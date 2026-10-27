@@ -215,5 +215,24 @@ class EvidenceTests(unittest.TestCase):
         self.assertEqual(result.rows[0]['seconds'],14)
         self.assertEqual(sum(r['seconds'] for r in suite.fixtures),3)
 
+    def test_operation_costs_preserve_returns_errors_and_nested_work(self):
+        from production_tests import OperationTimer
+        timer = OperationTimer(); clock = [0]
+        def inner():
+            clock[0] += 3
+            return 'actual return'
+        measured_inner = timer.wrap(inner, 'inner')
+        def outer():
+            clock[0] += 2
+            self.assertEqual(measured_inner(), 'actual return')
+            clock[0] += 5
+            raise OSError('actual failure')
+        with patch('production_tests.time.perf_counter', side_effect=lambda: clock[0]):
+            with self.assertRaisesRegex(OSError, 'actual failure'): timer.wrap(outer, 'outer')()
+        self.assertEqual(timer.counts, {'outer': 1, 'inner': 1})
+        self.assertEqual(timer.operations, {'outer': dict(calls=1, seconds=10, self_seconds=7),
+                                          'inner': dict(calls=1, seconds=3, self_seconds=3)})
+        self.assertEqual(timer.active, [])
+
 
 if __name__=='__main__':unittest.main()

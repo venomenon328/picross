@@ -29,18 +29,18 @@ class CatalogTests(unittest.TestCase):
     def setUpClass(cls):
         cls.temporary = tempfile.TemporaryDirectory()
         cls.home = Path(cls.temporary.name)
-        cls.base = isolated_checkout(cls.home/'base')
-        source = FIXTURES/'direct-mono'
-        approval = cls.home/'approval.json'; approve(source, approval)
+        from tests.puzzle_production.catalog_fixtures import registered
+        cls.checked = registered(cls.home, stem='sd_test', save_slot='sd_test')
+        cls.base = cls.home/'base'
         cls.exported = cls.home/'export'
-        export(source, cls.exported, name='TEST ONLY', revision=1, stem='sd_test', save_slot='sd_test',
-               approval_path=approval, category_id='voegel', categories_path=cls.base/'content/categories.json')
-        cls.checked = difficulty_for_export(cls.exported)
         cls.identifier = cls.checked['current_source']['id']
-        cr.registration(cls.exported, cls.base, apply=True, difficulty=cls.checked)
         cls.entry = cr.check_checkout(cls.base)['entries'][0]
         cls.definition = 'game/'+cls.entry['definition']
         cls.rating_path = rating.path(cls.identifier)
+        # Metadata, source and journal tests also support a genuinely integrated
+        # catalog. Keep full export inputs for new registrations and replay tests;
+        # never cache their verification or a mutable per-test checkout.
+        cls.full_base = cls.home/'full-base'
 
     @classmethod
     def tearDownClass(cls):
@@ -49,7 +49,11 @@ class CatalogTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
-        self.checkout = self.root/'checkout'; shutil.copytree(self.base, self.checkout)
+        self.checkout = self.root/'checkout'
+        # Visibility changes require a full export: a compact receipt binds the
+        # exact original entry and would make the intended hidden source invalid.
+        full = self._testMethodName == 'test_direct_priority_conflict_and_never_visible_unknown'
+        shutil.copytree(self.full_base if full else self.base, self.checkout)
 
     def legacy(self):
         (self.checkout/self.rating_path).unlink()
@@ -253,6 +257,10 @@ class CatalogTests(unittest.TestCase):
                approval_path=approval,category_id='voegel',categories_path=self.checkout/'content/categories.json')
         color=difficulty_for_export(exported);identifier=color['current_source']['id']
         cr.registration(exported,self.checkout,apply=True,difficulty=color)
+        # Registration above exercises the full export. The following metadata
+        # report/adoption only needs the valid integrated prerequisite.
+        from tests.puzzle_production.catalog_fixtures import compact
+        compact(self.checkout, [identifier])
         incomplete=ca.analyze_single(self.checkout/self.definition,self.root/'abort-bundle',production_mode='mono',budget=AnalysisBudget(max_waves=0))
         before=snapshot(self.checkout)
         report=ca.preview(self.checkout,self.root/'multiple','multiple','c'*40,ids=[identifier,self.identifier],

@@ -26,9 +26,13 @@ CI2-C / #415 ist nach separatem R01 über PR #421 auf
 bleiben an ihre Lieferung gebunden. CI2-D / #416 ist nach separatem R01 über
 PR #422 auf `8c31a69916941aed60ecd7e4d35a8d0d00637bf9` integriert;
 [D-T01](docs/CI2_D_VERIFICATION.md) bleibt an seine Lieferung gebunden.
-CI2-E / #417 ist auf `chore/417-ci2-e-cleanup` implementiert:
+CI2-E / #417 ist nach separatem finalem R01 über PR #423 auf
+`53f9c1f6d87d752e6b0f3152985fd0a83de2278b` integriert:
 [E-T01](docs/CI2_E_VERIFICATION.md) bindet Revisionsabschluss, Bereinigung und
-Metadatencheck. Unabhängiges CI2-E-R01 bleibt vor Merge offen.
+Metadatencheck. Die historischen E-Protokolle bleiben an ihre Lieferstände gebunden.
+CI2-F / #424 optimiert ausschließlich die Katalog-Fachprüfung;
+[F-T01](docs/CI2_F_VERIFICATION.md) bindet Messung und Lieferung.
+Separates qualifiziertes CI2-F-R01 bleibt vor Merge erforderlich.
 Keine Bestandslöschung oder Merge aus der Spezifikationsfreigabe ableiten.
 Der aktuelle Umfang verlangt Chromium ausschließlich auf ausdrücklichen Auftrag und
 ersetzt die 500er-Historyroute durch höchstens 20 semantische Benutzerkommandos,
