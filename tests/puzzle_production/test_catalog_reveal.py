@@ -1,7 +1,9 @@
 """AT-S01/S03/S04: fixed synthetic images and isolated catalog snapshots only."""
 from copy import deepcopy
 from pathlib import Path
+import os
 import shutil
+import stat
 import subprocess
 import tempfile
 import unittest
@@ -234,6 +236,44 @@ class RevealTests(unittest.TestCase):
         after = snapshot(self.checkout)
         self.assertEqual({n:v for n,v in before.items() if n.startswith('content/packages/')},
                          {n:v for n,v in after.items() if n.startswith('content/packages/')})
+
+    @unittest.skipIf(os.name == 'nt', 'Requires real POSIX executable bits')
+    def test_revision_retirement_rejects_unstaged_chmod_without_any_mutation(self):
+        from tools.puzzle_production.reveal_retirement import retire
+        directory, commit = self.retirement_fixture()
+        # The final selected file detects an incorrectly interleaved check/delete.
+        name = directory + '/record.json'
+        target = self.checkout/name
+        raw = target.read_bytes()
+        self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o644)
+        target.chmod(0o755)
+        self.assertEqual(target.read_bytes(), raw)
+        self.assertEqual(stat.S_IMODE(target.stat().st_mode), 0o755)
+
+        def git(*args):
+            return subprocess.check_output(['git', *args], cwd=self.checkout)
+
+        self.assertTrue(git('ls-tree', commit, '--', name).startswith(b'100644 blob '))
+        self.assertIn(b'100644 100755', git('diff', '--raw', '--', name))
+        self.assertEqual(git('diff', '--cached', '--raw'), b'')
+        # The safety check must not depend on Git honoring core.filemode.
+        git('config', 'core.filemode', 'false')
+        index = self.checkout/'.git/index'
+        before_index = (index.read_bytes(), index.stat().st_mtime_ns)
+        before_entries = git('ls-files', '--stage', '-z')
+        before = snapshot(self.checkout)
+
+        def modes_and_times():
+            return {p.relative_to(self.checkout).as_posix(): (p.stat().st_mode, p.stat().st_mtime_ns)
+                    for p in self.checkout.rglob('*') if '.git' not in p.relative_to(self.checkout).parts}
+
+        before_modes = modes_and_times()
+        with self.assertRaisesRegex(ValueError, 'Authoring file mode changed'):
+            retire(self.checkout, [(self.identifier, 'image-r01')], commit)
+        self.assertEqual(before, snapshot(self.checkout))
+        self.assertEqual(before_modes, modes_and_times())
+        self.assertEqual(before_index, (index.read_bytes(), index.stat().st_mtime_ns))
+        self.assertEqual(before_entries, git('ls-files', '--stage', '-z'))
 
     def test_revision_retirement_rejects_foreign_stale_partial_and_unmerged_sources_before_mutation(self):
         from tools.puzzle_production.reveal_retirement import retire

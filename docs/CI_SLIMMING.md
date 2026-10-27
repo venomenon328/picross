@@ -1,6 +1,6 @@
 # CI2: Kurze CI und begrenzter aktiver Bestand
 
-Stand: 26.10.2026 · freigegebener Sollvertrag · [Gesamtissue #412](https://github.com/venomenon328/picross/issues/412)
+Stand: 27.10.2026 · freigegebener Sollvertrag · [Gesamtissue #412](https://github.com/venomenon328/picross/issues/412)
 
 ## Status und Geltung
 
@@ -12,13 +12,19 @@ integriert. CI2-B ist nach separatem R01 über PR #420 auf
 [B-T01](CI2_B_VERIFICATION.md) bleibt historisch gebunden, B-O01 offen.
 CI2-C ist nach separatem R01 über PR #421 auf
 `8e5e99647596bc3ef9d7bd22bd746b73fbb424d5` integriert; [C-T01](CI2_C_VERIFICATION.md)
-bleibt an seinen Lieferstand gebunden. CI2-D wurde in
-[PR #422](https://github.com/venomenon328/picross/pull/422) technisch geliefert;
+bleibt an seinen Lieferstand gebunden. CI2-D ist nach separatem R01 über
+[PR #422](https://github.com/venomenon328/picross/pull/422) auf
+`8c31a69916941aed60ecd7e4d35a8d0d00637bf9` in `main` integriert;
 [D-T01](CI2_D_VERIFICATION.md) und das
 [separate R01](https://github.com/venomenon328/picross/pull/422#pullrequestreview-5659522486)
 bleiben an ihre geprüften Commits gebunden. Der Laufzeitbefund CI2-D-O01 ist
-weiterhin offen. CI2-E und der große Datenabbau sind unbegonnen;
-aus CI2 folgt keine zusätzliche Deployment- oder Releasefreigabe.
+weiterhin offen. CI2-E ist auf `chore/417-ci2-e-cleanup` in
+[Draft-PR #423](https://github.com/venomenon328/picross/pull/423) implementiert;
+der große Datenabbau ist auf diesem Branch ausgeführt, nicht auf `main` integriert.
+[E-T01](CI2_E_VERIFICATION.md) bindet die Lieferung und die Nacharbeit zu B-01/B-02
+aus dem [durchgeführten ersten E-R01](https://github.com/venomenon328/picross/pull/423#pullrequestreview-5661141319).
+Ein erneutes separates qualifiziertes Review des korrigierten Heads bleibt vor Merge
+erforderlich. Aus CI2 folgt keine zusätzliche Merge-, Deployment- oder Releasefreigabe.
 
 Dieser Vertrag ersetzt für die benannten Folgepakete die bisherigen automatischen
 Chromiumpflichten, impliziten Browserrechte manueller Scopes, ungekürzten historischen
@@ -29,7 +35,7 @@ Abnahmen behalten ihren damaligen Quellenbezug.
 Die Auswahl-/Aufruf-/Gateänderung von A ist integriert. B liefert integrierte
 Fachgruppen, gemessene isolierte Fixtures und die benannten historischen
 Helferstilllegungen. C begrenzt Browserfälle, Bilder und Exportbedarf;
-Nativeumfänge und die kurze native Produkt-CLI bleiben D vorbehalten.
+die integrierte D-Lieferung begrenzt Nativeumfänge und die native Produkt-CLI.
 Gemessene Kürzung und Zielerreichung
 werden ausschließlich mit tatsächlichen Läufen belegt. Auswahl, Producer und
 Gate werden jeweils gemeinsam im zuständigen Paket umgestellt; ein übersprungener
@@ -216,12 +222,15 @@ bereinigte Arbeitsdaten und aktuelle Statusverweise; keine Paketchronik in Einst
 | [CI2-D #416](https://github.com/venomenon328/picross/issues/416) | native Kürzung einschließlich History | A |
 | [CI2-E #417](https://github.com/venomenon328/picross/issues/417) | Bestandsbereinigung, Bildabschluss und Metadatenkontrolle | A |
 
-CI2-A/B/C sind nach separaten R01 auf `main` integriert; ihre T01-/R01-
-Nachweise bleiben an die damaligen Liefercommits gebunden. Die CI2-D-Lieferung,
-D-T01 und das separate R01 stehen in
-[PR #422](https://github.com/venomenon328/picross/pull/422); dessen aktueller
-Integrationsstand ist im PR maßgeblich. CI2-D-O01 (Laufzeit) bleibt offen.
-CI2-E ist unbegonnen und benötigt einen eigenen konkreten Auftrag.
+CI2-A/B/C/D sind nach separaten R01 auf `main` integriert; ihre T01-/R01-
+Nachweise bleiben an die damaligen Liefercommits gebunden. D ist über
+[PR #422](https://github.com/venomenon328/picross/pull/422) auf
+`8c31a69916941aed60ecd7e4d35a8d0d00637bf9` integriert. CI2-D-O01 (Laufzeit) bleibt offen.
+CI2-E einschließlich Bestandsabbau ist auf `chore/417-ci2-e-cleanup` /
+[Draft-PR #423](https://github.com/venomenon328/picross/pull/423) geliefert.
+Das erste E-R01 verlangt die Nacharbeit B-01/B-02; [E-T01](CI2_E_VERIFICATION.md)
+bindet deren technische Nachweise. Die erneute separate qualifizierte Prüfung des
+korrigierten Heads bleibt vor Merge erforderlich; E ist noch nicht auf `main` integriert.
 Nach A sind B/C/D/E unabhängig integrierbar; gemeinsame Gate-/Auswahländerungen
 gegen den jeweils aktuellen Stand nachführen. Standard ist ein Implementierungs-PR
 je Paket. T01 enthält tatsächliche gezielte Positiv-/Negativnachweise, gemessene

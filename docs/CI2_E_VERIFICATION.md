@@ -3,8 +3,73 @@
 Stand 27.10.2026 · [#417](https://github.com/venomenon328/picross/issues/417),
 einschließlich „Umsetzungsvorbereitung V1 · 27.10.2026“.
 Basis nach Aktualisierung: `main@8c31a69916941aed60ecd7e4d35a8d0d00637bf9` (PR #422).
-Arbeitsbranch `chore/417-ci2-e-cleanup`; Ziel `main`. Unabhängiges CI2-E-R01
-bleibt **vor Merge offen**. Kein Merge, Deployment oder Release beauftragt.
+Arbeitsbranch `chore/417-ci2-e-cleanup`; Ziel `main`;
+[Draft-PR #423](https://github.com/venomenon328/picross/pull/423).
+Das [erste unabhängige CI2-E-R01](https://github.com/venomenon328/picross/pull/423#pullrequestreview-5661141319)
+ist zu `6fd6173b46fb4371eaefd3e89fda38ea3d5e9d74` durchgeführt und verlangt
+Nacharbeit B-CI2-E-01/B-CI2-E-02. Die erneute separate qualifizierte Prüfung des
+korrigierten Heads bleibt **vor Merge erforderlich**. Kein Merge, Deployment oder Release.
+
+## Nacharbeit zu R01 · CI2-E-N01
+
+Umfang gemäß [N01](https://github.com/venomenon328/picross/pull/423#issuecomment-6438970581):
+ausschließlich B-01/B-02, ausgehend vom oben genannten Reviewhead.
+`reveal_retirement.retire()` prüft unmittelbar vor der ersten Mutation die
+tatsächlichen POSIX-Ausführungsbits sämtlicher Löschziele gegen deren bereits
+geprüften historischen regulären Modus `100644`. Auch `core.filemode=false`
+kann die Prüfung nicht abschalten. Windows erhält seine bisherige Git-Modussemantik;
+es werden keine Berechtigungen normalisiert oder gestagt. Byte-, Staging- und
+Wiederholungs-No-op-Schutz bleiben erhalten.
+
+Die neue feste synthetische Gegenprobe setzt die letzte ausgewählte Datei
+`record.json` von `0644` auf `0755`, bei gleichen Bytes und ungestagtem Git-Diff
+`100644 → 100755`. Danach wird zusätzlich `core.filemode=false` gesetzt.
+Erwartet ist `Authoring file mode changed` vor jeglicher Löschung. Nach Ablehnung
+sind sämtliche Checkoutdateien byte-/mtimegleich, alle Datei-/Verzeichnismodi und
+mtimes gleich sowie die Git-Indexbytes, Index-mtime und sämtliche Indexeinträge
+unverändert. Der Test wäre auch bei vorgezogener Löschung früherer Dateien rot.
+
+- Vor dem Fix: echte POSIX-Probe im lokalen temporären Ubuntu-24.04-Container,
+  Python 3.12.3/Pillow 12.3.0, **erwartet fehlgeschlagen**: keine Ablehnung,
+  `ValueError not raised`, 11,882 s einschließlich Fixtureaufbau.
+- Nach dem Fix: dieselbe Umgebung, vier gezielte `revision_retirement`-Tests,
+  **4/4 erfolgreich**, 26,027 s einschließlich Aufbau. Enthalten sind beide
+  positiven Paketwege, exakter Wiederholungs-No-op und die bisherigen 21
+  synthetischen Negativvarianten sowie die neue chmod-Probe.
+- Windows, Python 3.13.14/Pillow 12.3.0: dieselbe gezielte Auswahl erfolgreich,
+  54,931 s; drei Tests bestanden, nur die echte POSIX-Probe sachgerecht
+  übersprungen. Ihr tatsächlicher Nachweis stammt aus dem obigen POSIX-Lauf.
+- Dokumentvalidator auf vollständiger Kopie aller versionierten Arbeitsdateien:
+  erfolgreich, 8,564 s. Die zwei vorbestehenden unversionierten Designbereiche
+  wurden weder kopiert noch verändert. Vollständige Whitespace-/Diffkontrolle
+  erfolgt vor Commit; keine Bestandsoperation in diesen Prüfungen.
+
+`CI_SLIMMING.md` (Status/Geltung und §7) und der aktuelle AT-Einstieg nennen
+D als nach separatem R01 über #422 integriert und E samt Datenabbau ausschließlich
+auf diesem Branch/#423 geliefert. Erstes E-R01, Nacharbeit und erneutes Reviewgate
+sind getrennt. Fachregeln und historische AT-/HZ-Berichte bleiben unverändert.
+Keine erneuten echten Bildabschlüsse oder Bestandslöschungen, keine Produktänderung
+und keine Optimierung zu O-CI2-E-01. Chromium bleibt **nicht angefordert**.
+
+Die vollständige Base→Head-Auswahl und die tatsächlichen Pflichtjobresultate für
+den Korrekturhead werden nach dem Push im bestehenden PR mit Head, Basis,
+Test-Merge, Run und Versuch gebunden. Frühere grüne Ergebnisse sind kein Nachweis
+dieses Korrekturheads. Das erneute unabhängige Review bleibt davon getrennt.
+
+Getrennter Selbstreview nach Implementierung: neue Ablehnung vor der ersten
+Mutation für die ganze Auswahl, Plattformgrenze, unveränderter Byte-/Staging-/
+No-op-Schutz und aussagekräftiger Rot/Grün-Test geprüft. Vollständiger Base→Head-
+Umfang mit ursprünglichen sechs Löschklassen und aktuellem Nacharbeitsdiff
+abgeglichen: nur die beiden Befunde samt Test/T01, keine neue Bestandslöschung,
+Produktänderung oder Änderung historischer Berichte. Dies ist ein Selbstreview,
+kein erneutes unabhängiges R01.
+
+## Historische Bindung der ursprünglichen Lieferung
+
+Die folgenden Bereinigungszahlen, Laufzeiten und damaligen Reviewstatus gehören
+unverändert zur ursprünglichen Lieferung auf `6fd6173b46fb4371eaefd3e89fda38ea3d5e9d74`.
+Sie behaupten keine erneute Ausführung im Nacharbeitsauftrag; der aktuelle
+Nacharbeits-/Reviewstand steht oben und im PR.
 
 ## Abschlussvertrag
 
