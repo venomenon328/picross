@@ -23,10 +23,12 @@ bleiben gebunden; CI2-B-O01 bleibt im Gesamtvorhaben offen.
 CI2-C / #415 ist nach separatem R01 über PR #421 auf
 `8e5e99647596bc3ef9d7bd22bd746b73fbb424d5` integriert.
 [Browservertrag](docs/CI_B_BROWSER_GROUPS.md) und [C-T01](docs/CI2_C_VERIFICATION.md)
-bleiben an ihre Lieferung gebunden. CI2-D / #416 ist auf
-`chore/416-ci2-d-native` implementiert; [D-T01](docs/CI2_D_VERIFICATION.md)
-bindet den kurzen Historyweg, native Bildkürzung und tatsächliche Messungen.
-Separates CI2-D-R01 bleibt vor Merge offen. CI2-E / #417 bleibt unbegonnen.
+bleiben an ihre Lieferung gebunden. CI2-D / #416 ist nach separatem R01 über
+PR #422 auf `8c31a69916941aed60ecd7e4d35a8d0d00637bf9` integriert;
+[D-T01](docs/CI2_D_VERIFICATION.md) bleibt an seine Lieferung gebunden.
+CI2-E / #417 ist auf `chore/417-ci2-e-cleanup` implementiert:
+[E-T01](docs/CI2_E_VERIFICATION.md) bindet Revisionsabschluss, Bereinigung und
+Metadatencheck. Unabhängiges CI2-E-R01 bleibt vor Merge offen.
 Keine Bestandslöschung oder Merge aus der Spezifikationsfreigabe ableiten.
 Der aktuelle Umfang verlangt Chromium ausschließlich auf ausdrücklichen Auftrag und
 ersetzt die 500er-Historyroute durch höchstens 20 semantische Benutzerkommandos,

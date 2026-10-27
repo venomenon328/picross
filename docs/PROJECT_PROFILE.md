@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**CI2 · 26.10.2026, A/B/C integriert; D implementiert; E unbegonnen:**
+**CI2 · 27.10.2026, A/B/C/D integriert; E implementiert, R01 offen:**
 [Kurze CI und begrenzter aktiver Bestand](CI_SLIMMING.md) bindet #412–#417.
 CI2-A/B sind nach ihren separaten Reviews über PR #419/#420 integriert;
 Basis für C ist `dd56d310d942eee47448df4cdcca5e4af4a49b00`.
@@ -8,9 +8,11 @@ Basis für C ist `dd56d310d942eee47448df4cdcca5e4af4a49b00`.
 CI2-B-O01 bleibt im Gesamtvorhaben offen. [Browserumfang](CI_B_BROWSER_GROUPS.md)
 und [C-T01](CI2_C_VERIFICATION.md) bleiben historisch gebunden; C ist nach
 separatem R01 über PR #421 auf `8e5e99647596bc3ef9d7bd22bd746b73fbb424d5`
-integriert. [D-T01](CI2_D_VERIFICATION.md) bindet die Umsetzung auf
-`chore/416-ci2-d-native`; separates D-R01 bleibt vor Merge offen.
-E und großer Datenabbau bleiben unbegonnen. Kein Merge oder Deployment.
+integriert. D ist nach separatem R01 über PR #422 auf
+`8c31a69916941aed60ecd7e4d35a8d0d00637bf9` integriert; [D-T01](CI2_D_VERIFICATION.md)
+bleibt historisch gebunden. E ist auf `chore/417-ci2-e-cleanup` implementiert;
+[E-T01](CI2_E_VERIFICATION.md) weist den tatsächlichen Datenabbau nach.
+Unabhängiges E-R01 bleibt vor Merge offen. Kein Merge oder Deployment.
 
 Chromium läuft ausschließlich auf ausdrücklichen manuellen Auftrag,
 auch nicht implizit durch `all`, `toolchain` oder gemeinsame Änderungen.
@@ -22,7 +24,7 @@ Integrationen, gezielte Bildbelege, Laufzeitziele und begrenzte Ablagen ersetzen
 die in CI_SLIMMING ausdrücklich abgelösten Altpflichten. Quellenbindung,
 Fail-closed-Gate und aktuelle Produkt-/Speicherverträge bleiben erhalten.
 Gemessene Browserbeschleunigung folgt C-T01; native Kürzung und Messung folgen
-D-T01. Bereinigung bleibt dem noch offenen Paket E vorbehalten.
+D-T01. Revisionsabschluss und Bestandsbereinigung folgen E-T01.
 
 **HZ · HZ-A/B am 20.10.2026, HZ-C am 21.10.2026 integriert:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet die normale

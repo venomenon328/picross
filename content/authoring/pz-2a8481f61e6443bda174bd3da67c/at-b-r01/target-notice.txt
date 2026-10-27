@@ -1,5 +1,0 @@
-Production ID: pz-2a8481f61e6443bda174bd3da67c
-Artwork: Native ChatGPT-Bildgenerierung/-bearbeitung im Eigentümerauftrag
-Usage basis: Eigener beauftragter KI-Inhalt, keine fremden Bildbytes.
-
-AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.
