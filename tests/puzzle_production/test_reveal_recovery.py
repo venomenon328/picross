@@ -25,9 +25,7 @@ class RecoveryTests(unittest.TestCase):
         # not all historical production files at every guard. Real full-export
         # integration remains in RevealTests and the adapter group.
         from tests.puzzle_production.test_catalog_reveal import RevealTests as Fixture
-        from tests.puzzle_production.catalog_fixtures import compact
         Fixture.setUpClass.__func__(cls)
-        compact(cls.base,[cls.identifier])
         cls.entry=cr.check_checkout(cls.base)['entries'][0]
     tearDownClass = classmethod(RevealTests.tearDownClass.__func__)
     setUp = RevealTests.setUp

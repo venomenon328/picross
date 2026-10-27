@@ -13,9 +13,12 @@ binden die Fachgruppen; CI2-B-O01 bleibt offen. C ist nach separatem R01 über
 PR #421 auf `8e5e99647596bc3ef9d7bd22bd746b73fbb424d5` integriert:
 [Browservertrag](CI_B_BROWSER_GROUPS.md), [C-T01](CI2_C_VERIFICATION.md).
 D ist nach separatem R01 über PR #422 auf `8c31a69916941aed60ecd7e4d35a8d0d00637bf9`
-integriert; [D-T01](CI2_D_VERIFICATION.md) bleibt gebunden. E ist auf
-`chore/417-ci2-e-cleanup` implementiert; [E-T01](CI2_E_VERIFICATION.md) dokumentiert
-den Datenabbau. Unabhängiges E-R01 bleibt vor Merge offen. Kein Merge oder Deployment.
+integriert; [D-T01](CI2_D_VERIFICATION.md) bleibt gebunden. E ist nach separatem
+finalem R01 über PR #423 auf `53f9c1f6d87d752e6b0f3152985fd0a83de2278b`
+integriert; [E-T01](CI2_E_VERIFICATION.md) bleibt an seine Lieferstände gebunden.
+CI2-F / #424 optimiert die Katalog-Fachprüfung gemäß [F-T01](CI2_F_VERIFICATION.md).
+Das separate qualifizierte F-R01 bleibt vor Merge erforderlich; allgemeine
+Fachharness- und native Laufzeitbefunde bleiben offen.
 
 - **Auswahl / CI2-A [#413](https://github.com/venomenon328/picross/issues/413):**
   Automatische PR-/Push-Läufe installieren und starten keinen Browser. Auch

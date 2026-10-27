@@ -3,6 +3,7 @@ import contextlib
 import functools
 import json
 import platform
+import shutil
 from pathlib import Path
 import sys
 import time
@@ -103,22 +104,58 @@ class MeasuredSuite(unittest.TestSuite):
             return self.measure('module-teardown', previous, super()._handleModuleTearDown, result)
 
 
+class OperationTimer:
+    """Diagnostic call costs; never stores or substitutes operation results."""
+    def __init__(self):
+        self.counts = {}; self.operations = {}; self.active = []
+
+    def wrap(self, function, name):
+        @functools.wraps(function)
+        def counted(*args, **kwargs):
+            # copytree recurses through its patched public entry. Count/time
+            # only the outer copy, so a tree remains one isolation operation.
+            if name == 'copytree' and any(frame[0] == name for frame in self.active):
+                return function(*args, **kwargs)
+            self.counts[name] = self.counts.get(name, 0) + 1
+            frame = [name, time.perf_counter(), 0.0]; self.active.append(frame)
+            try:
+                return function(*args, **kwargs)
+            finally:
+                elapsed = time.perf_counter() - frame[1]
+                self.active.pop()
+                if self.active: self.active[-1][2] += elapsed
+                row = self.operations.setdefault(name, {'calls': 0, 'seconds': 0.0, 'self_seconds': 0.0})
+                row['calls'] += 1; row['seconds'] += elapsed
+                row['self_seconds'] += elapsed - frame[2]
+        return counted
+
+
 def run_tests(groups, directory):
     sys.path[:0] = [str(ROOT), str(ROOT / 'tests/puzzle_production')]
-    counts = {}
+    timer = OperationTimer()
     # Measure complete calls (including aliases imported by tests), without
     # changing behavior or suppressing source validation. No stored outcomes.
     from tools.puzzle_production import target_adapter, content_registry, images
+    from tools.puzzle_production import catalog_io, catalog_transaction, catalog_publication
+    from tools.puzzle_production import za1_fixtures
     suite_started = time.perf_counter()
     with contextlib.ExitStack() as stack:
         for module, name in ((target_adapter, 'export'), (target_adapter, 'verify_export'),
                              (content_registry, 'registration'), (content_registry, 'check_checkout'),
-                             (images, 'import_image')):
+                             (images, 'import_image'), (shutil, 'copytree'),
+                             (catalog_io, 'safe'), (catalog_io, 'read'),
+                             (catalog_transaction, 'capture'), (catalog_transaction, 'prepare'),
+                             (catalog_publication, 'guard'), (catalog_publication, 'execute'),
+                             (catalog_publication, 'recover'), (za1_fixtures, 'make')):
             original = getattr(module, name)
-            def counted(*args, _function=original, _key=name, **kwargs):
-                counts[_key] = counts.get(_key, 0) + 1
-                return _function(*args, **kwargs)
-            stack.enter_context(patch.object(module, name, functools.wraps(original)(counted)))
+            counted = timer.wrap(original, name)
+            # Also observe aliases bound while the measured modules were
+            # imported. Later imports receive the patched canonical callable.
+            for loaded in list(sys.modules.values()):
+                if loaded is module or getattr(loaded, '__name__', '').startswith('tools.puzzle_production.'):
+                    for alias, value in list(vars(loaded).items()):
+                        if value is original:
+                            stack.enter_context(patch.object(loaded, alias, counted))
         expected = contract.expected_tests(ROOT, groups)
         modules = [name for g in groups for name in contract.MODULES[g]]
         loader = unittest.TestLoader()
@@ -148,7 +185,8 @@ def run_tests(groups, directory):
     report = {'format': 'picross-production-tests-v1', 'accepted': result.wasSuccessful()
               and len(result.rows) == len(expected) and all(r['status'] == 'success' for r in result.rows),
               'groups': groups, 'seconds': elapsed, 'group_times': group_rows,
-              'tests': result.rows, 'fixtures': suite.fixtures, 'calls': counts,
+              'tests': result.rows, 'fixtures': suite.fixtures, 'calls': timer.counts,
+              'operations': timer.operations,
               'top10': sorted(result.rows, key=lambda r: (-r['seconds'], r['id']))[:10],
               'environment': {'platform': platform.platform(), 'python': sys.version,
                               'pillow': __import__('PIL').__version__,
