@@ -1,5 +1,0 @@
-Production ID: pz-20219e14dbe242689b9ef06297828f34
-Artwork: OpenAI image_gen, auf Nutzerauftrag
-Usage basis: Neu generierter Projektinhalt ohne fremde Bildreferenz; freigegebenes C-r01 unverändert weiterverwendet.
-
-AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

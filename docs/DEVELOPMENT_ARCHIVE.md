@@ -72,7 +72,9 @@ dieses Inventar sammelt keine neue Laufchronik.
 ## Freigegebene Folgebereinigung vom 26.10.2026
 
 Der folgende [CI2-E-Umfang / #417](https://github.com/venomenon328/picross/issues/417)
-ist spezifiziert, **noch nicht bereinigt**. Ausgang ist
+ist auf `chore/417-ci2-e-cleanup` bereinigt; [CI2-E-T01](CI2_E_VERIFICATION.md)
+weist aktuelle Zahlen, Leserprüfung und erhaltene Quellen nach. Unabhängiges
+CI2-E-R01 bleibt vor Merge offen. Die folgende historische Ausgangsmessung gehört zu
 [`main@967314538df376a281020fb4c34f93f370a491df`](https://github.com/venomenon328/picross/tree/967314538df376a281020fb4c34f93f370a491df).
 Die Zahlen summieren Datei-Bytes des aktiven Trees, nicht die Größe der Git-Historie.
 
@@ -86,9 +88,9 @@ Die Zahlen summieren Datei-Bytes des aktiven Trees, nicht die Größe der Git-Hi
 | `docs/evidence/at-a/` | 145 | 25,960 |
 | **Kandidatenumfang** | **1.156** | **798,267** |
 
-Die sechs Klassen enthalten zusammen 837.043.724 Bytes. Vor der späteren Entfernung
-sind tatsächliche Main-Integration, aktuelle Leser, offene Nacharbeit derselben IDs
-und Rechtebindungen zu prüfen. Verbleibende Dokumentlinks erhalten gebundene
+Die sechs Klassen enthielten zusammen 837.043.724 Bytes. Vor der Entfernung wurden
+tatsächliche Main-Integration, aktuelle Leser, offene Nacharbeit derselben IDs
+und Rechtebindungen geprüft. Verbleibende Dokumentlinks erhalten gebundene
 historische Commit-/PR-Verweise. Kompakte aktive Verträge und nötige Abschlussverweise
 bleiben; keine Kopie in einem neuen Archiv, Spielerbuild oder CI-Artefakt.
 Die nachträglichen AT-B-Bildrevisionen schließen nach
@@ -106,8 +108,8 @@ nicht als Löschgrund.
 Abnahme: ausgewiesener Tree-Rückgang von ungefähr 798 MiB, bereinigte Authoringindizes,
 unveränderte aktive Inhalte und erhaltene Rechte; nötige Restdaten und andere
 Abweichungen vom Kandidatenumfang werden konkret begründet. Die Git-Historie bleibt
-unangetastet. Die aktuelle Spezifikationspflege führt keine Löschung und keinen
-Cleanup-Merge aus und erweitert keine frühere Mergefreigabe auf CI2-Codepakete.
+unangetastet. CI2-E führt keinen Merge aus und erweitert keine frühere Mergefreigabe
+auf CI2-Codepakete.
 
 Der nach CI2 vorgesehene schnelle Check überwacht Pfade, Datei-/Bytezuwachs und
 unzulässige Ablageklassen aus verfügbaren Metadaten. Er lädt keine historischen

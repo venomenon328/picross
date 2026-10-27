@@ -1,3 +1,0 @@
-Production ID: pz-25d245061b0c49c190788de8e5d0e45b
-Artwork: OpenAI image generation in ChatGPT, commissioned by Tobias Schröder
-Usage basis: Originale textbasierte KI-Illustration innerhalb des beauftragten Picross-Workflows; keine fremde Bildreferenz oder fremden Assets. Die Ableitung ist für dasselbe Projekt beauftragt; Exklusivität und Schutzfähigkeit werden nicht behauptet.

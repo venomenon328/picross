@@ -1,5 +1,9 @@
 # HZ-C · Tidy-Hand-Ausrichtung und kleine Schriftrolle
 
+Historische Lieferung: CI2-E entfernt die abgeschlossenen Arbeits-/Laufdaten aus
+dem aktiven Tree. Die folgenden Archivlinks binden den vollständigen Stand vor
+der Bereinigung; damalige Ergebnisse und offene Gates bleiben unverändert.
+
 Lieferung zu [#294](https://github.com/venomenon328/picross/issues/294),
 auf `main@02b7fcd53b4eef8c94f873314848806eefc265cc`, Branch
 `fix/294-tidy-typografie`. Stand: 21.10.2026.
@@ -110,7 +114,7 @@ Die Windows-/Chromium-Belege des finalen technischen Stands sowie der getrennte
 vollständige Selbstreview werden im PR mit Originalhashes gebunden. Der
 Selbstreview erfüllt ausdrücklich nicht HZ-C-R01.
 
-Die [dauerhaft archivierten Entwicklungsoriginale](evidence/hz-c/README.md)
+Die [dauerhaft archivierten Entwicklungsoriginale](https://github.com/venomenon328/picross/blob/8c31a69916941aed60ecd7e4d35a8d0d00637bf9/docs/evidence/hz-c/README.md)
 bewahren insbesondere den direkten korrigierten 14/15-Vergleich in Windows und
 Chromium einschließlich ganzer geöffneter Vergleichsmenüs. SHA-256-Bindungen
 und die tatsächlichen temporären Einstiege legen ihre Quellen-/Gategrenzen offen.
@@ -133,7 +137,7 @@ Renderer ist NVIDIA GeForce RTX 3070; sämtliche 1.053 CI-Technikdateien wurden
 vor Verwendung erneut validiert. Die vollständigen 73 Chromium-Dateien sind
 ebenfalls erneut gegen das Browsergate geprüft.
 
-[Originalarchive, Inventare und genaue Bindungen](evidence/hz-c/README.md)
+[Originalarchive, Inventare und genaue Bindungen](https://github.com/venomenon328/picross/blob/8c31a69916941aed60ecd7e4d35a8d0d00637bf9/docs/evidence/hz-c/README.md)
 erhalten diese tatsächlichen Identitäten. Der anschließende reine Dokument-/
 Archivcommit ändert keine Laufzeit-, Test- oder Werkzeugdatei; seine eigene
 Pflicht-CI und der getrennte vollständige Selbstreview werden im PR gebunden.

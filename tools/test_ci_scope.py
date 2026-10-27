@@ -358,6 +358,17 @@ class PartialCloneTests(unittest.TestCase):
         self.assertTrue(plan["content_only"])
         self.assertTrue(self.lookup(oid).endswith(" missing"))
 
+    def test_growth_size_check_never_fetches_missing_historical_blob(self):
+        from ci_growth import tree
+        self.write('docs/evidence/hz-a/archive.zip', b'TEST ONLY old opaque bytes')
+        base = self.commit()
+        oid = self.run_git(self.source, 'rev-parse', base+':docs/evidence/hz-a/archive.zip')
+        self.start_clone()
+        self.assertTrue(self.lookup(oid).endswith(' missing'))
+        with self.assertRaises((ValueError, subprocess.CalledProcessError)):
+            tree(base)
+        self.assertTrue(self.lookup(oid).endswith(' missing'))
+
     def test_missing_blob_remote_failure_is_fatal(self):
         from ci_scope import fetch_diff_blobs
         self.write("docs/base.md", b"base\n")

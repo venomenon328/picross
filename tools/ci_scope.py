@@ -176,6 +176,7 @@ def classify(paths: list[str], force: str = "auto", browser_scope: str = "none",
             continue
         if path.startswith(".github/") or path in {
             "tools/ci_scope.py", "tools/test_ci_scope.py", "tools/test_ci2_a.py",
+            "tools/ci_growth.py", "tools/test_ci_growth.py",
             "tools/p1_product.py", "tools/test_p1_product.py",
             "tools/p1_preflight.py", "tools/test_p1_preflight.py",
             "tools/za1_product.py",
