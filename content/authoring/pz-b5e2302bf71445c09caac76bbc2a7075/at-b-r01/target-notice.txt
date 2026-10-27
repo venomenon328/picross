@@ -1,5 +1,0 @@
-Production ID: pz-b5e2302bf71445c09caac76bbc2a7075
-Artwork: OpenAI ChatGPT native image generation, commissioned by Tobias
-Usage basis: Im Nutzerauftrag nativ erzeugte KI-Illustration ohne Fremdassets; keine Exklusivität oder urheberrechtliche Schutzfähigkeit behauptet.
-
-AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.

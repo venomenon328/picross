@@ -1,5 +1,9 @@
 # AT-A-T01 · Bildrevisionen und technische Nachweise
 
+Historische Lieferung: CI2-E entfernt die abgeschlossenen Arbeits-/Laufdaten aus
+dem aktiven Tree. Die folgenden Archivlinks binden den vollständigen Stand vor
+der Bereinigung; damalige Ergebnisse und offene Gates bleiben unverändert.
+
 Stand: 19.10.2026 · Umsetzungsvorbereitung V3 · AT-A implementiert;
 abschließende Head-/CI-Bindung im [Draft-PR #263](https://github.com/venomenon328/picross/pull/263).
 [Auftrag #256](https://github.com/venomenon328/picross/issues/256),
@@ -54,7 +58,7 @@ Der grüne Docs-Lauf der P01-Basis ist kein AT-A-Produktnachweis.
 
 ### Dauerhaft gesicherte Originale
 
-[Originalverzeichnis und Inventare](evidence/at-a/README.md) enthalten unveränderte
+[Originalverzeichnis und Inventare](https://github.com/venomenon328/picross/blob/8c31a69916941aed60ecd7e4d35a8d0d00637bf9/docs/evidence/at-a/README.md) enthalten unveränderte
 Windows- und Linuxausgaben. Der abschließende saubere Windowsnachweis bindet
 `714144eb097001e1b7d078fe318799e97d6fc459`; der spätere Diff verändert dessen regulären Spieler- und Windowsprobecode nicht. Die frühere Zeichenstudie erhält separat die passende Layout-Overridesignatur; sie ist vom Spielerexport ausgeschlossen. Die früheren Linuxnachweise binden Commit
 `742f1837cf3a5600e4160c54744b87dfa88dcba1` an Basis
@@ -80,7 +84,7 @@ ausgegeben. Das Windows-Bild-/Saveexperiment wird mit
 `python tools/at_windows_probe.py --cache-dir <offizieller-cache> --output-dir <neuer-pfad>`
 in einem sauberen Checkout reproduziert.
 
-Die zusätzliche [Windows-Dreiermatrix](evidence/at-a/windows/matrix/records.zip)
+Die zusätzliche [Windows-Dreiermatrix](https://github.com/venomenon328/picross/blob/8c31a69916941aed60ecd7e4d35a8d0d00637bf9/docs/evidence/at-a/windows/matrix/records.zip)
 am sauberen Stand `5cb21694f8bb0f52077e0d5b17c151915679480a` bestätigt dieselben
 nativen AT-Darstellungsfälle mit tatsächlichem NVIDIA-Treiber. 81 Katalog- und
 2327 Abschlussprüfpunkte sowie alle 75 unabhängigen Pixelmessungen bestanden.
@@ -107,7 +111,7 @@ kein Produktivserver und kein Deployment werden angesprochen.
 
 ## Getrenntes Selbstreview
 
-Der [getrennte Selbstreview](evidence/at-a/self-review.md) benennt Prüfumfang,
+Der [getrennte Selbstreview](https://github.com/venomenon328/picross/blob/8c31a69916941aed60ecd7e4d35a8d0d00637bf9/docs/evidence/at-a/self-review.md) benennt Prüfumfang,
 konkrete Befunde B-AT-SR01–09 und deren Gegenproben. Er ergänzt
 frühe Registry-/Manifestvalidierung, kontrollierten Speicher-/Typabbruch und
 bytegenaue Git-Aufbewahrung der Originale, echte Abschlussnavigation und die

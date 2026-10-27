@@ -50,6 +50,7 @@ jobs:
           filter: blob:none
           sparse-checkout: |
             tools/ci_scope.py
+            tools/ci_growth.py
             tools/native_contract.py
             tools/production_contract.py
             tools/web_tests/contract.py
@@ -62,11 +63,10 @@ jobs:
           CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
           CI_SCOPE: ${{ inputs.scope || 'auto' }}
           CI_BROWSER_SCOPE: ${{ inputs.browser_scope || 'none' }}
-        run: >-
-          python3 tools/ci_scope.py plan --fetch
-          --base "$CI_BASE" --head "$CI_HEAD" --scope "$CI_SCOPE"
-          --browser-scope "$CI_BROWSER_SCOPE"
-          --output "${{ runner.temp }}/ci-plan.json"
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 tools/ci_growth.py --base "$CI_BASE" --head "$CI_HEAD" --output "$RUNNER_TEMP/ci-growth.json"
+          python3 tools/ci_scope.py plan --fetch --base "$CI_BASE" --head "$CI_HEAD" --scope "$CI_SCOPE" --browser-scope "$CI_BROWSER_SCOPE" --output "$RUNNER_TEMP/ci-plan.json"
       - name: Materialize sources for code and documentation checks
         if: steps.scope.outputs.content_only != 'true'
         run: git sparse-checkout disable
@@ -84,7 +84,9 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: ci-selection-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/ci-plan.json
+          path: |
+            ${{ runner.temp }}/ci-plan.json
+            ${{ runner.temp }}/ci-growth.json
           if-no-files-found: warn
           retention-days: 7
 
