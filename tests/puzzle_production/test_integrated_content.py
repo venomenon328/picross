@@ -1,7 +1,10 @@
 """Completed production must not be needed by later registration or metadata edits."""
 from tools.puzzle_production.za1_fixtures import rated_registration
 from copy import deepcopy
+from pathlib import Path
+import shutil
 import subprocess
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -11,13 +14,25 @@ from tools.puzzle_production.contract import InvalidInput, load_json, write_json
 
 
 class IntegratedContentTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        temporary = tempfile.TemporaryDirectory(); cls.addClassCleanup(temporary.cleanup)
+        cls.fixture_home = Path(temporary.name)
+        from tests.puzzle_production.catalog_fixtures import registered
+        registered(cls.fixture_home, stem='pz-test-direct-mono',
+                   save_slot='slot_pz-test-direct-mono', revision=7)
+
     setUp = fixtures.CategorizedAdapterTests.setUp
     snapshot = fixtures.CategorizedAdapterTests.snapshot
     export = fixtures.CategorizedAdapterTests.export
 
     def prepare(self):
-        out = self.export()
-        rated_registration(out, self.checkout, apply=True)
+        # A full registered source is a prerequisite of retirement, not the
+        # transition these cases test. Each test still creates its own Git
+        # history, performs real retirement and checks live foreign/staged data.
+        out = self.root/'export'
+        shutil.copytree(self.fixture_home/'export', out)
+        shutil.copytree(self.fixture_home/'full-base', self.checkout, dirs_exist_ok=True)
         index = self.checkout / "content/authoring/index.json"
         index.parent.mkdir(parents=True)
         write_json(index, {"format": "picross-authoring-index-v1", "entries": []})

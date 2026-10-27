@@ -76,6 +76,12 @@ def run(groups, directory):
                     for row in measured['top10']:
                         summary.write(f"- {row['seconds']:.3f}s: `{row['id']}`\n")
                     summary.write('\nMeasured calls: `' + json.dumps(measured['calls'], sort_keys=True) + '`\n')
+                    summary.write('\nOperation times are inclusive; self time excludes other measured operations. '
+                                  'Nested inclusive times must not be summed.\n\n'
+                                  '| Operation | Calls | Inclusive (s) | Self (s) |\n'
+                                  '| --- | ---: | ---: | ---: |\n')
+                    for name, row in measured.get('operations', {}).items():
+                        summary.write(f"| {name} | {row['calls']} | {row['seconds']:.3f} | {row['self_seconds']:.3f} |\n")
                 summary.write(f"\nComplete Fachtest/integration runner: {report['seconds']:.3f}s; accepted={report['accepted']}.\n")
     return report
 

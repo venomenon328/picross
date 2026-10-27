@@ -40,20 +40,33 @@ def tick():
 
 
 def safe(root, name):
-    root = Path(root).absolute()
+    # Reuse immutable Path syntax, never a filesystem observation or validation.
+    root = (root if isinstance(root, Path) else Path(root)).absolute()
     require(not str(root).startswith(('\\\\', '//')), 'Network/device catalog paths are unsupported')
     relative(name)
-    current = Path(root.anchor)
+    current = root.anchor
     last_existing = current
     parts = (*root.parts[1:], *name.split("/"))
     for index, part in enumerate(parts):
         tick()
-        if os.name != "nt" and current.exists():
-            matches = [p.name for p in current.iterdir() if p.name.casefold() == part.casefold()]
-            require(not matches or matches == [part], "Catalog path case collision: " + str(current / part))
-        current /= part
+        target = current + ('' if current.endswith(os.sep) else os.sep) + part
+        if os.name != "nt":
+            # Only names are needed. Path.iterdir constructs a Path for every
+            # sibling at every guard/read, even though none is opened here.
+            # Enumerate the same directory afresh; no path/identity result cache.
+            # Listing also checks presence; a preliminary exists/stat adds no
+            # identity check. Every component is still freshly lstat'ed below.
+            try:
+                names = os.listdir(current)
+            except (FileNotFoundError, NotADirectoryError):
+                pass
+            else:
+                folded = part.casefold()
+                matches = [name for name in names if name.casefold() == folded]
+                require(not matches or matches == [part], "Catalog path case collision: " + target)
+        current = target
         try:
-            info = current.lstat()
+            info = os.lstat(current)
         except FileNotFoundError:
             continue
         require(not stat.S_ISLNK(info.st_mode) and not (getattr(info, "st_file_attributes", 0) & 1024),
@@ -68,8 +81,9 @@ def safe(root, name):
         output = ctypes.create_unicode_buffer(32768)
         length = _long_path(str(last_existing), output, len(output))
         require(0 < length < len(output) and output.value[2:] == str(last_existing)[2:], "Catalog path case collision: " + str(last_existing))
-    require(current.is_relative_to(root), "Catalog path escapes root")
-    return current
+    checked = Path(current)
+    require(checked.is_relative_to(root), "Catalog path escapes root")
+    return checked
 
 
 def external(path):
