@@ -3,7 +3,7 @@
 Vertragsstand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
 
-**Statusfortschreibung 26.10.2026:** AT-A ist über
+**Statusfortschreibung 27.10.2026:** AT-A ist über
 [PR #263](https://github.com/venomenon328/picross/pull/263) auf
 `a0cb25eda49d29d3062fd3bcfeab9fda220c7aa9`, AT-B mit allen 26 freigegebenen
 Bildrevisionen über [PR #264](https://github.com/venomenon328/picross/pull/264) auf
@@ -11,9 +11,16 @@ Bildrevisionen über [PR #264](https://github.com/venomenon328/picross/pull/264)
 Die folgenden Vorbereitungs-/Lieferstatus, insbesondere „AT-B-F01 beauftragt“
 und „AT-B-R01 offen“, beschreiben frühere Stände und erteilen keinen erneuten
 Arbeitsauftrag. Historische Nachweise und ihre damaligen Urteile bleiben gebunden.
-Der noch auszuführende Abschluss der Bildarbeitsdaten folgt
-[CI2](CI_SLIMMING.md) und [Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung);
-diese Statuspflege führt weder Bereinigung noch Implementierung oder Merge aus.
+Der Abschluss der Bildarbeitsdaten nach [CI2](CI_SLIMMING.md) und
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung)
+ist mit CI2-E auf `chore/417-ci2-e-cleanup` /
+[Draft-PR #423](https://github.com/venomenon328/picross/pull/423) ausgeführt;
+[E-T01](CI2_E_VERIFICATION.md) bindet Bereinigung und technische Nacharbeit.
+Das [erste E-R01](https://github.com/venomenon328/picross/pull/423#pullrequestreview-5661141319)
+ist mit den Befunden B-01/B-02 durchgeführt. Erneutes separates qualifiziertes
+Review des korrigierten Heads bleibt vor Merge erforderlich; der CI2-E-Abschluss
+ist noch nicht auf `main` integriert. Diese Statuspflege erteilt keinen neuen
+Bereinigungs-, Merge-, Deployment- oder Releaseauftrag.
 
 ## Auftrag, Quellen und Wirksamkeit
 

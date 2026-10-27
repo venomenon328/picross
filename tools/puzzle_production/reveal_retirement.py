@@ -1,6 +1,8 @@
 """Revision-scoped retirement of merged reveal work; no package reconstruction."""
 import hashlib
+import os
 import re
+import stat
 import subprocess
 
 from . import catalog_io as io, catalog_transaction as tx, reveal_source as source
@@ -170,6 +172,11 @@ def retire(root, revisions, integrated_commit):
                 'Authoring namespace changed during retirement planning')
     for name, (checksum, _) in removed.items():
         require(io.file_hash(root, name, 256 * 1024 * 1024) == checksum, 'Authoring bytes changed during retirement planning')
+        # Every deletion source is bound to historical 100644. Check the actual
+        # POSIX bits even with core.filemode=false; Windows has no such bits.
+        if os.name != 'nt':
+            require(not io.safe(root, name).stat().st_mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH),
+                    'Authoring file mode changed: ' + name)
     if not present:
         return {'status': 'no-op', 'revisions': revisions, 'integrated_commit': integrated_commit,
                 'removed_files': 0, 'removed_bytes': 0}
