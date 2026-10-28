@@ -1,0 +1,79 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "revision": "r01",
+  "motif_name": "Huhn",
+  "category_id": "voegel",
+  "state": "reveal_review",
+  "repo_commit": "056c05073664e72a40f9fc8e68ec80d96f838f98",
+  "updated_at_utc": "2026-10-28T18:20:02Z",
+  "package": {
+    "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/package.zip",
+    "bytes": 5493725,
+    "sha256": "cbceb8d729f8eb779ea9a4ada096e9a30fad2d3b6ecf40d1dc18e0209ae3508e"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/handoff.json",
+    "sha256": "c77785fbe06b4247323becd0bead635d3285b118fb02cb3e3a597061a1968594"
+  },
+  "inventory_sha256": "34982967078648a9c78b4f9433bb922a5dae60caea7eadc5d0adc6d847625381",
+  "final_editorial_approval": null,
+  "width": null,
+  "height": null,
+  "dimensions_fixed": false,
+  "dimensions_approximate": true,
+  "mode": "mono",
+  "foreground_colors_requested": 1,
+  "foreground_colors_used": null,
+  "difficulty": null,
+  "reveal_options": [
+    {
+      "id": "A",
+      "title": "Weiße Henne im Seitenprofil",
+      "file": "images/reveal-a-r01.png",
+      "image_revision": "r01",
+      "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+      "offered": true,
+      "approval": null
+    },
+    {
+      "id": "B",
+      "title": "Rotbraune Henne in Dreiviertelansicht",
+      "file": "images/reveal-b-r01.png",
+      "image_revision": "r01",
+      "sha256": "b1785ab0d4cb42f2fc313cd6637fbf69dd7798fc37152e0cc720044343ae3f12",
+      "offered": true,
+      "approval": null
+    },
+    {
+      "id": "C",
+      "title": "Gescheckte Henne mit gesenktem Kopf",
+      "file": "images/reveal-c-r01.png",
+      "image_revision": "r01",
+      "sha256": "b702976eb1b0d734395432ac1f949dab060c15ba6cd149206534f38d24d0397a",
+      "offered": true,
+      "approval": null
+    }
+  ],
+  "blockers": [
+    "Menschliche Auswahl und ausdrückliche Abschlussbildfreigabe einer konkreten r01-Datei offen."
+  ],
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "integration": null,
+  "verification": {
+    "kind": "early-image-phase-file-check",
+    "status": "pass",
+    "safe_members": "pass",
+    "zip_crc": "pass",
+    "zip_members": 16,
+    "inventory_files": 14,
+    "inventory_bindings": "pass",
+    "handoff_copy_byte_equal": true,
+    "offered_images_and_provenance": "pass",
+    "rulebook_and_source_bindings": "pass",
+    "index_existing_entries_unchanged": true,
+    "human_approvals_not_fabricated": true,
+    "za1_inspection": "not_applicable: early image phase",
+    "native_tests": "not required: early image selection, no runtime changes"
+  }
+}
