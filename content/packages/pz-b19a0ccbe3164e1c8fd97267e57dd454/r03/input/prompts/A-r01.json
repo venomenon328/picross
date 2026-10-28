@@ -1,0 +1,20 @@
+{
+  "generation_time_utc": "not_exposed",
+  "mode": "built_in",
+  "output": {
+    "file": "reveals/A-r01.png",
+    "sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c"
+  },
+  "postprocessing": "none; generated PNG bytes copied unchanged",
+  "prompt": "Use case: illustration-story. Asset type: detailed colored completion illustration for a Picross puzzle album, variant selection, NOT a puzzle or pixel image. Create exactly ONE bat, isolated on a genuinely transparent PNG background, broad horizontal composition roughly 5:3. Style: calm warm hand-drawn 2D storybook illustration, confident clean dark contours, substantial coherent colored areas, restrained soft cel/gouache shading, carefully drawn characteristic surface details, warm curious peaceful personality. Detailed and polished full-color artwork even though the future puzzle is monochrome at approximately 25 by 15 cells. Natural bat anatomy: furry small body, two pointed ears, two eyes and short muzzle, two membranous wings with correct finger supports radiating from each wing wrist, two small feet, no feathers. Preserve a strong recognizable broad silhouette and scalloped wing edges; future abstraction should remain plausible, but do NOT simplify into a logo or colored silhouette. Fine fur on the chest, visible membrane structure with a few subtle folds, readable face. Fully visible entire animal, no clipping, modest transparent margin. No scenery, moon, stars, branch, props, cast shadow, opaque backdrop, frame, text, letter labels, watermark, grid, checkerboard drawing or pixel art. Variant A: symmetric frontal bat flying toward the viewer, both wings broadly spread horizontally, almost level at the upper leading edges. Warm chestnut brown fur, cinnamon and muted plum wing membranes, warm cream chest highlights, dark brown contours. Compact torso centered beneath the face, small feet below, ears upright. Alert friendly natural expression, not an oversized cartoon head. Deep characteristic scallops beneath the wings, wings fill the horizontal span. Clear simple frontal composition with detailed internal illustration.",
+  "settings": {
+    "model": "not_exposed",
+    "quality": "not_exposed",
+    "referenced_images": [],
+    "seed": "not_exposed",
+    "size": "not_exposed",
+    "transparent_background": true
+  },
+  "tool": "image_gen.imagegen",
+  "variant": "A-r01"
+}
