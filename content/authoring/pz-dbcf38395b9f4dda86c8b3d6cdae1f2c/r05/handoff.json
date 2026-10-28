@@ -1,0 +1,164 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        12,
+        51,
+        1298,
+        1160
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 25,
+      "id": "c29x25-5",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-5",
+      "width": 29
+    },
+    {
+      "actual_crop": [
+        12,
+        51,
+        1298,
+        1160
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 25,
+      "id": "c29x25-4",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-4",
+      "width": 29
+    },
+    {
+      "actual_crop": [
+        12,
+        51,
+        1298,
+        1160
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 27,
+      "id": "c31x27-5",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-5",
+      "width": 31
+    },
+    {
+      "actual_crop": [
+        12,
+        51,
+        1298,
+        1160
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 27,
+      "id": "c31x27-4",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-4",
+      "width": 31
+    }
+  ],
+  "authorization": "Standardauftrag 3 bis zur Endabnahmevorlage samt Repositoryablage und Ablagemerge nach erfolgreichen Pflichtprüfungen. Menschliche Endabnahme und Spielregistrierung noch nicht erteilt.",
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "imports/c29x25-5",
+    "certification": null,
+    "logic_hash": "a367272b8fa829a8ba5f77c8d4683f860d19c402112f645d033e7eafd339856e",
+    "matrix_hash": "e5f7291eea0ab6a960fa247774e040c82d8a19dab5619afa22dd709f2f48b3fb",
+    "proof": "imports/c29x25-5/c29x25-5-proof.json",
+    "source_type": "import",
+    "variant": "c29x25-5",
+    "verification": "review/c29x25-5-verification.json"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "codex_handoff": "codex-handoff.md",
+  "current_difficulty": "review/current-difficulty.json",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "review/current-difficulty.json",
+    "frame": "review/c29x25-5-verification.json",
+    "logic": "review/c29x25-5-verification.json",
+    "motif": "approvals/motif-approval.json",
+    "provenance": "review/c29x25-5-verification.json",
+    "reveal_approval": "approvals/reveal-approval.json",
+    "reveal_consistency": "review/editorial-review.json",
+    "visual": "review/editorial-review.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "image_derivation": "motif-derivation.json",
+  "integration_difficulty": "analysis/checked.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "b07de97efa7855e01889cdc9f7f3f0522f12446d8b82f46784c5a28027e93887"
+  },
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce",
+    "file": "images/motif-M-r05.png",
+    "provenance": "images/motif-M-r05.provenance.json",
+    "revision": "M-r05",
+    "sha256": "76b25cf3c41d8b5fb1dbac55e72c6ddac2bfac80d82bdd360432e3026c5d8449"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "origin_verification": "review/c29x25-5-verification.json",
+  "parameter_corridor": {
+    "file": "parameters.json",
+    "sha256": "929b3ca378c964f5bba5a0b5b0df23dce6d83346958107535cc8f36400270b18"
+  },
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "puzzle_id": "pz-dbcf38395b9f4dda86c8b3d6cdae1f2c",
+  "repair": null,
+  "repo_commit": "295f9d0960b45cef0bd2191d2e027211b78c8d63",
+  "report": "report.md",
+  "requested_parameters": {
+    "color_constraint": "approximate",
+    "foreground_colors": 5,
+    "foreground_colors_basis": "Nutzer wünscht farbliche Trennung von Huhn und Knoblauch mit vermutlich einer zusätzlichen Farbe gegenüber vier Rollen.",
+    "height": 25,
+    "mode": "color",
+    "size_constraint": "approximate",
+    "width": null
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-B-r01.png",
+    "provenance": "images/reveal-B-r01.provenance.json",
+    "revision": "B-r01",
+    "sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce"
+  },
+  "revision": "r05",
+  "rulebook": {
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "fdc05644bf98eb5c02d868ea45af9aff549c097b4d91a5cd13659b38bc5eba39",
+    "version": "0.5.0"
+  },
+  "state": "content_ready"
+}
