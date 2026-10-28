@@ -1,0 +1,20 @@
+{
+  "tool": "built-in image_gen",
+  "use_case": "precise-object-edit",
+  "prompt": "Use case: precise-object-edit.\nImage 1 is the EDIT TARGET: simplified Chicken Adobo motif M-r04. Image 2 is the immutable approved detailed reveal B-r01, only a subject/ingredient identity reference.\nMake a tightly localized COLOR CHANGE in image 1: recolor the TWO GARLIC CLOVES to a clearly lighter warm cream/ivory #f2dfb2, distinctly different in both hue and brightness from the golden ochre chicken #d69140. The garlic cloves are the isolated teardrop near the CENTER of the food, and the isolated teardrop at the LOWER LEFT below the big left chicken piece. These two shapes ONLY become cream. Do not recolor any chicken, wing, meat fragment or drumstick toes. Retain the broad dark sauce space around each garlic clove.\nPreserve the EXACT geometry, sizes, positions, perspective, oval rim, curved teal bowl wall, large chicken piece left front, folded wing left back, chicken right back, large front-right drumstick pointing up-right, and two olive bay leaves. No new objects, no removal, no rearrangement. No garlic division lines or extra details.\nFive intended solid foreground roles: sauce/contours #3b241d, chicken #d69140, bowl #28606b, leaves #7a843c, garlic #f2dfb2. Flat opaque color fields, no highlights, no gradient or texture added. Keep warm simple hand-drawn contours.\nExterior remains genuinely transparent, the food/sauce/bowl remain opaque. Deliver a full separate PNG illustration, no grid, no pixel cells, no text, no labels, no watermark, no contact sheet. Do not modify the detailed reveal reference.",
+  "inputs": [
+    {
+      "file": "images/motif-M-r04.png",
+      "role": "edit_target"
+    },
+    {
+      "file": "images/reveal-B-r01.png",
+      "role": "immutable_identity_reference"
+    }
+  ],
+  "output": "images/motif-M-r05.png",
+  "transparent_background": true,
+  "model": "not_exposed",
+  "seed": "not_exposed",
+  "quality": "not_exposed"
+}
