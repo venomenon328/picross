@@ -1,0 +1,109 @@
+{
+  "approved_parameters": [],
+  "authorization": "authorization.json",
+  "blockers": [
+    "Stilrevision ersetzt diese zu realistischen Quellbilder. Keine Bildfreigabe."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "menschen-berufe",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "visual": [
+      "decisions.json"
+    ]
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pending",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "fail"
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "f3d0a25a07e1a19ab58893eaf5946c6c1fb412144677208bec3938ad97c69653"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": null,
+    "file": null,
+    "sha256": null
+  },
+  "next_action": "Gespeicherte Arbeit fortsetzen: aktuelle Auswahlrevision r02",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": {
+    "dimensions_approximate": true,
+    "foreground_colors": null,
+    "height": 35,
+    "mode": "color",
+    "width": null
+  },
+  "puzzle_id": "pz-d2d41fd0fc604172a7586f7f41c55320",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "2cb9c8244ce65605cd8f62e765baf9ad885ca266",
+  "report": "report.md",
+  "reveal": {
+    "approval": null,
+    "file": null,
+    "sha256": null
+  },
+  "reveal_options": [
+    {
+      "approval": null,
+      "file": "images/reveal-a-r01.png",
+      "id": "A",
+      "image_revision": "r01",
+      "offered": false,
+      "sha256": "850ca7f7869181ce52488c6d930ac8ea59093b81b5a50bd4e2c4857867df8753",
+      "title": "Frontalporträt"
+    },
+    {
+      "approval": null,
+      "file": "images/reveal-b-r01.png",
+      "id": "B",
+      "image_revision": "r01",
+      "offered": false,
+      "sha256": "d55d58cf043788e9e7b343921871acc3ab3111b3f3a0d082d092bd2449e9ecad",
+      "title": "Dreiviertelporträt"
+    },
+    {
+      "approval": null,
+      "file": "images/reveal-c-r01.png",
+      "id": "C",
+      "image_revision": "r01",
+      "offered": false,
+      "sha256": "7b0215349bb36d5d35d1a8947d1c19a1dc611aec7d384d4a3c97e010cc94ecb3",
+      "title": "Halbfigur mit Bass"
+    }
+  ],
+  "revision": "r01",
+  "rulebook": {
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "fdc05644bf98eb5c02d868ea45af9aff549c097b4d91a5cd13659b38bc5eba39",
+    "version": "0.5.0"
+  },
+  "state": "superseded"
+}
