@@ -1,0 +1,183 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "fdc05644bf98eb5c02d868ea45af9aff549c097b4d91a5cd13659b38bc5eba39"
+  },
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "revision": "r02",
+  "repo_commit": "0be037585fa222496ce9c8d1d1021d459657c13e",
+  "state": "motif_review",
+  "category_id": "voegel",
+  "brief": "brief.md",
+  "approved_parameters": [],
+  "proposed_parameters": [
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    }
+  ],
+  "configuration": "configuration.json",
+  "invariants": "invariants.json",
+  "reveal": {
+    "file": "images/reveal-a-r01.png",
+    "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "revision": "r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/reveal-a-r01.provenance.json"
+  },
+  "motif": {
+    "file": "images/motif-m-r01.png",
+    "sha256": "056edd181366e945126da4a1f46174d42b6c2a5068627ae48daa507074b30ce3",
+    "revision": "r01",
+    "derived_from_reveal_sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "approval": null,
+    "provenance": "images/motif-m-r01.provenance.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": null,
+    "certification": null
+  },
+  "origin_verification": null,
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "0719b13630cdc1d59f77392405c6deab2eeac4f28974fe6056de9bc40979e91c"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "authorization": "authorization.json",
+  "codex_handoff": "CODEX_HANDOFF.md",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pending",
+    "provenance": "pass",
+    "logic": "pending",
+    "frame": "pending",
+    "visual": "pass",
+    "difficulty": "pending",
+    "reveal_consistency": "pending",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": [
+      "approvals/reveal-approval.json",
+      "approvals/reveal-approval-evidence.md"
+    ],
+    "provenance": [
+      "images/reveal-a-r01.provenance.json",
+      "images/motif-m-r01.provenance.json"
+    ],
+    "visual": [
+      "visual-review.json",
+      "review/reveal-motif-comparison.png"
+    ]
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "Menschliche Motivfreigabe der konkreten M-r01-Datei samt vorgeschlagenem Parameterkorridor vor Rasterproduktion offen."
+  ],
+  "next_action": "3 · Motiv freigeben & produzieren"
+}
