@@ -1,0 +1,565 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "fdc05644bf98eb5c02d868ea45af9aff549c097b4d91a5cd13659b38bc5eba39"
+  },
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "revision": "r04",
+  "repo_commit": "1bc379c56ef3a8b8f743589f1f6f7affb2237b19",
+  "state": "content_ready",
+  "category_id": "voegel",
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        80,
+        50,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        80,
+        50,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        88,
+        55,
+        1192,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        88,
+        55,
+        1192,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        78,
+        58,
+        1212,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        82,
+        58,
+        1184,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    }
+  ],
+  "proposed_parameters": [
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        80,
+        50,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        80,
+        50,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        88,
+        55,
+        1192,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        88,
+        55,
+        1192,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        78,
+        58,
+        1212,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        82,
+        58,
+        1184,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    }
+  ],
+  "configuration": "configuration.json",
+  "invariants": "invariants.json",
+  "reveal": {
+    "file": "images/reveal-a-r01.png",
+    "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "revision": "r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/reveal-a-r01.provenance.json"
+  },
+  "motif": {
+    "file": "images/motif-m-r01.png",
+    "sha256": "056edd181366e945126da4a1f46174d42b6c2a5068627ae48daa507074b30ce3",
+    "revision": "r01",
+    "derived_from_reveal_sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "approval": "approvals/crop-extension.json",
+    "provenance": "images/motif-m-r01.provenance.json"
+  },
+  "candidate": {
+    "source_type": "import",
+    "bundle": "import-crop-c",
+    "variant": "area-140",
+    "proof": "import-crop-c/area-140-proof.json",
+    "verification": "verification/crop-candidates.json",
+    "certification": null,
+    "matrix_hash": "cc0b5f7c72b5a6a71eefbfea3f1dd3118bed40b651be599be0c48523fb4db2d8",
+    "logic_hash": "45bcb9adf5489c32a2278f70c27d5aa59ef0d91b0d14388955edbe5bb0342081"
+  },
+  "origin_verification": "verification/final-source.json",
+  "repair": null,
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "e9dab97e6c2c70444d0e7bf19d90594f5cc87fae4f1f26611957bfd7612b327c"
+  },
+  "difficulty": "difficulty.json",
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "authorization": "authorization.json",
+  "codex_handoff": "CODEX_HANDOFF.md",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pass",
+    "frame": "pass",
+    "visual": "pass",
+    "difficulty": "pass",
+    "reveal_consistency": "pass",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json",
+    "motif": "approvals/crop-extension.json",
+    "provenance": "verification/final-source.json",
+    "logic": "verification/crop-candidates.json",
+    "frame": "verification/crop-candidates.json",
+    "visual": "visual-review.json",
+    "difficulty": "analysis/checked.json",
+    "reveal_consistency": "visual-review.json"
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "source_package": {
+    "repository": "venomenon328/picross",
+    "commit": "1bc379c56ef3a8b8f743589f1f6f7affb2237b19",
+    "revision": "r03",
+    "package": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r03/package.zip",
+      "bytes": 5258089,
+      "sha256": "feb374db5e42ca892576ed3680770674c1f2fd4ceaf0c7e02fcf90ab9ded00b2"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r03/handoff.json",
+      "sha256": "98b9b1f8b7a17f580249c17aa1d0754e4d7ad2bc9a396aa7e507ed32f92b7478"
+    },
+    "inventory_sha256": "89f15dfef2aa7ad203c0f04a541dfbd738d93d524348150250db7107f8345f02"
+  },
+  "current_difficulty": "analysis/checked.json",
+  "final_editorial_approval": null,
+  "content_blockers": []
+}
