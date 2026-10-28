@@ -1,0 +1,103 @@
+{
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "candidate": {
+    "bundle": "imports/c29x25-5",
+    "certification": null,
+    "logic_hash": "a367272b8fa829a8ba5f77c8d4683f860d19c402112f645d033e7eafd339856e",
+    "matrix_hash": "e5f7291eea0ab6a960fa247774e040c82d8a19dab5619afa22dd709f2f48b3fb",
+    "proof": "imports/c29x25-5/c29x25-5-proof.json",
+    "source_type": "import",
+    "variant": "c29x25-5",
+    "verification": "review/c29x25-5-verification.json"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "checked_hash": "0f39b49b89c20532c5360e4d70af006819b44bef53a60b4b85e4a2e94990d369",
+    "confidence": "medium",
+    "file": "analysis/checked.json",
+    "level": "L2",
+    "method": "picross-difficulty-0.4",
+    "plausible_range": [
+      "L2",
+      "L2"
+    ]
+  },
+  "dimensions_approximate": true,
+  "dimensions_status": "produced",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r05/handoff.json",
+    "sha256": "9b192cbd1bc582b21840aa33ad22ef530298d4ff2a62c8a68c2ed7b9c02743cc"
+  },
+  "height": 25,
+  "inspection": {
+    "blockers": [
+      "final_editorial: missing bound human final approval"
+    ],
+    "editorial_approved": false,
+    "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r05/inspection.json",
+    "original_zip_sha256": "d73cb7d0df35d0ecb4fd7df4657ac67c3c80ae2f6f5289e31db4938d000d6ea0",
+    "registered": false,
+    "sha256": "67578765a41a4755c07f391e2bf7d34d84424b7c1839e9855de4b2d7f5046f8e",
+    "technical": true
+  },
+  "integration": null,
+  "inventory_sha256": "b07de97efa7855e01889cdc9f7f3f0522f12446d8b82f46784c5a28027e93887",
+  "legacy_authoring_difficulty": {
+    "confidence": "low",
+    "file": "difficulty.json",
+    "level": "L3",
+    "method": "picross-difficulty-0.1",
+    "purpose": "Separate unveränderte Adaptermetadatenform, nicht aktuelle Integrationsbewertung."
+  },
+  "mode": "color",
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce",
+    "file": "images/motif-M-r05.png",
+    "provenance": "images/motif-M-r05.provenance.json",
+    "revision": "M-r05",
+    "sha256": "76b25cf3c41d8b5fb1dbac55e72c6ddac2bfac80d82bdd360432e3026c5d8449"
+  },
+  "motif_name": "Chicken Adobo",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "omissions": "Ungebundene doppelte r04-Sichtberichte und frühere Galerie nicht erneut kopiert. Beide tatsächlichen Bildedit-Eingänge, Prompt/Provenienz/Freigaben, alle vier vollständigen RP3-Bündel samt manifestgebundenen Bildern/HTML und komplettes geschlossenes SD2-Analysebundle erhalten. Keine alten ZIPs eingebettet.",
+  "package": {
+    "bytes": 14587101,
+    "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r05/package.zip",
+    "sha256": "d73cb7d0df35d0ecb4fd7df4657ac67c3c80ae2f6f5289e31db4938d000d6ea0"
+  },
+  "parameter_corridor": {
+    "file": "parameters.json",
+    "sha256": "929b3ca378c964f5bba5a0b5b0df23dce6d83346958107535cc8f36400270b18"
+  },
+  "prior_revision": "r04",
+  "puzzle_id": "pz-dbcf38395b9f4dda86c8b3d6cdae1f2c",
+  "repo_commit": "295f9d0960b45cef0bd2191d2e027211b78c8d63",
+  "requested_foreground_colors": 5,
+  "requested_parameters": {
+    "color_constraint": "approximate",
+    "foreground_colors": 5,
+    "foreground_colors_basis": "Nutzer wünscht farbliche Trennung von Huhn und Knoblauch mit vermutlich einer zusätzlichen Farbe gegenüber vier Rollen.",
+    "height": 25,
+    "mode": "color",
+    "size_constraint": "approximate",
+    "width": null
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-B-r01.png",
+    "provenance": "images/reveal-B-r01.provenance.json",
+    "revision": "B-r01",
+    "sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce"
+  },
+  "revision": "r05",
+  "state": "content_ready",
+  "updated_at_utc": "2026-10-28T13:20:50Z",
+  "used_foreground_colors": 5,
+  "width": 29
+}
