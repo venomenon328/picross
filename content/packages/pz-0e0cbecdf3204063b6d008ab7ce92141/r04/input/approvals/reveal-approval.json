@@ -1,0 +1,28 @@
+{
+  "actor": "Nutzer dieser Chat-Unterhaltung",
+  "evidence": "approvals/reveal-approval-evidence.md",
+  "file": "images/reveal-a-r01.png",
+  "protected_features": [
+    "aufrechte einzelne Eischale, gleicher Blickwinkel",
+    "goldener Dotter links/zentral",
+    "Embryokopf oben rechts, Schnabel nach rechts unten",
+    "eingerollte Körperform rechts unten",
+    "helles Eiweiß und charakteristischer gebrochener Schalenrand",
+    "transparente Außenfläche"
+  ],
+  "puzzle_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+  "revision": "r01",
+  "sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669",
+  "source_package": {
+    "commit": "879874d12c3e8d7bded486c6cba15279ec0d805f",
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r01/package.zip",
+    "handoff_sha256": "02f2993c179b1dbaad6e0119d3c1ee4ab0e18f7050ddaf0687ff3862c85a6e81",
+    "inventory_sha256": "a88e47bd46e1a70fb4559729f3d6f685b6cbdac24b852f946ab4d9a41fe314d0",
+    "revision": "r01",
+    "sha256": "bf198d9f3e4cdf191d46a3f9f52787d087d5890d9600950c7fc904058f1b25eb"
+  },
+  "statement": "Ich gebe das Abschlussbild A-r01 frei.",
+  "timestamp_basis": "UTC-Erfassungszeit dieser tatsächlich vorliegenden Nachricht; ursprünglicher Nachrichtenzeitpunkt nicht offengelegt",
+  "timestamp_utc": "2026-10-28T20:44:39Z",
+  "type": "human_reveal_approval"
+}

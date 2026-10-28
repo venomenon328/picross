@@ -1,0 +1,33 @@
+{
+  "author": "ChatGPT · native Imagegen",
+  "created_at_utc": "2026-10-28T20:54:28Z",
+  "derived_from": {
+    "file": "images/reveal-a-r01.png",
+    "sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669"
+  },
+  "edit_parent": {
+    "file": "images/motif-m-r01.png",
+    "sha256": "e62663a3a49a071b81d19d7a4d9010094210d5045c85b3e3a1459d416cad439d"
+  },
+  "file": "images/motif-m-r02.png",
+  "format": "picross-image-provenance-v1",
+  "input": "images/reveal-a-r01.png",
+  "prompt_file": "motif-generation.json",
+  "puzzle_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+  "revision": "m-r02",
+  "settings": {
+    "model": "not_exposed",
+    "quality": "not_exposed",
+    "requested_size": "not_exposed",
+    "seed": "not_exposed",
+    "tool": "image_gen.imagegen",
+    "transparent_background": true
+  },
+  "sha256": "1ca8a80dffbf288eb350931ac94764e4508d191296653191c7f6b99f75a5a5e0",
+  "source_approval": {
+    "file": "approvals/reveal-approval.json",
+    "sha256": "d31fe1faf4aabd6754d29998a1fe59494e541516ba30074c005a7172813e3f67"
+  },
+  "usage_basis": "Auftragsgenerierte getreue Abstraktion aus dem vom Nutzer freigegebenen Abschlussbild A-r01; keine fremden Bildassets.",
+  "working_mode": "faithful"
+}

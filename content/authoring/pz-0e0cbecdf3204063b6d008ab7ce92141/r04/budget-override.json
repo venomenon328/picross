@@ -1,0 +1,15 @@
+{
+  "actor": "Nutzer im Chat (Eigentümerauftrag für venomenon328/picross)",
+  "format": "picross-task-catalog-time-waiver-v1",
+  "implementation": "Process-local context manager for catalog_io.budget sets no catalog deadline and restores the prior context on exit; repository tool code and default behavior remain unchanged.",
+  "puzzle_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+  "recorded_at_utc": "2026-10-28T23:45:14Z",
+  "reused_export_manifest_sha256": "6c3192df6fef8b477702e087f5e0dd64ee768601bcbc225800df69a751fc8fc3",
+  "reused_plan_sha256": "ded30373a506881231c4fac5a4099ce07720fbb0a035c9a394eb10657725bb84",
+  "revision": "r04",
+  "runner_sha256": "f5da36c1f9aa084c3d7af5aa4828acc0afd9798f61ad0758a7056ed49ece42c4",
+  "scope": "Only the catalog transaction time budget for this Balut integration and its recovery is waived. All data, path, namespace, snapshot, hash, journal, byte, approval and proof checks remain unchanged.",
+  "source_commit": "c0fab9150fa45faa0c06d2cd6dd7da475963b5a9",
+  "statement": "Integriere, merge und bereinige. Ein festes Budget wurde von mir nicht explizit festgelegt und kann daher ignoriert werden.",
+  "timestamp_basis": "UTC-Erfassungszeit; ursprünglicher Nachrichtenzeitstempel ist nicht zugänglich."
+}
