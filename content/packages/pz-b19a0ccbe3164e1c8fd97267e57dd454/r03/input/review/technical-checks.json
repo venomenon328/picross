@@ -1,0 +1,304 @@
+{
+  "budget_per_candidate": {
+    "max_lines": 100000,
+    "seconds": 120
+  },
+  "candidates": [
+    {
+      "bundle": "production/27x9",
+      "candidate_id": "bb689fac799a058ce0adda01dc31a9deb57b309cab13bbe902ed1c4cd407b770",
+      "cells": 243,
+      "edges": {
+        "bottom": false,
+        "left": false,
+        "right": false,
+        "top": false
+      },
+      "empty": 160,
+      "empty_inner_columns": [],
+      "empty_inner_rows": [],
+      "fill_fraction": [
+        83,
+        243
+      ],
+      "filled": 83,
+      "final_matrix_matched": true,
+      "foreground_colors": 1,
+      "frame_valid": false,
+      "height": 9,
+      "isolated_filled_cells": [
+        [
+          7,
+          13
+        ]
+      ],
+      "logic_hash": "f03ca769a3ab7a736faa3d494e720a2cef33b824accd1a2145717728ac3cf001",
+      "matrix_clues_reconstructed": true,
+      "matrix_hash": "4ce8e8a60a7d3ee29133ce33c56752d7c039da34bc1277dccac355cca6ce966c",
+      "raster_pixels_matched": true,
+      "source_normalization_reconstructed": true,
+      "variant": "area-128",
+      "verification": {
+        "certified": true,
+        "line_evaluations": 100,
+        "logic_hash": "f03ca769a3ab7a736faa3d494e720a2cef33b824accd1a2145717728ac3cf001",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 64
+      },
+      "width": 27
+    },
+    {
+      "bundle": "production/27x9",
+      "candidate_id": "a201bb2289c0a94993d8ef73cf9669af96a11604311b0224bef81faa1510c614",
+      "cells": 243,
+      "edges": {
+        "bottom": false,
+        "left": false,
+        "right": false,
+        "top": false
+      },
+      "empty": 144,
+      "empty_inner_columns": [],
+      "empty_inner_rows": [],
+      "fill_fraction": [
+        99,
+        243
+      ],
+      "filled": 99,
+      "final_matrix_matched": true,
+      "foreground_colors": 1,
+      "frame_valid": false,
+      "height": 9,
+      "isolated_filled_cells": [],
+      "logic_hash": "d649e3e9f942c3e57b7f0013fe49378387f95570ca6e7343256da19c45e3d3bf",
+      "matrix_clues_reconstructed": true,
+      "matrix_hash": "6135c4a52679eca7ad904c7b3888cad3ed551786b6092cc3b01500d2211fde84",
+      "raster_pixels_matched": true,
+      "source_normalization_reconstructed": true,
+      "variant": "area-176",
+      "verification": {
+        "certified": true,
+        "line_evaluations": 94,
+        "logic_hash": "d649e3e9f942c3e57b7f0013fe49378387f95570ca6e7343256da19c45e3d3bf",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 58
+      },
+      "width": 27
+    },
+    {
+      "bundle": "production/30x10",
+      "candidate_id": "2038fb619bb2ab381cbf4a647528eaa35af87fb0e9ad90d849a826658fb817de",
+      "cells": 300,
+      "edges": {
+        "bottom": false,
+        "left": false,
+        "right": false,
+        "top": false
+      },
+      "empty": 191,
+      "empty_inner_columns": [],
+      "empty_inner_rows": [],
+      "fill_fraction": [
+        109,
+        300
+      ],
+      "filled": 109,
+      "final_matrix_matched": true,
+      "foreground_colors": 1,
+      "frame_valid": false,
+      "height": 10,
+      "isolated_filled_cells": [],
+      "logic_hash": "16b121fc8a6da749e81fae2dc0c5f27b3a07275e76dd9dfa3f2fda44db23e43d",
+      "matrix_clues_reconstructed": true,
+      "matrix_hash": "5e3772bafbe9cbae77d36f7cf1ca0893d6ca29a17806f8e5013240eec64b3285",
+      "raster_pixels_matched": true,
+      "source_normalization_reconstructed": true,
+      "variant": "area-128",
+      "verification": {
+        "certified": true,
+        "line_evaluations": 105,
+        "logic_hash": "16b121fc8a6da749e81fae2dc0c5f27b3a07275e76dd9dfa3f2fda44db23e43d",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 65
+      },
+      "width": 30
+    },
+    {
+      "bundle": "production/30x10",
+      "candidate_id": "fe8af2dfccf3eeb32264cb6804568c2efd5492bc22cc76b05a663cb893ce3c08",
+      "cells": 300,
+      "edges": {
+        "bottom": false,
+        "left": false,
+        "right": false,
+        "top": false
+      },
+      "empty": 175,
+      "empty_inner_columns": [],
+      "empty_inner_rows": [],
+      "fill_fraction": [
+        125,
+        300
+      ],
+      "filled": 125,
+      "final_matrix_matched": true,
+      "foreground_colors": 1,
+      "frame_valid": false,
+      "height": 10,
+      "isolated_filled_cells": [],
+      "logic_hash": "945cf50ba6be143de71721c223db275959431e920da67b8e76bd43e88b26e302",
+      "matrix_clues_reconstructed": true,
+      "matrix_hash": "8af7ac016233ee1251121c4c68aebb29f7b57d526ded09470886b59133249295",
+      "raster_pixels_matched": true,
+      "source_normalization_reconstructed": true,
+      "variant": "area-176",
+      "verification": {
+        "certified": true,
+        "line_evaluations": 113,
+        "logic_hash": "945cf50ba6be143de71721c223db275959431e920da67b8e76bd43e88b26e302",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 73
+      },
+      "width": 30
+    },
+    {
+      "bundle": "production/27x9-coverage",
+      "candidate_id": "6bb38c3c9bba2a5c79200bd39a7d4e4e33ea7330d65713443b090c7838c1eb45",
+      "cells": 243,
+      "edges": {
+        "bottom": true,
+        "left": true,
+        "right": true,
+        "top": true
+      },
+      "empty": 111,
+      "empty_inner_columns": [],
+      "empty_inner_rows": [],
+      "fill_fraction": [
+        132,
+        243
+      ],
+      "filled": 132,
+      "final_matrix_matched": true,
+      "foreground_colors": 1,
+      "frame_valid": true,
+      "height": 9,
+      "isolated_filled_cells": [],
+      "logic_hash": "bb0a5c461a5ba8a38ef50a84cae28b206d23c022b9a2b87ed619e7c16fa90fb0",
+      "matrix_clues_reconstructed": true,
+      "matrix_hash": "526df96a0e632d4b76639294fb17694f636a60bc27002e60f0c96264b2ec86e1",
+      "raster_pixels_matched": true,
+      "source_normalization_reconstructed": true,
+      "variant": "area-218",
+      "verification": {
+        "certified": true,
+        "line_evaluations": 94,
+        "logic_hash": "bb0a5c461a5ba8a38ef50a84cae28b206d23c022b9a2b87ed619e7c16fa90fb0",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 58
+      },
+      "width": 27
+    },
+    {
+      "bundle": "production/30x10-coverage",
+      "candidate_id": "9defc6fb11a6bebd1ee6488d52f8cea884d9f6bea062d1482d03de9d2989bc49",
+      "cells": 300,
+      "edges": {
+        "bottom": true,
+        "left": true,
+        "right": true,
+        "top": true
+      },
+      "empty": 141,
+      "empty_inner_columns": [],
+      "empty_inner_rows": [],
+      "fill_fraction": [
+        159,
+        300
+      ],
+      "filled": 159,
+      "final_matrix_matched": true,
+      "foreground_colors": 1,
+      "frame_valid": true,
+      "height": 10,
+      "isolated_filled_cells": [],
+      "logic_hash": "58668afe4fe23c7ce5b9b49216d3238227549caef8925fe5c0c44c0cec84adc6",
+      "matrix_clues_reconstructed": true,
+      "matrix_hash": "e95c70ebc8b682f9308a60f1b3ba5a109b184a5c9c0e6ebf10995007850eba4a",
+      "raster_pixels_matched": true,
+      "source_normalization_reconstructed": true,
+      "variant": "area-218",
+      "verification": {
+        "certified": true,
+        "line_evaluations": 111,
+        "logic_hash": "58668afe4fe23c7ce5b9b49216d3238227549caef8925fe5c0c44c0cec84adc6",
+        "profile": {
+          "deduction": "all-line-supported-values",
+          "id": "full-line-mono",
+          "search": false,
+          "start": "unknown",
+          "version": 1
+        },
+        "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+        "proof_verified": true,
+        "status": "solved",
+        "steps": 71
+      },
+      "width": 30
+    }
+  ],
+  "distinct_matrices": 6,
+  "fresh_process": true,
+  "producer_commit": "6f8343cfafcb827a69afdf041ef2d5c294234498",
+  "profile": "full-line-mono",
+  "repair": "not_required: direct import is visually viable and fully certified; no logic repair, pair run or uniqueness search needed.",
+  "selected": {
+    "bundle": "production/30x10-coverage",
+    "variant": "area-218"
+  }
+}

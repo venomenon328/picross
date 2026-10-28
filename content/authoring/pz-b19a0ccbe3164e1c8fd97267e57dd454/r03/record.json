@@ -44,7 +44,10 @@
     ]
   },
   "dimensions_approximate": true,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r03/approval.json",
+    "sha256": "44563f7eb2ef2471aea6d61afe04c88687176e253b130782b6811fb53a7bc6ae"
+  },
   "foreground_color_count_exact": true,
   "format": "picross-authoring-record-v1",
   "handoff": {
@@ -52,7 +55,102 @@
     "sha256": "5705196bed9c31c12b01060d8accaea4027ba4812e5db6ce8a2e52bbf312d901"
   },
   "height": 10,
-  "integration": null,
+  "integration": {
+    "category_id": "saeuger",
+    "checked_difficulty": {
+      "checked_hash": "052f2b531970d061a10dc42257216672d70bf9f1dd4514f4d409c2742a9f0367",
+      "file": "content/difficulty/pz-b19a0ccbe3164e1c8fd97267e57dd454/rating.json",
+      "method": "picross-difficulty-0.4",
+      "unchanged_rating_hash": "2faf1a8dda3b349b56a6d7f024fb995245da6b637414fbe5caa3d2bf677c085e"
+    },
+    "existing_content_and_runtime_entries_unchanged": 45,
+    "export_manifest": {
+      "file": "content/packages/pz-b19a0ccbe3164e1c8fd97267e57dd454/r03/manifest.json",
+      "sha256": "7da06f1abeb388eb535ddaab46cc82b04995b69d0a506583e9a8c193282d5ae6"
+    },
+    "file_checks": {
+      "content/added/pz-b19a0ccbe3164e1c8fd97267e57dd454.json": {
+        "bytes": 291,
+        "sha256": "277d2cade41b088741c648b9d3c9c50b02738244467b356f44c5fcc6bdcacca5"
+      },
+      "content/difficulty/pz-b19a0ccbe3164e1c8fd97267e57dd454/rating.json": {
+        "bytes": 3877,
+        "sha256": "418cf4bdf43a14332b005deaa34911fc09aed51d45d6b7b188dce5f88307267b"
+      },
+      "game/art/content/fledermaus_001.png": {
+        "bytes": 1222174,
+        "sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c"
+      },
+      "game/art/content/fledermaus_001.txt": {
+        "bytes": 331,
+        "sha256": "a70ca13b24f7a854ef94f65472a53a0772e66d822ec8cd416498958e71624afe"
+      },
+      "game/data/content/fledermaus_001.json": {
+        "bytes": 2497,
+        "sha256": "4788451616c9d9cb54ede29e4546de4670a85c18fdf4bf6893bdf772bd638222"
+      },
+      "game/data/registry.json": {
+        "bytes": 22140,
+        "sha256": "11f900e8394cba9827823bbbdbbaf1ebf9087ca9cca353295fd2b613bdf1673e"
+      }
+    },
+    "inspection": {
+      "catalog_ready": true,
+      "editorial_approved": true,
+      "file": "content/packages/pz-b19a0ccbe3164e1c8fd97267e57dd454/r03/inspection.json",
+      "sha256": "fdf818730be92ad954c9c807fcbf9ccdaae81b42dfc79c88c8fabd3625402d0b",
+      "technical": true
+    },
+    "journal_remaining": false,
+    "native_checks": "nicht erforderlich: reine Inhaltsintegration",
+    "new_analysis": "nicht erforderlich: identischer geprüfter Input rebindend übernommen",
+    "production_zip_handoff_unchanged": true,
+    "registration": {
+      "category": {
+        "id": "saeuger",
+        "name": "Säugetiere",
+        "order": 5
+      },
+      "changes": [
+        {
+          "operation": "add",
+          "path": "content/packages/pz-b19a0ccbe3164e1c8fd97267e57dd454/r03"
+        },
+        {
+          "operation": "add",
+          "path": "content/added/pz-b19a0ccbe3164e1c8fd97267e57dd454.json"
+        },
+        {
+          "operation": "add",
+          "path": "content/difficulty/pz-b19a0ccbe3164e1c8fd97267e57dd454/rating.json"
+        },
+        {
+          "operation": "replace",
+          "path": "content/registry.json"
+        },
+        {
+          "operation": "add",
+          "path": "game/art/content/fledermaus_001.txt"
+        },
+        {
+          "operation": "add",
+          "path": "game/data/content/fledermaus_001.json"
+        },
+        {
+          "operation": "replace",
+          "path": "game/data/registry.json"
+        }
+      ],
+      "id": "pz-b19a0ccbe3164e1c8fd97267e57dd454",
+      "registered": true,
+      "status": "registered",
+      "user_saves_modified": false
+    },
+    "runtime_id": "pz-b19a0ccbe3164e1c8fd97267e57dd454",
+    "runtime_revision": 1,
+    "save_slot": "fledermaus_001",
+    "source_main": "d7c3f4db388346a32a5f4687f80f7be55e6b3840"
+  },
   "inventory_sha256": "c9d5008c73c15a7114fd0de227b197c636822cf4ec11a25661332a87a0e9fcd4",
   "mode": "mono",
   "motif": {
@@ -64,11 +162,8 @@
     "sha256": "7ba635b32475f06d476b5c5572369eb1b4921ea2d2492d637c74f0b14f384887"
   },
   "motif_name": "Fledermaus",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren: tatsächliche menschliche Endabnahme des versiegelten r03-Inventars erforderlich.",
-  "open_gates": [
-    "final_editorial: tatsächliche menschliche Endabnahme vor Export/Registrierung offen",
-    "target_export: Bestandteil des späteren Auftrags4"
-  ],
+  "next_action": "Integrations-PR nach Pflicht-CI mergen; tatsächlichen Main-Commit bestätigen, danach §9-Bereinigung mit eigenem Merge.",
+  "open_gates": [],
   "package": {
     "bytes": 9358120,
     "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r03/package.zip",
@@ -293,8 +388,8 @@
     },
     "repository": "venomenon328/picross"
   },
-  "state": "content_ready",
-  "updated_at_utc": "2026-10-28T11:19:48Z",
+  "state": "registered",
+  "updated_at_utc": "2026-10-28T11:35:58Z",
   "used_foreground_colors": 1,
   "width": 30
 }

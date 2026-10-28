@@ -1,0 +1,165 @@
+{
+  "approved_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 9,
+      "method": "area",
+      "mode": "mono",
+      "width": 27
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 10,
+      "method": "area",
+      "mode": "mono",
+      "width": 30
+    }
+  ],
+  "authorization": "Tatsächliche Motivfreigabe M-r01 samt Korridor; Standardauftrag3 vollständig bis Endabnahmevorlage und Repositoryablage nach §6; Ablage-Merge nach erfolgreichen Pflichtchecks. Endabnahme/Spielregistrierung bleiben separat.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": "production/30x10-coverage",
+    "certification": null,
+    "logic_hash": "58668afe4fe23c7ce5b9b49216d3238227549caef8925fe5c0c44c0cec84adc6",
+    "matrix_hash": "e95c70ebc8b682f9308a60f1b3ba5a109b184a5c9c0e6ebf10995007850eba4a",
+    "proof": "production/30x10-coverage/area-218-proof.json",
+    "source_type": "import",
+    "variant": "area-218",
+    "verification": "review/technical-checks.json"
+  },
+  "category_id": "saeuger",
+  "codex_handoff": "codex-handoff.md",
+  "configuration": "configuration.json",
+  "current_difficulty": "analysis/checked.json",
+  "decisions": "decisions.json",
+  "difficulty": "difficulty.json",
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "difficulty": "analysis/checked.json",
+    "frame": "review/technical-checks.json",
+    "logic": "review/technical-checks.json",
+    "motif": "approvals/motif-M-r01.json",
+    "provenance": "review/technical-checks.json",
+    "reveal_approval": "approvals/reveal-A-r01.json",
+    "reveal_consistency": "review/visual-checks.json",
+    "visual": "review/visual-checks.json"
+  },
+  "gates": {
+    "difficulty": "pass",
+    "final_editorial": "pending",
+    "frame": "pass",
+    "logic": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pass",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "invariants": "invariants.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "c9d5008c73c15a7114fd0de227b197c636822cf4ec11a25661332a87a0e9fcd4"
+  },
+  "motif": {
+    "approval": "approvals/motif-M-r01.json",
+    "derived_from_reveal_sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c",
+    "file": "motifs/M-r01.png",
+    "provenance": "motifs/M-r01.provenance.json",
+    "revision": "M-r01",
+    "sha256": "7ba635b32475f06d476b5c5572369eb1b4921ea2d2492d637c74f0b14f384887"
+  },
+  "next_action": "4 · Abnehmen & ins Spiel integrieren: tatsächliche menschliche Endabnahme des versiegelten r03-Inventars erforderlich.",
+  "origin_verification": "review/technical-checks.json",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 9,
+      "method": "area",
+      "mode": "mono",
+      "width": 27
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 10,
+      "method": "area",
+      "mode": "mono",
+      "width": 30
+    }
+  ],
+  "puzzle_id": "pz-b19a0ccbe3164e1c8fd97267e57dd454",
+  "repair": null,
+  "repo_commit": "6f8343cfafcb827a69afdf041ef2d5c294234498",
+  "report": "report.md",
+  "requested_parameters": {
+    "color_count_exact": true,
+    "dimensions_approximate": true,
+    "foreground_colors": 1,
+    "height": 15,
+    "mode": "mono",
+    "width": 25
+  },
+  "reveal": {
+    "approval": "approvals/reveal-A-r01.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "revision": "A-r01",
+    "sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "fdc05644bf98eb5c02d868ea45af9aff549c097b4d91a5cd13659b38bc5eba39",
+    "version": "0.5.0"
+  },
+  "source_package": {
+    "commit": "6f8343cfafcb827a69afdf041ef2d5c294234498",
+    "handoff": {
+      "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r02/handoff.json",
+      "sha256": "3204cba988adf2d1a38d7e81dab221df27acddc66fe8daaf499d16c4335feb87"
+    },
+    "inventory_sha256": "2b00df6781e58e070255269e2fe8a58ec808aa4db3fb46fabb84e3c36497f81f",
+    "package": {
+      "bytes": 2758060,
+      "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r02/package.zip",
+      "sha256": "eeeafd0db34f134c254004d93f8991c4d0f2d6fd461b6eaa7e704d75eb34fb4c"
+    },
+    "repository": "venomenon328/picross"
+  },
+  "state": "content_ready"
+}
