@@ -1,0 +1,301 @@
+{
+  "format": "picross-authoring-handoff-v2",
+  "rulebook": {
+    "version": "0.5.0",
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "fdc05644bf98eb5c02d868ea45af9aff549c097b4d91a5cd13659b38bc5eba39"
+  },
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "revision": "r03",
+  "repo_commit": "57d69efe75672530e1e18dae022106d278b296b8",
+  "state": "blocked",
+  "category_id": "voegel",
+  "brief": "brief.md",
+  "approved_parameters": [
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    }
+  ],
+  "proposed_parameters": [
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    }
+  ],
+  "configuration": "configuration.json",
+  "invariants": "invariants.json",
+  "reveal": {
+    "file": "images/reveal-a-r01.png",
+    "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "revision": "r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/reveal-a-r01.provenance.json"
+  },
+  "motif": {
+    "file": "images/motif-m-r01.png",
+    "sha256": "056edd181366e945126da4a1f46174d42b6c2a5068627ae48daa507074b30ce3",
+    "revision": "r01",
+    "derived_from_reveal_sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "approval": "approvals/motif-approval.json",
+    "provenance": "images/motif-m-r01.provenance.json"
+  },
+  "candidate": {
+    "bundle": null,
+    "variant": null,
+    "proof": null,
+    "verification": "verification/original-candidates.json",
+    "certification": null
+  },
+  "origin_verification": "verification/source-check.json",
+  "repair": {
+    "reference": null,
+    "plan": null,
+    "replay": null
+  },
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "89f15dfef2aa7ad203c0f04a541dfbd738d93d524348150250db7107f8345f02"
+  },
+  "difficulty": null,
+  "report": "report.md",
+  "decisions": "decisions.json",
+  "effort": "effort.json",
+  "authorization": "authorization.json",
+  "codex_handoff": "CODEX_HANDOFF.md",
+  "gates": {
+    "reveal_approval": "pass",
+    "motif": "pass",
+    "provenance": "pass",
+    "logic": "pending",
+    "frame": "blocked",
+    "visual": "fail",
+    "difficulty": "pending",
+    "reveal_consistency": "blocked",
+    "final_editorial": "pending",
+    "target_export": "pending"
+  },
+  "gate_evidence": {
+    "reveal_approval": [
+      "approvals/reveal-approval.json"
+    ],
+    "motif": [
+      "approvals/motif-approval.json",
+      "approvals/motif-approval-evidence.md"
+    ],
+    "provenance": [
+      "verification/source-check.json"
+    ],
+    "logic": [
+      "verification/original-candidates.json"
+    ],
+    "frame": [
+      "verification/original-candidates.json"
+    ],
+    "visual": [
+      "visual-review.json",
+      "review/candidates-grid.png"
+    ]
+  },
+  "playtest": {
+    "status": "not_performed",
+    "evidence": null
+  },
+  "blockers": [
+    "30×32: beide Importe verletzen die Randregel; obere und untere Kante sind leer.",
+    "24×26: Randregel und Deduktion bestanden, das geschützte Auge geht jedoch vollständig verloren; keine stille Abnahme dieser Motivabweichung.",
+    "Entscheidung zur gezielten Erweiterung des freigegebenen Crops offen. Kein finaler Kandidat und keine Endabnahmevorlage."
+  ],
+  "next_action": "Korrigieren oder Fehler beheben",
+  "source_package": {
+    "repository": "venomenon328/picross",
+    "commit": "57d69efe75672530e1e18dae022106d278b296b8",
+    "revision": "r02",
+    "package": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r02/package.zip",
+      "bytes": 2680592,
+      "sha256": "dc9a8e01bdfb38029346150c77e4d5165f17c3f9343cc3cd908a2d2bef864942"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r02/handoff.json",
+      "sha256": "03e6d8dfc3349ae9a21a933228fa4e36f92caf86572606f3aafdc2388443fcc7"
+    },
+    "inventory_sha256": "0719b13630cdc1d59f77392405c6deab2eeac4f28974fe6056de9bc40979e91c"
+  }
+}
