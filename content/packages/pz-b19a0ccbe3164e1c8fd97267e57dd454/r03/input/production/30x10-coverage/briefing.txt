@@ -1,4 +1,0 @@
-Vorlagentreue breite Frontal-Fledermaus aus ausdrücklich freigegebener M-r01. Hauptsilhouette, zwei Ohren, Flügelbuchten, mittiger Körper und zwei Füße erhalten; Binnenzeichnung gemäß invariants.json reduziert. Freigegebener Korridor 27x9 oder 30x10, genau eine Vordergrundfarbe, voller Crop, area/exact. Zwei vorab geplante Schwellen 128/176 vergleichen. Zusatzhypothese: partielle Silhouettenflächen ab Alpha40/Luminanz<218 erhalten, ohne manuelle Zelledits oder anderen Crop.
-
-Working mode: faithful
-Motif and gameplay review: open
