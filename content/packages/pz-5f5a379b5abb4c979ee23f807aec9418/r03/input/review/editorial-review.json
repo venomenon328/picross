@@ -1,0 +1,76 @@
+{
+  "color_vision_simulation": "not_performed; ordinary large/small color separation visually checked, no additional metric asserted",
+  "criteria": {
+    "Erkennbarkeit": {
+      "reason": "Mehrere braune Rundkegel, drei dominante Vordergrundhügel und grüner Vegetationssockel bilden bereits im Farbraster eine Hügellandschaft.",
+      "status": "erfüllt"
+    },
+    "Palette beziehungsweise Mono-Lesbarkeit": {
+      "reason": "Vier tatsächlich verwendete Rollen: 67 helle Braun-, 98 Schattenbraun-, 37 Talgrün- und 193 Vegetationszellen; keine unbenutzte Palette. Schattenflanken sind gegenüber der Dreierpalette klarer.",
+      "status": "erfüllt"
+    },
+    "Serienästhetik": {
+      "reason": "Ruhige kompakte Flächen im Raster; die konkret freigegebene, stärker texturierte A-r01-Illustration und die vereinfachte M-r01 bleiben bytegleich. Statischer Papiervergleich ohne Bildkasten oder sichtbaren hellen Saum.",
+      "status": "erfüllt"
+    },
+    "Silhouette/Proportionen": {
+      "reason": "Großer Kegel links der Mitte, kleinerer links und großer rechts; 9:4-Panorama, Blickrichtung und Staffelung bleiben ohne Streckung.",
+      "status": "erfüllt"
+    },
+    "Wichtige Details und Negativräume": {
+      "reason": "Talöffnung zwischen mittlerem und rechtem Hügel sowie grüne Verbindungen bleiben; transparente Außenzone wird EMPTY. Ferne Kegel sind stark reduziert, als bewilligter Detailverlust ausgewiesen.",
+      "status": "erfüllt"
+    }
+  },
+  "final_editorial_approval": "pending: owner must approve exact sealed r03 inventory and final selection",
+  "invariant_check": {
+    "brown_hills_green_vegetation": true,
+    "main_hill_order_and_proportions": true,
+    "no_added_motif_or_text": true,
+    "open_green_valley": true,
+    "panorama_of_multiple_cones": true,
+    "same_view_direction": true
+  },
+  "native_tests": "not_required: production and repository storage only",
+  "occupancy": {
+    "cells": 576,
+    "empty": 181,
+    "filled": 395,
+    "fraction": [
+      395,
+      576
+    ],
+    "outside_15_85_warning": false
+  },
+  "paper_context": {
+    "file": "game/art/book/bp2-a-inventarband.png",
+    "kind": "static comparison, no native game test",
+    "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a",
+    "small_reveal_box_height": 112,
+    "source_commit": "3cc1ba6b944135be489c7feccdb80de325918435"
+  },
+  "playtest": "not_performed; optional",
+  "reveal_and_motif_criteria": "Vorherige fünf Bildkriterien werden mit aktuellen unveränderten Bildbytes und Papiervergleich bestätigt; alle erfüllt. Die ursprüngliche A-r01-Freigabe bleibt maßgeblich.",
+  "reveal_consistency": "pass: same ordered cones, central/main foreground group, brown flanks, green open valley and vegetation; permitted microtexture/small-shape loss only",
+  "reviewer": "Codex; visuelle Selbstprüfung, keine unabhängige menschliche Abnahme",
+  "soft_findings": [
+    {
+      "count": 33,
+      "kind": "isolated_same_color_cells",
+      "reason": "Kleine ferne Gipfel, Vegetations-/Talreste und Konturübergänge stammen unmittelbar aus BOX-Flächenreduktion. Gleichfarbig isoliert bedeutet nicht vom gesamten Motiv isoliert. Auf großen und kleinen Ansichten geprüft; keine Logikanker hinzugefügt."
+    },
+    {
+      "kind": "empty_nonboundary_row",
+      "reason": "Zeilen 1 und 2 liegen vollständig oberhalb der ersten Motivzelle; äußerer Himmelstreifen, keine leere Unterbrechung im Motiv. Linke Spalte leer. Maße/Crop sind freigegeben und unverändert; rechts und unten genügen der Randregel.",
+      "rows_1based": [
+        2
+      ]
+    }
+  ],
+  "views": [
+    "review/candidate-comparison.png",
+    "review/final-raster.png",
+    "review/final-grid.png",
+    "review/reveal-motif-raster.png"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "actor": "Eigentümer / Nutzer im aktuellen Chat",
+  "format": "picross-editorial-approval-v1",
+  "handoff_sha256": "60f218b9496e6dcc2c0e203cd25129bf5a0a8aa19bee26d22b4b8e3b74404df7",
+  "inventory_sha256": "c9481ed8f2758db2a721a7005d2a878f08bea8bebca8def108d5c86e470f295d",
+  "puzzle_id": "pz-5f5a379b5abb4c979ee23f807aec9418",
+  "revision": "r03",
+  "selection": {
+    "logic_hash": "620b47b2ed2af53f0a547488ac79d60267d120aeed09e5e523c6dc96bf7bde9f",
+    "matrix_hash": "d3304181f6168f75b10b16a87a486a992188beecaa80af8a46ad4e8c7341152c",
+    "reveal": {
+      "file": "images/reveal-a-r01.png",
+      "sha256": "37006bfe03d3800da227acfe8c210868c00e66bb27710f14c17c1c07af1b8a81"
+    },
+    "variant": "area"
+  },
+  "statement": "Ich nehme das Rätselpaket content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r03/package.zip · r03, Revision r03, Inventar-SHA-256 c9481ed8f2758db2a721a7005d2a878f08bea8bebca8def108d5c86e470f295d redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.",
+  "test_only": false,
+  "timestamp_utc": "2026-10-28T17:49:31Z"
+}

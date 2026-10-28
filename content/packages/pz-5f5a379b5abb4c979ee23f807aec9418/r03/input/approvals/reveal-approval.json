@@ -1,0 +1,18 @@
+{
+  "actor": "Eigentümer / Nutzer im aktuellen Chat",
+  "binding_note": "Wörtliche Bindung an die vorhandene frühere Datei A-r01. Die angebotene Stilüberarbeitung A-r02 wird nicht als freigegeben ausgegeben.",
+  "evidence": "approvals/user-request.txt",
+  "file": "images/reveal-a-r01.png",
+  "puzzle_id": "pz-5f5a379b5abb4c979ee23f807aec9418",
+  "revision": "r01",
+  "sha256": "37006bfe03d3800da227acfe8c210868c00e66bb27710f14c17c1c07af1b8a81",
+  "source": {
+    "commit": "e10f7f230cdd9d9deaafa672158c103ab52d40ec",
+    "file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/retained-sources/reveal-a-r01.png",
+    "repository": "venomenon328/picross"
+  },
+  "statement": "Ich gebe das Abschlussbild A-r01 frei.",
+  "timestamp_basis": "UTC-Zeit der Protokollierung der vorliegenden aktuellen Nutzererklärung; Nachrichtenzeit nicht separat bereitgestellt",
+  "timestamp_utc": "2026-10-28T16:46:45Z",
+  "type": "human_reveal_approval"
+}
