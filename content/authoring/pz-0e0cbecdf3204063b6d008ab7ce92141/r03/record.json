@@ -1,0 +1,106 @@
+{
+  "blockers": [
+    "final_editorial: missing bound human final approval"
+  ],
+  "candidate": {
+    "bundle": "production/c30x36-4c",
+    "certification": null,
+    "logic_hash": "a0e45eca625af28a1b9e2e14273c5918185eab77d2f438df627bb560a50d267a",
+    "matrix_hash": "b5f63ca3d1c9ebb1387fdea8bec241e6be82d918770e5597cb69181b7009d0fa",
+    "proof": "production/c30x36-4c/c30x36-4c-proof.json",
+    "source_type": "import",
+    "variant": "c30x36-4c",
+    "verification": "review/c30x36-4c-verification.json"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "level": "L3",
+    "method": "picross-difficulty-0.4",
+    "package_file": "analysis/checked.json",
+    "plausible_range": [
+      "L3",
+      "L3"
+    ],
+    "sha256": "592e637e0cd4a8ba1b00c28171373b94e835db73dfbb197227f5209bde5c7383"
+  },
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "foreground_colors_recommended": 4,
+  "foreground_colors_requested": null,
+  "foreground_colors_used": 4,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r03/handoff.json",
+    "sha256": "acb4e31638a8dbe4bc8112191e26481df7aa2b8af8ee315537510eb51f961b4f"
+  },
+  "height": 36,
+  "integration": null,
+  "inventory_sha256": "5608dfec1605e7b986a107cc03705f737e3969d3e1cf7af6e9ab167e4431570f",
+  "mode": "color",
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669",
+    "file": "images/motif-m-r02.png",
+    "provenance": "images/motif-m-r02.provenance.json",
+    "revision": "m-r02",
+    "sha256": "1ca8a80dffbf288eb350931ac94764e4508d191296653191c7f6b99f75a5a5e0"
+  },
+  "motif_name": "Balut",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "package": {
+    "bytes": 14414680,
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r03/package.zip",
+    "sha256": "62f8e87fcf1ba3dea30824b9e8e7bac462a0b88ca492cb0957d7653d92083b27"
+  },
+  "puzzle_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+  "repo_commit": "ebe587f79d18177056f25e7b220320081609a492",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-a-r01.png",
+    "provenance": "images/reveal-a-r01.provenance.json",
+    "revision": "r01",
+    "sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669"
+  },
+  "review_preview": {
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r03/end-review.png",
+    "package_file": "review/reveal-motif-raster.png",
+    "purpose": "Direkt zugängliche menschliche Endabnahmevorlage ohne ZIP-Viewer; bytegleiche inventarisierte Vergleichsansicht, statische Papierkomposition, kein Spiel-Screenshot.",
+    "sha256": "d8c79c8f5165ea32289a43e53694a82c556f4a319652795ca9c481c9b2462cdb"
+  },
+  "revision": "r03",
+  "source_package": {
+    "commit": "ebe587f79d18177056f25e7b220320081609a492",
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r02/package.zip",
+    "handoff": "source/r02-handoff.json",
+    "inventory": "source/r02-inventory.json",
+    "sha256": "7969cba494a6867ace1096301c24fc28f8f91e87928c183e01cf1f849be7e6df"
+  },
+  "state": "content_ready",
+  "updated_at_utc": "2026-10-28T21:13:48Z",
+  "verification": {
+    "all_four_candidates_verified": true,
+    "all_sizes_and_sha256": "pass",
+    "endmatrix_matches": true,
+    "handoff_copy_equal": true,
+    "inventory_files": 108,
+    "native_tests": "nicht erforderlich: reine Inhaltsproduktion ohne Runtimeänderung",
+    "reveal_and_motif_original_bytes_unchanged": true,
+    "safe_zip": "pass",
+    "source_reconstruction": true,
+    "za1_inspection": {
+      "blockers": [
+        "final_editorial: missing bound human final approval"
+      ],
+      "editorial_approved": false,
+      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r03/inspection.json",
+      "fresh_selected_proof": "solved",
+      "sha256": "f42a946e56557576c2ab02dbf21c65f8e221f66f0290feb8dcc3b73ca1f81819",
+      "source": "written package.zip",
+      "technical": true
+    }
+  },
+  "width": 30
+}
