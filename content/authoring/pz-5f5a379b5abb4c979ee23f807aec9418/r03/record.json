@@ -57,9 +57,7 @@
       "width": 27
     }
   ],
-  "blockers": [
-    "final_editorial: missing bound human final approval"
-  ],
+  "blockers": [],
   "category_id": "landschaften-natur",
   "difficulty": {
     "assessment_type": "instrumented",
@@ -71,7 +69,10 @@
   },
   "dimensions_approximate": true,
   "dimensions_fixed": false,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r03/approval.json",
+    "sha256": "ae8926522a8d683563cfc68e4e28408823b6774f569a63eb3c11624c05e63d42"
+  },
   "foreground_colors_requested": null,
   "foreground_colors_used": 4,
   "format": "picross-authoring-record-v1",
@@ -80,7 +81,18 @@
     "sha256": "60f218b9496e6dcc2c0e203cd25129bf5a0a8aa19bee26d22b4b8e3b74404df7"
   },
   "height": 16,
-  "integration": null,
+  "integration": {
+    "definition": "game/data/content/chocolate_hills_001.json",
+    "export_manifest_sha256": "3c6fe8fcfc0d21fc48b629c66052a5837ff94b50cea55a3933c692237ad51fb1",
+    "inspection": "content/packages/pz-5f5a379b5abb4c979ee23f807aec9418/r03/inspection.json",
+    "main_merge_commit": null,
+    "package": "content/packages/pz-5f5a379b5abb4c979ee23f807aec9418/r03",
+    "reveal": "game/art/content/chocolate_hills_001.png",
+    "runtime_id": "pz-5f5a379b5abb4c979ee23f807aec9418",
+    "runtime_revision": 1,
+    "save_slot": "chocolate_hills_001",
+    "verification": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r03/integration-verification.json"
+  },
   "inventory_sha256": "c9481ed8f2758db2a721a7005d2a878f08bea8bebca8def108d5c86e470f295d",
   "mode": "color",
   "motif": {
@@ -92,11 +104,8 @@
     "sha256": "2eac0685a9743d9a45540fad657d742324a577e5b178bd970b4b88052656fb9a"
   },
   "motif_name": "Chocolate Hills",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
-  "open_gates": [
-    "final_editorial",
-    "target_export"
-  ],
+  "next_action": "Beauftragten Integrationsmerge nach Pflichtchecks ausführen; danach §9 bereinigen",
+  "open_gates": [],
   "package": {
     "bytes": 14277103,
     "file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r03/package.zip",
@@ -128,8 +137,8 @@
     "mode": "color",
     "width": 36
   },
-  "state": "content_ready",
-  "updated_at_utc": "2026-10-28T17:41:19Z",
+  "state": "registered",
+  "updated_at_utc": "2026-10-28T18:10:55.665961+00:00",
   "verification": {
     "archive_inspection": "pass: technical=true; only final human editorial approval missing",
     "handoff_copy_byte_equal": true,

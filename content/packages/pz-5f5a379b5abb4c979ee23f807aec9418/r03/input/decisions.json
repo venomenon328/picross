@@ -1,0 +1,153 @@
+{
+  "approval_boundary": "A-r01 und M-r01 samt Korridor tatsächlich menschlich freigegeben; Endabnahme von r03 offen. Ablagemerge ist keine Spielregistrierung.",
+  "candidates": [
+    {
+      "candidate_id": "57c8a5f9c1e825ba10e5cd6392a60cc3e24d400bc2dca6d7426b985f273d63f2",
+      "decision": "selected",
+      "independent_verification": "review/c36x16-4c-verification.json",
+      "logic_hash": "620b47b2ed2af53f0a547488ac79d60267d120aeed09e5e523c6dc96bf7bde9f",
+      "matrix_hash": "d3304181f6168f75b10b16a87a486a992188beecaa80af8a46ad4e8c7341152c",
+      "name": "c36x16-4c",
+      "reason": "Gewählt: höchste freigegebene Formauflösung, zwei tragende Braunflanken bewahren Rundung/Staffelung, beide Grünrollen bleiben; drei Haupthügel und Talraum gut lesbar.",
+      "status": "solved",
+      "used_foreground_colors": 4
+    },
+    {
+      "candidate_id": "7a5b24b2726a5ddd479dd2aae361a09e68aff9765c2063b682f0272d2a38bbe7",
+      "decision": "not_selected",
+      "independent_verification": "review/c36x16-3c-verification.json",
+      "logic_hash": "aebebd5fc3fbd65c22682734fb5c0033bccfa98c5052127e7c2b33aeac1474b9",
+      "matrix_hash": "2c03cd19897ab574eda6b7393dd78f551ca3ad277ea25c251ff6d892b59071aa",
+      "name": "c36x16-3c",
+      "reason": "Vollständig zertifiziert, aber Zusammenlegung der Brauntöne verflacht die Hügel und schwächt die Tiefenstaffelung; kein technischer Ablehnungsgrund.",
+      "status": "solved",
+      "used_foreground_colors": 3
+    },
+    {
+      "candidate_id": "2f1a187da69aa3e2f9b8e3ac0f992cedec049905ec7eef877c7c5935e23c257b",
+      "decision": "not_selected",
+      "independent_verification": "review/c27x12-4c-verification.json",
+      "logic_hash": "706cf81763c6b6558de10bf265b551fde06625007fa5fca3bb8656584d7ab64b",
+      "matrix_hash": "5f4a2f3e31f6a543d3ee6f15e8dda7d932762391850d037ba6629bf6e4ee4cf6",
+      "name": "c27x12-4c",
+      "reason": "Vollständig zertifiziert, aber grobere Stufen, weniger ferne Hügel und kleinere Talöffnung als 36×16; kein technischer Ablehnungsgrund.",
+      "status": "solved",
+      "used_foreground_colors": 4
+    },
+    {
+      "candidate_id": "153f9a850c8a5c37b764a2dda5a7e849c118ef1321205b507586baa2af208e20",
+      "decision": "not_selected",
+      "independent_verification": "review/c27x12-3c-verification.json",
+      "logic_hash": "342a9801fd09d390eef172f48fd6f189987ed20d97b321476bd29769658d16bc",
+      "matrix_hash": "c143182f6f3137b54d23f2fca329384c52517ba8f6e8fc7a519045d33c9c17fc",
+      "name": "c27x12-3c",
+      "reason": "Vollständig zertifiziert, aber kombiniert geringere Formauflösung mit Verlust der Schattenflanken; kein technischer Ablehnungsgrund.",
+      "status": "solved",
+      "used_foreground_colors": 3
+    }
+  ],
+  "deduplication": "Vier verschiedene Kombinationen aus Maßen, Palette und Zellwerten; alle vier Entstehungswege behalten. Keine wirkungslosen Schwellenvarianten.",
+  "paired_profile": "not_required: all four full-line-color proofs solved and independently confirmed",
+  "previous_image_decisions": {
+    "approval_boundary": "Abschlussbildfreigabe liegt vor. Motivdatei und Parameterkorridor werden mit Auftrag 3 freigegeben, Endabnahme bleibt separat.",
+    "binding_basis": "Expliziter eindeutiger Dateirevisionsname im aktuellen Nutzerauftrag; keine Freigabe von A-r02 angenommen.",
+    "configuration": "configuration.json",
+    "generation_rounds": [
+      {
+        "corrections": 0,
+        "kind": "native abstraction from approved bytes",
+        "result": "motif_review",
+        "round": 1
+      }
+    ],
+    "motif": {
+      "approval": null,
+      "file": "images/motif-m-r01.png",
+      "revision": "r01",
+      "sha256": "2eac0685a9743d9a45540fad657d742324a577e5b178bd970b4b88052656fb9a"
+    },
+    "not_selected": [
+      {
+        "file": "images/reveal-a-r02.png",
+        "id": "A-r02",
+        "package": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/package.zip",
+        "package_commit": "e10f7f230cdd9d9deaafa672158c103ab52d40ec",
+        "reason": "Nicht vom aktuellen Auftrag freigegeben; nur historischen Fundort führen.",
+        "sha256": "34414ffcd3def8e1308e83739bb4be10e2c7d9e49cedcb74ca09d3140149531d"
+      },
+      {
+        "file": "images/reveal-b-r02.png",
+        "id": "B-r02",
+        "package": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/package.zip",
+        "package_commit": "e10f7f230cdd9d9deaafa672158c103ab52d40ec",
+        "reason": "Nicht vom aktuellen Auftrag freigegeben; nur historischen Fundort führen.",
+        "sha256": "1c5debf30993a4065fce315be826c31e2dbcc730a54711e5dbccc41196022fd7"
+      },
+      {
+        "file": "images/reveal-c-r02.png",
+        "id": "C-r02",
+        "package": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/package.zip",
+        "package_commit": "e10f7f230cdd9d9deaafa672158c103ab52d40ec",
+        "reason": "Nicht vom aktuellen Auftrag freigegeben; nur historischen Fundort führen.",
+        "sha256": "3b6ee1a2ca7cfe3412762a223566c0c6b3521d962c6b7c0c9c731779b365d48b"
+      }
+    ],
+    "previous_package": {
+      "commit": "e10f7f230cdd9d9deaafa672158c103ab52d40ec",
+      "file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/package.zip",
+      "inventory_sha256": "763081ed3d770cce7d94fa8d08a833314505ebfb26c9fb26893842aa0cb03bbc",
+      "sha256": "f0e339bcbcbd4be34a22ca8ac43663c0ba1bb3891e6bdcd0731af15ba46b7468"
+    },
+    "puzzle_id": "pz-5f5a379b5abb4c979ee23f807aec9418",
+    "recommended_parameters": {
+      "actual_crop": [
+        0,
+        0,
+        1881,
+        836
+      ],
+      "fit": "exact",
+      "foreground_colors": 4,
+      "height": 16,
+      "method": "area",
+      "mode": "color",
+      "width": 36
+    },
+    "revision": "r02",
+    "selected_parameters": null,
+    "selected_reveal": {
+      "approval": "approvals/reveal-approval.json",
+      "file": "images/reveal-a-r01.png",
+      "label": "A-r01",
+      "sha256": "37006bfe03d3800da227acfe8c210868c00e66bb27710f14c17c1c07af1b8a81"
+    }
+  },
+  "previous_package": {
+    "commit": "3cc1ba6b944135be489c7feccdb80de325918435",
+    "file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r02/package.zip",
+    "handoff_sha256": "6df5f788f42a75fb102c24345b813558ea6129298aaa3d0a5965853707fa1f07",
+    "inventory_sha256": "9fd56bbc04e1568db3a9ef1f9cb8859af70a9dd5aad07a5f16c13bc31b08cd08",
+    "sha256": "cef6fe08b3f06bbf2bf3699065d6060be1dcf035ec66fe748a3d45b5c7648f8d"
+  },
+  "puzzle_id": "pz-5f5a379b5abb4c979ee23f807aec9418",
+  "repair": {
+    "reason": "Kein Reparaturbedarf: visuell tragfähiger Direktimport vollständig zertifiziert; keine Matrixedits oder zusätzlichen Randanker.",
+    "rounds": 0
+  },
+  "revision": "r03",
+  "selected": "c36x16-4c",
+  "selected_parameters": {
+    "actual_crop": [
+      0,
+      0,
+      1881,
+      836
+    ],
+    "fit": "exact",
+    "foreground_colors": 4,
+    "height": 16,
+    "method": "area",
+    "mode": "color",
+    "width": 36
+  }
+}
