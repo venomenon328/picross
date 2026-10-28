@@ -1,0 +1,129 @@
+{
+  "blockers": [
+    "Menschliche Freigabe der konkreten Motivvorlage M-r02 samt vorgeschlagenem Parameterkorridor offen."
+  ],
+  "category_id": "gerichte-herzhaftes",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "foreground_colors_recommended": 4,
+  "foreground_colors_requested": null,
+  "foreground_colors_used": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r02/handoff.json",
+    "sha256": "1d2fa1344ede16cd214606071e439bbb2f35d169ebaf4610b1f8b647229d0143"
+  },
+  "height": 32,
+  "integration": null,
+  "inventory_sha256": "b0c961dfe9307b47832a7b00afb1d2407bcf5f805a8155ad09df05e1e6fea4b9",
+  "mode": "color",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669",
+    "file": "images/motif-m-r02.png",
+    "provenance": "images/motif-m-r02.provenance.json",
+    "revision": "m-r02",
+    "sha256": "1ca8a80dffbf288eb350931ac94764e4508d191296653191c7f6b99f75a5a5e0"
+  },
+  "motif_name": "Balut",
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "omitted_prior_variants": [
+    {
+      "file": "images/reveal-b-r01.png",
+      "reason": "A-r01 wurde ausgewählt; nicht mehr angebotene ungebundene Alternative bzw. deren Editquelle bleibt unverändert in r01.",
+      "sha256": "21b474aec70b4caf58ec913644f3ff88989785de9968ed1b091f2b4d8432411a",
+      "source": "venomenon328/picross@879874d12c3e8d7bded486c6cba15279ec0d805f:content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r01/package.zip!images/reveal-b-r01.png"
+    },
+    {
+      "file": "images/reveal-b-r02.png",
+      "reason": "A-r01 wurde ausgewählt; nicht mehr angebotene ungebundene Alternative bzw. deren Editquelle bleibt unverändert in r01.",
+      "sha256": "bf8e011ab34fae242a98ae5462d1ceb3920ea8c51fb3c41325d6f327a283780c",
+      "source": "venomenon328/picross@879874d12c3e8d7bded486c6cba15279ec0d805f:content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r01/package.zip!images/reveal-b-r02.png"
+    },
+    {
+      "file": "images/reveal-c-r01.png",
+      "reason": "A-r01 wurde ausgewählt; nicht mehr angebotene ungebundene Alternative bzw. deren Editquelle bleibt unverändert in r01.",
+      "sha256": "ee1798e9d1335f555314a2bf082cf4b3e0add64aadd97c8d2f9b1ab8fed87a17",
+      "source": "venomenon328/picross@879874d12c3e8d7bded486c6cba15279ec0d805f:content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r01/package.zip!images/reveal-c-r01.png"
+    }
+  ],
+  "package": {
+    "bytes": 5598131,
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r02/package.zip",
+    "sha256": "7969cba494a6867ace1096301c24fc28f8f91e87928c183e01cf1f849be7e6df"
+  },
+  "proposed_parameter_corridor": {
+    "package_file": "configuration.json",
+    "sha256": "01b7d69d033e153b1ed0f6208d65cdf9eadc5f295134bc09d25cdf1066919e57",
+    "status": "pending_motif_approval"
+  },
+  "puzzle_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+  "repo_commit": "879874d12c3e8d7bded486c6cba15279ec0d805f",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-a-r01.png",
+    "provenance": "images/reveal-a-r01.provenance.json",
+    "revision": "r01",
+    "sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669"
+  },
+  "reveal_approval": {
+    "package_file": "approvals/reveal-approval.json",
+    "sha256": "d31fe1faf4aabd6754d29998a1fe59494e541516ba30074c005a7172813e3f67"
+  },
+  "revision": "r02",
+  "source_package": {
+    "commit": "879874d12c3e8d7bded486c6cba15279ec0d805f",
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r01/package.zip",
+    "handoff": {
+      "file": "source/r01-handoff.json",
+      "sha256": "02f2993c179b1dbaad6e0119d3c1ee4ab0e18f7050ddaf0687ff3862c85a6e81"
+    },
+    "inventory": {
+      "file": "source/r01-inventory.json",
+      "sha256": "a88e47bd46e1a70fb4559729f3d6f685b6cbdac24b852f946ab4d9a41fe314d0"
+    },
+    "revision": "r01",
+    "sha256": "bf198d9f3e4cdf191d46a3f9f52787d087d5890d9600950c7fc904058f1b25eb"
+  },
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-28T20:54:28Z",
+  "verification": {
+    "actual_reveal_approval_bound": true,
+    "all_sizes_and_sha256": "pass",
+    "approved_reveal_bytes_unchanged": true,
+    "configuration_and_invariants_bound": true,
+    "handoff_copy_byte_equal": true,
+    "inventory_files": 25,
+    "kind": "early-motif-phase-file-check",
+    "local_ci_scope": {
+      "content_only": true,
+      "selected": {
+        "delivery": false,
+        "docs": true,
+        "integration": false,
+        "perf_b": false,
+        "pilots": false,
+        "preflight": false,
+        "product": false,
+        "production": false,
+        "visual": false,
+        "web": false
+      }
+    },
+    "motif_derivation_and_edit_parent_bound": true,
+    "native_tests": "not required: early image abstraction without runtime changes",
+    "no_matrix_or_logic_produced": true,
+    "no_motif_approval_fabricated": true,
+    "original_index_entries_unchanged": true,
+    "proposed_candidates": 4,
+    "safe_member_set": "pass",
+    "source_r01_unchanged": true,
+    "status": "pass",
+    "za1_inspection": "not_applicable: early motif phase",
+    "zip_crc": "pass",
+    "zip_members": 27
+  },
+  "width": 26
+}
