@@ -1,0 +1,198 @@
+{
+  "format": "picross-authoring-record-v1",
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "revision": "r02",
+  "motif_name": "Huhn",
+  "category_id": "voegel",
+  "state": "motif_review",
+  "repo_commit": "0be037585fa222496ce9c8d1d1021d459657c13e",
+  "updated_at_utc": "2026-10-28T19:02:14Z",
+  "package": {
+    "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r02/package.zip",
+    "bytes": 2680592,
+    "sha256": "dc9a8e01bdfb38029346150c77e4d5165f17c3f9343cc3cd908a2d2bef864942"
+  },
+  "handoff": {
+    "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r02/handoff.json",
+    "sha256": "03e6d8dfc3349ae9a21a933228fa4e36f92caf86572606f3aafdc2388443fcc7"
+  },
+  "inventory_sha256": "0719b13630cdc1d59f77392405c6deab2eeac4f28974fe6056de9bc40979e91c",
+  "final_editorial_approval": null,
+  "width": 30,
+  "height": 32,
+  "dimensions_fixed": false,
+  "dimensions_approximate": true,
+  "mode": "mono",
+  "foreground_colors_requested": 1,
+  "foreground_colors_used": null,
+  "difficulty": null,
+  "reveal": {
+    "file": "images/reveal-a-r01.png",
+    "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "revision": "r01",
+    "approval": "approvals/reveal-approval.json",
+    "provenance": "images/reveal-a-r01.provenance.json"
+  },
+  "motif": {
+    "file": "images/motif-m-r01.png",
+    "sha256": "056edd181366e945126da4a1f46174d42b6c2a5068627ae48daa507074b30ce3",
+    "revision": "r01",
+    "derived_from_reveal_sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "approval": null,
+    "provenance": "images/motif-m-r01.provenance.json"
+  },
+  "proposed_parameters": [
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 24,
+      "height": 26,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 140,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    },
+    {
+      "width": 30,
+      "height": 32,
+      "mode": "mono",
+      "foreground_colors": 1,
+      "method": "area",
+      "threshold": 180,
+      "fit": "contain",
+      "actual_crop": [
+        72,
+        27,
+        1222,
+        1233
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "palette": [
+        {
+          "id": "ink",
+          "rgb": "#242424"
+        }
+      ]
+    }
+  ],
+  "blockers": [
+    "Menschliche Motivfreigabe der konkreten M-r01-Datei samt vorgeschlagenem Parameterkorridor vor Rasterproduktion offen."
+  ],
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "integration": null,
+  "source_revision": "r01",
+  "source_package": {
+    "repository": "venomenon328/picross",
+    "commit": "0be037585fa222496ce9c8d1d1021d459657c13e",
+    "revision": "r01",
+    "package": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/package.zip",
+      "bytes": 5493725,
+      "sha256": "cbceb8d729f8eb779ea9a4ada096e9a30fad2d3b6ecf40d1dc18e0209ae3508e"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/handoff.json",
+      "sha256": "c77785fbe06b4247323becd0bead635d3285b118fb02cb3e3a597061a1968594"
+    },
+    "inventory_sha256": "34982967078648a9c78b4f9433bb922a5dae60caea7eadc5d0adc6d847625381"
+  },
+  "omitted_images": [
+    {
+      "id": "B",
+      "file": "images/reveal-b-r01.png",
+      "sha256": "b1785ab0d4cb42f2fc313cd6637fbf69dd7798fc37152e0cc720044343ae3f12",
+      "image_revision": "r01",
+      "source_commit": "0be037585fa222496ce9c8d1d1021d459657c13e",
+      "source_package": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/package.zip",
+      "source_zip_sha256": "cbceb8d729f8eb779ea9a4ada096e9a30fad2d3b6ecf40d1dc18e0209ae3508e",
+      "reason": "Nicht ausgewählt; im unveränderten r01-Paket erreichbar."
+    },
+    {
+      "id": "C",
+      "file": "images/reveal-c-r01.png",
+      "sha256": "b702976eb1b0d734395432ac1f949dab060c15ba6cd149206534f38d24d0397a",
+      "image_revision": "r01",
+      "source_commit": "0be037585fa222496ce9c8d1d1021d459657c13e",
+      "source_package": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/package.zip",
+      "source_zip_sha256": "cbceb8d729f8eb779ea9a4ada096e9a30fad2d3b6ecf40d1dc18e0209ae3508e",
+      "reason": "Nicht ausgewählt; im unveränderten r01-Paket erreichbar."
+    }
+  ],
+  "verification": {
+    "kind": "early-motif-phase-file-check",
+    "status": "pass",
+    "safe_zip_and_crc": "pass",
+    "zip_members": 24,
+    "inventory_files": 22,
+    "all_sizes_and_sha256": "pass",
+    "handoff_copy_byte_equal": true,
+    "actual_reveal_approval_binding": "pass",
+    "motif_derivation_and_provenance": "pass",
+    "proposed_configuration_and_two_strict_designs": "pass; schema only, no rasterization",
+    "codex_handoff_and_markdown_links": "pass",
+    "source_revision_r01_byte_unchanged": true,
+    "index_previous_entries_unchanged": true,
+    "za1_inspection": "not_applicable: motif_review image phase",
+    "raster_logic_difficulty_and_native_tests": "not_performed: require later motif approval; no runtime changes"
+  }
+}
