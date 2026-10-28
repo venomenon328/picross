@@ -1,0 +1,143 @@
+{
+  "approved_parameters": [],
+  "authorization": "authorization.txt",
+  "blockers": [
+    "Menschliche Freigabe der Motivvorlage M-r02 samt vorgeschlagenem Parameterkorridor steht aus."
+  ],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "menschen-berufe",
+  "codex_handoff": "codex-handoff.md",
+  "configuration": "configuration.json",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "provenance": "review/provenance-check.json",
+    "reveal_approval": "approvals/reveal-approval.json",
+    "visual": "review/visual-review.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pass",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pass"
+  },
+  "invariants": "invariants.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "65eb32fcbdcc6ff583ad8402fe0a6bb7a6de96648ea8fa7d75d8c176bec725e7"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "d55d58cf043788e9e7b343921871acc3ab3111b3f3a0d082d092bd2449e9ecad",
+    "file": "images/motif-m-r02.png",
+    "provenance": "images/motif-m-r02.provenance.json",
+    "revision": "M-r02",
+    "sha256": "6dd7d0fd08c5155c77d36f0f593537fcf8c120dda000f6a9cec6740b8b629400"
+  },
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "origin_verification": null,
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "previous_revision": {
+    "commit": "7f676557ad507f2bc6b14508ee9df84d2f9c39fa",
+    "record": "content/authoring/pz-d2d41fd0fc604172a7586f7f41c55320/r02/record.json",
+    "revision": "r02"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1222,
+        1287
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1222,
+        1287
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 35,
+      "method": "area",
+      "mode": "color",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1222,
+        1287
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 36,
+      "method": "area",
+      "mode": "color",
+      "width": 34
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1222,
+        1287
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 37,
+      "method": "area",
+      "mode": "color",
+      "width": 35
+    }
+  ],
+  "puzzle_id": "pz-d2d41fd0fc604172a7586f7f41c55320",
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "7f676557ad507f2bc6b14508ee9df84d2f9c39fa",
+  "report": "report.md",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-b-r01.png",
+    "provenance": "images/reveal-b-r01.provenance.json",
+    "revision": "B-r01",
+    "sha256": "d55d58cf043788e9e7b343921871acc3ab3111b3f3a0d082d092bd2449e9ecad"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "file": "rulebook/PUZZLE_AUTHORING.md",
+    "sha256": "fdc05644bf98eb5c02d868ea45af9aff549c097b4d91a5cd13659b38bc5eba39",
+    "version": "0.5.0"
+  },
+  "state": "motif_review"
+}

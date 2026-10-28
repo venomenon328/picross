@@ -1,0 +1,133 @@
+{
+  "approved_parameters": [],
+  "blockers": [
+    "Menschliche Freigabe der Motivvorlage M-r02 samt vorgeschlagenem Parameterkorridor steht aus."
+  ],
+  "category_id": "menschen-berufe",
+  "codex_handoff": "codex-handoff.md",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "dimensions_status": "recommended_pending_motif_approval",
+  "final_editorial_approval": null,
+  "foreground_colors_proposed": 3,
+  "foreground_colors_requested": null,
+  "foreground_colors_used": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-d2d41fd0fc604172a7586f7f41c55320/r03/handoff.json",
+    "sha256": "c86ace72d1b30578da2d652a0a42c307dcf09f31be703b7b58f083d35018bddf"
+  },
+  "height": 35,
+  "integration": null,
+  "inventory_sha256": "65eb32fcbdcc6ff583ad8402fe0a6bb7a6de96648ea8fa7d75d8c176bec725e7",
+  "mode": "color",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "d55d58cf043788e9e7b343921871acc3ab3111b3f3a0d082d092bd2449e9ecad",
+    "file": "images/motif-m-r02.png",
+    "provenance": "images/motif-m-r02.provenance.json",
+    "revision": "M-r02",
+    "sha256": "6dd7d0fd08c5155c77d36f0f593537fcf8c120dda000f6a9cec6740b8b629400"
+  },
+  "motif_name": "Lemmy Kilmister",
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "package": {
+    "bytes": 6982502,
+    "file": "content/authoring/pz-d2d41fd0fc604172a7586f7f41c55320/r03/package.zip",
+    "sha256": "f0a29c26182e757f1c30423bbc6e65f8121783f5f5ac30b3d9485efac6d82800"
+  },
+  "previous_revision": {
+    "commit": "7f676557ad507f2bc6b14508ee9df84d2f9c39fa",
+    "record": "content/authoring/pz-d2d41fd0fc604172a7586f7f41c55320/r02/record.json",
+    "revision": "r02"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        1222,
+        1287
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 34,
+      "method": "area",
+      "mode": "color",
+      "width": 32
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1222,
+        1287
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 35,
+      "method": "area",
+      "mode": "color",
+      "width": 33
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1222,
+        1287
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 36,
+      "method": "area",
+      "mode": "color",
+      "width": 34
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        1222,
+        1287
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 37,
+      "method": "area",
+      "mode": "color",
+      "width": 35
+    }
+  ],
+  "puzzle_id": "pz-d2d41fd0fc604172a7586f7f41c55320",
+  "repo_commit": "7f676557ad507f2bc6b14508ee9df84d2f9c39fa",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-b-r01.png",
+    "provenance": "images/reveal-b-r01.provenance.json",
+    "revision": "B-r01",
+    "sha256": "d55d58cf043788e9e7b343921871acc3ab3111b3f3a0d082d092bd2449e9ecad"
+  },
+  "revision": "r03",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-28T15:28:22Z",
+  "verification": {
+    "approved_reveal_original_bytes": "pass: B-r01, not B-r02",
+    "handoff_copy_byte_equal": true,
+    "human_reveal_approval": "pass: actual user statement and file/hash binding",
+    "inventory_bindings": "pass",
+    "inventory_files": 25,
+    "kind": "early-motif-phase-file-check",
+    "matrix": null,
+    "motif_derivation_chain": "pass: both native edits and all actual inputs present",
+    "parameter_corridor": "proposed; human motif approval pending",
+    "runtime_registration": "not_performed",
+    "safe_members": "pass",
+    "status": "pass",
+    "za1_inspection": "not_applicable: motif_review phase",
+    "zip_crc": "pass",
+    "zip_members": 27
+  },
+  "width": 33
+}
