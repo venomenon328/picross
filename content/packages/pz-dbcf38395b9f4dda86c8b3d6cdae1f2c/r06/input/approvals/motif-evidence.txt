@@ -1,0 +1,5 @@
+Nutzererklärung im beauftragenden Chat am 28.10.2026:
+
+Ich gebe die Motivvorlage images/motif-M-r05.png · M-r05 frei; Parameter: parameters.json · r04; empfohlen 29×25/5; zulässig 29×25 oder 31×27 mit 4 oder 5 Farben, Huhn/Knoblauch stets getrennt; area/contain; Crop [12,51,1298,1160]. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.
+
+Farbanzahl: 5 (Ungefähr, ohne Leer). Quellcommit: 295f9d0960b45cef0bd2191d2e027211b78c8d63. Repositoryablage nach §6 und Ablagemerge nach erfolgreichen Pflichtprüfungen ausdrücklich beauftragt.
