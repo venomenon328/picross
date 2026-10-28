@@ -1,0 +1,13 @@
+{
+  "format": "picross-task-source-verification-v1",
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "source_commit": "a7278092f98e30b46df769bfdde6b77b869604b2",
+  "package_sha256": "aec54e9654f3cc8a10afb712dbe204dbe344d89aa53bc3524f3f7aab7868e025",
+  "handoff_sha256": "0d502af47b0a5a3f9fb061313765c0d455ead18344f897833c4fc3e230b22c84",
+  "inventory_sha256": "e9dab97e6c2c70444d0e7bf19d90594f5cc87fae4f1f26611957bfd7612b327c",
+  "files": 104,
+  "safe_zip_crc_sizes_hashes": "pass",
+  "handoff_copy_byte_equal": true,
+  "approval_timestamp_meaning": "UTC protocol time after receipt; not a claimed user message timestamp",
+  "approval_sha256": "f82e01f0713a314b5ffd3e112177a3c1cfac033373cd61817471f9f36c7ef596"
+}
