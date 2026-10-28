@@ -1,0 +1,106 @@
+{
+  "blockers": [
+    "Menschliche Endabnahme der korrigierten Fassung und konkreten festen Farbänderungen (ZA-1-v4) offen."
+  ],
+  "candidate": {
+    "bundle": "production/fixed-r04",
+    "certification": null,
+    "logic_hash": "8f08cdd71c3c36530497643840ed6d9938d0b0935c4b5cd532bf0c87e6a692b2",
+    "matrix_hash": "cf4e91ca20ebcbfae1c0d129e59d98631ec0ebc1d28ca27d63640e528962c950",
+    "proof": "production/fixed-r04/fixed-r04-proof.json",
+    "source_type": "manual",
+    "variant": "fixed-r04",
+    "verification": "review/technical-check.json"
+  },
+  "category_id": "gerichte-herzhaftes",
+  "difficulty": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "level": "L4",
+    "method": "picross-difficulty-0.4",
+    "package_file": "analysis/checked.json",
+    "plausible_range": [
+      "L4",
+      "L4"
+    ],
+    "sha256": "ad8de7160df630bae3abdc0c421318d07a8af728f82bcc2a89b298907600c787"
+  },
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "foreground_colors_recommended": 4,
+  "foreground_colors_requested": null,
+  "foreground_colors_used": 4,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/handoff.json",
+    "sha256": "1c3c5ab624e461b608fa6d6ddbffa966ebf5c0ce8a57472615ebf216ebdc4442"
+  },
+  "height": 36,
+  "integration": null,
+  "inventory_sha256": "3138ecbc36aa0ba008b585b874f26c318395354981450ced3db0e049c9ec275a",
+  "mode": "color",
+  "motif": {
+    "approval": "approvals/motif-approval.json",
+    "derived_from_reveal_sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669",
+    "file": "images/motif-m-r02.png",
+    "provenance": "images/motif-m-r02.provenance.json",
+    "revision": "m-r02",
+    "sha256": "1ca8a80dffbf288eb350931ac94764e4508d191296653191c7f6b99f75a5a5e0"
+  },
+  "motif_name": "Balut",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "package": {
+    "bytes": 6708002,
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/package.zip",
+    "sha256": "ac08cfa95440b10e8da36f4cc7409e02c3c56f8be4b8fa6ae038b4ff32c32a4d"
+  },
+  "puzzle_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+  "repair": {
+    "plan": "correction/plan.json",
+    "record": "correction/edits.json",
+    "reference": "production/c30x36-4c",
+    "reference_variant": "c30x36-4c",
+    "type": "fixed_color_editorial_redraw"
+  },
+  "repo_commit": "5a127d06f81d7f051ef9eaa5434e896ea17034f5",
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-a-r01.png",
+    "provenance": "images/reveal-a-r01.provenance.json",
+    "revision": "r01",
+    "sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669"
+  },
+  "review_preview": {
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/end-review.png",
+    "package_file": "correction/before-after.png",
+    "purpose": "Direkt zugängliche hashgebundene menschliche Korrekturabnahme; echtes gerendertes Vorher/Nachher.",
+    "sha256": "76a6d31b43c0e72d75c9cccbd672d367523057b4e92027c049f105dda9173c3d"
+  },
+  "revision": "r04",
+  "source_package": {
+    "commit": "5a127d06f81d7f051ef9eaa5434e896ea17034f5",
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r03/package.zip",
+    "handoff": "source/r03-handoff.json",
+    "inventory": "source/r03-inventory.json",
+    "sha256": "62f8e87fcf1ba3dea30824b9e8e7bac462a0b88ca492cb0957d7653d92083b27"
+  },
+  "state": "raster_review",
+  "updated_at_utc": "2026-10-28T21:55:41Z",
+  "verification": {
+    "all_89_boundary_cells_outline": true,
+    "all_other_cells_protected": true,
+    "all_sizes_and_sha256": "pass",
+    "files": 78,
+    "fixed_cell_replay": "pass",
+    "handoff_copy_equal": true,
+    "native_tests": "nicht erforderlich: reine Inhaltskorrektur ohne Runtimeänderung",
+    "safe_zip": "pass",
+    "silhouette_unchanged": true,
+    "source_and_child_independent_proof": "solved",
+    "technical_replay": "review/technical-check.json",
+    "technical_replay_sha256": "2aa0424277c8f3152c25d32d52e104d0958b7c95eba7fafafc1789d7f4e4caf8",
+    "za1_inspection": "not_run: exact real final approval and ZA-1-v4 fixed-color authorization pending; not content_ready"
+  },
+  "width": 30
+}
