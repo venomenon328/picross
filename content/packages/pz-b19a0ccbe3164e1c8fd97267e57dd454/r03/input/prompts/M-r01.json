@@ -1,0 +1,26 @@
+{
+  "image_revision": "M-r01",
+  "input": {
+    "file": "reveals/A-r01.png",
+    "sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c"
+  },
+  "mode": "built_in_edit",
+  "native_generation_timestamp_utc": "not_exposed",
+  "output": {
+    "file": "motifs/M-r01.png",
+    "sha256": "7ba635b32475f06d476b5c5572369eb1b4921ea2d2492d637c74f0b14f384887"
+  },
+  "postprocessing": "none; original generated PNG bytes copied unchanged",
+  "prompt": "Use case: precise-object-edit. Asset type: simplified MONOCHROME continuous illustration to become the separately approved motif source for a small Nonogram/Picross puzzle. The attached local PNG is the EXACT APPROVED COLORED COMPLETION IMAGE A-r01 and the ONLY geometric reference. Derive one monochrome motif illustration from these actual bytes. Preserve its exact frontal orientation, almost symmetric horizontally spread wing pose, very broad low approximately 3:1 occupied silhouette, relative body/head/wing proportions, upright pair of large pointed ears, tiny two feet below the torso, scalloped lower wing edges and recognizable deep negative spaces between head/ears and both wings. Do NOT raise or bend the wings into another flight phase. Do not rotate, crop away wing tips, add scenery, or lengthen the body to fill canvas.\n\nChange only the detail treatment and colors: one solid very dark warm brown ink (#29231f) on a genuinely transparent PNG background. A bold clean hand-drawn flat 2D contour illustration. This is a continuous smooth-edged image, NOT pixel art, NOT a grid or a finished cell matrix. Simplify so it could eventually be represented at approximately 27 by 9 or 30 by 10 cells, with ONE foreground ink and EMPTY. Preserve strong filled wings, substantial scallops, and two ears. Group fur into a single coherent rounded torso with only a few large contour tufts; remove individual hairs, all shading, all gradients, membrane texture, tiny veins, and fine finger/toe anatomy. Retain a small number of BROAD transparent negative shapes: two clearly separated simple eye cutouts, small short muzzle mark, inner-ear cutouts and a few clearly subordinate thick simplified membrane fold separations. These cutouts must be large and simple enough for a small monochrome abstraction; avoid decorative thin linework and tiny disconnected specks. Wing membranes must read as substantial unified surfaces, not a skeletal outline or mesh. Facial expression stays calm/friendly; no fangs, clothing, accessories or superhero emblem. Maintain the reference's animal identity and form. Continuous illustrative abstraction only, no cells/numbers, no solver output. Fully include the whole animal with a little transparent margin. No white or opaque paper rectangle, no shadow, no labels or text, no watermark. Exactly ONE simplified bat. Keep true background transparency.",
+  "settings": {
+    "model": "not_exposed",
+    "quality": "not_exposed",
+    "referenced_image_paths": [
+      "reveals/A-r01.png"
+    ],
+    "seed": "not_exposed",
+    "size": "not_exposed",
+    "transparent_background": true
+  },
+  "tool": "image_gen.imagegen"
+}
