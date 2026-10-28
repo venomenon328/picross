@@ -1,0 +1,27 @@
+{
+  "format": "picross-authoring-source-check-v1",
+  "source_package": {
+    "repository": "venomenon328/picross",
+    "commit": "1bc379c56ef3a8b8f743589f1f6f7affb2237b19",
+    "revision": "r03",
+    "package": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r03/package.zip",
+      "bytes": 5258089,
+      "sha256": "feb374db5e42ca892576ed3680770674c1f2fd4ceaf0c7e02fcf90ab9ded00b2"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r03/handoff.json",
+      "sha256": "98b9b1f8b7a17f580249c17aa1d0754e4d7ad2bc9a396aa7e507ed32f92b7478"
+    },
+    "inventory_sha256": "89f15dfef2aa7ad203c0f04a541dfbd738d93d524348150250db7107f8345f02"
+  },
+  "reveal_sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+  "motif_sha256": "056edd181366e945126da4a1f46174d42b6c2a5068627ae48daa507074b30ce3",
+  "actual_reveal_approval": "approvals/reveal-approval.json",
+  "actual_initial_motif_approval": "approvals/motif-approval.json",
+  "actual_crop_extension": "approvals/crop-extension.json",
+  "image_bytes_unchanged": true,
+  "selected_import_original_matches_motif": true,
+  "fresh_reconstruction": "verification/crop-candidates.json",
+  "end_matrix_exact": true
+}

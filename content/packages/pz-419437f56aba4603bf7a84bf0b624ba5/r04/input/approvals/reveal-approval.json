@@ -1,0 +1,26 @@
+{
+  "type": "human_reveal_approval",
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "revision": "r01",
+  "actor": "Nutzer (Eigentümer)",
+  "timestamp_utc": "2026-10-28T18:56:01Z",
+  "timestamp_basis": "UTC-Protokollierung der im aktuellen Dialog vorliegenden Freigabe; Nachrichtenversandzeit nicht exponiert.",
+  "statement": "Ich gebe das Abschlussbild A-r01 frei. Führe Standardauftrag 2 bis zur Motivvorlage samt Konfiguration und Codex-Übergabe aus.",
+  "file": "images/reveal-a-r01.png",
+  "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+  "evidence": "approvals/reveal-approval-evidence.md",
+  "source": {
+    "commit": "0be037585fa222496ce9c8d1d1021d459657c13e",
+    "package": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/package.zip",
+    "package_revision": "r01",
+    "zip_sha256": "cbceb8d729f8eb779ea9a4ada096e9a30fad2d3b6ecf40d1dc18e0209ae3508e",
+    "inventory_sha256": "34982967078648a9c78b4f9433bb922a5dae60caea7eadc5d0adc6d847625381"
+  },
+  "preserve": [
+    "Linksblick und Seitenprofil",
+    "Kamm, Kehllappen, kurzer Schnabel und Auge",
+    "gerundeter Körper und gefalteter Flügel",
+    "rechter aufgerichteter Fächerschwanz",
+    "zwei Beine/Füße und klare Aussparung dazwischen"
+  ]
+}

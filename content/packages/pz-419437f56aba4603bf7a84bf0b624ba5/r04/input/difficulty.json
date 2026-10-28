@@ -1,0 +1,53 @@
+{
+  "method": "picross-difficulty-0.1",
+  "assessment_type": "editorial_estimate",
+  "level": "L2",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "confidence": "low",
+  "logic_hash": "45bcb9adf5489c32a2278f70c27d5aa59ef0d91b0d14388955edbe5bb0342081",
+  "evidence": "analysis/checked.json",
+  "time_estimate": null,
+  "rule_families": {
+    "R0": "Leerlinien sowie fertige Körper-/Beinruns liefern unmittelbare Belegung und Restaufräumen; R0 allein wird nicht als ausreichend behauptet.",
+    "R1": "Lange Körperblöcke und deren Anker ermöglichen Überlappungen und Verlängerungen; deshalb vorsichtige alte Produktionsschätzung L2.",
+    "R2": "Alte R2-Notwendigkeit wurde nicht separat instrumentiert. SD2-E1 umfasst ausdrücklich weitere einfache Schlüsse; die Methoden werden nicht umetikettiert.",
+    "R3": "Vollständige Linienunterstützung ist zertifiziert; ihr Profilname belegt keine R3-Notwendigkeit. Keine alte R0–R3-Instrumentierung behauptet."
+  },
+  "current_integration_rating": {
+    "file": "analysis/checked.json",
+    "method": "picross-difficulty-0.4",
+    "level": "L2",
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "plausible_range": [
+      "L2",
+      "L2"
+    ],
+    "highest_family": "E1",
+    "score": [
+      893,
+      484
+    ],
+    "contributions": {
+      "demand": [
+        1,
+        1
+      ],
+      "search": [
+        72,
+        121
+      ],
+      "workload": [
+        1,
+        4
+      ]
+    },
+    "level_without_workload": 2,
+    "estimated_minutes": null,
+    "human_calibration": "not_performed"
+  },
+  "note": "0.1 ist ausschließlich die separate vom unveränderten ZA-1-Eingang verlangte redaktionelle Begleitform. Die aktuelle Produktions-/Integrationsbewertung ist die vollständig geprüfte Methode 0.4."
+}

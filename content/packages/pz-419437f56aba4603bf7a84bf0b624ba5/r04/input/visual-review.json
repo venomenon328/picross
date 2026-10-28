@@ -1,0 +1,86 @@
+{
+  "format": "picross-authoring-visual-review-v1",
+  "phase": "content_ready",
+  "reviewer": "Codex · redaktioneller Selbstreview",
+  "selected": {
+    "bundle": "import-crop-c",
+    "variant": "area-140"
+  },
+  "evidence": [
+    "review/final-comparison.png",
+    "review/final-grid.png",
+    "review/crop-candidates-grid.png",
+    "review/crop-cd-grid.png",
+    "verification/final-matrix.json"
+  ],
+  "method": "Originalbilder und echtes Lösungsraster in nativer Zellauflösung, ohne Glättung vergrößert und mit Gitter verglichen. Statische Papiermontage verwendet das tatsächliche Buchasset.",
+  "paper": {
+    "source": "game/art/book/bp2-a-inventarband.png",
+    "commit": "1bc379c56ef3a8b8f743589f1f6f7affb2237b19",
+    "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a",
+    "crop": [
+      500,
+      250,
+      1120,
+      870
+    ]
+  },
+  "criteria": {
+    "Erkennbarkeit": {
+      "status": "erfüllt",
+      "reason": "Linkes Kopfprofil mit Kamm/Kehllappen, kompakte Augenform, gerundeter Körper, rechter Fächerschwanz und zwei Füße ergeben eine Henne."
+    },
+    "Silhouette/Proportionen": {
+      "status": "erfüllt",
+      "reason": "Pose, Blickrichtung, breiter Körper und Stand bleiben. Der engere Crop beschneidet nur dünne äußerste Spitzen; Hauptformen und Proportionen ändern sich nicht materiell."
+    },
+    "Wichtige Details und Negativräume": {
+      "status": "erfüllt",
+      "reason": "Dunkles Augenzentrum in Spalte 5/Zeile 4 ist von vier orthogonalen Leerzellen umgeben. Flügel bleibt durch reduzierte Aussparungen lesbar; klare große Öffnung zwischen den zwei Beinen."
+    },
+    "Palette beziehungsweise Mono-Lesbarkeit": {
+      "status": "erfüllt",
+      "reason": "Exakt eine tatsächlich verwendete ink-Farbe plus Leer, 434/526 Zellen. Keine Zusatzfarbe oder Startfelder."
+    },
+    "Serienästhetik": {
+      "status": "erfüllt",
+      "reason": "Ruhige zusammenhängende Form; farbiges detailreiches unverändertes Reveal klärt die starke monochrome Federreduktion."
+    }
+  },
+  "detail_losses": [
+    "Kammzacken und Federtrennungen werden stark zusammengefasst.",
+    "Feine Iris-/Glanz-/Lidzeichnung, Federtextur, Schuppen und Krallen entfallen.",
+    "Flügelbogen wird zu wenigen Leerstellen, ohne neue Nebenmotive oder veränderte Pose."
+  ],
+  "soft_warnings": [
+    {
+      "kind": "isolated_fill",
+      "cell": [
+        5,
+        4
+      ],
+      "reason": "Beabsichtigtes Auge, zulässiges charakteristisches Einzelmerkmal."
+    },
+    {
+      "kind": "isolated_fill",
+      "cell": [
+        7,
+        30
+      ],
+      "reason": "Äußerste Zehenspitze ist diagonal an den Fuß angebunden; kein Logikanker."
+    },
+    {
+      "kind": "empty_outer_lines",
+      "rows": [
+        31,
+        32
+      ],
+      "columns": [
+        1
+      ],
+      "reason": "Äußere Leerlinien aus contain bleiben erhalten; Randregel durch oben und rechts erfüllt, keine leeren Innenstreifen."
+    }
+  ],
+  "reveal_consistency": "erfüllt; A-r01/M-r01 bytegleich, Pose/Hauptformen/Negativraum stimmen überein",
+  "limits": "Statische Produktionsansicht, kein Godot-/Browser-/Animationsnachweis. Menschliche Endabnahme offen."
+}
