@@ -1,0 +1,15 @@
+{
+  "author": "KI-Abstraktion mit nativer ChatGPT-Bildfunktion im Nutzerauftrag",
+  "derived_from": {
+    "file": "images/reveal-b-r01.png",
+    "sha256": "d55d58cf043788e9e7b343921871acc3ab3111b3f3a0d082d092bd2449e9ecad"
+  },
+  "file": "images/motif-m-r02.png",
+  "generation_log": "generation.json",
+  "input": "images/motif-m-r01.png",
+  "prompt_file": "prompts/motif-m-r02.txt",
+  "puzzle_id": "pz-d2d41fd0fc604172a7586f7f41c55320",
+  "sha256": "6dd7d0fd08c5155c77d36f0f593537fcf8c120dda000f6a9cec6740b8b629400",
+  "usage_basis": "Dateigebundene Ableitung aus dem ausdrücklich freigegebenen, im vorangehenden Nutzerauftrag erzeugten Abschlussbild B-r01. Keine externen Bilddateien verwendet.",
+  "working_mode": "faithful"
+}

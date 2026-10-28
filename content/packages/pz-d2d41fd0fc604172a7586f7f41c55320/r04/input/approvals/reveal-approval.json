@@ -1,0 +1,14 @@
+{
+  "actor": "Nutzer dieser Unterhaltung (Name nicht angegeben)",
+  "evidence": "approvals/reveal-evidence.txt",
+  "file": "images/reveal-b-r01.png",
+  "puzzle_id": "pz-d2d41fd0fc604172a7586f7f41c55320",
+  "revision": "B-r01",
+  "scope": "Abschlussbildfreigabe und Auftrag 2, keine Motiv- oder Endfreigabe",
+  "sha256": "d55d58cf043788e9e7b343921871acc3ab3111b3f3a0d082d092bd2449e9ecad",
+  "source_resolution": "Die ausdrücklich benannte ursprüngliche Bildfassung B-r01 wird aus r01 übernommen. Das angegebene Paket r02 verweist auf diesen Quellenstand. B-r02 wird nicht als freigegeben behandelt.",
+  "statement": "Ich gebe das Abschlussbild B-r01 frei.",
+  "timestamp_basis": "Zeitpunkt der Protokollierung der vorliegenden Nutzernachricht; exakte Nachrichtenzeit nicht exponiert.",
+  "timestamp_utc": "2026-10-28T15:17:31Z",
+  "type": "human_reveal_approval"
+}

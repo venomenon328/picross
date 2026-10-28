@@ -1,0 +1,7 @@
+# Lemmy Kilmister · Standardauftrag 3 · r04
+
+M-r02 und der vierteilige Parameterkorridor sind ausdrücklich durch den Nutzer freigegeben. Unverändertes Abschlussbild B-r01; Kategorie menschen-berufe. Vorlagentreuer Import mit drei Farbrollen dark/skin/wine, area, contain und vollem Crop. Vier Größenhypothesen gemäß configuration.json; keine zusätzlichen Farben, keine manuelle Rasterableitung. Identität, Perspektive, Hut, Haar, freies Kinn, Gesichtslage und Bordeauxhemd gemäß invariants.json bewahren. Auftrag endet bei content_ready mit Endabnahmevorlage; Repositoryablage und bedingter Ablage-PR-Merge sind beauftragt. Endabnahme, Spielregistrierung und Produktionsbereinigung stehen danach separat aus.
+
+
+Working mode: faithful
+Motif and gameplay review: open
