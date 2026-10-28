@@ -1,12 +1,13 @@
 {
   "adapter_inspection": {
-    "reason": "ZA-1-v4 erfordert echte gebundene Endabnahme auch zur Diagnose; keine technische Vorlage als menschliche Autorisierung ausgegeben.",
-    "required_format": "picross-manual-authorization-v4",
-    "status": "pending_final_editorial"
+    "catalog_ready": true,
+    "editorial_approved": true,
+    "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r06/final-inspection.json",
+    "sha256": "849a799d95a008a2879240baa9f7520e1173ec9b89021a8c24a8528cb86f4bcb",
+    "status": "pass",
+    "technical": true
   },
-  "blockers": [
-    "final_editorial: missing bound human final approval and exact v4 fixed-color acceptance"
-  ],
+  "blockers": [],
   "candidate": {
     "bundle": "imports/c29x25-5-brown",
     "certification": null,
@@ -32,14 +33,27 @@
   },
   "dimensions_approximate": true,
   "dimensions_status": "produced",
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r06/approval.json",
+    "sha256": "eda568e0739c76d321ec6a469413c249c4e99d490bd3c1c3dd8b4d2fed6c2a84"
+  },
   "format": "picross-authoring-record-v1",
   "handoff": {
     "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r06/handoff.json",
     "sha256": "6510e2fc356d0060180d325f053a7585465c9ac2946a7694b8deee34609b426d"
   },
   "height": 25,
-  "integration": null,
+  "integration": {
+    "category_id": "gerichte-herzhaftes",
+    "export_manifest_sha256": "50eeeaa7474276a06734f489d6fcc4151a9683e1d9712500358c6a771164b958",
+    "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r06/integration.json",
+    "main_merge_pending": true,
+    "package": "content/packages/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r06",
+    "runtime_revision": 1,
+    "save_slot": "chicken_adobo",
+    "sha256": "174eeec8d1e059447af1e0ecdf628ad44864d3c38ba1eff8fb2e75d0a44105a3",
+    "status": "registered_on_work_branch"
+  },
   "inventory_sha256": "8d60053a5a732ea36a577b4fc4813a83bab532b6d939a57bbb073e5d4d398d76",
   "legacy_authoring_difficulty": {
     "confidence": "low",
@@ -58,7 +72,7 @@
     "sha256": "76b25cf3c41d8b5fb1dbac55e72c6ddac2bfac80d82bdd360432e3026c5d8449"
   },
   "motif_name": "Chicken Adobo",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Gespeicherte Arbeit fortsetzen",
   "omissions": "Drei ungewählte r05-RP3-Bündel, alte Rasterberichte und alte0.4-Analyse bleiben vollständig am Quellcommit. Aktuelle Original-/Kindbündel, beide tatsächlichen nativen Edit-Eingänge, Prompts/Herkunft/Freigaben und neues geschlossenes Analysebundle vollständig erhalten. Keine alten ZIPs eingebettet.",
   "package": {
     "bytes": 8354283,
@@ -104,7 +118,7 @@
     "sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce"
   },
   "revision": "r06",
-  "state": "raster_review",
+  "state": "registered",
   "updated_at_utc": "2026-10-28T14:04:34.350968+00:00",
   "used_foreground_colors": 5,
   "width": 29

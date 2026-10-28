@@ -1,0 +1,101 @@
+{
+  "actor": "Nutzer im beauftragenden Chat",
+  "approved_configurations": [
+    {
+      "actual_crop": [
+        12,
+        51,
+        1298,
+        1160
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 25,
+      "id": "c29x25-5",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-5",
+      "width": 29
+    },
+    {
+      "actual_crop": [
+        12,
+        51,
+        1298,
+        1160
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 25,
+      "id": "c29x25-4",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-4",
+      "width": 29
+    },
+    {
+      "actual_crop": [
+        12,
+        51,
+        1298,
+        1160
+      ],
+      "fit": "contain",
+      "foreground_colors": 5,
+      "height": 27,
+      "id": "c31x27-5",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-5",
+      "width": 31
+    },
+    {
+      "actual_crop": [
+        12,
+        51,
+        1298,
+        1160
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 27,
+      "id": "c31x27-4",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-4",
+      "width": 31
+    }
+  ],
+  "derived_from_reveal_sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce",
+  "evidence": "approvals/motif-evidence.txt",
+  "file": "images/motif-M-r05.png",
+  "parameter_corridor": {
+    "file": "parameters.json",
+    "sha256": "929b3ca378c964f5bba5a0b5b0df23dce6d83346958107535cc8f36400270b18"
+  },
+  "parameters": {
+    "actual_crop": [
+      12,
+      51,
+      1298,
+      1160
+    ],
+    "fit": "contain",
+    "foreground_colors": 5,
+    "height": 25,
+    "id": "c29x25-5",
+    "method": "area",
+    "mode": "color",
+    "palette_id": "palette-5",
+    "width": 29
+  },
+  "puzzle_id": "pz-dbcf38395b9f4dda86c8b3d6cdae1f2c",
+  "revision": "M-r05",
+  "sha256": "76b25cf3c41d8b5fb1dbac55e72c6ddac2bfac80d82bdd360432e3026c5d8449",
+  "source_commit": "295f9d0960b45cef0bd2191d2e027211b78c8d63",
+  "source_package_revision": "r04",
+  "statement": "Ich gebe die Motivvorlage images/motif-M-r05.png · M-r05 frei; Parameter: parameters.json · r04; empfohlen 29×25/5; zulässig 29×25 oder 31×27 mit 4 oder 5 Farben, Huhn/Knoblauch stets getrennt; area/contain; Crop [12,51,1298,1160]. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_basis": "Erfassungszeit der tatsächlichen Freigabe; genauer Sendezeitpunkt nicht exponiert.",
+  "timestamp_utc": "2026-10-28T13:14:20Z",
+  "type": "human_motif_approval"
+}

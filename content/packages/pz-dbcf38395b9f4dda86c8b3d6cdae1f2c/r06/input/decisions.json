@@ -1,0 +1,31 @@
+{
+  "decisions": [
+    {
+      "decision": "Exakte lokale Farbkorrektur statt neuer Motivgenerierung; vom Nutzer ausdrücklich benannte Oliv-/Braunrolle, übriges Raster bewahren.",
+      "id": "D01"
+    },
+    {
+      "decision": "Blattzuordnung an M-r05 mit gleicher Crop-/Contain-Geometrie gesichtet;26 klare Blattzellen erhalten,95 übrige Olivzellen nach Braun.",
+      "id": "D02"
+    },
+    {
+      "decision": "Vorab fester Plan und exakte Schutzmaske gespeichert; alle630 anderen Zellen unverändert, keine Suche.",
+      "id": "D03"
+    },
+    {
+      "decision": "Neuer vollständiger RP3-Kindimport, frischer Proof-/Herkunfts-/Editreplay und neue0.4-Bewertung erfolgreich. Keine logikbedingte Reparatur nötig.",
+      "id": "D04"
+    },
+    {
+      "decision": "ZA-1-v4 verlangt raster_review und echte Endabnahme vor Adapterdiagnose; technische Vorprüfung separat, keine vorgezogene Owner-Autorisierung.",
+      "id": "D05"
+    },
+    {
+      "decision": "Frühere r05 bleibt unverändert. Ungewählte Varianten und alte Analyseberichte über exakten Gitcommit referenziert, keine alten ZIPs eingebettet.",
+      "id": "D06"
+    }
+  ],
+  "format": "picross-authoring-decisions-v1",
+  "puzzle_id": "pz-dbcf38395b9f4dda86c8b3d6cdae1f2c",
+  "revision": "r06"
+}

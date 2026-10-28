@@ -1,0 +1,32 @@
+{
+  "assessment_type": "editorial_estimate",
+  "confidence": "low",
+  "current_integration_rating": {
+    "assessment_type": "instrumented",
+    "confidence": "medium",
+    "file": "analysis/checked.json",
+    "human_calibration": "not_performed",
+    "level": "L2",
+    "method": "picross-difficulty-0.4",
+    "plausible_range": [
+      "L2",
+      "L2"
+    ]
+  },
+  "evidence": "review/editorial-review.json",
+  "level": "L3",
+  "logic_hash": "d57c9d040eba333167e4659e9585b836fbad417631c077eab2ca8a54e5352fe0",
+  "method": "picross-difficulty-0.1",
+  "note": "Separate konservative historische 0.1-Adapterbegleitschätzung L3/L2–L4/low für die korrigierten Mehrfarblinien; keine historische Regelinstrumentierung behauptet. Maßgeblich ist die vollständig neu geprüfte 0.4-Bewertung L2 in analysis/checked.json.",
+  "plausible_range": [
+    "L2",
+    "L4"
+  ],
+  "rule_families": {
+    "R0": "Direkte Leer-/Voll- und Restbelegung liefert einfache Anteile. Keine eigenständige historische R0-Suffizienzanalyse behauptet.",
+    "R1": "Lange Schalen-/Fleischläufe erlauben Überlappungen und eindeutige Verlängerungen.",
+    "R2": "Mehrfachblock- und Farbzuordnung an Konturen ist unter dem historischen Vertrag plausibel; die neuen einfachen E1-Regeln sind nicht mit historischen R1 gleichgesetzt.",
+    "R3": "Vollständige Linienunterstützung ist unabhängig zertifiziert; daraus folgt keine R3-Notwendigkeit. Historische schwächere Fixpunkte wurden nicht instrumentiert."
+  },
+  "time_estimate": null
+}
