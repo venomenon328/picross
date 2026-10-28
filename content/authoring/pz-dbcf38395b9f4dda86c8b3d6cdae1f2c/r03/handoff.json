@@ -1,0 +1,160 @@
+{
+  "approved_parameters": [],
+  "authorization": "Standardauftrag 3 samt Repositoryablage und Ablagemerge nach erfolgreichen Pflichtchecks. Nach redaktionellem Rasterbefund ausdrücklich beauftragte Motivkorrektur; neue Motiv-/Endfreigabe nicht erteilt.",
+  "blockers": [],
+  "brief": "brief.md",
+  "candidate": {
+    "bundle": null,
+    "certification": null,
+    "proof": null,
+    "variant": null,
+    "verification": null
+  },
+  "category_id": "gerichte-herzhaftes",
+  "codex_handoff": "codex-handoff.md",
+  "decisions": "decisions.json",
+  "difficulty": null,
+  "effort": "effort.json",
+  "format": "picross-authoring-handoff-v2",
+  "gate_evidence": {
+    "reveal_approval": "approvals/reveal-approval.json"
+  },
+  "gates": {
+    "difficulty": "pending",
+    "final_editorial": "pending",
+    "frame": "pending",
+    "logic": "pending",
+    "motif": "pending",
+    "provenance": "pending",
+    "reveal_approval": "pass",
+    "reveal_consistency": "pending",
+    "target_export": "pending",
+    "visual": "pending"
+  },
+  "image_derivation": "motif-derivation.json",
+  "inventory": {
+    "file": "inventory.json",
+    "sha256": "7890ebe5aeb57075e329be270dd66441af3e6bc474fb912649b2ed99cc897cb4"
+  },
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce",
+    "file": "images/motif-M-r04.png",
+    "provenance": "images/motif-M-r04.provenance.json",
+    "revision": "M-r04",
+    "sha256": "bcfb58388f22bef0277bbe48e06aacc0027ba476d3bfafdce2a5e9a19c8d53e3"
+  },
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "origin_verification": null,
+  "parameter_corridor": {
+    "file": "parameters.json",
+    "sha256": "1b62e8b59c7338ed8426e0129491aece4596268a07a32597dab387038fd681ad"
+  },
+  "pending_human_approval": "M-r04 und parameters.json/r03 ausdrücklich freigeben; neue Motivfreigabe ist vor weiterer Rasterproduktion erforderlich.",
+  "playtest": {
+    "evidence": null,
+    "status": "not_performed"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        11,
+        49,
+        1299,
+        1154
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 25,
+      "id": "c29x25-4",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-4",
+      "width": 29
+    },
+    {
+      "actual_crop": [
+        11,
+        49,
+        1299,
+        1154
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 25,
+      "id": "c29x25-3",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-3",
+      "width": 29
+    },
+    {
+      "actual_crop": [
+        11,
+        49,
+        1299,
+        1154
+      ],
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 27,
+      "id": "c31x27-4",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-4",
+      "width": 31
+    },
+    {
+      "actual_crop": [
+        11,
+        49,
+        1299,
+        1154
+      ],
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 27,
+      "id": "c31x27-3",
+      "method": "area",
+      "mode": "color",
+      "palette_id": "palette-3",
+      "width": 31
+    }
+  ],
+  "puzzle_id": "pz-dbcf38395b9f4dda86c8b3d6cdae1f2c",
+  "rejected_raster_attempts": {
+    "editorial": "review/raster-editorial-review.json",
+    "parameters": "parameters-r02.json",
+    "source_motif": "images/motif-M-r02.png",
+    "technical": "review/technical-comparison.json"
+  },
+  "repair": {
+    "plan": null,
+    "reference": null,
+    "replay": null
+  },
+  "repo_commit": "c4bc5b4e0d023e4981198c2a9ce050774dedcc6d",
+  "report": "report.md",
+  "requested_parameters": {
+    "foreground_colors": null,
+    "height": 25,
+    "mode": "color",
+    "size_constraint": "approximate",
+    "width": null
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-B-r01.png",
+    "provenance": "images/reveal-B-r01.provenance.json",
+    "revision": "B-r01",
+    "sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce"
+  },
+  "revision": "r03",
+  "rulebook": {
+    "document_revision": 23,
+    "file": "rulebook.md",
+    "sha256": "fdc05644bf98eb5c02d868ea45af9aff549c097b4d91a5cd13659b38bc5eba39",
+    "version": "0.5.0"
+  },
+  "state": "motif_review"
+}
