@@ -1,0 +1,129 @@
+{
+  "blockers": [],
+  "category_id": "saeuger",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "foreground_color_count_exact": true,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r02/handoff.json",
+    "sha256": "3204cba988adf2d1a38d7e81dab221df27acddc66fe8daaf499d16c4335feb87"
+  },
+  "height": 9,
+  "integration": null,
+  "inventory_sha256": "2b00df6781e58e070255269e2fe8a58ec808aa4db3fb46fabb84e3c36497f81f",
+  "mode": "mono",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c",
+    "file": "motifs/M-r01.png",
+    "provenance": "motifs/M-r01.provenance.json",
+    "revision": "M-r01",
+    "sha256": "7ba635b32475f06d476b5c5572369eb1b4921ea2d2492d637c74f0b14f384887"
+  },
+  "motif_name": "Fledermaus",
+  "next_action": "3 · Motiv freigeben & produzieren: tatsächliche menschliche Freigabe M-r01 samt configuration.json/invariants.json erforderlich; anschließend Produktion, keine Spielregistrierung.",
+  "omitted_historical_variants": [
+    {
+      "id": "B-r01",
+      "reason": "Eigentümer hat A-r01 gewählt; keine alternative Bildfreigabe.",
+      "sha256": "8a5170d3712c7a6cc1f06a7f68fb59f8631a4936f2a74df1ca51122ee8ae34fa",
+      "source": {
+        "commit": "c6f86e3e2b0b195b7ff01e249342e5aef76d1f8e",
+        "internal_file": "reveals/B-r01.png",
+        "package": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r01/package.zip",
+        "repository": "venomenon328/picross"
+      },
+      "status": "not_selected"
+    },
+    {
+      "id": "C-r01",
+      "reason": "Eigentümer hat A-r01 gewählt; keine alternative Bildfreigabe.",
+      "sha256": "ed5e70fccb85bf187a64d39636b2d6128445c9df70cda83a239fd8ae996efe68",
+      "source": {
+        "commit": "c6f86e3e2b0b195b7ff01e249342e5aef76d1f8e",
+        "internal_file": "reveals/C-r01.png",
+        "package": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r01/package.zip",
+        "repository": "venomenon328/picross"
+      },
+      "status": "not_selected"
+    }
+  ],
+  "package": {
+    "bytes": 2758060,
+    "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r02/package.zip",
+    "sha256": "eeeafd0db34f134c254004d93f8991c4d0f2d6fd461b6eaa7e704d75eb34fb4c"
+  },
+  "proposed_parameters": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 9,
+      "method": "area",
+      "mode": "mono",
+      "width": 27
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 10,
+      "method": "area",
+      "mode": "mono",
+      "width": 30
+    }
+  ],
+  "puzzle_id": "pz-b19a0ccbe3164e1c8fd97267e57dd454",
+  "recommended_dimensions": [
+    27,
+    9
+  ],
+  "repo_commit": "c6f86e3e2b0b195b7ff01e249342e5aef76d1f8e",
+  "requested_dimensions": [
+    25,
+    15
+  ],
+  "requested_foreground_colors": 1,
+  "reveal": {
+    "approval": "approvals/reveal-A-r01.json",
+    "file": "reveals/A-r01.png",
+    "provenance": "reveals/A-r01.provenance.json",
+    "revision": "A-r01",
+    "sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c"
+  },
+  "revision": "r02",
+  "source_package": {
+    "commit": "c6f86e3e2b0b195b7ff01e249342e5aef76d1f8e",
+    "handoff": {
+      "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r01/handoff.json",
+      "sha256": "f9cfd830d63f4db12506084aa32abd2ef999f238a39471b15c1e45707e0d53da"
+    },
+    "inventory_sha256": "4b125720cfc76753fbadbc60483c617ec7bb3b3033847803abdecd97a987b211",
+    "package": {
+      "bytes": 4630124,
+      "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r01/package.zip",
+      "sha256": "2fb59dfa58757ecf06b11033ad2fff1ec7f0a2f4f99731150b865e1ce5924349"
+    },
+    "repository": "venomenon328/picross",
+    "selected_file": "reveals/A-r01.png",
+    "selected_revision": "A-r01",
+    "selected_sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c"
+  },
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-28T10:26:22Z",
+  "used_foreground_colors": null,
+  "width": 27
+}
