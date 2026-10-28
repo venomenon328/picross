@@ -1,0 +1,4 @@
+Faithful Chocolate Hills panorama. Preserve ordered rounded cones, large central foreground hill, right hill and open green valley, vegetation and transparent exterior. Approved sizes 36x16 or 27x12, 3/4 foreground colors, full crop exact area alpha<128 empty.
+
+Working mode: faithful
+Motif and gameplay review: open
