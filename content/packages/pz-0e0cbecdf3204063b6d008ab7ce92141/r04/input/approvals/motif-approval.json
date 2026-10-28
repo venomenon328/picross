@@ -1,0 +1,203 @@
+{
+  "actor": "Nutzer dieser Chat-Unterhaltung",
+  "approved_parameter_variants": [
+    {
+      "actual_crop": [
+        54,
+        29,
+        1120,
+        1316
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 32,
+      "id": "c26x32-4c",
+      "method": "area",
+      "mode": "color",
+      "palette": [
+        {
+          "id": "egg",
+          "rgb": "#e4e2cd"
+        },
+        {
+          "id": "yolk",
+          "rgb": "#d9a12b"
+        },
+        {
+          "id": "embryo",
+          "rgb": "#8a7461"
+        },
+        {
+          "id": "outline",
+          "rgb": "#49382e"
+        }
+      ],
+      "threshold": 128,
+      "width": 26
+    },
+    {
+      "actual_crop": [
+        54,
+        29,
+        1120,
+        1316
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 32,
+      "id": "c26x32-3c",
+      "method": "area",
+      "mode": "color",
+      "palette": [
+        {
+          "id": "egg",
+          "rgb": "#e4e2cd"
+        },
+        {
+          "id": "yolk",
+          "rgb": "#d9a12b"
+        },
+        {
+          "id": "outline",
+          "rgb": "#49382e"
+        }
+      ],
+      "threshold": 128,
+      "width": 26
+    },
+    {
+      "actual_crop": [
+        54,
+        29,
+        1120,
+        1316
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "foreground_colors": 4,
+      "height": 36,
+      "id": "c30x36-4c",
+      "method": "area",
+      "mode": "color",
+      "palette": [
+        {
+          "id": "egg",
+          "rgb": "#e4e2cd"
+        },
+        {
+          "id": "yolk",
+          "rgb": "#d9a12b"
+        },
+        {
+          "id": "embryo",
+          "rgb": "#8a7461"
+        },
+        {
+          "id": "outline",
+          "rgb": "#49382e"
+        }
+      ],
+      "threshold": 128,
+      "width": 30
+    },
+    {
+      "actual_crop": [
+        54,
+        29,
+        1120,
+        1316
+      ],
+      "alpha_below": 128,
+      "background": "#ffffff",
+      "fit": "contain",
+      "foreground_colors": 3,
+      "height": 36,
+      "id": "c30x36-3c",
+      "method": "area",
+      "mode": "color",
+      "palette": [
+        {
+          "id": "egg",
+          "rgb": "#e4e2cd"
+        },
+        {
+          "id": "yolk",
+          "rgb": "#d9a12b"
+        },
+        {
+          "id": "outline",
+          "rgb": "#49382e"
+        }
+      ],
+      "threshold": 128,
+      "width": 30
+    }
+  ],
+  "configuration": {
+    "file": "configuration.json",
+    "sha256": "01b7d69d033e153b1ed0f6208d65cdf9eadc5f295134bc09d25cdf1066919e57"
+  },
+  "derived_from_reveal_sha256": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669",
+  "evidence": "approvals/motif-approval-evidence.md",
+  "file": "images/motif-m-r02.png",
+  "invariants": {
+    "file": "invariants.json",
+    "sha256": "554016118566587750583fe3d1fa2bc1d5cf5d1b3ac6f04b183e89d15e89b202"
+  },
+  "parameters": {
+    "actual_crop": [
+      54,
+      29,
+      1120,
+      1316
+    ],
+    "alpha_below": 128,
+    "background": "#ffffff",
+    "fit": "contain",
+    "foreground_colors": 4,
+    "height": 36,
+    "id": "c30x36-4c",
+    "method": "area",
+    "mode": "color",
+    "palette": [
+      {
+        "id": "egg",
+        "rgb": "#e4e2cd"
+      },
+      {
+        "id": "yolk",
+        "rgb": "#d9a12b"
+      },
+      {
+        "id": "embryo",
+        "rgb": "#8a7461"
+      },
+      {
+        "id": "outline",
+        "rgb": "#49382e"
+      }
+    ],
+    "threshold": 128,
+    "width": 30
+  },
+  "puzzle_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+  "revision": "m-r02",
+  "selected_parameters_note": "Alle vier Varianten wurden vom Nutzer freigegeben. Dieses einzelne parameters-Objekt bindet die aus diesem Korridor ausgewählte Fassung für den bestehenden ZA-1-Vertrag; keine zusätzliche Freigabe erfunden.",
+  "sha256": "1ca8a80dffbf288eb350931ac94764e4508d191296653191c7f6b99f75a5a5e0",
+  "source_package": {
+    "commit": "ebe587f79d18177056f25e7b220320081609a492",
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r02/package.zip",
+    "handoff_sha256": "1d2fa1344ede16cd214606071e439bbb2f35d169ebaf4610b1f8b647229d0143",
+    "inventory_sha256": "b0c961dfe9307b47832a7b00afb1d2407bcf5f805a8155ad09df05e1e6fea4b9",
+    "sha256": "7969cba494a6867ace1096301c24fc28f8f91e87928c183e01cf1f849be7e6df"
+  },
+  "statement": "Ich gebe die Motivvorlage images/motif-m-r02.png · M-r02 im Paket r02 frei; Parameter: Vorschlag: 26×32 oder 30×36, farbig, jeweils 3 oder 4 Vordergrundfarben; bevorzugt 26×32/4. Crop [54,29,1120,1316], area, contain, Alpha128. Details: configuration.json. Freigabe offen.. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_basis": "UTC-Erfassungszeit der tatsächlich vorliegenden Nachricht; Original-Nachrichtenzeit nicht offengelegt",
+  "timestamp_utc": "2026-10-28T21:07:19Z",
+  "type": "human_motif_approval"
+}
