@@ -1,0 +1,54 @@
+{
+  "blockers": [],
+  "category_id": "wasserwelt",
+  "difficulty": null,
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r01/handoff.json",
+    "sha256": "c20cf127310e60208dab2177383dfa690b7daeeb9d299ea8274c7cdca5d72e46"
+  },
+  "height": null,
+  "integration": null,
+  "inventory_sha256": "2bd88413e9a1ba975e171d2b1b3ae277671d52bd051d646c1903b7c3b256a993",
+  "mode": "mono",
+  "motif_name": "Qualle",
+  "next_action": "2 · Bild freigeben & abstrahieren: A, B oder C ausdrücklich dateigebunden auswählen/freigeben; danach mono-konforme Motivvorlage ableiten. Bei Korrekturwunsch neue Bildrevision vorlegen.",
+  "package": {
+    "bytes": 7293697,
+    "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r01/package.zip",
+    "sha256": "d1695ebdb5dfd676ce28ce1db55dfee0b517291ba0cfb11a85ac61260e6424db"
+  },
+  "puzzle_id": "pz-20ecf7747bbf40828238ec26d1207172",
+  "repo_commit": "efd52aad96046764cf7a38e7817e28edddf655b7",
+  "reveal_options": [
+    {
+      "approval": null,
+      "file": "reveal/option-a-r01.png",
+      "label": "A - ruhige Frontalansicht",
+      "option": "A",
+      "revision": "r01",
+      "sha256": "a3f55cdef5264deb47e573e84c66fca4927b4660896b9f299b6ea0ccb6648576"
+    },
+    {
+      "approval": null,
+      "file": "reveal/option-b-r01.png",
+      "label": "B - diagonal schwebend",
+      "option": "B",
+      "revision": "r01",
+      "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d"
+    },
+    {
+      "approval": null,
+      "file": "reveal/option-c-r01.png",
+      "label": "C - kompakte Form",
+      "option": "C",
+      "revision": "r01",
+      "sha256": "e334a27a30ebca728163f2e9d07bec547631eaad87163f595bf0aea5773c1931"
+    }
+  ],
+  "revision": "r01",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-28T22:29:05Z",
+  "width": null
+}
