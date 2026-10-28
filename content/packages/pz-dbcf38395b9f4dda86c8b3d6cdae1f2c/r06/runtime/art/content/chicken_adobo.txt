@@ -1,3 +1,0 @@
-Production ID: pz-dbcf38395b9f4dda86c8b3d6cdae1f2c
-Artwork: KI-generiert mit der nativen ChatGPT-Bildfunktion im beauftragten Chat
-Usage basis: Für das Projekt Picross auf Nutzerauftrag neu generiert; keine externen Bildreferenzen übernommen. Nutzer hat B-r01 im aktuellen Auftrag ausdrücklich als Abschlussbild freigegeben.
