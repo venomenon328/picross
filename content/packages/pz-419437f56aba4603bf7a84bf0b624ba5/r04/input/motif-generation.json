@@ -1,0 +1,20 @@
+{
+  "format": "picross-image-generation-log-v1",
+  "tool": "image_gen.imagegen",
+  "mode": "built-in",
+  "request_mode": "edit",
+  "use_case": "identity-preserve",
+  "image_calls": 1,
+  "referenced_input": {
+    "file": "images/reveal-a-r01.png",
+    "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "role": "approved exact reveal; edit target"
+  },
+  "prompt": "Use case: identity-preserve. Asset type: MONOCHROME simplified motif illustration for a future Picross puzzle, target roughly 30 columns by 32 rows; this is NOT the final grid. EDIT the attached exact approved white HEN reveal image A-r01. Keep precisely the SAME adult hen, facing LEFT in SIDE PROFILE, same standing pose, eye position, short beak direction, comb and hanging wattle, rounded broad body, folded wing, short fanned tail raised at RIGHT, two legs and two distinct feet in the SAME stance. Preserve the original composition and major proportions; do not redesign, mirror, rotate, add props, or change the character. Convert it into a strong simple ONE-INK monochrome graphic using only flat deep charcoal #242424 for foreground and genuine transparency for background and negative cutouts (display may show white where transparent). NO shading, no colors, no gray fills, no feather texture, no stippling or hatching, no thin outlines. Large connected solid filled body silhouette; preserve a single large readable folded-wing form through a FEW broad transparent curved cutouts inside the body; preserve the eye as one broad compact negative-space eye, with at most a simple dark pupil if practical. Keep comb as 4 or 5 broad rounded teeth, beak as short clear projecting wedge, wattle as a broad distinctive lobe. Simplify the fan tail to 3 or 4 broad feather groups. Thicken and simplify each leg and foot so they remain structurally plausible and readable at 30x32; do not add legs or toes. Three forward toe directions can be grouped into clear broad foot silhouettes rather than thin separated threads. Keep a wide clear transparent opening between the legs and avoid extra detached specks. Internal negative shapes should be broad and sparse, not fine linework. All form edges smooth and deliberate. This must be a faithful MONOCHROME ABSTRACTION of this exact image, not an unrelated chicken silhouette, not a pixelated raster, not a complete nonogram puzzle, and not the detailed colored reveal. Whole bird must fit in frame; no cropping of comb, tail or feet. Use the same square canvas layout as source with clear transparent margin. No grid, no numbers, no text, no watermark, no background, no shadows.",
+  "arguments": {
+    "transparent_background": true
+  },
+  "model": "not_exposed",
+  "seed": "not_exposed",
+  "quality": "not_exposed"
+}

@@ -1,0 +1,19 @@
+{
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "file": "images/motif-m-r01.png",
+  "sha256": "056edd181366e945126da4a1f46174d42b6c2a5068627ae48daa507074b30ce3",
+  "revision": "r01",
+  "author": "OpenAI ChatGPT · native Bildbearbeitung",
+  "usage_basis": "Beauftragte motivtreue monochrome Ableitung aus dem vom Nutzer freigegebenen eigenen Abschlussbild.",
+  "derived_from": {
+    "file": "images/reveal-a-r01.png",
+    "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+    "revision": "r01",
+    "approval": "approvals/reveal-approval.json"
+  },
+  "prompt_file": "motif-generation.json",
+  "input": "images/reveal-a-r01.png",
+  "working_mode": "faithful",
+  "processing": "Ein nativer Bildbearbeitungsaufruf mit dem gespeicherten freigegebenen Reveal als Referenz; keine nachträgliche Pixelbearbeitung der gelieferten Motivdatei.",
+  "human_motif_approval": null
+}

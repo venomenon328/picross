@@ -1,0 +1,3 @@
+Production ID: pz-419437f56aba4603bf7a84bf0b624ba5
+Artwork: OpenAI ChatGPT · native Bildgenerierung
+Usage basis: Auf Nutzerauftrag neu generiertes Huhn für das eigene Picross-Projekt; keine externen Bildreferenzen.
