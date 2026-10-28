@@ -1,0 +1,104 @@
+{
+  "blockers": [
+    "Menschliche Auswahl und ausdrückliche Abschlussbildfreigabe der konkreten r02-Datei offen."
+  ],
+  "category_id": "landschaften-natur",
+  "derivation": {
+    "format": "picross-authoring-derivation-v1",
+    "omissions": [
+      {
+        "bytes": 2487600,
+        "original_path": "sources/reveal-a-r01.png",
+        "repository_file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/retained-sources/reveal-a-r01.png",
+        "sha256": "37006bfe03d3800da227acfe8c210868c00e66bb27710f14c17c1c07af1b8a81"
+      },
+      {
+        "bytes": 2858533,
+        "original_path": "sources/reveal-b-r01.png",
+        "repository_file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/retained-sources/reveal-b-r01.png",
+        "sha256": "63136727d2e20459a024bac615fcaa963a50e9ddaef4ffce7ff214b0b65056d3"
+      },
+      {
+        "bytes": 3067219,
+        "original_path": "sources/reveal-c-r01.png",
+        "repository_file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/retained-sources/reveal-c-r01.png",
+        "sha256": "3d8ceb52467a8cce6a2c87e9be1677873ae79c429ac2dc9d89e20a90fa344b26"
+      }
+    ],
+    "original_handoff_inventory_unchanged": true,
+    "original_zip_sha256": "5f33735daedff4250aa02be8619fc74f8753a024a2b6a64772802ac52ac91041",
+    "reason": "GitHub connector request limit 16 MiB; rejected style inputs retained byte-for-byte beside the selected package. No replay inputs for a raster production exist in this early phase."
+  },
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "final_editorial_approval": null,
+  "foreground_colors_requested": null,
+  "foreground_colors_used": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/handoff.json",
+    "sha256": "a3f1e8ffb6f32c63316d2a1c90baa95e4a78bc1fc285c0bb33a2199d48ba9e75"
+  },
+  "height": 20,
+  "integration": null,
+  "inventory_sha256": "763081ed3d770cce7d94fa8d08a833314505ebfb26c9fb26893842aa0cb03bbc",
+  "mode": "color",
+  "motif_name": "Chocolate Hills",
+  "next_action": "2 · Bild freigeben & abstrahieren",
+  "package": {
+    "bytes": 11073230,
+    "file": "content/authoring/pz-5f5a379b5abb4c979ee23f807aec9418/r01/package.zip",
+    "sha256": "f0e339bcbcbd4be34a22ca8ac43663c0ba1bb3891e6bdcd0731af15ba46b7468"
+  },
+  "puzzle_id": "pz-5f5a379b5abb4c979ee23f807aec9418",
+  "repo_commit": "06f0f09b4faca3c6f383923eca4c59b8b795bb74",
+  "reveal_options": [
+    {
+      "approval": null,
+      "file": "images/reveal-a-r02.png",
+      "id": "A",
+      "image_revision": "r02",
+      "offered": true,
+      "sha256": "34414ffcd3def8e1308e83739bb4be10e2c7d9e49cedcb74ca09d3140149531d",
+      "title": "Weites Hügelpanorama"
+    },
+    {
+      "approval": null,
+      "file": "images/reveal-b-r02.png",
+      "id": "B",
+      "image_revision": "r02",
+      "offered": true,
+      "sha256": "1c5debf30993a4065fce315be826c31e2dbcc730a54711e5dbccc41196022fd7",
+      "title": "Nahblick mit Talöffnung"
+    },
+    {
+      "approval": null,
+      "file": "images/reveal-c-r02.png",
+      "id": "C",
+      "image_revision": "r02",
+      "offered": true,
+      "sha256": "3b6ee1a2ca7cfe3412762a223566c0c6b3521d962c6b7c0c9c731779b365d48b",
+      "title": "Hügelfeld aus erhöhter Sicht"
+    }
+  ],
+  "revision": "r01",
+  "state": "reveal_review",
+  "updated_at_utc": "2026-10-28T16:18:58Z",
+  "verification": {
+    "declared_derivation_and_separate_source_bindings": "pass",
+    "handoff_copy_byte_equal": true,
+    "index_existing_entries_unchanged": true,
+    "inventory_bindings": "pass",
+    "inventory_files": 17,
+    "kind": "early-image-phase-file-check",
+    "native_tests": "not required: early image selection, no runtime changes",
+    "offered_images_and_provenance": "pass",
+    "safe_members": "pass",
+    "status": "pass",
+    "za1_inspection": "not_applicable: early image phase",
+    "zip_crc": "pass",
+    "zip_members": 17
+  },
+  "width": 30
+}
