@@ -1,0 +1,4 @@
+Gezielte autorisierte engere Cropprüfung, Hypothese: Augenzentrum um Quellpixel (210,190) nahe eine volle Zielzelle legen; 31 Inhaltszeilen und oberer Kamm weiterhin randnah. Nur area-140: breite Leerform wird gegenüber 180 besser erhalten.
+
+Working mode: faithful
+Motif and gameplay review: open

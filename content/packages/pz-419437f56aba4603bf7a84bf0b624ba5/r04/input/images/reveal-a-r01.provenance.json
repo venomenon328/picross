@@ -1,0 +1,25 @@
+{
+  "puzzle_id": "pz-419437f56aba4603bf7a84bf0b624ba5",
+  "file": "images/reveal-a-r01.png",
+  "sha256": "2672b5a69ca8b35bb78a0360860cbd415e285c5ba5c113c2867153b7e17c7328",
+  "revision": "r01",
+  "author": "OpenAI ChatGPT · native Bildgenerierung",
+  "usage_basis": "Auf Nutzerauftrag neu generiertes Huhn für das eigene Picross-Projekt; keine externen Bildreferenzen.",
+  "prompt_file": "source/reveal-generation-r01.json",
+  "source_package": {
+    "repository": "venomenon328/picross",
+    "commit": "0be037585fa222496ce9c8d1d1021d459657c13e",
+    "revision": "r01",
+    "package": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/package.zip",
+      "bytes": 5493725,
+      "sha256": "cbceb8d729f8eb779ea9a4ada096e9a30fad2d3b6ecf40d1dc18e0209ae3508e"
+    },
+    "handoff": {
+      "file": "content/authoring/pz-419437f56aba4603bf7a84bf0b624ba5/r01/handoff.json",
+      "sha256": "c77785fbe06b4247323becd0bead635d3285b118fb02cb3e3a597061a1968594"
+    },
+    "inventory_sha256": "34982967078648a9c78b4f9433bb922a5dae60caea7eadc5d0adc6d847625381"
+  },
+  "processing": "Unveränderte ausgewählte PNG-Originalbytes einschließlich Alpha und Herkunftsmetadaten."
+}
