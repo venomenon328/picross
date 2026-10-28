@@ -1,0 +1,72 @@
+{
+  "actor": "Tobias Schröder",
+  "approved_corridor": [
+    {
+      "actual_crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 9,
+      "method": "area",
+      "mode": "mono",
+      "width": 27
+    },
+    {
+      "actual_crop": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "fit": "exact",
+      "foreground_colors": 1,
+      "height": 10,
+      "method": "area",
+      "mode": "mono",
+      "width": 30
+    }
+  ],
+  "derived_from_reveal_sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c",
+  "evidence": "approvals/motif-user-request.md",
+  "file": "motifs/M-r01.png",
+  "invariants": "invariants.json",
+  "parameters": {
+    "actual_crop": [
+      0,
+      0,
+      2172,
+      724
+    ],
+    "fit": "exact",
+    "foreground_colors": 1,
+    "height": 10,
+    "method": "area",
+    "mode": "mono",
+    "width": 30
+  },
+  "puzzle_id": "pz-b19a0ccbe3164e1c8fd97267e57dd454",
+  "revision": "M-r01",
+  "sha256": "7ba635b32475f06d476b5c5572369eb1b4921ea2d2492d637c74f0b14f384887",
+  "source": {
+    "commit": "6f8343cfafcb827a69afdf041ef2d5c294234498",
+    "handoff": {
+      "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r02/handoff.json",
+      "sha256": "3204cba988adf2d1a38d7e81dab221df27acddc66fe8daaf499d16c4335feb87"
+    },
+    "inventory_sha256": "2b00df6781e58e070255269e2fe8a58ec808aa4db3fb46fabb84e3c36497f81f",
+    "package": {
+      "bytes": 2758060,
+      "file": "content/authoring/pz-b19a0ccbe3164e1c8fd97267e57dd454/r02/package.zip",
+      "sha256": "eeeafd0db34f134c254004d93f8991c4d0f2d6fd461b6eaa7e704d75eb34fb4c"
+    },
+    "repository": "venomenon328/picross"
+  },
+  "statement": "Ich gebe die Motivvorlage motifs/M-r01.png · M-r01, im Paket r02 frei; Parameter: Vorgeschlagen: 27×9 oder 30×10; monochrom, genau 1 Vordergrundfarbe; area, fit=exact, Crop [0,0,2172,724].. Führe Standardauftrag 3 vollständig bis zur Endabnahmevorlage aus.",
+  "timestamp_basis": "Zeit der Aufzeichnung; originale Nachrichtenzeit nicht separat verfügbar.",
+  "timestamp_utc": "2026-10-28T11:11:49Z",
+  "type": "human_motif_approval"
+}

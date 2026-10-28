@@ -1,0 +1,54 @@
+{
+  "comparison": "review/final-comparison.png",
+  "criteria": {
+    "details_negative_spaces": {
+      "reason": "Zwei Ohren mit groben freien Innenstellen, deutliche Zwischenräume zu beiden Flügeln und verbleibender zentraler Negativraum; feinere Buchten und Gesichtszüge stark reduziert.",
+      "status": "erfüllt"
+    },
+    "palette_mono_readability": {
+      "reason": "Exakt eine verwendete ink-Farbe #29231f; Leer bleibt eigener Wert. 159/300 Zellen gefüllt, keine isolierten Füllzellen oder leeren inneren Linien.",
+      "status": "erfüllt"
+    },
+    "recognizability": {
+      "reason": "Frontaler Fledermauskörper mit großer horizontaler Flügelspannweite und zwei aufrechten Ohren; farbiges A-r01 löst die Mono-Abstraktion eindeutig auf.",
+      "status": "erfüllt"
+    },
+    "series_aesthetics": {
+      "reason": "Ruhige klare Flächenstilisierung derselben freigegebenen gezeichneten Fledermaus. Das detaillierte farbige A-r01 bleibt unverändert.",
+      "status": "erfüllt"
+    },
+    "silhouette_proportions": {
+      "reason": "Unverändertes 3:1-Verhältnis; Kopf und kompakter Körper mittig, zwei kleine getrennte Fußenden. Keine neue Pose, kein abgeschnittener Quellbereich.",
+      "status": "erfüllt"
+    }
+  },
+  "final_editorial": "pending",
+  "grid": "review/final-grid.png",
+  "losses": [
+    "Augen, Schnauze, Fell-, Membran- und Zehenzeichnung sind bei 30×10 weitgehend zusammengefasst oder entfallen, wie in invariants.json erlaubt.",
+    "Feine Rundungen und Flügelbuchten werden stark treppig vereinfacht; die breite Spannweite, aufrechten Ohren, Kopf-/Flügelzwischenräume, der mittige Körper und zwei getrennte Füße bleiben lesbar.",
+    "Eine kleine Unregelmäßigkeit an der rechten Flügeloberkante stammt aus der unveränderten Quelle und ist kein manuell ergänzter Logikanker."
+  ],
+  "material_motif_change": false,
+  "paper_reference": {
+    "commit": "6f8343cfafcb827a69afdf041ef2d5c294234498",
+    "crop": [
+      800,
+      400,
+      1600,
+      1000
+    ],
+    "path": "game/art/book/bp2-a-inventarband.png",
+    "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
+  },
+  "reveal_consistency": true,
+  "reviewer": "Codex, redaktioneller Selbstcheck; keine menschliche Endabnahme",
+  "selected": {
+    "bundle": "production/30x10-coverage",
+    "variant": "area-218"
+  },
+  "small_raster": "production/30x10-coverage/area-218-raster.png",
+  "soft_exceptions": [],
+  "transparency_review": "Unveränderte A-/M-Originale sowie vorhandener Bildvergleich und neue große/kleine statische Papiermontage gesichtet; transparente Außenflächen und erhaltene helle Motivteile. Kein nativer Spieler-/Katalogtest.",
+  "ungirded_raster": "review/final-raster.png"
+}

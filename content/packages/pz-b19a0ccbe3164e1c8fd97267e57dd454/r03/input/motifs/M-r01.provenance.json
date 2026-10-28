@@ -1,0 +1,14 @@
+{
+  "author": "OpenAI image generation in ChatGPT, commissioned by Tobias Schröder",
+  "changes": "Eine dunkle Farbtonfamilie und transparente Negativräume; Fell-, Membran- und Zehendetails reduziert. Pose und charakteristische Geometrie erhalten. Native PNG-Bytes unverändert.",
+  "derived_from": {
+    "file": "reveals/A-r01.png",
+    "sha256": "7f433913a79a5e25e3fec423a2c05eeab675bb76b386cc09d05b7f0f2901c27c"
+  },
+  "file": "motifs/M-r01.png",
+  "prompt_file": "prompts/M-r01.json",
+  "puzzle_id": "pz-b19a0ccbe3164e1c8fd97267e57dd454",
+  "sha256": "7ba635b32475f06d476b5c5572369eb1b4921ea2d2492d637c74f0b14f384887",
+  "usage_basis": "Native KI-Ableitung aus dem ausdrücklich freigegebenen, projektbeauftragten A-r01 ohne zusätzliche Fremdreferenzen; eigene Picross-Produktion.",
+  "working_mode": "faithful"
+}
