@@ -1,0 +1,62 @@
+{
+  "blockers": [],
+  "category_id": "gerichte-herzhaftes",
+  "difficulty": null,
+  "dimensions_approximate": true,
+  "dimensions_fixed": false,
+  "dimensions_status": "proposed_not_produced",
+  "final_editorial_approval": null,
+  "format": "picross-authoring-record-v1",
+  "handoff": {
+    "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r02/handoff.json",
+    "sha256": "49706eb2613158baa9f957db0102321dd7b3c91a6f22cdd4114a78fd83e49788"
+  },
+  "height": 25,
+  "integration": null,
+  "inventory_sha256": "53840d9ab7e82e0c86707a337c391c018bb762ebe319bea88c55da4b07407714",
+  "mode": "color",
+  "motif": {
+    "approval": null,
+    "derived_from_reveal_sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce",
+    "file": "images/motif-M-r02.png",
+    "provenance": "images/motif-M-r02.provenance.json",
+    "revision": "M-r02",
+    "sha256": "d90388576740dc4f6a3d2da33877cc87f62dcabfc9b1b1caa12e79e2255dded5"
+  },
+  "motif_name": "Chicken Adobo",
+  "next_action": "3 · Motiv freigeben & produzieren",
+  "omissions": "Alte A-/C-Varianten und reine r01-Auswahlgalerie/-Berichte nicht erneut kopiert. Keine alten ZIPs eingebettet. Der neue M-r01-Zwischenschritt bleibt als tatsächlicher Bildedit-Eingang erhalten.",
+  "package": {
+    "bytes": 6373593,
+    "file": "content/authoring/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r02/package.zip",
+    "sha256": "7a968f5247cd825a714fc5b5cc39c5c291ac9d3611f5ddfea1da661a59ec50d1"
+  },
+  "parameter_corridor": {
+    "file": "parameters.json",
+    "sha256": "19a46cf67b2cd98da7db488eb28e4c8161165f8a4ade01e4a1fab92daa80d417"
+  },
+  "pending_human_approval": "Motiv M-r02 und vorgeschlagenen Parameterkorridor ausdrücklich freigeben.",
+  "prior_revision": "r01",
+  "proposed_foreground_colors": 4,
+  "puzzle_id": "pz-dbcf38395b9f4dda86c8b3d6cdae1f2c",
+  "repo_commit": "8c88b322388a996c0ac57a6f738ab96a8e32b576",
+  "requested_parameters": {
+    "foreground_colors": null,
+    "height": 25,
+    "mode": "color",
+    "size_constraint": "approximate",
+    "width": null
+  },
+  "reveal": {
+    "approval": "approvals/reveal-approval.json",
+    "file": "images/reveal-B-r01.png",
+    "provenance": "images/reveal-B-r01.provenance.json",
+    "revision": "B-r01",
+    "sha256": "d321cb52a6bcda782bba0829d2a7fa5eaeb91f7672807fd12ff6fec92d5113ce"
+  },
+  "revision": "r02",
+  "state": "motif_review",
+  "updated_at_utc": "2026-10-28T12:28:09Z",
+  "used_foreground_colors": null,
+  "width": 29
+}
