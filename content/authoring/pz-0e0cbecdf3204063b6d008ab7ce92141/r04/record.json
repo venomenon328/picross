@@ -1,6 +1,6 @@
 {
   "blockers": [
-    "Menschliche Endabnahme der korrigierten Fassung und konkreten festen Farbänderungen (ZA-1-v4) offen."
+    "The current catalog registration exceeds its fixed transaction budget on this Windows environment in both supported Python runs. Tool/runtime investigation is required before a successful register and integration merge."
   ],
   "candidate": {
     "bundle": "production/fixed-r04",
@@ -27,7 +27,10 @@
   },
   "dimensions_approximate": true,
   "dimensions_fixed": false,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/approval.json",
+    "sha256": "7f5905995e4d44d3ff732490496c272ba9e15c2c24456b1dc456adf26d41399f"
+  },
   "foreground_colors_recommended": 4,
   "foreground_colors_requested": null,
   "foreground_colors_used": 4,
@@ -37,7 +40,29 @@
     "sha256": "1c3c5ab624e461b608fa6d6ddbffa966ebf5c0ce8a57472615ebf216ebdc4442"
   },
   "height": 36,
-  "integration": null,
+  "integration": {
+    "approval_source": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/approval-source.json",
+    "attempts": {
+      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/integration-attempts.json",
+      "sha256": "4c05f79b85aed09fbf3ef139e732e064ca3b6a8170e285a3cfd70277231bc9c2"
+    },
+    "category_id": "gerichte-herzhaftes",
+    "cleanup": "not performed: no main integration",
+    "export_manifest": {
+      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/export-manifest.json",
+      "sha256": "6c3192df6fef8b477702e087f5e0dd64ee768601bcbc225800df69a751fc8fc3"
+    },
+    "manual_authorization": {
+      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/manual-authorization.json",
+      "sha256": "31035c8c754e4e6f09b67353085fce7ae92ca75ab1174a465995d383d35f2251"
+    },
+    "proposed_runtime_revision": 1,
+    "proposed_save_slot": "balut",
+    "registered": false,
+    "runtime_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
+    "source_commit": "efd52aad96046764cf7a38e7817e28edddf655b7",
+    "status": "blocked; not registered; no main integration"
+  },
   "inventory_sha256": "3138ecbc36aa0ba008b585b874f26c318395354981450ced3db0e049c9ec275a",
   "mode": "color",
   "motif": {
@@ -49,7 +74,7 @@
     "sha256": "1ca8a80dffbf288eb350931ac94764e4508d191296653191c7f6b99f75a5a5e0"
   },
   "motif_name": "Balut",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren",
+  "next_action": "Korrigieren oder Fehler beheben",
   "package": {
     "bytes": 6708002,
     "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/package.zip",
@@ -85,8 +110,8 @@
     "inventory": "source/r03-inventory.json",
     "sha256": "62f8e87fcf1ba3dea30824b9e8e7bac462a0b88ca492cb0957d7653d92083b27"
   },
-  "state": "raster_review",
-  "updated_at_utc": "2026-10-28T21:55:41Z",
+  "state": "blocked",
+  "updated_at_utc": "2026-10-28T22:39:12.259982+00:00",
   "verification": {
     "all_89_boundary_cells_outline": true,
     "all_other_cells_protected": true,
@@ -100,7 +125,14 @@
     "source_and_child_independent_proof": "solved",
     "technical_replay": "review/technical-check.json",
     "technical_replay_sha256": "2aa0424277c8f3152c25d32d52e104d0958b7c95eba7fafafc1789d7f4e4caf8",
-    "za1_inspection": "not_run: exact real final approval and ZA-1-v4 fixed-color authorization pending; not content_ready"
+    "za1_inspection": {
+      "catalog_ready": true,
+      "editorial_approved": true,
+      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/target-inspection.json",
+      "registered": false,
+      "sha256": "5fb268aae6ec5b5c97e18de14f46a7ebf1ebaa84d53a101362c32cfb0cbeec62",
+      "technical": true
+    }
   },
   "width": 30
 }
