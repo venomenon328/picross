@@ -1,7 +1,5 @@
 {
-  "blockers": [
-    "The current catalog registration exceeds its fixed transaction budget on this Windows environment in both supported Python runs. Tool/runtime investigation is required before a successful register and integration merge."
-  ],
+  "blockers": [],
   "candidate": {
     "bundle": "production/fixed-r04",
     "certification": null,
@@ -41,27 +39,37 @@
   },
   "height": 36,
   "integration": {
+    "active_difficulty": "picross-difficulty-0.4/L4",
     "approval_source": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/approval-source.json",
-    "attempts": {
-      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/integration-attempts.json",
-      "sha256": "4c05f79b85aed09fbf3ef139e732e064ca3b6a8170e285a3cfd70277231bc9c2"
+    "budget_override": {
+      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/budget-override.json",
+      "sha256": "5d68f2eeed929306b86c64240c9fa52fd831953b43e8f4fa347aa4e8c33ff02d"
     },
     "category_id": "gerichte-herzhaftes",
-    "cleanup": "not performed: no main integration",
-    "export_manifest": {
-      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/export-manifest.json",
-      "sha256": "6c3192df6fef8b477702e087f5e0dd64ee768601bcbc225800df69a751fc8fc3"
+    "export_manifest": "content/packages/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/manifest.json",
+    "export_manifest_sha256": "6c3192df6fef8b477702e087f5e0dd64ee768601bcbc225800df69a751fc8fc3",
+    "file_check": {
+      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/integration-check.json",
+      "sha256": "160f4dbad6490400aa6c1a709e2c5da44a0bae31a56a8401782a50228e7b5152"
     },
     "manual_authorization": {
       "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/manual-authorization.json",
       "sha256": "31035c8c754e4e6f09b67353085fce7ae92ca75ab1174a465995d383d35f2251"
     },
-    "proposed_runtime_revision": 1,
-    "proposed_save_slot": "balut",
-    "registered": false,
+    "registered": true,
+    "registration_report": {
+      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/registration.json",
+      "sha256": "33bc6ce03e5c6656786bee83145658ff41edf435d92bf7e2fdec86458880802f"
+    },
+    "runtime_files": {
+      "game/art/content/balut.png": "f157ea64818caf859ad50cbf5ede92e0c7091f1f57ab1c7f1f7dbdb108025669",
+      "game/art/content/balut.txt": "e5b4ada52ef1677c8868bfdbb201d71838031e53c0cce30a22ada32fc5de738a",
+      "game/data/content/balut.json": "5fb93ef0aa65d32fc3910538b6824898a264669d9381d3b99834eece1753de1e"
+    },
     "runtime_id": "pz-0e0cbecdf3204063b6d008ab7ce92141",
-    "source_commit": "efd52aad96046764cf7a38e7817e28edddf655b7",
-    "status": "blocked; not registered; no main integration"
+    "runtime_revision": 1,
+    "save_slot": "balut",
+    "status": "registered; Main-Merge und §9-Abschluss folgen"
   },
   "inventory_sha256": "3138ecbc36aa0ba008b585b874f26c318395354981450ced3db0e049c9ec275a",
   "mode": "color",
@@ -74,7 +82,7 @@
     "sha256": "1ca8a80dffbf288eb350931ac94764e4508d191296653191c7f6b99f75a5a5e0"
   },
   "motif_name": "Balut",
-  "next_action": "Korrigieren oder Fehler beheben",
+  "next_action": "4 · Abnehmen & ins Spiel integrieren",
   "package": {
     "bytes": 6708002,
     "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/package.zip",
@@ -110,8 +118,8 @@
     "inventory": "source/r03-inventory.json",
     "sha256": "62f8e87fcf1ba3dea30824b9e8e7bac462a0b88ca492cb0957d7653d92083b27"
   },
-  "state": "blocked",
-  "updated_at_utc": "2026-10-28T22:39:12.259982+00:00",
+  "state": "registered",
+  "updated_at_utc": "2026-10-28T23:54:29.231788+00:00",
   "verification": {
     "all_89_boundary_cells_outline": true,
     "all_other_cells_protected": true,
@@ -128,8 +136,7 @@
     "za1_inspection": {
       "catalog_ready": true,
       "editorial_approved": true,
-      "file": "content/authoring/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/target-inspection.json",
-      "registered": false,
+      "file": "content/packages/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/inspection.json",
       "sha256": "5fb268aae6ec5b5c97e18de14f46a7ebf1ebaa84d53a101362c32cfb0cbeec62",
       "technical": true
     }
