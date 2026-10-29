@@ -26,11 +26,18 @@ Journalformaten, Methodenfreezes, Proofverifikation oder fachlichen Grenzen.
 Im Selbstreview korrigiert: Diagnose der wirksamen verschachtelten Deadline,
 Bindung der Journalbytes nach Klassifikation, ehrliche Unterscheidung des
 historischen Lockabschlusses, Ablehnung ungenutzter Overrides am historischen
-Writer sowie eine versehentlich entfernte CI-Datendateizuordnung. Die
+Writer sowie eine versehentlich entfernte CI-Datendateizuordnung. Der vollständige
+CI-Lauf fand außerdem die alte exakte CLI-JSON-Erwartung für `plan`/`register`;
+die Korrektur prüft die neue Diagnose zusätzlich und erhält die exakte Prüfung
+aller bisherigen Fehlerfelder sowie unveränderter Checkout-/Exportbytes. Die
 zugehörigen Negativfälle und erneuten Prüfungen stehen in T01.
 
 ## Offene Abnahme
 
-Der endgültige Vorher/Nachher- und CI-Nachweis wird in T01 abgeschlossen.
+Der Vorher/Nachher-Nachweis umfasst drei Wiederholungen auf Linux sowie kurzen
+und normal verschachtelten Windows-Pfaden; feste Quell-/Eingangsbindung und
+die verbleibenden Messgrenzen stehen in T01. Die gemessenen Werkzeugbytes
+bleiben seit `a2c28518cead1f29f0fdc64afe0b65769947eded` unverändert.
+Das vollständige CI-Ergebnisgate wird für den endgültigen PR-Head geprüft.
 Ein unabhängiger qualifizierter RI-A-R01 auf dem tatsächlichen Lieferstand
 bleibt vor Merge erforderlich. Der PR bleibt Draft; es erfolgt kein Merge.
