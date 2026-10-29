@@ -82,6 +82,47 @@ Neue teure Tests benötigen aktuellen Zweck, passende günstige Ebene und
 Kostenbegründung; neue Module eine passende Auswahlzuordnung. Historische
 Lieferberichte behalten ihren damaligen Stand, Produktabnahmen bleiben separat.
 
+## RI · Prüfvertrag für die Rätselintegration
+
+Spezifikationsergänzung vom 29.10.2026:
+[RI / #477](https://github.com/venomenon328/picross/issues/477) und
+[PUZZLE_INTEGRATION](PUZZLE_INTEGRATION.md) sind als Sollvertrag freigegeben,
+noch nicht implementiert oder technisch abgenommen. Die Paketfolge ist
+RI-A → Messauswertung und gemeinsamer B/C-Vertragsabgleich → RI-B → RI-C.
+Die neue Warn-/Schutzpolitik betrifft ausschließlich neue Registrierungen und
+die Recovery unterstützter Registrierungsjournale; sie verändert keine
+CI-Laufzeitziele, übrigen operativen Budgets oder fachlichen Ressourcengrenzen.
+Bis zur jeweiligen Lieferung bleiben die bestehenden ausführbaren Prüfwege
+maßgeblich; diese Dokumentergänzung weist keine gemessene Beschleunigung nach.
+
+RI verwendet kleine feste synthetische Zeit-, Manipulations-, Unterbrechungs-
+und Recoveryfälle. Kontrollierte Uhren prüfen Warnschwelle, Deadline,
+verschachtelte Budgets und den eigenen Recoveryrahmen ohne minutenlange
+Testwartezeiten. Byte-/Freigabebindung, Invalidierung des Prüfkontexts,
+Fremddaten, Pfadalias/Links, tatsächlicher Abschlusszustand, No-op und
+wiederholbare Recovery bleiben an den zuständigen Grenzen abgesichert.
+Bestehende kleine Fälle gezielt erweitern; keine echten Rätsel, kopierten
+Bestandskataloge, rätselspezifischen Tests oder neuen dauerhaften Replaykorpora.
+
+Ein begrenzter synthetischer Messbestand liefert vor/nach der jeweiligen
+Änderung echte Windows- und Linuxwerte; Windows umfasst kurze und normal
+verschachtelte Pfade. Gleiche Eingänge, Parameter, Werkzeug-/Umgebungsbindung,
+Aufbaukosten, Phasenzeiten und Arbeitszähler sind auszuweisen. Für RI-C
+Bestandsgröße und Neupaketdateizahl getrennt variieren. Uhrsimulationen ersetzen
+diese Plattformmessung nicht; höhere Timeouts sind kein Geschwindigkeitsnachweis.
+Kompakte T01-/PR-Berichte binden die Ergebnisse, Rohprofile bleiben temporär.
+RI-C benötigt wegen der geänderten Transaktionssemantik ein gesondertes
+qualifiziertes Review vor Merge.
+
+Die bestehende CI-Auswahl nach vollständigem Diff bleibt verbindlich;
+Werkzeugänderungen erben keine `content_only`-Ausnahme. Alle ausgewählten
+Pflichtjobs einschließlich `ci-required` müssen tatsächlich erfolgreich sein.
+Chromium weiterhin nur auf ausdrücklichen Auftrag. RI erzeugt weder einen
+zusätzlichen dauerhaften CI-Job noch eine neue breite Jobmatrix oder automatische
+Spiel-/Browser-/Buildprüfungen allein für Performancebelege. Reine
+Spezifikationspflege nutzt den bestehenden Dokument-/Werkzeugprüfpfad nach
+tatsächlicher Auswahl; normale Inhaltsintegration behält Authoring §8.
+
 ## Ausführbare Ausgangsbasis und historische Bindungen
 
 Die folgenden Abschnitte dokumentieren die bestehenden Mechanismen aus
