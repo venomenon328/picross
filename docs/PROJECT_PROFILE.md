@@ -293,6 +293,17 @@ Bei Vorbereitung noch offener Implementierung/Nacharbeit zusätzlich die
 [Modellauswahl](dev-rules/MODEL_SELECTION.md) und den
 [Modellkatalog](dev-rules/MODEL_CATALOG.md) vollständig lesen.
 
+**Projektlokale Authoring-Ausnahme:** Normale Rätselproduktion nach
+[PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), einschließlich Korrektur und
+Wiederaufnahme, ist von diesem Modellrouting ausgenommen. Keine Modell-, Reasoning-
+oder Ausführungsempfehlung und keine dafür veranlasste Modellkatalog-, Verfügbarkeits-
+oder Webrecherche. Die tatsächlichen Fähigkeiten und Zugriffe bleiben zu prüfen.
+Authoring §7 regelt die kompakte Ausgabe ohne zusätzliche Handoff-Markdowndatei
+oder kopierbaren Folgeauftrag; technische Paketbindungen bleiben erhalten.
+Separate Entwicklungsaufträge an Werkzeugen, Spiel oder CI folgen weiterhin dem
+allgemeinen Entwicklungsworkflow. Der eingebundene Snapshot in `docs/dev-rules/`
+bleibt unverändert.
+
 | Arbeit | Zusätzlich vollständig lesen |
 | --- | --- |
 | Produkt, Regeln, Inhalte, Progression, UX/UI, Eingabe, Plattform oder Architektur | [Produktdefinition](PRODUCT_DEFINITION.md) |
