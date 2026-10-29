@@ -115,6 +115,16 @@ Bei Zellrendering, Sprite-/Atlasherstellung, Cache-/Invalidierungsarbeit und PER
 
 Nur bei Vorbereitung einer noch auszuführenden Implementierung oder konkreter noch offener technischer Nacharbeit zusätzlich [Modellauswahl](docs/dev-rules/MODEL_SELECTION.md) und [Modellkatalog](docs/dev-rules/MODEL_CATALOG.md) vollständig lesen. Keine rückblickende Empfehlung nach erledigter Arbeit.
 
+**Projektlokale Ausnahme für die Rätselproduktion:** Normale Aufträge nach
+[PUZZLE_AUTHORING](docs/ai-workflows/PUZZLE_AUTHORING.md), einschließlich Korrektur
+und Wiederaufnahme, benötigen keine Modell-, Reasoning- oder Ausführungsempfehlung.
+Die beiden Modellquellen dafür nicht laden und keine entsprechende Modellrecherche
+ausführen. Die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten
+weiter prüfen. Für die Produktionsausgabe gilt Authoring §7: keine zusätzliche
+Handoff-Markdowndatei und kein zusätzlicher kopierbarer Folgeauftrag.
+Separat beauftragte Entwicklungsarbeit an Werkzeugen, Spiel oder CI bleibt vom
+allgemeinen Entwicklungsworkflow erfasst.
+
 ## Unmittelbar wichtige Grenzen
 
 Das Setup ist keine Freigabe einer Engine, Sprache, Zielplattform oder Spielmechanik. Noch nicht dokumentierte Produktentscheidungen vor der betroffenen Umsetzung klären. Keine Fach- oder Umgebungsregeln aus anderen Projekten ungeprüft übertragen.
