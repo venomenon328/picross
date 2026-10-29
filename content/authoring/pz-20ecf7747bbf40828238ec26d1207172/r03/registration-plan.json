@@ -1,0 +1,46 @@
+{
+  "after_entries": 52,
+  "before_entries": 51,
+  "before_registry_sha256": "9866225ead1e0124085d7c8ed7f78d583468ca8af718c320f7fb642ab4b191af",
+  "category": {
+    "id": "wasserwelt",
+    "name": "Wasserwelt",
+    "order": 7
+  },
+  "changes": [
+    {
+      "operation": "add",
+      "path": "content/packages/pz-20ecf7747bbf40828238ec26d1207172/r03"
+    },
+    {
+      "operation": "add",
+      "path": "content/difficulty/pz-20ecf7747bbf40828238ec26d1207172/rating.json"
+    },
+    {
+      "operation": "replace",
+      "path": "content/registry.json"
+    },
+    {
+      "operation": "add",
+      "path": "game/art/content/qualle_001.txt"
+    },
+    {
+      "operation": "add",
+      "path": "game/data/content/qualle_001.json"
+    },
+    {
+      "operation": "replace",
+      "path": "game/data/registry.json"
+    },
+    {
+      "operation": "add-on-success",
+      "path": "content/added/pz-20ecf7747bbf40828238ec26d1207172.json"
+    }
+  ],
+  "existing_entries_unchanged": true,
+  "full_plan_sha256": "5dea9101d2559af4f9bbd46c0d8aae5ca932d58b100c611d89af8858878c8dd1",
+  "id": "pz-20ecf7747bbf40828238ec26d1207172",
+  "registered": false,
+  "status": "planned",
+  "user_saves_modified": false
+}

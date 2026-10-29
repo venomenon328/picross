@@ -1,0 +1,83 @@
+{
+  "approved_reveal_generation": {
+    "arguments": {
+      "transparent_background": true
+    },
+    "call": 2,
+    "input_images": [],
+    "option": "B",
+    "output": {
+      "approval": null,
+      "file": "reveal/option-b-r01.png",
+      "label": "B - diagonal schwebend",
+      "option": "B",
+      "revision": "r01",
+      "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d"
+    },
+    "prompt": "Use case: illustration-story. Asset type: detailed colorful completion illustration for the Picross hand-drawn album, motif jellyfish (Qualle). Create ONE complete standalone image, not a contact sheet, no labels. Warm calm hand-drawn 2D illustration, clean expressive ink contours, substantial coherent color areas, thoughtful interior drawing, delicate organic surface details and restrained shading. A recognizable natural jellyfish with a domed bell, softly scalloped rim, broad folded oral arms, and a few clearly readable curling tentacles with open spaces between them. Preserve a strong silhouette suitable for a later monochrome nonogram abstraction; THIS image itself must remain richly colored and detailed, not pixel art or a simplified silhouette. No face or anthropomorphic eyes, no text, no watermark, no diagram, no sea scenery, no bubbles, no props, no scattered decoration, no glow halo. True transparent PNG background including actual negative spaces between arms and tentacles; pale parts inside the animal must remain visible. Clean anti-aliased edges without a white matte. Entire jellyfish visible with comfortable transparent margin; nothing clipped.\nVariant B: graceful diagonal swimming pose, bell in three-quarter side view tilted toward the upper left, tentacles flowing down toward the lower right. A substantial teal/turquoise bell with gentle blue-violet underside, warm ivory highlights, readable darker radial contour details. Broad folded oral arms and four or five separated sweeping tentacles create clear large negative spaces; avoid a dense tangle. A strong asymmetrical silhouette, calm movement.",
+    "result": "image_returned",
+    "settings": {
+      "model": "not_exposed",
+      "quality": "not_exposed",
+      "seed": "not_exposed",
+      "size": "not_exposed"
+    }
+  },
+  "image_bytes_modified_after_native_output": false,
+  "mode": "built-in",
+  "motif_calls": [
+    {
+      "input_images": [
+        {
+          "file": "reveal/option-b-r01.png",
+          "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d"
+        }
+      ],
+      "input_roles": [
+        "binding_approved_reveal"
+      ],
+      "model": "not_exposed",
+      "prompt": "Use case: style-transfer. Asset type: monochrome motif illustration for a later Picross/nonogram abstraction, NOT a puzzle grid. Input image 1 is the ONLY binding approved jellyfish reference B-r01; derive the new illustration directly from these image bytes. Make one simplified faithful black-ink motif on a truly transparent background. Preserve the reference jellyfish identity, its exact three-quarter swimming pose, broad rounded scalloped bell tilted at the upper left, the bell's main proportions, and long sweeping oral arms/tentacles flowing diagonally toward the lower right. Preserve the large distinctive open space to the right of the arm group, the left downward-curving tentacle with curled tip, and the separated right sweeping tentacle with curled tip. Do not straighten or mirror the pose, do not make a frontal symmetrical jellyfish. Keep the same overall silhouette and relationships. Reduce the tiny ripples, speckles, radial color veins, secondary filaments and highlights. Merge the dense frills into two or three broad, flowing, filled black oral-arm ribbons with large clear transparent cuts between them. Keep only a few secondary tentacles, drawn as substantial smooth black ribbons, thick enough to remain meaningful at roughly 30 by 33 cells. Bell should be a coherent filled black mass with a simple scalloped lower edge and at most two or three broad transparent interior openings that clarify its curved underside. Use exactly one foreground ink: solid black. Empty exterior and internal negative spaces are transparent; no gray wash, shading, texture, color or white-painted foreground. Clean antialiased edges are acceptable. Keep all tips complete with a small clear margin. This is still a smooth high-resolution saved illustration, NOT pixel art, NOT a raster matrix, no grid, no numbers, no cell pattern, no text, no labels, no extra objects. Strong calm simple shapes and readable negative spaces; fidelity to the supplied diagonal jellyfish takes priority over decoration.",
+      "quality": "not_exposed",
+      "result": {
+        "file": "motif/motif-r01.png",
+        "sha256": "a0439c8c30e614f68672a063cd286fb539442673ee63cbddb6f8fcd8d4f6e758"
+      },
+      "round": 1,
+      "seed": "not_exposed",
+      "size": "not_exposed",
+      "transparent_background": true
+    },
+    {
+      "input_images": [
+        {
+          "file": "reveal/option-b-r01.png",
+          "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d"
+        },
+        {
+          "file": "motif/motif-r01.png",
+          "sha256": "a0439c8c30e614f68672a063cd286fb539442673ee63cbddb6f8fcd8d4f6e758"
+        }
+      ],
+      "input_roles": [
+        "binding_approved_reveal",
+        "monochrome_edit_target"
+      ],
+      "model": "not_exposed",
+      "prompt": "Use case: precise-object-edit. Image 1 is the approved colored jellyfish B-r01: binding identity, pose, relative bell size and diagonal flow. Image 2 is the current monochrome motif and the EDIT TARGET. Make a targeted second revision of image 2, keeping its silhouette, bell pose in upper left, three main flowing oral-arm ribbons and recognizable curl positions. Correct its overly fine lines for later abstraction at about 30 by 33 cells across a 1199 by 1312 source canvas. Thicken the free left curled tentacle and the two right sweeping curled tentacles into continuous FILLED BLACK ribbons approximately 30 to 40 source pixels thick (roughly 2.5 to 3.5 percent of full canvas width), with gently rounded ends. Keep the large open negative space on the right and separation between the principal arms. Simplify the bell: merge the many narrow radial separations into at most THREE broad transparent curved grooves; retain its domed outline and scalloped underside. In the oral-arm group, eliminate small jagged frills and hairline outline fragments, use three clean substantial wavy black ribbon masses separated by large transparent channels. Remove tiny disconnected stray marks. Preserve the diagonal swimming pose and proportion of the reference. Do not widen the arms so much that all negative spaces close. Do not add objects or facial features. Exactly one foreground ink, solid BLACK, true transparent empty background and internal cutouts, no white foreground, no gray, no colored pixels, no texture, no shading. Clean antialiased edges okay. Same source aspect ratio and framing, all tips complete. A smooth high resolution illustration, no grid, no pixel art, no cell matrix or clues, no labels. Make only this targeted readability correction, not a new pose.",
+      "quality": "not_exposed",
+      "result": {
+        "file": "motif/motif-r02.png",
+        "sha256": "82c82c08dbf018687bc04c1654cbecfad682a54264451abe431c4bdf79519af9"
+      },
+      "round": 2,
+      "seed": "not_exposed",
+      "size": "not_exposed",
+      "transparent_background": true
+    }
+  ],
+  "native_motif_calls": 2,
+  "provider": "OpenAI / native image_gen.imagegen",
+  "puzzle_id": "pz-20ecf7747bbf40828238ec26d1207172",
+  "revision": "r02"
+}
