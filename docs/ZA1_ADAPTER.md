@@ -110,6 +110,75 @@ Produktions-ID: `pz-[a-z0-9][a-z0-9-]{0,59}`. Explizite Dateistämme/Save-Slots:
 `[a-zA-Z0-9][a-zA-Z0-9._-]{0,31}`. Runtime-Revision: explizite Ganzzahl
 1…1.000.000, keine Ableitung aus `r03`. Grenzen führen zum Fehler ohne Zertifikat.
 
+## RI · Zeitbudget und Diagnose neuer Registrierungen
+
+**Freigegebener Sollvertrag vom 29.10.2026; RI-A ist noch nicht implementiert.**
+[RI: Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
+[#477](https://github.com/venomenon328/picross/issues/477) bindet Pakete und Abnahme.
+Der ausführbare Ausgangsstand begrenzt den gemeinsamen Katalogwriter und die
+Registrierungs-Recovery weiterhin auf 300 Sekunden. Diese Spezifikation
+behauptet weder eine bereits längere ausführbare Frist noch eine erreichte
+Beschleunigung.
+
+Die neue Budgetpolitik von RI-A gilt ausschließlich für die Veröffentlichung
+einer neuen ID durch `register` und die automatische beziehungsweise ausdrücklich gestartete
+Recovery zulässiger Registrierungsjournale. Die Warnschwelle beträgt
+**300 Sekunden**, der vor Beginn konfigurierbare endliche Transaktionsschutz
+zunächst **1800 Sekunden**. Eine Warnung allein beendet den Lauf nicht und
+verändert sein fachliches Ergebnis nicht. Recovery besitzt einen separaten,
+ebenfalls vor ihrem Beginn festgelegten endlichen Schutzrahmen mit zunächst
+**1800 Sekunden** Standard; sie übernimmt nicht die bereits verbrauchte
+Transaktionsfrist.
+
+Der Transaktionsrahmen beginnt vor der ersten Journal-/Alt-/Zielvalidierung
+des gemeinsamen Writers und endet nach vollständiger Abschlussprüfung und
+dauerhafter Lockentfernung. Er wird innerhalb dieser Veröffentlichung nicht
+für einzelne Dateien, Guards oder Unteraufrufe zurückgesetzt. Laufzeiten vor
+diesem Writer, insbesondere Exportprüfung, Quellenaufnahme und Planerzeugung,
+werden getrennt gemessen. Der Rahmen ist kein pauschales Zeitlimit für den
+gesamten Standardauftrag 4 einschließlich Git, CI und Merge.
+
+Die oben dokumentierten **300 Sekunden für die Authoring-Eingangsprüfung**
+einschließlich Extraktion sowie Import-, Reparatur-, Proof-, Datei-, Byte-,
+Pixel- und sonstige fachliche Grenzen bleiben unverändert. Die neue
+Transaktionsfrist erweitert keinen dieser fachlichen Teilrahmen und erlaubt keine
+unvollständige Prüfung. `export` und der lesende `plan` behalten ihren
+bestehenden Prüfvertrag. Update, Bewertungs-/Hinzugefügt-Übernahme, Sync,
+Bildübernahme und Methodenaktivierung erhalten durch RI-A keine neuen
+operativen Defaults oder erweiterten äußeren Befehlsbudgets.
+
+Budget und Messdaten sind ausschließlich Ausführungsinformationen. Sie ändern
+keine Paket-, Freigabe-, Kandidaten-, Definitions-, Bewertungs-, Methoden-,
+Plan- oder Journalidentität. Beide Methodenfreezes und alle historischen
+geschlossenen Formate bleiben bytegleich. Die konkrete CLI-/API-Syntax,
+zulässigen endlichen Parameter und gesonderten Diagnoseausgaben werden im
+Vertrag RI-A-V01 vor der ersten betroffenen Codeänderung festgelegt; diese
+Spezifikation führt noch keinen ausführbaren Schalter ein.
+
+Die Diagnostik trennt mindestens Quellenaufnahme, Export-/Stagingprüfung,
+Plan-/Journalvorprüfung, Veröffentlichung, Quellen-Guards, Abschlussprüfung
+und gegebenenfalls Recovery. Sie nennt aktuelle Phase, monotone Gesamt- und
+Phasendauer, tatsächlich wirksame Schutzrahmen, letzte nachgewiesene
+Fortschrittsmarke sowie tatsächliche Mengen von Quellen, Dateizugriffen,
+gelesenen/gehashten Bytes,
+Kandidaten-/Proofprüfungen, Guards, sicheren Reads/Pfadprüfungen und
+publizierten Dateien/Bytes. Methodenprüfung und Schreibsynchronisation werden
+gemessen, soweit die Ursachenaufteilung dies erfordert. Wiederholte Arbeit
+zählt als solche; eine unbekannte Gesamtmenge bleibt unbekannt.
+Längere Phasen geben begrenzt Fortschritt aus. Zeitablauf allein ist kein
+Fortschrittsnachweis und setzt keine Frist zurück.
+
+Warnungen, operativer Abbruch, Daten-/Vertragsfehler, erfolgreicher Rollback
+und offene Recovery bleiben unterscheidbar. Ein Abbruchbericht nennt letzte
+belegte Phase, Grund, wirksamen Rahmen sowie Lock-/Journal-/Rollbackzustand.
+Vor dem belegten dauerhaften Abschluss bleibt Ressourcen-/Signalende Exit 4,
+auch wenn die sichere Rückführung gelingt; eine Teilregistrierung erhält
+keinen Erfolg. Erst nach belegtem dauerhaften Abschluss bemerkter Zeitablauf
+darf dagegen keine bereits abgeschlossene Registrierung rückwirkend als
+nicht integriert oder abgebrochen ausweisen und keinen Rollback auslösen.
+Maßgeblich ist der nachgewiesene Abschlusszustand gemäß RI-D07. Der vollständige
+Transaktions-/Recoveryvertrag steht in [SD-C1](SD_CATALOG.md).
+
 ## Paarprofile, Schwierigkeit 0.2 und Export v4
 
 Der [Paarlinienvertrag](PAIRED_LINES.md) gilt zusätzlich für ausdrücklich gewählte
