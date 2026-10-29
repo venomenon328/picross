@@ -302,4 +302,3 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(result['status'], 'registered')
         self.assertEqual(result['operation_diagnostics']['outcome'], 'completed')
         self.assertIn('diagnostic failure', err.getvalue())
-
