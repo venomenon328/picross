@@ -8,6 +8,21 @@ Vor auftragsbezogener Arbeit vollständig lesen:
 
 Den beauftragten Arbeitsbranch verwenden, sonst den aktuellen `main`; geltende Bereichs-/Override-Regeln prüfen. Neue Ideen setzen kein vorhandenes Issue voraus. Fehlende Pflichtquellen nicht durch Erinnerungen ersetzen.
 
+Bei Entwicklung an der Schritt-4-Integration, Registrierungsbudgets,
+Paket-Prüfkontexten oder Publikationsguards/Recovery zusätzlich
+[RI: Zuverlässige und messbare Rätselintegration](docs/PUZZLE_INTEGRATION.md)
+vollständig lesen. [RI / #477](https://github.com/venomenon328/picross/issues/477)
+ist seit 29.10.2026 als Sollvertrag freigegeben, noch nicht implementiert oder
+technisch abgenommen. Reihenfolge: RI-A → Messauswertung und gemeinsamer
+B/C-Vertragsabgleich → RI-B → RI-C. Für neue Registrierungspublikationen ist
+eine Warnung nach 300 s mit vorläufig 1800 s konfigurierbarem Schutzrahmen
+vorgesehen; Recovery unterstützter Registrierungsjournale erhält einen eigenen,
+ebenfalls vorläufig 1800 s langen Rahmen. Andere operative Budgets sowie
+Eingangs-, Proof- und Ressourcengrenzen bleiben unverändert. Bis zur jeweiligen
+Lieferung gelten die bestehenden ausführbaren Grenzen und Prüfwege; die
+Spezifikation beauftragt weder Implementierung noch Budgetbypass oder Merge.
+Normale Authoringaufträge erhalten dadurch keinen zusätzlichen Freigabeprozess.
+
 Bei CI, Tests, Prüfartefakten, Bestandsbereinigung oder Produktionsabschluss zusätzlich
 [CI2: Kurze CI und begrenzter aktiver Bestand](docs/CI_SLIMMING.md),
 [CI-Policy](docs/CI_POLICY.md) und [Bestandsinventar](docs/DEVELOPMENT_ARCHIVE.md)
