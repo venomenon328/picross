@@ -15,6 +15,7 @@ from contextlib import contextmanager
 from .authoring_package import require, sha
 from .contract import canonical_bytes, exact_keys, integer, Aborted
 from . import catalog_io as io, reveal_source as reveal
+from . import operation_diagnostics as diagnostic
 
 PREFIX = b'{"format":"picross-reveal-adoption-journal-v1",'
 PREFIXES = (PREFIX, b'{"format":"picross-reveal-adoption-journal-v2",')
@@ -36,7 +37,11 @@ def read_journal(root, name="content/.registration-pending.json"):
     if size > LIMIT: raise Aborted("resource_limit: journal exceeds 128 MiB")
     with p.open("rb") as stream: prefix = stream.read(4096)
     require(size <= NORMAL_LIMIT or prefix.startswith(PREFIXES), "Only reveal journals may exceed 24 MiB")
-    return io.read(root, name, LIMIT if prefix.startswith(PREFIXES) else NORMAL_LIMIT)
+    raw = io.read(root, name, LIMIT if prefix.startswith(PREFIXES) else NORMAL_LIMIT)
+    active = diagnostic.frame.get()
+    if active is not None and hasattr(active, "journal_raw"):
+        require(raw == active.journal_raw, "Journal changed after recovery classification")
+    return raw
 
 
 def journal_bytes(j):
@@ -103,6 +108,7 @@ def validate_replacements(j, registry):
                 validate_reveal(p, entry["production"]["width"], entry["production"]["height"])
 
 
+@diagnostic.measured("Directory durability", "directory_flushes")
 def sync_directory(path):
     """Flush the directory entry, including on the actual Windows filesystem."""
     if os.name == "nt":
@@ -218,6 +224,7 @@ class _JournalView:
         self.temps = inventory(self.j, raw, restore=self.restore)
 
 
+@diagnostic.measured("Guards", "guards")
 def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _view=None):
     from . import catalog_transaction as tx, catalog_rating as rating, catalog_added as added
     from . import catalog_method
@@ -272,6 +279,16 @@ def checkpoint(phase, name=None):
     """Fault boundary for process-based tests; inert in production."""
 
 
+def _checkpoint(phase, name=None):
+    checkpoint(phase, name)
+    diagnostic.boundary(phase, name)
+
+
+@diagnostic.measured("File durability", "file_fsyncs")
+def fsync(fd):
+    os.fsync(fd)
+
+
 @contextmanager
 def addition_temporary(path):
     """Package hashes cannot prove arbitrary partial bytes after a hard kill.
@@ -312,7 +329,7 @@ def addition_preflight(root, temps):
         path=durable_parents(root,temporary)
         require(not path.exists(),'Transaction temporary already exists')
         with addition_temporary(path) as (stream,keep):
-            stream.flush();os.fsync(stream.fileno());keep()
+            stream.flush();fsync(stream.fileno());keep()
         require(io.read(root,temporary,0)==b'','Package temporary probe changed')
         path.unlink();sync_directory(path.parent)
 
@@ -328,26 +345,30 @@ def write(root, name, data, temporary, guard_fn, *, package_addition=False):
     if package_addition:
         with addition_temporary(tmp) as (stream,keep):
             for offset in range(0,len(data),io.CHUNK):
-                io.tick();stream.write(data[offset:offset+io.CHUNK]);checkpoint('temp-prefix',name)
-            stream.flush();os.fsync(stream.fileno());stream.seek(0)
+                io.tick();stream.write(data[offset:offset+io.CHUNK]);_checkpoint('temp-prefix',name)
+            stream.flush();fsync(stream.fileno());stream.seek(0)
             for offset in range(0,len(data),io.CHUNK):
                 io.tick();require(stream.read(io.CHUNK)==data[offset:offset+io.CHUNK],'Package temporary readback differs')
             keep()
         require(io.read(root,temporary,64*1024*1024)==data,'Complete package temporary differs')
-        checkpoint('temp-complete',name);guard_fn()
+        _checkpoint('temp-complete',name);guard_fn()
         rename(io.safe(root,temporary),io.safe(root,name),replace=False)
+        diagnostic.count("published_files", work="published: " + name)
+        diagnostic.count("published_bytes", len(data))
         return
     fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0), 0o644)
     with os.fdopen(fd, "wb") as stream:
         for offset in range(0, len(data), io.CHUNK):
             io.tick(); stream.write(data[offset:offset + io.CHUNK])
-            checkpoint("temp-prefix", name)
-        stream.flush(); os.fsync(stream.fileno())
+            _checkpoint("temp-prefix", name)
+        stream.flush(); fsync(stream.fileno())
     require(io.read(root, temporary, 64 * 1024 * 1024) == data, "Temporary readback differs")
-    checkpoint("temp-complete", name)
+    _checkpoint("temp-complete", name)
     guard_fn()
     target = io.safe(root, name)
     rename(io.safe(root, temporary), target, replace=target.exists())
+    diagnostic.count("published_files", work="published: " + name)
+    diagnostic.count("published_bytes", len(data))
 
 
 def cleanup_temps(root, j, raw, guard_fn, *, view):
@@ -357,9 +378,22 @@ def cleanup_temps(root, j, raw, guard_fn, *, view):
         target.unlink(); sync_directory(target.parent)
 
 
-def execute(root, j, additions=None, *, fail_step=None, under_lock=None):
+def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
+            publication_seconds=None, recovery_seconds=None):
+    diagnostic.seconds(publication_seconds)
+    diagnostic.seconds(recovery_seconds)
+    from . import catalog_transaction as tx
+    require(isinstance(j, dict), "Invalid catalog journal")
+    registration = j.get("operation") == "registration" and j.get("format") in (tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    require(registration or publication_seconds is None and recovery_seconds is None,
+            "RI-A overrides require a new registration")
+    if registration:
+        with diagnostic.operation("Publication", 1800 if publication_seconds is None else publication_seconds,
+                                  "registration-default" if publication_seconds is None else "override",
+                                  recovery_seconds=recovery_seconds):
+            return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock)
     with io.budget(300):
-        return _execute(root,j,additions,fail_step=fail_step,under_lock=under_lock)
+        return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock)
 
 
 def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
@@ -378,17 +412,25 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
         sync_directory(p)
     if os.name != "nt": require(hasattr(ctypes.CDLL(None), "renameat2"), "Atomic no-replace rename unavailable")
     addition_preflight(root,[temps[n] for n in j['additions']])
-    checkpoint("P0")
+    _checkpoint("P0")
     stage_name = "content/.registration-journal-" + io.checksum(raw) + ".tmp"
     stage = io.safe(root, stage_name)
     with stage.open("xb") as stream:
+        if diagnostic.current.get():
+            diagnostic.current.get().outcome = "recovery-required"
+            diagnostic.current.get().journal_state = {"journal": "staging-incomplete", "lock": "absent"}
         for offset in range(0, len(raw), io.CHUNK):
-            stream.write(raw[offset:offset + io.CHUNK]); checkpoint("journal-prefix")
-        stream.flush(); os.fsync(stream.fileno())
+            stream.write(raw[offset:offset + io.CHUNK]); _checkpoint("journal-prefix")
+        stream.flush(); fsync(stream.fileno())
     require(read_journal(root, stage_name) == raw, "Journal staging readback differs")
-    checkpoint("journal-complete")
+    if diagnostic.current.get():
+        diagnostic.current.get().journal_state["journal"] = "staging-complete"
+    _checkpoint("journal-complete")
     rename(stage, io.safe(root, tx.LOCK), replace=False)
-    checkpoint("P1")
+    if diagnostic.current.get():
+        diagnostic.current.get().journal_state = {"journal": "present", "lock": "present"}
+        diagnostic.current.get().outcome = "recovery-required"
+    _checkpoint("P1")
     expected = {n: io.checksum(v.encode() if v is not None else None) for n, v in j["old"].items()}
     expected.update({n: pair["old"]["sha256"] for n, pair in j["replacements"].items()})
     expected.update({n: None for n in j["additions"]})
@@ -397,19 +439,19 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
     guard_fn()
     try:
         if under_lock: under_lock()
-        checkpoint("P2")
+        _checkpoint("P2")
         for i, n in enumerate(sorted(j["additions"])):
             guard_fn()
             data = io.read(additions[n].parent, additions[n].name, 64 * 1024 * 1024)
             require(io.checksum(data) == j["additions"][n], "Staged package changed")
             write(root, n, data, temps[n], guard_fn,package_addition=True)
             expected[n] = io.checksum(data)
-            checkpoint("P3", n)
+            _checkpoint("P3", n)
             if i == 0 and fail_step == "crash": raise InterruptedError("Injected registration interruption")
             if i == 0 and fail_step == "files": raise OSError("Injected registration interruption")
         for n, pair in sorted(j["replacements"].items()):
             guard_fn(); write(root, n, decode_binary(pair["new"]), temps[n], guard_fn)
-            expected[n] = pair["new"]["sha256"]; checkpoint("P3", n)
+            expected[n] = pair["new"]["sha256"]; _checkpoint("P3", n)
         if fail_step == "crash-package": raise InterruptedError("Injected update crash after package")
         if j["operation"] == "registration":
             from .target_adapter import verify_export
@@ -421,32 +463,46 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
             guard_fn()
             data = j["new"][n].encode() if j["new"][n] is not None else None
             write(root, n, data, temps[n], guard_fn); expected[n] = io.checksum(data)
-            checkpoint("P5" if n == tx.RUNTIME else "P4", n)
+            _checkpoint("P5" if n == tx.RUNTIME else "P4", n)
             if fail_step == "crash-" + n or n == tx.REGISTRY and fail_step == "crash-index" or n == tx.RUNTIME and fail_step == "crash-runtime": raise InterruptedError("Injected transaction interruption: " + n)
             if fail_step == n or n == tx.REGISTRY and fail_step == "index": raise OSError("Injected update failure: " + n)
         if tx.RUNTIME not in names:
             # P5 still has a boundary when the projection is byte-identical.
             # Keep interruption coverage without manufacturing a runtime write.
-            checkpoint("P5", tx.RUNTIME)
+            _checkpoint("P5", tx.RUNTIME)
             if fail_step in ("crash-"+tx.RUNTIME,"crash-runtime"): raise InterruptedError("Injected transaction interruption: "+tx.RUNTIME)
             if fail_step == tx.RUNTIME: raise OSError("Injected update failure: "+tx.RUNTIME)
         guard_fn(); check_checkout(root, replay=j['operation']=='registration', pending_journal=raw); guard_fn()
         cleanup_temps(root, j, raw, guard_fn, view=view)
-        checkpoint("P6"); guard_fn()
+        _checkpoint("P6"); guard_fn()
         io.safe(root, tx.LOCK).unlink(); sync_directory(root / "content")
+        diagnostic.durable("completed")
     except InterruptedError:
         raise
-    except BaseException:
+    except BaseException as original:
         # A separate recovery budget is deliberately independent of the expired
         # forward budget, and foreign data still blocks before rollback writes.
         token = io._deadline.set(None)
+        forward = diagnostic.frame.get()
+        recovery_seconds = forward.recovery_seconds if forward is not None and forward.kind == "Publication" else None
+        operation_token = diagnostic.frame.set(None)
         try:
-            with io.budget(300): recover(root)
-        finally: io._deadline.reset(token)
+            from .content_registry import recover as classified_recover
+            classified_recover(root, recovery_seconds=recovery_seconds)
+        except BaseException as recovery_error:
+            if isinstance(original, (Aborted, KeyboardInterrupt)):
+                raise original from recovery_error
+            raise
+        finally:
+            diagnostic.frame.reset(operation_token)
+            io._deadline.reset(token)
         raise
 
 
 def recover(root):
+    if diagnostic.frame.get() is None or diagnostic.frame.get().kind != "Recovery":
+        from .content_registry import recover as classified_recover
+        return classified_recover(root)
     from . import catalog_transaction as tx
     from .content_registry import check_checkout
     raw = read_journal(root)
@@ -460,6 +516,7 @@ def recover(root):
         guard(root, j, raw=raw, old_only=True)
         require(read_journal(root) is None and read_journal(root, remnants[0]) == raw, "Journal appeared/changed during staging recovery")
         io.safe(root, remnants[0]).unlink(); sync_directory(root / "content")
+        diagnostic.durable("rolled-back")
         return {"status": "rolled-back", "registered": False}
     j = io.json_bytes(raw, LIMIT)
     require(tx.modern(j) and raw == journal_bytes(j), "Noncanonical transaction journal")
@@ -467,34 +524,35 @@ def recover(root):
     view = _JournalView(j, raw)
     j = view.j
     guard_fn = lambda: guard(root, j, raw=raw, _view=view)
-    guard_fn(); checkpoint("R0")
+    guard_fn(); _checkpoint("R0")
     cleanup_temps(root, j, raw, guard_fn, view=view)
     temps = view.temps
     for n, pair in sorted(j["replacements"].items()):
         if io.file_hash(root, n, reveal.IMAGE_LIMIT) != pair["old"]["sha256"]:
             guard_fn()
             write(root, n, decode_binary(pair["old"]), temps[n], guard_fn)
-        checkpoint("R1-binary", n)
+        _checkpoint("R1-binary", n)
     for n in sorted(j["old"]):
         if n == tx.RUNTIME: continue
         data = j["old"][n].encode() if j["old"][n] is not None else None
         if tx.read(root, n) != data:
             guard_fn()
             write(root, n, data, temps[n], guard_fn)
-        checkpoint("R1-text", n)
+        _checkpoint("R1-text", n)
     for n in sorted(j["additions"], reverse=True):
         target = io.safe(root, n)
         if target.exists():
             guard_fn()
             io.safe(root, n).unlink(); sync_directory(target.parent)
-        checkpoint("R1-addition", n)
+        _checkpoint("R1-addition", n)
     guard_fn()
     if tx.read(root, tx.RUNTIME) != runtime.encode(): write(root, tx.RUNTIME, runtime.encode(), temps[tx.RUNTIME], guard_fn)
-    checkpoint("R1-runtime")
+    _checkpoint("R1-runtime")
     guard_fn(); check_checkout(root, pending_journal=raw); guard_fn()
     require(all(tx.read(root, n) == (v.encode() if v is not None else None) for n, v in {**j["old"], tx.RUNTIME: runtime}.items()) and
             all(not io.safe(root, n).exists() for n in j["additions"]), "Recovery goal differs")
     cleanup_temps(root, j, raw, guard_fn, view=view)
-    checkpoint("R2"); guard_fn()
+    _checkpoint("R2"); guard_fn()
     io.safe(root, tx.LOCK).unlink(); sync_directory(root / "content")
+    diagnostic.durable("rolled-back")
     return {"status": "rolled-back", "registered": False}

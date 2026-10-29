@@ -5,6 +5,7 @@ from pathlib import Path
 from .authoring_package import require, sha, relative
 from .contract import Aborted, InvalidInput, canonical_bytes, digest, exact_keys, integer
 from . import catalog_io as io
+from . import operation_diagnostics as diagnostic
 
 OLD = "picross-difficulty-0.3"
 NEW = "picross-difficulty-0.4"
@@ -16,6 +17,7 @@ LIMIT = 4096
 PLAN_LIMIT = 16 * 1024 * 1024
 
 
+@diagnostic.measured("Method freeze", "method_validations")
 def method_hash(method):
     require(method in METHODS, "Unsupported difficulty method")
     if method == OLD:

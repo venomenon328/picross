@@ -11,7 +11,7 @@ Bestandsumstellung im echten Katalog sind in diesem C-Auftrag ausgeschlossen.
 Der [synthetische T01-Nachweis](../SD2_C_VERIFICATION.md) bindet neue und
 geänderte Logik, historische Rebinds und die gemeinsame Transaktion.
 
-**Version 0.5.0 · Dokumentrevision 25 · 29.10.2026**
+**Version 0.5.0 · Dokumentrevision 26 · 29.10.2026**
 
 **Variantenwahl / #468:** Sheet-Übergabe v2 bietet Abschlussbilder für Auftrag 2
 und geprüfte Rasterpakete für Auftrag 4 als auswählbare Optionen an (§4.5/§7).
@@ -737,6 +737,21 @@ Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflo
 muss über den tatsächlichen Arbeitsbranch/Commit erreichbar benannt werden.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren
+
+RI-A-V01 zu [#478](https://github.com/venomenon328/picross/issues/478) liefert
+auf seinem Arbeitsbranch die [operativen CLI-/API-Grenzen](../ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen).
+Neue Registrierung: `register --publication-seconds S --recovery-seconds S`,
+jeweils Default 1800 s; Warnung einmal ab 300 s. Ausdrückliche
+`recover-registration --recovery-seconds S` verwendet den eigenständigen
+Registrierungsrahmen nur nach sicherer Journalzuordnung. Andere Operationen
+behalten ihre bisherigen Grenzen. `export`/`plan` erhalten keine neuen
+mutierenden Budgetoptionen. Positive endliche Werte vor dem Lauf festlegen;
+bei Fristablauf Diagnose und Journalzustand prüfen, keinen Lock manuell entfernen.
+Die vier Befehle liefern `operation_diagnostics` im einzelnen JSON-Ergebnis
+und optional `--operation-report <neue-externe-datei>`; Fortschritt steht auf
+stderr. Phasenzeiten sind inklusive und nicht zu summieren. Der getrennte
+[RI-A-T01-Nachweis](../RI_A_VERIFICATION.md) benennt reale Messungen und offene
+Abnahmen; eine längere Schutzfrist beweist weder Beschleunigung noch Integration.
 
 Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
 

@@ -16,6 +16,7 @@ from .analysis_contract import RULE_IDS, REASONS, analysis_input
 from .analysis_io import runtime_logic, check_target
 from .difficulty_rating import (METHOD_ID, RATING_FORMAT, frozen_method,
                                 logical_level, size_effect)
+from . import operation_diagnostics as diagnostic
 
 LEGACY_FORMAT = "picross-catalog-difficulty-v1"
 LEGACY_CHECKED = "picross-checked-difficulty-v1"
@@ -258,7 +259,9 @@ def _compact(value):
 def _rating(rating, compact, identifier):
     exact_keys(rating, {"format", "method", "method_hash", "analysis_result_hash", "source", "result", "rating_hash"})
     require(len(canonical_bytes(rating)) + 1 <= 65536 and rating["format"] == RATING_FORMAT, "Invalid SD-B rating")
-    method = frozen_method()
+    diagnostic.count("method_validations")
+    with diagnostic.phase("Method freeze"):
+        method = frozen_method()
     require(digest(rating["method"]) == digest(method) == sha(rating["method_hash"]), "Unknown difficulty method")
     require(sha(rating["analysis_result_hash"]) == compact["result_hash"], "Wrong analysis result binding")
     check_hash(rating, "rating_hash")
