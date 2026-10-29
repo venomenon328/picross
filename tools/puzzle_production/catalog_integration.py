@@ -7,6 +7,7 @@ import tempfile
 import time
 
 from . import catalog_io
+from . import operation_diagnostics as diagnostic
 from .authoring_package import file_hash, file_table, require, sha
 from .contract import canonical_bytes, load_json
 from . import catalog_added as added, categories, catalog_rating as rating, catalog_transaction as tx, reveal_source as reveal, catalog_method
@@ -41,8 +42,13 @@ def _new_rating(raw, previous, checked, rebind, *, required, production_mode, ac
     return active, external
 
 
+@diagnostic.measured("Input/Plan")
 def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None, difficulty=None,
-              rebind_difficulty=False, fail_step=None):
+              rebind_difficulty=False, fail_step=None, publication_seconds=None, recovery_seconds=None):
+    diagnostic.seconds(publication_seconds)
+    diagnostic.seconds(recovery_seconds)
+    require(apply and expected_definition_sha256 is None or publication_seconds is None and recovery_seconds is None,
+            "RI-A overrides require mutating new registration, not plan/update")
     from .content_registry import ROOT, export_entry, check_checkout, validate
     from .content_update import notice_path
     from .target_adapter import verify_export, FORMAT, MANUAL_FORMAT, PAIRED_FORMAT
@@ -51,6 +57,8 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     if update: sha(expected_definition_sha256)
     snapshot = tx.capture(root)
     registry = snapshot["registry"]
+    if diagnostic.current.get():
+        diagnostic.current.get().environment["catalog_entries"] = len(registry["entries"])
     catalog = rating.bytes_json(snapshot["texts"][categories.PATH], 131072)
     m, report = verify_export(export_dir)  # Existing mandatory full production check.
     require(m["format"] in (FORMAT, MANUAL_FORMAT, PAIRED_FORMAT), "Category-less legacy export: create a new categorized export")
@@ -116,6 +124,8 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         verify_export(stage)  # Preserve the existing independent staging replay.
         require(file_hash(stage / "manifest.json") == entry["production"]["package_sha256"], "Export changed during staging")
         additions = {package + "/" + name: p for name, p in file_table(stage, time.monotonic() + 300).items()}
+        if diagnostic.current.get():
+            diagnostic.current.get().environment["package_files"] = len(additions)
         target=tx.safe(root,package)
         if target.exists():
             parents={str(parent).replace('\\','/') for name in additions for parent in Path(name).parents}
@@ -152,5 +162,6 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
                         runtime_revision=m["runtime_revision"], old_package_retained=existing["production"]["package"])
         if external: require(external[0].read_bytes() == external[1], "Checked difficulty input changed during planning")
         if not apply: return plan
-        tx.execute(root, journal, additions, fail_step=fail_step)
+        tx.execute(root, journal, additions, fail_step=fail_step,
+                   publication_seconds=publication_seconds, recovery_seconds=recovery_seconds)
     return {**plan, "status": "updated" if update else "registered", "registered": True}

@@ -6,6 +6,14 @@ gehören nicht dauerhaft in den aktiven Tree, Builds oder neue CI-Artefakte.
 
 ## Aktuell benötigt
 
+RI-A / #478 ergänzt genau einen operativen Diagnose-/Budgetbaustein,
+ein festes synthetisches Testmodul und den manuell gestarteten begrenzten
+T01-Messtreiber; keine echten Kataloginputs oder gespeicherten Testkopien.
+[RI-A-T01](RI_A_VERIFICATION.md) hält den kompakten Liefernachweis.
+Messarbeitsbäume und rohe lokale Berichte bleiben außerhalb des Repositorys
+für den laufenden Review, anschließend gelten die CI2-Abschlussregeln.
+Es entsteht kein dauerhafter Benchmarkjob und kein neues Replaykorpus.
+
 - `game/`: tatsächliche Spielressourcen und Nutzungsrechte; feste technische Testinputs
   liegen getrennt unter Tests/Studien und sind aus dem Export ausgeschlossen.
 - `content/authoring/`: ausschließlich laufende Arbeit. Ein Draft mit `registered`

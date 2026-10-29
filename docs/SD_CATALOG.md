@@ -641,10 +641,10 @@ Lock. Kein Erfolg für Teilpublikation oder gescheiterte Rückführung.
 
 ## RI · Betriebsgrenzen der Neuregistrierung und ihrer Recovery
 
-**Freigegebener Sollvertrag vom 29.10.2026; RI-A ist noch nicht implementiert.**
+**RI-A-V01 auf dem Arbeitsbranch zu #478 implementiert; [T01](RI_A_VERIFICATION.md) und getrennte Abnahme bleiben maßgeblich.**
 [RI: Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
 [#477](https://github.com/venomenon328/picross/issues/477) bindet Pakete und Abnahme.
-Die folgenden Betriebsgrenzen ersetzen nach RI-A ausschließlich die bisherige
+Die folgenden Betriebsgrenzen ersetzen in RI-A ausschließlich die bisherige
 harte 300-Sekunden-Grenze für neue Registrierungen und die zugehörige Recovery.
 Die vorhandenen Journalgenerationen, vollständigen Mengen, Operationsdeltas,
 Phasen P0–P6/R0–R2, Quellengarantien und das Ergebnisgate bleiben erhalten.
@@ -693,9 +693,23 @@ Mutation geprüft und im operativen Nachweis genannt; kein Null-/Unendlich-
 oder Abschaltschalter. Der Schutz wird an festgelegten sicheren Prüfgrenzen
 durchgesetzt und verspricht keinen harten OS-Prozessabbruch. Die Warnung bei
 300 Sekunden darf weder ein fachliches Gate abschwächen noch eigenständig
-einen ansonsten gültigen Lauf abbrechen. Die konkrete CLI-/API-Bindung,
-Parametergrenzen, Diagnosehülle und Fortschrittsfrequenz werden in RI-A-V01
-vor der ersten betroffenen Codeänderung festgelegt.
+einen ansonsten gültigen Lauf abbrechen. Die vor Code gebundene konkrete
+CLI-/API-Schnittstelle und Diagnosehülle stehen im
+[ZA-1-Betriebsvertrag](ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen).
+Der Recoveryrahmen beginnt vor der begrenzten Klassifikation. Während der
+lesenden Klassifikation gilt höchstens der Registrierungsrahmen; nach Zuordnung
+gilt ohne Neustart derselben Uhr die Operationsfrist (andere Writer 300 s plus
+bisherige Außenbudgets). Die ursprünglichen Journalbytes bleiben auch nach
+Klassifikation gebunden. Registrierung v6/v5 sowie historische v4/v3 verlangen
+die exakte Format-/Operationspaarung und ihr geschlossenes Schlüsselschema;
+v2 besitzt sein eigenes geschlossenes Schema ohne `operation`. V1 bleibt
+gesperrt. Vollständige Delta-, Quellen-, Eigentums- und Zielprüfung folgen
+unverändert vor Mutation.
+
+Nur der zusätzliche `tx.read`-Pfaddurchlauf entfällt: `io.read(..., missing=True)`
+prüft weiterhin frisch Pfad, Typ, Alias/Links, Bytegrenze und Identitäten
+vor/nach Öffnen und Lesen. Kein Cache. `catalog_publication.guard` behält
+seine vollständigen Prüfungen und jeden bisherigen Aufruf vor Schreibschritten.
 
 Operative Phasen, Zeiten, Zähler, Warnungen und Budgetwahl bleiben außerhalb
 der geschlossenen fachlichen und historischen Identitätskerne. Sie dürfen
