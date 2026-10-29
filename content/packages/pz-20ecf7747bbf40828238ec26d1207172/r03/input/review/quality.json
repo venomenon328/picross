@@ -1,0 +1,137 @@
+{
+  "candidate_comparison": [
+    {
+      "bundle": "production/tight-30x33",
+      "filled": 367,
+      "height": 33,
+      "line_status": "stalled",
+      "logic_hash": "c4fe52c445df0ca1a9425d882c8b6e17479740f12f53e0cf43f1082f13474166",
+      "matrix_hash": "b9d328b61f314ad04773465075012f9b3a57af958cf09df61c41ced22e9b9640",
+      "reason": "Schwelle 176 verliert mehr Bandkontinuität; unabhängig geprüfter Paarfixpunkt bleibt unvollständig.",
+      "selection": "rejected",
+      "used_foreground_colors": 1,
+      "variant": "area-176",
+      "width": 30
+    },
+    {
+      "bundle": "production/tight-30x33",
+      "filled": 408,
+      "height": 33,
+      "line_status": "stalled",
+      "logic_hash": "ecbd71ccaf3ac71f3d6e01760cb29bb6a2d2af99189af6a616ff327e2045a19f",
+      "matrix_hash": "154a5aff61f8046967610d02981ffc197a23111072972bf79d29de23a7e77a4c",
+      "reason": "Empfohlener mittlerer Umfang, kräftige Bänder und sichtbare Negativräume; Paarproof vollständig. Keine Reparatur.",
+      "selection": "selected_after_paired_certification",
+      "used_foreground_colors": 1,
+      "variant": "area-208",
+      "width": 30
+    },
+    {
+      "bundle": "production/tight-36x40",
+      "filled": 504,
+      "height": 40,
+      "line_status": "stalled",
+      "logic_hash": "2263a917fbd045186b33eb389cfc16e360dc726cf52e0112f3442cc8a5c08b49",
+      "matrix_hash": "143ffde5dc722ec09fd97a1fccb5dbf8cac8ef269b0057940b0ded3c653074e7",
+      "reason": "Größerer Umfang mit filigraneren/unterbrochenen Nebenformen, ohne erkennbaren Vorteil gegenüber 30×33/208; Linienfixpunkt unvollständig.",
+      "selection": "rejected",
+      "used_foreground_colors": 1,
+      "variant": "area-176",
+      "width": 36
+    },
+    {
+      "bundle": "production/tight-36x40",
+      "filled": 577,
+      "height": 40,
+      "line_status": "stalled",
+      "logic_hash": "2ace78c8cd94a5991bccd1120982f0be7bd2cd37e847bf00841e376f9ec9d0c1",
+      "matrix_hash": "cb40a83b6870bb60277915af347af776d073cf8e1385c0311dacaeb7daecb130",
+      "reason": "Mehr Detail, aber 450 zusätzliche Zellen ohne nötigen Identitätsgewinn. Die empfohlene 30×33-Fassung trägt das Motiv und ist vollständig zertifiziert; kein zusätzlicher Routinepaarlauf.",
+      "selection": "rejected",
+      "used_foreground_colors": 1,
+      "variant": "area-208",
+      "width": 36
+    }
+  ],
+  "cells": 990,
+  "criteria": {
+    "details_negative_spaces": {
+      "reason": "Drei große Bänder, linker eingerollter Tentakel und rechte geschwungene Nebenformen bleiben unterscheidbar. Glockenrillen und feine Falten werden auf Zellmaß zusammengefasst; große Außen- und Zwischenräume bleiben offen.",
+      "status": "erfüllt"
+    },
+    "mono_readability": {
+      "reason": "Genau ink/#000000 plus empty; zusammenhängende Hauptmassen und lesbare diagonale Zwischenräume. Zwei orthogonal isolierte Füllungen gehören zu einem diagonal laufenden rechten Faden beziehungsweise seiner unteren eingerollten Spitze; keine hinzugefügten Logikpixel.",
+      "status": "erfüllt"
+    },
+    "recognizability": {
+      "reason": "Gewölbte Glocke und diagonal nachlaufende Mundarme/Tentakel bilden auch als diskretes Monoraster eine erkennbare Qualle; farbiges Reveal verdeutlicht die Tierform.",
+      "status": "erfüllt"
+    },
+    "series_style": {
+      "reason": "Ruhige charaktervolle Reduktion mit klarer Silhouette; das detaillierte farbige transparente B-r01 bleibt bytegleich als Belohnungsbild.",
+      "status": "erfüllt"
+    },
+    "silhouette_proportions": {
+      "reason": "Breite Dreiviertelglocke oben links, schräger Unterrand und Fluss nach rechts unten unverändert; proportionaler contain-Import ohne Spiegelung oder Streckung.",
+      "status": "erfüllt"
+    }
+  },
+  "empty_columns_1_based": [],
+  "empty_rows_1_based": [
+    33
+  ],
+  "fill_fraction": [
+    408,
+    990
+  ],
+  "filled_cells": 408,
+  "foreground_color_requirement": "exact",
+  "frame": {
+    "bottom": false,
+    "left": true,
+    "right": true,
+    "top": true
+  },
+  "frame_valid": true,
+  "isolated_filled_1_based_xy": [
+    [
+      24,
+      18
+    ],
+    [
+      29,
+      31
+    ]
+  ],
+  "logic_hash": "ecbd71ccaf3ac71f3d6e01760cb29bb6a2d2af99189af6a616ff327e2045a19f",
+  "material_changes": false,
+  "matrix_hash": "154a5aff61f8046967610d02981ffc197a23111072972bf79d29de23a7e77a4c",
+  "native_game_test": "nicht erforderlich: reine Inhaltsproduktion",
+  "palette_roles": {
+    "empty": "Leere Außen- und Zwischenräume; zählt nicht zur Farbzahl.",
+    "ink": "Alle Motivfüllungen; einzige Vordergrundfarbe."
+  },
+  "playtest": "not_performed_optional",
+  "puzzle_id": "pz-20ecf7747bbf40828238ec26d1207172",
+  "repair": {
+    "reason": "Visuell geeigneter freigegebener Direktimport nach Paarprüfung vollständig zertifiziert; gemäß §4.4 bei Erfolg stoppen.",
+    "rounds": 0,
+    "status": "not_required"
+  },
+  "requested_foreground_colors": 1,
+  "reveal_consistency": {
+    "comparison": "review/final-comparison.png",
+    "motif_sha256": "82c82c08dbf018687bc04c1654cbecfad682a54264451abe431c4bdf79519af9",
+    "reveal_sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d",
+    "status": "pass"
+  },
+  "reviewer": "Codex; dateibasierte technische Prüfung und eigene Sichtprüfung, keine menschliche Endabnahme",
+  "revision": "r03",
+  "soft_exceptions": [
+    "Zwei orthogonal isolierte Pixel (24,18) und (29,31) sind durch diagonalen Verlauf beziehungsweise eingerollte Tentakelspitze motivisch begründet.",
+    "Die letzte Außenzeile 33 ist leer; keine vollständig leeren Innenlinien. Die neue Randregel verlangt nur eine horizontale und eine vertikale Außenkante und ist erfüllt. Keine nachträgliche Maßänderung."
+  ],
+  "target_export": "pending_actual_human_final_editorial_approval",
+  "timestamp_utc": "2026-10-29T00:05:01Z",
+  "used_foreground_colors": 1
+}

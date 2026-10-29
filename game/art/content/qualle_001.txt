@@ -1,0 +1,3 @@
+Production ID: pz-20ecf7747bbf40828238ec26d1207172
+Artwork: ChatGPT / OpenAI native image generation
+Usage basis: Vom Nutzer beauftragte native Neugenerierung aus Motivtext; keine Fremdvorlage. Tatsächliche menschliche Bildfreigabe in approvals/reveal-b-r01.json.
