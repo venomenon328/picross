@@ -1,0 +1,16 @@
+{
+  "actor": "Tobias Schröder",
+  "evidence": "approvals/reveal-evidence.txt",
+  "file": "images/reveal-a-r01.png",
+  "puzzle_id": "pz-22969714393847e697e8169a8b688efd",
+  "revision": "A-r01",
+  "sha256": "925da2e259f1f7eb9f697747d7926b9e3c0e1e63d12ed7cd46c3832588f80568",
+  "source_commit": "ac2e1f85e29f0dffd06a3d84d6a70e09af8a6d7a",
+  "source_handoff_sha256": "b623e2ade673e6d89864ecca9e260c67246c6a17b9171b5c3b408072fc0404a0",
+  "source_inventory_sha256": "46e939619506dbad33d42a5ea5979cb4c0b3a1be041aeab0d76f8e7ce903e6f4",
+  "source_package_sha256": "21fe2799c99a32d345065697b1a9859fa985e8767f03bad529c825b0161d20e2",
+  "statement": "Ich gebe das Abschlussbild A-r01 frei.",
+  "timestamp_basis": "Erfassungszeitpunkt der vorliegenden Nutzererklärung; exakte Nachrichtenzeit nicht verfügbar.",
+  "timestamp_utc": "2026-10-29T14:12:02Z",
+  "type": "human_reveal_approval"
+}
