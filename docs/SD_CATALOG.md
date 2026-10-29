@@ -628,9 +628,96 @@ OS-Aufrufen abgesichert; fehlt benötigte Atomizität/Dauerhaftigkeit, vor aktiv
 Mutation blockieren. Kein Versprechen gegen defekte Datenträger. Manuelle
 Paralleländerungen sind unzulässig; erkannte Rennen bewahren fremde Bytes.
 Gewöhnlicher Fehler nach P2 versucht denselben Recoveryweg; nach erfolgreicher
-Rückführung Exit 2 und gültiger Altcheckout. Ressourcen-/Signalende Exit 4;
-kontrollierter Rollback nur nach vollständiger Vorprüfung mit eigenem 300-s-Budget.
-Harter Kill garantiert kein JSON-Ergebnis. Ist Rückführung nicht sicher möglich,
-bleiben Journal und Dateien erhalten, `recovery_required=true`. Recovery selbst
-hat 300 s; erneutes Ressourcenende/Fremdbytes halten den Lock. Kein Erfolg für
-Teilpublikation oder gescheiterte Rückführung.
+Rückführung Exit 2 und gültiger Altcheckout. Ressourcen-/Signalende Exit 4.
+Am ausführbaren Ausgangsstand verwendet der kontrollierte Rollback nach
+vollständiger Vorprüfung ein eigenes 300-s-Budget; ausdrückliche Recovery
+hat ebenfalls 300 s. Für neue Registrierungen und ihre zulässigen
+Registrierungsjournale spezifiziert der nachfolgende RI-Sollvertrag einen
+eigenen künftigen Rahmen. Andere Operationen behalten diese bestehenden
+Betriebsgrenzen. Harter Kill garantiert kein JSON-Ergebnis. Ist Rückführung
+nicht sicher möglich, bleiben Journal und Dateien erhalten,
+`recovery_required=true`. Erneutes Ressourcenende oder Fremdbytes halten den
+Lock. Kein Erfolg für Teilpublikation oder gescheiterte Rückführung.
+
+## RI · Betriebsgrenzen der Neuregistrierung und ihrer Recovery
+
+**Freigegebener Sollvertrag vom 29.10.2026; RI-A ist noch nicht implementiert.**
+[RI: Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
+[#477](https://github.com/venomenon328/picross/issues/477) bindet Pakete und Abnahme.
+Die folgenden Betriebsgrenzen ersetzen nach RI-A ausschließlich die bisherige
+harte 300-Sekunden-Grenze für neue Registrierungen und die zugehörige Recovery.
+Die vorhandenen Journalgenerationen, vollständigen Mengen, Operationsdeltas,
+Phasen P0–P6/R0–R2, Quellengarantien und das Ergebnisgate bleiben erhalten.
+
+| Weg | Warnung | Endlicher Standardschutz | Geltung |
+| --- | --- | --- | --- |
+| Veröffentlichung einer neuen ID, Operation `registration` | 300 s | zunächst 1800 s, vor Beginn konfigurierbar | Gesamter gemeinsamer Writer einschließlich seiner Vorprüfung, Veröffentlichung und Abschlussprüfung |
+| Automatischer Rollback derselben Registrierung | 300 s | eigener Rahmen, zunächst 1800 s, vor Beginn konfigurierbar | Vollständige Recovery einschließlich erneuter Vorprüfung; unabhängig von der verbrauchten Veröffentlichungsfrist |
+| Ausdrückliche Recovery eines zulässigen Registrierungsjournals | 300 s | eigener Rahmen, zunächst 1800 s, vor Beginn konfigurierbar | Unterstützte historische und aktuelle Registrierungsjournalgenerationen unter ihren unveränderten Verträgen |
+| Alle anderen Schreib- und Recoveryoperationen | bisheriger Vertrag | bisherige Defaults und Außenbudgets | `update`, `adoption`, `sync`, `added-adoption`, `reveal-adoption`, `method-activation` |
+
+Die Budgetmechanik muss die Operationsklasse ausdrücklich erhalten. Eine
+pauschale Erhöhung des Defaults oder der zulässigen Höchstwerte eines von
+allen Katalogpfaden verwendeten Helfers ist keine ausreichende Umsetzung.
+Insbesondere bleibt der eigene `catalog_reveal`-Befehlsrahmen
+`--seconds` 1…300 unverändert. Größere Registrierungsfristen erweitern weder
+diesen Rahmen noch Import-/Proof-/Datei-/Bytegrenzen.
+
+Die sichere begrenzte Journalerkennung des gemeinsamen Recoveryeinstiegs
+bestimmt zunächst, ob tatsächlich eine unterstützte Registrierungsoperation
+vorliegt. Ein frei behauptetes `operation`-Feld oder der Befehlsname
+`recover-registration` genügt nicht: dieser Einstieg behandelt auch andere
+Operationen. Format und Operation müssen zum vorhandenen Dispatchvertrag
+passen; bei historischen Formaten ohne gleiches Operationsfeld gilt ihre
+eindeutige zugelassene Formatzuordnung. Die vollständige Journal-/Quellen-/
+Delta-/Eigentumsprüfung bleibt anschließend vor jeder Mutation erforderlich.
+
+Dieselbe Zuordnung gilt für einen nach bestehendem Vertrag allein zulässigen
+vollständigen Journalstagingrest. Mehrdeutige, unvollständige, fremde und
+unbekannte Reste behalten ihr bisheriges Blockadeverhalten. Registrierung v1
+bleibt gesperrt. Alte Journale erhalten weder neue Budgetfelder noch neue
+Kennungen oder nachträgliche Freigaben; ihre unveränderten Originalbytes
+bleiben die Wiederherstellungsautorität.
+
+Die Registrierungs-Recovery misst ab Beginn ihres Aufrufs einschließlich
+sicherer Journalerkennung. Automatische Recovery erhält einen frischen
+eigenen Rahmen; dessen Konfiguration steht vor ihrem Beginn fest. Während
+derselben Recovery wird das Budget nicht je Datei, Guard, Journalgeneration
+oder verschachteltem Aufruf erneuert. Ein erneuter ausdrücklicher
+Recoveryaufruf ist ein neuer dokumentierter Versuch, keine Verlängerung oder
+rückwirkende Erfolgserklärung des vorherigen Versuchs. Andere Operationen
+behalten ihre bisherigen Recoverybudgets.
+
+Zeitmessung verwendet eine monotone Uhr. Endliche gültige Werte werden vor
+Mutation geprüft und im operativen Nachweis genannt; kein Null-/Unendlich-
+oder Abschaltschalter. Der Schutz wird an festgelegten sicheren Prüfgrenzen
+durchgesetzt und verspricht keinen harten OS-Prozessabbruch. Die Warnung bei
+300 Sekunden darf weder ein fachliches Gate abschwächen noch eigenständig
+einen ansonsten gültigen Lauf abbrechen. Die konkrete CLI-/API-Bindung,
+Parametergrenzen, Diagnosehülle und Fortschrittsfrequenz werden in RI-A-V01
+vor der ersten betroffenen Codeänderung festgelegt.
+
+Operative Phasen, Zeiten, Zähler, Warnungen und Budgetwahl bleiben außerhalb
+der geschlossenen fachlichen und historischen Identitätskerne. Sie dürfen
+die Hüllen von Ratings, Freezes, Plänen, Paketen, Freigaben oder Journalen
+nicht still erweitern. Erfasst werden mindestens Phasendauer und Gesamtzeit,
+aktuelle Phase/letzter belegter Fortschritt, Dateizugriffe und gelesene/gehashte Bytes,
+Kandidaten-/Proofprüfungen, Guards, sichere Reads/Pfadprüfungen, publizierte
+Dateien/Bytes und tatsächlicher Ausgang einschließlich Lock-/Journal-/
+Rollbackzustand. Methodenprüfung und Schreibsynchronisation werden gemessen,
+soweit sie für die Ursachenaufteilung benötigt werden. Wiederholte Zugriffe
+werden nicht als einmalige Arbeit ausgewiesen; verschachtelte Phasen werden
+nicht als unabhängige addierbare Laufzeiten dargestellt.
+
+Ressourcen-/Signalende vor dem belegten dauerhaften Abschluss bleibt Exit 4
+auch bei erfolgreichem Rollback; gewöhnliche Fehler behalten Exit 2. Ein erst
+nach belegtem dauerhaften Abschluss bemerkter Zeitablauf wird mit dem
+tatsächlich abgeschlossenen Zustand ausgewiesen. Er macht diesen Zustand
+nicht rückwirkend zu einer abgebrochenen/nicht integrierten Registrierung
+und löst keinen Rollback aus. Bei unklarem Abschluss gibt es keine unbelegte
+Erfolgsaussage; die Zustandsklassen aus RI-D07 bleiben maßgeblich.
+Erfolgreiche Recovery stellt wie bisher ausschließlich den vollständig
+validierten eigenen Altzustand her. Fremde Bytes, nicht sicher belegte oder unvollständige Rückführung erhalten
+Dateien und Journal mit `recovery_required=true`; keine automatische
+Fortsetzung zur Vorwärtspublikation, Locklöschung oder Erfolgsmeldung für
+Teilzustände. Ein harter Kill garantiert weiterhin keinen Abschlussbericht.

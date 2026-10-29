@@ -36,6 +36,22 @@ Identität, Slot, Kategorie und Reveal bleiben erhalten. Recovery nutzt weiterhi
 `recover-registration`; Details und Grenzen im ZA-1-Vertrag. `register` allein
 überschreibt weiterhin keine vorhandenen Inhalte.
 
+**RI · freigegebener Sollvertrag vom 29.10.2026, noch nicht implementiert:**
+[RI: Zuverlässige und messbare Rätselintegration](../../docs/PUZZLE_INTEGRATION.md) /
+[#477](https://github.com/venomenon328/picross/issues/477),
+[ZA-1](../../docs/ZA1_ADAPTER.md) und der
+[Transaktionsvertrag](../../docs/SD_CATALOG.md) trennen für Schritt-4-
+Neuregistrierungen künftig die 300-s-Warnschwelle vom vorab konfigurierbaren
+endlichen Transaktionsschutz, zunächst 1800 s. Zugehörige automatische und
+ausdrückliche Recovery erhält einen separaten Rahmen, zunächst ebenfalls
+1800 s. Der ausführbare Ausgangsstand besitzt weiterhin seine bisherigen
+300-s-Abbruchgrenzen; neue Parameter sind noch nicht verfügbar.
+Die konkrete Syntax und operative Diagnose werden vor der Umsetzung in
+RI-A-V01 festgelegt. Andere Writer und Recoveryoperationen behalten ihre
+Defaults/Außenbudgets, insbesondere `catalog_reveal --seconds` 1…300.
+Authoring-Eingangsprüfung, Solver-/Import-/Proof- und Datei-/Bytegrenzen
+werden nicht pauschal angehoben; alle bestehenden Inhaltsgates bleiben.
+
 KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
 Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig
 geprüften v3-Checkout her. Beide Snapshots müssen kanonisch und formatgleich sein.
