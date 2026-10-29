@@ -1,0 +1,28 @@
+{
+  "actor": "Nutzer",
+  "evidence": "approvals/user-instruction.txt",
+  "file": "reveal/option-b-r01.png",
+  "preserve": [
+    "Eine einzelne Qualle ohne Gesicht, Zusatzobjekte oder Szene.",
+    "Dreiviertelansicht mit breiter gewölbter Glocke oben links und schrägem gelapptem Unterrand; keine Spiegelung oder Frontalisierung.",
+    "Mundarme und Tentakel strömen diagonal nach rechts unten; Hauptproportionen von Glocke und nachlaufender Unterform erhalten.",
+    "Linker abwärts geschwungener Tentakel mit eingerollter Spitze und große rechte geschwungene Tentakel als erkennbare Nebenformen.",
+    "Große Negativräume rechts neben den Mundarmen und zwischen den Hauptbändern bleiben erkennbar.",
+    "Das freigegebene farbige Abschlussbild B-r01 bleibt bytegleich; ausschließlich seine Motivabstraktion wird vereinfacht."
+  ],
+  "puzzle_id": "pz-20ecf7747bbf40828238ec26d1207172",
+  "revision": "B-r01",
+  "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d",
+  "source_package": {
+    "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r01/package.zip",
+    "handoff_sha256": "c20cf127310e60208dab2177383dfa690b7daeeb9d299ea8274c7cdca5d72e46",
+    "inventory_sha256": "2bd88413e9a1ba975e171d2b1b3ae277671d52bd051d646c1903b7c3b256a993",
+    "repository_commit": "dbf8039b044084f7840c6a2711c27bb856e75b42",
+    "sha256": "d1695ebdb5dfd676ce28ce1db55dfee0b517291ba0cfb11a85ac61260e6424db"
+  },
+  "statement": "Ich gebe das Abschlussbild B-r01 frei.",
+  "test_only": false,
+  "timestamp_source": "Zeitpunkt der Protokollierung; exakter Nachrichtenzeitstempel nicht exponiert.",
+  "timestamp_utc": "2026-10-28T23:37:54Z",
+  "type": "human_reveal_approval"
+}
