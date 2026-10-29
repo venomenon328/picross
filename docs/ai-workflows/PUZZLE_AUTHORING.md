@@ -11,7 +11,7 @@ Bestandsumstellung im echten Katalog sind in diesem C-Auftrag ausgeschlossen.
 Der [synthetische T01-Nachweis](../SD2_C_VERIFICATION.md) bindet neue und
 geänderte Logik, historische Rebinds und die gemeinsame Transaktion.
 
-**Version 0.5.0 · Dokumentrevision 24 · 29.10.2026**
+**Version 0.5.0 · Dokumentrevision 25 · 29.10.2026**
 
 **Variantenwahl / #468:** Sheet-Übergabe v2 bietet Abschlussbilder für Auftrag 2
 und geprüfte Rasterpakete für Auftrag 4 als auswählbare Optionen an (§4.5/§7).
@@ -61,6 +61,16 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 4. Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine Funktionen, Prüfungen oder Ergebnisse behaupten, die nicht verfügbar beziehungsweise ausgeführt sind.
 5. Keine direkte Modell-API einbauen. Produktionsaufträge mit Repositoryablage erlauben ausschließlich die beauftragte Paketsicherung samt Index; ein Integrationsauftrag erlaubt zusätzlich Abschnitt 8 und die anschließende Bereinigung nach Abschnitt 9. Ablage-/Integrationsmerge braucht den passenden ausdrücklichen oder bedingten Auftrag. Für den zugehörigen Cleanup gilt die Eigentümerfreigabe in Abschnitt 9. Werkzeugänderungen und Veröffentlichung bleiben getrennte Befugnisse. Bereits erteilte passende Aufträge nicht erneut erfragen.
 6. **Menschliches Probespielen ist optional und kein Freigabekriterium.** Ein großer Rätselbestand darf ohne Probespiele entstehen. Verpflichtend bleiben die Abschlussbildfreigabe, die Freigabe der daraus abgeleiteten Motivvorlage, die technische Prüfung und die abschließende redaktionelle Abnahme. Spätere Spielerfahrungen dienen der Verbesserung und Kalibrierung.
+
+**Projektlokale Ausnahme zur Modellauswahl:** Normale Produktionsaufträge nach
+diesem Regelwerk (1–4 einschließlich Korrektur und Wiederaufnahme) erzeugen keine
+Modell-, Reasoning-, Eigenumsetzungs- oder sonstige Ausführungsempfehlung.
+`docs/dev-rules/MODEL_SELECTION.md` und `MODEL_CATALOG.md` dafür nicht laden;
+keine dafür veranlasste Recherche zu Modellen, Preisen oder Clientverfügbarkeit.
+Der Nutzer wählt seine Oberfläche und Einstellungen selbst. Die Prüfung der
+tatsächlich nötigen Bild-, Datei-, Repository- und Werkzeugfähigkeiten bleibt
+Pflicht; konkrete Zugriffsblocker benennen. Separat beauftragte Entwicklungsarbeit
+an Werkzeugen, Spiel oder CI folgt weiterhin dem allgemeinen Entwicklungsworkflow.
 
 ### Prüfungen gehören zur Produktion, nicht zur CI
 
@@ -150,11 +160,11 @@ Ein Auftrag umfasst sämtliche nötigen Arbeiten bis zur nächsten menschlichen 
 | Auftrag | Akteur und verbindliche Arbeit | Ausgabe / Stopp |
 | --- | --- | --- |
 | **1 · Abschlussbildauswahl** | Bildfähige KI erfasst Text/Bild, liest Quellen und erzeugt drei Abschlussbilder nach Abschnitt 2. | `brief_ready` → `reveal_review`: Einzeldateien, kurzer Vergleich, gesicherte Übergabe mit allen Abschlussbildoptionen; auf menschliche Auswahl/Freigabe warten. |
-| **2 · Abschlussbildfreigabe und Abstraktion** | KI bindet die tatsächliche Freigabe, empfiehlt bei offenen Angaben 2–3 Konfigurationen und erstellt unmittelbar die Abstraktion für ihre Empfehlung. Keine zusätzliche Konfigurationsrunde, sofern keine feste Grenze verletzt wird. | `reveal_approved` → `motif_review`: Bildvergleich, Detailverluste, eindeutiger vorgeschlagener Parameterkorridor und vollständige Dateiübergabe für Codex; auf Motivfreigabe warten. |
+| **2 · Abschlussbildfreigabe und Abstraktion** | KI bindet die tatsächliche Freigabe, empfiehlt bei offenen Angaben 2–3 Konfigurationen und erstellt unmittelbar die Abstraktion für ihre Empfehlung. Keine zusätzliche Konfigurationsrunde, sofern keine feste Grenze verletzt wird. | `reveal_approved` → `motif_review`: Bildvergleich, Detailverluste, eindeutiger vorgeschlagener Parameterkorridor, gesichertes Produktionspaket und Sheet-Daten; auf Motivfreigabe warten. |
 | **3 · Motivfreigabe und Produktion** | Codex protokolliert die menschliche Freigabe der Motivdatei samt Parameterkorridor; führt Abschnitte 4–7 einschließlich Variantenvergleich, Profilprüfung nach 4.2.1, begrenzter Reparatur, technischer und visueller Prüfung sowie Schwierigkeit aus. | `motif_approved` → `raster_review` → `content_ready`: vorzugsweise 2–3 geprüfte Rasterangebote nach §4.5, echte Ansichten, Abschlussbild, kompakter Vergleich und je Angebot ein geprüftes Paket. Menschliche Auswahl/Endabnahme offen; keine Spielregistrierung. |
 | **4 · Endabnahme und Integration** | Codex bindet die menschliche Endabnahme separat und führt Abschnitte 8–9 aus. | `editorially_approved` → `catalog_ready` → `registered`: Integrationsbelege und PR; bei passendem Mergeauftrag Main-Merge, anschließend geprüfte Bereinigung samt eigenem Merge. Ohne Integrationsmerge beim PR stoppen. |
 
-Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf beides übernehmen, wenn sie die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten besitzt. Modell/Reasoning wählt der Nutzer in der Oberfläche; keine Modell-API einbauen. Ein zusätzlicher Mergeauftrag ist nur ohne vorherige passende Freigabe nötig; Korrekturrunden und echte Zugriffsprobleme können weitere Nachrichten erfordern.
+Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf beides übernehmen, wenn sie die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten besitzt. Diese Oberflächenzuordnung löst keine Modell- oder Ausführungsempfehlung aus (§1); keine Modell-API einbauen. Ein zusätzlicher Mergeauftrag ist nur ohne vorherige passende Freigabe nötig; Korrekturrunden und echte Zugriffsprobleme können weitere Nachrichten erfordern.
 
 **Übergabe ohne Zusatzauftrag:** An jedem Stopp Abschnitt 6 ausführen und ID, Revision, Bild-/Paketpfad, Hashbindung, Branch/Commit sowie nächsten erlaubten Auftrag nennen. Nach Auftrag 2 müssen beide Bilddateien, Abschlussbildfreigabe, Invarianten und vorgeschlagene Parameter bereits verfügbar sein; die noch offene Motivfreigabe erteilt der Mensch direkt in Auftrag 3. Bei beauftragter Repositoryablage automatisch committen/pushen und denselben passenden Draft-PR fortführen. Ohne Schreibzugriff ein schlankes Dateiübergabepaket liefern; Codex übernimmt es bei Auftrag 3. Ohne Lesezugriff erforderliche Quellen einmalig bereitstellen lassen, nicht Fähigkeiten vortäuschen. Bei Chatwechsel den gespeicherten Stand statt impliziter Chatkenntnis verwenden.
 
@@ -488,6 +498,7 @@ Die folgenden Aufbewahrungs- und Replaypflichten gelten bis zur finalen Integrat
 
 - Zuerst `content/authoring/index.json` und die Runtime-Registry `content/registry.json` lesen. Stabile motivneutrale ID gemäß ZA-1 vergeben; ID, Revision und Pfad auf Kollision prüfen. Bei Wiederaufnahme das verzeichnete Paket am angegebenen Branch/Commit selbst laden; keinen erneuten Upload verlangen, wenn die Bytes zugänglich sind. Mehrdeutige Auswahl klären, fehlenden Binärzugriff konkret melden.
 - Ablage: `content/authoring/<puzzle_id>/<revision>/package.zip`. Daneben `handoff.json` als bytegleiche lesbare Kopie, `record.json` und gegebenenfalls die separate `approval.json`. Ein Paket pro Phasenübergabe, Freigabevorlage oder Chatwechsel; keine ZIPs nach jedem Toolaufruf. Bereits vorgelegte Revisionen niemals überschreiben. Neue Inhalte erhalten eine neue Revision; identische Bytes werden wiederverwendet.
+- Für diese Übergabe keine zusätzliche Codex-Handoff-Markdowndatei oder duplizierte Folgeauftragsdatei erzeugen, beilegen oder separat verlinken. Das technische `handoff.json`, Inventar, Parameter, Freigaben und Belege bleiben nach diesem Abschnitt vollständig erforderlich. Vorhandene versiegelte Pakete mit einer früher ergänzten Markdowndatei behalten ihre Bytes und Bindungen; diese Straffung beauftragt keine nachträgliche Bereinigung.
 - `content/authoring/index.json` ist der von der KI gepflegte Arbeitsindex, **keine Runtime-Registry**. Pro ID/Revision: relativer Recordpfad. `record.json` führt zusätzlich `category_id`, sobald die Motivzuordnung feststeht (bei offenem Briefing ausdrücklich `null`; alte Records ohne Feld bleiben lesbar). Spätestens vor kategorisiertem Export ist eine gültige Zuordnung Pflicht. `record.json` führt Format `picross-authoring-record-v1`, ID/Revision, Phasenstatus, Paketpfad/-größe/-SHA-256, Handoffpfad/-SHA-256, Inventarhash (oder ausdrücklich noch offen), Abschlussfreigabepfad/-hash oder `null`, Maße/Modus/Schwierigkeit soweit bekannt, Blocker, nächsten erlaubten Schritt und Integrationsbeleg oder `null`. Branch/Commit der Sicherung in der Übergabe nennen; noch nicht gemergte Ablage nicht als `main` ausgeben. Paket, Handoffkopie und Index gemeinsam committen/pushen, sobald dieser Umfang beauftragt ist; Merge gemäß Entwicklungsworkflow.
 - UTF-8-Markdown/JSON, bestehende Matrix-/Proofverträge und verlustfreie Bilder verwenden. Quellenbytes, Herkunft/Nutzungsgrundlage, tatsächliche Bildprompts/-einstellungen (`not_exposed` wenn unbekannt), ausgewählte Bilder, Freigaben, Parameter und Nachweise behalten. Ungeklärte Nutzungsrechte blockieren die Katalogfreigabe. Versuchshypothese, Auswahl-/Ablehnungsgrund, Bildaufrufe, Überarbeitungsrunden, Import-/Reparaturversuche und aktive Menschenminuten getrennt erfassen; unbekannte Werte als `null` führen.
 - Vor einer Auswahl alle noch angebotenen Bildvarianten behalten. Nach der Auswahl verworfene ungebundene Bildvarianten nur in ihrer früheren Repositoryrevision belassen; im aktuellen Paket reichen Entscheidung, Hash und genauer früherer Fundort. Keine alten ZIPs in neue ZIPs einbetten. Allgemeine Projekt-/Workflowdokumente und Toolquellen über Repositorycommit/Pfad referenzieren, nicht pro Rätsel kopieren. Ausnahme: den von ZA-1 verlangten, hashgebundenen Regelwerks-Snapshot mitführen.
@@ -589,6 +600,14 @@ genau diese Reihenfolge; kurze Arbeitsfortschrittsmeldungen benötigen keinen Da
 3. **Nächster Schritt:** denselben Auftragsnamen wie im JSON nennen und in einem
    Satz die noch erforderliche menschliche Auswahl/Freigabe oder Blockerbehebung.
    Ohne echten Stopp bereits autorisierte Arbeiten selbst fortsetzen.
+
+Damit ist die Chatübergabe vollständig. Keine zusätzliche Handoff-Markdowndatei
+und keinen weiteren kopierbaren Folgeauftrag ausgeben, auch nicht nach Auftrag 2.
+Der Nutzer übernimmt die Sheet-Daten und erzeugt den gewählten Folgeauftrag im
+Cheat-Sheet; dessen Kopier-/Exportfunktionen bleiben der reguläre Bedienweg.
+Keine Modell-, Reasoning- oder Ausführungsempfehlung anfügen und keine dafür
+veranlasste Modellrecherche durchführen (§1). Die technische Übergabe nach §6
+und die menschlichen Freigaben werden dadurch nicht ersetzt oder verkürzt.
 
 ```json
 {
