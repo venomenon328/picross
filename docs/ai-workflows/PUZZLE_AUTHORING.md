@@ -643,7 +643,7 @@ auf `null` setzen; Reveal und Runtime-Inhalte bleiben erreichbar.
 
 ### Optionslisten im Sheet-Format v2
 
-Alle vier neuen Auswahlfelder sind Pflicht; v1 bleibt im Cheat-Sheet als
+Beide Optionslisten und ihre Auswahlfelder sind Pflicht; v1 bleibt im Cheat-Sheet als
 Alteingang ohne Optionslisten lesbar. Jede Liste enthält höchstens 20 Einträge.
 IDs sind innerhalb ihrer Liste eindeutig, höchstens 64 Zeichen lang und bestehen
 aus Buchstaben, Ziffern, Bindestrich oder Unterstrich, beginnend mit einem
