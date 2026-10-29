@@ -1,0 +1,87 @@
+{
+  "candidates": [
+    {
+      "bundle": "production/tight-30x33",
+      "filled": 367,
+      "height": 33,
+      "line_status": "stalled",
+      "logic_hash": "c4fe52c445df0ca1a9425d882c8b6e17479740f12f53e0cf43f1082f13474166",
+      "matrix_hash": "b9d328b61f314ad04773465075012f9b3a57af958cf09df61c41ced22e9b9640",
+      "reason": "Schwelle 176 verliert mehr Bandkontinuität; unabhängig geprüfter Paarfixpunkt bleibt unvollständig.",
+      "selection": "rejected",
+      "used_foreground_colors": 1,
+      "variant": "area-176",
+      "width": 30
+    },
+    {
+      "bundle": "production/tight-30x33",
+      "filled": 408,
+      "height": 33,
+      "line_status": "stalled",
+      "logic_hash": "ecbd71ccaf3ac71f3d6e01760cb29bb6a2d2af99189af6a616ff327e2045a19f",
+      "matrix_hash": "154a5aff61f8046967610d02981ffc197a23111072972bf79d29de23a7e77a4c",
+      "reason": "Empfohlener mittlerer Umfang, kräftige Bänder und sichtbare Negativräume; Paarproof vollständig. Keine Reparatur.",
+      "selection": "selected_after_paired_certification",
+      "used_foreground_colors": 1,
+      "variant": "area-208",
+      "width": 30
+    },
+    {
+      "bundle": "production/tight-36x40",
+      "filled": 504,
+      "height": 40,
+      "line_status": "stalled",
+      "logic_hash": "2263a917fbd045186b33eb389cfc16e360dc726cf52e0112f3442cc8a5c08b49",
+      "matrix_hash": "143ffde5dc722ec09fd97a1fccb5dbf8cac8ef269b0057940b0ded3c653074e7",
+      "reason": "Größerer Umfang mit filigraneren/unterbrochenen Nebenformen, ohne erkennbaren Vorteil gegenüber 30×33/208; Linienfixpunkt unvollständig.",
+      "selection": "rejected",
+      "used_foreground_colors": 1,
+      "variant": "area-176",
+      "width": 36
+    },
+    {
+      "bundle": "production/tight-36x40",
+      "filled": 577,
+      "height": 40,
+      "line_status": "stalled",
+      "logic_hash": "2ace78c8cd94a5991bccd1120982f0be7bd2cd37e847bf00841e376f9ec9d0c1",
+      "matrix_hash": "cb40a83b6870bb60277915af347af776d073cf8e1385c0311dacaeb7daecb130",
+      "reason": "Mehr Detail, aber 450 zusätzliche Zellen ohne nötigen Identitätsgewinn. Die empfohlene 30×33-Fassung trägt das Motiv und ist vollständig zertifiziert; kein zusätzlicher Routinepaarlauf.",
+      "selection": "rejected",
+      "used_foreground_colors": 1,
+      "variant": "area-208",
+      "width": 36
+    }
+  ],
+  "image_history": "Beide alten Bildrevisionen bleiben bytegleich; M-r01 ist eine tatsächliche native Referenz der M-r02-Ableitung, keine angebotene Alternative. Verworfene Revealoptionen bleiben nur im ursprünglichen r01.",
+  "paired_followup": {
+    "before_run": "production-plan.json",
+    "bundle": "production/paired-30x33",
+    "extra_raster_variants": 0,
+    "results": {
+      "area-176": "stalled independently verified",
+      "area-208": "solved independently verified, R4 required"
+    },
+    "unchanged_matrices": true
+  },
+  "previous_decisions": {
+    "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r02/package.zip!decisions.json",
+    "sha256": "d991a6217da29b22825485765caca676146ed892d4c8bc41ecb07f1f30d380df"
+  },
+  "puzzle_id": "pz-20ecf7747bbf40828238ec26d1207172",
+  "repair": {
+    "reason": "Visuell geeigneter freigegebener Direktimport nach Paarprüfung vollständig zertifiziert; gemäß §4.4 bei Erfolg stoppen.",
+    "rounds": 0,
+    "status": "not_required"
+  },
+  "revision": "r03",
+  "selected": {
+    "bundle": "production/paired-30x33",
+    "logic_hash": "ecbd71ccaf3ac71f3d6e01760cb29bb6a2d2af99189af6a616ff327e2045a19f",
+    "matrix_hash": "154a5aff61f8046967610d02981ffc197a23111072972bf79d29de23a7e77a4c",
+    "variant": "area-208"
+  },
+  "source_commit": "c0fab9150fa45faa0c06d2cd6dd7da475963b5a9",
+  "source_revision": "r02",
+  "unused_options": "Vollcrop nicht benötigt; keine Zusatzvariante oder erneute Motivbearbeitung. Keine Diagnose-Suche, da vollständige Deduktion bereits Eindeutigkeit belegt."
+}

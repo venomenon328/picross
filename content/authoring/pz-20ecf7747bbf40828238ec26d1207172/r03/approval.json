@@ -1,0 +1,20 @@
+{
+  "actor": "Nutzer",
+  "format": "picross-editorial-approval-v1",
+  "handoff_sha256": "3b1af3252502f5a816481e377ded2c882153a2a52dba9578e25e092b7eaa496d",
+  "inventory_sha256": "c94676433ee8bee1cd4af5e832edaa0736607c1312304858c2a3a3521956f956",
+  "puzzle_id": "pz-20ecf7747bbf40828238ec26d1207172",
+  "revision": "r03",
+  "selection": {
+    "logic_hash": "ecbd71ccaf3ac71f3d6e01760cb29bb6a2d2af99189af6a616ff327e2045a19f",
+    "matrix_hash": "154a5aff61f8046967610d02981ffc197a23111072972bf79d29de23a7e77a4c",
+    "reveal": {
+      "file": "reveal/option-b-r01.png",
+      "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d"
+    },
+    "variant": "area-208"
+  },
+  "statement": "Arbeite nach docs/ai-workflows/PUZZLE_AUTHORING.md in venomenon328/picross@main.\n\nIch nehme das Rätselpaket content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r03/package.zip · r03, Revision r03, Inventar-SHA-256 c94676433ee8bee1cd4af5e832edaa0736607c1312304858c2a3a3521956f956 redaktionell ab und beauftrage seine Integration ins Spiel gemäß Standardauftrag 4.\nQuellbranch / Commit: main / 96823f8da793775647cb95e7231d5e8894a1e8f7.\n\nAblage-/Integrations-PR nach erfolgreichen Pflichtprüfungen mergen. Nach tatsächlicher Main-Integration die Bereinigung gemäß §9 prüfen und direkt mergen.",
+  "test_only": false,
+  "timestamp_utc": "2026-10-29T08:25:24Z"
+}

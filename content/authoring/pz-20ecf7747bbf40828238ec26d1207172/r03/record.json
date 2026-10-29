@@ -141,7 +141,10 @@
     }
   },
   "dimensions_fixed": false,
-  "final_editorial_approval": null,
+  "final_editorial_approval": {
+    "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r03/approval.json",
+    "sha256": "f3556d1afe459024c5ea64f407e9f864a6fb3ca3e0b1b45a340cbbe36c7fbe59"
+  },
   "foreground_colors_requested": 1,
   "format": "picross-authoring-record-v1",
   "handoff": {
@@ -149,7 +152,31 @@
     "sha256": "3b1af3252502f5a816481e377ded2c882153a2a52dba9578e25e092b7eaa496d"
   },
   "height": 33,
-  "integration": null,
+  "integration": {
+    "active_rating": "content/difficulty/pz-20ecf7747bbf40828238ec26d1207172/rating.json",
+    "base_commit": "96823f8da793775647cb95e7231d5e8894a1e8f7",
+    "category_id": "wasserwelt",
+    "checked_hash": "8bfbd0915c0fd801b9265a8b35b7933931d33ac258542bc9e0a14afac646fed7",
+    "export_manifest": {
+      "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r03/export-manifest.json",
+      "sha256": "7aafce0942810b81ce780fb016b936d4db8934a3200136d39556bbe344ecaf07"
+    },
+    "file_check": {
+      "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r03/integration-check.json",
+      "sha256": "287f80286ad89f5f33bce129d49fc0626263333d7675e6dfd23fc9ca80c880b4"
+    },
+    "main_merge_commit": null,
+    "registration": {
+      "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r03/registration.json",
+      "sha256": "ed16e3dde1694a02f342b4070efab82de80007f7f7310adfd41952664e4f35ea"
+    },
+    "runtime_definition": "game/data/content/qualle_001.json",
+    "runtime_id": "pz-20ecf7747bbf40828238ec26d1207172",
+    "runtime_reveal": "game/art/content/qualle_001.png",
+    "runtime_revision": 1,
+    "save_slot": "qualle_001",
+    "status": "registered_on_work_branch"
+  },
   "inventory_sha256": "c94676433ee8bee1cd4af5e832edaa0736607c1312304858c2a3a3521956f956",
   "mode": "mono",
   "motif": {
@@ -161,12 +188,9 @@
     "sha256": "82c82c08dbf018687bc04c1654cbecfad682a54264451abe431c4bdf79519af9"
   },
   "motif_name": "Qualle",
-  "next_action": "4 · Abnehmen & ins Spiel integrieren: tatsächliche menschliche redaktionelle Endabnahme für dieses versiegelte r03 erforderlich; danach ZA-1-Export, Difficulty-Rebind und kontrollierte Registrierung. Keine Registrierung in Auftrag 3.",
+  "next_action": "Nach tatsächlichem Main-Merge Produktionsabschluss gemäß §9; noch keine abgeschlossene Main-Integration auf dem Arbeitsbranch.",
   "omissions": "Ungebundene alte Vergleichsmontage/Berichte/Übergabe nicht dupliziert; unverändert auf main@c0fab9150fa45faa0c06d2cd6dd7da475963b5a9 in r02/package.zip. Beide native Motivquellen bleiben als Ableitungsbeleg enthalten.",
-  "open_gates": [
-    "final_editorial",
-    "target_export"
-  ],
+  "open_gates": [],
   "package": {
     "bytes": 4947850,
     "file": "content/authoring/pz-20ecf7747bbf40828238ec26d1207172/r03/package.zip",
@@ -188,8 +212,8 @@
     "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d"
   },
   "revision": "r03",
-  "state": "content_ready",
-  "updated_at_utc": "2026-10-29T00:05:01Z",
+  "state": "registered",
+  "updated_at_utc": "2026-10-29T08:35:56Z",
   "used_colors": 1,
   "width": 30
 }

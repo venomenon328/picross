@@ -1,0 +1,14 @@
+{
+  "author": "ChatGPT / OpenAI native image generation",
+  "derived_from": {
+    "file": "reveal/option-b-r01.png",
+    "sha256": "91a20121593a44b0f7c41c2db6a1025a62f3c89f9c40927f2cb52ceb8513e29d"
+  },
+  "file": "motif/motif-r02.png",
+  "input": "reveal/option-b-r01.png",
+  "prompt_file": "generation.json",
+  "puzzle_id": "pz-20ecf7747bbf40828238ec26d1207172",
+  "sha256": "82c82c08dbf018687bc04c1654cbecfad682a54264451abe431c4bdf79519af9",
+  "usage_basis": "Beauftragte vorlagentreue Ableitung des ausdrücklich freigegebenen Abschlussbilds B-r01.",
+  "working_mode": "faithful"
+}
