@@ -11,7 +11,14 @@ Bestandsumstellung im echten Katalog sind in diesem C-Auftrag ausgeschlossen.
 Der [synthetische T01-Nachweis](../SD2_C_VERIFICATION.md) bindet neue und
 geänderte Logik, historische Rebinds und die gemeinsame Transaktion.
 
-**Version 0.5.0 · Dokumentrevision 23 · 22.10.2026**
+**Version 0.5.0 · Dokumentrevision 24 · 29.10.2026**
+
+**Variantenwahl / #468:** Sheet-Übergabe v2 bietet Abschlussbilder für Auftrag 2
+und geprüfte Rasterpakete für Auftrag 4 als auswählbare Optionen an (§4.5/§7).
+Das [Offline-Cheat-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html) übernimmt die
+jeweiligen Dateibindungen gemeinsam. Auswahl und Empfehlung sind keine Freigabe.
+Handoff-, Inventar-, Adapter- und Freigabeformate bleiben unverändert; versiegelte
+Altstände behalten ihre ursprünglichen Bytes und Regelwerksbindung.
 
 Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
 0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
@@ -142,9 +149,9 @@ Ein Auftrag umfasst sämtliche nötigen Arbeiten bis zur nächsten menschlichen 
 
 | Auftrag | Akteur und verbindliche Arbeit | Ausgabe / Stopp |
 | --- | --- | --- |
-| **1 · Abschlussbildauswahl** | Bildfähige KI erfasst Text/Bild, liest Quellen und erzeugt drei Abschlussbilder nach Abschnitt 2. | `brief_ready` → `reveal_review`: Einzeldateien, kurzer Vergleich, gesicherte Übergabe; auf menschliche Abschlussbildfreigabe warten. |
+| **1 · Abschlussbildauswahl** | Bildfähige KI erfasst Text/Bild, liest Quellen und erzeugt drei Abschlussbilder nach Abschnitt 2. | `brief_ready` → `reveal_review`: Einzeldateien, kurzer Vergleich, gesicherte Übergabe mit allen Abschlussbildoptionen; auf menschliche Auswahl/Freigabe warten. |
 | **2 · Abschlussbildfreigabe und Abstraktion** | KI bindet die tatsächliche Freigabe, empfiehlt bei offenen Angaben 2–3 Konfigurationen und erstellt unmittelbar die Abstraktion für ihre Empfehlung. Keine zusätzliche Konfigurationsrunde, sofern keine feste Grenze verletzt wird. | `reveal_approved` → `motif_review`: Bildvergleich, Detailverluste, eindeutiger vorgeschlagener Parameterkorridor und vollständige Dateiübergabe für Codex; auf Motivfreigabe warten. |
-| **3 · Motivfreigabe und Produktion** | Codex protokolliert die menschliche Freigabe der Motivdatei samt Parameterkorridor; führt Abschnitte 4–7 einschließlich Variantenwahl, Profilprüfung nach 4.2.1, begrenzter Reparatur, technischer und visueller Prüfung sowie Schwierigkeit aus. | `motif_approved` → `raster_review` → `content_ready`: echtes Endraster, Abschlussbild, kompakter Bericht und geprüftes Paket zur Endabnahme. Keine Spielregistrierung. |
+| **3 · Motivfreigabe und Produktion** | Codex protokolliert die menschliche Freigabe der Motivdatei samt Parameterkorridor; führt Abschnitte 4–7 einschließlich Variantenvergleich, Profilprüfung nach 4.2.1, begrenzter Reparatur, technischer und visueller Prüfung sowie Schwierigkeit aus. | `motif_approved` → `raster_review` → `content_ready`: vorzugsweise 2–3 geprüfte Rasterangebote nach §4.5, echte Ansichten, Abschlussbild, kompakter Vergleich und je Angebot ein geprüftes Paket. Menschliche Auswahl/Endabnahme offen; keine Spielregistrierung. |
 | **4 · Endabnahme und Integration** | Codex bindet die menschliche Endabnahme separat und führt Abschnitte 8–9 aus. | `editorially_approved` → `catalog_ready` → `registered`: Integrationsbelege und PR; bei passendem Mergeauftrag Main-Merge, anschließend geprüfte Bereinigung samt eigenem Merge. Ohne Integrationsmerge beim PR stoppen. |
 
 Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf beides übernehmen, wenn sie die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten besitzt. Modell/Reasoning wählt der Nutzer in der Oberfläche; keine Modell-API einbauen. Ein zusätzlicher Mergeauftrag ist nur ohne vorherige passende Freigabe nötig; Korrekturrunden und echte Zugriffsprobleme können weitere Nachrichten erfordern.
@@ -354,6 +361,42 @@ zusätzlichen Freigaben der obigen Tabelle erfasst.
 
 Materiell sind Änderungen an Identität, Pose, charakteristischen Proportionen, wichtigen Innenräumen, Gesichtszügen oder ausdrücklich geschützten Merkmalen. Eine einzelne Zelle kann materiell sein. Auch das Abschneiden ausschließlich leerer Außenlinien verändert das Rastermaß und benötigt neue Nachweise. Manuelle Ableitungen offen kennzeichnen, nicht als unveränderten Originalimport ausgeben.
 
+### 4.5 Geprüfte Raster zur menschlichen Auswahl
+
+Aus den ohnehin erzeugten Kandidaten SOLL Auftrag 3 **zwei bis drei sinnvoll
+unterschiedliche, vollständig geprüfte Raster** zur Endabnahme vorlegen. Alle
+angebotenen Varianten müssen den freigegebenen Parameterkorridor sowie §§4–5
+erfüllen: eigene vollständige technische Prüfung, visuelle Bewertung,
+Bildkonsistenz und gebundene Schwierigkeit. Gleiche Matrizen mit anderer Kennung
+oder nur anderem Solverprofil sind keine zusätzlichen Angebote. Auswahl und
+Empfehlung der KI getrennt benennen; die endgültige Wahl trifft der Mensch.
+
+Die vorhandenen Kandidaten- und Reparaturbudgets werden nicht zur Erfüllung einer
+Quote erweitert. Sind nur ein beziehungsweise kein freigabefähiges Ergebnis
+vorhanden, dies mit Grund melden: eine Option anbieten beziehungsweise die Liste
+leer lassen und den konkreten Blocker/nächsten Korrekturschritt nennen. Nicht
+zertifizierte oder visuell ungeeignete Kandidaten bleiben im Entscheidungsprotokoll,
+werden aber nicht als Integrationsoption angeboten. Eine Empfehlung setzt keine
+Auswahl voraus und darf kein Angebot automatisch freigeben.
+
+Jedes Angebot erhält eine im Auftrag stabile ID (etwa `R-A-r03`), eine kurze
+Beschreibung seiner Unterschiede, Maße/Modus/Istfarbzahl, Schwierigkeit und echte
+Rasteransichten. Vor der Ausgabe wird **je Raster eine eigene kollisionsfreie
+Paketrevision derselben Rätsel-ID** nach §6 gesichert, beispielsweise `r03`, `r04`
+und `r05`. Jede Revision bleibt ein bestehendes Einzelkandidatenpaket mit genau
+einem `handoff.candidate`, vollständigen benötigten Inputs und eigenem Inventar.
+Alle angebotenen ZIPs auf dem geschriebenen Stand nach §6.1 prüfen; keine neue
+Mehrfachkandidaten-Hülle im Adapter und keine Alternativen-ZIPs ineinander packen.
+Der gemeinsame Vergleich darf Beleglinks nutzen, ersetzt aber keinen Paketeingang.
+
+Die Sheet-Option bindet genau das jeweilige Paket samt Revision, Originalinventar,
+Quelle und Bild-/Rasterbezügen. Auftrag 4 übernimmt ausschließlich die ausdrücklich
+gewählte Option; Auswahl-ID und Paketbindungen im Auftrag abgleichen, dann die
+bestehende Endfreigabe extern an dieses Originalpaket binden. Keine automatische
+Wahl der ersten/empfohlenen oder vermeintlich neuesten Revision über den Index.
+Kein Neuversiegeln beim Wechsel im Sheet. Nicht gewählte Angebote bleiben bis zur
+finalen Integration erhalten; §9 regelt anschließend die Bereinigung.
+
 ## 5. Schwierigkeit L1–L5
 
 ### 5.1 Historische Produktionsmethoden 0.1 und 0.2
@@ -539,7 +582,8 @@ genau diese Reihenfolge; kurze Arbeitsfortschrittsmeldungen benötigen keinen Da
    Links unmittelbar dabei zeigen; technische Details bleiben in den Paketbelegen.
 2. **Sheet-Daten:** genau ein kopierbarer JSON-Block nach folgendem Format. Dieselben
    Bezeichnungen wie im Cheat-Sheet verwenden, alle Schlüssel ausgeben; unbekannte
-   Werte sind `null`. Keine Platzhalter oder erfundenen Hashes. Dies ist eine
+   Werte sind `null`, nicht vorhandene Optionslisten `[]`. Keine Platzhalter oder
+   erfundenen Hashes. Dies ist eine
    Bedienhilfe aus den bestehenden Dateien, kein zusätzlicher Nachweisvertrag und
    keine eigene Pflichtdatei im ZIP. Der Import erteilt keine Freigabe.
 3. **Nächster Schritt:** denselben Auftragsnamen wie im JSON nennen und in einem
@@ -548,7 +592,7 @@ genau diese Reihenfolge; kurze Arbeitsfortschrittsmeldungen benötigen keinen Da
 
 ```json
 {
-  "format": "picross-cheatsheet-update-v1",
+  "format": "picross-cheatsheet-update-v2",
   "Motiv": null,
   "Rasterbreite": null,
   "Rasterhöhe": null,
@@ -561,6 +605,9 @@ genau diese Reihenfolge; kurze Arbeitsfortschrittsmeldungen benötigen keinen Da
   "Paketrevision": null,
   "Paketpfad": null,
   "Abschlussbild": null,
+  "Abschlussbild-Optionen": [],
+  "Rastervariante": null,
+  "Raster-Optionen": [],
   "Motivvorlage": null,
   "Parameterkorridor": null,
   "Inventar-SHA-256": null,
@@ -576,8 +623,10 @@ genau diese Reihenfolge; kurze Arbeitsfortschrittsmeldungen benötigen keinen Da
 `Farbanzahl` bleibt der Nutzerwunsch, bei offener Vorgabe `null`; `Verwendete Farben`
 wird erst an einer tatsächlichen Matrix gezählt. Konkrete Empfehlung/Istmaße und
 Modus samt zulässigen Varianten stehen im `Parameterkorridor`; seine Bestätigung
-folgt weiterhin der echten Motivfreigabe. Bildfelder enthalten eindeutigen Pfad
-und Dateirevision; bei noch offener Auswahl `null`. `Inventar-SHA-256` enthält nur
+folgt weiterhin der echten Motivfreigabe. Ohne Abschlussbildoptionen enthalten die
+Bildfelder eindeutigen Pfad und Dateirevision; bei noch offener Auswahl `null`.
+Mit Abschlussbildoptionen enthält `Abschlussbild` dagegen die ausgewählte
+Options-ID oder `null`; das Sheet setzt daraus Dateipfad, ID und Hash ein. `Inventar-SHA-256` enthält nur
 den 64-stelligen Hash des Originalinventars, keinen ZIP-, Matrix- oder Logikhash.
 `Quellbranch / Commit` ist ein tatsächlich erreichbarer Paketstand, bevorzugt eine
 volle Commit-SHA; ungesicherte lokale Arbeit als `null` plus Blocker berichten.
@@ -591,6 +640,82 @@ Nach bereits beauftragtem Integrationsmerge ist erst nach Abschnitt 9
 `Abgeschlossen` zulässig. Dann auf den erhaltenen Integrationsdatensatz statt
 auf gelöschte ZIPs verweisen, `Paketpfad` und entfernte Bild-/Parameterreferenzen
 auf `null` setzen; Reveal und Runtime-Inhalte bleiben erreichbar.
+
+### Optionslisten im Sheet-Format v2
+
+Beide Optionslisten und ihre Auswahlfelder sind Pflicht; v1 bleibt im Cheat-Sheet als
+Alteingang ohne Optionslisten lesbar. Jede Liste enthält höchstens 20 Einträge.
+IDs sind innerhalb ihrer Liste eindeutig, höchstens 64 Zeichen lang und bestehen
+aus Buchstaben, Ziffern, Bindestrich oder Unterstrich, beginnend mit einem
+Buchstaben/einer Ziffer. Groß-/Kleinschreibung ist maßgeblich. Eine Auswahl muss
+auf genau einen Eintrag zeigen. Unbekannte Felder oder unvollständige Einträge
+werden vor einer Übernahme abgewiesen; keine stillschweigende erste Auswahl.
+
+**Abschlussbild-Optionen:** Nach Auftrag 1 alle tatsächlich angebotenen Dateien
+aufführen. Je Eintrag genau `ID`, `Beschreibung`, `Datei` und `SHA-256` ausgeben.
+`Datei` ist der sichere paketrelative Pfad, `SHA-256` der berechnete Dateihash;
+`Beschreibung` benennt den sichtbaren Unterschied und darf eine Empfehlung
+kennzeichnen. Der gemeinsame Paket-/Quellstand steht in den bisherigen Feldern.
+`Abschlussbild` bleibt bei neuer Auswahlvorlage `null`, auch bei Empfehlung oder
+nur einer Option. Erst eine bereits tatsächlich getroffene menschliche Auswahl
+darf als ID übernommen werden; sie ersetzt weiterhin keine Bildfreigabe.
+
+**Raster-Optionen:** Nach Auftrag 3 alle freigabefähigen Angebote aus §4.5 mit
+folgenden Feldern ausgeben. Sämtliche Felder sind Pflicht; nur `PR` darf `null`
+sein. Keine beispielhaften Hashes oder nicht existierenden Pfade in echten Daten.
+
+| Feld je Rasteroption | Bedeutung |
+| --- | --- |
+| `ID`, `Beschreibung` | Stabile Auswahlkennung, sichtbare Unterschiede/Empfehlung |
+| `Rasterdatei` | Sicherer paketrelativer Pfad der echten Rasteransicht |
+| `Kandidat` | Eindeutiger Bundle-/Variantbezug des einen Handoffkandidaten |
+| `Schwierigkeit` | Gebundene Stufe, zum Beispiel `L3 – mittel`; Bericht im Paket |
+| `Paketrevision`, `Paketpfad` | Eigene Revision und repositoryrelatives `content/authoring/<Rätsel-ID>/<Paketrevision>/package.zip` |
+| `Inventar-SHA-256` | Berechneter 64-stelliger SHA-256 des zugehörigen Originalinventars |
+| `Quellbranch / Commit`, `PR` | Tatsächlich zugänglicher Paketstand und gegebenenfalls dessen PR |
+| `Rasterbreite`, `Rasterhöhe` | Tatsächliche ganzzahlige Maße 1–50 |
+| `Rätselmodus`, `Verwendete Farben` | `Monochrom`/`Farbig`, tatsächliche Vordergrundfarbzahl 1–8; Mono genau 1 |
+| `Abschlussbild`, `Motivvorlage`, `Parameterkorridor` | Konkrete Bild-/Dateirevisionen und für dieses Ergebnis geltende Motivfreigabe |
+
+Alle Rasteroptionen gehören zur gemeinsamen `Rätsel-ID`; Paketpfade und
+Revisionen dürfen nicht kollidieren. Angaben müssen zur Größen-/Farbvorgabe und
+Motivfreigabe passen. Unterschiede zwischen Varianten sind nur innerhalb des
+bereits freigegebenen Korridors erlaubt. Die KI bestätigt dies anhand der
+Paketquellen; die Formularvalidierung ersetzt diese Prüfung nicht.
+`Rastervariante` ist die menschlich ausgewählte ID oder `null`, niemals die
+bloße Empfehlung. Bei neuen Rasterangeboten bleiben die variantenspezifischen
+Kopffelder (`Paketrevision`, `Paketpfad`, `Inventar-SHA-256`, `Quellbranch / Commit`,
+`PR`, Maße/Modus/Istfarbzahl und Bild-/Parameterbezüge) ohne ausdrückliche Auswahl
+`null`; die jeweiligen Werte stehen vollständig in jeder Option. Nutzerwünsche
+und Motivgrenzen stehen zusätzlich im Auftrag/Briefing; die Optionsmaße sind Istwerte.
+Bei bereits getroffener Auswahl müssen diese Kopffelder exakt zur Option passen.
+
+Abschlussbild- und Rasteroptionslisten dürfen nicht gleichzeitig befüllt sein.
+Nach Abschlussbildfreigabe wird nur deren konkrete Datei weitergegeben; der
+spätere Rasterdialog bietet keinen unbemerkten Wechsel des freigegebenen Bildes.
+Bei neuen Bildfassungen gelten unverändert die Rücksprünge/Freigaben aus §4.4.
+
+Das Sheet zeigt die Auswahl mit Beschreibung und Dateireferenz. Wechsel eines
+Rasters übernimmt alle zugehörigen Bindungen gemeinsam; Einzelbearbeitung dieser
+Felder ist bei Optionslisten gesperrt. Solange keine Auswahl getroffen wurde,
+sind die davon abhängigen Freigabeaufträge gesperrt. Auftrag 2 nennt Datei, ID
+und Hash; Auftrag 4 nennt Raster-ID/Kandidat/Ansicht und das passende Paket samt
+Inventarhash. Import, Dropdownwechsel, Sitzung und ZIP-Export erteilen keine
+Freigabe und ändern kein Repository. Erst das tatsächliche Absenden des passenden
+Freigabeauftrags ist eine menschliche Erklärung.
+
+Sitzungen v3 und Auftragsexporte erhalten Listen und Auswahl. Import eines alten
+v1-Blocks/Records oder einer alten Sitzung entfernt vorherige Optionsdaten;
+Reset leert sie ebenfalls. Fehlerhafte Daten dürfen keinen Teilstand übernehmen.
+Die HTML-Datei bleibt offline ohne automatische Bild-/Repositoryabrufe. Bilder
+stehen im Chat beziehungsweise Paket; Pfade im Dropdown sind keine Behauptung,
+dass das Sheet die Bytes oder Proofs selbst geprüft hätte. Nach Produktionsabschluss
+werden Optionslisten geleert, statt auf entfernte Arbeitsdateien zu verweisen.
+
+Bei Pflege des Cheat-Sheets den eingebetteten Regelwerksnapshot sowie dessen
+Versions-/Revisionsanzeige gemeinsam mit diesem Dokument aktualisieren. Der
+Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
+muss über den tatsächlichen Arbeitsbranch/Commit erreichbar benannt werden.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren
 
