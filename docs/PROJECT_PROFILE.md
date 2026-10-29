@@ -1,5 +1,24 @@
 # Projektprofil: picross
 
+**RI · 29.10.2026, Spezifikation freigegeben, noch nicht implementiert:**
+[Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
+[#477](https://github.com/venomenon328/picross/issues/477) ist bei Entwicklung
+an Schritt 4, Registrierungsbudgets, Paket-Prüfkontexten oder
+Publikationsguards/Recovery zusätzlich vollständig zu lesen. RI-A soll
+Budgetkonfiguration, Messung und gleichwertig gebündelte sichere Reads liefern.
+Danach folgen Messauswertung und gemeinsamer B/C-Vertragsabgleich, RI-B für
+den gebundenen Prüfkontext und RI-C für skalierende Publikationskontrollen.
+Der Sollstand trennt für neue Registrierungspublikationen eine 300-s-Warnung
+vom konfigurierbaren Schutzrahmen mit vorläufig 1800 s; Recovery unterstützter
+Registrierungsjournale erhält eigenständig ebenfalls vorläufig 1800 s.
+Andere operative Budgets und sämtliche Eingangs-/Proof-/Ressourcengrenzen
+bleiben erhalten. Die ausführbare Basis verwendet bis zur jeweiligen Lieferung
+ihre bisherigen Grenzen und Prüfungen; technische Abnahme und gemessene Wirkung
+stehen aus. Diese Spezifikationsfreigabe beauftragt keine Implementierung,
+Rätselintegration oder Merge und ergänzt für normale Authoringaufträge keine
+neue Freigabeschleife. Konkrete Produktionsblocker bleiben bis zur nachgewiesenen
+Wiederaufnahme im jeweiligen Inhaltsauftrag offen.
+
 **CI2 · 27.10.2026, A/B/C/D/E integriert; F in Umsetzung:**
 [Kurze CI und begrenzter aktiver Bestand](CI_SLIMMING.md) bindet #412–#417.
 CI2-A/B sind nach ihren separaten Reviews über PR #419/#420 integriert;
@@ -316,6 +335,7 @@ bleibt unverändert.
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Neue Rätsel konzipieren, gestalten, produzieren oder redaktionell abnehmen | [KI-Arbeitsanweisung zur Rätselproduktion](ai-workflows/PUZZLE_AUTHORING.md) und deren Pflichtquellen |
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
+| Entwicklung an Schritt-4-Integration, Registrierungsbudgets, Paket-Prüfkontexten oder Publikationsguards/Recovery | [RI-Sollvertrag und Paketfolge](PUZZLE_INTEGRATION.md) |
 | Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD2-Sollvertrag](PUZZLE_DIFFICULTY_V2.md), [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [SD-C1](SD_CATALOG.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
 | CI, Prüfprogramme, Artefakte, Archivierung, Bestandsbereinigung oder neue Tests | [CI2-Sollvertrag](CI_SLIMMING.md), [CI-Policy und ausführbare Ausgangsbasis](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md); bei Browserarbeit zusätzlich [Webvertrag](WEB_HOSTING.md), bei nativer Arbeit die betroffenen [KAT-2](KAT2_VERIFICATION.md)-, [EA](EA_VERIFICATION.md)- und [ZA-1](ZA1_VERIFICATION.md)-Verträge |
 
