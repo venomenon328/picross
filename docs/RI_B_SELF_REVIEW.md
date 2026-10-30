@@ -2,7 +2,8 @@
 
 Geprüfter Werkzeug-/Testhead: `a46d7c9945d2f06af7a5943ca4c9504a829fc59f`.
 Basis: `864c4e6289df15ea7b3522b850542ece3489160f` (main/RI-A).
-Nachfolgende T01-/Statusdokumentation verändert keine gemessenen Werkzeugbytes.
+Nachfolgende T01-/Statusdokumentation und Testhakenkorrektur verändern keine
+gemessenen Werkzeugbytes.
 Prüfung am vollständigen Diff nach Implementierung und Testlauf: **Selbstreview**,
 keine unabhängige Zweitprüfung. Finaler PR-Head/Test-Merge/CI folgen im T01-CI-Anhang.
 
@@ -46,6 +47,15 @@ acht Prüfungen: neues Testmodul genau catalog, Quellenmodul images/adapter/cata
 Gemeinsame Änderungen unterdrücken keine weiteren benötigten Nichtbrowserjobs.
 
 ## Nachweise, Befunde und offene Gates
+
+Nach dem ersten fehlgeschlagenen CI-Lauf zusätzlich den Kategorien-Race-Test
+separat gegen seinen bisherigen Zweck geprüft: der entfernte dritte Vollproof
+war kein erreichbarer Fehlerhaken mehr. Die Korrektur setzt dieselbe Mutation
+nach die tatsächlich erfolgreichen Prüfungen, einschließlich P3/P5-Readback,
+und verlangt explizit genau eine Injektion. Alle bisherigen Blockade-, Fremdbyte-
+und Recoveryassertions bleiben; P5 ergänzt Abdeckung. Gegenprobe Linux/Windows
+bestanden, CI2-Importzuordnung erneut bestanden. Produktions-/Methodenbytes
+bleiben exakt unverändert. Der erste rote Lauf ist kein Pass des neuen Heads.
 
 [T01](RI_B_VERIFICATION.md) bindet gezielte Linux-/Windows-Tests, sechs echte
 A/B-Berichte mit je drei Wiederholungen und vollständige Eingangs-/Quellinventare.
