@@ -12,6 +12,9 @@ import tempfile
 import time
 import xml.etree.ElementTree as ET
 import re
+import signal
+import sys
+import threading
 
 from .authoring_package import (ID, STEM, Package, open_package, require, sha,
                                 string, timestamp, relative)
@@ -20,6 +23,7 @@ from .contract import (Aborted, Budget, InvalidInput, InvalidProof, digest,
 from .images import (MAX_BYTES, file_hash, inspect_candidate, logic_from_matrix,
                      normalize, publish_bundle, versions)
 from . import categories
+from . import operation_diagnostics as diagnostic
 
 ADAPTER = "authoring-p1-rect-color-1"
 LEGACY_FORMAT = "picross-target-export-v1"
@@ -110,6 +114,7 @@ def final_approval(package, selection, approval_path=None):
     return {"record": a, "sha256": file_hash(approval_path), "path": approval_path}
 
 
+@diagnostic.measured("Input inspection", "full_input_inspections", attempt_counter="input_inspection_attempts")
 def inspect(package: Package, approval_path=None, *, legacy=False, manual_authorization=None):
     h = package.handoff
     for name in ("brief", "report", "decisions", "effort"):
@@ -165,19 +170,19 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     budget = Budget(min(120, max(0, package.deadline - time.monotonic())), 1_000_000)
     if late_raster:
         from .accepted_raster import inspect_source
-        design, matrix, proof, checked, source, reference = inspect_source(package, budget)
+        design, matrix, proof, checked, source, reference = diagnostic.candidate_check(inspect_source, package, budget)
         expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
     elif color_chain:
         from .color_derivation import inspect_chain
-        design, matrix, proof, checked, source, reference = inspect_chain(package, auth, budget)
+        design, matrix, proof, checked, source, reference = diagnostic.candidate_check(inspect_chain, package, auth, budget)
         expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
     elif edited_import:
         from .manual_derivation import inspect_edited_import
-        design, matrix, proof, checked, source, reference = inspect_edited_import(package, auth, budget)
+        design, matrix, proof, checked, source, reference = diagnostic.candidate_check(inspect_edited_import, package, auth, budget)
         expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
     elif kind == "import":
         require(h.get("repair") is None, "Ambiguous import/repair origin")
-        candidate, proof, checked = inspect_candidate(bundle, c.get("variant"), budget)
+        candidate, proof, checked = diagnostic.candidate_check(inspect_candidate, bundle, c.get("variant"), budget)
         design, matrix = candidate["design"], candidate["matrix"]
         expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
         result = load_json(bundle / (c["variant"] + "-result.json"))
@@ -193,7 +198,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
         reference = package.bundle(r.get("reference"))
         # RP-5 has its own bounded replay contract, including ALL parents/proofs.
         budget.deadline = min(budget.deadline, time.monotonic() + 60)
-        checked = inspect_repair(bundle, reference, budget)
+        checked = diagnostic.candidate_check(inspect_repair, bundle, reference, budget)
         raw = load_json(bundle / "repair.json")
         require(checked["status"] == "found" and checked["certified"], "Repair originally unfinished/uncertified")
         require(c.get("repair_id") == raw["id"] and c.get("variant") == f"candidate-{raw['selected']:03d}" and
@@ -206,7 +211,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
         source = {"kind": kind, "repair_id": raw["id"], "variant": c["variant"], "reference": raw["reference"]}
     elif kind == "manual":
         from .manual_derivation import inspect_manual
-        design, matrix, proof, checked, source, reference = inspect_manual(package, budget)
+        design, matrix, proof, checked, source, reference = diagnostic.candidate_check(inspect_manual, package, budget)
         expected_proof = c["bundle"] + "/certificate/proof.json"
     else:
         raise InvalidInput("Unsupported/ambiguous candidate source_type")
@@ -363,6 +368,7 @@ def player_notice(package, report=None):
                       "Usage basis: " + p["usage_basis"], ""))
 
 
+@diagnostic.measured("Export", "exports")
 def export(source, output, *, name, revision, stem, save_slot, approval_path=None,
            category_id=None, categories_path=None, manual_authorization=None):
     require(not output.exists(), "Export output exists; use a new path")
@@ -430,6 +436,7 @@ def hashes(root):
     return {p.relative_to(root).as_posix(): file_hash(p) for p in sorted(root.rglob("*")) if p.is_file()}
 
 
+@diagnostic.measured("Export/Proof validation", "full_export_validations", attempt_counter="export_validation_attempts")
 def verify_export(directory):
     from .authoring_package import file_table
     files = file_table(directory, time.monotonic()+300)
@@ -526,6 +533,7 @@ def main(argv=None):
         if cmd == "inspect":
             p.add_argument("--report", type=Path)
         else:
+            p.add_argument("--operation-report", type=Path)
             p.add_argument("--output-dir", type=Path, required=True)
             p.add_argument("--name", required=True)
             p.add_argument("--runtime-revision", type=int, required=True)
@@ -543,9 +551,17 @@ def main(argv=None):
             p.add_argument("--rebind-difficulty", action="store_true")
         if cmd in ("plan-update", "update"):
             p.add_argument("--expected-definition-sha256", required=True)
+        if cmd in ("plan", "register"):
+            p.add_argument("--operation-report", type=Path)
+        if cmd == "register":
+            p.add_argument("--publication-seconds", type=diagnostic.cli_seconds, action=ExplicitOnce)
+            p.add_argument("--recovery-seconds", type=diagnostic.cli_seconds, action=ExplicitOnce)
     for command in ("recover-registration", "sync-runtime", "check-registry"):
         p = sub.add_parser(command)
         p.add_argument("--checkout", type=Path, required=True)
+        if command == "recover-registration":
+            p.add_argument("--recovery-seconds", type=diagnostic.cli_seconds, action=ExplicitOnce)
+            p.add_argument("--operation-report", type=Path)
     p = sub.add_parser("retire-production")
     p.add_argument("--checkout", type=Path, required=True)
     p.add_argument("--integrated-commit", required=True)
@@ -555,7 +571,23 @@ def main(argv=None):
     p.add_argument("--integrated-commit", required=True)
     p.add_argument("--authoring-revision", nargs=2, metavar=("ID", "REVISION"), action="append", required=True)
     args = parser.parse_args(argv)
+    observed = args.command in ("export", "plan", "register", "recover-registration")
+    diagnostics = diagnostic.Diagnostics(args.command, {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()}, stderr=sys.stderr) if observed else None
+    token = diagnostic.current.set(diagnostics)
+    report_target = None
+    code = 0
+    previous_signal = None
+    if observed and threading.current_thread() is threading.main_thread():
+        def interrupted(signum, stack):
+            raise Aborted("interrupted: signal " + str(signum))
+        previous_signal = signal.signal(signal.SIGTERM, interrupted)
     try:
+        if observed:
+            diagnostics.environment["tool_commit"] = diagnostic.source_commit()
+            if args.operation_report is not None:
+                report_target = diagnostic.report_target(args.operation_report,
+                    [getattr(args, k, None) for k in ("checkout", "export", "input", "output_dir", "categories", "difficulty", "approval", "manual_authorization")] +
+                    [Path(__file__).resolve().parents[2]])
         if args.command == "retire-reveal-production":
             from .reveal_retirement import retire
             result = retire(args.checkout, args.authoring_revision, args.integrated_commit)
@@ -577,7 +609,7 @@ def main(argv=None):
             result = verify_export(args.export)[1]
         elif args.command == "recover-registration":
             from .content_registry import recover
-            result = recover(args.checkout)
+            result = recover(args.checkout, recovery_seconds=args.recovery_seconds)
         elif args.command == "sync-runtime":
             from .content_registry import sync_runtime
             result = sync_runtime(args.checkout)
@@ -592,12 +624,32 @@ def main(argv=None):
         else:
             from .content_registry import registration
             result = registration(args.export, args.checkout, apply=args.command == "register",
-                                  difficulty=args.difficulty, rebind_difficulty=args.rebind_difficulty)
-        print(json.dumps(result, ensure_ascii=True, sort_keys=True))
-        return 0
-    except (InvalidInput, InvalidProof, Aborted, OSError, ValueError, KeyError, TypeError, StopIteration) as exc:
-        print(json.dumps({"status": "blocked", "catalog_ready": False, "registered": False, "error": str(exc)}))
-        return 4 if isinstance(exc, Aborted) else 2
+                                  difficulty=args.difficulty, rebind_difficulty=args.rebind_difficulty,
+                                  publication_seconds=getattr(args, "publication_seconds", None),
+                                  recovery_seconds=getattr(args, "recovery_seconds", None))
+        if diagnostics:
+            diagnostics.outcome = "no-op" if result.get("status") == "no-op" else "rolled-back" if result.get("status") == "rolled-back" else "completed"
+            if args.command == "export":
+                diagnostics.environment["package_files"] = len(result["files"]) + 1
+    except (InvalidInput, InvalidProof, Aborted, OSError, ValueError, KeyError, TypeError, StopIteration, KeyboardInterrupt) as exc:
+        result = {"status": "blocked", "catalog_ready": False, "registered": False, "error": str(exc) or "interrupted"}
+        code = 4 if isinstance(exc, (Aborted, KeyboardInterrupt)) else 2
+    finally:
+        diagnostic.current.reset(token)
+        if previous_signal is not None:
+            signal.signal(signal.SIGTERM, previous_signal)
+    if diagnostics:
+        diagnostics.emit(event="end", force=True)
+        result["operation_diagnostics"] = diagnostics.result()
+        if report_target is not None:
+            try:
+                diagnostic.write_report(report_target, result["operation_diagnostics"])
+            except (OSError, ValueError, Aborted) as exc:
+                print("operation-report diagnostic failure: " + str(exc), file=sys.stderr)
+                if diagnostics.outcome not in ("completed", "rolled-back", "no-op"):
+                    code = code or 2
+    print(json.dumps(result, ensure_ascii=True, sort_keys=True))
+    return code
 
 
 if __name__ == "__main__":
