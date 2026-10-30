@@ -1,5 +1,10 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**Buch / #493 · B-A:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
+führen realistische Materialien, gezielte Bewegung und gezeichnete Seiteninhalte
+zusammen. Die folgenden BP-/Z2-Lieferbelege bleiben historisch gebunden; das
+bisherige A-Buch bleibt bis B-B die reguläre Darstellung.
+
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
 Tidy Hand für Standardtexte und erhält die bisherigen Überschriften. Kleine
@@ -136,7 +141,7 @@ Chalkboard/Stift/X/Timing sind nach ZS1-M01 bestätigt; die
 | Bereich | Bestätigte Entscheidung |
 | --- | --- |
 | Sammlung | Ein Album füllt sich mit erarbeiteten Bildern und kann einen erkennbar vollständigen Zustand erreichen. Keine zusätzlich beschlossene Raumansicht. |
-| Zeichenstil | Handgezeichnete 2D-Illustration mit klaren Konturen und ruhigen, nicht zu blassen Farbflächen. Nicht automatisch Retro-Pixel-Art für die gesamte Oberfläche. |
+| Zeichenstil | Realistischer räumlicher Buchkörper und sparsame Umgebung gemäß [#493](BOOK_STUDY.md); Inhalte/UI bleiben gezeichnet beziehungsweise geschrieben, Abschlussbilder illustriert. |
 | Stimmung | Warm, neugierig und dennoch ruhig. |
 | Spielbildschirm | Thematik bleibt dezent sichtbar; das geometrisch präzise Raster trägt selbst den gezeichneten Spielcharakter. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
 | Zelllesbarkeit | Füllungen bleiben einzeln erkennbar, insbesondere an kräftigen Fünferlinien. Raster und Füllung dürfen nicht optisch zu einer gemeinsamen Fläche verschmelzen. |
@@ -278,7 +283,7 @@ aufgehoben. #24 wurde noch nicht begonnen.
 
 Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Registern, Kapitelverzierungen und unterschiedlich großen Bildplätzen. Große Panoramen könnten eigene Seiten erhalten. Feste Seiten statt freier Dekoration sind ein Vorschlag, keine neue Spielmechanik.
 
-Beim Öffnen könnte das Rätselblatt zur großzügigen Arbeitsfläche werden. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster erhalten ausreichend Platz. Die linke Buchseite selbst wird zur großzügigen Bildschirmfläche; große Raster werden weder in eine kleine halbe Bildschirmfläche noch über einen Falz gezwungen. Perspektive, Ränder und Übergänge bleiben zu prüfen.
+Die bestätigte [Buchrichtung #493](BOOK_STUDY.md) verbindet Katalog und großzügige Arbeitsseite durch eine insgesamt dreisekündige Kamera-/Blattbewegung mit ruhender frontaler Endansicht. B-A untersucht sie isoliert; der normale Spielstart bleibt bis B-B unverändert. Die frühere Vorgabe zweier fester Ansichten ohne Kamerabewegung ist für diese neue Lieferung abgelöst. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster erhalten ausreichend Platz. Die linke Buchseite selbst wird zur großzügigen Bildschirmfläche; große Raster werden weder in eine kleine halbe Bildschirmfläche noch über einen Falz gezwungen. Perspektive, Ränder und Übergänge bleiben zu prüfen.
 
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
 
