@@ -133,7 +133,9 @@ technischen CI-Artefakt. Keine dauerhafte Bildgalerie.
 
 Der tatsächliche Diff mit neuem Studien- und gemeinsamem Produktharness wählt konservativ alle nativen
 und Nichtbrowserbereiche. Der Studiennachweis ist ein Schritt im vorhandenen
-Productjob bei Grafik-/Exportauswahl; kein neuer CI-Job, keine unterdrückten Tests.
+Productjob genau einmal in der Exportgruppe; kein neuer CI-Job, keine unterdrückten Tests.
+Der gemeinsame native Phasenvertrag verlangt diesen Schritt ausdrücklich; das Gate
+liest die originalen Studienassertions, Phasen und dateigebundenen Belege zusätzlich.
 `docs`, `ci-required` und sämtliche ausgewählten Jobs benötigen Erfolg am finalen
 Head/Test-Merge. Zusätzliche Exportkosten bleiben Messwerte; CI2-Ziele werden
 nicht ohne passende Messung als erreicht ausgegeben.

@@ -1,5 +1,13 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## Buchstudie B-A / #493
+
+Die Exportgruppe verlangt zusätzlich einmalig `isolated-book-study` und dessen
+[B-A-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Assertions, Quellbindung,
+vollständige Phasen, Film, drei Übergabepaare und tatsächliche Studienpakete samt
+Dateihashes. Die bisherigen Gruppen-/Dateipflichten bleiben erhalten. Die Studie
+liegt getrennt im befristeten Technikartefakt, nicht im regulären Spielerpaket.
+
 ## Aktuelle Umsetzung: CI2-D / #416
 
 Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),

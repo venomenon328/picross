@@ -62,7 +62,7 @@ def check_phases(report, expected, directory):
             raise ValueError('Incorrect native process outcome')
         python_checks = {'current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'kat2-adapter-export',
                          'kat2-adapter-register', 'kat2-imported-base-copies', 'kat2-image-processing', 'ea-image-processing', 'za1-test-only-registration',
-                         'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles'}
+                         'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles', 'isolated-book-study'}
         if ('log' in row) != (row['name'] not in python_checks):
             raise ValueError('Missing/unexpected native process log')
         if 'log' in row:
@@ -72,6 +72,44 @@ def check_phases(report, expected, directory):
                 raise ValueError('Truncated native phase log')
             if row.get('required_marker') and row['required_marker'] not in (directory/'logs'/log['file']).read_text(encoding='utf-8'):
                 raise ValueError('Missing native success marker')
+
+
+def validate_book_study(report, directory, identity, host):
+    """Require B-A's original results, not just a successful enclosing Python call."""
+    study = read(directory/'report.json')
+    native = read(directory/'native.json')
+    if (report.get('book_study') != study or study['package'] != 'B-A-T01'
+            or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
+            or native['checks'] != 96 or native['failures'] != []
+            or len(native['layouts']) != 3 or len(native['handoffs']) != 3
+            or native['motion_wall_seconds_quiet'] < 3.0 or not native['motion_frame_ms_quiet']
+            or native['resources']['ui_capture_targets'] != 0 or native['resources']['catalog_rgba_textures'] != 0):
+        raise ValueError('Incomplete/wrong isolated book study assertions or binding')
+    expected = ['book-version', 'book-import', 'book-native', 'book-movie', 'book-regular-import']
+    for target in ('windows', 'web'):
+        expected += ['book-regular-'+target+s for s in ('', '-content', '-isolation')]
+    for target in ('windows', 'web'):
+        expected += ['book-study-'+target+s for s in ('', '-pack')]
+    if host == 'Windows': expected += ['book-windows-exported-motion']
+    if ([p['name'] for p in study['phases']] != expected
+            or any(p['exit_code'] != 0 or p['timed_out'] or p['seconds'] < 0 for p in study['phases'])
+            or study['study_web_features'] != dict(renderer='gl_compatibility', threads=False, extensions=False, browser_probe='not requested')):
+        raise ValueError('Incomplete/failed book study phases or Web feature contract')
+    names = set(study['files'])
+    actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()} - {'report.json'}
+    required = {'opening.avi', 'native.json', 'catalog.png', 'opening-middle.png', 'opening-back.png',
+                'windows/book-study.exe', 'windows/book-study.pck', 'web/index.html', 'web/index.pck', 'web/index.wasm'}
+    required.update('logs/'+name+'.log' for name in expected)
+    required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work') for width in (1280,1920,2560))
+    if names != actual or not required <= names:
+        raise ValueError('Missing/unexpected book study evidence inventory')
+    for name, metadata in study['files'].items():
+        verify_file(directory, dict(file=name, **metadata))
+    pixels = study['handoff_pixels']
+    if (set(pixels['samples']) != {f'work-{w}.png' for w in (1280,1920,2560)}
+            or any(s['max_channel_delta'] > 4 or max(s['mean_channel_delta']) > .1 for s in pixels['samples'].values())
+            or pixels['negative_controls'] != 'one-pixel displacement and alpha mutation rejected'):
+        raise ValueError('Failed/incomplete book study handoff pixels or counterexamples')
 
 
 def validate_catalog_images(costs, summary, required, direct_images):
@@ -131,6 +169,8 @@ def validate_payload(result, root, player_root=None):
             if scope['enabled'] != (name in enabled) or scope['status'] != ('success' if name in enabled else 'not_applicable'):
                 raise ValueError('Unselected/skipped scope misreported')
         check_phases(report, checks(group, result['host']), directory)
+        if group == 'export':
+            validate_book_study(report, directory/'book-study', result['identity'], result['host'])
         if group == 'graphics':
             worker = read(directory/'vs2-worker/technical/product-report.json')
             if worker['status'] != 'success' or any(worker.get(k) != v for k,v in result['identity'].items()):

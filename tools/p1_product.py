@@ -580,7 +580,7 @@ def main(argv: list[str] | None = None) -> int:
                     phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
                           "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
                 evidence.scope_done("export")
-            if args.visual or args.export:
+            if args.export:
                 # The isolated B-A study owns its project/profile and reuses only
                 # verified archives. Its bounded evidence stays in technical/.
                 import book_study
