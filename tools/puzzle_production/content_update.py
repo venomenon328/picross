@@ -11,6 +11,7 @@ import shutil
 import time
 
 from . import catalog_io
+from . import operation_diagnostics as diagnostic
 from .authoring_package import file_hash, file_table, relative, require, sha
 from .contract import exact_keys, integer, load_json
 from . import categories
@@ -102,11 +103,13 @@ def recover_update(checkout):
             "Recovery package overlaps retained content")
     # Preflight completed before any rollback mutation. Only the new package is
     # removed; old packages, reveals and every user save remain untouched.
+    diagnostic.begin_segment("R1")
     for name in (definition_name,notice_name,REGISTRY,RUNTIME):
         atomic_bytes(root/name, runtime if name == RUNTIME else j["old"][name].encode("utf-8"))
     if package_path.exists():
         require(package_path.resolve().is_relative_to(root/"content/packages") and not package_path.is_symlink(),"Unsafe update cleanup")
         shutil.rmtree(package_path)
+    diagnostic.begin_segment("R2")
     lock.unlink()
     check_checkout(root)
     return {"status":"rolled-back","registered":False}

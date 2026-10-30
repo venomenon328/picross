@@ -696,10 +696,16 @@ durchgesetzt und verspricht keinen harten OS-Prozessabbruch. Die Warnung bei
 einen ansonsten gültigen Lauf abbrechen. Die vor Code gebundene konkrete
 CLI-/API-Schnittstelle und Diagnosehülle stehen im
 [ZA-1-Betriebsvertrag](ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen).
-Der Recoveryrahmen beginnt vor der begrenzten Klassifikation. Während der
-lesenden Klassifikation gilt höchstens der Registrierungsrahmen; nach Zuordnung
-gilt ohne Neustart derselben Uhr die Operationsfrist (andere Writer 300 s plus
-bisherige Außenbudgets). Die ursprünglichen Journalbytes bleiben auch nach
+Der Recoveryrahmen beginnt vor der begrenzten Klassifikation. Solange die
+Operation unbekannt ist, gilt bei jedem Tick höchstens 300 s, bei einem kürzeren
+Override dessen Frist. Erst die erfolgreiche geschlossene Zuordnung erlaubt
+1800 s beziehungsweise den Registrierungs-Override vom ursprünglichen Start;
+eine bereits abgelaufene Erst- oder Außenfrist lässt sich nicht wiederbeleben.
+Eine Klassifikation, die selbst 300 s überschreitet, wird auch bei später als
+Registrierung erkennbaren Bytes abgebrochen. Andere Writer behalten 300 s
+einschließlich Klassifikation und bisheriger Außenbudgets. Vollständige
+Journal-/Quellenvalidierung bleibt eine anschließende eigene Prüfung unter
+der sicher zugeordneten Operationsfrist. Die ursprünglichen Journalbytes bleiben auch nach
 Klassifikation gebunden. Registrierung v6/v5 sowie historische v4/v3 verlangen
 die exakte Format-/Operationspaarung und ihr geschlossenes Schlüsselschema;
 v2 besitzt sein eigenes geschlossenes Schema ohne `operation`. V1 bleibt
@@ -710,6 +716,16 @@ Nur der zusätzliche `tx.read`-Pfaddurchlauf entfällt: `io.read(..., missing=Tr
 prüft weiterhin frisch Pfad, Typ, Alias/Links, Bytegrenze und Identitäten
 vor/nach Öffnen und Lesen. Kein Cache. `catalog_publication.guard` behält
 seine vollständigen Prüfungen und jeden bisherigen Aufruf vor Schreibschritten.
+
+Phasenmessung beginnt vor der jeweiligen Arbeit: P0 Vorprüfung, P1 Journal,
+P2 Lockprüfung, P3 Paket/Binärdateien samt Paketprüfung, P4 Texte, P5 Runtime
+und Zielprüfung, P6 Bereinigung und dauerhafter Lockabschluss. Recovery trennt
+Classification von R0 Vorprüfung, R1 Rückführung und R2 Abschluss. Wiederholte
+Dateischritte bleiben in ihrer Phase. Die bestehenden Fehler-Checkpoints bleiben
+an ihren ursprünglichen Stellen; ein Checkpoint ist kein Nachweis des ganzen
+Phasenabschlusses. Auch abgebrochene Teilzeiten werden erfasst. Die pausierte
+Vorwärtsphase enthält keine anschließende Recoveryzeit; die äußere inklusive
+Publikationsdauer darf diese enthalten und wird nicht zu Unterphasen addiert.
 
 Operative Phasen, Zeiten, Zähler, Warnungen und Budgetwahl bleiben außerhalb
 der geschlossenen fachlichen und historischen Identitätskerne. Sie dürfen

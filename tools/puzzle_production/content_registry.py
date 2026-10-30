@@ -234,7 +234,7 @@ def recover(root, *, recovery_seconds=None):
     diagnostic.seconds(recovery_seconds, now=started)
     # Classification is read-only and bounded. All subsequent checks and writes
     # share the original call origin, including legacy recovery dispatch.
-    with diagnostic.operation("Recovery", 1800 if recovery_seconds is None else recovery_seconds,
+    with diagnostic.operation("Recovery", 300 if recovery_seconds is None else min(300, recovery_seconds),
                               "classification-pending", started=started) as active:
         root = catalog_io.external(root)
         operation, raw, staging_name = diagnostic.classify(root)
@@ -246,6 +246,7 @@ def recover(root, *, recovery_seconds=None):
         from . import catalog_publication as publication
         require(publication.read_journal(root, staging_name or "content/.registration-pending.json") == raw,
                 "Journal changed during recovery classification")
+        diagnostic.begin_segment("R0")
         result = _recover(root)
         if not active.complete:
             diagnostic.durable("rolled-back", lock_state="removed-legacy-contract")
@@ -315,10 +316,12 @@ def _recover(root):
     require(not any(n == target or n.startswith(target+"/") for n in retained for target in j["targets"]),
             "Recovery target overlaps retained content")
     # All checks passed; restore old indexes and the validated current projection.
+    diagnostic.begin_segment("R1")
     for name, text in j["old"].items():
         atomic_bytes(root/name, runtime if name == RUNTIME else text.encode("utf-8"))
     for path in reversed(existing):
         shutil.rmtree(path) if path.is_dir() else path.unlink()
+    diagnostic.begin_segment("R2")
     lock.unlink()
     check_checkout(root)
     return {"status": "rolled-back", "registered": False}

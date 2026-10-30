@@ -114,7 +114,7 @@ def final_approval(package, selection, approval_path=None):
     return {"record": a, "sha256": file_hash(approval_path), "path": approval_path}
 
 
-@diagnostic.measured("Input inspection", "full_input_inspections")
+@diagnostic.measured("Input inspection", "full_input_inspections", attempt_counter="input_inspection_attempts")
 def inspect(package: Package, approval_path=None, *, legacy=False, manual_authorization=None):
     h = package.handoff
     for name in ("brief", "report", "decisions", "effort"):
@@ -436,7 +436,7 @@ def hashes(root):
     return {p.relative_to(root).as_posix(): file_hash(p) for p in sorted(root.rglob("*")) if p.is_file()}
 
 
-@diagnostic.measured("Export/Proof validation", "full_export_validations")
+@diagnostic.measured("Export/Proof validation", "full_export_validations", attempt_counter="export_validation_attempts")
 def verify_export(directory):
     from .authoring_package import file_table
     files = file_table(directory, time.monotonic()+300)

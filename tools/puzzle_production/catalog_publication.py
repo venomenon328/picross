@@ -400,6 +400,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
     from . import catalog_transaction as tx
     from .content_registry import check_checkout
     additions = additions or {}
+    diagnostic.begin_segment("P0")
     tx.validate_journal(root, j, before_write=True)
     raw = journal_bytes(j)
     view = _JournalView(j, raw)
@@ -413,6 +414,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
     if os.name != "nt": require(hasattr(ctypes.CDLL(None), "renameat2"), "Atomic no-replace rename unavailable")
     addition_preflight(root,[temps[n] for n in j['additions']])
     _checkpoint("P0")
+    diagnostic.begin_segment("P1")
     stage_name = "content/.registration-journal-" + io.checksum(raw) + ".tmp"
     stage = io.safe(root, stage_name)
     with stage.open("xb") as stream:
@@ -431,6 +433,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
         diagnostic.current.get().journal_state = {"journal": "present", "lock": "present"}
         diagnostic.current.get().outcome = "recovery-required"
     _checkpoint("P1")
+    diagnostic.begin_segment("P2")
     expected = {n: io.checksum(v.encode() if v is not None else None) for n, v in j["old"].items()}
     expected.update({n: pair["old"]["sha256"] for n, pair in j["replacements"].items()})
     expected.update({n: None for n in j["additions"]})
@@ -440,6 +443,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
     try:
         if under_lock: under_lock()
         _checkpoint("P2")
+        diagnostic.begin_segment("P3")
         for i, n in enumerate(sorted(j["additions"])):
             guard_fn()
             data = io.read(additions[n].parent, additions[n].name, 64 * 1024 * 1024)
@@ -457,9 +461,11 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
             from .target_adapter import verify_export
             before, after = (io.json_bytes(j[s][tx.REGISTRY].encode(), 8 * 1024 * 1024) for s in ("old", "new"))
             verify_export(io.safe(root, tx._delta(j, before, after)))
+        diagnostic.begin_segment("P4")
         names = sorted(n for n in j["new"] if n != tx.RUNTIME and j["old"][n] != j["new"][n])
         if j["old"][tx.RUNTIME] != j["new"][tx.RUNTIME]: names.append(tx.RUNTIME)
         for n in names:
+            if n == tx.RUNTIME: diagnostic.begin_segment("P5")
             guard_fn()
             data = j["new"][n].encode() if j["new"][n] is not None else None
             write(root, n, data, temps[n], guard_fn); expected[n] = io.checksum(data)
@@ -467,12 +473,14 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
             if fail_step == "crash-" + n or n == tx.REGISTRY and fail_step == "crash-index" or n == tx.RUNTIME and fail_step == "crash-runtime": raise InterruptedError("Injected transaction interruption: " + n)
             if fail_step == n or n == tx.REGISTRY and fail_step == "index": raise OSError("Injected update failure: " + n)
         if tx.RUNTIME not in names:
+            diagnostic.begin_segment("P5")
             # P5 still has a boundary when the projection is byte-identical.
             # Keep interruption coverage without manufacturing a runtime write.
             _checkpoint("P5", tx.RUNTIME)
             if fail_step in ("crash-"+tx.RUNTIME,"crash-runtime"): raise InterruptedError("Injected transaction interruption: "+tx.RUNTIME)
             if fail_step == tx.RUNTIME: raise OSError("Injected update failure: "+tx.RUNTIME)
         guard_fn(); check_checkout(root, replay=j['operation']=='registration', pending_journal=raw); guard_fn()
+        diagnostic.begin_segment("P6")
         cleanup_temps(root, j, raw, guard_fn, view=view)
         _checkpoint("P6"); guard_fn()
         io.safe(root, tx.LOCK).unlink(); sync_directory(root / "content")
@@ -484,6 +492,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
         # forward budget, and foreign data still blocks before rollback writes.
         token = io._deadline.set(None)
         forward = diagnostic.frame.get()
+        if forward is not None: forward.next_segment()
         recovery_seconds = forward.recovery_seconds if forward is not None and forward.kind == "Publication" else None
         operation_token = diagnostic.frame.set(None)
         try:
@@ -515,6 +524,7 @@ def recover(root):
         tx.validate_journal(root, j, before_write=True)
         guard(root, j, raw=raw, old_only=True)
         require(read_journal(root) is None and read_journal(root, remnants[0]) == raw, "Journal appeared/changed during staging recovery")
+        diagnostic.begin_segment("R2")
         io.safe(root, remnants[0]).unlink(); sync_directory(root / "content")
         diagnostic.durable("rolled-back")
         return {"status": "rolled-back", "registered": False}
@@ -525,6 +535,7 @@ def recover(root):
     j = view.j
     guard_fn = lambda: guard(root, j, raw=raw, _view=view)
     guard_fn(); _checkpoint("R0")
+    diagnostic.begin_segment("R1")
     cleanup_temps(root, j, raw, guard_fn, view=view)
     temps = view.temps
     for n, pair in sorted(j["replacements"].items()):
@@ -548,6 +559,7 @@ def recover(root):
     guard_fn()
     if tx.read(root, tx.RUNTIME) != runtime.encode(): write(root, tx.RUNTIME, runtime.encode(), temps[tx.RUNTIME], guard_fn)
     _checkpoint("R1-runtime")
+    diagnostic.begin_segment("R2")
     guard_fn(); check_checkout(root, pending_journal=raw); guard_fn()
     require(all(tx.read(root, n) == (v.encode() if v is not None else None) for n, v in {**j["old"], tx.RUNTIME: runtime}.items()) and
             all(not io.safe(root, n).exists() for n in j["additions"]), "Recovery goal differs")

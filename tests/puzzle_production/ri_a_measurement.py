@@ -5,7 +5,7 @@ contain the fixed test-only export and checked.json made by --prepare.
 """
 import argparse
 from copy import deepcopy
-from contextlib import ExitStack
+from contextlib import ExitStack, nullcontext
 import functools
 import hashlib
 import json
@@ -63,6 +63,7 @@ def main():
     parser.add_argument('--source', required=True)
     parser.add_argument('--repetitions', type=int, default=3, choices=(2, 3, 4))
     parser.add_argument('--prepare', action='store_true')
+    parser.add_argument('--observe', action='store_true', help='Also collect the operative RI-A diagnostics (RI-A sources only)')
     args = parser.parse_args()
     sys.path.insert(0, str(args.repo.absolute()))
     from tools.puzzle_production import target_adapter as adapter, za1_fixtures as fixtures
@@ -104,10 +105,21 @@ def main():
         meter = Meter(); phases = {}; phase_operations = {}; run = args.work/str(repeat); run.mkdir()
         def timed(name, fn):
             prior = deepcopy(meter.rows); counters = dict(meter.counters)
-            at = time.perf_counter(); result = fn(); phases[name] = time.perf_counter() - at
+            diagnostics = None
+            if args.observe and name not in ('setup', 'recovery_setup'):
+                from tools.puzzle_production import operation_diagnostics as diagnostic
+                diagnostics = diagnostic.Diagnostics({'recovery': 'recover-registration', 'interrupted_registration': 'register'}.get(name, name))
+                diagnostics.environment['tool_commit'] = args.source
+            at = time.perf_counter()
+            with diagnostic.observe(diagnostics) if diagnostics else nullcontext():
+                result = fn()
+            phases[name] = time.perf_counter() - at
             phase_operations[name] = {'operations': {k: {field: value - prior.get(k, {}).get(field, 0)
                                          for field, value in row.items()} for k, row in meter.rows.items()},
                                       'counters': {k: value - counters.get(k, 0) for k, value in meter.counters.items()}}
+            if diagnostics:
+                if name != 'interrupted_registration': diagnostics.outcome = 'completed' if name != 'recovery' else 'rolled-back'
+                phase_operations[name]['diagnostics'] = diagnostics.result()
             return result
         with ExitStack() as stack:
             for module, name in ((adapter, 'export'), (adapter, 'verify_export'), (images, 'inspect_candidate'),

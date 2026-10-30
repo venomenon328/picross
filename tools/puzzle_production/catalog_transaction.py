@@ -622,6 +622,7 @@ def _recover(root):
     _, runtime = validate_journal(root, j)
     # Delete only individually hash-checked additions. Empty directory cleanup is
     # cosmetic; retaining empty parents cannot conceal or destroy foreign work.
+    diagnostic.begin_segment("R1")
     for n in sorted(j["additions"], reverse=True):
         guard(root, j, journal_bytes=raw)
         safe(root, n).unlink(missing_ok=True)
@@ -631,6 +632,7 @@ def _recover(root):
         _write(root, n, j["old"][n])
     guard(root, j, journal_bytes=raw)
     _write(root, RUNTIME, runtime)
+    diagnostic.begin_segment("R2")
     check_checkout(root, pending_journal=raw)
     guard(root, j, journal_bytes=raw)
     goal = {**j["old"], RUNTIME: runtime}

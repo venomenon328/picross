@@ -54,7 +54,7 @@ def phase(name):
     if d is None:
         yield
         return
-    parent = "/".join(d.stack) or None
+    parent = phase_path(d) or None
     key = (parent, name)
     row = d.phases.setdefault(key, {"name": name, "parent": parent, "inclusive": True, "calls": 0, "seconds": 0.0})
     row["calls"] += 1
@@ -68,25 +68,35 @@ def phase(name):
         d.stack.pop()
 
 
-def measured(name, counter=None):
+def phase_path(d):
+    stack = list(d.stack)
+    active = frame.get()
+    if active is not None and active.segment is not None and active.kind in stack:
+        index = len(stack) - 1 - stack[::-1].index(active.kind)
+        stack.insert(index + 1, active.segment)
+    return "/".join(stack)
+
+
+def measured(name, counter=None, *, attempt_counter=None):
     def decorate(function):
         @wraps(function)
         def wrapped(*args, **kwargs):
-            if counter:
-                count(counter)
+            if attempt_counter or counter:
+                count(attempt_counter or counter)
             with phase(name):
                 result = function(*args, **kwargs)
+            if attempt_counter and counter:
+                count(counter)
             count("completed_steps", work=name)
             return result
         return wrapped
     return decorate
 
 
+@measured("Candidate/Proof", "full_candidate_proof_checks", attempt_counter="candidate_proof_check_attempts")
 def candidate_check(function, *args, **kwargs):
-    """Count the actual complete source check, including a composite repair."""
-    count("full_candidate_proof_checks")
-    with phase("Candidate/Proof"):
-        return function(*args, **kwargs)
+    """A composite source check is one attempt, complete only on normal return."""
+    return function(*args, **kwargs)
 
 
 class Diagnostics:
@@ -113,8 +123,7 @@ class Diagnostics:
         if self.stderr is None or not force and now - self.last_message < 30:
             return
         stalled = now - self.last_progress["elapsed_seconds"] >= 30
-        active = frame.get()
-        phase_name = (active.kind + '/' + active.segment) if active is not None else '/'.join(self.stack) or 'Finish'
+        phase_name = phase_path(self) or 'Finish'
         try:
             print(f"{self.command}/{self.operation_class} phase={phase_name} "
                   f"elapsed={now:.3f}s event={event} steps={self.counters.get('completed_steps', 0)} "
@@ -161,6 +170,7 @@ class Frame:
         self.segment = "Prevalidation" if kind == "Publication" else "Classification"
         self.segment_started = self.started
         d = current.get()
+        self.phase_parent = "/".join([*d.stack, kind]) if d else kind
         if d:
             from . import catalog_io as io
             outer = io._deadline.get()
@@ -173,17 +183,19 @@ class Frame:
     def next_segment(self, name=None):
         now = time.monotonic()
         d = current.get()
-        if d:
-            key = (self.kind, self.segment)
-            row = d.phases.setdefault(key, {"name": self.segment, "parent": self.kind, "inclusive": True, "calls": 0, "seconds": 0.0})
+        if d and self.segment is not None:
+            key = (self.phase_parent, self.segment)
+            row = d.phases.setdefault(key, {"name": self.segment, "parent": self.phase_parent, "inclusive": True, "calls": 0, "seconds": 0.0})
             row["calls"] += 1
             row["seconds"] += now - self.segment_started
-        if name is not None:
-            self.segment = name
-            self.segment_started = now
+        self.segment = name
+        self.segment_started = now
 
     def classified_limit(self, limit, origin):
         from . import catalog_io as io
+        # A completed classification cannot revive an expired provisional or
+        # outer deadline. The selected limit still starts at API entry.
+        io.tick()
         self.seconds = seconds(limit, now=self.started)
         self.deadline = min(self.started + limit, self.parent_deadline)
         d = current.get()
@@ -243,13 +255,17 @@ def boundary(name, target=None):
     # remove budget enforcement or manufacture completion.
     from . import catalog_io as io
     io.tick()
-    count("phase_boundaries", work=name + (": " + target if target else ""))
-    f = frame.get()
-    if f is not None and name.startswith(("P", "R")) and name[:2] != f.segment:
-        f.next_segment(name[:2])
+    count("phase_boundaries", work="checkpoint " + name + (": " + target if target else ""))
     d = current.get()
     if d:
         d.emit(event=name)
+
+
+def begin_segment(name):
+    """Observe actual work boundaries, independently of fault checkpoints."""
+    active = frame.get()
+    if active is not None and active.segment != name:
+        active.next_segment(name)
 
 
 def classify(root):

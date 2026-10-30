@@ -87,6 +87,41 @@ class BudgetTests(unittest.TestCase):
         self.assertTrue(all(p['inclusive'] for p in report['phases']))
         self.assertEqual(report['last_progress']['elapsed_seconds'], 31)
 
+    def test_complete_checks_count_only_successful_returns(self):
+        clock = Clock()
+        with patch.object(diag.time, 'monotonic', clock):
+            d = diag.Diagnostics('plan')
+            with diag.observe(d):
+                def check(failure=None):
+                    clock.now += 7
+                    if failure: raise failure
+                    return 'checked'
+                self.assertEqual(diag.candidate_check(check), 'checked')
+                progress = dict(d.last_progress)
+                for failure in (InvalidInput('bad bytes'), Aborted('inside proof'), OSError('read failed')):
+                    with self.assertRaises(type(failure)):
+                        diag.candidate_check(check, failure)
+                    self.assertEqual(d.last_progress, progress)
+            self.assertEqual(d.counters['candidate_proof_check_attempts'], 4)
+            self.assertEqual(d.counters['full_candidate_proof_checks'], 1)
+            self.assertEqual(d.counters['completed_steps'], 1)
+            self.assertEqual(d.result()['phases'][0]['seconds'], 28)
+
+    def test_classification_cannot_revive_expired_frame_or_outer_deadline(self):
+        clock = Clock()
+        with patch.object(diag.time, 'monotonic', clock):
+            for outer in (False, True):
+                with self.subTest(outer=outer), self.assertRaises(Aborted):
+                    with io.budget(10 if outer else 300), diag.operation('Recovery', 300, 'classification') as active:
+                        clock.now += 11 if outer else 301
+                        active.classified_limit(1800, 'registration-default')
+            with self.assertRaises(Aborted), diag.operation('Publication', 10, 'outer'):
+                with diag.operation('Recovery', 300, 'classification') as active:
+                    clock.now += 9
+                    active.classified_limit(1800, 'registration-default')
+                    clock.now += 2
+                    io.tick()
+
     def test_read_keeps_type_alias_hardlink_and_fresh_identity_guards(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); target = root/'sample'; target.write_bytes(b'own')
@@ -161,6 +196,136 @@ class PublicationTests(unittest.TestCase):
     def execute(self, **kwargs):
         return pub.execute(self.root, deepcopy(self.journal), self.additions, **kwargs)
 
+    def test_classification_ticks_enforce_300_before_operation_is_known(self):
+        lock = self.root/tx.LOCK
+        sync = tx.prepare(self.root, tx.capture(self.root), {}, operation='sync')
+        original = io.json_bytes
+        for journal, override in ((sync, None), (sync, 1800), (self.journal, None), (self.journal, 1800)):
+            with self.subTest(operation=journal['operation'], override=override):
+                lock.write_bytes(pub.journal_bytes(journal)); before = files(self.root)
+                self.clock.now = 100; observed = []
+                def slow_parse(*args, **kwargs):
+                    # These ticks occur inside classify, before the JSON decoder
+                    # can establish the closed format/operation pair.
+                    for elapsed in (100, 299, 301):
+                        self.clock.now = 100 + elapsed
+                        observed.append(diag.frame.get().seconds)
+                        io.tick()
+                    return original(*args, **kwargs)
+                with patch.object(diag.time, 'monotonic', self.clock), patch.object(io, 'json_bytes', side_effect=slow_parse), self.assertRaises(Aborted):
+                    cr.recover(self.root, recovery_seconds=override)
+                self.assertEqual(observed, [300, 300, 300])
+                self.assertEqual(files(self.root), before)
+
+    def test_classified_registration_uses_original_origin_and_selected_limit(self):
+        lock = self.root/tx.LOCK
+        original = pub.read_journal
+        for override, outer, expected in ((None, None, 1800), (600, None, 600), (10, None, 10),
+                                           (None, 250, 250), (600, 250, 250)):
+            with self.subTest(override=override, outer=outer):
+                lock.write_bytes(pub.journal_bytes(self.journal)); before = files(self.root)
+                self.clock.now = 100; observed = []; calls = 0
+                early = 2 if expected == 10 else 100
+                def slow_read(*args, **kwargs):
+                    nonlocal calls
+                    calls += 1
+                    for elapsed in ((early, early * 2) if calls == 1 else (expected - 1, expected + 1)):
+                        self.clock.now = 100 + elapsed
+                        observed.append((calls, diag.frame.get().seconds, diag.frame.get().deadline))
+                        io.tick()
+                    return original(*args, **kwargs)
+                from contextlib import nullcontext
+                with patch.object(diag.time, 'monotonic', self.clock), patch.object(pub, 'read_journal', side_effect=slow_read), self.assertRaises(Aborted):
+                    with io.budget(outer) if outer else nullcontext():
+                        cr.recover(self.root, recovery_seconds=override)
+                self.assertEqual(len(observed), 4)
+                self.assertEqual(observed[0][1], min(300, override or 1800))
+                self.assertEqual(observed[-1][1:], (override or 1800, 100 + (override or 1800)))
+                self.assertEqual(files(self.root), before)
+
+    def test_publication_and_recovery_phase_times_follow_actual_work(self):
+        expected = {}; output = streams.StringIO()
+        original_write = pub.write; original_validate = tx.validate_journal
+        original_sync = pub.sync_directory; original_cleanup = pub.cleanup_temps
+        def spend(segment, amount):
+            self.assertEqual(diag.frame.get().segment, segment)
+            expected[segment] = expected.get(segment, 0) + amount
+            self.clock.now += amount
+            diag.current.get().emit(force=True)
+        def validate(*args, **kwargs):
+            spend('P0' if diag.frame.get().kind == 'Publication' else 'R0', 11)
+            return original_validate(*args, **kwargs)
+        def write(root, name, *args, **kwargs):
+            segment = ('P3' if name in self.journal['additions'] else 'P5' if name == tx.RUNTIME else 'P4')
+            spend(segment if diag.frame.get().kind == 'Publication' else 'R1', 2)
+            return original_write(root, name, *args, **kwargs)
+        def sync(path):
+            if diag.frame.get().segment in ('P1', 'P6', 'R2'):
+                spend(diag.frame.get().segment, 3)
+            return original_sync(path)
+        def cleanup(*args, **kwargs):
+            segment = diag.frame.get().segment
+            self.assertIn(segment, ('P6', 'R1', 'R2'))
+            spend(segment, 5)
+            return original_cleanup(*args, **kwargs)
+        def checkpoint(name, target=None):
+            segment = name[:2]
+            if segment in ('P2', 'R1'):
+                spend(segment, 1)
+        with patch.object(diag.time, 'monotonic', self.clock):
+            d = diag.Diagnostics('register', stderr=output)
+            with diag.observe(d), patch.object(tx, 'validate_journal', side_effect=validate), patch.object(pub, 'write', side_effect=write), patch.object(pub, 'sync_directory', side_effect=sync), patch.object(pub, 'cleanup_temps', side_effect=cleanup), patch.object(pub, 'checkpoint', side_effect=checkpoint):
+                self.execute(under_lock=lambda: spend('P2', 7))
+                publication = deepcopy(d.result())
+                publication_expected = dict(expected)
+                # Separate real interrupted publication, then timed rollback.
+                # Use a fresh checkout: never erase published files as test setup.
+                self.root = self.root.parent/'recovery'
+                shutil.copytree(self.base, self.root)
+                with self.assertRaises(InterruptedError): self.execute(fail_step='crash-runtime')
+                expected = {}
+                d = diag.Diagnostics('recover-registration', stderr=output)
+                with diag.observe(d): cr.recover(self.root)
+                recovery = d.result()
+        for report in (publication, recovery):
+            rows = {p['name']: p for p in report['phases'] if p['name'][:1] in ('P', 'R') and len(p['name']) == 2}
+            self.assertTrue(all(p['inclusive'] for p in rows.values()))
+            if report is recovery:
+                self.assertEqual({k: p['seconds'] for k, p in rows.items()}, expected)
+            else:
+                self.assertEqual({k: p['seconds'] for k, p in rows.items()}, publication_expected)
+                self.assertEqual(rows['P0']['seconds'], 11)
+                self.assertEqual(rows['P2']['seconds'], 8)
+                self.assertEqual(rows['P3']['seconds'], 2 * len(self.journal['additions']))
+                self.assertEqual(rows['P4']['seconds'], 2 * sum(self.journal['old'][n] != self.journal['new'][n] for n in self.journal['new'] if n != tx.RUNTIME))
+                self.assertEqual(rows['P5']['seconds'], 2)
+            self.assertTrue(all(p['calls'] == 1 for p in rows.values()))
+            self.assertAlmostEqual(sum(p['seconds'] for p in rows.values()), report['elapsed_seconds'])
+        self.assertIn('phase=Publication/P3', output.getvalue())
+        self.assertIn('phase=Recovery/R1', output.getvalue())
+
+    def test_failed_export_and_input_checks_do_not_claim_completion(self):
+        for failure in (InvalidInput('bad proof'), Aborted('proof deadline')):
+            with self.subTest(failure=failure):
+                d = diag.Diagnostics('plan')
+                def verifier(*args, **kwargs):
+                    diag.count('test_inner_work', work='inner proof prefix')
+                    if isinstance(failure, Aborted):
+                        self.clock.now += 11
+                        io.tick()
+                    raise failure
+                with patch.object(diag.time, 'monotonic', self.clock), diag.observe(d), patch.object(adapter, 'inspect_candidate', side_effect=verifier), self.assertRaises(type(failure)), io.budget(10):
+                    adapter.verify_export(self.exported)
+                for counter in ('input_inspection_attempts', 'export_validation_attempts', 'candidate_proof_check_attempts'):
+                    self.assertEqual(d.counters[counter], 1)
+                for counter in ('full_input_inspections', 'full_export_validations', 'full_candidate_proof_checks'):
+                    self.assertEqual(d.counters.get(counter, 0), 0)
+                self.assertEqual(d.last_progress['work'], 'inner proof prefix')
+        d = diag.Diagnostics('plan')
+        with diag.observe(d): adapter.verify_export(self.exported)
+        for counter in ('full_input_inspections', 'full_export_validations', 'full_candidate_proof_checks'):
+            self.assertEqual(d.counters[counter], 1)
+
     def test_warning_then_success_and_noop_mtimes(self):
         def step(phase, name=None):
             if phase == 'P2': self.clock.now += 301
@@ -174,14 +339,21 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(result['status'], 'no-op')
         self.assertEqual(files(self.root), before)
 
-    def test_timeout_prevalidation_before_any_mutation(self):
+    def test_timeout_in_p0_records_partial_work_before_any_mutation(self):
         original = tx.validate_journal
         def validate(*args, **kwargs):
             self.clock.now += 1801
             return original(*args, **kwargs)
         before = files(self.root)
-        with patch.object(diag.time, 'monotonic', self.clock), patch.object(tx, 'validate_journal', side_effect=validate), self.assertRaises(Aborted):
-            self.execute()
+        with patch.object(diag.time, 'monotonic', self.clock):
+            d = diag.Diagnostics('register')
+            with diag.observe(d), patch.object(tx, 'validate_journal', side_effect=validate), self.assertRaises(Aborted):
+                self.execute()
+            rows = {p['name']: p['seconds'] for p in d.result()['phases']}
+            self.assertEqual(rows['Prevalidation'], 0)
+            self.assertEqual(rows['P0'], 1801)
+            self.assertNotIn('P1', rows)
+            self.assertEqual(d.last_progress['work'], 'call started')
         self.assertEqual(files(self.root), before)
 
     def test_expired_publication_has_independent_recovery_and_original_abort(self):
@@ -191,6 +363,7 @@ class PublicationTests(unittest.TestCase):
         with patch.object(diag.time, 'monotonic', self.clock), patch.object(pub, 'checkpoint', side_effect=step), diag.observe(self.d), self.assertRaises(Aborted):
             self.execute()
         self.assertEqual(self.d.outcome, 'rolled-back')
+        self.assertEqual(next(p['seconds'] for p in self.d.phases.values() if p['name'] == 'P3'), 1801)
         self.assertEqual([p['protection_seconds'] for p in self.d.limits], [1800, 1800])
         self.assertFalse((self.root/tx.LOCK).exists())
         self.assertEqual(cr.check_checkout(self.root)['entries'], [])
