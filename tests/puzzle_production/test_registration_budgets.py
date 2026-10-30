@@ -205,17 +205,90 @@ class PublicationTests(unittest.TestCase):
                 lock.write_bytes(pub.journal_bytes(journal)); before = files(self.root)
                 self.clock.now = 100; observed = []
                 def slow_parse(*args, **kwargs):
-                    # These ticks occur inside classify, before the JSON decoder
-                    # can establish the closed format/operation pair.
+                    # These ticks occur inside the bounded early discriminator,
+                    # before the format/operation pair has been established.
                     for elapsed in (100, 299, 301):
                         self.clock.now = 100 + elapsed
                         observed.append(diag.frame.get().seconds)
                         io.tick()
                     return original(*args, **kwargs)
-                with patch.object(diag.time, 'monotonic', self.clock), patch.object(io, 'json_bytes', side_effect=slow_parse), self.assertRaises(Aborted):
+                with patch.object(diag.time, 'monotonic', self.clock), patch.object(diag, '_early_registration', side_effect=lambda *a, **kw: slow_parse(b'{}', 0)), self.assertRaises(Aborted):
                     cr.recover(self.root, recovery_seconds=override)
                 self.assertEqual(observed, [300, 300, 300])
                 self.assertEqual(files(self.root), before)
+
+
+    def test_complete_registration_classification_may_exceed_warning_threshold(self):
+        # Slow strict JSON validation occurs after early safe format/operation
+        # recognition. Its 300-s point is a warning, not a second abort budget.
+        original = io.json_bytes
+        for protection in (None, 600):
+            with self.subTest(protection=protection):
+                with self.assertRaises(InterruptedError):
+                    self.execute(fail_step="crash")
+                self.clock.now = 100
+                slow_once = False
+                d = diag.Diagnostics("recover-registration", stderr=streams.StringIO())
+
+                def slow_json(*args, **kwargs):
+                    nonlocal slow_once
+                    if not slow_once:
+                        slow_once = True
+                        self.clock.now += 301
+                        io.tick()  # Inside the full classifier, before recovery.
+                    return original(*args, **kwargs)
+
+                with patch.object(diag.time, "monotonic", self.clock), \
+                        patch.object(io, "json_bytes", side_effect=slow_json), diag.observe(d):
+                    result = cr.recover(self.root, recovery_seconds=protection)
+                self.assertTrue(slow_once)
+                self.assertEqual(result["status"], "rolled-back")
+                self.assertEqual([row["protection_seconds"] for row in d.limits], [protection or 1800])
+                self.assertEqual(d.operation_class, "registration-recovery")
+                self.assertEqual(cr.check_checkout(self.root)["entries"], [])
+                self.assertFalse((self.root / tx.LOCK).exists())
+
+    def test_incorrect_pair_remains_at_300_through_slow_full_classification(self):
+        original = io.json_bytes
+        for mutation in ("wrong-operation", "missing-field", "wrong-format"):
+            with self.subTest(mutation=mutation):
+                value = deepcopy(self.journal)
+                if mutation == "wrong-operation":
+                    value["operation"] = "sync"
+                elif mutation == "missing-field":
+                    value.pop("retained")
+                else:
+                    value["format"] = tx.FORMATS["sync"]
+                lock = self.root / tx.LOCK
+                lock.write_bytes(pub.journal_bytes(value))
+                before = files(self.root)
+                clock = self.clock
+                clock.now = 100
+
+                def slow_json(*args, **kwargs):
+                    clock.now += 301
+                    self.assertEqual(diag.frame.get().seconds, 300)
+                    io.tick()
+                    return original(*args, **kwargs)
+
+                with patch.object(diag.time, "monotonic", clock), \
+                        patch.object(io, "json_bytes", side_effect=slow_json), self.assertRaises(Aborted):
+                    cr.recover(self.root)
+                self.assertEqual(files(self.root), before)
+                lock.unlink()
+
+    def test_early_budget_discriminator_is_not_mutation_authority(self):
+        # Invalid nested bytes may have the correct operation pair; later
+        # independent complete journal validation still refuses mutation.
+        value = deepcopy(self.journal)
+        value["old"] = {"game/data/registry.json": "not a complete journal"}
+        raw = pub.journal_bytes(value)
+        self.assertTrue(diag._early_registration(raw))
+        (self.root / tx.LOCK).write_bytes(raw)
+        before = files(self.root)
+        with self.assertRaises((InvalidInput, ValueError, KeyError, TypeError)):
+            cr.recover(self.root)
+        self.assertEqual(files(self.root), before)
 
     def test_classified_registration_uses_original_origin_and_selected_limit(self):
         lock = self.root/tx.LOCK

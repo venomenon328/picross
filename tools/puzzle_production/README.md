@@ -51,8 +51,11 @@ endlicher berechneter Deadline.
 Noch unbekannte Recoveryoperationen bleiben während der lesenden Klassifikation
 unter höchstens 300 s beziehungsweise einem kürzeren Override. Erst sichere
 Zuordnung erlaubt den Registrierungsrahmen ab dem ursprünglichen Aufrufstart;
-abgelaufene Erst-/Außenfristen werden nicht verlängert. Die anschließende
-vollständige Journal-/Quellenprüfung bleibt vor Mutation erforderlich.
+abgelaufene Erst-/Außenfristen werden nicht verlängert. Eine früh erkannte
+zulässige Registrierungs-Format-/Operationspaarung erlaubt die vollständige
+Validierung über die Warnschwelle von 300 s hinaus, sofern die ursprüngliche
+Registrierungsfrist noch läuft. Die Vorzuordnung ist keine Autorisierung
+für Mutation; Journal-/Quellenprüfung bleibt vollständig verbindlich.
 
 `export`, `plan`, `register`, `recover-registration` ergänzen stdout ausschließlich
 um `operation_diagnostics`; es bleibt genau ein JSON-Ergebnis. Fortschritt,
