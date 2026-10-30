@@ -134,6 +134,13 @@ Ausgabekontrolle sind vor Code in RI-B-V01 zu schließen. Ein dauerhafter
 prozessübergreifender Vertrauenscache ist durch RI nicht freigegeben.
 Die bestehende Planprüfung und tatsächliche Übernahmeautorisierung bleiben erhalten.
 
+RI-B-T01 belegt auf dem kleinen synthetischen Direktimport vier → zwei volle
+Kandidaten-/Einzelproofprüfungen bei weiterhin 80 Guards. Zusätzliche frische
+Byte-/Identitätsbindungen erhöhen dabei die gemessenen Laufzeiten auf Linux und
+beiden Windows-Pfaden. RI-B-O01 bleibt ein offener Leistungsbefund; keine
+Wallclockbeschleunigung oder Skalierungszusage. Der enge Umfang und die Folge
+A → B → C bleiben gemäß dem in #477 dokumentierten Messabgleich unverändert.
+
 RI-B-V01 konkretisiert den engen gelieferten Weg: Nur eine mutierende neue
 Registrierung erzeugt nach erfolgreichem unabhängigem Staging-Replay einen
 internen prozess-/threadgebundenen Kontext. Eingangsprüfung und Staging-Replay
