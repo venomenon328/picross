@@ -36,7 +36,7 @@ Identität, Slot, Kategorie und Reveal bleiben erhalten. Recovery nutzt weiterhi
 `recover-registration`; Details und Grenzen im ZA-1-Vertrag. `register` allein
 überschreibt weiterhin keine vorhandenen Inhalte.
 
-**RI-A-V01 · Implementierung zu #478, getrennte Abnahme offen:**
+**RI-A-V01 · Über PR #484 auf main integriert:**
 [RI](../../docs/PUZZLE_INTEGRATION.md) und [RI-A-T01](../../docs/RI_A_VERIFICATION.md)
 binden Umfang, Messungen und Gates. Nur `register` akzeptiert
 `--publication-seconds S` und `--recovery-seconds S` (jeweils Default 1800).
@@ -78,6 +78,21 @@ Zählernamen stehen im [ZA-1-Vertrag](../../docs/ZA1_ADAPTER.md).
 
 Andere Writer, `catalog_reveal --seconds` 1…300, Authoring-Eingangsprüfung,
 Solver-/Import-/Proof- und Datei-/Bytegrenzen bleiben unverändert.
+
+**RI-B-V01 · Branchlieferung zu #479:** Innerhalb einer mutierenden neuen
+Registrierung bleiben Eingangsprüfung und unabhängiger Staging-Replay vollständig.
+Ein privater prozess-/threadgebundener Kontext ersetzt danach ausschließlich die
+beiden wiederholten Proofprüfungen des neuen Pakets in P3/P5 durch vollständige
+frische Inventar-/Byte-Nachprüfungen. Er bindet tatsächliche Freigaben, Parameter,
+Quellen, Methodenbytes, Stagingidentitäten und konkretes Journal. Änderungen,
+Austausch und Scopeende bei Erfolg/Fehler/Abbruch entziehen die Wiederverwendung.
+Diagnostik zählt `verified_package_reuses` getrennt von `full_*`; Nachprüfung ist
+keine weitere vollständige Proofprüfung. Es gibt keinen neuen CLI-Schalter,
+persistenten Cache oder externen Pass-Beleg. Getrennte Befehle prüfen unabhängig;
+`verify-export` vollständig, `plan` lesend, `register` ausdrücklich autorisiert.
+Updates/No-ops, alle globalen Guards, P0–P6/R0–R2 und Recovery bleiben unverändert.
+Recovery verwendet niemals den Kontext. [RI-B-T01](../../docs/RI_B_VERIFICATION.md)
+bindet Plattformmessungen, tatsächliche CI und offene Gates.
 
 KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
 Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig

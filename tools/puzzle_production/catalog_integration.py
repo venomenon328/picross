@@ -1,5 +1,6 @@
 """ZA-1 integration with external, prechecked SD-C evidence (no analysis calls)."""
 from copy import deepcopy
+from contextlib import ExitStack
 import hashlib
 from pathlib import Path
 import shutil
@@ -60,6 +61,8 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     if diagnostic.current.get():
         diagnostic.current.get().environment["catalog_entries"] = len(registry["entries"])
     catalog = rating.bytes_json(snapshot["texts"][categories.PATH], 131072)
+    from . import registration_verification as verification
+    original_state = verification.inventory(export_dir) if apply and not update else None
     m, report = verify_export(export_dir)  # Existing mandatory full production check.
     require(m["format"] in (FORMAT, MANUAL_FORMAT, PAIRED_FORMAT), "Category-less legacy export: create a new categorized export")
     require(not m["test_only"] or root != ROOT.resolve(), "Test-only fixtures cannot be registered in the real repository")
@@ -118,10 +121,13 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         rebound = reveal.rebind(active_reveal, entry, m["runtime_revision"], changes[notice], catalog)
         changes[reveal.path(entry["id"])] = canonical_bytes(rebound) + b"\n"
         changes[notice] = snapshot["texts"][notice]
-    with tempfile.TemporaryDirectory(prefix="sd-c-integration-") as temp:
+    with tempfile.TemporaryDirectory(prefix="sd-c-integration-") as temp, ExitStack() as scope:
         stage = Path(temp) / "package"
         shutil.copytree(export_dir, stage)
-        verify_export(stage)  # Preserve the existing independent staging replay.
+        checked = (scope.enter_context(verification.verified(stage, export_dir, original_state, root, snapshot,
+                    (m, report), external)) if apply and not existing else None)
+        if checked is None:
+            verify_export(stage)  # Preserve the existing independent staging replay.
         require(file_hash(stage / "manifest.json") == entry["production"]["package_sha256"], "Export changed during staging")
         additions = {package + "/" + name: p for name, p in file_table(stage, time.monotonic() + 300).items()}
         if diagnostic.current.get():
@@ -162,6 +168,8 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
                         runtime_revision=m["runtime_revision"], old_package_retained=existing["production"]["package"])
         if external: require(external[0].read_bytes() == external[1], "Checked difficulty input changed during planning")
         if not apply: return plan
+        if checked is not None: checked.bind(root, journal, additions)
         tx.execute(root, journal, additions, fail_step=fail_step,
-                   publication_seconds=publication_seconds, recovery_seconds=recovery_seconds)
+                   publication_seconds=publication_seconds, recovery_seconds=recovery_seconds,
+                   **({"_verification": checked} if checked is not None else {}))
     return {**plan, "status": "updated" if update else "registered", "registered": True}

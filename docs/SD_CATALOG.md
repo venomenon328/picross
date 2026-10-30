@@ -641,7 +641,7 @@ Lock. Kein Erfolg für Teilpublikation oder gescheiterte Rückführung.
 
 ## RI · Betriebsgrenzen der Neuregistrierung und ihrer Recovery
 
-**RI-A-V01 auf dem Arbeitsbranch zu #478 implementiert; [T01](RI_A_VERIFICATION.md) und getrennte Abnahme bleiben maßgeblich.**
+**RI-A über PR #484 integriert; [T01](RI_A_VERIFICATION.md) bleibt historisch gebunden.**
 [RI: Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
 [#477](https://github.com/venomenon328/picross/issues/477) bindet Pakete und Abnahme.
 Die folgenden Betriebsgrenzen ersetzen in RI-A ausschließlich die bisherige
@@ -757,3 +757,24 @@ validierten eigenen Altzustand her. Fremde Bytes, nicht sicher belegte oder unvo
 Dateien und Journal mit `recovery_required=true`; keine automatische
 Fortsetzung zur Vorwärtspublikation, Locklöschung oder Erfolgsmeldung für
 Teilzustände. Ein harter Kill garantiert weiterhin keinen Abschlussbericht.
+
+## RI-B · Paketbeweis und Quellenschutz bleiben getrennt
+
+Der private prozesslokale [B-Kontext](ZA1_ADAPTER.md#ri-b--interne-wiederverwendung-bei-neuer-registrierung)
+ersetzt nach erfolgreich unabhängigem Staging-Replay ausschließlich zwei
+Wiederholungen für die neue Paketproduktion: P3 und den neuen Eintrag in P5.
+Beide prüfen frisch vollständiges Paket-/Byteinventar gegen das eigene gebundene
+Staging. Staging-/Originalidentität, Checked-Quelle, tatsächliche Methodenbytes,
+Checkout und unveränderte vollständige Journalbytes bleiben Voraussetzung.
+
+T(R), K(R), Sidecarabwesenheiten und vollständige Namespaces bleiben eigenständig
+durch Capture, Journal und alle bisherigen Guards gebunden, einschließlich
+Kategorien, Ratings/Reports, Added/Reports, Revealquellen, Produktionsstandard
+und Freezes. B-Erfolg ist keine Katalogquellenaussage. RI-C muss seinen eigenen
+Quellensnapshot samt erlaubten Journaldeltas unabhängig definieren (#480).
+**Keine Änderung globaler Guard-Aufrufstellen/-frequenz, P0–P6/R0–R2,
+Erkennungszeitpunkte oder Recoverysemantik durch B.** Neue Journale bleiben v6,
+historische Generationen und registration-v1-Sperre unverändert.
+Recovery verwendet ausschließlich die bisherigen Journal-/Quellen-/Eigentumsbeweise,
+auch nach B-Fehlern oder automatischem Rollback; keine Kontextrekonstruktion und
+keine Vorwärtsfortsetzung. [RI-B-T01](RI_B_VERIFICATION.md) führt aktuelle Belege.
