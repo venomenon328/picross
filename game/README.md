@@ -1,5 +1,11 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+**Buchstudie B-A / #493:** Die neue räumliche Buchrichtung ist ausschließlich
+als [getrennt startbare Studie](study/book/README.md) vorhanden. Ihr Katalog öffnet
+drei synthetische Muster mit insgesamt drei Sekunden Blatt-/Kamerabewegung.
+Bearbeitung bleibt im RAM. Das normale Spiel verwendet weiterhin das bisherige
+A-Buch; reguläre Integration und persönliche Sichtabnahme folgen separat.
+
 **Kleine Texte und Ausrichtung (HZ-C):** Kategorien, Kartenmetadaten, Status,
 Auswahllisten und kleine Papiertextbuttons verwenden eine gemeinsame etwas
 größere Textrolle. Beim Wechsel von Werten bleibt die Grundlinie ruhig;

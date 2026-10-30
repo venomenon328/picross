@@ -1,5 +1,14 @@
 # Z2: aktive Auswahl und native Integration
 
+## Buchrichtung #493 · isolierter B-A-Studienstand
+
+Die [Bewegungsstudie](BOOK_STUDY.md) untersucht realistische Buch-/Umgebungsmaterialien,
+mitbewegte gezeichnete Inhalte und insgesamt drei Sekunden Öffnung. Für diese neue
+Richtung sind das flache A-PNG, reine Informationsspiegelung und das Verbot gezielter
+Kamerabewegung keine Architekturvorgabe. Regulärer Spielstart, Originalressourcen,
+Fonts, C1 und SL-Rahmen bleiben in B-A unverändert. B-B und persönliche Auswahl
+sind getrennte spätere Schritte; historische GD-/BP-Bindungen bleiben erhalten.
+
 ## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 21.10.2026:
