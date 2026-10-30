@@ -112,13 +112,12 @@ Produktions-ID: `pz-[a-z0-9][a-z0-9-]{0,59}`. Explizite Dateistämme/Save-Slots:
 
 ## RI · Zeitbudget und Diagnose neuer Registrierungen
 
-**Freigegebener Sollvertrag vom 29.10.2026; RI-A ist noch nicht implementiert.**
+**RI-A-V01 auf dem Arbeitsbranch zu #478 implementiert; getrennte Abnahme offen.**
 [RI: Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
 [#477](https://github.com/venomenon328/picross/issues/477) bindet Pakete und Abnahme.
-Der ausführbare Ausgangsstand begrenzt den gemeinsamen Katalogwriter und die
-Registrierungs-Recovery weiterhin auf 300 Sekunden. Diese Spezifikation
-behauptet weder eine bereits längere ausführbare Frist noch eine erreichte
-Beschleunigung.
+Ausgangsbasis ist `f47a30b904a8d4eba79ca9d3f82576aebcceaa38`;
+[RI-A-T01](RI_A_VERIFICATION.md) bindet Messungen und offene Gates.
+Die längere Schutzfrist ist für sich kein Beschleunigungsnachweis.
 
 Die neue Budgetpolitik von RI-A gilt ausschließlich für die Veröffentlichung
 einer neuen ID durch `register` und die automatische beziehungsweise ausdrücklich gestartete
@@ -150,10 +149,60 @@ operativen Defaults oder erweiterten äußeren Befehlsbudgets.
 Budget und Messdaten sind ausschließlich Ausführungsinformationen. Sie ändern
 keine Paket-, Freigabe-, Kandidaten-, Definitions-, Bewertungs-, Methoden-,
 Plan- oder Journalidentität. Beide Methodenfreezes und alle historischen
-geschlossenen Formate bleiben bytegleich. Die konkrete CLI-/API-Syntax,
-zulässigen endlichen Parameter und gesonderten Diagnoseausgaben werden im
-Vertrag RI-A-V01 vor der ersten betroffenen Codeänderung festgelegt; diese
-Spezifikation führt noch keinen ausführbaren Schalter ein.
+geschlossenen Formate bleiben bytegleich. Der vor Code freigegebene RI-A-V01
+in #478 bindet folgende Schnittstelle:
+
+- Nur `register`: `--publication-seconds S`, `--recovery-seconds S`, jeweils
+  Default 1800. API `registration`/`integrate`: `publication_seconds=None`,
+  `recovery_seconds=None`, ausschließlich für mutierende neue Registrierung.
+- `recover-registration --recovery-seconds S` und API `recover(...,
+  recovery_seconds=None)`: 1800 nur für sicher erkannte Registrierungsjournale,
+  sonst bisher 300. Andere Operationen lehnen den RI-A-Override vor Mutation ab.
+  Die unbekannte Operation erhält zunächst höchstens 300 s (oder einen kürzeren
+  Override). Sichere Klassifikation und anschließende vollständige Validierung
+  bleiben getrennt. Fristursprung und kürzere Außenfristen bleiben erhalten;
+  eine schon abgelaufene noch unbekannte Klassifikationsfrist wird nicht verlängert.
+  Nach früher sicherer Format-/Operationsvorzuordnung darf die vollständige
+  Validierung einer Registrierung die 300-s-Warnschwelle innerhalb des eigenen
+  Recoveryrahmens überschreiten; diese Vorzuordnung ersetzt keine spätere
+  vollständige Journal-/Quellenprüfung.
+- Plan/Update akzeptieren keinen mutierenden Override. Exakter API-Typ
+  `int`/`float`, kein `bool`; Wert und berechnete monotone Deadline müssen
+  endlich und positiv sein. CLI verwendet endliche Dezimalzahlen.
+- Nur `export`, `plan`, `register`, `recover-registration` ergänzen das einzelne
+  JSON-Ergebnis auf stdout um `operation_diagnostics` und akzeptieren
+  `--operation-report <neue-datei>`. Warnung/Fortschritt stehen auf stderr,
+  regulär höchstens einmal je 30 s; Warnung/Ende sind ausgenommen. 30 s ohne
+  belegten Fortschritt werden ausdrücklich gemeldet, keine Prozentfiktion.
+
+Die separate Hülle `picross-ri-a-operation-v1` enthält `format`, `command`,
+`operation_class`, `outcome`, `limits`, `elapsed_seconds`, `phases`, `counters`,
+`last_progress`, `environment`, `missing_measurements`, `journal_state`.
+Journal und Lock bleiben getrennte Zustände. Phasen sind inklusive/verschachtelt
+und nicht additiv. Unbekannte Werte bleiben `null` beziehungsweise ausdrücklich
+offen; Aufrufe, Reads/Hashbytes und Publikationen werden tatsächlich gezählt.
+`candidate_proof_check_attempts`, `input_inspection_attempts` und
+`export_validation_attempts` zählen begonnene Prüfungen; die zugehörigen
+`full_candidate_proof_checks`, `full_input_inspections` und
+`full_export_validations` ausschließlich fehlerfrei zurückgekehrte vollständige
+Prüfungen. Fehlversuche/Fristabläufe behalten ihre Versuchs-, Byte- und Zeitwerte,
+erzeugen aber keinen Vollprüfungszähler oder vorgetäuschten Abschlussfortschritt.
+Andere Aufrufzähler bleiben Versuche. `last_progress` nennt tatsächlich erledigte
+Arbeit beziehungsweise einen erreichten Checkpoint, keinen garantierten Phasenabschluss.
+Phasen beginnen vor ihrer Arbeit; P3/P4/R1 umfassen alle jeweiligen Dateischritte.
+Classification und Prevalidation bleiben gesondert, abgebrochene Teilzeiten sichtbar.
+Zusammengesetzte Kandidaten-/Proofprüfungen und ihre inneren Einzelproofs
+werden nicht gleichgesetzt. Die genaue Zählerabdeckung steht in T01.
+
+Der Bericht braucht einen vorhandenen sicheren Elternpfad außerhalb von
+Checkout und Eingängen; atomare Neuveröffentlichung ohne Überschreiben.
+Ein Berichtsfehler nach dauerhaftem Abschluss wird auf stderr genannt und
+ändert den tatsächlichen Commit nicht in einen Misserfolg. Ein harter Abbruch
+kann einen Abschlussbericht verhindern. Ergebnisse: `completed`, `no-op`,
+`blocked-before-mutation`, `rolled-back`, `recovery-required`.
+Ressourcen-/Signalabbruch bleibt Exit 4 auch nach erfolgreichem Rollback,
+fachliche Blockade Exit 2. Nach dauerhaftem P6 einschließlich Lockentfernung
+löst eine spät bemerkte Deadline keinen Rollback und keinen falschen Exit 4 aus.
 
 Die Diagnostik trennt mindestens Quellenaufnahme, Export-/Stagingprüfung,
 Plan-/Journalvorprüfung, Veröffentlichung, Quellen-Guards, Abschlussprüfung

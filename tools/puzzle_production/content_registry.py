@@ -8,6 +8,7 @@ import shutil
 import tempfile
 
 from . import catalog_io
+from . import operation_diagnostics as diagnostic
 from .authoring_package import ID, STEM, REVISION, relative, require, sha, file_hash, file_table
 from .contract import canonical_bytes, exact_keys, load_json, integer
 from . import categories
@@ -164,10 +165,15 @@ def export_entry(export_dir, m, report, category):
              "definition_sha256": m["files"][m["definition"]], "reveal_sha256": m["files"][m["reveal"]]}}
 
 
-def registration(export_dir, root, *, apply=False, fail_step=None, difficulty=None, rebind_difficulty=False):
+def registration(export_dir, root, *, apply=False, fail_step=None, difficulty=None, rebind_difficulty=False,
+                 publication_seconds=None, recovery_seconds=None):
+    diagnostic.seconds(publication_seconds)
+    diagnostic.seconds(recovery_seconds)
+    require(apply or publication_seconds is None and recovery_seconds is None, "Plan cannot accept RI-A budget overrides")
     from .catalog_integration import integrate
     return integrate(export_dir, root, apply=apply, fail_step=fail_step,
-                     difficulty=difficulty, rebind_difficulty=rebind_difficulty)
+                     difficulty=difficulty, rebind_difficulty=rebind_difficulty,
+                     publication_seconds=publication_seconds, recovery_seconds=recovery_seconds)
 
 
 def recovery_projection(journal, before, after, catalog):
@@ -222,9 +228,32 @@ def recovery_target(root, journal, registry, runtime):
     return names
 
 
-def recover(root):
+def recover(root, *, recovery_seconds=None):
     """Explicit rollback after process death; preflight every byte before mutation."""
-    with catalog_io.budget(300): return _recover(root)
+    started = time.monotonic()
+    diagnostic.seconds(recovery_seconds, now=started)
+    # Classification is read-only and bounded. All subsequent checks and writes
+    # share the original call origin, including legacy recovery dispatch.
+    with diagnostic.operation("Recovery", 300 if recovery_seconds is None else min(300, recovery_seconds),
+                              "classification-pending", started=started) as active:
+        root = catalog_io.external(root)
+        def select_registration():
+            active.classified_limit(1800 if recovery_seconds is None else recovery_seconds,
+                                    "registration-default" if recovery_seconds is None else "override")
+        operation, raw, staging_name = diagnostic.classify(root, on_registration=select_registration)
+        require(operation == "registration" or recovery_seconds is None,
+                "RI-A recovery override requires a registration journal")
+        limit = (1800 if recovery_seconds is None else recovery_seconds) if operation == "registration" else 300
+        active.classified_limit(limit, "override" if recovery_seconds is not None else operation + "-default")
+        active.journal_raw = raw
+        from . import catalog_publication as publication
+        require(publication.read_journal(root, staging_name or "content/.registration-pending.json") == raw,
+                "Journal changed during recovery classification")
+        diagnostic.begin_segment("R0")
+        result = _recover(root)
+        if not active.complete:
+            diagnostic.durable("rolled-back", lock_state="removed-legacy-contract")
+        return result
 
 
 def _recover(root):
@@ -290,10 +319,12 @@ def _recover(root):
     require(not any(n == target or n.startswith(target+"/") for n in retained for target in j["targets"]),
             "Recovery target overlaps retained content")
     # All checks passed; restore old indexes and the validated current projection.
+    diagnostic.begin_segment("R1")
     for name, text in j["old"].items():
         atomic_bytes(root/name, runtime if name == RUNTIME else text.encode("utf-8"))
     for path in reversed(existing):
         shutil.rmtree(path) if path.is_dir() else path.unlink()
+    diagnostic.begin_segment("R2")
     lock.unlink()
     check_checkout(root)
     return {"status": "rolled-back", "registered": False}

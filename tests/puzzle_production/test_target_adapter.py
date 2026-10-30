@@ -92,7 +92,14 @@ class TargetTests(unittest.TestCase):
                             args += ["--checkout", str(checkout)]
                         result = subprocess.run(args, cwd=ROOT, capture_output=True, text=True, timeout=60)
                         self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
-                        self.assertEqual(json.loads(result.stdout), {
+                        response = json.loads(result.stdout)
+                        if command in ("plan", "register"):
+                            diagnostics = response.pop("operation_diagnostics")
+                            self.assertEqual(diagnostics["format"], "picross-ri-a-operation-v1")
+                            self.assertEqual(diagnostics["command"], command)
+                            self.assertEqual(diagnostics["outcome"], "blocked-before-mutation")
+                            self.assertEqual(diagnostics["limits"], [])
+                        self.assertEqual(response, {
                             "status": "blocked", "catalog_ready": False, "registered": False,
                             "error": "Unsafe package path"})
                     self.assertEqual(self.snapshot(checkout), before_checkout)

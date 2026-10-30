@@ -4,11 +4,12 @@ Spezifikationsstand: 29.10.2026 · RI-V01 · vom Eigentümer im Chat freigegeben
 Gesamtvorhaben: [RI / #477](https://github.com/venomenon328/picross/issues/477).
 Geprüfte Ausgangsbasis: `main@ddacc8dbf328923626cbd0235578fda2bfb99c37`.
 
-**Status: Sollvertrag freigegeben, noch nicht implementiert oder technisch
-abgenommen.** Der Auftrag umfasst Issues und dauerhafte Spezifikationspflege.
-Er beauftragt keine Werkzeugimplementierung, Rätselintegration, Bereinigung,
-Veröffentlichung oder Merge. Die ausführbare Basis verwendet weiterhin ihre
-bisherigen Grenzen und Prüfwege; kein Budgetbypass allein aus diesem Dokument.
+**Status: RI-A-V01 auf dem beauftragten Branch zu #478 implementiert;
+erneute unabhängige Abnahme und Merge offen.** RI-A-R01 benannte B-01/B-02/B-03;
+die beauftragte Nacharbeit und ihre neuen Nachweise stehen in
+[RI-A-T01](RI_A_VERIFICATION.md). RI-B und RI-C bleiben spätere, nicht beauftragte
+Pakete. Die Spezifikationsfreigabe allein erteilt weiterhin keinen
+Implementierungs- oder Mergeauftrag.
 
 ## 1. Problem, Belege und Ziel
 
@@ -68,7 +69,7 @@ Solver- oder Schwierigkeitsanalyselauf in Registrierung, Sync oder Recovery.
 ### RI-D02 · Warnung und Schutzrahmen trennen
 
 Für die Registrierungspublikation wird der heutige harte 300-s-Rahmen durch
-folgende getrennte Einstellungen abgelöst, sobald RI-A geliefert ist:
+folgende getrennte Einstellungen der RI-A-Implementierung abgelöst:
 
 | Aspekt | Freigegebener Sollstand |
 | --- | --- |
@@ -84,10 +85,9 @@ Verlängern oder Wiederholen; kein unendlicher Default. Ungültige Werte müssen
 vor Mutation scheitern. Verschachtelte Aufrufe dürfen den wirksamen Rahmen nicht
 heimlich verlängern; eine eigenständige Recovery beginnt mit ihrem eigenen Rahmen.
 
-Konkrete CLI-Namen, Wertevalidierung, Weitergabe, Warn-/Ausgabekanäle und die
-Abgrenzung kooperativer Deadlineprüfung von äußerem Prozessabbruch werden vor
-RI-A-Code in dessen V01-Vertrag festgelegt. Bis dahin keine noch nicht vorhandenen
-Schalter oder erhöhte Standardbudgets als ausführbare Anleitung ausgeben.
+RI-A-V01 in #478 wurde vor Code freigegeben. Die konkrete
+[CLI-/API-Bindung](ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen)
+dokumentiert Wertevalidierung, Ausgabe und kooperative Prüfgrenzen.
 
 ### RI-D03 · Messung und tatsächlicher Fortschritt
 
@@ -166,7 +166,7 @@ werden. Kein Budgetbypass und kein Entfernen eines Locks als Fehlerbehandlung.
 
 | Paket | Ergebnis | Abhängigkeit / Status |
 | --- | --- | --- |
-| [RI-A / #478](https://github.com/venomenon328/picross/issues/478) | Budgetkonfiguration, Warnung/Fortschritt, Phasen-/I/O-Messung und gleichwertig gebündelte sichere Reads. | Erster enger Schritt; Spezifikation freigegeben, Implementierung nicht beauftragt. A-V01 vor Code. |
+| [RI-A / #478](https://github.com/venomenon328/picross/issues/478) | Budgetkonfiguration, Warnung/Fortschritt, Phasen-/I/O-Messung und gleichwertig gebündelte sichere Reads. | V01/P01 gebunden, Implementierung beauftragt; T01 und unabhängiges R01 bleiben getrennte Gates. |
 | [RI-B / #479](https://github.com/venomenon328/picross/issues/479) | Bytegebundene Wiederverwendung tatsächlich geprüfter Pakete in zusammenhängender Integration. | Nach A-Messauswertung und B-V01; geplantes Folgepaket, noch nicht als unmittelbar umsetzungsbereit ausgeben. |
 | [RI-C / #480](https://github.com/venomenon328/picross/issues/480) | Skalierende Katalogpublikation mit explizitem Kontroll- und Recoveryvertrag. | Nach A-Messauswertung/C-V01; geplante Umsetzung auf dem abgestimmten B-Kontext. |
 

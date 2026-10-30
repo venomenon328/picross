@@ -11,6 +11,7 @@ import ctypes
 
 from .authoring_package import relative, require
 from .contract import Aborted, canonical_bytes
+from . import operation_diagnostics as diagnostic
 
 CHUNK = 1024 * 1024
 _deadline = ContextVar("catalog_deadline", default=None)
@@ -25,21 +26,31 @@ if os.name == "nt":
 def budget(seconds=300):
     require(type(seconds) in (int, float) and 1 <= seconds <= 300, "Invalid catalog time budget")
     prior = _deadline.get()
+    completed = diagnostic.completion.get()
     token = _deadline.set(min(prior, time.monotonic() + seconds) if prior else time.monotonic() + seconds)
     try:
         tick()
         yield
-        tick()
+        if diagnostic.completion.get() == completed:
+            tick()
     finally:
         _deadline.reset(token)
 
 
 def tick():
+    operation = diagnostic.frame.get()
+    if operation is not None:
+        if operation.complete:
+            return
+        operation.tick()
+    elif diagnostic.current.get() is not None:
+        diagnostic.current.get().emit()
     if _deadline.get() is not None and time.monotonic() >= _deadline.get():
         raise Aborted("resource_limit: catalog time budget exhausted")
 
 
 def safe(root, name):
+    diagnostic.count("path_checks")
     # Reuse immutable Path syntax, never a filesystem observation or validation.
     root = (root if isinstance(root, Path) else Path(root)).absolute()
     require(not str(root).startswith(('\\\\', '//')), 'Network/device catalog paths are unsupported')
@@ -49,6 +60,7 @@ def safe(root, name):
     parts = (*root.parts[1:], *name.split("/"))
     for index, part in enumerate(parts):
         tick()
+        diagnostic.count("path_components")
         target = current + ('' if current.endswith(os.sep) else os.sep) + part
         if os.name != "nt":
             # Only names are needed. Path.iterdir constructs a Path for every
@@ -99,6 +111,7 @@ def signature(info):
 
 
 def read(root, name, limit, *, missing=False):
+    diagnostic.count("safe_reads")
     path = safe(root, name)
     try:
         before = path.lstat()
@@ -119,6 +132,7 @@ def read(root, name, limit, *, missing=False):
             if not block:
                 break
             size += len(block)
+            diagnostic.count("bytes_read", len(block), work="read: " + name)
             if size > limit:
                 raise Aborted("resource_limit: catalog file exceeds byte limit: " + name)
             chunks.append(block)
@@ -131,6 +145,9 @@ def read(root, name, limit, *, missing=False):
 
 
 def checksum(raw):
+    if raw is not None:
+        diagnostic.count("bytes_hashed", len(raw))
+        diagnostic.count("hash_calls")
     return hashlib.sha256(raw).hexdigest() if raw is not None else None
 
 

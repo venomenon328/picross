@@ -36,21 +36,48 @@ Identität, Slot, Kategorie und Reveal bleiben erhalten. Recovery nutzt weiterhi
 `recover-registration`; Details und Grenzen im ZA-1-Vertrag. `register` allein
 überschreibt weiterhin keine vorhandenen Inhalte.
 
-**RI · freigegebener Sollvertrag vom 29.10.2026, noch nicht implementiert:**
-[RI: Zuverlässige und messbare Rätselintegration](../../docs/PUZZLE_INTEGRATION.md) /
-[#477](https://github.com/venomenon328/picross/issues/477),
-[ZA-1](../../docs/ZA1_ADAPTER.md) und der
-[Transaktionsvertrag](../../docs/SD_CATALOG.md) trennen für Schritt-4-
-Neuregistrierungen künftig die 300-s-Warnschwelle vom vorab konfigurierbaren
-endlichen Transaktionsschutz, zunächst 1800 s. Zugehörige automatische und
-ausdrückliche Recovery erhält einen separaten Rahmen, zunächst ebenfalls
-1800 s. Der ausführbare Ausgangsstand besitzt weiterhin seine bisherigen
-300-s-Abbruchgrenzen; neue Parameter sind noch nicht verfügbar.
-Die konkrete Syntax und operative Diagnose werden vor der Umsetzung in
-RI-A-V01 festgelegt. Andere Writer und Recoveryoperationen behalten ihre
-Defaults/Außenbudgets, insbesondere `catalog_reveal --seconds` 1…300.
-Authoring-Eingangsprüfung, Solver-/Import-/Proof- und Datei-/Bytegrenzen
-werden nicht pauschal angehoben; alle bestehenden Inhaltsgates bleiben.
+**RI-A-V01 · Implementierung zu #478, getrennte Abnahme offen:**
+[RI](../../docs/PUZZLE_INTEGRATION.md) und [RI-A-T01](../../docs/RI_A_VERIFICATION.md)
+binden Umfang, Messungen und Gates. Nur `register` akzeptiert
+`--publication-seconds S` und `--recovery-seconds S` (jeweils Default 1800).
+`recover-registration --recovery-seconds S` gilt nur für sicher erkannte
+Registrierungsjournale; andere Operationen lehnen diesen Override ab und
+behalten sonst 300 s plus bestehende Außenbudgets. Die feste Warnung nach
+300 s bricht keinen Lauf ab. API: `registration`/`integrate` erhalten
+`publication_seconds=None, recovery_seconds=None`; `recover` erhält
+`recovery_seconds=None`. Plan/Update lehnen mutierende Overrides ab.
+`S` ist positiv und endlich, API exakt `int`/`float` ohne `bool`, inklusive
+endlicher berechneter Deadline.
+Noch unbekannte Recoveryoperationen bleiben während der lesenden Klassifikation
+unter höchstens 300 s beziehungsweise einem kürzeren Override. Erst sichere
+Zuordnung erlaubt den Registrierungsrahmen ab dem ursprünglichen Aufrufstart;
+abgelaufene Erst-/Außenfristen werden nicht verlängert. Eine früh erkannte
+zulässige Registrierungs-Format-/Operationspaarung erlaubt die vollständige
+Validierung über die Warnschwelle von 300 s hinaus, sofern die ursprüngliche
+Registrierungsfrist noch läuft. Die Vorzuordnung ist keine Autorisierung
+für Mutation; Journal-/Quellenprüfung bleibt vollständig verbindlich.
+
+`export`, `plan`, `register`, `recover-registration` ergänzen stdout ausschließlich
+um `operation_diagnostics`; es bleibt genau ein JSON-Ergebnis. Fortschritt,
+300-s-Warnung und Abschluss stehen auf stderr, regulär höchstens alle 30 s.
+`--operation-report <neue-datei>` veröffentlicht dieselbe Hülle
+`picross-ri-a-operation-v1` atomar außerhalb des Checkouts und aller Eingänge.
+Der Elternordner muss existieren; keine Überschreibung. Ein Berichtsfehler nach
+Commit bleibt ein Diagnosefehler auf stderr, kein fehlgeschlagener Commit.
+Verschachtelte Phasen sind inklusive, nicht additiv; Zähler zählen tatsächliche
+Aufrufe/Bytes, benannte Messlücken bleiben offen. Ressourcen/Signale: Exit 4
+auch nach Rollback; fachliche Fehler: Exit 2. Dauerhaftes P6 einschließlich
+Lockentfernung bleibt Erfolg bei erst danach bemerktem Fristablauf.
+Ein harter Prozessabbruch kann den Abschlussbericht verhindern.
+`*_attempts` zählt begonnene Kandidaten-/Input-/Exportprüfungen, die drei
+`full_*`-Zähler nur deren erfolgreichen vollständigen Rücklauf. Fehler und
+Fristabläufe bleiben als Versuche/Teilzeiten erhalten. Phasen P0–P6/R0–R2
+bezeichnen die gerade ausgeführte Arbeit einschließlich wiederholter Dateien;
+Checkpointfortschritt ist kein vorgezogener Phasenabschluss. Details und
+Zählernamen stehen im [ZA-1-Vertrag](../../docs/ZA1_ADAPTER.md).
+
+Andere Writer, `catalog_reveal --seconds` 1…300, Authoring-Eingangsprüfung,
+Solver-/Import-/Proof- und Datei-/Bytegrenzen bleiben unverändert.
 
 KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
 Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig

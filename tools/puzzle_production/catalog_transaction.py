@@ -14,6 +14,7 @@ from . import catalog_io
 from .authoring_package import require, file_hash, file_table, sha, relative
 from .contract import canonical_bytes, exact_keys
 from . import catalog_rating as rating, categories, catalog_added as added, catalog_io as io, reveal_source as reveal, catalog_method
+from . import operation_diagnostics as diagnostic
 
 LOCK = "content/.registration-pending.json"
 REGISTRY = "content/registry.json"
@@ -49,9 +50,6 @@ def safe(root, name):
 
 
 def read(root, name):
-    path = safe(root, name)
-    require(not path.exists() or path.is_file(), "Transaction target must be a file: " + name)
-    if not path.exists(): return None
     if name == LOCK:
         from .catalog_publication import read_journal
         return read_journal(root)
@@ -62,7 +60,7 @@ def read(root, name):
              16 * 1024 * 1024 if name.startswith("content/difficulty/reports/") else
              8 * 1024 * 1024 if name in (REGISTRY,RUNTIME) else
              2 * 1024 * 1024 if name.startswith("game/data/content/") else 64 * 1024 * 1024)
-    return io.read(root, name, limit)
+    return io.read(root, name, limit, missing=True)
 
 
 def text_names(registry, *, legacy=False, previous=False, sd2=True):
@@ -99,6 +97,7 @@ def retained_names(root, registry, *, reports=None, previous=False, exclude=()):
     return names
 
 
+@diagnostic.measured("Snapshot", "snapshots")
 def capture(root, *, allow_stale=False):
     from .content_registry import check_checkout, validate
     root = catalog_io.external(root)
@@ -195,6 +194,7 @@ def projection(texts, registry, *, version=5):
     return canonical_bytes(result) + b"\n"
 
 
+@diagnostic.measured("Staging/Proof", "staged_checkout_checks")
 def _stage_check(root, texts, retained, additions=None, replacements=None, legacy=False):
     """Check a complete target view in isolation; no user saves or source replay."""
     from .content_registry import check_checkout, ROOT
@@ -350,6 +350,7 @@ def _delta(j, before, after, root=None):
     return package
 
 
+@diagnostic.measured("Journal validation", "journal_validations")
 def validate_journal(root, j, *, before_write=False):
     require(isinstance(j, dict) and isinstance(j.get("format"), str), "Invalid catalog journal")
     current_generation = modern(j)
@@ -544,10 +545,16 @@ def _publish_new(target, data):
         Path(temporary).unlink(missing_ok=True)
 
 
-def execute(root, j, additions=None, *, fail_step=None):
+def execute(root, j, additions=None, *, fail_step=None, publication_seconds=None, recovery_seconds=None):
+    diagnostic.seconds(publication_seconds)
+    diagnostic.seconds(recovery_seconds)
+    require(isinstance(j, dict), "Invalid catalog journal")
+    require(modern(j) and j.get("operation") == "registration" or publication_seconds is None and recovery_seconds is None,
+            "RI-A overrides require a new registration")
     if modern(j):
         from .catalog_publication import execute as current_execute
-        return current_execute(root, j, additions, fail_step=fail_step)
+        return current_execute(root, j, additions, fail_step=fail_step,
+                               publication_seconds=publication_seconds, recovery_seconds=recovery_seconds)
     from .content_registry import check_checkout
     additions = additions or {}
     validate_journal(root, j, before_write=True)
@@ -598,7 +605,10 @@ def execute(root, j, additions=None, *, fail_step=None):
 
 
 def recover(root):
-    with io.budget(300): return _recover(root)
+    if diagnostic.frame.get() is None or diagnostic.frame.get().kind != "Recovery":
+        from .content_registry import recover as classified_recover
+        return classified_recover(root)
+    return _recover(root)
 
 
 def _recover(root):
@@ -607,11 +617,12 @@ def _recover(root):
     raw = read(root, LOCK)
     if raw is None or modern(io.json_bytes(raw, REVEAL_LIMIT)):
         from .catalog_publication import recover as current_recover
-        with io.budget(300): return current_recover(root)
+        return current_recover(root)
     j = rating.bytes_json(raw, LIMIT)
     _, runtime = validate_journal(root, j)
     # Delete only individually hash-checked additions. Empty directory cleanup is
     # cosmetic; retaining empty parents cannot conceal or destroy foreign work.
+    diagnostic.begin_segment("R1")
     for n in sorted(j["additions"], reverse=True):
         guard(root, j, journal_bytes=raw)
         safe(root, n).unlink(missing_ok=True)
@@ -621,6 +632,7 @@ def _recover(root):
         _write(root, n, j["old"][n])
     guard(root, j, journal_bytes=raw)
     _write(root, RUNTIME, runtime)
+    diagnostic.begin_segment("R2")
     check_checkout(root, pending_journal=raw)
     guard(root, j, journal_bytes=raw)
     goal = {**j["old"], RUNTIME: runtime}
