@@ -1,43 +1,69 @@
-# RI-A: getrenntes Selbstreview
+# RI-A: getrenntes Selbstreview der Nacharbeit
 
-Bezug: [#478](https://github.com/venomenon328/picross/issues/478), RI-A-V01/P01,
-Basis `f47a30b904a8d4eba79ca9d3f82576aebcceaa38`, Branch
-`feat/478-ri-a-registration-budgets`. Dies ist das Selbstreview des Autors,
-kein unabhängiges RI-A-R01 und keine Mergefreigabe. Mess-/CI-Bindung: [T01](RI_A_VERIFICATION.md).
+30.10.2026 · [#478](https://github.com/venomenon328/picross/issues/478) ·
+[Draft-PR #484](https://github.com/venomenon328/picross/pull/484).
+Ausgangshead `29349ffbfa9fd42d4e20e7065d2d0c4f9b721211`,
+Werkzeug-/Teststand `bca790bf4a8a0e5f32e746cc0d2e0723e3f878c8`.
+Dies ist eine getrennte Prüfung durch den implementierenden Autor, kein
+unabhängiges qualifiziertes Review und keine Mergefreigabe.
 
-## Gegenstand und Befunde
+## Auftrag, Quellen und Diff
 
-Der tatsächliche Diff und die neuen Dateien wurden getrennt von der Umsetzung
-gegen V01 geprüft. Es gibt keine Änderung an produktiven Katalogbytes,
-Journalformaten, Methodenfreezes, Proofverifikation oder fachlichen Grenzen.
+Die aktuelle AGENTS.md, Workflow, Projektprofil und auftragsbezogenen
+Integrations-, Adapter-, Katalog-, Produktions- und CI-Quellen wurden vor
+Änderungen gelesen. Verbindlicher Befundstand:
+[RI-A-R01](https://github.com/venomenon328/picross/pull/484#pullrequestreview-5709431225)
+und [RI-A-N01](https://github.com/venomenon328/picross/pull/484#issuecomment-6517789353).
+Geprüft wurden sowohl der vollständige PR-Diff gegen
+`main@8f903d7ecb6c111451ae359ecca44156987daa19` als auch die Nacharbeit seit
+`29349ffb`. Die damalige positive Selbstbewertung der Diagnostik ist durch R01
+widerlegt; der [alte Bericht](https://github.com/venomenon328/picross/blob/29349ffbfa9fd42d4e20e7065d2d0c4f9b721211/docs/RI_A_SELF_REVIEW.md)
+bleibt ausschließlich historische Quelle.
 
-| Vertrag | Kontrollierter Befund |
+## Einzelbefunde und Gegenprüfung
+
+| Befund | Änderung und kontrolliertes Orakel |
 | --- | --- |
-| Operationsgrenzen | Neue Optionen nur an `register` und zulässiger Recovery; Plan/Update lehnen Overrides ab. Exakte numerische Typen, Endlichkeit des Werts und der Deadline vor Mutation. |
-| Klassifikation | Originalbytes werden begrenzt sicher gelesen; exakte Format-/Operationspaare und Schlüssel, v2 separat, v1 gesperrt. Vollständige bestehende Journalprüfung vor Mutation. Späterer Bytetausch wird erneut blockiert. |
-| Fristursprung | Publikationsrahmen vor `validate_journal`; Recovery ab API-Eintritt einschließlich Klassifikation. Keine erneuten inneren 300-s-Rahmen für Registrierung. Kürzere Außenfristen bleiben wirksam. |
-| Rollback/Abschluss | Automatischer Rollback löst die verbrauchte Vorwärtsfrist und erhält seinen eigenen Rahmen. Ressourcen-/Signalursache bleibt bei gescheiterter Recovery erhalten. Dauerhaftes P6 markiert erst der erfolgreiche Verzeichnisflush nach Lockentfernung. Historischer Recoveryabschluss wird gesondert als `removed-legacy-contract` bezeichnet. |
-| Sichere Reads | Nur der zusätzliche Durchlauf in `tx.read` entfällt. `io.read` behält frische Vor-/Nachpfadprüfung, Handle-/Pfadidentität, Typ-, Größen-, Alias- und Linkprüfungen. Kein Beobachtungscache. |
-| Guards | Der Körper von `catalog_publication.guard` und seine fachlichen Aufrufstellen bleiben vollständig. Der zusätzliche Dekorator misst lediglich. Keine RI-B-Prüfwiederverwendung, keine RI-C-Guardausdünnung. |
-| Ausgabe | Nur die vier V01-Befehle ergänzen stdout. Separater neuer Bericht, sichere Eltern-/Überlappungsprüfung, atomare Veröffentlichung ohne Ersetzen. Berichtsfehler nach Commit bleibt Diagnosefehler. |
-| Messung | Monotone inklusive Phasen, physische Zähler und benannte Abdeckungsgrenzen. Keine Prozentfiktion oder Messdaten in Identitätskernen. |
-| Dokumente/Bestand | CLI, API, Recoveryvertrag, RI-Status und Authoring-Dokumentrevision 26 sind nachgeführt; eingebetteter Offline-Snapshot folgt denselben Bytes. Drei neue Python-Dateien haben explizite CI-Zuordnung; keine neuen Ergebnisjobs oder Korpora. |
+| B-01 | Unklassifiziert höchstens 300 s oder kürzerer Override. Ticks bei 100/299/301 s innerhalb des JSON-Lesens stoppen vor weiterer Arbeit; Checkoutbytes und mtimes bleiben gleich. Nach sicherer Zuordnung gelten 1800/600/10 s vom ursprünglichen Start, einschließlich bereits verbrauchter Klassifikationszeit. Kürzere äußere Katalog- und Operationsframes sowie bereits abgelaufene Fristen bleiben wirksam. Klassifikator, geschlossene Schemas, Staginghash und vollständige folgende Quellenprüfung sind unverändert. |
+| B-02 | Beobachtungsbeginn vor P0–P6/R0–R2, unabhängig von unveränderten Fehler-Checkpoints. Ungleiche kontrollierte Arbeitsdauern prüfen sämtliche Phasen einschließlich erster und weiterer P3/P4/R1-Dateien. Eltern-/Unterphasen bleiben inklusive. P0-Abbruch meldet 1801 s Teilzeit, keine P1-Arbeit; automatische Recovery wird nicht der pausierten P3 zugeschlagen. Checkpoints heißen im Fortschritt ausdrücklich Checkpoints. |
+| B-03 | Eigene Versuchs- und erfolgreiche Vollprüfungszähler für Kandidat, Input und Export. Positivfall sowie ungültige Proofbytes, I/O-Fehler und tatsächlicher Deadline-Tick innerhalb der Verifikation erhalten begonnene Arbeit, zählen aber keinen falschen Abschluss. Eine erfolgreiche und eine abgebrochene Kandidatenprüfung meldeten vorher zwei vollständige Prüfungen; jetzt zwei Versuche und eine vollständige Prüfung. Innere Einzelproofs bleiben davon getrennt. |
 
-Im Selbstreview korrigiert: Diagnose der wirksamen verschachtelten Deadline,
-Bindung der Journalbytes nach Klassifikation, ehrliche Unterscheidung des
-historischen Lockabschlusses, Ablehnung ungenutzter Overrides am historischen
-Writer sowie eine versehentlich entfernte CI-Datendateizuordnung. Der vollständige
-CI-Lauf fand außerdem die alte exakte CLI-JSON-Erwartung für `plan`/`register`;
-die Korrektur prüft die neue Diagnose zusätzlich und erhält die exakte Prüfung
-aller bisherigen Fehlerfelder sowie unveränderter Checkout-/Exportbytes. Die
-zugehörigen Negativfälle und erneuten Prüfungen stehen in T01.
+Alle 22 RI-A-Fälle bestehen auf Linux und Windows, einschließlich der alten
+No-op-, Fremdbyte-, unabhängigen Recovery- und dauerhaften Abschlussfälle.
+Drei ausgewählte neue Regressionen wurden zusätzlich am alten Head ausgeführt
+und scheitern dort. Exakte Zuordnung, Laufzeiten und Messbindung stehen in
+[RI-A-T01](RI_A_VERIFICATION.md).
+
+## Erhaltene Verträge und Prüfgrenzen
+
+Separater AST-Vergleich gegen `29349ffb`: Guards, Read-/Write-Helfer,
+Klassifikator und Journalvalidator sind unverändert. Nach Herausfiltern allein
+der neuen Beobachtungsaufrufe sind auch moderne und historische
+Publikations-/Recoverykörper identisch; insbesondere bleiben Checkpoints,
+Guards, Mutationsreihenfolge und Lock-/Flushabschluss an denselben Stellen.
+`catalog_io.py` und Methodenvertragsdateien sind bytegleich; keine weitere
+I/O-Ausdünnung. Fachformate und echte Katalog-/Rätselbytes bleiben unverändert.
+
+CLI/API und Recoveryvertrag erklären die konservative Erstfrist und getrennte
+Zählersemantik. Der Authoringtext bleibt in dieser Nacharbeit unverändert;
+sein bereits im PR enthaltener Offline-Snapshot wurde erneut exakt verglichen.
+Keine neue dauerhafte Datei, kein Benchmarkjob, kein Produktionsinput.
+Der bestehende manuelle Messtreiber ergänzt ausschließlich die optionale
+Beobachtung für den erneuten, quellgebundenen Vergleich. Alte Laufzeiten werden
+nicht als Messungen des neuen Codes übernommen.
+
+232 Werkzeugtests bestehen lokal mit drei bestehenden Plattform-Skips;
+Dokumentvalidator und vollständiger Whitespacecheck bestehen. Der vollständige
+Diff wählt alle vier Fachgruppen, alle sieben nativen Gruppen, Docs, Preflight
+und Delivery. Chromium bleibt ohne Auftrag unangefordert. Aktuelle Pflicht-CI
+und `ci-required` müssen den endgültigen Head und zugehörigen Test-Merge binden;
+die konkrete Run-/Head-/Base-/Merge-Zuordnung steht im PR, kein Ersatz durch
+lokale oder alte grüne Ergebnisse.
 
 ## Offene Abnahme
 
-Der Vorher/Nachher-Nachweis umfasst drei Wiederholungen auf Linux sowie kurzen
-und normal verschachtelten Windows-Pfaden; feste Quell-/Eingangsbindung und
-die verbleibenden Messgrenzen stehen in T01. Die gemessenen Werkzeugbytes
-bleiben seit `a2c28518cead1f29f0fdc64afe0b65769947eded` unverändert.
-Das vollständige CI-Ergebnisgate wird für den endgültigen PR-Head geprüft.
-Ein unabhängiger qualifizierter RI-A-R01 auf dem tatsächlichen Lieferstand
-bleibt vor Merge erforderlich. Der PR bleibt Draft; es erfolgt kein Merge.
+B-01/B-02/B-03 sind aus Autorensicht durch Umsetzung und Regressionen erledigt.
+Erforderlich bleibt das erneute unabhängige qualifizierte Review auf dem neuen
+Head. O-01 bleibt außerhalb dieses Auftrags; native CI wurde weder verkürzt
+noch als neue Ausnahme behandelt. Keine RI-B-/RI-C-Arbeit, echte Integration,
+zusätzliche Produktänderung oder Merge. Der PR bleibt Draft.
