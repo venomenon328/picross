@@ -1,13 +1,16 @@
 # Projektprofil: picross
 
-**RI · 29.10.2026, Spezifikation freigegeben, noch nicht implementiert:**
+**RI · 30.10.2026, RI-A integriert, RI-B-Branchlieferung:**
 [Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
 [#477](https://github.com/venomenon328/picross/issues/477) ist bei Entwicklung
 an Schritt 4, Registrierungsbudgets, Paket-Prüfkontexten oder
 Publikationsguards/Recovery zusätzlich vollständig zu lesen. RI-A soll
 Budgetkonfiguration, Messung und gleichwertig gebündelte sichere Reads liefern.
-Danach folgen Messauswertung und gemeinsamer B/C-Vertragsabgleich, RI-B für
-den gebundenen Prüfkontext und RI-C für skalierende Publikationskontrollen.
+RI-A ist über PR #484 auf `864c4e6` integriert. Die ausgewertete Messung und
+RI-B-V01/B/C-Schnittstellenabgleich sind vor Code in #479/#480 dokumentiert.
+RI-B liefert auf seinem beauftragten Branch den privaten prozesslokalen Kontext;
+[B-T01](RI_B_VERIFICATION.md) bindet Nachweise und offene Gates.
+RI-C für skalierende Publikationskontrollen bleibt unimplementiert.
 Der Sollstand trennt für neue Registrierungspublikationen eine 300-s-Warnung
 vom konfigurierbaren Schutzrahmen mit vorläufig 1800 s; Recovery unterstützter
 Registrierungsjournale erhält eigenständig ebenfalls vorläufig 1800 s.

@@ -12,8 +12,10 @@ Bei Entwicklung an der Schritt-4-Integration, Registrierungsbudgets,
 Paket-Prüfkontexten oder Publikationsguards/Recovery zusätzlich
 [RI: Zuverlässige und messbare Rätselintegration](docs/PUZZLE_INTEGRATION.md)
 vollständig lesen. [RI / #477](https://github.com/venomenon328/picross/issues/477)
-ist seit 29.10.2026 als Sollvertrag freigegeben, noch nicht implementiert oder
-technisch abgenommen. Reihenfolge: RI-A → Messauswertung und gemeinsamer
+ist seit 29.10.2026 als Sollvertrag freigegeben. RI-A ist über PR #484 auf
+`864c4e6` integriert; RI-B ist auf seinem beauftragten Branch implementiert,
+[B-T01](docs/RI_B_VERIFICATION.md) führt Nachweise und offene Gates. RI-C bleibt
+unimplementiert. Reihenfolge: RI-A → Messauswertung und gemeinsamer
 B/C-Vertragsabgleich → RI-B → RI-C. Für neue Registrierungspublikationen ist
 eine Warnung nach 300 s mit vorläufig 1800 s konfigurierbarem Schutzrahmen
 vorgesehen; Recovery unterstützter Registrierungsjournale erhält einen eigenen,

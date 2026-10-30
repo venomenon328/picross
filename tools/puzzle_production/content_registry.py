@@ -92,8 +92,13 @@ def validate(registry, catalog):
     return registry
 
 
-def check_checkout(root, replay=False, *, check_projection=True, pending_journal=None):
+def check_checkout(root, replay=False, *, check_projection=True, pending_journal=None, _verification=None):
     from . import catalog_io as io, reveal_source as reveal
+    if _verification is not None:
+        from .registration_verification import require_context
+        require_context(_verification)
+        require(replay and check_projection, "Verification requires a complete publishing checkout replay")
+        _verification.checkout(root, pending_journal)
     lock = root / "content/.registration-pending.json"
     require(not lock.exists() or pending_journal is not None and lock.read_bytes() == pending_journal,
             "Interrupted registration: recovery required")
@@ -133,7 +138,10 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
             require(m.get("category_id") == e["category_id"], "Registered category differs from export")
         if replay:
             from .target_adapter import verify_export
-            m, report = verify_export(package)
+            if _verification is not None and p["package"] == _verification.package:
+                m, report = _verification.written(root, p["package"], pending_journal)
+            else:
+                m, report = verify_export(package)
             require(m["definition_id"] == e["id"] and m["save_slot"] == e["save_slot"] and
                     m["definition"] == "runtime/"+e["definition"] and m["reveal"] == "runtime/"+e["reveal"] and
                     report["package_revision"] == p["revision"] and

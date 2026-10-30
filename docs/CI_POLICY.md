@@ -86,8 +86,10 @@ Lieferberichte behalten ihren damaligen Stand, Produktabnahmen bleiben separat.
 
 Spezifikationsergänzung vom 29.10.2026:
 [RI / #477](https://github.com/venomenon328/picross/issues/477) und
-[PUZZLE_INTEGRATION](PUZZLE_INTEGRATION.md) sind als Sollvertrag freigegeben,
-noch nicht implementiert oder technisch abgenommen. Die Paketfolge ist
+[PUZZLE_INTEGRATION](PUZZLE_INTEGRATION.md) sind als Sollvertrag freigegeben.
+RI-A ist über PR #484 integriert; RI-B ist auf seinem beauftragten Branch
+implementiert, [B-T01](RI_B_VERIFICATION.md) führt die standgebundenen Nachweise.
+RI-C bleibt unimplementiert. Die Paketfolge ist
 RI-A → Messauswertung und gemeinsamer B/C-Vertragsabgleich → RI-B → RI-C.
 Die neue Warn-/Schutzpolitik betrifft ausschließlich neue Registrierungen und
 die Recovery unterstützter Registrierungsjournale; sie verändert keine

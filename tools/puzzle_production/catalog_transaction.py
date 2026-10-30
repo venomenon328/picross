@@ -545,7 +545,7 @@ def _publish_new(target, data):
         Path(temporary).unlink(missing_ok=True)
 
 
-def execute(root, j, additions=None, *, fail_step=None, publication_seconds=None, recovery_seconds=None):
+def execute(root, j, additions=None, *, fail_step=None, publication_seconds=None, recovery_seconds=None, _verification=None):
     diagnostic.seconds(publication_seconds)
     diagnostic.seconds(recovery_seconds)
     require(isinstance(j, dict), "Invalid catalog journal")
@@ -554,7 +554,9 @@ def execute(root, j, additions=None, *, fail_step=None, publication_seconds=None
     if modern(j):
         from .catalog_publication import execute as current_execute
         return current_execute(root, j, additions, fail_step=fail_step,
-                               publication_seconds=publication_seconds, recovery_seconds=recovery_seconds)
+                               publication_seconds=publication_seconds, recovery_seconds=recovery_seconds,
+                               **({"_verification": _verification} if _verification is not None else {}))
+    require(_verification is None, "Verification context cannot enter a legacy writer")
     from .content_registry import check_checkout
     additions = additions or {}
     validate_journal(root, j, before_write=True)
