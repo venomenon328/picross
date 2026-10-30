@@ -504,8 +504,8 @@ class PublicationTests(unittest.TestCase):
     def test_recovery_deadline_origin_includes_classification(self):
         with self.assertRaises(InterruptedError): self.execute(fail_step='crash')
         original = diag.classify
-        def classify(root):
-            value = original(root); self.clock.now += 11; return value
+        def classify(root, **kwargs):
+            value = original(root, **kwargs); self.clock.now += 11; return value
         before = files(self.root)
         with patch.object(diag.time, 'monotonic', self.clock), patch.object(diag, 'classify', side_effect=classify), self.assertRaises(Aborted):
             cr.recover(self.root, recovery_seconds=10)
@@ -516,8 +516,8 @@ class PublicationTests(unittest.TestCase):
         (self.root/tx.LOCK).write_bytes(pub.journal_bytes(journal))
         before = files(self.root)
         original = diag.classify
-        def classify(root):
-            value = original(root); self.clock.now += 301; return value
+        def classify(root, **kwargs):
+            value = original(root, **kwargs); self.clock.now += 301; return value
         with patch.object(diag.time, 'monotonic', self.clock), patch.object(diag, 'classify', side_effect=classify), diag.observe(self.d), self.assertRaises(Aborted):
             cr.recover(self.root)
         self.assertEqual(files(self.root), before)
@@ -527,8 +527,8 @@ class PublicationTests(unittest.TestCase):
     def test_original_journal_bytes_remain_bound_after_classification(self):
         with self.assertRaises(InterruptedError): self.execute(fail_step='crash')
         original = diag.classify
-        def classify(root):
-            value = original(root)
+        def classify(root, **kwargs):
+            value = original(root, **kwargs)
             (root/tx.LOCK).write_bytes(value[1] + b' ')
             return value
         with patch.object(diag, 'classify', side_effect=classify), self.assertRaisesRegex(InvalidInput, 'classification'):
