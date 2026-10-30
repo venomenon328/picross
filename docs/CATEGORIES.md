@@ -1,5 +1,13 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**RI-B · #479:** Der prozesslokale Paketprüfkontext ersetzt ausschließlich zwei
+erneute Proof-Replays der neuen Produktion nach erfolgreicher Eingangs- und
+unabhängiger Stagingprüfung. Kategorie-Snapshot und übrige Paketbytes bleiben
+gebunden. Die vollständige unabhängige Katalogquellen-/Namespaceprüfung samt
+allen bisherigen Guards, Projektion und Recovery bleibt unverändert;
+ein B-Erfolg ersetzt keine Quellenaussage des späteren RI-C.
+[Vertrag und Nachweis](RI_B_VERIFICATION.md).
+
 **SD2 · 25.10.2026:** [SD2-D05](PUZZLE_DIFFICULTY_V2.md) verlangt künftig die
 gemeinsame kompatible Projektion der Methode 0.4. Die folgenden exakten
 alten Schemas erlauben 0.4 nicht. [SD2-C-V01](SD2_INTEGRATION.md) spezifiziert

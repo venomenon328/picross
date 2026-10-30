@@ -6,6 +6,12 @@ gehören nicht dauerhaft in den aktiven Tree, Builds oder neue CI-Artefakte.
 
 ## Aktuell benötigt
 
+RI-B / #479 ergänzt einen privaten prozesslokalen Paketprüfkontext und ein
+kleines synthetisches Testmodul; keine persistierten Prüfresultate oder neuen
+Korpusinputs. [RI-B-T01](RI_B_VERIFICATION.md) bindet den kompakten Liefernachweis.
+Der vorhandene manuelle RI-A-Treiber misst dieselben einmal erzeugten Inputs;
+Messarbeitsbäume und Rohprofile bleiben temporär für die laufende Prüfung.
+
 RI-A / #478 ergänzt genau einen operativen Diagnose-/Budgetbaustein,
 ein festes synthetisches Testmodul und den manuell gestarteten begrenzten
 T01-Messtreiber; keine echten Kataloginputs oder gespeicherten Testkopien.

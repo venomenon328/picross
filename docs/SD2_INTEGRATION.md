@@ -23,6 +23,14 @@ behalten ihre Verträge. Keine neuen UI-Funktionen oder persönlichen Spielgates
 
 ## C-V01-01 · Unveränderte Methoden und geschlossene Altformate
 
+RI-B / #479 ergänzt auf seinem Arbeitsbranch ausschließlich den internen
+prozesslokalen Paketprüfkontext nach unabhängig erfolgreichem Staging-Replay.
+Tatsächliche lokale Werkzeug-/Methodenbytes und Laufzeitstände werden gebunden;
+ein unveränderter Methodenname genügt nicht. Beide Freezes, aktuelle und
+historische Hüllen/Journalgenerationen, Produktionsstandard, Rating-/Rebind-
+regeln, alle globalen Guards und Recovery bleiben unverändert.
+[RI-B-T01](RI_B_VERIFICATION.md) bindet die konkrete Lieferung.
+
 | Methode | Unveränderlicher Freezehash |
 | --- | --- |
 | `picross-difficulty-0.3` | `8f7efa0d5ac76a1bd73fbae3618fec18dba28cf704887188eba2fcf020b9df79` |

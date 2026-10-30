@@ -4,12 +4,12 @@ Spezifikationsstand: 29.10.2026 · RI-V01 · vom Eigentümer im Chat freigegeben
 Gesamtvorhaben: [RI / #477](https://github.com/venomenon328/picross/issues/477).
 Geprüfte Ausgangsbasis: `main@ddacc8dbf328923626cbd0235578fda2bfb99c37`.
 
-**Status: RI-A-V01 auf dem beauftragten Branch zu #478 implementiert;
-erneute unabhängige Abnahme und Merge offen.** RI-A-R01 benannte B-01/B-02/B-03;
-die beauftragte Nacharbeit und ihre neuen Nachweise stehen in
-[RI-A-T01](RI_A_VERIFICATION.md). RI-B und RI-C bleiben spätere, nicht beauftragte
-Pakete. Die Spezifikationsfreigabe allein erteilt weiterhin keinen
-Implementierungs- oder Mergeauftrag.
+**Stand 30.10.2026:** RI-A ist über PR #484 auf `864c4e6` integriert;
+[RI-A-T01](RI_A_VERIFICATION.md) bleibt historisch gebunden. RI-B ist auf dem
+beauftragten Branch zu #479 implementiert; [RI-B-T01](RI_B_VERIFICATION.md)
+führt aktuelle Nachweise und offene Gates. RI-C ist nicht implementiert.
+RI-B-V01 und der gemeinsame B/C-Schnittstellenabgleich wurden vor Code in
+#479/#480 gespeichert. Kein Mergeauftrag und keine echte Rätselintegration.
 
 ## 1. Problem, Belege und Ziel
 
@@ -134,6 +134,33 @@ Ausgabekontrolle sind vor Code in RI-B-V01 zu schließen. Ein dauerhafter
 prozessübergreifender Vertrauenscache ist durch RI nicht freigegeben.
 Die bestehende Planprüfung und tatsächliche Übernahmeautorisierung bleiben erhalten.
 
+RI-B-T01 belegt auf dem kleinen synthetischen Direktimport vier → zwei volle
+Kandidaten-/Einzelproofprüfungen bei weiterhin 80 Guards. Zusätzliche frische
+Byte-/Identitätsbindungen erhöhen dabei die gemessenen Laufzeiten auf Linux und
+beiden Windows-Pfaden. RI-B-O01 bleibt ein offener Leistungsbefund; keine
+Wallclockbeschleunigung oder Skalierungszusage. Der enge Umfang und die Folge
+A → B → C bleiben gemäß dem in #477 dokumentierten Messabgleich unverändert.
+
+RI-B-V01 konkretisiert den engen gelieferten Weg: Nur eine mutierende neue
+Registrierung erzeugt nach erfolgreichem unabhängigem Staging-Replay einen
+internen prozess-/threadgebundenen Kontext. Eingangsprüfung und Staging-Replay
+bleiben vollständig. P3 und ausschließlich der neue Eintrag im P5-Replay verwenden
+frische vollständige Inventar-/Byte-Nachprüfungen statt desselben Proof-Replays.
+Der Kontext bindet Original-/Stagingidentitäten, tatsächliche Freigabe-/Parameter-
+bytes, Checked-Input, Ausgangssnapshot, konkretes Journal samt Added-Zeitpunkt,
+Addition-Quellpfade sowie tatsächliche Werkzeug-/Methodenbytes und Laufzeitstände.
+Austausch, Zusatz/Fehlen oder Änderung invalidieren ihn; Scopeende bei Erfolg,
+Fehler oder Abbruch ebenfalls. Keine Serialisierung und kein persistenter Cache.
+Ohne privaten Kontext bleibt der bisherige vollständige Prüfweg aktiv.
+
+`export`, `plan`, `verify-export`, No-op und Updates prüfen unabhängig nach ihren
+bisherigen Verträgen. `plan` bleibt lesend, `register` ausdrücklich autorisiert.
+Recovery erhält niemals den Kontext. B-Paketbeweis und der vollständige
+Quell-/Namespacebeweis bleiben unabhängige Autoritäten: B-Erfolg belegt keinen
+unveränderten Katalog, ein späterer C-Snapshot keine Kandidatenprüfung.
+**B ändert weder globale Guard-Aufrufstellen/-frequenz noch P0–P6/R0–R2,
+Erkennungszeitpunkte oder Recoverysemantik.** Keine neue Journalgeneration.
+
 ### RI-D06 · Globale Kontrolle an definierte Transaktionsgrenzen binden
 
 RI-C soll die Multiplikation vollständiger Bestandskontrollen mit jeder neuen
@@ -166,8 +193,8 @@ werden. Kein Budgetbypass und kein Entfernen eines Locks als Fehlerbehandlung.
 
 | Paket | Ergebnis | Abhängigkeit / Status |
 | --- | --- | --- |
-| [RI-A / #478](https://github.com/venomenon328/picross/issues/478) | Budgetkonfiguration, Warnung/Fortschritt, Phasen-/I/O-Messung und gleichwertig gebündelte sichere Reads. | V01/P01 gebunden, Implementierung beauftragt; T01 und unabhängiges R01 bleiben getrennte Gates. |
-| [RI-B / #479](https://github.com/venomenon328/picross/issues/479) | Bytegebundene Wiederverwendung tatsächlich geprüfter Pakete in zusammenhängender Integration. | Nach A-Messauswertung und B-V01; geplantes Folgepaket, noch nicht als unmittelbar umsetzungsbereit ausgeben. |
+| [RI-A / #478](https://github.com/venomenon328/picross/issues/478) | Budgetkonfiguration, Warnung/Fortschritt, Phasen-/I/O-Messung und gleichwertig gebündelte sichere Reads. | Über PR #484 auf `864c4e6` integriert; Abschlussentscheidung im Issue. |
+| [RI-B / #479](https://github.com/venomenon328/picross/issues/479) | Bytegebundene Wiederverwendung tatsächlich geprüfter Pakete in zusammenhängender Integration. | A-Messauswertung und B-V01/B/C-Abgleich vor Code dokumentiert; beauftragte Branchlieferung, T01/CI/Review standgebunden. |
 | [RI-C / #480](https://github.com/venomenon328/picross/issues/480) | Skalierende Katalogpublikation mit explizitem Kontroll- und Recoveryvertrag. | Nach A-Messauswertung/C-V01; geplante Umsetzung auf dem abgestimmten B-Kontext. |
 
 Geplante Folge: A → Messauswertung und gemeinsamer B/C-Vertragsabgleich → B → C.
