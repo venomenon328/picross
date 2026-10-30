@@ -40,8 +40,9 @@ Werkzeugbasis A: `864c4e6289df15ea7b3522b850542ece3489160f`; gemessener
 B-Werkzeug-/Testhead: `a46d7c9945d2f06af7a5943ca4c9504a829fc59f`.
 Alle Dateien beider vollständigen Werkzeugbäume wurden byteweise gegen diese
 Git-Objekte geprüft; jedes Quellinventar aller sechs Berichte stimmt mit dem
-jeweiligen Baum überein. Nachfolgende reine T01-/Reviewtexte ändern keine
-gemessenen Werkzeugbytes. Finale PR-Head-/Basis-/Test-Merge-/Runbindung und
+jeweiligen Baum überein. Nachfolgende T01-/Reviewtexte und die unten erklärte
+reine Testhakenkorrektur ändern keine gemessenen Werkzeugbytes.
+Finale PR-Head-/Basis-/Test-Merge-/Runbindung und
 CI-Ergebnisse werden im ausdrücklich benannten RI-B-T01-CI-Anhang im PR geführt.
 
 Der unveränderte vorhandene manuelle RI-A-Treiber lief mit `--observe`,
@@ -197,6 +198,25 @@ Acht CI2-Auswahl-/Ergebnisprüfungen bestanden.
 Der lokale vollständige Tool-/Dokumentlauf ist wegen Sparse-Checkout und
 vorhandenen ignorierten Arbeitsartefakten kein Pass; aktuelle vollständige
 Remote-CI liefert den Abschlussnachweis. Kein Chromium gestartet.
+
+## CI-Nachkorrektur: Kategorien-Race tatsächlich injizieren
+
+Der erste [CI-Lauf 41083589687](https://github.com/venomenon328/picross/actions/runs/41083589687)
+auf Lieferhead `d05a69621cdaef8596f8bd7a9b83f5963a60b9ae` bestand den Fachjob
+nicht: 397 Tests, zwei Assertions desselben Kategorien-Race-Tests fehlgeschlagen.
+Der Originalbericht bestätigt: der dritte `verify_export`-Aufruf entfällt durch
+RI-B bestimmungsgemäß; der alte Mock injizierte deshalb keine Fremdänderung.
+Dies ist kein erfolgreicher CI-Lauf und wird nicht umgedeutet.
+
+Der vorhandene Test injiziert jetzt nach den tatsächlich ausgeführten vier
+Prüfgrenzen: Eingangsproof, Staging-Replay, geschriebene P3- und P5-Nachprüfung.
+Er prüft zusätzlich genau eine tatsächliche Injektion. Seine bisherigen
+Fremdbyte-/Journal-/Recovery-Orakel bleiben unverändert; der P5-Fall kommt hinzu.
+Gezielte Gegenprobe erfolgreich: Linux 5,433 s, Windows 43,979 s; die acht
+CI2-Zuordnungs-/Ergebnisprüfungen erneut erfolgreich. Kein Produktionscode,
+kein Guard und keine Methodenquelle geändert. Alle sechs Plattformmessungen
+bleiben deshalb an exakt dieselben vollständig inventarisierten Werkzeugbytes
+gebunden. Neue vollständige Pflicht-CI für den korrigierten PR-Head erforderlich.
 
 [Getrenntes Selbstreview](RI_B_SELF_REVIEW.md) prüft den vollständigen Diff,
 Bindungen und unveränderten Guard-/Recoveryvertrag; keine unabhängige Zweitprüfung.

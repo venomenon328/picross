@@ -173,19 +173,31 @@ class CategorizedAdapterTests(unittest.TestCase):
         original = self.catalog_path.read_bytes()
         before = self.snapshot(self.checkout)
         verify = adapter.verify_export
-        for trigger in (1, 2, 3):
+        from tools.puzzle_production.registration_verification import _Verification
+        written = _Verification.written
+        for trigger in (1, 2, 3, 4):
             calls = []
-            def change(path):
-                result = verify(path)
+            injected = []
+            def change_after_check(result, path):
                 calls.append(path)
                 if len(calls) == trigger:
+                    injected.append(trigger)
                     changed = deepcopy(self.catalog)
                     changed["categories"][0]["name"] = "Concurrent edit"
                     write_json(self.catalog_path, changed)
                 return result
-            with self.subTest(trigger=trigger), patch.object(adapter, "verify_export", side_effect=change):
+            def change(path):
+                return change_after_check(verify(path), path)
+            def change_after_readback(context, root, package, raw):
+                return change_after_check(written(context, root, package, raw), root / package)
+            # RI-B preserves both publication check boundaries as bound byte
+            # readbacks. Inject after the actual checks, never a removed third
+            # verify_export call. P5 also keeps the independent global guard.
+            with self.subTest(trigger=trigger), patch.object(adapter, "verify_export", side_effect=change), \
+                    patch.object(_Verification, "written", new=change_after_readback):
                 with self.assertRaisesRegex(InvalidInput, "changed"):
                     rated_registration(out, self.checkout, apply=True)
+            self.assertEqual(injected, [trigger], "Category race must actually be injected once")
             self.assertEqual(categories.load(self.catalog_path)["categories"][0]["name"], "Concurrent edit")
             self.catalog_path.write_bytes(original)
             if (self.checkout / "content/.registration-pending.json").exists():
