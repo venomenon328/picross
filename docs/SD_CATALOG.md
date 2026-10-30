@@ -701,8 +701,14 @@ Operation unbekannt ist, gilt bei jedem Tick höchstens 300 s, bei einem kürzer
 Override dessen Frist. Erst die erfolgreiche geschlossene Zuordnung erlaubt
 1800 s beziehungsweise den Registrierungs-Override vom ursprünglichen Start;
 eine bereits abgelaufene Erst- oder Außenfrist lässt sich nicht wiederbeleben.
-Eine Klassifikation, die selbst 300 s überschreitet, wird auch bei später als
-Registrierung erkennbaren Bytes abgebrochen. Andere Writer behalten 300 s
+Die vollständige Journal-JSON- und Quellenprüfung darf nach früh erkannter
+zulässiger Registrierungs-Format-/Operationspaarung die 300-s-Warnschwelle
+überschreiten, solange die ursprüngliche Registrierungsfrist gültig bleibt.
+Die begrenzte strukturelle Vorzuordnung allein autorisiert keine Mutation:
+Schema, Originalbytes, Journal-/Stagingbindung, Delta und Quellen bleiben
+anschließend vollständig verpflichtend. Solange noch keine sichere Zuordnung
+vorliegt, gilt weiterhin höchstens 300 s; ein bereits abgelaufener Rahmen
+kann nicht nachträglich wiederbelebt werden. Andere Writer behalten 300 s
 einschließlich Klassifikation und bisheriger Außenbudgets. Vollständige
 Journal-/Quellenvalidierung bleibt eine anschließende eigene Prüfung unter
 der sicher zugeordneten Operationsfrist. Die ursprünglichen Journalbytes bleiben auch nach

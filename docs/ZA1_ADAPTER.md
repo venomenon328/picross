@@ -161,7 +161,11 @@ in #478 bindet folgende Schnittstelle:
   Die unbekannte Operation erhält zunächst höchstens 300 s (oder einen kürzeren
   Override). Sichere Klassifikation und anschließende vollständige Validierung
   bleiben getrennt. Fristursprung und kürzere Außenfristen bleiben erhalten;
-  eine schon abgelaufene Klassifikationsfrist wird nicht verlängert.
+  eine schon abgelaufene noch unbekannte Klassifikationsfrist wird nicht verlängert.
+  Nach früher sicherer Format-/Operationsvorzuordnung darf die vollständige
+  Validierung einer Registrierung die 300-s-Warnschwelle innerhalb des eigenen
+  Recoveryrahmens überschreiten; diese Vorzuordnung ersetzt keine spätere
+  vollständige Journal-/Quellenprüfung.
 - Plan/Update akzeptieren keinen mutierenden Override. Exakter API-Typ
   `int`/`float`, kein `bool`; Wert und berechnete monotone Deadline müssen
   endlich und positiv sein. CLI verwendet endliche Dezimalzahlen.

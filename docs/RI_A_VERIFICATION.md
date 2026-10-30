@@ -244,3 +244,31 @@ Die sechs Rohberichte mit Eingangs-/Quellinventaren liegen für den laufenden Re
 | `final-windows-short-after.json` | `d8b294391ebb42d8b84cb2a966a310a12d1124dc9a5526fcb7a112a33f0d8995` |
 | `final-windows-nested-before.json` | `a35609c8098829389d141e1665e4230e4ec6047d877717102c64d5ce89e60723` |
 | `final-windows-nested-after.json` | `bded63ccd889d6b78f028d30884abbebc23ea39b17caa54bbfef5a5ab2779289` |
+
+### R02-B01-Korrektur auf dem bestehenden PR (eigener Umsetzungsstand)
+
+Nach dem unabhängigen [RI-A-R02](https://github.com/venomenon328/picross/pull/484#pullrequestreview-5710915426)
+ist die zu strenge 300-s-Vorfrist bei bereits identifizierter
+Registrierungs-Recovery korrigiert: Die erste sichere vollständige Lektüre der
+Originaljournalbytes bleibt zunächst im konservativen Rahmen. Ein kleiner
+begrenzt arbeitender, nicht autorisierender Top-Level-Discriminator prüft
+danach vor der vollständigen teureren JSON-/Journalvalidierung nur zulässige
+Format-/Operationspaarung und die obligatorischen Top-Level-Feldformen.
+Nur bei passender Registrierung darf der Schutz vom ursprünglichen
+Aufrufbeginn auf 1800 s beziehungsweise den festgelegten Override wechseln.
+Abgelaufene Anfangs- und äußere Fristen bleiben abgelaufen;
+fremde, unvollständige oder widersprüchliche Paare erhalten keine Erweiterung.
+Alle bisherigen vollständigen Byte-, Schema-, Quellen-, Delta- und Lockchecks
+bleiben vor jeglicher Mutation Pflicht.
+
+Neue feste Uhr-Gegenproben prüfen erfolgreiche gültige Registrierungs-Recovery
+nach 301 s strikter Klassifikationsarbeit innerhalb von 600/1800 s, die
+konservative Grenze vor Erkennung, unzulässige Format-/Operationspaare
+und nicht autorisierende Vorzuordnung bei ungültigen inneren Journalbytes.
+Der vorhandene Klassifikationstest ist auf die tatsächlich *noch nicht*
+erfolgte frühe Zuordnung angepasst, statt die widersprochene harte
+300-s-Grenze nach sicherer Registrierungserkennung weiter festzuschreiben.
+
+**Ausführungsnachweise:** Stand, Ergebnis, tatsächliche CI-Bindung und getrenntes
+Review sind an den neuen PR-Head zu binden. Die vorherigen Messreihen bleiben
+historische Quellen; keine neue Laufzeitverbesserung aus Uhrsimulation ableiten.

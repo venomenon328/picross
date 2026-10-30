@@ -237,7 +237,10 @@ def recover(root, *, recovery_seconds=None):
     with diagnostic.operation("Recovery", 300 if recovery_seconds is None else min(300, recovery_seconds),
                               "classification-pending", started=started) as active:
         root = catalog_io.external(root)
-        operation, raw, staging_name = diagnostic.classify(root)
+        def select_registration():
+            active.classified_limit(1800 if recovery_seconds is None else recovery_seconds,
+                                    "registration-default" if recovery_seconds is None else "override")
+        operation, raw, staging_name = diagnostic.classify(root, on_registration=select_registration)
         require(operation == "registration" or recovery_seconds is None,
                 "RI-A recovery override requires a registration journal")
         limit = (1800 if recovery_seconds is None else recovery_seconds) if operation == "registration" else 300

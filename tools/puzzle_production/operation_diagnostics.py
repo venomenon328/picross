@@ -268,7 +268,134 @@ def begin_segment(name):
         active.next_segment(name)
 
 
-def classify(root):
+
+def _shallow_recovery_fields(raw):
+    """Read only top-level JSON selectors without materializing nested journal data.
+
+    This is an early *budget discriminator*, never a journal validation or a
+    permission to mutate. The existing full bounded decoder and all journal,
+    ownership and source checks remain authoritative after the selection.
+    """
+    if not isinstance(raw, bytes) or not raw.startswith(b"{"):
+        return None
+    size = len(raw)
+
+    def whitespace(index):
+        while index < size and raw[index] in b" \t\r\n":
+            index += 1
+        return index
+
+    def simple_string(index):
+        if index >= size or raw[index] != 34:
+            return None, index
+        end = raw.find(b'"', index + 1)
+        if end < 0 or end - index > 130 or b"\\" in raw[index + 1:end]:
+            return None, index
+        try:
+            return raw[index + 1:end].decode("ascii"), end + 1
+        except UnicodeDecodeError:
+            return None, index
+
+    def value_end(index):
+        opened, quoted, escaped = [], False, False
+        while index < size:
+            if index % (1024 * 1024) == 0:
+                from . import catalog_io as io
+                io.tick()
+            char = raw[index]
+            if quoted:
+                if escaped:
+                    escaped = False
+                elif char == 92:
+                    escaped = True
+                elif char == 34:
+                    quoted = False
+            elif char == 34:
+                quoted = True
+            elif char in (123, 91):
+                opened.append(char)
+                if len(opened) > 32:
+                    return -1
+            elif char in (125, 93):
+                if opened:
+                    if opened[-1] != (123 if char == 125 else 91):
+                        return -1
+                    opened.pop()
+                elif char == 125:
+                    return index
+                else:
+                    return -1
+            elif char == 44 and not opened:
+                return index
+            index += 1
+        return -1
+
+    fields, index = {}, 1
+    while True:
+        index = whitespace(index)
+        if index >= size:
+            return None
+        if raw[index] == 125:
+            return fields if whitespace(index + 1) == size else None
+        key, index = simple_string(index)
+        if key is None or key in fields:
+            return None
+        index = whitespace(index)
+        if index >= size or raw[index] != 58:
+            return None
+        index = whitespace(index + 1)
+        if index >= size:
+            return None
+        if key in ("format", "operation"):
+            value, index = simple_string(index)
+            if value is None:
+                return None
+        else:
+            value = chr(raw[index])  # Shape only; contents checked by full parser.
+            index = value_end(index)
+            if index < 0:
+                return None
+        fields[key] = value
+        index = whitespace(index)
+        if index >= size:
+            return None
+        if raw[index] == 44:
+            index += 1
+        elif raw[index] == 125:
+            return fields if whitespace(index + 1) == size else None
+        else:
+            return None
+
+
+def _early_registration(raw, *, staged=False):
+    """Promote only a recognized closed registration format/operation pair."""
+    from . import catalog_transaction as tx
+    if not isinstance(raw, bytes) or len(raw) > tx.LIMIT:
+        return False
+    fields = _shallow_recovery_fields(raw)
+    if fields is None:
+        return False
+    fmt = fields.get("format")
+    modern = fmt in (tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    previous = fmt in (tx.PREVIOUS_FORMATS["registration"], tx.LEGACY_FORMATS["registration"])
+    if staged and not modern:
+        return False
+    if modern or previous:
+        keys = {"format", "operation", "old", "new", "retained", "additions", "report_run"}
+        if modern:
+            keys.add("replacements")
+        return (set(fields) == keys and fields["operation"] == "registration"
+                and all(fields[n] == "{" for n in ("old", "new", "retained", "additions"))
+                and fields["report_run"] == "n"
+                and (not modern or fields["replacements"] == "{"))
+    if fmt == "picross-registration-journal-v2" and not staged:
+        return (set(fields) == {"format", "targets", "files", "old", "new", "categories"}
+                and fields["targets"] == "[" and fields["categories"] == '"'
+                and all(fields[n] == "{" for n in ("files", "old", "new")))
+    return False
+
+
+def classify(root, *, on_registration=None):
     """Read original bounded bytes; do not trust a free-standing operation tag."""
     from . import catalog_io as io, catalog_transaction as tx, catalog_publication as pub
     raw = pub.read_journal(root)
@@ -283,6 +410,12 @@ def classify(root):
     if d:
         d.outcome = "recovery-required"
         d.journal_state = {"journal": "staging-unvalidated" if staged else "present-unvalidated", "lock": "absent" if staged else "present"}
+    # Select the registration deadline before the potentially long complete JSON
+    # decoding/validation. A mismatched or incomplete operation never gets it.
+    # An early match changes only the clock, not the authority of journal bytes.
+    if on_registration is not None and _early_registration(raw, staged=staged):
+        if not staged or name == "content/.registration-journal-" + io.checksum(raw) + ".tmp":
+            on_registration()
     j = io.json_bytes(raw, pub.LIMIT)
     require(isinstance(j, dict), "Invalid recovery journal")
     fmt = j.get("format")
