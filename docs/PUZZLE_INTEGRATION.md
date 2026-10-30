@@ -5,8 +5,9 @@ Gesamtvorhaben: [RI / #477](https://github.com/venomenon328/picross/issues/477).
 Geprüfte Ausgangsbasis: `main@ddacc8dbf328923626cbd0235578fda2bfb99c37`.
 
 **Status: RI-A-V01 auf dem beauftragten Branch zu #478 implementiert;
-unabhängige Abnahme und Merge offen.** [RI-A-T01](RI_A_VERIFICATION.md) bindet
-Messungen, Prüfstand und Lücken. RI-B und RI-C bleiben spätere, nicht beauftragte
+erneute unabhängige Abnahme und Merge offen.** RI-A-R01 benannte B-01/B-02/B-03;
+die beauftragte Nacharbeit und ihre neuen Nachweise stehen in
+[RI-A-T01](RI_A_VERIFICATION.md). RI-B und RI-C bleiben spätere, nicht beauftragte
 Pakete. Die Spezifikationsfreigabe allein erteilt weiterhin keinen
 Implementierungs- oder Mergeauftrag.
 

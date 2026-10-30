@@ -1,16 +1,135 @@
 # RI-A-T01: Registrierung, Betriebsgrenzen und Messung
 
-RI-A-V01/P01 zu [#478](https://github.com/venomenon328/picross/issues/478).
-Drei wiederholte Vorher/Nachher-Läufe pro Plattform/Pfad sind abgeschlossen.
-Die kleine feste Registrierung benötigt nachher im Median 5,004 s unter Linux,
-25,930 s auf kurzem Windows-Pfad und 32,838 s auf verschachteltem Windows-Pfad.
-Das ist keine Abnahme großer Kataloge. Der unabhängige RI-A-R01 bleibt offen;
-[PR #484](https://github.com/venomenon328/picross/pull/484) bleibt Draft. Kein Merge.
+## RI-A-N01: Nacharbeit zu B-01/B-02/B-03 · 30.10.2026
+
+Verbindlich: [RI-A-R01](https://github.com/venomenon328/picross/pull/484#pullrequestreview-5709431225)
+und [RI-A-N01](https://github.com/venomenon328/picross/pull/484#issuecomment-6517789353).
+Ausgangshead `29349ffbfa9fd42d4e20e7065d2d0c4f9b721211`, korrigierter Werkzeug-
+und Teststand `bca790bf4a8a0e5f32e746cc0d2e0723e3f878c8`.
+Die Befunde sind aus Autorensicht behoben; das erneute unabhängige qualifizierte
+Review auf dem neuen Head bleibt erforderlich. [PR #484](https://github.com/venomenon328/picross/pull/484)
+bleibt Draft. O-01, RI-B/RI-C und echte Rätselintegrationen sind nicht beauftragt.
+
+### Befundbezogene Regressionen
+
+Alle Fälle stehen im festen synthetischen [RI-A-Testmodul](../tests/puzzle_production/test_registration_budgets.py).
+
+| Befund | Konkrete Orakel |
+| --- | --- |
+| B-01 | `classification_ticks_enforce_300_before_operation_is_known`: mehrere Ticks innerhalb der Klassifikation bei 100/299/301 s; unbekannte Registrierung und Sync bleiben bis zur Zuordnung bei höchstens 300 s, auch mit langem Override. `classified_registration_uses_original_origin_and_selected_limit`: 1800/600/10 s, Klassifikationsverbrauch und 250-s-Außenrahmen, unveränderte Bytes/mtimes beim Abbruch. `classification_cannot_revive_expired_frame_or_outer_deadline`: keine Wiederbelebung abgelaufener Fristen oder Erweiterung eines verschachtelten Operationsframes. Bestehende Fälle erhalten v1-Blockade, geschlossene Generationen, vollständiges/ungültiges Staging und Originalbytebindung. |
+| B-02 | `publication_and_recovery_phase_times_follow_actual_work`: echte Writer-/Recoveryaufrufe, ungleiche Uhrschritte vor Validierung, Schreiben, Flush und Bereinigung; jede Phase P0–P6/R0–R2 und alle wiederholten Dateischritte werden am Arbeitsort geprüft. Exakte Phasensummen entsprechen der verstrichenen Uhrzeit; inklusive Kinder werden nicht nochmals addiert. `timeout_in_p0_records_partial_work_before_any_mutation`: P0=1801 s, Prevalidation=0, keine P1-Arbeit/Mutation oder erfundener Fortschritt. Automatischer Rollback bleibt außerhalb der angehaltenen P3-Teilzeit. |
+| B-03 | `complete_checks_count_only_successful_returns`: vier Kandidatenversuche, ein Erfolg; Fehler, I/O-Fehler und Abbruch behalten Zeit/Versuche ohne Abschlussfortschritt. `failed_export_and_input_checks_do_not_claim_completion`: Fehler und tatsächlicher Deadline-Tick innerhalb der Kandidatenverifikation liefern je einen begonnenen Input-/Export-/Kandidatenversuch, null Vollprüfungen; erfolgreicher Export je eine Vollprüfung. Innere Einzelproofs bleiben eigenständige Messung. |
+
+22 RI-A-Tests: Linux **22,052 s**, Windows **92,115 s**, jeweils erfolgreich.
+Die ausgewählten B-01/B-02/B-03-Regressionen scheitern auf `29349ffb`;
+zusätzlich zeigt die direkte Gegenprobe nach einem Erfolg plus einem Abbruch
+vorher `full_candidate_proof_checks=2`, nachher zwei Versuche und genau einen
+Vollprüfungsabschluss. Lokale Logs: `n01-before-regressions.log`,
+`n01-linux-final-tests.log`, `n01-windows-final-tests.log` unter `E:/ri478/`.
+
+### Erneuter begrenzter Messvergleich
+
+Drei reale Wiederholungen pro Stand auf Linux/native OverlayFS sowie Windows/NTFS
+mit kurzen und normal verschachtelten Pfaden. Derselbe feste 57-Dateien-Eingang,
+0→1 synthetische Katalogeinträge und 30 Exportdateien wie im historischen Vergleich.
+Alle sechs vollständigen Quellinventare wurden gegen die aus den genannten
+Git-Commits erzeugten Archive verglichen; Eingangsmanifest unverändert
+`d754e43ffb1b8765f3eaab81d6938e19d79a092be07c60362c79f62e60d87fc4`.
+Der identische aktuelle [Messtreiber](../tests/puzzle_production/ri_a_measurement.py)
+(SHA-256 `dcadd6f0d676bf7504f7689e875af5527fd1e9016c5fe0cdda2eb9db1f30f5cf`)
+misst beide Stände diesmal mit `--observe`, einschließlich der operativen
+Phasen/Zähler. Sonstige Argumente wie unten; keine neue Inputerzeugung.
+
+Windowspfade: `E:/ri478/n01/runs/{before,after}/<0..2>/checkout` sowie
+`E:/Zeuch/Coding/ri-a-measurements/n01/project/catalog/{before,after}/<0..2>/checkout`.
+Linux: `/work/n01/runs/{before,after}/<0..2>/checkout`; `stat -f` erneut OverlayFS,
+Containermountliste `[]`. OS-/Python-/Pillow-/Imageversionen wie unten und in den
+Rohberichten. Sequenziell je Plattform; Linux und Windows teilen die Hosthardware.
+Warme Caches, keine CPU-Pinnung oder Lastkontrolle; deutliche Windowsstreuung.
+Die Quellarchive besitzen keine `.git`-Metadaten: interne Export-Commitangabe
+bleibt unbekannt (unter Windows sichtbare Git-Meldungen); reale Commitbindung
+kommt aus dem überprüften vollständigen Quellinventar. Kein CLI-/Startkostenbeleg.
+
+Sekunden, Median [Minimum–Maximum], n=3; Register umfasst Vorarbeit und Writer:
+
+| Umgebung | Operation | 29349ffb | bca790bf |
+| --- | --- | ---: | ---: |
+| Linux | Register | 4.331 [4.143–4.366] | 4.340 [4.311–4.428] |
+| Linux | Recovery | 0.297 [0.296–0.315] | 0.308 [0.308–0.351] |
+| Windows kurz | Register | 24.538 [19.198–25.225] | 24.126 [23.875–25.303] |
+| Windows kurz | Recovery | 1.823 [1.678–1.840] | 1.683 [1.635–1.685] |
+| Windows verschachtelt | Register | 30.591 [23.609–30.643] | 28.897 [28.430–29.740] |
+| Windows verschachtelt | Recovery | 2.037 [1.816–2.280] | 2.078 [2.045–2.137] |
+
+Neue operative Publikationsphasen, Mediane in Sekunden (inklusive, keine
+Addition mit ihren Unterphasen oder der gesamten Registrierungsdauer):
+
+| Umgebung | P0 | P1 | P2 | P3 | P4 | P5 | P6 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| Linux | 0.2671 | 0.0054 | 0.0316 | 2.8836 | 0.5874 | 0.2950 | 0.0703 |
+| Windows kurz | 0.6972 | 0.0166 | 0.1792 | 16.6250 | 3.4544 | 1.7681 | 0.3974 |
+| Windows verschachtelt | 0.8283 | 0.0171 | 0.2374 | 19.9770 | 4.1534 | 2.0661 | 0.4734 |
+
+Auf allen sechs Varianten und in jeder Wiederholung unverändert: 80 Guardaufrufe,
+4 Kandidatenprüfungen, 4 unabhängige Einzelproofs, 4 Exportprüfungen, 12079
+Pfadprüfungen, 6642 sichere Read-Helferaufrufe; 3627169 gelesene und 3456296
+gehashte Bytes, 37 veröffentlichte Dateien/40834 Bytes. Die neuen operativen
+Zähler melden für diesen positiven Registerlauf je 4 Input-/Export-/Kandidaten-
+versuche und je 4 erfolgreiche Vollprüfungen. Das belegt keine fehlgeschlagenen
+Versuche als vollständig. Keine weiteren Reads oder Guards wurden entfernt.
+
+Die alten P01-Laufzeiten bleiben gültige **historische** Messungen ihrer damaligen
+Quellstände; sie sind kein Laufzeitbeleg für N01. Alte operative P-/R-Labels und
+Fehlerfall-Vollprüfungszähler sind durch R01 widerlegt und werden nicht übernommen.
+Die damaligen extern gemessenen Funktionsaufrufe/Bytezahlen bleiben an ihren
+positiven Lauf gebunden; der neue Vergleich bestätigt deren erhaltenen Umfang.
+Spannweiten überlappen: keine allgemeine Beschleunigungs- oder Skalierungszusage.
+Die nachfolgenden historischen Messlücken (große Kataloge, 0.4-Bestand, andere
+Hardware, CLI-/Prozesskosten und komplexe Proofketten) bleiben offen. Kein realer
+Messlauf erreichte 300/1800 s; deren Vertrag wird durch kontrollierte Uhr geprüft.
+
+Rohberichte außerhalb des aktiven Trees unter `E:/ri478/`, begrenzt bis zum
+Reviewabschluss; danach CI2-Aufbewahrung. Keine neue Dauerdatei/Testkopie im Repo.
+
+| Rohbericht | SHA-256 |
+| --- | --- |
+| `n01-linux-before.json` | `1ff7665b59655977b81ae186bcd15f39235e78bb56a374e00914b4cc3392155b` |
+| `n01-linux-after.json` | `7df9665812fe7c4f4d40e9bc814dbdf023c2c99aff53f3be121ca79cea227c2e` |
+| `n01-windows-short-before.json` | `03cee9fa53f5a6406d1bf3939a6c3593f1d3ceab31c738d545a6f280d6d2247f` |
+| `n01-windows-short-after.json` | `618aba5ee1d644df5b391807af8fda0370e110d1bce7bf1813a677d27b53afec` |
+| `n01-windows-nested-before.json` | `f1d81def2f08d03acbf2da2eda55ab7c841bdeaf204a402a25f13a7c591c8378` |
+| `n01-windows-nested-after.json` | `7511b4eb666e52edc810fd7c5e4e8648fd9dd97b48849388021e46dbaa273fbc` |
+
+### Selbstreview und aktuelle Pflicht-CI
+
+[Getrenntes Selbstreview](RI_A_SELF_REVIEW.md): Transaktions-/Checkpointkörper
+nach Abzug reiner Beobachtungsaufrufe per AST unverändert; sichere I/O und
+Methodenvertragsdateien bytegleich. 232 Werkzeugtests in 49,432 s erfolgreich,
+drei bestehende Plattform-Skips. Dokumentvalidator, Whitespacecheck und exakter
+Authoring-/Offline-Snapshotvergleich bestanden.
+
+Der vollständige PR-Diff wählt `solver, images, adapter, catalog`, native
+`core, history, catalog, completion, adapters, graphics, export`, Docs, Preflight
+und Delivery. Browsergruppen leer, kein Chromium-Auftrag. Die abschließende
+CI einschließlich `ci-required` muss den neuen Head und Test-Merge prüfen;
+die exakte endgültige Head-/Base-/Test-Merge-/Run- und Ergebnisbindung wird in
+PR #484 geführt. Lokale Tests und der alte grüne Lauf ersetzen sie nicht.
+Offen bleibt das erneute unabhängige qualifizierte Review; kein Merge.
+
+## Historischer P01-Vergleich vor R01/N01
+
+Die folgenden Tabellen und Aussagen betreffen ausschließlich P01→ursprüngliches
+RI-A, nicht die Nacharbeit. Historischer grüner CI-Abschluss:
+[Lauf 40950193706](https://github.com/venomenon328/picross/actions/runs/40950193706),
+Head `29349ffbfa9fd42d4e20e7065d2d0c4f9b721211`, Basis
+`8f903d7ecb6c111451ae359ecca44156987daa19`, Test-Merge
+`f00f8982932843f7ef62d78fb5a6d42340cedaea`. R01 hat danach die oben genannten
+Blocker festgestellt; damaliges CI-Grün ist keine aktuelle Abnahme.
 
 ## Quellen und Messmethode
 
 - Vorher: `main@f47a30b904a8d4eba79ca9d3f82576aebcceaa38` (P01).
-- Nachher: Produktcode `a2c28518cead1f29f0fdc64afe0b65769947eded`. Spätere Test-/Dokumentkorrekturen ändern diese gemessenen Werkzeugbytes nicht.
+- Nachher: Produktcode `a2c28518cead1f29f0fdc64afe0b65769947eded`. Die Test-/Dokumentkorrekturen bis `29349ffb` änderten diese gemessenen Werkzeugbytes nicht; N01 wird oben neu gemessen.
 - Treiber: [ri_a_measurement.py](../tests/puzzle_production/ri_a_measurement.py), identisch auf beiden Ständen; SHA-256 `62c2ef840b2df0edcd1a1ac25c35f54c84ed98cf02fbddd862a77ab125efb820`.
 - Einmalig erzeugter, danach unveränderter `direct-mono`-Eingang: 57 inventarisierte Dateien einschließlich eines Exports mit 30 Dateien. Katalog vorher 0, nachher 1 synthetischer Eintrag; explizit vorgeprüfter 0.3-Ratinginput, keine echte Katalogdatei.
 - Eingangsmanifest SHA-256 `d754e43ffb1b8765f3eaab81d6938e19d79a092be07c60362c79f62e60d87fc4`. Alle sechs Berichte besitzen identische Eingangs- und Treiberbindung; die vollständigen Quellmodul-Hashes stimmen je Vorher/Nachher mit den genannten Git-Objekten überein.
@@ -125,15 +244,3 @@ Die sechs Rohberichte mit Eingangs-/Quellinventaren liegen für den laufenden Re
 | `final-windows-short-after.json` | `d8b294391ebb42d8b84cb2a966a310a12d1124dc9a5526fcb7a112a33f0d8995` |
 | `final-windows-nested-before.json` | `a35609c8098829389d141e1665e4230e4ec6047d877717102c64d5ce89e60723` |
 | `final-windows-nested-after.json` | `bded63ccd889d6b78f028d30884abbebc23ea39b17caa54bbfef5a5ab2779289` |
-
-## Funktionsprüfung, Selbstreview und CI
-
-- 16 feste neue RI-A-Tests: positive 300-s-Warnung mit späterem Erfolg; Ablauf vor Mutation, während Publikation und Recovery; wiederholte Recovery; kürzere Außenbudgets und Dauerabschluss nach P6; nichtendliche/falsche Parameter; fremde Bytes, geänderte Identitäten, Alias/Hardlink/Dateityp; No-op-Bytes/mtime; Journal-/Stagingklassifikation und nachträglicher Bytetausch; anderer Recoverydefault 300; Berichtskollision und Berichtsfehler nach Commit.
-- Linux: 23 gezielte RI-A- und historische Recoverytests erfolgreich in 24,644 s. Windows: 17 RI-A-/CLI-Negativtests einschließlich der korrigierten Additivhülle erfolgreich in 79,073 s.
-- 232 Werkzeugtests auf Windows erfolgreich in 65,085 s; drei plattformbedingte Skips. Dokumentvalidator, vollständiger Diffcheck, exakter Offline-Snapshot und Bytevergleich beider Methodenfreezes erfolgreich. Guard-Körper per AST gegen P01 unverändert.
-- [Getrenntes Selbstreview](RI_A_SELF_REVIEW.md); dies ersetzt kein unabhängiges RI-A-R01.
-- Vollständige automatische Auswahl: `solver, images, adapter, catalog`; native `core, history, catalog, completion, adapters, graphics, export`; außerdem Docs, Preflight und Delivery. Browsergruppen leer, kein Chromium-Auftrag.
-- Erster CI-Lauf stoppte am zusätzlichen Leerzeilenabschluss der neuen Testdatei; korrigiert in `27c531f6d9d0d0cbb7868bcd1d83c995e75edcfb`. [Lauf 40948421511](https://github.com/venomenon328/picross/actions/runs/40948421511) prüft Head `27c531f6…`, Base `8f903d7e…`, Test-Merge `7e268ee7219541c741a9e209f84f6d1220e73a93`: 382 Fachtests, zwei Fehler in der bisherigen exakten CLI-JSON-Erwartung für das neue Diagnosefeld. Fachliche Blockade, Exit 2, beide Integrationen und alle RI-A-Fälle bestanden. Die Erwartung wurde ausdrücklich um die additive Diagnose erweitert, ohne alte Felder oder Byteprüfungen zu lockern.
-- Der korrigierte vollständige Lauf und `ci-required` müssen auf dem endgültigen PR-Head erfolgreich sein. Dessen exakte Head-/Base-/Test-Merge-/Run-Bindung wird in PR #484 geführt; fehlende oder rote Checks gelten nicht als Pass.
-
-Offen vor Merge: unabhängiger qualifizierter RI-A-R01 sowie bis zum tatsächlichen grünen Abschluss das CI-Ergebnisgate. Keine neue Ausnahme vom Ergebnisgate. Keine RI-B-/RI-C-Implementierung und keine echte Rätselintegration.
