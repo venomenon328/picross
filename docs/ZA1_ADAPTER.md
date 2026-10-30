@@ -158,6 +158,10 @@ in #478 bindet folgende Schnittstelle:
 - `recover-registration --recovery-seconds S` und API `recover(...,
   recovery_seconds=None)`: 1800 nur für sicher erkannte Registrierungsjournale,
   sonst bisher 300. Andere Operationen lehnen den RI-A-Override vor Mutation ab.
+  Die unbekannte Operation erhält zunächst höchstens 300 s (oder einen kürzeren
+  Override). Sichere Klassifikation und anschließende vollständige Validierung
+  bleiben getrennt. Fristursprung und kürzere Außenfristen bleiben erhalten;
+  eine schon abgelaufene Klassifikationsfrist wird nicht verlängert.
 - Plan/Update akzeptieren keinen mutierenden Override. Exakter API-Typ
   `int`/`float`, kein `bool`; Wert und berechnete monotone Deadline müssen
   endlich und positiv sein. CLI verwendet endliche Dezimalzahlen.
@@ -173,6 +177,16 @@ Die separate Hülle `picross-ri-a-operation-v1` enthält `format`, `command`,
 Journal und Lock bleiben getrennte Zustände. Phasen sind inklusive/verschachtelt
 und nicht additiv. Unbekannte Werte bleiben `null` beziehungsweise ausdrücklich
 offen; Aufrufe, Reads/Hashbytes und Publikationen werden tatsächlich gezählt.
+`candidate_proof_check_attempts`, `input_inspection_attempts` und
+`export_validation_attempts` zählen begonnene Prüfungen; die zugehörigen
+`full_candidate_proof_checks`, `full_input_inspections` und
+`full_export_validations` ausschließlich fehlerfrei zurückgekehrte vollständige
+Prüfungen. Fehlversuche/Fristabläufe behalten ihre Versuchs-, Byte- und Zeitwerte,
+erzeugen aber keinen Vollprüfungszähler oder vorgetäuschten Abschlussfortschritt.
+Andere Aufrufzähler bleiben Versuche. `last_progress` nennt tatsächlich erledigte
+Arbeit beziehungsweise einen erreichten Checkpoint, keinen garantierten Phasenabschluss.
+Phasen beginnen vor ihrer Arbeit; P3/P4/R1 umfassen alle jeweiligen Dateischritte.
+Classification und Prevalidation bleiben gesondert, abgebrochene Teilzeiten sichtbar.
 Zusammengesetzte Kandidaten-/Proofprüfungen und ihre inneren Einzelproofs
 werden nicht gleichgesetzt. Die genaue Zählerabdeckung steht in T01.
 

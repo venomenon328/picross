@@ -48,6 +48,11 @@ behalten sonst 300 s plus bestehende Außenbudgets. Die feste Warnung nach
 `recovery_seconds=None`. Plan/Update lehnen mutierende Overrides ab.
 `S` ist positiv und endlich, API exakt `int`/`float` ohne `bool`, inklusive
 endlicher berechneter Deadline.
+Noch unbekannte Recoveryoperationen bleiben während der lesenden Klassifikation
+unter höchstens 300 s beziehungsweise einem kürzeren Override. Erst sichere
+Zuordnung erlaubt den Registrierungsrahmen ab dem ursprünglichen Aufrufstart;
+abgelaufene Erst-/Außenfristen werden nicht verlängert. Die anschließende
+vollständige Journal-/Quellenprüfung bleibt vor Mutation erforderlich.
 
 `export`, `plan`, `register`, `recover-registration` ergänzen stdout ausschließlich
 um `operation_diagnostics`; es bleibt genau ein JSON-Ergebnis. Fortschritt,
@@ -61,6 +66,12 @@ Aufrufe/Bytes, benannte Messlücken bleiben offen. Ressourcen/Signale: Exit 4
 auch nach Rollback; fachliche Fehler: Exit 2. Dauerhaftes P6 einschließlich
 Lockentfernung bleibt Erfolg bei erst danach bemerktem Fristablauf.
 Ein harter Prozessabbruch kann den Abschlussbericht verhindern.
+`*_attempts` zählt begonnene Kandidaten-/Input-/Exportprüfungen, die drei
+`full_*`-Zähler nur deren erfolgreichen vollständigen Rücklauf. Fehler und
+Fristabläufe bleiben als Versuche/Teilzeiten erhalten. Phasen P0–P6/R0–R2
+bezeichnen die gerade ausgeführte Arbeit einschließlich wiederholter Dateien;
+Checkpointfortschritt ist kein vorgezogener Phasenabschluss. Details und
+Zählernamen stehen im [ZA-1-Vertrag](../../docs/ZA1_ADAPTER.md).
 
 Andere Writer, `catalog_reveal --seconds` 1…300, Authoring-Eingangsprüfung,
 Solver-/Import-/Proof- und Datei-/Bytegrenzen bleiben unverändert.
