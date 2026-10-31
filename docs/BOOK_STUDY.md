@@ -69,7 +69,9 @@ beiden Seiten bis zur Deckelschulter. Kopf-/Fußbänder sitzen auf dieser Krone.
 Der Rücken verbindet beide Deckel auch unten. Beleuchtung, Lederabrieb und
 Kontaktschatten folgen der Geometrie. Der ruhige Untergrund ist eine durchgehende
 eigene Shaderfläche. Sechs gefilterte sichtbare Lagen vermeiden unaufgelöste
-feine Linien. Kameras und Arbeitsbudgets bleiben unverändert.
+feine Linien. Breite, flache Unregelmäßigkeiten halten auch die Blocknormalen
+ruhig; hochfrequente Subpixelwellen erzeugten zuvor diagonale Moiréflecken.
+Kameras und Arbeitsbudgets bleiben unverändert.
 
 Die Innenflächen verwenden die originale neue Bildtextur `study/book/paper.png`,
 1254×1254, 2.564.246 Bytes, SHA-256

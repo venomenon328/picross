@@ -75,7 +75,9 @@ func block_ring(side: float, depth: float) -> PackedVector3Array:
 		var x: float = p.x+0.035*arch+depth*0.13*(p.x/10.0)
 		var y: float = p.y*(1.0-0.012*arch)+signf(p.y)*depth*0.16
 		var z: float = 0.26*pow(arch,1.5)*(1.0-depth*0.35)-depth*0.43-0.006
-		var uneven: float = sin(p.x*11.7+p.y*8.3+depth*77)*0.004*sin(depth*PI)
+		# Broad, shallow deckle keeps the normal field resolved at all three
+		# scales; subpixel high-frequency ridges formed diagonal moire patches.
+		var uneven: float = sin(p.x*1.7+p.y*0.8+depth*5)*0.0015*sin(depth*PI)
 		ring.append(Vector3(side*(x+uneven),y+uneven,z))
 	if side < 0: ring.reverse()
 	return ring
