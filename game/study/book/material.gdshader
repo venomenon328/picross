@@ -18,15 +18,22 @@ void fragment() {
 	}
 	ALBEDO = base_color.rgb + grain;
 	if (kind < 0.5) {
-		// The paper mesh covers the centre; the exposed original perimeter
-		// supplies leather creases and worn corners at their actual proportions.
-		ALBEDO = texture(material_source, vec2(mix(0.012,0.978,UV.x),mix(0.018,0.984,UV.y))).rgb * 0.84;
+		// Map the exposed rim to leather, not to the original paper interior.
+		float rim = smoothstep(0.0,0.04,min(UV.x,1.0-UV.x));
+		ALBEDO = texture(material_source,vec2(mix(0.005,0.035,rim),mix(0.005,0.995,UV.y))).rgb;
 	}
-	if (kind > 1.5) {
+	if (kind > 1.5 && kind < 2.5) {
 		ALBEDO = texture(material_source,vec2(UV.x,mix(0.001,0.017,UV.y))).rgb*0.48;
 		vec2 outside = abs(surface_position.xy - vec2(0.12, -0.18)) - vec2(10.45, 6.52);
 		float edge = length(max(outside, vec2(0.0))) + min(max(outside.x, outside.y), 0.0);
 		ALBEDO *= 0.4 + 0.6 * smoothstep(0.0, 0.55, edge);
+	}
+	if (kind > 2.5 && kind < 3.5) {
+		// Original stitched binding, on its own narrow raised spine.
+		ALBEDO = texture(material_source,vec2(mix(0.960,0.985,UV.x),mix(0.025,0.975,UV.y))).rgb;
+	}
+	if (kind > 3.5) {
+		ALBEDO = texture(material_source,vec2(mix(0.008,0.025,UV.x),mix(0.035,0.965,UV.y))).rgb;
 	}
 	ROUGHNESS = kind < 0.5 ? 0.72 : 0.94;
 	SPECULAR = 0.2;

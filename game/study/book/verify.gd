@@ -275,6 +275,8 @@ func catalog_cases() -> void:
 		study.set_ui_scale(configuration[1])
 		await frames(6)
 		var catalog = study.app.album
+		var paper_top: float = root.size.y*(1.0-12.4/study.view_rect(false).w)/2.0
+		check(study.app.title.position.y >= paper_top and study.app.title.get_rect().end.y <= catalog.position.y,"catalog heading stays inside paper and above controls %d" % configuration[0].x)
 		check(catalog.choices.size() == 24 and catalog.grid.get_child_count() == 12 and catalog.right_grid.get_child_count() == 12,"24 active cards distributed over both pages %s" % configuration[0])
 		var fold: float = root.size.x/2.0
 		var measurements: Array = []
