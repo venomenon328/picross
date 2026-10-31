@@ -102,10 +102,12 @@ func _layout_book(prepare_board: bool = false) -> void:
 		# Actual screen pixels: no render-target downscaling of controls or fonts.
 		var material: Rect2 = surface.material_rect()
 		var margin: float = material.size.x*0.09
-		_place(album, Rect2(material.position+Vector2(margin, 86*ui_scale), Vector2(material.size.x-2*margin, material.size.y-126*ui_scale)))
-		_place(title, Rect2(material.position+Vector2(margin, 28*ui_scale), Vector2(material.size.x*0.38, 45*ui_scale)))
+		var heading_top: float = maxf(28*ui_scale,material.size.y*0.035+8*ui_scale)
+		var catalog_top: float = maxf(86*ui_scale,heading_top+53*ui_scale)
+		_place(album, Rect2(material.position+Vector2(margin, catalog_top), Vector2(material.size.x-2*margin, material.size.y-catalog_top-40*ui_scale)))
+		_place(title, Rect2(material.position+Vector2(margin, heading_top), Vector2(material.size.x*0.38, 45*ui_scale)))
 		if album.summary != null:
-			_place(album.summary,Rect2(material.position+Vector2(material.size.x/2+38*ui_scale,28*ui_scale),Vector2(material.size.x*0.35,45*ui_scale)))
+			_place(album.summary,Rect2(material.position+Vector2(material.size.x/2+38*ui_scale,heading_top),Vector2(material.size.x*0.35,45*ui_scale)))
 			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))
 		album._layout_cards()
 

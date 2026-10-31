@@ -60,7 +60,9 @@ Materialquelle ist das unveränderte bisherige A-Buch
 `957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a`.
 Die Shader lesen dessen UI-freie Papier- und Einbandbereiche. Es entsteht kein
 neues Fremdasset und keine umgeschriebene Bildfreigabe. Eigene Meshes trennen
-Papier, Lederdeckel, Seitenlagen, Bindung und sparsamen Untergrund.
+Papier, Lederdeckel, Seitenlagen, Bindung und sparsamen Untergrund. Die sichtbaren
+Lederkanten und die schmale erhabene Bindung lesen gezielt deren Originalbereiche;
+die Katalogüberschrift bleibt bei allen drei Größen innerhalb des Papiers.
 Gerichtete Blattabdunklung, Falz- und Kontaktschatten ergänzen die vorhandene
 Papierstruktur und die abgenutzten Einbandkanten.
 

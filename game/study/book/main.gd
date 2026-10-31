@@ -131,13 +131,8 @@ func _build_book() -> void:
 		for i: int in range(16):
 			_box(Vector3(10.06+sin(i*4.7)*0.025,12.52+sin(i*3.1)*0.024,0.008),Vector3(side*5.02,0,-0.40+i*0.021),_material(Color("e5d4ae").darkened((i%3)*0.025),1))
 		# A worn raised leather lip remains visible in the close work crop.
-		_box(Vector3(0.13,12.77,0.06),Vector3(side*10.22,-0.02,-0.32),leather)
-	_box(Vector3(0.22,12.75,0.32),Vector3(0,0,-0.20),leather)
-	var thread := StandardMaterial3D.new()
-	thread.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	thread.albedo_color = Color("947349")
-	for y: float in [-5.6,-3.7,-1.8,0.1,2.0,3.9,5.7]:
-		_box(Vector3(0.15,0.025,0.02),Vector3(0,y,0.01),thread)
+		_box(Vector3(0.13,12.77,0.06),Vector3(side*10.22,-0.02,-0.32),_material(Color.WHITE,4))
+	_box(Vector3(0.12,12.75,0.06),Vector3(0,0,0.007),_material(Color.WHITE,3))
 	left_material = _page_material(-1)
 	_page(left_material)
 	paper_material = _page_material(1)
