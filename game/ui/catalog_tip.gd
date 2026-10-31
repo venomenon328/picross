@@ -9,13 +9,16 @@ func _ready() -> void:
 	add_to_group("book-buttons")
 	resized.connect(dismiss_tooltip)
 	visibility_changed.connect(dismiss_tooltip)
+	mouse_exited.connect(dismiss_tooltip)
 
 func _get_tooltip(_at_position: Vector2) -> String:
-	return tooltip_text
+	return tooltip_text.strip_edges()
 
 func _make_custom_tooltip(for_text: String) -> Object:
+	var caption: String = for_text.strip_edges()
+	if caption.is_empty(): return null
 	var tip: BookTooltip = BookTooltip.new()
-	tip.configure(for_text, ui_scale, get_viewport_rect().size.x, get_theme_font("font"))
+	tip.configure(caption, ui_scale, get_viewport_rect().size.x, get_theme_font("font"))
 	tooltip_ref = weakref(tip)
 	return tip
 

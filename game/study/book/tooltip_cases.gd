@@ -17,7 +17,9 @@ class OldButton extends ButtonType:
 		if is_hovered(): draw_line(Vector2(9,8)*ui_scale,Vector2(18,8)*ui_scale,INK,1.5*ui_scale,true)
 
 func move(point: Vector2) -> void:
-	Input.warp_mouse(point)
+	# Scenario targets use native viewport events, not desktop coordinates.
+	# Desktop warps clamp wide targets on smaller monitors and send a later
+	# conflicting OS event after the intended pointer position.
 	var event := InputEventMouseMotion.new()
 	event.position = point
 	proof.root.push_input(event,true)
@@ -41,7 +43,9 @@ func hover(control: Control, label: String, expected: String, capture: bool = tr
 	await proof.frames()
 	var tip: Control = current(control)
 	var ok: bool = tip == null if expected.is_empty() else tip != null
-	var row: Dictionary = {"case":label,"width":proof.root.size.x,"scale":proof.study.app.ui_scale,"caption":expected,"wait_seconds":delay+0.15,"visible":tip != null}
+	var hovered: bool = proof.root.gui_get_hovered_control() == control
+	ok = ok and hovered
+	var row: Dictionary = {"case":label,"width":proof.root.size.x,"scale":proof.study.app.ui_scale,"caption":expected,"wait_seconds":delay+0.15,"hovered":hovered,"visible":tip != null}
 	if tip != null:
 		var text: Label = tip.get_child(0)
 		var rect := Rect2i(tip.get_window().position,tip.get_window().size)
@@ -67,6 +71,10 @@ func run(context: SceneTree) -> Array:
 		proof.study.set_ui_scale(configuration[1])
 		proof.study.app.show_album()
 		await proof.frames(6)
+		# Establish real window entry at a safe point, then let its OS event
+		# settle before sending the logical test positions (also beyond 1920px).
+		Input.warp_mouse(Vector2(2,2))
+		await proof.frames()
 		var catalog = proof.study.app.album
 		var footer: Array = [catalog.next_button]
 		for b: Node in catalog.find_children("*","Button",true,false):
@@ -85,6 +93,13 @@ func run(context: SceneTree) -> Array:
 		await dismissed(direction,"switch-%d" % proof.root.size.x)
 		var mode: Control=catalog.choices[0].mode_tip
 		await hover(mode,"mode",mode.tooltip_text)
+		if proof.root.size.x==1920:
+			var caption: String=mode.tooltip_text
+			mode.tooltip_text=""
+			await hover(mode,"mode-empty","")
+			mode.tooltip_text=" \t\n "
+			await hover(mode,"mode-whitespace","")
+			mode.tooltip_text=caption
 		await move(Vector2(2,2))
 		await dismissed(mode,"leave-%d" % proof.root.size.x)
 		await hover(direction,"click-before",direction.tooltip_text,false)
