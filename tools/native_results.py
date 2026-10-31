@@ -62,7 +62,7 @@ def check_phases(report, expected, directory):
             raise ValueError('Incorrect native process outcome')
         python_checks = {'current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'kat2-adapter-export',
                          'kat2-adapter-register', 'kat2-imported-base-copies', 'kat2-image-processing', 'ea-image-processing', 'za1-test-only-registration',
-                         'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles'}
+                         'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles', 'isolated-book-study'}
         if ('log' in row) != (row['name'] not in python_checks):
             raise ValueError('Missing/unexpected native process log')
         if 'log' in row:
@@ -72,6 +72,134 @@ def check_phases(report, expected, directory):
                 raise ValueError('Truncated native phase log')
             if row.get('required_marker') and row['required_marker'] not in (directory/'logs'/log['file']).read_text(encoding='utf-8'):
                 raise ValueError('Missing native success marker')
+
+
+def validate_book_study(report, directory, identity, host):
+    """Require B-A's original results, not just a successful enclosing Python call."""
+    study = read(directory/'report.json')
+    native = read(directory/'native.json')
+    assertions = native.get('assertions', [])
+    required_assertions = {'three independently moving leaves', 'actual catalog pointer selects correct ID',
+                           'motion and blocked pointer input preserve cells/history/redo', 'presentation creates no save action',
+                           'correct ID from page half 0', 'correct ID from page half 12',
+                           'empty filter is immediate and reachable', 'sort is global and immediate',
+                           'empty filter retains settings and quit',
+                           'normal registry and definition validators accept all 27 instances',
+                           'foreign fixture binding rejected definition_id', 'duplicate fixture binding rejected reveal',
+                           'copied ID on second spread has its earned reveal', 'earned copied reveal returns to second spread',
+                           'explicit catalog tab starts return', 'return starts with actual edited content',
+                           'return retains exact catalog context', 'return does not mutate history or add saves',
+                           'return catalog shows current edited progress', 'return cancellation never commits held gesture',
+                           'idle Escape is not catalog navigation', 'stable ending accepts animated return',
+                           'same logical page retains exact paper after return', 'different logical pages have different organic paper',
+                           'control states retain non-color ink distinctions', 'popup remains opaque in study',
+                           'fresh actual pointer gesture works after interruption',
+                           'solved puzzle opens directly without replay', 'ending reset opens same empty page without book animation'}
+    for target in (0, 1):
+        required_assertions.update(f'{label} {target}' for label in ('pointer starts catalog turn', 'filter and sort discarded during turn',
+                                  'short catalog motion settles target', 'partial last spread', 'global ordering precedes pagination', 'edge action has no animation'))
+    expected_interruptions = {(kind, phase, reason) for kind in ('page', 'open', 'return') for phase in ('prepare', 'motion')
+                              for reason in ('resize', 'ui-scale', 'focus', 'leave')}
+    for kind, phase, reason in expected_interruptions:
+        required_assertions.update(f'{label} {kind}/{phase}/{reason}' for label in
+                                   ('matrix stable target', 'matrix no history or save', 'matrix releases resources'))
+    required_assertions.update({'native tooltip delay is not bypassed',
+                                'negative empty tooltip reproduced by native hover',
+                                'negative detached hover stroke rejected'})
+    if (report.get('book_study') != study or study['package'] != 'B-A-N03-T01'
+            or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
+            or native['checks'] != len(assertions) or native['failures'] != []
+            or not all(a.get('passed') is True for a in assertions)
+            or not required_assertions <= {a.get('label') for a in assertions}
+            or {(r['kind'], r['phase'], r['reason']) for r in native['interruptions']} != expected_interruptions
+            or len(native['interruptions']) != 24 or len(native['catalog_layouts']) != 3
+            or {(r['view'],r['width']) for r in native['ink_margins']} != {(v,w) for v in ('catalog','work') for w in (1280,1920,2560)}
+            or any(sum(r['view'] == v and r['width'] == w for r in native['ink_margins']) != n for v,n in (('catalog',9),('work',5)) for w in (1280,1920,2560))
+            or any(r['margin'] < 8 or min(r['hull'][2:]) <= 0 for r in native['ink_margins'])
+            or len(native['returns']) != 1 or native['returns'][0]['seconds'] != 1.8 or native['returns'][0]['page'] != 1
+            or any(len(r['cards']) != 24 for r in native['catalog_layouts'])
+            or [(r['target'],r['direction'],r['seconds']) for r in native['page_motions']] != [(1,1,.85),(0,-1,.85)]
+            or len(native['layouts']) != 3 or len(native['handoffs']) != 4
+            or native['motion_wall_seconds_quiet'] < 3.0 or not native['motion_frame_ms_quiet']
+            or native['resources']['ui_capture_targets'] != 0 or native['resources']['catalog_rgba_textures'] != 0
+            or native['resources']['visible_leaves'] != 0 or native['resources']['moving_leaves'] != 3
+            or study['organic_paper']['sha256'] != '1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f'
+            or study['organic_paper']['size'] != [1254,1254] or study['organic_paper']['imported_texture']['bytes'] <= 0
+            or study['leather']['sha256'] != '58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41'
+            or study['leather']['size'] != [1254,1254] or study['leather']['imported_texture']['bytes'] <= 0
+            or study['material_source']['sha256'] != '957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a'):
+        raise ValueError('Incomplete/wrong isolated book study assertions or binding')
+    tooltip_cases = native['tooltip_cases']
+    captions = {'direction','reset','mode','click-before','caption-after-click','fill','help','wrapped-edge'}
+    empty = {'footer-0','footer-1','footer-2','whitespace'}
+    for width, scale in ((1280,1.25),(1920,1.0),(2560,1.25)):
+        cases = captions | empty | ({'mode-empty','mode-whitespace'} if width == 1920 else set())
+        rows = [r for r in tooltip_cases if r.get('width') == width and r['case'] in cases]
+        if len(rows) != len(cases) or {r['case'] for r in rows} != cases:
+            raise ValueError('Missing/duplicate delayed tooltip scenario')
+        for row in rows:
+            if row['scale'] != scale or row['wait_seconds'] < .65 or row.get('hovered') is not True or row['visible'] != (row['case'] in captions):
+                raise ValueError('Bypassed delay/incorrect tooltip visibility')
+            if row['visible']:
+                x,y,w,h = row['popup']
+                if (not row['caption'].strip() or row['caption'] != row['text']
+                        or min(x,y) < 0 or min(w,h) <= 0 or x+w > width or y+h > width*9/16
+                        or min(row['label']) <= 0 or row['label'][0] > w or row['label'][1] > h):
+                    raise ValueError('Empty/stale/clipped tooltip content')
+            elif row['caption']:
+                raise ValueError('Unexpected redundant footer tooltip')
+    dismissals = {f'dismiss-{kind}-{w}' for w in (1280,1920,2560) for kind in ('switch','leave','click')}
+    dismissals |= {'dismiss-'+kind for kind in ('resize','ui-scale','focus','motion-start','motion-end-no-revival')}
+    rows = [r for r in tooltip_cases if r['case'].startswith('dismiss-')]
+    negatives = [r for r in tooltip_cases if r['case'] == 'negative-controls']
+    if ({r['case'] for r in rows} != dismissals or len(rows) != len(dismissals) or any(r['visible'] for r in rows)
+            or len(negatives) != 1 or negatives[0]['empty_popup'] is not True
+            or negatives[0]['current_detached_pixels'] != 0 or negatives[0]['legacy_detached_pixels'] < 8):
+        raise ValueError('Tooltip lifetime or native counterexample failed')
+    details = study['edge_details']
+    expected_edges = {f'edge-{kind}-{w}.png' for w in (1280,1920,2560)
+                      for kind in ('bottom-left','bottom-right','bottom-fold','outer-left','outer-right')}
+    if ({r['file'] for r in details} != expected_edges or len(details) != 15
+            or any(r['scale'] != 1 or len(r['rect']) != 4 or r['rect'][2] <= r['rect'][0] or r['rect'][3] <= r['rect'][1] for r in details)):
+        raise ValueError('Incomplete/unscaled native edge detail evidence')
+    movie = read(directory/'movie.json')
+    if (movie['fps'] != 30 or movie['failures'] != [] or movie['final_state'] != 'CATALOG' or movie['final_id'] != 'T-06' or movie['edited_cursor'] != 2
+            or [(e['kind'], e['direction'], e['seconds']) for e in movie['events']] != [('page',1,.85),('page',-1,.85),('open',1,3.0),('return',-1,1.8)]
+            or any(e['last_frame'] <= e['first_frame'] for e in movie['events'])):
+        raise ValueError('Incomplete/incorrect book motion evidence')
+    expected = ['book-version', 'book-import', 'book-native', 'book-movie', 'book-regular-import']
+    for target in ('windows', 'web'):
+        expected += ['book-regular-'+target+s for s in ('', '-content', '-isolation')]
+    for target in ('windows', 'web'):
+        expected += ['book-study-'+target+s for s in ('', '-pack')]
+    if host == 'Windows': expected += ['book-windows-exported-motion']
+    if ([p['name'] for p in study['phases']] != expected
+            or any(p['exit_code'] != 0 or p['timed_out'] or p['seconds'] < 0 for p in study['phases'])
+            or study['study_web_features'] != dict(renderer='gl_compatibility', threads=False, extensions=False, browser_probe='not requested')):
+        raise ValueError('Incomplete/failed book study phases or Web feature contract')
+    names = set(study['files'])
+    actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()} - {'report.json'}
+    required = {'opening.avi', 'movie.json', 'movie-final.png', 'native.json', 'catalog.png', 'opening-middle.png', 'opening-back.png',
+                'return-middle.png', 'return-edited-work.png', 'paper-page-one.png', 'paper-page-two.png', 'paper-page-two-return.png',
+                'return-handoff-texture.png','return-handoff-direct.png','control-states.png',
+                'page-forward.png', 'page-backward.png', 'material-original-detail.png', 'material-study-detail.png',
+                'windows/book-study.exe', 'windows/book-study.pck', 'web/index.html', 'web/index.pck', 'web/index.wasm'}
+    required.update('logs/'+name+'.log' for name in expected)
+    if host == 'Windows': required.update({'windows-exported-work.png','windows-exported-catalog.png'})
+    required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work', 'catalog') for width in (1280,1920,2560))
+    required.update(expected_edges)
+    required.update(f'tooltip-{kind}-{w}.png' for w in (1280,1920,2560) for kind in captions | empty if kind != 'click-before')
+    required.update({'tooltip-negative-empty.png','hover-negative.png','hover-current.png','tooltip-after-motion-1920.png'})
+    required.update({'tooltip-mode-empty-1920.png','tooltip-mode-whitespace-1920.png'})
+    if names != actual or not required <= names:
+        raise ValueError('Missing/unexpected book study evidence inventory')
+    for name, metadata in study['files'].items():
+        verify_file(directory, dict(file=name, **metadata))
+    pixels = study['handoff_pixels']
+    if (set(pixels['samples']) != {f'work-{w}.png' for w in (1280,1920,2560)} | {'return-handoff-direct.png'}
+            or any(s['max_channel_delta'] > 4 or max(s['mean_channel_delta']) > .1 for s in pixels['samples'].values())
+            or pixels['negative_controls'] != 'one-pixel displacement and alpha mutation rejected'):
+        raise ValueError('Failed/incomplete book study handoff pixels or counterexamples')
 
 
 def validate_catalog_images(costs, summary, required, direct_images):
@@ -131,6 +259,8 @@ def validate_payload(result, root, player_root=None):
             if scope['enabled'] != (name in enabled) or scope['status'] != ('success' if name in enabled else 'not_applicable'):
                 raise ValueError('Unselected/skipped scope misreported')
         check_phases(report, checks(group, result['host']), directory)
+        if group == 'export':
+            validate_book_study(report, directory/'book-study', result['identity'], result['host'])
         if group == 'graphics':
             worker = read(directory/'vs2-worker/technical/product-report.json')
             if worker['status'] != 'success' or any(worker.get(k) != v for k,v in result['identity'].items()):

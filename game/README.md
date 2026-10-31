@@ -1,5 +1,16 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+**Buchstudie B-A-N03 / #493:** Die neue räumliche Buchrichtung ist ausschließlich
+als [getrennt startbare Studie](study/book/README.md) vorhanden. Ihr Katalog öffnet
+drei synthetische Muster unter 27 IDs auf einer Doppelseite. Kurzes Blättern
+dauert 0,85 Sekunden; drei einzelne Blätter führen in insgesamt drei Sekunden
+zur großen rechten Arbeitsseite mit Bindung links. Überarbeitete Papiertextur,
+sichtbare Buchkante, ruhende Wölbung und transparente Controls erhalten die
+Arbeitsbudgets. N03 revidiert Leder-/Randanschlüsse sowie Hover und leere
+Tooltips bei erhaltenen sinnvollen Hilfen. Der Katalogreiter führt in 1,8 Sekunden zum vorherigen Kontext zurück.
+Bearbeitung bleibt im RAM. Das normale Spiel verwendet weiterhin das bisherige
+A-Buch; reguläre Integration und persönliche Sichtabnahme folgen separat.
+
 **Kleine Texte und Ausrichtung (HZ-C):** Kategorien, Kartenmetadaten, Status,
 Auswahllisten und kleine Papiertextbuttons verwenden eine gemeinsame etwas
 größere Textrolle. Beim Wechsel von Werten bleibt die Grundlinie ruhig;

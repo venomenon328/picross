@@ -1,5 +1,20 @@
 # Z2: aktive Auswahl und native Integration
 
+## Buchrichtung #493 · isolierter B-A-N03-Studienstand
+
+Die [Bewegungsstudie](BOOK_STUDY.md) untersucht realistische Buch-/Umgebungsmaterialien,
+mitbewegte gezeichnete Inhalte, Katalog-Doppelseite, kurzes Blättern in beide
+Richtungen und drei einzelne Blätter in insgesamt drei Sekunden zur rechten
+Arbeitsseite mit Bindung links. N02 ergänzt sichtbare Buchkante, sichere Innenabstände,
+organisches Papier, reale ruhende Falzwölbung, transparente Controls und eine
+1,8-s-Rückkehr. N03 konstruiert die Rand-/Rückenanschlüsse gemeinsam und ersetzt
+Bildausschnitte des A-Buchs durch eine eigene homogene Ledertextur. A bleibt
+unveränderte Qualitätsreferenz; eigenes Papier liefert die Innenflächen. Für diese neue
+Richtung sind das flache A-PNG, reine Informationsspiegelung und das Verbot gezielter
+Kamerabewegung keine Architekturvorgabe. Regulärer Spielstart, Originalressourcen,
+Fonts, C1 und SL-Rahmen bleiben in B-A unverändert. B-B und persönliche Auswahl
+sind getrennte spätere Schritte; historische GD-/BP-Bindungen bleiben erhalten.
+
 ## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 21.10.2026:

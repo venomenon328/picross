@@ -1,5 +1,15 @@
 # Produktdefinition: picross
 
+**Buch / #493 · B-A-N03:** Katalog-Doppelseite mit mittiger Bindung,
+kurzes richtungsabhängiges Blättern und drei einzelne Blätter zur rechten
+Arbeitsseite sind in der isolierten Studie umgesetzt. Sichtbare Buchkante, organische
+Papiertextur, ruhende Falzwölbung, transparente Controls und animierte Rückkehr
+ergänzen die Revision ohne kleinere Arbeitsbudgets. Die bestätigte Richtung verbindet einen realistischen
+räumlichen Buchkörper mit gezeichneten Inhalten/UI. Die [isolierte Studie](BOOK_STUDY.md)
+ändert den normalen Spielstart nicht; reguläre Integration und persönliche
+Kandidatenwahl bleiben getrennt. N03 revidiert gezielt Materialanschlüsse und
+Hover-/Tooltips; N01–N10 und die gültigen 27 Instanzen bleiben erhalten.
+
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil
 auf alle normalen Spielertexte, Rahmen der Rätselkarten und kleinen Buttons,
@@ -294,7 +304,7 @@ Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh u
 
 Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlungen, Bearbeitung und Enthüllungen gestalterisch zusammenführen. Eine komplexe Geschichte ist nicht erforderlich. Eine zusätzliche Wirtschaftssimulation, Währungen oder ein Aufbauspiel folgen daraus nicht automatisch.
 
-Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Die Gestaltung geht in Richtung handgezeichneter 2D-Illustration mit klaren gezeichneten Konturen und ruhigen, nicht zu blassen Farbflächen. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
+Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Gemäß [Buchrichtung #493](BOOK_STUDY.md) wirken Buchkörper und sparsame Umgebung realistisch und räumlich; Inhalte und UI behalten klare gezeichnete Konturen, handgeschriebene Texte und ruhige, nicht zu blasse Farbflächen. Feste ruhende Ansichten werden durch gezielte Kamera-/Blattbewegung verbunden; der Ausgangswert der Rätselöffnung beträgt insgesamt drei Sekunden. B-A liefert die isolierte Studie, die reguläre Umstellung bleibt B-B. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
 
 Die Freigabe [HZ vom 20.10.2026](HAND_DRAWN_UI.md) überträgt die Handschrift
 durchgängig auf die Bedienelemente: gemäß HZ-A-FONT02 Tidy Hand für Standardtext

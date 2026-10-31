@@ -1,5 +1,13 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
+**B-A-N03 / #493:** Die [isolierte Doppelseitenstudie](BOOK_STUDY.md) übernimmt
+diesen globalen Sortier-/Filtervertrag vor der logischen 24er-Paginierung.
+Beide Buchhälften teilen den Katalogkontext; nur echte Seitenwechsel animieren.
+Filter und Sortierung wirken unmittelbar, während laufender Wechsel werden
+weitere Befehle verworfen. Die 1,8-s-Rückkehr erhält Filter, Sortierung, Richtung,
+Seite, Scrollposition und Auswahl bei aktuellem Fortschritt. Die Studie speichert ihre Auswahl nur im RAM;
+reguläre Präferenzpersistenz und B-B bleiben unverändert beziehungsweise offen.
+
 Stand: 21.10.2026 · Spezifikation 1.3 · KU-B und HZ-A/B integriert; HZ-C implementiert, Abnahmen offen
 
 Der Eigentümer hat die Katalogüberarbeitung als Spezifikation freigegeben.
