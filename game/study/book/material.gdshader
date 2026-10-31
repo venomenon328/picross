@@ -18,9 +18,11 @@ void fragment() {
     } else if (kind<1.5) {
         float crown=0.26*pow(1.0-clamp(abs(surface.x)/0.75,0.0,1.0),3.0);
         float depth=(crown-surface.z)/(0.43+crown*0.35);
-        float phase=depth*12.0;
-        float distance_to_leaf=abs(fract(phase+0.5)-0.5);
-        float separation=1.0-smoothstep(0.035,0.035+max(fwidth(phase),0.02),distance_to_leaf);
+        // Six subtle signatures; smoothly average subpixel layers instead of
+        // thresholding aliased stripes into diagonal patches at 1080p.
+        float phase=depth*6.0;
+        float resolved=1.0-smoothstep(0.25,0.65,fwidth(phase));
+        float separation=(0.5+0.5*cos(phase*6.283185))*resolved;
         float contact=0.87+0.13*smoothstep(0.0,0.06,depth);
         ALBEDO=base_color.rgb*light*contact*(1.0-0.15*separation);
     } else if (kind<2.5) {

@@ -68,7 +68,7 @@ Papierwölbung einschließlich ihrer verkürzten Enden; die unteren Ringe laufen
 beiden Seiten bis zur Deckelschulter. Kopf-/Fußbänder sitzen auf dieser Krone.
 Der Rücken verbindet beide Deckel auch unten. Beleuchtung, Lederabrieb und
 Kontaktschatten folgen der Geometrie. Der ruhige Untergrund ist eine durchgehende
-eigene Shaderfläche. Zwölf gefilterte sichtbare Lagen vermeiden unaufgelöste
+eigene Shaderfläche. Sechs gefilterte sichtbare Lagen vermeiden unaufgelöste
 feine Linien. Kameras und Arbeitsbudgets bleiben unverändert.
 
 Die Innenflächen verwenden die originale neue Bildtextur `study/book/paper.png`,
