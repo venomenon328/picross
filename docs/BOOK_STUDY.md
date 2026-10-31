@@ -208,6 +208,10 @@ Verzögerungspfad wie im bestehenden KAT-Prüfer. Die logischen Testpositionen
 werden nicht auf die physische Monitorbreite begrenzt. Jeder Fall verlangt auch
 den tatsächlichen Hoverzustand des Controls; die Tooltipfactory wird nicht direkt
 aufgerufen.
+Nach dem unveränderten Tooltipdelay wird ein vollständiger Renderabschluss
+abgewartet und dessen Originalframe direkt gespeichert; redundante zusätzliche
+Warteframes um dieselbe Aufnahme entfallen. Fälle, Originalauflösung und das
+300-s-Phasenlimit bleiben erhalten. Die Tooltipgruppe protokolliert ihre Laufzeit.
 
 Die eigene Sichtprüfung vergleicht A als Qualitätsreferenz sowie gebundene N02-
 und N03-Originalframes in allen drei Konfigurationen. Je Katalogbild entstehen
