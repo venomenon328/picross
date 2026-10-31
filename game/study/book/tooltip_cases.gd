@@ -23,7 +23,7 @@ func move(point: Vector2) -> void:
 	var event := InputEventMouseMotion.new()
 	event.position = point
 	proof.root.push_input(event,true)
-	await proof.frames()
+	await proof.frames(1)
 
 func current(control: Control) -> Control:
 	var ref: WeakRef = control.get("tooltip_ref")
@@ -40,7 +40,10 @@ func hover(control: Control, label: String, expected: String, capture: bool = tr
 	await move(Vector2(2,proof.root.size.y/2))
 	await move(control.get_global_rect().get_center())
 	await proof.create_timer(delay+0.15).timeout
-	await proof.frames()
+	# The GUI event has already been dispatched and the full delay elapsed.
+	# One completed draw is enough; do not render six extra unchanged frames
+	# around every screenshot on the CI software renderer.
+	await proof.frames(1)
 	var tip: Control = current(control)
 	var ok: bool = tip == null if expected.is_empty() else tip != null
 	var hovered: bool = proof.root.gui_get_hovered_control() == control
@@ -54,7 +57,7 @@ func hover(control: Control, label: String, expected: String, capture: bool = tr
 		row.merge({"popup":[rect.position.x,rect.position.y,rect.size.x,rect.size.y],"label":[text.size.x,text.size.y],"text":text.text})
 	proof.check(ok,"delayed tooltip "+label+"/%d" % proof.root.size.x)
 	rows.append(row)
-	if capture: await proof.screenshot("tooltip-"+label+"-%d" % proof.root.size.x)
+	if capture: await proof.screenshot("tooltip-"+label+"-%d" % proof.root.size.x,true)
 	return tip
 
 func dismissed(control: Control, label: String) -> void:
@@ -64,6 +67,7 @@ func dismissed(control: Control, label: String) -> void:
 
 func run(context: SceneTree) -> Array:
 	proof=context
+	var started: int=Time.get_ticks_msec()
 	delay=float(ProjectSettings.get_setting("gui/timers/tooltip_delay_sec",0.5))
 	proof.check(delay >= 0.5,"native tooltip delay is not bypassed")
 	for configuration: Array in proof.Current.CONFIGURATIONS:
@@ -149,6 +153,7 @@ func run(context: SceneTree) -> Array:
 		await proof.frames(6)
 	await negative_controls()
 	await move(Vector2(2,2))
+	print("BOOK_TOOLTIP_SECONDS ",(Time.get_ticks_msec()-started)/1000.0)
 	return rows
 
 func negative_controls() -> void:

@@ -41,8 +41,8 @@ func frames(count: int = 3) -> void:
 	for i: int in range(count): await process_frame
 	await RenderingServer.frame_post_draw
 
-func screenshot(name: String) -> Image:
-	await frames()
+func screenshot(name: String, already_drawn: bool = false) -> Image:
+	if not already_drawn: await frames()
 	var image: Image = root.get_texture().get_image()
 	check(image.save_png(output.path_join(name+".png")) == OK, "native framebuffer " + name)
 	return image
