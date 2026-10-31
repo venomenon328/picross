@@ -327,6 +327,8 @@ func catalog_cases() -> void:
 	catalog.choose_category("missing-synthetic-category")
 	await frames()
 	check(catalog.choices.is_empty() and catalog.empty_message.visible and study.generation == token,"empty filter is immediate and reachable")
+	var actions: Control = catalog.next_button.get_parent().get_child(0)
+	check(actions.is_visible_in_tree() and actions.get_child_count() == 2 and not catalog.next_button.visible,"empty filter retains settings and quit")
 	catalog.choose_category("")
 	catalog.choose_sort("size")
 	await frames()

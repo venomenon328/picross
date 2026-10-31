@@ -78,6 +78,7 @@ class BookStudyTests(unittest.TestCase):
                       'motion and blocked pointer input preserve cells/history/redo', 'presentation creates no save action',
                       'correct ID from page half 0', 'correct ID from page half 12', 'empty filter is immediate and reachable',
                       'sort is global and immediate', 'fresh actual pointer gesture works after interruption',
+                      'empty filter retains settings and quit',
                       'solved puzzle opens directly without replay', 'ending reset opens same empty page without book animation']
             labels += [f'{label} {target}' for target in (0,1) for label in ('pointer starts catalog turn',
                        'filter and sort discarded during turn', 'short catalog motion settles target', 'partial last spread',

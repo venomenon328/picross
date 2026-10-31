@@ -83,6 +83,7 @@ def validate_book_study(report, directory, identity, host):
                            'motion and blocked pointer input preserve cells/history/redo', 'presentation creates no save action',
                            'correct ID from page half 0', 'correct ID from page half 12',
                            'empty filter is immediate and reachable', 'sort is global and immediate',
+                           'empty filter retains settings and quit',
                            'fresh actual pointer gesture works after interruption',
                            'solved puzzle opens directly without replay', 'ending reset opens same empty page without book animation'}
     for target in (0, 1):
