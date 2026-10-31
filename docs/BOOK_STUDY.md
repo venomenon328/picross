@@ -1,195 +1,202 @@
-# Buchstudie B-A · B-A-N01-T01
+# Buchstudie B-A · B-A-N02-T01
 
 Stand: 31.10.2026 · isolierte Nacharbeit zu
-[#493 / B-A-E01 und N01–N05](https://github.com/venomenon328/picross/issues/493),
-[Umsetzungsvorbereitung B-A-V02](https://github.com/venomenon328/picross/pull/495#issuecomment-6536305108).
-Ausgangshead: `70ffcb8150f38113290ef34bda7299ce1e5c0dda`;
+[#493 / B-A-E02, N06–N10](https://github.com/venomenon328/picross/issues/493),
+[Umsetzungsvorbereitung B-A-V03](https://github.com/venomenon328/picross/pull/495#issuecomment-6541551895)
+und [B-A-R02-B01](https://github.com/venomenon328/picross/pull/495#pullrequestreview-5721985216).
+Ausgangshead: `6677d3e339701be9aa3cfa9f9a55f7ff78990d86`;
 Basis: `864c4e6289df15ea7b3522b850542ece3489160f`.
 Branch `feat/493-book-study`, bestehender Draft-PR #495 gegen `main`.
-B-B bleibt unimplementiert. Aktueller Head, CI, Originalbelege und getrenntes
-Selbstreview werden im PR gebunden; dieses Dokument ist der ausführbare Prüfvertrag.
+Aktueller Lieferhead, CI, Originalbelege und getrenntes Selbstreview werden im PR
+gebunden. Dieses Dokument beschreibt den ausführbaren Prüfvertrag. B-B bleibt
+unimplementiert, #493 offen; dieser Auftrag erlaubt keinen Merge.
 
-## Doppelseite und Katalog
+## Doppelseite und Arbeitskapazität
 
 Der ruhende Katalog liegt auf zwei vollständigen Papierseiten mit mittiger Bindung.
-Die Kamera steht weiter zurück als bei der Rätselarbeit. Links und rechts stehen
-die unveränderten regulären Karten, Metadaten, Miniaturen und Resetaktionen.
-Die studieneigene Unterklasse verteilt die von der regulären Kataloglogik erzeugten
-Karten; sie ersetzt weder Filterung, Sortierung, Blattnummern noch ID-Aktionen.
+Die reguläre Kataloglogik behält Filter, globale Sortierung, Metadaten, Blattnummern,
+ID-Aktionen, Miniaturen und Reset. Höchstens 24 aktive Karten verteilen sich auf
+beide Hälften; 27 synthetische Instanzen liefern eine volle und eine teilweise
+belegte Doppelseite. Die zweite Seite zeigt zwei Karten links und eine rechts.
+Beide Hälften teilen den Scrollkontext. Bei knapper Breite sinkt die Spaltenzahl;
+Schrift, Kartengrößen und Trefferflächen werden nicht verkleinert.
 
-Eine logische Seite enthält höchstens 24 aktive Karten, auf beide Hälften verteilt.
-Filter und Sortierung wirken auf den Gesamtbestand vor der Seitenauswahl.
-27 feste synthetische IDs aus nur drei Formen liefern eine volle und eine letzte
-unvollständige Doppelseite. Die zweite Seite zeigt zwei Karten links und eine rechts.
-Die Schrift und die Controls werden in tatsächlichen Fensterpixeln angeordnet,
-nicht durch eine verkleinerte UI-Textur eingepasst. Bei knapper Breite sinkt die
-Spaltenzahl; die Karten bleiben scrollbar. Beide Hälften teilen den Scrollkontext.
-Die obere Zeile verteilt Kategorie und Sortierung auf die Seiten; Einstellungen,
-Beenden und Blättern bleiben ohne Überlagerung des Falzes erreichbar.
+Ein echter Weiterbefehl blättert rechts nach links, Zurück links nach rechts,
+jeweils **0,85 s**. Randbefehle und unveränderte Ziele bewegen nichts. Filter und
+Sortierung wirken sofort auf den Gesamtbestand vor der Seitenauswahl.
 
-Ein echter Weiterbefehl blättert rechts nach links, Zurück links nach rechts.
-Beide dauern **0,85 Sekunden**, ohne zusätzliche Kamerafahrt. Am Rand und bei
-unverändertem Ziel entsteht keine Bewegung. Filter und Sortierung wirken unmittelbar.
-Eine laufende Bewegung verwirft weitere Filter-, Sortier-, Blatt- und Öffnungsbefehle.
-
-## Öffnung und Arbeitskapazität
-
-Neu oder begonnen öffnet mit **drei getrennten Blättern** und insgesamt
-**3,0 Sekunden** Bewegung. Die Blätter beginnen zeitversetzt, haben eigene
-Winkel und Krümmung und bewegen sich rechts nach links. Zusätzliche Blätter
-bleiben neutral. Die Kamera fährt während des zweiten Bewegungsteils auf die
-rechte Arbeitsseite und endet frontal und ruhig: die Bindung liegt links.
-
-Die physische Seite ist höher als der nahe Arbeitsausschnitt. Dadurch bleiben
-im Katalog beide ganzen Seiten sichtbar und bei der Arbeit die vollständigen
-bisherigen Pixelbudgets erhalten. Obere und untere Buchkante liegen in der
-Nahansicht außerhalb des Ausschnitts; Papier, linke Bindung und rechter
-Einband-/Seitenrand bleiben sichtbar. UI-Inhalte werden niemals gespiegelt.
+Neu oder begonnen öffnet mit **drei getrennten Blättern und insgesamt 3,0 s**
+Bewegung nach links. Die Kamera fährt im zweiten Teil auf die rechte Arbeitsseite
+mit Bindung links. Zusätzliche Blätter bleiben neutral. Schrift wird nie gespiegelt.
+Die Arbeitskamera zeigt jetzt zusätzlich die obere Buchkante samt Deckel und
+Seitenblock. Breitere Deckel bleiben seitlich sichtbar. Die untere Kante liegt
+weiterhin außerhalb des Arbeitsausschnitts; der Katalog zeigt das ganze Buch.
 
 Boardfläche, Rasterfit, gewünschte Zellgröße, Hinweisfont, Slots, Reserven,
-Miniatur, Originalpalette und sechs SL-Werkzeuge stammen aus der regulären UI.
-Nur Katalogreiter und Platzwarnung werden innerhalb der rechten Papierfläche
-positioniert. Ein gelöstes Blatt öffnet direkt seine Endansicht. Der bestätigte
-Reset aus dieser Ansicht öffnet dasselbe leere Blatt ohne Buchanimation.
-Die vorhandene separate 2,15-s-Abschlussdarstellung bleibt unverändert.
+Miniatur, Originalpalette und die drei SL-Rahmen behalten ihre regulären Budgets.
+Kleine Rätsel werden nicht künstlich vergrößert. Titel, Katalogreiter und obere
+Navigation orientieren sich an der projizierten Papierkante. Im Katalog bestimmen
+Papierkante und Falzwölbung Außenabstand, Fußzeile und Seitenabstand. Die Hüllen
+der tatsächlich gerenderten Glyphen und Konturen müssen in allen drei gebundenen
+Konfigurationen mindestens **acht Pixel** innerhalb des flachen Papierbereichs
+liegen. Diese Aussage ersetzt kein Raster-/Hinweisbudget durch kleinere Controls.
 
-## Materialien und Vergleich
+Gelöst öffnet direkt die stabile Endansicht. Deren bestätigter Reset öffnet dasselbe
+leere Blatt ohne Buchanimation. Die separate 2,15-s-Abschlussdarstellung bleibt.
 
-Materialquelle ist das unveränderte bisherige A-Buch
-`game/art/book/bp2-a-inventarband.png`, SHA-256
-`957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a`.
-Die Shader lesen dessen UI-freie Papier- und Einbandbereiche. Es entsteht kein
-neues Fremdasset und keine umgeschriebene Bildfreigabe. Eigene Meshes trennen
-Papier, Lederdeckel, Seitenlagen, Bindung und sparsamen Untergrund. Die sichtbaren
-Lederkanten und die schmale erhabene Bindung lesen gezielt deren Originalbereiche;
-die Katalogüberschrift bleibt bei allen drei Größen innerhalb des Papiers.
-Gerichtete Blattabdunklung, Falz- und Kontaktschatten ergänzen die vorhandene
-Papierstruktur und die abgenutzten Einbandkanten.
+## Material, Wölbung und Controls
 
-Der native Nachweis liefert die alte reguläre Ansicht und die neue rechte
-Arbeitsansicht jeweils bei denselben drei Fenster-/UI-Konfigurationen, zusätzlich
-unverkleinerte Bindungsdetails. Der direkte Vergleich betrifft Papierzeichnung,
-Kanten, Einband, Bindung, Seitenblock und Licht. Die alte linke Arbeitsseite mit
-rechter Bindung und ganzem Buchrand ist keine positionsgleiche Sollmaske für
-die neue rechte Nahansicht. **Materialqualität wird visuell beurteilt**;
-Pixelgleichheit gilt ausschließlich für die identische neue Textur-/Direktübergabe.
+Die bestehende A-Quelle `art/book/bp2-a-inventarband.png` bleibt bytegleich:
+SHA-256 `957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a`.
+Die Einbandshader verwenden deren UI-freie Leder-/Bindungsbereiche. Meshes trennen
+Papier, Deckel, Seitenlagen, Bindung und sparsamen Untergrund.
 
-Die Implementierung wird an tatsächlichen nativen Bildern iteriert. Der PR nennt
-die gesichteten Fassungen, konkrete Korrekturen und das eigene Materialurteil.
-Das ersetzt weder die visuelle Prüfung in B-A-R02 noch die persönliche
-Kandidatenwahl B-A-M01. Historische Erstlieferung und B-A-R01 bleiben ausschließlich
-an ihren damaligen Head gebunden.
+Die Innenflächen verwenden die originale neue Bildtextur `study/book/paper.png`,
+1254×1254, 2.564.246 Bytes, SHA-256
+`1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f`.
+[Herkunft, vollständiger Prompt, Rechte und Import](../game/study/book/paper.json)
+binden die unverändert kopierte imagegen-Ausgabe ohne Fremdvorlage. Verlustloser
+Import, Mipmaps, lineare Filterung, kein Repeat; das Mischen mit 55 % hellem
+Elfenbein hält Fasern und Alterung unter Hinweisen zurückhaltend. Katalogseite,
+Seitenhälfte und Arbeits-ID bestimmen feste Ausschnitte. Vorder- und Rückseite
+besitzen eigene Zuordnungen. Keine Spiegelung oder Zufallsvariation pro Frame;
+dieselbe Seite behält nach Rückkehr ihre Papierpixel.
 
-## Texturübergabe und Eingabebesitz
+Die ruhende Wölbung ist reale Vertexgeometrie: 0,26 Welteinheiten hoch und nach
+0,75 Einheiten vollständig flach. Sie verändert Normalen und die sichtbare obere/
+untere Papierkontur. Eine schmale geometrische Lücke lässt die Bindung frei.
+Das Licht folgt der Wölbung. Die UI-Sicherheitsfläche liegt außerhalb dieses
+Streifens, die präzise Rasterfläche bleibt eben. Bewegte Inhalte folgen den
+Blattvertices; kein nachträglich über die ganze UI gelegter Verzerrungseffekt.
 
-Ruhende Ansichten verwenden direkte Controls. Nur während der Bewegung liegt
-dieselbe UI in einem transparenten SubViewport mit tatsächlicher Fensterauflösung.
-Ein eingefrorener Quellkatalog folgt dem bewegten Blatt; die aktuelle Ziel-UI
-liegt auf der Zielseite. Beim Katalogblättern trägt die Blattrückseite die
-gebundene andere Zielhälfte, bei der Rätselöffnung bleibt sie neutral.
-Die UV-Abbildung folgt der jeweiligen Seite und spiegelt keine Schrift.
+Studienbuttons und geschlossene Dropdowns haben transparente Füllung. Normal,
+Hover, Gedrückt, Auswahl, Deaktiviert und Fokus behalten unterscheidbare Konturen;
+Auswahl erhält einen zusätzlichen Strich. Ein nativer Alphavergleich prüft die
+nicht nur farblichen Unterschiede. Die native Standardbeschriftung wird im
+Opt-in unterdrückt, damit der eigene Text genau einmal erscheint. Farbproben
+behalten ihre Originalpixel; Popup-, Dialog- und Fehlerflächen bleiben deckend.
+Die zwei gemeinsamen Controls haben einen expliziten, standardmäßig deaktivierten
+Schalter. Die reguläre Produktdarstellung bleibt unverändert.
 
-Am Ende verschwinden bewegte Blätter und Texturverweise vor der direkten
-Eingabeübergabe. Premultiplizierte Alphakomposition erhält geglättete Text- und
-Rasterkanten. Derselbe Endzustand wird als Textur und als direkte UI nativ
-aufgenommen und unabhängig auf Originalpixeln verglichen:
-höchstens vier Kanalstufen und 0,1 mittlere Kanalstufen Differenz.
-Ein Pixel Versatz und eine Alphamutation müssen als Gegenproben scheitern.
+## Zustände, Rückkehr und Eingabebesitz
 
-`CATALOG → PREPARING → OPENING → CATALOG/WORK` bindet Ziel, Quelle,
-Scrollkontext und Öffnungs-ID vor dem ersten Await. Generationen entwerten
-veraltete Fortsetzungen. Vorbereitung und Bewegungsdauer werden getrennt gemessen.
+Ruhende Ansichten verwenden direkte Controls. Während der Bewegung liegt dieselbe
+UI in einem transparenten SubViewport in tatsächlicher Fensterauflösung. Ein
+Snapshot bindet den Quellzustand, die aktuelle UI den Zielzustand. Beim Blättern
+trägt die Rückseite die andere Zielhälfte; bei der Öffnung bleibt sie neutral.
+Premultiplizierte Alphakomposition erhält geglättete Text-/Rasterkanten.
+
+Der tatsächliche Katalogreiter löst aus ruhender Arbeit oder stabiler Endansicht
+eine **1,8-s-Rückkehr** mit Herauszoomen und drei Blättern von links nach rechts aus.
+Der Snapshot enthält die aktuelle Bearbeitung. Vor dem bestehenden RAM-Flush wird
+eine laufende Geste abgebrochen. Danach bleiben Filter, Sortierung, Richtung,
+Seite, Scrollposition und Auswahl erhalten; die Miniatur zeigt den neuen Fortschritt.
+`show_album()` selbst bleibt unmittelbar für Start, Reset, Information und interne
+Stabilisierung. Idle-Escape navigiert nicht. Eine aktive Endanimation nimmt noch
+keinen Rückkehrbefehl an.
+
+`CATALOG/WORK → PREPARING → OPENING → CATALOG/WORK` bindet Quelle, Ziel und IDs
+vor dem ersten Await. Generationen entwerten alte Fortsetzungen. Vorbereitung,
+Bewegungszeit und Frameabstände werden getrennt gemessen.
 
 | Unterbrechung in Vorbereitung oder Bewegung | Stabile Wirkung |
 | --- | --- |
-| Resize, UI-Skalierung, Fokusverlust | Gebundene Ziel-Doppelseite beziehungsweise gewählte rechte Arbeitsseite; gültig neu vermessen. |
-| Escape oder ausdrückliche Rückkehr | Erhaltener Quellkatalog mit Seite, Scrollposition, Sortierung, Filter und Auswahl. |
-| Weitere Eingabe | Verwerfen; keine Warteschlange, kein Durchklicken und kein späteres Nachholen. |
+| Resize, UI-Skalierung, Fokusverlust | Gebundenes Ziel: Katalog oder ausgewählte rechte Arbeitsseite; gültig neu vermessen. |
+| Escape oder ausdrücklicher Abbruch | Blättern/Öffnen: erhaltener Quellkatalog. Rückkehr: gebundener Zielkatalog, jeweils mit vollständigem Kontext. |
+| Weitere Eingabe | Verwerfen, keine Warteschlange, kein Durchklicken oder späteres Nachholen. |
 | Normales Ende | Gebundenes Ziel; gehaltene Tasten loslassen, danach frisches Down. |
-| Beenden | Generation ungültig machen, Ressourcen lösen, Prozess beenden. |
+| Beenden | Generation entwerten, Ressourcen lösen, Prozess beenden. |
 
-Die UI-Unterstruktur einschließlich globaler Board-Eingabe ist während Vorbereitung
-und Bewegung deaktiviert. Bestehende Zell-/Hinweisgesten, Tooltips und Dropdowns
-werden vorher geschlossen. Radereignisse sind keine gehaltenen Tasten.
-Zellen, History/Redo und Save-Aktionen ändern sich durch die Präsentation nicht.
-Bearbeitung und Sortierung bleiben ausschließlich im RAM; reale Saves werden
-weder gelesen noch geschrieben. Vor Abschluss erscheinen auf keiner Fläche
-verdiente Namen oder Reveals; Miniaturen zeigen nur eigene, auch falsche Einträge.
+Die UI einschließlich globaler Board-Eingabe ist während Vorbereitung und Bewegung
+deaktiviert. Gesten, Tooltips und Dropdowns werden vorher geschlossen. Radereignisse
+sind keine gehaltenen Tasten. Die Eingabesperre erfasst nur ihre eigenen Ereignisse;
+eine von Board konsumierte normale Release-Aktion darf keinen alten Down-Merker
+hinterlassen. Zellen, History/Redo und Save-Aktionen ändern sich durch Präsentation
+nicht. Bearbeitung und Sortierung bleiben im RAM; echte Profile bleiben unberührt.
+Vor Abschluss erscheinen auf keiner Fläche verdiente Namen/Reveals, auch nicht
+auf Rückseiten. Miniaturen zeigen eigene, auch falsche Einträge.
 
-Die komplette reguläre Navigation mit Pflicht-Flush, Recovery und den Anschlüssen
-aus #485–#487 bleibt B-B. Informations-/Hilfswege in B-A sind vorhandene unmittelbare
-UI; ihre vollständige Buchnavigation wird hier nicht vorgezogen.
+Reguläre Save-/Recovery-Integration und #485–#487 bleiben B-B. Informations-/Hilfswege
+sind vorhandene unmittelbare UI; ihre vollständige Buchnavigation wird nicht vorgezogen.
 
-## Aktuelle Nachweise
+## Gültige Instanzen und Nachweise
 
-| Fenster / UI | Technischer Fall | Hauptprüfung |
+`inputs.gd` prüft die Registry mit dem unveränderten regulären Validator, bevor sie
+den Cache erreicht. Jede der 27 IDs besitzt einen eigenen Schlüssel, Slot,
+Definitionspfad und Revealpfad. 27 tatsächliche JSON-Dateien und 27 kleine eigene
+SVG-Sentinels liegen unter `study/book/data` beziehungsweise `study/book/art`.
+Der einzige Adapter ist der feste Studienpräfix vor den regulären relativen
+`data/`-/`art/`-Pfaden. Jede Definition wird geladen, gegen ID/Pfadbindung und den
+unveränderten Definitionsvalidator mit dessen vorhandener expliziter Study-Asset-
+Allowlist geprüft. Auch `reveal.definition_id` gehört zur jeweiligen Instanz.
+Der Generator wiederholt drei Formen; er erzeugt keine weiteren Puzzleformen.
+Geprüfter Tree, Runtime und beide PCKs verwenden dieselben Dateien.
+
+| Fenster / UI | Fall | Hauptprüfung |
 | --- | --- | --- |
-| 1280×720 / 125 % | T01, 20×20 Mono | Kleine Fläche, ungekürzte Kartenbudgets, vollständige Controls. |
-| 1920×1080 / 100 % | T06, 50×50 Farbe | Lange Hinweise, Großfall, Materialdetails und Bewegungsbelege. |
-| 2560×1440 / 125 % | T08, 40×30 Farbe | Rechteck, getrennte UI-/Rastergrößen, Texturübergabe. |
+| 1280×720 / 125 % | T01, 20×20 Mono | Kleine Fläche, unverkleinerte Karten und Controls. |
+| 1920×1080 / 100 % | T06, 50×50 Farbe | Lange Hinweise, Großfall, Material und Bewegung. |
+| 2560×1440 / 125 % | T08, 40×30 Farbe | Rechteck, getrennte UI-/Rastergrößen, Übergabe. |
 
-Keine neue Kreuzmatrix und keine Produktionsrätsel. `verify.gd` liefert
-Kataloggeometrie, echte Pointerrouten auf beiden Hälften, Vorwärts/Rückwärts,
-Teil-/Leerseiten, globale Reihenfolge, Rand-No-op, blockierte Eingaben,
-drei getrennte Blätter, eigene fehlerhafte Miniaturen, Popup-/Gestenabbruch,
-16 Kombinationen aus Wechselart, Phase und Unterbrechung, Ressourcenfreigabe,
-frische Zellgeste sowie direkte Wiederöffnung und Reset.
-Die bisherigen Arbeitskapazitäts- und Eingabeprüfungen bleiben erhalten.
+Native Prüfungen liefern Pointerrouten auf beiden Kataloghälften, Rand-/Leerfälle,
+globale Sortierung, drei Einzelblätter, Popup-/Gestenabbruch, 24 Kombinationen aus
+Wechselart/Phase/Unterbrechung, Ressourcenfreigabe, gehaltene Taste/frisches Down,
+bearbeitete Rückkehr, direkte Endansicht und Reset. Ein kopiertes T34 auf der zweiten
+Seite beweist die verdiente Revealzuordnung. Billige Gegenproben weisen doppelte
+IDs/Schlüssel/Slots/Pfade sowie fremde Definitions-/Revealzuordnungen ab.
 
-`opening.avi` enthält echte Engineframes mit normaler 30-fps-Wiedergabe:
-Vorwärts, Rückwärts und die volle Rätselöffnung, jeweils mit ruhenden Zuständen.
-`movie.json` bindet Richtung, Dauer, Framefolge und Endzustand.
-Der Film endet auf der lebenden stabilen Arbeitsansicht; kein freigeräumter
-Schlussframe. Kompakte native Zwischenbilder ergänzen den Film.
-Ein ruhiger nativer Durchgang misst Frameabstände ohne Screenshot-/PNG-Arbeit.
-Movie-Aufnahmezeit, feste Filmzeit, Vorbereitung und tatsächliche native
-Bewegungszeit bleiben getrennt; keine daraus abgeleitete Hardware-FPS-Garantie.
+Drei Arbeitsübergaben und eine Rückkehrübergabe werden auf vollständigen nativen
+Originalframes geprüft: höchstens vier Kanalstufen und 0,1 mittlere Kanalstufen
+Differenz. Ein Pixel Versatz und eine Alphamutation müssen scheitern. Die Geometrie
+bezieht sich auf das neue Layout, nicht auf alte absolute Titelpositionen.
 
-## Ressourcen, Exporte und CI
+`opening.avi` enthält echte Engineframes bei normaler 30-fps-Wiedergabe: Blättern
+in beide Richtungen, volle Öffnung, echte Zellbearbeitung und Rückkehr. Der Film
+endet im lebenden Katalog mit aktuellem Fortschritt. `movie.json` bindet Phasen,
+Vorbereitung und Zeit-/Framefolgen. Ein ruhiger nativer Öffnungslauf misst ohne
+Screenshotarbeit. Aufnahme-Wandzeit, Filmzeit und native Bewegungszeit bleiben
+getrennt; daraus folgt keine Hardware-FPS-Garantie.
 
-Maximal drei bewegte Blätter mit je 1105 Vertices/2048 Dreiecken, zwei ruhende
-Papierflächen und feste Deckel-/Seitenlagen. Kein Katalogtexturcache.
-Höchstens ein UI-Renderziel und ein RGBA8-Snapshot in Fenstergröße:
-**7,03/15,82/28,13 MiB** bei 720p/1080p/1440p.
-Mit konservativ zusätzlichen vier Depthbytes pro Pixel:
-**10,55/23,73/42,19 MiB**. Beim Einfrieren kommt vorübergehend eine CPU-Bildkopie
-von vier Bytes je Pixel hinzu. Die schon vorhandene Materialquelle umfasst
-14.745.600 dekodierte RGBA-Bytes. Font-/Zellatlanten, SL-Rahmen, Hauptframebuffer
-und Treiberoverhead sind separat. Nach Ende und Abbruch sind Renderziel, Snapshot
-und bewegte Flächen inaktiv beziehungsweise freigegeben.
+Die eigenen Sichtprüfungen vergleichen alte A-Ansicht, gebundene N01-Bilder und N02
+in denselben drei Konfigurationen, mit nativen Details und zwei Papierseiten samt
+Rückkehr. Iterationen, Korrekturen und Materialurteil stehen im PR. Das ersetzt
+weder B-A-R03 noch die persönliche Kandidatenwahl. Alte Belege bleiben historisch.
+
+## Ressourcen, Export, CI und Gates
+
+Höchstens drei bewegte Blätter mit je 1105 Vertices/2048 Dreiecken, zwei ruhende
+Papierflächen und feste Deckel-/Seitenlagen. Kein Katalogtexturcache. Ein UI-Renderziel
+plus RGBA-Snapshot benötigt 7,03/15,82/28,13 MiB bei 720p/1080p/1440p; einschließlich
+konservativ vier Depthbytes je Pixel 10,55/23,73/42,19 MiB. Einfrieren benötigt kurz
+zusätzlich eine CPU-Bildkopie. A umfasst 14.745.600 RGBA-Bytes, das neue Papier
+6.290.064, mit Mipmaps höchstens 8.386.752 Bytes (ca. 8 MiB). Tatsächliche Import-
+und Paketgrößen werden gemessen. Font-/Zellatlanten, SL-Rahmen, Hauptframebuffer
+und Treiberoverhead sind separat. Nach Ende/Abbruch sind Übergaberessourcen frei.
 
 Godot Standard 4.7.2, GL Compatibility, Web ohne Threads oder Erweiterungen.
-Der Harness erzeugt tatsächliche getrennte Windows-/Webstudienpakete und prüft
-ihre PCKs extern, einschließlich Einstieg, Skripten, Materialien und synthetischen
-Inputs. Beide regulären Windows-/Webpakete werden ebenfalls wirklich exportiert
-und auf Ausschluss der Studie geprüft. Windows startet zusätzlich den exportierten
-Studienplayer und führt dessen Bewegung aus; Linux behauptet keinen Windowsstart.
+Tatsächliche separate Windows-/Webstudienpakete erhalten externe PCK-Prüfungen
+auf Einstieg, Quellen, Textur und alle Instanzen. Beide regulären Pakete werden
+ebenfalls exportiert und auf Ausschluss geprüft. Windows startet den exportierten
+Player und prüft Öffnung, echte Zellbearbeitung und Rückkehr. Linux behauptet
+keinen Windowsstart. Chromium ist nicht beauftragt; Webexport ist kein Browser-
+Darstellungsnachweis. Kein Deployment oder Release.
 
-Webexport ist kein Browserdarstellungs- oder Eingabenachweis. Chromium ist nicht
-beauftragt und wird nicht gestartet. B-B muss den passenden Browsernachweis liefern.
-Es gibt kein Deployment, Release oder Zugriff auf echte Spielprofile.
+`report.json` bindet Quellen, Commit/Basis/Checkout/Run/Attempt, Materialhashes,
+Importkosten, Originaldateien, Phasen, Pixelprüfzeit und tatsächliche Mengen/Bytes.
+Die Exportgruppe führt die Studie einmal aus. Der Ergebnisguard liest originale
+Einzelassertions, die feste Szenariomenge, Geometrie, Bewegung, Unterbrechungen,
+Film und Dateien. Fehlende, manipulierte oder fehlgeschlagene Ergebnisse scheitern.
+Der vollständige Base-/Head-Diff bestimmt alle Pflichtjobs. `docs`, ausgewählte
+Jobs und `ci-required` müssen am Lieferstand erfolgreich sein. CI2-Ziele werden
+gemessen; es gibt keinen neuen Erfolgsverzicht oder allgemeinen CI-Umbau.
+Laufbilder, Filme und Exporte bleiben in ignorierter Arbeitsablage beziehungsweise
+befristeten Technikartefakten, keine neue permanente Bildgalerie.
 
-`report.json` bindet Commit, Basis, Checkout, Run/Attempt, Quellen, Materialhash,
-Originaldateien, Phasen, Pixelprüfzeit und tatsächliche Dateimengen/-bytes.
-Der vorhandene Productjob führt die Studie einmal in der Exportgruppe aus.
-Der native Ergebnisguard liest originale Einzelassertions, die feste Szenariomenge,
-Geometrie-, Bewegungs- und Unterbrechungsberichte, Film und Pflichtdateien.
-Die alte feste Zahl 96 ist kein Ersatz für den erweiterten Vertrag.
-Fehlende, manipulierte oder fehlgeschlagene Resultate scheitern.
+B-A-N02-T01 verlangt aktuelle Technik-, Sicht-, Export- und CI-Nachweise sowie
+getrenntes Selbstreview. **B-A-R03 bleibt ein separates qualifiziertes technisches
+und visuelles Review vor Merge.** R01/R02 nehmen N02 nicht ab. **B-A-M01** bleibt
+persönliche Kandidatenwahl vor vollständigem B-A-Abschluss und vor B-B; sie darf
+nach einem separat freigegebenen isolierten Merge auf main erfolgen. Der aktuelle
+Auftrag enthält keine Mergefreigabe und lässt den PR als Draft.
 
-Der vollständige Base-/Head-Diff bestimmt alle Pflichtjobs. Kein neuer CI-Job
-und keine Testunterdrückung. `docs`, ausgewählte Gruppen und `ci-required`
-müssen am finalen Stand erfolgreich sein. CI2-Laufzeitziele werden anhand
-tatsächlicher Messwerte beurteilt. Laufbilder, Filme, Exporte und Iterationen
-bleiben in ignorierter Arbeitsablage beziehungsweise im befristeten Technikartefakt.
-Quellen, Rechte und Startbefehle: [Studienanleitung](../game/study/book/README.md).
-
-## Getrennte Gates
-
-B-A-N01-T01: Implementierer liefert aktuelle Technik-, Material-, Bewegungs-,
-Export- und CI-Nachweise sowie getrenntes vollständiges Selbstreview.
-B-A-R02: neues qualifiziertes technisches und visuelles Review des revidierten
-Heads vor Merge. Das frühere B-A-R01 nimmt N01 nicht ab.
-B-A-M01: persönliche Kandidatenwahl vor vollständigem B-A-Abschluss und vor B-B;
-darf nach technischem isoliertem Merge auf main erfolgen und ist dafür kein
-zusätzliches Mergegate. Mergefreigabe bleibt separat. #493 bleibt offen.
+Start und Reproduktion: [Studienanleitung](../game/study/book/README.md).

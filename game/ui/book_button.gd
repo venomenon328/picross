@@ -8,6 +8,16 @@ const UiText = preload("res://ui/ui_text.gd")
 const PaperStyle = preload("res://ui/book_style.gd")
 var action_id: String = ""
 var content_surface: bool = false
+## Explicit study opt-in; the default product appearance is unchanged.
+var paper_transparent: bool = false:
+	set(value):
+		paper_transparent = value
+		# Opaque custom bodies used to cover Button's native caption. A
+		# transparent body must suppress that caption, not draw it twice.
+		for state: String in ["font_color","font_hover_color","font_pressed_color","font_hover_pressed_color","font_disabled_color","font_focus_color"]:
+			if value: add_theme_color_override(state,Color.TRANSPARENT)
+			else: remove_theme_color_override(state)
+		queue_redraw()
 var selected: bool = false:
 	set(value):
 		selected = value
@@ -78,9 +88,19 @@ func _draw() -> void:
 		for line: Dictionary in swatch_strokes():
 			Scribble.paint(self,line,Color("68583f"))
 	else:
+		if paper_transparent: body = Color.TRANSPARENT
 		var style = PaperStyle.make("button/"+action_id,u,body)
-		style.ink = PAPER if selected else Color("6d624d")
+		style.ink = INK if paper_transparent else PAPER if selected else Color("6d624d")
+		if paper_transparent:
+			style.selected = selected
+			if disabled: style.ink = Color("8a887d")
+			elif is_pressed(): style.ink = Color("173e35")
+			elif is_hovered(): style.ink = Color("376a60")
 		draw_style_box(style,box)
+		if paper_transparent and is_pressed():
+			draw_line(Vector2(9,8)*u,Vector2(size.x-9*u,8*u),INK,2*u,true)
+		elif paper_transparent and is_hovered():
+			draw_line(Vector2(9,8)*u,Vector2(18,8)*u,INK,1.5*u,true)
 	if swatch.a > 0:
 		draw_rect(box.grow(-5*u), swatch)
 		if selected:
@@ -88,12 +108,12 @@ func _draw() -> void:
 				draw_polyline(corner, INK, 3*u, true)
 				draw_polyline(corner, PAPER, u, true)
 	elif image != null:
-		var ink: Color = PAPER if selected else (Color("757970") if disabled else INK)
+		var ink: Color = PAPER if selected and not paper_transparent else (Color("757970") if disabled else INK)
 		var offset: Vector2 = (size-Vector2(26,26)*u)/2 + Vector2(0,u if is_pressed() else 0)
 		if not text.is_empty(): offset.x = 10*u
 		draw_texture_rect(image, Rect2(offset,Vector2(26,26)*u), false, ink)
 		if selected:
-			draw_line(Vector2(11*u,size.y-6*u),size-Vector2(11,6)*u,PAPER,2*u,true)
+			draw_line(Vector2(11*u,size.y-6*u),size-Vector2(11,6)*u,INK if paper_transparent else PAPER,2*u,true)
 	if disabled:
 		draw_line(Vector2(6*u,size.y-7*u),Vector2(10*u,size.y-7*u),Color("757970"),1.5*u,true)
 	if not text.is_empty():
@@ -101,8 +121,8 @@ func _draw() -> void:
 		var fs: int = get_theme_font_size("font_size")
 		var bounds: Rect2 = UiText.ink(font, text, fs)
 		# Honour theme alpha, including the existing native contrast probe.
-		var ink: Color = get_theme_color("font_color")
-		if selected and ink.a > 0: ink = PAPER
+		var ink: Color = (Color("757970") if disabled else INK) if paper_transparent else get_theme_color("font_color")
+		if selected and ink.a > 0: ink = INK if paper_transparent else PAPER
 		var origin: Vector2 = Vector2(roundf((size.x-bounds.size.x)/2-bounds.position.x), UiText.line_baseline(font, fs, size.y))
 		if image != null: origin.x += 16*u
 		draw_string(font,origin,text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,ink)
@@ -115,5 +135,5 @@ func _draw() -> void:
 		else:
 			var focus_style = PaperStyle.make("button/"+action_id,u,Color.TRANSPARENT)
 			focus_style.focus = true
-			focus_style.ink = PAPER if selected else INK
+			focus_style.ink = PAPER if selected and not paper_transparent else INK
 			draw_style_box(focus_style,box)

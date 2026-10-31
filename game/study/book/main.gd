@@ -1,11 +1,13 @@
 extends Node3D
-## B-A-N01 only: synthetic RAM study, no regular startup or save integration.
+## B-A-N02 only: synthetic RAM study, no regular startup or save integration.
 const Content = preload("res://study/book/content.gd")
 const PAGE = preload("res://study/book/page.gdshader")
 const MATERIAL = preload("res://study/book/material.gdshader")
 const SOURCE = preload("res://art/book/bp2-a-inventarband.png")
+const PAPER_SOURCE = preload("res://study/book/paper.png")
 const DURATION: float = 3.0
 const PAGE_DURATION: float = 0.85
+const RETURN_DURATION: float = 1.8
 const OPENING_LEAVES: int = 3
 enum State { CATALOG, PREPARING, OPENING, WORK }
 var state: State = State.CATALOG
@@ -36,14 +38,18 @@ var source_context: Dictionary = {}
 var target_page: int = 0
 var preparation_started: int = 0
 var settling: bool = false
+var return_context: Dictionary = {}
+var material_catalog_page: int = -1
 
 func _ready() -> void:
 	_build_book()
 	app = Content.new()
+	app.book = self
 	app.name = "StudyUI"
 	app.size = Vector2(get_viewport().size)
 	add_child(app)
 	app.opening_requested.connect(request_open)
+	app.return_requested.connect(request_return)
 	app.album.page_requested.connect(request_page)
 	app.catalog_shown.connect(_catalog)
 	app.scale_changing.connect(func() -> void: interrupt("ui-scale"))
@@ -61,8 +67,25 @@ func _native_proof() -> void:
 	var ok: bool = accepted and state == State.WORK and elapsed == DURATION and app.session.definition.id == "T-06"
 	await RenderingServer.frame_post_draw
 	ok = ok and get_viewport().get_texture().get_image().save_png(OS.get_environment("BOOK_STUDY_OUTPUT").path_join("windows-exported-work.png")) == OK
-	print("BOOK_PACK_MOTION_OK" if ok else "BOOK_PACK_MOTION_FAIL", " elapsed=", elapsed, " id=", selected_id)
+	_proof_click(app.board.global_position+app.board.view.origin+Vector2(5.5,5.5)*app.board.view.cell_size)
+	for i: int in range(4): await get_tree().process_frame
+	ok = ok and app.session.player.cursor == 2
+	_proof_click(app.album_button.get_global_rect().get_center())
+	deadline = Time.get_ticks_usec()+10000000
+	while state in [State.PREPARING,State.OPENING] and Time.get_ticks_usec() < deadline: await get_tree().process_frame
+	ok = ok and state == State.CATALOG and elapsed == RETURN_DURATION and app.session.player.cursor == 2
+	await RenderingServer.frame_post_draw
+	ok = ok and get_viewport().get_texture().get_image().save_png(OS.get_environment("BOOK_STUDY_OUTPUT").path_join("windows-exported-catalog.png")) == OK
+	print("BOOK_PACK_MOTION_OK" if ok else "BOOK_PACK_MOTION_FAIL", " return=", elapsed, " cursor=",app.session.player.cursor," id=", selected_id)
 	get_tree().quit(0 if ok else 4)
+
+func _proof_click(point: Vector2) -> void:
+	for pressed: bool in [true,false]:
+		var event := InputEventMouseButton.new()
+		event.position = point
+		event.button_index = MOUSE_BUTTON_LEFT
+		event.pressed = pressed
+		get_viewport().push_input(event,true)
 
 func _material(color: Color, kind: float) -> ShaderMaterial:
 	var result := ShaderMaterial.new()
@@ -86,7 +109,7 @@ func _page_material(side: float) -> ShaderMaterial:
 	var result := ShaderMaterial.new()
 	result.shader = PAGE
 	result.set_shader_parameter("side", side)
-	result.set_shader_parameter("material_source", SOURCE)
+	result.set_shader_parameter("paper_source", PAPER_SOURCE)
 	return result
 
 func _page(material: ShaderMaterial) -> MeshInstance3D:
@@ -126,8 +149,8 @@ func _build_book() -> void:
 	_box(Vector3(80,50,0.15),Vector3(0,0,-0.75),_material(Color("514333"),2))
 	var leather: ShaderMaterial = _material(Color("292522"),0)
 	for side: float in [-1.0,1.0]:
-		_box(Vector3(10.36,12.86,0.18),Vector3(side*5.13,-0.04,-0.49),leather)
-		_box(Vector3(10.12,12.62,0.31),Vector3(side*5.04,0,-0.28),_material(Color("cbb992"),1))
+		_box(Vector3(10.62,13.06,0.24),Vector3(side*5.16,-0.04,-0.55),leather)
+		_box(Vector3(10.22,12.70,0.39),Vector3(side*5.06,0,-0.29),_material(Color("cbb992"),1))
 		for i: int in range(16):
 			_box(Vector3(10.06+sin(i*4.7)*0.025,12.52+sin(i*3.1)*0.024,0.008),Vector3(side*5.02,0,-0.40+i*0.021),_material(Color("e5d4ae").darkened((i%3)*0.025),1))
 		# A worn raised leather lip remains visible in the close work crop.
@@ -156,26 +179,48 @@ func view_rect(work: bool) -> Vector4:
 	var viewport_size := Vector2(get_viewport().size)
 	var height: float = maxf(6.075,10.8*viewport_size.y/maxf(1,viewport_size.x)) if work else maxf(13.4,22.0*viewport_size.y/maxf(1,viewport_size.x))
 	var width: float = height*viewport_size.x/maxf(1,viewport_size.y)
-	return Vector4((5.0 if work else 0.0)-width/2,-height/2,width,height)
+	# Expose the top rim and page block without changing any UI pixel scale.
+	var center_y: float = 6.48-height/2 if work else 0.0
+	return Vector4((5.0 if work else 0.0)-width/2,center_y-height/2,width,height)
+
+func page_identity(material: ShaderMaterial, identity: String, back: bool = false) -> void:
+	var seed: int = absi(identity.hash())
+	material.set_shader_parameter("back_paper_offset" if back else "paper_offset",Vector2((seed%997)/997.0,((seed/997)%991)/991.0)*0.26)
+
+func projected_paper(work: bool, side: int = 1) -> Rect2:
+	var view: Vector4 = view_rect(work)
+	var scale: Vector2 = Vector2(get_viewport().size)/Vector2(view.z,view.w)
+	return Rect2(Vector2(((-10.0 if side < 0 else 0.0)-view.x)*scale.x,(view.y+view.w-6.2)*scale.y),Vector2(10.0,12.4)*scale)
+
+func catalog_materials(page_index: int) -> void:
+	page_identity(left_material,"catalog/%d/left" % page_index)
+	page_identity(paper_material,"catalog/%d/right" % page_index)
+	material_catalog_page = page_index
 
 func _pose(progress: float) -> void:
 	var work: bool = motion_kind == "open" or state == State.WORK
 	var zoom: float = smoothstep(0.45,1.0,progress) if work else 0.0
+	if motion_kind == "return" and state in [State.PREPARING,State.OPENING]: zoom = 1.0-smoothstep(0.0,0.85,progress)
 	var from: Vector4 = view_rect(false)
 	var to: Vector4 = view_rect(true)
 	camera.size = lerpf(from.w,to.w,zoom)
 	var center: float = 5.0*zoom
+	var center_y: float = (to.y+to.w/2)*zoom
 	var tilt: float = sin(PI*progress)*0.65 if state == State.OPENING and work else 0.0
-	camera.position = Vector3(center,tilt,30)
-	camera.look_at(Vector3(center,0,0))
+	camera.position = Vector3(center,center_y+tilt,30)
+	camera.look_at(Vector3(center,center_y,0))
 	var strongest: float = 0
 	for i: int in range(leaves.size()):
 		if progress >= 1.0: leaves[i].hide()
-		var turn: float = smoothstep(0.04+i*0.14,0.65+i*0.11,progress) if motion_kind == "open" else smoothstep(0,1,progress)
+		var turn: float = smoothstep(0.04+i*0.14,0.65+i*0.11,progress) if motion_kind in ["open","return"] else smoothstep(0,1,progress)
 		leaves[i].material_override.set_shader_parameter("turn",turn)
 		strongest = maxf(strongest,sin(turn*PI))
 	paper_material.set_shader_parameter("shadow",strongest)
 	left_material.set_shader_parameter("shadow",strongest*0.65)
+	if motion_kind == "return" and progress >= 1.0 and capture != null:
+		_ink(paper_material,capture.get_texture(),view_rect(false))
+		catalog_materials(target_page)
+	if motion_kind == "page" and progress >= 1.0: catalog_materials(target_page)
 
 func _catalog() -> void:
 	if settling: return
@@ -183,6 +228,7 @@ func _catalog() -> void:
 	state = State.CATALOG
 	selected_id = ""
 	motion_kind = ""
+	catalog_materials(app.album.page_index)
 	for sheet: MeshInstance3D in leaves: sheet.hide()
 	_pose(0)
 
@@ -208,20 +254,35 @@ func _begin(kind: String) -> void:
 	app._cancel_interaction()
 	app.album.locked = true
 	app.process_mode = Node.PROCESS_MODE_DISABLED
+	held_buttons = Input.get_mouse_button_mask()
 	release_barrier = true
 	_prepare(generation)
 
 func request_open(id: String) -> bool:
 	if state != State.CATALOG or release_barrier or not app.session_indices.has(id): return false
 	selected_id = id
+	return_context = context()
 	if app.sessions[int(app.session_indices[id])].completed:
 		app.activate(id)
 		state = State.WORK
 		motion_kind = ""
+		page_identity(paper_material,"work/"+id)
 		_pose(1)
 		return true
 	direction = 1
 	_begin("open")
+	return true
+
+func request_return() -> bool:
+	if state != State.WORK or release_barrier or app.information.visible or app.reveal_view.active: return false
+	if not (app.work.visible or app.ending.visible): return false
+	# The explicit tab owns this route. Cancel before securing the edited RAM
+	# state; show_album remains a stable primitive for reset/start/info/abort.
+	app._cancel_interaction()
+	if not app._flush_current(): return false
+	target_page = int(return_context.get("page",app.album.page_index))
+	direction = -1
+	_begin("return")
 	return true
 
 func request_page(target: int) -> bool:
@@ -249,26 +310,46 @@ func _prepare(token: int) -> void:
 	app.position = Vector2.ZERO
 	app.size = Vector2(capture.size)
 	for i: int in range(leaves.size()):
-		leaves[i].visible = i == 0 or motion_kind == "open"
+		leaves[i].visible = i == 0 or motion_kind in ["open","return"]
 		leaves[i].material_override.set_shader_parameter("side",float(direction))
 		leaves[i].material_override.set_shader_parameter("turn",0.0)
-	_ink(leaf_material,capture.get_texture(),view_rect(false))
-	_ink(left_material,capture.get_texture(),view_rect(false))
-	_ink(paper_material,capture.get_texture(),view_rect(false))
+		page_identity(leaves[i].material_override,"leaf/%s/%d/%d" % [motion_kind,source_context.page,i])
+	page_identity(leaf_material,"catalog/%d/%s" % [source_context.page,"right" if direction == 1 else "left"])
+	var source_rect: Vector4 = view_rect(motion_kind == "return")
+	_ink(leaf_material,capture.get_texture(),source_rect)
+	_ink(left_material,capture.get_texture(),source_rect)
+	_ink(paper_material,capture.get_texture(),source_rect)
 	await RenderingServer.frame_post_draw
 	if token != generation: return
 	catalog_texture = ImageTexture.create_from_image(capture.get_texture().get_image())
-	_ink(leaf_material,catalog_texture,view_rect(false))
-	_ink(left_material,catalog_texture,view_rect(false))
-	_ink(paper_material,catalog_texture,view_rect(false))
+	_ink(leaf_material,catalog_texture,source_rect)
+	_ink(left_material,catalog_texture,source_rect)
+	_ink(paper_material,catalog_texture,source_rect)
 	if motion_kind == "open": app.activate(selected_id)
+	elif motion_kind == "return":
+		settling = true
+		app.show_album()
+		app.album.selected_id = return_context.get("selection",selected_id)
+		app.album.commit_page(target_page,int(return_context.get("scroll",0)))
+		settling = false
 	else: app.album.commit_page(target_page)
 	await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	if token != generation: return
 	if motion_kind == "open":
+		page_identity(paper_material,"work/"+selected_id)
 		_ink(paper_material,capture.get_texture(),view_rect(true))
+	elif motion_kind == "return":
+		page_identity(left_material,"catalog/%d/left" % target_page)
+		_ink(left_material,capture.get_texture(),view_rect(false))
+		_ink(leaf_material,capture.get_texture(),view_rect(false))
+		# The last returning leaf covers the current work with the catalog.
+		for sheet: MeshInstance3D in leaves:
+			_ink(sheet.material_override,capture.get_texture(),view_rect(false),true)
+			page_identity(sheet.material_override,"catalog/%d/right" % target_page,true)
 	else:
+		page_identity(paper_material if direction == 1 else left_material,"catalog/%d/%s" % [target_page,"right" if direction == 1 else "left"])
+		page_identity(leaf_material,"catalog/%d/%s" % [target_page,"left" if direction == 1 else "right"],true)
 		_ink(paper_material if direction == 1 else left_material,capture.get_texture(),view_rect(false))
 		_ink(leaf_material,capture.get_texture(),view_rect(false),true)
 	elapsed = 0
@@ -279,11 +360,12 @@ func _prepare(token: int) -> void:
 	state = State.OPENING
 
 func _process(delta: float) -> void:
+	if state == State.CATALOG and material_catalog_page != app.album.page_index: catalog_materials(app.album.page_index)
 	if state == State.OPENING:
 		var now: int = Time.get_ticks_usec()
 		frames_ms.append((now-last_frame_usec)/1000.0)
 		last_frame_usec = now
-		var duration: float = DURATION if motion_kind == "open" else PAGE_DURATION
+		var duration: float = DURATION if motion_kind == "open" else RETURN_DURATION if motion_kind == "return" else PAGE_DURATION
 		elapsed = minf(duration,elapsed+delta if OS.has_feature("movie") else (now-wall_started)/1000000.0)
 		_pose(elapsed/duration)
 		if elapsed >= duration:
@@ -295,13 +377,15 @@ func _process(delta: float) -> void:
 		app.process_mode = Node.PROCESS_MODE_INHERIT
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_LEFT,MOUSE_BUTTON_RIGHT,MOUSE_BUTTON_MIDDLE,MOUSE_BUTTON_XBUTTON1,MOUSE_BUTTON_XBUTTON2]:
+	# Track only events owned by this input barrier. During normal work Board
+	# can consume a release before its parent sees it; retaining that old Down
+	# would incorrectly block the next page forever.
+	if (state in [State.PREPARING,State.OPENING] or release_barrier) and event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_LEFT,MOUSE_BUTTON_RIGHT,MOUSE_BUTTON_MIDDLE,MOUSE_BUTTON_XBUTTON1,MOUSE_BUTTON_XBUTTON2]:
 		var mask: int = 1 << (event.button_index-1)
 		held_buttons = (held_buttons | mask) if event.pressed else (held_buttons & ~mask)
 	if state in [State.PREPARING,State.OPENING] or release_barrier: get_viewport().set_input_as_handled()
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
-		interrupt("leave")
-		app.show_album()
+		if state in [State.PREPARING,State.OPENING]: interrupt("leave")
 
 func interrupt(reason: String) -> void:
 	if state not in [State.PREPARING,State.OPENING]: return
@@ -319,12 +403,16 @@ func _settle(target: bool) -> void:
 	app.size = Vector2(get_viewport().size)
 	if work: app.activate(selected_id)
 	else:
-		if not target:
+		if not target and motion_kind != "return":
 			app.session = app.sessions[int(app.session_indices[source_context.session])]
 			app.board.session = app.session
 		app.show_album()
-		app.album.selected_id = source_context.selection
-		app.album.commit_page(target_page if target else int(source_context.page),0 if target else int(source_context.scroll))
+		var destination: Dictionary = return_context if motion_kind == "return" else source_context
+		app.album.selected_id = destination.selection
+		var moved_page: bool = target and motion_kind == "page"
+		app.album.commit_page(target_page if moved_page else int(destination.page),0 if moved_page else int(destination.scroll))
+		catalog_materials(app.album.page_index)
+	if work: page_identity(paper_material,"work/"+selected_id)
 	for sheet: MeshInstance3D in leaves:
 		sheet.hide()
 		_ink(sheet.material_override,null,Vector4.ZERO)
@@ -357,6 +445,7 @@ func resource_report() -> Dictionary:
 	return {"viewport":get_viewport().size,"page_vertices":1105,"page_triangles":2048,"moving_leaves":OPENING_LEAVES,
 		"visible_leaves":leaves.filter(func(sheet: MeshInstance3D) -> bool: return sheet.visible).size(),
 		"animation_seconds":DURATION,"page_seconds":PAGE_DURATION,"motion_wall_seconds":motion_wall_seconds,"preparation_seconds":preparation_seconds,
+		"return_seconds":RETURN_DURATION,"organic_paper_rgba_bytes":1254*1254*4,"organic_paper_with_mipmaps_upper_bytes":1254*1254*4*4/3,
 		"ui_capture_targets":1 if capture != null else 0,"catalog_rgba_textures":1 if catalog_texture != null else 0,
 		"peak_color_target_and_snapshot_bytes":pixels*8,"peak_capture_depth_upper_bound_bytes":pixels*4,
 		"material_source_rgba_bytes":2560*1440*4,

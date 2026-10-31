@@ -2,11 +2,14 @@ extends "res://ui/main.gd"
 ## Developer-only regular UI, synthetic sessions, no filesystem persistence.
 const StudySurface = preload("res://study/book/surface.gd")
 const StudyCatalog = preload("res://study/book/catalog.gd")
+const Inputs = preload("res://study/book/inputs.gd")
 signal opening_requested(id: String)
+signal return_requested
 signal catalog_shown
 signal exit_requested
 signal scale_changing
 var resetting_ending: bool = false
+var book: Node3D
 
 class MemoryPreference extends "res://model/catalog_preference.gd":
 	func load_selection() -> void: pass
@@ -30,14 +33,17 @@ class MemoryStore extends "res://model/save_store.gd":
 
 func _ready() -> void:
 	# Do not call the product lifecycle: no real saves, preference or web storage.
-	var input: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://study/book/fixtures.json"))
+	var input: Dictionary = Inputs.read()
+	if not input.error.is_empty():
+		push_error(input.error)
+		get_tree().quit(4)
+		return
 	Registry.cached = input.registry
 	Registry.load_error = ""
 	store = MemoryStore.new()
 	# Three shapes, 27 fixed IDs: one full spread and one partial spread.
 	for index: int in range(input.registry.entries.size()):
-		var data: Dictionary = input.definitions[index % 3].duplicate(true)
-		data.id = input.registry.entries[index].id
+		var data: Dictionary = input.definitions[index].duplicate(true)
 		var item := Session.new(data)
 		# Fixed own entries, including wrong colors and X. Never copy the solution.
 		if not sessions.is_empty():
@@ -69,6 +75,8 @@ func _build() -> void:
 	laying_out = true
 	super._build()
 	laying_out = false
+	album_button.pressed.disconnect(show_album)
+	album_button.pressed.connect(func() -> void: return_requested.emit())
 	var old_album: Control = album
 	page.remove_child(old_album)
 	old_album.free()
@@ -90,24 +98,41 @@ func _build() -> void:
 	add_child(surface)
 	move_child(surface, 0)
 	parent.add_child(self)
+	for item: Node in find_children("*","Button",true,false):
+		if item is BookButton: item.paper_transparent = true
+		if item is BookChoice: item.paper_transparent = true
 
 func _layout_book(prepare_board: bool = false) -> void:
 	super._layout_book(prepare_board)
 	if album == null or surface == null or laying_out: return
-	# The close right page starts beyond the gutter; the tab stays on paper.
-	album_button.position.x = surface.material_rect().position.x + surface.material_rect().size.x*0.045
+	# Keep the actual title/tab ink beyond the projected curved binding strip.
+	var material: Rect2 = surface.material_rect()
+	album_button.position = material.position+Vector2(material.size.x*0.12,38*ui_scale)
+	if work.visible or ending.visible:
+		var paper_top: float = book.projected_paper(true).position.y if book != null else 0.0
+		album_button.position.y = maxf(album_button.position.y,paper_top+12*ui_scale)
+		title.position = album_button.position+Vector2(album_button.size.x+16*ui_scale,0)
+		for id: String in ["help","menu","nav-information"]:
+			actions[id].position.y = maxf(actions[id].position.y,paper_top+8*ui_scale)
 	layout_warning.position.x = maxf(layout_warning.position.x, album_button.position.x)
 	if album.summary != null: album.summary.visible = album.visible and catalog_error.is_empty()
 	if album.visible:
 		# Actual screen pixels: no render-target downscaling of controls or fonts.
-		var material: Rect2 = surface.material_rect()
 		var margin: float = material.size.x*0.09
-		var heading_top: float = maxf(28*ui_scale,material.size.y*0.035+8*ui_scale)
+		var paper_bottom: float = material.end.y
+		var right_heading: float = material.size.x/2+38*ui_scale
+		if book != null:
+			var projected: Rect2 = book.projected_paper(false,-1)
+			margin = projected.position.x+18*ui_scale
+			paper_bottom = projected.end.y
+			album.fold_gap = 2*(projected.size.x*0.075+12*ui_scale)
+			right_heading = material.size.x/2+projected.size.x*0.075+18*ui_scale
+		var heading_top: float = maxf(28*ui_scale,material.size.y*0.035+8*ui_scale)+4*ui_scale
 		var catalog_top: float = maxf(86*ui_scale,heading_top+53*ui_scale)
-		_place(album, Rect2(material.position+Vector2(margin, catalog_top), Vector2(material.size.x-2*margin, material.size.y-catalog_top-40*ui_scale)))
+		_place(album, Rect2(material.position+Vector2(margin, catalog_top), Vector2(material.size.x-2*margin, paper_bottom-catalog_top-18*ui_scale)))
 		_place(title, Rect2(material.position+Vector2(margin, heading_top), Vector2(material.size.x*0.38, 45*ui_scale)))
 		if album.summary != null:
-			_place(album.summary,Rect2(material.position+Vector2(material.size.x/2+38*ui_scale,heading_top),Vector2(material.size.x*0.35,45*ui_scale)))
+			_place(album.summary,Rect2(material.position+Vector2(right_heading,heading_top),Vector2(material.size.x*0.35,45*ui_scale)))
 			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))
 		album._layout_cards()
 

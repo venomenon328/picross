@@ -1,4 +1,4 @@
-# Buchstudie B-A-N01 · #493
+# Buchstudie B-A-N02 · #493
 
 Isolierter ausführbarer Studienstand. Der normale Spielstart verwendet weiterhin
 das bisherige A-Buch. Drei feste synthetische Muster unter 27 Katalog-IDs, keine echten Rätsel oder
@@ -17,7 +17,10 @@ bewegen nichts. Filter und Sortierung wirken sofort.
 
 Eine neue/begonnene Karte öffnet drei einzelne Blätter in insgesamt drei Sekunden
 und endet auf der großen rechten Arbeitsseite mit Bindung links. Der Buchreiter
-kehrt zum Katalog zurück. Escape beendet einen laufenden Wechsel zum Katalog.
+kehrt in 1,8 Sekunden mit Herauszoomen und drei nach rechts blätternden Seiten zum
+erhaltenen Katalogkontext zurück. Der aktuelle Arbeitsstand bleibt sichtbar.
+Escape bricht nur einen laufenden Wechsel ab: Blättern/Öffnen endet im Quellkatalog,
+Rückkehr im gebundenen Zielkatalog. Im ruhenden Spiel ist Escape keine Katalognavigation.
 Die vorhandenen Werkzeuge lassen sich auf der ruhenden Seite ausprobieren.
 Fenster-/UI-Wechsel und Fokusverlust stellen die gewählte Arbeitsseite stabil
 her beziehungsweise beenden einen Katalogwechsel auf dessen Zielseite;
@@ -53,15 +56,24 @@ stehen in `report.json`; `native.json` und Originalframes ergänzen den Nachweis
 
 Die Meshkonstruktion und Materialshader sind eigene Studienquellen. Sie verwenden
 das unveränderte A-Buch `art/book/bp2-a-inventarband.png` als Materialquelle für
-Papier und Einband, mit dessen bestehenden Herkunfts-/Nutzungshinweisen.
+Einband und Bindung, mit dessen bestehenden Herkunfts-/Nutzungshinweisen.
 SHA-256: `957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a`.
-Keine neuen Fremdmodelle, Bildrechte oder Bibliotheken. Parameter, Flächen und
+Die Innenflächen verwenden `paper.png`, eine originale imagegen-Ausgabe ohne
+Fremdvorlage. `paper.json` bindet vollständigen Prompt, Herkunft, SHA-256, Rechte,
+Import und logische Seitenzuordnung; die Exporte liefern diese Angaben auch unter
+`licenses/Study-paper.json`. Die Textur wird unverändert importiert, mit Mipmaps
+gefiltert und im Shader zurückhaltend aufgehellt. Die ruhende Falzwölbung ist echte
+Geometrie außerhalb des ebenen UI-Bereichs. Controls nutzen transparente Füllung.
+Keine neuen Fremdmodelle oder Bibliotheken. Parameter, Flächen und
 UV-Ausschnitte stehen in `main.gd` und den Shadern. T01/T06 stammen aus
 `tools/product_fixtures.py`, T08 daraus mit 30 statt 40 Zeilen und neu abgeleiteten
 Spaltenhinweisen. Weitere feste IDs wiederholen nur diese Formen und erzeugen
 die nötige volle/teilweise Katalogseite. Regeneration:
 `python tools/book_study.py --write-fixtures`.
-Die drei kleinen SVGs sind eigene technische Spoilersentinels, keine Motive.
+27 eigene kleine SVGs sind technische Spoilersentinels, keine Motive. Jede ID
+besitzt eine eigene Definition und Revealzuordnung. `inputs.gd` prüft alle mit
+den normalen Registry-/Definitionsvalidatoren und einem festen Studienpfadpräfix;
+auch kopierte Formen behalten keine fremde `reveal.definition_id`.
 `report.json` bindet sämtliche Studienquellen per SHA-256.
 
 Tidy Hand, Delight Coffee, Bakso, Fraunces, Plex, Zellatlanten, SL-Rahmen und
@@ -72,7 +84,7 @@ liefern die bestehenden Nutzungshinweise mit. Alte Assets/Freigaben werden
 weder ersetzt noch umetikettiert.
 
 `opening.avi` zeigt beide Blätterrichtungen und die volle Öffnung in normalem
-Tempo. Alte/neue native Ansichten und Bindungsdetails dienen dem Materialvergleich;
+Tempo sowie die Rückkehr nach echter Bearbeitung. Alte/neue native Ansichten und Bindungsdetails dienen dem Materialvergleich;
 Originalpixelpaare prüfen separat die Textur-/Direktübergabe.
 
-Bericht, Zustandsvertrag und offene Gates: [B-A-N01-T01](../../../docs/BOOK_STUDY.md).
+Bericht, Zustandsvertrag und offene Gates: [B-A-N02-T01](../../../docs/BOOK_STUDY.md).

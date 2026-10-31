@@ -84,34 +84,49 @@ def validate_book_study(report, directory, identity, host):
                            'correct ID from page half 0', 'correct ID from page half 12',
                            'empty filter is immediate and reachable', 'sort is global and immediate',
                            'empty filter retains settings and quit',
+                           'normal registry and definition validators accept all 27 instances',
+                           'foreign fixture binding rejected definition_id', 'duplicate fixture binding rejected reveal',
+                           'copied ID on second spread has its earned reveal', 'earned copied reveal returns to second spread',
+                           'explicit catalog tab starts return', 'return starts with actual edited content',
+                           'return retains exact catalog context', 'return does not mutate history or add saves',
+                           'return catalog shows current edited progress', 'return cancellation never commits held gesture',
+                           'idle Escape is not catalog navigation', 'stable ending accepts animated return',
+                           'same logical page retains exact paper after return', 'different logical pages have different organic paper',
+                           'control states retain non-color ink distinctions', 'popup remains opaque in study',
                            'fresh actual pointer gesture works after interruption',
                            'solved puzzle opens directly without replay', 'ending reset opens same empty page without book animation'}
     for target in (0, 1):
         required_assertions.update(f'{label} {target}' for label in ('pointer starts catalog turn', 'filter and sort discarded during turn',
                                   'short catalog motion settles target', 'partial last spread', 'global ordering precedes pagination', 'edge action has no animation'))
-    expected_interruptions = {(kind, phase, reason) for kind in ('page', 'open') for phase in ('prepare', 'motion')
+    expected_interruptions = {(kind, phase, reason) for kind in ('page', 'open', 'return') for phase in ('prepare', 'motion')
                               for reason in ('resize', 'ui-scale', 'focus', 'leave')}
     for kind, phase, reason in expected_interruptions:
         required_assertions.update(f'{label} {kind}/{phase}/{reason}' for label in
                                    ('matrix stable target', 'matrix no history or save', 'matrix releases resources'))
-    if (report.get('book_study') != study or study['package'] != 'B-A-N01-T01'
+    if (report.get('book_study') != study or study['package'] != 'B-A-N02-T01'
             or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
             or native['checks'] != len(assertions) or native['failures'] != []
             or not all(a.get('passed') is True for a in assertions)
             or not required_assertions <= {a.get('label') for a in assertions}
             or {(r['kind'], r['phase'], r['reason']) for r in native['interruptions']} != expected_interruptions
-            or len(native['interruptions']) != 16 or len(native['catalog_layouts']) != 3
+            or len(native['interruptions']) != 24 or len(native['catalog_layouts']) != 3
+            or {(r['view'],r['width']) for r in native['ink_margins']} != {(v,w) for v in ('catalog','work') for w in (1280,1920,2560)}
+            or any(sum(r['view'] == v and r['width'] == w for r in native['ink_margins']) != n for v,n in (('catalog',9),('work',5)) for w in (1280,1920,2560))
+            or any(r['margin'] < 8 or min(r['hull'][2:]) <= 0 for r in native['ink_margins'])
+            or len(native['returns']) != 1 or native['returns'][0]['seconds'] != 1.8 or native['returns'][0]['page'] != 1
             or any(len(r['cards']) != 24 for r in native['catalog_layouts'])
             or [(r['target'],r['direction'],r['seconds']) for r in native['page_motions']] != [(1,1,.85),(0,-1,.85)]
-            or len(native['layouts']) != 3 or len(native['handoffs']) != 3
+            or len(native['layouts']) != 3 or len(native['handoffs']) != 4
             or native['motion_wall_seconds_quiet'] < 3.0 or not native['motion_frame_ms_quiet']
             or native['resources']['ui_capture_targets'] != 0 or native['resources']['catalog_rgba_textures'] != 0
             or native['resources']['visible_leaves'] != 0 or native['resources']['moving_leaves'] != 3
+            or study['organic_paper']['sha256'] != '1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f'
+            or study['organic_paper']['size'] != [1254,1254] or study['organic_paper']['imported_texture']['bytes'] <= 0
             or study['material_source']['sha256'] != '957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a'):
         raise ValueError('Incomplete/wrong isolated book study assertions or binding')
     movie = read(directory/'movie.json')
-    if (movie['fps'] != 30 or movie['failures'] != [] or movie['final_state'] != 'WORK' or movie['final_id'] != 'T-06'
-            or [(e['kind'], e['direction'], e['seconds']) for e in movie['events']] != [('page',1,.85),('page',-1,.85),('open',1,3.0)]
+    if (movie['fps'] != 30 or movie['failures'] != [] or movie['final_state'] != 'CATALOG' or movie['final_id'] != 'T-06' or movie['edited_cursor'] != 2
+            or [(e['kind'], e['direction'], e['seconds']) for e in movie['events']] != [('page',1,.85),('page',-1,.85),('open',1,3.0),('return',-1,1.8)]
             or any(e['last_frame'] <= e['first_frame'] for e in movie['events'])):
         raise ValueError('Incomplete/incorrect book motion evidence')
     expected = ['book-version', 'book-import', 'book-native', 'book-movie', 'book-regular-import']
@@ -127,16 +142,19 @@ def validate_book_study(report, directory, identity, host):
     names = set(study['files'])
     actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()} - {'report.json'}
     required = {'opening.avi', 'movie.json', 'movie-final.png', 'native.json', 'catalog.png', 'opening-middle.png', 'opening-back.png',
+                'return-middle.png', 'return-edited-work.png', 'paper-page-one.png', 'paper-page-two.png', 'paper-page-two-return.png',
+                'return-handoff-texture.png','return-handoff-direct.png','control-states.png',
                 'page-forward.png', 'page-backward.png', 'material-original-detail.png', 'material-study-detail.png',
                 'windows/book-study.exe', 'windows/book-study.pck', 'web/index.html', 'web/index.pck', 'web/index.wasm'}
     required.update('logs/'+name+'.log' for name in expected)
+    if host == 'Windows': required.update({'windows-exported-work.png','windows-exported-catalog.png'})
     required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work', 'catalog') for width in (1280,1920,2560))
     if names != actual or not required <= names:
         raise ValueError('Missing/unexpected book study evidence inventory')
     for name, metadata in study['files'].items():
         verify_file(directory, dict(file=name, **metadata))
     pixels = study['handoff_pixels']
-    if (set(pixels['samples']) != {f'work-{w}.png' for w in (1280,1920,2560)}
+    if (set(pixels['samples']) != {f'work-{w}.png' for w in (1280,1920,2560)} | {'return-handoff-direct.png'}
             or any(s['max_channel_delta'] > 4 or max(s['mean_channel_delta']) > .1 for s in pixels['samples'].values())
             or pixels['negative_controls'] != 'one-pixel displacement and alpha mutation rejected'):
         raise ValueError('Failed/incomplete book study handoff pixels or counterexamples')
