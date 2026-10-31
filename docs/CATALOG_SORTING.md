@@ -1,6 +1,6 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-**B-A-N02 / #493:** Die [isolierte Doppelseitenstudie](BOOK_STUDY.md) übernimmt
+**B-A-N03 / #493:** Die [isolierte Doppelseitenstudie](BOOK_STUDY.md) übernimmt
 diesen globalen Sortier-/Filtervertrag vor der logischen 24er-Paginierung.
 Beide Buchhälften teilen den Katalogkontext; nur echte Seitenwechsel animieren.
 Filter und Sortierung wirken unmittelbar, während laufender Wechsel werden

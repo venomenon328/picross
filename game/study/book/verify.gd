@@ -15,6 +15,7 @@ var page_motions: Array = []
 var interruptions: Array = []
 var ink_margins: Array = []
 var returns: Array = []
+var tooltip_cases: Array = []
 
 class Baseline extends Main:
 	func create_store() -> SaveStore: return Study.Content.MemoryStore.new()
@@ -98,6 +99,7 @@ func run() -> void:
 	check(study.app.sessions.size() == 27, "three synthetic shapes with 27 fixed catalog IDs")
 	fixture_cases()
 	await control_cases()
+	tooltip_cases = await preload("res://study/book/tooltip_cases.gd").new().run(self)
 	var before: Array = fingerprint()
 	var writes_before: int = study.app.store.writes
 	var start: Image = await screenshot("catalog")
@@ -244,7 +246,7 @@ func run() -> void:
 	await solved_reset_case()
 	var report: Dictionary = {"checks": checks, "assertions":assertions, "failures": failures, "layouts": layouts, "handoffs": handoffs,
 		"catalog_layouts":catalog_layouts,"page_motions":page_motions,"interruptions":interruptions,
-		"ink_margins":ink_margins,"returns":returns,
+		"ink_margins":ink_margins,"returns":returns,"tooltip_cases":tooltip_cases,
 		"resources": study.resource_report(), "motion_frame_ms_with_captures": motion_ms, "motion_wall_seconds_with_captures": motion_wall,
 		"motion_frame_ms_quiet": quiet_ms, "motion_wall_seconds_quiet": quiet_wall,
 		"engine": Engine.get_version_info(), "display": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
@@ -404,6 +406,7 @@ func interruption_cases() -> void:
 	for kind: String in ["page","open","return"]:
 		for phase: String in ["prepare","motion"]:
 			for reason: String in ["resize","ui-scale","focus","leave"]:
+				print("BOOK_MATRIX ",kind,"/",phase,"/",reason)
 				study.app.show_album()
 				study.app.album.commit_page(0,40)
 				await frames(6)

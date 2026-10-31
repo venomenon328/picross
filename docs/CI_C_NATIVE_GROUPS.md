@@ -3,13 +3,18 @@
 ## Buchstudie B-A / #493
 
 Die Exportgruppe verlangt zusätzlich einmalig `isolated-book-study` und dessen
-[B-A-N02-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
+[B-A-N03-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
 die feste Szenariomenge, Doppelseitengeometrie, beide Blätterrichtungen,
 24 Unterbrechungsfälle, gültige ID-/Revealinstanzen, gerenderte Glyphen-/Konturabstände,
 Rückkehr mit aktuellem Fortschritt, Quellbindung, Materialvergleich und Papierstabilität,
 vollständige Phasen, Film mit stabilem Katalogende, vier Übergabepaare und tatsächliche Studienpakete samt
 Dateihashes. Die bisherigen Gruppen-/Dateipflichten bleiben erhalten. Die Studie
 liegt getrennt im befristeten Technikartefakt, nicht im regulären Spielerpaket.
+N03 bindet zusätzlich die eigene Ledertextur samt Importkosten, 15 unskalierte
+Randdetails, echte verzögerte Tooltipfälle in den drei bestehenden Konfigurationen,
+deren Inhalt/Geometrie/Lebensdauer und Gegenbeispiele für leeren Rahmen und alten
+Hoverstrich. Producer, Originalbericht, unabhängiger Guard und Mutationstests
+folgen gemeinsam diesem Umfang. Keine neue Gruppe und kein Browserauftrag.
 
 ## Aktuelle Umsetzung: CI2-D / #416
 

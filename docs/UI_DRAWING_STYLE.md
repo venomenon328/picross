@@ -1,5 +1,11 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
+**B-A-N03 / #493:** Die [isolierte Buchstudie](BOOK_STUDY.md) verstärkt beim
+Hover/Druck die vorhandene transparente Buttonkontur. Ein isolierter kurzer
+oberer Hoverstrich entfällt; Auswahl, Deaktivierung und Fokus behalten ihre
+Zeichen. Sinnvolle verzögerte Hilfen bleiben, leere Panels entfallen. HZ-Fonts,
+Icons, Farbproben und große SL-Rahmen bleiben unverändert.
+
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) ist der Detailvertrag für
 Tidy Hand als normale UI-Schrift bei erhaltenen Überschriften, organischere Karten-/Button-/Dropdownrahmen,

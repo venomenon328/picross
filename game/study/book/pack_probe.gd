@@ -12,6 +12,8 @@ func run() -> void:
 	check(ResourceLoader.exists("res://study/book/main.tscn") == expected, "study entry point inclusion/exclusion")
 	check(FileAccess.file_exists("res://study/book/fixtures.json") == expected, "study inputs inclusion/exclusion")
 	check(ResourceLoader.exists("res://study/book/paper.png") == expected,"organic paper inclusion/exclusion")
+	check(ResourceLoader.exists("res://study/book/leather.png") == expected,"independent leather inclusion/exclusion")
+	check(ResourceLoader.exists("res://study/book/binding.gd") == expected,"joined binding inclusion/exclusion")
 	check(ResourceLoader.exists("res://study/book/inputs.gd") == expected,"study adapter inclusion/exclusion")
 	for key: String in ["t01","t06","t08"] + Array(range(13,37)).map(func(i: int) -> String: return "t%02d" % i):
 		check(FileAccess.file_exists("res://study/book/data/"+key+".json") == expected,"definition instance inclusion/exclusion "+key)
@@ -24,7 +26,7 @@ func run() -> void:
 		check(ProjectSettings.get_setting("application/run/main_scene") == "res://study/book/main.tscn", "separate study startup")
 		check(not FileAccess.file_exists("res://data/registry.json"), "no real catalog in study")
 		check(not DirAccess.dir_exists_absolute("res://art/content"), "no real reveals in study")
-		check(not ResourceLoader.exists("res://study/book/verify.gd") and not ResourceLoader.exists("res://study/book/pack_probe.gd"), "no verification programs in study pack")
+		check(not ResourceLoader.exists("res://study/book/verify.gd") and not ResourceLoader.exists("res://study/book/pack_probe.gd") and not ResourceLoader.exists("res://study/book/tooltip_cases.gd"), "no verification programs in study pack")
 		var input: Dictionary = load("res://study/book/inputs.gd").read()
 		check(input.error.is_empty(),"normal validators accept packed study instances")
 		check(input.definitions.size() == 27 and input.registry.entries.size() == 27, "bounded synthetic input")

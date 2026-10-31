@@ -1,9 +1,8 @@
 extends Node3D
-## B-A-N02 only: synthetic RAM study, no regular startup or save integration.
+## B-A-N03 only: synthetic RAM study, no regular startup or save integration.
 const Content = preload("res://study/book/content.gd")
 const PAGE = preload("res://study/book/page.gdshader")
-const MATERIAL = preload("res://study/book/material.gdshader")
-const SOURCE = preload("res://art/book/bp2-a-inventarband.png")
+const Binding = preload("res://study/book/binding.gd")
 const PAPER_SOURCE = preload("res://study/book/paper.png")
 const DURATION: float = 3.0
 const PAGE_DURATION: float = 0.85
@@ -40,6 +39,7 @@ var preparation_started: int = 0
 var settling: bool = false
 var return_context: Dictionary = {}
 var material_catalog_page: int = -1
+var binding := Binding.new()
 
 func _ready() -> void:
 	_build_book()
@@ -87,24 +87,6 @@ func _proof_click(point: Vector2) -> void:
 		event.pressed = pressed
 		get_viewport().push_input(event,true)
 
-func _material(color: Color, kind: float) -> ShaderMaterial:
-	var result := ShaderMaterial.new()
-	result.shader = MATERIAL
-	result.set_shader_parameter("base_color", color)
-	result.set_shader_parameter("kind", kind)
-	result.set_shader_parameter("material_source", SOURCE)
-	return result
-
-func _box(extent: Vector3, at: Vector3, material: Material) -> MeshInstance3D:
-	var instance := MeshInstance3D.new()
-	var mesh := BoxMesh.new()
-	mesh.size = extent
-	instance.mesh = mesh
-	instance.material_override = material
-	instance.position = at
-	add_child(instance)
-	return instance
-
 func _page_material(side: float) -> ShaderMaterial:
 	var result := ShaderMaterial.new()
 	result.shader = PAGE
@@ -146,16 +128,7 @@ func _build_book() -> void:
 	environment.environment.background_mode = Environment.BG_COLOR
 	environment.environment.background_color = Color("302b25")
 	add_child(environment)
-	_box(Vector3(80,50,0.15),Vector3(0,0,-0.75),_material(Color("514333"),2))
-	var leather: ShaderMaterial = _material(Color("292522"),0)
-	for side: float in [-1.0,1.0]:
-		_box(Vector3(10.62,13.06,0.24),Vector3(side*5.16,-0.04,-0.55),leather)
-		_box(Vector3(10.22,12.70,0.39),Vector3(side*5.06,0,-0.29),_material(Color("cbb992"),1))
-		for i: int in range(16):
-			_box(Vector3(10.06+sin(i*4.7)*0.025,12.52+sin(i*3.1)*0.024,0.008),Vector3(side*5.02,0,-0.40+i*0.021),_material(Color("e5d4ae").darkened((i%3)*0.025),1))
-		# A worn raised leather lip remains visible in the close work crop.
-		_box(Vector3(0.13,12.77,0.06),Vector3(side*10.22,-0.02,-0.32),_material(Color.WHITE,4))
-	_box(Vector3(0.12,12.75,0.06),Vector3(0,0,0.007),_material(Color.WHITE,3))
+	binding.build(self)
 	left_material = _page_material(-1)
 	_page(left_material)
 	paper_material = _page_material(1)
@@ -448,5 +421,6 @@ func resource_report() -> Dictionary:
 		"return_seconds":RETURN_DURATION,"organic_paper_rgba_bytes":1254*1254*4,"organic_paper_with_mipmaps_upper_bytes":1254*1254*4*4/3,
 		"ui_capture_targets":1 if capture != null else 0,"catalog_rgba_textures":1 if catalog_texture != null else 0,
 		"peak_color_target_and_snapshot_bytes":pixels*8,"peak_capture_depth_upper_bound_bytes":pixels*4,
-		"material_source_rgba_bytes":2560*1440*4,
+		"binding":binding.report(),
+		"shared_original_a_rgba_bytes":2560*1440*4,
 		"shared_resources_excluded_from_estimate":"font atlases, six cell atlases, SL frames, main framebuffer, driver overhead"}

@@ -46,6 +46,7 @@ class BookStudyTests(unittest.TestCase):
             self.assertIn("study/main.gd", exclusions)
             self.assertIn("study/book/verify.gd", exclusions)
             self.assertIn("study/book/pack_probe.gd", exclusions)
+            self.assertIn("study/book/tooltip_cases.gd", exclusions)
             self.assertNotIn("study/*", exclusions)
         self.assertEqual(presets["preset.1.options"]["variant/thread_support"], "false")
         self.assertEqual(presets["preset.1.options"]["variant/extensions_support"], "false")
@@ -78,6 +79,13 @@ class BookStudyTests(unittest.TestCase):
                      "windows/book-study.exe", "windows/book-study.pck", "web/index.html", "web/index.pck", "web/index.wasm"]
             files += ["logs/"+name+".log" for name in names]
             files += [f"{kind}-{w}.png" for kind in ("baseline", "handoff-texture", "work", "catalog") for w in (1280,1920,2560)]
+            captions = {'direction','reset','mode','click-before','caption-after-click','fill','help','wrapped-edge'}
+            empty = {'footer-0','footer-1','footer-2','whitespace'}
+            files += [f'tooltip-{kind}-{w}.png' for w in (1280,1920,2560) for kind in captions | empty if kind != 'click-before']
+            files += ['tooltip-negative-empty.png','hover-negative.png','hover-current.png','tooltip-after-motion-1920.png']
+            details = [dict(file=f'edge-{kind}-{w}.png',source=f'catalog-{w}.png',rect=[0,0,20,20],scale=1)
+                       for w in (1280,1920,2560) for kind in ('bottom-left','bottom-right','bottom-fold','outer-left','outer-right')]
+            files += [r['file'] for r in details]
             for name in files:
                 target = root/name
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -105,7 +113,16 @@ class BookStudyTests(unittest.TestCase):
                              for r in ('resize','ui-scale','focus','leave')]
             labels += [f"{label} {r['kind']}/{r['phase']}/{r['reason']}" for r in interruptions
                        for label in ('matrix stable target', 'matrix no history or save', 'matrix releases resources')]
+            labels += ['native tooltip delay is not bypassed','negative empty tooltip reproduced by native hover',
+                       'negative detached hover stroke rejected']
+            tips = [dict(case=kind,width=w,scale=s,caption='Useful help' if kind in captions else '',wait_seconds=.65,
+                         visible=kind in captions, popup=[10,10,150,40],label=[130,20],text='Useful help')
+                    for w,s in ((1280,1.25),(1920,1.0),(2560,1.25)) for kind in captions | empty]
+            tips += [dict(case=f'dismiss-{kind}-{w}',visible=False) for w in (1280,1920,2560) for kind in ('switch','leave','click')]
+            tips += [dict(case='dismiss-'+kind,visible=False) for kind in ('resize','ui-scale','focus','motion-start','motion-end-no-revival')]
+            tips += [dict(case='negative-controls',empty_popup=True,current_detached_pixels=0,legacy_detached_pixels=12)]
             native = dict(checks=len(labels), assertions=[dict(label=l,passed=True) for l in labels],
+                          tooltip_cases=tips,
                           interruptions=interruptions, catalog_layouts=[dict(cards=[{}]*24)]*3,
                           page_motions=[dict(target=1,direction=1,seconds=.85),dict(target=0,direction=-1,seconds=.85)],
                           failures=[], layouts=[{}, {}, {}], handoffs=[{}, {}, {}, {}],
@@ -117,7 +134,8 @@ class BookStudyTests(unittest.TestCase):
                          events=[dict(kind=k,direction=d,seconds=s,first_frame=i*100,last_frame=i*100+90)
                                  for i,(k,d,s) in enumerate([('page',1,.85),('page',-1,.85),('open',1,3.),('return',-1,1.8)])])
             (root/'movie.json').write_text(json.dumps(movie),encoding='utf-8')
-            study = dict(identity, package="B-A-N02-T01", host="Linux",
+            study = dict(identity, package="B-A-N03-T01", host="Linux",edge_details=details,
+                         leather=dict(sha256='58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41',size=[1254,1254],imported_texture=dict(bytes=1)),
                          organic_paper=dict(sha256='1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f',size=[1254,1254],imported_texture=dict(bytes=1)),
                          material_source=dict(sha256='957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a'),
                          phases=[dict(name=n, exit_code=0, timed_out=False, seconds=.1) for n in names],
@@ -131,7 +149,8 @@ class BookStudyTests(unittest.TestCase):
                 (root/"report.json").write_text(json.dumps(candidate), encoding="utf-8")
                 return dict(book_study=candidate)
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
-            for mutation in ("assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return", "required-file"):
+            for mutation in ("assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
+                             "tooltip-delay", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
                 if mutation == "assertion": original["failures"] = ["input lock failed"]
                 if mutation == "omitted-assertion":
@@ -146,6 +165,16 @@ class BookStudyTests(unittest.TestCase):
                 if mutation == "pixels": candidate["handoff_pixels"]["samples"]["work-1280.png"]["max_channel_delta"] = 5
                 if mutation == "margin": original['ink_margins'][0]['margin'] = 7.9
                 if mutation == "return": original['returns'][0]['seconds'] = 0
+                if mutation == "tooltip-delay": original['tooltip_cases'][0]['wait_seconds'] = 0
+                if mutation == "tooltip-empty": next(r for r in original['tooltip_cases'] if r.get('caption'))['caption'] = ''
+                if mutation == "tooltip-missing": original['tooltip_cases'].pop(0)
+                if mutation == "tooltip-stale": next(r for r in original['tooltip_cases'] if r.get('caption'))['text'] = 'Old help'
+                if mutation == "tooltip-clipped": next(r for r in original['tooltip_cases'] if r.get('caption'))['popup'][2] = 3000
+                if mutation == "tooltip-lifetime": next(r for r in original['tooltip_cases'] if r['case'].startswith('dismiss-'))['visible'] = True
+                if mutation == "tooltip-counterexample": original['tooltip_cases'][-1]['empty_popup'] = False
+                if mutation == "hover-stroke": original['tooltip_cases'][-1]['current_detached_pixels'] = 12
+                if mutation == "edge-missing": candidate['edge_details'].pop()
+                if mutation == "edge-scaled": candidate['edge_details'][0]['scale'] = 2
                 if mutation == "required-file": (root/"opening.avi").unlink()
                 with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                     validate_book_study(publish(candidate, original), root, identity, "Linux")
