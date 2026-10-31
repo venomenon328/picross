@@ -78,13 +78,41 @@ def validate_book_study(report, directory, identity, host):
     """Require B-A's original results, not just a successful enclosing Python call."""
     study = read(directory/'report.json')
     native = read(directory/'native.json')
-    if (report.get('book_study') != study or study['package'] != 'B-A-T01'
+    assertions = native.get('assertions', [])
+    required_assertions = {'three independently moving leaves', 'actual catalog pointer selects correct ID',
+                           'motion and blocked pointer input preserve cells/history/redo', 'presentation creates no save action',
+                           'correct ID from page half 0', 'correct ID from page half 12',
+                           'empty filter is immediate and reachable', 'sort is global and immediate',
+                           'fresh actual pointer gesture works after interruption',
+                           'solved puzzle opens directly without replay', 'ending reset opens same empty page without book animation'}
+    for target in (0, 1):
+        required_assertions.update(f'{label} {target}' for label in ('pointer starts catalog turn', 'filter and sort discarded during turn',
+                                  'short catalog motion settles target', 'partial last spread', 'global ordering precedes pagination', 'edge action has no animation'))
+    expected_interruptions = {(kind, phase, reason) for kind in ('page', 'open') for phase in ('prepare', 'motion')
+                              for reason in ('resize', 'ui-scale', 'focus', 'leave')}
+    for kind, phase, reason in expected_interruptions:
+        required_assertions.update(f'{label} {kind}/{phase}/{reason}' for label in
+                                   ('matrix stable target', 'matrix no history or save', 'matrix releases resources'))
+    if (report.get('book_study') != study or study['package'] != 'B-A-N01-T01'
             or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
-            or native['checks'] != 96 or native['failures'] != []
+            or native['checks'] != len(assertions) or native['failures'] != []
+            or not all(a.get('passed') is True for a in assertions)
+            or not required_assertions <= {a.get('label') for a in assertions}
+            or {(r['kind'], r['phase'], r['reason']) for r in native['interruptions']} != expected_interruptions
+            or len(native['interruptions']) != 16 or len(native['catalog_layouts']) != 3
+            or any(len(r['cards']) != 24 for r in native['catalog_layouts'])
+            or [(r['target'],r['direction'],r['seconds']) for r in native['page_motions']] != [(1,1,.85),(0,-1,.85)]
             or len(native['layouts']) != 3 or len(native['handoffs']) != 3
             or native['motion_wall_seconds_quiet'] < 3.0 or not native['motion_frame_ms_quiet']
-            or native['resources']['ui_capture_targets'] != 0 or native['resources']['catalog_rgba_textures'] != 0):
+            or native['resources']['ui_capture_targets'] != 0 or native['resources']['catalog_rgba_textures'] != 0
+            or native['resources']['visible_leaves'] != 0 or native['resources']['moving_leaves'] != 3
+            or study['material_source']['sha256'] != '957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a'):
         raise ValueError('Incomplete/wrong isolated book study assertions or binding')
+    movie = read(directory/'movie.json')
+    if (movie['fps'] != 30 or movie['failures'] != [] or movie['final_state'] != 'WORK' or movie['final_id'] != 'T-06'
+            or [(e['kind'], e['direction'], e['seconds']) for e in movie['events']] != [('page',1,.85),('page',-1,.85),('open',1,3.0)]
+            or any(e['last_frame'] <= e['first_frame'] for e in movie['events'])):
+        raise ValueError('Incomplete/incorrect book motion evidence')
     expected = ['book-version', 'book-import', 'book-native', 'book-movie', 'book-regular-import']
     for target in ('windows', 'web'):
         expected += ['book-regular-'+target+s for s in ('', '-content', '-isolation')]
@@ -97,10 +125,11 @@ def validate_book_study(report, directory, identity, host):
         raise ValueError('Incomplete/failed book study phases or Web feature contract')
     names = set(study['files'])
     actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()} - {'report.json'}
-    required = {'opening.avi', 'native.json', 'catalog.png', 'opening-middle.png', 'opening-back.png',
+    required = {'opening.avi', 'movie.json', 'movie-final.png', 'native.json', 'catalog.png', 'opening-middle.png', 'opening-back.png',
+                'page-forward.png', 'page-backward.png', 'material-original-detail.png', 'material-study-detail.png',
                 'windows/book-study.exe', 'windows/book-study.pck', 'web/index.html', 'web/index.pck', 'web/index.wasm'}
     required.update('logs/'+name+'.log' for name in expected)
-    required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work') for width in (1280,1920,2560))
+    required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work', 'catalog') for width in (1280,1920,2560))
     if names != actual or not required <= names:
         raise ValueError('Missing/unexpected book study evidence inventory')
     for name, metadata in study['files'].items():

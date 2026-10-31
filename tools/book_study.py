@@ -10,6 +10,8 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from copy import deepcopy
+import time
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -52,6 +54,10 @@ def fixtures() -> dict:
             data["reveal"].update(image=f"res://{STUDY}/reveal-{key}.svg", name="VERBORGENER STUDIENNAME " + key)
             definitions.append(data)
             entries.append(entry)
+        for index in range(3, 27):
+            entry = deepcopy(entries[index % 3])
+            entry.update(id=f"T-{index+10:02d}", key=f"t{index+10:02d}", save_slot=f"t{index+10:02d}")
+            entries.append(entry)
         # Registry entries retain the valid technical metadata contract. Study
         # definitions use the explicit study-asset validation exception.
         return dict(registry=dict(format=catalog["format"], categories=[dict(id="technical", name="Technische Muster", order=1)], entries=entries), definitions=definitions)
@@ -84,11 +90,15 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
     urls = tc.official_asset_urls(tc.request_json(tc.RELEASE_API), assets)
     for asset in assets:
         tc.download_asset(urls[asset.name], cache / asset.name, asset.sha256, 1200)
-    report = dict(package="B-A-T01", **source_identity(ROOT),
+    report = dict(package="B-A-N01-T01", **source_identity(ROOT),
                   host=host, platform=platform.platform(), python=platform.python_version(),
                   engine=tc.EXPECTED_VERSION, phases=[], browser="not requested; not started")
     report["sources"] = {p.relative_to(ROOT).as_posix(): tc.sha256_file(p) for p in sorted((ROOT / "game" / STUDY).glob("*")) if p.is_file()}
     report["sources"]["tools/book_study.py"] = tc.sha256_file(Path(__file__))
+    material = ROOT / "game/art/book/bp2-a-inventarband.png"
+    report["material_source"] = dict(file=material.relative_to(ROOT).as_posix(), sha256=tc.sha256_file(material), bytes=material.stat().st_size)
+    if report["material_source"]["sha256"] != "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a":
+        raise ValueError("The bound original A material changed")
     with tempfile.TemporaryDirectory(prefix="picross-book-study-") as temp:
         work = Path(temp)
         engine = str(tc.extract_editor(cache / editor.name, work / "engine", host))
@@ -108,11 +118,15 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
         phase("version", ["--version"], tc.EXPECTED_VERSION)
         phase("import", ["--headless", *base, "--import"])
         phase("native", [*base, "--rendering-driver", "opengl3", "--script", "res://study/book/verify.gd", "--", "--p1-capture"], "BOOK_STUDY_OK", True)
+        started = time.monotonic()
         report["handoff_pixels"] = verify_handoffs(output)
+        report["pixel_verification_seconds"] = time.monotonic() - started
         phase("movie", [*base, "--rendering-driver", "opengl3", "--write-movie", str(output / "opening.avi"), "--fixed-fps", "30", "--script", "res://study/book/verify.gd", "--", "--movie", "--p1-capture"], "BOOK_STUDY_MOVIE_OK", True)
         if not native_only:
             export_all(work, project, cache, output, env, phase, base, report)
     report["files"] = {p.relative_to(output).as_posix(): dict(bytes=p.stat().st_size, sha256=tc.sha256_file(p)) for p in sorted(output.rglob("*")) if p.is_file()}
+    report["inventory_cost"] = dict(files=len(report["files"]), bytes=sum(row["bytes"] for row in report["files"].values()),
+                                  pngs=sum(name.endswith('.png') for name in report["files"]), movie_bytes=report["files"]["opening.avi"]["bytes"])
     (output / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     return report
 

@@ -1,6 +1,8 @@
 # Produktdefinition: picross
 
-**Buch / #493 · B-A:** Die bestätigte Richtung verbindet einen realistischen
+**Buch / #493 · B-A-N01:** Katalog-Doppelseite mit mittiger Bindung,
+kurzes richtungsabhängiges Blättern und drei einzelne Blätter zur rechten
+Arbeitsseite sind in der isolierten Studie umgesetzt. Die bestätigte Richtung verbindet einen realistischen
 räumlichen Buchkörper mit gezeichneten Inhalten/UI. Die [isolierte Studie](BOOK_STUDY.md)
 ändert den normalen Spielstart nicht; reguläre Integration und persönliche
 Kandidatenwahl bleiben getrennt.

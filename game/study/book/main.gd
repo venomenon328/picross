@@ -1,9 +1,12 @@
 extends Node3D
-## B-A only. No product entry point, registry mutation, save or recovery integration.
+## B-A-N01 only: synthetic RAM study, no regular startup or save integration.
 const Content = preload("res://study/book/content.gd")
 const PAGE = preload("res://study/book/page.gdshader")
 const MATERIAL = preload("res://study/book/material.gdshader")
+const SOURCE = preload("res://art/book/bp2-a-inventarband.png")
 const DURATION: float = 3.0
+const PAGE_DURATION: float = 0.85
+const OPENING_LEAVES: int = 3
 enum State { CATALOG, PREPARING, OPENING, WORK }
 var state: State = State.CATALOG
 var generation: int = 0
@@ -17,13 +20,22 @@ var leaf: MeshInstance3D
 var paper: MeshInstance3D
 var leaf_material: ShaderMaterial
 var paper_material: ShaderMaterial
+var left_material: ShaderMaterial
+var leaves: Array[MeshInstance3D] = []
 var capture: SubViewport
 var catalog_texture: ImageTexture
 var frames_ms: Array[float] = []
 var wall_started: int = 0
 var last_frame_usec: int = 0
 var motion_wall_seconds: float = 0.0
+var preparation_seconds: float = 0.0
 var interrupted: String = ""
+var motion_kind: String = ""
+var direction: int = 1
+var source_context: Dictionary = {}
+var target_page: int = 0
+var preparation_started: int = 0
+var settling: bool = false
 
 func _ready() -> void:
 	_build_book()
@@ -32,6 +44,7 @@ func _ready() -> void:
 	app.size = Vector2(get_viewport().size)
 	add_child(app)
 	app.opening_requested.connect(request_open)
+	app.album.page_requested.connect(request_page)
 	app.catalog_shown.connect(_catalog)
 	app.scale_changing.connect(func() -> void: interrupt("ui-scale"))
 	app.exit_requested.connect(func() -> void: interrupt("leave"); get_tree().quit())
@@ -40,8 +53,6 @@ func _ready() -> void:
 	if OS.get_cmdline_user_args().has("--book-study-proof"): call_deferred("_native_proof")
 
 func _native_proof() -> void:
-	# Export templates do not run the editor's --script entry point. Exercise the
-	# actual delivered main scene instead, only under this explicit study flag.
 	for i: int in range(6): await get_tree().process_frame
 	var accepted: bool = request_open("T-06")
 	var deadline: int = Time.get_ticks_usec()+10000000
@@ -49,8 +60,7 @@ func _native_proof() -> void:
 		await get_tree().process_frame
 	var ok: bool = accepted and state == State.WORK and elapsed == DURATION and app.session.definition.id == "T-06"
 	await RenderingServer.frame_post_draw
-	var destination: String = OS.get_environment("BOOK_STUDY_OUTPUT").path_join("windows-exported-work.png")
-	ok = ok and get_viewport().get_texture().get_image().save_png(destination) == OK
+	ok = ok and get_viewport().get_texture().get_image().save_png(OS.get_environment("BOOK_STUDY_OUTPUT").path_join("windows-exported-work.png")) == OK
 	print("BOOK_PACK_MOTION_OK" if ok else "BOOK_PACK_MOTION_FAIL", " elapsed=", elapsed, " id=", selected_id)
 	get_tree().quit(0 if ok else 4)
 
@@ -59,6 +69,7 @@ func _material(color: Color, kind: float) -> ShaderMaterial:
 	result.shader = MATERIAL
 	result.set_shader_parameter("base_color", color)
 	result.set_shader_parameter("kind", kind)
+	result.set_shader_parameter("material_source", SOURCE)
 	return result
 
 func _box(extent: Vector3, at: Vector3, material: Material) -> MeshInstance3D:
@@ -71,19 +82,26 @@ func _box(extent: Vector3, at: Vector3, material: Material) -> MeshInstance3D:
 	add_child(instance)
 	return instance
 
+func _page_material(side: float) -> ShaderMaterial:
+	var result := ShaderMaterial.new()
+	result.shader = PAGE
+	result.set_shader_parameter("side", side)
+	result.set_shader_parameter("material_source", SOURCE)
+	return result
+
 func _page(material: ShaderMaterial) -> MeshInstance3D:
 	var mesh := ArrayMesh.new()
 	var vertices := PackedVector3Array()
 	var normals := PackedVector3Array()
 	var uvs := PackedVector2Array()
 	var indices := PackedInt32Array()
-	for y: int in range(9):
+	for y: int in range(17):
 		for x: int in range(65):
-			var uv := Vector2(x/64.0, y/8.0)
-			vertices.append(Vector3((uv.x-0.5)*19.2, (0.5-uv.y)*10.8, 0.0))
-			normals.append(Vector3.FORWARD * -1.0)
+			var uv := Vector2(x/64.0, y/16.0)
+			vertices.append(Vector3(uv.x*10.0, (0.5-uv.y)*12.4, 0.0))
+			normals.append(Vector3.BACK)
 			uvs.append(uv)
-			if x < 64 and y < 8:
+			if x < 64 and y < 16:
 				var i: int = y*65+x
 				indices.append_array([i, i+1, i+65, i+1, i+66, i+65])
 	var arrays: Array = []
@@ -104,33 +122,33 @@ func _build_book() -> void:
 	environment.environment = Environment.new()
 	environment.environment.background_mode = Environment.BG_COLOR
 	environment.environment.background_color = Color("302b25")
-	environment.environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.environment.ambient_light_color = Color("f7f3eb")
-	environment.environment.ambient_light_energy = 0.4
 	add_child(environment)
-	var light := DirectionalLight3D.new()
-	light.rotation_degrees = Vector3(-25, -32, 0)
-	light.light_color = Color("ffeed7")
-	light.light_energy = 0.55
-	light.shadow_enabled = false
-	add_child(light)
-	_box(Vector3(80, 50, 0.15), Vector3(0, 0, -0.75), _material(Color("514333"), 2))
-	var leather: ShaderMaterial = _material(Color("292c2b"), 0)
-	_box(Vector3(18.75, 10.55, 0.16), Vector3(0.03, -0.025, -0.46), leather)
-	_box(Vector3(18.53, 10.36, 0.27), Vector3(-0.01, 0.01, -0.245), _material(Color("c9b993"), 1))
-	# Individual thin signatures and slightly irregular fore-edges catch material light.
-	for i: int in range(18):
-		_box(Vector3(18.49+sin(i*4.7)*0.018, 10.32+sin(i*3.1)*0.017, 0.008), Vector3(-0.02, 0.01, -0.37+i*0.015), _material(Color("dfd2b3").darkened((i%3)*0.015), 1))
-	_box(Vector3(0.18, 10.43, 0.42), Vector3(9.27, 0.01, -0.2), leather)
-	_box(Vector3(0.025, 10.26, 0.015), Vector3(9.16, 0.01, 0.01), _material(Color("756345"), 0))
-	paper_material = ShaderMaterial.new()
-	paper_material.shader = PAGE
+	_box(Vector3(80,50,0.15),Vector3(0,0,-0.75),_material(Color("514333"),2))
+	var leather: ShaderMaterial = _material(Color("292522"),0)
+	for side: float in [-1.0,1.0]:
+		_box(Vector3(10.36,12.86,0.18),Vector3(side*5.13,-0.04,-0.49),leather)
+		_box(Vector3(10.12,12.62,0.31),Vector3(side*5.04,0,-0.28),_material(Color("cbb992"),1))
+		for i: int in range(16):
+			_box(Vector3(10.06+sin(i*4.7)*0.025,12.52+sin(i*3.1)*0.024,0.008),Vector3(side*5.02,0,-0.40+i*0.021),_material(Color("e5d4ae").darkened((i%3)*0.025),1))
+		# A worn raised leather lip remains visible in the close work crop.
+		_box(Vector3(0.13,12.77,0.06),Vector3(side*10.22,-0.02,-0.32),leather)
+	_box(Vector3(0.22,12.75,0.32),Vector3(0,0,-0.20),leather)
+	var thread := StandardMaterial3D.new()
+	thread.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	thread.albedo_color = Color("947349")
+	for y: float in [-5.6,-3.7,-1.8,0.1,2.0,3.9,5.7]:
+		_box(Vector3(0.15,0.025,0.02),Vector3(0,y,0.01),thread)
+	left_material = _page_material(-1)
+	_page(left_material)
+	paper_material = _page_material(1)
 	paper = _page(paper_material)
-	leaf_material = ShaderMaterial.new()
-	leaf_material.shader = PAGE
-	leaf = _page(leaf_material)
-	leaf.position.z = 0.014
-	leaf.hide()
+	for i: int in range(OPENING_LEAVES):
+		var sheet: MeshInstance3D = _page(_page_material(1))
+		sheet.position.z = 0.025+(OPENING_LEAVES-i)*0.022
+		sheet.hide()
+		leaves.append(sheet)
+	leaf = leaves[0]
+	leaf_material = leaf.material_override
 	camera = Camera3D.new()
 	camera.projection = Camera3D.PROJECTION_ORTHOGONAL
 	camera.near = 0.05
@@ -139,42 +157,90 @@ func _build_book() -> void:
 	add_child(camera)
 	_pose(0)
 
-func _pose(progress: float) -> void:
-	var retreat: float = sin(PI * clampf(progress/0.84, 0, 1))
+func view_rect(work: bool) -> Vector4:
 	var viewport_size := Vector2(get_viewport().size)
-	var fit: float = maxf(10.8, 19.2*viewport_size.y/maxf(1, viewport_size.x))
-	camera.size = fit*(1.0+0.17*retreat)
-	camera.position = Vector3(-3.5*retreat, 3.2*retreat, 30)
-	camera.look_at(Vector3.ZERO)
-	var t: float = smoothstep(0.12, 0.88, progress)
-	leaf_material.set_shader_parameter("turn", t)
-	paper_material.set_shader_parameter("shadow", sin(t*PI))
+	var height: float = maxf(6.075,10.8*viewport_size.y/maxf(1,viewport_size.x)) if work else maxf(13.4,22.0*viewport_size.y/maxf(1,viewport_size.x))
+	var width: float = height*viewport_size.x/maxf(1,viewport_size.y)
+	return Vector4((5.0 if work else 0.0)-width/2,-height/2,width,height)
+
+func _pose(progress: float) -> void:
+	var work: bool = motion_kind == "open" or state == State.WORK
+	var zoom: float = smoothstep(0.45,1.0,progress) if work else 0.0
+	var from: Vector4 = view_rect(false)
+	var to: Vector4 = view_rect(true)
+	camera.size = lerpf(from.w,to.w,zoom)
+	var center: float = 5.0*zoom
+	var tilt: float = sin(PI*progress)*0.65 if state == State.OPENING else 0.0
+	camera.position = Vector3(center,tilt,30)
+	camera.look_at(Vector3(center,0,0))
+	var strongest: float = 0
+	for i: int in range(leaves.size()):
+		if progress >= 1.0: leaves[i].hide()
+		var turn: float = smoothstep(0.04+i*0.14,0.65+i*0.11,progress) if motion_kind == "open" else smoothstep(0,1,progress)
+		leaves[i].material_override.set_shader_parameter("turn",turn)
+		strongest = maxf(strongest,sin(turn*PI))
+	paper_material.set_shader_parameter("shadow",strongest)
+	left_material.set_shader_parameter("shadow",strongest*0.65)
 
 func _catalog() -> void:
-	if state in [State.PREPARING, State.OPENING]: interrupt("leave")
+	if settling: return
+	if state in [State.PREPARING,State.OPENING]: interrupt("leave")
 	state = State.CATALOG
 	selected_id = ""
-	leaf.hide()
+	motion_kind = ""
+	for sheet: MeshInstance3D in leaves: sheet.hide()
 	_pose(0)
 
 func _resize() -> void:
 	if app == null: return
-	if state in [State.PREPARING, State.OPENING]: interrupt("resize")
+	if state in [State.PREPARING,State.OPENING]: interrupt("resize")
 	app.size = Vector2(get_viewport().size)
 	_pose(1.0 if state == State.WORK else 0.0)
 	app._layout_book()
 
-func request_open(id: String) -> bool:
-	if state != State.CATALOG or release_barrier or not app.session_indices.has(id): return false
-	selected_id = id # Bind identity before any await or catalog rebuild.
+func context() -> Dictionary:
+	return {"page":app.album.page_index,"scroll":app.album.scroll_vertical,"category":app.album.category_id,
+		"criterion":app.album.preference.criterion,"direction":app.album.preference.direction,
+		"selection":app.album.selected_id,"session":str(app.session.definition.id)}
+
+func _begin(kind: String) -> void:
+	source_context = context()
+	motion_kind = kind
 	generation += 1
 	state = State.PREPARING
+	preparation_started = Time.get_ticks_usec()
 	interrupted = ""
 	app._cancel_interaction()
+	app.album.locked = true
 	app.process_mode = Node.PROCESS_MODE_DISABLED
 	release_barrier = true
 	_prepare(generation)
+
+func request_open(id: String) -> bool:
+	if state != State.CATALOG or release_barrier or not app.session_indices.has(id): return false
+	selected_id = id
+	if app.sessions[int(app.session_indices[id])].completed:
+		app.activate(id)
+		state = State.WORK
+		motion_kind = ""
+		_pose(1)
+		return true
+	direction = 1
+	_begin("open")
 	return true
+
+func request_page(target: int) -> bool:
+	if state != State.CATALOG or release_barrier or target == app.album.page_index: return false
+	if target < 0 or target >= ceili(app.album.filtered_ids.size()/24.0): return false
+	target_page = target
+	direction = 1 if target > app.album.page_index else -1
+	_begin("page")
+	return true
+
+func _ink(material: ShaderMaterial, texture: Texture2D, rect: Vector4, back: bool = false) -> void:
+	material.set_shader_parameter("back_content" if back else "content",texture)
+	material.set_shader_parameter("has_back" if back else "has_content",texture != null)
+	material.set_shader_parameter("back_rect" if back else "content_rect",rect)
 
 func _prepare(token: int) -> void:
 	capture = SubViewport.new()
@@ -184,25 +250,36 @@ func _prepare(token: int) -> void:
 	capture.gui_disable_input = true
 	capture.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	add_child(capture)
-	app.reparent(capture, false)
+	app.reparent(capture,false)
 	app.position = Vector2.ZERO
 	app.size = Vector2(capture.size)
-	leaf_material.set_shader_parameter("content", capture.get_texture())
-	leaf_material.set_shader_parameter("has_content", true)
-	leaf.show()
+	for i: int in range(leaves.size()):
+		leaves[i].visible = i == 0 or motion_kind == "open"
+		leaves[i].material_override.set_shader_parameter("side",float(direction))
+		leaves[i].material_override.set_shader_parameter("turn",0.0)
+	_ink(leaf_material,capture.get_texture(),view_rect(false))
+	_ink(left_material,capture.get_texture(),view_rect(false))
+	_ink(paper_material,capture.get_texture(),view_rect(false))
 	await RenderingServer.frame_post_draw
 	if token != generation: return
 	catalog_texture = ImageTexture.create_from_image(capture.get_texture().get_image())
-	leaf_material.set_shader_parameter("content", catalog_texture)
-	app.activate(selected_id)
+	_ink(leaf_material,catalog_texture,view_rect(false))
+	_ink(left_material,catalog_texture,view_rect(false))
+	_ink(paper_material,catalog_texture,view_rect(false))
+	if motion_kind == "open": app.activate(selected_id)
+	else: app.album.commit_page(target_page)
 	await get_tree().process_frame
 	await RenderingServer.frame_post_draw
 	if token != generation: return
-	paper_material.set_shader_parameter("content", capture.get_texture())
-	paper_material.set_shader_parameter("has_content", true)
+	if motion_kind == "open":
+		_ink(paper_material,capture.get_texture(),view_rect(true))
+	else:
+		_ink(paper_material if direction == 1 else left_material,capture.get_texture(),view_rect(false))
+		_ink(leaf_material,capture.get_texture(),view_rect(false),true)
 	elapsed = 0
 	frames_ms.clear()
 	wall_started = Time.get_ticks_usec()
+	preparation_seconds = (wall_started-preparation_started)/1000000.0
 	last_frame_usec = wall_started
 	state = State.OPENING
 
@@ -211,53 +288,62 @@ func _process(delta: float) -> void:
 		var now: int = Time.get_ticks_usec()
 		frames_ms.append((now-last_frame_usec)/1000.0)
 		last_frame_usec = now
-		elapsed = minf(DURATION, elapsed+delta if OS.has_feature("movie") else (now-wall_started)/1000000.0)
-		_pose(elapsed/DURATION)
-		if elapsed >= DURATION:
+		var duration: float = DURATION if motion_kind == "open" else PAGE_DURATION
+		elapsed = minf(duration,elapsed+delta if OS.has_feature("movie") else (now-wall_started)/1000000.0)
+		_pose(elapsed/duration)
+		if elapsed >= duration:
 			motion_wall_seconds = (Time.get_ticks_usec()-wall_started)/1000000.0
 			_settle(true)
 	elif state != State.PREPARING and release_barrier and held_buttons == 0 and Input.get_mouse_button_mask() == 0:
-		# The release itself was consumed. Only a subsequent event can reach UI.
 		release_barrier = false
-		if app != null: app.process_mode = Node.PROCESS_MODE_INHERIT
+		app.album.locked = false
+		app.process_mode = Node.PROCESS_MODE_INHERIT
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE, MOUSE_BUTTON_XBUTTON1, MOUSE_BUTTON_XBUTTON2]:
+	if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_LEFT,MOUSE_BUTTON_RIGHT,MOUSE_BUTTON_MIDDLE,MOUSE_BUTTON_XBUTTON1,MOUSE_BUTTON_XBUTTON2]:
 		var mask: int = 1 << (event.button_index-1)
 		held_buttons = (held_buttons | mask) if event.pressed else (held_buttons & ~mask)
-	if state in [State.PREPARING, State.OPENING] or release_barrier:
-		get_viewport().set_input_as_handled()
+	if state in [State.PREPARING,State.OPENING] or release_barrier: get_viewport().set_input_as_handled()
 	if event is InputEventKey and event.pressed and event.keycode == KEY_ESCAPE:
 		interrupt("leave")
 		app.show_album()
 
 func interrupt(reason: String) -> void:
-	if state not in [State.PREPARING, State.OPENING]: return
+	if state not in [State.PREPARING,State.OPENING]: return
 	interrupted = reason
 	generation += 1
 	_settle(reason != "leave")
 
-func _settle(to_work: bool) -> void:
+func _settle(target: bool) -> void:
 	generation += 1
-	state = State.WORK if to_work else State.CATALOG
-	if app.get_parent() != self: app.reparent(self, false)
+	settling = true
+	var work: bool = target and motion_kind == "open"
+	state = State.WORK if work else State.CATALOG
+	if app.get_parent() != self: app.reparent(self,false)
 	app.position = Vector2.ZERO
 	app.size = Vector2(get_viewport().size)
-	if to_work: app.activate(selected_id)
-	else: app.show_album()
-	leaf.visible = to_work
-	_pose(1.0 if to_work else 0.0)
-	leaf_material.set_shader_parameter("has_content", false)
-	leaf_material.set_shader_parameter("content", null)
-	paper_material.set_shader_parameter("has_content", false)
-	paper_material.set_shader_parameter("content", null)
+	if work: app.activate(selected_id)
+	else:
+		if not target:
+			app.session = app.sessions[int(app.session_indices[source_context.session])]
+			app.board.session = app.session
+		app.show_album()
+		app.album.selected_id = source_context.selection
+		app.album.commit_page(target_page if target else int(source_context.page),0 if target else int(source_context.scroll))
+	for sheet: MeshInstance3D in leaves:
+		sheet.hide()
+		_ink(sheet.material_override,null,Vector4.ZERO)
+		_ink(sheet.material_override,null,Vector4.ZERO,true)
+	_pose(1.0 if work else 0.0)
+	_ink(paper_material,null,Vector4.ZERO)
+	_ink(left_material,null,Vector4.ZERO)
 	catalog_texture = null
 	if capture != null:
 		capture.queue_free()
 		capture = null
-	# Stay disabled until the transition-triggering and all blocked buttons are up.
 	release_barrier = true
 	app._cancel_interaction()
+	settling = false
 
 func set_ui_scale(value: float) -> void:
 	interrupt("ui-scale")
@@ -272,9 +358,11 @@ func _notification(what: int) -> void:
 		get_tree().quit()
 
 func resource_report() -> Dictionary:
-	var pixels: int = get_viewport().size.x * get_viewport().size.y
-	return {"viewport": get_viewport().size, "page_vertices": 585, "page_triangles": 1024,
-		"animation_seconds": DURATION, "motion_wall_seconds": motion_wall_seconds,
-		"ui_capture_targets": 1 if capture != null else 0, "catalog_rgba_textures": 1 if catalog_texture != null else 0,
-		"peak_color_target_and_snapshot_bytes": pixels*8, "peak_capture_depth_upper_bound_bytes": pixels*4,
-		"shared_resources_excluded_from_estimate": "font atlases, six cell atlases, SL frames, main framebuffer, driver overhead"}
+	var pixels: int = get_viewport().size.x*get_viewport().size.y
+	return {"viewport":get_viewport().size,"page_vertices":1105,"page_triangles":2048,"moving_leaves":OPENING_LEAVES,
+		"visible_leaves":leaves.filter(func(sheet: MeshInstance3D) -> bool: return sheet.visible).size(),
+		"animation_seconds":DURATION,"page_seconds":PAGE_DURATION,"motion_wall_seconds":motion_wall_seconds,"preparation_seconds":preparation_seconds,
+		"ui_capture_targets":1 if capture != null else 0,"catalog_rgba_textures":1 if catalog_texture != null else 0,
+		"peak_color_target_and_snapshot_bytes":pixels*8,"peak_capture_depth_upper_bound_bytes":pixels*4,
+		"material_source_rgba_bytes":2560*1440*4,
+		"shared_resources_excluded_from_estimate":"font atlases, six cell atlases, SL frames, main framebuffer, driver overhead"}

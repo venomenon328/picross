@@ -12,7 +12,7 @@ func run() -> void:
 	check(ResourceLoader.exists("res://study/book/main.tscn") == expected, "study entry point inclusion/exclusion")
 	check(FileAccess.file_exists("res://study/book/fixtures.json") == expected, "study inputs inclusion/exclusion")
 	if expected:
-		for resource: String in ["res://study/book/main.gd", "res://study/book/content.gd", "res://study/book/page.gdshader", "res://study/book/material.gdshader", "res://ui/main.gd"]:
+		for resource: String in ["res://study/book/main.gd", "res://study/book/content.gd", "res://study/book/catalog.gd", "res://study/book/page.gdshader", "res://study/book/material.gdshader", "res://ui/main.gd"]:
 			check(ResourceLoader.exists(resource), "study dependency present " + resource)
 		var actual_script: Script = load("res://study/book/main.gd")
 		check(actual_script != null and actual_script.can_instantiate(), "actual packed study compiles with its dependencies")
@@ -21,7 +21,7 @@ func run() -> void:
 		check(not DirAccess.dir_exists_absolute("res://art/content"), "no real reveals in study")
 		check(not ResourceLoader.exists("res://study/book/verify.gd") and not ResourceLoader.exists("res://study/book/pack_probe.gd"), "no verification programs in study pack")
 		var input: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://study/book/fixtures.json"))
-		check(input.definitions.size() == 3, "bounded synthetic input")
+		check(input.definitions.size() == 3 and input.registry.entries.size() == 27, "bounded synthetic input")
 		for data: Dictionary in input.definitions:
 			check(ResourceLoader.exists(data.reveal.image), "fixed synthetic sentinel bundled")
 	print("BOOK_PACK_OK expected_study=", expected, " failures=", failures.size())

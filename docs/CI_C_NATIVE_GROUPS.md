@@ -3,8 +3,10 @@
 ## Buchstudie B-A / #493
 
 Die Exportgruppe verlangt zusätzlich einmalig `isolated-book-study` und dessen
-[B-A-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Assertions, Quellbindung,
-vollständige Phasen, Film, drei Übergabepaare und tatsächliche Studienpakete samt
+[B-A-N01-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
+die feste Szenariomenge, Doppelseitengeometrie, beide Blätterrichtungen,
+16 Unterbrechungsfälle, Quellbindung, Materialvergleich,
+vollständige Phasen, Film mit stabilem Ende, drei Übergabepaare und tatsächliche Studienpakete samt
 Dateihashes. Die bisherigen Gruppen-/Dateipflichten bleiben erhalten. Die Studie
 liegt getrennt im befristeten Technikartefakt, nicht im regulären Spielerpaket.
 

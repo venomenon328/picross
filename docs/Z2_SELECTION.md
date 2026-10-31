@@ -1,9 +1,12 @@
 # Z2: aktive Auswahl und native Integration
 
-## Buchrichtung #493 · isolierter B-A-Studienstand
+## Buchrichtung #493 · isolierter B-A-N01-Studienstand
 
 Die [Bewegungsstudie](BOOK_STUDY.md) untersucht realistische Buch-/Umgebungsmaterialien,
-mitbewegte gezeichnete Inhalte und insgesamt drei Sekunden Öffnung. Für diese neue
+mitbewegte gezeichnete Inhalte, Katalog-Doppelseite, kurzes Blättern in beide
+Richtungen und drei einzelne Blätter in insgesamt drei Sekunden zur rechten
+Arbeitsseite mit Bindung links. Das unveränderte A-Buch liefert Materialquelle
+und nativen Qualitätsvergleich. Für diese neue
 Richtung sind das flache A-PNG, reine Informationsspiegelung und das Verbot gezielter
 Kamerabewegung keine Architekturvorgabe. Regulärer Spielstart, Originalressourcen,
 Fonts, C1 und SL-Rahmen bleiben in B-A unverändert. B-B und persönliche Auswahl
