@@ -1,10 +1,12 @@
 extends "res://ui/main.gd"
 ## Developer-only regular UI, synthetic sessions, no filesystem persistence.
 const StudySurface = preload("res://study/book/surface.gd")
+const StudyCatalog = preload("res://study/book/catalog.gd")
 signal opening_requested(id: String)
 signal catalog_shown
 signal exit_requested
 signal scale_changing
+var resetting_ending: bool = false
 
 class MemoryPreference extends "res://model/catalog_preference.gd":
 	func load_selection() -> void: pass
@@ -32,7 +34,10 @@ func _ready() -> void:
 	Registry.cached = input.registry
 	Registry.load_error = ""
 	store = MemoryStore.new()
-	for data: Dictionary in input.definitions:
+	# Three shapes, 27 fixed IDs: one full spread and one partial spread.
+	for index: int in range(input.registry.entries.size()):
+		var data: Dictionary = input.definitions[index % 3].duplicate(true)
+		data.id = input.registry.entries[index].id
 		var item := Session.new(data)
 		# Fixed own entries, including wrong colors and X. Never copy the solution.
 		if not sessions.is_empty():
@@ -64,6 +69,16 @@ func _build() -> void:
 	laying_out = true
 	super._build()
 	laying_out = false
+	var old_album: Control = album
+	page.remove_child(old_album)
+	old_album.free()
+	album = StudyCatalog.new()
+	page.add_child(album)
+	album.opened.connect(select_by_id)
+	album.reset_requested.connect(_ask_reset_id)
+	album.repair_requested.connect(_ask_repair_id)
+	album.information_requested.connect(show_information.bind("settings"))
+	album.quit_requested.connect(leave_app)
 	album.preference = MemoryPreference.new()
 	# The regular catalog polls the web storage status; the study has no storage.
 	album.set_process(false)
@@ -76,8 +91,34 @@ func _build() -> void:
 	move_child(surface, 0)
 	parent.add_child(self)
 
+func _layout_book(prepare_board: bool = false) -> void:
+	super._layout_book(prepare_board)
+	if album == null or surface == null or laying_out: return
+	# The close right page starts beyond the gutter; the tab stays on paper.
+	album_button.position.x = surface.material_rect().position.x + surface.material_rect().size.x*0.045
+	layout_warning.position.x = maxf(layout_warning.position.x, album_button.position.x)
+	if album.summary != null: album.summary.visible = album.visible and catalog_error.is_empty()
+	if album.visible:
+		# Actual screen pixels: no render-target downscaling of controls or fonts.
+		var material: Rect2 = surface.material_rect()
+		var margin: float = material.size.x*0.09
+		_place(album, Rect2(material.position+Vector2(margin, 86*ui_scale), Vector2(material.size.x-2*margin, material.size.y-126*ui_scale)))
+		_place(title, Rect2(material.position+Vector2(margin, 28*ui_scale), Vector2(material.size.x*0.38, 45*ui_scale)))
+		if album.summary != null:
+			_place(album.summary,Rect2(material.position+Vector2(material.size.x/2+38*ui_scale,28*ui_scale),Vector2(material.size.x*0.35,45*ui_scale)))
+			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))
+		album._layout_cards()
+
 func select_puzzle(index: int) -> void:
+	if resetting_ending:
+		super.select_puzzle(index)
+		return
 	if index >= 0 and index < sessions.size(): opening_requested.emit(str(sessions[index].definition.id))
+
+func _reset_selected() -> void:
+	resetting_ending = reset_origin == "ending"
+	super._reset_selected()
+	resetting_ending = false
 
 func activate(id: String) -> void:
 	super.select_puzzle(int(session_indices[id]))

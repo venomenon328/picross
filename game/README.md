@@ -1,8 +1,10 @@
 # picross: Spiel- und Entwicklungsanleitung
 
-**Buchstudie B-A / #493:** Die neue räumliche Buchrichtung ist ausschließlich
+**Buchstudie B-A-N01 / #493:** Die neue räumliche Buchrichtung ist ausschließlich
 als [getrennt startbare Studie](study/book/README.md) vorhanden. Ihr Katalog öffnet
-drei synthetische Muster mit insgesamt drei Sekunden Blatt-/Kamerabewegung.
+drei synthetische Muster unter 27 IDs auf einer Doppelseite. Kurzes Blättern
+dauert 0,85 Sekunden; drei einzelne Blätter führen in insgesamt drei Sekunden
+zur großen rechten Arbeitsseite mit Bindung links.
 Bearbeitung bleibt im RAM. Das normale Spiel verwendet weiterhin das bisherige
 A-Buch; reguläre Integration und persönliche Sichtabnahme folgen separat.
 

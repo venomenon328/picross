@@ -1,8 +1,10 @@
 # Aktiver Bestand und historische Quellen
 
-**Buchstudie B-A / #493:** `game/study/book/` erhält den ausführbaren isolierten
+**Buchstudie B-A-N01 / #493:** `game/study/book/` erhält den ausführbaren isolierten
 Untersuchungsstand, zwei eigene Materialshader und kompakte synthetische Inputs
-samt deterministischer Erzeugung. [B-A-T01](BOOK_STUDY.md) und Startanleitung binden
+samt deterministischer Erzeugung und studieneigener Doppelseitenanordnung.
+Das bestehende A-Bild bleibt unveränderte Materialquelle.
+[B-A-N01-T01](BOOK_STUDY.md) und Startanleitung binden
 Zweck, Rechte und Nachweise. Filme, Laufbilder und Exporte bleiben temporär; der
 reguläre Export schließt die Studie aus. Keine historischen Bildressourcen ersetzen.
 

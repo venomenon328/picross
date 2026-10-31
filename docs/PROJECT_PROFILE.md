@@ -1,9 +1,11 @@
 # Projektprofil: picross
 
-**Buch / #493 · B-A:** Die [isolierte ausführbare Bewegungsstudie](BOOK_STUDY.md)
+**Buch / #493 · B-A-N01:** Die [isolierte ausführbare Bewegungsstudie](BOOK_STUDY.md)
 verwendet realistischen Buchkörper und gezeichnete reguläre UI mit synthetischen
-Inputs. Normaler Start und Navigation bleiben beim bisherigen A-Buch. B-B,
-separates B-A-R01, persönliche Kandidatenwahl B-A-M01 und Merge bleiben getrennt.
+Inputs, Katalog-Doppelseite und rechter Arbeitsseite. Materialvergleich und
+revidierte Nachweise folgen B-A-N01-T01. Normaler Start und Navigation bleiben
+beim bisherigen A-Buch. B-B, neues separates B-A-N01-R02, persönliche
+Kandidatenwahl B-A-M01 und Merge bleiben getrennt.
 
 **RI · 29.10.2026, Spezifikation freigegeben, noch nicht implementiert:**
 [Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
