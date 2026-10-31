@@ -1,41 +1,36 @@
 shader_type spatial;
-render_mode unshaded, cull_back;
-uniform sampler2D material_source : source_color, filter_linear_mipmap, repeat_disable;
-uniform vec4 base_color : source_color = vec4(0.12, 0.105, 0.085, 1.0);
+render_mode unshaded, cull_disabled;
+uniform sampler2D leather_source : source_color, filter_linear_mipmap, repeat_enable;
+uniform vec4 base_color : source_color = vec4(1.0);
 uniform float kind = 0.0;
-varying vec3 surface_position;
-float noise(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
-void vertex() { surface_position = VERTEX; }
+varying vec3 surface;
+varying vec3 surface_normal;
+float noise(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+void vertex() { surface=VERTEX; surface_normal=NORMAL; }
 void fragment() {
-	float n = noise(floor(UV * 1500.0));
-	float grain = 0.0;
-	if (kind < 0.5) {
-		grain = (n - 0.5) * 0.015;
-	} else if (kind < 1.5) {
-		grain = sin(UV.y * 1900.0 + sin(UV.x * 47.0) * 0.8) * 0.035; // page edges
-	} else {
-		grain = sin(surface_position.x * 19.0 + sin(surface_position.y * 0.9) * 0.4) * 0.012 + (n-0.5)*0.008;
-	}
-	ALBEDO = base_color.rgb + grain;
-	if (kind < 0.5) {
-		// Map the exposed rim to leather, not to the original paper interior.
-		float rim = smoothstep(0.0,0.04,min(UV.x,1.0-UV.x));
-		ALBEDO = texture(material_source,vec2(mix(0.005,0.035,rim),mix(0.005,0.995,UV.y))).rgb;
-	}
-	if (kind > 1.5 && kind < 2.5) {
-		ALBEDO = texture(material_source,vec2(UV.x,mix(0.001,0.017,UV.y))).rgb*0.48;
-		vec2 outside = abs(surface_position.xy - vec2(0.12, -0.18)) - vec2(10.45, 6.52);
-		float edge = length(max(outside, vec2(0.0))) + min(max(outside.x, outside.y), 0.0);
-		ALBEDO *= 0.4 + 0.6 * smoothstep(0.0, 0.55, edge);
-	}
-	if (kind > 2.5 && kind < 3.5) {
-		// Original stitched binding, on its own narrow raised spine.
-		ALBEDO = texture(material_source,vec2(mix(0.960,0.985,UV.x),mix(0.025,0.975,UV.y))).rgb;
-	}
-	if (kind > 3.5) {
-		ALBEDO = texture(material_source,vec2(mix(0.008,0.025,UV.x),mix(0.035,0.965,UV.y))).rgb;
-	}
-	ROUGHNESS = kind < 0.5 ? 0.72 : 0.94;
-	SPECULAR = 0.2;
-	NORMAL_MAP = vec3(0.5 + (n-0.5)*0.08, 0.5, 1.0);
+    vec3 n=normalize(surface_normal);
+    float light=0.68+0.32*max(0.0,dot(n,normalize(vec3(-0.35,0.6,1.0))));
+    if (kind<0.5) {
+        // Independent leather: no silhouette, cloth or shadows in its UVs.
+        vec3 leather=texture(leather_source,surface.xy*0.22).rgb;
+        float rim=max(smoothstep(10.16,10.43,abs(surface.x)),smoothstep(6.33,6.55,abs(surface.y)));
+        ALBEDO=leather*(0.75+rim*0.28)*light;
+    } else if (kind<1.5) {
+        float crown=0.26*pow(1.0-clamp(abs(surface.x)/0.75,0.0,1.0),3.0);
+        float depth=(crown-surface.z)/(0.43+crown*0.35);
+        float phase=depth*12.0;
+        float distance_to_leaf=abs(fract(phase+0.5)-0.5);
+        float separation=1.0-smoothstep(0.035,0.035+max(fwidth(phase),0.02),distance_to_leaf);
+        float contact=0.87+0.13*smoothstep(0.0,0.06,depth);
+        ALBEDO=base_color.rgb*light*contact*(1.0-0.15*separation);
+    } else if (kind<2.5) {
+        // Continuous woven support; world-space contact follows the cover.
+        float weave=sin(surface.x*260.0)*sin(surface.y*260.0)*0.008;
+        vec2 outside=abs(surface.xy-vec2(0.10,-0.10))-vec2(10.26,6.38);
+        float edge=length(max(outside,vec2(0.0)))+min(max(outside.x,outside.y),0.0)-0.17;
+        float shadow=0.46+0.54*smoothstep(0.0,0.45,edge);
+        ALBEDO=(base_color.rgb+weave+(noise(floor(surface.xy*180.0))-0.5)*0.008)*shadow;
+    } else {
+        ALBEDO=base_color.rgb*light;
+    }
 }

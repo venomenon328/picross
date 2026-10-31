@@ -1,12 +1,14 @@
 # Projektprofil: picross
 
-**Buch / #493 · B-A-N02:** Die [isolierte ausführbare Bewegungsstudie](BOOK_STUDY.md)
+**Buch / #493 · B-A-N03:** Die [isolierte ausführbare Bewegungsstudie](BOOK_STUDY.md)
 verwendet realistischen Buchkörper und gezeichnete reguläre UI mit synthetischen
 Inputs, Katalog-Doppelseite und rechter Arbeitsseite. Organische Papiertextur,
 ruhende Falzwölbung, sichere Innenabstände und animierte Rückkehr ergänzen N02;
 alle 27 Instanzen erhalten gültige ID-/Revealbindungen. Materialvergleich und
-revidierte Nachweise folgen B-A-N02-T01. Normaler Start und Navigation bleiben
-beim bisherigen A-Buch. B-B, neues separates B-A-R03, persönliche
+revidierte Nachweise folgen B-A-N03-T01: eigene Ledertextur, zusammenhängende
+Rand-/Rückengeometrie und tatsächlich verzögert geprüfte Hover-/Tooltippfade.
+Normaler Start und Navigation bleiben beim bisherigen A-Buch. B-B, neues
+separates B-A-R04, persönliche
 Kandidatenwahl B-A-M01 und Merge bleiben getrennt.
 
 **RI · 29.10.2026, Spezifikation freigegeben, noch nicht implementiert:**

@@ -37,18 +37,27 @@ func _ready() -> void:
 		if not content_surface: add_theme_stylebox_override(state, StyleBoxEmpty.new())
 	mouse_entered.connect(queue_redraw)
 	mouse_exited.connect(queue_redraw)
+	mouse_exited.connect(dismiss_tooltip)
 	button_down.connect(queue_redraw)
 	button_up.connect(queue_redraw)
 	focus_entered.connect(queue_redraw)
 	focus_exited.connect(queue_redraw)
+	focus_exited.connect(dismiss_tooltip)
 	visibility_changed.connect(func() -> void:
 		if not is_visible_in_tree(): dismiss_tooltip())
 	resized.connect(dismiss_tooltip)
 	if accessibility_name.is_empty(): accessibility_name = text if not text.is_empty() else tooltip_text
 
+func _get_tooltip(_at_position: Vector2) -> String:
+	return tooltip_text.strip_edges()
+
 func _make_custom_tooltip(for_text: String) -> Object:
+	# Godot calls this virtual even for an empty tooltip. A non-null custom
+	# panel then opens with just its margins. Decline before constructing it.
+	var caption: String = for_text.strip_edges()
+	if caption.is_empty(): return null
 	var tip: BookTooltip = BookTooltip.new()
-	tip.configure(for_text, ui_scale, get_viewport_rect().size.x, get_theme_font("font"))
+	tip.configure(caption, ui_scale, get_viewport_rect().size.x, get_theme_font("font"))
 	tooltip_ref = weakref(tip)
 	return tip
 
@@ -97,10 +106,11 @@ func _draw() -> void:
 			elif is_pressed(): style.ink = Color("173e35")
 			elif is_hovered(): style.ink = Color("376a60")
 		draw_style_box(style,box)
-		if paper_transparent and is_pressed():
-			draw_line(Vector2(9,8)*u,Vector2(size.x-9*u,8*u),INK,2*u,true)
-		elif paper_transparent and is_hovered():
-			draw_line(Vector2(9,8)*u,Vector2(18,8)*u,INK,1.5*u,true)
+		if paper_transparent and not disabled and (is_hovered() or is_pressed()):
+			# Retrace the existing contour continuously: hover and pressure belong
+			# to the button edge, with no floating short stroke above the caption.
+			for line: PackedVector2Array in style.contours(box):
+				draw_polyline(line,style.ink,(2.4 if is_pressed() else 1.6)*u,true)
 	if swatch.a > 0:
 		draw_rect(box.grow(-5*u), swatch)
 		if selected:

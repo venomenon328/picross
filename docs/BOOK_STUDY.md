@@ -1,15 +1,16 @@
-# Buchstudie B-A · B-A-N02-T01
+# Buchstudie B-A · B-A-N03-T01
 
 Stand: 31.10.2026 · isolierte Nacharbeit zu
-[#493 / B-A-E02, N06–N10](https://github.com/venomenon328/picross/issues/493),
-[Umsetzungsvorbereitung B-A-V03](https://github.com/venomenon328/picross/pull/495#issuecomment-6541551895)
-und [B-A-R02-B01](https://github.com/venomenon328/picross/pull/495#pullrequestreview-5721985216).
-Ausgangshead: `6677d3e339701be9aa3cfa9f9a55f7ff78990d86`;
+[#493 / B-A-E03, N11–N13](https://github.com/venomenon328/picross/issues/493),
+[Umsetzungsvorbereitung B-A-V04](https://github.com/venomenon328/picross/pull/495#issuecomment-6548285901).
+Ausgangshead: `158e096a9685f11c7268f7e1859e7eca87917b46`;
 Basis: `864c4e6289df15ea7b3522b850542ece3489160f`.
 Branch `feat/493-book-study`, bestehender Draft-PR #495 gegen `main`.
 Aktueller Lieferhead, CI, Originalbelege und getrenntes Selbstreview werden im PR
 gebunden. Dieses Dokument beschreibt den ausführbaren Prüfvertrag. B-B bleibt
 unimplementiert, #493 offen; dieser Auftrag erlaubt keinen Merge.
+N01–N10 und die in R03 bestätigte Behebung von R02-B01 bleiben erhalten.
+N02-T01 und R01–R03 bleiben historische, an ihre Lieferstände gebundene Nachweise.
 
 ## Doppelseite und Arbeitskapazität
 
@@ -48,8 +49,27 @@ leere Blatt ohne Buchanimation. Die separate 2,15-s-Abschlussdarstellung bleibt.
 
 Die bestehende A-Quelle `art/book/bp2-a-inventarband.png` bleibt bytegleich:
 SHA-256 `957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a`.
-Die Einbandshader verwenden deren UI-freie Leder-/Bindungsbereiche. Meshes trennen
-Papier, Deckel, Seitenlagen, Bindung und sparsamen Untergrund.
+Sie bleibt Qualitätsreferenz und reguläres Produktasset. Der Studien-Einbandshader
+verwendet keine Ausschnitte mehr daraus: N02 dehnte schmale Streifen des fertigen
+Buchbilds auf Deckel, Rücken, Lippe und Untergrund. Eingebrannte Buch-/Untergrund-
+kanten und Schatten erschienen dadurch an geometrisch unpassenden Stellen.
+
+N03 verwendet eine eigene homogene Ledertextur `study/book/leather.png`,
+1254×1254, 4.089.216 Bytes, SHA-256
+`58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41`.
+[Prompt, Herkunft, Rechte und Import](../game/study/book/leather.json) binden die
+unverändert kopierte imagegen-Ausgabe ohne Fremdvorlage. Verlustloser Import mit
+Mipmaps und wiederholbarer Weltkoordinatenzuordnung; keine Buchsilhouette,
+Fremdfläche oder fertigen Schlagschatten im Material.
+
+`binding.gd` konstruiert gerundete Deckelrollen, Fasen, Seitenblock und flexiblen
+Rücken aus zusammenhängenden Ringen. Die oberste Blockkontur folgt der ruhenden
+Papierwölbung einschließlich ihrer verkürzten Enden; die unteren Ringe laufen an
+beiden Seiten bis zur Deckelschulter. Kopf-/Fußbänder sitzen auf dieser Krone.
+Der Rücken verbindet beide Deckel auch unten. Beleuchtung, Lederabrieb und
+Kontaktschatten folgen der Geometrie. Der ruhige Untergrund ist eine durchgehende
+eigene Shaderfläche. Zwölf gefilterte sichtbare Lagen vermeiden unaufgelöste
+feine Linien. Kameras und Arbeitsbudgets bleiben unverändert.
 
 Die Innenflächen verwenden die originale neue Bildtextur `study/book/paper.png`,
 1254×1254, 2.564.246 Bytes, SHA-256
@@ -70,13 +90,25 @@ Streifens, die präzise Rasterfläche bleibt eben. Bewegte Inhalte folgen den
 Blattvertices; kein nachträglich über die ganze UI gelegter Verzerrungseffekt.
 
 Studienbuttons und geschlossene Dropdowns haben transparente Füllung. Normal,
-Hover, Gedrückt, Auswahl, Deaktiviert und Fokus behalten unterscheidbare Konturen;
-Auswahl erhält einen zusätzlichen Strich. Ein nativer Alphavergleich prüft die
-nicht nur farblichen Unterschiede. Die native Standardbeschriftung wird im
+Hover, Gedrückt, Auswahl, Deaktiviert und Fokus behalten unterscheidbare Konturen.
+Hover und Druck verstärken die vorhandene vollständige Kontur in zwei Stärken;
+der isolierte kurze obere Hoverstrich entfällt. Auswahlunterstrich, Fokusinnenkontur
+und Deaktiviertmarkierung bleiben. Native Zustandsbilder und eine Pixelgegenprobe
+mit wieder eingesetztem alten Strich ergänzen die Sichtprüfung. Die native
+Standardbeschriftung wird im
 Opt-in unterdrückt, damit der eigene Text genau einmal erscheint. Farbproben
 behalten ihre Originalpixel; Popup-, Dialog- und Fehlerflächen bleiben deckend.
 Die zwei gemeinsamen Controls haben einen expliziten, standardmäßig deaktivierten
 Schalter. Die reguläre Produktdarstellung bleibt unverändert.
+
+Der leere Tooltip wurde mit echtem Mausweg und normaler 0,5-s-Verzögerung
+reproduziert: Godot ruft die benutzerdefinierte Factory auch für leeren Text auf.
+Das bisher stets angelegte Panel erschien als 29×46-Pixel-Rahmen allein aus
+Rändern und leerem Label. `BookButton` normalisiert Whitespace und gibt vor dem
+Anlegen eines leeren Panels `null` zurück. Das korrigiert auch den gemeinsamen
+Defaultpfad; sinnvolle Hilfen behalten ihre Darstellung. Vollständig beschriftete
+Fußaktionen erhalten keinen redundanten Text. Modus-, Reset-, Werkzeug-, Icon-
+und Richtungshilfen bleiben erhalten.
 
 ## Zustände, Rückkehr und Eingabebesitz
 
@@ -157,10 +189,22 @@ Vorbereitung und Zeit-/Framefolgen. Ein ruhiger nativer Öffnungslauf misst ohne
 Screenshotarbeit. Aufnahme-Wandzeit, Filmzeit und native Bewegungszeit bleiben
 getrennt; daraus folgt keine Hardware-FPS-Garantie.
 
-Die eigenen Sichtprüfungen vergleichen alte A-Ansicht, gebundene N01-Bilder und N02
-in denselben drei Konfigurationen, mit nativen Details und zwei Papierseiten samt
-Rückkehr. Iterationen, Korrekturen und Materialurteil stehen im PR. Das ersetzt
-weder B-A-R03 noch die persönliche Kandidatenwahl. Alte Belege bleiben historisch.
+N03 ergänzt reale verzögerte Hoverwege in denselben drei Konfigurationen: drei
+beschriftete Fußaktionen, Whitespace, Richtung, Reset einer begonnenen Karte,
+Modus, Werkzeug, Hilfe und langer aktueller Randtext. Wechsel, Verlassen, Klick,
+Fokusverlust, Resize, UI-Skalierung und Bewegungsbeginn/-ende prüfen Lebensdauer
+und ausbleibendes Wiederaufleben. Labeltext, Mindestmaße und Popupgrenzen werden
+erfasst; Originalbilder erlauben die Sichtprüfung. Gegenbeispiele stellen leeren
+Panelaufbau und alten Hoverstrich wieder her. Der unabhängige Ergebnisguard
+verwirft fehlende Fälle, umgangene Verzögerung, leeren/veralteten Text,
+abgeschnittene Geometrie, überlebende Popups und wirkungslose Gegenproben.
+
+Die eigene Sichtprüfung vergleicht A als Qualitätsreferenz sowie gebundene N02-
+und N03-Originalframes in allen drei Konfigurationen. Je Katalogbild entstehen
+unskalierte Details beider unterer Ecken, des unteren Falzes und beider Außenränder
+mit dokumentiertem Quellrechteck. Vollansichten, Arbeitsränder und Film ergänzen
+diese Ausschnitte. Iterationen, Korrekturen und Materialurteil stehen im PR.
+Das ersetzt weder B-A-R04 noch die persönliche Kandidatenwahl.
 
 ## Ressourcen, Export, CI und Gates
 
@@ -168,8 +212,11 @@ Höchstens drei bewegte Blätter mit je 1105 Vertices/2048 Dreiecken, zwei ruhen
 Papierflächen und feste Deckel-/Seitenlagen. Kein Katalogtexturcache. Ein UI-Renderziel
 plus RGBA-Snapshot benötigt 7,03/15,82/28,13 MiB bei 720p/1080p/1440p; einschließlich
 konservativ vier Depthbytes je Pixel 10,55/23,73/42,19 MiB. Einfrieren benötigt kurz
-zusätzlich eine CPU-Bildkopie. A umfasst 14.745.600 RGBA-Bytes, das neue Papier
-6.290.064, mit Mipmaps höchstens 8.386.752 Bytes (ca. 8 MiB). Tatsächliche Import-
+zusätzlich eine CPU-Bildkopie. Das von der gemeinsamen UI referenzierte A umfasst
+weiterhin konservativ 14.745.600 RGBA-Bytes; der Einbandshader sampelt es nicht.
+Papier und Leder umfassen jeweils 6.290.064 RGBA-Bytes, mit Mipmaps jeweils
+höchstens 8.386.752 Bytes (ca. 8 MiB). `resources.binding` zählt die tatsächlichen
+statischen Flächen, Vertices und Dreiecke. Tatsächliche Import-
 und Paketgrößen werden gemessen. Font-/Zellatlanten, SL-Rahmen, Hauptframebuffer
 und Treiberoverhead sind separat. Nach Ende/Abbruch sind Übergaberessourcen frei.
 
@@ -192,9 +239,9 @@ gemessen; es gibt keinen neuen Erfolgsverzicht oder allgemeinen CI-Umbau.
 Laufbilder, Filme und Exporte bleiben in ignorierter Arbeitsablage beziehungsweise
 befristeten Technikartefakten, keine neue permanente Bildgalerie.
 
-B-A-N02-T01 verlangt aktuelle Technik-, Sicht-, Export- und CI-Nachweise sowie
-getrenntes Selbstreview. **B-A-R03 bleibt ein separates qualifiziertes technisches
-und visuelles Review vor Merge.** R01/R02 nehmen N02 nicht ab. **B-A-M01** bleibt
+B-A-N03-T01 verlangt aktuelle Technik-, Sicht-, Export- und CI-Nachweise sowie
+getrenntes Selbstreview. **B-A-R04 bleibt ein separates qualifiziertes technisches
+und visuelles Review vor Merge.** R01–R03 nehmen N03 nicht ab. **B-A-M01** bleibt
 persönliche Kandidatenwahl vor vollständigem B-A-Abschluss und vor B-B; sie darf
 nach einem separat freigegebenen isolierten Merge auf main erfolgen. Der aktuelle
 Auftrag enthält keine Mergefreigabe und lässt den PR als Draft.
