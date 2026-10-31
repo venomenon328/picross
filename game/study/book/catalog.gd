@@ -96,7 +96,8 @@ func _render(position: int) -> void:
 		for child: Node in right_grid.get_children(): child.reparent(grid)
 	super._render(position)
 	if right_scroll != null:
-		next_button.get_parent().visible = previous_button.get_parent().visible
+		# Settings and quit share this row but are not pagination controls.
+		next_button.visible = previous_button.get_parent().visible
 
 func _layout_cards() -> void:
 	if arranging: return
