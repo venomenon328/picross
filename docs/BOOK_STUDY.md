@@ -111,6 +111,8 @@ Anlegen eines leeren Panels `null` zurück. Das korrigiert auch den gemeinsamen
 Defaultpfad; sinnvolle Hilfen behalten ihre Darstellung. Vollständig beschriftete
 Fußaktionen erhalten keinen redundanten Text. Modus-, Reset-, Werkzeug-, Icon-
 und Richtungshilfen bleiben erhalten.
+Die passive Modusbeschriftung `CatalogTip` verwendet dieselbe Leervorgabe;
+zwei gezielte 1920er-Fälle prüfen auch diesen Labelpfad ohne neue Größenmatrix.
 
 ## Zustände, Rückkehr und Eingabebesitz
 
@@ -200,6 +202,12 @@ erfasst; Originalbilder erlauben die Sichtprüfung. Gegenbeispiele stellen leere
 Panelaufbau und alten Hoverstrich wieder her. Der unabhängige Ergebnisguard
 verwirft fehlende Fälle, umgangene Verzögerung, leeren/veralteten Text,
 abgeschnittene Geometrie, überlebende Popups und wirkungslose Gegenproben.
+Nach Fenstereintritt an einer sicheren Position und dessen abgearbeitetem
+OS-Ereignis aktivieren native Viewport-Zeigerereignisse den normalen GUI-/
+Verzögerungspfad wie im bestehenden KAT-Prüfer. Die logischen Testpositionen
+werden nicht auf die physische Monitorbreite begrenzt. Jeder Fall verlangt auch
+den tatsächlichen Hoverzustand des Controls; die Tooltipfactory wird nicht direkt
+aufgerufen.
 
 Die eigene Sichtprüfung vergleicht A als Qualitätsreferenz sowie gebundene N02-
 und N03-Originalframes in allen drei Konfigurationen. Je Katalogbild entstehen

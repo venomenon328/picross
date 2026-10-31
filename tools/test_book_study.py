@@ -83,6 +83,7 @@ class BookStudyTests(unittest.TestCase):
             empty = {'footer-0','footer-1','footer-2','whitespace'}
             files += [f'tooltip-{kind}-{w}.png' for w in (1280,1920,2560) for kind in captions | empty if kind != 'click-before']
             files += ['tooltip-negative-empty.png','hover-negative.png','hover-current.png','tooltip-after-motion-1920.png']
+            files += ['tooltip-mode-empty-1920.png','tooltip-mode-whitespace-1920.png']
             details = [dict(file=f'edge-{kind}-{w}.png',source=f'catalog-{w}.png',rect=[0,0,20,20],scale=1)
                        for w in (1280,1920,2560) for kind in ('bottom-left','bottom-right','bottom-fold','outer-left','outer-right')]
             files += [r['file'] for r in details]
@@ -115,9 +116,10 @@ class BookStudyTests(unittest.TestCase):
                        for label in ('matrix stable target', 'matrix no history or save', 'matrix releases resources')]
             labels += ['native tooltip delay is not bypassed','negative empty tooltip reproduced by native hover',
                        'negative detached hover stroke rejected']
-            tips = [dict(case=kind,width=w,scale=s,caption='Useful help' if kind in captions else '',wait_seconds=.65,
+            tips = [dict(case=kind,width=w,scale=s,caption='Useful help' if kind in captions else '',wait_seconds=.65,hovered=True,
                          visible=kind in captions, popup=[10,10,150,40],label=[130,20],text='Useful help')
-                    for w,s in ((1280,1.25),(1920,1.0),(2560,1.25)) for kind in captions | empty]
+                    for w,s in ((1280,1.25),(1920,1.0),(2560,1.25))
+                    for kind in captions | empty | ({'mode-empty','mode-whitespace'} if w == 1920 else set())]
             tips += [dict(case=f'dismiss-{kind}-{w}',visible=False) for w in (1280,1920,2560) for kind in ('switch','leave','click')]
             tips += [dict(case='dismiss-'+kind,visible=False) for kind in ('resize','ui-scale','focus','motion-start','motion-end-no-revival')]
             tips += [dict(case='negative-controls',empty_popup=True,current_detached_pixels=0,legacy_detached_pixels=12)]
@@ -150,7 +152,7 @@ class BookStudyTests(unittest.TestCase):
                 return dict(book_study=candidate)
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
             for mutation in ("assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
-                             "tooltip-delay", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled", "required-file"):
+                             "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
                 if mutation == "assertion": original["failures"] = ["input lock failed"]
                 if mutation == "omitted-assertion":
@@ -166,6 +168,7 @@ class BookStudyTests(unittest.TestCase):
                 if mutation == "margin": original['ink_margins'][0]['margin'] = 7.9
                 if mutation == "return": original['returns'][0]['seconds'] = 0
                 if mutation == "tooltip-delay": original['tooltip_cases'][0]['wait_seconds'] = 0
+                if mutation == "tooltip-hover": original['tooltip_cases'][0]['hovered'] = False
                 if mutation == "tooltip-empty": next(r for r in original['tooltip_cases'] if r.get('caption'))['caption'] = ''
                 if mutation == "tooltip-missing": original['tooltip_cases'].pop(0)
                 if mutation == "tooltip-stale": next(r for r in original['tooltip_cases'] if r.get('caption'))['text'] = 'Old help'

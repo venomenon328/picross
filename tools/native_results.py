@@ -133,11 +133,12 @@ def validate_book_study(report, directory, identity, host):
     captions = {'direction','reset','mode','click-before','caption-after-click','fill','help','wrapped-edge'}
     empty = {'footer-0','footer-1','footer-2','whitespace'}
     for width, scale in ((1280,1.25),(1920,1.0),(2560,1.25)):
-        rows = [r for r in tooltip_cases if r.get('width') == width and r['case'] in captions | empty]
-        if len(rows) != len(captions | empty) or {r['case'] for r in rows} != captions | empty:
+        cases = captions | empty | ({'mode-empty','mode-whitespace'} if width == 1920 else set())
+        rows = [r for r in tooltip_cases if r.get('width') == width and r['case'] in cases]
+        if len(rows) != len(cases) or {r['case'] for r in rows} != cases:
             raise ValueError('Missing/duplicate delayed tooltip scenario')
         for row in rows:
-            if row['scale'] != scale or row['wait_seconds'] < .65 or row['visible'] != (row['case'] in captions):
+            if row['scale'] != scale or row['wait_seconds'] < .65 or row.get('hovered') is not True or row['visible'] != (row['case'] in captions):
                 raise ValueError('Bypassed delay/incorrect tooltip visibility')
             if row['visible']:
                 x,y,w,h = row['popup']
@@ -189,6 +190,7 @@ def validate_book_study(report, directory, identity, host):
     required.update(expected_edges)
     required.update(f'tooltip-{kind}-{w}.png' for w in (1280,1920,2560) for kind in captions | empty if kind != 'click-before')
     required.update({'tooltip-negative-empty.png','hover-negative.png','hover-current.png','tooltip-after-motion-1920.png'})
+    required.update({'tooltip-mode-empty-1920.png','tooltip-mode-whitespace-1920.png'})
     if names != actual or not required <= names:
         raise ValueError('Missing/unexpected book study evidence inventory')
     for name, metadata in study['files'].items():

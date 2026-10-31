@@ -105,7 +105,7 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
                   engine=tc.EXPECTED_VERSION, phases=[], browser="not requested; not started")
     report["sources"] = {p.relative_to(ROOT).as_posix(): tc.sha256_file(p) for p in sorted((ROOT / "game" / STUDY).rglob("*")) if p.is_file()}
     report["sources"]["tools/book_study.py"] = tc.sha256_file(Path(__file__))
-    for name in ('game/ui/book_button.gd', 'game/ui/book_tooltip.gd', 'game/ui/book_style.gd',
+    for name in ('game/ui/book_button.gd', 'game/ui/book_tooltip.gd', 'game/ui/book_style.gd', 'game/ui/catalog_tip.gd',
                  'tools/native_results.py', 'tools/test_book_study.py'):
         report['sources'][name] = tc.sha256_file(ROOT/name)
     material = ROOT / "game/art/book/bp2-a-inventarband.png"
