@@ -170,7 +170,7 @@ func _pose(progress: float) -> void:
 	var to: Vector4 = view_rect(true)
 	camera.size = lerpf(from.w,to.w,zoom)
 	var center: float = 5.0*zoom
-	var tilt: float = sin(PI*progress)*0.65 if state == State.OPENING else 0.0
+	var tilt: float = sin(PI*progress)*0.65 if state == State.OPENING and work else 0.0
 	camera.position = Vector3(center,tilt,30)
 	camera.look_at(Vector3(center,0,0))
 	var strongest: float = 0

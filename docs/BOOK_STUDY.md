@@ -74,7 +74,7 @@ Pixelgleichheit gilt ausschließlich für die identische neue Textur-/Direktübe
 
 Die Implementierung wird an tatsächlichen nativen Bildern iteriert. Der PR nennt
 die gesichteten Fassungen, konkrete Korrekturen und das eigene Materialurteil.
-Das ersetzt weder die visuelle Prüfung in B-A-N01-R02 noch die persönliche
+Das ersetzt weder die visuelle Prüfung in B-A-R02 noch die persönliche
 Kandidatenwahl B-A-M01. Historische Erstlieferung und B-A-R01 bleiben ausschließlich
 an ihren damaligen Head gebunden.
 
@@ -186,7 +186,7 @@ Quellen, Rechte und Startbefehle: [Studienanleitung](../game/study/book/README.m
 
 B-A-N01-T01: Implementierer liefert aktuelle Technik-, Material-, Bewegungs-,
 Export- und CI-Nachweise sowie getrenntes vollständiges Selbstreview.
-B-A-N01-R02: neues qualifiziertes technisches und visuelles Review des revidierten
+B-A-R02: neues qualifiziertes technisches und visuelles Review des revidierten
 Heads vor Merge. Das frühere B-A-R01 nimmt N01 nicht ab.
 B-A-M01: persönliche Kandidatenwahl vor vollständigem B-A-Abschluss und vor B-B;
 darf nach technischem isoliertem Merge auf main erfolgen und ist dafür kein
