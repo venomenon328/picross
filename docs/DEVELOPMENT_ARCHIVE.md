@@ -1,10 +1,13 @@
 # Aktiver Bestand und historische Quellen
 
-**Buchstudie B-A-N01 / #493:** `game/study/book/` erhält den ausführbaren isolierten
+**Buchstudie B-A-N02 / #493:** `game/study/book/` erhält den ausführbaren isolierten
 Untersuchungsstand, zwei eigene Materialshader und kompakte synthetische Inputs
 samt deterministischer Erzeugung und studieneigener Doppelseitenanordnung.
-Das bestehende A-Bild bleibt unveränderte Materialquelle.
-[B-A-N01-T01](BOOK_STUDY.md) und Startanleitung binden
+Das bestehende A-Bild bleibt unveränderte Einbandquelle. Eine neue originale
+Papiertextur samt Import-/Herkunftsmetadaten und 27 eindeutige Definitions-/Revealpaare
+ersetzen die fehlerhafte Wiederverwendung dreier Ressourcenpfade. Die Dateipaare
+sind der begrenzte reproduzierbare Runtime-/PCK-Bestand, keine historische Galerie.
+[B-A-N02-T01](BOOK_STUDY.md) und Startanleitung binden
 Zweck, Rechte und Nachweise. Filme, Laufbilder und Exporte bleiben temporär; der
 reguläre Export schließt die Studie aus. Keine historischen Bildressourcen ersetzen.
 

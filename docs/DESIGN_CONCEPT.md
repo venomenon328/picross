@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**Buch / #493 · B-A-N01:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
+**Buch / #493 · B-A-N02:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
 führen realistische Materialien, gezielte Bewegung und gezeichnete Seiteninhalte
 zusammen. Die folgenden BP-/Z2-Lieferbelege bleiben historisch gebunden; das
 bisherige A-Buch bleibt bis B-B die reguläre Darstellung.
@@ -283,7 +283,7 @@ aufgehoben. #24 wurde noch nicht begonnen.
 
 Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Registern, Kapitelverzierungen und unterschiedlich großen Bildplätzen. Große Panoramen könnten eigene Seiten erhalten. Feste Seiten statt freier Dekoration sind ein Vorschlag, keine neue Spielmechanik.
 
-Die bestätigte [Buchrichtung #493](BOOK_STUDY.md) zeigt den Katalog als echte Doppelseite mit mittiger Bindung. Katalogblättern dauert 0,85 Sekunden, vorwärts rechts nach links und zurück umgekehrt. Drei einzelne Blätter und eine insgesamt dreisekündige Kamerafahrt führen zur großzügigen rechten Arbeitsseite, frontal und mit Bindung links. B-A-N01 untersucht diese Revision isoliert; der normale Spielstart bleibt bis B-B unverändert. Die frühere linke Arbeitsseite und das Verbot gezielter Kamerabewegung sind für diese neue Lieferung abgelöst. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster behalten ihre vollständigen bisherigen Pixelbudgets. Große Raster werden weder auf eine halbe Bildschirmfläche verkleinert noch über den Falz gelegt. Materialvergleich, Übergabe und offene Sichtabnahmen sind im Studienvertrag gebunden.
+Die bestätigte [Buchrichtung #493](BOOK_STUDY.md) zeigt den Katalog als echte Doppelseite mit mittiger Bindung. Katalogblättern dauert 0,85 Sekunden, vorwärts rechts nach links und zurück umgekehrt. Drei einzelne Blätter und eine insgesamt dreisekündige Kamerafahrt führen zur großzügigen rechten Arbeitsseite, frontal und mit Bindung links. B-A-N02 ergänzt sichtbaren Buchkörper, organische Papiertextur, reale ruhende Falzwölbung, transparente Controls und eine 1,8-sekündige Rückkehr mit aktuellem Arbeitsstand. Die Revision bleibt isoliert; der normale Spielstart bleibt bis B-B unverändert. Die frühere linke Arbeitsseite und das Verbot gezielter Kamerabewegung sind für diese neue Lieferung abgelöst. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster behalten ihre vollständigen bisherigen Pixelbudgets. Große Raster werden weder auf eine halbe Bildschirmfläche verkleinert noch über den Falz gelegt. Materialvergleich, Übergabe und offene Sichtabnahmen sind im Studienvertrag gebunden.
 
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
 

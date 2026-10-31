@@ -9,6 +9,7 @@ var left_page: VBoxContainer
 var right_page: VBoxContainer
 var arranging: bool = false
 var syncing_scroll: bool = false
+var fold_gap: float = 76.0
 
 func _ready() -> void:
 	super._ready()
@@ -95,6 +96,8 @@ func _render(position: int) -> void:
 	if right_grid != null:
 		for child: Node in right_grid.get_children(): child.reparent(grid)
 	super._render(position)
+	for item: Node in find_children("*","Button",true,false):
+		if item is BookButton: item.paper_transparent = true
 	if right_scroll != null:
 		# Settings and quit share this row but are not pagination controls.
 		next_button.visible = previous_button.get_parent().visible
@@ -108,7 +111,7 @@ func _layout_cards() -> void:
 			var column: Node = choices[i].get_parent()
 			var target: Node = grid if i < split else right_grid
 			if column.get_parent() != target: column.reparent(target)
-		spread.add_theme_constant_override("separation", roundi(76*ui_scale))
+		spread.add_theme_constant_override("separation", roundi(fold_gap))
 		for half: VBoxContainer in [left_page, right_page]: half.add_theme_constant_override("separation", roundi(8*ui_scale))
 	super._layout_cards()
 	if right_grid != null:

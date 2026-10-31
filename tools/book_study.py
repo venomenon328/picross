@@ -51,25 +51,35 @@ def fixtures() -> dict:
                     return result
                 data["columns"] = [hints(line) for line in zip(*data["solution"])]
             entry.update(category_id="technical")
-            data["reveal"].update(image=f"res://{STUDY}/reveal-{key}.svg", name="VERBORGENER STUDIENNAME " + key)
             definitions.append(data)
             entries.append(entry)
         for index in range(3, 27):
             entry = deepcopy(entries[index % 3])
             entry.update(id=f"T-{index+10:02d}", key=f"t{index+10:02d}", save_slot=f"t{index+10:02d}")
             entries.append(entry)
-        # Registry entries retain the valid technical metadata contract. Study
-        # definitions use the explicit study-asset validation exception.
-        return dict(registry=dict(format=catalog["format"], categories=[dict(id="technical", name="Technische Muster", order=1)], entries=entries), definitions=definitions)
+        instances = []
+        for index, entry in enumerate(entries):
+            key = entry['key']
+            entry.update(definition=f"data/{key}.json", reveal=f"art/{key}.svg")
+            data = deepcopy(definitions[index % 3])
+            data['id'] = entry['id']
+            data['reveal'].update(definition_id=entry['id'], image=f"res://{STUDY}/{entry['reveal']}",
+                                  name="VERBORGENER STUDIENNAME " + key)
+            instances.append(data)
+        return dict(registry=dict(format=catalog["format"], categories=[dict(id="technical", name="Technische Muster", order=1)], entries=entries), definitions=instances)
 
 
 def write_fixtures() -> None:
     target = ROOT / "game" / STUDY
-    (target / "fixtures.json").write_text(json.dumps(fixtures(), ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8", newline="\n")
+    inputs = fixtures()
+    (target / "fixtures.json").write_text(json.dumps(inputs['registry'], ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8", newline="\n")
     # Explicit synthetic spoiler sentinel; never shown before valid completion.
     svg = '<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"><path d="M16 16H112V112H16Z" fill="#d933c5"/></svg>\n'
-    for key in ("t01", "t06", "t08"):
-        (target / f"reveal-{key}.svg").write_text(svg, encoding="utf-8", newline="\n")
+    for entry, data in zip(inputs['registry']['entries'], inputs['definitions'], strict=True):
+        for path, text in ((entry['definition'], json.dumps(data, ensure_ascii=False, separators=(",", ":"))+'\n'), (entry['reveal'], svg)):
+            destination = target / path
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            destination.write_text(text, encoding='utf-8', newline='\n')
 
 
 def prepare(project: Path) -> None:
@@ -90,15 +100,20 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
     urls = tc.official_asset_urls(tc.request_json(tc.RELEASE_API), assets)
     for asset in assets:
         tc.download_asset(urls[asset.name], cache / asset.name, asset.sha256, 1200)
-    report = dict(package="B-A-N01-T01", **source_identity(ROOT),
+    report = dict(package="B-A-N02-T01", **source_identity(ROOT),
                   host=host, platform=platform.platform(), python=platform.python_version(),
                   engine=tc.EXPECTED_VERSION, phases=[], browser="not requested; not started")
-    report["sources"] = {p.relative_to(ROOT).as_posix(): tc.sha256_file(p) for p in sorted((ROOT / "game" / STUDY).glob("*")) if p.is_file()}
+    report["sources"] = {p.relative_to(ROOT).as_posix(): tc.sha256_file(p) for p in sorted((ROOT / "game" / STUDY).rglob("*")) if p.is_file()}
     report["sources"]["tools/book_study.py"] = tc.sha256_file(Path(__file__))
     material = ROOT / "game/art/book/bp2-a-inventarband.png"
     report["material_source"] = dict(file=material.relative_to(ROOT).as_posix(), sha256=tc.sha256_file(material), bytes=material.stat().st_size)
     if report["material_source"]["sha256"] != "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a":
         raise ValueError("The bound original A material changed")
+    paper = ROOT / 'game' / STUDY / 'paper.png'
+    paper_metadata = json.loads(paper.with_suffix('.json').read_text(encoding='utf-8'))
+    if tc.sha256_file(paper) != paper_metadata['sha256'] or paper.stat().st_size != paper_metadata['bytes']:
+        raise ValueError('Organic paper source differs from its provenance')
+    report['organic_paper'] = dict(paper_metadata)
     with tempfile.TemporaryDirectory(prefix="picross-book-study-") as temp:
         work = Path(temp)
         engine = str(tc.extract_editor(cache / editor.name, work / "engine", host))
@@ -117,6 +132,9 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
         base = ["--path", str(project), "--audio-driver", "Dummy"]
         phase("version", ["--version"], tc.EXPECTED_VERSION)
         phase("import", ["--headless", *base, "--import"])
+        imported = project / '.godot/imported/paper.png-d97cf9011e5b971689c7f26fae3c148d.ctex'
+        report['organic_paper']['imported_texture'] = dict(bytes=imported.stat().st_size, sha256=tc.sha256_file(imported))
+        report['organic_paper']['import_settings_sha256'] = tc.sha256_file(project / STUDY / 'paper.png.import')
         phase("native", [*base, "--rendering-driver", "opengl3", "--script", "res://study/book/verify.gd", "--", "--p1-capture"], "BOOK_STUDY_OK", True)
         started = time.monotonic()
         report["handoff_pixels"] = verify_handoffs(output)
@@ -173,6 +191,7 @@ def export_all(work, project, cache, output, env, phase, base, report):
         guide = (ROOT / "game/study/book/README.md").read_text(encoding="utf-8")
         guide = guide.replace("../../../docs/BOOK_STUDY.md", f"https://github.com/venomenon328/picross/blob/{report['source_commit']}/docs/BOOK_STUDY.md")
         (target.parent / "STUDIE.md").write_text(guide, encoding="utf-8", newline="\n")
+        shutil.copyfile(ROOT/'game'/STUDY/'paper.json',target.parent/'licenses/Study-paper.json')
     if platform.system() == "Windows":
         native = output / "windows/book-study.exe"
         result = run_phase("book-windows-exported-motion", [str(native), "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--quit-after", "1200", "--", "--book-study-proof"], env, 90, output / "logs")
@@ -191,7 +210,7 @@ def study_presets() -> str:
                   "ui/pencil_marks.gd", "study/book/verify.gd", "study/book/pack_probe.gd", *legacy]
     common = '''runnable=false
 export_filter="all_resources"
-include_filter="study/book/fixtures.json,study/book/reveal-*.svg,art/book/*.json,art/book/*.txt,art/drawing/delight-coffee/*,art/drawing/tidy-hand/*"
+include_filter="study/book/fixtures.json,study/book/data/*.json,study/book/art/*.svg,study/book/paper.json,art/book/*.json,art/book/*.txt,art/drawing/delight-coffee/*,art/drawing/tidy-hand/*"
 ''' + 'exclude_filter="' + ','.join(exclusions) + '"\nscript_export_mode=2\n'
     return '[preset.0]\nname="Book study Windows"\nplatform="Windows Desktop"\n' + common + '''
 [preset.0.options]
@@ -244,8 +263,8 @@ def verify_handoffs(output: Path) -> dict:
                         pass
                     else:
                         raise ValueError("Handoff gate accepted a shifted/alpha-mutated counterexample")
-    if len(results) != 3:
-        raise ValueError("Exactly three handoff configurations required")
+    if set(results) != {'work-1280.png','work-1920.png','work-2560.png','return-handoff-direct.png'}:
+        raise ValueError("Three work configurations and the catalog return handoff required")
     return dict(samples=results, negative_controls="one-pixel displacement and alpha mutation rejected")
 
 
