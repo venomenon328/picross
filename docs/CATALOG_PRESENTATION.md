@@ -1,9 +1,10 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-**B-A-N01 / #493:** Die [isolierte Buchstudie](BOOK_STUDY.md) verteilt eine
+**B-A-N02 / #493:** Die [isolierte Buchstudie](BOOK_STUDY.md) verteilt eine
 logische Katalogseite auf beide Buchhälften. Höchstens 24 aktive Karten,
 vollständige Schrift-/Metadaten-/Bild-/Resetbudgets und ID-Aktionen bleiben.
-Knappere Flächen verwenden weniger Spalten und Scrollen. Der reguläre Katalog
+Knappere Flächen verwenden weniger Spalten und Scrollen. Die revidierten Abstände
+folgen projizierter Papierkante und ruhender Falzwölbung. Der reguläre Katalog
 wird erst mit B-B umgestellt; bisherige KU-/HZ-Abnahmen bleiben gebunden.
 
 **HZ · 21.10.2026, HZ-A/B integriert; HZ-C / #294 implementiert, Abnahmen offen:**
