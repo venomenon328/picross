@@ -7,6 +7,22 @@ var vertices: int = 0
 var triangles: int = 0
 var surfaces: int = 0
 
+static func column(index: int) -> float:
+	# Resolve the narrow valley without increasing the existing mesh budget.
+	return index*0.75/16.0 if index <= 16 else 0.75+(index-16)*9.25/48.0
+
+static func fold_height(d: float) -> float:
+	# Same two C1-continuous shoulders as fold.gdshaderinc; flat UI starts at .75.
+	return 0.22*smoothstep(0,0.28,d) if d < 0.28 else 0.22*(1.0-smoothstep(0.28,0.75,d))
+
+static func hinge_height(x: float) -> float:
+	x = absf(x)
+	if x < 0.16: return lerpf(0.25,0.20,smoothstep(0,0.16,x))
+	if x < 0.30: return lerpf(0.20,0.02,smoothstep(0.16,0.30,x))
+	if x < 0.42: return lerpf(0.02,-0.06,smoothstep(0.30,0.42,x))
+	if x < 0.60: return lerpf(-0.06,-0.01,smoothstep(0.42,0.60,x))
+	return lerpf(-0.01,0,smoothstep(0.60,0.75,x))
+
 func material(kind: float, color: Color) -> ShaderMaterial:
 	var result := ShaderMaterial.new()
 	result.shader = MATERIAL
@@ -38,6 +54,9 @@ func mesh(parent: Node3D, rings: Array, mat: Material, cap: bool = false) -> voi
 		positions.append(center)
 		normals.append(Vector3.BACK)
 		for col: int in range(count): indices.append_array([index,col,(col+1)%count])
+	add_surface(parent,positions,normals,indices,mat)
+
+func add_surface(parent: Node3D, positions: PackedVector3Array, normals: PackedVector3Array, indices: PackedInt32Array, mat: Material) -> void:
 	var arrays: Array = []
 	arrays.resize(Mesh.ARRAY_MAX)
 	arrays[Mesh.ARRAY_VERTEX] = positions
@@ -52,6 +71,41 @@ func mesh(parent: Node3D, rings: Array, mat: Material, cap: bool = false) -> voi
 	vertices += positions.size()
 	triangles += indices.size()/3
 	surfaces += 1
+
+func cover(parent: Node3D, mat: Material) -> void:
+	# One continuous shaped cover, including both joints and the spine. No band
+	# placed over the leather, separate coplanar caps, or intersecting end threads.
+	var rings: Array = []
+	var hinge_x: Array[float] = [0.75,0.60,0.51,0.42,0.36,0.30,0.23,0.16,0.08,0.0,-0.08,-0.16,-0.23,-0.30,-0.36,-0.42,-0.51,-0.60,-0.75]
+	for profile: Vector2 in [Vector2(0.09,-0.45),Vector2(0.025,-0.47),Vector2(0,-0.53),Vector2(0.015,-0.63),Vector2(0.065,-0.68)]:
+		var ring := PackedVector3Array()
+		var edge: PackedVector3Array = rounded(Rect2(-10.43,-6.55,20.86,13.10).grow(-profile.x),0.17,profile.y)
+		for i: int in range(edge.size()):
+			ring.append(edge[i])
+			if i == 8:
+				for x: float in hinge_x: ring.append(Vector3(x,6.55-profile.x,profile.y))
+			elif i == 26:
+				for j: int in range(hinge_x.size()-1,-1,-1): ring.append(Vector3(hinge_x[j],-6.55+profile.x,profile.y))
+		for i: int in range(ring.size()): ring[i].z += hinge_height(ring[i].x)
+		rings.append(ring)
+	mesh(parent,rings,mat)
+	# The top uses matching ruled strips, not a fan that flattens the joints.
+	var top: Array[Vector3] = []
+	for point: Vector3 in rings[0]:
+		if point.y > 0: top.append(point)
+	top.sort_custom(func(a: Vector3,b: Vector3) -> bool: return a.x < b.x)
+	var positions := PackedVector3Array()
+	var normals := PackedVector3Array()
+	var indices := PackedInt32Array()
+	for i: int in range(top.size()):
+		var point: Vector3 = top[i]
+		var slope: float = (hinge_height(point.x+0.001)-hinge_height(point.x-0.001))/0.002
+		positions.append_array([point,Vector3(point.x,-point.y,point.z)])
+		normals.append_array([Vector3(-slope,0,1).normalized(),Vector3(-slope,0,1).normalized()])
+		if i < top.size()-1:
+			var n: int = i*2
+			indices.append_array([n,n+1,n+2,n+1,n+3,n+2])
+	add_surface(parent,positions,normals,indices,mat)
 
 func rounded(rect: Rect2, radius: float, z: float) -> PackedVector3Array:
 	var ring := PackedVector3Array()
@@ -68,18 +122,21 @@ func rounded(rect: Rect2, radius: float, z: float) -> PackedVector3Array:
 func block_ring(side: float, depth: float) -> PackedVector3Array:
 	var ring := PackedVector3Array()
 	var perimeter: Array[Vector2] = []
-	for i: int in range(65): perimeter.append(Vector2(10.0-i*10.0/64,6.2))
+	for i: int in range(65): perimeter.append(Vector2(column(64-i),6.2))
 	for i: int in range(1,17): perimeter.append(Vector2(0,6.2-i*12.4/16))
-	for i: int in range(1,65): perimeter.append(Vector2(i*10.0/64,-6.2))
+	for i: int in range(1,65): perimeter.append(Vector2(column(i),-6.2))
 	for i: int in range(1,16): perimeter.append(Vector2(10,-6.2+i*12.4/16))
 	for p: Vector2 in perimeter:
 		var arch: float = pow(1.0-clampf(p.x/0.75,0,1),2)
-		var x: float = p.x+0.035*arch+depth*0.13*(p.x/10.0)
-		var y: float = p.y*(1.0-0.012*arch)+signf(p.y)*depth*0.16
-		var z: float = 0.26*pow(arch,1.5)*(1.0-depth*0.35)-depth*0.43-0.006
+		var crown: float = fold_height(p.x)
+		var x: float = p.x+0.004*arch+depth*0.13*(p.x/10.0)
+		# Gather the signatures into the joint instead of covering its exposed ends.
+		var end_splay: float = lerpf(0.08,0.16,smoothstep(0,0.75,p.x))
+		var y: float = p.y*(1.0-0.004*crown/0.22)+signf(p.y)*depth*end_splay
+		var z: float = lerpf(crown-0.006,-0.436+hinge_height(p.x),depth)
 		# Broad, shallow deckle keeps the normal field resolved at all three
 		# scales; subpixel high-frequency ridges formed diagonal moire patches.
-		var uneven: float = sin(p.x*1.7+p.y*0.8+depth*5)*0.0015*sin(depth*PI)
+		var uneven: float = sin(p.x*1.7+p.y*0.8+depth*5)*0.0015*sin(depth*PI)*smoothstep(0,0.75,p.x)
 		ring.append(Vector3(side*(x+uneven),y+uneven,z))
 	if side < 0: ring.reverse()
 	return ring
@@ -87,22 +144,11 @@ func block_ring(side: float, depth: float) -> PackedVector3Array:
 func build(parent: Node3D) -> void:
 	var leather: ShaderMaterial = material(0,Color.WHITE)
 	var edges: ShaderMaterial = material(1,Color("e2d5b9"))
+	cover(parent,leather)
 	for side: float in [-1.0,1.0]:
-		var rect := Rect2(0 if side > 0 else -10.43,-6.55,10.43,13.10)
-		var covers: Array = []
-		for profile: Vector2 in [Vector2(0.09,-0.45),Vector2(0.025,-0.47),Vector2(0,-0.53),Vector2(0.015,-0.63),Vector2(0.065,-0.68)]:
-			covers.append(rounded(rect.grow(-profile.x),0.17,profile.y))
-		mesh(parent,covers,leather,true)
 		var block: Array = []
 		for i: int in range(25): block.append(block_ring(side,i/24.0))
 		mesh(parent,block,edges)
-	# Narrow flexible binding, with rounded ends, seated below the paper crown.
-	var spine: Array = []
-	for profile: Vector2 in [Vector2(0.025,0.225),Vector2(0.0,0.18),Vector2(-0.06,-0.12),Vector2(-0.25,-0.50)]:
-		spine.append(rounded(Rect2(-0.075,-6.30,0.15,12.60).grow(-profile.x),0.025,profile.y))
-	mesh(parent,spine,leather,true)
-	# The 46 tiny decorative threads protruded through the crown at both ends.
-	# The continuous page blocks and rounded leather spine form the actual join.
 	var ground := MeshInstance3D.new()
 	var plane := PlaneMesh.new()
 	plane.orientation = PlaneMesh.FACE_Z

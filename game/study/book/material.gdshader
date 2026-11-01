@@ -1,5 +1,6 @@
 shader_type spatial;
 render_mode unshaded, cull_disabled;
+#include "res://study/book/fold.gdshaderinc"
 uniform sampler2D leather_source : source_color, filter_linear_mipmap, repeat_enable;
 uniform sampler2D table_source : source_color, filter_linear_mipmap, repeat_disable;
 uniform vec4 base_color : source_color = vec4(1.0);
@@ -14,10 +15,12 @@ void fragment() {
         // Independent leather: no silhouette, cloth or shadows in its UVs.
         vec3 leather=texture(leather_source,surface.xy*0.22).rgb;
         float rim=max(smoothstep(10.16,10.43,abs(surface.x)),smoothstep(6.33,6.55,abs(surface.y)));
+        float joint=1.0-smoothstep(0.60,0.75,abs(surface.x));
+        light=mix(light,0.44+0.56*max(0.0,dot(n,normalize(vec3(-0.35,0.6,1.0)))),joint);
         ALBEDO=leather*(0.75+rim*0.28)*light;
     } else if (kind<1.5) {
-        float crown=0.26*pow(1.0-clamp(abs(surface.x)/0.75,0.0,1.0),3.0);
-        float depth=(crown-surface.z)/(0.43+crown*0.35);
+        float crown=fold_profile(abs(surface.x)).x;
+        float depth=(crown-surface.z)/(crown+0.436-hinge_height(surface.x));
         // Six subtle signatures; smoothly average subpixel layers instead of
         // thresholding aliased stripes into diagonal patches at 1080p.
         float phase=depth*6.0;

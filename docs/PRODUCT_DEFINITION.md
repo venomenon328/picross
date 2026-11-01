@@ -1,6 +1,6 @@
 # Produktdefinition: picross
 
-**Buch / #493 · B-A-N05:** Katalog-Doppelseite mit mittiger Bindung,
+**Buch / #493, #496 · B-A-N06:** Katalog-Doppelseite mit mittiger Bindung,
 kurzes richtungsabhängiges Blättern und drei einzelne Blätter zur rechten
 Arbeitsseite sind in der isolierten Studie umgesetzt. Sichtbare Buchkante, organische
 Papiertextur, ruhende Falzwölbung, transparente Controls und animierte Rückkehr
@@ -14,8 +14,11 @@ N01–N17 und die gültigen 27 Instanzen bleiben erhalten. N05 ergänzt eine nah
 Informationsdoppelseite mit Einstellungen links und Hilfe rechts. Blatt-/Pan-/
 Zoomwege führen zum ursprünglichen Katalog beziehungsweise selben Rätsel zurück;
 bewusst geänderte Einstellungen bleiben wirksam. Der rechte Arbeitskopf bietet
-Katalog, Einstellungen und Hilfe; der alte linke Reiter entfällt. Das positive
-R05 bleibt N04-gebunden; neues R06 und persönliche B-A-M01 bleiben getrennt.
+Katalog, Einstellungen und Hilfe; der alte linke Reiter entfällt. N05/F01 sind
+über PR #495 integriert. N06 führt die Papierhälften zu einem engen Falztal mit
+realen Schultern und formt die Ledergelenke im zusammenhängenden Einband.
+Die bisherigen Animationen und UI-/Inputverträge bleiben erhalten.
+Unabhängiges R08, persönliche B-A-M01, B-B und Merge bleiben offen.
 
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil

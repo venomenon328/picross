@@ -16,6 +16,8 @@ func run() -> void:
 	check(ResourceLoader.exists("res://study/book/table.png") == expected,"independent tabletop inclusion/exclusion")
 	check(FileAccess.file_exists("res://study/book/table.json") == expected,"tabletop provenance inclusion/exclusion")
 	check(ResourceLoader.exists("res://study/book/binding.gd") == expected,"joined binding inclusion/exclusion")
+	check(ResourceLoader.exists("res://study/book/fold.gdshaderinc") == expected,"fold geometry include inclusion/exclusion")
+	check(not ResourceLoader.exists("res://study/book/n06_cases.gd"),"no N06 verification program in pack")
 	check(ResourceLoader.exists("res://study/book/inputs.gd") == expected,"study adapter inclusion/exclusion")
 	for resource: String in ["information.gd","information_routes.gd"]:
 		check(ResourceLoader.exists("res://study/book/"+resource) == expected,"study information inclusion/exclusion "+resource)
