@@ -93,4 +93,21 @@ func run(proof: SceneTree) -> Dictionary:
 	p.check(clearance > 0.005,"N06 block clears actual leather strips")
 	p.check(counts.vertices <= 8511 and counts.triangles <= 16262 and counts.surfaces <= 6,"N06 existing binding budgets")
 	holder.free()
-	return {"depth_cases":rows,"joint_depth":high-low,"minimum_cover_clearance":clearance,"binding":counts}
+	# A real tree-exit signal recreates the reentrant OS focus notification
+	# observed in the Windows regression; no substitute model of the transition.
+	p.study.app.show_album()
+	await p.frames()
+	var before: Array = p.fingerprint()
+	p.study.app.tree_exiting.connect(func(): p.study._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT),CONNECT_ONE_SHOT)
+	p.check(p.study.request_open("T-06"),"N06 reentrant focus starts actual opening")
+	await p.frames(6)
+	var attached: bool = is_instance_valid(p.study.app) and p.study.app.is_inside_tree() and p.study.app.get_parent() == p.study
+	var settled: bool = attached and p.study.state == p.Study.State.WORK and p.study.capture == null and p.fingerprint() == before
+	p.check(settled,"N06 reentrant focus settles attached unchanged work")
+	var stale: int = p.study.generation
+	p.check(p.study.request_return(),"N06 return after reentrant focus")
+	p.study._focus_interrupt(stale)
+	p.check(p.study.state == p.Study.State.PREPARING,"N06 stale focus cannot interrupt later motion")
+	p.study.interrupt("focus")
+	await p.frames()
+	return {"depth_cases":rows,"joint_depth":high-low,"minimum_cover_clearance":clearance,"binding":counts,"focus_reparent":settled}

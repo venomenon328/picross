@@ -45,9 +45,18 @@ angehobene Schultern und ebene Außenfläche zeigen. Wieder eingesetzter breiter
 Spalt und flach gesetzte Geometrie müssen scheitern. Vier originale 640×128-PNGs
 und Messwerte gehören zum bestehenden nativen Lauf. Die tatsächlichen
 Leder-/Blockarrays liefern zusätzlich Gelenktiefe, Mindestabstand und Mengen.
-Der Ergebnisguard verlangt diese Fälle und Dateien; sieben Mutationen prüfen
+Der Ergebnisguard verlangt diese Fälle und Dateien; acht Mutationen prüfen
 fehlende Fälle, breite Lücke, flache Schulter, akzeptiertes Gegenbeispiel,
-flaches Leder, Durchdringung und Budgetüberschreitung. Keine neue CI-Gruppe.
+flaches Leder, Durchdringung, Budgetüberschreitung und Fokus-Reentranz. Keine neue CI-Gruppe.
+
+Die Windowsregression legte zusätzlich einen bestehenden reentranten Fokuspfad
+offen: Eine OS-Fokusmeldung während `app.reparent()` konnte `_settle()` im noch
+laufenden Baumumbau auslösen. Nur diese Studienbenachrichtigung wird ans Ende
+des Dispatchs verschoben und an die aktuelle Generation gebunden. Der geforderte
+Zielzustand und die unmittelbare Gestenstornierung bleiben erhalten. Ein echter
+`tree_exiting`-Callback prüft angehängte UI, freigegebene Capture-Ressourcen und
+unveränderte Zellen/History; eine veraltete Generation darf keine spätere Bewegung
+unterbrechen. Die vorherige synchrone Fassung wurde separat als Fehler reproduziert.
 
 T01 bindet vorher/nachher die vollen Katalogbilder 1920×1080 und 1920×1200/UI100
 samt unskalierten oberen/unteren Falzausschnitten, gezielte Arbeits-/Informations-
