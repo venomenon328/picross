@@ -151,4 +151,4 @@ und flacher Geometrie als Gegenbeispielen; der Einband bleibt im bisherigen Budg
 
 Bericht, Zustandsvertrag und offene Gates: [B-A-N06-T01](../../../docs/BOOK_STUDY.md).
 Unabhängiges R08, persönliche B-A-M01, B-B und Merge bleiben offen.
-R06-B01 erhält gezielte Nacharbeit; unabhängiges R07, R06-A01 und persönliche M01 bleiben offen.
+Frühere F01-Reviews und Eigentümerausnahmen bleiben an PR #495 gebunden.
