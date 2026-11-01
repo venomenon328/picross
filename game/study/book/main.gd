@@ -152,7 +152,7 @@ func _page(material: ShaderMaterial) -> MeshInstance3D:
 	var indices := PackedInt32Array()
 	for y: int in range(17):
 		for x: int in range(65):
-			var uv := Vector2(x/64.0, y/16.0)
+			var uv := Vector2(Binding.column(x)/10.0, y/16.0)
 			vertices.append(Vector3(uv.x*10.0, (0.5-uv.y)*12.4, 0.0))
 			normals.append(Vector3.BACK)
 			uvs.append(uv)

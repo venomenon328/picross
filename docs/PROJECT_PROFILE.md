@@ -1,6 +1,6 @@
 # Projektprofil: picross
 
-**Buch / #493 · B-A-N05:** Die [isolierte ausführbare Bewegungsstudie](BOOK_STUDY.md)
+**Buch / #493, #496 · B-A-N06:** Die [isolierte ausführbare Bewegungsstudie](BOOK_STUDY.md)
 verwendet realistischen Buchkörper und gezeichnete reguläre UI mit synthetischen
 Inputs, Katalog-Doppelseite und rechter Arbeitsseite. Organische Papiertextur,
 ruhende Falzwölbung, sichere Innenabstände und animierte Rückkehr ergänzen N02;
@@ -12,10 +12,12 @@ Ledertextur, Papier, Hover-/Tooltippfade und Arbeitsbudgets bleiben erhalten.
 N05 ergänzt Einstellungen links/Hilfe rechts im Nahmaßstab, zehn ursprungsgebundene
 Blatt-/Pan-/Zoomwege und den rechten Kopf Katalog/Einstellungen/Hilfe ohne linken
 Reiter. Optionen bleiben echte Controls; beide Informationsscrollstände und
-bewusste Einstellungsänderungen bleiben erhalten. B-A-N05-T01 bindet die Nachweise.
-Normaler Start und Navigation bleiben beim bisherigen A-Buch. R05 ist positiv
-für N04 am Ausgangshead; B-B, neues separates B-A-R06, persönliche
-Kandidatenwahl B-A-M01 und Merge bleiben getrennt.
+bewusste Einstellungsänderungen bleiben erhalten. N06 überarbeitet ausschließlich
+Falztal, Papierkrümmung und strukturelle Ledergelenke. B-A-N06-T01 bindet aktuelle
+Geometrie-, native und Windowsbelege. N05/F01 sind über PR #495 integriert;
+damalige Ausnahmen für Originalprüfungen bleiben historisch gebunden.
+Normaler Start und Navigation bleiben beim bisherigen A-Buch. B-B, neues
+unabhängiges B-A-R08, persönliche Kandidatenwahl B-A-M01 und Merge bleiben offen.
 
 **RI · 29.10.2026, Spezifikation freigegeben, noch nicht implementiert:**
 [Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /

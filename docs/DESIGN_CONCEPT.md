@@ -1,6 +1,6 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**Buch / #493 · B-A-N05:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
+**Buch / #493, #496 · B-A-N06:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
 führen realistische Materialien, gezielte Bewegung und gezeichnete Seiteninhalte
 zusammen. Die folgenden BP-/Z2-Lieferbelege bleiben historisch gebunden; das
 bisherige A-Buch bleibt bis B-B die reguläre Darstellung. N03 verwendet eigene
@@ -12,7 +12,10 @@ N05 ordnet Einstellungen links und Hilfe rechts im Arbeitsnahmaßstab an. Reine
 Seitenwechsel pannen in 0,65 s, Eintritt/Rückkehr blättern in 0,85 s mit dem zum
 Ursprung passenden Zoom. Beide Seiten bewegen ihren eigenen Inhalt mit dem Buch;
 die generische Informationsüberschrift entfällt. Bestehende Controls, Schriften,
-HZ-Icons und Arbeitskapazitäten bleiben erhalten. R06 und M01 bleiben getrennt.
+HZ-Icons und Arbeitskapazitäten bleiben erhalten. N06 ersetzt den breiten
+Mittelspalt durch ein enges Tal zwischen räumlichen Papierschultern. Lederne
+Gelenke gehören zur Deckel-/Rückengeometrie; ihre freien Enden bleiben sichtbar.
+N05/F01 sind integriert; neue Abnahmen R08 und M01 bleiben getrennt offen.
 
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
