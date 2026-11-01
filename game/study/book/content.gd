@@ -3,6 +3,7 @@ extends "res://ui/main.gd"
 const StudySurface = preload("res://study/book/surface.gd")
 const StudyCatalog = preload("res://study/book/catalog.gd")
 const Inputs = preload("res://study/book/inputs.gd")
+const Information = preload("res://study/book/information.gd")
 signal opening_requested(id: String)
 signal return_requested
 signal catalog_shown
@@ -10,6 +11,7 @@ signal exit_requested
 signal scale_changing
 var resetting_ending: bool = false
 var book: Node3D
+var info: RefCounted
 
 class MemoryPreference extends "res://model/catalog_preference.gd":
 	func load_selection() -> void: pass
@@ -20,10 +22,12 @@ class MemoryPreference extends "res://model/catalog_preference.gd":
 class MemoryStore extends "res://model/save_store.gd":
 	var snapshots: Dictionary = {}
 	var writes: int = 0
+	var failure: String = ""
 	func load_slot(data: Dictionary) -> Dictionary:
 		return {"status": "fresh"} if not snapshots.has(data.id) else {"status": "loaded", "data": snapshots[data.id]}
 	func write_slot(item: Session, view: Dictionary) -> String:
 		writes += 1
+		if not failure.is_empty(): return failure
 		snapshots[item.definition.id] = snapshot(item, view)
 		return ""
 	func key_for_definition(id: String) -> String: return id
@@ -75,8 +79,18 @@ func _build() -> void:
 	laying_out = true
 	super._build()
 	laying_out = false
-	album_button.pressed.disconnect(show_album)
+	# Remove the old left tab completely. Reuse the three existing right slots;
+	# the middle menu remains the unchanged sidebar axis in the base layout.
+	album_button.free()
+	actions.erase("nav-album")
+	album_button = actions["nav-information"]
+	album_button.pressed.disconnect(show_information.bind("settings"))
 	album_button.pressed.connect(func() -> void: return_requested.emit())
+	album_button.action_id = "nav-work"
+	album_button.image = load("res://art/book/nav-work.svg")
+	album_button.tooltip_text = "Zurück zum Katalog"
+	album_button.accessibility_name = "Zurück zum Katalog"
+	for id: String in ["help","menu","nav-information"]: actions[id].reparent(page)
 	var old_album: Control = album
 	page.remove_child(old_album)
 	old_album.free()
@@ -86,6 +100,7 @@ func _build() -> void:
 	album.reset_requested.connect(_ask_reset_id)
 	album.repair_requested.connect(_ask_repair_id)
 	album.information_requested.connect(show_information.bind("settings"))
+	album.help_requested.connect(show_information.bind("help"))
 	album.quit_requested.connect(leave_app)
 	album.preference = MemoryPreference.new()
 	# The regular catalog polls the web storage status; the study has no storage.
@@ -105,16 +120,23 @@ func _build() -> void:
 func _layout_book(prepare_board: bool = false) -> void:
 	super._layout_book(prepare_board)
 	if album == null or surface == null or laying_out: return
-	# Keep the actual title/tab ink beyond the projected curved binding strip.
+	if info == null: return
 	var material: Rect2 = surface.material_rect()
-	album_button.position = material.position+Vector2(material.size.x*0.12,38*ui_scale)
+	var title_origin: Vector2 = material.position+Vector2(material.size.x*0.12,38*ui_scale)
+	for id: String in ["help","menu","nav-information"]:
+		actions[id].visible = work.visible or ending.visible
 	if work.visible or ending.visible:
 		var paper_top: float = book.projected_paper(true).position.y if book != null else 0.0
-		album_button.position.y = maxf(album_button.position.y,paper_top+12*ui_scale)
-		title.position = album_button.position+Vector2(album_button.size.x+16*ui_scale,0)
+		title_origin.y = maxf(title_origin.y,paper_top+12*ui_scale)
+		title.position = title_origin
+		var axis: float = actions["menu"].position.x
+		album_button.position.x = axis-58*ui_scale
+		actions["help"].position.x = axis+58*ui_scale
 		for id: String in ["help","menu","nav-information"]:
-			actions[id].position.y = maxf(actions[id].position.y,paper_top+8*ui_scale)
-	layout_warning.position.x = maxf(layout_warning.position.x, album_button.position.x)
+			actions[id].position.y = maxf(actions["menu"].position.y,paper_top+8*ui_scale)
+	layout_warning.position.x = maxf(layout_warning.position.x, title_origin.x)
+	title.visible = not information.visible
+	if information.visible: info.layout()
 	if album.summary != null: album.summary.visible = album.visible and catalog_error.is_empty()
 	if album.visible:
 		# Projected paper is already in viewport pixels, including letterboxing.
@@ -129,6 +151,8 @@ func _layout_book(prepare_board: bool = false) -> void:
 		var right_heading: float = right_paper.position.x+curve+inset
 		var heading_top: float = maxf(left_paper.position.y+12*ui_scale,material.size.y*0.035+12*ui_scale)
 		var catalog_top: float = heading_top+53*ui_scale
+		var footer_width: float = album.right_pager.get_child(0).get_combined_minimum_size().x+album.next_button.get_combined_minimum_size().x+12*ui_scale
+		album.right_pager.vertical = (edge-margin-album.fold_gap)/2 < footer_width
 		_place(album, Rect2(Vector2(margin,catalog_top),Vector2(edge-margin,left_paper.end.y-inset-catalog_top)))
 		_place(title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,45*ui_scale)))
 		if album.summary != null:
@@ -153,6 +177,21 @@ func activate(id: String) -> void:
 func set_ui_scale(value: float) -> void:
 	scale_changing.emit()
 	super.set_ui_scale(value)
+	if info != null: info.layout()
+
+func _build_information() -> void:
+	super._build_information()
+	info = Information.new(self)
+
+func show_information(section: String = "settings") -> void:
+	if book != null: book.information_routes.request(section)
+
+func _information_section(section: String) -> void:
+	if info == null: information_section = section
+	else: show_information(section)
+
+func return_to_work() -> void:
+	if book != null: book.information_routes.request_return()
 
 func show_album() -> void:
 	super.show_album()
@@ -163,9 +202,12 @@ func _schedule_view_save() -> void:
 
 func _save_current() -> bool:
 	if session != null and board != null:
+		if save_timer != null: save_timer.stop()
 		session.view_state = board.capture_view()
-		store.write_slot(session, session.view_state)
-	return true
+		save_error = store.write_slot(session, session.view_state)
+		slot_errors[sessions.find(session)] = save_error
+		_update_status()
+	return save_error.is_empty()
 
 func leave_app() -> void: exit_requested.emit()
 

@@ -1,4 +1,4 @@
-# Buchstudie B-A-N04 · #493
+# Buchstudie B-A-N05 · #493
 
 Isolierter ausführbarer Studienstand. Der normale Spielstart verwendet weiterhin
 das bisherige A-Buch. Drei feste synthetische Muster unter 27 Katalog-IDs, keine echten Rätsel oder
@@ -19,7 +19,8 @@ rechts nach links, Zurück links nach rechts, jeweils 0,85 Sekunden; Randbefehle
 bewegen nichts. Filter und Sortierung wirken sofort.
 
 Eine neue/begonnene Karte öffnet drei einzelne Blätter in insgesamt drei Sekunden
-und endet auf der großen rechten Arbeitsseite mit Bindung links. Der Buchreiter
+und endet auf der großen rechten Arbeitsseite mit Bindung links. Der linke Pfeil
+im rechten Arbeitskopf
 kehrt in 1,8 Sekunden mit Herauszoomen und drei nach rechts blätternden Seiten zum
 erhaltenen Katalogkontext zurück. Der aktuelle Arbeitsstand bleibt sichtbar.
 Escape bricht nur einen laufenden Wechsel ab: Blättern/Öffnen endet im Quellkatalog,
@@ -28,7 +29,21 @@ Die vorhandenen Werkzeuge lassen sich auf der ruhenden Seite ausprobieren.
 Fenster-/UI-Wechsel und Fokusverlust stellen die gewählte Arbeitsseite stabil
 her beziehungsweise beenden einen Katalogwechsel auf dessen Zielseite;
 während der Bewegung und bis zum Loslassen gehaltener Tasten bleibt die
-Eingabe gesperrt. Nebenwege sind vorhandene unmittelbare UI, keine B-B-Integration.
+Eingabe gesperrt.
+
+Rechts stehen genau Katalogpfeil, Menü und Hilfe. Der alte linke Reiter entfällt.
+Menü öffnet die Einstellungen links, `?` die Hilfe rechts, jeweils im Arbeitsnahmaßstab.
+Beide Zugänge gibt es auch im Katalogfuß; bei knapper Breite steht „Weiter“ darunter.
+Eintritt und Rückkehr blättern ein Blatt in 0,85 Sekunden. Beim Katalogbesuch fährt
+die Kamera zugleich nah beziehungsweise wieder weit; bei Arbeit bleibt der Maßstab.
+Einstellungen↔Hilfe pannt ohne Blatt/Zoom in 0,65 Sekunden. Navigation steht über
+den beiden getrennten Scrollbereichen; der vollständige Hilfetext bleibt erreichbar.
+„Zurück zum Katalog/Rätsel“ führt zum Ursprung dieses Besuchs. Arbeitsstand,
+Katalogfilter/-sortierung und beide Scrollstände bleiben erhalten; bewusst geänderte
+Optionen werden übernommen. Derselbe Informationszugang setzt Scrollen nicht zurück.
+Escape während Eintritt/Pan stabilisiert die Quelle, während Rückkehr den Ursprung.
+Resize, UI-Wechsel und Fokusverlust stabilisieren jeweils das gewählte Ziel.
+Diese Wege bleiben studienlokal, keine B-B-Integration.
 
 Der getrennte Windows-Studienexport startet mit `book-study.exe`; EXE und PCK
 bleiben zusammen. Der Webexport benötigt einen lokalen HTTP-Server. Er wurde
@@ -102,8 +117,12 @@ weder ersetzt noch umetikettiert.
 
 `opening.avi` zeigt beide Blätterrichtungen und die volle Öffnung in normalem
 Tempo sowie die Rückkehr nach echter Bearbeitung. Alte/neue native Ansichten und Bindungsdetails dienen dem Materialvergleich;
-Fünf Originalpixelpaare prüfen separat die Textur-/Direktübergabe. Sechs unskalierte
+Fünf bisherige und vier neue Originalpixelpaare prüfen separat die Textur-/Direktübergabe.
+Der Film enthält zusätzlich alle zehn Informationswege. Originale Informationsbilder
+und Alphahüllen prüfen beide Seiten in vier Flächen; sechs echte Unterbrechungen
+ergänzen eine günstige vollständige Entscheidungstabelle. Sechs unskalierte
 Randdetails je gebundener Fläche einschließlich oberem und unterem Falz sowie tatsächliche verzögerte Tooltipbilder ergänzen
 die Sichtprüfung; Quelle, Rechteck und Kosten stehen im Bericht.
 
-Bericht, Zustandsvertrag und offene Gates: [B-A-N04-T01](../../../docs/BOOK_STUDY.md).
+Bericht, Zustandsvertrag und offene Gates: [B-A-N05-T01](../../../docs/BOOK_STUDY.md).
+R05 ist positiv für N04; neues unabhängiges R06 und persönliche M01 bleiben offen.

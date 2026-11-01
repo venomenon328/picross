@@ -1,16 +1,87 @@
-# Buchstudie B-A · B-A-N04-T01
+# Buchstudie B-A · B-A-N05-T01
 
-Stand: 01.11.2026 · ausschließlich B-A-N04 gemäß
-[#493 / B-A-E04, N14–N17](https://github.com/venomenon328/picross/issues/493),
-[Umsetzungsvorbereitung B-A-V05](https://github.com/venomenon328/picross/pull/495#issuecomment-6552117759).
-Ausgangshead: `8b48e0cf94dc086225aa5444ea5cb253527b6d22`;
+Stand: 01.11.2026 · ausschließlich B-A-N05 gemäß
+[#493 / B-A-E05, N18–N21](https://github.com/venomenon328/picross/issues/493),
+[Umsetzungsvorbereitung B-A-V06](https://github.com/venomenon328/picross/pull/495#issuecomment-6555884747).
+Ausgangshead: `b03397e5a492567ed615256112075755f235bc4f`;
 Basis: `864c4e6289df15ea7b3522b850542ece3489160f`.
 Branch `feat/493-book-study`, bestehender Draft-PR #495 gegen `main`.
 Aktueller Lieferhead, CI, Originalbelege und getrenntes Selbstreview werden im PR
 gebunden. Dieses Dokument beschreibt den ausführbaren Prüfvertrag. B-B bleibt
 unimplementiert, #493 offen; dieser Auftrag erlaubt keinen Merge.
-N01–N13 und die in R03 bestätigte Behebung von R02-B01 bleiben erhalten.
-Frühere T01-Lieferungen und R01–R04 bleiben an ihre damaligen Stände gebunden.
+N01–N17 und die in R03 bestätigte Behebung von R02-B01 bleiben erhalten.
+[R05](https://github.com/venomenon328/picross/pull/495#pullrequestreview-5727130442)
+ist positiv für N04 am Ausgangshead; frühere T01-Lieferungen und R01–R05
+bleiben an ihre damaligen Stände gebunden. N05 benötigt neues R06.
+
+## Informationsdoppelseite und Arbeitsnavigation
+
+Einstellungen stehen links, Hilfe rechts. Beide ruhen im selben Nahmaßstab wie
+die Arbeitsseite. `information.gd` ordnet die jeweils einmal vorhandenen regulären
+Optionscontrols und den vollständigen Hilfetext in zwei eigene Scroll-/Clipflächen.
+Schrift, Trefferflächen und Optionssignale bleiben erhalten. Der globale Titel
+`Information`/`Information / ID` entfällt. Seitentitel, Umbruch und Clipgrenzen
+liegen außerhalb der Falzwölbung; Navigation bleibt über dem Scrollbereich.
+Die nicht gewählte Seite ist im Ruhezustand unsichtbar und erhält keinen Fokus.
+Die vorhandene Auswahlliste bleibt ein natives, lesbares Popup; Übergänge schließen sie.
+
+Der rechte Arbeitskopf lautet **Pfeil links → Katalog, Hamburger → Einstellungen,
+? → Hilfe**. Der alte linke Reiter wird samt Signal/Fokus entfernt. Der Titel hat
+einen eigenen Papieranker, die mittlere Menüachse samt Miniatur, Palette und
+2×3-Werkzeugen bleibt geometrisch erhalten. Dieselben drei Zugänge bleiben auch
+auf der stabilen Endansicht erreichbar. Im Katalog stehen Einstellungen und Hilfe
+nebeneinander im Fußbereich; bei knapper Breite steht „Weiter“ in einer zweiten
+Zeile. Karten-, Schrift- und Trefferbudgets bleiben erhalten.
+
+| Route | Blatt / Dauer | Kamera |
+| --- | --- | --- |
+| Arbeit → Einstellungen | eins vorwärts / 0,85 s | nah, rechts → links |
+| Arbeit → Hilfe | eins vorwärts / 0,85 s | nah rechts, unverändert |
+| Katalog → Einstellungen | eins vorwärts / 0,85 s | weit mittig → nah links |
+| Katalog → Hilfe | eins vorwärts / 0,85 s | weit mittig → nah rechts |
+| Einstellungen → Hilfe | keines / 0,65 s | nur nah links → rechts |
+| Hilfe → Einstellungen | keines / 0,65 s | nur nah rechts → links |
+| Einstellungen → ursprüngliche Arbeit | eins zurück / 0,85 s | nah links → rechts |
+| Hilfe → ursprüngliche Arbeit | eins zurück / 0,85 s | nah rechts, unverändert |
+| Einstellungen → ursprünglicher Katalog | eins zurück / 0,85 s | nah links → weit mittig |
+| Hilfe → ursprünglicher Katalog | eins zurück / 0,85 s | nah rechts → weit mittig |
+
+Vorwärts dreht rechts nach links, zurück links nach rechts. Smoothstep verbindet
+die gebundenen Endlagen ohne Overshoot. Die kurzen Informationstimings sind eigene
+Studienparameter; 0,85/3,0/1,8 s der bisherigen Katalog-/Arbeitswege bleiben.
+Seitenwechsel und beschriftetes „Zurück zum Katalog/Rätsel“ sind getrennte Aktionen.
+Erneute Wahl derselben Informationsseite ist ein No-op einschließlich Scrollstand.
+
+`information_routes.gd` bindet vor dem ersten Await genau einen Besuchsursprung:
+Katalog oder tatsächlich geöffnete Arbeit/stabile Endansicht samt ID. Ein bloßes
+Sessionobjekt im Katalog zählt nicht als Arbeit. Der Informationsursprung bleibt
+neben `return_context` für Arbeit→Katalog bestehen. Filter, Sortierung, Richtung,
+Seite, Auswahl und beide ungleichen Katalogoffsets bleiben erhalten. Eine Rückkehr
+lädt keinen alten Arbeits-/Optionssnapshot: Zellen, History/Redo, Werkzeug, Farbe,
+Zoomwunsch und Hinweislesestände bleiben; bewusst geänderte UI-/G/V-/Hinweis- und
+Animationsoptionen gelten weiter. Jede Informationsseite behält ihren Scrollstand
+während des Besuchs und begrenzt ihn bei Reflow selbst; ein neuer Besuch beginnt oben.
+Es entsteht weder persistentes Informationsgedächtnis noch ein Texturcache.
+
+Vor Eintritt aus Arbeit und vor deren Rückkehr gilt der bestehende Pflichtflush;
+ein synthetisch geprüfter Schreibfehler verhindert Vorbereitung und Animation.
+Katalogbesuche erzeugen keine neue Rätselsavepflicht. Gesten/Popups werden vorher
+verworfen. Während Vorbereitung/Bewegung werden weitere Eingaben verworfen.
+Nach gehaltenem Down braucht es Release und ein frisches Down; Fokuswiederkehr
+gleicht außerhalb des Fensters erfolgte Releases mit dem tatsächlichen Tastenmask ab.
+
+Resize/UI-Wechsel/Fokusverlust stabilisieren das gebundene Ziel. Escape während
+Eintritt führt zur ursprünglichen Quelle, während Pan zur vorherigen Informationsseite
+mit demselben Ursprung und während Rückkehr unmittelbar zum ursprünglichen Ziel.
+Idle-Escape bekommt keine neue Rückfunktion. Jede Stabilisierung entwertet alte
+Awaits und löst die Übergangsressourcen; Beenden tut dasselbe vor Prozessende.
+
+Während Informationsbewegungen entstehen aus denselben Controls ein Quellsnapshot
+und höchstens zwei native Zielseitenbilder in einem wiederverwendeten transparenten
+Viewport. Links/rechts werden separat in genau ihrem Nahmaßstab aufgenommen und
+auf die jeweiligen Weltseiten projiziert. Beim Pan sind beide Papierseiten mit
+ihrem eigenen Inhalt sichtbar. Im Ruhezustand kehren echte Controls zurück;
+alle drei Snapshots und der Viewport werden freigegeben.
 
 ## Doppelseite und Arbeitskapazität
 
@@ -46,7 +117,7 @@ weiterhin außerhalb des Arbeitsausschnitts; der Katalog zeigt das ganze Buch.
 
 Boardfläche, Rasterfit, gewünschte Zellgröße, Hinweisfont, Slots, Reserven,
 Miniatur, Originalpalette und die drei SL-Rahmen behalten ihre regulären Budgets.
-Kleine Rätsel werden nicht künstlich vergrößert. Titel, Katalogreiter und obere
+Kleine Rätsel werden nicht künstlich vergrößert. Titel und obere
 Navigation orientieren sich an der projizierten Papierkante. Im Katalog bestimmen
 Papierkante und Falzwölbung Außenabstand, Fußzeile und Seitenabstand. Die Hüllen
 der tatsächlich gerenderten Glyphen und Konturen einschließlich Antialiasing
@@ -152,7 +223,7 @@ Snapshot bindet den Quellzustand, die aktuelle UI den Zielzustand. Beim Blätter
 trägt die Rückseite die andere Zielhälfte; bei der Öffnung bleibt sie neutral.
 Premultiplizierte Alphakomposition erhält geglättete Text-/Rasterkanten.
 
-Der tatsächliche Katalogreiter löst aus ruhender Arbeit oder stabiler Endansicht
+Der linke Pfeil im rechten Arbeitskopf löst aus ruhender Arbeit oder stabiler Endansicht
 eine **1,8-s-Rückkehr** mit Herauszoomen und drei Blättern von links nach rechts aus.
 Der Snapshot enthält die aktuelle Bearbeitung. Vor dem bestehenden RAM-Flush wird
 eine laufende Geste abgebrochen. Danach bleiben Filter, Sortierung, Richtung,
@@ -182,8 +253,8 @@ nicht. Bearbeitung und Sortierung bleiben im RAM; echte Profile bleiben unberüh
 Vor Abschluss erscheinen auf keiner Fläche verdiente Namen/Reveals, auch nicht
 auf Rückseiten. Miniaturen zeigen eigene, auch falsche Einträge.
 
-Reguläre Save-/Recovery-Integration und #485–#487 bleiben B-B. Informations-/Hilfswege
-sind vorhandene unmittelbare UI; ihre vollständige Buchnavigation wird nicht vorgezogen.
+Reguläre Save-/Recovery-Integration und #485–#487 bleiben B-B. Die oben beschriebenen
+Informationswege gehören ausschließlich zur erweiterten B-A-Studie.
 
 ## Gültige Instanzen und Nachweise
 
@@ -214,6 +285,17 @@ Rückkehr, No-ops, globale Änderungen und unabhängiges Resize-Clamping.
 Die bestehende 24er-Unterbrechungsmatrix bindet beide Quell-/Zieloffsets vor
 und nach Await, einschließlich tatsächlichem Resize und UI-Wechsel.
 
+N05 ergänzt die zehn Wege mit tatsächlichen sichtbaren Buttonklicks bei
+1920×1080/UI100, Kamera-/Blattspuren und getrennten Ursprungs-/Zustandswerten.
+Vier gezielte Flächen prüfen beide Informationsseiten, vollständige Hilfe und
+Optionen bis zum Scrollende, originale Alphahüllen und acht Pixel Papierabstand.
+UI100→125→100, G/V, Hinweis-/Animationsoptionen, fehlgeschlagener Flush und stabile
+Endansicht erhalten eigene Fälle. Eine günstige 24er-Entscheidungstabelle ergänzt
+sechs echte Unterbrechungen vor/nach Await für Eintritt, Pan und Rückkehr; keine
+zusätzliche Routen×Größen×Unterbrechungsmatrix. `native_results.py::validate_n05`
+prüft Seiten, Ursprung, beide Offsets, Kameraspuren, Blattzahl, Timing und
+unabhängig projizierte Hüllen; gezielte Mutationen müssen scheitern.
+
 Native Prüfungen liefern Pointerrouten auf beiden Kataloghälften, Rand-/Leerfälle,
 globale Sortierung, drei Einzelblätter, Popup-/Gestenabbruch, 24 Kombinationen aus
 Wechselart/Phase/Unterbrechung, Ressourcenfreigabe, gehaltene Taste/frisches Down,
@@ -226,9 +308,12 @@ werden auf vollständigen nativen
 Originalframes geprüft: höchstens vier Kanalstufen und 0,1 mittlere Kanalstufen
 Differenz. Ein Pixel Versatz und eine Alphamutation müssen scheitern. Die Geometrie
 bezieht sich auf das neue Layout, nicht auf alte absolute Titelpositionen.
+Vier zusätzliche N05-Paare binden Einstellungen links, Hilfe rechts und die
+Rückkehr zu Arbeit/Katalog mit denselben Grenzen und Gegenproben: insgesamt neun.
 
 `opening.avi` enthält echte Engineframes bei normaler 30-fps-Wiedergabe: Blättern
 in beide Richtungen, volle Öffnung, echte Zellbearbeitung und Rückkehr. Der Film
+zeigt zusätzlich alle zehn Informationschoreografien einschließlich beider reiner Pans und
 endet im lebenden Katalog mit aktuellem Fortschritt. `movie.json` bindet Phasen,
 Vorbereitung und Zeit-/Framefolgen. Ein ruhiger nativer Öffnungslauf misst ohne
 Screenshotarbeit. Aufnahme-Wandzeit, Filmzeit und native Bewegungszeit bleiben
@@ -259,7 +344,7 @@ und N04-Originalframes. Je Katalogbild der vier Flächen entstehen sechs
 unskalierte Details beider unterer Ecken, des oberen/unteren Falzes und beider Außenränder
 mit dokumentiertem Quellrechteck. Vollansichten, Arbeitsränder und Film ergänzen
 diese Ausschnitte. Iterationen, Korrekturen und Materialurteil stehen im PR.
-Das ersetzt weder B-A-R05 noch die persönliche Kandidatenwahl.
+Das ersetzt weder das neue B-A-R06 noch die persönliche Kandidatenwahl.
 
 ## Ressourcen, Export, CI und Gates
 
@@ -278,6 +363,12 @@ Bei 1920×1200 benötigen Renderziel/Snapshot 18.432.000 Bytes, mit konservative
 Depthobergrenze 27.648.000 Bytes. Tatsächliche Import-
 und Paketgrößen werden gemessen. Font-/Zellatlanten, SL-Rahmen, Hauptframebuffer
 und Treiberoverhead sind separat. Nach Ende/Abbruch sind Übergaberessourcen frei.
+Für Informationswege beträgt die neue konservative Farbobergrenze ein Renderziel
+plus drei RGBA-Snapshots, also 16 Bytes je Pixel; zuzüglich vier Depthbytes
+17,58/39,55/70,31 MiB bei 720p/1080p/1440p. Bei 1920×1200 sind es 43,95 MiB
+einschließlich Depth. Eine kurzlebige CPU-Bildkopie bleibt zusätzlich zu beachten.
+Es werden weiterhin höchstens ein Capture-Viewport und während Informationswegen
+nur ein bewegtes Blatt verwendet.
 
 Godot Standard 4.7.2, GL Compatibility, Web ohne Threads oder Erweiterungen.
 Tatsächliche separate Windows-/Webstudienpakete erhalten externe PCK-Prüfungen
@@ -309,9 +400,9 @@ gemessen; es gibt keinen neuen Erfolgsverzicht oder allgemeinen CI-Umbau.
 Laufbilder, Filme und Exporte bleiben in ignorierter Arbeitsablage beziehungsweise
 befristeten Technikartefakten, keine neue permanente Bildgalerie.
 
-B-A-N04-T01 verlangt aktuelle Technik-, Sicht-, Export- und CI-Nachweise sowie
-getrenntes Selbstreview. **B-A-R05 bleibt ein neues separates qualifiziertes technisches
-und visuelles Review vor Merge.** R01–R04 nehmen N04 nicht ab. **B-A-M01** bleibt
+B-A-N05-T01 verlangt aktuelle Technik-, Sicht-, Export- und CI-Nachweise sowie
+getrenntes Selbstreview. **B-A-R06 bleibt ein neues separates qualifiziertes technisches
+und visuelles Review vor Merge.** Das positive R05 nimmt N05 nicht ab. **B-A-M01** bleibt
 persönliche Kandidatenwahl vor vollständigem B-A-Abschluss und vor B-B; sie darf
 nach einem separat freigegebenen isolierten Merge auf main erfolgen. Der aktuelle
 Auftrag enthält keine Mergefreigabe und lässt den PR als Draft.

@@ -1,6 +1,7 @@
 extends "res://ui/catalog.gd"
 ## Study-only spread: shared filter/order/page, independent half-page scroll.
 signal page_requested(target: int)
+signal help_requested
 var locked: bool = false
 var right_scroll: ScrollContainer
 var right_grid: GridContainer
@@ -10,6 +11,7 @@ var right_page: VBoxContainer
 var arranging: bool = false
 var next_right_position: int = 0
 var fold_gap: float = 76.0
+var right_pager: BoxContainer
 
 func _ready() -> void:
 	super._ready()
@@ -32,6 +34,13 @@ func _ready() -> void:
 	for item: Node in [sort_label, sort_choice, direction_button]: item.reparent(sorting)
 	var actions := HBoxContainer.new()
 	for item: Node in top.get_children(): item.reparent(actions)
+	var help := BookButton.new()
+	help.text = "Hilfe"
+	help.action_id = "study-help"
+	help.pressed.connect(func() -> void: help_requested.emit())
+	actions.add_child(help)
+	actions.move_child(help,1)
+	actions.move_child(help,1)
 	summary.reparent(right_page)
 	_detach_summary.call_deferred()
 	preference_feedback.get_parent().reparent(left_page)
@@ -48,11 +57,12 @@ func _ready() -> void:
 	left_page.add_child(left_pager)
 	previous_button.reparent(left_pager)
 	page_label.reparent(left_pager)
-	var right_pager := HBoxContainer.new()
+	right_pager = BoxContainer.new()
 	right_pager.alignment = BoxContainer.ALIGNMENT_END
 	right_page.add_child(right_pager)
 	right_pager.add_child(actions)
 	next_button.reparent(right_pager)
+	next_button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	for node: Node in old_children:
 		if node.get_parent() == self:
 			remove_child(node)
