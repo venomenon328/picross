@@ -77,7 +77,7 @@ def checks(group, host='Linux'):
                     + [f'za1-pz-test-direct-{c}-{s}' for c in ('mono','color') for s in
                        (('partial','finish','read','reset') if c == 'mono' else ('partial','finish','read','oldreset','reset'))],
         'graphics': ['current-vs2-complete', 'perf-b-native', 'retained-hc92-font-samples'],
-        'export': ['player-content-import', 'windows-export', 'player-content-pck'],
+        'export': ['player-content-import', 'windows-export', 'player-content-pck', 'isolated-book-study'],
     }
     if host == 'Windows':
         cases['adapters'] += ['za1-windows-exported-start']

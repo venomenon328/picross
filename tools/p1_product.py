@@ -580,6 +580,12 @@ def main(argv: list[str] | None = None) -> int:
                     phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
                           "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
                 evidence.scope_done("export")
+            if args.export:
+                # The isolated B-A study owns its project/profile and reuses only
+                # verified archives. Its bounded evidence stays in technical/.
+                import book_study
+                evidence.report["book_study"] = python_phase("isolated-book-study", lambda: book_study.run(
+                    args.cache_dir.resolve(), evidence.technical / "book-study"))
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
             evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2", "ea") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
             if args.visual:

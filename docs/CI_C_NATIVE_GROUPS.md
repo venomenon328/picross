@@ -1,5 +1,36 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## Buchstudie B-A / #493
+
+Die Exportgruppe verlangt zusätzlich einmalig `isolated-book-study` und dessen
+[B-A-N05-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
+die feste Szenariomenge, Doppelseitengeometrie, beide Blätterrichtungen,
+24 Unterbrechungsfälle, gültige ID-/Revealinstanzen, gerenderte Glyphen-/Konturabstände,
+Rückkehr mit aktuellem Fortschritt, Quellbindung, Materialvergleich und Papierstabilität,
+vollständige Phasen, Film mit stabilem Katalogende, vier Übergabepaare und tatsächliche Studienpakete samt
+Dateihashes. Die bisherigen Gruppen-/Dateipflichten bleiben erhalten. Die Studie
+liegt getrennt im befristeten Technikartefakt, nicht im regulären Spielerpaket.
+N03 bindet zusätzlich die eigene Ledertextur samt Importkosten, 15 unskalierte
+Randdetails, echte verzögerte Tooltipfälle in den drei bestehenden Konfigurationen,
+deren Inhalt/Geometrie/Lebensdauer und Gegenbeispiele für leeren Rahmen und alten
+Hoverstrich. Producer, Originalbericht, unabhängiger Guard und Mutationstests
+folgen gemeinsam diesem Umfang. Keine neue Gruppe und kein Browserauftrag.
+N04 erhält diese Nachweise, ergänzt genau eine gezielte 1920×1200/UI100-Fläche
+mit fünfter Übergabe sowie günstige Nachbar-/UI125-Geometrieprüfungen. 24
+unskalierte Randdetails binden beide inneren Enden und tatsächliche Quellmaße.
+Das Gate kontrolliert links beginnende Belegung, unabhängige Offsets einschließlich
+Abbruch/Resize, Originalglyphenhüllen und explizite Breite/Höhe statt 16:9-Ableitung.
+Tischquelle/Importkosten und beidseitige Paketisolation bleiben gebunden. Ein
+tatsächlicher Windows-Exportlauf ergänzt Standard/Maximieren/Wiederherstellen;
+Linux behauptet diese Probe nicht. Das native Phasenlimit bleibt 300 Sekunden.
+N05 erweitert denselben Lauf um zehn echte Informationsrouten, zwei nahe
+Seitenlayouts in vier gezielten Flächen, sechs native Unterbrechungen und eine
+günstige vollständige Entscheidungstabelle. Fünf bisherige plus vier neue
+Handoffs behalten die Grenzen 4/0,1 samt Versatz-/Alphagegenprobe. Der unabhängige
+Guard prüft Ursprung, ungleiche Offsets, tatsächliche Kamera-/Blattspuren, native
+Hüllen, Optionsänderung und Film. Keine neue CI-Gruppe, Budgeterhöhung oder
+Browserpflicht; Windowsoriginale müssen für das neue R06 erreichbar gebunden sein.
+
 ## Aktuelle Umsetzung: CI2-D / #416
 
 Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),

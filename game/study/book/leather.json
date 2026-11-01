@@ -1,0 +1,17 @@
+{
+  "file": "leather.png",
+  "sha256": "58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41",
+  "bytes": 4089216,
+  "size": [
+    1254,
+    1254
+  ],
+  "created": "2026-10-31",
+  "source": "OpenAI imagegen, original generation for B-A-N03; no reference image or external asset",
+  "mode": "generate; opaque; original output copied unchanged",
+  "rights": "AI-generated project asset for the authorized isolated study. No third-party reference. A remains unchanged as a quality reference, not used by the study binding shader.",
+  "prompt": "Create a square, seamless tileable material texture for the worn leather binding of a lovingly used old sketchbook, top-down orthographic flat material albedo scan, full bleed. Rich dark warm chocolate brown / umber leather, irregular tiny pebbled pores, fine natural wrinkles and branching hairline patina, subtle lighter russet wear rubbed into ridges. Convincingly organic, tactile, handmade and quietly illustrated photographic quality, low contrast at distance, moderately detailed up close. Perfectly even diffuse lighting across the entire image. Only the leather material itself, absolutely no book silhouette, pages, corners, edge bevel, stitch border, cast shadow, drop shadow, fold, gold ornament, text, symbols, logo, watermark, table, cloth or other objects. The whole square consists of the same continuous homogeneous leather and should tile without obvious seams. 1024x1024.",
+  "import": "Godot lossless, original 1254 square, mipmaps, linear mipmap filtering, repeat enabled; source_color/sRGB",
+  "mapping": "World-space planar leather grain on rounded cover and binding meshes, independent geometry shading and edge wear; no baked book silhouette or contact shadows",
+  "scope": "study/book only; included in both study packs, excluded from both regular player packs"
+}
