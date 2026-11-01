@@ -179,6 +179,15 @@ class BookStudyTests(unittest.TestCase):
             labels += ['native tooltip delay is not bypassed','negative empty tooltip reproduced by native hover',
                        'negative detached hover stroke rejected']
             labels += n05_labels
+            gestures = ('left','right','outside','clue','chord','escape','lost-release','resize')
+            labels += ['F01 '+label for label in ('regular BookButton default','deferred popup teardown',
+                       'popup released after dispatch','lost release cancels without commit',
+                       'outside releases never click another control','exact undo redo',
+                       'negative synchronous popup hide rejected')]
+            labels += ['F01 '+label+' '+kind for kind in gestures for label in ('gesture','crosshair returns')]
+            f01 = [dict(case=kind,visible=kind != 'negative-consumed-release',passed=True)
+                   for kind in ('default-idle',*gestures,'negative-consumed-release','release-recovered')]
+            f01 += [dict(case='negative-synchronous-hide',passed=True)]
             tips = [dict(case=kind,width=w,height=h,scale=s,caption='Useful help' if kind in captions else '',wait_seconds=.65,hovered=True,
                          visible=kind in captions, popup=[10,10,150,40],label=[130,20],text='Useful help')
                     for w,h,s in configurations[:3]
@@ -207,7 +216,7 @@ class BookStudyTests(unittest.TestCase):
             boundaries = [dict(width=1920,height=h,scale=s,margin=10,offsets=[91,173]) for h,s in ((1200,1.25),(1192,1.0),(1208,1.0),(1088,1.0))]
             native = dict(checks=len(labels), assertions=[dict(label=l,passed=True) for l in labels],
                           n04=dict(counts=counts,scroll=scroll,boundaries=boundaries,clips=[dict(side=-1,rect=[106,125,750,900]),dict(side=1,rect=[1040,125,750,900])]),
-                          tooltip_cases=tips,n05=n05,
+                          tooltip_cases=tips,f01=f01,n05=n05,
                           interruptions=interruptions, catalog_layouts=[dict(cards=[{}]*24)]*3,
                           page_motions=[dict(target=1,direction=1,seconds=.85),dict(target=0,direction=-1,seconds=.85)],
                           failures=[], layouts=[{}, {}, {}], handoffs=[{}]*9,
@@ -241,10 +250,13 @@ class BookStudyTests(unittest.TestCase):
             study['handoff_pixels']['samples'].update({n:dict(max_channel_delta=2,mean_channel_delta=[.01]*4) for n in HANDOFFS})
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
             for mutation in ("assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
-                             "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
+                             "f01-missing", "f01-failed", "f01-negative", "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
                              "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source",
                              "info-route", "info-zoom", "info-leaf", "info-pan", "info-turn", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
+                if mutation == 'f01-missing': original['f01'].pop()
+                if mutation == 'f01-failed': original['f01'][0]['passed'] = False
+                if mutation == 'f01-negative': next(r for r in original['f01'] if r['case'] == 'negative-consumed-release')['visible'] = True
                 if mutation == "assertion": original["failures"] = ["input lock failed"]
                 if mutation == "omitted-assertion":
                     original['assertions'].pop(0)

@@ -202,6 +202,13 @@ def validate_book_study(report, directory, identity, host):
     required_assertions.update({'native tooltip delay is not bypassed',
                                 'negative empty tooltip reproduced by native hover',
                                 'negative detached hover stroke rejected'})
+    f01_gestures = ('left','right','outside','clue','chord','escape','lost-release','resize')
+    required_assertions.update('F01 '+label for label in (
+        'regular BookButton default', 'deferred popup teardown', 'popup released after dispatch',
+        'lost release cancels without commit', 'outside releases never click another control',
+        'exact undo redo', 'negative synchronous popup hide rejected'))
+    for kind in f01_gestures:
+        required_assertions.update('F01 '+label+' '+kind for label in ('gesture','crosshair returns'))
     configurations = {(1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0)}
     if (report.get('book_study') != study or study['package'] != 'B-A-N05-T01'
             or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
@@ -230,6 +237,13 @@ def validate_book_study(report, directory, identity, host):
             or study['material_source']['sha256'] != '957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a'):
         raise ValueError('Incomplete/wrong isolated book study assertions or binding')
     tooltip_cases = native['tooltip_cases']
+    f01 = native.get('f01', [])
+    f01_cases = {'default-idle','negative-consumed-release','release-recovered',*f01_gestures}
+    if (len(f01) != len(f01_cases)+1 or {r['case'] for r in f01} != f01_cases | {'negative-synchronous-hide'}
+            or any(r.get('passed') is not True for r in f01)
+            or any(r.get('visible') is not (r['case'] != 'negative-consumed-release')
+                   for r in f01 if r['case'] in f01_cases)):
+        raise ValueError('F01 native tooltip/release regression or counterexample missing/failed')
     captions = {'direction','reset','mode','click-before','caption-after-click','fill','help','wrapped-edge'}
     empty = {'footer-0','footer-1','footer-2','whitespace'}
     for width, height, scale in ((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25)):

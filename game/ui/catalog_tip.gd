@@ -25,5 +25,6 @@ func _make_custom_tooltip(for_text: String) -> Object:
 func dismiss_tooltip() -> void:
 	if tooltip_ref == null: return
 	var tip: Control = tooltip_ref.get_ref()
-	if tip != null and tip.is_inside_tree() and tip.get_window() != get_window(): tip.get_window().hide()
+	# Preserve the Viewport's popup traversal until event dispatch finishes.
+	if tip != null and tip.is_inside_tree() and tip.get_window() != get_window(): tip.get_window().queue_free()
 	tooltip_ref = null

@@ -417,4 +417,49 @@ persönliche Kandidatenwahl vor vollständigem B-A-Abschluss und vor B-B; sie da
 nach einem separat freigegebenen isolierten Merge auf main erfolgen. Der aktuelle
 Auftrag enthält keine Mergefreigabe und lässt den PR als Draft.
 
+### B-A-N05-F01 / B-A-R06-B01: Windows-Eingabe und Tooltip-Lebensdauer
+
+Nacharbeit gemäß [B-A-V07](https://github.com/venomenon328/picross/pull/495#issuecomment-6557397651).
+Am unveränderten Windows-Export von `2cd4fa1c0a602976b996115bff7a4eaa2a7e77f9`
+wurden beide Symptome getrennt reproduziert: Access Violation `0xc0000005`
+beim wiederholten Überfahren sichtbarer Tooltips und ausbleibende Tooltips nach
+echtem Zell-Down/Up. Windows 11, Godot 4.7.2, GL Compatibility, Intel Arc Pro B390;
+ursprüngliche Logs und WER-Ereignisse 1000/1001 gehören zum F01-Nachweis.
+
+Die kontrollierte Tooltip-Variante ersetzt synchrones `hide()` am Godot-eigenen
+Popup durch `queue_free()`, entsprechend dem verzögerten Abbau der Engine.
+Dadurch bleibt die Liste eingebetteter Fenster während der Ereigniszustellung
+stabil. Dies gilt auch für die passive `CatalogTip`-Beschriftung. Der getrennte
+Commit-Fehler bleibt damit reproduzierbar: Godot bereinigt bei einem in `_input`
+verbrauchten Up zwar seine Tastenmaske, behält aber den Board-Mausempfänger.
+Das Board wertet seine Loslassposition weiterhin genau einmal aus und lässt
+anschließend das Up durch die normale GUI-Zustellung laufen. Diese löst den
+ursprünglichen Mausempfänger, einschließlich Hinweisgesten und Gegentastenbarriere;
+ein Außen-Up aktiviert keinen anderen Button. Kein erhöhter Delay, globaler
+Input-Reset oder Eingriff in Zell-/Saveverträge.
+
+`f01_cases.gd` ergänzt den bestehenden nativen Studienlauf um kleine echte
+GUI-Dispatchfälle: Default-BookButton, Popup-Abbau nach Ereignisende, linke/rechte
+Zellaktion, Außen-Up, Hinweisroute, Gegentaste, Escape, verlorenes und späteres Up,
+Resize, Kreuzlinienrückkehr sowie exaktes Undo/Redo. Zwei Gegenproben stellen
+gezielt die alte Release-Verarbeitung und das synchrone Popup-Verstecken wieder
+her. Der Ergebnisguard verlangt die Fälle und ihre Originalassertions.
+Die Prüfprogramme sind aus beiden Spielerpaketen ausgeschlossen. Das 300-s-Limit bleibt.
+
+Die zusätzliche Windows-Probe verwendet echte Win32-Mausereignisse in der
+exportierten EXE/PCK, 32 Hin-/Rückwege mit Idle, Commit, schnellem Wechsel und
+sichtbarem Tooltip sowie echte Fokus-/Resize-/Außenloslassfälle. Ein externes,
+rein lesendes Beobachterskript lädt den konfigurierten Einstieg aus dem PCK;
+es injiziert keine Engine-Ereignisse und verändert keine Spielzustände.
+Ein gewöhnlicher Exportstart ohne Beobachter ergänzt diese Instrumentierung.
+Head/Basis/Checkout, Werkzeug-/Exporthashes, OS-Ereignisse, begrenzte gespülte
+Engine-Spur, Clientbilder und Exitcode bilden B-A-N05-F01-T01. Arbeitsoriginale
+liegen vorläufig in `artifacts/book-n05-f01-work/`; der PR bindet das kompakte
+Prüfpaket und die tatsächlichen finalen Laufresultate. Keine neue permanente
+Bildablage oder erneuter W05-Upload. Die zwei neuen Prüfskripte und der Windows-
+Treiber dienen ausschließlich dieser reproduzierbaren Regression.
+
+Unabhängiges **B-A-R07** bleibt erforderlich. **B-A-R06-A01** und **B-A-M01** bleiben
+offen; F01 nimmt weder W05 noch Gestaltung oder B-B ab und erteilt keinen Merge.
+
 Start und Reproduktion: [Studienanleitung](../game/study/book/README.md).

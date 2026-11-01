@@ -65,7 +65,10 @@ func dismiss_tooltip() -> void:
 	if tooltip_ref == null: return
 	var tip: Control = tooltip_ref.get_ref()
 	if tip != null and tip.is_inside_tree() and tip.get_window() != get_window():
-		tip.get_window().hide()
+		# The Viewport owns this popup. Synchronous hide during mouse_exited
+		# mutates its embedded-window traversal (Windows access violation).
+		# Use the same deferred teardown as Godot's tooltip cancellation.
+		tip.get_window().queue_free()
 	tooltip_ref = null
 
 static func dismiss_all(tree: SceneTree) -> void:
