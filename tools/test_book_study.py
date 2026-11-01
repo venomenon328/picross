@@ -157,7 +157,7 @@ class BookStudyTests(unittest.TestCase):
             n06 = dict(depth_cases=[dict(case=label,file='fold-depth-'+label+'.png',gap_pixels=22 if label == 'wide-gap' else 2,
                                         raised_shoulders=label != 'flat-sheet',low_valley_flat_outer=label != 'wide-gap',
                                         accepted=label in ('rest','landed')) for label in ('rest','landed','wide-gap','flat-sheet')],
-                       joint_depth=.31,minimum_cover_clearance=.006,binding=dict(vertices=8448,triangles=16026,surfaces=5))
+                       joint_depth=.31,minimum_cover_clearance=.006,binding=dict(vertices=8448,triangles=16026,surfaces=5),focus_reparent=True)
             for row in n06['depth_cases']: png(root/row['file'],640,128)
             identity = dict(source_commit="a"*40, source_tree_dirty=False)
             labels = ['three independently moving leaves', 'actual catalog pointer selects correct ID',
@@ -255,11 +255,12 @@ class BookStudyTests(unittest.TestCase):
                 return dict(book_study=candidate)
             study['handoff_pixels']['samples'].update({n:dict(max_channel_delta=2,mean_channel_delta=[.01]*4) for n in HANDOFFS})
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
-            for mutation in ("n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
+            for mutation in ("n06-focus", "n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
                              "f01-missing", "f01-failed", "f01-negative", "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
                              "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source",
                              "info-route", "info-zoom", "info-leaf", "info-pan", "info-turn", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
+                if mutation == 'n06-focus': original['n06']['focus_reparent'] = False
                 if mutation == 'n06-missing': original['n06']['depth_cases'].pop()
                 if mutation == 'n06-gap': original['n06']['depth_cases'][0]['gap_pixels'] = 8
                 if mutation == 'n06-flat': original['n06']['depth_cases'][1]['raised_shoulders'] = False

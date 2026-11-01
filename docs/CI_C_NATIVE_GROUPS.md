@@ -33,7 +33,9 @@ Browserpflicht. N06 ergänzt vier 640×128-Tiefenbilder des echten Mesh-/Vertexp
 Ruhe, gegenüberliegende Landung, verbreiterter Spalt und flache Geometrie.
 Die beiden Gegenbeispiele müssen scheitern; tatsächliche Leder-/Blockarrays
 prüfen Gelenktiefe und positiven Abstand unter den bestehenden Mengenbudgets.
-Der Guard verlangt Fälle, PNG-Maße und Messwerte mit sieben Mutationen.
+Ein echter Tree-Exit prüft den unter Windows gefundenen reentranten Fokusabbruch
+und die Bindung an dieselbe Bewegung. Der Guard verlangt Fälle, PNG-Maße und
+Messwerte mit acht Mutationen.
 Windowsoriginale müssen für das neue unabhängige R08 erreichbar gebunden sein.
 
 ## Aktuelle Umsetzung: CI2-D / #416

@@ -44,7 +44,8 @@ def validate_n06(native, directory):
         if header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' or struct.unpack('>II',header[16:24]) != (640,128):
             raise ValueError('N06 missing original depth strip')
     counts = data['binding']
-    if (not .30 < data['joint_depth'] < .40 or not .005 < data['minimum_cover_clearance'] < .02
+    if (data.get('focus_reparent') is not True
+            or not .30 < data['joint_depth'] < .40 or not .005 < data['minimum_cover_clearance'] < .02
             or not 0 < counts['vertices'] <= 8511 or not 0 < counts['triangles'] <= 16262
             or not 0 < counts['surfaces'] <= 6):
         raise ValueError('N06 invalid binding depth/clearance/budget')
