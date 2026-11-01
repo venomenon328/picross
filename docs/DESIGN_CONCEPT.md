@@ -1,5 +1,19 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**Buch / #493 · B-A-N05:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
+führen realistische Materialien, gezielte Bewegung und gezeichnete Seiteninhalte
+zusammen. Die folgenden BP-/Z2-Lieferbelege bleiben historisch gebunden; das
+bisherige A-Buch bleibt bis B-B die reguläre Darstellung. N03 verwendet eigene
+Lederflächen und zusammenhängende Rand-/Rückengeometrie; A bleibt Qualitätsreferenz.
+N04 bereinigt die beiden inneren Enden und ergänzt eine zusammenhängende echte
+Tischbildressource hinter dem Buch. Papierkoordinaten gelten auch bei 16:10;
+links beginnende Kartenbelegung und zwei unabhängige Scrollstände bleiben Studie.
+N05 ordnet Einstellungen links und Hilfe rechts im Arbeitsnahmaßstab an. Reine
+Seitenwechsel pannen in 0,65 s, Eintritt/Rückkehr blättern in 0,85 s mit dem zum
+Ursprung passenden Zoom. Beide Seiten bewegen ihren eigenen Inhalt mit dem Buch;
+die generische Informationsüberschrift entfällt. Bestehende Controls, Schriften,
+HZ-Icons und Arbeitskapazitäten bleiben erhalten. R06 und M01 bleiben getrennt.
+
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
 Tidy Hand für Standardtexte und erhält die bisherigen Überschriften. Kleine
@@ -136,7 +150,7 @@ Chalkboard/Stift/X/Timing sind nach ZS1-M01 bestätigt; die
 | Bereich | Bestätigte Entscheidung |
 | --- | --- |
 | Sammlung | Ein Album füllt sich mit erarbeiteten Bildern und kann einen erkennbar vollständigen Zustand erreichen. Keine zusätzlich beschlossene Raumansicht. |
-| Zeichenstil | Handgezeichnete 2D-Illustration mit klaren Konturen und ruhigen, nicht zu blassen Farbflächen. Nicht automatisch Retro-Pixel-Art für die gesamte Oberfläche. |
+| Zeichenstil | Realistischer räumlicher Buchkörper und sparsame Umgebung gemäß [#493](BOOK_STUDY.md); Inhalte/UI bleiben gezeichnet beziehungsweise geschrieben, Abschlussbilder illustriert. |
 | Stimmung | Warm, neugierig und dennoch ruhig. |
 | Spielbildschirm | Thematik bleibt dezent sichtbar; das geometrisch präzise Raster trägt selbst den gezeichneten Spielcharakter. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
 | Zelllesbarkeit | Füllungen bleiben einzeln erkennbar, insbesondere an kräftigen Fünferlinien. Raster und Füllung dürfen nicht optisch zu einer gemeinsamen Fläche verschmelzen. |
@@ -278,7 +292,7 @@ aufgehoben. #24 wurde noch nicht begonnen.
 
 Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Registern, Kapitelverzierungen und unterschiedlich großen Bildplätzen. Große Panoramen könnten eigene Seiten erhalten. Feste Seiten statt freier Dekoration sind ein Vorschlag, keine neue Spielmechanik.
 
-Beim Öffnen könnte das Rätselblatt zur großzügigen Arbeitsfläche werden. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster erhalten ausreichend Platz. Die linke Buchseite selbst wird zur großzügigen Bildschirmfläche; große Raster werden weder in eine kleine halbe Bildschirmfläche noch über einen Falz gezwungen. Perspektive, Ränder und Übergänge bleiben zu prüfen.
+Die bestätigte [Buchrichtung #493](BOOK_STUDY.md) zeigt den Katalog als echte Doppelseite mit mittiger Bindung. Katalogblättern dauert 0,85 Sekunden, vorwärts rechts nach links und zurück umgekehrt. Drei einzelne Blätter und eine insgesamt dreisekündige Kamerafahrt führen zur großzügigen rechten Arbeitsseite, frontal und mit Bindung links. B-A-N02 ergänzt sichtbaren Buchkörper, organische Papiertextur, reale ruhende Falzwölbung, transparente Controls und eine 1,8-sekündige Rückkehr mit aktuellem Arbeitsstand. Die Revision bleibt isoliert; der normale Spielstart bleibt bis B-B unverändert. Die frühere linke Arbeitsseite und das Verbot gezielter Kamerabewegung sind für diese neue Lieferung abgelöst. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster behalten ihre vollständigen bisherigen Pixelbudgets. Große Raster werden weder auf eine halbe Bildschirmfläche verkleinert noch über den Falz gelegt. Materialvergleich, Übergabe und offene Sichtabnahmen sind im Studienvertrag gebunden.
 
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
 

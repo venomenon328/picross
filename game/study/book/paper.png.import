@@ -1,0 +1,21 @@
+[remap]
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://dj82ck4peqalj"
+path="res://.godot/imported/paper.png-d97cf9011e5b971689c7f26fae3c148d.ctex"
+metadata={"vram_texture": false}
+
+[deps]
+source_file="res://study/book/paper.png"
+dest_files=["res://.godot/imported/paper.png-d97cf9011e5b971689c7f26fae3c148d.ctex"]
+
+[params]
+compress/mode=0
+compress/high_quality=false
+compress/lossy_quality=0.7
+mipmaps/generate=true
+mipmaps/limit=-1
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/size_limit=0
+detect_3d/compress_to=0

@@ -1,5 +1,36 @@
 # Aktiver Bestand und historische Quellen
 
+**Buchstudie B-A-N05 / #493:** `game/study/book/` erhält den ausführbaren isolierten
+Untersuchungsstand, zwei eigene Materialshader und kompakte synthetische Inputs
+samt deterministischer Erzeugung und studieneigener Doppelseitenanordnung.
+Das bestehende A-Bild bleibt unveränderte Qualitätsreferenz. Eine originale
+Papiertextur samt Import-/Herkunftsmetadaten und 27 eindeutige Definitions-/Revealpaare
+ersetzen die fehlerhafte Wiederverwendung dreier Ressourcenpfade. Die Dateipaare
+sind der begrenzte reproduzierbare Runtime-/PCK-Bestand, keine historische Galerie.
+[B-A-N05-T01](BOOK_STUDY.md) und Startanleitung binden
+Zweck, Rechte und Nachweise. Filme, Laufbilder und Exporte bleiben temporär; der
+reguläre Export schließt die Studie aus. Keine historischen Bildressourcen ersetzen.
+N03 ergänzt eine originale homogene Ledertextur mit Import-/Herkunftsmetadaten,
+die gemeinsame Rand-/Rückengeometrie und einen aus exportierten Paketen ausgeschlossenen
+nativen Tooltipprüfer. Keine neue dauerhafte Bildgalerie; N02-/N03-Vergleiche,
+unskalierte Randdetails und Tooltipbilder bleiben befristete technische Belege.
+N04 ergänzt genau eine originale Tischbildressource samt Import/Herkunft sowie
+einen begrenzten nativen Prüfer für Halbseiten, Scrollkontext und 16:10. Der Prüfer
+ist aus Studienpaketen ausgeschlossen, die gesamte Studie aus regulären Paketen.
+Vorher-/Nachherbilder, Windowsbelege und Film bleiben in befristeten Artefakten;
+keine zusätzliche dauerhafte Galerie oder Handoffdatei.
+N05 ergänzt zwei studienlokale Bausteine für Informationslayout und
+Ursprungs-/Bewegungszustände, einen aus Paketen ausgeschlossenen nativen Prüfer
+und erweitert den vorhandenen unabhängigen Python-Ergebnisguard. Alle haben einen aktuellen Runtime-
+beziehungsweise Ergebnisgatezweck. N05-Originalbilder, Windowsbelege und Film
+bleiben befristete Prüfarbeitsdaten; keine neuen Bild-/Font-/Materialressourcen.
+F01 ergänzt einen nativen GUI-Dispatchprüfer, einen rein lesenden Windows-
+Beobachter und einen begrenzten Win32-Eingabetreiber. Beide GDScripts bleiben aus
+Spielerpaketen ausgeschlossen. Nur die private Diagnosekopie erhält den Beobachter
+als externes Autoload; EXE und PCK bleiben bytegleich. Crash-/WER-Originale,
+OS-/Engine-Spuren und wenige Clientbilder bleiben bis zum offenen F01-Review in
+einem kompakten temporären Prüfpaket; keine dauerhafte Laufchronik oder Galerie.
+
 Eigentümerentscheidung 14.10.2026, [#116](https://github.com/venomenon328/picross/issues/116):
 Abgeschlossene Produktion muss nicht wiederholbar sein. Historische Arbeitsdateien
 gehören nicht dauerhaft in den aktiven Tree, Builds oder neue CI-Artefakte.

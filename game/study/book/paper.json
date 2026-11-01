@@ -1,0 +1,14 @@
+{
+  "file": "paper.png",
+  "sha256": "1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f",
+  "bytes": 2564246,
+  "size": [1254, 1254],
+  "created": "2026-10-31",
+  "source": "OpenAI imagegen, original generation for B-A-N02, no input image or external asset",
+  "mode": "generate; opaque; one original output copied unchanged",
+  "rights": "AI-generated project asset for the authorized isolated study. No third-party reference or claimed scanned historical original. Existing A image and its approvals remain unchanged.",
+  "prompt": "Create one square, high-resolution scan of blank antique book paper as a seamless-feeling MATERIAL TEXTURE, not a picture of a book. Flat orthographic scan, evenly lit, edge-to-edge continuous paper, no page edges, no text, no objects, no frame, no shadows. Very light warm ivory rag paper, restrained natural irregular paper fibers visible at close inspection, subtle softly cloudy age variation, a few very faint diffuse pale beige age marks with asymmetric placement. Quiet enough for dark puzzle text and fine grid lines drawn over it. Organic photographic paper texture, absolutely no crosshatching, polygons, ovals, digital geometric noise, repeated motifs, creases, holes or strong stains. Keep overall brightness high and contrast low, avoid a central vignette. This is an original bitmap material for a hand-drawn puzzle book UI.",
+  "import": "Godot lossless, original 1254 square, mipmaps, linear mipmap sampling, no repeat, source_color/sRGB; no premultiplied source alpha",
+  "mapping": "0.72 UV scale plus deterministic 0..0.26 offset from logical catalog page/side or work definition ID; never mirrored; both leaf faces bind their own page; shader blends 55% light ivory",
+  "scope": "study/book only; included in both study packs, excluded from both regular player packs"
+}
