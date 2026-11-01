@@ -1,0 +1,129 @@
+name: Book study B-A M01 compact Windows package
+
+on:
+  push:
+    branches: [chore/493-book-study-m01-package]
+    paths: [.github/workflows/book-study-m01-package.yml]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  compact-study:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Download the already-tested head-bound technical artifact
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: picross-p1-technical-33ccd1c8669c82607fd0978b37f5ccae4310b1bd-1
+          repository: venomenon328/picross
+          run-id: '41306765947'
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/technical
+
+      - name: Verify and select only the runnable study plus notices
+        shell: bash
+        env:
+          STUDY_TECHNICAL: ${{ runner.temp }}/technical
+          STUDY_OUT: ${{ runner.temp }}/study-m01
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import shutil
+
+          expected_head = "33ccd1c8669c82607fd0978b37f5ccae4310b1bd"
+          merged_main = "130a52662d59bc810fb95e08854a2b7d067fafb6"
+          root = Path(os.environ["STUDY_TECHNICAL"]) / "book-study"
+          if not (root / "report.json").is_file():
+              raise RuntimeError("Expected book-study/report.json not found")
+          report = json.loads((root / "report.json").read_text(encoding="utf-8"))
+          if (report.get("source_commit") != expected_head
+                  or report.get("source_tree_dirty")
+                  or report.get("package") != "B-A-N05-T01"):
+              raise RuntimeError("Unexpected study report source or package")
+          inventory = report["files"]
+          out = Path(os.environ["STUDY_OUT"])
+          out.mkdir(parents=True, exist_ok=False)
+          selected = {
+              "book-study.exe": "windows/book-study.exe",
+              "book-study.pck": "windows/book-study.pck",
+              "STUDIE.md": "windows/STUDIE.md",
+          }
+          licenses = sorted(p for p in (root / "windows" / "licenses").rglob("*") if p.is_file())
+          if not licenses:
+              raise RuntimeError("Missing license/provenance files")
+          for item in licenses:
+              rel = item.relative_to(root).as_posix()
+              selected[rel.removeprefix("windows/")] = rel
+
+          hashes = {}
+          for target, origin in selected.items():
+              if Path(target).suffix.lower() in (".avi", ".mp4", ".webm", ".png", ".jpg", ".jpeg"):
+                  raise RuntimeError(f"Unwanted gallery/video: {target}")
+              if origin not in inventory:
+                  raise RuntimeError(f"Unbound study export file: {origin}")
+              source = root / origin
+              size = source.stat().st_size
+              with source.open("rb") as handle:
+                  digest = hashlib.file_digest(handle, "sha256").hexdigest()
+              expected = inventory[origin]
+              if size != expected["bytes"] or digest != expected["sha256"]:
+                  raise RuntimeError(f"Original export mismatch: {origin}")
+              dest = out / target
+              dest.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copyfile(source, dest)
+              hashes[target] = {"bytes": size, "sha256": digest}
+          if len(selected) > 40:
+              raise RuntimeError(f"Unexpectedly large inventory: {len(selected)}")
+
+          (out / "README-START.txt").write_text(
+              "PICROSS – BUCHSTUDIE B-A / PERSOENLICHE SICHTUNG M01\n\n"
+              "Alle Dateien in EINEN Ordner entpacken. Unter Windows\n"
+              "book-study.exe doppelklicken; book-study.pck liegt daneben.\n\n"
+              "Dies ist die ISOLIERTE Buchstudie mit synthetischen Raetseln,\n"
+              "nicht das normale Spiel. Keine echten Spielstaende.\n"
+              "Bitte Buch, Materialien, Seitenbewegungen, Kamerafahrten,\n"
+              "Informationsseiten, Eingabe und Ruecknavigation beurteilen.\n"
+              "B-A-M01 bleibt bis zu deiner Entscheidung offen.\n\n"
+              "Gepruefter Head: " + expected_head + "\n"
+              "Squash-Merge auf main: " + merged_main + "\n"
+              "Der gemergte Tree ist identisch zum geprueften PR-Head.\n"
+              "CI: https://github.com/venomenon328/picross/actions/runs/41306765947\n"
+              "Einige Originalsichtpruefungen wurden ausdruecklich erlassen;\n"
+              "die Umpackung selbst ist kein neuer Windowslauf.\n",
+              encoding="utf-8")
+          manifest = {
+              "purpose": "B-A-M01 owner review, isolated Windows study only",
+              "source_commit": expected_head,
+              "integrated_main": merged_main,
+              "source_ci": "https://github.com/venomenon328/picross/actions/runs/41306765947",
+              "files": hashes,
+              "excluded": "Test renders, screenshots, films, logs, browser and regular player",
+              "no_new_build": True,
+              "owner_acceptance": "OPEN",
+          }
+          (out / "MANIFEST.json").write_text(
+              json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+          print(json.dumps({
+              "status": "STUDY_ONLY_PACKAGE_OK",
+              "files": sorted(p.relative_to(out).as_posix() for p in out.rglob("*") if p.is_file()),
+              "exe_sha256": hashes["book-study.exe"]["sha256"],
+              "pck_sha256": hashes["book-study.pck"]["sha256"],
+              "total_bytes": sum(p.stat().st_size for p in out.rglob("*") if p.is_file()),
+          }, ensure_ascii=False))
+          PY
+
+      - name: Upload one runnable ZIP without development images or video
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: picross-book-study-B-A-M01-windows-130a526
+          path: ${{ runner.temp }}/study-m01/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
