@@ -79,6 +79,10 @@ func run(proof: SceneTree) -> Dictionary:
 	p.root.size = Vector2i(1920,1080)
 	book.set_ui_scale(1.0)
 	await force_open()
+	var player = app.session.player
+	var previous: int = player.cells[0]
+	p.check(player.commit([{"index":0,"before":previous,"after":0 if previous != 0 else 1}]) and player.undo() and player.cursor > 0 and player.cursor < player.history.size(),"N05 begun work has undo and redo history")
+	app.refresh()
 	app.board.active_color = 4
 	app.set_tool("erase")
 	app.board.zoom(-1,app.board.view.viewport.get_center())
@@ -105,6 +109,12 @@ func run(proof: SceneTree) -> Dictionary:
 	await route("catalog","help")
 	await route("help","catalog")
 	p.check(app.store.writes == writes,"N05 catalog placeholder never creates save obligation")
+	var catalog_origin: Dictionary = book.context().duplicate(true)
+	for destination: String in ["help","settings","catalog"]:
+		click(target_control(destination))
+		book.interrupt("focus")
+		await settled()
+	p.check(book.context() == catalog_origin and app.store.writes == writes,"N05 catalog help settings returns original context without saves")
 	for sample: Dictionary in rows.routes:
 		if sample.target == "catalog":
 			p.check(sample.catalog_after == sample.origin.catalog,"N05 exact unequal catalog offsets and selection "+sample.source)
@@ -192,7 +202,7 @@ func settings_cases() -> void:
 	book.set_ui_scale(1.0)
 	await force_open()
 	var before: Array = p.fingerprint()
-	book.information_routes.request("settings")
+	click(target_control("settings"))
 	book.interrupt("focus")
 	await settled()
 	for expected: float in [1.25,1.0]:
@@ -216,10 +226,10 @@ func settings_cases() -> void:
 	p.check(app.board.row_clue_reads.all(func(r: Dictionary) -> bool: return r == app.board.ClueLayout.grid_end_position()) and app.board.column_clue_reads.all(func(r: Dictionary) -> bool: return r == app.board.ClueLayout.grid_end_position()),"N05 explicit clue reset remains effective")
 	rows.settings = {"mode":app.board.mode,"mark":app.board.mark_completed_clues,"animations":app.animation_toggle.button_pressed,"ui":app.ui_scale}
 	p.check(rows.settings == {"mode":"V","mark":false,"animations":false,"ui":1.0},"N05 actual controls change settings")
-	book.information_routes.request("help")
+	click(target_control("help"))
 	book.interrupt("focus")
 	await settled()
-	book.information_routes.request_return()
+	click(target_control("work"))
 	book.interrupt("focus")
 	await settled()
 	p.check(p.fingerprint() == before and app.board.mode == "V" and not app.board.mark_completed_clues and not app.animation_toggle.button_pressed,"N05 explicit settings survive work return")

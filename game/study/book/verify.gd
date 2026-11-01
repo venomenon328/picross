@@ -18,6 +18,32 @@ var returns: Array = []
 var tooltip_cases: Array = []
 var n04: Dictionary = {}
 var n05: Dictionary = {}
+var image_writer: Thread
+var image_label: String
+var pending_image: Image
+var phase_started: int
+
+func phase(label: String) -> void:
+	print("BOOK_PHASE ",label," seconds=",(Time.get_ticks_msec()-phase_started)/1000.0)
+	phase_started = Time.get_ticks_msec()
+
+func finish_image() -> void:
+	if image_writer != null:
+		check(image_writer.wait_to_finish() == OK,image_label)
+		image_writer = null
+		pending_image = null
+
+func write_image(image: Image, path: String, label: String) -> void:
+	# One immutable framebuffer at a time: PNG compression may overlap the next
+	# native frame, never the readback or scene access. Join before reporting.
+	finish_image()
+	image_label = label
+	pending_image = image
+	image_writer = Thread.new()
+	var error: Error = image_writer.start(image.save_png.bind(path))
+	if error != OK:
+		image_writer = null
+		check(false,"start bounded PNG writer")
 
 class Baseline extends Main:
 	func create_store() -> SaveStore: return Study.Content.MemoryStore.new()
@@ -46,7 +72,7 @@ func frames(count: int = 2) -> void:
 func screenshot(name: String, already_drawn: bool = false) -> Image:
 	if not already_drawn: await frames(1)
 	var image: Image = root.get_texture().get_image()
-	check(image.save_png(output.path_join(name+".png")) == OK, "native framebuffer " + name)
+	write_image(image,output.path_join(name+".png"),"native framebuffer "+name)
 	return image
 
 func fingerprint() -> Array:
@@ -88,6 +114,7 @@ func prepare_open(id: String) -> void:
 	check(study.state == Study.State.OPENING, "actual texture preparation completes")
 
 func run() -> void:
+	phase_started = Time.get_ticks_msec()
 	output = OS.get_environment("BOOK_STUDY_OUTPUT")
 	if output.is_empty(): quit(4); return
 	root.gui_embed_subwindows = true
@@ -102,6 +129,7 @@ func run() -> void:
 	fixture_cases()
 	await control_cases()
 	tooltip_cases = await preload("res://study/book/tooltip_cases.gd").new().run(self)
+	phase("controls-tooltips")
 	var before: Array = fingerprint()
 	var writes_before: int = study.app.store.writes
 	var start: Image = await screenshot("catalog")
@@ -190,9 +218,11 @@ func run() -> void:
 		var report: Dictionary = study.resource_report()
 		check(report.ui_capture_targets == 0 and report.catalog_rgba_textures == 0, "transient textures released " + id)
 	baseline.free()
+	phase("catalog-work-layouts")
 	n04 = await preload("res://study/book/n04_cases.gd").new().run(self)
 	await return_cases()
 	await interruption_cases()
+	phase("catalog-return-interruptions")
 	# Existing popups and gestures are cancelled before a page can move.
 	study.app.show_album()
 	await frames()
@@ -227,7 +257,7 @@ func run() -> void:
 		else:
 			study.interrupt("leave")
 			study.app.show_album()
-		await frames(8)
+		await frames(2)
 		check(study.generation > token and study.state == (Study.State.CATALOG if reason == "leave" else Study.State.WORK), "stable interrupted end state " + reason)
 		check(study.capture == null and (not study.leaf.visible or study.leaf_material.get_shader_parameter("turn") == 1.0), "no half leaf or stale viewport " + reason)
 		check(fingerprint() == cells, "interruption has no cell/history effect " + reason)
@@ -247,7 +277,10 @@ func run() -> void:
 	await frames()
 	check(study.app.session.player.cursor == old_cursor+1, "fresh actual pointer gesture works after interruption")
 	await solved_reset_case()
+	phase("input-completion")
 	n05 = await preload("res://study/book/n05_cases.gd").new().run(self)
+	finish_image()
+	phase("information")
 	var report: Dictionary = {"checks": checks, "assertions":assertions, "failures": failures, "layouts": layouts, "handoffs": handoffs,
 		"catalog_layouts":catalog_layouts,"page_motions":page_motions,"interruptions":interruptions,
 		"ink_margins":ink_margins,"returns":returns,"tooltip_cases":tooltip_cases,"n04":n04,"n05":n05,
@@ -293,6 +326,7 @@ func movie() -> void:
 	await movie_information(["settings","catalog","help","catalog"],events)
 	check(study.state == Study.State.CATALOG and study.app.session.player.cursor == edited_cursor,"movie returns edited content to catalog")
 	await screenshot("movie-final")
+	finish_image()
 	var file := FileAccess.open(output.path_join("movie.json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify({"fps":30,"events":events,"final_state":"CATALOG","final_id":str(study.app.session.definition.id),"edited_cursor":edited_cursor,"failures":failures})+"\n")
 	file.close()
@@ -432,11 +466,11 @@ func interruption_cases() -> void:
 				study.set_ui_scale(1.0)
 				study.app.show_album()
 				study.app.album.commit_page(0,40,120)
-				await frames(3)
+				await frames(2)
 				if kind == "return":
 					check(study.request_open("T-06"),"matrix return setup")
 					study.interrupt("focus")
-					await frames(3)
+					await frames(2)
 				var source: Dictionary = study.context()
 				var cells: Array = fingerprint()
 				var writes: int = study.app.store.writes
@@ -453,7 +487,8 @@ func interruption_cases() -> void:
 				elif reason == "resize": root.size += Vector2i(8,0)
 				elif reason == "ui-scale": study.set_ui_scale(1.25)
 				else: study._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
-				await frames(6)
+				# Two event/draw cycles also resume stale preparation awaits.
+				await frames(2)
 				var expected_work: bool = kind == "open" and reason != "leave"
 				check(study.state == (Study.State.WORK if expected_work else Study.State.CATALOG) and study.generation > token,"matrix stable target %s/%s/%s" % [kind,phase,reason])
 				if not expected_work:
