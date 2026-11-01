@@ -152,7 +152,7 @@ func _page(material: ShaderMaterial) -> MeshInstance3D:
 	var indices := PackedInt32Array()
 	for y: int in range(17):
 		for x: int in range(65):
-			var uv := Vector2(x/64.0, y/16.0)
+			var uv := Vector2(Binding.column(x)/10.0, y/16.0)
 			vertices.append(Vector3(uv.x*10.0, (0.5-uv.y)*12.4, 0.0))
 			normals.append(Vector3.BACK)
 			uvs.append(uv)
@@ -476,9 +476,14 @@ func set_ui_scale(value: float) -> void:
 	interrupt("ui-scale")
 	app.set_ui_scale(value)
 
+func _focus_interrupt(token: int) -> void:
+	# OS notifications may arrive inside app.reparent(). Do not re-enter that
+	# tree mutation, or interrupt a later motion after this one already settled.
+	if token == generation: interrupt("focus")
+
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
-		interrupt("focus")
+		_focus_interrupt.call_deferred(generation)
 	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
 		# Releases outside the unfocused window may not arrive here. Reconcile
 		# only on focus return; never turn a still-held transition press into input.

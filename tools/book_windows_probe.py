@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OBSERVER = ROOT / 'game/study/book/windows_observer.gd'
 
 
-def probe(source: Path, output: Path, expected_head: str) -> dict:
+def probe(source: Path, output: Path, expected_head: str, fold: bool = False) -> dict:
     if platform.system() != 'Windows':
         raise RuntimeError('Real Windows desktop required')
     report = json.loads((source / 'report.json').read_text(encoding='utf-8'))
@@ -77,7 +77,7 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
                                creationflags=subprocess.CREATE_NO_WINDOW)
     hwnd = None
     held = set()
-    binding = dict(package='B-A-N05-F01-T01', source_commit=expected_head,
+    binding = dict(package='B-A-N06-W01' if fold else 'B-A-N05-F01-T01', source_commit=expected_head,
                    base_commit=report['base_commit'], tested_checkout_commit=report['tested_checkout_commit'],
                    export_files={n: report['files']['windows/'+n] for n in ('book-study.exe','book-study.pck')},
                    observer_sha256=tc.sha256_file(OBSERVER), driver_sha256=tc.sha256_file(Path(__file__)),
@@ -208,9 +208,57 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
         wait(lambda: state().get('card'))
         hwnd = wait(find)
         record('window-ready', pid=process.pid, hwnd=hwnd)
+        if fold:
+            # Establish a visible owned window before requesting foreground;
+            # restoring it then gives the real ordinary-window dimensions.
+            user.ShowWindow(hwnd, 3)
+            activate()
+            user.ShowWindow(hwnd, 9)
+            time.sleep(.3)
+            capture('fold-catalog-standard-ui100')
         user.ShowWindow(hwnd, 3)
         activate()
         time.sleep(.5)
+        if fold:
+            capture('fold-catalog-maximized-ui100')
+            click(center(state()['card']))
+            wait(lambda: state()['state'] == 3 and not state()['barrier'])
+            fold_initial = state()
+            capture('fold-work-ui100')
+            click(center(state()['tips']['menu']['rect']))
+            wait(lambda: state()['state'] == 4 and state()['section'] == 'settings' and not state()['barrier'])
+            capture('fold-settings-ui100')
+            click(center(state()['scale_control']))
+            wait(lambda: state()['ui_scale'] == 1.25 and not state()['barrier'])
+            capture('fold-settings-ui125')
+            click(center(state()['info_switch']))
+            wait(lambda: state()['state'] == 4 and state()['section'] == 'help' and not state()['barrier'])
+            capture('fold-help-ui125')
+            click(center(state()['info_return']))
+            wait(lambda: state()['state'] == 3 and not state()['barrier'])
+            capture('fold-work-ui125')
+            click(center(state()['tips']['nav-information']['rect']))
+            wait(lambda: state()['state'] == 0 and not state()['barrier'])
+            capture('fold-catalog-maximized-ui125')
+            user.ShowWindow(hwnd, 9)
+            wait(lambda: state()['mode'] == 0)
+            time.sleep(.2)
+            capture('fold-catalog-restored-ui125')
+            require(all(state()[k] == fold_initial[k] for k in ('cursor','cells','history')),
+                    'fold Windows routes and scale/resize preserve initial history')
+            # Restore the normal UI100 origin for the unchanged F01 route below.
+            click(center(state()['card']))
+            wait(lambda: state()['state'] == 3 and not state()['barrier'])
+            click(center(state()['tips']['menu']['rect']))
+            wait(lambda: state()['state'] == 4 and not state()['barrier'])
+            click(center(state()['scale_control']))
+            wait(lambda: state()['ui_scale'] == 1.0 and not state()['barrier'])
+            click(center(state()['info_return']))
+            wait(lambda: state()['state'] == 3 and not state()['barrier'])
+            click(center(state()['tips']['nav-information']['rect']))
+            wait(lambda: state()['state'] == 0 and not state()['barrier'])
+            user.ShowWindow(hwnd, 3)
+            wait(lambda: state()['mode'] == 2)
         click(center(state()['card']))
         wait(lambda: state()['state'] == 3 and not state()['barrier'])
         initial = state()
@@ -342,6 +390,7 @@ if __name__ == '__main__':
     parser.add_argument('--source', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--head', required=True)
+    parser.add_argument('--fold', action='store_true', help='Include bounded N06 catalog/work/information UI100/125 and resize views')
     args = parser.parse_args()
-    result = probe(args.source.resolve(), args.output.resolve(), args.head)
+    result = probe(args.source.resolve(), args.output.resolve(), args.head, args.fold)
     print(json.dumps({k:result[k] for k in ('passed','exit_code','seconds','round_trips')}))

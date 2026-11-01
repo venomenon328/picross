@@ -63,6 +63,11 @@ func snapshot(full: bool = false) -> Dictionary:
 		"clue":board.clue_press_owned,"cursor":session.player.cursor,"history_size":session.player.history.size(),
 		"tool":[board.eraser,board.active_color],"tips":tips,"selected":study.selected_id,"writes":app.store.writes}
 	if full:
+		row["ui_scale"] = app.ui_scale
+		row["section"] = app.info.section
+		row["scale_control"] = rect(app.ui_scale_button)
+		row["info_switch"] = rect(app.information.get_node("help-access" if app.info.section == "settings" else "settings-access"))
+		row["info_return"] = rect(app.actions["nav-work"] if app.info.section == "settings" else app.info.right_return)
 		row["cells"] = session.player.cells
 		row["history"] = session.player.history
 		row["memory"] = app.store.snapshots.get(session.definition.id,{})

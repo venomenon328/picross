@@ -2,11 +2,13 @@
 
 Stand: 26.10.2026 · Version 3.3 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
 
-**B-A-N05 / #493:** Die bestehende Exportgruppe führt die erweiterte isolierte
+**B-A-N06 / #496:** Die bestehende Exportgruppe führt die erweiterte isolierte
 [Buchstudie und T01](BOOK_STUDY.md) einmalig nach dem
 [nativen Belegvertrag](CI_C_NATIVE_GROUPS.md) aus. Zehn Informationsrouten,
 gezielte Layouts und vier zusätzliche strenge Handoffs ergänzen die bisherigen
-Belege innerhalb desselben 300-s-Limits. Windowsoriginale, Selbstreview und R06
+Belege innerhalb desselben 300-s-Limits. N06 ergänzt vier kleine echte
+Shader-Tiefenbilder mit zwei Gegenbeispielen, Einbandabstand und Budgetprüfung.
+Windowsoriginale, Selbstreview und neues R08
 bleiben getrennt von der Linux-CI; Chromium ist weiterhin nicht beauftragt.
 
 ## Freigegebener CI2-Sollvertrag

@@ -1,4 +1,4 @@
-# Buchstudie B-A-N05 · #493
+# Buchstudie B-A-N06 · #496
 
 Isolierter ausführbarer Studienstand. Der normale Spielstart verwendet weiterhin
 das bisherige A-Buch. Drei feste synthetische Muster unter 27 Katalog-IDs, keine echten Rätsel oder
@@ -143,5 +143,12 @@ Die Spur ist auf 4096 Engine-Einträge, der Lauf auf 180 Sekunden begrenzt.
 Ein gewöhnlicher Exportstart ohne Beobachter und Originalbilder ergänzen den
 Nachweis; kein physischer Eigentümer-Spieltest wird dadurch behauptet.
 
-Bericht, Zustandsvertrag und offene Gates: [B-A-N05/F01-T01](../../../docs/BOOK_STUDY.md).
-R06-B01 erhält gezielte Nacharbeit; unabhängiges R07, R06-A01 und persönliche M01 bleiben offen.
+Für N06 ergänzt `--fold` beim gleichen Windows-Treiber echte Katalog-/Arbeits-/
+Informationswege bei UI100 und UI125, Maximieren/Wiederherstellen und originale
+Clientbilder. Anschließend läuft die vorhandene F01-Regressionsroute unverändert.
+Vier kleine Shader-Tiefenbilder prüfen den echten Falz mit verbreitertem Spalt
+und flacher Geometrie als Gegenbeispielen; der Einband bleibt im bisherigen Budget.
+
+Bericht, Zustandsvertrag und offene Gates: [B-A-N06-T01](../../../docs/BOOK_STUDY.md).
+Unabhängiges R08, persönliche B-A-M01, B-B und Merge bleiben offen.
+Frühere F01-Reviews und Eigentümerausnahmen bleiben an PR #495 gebunden.

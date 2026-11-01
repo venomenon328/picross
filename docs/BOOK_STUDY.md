@@ -1,18 +1,69 @@
-# Buchstudie B-A · B-A-N05-T01
+# Buchstudie B-A · B-A-N06-T01
 
-Stand: 01.11.2026 · ausschließlich B-A-N05 gemäß
-[#493 / B-A-E05, N18–N21](https://github.com/venomenon328/picross/issues/493),
-[Umsetzungsvorbereitung B-A-V06](https://github.com/venomenon328/picross/pull/495#issuecomment-6555884747).
-Ausgangshead: `b03397e5a492567ed615256112075755f235bc4f`;
-Basis: `864c4e6289df15ea7b3522b850542ece3489160f`.
-Branch `feat/493-book-study`, bestehender Draft-PR #495 gegen `main`.
+Stand: 01.11.2026 · isolierte visuelle Nacharbeit gemäß
+[#496 / B-A-N06](https://github.com/venomenon328/picross/issues/496).
+Vorab gefetchte und geprüfte Basis: `main@130a52662d59bc810fb95e08854a2b7d067fafb6`;
+Branch `feat/496-book-gutter`, neuer Draft-PR gegen `main`.
 Aktueller Lieferhead, CI, Originalbelege und getrenntes Selbstreview werden im PR
 gebunden. Dieses Dokument beschreibt den ausführbaren Prüfvertrag. B-B bleibt
 unimplementiert, #493 offen; dieser Auftrag erlaubt keinen Merge.
-N01–N17 und die in R03 bestätigte Behebung von R02-B01 bleiben erhalten.
-[R05](https://github.com/venomenon328/picross/pull/495#pullrequestreview-5727130442)
-ist positiv für N04 am Ausgangshead; frühere T01-Lieferungen und R01–R05
-bleiben an ihre damaligen Stände gebunden. N05 benötigt neues R06.
+N01–N21, F01 und die in R03 bestätigte Behebung von R02-B01 bleiben erhalten.
+N05/F01 wurden über [PR #495](https://github.com/venomenon328/picross/pull/495)
+integriert. Die damaligen Eigentümerausnahmen für R06-A01/R07-A01 sind keine
+nachgeholten Sichtprüfungen und gelten nicht für N06. Frühere T01 und R01–R07
+bleiben historisch gebunden. N06 benötigt unabhängiges **R08**; persönliche
+**B-A-M01**, B-B und Merge bleiben offen.
+
+## N06: Buchfalz und Einbandsteg
+
+Die Ursache des alten Schlitzes war geometrisch: beide Innenkanten lagen je
+0,035 Welteinheiten neben der Mitte, entsprechend zusammen etwa 5,64 Pixeln
+bei 1920×1080. Die Wölbung endete als zwei getrennte hohe Kanten; die verkürzten
+Papierenden bildeten zusätzliche Einkerbungen. Der bisherige Lichtgradient
+verwendete außerdem die ruhende Steigung auch während der Blattdrehung.
+
+Die Innenkanten liegen nun je 0,004 Einheiten neben der Mitte. Zwei reale,
+stetig anschließende Schultern erreichen bei Abstand 0,28 eine Höhe von 0,22;
+das mittige Tal liegt auf der ebenen Papierhöhe. Ab Abstand 0,75 ist die Fläche
+vollständig eben. 16 der weiterhin 64 Querspannen lösen diesen Bereich auf;
+UVs bleiben an die tatsächlichen Papierkoordinaten gebunden. Lichtnormalen
+folgen der Deformation einschließlich Drehung und Curl. Papierfasern und
+vormultiplizierte UI-Tinte bleiben unverändert.
+
+Ein zusammenhängender Lederdeckel enthält Rücken, Gelenkvertiefungen und beide
+Deckelflächen. Seine Oberseite besteht aus passenden Streifen statt eines flachen
+Fächers. Die Seitenblock-Unterkante folgt dem Gelenk mit positivem Abstand;
+die inneren Lagen sind an den freien Enden enger zusammengeführt. Es gibt kein
+zusätzlich aufgelegtes Band. Die Krümmung bleibt beim Blättern am inneren Tal
+gebunden und landet beidseitig oberhalb des ruhenden Blocks. Zustandsautomat,
+Kameras, Bewegungszeiten, Texturübergaben und UI-/Inputverträge bleiben erhalten.
+
+`n06_cases.gd` rendert das tatsächliche Seitenmesh mit dem tatsächlichen
+Vertexshader in einer kleinen separaten Szene. Nur die Fragmentausgabe wird
+durch Tiefenbänder ersetzt. Ruhe und gegenüberliegende Landung müssen Tal,
+angehobene Schultern und ebene Außenfläche zeigen. Wieder eingesetzter breiter
+Spalt und flach gesetzte Geometrie müssen scheitern. Vier originale 640×128-PNGs
+und Messwerte gehören zum bestehenden nativen Lauf. Die tatsächlichen
+Leder-/Blockarrays liefern zusätzlich Gelenktiefe, Mindestabstand und Mengen.
+Der Ergebnisguard verlangt diese Fälle und Dateien; acht Mutationen prüfen
+fehlende Fälle, breite Lücke, flache Schulter, akzeptiertes Gegenbeispiel,
+flaches Leder, Durchdringung, Budgetüberschreitung und Fokus-Reentranz. Keine neue CI-Gruppe.
+
+Die Windowsregression legte zusätzlich einen bestehenden reentranten Fokuspfad
+offen: Eine OS-Fokusmeldung während `app.reparent()` konnte `_settle()` im noch
+laufenden Baumumbau auslösen. Nur diese Studienbenachrichtigung wird ans Ende
+des Dispatchs verschoben und an die aktuelle Generation gebunden. Der geforderte
+Zielzustand und die unmittelbare Gestenstornierung bleiben erhalten. Ein echter
+`tree_exiting`-Callback prüft angehängte UI, freigegebene Capture-Ressourcen und
+unveränderte Zellen/History; eine veraltete Generation darf keine spätere Bewegung
+unterbrechen. Die vorherige synchrone Fassung wurde separat als Fehler reproduziert.
+
+T01 bindet vorher/nachher die vollen Katalogbilder 1920×1080 und 1920×1200/UI100
+samt unskalierten oberen/unteren Falzausschnitten, gezielte Arbeits-/Informations-
+und UI125-Ansichten sowie den bestehenden echten Engine-Bewegungsfilm. Hinzu
+kommen erreichbare Originalberichte und Clientbilder des finalen Windowsexports.
+Der Windows-Sichtkandidat enthält nur getestete EXE/PCK, Lizenzen und kurze
+Startanleitung; technische Bilder und Film bleiben getrennte befristete Belege.
 
 ## Informationsdoppelseite und Arbeitsnavigation
 
@@ -185,9 +236,9 @@ Seitenhälfte und Arbeits-ID bestimmen feste Ausschnitte. Vorder- und Rückseite
 besitzen eigene Zuordnungen. Keine Spiegelung oder Zufallsvariation pro Frame;
 dieselbe Seite behält nach Rückkehr ihre Papierpixel.
 
-Die ruhende Wölbung ist reale Vertexgeometrie: 0,26 Welteinheiten hoch und nach
-0,75 Einheiten vollständig flach. Sie verändert Normalen und die sichtbare obere/
-untere Papierkontur. Eine schmale geometrische Lücke lässt die Bindung frei.
+Die ruhende Wölbung ist seit N06 reale Schulter-/Talgeometrie: 0,22 Welteinheiten
+hoch und nach 0,75 Einheiten vollständig flach. Sie verändert Normalen und die
+sichtbare obere/untere Papierkontur. Die geometrische Naht ist 0,008 Einheiten breit.
 Das Licht folgt der Wölbung. Die UI-Sicherheitsfläche liegt außerhalb dieses
 Streifens, die präzise Rasterfläche bleibt eben. Bewegte Inhalte folgen den
 Blattvertices; kein nachträglich über die ganze UI gelegter Verzerrungseffekt.
@@ -366,8 +417,9 @@ zusätzlich eine CPU-Bildkopie. Das von der gemeinsamen UI referenzierte A umfas
 weiterhin konservativ 14.745.600 RGBA-Bytes; der Einbandshader sampelt es nicht.
 Papier und Leder umfassen jeweils 6.290.064 RGBA-Bytes, mit Mipmaps jeweils
 höchstens 8.386.752 Bytes (ca. 8 MiB). `resources.binding` zählt die tatsächlichen
-statischen Flächen, Vertices und Dreiecke: nach Entfernung der Zierbänder
-6 Flächen, 8.511 Vertices, 16.262 Dreiecke statt 52/11.869/21.230.
+statischen Flächen, Vertices und Dreiecke: N06 benötigt
+5 Flächen, 8.448 Vertices, 16.026 Dreiecke; die bisherige Obergrenze bleibt
+6/8.511/16.262. Historisch vor Entfernung der Zierbänder: 52/11.869/21.230.
 Das Tischbild benötigt 6.291.456 RGBA-Bytes, mit Mipmaps höchstens 8.388.608 Bytes.
 Bei 1920×1200 benötigen Renderziel/Snapshot 18.432.000 Bytes, mit konservativer
 Depthobergrenze 27.648.000 Bytes. Tatsächliche Import-
@@ -410,9 +462,9 @@ gemessen; es gibt keinen neuen Erfolgsverzicht oder allgemeinen CI-Umbau.
 Laufbilder, Filme und Exporte bleiben in ignorierter Arbeitsablage beziehungsweise
 befristeten Technikartefakten, keine neue permanente Bildgalerie.
 
-B-A-N05-T01 verlangt aktuelle Technik-, Sicht-, Export- und CI-Nachweise sowie
-getrenntes Selbstreview. **B-A-R06 bleibt ein neues separates qualifiziertes technisches
-und visuelles Review vor Merge.** Das positive R05 nimmt N05 nicht ab. **B-A-M01** bleibt
+B-A-N06-T01 verlangt aktuelle Technik-, Sicht-, Export- und CI-Nachweise sowie
+getrenntes Selbstreview. **B-A-R08 bleibt ein neues separates qualifiziertes technisches
+und visuelles Review vor Merge.** Frühere Reviews nehmen N06 nicht ab. **B-A-M01** bleibt
 persönliche Kandidatenwahl vor vollständigem B-A-Abschluss und vor B-B; sie darf
 nach einem separat freigegebenen isolierten Merge auf main erfolgen. Der aktuelle
 Auftrag enthält keine Mergefreigabe und lässt den PR als Draft.
@@ -460,7 +512,8 @@ Prüfpaket und die tatsächlichen finalen Laufresultate. Keine neue permanente
 Bildablage oder erneuter W05-Upload. Die zwei neuen Prüfskripte und der Windows-
 Treiber dienen ausschließlich dieser reproduzierbaren Regression.
 
-Unabhängiges **B-A-R07** bleibt erforderlich. **B-A-R06-A01** und **B-A-M01** bleiben
-offen; F01 nimmt weder W05 noch Gestaltung oder B-B ab und erteilt keinen Merge.
+Die damaligen offenen R06-/R07-Originalprüfungen wurden für PR #495 durch
+ausdrückliche Eigentümerentscheidungen erlassen, nicht tatsächlich nachgeholt.
+Diese historische Lieferung nimmt weder N06 noch B-A-M01 oder B-B ab.
 
 Start und Reproduktion: [Studienanleitung](../game/study/book/README.md).

@@ -1,13 +1,13 @@
 # Aktiver Bestand und historische Quellen
 
-**Buchstudie B-A-N05 / #493:** `game/study/book/` erhält den ausführbaren isolierten
+**Buchstudie B-A-N06 / #493, #496:** `game/study/book/` erhält den ausführbaren isolierten
 Untersuchungsstand, zwei eigene Materialshader und kompakte synthetische Inputs
 samt deterministischer Erzeugung und studieneigener Doppelseitenanordnung.
 Das bestehende A-Bild bleibt unveränderte Qualitätsreferenz. Eine originale
 Papiertextur samt Import-/Herkunftsmetadaten und 27 eindeutige Definitions-/Revealpaare
 ersetzen die fehlerhafte Wiederverwendung dreier Ressourcenpfade. Die Dateipaare
 sind der begrenzte reproduzierbare Runtime-/PCK-Bestand, keine historische Galerie.
-[B-A-N05-T01](BOOK_STUDY.md) und Startanleitung binden
+[B-A-N06-T01](BOOK_STUDY.md) und Startanleitung binden
 Zweck, Rechte und Nachweise. Filme, Laufbilder und Exporte bleiben temporär; der
 reguläre Export schließt die Studie aus. Keine historischen Bildressourcen ersetzen.
 N03 ergänzt eine originale homogene Ledertextur mit Import-/Herkunftsmetadaten,
@@ -30,6 +30,12 @@ Spielerpaketen ausgeschlossen. Nur die private Diagnosekopie erhält den Beobach
 als externes Autoload; EXE und PCK bleiben bytegleich. Crash-/WER-Originale,
 OS-/Engine-Spuren und wenige Clientbilder bleiben bis zum offenen F01-Review in
 einem kompakten temporären Prüfpaket; keine dauerhafte Laufchronik oder Galerie.
+N06 ergänzt ein gemeinsames Shaderinclude für Falz-/Gelenkprofile und einen
+aus Spielerpaketen ausgeschlossenen nativen Tiefen-/Geometrieprüfer. Der bestehende
+Windows-Treiber erhält einen begrenzten Sichtweg; der Ergebnisguard prüft vier
+Tiefenbilder, Gegenproben und Mengen. Keine neuen Bildressourcen. Vorher-/Nachher-
+Originale bleiben bis R08/M01 begründete temporäre Belege; der kompakte Windows-
+Sichtkandidat enthält keine Entwicklungsgalerie und keinen Film.
 
 Eigentümerentscheidung 14.10.2026, [#116](https://github.com/venomenon328/picross/issues/116):
 Abgeschlossene Produktion muss nicht wiederholbar sein. Historische Arbeitsdateien

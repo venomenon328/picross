@@ -19,6 +19,7 @@ var tooltip_cases: Array = []
 var f01: Array = []
 var n04: Dictionary = {}
 var n05: Dictionary = {}
+var n06: Dictionary = {}
 var image_writer: Thread
 var image_label: String
 var pending_image: Image
@@ -283,9 +284,11 @@ func run() -> void:
 	n05 = await preload("res://study/book/n05_cases.gd").new().run(self)
 	finish_image()
 	phase("information")
+	n06 = await preload("res://study/book/n06_cases.gd").new().run(self)
+	phase("fold-depth")
 	var report: Dictionary = {"checks": checks, "assertions":assertions, "failures": failures, "layouts": layouts, "handoffs": handoffs,
 		"catalog_layouts":catalog_layouts,"page_motions":page_motions,"interruptions":interruptions,
-		"ink_margins":ink_margins,"returns":returns,"tooltip_cases":tooltip_cases,"f01":f01,"n04":n04,"n05":n05,
+		"ink_margins":ink_margins,"returns":returns,"tooltip_cases":tooltip_cases,"f01":f01,"n04":n04,"n05":n05,"n06":n06,
 		"resources": study.resource_report(), "motion_frame_ms_with_captures": motion_ms, "motion_wall_seconds_with_captures": motion_wall,
 		"motion_frame_ms_quiet": quiet_ms, "motion_wall_seconds_quiet": quiet_wall,
 		"engine": Engine.get_version_info(), "display": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
