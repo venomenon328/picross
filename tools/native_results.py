@@ -106,20 +106,21 @@ def validate_book_study(report, directory, identity, host):
     required_assertions.update({'native tooltip delay is not bypassed',
                                 'negative empty tooltip reproduced by native hover',
                                 'negative detached hover stroke rejected'})
-    if (report.get('book_study') != study or study['package'] != 'B-A-N03-T01'
+    configurations = {(1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0)}
+    if (report.get('book_study') != study or study['package'] != 'B-A-N04-T01'
             or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
             or native['checks'] != len(assertions) or native['failures'] != []
             or not all(a.get('passed') is True for a in assertions)
             or not required_assertions <= {a.get('label') for a in assertions}
             or {(r['kind'], r['phase'], r['reason']) for r in native['interruptions']} != expected_interruptions
             or len(native['interruptions']) != 24 or len(native['catalog_layouts']) != 3
-            or {(r['view'],r['width']) for r in native['ink_margins']} != {(v,w) for v in ('catalog','work') for w in (1280,1920,2560)}
-            or any(sum(r['view'] == v and r['width'] == w for r in native['ink_margins']) != n for v,n in (('catalog',9),('work',5)) for w in (1280,1920,2560))
+            or {(r['view'],r['width'],r['height'],r['scale']) for r in native['ink_margins']} != {(v,w,h,s) for v in ('catalog','work') for w,h,s in configurations}
+            or any(sum((r['view'],r['width'],r['height'],r['scale']) == (v,w,h,s) for r in native['ink_margins']) != n for v,n in (('catalog',12),('work',5)) for w,h,s in configurations)
             or any(r['margin'] < 8 or min(r['hull'][2:]) <= 0 for r in native['ink_margins'])
             or len(native['returns']) != 1 or native['returns'][0]['seconds'] != 1.8 or native['returns'][0]['page'] != 1
             or any(len(r['cards']) != 24 for r in native['catalog_layouts'])
             or [(r['target'],r['direction'],r['seconds']) for r in native['page_motions']] != [(1,1,.85),(0,-1,.85)]
-            or len(native['layouts']) != 3 or len(native['handoffs']) != 4
+            or len(native['layouts']) != 3 or len(native['handoffs']) != 5
             or native['motion_wall_seconds_quiet'] < 3.0 or not native['motion_frame_ms_quiet']
             or native['resources']['ui_capture_targets'] != 0 or native['resources']['catalog_rgba_textures'] != 0
             or native['resources']['visible_leaves'] != 0 or native['resources']['moving_leaves'] != 3
@@ -127,23 +128,25 @@ def validate_book_study(report, directory, identity, host):
             or study['organic_paper']['size'] != [1254,1254] or study['organic_paper']['imported_texture']['bytes'] <= 0
             or study['leather']['sha256'] != '58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41'
             or study['leather']['size'] != [1254,1254] or study['leather']['imported_texture']['bytes'] <= 0
+            or study['table']['sha256'] != '5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da'
+            or study['table']['size'] != [1536,1024] or study['table']['imported_texture']['bytes'] <= 0
             or study['material_source']['sha256'] != '957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a'):
         raise ValueError('Incomplete/wrong isolated book study assertions or binding')
     tooltip_cases = native['tooltip_cases']
     captions = {'direction','reset','mode','click-before','caption-after-click','fill','help','wrapped-edge'}
     empty = {'footer-0','footer-1','footer-2','whitespace'}
-    for width, scale in ((1280,1.25),(1920,1.0),(2560,1.25)):
+    for width, height, scale in ((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25)):
         cases = captions | empty | ({'mode-empty','mode-whitespace'} if width == 1920 else set())
         rows = [r for r in tooltip_cases if r.get('width') == width and r['case'] in cases]
         if len(rows) != len(cases) or {r['case'] for r in rows} != cases:
             raise ValueError('Missing/duplicate delayed tooltip scenario')
         for row in rows:
-            if row['scale'] != scale or row['wait_seconds'] < .65 or row.get('hovered') is not True or row['visible'] != (row['case'] in captions):
+            if row['height'] != height or row['scale'] != scale or row['wait_seconds'] < .65 or row.get('hovered') is not True or row['visible'] != (row['case'] in captions):
                 raise ValueError('Bypassed delay/incorrect tooltip visibility')
             if row['visible']:
                 x,y,w,h = row['popup']
                 if (not row['caption'].strip() or row['caption'] != row['text']
-                        or min(x,y) < 0 or min(w,h) <= 0 or x+w > width or y+h > width*9/16
+                        or min(x,y) < 0 or min(w,h) <= 0 or x+w > width or y+h > height
                         or min(row['label']) <= 0 or row['label'][0] > w or row['label'][1] > h):
                     raise ValueError('Empty/stale/clipped tooltip content')
             elif row['caption']:
@@ -157,9 +160,9 @@ def validate_book_study(report, directory, identity, host):
             or negatives[0]['current_detached_pixels'] != 0 or negatives[0]['legacy_detached_pixels'] < 8):
         raise ValueError('Tooltip lifetime or native counterexample failed')
     details = study['edge_details']
-    expected_edges = {f'edge-{kind}-{w}.png' for w in (1280,1920,2560)
-                      for kind in ('bottom-left','bottom-right','bottom-fold','outer-left','outer-right')}
-    if ({r['file'] for r in details} != expected_edges or len(details) != 15
+    expected_edges = {f'edge-{kind}-{suffix}.png' for suffix in ('1280','1920','2560','1920x1200')
+                      for kind in ('bottom-left','bottom-right','bottom-fold','top-fold','outer-left','outer-right')}
+    if ({r['file'] for r in details} != expected_edges or len(details) != 24
             or any(r['scale'] != 1 or len(r['rect']) != 4 or r['rect'][2] <= r['rect'][0] or r['rect'][3] <= r['rect'][1] for r in details)):
         raise ValueError('Incomplete/unscaled native edge detail evidence')
     movie = read(directory/'movie.json')
@@ -185,21 +188,111 @@ def validate_book_study(report, directory, identity, host):
                 'page-forward.png', 'page-backward.png', 'material-original-detail.png', 'material-study-detail.png',
                 'windows/book-study.exe', 'windows/book-study.pck', 'web/index.html', 'web/index.pck', 'web/index.wasm'}
     required.update('logs/'+name+'.log' for name in expected)
-    if host == 'Windows': required.update({'windows-exported-work.png','windows-exported-catalog.png'})
+    if host == 'Windows':
+        required.update({'windows-exported-work.png','windows-exported-catalog.png','windows-native.json','windows-standard.png','windows-maximized.png','windows-restored.png'})
+        windows = read(directory/'windows-native.json')
+        states = windows['windows']
+        if (windows['passed'] is not True or windows['cursor'] != 2 or windows['id'] != 'T-06'
+                or [(r['stage'],r['mode']) for r in states] != [('standard',0),('maximized',2),('restored',0)]
+                or states[0]['client'] != states[2]['client'] or states[0]['client'] == states[1]['client']
+                or any(r['client'] != r['framebuffer'] or r['ui_scale'] != 1.0 or r['dpi'] <= 0 or r['os_scale'] <= 0 for r in states)):
+            raise ValueError('Incomplete actual Windows maximize/restore proof')
     required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work', 'catalog') for width in (1280,1920,2560))
     required.update(expected_edges)
     required.update(f'tooltip-{kind}-{w}.png' for w in (1280,1920,2560) for kind in captions | empty if kind != 'click-before')
     required.update({'tooltip-negative-empty.png','hover-negative.png','hover-current.png','tooltip-after-motion-1920.png'})
     required.update({'tooltip-mode-empty-1920.png','tooltip-mode-whitespace-1920.png'})
+    required.update({'catalog-1920x1200.png','work-1920x1200.png','return-handoff-texture-1920x1200.png','return-handoff-direct-1920x1200.png'})
     if names != actual or not required <= names:
         raise ValueError('Missing/unexpected book study evidence inventory')
     for name, metadata in study['files'].items():
         verify_file(directory, dict(file=name, **metadata))
     pixels = study['handoff_pixels']
-    if (set(pixels['samples']) != {f'work-{w}.png' for w in (1280,1920,2560)} | {'return-handoff-direct.png'}
+    if (set(pixels['samples']) != {f'work-{w}.png' for w in (1280,1920,2560)} | {'return-handoff-direct.png','return-handoff-direct-1920x1200.png'}
             or any(s['max_channel_delta'] > 4 or max(s['mean_channel_delta']) > .1 for s in pixels['samples'].values())
             or pixels['negative_controls'] != 'one-pixel displacement and alpha mutation rejected'):
         raise ValueError('Failed/incomplete book study handoff pixels or counterexamples')
+    validate_book_n04(native, directory, details, configurations)
+
+
+def validate_book_n04(native, directory, details, configurations):
+    """Independent N14-N17 scenario, projection, viewport and scroll guards."""
+    import struct
+    def frame_size(path):
+        with path.open('rb') as stream: header = stream.read(24)
+        if len(header) != 24 or header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR':
+            raise ValueError('Invalid native PNG header')
+        return struct.unpack('>II',header[16:24])
+    rows = native['n04']
+    expected_counts = [(0,0,0,0),(1,0,1,0),(12,0,12,0),(13,0,12,1),(24,0,12,12),(27,0,12,12),(27,1,3,0)]
+    ids = ['T-01','T-06','T-08'] + [f'T-{i:02d}' for i in range(13,37)]
+    if ([(r['count'],r['page'],r['left'],r['right']) for r in rows['counts']] != expected_counts
+            or any(r['ids'] != ids[r['page']*24:min(r['count'],(r['page']+1)*24)] for r in rows['counts'])):
+        raise ValueError('Wrong left-first membership or global ID order')
+    scroll = rows['scroll']
+    expected = {'wheel-left','wheel-right','bar-left','bar-right','ensure-right','right-edge',
+                'return-left','return-right','no-op','empty-right','reset-filter','reset-sort','reset-reverse','resize-clamp'}
+    if {r['case'] for r in scroll} != expected or len(scroll) != len(expected):
+        raise ValueError('Missing independent scroll scenario')
+    for row in scroll:
+        case, after = row['case'], row['after']
+        if case.startswith('reset-'):
+            ok = after == [0,0]
+        elif case == 'resize-clamp':
+            ok = after[0] == row['before'][0] == 91 and after[1] == row['right_limit'] and 0 < after[1] < row['before'][1]
+        elif case in {'wheel-left','bar-left','wheel-right','bar-right','ensure-right'}:
+            side = 0 if case.endswith('-left') else 1
+            ok = after[side] > row['before'][side] and after[1-side] == row['before'][1-side]
+        else:
+            ok = after == row['before']
+            if case in {'return-left','return-right','no-op'}: ok = ok and min(after) > 0 and after[0] != after[1]
+            if case == 'empty-right': ok = ok and after == [80,0]
+        if not ok: raise ValueError('Mirrored/lost scroll context: '+case)
+    for row in native['interruptions']:
+        if row['source_offsets'] != [40,120]: raise ValueError('Unbound two-offset interruption source')
+        if not (row['kind'] == 'open' and row['reason'] != 'leave'):
+            expected = [0,0] if row['kind'] == 'page' and row['reason'] != 'leave' else [40,120]
+            if row['final_offsets'] != expected: raise ValueError('Wrong abort/settle scroll pair')
+    boundaries = rows['boundaries']
+    if ({(r['width'],r['height'],r['scale']) for r in boundaries} != {(1920,1200,1.25),(1920,1192,1.0),(1920,1208,1.0),(1920,1088,1.0)}
+            or len(boundaries) != 4 or any(r['margin'] < 8 or r['offsets'] != [91,173] for r in boundaries)):
+        raise ValueError('Missing/unsafe aspect or UI boundary')
+    if len(rows['clips']) != 2 or {r['side'] for r in rows['clips']} != {-1,1}:
+        raise ValueError('Missing half-page clipping geometry')
+    factor = 1920/22
+    for row in rows['clips']:
+        x,y,w,h = row['rect']
+        left = 960 + (-10 if row['side'] == -1 else .75)*factor
+        right = 960 + (-.75 if row['side'] == -1 else 10)*factor
+        top = (1200-12.4*factor)/2
+        if min(x-left,right-x-w,y-top,1200-top-y-h) < 8:
+            raise ValueError('Card clipping leaves quiet flat paper')
+    for row in native['ink_margins']:
+        w,h = row['width'],row['height']
+        work = row['view'] == 'work'
+        world_h = max(6.075,10.8*h/w) if work else max(13.4,22*h/w)
+        factor = h/world_h
+        x,y,rw,rh = row['hull']
+        side = 1 if work or x+rw/2 > w/2 else -1
+        paper = [w/2+(0 if side == 1 else -10)*factor-(5*factor if work else 0),
+                 .28*factor if work else (h-12.4*factor)/2,10*factor,12.4*factor]
+        safe = [paper[0]+(.75*factor if side == 1 else 0),paper[1],paper[2]-.75*factor,paper[3]]
+        margin = min(x-safe[0],safe[0]+safe[2]-x-rw,y-safe[1],safe[1]+safe[3]-y-rh)
+        if (any(abs(a-b) > .002 for a,b in zip(paper,row['paper'],strict=True))
+                or any(abs(a-b) > .002 for a,b in zip(safe,row['flat_safe'],strict=True))
+                or margin < 8 or abs(margin-row['margin']) > .002):
+            raise ValueError('Ink outside independently projected quiet paper')
+    for w,h,_ in configurations:
+        suffix = '1920x1200' if (w,h) == (1920,1200) else str(w)
+        for kind in ('catalog','work'):
+            if frame_size(directory/f'{kind}-{suffix}.png') != (w,h):
+                raise ValueError('Wrong actual native framebuffer size')
+    for row in details:
+        x0,y0,x1,y1 = row['rect']
+        if (frame_size(directory/row['source']) != (row['width'],row['height'])
+                or frame_size(directory/row['file']) != (x1-x0,y1-y0)
+                or min(x0,y0) < 0 or x1 > row['width'] or y1 > row['height']):
+            raise ValueError('Wrong original framebuffer/crop dimensions')
 
 
 def validate_catalog_images(costs, summary, required, direct_images):

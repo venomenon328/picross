@@ -117,22 +117,22 @@ func _layout_book(prepare_board: bool = false) -> void:
 	layout_warning.position.x = maxf(layout_warning.position.x, album_button.position.x)
 	if album.summary != null: album.summary.visible = album.visible and catalog_error.is_empty()
 	if album.visible:
-		# Actual screen pixels: no render-target downscaling of controls or fonts.
-		var margin: float = material.size.x*0.09
-		var paper_bottom: float = material.end.y
-		var right_heading: float = material.size.x/2+38*ui_scale
-		if book != null:
-			var projected: Rect2 = book.projected_paper(false,-1)
-			margin = projected.position.x+18*ui_scale
-			paper_bottom = projected.end.y
-			album.fold_gap = 2*(projected.size.x*0.075+12*ui_scale)
-			right_heading = material.size.x/2+projected.size.x*0.075+18*ui_scale
-		var heading_top: float = maxf(28*ui_scale,material.size.y*0.035+8*ui_scale)+4*ui_scale
-		var catalog_top: float = maxf(86*ui_scale,heading_top+53*ui_scale)
-		_place(album, Rect2(material.position+Vector2(margin, catalog_top), Vector2(material.size.x-2*margin, paper_bottom-catalog_top-18*ui_scale)))
-		_place(title, Rect2(material.position+Vector2(margin, heading_top), Vector2(material.size.x*0.38, 45*ui_scale)))
+		# Projected paper is already in viewport pixels, including letterboxing.
+		# Use that one coordinate system for heading, clip areas and both footers.
+		var left_paper: Rect2 = book.projected_paper(false,-1)
+		var right_paper: Rect2 = book.projected_paper(false,1)
+		var inset: float = 18*ui_scale
+		var margin: float = left_paper.position.x+inset
+		var edge: float = right_paper.end.x-inset
+		var curve: float = left_paper.size.x*0.075
+		album.fold_gap = 2*(curve+12*ui_scale)
+		var right_heading: float = right_paper.position.x+curve+inset
+		var heading_top: float = maxf(left_paper.position.y+12*ui_scale,material.size.y*0.035+12*ui_scale)
+		var catalog_top: float = heading_top+53*ui_scale
+		_place(album, Rect2(Vector2(margin,catalog_top),Vector2(edge-margin,left_paper.end.y-inset-catalog_top)))
+		_place(title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,45*ui_scale)))
 		if album.summary != null:
-			_place(album.summary,Rect2(material.position+Vector2(right_heading,heading_top),Vector2(material.size.x*0.35,45*ui_scale)))
+			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(edge-right_heading,45*ui_scale)))
 			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))
 		album._layout_cards()
 

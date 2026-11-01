@@ -1,14 +1,16 @@
 # Produktdefinition: picross
 
-**Buch / #493 · B-A-N03:** Katalog-Doppelseite mit mittiger Bindung,
+**Buch / #493 · B-A-N04:** Katalog-Doppelseite mit mittiger Bindung,
 kurzes richtungsabhängiges Blättern und drei einzelne Blätter zur rechten
 Arbeitsseite sind in der isolierten Studie umgesetzt. Sichtbare Buchkante, organische
 Papiertextur, ruhende Falzwölbung, transparente Controls und animierte Rückkehr
 ergänzen die Revision ohne kleinere Arbeitsbudgets. Die bestätigte Richtung verbindet einen realistischen
 räumlichen Buchkörper mit gezeichneten Inhalten/UI. Die [isolierte Studie](BOOK_STUDY.md)
 ändert den normalen Spielstart nicht; reguläre Integration und persönliche
-Kandidatenwahl bleiben getrennt. N03 revidiert gezielt Materialanschlüsse und
-Hover-/Tooltips; N01–N10 und die gültigen 27 Instanzen bleiben erhalten.
+Kandidatenwahl bleiben getrennt. N04 bereinigt innere Papier-/Bindungsenden,
+ergänzt ein eigenständiges Tischbild und hält Controls auch bei 16:10 auf dem
+Papier. Erst bis zu zwölf Karten links, dann rechts; jede Hälfte scrollt unabhängig.
+N01–N13 und die gültigen 27 Instanzen bleiben erhalten.
 
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil

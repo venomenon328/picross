@@ -1,11 +1,11 @@
 shader_type spatial;
 render_mode unshaded, cull_disabled;
 uniform sampler2D leather_source : source_color, filter_linear_mipmap, repeat_enable;
+uniform sampler2D table_source : source_color, filter_linear_mipmap, repeat_disable;
 uniform vec4 base_color : source_color = vec4(1.0);
 uniform float kind = 0.0;
 varying vec3 surface;
 varying vec3 surface_normal;
-float noise(vec2 p) { return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
 void vertex() { surface=VERTEX; surface_normal=NORMAL; }
 void fragment() {
     vec3 n=normalize(surface_normal);
@@ -26,12 +26,13 @@ void fragment() {
         float contact=0.87+0.13*smoothstep(0.0,0.06,depth);
         ALBEDO=base_color.rgb*light*contact*(1.0-0.15*separation);
     } else if (kind<2.5) {
-        // Continuous woven support; world-space contact follows the cover.
-        float weave=sin(surface.x*260.0)*sin(surface.y*260.0)*0.008;
+        // One non-tiling photograph on stationary world geometry. Its aspect
+        // ratio is preserved while the same camera moves over book and table.
+        vec3 table=texture(table_source,vec2(surface.x/48.0+0.5,0.5-surface.y/32.0)).rgb;
         vec2 outside=abs(surface.xy-vec2(0.10,-0.10))-vec2(10.26,6.38);
         float edge=length(max(outside,vec2(0.0)))+min(max(outside.x,outside.y),0.0)-0.17;
         float shadow=0.46+0.54*smoothstep(0.0,0.45,edge);
-        ALBEDO=(base_color.rgb+weave+(noise(floor(surface.xy*180.0))-0.5)*0.008)*shadow;
+        ALBEDO=table*shadow;
     } else {
         ALBEDO=base_color.rgb*light;
     }

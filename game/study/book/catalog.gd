@@ -1,5 +1,5 @@
 extends "res://ui/catalog.gd"
-## Study-only two-page presentation; one canonical filter/order/page and scroll.
+## Study-only spread: shared filter/order/page, independent half-page scroll.
 signal page_requested(target: int)
 var locked: bool = false
 var right_scroll: ScrollContainer
@@ -8,7 +8,7 @@ var spread: HBoxContainer
 var left_page: VBoxContainer
 var right_page: VBoxContainer
 var arranging: bool = false
-var syncing_scroll: bool = false
+var next_right_position: int = 0
 var fold_gap: float = 76.0
 
 func _ready() -> void:
@@ -42,8 +42,8 @@ func _ready() -> void:
 	right_page.add_child(right_scroll)
 	right_grid = GridContainer.new()
 	right_scroll.add_child(right_grid)
-	scroll.get_v_scroll_bar().value_changed.connect(_sync_scroll.bind(false))
-	right_scroll.get_v_scroll_bar().value_changed.connect(_sync_scroll.bind(true))
+	for half: ScrollContainer in [scroll,right_scroll]:
+		half.mouse_force_pass_scroll_events = false
 	var left_pager := HBoxContainer.new()
 	left_page.add_child(left_pager)
 	previous_button.reparent(left_pager)
@@ -64,14 +64,23 @@ func _detach_summary() -> void:
 	summary.reparent(get_parent())
 	get_parent().get_parent()._layout_book()
 
-func _sync_scroll(value: float, from_right: bool) -> void:
-	# A partial spread can have unequal ranges. The shorter side must not
-	# clamp a new position back into the originating, longer side.
-	if syncing_scroll: return
-	syncing_scroll = true
-	if from_right: scroll.scroll_vertical = int(value)
-	else: right_scroll.scroll_vertical = int(value)
-	syncing_scroll = false
+func positions() -> Vector2i:
+	return Vector2i(scroll.scroll_vertical,right_scroll.scroll_vertical)
+
+func present(sessions: Array[Session], slot_status: Array[String], slot_errors: Array[String], error: String, selection: String) -> void:
+	# Base present passes only its legacy left property to _render. Preserve the
+	# right half explicitly on redisplay; a real filter/sort still resets both.
+	next_right_position = right_scroll.scroll_vertical
+	super.present(sessions,slot_status,slot_errors,error,selection)
+
+func restore_positions(pair: Vector2i, expected_generation: int) -> void:
+	# A partial -> full spread changes Grid minima in a deferred container pass.
+	# Wait for that pass before clamping; the preceding ranges can still be zero.
+	await get_tree().process_frame
+	if generation != expected_generation: return
+	# Each ScrollContainer clamps against its own current content and viewport.
+	scroll.scroll_vertical = pair.x
+	right_scroll.scroll_vertical = pair.y
 
 func choose_category(id: String) -> void:
 	if not locked: super.choose_category(id)
@@ -87,11 +96,14 @@ func turn_page(delta: int) -> void:
 	var target: int = clampi(page_index + delta, 0, maxi(0, ceili(filtered_ids.size()/float(PAGE_SIZE))-1))
 	if target != page_index: page_requested.emit(target)
 
-func commit_page(target: int, position: int = 0) -> void:
+func commit_page(target: int, position: int = 0, right_position: int = 0) -> void:
 	page_index = target
+	next_right_position = right_position
 	_render(position)
 
 func _render(position: int) -> void:
+	var pair := Vector2i(position,next_right_position)
+	next_right_position = 0
 	# The base owns card lifecycle, metadata, stable IDs and spoiler gates.
 	if right_grid != null:
 		for child: Node in right_grid.get_children(): child.reparent(grid)
@@ -101,12 +113,13 @@ func _render(position: int) -> void:
 	if right_scroll != null:
 		# Settings and quit share this row but are not pagination controls.
 		next_button.visible = previous_button.get_parent().visible
+		restore_positions.call_deferred(pair,generation)
 
 func _layout_cards() -> void:
 	if arranging: return
 	arranging = true
 	if right_grid != null:
-		var split: int = ceili(choices.size()/2.0)
+		var split: int = mini(12,choices.size())
 		for i: int in range(choices.size()):
 			var column: Node = choices[i].get_parent()
 			var target: Node = grid if i < split else right_grid

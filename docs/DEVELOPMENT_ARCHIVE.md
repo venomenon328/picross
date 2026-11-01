@@ -1,19 +1,24 @@
 # Aktiver Bestand und historische Quellen
 
-**Buchstudie B-A-N03 / #493:** `game/study/book/` erhält den ausführbaren isolierten
+**Buchstudie B-A-N04 / #493:** `game/study/book/` erhält den ausführbaren isolierten
 Untersuchungsstand, zwei eigene Materialshader und kompakte synthetische Inputs
 samt deterministischer Erzeugung und studieneigener Doppelseitenanordnung.
 Das bestehende A-Bild bleibt unveränderte Qualitätsreferenz. Eine originale
 Papiertextur samt Import-/Herkunftsmetadaten und 27 eindeutige Definitions-/Revealpaare
 ersetzen die fehlerhafte Wiederverwendung dreier Ressourcenpfade. Die Dateipaare
 sind der begrenzte reproduzierbare Runtime-/PCK-Bestand, keine historische Galerie.
-[B-A-N03-T01](BOOK_STUDY.md) und Startanleitung binden
+[B-A-N04-T01](BOOK_STUDY.md) und Startanleitung binden
 Zweck, Rechte und Nachweise. Filme, Laufbilder und Exporte bleiben temporär; der
 reguläre Export schließt die Studie aus. Keine historischen Bildressourcen ersetzen.
 N03 ergänzt eine originale homogene Ledertextur mit Import-/Herkunftsmetadaten,
 die gemeinsame Rand-/Rückengeometrie und einen aus exportierten Paketen ausgeschlossenen
 nativen Tooltipprüfer. Keine neue dauerhafte Bildgalerie; N02-/N03-Vergleiche,
 unskalierte Randdetails und Tooltipbilder bleiben befristete technische Belege.
+N04 ergänzt genau eine originale Tischbildressource samt Import/Herkunft sowie
+einen begrenzten nativen Prüfer für Halbseiten, Scrollkontext und 16:10. Der Prüfer
+ist aus Studienpaketen ausgeschlossen, die gesamte Studie aus regulären Paketen.
+Vorher-/Nachherbilder, Windowsbelege und Film bleiben in befristeten Artefakten;
+keine zusätzliche dauerhafte Galerie oder Handoffdatei.
 
 Eigentümerentscheidung 14.10.2026, [#116](https://github.com/venomenon328/picross/issues/116):
 Abgeschlossene Produktion muss nicht wiederholbar sein. Historische Arbeitsdateien

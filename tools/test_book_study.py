@@ -4,6 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 from copy import deepcopy
+import math
 
 import book_study
 import ci_scope
@@ -47,6 +48,7 @@ class BookStudyTests(unittest.TestCase):
             self.assertIn("study/book/verify.gd", exclusions)
             self.assertIn("study/book/pack_probe.gd", exclusions)
             self.assertIn("study/book/tooltip_cases.gd", exclusions)
+            self.assertIn("study/book/n04_cases.gd", exclusions)
             self.assertNotIn("study/*", exclusions)
         self.assertEqual(presets["preset.1.options"]["variant/thread_support"], "false")
         self.assertEqual(presets["preset.1.options"]["variant/extensions_support"], "false")
@@ -75,6 +77,7 @@ class BookStudyTests(unittest.TestCase):
             files = ["opening.avi", "movie-final.png", "catalog.png", "opening-middle.png", "opening-back.png",
                      "return-middle.png", "return-edited-work.png", "paper-page-one.png", "paper-page-two.png", "paper-page-two-return.png",
                      "return-handoff-texture.png","return-handoff-direct.png","control-states.png",
+                     "catalog-1920x1200.png","work-1920x1200.png","return-handoff-texture-1920x1200.png","return-handoff-direct-1920x1200.png",
                      "page-forward.png", "page-backward.png", "material-original-detail.png", "material-study-detail.png",
                      "windows/book-study.exe", "windows/book-study.pck", "web/index.html", "web/index.pck", "web/index.wasm"]
             files += ["logs/"+name+".log" for name in names]
@@ -84,13 +87,25 @@ class BookStudyTests(unittest.TestCase):
             files += [f'tooltip-{kind}-{w}.png' for w in (1280,1920,2560) for kind in captions | empty if kind != 'click-before']
             files += ['tooltip-negative-empty.png','hover-negative.png','hover-current.png','tooltip-after-motion-1920.png']
             files += ['tooltip-mode-empty-1920.png','tooltip-mode-whitespace-1920.png']
-            details = [dict(file=f'edge-{kind}-{w}.png',source=f'catalog-{w}.png',rect=[0,0,20,20],scale=1)
-                       for w in (1280,1920,2560) for kind in ('bottom-left','bottom-right','bottom-fold','outer-left','outer-right')]
+            configurations = ((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0))
+            details = [dict(file=f'edge-{kind}-{suffix}.png',source=f'catalog-{suffix}.png',width=w,height=h,rect=[0,0,20,20],scale=1)
+                       for w,h,suffix in ((1280,720,'1280'),(1920,1080,'1920'),(2560,1440,'2560'),(1920,1200,'1920x1200'))
+                       for kind in ('bottom-left','bottom-right','bottom-fold','top-fold','outer-left','outer-right')]
             files += [r['file'] for r in details]
             for name in files:
                 target = root/name
                 target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(b"synthetic test evidence")
+            import struct, zlib
+            def png(path,w,h):
+                def chunk(kind,data): return struct.pack('>I',len(data))+kind+data+struct.pack('>I',zlib.crc32(kind+data))
+                path.write_bytes(b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',w,h,8,6,0,0,0))+
+                                 chunk(b'IDAT',zlib.compress(bytes((w*4+1)*h)))+chunk(b'IEND',b''))
+            for w,h,_ in configurations:
+                suffix = '1920x1200' if h == 1200 else str(w)
+                for kind in ('catalog','work'):
+                    png(root/f'{kind}-{suffix}.png',w,h)
+            for detail in details: png(root/detail['file'],20,20)
             identity = dict(source_commit="a"*40, source_tree_dirty=False)
             labels = ['three independently moving leaves', 'actual catalog pointer selects correct ID',
                       'motion and blocked pointer input preserve cells/history/redo', 'presentation creates no save action',
@@ -110,25 +125,45 @@ class BookStudyTests(unittest.TestCase):
             labels += [f'{label} {target}' for target in (0,1) for label in ('pointer starts catalog turn',
                        'filter and sort discarded during turn', 'short catalog motion settles target', 'partial last spread',
                        'global ordering precedes pagination', 'edge action has no animation')]
-            interruptions = [dict(kind=k,phase=p,reason=r) for k in ('page','open','return') for p in ('prepare','motion')
+            interruptions = [dict(kind=k,phase=p,reason=r,source_offsets=[40,120],final_offsets=[0,0] if k == 'page' and r != 'leave' else [40,120]) for k in ('page','open','return') for p in ('prepare','motion')
                              for r in ('resize','ui-scale','focus','leave')]
             labels += [f"{label} {r['kind']}/{r['phase']}/{r['reason']}" for r in interruptions
                        for label in ('matrix stable target', 'matrix no history or save', 'matrix releases resources')]
             labels += ['native tooltip delay is not bypassed','negative empty tooltip reproduced by native hover',
                        'negative detached hover stroke rejected']
-            tips = [dict(case=kind,width=w,scale=s,caption='Useful help' if kind in captions else '',wait_seconds=.65,hovered=True,
+            tips = [dict(case=kind,width=w,height=h,scale=s,caption='Useful help' if kind in captions else '',wait_seconds=.65,hovered=True,
                          visible=kind in captions, popup=[10,10,150,40],label=[130,20],text='Useful help')
-                    for w,s in ((1280,1.25),(1920,1.0),(2560,1.25))
+                    for w,h,s in configurations[:3]
                     for kind in captions | empty | ({'mode-empty','mode-whitespace'} if w == 1920 else set())]
             tips += [dict(case=f'dismiss-{kind}-{w}',visible=False) for w in (1280,1920,2560) for kind in ('switch','leave','click')]
             tips += [dict(case='dismiss-'+kind,visible=False) for kind in ('resize','ui-scale','focus','motion-start','motion-end-no-revival')]
             tips += [dict(case='negative-controls',empty_popup=True,current_detached_pixels=0,legacy_detached_pixels=12)]
+            ink = []
+            for view,n in (('catalog',12),('work',5)):
+                for w,h,s in configurations:
+                    work = view == 'work'
+                    factor = h/(max(6.075,10.8*h/w) if work else max(13.4,22*h/w))
+                    paper = [w/2-5*factor if work else w/2,.28*factor if work else (h-12.4*factor)/2,10*factor,12.4*factor]
+                    safe = [paper[0]+.75*factor,paper[1],paper[2]-.75*factor,paper[3]]
+                    hull = [math.ceil(safe[0])+10,math.ceil(safe[1])+10,20,20]
+                    margin = min(hull[0]-safe[0],hull[1]-safe[1])
+                    ink += [dict(view=view,width=w,height=h,scale=s,margin=margin,hull=hull,paper=paper,flat_safe=safe)]*n
+            ids = ['T-01','T-06','T-08']+[f'T-{i:02d}' for i in range(13,37)]
+            counts = [dict(count=n,page=p,left=l,right=r,ids=ids[p*24:min(n,(p+1)*24)])
+                      for n,p,l,r in ((0,0,0,0),(1,0,1,0),(12,0,12,0),(13,0,12,1),(24,0,12,12),(27,0,12,12),(27,1,3,0))]
+            scroll = [dict(case=k,before=[40,120],after=[80,120] if k.endswith('-left') else [40,160])
+                      for k in ('wheel-left','wheel-right','bar-left','bar-right','ensure-right')]
+            scroll += [dict(case=k,before=[40,120],after=[40,120]) for k in ('right-edge','return-left','return-right','no-op')]
+            scroll += [dict(case='empty-right',before=[80,0],after=[80,0]),dict(case='resize-clamp',before=[91,3000],after=[91,1200],right_limit=1200)]
+            scroll += [dict(case='reset-'+k,after=[0,0]) for k in ('filter','sort','reverse')]
+            boundaries = [dict(width=1920,height=h,scale=s,margin=10,offsets=[91,173]) for h,s in ((1200,1.25),(1192,1.0),(1208,1.0),(1088,1.0))]
             native = dict(checks=len(labels), assertions=[dict(label=l,passed=True) for l in labels],
+                          n04=dict(counts=counts,scroll=scroll,boundaries=boundaries,clips=[dict(side=-1,rect=[106,125,750,900]),dict(side=1,rect=[1040,125,750,900])]),
                           tooltip_cases=tips,
                           interruptions=interruptions, catalog_layouts=[dict(cards=[{}]*24)]*3,
                           page_motions=[dict(target=1,direction=1,seconds=.85),dict(target=0,direction=-1,seconds=.85)],
-                          failures=[], layouts=[{}, {}, {}], handoffs=[{}, {}, {}, {}],
-                          ink_margins=[dict(view=v,width=w,margin=8,hull=[10,10,20,20]) for v,n in (('catalog',9),('work',5)) for w in (1280,1920,2560) for _ in range(n)],
+                          failures=[], layouts=[{}, {}, {}], handoffs=[{}, {}, {}, {}, {}],
+                          ink_margins=ink,
                           returns=[dict(seconds=1.8,page=1)],
                           motion_wall_seconds_quiet=3.01, motion_frame_ms_quiet=[16.7],
                           resources=dict(ui_capture_targets=0, catalog_rgba_textures=0, visible_leaves=0,moving_leaves=3))
@@ -136,13 +171,14 @@ class BookStudyTests(unittest.TestCase):
                          events=[dict(kind=k,direction=d,seconds=s,first_frame=i*100,last_frame=i*100+90)
                                  for i,(k,d,s) in enumerate([('page',1,.85),('page',-1,.85),('open',1,3.),('return',-1,1.8)])])
             (root/'movie.json').write_text(json.dumps(movie),encoding='utf-8')
-            study = dict(identity, package="B-A-N03-T01", host="Linux",edge_details=details,
+            study = dict(identity, package="B-A-N04-T01", host="Linux",edge_details=details,
+                         table=dict(sha256='5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da',size=[1536,1024],imported_texture=dict(bytes=1)),
                          leather=dict(sha256='58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41',size=[1254,1254],imported_texture=dict(bytes=1)),
                          organic_paper=dict(sha256='1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f',size=[1254,1254],imported_texture=dict(bytes=1)),
                          material_source=dict(sha256='957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a'),
                          phases=[dict(name=n, exit_code=0, timed_out=False, seconds=.1) for n in names],
                          study_web_features=dict(renderer="gl_compatibility", threads=False, extensions=False, browser_probe="not requested"),
-                         handoff_pixels=dict(samples={name: dict(max_channel_delta=3, mean_channel_delta=[.01]*4) for name in ('work-1280.png','work-1920.png','work-2560.png','return-handoff-direct.png')},
+                         handoff_pixels=dict(samples={name: dict(max_channel_delta=3, mean_channel_delta=[.01]*4) for name in ('work-1280.png','work-1920.png','work-2560.png','return-handoff-direct.png','return-handoff-direct-1920x1200.png')},
                                              negative_controls="one-pixel displacement and alpha mutation rejected"))
             def publish(candidate, original):
                 (root/"native.json").write_text(json.dumps(original), encoding="utf-8")
@@ -152,7 +188,8 @@ class BookStudyTests(unittest.TestCase):
                 return dict(book_study=candidate)
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
             for mutation in ("assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
-                             "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled", "required-file"):
+                             "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
+                             "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
                 if mutation == "assertion": original["failures"] = ["input lock failed"]
                 if mutation == "omitted-assertion":
@@ -178,6 +215,17 @@ class BookStudyTests(unittest.TestCase):
                 if mutation == "hover-stroke": original['tooltip_cases'][-1]['current_detached_pixels'] = 12
                 if mutation == "edge-missing": candidate['edge_details'].pop()
                 if mutation == "edge-scaled": candidate['edge_details'][0]['scale'] = 2
+                if mutation == 'height': original['ink_margins'][-1]['height'] = 1080
+                if mutation == 'projection': original['ink_margins'][0]['paper'][1] += 60
+                if mutation == 'ink-hull': original['ink_margins'][0]['hull'][1] -= 20
+                if mutation == 'left-first': original['n04']['counts'][3].update(left=7,right=6)
+                if mutation == 'id-order': original['n04']['counts'][3]['ids'].reverse()
+                if mutation == 'scroll-mirrored': original['n04']['scroll'][0]['after'] = [80,80]
+                if mutation == 'scroll-return': next(r for r in original['n04']['scroll'] if r['case'] == 'return-right')['after'][1] = 0
+                if mutation == 'scroll-omitted': original['n04']['scroll'].pop()
+                if mutation == 'abort-pair': original['interruptions'][-1]['final_offsets'][1] = 40
+                if mutation == 'boundary': original['n04']['boundaries'].pop()
+                if mutation == 'table-source': candidate['table']['sha256'] = 'a'*64
                 if mutation == "required-file": (root/"opening.avi").unlink()
                 with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                     validate_book_study(publish(candidate, original), root, identity, "Linux")
