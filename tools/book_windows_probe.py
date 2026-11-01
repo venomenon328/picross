@@ -209,7 +209,12 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
         hwnd = wait(find)
         record('window-ready', pid=process.pid, hwnd=hwnd)
         if fold:
+            # Establish a visible owned window before requesting foreground;
+            # restoring it then gives the real ordinary-window dimensions.
+            user.ShowWindow(hwnd, 3)
             activate()
+            user.ShowWindow(hwnd, 9)
+            time.sleep(.3)
             capture('fold-catalog-standard-ui100')
         user.ShowWindow(hwnd, 3)
         activate()
