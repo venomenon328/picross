@@ -39,9 +39,16 @@ jobs:
 
           expected_head = "33ccd1c8669c82607fd0978b37f5ccae4310b1bd"
           merged_main = "130a52662d59bc810fb95e08854a2b7d067fafb6"
-          root = Path(os.environ["STUDY_TECHNICAL"]) / "book-study"
-          if not (root / "report.json").is_file():
-              raise RuntimeError("Expected book-study/report.json not found")
+          technical = Path(os.environ["STUDY_TECHNICAL"])
+          reports = sorted(technical.rglob("report.json"))
+          candidates = [p.parent for p in reports if (p.parent / "windows" / "book-study.exe").is_file()
+                        and (p.parent / "windows" / "book-study.pck").is_file()]
+          print("PROBE_ROOTS", [p.relative_to(technical).as_posix() for p in reports], flush=True)
+          if len(candidates) != 1:
+              print("ARTIFACT_TOP", [p.relative_to(technical).as_posix()
+                    for p in sorted(technical.rglob("*")) if p.is_file()][:75], flush=True)
+              raise RuntimeError(f"Expected exactly one book-study export report, got {len(candidates)}")
+          root = candidates[0]
           report = json.loads((root / "report.json").read_text(encoding="utf-8"))
           if (report.get("source_commit") != expected_head
                   or report.get("source_tree_dirty")
