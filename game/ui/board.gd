@@ -272,7 +272,7 @@ func _input(event: InputEvent) -> void:
 	if cell_buttons_blocked and event is InputEventMouse:
 		cell_buttons_blocked = (int(event.button_mask) & CELL_BUTTONS) != 0
 		if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
-			get_viewport().set_input_as_handled()
+			if event.pressed: get_viewport().set_input_as_handled()
 			return
 	if not is_visible_in_tree() or session == null:
 		return
@@ -284,8 +284,9 @@ func _input(event: InputEvent) -> void:
 		clue_pointer_global = global_position + local.position
 		clue_pointer_known = true
 	if pan_button != MOUSE_BUTTON_NONE or clue_press_owned:
-		# Own the whole mouse route, including releases over another Control.
-		if local is InputEventMouse:
+		# Model ownership includes releases over another Control. Let Up reach
+		# the GUI too: its native mouse focus still belongs to this Board.
+		if local is InputEventMouseMotion or (local is InputEventMouseButton and local.pressed):
 			get_viewport().set_input_as_handled()
 		if local is InputEventMouseButton and local.pressed and local.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
 			# A second Down (including a lost prior Up) is ambiguous, not a
@@ -327,7 +328,6 @@ func _input(event: InputEvent) -> void:
 			clue_press_owned = false
 			update_pointer_hover(local.position)
 			queue_redraw()
-			get_viewport().set_input_as_handled()
 		return
 	if not session.gesture.active:
 		return
@@ -349,7 +349,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif local is InputEventMouseButton and not local.pressed and local.button_index == held_button:
 		pointer_release(local.position, get_viewport().gui_get_hovered_control() == self)
-		get_viewport().set_input_as_handled()
+		# _input consumption clears Godot's button mask but leaves mouse_focus
+		# on the Board. GUI delivery releases that owner before _gui_input;
+		# otherwise later motion reaches the Board instead of button tooltips.
 
 func _gui_input(event: InputEvent) -> void:
 	if session.completed:

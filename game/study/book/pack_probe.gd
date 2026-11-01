@@ -20,6 +20,8 @@ func run() -> void:
 	for resource: String in ["information.gd","information_routes.gd"]:
 		check(ResourceLoader.exists("res://study/book/"+resource) == expected,"study information inclusion/exclusion "+resource)
 	check(not ResourceLoader.exists("res://study/book/n05_cases.gd"),"no N05 verification program in pack")
+	for resource: String in ["f01_cases.gd","windows_observer.gd"]:
+		check(not ResourceLoader.exists("res://study/book/"+resource),"no F01 verification program in pack "+resource)
 	for key: String in ["t01","t06","t08"] + Array(range(13,37)).map(func(i: int) -> String: return "t%02d" % i):
 		check(FileAccess.file_exists("res://study/book/data/"+key+".json") == expected,"definition instance inclusion/exclusion "+key)
 		check(ResourceLoader.exists("res://study/book/art/"+key+".svg") == expected,"reveal instance inclusion/exclusion "+key)

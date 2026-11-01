@@ -124,5 +124,23 @@ ergänzen eine günstige vollständige Entscheidungstabelle. Sechs unskalierte
 Randdetails je gebundener Fläche einschließlich oberem und unterem Falz sowie tatsächliche verzögerte Tooltipbilder ergänzen
 die Sichtprüfung; Quelle, Rechteck und Kosten stehen im Bericht.
 
-Bericht, Zustandsvertrag und offene Gates: [B-A-N05-T01](../../../docs/BOOK_STUDY.md).
-R05 ist positiv für N04; neues unabhängiges R06 und persönliche M01 bleiben offen.
+Für B-A-N05-F01 ergänzt `tools/book_windows_probe.py` die native Prüfung durch
+echte Windows-Mausereignisse. Auf einem freien Windows-Desktop, mit Python und
+Pillow aus der vorhandenen isolierten Prüfumgebung:
+
+```powershell
+python tools/book_windows_probe.py --source artifacts/book-n05-f01-work/final --output artifacts/book-n05-f01-work/windows-final --head <vollständiger-Head>
+```
+
+`--source` enthält den vollständigen sauberen Studienexport mit `report.json`.
+Der Treiber prüft dessen Head und EXE-/PCK-Hashes, verwendet isolierte Profile,
+lädt den regulären Studien-Einstieg über einen externen rein lesenden Beobachter
+und sendet ausschließlich echte OS-Mausereignisse. 32 Raster-/Kopfbutton-Rundwege,
+Zell-Commits, Undo/Redo, Werkzeug/Farbe, Fokusverlust, Resize und Außenloslassen
+werden protokolliert. Bei unerwartetem Fokusverlust bricht er die Eingabe ab.
+Die Spur ist auf 4096 Engine-Einträge, der Lauf auf 180 Sekunden begrenzt.
+Ein gewöhnlicher Exportstart ohne Beobachter und Originalbilder ergänzen den
+Nachweis; kein physischer Eigentümer-Spieltest wird dadurch behauptet.
+
+Bericht, Zustandsvertrag und offene Gates: [B-A-N05/F01-T01](../../../docs/BOOK_STUDY.md).
+R06-B01 erhält gezielte Nacharbeit; unabhängiges R07, R06-A01 und persönliche M01 bleiben offen.
