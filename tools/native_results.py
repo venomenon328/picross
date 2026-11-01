@@ -26,6 +26,31 @@ def information_close(a, b):
     return len(a) == len(b) and all(isinstance(x,(int,float)) and math.isfinite(x) and abs(x-y) < .0001 for x,y in zip(a,b))
 
 
+def validate_n06(native, directory):
+    data = native['n06']
+    rows = data['depth_cases']
+    labels = ['rest','landed','wide-gap','flat-sheet']
+    if len(rows) != 4 or [r['case'] for r in rows] != labels:
+        raise ValueError('N06 incomplete depth cases')
+    for row in rows:
+        accepted = row['case'] in ('rest','landed')
+        if (row['accepted'] is not accepted or row['raised_shoulders'] is not (row['case'] != 'flat-sheet')
+                or row['low_valley_flat_outer'] is not (row['case'] != 'wide-gap')
+                or not 0 <= row['gap_pixels'] <= 40
+                or (row['gap_pixels'] <= 3) is not (row['case'] != 'wide-gap')
+                or row['file'] != 'fold-depth-'+row['case']+'.png'):
+            raise ValueError('N06 failed depth/counterexample')
+        header = (directory/row['file']).read_bytes()[:24]
+        if header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' or struct.unpack('>II',header[16:24]) != (640,128):
+            raise ValueError('N06 missing original depth strip')
+    counts = data['binding']
+    if (data.get('focus_reparent') is not True
+            or not .30 < data['joint_depth'] < .40 or not .005 < data['minimum_cover_clearance'] < .02
+            or not 0 < counts['vertices'] <= 8511 or not 0 < counts['triangles'] <= 16262
+            or not 0 < counts['surfaces'] <= 6):
+        raise ValueError('N06 invalid binding depth/clearance/budget')
+
+
 def validate_n05(native, directory):
     data = native['n05']
     routes = data['routes']
@@ -210,7 +235,7 @@ def validate_book_study(report, directory, identity, host):
     for kind in f01_gestures:
         required_assertions.update('F01 '+label+' '+kind for label in ('starts','gesture','crosshair returns'))
     configurations = {(1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0)}
-    if (report.get('book_study') != study or study['package'] != 'B-A-N05-T01'
+    if (report.get('book_study') != study or study['package'] != 'B-A-N06-T01'
             or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
             or native['checks'] != len(assertions) or native['failures'] != []
             or not all(a.get('passed') is True for a in assertions)
@@ -335,6 +360,7 @@ def validate_book_study(report, directory, identity, host):
         raise ValueError('Failed/incomplete book study handoff pixels or counterexamples')
     validate_book_n04(native, directory, details, configurations)
     validate_n05(native, directory)
+    validate_n06(native, directory)
 
 
 def validate_book_n04(native, directory, details, configurations):

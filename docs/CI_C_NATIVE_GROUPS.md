@@ -1,9 +1,9 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
-## Buchstudie B-A / #493
+## Buchstudie B-A / #493, #496
 
 Die Exportgruppe verlangt zusätzlich einmalig `isolated-book-study` und dessen
-[B-A-N05-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
+[B-A-N06-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
 die feste Szenariomenge, Doppelseitengeometrie, beide Blätterrichtungen,
 24 Unterbrechungsfälle, gültige ID-/Revealinstanzen, gerenderte Glyphen-/Konturabstände,
 Rückkehr mit aktuellem Fortschritt, Quellbindung, Materialvergleich und Papierstabilität,
@@ -29,7 +29,14 @@ günstige vollständige Entscheidungstabelle. Fünf bisherige plus vier neue
 Handoffs behalten die Grenzen 4/0,1 samt Versatz-/Alphagegenprobe. Der unabhängige
 Guard prüft Ursprung, ungleiche Offsets, tatsächliche Kamera-/Blattspuren, native
 Hüllen, Optionsänderung und Film. Keine neue CI-Gruppe, Budgeterhöhung oder
-Browserpflicht; Windowsoriginale müssen für das neue R06 erreichbar gebunden sein.
+Browserpflicht. N06 ergänzt vier 640×128-Tiefenbilder des echten Mesh-/Vertexpfads:
+Ruhe, gegenüberliegende Landung, verbreiterter Spalt und flache Geometrie.
+Die beiden Gegenbeispiele müssen scheitern; tatsächliche Leder-/Blockarrays
+prüfen Gelenktiefe und positiven Abstand unter den bestehenden Mengenbudgets.
+Ein echter Tree-Exit prüft den unter Windows gefundenen reentranten Fokusabbruch
+und die Bindung an dieselbe Bewegung. Der Guard verlangt Fälle, PNG-Maße und
+Messwerte mit acht Mutationen.
+Windowsoriginale müssen für das neue unabhängige R08 erreichbar gebunden sein.
 
 ## Aktuelle Umsetzung: CI2-D / #416
 

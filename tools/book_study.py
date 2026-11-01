@@ -100,7 +100,7 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
     urls = tc.official_asset_urls(tc.request_json(tc.RELEASE_API), assets)
     for asset in assets:
         tc.download_asset(urls[asset.name], cache / asset.name, asset.sha256, 1200)
-    report = dict(package="B-A-N05-T01", **source_identity(ROOT),
+    report = dict(package="B-A-N06-T01", **source_identity(ROOT),
                   host=host, platform=platform.platform(), python=platform.python_version(),
                   engine=tc.EXPECTED_VERSION, phases=[], browser="not requested; not started")
     report["sources"] = {p.relative_to(ROOT).as_posix(): tc.sha256_file(p) for p in sorted((ROOT / "game" / STUDY).rglob("*")) if p.is_file()}
@@ -230,7 +230,7 @@ def study_presets() -> str:
     legacy = [p.relative_to(ROOT / "game").as_posix() + ("/*" if p.is_dir() else "")
               for p in sorted((ROOT / "game/study").iterdir()) if p.name != "book"]
     exclusions = ["tests/*", "full_view_study/*", "data/*", "art/content/*", "perf_a/*", "web/*",
-                  "ui/pencil_marks.gd", "study/book/verify.gd", "study/book/pack_probe.gd", "study/book/tooltip_cases.gd", "study/book/f01_cases.gd", "study/book/windows_observer.gd", "study/book/n04_cases.gd", "study/book/n05_cases.gd", *legacy]
+                  "ui/pencil_marks.gd", "study/book/verify.gd", "study/book/pack_probe.gd", "study/book/tooltip_cases.gd", "study/book/f01_cases.gd", "study/book/windows_observer.gd", "study/book/n04_cases.gd", "study/book/n05_cases.gd", "study/book/n06_cases.gd", *legacy]
     common = '''runnable=false
 export_filter="all_resources"
 include_filter="study/book/fixtures.json,study/book/data/*.json,study/book/art/*.svg,study/book/paper.json,study/book/leather.json,study/book/table.json,art/book/*.json,art/book/*.txt,art/drawing/delight-coffee/*,art/drawing/tidy-hand/*"

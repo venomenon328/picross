@@ -93,6 +93,7 @@ class BookStudyTests(unittest.TestCase):
             self.assertIn("study/book/tooltip_cases.gd", exclusions)
             self.assertIn("study/book/n04_cases.gd", exclusions)
             self.assertIn("study/book/n05_cases.gd", exclusions)
+            self.assertIn("study/book/n06_cases.gd", exclusions)
             self.assertNotIn("study/*", exclusions)
         self.assertEqual(presets["preset.1.options"]["variant/thread_support"], "false")
         self.assertEqual(presets["preset.1.options"]["variant/extensions_support"], "false")
@@ -153,6 +154,11 @@ class BookStudyTests(unittest.TestCase):
                     png(root/f'{kind}-{suffix}.png',w,h)
             for detail in details: png(root/detail['file'],20,20)
             n05,n05_labels = information_fixture(root,png)
+            n06 = dict(depth_cases=[dict(case=label,file='fold-depth-'+label+'.png',gap_pixels=22 if label == 'wide-gap' else 2,
+                                        raised_shoulders=label != 'flat-sheet',low_valley_flat_outer=label != 'wide-gap',
+                                        accepted=label in ('rest','landed')) for label in ('rest','landed','wide-gap','flat-sheet')],
+                       joint_depth=.31,minimum_cover_clearance=.006,binding=dict(vertices=8448,triangles=16026,surfaces=5),focus_reparent=True)
+            for row in n06['depth_cases']: png(root/row['file'],640,128)
             identity = dict(source_commit="a"*40, source_tree_dirty=False)
             labels = ['three independently moving leaves', 'actual catalog pointer selects correct ID',
                       'motion and blocked pointer input preserve cells/history/redo', 'presentation creates no save action',
@@ -216,7 +222,7 @@ class BookStudyTests(unittest.TestCase):
             boundaries = [dict(width=1920,height=h,scale=s,margin=10,offsets=[91,173]) for h,s in ((1200,1.25),(1192,1.0),(1208,1.0),(1088,1.0))]
             native = dict(checks=len(labels), assertions=[dict(label=l,passed=True) for l in labels],
                           n04=dict(counts=counts,scroll=scroll,boundaries=boundaries,clips=[dict(side=-1,rect=[106,125,750,900]),dict(side=1,rect=[1040,125,750,900])]),
-                          tooltip_cases=tips,f01=f01,n05=n05,
+                          tooltip_cases=tips,f01=f01,n05=n05,n06=n06,
                           interruptions=interruptions, catalog_layouts=[dict(cards=[{}]*24)]*3,
                           page_motions=[dict(target=1,direction=1,seconds=.85),dict(target=0,direction=-1,seconds=.85)],
                           failures=[], layouts=[{}, {}, {}], handoffs=[{}]*9,
@@ -232,7 +238,7 @@ class BookStudyTests(unittest.TestCase):
                 pan = source in ('settings','help') and target in ('settings','help')
                 movie['events'].append(dict(kind='information',source=source,target=target,direction=0 if pan else 1 if target in ('settings','help') else -1,seconds=.65 if pan else .85,first_frame=500+index*40,last_frame=530+index*40))
             (root/'movie.json').write_text(json.dumps(movie),encoding='utf-8')
-            study = dict(identity, package="B-A-N05-T01", host="Linux",edge_details=details,
+            study = dict(identity, package="B-A-N06-T01", host="Linux",edge_details=details,
                          table=dict(sha256='5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da',size=[1536,1024],imported_texture=dict(bytes=1)),
                          leather=dict(sha256='58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41',size=[1254,1254],imported_texture=dict(bytes=1)),
                          organic_paper=dict(sha256='1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f',size=[1254,1254],imported_texture=dict(bytes=1)),
@@ -249,11 +255,19 @@ class BookStudyTests(unittest.TestCase):
                 return dict(book_study=candidate)
             study['handoff_pixels']['samples'].update({n:dict(max_channel_delta=2,mean_channel_delta=[.01]*4) for n in HANDOFFS})
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
-            for mutation in ("assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
+            for mutation in ("n06-focus", "n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
                              "f01-missing", "f01-failed", "f01-negative", "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
                              "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source",
                              "info-route", "info-zoom", "info-leaf", "info-pan", "info-turn", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
+                if mutation == 'n06-focus': original['n06']['focus_reparent'] = False
+                if mutation == 'n06-missing': original['n06']['depth_cases'].pop()
+                if mutation == 'n06-gap': original['n06']['depth_cases'][0]['gap_pixels'] = 8
+                if mutation == 'n06-flat': original['n06']['depth_cases'][1]['raised_shoulders'] = False
+                if mutation == 'n06-negative': original['n06']['depth_cases'][2]['accepted'] = True
+                if mutation == 'n06-joint': original['n06']['joint_depth'] = 0
+                if mutation == 'n06-clearance': original['n06']['minimum_cover_clearance'] = -.01
+                if mutation == 'n06-budget': original['n06']['binding']['vertices'] = 10000
                 if mutation == 'f01-missing': original['f01'].pop()
                 if mutation == 'f01-failed': original['f01'][0]['passed'] = False
                 if mutation == 'f01-negative': next(r for r in original['f01'] if r['case'] == 'negative-consumed-release')['visible'] = True
