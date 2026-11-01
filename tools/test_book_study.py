@@ -22,7 +22,7 @@ def information_fixture(root, png):
         seconds = .65 if pan else .85
         routes.append(dict(source=source,target=target,kind='pan' if pan else 'enter' if entering else 'return',
                            direction=0 if pan else 1 if entering else -1,seconds=seconds,wall_seconds=seconds+.01,
-                           start=pose(source),end=pose(target),samples=[[seconds/2,[(a+b)/2 for a,b in zip(pose(source),pose(target))],.5]],
+                           start=pose(source),end=pose(target),samples=[[seconds/2,[(a+b)/2 for a,b in zip(pose(source),pose(target))],1 if pan else .5]],
                            leaves=0 if pan else 1,origin=dict(kind='work' if index < 4 else 'catalog',id='T-06',catalog=catalog),
                            id='T-06',catalog_after=catalog,state_unchanged=True,return_context_unchanged=True,view_before={'zoom':1},view_after={'zoom':1}))
     layouts = []
@@ -47,6 +47,8 @@ def information_fixture(root, png):
                 if reason == ('leave' if phase == 'prepare' else 'focus'):
                     interruptions.append(dict(row,held_blocked=True,released=True,textures=0))
     labels = ['N05 old tab removed including signal and focus','N05 work navigation order catalog settings help',
+              'N05 begun work has undo and redo history','N05 explicit clue reset remains effective',
+              'N05 catalog help settings returns original context without saves',
               'N05 catalog placeholder never creates save obligation','N05 actual UI toggle 1.25','N05 actual UI toggle 1.0',
               'N05 actual controls change settings','N05 explicit settings survive work return',
               'N05 failed mandatory flush blocks preparation','N05 stable completion origin','N05 completion return never replays success']
@@ -241,7 +243,7 @@ class BookStudyTests(unittest.TestCase):
             for mutation in ("assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
                              "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
                              "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source",
-                             "info-route", "info-zoom", "info-leaf", "info-pan", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
+                             "info-route", "info-zoom", "info-leaf", "info-pan", "info-turn", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
                 if mutation == "assertion": original["failures"] = ["input lock failed"]
                 if mutation == "omitted-assertion":
@@ -282,6 +284,7 @@ class BookStudyTests(unittest.TestCase):
                 if mutation == 'info-zoom': original['n05']['routes'][2]['samples'][0][1][2] += .1
                 if mutation == 'info-leaf': original['n05']['routes'][5]['leaves'] = 1
                 if mutation == 'info-pan': original['n05']['routes'][2]['end'][0] = -5
+                if mutation == 'info-turn': original['n05']['routes'][5]['samples'][0][2] = .5
                 if mutation == 'info-origin': original['n05']['routes'][5]['origin']['kind'] = 'work'
                 if mutation == 'info-offset': original['n05']['routes'][8]['origin']['catalog']['right_scroll'] = 91
                 if mutation == 'info-view': original['n05']['routes'][0]['view_after']['zoom'] = 2

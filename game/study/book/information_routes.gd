@@ -158,7 +158,7 @@ func pose(progress: float) -> void:
 	book.camera.position = center
 	book.camera.look_at(center-Vector3(0,0,30))
 	var turn: float = smoothstep(0,1,progress)
-	book.leaf_material.set_shader_parameter("turn",turn)
+	book.leaf_material.set_shader_parameter("turn",1.0 if active and book.motion_kind == "info-pan" else turn)
 	book.paper_material.set_shader_parameter("shadow",sin(turn*PI) if active and book.direction != 0 else 0.0)
 	book.left_material.set_shader_parameter("shadow",sin(turn*PI)*0.65 if active and book.direction != 0 else 0.0)
 	if active and progress >= 1:

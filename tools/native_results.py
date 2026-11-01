@@ -49,7 +49,7 @@ def validate_n05(native, directory):
             t = elapsed/seconds
             s = t*t*(3-2*t)
             expected = [a+(b-a)*s for a,b in zip(information_pose(source),information_pose(target))]
-            if not 0 <= elapsed <= seconds or elapsed < previous or not information_close(camera,expected) or abs(turn-s) > .0001:
+            if not 0 <= elapsed <= seconds or elapsed < previous or not information_close(camera,expected) or abs(turn-(1 if pan else s)) > .0001:
                 raise ValueError('N05 camera/leaf trace deviates from bound choreography')
             previous = elapsed
         origin = 'work' if (source,target) in INFO_ROUTES[:4] else 'catalog'
@@ -95,6 +95,8 @@ def validate_n05(native, directory):
     if data['settings'] != dict(mode='V',mark=False,animations=False,ui=1.0):
         raise ValueError('N05 deliberate settings not exercised')
     required = {'N05 old tab removed including signal and focus','N05 work navigation order catalog settings help',
+                'N05 begun work has undo and redo history','N05 explicit clue reset remains effective',
+                'N05 catalog help settings returns original context without saves',
                 'N05 catalog placeholder never creates save obligation','N05 actual UI toggle 1.25','N05 actual UI toggle 1.0',
                 'N05 actual controls change settings','N05 explicit settings survive work return',
                 'N05 failed mandatory flush blocks preparation','N05 stable completion origin','N05 completion return never replays success'}

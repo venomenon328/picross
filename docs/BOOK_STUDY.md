@@ -339,6 +339,16 @@ abgewartet und dessen Originalframe direkt gespeichert; redundante zusätzliche
 Warteframes um dieselbe Aufnahme entfallen. Fälle, Originalauflösung und das
 300-s-Phasenlimit bleiben erhalten. Die Tooltipgruppe protokolliert ihre Laufzeit.
 
+N05 entfernt außerdem redundante Warteframes nach bereits abgeschlossenem Draw
+und misst Alphahüllen mit der nativen Bildoperation statt einer interpretierten
+Pixelschleife. Ein einzelner PNG-Schreibthread hält genau ein unveränderliches
+CPU-Originalbild bis zum Schreibabschluss. Nur die verlustfreie Kompression
+überlappt nachfolgende Frames; Aufnahme, UI und Rendering bleiben im Hauptthread.
+Vor dem Ergebnisbericht wird der Writer verbunden und sein Ergebnis geprüft.
+Zusätzlich zur laufenden Aufnahme bleibt höchstens eine RGBA-Bildkopie für diesen
+Prüfwriter gebunden (14,06 MiB bei 2560×1440); der ausgelieferte Player enthält ihn
+nicht. Die nativen Gruppen protokollieren ihre Zeiten im selben 300-s-Prozess.
+
 Die eigene Sichtprüfung vergleicht A als Qualitätsreferenz sowie gebundene N03-
 und N04-Originalframes. Je Katalogbild der vier Flächen entstehen sechs
 unskalierte Details beider unterer Ecken, des oberen/unteren Falzes und beider Außenränder
