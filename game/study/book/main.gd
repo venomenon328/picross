@@ -1,14 +1,15 @@
 extends Node3D
-## B-A-N04 only: synthetic RAM study, no regular startup or save integration.
+## B-A-N05 only: synthetic RAM study, no regular startup or save integration.
 const Content = preload("res://study/book/content.gd")
 const PAGE = preload("res://study/book/page.gdshader")
 const Binding = preload("res://study/book/binding.gd")
+const InformationRoutes = preload("res://study/book/information_routes.gd")
 const PAPER_SOURCE = preload("res://study/book/paper.png")
 const DURATION: float = 3.0
 const PAGE_DURATION: float = 0.85
 const RETURN_DURATION: float = 1.8
 const OPENING_LEAVES: int = 3
-enum State { CATALOG, PREPARING, OPENING, WORK }
+enum State { CATALOG, PREPARING, OPENING, WORK, INFORMATION }
 var state: State = State.CATALOG
 var generation: int = 0
 var selected_id: String = ""
@@ -40,9 +41,11 @@ var settling: bool = false
 var return_context: Dictionary = {}
 var material_catalog_page: int = -1
 var binding := Binding.new()
+var information_routes: RefCounted
 
 func _ready() -> void:
 	_build_book()
+	information_routes = InformationRoutes.new(self)
 	app = Content.new()
 	app.book = self
 	app.name = "StudyUI"
@@ -77,6 +80,22 @@ func _native_proof() -> void:
 	_proof_click(app.board.global_position+app.board.view.origin+Vector2(5.5,5.5)*app.board.view.cell_size)
 	for i: int in range(4): await get_tree().process_frame
 	ok = ok and app.session.player.cursor == 2
+	var info_routes: Array = []
+	for section: String in ["settings","help"]:
+		var entry: Control = app.actions["menu" if section == "settings" else "help"]
+		_proof_click(entry.get_global_rect().get_center())
+		await _proof_settled()
+		ok = ok and state == State.INFORMATION and app.info.section == section and information_routes.origin.kind == "work"
+		await _window_proof_frame("information-"+section)
+		var other: String = "help" if section == "settings" else "settings"
+		_proof_click(app.information.get_node(other+"-access").get_global_rect().get_center())
+		await _proof_settled()
+		ok = ok and state == State.INFORMATION and app.info.section == other
+		var back: Control = app.actions["nav-work"] if other == "settings" else app.info.right_return
+		_proof_click(back.get_global_rect().get_center())
+		await _proof_settled()
+		ok = ok and state == State.WORK and app.session.player.cursor == 2
+		info_routes.append({"entry":section,"pan":other,"return":"work","cursor":app.session.player.cursor})
 	_proof_click(app.album_button.get_global_rect().get_center())
 	deadline = Time.get_ticks_usec()+10000000
 	while state in [State.PREPARING,State.OPENING] and Time.get_ticks_usec() < deadline: await get_tree().process_frame
@@ -88,10 +107,15 @@ func _native_proof() -> void:
 	ok = ok and windows[0].mode == DisplayServer.WINDOW_MODE_WINDOWED and windows[1].mode == DisplayServer.WINDOW_MODE_MAXIMIZED and windows[2].mode == DisplayServer.WINDOW_MODE_WINDOWED
 	ok = ok and windows[0].client == windows[2].client and windows[0].framebuffer == windows[2].framebuffer
 	var file := FileAccess.open(OS.get_environment("BOOK_STUDY_OUTPUT").path_join("windows-native.json"),FileAccess.WRITE)
-	file.store_string(JSON.stringify({"passed":ok,"windows":windows,"id":selected_id,"cursor":app.session.player.cursor,"engine":Engine.get_version_info(),"os":OS.get_version(),"adapter":RenderingServer.get_video_adapter_name()},"\t")+"\n")
+	file.store_string(JSON.stringify({"passed":ok,"windows":windows,"information_routes":info_routes,"id":selected_id,"cursor":app.session.player.cursor,"engine":Engine.get_version_info(),"os":OS.get_version(),"adapter":RenderingServer.get_video_adapter_name()},"\t")+"\n")
 	file.close()
 	print("BOOK_PACK_MOTION_OK" if ok else "BOOK_PACK_MOTION_FAIL", " return=", elapsed, " cursor=",app.session.player.cursor," id=", selected_id)
 	get_tree().quit(0 if ok else 4)
+
+func _proof_settled() -> void:
+	var deadline: int = Time.get_ticks_usec()+10000000
+	while (state in [State.PREPARING,State.OPENING] or release_barrier) and Time.get_ticks_usec() < deadline: await get_tree().process_frame
+	for i: int in range(3): await get_tree().process_frame
 
 func _window_proof_frame(label: String) -> Dictionary:
 	for i: int in range(8): await get_tree().process_frame
@@ -191,12 +215,22 @@ func projected_paper(work: bool, side: int = 1) -> Rect2:
 	var scale: Vector2 = Vector2(get_viewport().size)/Vector2(view.z,view.w)
 	return Rect2(Vector2(((-10.0 if side < 0 else 0.0)-view.x)*scale.x,(view.y+view.w-6.2)*scale.y),Vector2(10.0,12.4)*scale)
 
+func projected_information(side: int) -> Rect2:
+	var rect: Rect2 = projected_paper(true)
+	# Both near poses have identical scale; mirror the camera, never the text.
+	if side < 0:
+		rect.position.x = get_viewport().size.x-rect.end.x
+	return rect
+
 func catalog_materials(page_index: int) -> void:
 	page_identity(left_material,"catalog/%d/left" % page_index)
 	page_identity(paper_material,"catalog/%d/right" % page_index)
 	material_catalog_page = page_index
 
 func _pose(progress: float) -> void:
+	if information_routes != null and (information_routes.moving() or state == State.INFORMATION):
+		information_routes.pose(progress)
+		return
 	var work: bool = motion_kind == "open" or state == State.WORK
 	var zoom: float = smoothstep(0.45,1.0,progress) if work else 0.0
 	if motion_kind == "return" and state in [State.PREPARING,State.OPENING]: zoom = 1.0-smoothstep(0.0,0.85,progress)
@@ -298,6 +332,9 @@ func _ink(material: ShaderMaterial, texture: Texture2D, rect: Vector4, back: boo
 	material.set_shader_parameter("back_rect" if back else "content_rect",rect)
 
 func _prepare(token: int) -> void:
+	if information_routes.moving():
+		information_routes.prepare(token)
+		return
 	capture = SubViewport.new()
 	capture.size = get_viewport().size
 	capture.disable_3d = true
@@ -364,7 +401,7 @@ func _process(delta: float) -> void:
 		var now: int = Time.get_ticks_usec()
 		frames_ms.append((now-last_frame_usec)/1000.0)
 		last_frame_usec = now
-		var duration: float = DURATION if motion_kind == "open" else RETURN_DURATION if motion_kind == "return" else PAGE_DURATION
+		var duration: float = information_routes.duration() if information_routes.moving() else DURATION if motion_kind == "open" else RETURN_DURATION if motion_kind == "return" else PAGE_DURATION
 		elapsed = minf(duration,elapsed+delta if OS.has_feature("movie") else (now-wall_started)/1000000.0)
 		_pose(elapsed/duration)
 		if elapsed >= duration:
@@ -395,6 +432,10 @@ func interrupt(reason: String) -> void:
 func _settle(target: bool) -> void:
 	generation += 1
 	settling = true
+	if information_routes.moving():
+		information_routes.settle(target)
+		_finish_settle()
+		return
 	var work: bool = target and motion_kind == "open"
 	state = State.WORK if work else State.CATALOG
 	if app.get_parent() != self: app.reparent(self,false)
@@ -412,14 +453,18 @@ func _settle(target: bool) -> void:
 		app.album.commit_page(target_page if moved_page else int(destination.page),0 if moved_page else int(destination.scroll),0 if moved_page else int(destination.right_scroll))
 		catalog_materials(app.album.page_index)
 	if work: page_identity(paper_material,"work/"+selected_id)
+	_finish_settle()
+
+func _finish_settle() -> void:
 	for sheet: MeshInstance3D in leaves:
 		sheet.hide()
 		_ink(sheet.material_override,null,Vector4.ZERO)
 		_ink(sheet.material_override,null,Vector4.ZERO,true)
-	_pose(1.0 if work else 0.0)
+	_pose(1.0 if state in [State.WORK,State.INFORMATION] else 0.0)
 	_ink(paper_material,null,Vector4.ZERO)
 	_ink(left_material,null,Vector4.ZERO)
 	catalog_texture = null
+	information_routes.textures.clear()
 	if capture != null:
 		capture.queue_free()
 		capture = null
@@ -433,8 +478,11 @@ func set_ui_scale(value: float) -> void:
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
-		held_buttons = 0
 		interrupt("focus")
+	if what == NOTIFICATION_APPLICATION_FOCUS_IN:
+		# Releases outside the unfocused window may not arrive here. Reconcile
+		# only on focus return; never turn a still-held transition press into input.
+		held_buttons &= Input.get_mouse_button_mask()
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		interrupt("leave")
 		get_tree().quit()
@@ -446,7 +494,8 @@ func resource_report() -> Dictionary:
 		"animation_seconds":DURATION,"page_seconds":PAGE_DURATION,"motion_wall_seconds":motion_wall_seconds,"preparation_seconds":preparation_seconds,
 		"return_seconds":RETURN_DURATION,"organic_paper_rgba_bytes":1254*1254*4,"organic_paper_with_mipmaps_upper_bytes":1254*1254*4*4/3,
 		"ui_capture_targets":1 if capture != null else 0,"catalog_rgba_textures":1 if catalog_texture != null else 0,
-		"peak_color_target_and_snapshot_bytes":pixels*8,"peak_capture_depth_upper_bound_bytes":pixels*4,
+		"information_snapshots":information_routes.textures.size(),"information_visit":not information_routes.origin.is_empty(),
+		"peak_color_target_and_snapshot_bytes":pixels*16,"peak_capture_depth_upper_bound_bytes":pixels*4,
 		"binding":binding.report(),
 		"shared_original_a_rgba_bytes":2560*1440*4,
 		"shared_resources_excluded_from_estimate":"font atlases, six cell atlases, SL frames, main framebuffer, driver overhead"}

@@ -1,6 +1,6 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-**B-A-N04 / #493:** Die [isolierte Doppelseitenstudie](BOOK_STUDY.md) übernimmt
+**B-A-N05 / #493:** Die [isolierte Doppelseitenstudie](BOOK_STUDY.md) übernimmt
 diesen globalen Sortier-/Filtervertrag vor der logischen 24er-Paginierung.
 Beide Buchhälften teilen Filter/Sortierung/Seite/Auswahl, besitzen aber eigene
 Scrollstände. Die ersten bis zu zwölf Karten liegen links, der Rest rechts.
@@ -11,6 +11,9 @@ Seite, beide Scrollpositionen und Auswahl bei aktuellem Fortschritt. Echte Filte
 Sortieränderungen setzen Seite und beide Offsets zurück, No-ops erhalten sie.
 Die Studie speichert ihre Auswahl nur im RAM;
 reguläre Präferenzpersistenz und B-B bleiben unverändert beziehungsweise offen.
+N05 bindet denselben vollständigen Katalogkontext vor einem Informationsbesuch.
+Auch Hilfe↔Einstellungen überschreibt diesen Ursprung nicht; eine interne Session
+im Katalog ist keine aktive Rätselansicht und erzeugt keine neue Savepflicht.
 
 Stand: 21.10.2026 · Spezifikation 1.3 · KU-B und HZ-A/B integriert; HZ-C implementiert, Abnahmen offen
 

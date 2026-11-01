@@ -1,12 +1,106 @@
 """Fail-closed native evidence gate. Standard library only; verify delivered bytes."""
 import hashlib
 import gzip
+import math
+import struct
 import json
 from pathlib import Path, PurePosixPath
 import re
 import zipfile
 
 from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, artifacts, checks, coverage
+INFO_ROUTES = [('work','settings'),('settings','work'),('work','help'),('help','work'),
+          ('catalog','settings'),('settings','help'),('help','settings'),('settings','catalog'),
+          ('catalog','help'),('help','catalog')]
+INFO_CONFIGURATIONS = [(1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0)]
+INFO_HANDOFFS = {f'info-handoff-direct-{s}.png' for s in ('settings','help','work','catalog')}
+
+
+def information_pose(endpoint):
+    height = 13.4 if endpoint == 'catalog' else 6.075
+    return [0 if endpoint == 'catalog' else -5 if endpoint == 'settings' else 5,
+            0 if endpoint == 'catalog' else 6.48-height/2,height]
+
+
+def information_close(a, b):
+    return len(a) == len(b) and all(isinstance(x,(int,float)) and math.isfinite(x) and abs(x-y) < .0001 for x,y in zip(a,b))
+
+
+def validate_n05(native, directory):
+    data = native['n05']
+    routes = data['routes']
+    if [(r['source'],r['target']) for r in routes] != INFO_ROUTES:
+        raise ValueError('N05 missing, reordered or wrong information route')
+    for r in routes:
+        source, target = r['source'], r['target']
+        pan = source in ('settings','help') and target in ('settings','help')
+        entering = source in ('catalog','work')
+        direction = 0 if pan else 1 if entering else -1
+        seconds = .65 if pan else .85
+        if (r['kind'] != ('pan' if pan else 'enter' if entering else 'return')
+                or r['direction'] != direction or r['seconds'] != seconds or r['wall_seconds'] < seconds
+                or r['leaves'] != (0 if pan else 1) or not information_close(r['start'],information_pose(source)) or not information_close(r['end'],information_pose(target))
+                or r['state_unchanged'] is not True or r['return_context_unchanged'] is not True
+                or r['view_before'] != r['view_after']
+                or r['id'] != 'T-06' or r['origin']['id'] != r['id'] or not r['samples']):
+            raise ValueError('N05 wrong leaf, camera, duration, ID or work state')
+        previous = -1
+        for elapsed, camera, turn in r['samples']:
+            t = elapsed/seconds
+            s = t*t*(3-2*t)
+            expected = [a+(b-a)*s for a,b in zip(information_pose(source),information_pose(target))]
+            if not 0 <= elapsed <= seconds or elapsed < previous or not information_close(camera,expected) or abs(turn-s) > .0001:
+                raise ValueError('N05 camera/leaf trace deviates from bound choreography')
+            previous = elapsed
+        origin = 'work' if (source,target) in INFO_ROUTES[:4] else 'catalog'
+        if r['origin']['kind'] != origin:
+            raise ValueError('N05 visit origin overwritten by current information page')
+        if origin == 'catalog':
+            c = r['origin']['catalog']
+            if (c['scroll'],c['right_scroll'],c['selection'],c['criterion'],c['direction'],c['page']) != (91,173,'T-08','size','desc',0):
+                raise ValueError('N05 lost/mirrored catalog origin')
+            if target == 'catalog' and r['catalog_after'] != c:
+                raise ValueError('N05 catalog return differs from immutable origin')
+    layouts = data['layouts']
+    if (len(layouts) != 8 or {(r['section'],r['width'],r['height'],r['scale']) for r in layouts}
+            != {(s,w,h,u) for s in ('settings','help') for w,h,u in INFO_CONFIGURATIONS}):
+        raise ValueError('N05 missing native layout')
+    for r in layouts:
+        w,h = r['width'],r['height']
+        factor = h/max(6.075,10.8*h/w)
+        x,y,rw,rh = r['hull']
+        left = w/2-5*factor+(.75*factor if r['section'] == 'help' else 0)
+        right = w/2+5*factor-(.75*factor if r['section'] == 'settings' else 0)
+        top, bottom = .28*factor, (12.4+.28)*factor
+        margin = min(x-left,right-x-rw,y-top,bottom-y-rh)
+        cx,cy,cw,ch = r['clip']
+        with (directory/r['file']).open('rb') as stream: header = stream.read(24)
+        if (len(header) != 24 or header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
+                or struct.unpack('>II',header[16:24]) != (w,h)
+                or min(rw,rh,cw,ch) <= 0 or margin < 8 or abs(margin-r['margin']) > .002
+                or min(cx-left,right-cx-cw,cy-top,h-cy-ch) < 8
+                or r['scroll'] != r['limit'] or r['limit'] < 0):
+            raise ValueError('N05 native ink/clip leaves independently projected safe paper or help end')
+    expected = {(k,p,r) for k in ('enter','pan','return') for p in ('prepare','motion') for r in ('resize','ui-scale','focus','leave')}
+    if len(data['logic']) != 24 or {(r['kind'],r['phase'],r['reason']) for r in data['logic']} != expected:
+        raise ValueError('N05 incomplete interruption decision table')
+    for r in data['logic']+data['interruptions']:
+        expected_endpoint = 'work' if r['kind'] == 'return' or (r['kind'] == 'enter' and r['reason'] == 'leave') else 'settings' if r['kind'] == 'pan' and r['reason'] == 'leave' else 'help'
+        if r['endpoint'] != expected_endpoint:
+            raise ValueError('N05 wrong interruption endpoint')
+    interruptions = data['interruptions']
+    if (len(interruptions) != 6 or {(r['kind'],r['phase']) for r in interruptions} != {(k,p) for k in ('enter','pan','return') for p in ('prepare','motion')}
+            or any(r['held_blocked'] is not True or r['released'] is not True or r['textures'] != 0 for r in interruptions)):
+        raise ValueError('N05 incomplete native interruption/input/resource proof')
+    if data['settings'] != dict(mode='V',mark=False,animations=False,ui=1.0):
+        raise ValueError('N05 deliberate settings not exercised')
+    required = {'N05 old tab removed including signal and focus','N05 work navigation order catalog settings help',
+                'N05 catalog placeholder never creates save obligation','N05 actual UI toggle 1.25','N05 actual UI toggle 1.0',
+                'N05 actual controls change settings','N05 explicit settings survive work return',
+                'N05 failed mandatory flush blocks preparation','N05 stable completion origin','N05 completion return never replays success'}
+    if not required <= {r['label'] for r in native['assertions'] if r['passed'] is True}:
+        raise ValueError('N05 missing control/state assertions')
+
 
 
 def unique(pairs):
@@ -107,7 +201,7 @@ def validate_book_study(report, directory, identity, host):
                                 'negative empty tooltip reproduced by native hover',
                                 'negative detached hover stroke rejected'})
     configurations = {(1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0)}
-    if (report.get('book_study') != study or study['package'] != 'B-A-N04-T01'
+    if (report.get('book_study') != study or study['package'] != 'B-A-N05-T01'
             or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
             or native['checks'] != len(assertions) or native['failures'] != []
             or not all(a.get('passed') is True for a in assertions)
@@ -115,15 +209,16 @@ def validate_book_study(report, directory, identity, host):
             or {(r['kind'], r['phase'], r['reason']) for r in native['interruptions']} != expected_interruptions
             or len(native['interruptions']) != 24 or len(native['catalog_layouts']) != 3
             or {(r['view'],r['width'],r['height'],r['scale']) for r in native['ink_margins']} != {(v,w,h,s) for v in ('catalog','work') for w,h,s in configurations}
-            or any(sum((r['view'],r['width'],r['height'],r['scale']) == (v,w,h,s) for r in native['ink_margins']) != n for v,n in (('catalog',12),('work',5)) for w,h,s in configurations)
+            or any(sum((r['view'],r['width'],r['height'],r['scale']) == (v,w,h,s) for r in native['ink_margins']) != n for v,n in (('catalog',13),('work',4)) for w,h,s in configurations)
             or any(r['margin'] < 8 or min(r['hull'][2:]) <= 0 for r in native['ink_margins'])
             or len(native['returns']) != 1 or native['returns'][0]['seconds'] != 1.8 or native['returns'][0]['page'] != 1
             or any(len(r['cards']) != 24 for r in native['catalog_layouts'])
             or [(r['target'],r['direction'],r['seconds']) for r in native['page_motions']] != [(1,1,.85),(0,-1,.85)]
-            or len(native['layouts']) != 3 or len(native['handoffs']) != 5
+            or len(native['layouts']) != 3 or len(native['handoffs']) != 9
             or native['motion_wall_seconds_quiet'] < 3.0 or not native['motion_frame_ms_quiet']
             or native['resources']['ui_capture_targets'] != 0 or native['resources']['catalog_rgba_textures'] != 0
             or native['resources']['visible_leaves'] != 0 or native['resources']['moving_leaves'] != 3
+            or native['resources']['information_snapshots'] != 0 or native['resources']['information_visit'] is not False
             or study['organic_paper']['sha256'] != '1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f'
             or study['organic_paper']['size'] != [1254,1254] or study['organic_paper']['imported_texture']['bytes'] <= 0
             or study['leather']['sha256'] != '58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41'
@@ -167,9 +262,13 @@ def validate_book_study(report, directory, identity, host):
         raise ValueError('Incomplete/unscaled native edge detail evidence')
     movie = read(directory/'movie.json')
     if (movie['fps'] != 30 or movie['failures'] != [] or movie['final_state'] != 'CATALOG' or movie['final_id'] != 'T-06' or movie['edited_cursor'] != 2
-            or [(e['kind'], e['direction'], e['seconds']) for e in movie['events']] != [('page',1,.85),('page',-1,.85),('open',1,3.0),('return',-1,1.8)]
+            or [(e['kind'], e['direction'], e['seconds']) for e in movie['events'] if e['kind'] != 'information'] != [('page',1,.85),('page',-1,.85),('open',1,3.0),('return',-1,1.8)]
             or any(e['last_frame'] <= e['first_frame'] for e in movie['events'])):
         raise ValueError('Incomplete/incorrect book motion evidence')
+    info_movie = [e for e in movie['events'] if e['kind'] == 'information']
+    if ([(e['source'],e['target']) for e in info_movie] != [('work','settings'),('settings','help'),('help','work'),('work','help'),('help','settings'),('settings','work'),('catalog','settings'),('settings','catalog'),('catalog','help'),('help','catalog')]
+            or any((e['direction'],e['seconds']) != ((0,.65) if e['source'] in ('settings','help') and e['target'] in ('settings','help') else (1,.85) if e['target'] in ('settings','help') else (-1,.85)) for e in info_movie)):
+        raise ValueError('Missing/incorrect information film choreography')
     expected = ['book-version', 'book-import', 'book-native', 'book-movie', 'book-regular-import']
     for target in ('windows', 'web'):
         expected += ['book-regular-'+target+s for s in ('', '-content', '-isolation')]
@@ -189,6 +288,7 @@ def validate_book_study(report, directory, identity, host):
                 'windows/book-study.exe', 'windows/book-study.pck', 'web/index.html', 'web/index.pck', 'web/index.wasm'}
     required.update('logs/'+name+'.log' for name in expected)
     if host == 'Windows':
+        required.update({'windows-information-settings.png','windows-information-help.png'})
         required.update({'windows-exported-work.png','windows-exported-catalog.png','windows-native.json','windows-standard.png','windows-maximized.png','windows-restored.png'})
         windows = read(directory/'windows-native.json')
         states = windows['windows']
@@ -197,22 +297,28 @@ def validate_book_study(report, directory, identity, host):
                 or states[0]['client'] != states[2]['client'] or states[0]['client'] == states[1]['client']
                 or any(r['client'] != r['framebuffer'] or r['ui_scale'] != 1.0 or r['dpi'] <= 0 or r['os_scale'] <= 0 for r in states)):
             raise ValueError('Incomplete actual Windows maximize/restore proof')
+        if windows['information_routes'] != [dict(entry=s,pan=o,**{'return':'work'},cursor=2) for s,o in [('settings','help'),('help','settings')]]:
+            raise ValueError('Missing actual Windows information routes')
     required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work', 'catalog') for width in (1280,1920,2560))
     required.update(expected_edges)
     required.update(f'tooltip-{kind}-{w}.png' for w in (1280,1920,2560) for kind in captions | empty if kind != 'click-before')
     required.update({'tooltip-negative-empty.png','hover-negative.png','hover-current.png','tooltip-after-motion-1920.png'})
     required.update({'tooltip-mode-empty-1920.png','tooltip-mode-whitespace-1920.png'})
     required.update({'catalog-1920x1200.png','work-1920x1200.png','return-handoff-texture-1920x1200.png','return-handoff-direct-1920x1200.png'})
+    required.update(INFO_HANDOFFS | {n.replace('direct','texture') for n in INFO_HANDOFFS})
+    required.update({'info-pan-help-middle.png','info-pan-settings-middle.png'})
+    required.update(r['file'] for r in native['n05']['layouts'])
     if names != actual or not required <= names:
         raise ValueError('Missing/unexpected book study evidence inventory')
     for name, metadata in study['files'].items():
         verify_file(directory, dict(file=name, **metadata))
     pixels = study['handoff_pixels']
-    if (set(pixels['samples']) != {f'work-{w}.png' for w in (1280,1920,2560)} | {'return-handoff-direct.png','return-handoff-direct-1920x1200.png'}
+    if (set(pixels['samples']) != {f'work-{w}.png' for w in (1280,1920,2560)} | {'return-handoff-direct.png','return-handoff-direct-1920x1200.png'} | INFO_HANDOFFS
             or any(s['max_channel_delta'] > 4 or max(s['mean_channel_delta']) > .1 for s in pixels['samples'].values())
             or pixels['negative_controls'] != 'one-pixel displacement and alpha mutation rejected'):
         raise ValueError('Failed/incomplete book study handoff pixels or counterexamples')
     validate_book_n04(native, directory, details, configurations)
+    validate_n05(native, directory)
 
 
 def validate_book_n04(native, directory, details, configurations):

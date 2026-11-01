@@ -17,6 +17,7 @@ var ink_margins: Array = []
 var returns: Array = []
 var tooltip_cases: Array = []
 var n04: Dictionary = {}
+var n05: Dictionary = {}
 
 class Baseline extends Main:
 	func create_store() -> SaveStore: return Study.Content.MemoryStore.new()
@@ -38,12 +39,12 @@ func check(ok: bool, label: String) -> void:
 		failures.append(label)
 		print("BOOK_STUDY_FAIL ", label)
 
-func frames(count: int = 3) -> void:
+func frames(count: int = 2) -> void:
 	for i: int in range(count): await process_frame
 	await RenderingServer.frame_post_draw
 
 func screenshot(name: String, already_drawn: bool = false) -> Image:
-	if not already_drawn: await frames()
+	if not already_drawn: await frames(1)
 	var image: Image = root.get_texture().get_image()
 	check(image.save_png(output.path_join(name+".png")) == OK, "native framebuffer " + name)
 	return image
@@ -246,9 +247,10 @@ func run() -> void:
 	await frames()
 	check(study.app.session.player.cursor == old_cursor+1, "fresh actual pointer gesture works after interruption")
 	await solved_reset_case()
+	n05 = await preload("res://study/book/n05_cases.gd").new().run(self)
 	var report: Dictionary = {"checks": checks, "assertions":assertions, "failures": failures, "layouts": layouts, "handoffs": handoffs,
 		"catalog_layouts":catalog_layouts,"page_motions":page_motions,"interruptions":interruptions,
-		"ink_margins":ink_margins,"returns":returns,"tooltip_cases":tooltip_cases,"n04":n04,
+		"ink_margins":ink_margins,"returns":returns,"tooltip_cases":tooltip_cases,"n04":n04,"n05":n05,
 		"resources": study.resource_report(), "motion_frame_ms_with_captures": motion_ms, "motion_wall_seconds_with_captures": motion_wall,
 		"motion_frame_ms_quiet": quiet_ms, "motion_wall_seconds_quiet": quiet_wall,
 		"engine": Engine.get_version_info(), "display": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
@@ -280,6 +282,7 @@ func movie() -> void:
 	button(false,point)
 	await frames(15)
 	var edited_cursor: int = study.app.session.player.cursor
+	await movie_information(["settings","help","work","help","settings","work"],events)
 	begin = Engine.get_frames_drawn()
 	var tab: Vector2 = study.app.album_button.get_global_rect().get_center()
 	button(true,tab)
@@ -287,6 +290,7 @@ func movie() -> void:
 	while study.state in [Study.State.PREPARING,Study.State.OPENING]: await process_frame
 	events.append(movie_event("return",begin))
 	await frames(15)
+	await movie_information(["settings","catalog","help","catalog"],events)
 	check(study.state == Study.State.CATALOG and study.app.session.player.cursor == edited_cursor,"movie returns edited content to catalog")
 	await screenshot("movie-final")
 	var file := FileAccess.open(output.path_join("movie.json"),FileAccess.WRITE)
@@ -298,6 +302,21 @@ func movie() -> void:
 
 func movie_event(kind: String, begin: int) -> Dictionary:
 	return {"kind":kind,"direction":study.direction,"seconds":study.elapsed,"first_frame":begin,"last_frame":Engine.get_frames_drawn(),"preparation_seconds":study.preparation_seconds,"capture_motion_wall_seconds":study.motion_wall_seconds,"frame_ms":study.frames_ms.duplicate()}
+
+func movie_information(destinations: Array, events: Array) -> void:
+	var helper := preload("res://study/book/n05_cases.gd").new()
+	helper.p = self
+	helper.book = study
+	helper.app = study.app
+	for destination: String in destinations:
+		var source: String = study.app.info.section if study.state == Study.State.INFORMATION else "catalog" if study.state == Study.State.CATALOG else "work"
+		var begin: int = Engine.get_frames_drawn()
+		helper.click(helper.target_control(destination))
+		while study.state in [Study.State.PREPARING,Study.State.OPENING]: await process_frame
+		var event: Dictionary = movie_event("information",begin)
+		event.merge({"source":source,"target":destination})
+		events.append(event)
+		await frames(6)
 
 func catalog_cases() -> void:
 	for configuration: Array in Current.CONFIGURATIONS:
@@ -361,7 +380,7 @@ func catalog_cases() -> void:
 	await frames()
 	check(catalog.choices.is_empty() and catalog.empty_message.visible and study.generation == token,"empty filter is immediate and reachable")
 	var actions: Control = catalog.next_button.get_parent().get_child(0)
-	check(actions.is_visible_in_tree() and actions.get_child_count() == 2 and not catalog.next_button.visible,"empty filter retains settings and quit")
+	check(actions.is_visible_in_tree() and actions.get_child_count() == 3 and not catalog.next_button.visible,"empty filter retains settings and quit")
 	catalog.choose_category("")
 	catalog.choose_sort("size")
 	await frames()
@@ -413,11 +432,11 @@ func interruption_cases() -> void:
 				study.set_ui_scale(1.0)
 				study.app.show_album()
 				study.app.album.commit_page(0,40,120)
-				await frames(6)
+				await frames(3)
 				if kind == "return":
 					check(study.request_open("T-06"),"matrix return setup")
 					study.interrupt("focus")
-					await frames(6)
+					await frames(3)
 				var source: Dictionary = study.context()
 				var cells: Array = fingerprint()
 				var writes: int = study.app.store.writes
@@ -473,7 +492,6 @@ func measure_ink(work: bool) -> void:
 	var image: Image = viewport.get_texture().get_image()
 	var controls: Array[Control] = [study.app.title]
 	if work:
-		controls.append(study.app.album_button)
 		for id: String in ["help","menu","nav-information"]: controls.append(study.app.actions[id])
 	else:
 		controls.append(study.app.album.summary)
@@ -484,14 +502,11 @@ func measure_ink(work: bool) -> void:
 			if node.is_visible_in_tree() and not study.app.album.scroll.is_ancestor_of(node) and not study.app.album.right_scroll.is_ancestor_of(node): controls.append(node)
 	for control: Control in controls:
 		var region := Rect2i(control.get_global_rect().grow(3)).intersection(Rect2i(Vector2i.ZERO,root.size))
-		var hull := Rect2i()
-		var found: bool = false
-		for y: int in range(region.position.y,region.end.y):
-			for x: int in range(region.position.x,region.end.x):
-				if image.get_pixel(x,y).a > 0.01:
-					var pixel := Rect2i(x,y,1,1)
-					hull = hull.merge(pixel) if found else pixel
-					found = true
+		# Native alpha bounds avoid millions of interpreted get_pixel calls.
+		# Include every nonzero AA pixel (the earlier scan ignored alpha <= .01).
+		var hull: Rect2i = image.get_region(region).get_used_rect()
+		var found: bool = hull.has_area()
+		hull.position += region.position
 		var side: int = 1 if work or control.get_global_rect().get_center().x > root.size.x/2.0 else -1
 		var paper: Rect2 = study.projected_paper(work,side)
 		var curve: float = 0.75*paper.size.x/10.0

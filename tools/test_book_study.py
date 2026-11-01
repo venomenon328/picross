@@ -10,6 +10,47 @@ import book_study
 import ci_scope
 from native_contract import checks
 from native_results import bind_files, check_phases, validate_book_study
+from native_results import INFO_HANDOFFS as HANDOFFS, INFO_ROUTES as ROUTES, information_pose as pose, validate_n05
+
+
+def information_fixture(root, png):
+    catalog = dict(scroll=91,right_scroll=173,selection='T-08',criterion='size',direction='desc',page=0)
+    routes = []
+    for index,(source,target) in enumerate(ROUTES):
+        pan = source in ('settings','help') and target in ('settings','help')
+        entering = source in ('catalog','work')
+        seconds = .65 if pan else .85
+        routes.append(dict(source=source,target=target,kind='pan' if pan else 'enter' if entering else 'return',
+                           direction=0 if pan else 1 if entering else -1,seconds=seconds,wall_seconds=seconds+.01,
+                           start=pose(source),end=pose(target),samples=[[seconds/2,[(a+b)/2 for a,b in zip(pose(source),pose(target))],.5]],
+                           leaves=0 if pan else 1,origin=dict(kind='work' if index < 4 else 'catalog',id='T-06',catalog=catalog),
+                           id='T-06',catalog_after=catalog,state_unchanged=True,return_context_unchanged=True,view_before={'zoom':1},view_after={'zoom':1}))
+    layouts = []
+    for w,h,u in ((1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0)):
+        factor = h/max(6.075,10.8*h/w)
+        for section in ('settings','help'):
+            left = w/2-5*factor+(.75*factor if section == 'help' else 0)
+            top = .28*factor
+            x,y = math.ceil(left)+12,math.ceil(top)+12
+            name = f'info-{section}-ink-{w}x{h}.png'
+            png(root/name,w,h)
+            layouts.append(dict(section=section,width=w,height=h,scale=u,file=name,hull=[x,y,20,20],
+                                margin=min(x-left,y-top),clip=[x,y,100,100],scroll=0,limit=0))
+    logic = []
+    interruptions = []
+    for kind in ('enter','pan','return'):
+        for phase in ('prepare','motion'):
+            for reason in ('resize','ui-scale','focus','leave'):
+                endpoint = 'work' if kind == 'return' or (kind == 'enter' and reason == 'leave') else 'settings' if kind == 'pan' and reason == 'leave' else 'help'
+                row = dict(kind=kind,phase=phase,reason=reason,endpoint=endpoint)
+                logic.append(row)
+                if reason == ('leave' if phase == 'prepare' else 'focus'):
+                    interruptions.append(dict(row,held_blocked=True,released=True,textures=0))
+    labels = ['N05 old tab removed including signal and focus','N05 work navigation order catalog settings help',
+              'N05 catalog placeholder never creates save obligation','N05 actual UI toggle 1.25','N05 actual UI toggle 1.0',
+              'N05 actual controls change settings','N05 explicit settings survive work return',
+              'N05 failed mandatory flush blocks preparation','N05 stable completion origin','N05 completion return never replays success']
+    return dict(routes=routes,layouts=layouts,logic=logic,interruptions=interruptions,settings=dict(mode='V',mark=False,animations=False,ui=1.0)),labels
 
 
 class BookStudyTests(unittest.TestCase):
@@ -49,6 +90,7 @@ class BookStudyTests(unittest.TestCase):
             self.assertIn("study/book/pack_probe.gd", exclusions)
             self.assertIn("study/book/tooltip_cases.gd", exclusions)
             self.assertIn("study/book/n04_cases.gd", exclusions)
+            self.assertIn("study/book/n05_cases.gd", exclusions)
             self.assertNotIn("study/*", exclusions)
         self.assertEqual(presets["preset.1.options"]["variant/thread_support"], "false")
         self.assertEqual(presets["preset.1.options"]["variant/extensions_support"], "false")
@@ -92,6 +134,8 @@ class BookStudyTests(unittest.TestCase):
                        for w,h,suffix in ((1280,720,'1280'),(1920,1080,'1920'),(2560,1440,'2560'),(1920,1200,'1920x1200'))
                        for kind in ('bottom-left','bottom-right','bottom-fold','top-fold','outer-left','outer-right')]
             files += [r['file'] for r in details]
+            files += list(HANDOFFS | {n.replace('direct','texture') for n in HANDOFFS})
+            files += ['info-pan-help-middle.png','info-pan-settings-middle.png']
             for name in files:
                 target = root/name
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -106,6 +150,7 @@ class BookStudyTests(unittest.TestCase):
                 for kind in ('catalog','work'):
                     png(root/f'{kind}-{suffix}.png',w,h)
             for detail in details: png(root/detail['file'],20,20)
+            n05,n05_labels = information_fixture(root,png)
             identity = dict(source_commit="a"*40, source_tree_dirty=False)
             labels = ['three independently moving leaves', 'actual catalog pointer selects correct ID',
                       'motion and blocked pointer input preserve cells/history/redo', 'presentation creates no save action',
@@ -131,6 +176,7 @@ class BookStudyTests(unittest.TestCase):
                        for label in ('matrix stable target', 'matrix no history or save', 'matrix releases resources')]
             labels += ['native tooltip delay is not bypassed','negative empty tooltip reproduced by native hover',
                        'negative detached hover stroke rejected']
+            labels += n05_labels
             tips = [dict(case=kind,width=w,height=h,scale=s,caption='Useful help' if kind in captions else '',wait_seconds=.65,hovered=True,
                          visible=kind in captions, popup=[10,10,150,40],label=[130,20],text='Useful help')
                     for w,h,s in configurations[:3]
@@ -139,7 +185,7 @@ class BookStudyTests(unittest.TestCase):
             tips += [dict(case='dismiss-'+kind,visible=False) for kind in ('resize','ui-scale','focus','motion-start','motion-end-no-revival')]
             tips += [dict(case='negative-controls',empty_popup=True,current_detached_pixels=0,legacy_detached_pixels=12)]
             ink = []
-            for view,n in (('catalog',12),('work',5)):
+            for view,n in (('catalog',13),('work',4)):
                 for w,h,s in configurations:
                     work = view == 'work'
                     factor = h/(max(6.075,10.8*h/w) if work else max(13.4,22*h/w))
@@ -159,19 +205,23 @@ class BookStudyTests(unittest.TestCase):
             boundaries = [dict(width=1920,height=h,scale=s,margin=10,offsets=[91,173]) for h,s in ((1200,1.25),(1192,1.0),(1208,1.0),(1088,1.0))]
             native = dict(checks=len(labels), assertions=[dict(label=l,passed=True) for l in labels],
                           n04=dict(counts=counts,scroll=scroll,boundaries=boundaries,clips=[dict(side=-1,rect=[106,125,750,900]),dict(side=1,rect=[1040,125,750,900])]),
-                          tooltip_cases=tips,
+                          tooltip_cases=tips,n05=n05,
                           interruptions=interruptions, catalog_layouts=[dict(cards=[{}]*24)]*3,
                           page_motions=[dict(target=1,direction=1,seconds=.85),dict(target=0,direction=-1,seconds=.85)],
-                          failures=[], layouts=[{}, {}, {}], handoffs=[{}, {}, {}, {}, {}],
+                          failures=[], layouts=[{}, {}, {}], handoffs=[{}]*9,
                           ink_margins=ink,
                           returns=[dict(seconds=1.8,page=1)],
                           motion_wall_seconds_quiet=3.01, motion_frame_ms_quiet=[16.7],
-                          resources=dict(ui_capture_targets=0, catalog_rgba_textures=0, visible_leaves=0,moving_leaves=3))
+                          resources=dict(ui_capture_targets=0, catalog_rgba_textures=0, visible_leaves=0,moving_leaves=3,information_snapshots=0,information_visit=False))
             movie = dict(fps=30,failures=[],final_state='CATALOG',final_id='T-06',edited_cursor=2,
                          events=[dict(kind=k,direction=d,seconds=s,first_frame=i*100,last_frame=i*100+90)
                                  for i,(k,d,s) in enumerate([('page',1,.85),('page',-1,.85),('open',1,3.),('return',-1,1.8)])])
             (root/'movie.json').write_text(json.dumps(movie),encoding='utf-8')
-            study = dict(identity, package="B-A-N04-T01", host="Linux",edge_details=details,
+            for index,(source,target) in enumerate([('work','settings'),('settings','help'),('help','work'),('work','help'),('help','settings'),('settings','work'),('catalog','settings'),('settings','catalog'),('catalog','help'),('help','catalog')]):
+                pan = source in ('settings','help') and target in ('settings','help')
+                movie['events'].append(dict(kind='information',source=source,target=target,direction=0 if pan else 1 if target in ('settings','help') else -1,seconds=.65 if pan else .85,first_frame=500+index*40,last_frame=530+index*40))
+            (root/'movie.json').write_text(json.dumps(movie),encoding='utf-8')
+            study = dict(identity, package="B-A-N05-T01", host="Linux",edge_details=details,
                          table=dict(sha256='5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da',size=[1536,1024],imported_texture=dict(bytes=1)),
                          leather=dict(sha256='58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41',size=[1254,1254],imported_texture=dict(bytes=1)),
                          organic_paper=dict(sha256='1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f',size=[1254,1254],imported_texture=dict(bytes=1)),
@@ -186,10 +236,12 @@ class BookStudyTests(unittest.TestCase):
                                       for r in bind_files(root, exclude={"report.json"})}
                 (root/"report.json").write_text(json.dumps(candidate), encoding="utf-8")
                 return dict(book_study=candidate)
+            study['handoff_pixels']['samples'].update({n:dict(max_channel_delta=2,mean_channel_delta=[.01]*4) for n in HANDOFFS})
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
             for mutation in ("assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
                              "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
-                             "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source", "required-file"):
+                             "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source",
+                             "info-route", "info-zoom", "info-leaf", "info-pan", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
                 if mutation == "assertion": original["failures"] = ["input lock failed"]
                 if mutation == "omitted-assertion":
@@ -226,6 +278,19 @@ class BookStudyTests(unittest.TestCase):
                 if mutation == 'abort-pair': original['interruptions'][-1]['final_offsets'][1] = 40
                 if mutation == 'boundary': original['n04']['boundaries'].pop()
                 if mutation == 'table-source': candidate['table']['sha256'] = 'a'*64
+                if mutation == 'info-route': original['n05']['routes'][0]['target'] = 'help'
+                if mutation == 'info-zoom': original['n05']['routes'][2]['samples'][0][1][2] += .1
+                if mutation == 'info-leaf': original['n05']['routes'][5]['leaves'] = 1
+                if mutation == 'info-pan': original['n05']['routes'][2]['end'][0] = -5
+                if mutation == 'info-origin': original['n05']['routes'][5]['origin']['kind'] = 'work'
+                if mutation == 'info-offset': original['n05']['routes'][8]['origin']['catalog']['right_scroll'] = 91
+                if mutation == 'info-view': original['n05']['routes'][0]['view_after']['zoom'] = 2
+                if mutation == 'info-hull': original['n05']['layouts'][0]['hull'][0] -= 20
+                if mutation == 'info-clip': original['n05']['layouts'][1]['clip'][0] = 0
+                if mutation == 'info-scroll': original['n05']['layouts'][0]['limit'] = 1
+                if mutation == 'info-abort': original['n05']['logic'][0]['endpoint'] = 'work'
+                if mutation == 'info-held': original['n05']['interruptions'][0]['held_blocked'] = False
+                if mutation == 'info-handoff': candidate['handoff_pixels']['samples'].pop(next(iter(HANDOFFS)))
                 if mutation == "required-file": (root/"opening.avi").unlink()
                 with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                     validate_book_study(publish(candidate, original), root, identity, "Linux")

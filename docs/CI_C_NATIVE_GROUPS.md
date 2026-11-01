@@ -3,7 +3,7 @@
 ## Buchstudie B-A / #493
 
 Die Exportgruppe verlangt zusätzlich einmalig `isolated-book-study` und dessen
-[B-A-N04-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
+[B-A-N05-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
 die feste Szenariomenge, Doppelseitengeometrie, beide Blätterrichtungen,
 24 Unterbrechungsfälle, gültige ID-/Revealinstanzen, gerenderte Glyphen-/Konturabstände,
 Rückkehr mit aktuellem Fortschritt, Quellbindung, Materialvergleich und Papierstabilität,
@@ -23,6 +23,13 @@ Abbruch/Resize, Originalglyphenhüllen und explizite Breite/Höhe statt 16:9-Abl
 Tischquelle/Importkosten und beidseitige Paketisolation bleiben gebunden. Ein
 tatsächlicher Windows-Exportlauf ergänzt Standard/Maximieren/Wiederherstellen;
 Linux behauptet diese Probe nicht. Das native Phasenlimit bleibt 300 Sekunden.
+N05 erweitert denselben Lauf um zehn echte Informationsrouten, zwei nahe
+Seitenlayouts in vier gezielten Flächen, sechs native Unterbrechungen und eine
+günstige vollständige Entscheidungstabelle. Fünf bisherige plus vier neue
+Handoffs behalten die Grenzen 4/0,1 samt Versatz-/Alphagegenprobe. Der unabhängige
+Guard prüft Ursprung, ungleiche Offsets, tatsächliche Kamera-/Blattspuren, native
+Hüllen, Optionsänderung und Film. Keine neue CI-Gruppe, Budgeterhöhung oder
+Browserpflicht; Windowsoriginale müssen für das neue R06 erreichbar gebunden sein.
 
 ## Aktuelle Umsetzung: CI2-D / #416
 

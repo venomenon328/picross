@@ -1,6 +1,6 @@
 # Z2: aktive Auswahl und native Integration
 
-## Buchrichtung #493 · isolierter B-A-N04-Studienstand
+## Buchrichtung #493 · isolierter B-A-N05-Studienstand
 
 Die [Bewegungsstudie](BOOK_STUDY.md) untersucht realistische Buch-/Umgebungsmaterialien,
 mitbewegte gezeichnete Inhalte, Katalog-Doppelseite, kurzes Blättern in beide
@@ -18,6 +18,12 @@ N04 entfernt durchstoßende Zierbanddetails an den inneren Enden, verwendet eine
 eigene zusammenhängende Tischbildressource und leitet die Kataloganordnung auch
 bei 16:10 aus der projizierten Papierfläche ab. Karten füllen zuerst links bis
 zwölf, dann rechts bis zwölf; beide Scrollstände bleiben unabhängig erhalten.
+N05 erweitert ausschließlich die Studie um nahe Einstellungen links/Hilfe rechts
+mit eigenen Scroll-/Clipflächen und gebundenem Rückkehrursprung. Der rechte
+Arbeitskopf enthält Katalogpfeil, Menü und Hilfe; der linke Reiter entfällt.
+Die mittlere Menü-/Sidebarachse und alle Arbeitsbudgets bleiben erhalten.
+Reguläre Z2-Navigation wird damit nicht umgestellt. R05 ist N04-positiv;
+N05 verlangt ein neues unabhängiges R06 vor einem separat freizugebenden Merge.
 
 ## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 

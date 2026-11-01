@@ -17,6 +17,9 @@ func run() -> void:
 	check(FileAccess.file_exists("res://study/book/table.json") == expected,"tabletop provenance inclusion/exclusion")
 	check(ResourceLoader.exists("res://study/book/binding.gd") == expected,"joined binding inclusion/exclusion")
 	check(ResourceLoader.exists("res://study/book/inputs.gd") == expected,"study adapter inclusion/exclusion")
+	for resource: String in ["information.gd","information_routes.gd"]:
+		check(ResourceLoader.exists("res://study/book/"+resource) == expected,"study information inclusion/exclusion "+resource)
+	check(not ResourceLoader.exists("res://study/book/n05_cases.gd"),"no N05 verification program in pack")
 	for key: String in ["t01","t06","t08"] + Array(range(13,37)).map(func(i: int) -> String: return "t%02d" % i):
 		check(FileAccess.file_exists("res://study/book/data/"+key+".json") == expected,"definition instance inclusion/exclusion "+key)
 		check(ResourceLoader.exists("res://study/book/art/"+key+".svg") == expected,"reveal instance inclusion/exclusion "+key)
