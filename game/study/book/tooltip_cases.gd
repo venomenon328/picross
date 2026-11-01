@@ -48,7 +48,7 @@ func hover(control: Control, label: String, expected: String, capture: bool = tr
 	var ok: bool = tip == null if expected.is_empty() else tip != null
 	var hovered: bool = proof.root.gui_get_hovered_control() == control
 	ok = ok and hovered
-	var row: Dictionary = {"case":label,"width":proof.root.size.x,"scale":proof.study.app.ui_scale,"caption":expected,"wait_seconds":delay+0.15,"hovered":hovered,"visible":tip != null}
+	var row: Dictionary = {"case":label,"width":proof.root.size.x,"height":proof.root.size.y,"scale":proof.study.app.ui_scale,"caption":expected,"wait_seconds":delay+0.15,"hovered":hovered,"visible":tip != null}
 	if tip != null:
 		var text: Label = tip.get_child(0)
 		var rect := Rect2i(tip.get_window().position,tip.get_window().size)

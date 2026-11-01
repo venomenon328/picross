@@ -2,6 +2,7 @@ extends RefCounted
 ## Joined study surfaces. The block crown follows page.gdshader's resting arch.
 const MATERIAL = preload("res://study/book/material.gdshader")
 const LEATHER = preload("res://study/book/leather.png")
+const TABLE = preload("res://study/book/table.png")
 var vertices: int = 0
 var triangles: int = 0
 var surfaces: int = 0
@@ -10,6 +11,7 @@ func material(kind: float, color: Color) -> ShaderMaterial:
 	var result := ShaderMaterial.new()
 	result.shader = MATERIAL
 	result.set_shader_parameter("kind",kind)
+	if kind == 2: result.set_shader_parameter("table_source",TABLE)
 	result.set_shader_parameter("base_color",color)
 	result.set_shader_parameter("leather_source",LEATHER)
 	return result
@@ -99,22 +101,17 @@ func build(parent: Node3D) -> void:
 	for profile: Vector2 in [Vector2(0.025,0.225),Vector2(0.0,0.18),Vector2(-0.06,-0.12),Vector2(-0.25,-0.50)]:
 		spine.append(rounded(Rect2(-0.075,-6.30,0.15,12.60).grow(-profile.x),0.025,profile.y))
 	mesh(parent,spine,leather,true)
-	# Sewn head/tail bands follow the crown; no painted-on book edges.
-	for end: float in [-1.0,1.0]:
-		for i: int in range(23):
-			var x: float = (i-11)*0.027
-			var z: float = 0.26*pow(1.0-absf(x)/0.75,3)-0.09
-			var y: float = end*(6.18+absf(x)*0.10)
-			var thread: Array = [rounded(Rect2(x-0.010,y-0.031,0.020,0.062),0.009,z),rounded(Rect2(x-0.012,y-0.034,0.024,0.068),0.010,z-0.025)]
-			mesh(parent,thread,material(3,Color("c4ac7f") if i%3 else Color("6e6551")),true)
+	# The 46 tiny decorative threads protruded through the crown at both ends.
+	# The continuous page blocks and rounded leather spine form the actual join.
 	var ground := MeshInstance3D.new()
 	var plane := PlaneMesh.new()
 	plane.orientation = PlaneMesh.FACE_Z
-	plane.size = Vector2(80,50)
+	plane.size = Vector2(48,32)
 	ground.mesh = plane
 	ground.position.z = -0.72
 	ground.material_override = material(2,Color("554b3f"))
 	parent.add_child(ground)
 
 func report() -> Dictionary:
-	return {"surfaces":surfaces+1,"vertices":vertices+4,"triangles":triangles+2,"leather_rgba_bytes":1254*1254*4,"leather_with_mipmaps_upper_bytes":1254*1254*4*4/3}
+	return {"surfaces":surfaces+1,"vertices":vertices+4,"triangles":triangles+2,"leather_rgba_bytes":1254*1254*4,"leather_with_mipmaps_upper_bytes":1254*1254*4*4/3,
+		"table_size":[TABLE.get_width(),TABLE.get_height()],"table_rgba_bytes":TABLE.get_width()*TABLE.get_height()*4,"table_with_mipmaps_upper_bytes":TABLE.get_width()*TABLE.get_height()*4*4/3}

@@ -1,6 +1,6 @@
 # Z2: aktive Auswahl und native Integration
 
-## Buchrichtung #493 · isolierter B-A-N03-Studienstand
+## Buchrichtung #493 · isolierter B-A-N04-Studienstand
 
 Die [Bewegungsstudie](BOOK_STUDY.md) untersucht realistische Buch-/Umgebungsmaterialien,
 mitbewegte gezeichnete Inhalte, Katalog-Doppelseite, kurzes Blättern in beide
@@ -14,6 +14,10 @@ Richtung sind das flache A-PNG, reine Informationsspiegelung und das Verbot gezi
 Kamerabewegung keine Architekturvorgabe. Regulärer Spielstart, Originalressourcen,
 Fonts, C1 und SL-Rahmen bleiben in B-A unverändert. B-B und persönliche Auswahl
 sind getrennte spätere Schritte; historische GD-/BP-Bindungen bleiben erhalten.
+N04 entfernt durchstoßende Zierbanddetails an den inneren Enden, verwendet eine
+eigene zusammenhängende Tischbildressource und leitet die Kataloganordnung auch
+bei 16:10 aus der projizierten Papierfläche ab. Karten füllen zuerst links bis
+zwölf, dann rechts bis zwölf; beide Scrollstände bleiben unabhängig erhalten.
 
 ## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 

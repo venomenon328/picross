@@ -1,5 +1,5 @@
 extends Node3D
-## B-A-N03 only: synthetic RAM study, no regular startup or save integration.
+## B-A-N04 only: synthetic RAM study, no regular startup or save integration.
 const Content = preload("res://study/book/content.gd")
 const PAGE = preload("res://study/book/page.gdshader")
 const Binding = preload("res://study/book/binding.gd")
@@ -60,6 +60,13 @@ func _ready() -> void:
 
 func _native_proof() -> void:
 	for i: int in range(6): await get_tree().process_frame
+	var windows: Array = []
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	get_tree().root.size = Vector2i(1600,900)
+	get_tree().root.move_to_center()
+	windows.append(await _window_proof_frame("standard"))
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_MAXIMIZED)
+	windows.append(await _window_proof_frame("maximized"))
 	var accepted: bool = request_open("T-06")
 	var deadline: int = Time.get_ticks_usec()+10000000
 	while state in [State.PREPARING, State.OPENING] and Time.get_ticks_usec() < deadline:
@@ -76,8 +83,27 @@ func _native_proof() -> void:
 	ok = ok and state == State.CATALOG and elapsed == RETURN_DURATION and app.session.player.cursor == 2
 	await RenderingServer.frame_post_draw
 	ok = ok and get_viewport().get_texture().get_image().save_png(OS.get_environment("BOOK_STUDY_OUTPUT").path_join("windows-exported-catalog.png")) == OK
+	DisplayServer.window_set_mode(DisplayServer.WINDOW_MODE_WINDOWED)
+	windows.append(await _window_proof_frame("restored"))
+	ok = ok and windows[0].mode == DisplayServer.WINDOW_MODE_WINDOWED and windows[1].mode == DisplayServer.WINDOW_MODE_MAXIMIZED and windows[2].mode == DisplayServer.WINDOW_MODE_WINDOWED
+	ok = ok and windows[0].client == windows[2].client and windows[0].framebuffer == windows[2].framebuffer
+	var file := FileAccess.open(OS.get_environment("BOOK_STUDY_OUTPUT").path_join("windows-native.json"),FileAccess.WRITE)
+	file.store_string(JSON.stringify({"passed":ok,"windows":windows,"id":selected_id,"cursor":app.session.player.cursor,"engine":Engine.get_version_info(),"os":OS.get_version(),"adapter":RenderingServer.get_video_adapter_name()},"\t")+"\n")
+	file.close()
 	print("BOOK_PACK_MOTION_OK" if ok else "BOOK_PACK_MOTION_FAIL", " return=", elapsed, " cursor=",app.session.player.cursor," id=", selected_id)
 	get_tree().quit(0 if ok else 4)
+
+func _window_proof_frame(label: String) -> Dictionary:
+	for i: int in range(8): await get_tree().process_frame
+	await RenderingServer.frame_post_draw
+	var image: Image = get_viewport().get_texture().get_image()
+	image.save_png(OS.get_environment("BOOK_STUDY_OUTPUT").path_join("windows-"+label+".png"))
+	var desktop: Vector2i = DisplayServer.screen_get_size()
+	var client: Vector2i = DisplayServer.window_get_size()
+	var outer: Vector2i = DisplayServer.window_get_size_with_decorations()
+	return {"stage":label,"mode":DisplayServer.window_get_mode(),"desktop":[desktop.x,desktop.y],"client":[client.x,client.y],"outer":[outer.x,outer.y],"framebuffer":[image.get_width(),image.get_height()],
+		"position":DisplayServer.window_get_position(),"usable":DisplayServer.screen_get_usable_rect(),"os_scale":DisplayServer.screen_get_scale(),"dpi":DisplayServer.screen_get_dpi(),"ui_scale":app.ui_scale,
+		"paper":projected_paper(false,-1),"left_footer":app.album.previous_button.get_global_rect(),"right_footer":app.album.next_button.get_global_rect()}
 
 func _proof_click(point: Vector2) -> void:
 	for pressed: bool in [true,false]:
@@ -213,7 +239,7 @@ func _resize() -> void:
 	app._layout_book()
 
 func context() -> Dictionary:
-	return {"page":app.album.page_index,"scroll":app.album.scroll_vertical,"category":app.album.category_id,
+	return {"page":app.album.page_index,"scroll":app.album.scroll_vertical,"right_scroll":app.album.right_scroll.scroll_vertical,"category":app.album.category_id,
 		"criterion":app.album.preference.criterion,"direction":app.album.preference.direction,
 		"selection":app.album.selected_id,"session":str(app.session.definition.id)}
 
@@ -303,7 +329,7 @@ func _prepare(token: int) -> void:
 		settling = true
 		app.show_album()
 		app.album.selected_id = return_context.get("selection",selected_id)
-		app.album.commit_page(target_page,int(return_context.get("scroll",0)))
+		app.album.commit_page(target_page,int(return_context.get("scroll",0)),int(return_context.get("right_scroll",0)))
 		settling = false
 	else: app.album.commit_page(target_page)
 	await get_tree().process_frame
@@ -383,7 +409,7 @@ func _settle(target: bool) -> void:
 		var destination: Dictionary = return_context if motion_kind == "return" else source_context
 		app.album.selected_id = destination.selection
 		var moved_page: bool = target and motion_kind == "page"
-		app.album.commit_page(target_page if moved_page else int(destination.page),0 if moved_page else int(destination.scroll))
+		app.album.commit_page(target_page if moved_page else int(destination.page),0 if moved_page else int(destination.scroll),0 if moved_page else int(destination.right_scroll))
 		catalog_materials(app.album.page_index)
 	if work: page_identity(paper_material,"work/"+selected_id)
 	for sheet: MeshInstance3D in leaves:

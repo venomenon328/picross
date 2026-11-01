@@ -100,7 +100,7 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
     urls = tc.official_asset_urls(tc.request_json(tc.RELEASE_API), assets)
     for asset in assets:
         tc.download_asset(urls[asset.name], cache / asset.name, asset.sha256, 1200)
-    report = dict(package="B-A-N03-T01", **source_identity(ROOT),
+    report = dict(package="B-A-N04-T01", **source_identity(ROOT),
                   host=host, platform=platform.platform(), python=platform.python_version(),
                   engine=tc.EXPECTED_VERSION, phases=[], browser="not requested; not started")
     report["sources"] = {p.relative_to(ROOT).as_posix(): tc.sha256_file(p) for p in sorted((ROOT / "game" / STUDY).rglob("*")) if p.is_file()}
@@ -122,6 +122,11 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
     if tc.sha256_file(leather) != metadata['sha256'] or leather.stat().st_size != metadata['bytes']:
         raise ValueError('Independent leather differs from its provenance')
     report['leather'] = metadata
+    table = ROOT / 'game' / STUDY / 'table.png'
+    metadata = json.loads(table.with_suffix('.json').read_text(encoding='utf-8'))
+    if tc.sha256_file(table) != metadata['sha256'] or table.stat().st_size != metadata['bytes']:
+        raise ValueError('Independent tabletop differs from its provenance')
+    report['table'] = metadata
     report['material_source']['role'] = 'unchanged A quality reference; not sampled by the study binding shader'
     with tempfile.TemporaryDirectory(prefix="picross-book-study-") as temp:
         work = Path(temp)
@@ -147,6 +152,9 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
         imported_leather = project / '.godot/imported/leather.png-434e2b6a9781d988431ff2eba303f204.ctex'
         report['leather']['imported_texture'] = dict(bytes=imported_leather.stat().st_size, sha256=tc.sha256_file(imported_leather))
         report['leather']['import_settings_sha256'] = tc.sha256_file(project / STUDY / 'leather.png.import')
+        imported_table = project / '.godot/imported/table.png-ac6fae3d857328c85675d2f2587f2353.ctex'
+        report['table']['imported_texture'] = dict(bytes=imported_table.stat().st_size, sha256=tc.sha256_file(imported_table))
+        report['table']['import_settings_sha256'] = tc.sha256_file(project / STUDY / 'table.png.import')
         phase("native", [*base, "--rendering-driver", "opengl3", "--script", "res://study/book/verify.gd", "--", "--p1-capture"], "BOOK_STUDY_OK", True)
         started = time.monotonic()
         report["handoff_pixels"] = verify_handoffs(output)
@@ -206,6 +214,7 @@ def export_all(work, project, cache, output, env, phase, base, report):
         (target.parent / "STUDIE.md").write_text(guide, encoding="utf-8", newline="\n")
         shutil.copyfile(ROOT/'game'/STUDY/'paper.json',target.parent/'licenses/Study-paper.json')
         shutil.copyfile(ROOT/'game'/STUDY/'leather.json',target.parent/'licenses/Study-leather.json')
+        shutil.copyfile(ROOT/'game'/STUDY/'table.json',target.parent/'licenses/Study-table.json')
     if platform.system() == "Windows":
         native = output / "windows/book-study.exe"
         result = run_phase("book-windows-exported-motion", [str(native), "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--quit-after", "1200", "--", "--book-study-proof"], env, 90, output / "logs")
@@ -221,10 +230,10 @@ def study_presets() -> str:
     legacy = [p.relative_to(ROOT / "game").as_posix() + ("/*" if p.is_dir() else "")
               for p in sorted((ROOT / "game/study").iterdir()) if p.name != "book"]
     exclusions = ["tests/*", "full_view_study/*", "data/*", "art/content/*", "perf_a/*", "web/*",
-                  "ui/pencil_marks.gd", "study/book/verify.gd", "study/book/pack_probe.gd", "study/book/tooltip_cases.gd", *legacy]
+                  "ui/pencil_marks.gd", "study/book/verify.gd", "study/book/pack_probe.gd", "study/book/tooltip_cases.gd", "study/book/n04_cases.gd", *legacy]
     common = '''runnable=false
 export_filter="all_resources"
-include_filter="study/book/fixtures.json,study/book/data/*.json,study/book/art/*.svg,study/book/paper.json,study/book/leather.json,art/book/*.json,art/book/*.txt,art/drawing/delight-coffee/*,art/drawing/tidy-hand/*"
+include_filter="study/book/fixtures.json,study/book/data/*.json,study/book/art/*.svg,study/book/paper.json,study/book/leather.json,study/book/table.json,art/book/*.json,art/book/*.txt,art/drawing/delight-coffee/*,art/drawing/tidy-hand/*"
 ''' + 'exclude_filter="' + ','.join(exclusions) + '"\nscript_export_mode=2\n'
     return '[preset.0]\nname="Book study Windows"\nplatform="Windows Desktop"\n' + common + '''
 [preset.0.options]
@@ -255,21 +264,23 @@ def edge_details(output: Path) -> list:
     """Unscaled original pixels, with explicit source rectangles; no retouching."""
     from PIL import Image
     rows = []
-    for width, height in ((1280,720),(1920,1080),(2560,1440)):
-        scale = height/13.4
+    for width, height, suffix in ((1280,720,'1280'),(1920,1080,'1920'),(2560,1440,'2560'),(1920,1200,'1920x1200')):
+        scale = height/max(13.4,22*height/width)
         left, right = round(width/2-10.6*scale), round(width/2+10.6*scale)
         bottom = round(height/2+6.65*scale)
         top = round(height/2-6.65*scale)
         regions = {'bottom-left':(left,bottom-140,left+220,bottom),
                    'bottom-right':(right-220,bottom-140,right,bottom),
                    'bottom-fold':(width//2-150,bottom-140,width//2+150,bottom),
+                   'top-fold':(width//2-150,top,width//2+150,top+140),
                    'outer-left':(left,top,left+100,bottom),
                    'outer-right':(right-100,top,right,bottom)}
-        with Image.open(output/f'catalog-{width}.png') as source:
+        with Image.open(output/f'catalog-{suffix}.png') as source:
+            if source.size != (width,height): raise ValueError('Wrong actual edge source dimensions')
             for name, box in regions.items():
-                target = f'edge-{name}-{width}.png'
+                target = f'edge-{name}-{suffix}.png'
                 source.crop(box).save(output/target)
-                rows.append(dict(file=target, source=f'catalog-{width}.png', rect=list(box), scale=1))
+                rows.append(dict(file=target, source=f'catalog-{suffix}.png', width=width,height=height,rect=list(box), scale=1))
     return rows
 
 
@@ -299,8 +310,8 @@ def verify_handoffs(output: Path) -> dict:
                         pass
                     else:
                         raise ValueError("Handoff gate accepted a shifted/alpha-mutated counterexample")
-    if set(results) != {'work-1280.png','work-1920.png','work-2560.png','return-handoff-direct.png'}:
-        raise ValueError("Three work configurations and the catalog return handoff required")
+    if set(results) != {'work-1280.png','work-1920.png','work-2560.png','return-handoff-direct.png','return-handoff-direct-1920x1200.png'}:
+        raise ValueError("Three work configurations, regular and 16:10 catalog return handoffs required")
     return dict(samples=results, negative_controls="one-pixel displacement and alpha mutation rejected")
 
 

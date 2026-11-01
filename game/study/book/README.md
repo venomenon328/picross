@@ -1,4 +1,4 @@
-# Buchstudie B-A-N03 · #493
+# Buchstudie B-A-N04 · #493
 
 Isolierter ausführbarer Studienstand. Der normale Spielstart verwendet weiterhin
 das bisherige A-Buch. Drei feste synthetische Muster unter 27 Katalog-IDs, keine echten Rätsel oder
@@ -11,7 +11,10 @@ godot --path game res://study/book/main.tscn
 ```
 
 Der Katalog zeigt eine Doppelseite mit mittiger Bindung, höchstens 24 Karten und
-gemeinsamer Sortierung/Filterung. Beide Hälften scrollen gemeinsam. Weiter blättert
+gemeinsamer Sortierung/Filterung. Bis zu zwölf Karten stehen zuerst links,
+die übrigen rechts. Beide Hälften scrollen unabhängig; ihre Positionen bleiben
+beim Öffnen und Zurückkehren erhalten. Eine neue Filter-/Sortierwahl setzt beide
+zurück, eine unveränderte Auswahl erhält sie. Weiter blättert
 rechts nach links, Zurück links nach rechts, jeweils 0,85 Sekunden; Randbefehle
 bewegen nichts. Filter und Sortierung wirken sofort.
 
@@ -48,11 +51,14 @@ python tools/book_study.py --cache-dir <gebundener-archivcache> --output-dir <le
 ```
 
 Der Harness isoliert Projekt und Benutzerpfade, prüft native Bewegung und die
-drei bestehenden Konfigurationen, erzeugt einen 30-fps-Enginefilm sowie getrennte
+drei bestehenden Konfigurationen und gezielt 1920×1200/UI100, erzeugt einen 30-fps-Enginefilm sowie getrennte
 Windows-/Webstudienexporte und kontrolliert beide regulären Pakete auf Ausschluss.
 Er startet keinen Browser. `--native-only` ist eine ausdrücklich unvollständige
 Entwicklungsprüfung ohne Exporte. Quellenbindung, Hashes, Zeiten und Grenzen
 stehen in `report.json`; `native.json` und Originalframes ergänzen den Nachweis.
+Unter Windows führt der exportierte Player zusätzlich Standardfenster,
+Maximieren, Öffnen/Bearbeiten/Rückkehr und Wiederherstellen aus. Der Bericht
+`windows-native.json` trennt Desktop-, Client-/Framebuffermaße und Skalierungen.
 
 Die Meshkonstruktion und Materialshader sind eigene Studienquellen. Das
 unveränderte A-Buch `art/book/bp2-a-inventarband.png` bleibt Qualitätsreferenz und
@@ -62,7 +68,12 @@ Der Einband verwendet die eigene homogene Ledertextur `leather.png`, ohne alte
 Buch-/Untergrundkanten. `leather.json` bindet Prompt, Herkunft, Rechte, SHA-256 und
 Import; die Exporte enthalten `licenses/Study-leather.json`. Der gerundete Einband,
 Seitenblock und Rücken haben gemeinsam konstruierte Anschlüsse, gefilterte Lagen
-und geometriebezogene Schatten. Die Innenflächen verwenden `paper.png`, eine originale imagegen-Ausgabe ohne
+und geometriebezogene Schatten. Die durchstoßenden kleinen Zierbänder an den
+inneren Enden entfallen; der ganze Buchkörper bleibt erhalten. Das eigenständige
+zusammenhängende Tischbild `table.png` liegt auf einer festen Weltfläche hinter
+dem Buch. `table.json` beziehungsweise `licenses/Study-table.json` bindet Prompt,
+Werkzeug, Rechte, Quellbytes, Hash und verlustlosen Mipmapimport ohne Repeat.
+Die Innenflächen verwenden `paper.png`, eine originale imagegen-Ausgabe ohne
 Fremdvorlage. `paper.json` bindet vollständigen Prompt, Herkunft, SHA-256, Rechte,
 Import und logische Seitenzuordnung; die Exporte liefern diese Angaben auch unter
 `licenses/Study-paper.json`. Die Textur wird unverändert importiert, mit Mipmaps
@@ -91,8 +102,8 @@ weder ersetzt noch umetikettiert.
 
 `opening.avi` zeigt beide Blätterrichtungen und die volle Öffnung in normalem
 Tempo sowie die Rückkehr nach echter Bearbeitung. Alte/neue native Ansichten und Bindungsdetails dienen dem Materialvergleich;
-Originalpixelpaare prüfen separat die Textur-/Direktübergabe. Fünf unskalierte
-Randdetails je Konfiguration und tatsächliche verzögerte Tooltipbilder ergänzen
+Fünf Originalpixelpaare prüfen separat die Textur-/Direktübergabe. Sechs unskalierte
+Randdetails je gebundener Fläche einschließlich oberem und unterem Falz sowie tatsächliche verzögerte Tooltipbilder ergänzen
 die Sichtprüfung; Quelle, Rechteck und Kosten stehen im Bericht.
 
-Bericht, Zustandsvertrag und offene Gates: [B-A-N03-T01](../../../docs/BOOK_STUDY.md).
+Bericht, Zustandsvertrag und offene Gates: [B-A-N04-T01](../../../docs/BOOK_STUDY.md).

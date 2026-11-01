@@ -1,6 +1,6 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-**B-A-N03 / #493:** Die [isolierte Buchstudie](BOOK_STUDY.md) verteilt eine
+**B-A-N04 / #493:** Die [isolierte Buchstudie](BOOK_STUDY.md) verteilt eine
 logische Katalogseite auf beide Buchhälften. Höchstens 24 aktive Karten,
 vollständige Schrift-/Metadaten-/Bild-/Resetbudgets und ID-Aktionen bleiben.
 Knappere Flächen verwenden weniger Spalten und Scrollen. Die revidierten Abstände
@@ -8,6 +8,10 @@ folgen projizierter Papierkante und ruhender Falzwölbung. Der reguläre Katalog
 wird erst mit B-B umgestellt; bisherige KU-/HZ-Abnahmen bleiben gebunden.
 N03 entfernt den isolierten Hoverstrich und leere Tooltippanels, erhält sinnvolle
 Modus-/Reset-/Richtungshilfen und prüft deren verzögerte native Mauswege.
+N04 füllt zuerst die linke Hälfte bis zwölf Karten, dann die rechte bis zwölf;
+Spaltenzahl und Scrollen verändern die Mitgliedschaft nicht. Beide Hälften
+scrollen getrennt. Kopf, Clipbereiche und Fußaktionen folgen einer einheitlichen
+Papierprojektion einschließlich des gezielten 1920×1200-Nachweises.
 
 **HZ · 21.10.2026, HZ-A/B integriert; HZ-C / #294 implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet Tidy Hand für normale

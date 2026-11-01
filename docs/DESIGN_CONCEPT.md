@@ -1,10 +1,13 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**Buch / #493 · B-A-N03:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
+**Buch / #493 · B-A-N04:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
 führen realistische Materialien, gezielte Bewegung und gezeichnete Seiteninhalte
 zusammen. Die folgenden BP-/Z2-Lieferbelege bleiben historisch gebunden; das
 bisherige A-Buch bleibt bis B-B die reguläre Darstellung. N03 verwendet eigene
 Lederflächen und zusammenhängende Rand-/Rückengeometrie; A bleibt Qualitätsreferenz.
+N04 bereinigt die beiden inneren Enden und ergänzt eine zusammenhängende echte
+Tischbildressource hinter dem Buch. Papierkoordinaten gelten auch bei 16:10;
+links beginnende Kartenbelegung und zwei unabhängige Scrollstände bleiben Studie.
 
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02

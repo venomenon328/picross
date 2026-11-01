@@ -16,6 +16,7 @@ var interruptions: Array = []
 var ink_margins: Array = []
 var returns: Array = []
 var tooltip_cases: Array = []
+var n04: Dictionary = {}
 
 class Baseline extends Main:
 	func create_store() -> SaveStore: return Study.Content.MemoryStore.new()
@@ -188,6 +189,7 @@ func run() -> void:
 		var report: Dictionary = study.resource_report()
 		check(report.ui_capture_targets == 0 and report.catalog_rgba_textures == 0, "transient textures released " + id)
 	baseline.free()
+	n04 = await preload("res://study/book/n04_cases.gd").new().run(self)
 	await return_cases()
 	await interruption_cases()
 	# Existing popups and gestures are cancelled before a page can move.
@@ -246,7 +248,7 @@ func run() -> void:
 	await solved_reset_case()
 	var report: Dictionary = {"checks": checks, "assertions":assertions, "failures": failures, "layouts": layouts, "handoffs": handoffs,
 		"catalog_layouts":catalog_layouts,"page_motions":page_motions,"interruptions":interruptions,
-		"ink_margins":ink_margins,"returns":returns,"tooltip_cases":tooltip_cases,
+		"ink_margins":ink_margins,"returns":returns,"tooltip_cases":tooltip_cases,"n04":n04,
 		"resources": study.resource_report(), "motion_frame_ms_with_captures": motion_ms, "motion_wall_seconds_with_captures": motion_wall,
 		"motion_frame_ms_quiet": quiet_ms, "motion_wall_seconds_quiet": quiet_wall,
 		"engine": Engine.get_version_info(), "display": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name(),
@@ -407,8 +409,10 @@ func interruption_cases() -> void:
 		for phase: String in ["prepare","motion"]:
 			for reason: String in ["resize","ui-scale","focus","leave"]:
 				print("BOOK_MATRIX ",kind,"/",phase,"/",reason)
+				root.size = Vector2i(1920,1080)
+				study.set_ui_scale(1.0)
 				study.app.show_album()
-				study.app.album.commit_page(0,40)
+				study.app.album.commit_page(0,40,120)
 				await frames(6)
 				if kind == "return":
 					check(study.request_open("T-06"),"matrix return setup")
@@ -427,16 +431,20 @@ func interruption_cases() -> void:
 					escape.keycode = KEY_ESCAPE
 					escape.pressed = true
 					root.push_input(escape,true)
-				else: study.interrupt(reason)
+				elif reason == "resize": root.size += Vector2i(8,0)
+				elif reason == "ui-scale": study.set_ui_scale(1.25)
+				else: study._notification(Node.NOTIFICATION_APPLICATION_FOCUS_OUT)
 				await frames(6)
 				var expected_work: bool = kind == "open" and reason != "leave"
 				check(study.state == (Study.State.WORK if expected_work else Study.State.CATALOG) and study.generation > token,"matrix stable target %s/%s/%s" % [kind,phase,reason])
 				if not expected_work:
 					check(study.app.album.page_index == (1 if reason != "leave" and kind == "page" else source.page),"matrix catalog target %s/%s/%s" % [kind,phase,reason])
+					var moved: bool = kind == "page" and reason != "leave"
+					check(study.app.album.positions() == (Vector2i.ZERO if moved else Vector2i(source.scroll,source.right_scroll)),"N04 matrix both offsets %s/%s/%s" % [kind,phase,reason])
 					if reason == "leave": check(study.app.album.scroll_vertical == source.scroll and study.app.album.selected_id == source.selection,"retained catalog context %s/%s" % [kind,phase])
 				check(fingerprint() == cells and study.app.store.writes == writes,"matrix no history or save %s/%s/%s" % [kind,phase,reason])
 				check(study.capture == null and study.catalog_texture == null and study.resource_report().visible_leaves == 0,"matrix releases resources %s/%s/%s" % [kind,phase,reason])
-				interruptions.append({"kind":kind,"phase":phase,"reason":reason,"state":study.state})
+				interruptions.append({"kind":kind,"phase":phase,"reason":reason,"state":study.state,"source_offsets":[source.scroll,source.right_scroll],"final_offsets":[study.app.album.scroll_vertical,study.app.album.right_scroll.scroll_vertical]})
 
 func fixture_cases() -> void:
 	var input: Dictionary = Study.Content.Inputs.read()
@@ -469,6 +477,9 @@ func measure_ink(work: bool) -> void:
 		for id: String in ["help","menu","nav-information"]: controls.append(study.app.actions[id])
 	else:
 		controls.append(study.app.album.summary)
+		controls.append(study.app.album.page_label)
+		controls.append(study.app.album.sort_label)
+		controls.append(study.app.album.category_choice.get_parent().get_child(0))
 		for node: Node in study.app.album.find_children("*","Button",true,false):
 			if node.is_visible_in_tree() and not study.app.album.scroll.is_ancestor_of(node) and not study.app.album.right_scroll.is_ancestor_of(node): controls.append(node)
 	for control: Control in controls:
@@ -490,7 +501,7 @@ func measure_ink(work: bool) -> void:
 		var margin: float = minf(minf(hull.position.x-safe.position.x,safe.end.x-hull.end.x),minf(hull.position.y-safe.position.y,safe.end.y-hull.end.y))
 		if not found or margin < 8: print("INK_DIAGNOSTIC ",control.name," width=",root.size.x," found=",found," margin=",margin," hull=",hull," safe=",safe)
 		check(found and margin >= 8.0,"actual glyph and contour margin %s/%d/%s" % ["work" if work else "catalog",root.size.x,control.name])
-		ink_margins.append({"view":"work" if work else "catalog","width":root.size.x,"control":str(control.name),"hull":[hull.position.x,hull.position.y,hull.size.x,hull.size.y],"paper":[paper.position.x,paper.position.y,paper.size.x,paper.size.y],"flat_safe":[safe.position.x,safe.position.y,safe.size.x,safe.size.y],"margin":margin})
+		ink_margins.append({"view":"work" if work else "catalog","width":root.size.x,"height":root.size.y,"scale":study.app.ui_scale,"control":str(control.name),"hull":[hull.position.x,hull.position.y,hull.size.x,hull.size.y],"paper":[paper.position.x,paper.position.y,paper.size.x,paper.size.y],"flat_safe":[safe.position.x,safe.position.y,safe.size.x,safe.size.y],"margin":margin})
 	study.app.reparent(study,false)
 	viewport.queue_free()
 	await frames()
