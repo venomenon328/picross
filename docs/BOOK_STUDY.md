@@ -449,7 +449,8 @@ Die Prüfprogramme sind aus beiden Spielerpaketen ausgeschlossen. Das 300-s-Limi
 Die zusätzliche Windows-Probe verwendet echte Win32-Mausereignisse in der
 exportierten EXE/PCK, 32 Hin-/Rückwege mit Idle, Commit, schnellem Wechsel und
 sichtbarem Tooltip sowie echte Fokus-/Resize-/Außenloslassfälle. Ein externes,
-rein lesendes Beobachterskript lädt den konfigurierten Einstieg aus dem PCK;
+rein lesendes Beobachterskript wird in einer privaten bytegleichen EXE-/PCK-Kopie
+über `override.cfg` als Autoload ergänzt und beobachtet den normalen Einstieg;
 es injiziert keine Engine-Ereignisse und verändert keine Spielzustände.
 Ein gewöhnlicher Exportstart ohne Beobachter ergänzt diese Instrumentierung.
 Head/Basis/Checkout, Werkzeug-/Exporthashes, OS-Ereignisse, begrenzte gespülte

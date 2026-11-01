@@ -184,7 +184,7 @@ class BookStudyTests(unittest.TestCase):
                        'popup released after dispatch','lost release cancels without commit',
                        'outside releases never click another control','exact undo redo',
                        'negative synchronous popup hide rejected')]
-            labels += ['F01 '+label+' '+kind for kind in gestures for label in ('gesture','crosshair returns')]
+            labels += ['F01 '+label+' '+kind for kind in gestures for label in ('starts','gesture','crosshair returns')]
             f01 = [dict(case=kind,visible=kind != 'negative-consumed-release',passed=True)
                    for kind in ('default-idle',*gestures,'negative-consumed-release','release-recovered')]
             f01 += [dict(case='negative-synchronous-hide',passed=True)]

@@ -91,9 +91,10 @@ func run(context: SceneTree) -> Array:
 		var before: int = board.session.player.cursor
 		var index: MouseButton = MOUSE_BUTTON_RIGHT if kind == "right" else MOUSE_BUTTON_LEFT
 		var mask: int = MOUSE_BUTTON_MASK_RIGHT if index == MOUSE_BUTTON_RIGHT else MOUSE_BUTTON_MASK_LEFT
-		var start: Vector2 = Vector2(board.view.origin.x-8,cell.y) if kind == "clue" else cell
+		var start: Vector2 = Vector2(board.row_clue_area().get_center().x,cell.y) if kind == "clue" else cell
 		motion(start)
 		press(start,true,index,mask)
+		proof.check(board.clue_press_owned if kind == "clue" else board.session.gesture.active,"F01 starts "+kind)
 		if kind == "chord": press(start,true,MOUSE_BUTTON_RIGHT,3)
 		elif kind == "escape":
 			var escape := InputEventKey.new()
