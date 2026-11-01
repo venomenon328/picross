@@ -208,7 +208,7 @@ def validate_book_study(report, directory, identity, host):
         'lost release cancels without commit', 'outside releases never click another control',
         'exact undo redo', 'negative synchronous popup hide rejected'))
     for kind in f01_gestures:
-        required_assertions.update('F01 '+label+' '+kind for label in ('gesture','crosshair returns'))
+        required_assertions.update('F01 '+label+' '+kind for label in ('starts','gesture','crosshair returns'))
     configurations = {(1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0)}
     if (report.get('book_study') != study or study['package'] != 'B-A-N05-T01'
             or study['host'] != host or any(study.get(k) != v for k,v in identity.items())

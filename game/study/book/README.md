@@ -134,7 +134,8 @@ python tools/book_windows_probe.py --source artifacts/book-n05-f01-work/final --
 
 `--source` enthält den vollständigen sauberen Studienexport mit `report.json`.
 Der Treiber prüft dessen Head und EXE-/PCK-Hashes, verwendet isolierte Profile,
-lädt den regulären Studien-Einstieg über einen externen rein lesenden Beobachter
+ergänzt in einer bytegleichen privaten EXE-/PCK-Kopie über `override.cfg` einen
+externen rein lesenden Autoload-Beobachter am regulären Studien-Einstieg
 und sendet ausschließlich echte OS-Mausereignisse. 32 Raster-/Kopfbutton-Rundwege,
 Zell-Commits, Undo/Redo, Werkzeug/Farbe, Fokusverlust, Resize und Außenloslassen
 werden protokolliert. Bei unerwartetem Fokusverlust bricht er die Eingabe ab.

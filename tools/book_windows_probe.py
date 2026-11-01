@@ -1,6 +1,6 @@
 """B-A-N05-F01: bounded real Win32 input in the hash-bound exported study.
 
-An external read-only SceneTree loads the pack's configured main scene and records
+An external read-only autoload observes the pack's configured main scene and records
 state. No Viewport injection, model calls or real save directories. A separate
 ordinary-start run can reuse the recorded OS plan without this observer.
 """
@@ -13,6 +13,7 @@ import json
 import os
 from pathlib import Path
 import platform
+import shutil
 import subprocess
 import time
 
@@ -36,6 +37,17 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
     for name in ('book-study.exe', 'book-study.pck'):
         tc.verify_sha256(source / 'windows' / name, report['files']['windows/' + name]['sha256'])
     output.mkdir(parents=True, exist_ok=False)
+    # Export templates ignore --script. Their documented override.cfg mechanism
+    # adds only an observer to a private copy of the unchanged EXE and PCK.
+    player_dir = output / 'player'
+    player_dir.mkdir()
+    for name in ('book-study.exe', 'book-study.pck'):
+        shutil.copyfile(source / 'windows' / name, player_dir / name)
+        tc.verify_sha256(player_dir / name, report['files']['windows/' + name]['sha256'])
+    shutil.copyfile(OBSERVER, player_dir / 'observer.gd')
+    override = player_dir / 'override.cfg'
+    override.write_text('[autoload]\nF01Observer="*'+(player_dir/'observer.gd').as_posix()+'"\n', encoding='utf-8')
+    player = player_dir / 'book-study.exe'
     user = ctypes.windll.user32
     user.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
     for name, args in (
@@ -60,7 +72,7 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
     trace = (output / 'os.jsonl').open('w', encoding='utf-8')
     started = time.monotonic()
     results = []
-    process = subprocess.Popen([str(player), '--audio-driver', 'Dummy', '--script', str(OBSERVER)],
+    process = subprocess.Popen([str(player), '--audio-driver', 'Dummy'],
                                cwd=player.parent, env=env, stdout=stdout, stderr=stderr,
                                creationflags=subprocess.CREATE_NO_WINDOW)
     hwnd = None
@@ -69,6 +81,7 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
                    base_commit=report['base_commit'], tested_checkout_commit=report['tested_checkout_commit'],
                    export_files={n: report['files']['windows/'+n] for n in ('book-study.exe','book-study.pck')},
                    observer_sha256=tc.sha256_file(OBSERVER), driver_sha256=tc.sha256_file(Path(__file__)),
+                   override_sha256=tc.sha256_file(override),
                    platform=platform.platform(), stimulus='Win32 OS mouse; no Viewport injection',
                    observation='External read-only observer in actual exported EXE/PCK, owned client captures',
                    owner_acceptance='OPEN', results=results)
@@ -79,7 +92,13 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
         os.fsync(trace.fileno())
 
     def state():
-        return json.loads((output / 'state.json').read_text(encoding='utf-8'))
+        # The observer can be in the middle of its bounded snapshot write.
+        for _ in range(20):
+            try:
+                return json.loads((output / 'state.json').read_text(encoding='utf-8'))
+            except (OSError, ValueError):
+                time.sleep(.01)
+        raise OSError('No complete observation snapshot within 200 ms')
 
     def wait(condition, timeout=8):
         deadline = time.monotonic()+timeout
@@ -159,7 +178,10 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
     def tooltip(label, key='help'):
         move(center(state()['tips'][key]['rect']), .72)
         s = wait(lambda: state() if state()['tips'][key]['visible'] else None)
-        require(not s['gesture'] and not s['blocked'] and s['buttons'] == 0, label, dict(cursor=s['cursor'], tip=key))
+        require(not s['gesture'] and not s['blocked'] and not s['clue'] and not s['barrier']
+                and s['held'] == 0 and s['buttons'] == 0, label, dict(cursor=s['cursor'], tip=key))
+        tip = s['tips'][key]
+        require(bool(tip['caption'].strip()) and tip['text'] == tip['caption'], label+' correct text')
         return s
 
     def capture(name):
@@ -184,6 +206,8 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
             return owned[0] if owned else None
         hwnd = wait(find)
         wait(lambda: state().get('card'))
+        hwnd = wait(find)
+        record('window-ready', pid=process.pid, hwnd=hwnd)
         user.ShowWindow(hwnd, 3)
         activate()
         time.sleep(.5)
@@ -231,20 +255,22 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
         click(center(state()['tips']['color-2']['rect']))
         wait(lambda: state()['tool'] == [False,2])
         require(state()['cells'] == committed['cells'], 'tool/color selection preserves cells')
-        # Real focus loss while held; releasing on the desktop must not commit.
+        # Real focus loss while held, then the matching Up after focus return.
         move(cell_point(7,7))
         button(True)
         wait(lambda: state()['gesture'])
         user.ShowWindow(hwnd, 6)
         time.sleep(.2)
-        user.mouse_event(4,0,0,0,0)
-        held.discard(False)
+        wait(lambda: not state()['gesture'])
         user.ShowWindow(hwnd, 9)
         activate()
-        wait(lambda: not state()['gesture'])
+        button(False)
+        wait(lambda: state()['buttons'] == 0)
         require(state()['cells'] == committed['cells'], 'OS focus loss cancels held gesture')
         tooltip('tooltip after focus loss')
         # Restore a bounded window for a real release outside its client area.
+        user.ShowWindow(hwnd, 9)
+        wait(lambda: state()['mode'] == 0)
         outer = w.RECT()
         user.GetWindowRect(hwnd, ctypes.byref(outer))
         _, size = geometry()
@@ -255,7 +281,8 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
         button(True)
         wait(lambda: state()['gesture'])
         user.SetWindowPos(hwnd, None, 100, 100, 1610+outer.right-outer.left-size[0],
-                          900+outer.bottom-outer.top-size[1], 0x14)
+                          850+outer.bottom-outer.top-size[1], 0x14)
+        wait(lambda: state()['size'] == [1610,850])
         wait(lambda: not state()['gesture'])
         button(False)
         require(state()['cells'] == committed['cells'], 'OS resize cancels held gesture')
@@ -270,7 +297,11 @@ def probe(source: Path, output: Path, expected_head: str) -> dict:
         tooltip('tooltip after outside-client release')
         capture('outside-release-tooltip')
         binding['round_trips'] = 32
-        binding['final_state'] = state()
+        saved = wait(lambda: state() if state()['memory'].get('cursor') == state()['cursor'] else None)
+        require(all(saved['memory'][k] == saved[k] for k in ('cells','history','cursor')), 'RAM snapshot preserves exact player state')
+        profile_files = [p.relative_to(output/'profile') for p in (output/'profile').rglob('*') if p.is_file()]
+        require(all('logs' in p.parts or 'shader_cache' in p.parts for p in profile_files), 'no save or preference files in isolated profile')
+        binding['final_state'] = saved
         binding['passed'] = True
     except Exception as exc:
         binding['passed'] = False

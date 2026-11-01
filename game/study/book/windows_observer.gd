@@ -1,16 +1,18 @@
-extends SceneTree
+extends Node
 ## External, read-only observer of the actual exported PCK. Never injects input.
 var study: Node
 var directory: String
 var trace: FileAccess
 var elapsed: float = 0.0
 var sequence: int = 0
+var root: Window
 
-func _initialize() -> void: call_deferred("start")
+func _ready() -> void: call_deferred("start")
 
 func start() -> void:
+	root = get_tree().root
 	directory = OS.get_environment("BOOK_WINDOWS_OBSERVATION")
-	if directory.is_empty(): quit(4); return
+	if directory.is_empty(): get_tree().quit(4); return
 	trace = FileAccess.open(directory.path_join("engine.jsonl"),FileAccess.WRITE)
 	root.window_input.connect(func(event: InputEvent):
 		if event is InputEventMouse:
@@ -19,15 +21,13 @@ func start() -> void:
 				"pressed":event.pressed if event is InputEventMouseButton else false}))
 	root.focus_entered.connect(func(): record("window-focus-in"))
 	root.focus_exited.connect(func(): record("window-focus-out"))
-	node_added.connect(func(node: Node):
+	get_tree().node_added.connect(func(node: Node):
 		if node is PopupPanel:
 			var id: int = node.get_instance_id()
 			node.visibility_changed.connect(func(): record("popup-visible",{"id":id,"visible":node.visible}))
 			node.tree_exiting.connect(func(): record("popup-exit",{"id":id})))
-	var scene: PackedScene = load(ProjectSettings.get_setting("application/run/main_scene"))
-	study = scene.instantiate()
-	root.add_child(study)
-	for control: Node in get_nodes_in_group("book-buttons"):
+	study = get_tree().current_scene
+	for control: Node in get_tree().get_nodes_in_group("book-buttons"):
 		for event: String in ["mouse_entered","mouse_exited","focus_entered","focus_exited"]:
 			control.connect(event,func(): record(event,{"control":str(control.name)}))
 	record("started",{"engine":Engine.get_version_info(),"adapter":RenderingServer.get_video_adapter_name(),"os":OS.get_version()})
@@ -50,8 +50,9 @@ func snapshot(full: bool = false) -> Dictionary:
 		var b: Control = app.actions[key]
 		if not b is Button or not "tooltip_ref" in b: continue
 		var tip: Control = b.tooltip_ref.get_ref() if b.tooltip_ref != null else null
-		tips[key] = {"visible":tip != null and tip.is_inside_tree() and tip.get_window().visible,"rect":rect(b)}
+		tips[key] = {"visible":tip != null and tip.is_inside_tree() and tip.get_window().visible,"rect":rect(b),"caption":b.tooltip_text.strip_edges()}
 		if tip != null and tip.is_inside_tree():
+			tips[key]["text"] = tip.get_child(0).text
 			var popup: Window = tip.get_window()
 			tips[key]["popup"] = [popup.position.x,popup.position.y,popup.size.x,popup.size.y]
 	var row: Dictionary = {"us":Time.get_ticks_usec(),"state":study.state,"barrier":study.release_barrier,
@@ -64,6 +65,7 @@ func snapshot(full: bool = false) -> Dictionary:
 	if full:
 		row["cells"] = session.player.cells
 		row["history"] = session.player.history
+		row["memory"] = app.store.snapshots.get(session.definition.id,{})
 		row["board_rect"] = rect(board)
 		var grid: Rect2 = board.view.bounds()
 		row["grid"] = [grid.position.x+board.global_position.x,grid.position.y+board.global_position.y,grid.size.x,grid.size.y]
@@ -77,11 +79,10 @@ func record(event: String, detail: Dictionary = {}) -> void:
 	trace.store_line(JSON.stringify({"seq":sequence,"event":event,"detail":detail,"state":snapshot()}))
 	trace.flush()
 
-func _process(delta: float) -> bool:
+func _process(delta: float) -> void:
 	elapsed += delta
 	if elapsed >= 0.08 and is_instance_valid(study) and study.get("app") != null:
 		elapsed = 0
 		var file := FileAccess.open(directory.path_join("state.json"),FileAccess.WRITE)
 		file.store_string(JSON.stringify(snapshot(true)))
 		file.close()
-	return false

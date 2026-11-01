@@ -24,6 +24,12 @@ Ursprungs-/Bewegungszustände, einen aus Paketen ausgeschlossenen nativen Prüfe
 und erweitert den vorhandenen unabhängigen Python-Ergebnisguard. Alle haben einen aktuellen Runtime-
 beziehungsweise Ergebnisgatezweck. N05-Originalbilder, Windowsbelege und Film
 bleiben befristete Prüfarbeitsdaten; keine neuen Bild-/Font-/Materialressourcen.
+F01 ergänzt einen nativen GUI-Dispatchprüfer, einen rein lesenden Windows-
+Beobachter und einen begrenzten Win32-Eingabetreiber. Beide GDScripts bleiben aus
+Spielerpaketen ausgeschlossen. Nur die private Diagnosekopie erhält den Beobachter
+als externes Autoload; EXE und PCK bleiben bytegleich. Crash-/WER-Originale,
+OS-/Engine-Spuren und wenige Clientbilder bleiben bis zum offenen F01-Review in
+einem kompakten temporären Prüfpaket; keine dauerhafte Laufchronik oder Galerie.
 
 Eigentümerentscheidung 14.10.2026, [#116](https://github.com/venomenon328/picross/issues/116):
 Abgeschlossene Produktion muss nicht wiederholbar sein. Historische Arbeitsdateien
