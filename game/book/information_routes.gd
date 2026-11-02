@@ -38,6 +38,7 @@ func request(section: String) -> bool:
 	source = kind
 	target = section
 	book.direction = 1
+	app.help_panel.begin_visit()
 	app.info_scroll.scroll_vertical = 0
 	app.info.help_scroll.scroll_vertical = 0
 	book._begin("info-enter")
