@@ -16,16 +16,13 @@ class OldButton extends ButtonType:
 		super._draw()
 		if is_hovered(): draw_line(Vector2(9,8)*ui_scale,Vector2(18,8)*ui_scale,INK,1.5*ui_scale,true)
 
-func dispatch_motion(point: Vector2) -> void:
+func move(point: Vector2) -> void:
 	# Scenario targets use native viewport events, not desktop coordinates.
 	# Desktop warps clamp wide targets on smaller monitors and send a later
 	# conflicting OS event after the intended pointer position.
 	var event := InputEventMouseMotion.new()
 	event.position = point
 	proof.root.push_input(event,true)
-
-func move(point: Vector2) -> void:
-	dispatch_motion(point)
 	# Dispatch the real event before waiting for its native tooltip timer.
 	# The final hover observation still waits for the completed rendered frame.
 	await proof.process_frame
@@ -42,14 +39,13 @@ func hover(control: Control, label: String, expected: String, capture: bool = tr
 	if catalog.visible and (catalog.scroll.is_ancestor_of(control) or catalog.right_scroll.is_ancestor_of(control)):
 		catalog.ensure_control_visible(control)
 		await proof.frames()
-	# push_input dispatches exit/entry synchronously. Both events precede the
-	# same real frame; an unchanged intermediate frame adds no hover coverage.
-	dispatch_motion(Vector2(2,proof.root.size.y/2))
+	await move(Vector2(2,proof.root.size.y/2))
 	await move(control.get_global_rect().get_center())
 	await proof.create_timer(delay+0.15).timeout
-	# The timer resumes before rendering. Observe this completed native draw,
-	# without adding a further unchanged process/draw cycle after the delay.
-	await RenderingServer.frame_post_draw
+	# The GUI event has already been dispatched and the full delay elapsed.
+	# One completed draw is enough; do not render six extra unchanged frames
+	# around every screenshot on the CI software renderer.
+	await proof.frames(1)
 	var tip: Control = current(control)
 	var ok: bool = tip == null if expected.is_empty() else tip != null
 	var hovered: bool = proof.root.gui_get_hovered_control() == control
@@ -80,7 +76,7 @@ func run(context: SceneTree) -> Array:
 		proof.root.size=configuration[0]
 		proof.study.set_ui_scale(configuration[1])
 		proof.study.app.show_album()
-		await proof.frames(3)
+		await proof.frames(6)
 		# Establish real window entry at a safe point, then let its OS event
 		# settle before sending the logical test positions (also beyond 1920px).
 		Input.warp_mouse(Vector2(2,2))
@@ -123,7 +119,7 @@ func run(context: SceneTree) -> Array:
 		await move(Vector2(2,2))
 		proof.study.request_open("T-06")
 		proof.study.interrupt("focus")
-		await proof.frames(3)
+		await proof.frames(6)
 		for id: String in ["fill","help"]:
 			var control: Control=proof.study.app.actions[id]
 			await hover(control,id,control.tooltip_text)
@@ -139,7 +135,7 @@ func run(context: SceneTree) -> Array:
 	# Lifecycle at the existing 1920 configuration, separate from motion matrix.
 	proof.root.size=Vector2i(1920,1080)
 	proof.study.set_ui_scale(1.0)
-	await proof.frames(3)
+	await proof.frames(6)
 	for reason: String in ["resize","ui-scale","focus","motion-start"]:
 		var direction: Control=proof.study.app.album.direction_button
 		await hover(direction,"before-"+reason,direction.tooltip_text,false)
@@ -156,7 +152,7 @@ func run(context: SceneTree) -> Array:
 		proof.root.size=Vector2i(1920,1080)
 		proof.study.set_ui_scale(1.0)
 		proof.study.app.album.commit_page(0)
-		await proof.frames(3)
+		await proof.frames(6)
 	await negative_controls()
 	await move(Vector2(2,2))
 	print("BOOK_TOOLTIP_SECONDS ",(Time.get_ticks_msec()-started)/1000.0)
