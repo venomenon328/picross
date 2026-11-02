@@ -27,6 +27,10 @@ func setup(viewport: Viewport) -> void:
 
 func select_pilot() -> void:
 	app.show_album()
+	# Redisplay restores both saved scroll offsets after the deferred container
+	# layout. Select the card only after that restoration has settled.
+	await process_frame
+	await process_frame
 	await process_frame
 	app.album.ensure_control_visible(app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))])
 	await process_frame
