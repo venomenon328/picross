@@ -1,7 +1,7 @@
 # WEB-1: Browserbuild und manuelles SSH-Deployment
 
-**B-B / #498:** Der regul?re Webexport startet denselben [Buchroot](BOOK_INTEGRATION.md)
-wie Windows. Produkt-HTML, Appidentit?t, IndexedDB-/Lock-/Retrywege bleiben erhalten.
+**B-B / #498:** Der reguläre Webexport startet denselben [Buchroot](BOOK_INTEGRATION.md)
+wie Windows. Produkt-HTML, Appidentität, IndexedDB-/Lock-/Retrywege bleiben erhalten.
 Die technische Beobachtung erweitert diesen Root; die persistenzlose Studienshell
 ist kein Webspielernachweis. Der beauftragte Chromium-Kurzlauf und alle noch offenen
 Liefer-/Abnahmebindungen stehen in [B-B-T01](B_B_VERIFICATION.md).

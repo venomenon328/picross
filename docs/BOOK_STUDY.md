@@ -1,17 +1,17 @@
-# Buchstudie B-A ? gebundener Vorg?nger
+# Buchstudie B-A · gebundener Vorgänger
 
-Die gew?hlte N06-Fassung ist mit PR #497 auf `main@2a0d9e4` integriert.
+Die gewählte N06-Fassung ist mit PR #497 auf `main@2a0d9e4` integriert.
 [B-A-R08-V02](https://github.com/venomenon328/picross/pull/497#pullrequestreview-5730592686)
-und [pers?nliche B-A-M01](https://github.com/venomenon328/picross/pull/497#issuecomment-6564908352)
-sind abgeschlossen. B-B ?bernimmt Darstellung und Materialien in den regul?ren
+und [persönliche B-A-M01](https://github.com/venomenon328/picross/pull/497#issuecomment-6564908352)
+sind abgeschlossen. B-B übernimmt Darstellung und Materialien in den regulären
 Spieler: [aktueller Vertrag](BOOK_INTEGRATION.md), [B-B-T01](B_B_VERIFICATION.md).
 Der gemeinsame Kern liegt jetzt unter `game/book/`; die verbleibende synthetische
-Studienh?lle verwendet ihn mit isolierten Inputs. Aktive Pr?fungen binden diesen
-Kern und den realen Produktlebenszyklus, keine zus?tzliche Studienexportmatrix.
+Studienhülle verwendet ihn mit isolierten Inputs. Aktive Prüfungen binden diesen
+Kern und den realen Produktlebenszyklus, keine zusätzliche Studienexportmatrix.
 
-Die folgenden Status-, Pfad-, Pr?f- und Exportangaben beschreiben ausdr?cklich
+Die folgenden Status-, Pfad-, Prüf- und Exportangaben beschreiben ausdrücklich
 den damaligen B-A-Lieferstand. Seine Nachweise und Freigaben werden nicht
-r?ckwirkend als B-B-Abnahme ausgegeben oder umgeschrieben.
+rückwirkend als B-B-Abnahme ausgegeben oder umgeschrieben.
 
 ## Historischer B-A-N06-T01-Vertrag
 

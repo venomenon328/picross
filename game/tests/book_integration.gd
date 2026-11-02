@@ -51,7 +51,9 @@ func run() -> void:
 	var first: String = str(app.sessions[0].definition.id)
 	var other: String = str(app.sessions[1].definition.id)
 	var frozen_data: Dictionary = JSON.parse_string(frozen.get_string_from_utf8())
-	check(Store.snapshot(app.sessions[1],app.sessions[1].view_state) == frozen_data,"frozen schema1 history redo and view load exactly")
+	# Compare JSON values: parsing produces floats while the player deliberately
+	# restores typed integer arrays. No numeric tolerance or omitted fields.
+	check(JSON.parse_string(JSON.stringify(Store.snapshot(app.sessions[1],app.sessions[1].view_state))) == frozen_data,"frozen schema1 history redo and view load exactly")
 	check(book.request_open(first),"valid opening accepted")
 	await settled()
 	check(book.state == Book.State.WORK and app.session.definition.id == first and app.work.visible,"opening reaches bound work")
