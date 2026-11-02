@@ -132,7 +132,10 @@ bestätigtem IndexedDB-Sync, Reload, Prozessneustart, Tab-Sperre und Fehler/Retr
 Die neun Kernfälle und zwei benötigten Exporte bleiben der begrenzte Umfang;
 kein zusätzliches Exportprofil, Firefox oder Livehosting.
 Für den Linux-Softwarelauf wählt der Chromium-Harness ANGLE/OpenGL über die
-vorhandene Mesa-Umgebung (`PICROSS_WEB_SOFTWARE=1`). Der implizite SwiftShader-
+vorhandene Mesa-/Xvfb-Umgebung (`PICROSS_WEB_SOFTWARE=1`) im neuen Headlessmodus
+des bereits installierten Chromium (`channel=chromium`, `--enable-gpu`).
+Die getrennte Headless-Shell stellte mit OpenGL kein WebGL 2 bereit.
+Der implizite SwiftShader-
 Pfad übersprang in der neuen 3D-Szene bei etwa 360 ms pro Frame den unverändert
 geforderten Alpha-Bereich 0,3–0,7. Der Lauf berichtet tatsächliche Startoptionen,
 Renderer und beobachtete Überblendungsframes. Auflösung, 2,15-s-Produktuhr,
