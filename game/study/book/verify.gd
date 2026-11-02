@@ -361,7 +361,9 @@ func catalog_cases() -> void:
 	for configuration: Array in Current.CONFIGURATIONS:
 		root.size = configuration[0]
 		study.set_ui_scale(configuration[1])
-		await frames(6)
+		# Three deferred layout cycles settle both album halves; the following
+		# assertions still inspect every card and its unchanged hit/ink budgets.
+		await frames(3)
 		var catalog = study.app.album
 		var paper_top: float = root.size.y*(1.0-12.4/study.view_rect(false).w)/2.0
 		check(study.app.title.position.y >= paper_top and study.app.title.get_rect().end.y <= catalog.position.y,"catalog heading stays inside paper and above controls %d" % configuration[0].x)
@@ -413,7 +415,7 @@ func catalog_cases() -> void:
 		button(false,point)
 		check(study.selected_id == id and study.state == Study.State.PREPARING,"correct ID from page half %d" % i)
 		study.interrupt("leave")
-		await frames(6)
+		await frames(3)
 	var token: int = study.generation
 	catalog.choose_category("missing-synthetic-category")
 	await frames()

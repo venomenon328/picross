@@ -113,6 +113,15 @@ Die Exportgruppe wartet unter Linux auf die bereits laufenden Katalog-/Grafik-
 gruppen, bevor sie den neuen 3D-Buchnachweis beginnt. So konkurrieren diese
 Software-Renderer nicht im unveränderten 300-s-Fenster; Prüfungen, Auflösung
 und Phasengrenzen bleiben vollständig erhalten.
+Der gemeinsame Tooltipprüfer dispatcht Austritt und Eintritt vor demselben
+Frame und beobachtet nach der unveränderten Hoverwartezeit den abgeschlossenen
+nativen Draw. Zusätzliche unveränderte Zwischenframes entfallen; statische
+Katalogwechsel warten drei Layoutzyklen. Alle Hover-/Popup-/Pixelassertions,
+Originalbilder, Gegenproben und die getrennte Bewegungsfolge bleiben erhalten.
+Dies nutzt die dokumentierte Reihenfolge von
+[Viewport-Eingabe](https://docs.godotengine.org/en/stable/classes/class_viewport.html#class-viewport-method-push-input)
+und [SceneTree-Timern](https://docs.godotengine.org/en/stable/classes/class_scenetree.html#class-scenetree-method-create-timer),
+keine beschleunigte Produktuhr oder erhöhte Abbruchgrenze.
 
 `tools/book_windows_probe.py --build-cache <cache> --source <ziel>` exportiert
 headless den regulären Windowsroot mit synthetischen Daten. Zwei kleine
