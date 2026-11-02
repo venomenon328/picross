@@ -17,6 +17,7 @@ import shutil
 import subprocess
 import tempfile
 import time
+import zipfile
 
 import p1_preflight as tc
 
@@ -62,6 +63,28 @@ def build(cache: Path, output: Path) -> dict:
             result = run_phase('windows-book-'+name,[engine,*args],env,300,logs)
             require_clean_output(result,marker)
             report['phases'].append({k:v for k,v in result.items() if k != 'output'})
+        # Small resource overlays challenge the actual external PCK guard;
+        # they never enter the delivered player or require another full export.
+        probe_source = (ROOT/'game/tests/content_pack_probe.gd').read_text(encoding='utf-8')
+        probe_source = probe_source.replace('func _initialize() -> void:',
+            'func _initialize() -> void:\n\tassert(ProjectSettings.load_resource_pack(OS.get_environment("BOOK_NEGATIVE_PACK")))')
+        negative_probe = work/'negative_probe.gd'
+        negative_probe.write_text(probe_source,encoding='utf-8')
+        old_entry = '[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://ui/main.gd" id="1"]\n[node name="OldEntry" type="Control"]\nscript = ExtResource("1")\n'
+        report['negative_controls'] = []
+        for case,files,marker in (
+            ('old-entry',{'main.tscn.remap':'[remap]\npath="res://old-entry.tscn"\n','old-entry.tscn':old_entry},'PCK regular book root, no hidden old entry'),
+            ('study-input',{'study/book/forbidden.json':'{"synthetic":true}\n'},'technical directory in PCK: res://study'),
+        ):
+            overlay = work/(case+'.zip')
+            with zipfile.ZipFile(overlay,'w') as archive:
+                for name,content in files.items(): archive.writestr(name,content)
+            env['BOOK_NEGATIVE_PACK'] = str(overlay)
+            result = run_phase('windows-book-negative-'+case,[engine,'--headless','--main-pack',str(target.with_suffix('.pck')),
+                                '--script',str(negative_probe)],env,90,logs)
+            if result['exit_code'] != 4 or marker not in result['output'] or 'SCRIPT ERROR' in result['output']:
+                raise RuntimeError('PCK negative control was not rejected: '+case)
+            report['negative_controls'].append(dict(case=case,rejected=True,exit_code=4,marker=marker))
     report['files'] = {p.relative_to(output).as_posix():dict(bytes=p.stat().st_size,sha256=tc.sha256_file(p))
                        for p in output.rglob('*') if p.is_file()}
     (output/'report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
