@@ -11,8 +11,11 @@ def options(name):
         # The book's real 3D path needs a rendered frame inside the unchanged
         # 0.3..0.7 reveal interval. Use the runner's Mesa OpenGL implementation;
         # implicit SwiftShader skipped that interval at ~360 ms/frame.
-        # https://chromium.googlesource.com/angle/angle/+/main/doc/DebuggingTips.md
-        result['args'] = ['--use-gl=angle', '--use-angle=gl']
+        # Use the installed full Chromium's documented new headless path and
+        # allow the Xvfb/Mesa driver instead of the shell's forced SwiftShader.
+        # https://playwright.dev/python/docs/browsers#chromium-new-headless-mode
+        # https://chromium.googlesource.com/chromium/src/+/main/docs/gpu/using-gpu-hardware-in-headless-chrome.md
+        result.update(channel='chromium', args=['--enable-gpu', '--use-gl=angle', '--use-angle=gl'])
     return result
 
 
