@@ -246,6 +246,22 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
         s = state()
         return [s['grid'][0]+(x+.5)*s['cell_size'], s['grid'][1]+(y+.5)*s['cell_size']]
 
+    def open_card():
+        # UI scale and restored windows can move T-06 below the clip. Reach it
+        # with actual wheel input, never click the observer's off-screen rect.
+        for _ in range(24):
+            s = state()
+            point, clip = center(s['card']), s['card_clip']
+            if clip[1] + 4 <= point[1] <= clip[1] + clip[3] - 4:
+                click(point)
+                return
+            move(center(clip))
+            delta = -360 if point[1] >= clip[1] + clip[3] else 360
+            record('wheel', delta=delta)
+            user.mouse_event(0x0800, 0, 0, delta, 0)
+            time.sleep(.2)
+        raise RuntimeError('T-06 did not become reachable through real scrolling')
+
     def tooltip(label, key='help'):
         move(center(state()['tips'][key]['rect']), .72)
         s = wait(lambda: state() if state()['tips'][key]['visible'] else None)
@@ -294,7 +310,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
         time.sleep(.5)
         if fold:
             capture('fold-catalog-maximized-ui100')
-            click(center(state()['card']))
+            open_card()
             wait(lambda: state()['state'] == 3 and not state()['barrier'])
             fold_initial = state()
             capture('fold-work-ui100')
@@ -320,7 +336,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
             require(all(state()[k] == fold_initial[k] for k in ('cursor','cells','history')),
                     'fold Windows routes and scale/resize preserve initial history')
             # Restore the normal UI100 origin for the unchanged F01 route below.
-            click(center(state()['card']))
+            open_card()
             wait(lambda: state()['state'] == 3 and not state()['barrier'])
             click(center(state()['tips']['menu']['rect']))
             wait(lambda: state()['state'] == 4 and not state()['barrier'])
@@ -332,7 +348,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
             wait(lambda: state()['state'] == 0 and not state()['barrier'])
             user.ShowWindow(hwnd, 3)
             wait(lambda: state()['mode'] == 2)
-        click(center(state()['card']))
+        open_card()
         wait(lambda: state()['state'] == 3 and not state()['barrier'])
         initial = state()
         require(initial['selected'] == 'T-06', 'real catalog click opens T-06')
