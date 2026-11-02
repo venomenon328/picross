@@ -67,7 +67,7 @@ func check(ok: bool, label: String) -> void:
 		failures.append(label)
 		print("BOOK_STUDY_FAIL ", label)
 
-func frames(count: int = 2) -> void:
+func frames(count: int = 1) -> void:
 	for i: int in range(count): await process_frame
 	await RenderingServer.frame_post_draw
 

@@ -53,7 +53,8 @@ static func sidebar_aligned(app: Control) -> bool:
 	var axes: Dictionary = sidebar_axes(app)
 	var paper: Rect2 = app.surface.material_rect()
 	for i: int in range(3):
-		var expected: Vector2 = paper.position+Vector2(paper.size.x-(187.5 if paper.size.x<1700 else 150)-(2-i)*58*app.ui_scale-20*app.ui_scale,paper.size.y/30+12*app.ui_scale)
+		var expected: Vector2 = paper.position+Vector2(paper.size.x-(187.5 if paper.size.x<1700 else 150)-i*58*app.ui_scale-20*app.ui_scale,paper.size.y/30+12*app.ui_scale)
+		expected.y = maxf(expected.y,app.book.projected_paper(true).position.y+5*app.ui_scale)
 		if Vector2(axes.navigation_buttons[i][0],axes.navigation_buttons[i][1]).distance_to(expected)>0.05: return false
 	for axis: float in axes.frames+axes.controls:
 		if absf(axis-axes.navigation)>0.05: return false
@@ -133,7 +134,7 @@ static func layout(app: Control, check: Callable) -> Dictionary:
 		check.call(inner.grow(0.1).encloses(box),"V1 group inside actual inner paper %s %s u%s box%s inner%s" % [app.session.definition.id,app.size,u,box,inner])
 		check.call(clear_of_board(app,box),"SL group clear of actual grid and complete hint hit/travel areas %s %s u%s %s box%s board%s" % [app.session.definition.id,app.size,u,b.mode,box,board_regions(app)])
 		for id: String in ["help","menu","nav-information"]:
-			check.call(not box.intersects(app.actions[id].get_global_rect()),"V1 group clear of page controls")
+			check.call(not box.intersects(app.actions[id].get_global_rect()),"V1 group clear of page controls %s ui%s box%s control%s %s" % [app.size,u,box,id,app.actions[id].get_global_rect()])
 		for item: Control in [app.status_label,app.work_repair_button]:
 			if item.is_visible_in_tree(): check.call(not box.intersects(item.get_global_rect()),"V1 group clear of recovery card")
 	if app.work_repair_button.is_visible_in_tree():

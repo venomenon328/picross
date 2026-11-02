@@ -2,6 +2,7 @@ extends "res://book/main.gd"
 ## Focused native component cases settle the real presentation synchronously.
 ## Unaccelerated input/motion/lifecycle proofs use main.tscn without this fixture.
 const Product = preload("res://book/main.gd")
+var content_script: Script
 
 class ImmediateContent extends "res://book/content.gd":
 	func finish_navigation() -> void:
@@ -31,12 +32,28 @@ class ImmediateContent extends "res://book/content.gd":
 		finish_navigation()
 
 func create_content() -> Content:
-	return ImmediateContent.new()
+	return content_script.new() if content_script != null else ImmediateContent.new()
 
-static func attach(parent: Node) -> Content:
+func request_open(id: String) -> bool:
+	var accepted: bool = super.request_open(id)
+	if accepted: app.finish_navigation()
+	return accepted
+
+func request_return() -> bool:
+	var accepted: bool = super.request_return()
+	if accepted: app.finish_navigation()
+	return accepted
+
+func request_page(target: int) -> bool:
+	var accepted: bool = super.request_page(target)
+	if accepted: app.finish_navigation()
+	return accepted
+
+static func attach(parent: Node, custom_content: Script = null) -> Content:
 	var instance = load("res://main.tscn").instantiate()
 	assert(instance.get_script() == Product,"Native probe must enter the regular book scene")
 	instance.set_script(load("res://tests/book_fixture.gd"))
+	instance.content_script = custom_content
 	parent.add_child(instance)
 	return instance.app
 

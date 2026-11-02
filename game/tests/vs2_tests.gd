@@ -149,9 +149,7 @@ func run() -> void:
 	await native_clue_boundaries()
 	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
-	app = Cases.new()
-	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	canvas.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(canvas,Cases)
 	await process_frame
 	await matrix(true)
 	await rectangular_input()

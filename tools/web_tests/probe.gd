@@ -3,6 +3,7 @@ extends "res://book/content.gd"
 var probe_elapsed: float = 0.0
 var at_probe_images: Dictionary = {}
 var at_frame_key: String = ""
+var at_trace: Array = []
 const Card = preload("res://ui/catalog_card.gd")
 
 func _ready() -> void:
@@ -15,6 +16,8 @@ func _capture_at_frame() -> void:
 	if reveal_view == null or not reveal_view.active or reveal_view.artwork == null:
 		return
 	var opacity: float = reveal_view.art.modulate.a
+	if at_trace.size() < 32:
+		at_trace.append({"elapsed":reveal_view.elapsed,"opacity":opacity,"size":str(reveal_view.artwork.get_size())})
 	if opacity < 0.3 or opacity > 0.7 or reveal_view.artwork.get_size() != Vector2(256,256):
 		return
 	# Arming requests observation only; the player has no command/state hook.
@@ -112,7 +115,7 @@ func observe(delta: float) -> void:
 		"ea_active": reveal_view.active, "ea_processing": reveal_view.is_processing(),
 		"ea_caption_alpha": completion_title.modulate.a, "ea_reset_disabled": completion_reset.disabled,
 		"ea_title": title.text, "ea_art": reveal_view.artwork != null,
-		"at_image":_probe_image(reveal_view),"ea_alpha":reveal_view.art.modulate.a,
+		"at_image":_probe_image(reveal_view),"ea_alpha":reveal_view.art.modulate.a,"at_trace":at_trace,
 		"album": album.visible, "work": work.visible, "ending": ending.visible, "information": information.visible,
 		"id": session.definition.id, "cells": session.player.cells, "history": session.player.history,
 		"cursor": session.player.cursor, "completed": session.completed, "view": board.capture_view(),

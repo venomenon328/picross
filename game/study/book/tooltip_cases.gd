@@ -23,7 +23,9 @@ func move(point: Vector2) -> void:
 	var event := InputEventMouseMotion.new()
 	event.position = point
 	proof.root.push_input(event,true)
-	await proof.frames(1)
+	# Dispatch the real event before waiting for its native tooltip timer.
+	# The final hover observation still waits for the completed rendered frame.
+	await proof.process_frame
 
 func current(control: Control) -> Control:
 	var ref: WeakRef = control.get("tooltip_ref")
