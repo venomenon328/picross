@@ -1,10 +1,19 @@
 """Explicit disposable Chromium profile and guarded launch for CI."""
 from contract import require_browser
+import os
+import platform
 
 
 def options(name):
     require_browser(name)
-    return {'headless': True}
+    result = {'headless': True}
+    if platform.system() == 'Linux' and os.environ.get('PICROSS_WEB_SOFTWARE') == '1':
+        # The book's real 3D path needs a rendered frame inside the unchanged
+        # 0.3..0.7 reveal interval. Use the runner's Mesa OpenGL implementation;
+        # implicit SwiftShader skipped that interval at ~360 ms/frame.
+        # https://chromium.googlesource.com/angle/angle/+/main/doc/DebuggingTips.md
+        result['args'] = ['--use-gl=angle', '--use-angle=gl']
+    return result
 
 
 def launch(pw, name, profile, **kwargs):

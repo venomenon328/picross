@@ -134,7 +134,7 @@ func run() -> void:
 	app.size = Vector2(surface.size)
 	app.set_ui_scale(1.0)
 	check(app._flush_current(), "capture partial flush")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
 	var completed_root: String = OS.get_environment("P1_TEST_SAVE_ROOT")
 	if completed_root.is_empty():

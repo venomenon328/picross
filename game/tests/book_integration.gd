@@ -79,6 +79,22 @@ func run() -> void:
 	check(book.request_return(),"return after retry accepted")
 	await settled()
 	check(bytes(save) == committed and book.state == Book.State.CATALOG,"capture and return do not rewrite save")
+	# A failed write can remain on the catalog while its slot is filtered out.
+	app.album.choose_category("obst-nuesse")
+	app.store.fail_step = "after_temp"
+	check(not app._save_current(),"catalog pending write failure prepared")
+	serial = book.generation
+	check(not book.information_routes.request("settings") and book.generation == serial
+		and app.album.visible and app.album.feedback.visible and app.save_retry.visible
+		and bytes(save) == committed,"catalog pending failure blocks information with visible retry")
+	app.store.fail_step = ""
+	app.save_retry.pressed.emit()
+	check(book.information_routes.request("settings"),"catalog information accepts successful retry")
+	await settled()
+	check(book.information_routes.request_return(),"catalog information returns after retry")
+	await settled()
+	app.album.choose_category("")
+	check(not app.album.feedback.visible and bytes(save) == committed,"catalog retry clears feedback without changing primary values")
 	check(book.request_open(other),"second valid slot accepted")
 	var restored: Dictionary = app.board.capture_view()
 	check(restored.tool == "erase" and restored.active_color == 2 and restored.zoom == 18 and restored.row_clue_reads[35].anchor == "outer_start" and restored.column_clue_reads[21].anchor == "outer_start","frozen tool color zoom and clue anchors survive activation")

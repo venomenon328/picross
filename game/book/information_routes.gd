@@ -30,8 +30,9 @@ func request(section: String) -> bool:
 	if app.reveal_view.active: return false
 	app._cancel_interaction()
 	var kind: String = "catalog" if book.state == book.State.CATALOG else "ending" if app.ending.visible else "work"
-	# A passive catalog's placeholder session creates no save obligation.
-	if kind != "catalog" and not app._flush_current(): return false
+	# _flush_current already excludes a passive catalog's placeholder view.
+	# An outstanding timer/error still needs a real flush, even outside filters.
+	if not app._flush_current(): return false
 	origin = {"kind":kind,"id":str(app.session.definition.id) if app.session != null else "","catalog":book.context().duplicate(true)}
 	app.information_origin = "album" if kind == "catalog" else kind
 	source = kind
@@ -45,7 +46,7 @@ func request(section: String) -> bool:
 func request_return() -> bool:
 	if book.state != book.State.INFORMATION or book.release_barrier or origin.is_empty(): return false
 	book.app._cancel_interaction()
-	if origin.kind != "catalog" and not book.app._flush_current(): return false
+	if not book.app._flush_current(): return false
 	source = book.app.info.section
 	target = origin.kind
 	book.direction = -1
