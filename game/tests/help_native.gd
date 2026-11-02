@@ -37,6 +37,9 @@ static func layout(t: SceneTree, node: Node, width: float, u: float) -> void:
 		layout(t,child,width,u)
 
 static func scroll_to(t: SceneTree, control: Control) -> void:
+	# Chapter visibility changes queue nested container layout. Read positions
+	# only after that reflow, then let the scroll range clamp the new offset.
+	await t.frames(4)
 	var scroll: ScrollContainer = t.book.app.info.help_scroll
 	scroll.scroll_vertical += roundi(control.get_global_rect().position.y-scroll.get_global_rect().position.y)
 	await t.frames(4)
@@ -109,6 +112,7 @@ static func run(t: SceneTree) -> void:
 		if figure.identity == "help/clue-open": await scroll_to(t,figure.get_parent())
 	await capture(t,"legend")
 	var offset: int = app.info.help_scroll.scroll_vertical
+	t.check(offset > 0,"HIL help retains a nonzero reading position")
 	# Passive content clicks use the same native GUI dispatch as chapter
 	# buttons and wheel input, with the real board present behind the page.
 	click(t,app.info.help_scroll)

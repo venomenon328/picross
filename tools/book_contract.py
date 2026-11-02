@@ -18,6 +18,7 @@ INTEGRATION_ASSERTIONS = {
     'HIL editorial input preserves session history view and save',
     'HIL content participates in moving book captures',
     'HIL chapter and scroll survive settings pan',
+    'HIL help retains a nonzero reading position',
     'HIL work origin preserves all durable state',
     'HIL new catalog visit resets chapter and scroll',
     'HIL catalog context and capture lifetime preserved',
