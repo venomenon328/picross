@@ -45,8 +45,7 @@ func focused_scene(corpus: bool) -> void:
 		preload("res://tests/book_fixture.gd").dispose(app,true)
 		await process_frame
 	if corpus:
-		app = Cases.new()
-		canvas.add_child(app)
+		app = preload("res://tests/book_fixture.gd").attach(canvas,Cases)
 	else:
 		app = preload("res://tests/book_fixture.gd").attach(canvas)
 	await process_frame

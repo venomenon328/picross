@@ -227,8 +227,9 @@ func check_layout() -> void:
 	for i: int in range(3):
 		var item: Control = app.actions[["help","menu","nav-information"][i]]
 		var box: Rect2 = item.get_global_rect()
-		var old: Vector2 = paper.position+Vector2(paper.size.x-(187.5 if paper.size.x<1700 else 150)-(2-i)*58*app.ui_scale,paper.size.y/30)
-		check((box.position-old).distance_to(Vector2(-20,12)*app.ui_scale)<0.01,"navigation moves left/down against bound reference")
+		var expected: Vector2 = paper.position+Vector2(paper.size.x-(187.5 if paper.size.x<1700 else 150)-i*58*app.ui_scale-20*app.ui_scale,paper.size.y/30+12*app.ui_scale)
+		expected.y = maxf(expected.y,app.book.projected_paper(true).position.y+5*app.ui_scale)
+		check(box.position.distance_to(expected)<0.01,"book navigation keeps sidebar axis and projected paper clearance")
 		check(inner.encloses(box.grow(1)) and not box.intersects(title_box) and not box.intersects(app.surface.card),"nav clear of title/mini/paper %s u%s box%s mini%s" % [canvas.size,app.ui_scale,box,app.surface.card])
 	for item: Control in [app.layout_warning,app.stress_label]:
 		if item.is_visible_in_tree() and not item.text.is_empty():

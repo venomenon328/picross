@@ -81,7 +81,9 @@ func _layout_book(prepare_board: bool = false) -> void:
 		album_button.position.x = axis-58*ui_scale
 		actions["help"].position.x = axis+58*ui_scale
 		for id: String in ["help","menu","nav-information"]:
-			actions[id].position.y = maxf(actions["menu"].position.y,paper_top+8*ui_scale)
+			# Five pixels clear the paper rim while preserving the independent
+			# preview frame's alpha envelope below the 44-pixel hit targets.
+			actions[id].position.y = maxf(actions["menu"].position.y,paper_top+5*ui_scale)
 	layout_warning.position.x = maxf(layout_warning.position.x, title_origin.x)
 	title.visible = not information.visible
 	if information.visible: info.layout()
