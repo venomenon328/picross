@@ -89,6 +89,18 @@ class ChromiumBoundary(unittest.TestCase):
         pw.chromium.launch_persistent_context.assert_called_once_with(
             'synthetic-profile', headless=True, device_scale_factor=1.25)
 
+    def test_book_software_renderer_is_explicit_and_platform_scoped(self):
+        with patch.object(sys, 'path', [str(ROOT/'tools/web_tests'), *sys.path]):
+            runtime = importlib.import_module('browser_runtime')
+        with patch.dict(os.environ, {'PICROSS_WEB_SOFTWARE':'1'}):
+            with patch.object(runtime.platform, 'system', return_value='Linux'):
+                self.assertEqual(runtime.options('chromium'),
+                                 {'headless':True, 'args':['--use-gl=angle','--use-angle=gl']})
+            with patch.object(runtime.platform, 'system', return_value='Windows'):
+                self.assertEqual(runtime.options('chromium'), {'headless':True})
+        with patch.dict(os.environ, {'PICROSS_WEB_SOFTWARE':'0'}), patch.object(runtime.platform, 'system', return_value='Linux'):
+            self.assertEqual(runtime.options('chromium'), {'headless':True})
+
     def test_workflows_have_no_firefox_and_validate_before_installation(self):
         for path in (ROOT/'.github/workflows').glob('*.yml'):
             self.assertNotIn('firefox', path.read_text().lower(), path)

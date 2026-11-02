@@ -44,7 +44,7 @@ def run(args):
     result = dict(format='picross-native-result-v1', status='running', identity=identity,
                   selection_attempt=os.environ.get('CI_SELECTION_ATTEMPT', identity['github_run_attempt']),
                   groups=groups, expected=coverage(groups), started_at=now(), results=[],
-                  host=platform.system(), overlap='catalog and graphics on isolated Xvfb; remaining groups serial'
+                  host=platform.system(), overlap='catalog and graphics on isolated Xvfb; export book renderer waits for both; remaining groups serial'
                   if platform.system() == 'Linux' else 'serial; native windows own focus')
     began = time.monotonic()
     path = technical / 'native-result.json'
@@ -85,6 +85,12 @@ def run(args):
     with ThreadPoolExecutor(max_workers=2) as executor:
         futures = {g:executor.submit(execute,g) for g in parallel} if primed else {}
         for group in serial:
+            if group == 'export':
+                # B-B adds the real 3D book proof to this group. Do not compete
+                # with the existing graphics/catalog software renderers for
+                # the same runner CPU inside its unchanged 300-second phase.
+                for future in futures.values():
+                    future.result()
             result['results'].append(execute(group))
             flush()
         for group in parallel:

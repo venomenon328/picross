@@ -109,6 +109,10 @@ Quellinventar `tools/book_contract.py` und unabhängiger Ergebnisguard binden
 gemeinsam Originalberichte, notwendige Assertions, Phasen und Datei-Hashes.
 Die 300-s-Phasengrenze bleibt. Die kurze Historyroute behält höchstens 20
 Kommandos, sechs neue Transaktionen und genau zwei echte Prozesse.
+Die Exportgruppe wartet unter Linux auf die bereits laufenden Katalog-/Grafik-
+gruppen, bevor sie den neuen 3D-Buchnachweis beginnt. So konkurrieren diese
+Software-Renderer nicht im unveränderten 300-s-Fenster; Prüfungen, Auflösung
+und Phasengrenzen bleiben vollständig erhalten.
 
 `tools/book_windows_probe.py --build-cache <cache> --source <ziel>` exportiert
 headless den regulären Windowsroot mit synthetischen Daten. Zwei kleine
@@ -127,6 +131,12 @@ beauftragt. C01–C08 verwenden die neue Buchpräsentation mit echter Eingabe,
 bestätigtem IndexedDB-Sync, Reload, Prozessneustart, Tab-Sperre und Fehler/Retry.
 Die neun Kernfälle und zwei benötigten Exporte bleiben der begrenzte Umfang;
 kein zusätzliches Exportprofil, Firefox oder Livehosting.
+Für den Linux-Softwarelauf wählt der Chromium-Harness ANGLE/OpenGL über die
+vorhandene Mesa-Umgebung (`PICROSS_WEB_SOFTWARE=1`). Der implizite SwiftShader-
+Pfad übersprang in der neuen 3D-Szene bei etwa 360 ms pro Frame den unverändert
+geforderten Alpha-Bereich 0,3–0,7. Der Lauf berichtet tatsächliche Startoptionen,
+Renderer und beobachtete Überblendungsframes. Auflösung, 2,15-s-Produktuhr,
+Pixelgrenzen und Zeitbudgets werden nicht verändert.
 
 Unabhängiges B-B-R01, persönliche B-B-M01, Merge und Deployment bleiben getrennt.
 Offene persönliche Abnahme schließt #498/#493 nicht automatisch.

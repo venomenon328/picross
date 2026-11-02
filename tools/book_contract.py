@@ -16,6 +16,8 @@ INTEGRATION_ASSERTIONS = {
     'failed quit stays usable with retry',
     'failed navigation preserves pending state and primary bytes',
     'visible retry commits real slot', 'capture and return do not rewrite save',
+    'catalog pending failure blocks information with visible retry',
+    'catalog retry clears feedback without changing primary values',
     'cancelled opening restores source binding', 'stale callback cannot revive capture',
     'wrong session ID invalidates pending capture',
     'invalid save blocks only its slot', 'unrelated valid slot still opens',

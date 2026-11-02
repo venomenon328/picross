@@ -32,9 +32,14 @@ func select_pilot() -> void:
 	await process_frame
 	await process_frame
 	var box: Rect2 = app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].get_global_rect()
-	check(app.album.get_global_rect().encloses(box), "pilot album choice reachable")
+	var card: Control = app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))]
+	var scroller: ScrollContainer = app.album.right_scroll if app.album.right_grid.is_ancestor_of(card) else app.album.scroll
+	var visible: Rect2 = box.intersection(scroller.get_global_rect())
+	check(visible.has_area() and app.album.get_global_rect().encloses(visible), "pilot album choice reachable")
 	check(box.size.y >= 44 * app.ui_scale, "choice respects minimum hit height")
-	click(box.get_center())
+	# A tall card may be clipped in the two-column book. Use its actual visible
+	# left inset, outside the card's nested reset/recovery actions.
+	click(Vector2(visible.position.x+5*app.ui_scale,visible.get_center().y))
 	await process_frame
 	check(app.session == app.sessions[pilot_index] and (app.ending.visible if app.session.completed else app.work.visible), "regular album click selects pilot and saved completion scene")
 	app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
