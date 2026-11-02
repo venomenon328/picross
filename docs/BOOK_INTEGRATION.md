@@ -32,6 +32,9 @@ Der PCK-Audit prüft den tatsächlichen Entrypoint und benötigte gemeinsame
 Ressourcen zusätzlich zu den bisherigen Ausschlüssen; er erlaubt nicht pauschal
 den Studienbaum. Die technische Webprobe erweitert denselben Buchroot und
 beobachtet die laufende Präsentation auch während gesperrter UI-Captures.
+Die Startprüfung `--p1-smoke` bestätigt nur Ressourcen, Fenster und Katalog;
+sie spielt keine echten Katalogrätsel nach. Input und History werden in den
+getrennten synthetischen Prüfwegen nachgewiesen.
 
 ## Navigation und Darstellung
 
@@ -106,6 +109,14 @@ Quellinventar `tools/book_contract.py` und unabhängiger Ergebnisguard binden
 gemeinsam Originalberichte, notwendige Assertions, Phasen und Datei-Hashes.
 Die 300-s-Phasengrenze bleibt. Die kurze Historyroute behält höchstens 20
 Kommandos, sechs neue Transaktionen und genau zwei echte Prozesse.
+
+`tools/book_windows_probe.py --build-cache <cache> --source <ziel>` exportiert
+headless den regulären Windowsroot mit synthetischen Daten. Zwei kleine
+Ressourcenüberlagerungen müssen den tatsächlichen PCK-Guard am alten Einstieg
+beziehungsweise einer Studienbeigabe scheitern lassen. Der getrennte Desktoplauf
+`--source <ziel> --output <belege> --head <sha> --fold` verwendet bytegleiche
+EXE/PCK, isolierte Profile und den rein lesenden externen Beobachter. OS-Eingaben
+prüfen auch einen realen Dateisystemfehler, verweigertes Fensterschließen und Retry.
 
 Chromium ist für diesen Auftrag ausdrücklich als `browser_scope=short`
 beauftragt. C01–C08 verwenden die neue Buchpräsentation mit echter Eingabe,
