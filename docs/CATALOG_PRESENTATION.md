@@ -1,6 +1,6 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-**B-B / #498:** Die [regul?re Buchdarstellung](BOOK_INTEGRATION.md) verteilt eine
+**B-B / #498:** Die [reguläre Buchdarstellung](BOOK_INTEGRATION.md) verteilt eine
 logische Katalogseite auf beide Buchhälften. Höchstens 24 aktive Karten,
 vollständige Schrift-/Metadaten-/Bild-/Resetbudgets und ID-Aktionen bleiben.
 Knappere Flächen verwenden weniger Spalten und Scrollen. Die revidierten Abstände

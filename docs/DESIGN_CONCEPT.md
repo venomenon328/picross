@@ -1,15 +1,15 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**B-B / #498 ? regul?re Buchintegration:** Der normale Entwickler-, Windows-
-und Webstart verwendet die abgenommene r?umliche Buchdarstellung mit echtem
+**B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
 Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
-f?llen zuerst zw?lf Karten links, dann zw?lf rechts; beide H?lften scrollen
-unabh?ngig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+füllen zuerst zwölf Karten links, dann zwölf rechts; beide Hälften scrollen
+unabhängig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
 Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
-bewusst ge?nderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
-unver?ndert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+bewusst geänderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unverändert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
 [B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
-B-A-R08-V02 und B-A-M01 sind ?ber PR #497 abgeschlossen; die
+B-A-R08-V02 und B-A-M01 sind über PR #497 abgeschlossen; die
 [Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
 Merge und Deployment sind getrennt offen.
 

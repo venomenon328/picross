@@ -23,9 +23,7 @@ func run() -> void:
 	surface.size = Vector2i(1920,1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(surface)
-	app = Main.new()
-	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	surface.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(surface)
 	await process_frame
 	var demos: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://tests/z2-demo.json"))
 	for i: int in range(2):

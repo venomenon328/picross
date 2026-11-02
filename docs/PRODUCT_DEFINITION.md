@@ -1,15 +1,15 @@
 # Produktdefinition: picross
 
-**B-B / #498 ? regul?re Buchintegration:** Der normale Entwickler-, Windows-
-und Webstart verwendet die abgenommene r?umliche Buchdarstellung mit echtem
+**B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
 Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
-f?llen zuerst zw?lf Karten links, dann zw?lf rechts; beide H?lften scrollen
-unabh?ngig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+füllen zuerst zwölf Karten links, dann zwölf rechts; beide Hälften scrollen
+unabhängig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
 Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
-bewusst ge?nderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
-unver?ndert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+bewusst geänderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unverändert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
 [B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
-B-A-R08-V02 und B-A-M01 sind ?ber PR #497 abgeschlossen; die
+B-A-R08-V02 und B-A-M01 sind über PR #497 abgeschlossen; die
 [Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
 Merge und Deployment sind getrennt offen.
 
@@ -307,7 +307,7 @@ Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh u
 
 Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlungen, Bearbeitung und Enthüllungen gestalterisch zusammenführen. Eine komplexe Geschichte ist nicht erforderlich. Eine zusätzliche Wirtschaftssimulation, Währungen oder ein Aufbauspiel folgen daraus nicht automatisch.
 
-Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Gemäß [Buchrichtung #493](BOOK_STUDY.md) wirken Buchkörper und sparsame Umgebung realistisch und räumlich; Inhalte und UI behalten klare gezeichnete Konturen, handgeschriebene Texte und ruhige, nicht zu blasse Farbflächen. Feste ruhende Ansichten werden durch gezielte Kamera-/Blattbewegung verbunden; der Ausgangswert der Rätselöffnung beträgt insgesamt drei Sekunden. B-A liefert die isolierte Studie, die reguläre Umstellung bleibt B-B. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
+Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Gemäß [Buchrichtung #493](BOOK_INTEGRATION.md) wirken Buchkörper und sparsame Umgebung realistisch und räumlich; Inhalte und UI behalten klare gezeichnete Konturen, handgeschriebene Texte und ruhige, nicht zu blasse Farbflächen. Feste ruhende Ansichten werden durch gezielte Kamera-/Blattbewegung verbunden; die Rätselöffnung beträgt insgesamt drei Sekunden. B-A ist der abgenommene Studienvorgänger, B-B integriert die Darstellung in den regulären Spieler. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
 
 Die Freigabe [HZ vom 20.10.2026](HAND_DRAWN_UI.md) überträgt die Handschrift
 durchgängig auf die Bedienelemente: gemäß HZ-A-FONT02 Tidy Hand für Standardtext
