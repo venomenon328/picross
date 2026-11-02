@@ -317,8 +317,7 @@ func run() -> void:
 	surface.size = Vector2i(1920, 1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(surface)
-	var app: Main = load("res://main.tscn").instantiate()
-	surface.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(surface)
 	var stage: String = OS.get_environment("P1_RENDER_STAGE")
 	var stages: Array[String] = ["layout","cells-f1","cells-f2","axis","h1"]
 	if not stage.is_empty() and not stage in stages:

@@ -48,10 +48,10 @@ func write_image(image: Image, path: String, label: String) -> void:
 		check(false,"start bounded PNG writer")
 
 class Baseline extends Main:
-	func create_store() -> SaveStore: return Study.Content.MemoryStore.new()
+	func create_store() -> SaveStore: return Study.StudyContent.MemoryStore.new()
 	func puzzle_definitions() -> Array[Dictionary]:
 		var result: Array[Dictionary] = []
-		var input: Dictionary = Study.Content.Inputs.read()
+		var input: Dictionary = Study.StudyContent.Inputs.read()
 		Registry.cached = input.registry
 		for data: Dictionary in input.definitions: result.append(data)
 		return result
@@ -506,17 +506,17 @@ func interruption_cases() -> void:
 				interruptions.append({"kind":kind,"phase":phase,"reason":reason,"state":study.state,"source_offsets":[source.scroll,source.right_scroll],"final_offsets":[study.app.album.scroll_vertical,study.app.album.right_scroll.scroll_vertical]})
 
 func fixture_cases() -> void:
-	var input: Dictionary = Study.Content.Inputs.read()
+	var input: Dictionary = Study.StudyContent.Inputs.read()
 	check(input.error.is_empty(),"normal registry and definition validators accept all 27 instances")
 	for field: String in ["id","key","save_slot","definition","reveal"]:
 		var bad: Dictionary = input.registry.duplicate(true)
 		bad.entries[24][field] = bad.entries[0][field]
-		check(not Study.Content.Inputs.validate(bad,input.definitions).is_empty(),"duplicate fixture binding rejected "+field)
+		check(not Study.StudyContent.Inputs.validate(bad,input.definitions).is_empty(),"duplicate fixture binding rejected "+field)
 	for field: String in ["id","definition_id","image"]:
 		var bad: Array = input.definitions.duplicate(true)
 		if field == "id": bad[24].id = bad[0].id
 		else: bad[24].reveal[field] = bad[0].reveal[field]
-		check(not Study.Content.Inputs.validate(input.registry,bad).is_empty(),"foreign fixture binding rejected "+field)
+		check(not Study.StudyContent.Inputs.validate(input.registry,bad).is_empty(),"foreign fixture binding rejected "+field)
 
 func measure_ink(work: bool) -> void:
 	# Inspect real transparent-rendered glyph/contour alpha, including antialiasing.

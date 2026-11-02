@@ -9,6 +9,7 @@ import re
 import zipfile
 
 from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, artifacts, checks, coverage
+from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
 INFO_ROUTES = [('work','settings'),('settings','work'),('work','help'),('help','work'),
           ('catalog','settings'),('settings','help'),('help','settings'),('settings','catalog'),
           ('catalog','help'),('help','catalog')]
@@ -183,7 +184,7 @@ def check_phases(report, expected, directory):
             raise ValueError('Incorrect native process outcome')
         python_checks = {'current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'kat2-adapter-export',
                          'kat2-adapter-register', 'kat2-imported-base-copies', 'kat2-image-processing', 'ea-image-processing', 'za1-test-only-registration',
-                         'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles', 'isolated-book-study'}
+                         'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles', 'regular-book-integration'}
         if ('log' in row) != (row['name'] not in python_checks):
             raise ValueError('Missing/unexpected native process log')
         if 'log' in row:
@@ -196,7 +197,7 @@ def check_phases(report, expected, directory):
 
 
 def validate_book_study(report, directory, identity, host):
-    """Require B-A's original results, not just a successful enclosing Python call."""
+    """Require shared presentation originals and the real B-B product lifecycle."""
     study = read(directory/'report.json')
     native = read(directory/'native.json')
     assertions = native.get('assertions', [])
@@ -235,7 +236,7 @@ def validate_book_study(report, directory, identity, host):
     for kind in f01_gestures:
         required_assertions.update('F01 '+label+' '+kind for label in ('starts','gesture','crosshair returns'))
     configurations = {(1280,720,1.25),(1920,1080,1.0),(2560,1440,1.25),(1920,1200,1.0)}
-    if (report.get('book_study') != study or study['package'] != 'B-A-N06-T01'
+    if (report.get('book_study') != study or study['package'] != 'B-B-T01'
             or study['host'] != host or any(study.get(k) != v for k,v in identity.items())
             or native['checks'] != len(assertions) or native['failures'] != []
             or not all(a.get('passed') is True for a in assertions)
@@ -310,36 +311,25 @@ def validate_book_study(report, directory, identity, host):
     if ([(e['source'],e['target']) for e in info_movie] != [('work','settings'),('settings','help'),('help','work'),('work','help'),('help','settings'),('settings','work'),('catalog','settings'),('settings','catalog'),('catalog','help'),('help','catalog')]
             or any((e['direction'],e['seconds']) != ((0,.65) if e['source'] in ('settings','help') and e['target'] in ('settings','help') else (1,.85) if e['target'] in ('settings','help') else (-1,.85)) for e in info_movie)):
         raise ValueError('Missing/incorrect information film choreography')
-    expected = ['book-version', 'book-import', 'book-native', 'book-movie', 'book-regular-import']
-    for target in ('windows', 'web'):
-        expected += ['book-regular-'+target+s for s in ('', '-content', '-isolation')]
-    for target in ('windows', 'web'):
-        expected += ['book-study-'+target+s for s in ('', '-pack')]
-    if host == 'Windows': expected += ['book-windows-exported-motion']
-    if ([p['name'] for p in study['phases']] != expected
-            or any(p['exit_code'] != 0 or p['timed_out'] or p['seconds'] < 0 for p in study['phases'])
-            or study['study_web_features'] != dict(renderer='gl_compatibility', threads=False, extensions=False, browser_probe='not requested')):
-        raise ValueError('Incomplete/failed book study phases or Web feature contract')
+    expected = ['book-version', 'book-import', 'book-integration', 'book-native', 'book-movie']
+    integration = read(directory/'integration/integration.json')
+    source_root = Path(__file__).resolve().parents[1]
+    if (integration.get('passed') is not True or not integration.get('assertions')
+            or any(row.get('passed') is not True for row in integration['assertions'])
+            or not INTEGRATION_ASSERTIONS <= {row.get('label') for row in integration['assertions']}
+            or any(study.get('sources', {}).get(name) != hashlib.sha256((source_root/name).read_bytes()).hexdigest() for name in BOOK_SOURCES)
+            or study.get('scope') != 'shared-presentation-and-product-lifecycle'
+            or [p['name'] for p in study['phases']] != expected
+            or any(p['exit_code'] != 0 or p['timed_out'] or p['seconds'] < 0 for p in study['phases'])):
+        raise ValueError('Incomplete/failed shared book or product lifecycle phases')
     names = set(study['files'])
     actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()} - {'report.json'}
     required = {'opening.avi', 'movie.json', 'movie-final.png', 'native.json', 'catalog.png', 'opening-middle.png', 'opening-back.png',
                 'return-middle.png', 'return-edited-work.png', 'paper-page-one.png', 'paper-page-two.png', 'paper-page-two-return.png',
                 'return-handoff-texture.png','return-handoff-direct.png','control-states.png',
                 'page-forward.png', 'page-backward.png', 'material-original-detail.png', 'material-study-detail.png',
-                'windows/book-study.exe', 'windows/book-study.pck', 'web/index.html', 'web/index.pck', 'web/index.wasm'}
+                'integration/integration.json'}
     required.update('logs/'+name+'.log' for name in expected)
-    if host == 'Windows':
-        required.update({'windows-information-settings.png','windows-information-help.png'})
-        required.update({'windows-exported-work.png','windows-exported-catalog.png','windows-native.json','windows-standard.png','windows-maximized.png','windows-restored.png'})
-        windows = read(directory/'windows-native.json')
-        states = windows['windows']
-        if (windows['passed'] is not True or windows['cursor'] != 2 or windows['id'] != 'T-06'
-                or [(r['stage'],r['mode']) for r in states] != [('standard',0),('maximized',2),('restored',0)]
-                or states[0]['client'] != states[2]['client'] or states[0]['client'] == states[1]['client']
-                or any(r['client'] != r['framebuffer'] or r['ui_scale'] != 1.0 or r['dpi'] <= 0 or r['os_scale'] <= 0 for r in states)):
-            raise ValueError('Incomplete actual Windows maximize/restore proof')
-        if windows['information_routes'] != [dict(entry=s,pan=o,**{'return':'work'},cursor=2) for s,o in [('settings','help'),('help','settings')]]:
-            raise ValueError('Missing actual Windows information routes')
     required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work', 'catalog') for width in (1280,1920,2560))
     required.update(expected_edges)
     required.update(f'tooltip-{kind}-{w}.png' for w in (1280,1920,2560) for kind in captions | empty if kind != 'click-before')

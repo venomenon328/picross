@@ -1,21 +1,17 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**Buch / #493, #496 · B-A-N06:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
-führen realistische Materialien, gezielte Bewegung und gezeichnete Seiteninhalte
-zusammen. Die folgenden BP-/Z2-Lieferbelege bleiben historisch gebunden; das
-bisherige A-Buch bleibt bis B-B die reguläre Darstellung. N03 verwendet eigene
-Lederflächen und zusammenhängende Rand-/Rückengeometrie; A bleibt Qualitätsreferenz.
-N04 bereinigt die beiden inneren Enden und ergänzt eine zusammenhängende echte
-Tischbildressource hinter dem Buch. Papierkoordinaten gelten auch bei 16:10;
-links beginnende Kartenbelegung und zwei unabhängige Scrollstände bleiben Studie.
-N05 ordnet Einstellungen links und Hilfe rechts im Arbeitsnahmaßstab an. Reine
-Seitenwechsel pannen in 0,65 s, Eintritt/Rückkehr blättern in 0,85 s mit dem zum
-Ursprung passenden Zoom. Beide Seiten bewegen ihren eigenen Inhalt mit dem Buch;
-die generische Informationsüberschrift entfällt. Bestehende Controls, Schriften,
-HZ-Icons und Arbeitskapazitäten bleiben erhalten. N06 ersetzt den breiten
-Mittelspalt durch ein enges Tal zwischen räumlichen Papierschultern. Lederne
-Gelenke gehören zur Deckel-/Rückengeometrie; ihre freien Enden bleiben sichtbar.
-N05/F01 sind integriert; neue Abnahmen R08 und M01 bleiben getrennt offen.
+**B-B / #498 ? regul?re Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene r?umliche Buchdarstellung mit echtem
+Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
+f?llen zuerst zw?lf Karten links, dann zw?lf rechts; beide H?lften scrollen
+unabh?ngig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
+bewusst ge?nderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unver?ndert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+[B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
+B-A-R08-V02 und B-A-M01 sind ?ber PR #497 abgeschlossen; die
+[Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
+Merge und Deployment sind getrennt offen.
 
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02

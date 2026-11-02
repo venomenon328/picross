@@ -249,8 +249,7 @@ func run() -> void:
 	canvas.size = Vector2i(1920,1080)
 	canvas.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(canvas)
-	app = load("res://main.tscn").instantiate()
-	canvas.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(canvas)
 	await process_frame
 	app.size = Vector2(canvas.size)
 	var expected_path: String = output.path_join("v2-expected.json")

@@ -76,8 +76,7 @@ static func run(t: SceneTree) -> void:
 	model_cases(t)
 	var old_root: String = Store.test_root_override
 	Store.test_root_override += "-zr"
-	var app: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	app.sessions[0]=Session.new(pattern())
 	app.select_puzzle(0)
 	app.open_puzzle()
@@ -172,6 +171,6 @@ static func run(t: SceneTree) -> void:
 	t.check(b.cell_buttons_blocked and not app.session.gesture.active,"ZR chord barrier survives first Up while origin held")
 	t.mouse_button(a,false)
 	t.check(not b.cell_buttons_blocked,"ZR ambiguous chord clears after releases")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await t.process_frame
 	Store.test_root_override=old_root

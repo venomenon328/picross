@@ -11,8 +11,7 @@ static func full_grid(board: Board) -> bool:
 
 static func run(t: SceneTree) -> void:
 	t.root.size = Vector2i(1920, 1080)
-	var app: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	app.select_puzzle(2)
 	await t.process_frame
@@ -43,5 +42,5 @@ static func run(t: SceneTree) -> void:
 			var screen: Rect2 = Rect2(Vector2.ZERO, Vector2(dimensions))
 			t.check(screen.encloses(viewport_global) and not viewport_global.intersects(app.tools_scroll.get_global_rect().grow(4.0)), "ZV50-A03 zoom viewport stays clear of right V3 tools at " + str(dimensions) + " scale " + str(scale))
 			t.check(app.board.view.cell_size <= app.board.fit_ceiling and full_grid(app.board), "VS2 resize/UI always clamps full frame")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await t.process_frame

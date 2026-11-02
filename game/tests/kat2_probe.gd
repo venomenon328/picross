@@ -145,10 +145,9 @@ func save_bytes(excluded: String = "") -> Dictionary:
 
 func new_app() -> void:
 	if app != null:
-		app.free()
+		preload("res://tests/book_fixture.gd").dispose(app)
 	var started: int = Time.get_ticks_usec()
-	app = load("res://main.tscn").instantiate()
-	surface.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(surface)
 	# Existing KAT/KE scenarios bind their synthetic slots by canonical order.
 	# All their added dates are unknown; KU-B's large scenario tests real sorting.
 	if not mode in ["pages", "adapter", "empty", "invalid"]: app.album.choose_sort("added")
@@ -317,7 +316,7 @@ func choose_view(index: int) -> void:
 
 func information_profile(base: String, state: String) -> void:
 	if app != null:
-		app.free()
+		preload("res://tests/book_fixture.gd").dispose(app)
 		app = null
 	Store.test_root_override = base.path_join(state)
 	DirAccess.make_dir_recursive_absolute(Store.test_root_override)

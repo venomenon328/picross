@@ -271,8 +271,7 @@ func run() -> void:
 	canvas.size = Vector2i(1920,1080)
 	canvas.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(canvas)
-	app = load("res://main.tscn").instantiate()
-	canvas.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(canvas)
 	await settle()
 	check(title_ok(),"KB catalog explicitly uses original Bakso")
 	var font = app.WORK_TITLE_FONT
@@ -482,6 +481,6 @@ func run() -> void:
 	report.sidebar_metadata_sha256=FileAccess.get_sha256("res://art/book/frames.json")
 	FileAccess.open(output.path_join("v3-report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	print("VS2_V3_", "OK" if failures==0 else "FAILED", " checks=",checks," failures=",failures)
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
 	quit(0 if failures==0 else 1)

@@ -4,9 +4,7 @@ var pilot_index: int = 2
 
 func setup(viewport: Viewport) -> void:
 	target = viewport
-	app = load("res://main.tscn").instantiate()
-	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	target.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(target)
 	await process_frame
 	await process_frame
 	check(app.sessions.size() == Definition.catalog_ids().size(), "all current registrations load")

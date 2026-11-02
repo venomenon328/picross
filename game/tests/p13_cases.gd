@@ -170,8 +170,7 @@ static func run(t: SceneTree) -> void:
 		var untouched: FileAccess = FileAccess.open(retired.root.path_join(id + ".json"),FileAccess.WRITE)
 		untouched.store_string("retired slot preserved " + id)
 		untouched.close()
-	var app: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	var first_action: Array[Dictionary] = [{"index": 0, "before": -1, "after": 1}]
 	t.check(app.session.player.commit(first_action), "P1.3 UI first slot action")
@@ -196,10 +195,9 @@ static func run(t: SceneTree) -> void:
 	var broken_backup: FileAccess = FileAccess.open(app.store.path_for("t01", ".bak"), FileAccess.WRITE)
 	broken_backup.store_string("{bad backup")
 	broken_backup.close()
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await t.process_frame
-	var recovery_ui: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(recovery_ui)
+	var recovery_ui: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	t.check(recovery_ui.slot_status[0] == "backup_invalid" and recovery_ui.choices[recovery_ui.album.visible_ids.find("T-01")].diagnosis.text.contains("Backup beschädigt") and recovery_ui.album.repair_buttons.has("T-01"), "P1.3 broken backup visibly reported at startup")
 	recovery_ui._ask_repair()
@@ -208,19 +206,17 @@ static func run(t: SceneTree) -> void:
 	var broken_primary: FileAccess = FileAccess.open(recovery_ui.store.path_for("t01"), FileAccess.WRITE)
 	broken_primary.store_string("{bad primary")
 	broken_primary.close()
-	recovery_ui.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(recovery_ui,true)
 	await t.process_frame
-	var backup_ui: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(backup_ui)
+	var backup_ui: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	t.check(backup_ui.slot_status[0] == "recovered" and backup_ui.choices[backup_ui.album.visible_ids.find("T-01")].diagnosis.text.contains("Backup geladen") and backup_ui.album.repair_buttons.has("T-01"), "P1.3 backup recovery visibly reported at startup")
 	backup_ui._ask_repair()
 	backup_ui.repair_dialog.confirmed.emit()
 	t.check(backup_ui.store.load_slot(t01).status == "loaded" and backup_ui.status_label.text.is_empty(), "P1.3 confirmed recovery resumes saving")
-	backup_ui.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(backup_ui,true)
 	await t.process_frame
-	var failure_ui: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(failure_ui)
+	var failure_ui: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	failure_ui.open_puzzle()
 	failure_ui.board.eraser = not failure_ui.board.eraser # Guaranteed pending valid view change, even at fit.
@@ -254,10 +250,9 @@ static func run(t: SceneTree) -> void:
 	t.check(not failure_ui._save_current() and failure_ui.slot_status[0] == "recovered" and failure_ui.work_repair_button.visible, "N-02 interrupted replacement exposes same-process recovery")
 	failure_ui.store.fail_step = ""
 	var saved_backup: String = FileAccess.get_file_as_string(failure_ui.store.path_for("t01", ".bak"))
-	failure_ui.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(failure_ui,true)
 	await t.process_frame
-	var missing_ui: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(missing_ui)
+	var missing_ui: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	t.check(missing_ui.slot_status[0] == "recovered" and missing_ui.album.repair_buttons.has("T-01") and not FileAccess.file_exists(missing_ui.store.path_for("t01")), "N-02 missing primary loads backup visibly after restart")
 	missing_ui.open_puzzle()
@@ -271,15 +266,14 @@ static func run(t: SceneTree) -> void:
 	missing_ui._ask_repair()
 	missing_ui.repair_dialog.confirmed.emit()
 	t.check(missing_ui.store.load_slot(t01).status == "loaded" and missing_ui.status_label.text.is_empty(), "N-02 confirmed takeover permits saving")
-	missing_ui.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(missing_ui,true)
 	await t.process_frame
 	var t02: Dictionary = Definition.load_fixture("t02")
 	var color_store: SaveStore = SaveStore.new(SaveStore.test_root_override)
 	color_store.fail_step = "after_rotation"
 	t.check(not color_store.write_slot(Session.new(t02), Session.new(t02).view_state).is_empty() and color_store.load_slot(t02).status == "recovered", "N-02 color fixture interrupted after rotation")
 	var color_backup: String = FileAccess.get_file_as_string(color_store.path_for("t02", ".bak"))
-	var color_ui: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(color_ui)
+	var color_ui: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	color_ui.select_puzzle(1)
 	color_ui.board.active_color = 2
@@ -288,4 +282,4 @@ static func run(t: SceneTree) -> void:
 	color_ui._ask_repair()
 	color_ui.repair_dialog.confirmed.emit()
 	t.check(color_store.load_slot(t02).status == "loaded" and int(color_store.load_slot(t02).data.view.active_color) == 2, "N-02 confirmed color-slot takeover saves changed color")
-	color_ui.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(color_ui,true)

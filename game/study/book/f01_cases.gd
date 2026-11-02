@@ -61,7 +61,7 @@ func run(context: SceneTree) -> Array:
 	proof.root.add_child(viewport)
 	viewport.notify_mouse_entered()
 	board = BoardType.new()
-	board.session = Session.new(proof.Study.Content.Inputs.read().definitions[0])
+	board.session = Session.new(proof.Study.StudyContent.Inputs.read().definitions[0])
 	board.size = Vector2(440,450)
 	viewport.add_child(board)
 	board.fit_all()

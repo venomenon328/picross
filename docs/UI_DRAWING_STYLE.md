@@ -1,11 +1,11 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**B-A-N05 / #493:** Die [isolierte Buchstudie](BOOK_STUDY.md) verstärkt beim
+**B-B / #498:** Die [regul?re Buchdarstellung](BOOK_INTEGRATION.md) verstärkt beim
 Hover/Druck die vorhandene transparente Buttonkontur. Ein isolierter kurzer
 oberer Hoverstrich entfällt; Auswahl, Deaktivierung und Fokus behalten ihre
 Zeichen. Sinnvolle verzögerte Hilfen bleiben, leere Panels entfallen. HZ-Fonts,
 Icons, Farbproben und große SL-Rahmen bleiben unverändert.
-N05 verwendet dieselben HZ-Icons für Katalogpfeil links, Menü und Hilfe im rechten
+Die aus N05 ?bernommene Darstellung verwendet dieselben HZ-Icons für Katalogpfeil links, Menü und Hilfe im rechten
 Arbeitskopf. Informationsseiten erhalten echte reguläre Optionscontrols, eigene
 Scrollflächen und Seitentitel statt globaler Informationsüberschrift. Übergänge
 schließen Popups/Tooltips; Schrift- und Trefferbudgets werden nicht verkleinert.

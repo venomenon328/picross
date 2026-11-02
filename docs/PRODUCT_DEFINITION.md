@@ -1,24 +1,17 @@
 # Produktdefinition: picross
 
-**Buch / #493, #496 · B-A-N06:** Katalog-Doppelseite mit mittiger Bindung,
-kurzes richtungsabhängiges Blättern und drei einzelne Blätter zur rechten
-Arbeitsseite sind in der isolierten Studie umgesetzt. Sichtbare Buchkante, organische
-Papiertextur, ruhende Falzwölbung, transparente Controls und animierte Rückkehr
-ergänzen die Revision ohne kleinere Arbeitsbudgets. Die bestätigte Richtung verbindet einen realistischen
-räumlichen Buchkörper mit gezeichneten Inhalten/UI. Die [isolierte Studie](BOOK_STUDY.md)
-ändert den normalen Spielstart nicht; reguläre Integration und persönliche
-Kandidatenwahl bleiben getrennt. N04 bereinigt innere Papier-/Bindungsenden,
-ergänzt ein eigenständiges Tischbild und hält Controls auch bei 16:10 auf dem
-Papier. Erst bis zu zwölf Karten links, dann rechts; jede Hälfte scrollt unabhängig.
-N01–N17 und die gültigen 27 Instanzen bleiben erhalten. N05 ergänzt eine nahe
-Informationsdoppelseite mit Einstellungen links und Hilfe rechts. Blatt-/Pan-/
-Zoomwege führen zum ursprünglichen Katalog beziehungsweise selben Rätsel zurück;
-bewusst geänderte Einstellungen bleiben wirksam. Der rechte Arbeitskopf bietet
-Katalog, Einstellungen und Hilfe; der alte linke Reiter entfällt. N05/F01 sind
-über PR #495 integriert. N06 führt die Papierhälften zu einem engen Falztal mit
-realen Schultern und formt die Ledergelenke im zusammenhängenden Einband.
-Die bisherigen Animationen und UI-/Inputverträge bleiben erhalten.
-Unabhängiges R08, persönliche B-A-M01, B-B und Merge bleiben offen.
+**B-B / #498 ? regul?re Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene r?umliche Buchdarstellung mit echtem
+Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
+f?llen zuerst zw?lf Karten links, dann zw?lf rechts; beide H?lften scrollen
+unabh?ngig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
+bewusst ge?nderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unver?ndert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+[B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
+B-A-R08-V02 und B-A-M01 sind ?ber PR #497 abgeschlossen; die
+[Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
+Merge und Deployment sind getrennt offen.
 
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil
