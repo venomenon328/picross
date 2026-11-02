@@ -458,4 +458,3 @@ func _notification(what: int) -> void:
 		held_buttons &= Input.get_mouse_button_mask()
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		if app != null: request_quit()
-
