@@ -39,7 +39,7 @@ def main():
                         page.on('response', lambda response: evidence['http_failures'].append(
                             {'url':response.url,'status':response.status}) if response.status >= 400 else None)
                         page.on('pageerror', lambda error: errors.append(str(error)))
-                        page.on('console', lambda msg: errors.append(msg.text) if msg.type=='error' else None)
+                        page.on('console', lambda msg: errors.append({'text':msg.text,'location':msg.location}) if msg.type=='error' else None)
                         page.goto(url)
                         page.wait_for_function('window.picrossStorage && picrossStorage.ready && !picrossStorage.pending && document.getElementById("message").hidden', timeout=60000)
                         assert page.evaluate('window.picrossProbe === undefined')
