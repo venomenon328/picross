@@ -27,14 +27,17 @@ Das Gate kontrolliert links beginnende Belegung, unabhängige Offsets einschlie�
 Abbruch/Resize, Originalglyphenhüllen und explizite Breite/Höhe statt 16:9-Ableitung.
 Tischquelle/Importkosten und beidseitige Paketisolation bleiben gebunden. Ein
 tatsächlicher Windows-Exportlauf ergänzt Standard/Maximieren/Wiederherstellen;
-Linux behauptet diese Probe nicht. Das native Phasenlimit bleibt 300 Sekunden.
+Linux behauptet diese Probe nicht. Für B-B erhält ausschließlich `book-native`
+nach Eigentümerklarstellung vom 02.11.2026 einen 600-s-Hangschutz statt 300 s;
+Laufzeitziele werden berichtet, sind aber keine zusätzlichen Abnahmeblocker.
 N05 erweitert denselben Lauf um zehn echte Informationsrouten, zwei nahe
 Seitenlayouts in vier gezielten Flächen, sechs native Unterbrechungen und eine
 günstige vollständige Entscheidungstabelle. Fünf bisherige plus vier neue
 Handoffs behalten die Grenzen 4/0,1 samt Versatz-/Alphagegenprobe. Der unabhängige
 Guard prüft Ursprung, ungleiche Offsets, tatsächliche Kamera-/Blattspuren, native
-Hüllen, Optionsänderung und Film. Keine neue CI-Gruppe, Budgeterhöhung oder
-Browserpflicht. N06 ergänzt vier 640×128-Tiefenbilder des echten Mesh-/Vertexpfads:
+Hüllen, Optionsänderung und Film. N05 führte keine neue CI-Gruppe, Budgeterhöhung
+oder Browserpflicht ein; die spätere B-B-Ausnahme steht oben.
+N06 ergänzt vier 640×128-Tiefenbilder des echten Mesh-/Vertexpfads:
 Ruhe, gegenüberliegende Landung, verbreiterter Spalt und flache Geometrie.
 Die beiden Gegenbeispiele müssen scheitern; tatsächliche Leder-/Blockarrays
 prüfen Gelenktiefe und positiven Abstand unter den bestehenden Mengenbudgets.

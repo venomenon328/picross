@@ -6,7 +6,10 @@ Stand: 26.10.2026 · Version 3.3 · [CI2-Spezifikation #412](https://github.com/
 und den regulären Produktlebenszyklus gemäß [B-B-T01](B_B_VERIFICATION.md) und
 [nativem Belegvertrag](CI_C_NATIVE_GROUPS.md) aus. Die übernommenen N01–N21-/F01-
 Prüfungen, neun strengen Handoffs und Gegenproben bleiben erhalten; eine zweite
-Studien-Exportmatrix entfällt. Native Phasen behalten das 300-s-Limit.
+Studien-Exportmatrix entfällt. Nach Eigentümerklarstellung vom 02.11.2026
+sind B-B-Laufzeitziele keine zusätzlichen Abnahmeblocker. Ausschließlich
+`book-native` erhält einen 600-s-Hangschutz statt 300 s; die übrigen Phasen
+behalten ihre Grenzen. Zielüberschreitungen werden gemessen und berichtet.
 Der Paketauftrag autorisiert zusätzlich genau den manuellen Chromium-Kurzlauf
 `browser_scope=short`. Windowsoriginale und getrenntes Selbstreview werden
 eigens gebunden; unabhängiges B-B-R01 und persönliches B-B-M01 bleiben offen.

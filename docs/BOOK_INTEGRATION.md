@@ -107,19 +107,18 @@ Die Exportgruppe führt die gemeinsame Darstellungs-/Lifecycleprüfung einmal
 aus. Eine zusätzliche Studienexportmatrix ist nicht Teil von B-B. Producer,
 Quellinventar `tools/book_contract.py` und unabhängiger Ergebnisguard binden
 gemeinsam Originalberichte, notwendige Assertions, Phasen und Datei-Hashes.
-Die 300-s-Phasengrenze bleibt. Die kurze Historyroute behält höchstens 20
+Nach Eigentümerklarstellung vom 02.11.2026 sind Laufzeitziele keine zusätzlichen
+Abnahmeblocker für B-B. Die gemeinsame native Buchprüfung (`book-native`)
+erhält einen endlichen 600-s-Hangschutz; die übrigen Buchphasen behalten 300 s.
+Messwerte und Zielüberschreitungen werden offen berichtet. Diese Entscheidung
+löst gezielt die vorherige 300-s-Bindung von B-B-V01 ab; fachliche Assertions,
+Pixelgrenzen, Originalumfang und Produktzeiten bleiben erhalten.
+Die kurze Historyroute behält höchstens 20
 Kommandos, sechs neue Transaktionen und genau zwei echte Prozesse.
 Die Exportgruppe wartet unter Linux auf die bereits laufenden Katalog-/Grafik-
 gruppen, bevor sie den neuen 3D-Buchnachweis beginnt. So konkurrieren diese
-Software-Renderer nicht im unveränderten 300-s-Fenster; Prüfungen, Auflösung
-und Phasengrenzen bleiben vollständig erhalten.
-Der Linux-Buchharness begrenzt die
-[llvmpipe-Renderthreads](https://docs.mesa3d.org/envvars.html#envvar-LP_NUM_THREADS)
-auf die verfügbaren CPUs abzüglich zweier Plätze für Szenenverarbeitung und den
-bereits begrenzten PNG-Schreiber, mindestens einen Renderthread. CPU-Anzahl und
-Threadwahl werden protokolliert. Dies verändert ausschließlich die isolierte
-Prüfumgebung; Eingaben, Draw-/Wartezyklen, Pixel-/Originalumfang, Produktuhr und
-300-s-Grenze bleiben unverändert. Wirkung und Grenzen werden tatsächlich gemessen.
+Software-Renderer nicht um dieselben CPUs; Prüfungen und Auflösung bleiben
+vollständig erhalten. Für die Renderthreads gilt die Renderer-Vorgabe.
 
 `tools/book_windows_probe.py --build-cache <cache> --source <ziel>` exportiert
 headless den regulären Windowsroot mit synthetischen Daten. Zwei kleine

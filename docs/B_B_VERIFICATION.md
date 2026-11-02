@@ -36,28 +36,33 @@ der Lifecycleprüfung, gemeinsame native Bewegung, Windows und Chromium.
 
 ## Entwicklungsbefunde und Beleggrenzen
 
-Der lokale Entwicklungsstand `173a162742d933fa890a59ccc949d44a810091c2`
-bestand 1125 gemeinsame native Assertions und alle neun strengen Handoffs mit
-Gegenproben. Gemessene Phasen: Version 1,263 s, Import 9,950 s, reguläre
-Integration 30,215 s, gemeinsame native Prüfung 192,356 s und Film 25,451 s.
-Die reale Bildfolge enthält 644 Frames bei 30 fps (21,467 s). Die eigene Sichtung
-umfasste gebundene Bewegungszwischenbilder sowie Originale für Arbeit,
-Information, Falzrand und Windowsfehler. Sie wird für die abschließende Lieferung
-anhand ihrer aktuellen Originale ergänzt; keine behauptete persönliche Abnahme.
-
-Der damalige exportierte Windowslauf dauerte 74,081 s und bestand 32 echte
+Der abschließende exportierte Windowslauf am Laufzeitstand
+`41c1570cc9022400257bfb1a8f5cd7d1ca48198c` dauerte 87,598 s und bestand 32 echte
 Pointer-Rundwege, Zellaktionen, Undo/Redo, Farbwechsel, Release außerhalb,
 Fokus/Resize, UI100/UI125, Maximieren/Wiederherstellen und Save-/Quitfehler mit
-Retry. Spätere Layout-/Savekorrekturen verlangen den separat freigegebenen kurzen
-Abschlusslauf. Dieser Zwischenstand ersetzt ihn nicht. Desktop, tatsächlicher
-Client/Framebuffer, OS-/UI-Skalierung, DPI und Renderer stehen getrennt in den
-Rohberichten; Linuxbilder ersetzen keinen Windowsnachweis.
+Retry. Auch der reguläre Start ohne Zusatzargumente wurde geprüft.
+Die freigegebene Auswahl von acht unveränderten Fensterbildern samt synthetischen
+Spuren ist im Lieferindex revisions- und hashgebunden zugänglich.
+
+Spätere Änderungen betreffen ausschließlich Prüfprogramme und Dokumentation.
+Der erneut headless geprüfte Windows-Export an `118fb0a` enthält dieselben
+Laufzeitressourcen: 217 von 218 PCK-Dateien sind bytegleich; nur generierte
+Szenenkennungen der Hauptszene unterscheiden sich. Der Index bindet beide
+Exporthashes und diesen tatsächlichen Ressourcenvergleich. Das ist eine
+begründete Wiederverwendung des Windowsnachweises, kein behaupteter neuer
+Desktoplauf oder bytegleicher PCK. Desktop, Client/Framebuffer, OS-/UI-Skalierung,
+DPI und Renderer stehen getrennt in den Rohberichten; Linuxbilder ersetzen
+keinen Windowsnachweis. Aktuelle native Originale und Bewegung werden am
+abschließenden CI-Stand gesichtet und im Lieferindex gebunden.
 
 Die CI-Nacharbeit korrigierte veraltete Navigationsannahmen kleiner Prüfungen,
 einen überlappenden Kopfbereich, die Kartenwahl in gescrollten Albumhälften und
 einen echten ausstehenden Savefehler beim Informationswechsel aus dem Katalog.
 Der Retry beseitigt die Fehlermeldung sofort unter Erhalt des Filters.
-Pixelgrenzen, Produktzeiten und die 300-s-Phasengrenze bleiben unverändert.
+Pixelgrenzen und Produktzeiten bleiben unverändert. Nach der
+Eigentümerklarstellung vom 02.11.2026 sind Laufzeitziele keine zusätzlichen
+B-B-Abnahmeblocker; ausschließlich `book-native` erhält 600 s Hangschutz.
+Die übrigen Buchphasen behalten 300 s. Dies ist keine gemessene Beschleunigung.
 Fehlgeschlagene Zwischenläufe einschließlich Chromium-Grafikinitialisierung
 werden im Lieferindex vom abschließenden Erfolg unterschieden.
 
