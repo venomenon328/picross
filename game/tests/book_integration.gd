@@ -128,7 +128,14 @@ func run() -> void:
 	check(app.slot_status[1] == "recovered" and not FileAccess.file_exists(seed.path_for("t02")),"backup-only load stays write blocked")
 	check(book.request_open(other),"backup can be viewed")
 	await settled()
+	check(book.information_routes.request("settings"),"read-only backup can open settings")
+	await settled()
 	check(not app._save_current(),"backup-only write requires confirmation")
+	var screen := Rect2(Vector2.ZERO,Vector2(root.size))
+	check(screen.encloses(app.status_label.get_global_rect()) and screen.encloses(app.work_repair_button.get_global_rect())
+		and app.status_label.get_global_rect().end.y <= app.work_repair_button.get_global_rect().position.y
+		and app.work_repair_button.get_global_rect().end.x <= book.projected_information(-1).end.x,
+		"information recovery remains on reachable left paper")
 	app.leave_app()
 	await frames()
 	check(bytes(seed.path_for("t02",".bak")) == frozen and not FileAccess.file_exists(seed.path_for("t02")) and app.work_repair_button.visible,"backup-only quit preserves bytes and exposes recovery")

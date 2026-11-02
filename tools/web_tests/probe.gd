@@ -71,7 +71,7 @@ func observe(delta: float) -> void:
 	var origin: Vector2 = board.global_position + board.view.origin
 	var sort_popup: PopupMenu = album.sort_choice.get_popup()
 	var data: Dictionary = {"controls": controls, "labels":labels,"slots": slots, "slot_status": slot_status,
-		"book":{"root":book.get_script().resource_path,"presentation":"res://book/main.gd","state":book.state,
+		"book":{"root":book.get_script().resource_path,"presentation":book.get_script().get_base_script().resource_path,"state":book.state,
 			"moving":book.state in [book.State.PREPARING,book.State.OPENING],"blocked":book.release_barrier,
 			"right_scroll":album.right_scroll.scroll_vertical,"information_section":information_section},
 		"hz_c":{"small_size":UiText.small_size(ui_scale),

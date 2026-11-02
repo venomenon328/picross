@@ -162,10 +162,16 @@ func _save_action_visible() -> bool:
 	return super._save_action_visible() or (save_retry != null and save_retry.visible)
 
 func _update_status() -> void:
+	var prior_status: bool = status_label != null and status_label.visible
+	var prior_repair: bool = work_repair_button != null and work_repair_button.visible
 	super._update_status()
+	if session == null and status_label != null:
+		status_label.hide()
+		if work_repair_button != null: work_repair_button.hide()
 	if save_retry != null:
 		var visible_retry: bool = session != null and not slot_errors[sessions.find(session)].is_empty() and not work_repair_button.visible
-		if save_retry.visible != visible_retry:
+		var information_changed: bool = information.visible and (prior_status != status_label.visible or prior_repair != work_repair_button.visible)
+		if save_retry.visible != visible_retry or information_changed:
 			save_retry.visible = visible_retry
 			_layout_book()
 

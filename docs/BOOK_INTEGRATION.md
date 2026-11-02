@@ -117,6 +117,10 @@ beziehungsweise einer Studienbeigabe scheitern lassen. Der getrennte Desktoplauf
 `--source <ziel> --output <belege> --head <sha> --fold` verwendet bytegleiche
 EXE/PCK, isolierte Profile und den rein lesenden externen Beobachter. OS-Eingaben
 prüfen auch einen realen Dateisystemfehler, verweigertes Fensterschließen und Retry.
+Dieser exklusive Desktoplauf ist nach Eigentümerentscheidung vom 02.11.2026
+nur für die aktuelle B-B-Entwicklung beauftragt. Er wird nicht automatisch in
+Standardprüfungen aufgenommen. Spätere Läufe mit Fenstern/Maussteuerung benötigen
+einen passenden ausdrücklichen Auftrag und vorherige Desktopfreigabe.
 
 Chromium ist für diesen Auftrag ausdrücklich als `browser_scope=short`
 beauftragt. C01–C08 verwenden die neue Buchpräsentation mit echter Eingabe,

@@ -173,7 +173,9 @@ Keine Nachbildung seiner Oberfläche, Anordnung, Palette, Figuren oder Zellmotiv
 keine Übernahme fremder Assets. Die Vergleichsbilder im Chat sind keine Pflichtassets
 oder mathematischen Rätseldaten für die spätere Umsetzung.
 
-Die gewählte A-Buchkomposition bleibt Grundlage. GD-03/GP-03 wurden für die
+Die aus der A-Buchkomposition übernommenen Arbeitsbudgets bleiben Grundlage;
+die räumliche Darstellung folgt inzwischen [B-B](BOOK_INTEGRATION.md).
+GD-03/GP-03 wurden für die
 gezielte Untersuchung der Hinweisziffern geöffnet: Schriftform, Gewicht, optischer
 Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Seit V3
 waren Bakso-Arbeitstitel, sonstige Fraunces-Überschriften und Plex-Sans-Bedientexte

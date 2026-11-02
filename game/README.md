@@ -284,10 +284,11 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   in ganzen Slots eingerastet. Vorübergehende Vollanzeige bewahrt die Anker auch
   beim Speichern und Neustart; beim Verengen kehrt derselbe Lesebereich zurück.
   Die UI-Skalierung, Hinweisrücksetzung und H1 stehen auf der Informationsseite.
-  `?` führt direkt zur dort scrollbar erreichbaren Bedienhilfe; Menü und rechter
-  Pfeil zu den Einstellungen. Auch bei 1280×720/UI 125 % bleiben Werkzeuge,
+  `?` führt direkt zur scrollbar erreichbaren Bedienhilfe rechts; das Menü
+  öffnet die Einstellungen links. Der Pfeil im Arbeitskopf führt zum Katalog.
+  Auch bei 1280×720/UI 125 % bleiben Werkzeuge,
   eigene Miniatur und Hinweiszugriff auf der Arbeitsseite. Der Rückpfeil führt
-  zum erhaltenen Arbeitsstand zurück.
+  auf den Informationsseiten zum jeweiligen erhaltenen Ursprung zurück.
 
 Für den Abschluss genügen alle richtigen Füllungen ohne Zusatzfüllungen.
 Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild erscheinen
