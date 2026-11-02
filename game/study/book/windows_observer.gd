@@ -91,6 +91,7 @@ func snapshot(full: bool = false) -> Dictionary:
 		row["cell_size"] = board.view.cell_size
 		var index: int = app.album.visible_ids.find("T-06")
 		row["card"] = rect(app.album.choices[index]) if index >= 0 else []
+		row["card_clip"] = rect(app.album.right_scroll if index >= 12 else app.album.scroll)
 	return row
 
 func record(event: String, detail: Dictionary = {}) -> void:
