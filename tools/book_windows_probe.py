@@ -1,4 +1,4 @@
-"""B-A-N05-F01: bounded real Win32 input in the hash-bound exported study.
+"""Bounded real Win32 input in a hash-bound exported book player (B-B/F01).
 
 An external read-only autoload observes the pack's configured main scene and records
 state. No Viewport injection, model calls or real save directories. A separate
@@ -15,12 +15,80 @@ from pathlib import Path
 import platform
 import shutil
 import subprocess
+import tempfile
 import time
+import zipfile
 
 import p1_preflight as tc
 
 ROOT = Path(__file__).resolve().parents[1]
 OBSERVER = ROOT / 'game/study/book/windows_observer.gd'
+
+
+def build(cache: Path, output: Path) -> dict:
+    """Export the regular root/presets with synthetic inputs, without a window."""
+    from book_study import prepare
+    from p1_product import run_phase, require_clean_output
+    from p1_evidence import source_identity
+    identity = source_identity(ROOT)
+    if identity['source_tree_dirty']:
+        raise ValueError('A clean checkout is required for the Windows evidence export')
+    output.mkdir(parents=True, exist_ok=False)
+    logs = output/'logs'
+    logs.mkdir()
+    assets = (tc.EDITORS['Windows'], tc.TEMPLATES)
+    urls = tc.official_asset_urls(tc.request_json(tc.RELEASE_API), assets)
+    for asset in assets:
+        tc.download_asset(urls[asset.name], cache/asset.name, asset.sha256, 1200)
+    report = dict(package='B-B-Windows-synthetic-export', **identity, phases=[])
+    with tempfile.TemporaryDirectory(prefix='picross-book-windows-') as temp:
+        work = Path(temp)
+        engine = str(tc.extract_editor(cache/assets[0].name,work/'engine','Windows'))
+        tc.extract_windows_templates(cache/tc.TEMPLATES.name,tc.template_directory(work,'Windows'))
+        project = work/'game'
+        prepare(project)
+        env = tc.isolated_environment(work,'Windows')
+        registry = json.loads((project/'data/registry.json').read_text(encoding='utf-8'))
+        env['ZA1_PACK_COUNT'] = str(sum(e['visible'] for e in registry['entries']))
+        target = output/'windows/picross-p1.exe'
+        target.parent.mkdir()
+        base = ['--headless','--path',str(project)]
+        for name,args,marker in (
+            ('version',['--version'],tc.EXPECTED_VERSION),
+            ('import',[*base,'--import'],None),
+            ('export',[*base,'--export-debug','P1 Windows x86_64',str(target)],None),
+            ('content',['--headless','--main-pack',str(target.with_suffix('.pck')),
+                        '--script',str(ROOT/'game/tests/content_pack_probe.gd')],'CONTENT_PACK_OK'),
+        ):
+            result = run_phase('windows-book-'+name,[engine,*args],env,300,logs)
+            require_clean_output(result,marker)
+            report['phases'].append({k:v for k,v in result.items() if k != 'output'})
+        # Small resource overlays challenge the actual external PCK guard;
+        # they never enter the delivered player or require another full export.
+        probe_source = (ROOT/'game/tests/content_pack_probe.gd').read_text(encoding='utf-8')
+        probe_source = probe_source.replace('func _initialize() -> void:',
+            'func _initialize() -> void:\n\tassert(ProjectSettings.load_resource_pack(OS.get_environment("BOOK_NEGATIVE_PACK")))')
+        negative_probe = work/'negative_probe.gd'
+        negative_probe.write_text(probe_source,encoding='utf-8')
+        old_entry = '[gd_scene load_steps=2 format=3]\n[ext_resource type="Script" path="res://ui/main.gd" id="1"]\n[node name="OldEntry" type="Control"]\nscript = ExtResource("1")\n'
+        report['negative_controls'] = []
+        for case,files,marker in (
+            ('old-entry',{'main.tscn.remap':'[remap]\npath="res://old-entry.tscn"\n','old-entry.tscn':old_entry},'PCK regular book root, no hidden old entry'),
+            ('study-input',{'study/book/forbidden.json':'{"synthetic":true}\n'},'technical directory in PCK: res://study'),
+        ):
+            overlay = work/(case+'.zip')
+            with zipfile.ZipFile(overlay,'w') as archive:
+                for name,content in files.items(): archive.writestr(name,content)
+            env['BOOK_NEGATIVE_PACK'] = str(overlay)
+            result = run_phase('windows-book-negative-'+case,[engine,'--headless','--main-pack',str(target.with_suffix('.pck')),
+                                '--script',str(negative_probe)],env,90,logs)
+            if result['exit_code'] != 4 or marker not in result['output'] or 'SCRIPT ERROR' in result['output']:
+                raise RuntimeError('PCK negative control was not rejected: '+case)
+            report['negative_controls'].append(dict(case=case,rejected=True,exit_code=4,marker=marker))
+    report['files'] = {p.relative_to(output).as_posix():dict(bytes=p.stat().st_size,sha256=tc.sha256_file(p))
+                       for p in output.rglob('*') if p.is_file()}
+    (output/'report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8')
+    return report
 
 
 def probe(source: Path, output: Path, expected_head: str, fold: bool = False) -> dict:
@@ -33,21 +101,24 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
     dirty = subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()
     if checkout != expected_head or dirty:
         raise ValueError('Observer and driver require the same clean checkout as the export')
-    player = source / 'windows/book-study.exe'
-    for name in ('book-study.exe', 'book-study.pck'):
+    regular = report.get('package') == 'B-B-Windows-synthetic-export'
+    stem = 'picross-p1' if regular else 'book-study'
+    names = (stem+'.exe', stem+'.pck')
+    player = source / 'windows' / names[0]
+    for name in names:
         tc.verify_sha256(source / 'windows' / name, report['files']['windows/' + name]['sha256'])
     output.mkdir(parents=True, exist_ok=False)
     # Export templates ignore --script. Their documented override.cfg mechanism
     # adds only an observer to a private copy of the unchanged EXE and PCK.
     player_dir = output / 'player'
     player_dir.mkdir()
-    for name in ('book-study.exe', 'book-study.pck'):
+    for name in names:
         shutil.copyfile(source / 'windows' / name, player_dir / name)
         tc.verify_sha256(player_dir / name, report['files']['windows/' + name]['sha256'])
     shutil.copyfile(OBSERVER, player_dir / 'observer.gd')
     override = player_dir / 'override.cfg'
     override.write_text('[autoload]\nF01Observer="*'+(player_dir/'observer.gd').as_posix()+'"\n', encoding='utf-8')
-    player = player_dir / 'book-study.exe'
+    player = player_dir / names[0]
     user = ctypes.windll.user32
     user.SetProcessDpiAwarenessContext(ctypes.c_void_p(-4))
     for name, args in (
@@ -77,9 +148,9 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
                                creationflags=subprocess.CREATE_NO_WINDOW)
     hwnd = None
     held = set()
-    binding = dict(package='B-A-N06-W01' if fold else 'B-A-N05-F01-T01', source_commit=expected_head,
+    binding = dict(package='B-B-W01' if regular else 'B-A-N06-W01' if fold else 'B-A-N05-F01-T01', source_commit=expected_head,
                    base_commit=report['base_commit'], tested_checkout_commit=report['tested_checkout_commit'],
-                   export_files={n: report['files']['windows/'+n] for n in ('book-study.exe','book-study.pck')},
+                   export_files={n: report['files']['windows/'+n] for n in names},
                    observer_sha256=tc.sha256_file(OBSERVER), driver_sha256=tc.sha256_file(Path(__file__)),
                    override_sha256=tc.sha256_file(override),
                    platform=platform.platform(), stimulus='Win32 OS mouse; no Viewport injection',
@@ -175,6 +246,22 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
         s = state()
         return [s['grid'][0]+(x+.5)*s['cell_size'], s['grid'][1]+(y+.5)*s['cell_size']]
 
+    def open_card():
+        # UI scale and restored windows can move T-06 below the clip. Reach it
+        # with actual wheel input, never click the observer's off-screen rect.
+        for _ in range(24):
+            s = state()
+            point, clip = center(s['card']), s['card_clip']
+            if clip[1] + 4 <= point[1] <= clip[1] + clip[3] - 4:
+                click(point)
+                return
+            move(center(clip))
+            delta = -360 if point[1] >= clip[1] + clip[3] else 360
+            record('wheel', delta=delta)
+            user.mouse_event(0x0800, 0, 0, delta, 0)
+            time.sleep(.2)
+        raise RuntimeError('T-06 did not become reachable through real scrolling')
+
     def tooltip(label, key='help'):
         move(center(state()['tips'][key]['rect']), .72)
         s = wait(lambda: state() if state()['tips'][key]['visible'] else None)
@@ -206,6 +293,8 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
             return owned[0] if owned else None
         hwnd = wait(find)
         wait(lambda: state().get('card'))
+        if regular:
+            require(state()['presentation'] == 'res://book/main.gd', 'actual regular product root')
         hwnd = wait(find)
         record('window-ready', pid=process.pid, hwnd=hwnd)
         if fold:
@@ -221,7 +310,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
         time.sleep(.5)
         if fold:
             capture('fold-catalog-maximized-ui100')
-            click(center(state()['card']))
+            open_card()
             wait(lambda: state()['state'] == 3 and not state()['barrier'])
             fold_initial = state()
             capture('fold-work-ui100')
@@ -247,7 +336,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
             require(all(state()[k] == fold_initial[k] for k in ('cursor','cells','history')),
                     'fold Windows routes and scale/resize preserve initial history')
             # Restore the normal UI100 origin for the unchanged F01 route below.
-            click(center(state()['card']))
+            open_card()
             wait(lambda: state()['state'] == 3 and not state()['barrier'])
             click(center(state()['tips']['menu']['rect']))
             wait(lambda: state()['state'] == 4 and not state()['barrier'])
@@ -259,7 +348,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
             wait(lambda: state()['state'] == 0 and not state()['barrier'])
             user.ShowWindow(hwnd, 3)
             wait(lambda: state()['mode'] == 2)
-        click(center(state()['card']))
+        open_card()
         wait(lambda: state()['state'] == 3 and not state()['barrier'])
         initial = state()
         require(initial['selected'] == 'T-06', 'real catalog click opens T-06')
@@ -346,9 +435,33 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
         capture('outside-release-tooltip')
         binding['round_trips'] = 32
         saved = wait(lambda: state() if state()['memory'].get('cursor') == state()['cursor'] else None)
-        require(all(saved['memory'][k] == saved[k] for k in ('cells','history','cursor')), 'RAM snapshot preserves exact player state')
+        require(all(saved['memory'][k] == saved[k] for k in ('cells','history','cursor')), 'durable snapshot preserves exact player state')
         profile_files = [p.relative_to(output/'profile') for p in (output/'profile').rglob('*') if p.is_file()]
-        require(all('logs' in p.parts or 'shader_cache' in p.parts for p in profile_files), 'no save or preference files in isolated profile')
+        if regular:
+            # A directory at the temporary-file path causes an actual filesystem
+            # failure without mutating runtime state or touching a real profile.
+            slot = Path(saved['slot_path']).resolve()
+            if not slot.is_relative_to((output/'profile').resolve()):
+                raise ValueError('Observed save lies outside the isolated profile')
+            before_bytes = slot.read_bytes()
+            obstacle = slot.with_suffix('.tmp')
+            obstacle.mkdir()
+            try:
+                click(cell_point(8,8))
+                wait(lambda: state()['save_error'] and state()['retry_visible'])
+                user.PostMessageW(hwnd,0x10,0,0)
+                time.sleep(.3)
+                require(process.poll() is None and slot.read_bytes() == before_bytes,
+                        'native close rejects failed flush and preserves primary bytes')
+                capture('save-quit-failure')
+            finally:
+                obstacle.rmdir()
+            click(center(state()['retry']))
+            saved = wait(lambda: state() if not state()['save_error'] and state()['memory'].get('cursor') == state()['cursor'] else None)
+            require(all(saved['memory'][k] == saved[k] for k in ('cells','history','cursor')),
+                    'visible retry commits pending state after native close refusal')
+        else:
+            require(all('logs' in p.parts or 'shader_cache' in p.parts for p in profile_files), 'no save or preference files in isolated profile')
         binding['final_state'] = saved
         binding['passed'] = True
     except Exception as exc:
@@ -388,9 +501,15 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--source', required=True, type=Path)
-    parser.add_argument('--output', required=True, type=Path)
-    parser.add_argument('--head', required=True)
+    parser.add_argument('--output', type=Path)
+    parser.add_argument('--head')
+    parser.add_argument('--build-cache', type=Path, help='Only build a synthetic regular Windows export into --source; no desktop use')
     parser.add_argument('--fold', action='store_true', help='Include bounded N06 catalog/work/information UI100/125 and resize views')
     args = parser.parse_args()
-    result = probe(args.source.resolve(), args.output.resolve(), args.head, args.fold)
-    print(json.dumps({k:result[k] for k in ('passed','exit_code','seconds','round_trips')}))
+    if args.build_cache:
+        result = build(args.build_cache.resolve(),args.source.resolve())
+        print('B-B Windows export', result['source_commit'])
+    else:
+        if args.output is None or args.head is None: parser.error('--output and --head are required for desktop input')
+        result = probe(args.source.resolve(), args.output.resolve(), args.head, args.fold)
+        print(json.dumps({k:result[k] for k in ('passed','exit_code','seconds','round_trips')}))

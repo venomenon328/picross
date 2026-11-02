@@ -9,8 +9,7 @@ func run() -> void:
 	surface = SubViewport.new()
 	surface.size = Vector2i(1920, 1080)
 	root.add_child(surface)
-	app = load("res://main.tscn").instantiate()
-	surface.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(surface)
 	await process_frame
 	check(app.board is Regular and app.store.root == saved_root, "regular scene and isolated test save root")
 	check(app.sessions.size() == app.puzzle_definitions().size(), "all registered regular sheets available")
@@ -51,10 +50,9 @@ func run() -> void:
 	app.animation_toggle.button_pressed = true
 	check(app.board.effects.is_empty(), "reenabling never replays")
 	app.animation_toggle.button_pressed = false
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
-	app = load("res://main.tscn").instantiate()
-	surface.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(surface)
 	await process_frame
 	check(app.board.animations and app.animation_toggle.button_pressed, "new app ignores previous session choice")
 	# Real G1 reorientation and cancellation supersede old effects permanently.

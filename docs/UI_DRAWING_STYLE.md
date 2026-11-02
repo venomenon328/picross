@@ -1,11 +1,11 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**B-A-N05 / #493:** Die [isolierte Buchstudie](BOOK_STUDY.md) verstärkt beim
+**B-B / #498:** Die [reguläre Buchdarstellung](BOOK_INTEGRATION.md) verstärkt beim
 Hover/Druck die vorhandene transparente Buttonkontur. Ein isolierter kurzer
 oberer Hoverstrich entfällt; Auswahl, Deaktivierung und Fokus behalten ihre
 Zeichen. Sinnvolle verzögerte Hilfen bleiben, leere Panels entfallen. HZ-Fonts,
 Icons, Farbproben und große SL-Rahmen bleiben unverändert.
-N05 verwendet dieselben HZ-Icons für Katalogpfeil links, Menü und Hilfe im rechten
+Die aus N05 übernommene Darstellung verwendet dieselben HZ-Icons für Katalogpfeil links, Menü und Hilfe im rechten
 Arbeitskopf. Informationsseiten erhalten echte reguläre Optionscontrols, eigene
 Scrollflächen und Seitentitel statt globaler Informationsüberschrift. Übergänge
 schließen Popups/Tooltips; Schrift- und Trefferbudgets werden nicht verkleinert.
@@ -173,7 +173,9 @@ Keine Nachbildung seiner Oberfläche, Anordnung, Palette, Figuren oder Zellmotiv
 keine Übernahme fremder Assets. Die Vergleichsbilder im Chat sind keine Pflichtassets
 oder mathematischen Rätseldaten für die spätere Umsetzung.
 
-Die gewählte A-Buchkomposition bleibt Grundlage. GD-03/GP-03 wurden für die
+Die aus der A-Buchkomposition übernommenen Arbeitsbudgets bleiben Grundlage;
+die räumliche Darstellung folgt inzwischen [B-B](BOOK_INTEGRATION.md).
+GD-03/GP-03 wurden für die
 gezielte Untersuchung der Hinweisziffern geöffnet: Schriftform, Gewicht, optischer
 Schriftgrad und gegebenenfalls bewusst gewählte gemeinsame Slotmaße. Seit V3
 waren Bakso-Arbeitstitel, sonstige Fraunces-Überschriften und Plex-Sans-Bedientexte

@@ -5,6 +5,8 @@ import tempfile
 import unittest
 from copy import deepcopy
 import math
+import hashlib
+from book_contract import SOURCES, INTEGRATION_ASSERTIONS
 
 import book_study
 import ci_scope
@@ -105,26 +107,25 @@ class BookStudyTests(unittest.TestCase):
             self.assertTrue(selection["selected"][job])
 
     def test_study_phase_is_required_once_and_recognized_as_python(self):
-        self.assertIn("isolated-book-study", checks("export"))
-        self.assertNotIn("isolated-book-study", checks("graphics"))
-        row = dict(name="isolated-book-study", status="success", seconds=.1, exit_code=0)
-        check_phases(dict(checks=[row]), ["isolated-book-study"], Path("unused"))
+        self.assertIn("regular-book-integration", checks("export"))
+        self.assertNotIn("regular-book-integration", checks("graphics"))
+        row = dict(name="regular-book-integration", status="success", seconds=.1, exit_code=0)
+        check_phases(dict(checks=[row]), ["regular-book-integration"], Path("unused"))
         with self.assertRaises(ValueError):
-            check_phases(dict(checks=[]), ["isolated-book-study"], Path("unused"))
+            check_phases(dict(checks=[]), ["regular-book-integration"], Path("unused"))
 
     def test_study_gate_reads_original_assertions_phases_and_required_files(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            names = ["book-version", "book-import", "book-native", "book-movie", "book-regular-import",
-                     "book-regular-windows", "book-regular-windows-content", "book-regular-windows-isolation",
-                     "book-regular-web", "book-regular-web-content", "book-regular-web-isolation",
-                     "book-study-windows", "book-study-windows-pack", "book-study-web", "book-study-web-pack"]
+            names = ["book-version", "book-import", "book-integration", "book-native", "book-movie"]
+            (root/'integration').mkdir()
+            (root/'integration/integration.json').write_text(json.dumps(dict(passed=True, assertions=[dict(label=label,passed=True) for label in sorted(INTEGRATION_ASSERTIONS)])),encoding='utf-8')
             files = ["opening.avi", "movie-final.png", "catalog.png", "opening-middle.png", "opening-back.png",
                      "return-middle.png", "return-edited-work.png", "paper-page-one.png", "paper-page-two.png", "paper-page-two-return.png",
                      "return-handoff-texture.png","return-handoff-direct.png","control-states.png",
                      "catalog-1920x1200.png","work-1920x1200.png","return-handoff-texture-1920x1200.png","return-handoff-direct-1920x1200.png",
                      "page-forward.png", "page-backward.png", "material-original-detail.png", "material-study-detail.png",
-                     "windows/book-study.exe", "windows/book-study.pck", "web/index.html", "web/index.pck", "web/index.wasm"]
+                     "integration/integration.json"]
             files += ["logs/"+name+".log" for name in names]
             files += [f"{kind}-{w}.png" for kind in ("baseline", "handoff-texture", "work", "catalog") for w in (1280,1920,2560)]
             captions = {'direction','reset','mode','click-before','caption-after-click','fill','help','wrapped-edge'}
@@ -142,7 +143,7 @@ class BookStudyTests(unittest.TestCase):
             for name in files:
                 target = root/name
                 target.parent.mkdir(parents=True, exist_ok=True)
-                target.write_bytes(b"synthetic test evidence")
+                if name != "integration/integration.json": target.write_bytes(b"synthetic test evidence")
             import struct, zlib
             def png(path,w,h):
                 def chunk(kind,data): return struct.pack('>I',len(data))+kind+data+struct.pack('>I',zlib.crc32(kind+data))
@@ -238,7 +239,7 @@ class BookStudyTests(unittest.TestCase):
                 pan = source in ('settings','help') and target in ('settings','help')
                 movie['events'].append(dict(kind='information',source=source,target=target,direction=0 if pan else 1 if target in ('settings','help') else -1,seconds=.65 if pan else .85,first_frame=500+index*40,last_frame=530+index*40))
             (root/'movie.json').write_text(json.dumps(movie),encoding='utf-8')
-            study = dict(identity, package="B-A-N06-T01", host="Linux",edge_details=details,
+            study = dict(identity, package="B-B-T01", scope="shared-presentation-and-product-lifecycle", sources={name:hashlib.sha256((Path(__file__).resolve().parents[1]/name).read_bytes()).hexdigest() for name in SOURCES}, host="Linux",edge_details=details,
                          table=dict(sha256='5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da',size=[1536,1024],imported_texture=dict(bytes=1)),
                          leather=dict(sha256='58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41',size=[1254,1254],imported_texture=dict(bytes=1)),
                          organic_paper=dict(sha256='1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f',size=[1254,1254],imported_texture=dict(bytes=1)),
@@ -255,11 +256,17 @@ class BookStudyTests(unittest.TestCase):
                 return dict(book_study=candidate)
             study['handoff_pixels']['samples'].update({n:dict(max_channel_delta=2,mean_channel_delta=[.01]*4) for n in HANDOFFS})
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
-            for mutation in ("n06-focus", "n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
+            for mutation in ("integration-omitted", "integration-failed", "source-omitted", "source-changed", "n06-focus", "n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
                              "f01-missing", "f01-failed", "f01-negative", "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
                              "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source",
                              "info-route", "info-zoom", "info-leaf", "info-pan", "info-turn", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
+                integration = dict(passed=True,assertions=[dict(label=label,passed=True) for label in sorted(INTEGRATION_ASSERTIONS)])
+                if mutation == 'integration-omitted': integration['assertions'].pop()
+                if mutation == 'integration-failed': integration['assertions'][0]['passed'] = False
+                if mutation == 'source-omitted': candidate['sources'].pop(SOURCES[0])
+                if mutation == 'source-changed': candidate['sources'][SOURCES[0]] = '0'*64
+                (root/'integration/integration.json').write_text(json.dumps(integration),encoding='utf-8')
                 if mutation == 'n06-focus': original['n06']['focus_reparent'] = False
                 if mutation == 'n06-missing': original['n06']['depth_cases'].pop()
                 if mutation == 'n06-gap': original['n06']['depth_cases'][0]['gap_pixels'] = 8

@@ -1,21 +1,17 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**Buch / #493, #496 · B-A-N06:** [Bewegungsstudie und Zustandsvertrag](BOOK_STUDY.md)
-führen realistische Materialien, gezielte Bewegung und gezeichnete Seiteninhalte
-zusammen. Die folgenden BP-/Z2-Lieferbelege bleiben historisch gebunden; das
-bisherige A-Buch bleibt bis B-B die reguläre Darstellung. N03 verwendet eigene
-Lederflächen und zusammenhängende Rand-/Rückengeometrie; A bleibt Qualitätsreferenz.
-N04 bereinigt die beiden inneren Enden und ergänzt eine zusammenhängende echte
-Tischbildressource hinter dem Buch. Papierkoordinaten gelten auch bei 16:10;
-links beginnende Kartenbelegung und zwei unabhängige Scrollstände bleiben Studie.
-N05 ordnet Einstellungen links und Hilfe rechts im Arbeitsnahmaßstab an. Reine
-Seitenwechsel pannen in 0,65 s, Eintritt/Rückkehr blättern in 0,85 s mit dem zum
-Ursprung passenden Zoom. Beide Seiten bewegen ihren eigenen Inhalt mit dem Buch;
-die generische Informationsüberschrift entfällt. Bestehende Controls, Schriften,
-HZ-Icons und Arbeitskapazitäten bleiben erhalten. N06 ersetzt den breiten
-Mittelspalt durch ein enges Tal zwischen räumlichen Papierschultern. Lederne
-Gelenke gehören zur Deckel-/Rückengeometrie; ihre freien Enden bleiben sichtbar.
-N05/F01 sind integriert; neue Abnahmen R08 und M01 bleiben getrennt offen.
+**B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
+Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
+füllen zuerst zwölf Karten links, dann zwölf rechts; beide Hälften scrollen
+unabhängig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
+bewusst geänderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unverändert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+[B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
+B-A-R08-V02 und B-A-M01 sind über PR #497 abgeschlossen; die
+[Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
+Merge und Deployment sind getrennt offen.
 
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
@@ -231,7 +227,8 @@ Der begrenzte Rollenumfang und die Prüfung bei UI100/125 stehen in HZ-D07.
 
 Der folgende Verlauf ordnet die bereits integrierten Vorlagen und Studien ein.
 Frühere Start- und Auswahlgrenzen sind keine erneut offenen Z2-Entscheidungen;
-maßgeblich sind GD-01 bis GD-05 und der aktuelle #23-Vertrag. Die historischen
+damals galten GD-01 bis GD-05 und der #23-Vertrag. Die aktuelle Darstellung und
+Navigation werden durch [B-B](BOOK_INTEGRATION.md) gezielt abgelöst. Die historischen
 hashgebundenen Bilder, ZIPs, Manifeste und Prüfberichte bleiben unverändert.
 
 [#27 unter #21](https://github.com/venomenon328/picross/issues/27) konkretisierte
@@ -295,7 +292,7 @@ aufgehoben. #24 wurde noch nicht begonnen.
 
 Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Registern, Kapitelverzierungen und unterschiedlich großen Bildplätzen. Große Panoramen könnten eigene Seiten erhalten. Feste Seiten statt freier Dekoration sind ein Vorschlag, keine neue Spielmechanik.
 
-Die bestätigte [Buchrichtung #493](BOOK_STUDY.md) zeigt den Katalog als echte Doppelseite mit mittiger Bindung. Katalogblättern dauert 0,85 Sekunden, vorwärts rechts nach links und zurück umgekehrt. Drei einzelne Blätter und eine insgesamt dreisekündige Kamerafahrt führen zur großzügigen rechten Arbeitsseite, frontal und mit Bindung links. B-A-N02 ergänzt sichtbaren Buchkörper, organische Papiertextur, reale ruhende Falzwölbung, transparente Controls und eine 1,8-sekündige Rückkehr mit aktuellem Arbeitsstand. Die Revision bleibt isoliert; der normale Spielstart bleibt bis B-B unverändert. Die frühere linke Arbeitsseite und das Verbot gezielter Kamerabewegung sind für diese neue Lieferung abgelöst. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster behalten ihre vollständigen bisherigen Pixelbudgets. Große Raster werden weder auf eine halbe Bildschirmfläche verkleinert noch über den Falz gelegt. Materialvergleich, Übergabe und offene Sichtabnahmen sind im Studienvertrag gebunden.
+Die bestätigte [Buchrichtung #493](BOOK_INTEGRATION.md) zeigt den Katalog als echte Doppelseite mit mittiger Bindung. Katalogblättern dauert 0,85 Sekunden, vorwärts rechts nach links und zurück umgekehrt. Drei einzelne Blätter und eine insgesamt dreisekündige Kamerafahrt führen zur großzügigen rechten Arbeitsseite, frontal und mit Bindung links. B-B übernimmt den abgenommenen Buchkörper, Papier-/Leder-/Tischmaterial, Falzgeometrie, transparente Controls und die 1,8-sekündige Rückkehr in den regulären Windows-/Webstart. Die frühere linke Arbeitsseite und das Verbot gezielter Kamerabewegung sind abgelöst. Hinweise und Raster behalten ihre vollständigen bisherigen Pixelbudgets. Große Raster werden weder auf eine halbe Bildschirmfläche verkleinert noch über den Falz gelegt. Die historischen Materialabnahmen bleiben im Studienvertrag gebunden; die neue Integrationslieferung folgt B-B-T01/R01/M01.
 
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
 

@@ -1,5 +1,5 @@
 """One representative current catalog flow, not the historical KU/AT/HZ matrices."""
-from browser_actions import open_page, state, point, control, wait, click
+from browser_actions import open_page, state, point, control, wait, click, wait_book
 from group_persistence import choose_sort
 from hz_c_cases import typography
 from hz_b_cases import select_view
@@ -43,19 +43,28 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     click(page, point(page, item['center']))
     wait(page, '!picrossProbe.sort.menu.visible'); assert state(page, 'album')['album']
     # Passive metadata opens its own stable ID even after sorting.
-    current = state(page, 'sort', 'labels')
+    current = state(page, 'sort', 'labels', 'book')
+    assert current['book']['presentation'] == 'res://book/main.gd'
+    assert current['book']['root'] == 'res://book/web_root.gd'
+    origin = {key:current['sort'][key] for key in ('selected','page','scroll','criterion','direction')}
     chosen = current['sort']['visible_ids'][0]
     click(page, point(page, current['labels'][0]['centers']['paper']))
     wait(page, 'picrossProbe.work'); assert state(page, 'id')['id'] == chosen
-    control(page, name='nav-album'); wait(page, 'picrossProbe.album')
-    assert state(page, 'sort')['sort']['selected'] == chosen
+    control(page, name='catalog-return'); wait(page, 'picrossProbe.album')
+    assert {key:state(page, 'sort')['sort'][key] for key in origin} == origin
     control(page, text='Einstellungen / Info')
     control(page, name='puzzle-view'); wait(page, 'picrossProbe.hz_b.view_popup')
     assert state(page, 'hz_b')['hz_b']['view_checked']
     page.screenshot(path=str(output/f'{name}-view.png'))
     selected = state(page, 'hz_b')['hz_b']['view_selected']
     select_view(page, 1-selected)
-    control(page, name='nav-work'); wait(page, 'picrossProbe.album')
+    control(page, name='help-access')
+    wait(page, "picrossProbe.information && picrossProbe.book.information_section === 'help'")
+    control(page, name='information-return'); wait(page, 'picrossProbe.album')
+    wait_book(page)
+    evidence['book_navigation'] = dict(presentation=current['book']['presentation'],root=current['book']['root'],
+                                      opened_id=chosen,origin=origin,returned=state(page,'sort')['sort'],
+                                      routes=['catalog-work','work-catalog','catalog-settings','settings-help','help-catalog'])
     after = state(page, 'slots')['slots']
     for a, b in zip(before, after, strict=True):
         for key in ('definition_id', 'definition_revision', 'cells', 'history', 'cursor', 'completed'):

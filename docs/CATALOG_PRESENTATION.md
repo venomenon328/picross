@@ -1,6 +1,6 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
-**B-A-N05 / #493:** Die [isolierte Buchstudie](BOOK_STUDY.md) verteilt eine
+**B-B / #498:** Die [reguläre Buchdarstellung](BOOK_INTEGRATION.md) verteilt eine
 logische Katalogseite auf beide Buchhälften. Höchstens 24 aktive Karten,
 vollständige Schrift-/Metadaten-/Bild-/Resetbudgets und ID-Aktionen bleiben.
 Knappere Flächen verwenden weniger Spalten und Scrollen. Die revidierten Abstände

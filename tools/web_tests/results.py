@@ -96,8 +96,16 @@ def validate_browser(report, plan, browser, producer_attempt, gate_attempt, root
             raise ValueError('Missing browser identity/profile evidence')
         if group == 'regular' and row.get('errors') != []:
             raise ValueError('Missing or unsuccessful regular error check')
-        if group == 'catalog' and not row.get('version'):
-            raise ValueError('Missing catalog browser version')
+        if group == 'catalog':
+            book = row.get('book_navigation', {})
+            origin = book.get('origin', {})
+            returned = book.get('returned', {})
+            if (not row.get('version') or book.get('presentation') != 'res://book/main.gd'
+                    or book.get('root') != 'res://book/web_root.gd' or not book.get('opened_id')
+                    or book.get('routes') != ['catalog-work','work-catalog','catalog-settings','settings-help','help-catalog']
+                    or set(origin) != {'selected','page','scroll','criterion','direction'}
+                    or any(returned.get(key) != value for key, value in origin.items())):
+                raise ValueError('Missing regular book navigation/context evidence')
         if group == 'input':
             viewports = row.get('viewports', [])
             if ([v.get('viewport') for v in viewports] != [[1280, 720], [1920, 1080]]

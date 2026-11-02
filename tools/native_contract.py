@@ -18,6 +18,17 @@ PATHS = {
        ('catalog', 'catalog_card')},
     # Besides card display, Difficulty.valid gates the shared runtime registry.
     'game/model/catalog_difficulty.gd': GROUPS,
+    # The regular book root shares session, save, input and export boundaries.
+    **{f'game/book/{name}': GROUPS for name in (
+        'main.gd', 'content.gd', 'binding.gd', 'catalog.gd', 'information.gd',
+        'information_routes.gd', 'surface.gd', 'page.gdshader', 'material.gdshader',
+        'fold.gdshaderinc', 'paper.png', 'paper.png.import', 'paper.json',
+        'leather.png', 'leather.png.import', 'leather.json',
+        'table.png', 'table.png.import', 'table.json')},
+    'game/tests/book_fixture.gd': GROUPS,
+    'game/tests/book_integration.gd': GROUPS,
+    'game/tests/book-save-v1.json': GROUPS,
+    'tools/book_contract.py': GROUPS,
     # KAT-2's ke_graphics and RP6/ZA-1 exercise the real completion view too.
     'game/ui/completion.gd': ('core', 'catalog', 'completion', 'adapters', 'graphics', 'export'),
     'tools/kat2_product.py': ('catalog',),
@@ -77,7 +88,7 @@ def checks(group, host='Linux'):
                     + [f'za1-pz-test-direct-{c}-{s}' for c in ('mono','color') for s in
                        (('partial','finish','read','reset') if c == 'mono' else ('partial','finish','read','oldreset','reset'))],
         'graphics': ['current-vs2-complete', 'perf-b-native', 'retained-hc92-font-samples'],
-        'export': ['player-content-import', 'windows-export', 'player-content-pck', 'isolated-book-study'],
+        'export': ['player-content-import', 'windows-export', 'player-content-pck', 'regular-book-integration'],
     }
     if host == 'Windows':
         cases['adapters'] += ['za1-windows-exported-start']

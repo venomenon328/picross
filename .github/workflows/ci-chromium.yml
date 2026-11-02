@@ -145,6 +145,12 @@ jobs:
             tools/web_tests/contract.py
             tools/web_tests/results.py
             tools/native_results.py
+            tools/book_contract.py
+            game/book/*
+            game/main.tscn
+            game/ui/main.gd
+            game/tests/book_integration.gd
+            game/tests/book-save-v1.json
             tools/p14_integration.py
             tools/native_artifacts.json
             tools/at_evidence.py

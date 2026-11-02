@@ -1,15 +1,20 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
-## Buchstudie B-A / #493, #496
+## Gemeinsame Buchdarstellung B-B / #493, #498
 
-Die Exportgruppe verlangt zusätzlich einmalig `isolated-book-study` und dessen
-[B-A-N06-T01-Belege](BOOK_STUDY.md). Das Gate prüft originale Einzelassertions,
+Die Exportgruppe verlangt einmalig `regular-book-integration` und dessen
+[B-B-T01-Belege](B_B_VERIFICATION.md). Das Gate prüft originale Einzelassertions,
 die feste Szenariomenge, Doppelseitengeometrie, beide Blätterrichtungen,
 24 Unterbrechungsfälle, gültige ID-/Revealinstanzen, gerenderte Glyphen-/Konturabstände,
 Rückkehr mit aktuellem Fortschritt, Quellbindung, Materialvergleich und Papierstabilität,
-vollständige Phasen, Film mit stabilem Katalogende, vier Übergabepaare und tatsächliche Studienpakete samt
-Dateihashes. Die bisherigen Gruppen-/Dateipflichten bleiben erhalten. Die Studie
-liegt getrennt im befristeten Technikartefakt, nicht im regulären Spielerpaket.
+vollständige Phasen, Film mit stabilem Katalogende und neun Übergabepaare samt
+Dateihashes. Der reale Produktlebenszyklus ergänzt eingefrorene Schema-1-Bytes,
+Redo-/View-Wiederherstellung, Schreibfehler/Retry, ID-gebundene Recovery,
+Abbruch-/Generationskontrollen sowie leere und fehlerhafte Kataloge.
+Der unabhängige Guard bindet die gemeinsamen Runtimequellen an den aktuellen
+Checkout und verlangt sämtliche Lifecycle-Assertions. Die regulären Export-
+und Paketprüfungen bleiben zuständig für Windows/Web; die zusätzliche B-A-
+Exportmatrix entfällt. Prüfskripte und Studieninputs bleiben im Technikartefakt.
 N03 bindet zusätzlich die eigene Ledertextur samt Importkosten, 15 unskalierte
 Randdetails, echte verzögerte Tooltipfälle in den drei bestehenden Konfigurationen,
 deren Inhalt/Geometrie/Lebensdauer und Gegenbeispiele für leeren Rahmen und alten
@@ -22,21 +27,27 @@ Das Gate kontrolliert links beginnende Belegung, unabhängige Offsets einschlie�
 Abbruch/Resize, Originalglyphenhüllen und explizite Breite/Höhe statt 16:9-Ableitung.
 Tischquelle/Importkosten und beidseitige Paketisolation bleiben gebunden. Ein
 tatsächlicher Windows-Exportlauf ergänzt Standard/Maximieren/Wiederherstellen;
-Linux behauptet diese Probe nicht. Das native Phasenlimit bleibt 300 Sekunden.
+Linux behauptet diese Probe nicht. Für B-B erhält ausschließlich `book-native`
+nach Eigentümerklarstellung vom 02.11.2026 einen 600-s-Hangschutz statt 300 s;
+Laufzeitziele werden berichtet, sind aber keine zusätzlichen Abnahmeblocker.
 N05 erweitert denselben Lauf um zehn echte Informationsrouten, zwei nahe
 Seitenlayouts in vier gezielten Flächen, sechs native Unterbrechungen und eine
 günstige vollständige Entscheidungstabelle. Fünf bisherige plus vier neue
 Handoffs behalten die Grenzen 4/0,1 samt Versatz-/Alphagegenprobe. Der unabhängige
 Guard prüft Ursprung, ungleiche Offsets, tatsächliche Kamera-/Blattspuren, native
-Hüllen, Optionsänderung und Film. Keine neue CI-Gruppe, Budgeterhöhung oder
-Browserpflicht. N06 ergänzt vier 640×128-Tiefenbilder des echten Mesh-/Vertexpfads:
+Hüllen, Optionsänderung und Film. N05 führte keine neue CI-Gruppe, Budgeterhöhung
+oder Browserpflicht ein; die spätere B-B-Ausnahme steht oben.
+N06 ergänzt vier 640×128-Tiefenbilder des echten Mesh-/Vertexpfads:
 Ruhe, gegenüberliegende Landung, verbreiterter Spalt und flache Geometrie.
 Die beiden Gegenbeispiele müssen scheitern; tatsächliche Leder-/Blockarrays
 prüfen Gelenktiefe und positiven Abstand unter den bestehenden Mengenbudgets.
 Ein echter Tree-Exit prüft den unter Windows gefundenen reentranten Fokusabbruch
 und die Bindung an dieselbe Bewegung. Der Guard verlangt Fälle, PNG-Maße und
 Messwerte mit acht Mutationen.
-Windowsoriginale müssen für das neue unabhängige R08 erreichbar gebunden sein.
+Die obigen N03–N06-Prüfungen bleiben unverändert auf die gemeinsame Darstellung
+angewendet. B-A-R08/M01 sind auf PR #497 abgeschlossen. B-B bindet neue reguläre
+Windowsoriginale und echte OS-Eingaben für sein getrenntes Selbstreview sowie
+das spätere unabhängige B-B-R01; die persönliche B-B-M01 bleibt gesondert.
 
 ## Aktuelle Umsetzung: CI2-D / #416
 

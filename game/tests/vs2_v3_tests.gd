@@ -227,8 +227,9 @@ func check_layout() -> void:
 	for i: int in range(3):
 		var item: Control = app.actions[["help","menu","nav-information"][i]]
 		var box: Rect2 = item.get_global_rect()
-		var old: Vector2 = paper.position+Vector2(paper.size.x-(187.5 if paper.size.x<1700 else 150)-(2-i)*58*app.ui_scale,paper.size.y/30)
-		check((box.position-old).distance_to(Vector2(-20,12)*app.ui_scale)<0.01,"navigation moves left/down against bound reference")
+		var expected: Vector2 = paper.position+Vector2(paper.size.x-(187.5 if paper.size.x<1700 else 150)-i*58*app.ui_scale-20*app.ui_scale,paper.size.y/30+12*app.ui_scale)
+		expected.y = maxf(expected.y,app.book.projected_paper(true).position.y+5*app.ui_scale)
+		check(box.position.distance_to(expected)<0.01,"book navigation keeps sidebar axis and projected paper clearance")
 		check(inner.encloses(box.grow(1)) and not box.intersects(title_box) and not box.intersects(app.surface.card),"nav clear of title/mini/paper %s u%s box%s mini%s" % [canvas.size,app.ui_scale,box,app.surface.card])
 	for item: Control in [app.layout_warning,app.stress_label]:
 		if item.is_visible_in_tree() and not item.text.is_empty():
@@ -271,8 +272,7 @@ func run() -> void:
 	canvas.size = Vector2i(1920,1080)
 	canvas.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(canvas)
-	app = load("res://main.tscn").instantiate()
-	canvas.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(canvas)
 	await settle()
 	check(title_ok(),"KB catalog explicitly uses original Bakso")
 	var font = app.WORK_TITLE_FONT
@@ -355,13 +355,21 @@ func run() -> void:
 	mouse(cell,MOUSE_BUTTON_WHEEL_DOWN,false)
 	check(app.board.view.cell_size!=pitch and app.tools_scroll.scroll_vertical==scroll_before,"wheel outside rail still zooms board")
 	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
-	for id: String in ["help","menu","nav-information"]:
+	for id: String in ["help","menu"]:
 		click(app.actions[id])
 		await settle()
 		check(app.information.visible and not title_ok(),"navigation and information font "+id)
-		click(app.actions["nav-work"])
+		var back: Control = app.info.right_return if app.info.section == "help" else app.actions["nav-work"]
+		check(back.is_visible_in_tree(),"visible return on the current information page")
+		click(back)
 		await settle()
 		check(app.work.visible and title_ok(),"return restores work font")
+	click(app.actions["nav-information"])
+	await settle()
+	check(app.album.visible and title_ok(),"catalog arrow restores catalog and original title font")
+	app.select_puzzle(0)
+	await settle()
+	check(app.work.visible and title_ok(),"catalog reopening restores work font")
 	# Deliberate mutations prove new oracles reject the old/wrong arrangements.
 	var original: Vector2 = app.actions.erase.position
 	app.actions.erase.position.x+=44
@@ -482,6 +490,6 @@ func run() -> void:
 	report.sidebar_metadata_sha256=FileAccess.get_sha256("res://art/book/frames.json")
 	FileAccess.open(output.path_join("v3-report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"\t"))
 	print("VS2_V3_", "OK" if failures==0 else "FAILED", " checks=",checks," failures=",failures)
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
 	quit(0 if failures==0 else 1)

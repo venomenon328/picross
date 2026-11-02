@@ -123,18 +123,30 @@ func run() -> void:
 		await shot("detail-%d-ui%d" % [spec[0],spec[2]*100])
 		app.show_album()
 		await process_frame
+		await process_frame
+		await process_frame
 		# Every slot can be brought into view, including the bottom row at 125%.
 		for choice: Button in app.choices:
 			app.album.ensure_control_visible(choice)
 			await process_frame
-			check(app.album.get_global_rect().encloses(choice.get_global_rect()), "all six choices reachable")
+			await process_frame
+			var scroller: ScrollContainer = app.album.right_scroll if app.album.right_grid.is_ancestor_of(choice) else app.album.scroll
+			# Measure inside the actual clip's coordinate system. Adding the
+			# fractional projected paper origin separately to each global edge
+			# can create a one-float-ULP overrun even at identical local edges.
+			var bounds := Rect2(Vector2.ZERO,choice.size)
+			var item: CanvasItem = choice
+			while item != scroller:
+				bounds = item.get_transform()*bounds
+				item = item.get_parent() as CanvasItem
+			check(Rect2(Vector2.ZERO,scroller.size).encloses(bounds), "all six choices reachable inside their scroll viewport: %s card%s viewport%s" % [choice.leaf.text,bounds,scroller.size])
 		check(app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].payload.is_empty(), "album no hidden reveal payload")
 		await shot("album-partial-%d-ui%d" % [spec[0],spec[2]*100])
 	surface.size = Vector2i(1920,1080)
 	app.size = Vector2(surface.size)
 	app.set_ui_scale(1.0)
 	check(app._flush_current(), "capture partial flush")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
 	var completed_root: String = OS.get_environment("P1_TEST_SAVE_ROOT")
 	if completed_root.is_empty():

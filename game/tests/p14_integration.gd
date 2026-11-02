@@ -23,8 +23,7 @@ func run() -> void:
 		return
 	SaveStore.test_root_override = isolated
 	root.size = Vector2i(1920, 1080)
-	app = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(root)
 	await process_frame
 	await process_frame
 	var plan: Variant = JSON.parse_string(FileAccess.get_file_as_string(plan_path))

@@ -1,8 +1,7 @@
 # picross: Spiel- und Entwicklungsanleitung
 
-**Buchstudie B-A-N05 / #493:** Die neue räumliche Buchrichtung ist ausschließlich
-als [getrennt startbare Studie](study/book/README.md) vorhanden. Ihr Katalog öffnet
-drei synthetische Muster unter 27 IDs auf einer Doppelseite. Kurzes Blättern
+**Buchintegration B-B / #493, #498:** Windows und Web starten den regulären
+Rätselkatalog als räumliches Buch. Kurzes Blättern
 dauert 0,85 Sekunden; drei einzelne Blätter führen in insgesamt drei Sekunden
 zur großen rechten Arbeitsseite mit Bindung links. Überarbeitete Papiertextur,
 sichtbare Buchkante, ruhende Wölbung und transparente Controls erhalten die
@@ -15,8 +14,13 @@ Katalogkontext mit beiden Scrollständen zurück. Daneben öffnen Menü und Frag
 Einstellungen links beziehungsweise Hilfe rechts in naher Ansicht. Zwischen
 beiden Seiten wird nur gepannt; die beschriftete Rückkehr führt zum ursprünglichen
 Katalog oder Rätsel. Bewusst geänderte Einstellungen bleiben erhalten.
-Bearbeitung bleibt im RAM. Das normale Spiel verwendet weiterhin das bisherige
-A-Buch; reguläre Integration und persönliche Sichtabnahme folgen separat.
+Bearbeitung und Sortierauswahl werden über die bisherigen Speicherwege gesichert.
+Bei einem Speicherfehler bleibt die Anwendung mit einer sichtbaren Wiederholung
+offen; notwendige Backupübernahme verlangt weiterhin Bestätigung. Die
+[isolierte Studie](study/book/README.md) verwendet denselben Darstellungskern mit
+synthetischen Daten. [B-B-Vertrag](../docs/BOOK_INTEGRATION.md) und
+[Prüfstand](../docs/B_B_VERIFICATION.md) binden die Integration; unabhängige und
+persönliche Abnahmen bleiben gesondert.
 
 **Kleine Texte und Ausrichtung (HZ-C):** Kategorien, Kartenmetadaten, Status,
 Auswahllisten und kleine Papiertextbuttons verwenden eine gemeinsame etwas
@@ -280,10 +284,11 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   in ganzen Slots eingerastet. Vorübergehende Vollanzeige bewahrt die Anker auch
   beim Speichern und Neustart; beim Verengen kehrt derselbe Lesebereich zurück.
   Die UI-Skalierung, Hinweisrücksetzung und H1 stehen auf der Informationsseite.
-  `?` führt direkt zur dort scrollbar erreichbaren Bedienhilfe; Menü und rechter
-  Pfeil zu den Einstellungen. Auch bei 1280×720/UI 125 % bleiben Werkzeuge,
+  `?` führt direkt zur scrollbar erreichbaren Bedienhilfe rechts; das Menü
+  öffnet die Einstellungen links. Der Pfeil im Arbeitskopf führt zum Katalog.
+  Auch bei 1280×720/UI 125 % bleiben Werkzeuge,
   eigene Miniatur und Hinweiszugriff auf der Arbeitsseite. Der Rückpfeil führt
-  zum erhaltenen Arbeitsstand zurück.
+  auf den Informationsseiten zum jeweiligen erhaltenen Ursprung zurück.
 
 Für den Abschluss genügen alle richtigen Füllungen ohne Zusatzfüllungen.
 Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild erscheinen

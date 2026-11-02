@@ -42,10 +42,12 @@ func stable_input() -> void:
 
 func focused_scene(corpus: bool) -> void:
 	if app != null:
-		app.queue_free()
+		preload("res://tests/book_fixture.gd").dispose(app,true)
 		await process_frame
-	app = Cases.new() if corpus else load("res://main.tscn").instantiate()
-	canvas.add_child(app)
+	if corpus:
+		app = preload("res://tests/book_fixture.gd").attach(canvas,Cases)
+	else:
+		app = preload("res://tests/book_fixture.gd").attach(canvas)
 	await process_frame
 	canvas.size = Vector2i(1920,1080)
 	app.size = Vector2(canvas.size)
@@ -79,10 +81,9 @@ func focused_scene(corpus: bool) -> void:
 						await shot("v1-%s-%s" % [app.session.definition.id,"fit" if fit else "work"])
 
 func recovery_matrix() -> void:
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
-	app = load("res://main.tscn").instantiate()
-	canvas.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(canvas)
 	await process_frame
 	for configuration: Array in VisualCases.CONFIGURATIONS:
 		var dims: Vector2i = configuration[0]
@@ -114,7 +115,7 @@ func recovery_matrix() -> void:
 			check(not app.work_repair_button.visible and app.store.load_slot(app.session.definition).status == "loaded","V1 confirmed recovery restores valid saving")
 
 func glyph_probe() -> void:
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
 	var data: Dictionary = Definition.load_fixture("t02").duplicate(true)
 	data.width = 40

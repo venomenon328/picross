@@ -318,6 +318,9 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
     for name, source in (
         ("SPIELANLEITUNG.md", "game/README.md"),
         ("licenses/resources.json", "game/art/book/manifest.json"),
+        ("licenses/Book-paper.json", "game/book/paper.json"),
+        ("licenses/Book-leather.json", "game/book/leather.json"),
+        ("licenses/Book-table.json", "game/book/table.json"),
         ("licenses/Chalkboard-NOTICES.md", "game/art/drawing/NOTICES.md"),
         ("licenses/Bakso-NOTICES.md", "game/art/drawing/Bakso-NOTICES.md"),
         ("licenses/tidy-hand/NOTICE.txt", "game/art/drawing/tidy-hand/NOTICE.txt"),
@@ -581,10 +584,10 @@ def main(argv: list[str] | None = None) -> int:
                           "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
                 evidence.scope_done("export")
             if args.export:
-                # The isolated B-A study owns its project/profile and reuses only
-                # verified archives. Its bounded evidence stays in technical/.
+                # Shared presentation and real product lifecycle use isolated
+                # synthetic inputs. No additional study export matrix.
                 import book_study
-                evidence.report["book_study"] = python_phase("isolated-book-study", lambda: book_study.run(
+                evidence.report["book_study"] = python_phase("regular-book-integration", lambda: book_study.run(
                     args.cache_dir.resolve(), evidence.technical / "book-study"))
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
             evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2", "ea") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])

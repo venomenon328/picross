@@ -25,6 +25,20 @@ func _initialize() -> void:
 
 func run() -> void:
 	walk("res://")
+	check(ProjectSettings.get_setting("application/config/name") == "picross · P1", "PCK unchanged application identity")
+	check(ProjectSettings.get_setting("application/run/main_scene") == "res://main.tscn", "PCK regular startup scene")
+	var scene: PackedScene = load("res://main.tscn")
+	var root_entry: Node = scene.instantiate()
+	check(root_entry is Node3D and root_entry.get_script().resource_path == "res://book/main.gd", "PCK regular book root, no hidden old entry")
+	root_entry.free()
+	for name: String in ["main.gd","content.gd","binding.gd","catalog.gd","information.gd","information_routes.gd","surface.gd","page.gdshader","material.gdshader","fold.gdshaderinc"]:
+		check(ResourceLoader.exists("res://book/"+name), "PCK shared book dependency "+name)
+	for name: String in ["web_probe.gd","web_root.gd","windows_observer.gd","fixtures.json","inputs.gd","verify.gd"]:
+		check(not ResourceLoader.exists("res://book/"+name) and not FileAccess.file_exists("res://book/"+name), "PCK excludes technical book input "+name)
+	for name: String in ["paper","leather","table"]:
+		var material: Texture2D = load("res://book/"+name+".png")
+		var provenance: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://book/"+name+".json"))
+		check(material != null and material.get_width() == provenance.size[0] and material.get_height() == provenance.size[1], "PCK imported material and rights "+name)
 	var ids: Array[String] = Registry.catalog_ids()
 	# Fixed shared KB resources, independent of the growing puzzle catalog.
 	var book_manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/manifest.json"))

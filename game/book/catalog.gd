@@ -1,5 +1,5 @@
 extends "res://ui/catalog.gd"
-## Study-only spread: shared filter/order/page, independent half-page scroll.
+## Shared spread: global filter/order/page, independent half-page scroll.
 signal page_requested(target: int)
 signal help_requested
 var locked: bool = false
@@ -36,7 +36,7 @@ func _ready() -> void:
 	for item: Node in top.get_children(): item.reparent(actions)
 	var help := BookButton.new()
 	help.text = "Hilfe"
-	help.action_id = "study-help"
+	help.action_id = "catalog-help"
 	help.pressed.connect(func() -> void: help_requested.emit())
 	actions.add_child(help)
 	actions.move_child(help,1)

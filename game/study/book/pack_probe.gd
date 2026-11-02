@@ -11,16 +11,16 @@ func run() -> void:
 	var expected: bool = OS.get_environment("BOOK_EXPECT_STUDY") == "1"
 	check(ResourceLoader.exists("res://study/book/main.tscn") == expected, "study entry point inclusion/exclusion")
 	check(FileAccess.file_exists("res://study/book/fixtures.json") == expected, "study inputs inclusion/exclusion")
-	check(ResourceLoader.exists("res://study/book/paper.png") == expected,"organic paper inclusion/exclusion")
-	check(ResourceLoader.exists("res://study/book/leather.png") == expected,"independent leather inclusion/exclusion")
-	check(ResourceLoader.exists("res://study/book/table.png") == expected,"independent tabletop inclusion/exclusion")
-	check(FileAccess.file_exists("res://study/book/table.json") == expected,"tabletop provenance inclusion/exclusion")
-	check(ResourceLoader.exists("res://study/book/binding.gd") == expected,"joined binding inclusion/exclusion")
-	check(ResourceLoader.exists("res://study/book/fold.gdshaderinc") == expected,"fold geometry include inclusion/exclusion")
+	check(ResourceLoader.exists("res://book/paper.png"),"organic paper inclusion/exclusion")
+	check(ResourceLoader.exists("res://book/leather.png"),"independent leather inclusion/exclusion")
+	check(ResourceLoader.exists("res://book/table.png"),"independent tabletop inclusion/exclusion")
+	check(FileAccess.file_exists("res://book/table.json"),"tabletop provenance inclusion/exclusion")
+	check(ResourceLoader.exists("res://book/binding.gd"),"joined binding inclusion/exclusion")
+	check(ResourceLoader.exists("res://book/fold.gdshaderinc"),"fold geometry include inclusion/exclusion")
 	check(not ResourceLoader.exists("res://study/book/n06_cases.gd"),"no N06 verification program in pack")
 	check(ResourceLoader.exists("res://study/book/inputs.gd") == expected,"study adapter inclusion/exclusion")
 	for resource: String in ["information.gd","information_routes.gd"]:
-		check(ResourceLoader.exists("res://study/book/"+resource) == expected,"study information inclusion/exclusion "+resource)
+		check(ResourceLoader.exists("res://book/"+resource),"shared information inclusion/exclusion "+resource)
 	check(not ResourceLoader.exists("res://study/book/n05_cases.gd"),"no N05 verification program in pack")
 	for resource: String in ["f01_cases.gd","windows_observer.gd"]:
 		check(not ResourceLoader.exists("res://study/book/"+resource),"no F01 verification program in pack "+resource)
@@ -28,7 +28,7 @@ func run() -> void:
 		check(FileAccess.file_exists("res://study/book/data/"+key+".json") == expected,"definition instance inclusion/exclusion "+key)
 		check(ResourceLoader.exists("res://study/book/art/"+key+".svg") == expected,"reveal instance inclusion/exclusion "+key)
 	if expected:
-		for resource: String in ["res://study/book/main.gd", "res://study/book/content.gd", "res://study/book/catalog.gd", "res://study/book/page.gdshader", "res://study/book/material.gdshader", "res://ui/main.gd"]:
+		for resource: String in ["res://study/book/main.gd", "res://study/book/content.gd", "res://book/catalog.gd", "res://book/page.gdshader", "res://book/material.gdshader", "res://ui/main.gd"]:
 			check(ResourceLoader.exists(resource), "study dependency present " + resource)
 		var actual_script: Script = load("res://study/book/main.gd")
 		check(actual_script != null and actual_script.can_instantiate(), "actual packed study compiles with its dependencies")

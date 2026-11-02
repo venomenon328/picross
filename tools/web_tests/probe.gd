@@ -1,8 +1,9 @@
-extends "res://ui/main.gd"
+extends "res://book/content.gd"
 ## Read-only observability in the separate technical export; never in player bundles.
 var probe_elapsed: float = 0.0
 var at_probe_images: Dictionary = {}
 var at_frame_key: String = ""
+var at_trace: Array = []
 const Card = preload("res://ui/catalog_card.gd")
 
 func _ready() -> void:
@@ -15,6 +16,8 @@ func _capture_at_frame() -> void:
 	if reveal_view == null or not reveal_view.active or reveal_view.artwork == null:
 		return
 	var opacity: float = reveal_view.art.modulate.a
+	if at_trace.size() < 32:
+		at_trace.append({"elapsed":reveal_view.elapsed,"opacity":opacity,"size":str(reveal_view.artwork.get_size())})
 	if opacity < 0.3 or opacity > 0.7 or reveal_view.artwork.get_size() != Vector2(256,256):
 		return
 	# Arming requests observation only; the player has no command/state hook.
@@ -32,7 +35,7 @@ func _capture_at_frame() -> void:
 	at_frame_key = key
 	JavaScriptBridge.eval("window.picrossAtFrame = " + JSON.stringify(frame),true)
 
-func _process(delta: float) -> void:
+func observe(delta: float) -> void:
 	probe_elapsed += delta
 	if probe_elapsed < 0.1 or board == null: return
 	probe_elapsed = 0.0
@@ -71,6 +74,9 @@ func _process(delta: float) -> void:
 	var origin: Vector2 = board.global_position + board.view.origin
 	var sort_popup: PopupMenu = album.sort_choice.get_popup()
 	var data: Dictionary = {"controls": controls, "labels":labels,"slots": slots, "slot_status": slot_status,
+		"book":{"root":book.get_script().resource_path,"presentation":book.get_script().get_base_script().resource_path,"state":book.state,
+			"moving":book.state in [book.State.PREPARING,book.State.OPENING],"blocked":book.release_barrier,
+			"right_scroll":album.right_scroll.scroll_vertical,"information_section":information_section},
 		"hz_c":{"small_size":UiText.small_size(ui_scale),
 			"category_size":album.category_choice.get_theme_font_size("font_size"),"category_popup_size":album.category_choice.get_popup().get_theme_font_size("font_size"),
 			"sort_size":album.sort_choice.get_theme_font_size("font_size"),"sort_popup_size":sort_popup.get_theme_font_size("font_size"),
@@ -92,9 +98,9 @@ func _process(delta: float) -> void:
 				"font":album.category_choice.get_popup().get_theme_font("font").get_font_name(),
 				"position":[album.category_choice.get_popup().position.x,album.category_choice.get_popup().position.y],
 				"size":[album.category_choice.get_popup().size.x,album.category_choice.get_popup().size.y]},
-			"help_scroll":info_scroll.scroll_vertical,
-			"help_rect":[info_scroll.global_position.x,info_scroll.global_position.y,info_scroll.size.x,info_scroll.size.y],
-			"help_fits":help_panel.size.y <= info_scroll.size.y,
+			"help_scroll":info.help_scroll.scroll_vertical,
+			"help_rect":[info.help_scroll.global_position.x,info.help_scroll.global_position.y,info.help_scroll.size.x,info.help_scroll.size.y],
+			"help_fits":help_panel.size.y <= info.help_scroll.size.y,
 			"help_font":help_panel.get_child(1).get_theme_font("font").get_font_name()},
 		"sort": {"criterion": album.preference.criterion, "direction": album.preference.direction,
 			"direction_tooltip": album.direction_button.tooltip_text,
@@ -109,7 +115,7 @@ func _process(delta: float) -> void:
 		"ea_active": reveal_view.active, "ea_processing": reveal_view.is_processing(),
 		"ea_caption_alpha": completion_title.modulate.a, "ea_reset_disabled": completion_reset.disabled,
 		"ea_title": title.text, "ea_art": reveal_view.artwork != null,
-		"at_image":_probe_image(reveal_view),"ea_alpha":reveal_view.art.modulate.a,
+		"at_image":_probe_image(reveal_view),"ea_alpha":reveal_view.art.modulate.a,"at_trace":at_trace,
 		"album": album.visible, "work": work.visible, "ending": ending.visible, "information": information.visible,
 		"id": session.definition.id, "cells": session.player.cells, "history": session.player.history,
 		"cursor": session.player.cursor, "completed": session.completed, "view": board.capture_view(),

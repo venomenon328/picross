@@ -20,9 +20,20 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     assert state(page, 'cells', 'history', 'cursor') == edited
     page.mouse.move(*cell(page,3,5)); page.mouse.down()
     page.mouse.move(*cell(page,8,5), steps=3)
-    page.keyboard.press('Escape'); page.mouse.up()
+    # Observe the live gesture, then the Escape cancellation before releasing.
+    # An initially false, asynchronously published probe is not an event ack;
+    # neither should Mouse.up race the keyboard event on a software renderer.
+    wait(page, 'picrossProbe.gesture')
+    page.keyboard.press('Escape')
     wait(page, '!picrossProbe.gesture')
-    assert state(page, 'cells', 'history', 'cursor') == edited
+    cancelled = state(page, 'cells', 'history', 'cursor')
+    assert cancelled == edited, dict(before=edited, after_escape=cancelled)
+    page.mouse.up()
+    wait(page, '!picrossProbe.gesture')
+    released = state(page, 'cells', 'history', 'cursor')
+    assert released == edited, dict(before=edited, after_release=released)
+    evidence['cancellation'] = dict(active_observed=True, escape_cancelled_before_release=True,
+                                    cells_history_cursor_unchanged=True)
     saved(page)
     page.screenshot(path=str(output/f'{name}-input.png'))
     passed('real elastic edit, atomic undo, redo and cancellation')

@@ -51,7 +51,8 @@ func click(control: Control) -> void:
 	if control is Card:
 		# Both title and footer can be clipped after a preserved scroll offset.
 		# The centre may be a recovery action; the visible inset belongs to the card.
-		var visible: Rect2 = control.get_global_rect().intersection(app.album.scroll.get_global_rect())
+		var scroller: ScrollContainer = app.album.right_scroll if app.album.right_grid.is_ancestor_of(control) else app.album.scroll
+		var visible: Rect2 = control.get_global_rect().intersection(scroller.get_global_rect())
 		point = Vector2(visible.position.x+5*app.ui_scale,visible.get_center().y)
 	if control.get_window() != root: point += Vector2(control.get_window().position)
 	click_at(point)
@@ -145,10 +146,9 @@ func save_bytes(excluded: String = "") -> Dictionary:
 
 func new_app() -> void:
 	if app != null:
-		app.free()
+		preload("res://tests/book_fixture.gd").dispose(app)
 	var started: int = Time.get_ticks_usec()
-	app = load("res://main.tscn").instantiate()
-	surface.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(surface)
 	# Existing KAT/KE scenarios bind their synthetic slots by canonical order.
 	# All their added dates are unknown; KU-B's large scenario tests real sorting.
 	if not mode in ["pages", "adapter", "empty", "invalid"]: app.album.choose_sort("added")
@@ -317,7 +317,7 @@ func choose_view(index: int) -> void:
 
 func information_profile(base: String, state: String) -> void:
 	if app != null:
-		app.free()
+		preload("res://tests/book_fixture.gd").dispose(app)
 		app = null
 	Store.test_root_override = base.path_join(state)
 	DirAccess.make_dir_recursive_absolute(Store.test_root_override)
@@ -865,11 +865,12 @@ func catalog_labels() -> void:
 			check(app.work.visible and app.session.definition.id == "T-01","KE passive label click opens owning card: "+part)
 			app.show_album()
 			await frames()
-	# Cross actual column thresholds, rather than assuming the old 228px grid.
+	# Grow the physical book at 16:9 through the supported layout range. A wider
+	# window alone leaves this height-fitted book at the same physical scale.
 	var previous_columns: int = 0
 	var transitions: int = 0
-	for width: int in range(1280,1921,16):
-		surface.size = Vector2i(width,1080)
+	for width: int in range(1280,2561,32):
+		surface.size = Vector2i(width,roundi(width*9.0/16.0))
 		await frames()
 		if previous_columns > 0 and app.album.grid.columns != previous_columns: transitions += 1
 		previous_columns = app.album.grid.columns
@@ -1219,7 +1220,15 @@ func compact_buttons() -> void:
 			check(labels[0].get_global_rect().end.x <= reset.get_global_rect().position.x-7*u, "KB metadata does not enter actions")
 			interiors.append({"card":region(card),"meta":region(labels[1]),"reset":region(reset),"preview":region(app.album.previews[index]),"status":region(app.album.notes[index])})
 		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0, "KB no horizontal overflow")
-		check(app.album.grid.columns > 4 if spec[0] >= 1920 else app.album.grid.columns >= 2, "KB responsive columns without four-column cap")
+		# B-B allocates cards within each physical half, not the old full window.
+		# Require room for every column and no avoidable spare whole column.
+		var columns: int = app.album.grid.columns
+		var minimum: float = app.choices[0].minimum_card_width(u)
+		var gap: float = 12*u
+		var available: float = app.album.scroll.size.x-app.album.scroll.get_v_scroll_bar().get_combined_minimum_size().x-2*u
+		var spare: float = available-columns*minimum-(columns-1)*gap
+		check(columns >= 1 and spare >= 0 and (columns >= mini(12,app.choices.size()) or spare < minimum+gap), "KB responsive columns fill the available book half")
+		check(app.album.right_grid.columns == columns and app.album.right_grid.size.x <= app.album.right_scroll.size.x and app.album.right_scroll.scroll_horizontal == 0, "KB right half shares responsive columns without overflow")
 		kb_measurements.append({"surface":spec,"columns":app.album.grid.columns,"widths":widths,"interiors":interiors})
 		await shot("compact-%d-ui%d" % [spec[0],spec[2]*100])
 		await choose("voegel")
