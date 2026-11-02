@@ -123,11 +123,15 @@ func run() -> void:
 		await shot("detail-%d-ui%d" % [spec[0],spec[2]*100])
 		app.show_album()
 		await process_frame
+		await process_frame
+		await process_frame
 		# Every slot can be brought into view, including the bottom row at 125%.
 		for choice: Button in app.choices:
 			app.album.ensure_control_visible(choice)
 			await process_frame
-			check(app.album.get_global_rect().encloses(choice.get_global_rect()), "all six choices reachable")
+			await process_frame
+			var scroller: ScrollContainer = app.album.right_scroll if app.album.right_grid.is_ancestor_of(choice) else app.album.scroll
+			check(scroller.get_global_rect().encloses(choice.get_global_rect()), "all six choices reachable inside their scroll viewport: %s card%s viewport%s" % [choice.leaf.text,choice.get_global_rect(),scroller.get_global_rect()])
 		check(app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))].payload.is_empty(), "album no hidden reveal payload")
 		await shot("album-partial-%d-ui%d" % [spec[0],spec[2]*100])
 	surface.size = Vector2i(1920,1080)

@@ -865,11 +865,12 @@ func catalog_labels() -> void:
 			check(app.work.visible and app.session.definition.id == "T-01","KE passive label click opens owning card: "+part)
 			app.show_album()
 			await frames()
-	# Cross actual column thresholds, rather than assuming the old 228px grid.
+	# Grow the physical book at 16:9 through the supported layout range. A wider
+	# window alone leaves this height-fitted book at the same physical scale.
 	var previous_columns: int = 0
 	var transitions: int = 0
-	for width: int in range(1280,1921,16):
-		surface.size = Vector2i(width,1080)
+	for width: int in range(1280,2561,32):
+		surface.size = Vector2i(width,roundi(width*9.0/16.0))
 		await frames()
 		if previous_columns > 0 and app.album.grid.columns != previous_columns: transitions += 1
 		previous_columns = app.album.grid.columns
