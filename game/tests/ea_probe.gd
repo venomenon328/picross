@@ -250,5 +250,5 @@ func run() -> void:
 	file.store_string(JSON.stringify(report,"\t")+"\n")
 	file.close()
 	if failures.is_empty(): print("EA_PROBE_OK ",checks)
-	app.free()
+	preload("res://tests/book_fixture.gd").dispose(app)
 	quit(0 if failures.is_empty() else 23)

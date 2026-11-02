@@ -1,23 +1,17 @@
 # Projektprofil: picross
 
-**Buch / #493, #496 · B-A-N06:** Die [isolierte ausführbare Bewegungsstudie](BOOK_STUDY.md)
-verwendet realistischen Buchkörper und gezeichnete reguläre UI mit synthetischen
-Inputs, Katalog-Doppelseite und rechter Arbeitsseite. Organische Papiertextur,
-ruhende Falzwölbung, sichere Innenabstände und animierte Rückkehr ergänzen N02;
-alle 27 Instanzen erhalten gültige ID-/Revealbindungen. Materialvergleich und
-erhaltene N04-Grundlagen sind bereinigte innere Enden, eigenständiges
-Tischbild, konsistente projizierte Papierkoordinaten auch bei 16:10 sowie
-links beginnende Kartenbelegung mit zwei unabhängigen Scrollständen. Eigene
-Ledertextur, Papier, Hover-/Tooltippfade und Arbeitsbudgets bleiben erhalten.
-N05 ergänzt Einstellungen links/Hilfe rechts im Nahmaßstab, zehn ursprungsgebundene
-Blatt-/Pan-/Zoomwege und den rechten Kopf Katalog/Einstellungen/Hilfe ohne linken
-Reiter. Optionen bleiben echte Controls; beide Informationsscrollstände und
-bewusste Einstellungsänderungen bleiben erhalten. N06 überarbeitet ausschließlich
-Falztal, Papierkrümmung und strukturelle Ledergelenke. B-A-N06-T01 bindet aktuelle
-Geometrie-, native und Windowsbelege. N05/F01 sind über PR #495 integriert;
-damalige Ausnahmen für Originalprüfungen bleiben historisch gebunden.
-Normaler Start und Navigation bleiben beim bisherigen A-Buch. B-B, neues
-unabhängiges B-A-R08, persönliche Kandidatenwahl B-A-M01 und Merge bleiben offen.
+**B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
+Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
+füllen zuerst zwölf Karten links, dann zwölf rechts; beide Hälften scrollen
+unabhängig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
+bewusst geänderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unverändert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+[B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
+B-A-R08-V02 und B-A-M01 sind über PR #497 abgeschlossen; die
+[Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
+Merge und Deployment sind getrennt offen.
 
 **RI · 29.10.2026, Spezifikation freigegeben, noch nicht implementiert:**
 [Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /

@@ -1,5 +1,11 @@
 # WEB-1: Browserbuild und manuelles SSH-Deployment
 
+**B-B / #498:** Der reguläre Webexport startet denselben [Buchroot](BOOK_INTEGRATION.md)
+wie Windows. Produkt-HTML, Appidentität, IndexedDB-/Lock-/Retrywege bleiben erhalten.
+Die technische Beobachtung erweitert diesen Root; die persistenzlose Studienshell
+ist kein Webspielernachweis. Der beauftragte Chromium-Kurzlauf und alle noch offenen
+Liefer-/Abnahmebindungen stehen in [B-B-T01](B_B_VERIFICATION.md).
+
 Zusätzliche statische Entwicklungsfassung aus [#162](https://github.com/venomenon328/picross/issues/162).
 Godot Standard 4.7.2-stable, Single-Thread, WebGL 2 und WebAssembly; Desktop mit
 Maus in Chromium und Firefox. Windows, Regeln, Schema 1 und Savevalidierung

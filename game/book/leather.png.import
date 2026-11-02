@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cyhg11og5ymg7"
-path="res://.godot/imported/leather.png-434e2b6a9781d988431ff2eba303f204.ctex"
+path="res://.godot/imported/leather.png-f99ee14f2a10eece45829327bb304406.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://study/book/leather.png"
-dest_files=["res://.godot/imported/leather.png-434e2b6a9781d988431ff2eba303f204.ctex"]
+source_file="res://book/leather.png"
+dest_files=["res://.godot/imported/leather.png-f99ee14f2a10eece45829327bb304406.ctex"]
 
 [params]
 

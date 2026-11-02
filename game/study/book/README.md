@@ -1,7 +1,8 @@
 # Buchstudie B-A-N06 · #496
 
-Isolierter ausführbarer Studienstand. Der normale Spielstart verwendet weiterhin
-das bisherige A-Buch. Drei feste synthetische Muster unter 27 Katalog-IDs, keine echten Rätsel oder
+Isolierter ausführbarer Studienadapter um den gemeinsamen Kern unter `game/book/`.
+Der normale Spielstart verwendet die [reguläre B-B-Integration](../../../docs/BOOK_INTEGRATION.md).
+Die Studie enthält drei feste synthetische Muster unter 27 Katalog-IDs, keine echten Rätsel oder
 Spielstände; Bearbeitung und Sortierung gelten nur bis zum Schließen der Studie.
 
 Mit der gebundenen Godot-4.7.2-Toolchain nach Import:
@@ -43,7 +44,7 @@ Katalogfilter/-sortierung und beide Scrollstände bleiben erhalten; bewusst geä
 Optionen werden übernommen. Derselbe Informationszugang setzt Scrollen nicht zurück.
 Escape während Eintritt/Pan stabilisiert die Quelle, während Rückkehr den Ursprung.
 Resize, UI-Wechsel und Fokusverlust stabilisieren jeweils das gewählte Ziel.
-Diese Wege bleiben studienlokal, keine B-B-Integration.
+Diese H?lle pr?ft dieselbe Pr?sentation mit isolierten Inputs.
 
 Der getrennte Windows-Studienexport startet mit `book-study.exe`; EXE und PCK
 bleiben zusammen. Der Webexport benötigt einen lokalen HTTP-Server. Er wurde
@@ -67,11 +68,12 @@ python tools/book_study.py --cache-dir <gebundener-archivcache> --output-dir <le
 
 Der Harness isoliert Projekt und Benutzerpfade, prüft native Bewegung und die
 drei bestehenden Konfigurationen und gezielt 1920×1200/UI100, erzeugt einen 30-fps-Enginefilm sowie getrennte
-Windows-/Webstudienexporte und kontrolliert beide regulären Pakete auf Ausschluss.
-Er startet keinen Browser. `--native-only` ist eine ausdrücklich unvollständige
-Entwicklungsprüfung ohne Exporte. Quellenbindung, Hashes, Zeiten und Grenzen
+den regulären Lifecycle an synthetischen Daten. Er startet keinen Browser.
+`--native-only` ist der Standard; reguläre Exporte werden von den Produkt-/Web-
+Buildern geprüft. `--study-exports` erzeugt nur bei gesondertem Bedarf die frühere
+Studienmatrix. Quellenbindung, Hashes, Zeiten und Grenzen
 stehen in `report.json`; `native.json` und Originalframes ergänzen den Nachweis.
-Unter Windows führt der exportierte Player zusätzlich Standardfenster,
+Im optionalen Studienexport führt der Windowsplayer zusätzlich Standardfenster,
 Maximieren, Öffnen/Bearbeiten/Rückkehr und Wiederherstellen aus. Der Bericht
 `windows-native.json` trennt Desktop-, Client-/Framebuffermaße und Skalierungen.
 
@@ -149,6 +151,7 @@ Clientbilder. Anschließend läuft die vorhandene F01-Regressionsroute unveränd
 Vier kleine Shader-Tiefenbilder prüfen den echten Falz mit verbreitertem Spalt
 und flacher Geometrie als Gegenbeispielen; der Einband bleibt im bisherigen Budget.
 
-Bericht, Zustandsvertrag und offene Gates: [B-A-N06-T01](../../../docs/BOOK_STUDY.md).
-Unabhängiges R08, persönliche B-A-M01, B-B und Merge bleiben offen.
+Historischer Bericht und Zustandsvertrag: [B-A-N06-T01](../../../docs/BOOK_STUDY.md).
+Unabhängiges R08 und persönliche B-A-M01 sind auf PR #497 abgeschlossen.
+Für B-B gelten die getrennten Gates im [aktuellen T01](../../../docs/B_B_VERIFICATION.md).
 Frühere F01-Reviews und Eigentümerausnahmen bleiben an PR #495 gebunden.

@@ -1,31 +1,19 @@
 # Z2: aktive Auswahl und native Integration
 
-## Buchrichtung #493 / #496 · isolierter B-A-N06-Studienstand
+## Reguläre Buchrichtung #493 / B-B
 
-Die [Bewegungsstudie](BOOK_STUDY.md) untersucht realistische Buch-/Umgebungsmaterialien,
-mitbewegte gezeichnete Inhalte, Katalog-Doppelseite, kurzes Blättern in beide
-Richtungen und drei einzelne Blätter in insgesamt drei Sekunden zur rechten
-Arbeitsseite mit Bindung links. N02 ergänzt sichtbare Buchkante, sichere Innenabstände,
-organisches Papier, reale ruhende Falzwölbung, transparente Controls und eine
-1,8-s-Rückkehr. N03 konstruiert die Rand-/Rückenanschlüsse gemeinsam und ersetzt
-Bildausschnitte des A-Buchs durch eine eigene homogene Ledertextur. A bleibt
-unveränderte Qualitätsreferenz; eigenes Papier liefert die Innenflächen. Für diese neue
-Richtung sind das flache A-PNG, reine Informationsspiegelung und das Verbot gezielter
-Kamerabewegung keine Architekturvorgabe. Regulärer Spielstart, Originalressourcen,
-Fonts, C1 und SL-Rahmen bleiben in B-A unverändert. B-B und persönliche Auswahl
-sind getrennte spätere Schritte; historische GD-/BP-Bindungen bleiben erhalten.
-N04 entfernt durchstoßende Zierbanddetails an den inneren Enden, verwendet eine
-eigene zusammenhängende Tischbildressource und leitet die Kataloganordnung auch
-bei 16:10 aus der projizierten Papierfläche ab. Karten füllen zuerst links bis
-zwölf, dann rechts bis zwölf; beide Scrollstände bleiben unabhängig erhalten.
-N05 erweitert ausschließlich die Studie um nahe Einstellungen links/Hilfe rechts
-mit eigenen Scroll-/Clipflächen und gebundenem Rückkehrursprung. Der rechte
-Arbeitskopf enthält Katalogpfeil, Menü und Hilfe; der linke Reiter entfällt.
-Die mittlere Menü-/Sidebarachse und alle Arbeitsbudgets bleiben erhalten.
-Reguläre Z2-Navigation wird damit nicht umgestellt. N05/F01 sind über PR #495
-integriert. N06 bearbeitet Falztal, räumliche Papierkrümmung und den ledernen
-Einbandsteg mit erhaltenen Bewegungs-/UI-Verträgen. Neues unabhängiges R08,
-persönliche B-A-M01, B-B und Merge bleiben offen.
+**B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
+Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
+füllen zuerst zwölf Karten links, dann zwölf rechts; beide Hälften scrollen
+unabhängig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
+bewusst geänderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unverändert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+[B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
+B-A-R08-V02 und B-A-M01 sind über PR #497 abgeschlossen; die
+[Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
+Merge und Deployment sind getrennt offen.
 
 ## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 

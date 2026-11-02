@@ -61,8 +61,13 @@ func snapshot(full: bool = false) -> Dictionary:
 		"focus":identity(root.gui_get_focus_owner()),"board_hover":[board.hover.x,board.hover.y],
 		"gesture":session.gesture.active,"held":board.held_button,"blocked":board.cell_buttons_blocked,
 		"clue":board.clue_press_owned,"cursor":session.player.cursor,"history_size":session.player.history.size(),
-		"tool":[board.eraser,board.active_color],"tips":tips,"selected":study.selected_id,"writes":app.store.writes}
+		"tool":[board.eraser,board.active_color],"tips":tips,"selected":study.selected_id}
 	if full:
+		row["presentation"] = study.get_script().resource_path
+		row["renderer"] = RenderingServer.get_video_adapter_name()
+		row["framebuffer"] = [root.get_texture().get_width(),root.get_texture().get_height()]
+		row["screen_dpi"] = DisplayServer.screen_get_dpi()
+		row["screen_scale"] = DisplayServer.screen_get_scale()
 		row["ui_scale"] = app.ui_scale
 		row["section"] = app.info.section
 		row["scale_control"] = rect(app.ui_scale_button)
@@ -70,12 +75,23 @@ func snapshot(full: bool = false) -> Dictionary:
 		row["info_return"] = rect(app.actions["nav-work"] if app.info.section == "settings" else app.info.right_return)
 		row["cells"] = session.player.cells
 		row["history"] = session.player.history
-		row["memory"] = app.store.snapshots.get(session.definition.id,{})
+		if "snapshots" in app.store:
+			row["memory"] = app.store.snapshots.get(session.definition.id,{})
+			row["writes"] = app.store.writes
+		else:
+			var path: String = app.store.path_for(app.store.key_for_definition(session.definition.id))
+			row["slot_path"] = ProjectSettings.globalize_path(path)
+			row["memory"] = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}
+			row["save_error"] = app.save_error
+			row["retry"] = rect(app.save_retry)
+			row["retry_visible"] = app.save_retry.is_visible_in_tree()
 		row["board_rect"] = rect(board)
 		var grid: Rect2 = board.view.bounds()
 		row["grid"] = [grid.position.x+board.global_position.x,grid.position.y+board.global_position.y,grid.size.x,grid.size.y]
 		row["cell_size"] = board.view.cell_size
-		row["card"] = rect(app.album.choices[1])
+		var index: int = app.album.visible_ids.find("T-06")
+		row["card"] = rect(app.album.choices[index]) if index >= 0 else []
+		row["card_clip"] = rect(app.album.right_scroll if index >= 12 else app.album.scroll)
 	return row
 
 func record(event: String, detail: Dictionary = {}) -> void:

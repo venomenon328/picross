@@ -10,8 +10,7 @@ func point(item: Control) -> Array:
 	return [p.x,p.y]
 
 func run() -> void:
-	app=load("res://main.tscn").instantiate()
-	root.add_child(app)
+	app=preload("res://tests/book_fixture.gd").attach(root)
 	root.size=Vector2i(1280,720)
 	await process_frame
 	await process_frame

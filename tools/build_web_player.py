@@ -68,9 +68,13 @@ def build(cache: Path, output: Path, *, test: bool = False, development: bool = 
             install(project, test_reveal_revision)
             preset = project/'export_presets.cfg'
             preset.write_text(preset.read_text(encoding='utf-8').replace('data/*.json,', 'data/fixtures/*.json,data/*.json,'), encoding='utf-8', newline='\n')
-            shutil.copyfile(root/'tools/web_tests/probe.gd', project/'ui/web_probe.gd')
+            shutil.copyfile(root/'tools/web_tests/probe.gd', project/'book/web_probe.gd')
+            shutil.copyfile(root/'tools/web_tests/book_root.gd', project/'book/web_root.gd')
             scene = project/'main.tscn'
-            scene.write_text(scene.read_text(encoding='utf-8').replace('res://ui/main.gd', 'res://ui/web_probe.gd'), encoding='utf-8', newline='\n')
+            original_scene = scene.read_text(encoding='utf-8')
+            if original_scene.count('res://book/main.gd') != 1:
+                raise ValueError('Technical observer must use the regular book root')
+            scene.write_text(original_scene.replace('res://book/main.gd', 'res://book/web_root.gd'), encoding='utf-8', newline='\n')
         exported = work/'export'
         exported.mkdir()
         logs = output.parent/(output.name+'-logs')

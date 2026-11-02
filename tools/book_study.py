@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build and verify the isolated #493 B-A study; never launches a browser."""
+"""Verify shared book presentation and B-B lifecycle; never launches a browser."""
 from __future__ import annotations
 
 import argparse
@@ -21,8 +21,10 @@ from p1_product import run_phase, require_clean_output, player_extras
 from build_web_player import extract_web_templates
 from product_fixtures import install_runtime_fixtures
 from p1_evidence import source_identity
+from book_contract import SOURCES
 
 STUDY = "study/book"
+PRESENTATION = "book"
 
 
 def fixtures() -> dict:
@@ -84,11 +86,10 @@ def write_fixtures() -> None:
 
 def prepare(project: Path) -> None:
     shutil.copytree(ROOT / "game", project, ignore=shutil.ignore_patterns(".godot", "build", "content"))
-    settings = project / "project.godot"
-    settings.write_text(settings.read_text(encoding="utf-8").replace('run/main_scene="res://main.tscn"', 'run/main_scene="res://study/book/main.tscn"').replace('config/name="picross · P1"', 'config/name="picross · Buchstudie B-A"'), encoding="utf-8", newline="\n")
+    install_runtime_fixtures(ROOT, project)
 
 
-def run(cache: Path, output: Path, native_only: bool = False) -> dict:
+def run(cache: Path, output: Path, native_only: bool = True) -> dict:
     if output.exists() and any(output.iterdir()):
         raise ValueError("Output must be empty")
     output.mkdir(parents=True, exist_ok=True)
@@ -100,10 +101,12 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
     urls = tc.official_asset_urls(tc.request_json(tc.RELEASE_API), assets)
     for asset in assets:
         tc.download_asset(urls[asset.name], cache / asset.name, asset.sha256, 1200)
-    report = dict(package="B-A-N06-T01", **source_identity(ROOT),
+    report = dict(package="B-B-T01", scope="shared-presentation-and-product-lifecycle", **source_identity(ROOT),
                   host=host, platform=platform.platform(), python=platform.python_version(),
                   engine=tc.EXPECTED_VERSION, phases=[], browser="not requested; not started")
     report["sources"] = {p.relative_to(ROOT).as_posix(): tc.sha256_file(p) for p in sorted((ROOT / "game" / STUDY).rglob("*")) if p.is_file()}
+    report["sources"].update({p.relative_to(ROOT).as_posix(): tc.sha256_file(p) for p in sorted((ROOT / "game" / PRESENTATION).rglob("*")) if p.is_file()})
+    report["sources"].update({name: tc.sha256_file(ROOT/name) for name in SOURCES})
     report["sources"]["tools/book_study.py"] = tc.sha256_file(Path(__file__))
     for name in ('game/ui/book_button.gd', 'game/ui/book_tooltip.gd', 'game/ui/book_style.gd', 'game/ui/catalog_tip.gd',
                  'tools/native_results.py', 'tools/test_book_study.py'):
@@ -112,17 +115,17 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
     report["material_source"] = dict(file=material.relative_to(ROOT).as_posix(), sha256=tc.sha256_file(material), bytes=material.stat().st_size)
     if report["material_source"]["sha256"] != "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a":
         raise ValueError("The bound original A material changed")
-    paper = ROOT / 'game' / STUDY / 'paper.png'
+    paper = ROOT / 'game' / PRESENTATION / 'paper.png'
     paper_metadata = json.loads(paper.with_suffix('.json').read_text(encoding='utf-8'))
     if tc.sha256_file(paper) != paper_metadata['sha256'] or paper.stat().st_size != paper_metadata['bytes']:
         raise ValueError('Organic paper source differs from its provenance')
     report['organic_paper'] = dict(paper_metadata)
-    leather = ROOT / 'game' / STUDY / 'leather.png'
+    leather = ROOT / 'game' / PRESENTATION / 'leather.png'
     metadata = json.loads(leather.with_suffix('.json').read_text(encoding='utf-8'))
     if tc.sha256_file(leather) != metadata['sha256'] or leather.stat().st_size != metadata['bytes']:
         raise ValueError('Independent leather differs from its provenance')
     report['leather'] = metadata
-    table = ROOT / 'game' / STUDY / 'table.png'
+    table = ROOT / 'game' / PRESENTATION / 'table.png'
     metadata = json.loads(table.with_suffix('.json').read_text(encoding='utf-8'))
     if tc.sha256_file(table) != metadata['sha256'] or table.stat().st_size != metadata['bytes']:
         raise ValueError('Independent tabletop differs from its provenance')
@@ -140,21 +143,30 @@ def run(cache: Path, output: Path, native_only: bool = False) -> dict:
             if render and host == "Linux":
                 command = ["xvfb-run", "-a", *command]
                 env["LIBGL_ALWAYS_SOFTWARE"] = "1"
-            result = run_phase("book-" + name, command, env, 300, logs)
+            # B-B owner clarification, 2026-11-02: elapsed-time targets are
+            # diagnostic, not an acceptance gate. Retain a finite hang guard
+            # for the complete shared visual proof without cutting its cases.
+            timeout = 600 if name == "native" else 300
+            result = run_phase("book-" + name, command, env, timeout, logs)
+            result["timeout_seconds"] = timeout
             report["phases"].append({k: v for k, v in result.items() if k != "output"})
             require_clean_output(result, marker)
         base = ["--path", str(project), "--audio-driver", "Dummy"]
         phase("version", ["--version"], tc.EXPECTED_VERSION)
         phase("import", ["--headless", *base, "--import"])
-        imported = project / '.godot/imported/paper.png-d97cf9011e5b971689c7f26fae3c148d.ctex'
+        imported = project / '.godot/imported/paper.png-79159670a810b77db2e9ca44b312b09f.ctex'
         report['organic_paper']['imported_texture'] = dict(bytes=imported.stat().st_size, sha256=tc.sha256_file(imported))
-        report['organic_paper']['import_settings_sha256'] = tc.sha256_file(project / STUDY / 'paper.png.import')
-        imported_leather = project / '.godot/imported/leather.png-434e2b6a9781d988431ff2eba303f204.ctex'
+        report['organic_paper']['import_settings_sha256'] = tc.sha256_file(project / PRESENTATION / 'paper.png.import')
+        imported_leather = project / '.godot/imported/leather.png-f99ee14f2a10eece45829327bb304406.ctex'
         report['leather']['imported_texture'] = dict(bytes=imported_leather.stat().st_size, sha256=tc.sha256_file(imported_leather))
-        report['leather']['import_settings_sha256'] = tc.sha256_file(project / STUDY / 'leather.png.import')
-        imported_table = project / '.godot/imported/table.png-ac6fae3d857328c85675d2f2587f2353.ctex'
+        report['leather']['import_settings_sha256'] = tc.sha256_file(project / PRESENTATION / 'leather.png.import')
+        imported_table = project / '.godot/imported/table.png-28a50a2d09a1329c3366d17db7b748f7.ctex'
         report['table']['imported_texture'] = dict(bytes=imported_table.stat().st_size, sha256=tc.sha256_file(imported_table))
-        report['table']['import_settings_sha256'] = tc.sha256_file(project / STUDY / 'table.png.import')
+        report['table']['import_settings_sha256'] = tc.sha256_file(project / PRESENTATION / 'table.png.import')
+        integration = output / "integration"
+        integration.mkdir()
+        env["BOOK_INTEGRATION_OUTPUT"] = str(integration)
+        phase("integration", [*base, "--rendering-driver", "opengl3", "--script", "res://tests/book_integration.gd", "--", "--p1-capture"], "BOOK_INTEGRATION_OK", True)
         phase("native", [*base, "--rendering-driver", "opengl3", "--script", "res://study/book/verify.gd", "--", "--p1-capture"], "BOOK_STUDY_OK", True)
         started = time.monotonic()
         report["handoff_pixels"] = verify_handoffs(output)
@@ -175,7 +187,9 @@ def export_all(work, project, cache, output, env, phase, base, report):
     tc.extract_windows_templates(cache / tc.TEMPLATES.name, templates)
     extract_web_templates(cache / tc.TEMPLATES.name, templates)
     settings = project / "project.godot"
-    study_settings = settings.read_bytes()
+    study_settings = settings.read_text(encoding='utf-8').replace(
+        'run/main_scene="res://main.tscn"', 'run/main_scene="res://study/book/main.tscn"').replace(
+        'config/name="picross · P1"', 'config/name="picross · Buchstudie B-A"').encode('utf-8')
     preset = project / "export_presets.cfg"
     regular_presets = preset.read_bytes()
     from product_fixtures import restore_player_catalog
@@ -212,9 +226,9 @@ def export_all(work, project, cache, output, env, phase, base, report):
         guide = (ROOT / "game/study/book/README.md").read_text(encoding="utf-8")
         guide = guide.replace("../../../docs/BOOK_STUDY.md", f"https://github.com/venomenon328/picross/blob/{report['source_commit']}/docs/BOOK_STUDY.md")
         (target.parent / "STUDIE.md").write_text(guide, encoding="utf-8", newline="\n")
-        shutil.copyfile(ROOT/'game'/STUDY/'paper.json',target.parent/'licenses/Study-paper.json')
-        shutil.copyfile(ROOT/'game'/STUDY/'leather.json',target.parent/'licenses/Study-leather.json')
-        shutil.copyfile(ROOT/'game'/STUDY/'table.json',target.parent/'licenses/Study-table.json')
+        shutil.copyfile(ROOT/'game'/PRESENTATION/'paper.json',target.parent/'licenses/Study-paper.json')
+        shutil.copyfile(ROOT/'game'/PRESENTATION/'leather.json',target.parent/'licenses/Study-leather.json')
+        shutil.copyfile(ROOT/'game'/PRESENTATION/'table.json',target.parent/'licenses/Study-table.json')
     if platform.system() == "Windows":
         native = output / "windows/book-study.exe"
         result = run_phase("book-windows-exported-motion", [str(native), "--rendering-driver", "opengl3", "--audio-driver", "Dummy", "--quit-after", "1200", "--", "--book-study-proof"], env, 90, output / "logs")
@@ -233,7 +247,7 @@ def study_presets() -> str:
                   "ui/pencil_marks.gd", "study/book/verify.gd", "study/book/pack_probe.gd", "study/book/tooltip_cases.gd", "study/book/f01_cases.gd", "study/book/windows_observer.gd", "study/book/n04_cases.gd", "study/book/n05_cases.gd", "study/book/n06_cases.gd", *legacy]
     common = '''runnable=false
 export_filter="all_resources"
-include_filter="study/book/fixtures.json,study/book/data/*.json,study/book/art/*.svg,study/book/paper.json,study/book/leather.json,study/book/table.json,art/book/*.json,art/book/*.txt,art/drawing/delight-coffee/*,art/drawing/tidy-hand/*"
+include_filter="study/book/fixtures.json,study/book/data/*.json,study/book/art/*.svg,book/*.json,art/book/*.json,art/book/*.txt,art/drawing/delight-coffee/*,art/drawing/tidy-hand/*"
 ''' + 'exclude_filter="' + ','.join(exclusions) + '"\nscript_export_mode=2\n'
     return '[preset.0]\nname="Book study Windows"\nplatform="Windows Desktop"\n' + common + '''
 [preset.0.options]
@@ -320,10 +334,11 @@ if __name__ == "__main__":
     parser.add_argument("--write-fixtures", action="store_true")
     parser.add_argument("--cache-dir", type=Path)
     parser.add_argument("--output-dir", type=Path)
-    parser.add_argument("--native-only", action="store_true")
+    parser.add_argument("--native-only", action="store_true", help="Shared native checks (the default)")
+    parser.add_argument("--study-exports", action="store_true", help="Optional isolated study exports; not part of the B-B delivery gate")
     args = parser.parse_args()
     if args.write_fixtures:
         write_fixtures()
     else:
         if args.cache_dir is None or args.output_dir is None: parser.error("cache and output are required")
-        run(args.cache_dir.resolve(), args.output_dir.resolve(), args.native_only)
+        run(args.cache_dir.resolve(), args.output_dir.resolve(), not args.study_exports)

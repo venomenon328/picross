@@ -1,6 +1,19 @@
 # Aktiver Bestand und historische Quellen
 
-**Buchstudie B-A-N06 / #493, #496:** `game/study/book/` erhält den ausführbaren isolierten
+**B-B / #498:** `game/book/` enthält die gemeinsame Produktdarstellung samt drei
+unveränderten Materialbildern und deren Import-/Herkunftsmetadaten. Der reguläre
+Windows-/Webstart verwendet diese Quellen; `game/study/book/` enthält nur noch
+den isolierten Untersuchungsadapter, synthetische Inputs und technische Prüfer.
+`game/tests/book_fixture.gd` bindet bestehende Komponentenprüfungen an dieselbe
+Produktwurzel, `book_integration.gd` prüft ihren unbeschleunigten Lebenszyklus.
+`book-save-v1.json` ist ein einzelner eingefrorener synthetischer Schema-1-Beleg.
+`tools/book_contract.py` bindet den begrenzten Runtime-/Prüfbestand; die beiden
+neuen Dokumente [Vertrag](BOOK_INTEGRATION.md) und [T01](B_B_VERIFICATION.md)
+enthalten aktive Integration beziehungsweise Liefernachweis. Temporäre Originale,
+Exporte und Film bleiben in begrenzten Prüfarbeitsdaten; keine neue Bildgalerie.
+
+**Historische Herkunft B-A-N06 / #493, #496 (R08/M01 auf PR #497 abgeschlossen):**
+Der damalige Bestand unter `game/study/book/` erhielt den ausführbaren isolierten
 Untersuchungsstand, zwei eigene Materialshader und kompakte synthetische Inputs
 samt deterministischer Erzeugung und studieneigener Doppelseitenanordnung.
 Das bestehende A-Bild bleibt unveränderte Qualitätsreferenz. Eine originale

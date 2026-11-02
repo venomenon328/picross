@@ -14,8 +14,7 @@ func run() -> void:
 		return
 	SaveStore.test_root_override = isolated
 	root.size = Vector2i(1600, 900)
-	var app: Main = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(root)
 	await process_frame
 	await process_frame
 	app.select_puzzle(2)

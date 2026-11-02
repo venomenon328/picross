@@ -135,8 +135,11 @@ func run() -> void:
 	surface.size = Vector2i(1920, 1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(surface)
-	app = load("res://study/main.tscn" if role == "study" else "res://main.tscn").instantiate()
-	surface.add_child(app)
+	if role == "study":
+		app = load("res://study/main.tscn").instantiate()
+		surface.add_child(app)
+	else:
+		app = preload("res://tests/book_fixture.gd").attach(surface)
 	await process_frame
 	await create_timer(0.3).timeout
 	for spec: Array in [

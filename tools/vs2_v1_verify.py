@@ -69,11 +69,16 @@ def sidebar_axes(r, ui):
     require(all(math.isfinite(v) for v in [*material,*frames,*controls,axes['navigation'],
                                           *(v for b in buttons for v in b)]), 'finite axes')
     x,y,w,h = material
+    # Regular B-B: right-hand work camera, original pixel-scaled hit budgets.
+    # Reconstruct the projected top rim from the fixed camera contract; do not
+    # trust a producer-supplied expected button position.
+    width, height = r['client']
+    paper_top = .28*height/max(6.075,10.8*height/width)
     for i,b in enumerate(buttons):
-        expected = [x+w-(187.5 if w<1700 else 150)-(2-i)*58*ui-20*ui,
-                    y+h/30+12*ui,44*ui,44*ui]
-        require(all(close(a,e) for a,e in zip(b,expected)), 'unchanged upper navigation')
-    upper = (buttons[0][0]+buttons[2][0]+buttons[2][2])/2
+        expected = [x+w-(187.5 if w<1700 else 150)-i*58*ui-20*ui,
+                    max(y+h/30+12*ui,paper_top+5*ui),44*ui,44*ui]
+        require(all(close(a,e) for a,e in zip(b,expected)), 'regular book upper navigation')
+    upper = (buttons[2][0]+buttons[0][0]+buttons[0][2])/2
     require(close(axes['navigation'],upper), 'actual navigation union')
     require(all(close(v,upper) for v in frames+controls), 'lower alpha/actual controls vs upper axis')
 

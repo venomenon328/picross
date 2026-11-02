@@ -282,8 +282,7 @@ func pictures() -> void:
 func run() -> void:
 	output=OS.get_environment("PERF_B_OUTPUT")
 	Store.test_root_override=output.path_join("isolated-saves")
-	app=load("res://main.tscn").instantiate()
-	root.add_child(app)
+	app=preload("res://tests/book_fixture.gd").attach(root)
 	root.size=Vector2i(1920,1080)
 	await settle()
 	app.select_puzzle(1)

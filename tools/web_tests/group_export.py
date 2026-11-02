@@ -15,7 +15,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     assert first_fixture['image_revision']==1 and second_fixture['image_revision']==2
     assert first_fixture['definitions']==second_fixture['definitions'] and first_fixture['registry_sha256']==second_fixture['registry_sha256']
     assert first_fixture['image_sha256']!=second_fixture['image_sha256']
-    control(page,name='nav-album');control(page,text='Blatt 03')
+    control(page,name='catalog-return');control(page,text='Blatt 03')
     draw(page,(0,2),(4,2));wait(page,'picrossProbe.completed && !picrossProbe.ea_active');saved(page)
     at_slots=state(page,'slots')['slots']
     at_before=capture(page,output,f'{name}-at-before-update',state(page,'at_image')['at_image'])

@@ -27,8 +27,7 @@ func run() -> void:
 	if not OS.get_environment("P1_TEST_SAVE_ROOT").is_empty():
 		Store.test_root_override = OS.get_environment("P1_TEST_SAVE_ROOT")
 	root.size = Vector2i(1920,1080)
-	app = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(root)
 	await process_frame
 	await process_frame
 	if not OS.get_environment("P1_TEST_SAVE_ROOT").is_empty():

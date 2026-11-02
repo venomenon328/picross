@@ -62,8 +62,7 @@ func run() -> void:
 	canvas.size = Vector2i(1920,1080)
 	canvas.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(canvas)
-	app = load("res://main.tscn").instantiate()
-	canvas.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(canvas)
 	await process_frame
 	check(app.album.visible and not app.work.visible and not app.ending.visible, "fresh regular startup is collection")
 	check(app.board.mode == "G" and app.view_choice.item_count == 2 and not app.actions.has("hand"), "one named option, G default, no hand")
@@ -148,11 +147,9 @@ func run() -> void:
 		for i: int in range(prior.size()):
 			if i != index: check(after[i] == prior[i], "other clue reads unchanged")
 	await native_clue_boundaries()
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
-	app = Cases.new()
-	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	canvas.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(canvas,Cases)
 	await process_frame
 	await matrix(true)
 	await rectangular_input()

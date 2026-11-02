@@ -324,9 +324,16 @@ func select_by_id(id: String) -> void:
 
 func _activate_session(index: int) -> bool:
 	if index < 0 or index >= sessions.size(): return false
+	if slot_status[index] == "error": return false
 	_cancel_interaction()
 	if not _flush_current(): return false
 	if session != null and _puzzle_view_active(): session.view_state = board.capture_view()
+	_bind_session(index)
+	return true
+
+func _bind_session(index: int) -> void:
+	# Presentation can restore a previously validated binding without a second
+	# flush. The caller owns the fallible transition before entering this method.
 	reveal_view.clear()
 	session = sessions[index]
 	board.session = session
@@ -338,7 +345,6 @@ func _activate_session(index: int) -> bool:
 	session.view_state = board.capture_view()
 	_update_palette()
 	_update_status()
-	return true
 
 func select_puzzle(index: int) -> void:
 	if _activate_session(index): open_puzzle()
@@ -346,6 +352,10 @@ func select_puzzle(index: int) -> void:
 func show_album() -> void:
 	_cancel_interaction()
 	if not _flush_current(): return
+	present_album()
+
+func present_album() -> void:
+	# Redisplay is deliberately separate from the fallible navigation boundary.
 	board.clear_clue_hover()
 	information.hide()
 	album.show()
@@ -414,7 +424,7 @@ func _layout_completion() -> void:
 	var width := paper.size.x - 200*u
 	var top := paper.position.y + maxf(paper.size.y*0.039+57*u, 94*u)
 	if status_label.visible:
-		top = maxf(top, paper.position.y+85+78*u+(56*u if work_repair_button.visible else 0.0))
+		top = maxf(top, paper.position.y+85+78*u+(56*u if _save_action_visible() else 0.0))
 	_place(ending, Rect2(Vector2.ZERO, size))
 	_place(reveal_view, Rect2(Vector2.ZERO, size))
 	completion_title.size = Vector2(width, 0)
@@ -546,6 +556,9 @@ func _update_status() -> void:
 		work_repair_button.text = "Backup erneuern" if state == "backup_invalid" else "Backup zum Speichern übernehmen"
 	if work != null and (work.visible or ending.visible) and (previous_visibility != status_label.visible or previous_repair != work_repair_button.visible):
 		_layout_book()
+
+func _save_action_visible() -> bool:
+	return work_repair_button != null and work_repair_button.visible
 
 func _ask_reset() -> void:
 	if session != null: _ask_reset_id(str(session.definition.id))
@@ -720,25 +733,9 @@ func _smoke() -> void:
 			push_error("Decorated start window exceeds usable monitor area")
 			get_tree().quit(7)
 			return
-	for i: int in range(sessions.size()):
-		select_puzzle(i)
-		await get_tree().process_frame
-		await get_tree().process_frame
-		var cell: Vector2i = board.view.hit(board.view.viewport.get_center())
-		var point: Vector2 = board.view.cell_rect(cell).get_center()
-		board.pointer_press(point, MOUSE_BUTTON_LEFT)
-		board.pointer_release(point, true)
-		if session.player.cells.count(1) != 1 or session.completed != session.is_solution() or (not session.completed and not session.reveal().is_empty()):
-			get_tree().quit(3)
-			return
-		_undo()
-		show_information("settings")
-		if not information.visible or work.visible:
-			get_tree().quit(9)
-			return
-		return_to_work()
-	show_album()
-	print("P1_START_OK: ", sessions.size(), " registered fixtures -> mouse -> undo -> album; isolated persistence")
+	# This path also runs in the real catalog export. Input/history/navigation
+	# belong to the isolated native and browser fixtures, never a catalog replay.
+	print("P1_START_OK: regular catalog initialized; no puzzle replay")
 	get_tree().quit(0)
 
 func _icon_button(id: String, action: Callable, parent: Control) -> BookButton:
@@ -969,7 +966,7 @@ func _layout_book(prepare_board: bool = false) -> void:
 	var rail_top: float = top
 	if work.visible and status_label.visible:
 		top += 106*u
-		if work_repair_button.visible:
+		if _save_action_visible():
 			top += 50*u
 	# Album, information and earned artwork need no hidden grid/font fit.
 	# Opening work or restoring a selected slot prepares the current geometry.

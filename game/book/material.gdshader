@@ -1,6 +1,6 @@
 shader_type spatial;
 render_mode unshaded, cull_disabled;
-#include "res://study/book/fold.gdshaderinc"
+#include "res://book/fold.gdshaderinc"
 uniform sampler2D leather_source : source_color, filter_linear_mipmap, repeat_enable;
 uniform sampler2D table_source : source_color, filter_linear_mipmap, repeat_disable;
 uniform vec4 base_color : source_color = vec4(1.0);
