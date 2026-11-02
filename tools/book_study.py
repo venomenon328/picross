@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 from pathlib import Path
 import platform
 import shutil
@@ -138,22 +137,18 @@ def run(cache: Path, output: Path, native_only: bool = True) -> dict:
         project = work / "game"
         prepare(project)
         env = tc.isolated_environment(work, host)
-        if host == "Linux":
-            # The scene thread and bounded PNG writer share this runner with
-            # llvmpipe. Leave them CPU capacity instead of adding a renderer
-            # worker for every available CPU. This changes no rendered input,
-            # frame size, assertion, product clock or phase timeout.
-            cpus = len(os.sched_getaffinity(0)) if hasattr(os, "sched_getaffinity") else (os.cpu_count() or 1)
-            env["LP_NUM_THREADS"] = str(max(1, cpus - 2))
-            report["software_renderer"] = dict(available_cpus=cpus, lp_num_threads=int(env["LP_NUM_THREADS"]))
-            print("BOOK_SOFTWARE_RENDERER " + json.dumps(report["software_renderer"]), flush=True)
         env["BOOK_STUDY_OUTPUT"] = str(output)
         def phase(name, args, marker=None, render=False):
             command = [engine, *args]
             if render and host == "Linux":
                 command = ["xvfb-run", "-a", *command]
                 env["LIBGL_ALWAYS_SOFTWARE"] = "1"
-            result = run_phase("book-" + name, command, env, 300, logs)
+            # B-B owner clarification, 2026-11-02: elapsed-time targets are
+            # diagnostic, not an acceptance gate. Retain a finite hang guard
+            # for the complete shared visual proof without cutting its cases.
+            timeout = 600 if name == "native" else 300
+            result = run_phase("book-" + name, command, env, timeout, logs)
+            result["timeout_seconds"] = timeout
             report["phases"].append({k: v for k, v in result.items() if k != "output"})
             require_clean_output(result, marker)
         base = ["--path", str(project), "--audio-driver", "Dummy"]
