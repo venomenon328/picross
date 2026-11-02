@@ -15,7 +15,12 @@ def options(name):
         # allow the Xvfb/Mesa driver instead of the shell's forced SwiftShader.
         # https://playwright.dev/python/docs/browsers#chromium-new-headless-mode
         # https://chromium.googlesource.com/chromium/src/+/main/docs/gpu/using-gpu-hardware-in-headless-chrome.md
-        result.update(channel='chromium', args=['--enable-gpu', '--use-gl=angle', '--use-angle=gl'])
+        # The recorded driver is Mesa llvmpipe, which Chromium's software
+        # rendering list entry 3 blocks categorically. This explicit isolated
+        # software run needs that driver; keep normal platform defaults intact.
+        # https://chromium.googlesource.com/chromium/src/+/main/gpu/config/software_rendering_list.json
+        result.update(channel='chromium', args=['--enable-gpu', '--use-gl=angle',
+                                               '--use-angle=gl', '--ignore-gpu-blocklist'])
     return result
 
 

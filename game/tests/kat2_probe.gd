@@ -1219,7 +1219,15 @@ func compact_buttons() -> void:
 			check(labels[0].get_global_rect().end.x <= reset.get_global_rect().position.x-7*u, "KB metadata does not enter actions")
 			interiors.append({"card":region(card),"meta":region(labels[1]),"reset":region(reset),"preview":region(app.album.previews[index]),"status":region(app.album.notes[index])})
 		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0, "KB no horizontal overflow")
-		check(app.album.grid.columns > 4 if spec[0] >= 1920 else app.album.grid.columns >= 2, "KB responsive columns without four-column cap")
+		# B-B allocates cards within each physical half, not the old full window.
+		# Require room for every column and no avoidable spare whole column.
+		var columns: int = app.album.grid.columns
+		var minimum: float = app.choices[0].minimum_card_width(u)
+		var gap: float = 12*u
+		var available: float = app.album.scroll.size.x-app.album.scroll.get_v_scroll_bar().get_combined_minimum_size().x-2*u
+		var spare: float = available-columns*minimum-(columns-1)*gap
+		check(columns >= 1 and spare >= 0 and (columns >= mini(12,app.choices.size()) or spare < minimum+gap), "KB responsive columns fill the available book half")
+		check(app.album.right_grid.columns == columns and app.album.right_grid.size.x <= app.album.right_scroll.size.x and app.album.right_scroll.scroll_horizontal == 0, "KB right half shares responsive columns without overflow")
 		kb_measurements.append({"surface":spec,"columns":app.album.grid.columns,"widths":widths,"interiors":interiors})
 		await shot("compact-%d-ui%d" % [spec[0],spec[2]*100])
 		await choose("voegel")

@@ -355,13 +355,21 @@ func run() -> void:
 	mouse(cell,MOUSE_BUTTON_WHEEL_DOWN,false)
 	check(app.board.view.cell_size!=pitch and app.tools_scroll.scroll_vertical==scroll_before,"wheel outside rail still zooms board")
 	app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
-	for id: String in ["help","menu","nav-information"]:
+	for id: String in ["help","menu"]:
 		click(app.actions[id])
 		await settle()
 		check(app.information.visible and not title_ok(),"navigation and information font "+id)
-		click(app.actions["nav-work"])
+		var back: Control = app.info.right_return if app.info.section == "help" else app.actions["nav-work"]
+		check(back.is_visible_in_tree(),"visible return on the current information page")
+		click(back)
 		await settle()
 		check(app.work.visible and title_ok(),"return restores work font")
+	click(app.actions["nav-information"])
+	await settle()
+	check(app.album.visible and title_ok(),"catalog arrow restores catalog and original title font")
+	app.select_puzzle(0)
+	await settle()
+	check(app.work.visible and title_ok(),"catalog reopening restores work font")
 	# Deliberate mutations prove new oracles reject the old/wrong arrangements.
 	var original: Vector2 = app.actions.erase.position
 	app.actions.erase.position.x+=44

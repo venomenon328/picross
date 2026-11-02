@@ -28,6 +28,16 @@ func shot(stage: String) -> void:
 	app.refresh()
 	await process_frame
 	await process_frame
+	if app.album.visible:
+		var index: int = app.album.visible_ids.find(str(app.session.definition.id))
+		var observed: Control = app.album_reveals[index] if app.session.completed else app.album_previews[index]
+		# The compact book half scrolls independently. Observe the actual visible
+		# miniature/reveal rather than pixels of a clipped card below its viewport.
+		app.album.ensure_control_visible(observed)
+		await process_frame
+		await process_frame
+		var scroller: ScrollContainer = app.album.right_scroll if app.album.right_grid.is_ancestor_of(observed) else app.album.scroll
+		check(scroller.get_global_rect().encloses(observed.get_global_rect()),"native observed album image entirely visible")
 	await RenderingServer.frame_post_draw
 	var image: Image = surface.get_texture().get_image()
 	var ratio: float = float(app.session.player.width)/app.session.player.height

@@ -96,7 +96,8 @@ class ChromiumBoundary(unittest.TestCase):
             with patch.object(runtime.platform, 'system', return_value='Linux'):
                 self.assertEqual(runtime.options('chromium'),
                                  {'headless':True, 'channel':'chromium',
-                                  'args':['--enable-gpu','--use-gl=angle','--use-angle=gl']})
+                                  'args':['--enable-gpu','--use-gl=angle','--use-angle=gl',
+                                          '--ignore-gpu-blocklist']})
             with patch.object(runtime.platform, 'system', return_value='Windows'):
                 self.assertEqual(runtime.options('chromium'), {'headless':True})
         with patch.dict(os.environ, {'PICROSS_WEB_SOFTWARE':'0'}), patch.object(runtime.platform, 'system', return_value='Linux'):

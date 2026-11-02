@@ -134,9 +134,14 @@ kein zusätzliches Exportprofil, Firefox oder Livehosting.
 Für den Linux-Softwarelauf wählt der Chromium-Harness ANGLE/OpenGL über die
 vorhandene Mesa-/Xvfb-Umgebung (`PICROSS_WEB_SOFTWARE=1`) im neuen Headlessmodus
 des bereits installierten Chromium (`channel=chromium`, `--enable-gpu`).
-Die getrennte Headless-Shell stellte mit OpenGL kein WebGL 2 bereit.
-Der implizite SwiftShader-
-Pfad übersprang in der neuen 3D-Szene bei etwa 360 ms pro Frame den unverändert
+Die Diagnose auf dem Runner meldete Mesa 25.2.8/llvmpipe mit funktionierender
+OpenGL-Initialisierung, aber deaktiviertem WebGL. Chromiums
+[Softwaretreiberliste, Eintrag 3](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/gpu/config/software_rendering_list.json)
+sperrt diesen Renderer pauschal. Ausschließlich der ausdrücklich gewählte
+isolierte Linux-Softwarelauf ergänzt deshalb `--ignore-gpu-blocklist`;
+normale Spielerstarts und andere Plattformen erhalten keine Startschalter.
+Der implizite SwiftShader-Pfad übersprang in der neuen 3D-Szene bei etwa
+360 ms pro Frame den unverändert
 geforderten Alpha-Bereich 0,3–0,7. Der Lauf berichtet tatsächliche Startoptionen,
 Renderer und beobachtete Überblendungsframes. Auflösung, 2,15-s-Produktuhr,
 Pixelgrenzen und Zeitbudgets werden nicht verändert.
