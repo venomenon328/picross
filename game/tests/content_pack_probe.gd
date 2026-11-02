@@ -28,9 +28,9 @@ func run() -> void:
 	check(ProjectSettings.get_setting("application/config/name") == "picross · P1", "PCK unchanged application identity")
 	check(ProjectSettings.get_setting("application/run/main_scene") == "res://main.tscn", "PCK regular startup scene")
 	var scene: PackedScene = load("res://main.tscn")
-	var entry: Node = scene.instantiate()
-	check(entry is Node3D and entry.get_script().resource_path == "res://book/main.gd", "PCK regular book root, no hidden old entry")
-	entry.free()
+	var root_entry: Node = scene.instantiate()
+	check(root_entry is Node3D and root_entry.get_script().resource_path == "res://book/main.gd", "PCK regular book root, no hidden old entry")
+	root_entry.free()
 	for name: String in ["main.gd","content.gd","binding.gd","catalog.gd","information.gd","information_routes.gd","surface.gd","page.gdshader","material.gdshader","fold.gdshaderinc"]:
 		check(ResourceLoader.exists("res://book/"+name), "PCK shared book dependency "+name)
 	for name: String in ["web_probe.gd","web_root.gd","windows_observer.gd","fixtures.json","inputs.gd","verify.gd"]:
