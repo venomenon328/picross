@@ -33,7 +33,7 @@ func run(proof: SceneTree) -> Dictionary:
 	camera.size = 0.4
 	camera.position.z = 20
 	viewport.add_child(camera)
-	var source: String = FileAccess.get_file_as_string("res://study/book/page.gdshader")
+	var source: String = FileAccess.get_file_as_string("res://book/page.gdshader")
 	source = source.left(source.find("void fragment()"))
 	source = source.replace("varying vec2 original;","varying float measured_z;\nvarying vec2 original;")
 	source = source.replace("NORMAL = paper_normal;","NORMAL = paper_normal; measured_z = VERTEX.z;")

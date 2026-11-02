@@ -1,6 +1,6 @@
 shader_type spatial;
 render_mode unshaded, cull_disabled, fog_disabled, depth_draw_opaque;
-#include "res://study/book/fold.gdshaderinc"
+#include "res://book/fold.gdshaderinc"
 uniform sampler2D paper_source : source_color, filter_linear_mipmap, repeat_disable;
 uniform vec2 paper_offset = vec2(0.0);
 uniform vec2 back_paper_offset = vec2(0.0);

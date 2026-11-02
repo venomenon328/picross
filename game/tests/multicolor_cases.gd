@@ -43,8 +43,7 @@ static func run(t: SceneTree) -> void:
 		for configuration: Array in configurations:
 			Store.test_root_override = old_root+"-colors-%d-%d" % [count,int(configuration[0].x)]
 			t.root.size = configuration[0]
-			var app: Main = load("res://main.tscn").instantiate()
-			t.root.add_child(app)
+			var app: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 			await t.process_frame
 			app.sessions[1] = Session.new(pattern(count))
 			app.select_puzzle(1)
@@ -84,7 +83,7 @@ static func run(t: SceneTree) -> void:
 				t.mouse_button(point,true)
 				t.mouse_button(point,false)
 				t.check(app.session.player.cells[0]==-1,"real pointer neutralizes every supported color")
-			app.queue_free()
+			preload("res://tests/book_fixture.gd").dispose(app,true)
 			await t.process_frame
 	Store.test_root_override = old_root
 	t.root.size = Vector2i(1280,720)

@@ -175,8 +175,7 @@ static func test_atomic_clue_windows(t: SceneTree) -> void:
 
 static func ui_cases(t: SceneTree) -> void:
 	t.root.size = Vector2i(1920, 1080)
-	var app: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	app.select_puzzle(1)
 	await t.process_frame
 	await t.process_frame
@@ -358,7 +357,7 @@ static func ui_cases(t: SceneTree) -> void:
 	await t.process_frame
 	await t.process_frame
 	t.check(app.minimum_message.visible and not app.page.visible, "undersize clear fallback")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await t.process_frame
 	t.root.size = Vector2i(1280, 720)
 

@@ -1,8 +1,8 @@
 extends RefCounted
 ## Joined study surfaces. The block crown follows page.gdshader's resting arch.
-const MATERIAL = preload("res://study/book/material.gdshader")
-const LEATHER = preload("res://study/book/leather.png")
-const TABLE = preload("res://study/book/table.png")
+const MATERIAL = preload("res://book/material.gdshader")
+const LEATHER = preload("res://book/leather.png")
+const TABLE = preload("res://book/table.png")
 var vertices: int = 0
 var triangles: int = 0
 var surfaces: int = 0

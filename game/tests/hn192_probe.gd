@@ -314,8 +314,7 @@ func run() -> void:
 	if output.is_empty(): quit(2); return
 	Store.test_root_override = output.path_join("isolated-saves")
 	root.size = Vector2i(1920,1080)
-	app = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(root)
 	await settle()
 	install()
 	await settle()

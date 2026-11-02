@@ -20,6 +20,7 @@ func _init(owner: Control) -> void:
 	for scroll: ScrollContainer in [app.info_scroll,help_scroll]:
 		scroll.mouse_force_pass_scroll_events = false
 	right_return = app._text_button("Zurück zum Katalog",app.return_to_work)
+	right_return.name = "information-return"
 	app.information.add_child(right_return)
 	# Reuse the existing section shortcuts; each belongs to the opposite page.
 	app.information.get_node("help-access").text = "Hilfe →"
@@ -27,6 +28,11 @@ func _init(owner: Control) -> void:
 
 func positions() -> Vector2i:
 	return Vector2i(app.info_scroll.scroll_vertical,help_scroll.scroll_vertical)
+
+func focus_navigation() -> void:
+	var control: Control = app.ui_scale_button if section == "settings" else app.information.get_node("settings-access")
+	control.focus_mode = Control.FOCUS_ALL
+	control.grab_focus()
 
 func present(value: String, fresh: bool = false) -> void:
 	section = value
@@ -41,6 +47,7 @@ func present(value: String, fresh: bool = false) -> void:
 		app.info_scroll.scroll_vertical = 0
 		help_scroll.scroll_vertical = 0
 	app._layout_book()
+	focus_navigation()
 
 func layout() -> void:
 	var u: float = app.ui_scale
@@ -53,6 +60,12 @@ func layout() -> void:
 	var edge: float = paper.end.x-(curve+24*u if left else 24*u)
 	var top: float = maxf(24*u,paper.position.y+20*u)
 	var bottom: float = minf(app.book.get_viewport().size.y-24*u,paper.end.y-24*u)
+	# Native save/recovery feedback belongs to the currently visible paper,
+	# including the left settings page. Reserve it outside the scrolling text.
+	if app.status_label.visible:
+		bottom -= 124*u
+		app._place(app.status_label,Rect2(Vector2(x,bottom+8*u),Vector2(edge-x,64*u)))
+		app._place(app.work_repair_button,Rect2(Vector2(x,bottom+76*u),Vector2(340,44)*u))
 	var hit: float = 44*u
 	var back: Button = app.actions["nav-work"] if left else right_return
 	var switch: Button = app.information.get_node("help-access" if left else "settings-access")

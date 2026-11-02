@@ -1,4 +1,20 @@
-# Buchstudie B-A · B-A-N06-T01
+# Buchstudie B-A ? gebundener Vorg?nger
+
+Die gew?hlte N06-Fassung ist mit PR #497 auf `main@2a0d9e4` integriert.
+[B-A-R08-V02](https://github.com/venomenon328/picross/pull/497#pullrequestreview-5730592686)
+und [pers?nliche B-A-M01](https://github.com/venomenon328/picross/pull/497#issuecomment-6564908352)
+sind abgeschlossen. B-B ?bernimmt Darstellung und Materialien in den regul?ren
+Spieler: [aktueller Vertrag](BOOK_INTEGRATION.md), [B-B-T01](B_B_VERIFICATION.md).
+Der gemeinsame Kern liegt jetzt unter `game/book/`; die verbleibende synthetische
+Studienh?lle verwendet ihn mit isolierten Inputs. Aktive Pr?fungen binden diesen
+Kern und den realen Produktlebenszyklus, keine zus?tzliche Studienexportmatrix.
+
+Die folgenden Status-, Pfad-, Pr?f- und Exportangaben beschreiben ausdr?cklich
+den damaligen B-A-Lieferstand. Seine Nachweise und Freigaben werden nicht
+r?ckwirkend als B-B-Abnahme ausgegeben oder umgeschrieben.
+
+## Historischer B-A-N06-T01-Vertrag
+
 
 Stand: 01.11.2026 · isolierte visuelle Nacharbeit gemäß
 [#496 / B-A-N06](https://github.com/venomenon328/picross/issues/496).
@@ -195,7 +211,7 @@ kanten und Schatten erschienen dadurch an geometrisch unpassenden Stellen.
 N03 verwendet eine eigene homogene Ledertextur `study/book/leather.png`,
 1254×1254, 4.089.216 Bytes, SHA-256
 `58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41`.
-[Prompt, Herkunft, Rechte und Import](../game/study/book/leather.json) binden die
+[Prompt, Herkunft, Rechte und Import](../game/book/leather.json) binden die
 unverändert kopierte imagegen-Ausgabe ohne Fremdvorlage. Verlustloser Import mit
 Mipmaps und wiederholbarer Weltkoordinatenzuordnung; keine Buchsilhouette,
 Fremdfläche oder fertigen Schlagschatten im Material.
@@ -217,7 +233,7 @@ Kameras und Arbeitsbudgets bleiben unverändert.
 N15 ersetzt den synthetischen Untergrund durch das originale zusammenhängende
 Umgebungsbild `study/book/table.png`: 1536×1024, 3.203.044 Bytes, SHA-256
 `5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da`.
-[Vollständiger Prompt, tatsächliches Bildwerkzeug, Rechte und Import](../game/study/book/table.json)
+[Vollständiger Prompt, tatsächliches Bildwerkzeug, Rechte und Import](../game/book/table.json)
 binden die unverändert kopierte imagegen-Ausgabe ohne Fremdvorlage. Die Holzfläche
 mit Leinen am linken Außenrand enthält weder Buch noch UI oder Buchschatten.
 Eine feste 48×32-Weltfläche erhält das Bild ohne Kachelung und ohne Verzerrung
@@ -228,7 +244,7 @@ sRGB-Import, Mipmaps, lineare Mipmapfilterung und deaktiviertes Repeat sind gebu
 Die Innenflächen verwenden die originale neue Bildtextur `study/book/paper.png`,
 1254×1254, 2.564.246 Bytes, SHA-256
 `1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f`.
-[Herkunft, vollständiger Prompt, Rechte und Import](../game/study/book/paper.json)
+[Herkunft, vollständiger Prompt, Rechte und Import](../game/book/paper.json)
 binden die unverändert kopierte imagegen-Ausgabe ohne Fremdvorlage. Verlustloser
 Import, Mipmaps, lineare Filterung, kein Repeat; das Mischen mit 55 % hellem
 Elfenbein hält Fasern und Alterung unter Hinweisen zurückhaltend. Katalogseite,

@@ -32,7 +32,7 @@ func request(section: String) -> bool:
 	var kind: String = "catalog" if book.state == book.State.CATALOG else "ending" if app.ending.visible else "work"
 	# A passive catalog's placeholder session creates no save obligation.
 	if kind != "catalog" and not app._flush_current(): return false
-	origin = {"kind":kind,"id":str(app.session.definition.id),"catalog":book.context().duplicate(true)}
+	origin = {"kind":kind,"id":str(app.session.definition.id) if app.session != null else "","catalog":book.context().duplicate(true)}
 	app.information_origin = "album" if kind == "catalog" else kind
 	source = kind
 	target = section
@@ -63,7 +63,7 @@ func present(endpoint: String) -> void:
 		app.info.present(endpoint)
 	elif endpoint == "catalog":
 		book.settling = true
-		app.show_album()
+		app.present_album()
 		var c: Dictionary = origin.catalog
 		app.album.selected_id = c.selection
 		app.album.commit_page(c.page,c.scroll,c.right_scroll)
@@ -93,8 +93,9 @@ func prepare(token: int) -> void:
 	# Render the source, then each needed destination at native pixel scale.
 	# All three snapshots share one temporary viewport and the same UI instance.
 	await book.get_tree().process_frame
+	if not book.valid_motion(token): return
 	await RenderingServer.frame_post_draw
-	if token != book.generation: return
+	if not book.valid_motion(token): return
 	book.catalog_texture = ImageTexture.create_from_image(book.capture.get_texture().get_image())
 	for material: ShaderMaterial in [book.left_material,book.paper_material]:
 		book._ink(material,book.catalog_texture,rect(source))
@@ -102,15 +103,17 @@ func prepare(token: int) -> void:
 		for endpoint: String in ["settings","help"]:
 			present(endpoint)
 			await book.get_tree().process_frame
+			if not book.valid_motion(token): return
 			await RenderingServer.frame_post_draw
-			if token != book.generation: return
+			if not book.valid_motion(token): return
 			textures[endpoint] = ImageTexture.create_from_image(book.capture.get_texture().get_image())
 		present(target)
 	else:
 		present(target)
 		await book.get_tree().process_frame
+		if not book.valid_motion(token): return
 		await RenderingServer.frame_post_draw
-		if token != book.generation: return
+		if not book.valid_motion(token): return
 		textures[target] = ImageTexture.create_from_image(book.capture.get_texture().get_image())
 	if book.motion_kind == "info-pan":
 		book._ink(book.left_material,textures.settings,rect("settings"))
