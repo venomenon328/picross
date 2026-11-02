@@ -49,6 +49,18 @@ angewendet. B-A-R08/M01 sind auf PR #497 abgeschlossen. B-B bindet neue regulär
 Windowsoriginale und echte OS-Eingaben für sein getrenntes Selbstreview sowie
 das spätere unabhängige B-B-R01; die persönliche B-B-M01 bleibt gesondert.
 
+HIL-1 / #500 erweitert dieselbe Integration um passive Lehrbeispiele und die
+vier Hilfekapitel. `help_cases.gd` enumeriert die tatsächlich dargestellten
+kleinen Belegungen unabhängig; `help_native.gd` prüft echte GUI-Ereignisse,
+verschachtelte Schriftrollen, Platz-/Scrollgrenzen, Besuchs-/Rückkehrkontext und
+unveränderte Spiel-/Savewerte. Keine neue Gruppe und keine zusätzliche
+Spielprozessmatrix. Sieben Originale (`integration/hil-{work,principle,
+combination,colors,overlap,legend,pan}.png`) sind über `book_contract.py` gebunden;
+der Guard verlangt Quellen, Assertions und Dateien. Die vorhandenen
+Buchübergabe-/Filmprüfungen verwenden denselben neuen Seiteninhalt. Die
+PCK-Prüfung verlangt die drei aktiven Hilfemodule; Tests bleiben ausgeschlossen.
+Es entsteht kein Chromiumauftrag und kein exklusiver Desktop-Eingabelauf.
+
 ## Aktuelle Umsetzung: CI2-D / #416
 
 Der freigegebene [CI2-Vertrag vom 26.10.2026](CI_SLIMMING.md),

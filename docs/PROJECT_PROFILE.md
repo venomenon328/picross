@@ -1,5 +1,11 @@
 # Projektprofil: picross
 
+**HIL-1 / #500:** Die vierteilige passive Spielerhilfe ist Teil der rechten
+[Buchinformationsseite](BOOK_INTEGRATION.md#spielerhilfe--hil-1--500).
+Inhalte, Lehrbeispiele und getrennte Abnahmen bindet
+[Issue #500](https://github.com/venomenon328/picross/issues/500);
+Bedienung und Navigation stehen in der [Spielanleitung](../game/README.md).
+
 **B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
 und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
 Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten

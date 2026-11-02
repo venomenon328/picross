@@ -171,6 +171,26 @@ zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht a
 Die angebotenen Zoomstufen halten das gesamte Raster samt Rahmen innerhalb
 der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
 
+## Spielerhilfe im Buch
+
+Das Fragezeichen öffnet die rechte Informationsseite. Vier beschriftete Bereiche
+sind direkt erreichbar: **Spielprinzip**, **Farbige Rätsel**, **Bedienung** und
+**Lösungstipps**. Die Hilfe funktioniert auch ohne geöffnetes Rätsel. Sie erklärt
+Begriffe vor ihrer Verwendung und zeigt passive Beispiele mit denselben Zahlen,
+Stiftfüllungen, Rasterlinien und X wie das Spiel.
+
+Die Beispiele zeigen eine vollständig bestimmte Siebenerzeile, ein schrittweises
+5×5-Lehrbild, die Überlappung eines Fünferblocks in sieben Feldern und den
+Unterschied zwischen gleich- und verschiedenfarbigen Nachbarblöcken. Drei kurze
+Lösungstipps sind freiwillige Vertiefung. Die Bedienübersicht verbindet Eingabe,
+vorhandenes Symbol und Wirkung; die Anzeigenlegende erklärt auch Hinweiszustände,
+Leerlinienzeichen und Überlaufmarker. Diese Markierungen bestätigen keine Lösung.
+
+Jeder neue Besuch beginnt bei Spielprinzip, jede Kapitelwahl oben. Zwischen Hilfe
+und Einstellungen bleiben das Hilfekapitel und seine Lesestelle erhalten. Der
+beschriftete Rückweg oben führt zum gebundenen Katalog oder Rätsel zurück.
+Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
+
 ## Bearbeiten und zurücknehmen
 
 - Links: unbekannt → aktive Farbe, Füllung → unbekannt, X → aktive Farbe.

@@ -9,7 +9,7 @@ import re
 import zipfile
 
 from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, artifacts, checks, coverage
-from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
+from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS, HELP_ORIGINALS
 INFO_ROUTES = [('work','settings'),('settings','work'),('work','help'),('help','work'),
           ('catalog','settings'),('settings','help'),('help','settings'),('settings','catalog'),
           ('catalog','help'),('help','catalog')]
@@ -329,6 +329,7 @@ def validate_book_study(report, directory, identity, host):
                 'return-handoff-texture.png','return-handoff-direct.png','control-states.png',
                 'page-forward.png', 'page-backward.png', 'material-original-detail.png', 'material-study-detail.png',
                 'integration/integration.json'}
+    required.update(HELP_ORIGINALS)
     required.update('logs/'+name+'.log' for name in expected)
     required.update(f'{kind}-{width}.png' for kind in ('baseline', 'handoff-texture', 'work', 'catalog') for width in (1280,1920,2560))
     required.update(expected_edges)

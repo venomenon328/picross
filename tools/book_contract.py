@@ -5,9 +5,23 @@ RUNTIME = tuple('game/book/'+name for name in (
     'fold.gdshaderinc', 'paper.png', 'paper.png.import', 'paper.json',
     'leather.png', 'leather.png.import', 'leather.json',
     'table.png', 'table.png.import', 'table.json'))
-SOURCES = (*RUNTIME, 'game/tests/book_integration.gd', 'game/tests/book-save-v1.json',
+HELP_SOURCES = tuple("game/ui/"+name+".gd" for name in ("help_panel", "help_example", "help_examples"))
+HELP_ORIGINALS = {"integration/hil-"+name+".png" for name in (
+    "work", "principle", "combination", "colors", "overlap", "legend", "pan")}
+SOURCES = (*RUNTIME, *HELP_SOURCES, "game/tests/help_cases.gd", "game/tests/help_native.gd",
+           "game/ui/clue_typography.gd", "game/ui/scribble.gd", 'game/tests/book_integration.gd', 'game/tests/book-save-v1.json',
            'game/main.tscn', 'game/ui/main.gd', 'tools/book_contract.py')
 INTEGRATION_ASSERTIONS = {
+    'HIL complete native chapter layout coverage',
+    'HIL passive diagrams have no processing tick',
+    'HIL fresh visit starts principle with four direct chapters',
+    'HIL editorial input preserves session history view and save',
+    'HIL content participates in moving book captures',
+    'HIL chapter and scroll survive settings pan',
+    'HIL work origin preserves all durable state',
+    'HIL new catalog visit resets chapter and scroll',
+    'HIL catalog context and capture lifetime preserved',
+    'HIL direct operation without any session',
     'regular root and real SaveStore', 'regular registry starts catalog',
     'unchanged preference identity', 'opening reaches bound work',
     'opening/capture creates no save', 'actual filesystem failure reported',

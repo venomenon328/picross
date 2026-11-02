@@ -6,7 +6,7 @@ import unittest
 from copy import deepcopy
 import math
 import hashlib
-from book_contract import SOURCES, INTEGRATION_ASSERTIONS
+from book_contract import SOURCES, INTEGRATION_ASSERTIONS, HELP_ORIGINALS
 
 import book_study
 import ci_scope
@@ -126,6 +126,7 @@ class BookStudyTests(unittest.TestCase):
                      "catalog-1920x1200.png","work-1920x1200.png","return-handoff-texture-1920x1200.png","return-handoff-direct-1920x1200.png",
                      "page-forward.png", "page-backward.png", "material-original-detail.png", "material-study-detail.png",
                      "integration/integration.json"]
+            files += sorted(HELP_ORIGINALS)
             files += ["logs/"+name+".log" for name in names]
             files += [f"{kind}-{w}.png" for kind in ("baseline", "handoff-texture", "work", "catalog") for w in (1280,1920,2560)]
             captions = {'direction','reset','mode','click-before','caption-after-click','fill','help','wrapped-edge'}
@@ -256,12 +257,14 @@ class BookStudyTests(unittest.TestCase):
                 return dict(book_study=candidate)
             study['handoff_pixels']['samples'].update({n:dict(max_channel_delta=2,mean_channel_delta=[.01]*4) for n in HANDOFFS})
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
-            for mutation in ("integration-omitted", "integration-failed", "source-omitted", "source-changed", "n06-focus", "n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
+            for mutation in ("help-omitted", "help-original", "integration-omitted", "integration-failed", "source-omitted", "source-changed", "n06-focus", "n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
                              "f01-missing", "f01-failed", "f01-negative", "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
                              "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source",
                              "info-route", "info-zoom", "info-leaf", "info-pan", "info-turn", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
                 integration = dict(passed=True,assertions=[dict(label=label,passed=True) for label in sorted(INTEGRATION_ASSERTIONS)])
+                if mutation == 'help-omitted':
+                    integration['assertions'] = [row for row in integration['assertions'] if row['label'] != 'HIL chapter and scroll survive settings pan']
                 if mutation == 'integration-omitted': integration['assertions'].pop()
                 if mutation == 'integration-failed': integration['assertions'][0]['passed'] = False
                 if mutation == 'source-omitted': candidate['sources'].pop(SOURCES[0])
@@ -328,8 +331,15 @@ class BookStudyTests(unittest.TestCase):
                 if mutation == 'info-held': original['n05']['interruptions'][0]['held_blocked'] = False
                 if mutation == 'info-handoff': candidate['handoff_pixels']['samples'].pop(next(iter(HANDOFFS)))
                 if mutation == "required-file": (root/"opening.avi").unlink()
+                if mutation == 'help-original':
+                    # publish() rebinds present originals; challenge omission in
+                    # the required inventory without leaving later cases dirty.
+                    target = root/'integration/hil-principle.png'
+                    saved = target.read_bytes()
+                    target.unlink()
                 with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                     validate_book_study(publish(candidate, original), root, identity, "Linux")
+                if mutation == 'help-original': target.write_bytes(saved)
 
 
 if __name__ == "__main__":

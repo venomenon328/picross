@@ -39,6 +39,10 @@ func run() -> void:
 		var material: Texture2D = load("res://book/"+name+".png")
 		var provenance: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://book/"+name+".json"))
 		check(material != null and material.get_width() == provenance.size[0] and material.get_height() == provenance.size[1], "PCK imported material and rights "+name)
+	for name: String in ["help_panel","help_example","help_examples"]:
+		check(ResourceLoader.exists("res://ui/"+name+".gd"),"PCK passive help dependency "+name)
+	var examples = load("res://ui/help_examples.gd")
+	check(examples.all().size() == 16,"PCK complete passive teaching diagrams")
 	var ids: Array[String] = Registry.catalog_ids()
 	# Fixed shared KB resources, independent of the growing puzzle catalog.
 	var book_manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/manifest.json"))

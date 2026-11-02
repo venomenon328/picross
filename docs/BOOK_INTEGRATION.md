@@ -69,6 +69,35 @@ folgen den abgenommenen gemeinsamen Verträgen. Die neun Textur-/Direktübergabe
 behalten maximal vier Kanalstufen und mittlere Abweichung höchstens 0,1 sowie
 Einpixel-/Alpha-Gegenproben.
 
+## Spielerhilfe · HIL-1 / #500
+
+Der gemeinsame `help_panel` enthält vier direkt anwählbare Kapitel, kurze
+Absätze und passive Lehrdiagramme aus `ui/help_panel.gd`, `help_examples.gd`
+und `help_example.gd`. Die rechte eigene Scroll-/Clipfläche, Papier-/Falzränder,
+obere Rücknavigation und der Meldungsraum aus `information.gd` bleiben Grundlage.
+Ein neuer Informationsbesuch setzt Hilfe auf Spielprinzip zurück. Die Kapitelwahl
+zeigt dessen Anfang; ein Pan zu Einstellungen und zurück erhält Kapitel und
+Scrollstand. Das ist transienter Besuchskontext, kein Saveformat oder neue Option.
+
+Alle verschachtelten Labels tragen `base_font` und werden rekursiv skaliert;
+Überschriften erhalten ausdrücklich die Informationsrolle. Auch Kapitelbuttons
+tragen transparente Papierdarstellung und skalierte HZ-Trefferflächen. Die
+Diagramme besitzen keine Session, Eingabe- oder Effektsteuerung. Zellmasken
+liegen auf einer eigenen Shader-Ebene, Zahlen und Raster außerhalb davon.
+Die aktiven Zahlen-/X- und Rasterzeichenhelfer werden gemeinsam verwendet.
+Captures nehmen die vollständige Controls-Hierarchie mit; kein eigenes Overlay
+oder stehenbleibendes Lehrbild während eines Übergangs.
+
+Die vorhandene Integration prüft zusätzlich die tatsächlichen Beispielschlüsse,
+Kapitelpointer, Scrollenden in den drei CI-Konfigurationen, Einstellungenpan,
+Katalog-/Rätselrückweg und Hilfe ohne Session. Spielstand, History, Werkzeug/Farbe,
+Zoom und Hinweisanker bleiben erhalten; der Pflicht-Flush echter Seitenwechsel
+bleibt bestehen. Sieben native Originale ergänzen den aktuellen Lieferumfang;
+Quellinventar und Ergebnisguard verlangen sie. Die B-B-Lieferberichte und
+historischen Abnahmen werden dadurch nicht nachträglich geändert.
+Die getrennten HIL-T01/R01/M01-Gates stehen in
+[Issue #500](https://github.com/venomenon328/picross/issues/500).
+
 ## Speicher- und Fehlergrenzen
 
 Vor einer Zielanimation werden gültige Ziel-ID und notwendiger Flush geprüft.
