@@ -26,6 +26,7 @@ INTEGRATION_ASSERTIONS = {
     'passive opening preserves frozen save bytes',
     'backup-only load stays write blocked', 'backup-only write requires confirmation',
     'backup-only quit preserves bytes and exposes recovery',
+    'information recovery remains on reachable left paper',
     'confirmed recovery remains ID bound',
     'null session context', 'empty and invalid catalogs distinct',
     'null session settings reachable', 'null session help reachable',

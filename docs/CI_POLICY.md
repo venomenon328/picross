@@ -11,6 +11,9 @@ Der Paketauftrag autorisiert zusätzlich genau den manuellen Chromium-Kurzlauf
 `browser_scope=short`. Windowsoriginale und getrenntes Selbstreview werden
 eigens gebunden; unabhängiges B-B-R01 und persönliches B-B-M01 bleiben offen.
 B-A-R08/M01 sind historische Abnahmen von PR #497, keine erneuten B-B-Gates.
+Der exklusive lokale Windowslauf mit OS-Eingabe ist ausschließlich für diese
+B-B-Entwicklung freigegeben (Eigentümerentscheidung 02.11.2026), kein zukünftiger
+Standardtest. Er bleibt ein getrennt aufgerufener Lauf nach Desktopfreigabe.
 
 ## Freigegebener CI2-Sollvertrag
 
