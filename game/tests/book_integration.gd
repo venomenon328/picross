@@ -89,6 +89,8 @@ func run() -> void:
 		and bytes(save) == committed,"catalog pending failure blocks information with visible retry")
 	app.store.fail_step = ""
 	app.save_retry.pressed.emit()
+	check(not app.album.feedback.visible and not app.save_retry.visible and app.album.category_id == "obst-nuesse",
+		"catalog retry immediately clears feedback and preserves filter")
 	check(book.information_routes.request("settings"),"catalog information accepts successful retry")
 	await settled()
 	check(book.information_routes.request_return(),"catalog information returns after retry")

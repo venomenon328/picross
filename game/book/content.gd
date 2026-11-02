@@ -166,12 +166,17 @@ func _save_action_visible() -> bool:
 func _update_status() -> void:
 	var prior_status: bool = status_label != null and status_label.visible
 	var prior_repair: bool = work_repair_button != null and work_repair_button.visible
+	var prior_retry: bool = save_retry != null and save_retry.visible
 	super._update_status()
 	if session == null and status_label != null:
 		status_label.hide()
 		if work_repair_button != null: work_repair_button.hide()
 	if save_retry != null:
 		var visible_retry: bool = session != null and not slot_errors[sessions.find(session)].is_empty() and not work_repair_button.visible
+		if prior_retry and not visible_retry and album.visible:
+			# A successful catalog retry must clear both the summary feedback and
+			# the card diagnosis without changing filter, page or either offset.
+			album.present(sessions,slot_status,slot_errors,catalog_error,album.selected_id)
 		var information_changed: bool = information.visible and (prior_status != status_label.visible or prior_repair != work_repair_button.visible)
 		if save_retry.visible != visible_retry or information_changed:
 			save_retry.visible = visible_retry

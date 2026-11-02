@@ -109,7 +109,8 @@ class DeliveryTests(unittest.TestCase):
 
     def test_v3_rejects_duplicate_case_failed_assertion_and_changed_picture(self):
         def axes(w,h,u):
-            buttons=[[w-(187.5 if w<1700 else 150)-(2-i)*58*u-20*u,h/30+12*u,44*u,44*u] for i in range(3)]
+            top=max(h/30+12*u,.28*h/max(6.075,10.8*h/w)+5*u)
+            buttons=[[w-(187.5 if w<1700 else 150)-i*58*u-20*u,top,44*u,44*u] for i in range(3)]
             axis=buttons[1][0]+22*u
             return dict(material=[0,0,w,h],navigation_buttons=buttons,navigation=axis,frames=[axis]*3,controls=[axis]*4)
         names = ['v3-sl-720-125-color-G.png', 'v3-sl-720-100-mono-V.png', 'v3-sl-900-100-color-V.png', 'v3-sl-900-125-mono-G.png', 'v3-sl-1440-125-color-V.png', 'v3-sl-720-125-recovery.png', 'v3-sidebar-detail.png'] + ["v3-tight-rail.png", "v3-T01-work.png", "v3-T08-work.png", "v3-title.png", "v3-fills-five.png"]
