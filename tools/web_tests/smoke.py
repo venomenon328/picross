@@ -5,7 +5,7 @@ from pathlib import Path
 import platform
 import tempfile
 from serve import serve
-from browser_runtime import options, graphics, launch
+from browser_runtime import options, graphics, graphics_diagnostics, launch
 import timing
 from contract import BROWSERS
 
@@ -31,8 +31,13 @@ def main():
                     report['results'].append(evidence)
                     try:
                         page = context.pages[0]
+                        evidence['graphics_diagnostics'] = graphics_diagnostics(context)
+                        print('CHROMIUM GRAPHICS', json.dumps(evidence['graphics_diagnostics']), flush=True)
                         evidence['user_agent'] = page.evaluate('navigator.userAgent')
                         errors = evidence['errors']
+                        evidence['http_failures'] = []
+                        page.on('response', lambda response: evidence['http_failures'].append(
+                            {'url':response.url,'status':response.status}) if response.status >= 400 else None)
                         page.on('pageerror', lambda error: errors.append(str(error)))
                         page.on('console', lambda msg: errors.append(msg.text) if msg.type=='error' else None)
                         page.goto(url)
@@ -47,9 +52,10 @@ def main():
                         evidence['timings'].append(timing.CURRENT.checkpoint('regular-start'))
                         evidence['status'] = 'passed'
                         print('PLAYER PASS', name, flush=True)
-                    except Exception:
-                        evidence['message'] = page.locator('#message').inner_text()
-                        evidence['storage'] = page.locator('#storage').inner_text()
+                    except Exception as error:
+                        evidence['failure'] = str(error)
+                        evidence['message'] = page.evaluate("document.querySelector('#message')?.innerText ?? ''")
+                        evidence['storage'] = page.evaluate("document.querySelector('#storage')?.innerText ?? ''")
                         page.screenshot(path=str(args.output/f'{name}-regular-failure.png'))
                         print('PLAYER FAILURE', json.dumps(evidence), flush=True)
                         raise

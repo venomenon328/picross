@@ -24,6 +24,16 @@ def launch(pw, name, profile, **kwargs):
     return pw.chromium.launch_persistent_context(profile, **options(name), **kwargs)
 
 
+def graphics_diagnostics(context):
+    """Read actual driver/feature decisions even if creating WebGL2 fails."""
+    session = context.browser.new_browser_cdp_session()
+    try:
+        gpu = session.send('SystemInfo.getInfo')['gpu']
+        return {key:gpu.get(key) for key in ('devices','auxAttributes','featureStatus')}
+    finally:
+        session.detach()
+
+
 def graphics(page):
     return page.evaluate('''() => {
       const gl = document.querySelector('canvas').getContext('webgl2');
