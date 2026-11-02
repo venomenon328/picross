@@ -160,11 +160,28 @@ func run() -> void:
 		check(book.app.album.visible and book.capture == null,"null session returns without retained resources")
 		book.free()
 		await frames()
-	Registry.cached = registry
+	Registry.cached = registry.duplicate(true)
+	Registry.cached.entries = []
 	Registry.load_error = ""
+	book = load("res://main.tscn").instantiate()
+	root.add_child(book)
+	await frames()
+	check(book.information_routes.request("settings"),"null session starts final preparation")
+	# The product close path must end this real process. If it fails to quit,
+	# the watchdog overwrites the report and makes the producer fail closed.
+	create_timer(3).timeout.connect(func() -> void:
+		check(false,"null session native close did not quit")
+		write_result()
+		quit(4))
+	book._notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	check(book.capture == null and not book.app.presentation_locked and book.state == Book.State.CATALOG,
+		"null session native close invalidates preparation")
+	if not write_result(): quit(4)
+
+func write_result() -> bool:
 	var passed: bool = assertions.all(func(row: Dictionary) -> bool: return row.passed)
 	var file := FileAccess.open(output.path_join("integration.json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify({"passed":passed,"assertions":assertions,"engine":Engine.get_version_info()},"\t")+"\n")
 	file.close()
 	print("BOOK_INTEGRATION_OK" if passed else "BOOK_INTEGRATION_FAILED")
-	quit(0 if passed else 4)
+	return passed

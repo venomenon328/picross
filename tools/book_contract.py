@@ -30,4 +30,5 @@ INTEGRATION_ASSERTIONS = {
     'null session context', 'empty and invalid catalogs distinct',
     'null session settings reachable', 'null session help reachable',
     'null session catalog return', 'null session returns without retained resources',
+    'null session native close invalidates preparation',
 }
