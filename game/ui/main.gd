@@ -21,6 +21,7 @@ const BODY_FONT = preload("res://art/book/PlexSans.ttf")
 const TITLE_FONT = preload("res://art/book/Fraunces.ttf")
 const WORK_TITLE_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
 const UiText = preload("res://ui/ui_text.gd")
+const HelpPanel = preload("res://ui/help_panel.gd")
 const TOOL_IDS: Array[String] = ["fill","erase","undo","redo","minus","plus"]
 var tools_scroll: ScrollContainer
 var tools_column: GridContainer
@@ -28,7 +29,7 @@ var surface: BookSurface
 var information: Control
 var information_section: String = "settings"
 var settings_panel: VBoxContainer
-var help_panel: VBoxContainer
+var help_panel: HelpPanel
 var info_scroll: ScrollContainer
 var information_origin: String = "album"
 var view_choice: OptionButton
@@ -285,6 +286,7 @@ func set_ui_scale(value: float) -> void:
 	theme.set_stylebox("normal", "Label", UiText.label_style(value))
 	theme.set_constant("line_spacing", "Label", roundi(3 * value))
 	_scale_labels(self)
+	help_panel.set_ui_scale(value)
 	board.ui_scale = value
 	ui_scale_button.text = "UI %d %%" % roundi(ui_scale * 100)
 	_layout_book()
@@ -856,13 +858,9 @@ func _build_information() -> void:
 	animation_toggle.toggled.connect(func(enabled: bool) -> void: board.set_animations(enabled))
 	settings_panel.add_child(animation_toggle)
 	settings_panel.add_child(_text_button("Beenden",leave_app))
-	help_panel = VBoxContainer.new()
-	help_panel.add_theme_constant_override("separation",16)
+	help_panel = HelpPanel.new()
 	content.add_child(help_panel)
-	help_panel.add_child(label("Maus und Hinweise",26))
-	var help_text: Label = label("Links: Farbe setzen, Füllung zurücknehmen, X in Farbe umwandeln.\nRechts: X setzen, X zurücknehmen, Füllung in X umwandeln.\n\nStart auf unbekannt schützt X und Füllungen. Bewusste Umwandlung startet auf X (links) oder Füllung (rechts). Rücknahmestriche löschen nur ihren Starttyp.\n\nModus und Farbe bleiben im Strich fest. Zurückziehen verkürzt die Vorschau. Bei Rückkehr zur Startzelle lässt sich die Achse neu wählen. Loslassen übernimmt einen Schritt; Undo/Redo nimmt ganze Striche zurück. Begonnene Striche folgen auch über der Seitenleiste bis zum Rasterrand; die letzte Loslassposition zählt.\n\nAb Länge 2 folgt die Zahl mit heller Kontur dem Zeiger; bei Länge 1 verschwindet sie. Vorbelegte Felder zählen mit. Am Fensterrand bleibt die vollständige Zahl innen sichtbar. Der Zeiger bleibt frei. Bei erhaltenem Spielfokus übernimmt auch Loslassen außerhalb des Fensters den Strich. Fokusverlust verwirft ihn vollständig.\n\nDie Werkzeuge stehen rechts unter den Farben: zwei Spalten und drei Zeilen: Füllen / Radieren, Undo / Redo, Verkleinern / Vergrößern. Auswahlmarkierungen zeigen Werkzeug und Farbe.\n\nRad über dem Raster und +/−: Zoom bis zur Vollsichtgrenze. Raster und eigene Miniatur bleiben fest. Die Miniatur zeigt nur eigene Füllungen in Originalfarben, auch Fehler und die aktuelle Vorschau. X und unbekannt bleiben gleich neutral. Die Rätselansicht wird nur unter Einstellungen gewählt.\n\nLinke Taste auf überlaufenden Hinweisen: nur die angefasste Zeile waagerecht oder Spalte senkrecht ziehen. Loslassen rastet ein. MMB navigiert keine Hinweise. Beim Ziehen über Raster oder Buttons bleibt die Geste Hinweisnavigation und löst dort keine Aktion aus. Im Raster sind Zeile und Spalte markiert, über Hinweisen nur deren eine Linie, auch im Vollhinweis. Während Hinweisdrag bleibt seine Quellenlinie markiert. Freie Breite und Höhe zeigen nach dem Fit zusätzliche ganze Hinweise, ohne kleinere Zellen. Vollständig passende Folgen haben keine Marker und lassen sich nicht verschieben. … markiert verborgene Zahlen; darüberfahren zeigt die vollständige Folge auf Papier mit gezeichnetem Rahmen und kleinerer Überschrift. Die Overlaylesegröße folgt der UI-Skalierung unabhängig vom Rasterzoom. Vorübergehende Vollanzeige bewahrt die Leseposition auch beim Speichern.\n\nDie Vorschau bleibt statisch und heller. Beim Loslassen wird alles sofort übernommen; die Striche zeichnen sich vom Start zum Ende in höchstens 390 ms. Entfernen dauert 120 ms. Zellanimationen lassen sich für diese Sitzung abschalten.\n\nEsc, Fokusverlust oder Drücken der anderen Maustaste verwirft die laufende Zellgeste. Nach Gegentasten-Abbruch beide Tasten loslassen, dann neu beginnen.\nHinweise: normal = offen; deutlich blasser = eindeutig vollständig gesetzt; gleich blass mit handschriftlichem X über der ganzen Zahl = zusätzlich an beiden Enden abgegrenzt. … und – bleiben unmarkiert. X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn und Ausschnittränder nicht. Nur die eigene vollständige Linie zählt – keine Fehlerprüfung der Lösung. Der Schalter gilt für diese Sitzung.\n\nDer Arbeitsstand wird lokal gespeichert. Speicherfehler bleiben sichtbar; eine Backupübernahme braucht deine Bestätigung.",16)
-	help_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	help_panel.add_child(help_text)
+	help_panel.configure(self)
 	information.hide()
 	_information_section("settings")
 

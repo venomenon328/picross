@@ -25,3 +25,23 @@ static func outline_strokes(box: Rect2, identity: String, width: float = 1.2) ->
 	for i: int in range(4):
 		result.append(stroke(corners[i],corners[i+1],identity+str(i),0.25,width,maxi(2,ceili(corners[i].distance_to(corners[i+1])/24.0))))
 	return result
+
+static func grid_stroke(start: Vector2, end: Vector2, axis: String, index: int, limit: int, cell_size: float, puzzle_id: String, revision: int) -> Dictionary:
+	var horizontal: bool = axis == "row"
+	var outer: bool = index == 0 or index == limit
+	var detail: float = clampf((cell_size-4.0)/20.0,0.0,1.0)
+	var identity: String = "%s/%s/%s/%d" % [puzzle_id,revision,axis,index]
+	var major: bool = outer or index % 5 == 0
+	var width: float = (1.4 + 0.24 * (unit(identity,0)+1.0)/2.0) if major else (0.7 + 0.2 * (unit(identity,0)+1.0)/2.0)
+	# Endpoints meet on the same inset rectangle. Interior logical boundaries
+	# stay fixed; only their ink deviates within the existing two-pixel gap.
+	var along: Vector2 = Vector2.RIGHT if horizontal else Vector2.DOWN
+	start += along * 1.10
+	end -= along * 1.10
+	if outer:
+		var inward: Vector2 = (Vector2.DOWN if horizontal else Vector2.RIGHT) * (1.10 if index == 0 else -1.10)
+		start += inward
+		end += inward
+	var line: Dictionary = stroke(start,end,identity,0.28*detail,width,maxi(2,ceili(start.distance_to(end)/24.0)))
+	line.color = Color("343f42") if major else Color("b5b6ab")
+	return line

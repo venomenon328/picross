@@ -6,12 +6,15 @@ import unittest
 from copy import deepcopy
 import math
 import hashlib
-from book_contract import SOURCES, INTEGRATION_ASSERTIONS
+import os
+import struct
+from unittest.mock import patch
+from book_contract import SOURCES, INTEGRATION_ASSERTIONS, HELP_ORIGINALS
 
 import book_study
 import ci_scope
 from native_contract import checks
-from native_results import bind_files, check_phases, validate_book_study
+from native_results import bind_files, check_phases, validate_book_study, validate_book_lifecycle
 from native_results import INFO_HANDOFFS as HANDOFFS, INFO_ROUTES as ROUTES, information_pose as pose, validate_n05
 
 
@@ -58,6 +61,67 @@ def information_fixture(root, png):
 
 
 class BookStudyTests(unittest.TestCase):
+    def test_targeted_product_route_and_gate_exclude_full_study_and_movie(self):
+        identity = dict(source_commit='a'*40,source_tree_dirty=False)
+        calls = []
+        def phase(name, command, environment, timeout, logs):
+            calls.append(command)
+            (logs/(name+'.log')).write_text('synthetic successful native process\n')
+            if name == 'book-integration':
+                directory = Path(environment['BOOK_INTEGRATION_OUTPUT'])
+                (directory/'integration.json').write_text(json.dumps(dict(passed=True,
+                    assertions=[dict(label=label,passed=True) for label in INTEGRATION_ASSERTIONS])))
+                for filename in HELP_ORIGINALS:
+                    (directory/Path(filename).name).write_bytes(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'+struct.pack('>II',1920,1080))
+                (directory/'saves').mkdir()
+                (directory/'saves/private-fixture.json').write_text('{}')
+            return dict(name=name,output='synthetic',exit_code=0,timed_out=False,seconds=.1)
+        with tempfile.TemporaryDirectory() as temp:
+            output = Path(temp)/'proof'
+            with patch.dict(os.environ, {'GITHUB_ACTIONS':'true'}), \
+                    patch.object(book_study.tc,'request_json'), \
+                    patch.object(book_study.tc,'official_asset_urls',return_value={book_study.tc.EDITORS[book_study.platform.system()].name:'unused'}), \
+                    patch.object(book_study.tc,'download_asset'), \
+                    patch.object(book_study.tc,'extract_editor',return_value=Path('synthetic-engine')), \
+                    patch.object(book_study,'prepare'), patch.object(book_study,'run_phase',side_effect=phase), \
+                    patch.object(book_study,'require_clean_output'), \
+                    patch.object(book_study,'source_identity',return_value=identity):
+                study = book_study.run_lifecycle(Path(temp)/'cache',output)
+                with self.assertRaisesRegex(ValueError,'not allowed in CI'):
+                    book_study.run(Path(temp)/'cache',Path(temp)/'full')
+            self.assertEqual([p['name'] for p in study['phases']],['book-version','book-import','book-integration'])
+            self.assertFalse(any('--write-movie' in c or 'res://study/book/verify.gd' in c for c in calls))
+            self.assertEqual(study['inventory_cost']['movie_bytes'],0)
+            self.assertFalse(list(output.rglob('saves')))
+            host = book_study.platform.system()
+            report = dict(book_lifecycle=study)
+            validate_book_lifecycle(report,output,identity,host)
+            # A rehashed manifest must still reject extra film, wrong sources,
+            # missing assertions/originals, failed phases and false dimensions.
+            original = (output/'integration/integration.json').read_bytes()
+            (output/'integration/integration.json').write_text(json.dumps(dict(passed=True,assertions=[])))
+            bad = deepcopy(study)
+            bad['files'] = {r.pop('file'):r for r in bind_files(output,exclude={'report.json'})}
+            (output/'report.json').write_text(json.dumps(bad))
+            with self.assertRaises(ValueError): validate_book_lifecycle(dict(book_lifecycle=bad),output,identity,host)
+            (output/'integration/integration.json').write_bytes(original)
+            for mutation in ('source','phase','missing','movie','dimensions'):
+                bad = deepcopy(study)
+                picture = output/sorted(HELP_ORIGINALS)[0]
+                pixels = picture.read_bytes()
+                if mutation == 'source': bad['sources'][SOURCES[0]] = '0'*64
+                if mutation == 'phase': bad['phases'][-1]['exit_code'] = 4
+                if mutation == 'missing': picture.unlink()
+                if mutation == 'movie': (output/'opening.avi').write_bytes(b'forbidden movie')
+                if mutation == 'dimensions': picture.write_bytes(pixels[:16]+struct.pack('>II',1,1))
+                bad['files'] = {r.pop('file'):r for r in bind_files(output,exclude={'report.json'})}
+                bad['inventory_cost']['bytes'] = sum(r['bytes'] for r in bad['files'].values())
+                (output/'report.json').write_text(json.dumps(bad))
+                with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                    validate_book_lifecycle(dict(book_lifecycle=bad),output,identity,host)
+                picture.write_bytes(pixels)
+                (output/'opening.avi').unlink(missing_ok=True)
+
     def test_checked_in_inputs_are_reproducible_and_bounded(self):
         root = Path(__file__).resolve().parents[1]
         actual = json.loads((root / "game/study/book/fixtures.json").read_text(encoding="utf-8"))
@@ -126,6 +190,7 @@ class BookStudyTests(unittest.TestCase):
                      "catalog-1920x1200.png","work-1920x1200.png","return-handoff-texture-1920x1200.png","return-handoff-direct-1920x1200.png",
                      "page-forward.png", "page-backward.png", "material-original-detail.png", "material-study-detail.png",
                      "integration/integration.json"]
+            files += sorted(HELP_ORIGINALS)
             files += ["logs/"+name+".log" for name in names]
             files += [f"{kind}-{w}.png" for kind in ("baseline", "handoff-texture", "work", "catalog") for w in (1280,1920,2560)]
             captions = {'direction','reset','mode','click-before','caption-after-click','fill','help','wrapped-edge'}
@@ -256,12 +321,14 @@ class BookStudyTests(unittest.TestCase):
                 return dict(book_study=candidate)
             study['handoff_pixels']['samples'].update({n:dict(max_channel_delta=2,mean_channel_delta=[.01]*4) for n in HANDOFFS})
             validate_book_study(publish(deepcopy(study), native), root, identity, "Linux")
-            for mutation in ("integration-omitted", "integration-failed", "source-omitted", "source-changed", "n06-focus", "n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
+            for mutation in ("help-omitted", "help-original", "integration-omitted", "integration-failed", "source-omitted", "source-changed", "n06-focus", "n06-missing", "n06-gap", "n06-flat", "n06-negative", "n06-joint", "n06-clearance", "n06-budget", "assertion", "omitted-assertion", "direction", "matrix", "cards", "leaves", "phase", "binding", "pixels", "margin", "return",
                              "f01-missing", "f01-failed", "f01-negative", "tooltip-delay", "tooltip-hover", "tooltip-empty", "tooltip-missing", "tooltip-stale", "tooltip-clipped", "tooltip-lifetime", "tooltip-counterexample", "hover-stroke", "edge-missing", "edge-scaled",
                              "height", "projection", "ink-hull", "left-first", "id-order", "scroll-mirrored", "scroll-return", "scroll-omitted", "abort-pair", "boundary", "table-source",
                              "info-route", "info-zoom", "info-leaf", "info-pan", "info-turn", "info-origin", "info-offset", "info-view", "info-hull", "info-clip", "info-scroll", "info-abort", "info-held", "info-handoff", "required-file"):
                 candidate, original = deepcopy(study), deepcopy(native)
                 integration = dict(passed=True,assertions=[dict(label=label,passed=True) for label in sorted(INTEGRATION_ASSERTIONS)])
+                if mutation == 'help-omitted':
+                    integration['assertions'] = [row for row in integration['assertions'] if row['label'] != 'HIL chapter and scroll survive settings pan']
                 if mutation == 'integration-omitted': integration['assertions'].pop()
                 if mutation == 'integration-failed': integration['assertions'][0]['passed'] = False
                 if mutation == 'source-omitted': candidate['sources'].pop(SOURCES[0])
@@ -328,8 +395,15 @@ class BookStudyTests(unittest.TestCase):
                 if mutation == 'info-held': original['n05']['interruptions'][0]['held_blocked'] = False
                 if mutation == 'info-handoff': candidate['handoff_pixels']['samples'].pop(next(iter(HANDOFFS)))
                 if mutation == "required-file": (root/"opening.avi").unlink()
+                if mutation == 'help-original':
+                    # publish() rebinds present originals; challenge omission in
+                    # the required inventory without leaving later cases dirty.
+                    target = root/'integration/hil-principle.png'
+                    saved = target.read_bytes()
+                    target.unlink()
                 with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                     validate_book_study(publish(candidate, original), root, identity, "Linux")
+                if mutation == 'help-original': target.write_bytes(saved)
 
 
 if __name__ == "__main__":

@@ -131,7 +131,7 @@ Dieses Dokument entscheidet keine Engine, Programmiersprache, Betriebssystemmatr
 
 Ein thematisch zusammenhängendes Nonogramm-Spiel für PC, dessen Hauptreiz in logischen Erkenntnissen und dem Bearbeiten größerer Bildrätselprojekte liegt. Eine präzise, komfortable Bedienung soll auch große Raster und mehrteilige Spielsitzungen angenehm machen. Anspruch entsteht aus dem Rätsel, nicht aus vermeidbarem Zählen, Fehlbedienung oder Orientierungsverlust.
 
-Die Zielgruppe sind erfahrene Nonogramm-Spieler sowie interessierte Rätselspieler, die sich schnell einfinden. Es gibt einen Erklärungsbereich oder kurze Tutorial-Rätsel. Menschen umfassend das Nonogramm-Lösen beizubringen, ist nicht der Schwerpunkt; umfangreiche Hilfen und Übungsstrecken sind ausdrücklich nachrangig.
+Die Zielgruppe sind erfahrene Nonogramm-Spieler sowie interessierte Rätselspieler, die sich schnell einfinden. Die Spielerhilfe bietet vier direkt erreichbare Bereiche: Spielprinzip, farbige Rätsel, Bedienung und kurze freiwillige Lösungstipps. Feste passive Lehrbeispiele erklären vollständig bestimmte Linien, das Zusammenwirken von Zeile und Spalte, Überlappungen sowie Farbkontakt und Farbabstand. Sie verwenden die normalen Spielzeichen auf der rechten Buchseite. Menschen umfassend das Nonogramm-Lösen beizubringen, ist nicht der Schwerpunkt; umfangreiche Lernstrecken bleiben nachrangig ([HIL-1 / #500](https://github.com/venomenon328/picross/issues/500)).
 
 Prioritäten des Spielerlebnisses:
 
@@ -425,7 +425,7 @@ Die vorhandenen Python-Dokumentprüfer sind keine Festlegung des Produktstacks. 
 
 ## 9. Abgrenzung des ersten Produkts
 
-Zum Produktkern gehören klassische und farbige kuratierte Bildrätsel, das reguläre Vollsichtziel mit 40×40 und mindestens 30×30 Größenkapazität, geeigneten Rechtecken und möglichen Großraster-Sonderfällen, komfortable Bearbeitung und Fortsetzung, frühe thematische/UI-Konzeption, Sammlungsprogression, Perfektions-Bonusrätsel, die beiden Fehler-Rückmeldungsmodi sowie Logbuch und vorgesehene Leistungsvergleiche.
+Zum Produktkern gehören klassische und farbige kuratierte Bildrätsel, das reguläre Vollsichtziel mit 40×40 und mindestens 30×30 Größenkapazität, geeigneten Rechtecken und möglichen Großraster-Sonderfällen, komfortable Bearbeitung und Fortsetzung, die vierteilige Grundhilfe mit festen Lehrbeispielen und kurzen optionalen Strategien, frühe thematische/UI-Konzeption, Sammlungsprogression, Perfektions-Bonusrätsel, die beiden Fehler-Rückmeldungsmodi sowie Logbuch und vorgesehene Leistungsvergleiche.
 
 Nicht als Startvoraussetzung beschlossen sind Verbundraster, Regionenbedingungen, Raster jenseits von 50×50, ein öffentlicher Editor, Community-/Workshop-Inhalte, Koop, spielerseitige Bildgenerierung, Wochenherausforderungen und umfangreiche Lern- oder Erklärhilfen. Diese Themen dürfen nicht stillschweigend den verbindlichen Umfang vergrößern. Unvollständige Hinweise sind vorerst ausgeschlossen.
 

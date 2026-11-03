@@ -729,30 +729,14 @@ func clue_identity(axis: String, line: int, token: int) -> String:
 	return "%s/%s/%d/%d" % [session.definition.id, axis, line, token]
 
 func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, status: int, identity: String = "") -> void:
-	font = clue_text_font(font, text)
-	if not text.is_valid_int(): status = ClueCompletion.Status.OPEN
-	var alpha: float = FILLED_ALPHA if status != ClueCompletion.Status.OPEN else 1.0
+	font = clue_text_font(font,text)
 	var outlined: bool = text.is_valid_int() and session.definition.palette.size() > 1 and (color.is_equal_approx(cell_color(2)) or color.is_equal_approx(cell_color(4)))
-	# Quarter-pixel outline: a 4x glyph drawn at 1/4 scale gives a 0.25px
-	# outer contour (C1 reference: 0.275px). Keep the original fill last.
-	if outlined:
-		var contour_scale: float = ui_scale/4.0
-		draw_set_transform(Vector2.ZERO,0,Vector2.ONE*contour_scale)
-		draw_string_outline(font,baseline/contour_scale,text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(fs/contour_scale),1,Color(Color("293e3d"),alpha))
-		draw_set_transform(Vector2.ZERO)
-	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(color, alpha))
-	if status == ClueCompletion.Status.CLOSED:
+	ClueStatusDrawing.paint_number(self, baseline, text, fs, color, status, outlined, ui_scale, font)
+	if text.is_valid_int() and status == ClueCompletion.Status.CLOSED:
 		draw_clue_cross(font, baseline, text, fs, color, outlined, identity)
 
 func draw_clue_cross(font: Font, baseline: Vector2, text: String, fs: int, color: Color, outlined: bool, identity: String) -> void:
-	var strokes: Array[PackedVector2Array] = ClueStatusDrawing.cross_strokes(text, fs, identity, font, ui_scale)
-	for i: int in range(strokes.size()):
-		var points: PackedVector2Array = strokes[i]
-		for p: int in range(points.size()): points[p] += baseline
-		var thickness: float = ClueStatusDrawing.cross_width(fs, i)
-		if outlined:
-			draw_polyline(points, Color(Color("293e3d"), CROSS_ALPHA), thickness + ui_scale / 2.0, true)
-		draw_polyline(points, Color(color, CROSS_ALPHA), thickness, true)
+	ClueStatusDrawing.paint_cross(self, baseline, text, fs, color, identity, outlined, ui_scale, font)
 
 func clue_font_size() -> int:
 	if book_layout:

@@ -584,11 +584,11 @@ def main(argv: list[str] | None = None) -> int:
                           "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
                 evidence.scope_done("export")
             if args.export:
-                # Shared presentation and real product lifecycle use isolated
-                # synthetic inputs. No additional study export matrix.
+                # HIL owner instruction: targeted help/lifecycle only in CI;
+                # complete book study and movie production are excluded.
                 import book_study
-                evidence.report["book_study"] = python_phase("regular-book-integration", lambda: book_study.run(
-                    args.cache_dir.resolve(), evidence.technical / "book-study"))
+                evidence.report["book_lifecycle"] = python_phase("regular-book-integration", lambda: book_study.run_lifecycle(
+                    args.cache_dir.resolve(), evidence.technical / "book-lifecycle"))
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
             evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2", "ea") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
             if args.visual:
