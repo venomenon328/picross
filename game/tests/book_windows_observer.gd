@@ -75,16 +75,12 @@ func snapshot(full: bool = false) -> Dictionary:
 		row["info_return"] = rect(app.actions["nav-work"] if app.info.section == "settings" else app.info.right_return)
 		row["cells"] = session.player.cells
 		row["history"] = session.player.history
-		if "snapshots" in app.store:
-			row["memory"] = app.store.snapshots.get(session.definition.id,{})
-			row["writes"] = app.store.writes
-		else:
-			var path: String = app.store.path_for(app.store.key_for_definition(session.definition.id))
-			row["slot_path"] = ProjectSettings.globalize_path(path)
-			row["memory"] = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}
-			row["save_error"] = app.save_error
-			row["retry"] = rect(app.save_retry)
-			row["retry_visible"] = app.save_retry.is_visible_in_tree()
+		var path: String = app.store.path_for(app.store.key_for_definition(session.definition.id))
+		row["slot_path"] = ProjectSettings.globalize_path(path)
+		row["memory"] = JSON.parse_string(FileAccess.get_file_as_string(path)) if FileAccess.file_exists(path) else {}
+		row["save_error"] = app.save_error
+		row["retry"] = rect(app.save_retry)
+		row["retry_visible"] = app.save_retry.is_visible_in_tree()
 		row["board_rect"] = rect(board)
 		var grid: Rect2 = board.view.bounds()
 		row["grid"] = [grid.position.x+board.global_position.x,grid.position.y+board.global_position.y,grid.size.x,grid.size.y]

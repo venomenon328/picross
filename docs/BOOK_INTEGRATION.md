@@ -25,9 +25,12 @@ auch unter `licenses/Book-{paper,leather,table}.json` im Export. Das A-Original
 bleibt bytegleich als gebundene Referenz und geerbte Ressourcenabhängigkeit.
 Fonts, Hinweis-/Zellgrafik und SL-Rahmen behalten ihre bisherigen Bytes/Rechte.
 
-`game/study/book/` ist ausschließlich eine isolierte synthetische Hülle um
-denselben Präsentationskern. Ihre RAM-Speicher, 27 Instanzen, Beobachter,
-Prüfprogramme und Berichte werden aus regulären Paketen ausgeschlossen.
+P2-A / #502 entfernt die historische Hülle `game/study/book/` mit ihren
+27 Instanzen und Vollprüfern. Die Quellen bleiben über [BOOK_STUDY](BOOK_STUDY.md)
+commitgebunden erreichbar. `tools/book_lifecycle.py` prüft ausschließlich den
+aktuellen Produktroot und HIL mit dem bestehenden synthetischen Testkatalog.
+Der externe Windows-Beobachter liegt unter `game/tests/`; technische Inputs,
+Prüfprogramme und Berichte bleiben aus regulären Paketen ausgeschlossen.
 Der PCK-Audit prüft den tatsächlichen Entrypoint und benötigte gemeinsame
 Ressourcen zusätzlich zu den bisherigen Ausschlüssen; er erlaubt nicht pauschal
 den Studienbaum. Die technische Webprobe erweitert denselben Buchroot und
@@ -123,16 +126,12 @@ Prozessabbruch behält die Grenzen aus [WEB-1](WEB_HOSTING.md).
 
 ## Prüfzuordnung
 
-P1 aus [#502](https://github.com/venomenon328/picross/issues/502) entfernt die
-Filmproduktion aus sämtlichen aktiven Buchprüfwegen einschließlich manuellem
-Studienaufruf und optionalen Studienexporten. Filmphase, Metadaten, Endbild,
-Aufzeichnungshelfer und Filmkostenfelder entfallen gemeinsam aus Producer,
-Vertrag und Guard. Die normale Bewegungsuhr und das produktive Verhalten bleiben
-erhalten. Der manuelle native Pfad behält Bewegungs-/Kamera-/Endzustandsdaten,
-zehn Informationsrouten, Lifecycle und Originalpixelprüfungen gemäß
-[Belegvertrag](CI_C_NATIVE_GROUPS.md#filmrückbau--502--p1).
-Historische B-A-/B-B-Filme und Abnahmen bleiben commit-/PR-gebunden;
-P1 schreibt sie nicht um und baut die übrige Studie nicht zurück.
+P2-A aus [#502](https://github.com/venomenon328/picross/issues/502) entfernt die
+historischen manuellen Vollstudien-/Matrix-/Exportwege samt exklusiven Guards.
+Der [aktuelle Belegvertrag](CI_C_NATIVE_GROUPS.md#studienrückbau--502--p2-a)
+bindet erhaltene Reader und kurze Produktprüfungen. P1 hat die Filmproduktion
+bereits vollständig entfernt. Historische B-A-/B-B-Nachweise werden nicht
+umgeschrieben oder durch diesen technischen Rückbau erneut abgenommen.
 
 Die nativen Gruppen bleiben nach dem vollständigen Diff ausgewählt. Kleine
 bisherige Komponentenfälle hängen über `tests/book_fixture.gd` am tatsächlichen
@@ -150,13 +149,9 @@ sieben Hilfeoriginalen, Assertionbericht und drei Logs. Keine komplette
 Buchstudie, Materialgalerie oder Filmproduktion in CI. Producer,
 Quellinventar `tools/book_contract.py` und unabhängiger Ergebnisguard binden
 gemeinsam Originalberichte, notwendige Assertions, Phasen und Datei-Hashes.
-Für den historischen B-B-Vollnachweis waren nach Eigentümerklarstellung vom
-02.11.2026 Laufzeitziele keine zusätzlichen
-Abnahmeblocker für B-B. Die gemeinsame native Buchprüfung (`book-native`)
-erhält einen endlichen 600-s-Hangschutz; die übrigen Buchphasen behalten 300 s.
-Messwerte und Zielüberschreitungen werden offen berichtet. Diese Entscheidung
-löst gezielt die vorherige 300-s-Bindung von B-B-V01 ab; fachliche Assertions,
-Pixelgrenzen, Originalumfang und Produktzeiten bleiben erhalten.
+Die historische 600-s-Ausnahme für `book-native` gehört zum damaligen
+B-B-Vollnachweis. Diese Phase entfällt mit dem Vollstudienpfad; die aktuellen
+drei Lifecyclephasen behalten ihre 300-s-Grenzen.
 Die kurze Historyroute behält höchstens 20
 Kommandos, sechs neue Transaktionen und genau zwei echte Prozesse.
 Die Exportgruppe wartet unter Linux auf die bereits laufenden Katalog-/Grafik-
@@ -172,12 +167,13 @@ beziehungsweise einer Studienbeigabe scheitern lassen. Der getrennte Desktoplauf
 EXE/PCK, isolierte Profile und den rein lesenden externen Beobachter. OS-Eingaben
 prüfen auch einen realen Dateisystemfehler, verweigertes Fensterschließen und Retry.
 Dieser exklusive Desktoplauf ist nach Eigentümerentscheidung vom 02.11.2026
-nur für die aktuelle B-B-Entwicklung beauftragt. Er wird nicht automatisch in
+nur für die damalige B-B-Entwicklung beauftragt. Der Diagnoseweg bleibt für
+die offenen B-B-M01/HIL-M01 und P1-R01-O01 am aktuellen Spieler erhalten. Er wird nicht automatisch in
 Standardprüfungen aufgenommen. Spätere Läufe mit Fenstern/Maussteuerung benötigen
 einen passenden ausdrücklichen Auftrag und vorherige Desktopfreigabe.
 
-Chromium ist für diesen Auftrag ausdrücklich als `browser_scope=short`
-beauftragt. C01–C08 verwenden die neue Buchpräsentation mit echter Eingabe,
+Für die historische B-B-Lieferung war Chromium ausdrücklich als
+`browser_scope=short` beauftragt; daraus folgt kein neuer Browserauftrag. C01–C08 verwenden die neue Buchpräsentation mit echter Eingabe,
 bestätigtem IndexedDB-Sync, Reload, Prozessneustart, Tab-Sperre und Fehler/Retry.
 Die neun Kernfälle und zwei benötigten Exporte bleiben der begrenzte Umfang;
 kein zusätzliches Exportprofil, Firefox oder Livehosting.

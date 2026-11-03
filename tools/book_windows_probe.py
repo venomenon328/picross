@@ -22,12 +22,12 @@ import zipfile
 import p1_preflight as tc
 
 ROOT = Path(__file__).resolve().parents[1]
-OBSERVER = ROOT / 'game/study/book/windows_observer.gd'
+OBSERVER = ROOT / 'game/tests/book_windows_observer.gd'
 
 
 def build(cache: Path, output: Path) -> dict:
     """Export the regular root/presets with synthetic inputs, without a window."""
-    from book_study import prepare
+    from product_fixtures import copy_regression_game
     from p1_product import run_phase, require_clean_output
     from p1_evidence import source_identity
     identity = source_identity(ROOT)
@@ -46,7 +46,7 @@ def build(cache: Path, output: Path) -> dict:
         engine = str(tc.extract_editor(cache/assets[0].name,work/'engine','Windows'))
         tc.extract_windows_templates(cache/tc.TEMPLATES.name,tc.template_directory(work,'Windows'))
         project = work/'game'
-        prepare(project)
+        copy_regression_game(ROOT, project)
         env = tc.isolated_environment(work,'Windows')
         registry = json.loads((project/'data/registry.json').read_text(encoding='utf-8'))
         env['ZA1_PACK_COUNT'] = str(sum(e['visible'] for e in registry['entries']))
@@ -101,8 +101,9 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
     dirty = subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip()
     if checkout != expected_head or dirty:
         raise ValueError('Observer and driver require the same clean checkout as the export')
-    regular = report.get('package') == 'B-B-Windows-synthetic-export'
-    stem = 'picross-p1' if regular else 'book-study'
+    if report.get('package') != 'B-B-Windows-synthetic-export':
+        raise ValueError('Expected a current regular Windows product export')
+    stem = 'picross-p1'
     names = (stem+'.exe', stem+'.pck')
     player = source / 'windows' / names[0]
     for name in names:
@@ -148,7 +149,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
                                creationflags=subprocess.CREATE_NO_WINDOW)
     hwnd = None
     held = set()
-    binding = dict(package='B-B-W01' if regular else 'B-A-N06-W01' if fold else 'B-A-N05-F01-T01', source_commit=expected_head,
+    binding = dict(package='B-B-W01', source_commit=expected_head,
                    base_commit=report['base_commit'], tested_checkout_commit=report['tested_checkout_commit'],
                    export_files={n: report['files']['windows/'+n] for n in names},
                    observer_sha256=tc.sha256_file(OBSERVER), driver_sha256=tc.sha256_file(Path(__file__)),
@@ -293,8 +294,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
             return owned[0] if owned else None
         hwnd = wait(find)
         wait(lambda: state().get('card'))
-        if regular:
-            require(state()['presentation'] == 'res://book/main.gd', 'actual regular product root')
+        require(state()['presentation'] == 'res://book/main.gd', 'actual regular product root')
         hwnd = wait(find)
         record('window-ready', pid=process.pid, hwnd=hwnd)
         if fold:
@@ -436,32 +436,28 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
         binding['round_trips'] = 32
         saved = wait(lambda: state() if state()['memory'].get('cursor') == state()['cursor'] else None)
         require(all(saved['memory'][k] == saved[k] for k in ('cells','history','cursor')), 'durable snapshot preserves exact player state')
-        profile_files = [p.relative_to(output/'profile') for p in (output/'profile').rglob('*') if p.is_file()]
-        if regular:
-            # A directory at the temporary-file path causes an actual filesystem
-            # failure without mutating runtime state or touching a real profile.
-            slot = Path(saved['slot_path']).resolve()
-            if not slot.is_relative_to((output/'profile').resolve()):
-                raise ValueError('Observed save lies outside the isolated profile')
-            before_bytes = slot.read_bytes()
-            obstacle = slot.with_suffix('.tmp')
-            obstacle.mkdir()
-            try:
-                click(cell_point(8,8))
-                wait(lambda: state()['save_error'] and state()['retry_visible'])
-                user.PostMessageW(hwnd,0x10,0,0)
-                time.sleep(.3)
-                require(process.poll() is None and slot.read_bytes() == before_bytes,
-                        'native close rejects failed flush and preserves primary bytes')
-                capture('save-quit-failure')
-            finally:
-                obstacle.rmdir()
-            click(center(state()['retry']))
-            saved = wait(lambda: state() if not state()['save_error'] and state()['memory'].get('cursor') == state()['cursor'] else None)
-            require(all(saved['memory'][k] == saved[k] for k in ('cells','history','cursor')),
-                    'visible retry commits pending state after native close refusal')
-        else:
-            require(all('logs' in p.parts or 'shader_cache' in p.parts for p in profile_files), 'no save or preference files in isolated profile')
+        # A directory at the temporary-file path causes an actual filesystem
+        # failure without mutating runtime state or touching a real profile.
+        slot = Path(saved['slot_path']).resolve()
+        if not slot.is_relative_to((output/'profile').resolve()):
+            raise ValueError('Observed save lies outside the isolated profile')
+        before_bytes = slot.read_bytes()
+        obstacle = slot.with_suffix('.tmp')
+        obstacle.mkdir()
+        try:
+            click(cell_point(8,8))
+            wait(lambda: state()['save_error'] and state()['retry_visible'])
+            user.PostMessageW(hwnd,0x10,0,0)
+            time.sleep(.3)
+            require(process.poll() is None and slot.read_bytes() == before_bytes,
+                    'native close rejects failed flush and preserves primary bytes')
+            capture('save-quit-failure')
+        finally:
+            obstacle.rmdir()
+        click(center(state()['retry']))
+        saved = wait(lambda: state() if not state()['save_error'] and state()['memory'].get('cursor') == state()['cursor'] else None)
+        require(all(saved['memory'][k] == saved[k] for k in ('cells','history','cursor')),
+                'visible retry commits pending state after native close refusal')
         binding['final_state'] = saved
         binding['passed'] = True
     except Exception as exc:

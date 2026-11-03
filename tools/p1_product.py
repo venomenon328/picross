@@ -585,9 +585,9 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("export")
             if args.export:
                 # HIL owner instruction: targeted help/lifecycle only in CI;
-                # the complete book study remains excluded (P2 is separate).
-                import book_study
-                evidence.report["book_lifecycle"] = python_phase("regular-book-integration", lambda: book_study.run_lifecycle(
+                # only the current short product lifecycle is retained.
+                import book_lifecycle
+                evidence.report["book_lifecycle"] = python_phase("regular-book-integration", lambda: book_lifecycle.run_lifecycle(
                     args.cache_dir.resolve(), evidence.technical / "book-lifecycle"))
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
             evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2", "ea") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])

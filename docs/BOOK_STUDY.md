@@ -5,9 +5,14 @@ Die gewählte N06-Fassung ist mit PR #497 auf `main@2a0d9e4` integriert.
 und [persönliche B-A-M01](https://github.com/venomenon328/picross/pull/497#issuecomment-6564908352)
 sind abgeschlossen. B-B übernimmt Darstellung und Materialien in den regulären
 Spieler: [aktueller Vertrag](BOOK_INTEGRATION.md), [B-B-T01](B_B_VERIFICATION.md).
-Der gemeinsame Kern liegt jetzt unter `game/book/`; die verbleibende synthetische
-Studienhülle verwendet ihn mit isolierten Inputs. Aktive Prüfungen binden diesen
-Kern und den realen Produktlebenszyklus, keine zusätzliche Studienexportmatrix.
+Der gemeinsame Produktkern liegt unter `game/book/`. P2-A aus
+[#502](https://github.com/venomenon328/picross/issues/502) entfernt die historische
+Studienhülle, ihre 27 Definitions-/Revealpaare, Vollprüfer und Studienexporte.
+Die damaligen Quellen und Aufrufwege bleiben im
+[gebundenen Stand vor Rückbau](https://github.com/venomenon328/picross/tree/fc86d2a2eff543f5b0c4ff328a71e815e4bc43a7/game/study/book)
+erreichbar. Aktuell gelten der kurze Hilfe-/Lifecyclepfad und die nativen
+Produktgruppen gemäß [Belegvertrag](CI_C_NATIVE_GROUPS.md). B-B-M01/HIL-M01 und
+der Windows-Tooltipbefund P1-R01-O01 bleiben separat offen.
 
 Die folgenden Status-, Pfad-, Prüf- und Exportangaben beschreiben ausdrücklich
 den damaligen B-A-Lieferstand. Seine Nachweise und Freigaben werden nicht
@@ -532,4 +537,4 @@ Die damaligen offenen R06-/R07-Originalprüfungen wurden für PR #495 durch
 ausdrückliche Eigentümerentscheidungen erlassen, nicht tatsächlich nachgeholt.
 Diese historische Lieferung nimmt weder N06 noch B-A-M01 oder B-B ab.
 
-Start und Reproduktion: [Studienanleitung](../game/study/book/README.md).
+Start und Reproduktion: [historische Studienanleitung](https://github.com/venomenon328/picross/blob/fc86d2a2eff543f5b0c4ff328a71e815e4bc43a7/game/study/book/README.md).
