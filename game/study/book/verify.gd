@@ -124,9 +124,6 @@ func run() -> void:
 	study = Study.new()
 	root.add_child(study)
 	await frames(6)
-	if OS.get_cmdline_user_args().has("--movie"):
-		await movie()
-		return
 	check(study.app.sessions.size() == 27, "three synthetic shapes with 27 fixed catalog IDs")
 	fixture_cases()
 	await control_cases()
@@ -300,62 +297,6 @@ func run() -> void:
 	study.free()
 	print("BOOK_STUDY_OK checks=", checks, " failures=", failures.size())
 	quit(0 if failures.is_empty() else 4)
-
-func movie() -> void:
-	await frames(12)
-	var events: Array = []
-	for target: int in [1,0]:
-		var begin: int = Engine.get_frames_drawn()
-		check(study.request_page(target),"movie page accepted")
-		while study.state in [Study.State.PREPARING,Study.State.OPENING]: await process_frame
-		events.append(movie_event("page",begin))
-		await frames(12)
-	var begin: int = Engine.get_frames_drawn()
-	await prepare_open("T-06")
-	while study.state == Study.State.OPENING: await process_frame
-	events.append(movie_event("open",begin))
-	await frames(15)
-	var point: Vector2 = study.app.board.global_position+study.app.board.view.origin+Vector2(5.5,5.5)*study.app.board.view.cell_size
-	button(true,point)
-	button(false,point)
-	await frames(15)
-	var edited_cursor: int = study.app.session.player.cursor
-	await movie_information(["settings","help","work","help","settings","work"],events)
-	begin = Engine.get_frames_drawn()
-	var tab: Vector2 = study.app.album_button.get_global_rect().get_center()
-	button(true,tab)
-	button(false,tab)
-	while study.state in [Study.State.PREPARING,Study.State.OPENING]: await process_frame
-	events.append(movie_event("return",begin))
-	await frames(15)
-	await movie_information(["settings","catalog","help","catalog"],events)
-	check(study.state == Study.State.CATALOG and study.app.session.player.cursor == edited_cursor,"movie returns edited content to catalog")
-	await screenshot("movie-final")
-	finish_image()
-	var file := FileAccess.open(output.path_join("movie.json"),FileAccess.WRITE)
-	file.store_string(JSON.stringify({"fps":30,"events":events,"final_state":"CATALOG","final_id":str(study.app.session.definition.id),"edited_cursor":edited_cursor,"failures":failures})+"\n")
-	file.close()
-	print("BOOK_STUDY_MOVIE_OK total=", study.elapsed, " fixed_fps=30 native_motion_separately_measured=true")
-	# Keep the settled scene alive through the engine's final recorded frame.
-	quit(0 if failures.is_empty() else 4)
-
-func movie_event(kind: String, begin: int) -> Dictionary:
-	return {"kind":kind,"direction":study.direction,"seconds":study.elapsed,"first_frame":begin,"last_frame":Engine.get_frames_drawn(),"preparation_seconds":study.preparation_seconds,"capture_motion_wall_seconds":study.motion_wall_seconds,"frame_ms":study.frames_ms.duplicate()}
-
-func movie_information(destinations: Array, events: Array) -> void:
-	var helper := preload("res://study/book/n05_cases.gd").new()
-	helper.p = self
-	helper.book = study
-	helper.app = study.app
-	for destination: String in destinations:
-		var source: String = study.app.info.section if study.state == Study.State.INFORMATION else "catalog" if study.state == Study.State.CATALOG else "work"
-		var begin: int = Engine.get_frames_drawn()
-		helper.click(helper.target_control(destination))
-		while study.state in [Study.State.PREPARING,Study.State.OPENING]: await process_frame
-		var event: Dictionary = movie_event("information",begin)
-		event.merge({"source":source,"target":destination})
-		events.append(event)
-		await frames(6)
 
 func catalog_cases() -> void:
 	for configuration: Array in Current.CONFIGURATIONS:
