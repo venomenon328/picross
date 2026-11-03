@@ -1322,6 +1322,23 @@ func compact_buttons() -> void:
 		check(Rect2(Vector2.ZERO,Vector2(surface.size)).encloses(Rect2(Vector2(popup.position),Vector2(popup.size))), "KB complete tooltip fits client")
 		kb_measurements.append({"tooltip_position":popup.position,"tooltip_size":popup.size,"scale":app.ui_scale})
 		await shot("tooltip")
+	# Keep a small current empty-text/lifetime oracle after retiring the old
+	# study matrix. Use the same real hover and native delay, without more PNGs.
+	tool.dismiss_tooltip()
+	if tip != null:
+		check(tip.get_window().is_queued_for_deletion(), "KB tooltip teardown deferred past dispatch")
+	await frames()
+	tool.tooltip_text = " \t\n "
+	await hover(app.actions.menu)
+	await hover(tool)
+	await create_timer(0.8).timeout
+	check(surface.gui_get_hovered_control() == tool and (tool.tooltip_ref == null or tool.tooltip_ref.get_ref() == null), "KB delayed whitespace tooltip remains absent")
+	tool.tooltip_text = "Aktuelle Werkzeughilfe"
+	await hover(app.actions.menu)
+	await hover(tool)
+	await create_timer(0.8).timeout
+	tip = tool.tooltip_ref.get_ref() if tool.tooltip_ref != null else null
+	check(tip != null and tip.is_visible_in_tree() and tip.get_child(0).text == tool.tooltip_text, "KB current tooltip text after empty hover and cell release")
 	click(app.actions.menu)
 	await frames()
 	check(app.information.visible and (tip == null or not is_instance_valid(tip) or not tip.is_visible_in_tree()), "KB switch dismisses stale tooltip")

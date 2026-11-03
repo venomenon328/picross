@@ -10,15 +10,19 @@ binden genau diesen Umfang gemäß [nativem Belegvertrag](CI_C_NATIVE_GROUPS.md)
 Die vollständige Studien-/Materialroute ist in CI gesperrt.
 P1 aus [#502](https://github.com/venomenon328/picross/issues/502) entfernt die
 Filmproduktion zusätzlich vollständig aus manuellen Buchprüfwegen samt
-Filmphase, Hilfsfunktionen, Pflichtbelegen und Kostenfeldern. Der übrige
-Studienumfang bleibt bis P2 erhalten; neue Größenlimits gehören zu P3. Übrige nach dem
+Filmphase, Hilfsfunktionen, Pflichtbelegen und Kostenfeldern. P2-A entfernt anschließend den ungenutzten historischen
+Studienumfang und dessen exklusive Reader/Guards aus dem aktiven Tree. Der
+kurze Producer heißt `tools/book_lifecycle.py`; Quellenbindung, Ergebnisgate und
+aktuelle Produkt-/Speicher-/Tooltip-/PCK-Prüfungen bleiben gemäß Belegvertrag.
+Der Windows-Diagnoseweg bleibt für die offenen Abnahmen/Befunde erhalten.
+Neue Größenlimits gehören zu P3; Laufzeitoptimierung bleibt P2-B. Übrige nach dem
 Gesamtdiff ausgewählte Gruppen bleiben erforderlich; historische Vollnachweise
 werden weder wiederholt noch als aktueller verkürzter Erfolg umgedeutet.
 
 **Historischer B-B-Lieferumfang / #498:** Die damalige Exportgruppe führte die gemeinsame Buchdarstellung
 und den regulären Produktlebenszyklus gemäß [B-B-T01](B_B_VERIFICATION.md) und
 [nativem Belegvertrag](CI_C_NATIVE_GROUPS.md) aus. Die übernommenen N01–N21-/F01-
-Prüfungen, neun strengen Handoffs und Gegenproben bleiben erhalten; eine zweite
+Prüfungen, neun strengen Handoffs und Gegenproben waren Bestandteil der Lieferung; eine zweite
 Studien-Exportmatrix entfällt. Nach Eigentümerklarstellung vom 02.11.2026
 sind B-B-Laufzeitziele keine zusätzlichen Abnahmeblocker. Ausschließlich
 `book-native` erhält einen 600-s-Hangschutz statt 300 s; die übrigen Phasen

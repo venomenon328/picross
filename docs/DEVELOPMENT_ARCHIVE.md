@@ -2,8 +2,17 @@
 
 **B-B / #498:** `game/book/` enthält die gemeinsame Produktdarstellung samt drei
 unveränderten Materialbildern und deren Import-/Herkunftsmetadaten. Der reguläre
-Windows-/Webstart verwendet diese Quellen; `game/study/book/` enthält nur noch
-den isolierten Untersuchungsadapter, synthetische Inputs und technische Prüfer.
+Windows-/Webstart verwendet diese Quellen. P2-A / #502 entfernt
+`game/study/book/` samt 27 Definitions-/Revealpaaren, Vollstudienprüfern und
+Exportwegen; die historischen Quellen liegen am
+[gebundenen Vorgänger](https://github.com/venomenon328/picross/tree/fc86d2a2eff543f5b0c4ff328a71e815e4bc43a7/game/study/book).
+Aktive Reader sind `tools/book_lifecycle.py` für die kurze Hilfe-/Lifecycleprüfung
+und `tools/book_windows_probe.py` mit dem externen Beobachter
+`game/tests/book_windows_observer.gd` für ausdrücklich beauftragte Windowsdiagnosen.
+Beide kopieren den bestehenden kleinen Testkatalog über `product_fixtures`.
+B-B-M01/HIL-M01 und der wechselnde Windows-Tooltipbefund P1-R01-O01 bleiben offen;
+kein Studienreplay oder neuer Desktopauftrag. Der [Belegvertrag](CI_C_NATIVE_GROUPS.md)
+ordnet die erhaltenen aktuellen Produkt-/Tooltip-/Speicher-/PCK-Prüfungen zu.
 `game/tests/book_fixture.gd` bindet bestehende Komponentenprüfungen an dieselbe
 Produktwurzel, `book_integration.gd` prüft ihren unbeschleunigten Lebenszyklus.
 `book-save-v1.json` ist ein einzelner eingefrorener synthetischer Schema-1-Beleg.
@@ -21,8 +30,8 @@ Untersuchungsstand, zwei eigene Materialshader und kompakte synthetische Inputs
 samt deterministischer Erzeugung und studieneigener Doppelseitenanordnung.
 Das bestehende A-Bild bleibt unveränderte Qualitätsreferenz. Eine originale
 Papiertextur samt Import-/Herkunftsmetadaten und 27 eindeutige Definitions-/Revealpaare
-ersetzen die fehlerhafte Wiederverwendung dreier Ressourcenpfade. Die Dateipaare
-sind der begrenzte reproduzierbare Runtime-/PCK-Bestand, keine historische Galerie.
+ersetzen die fehlerhafte Wiederverwendung dreier Ressourcenpfade. Die Dateipaare waren der damalige reproduzierbare Studien-/PCK-Bestand;
+P2-A entfernt sie nach dem Leserabgleich.
 [B-A-N06-T01](BOOK_STUDY.md) und Startanleitung binden
 Zweck, Rechte und Nachweise. Filme, Laufbilder und Exporte bleiben temporär; der
 reguläre Export schließt die Studie aus. Keine historischen Bildressourcen ersetzen.
