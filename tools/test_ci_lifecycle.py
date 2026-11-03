@@ -227,13 +227,14 @@ class LifecycleTests(unittest.TestCase):
             manifest['records'][0]['sources'][SOURCE]['after'] = after[SOURCE]
             write(MANIFEST, (json.dumps(manifest) + '\n').encode()); head = commit()
             command = [sys.executable, str(Path(__file__).with_name('ci_lifecycle.py').resolve()), '--base', base, '--head', head,
-                       '--output', str(Path(directory, 'report.json'))]
+                       '--output', str(Path(directory, '.git', 'report.json'))]
             result = subprocess.run(command, cwd=directory, capture_output=True, text=True, timeout=15)
             self.assertEqual(result.returncode, 0, result.stderr)
-            report = json.loads(Path(directory, 'report.json').read_text())
+            report = json.loads(Path(directory, '.git', 'report.json').read_text())
             self.assertEqual(report['source_head'], head); self.assertEqual(report['base_commit'], base)
             write('different/optional.machine', b'NEVER EXECUTE THIS GENERATOR\n'); head = commit()
             command[command.index('--head') + 1] = head
             result = subprocess.run(command, cwd=directory, capture_output=True, text=True, timeout=15)
             self.assertNotEqual(result.returncode, 0)
             self.assertIn('Unclassified', result.stderr)
+            self.assertIn('different/optional.machine', result.stderr)
