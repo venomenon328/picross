@@ -19,7 +19,8 @@ P2-B erhält dieselben Assertions und logischen Originalbindungen, liefert nativ
 KAT-2-Ausschnitte direkt und HN-Originalsamples mit unabhängigem Pixelreplay;
 byteidentische PNGs werden einmal physisch gespeichert. Gemessene Prozesskosten,
 Schedulergrenzen und temporäre Rekonstruktion bindet der Belegvertrag. Neue
-Größen-/Lebenszyklusguards gehören weiterhin zu P3. Übrige nach dem
+Globale Größenlimits bleiben P3-B; den Neuzuwachs-/Lebenszyklusguard liefert
+P3-A gemäß dem folgenden Abschnitt. Übrige nach dem
 Gesamtdiff ausgewählte Gruppen bleiben erforderlich; historische Vollnachweise
 werden weder wiederholt noch als aktueller verkürzter Erfolg umgedeutet.
 
@@ -118,6 +119,99 @@ Quell-/Runbindung, unabhängige Verifikation und isolierte Testdaten bleiben.
 Neue teure Tests benötigen aktuellen Zweck, passende günstige Ebene und
 Kostenbegründung; neue Module eine passende Auswahlzuordnung. Historische
 Lieferberichte behalten ihren damaligen Stand, Produktabnahmen bleiben separat.
+
+## Testlebenszyklus und Featureabschluss · #502 / P3-A
+
+Aktuelle Spiel-, Save-, Pixel-, Export- und Integritätsregressionen sind dauerhafte
+Produktprüfungen. Entwicklungsstudien, Einführungsvergleiche, Probeexporte,
+Film-/Frame-Matrizen und Abnahmegalerien sind zunächst **befristete Nachweise**.
+Vor einer neuen aufwendigen Prüfung sind aktueller Fehler-/Produktzweck,
+günstigste passende Ebene, bestehender ersetzter/erweiterter Fall, tatsächliche
+Leser, CI-Auswahl, erwartete CPU-/Wandzeit, gelieferte Dateien/Bytes/PNGs,
+Verantwortlicher und Paket sowie ein überprüfbarer Rückbaupunkt festzuhalten.
+Das Wort „Regression“, ein anderer Ausgabeordner oder „optional“ erteilt keine
+Dauerfreigabe. Historische Prüfungen werden nicht allein wegen ihres Namens verboten.
+
+Der schnelle Docs-Schritt führt [ci_lifecycle.py](../tools/ci_lifecycle.py) nach
+der Materialisierung und vor den Werkzeugtests aus. Er liest die **exakten
+Base-/Head-Gitbäume**, keine unversionierten Arbeitsdaten und keine historische
+Rätselproduktion. Er klassifiziert jede Änderung unter `tools/`, `tests/`,
+`game/tests/` und `.github/` sowie neue andere Dateipfade; Prosa (`.md`/`.txt`),
+der eigene Datensatz und kanonische Inhaltslieferungen sind ausgenommen.
+Das ist bewusst eine konservative Änderungsgrenze: auch Wartung vorhandener
+Prüfmaschinen und neue unbekannte Dateiklassen brauchen eine Erklärung. Keine
+Analyse des gesamten historischen Textbestands und kein Grep nach Filmnamen
+in negativen Testdaten. Rename wird wie bisher als Delete plus Add geprüft.
+Bestehende unveränderte Prüfungen brauchen keine rückwirkende Registrierung.
+Reine Inhaltslieferungen behalten ausschließlich ihren Metadatenpfad.
+
+[ci_lifecycle.json](../tools/ci_lifecycle.json) hält nur die aktiven Erklärungen,
+keine wachsende Lieferchronik. Jeder Datensatz bindet vollständige Git-Blob-IDs
+vor/nach der Änderung, konkrete Readerpfade und ausführbare Anker. Entrypoints
+sind Workflowereignisse, tatsächliche Script-/Importaufrufe oder die vorhandene
+Unittest-Discovery. Readerbytes werden im kompakten Laufbericht SHA-256-gebunden.
+`selection` muss der bestehenden `ci_scope.classify()`-Auswahl der Quellen exakt
+entsprechen; sie erteilt selbst keinen Test-/Browserauftrag. Gemeinsame Änderungen
+behalten die Vereinigung sämtlicher vorhandener Pflichtbereiche.
+
+| `kind` | Technisch kontrollierte Geltung |
+| --- | --- |
+| `permanent-small` | Kleine aktuelle Regression oder günstiger Guard: erklärte zusätzliche CPU ≤10 s, Wandzeit ≤5 s, höchstens 20 gelieferte Dateien/1 MiB und keine PNGs. Keine Befristung als billige Dauerprüfung tarnen. |
+| `temporary` | Offenes verlinktes Feature/Issue und festes ISO-Ablaufdatum. Ende beim früheren Ereignis: Featureabschluss, geschlossenes GitHub-Issue/PR oder Datum. Keine Standard-CI-Daueraktivierung bei abgeschlossenem Feature. |
+| `permanent-heavy` | Aktueller belegter Abdeckungsbedarf, messbare Kosten, separate ausdrückliche Eigentümerentscheidung und festes nächstes Review-/Ablaufdatum. Ablauf erzwingt erneute Entscheidung oder Rückbau. |
+
+Die kleinen Zahlen unterscheiden **nur neue deklarierte Prüflast**; sie sind
+keine globale Laufzeit-, Artefakt- oder Prozessabbruchgrenze. Kosten sind explizite
+Schätzungen, keine automatische Beweisführung über beliebige Programme. Den
+fachlichen Zweck, minimale Ebene und die Plausibilität gegenüber ausführbaren
+Quellen und realen Messungen prüfen T01 und unabhängiges R01. Auch ein Generator
+mit beliebigem Namen oder eine neue Uploadklasse bleibt eine deklarationspflichtige
+Änderung; ein niedriger Fantasiewert ist keine Freigabe schwerer Dauerprüfungen.
+
+`purpose`, `level`, `coverage`, `feature`, `owner`, `sources`, `readers`,
+`selection`, `cost`, `expires`, `retire_when` und `owner_decision` sind Pflichtfelder.
+`cost` enthält `cpu_seconds`, `wall_seconds`, `files`, `bytes`, `pngs`; Zahlen
+müssen endlich/nichtnegativ sein. Temporäre/schwere Einträge verwenden
+`retire_when=feature-closeout-or-deadline`. Für schwere Dauerprüfungen,
+Verlängerung oder Klassenwechsel verlangt der Guard einen separaten Kommentar
+des Repositoryeigentümers mit `CI-LIFECYCLE-APPROVE <Fingerprint>`.
+Der SHA-256-Fingerprint wird durch `ci_lifecycle.fingerprint(record)` aus dem
+kanonischen vollständigen Datensatz ohne `owner_decision` berechnet. Die API prüft
+Autor, exakte Kommentar-URL und Fingerprint einschließlich Kosten, Quellen und
+Datum; ein erfundener Link genügt nicht. Fehlender Zugriff scheitert geschlossen.
+Die Entscheidung ist vor Aufnahme der neuen schweren Dauerpflicht erforderlich.
+
+Ein temporärer/schwerer Datensatz darf nicht durch Entfernen/Umbenennen seiner ID
+oder ein geändertes Etikett verschwinden, solange seine Quellen aktiv bleiben.
+Beim regulären Rückbau Quellen entfernen und die Löschung mit kleinem Datensatz
+ausweisen; den erledigten Datensatz danach aus der aktiven Liste nehmen.
+Bei notwendiger Überführung in eine aktuelle Dauerregression denselben Datensatz
+mit der separaten exakten Eigentümerentscheidung umstellen. Kein blindes Löschen
+von Produktprüfungen oder historischer Rechte-/Quellbindung.
+
+`closeout` nennt Feature, `in-progress`/`complete`, hinzugefügte/entfernte dauerhafte
+Tests, sämtliche temporären Rest-IDs und die Kostenänderung. Vor Featureabschluss
+sind Entwicklungsstudien, Filme, große Galerien und Probeexporte gezielt auf
+Rückbau zu prüfen. T01/PR ergänzt **tatsächliche** CI-Zeiten, erzeugte/gelieferte
+PNGs, physische/logische Dateien/Bytes und Uploadbytes mit Head/Basis/Checkout/
+Run/Versuch, oder begründet nicht anwendbare Messungen. Schätzungen werden nicht
+als Messung ausgegeben. Der Guard verweigert `complete` bei eigenem temporärem
+Rest; spätere Docs-Läufe prüfen weiterhin Ablauf und GitHub-Featurezustand.
+Der Bericht liegt neben Auswahl/Wachstum im vorhandenen siebentägigen Artefakt.
+Docs-Fehler verhindert unverändert `ci-required`; kein weiterer Job/Prüfmatrix.
+
+**Übergang:** P2-B maß 840,229 s native Auswahl und 151.886.625 ZIP-Bytes
+(144,850 MiB). <10 Minuten und der 75-MiB-Arbeitsrichtwert bleiben verfehlt.
+P3-A schaltet weder Gesamt-Byte-/Dateimaxima noch neue Zeitabbrüche,
+Testauslassungen oder Chromium ein. Weitere Optimierung P2-C und das globale
+Erfolgslimit P3-B brauchen ihre eigenen Aufträge und Entscheidungen.
+
+[HIL-F01](https://github.com/venomenon328/picross/pull/501#issuecomment-6601103689)
+stellt blockierte lokale Arbeitsdaten nur für den damaligen Merge zurück.
+P3-A implementiert keine lokale Löschung, Policy-Umgehung oder allgemeine
+Workflowreform; fremde/gesperrte Daten und der offene P2-B-Bereinigungsrest
+bleiben erhalten und ehrlich offen. Prozessinterne Bereinigung und
+Wiederanlauf gehören zum separaten Workflowauftrag.
 
 ## RI · Prüfvertrag für die Rätselintegration
 
