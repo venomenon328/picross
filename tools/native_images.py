@@ -22,11 +22,13 @@ def require_identical(reference, actual):
 def crop_native(directory: Path, reports: list, compare: bool = False):
     from PIL import Image, __version__
     metrics = dict(format='picross-native-images-v1', status='running', pillow=__version__,
-                   codec=dict(optimize=False, compress_level=6), comparison=compare,
+                   codec=dict(native='unchanged Godot crop bytes',
+                              fallback_python=dict(optimize=False, compress_level=6)), comparison=compare,
                    input_frames=0, crops=0, input_bytes=0, output_bytes=0,
                    read_decode_seconds=0., crop_seconds=0., png_write_seconds=0.,
                    reference_png_write_seconds=0., reference_bytes=0, comparison_seconds=0.,
                    source_binding_seconds=0.,
+                   same_frame_compare_seconds=0., same_frame_input_bytes=0,
                    entries=[])
     started = time.perf_counter()
     cpu = time.process_time()
@@ -68,16 +70,19 @@ def crop_native(directory: Path, reports: list, compare: bool = False):
                                 raise ValueError('Native crop pixels/dimensions differ from original readback')
                             crop = image.copy()
                             if 'full_reference' in capture:
+                                comparison_began = time.perf_counter()
                                 reference_name = capture['full_reference']
                                 if not compare or Path(reference_name).name != reference_name:
                                     raise ValueError('Unexpected/unsafe same-frame crop reference')
                                 full_reference = directory/reference_name
+                                metrics['same_frame_input_bytes'] += full_reference.stat().st_size
                                 with Image.open(full_reference) as full:
                                     rgba = full.convert('RGBA')
                                     if (list(rgba.size) != capture['framebuffer']
                                             or hashlib.sha256(rgba.tobytes()).hexdigest() != capture['source_rgba_sha256']
                                             or rgba.crop(rectangle).tobytes() != crop.convert('RGBA').tobytes()):
                                         raise ValueError('Native crop differs from independent same-frame crop')
+                                metrics['same_frame_compare_seconds'] += time.perf_counter()-comparison_began
                         else:
                             crop = image.crop(rectangle)
                         metrics['crop_seconds'] += time.perf_counter()-began

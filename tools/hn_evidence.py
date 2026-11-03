@@ -26,9 +26,11 @@ def verify(directory, report):
             raise ValueError('HN pixels differ from native readback')
         cx,cy = row['context']
         kind = row['file'].split('-',3)[3].removesuffix('.png')
+        width = int(row['file'].split('-')[1])
+        height,ui = {1280:(720,1.25),1920:(1080,1.0),2560:(1440,1.25)}[width]
         context = {'row':[-1,2],'column':[2,-1],'grid':[2,2],
                    'complete-row':[-1,49],'drag-row':[-1,2]}[kind]
-        if [cx,cy] != context or row['cell'] <= 0:
+        if [cx,cy] != context or row['cell'] <= 0 or row['client'] != [width,height] or row['ui'] != ui:
             raise ValueError('Wrong HN band context')
         ox,oy = row['grid_origin']
         bx,by,bw,bh = row['board']

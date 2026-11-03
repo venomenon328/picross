@@ -151,8 +151,10 @@ func shot(name: String) -> void:
 	captures[-1]["image_costs"] = {"readback_seconds":read_seconds,"crop_seconds":crop_seconds,"png_write_seconds":write_seconds,"hash_seconds":(Time.get_ticks_usec()-hash_started)/1000000.0}
 	if OS.get_environment("P1_COMPARE_NATIVE_PNG") == "1":
 		var reference_name: String = filename.trim_suffix(".png")+"-full-reference.png"
+		var comparison_started: int = Time.get_ticks_usec()
 		check(image.save_png(output.path_join(reference_name)) == OK,"same-frame crop comparison source saved")
 		captures[-1]["full_reference"] = reference_name
+		captures[-1]["image_costs"]["reference_png_write_seconds"] = (Time.get_ticks_usec()-comparison_started)/1000000.0
 
 func region(control: Control, trim_label: bool = false) -> Array:
 	var rect: Rect2 = control.get_global_rect()

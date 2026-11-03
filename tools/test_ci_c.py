@@ -520,7 +520,7 @@ class Pixels(unittest.TestCase):
                     image.save(root/name)
                     rows.append(dict(kind='pixels',file=name,context=context,marked=count,unmarked=2500-count,
                                      evidence='picross-hn-samples-v1',grid_origin=[4,4],board=[10,10,60,60],
-                                     overlay=[0,0,0,0],client=[width,height],cell=1,
+                                     overlay=[0,0,0,0],client=[width,height],ui=ui/100,cell=1,
                                      source_rgba_sha256=dict(frame='a'*64,baseline='b'*64,
                                          samples=hashlib.sha256(image.tobytes()).hexdigest())))
             report=dict(checks=1001,failures=0,records=rows)
