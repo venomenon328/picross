@@ -207,7 +207,7 @@ def validate(before, after, old, current, read, *, today, decision, feature_open
         if set(live) - {p for reader in readers for p in reader['sources']}:
             raise ValueError('Unbound lifecycle source reader')
         previous = prior.get(key)
-        extending = previous and (previous['kind'] != kind or
+        extending = previous and (any(previous[field] != record[field] for field in ('kind', 'feature', 'owner', 'retire_when')) or
                                    (previous['expires'] and record['expires'] and record['expires'] > previous['expires']))
         if kind == 'permanent-heavy' or extending:
             decision(record)  # Authored owner comment, exact record fingerprint.
