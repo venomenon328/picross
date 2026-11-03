@@ -27,7 +27,7 @@ Fonts, Hinweis-/Zellgrafik und SL-Rahmen behalten ihre bisherigen Bytes/Rechte.
 
 `game/study/book/` ist ausschließlich eine isolierte synthetische Hülle um
 denselben Präsentationskern. Ihre RAM-Speicher, 27 Instanzen, Beobachter,
-Prüf-/Filmprogramme und Berichte werden aus regulären Paketen ausgeschlossen.
+Prüfprogramme und Berichte werden aus regulären Paketen ausgeschlossen.
 Der PCK-Audit prüft den tatsächlichen Entrypoint und benötigte gemeinsame
 Ressourcen zusätzlich zu den bisherigen Ausschlüssen; er erlaubt nicht pauschal
 den Studienbaum. Die technische Webprobe erweitert denselben Buchroot und
@@ -122,6 +122,17 @@ Präferenzsync; Fehler bleiben mit Retry erreichbar. Browsergesteuerter Tab- ode
 Prozessabbruch behält die Grenzen aus [WEB-1](WEB_HOSTING.md).
 
 ## Prüfzuordnung
+
+P1 aus [#502](https://github.com/venomenon328/picross/issues/502) entfernt die
+Filmproduktion aus sämtlichen aktiven Buchprüfwegen einschließlich manuellem
+Studienaufruf und optionalen Studienexporten. Filmphase, Metadaten, Endbild,
+Aufzeichnungshelfer und Filmkostenfelder entfallen gemeinsam aus Producer,
+Vertrag und Guard. Die normale Bewegungsuhr und das produktive Verhalten bleiben
+erhalten. Der manuelle native Pfad behält Bewegungs-/Kamera-/Endzustandsdaten,
+zehn Informationsrouten, Lifecycle und Originalpixelprüfungen gemäß
+[Belegvertrag](CI_C_NATIVE_GROUPS.md#filmrückbau--502--p1).
+Historische B-A-/B-B-Filme und Abnahmen bleiben commit-/PR-gebunden;
+P1 schreibt sie nicht um und baut die übrige Studie nicht zurück.
 
 Die nativen Gruppen bleiben nach dem vollständigen Diff ausgewählt. Kleine
 bisherige Komponentenfälle hängen über `tests/book_fixture.gd` am tatsächlichen

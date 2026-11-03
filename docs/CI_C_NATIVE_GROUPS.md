@@ -1,5 +1,33 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## Filmrückbau · #502 / P1
+
+Die Buchfilmproduktion entfällt vollständig, auch im gewöhnlichen manuellen
+Studienaufruf und bei `--study-exports`. Es gibt keine Filmphase, Filmargumente,
+Filmhelfer, `opening.avi`, `movie.json`, `movie-final.png` oder Filmkostenfelder
+mehr im aktiven Producer-/Belegvertrag. Die bisherige Sonderuhr für Aufzeichnung
+entfällt; die normale monotone Bewegungsuhr bleibt unverändert.
+
+Der manuelle Studienpfad behält `book-version`, `book-import`,
+`book-integration` und `book-native`, seine unabhängigen Originalpixel-,
+Material-, Navigations-, Lifecycle- und Abbruchprüfungen. `validate_book_study`
+verlangt diese vier Phasen und die verbliebenen Originale weiterhin fail-closed.
+Beide Blätterrichtungen, echte Drei-Sekunden-Öffnung, bearbeitete 1,8-s-Rückkehr
+und Ressourcenfreigabe stehen in `native.json`. Die zehn Informationswege
+werden bereits in `n05_cases.gd` mit echten Pointerereignissen geprüft:
+Kamera-/Blattspuren, 0,85-s-Eintritt/-Rückkehr, 0,65-s-Pan, Ursprung, beide
+Offsets und unveränderte Spiel-/Ansichtswerte. `validate_n05` prüft diese
+Originaldaten unabhängig einschließlich Unterbrechungen und Endzuständen.
+Die zusätzlichen Filmroutenduplikate entfallen ohne neue Ersatzmatrix.
+
+Die folgende kurze CI-Auswahl aus #500 bleibt erhalten; P1 aktiviert keine
+vollständige Studie in CI. Auch dort entfallen die leeren Filmkostenfelder.
+Quellen-, Assertion-, Phasen-, Originaldatei-, Head-/Test-Merge-/Runbindungen
+und `regular-book-integration` bleiben Pflicht. Historische B-A-/B-B-Berichte,
+Filme und Abnahmen bleiben ausschließlich an ihren damaligen
+[Commit-/PR-Nachweis](BOOK_STUDY.md) gebunden. Studienrückbau und neue
+Artefaktbudgets sind die separaten Pakete P2/P3, kein Bestandteil von P1.
+
 ## Aktuelle gezielte Buchintegration · HIL-1 / #500
 
 Eigentümeranweisung vom 03.11.2026: In CI keine komplette Buchprüfung und keine

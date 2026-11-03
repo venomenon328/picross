@@ -67,8 +67,11 @@ python tools/book_study.py --cache-dir <gebundener-archivcache> --output-dir <le
 ```
 
 Der Harness isoliert Projekt und Benutzerpfade, prüft native Bewegung und die
-drei bestehenden Konfigurationen und gezielt 1920×1200/UI100, erzeugt einen 30-fps-Enginefilm sowie getrennte
-den regulären Lifecycle an synthetischen Daten. Er startet keinen Browser.
+drei bestehenden Konfigurationen und gezielt 1920×1200/UI100 sowie getrennt
+den regulären Lifecycle an synthetischen Daten. P1 / #502 entfernt die
+Filmproduktion vollständig, auch aus manuellen Aufrufen und Studienexporten.
+Frühere Filme sind nur über die gebundenen B-A-/B-B-Commits und PRs erreichbar.
+Der Harness startet keinen Browser.
 `--native-only` ist der Standard; reguläre Exporte werden von den Produkt-/Web-
 Buildern geprüft. `--study-exports` erzeugt nur bei gesondertem Bedarf die frühere
 Studienmatrix. Quellenbindung, Hashes, Zeiten und Grenzen
@@ -117,10 +120,12 @@ Einbandshader verwendet ausschließlich das eigene Leder. Die Exportpakete
 liefern die bestehenden Nutzungshinweise mit. Alte Assets/Freigaben werden
 weder ersetzt noch umetikettiert.
 
-`opening.avi` zeigt beide Blätterrichtungen und die volle Öffnung in normalem
-Tempo sowie die Rückkehr nach echter Bearbeitung. Alte/neue native Ansichten und Bindungsdetails dienen dem Materialvergleich;
+Der native Prüfer misst beide Blätterrichtungen, die volle Öffnung in normalem
+Tempo und die Rückkehr nach echter Bearbeitung unabhängig von einer Aufzeichnung.
+Alte/neue native Ansichten und Bindungsdetails dienen dem Materialvergleich.
 Fünf bisherige und vier neue Originalpixelpaare prüfen separat die Textur-/Direktübergabe.
-Der Film enthält zusätzlich alle zehn Informationswege. Originale Informationsbilder
+`n05_cases.gd` prüft alle zehn Informationswege mit tatsächlichen Kamera-/
+Blattspuren, Zeiten, Ursprung und unverändertem Zustand. Originale Informationsbilder
 und Alphahüllen prüfen beide Seiten in vier Flächen; sechs echte Unterbrechungen
 ergänzen eine günstige vollständige Entscheidungstabelle. Sechs unskalierte
 Randdetails je gebundener Fläche einschließlich oberem und unterem Falz sowie tatsächliche verzögerte Tooltipbilder ergänzen

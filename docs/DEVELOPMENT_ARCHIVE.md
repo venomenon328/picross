@@ -9,8 +9,11 @@ Produktwurzel, `book_integration.gd` prüft ihren unbeschleunigten Lebenszyklus.
 `book-save-v1.json` ist ein einzelner eingefrorener synthetischer Schema-1-Beleg.
 `tools/book_contract.py` bindet den begrenzten Runtime-/Prüfbestand; die beiden
 neuen Dokumente [Vertrag](BOOK_INTEGRATION.md) und [T01](B_B_VERIFICATION.md)
-enthalten aktive Integration beziehungsweise Liefernachweis. Temporäre Originale,
-Exporte und Film bleiben in begrenzten Prüfarbeitsdaten; keine neue Bildgalerie.
+enthalten aktive Integration beziehungsweise Liefernachweis. Temporäre Originale
+und Exporte bleiben in begrenzten Prüfarbeitsdaten; keine neue Bildgalerie.
+P1 / [#502](https://github.com/venomenon328/picross/issues/502) entfernt die
+aktive Filmproduktion vollständig. Frühere Filme bleiben nur über den
+gebundenen historischen Commit-/PR-Stand erreichbar; kein neuer Filmbeleg.
 
 **Historische Herkunft B-A-N06 / #493, #496 (R08/M01 auf PR #497 abgeschlossen):**
 Der damalige Bestand unter `game/study/book/` erhielt den ausführbaren isolierten
