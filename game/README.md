@@ -17,8 +17,9 @@ Katalog oder Rätsel. Bewusst geänderte Einstellungen bleiben erhalten.
 Bearbeitung und Sortierauswahl werden über die bisherigen Speicherwege gesichert.
 Bei einem Speicherfehler bleibt die Anwendung mit einer sichtbaren Wiederholung
 offen; notwendige Backupübernahme verlangt weiterhin Bestätigung. Die
-[isolierte Studie](study/book/README.md) verwendet denselben Darstellungskern mit
-synthetischen Daten. [B-B-Vertrag](../docs/BOOK_INTEGRATION.md) und
+[historische Studie](../docs/BOOK_STUDY.md) ist aus dem aktiven Tree entfernt.
+Der kurze Prüfeinstieg `tools/book_lifecycle.py` verwendet den regulären Root
+mit synthetischen Daten und isolierten Speicherpfaden. [B-B-Vertrag](../docs/BOOK_INTEGRATION.md) und
 [Prüfstand](../docs/B_B_VERIFICATION.md) binden die Integration; unabhängige und
 persönliche Abnahmen bleiben gesondert.
 

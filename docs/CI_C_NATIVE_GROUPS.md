@@ -1,32 +1,45 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
-## Filmrückbau · #502 / P1
+## Studienrückbau · #502 / P2-A
 
-Die Buchfilmproduktion entfällt vollständig, auch im gewöhnlichen manuellen
-Studienaufruf und bei `--study-exports`. Es gibt keine Filmphase, Filmargumente,
-Filmhelfer, `opening.avi`, `movie.json`, `movie-final.png` oder Filmkostenfelder
-mehr im aktiven Producer-/Belegvertrag. Die bisherige Sonderuhr für Aufzeichnung
-entfällt; die normale monotone Bewegungsuhr bleibt unverändert.
+`tools/book_lifecycle.py` enthält ausschließlich den unveränderten kurzen
+Hilfe-/Produktlebenszyklus. `p1_product.py` ruft ihn als
+`regular-book-integration` auf; `validate_book_lifecycle` bleibt das unabhängige
+Ergebnisgate. `book_contract.SOURCES`, alle Pflichtassertions, sieben HIL-Originale,
+Phasen-, Hash-, Head-/Basis-/Checkout-/Run-/Versuchsbindung bleiben erhalten.
+Die manuelle CLI desselben Producers verlangt `--cache-dir` und `--output-dir`.
+Es gibt keinen Vollstudien-, Fixturegenerator- oder Studienexportmodus mehr.
 
-Der manuelle Studienpfad behält `book-version`, `book-import`,
-`book-integration` und `book-native`, seine unabhängigen Originalpixel-,
-Material-, Navigations-, Lifecycle- und Abbruchprüfungen. `validate_book_study`
-verlangt diese vier Phasen und die verbliebenen Originale weiterhin fail-closed.
-Beide Blätterrichtungen, echte Drei-Sekunden-Öffnung, bearbeitete 1,8-s-Rückkehr
-und Ressourcenfreigabe stehen in `native.json`. Die zehn Informationswege
-werden bereits in `n05_cases.gd` mit echten Pointerereignissen geprüft:
-Kamera-/Blattspuren, 0,85-s-Eintritt/-Rückkehr, 0,65-s-Pan, Ursprung, beide
-Offsets und unveränderte Spiel-/Ansichtswerte. `validate_n05` prüft diese
-Originaldaten unabhängig einschließlich Unterbrechungen und Endzuständen.
-Die zusätzlichen Filmroutenduplikate entfallen ohne neue Ersatzmatrix.
+Entfernt sind `tools/book_study.py`, dessen exklusive Tests und
+`validate_book_study` samt N04–N06-/F01-/Projektions-/Pixelmatrixguards sowie
+`game/study/book/`: 27 Definitionen, 27 Reveal-SVGs, Registry/RAM-Adapter,
+Szenen-/Shaderdiagnosen, Tooltip-Vollmatrix, Packprüfer und Webshell. Die
+[historische Quelle](https://github.com/venomenon328/picross/tree/fc86d2a2eff543f5b0c4ff328a71e815e4bc43a7/game/study/book)
+und [B-A-/B-B-Liefernachweise](BOOK_STUDY.md) ersetzen deren aktive Reproduktion.
+P1 hat die Filmproduktion bereits vollständig entfernt; sie wird nicht ersetzt.
 
-Die folgende kurze CI-Auswahl aus #500 bleibt erhalten; P1 aktiviert keine
-vollständige Studie in CI. Auch dort entfallen die leeren Filmkostenfelder.
-Quellen-, Assertion-, Phasen-, Originaldatei-, Head-/Test-Merge-/Runbindungen
-und `regular-book-integration` bleiben Pflicht. Historische B-A-/B-B-Berichte,
-Filme und Abnahmen bleiben ausschließlich an ihren damaligen
-[Commit-/PR-Nachweis](BOOK_STUDY.md) gebunden. Studienrückbau und neue
-Artefaktbudgets sind die separaten Pakete P2/P3, kein Bestandteil von P1.
+Aktuelle `core`-/`history`-/`catalog`-/`completion`-/`adapters`-/`graphics`-/`export`-
+Regressionen bleiben ausgewählt wie bisher. Insbesondere KAT-2 `kb` prüft echte
+Hover nach Zellaktionen, lesbaren Text, Clientgrenzen und Abbau beim Seitenwechsel;
+`kk`/`ke` prüfen Reset-/Modustooltips. Der vorhandene `kb`-Pfad ergänzt ohne neue
+Bilder einen verzögerten Whitespacehover, verzögerten Popupabbau und erneuten
+beschrifteten Hover. Das ist eine kleine aktuelle Prüfaussage, keine Behauptung,
+den wechselnden Windowsbefund P1-R01-O01 reproduziert oder behoben zu haben.
+
+Der weiterhin ausdrücklich manuelle `book_windows_probe.py` baut ausschließlich
+den regulären synthetischen Windowsplayer und behält beide echten negativen
+PCK-Überlagerungen, Hashbindung, Tooltip-/Release-/Fokus-/Save-/Retrydiagnosen.
+Sein externer rein lesender Beobachter liegt in
+`game/tests/book_windows_observer.gd`; beide verwenden den echten SaveStore,
+keinen historischen RAM-Adapter. `product_fixtures.copy_regression_game` versorgt
+beide aktiven Producer. `tests/*` und `study/*` bleiben im Runtimeexport gesperrt;
+der PCK-Audit prüft weiterhin die tatsächlichen Verzeichnisse und den Entrypoint.
+B-B-M01/HIL-M01 und P1-R01-O01 bleiben offen; kein automatischer Desktoplauf oder
+Chromiumauftrag. Die persönliche Prüfung erfolgt am regulären Spieler.
+
+Die Vollstudie lief bereits seit #501 nicht mehr in CI. Ihr Quellenrückbau
+belegt keine CI-Beschleunigung; aktuelle Kosten stehen im P2-A-T01 des PRs.
+Laufzeitoptimierung und neue Größen-/Lebenszyklusguards bleiben P2-B/P3.
 
 ## Aktuelle gezielte Buchintegration · HIL-1 / #500
 
@@ -40,7 +53,7 @@ Umfang an Head, Basis, Checkout, Producer-Versuch und aktuelle Quellbytes.
 Das Ergebnisgate verlangt sämtliche Lifecycle-/HIL-Einzelassertions, genau die
 sieben unten genannten 1920×1080-Originale, den Assertionbericht und drei Logs.
 Zusätzlicher Film oder eine Galerie werden abgewiesen; Spielprofile werden nicht
-ausgeliefert. Die vollständige Route in `book_study.run()` ist in CI gesperrt.
+ausgeliefert. Die vollständige Studienroute ist aus dem aktiven Tree entfernt.
 Historische B-B-Nachweise behalten ihren damaligen Umfang und werden dadurch
 weder erneut verlangt noch nachträglich als verkürzte Prüfung ausgegeben.
 

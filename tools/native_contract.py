@@ -32,6 +32,8 @@ PATHS = {
     'game/tests/book_integration.gd': GROUPS,
     'game/tests/book-save-v1.json': GROUPS,
     'tools/book_contract.py': GROUPS,
+    'tools/book_lifecycle.py': GROUPS,
+    'game/tests/book_windows_observer.gd': GROUPS,
     # KAT-2's ke_graphics and RP6/ZA-1 exercise the real completion view too.
     'game/ui/completion.gd': ('core', 'catalog', 'completion', 'adapters', 'graphics', 'export'),
     'tools/kat2_product.py': ('catalog',),
