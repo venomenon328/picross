@@ -189,6 +189,17 @@ def validate_catalog_images(costs, summary, required, direct_images):
             raise ValueError('Native crop/source readback binding mismatch')
 
 
+def validate_catalog_originals(costs, directory):
+    for entry in costs['entries']:
+        path = safe(directory,entry['file'])
+        with path.open('rb') as stream: header = stream.read(24)
+        rect = entry['region']
+        if (entry.get('native_png') is not True or digest(path) != entry['source_sha256']
+                or len(header) != 24 or header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
+                or struct.unpack('>II',header[16:24]) != (rect[2]-rect[0],rect[3]-rect[1])):
+            raise ValueError('Delivered KAT-2 PNG differs from original native crop')
+
+
 def validate_payload(result, root, player_root=None):
     began = time.monotonic()
     inventory = result['files']
@@ -314,6 +325,7 @@ def validate_original_payload(result, root, player_root=None):
             summary = read(directory/'selected/kat2/summary.json')
             validate_catalog_images(costs, summary, required,
                                     read(Path(__file__).with_name('native_artifacts.json'))['catalog_direct_images'])
+            validate_catalog_originals(costs,directory/'selected/kat2')
             if costs['comparison'] and any(r.get('identical') is not True for r in costs['entries']):
                 raise ValueError('Native PNG comparison failed')
             for entry in costs['entries']:
@@ -321,7 +333,8 @@ def validate_original_payload(result, root, player_root=None):
                         len(entry['source_size']) != 2 or len(entry['region']) != 4):
                     raise ValueError('Missing native input frame/region binding')
                 if costs['comparison'] and (entry['reference'] != entry['actual'] or
-                        entry['actual']['size'] != [entry['region'][2]-entry['region'][0],entry['region'][3]-entry['region'][1]]):
+                        entry['actual']['size'] != [entry['region'][2]-entry['region'][0],entry['region'][3]-entry['region'][1]]
+                        or entry.get('full_reference_identical') is not True):
                     raise ValueError('Native comparison dimensions/RGBA disagree')
             if summary['reports'] != [read(directory/'selected/kat2'/(mode+'.json')) for mode in
                                       CATALOG_MODES]:
