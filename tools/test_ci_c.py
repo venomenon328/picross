@@ -354,6 +354,26 @@ class NativeGate(unittest.TestCase):
 
 
 class Isolation(unittest.TestCase):
+    def test_mesa_limit_preserves_timing_oracles_windows_and_callers_environment(self):
+        from p1_product import run_phase
+        from types import SimpleNamespace
+        usage=SimpleNamespace(ru_utime=0,ru_stime=0,ru_maxrss=1,ru_nivcsw=0)
+        resource=SimpleNamespace(RUSAGE_CHILDREN=-1,getrusage=lambda _:usage)
+        environment={**os.environ,'LIBGL_ALWAYS_SOFTWARE':'1','LP_NUM_THREADS':'8'}
+        program='import os; print("THREADS="+os.environ["LP_NUM_THREADS"])'
+        with tempfile.TemporaryDirectory() as t:
+            for host,name,extra,expected in [
+                ('Linux','kat2-regular',[],1),('Linux','kat2-information',[],8),
+                ('Linux','current-drawing-capture',[],8),('Linux','perf-b-native',[],8),
+                ('Linux','book-integration',[],8),('Linux','import',['--headless'],8),
+                ('Windows','kat2-regular',[],8)]:
+                with self.subTest(host=host,name=name),patch('p1_product.platform.system',return_value=host), \
+                     patch.dict(sys.modules,{'resource':resource}):
+                    result=run_phase(name,[sys.executable,'-c',program,*extra],environment,5,Path(t))
+                    self.assertEqual(result['exit_code'],0)
+                    self.assertIn('THREADS='+str(expected),result['output'])
+                    self.assertEqual(environment['LP_NUM_THREADS'],'8')
+
     def test_verified_warm_cache_starts_renderers_without_waiting_for_core(self):
         import native_runner
         import threading
@@ -541,6 +561,7 @@ class Pixels(unittest.TestCase):
         except ImportError:
             self.skipTest('Isolated Product image dependency')
         from native_images import crop_native,require_identical
+        from native_results import validate_catalog_originals
         import hashlib
         with tempfile.TemporaryDirectory() as t:
             root=Path(t)
@@ -556,6 +577,13 @@ class Pixels(unittest.TestCase):
             crop_native(before,[dict(captures=[dict(file='native.png',regions={'layout':rectangle})])])
             entries,cost=crop_native(after,[dict(captures=[record])],compare=True)
             require_identical(before/'native-layout.png',after/'native-layout.png')
+            validate_catalog_originals(cost,after)
+            actual=after/'native-layout.png';original=actual.read_bytes()
+            actual.write_bytes(original+b'changed')
+            with self.assertRaisesRegex(ValueError,'original native crop'):validate_catalog_originals(cost,after)
+            actual.write_bytes(original)
+            wrong=deepcopy(cost);wrong['entries'][0]['region']=[0,0,1,1]
+            with self.assertRaisesRegex(ValueError,'original native crop'):validate_catalog_originals(wrong,after)
             self.assertEqual(entries[0]['source_size'],[19,13])
             self.assertEqual(entries[0]['stored_rgba_sha256'],record['stored_rgba_sha256'])
             self.assertLess(cost['input_bytes'],(before/'native-context.png').stat().st_size)
