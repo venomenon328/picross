@@ -169,6 +169,8 @@ def capture_current(project, workspace, output, engine, render_command, environm
     finally:
         environment.pop("HN192_OUTPUT", None)
     hn = json.loads((hn_dir / "hn-native.json").read_text(encoding="utf-8"))
+    from hn_evidence import verify as verify_hn
+    verify_hn(hn_dir, hn)
     expected = {(width, axis) for width in (1280,1920,2560)
                 for axis in ("row", "column", "grid", "complete-row", "drag-row")}
     pixel_records = [r for r in hn["records"] if r["kind"] == "pixels"]

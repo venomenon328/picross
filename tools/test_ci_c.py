@@ -354,6 +354,69 @@ class NativeGate(unittest.TestCase):
 
 
 class Isolation(unittest.TestCase):
+    def test_mesa_limit_preserves_timing_oracles_windows_and_callers_environment(self):
+        from p1_product import run_phase
+        from types import SimpleNamespace
+        usage=SimpleNamespace(ru_utime=0,ru_stime=0,ru_maxrss=1,ru_nivcsw=0)
+        resource=SimpleNamespace(RUSAGE_CHILDREN=-1,getrusage=lambda _:usage)
+        environment={**os.environ,'LIBGL_ALWAYS_SOFTWARE':'1','LP_NUM_THREADS':'8',
+                     'GITHUB_TOKEN':'test-only-placeholder'}
+        program='import os; print("THREADS="+os.environ["LP_NUM_THREADS"]); print("TOKEN_PRESENT="+str("GITHUB_TOKEN" in os.environ))'
+        with tempfile.TemporaryDirectory() as t:
+            for host,name,extra,expected in [
+                ('Linux','kat2-regular',[],1),('Linux','kat2-information',[],8),
+                ('Linux','current-drawing-capture',[],8),('Linux','perf-b-native',[],8),
+                ('Linux','book-integration',[],8),('Linux','import',['--headless'],8),
+                ('Windows','kat2-regular',[],8)]:
+                with self.subTest(host=host,name=name),patch('p1_product.platform.system',return_value=host), \
+                     patch.dict(sys.modules,{'resource':resource}):
+                    result=run_phase(name,[sys.executable,'-c',program,*extra],environment,5,Path(t))
+                    self.assertEqual(result['exit_code'],0)
+                    self.assertIn('THREADS='+str(expected),result['output'])
+                    self.assertIn('TOKEN_PRESENT=False',result['output'])
+                    self.assertEqual(environment['LP_NUM_THREADS'],'8')
+                    self.assertEqual(environment['GITHUB_TOKEN'],'test-only-placeholder')
+
+    def test_verified_warm_cache_starts_renderers_without_waiting_for_core(self):
+        import native_runner
+        import threading
+        with tempfile.TemporaryDirectory() as t:
+            started = {g: threading.Event() for g in ('core','catalog','graphics')}
+            finished = set()
+            def process(command, **kwargs):
+                group = command[command.index('--native-group')+1]
+                if group in started:
+                    started[group].set()
+                    for event in started.values(): self.assertTrue(event.wait(5))
+                if group == 'export':
+                    self.assertTrue({'core','catalog','graphics'} <= finished)
+                finished.add(group)
+                return subprocess.CompletedProcess(command,0)
+            args = parse_args(['--cache-dir',t+'/cache','--output-dir',t+'/output',
+                               '--groups','core,catalog,graphics,export'])
+            with patch('native_runner.subprocess.run',side_effect=process), \
+                 patch('native_runner.source_identity',return_value={'github_run_attempt':'1'}), \
+                 patch('native_runner.platform.system',return_value='Linux'), \
+                 patch('native_runner.cached_archives_ready',return_value=True), \
+                 patch('native_results.validate_payload'):
+                self.assertEqual(native_runner.run(args),0)
+            result = read(Path(t)/'output/technical/native-result.json')
+            self.assertTrue(result['cache_preparation']['verified_warm_archives'])
+            self.assertEqual(finished,{'core','catalog','graphics','export'})
+
+    def test_archive_cache_requires_both_original_hashes(self):
+        import native_runner
+        import p1_preflight as tc
+        with tempfile.TemporaryDirectory() as t:
+            cache = Path(t)
+            self.assertFalse(native_runner.cached_archives_ready(cache,'Linux'))
+            for asset in (tc.EDITORS['Linux'],tc.TEMPLATES):
+                (cache/asset.name).write_bytes(b'corrupt archive')
+            self.assertFalse(native_runner.cached_archives_ready(cache,'Linux'))
+            with patch('p1_preflight.verify_sha256') as verify:
+                self.assertTrue(native_runner.cached_archives_ready(cache,'Linux'))
+                self.assertEqual(verify.call_count,2)
+
     def test_linux_parallel_groups_are_primed_isolated_and_awaited(self):
         import native_runner
         import threading
@@ -407,17 +470,133 @@ class Isolation(unittest.TestCase):
 
 
 class Pixels(unittest.TestCase):
+    def test_identical_originals_are_stored_once_and_aliases_fail_closed(self):
+        from native_results import deduplicate_images,original_images
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t)
+            for name,data in [('a.png',b'original bytes'),('b.png',b'original bytes'),
+                              ('c.png',b'different original'),('report.json',b'{}')]:
+                (root/name).write_bytes(data)
+            original=bind_files(root)
+            aliases=deduplicate_images(root)
+            physical=bind_files(root)
+            self.assertEqual(len(aliases),1)
+            self.assertFalse((root/'b.png').exists())
+            with original_images(root,physical,aliases):
+                self.assertEqual(bind_files(root),original)
+            self.assertFalse((root/'b.png').exists())
+            for changed in [aliases*2,[{**aliases[0],'file':'../escape.png'}],
+                            [{**aliases[0],'file':'a.png'}],[{**aliases[0],'source':'b.png'}],
+                            [{**aliases[0],'sha256':'0'*64}],[{**aliases[0],'file':'false.json'}],
+                            [{**aliases[0],'source':'c.png'}]]:
+                with self.subTest(aliases=changed),self.assertRaises((ValueError,FileExistsError)):
+                    with original_images(root,physical,changed): pass
+                self.assertEqual(bind_files(root),physical)
+            with self.assertRaisesRegex(ValueError,'deliberate'):
+                with original_images(root,physical,aliases): raise ValueError('deliberate reader failure')
+            self.assertEqual(bind_files(root),physical)
+            # Even with self-consistent alias metadata, actual changed bytes fail.
+            (root/'a.png').write_bytes(b'changed source')
+            with self.assertRaises(ValueError):
+                with original_images(root,physical,aliases): pass
+
+    def test_hn_samples_replay_all_bands_and_reject_rehashed_pixel_mutations(self):
+        try:
+            from PIL import Image
+        except ImportError:
+            self.skipTest('Isolated Product image dependency')
+        import hashlib
+        from hn_evidence import verify
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t)
+            rows=[]
+            for width,height,ui in ((1280,720,125),(1920,1080,100),(2560,1440,125)):
+                for kind,context in [('row',[-1,2]),('column',[2,-1]),('grid',[2,2]),
+                                     ('complete-row',[-1,49]),('drag-row',[-1,2])]:
+                    image=Image.new('RGBA',(50,100),(240,230,220,255))
+                    count=0
+                    for y in range(50):
+                        for x in range(50):
+                            if x==context[0] or y==context[1]:
+                                image.putpixel((x,y),(220,210,200,255));count+=1
+                    name=f'hn-{width}-ui{ui}-{kind}.png'
+                    image.save(root/name)
+                    rows.append(dict(kind='pixels',file=name,context=context,marked=count,unmarked=2500-count,
+                                     evidence='picross-hn-samples-v1',grid_origin=[4,4],board=[10,10,60,60],
+                                     overlay=[0,0,0,0],client=[width,height],ui=ui/100,cell=1,
+                                     source_rgba_sha256=dict(frame='a'*64,baseline='b'*64,
+                                         samples=hashlib.sha256(image.tobytes()).hexdigest())))
+            report=dict(checks=1001,failures=0,records=rows)
+            self.assertEqual(verify(root,report),15)
+            path=root/rows[0]['file'];original=path.read_bytes()
+            for pixel,color in [((20,20),(220,210,200,255)),((20,2),(240,230,220,255)),
+                                ((20,20),(240,230,220,0))]:
+                with Image.open(path) as source:changed=source.copy()
+                changed.putpixel(pixel,color);changed.save(path)
+                rows[0]['source_rgba_sha256']['samples']=hashlib.sha256(changed.tobytes()).hexdigest()
+                with self.subTest(pixel=pixel,color=color),self.assertRaisesRegex(ValueError,'band/phantom'):
+                    verify(root,report)
+                path.write_bytes(original)
+            with self.assertRaisesRegex(ValueError,'readback'):verify(root,report)
+            report['records']=rows[:-1]
+            with self.assertRaisesRegex(ValueError,'Incomplete native HN'):verify(root,report)
+
     def test_native_ke_images_are_required_but_not_python_crop_work(self):
         from native_results import validate_catalog_images
-        entries=[dict(file='frame-card.png',source='frame.png',region=[1,2,7,8])]
+        binding=dict(stored_region=[1,2,7,8],source_rgba_sha256='a'*64,stored_rgba_sha256='b'*64)
+        entries=[dict(file='frame-card.png',source='frame.png',region=[1,2,7,8],source_size=[10,10],**binding)]
         costs=dict(status='success',input_frames=1,crops=1,entries=entries)
-        summary=dict(image_costs=costs,crops=entries,reports=[dict(captures=[dict(file='frame.png',regions=dict(card=[1,2,7,8]))])])
+        summary=dict(image_costs=costs,crops=entries,reports=[dict(captures=[dict(file='frame.png',framebuffer=[10,10],regions=dict(card=[1,2,7,8]),**binding)])])
         required={'kat2/frame-card.png','kat2/direct.png','kat2/report.json'}
         validate_catalog_images(costs,summary,required,['kat2/direct.png'])
         for direct in ([],['kat2/direct.png','kat2/unexpected.png']):
             with self.assertRaises(ValueError):validate_catalog_images(costs,summary,required,direct)
         changed=deepcopy(summary);changed['reports'][0]['captures'][0]['regions']['card'][0]=0
         with self.assertRaises(ValueError):validate_catalog_images(costs,changed,required,['kat2/direct.png'])
+        for key in binding:
+            changed=deepcopy(summary);changed['reports'][0]['captures'][0][key]=None
+            with self.subTest(binding=key),self.assertRaisesRegex(ValueError,'readback binding'):
+                validate_catalog_images(costs,changed,required,['kat2/direct.png'])
+
+    def test_native_precrop_preserves_the_exact_old_full_frame_pixels(self):
+        try:
+            from PIL import Image
+        except ImportError:
+            self.skipTest('Isolated Product image dependency')
+        from native_images import crop_native,require_identical
+        from native_results import validate_catalog_originals
+        import hashlib
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t)
+            im=Image.new('RGBA',(19,13))
+            im.putdata([(x*7%256,x*17%256,x*31%256,x*13%256) for x in range(19*13)])
+            rectangle=[1,2,17,11]
+            crop=im.crop(rectangle)
+            before=root/'before';before.mkdir();im.save(before/'native.png')
+            after=root/'after';after.mkdir();crop.save(after/'native.png')
+            record=dict(file='native.png',regions={'layout':rectangle},framebuffer=[19,13],
+                        stored_region=rectangle,source_rgba_sha256=hashlib.sha256(im.tobytes()).hexdigest(),
+                        stored_rgba_sha256=hashlib.sha256(crop.tobytes()).hexdigest())
+            crop_native(before,[dict(captures=[dict(file='native.png',regions={'layout':rectangle})])])
+            entries,cost=crop_native(after,[dict(captures=[record])],compare=True)
+            require_identical(before/'native-layout.png',after/'native-layout.png')
+            validate_catalog_originals(cost,after)
+            actual=after/'native-layout.png';original=actual.read_bytes()
+            actual.write_bytes(original+b'changed')
+            with self.assertRaisesRegex(ValueError,'original native crop'):validate_catalog_originals(cost,after)
+            actual.write_bytes(original)
+            wrong=deepcopy(cost);wrong['entries'][0]['region']=[0,0,1,1]
+            with self.assertRaisesRegex(ValueError,'original native crop'):validate_catalog_originals(wrong,after)
+            self.assertEqual(entries[0]['source_size'],[19,13])
+            self.assertEqual(entries[0]['stored_rgba_sha256'],record['stored_rgba_sha256'])
+            self.assertLess(cost['input_bytes'],(before/'native-context.png').stat().st_size)
+            for change in ('alpha','size'):
+                bad=root/change;bad.mkdir();mutated=crop.copy()
+                if change=='alpha':mutated.putpixel((0,0),(1,2,3,4))
+                else:mutated=mutated.crop((0,0,15,9))
+                mutated.save(bad/'native.png')
+                with self.subTest(change=change),self.assertRaisesRegex(ValueError,'pixels/dimensions'):
+                    crop_native(bad,[dict(captures=[record])])
 
     def test_lossless_crop_and_negative_rgba_alpha_dimension_controls(self):
         try:
