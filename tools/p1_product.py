@@ -86,6 +86,15 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
     """Write live diagnostic output even if the runner is cancelled mid-phase."""
     print(f"RUN {name}", flush=True)
     started = time.monotonic()
+    environment = environment.copy()
+    # Mesa otherwise builds a CPU-sized worker pool in every simultaneous
+    # llvmpipe process. Native groups already supply process-level parallelism.
+    if platform.system() == "Linux" and environment.get("LIBGL_ALWAYS_SOFTWARE") == "1":
+        environment["LP_NUM_THREADS"] = "1"
+    usage_before = None
+    if platform.system() == "Linux":
+        import resource
+        usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
     path = logs / f"{name}.log"
     timed_out = False
     with path.open("wb") as stream, import_settings(command):
@@ -98,6 +107,14 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
             exit_code = None
             stream.write(f"\n{name} exceeded {timeout}s\n".encode())
     output = path.read_bytes().decode("utf-8", errors="replace")
+    costs = dict(software_render_threads=environment.get("LP_NUM_THREADS"),
+                 display=environment.get("DISPLAY"))
+    if usage_before is not None:
+        usage_after = resource.getrusage(resource.RUSAGE_CHILDREN)
+        costs.update(child_user_seconds=usage_after.ru_utime-usage_before.ru_utime,
+                     child_system_seconds=usage_after.ru_stime-usage_before.ru_stime,
+                     child_max_rss_kib=usage_after.ru_maxrss,
+                     child_involuntary_switches=usage_after.ru_nivcsw-usage_before.ru_nivcsw)
     print(output[-4000:], flush=True)
     if len(output) > 4000:
         print(f"[{name}: console tail only; diagnostic log retained separately]", flush=True)
@@ -105,6 +122,7 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
                 process_role='import' if '--import' in command else 'export' if '--export-debug' in command else 'version' if '--version' in command else 'game',
                 rendered='--headless' not in command and '--version' not in command,
                 seconds=round(time.monotonic() - started, 3), timed_out=timed_out,
+                process_costs=costs,
                 log=bound_log(path))
 
 
