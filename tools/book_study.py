@@ -91,7 +91,7 @@ def prepare(project: Path) -> None:
 
 
 def run_lifecycle(cache: Path, output: Path) -> dict:
-    """Current help/product route; no complete study, material gallery or movie."""
+    """Current help/product route; no complete study or material gallery."""
     if output.exists() and any(output.iterdir()):
         raise ValueError("Output must be empty")
     logs = output / "logs"
@@ -132,14 +132,14 @@ def run_lifecycle(cache: Path, output: Path) -> dict:
     report["files"] = {p.relative_to(output).as_posix():dict(bytes=p.stat().st_size, sha256=tc.sha256_file(p))
                        for p in sorted(output.rglob("*")) if p.is_file()}
     report["inventory_cost"] = dict(files=len(report["files"]), bytes=sum(f["bytes"] for f in report["files"].values()),
-                                  pngs=len(HELP_ORIGINALS), movie_bytes=0)
+                                  pngs=len(HELP_ORIGINALS))
     (output/"report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     return report
 
 
 def run(cache: Path, output: Path, native_only: bool = True) -> dict:
     if os.environ.get("GITHUB_ACTIONS") == "true":
-        raise ValueError("Complete book proof and movie production are not allowed in CI")
+        raise ValueError("Complete book proof is not allowed in CI")
     if output.exists() and any(output.iterdir()):
         raise ValueError("Output must be empty")
     output.mkdir(parents=True, exist_ok=True)
@@ -222,12 +222,11 @@ def run(cache: Path, output: Path, native_only: bool = True) -> dict:
         report["handoff_pixels"] = verify_handoffs(output)
         report["pixel_verification_seconds"] = time.monotonic() - started
         report['edge_details'] = edge_details(output)
-        phase("movie", [*base, "--rendering-driver", "opengl3", "--write-movie", str(output / "opening.avi"), "--fixed-fps", "30", "--script", "res://study/book/verify.gd", "--", "--movie", "--p1-capture"], "BOOK_STUDY_MOVIE_OK", True)
         if not native_only:
             export_all(work, project, cache, output, env, phase, base, report)
     report["files"] = {p.relative_to(output).as_posix(): dict(bytes=p.stat().st_size, sha256=tc.sha256_file(p)) for p in sorted(output.rglob("*")) if p.is_file()}
     report["inventory_cost"] = dict(files=len(report["files"]), bytes=sum(row["bytes"] for row in report["files"].values()),
-                                  pngs=sum(name.endswith('.png') for name in report["files"]), movie_bytes=report["files"]["opening.avi"]["bytes"])
+                                  pngs=sum(name.endswith('.png') for name in report["files"]))
     (output / "report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     return report
 

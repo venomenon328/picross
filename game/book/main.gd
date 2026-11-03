@@ -345,7 +345,7 @@ func _prepare(token: int) -> void:
 	last_frame_usec = wall_started
 	state = State.OPENING
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if state in [State.PREPARING,State.OPENING] and not valid_motion(generation): return
 	if state == State.CATALOG and material_catalog_page != app.album.page_index: catalog_materials(app.album.page_index)
 	if state == State.OPENING:
@@ -353,7 +353,7 @@ func _process(delta: float) -> void:
 		frames_ms.append((now-last_frame_usec)/1000.0)
 		last_frame_usec = now
 		var duration: float = information_routes.duration() if information_routes.moving() else DURATION if motion_kind == "open" else RETURN_DURATION if motion_kind == "return" else PAGE_DURATION
-		elapsed = minf(duration,elapsed+delta if OS.has_feature("movie") else (now-wall_started)/1000000.0)
+		elapsed = minf(duration,(now-wall_started)/1000000.0)
 		_pose(elapsed/duration)
 		if elapsed >= duration:
 			motion_wall_seconds = (Time.get_ticks_usec()-wall_started)/1000000.0

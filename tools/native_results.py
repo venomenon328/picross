@@ -226,7 +226,7 @@ def validate_book_lifecycle(report, directory, identity, host):
             raise ValueError('Invalid targeted help original dimensions')
     cost = study.get('inventory_cost', {})
     if cost != dict(files=len(expected_files), bytes=sum(f['bytes'] for f in study['files'].values()),
-                    pngs=len(HELP_ORIGINALS), movie_bytes=0):
+                    pngs=len(HELP_ORIGINALS)):
         raise ValueError('Incorrect targeted help inventory cost')
 
 
@@ -336,16 +336,7 @@ def validate_book_study(report, directory, identity, host):
     if ({r['file'] for r in details} != expected_edges or len(details) != 24
             or any(r['scale'] != 1 or len(r['rect']) != 4 or r['rect'][2] <= r['rect'][0] or r['rect'][3] <= r['rect'][1] for r in details)):
         raise ValueError('Incomplete/unscaled native edge detail evidence')
-    movie = read(directory/'movie.json')
-    if (movie['fps'] != 30 or movie['failures'] != [] or movie['final_state'] != 'CATALOG' or movie['final_id'] != 'T-06' or movie['edited_cursor'] != 2
-            or [(e['kind'], e['direction'], e['seconds']) for e in movie['events'] if e['kind'] != 'information'] != [('page',1,.85),('page',-1,.85),('open',1,3.0),('return',-1,1.8)]
-            or any(e['last_frame'] <= e['first_frame'] for e in movie['events'])):
-        raise ValueError('Incomplete/incorrect book motion evidence')
-    info_movie = [e for e in movie['events'] if e['kind'] == 'information']
-    if ([(e['source'],e['target']) for e in info_movie] != [('work','settings'),('settings','help'),('help','work'),('work','help'),('help','settings'),('settings','work'),('catalog','settings'),('settings','catalog'),('catalog','help'),('help','catalog')]
-            or any((e['direction'],e['seconds']) != ((0,.65) if e['source'] in ('settings','help') and e['target'] in ('settings','help') else (1,.85) if e['target'] in ('settings','help') else (-1,.85)) for e in info_movie)):
-        raise ValueError('Missing/incorrect information film choreography')
-    expected = ['book-version', 'book-import', 'book-integration', 'book-native', 'book-movie']
+    expected = ['book-version', 'book-import', 'book-integration', 'book-native']
     integration = read(directory/'integration/integration.json')
     source_root = Path(__file__).resolve().parents[1]
     if (integration.get('passed') is not True or not integration.get('assertions')
@@ -358,7 +349,7 @@ def validate_book_study(report, directory, identity, host):
         raise ValueError('Incomplete/failed shared book or product lifecycle phases')
     names = set(study['files'])
     actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()} - {'report.json'}
-    required = {'opening.avi', 'movie.json', 'movie-final.png', 'native.json', 'catalog.png', 'opening-middle.png', 'opening-back.png',
+    required = {'native.json', 'catalog.png', 'opening-middle.png', 'opening-back.png',
                 'return-middle.png', 'return-edited-work.png', 'paper-page-one.png', 'paper-page-two.png', 'paper-page-two-return.png',
                 'return-handoff-texture.png','return-handoff-direct.png','control-states.png',
                 'page-forward.png', 'page-backward.png', 'material-original-detail.png', 'material-study-detail.png',

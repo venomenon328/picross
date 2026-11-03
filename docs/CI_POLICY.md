@@ -7,7 +7,11 @@ und insbesondere keine Filmproduktion in CI. Die Exportgruppe führt nur die
 gezielte Hilfe-/Produktlebenszyklusroute mit Import, echten Viewportereignissen,
 Zustands-/Savekontrollen und sieben Originalbildern aus. Producer und Ergebnisgate
 binden genau diesen Umfang gemäß [nativem Belegvertrag](CI_C_NATIVE_GROUPS.md).
-Die vollständige Studien-/Material-/Filmroute ist in CI gesperrt. Übrige nach dem
+Die vollständige Studien-/Materialroute ist in CI gesperrt.
+P1 aus [#502](https://github.com/venomenon328/picross/issues/502) entfernt die
+Filmproduktion zusätzlich vollständig aus manuellen Buchprüfwegen samt
+Filmphase, Hilfsfunktionen, Pflichtbelegen und Kostenfeldern. Der übrige
+Studienumfang bleibt bis P2 erhalten; neue Größenlimits gehören zu P3. Übrige nach dem
 Gesamtdiff ausgewählte Gruppen bleiben erforderlich; historische Vollnachweise
 werden weder wiederholt noch als aktueller verkürzter Erfolg umgedeutet.
 
