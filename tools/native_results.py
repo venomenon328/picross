@@ -6,6 +6,9 @@ import json
 from pathlib import Path, PurePosixPath
 import re
 import zipfile
+from contextlib import contextmanager
+import shutil
+import time
 
 from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, artifacts, checks, coverage
 from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS, HELP_ORIGINALS
@@ -39,6 +42,60 @@ def bind_files(root, exclude=(), only=None):
     return [dict(file=p.relative_to(root).as_posix(), bytes=p.stat().st_size, sha256=digest(p))
             for p in sorted(root.rglob('*')) if p.is_file() and p.relative_to(root).as_posix() not in exclude
             and (only is None or p.relative_to(root).as_posix() in only)]
+
+
+def deduplicate_images(root):
+    """Store identical original PNG bytes once, retaining each logical binding."""
+    originals = {}
+    aliases = []
+    for row in bind_files(root, exclude={'native-result.json'}):
+        if not row['file'].endswith('.png'):
+            continue
+        key = (row['sha256'],row['bytes'])
+        if key in originals:
+            source = originals[key]
+            # Hash collisions never authorize discarding different original bytes.
+            if safe(root,row['file']).read_bytes() != safe(root,source).read_bytes():
+                raise ValueError('Different native images share a digest')
+            aliases.append(dict(row, source=source))
+            safe(root,row['file']).unlink()
+        else:
+            originals[key] = row['file']
+    return aliases
+
+
+@contextmanager
+def original_images(root, inventory, aliases):
+    """Reconstruct exact original paths only during independent verification."""
+    physical = {r['file']:r for r in inventory}
+    if len(physical) != len(inventory):
+        raise ValueError('Duplicate native physical inventory')
+    names = set(physical)
+    for row in aliases:
+        name,source = row['file'],row['source']
+        safe(root,name)
+        safe(root,source)
+        if (set(row) != {'file','source','bytes','sha256'} or name in names
+                or source not in physical or not name.endswith('.png') or not source.endswith('.png')
+                or any(row[k] != physical[source][k] for k in ('bytes','sha256'))):
+            raise ValueError('Invalid/duplicate/chained native image alias')
+        verify_file(root,physical[source])
+        names.add(name)
+    created = []
+    try:
+        for row in aliases:
+            target = safe(root,row['file'])
+            target.parent.mkdir(parents=True,exist_ok=True)
+            # Refuse to overwrite any actual delivery (including unlisted files).
+            with target.open('xb') as stream:
+                created.append(target)
+                with safe(root,row['source']).open('rb') as original:
+                    shutil.copyfileobj(original,stream)
+            verify_file(root,row)
+        yield
+    finally:
+        for path in created:
+            path.unlink()
 
 
 def verify_file(root, row):
@@ -121,9 +178,48 @@ def validate_catalog_images(costs, summary, required, direct_images):
             or {'kat2/'+r['file'] for r in costs['entries']} | set(direct_images)
                != {p for p in required if p.endswith('.png')}):
         raise ValueError('Incomplete native image costs/crops')
+    captures = [c for report in summary['reports'] for c in report['captures']]
+    for capture, entry in zip(captures, costs['entries']):
+        if (capture.get('stored_region') != entry.get('stored_region')
+                or capture.get('stored_region') != entry['region']
+                or capture.get('framebuffer') != entry['source_size']
+                or any(not re.fullmatch('[0-9a-f]{64}', str(capture.get(key, '')))
+                       or capture.get(key) != entry.get(key)
+                       for key in ('source_rgba_sha256','stored_rgba_sha256'))):
+            raise ValueError('Native crop/source readback binding mismatch')
+
+
+def validate_catalog_originals(costs, directory):
+    for entry in costs['entries']:
+        path = safe(directory,entry['file'])
+        with path.open('rb') as stream: header = stream.read(24)
+        rect = entry['region']
+        if (entry.get('native_png') is not True or digest(path) != entry['source_sha256']
+                or len(header) != 24 or header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
+                or struct.unpack('>II',header[16:24]) != (rect[2]-rect[0],rect[3]-rect[1])):
+            raise ValueError('Delivered KAT-2 PNG differs from original native crop')
 
 
 def validate_payload(result, root, player_root=None):
+    began = time.monotonic()
+    inventory = result['files']
+    aliases = result.get('image_aliases', [])
+    actual = sorted(p.relative_to(root).as_posix() for p in root.rglob('*')
+                    if p.is_file() and p.relative_to(root).as_posix() != 'native-result.json')
+    if sorted(r['file'] for r in inventory) != actual:
+        raise ValueError('Incomplete/unexpected native physical inventory')
+    reconstruction_began = time.monotonic()
+    with original_images(root,inventory,aliases):
+        reconstruction_seconds = time.monotonic()-reconstruction_began
+        expanded = dict(result, files=inventory+[{k:v for k,v in row.items() if k!='source'} for row in aliases])
+        summary = validate_original_payload(expanded,root,player_root)
+    return dict(summary, files=len(inventory), bytes=sum(r['bytes'] for r in inventory),
+                logical_files=len(inventory)+len(aliases), shared_original_pngs=len(aliases),
+                reconstruction_seconds=round(reconstruction_seconds,6),
+                total_validation_seconds=round(time.monotonic()-began,6))
+
+
+def validate_original_payload(result, root, player_root=None):
     groups = result['groups']
     if (result.get('format') != 'picross-native-result-v1' or result['status'] != 'success'
             or groups != [g for g in GROUPS if g in groups] or not groups
@@ -140,7 +236,9 @@ def validate_payload(result, root, player_root=None):
     for row in inventory:
         verify_file(root, row)
     isolation_roots = set()
+    verification_times = {}
     for group in groups:
+        group_began = time.monotonic()
         directory = root/group
         report = read(directory/'product-report.json')
         if report['status'] != 'success' or report['native_group'] != group or report['host'] != result['host']:
@@ -172,6 +270,11 @@ def validate_payload(result, root, player_root=None):
             if worker['status'] != 'success' or any(worker.get(k) != v for k,v in result['identity'].items()):
                 raise ValueError('Incomplete/wrong graphics worker')
             check_phases(worker, WORKER_CHECKS, directory/'vs2-worker/technical')
+            from hn_evidence import verify as verify_hn
+            hn = read(directory/'selected/hn192/hn-native.json')
+            if report['visual']['vs2']['hn192'] != hn:
+                raise ValueError('HN original/group report mismatch')
+            verify_hn(directory/'selected/hn192', hn)
         required = set(artifacts(group))
         if group == 'completion':
             native = read(directory/'selected/ea/native.json')
@@ -222,6 +325,7 @@ def validate_payload(result, root, player_root=None):
             summary = read(directory/'selected/kat2/summary.json')
             validate_catalog_images(costs, summary, required,
                                     read(Path(__file__).with_name('native_artifacts.json'))['catalog_direct_images'])
+            validate_catalog_originals(costs,directory/'selected/kat2')
             if costs['comparison'] and any(r.get('identical') is not True for r in costs['entries']):
                 raise ValueError('Native PNG comparison failed')
             for entry in costs['entries']:
@@ -229,7 +333,8 @@ def validate_payload(result, root, player_root=None):
                         len(entry['source_size']) != 2 or len(entry['region']) != 4):
                     raise ValueError('Missing native input frame/region binding')
                 if costs['comparison'] and (entry['reference'] != entry['actual'] or
-                        entry['actual']['size'] != [entry['region'][2]-entry['region'][0],entry['region'][3]-entry['region'][1]]):
+                        entry['actual']['size'] != [entry['region'][2]-entry['region'][0],entry['region'][3]-entry['region'][1]]
+                        or entry.get('full_reference_identical') is not True):
                     raise ValueError('Native comparison dimensions/RGBA disagree')
             if summary['reports'] != [read(directory/'selected/kat2'/(mode+'.json')) for mode in
                                       CATALOG_MODES]:
@@ -246,7 +351,9 @@ def validate_payload(result, root, player_root=None):
                 raise ValueError('EA group/original mismatch')
             from at_evidence import native
             native(directory/'selected/ea', read(directory/'selected/ea/native.json'), ('final','reopen','blend'))
+        verification_times[group] = round(time.monotonic()-group_began,6)
     if 'export' in groups:
+        player_began = time.monotonic()
         if player_root is None:
             raise ValueError('Selected export requires delivered player bytes')
         verify_file(player_root, result['player'])
@@ -258,7 +365,15 @@ def validate_payload(result, root, player_root=None):
             if set(export['export_files']) != {'picross-p1.exe','picross-p1.console.exe','picross-p1.pck'}:
                 raise ValueError('Incomplete export file contract')
             for name, expected in export['export_files'].items():
-                if not archive.read(name) or hashlib.sha256(archive.read(name)).hexdigest() != expected:
+                # Hash the actual decompressed member once. Reading it twice
+                # doubled decompression/allocation of the large Windows binary.
+                with archive.open(name) as stream:
+                    hasher = hashlib.sha256()
+                    size = 0
+                    for chunk in iter(lambda:stream.read(1024*1024), b''):
+                        hasher.update(chunk)
+                        size += len(chunk)
+                if not size or hasher.hexdigest() != expected:
                     raise ValueError('Wrong delivered Windows export')
             if json.loads(archive.read('product-report.json'), object_pairs_hook=unique) != export:
                 raise ValueError('Player source/report differs from actual export report')
@@ -268,9 +383,11 @@ def validate_payload(result, root, player_root=None):
                 or export['content_pack']['pack_sha256'] != export['export_files']['picross-p1.pck']
                 or export['content_pack']['executable_sha256'] != export['export_files']['picross-p1.exe']):
             raise ValueError('Player packaging audit mismatch')
+        verification_times['player_bytes'] = round(time.monotonic()-player_began,6)
     elif 'player' in result:
         raise ValueError('Unselected export reported')
-    return dict(groups=groups, files=len(inventory), bytes=sum(r['bytes'] for r in inventory))
+    return dict(groups=groups, files=len(inventory), bytes=sum(r['bytes'] for r in inventory),
+                verification_seconds=verification_times)
 
 
 def validate_all(plan, root, player_root, outputs, gate_attempt):

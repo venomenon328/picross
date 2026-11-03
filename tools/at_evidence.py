@@ -14,7 +14,7 @@ def require(value, message):
     if not value: raise ValueError('AT evidence: '+message)
 
 
-def png(path):
+def png(path, rgba=False):
     raw=path.read_bytes()
     require(raw[:8] == b'\x89PNG\r\n\x1a\n' and len(raw)<=32*1024*1024,'invalid PNG')
     offset=8; data=bytearray(); header=None
@@ -44,7 +44,10 @@ def png(path):
             else: predictor=(0,left,above,(left+above)//2)[mode]
             row[i]=(row[i]+predictor)&255
         rows.append(row); previous=row
-    return (width,height),lambda x,y: tuple(rows[y][x*channels:x*channels+3])
+    def pixel(x,y):
+        value=tuple(rows[y][x*channels:x*channels+(4 if rgba else 3)])
+        return value+(255,) if rgba and channels==3 else value
+    return (width,height),pixel
 
 
 def native(directory, report, kinds):

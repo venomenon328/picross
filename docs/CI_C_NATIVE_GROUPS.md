@@ -1,5 +1,59 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## Laufzeit und Originalpixel · #502 / P2-B
+
+Die aktuelle Auswahl, sämtliche Produktassertions, KAT-2-Modi, nativen Prozesse,
+Zeitgrenzen und isolierten Projekte/Profile bleiben erhalten. Nur Linux-
+Softwarerenderprozesse erhalten `LP_NUM_THREADS=1`, ausgenommen die aktuellen
+kurzen Save-/Schraffur-/Atlasbewegungs- und echten Buch-Lifecyclezeitfenster
+(`kat2-information`, `current-drawing-capture`, `perf-b-native`, `book-integration`).
+Die Gegenmessung mit einem Worker auch in diesen Zeitfenstern war fehlgeschlagen;
+dort bleibt der ursprüngliche Mesa-Pool erhalten. Windows behält seine serielle
+Fokusgrenze. Bereits vorhandene Editor-/Vorlagenarchive dürfen die Parallelität
+nach erneuter vollständiger SHA-Prüfung sofort freigeben. Bei fehlendem/falschem
+Cache bleibt zuerst ein echter serieller Gruppenlauf erforderlich. Jeder Producer
+prüft weiterhin seine Archive und extrahiert eigene Werkzeuge. Kein importiertes
+Projekt, Save oder Prüfergebnis wird gruppenübergreifend geteilt. Der Python-
+Downloadpfad nutzt das vorhandene kurzlebige Jobtoken mit den unveränderten
+Leserechten gegen anonyme GitHub-API-Limits; Godot erhält dieses Token nicht.
+Export wartet
+weiter auf beide Rendergruppen. Start-/Endoffsets, Cachevorbereitung, CPU-/
+Kontextwechselkosten und Ergebnisprüfung werden separat gemessen; RSS ist der
+bisherige Höchststand aller beendeten Kindprozesse, keine isolierte Phasenmessung.
+
+KAT-2 behält alle 53 Layoutaufnahmen und unveränderten Ausschnittkoordinaten.
+Der native Producer speichert sofort das bisher in Python ausgeschnittene
+Rechteck. Originalframe-Maße/RGBA-Hash, Ausschnitt/RGBA-Hash und native PNG-Bytes
+bleiben gebunden. Python prüft dekodierte RGBA-Pixel einschließlich Alpha und
+liefert dieses native PNG nach Umbenennung einmal aus. Vollbildencoding,
+erneutes Zuschneiden/Encoding und doppelte Kontextdateien entfallen. Die
+unveränderten direkten KE-/HZ-/AT-Bilder bleiben im Pflichtinventar. Der bestehende
+ausdrückliche PNG-Vergleich prüft zusätzlich den unabhängigen Pythonzuschnitt
+eines identischen nativen Vollframes; Vergleichskopien entfallen nach Gleichheit.
+
+HN behält alle 15 Fälle und sämtliche bisherigen Pixel-/Eingabe-/Cacheassertions.
+Statt 15 Vollbildern liefert jeder Fall die exakt verglichenen 2.500 Originalpixel
+und ihre 2.500 Basispixel in einem 50×100-PNG: oben Ist, unten Basis, ohne
+Interpolation. Quellframe-/Basis-/Sample-RGBA-Hashes, Client, Board, Rasterursprung,
+Zellgröße, Overlay und Kontext bleiben im Originalbericht. `hn_evidence.py`
+wiederholt unabhängig alle Band-/Phantomvergleiche einschließlich Alpha und
+natürlicher Overlayausschlüsse. Fehlende Fälle, falsche Maße/Bindungen oder
+auch konsistent neu gehashte falsche Pixel scheitern. Dies sind Pixelsamples,
+keine verkleinerten Kontextbilder; die übrigen Vollhinweis-/Schriftoriginale
+behalten ihre eigenen unabhängigen Leser.
+
+Byteidentische PNGs werden nach erfolgreicher Erzeugung nur einmal physisch
+geliefert. `image_aliases` bindet jeden logischen Originalpfad mit Bytezahl/SHA
+an ein tatsächlich geliefertes, identisches PNG; Ketten, Fremdpfade, doppelte
+Ziele, Nicht-PNGs oder Überschreiben sind verboten. Producer und unabhängiges
+Gate rekonstruieren die exakten Originalbytes nur für die bestehenden Leser und
+entfernen diese temporären Kopien auch nach Fehlern. Das feste logische Inventar,
+Originalberichte und Einzelbindungen bleiben unverändert verpflichtend. Fehler-
+artefakte werden nicht dedupliziert. Physische und logische Dateien/PNGs/Bytes,
+erzeugte Arbeitsdateien sowie direkt im Technikbereich erzeugte HIL-PNGs werden
+getrennt ausgewiesen. Neue Budget-/Lebenszyklusguards bleiben P3; CI2-Ziele gelten
+erst nach tatsächlicher Messung als erreicht. Messwerte und Restbefunde im P2-B-T01.
+
 ## Studienrückbau · #502 / P2-A
 
 `tools/book_lifecycle.py` enthält ausschließlich den unveränderten kurzen
