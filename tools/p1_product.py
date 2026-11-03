@@ -89,7 +89,13 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
     environment = environment.copy()
     # Mesa otherwise builds a CPU-sized worker pool in every simultaneous
     # llvmpipe process. Native groups already supply process-level parallelism.
-    if platform.system() == "Linux" and environment.get("LIBGL_ALWAYS_SOFTWARE") == "1":
+    # These existing oracles require short wall-clock windows. The one-thread
+    # countermeasurement missed a debounced-save boundary and hatch buildup;
+    # retain Mesa's original pool for them and the real lifecycle/atlas motion.
+    timing_sensitive = {"kat2-information", "current-drawing-capture", "book-integration", "perf-b-native"}
+    if (platform.system() == "Linux" and environment.get("LIBGL_ALWAYS_SOFTWARE") == "1"
+            and '--headless' not in command
+            and name not in timing_sensitive):
         environment["LP_NUM_THREADS"] = "1"
     usage_before = None
     if platform.system() == "Linux":
@@ -113,7 +119,7 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
         usage_after = resource.getrusage(resource.RUSAGE_CHILDREN)
         costs.update(child_user_seconds=usage_after.ru_utime-usage_before.ru_utime,
                      child_system_seconds=usage_after.ru_stime-usage_before.ru_stime,
-                     child_max_rss_kib=usage_after.ru_maxrss,
+                     children_max_rss_so_far_kib=usage_after.ru_maxrss,
                      child_involuntary_switches=usage_after.ru_nivcsw-usage_before.ru_nivcsw)
     print(output[-4000:], flush=True)
     if len(output) > 4000:

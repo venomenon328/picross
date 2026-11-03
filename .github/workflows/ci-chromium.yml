@@ -161,6 +161,7 @@ jobs:
             tools/p14_integration.py
             tools/native_artifacts.json
             tools/at_evidence.py
+            tools/hn_evidence.py
           sparse-checkout-cone-mode: false
           filter: blob:none
       - name: Download complete selection for the result gate

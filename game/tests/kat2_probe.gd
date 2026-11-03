@@ -108,9 +108,11 @@ func choose(id: String) -> void:
 func shot(name: String) -> void:
 	await frames()
 	await RenderingServer.frame_post_draw
+	var read_started: int = Time.get_ticks_usec()
 	var image: Image = surface.get_texture().get_image()
+	image.convert(Image.FORMAT_RGBA8)
+	var read_seconds: float = (Time.get_ticks_usec()-read_started)/1000000.0
 	var filename: String = mode + "-" + name + ".png"
-	check(image.save_png(output.path_join(filename)) == OK, "native frame saved " + filename)
 	var textures: int = 0
 	for reveal: Control in app.album.reveals:
 		if reveal.artwork != null: textures += 1
@@ -125,10 +127,32 @@ func shot(name: String) -> void:
 	if not app.album.visible: bounds = app.work.get_global_rect()
 	bounds = bounds.intersection(Rect2(Vector2.ZERO,Vector2(surface.size)))
 	var regions: Dictionary = {"layout": [floori(bounds.position.x),floori(bounds.position.y),ceili(bounds.end.x),ceili(bounds.end.y)]}
+	# Only this exact rectangle has a current reader. Do not encode/write and
+	# decode a second full paper frame just to extract the same pixels in Python.
+	var rectangle: Array = regions.layout
+	var crop_started: int = Time.get_ticks_usec()
+	var crop: Image = image.get_region(Rect2i(rectangle[0],rectangle[1],rectangle[2]-rectangle[0],rectangle[3]-rectangle[1]))
+	var crop_seconds: float = (Time.get_ticks_usec()-crop_started)/1000000.0
+	var write_started: int = Time.get_ticks_usec()
+	check(crop.save_png(output.path_join(filename)) == OK, "native frame saved " + filename)
+	var write_seconds: float = (Time.get_ticks_usec()-write_started)/1000000.0
+	var hash_started: int = Time.get_ticks_usec()
+	var source_hash := HashingContext.new()
+	source_hash.start(HashingContext.HASH_SHA256)
+	source_hash.update(image.get_data())
+	var stored_hash := HashingContext.new()
+	stored_hash.start(HashingContext.HASH_SHA256)
+	stored_hash.update(crop.get_data())
 	for card: Button in app.choices:
 		for label: Label in [card.caption,card.detail,card.leaf,card.note]:
 			check(card.get_global_rect().grow(1).encloses(label.get_global_rect()), "card labels fit without overlap")
-	captures.append({"file": filename, "framebuffer": [image.get_width(), image.get_height()], "window_client": [root.size.x, root.size.y], "ui_scale": app.ui_scale, "category": app.album.category_id, "page": app.album.page_index, "scroll": app.album.scroll_vertical, "cards": app.choices.size(), "textures": textures, "summary": app.album.summary.text, "ids": app.album.visible_ids.duplicate(), "regions": regions})
+	captures.append({"file": filename, "framebuffer": [image.get_width(), image.get_height()], "window_client": [root.size.x, root.size.y], "ui_scale": app.ui_scale, "category": app.album.category_id, "page": app.album.page_index, "scroll": app.album.scroll_vertical, "cards": app.choices.size(), "textures": textures, "summary": app.album.summary.text, "ids": app.album.visible_ids.duplicate(), "regions": regions,
+		"stored_region":rectangle,"source_rgba_sha256":source_hash.finish().hex_encode(),"stored_rgba_sha256":stored_hash.finish().hex_encode(),"image_format":image.get_format()})
+	captures[-1]["image_costs"] = {"readback_seconds":read_seconds,"crop_seconds":crop_seconds,"png_write_seconds":write_seconds,"hash_seconds":(Time.get_ticks_usec()-hash_started)/1000000.0}
+	if OS.get_environment("P1_COMPARE_NATIVE_PNG") == "1":
+		var reference_name: String = filename.trim_suffix(".png")+"-full-reference.png"
+		check(image.save_png(output.path_join(reference_name)) == OK,"same-frame crop comparison source saved")
+		captures[-1]["full_reference"] = reference_name
 
 func region(control: Control, trim_label: bool = false) -> Array:
 	var rect: Rect2 = control.get_global_rect()

@@ -15,7 +15,11 @@ Studienumfang und dessen exklusive Reader/Guards aus dem aktiven Tree. Der
 kurze Producer heißt `tools/book_lifecycle.py`; Quellenbindung, Ergebnisgate und
 aktuelle Produkt-/Speicher-/Tooltip-/PCK-Prüfungen bleiben gemäß Belegvertrag.
 Der Windows-Diagnoseweg bleibt für die offenen Abnahmen/Befunde erhalten.
-Neue Größenlimits gehören zu P3; Laufzeitoptimierung bleibt P2-B. Übrige nach dem
+P2-B erhält dieselben Assertions und logischen Originalbindungen, liefert native
+KAT-2-Ausschnitte direkt und HN-Originalsamples mit unabhängigem Pixelreplay;
+byteidentische PNGs werden einmal physisch gespeichert. Gemessene Prozesskosten,
+Schedulergrenzen und temporäre Rekonstruktion bindet der Belegvertrag. Neue
+Größen-/Lebenszyklusguards gehören weiterhin zu P3. Übrige nach dem
 Gesamtdiff ausgewählte Gruppen bleiben erforderlich; historische Vollnachweise
 werden weder wiederholt noch als aktueller verkürzter Erfolg umgedeutet.
 
