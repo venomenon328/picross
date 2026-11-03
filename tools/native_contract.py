@@ -42,6 +42,7 @@ PATHS = {
     'tools/ea_product.py': ('completion',),
     'tools/p14_integration.py': ('history',),
     'tools/native_metrics.py': GROUPS,
+    'tools/hn_evidence.py': ('graphics',),
     'game/tests/p14_integration.gd': ('history',),
     'tools/za1_product.py': ('adapters', 'export'),
     'game/tests/kat2_probe.gd': ('catalog',),
