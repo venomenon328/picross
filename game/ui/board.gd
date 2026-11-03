@@ -729,8 +729,11 @@ func clue_identity(axis: String, line: int, token: int) -> String:
 	return "%s/%s/%d/%d" % [session.definition.id, axis, line, token]
 
 func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, status: int, identity: String = "") -> void:
+	font = clue_text_font(font,text)
 	var outlined: bool = text.is_valid_int() and session.definition.palette.size() > 1 and (color.is_equal_approx(cell_color(2)) or color.is_equal_approx(cell_color(4)))
-	ClueStatusDrawing.paint(self, baseline, text, fs, color, status, identity, outlined, ui_scale, clue_text_font(font,text))
+	ClueStatusDrawing.paint_number(self, baseline, text, fs, color, status, outlined, ui_scale, font)
+	if text.is_valid_int() and status == ClueCompletion.Status.CLOSED:
+		draw_clue_cross(font, baseline, text, fs, color, outlined, identity)
 
 func draw_clue_cross(font: Font, baseline: Vector2, text: String, fs: int, color: Color, outlined: bool, identity: String) -> void:
 	ClueStatusDrawing.paint_cross(self, baseline, text, fs, color, identity, outlined, ui_scale, font)

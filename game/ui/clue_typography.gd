@@ -113,6 +113,12 @@ static func envelope(text: String, fs: int, ui: float) -> Rect2:
 # Shared active ink path for boards and passive teaching diagrams. Callers own
 # palette/C1 eligibility; glyphs, opacity and the whole-token X stay identical.
 static func paint(canvas: CanvasItem, origin: Vector2, text: String, fs: int, color: Color, status: int, identity: String, outlined: bool, ui: float, face: Font = null) -> void:
+	paint_number(canvas,origin,text,fs,color,status,outlined,ui,face)
+	if status == 2 and text.is_valid_int():
+		if face == null: face = text_font(text)
+		paint_cross(canvas,origin,text,fs,color,identity,outlined,ui,face)
+
+static func paint_number(canvas: CanvasItem, origin: Vector2, text: String, fs: int, color: Color, status: int, outlined: bool, ui: float, face: Font = null) -> void:
 	if face == null: face = text_font(text)
 	if not text.is_valid_int(): status = 0
 	var alpha: float = 0.6 if status != 0 else 1.0
@@ -122,7 +128,6 @@ static func paint(canvas: CanvasItem, origin: Vector2, text: String, fs: int, co
 		canvas.draw_string_outline(face,origin/contour_scale,text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(fs/contour_scale),1,Color(Color("293e3d"),alpha))
 		canvas.draw_set_transform(Vector2.ZERO)
 	canvas.draw_string(face,origin,text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs,Color(color,alpha))
-	if status == 2: paint_cross(canvas,origin,text,fs,color,identity,outlined,ui,face)
 
 static func paint_cross(canvas: CanvasItem, origin: Vector2, text: String, fs: int, color: Color, identity: String, outlined: bool, ui: float, face: Font) -> void:
 	var strokes: Array[PackedVector2Array] = cross_strokes(text,fs,identity,face,ui)
