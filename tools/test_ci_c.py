@@ -359,8 +359,9 @@ class Isolation(unittest.TestCase):
         from types import SimpleNamespace
         usage=SimpleNamespace(ru_utime=0,ru_stime=0,ru_maxrss=1,ru_nivcsw=0)
         resource=SimpleNamespace(RUSAGE_CHILDREN=-1,getrusage=lambda _:usage)
-        environment={**os.environ,'LIBGL_ALWAYS_SOFTWARE':'1','LP_NUM_THREADS':'8'}
-        program='import os; print("THREADS="+os.environ["LP_NUM_THREADS"])'
+        environment={**os.environ,'LIBGL_ALWAYS_SOFTWARE':'1','LP_NUM_THREADS':'8',
+                     'GITHUB_TOKEN':'test-only-placeholder'}
+        program='import os; print("THREADS="+os.environ["LP_NUM_THREADS"]); print("TOKEN_PRESENT="+str("GITHUB_TOKEN" in os.environ))'
         with tempfile.TemporaryDirectory() as t:
             for host,name,extra,expected in [
                 ('Linux','kat2-regular',[],1),('Linux','kat2-information',[],8),
@@ -372,7 +373,9 @@ class Isolation(unittest.TestCase):
                     result=run_phase(name,[sys.executable,'-c',program,*extra],environment,5,Path(t))
                     self.assertEqual(result['exit_code'],0)
                     self.assertIn('THREADS='+str(expected),result['output'])
+                    self.assertIn('TOKEN_PRESENT=False',result['output'])
                     self.assertEqual(environment['LP_NUM_THREADS'],'8')
+                    self.assertEqual(environment['GITHUB_TOKEN'],'test-only-placeholder')
 
     def test_verified_warm_cache_starts_renderers_without_waiting_for_core(self):
         import native_runner

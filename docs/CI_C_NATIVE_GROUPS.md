@@ -13,7 +13,10 @@ Fokusgrenze. Bereits vorhandene Editor-/Vorlagenarchive dürfen die Parallelitä
 nach erneuter vollständiger SHA-Prüfung sofort freigeben. Bei fehlendem/falschem
 Cache bleibt zuerst ein echter serieller Gruppenlauf erforderlich. Jeder Producer
 prüft weiterhin seine Archive und extrahiert eigene Werkzeuge. Kein importiertes
-Projekt, Save oder Prüfergebnis wird gruppenübergreifend geteilt. Export wartet
+Projekt, Save oder Prüfergebnis wird gruppenübergreifend geteilt. Der Python-
+Downloadpfad nutzt das vorhandene kurzlebige Jobtoken mit den unveränderten
+Leserechten gegen anonyme GitHub-API-Limits; Godot erhält dieses Token nicht.
+Export wartet
 weiter auf beide Rendergruppen. Start-/Endoffsets, Cachevorbereitung, CPU-/
 Kontextwechselkosten und Ergebnisprüfung werden separat gemessen; RSS ist der
 bisherige Höchststand aller beendeten Kindprozesse, keine isolierte Phasenmessung.

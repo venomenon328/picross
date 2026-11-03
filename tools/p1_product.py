@@ -87,6 +87,9 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
     print(f"RUN {name}", flush=True)
     started = time.monotonic()
     environment = environment.copy()
+    # Only the Python toolchain downloader needs the short-lived read token.
+    # The engine and its native probes do not receive repository credentials.
+    environment.pop('GITHUB_TOKEN', None)
     # Mesa otherwise builds a CPU-sized worker pool in every simultaneous
     # llvmpipe process. Native groups already supply process-level parallelism.
     # These existing oracles require short wall-clock windows. The one-thread

@@ -59,6 +59,7 @@ jobs:
         run: python3 -m unittest discover -s tools -p 'test_ci_c.py' -v
       - name: Current regression, selected integration, pixels and player export
         env:
+          GITHUB_TOKEN: ${{ github.token }}
           P1_PREFLIGHT_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
           CI_SELECTION_ATTEMPT: ${{ inputs.selection_attempt || github.run_attempt }}
           NATIVE_GROUPS: ${{ inputs.groups }}
