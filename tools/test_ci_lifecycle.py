@@ -107,10 +107,12 @@ class LifecycleTests(unittest.TestCase):
         self.assertTrue(self.check((before, after, blobs, manifest), old=old)['accepted'])
 
     def test_relabel_rename_or_deadline_extension_needs_exact_owner_decision(self):
-        for action in ('extend', 'relabel', 'rename'):
+        for action in ('extend', 'relabel', 'rename', 'feature', 'owner'):
             data = fixture('temporary'); old = deepcopy(data[3]); record = data[3]['records'][0]
             if action == 'extend': record['expires'] = '2026-11-11'
             elif action == 'rename': record['id'] = 'different'; data[3]['closeout']['temporary'] = ['different']
+            elif action == 'feature': record['feature'] = REPO + 'issues/999998'
+            elif action == 'owner': record['owner'] = 'other package'
             else:
                 record.update(kind='permanent-small', expires=None, retire_when=None)
                 data[3]['closeout']['temporary'] = []
