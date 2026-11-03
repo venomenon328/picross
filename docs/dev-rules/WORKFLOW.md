@@ -115,6 +115,19 @@ Vor der Übergabe vollständigen Diff auf Scope, unbeabsichtigte Änderungen, se
 
 Die Abschlussmeldung nennt kompakt Repository/Branch/PR und Head-Commit, Ergebnis, tatsächlich ausgeführte Prüfungen mit Resultat sowie offene Risiken und Abnahmen. „Nicht ausgeführt“, „fehlgeschlagen“ und „nicht anwendbar“ unterscheiden. Die relevanten Nachweise liegen im PR, nicht ausschließlich in der Chatnachricht. Kein Pflichtroman und keine rückblickende Modellwahl.
 
+**Projektlokale CI-Ergänzung picross / #502 P3-A:** Vor neuen aufwendigen Prüfungen
+dauerhafte aktuelle Produktregressionen und befristete Entwicklungs-/Abnahmenachweise
+unterscheiden. Zweck, minimale Ebene, tatsächliche Leser und CI-Auswahl, erwartete
+CPU-/Wandzeit-/Datei-/Bytekosten, Verantwortung/Paket und konkreten Rückbau-/Ablaufpunkt
+nach [CI-Policy](https://github.com/venomenon328/picross/blob/main/docs/CI_POLICY.md#testlebenszyklus-und-featureabschluss--502--p3-a)
+quellgebunden erklären. Neue schwere Dauerpflicht, Verlängerung oder Entfristung
+benötigt die dort technisch gebundene separate Eigentümerentscheidung.
+Vor Featureabschluss einen Test-/Artefakt-Rückbaucheck durchführen; T01/PR nennt
+hinzugefügte/entfernte dauerhafte Tests, befristeten Rest mit Ablauf und tatsächliche
+Kostenänderung. Historische Belege bleiben über PR/Commit erreichbar.
+Diese Ergänzung autorisiert keine Löschung lokaler blockierter/fremder Arbeitsdaten;
+HIL-F01 und die separate umfassende Workflowüberarbeitung bleiben eigenständig.
+
 ## 8. Verifikation und Abnahme
 
 Prüfungen müssen das geänderte Verhalten und wichtige Regressionen sinnvoll absichern. Bei Bugs nach Möglichkeit einen reproduzierenden Regressionstest ergänzen; wenn nicht sinnvoll oder machbar, den alternativen Nachweis begründen. Produktionsdaten-Snapshots sind kein automatischer Ersatz für fachlich passende Tests. Projektspezifische Regeln für redaktionelle Datenänderungen bleiben maßgeblich.

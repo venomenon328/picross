@@ -1,5 +1,26 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## Neue Prüfungen und Featureabschluss · #502 / P3-A
+
+Der [Lebenszyklusvertrag](CI_POLICY.md#testlebenszyklus-und-featureabschluss--502--p3-a)
+gilt vor neuer nativer Prüf-/Bildlast: dauerhafte aktuelle Spiel-/Save-/Pixel-/
+Exportregression oder befristeter Einführungs-/Abnahmenachweis, jeweils mit
+Zweck, minimaler Ebene, Leser, Auswahl, CPU-/Wandzeit-/Datei-/Byte-/PNGkosten,
+Verantwortung und konkreter Ablauf-/Reviewentscheidung. Neue Maschinen,
+Frame-/Filmmatrizen, Generatoren und Artefaktklassen benötigen diese Erklärung
+auch bei anderem Namen, Ausgabeordner oder optionalem Einstieg. Schwere neue
+Dauerpflichten benötigen die separat gebundene Eigentümerentscheidung.
+Der schnelle Docs-Guard prüft Quell-/Leser-/Auswahlbindung und Ablauf; T01 und
+unabhängiges R01 prüfen Abdeckung und tatsächliche Kosten. Vor Featureabschluss
+temporäre Last zurückbauen und verbleibende Dauerregressionen begründen.
+
+Das heutige logische Pflichtinventar, seine physischen Aliase, alle Assertions,
+Quellen-, Head-/Basis-/Run-/Versuchsbindungen und Pixel-/Exportgates bleiben
+erhalten. Laufzeit, erzeugte/gelieferte PNGs und physische/logische Dateien/Bytes
+werden weiter gemessen. P3-A setzt keine globale 75-MiB-/10-Minuten-Grenze,
+ändert keine Zeitfenster und erteilt keinen Browserauftrag. P2-C/P3-B bleiben
+separat; bestehende Produktprüfungen werden nicht rückwirkend nach Namen verboten.
+
 ## Laufzeit und Originalpixel · #502 / P2-B
 
 Die aktuelle Auswahl, sämtliche Produktassertions, KAT-2-Modi, nativen Prozesse,
@@ -51,7 +72,8 @@ entfernen diese temporären Kopien auch nach Fehlern. Das feste logische Inventa
 Originalberichte und Einzelbindungen bleiben unverändert verpflichtend. Fehler-
 artefakte werden nicht dedupliziert. Physische und logische Dateien/PNGs/Bytes,
 erzeugte Arbeitsdateien sowie direkt im Technikbereich erzeugte HIL-PNGs werden
-getrennt ausgewiesen. Neue Budget-/Lebenszyklusguards bleiben P3; CI2-Ziele gelten
+getrennt ausgewiesen. Globale Budgetguards bleiben P3-B; neue Lebenszyklusregeln
+stehen oben unter P3-A. CI2-Ziele gelten
 erst nach tatsächlicher Messung als erreicht. Messwerte und Restbefunde im P2-B-T01.
 
 ## Studienrückbau · #502 / P2-A

@@ -213,6 +213,19 @@ wird. Neue Module liefern passende Auswahlzuordnung. Ein kleines Dokument-/Daten
 Update erzeugt keine eigene historische Testfamilie. Lieferabschluss umfasst
 bereinigte Arbeitsdaten und aktuelle Statusverweise; keine Paketchronik in Einstiegen.
 
+P3-A aus [#502](https://github.com/venomenon328/picross/issues/502) macht diese
+Regel für neue Prüflast überprüfbar: [CI-Policy / Testlebenszyklus](CI_POLICY.md#testlebenszyklus-und-featureabschluss--502--p3-a)
+bindet Zweck, Leser, minimale Ebene, Kosten, Verantwortung, Quellen und konkrete
+Ablaufentscheidung im bestehenden Docs-Pfad. Dauerhafte aktuelle Produktregressionen
+und befristete Einführungs-/Abnahmenachweise sind getrennt zu erklären.
+Featureabschluss/T01 weist hinzugefügte/entfernte Tests, befristeten Rest und
+tatsächliche Kostenänderung aus; eine schwere neue Dauerpflicht benötigt eine
+separate gebundene Eigentümerentscheidung. Kein automatischer Nachlauf alter Studien.
+Der vorhandene P2-B-Stand verfehlt weiterhin zehn Minuten und den 75-MiB-Richtwert;
+P3-A aktiviert keine globale Größen-/Zeitgrenze und ersetzt weder P2-C noch P3-B.
+HIL-F01 und der separate Workflowauftrag bleiben für blockierte lokale Daten
+maßgeblich; daraus folgt keine Löschbefugnis oder pauschale Abschlussausnahme.
+
 ## 7. Pakete und Abnahme
 
 | Paket | Ergebnis | Abhängigkeit |

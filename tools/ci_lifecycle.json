@@ -1,0 +1,99 @@
+{
+  "format": "picross-ci-lifecycle-v1",
+  "records": [
+    {
+      "id": "p3-a-lifecycle",
+      "kind": "permanent-small",
+      "purpose": "Fail-closed declarations and feature retirement for new test/CI/output deltas",
+      "level": "Existing Python standard-library Docs/tool path; no engine or image production",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / package P3-A implementer",
+      "sources": {
+        ".github/workflows/ci-chromium.yml": {
+          "before": "062d795c50730822153af6b68f7f825a7f3d2391",
+          "after": "c615ac948cf860118c0a82c871e61714022a98d8"
+        },
+        "tools/ci_lifecycle.py": {
+          "before": null,
+          "after": "9164dc3e4680914337b50fa94c24ed85a0077755"
+        },
+        "tools/test_ci_lifecycle.py": {
+          "before": null,
+          "after": "0f87f934dafb5933e1b56dea00984bf324c85175"
+        }
+      },
+      "readers": [
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "on:\n  pull_request:",
+          "sources": [
+            ".github/workflows/ci-chromium.yml"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 tools/ci_lifecycle.py --base \"$CI_BASE\" --head \"$CI_HEAD\" --output \"$RUNNER_TEMP/ci-lifecycle.json\"",
+          "sources": [
+            "tools/ci_lifecycle.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_ci_lifecycle.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 3,
+        "wall_seconds": 3,
+        "files": 1,
+        "bytes": 32768,
+        "pngs": 0
+      },
+      "coverage": "15 cheap positive/negative tests, real synthetic Git/CLI and workflow reader checks. Existing regression/gate implementations and native inventory unchanged; independent P3-A-R01 before merge.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
+    }
+  ],
+  "closeout": {
+    "feature": "https://github.com/venomenon328/picross/issues/502",
+    "status": "in-progress",
+    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; existing product regressions retained.",
+    "removed": "No current product tests or required evidence removed.",
+    "temporary": [],
+    "cost_change": "Estimate: <=3 s additional Docs/tool work and one <=32768-byte report, zero PNGs. Actual final CI costs and unresolved P2-C/P3-B targets belong to P3-A-T01; package awaiting independent R01."
+  }
+}
