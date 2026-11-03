@@ -585,7 +585,7 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("export")
             if args.export:
                 # HIL owner instruction: targeted help/lifecycle only in CI;
-                # complete book study and movie production are excluded.
+                # the complete book study remains excluded (P2 is separate).
                 import book_study
                 evidence.report["book_lifecycle"] = python_phase("regular-book-integration", lambda: book_study.run_lifecycle(
                     args.cache_dir.resolve(), evidence.technical / "book-lifecycle"))
