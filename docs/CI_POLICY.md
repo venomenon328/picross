@@ -18,7 +18,7 @@ Der Windows-Diagnoseweg bleibt für die offenen Abnahmen/Befunde erhalten.
 P2-B erhält dieselben Assertions und logischen Originalbindungen, liefert native
 KAT-2-Ausschnitte direkt und HN-Originalsamples mit unabhängigem Pixelreplay;
 byteidentische PNGs werden einmal physisch gespeichert. Gemessene Prozesskosten,
-Schedulergrenzen und temporäre Rekonstruktion bindet der Belegvertrag. Neue
+Schedulergrenzen und temporäre Rekonstruktion bindet der Belegvertrag.
 Globale Größenlimits bleiben P3-B; den Neuzuwachs-/Lebenszyklusguard liefert
 P3-A gemäß dem folgenden Abschnitt. Übrige nach dem
 Gesamtdiff ausgewählte Gruppen bleiben erforderlich; historische Vollnachweise
