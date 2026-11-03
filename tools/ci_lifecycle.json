@@ -15,11 +15,11 @@
         },
         "tools/ci_lifecycle.py": {
           "before": null,
-          "after": "e03db05d871dca8f84fca25d487987835c763707"
+          "after": "f72d3495078b18c77ad99683f2326122b2b11aee"
         },
         "tools/test_ci_lifecycle.py": {
           "before": null,
-          "after": "5bff63a3ea64ae7f27f9c0347dafb5ce621d4bc0"
+          "after": "79be930ab3695948723da2b4e98e79e635397a82"
         }
       },
       "readers": [

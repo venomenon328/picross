@@ -174,7 +174,7 @@ mit beliebigem Namen oder eine neue Uploadklasse bleibt eine deklarationspflicht
 müssen endlich/nichtnegativ sein. Temporäre/schwere Einträge verwenden
 `retire_when=feature-closeout-or-deadline`. Für schwere Dauerprüfungen,
 Verlängerung oder Klassenwechsel verlangt der Guard einen separaten Kommentar
-des Repositoryeigentümers mit `CI-LIFECYCLE-APPROVE <Fingerprint>`.
+des Repositoryeigentümers mit der eigenständigen Zeile `CI-LIFECYCLE-APPROVE <Fingerprint>`.
 Der SHA-256-Fingerprint wird durch `ci_lifecycle.fingerprint(record)` aus dem
 kanonischen vollständigen Datensatz ohne `owner_decision` berechnet. Die API prüft
 Autor, exakte Kommentar-URL und Fingerprint einschließlich Kosten, Quellen und
