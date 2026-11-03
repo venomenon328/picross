@@ -196,6 +196,40 @@ def check_phases(report, expected, directory):
                 raise ValueError('Missing native success marker')
 
 
+def validate_book_lifecycle(report, directory, identity, host):
+    study = read(directory/'report.json')
+    expected_phases = ['book-version', 'book-import', 'book-integration']
+    expected_files = HELP_ORIGINALS | {'integration/integration.json'} | {'logs/'+name+'.log' for name in expected_phases}
+    source_root = Path(__file__).resolve().parents[1]
+    if (report.get('book_lifecycle') != study or study.get('package') != 'HIL-1-T01'
+            or study.get('scope') != 'help-and-product-lifecycle' or study.get('host') != host
+            or any(study.get(k) != v for k,v in identity.items())
+            or set(study.get('sources', {})) != set(BOOK_SOURCES)
+            or any(study['sources'][name] != hashlib.sha256((source_root/name).read_bytes()).hexdigest() for name in BOOK_SOURCES)
+            or [p['name'] for p in study.get('phases', [])] != expected_phases
+            or any(p['exit_code'] != 0 or p['timed_out'] or p['seconds'] < 0 for p in study['phases'])):
+        raise ValueError('Incomplete/failed help and product lifecycle binding')
+    actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()} - {'report.json'}
+    if set(study.get('files', {})) != expected_files or actual != expected_files:
+        raise ValueError('Missing/unexpected targeted help evidence; no movie or gallery permitted')
+    for name,metadata in study['files'].items():
+        verify_file(directory, dict(file=name, **metadata))
+    integration = read(directory/'integration/integration.json')
+    if (integration.get('passed') is not True or not integration.get('assertions')
+            or any(row.get('passed') is not True for row in integration['assertions'])
+            or not INTEGRATION_ASSERTIONS <= {row.get('label') for row in integration['assertions']}):
+        raise ValueError('Incomplete/failed targeted help assertions')
+    for name in HELP_ORIGINALS:
+        with (directory/name).open('rb') as stream: header = stream.read(24)
+        if (len(header) != 24 or header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
+                or struct.unpack('>II',header[16:24]) != (1920,1080)):
+            raise ValueError('Invalid targeted help original dimensions')
+    cost = study.get('inventory_cost', {})
+    if cost != dict(files=len(expected_files), bytes=sum(f['bytes'] for f in study['files'].values()),
+                    pngs=len(HELP_ORIGINALS), movie_bytes=0):
+        raise ValueError('Incorrect targeted help inventory cost')
+
+
 def validate_book_study(report, directory, identity, host):
     """Require shared presentation originals and the real B-B product lifecycle."""
     study = read(directory/'report.json')
@@ -492,7 +526,7 @@ def validate_payload(result, root, player_root=None):
                 raise ValueError('Unselected/skipped scope misreported')
         check_phases(report, checks(group, result['host']), directory)
         if group == 'export':
-            validate_book_study(report, directory/'book-study', result['identity'], result['host'])
+            validate_book_lifecycle(report, directory/'book-lifecycle', result['identity'], result['host'])
         if group == 'graphics':
             worker = read(directory/'vs2-worker/technical/product-report.json')
             if worker['status'] != 'success' or any(worker.get(k) != v for k,v in result['identity'].items()):

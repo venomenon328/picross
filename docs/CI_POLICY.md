@@ -2,7 +2,16 @@
 
 Stand: 26.10.2026 · Version 3.3 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
 
-**B-B / #498:** Die bestehende Exportgruppe führt die gemeinsame Buchdarstellung
+**HIL-1 / #500, Eigentümeranweisung 03.11.2026:** Keine vollständige Buchprüfung
+und insbesondere keine Filmproduktion in CI. Die Exportgruppe führt nur die
+gezielte Hilfe-/Produktlebenszyklusroute mit Import, echten Viewportereignissen,
+Zustands-/Savekontrollen und sieben Originalbildern aus. Producer und Ergebnisgate
+binden genau diesen Umfang gemäß [nativem Belegvertrag](CI_C_NATIVE_GROUPS.md).
+Die vollständige Studien-/Material-/Filmroute ist in CI gesperrt. Übrige nach dem
+Gesamtdiff ausgewählte Gruppen bleiben erforderlich; historische Vollnachweise
+werden weder wiederholt noch als aktueller verkürzter Erfolg umgedeutet.
+
+**Historischer B-B-Lieferumfang / #498:** Die damalige Exportgruppe führte die gemeinsame Buchdarstellung
 und den regulären Produktlebenszyklus gemäß [B-B-T01](B_B_VERIFICATION.md) und
 [nativem Belegvertrag](CI_C_NATIVE_GROUPS.md) aus. Die übernommenen N01–N21-/F01-
 Prüfungen, neun strengen Handoffs und Gegenproben bleiben erhalten; eine zweite
