@@ -273,11 +273,20 @@ class NativeGate(unittest.TestCase):
                     shutil.copyfile(source,target)
             command=[sys.executable,'-I','-c',
                      'import sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); '
+                     'from book_contract import SOURCES; '
+                     'assert all((Path(sys.argv[1]).parent/name).is_file() for name in SOURCES), "Missing book hash input"; '
                      'from native_results import read,validate_payload; '
                      'root=Path(sys.argv[2]); validate_payload(read(root/"native-result.json"),root)',
                      str(checkout/'tools'),str(self.root)]
             positive=subprocess.run(command,cwd=checkout,capture_output=True)
             self.assertEqual(positive.returncode,0,positive.stderr)
+            help_source=checkout/'game/ui/help_panel.gd'
+            original=help_source.read_bytes()
+            help_source.unlink()
+            missing_source=subprocess.run(command,cwd=checkout,capture_output=True)
+            self.assertNotEqual(missing_source.returncode,0)
+            self.assertIn(b'Missing book hash input',missing_source.stderr)
+            help_source.write_bytes(original)
             (checkout/'tools/p14_integration.py').unlink()
             negative=subprocess.run(command,cwd=checkout,capture_output=True)
             self.assertNotEqual(negative.returncode,0)
