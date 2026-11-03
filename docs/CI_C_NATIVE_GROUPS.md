@@ -1,6 +1,25 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
-## Gemeinsame Buchdarstellung B-B / #493, #498
+## Aktuelle gezielte Buchintegration · HIL-1 / #500
+
+Eigentümeranweisung vom 03.11.2026: In CI keine komplette Buchprüfung und keine
+Filmproduktion. `regular-book-integration` führt deshalb ausschließlich
+`book-version`, `book-import` und `book-integration` aus. Die letzte Phase nutzt
+den regulären Produktroot mit festen synthetischen Inputs für Hilfe, Navigation
+und unveränderten Spiel-/Savezustand; keine vollständige Studien-/Materialroute.
+`book_lifecycle` und `book-lifecycle/report.json` binden denselben begrenzten
+Umfang an Head, Basis, Checkout, Producer-Versuch und aktuelle Quellbytes.
+Das Ergebnisgate verlangt sämtliche Lifecycle-/HIL-Einzelassertions, genau die
+sieben unten genannten 1920×1080-Originale, den Assertionbericht und drei Logs.
+Zusätzlicher Film oder eine Galerie werden abgewiesen; Spielprofile werden nicht
+ausgeliefert. Die vollständige Route in `book_study.run()` ist in CI gesperrt.
+Historische B-B-Nachweise behalten ihren damaligen Umfang und werden dadurch
+weder erneut verlangt noch nachträglich als verkürzte Prüfung ausgegeben.
+
+## Historischer B-B-Vollumfang / #493, #498
+
+Die folgenden Absätze beschreiben den damaligen Liefernachweis. Für aktuelle
+automatische Läufe gilt ausschließlich der gezielte Umfang oben.
 
 Die Exportgruppe verlangt einmalig `regular-book-integration` und dessen
 [B-B-T01-Belege](B_B_VERIFICATION.md). Das Gate prüft originale Einzelassertions,
@@ -48,6 +67,19 @@ Die obigen N03–N06-Prüfungen bleiben unverändert auf die gemeinsame Darstell
 angewendet. B-A-R08/M01 sind auf PR #497 abgeschlossen. B-B bindet neue reguläre
 Windowsoriginale und echte OS-Eingaben für sein getrenntes Selbstreview sowie
 das spätere unabhängige B-B-R01; die persönliche B-B-M01 bleibt gesondert.
+
+HIL-1 / #500 erweitert dieselbe Integration um passive Lehrbeispiele und die
+vier Hilfekapitel. `help_cases.gd` enumeriert die tatsächlich dargestellten
+kleinen Belegungen unabhängig; `help_native.gd` prüft echte GUI-Ereignisse,
+verschachtelte Schriftrollen, Platz-/Scrollgrenzen, Besuchs-/Rückkehrkontext und
+unveränderte Spiel-/Savewerte. Keine neue Gruppe und keine zusätzliche
+Spielprozessmatrix. Sieben Originale (`integration/hil-{work,principle,
+combination,colors,overlap,legend,pan}.png`) sind über `book_contract.py` gebunden;
+der Guard verlangt Quellen, Assertions und Dateien. Ein gezielter Pan mit dem
+neuen Seiteninhalt gehört zur Hilferoute; die vollständige Übergabematrix und
+Filmproduktion werden in CI nicht ausgeführt. Die
+PCK-Prüfung verlangt die drei aktiven Hilfemodule; Tests bleiben ausgeschlossen.
+Es entsteht kein Chromiumauftrag und kein exklusiver Desktop-Eingabelauf.
 
 ## Aktuelle Umsetzung: CI2-D / #416
 

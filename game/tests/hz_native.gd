@@ -69,8 +69,8 @@ static func run(runner: Object) -> void:
 		await runner.choose("")
 		app.show_information("help")
 		await runner.frames()
-		var help: Label = app.help_panel.get_child(1)
-		runner.check(help.get_theme_font("font") == Text.font() and help.get_line_count() > 10, "HZ help uses wrapped standard text")
+		var help: Label = app.help_panel.chapters[0].get_child(1)
+		runner.check(help.get_theme_font("font") == Text.font() and help.get_line_count() > 1, "HZ help uses wrapped standard text")
 		app.info_scroll.scroll_vertical = 100000
 		await runner.frames()
 		runner.check(app.info_scroll.scroll_vertical > 0 or app.help_panel.size.y <= app.info_scroll.size.y, "HZ complete help fits or remains scrollable")

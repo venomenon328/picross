@@ -101,7 +101,7 @@ func observe(delta: float) -> void:
 			"help_scroll":info.help_scroll.scroll_vertical,
 			"help_rect":[info.help_scroll.global_position.x,info.help_scroll.global_position.y,info.help_scroll.size.x,info.help_scroll.size.y],
 			"help_fits":help_panel.size.y <= info.help_scroll.size.y,
-			"help_font":help_panel.get_child(1).get_theme_font("font").get_font_name()},
+			"help_font":help_panel.chapters[0].get_child(1).get_theme_font("font").get_font_name()},
 		"sort": {"criterion": album.preference.criterion, "direction": album.preference.direction,
 			"direction_tooltip": album.direction_button.tooltip_text,
 			"direction_accessibility_name": album.direction_button.accessibility_name,
