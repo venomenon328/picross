@@ -173,6 +173,8 @@ class LifecycleTests(unittest.TestCase):
     def test_reader_prose_comments_and_negative_strings_are_not_executable_entrypoints(self):
         self.assertFalse(executable_anchor('docs/old.md', b'python3 tools/new.py', 'tools/new.py'))
         self.assertFalse(executable_anchor('tools/reader.py', b"fixture = 'tools/new.py'\n", 'tools/new.py'))
+        self.assertFalse(executable_anchor('tools/reader.py', b"print('tools/new.py')\n", 'tools/new.py'))
+        self.assertTrue(executable_anchor('tools/reader.py', b"Path('tools/new.py').read_text()\n", 'tools/new.py'))
         self.assertTrue(executable_anchor('tools/reader.py', b'import new\n', 'import new'))
         self.assertFalse(executable_anchor(READER, b'# run: python3 tools/new.py\n', 'tools/new.py'))
         self.assertFalse(executable_anchor(READER, b'name: python3 tools/new.py\n', 'tools/new.py'))
@@ -190,6 +192,8 @@ class LifecycleTests(unittest.TestCase):
                 changed[field] = {'cpu_seconds': 999} if field == 'cost' else 'changed'
                 with self.subTest(field=field), self.assertRaises(ValueError): owner_decision(changed)
         with patch('ci_lifecycle.api', return_value={**comment, 'user': {'login': 'someone-else'}}), self.assertRaises(ValueError):
+            owner_decision(record)
+        with patch('ci_lifecycle.api', return_value={**comment, 'body': '> ' + comment['body']}), self.assertRaises(ValueError):
             owner_decision(record)
         with patch('ci_lifecycle.api', return_value={'state': 'closed'}):
             self.assertFalse(is_feature_open(FEATURE))

@@ -98,7 +98,11 @@ def executable_anchor(path, raw, anchor):
         return any(anchor in region for region in regions)
     if path.endswith('.py'):
         return any(anchor in (ast.get_source_segment(source, node) or '') for node in ast.walk(ast.parse(source))
-                   if isinstance(node, (ast.Call, ast.Import, ast.ImportFrom)))
+                   if isinstance(node, (ast.Import, ast.ImportFrom)) or
+                   (isinstance(node, ast.Call) and
+                    (node.func.id if isinstance(node.func, ast.Name) else
+                     node.func.attr if isinstance(node.func, ast.Attribute) else '') in
+                    {'run', 'run_phase', 'check_call', 'check_output', 'Popen', 'read_text', 'read_bytes', 'open', 'load'}))
     if path.endswith('.gd'):
         return any(anchor in line and re.search(r'\b(?:preload|load)\s*\(', line)
                    for line in source.splitlines() if not line.lstrip().startswith('#'))
@@ -252,7 +256,8 @@ def owner_decision(record):
         raise ValueError('Separate authored owner decision required')
     comment = api('issues/comments/' + match[1])
     marker = 'CI-LIFECYCLE-APPROVE ' + fingerprint(record)
-    if comment.get('user', {}).get('login') != 'venomenon328' or marker not in comment.get('body', '') or comment.get('html_url') != url:
+    if (comment.get('user', {}).get('login') != 'venomenon328' or
+            marker not in comment.get('body', '').splitlines() or comment.get('html_url') != url):
         raise ValueError('Owner decision does not approve exact lifecycle/cost/source record')
 
 
