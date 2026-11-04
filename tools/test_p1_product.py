@@ -7,6 +7,7 @@ import subprocess
 import sys
 import time
 import unittest
+from unittest.mock import patch
 import zipfile
 from pathlib import Path
 
@@ -26,8 +27,16 @@ class ProductHarnessTests(unittest.TestCase):
             def alive(pid):
                 try:
                     return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] not in {"Z", "X"}
-                except FileNotFoundError:
+                except (FileNotFoundError, ProcessLookupError):
                     return False
+            # procfs can open stat before exit, then report ESRCH on read.
+            # Both disappearance paths mean dead; other read errors still fail.
+            for error in (FileNotFoundError(), ProcessLookupError()):
+                with patch.object(Path, "read_text", side_effect=error):
+                    self.assertFalse(alive(os.getpid()))
+            with patch.object(Path, "read_text", side_effect=PermissionError()):
+                with self.assertRaises(PermissionError):
+                    alive(os.getpid())
             leaf = ("import os,pathlib,time; "
                     f"pathlib.Path({str(root / 'leaf.pid')!r}).write_text(str(os.getpid())); "
                     "time.sleep(60)")
