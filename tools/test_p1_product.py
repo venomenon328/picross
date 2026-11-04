@@ -36,7 +36,7 @@ class ProductHarnessTests(unittest.TestCase):
                 if timeout is not None and clock[0] + timeout < duration:
                     clock[0] += timeout
                     raise subprocess.TimeoutExpired(["probe"], timeout)
-                clock[0] = duration if timeout is not None else clock[0]
+                clock[0] = max(clock[0], duration) if timeout is not None else clock[0]
                 return exit_code
             process.wait.side_effect = wait
             def printed(*args, **kwargs):
@@ -74,7 +74,7 @@ class ProductHarnessTests(unittest.TestCase):
                 self.assertEqual(waits, [300, 298])
                 self.assertTrue(result["warning_emitted"])
                 self.assertFalse(result["timed_out"])
-                self.assertEqual(result["seconds"], duration)
+                self.assertEqual(result["seconds"], max(302, duration))
                 self.assertEqual(result["output"].count("WARNING:"), 1)
                 require_clean_output(result, "KAT2_PROBE_OK")
                 process.kill.assert_not_called()
