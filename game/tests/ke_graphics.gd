@@ -9,7 +9,7 @@ static func capture(runner: SceneTree, control: Control, name: String) -> Packed
 	var rectangle: Rect2 = control.get_global_rect()
 	if control is Completion: rectangle = control.artwork_rect()
 	var image: Image = runner.surface.get_texture().get_image().get_region(Rect2i(rectangle))
-	runner.check(image.save_png(runner.output.path_join("ke-graphics-"+name+".png")) == OK,"KE graphics native crop "+name)
+	runner.check(preload("res://tests/native_png.gd").write(image, runner.output.path_join("ke-graphics-"+name+".png")) == OK,"KE graphics native crop "+name)
 	runner.ke_graphics_measurements.append({"file":"ke-graphics-"+name+".png","native_rect":[rectangle.position.x,rectangle.position.y,rectangle.size.x,rectangle.size.y],"viewport":[runner.surface.size.x,runner.surface.size.y],"ui_scale":runner.app.ui_scale})
 	return image.get_data()
 

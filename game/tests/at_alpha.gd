@@ -35,8 +35,8 @@ static func sample(probe: SceneTree, view: Control, name: String, opacity: float
 	var bounds := Rect2i(Vector2i(rect.position),Vector2i(rect.size)).intersection(Rect2i(Vector2i.ZERO,visible.get_size()))
 	var file := "at-"+name+".png"
 	var background_file := "at-"+name+"-paper.png"
-	probe.check(visible.get_region(bounds).save_png(probe.output.path_join(file)) == OK,"AT original native image crop")
-	probe.check(background.get_region(bounds).save_png(probe.output.path_join(background_file)) == OK,"AT original native background crop")
+	probe.check(preload("res://tests/native_png.gd").write(visible.get_region(bounds), probe.output.path_join(file)) == OK,"AT original native image crop")
+	probe.check(preload("res://tests/native_png.gd").write(background.get_region(bounds), probe.output.path_join(background_file)) == OK,"AT original native background crop")
 	var hash := HashingContext.new()
 	hash.start(HashingContext.HASH_SHA256)
 	hash.update(image.get_data())

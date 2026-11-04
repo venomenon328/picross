@@ -9,10 +9,6 @@
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / package P3-A implementer",
       "sources": {
-        ".github/workflows/ci-chromium.yml": {
-          "before": "062d795c50730822153af6b68f7f825a7f3d2391",
-          "after": "c615ac948cf860118c0a82c871e61714022a98d8"
-        },
         "tools/ci_lifecycle.py": {
           "before": null,
           "after": "f72d3495078b18c77ad99683f2326122b2b11aee"
@@ -23,13 +19,6 @@
         }
       },
       "readers": [
-        {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "on:\n  pull_request:",
-          "sources": [
-            ".github/workflows/ci-chromium.yml"
-          ]
-        },
         {
           "path": ".github/workflows/ci-chromium.yml",
           "anchor": "python3 tools/ci_lifecycle.py --base \"$CI_BASE\" --head \"$CI_HEAD\" --output \"$RUNNER_TEMP/ci-lifecycle.json\"",
@@ -225,55 +214,17 @@
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / package P2-C implementer",
       "sources": {
-        "game/tests/kat2_probe.gd": {
-          "before": "0ef6ddfca2232d9a0f070aba2b4aecf715b9227a",
-          "after": "87f93ccc56fd32e2791cabedfebf995f4b36454c"
-        },
-        "tools/p1_product.py": {
-          "before": "d83328ed6ab70e808ea9c599304298a85c015100",
-          "after": "273c54df4c305e7408b1dd7a09efea4e137eb099"
-        },
-        "tools/ea_product.py": {
-          "before": "fe2f0b6f951d2e4131d70d0c8cbb7ee8c1c0a07d",
-          "after": "994c91f567bf77baca2f66a52442800bc150bf61"
-        },
         "tools/test_ea_product.py": {
           "before": null,
           "after": "5204690862d7c4f0b6f2bb661af374a70dc07c61"
-        },
-        "tools/test_ci_c.py": {
-          "before": "f62199bc5fc1d8bde04dcad0278f7095caf71003",
-          "after": "808da00eacd1d7a69133cc3e5772b057b9e91ea7"
         }
       },
       "readers": [
         {
-          "path": "tools/kat2_product.py",
-          "anchor": "\"res://tests/kat2_probe.gd\"",
-          "sources": [
-            "game/tests/kat2_probe.gd"
-          ]
-        },
-        {
-          "path": ".github/workflows/p1-product.yml",
-          "anchor": "python3 tools/p1_product.py",
-          "sources": [
-            "tools/p1_product.py"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "import ea_product",
-          "sources": [
-            "tools/ea_product.py"
-          ]
-        },
-        {
           "path": ".github/workflows/ci-chromium.yml",
           "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
           "sources": [
-            "tools/test_ea_product.py",
-            "tools/test_ci_c.py"
+            "tools/test_ea_product.py"
           ]
         }
       ],
@@ -318,14 +269,298 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p2-c-evidence-bytes",
+      "kind": "permanent-small",
+      "purpose": "Lossless original PNG encoding with exact alpha preservation and unchanged independent evidence gates",
+      "level": "Existing native writers/core process and cheap independent Python negative control; no added native phase/image",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / P2-C-V02 implementer",
+      "sources": {
+        ".github/workflows/ci-chromium.yml": {
+          "before": "c615ac948cf860118c0a82c871e61714022a98d8",
+          "after": "1264d4f4f5c743725dce14f24ae7e8eb11b80c14"
+        },
+        "game/tests/at_alpha.gd": {
+          "before": "022860e2d02eca26f949f74a68ddab3d01054d88",
+          "after": "fd21559461011ebe02abbf568e5547ff8c2e3213"
+        },
+        "game/tests/capture.gd": {
+          "before": "a1239e78ae6816b89874659f18802d5a7f6b9cb3",
+          "after": "5198c392868d58ae29f00c0a82616c560c5db318"
+        },
+        "game/tests/ea_probe.gd": {
+          "before": "b9861c93cee25bfea717aac96cdbecfc7a9c6636",
+          "after": "75b7e16dfcd34cedd5eda827975ce79dbff306e7"
+        },
+        "game/tests/help_native.gd": {
+          "before": "8e9e18b651a904130dea710d690f8098a1bb344c",
+          "after": "c93ac545e3820ceab199fe2c0b4aab6162a8cb67"
+        },
+        "game/tests/hf149_probe.gd": {
+          "before": "2c91972a87780482ce04cf9be77bd55296435bca",
+          "after": "b4f2b5792284de5bebb97a528e7ddacaa332ce37"
+        },
+        "game/tests/hz_native.gd": {
+          "before": "60d5b8880764ae64d46a2116df1034ae6baab3bf",
+          "after": "ac0eb3ee048ff5124aead61f2476995f77ae481c"
+        },
+        "game/tests/kat2_probe.gd": {
+          "before": "87f93ccc56fd32e2791cabedfebf995f4b36454c",
+          "after": "a2049473514e9371188ce0f4dd9d2210550c8595"
+        },
+        "game/tests/ke_graphics.gd": {
+          "before": "3b99459d853ecca96ebffc950d4a5684eb27b06a",
+          "after": "05672ae87deeba2dfb1cb2653da3b894546ff33f"
+        },
+        "game/tests/native_png.gd": {
+          "before": null,
+          "after": "1b3f5f439e3928d74e23ec5e3b7eaa93472e1a80"
+        },
+        "game/tests/native_png_cases.gd": {
+          "before": null,
+          "after": "e56ffa3d99060fb363e6f8d8efcb85ad101517ba"
+        },
+        "game/tests/perf_b_probe.gd": {
+          "before": "a2c590722503368a74082bf9537a24f1e51ebadb",
+          "after": "6ede0250109903d16df5223603606aabfefc2979"
+        },
+        "game/tests/run_tests.gd": {
+          "before": "4e78f7e1ecf9915335985f02101196568eb6c850",
+          "after": "53a7dfd90f2b8c4da553ea52ed16f71bb23cf4be"
+        },
+        "game/tests/vs2_tests.gd": {
+          "before": "bcb90f32ea72e43b910a988edeb5ad6aba01854a",
+          "after": "2b6e20f1b555a6b75e55ed4fea894099ec9f3f38"
+        },
+        "game/tests/vs2_v1_tests.gd": {
+          "before": "1e9829c46152d5f7263f1fb8ff2e7dc0620fc6b9",
+          "after": "7555fe44a67b570db47c0e757aef6b2dc71a2855"
+        },
+        "game/tests/vs2_v2_tests.gd": {
+          "before": "fdb7d7e91c866ad8521d48e5f6689ed2f3a5b5ef",
+          "after": "172276def8f2cff07d870d52c5e1f1260562f39f"
+        },
+        "tools/book_contract.py": {
+          "before": "6ff8698278504b6b9d2db4875ee89e16d80e1fba",
+          "after": "87b4c91bd649aceea3d661ef261f8a1842ff987c"
+        },
+        "tools/ea_product.py": {
+          "before": "994c91f567bf77baca2f66a52442800bc150bf61",
+          "after": "63a3bc04aee7908531912d586c81f346377fb2fe"
+        },
+        "tools/p1_product.py": {
+          "before": "273c54df4c305e7408b1dd7a09efea4e137eb099",
+          "after": "8e6e575c7b6a4db37525338852685442360daed3"
+        },
+        "tools/test_ci_c.py": {
+          "before": "808da00eacd1d7a69133cc3e5772b057b9e91ea7",
+          "after": "087b139c0f18343ad2871c85a8b481f45ad3e4cc"
+        },
+        "tools/vs2_delivery.py": {
+          "before": "ac7ecff151a05cbb1a1b55cc5761f0240304c8ec",
+          "after": "6f13d3c8e9f9863e6dfee2547d61c4994de087c1"
+        }
+      },
+      "readers": [
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "on:\n  pull_request:",
+          "sources": [
+            ".github/workflows/ci-chromium.yml"
+          ]
+        },
+        {
+          "path": "game/tests/kat2_probe.gd",
+          "anchor": "preload(\"res://tests/at_alpha.gd\")",
+          "sources": [
+            "game/tests/at_alpha.gd"
+          ]
+        },
+        {
+          "path": "game/tests/kat2_probe.gd",
+          "anchor": "preload(\"res://tests/hz_native.gd\")",
+          "sources": [
+            "game/tests/hz_native.gd"
+          ]
+        },
+        {
+          "path": "game/tests/kat2_probe.gd",
+          "anchor": "preload(\"res://tests/ke_graphics.gd\")",
+          "sources": [
+            "game/tests/ke_graphics.gd"
+          ]
+        },
+        {
+          "path": "game/tests/book_integration.gd",
+          "anchor": "preload(\"res://tests/help_native.gd\")",
+          "sources": [
+            "game/tests/help_native.gd"
+          ]
+        },
+        {
+          "path": "game/tests/kat2_probe.gd",
+          "anchor": "preload(\"res://tests/native_png.gd\")",
+          "sources": [
+            "game/tests/native_png.gd"
+          ]
+        },
+        {
+          "path": "game/tests/run_tests.gd",
+          "anchor": "preload(\"res://tests/native_png_cases.gd\")",
+          "sources": [
+            "game/tests/native_png_cases.gd"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "\"res://tests/capture.gd\"",
+          "sources": [
+            "game/tests/capture.gd"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "\"res://tests/perf_b_probe.gd\"",
+          "sources": [
+            "game/tests/perf_b_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "\"res://tests/run_tests.gd\"",
+          "sources": [
+            "game/tests/run_tests.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "\"res://tests/hf149_probe.gd\"",
+          "sources": [
+            "game/tests/hf149_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "\"res://tests/vs2_tests.gd\"",
+          "sources": [
+            "game/tests/vs2_tests.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "\"res://tests/vs2_v1_tests.gd\"",
+          "sources": [
+            "game/tests/vs2_v1_tests.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "\"res://tests/vs2_v2_tests.gd\"",
+          "sources": [
+            "game/tests/vs2_v2_tests.gd"
+          ]
+        },
+        {
+          "path": "tools/kat2_product.py",
+          "anchor": "\"res://tests/kat2_probe.gd\"",
+          "sources": [
+            "game/tests/kat2_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/ea_product.py",
+          "anchor": "\"res://tests/ea_probe.gd\"",
+          "sources": [
+            "game/tests/ea_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/native_results.py",
+          "anchor": "from book_contract import",
+          "sources": [
+            "tools/book_contract.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import ea_product",
+          "sources": [
+            "tools/ea_product.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import vs2_delivery",
+          "sources": [
+            "tools/vs2_delivery.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/p1_product.py",
+          "sources": [
+            "tools/p1_product.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_ci_c.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 1,
+        "wall_seconds": 1,
+        "files": 0,
+        "bytes": 4096,
+        "pngs": 0
+      },
+      "coverage": "256 real PNG-buffer alpha roundtrips, source immutability, alternate formats/mipmaps and independent HN RGB rejection. Sparse checkout binds the exact new HIL helper source. Existing native pixel, time, geometry, save, recovery, export, original/alias/inventory gates remain. Additional small guard/report estimate only; native encoding reduces measured CPU/bytes. Same-frame 366-image probe and 15-image ABBA are temporary local diagnosis, not new CI. Actual selected CI and costs in V02-T01; separate independent R01 required.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle. D03 maintains the existing capture observation; no additional permanent test or native invocation. F02 adds six small runner regressions, including one accelerated real-process cleanup; native KK checks remain 3440. P2-C: two small imported-copy regressions and one small RGB/alpha gate regression; existing native modes only.",
+    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle. D03 maintains the existing capture observation; no additional permanent test or native invocation. F02 adds six small runner regressions, including one accelerated real-process cleanup; native KK checks remain 3440. P2-C: two small imported-copy regressions and one small RGB/alpha gate regression; existing native modes only. P2-C-V02: one shared lossless writer, 256 alpha-buffer controls in the existing core process, and independent HN format rejection; exact new HIL source/sparse binding.",
     "removed": "No current product tests or required evidence removed.",
     "temporary": [],
-    "cost_change": "Estimate: original <=3 s Docs guard plus <=3 s F01/F02 runner regressions, unchanged native modes/images; only kat2-kk gets live warning at 300 s and hard timeout at 600 s. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate. D03 estimate <=0.01 s for atlas-frame observation, no additional files/readbacks/PNGs; measured isolated/parallel diagnostics and final CI are recorded in T01. P2-C measured local import and codec savings, plus <=1 s estimated small regression/guard overhead and <=1024 B report metadata. Final CI measurements in P2-C-T01; no required images removed. P3-B remains separate."
+    "cost_change": "Estimate: original <=3 s Docs guard plus <=3 s F01/F02 runner regressions, unchanged native modes/images; only kat2-kk gets live warning at 300 s and hard timeout at 600 s. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate. D03 estimate <=0.01 s for atlas-frame observation, no additional files/readbacks/PNGs; measured isolated/parallel diagnostics and final CI are recorded in T01. P2-C measured local import and codec savings, plus <=1 s estimated small regression/guard overhead and <=1024 B report metadata. Final CI measurements in P2-C-T01; no required images removed. P3-B remains separate. V02: <=1 s additional small guards and <=4096 B metadata estimated, zero additional files/PNGs/processes; measured encoder CPU/bytes decline. Full CI, memory tradeoff, unchanged logical inventory and bounded local diagnosis in V02-T01; 75 MiB remains advisory."
   }
 }
