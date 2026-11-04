@@ -306,8 +306,7 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
     renders.mkdir(exist_ok=True)
     environment["P1_CAPTURE_DIR"] = str(renders)
     command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
-               "--audio-driver", "Dummy", "--script", "res://tests/capture.gd",
-               "--", "--p1-capture", "--ci-compact"]
+               "--audio-driver", "Dummy"]
     if host == "Linux":
         if not shutil.which("xvfb-run"):
             raise toolchain.PreflightError("Real render verification requires xvfb-run on Linux")
@@ -317,7 +316,8 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         reports = []
         for stage in RENDER_STAGES:
             environment["P1_RENDER_STAGE"] = stage
-            run_phase("render-" + stage, command, "P1_CAPTURE_OK")
+            run_phase("render-" + stage, command + ["--script", "res://tests/capture.gd",
+                      "--", "--p1-capture", "--ci-compact"], "P1_CAPTURE_OK")
             report = json.loads((renders / f"render-report-{stage}.json").read_text(encoding="utf-8"))
             if (report.get("failed") or report.get("compact") is not True
                     or report["rendered_count"] < 1
@@ -333,7 +333,7 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         (renders / "render-report.json").write_text(json.dumps(combined, indent=2) + "\n", encoding="utf-8")
         # Current contrast, tooltip blocking and recovery layout assertions.
         # No Z2 historical project, comparison or archive is produced.
-        z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
+        z2_command = command + ["--script", "res://tests/z2_capture.gd", "--", "--p1-capture", "--ci-compact"]
         run_phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
         current = output / "drawing-renders"
         current.mkdir()
@@ -341,7 +341,7 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         environment["ZS2_VARIANT"] = "after"
         # Bind the unchanged native command at its executable lifecycle reader.
         run_phase("current-drawing-capture",
-                  ["res://tests/zs2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command],
+                  command + ["--script", "res://tests/zs2_capture.gd", "--", "--p1-capture", "--ci-compact"],
                   "ZS2_CAPTURE_OK")
         motion = python_phase("current-drawing-pixel-oracles",
                               lambda: p1_current_visual.verify_regular_motion(Path(__file__).resolve().parents[1], current))
@@ -500,7 +500,7 @@ def main(argv: list[str] | None = None) -> int:
                 output=str(output))
             evidence.flush()
 
-            def phase(name: str, command: list[str], marker: str | None = None,
+            def run(name: str, command: list[str], marker: str | None = None,
                       expected_failure: bool = False, validator=None,
                       reporter=evidence, phase_env=None):
                 record = reporter.start(name)
@@ -527,22 +527,22 @@ def main(argv: list[str] | None = None) -> int:
                 reporter.complete(record, result)
 
             evidence.report['setup_seconds'] = round(time.monotonic()-setup_started,6)
-            phase("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
+            run("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
             base = [engine, "--headless", "--path", str(project)]
             if args.catalog:
                 shutil.copyfile(root/"game/art/content/yin_yang_001.png", project/"tests/fixtures/ke-reveal.png")
-            phase("import", base + ["--import"])
+            run("import", base + ["--import"])
             if args.core:
-                phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
-                phase("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
-                phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
+                run("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+                run("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
+                run("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
                       expected_failure=True)
                 environment["P1_TEST_SAVE_ROOT"] = str(workspace / "roundtrip-saves")
                 for stage in ("write", "read"):
-                    phase("roundtrip-" + stage, base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--" + stage],
+                    run("roundtrip-" + stage, base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--" + stage],
                           "P1_ROUNDTRIP_" + stage.upper() + "_OK")
                 environment.pop("P1_TEST_SAVE_ROOT")
-                phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
+                run("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
                 evidence.scope_done("core")
             vs2_future = None
             vs2_result = None
@@ -566,7 +566,7 @@ def main(argv: list[str] | None = None) -> int:
                         command = ["xvfb-run", "-a"] + command
                         vs2_environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
                     def vs2_phase(name, command, marker=None):
-                        return phase(name, command, marker, reporter=vs2_evidence, phase_env=vs2_environment)
+                        return run(name, command, marker, reporter=vs2_evidence, phase_env=vs2_environment)
                     try:
                         result = vs2_delivery.capture_current(vs2_project, workspace, output,
                                                              engine, command, vs2_environment, vs2_phase)
@@ -586,25 +586,25 @@ def main(argv: list[str] | None = None) -> int:
                 vs2_future = executor.submit(vs2_work)
             if args.integration:
                 evidence.scope_start("integration")
-                evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
+                evidence.report["integration"] = run_integration(output, workspace, environment, base, run, host)
                 selected += sorted((output / "integration").iterdir())
                 evidence.scope_done("integration")
             if args.catalog:
                 evidence.scope_start("catalog")
-                evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host, project)
+                evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, run, python_phase, host, project)
                 selected += kat2_files
                 evidence.scope_done("catalog")
             if args.completion:
                 evidence.scope_start("completion")
-                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, phase, python_phase, host, project)
+                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, run, python_phase, host, project)
                 selected += ea_files
                 evidence.scope_done("completion")
             if args.pilots:
                 evidence.scope_start("pilots")
-                evidence.report["pilots"] = run_pilots(workspace, environment, base, phase)
-                evidence.report["za1"], za1_files = za1_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
+                evidence.report["pilots"] = run_pilots(workspace, environment, base, run)
+                evidence.report["za1"], za1_files = za1_product.run(root, workspace, output, engine, environment, run, python_phase, host)
                 selected += za1_files
-                selected += run_pilot_visual(output, workspace, project, engine, environment, phase, host)
+                selected += run_pilot_visual(output, workspace, project, engine, environment, run, host)
                 evidence.scope_done("pilots")
             if args.visual:
                 evidence.scope_start("visual")
@@ -624,26 +624,26 @@ def main(argv: list[str] | None = None) -> int:
                 perf_env = environment.copy()
                 perf_env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(root / "tools/cell_atlas_reference.json"))
                 b_command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
-                             "--audio-driver", "Dummy", "--script", "res://tests/perf_b_probe.gd"]
+                             "--audio-driver", "Dummy"]
                 if host == "Linux":
                     b_command = ["xvfb-run", "-a"] + b_command
                     perf_env["LIBGL_ALWAYS_SOFTWARE"] = "1"
-                phase("perf-b-native", b_command, "PERF_B_PROBE_OK", phase_env=perf_env)
+                run("perf-b-native", b_command + ["--script", "res://tests/perf_b_probe.gd"], "PERF_B_PROBE_OK", phase_env=perf_env)
                 evidence.report["perf_b_native"] = json.loads((b_output / "probe.json").read_text())
                 selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
                 evidence.scope_done("perf_b")
             if args.export:
                 evidence.scope_start("export")
                 if restore_player_catalog(root, project):
-                    phase("player-content-import", base + ["--import"])
+                    run("player-content-import", base + ["--import"])
                 build = project / "build/windows"
                 build.mkdir(parents=True)
-                phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
+                run("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
                 evidence.report["content_pack"] = za1_product.audit_pack(root, engine, build / "picross-p1.exe", environment,
-                    phase, sum(e["visible"] for e in registry["entries"]), "player-content-pck")
+                    run, sum(e["visible"] for e in registry["entries"]), "player-content-pck")
                 if host == "Windows":
-                    phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
-                    phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
+                    run("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
+                    run("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
                           "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
                 evidence.scope_done("export")
             if args.export:

@@ -165,6 +165,7 @@ jobs:
             game/tests/book_integration.gd
             game/tests/help_cases.gd
             game/tests/help_native.gd
+            game/tests/native_png.gd
             game/tests/book-save-v1.json
             tools/p14_integration.py
             tools/native_artifacts.json

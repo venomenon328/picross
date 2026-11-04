@@ -529,6 +529,11 @@ class Pixels(unittest.TestCase):
             report=dict(checks=1001,failures=0,records=rows)
             self.assertEqual(verify(root,report),15)
             path=root/rows[0]['file'];original=path.read_bytes()
+            # HN binds raw RGBA sample bytes; this reader is intentionally not
+            # migrated to RGB. A format change cannot silently pass its gate.
+            with Image.open(path) as source:source.convert('RGB').save(path)
+            with self.assertRaisesRegex(ValueError,'readback'):verify(root,report)
+            path.write_bytes(original)
             for pixel,color in [((20,20),(220,210,200,255)),((20,2),(240,230,220,255)),
                                 ((20,20),(240,230,220,0))]:
                 with Image.open(path) as source:changed=source.copy()

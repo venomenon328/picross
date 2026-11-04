@@ -21,6 +21,48 @@ werden weiter gemessen. P3-A setzt keine globale 75-MiB-/10-Minuten-Grenze,
 ändert keine funktionalen Zeitfenster und erteilt keinen Browserauftrag. P2-C/P3-B bleiben
 separat; bestehende Produktprüfungen werden nicht rückwirkend nach Namen verboten.
 
+## Verlustfreie Originalkodierung · #502 / P2-C-V02
+
+`game/tests/native_png.gd` schreibt ausgewählte native Originale direkt beim
+Producer. Ausschließlich RGBA8 ohne Mipmaps wird auf einer Kopie nach RGB8 und
+zurück nach RGBA8 konvertiert. Nur bei vollständiger Bytegleichheit darf die
+RGB-Kopie in den bisherigen Godot-PNG-Writer gelangen. Alpha 254, weiche oder
+transparente Pixel behalten RGBA; andere Formate bleiben unverändert. Das
+gemessene Quellbild, Maße, Ausschnitte und RGBA-Hashes bleiben unberührt. Keine
+Quantisierung, Skalierung, Palette oder nachträgliche Umschreibung gebundener
+Originaldateien; keine zusätzliche Kompressionsstufe oder Bildproduktion.
+
+| Originalfamilie | Tatsächliche Producer | Leser, Pixelorakel und Gate |
+| --- | --- | --- |
+| Graphics Render-/V1-Flächen und Glyphen | `capture.gd`, `vs2_tests.gd`, `vs2_v1_tests.gd` | Native Vergleichs-/Geometrieassertions vor dem Schreiben; `vs2_delivery`, `vs2_v1_verify`, Captureberichte und originale SHA-/Inventarbindungen |
+| Graphics Vollhinweis / V2 / PERF-B | `hf149_probe.gd`, `vs2_v2_tests.gd`, `perf_b_probe.gd` | Native Pixel-/Cache-/Saveprüfungen; `hf149_verify`, `vs2_delivery.verify_v2`, PERF-Bericht und Originalhashes. Externe PCK-Proben laden den Encoder neben ihrem Skript; Tests bleiben außerhalb des PCK. |
+| Catalog Layout / HZ / KE | `kat2_probe.gd`, `hz_native.gd`, `ke_graphics.gd` | Unveränderte native Assertions; `native_images.crop_native` dekodiert KAT-RGBA erneut und prüft Maße/Quellhash, `validate_catalog_images` und `validate_catalog_originals` binden Originale und Inventar. KAT ersetzt den bisherigen strikten Alpha-Loop durch denselben exakten Vertrag. |
+| Catalog / Completion AT | `at_alpha.gd` | Importierte Alpha-Fixture, native Kompositionswerte und `at_evidence.native` lesen tatsächliche Bild-/Papierpixel einschließlich Weißdetails, Alpha 80 und transparentem Hintergrund. Der Standardbibliothek-Decoder unterstützt RGB und RGBA bereits. |
+| Completion statische und gepufferte Bewegungsframes | `ea_probe.gd` | Native Commit-/Save-/Restart-/Zeit-/Geometrieassertions; `ea_product.prepare_images` behält die tatsächlichen Zeitstempel, fünf abgeleitete Phasen und APNG. Kodierung der gepufferten Bewegung erfolgt weiterhin erst nach dem Zeitfenster. |
+| Export sieben HIL-Flächen | `help_native.gd` | Native Hilfe-/Save-/Recoveryassertions; `book_contract.SOURCES` bindet zusätzlich den Encoder, auch im Sparse-Checkout des unabhängigen `validate_book_lifecycle`. Originalmaße 1920×1080, Dateihashes, Assertions und Pack-/Exportgates bleiben Pflicht. |
+
+Unverändert bleiben HN-Samples (`hn192_probe`/`hn_evidence`: rohe RGBA-Hashbindung),
+HC92/HS186, Zeichnungs-/Zeitfolgen aus ZS1/ZS2, bereits RGB-kodierte V3-Originale,
+RP6/ZA-1, separate PCK-/Fensterproben und sämtliche Produkt-/Reveal-/Atlasassets.
+Die APNG wird nicht neu optimiert. `Evidence.retain_files`, `native_artifacts.json`,
+`native_contract.py` und `native_results.py` behalten ihre exakten Original-,
+Alias-, Quellen-, Zeit-, Save-/Recovery- und Exportanforderungen. Der gemeinsame
+neue Testpfad wählt konservativ alle nativen Gruppen; kein Chromiumauftrag.
+Fehlende/manipulierte Pflichtdaten scheitern weiter unabhängig. Kleine native
+PNG-Puffer-Gegenproben über alle 256 Alphawerte laufen im bestehenden Coreprozess,
+ohne zusätzliche Dateien oder Prozesse; der HN-Gegentest verwirft auch RGB-Samples.
+
+Die begrenzte Untersuchung verwendet den tatsächlichen V01-Erfolg aus
+[Run 41851661750](https://github.com/venomenon328/picross/actions/runs/41851661750),
+Versuch 1: 147.554.626 Archivbytes, 555/624 physische/logische Dateien,
+366/435 PNGs und 914,310 s native Gesamtdauer. Alle 366 statischen Originale
+wurden in der einmaligen A/B-Probe mit vollständigem RGBA-/Maßvergleich geprüft;
+eine zusätzliche 15-Bild-ABBA-Probe misst CPU, Wandzeit, Spitzenspeicher und ZIP.
+Pillow-Stufen 1/3/6 rechtfertigten keine zusätzliche Rekodierung. Vollständige
+Istwerte, Producergrenzen, lokale Befristung und finaler CI-Vergleich gehören in
+V02-T01 am tatsächlichen Head/Run. Keine Behauptung eines kausalen CI-Zeitgewinns
+aus verschiedenen Runnern; 75 MiB bleibt Richtwert, P3-B bleibt separat.
+
 ## Phasenschutz · #502 / P3-A-F02
 
 Die [Eigentümerentscheidung vom 04.11.2026](https://github.com/venomenon328/picross/pull/506#issuecomment-6631521834)
