@@ -596,7 +596,7 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("catalog")
             if args.completion:
                 evidence.scope_start("completion")
-                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
+                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, phase, python_phase, host, project)
                 selected += ea_files
                 evidence.scope_done("completion")
             if args.pilots:
