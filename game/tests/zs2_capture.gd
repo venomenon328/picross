@@ -117,6 +117,16 @@ func rework_motion(marker: String = "x") -> void:
 		empty_sample()
 		app.board.restore_view(view_state)
 		var rendered: Array[int] = [0]
+		# Keep draw, presentation-clock and readback times distinct. In particular,
+		# the production clock stops being called once the effect has expired.
+		# Buffer only timestamps here; serialize after the real animation window.
+		var trace: Array = []
+		var on_draw: Callable = func() -> void:
+			trace.append(["draw", Time.get_ticks_usec(), rendered[0], app.board.effects.has(21)])
+		var on_post: Callable = func() -> void:
+			trace.append(["post", Time.get_ticks_usec(), rendered[0], app.board.effects.has(21)])
+		app.board.marks.transitions.draw.connect(on_draw)
+		RenderingServer.frame_post_draw.connect(on_post)
 		app.board.animation_clock = func() -> int:
 			rendered[0] = Time.get_ticks_usec()
 			return rendered[0]
@@ -147,14 +157,19 @@ func rework_motion(marker: String = "x") -> void:
 				app.board.marks.queue_redraw()
 				# Capture this frame without adding another process-frame wait.
 				await RenderingServer.frame_post_draw
+			trace.append(["read-before", Time.get_ticks_usec(), rendered[0], app.board.effects.has(21)])
 			pictures.append(surface.get_texture().get_image())
+			trace.append(["read-after", Time.get_ticks_usec(), rendered[0], app.board.effects.has(21)])
 			live.append({"file": prefix + "-live-%02d.png" % i, "elapsed_ms": float(rendered[0] - began) / 1000.0})
+		app.board.marks.transitions.draw.disconnect(on_draw)
+		RenderingServer.frame_post_draw.disconnect(on_post)
 		check(not app.board.is_processing(), "real-time X ends without callback")
 		for i: int in range(pictures.size()):
 			pictures[i].get_region(crop).save_png(output.path_join(live[i].file))
 		var sequences: Array = rework_sequences if marker == "x" else fill_sequences
 		sequences.append({"cell_size": pitch, "blank": blank,
 			"crop": [crop.position.x, crop.position.y, crop.size.x, crop.size.y], "controlled": controlled,
+			"timing_trace": {"began_usec": began, "columns": ["event", "wall_usec", "last_animation_clock_usec", "effect_active"], "events": trace},
 			"live": live, "clock": "Time.get_ticks_usec sampled by production draw", "native_scale": "1:1"})
 	app.board.animation_clock = Time.get_ticks_usec
 

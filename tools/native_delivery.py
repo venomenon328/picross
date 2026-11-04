@@ -5,7 +5,7 @@ from pathlib import Path
 import shutil
 
 from native_contract import GROUPS
-from native_results import bind_files, read, safe, verify_file
+from native_results import bind_files, read, safe, verify_file, validate_image_alias
 from p1_evidence import native_failure_sources, source_identity
 
 
@@ -71,6 +71,32 @@ def stage(output, destination, outcome, identity):
     validation_groups = set((result or {}).get('validation_groups', []))
     if (result or {}).get('validation_group'):
         validation_groups.add(result['validation_group'])
+    # Alias validation precedes group oracles. Recheck the actual bindings,
+    # without reconstructing files or relying on a producer-supplied group.
+    aliases = []
+    physical = {r['file']: r for r in (result or {}).get('files', [])}
+    names = set(physical)
+    def image_group(name):
+        source(technical, name)
+        group = name.split('/')[0]
+        if group not in (result or {}).get('groups', []) or not name.endswith('.png'):
+            raise ValueError('Invalid diagnostic image group/type')
+        return group
+
+    for alias in (result or {}).get('image_aliases', []):
+        group, valid = None, False
+        try:
+            group = image_group(alias['file'])
+            image_group(alias['source'])
+            validate_image_alias(technical, alias, physical, names)
+            valid = True
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            diagnostics.setdefault('alias_failures', []).append(dict(alias=alias, error=str(error)))
+            if group:
+                validation_groups.add(group)
+        if isinstance(alias, dict) and isinstance(alias.get('file'), str):
+            names.add(alias['file'])
+        aliases.append((alias, group, valid))
     if (result or {}).get('validation_error') and not validation_groups:
         # Inventory validation can fail before an oracle is entered. Preserve
         # the damaged/missing originals' group, without accepting extra files.
@@ -138,16 +164,19 @@ def stage(output, destination, outcome, identity):
         except (OSError, ValueError, KeyError, TypeError) as error:
             issues.append(group + ': ' + str(error))
     # Alias originals may physically live in another group after validation failed.
-    for alias in (result or {}).get('image_aliases', []):
-        target = alias.get('file', '')
-        if any(r['diagnostics'] and target.startswith(r['group'] + '/') for r in diagnostics['groups']):
+    for alias, group, valid in aliases:
+        if not valid or any(r['diagnostics'] and group == r['group'] for r in diagnostics['groups']):
             try:
                 name = alias['source']
-                if not target.endswith('.png') or not name.endswith('.png'):
-                    raise ValueError('Invalid diagnostic image alias')
-                source(technical, name)
-                verify_file(technical, dict(file=name, bytes=alias['bytes'], sha256=alias['sha256']))
-                copy(technical, name, target)
+                image_group(name)
+                # A broken alias does not authorize reads. Only a separately
+                # bound physical PNG may be delivered, under its true name;
+                # never fabricate a valid logical alias from mismatched data.
+                verify_file(technical, physical[name])
+                with source(technical, name).open('rb') as stream:
+                    if stream.read(8) != b'\x89PNG\r\n\x1a\n':
+                        raise ValueError('Invalid diagnostic PNG source')
+                copy(technical, name, alias['file'] if valid else name)
             except (OSError, ValueError, KeyError, TypeError) as error:
                 issues.append(str(error))
     diagnostics['files'] = bind_files(destination)

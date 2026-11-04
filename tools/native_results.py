@@ -63,6 +63,18 @@ def deduplicate_images(root):
     return aliases
 
 
+def validate_image_alias(root, row, physical, names):
+    """Check one binding without reconstructing or accepting a payload."""
+    name, source = row['file'], row['source']
+    safe(root, name)
+    safe(root, source)
+    if (set(row) != {'file','source','bytes','sha256'} or name in names
+            or source not in physical or not name.endswith('.png') or not source.endswith('.png')
+            or any(row[k] != physical[source][k] for k in ('bytes','sha256'))):
+        raise ValueError('Invalid/duplicate/chained native image alias')
+    verify_file(root, physical[source])
+
+
 @contextmanager
 def original_images(root, inventory, aliases):
     """Reconstruct exact original paths only during independent verification."""
@@ -71,14 +83,8 @@ def original_images(root, inventory, aliases):
         raise ValueError('Duplicate native physical inventory')
     names = set(physical)
     for row in aliases:
-        name,source = row['file'],row['source']
-        safe(root,name)
-        safe(root,source)
-        if (set(row) != {'file','source','bytes','sha256'} or name in names
-                or source not in physical or not name.endswith('.png') or not source.endswith('.png')
-                or any(row[k] != physical[source][k] for k in ('bytes','sha256'))):
-            raise ValueError('Invalid/duplicate/chained native image alias')
-        verify_file(root,physical[source])
+        validate_image_alias(root, row, physical, names)
+        name = row['file']
         names.add(name)
     created = []
     try:
