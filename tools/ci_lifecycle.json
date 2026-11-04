@@ -101,7 +101,7 @@
         },
         "tools/p1_product.py": {
           "before": "6e80ac152b864bcc8c53187e92929459f30b225b",
-          "after": "6038ae66f52c165cdd3cff0bdcf40c0342e9f8c9"
+          "after": "8e88aa13818d44f8e7ef8e55d3be19a1e9866da3"
         },
         "tools/test_p1_product.py": {
           "before": "e2d6371c7e7d3b36c55fc8c1459797734b9c1078",
@@ -179,7 +179,62 @@
         "bytes": 4096,
         "pngs": 0
       },
-      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save/process budgets unchanged. Targeted diagnostic traces remain local, outside permanent CI.",
+      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save/process budgets unchanged. Targeted diagnostic traces remain local, outside permanent CI. F01-D03 also exposes the unchanged drawing-capture command at the executable reader; positional caller and arguments remain identical.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
+    },
+    {
+      "id": "p3-a-f01-draw-observation",
+      "kind": "permanent-small",
+      "purpose": "F01-D03: retain the first completed nonzero production atlas frame instead of discarding it at a pre-draw sampling deadline",
+      "level": "Maintenance of the existing native current-drawing-capture; unchanged three live frames and independent pixel oracles",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / package P3-A implementer",
+      "sources": {
+        "game/tests/zs2_capture.gd": {
+          "before": "360124bb4c8596457d5a5f5d18d648613422e55f",
+          "after": "13924857d081e924e70acb5c245982198544671f"
+        }
+      },
+      "readers": [
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "\"res://tests/zs2_capture.gd\"",
+          "sources": [
+            "game/tests/zs2_capture.gd"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": false,
+          "preflight": false,
+          "integration": false,
+          "pilots": false,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": false
+        },
+        "native_groups": [
+          "core",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 0.01,
+        "wall_seconds": 0.01,
+        "files": 0,
+        "bytes": 0,
+        "pngs": 0
+      },
+      "coverage": "Native 12/24/36px X and fill captures retain production input, clock, renderer, dimensions and three readbacks. Existing X windows 0<t<105, 105<t<210 and t>=210, spatial ink, controlled pixel/negative controls and final context remain unchanged. No animation, timeout, worker pool, scheduler or CI selection change. Temporary frame/CPU diagnostics are local only.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -188,9 +243,9 @@
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle.",
+    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle. D03 maintains the existing capture observation; no additional permanent test or native invocation.",
     "removed": "No current product tests or required evidence removed.",
     "temporary": [],
-    "cost_change": "Estimate: original <=3 s Docs guard plus <=2 s F01 regression, unchanged native modes/images and 300 s phase timeout. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate."
+    "cost_change": "Estimate: original <=3 s Docs guard plus <=2 s F01 regression, unchanged native modes/images and 300 s phase timeout. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate. D03 estimate <=0.01 s for atlas-frame observation, no additional files/readbacks/PNGs; measured isolated/parallel diagnostics and final CI are recorded in T01."
   }
 }

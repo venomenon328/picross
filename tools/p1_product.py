@@ -281,7 +281,7 @@ def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[s
 
 
 def run_visual(output: Path, workspace: Path, project: Path, engine: str,
-               environment: dict, phase, python_phase, host: str) -> tuple[dict, list[Path]]:
+               environment: dict, run_phase, python_phase, host: str) -> tuple[dict, list[Path]]:
     renders = output / "renders"
     renders.mkdir(exist_ok=True)
     environment["P1_CAPTURE_DIR"] = str(renders)
@@ -297,7 +297,7 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         reports = []
         for stage in RENDER_STAGES:
             environment["P1_RENDER_STAGE"] = stage
-            phase("render-" + stage, command, "P1_CAPTURE_OK")
+            run_phase("render-" + stage, command, "P1_CAPTURE_OK")
             report = json.loads((renders / f"render-report-{stage}.json").read_text(encoding="utf-8"))
             if (report.get("failed") or report.get("compact") is not True
                     or report["rendered_count"] < 1
@@ -314,13 +314,15 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         # Current contrast, tooltip blocking and recovery layout assertions.
         # No Z2 historical project, comparison or archive is produced.
         z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
-        phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
+        run_phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
         current = output / "drawing-renders"
         current.mkdir()
         environment["P1_CAPTURE_DIR"] = str(current)
         environment["ZS2_VARIANT"] = "after"
-        current_command = ["res://tests/zs2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
-        phase("current-drawing-capture", current_command, "ZS2_CAPTURE_OK")
+        # Bind the unchanged native command at its executable lifecycle reader.
+        run_phase("current-drawing-capture",
+                  ["res://tests/zs2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command],
+                  "ZS2_CAPTURE_OK")
         motion = python_phase("current-drawing-pixel-oracles",
                               lambda: p1_current_visual.verify_regular_motion(Path(__file__).resolve().parents[1], current))
         (current / "current-drawing-report.json").write_text(json.dumps(motion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
