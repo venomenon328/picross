@@ -103,6 +103,7 @@ def stage(output, destination, outcome, identity):
         for path in sorted(directory.rglob('*')):
             if path.suffix in {'.json', '.gz', '.log'}:
                 copy(technical, path.relative_to(technical).as_posix())
+        phase, selected = '', []
         try:
             report = read(source(directory, 'product-report.json'))
             selected = report.get('selected_evidence', {}).get('files', [])
@@ -113,12 +114,19 @@ def stage(output, destination, outcome, identity):
                     copy(directory / 'selected', entry['file'], group + '/selected/' + entry['file'])
             phase = report.get('active_phase') or next(
                 (r['name'] for r in reversed(report.get('checks', [])) if r.get('status') != 'success'), '')
-            if phase == 'current-vs2-complete':
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            issues.append(group + ': ' + str(error))
+        if phase == 'current-vs2-complete':
+            try:
                 worker = read(source(directory, 'vs2-worker/technical/product-report.json'))
                 phase = worker.get('active_phase') or next(
                     (r['name'] for r in reversed(worker.get('checks', [])) if r.get('status') != 'success'), phase)
+            except (OSError, ValueError, KeyError, TypeError) as error:
+                issues.append(group + ': ' + str(error))
+        try:
             raw = output / 'groups' / group
-            reports, priority = native_failure_sources(raw, phase)
+            nominated = [safe(raw, r['file']) for r in selected if r.get('failure_priority')]
+            reports, priority = native_failure_sources(raw, phase, nominated)
             # Recover partial originals if the process died before retain_files.
             for path in reports:
                 if path.suffix == '.json' or path in priority:
