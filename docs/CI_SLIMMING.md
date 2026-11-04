@@ -221,8 +221,13 @@ und befristete Einführungs-/Abnahmenachweise sind getrennt zu erklären.
 Featureabschluss/T01 weist hinzugefügte/entfernte Tests, befristeten Rest und
 tatsächliche Kostenänderung aus; eine schwere neue Dauerpflicht benötigt eine
 separate gebundene Eigentümerentscheidung. Kein automatischer Nachlauf alter Studien.
-Der vorhandene P2-B-Stand verfehlt weiterhin zehn Minuten und den 75-MiB-Richtwert;
-P3-A aktiviert keine globale Größen-/Zeitgrenze und ersetzt weder P2-C noch P3-B.
+Die P2-B-Messungen bleiben historisch. [P3-B-D01](https://github.com/venomenon328/picross/issues/502#issuecomment-6641721279)
+verwirft den früheren 75-MiB-Richtwert und feste Byte-/Datei-/PNG-Gesamtgrenzen.
+P3-B-L01 liefert zweckgebundene Fehlerdiagnostik statt vollständiger Techniktrees.
+Erforderliche aktuelle Erfolgspayloads bleiben vollständig. Technische Laufbelege
+verfallen nach sieben Tagen, ausgewählte Spielerpakete nach vierzehn; temporäre
+Featurebelege enden bei konkreter Abnahme/Review oder Ablauf. Historie bleibt
+über PR/Commit erreichbar. CI2-Laufzeitziele und Prozess-Hangschutz bleiben separat.
 HIL-F01 und der separate Workflowauftrag bleiben für blockierte lokale Daten
 maßgeblich; daraus folgt keine Löschbefugnis oder pauschale Abschlussausnahme.
 

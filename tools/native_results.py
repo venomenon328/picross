@@ -171,14 +171,20 @@ def validate_payload(result, root, player_root=None):
     with original_images(root,inventory,aliases):
         reconstruction_seconds = time.monotonic()-reconstruction_began
         expanded = dict(result, files=inventory+[{k:v for k,v in row.items() if k!='source'} for row in aliases])
-        summary = validate_original_payload(expanded,root,player_root)
+        context = {}
+        try:
+            summary = validate_original_payload(expanded, root, player_root, context)
+        except (ValueError, OSError, KeyError, TypeError) as error:
+            error.native_group = context.get('group')
+            raise
     return dict(summary, files=len(inventory), bytes=sum(r['bytes'] for r in inventory),
                 logical_files=len(inventory)+len(aliases), shared_original_pngs=len(aliases),
                 reconstruction_seconds=round(reconstruction_seconds,6),
                 total_validation_seconds=round(time.monotonic()-began,6))
 
 
-def validate_original_payload(result, root, player_root=None):
+def validate_original_payload(result, root, player_root=None, failure_context=None):
+    failure_context = failure_context if failure_context is not None else {}
     groups = result['groups']
     if (result.get('format') != 'picross-native-result-v1' or result['status'] != 'success'
             or groups != [g for g in GROUPS if g in groups] or not groups
@@ -197,6 +203,7 @@ def validate_original_payload(result, root, player_root=None):
     isolation_roots = set()
     verification_times = {}
     for group in groups:
+        failure_context['group'] = group
         group_began = time.monotonic()
         directory = root/group
         report = read(directory/'product-report.json')
@@ -288,6 +295,7 @@ def validate_original_payload(result, root, player_root=None):
             native(directory/'selected/ea', read(directory/'selected/ea/native.json'), ('final','reopen','blend'))
         verification_times[group] = round(time.monotonic()-group_began,6)
     if 'export' in groups:
+        failure_context['group'] = 'export'
         player_began = time.monotonic()
         if player_root is None:
             raise ValueError('Selected export requires delivered player bytes')
