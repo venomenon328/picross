@@ -142,4 +142,4 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
     write_json(directory/"import-copies.json", reuse)
     summary = dict(format="picross-kat2-product-v1", test_only=True, reports=reports)
     write_json(directory / "summary.json", summary)
-    return summary, sorted(p for p in directory.iterdir() if not p.name.endswith("-context.png"))
+    return summary, sorted(directory.iterdir())
