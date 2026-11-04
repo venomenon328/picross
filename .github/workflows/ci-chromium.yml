@@ -70,6 +70,13 @@ jobs:
       - name: Materialize sources for code and documentation checks
         if: steps.scope.outputs.content_only != 'true'
         run: git sparse-checkout disable
+      - name: Enforce test lifecycle and feature closeout
+        if: steps.scope.outputs.content_only != 'true'
+        env:
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
+          CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/ci_lifecycle.py --base "$CI_BASE" --head "$CI_HEAD" --output "$RUNNER_TEMP/ci-lifecycle.json"
       - name: Fast tool contracts and CI gate regression
         if: steps.scope.outputs.content_only != 'true'
         run: python3 -m unittest discover -s tools -p 'test_*.py' -v
@@ -87,6 +94,7 @@ jobs:
           path: |
             ${{ runner.temp }}/ci-plan.json
             ${{ runner.temp }}/ci-growth.json
+            ${{ runner.temp }}/ci-lifecycle.json
           if-no-files-found: warn
           retention-days: 7
 

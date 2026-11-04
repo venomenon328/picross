@@ -10,6 +10,7 @@ import os
 import platform
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -105,16 +106,47 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
         import resource
         usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
     path = logs / f"{name}.log"
+    # P3-A-F02: only KK may finish after the standard 300s boundary.
+    warning_seconds = 300 if name == "kat2-kk" else None
+    timeout = 600 if name == "kat2-kk" else timeout
+    warning_emitted = False
     timed_out = False
     with path.open("wb") as stream, import_settings(command):
-        try:
-            process = subprocess.run(command, env=environment, stdout=stream,
-                                     stderr=subprocess.STDOUT, timeout=timeout, check=False)
-            exit_code = process.returncode
-        except subprocess.TimeoutExpired:
-            timed_out = True
-            exit_code = None
-            stream.write(f"\n{name} exceeded {timeout}s\n".encode())
+        # xvfb-run waits for Godot: killing only the wrapper leaves the engine
+        # writing into a project/profile which the caller is about to remove.
+        grouped = platform.system() == "Linux"
+        with subprocess.Popen(command, env=environment, stdout=stream,
+                              stderr=subprocess.STDOUT, start_new_session=grouped) as process:
+            try:
+                if warning_seconds is None:
+                    exit_code = process.wait(timeout=timeout)
+                else:
+                    waiting_started = time.monotonic()
+                    try:
+                        exit_code = process.wait(timeout=warning_seconds)
+                    except subprocess.TimeoutExpired:
+                        warning_emitted = True
+                        warning = f"WARNING: {name} reached {warning_seconds}s; continuing with {timeout}s hard timeout"
+                        stream.write(("\n" + warning + "\n").encode())
+                        stream.flush()
+                        print(warning, flush=True)
+                        # Warning/logging time consumes the same hard budget.
+                        remaining = max(0, timeout - (time.monotonic() - waiting_started))
+                        exit_code = process.wait(timeout=remaining)
+            except BaseException as error:
+                if grouped:
+                    try:
+                        os.killpg(process.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                else:
+                    process.kill()
+                process.wait()
+                if not isinstance(error, subprocess.TimeoutExpired):
+                    raise
+                timed_out = True
+                exit_code = None
+                stream.write(f"\n{name} exceeded {timeout}s\n".encode())
     output = path.read_bytes().decode("utf-8", errors="replace")
     costs = dict(software_render_threads=environment.get("LP_NUM_THREADS"),
                  display=environment.get("DISPLAY"))
@@ -131,6 +163,8 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
                 process_role='import' if '--import' in command else 'export' if '--export-debug' in command else 'version' if '--version' in command else 'game',
                 rendered='--headless' not in command and '--version' not in command,
                 seconds=round(time.monotonic() - started, 3), timed_out=timed_out,
+                timeout_seconds=timeout, warning_seconds=warning_seconds,
+                warning_emitted=warning_emitted,
                 process_costs=costs,
                 log=bound_log(path))
 
@@ -267,7 +301,7 @@ def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[s
 
 
 def run_visual(output: Path, workspace: Path, project: Path, engine: str,
-               environment: dict, phase, python_phase, host: str) -> tuple[dict, list[Path]]:
+               environment: dict, run_phase, python_phase, host: str) -> tuple[dict, list[Path]]:
     renders = output / "renders"
     renders.mkdir(exist_ok=True)
     environment["P1_CAPTURE_DIR"] = str(renders)
@@ -283,7 +317,7 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         reports = []
         for stage in RENDER_STAGES:
             environment["P1_RENDER_STAGE"] = stage
-            phase("render-" + stage, command, "P1_CAPTURE_OK")
+            run_phase("render-" + stage, command, "P1_CAPTURE_OK")
             report = json.loads((renders / f"render-report-{stage}.json").read_text(encoding="utf-8"))
             if (report.get("failed") or report.get("compact") is not True
                     or report["rendered_count"] < 1
@@ -300,13 +334,15 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         # Current contrast, tooltip blocking and recovery layout assertions.
         # No Z2 historical project, comparison or archive is produced.
         z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
-        phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
+        run_phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
         current = output / "drawing-renders"
         current.mkdir()
         environment["P1_CAPTURE_DIR"] = str(current)
         environment["ZS2_VARIANT"] = "after"
-        current_command = ["res://tests/zs2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
-        phase("current-drawing-capture", current_command, "ZS2_CAPTURE_OK")
+        # Bind the unchanged native command at its executable lifecycle reader.
+        run_phase("current-drawing-capture",
+                  ["res://tests/zs2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command],
+                  "ZS2_CAPTURE_OK")
         motion = python_phase("current-drawing-pixel-oracles",
                               lambda: p1_current_visual.verify_regular_motion(Path(__file__).resolve().parents[1], current))
         (current / "current-drawing-report.json").write_text(json.dumps(motion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -474,7 +510,7 @@ def main(argv: list[str] | None = None) -> int:
                                        args.process_timeout_seconds, reporter.logs)
                     result["required_marker"] = marker
                     if result["timed_out"]:
-                        raise toolchain.PreflightError(f"{name} exceeded {args.process_timeout_seconds}s")
+                        raise toolchain.PreflightError(f"{name} exceeded {result['timeout_seconds']}s")
                     if expected_failure:
                         toolchain.require_expected_failure(result, "P1_EXPECTED_FAILURE")
                         if result["exit_code"] != 23 or "SCRIPT ERROR:" in result["output"] or "ERROR:" in result["output"]:

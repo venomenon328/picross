@@ -99,16 +99,22 @@ func rework_motion(marker: String = "x") -> void:
 		var pictures: Array[Image] = []
 		for i: int in range(3):
 			# Three actual rendered instants; no dense readback/PNG sequence.
-			# The first atlas frame can still be empty just after commit. Sample
-			# within each visible stroke phase, then the settled frame.
-			var target_ms: int = [30,105,230][i]
-			while Time.get_ticks_usec()-began < target_ms*1000:
-				await process_frame
-			app.board.marks.queue_redraw()
-			# The loop resumed in process_frame already. Capture that frame's
-			# completed draw; waiting for another frame can skip a whole stroke
-			# on software renderers. The production clock remains untouched.
-			await RenderingServer.frame_post_draw
+			if i == 0:
+				# Observe the completed production draw. A pre-draw 30ms wait can
+				# discard a visible early frame and spend the next stroke rendering
+				# and reading back its replacement under software-renderer load.
+				# Skip empty atlas frame zero; the pixel oracle still requires
+				# visible native ink and the unchanged real-time stroke windows.
+				await RenderingServer.frame_post_draw
+				while app.board.marks.Atlas.frame(rendered[0] - began) == 0:
+					await RenderingServer.frame_post_draw
+			else:
+				var target_ms: int = [105,230][i-1]
+				while Time.get_ticks_usec()-began < target_ms*1000:
+					await process_frame
+				app.board.marks.queue_redraw()
+				# Capture this frame without adding another process-frame wait.
+				await RenderingServer.frame_post_draw
 			pictures.append(surface.get_texture().get_image())
 			live.append({"file": prefix + "-live-%02d.png" % i, "elapsed_ms": float(rendered[0] - began) / 1000.0})
 		check(not app.board.is_processing(), "real-time X ends without callback")
