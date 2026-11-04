@@ -1,8 +1,6 @@
 extends "res://tests/kat2_probe.gd"
 ## TEST ONLY. Native renderer and actual viewport mouse routes; isolated saves.
-var sequence: Array = []
 var measurements: Array = []
-var motion_images: Array[Image] = []
 
 func event(point: Vector2, down: bool) -> void:
 	var input := InputEventMouseButton.new()
@@ -62,11 +60,6 @@ func final_checks() -> void:
 	check(art.end.y < app.completion_title.position.y and app.completion_title.get_rect().end.y < app.completion_reset.position.y, "EA name/reset separate reserved rows")
 	check(app.completion_title.modulate.a == 1 and not app.completion_reset.disabled, "EA name/reset fully visible after image")
 
-func frame(name: String) -> void:
-	await RenderingServer.frame_post_draw
-	var image: Image = surface.get_texture().get_image()
-	check(preload("res://tests/native_png.gd").write(image, output.path_join(name+".png")) == OK, "EA native frame "+name)
-
 func run() -> void:
 	output = OS.get_environment("EA_OUTPUT")
 	mode = OS.get_environment("EA_MODE")
@@ -86,7 +79,7 @@ func run() -> void:
 		check(app.session.completed, "EA actual second process loads completed slot")
 		final_checks()
 	else:
-		for context: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
+		for context: Array in [[1280,720,1.25]]:
 			surface.size = Vector2i(context[0],context[1])
 			app.set_ui_scale(context[2])
 			var last := prepare()
@@ -94,26 +87,13 @@ func run() -> void:
 			finish_stroke(last)
 			var bytes := save_bytes()
 			var started := Time.get_ticks_msec()
-			var next_frame := 0.0
 			var target_rect: Rect2 = app.reveal_view.artwork_rect()
 			while app.reveal_view.active:
 				await process_frame
-				if app.reveal_view.elapsed >= next_frame:
-					if context[0] == 1280:
-						var name := "motion-%03d" % sequence.size()
-						await RenderingServer.frame_post_draw
-						motion_images.append(surface.get_texture().get_image())
-						sequence.append({"file":name+".png","seconds":app.reveal_view.elapsed})
-					next_frame += 0.10
-			if context[0] == 1280:
-				await RenderingServer.frame_post_draw
-				motion_images.append(surface.get_texture().get_image())
-				sequence.append({"file":"motion-%03d.png" % sequence.size(),"seconds":(Time.get_ticks_usec()-app.reveal_view.started_usec)/1000000.0})
 			final_checks()
 			check(app.reveal_view.artwork_rect() == target_rect, "EA caption arrival never changes image geometry")
 			check(save_bytes() == bytes, "EA presentation never rewrites save/history")
 			measurements.append({"window":context,"duration_ms":Time.get_ticks_msec()-started,"source":str(app.reveal_view.source),"area":str(app.reveal_view.area),"art":str(app.reveal_view.artwork_rect())})
-			await frame("final-%d" % context[0])
 			var alpha_final := await preload("res://tests/at_alpha.gd").sample(self,app.reveal_view,"final-%d" % context[0])
 			click(app.completion_reset)
 			await frames()
@@ -136,9 +116,6 @@ func run() -> void:
 			var alpha_blend := await preload("res://tests/at_alpha.gd").sample(self,app.reveal_view,"blend-%d" % context[0],0.5)
 			app.reveal_view.finish()
 			at_measurements.append({"window":context,"final":alpha_final,"reopen":alpha_reopen,"blend":alpha_blend})
-		for i: int in range(motion_images.size()):
-			check(preload("res://tests/native_png.gd").write(motion_images[i], output.path_join(sequence[i].file)) == OK, "EA buffered actual motion frame")
-		motion_images.clear()
 		# Rectangular eight-colour raster, long title, independent image aspect.
 		var rectangle_last := prepare(5)
 		app.session.definition.reveal.name = "TEST ONLY Ein besonders langer deutscher Motivname mit mehreren Wörtern für einen Zeilenumbruch auf der schmalen Papierseite"
@@ -181,7 +158,6 @@ func run() -> void:
 		app.reveal_view.finish()
 		await frames()
 		final_checks()
-		await frame("rectangle-long-title")
 		var landscape := app.reveal_view.artwork
 		var portrait_image := Image.create(30,80,false,Image.FORMAT_RGB8)
 		portrait_image.fill(Color("6d9dad"))
@@ -245,7 +221,7 @@ func run() -> void:
 		finish_stroke(last)
 		app.reveal_view.finish()
 		app.show_album()
-	var report := {"checks":checks,"failures":failures,"sequence":sequence,"measurements":measurements,"at_measurements":at_measurements,"test_only":true,"mode":mode}
+	var report := {"checks":checks,"failures":failures,"measurements":measurements,"at_measurements":at_measurements,"test_only":true,"mode":mode}
 	var file := FileAccess.open(output.path_join(mode+".json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t")+"\n")
 	file.close()

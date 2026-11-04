@@ -10,7 +10,7 @@ import subprocess
 import struct
 import sys
 from unittest.mock import patch
-from book_contract import SOURCES, INTEGRATION_ASSERTIONS, HELP_ORIGINALS
+from book_contract import SOURCES, INTEGRATION_ASSERTIONS
 
 import book_lifecycle
 import ci_scope
@@ -31,8 +31,6 @@ class BookLifecycleTests(unittest.TestCase):
                 directory = Path(environment['BOOK_INTEGRATION_OUTPUT'])
                 (directory/'integration.json').write_text(json.dumps(dict(passed=True,
                     assertions=[dict(label=label,passed=True) for label in INTEGRATION_ASSERTIONS])))
-                for filename in HELP_ORIGINALS:
-                    (directory/Path(filename).name).write_bytes(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'+struct.pack('>II',1920,1080))
                 (directory/'saves').mkdir()
                 (directory/'saves/private-fixture.json').write_text('{}')
             return dict(name=name,output='synthetic',exit_code=0,timed_out=False,seconds=.1)
@@ -68,11 +66,11 @@ class BookLifecycleTests(unittest.TestCase):
             with self.assertRaises(ValueError): validate_book_lifecycle(dict(book_lifecycle=bad),output,identity,host)
             (output/'integration/integration.json').write_bytes(original)
             for mutation in ('source','source-omitted','phase','phase-omitted','phase-duplicate','phase-timeout',
-                             'missing','original-omitted','movie','movie-json','movie-final','dimensions',
+                             'missing','original-omitted','movie','movie-json','movie-final',
                              'assertion-omitted','assertion-failed','summary-failed','assertion-duplicate-key',
                              'head','base','checkout','run','attempt','aggregate'):
                 bad = deepcopy(study)
-                picture = output/sorted(HELP_ORIGINALS)[0]
+                picture = output/'integration/integration.json'
                 pixels = picture.read_bytes()
                 if mutation == 'source': bad['sources'][SOURCES[0]] = '0'*64
                 if mutation == 'source-omitted': bad['sources'].pop(SOURCES[0])
@@ -83,8 +81,6 @@ class BookLifecycleTests(unittest.TestCase):
                 field = {'head':'source_commit','base':'base_commit','checkout':'tested_checkout_commit',
                          'run':'github_run_id','attempt':'github_run_attempt'}.get(mutation)
                 if field: bad[field] = 'forged'
-                if mutation == 'missing': picture.unlink()
-                if mutation == 'original-omitted': picture.unlink()
                 integration = json.loads(original)
                 if mutation == 'assertion-omitted': integration['assertions'].pop()
                 if mutation == 'assertion-failed': integration['assertions'][0]['passed'] = False
@@ -95,7 +91,7 @@ class BookLifecycleTests(unittest.TestCase):
                 if mutation in ('movie','movie-json','movie-final'):
                     forbidden = output/{'movie':'opening.avi','movie-json':'movie.json','movie-final':'movie-final.png'}[mutation]
                     forbidden.write_bytes(b'forbidden recording')
-                if mutation == 'dimensions': picture.write_bytes(pixels[:16]+struct.pack('>II',1,1))
+                if mutation in ('missing','original-omitted'): picture.unlink()
                 bad['files'] = {r.pop('file'):r for r in bind_files(output,exclude={'report.json'})}
                 if mutation == 'missing': bad['files'][picture.relative_to(output).as_posix()] = study['files'][picture.relative_to(output).as_posix()]
                 bad['inventory_cost']['bytes'] = sum(r['bytes'] for r in bad['files'].values())

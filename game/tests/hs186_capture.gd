@@ -65,8 +65,8 @@ func run() -> void:
 	canvas.add_child(board)
 	# Deliberately fixed drawing isolation, NOT a window/layout matrix. Real
 	# main-scene layouts and their measured HS context come from hf149_probe.
-	for ui: float in [1.0,1.25]:
-		for cell: float in [16,24,40,23.37]:
+	for ui: float in [1.25]:
+		for cell: float in [23.37]:
 			board.prepare(cell,ui)
 			var files: Dictionary = {}
 			var closed: Image

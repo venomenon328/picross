@@ -17,7 +17,7 @@ import p1_preflight as tc
 from p1_product import run_phase, require_clean_output
 from product_fixtures import copy_regression_game
 from p1_evidence import source_identity
-from book_contract import SOURCES, HELP_ORIGINALS
+from book_contract import SOURCES
 
 
 def run_lifecycle(cache: Path, output: Path) -> dict:
@@ -55,14 +55,14 @@ def run_lifecycle(cache: Path, output: Path) -> dict:
         phase("import", ["--headless", *base, "--import"])
         phase("integration", [*base, "--rendering-driver", "opengl3", "--script",
               "res://tests/book_integration.gd", "--", "--p1-capture"], "BOOK_INTEGRATION_OK", True)
-        for name in sorted(HELP_ORIGINALS | {"integration/integration.json"}):
+        for name in sorted({"integration/integration.json"}):
             target = output / name
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(work/name, target)
     report["files"] = {p.relative_to(output).as_posix():dict(bytes=p.stat().st_size, sha256=tc.sha256_file(p))
                        for p in sorted(output.rglob("*")) if p.is_file()}
     report["inventory_cost"] = dict(files=len(report["files"]), bytes=sum(f["bytes"] for f in report["files"].values()),
-                                  pngs=len(HELP_ORIGINALS))
+                                  pngs=0)
     (output/"report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     return report
 

@@ -58,30 +58,7 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
     if bind_files(imported_base) != inventory:
         raise PreflightError("EA immutable imported base changed")
     reuse.update(base_unchanged=True, verification_seconds=time.perf_counter()-began)
-    summary, selected = python_phase("ea-image-processing", lambda: prepare_images(directory, reports))
+    summary = dict(test_only=True, reports=reports)
+    selected = sorted(directory.glob("*.json")) + sorted(directory.glob("at-*.png"))
     summary['import_reuse'] = reuse
     return summary, selected
-
-
-def prepare_images(directory, reports):
-    # Lossless animated PNG, actual native frames/timestamps; no interpolated art.
-    from PIL import Image
-    sequence = reports[0]["sequence"]
-    if len(sequence) < 10:
-        raise PreflightError("EA motion sequence is incomplete")
-    began = time.perf_counter()
-    frames = [Image.open(directory / frame["file"]).convert("RGB") for frame in sequence]
-    read_seconds = time.perf_counter()-began
-    durations = [max(1, round((b["seconds"]-a["seconds"])*1000)) for a,b in zip(sequence, sequence[1:])]+[1000]
-    began = time.perf_counter()
-    frames[0].save(directory / "motion.apng", save_all=True, append_images=frames[1:], duration=durations, loop=0, format="PNG")
-    write_seconds = time.perf_counter()-began
-    for frame in frames: frame.close()
-    image_costs = dict(input_frames=len(sequence), read_decode_seconds=read_seconds,
-        apng_write_seconds=write_seconds, output_bytes=(directory / "motion.apng").stat().st_size,
-        durations_ms=durations, format="picross-ea-image-costs-v1")
-    (directory / "image-costs.json").write_text(json.dumps(image_costs, indent=2)+"\n", encoding="utf-8")
-    # The APNG contains all frames. Keep only five additional static phase samples.
-    selected = {min(range(len(sequence)), key=lambda i:abs(sequence[i]["seconds"]-t)) for t in (0, .5, 1.1, 1.65, 2.15)}
-    retained = [directory / sequence[i]["file"] for i in sorted(selected)]
-    return dict(test_only=True, reports=reports, image_costs=image_costs, animation="motion.apng"), retained + sorted(directory.glob("final-*.png")) + sorted(directory.glob("rectangle-*.png")) + sorted(directory.glob("at-*.png")) + sorted(directory.glob("*.json")) + [directory / "motion.apng"]

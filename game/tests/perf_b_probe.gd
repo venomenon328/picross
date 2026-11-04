@@ -3,7 +3,6 @@ extends SceneTree
 ## independent of the runtime mapping, cache and vertex-color shader.
 const Store = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
-var native_png: Script
 var app: Control
 var output: String
 var failures: int = 0
@@ -24,7 +23,6 @@ class ReferenceInk extends Control:
 		if texture != null: draw_texture_rect_region(texture,target,source,Color.WHITE,false,true)
 
 func _initialize() -> void:
-	native_png = load(get_script().resource_path.get_base_dir().path_join("native_png.gd"))
 	call_deferred("run")
 func check(ok: bool, label: String) -> void:
 	checks += 1
@@ -126,7 +124,6 @@ func structural() -> void:
 	check(app.session.player.commit(changes),"valid dense synthetic history")
 	app.refresh()
 	await settle()
-	native_png.write(root.get_texture().get_image(), output.path_join("runtime-dense-t02.png"))
 	var before: Dictionary = app.board.marks.stats.duplicate()
 	var draws: Array[int] = draw_counts.duplicate()
 	for i: int in range(12):
@@ -265,7 +262,6 @@ func pictures() -> void:
 				await settle()
 				check(difference(capture(box),end)<=1.0,"palette restoration repairs cache")
 			if value!=0 and value!=1: continue
-			var strip: Image = Image.create(blank.get_width()*9,blank.get_height(),false,Image.FORMAT_RGBA8)
 			var column: int = 0
 			for elapsed: int in [-1,0,30000,75000,105000,150000,180000,209000,210000]:
 				clock_us=1000000+maxi(0,elapsed)
@@ -276,10 +272,8 @@ func pictures() -> void:
 				var expected_image: Image = await expected(blank,box,cell,value,210000 if elapsed<0 else elapsed,0.56 if elapsed<0 else 1.0)
 				error=difference(actual,expected_image)
 				check(error<=1.0,"regular temporal pixels no underpaint/fade/form jump "+str([zoom,value,elapsed,error]))
-				strip.blit_rect(actual,Rect2i(Vector2i.ZERO,actual.get_size()),Vector2i(column*actual.get_width(),0))
 				column+=1
 				samples.append({"zoom":zoom,"actual_cell":box.size.x,"value":value,"elapsed_us":elapsed,"mean_channel_error":error})
-			native_png.write(strip, output.path_join("runtime-%d-%d.png" % [zoom,value]))
 	app.board.animation_clock=Time.get_ticks_usec
 
 func run() -> void:
