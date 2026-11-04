@@ -1,6 +1,5 @@
-"""Independent V1 geometry/type acceptance and deliberately bad report controls."""
+"""Independent current geometry and typography mathematics."""
 from __future__ import annotations
-import copy
 import math
 from p1_preflight import PreflightError
 
@@ -113,56 +112,3 @@ def record(r):
 
 # Independent expected coverage; mirrors the approved scope, not generated reports.
 VISUAL_CONFIGURATIONS = ((1280, 720, 1.25), (1920, 1080, 1.0), (2560, 1440, 1.25))
-
-
-def verify_focused_coverage(focused):
-    expected = {(False, sheet, 1920, 1080, ui, mode, zoom)
-                for sheet in ("T-01", "VS04", "VS08", "VS09")
-                for ui in (1.0, 1.25) for mode in ("G", "V") for zoom in (24, 72)}
-    expected |= {(True, sheet, w, h, ui, mode, 0)
-                 for sheet in ("T-01", "T-02", "T-06")
-                 for w, h, ui in VISUAL_CONFIGURATIONS for mode in ("G", "V")}
-    actual = {(r['recovery'], r['id'], *r['client'], r['ui_scale'], r['mode'],
-               0 if r['recovery'] else r['requested_cell']) for r in focused['records']}
-    require(not focused['failures'] and len(focused['records']) == len(expected)
-            and actual == expected, 'focused and recovery coverage')
-
-
-def verify(matrix, focused):
-    verify_focused_coverage(focused)
-    for r in matrix['records']:
-        record(r['v1'])
-    for r in focused['records']:
-        record(r)
-    require({(g['ui_scale'],g['status']) for g in focused['glyphs']} == {(u,s) for u in (1,1.25) for s in range(3)}, 'native glyph/status coverage')
-    require(all(not g['clipped'] and not g['collisions'] for g in focused['glyphs']), 'glyph bounds')
-    for ui in (1,1.25):
-        require(len({g['sha256'] for g in focused['glyphs'] if g['ui_scale'] == ui}) == 3, 'three distinct rendered statuses')
-    # Apply failures to a REAL generous-case report, not a hand-built passing fixture.
-    source = next(r for r in focused['records'] if r['id']=='T-01' and r['ui_scale']==1 and not r['overview'] and not r['recovery'])
-    mutations = {
-        'inconsistent row pitch': lambda r: r.update(row_pitch=r['row_pitch']+2),
-        'smaller font': lambda r: r.update(font_px=r['font_px']-1),
-        'old left placement': lambda r: r.update(translation=[0,0]),
-        'empty reserve padding': lambda r: r.update(reserve=[r['max_hints'][0]+1,r['reserve'][1]]),
-        'grid-only translation': lambda r: r.update(rows=[0,*r['rows'][1:]],columns=[r['columns'][0],0,*r['columns'][2:]]),
-        'old group placement': lambda r: r.update(group_delta=[16,0]),
-        'jointly shifted lower groups': lambda r: r['sidebar_axes'].update(
-            frames=[v+16 for v in r['sidebar_axes']['frames']],controls=[v+16 for v in r['sidebar_axes']['controls']]),
-        'shifted actual controls': lambda r: r['sidebar_axes'].update(controls=[v+16 for v in r['sidebar_axes']['controls']]),
-        'shifted frames': lambda r: r['sidebar_axes'].update(frames=[v+16 for v in r['sidebar_axes']['frames']]),
-        'shifted upper reference': lambda r: r['sidebar_axes'].update(navigation=r['sidebar_axes']['navigation']+16,
-            navigation_buttons=[[b[0]+16,*b[1:]] for b in r['sidebar_axes']['navigation_buttons']],
-            frames=[v+16 for v in r['sidebar_axes']['frames']],controls=[v+16 for v in r['sidebar_axes']['controls']]),
-    }
-    rejected=[]
-    for name, mutate in mutations.items():
-        bad=copy.deepcopy(source)
-        mutate(bad)
-        try:
-            record(bad)
-        except PreflightError:
-            rejected.append(name)
-        else:
-            raise PreflightError('V1 negative control escaped: '+name)
-    return dict(matrix_records=len(matrix["records"]),focused_records=len(focused["records"]),glyph_status_images=6,negative_controls=rejected)

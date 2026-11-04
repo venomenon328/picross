@@ -1,5 +1,38 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## Aktueller Minimalumfang · #502 / P2-C-V03
+
+Die [ersetzende Eigentümerentscheidung](https://github.com/venomenon328/picross/issues/502#issuecomment-6637589747)
+und der [vollständige 435-Pflichten-Audit](P2_C_V03_AUDIT.md) ersetzen die unten
+historisch beschriebenen V02-/CI2-D-Bildmengen. Erfolgreiche Standardprüfungen
+liefern grundsätzlich keine Sichtbilder. Einzige aktuelle Rohpixelausnahmen:
+fünf AT-Kompositionssamples (je 5×2 RGB8) und fünf HN-Bandsamples (je 50×100 RGBA8),
+die das unabhängige Ergebnisgate selbst fachlich liest; Einzelzweck, Trigger,
+Kosten und Reviewfrist stehen im Audit. 423+5+7 ist ausschließlich die Baseline.
+
+HZ-/KE-/HC-Einführungsbilder, separate V1-/V3-/Z2-Läufe, ZS-Studienmatrix,
+EA-Film/Phasenbilder und HIL-Sichtdateien sind keine aktive Pflicht mehr.
+Die dazugehörige Produktion, Reader, Prozess-/Bildinventare und Gates entfallen.
+KAT/HF/V2/ZA1/RP6/PERF/Raster behalten ihre aktuellen Fach-/Pixel-/Saveassertions
+ohne Erfolgsbilder. Aktuelle Layoutmathematik nutzt die vorhandenen VS2-Messungen.
+HS liest fünf temporäre Layerbilder, ZS 24 temporäre Bewegungs-Crops; beide
+prüfen echte Originale und Pixelmutanten vor dem Löschen. Die Arbeitsmessung
+zählt diese konsumierten Daten weiterhin, unabhängig vom gelieferten Inventar.
+
+`native_contract.py`, `native_artifacts.json` und `native_results.py` bilden dieses
+neue Soll gemeinsam ab. Alle sieben Gruppen bleiben vorhanden; Änderungen an
+gemeinsamen Prüfquellen wählen weiterhin konservativ alle. Source/Head/Basis/Run/
+Versuch, Fachfehler, Save-/Recovery-/PCK-/Playerbytes und unabhängige AT/HN-Pixel
+bleiben fail-closed. Historische Aliasdateien werden nicht rekonstruiert, um alte
+Pflichten aufrechtzuerhalten. HIL-M01 und weitere persönliche Abnahmen bleiben offen;
+Einmalbelege nur auf konkreten Auftrag außerhalb der Regel-CI. Kein Chromium.
+
+Die folgenden Lieferbeschreibungen bleiben historische Quellen ihrer jeweiligen
+Revision, soweit sie alte Bilder, Reader, Mengen oder Einführungsprozesse nennen.
+Die 300-/KK-600-s-Grenzen, Scheduler und funktionalen Zeitfenster ändern sich nicht.
+75 MiB/<10 Minuten bleiben Ziele, P3-B folgt separat.
+
+
 ## Neue Prüfungen und Featureabschluss · #502 / P3-A
 
 Der [Lebenszyklusvertrag](CI_POLICY.md#testlebenszyklus-und-featureabschluss--502--p3-a)

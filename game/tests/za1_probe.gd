@@ -73,23 +73,6 @@ func shot(stage: String) -> void:
 					for entry: Dictionary in app.session.definition.palette:
 						if int(entry.id) == int(app.session.definition.solution[y][x]): expected = Color(entry.color)
 					check(image.get_pixelv(Vector2i(reveal.global_position+grid.position+Vector2(x+0.5,y+0.5)*step)).is_equal_approx(expected), "native solved raster cell/color")
-	var filename: String = OS.get_environment("ZA1_ID")+"-"+stage+".png"
-	var context_file: String = filename.trim_suffix(".png")+"-context.png"
-	check(image.save_png(output.path_join(context_file)) == OK, "local native context")
-	var area: Rect2
-	if earned:
-		var reveal: Control = app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))] if app.album.visible else app.reveal_view
-		area = Rect2(reveal.global_position+reveal.artwork_rect().position,reveal.artwork_rect().size)
-		if reveal.paired:
-			var grid: Rect2 = reveal.raster_rect()
-			var raster_file: String = filename.trim_suffix(".png")+"-raster.png"
-			check(image.get_region(Rect2i(reveal.global_position+grid.position,grid.size)).save_png(output.path_join(raster_file)) == OK,"native solved raster crop")
-			captures.append({"file":raster_file,"stage":stage,"crop":true,"ratio":ratio})
-	else:
-		var preview: Control = app.album_previews[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))] if app.album.visible else app.mini
-		area = Rect2(preview.global_position+preview.image_rect().position,preview.image_rect().size)
-	check(image.get_region(Rect2i(area)).save_png(output.path_join(filename)) == OK,"native relevant crop")
-	captures.append({"file":filename,"context_file":context_file,"stage":stage,"completed":earned,"native_size":[surface.size.x,surface.size.y],"crop":true,"crop_rect":[area.position.x,area.position.y,area.size.x,area.size.y],"ratio":ratio})
 
 func seed_old() -> void:
 	for index: int in [0,1,3]:

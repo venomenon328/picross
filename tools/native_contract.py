@@ -34,11 +34,10 @@ PATHS = {
     'tools/book_contract.py': GROUPS,
     'tools/book_lifecycle.py': GROUPS,
     'game/tests/book_windows_observer.gd': GROUPS,
-    # KAT-2's ke_graphics and RP6/ZA-1 exercise the real completion view too.
+    # KAT-2 and RP6/ZA-1 exercise the real completion view too.
     'game/ui/completion.gd': ('core', 'catalog', 'completion', 'adapters', 'graphics', 'export'),
     'tools/kat2_product.py': ('catalog',),
     'tools/test_kat2_product.py': ('catalog',),
-    'tools/native_images.py': ('catalog',),
     'tools/ea_product.py': ('completion',),
     'tools/p14_integration.py': ('history',),
     'tools/native_metrics.py': GROUPS,
@@ -86,14 +85,14 @@ def checks(group, host='Linux'):
         'core': ['tests', 'current-drawing-tests', 'expected-failure', 'roundtrip-write', 'roundtrip-read', 'controlled-start'],
         'history': ['integration-writer', 'integration-reader'],
         'catalog': ['kat2-'+mode for mode in CATALOG_MODES]+['kat2-pages-import','kat2-adapter-import','kat2-at-import','kat2-imported-base-copies']
-                   + ['kat2-adapter-export', 'kat2-adapter-register', 'kat2-image-processing'],
-        'completion': ['ea-import', 'ea-native', 'ea-restart', 'ea-image-processing'],
+                   + ['kat2-adapter-export', 'kat2-adapter-register'],
+        'completion': ['ea-import', 'ea-native', 'ea-restart'],
         'adapters': [f'rp6-t{n:02d}-{s}' for n in (4,6,8,9) for s in ('partial','finish','read','render')]
                     + ['rp6-t04-foreign-slot-write', 'rp6-t04-foreign-slot-control', 'za1-test-only-registration',
                        'za1-import', 'za1-save-recovery', 'za1-seed-old-slots', 'za1-windows-export', 'za1-pck-resources']
                     + [f'za1-pz-test-direct-{c}-{s}' for c in ('mono','color') for s in
                        (('partial','finish','read','reset') if c == 'mono' else ('partial','finish','read','oldreset','reset'))],
-        'graphics': ['current-vs2-complete', 'perf-b-native', 'retained-hc92-font-samples'],
+        'graphics': ['current-vs2-complete', 'perf-b-native'],
         'export': ['player-content-import', 'windows-export', 'player-content-pck', 'regular-book-integration'],
     }
     if host == 'Windows':
@@ -103,9 +102,9 @@ def checks(group, host='Linux'):
 
 
 WORKER_CHECKS = sorted(['vs2-roundtrip-write', 'vs2-roundtrip-read', 'vs2-gf1-tests',
-    'hf149-write', 'hf149-read', 'hf149-native', 'vs2-regular-matrix', 'vs2-v1-focused',
-    'vs2-v2-write', 'vs2-v2-read', 'vs2-v3-current', 'hc92-native-font-pixels',
-    'hs186-native-number-cross-pixels', 'hn192-native-input-cursor', 'current-book-capture',
+    'hf149-write', 'hf149-read', 'hf149-native', 'vs2-regular-matrix',
+    'vs2-v2-write', 'vs2-v2-read',
+    'hs186-native-number-cross-pixels', 'hn192-native-input-cursor',
     'current-drawing-capture', 'current-drawing-pixel-oracles']+
     ['render-'+s for s in ('layout','cells-f1','cells-f2','axis','h1')])
 

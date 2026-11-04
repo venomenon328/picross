@@ -10,7 +10,6 @@ var records: Array = []
 var app: Control
 var output: String
 var stage: String
-var native_png: Script
 
 func digest(bytes: PackedByteArray) -> String:
 	var hash: HashingContext = HashingContext.new()
@@ -24,7 +23,6 @@ func texture_digest(texture: Texture2D) -> String:
 	return digest(image.get_data())
 
 func _initialize() -> void:
-	native_png = load(get_script().resource_path.get_base_dir().path_join("native_png.gd"))
 	call_deferred("run")
 
 func check(ok: bool, label: String) -> void:
@@ -151,33 +149,6 @@ func geometry() -> void:
 							check(b.view.hit(b.view.cell_rect(cell).get_center()) == cell, "all four corners hit")
 						records.append({"kind":"slots", "axis":axis, "delta":delta, "size":[b.size.x,b.size.y], "dimensions":[dimensions.x,dimensions.y], "cell":b.view.cell_size, "ui":u, "pitch":[b.slot_pitch.x,b.slot_pitch.y], "minimum":[b.minimum_slots.x,b.minimum_slots.y], "reserve":[b.reserve_slots.x,b.reserve_slots.y], "demand":[b.max_hints.x,b.max_hints.y]})
 
-func dimensions(v: Vector2) -> Array:
-	return [v.x,v.y]
-
-func rect_values(r: Rect2) -> Array:
-	return [r.position.x,r.position.y,r.size.x,r.size.y]
-
-func hs_window_evidence(image: Image, requested: Vector2i) -> Dictionary:
-	var b: Control = app.board
-	check(image.get_size() == root.size and root.size == requested, "HS actual framebuffer equals requested client")
-	check(DisplayServer.window_get_size() == requested, "HS actual native window client equals framebuffer")
-	check(app.size == Vector2(root.size), "HS real main scene follows client resize")
-	var samples: Array = []
-	for axis: String in ["row","column"]:
-		var layout: Dictionary = b.visible_clue_layout(axis,0)
-		for unit: Dictionary in b.visual_hint_units(axis,0).units:
-			if unit.kind != "token": continue
-			var token: int = int(unit.index)
-			var entry: Dictionary = layout.entries[token]
-			var fs: int = b.clue_font_size()
-			var width: float = b.clue_font().get_string_size(entry.text,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x
-			var cross: float = b.view.origin.y+b.view.cell_size/2 if axis == "row" else b.view.origin.x+b.view.cell_size/2
-			var baseline: Vector2 = Vector2(unit.center-width/2,cross+b.clue_baseline_offset(fs)) if axis == "row" else Vector2(cross-width/2,unit.center+b.clue_baseline_offset(fs))
-			var box: Rect2 = b.glyph_box(entry.text,baseline,fs)
-			check(Rect2(Vector2.ZERO,b.size).encloses(box), "HS visible original token envelope inside real board")
-			samples.append({"axis":axis,"index":token,"text":entry.text,"status":b.clue_status(axis,0,token),"identity":b.clue_identity(axis,0,token),"box":rect_values(box)})
-	return {"requested_client":dimensions(Vector2(requested)),"client":dimensions(Vector2(DisplayServer.window_get_size())),"viewport":dimensions(Vector2(root.size)),"image_size":dimensions(Vector2(image.get_size())),"app_size":dimensions(app.size),"board_rect":rect_values(Rect2(b.global_position,b.size)),"composition":rect_values(b.composition_envelope()),"cell":b.view.cell_size,"fs":b.clue_font_size(),"pitch":dimensions(b.slot_pitch),"samples":samples}
-
 func captures() -> void:
 	var b: Control = app.board
 	for config: Vector3 in [Vector3(1280,720,1.25),Vector3(1920,1080,1),Vector3(2560,1440,1.25)]:
@@ -221,16 +192,10 @@ func captures() -> void:
 				for box: Rect2 in g.boxes:
 					check(not box.intersects(g.title_box) and box.position.y >= g.title_box.end.y+9*config.z, "measured heading/number gap")
 					check(Rect2(Vector2.ONE*g.padding,g.rect.size-Vector2.ONE*2*g.padding).grow(0.01).encloses(box), "all ink/contour/status inside safe padding")
-				var image: Image = root.get_texture().get_image()
-				var hs_window: Dictionary = hs_window_evidence(image,Vector2i(config.x,config.y))
-				var name: String = "hf-%d-%d-%s-z%d" % [config.x,roundi(config.z*100),axis,zoom]
-				var global_box: Rect2 = Rect2(b.global_position+g.rect.position,g.rect.size).grow(3)
-				native_png.write(image.get_region(Rect2i(global_box)), output.path_join(name+".png"))
-				if zoom == 72: native_png.write(image, output.path_join(name+"-scene.png"))
 				var entries: Array = b.tooltip_entries(axis,index)
 				var token_boxes: Array = []
 				for box: Rect2 in g.boxes: token_boxes.append([box.position.x,box.position.y,box.size.x,box.size.y])
-				records.append({"kind":"overlay", "file":name+".png", "scene_file":name+"-scene.png" if zoom == 72 else "", "hs_window":hs_window, "client":[root.size.x,root.size.y], "ui":config.z, "zoom":zoom, "axis":axis, "rows":g.rows, "font":b.clue_font().get_font_name(), "heading":b.ClueOverlay.title_font().get_font_name(), "fs":g.font_size, "title_fs":g.title_size, "rect":[g.rect.position.x,g.rect.position.y,g.rect.size.x,g.rect.size.y], "title_box":[g.title_box.position.x,g.title_box.position.y,g.title_box.size.x,g.title_box.size.y], "boxes":token_boxes, "tokens":entries.map(func(e:Dictionary)->String:return e.text), "statuses":statuses})
+				records.append({"kind":"overlay", "client":[root.size.x,root.size.y], "ui":config.z, "zoom":zoom, "axis":axis, "rows":g.rows, "font":b.clue_font().get_font_name(), "heading":b.ClueOverlay.title_font().get_font_name(), "fs":g.font_size, "title_fs":g.title_size, "rect":[g.rect.position.x,g.rect.position.y,g.rect.size.x,g.rect.size.y], "title_box":[g.title_box.position.x,g.title_box.position.y,g.title_box.size.x,g.title_box.size.y], "boxes":token_boxes, "tokens":entries.map(func(e:Dictionary)->String:return e.text), "statuses":statuses})
 				var before: int = app.session.player.cursor
 				var click: InputEventMouseButton = InputEventMouseButton.new()
 				click.position = g.rect.get_center()
@@ -248,7 +213,6 @@ func captures() -> void:
 		await process_frame
 		await RenderingServer.frame_post_draw
 		var g: Dictionary = b.tooltip_geometry()
-		native_png.write(root.get_texture().get_image().get_region(Rect2i(Rect2(b.global_position+g.rect.position,g.rect.size).grow(3))), output.path_join("hf-%d-single.png" % config.x))
 		# Stationary pointer no longer targets overflow after G -> V.
 		var point: Vector2 = Vector2(b.row_clue_area().get_center().x,b.view.origin.y+b.view.cell_size/2)
 		b.update_clue_hover(point)
@@ -276,9 +240,7 @@ func captures() -> void:
 		b.queue_redraw()
 		await process_frame
 		await RenderingServer.frame_post_draw
-		var name: String = "hf-rectangle-z%d.png" % wish
-		native_png.write(root.get_texture().get_image(), output.path_join(name))
-		records.append({"kind":"reported", "file":name, "wish":wish, "cell":b.view.cell_size, "reserve":[b.reserve_slots.x,b.reserve_slots.y], "demand":[b.max_hints.x,b.max_hints.y], "overlay":not b.clue_hover_axis.is_empty()})
+		records.append({"kind":"reported", "wish":wish, "cell":b.view.cell_size, "reserve":[b.reserve_slots.x,b.reserve_slots.y], "demand":[b.max_hints.x,b.max_hints.y], "overlay":not b.clue_hover_axis.is_empty()})
 	b.size = Vector2(100,100)
 	b._layout()
 	check(not b.layout_valid and b.clue_hover_axis.is_empty() and b.clue_tooltip_rect == Rect2(), "invalid geometry has no invisible overlay hit box")

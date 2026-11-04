@@ -1,7 +1,6 @@
 """Fail-closed native evidence gate. Standard library only; verify delivered bytes."""
 import hashlib
 import gzip
-import struct
 import json
 from pathlib import Path, PurePosixPath
 import re
@@ -11,7 +10,7 @@ import shutil
 import time
 
 from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, artifacts, checks, coverage
-from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS, HELP_ORIGINALS
+from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
 def unique(pairs):
     result = {}
     for key, value in pairs:
@@ -118,8 +117,8 @@ def check_phases(report, expected, directory):
         if row.get('exit_code') != expected_exit or bool(row.get('expected_failure')) != negative:
             raise ValueError('Incorrect native process outcome')
         python_checks = {'current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'kat2-adapter-export',
-                         'kat2-adapter-register', 'kat2-imported-base-copies', 'kat2-image-processing', 'ea-image-processing', 'za1-test-only-registration',
-                         'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles', 'regular-book-integration'}
+                         'kat2-adapter-register', 'kat2-imported-base-copies', 'za1-test-only-registration',
+                         'current-vs2-complete', 'current-drawing-pixel-oracles', 'regular-book-integration'}
         if ('log' in row) != (row['name'] not in python_checks):
             raise ValueError('Missing/unexpected native process log')
         if 'log' in row:
@@ -134,7 +133,7 @@ def check_phases(report, expected, directory):
 def validate_book_lifecycle(report, directory, identity, host):
     study = read(directory/'report.json')
     expected_phases = ['book-version', 'book-import', 'book-integration']
-    expected_files = HELP_ORIGINALS | {'integration/integration.json'} | {'logs/'+name+'.log' for name in expected_phases}
+    expected_files = {'integration/integration.json'} | {'logs/'+name+'.log' for name in expected_phases}
     source_root = Path(__file__).resolve().parents[1]
     if (report.get('book_lifecycle') != study or study.get('package') != 'HIL-1-T01'
             or study.get('scope') != 'help-and-product-lifecycle' or study.get('host') != host
@@ -154,50 +153,10 @@ def validate_book_lifecycle(report, directory, identity, host):
             or any(row.get('passed') is not True for row in integration['assertions'])
             or not INTEGRATION_ASSERTIONS <= {row.get('label') for row in integration['assertions']}):
         raise ValueError('Incomplete/failed targeted help assertions')
-    for name in HELP_ORIGINALS:
-        with (directory/name).open('rb') as stream: header = stream.read(24)
-        if (len(header) != 24 or header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
-                or struct.unpack('>II',header[16:24]) != (1920,1080)):
-            raise ValueError('Invalid targeted help original dimensions')
     cost = study.get('inventory_cost', {})
     if cost != dict(files=len(expected_files), bytes=sum(f['bytes'] for f in study['files'].values()),
-                    pngs=len(HELP_ORIGINALS)):
+                    pngs=0):
         raise ValueError('Incorrect targeted help inventory cost')
-
-
-def validate_catalog_images(costs, summary, required, direct_images):
-    """Separate Python crops from unchanged images already emitted by KE natively."""
-    expected_crops = [dict(file=Path(capture['file']).stem+'-'+name+'.png',
-                           source=capture['file'], region=rectangle)
-                      for report in summary['reports'] for capture in report['captures']
-                      for name,rectangle in capture['regions'].items()]
-    if (costs['status'] != 'success' or summary['image_costs'] != costs
-            or costs['input_frames'] != sum(len(r['captures']) for r in summary['reports'])
-            or costs['crops'] != len(expected_crops) or costs['entries'] != summary['crops']
-            or [{k:r[k] for k in ('file','source','region')} for r in costs['entries']] != expected_crops
-            or {'kat2/'+r['file'] for r in costs['entries']} | set(direct_images)
-               != {p for p in required if p.endswith('.png')}):
-        raise ValueError('Incomplete native image costs/crops')
-    captures = [c for report in summary['reports'] for c in report['captures']]
-    for capture, entry in zip(captures, costs['entries']):
-        if (capture.get('stored_region') != entry.get('stored_region')
-                or capture.get('stored_region') != entry['region']
-                or capture.get('framebuffer') != entry['source_size']
-                or any(not re.fullmatch('[0-9a-f]{64}', str(capture.get(key, '')))
-                       or capture.get(key) != entry.get(key)
-                       for key in ('source_rgba_sha256','stored_rgba_sha256'))):
-            raise ValueError('Native crop/source readback binding mismatch')
-
-
-def validate_catalog_originals(costs, directory):
-    for entry in costs['entries']:
-        path = safe(directory,entry['file'])
-        with path.open('rb') as stream: header = stream.read(24)
-        rect = entry['region']
-        if (entry.get('native_png') is not True or digest(path) != entry['source_sha256']
-                or len(header) != 24 or header[:16] != b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR'
-                or struct.unpack('>II',header[16:24]) != (rect[2]-rect[0],rect[3]-rect[1])):
-            raise ValueError('Delivered KAT-2 PNG differs from original native crop')
 
 
 def validate_payload(result, root, player_root=None):
@@ -276,13 +235,6 @@ def validate_original_payload(result, root, player_root=None):
                 raise ValueError('HN original/group report mismatch')
             verify_hn(directory/'selected/hn192', hn)
         required = set(artifacts(group))
-        if group == 'completion':
-            native = read(directory/'selected/ea/native.json')
-            sequence = native['sequence']
-            if len(sequence) < 10:
-                raise ValueError('Incomplete actual EA motion sequence')
-            indices = {min(range(len(sequence)), key=lambda i:abs(sequence[i]['seconds']-t)) for t in (0,.5,1.1,1.65,2.15)}
-            required.update('ea/'+sequence[i]['file'] for i in indices)
         selected = report['selected_evidence']['files']
         if sorted(r['file'] for r in selected) != sorted(required) or report['selected_evidence']['omitted']:
             raise ValueError('Missing/duplicate/unexpected mandatory files for '+group)
@@ -321,21 +273,7 @@ def validate_original_payload(result, root, player_root=None):
                            or r['bytes'] != reuse['base_bytes'] or r['seconds'] < 0
                            or not r['project'].replace('\\','/').startswith(workspace+'/kat2-') for r in copies)):
                 raise ValueError('Incomplete/changed/shared catalog imported base copies')
-            costs = read(directory/'selected/kat2/image-costs.json')
             summary = read(directory/'selected/kat2/summary.json')
-            validate_catalog_images(costs, summary, required,
-                                    read(Path(__file__).with_name('native_artifacts.json'))['catalog_direct_images'])
-            validate_catalog_originals(costs,directory/'selected/kat2')
-            if costs['comparison'] and any(r.get('identical') is not True for r in costs['entries']):
-                raise ValueError('Native PNG comparison failed')
-            for entry in costs['entries']:
-                if (not re.fullmatch('[0-9a-f]{64}', entry['source_sha256']) or
-                        len(entry['source_size']) != 2 or len(entry['region']) != 4):
-                    raise ValueError('Missing native input frame/region binding')
-                if costs['comparison'] and (entry['reference'] != entry['actual'] or
-                        entry['actual']['size'] != [entry['region'][2]-entry['region'][0],entry['region'][3]-entry['region'][1]]
-                        or entry.get('full_reference_identical') is not True):
-                    raise ValueError('Native comparison dimensions/RGBA disagree')
             if summary['reports'] != [read(directory/'selected/kat2'/(mode+'.json')) for mode in
                                       CATALOG_MODES]:
                 raise ValueError('Catalog original reports disagree with summary')
@@ -344,9 +282,6 @@ def validate_original_payload(result, root, player_root=None):
             from at_evidence import native
             native(directory/'selected/kat2', read(directory/'selected/kat2/at.json'), ('small','hover'))
         if group == 'completion':
-            costs = read(directory/'selected/ea/image-costs.json')
-            if report['ea']['image_costs'] != costs or costs['input_frames'] != len(sequence):
-                raise ValueError('EA image timing/sequence mismatch')
             if report['ea']['reports'] != [read(directory/'selected/ea'/(mode+'.json')) for mode in ('native','restart')]:
                 raise ValueError('EA group/original mismatch')
             from at_evidence import native

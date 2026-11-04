@@ -1,5 +1,13 @@
 # EA · Abschlussenthüllung (#170)
 
+**Aktueller CI-Umfang nach P2-C-V03 / #502:** Die hier gebundenen damaligen
+Liefer-/Bildnachweise bleiben historisch. Der [vollständige Audit](P2_C_V03_AUDIT.md)
+und [aktuelle native Minimalvertrag](CI_C_NATIVE_GROUPS.md) ersetzen ausschließlich
+die wiederkehrenden Prüf-/Bild-/Inventarpflichten. Aktuelle Fach-, Pixel-, Save-,
+Recovery- und Exportprüfungen bleiben; offene persönliche Abnahmen werden dadurch
+nicht erledigt. Kein historisches Bild wird allein wegen dieses Berichts erneut erzeugt.
+
+
 Vertrag: [vollständiges Issue #170 einschließlich Umsetzungsvorbereitung V1](https://github.com/venomenon328/picross/issues/170).
 Basis: KB aus PR #169 ist als `bdf22e5e226a058ce47d00cea59853ec2db01a8b`
 in main integriert. Der EA-Branch beginnt auf diesem Commit; kein Kopieren oder

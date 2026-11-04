@@ -1,5 +1,16 @@
 # Aktuelle CI-Policy
 
+**Aktualisierung P2-C-V03 / #502:** Die [Eigentümerentscheidung](https://github.com/venomenon328/picross/issues/502#issuecomment-6637589747)
+ersetzt historische Bild-/Abnahmewiederholungen durch den [Minimalvertrag](CI_C_NATIVE_GROUPS.md)
+und den [435-Pflichten-Audit](P2_C_V03_AUDIT.md). Keine Erfolgs-Sichtbilder;
+nur zehn dort einzeln begründete AT/HN-Rohpixeleingaben für das unabhängige Gate.
+HS-/ZS-Arbeitsbilder sind temporär; entfernte H-Familien werden auch nicht mehr
+ausgeführt. Offene persönliche Abnahmen bleiben offen. Die bisherigen CI2-D-/V02-
+Bildmengen sind historische Baselines, keine neue oder weiter geltende Pflicht.
+P3-A deklariert den tatsächlichen Rückbau und neue kleine Änderungen; er macht
+historische Prüfungen nicht zu dauerhaften Regressionen. Kein Chromium oder P3-B.
+
+
 Stand: 26.10.2026 · Version 3.3 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
 
 **P3-A-F02 / #502, Eigentümerentscheidung 04.11.2026:** Ausschließlich

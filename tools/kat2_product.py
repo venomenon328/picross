@@ -140,13 +140,6 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
                     base_unchanged=True, elapsed_seconds=time.monotonic()-began)
     reuse = python_phase("kat2-imported-base-copies", verified_copies)
     write_json(directory/"import-copies.json", reuse)
-    # Keep compact native images without repeating the large paper background.
-    # Full framebuffer originals remain local; crops preserve exact native pixels.
-    from native_images import crop_native
-    import os
-    crops, image_costs = python_phase("kat2-image-processing", lambda: crop_native(
-        directory, reports, compare=os.environ.get("P1_COMPARE_NATIVE_PNG") == "1"))
-    summary = dict(format="picross-kat2-product-v1", test_only=True, reports=reports,
-                   crops=crops, image_costs=image_costs, crop="Native control rectangles and one tight layout; no resizing. Full contexts remain local.")
+    summary = dict(format="picross-kat2-product-v1", test_only=True, reports=reports)
     write_json(directory / "summary.json", summary)
-    return summary, sorted(p for p in directory.iterdir() if not p.name.endswith("-context.png"))
+    return summary, sorted(directory.iterdir())

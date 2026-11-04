@@ -4,7 +4,7 @@ import hashlib
 import struct
 import zlib
 
-MATRIX = [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]
+MATRIX = [[1280,720,1.25]]
 BROWSER_MATRIX = [[1920,1080,1.0]]
 SAMPLES = {'outside': (0,0,0,0), 'white': (255,255,255,255),
            'hole': (0,0,0,0), 'soft': (56,132,90,80), 'ink': (56,132,90,255)}
@@ -60,19 +60,19 @@ def native(directory, report, kinds):
         for kind in kinds:
             item=row[kind]; w=row['window'][0]
             name='catalog' if kind=='small' else kind
-            require(item['file']==f'at-{name}-{w}.png' and item['background_file']==f'at-{name}-{w}-paper.png','original image names')
-            size,pixel=png(directory/item['file']); back_size,paper=png(directory/item['background_file'])
-            bounds=item['bounds']; require(list(size)==bounds[2:] and size==back_size,'original crop geometry')
+            require(item['file']==f'at-{name}-{w}.png','original image names')
+            size,pixel=png(directory/item['file'])
+            bounds=item['bounds']; require(size==(5,2),'minimal original composition samples')
             require(item['framebuffer']==row['window'][:2],'actual framebuffer')
             require([s['kind'] for s in item['samples']]==list(SAMPLES),'complete pixel samples')
-            for sample in item['samples']:
+            for index,sample in enumerate(item['samples']):
                 source=SAMPLES[sample['kind']]; actual_source=sample['source']
                 require(abs(actual_source[3]-source[3]/255)<.001 and (source[3]==0 or all(abs(actual_source[i]-source[i]/255)<.001 for i in range(3))),'imported RGBA')
                 opacity=.5 if kind=='blend' else 1
                 require(sample['opacity']==opacity,'actual reveal phase')
                 x,y=(sample['point'][i]-bounds[i] for i in (0,1))
-                require(0<=x<size[0] and 0<=y<size[1],'sample within original crop')
-                actual=pixel(x,y); background=paper(x,y); alpha=source[3]/255*opacity
+                require(0<=x<bounds[2] and 0<=y<bounds[3],'sample within original crop')
+                actual=pixel(index,0); background=pixel(index,1); alpha=source[3]/255*opacity
                 require(all(abs(actual[i]/255-sample['actual'][i])<.005 and abs(background[i]/255-sample['background'][i])<.005 for i in range(3)),'JSON differs from original pixels')
                 require(max(abs(actual[i]/255-(background[i]/255*(1-alpha)+source[i]/255*alpha)) for i in range(3))<=.035,'original alpha composition')
     return len(rows)*len(kinds)*len(SAMPLES)
@@ -100,7 +100,7 @@ def browser(directory, report, builds):
         require(item['revision']==revision and (0<item['opacity']<1 if blend else item['opacity']==1),'browser image phase/revision')
         require([s['kind'] for s in item['samples']]==list(SAMPLES),'browser pixel inventory')
         color=(56,132,90) if revision==1 else (174,85,52)
-        for sample in item['samples']:
+        for index,sample in enumerate(item['samples']):
             x,y=sample['point'];require(0<=x<size[0] and 0<=y<size[1],'browser pixel outside screenshot')
             actual=pixel(x,y);kind=sample['kind'];source=sample['source']
             require(list(actual)==sample['actual'],'browser pixels differ from original')

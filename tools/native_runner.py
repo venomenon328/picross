@@ -84,8 +84,6 @@ def run(args):
                    '--process-timeout-seconds', str(args.process_timeout_seconds),
                    '--download-timeout-seconds', str(args.download_timeout_seconds)]
         env = os.environ.copy()
-        if args.compare_native_png:
-            env['P1_COMPARE_NATIVE_PNG'] = '1'
         print('NATIVE GROUP START '+group, flush=True)
         with log.open('wb') as stream:
             completed = subprocess.run(command, env=env, stdout=stream, stderr=subprocess.STDOUT)
