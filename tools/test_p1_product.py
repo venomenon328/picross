@@ -1,8 +1,11 @@
 import tempfile
 import os
+import platform
+import signal
 import shutil
 import subprocess
 import sys
+import time
 import unittest
 import zipfile
 from pathlib import Path
@@ -15,6 +18,50 @@ from ci_scope import FLAGS, JOBS, classify, evaluate
 
 
 class ProductHarnessTests(unittest.TestCase):
+    @unittest.skipUnless(platform.system() == "Linux", "Linux wrapper process-group contract")
+    def test_phase_timeout_stops_descendants_and_preserves_unrelated_process(self):
+        from p1_product import run_phase
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            def alive(pid):
+                try:
+                    return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] not in {"Z", "X"}
+                except FileNotFoundError:
+                    return False
+            leaf = ("import os,pathlib,time; "
+                    f"pathlib.Path({str(root / 'leaf.pid')!r}).write_text(str(os.getpid())); "
+                    "time.sleep(60)")
+            child = ("import os,pathlib,subprocess,sys; "
+                     f"pathlib.Path({str(root / 'child.pid')!r}).write_text(str(os.getpid())); "
+                     f"subprocess.run([sys.executable, '-c', {leaf!r}])")
+            wrapper = f"import subprocess,sys; subprocess.run([sys.executable, '-c', {child!r}])"
+            # The kill scope must be this phase, even with another runner alive.
+            with subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"]) as unrelated:
+                try:
+                    result = run_phase("timeout-tree", [sys.executable, "-c", wrapper],
+                                       os.environ.copy(), 1, root)
+                    self.assertTrue(result["timed_out"])
+                    self.assertIsNone(result["exit_code"])
+                    self.assertIn("timeout-tree exceeded 1s", result["output"])
+                    self.assertIsNone(unrelated.poll())
+                    for name in ("child", "leaf"):
+                        pid = int((root / (name + ".pid")).read_text())
+                        deadline = time.monotonic() + 0.5
+                        while alive(pid) and time.monotonic() < deadline:
+                            time.sleep(0.01)
+                        self.assertFalse(alive(pid), f"{name} survived phase timeout")
+                finally:
+                    # Keep the negative case bounded if the regression returns.
+                    for name in ("child", "leaf"):
+                        pidfile = root / (name + ".pid")
+                        if pidfile.exists():
+                            try:
+                                os.kill(int(pidfile.read_text()), signal.SIGKILL)
+                            except ProcessLookupError:
+                                pass
+                    unrelated.kill()
+                    unrelated.wait()
+
     def test_import_setting_is_temporary_even_after_failed_process(self):
         from p1_product import run_phase
         with tempfile.TemporaryDirectory() as temporary:

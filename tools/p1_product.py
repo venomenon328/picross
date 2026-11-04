@@ -10,6 +10,7 @@ import os
 import platform
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -107,14 +108,27 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
     path = logs / f"{name}.log"
     timed_out = False
     with path.open("wb") as stream, import_settings(command):
-        try:
-            process = subprocess.run(command, env=environment, stdout=stream,
-                                     stderr=subprocess.STDOUT, timeout=timeout, check=False)
-            exit_code = process.returncode
-        except subprocess.TimeoutExpired:
-            timed_out = True
-            exit_code = None
-            stream.write(f"\n{name} exceeded {timeout}s\n".encode())
+        # xvfb-run waits for Godot: killing only the wrapper leaves the engine
+        # writing into a project/profile which the caller is about to remove.
+        grouped = platform.system() == "Linux"
+        with subprocess.Popen(command, env=environment, stdout=stream,
+                              stderr=subprocess.STDOUT, start_new_session=grouped) as process:
+            try:
+                exit_code = process.wait(timeout=timeout)
+            except BaseException as error:
+                if grouped:
+                    try:
+                        os.killpg(process.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                else:
+                    process.kill()
+                process.wait()
+                if not isinstance(error, subprocess.TimeoutExpired):
+                    raise
+                timed_out = True
+                exit_code = None
+                stream.write(f"\n{name} exceeded {timeout}s\n".encode())
     output = path.read_bytes().decode("utf-8", errors="replace")
     costs = dict(software_render_threads=environment.get("LP_NUM_THREADS"),
                  display=environment.get("DISPLAY"))
