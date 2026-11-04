@@ -1,17 +1,32 @@
 """EA native motion/geometry/input and independent process restart evidence."""
 import json
+import hashlib
+import shutil
 import time
 from pathlib import Path
 
-from product_fixtures import copy_regression_game
 from p1_preflight import PreflightError
+from native_results import bind_files
 
 
-def run(root, workspace, output, engine, environment, phase, python_phase, host):
+def copy_imported_base(base, project):
+    """Copy immutable inputs, never share a writable project or a save profile."""
+    began = time.perf_counter()
+    inventory = bind_files(base)
+    shutil.copytree(base, project)
+    if bind_files(project) != inventory:
+        raise PreflightError("EA imported base copy differs")
+    return inventory, dict(base_sha256=hashlib.sha256(
+        json.dumps(inventory, sort_keys=True).encode()).hexdigest(),
+        files=len(inventory), bytes=sum(row['bytes'] for row in inventory),
+        copy_seconds=time.perf_counter()-began)
+
+
+def run(root, workspace, output, engine, environment, phase, python_phase, host, imported_base):
     directory = output / "ea"
     directory.mkdir()
     project = workspace / "ea/game"
-    copy_regression_game(root, project)
+    inventory, reuse = copy_imported_base(imported_base, project)
     from web_tests.fixtures import adapt
     adapt(project)
     from at_fixtures import install
@@ -40,7 +55,13 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host)
         if report["failures"] or not report["checks"]:
             raise PreflightError("EA native assertions failed")
         reports.append(report)
-    return python_phase("ea-image-processing", lambda: prepare_images(directory, reports))
+    began = time.perf_counter()
+    if bind_files(imported_base) != inventory:
+        raise PreflightError("EA immutable imported base changed")
+    reuse.update(base_unchanged=True, verification_seconds=time.perf_counter()-began)
+    summary, selected = python_phase("ea-image-processing", lambda: prepare_images(directory, reports))
+    summary['import_reuse'] = reuse
+    return summary, selected
 
 
 def prepare_images(directory, reports):

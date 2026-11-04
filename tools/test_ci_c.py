@@ -598,6 +598,32 @@ class Pixels(unittest.TestCase):
                 with self.subTest(change=change),self.assertRaisesRegex(ValueError,'pixels/dimensions'):
                     crop_native(bad,[dict(captures=[record])])
 
+    def test_native_rgb_crop_keeps_rgba_binding_and_rejects_lost_alpha(self):
+        try:
+            from PIL import Image
+        except ImportError:
+            self.skipTest('Isolated Product image dependency')
+        import hashlib
+        from native_images import crop_native
+        from native_results import validate_catalog_originals
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for alpha in (255, 254, 80, 0):
+                directory = root / str(alpha)
+                directory.mkdir()
+                rgba = Image.new('RGBA', (3, 2), (56, 132, 90, alpha))
+                rgba.convert('RGB').save(directory / 'native.png')
+                record = dict(file='native.png', regions={'layout':[0,0,3,2]},
+                              framebuffer=[3,2], stored_region=[0,0,3,2],
+                              source_rgba_sha256=hashlib.sha256(rgba.tobytes()).hexdigest(),
+                              stored_rgba_sha256=hashlib.sha256(rgba.tobytes()).hexdigest())
+                if alpha == 255:
+                    _, costs = crop_native(directory, [dict(captures=[record])])
+                    validate_catalog_originals(costs, directory)
+                else:
+                    with self.subTest(alpha=alpha), self.assertRaisesRegex(ValueError, 'pixels/dimensions'):
+                        crop_native(directory, [dict(captures=[record])])
+
     def test_lossless_crop_and_negative_rgba_alpha_dimension_controls(self):
         try:
             from PIL import Image
