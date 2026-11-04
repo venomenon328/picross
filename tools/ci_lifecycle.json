@@ -105,7 +105,7 @@
         },
         "tools/test_p1_product.py": {
           "before": "e2d6371c7e7d3b36c55fc8c1459797734b9c1078",
-          "after": "4a2612a0eafa1ad0f73def8ee0ba5413abf68ac5"
+          "after": "13b78c4c7bfec5e2809d939f7ae4cac2db5b41df"
         },
         "tools/kat2_product.py": {
           "before": "150ecdf5975623eb2d7b490b61adbe99dfdacdf6",
@@ -179,7 +179,7 @@
         "bytes": 4096,
         "pngs": 0
       },
-      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save/process budgets unchanged. Targeted diagnostic traces remain local, outside permanent CI. F01-D03 also exposes the unchanged drawing-capture command at the executable reader; positional caller and arguments remain identical.",
+      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save/process budgets unchanged. Targeted diagnostic traces remain local, outside permanent CI. F01-D03 also exposes the unchanged drawing-capture command at the executable reader; positional caller and arguments remain identical. The same process-tree test covers procfs disappearance at open (ENOENT) and read (ESRCH), while permission errors still fail; no timeout or liveness assertion is relaxed.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
