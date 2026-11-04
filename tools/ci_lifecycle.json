@@ -389,10 +389,6 @@
           "before": "4e10d284230e1d6f6bb9ee8f03309c64cf921aeb",
           "after": "1b5b2c9c19f835bdeccf2bb2760ce945a63f900d"
         },
-        "game/tests/zs2_capture.gd": {
-          "before": "13924857d081e924e70acb5c245982198544671f",
-          "after": "75d9e7b922b90f1ae66d544fe0d7dcf527e75697"
-        },
         "tools/at_evidence.py": {
           "before": "d2f80ca7b41239d5e9b315eaf5f34b1515fa7a0a",
           "after": "365a26cc34df80be6c237a9fef3904d20ab0e25d"
@@ -588,13 +584,6 @@
           "anchor": "run_phase(\"za1-seed-old-slots\", command + [\"--script\",\"res://tests/za1_probe.gd\",\"--\",\"--p1-capture\"], \"ZA1_PROBE_OK\",phase_env=env)",
           "sources": [
             "game/tests/za1_probe.gd"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "run_phase(\"current-drawing-capture\",\n                  command + [\"--script\", \"res://tests/zs2_capture.gd\", \"--\", \"--p1-capture\", \"--ci-compact\"],\n                  \"ZS2_CAPTURE_OK\")",
-          "sources": [
-            "game/tests/zs2_capture.gd"
           ]
         },
         {
@@ -811,8 +800,8 @@
     {
       "id": "p3-b-l01-delivery",
       "kind": "permanent-small",
-      "purpose": "Current native failure selection and unchanged independent success delivery; no new heavy phase or render work",
-      "level": "Existing standard-library runner and Docs tests; temporary synthetic filesystem inputs",
+      "purpose": "Current native failure selection including pre-oracle aliases; unchanged independent success delivery; distinguish ZS2 draw/clock/readback timing in the existing report",
+      "level": "Existing standard-library Docs tests and existing 24px ZS2 invocation; in-memory timestamps only, serialized after the live window; no new process, image or evidence file",
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / P3-B-L01 implementer",
       "sources": {
@@ -822,11 +811,11 @@
         },
         "tools/native_delivery.py": {
           "before": null,
-          "after": "429db8be8284fbd739c58805f11d062070a65773"
+          "after": "8822f4fd83cedc3f551a74505fe34ddc7c94aeca"
         },
         "tools/test_native_delivery.py": {
           "before": null,
-          "after": "168f92ee24d22ed6c1549331643260c806ce84cb"
+          "after": "b67c612525fe4b480a7b1443b5616696a11c0802"
         },
         "tools/native_runner.py": {
           "before": "33565a9c77940a2621e29ddf05b54764d30b318d",
@@ -834,11 +823,15 @@
         },
         "tools/native_results.py": {
           "before": "a514719c0a79fb3a92f5a33f789f5c3bbf4cd7a7",
-          "after": "11567796646cb7e571f9be6998033a55001815d2"
+          "after": "3d0400f79a179e6ad371da484b79a20ae139fdd9"
         },
         "tools/p1_evidence.py": {
           "before": "298cde74cb447acefd26fc76c70789a742898513",
           "after": "60e652969a0873e6ce71c367a8f1db79fc8a43b3"
+        },
+        "game/tests/zs2_capture.gd": {
+          "before": "75d9e7b922b90f1ae66d544fe0d7dcf527e75697",
+          "after": "a0125f7efa4b61723c9b814df543bb3d0e58124f"
         }
       },
       "readers": [
@@ -883,6 +876,13 @@
           "sources": [
             "tools/p1_evidence.py"
           ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "run_phase(\"current-drawing-capture\",\n                  command + [\"--script\", \"res://tests/zs2_capture.gd\", \"--\", \"--p1-capture\", \"--ci-compact\"],\n                  \"ZS2_CAPTURE_OK\")",
+          "sources": [
+            "game/tests/zs2_capture.gd"
+          ]
         }
       ],
       "selection": {
@@ -919,10 +919,10 @@
         "cpu_seconds": 3,
         "wall_seconds": 3,
         "files": 1,
-        "bytes": 16384,
+        "bytes": 32768,
         "pngs": 0
       },
-      "coverage": "Small synthetic positive/negative delivery and workflow retention cases, using existing gate fixtures. No new native process, PNG production or permanent evidence. One diagnostic status replaces unrelated successful group trees only on failures; required success inventory unchanged. Estimates concern added checks/status only, not total delivery sizes. Full measured CI/T01 and separate self-review in PR; independent P3-B-L01-R01 before merge.",
+      "coverage": "Small synthetic positive/negative delivery and workflow retention cases, using existing gate fixtures. No new native process, PNG production or permanent evidence. One diagnostic status replaces unrelated successful group trees only on failures; required success inventory unchanged. Estimates concern added checks/status only, not total delivery sizes. Full measured CI/T01 and separate self-review in PR; independent P3-B-L01-R01 before merge. F01 adds three small alias regression methods (including unsafe sources and Linux symlinks), sharing the unchanged validator predicate. ZS2 trace adds only diagnostic timestamps to the current report; existing real-time/pixel acceptance and process budgets are unchanged. The source moves from its previous lifecycle record; no historical regression is rerun.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -931,7 +931,7 @@
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P3-B-L01 small synthetic delivery/retention regressions in existing Docs discovery; no new heavy phase, job or PNG.",
+    "added": "P3-B-L01 small synthetic delivery/retention regressions in existing Docs discovery; no new heavy phase, job or PNG. F01: three alias regression methods and draw/readback timing metadata in the existing ZS2 JSON; no new artifact class.",
     "removed": "No current product regression removed. Failure uploader no longer retains successful unrelated group payloads.",
     "temporary": [],
     "cost_change": "Estimated added cheap tests/status at most 3 CPU/wall seconds; existing success bytes unchanged and failed delivery purpose-selected. Actual measured times, files/bytes and retained originals in L01-T01. Technical CI 7 days, players 14 days. No new historical archive or local blocked-data cleanup."

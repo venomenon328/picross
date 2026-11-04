@@ -966,6 +966,14 @@ werden nur Status, relevante fehlgeschlagene Gruppen-/Phasenberichte, vollständ
 Prozesslogs und betroffene Originale geliefert; erfolgreiche andere Gruppen
 stehen im Status statt mit vollständigem Dateibaum. Fehlende Teilberichte bleiben
 ehrliche Diagnosebefunde. Fehlerartefakte sind keine erfolgsfähigen Belege. Fehlermarker werden am vollständigen Log geprüft; Logs werden nicht bytebedingt gekürzt. Abgebrochene Phasen bleiben als solche sichtbar.
+Auch vor Eintritt in einen Fachgruppenreader fehlgeschlagene Bildaliasbindungen
+werden unabhängig im Stager geprüft. Die Diagnose nennt Alias und Zielgruppe;
+eine sichere physische PNG-Quelle aus einer anderen Gruppe wird nur einzeln und
+bei fehlerhafter Aliasbindung unter ihrem tatsächlichen Pfad geliefert.
+Der bestehende ZS2-Bericht unterscheidet Draw-/Post-Draw-Ereignisse, die letzte
+Produktionsanimationsuhr und Beginn/Ende der drei Readbacks. Diese Zeitspur wird
+im Speicher gesammelt und erst nach dem Animationsfenster geschrieben; sie
+ersetzt weder Originalpixel noch die unveränderten Zeitfensterprüfungen.
 Laufzeitziele werden erst durch neue Messungen als erreicht ausgewiesen;
 Warteschlangenzeit und Runnerzeit werden getrennt betrachtet.
 

@@ -4,8 +4,10 @@ import json
 import os
 from pathlib import Path
 import shutil
+import struct
 import tempfile
 import unittest
+import zlib
 
 from native_contract import GROUPS
 from native_delivery import stage
@@ -15,6 +17,16 @@ from native_results import bind_files, digest, read, validate_all, validate_payl
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value) + '\n', encoding='utf-8')
+
+
+def write_png(path):
+    def chunk(kind, data):
+        return (struct.pack('>I', len(data)) + kind + data +
+                struct.pack('>I', zlib.crc32(kind + data)))
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(b'\x89PNG\r\n\x1a\n' +
+                     chunk(b'IHDR', struct.pack('>IIBBBBB', 1, 1, 8, 2, 0, 0, 0)) +
+                     chunk(b'IDAT', zlib.compress(b'\0\x10\x20\x30')) + chunk(b'IEND', b''))
 
 
 class Delivery(unittest.TestCase):
@@ -160,13 +172,90 @@ class Delivery(unittest.TestCase):
         self.result.update(validation_group='graphics', validation_error='original pixel mismatch',
                            image_aliases=[dict(file='graphics/selected/case/aliased.png',
                                                source='catalog/selected/shared.png')])
-        write(self.technical/'catalog/selected/shared.png', {'original': True})
         original = self.technical/'catalog/selected/shared.png'
+        write_png(original)
         self.result['image_aliases'][0].update(bytes=original.stat().st_size, sha256=digest(original))
         self.deliver()
         self.assertTrue((self.destination/'graphics/selected/case/earlier.png').is_file())
         self.assertTrue((self.destination/'graphics/selected/case/aliased.png').is_file())
         self.assertFalse((self.destination/'catalog/product-report.json').exists())
+
+    def test_early_alias_hash_failure_retains_target_logs_and_physical_source(self):
+        # Every process and physical binding is valid. The real validator fails
+        # before entering any group oracle, so no validation_group is supplied.
+        original = self.technical/'catalog/selected/shared.png'
+        write_png(original)
+        self.result.update(status='success', image_aliases=[dict(
+            file='graphics/selected/case/alias.png', source='catalog/selected/shared.png',
+            bytes=original.stat().st_size, sha256='0'*64)])
+        self.result['files'] = bind_files(self.technical)
+        with self.assertRaisesRegex(ValueError, 'native image alias') as caught:
+            validate_payload(self.result, self.technical)
+        self.assertFalse(getattr(caught.exception, 'native_group', None))
+        self.result.update(status='failure', validation_error=str(caught.exception))
+        result = self.deliver()
+        self.assertFalse(result['accepted'])
+        self.assertEqual([r['group'] for r in result['groups'] if r['diagnostics']], ['graphics'])
+        self.assertTrue((self.destination/'graphics-process.log').is_file())
+        self.assertTrue((self.destination/'graphics/product-report.json').is_file())
+        self.assertEqual((self.destination/'catalog/selected/shared.png').read_bytes(), original.read_bytes())
+        self.assertFalse((self.destination/'catalog/product-report.json').exists())
+        self.assertFalse((self.destination/'graphics/selected/case/alias.png').exists())
+        self.assertEqual(result['alias_failures'][0]['alias'], self.result['image_aliases'][0])
+
+    def test_early_alias_errors_cannot_authorize_unbound_or_unsafe_sources(self):
+        cases = [dict(bytes=1), dict(source='catalog/selected/missing.png'),
+                 dict(source='graphics/selected/case/alias.png'),
+                 dict(source='../outside.png'), dict(source='catalog/../../outside.png'),
+                 dict(file='../escaped.png'), dict(source='catalog/product-report.json'),
+                 dict(source='catalog/selected/unlisted.png'), dict(file='catalog/selected/shared.png')]
+        for index, mutation in enumerate(cases):
+            with self.subTest(mutation=mutation):
+                output = self.root/('alias-case-%d' % index)
+                shutil.copytree(self.technical, output/'technical')
+                tech = output/'technical'
+                original = tech/'catalog/selected/shared.png'
+                write_png(original)
+                alias = dict(file='graphics/selected/case/alias.png',
+                             source='catalog/selected/shared.png', bytes=original.stat().st_size,
+                             sha256=digest(original))
+                alias.update(mutation)
+                result = dict(self.result, status='success', image_aliases=[alias], files=bind_files(tech))
+                # An existing but unlisted PNG must not be read based on an alias.
+                if mutation.get('source') == 'catalog/selected/unlisted.png':
+                    write_png(tech/'catalog/selected/unlisted.png')
+                with self.assertRaises((ValueError, OSError, KeyError, TypeError)) as caught:
+                    validate_payload(result, tech)
+                result.update(status='failure', validation_error=str(caught.exception))
+                write(tech/'native-result.json', result)
+                destination = output/'delivery'
+                report = stage(output, destination, 'failure', self.identity)
+                self.assertFalse(report['accepted'])
+                self.assertTrue(report['alias_failures'])
+                self.assertFalse((destination/'catalog/selected/unlisted.png').exists())
+                self.assertFalse((destination/'graphics/selected/case/alias.png').exists())
+                self.assertFalse((output/'escaped.png').exists())
+
+    def test_alias_source_symlink_is_rejected_even_with_matching_physical_hash(self):
+        original = self.root/'outside.png'
+        write_png(original)
+        link = self.technical/'catalog/selected/shared.png'
+        link.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.symlink(original, link)
+        except OSError:
+            self.skipTest('Host does not permit creating symlinks')
+        self.result.update(status='success', image_aliases=[dict(
+            file='graphics/selected/alias.png', source='catalog/selected/shared.png',
+            bytes=original.stat().st_size, sha256=digest(original))])
+        self.result['files'] = bind_files(self.technical)
+        with self.assertRaises(ValueError) as caught:
+            validate_payload(self.result, self.technical)
+        self.result.update(status='failure', validation_error=str(caught.exception))
+        report = self.deliver()
+        self.assertTrue(report['alias_failures'])
+        self.assertFalse((self.destination/'graphics/selected/alias.png').exists())
+        self.assertFalse((self.destination/'catalog/selected/shared.png').exists())
 
     def test_wrong_identity_is_not_reused_and_cannot_be_staged_as_success(self):
         for field in ('source_commit','base_commit','tested_checkout_commit','github_run_id','github_run_attempt'):
