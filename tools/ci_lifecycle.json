@@ -395,7 +395,7 @@
         },
         "game/tests/zs2_capture.gd": {
           "before": "13924857d081e924e70acb5c245982198544671f",
-          "after": "5cea4b042d14415b37276fda2158475fc33f8886"
+          "after": "75d9e7b922b90f1ae66d544fe0d7dcf527e75697"
         },
         "tools/at_evidence.py": {
           "before": "d2f80ca7b41239d5e9b315eaf5f34b1515fa7a0a",
