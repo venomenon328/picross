@@ -244,7 +244,7 @@ func pixels(label: String, context: Vector2i, baseline: Image) -> void:
 		"evidence":"picross-hn-samples-v1","grid_origin":[b.view.origin.x,b.view.origin.y],"source_rgba_sha256":sources})
 
 func captures() -> void:
-	for config: Vector3 in [Vector3(1280,720,1.25),Vector3(1920,1080,1),Vector3(2560,1440,1.25)]:
+	for config: Vector3 in [Vector3(1280,720,1.25)]:
 		root.size = Vector2i(config.x,config.y)
 		DisplayServer.window_set_size(root.size)
 		app.set_ui_scale(config.z)

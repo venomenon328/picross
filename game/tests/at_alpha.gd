@@ -21,12 +21,17 @@ static func sample(probe: SceneTree, view: Control, name: String, opacity: float
 	var rect: Rect2 = view.artwork_rect()
 	rect.position += view.global_position
 	var rows: Array = []
+	# Only the ten pixels consumed by the independent composition oracle cross
+	# the process boundary. No full artwork or paper screenshot is evidence.
+	var observations := Image.create(5,2,false,Image.FORMAT_RGB8)
 	for kind: String in POINTS:
 		var normalized: Vector2 = (POINTS[kind]+Vector2(0.5,0.5))/256.0
 		var point := Vector2i(rect.position+normalized*rect.size)
 		var foreground: Color = image.get_pixelv(Vector2i(POINTS[kind]))
 		var paper: Color = background.get_pixelv(point)
 		var actual: Color = visible.get_pixelv(point)
+		observations.set_pixel(rows.size(),0,actual)
+		observations.set_pixel(rows.size(),1,paper)
 		var expected: Color = paper.lerp(Color(foreground.r,foreground.g,foreground.b,1),foreground.a*opacity)
 		var error: float = maxf(absf(actual.r-expected.r),maxf(absf(actual.g-expected.g),absf(actual.b-expected.b)))
 		probe.check(error <= 0.035, "AT native alpha composition "+name+"/"+kind)
@@ -34,11 +39,9 @@ static func sample(probe: SceneTree, view: Control, name: String, opacity: float
 			"background":[paper.r,paper.g,paper.b],"actual":[actual.r,actual.g,actual.b],"opacity":opacity,"max_error":error})
 	var bounds := Rect2i(Vector2i(rect.position),Vector2i(rect.size)).intersection(Rect2i(Vector2i.ZERO,visible.get_size()))
 	var file := "at-"+name+".png"
-	var background_file := "at-"+name+"-paper.png"
-	probe.check(preload("res://tests/native_png.gd").write(visible.get_region(bounds), probe.output.path_join(file)) == OK,"AT original native image crop")
-	probe.check(preload("res://tests/native_png.gd").write(background.get_region(bounds), probe.output.path_join(background_file)) == OK,"AT original native background crop")
+	probe.check(preload("res://tests/native_png.gd").write(observations, probe.output.path_join(file)) == OK,"AT original composition samples")
 	var hash := HashingContext.new()
 	hash.start(HashingContext.HASH_SHA256)
 	hash.update(image.get_data())
-	return {"file":file,"background_file":background_file,"framebuffer":[visible.get_width(),visible.get_height()],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],
+	return {"file":file,"framebuffer":[visible.get_width(),visible.get_height()],"bounds":[bounds.position.x,bounds.position.y,bounds.size.x,bounds.size.y],
 		"rgba_sha256":hash.finish().hex_encode(),"samples":rows}

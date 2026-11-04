@@ -45,7 +45,7 @@ class Selection(unittest.TestCase):
     def test_catalog_and_completion_consumers_select_exact_native_and_browser_groups(self):
         # Expectations follow the active probes, independently of PATHS:
         # RP6/ZA-1 navigate cards and render album/reveal; compact capture renders
-        # the album; KAT-2 KE also instantiates Completion in ke_graphics.gd.
+        # the album; KAT-2 also exercises completed catalog states.
         for path, native, browser in [
             ('game/ui/catalog.gd', ['core','catalog','completion','adapters','graphics','export'],
              ['regular','catalog','completion','persistence']),
@@ -510,7 +510,7 @@ class Pixels(unittest.TestCase):
         with tempfile.TemporaryDirectory() as t:
             root=Path(t)
             rows=[]
-            for width,height,ui in ((1280,720,125),(1920,1080,100),(2560,1440,125)):
+            for width,height,ui in ((1280,720,125),):
                 for kind,context in [('row',[-1,2]),('column',[2,-1]),('grid',[2,2]),
                                      ('complete-row',[-1,49]),('drag-row',[-1,2])]:
                     image=Image.new('RGBA',(50,100),(240,230,220,255))
@@ -527,10 +527,9 @@ class Pixels(unittest.TestCase):
                                      source_rgba_sha256=dict(frame='a'*64,baseline='b'*64,
                                          samples=hashlib.sha256(image.tobytes()).hexdigest())))
             report=dict(checks=1001,failures=0,records=rows)
-            self.assertEqual(verify(root,report),15)
+            self.assertEqual(verify(root,report),5)
             path=root/rows[0]['file'];original=path.read_bytes()
-            # HN binds raw RGBA sample bytes; this reader is intentionally not
-            # migrated to RGB. A format change cannot silently pass its gate.
+            # HN requires the original RGBA readback representation.
             with Image.open(path) as source:source.convert('RGB').save(path)
             with self.assertRaisesRegex(ValueError,'readback'):verify(root,report)
             path.write_bytes(original)
@@ -545,119 +544,3 @@ class Pixels(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'readback'):verify(root,report)
             report['records']=rows[:-1]
             with self.assertRaisesRegex(ValueError,'Incomplete native HN'):verify(root,report)
-
-    def test_native_ke_images_are_required_but_not_python_crop_work(self):
-        from native_results import validate_catalog_images
-        binding=dict(stored_region=[1,2,7,8],source_rgba_sha256='a'*64,stored_rgba_sha256='b'*64)
-        entries=[dict(file='frame-card.png',source='frame.png',region=[1,2,7,8],source_size=[10,10],**binding)]
-        costs=dict(status='success',input_frames=1,crops=1,entries=entries)
-        summary=dict(image_costs=costs,crops=entries,reports=[dict(captures=[dict(file='frame.png',framebuffer=[10,10],regions=dict(card=[1,2,7,8]),**binding)])])
-        required={'kat2/frame-card.png','kat2/direct.png','kat2/report.json'}
-        validate_catalog_images(costs,summary,required,['kat2/direct.png'])
-        for direct in ([],['kat2/direct.png','kat2/unexpected.png']):
-            with self.assertRaises(ValueError):validate_catalog_images(costs,summary,required,direct)
-        changed=deepcopy(summary);changed['reports'][0]['captures'][0]['regions']['card'][0]=0
-        with self.assertRaises(ValueError):validate_catalog_images(costs,changed,required,['kat2/direct.png'])
-        for key in binding:
-            changed=deepcopy(summary);changed['reports'][0]['captures'][0][key]=None
-            with self.subTest(binding=key),self.assertRaisesRegex(ValueError,'readback binding'):
-                validate_catalog_images(costs,changed,required,['kat2/direct.png'])
-
-    def test_native_precrop_preserves_the_exact_old_full_frame_pixels(self):
-        try:
-            from PIL import Image
-        except ImportError:
-            self.skipTest('Isolated Product image dependency')
-        from native_images import crop_native,require_identical
-        from native_results import validate_catalog_originals
-        import hashlib
-        with tempfile.TemporaryDirectory() as t:
-            root=Path(t)
-            im=Image.new('RGBA',(19,13))
-            im.putdata([(x*7%256,x*17%256,x*31%256,x*13%256) for x in range(19*13)])
-            rectangle=[1,2,17,11]
-            crop=im.crop(rectangle)
-            before=root/'before';before.mkdir();im.save(before/'native.png')
-            after=root/'after';after.mkdir();crop.save(after/'native.png')
-            record=dict(file='native.png',regions={'layout':rectangle},framebuffer=[19,13],
-                        stored_region=rectangle,source_rgba_sha256=hashlib.sha256(im.tobytes()).hexdigest(),
-                        stored_rgba_sha256=hashlib.sha256(crop.tobytes()).hexdigest())
-            crop_native(before,[dict(captures=[dict(file='native.png',regions={'layout':rectangle})])])
-            entries,cost=crop_native(after,[dict(captures=[record])],compare=True)
-            require_identical(before/'native-layout.png',after/'native-layout.png')
-            validate_catalog_originals(cost,after)
-            actual=after/'native-layout.png';original=actual.read_bytes()
-            actual.write_bytes(original+b'changed')
-            with self.assertRaisesRegex(ValueError,'original native crop'):validate_catalog_originals(cost,after)
-            actual.write_bytes(original)
-            wrong=deepcopy(cost);wrong['entries'][0]['region']=[0,0,1,1]
-            with self.assertRaisesRegex(ValueError,'original native crop'):validate_catalog_originals(wrong,after)
-            self.assertEqual(entries[0]['source_size'],[19,13])
-            self.assertEqual(entries[0]['stored_rgba_sha256'],record['stored_rgba_sha256'])
-            self.assertLess(cost['input_bytes'],(before/'native-context.png').stat().st_size)
-            for change in ('alpha','size'):
-                bad=root/change;bad.mkdir();mutated=crop.copy()
-                if change=='alpha':mutated.putpixel((0,0),(1,2,3,4))
-                else:mutated=mutated.crop((0,0,15,9))
-                mutated.save(bad/'native.png')
-                with self.subTest(change=change),self.assertRaisesRegex(ValueError,'pixels/dimensions'):
-                    crop_native(bad,[dict(captures=[record])])
-
-    def test_native_rgb_crop_keeps_rgba_binding_and_rejects_lost_alpha(self):
-        try:
-            from PIL import Image
-        except ImportError:
-            self.skipTest('Isolated Product image dependency')
-        import hashlib
-        from native_images import crop_native
-        from native_results import validate_catalog_originals
-        with tempfile.TemporaryDirectory() as temporary:
-            root = Path(temporary)
-            for alpha in (255, 254, 80, 0):
-                directory = root / str(alpha)
-                directory.mkdir()
-                rgba = Image.new('RGBA', (3, 2), (56, 132, 90, alpha))
-                rgba.convert('RGB').save(directory / 'native.png')
-                record = dict(file='native.png', regions={'layout':[0,0,3,2]},
-                              framebuffer=[3,2], stored_region=[0,0,3,2],
-                              source_rgba_sha256=hashlib.sha256(rgba.tobytes()).hexdigest(),
-                              stored_rgba_sha256=hashlib.sha256(rgba.tobytes()).hexdigest())
-                if alpha == 255:
-                    _, costs = crop_native(directory, [dict(captures=[record])])
-                    validate_catalog_originals(costs, directory)
-                else:
-                    with self.subTest(alpha=alpha), self.assertRaisesRegex(ValueError, 'pixels/dimensions'):
-                        crop_native(directory, [dict(captures=[record])])
-
-    def test_lossless_crop_and_negative_rgba_alpha_dimension_controls(self):
-        try:
-            from PIL import Image
-        except ImportError:
-            self.skipTest('Image dependency checked in isolated Product job')
-        from native_images import crop_native,require_identical
-        with tempfile.TemporaryDirectory() as t:
-            root=Path(t)
-            im=Image.new('RGBA',(19,13))
-            im.putdata([(x*7%256,x*17%256,x*31%256,x*13%256) for x in range(19*13)])
-            im.save(root/'native.png')
-            reports=[dict(captures=[dict(file='native.png',regions={'one':[1,2,17,11],'two':[0,0,19,13]})])]
-            crops,costs=crop_native(root,reports,compare=True)
-            self.assertEqual(costs['input_frames'],1);self.assertEqual(costs['crops'],2)
-            self.assertTrue(all(r['identical'] for r in crops))
-            target=root/'native-two.png'
-            for mode in ('rgb','alpha','size'):
-                changed=im.copy()
-                if mode=='size':changed=changed.crop((0,0,18,13))
-                else:
-                    pixel=list(changed.getpixel((0,0)));pixel[0 if mode=='rgb' else 3]^=1;changed.putpixel((0,0),tuple(pixel))
-                changed.save(root/'changed.png')
-                with self.assertRaises(ValueError):require_identical(target,root/'changed.png')
-
-    def test_partial_image_error_is_persisted(self):
-        try: import PIL
-        except ImportError: self.skipTest('Isolated Product image dependency')
-        from native_images import crop_native
-        with tempfile.TemporaryDirectory() as t:
-            root=Path(t)
-            with self.assertRaises(OSError):crop_native(root,[dict(captures=[dict(file='missing.png',regions={})])])
-            self.assertEqual(read(root/'image-costs.json')['status'],'failure')

@@ -1,5 +1,13 @@
 # ZA-1: Prüfzuordnung und Referenzeingang
 
+**Aktueller CI-Umfang nach P2-C-V03 / #502:** Die hier gebundenen damaligen
+Liefer-/Bildnachweise bleiben historisch. Der [vollständige Audit](P2_C_V03_AUDIT.md)
+und [aktuelle native Minimalvertrag](CI_C_NATIVE_GROUPS.md) ersetzen ausschließlich
+die wiederkehrenden Prüf-/Bild-/Inventarpflichten. Aktuelle Fach-, Pixel-, Save-,
+Recovery- und Exportprüfungen bleiben; offene persönliche Abnahmen werden dadurch
+nicht erledigt. Kein historisches Bild wird allein wegen dieses Berichts erneut erzeugt.
+
+
 **Aktuell:** Der reale Knoblauch-Test/ZIP ist aus der Test-Discovery entfernt.
 Allgemeine Adaptertests behalten feste synthetische Pakete; neue Inhalte werden
 einmalig außerhalb der CI geprüft. [CI-Policy](CI_POLICY.md).

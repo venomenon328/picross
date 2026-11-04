@@ -16,11 +16,6 @@ static func click(t: SceneTree, control: Control) -> void:
 		event.pressed = down
 		t.root.push_input(event,true)
 
-static func capture(t: SceneTree, name: String) -> void:
-	await t.frames(4)
-	await RenderingServer.frame_post_draw
-	var image: Image = t.root.get_texture().get_image()
-	t.check(image != null and preload("res://tests/native_png.gd").write(image, t.output.path_join("hil-"+name+".png")) == OK,"HIL native original "+name)
 
 static func layout(t: SceneTree, node: Node, width: float, u: float) -> void:
 	for child: Node in node.get_children():
@@ -50,7 +45,7 @@ static func run(t: SceneTree) -> void:
 	t.root.size = Vector2i(1920,1080)
 	book.set_ui_scale(1.0)
 	await t.frames(4)
-	await capture(t,"work")
+
 	t.check(book.information_routes.request("help"),"HIL help enters from work")
 	await t.settled()
 	var panel = app.help_panel
@@ -59,9 +54,9 @@ static func run(t: SceneTree) -> void:
 	var saved: PackedByteArray = t.bytes(path)
 	var active: int = app.session.get_instance_id()
 	t.check(panel.chapter == 0 and panel.buttons.size() == 4,"HIL fresh visit starts principle with four direct chapters")
-	await capture(t,"principle")
+
 	await scroll_to(t,panel.figures[4].get_parent())
-	await capture(t,"combination")
+
 	# One detailed configuration, the others only for the actual content/clip
 	# boundaries. No routes × chapters × resolutions Cartesian replay.
 	var layouts: int = 0
@@ -103,14 +98,14 @@ static func run(t: SceneTree) -> void:
 	t.root.size = Vector2i(1920,1080)
 	book.set_ui_scale(1.0)
 	panel.choose(1)
-	await capture(t,"colors")
+
 	panel.choose(3)
 	await scroll_to(t,panel.chapters[3].get_child(3))
-	await capture(t,"overlap")
+
 	panel.choose(2)
 	for figure: Control in panel.figures:
 		if figure.identity == "help/clue-open": await scroll_to(t,figure.get_parent())
-	await capture(t,"legend")
+
 	var offset: int = app.info.help_scroll.scroll_vertical
 	t.check(offset > 0,"HIL help retains a nonzero reading position")
 	# Passive content clicks use the same native GUI dispatch as chapter
@@ -122,7 +117,7 @@ static func run(t: SceneTree) -> void:
 	while book.state == book.State.PREPARING and Time.get_ticks_msec() < deadline: await t.process_frame
 	while book.state == book.State.OPENING and book.elapsed < 0.25 and Time.get_ticks_msec() < deadline: await t.process_frame
 	t.check(book.capture != null and not book.information_routes.textures.is_empty(),"HIL content participates in moving book captures")
-	await capture(t,"pan")
+
 	await t.settled()
 	t.check(book.information_routes.request("help"),"HIL returns to help in same visit")
 	await t.settled()

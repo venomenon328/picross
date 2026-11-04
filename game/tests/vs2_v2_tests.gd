@@ -72,11 +72,6 @@ func projection(label: String, cell: Vector2i, expected: int) -> void:
 	check(image.get_pixelv(p).is_equal_approx(color),label+" immediate original-color/neutral pixels")
 	scenarios.append(label)
 
-func save_image(name: String, image: Image) -> void:
-	var path: String = output.path_join(name+".png")
-	check(native_png.write(image, path)==OK,"V2 image saved")
-	pictures.append({"file":name+".png","sha256":FileAccess.get_sha256(path)})
-
 func equal_projection() -> void:
 	app.hide()
 	var mini = Miniature.new()
@@ -106,7 +101,6 @@ func equal_projection() -> void:
 	bad = second.duplicate()
 	bad.set_pixel(45,45,Color("faf6ec"))
 	check(first.get_data()!=bad.get_data(),"negative corrected/hidden own fill rejected")
-	save_image("v2-projection-"+str(mini.palette.size()),first)
 	mini.queue_free()
 	await process_frame
 	app.show()
@@ -203,11 +197,9 @@ func grid_probe() -> void:
 		check(app.board.view.hit(rect.position+Vector2(0.01,0.01))==cell and app.board.view.hit(rect.end-Vector2(0.01,0.01))==cell,"precise regular logical cell boundaries")
 	app.board.clear_pointer_hover()
 	app.board.clear_effects()
-	save_image("v2-mono-work",await frame())
 	var box: Rect2 = app.board.view.cell_rect(Vector2i(3,3))
 	box.position += app.board.global_position
 	box.size = Vector2.ONE*app.board.view.cell_size*4
-	save_image("v2-five-crossing",(await frame()).get_region(Rect2i(box)))
 	app.hide()
 	var painter = Lines.new()
 	painter.size = Vector2(canvas.size)
@@ -230,8 +222,6 @@ func grid_probe() -> void:
 		click(Vector2i(i+3,4),MOUSE_BUTTON_LEFT)
 	app.board.clear_pointer_hover()
 	app.board.clear_effects()
-	save_image("v2-color-work",await frame())
-	save_image("v2-mini-palette",(await frame()).get_region(Rect2i(app.surface.card.merge(app.surface.palette).grow(3))))
 	for u: float in [1.0,1.25]:
 		app.set_ui_scale(u)
 		app.board.requested_cell = 12

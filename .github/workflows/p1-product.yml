@@ -18,10 +18,6 @@ on:
         description: Independent native groups (comma separated)
         type: string
         default: core,history,catalog,completion,adapters,graphics,export
-      compare_native_png:
-        description: Measure old/new lossless PNG encoding on identical native frames
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -63,7 +59,6 @@ jobs:
           P1_PREFLIGHT_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
           CI_SELECTION_ATTEMPT: ${{ inputs.selection_attempt || github.run_attempt }}
           NATIVE_GROUPS: ${{ inputs.groups }}
-          P1_COMPARE_NATIVE_PNG: ${{ inputs.compare_native_png && '1' || '0' }}
           P1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
         run: >-
           python3 tools/p1_product.py
