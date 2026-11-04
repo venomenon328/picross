@@ -262,7 +262,6 @@ func pictures() -> void:
 				await settle()
 				check(difference(capture(box),end)<=1.0,"palette restoration repairs cache")
 			if value!=0 and value!=1: continue
-			var column: int = 0
 			for elapsed: int in [-1,0,30000,75000,105000,150000,180000,209000,210000]:
 				clock_us=1000000+maxi(0,elapsed)
 				app.board.effects[index]={"start":1000001 if elapsed<0 else 1000000,"after":value,"seconds":0.210}
@@ -272,7 +271,6 @@ func pictures() -> void:
 				var expected_image: Image = await expected(blank,box,cell,value,210000 if elapsed<0 else elapsed,0.56 if elapsed<0 else 1.0)
 				error=difference(actual,expected_image)
 				check(error<=1.0,"regular temporal pixels no underpaint/fade/form jump "+str([zoom,value,elapsed,error]))
-				column+=1
 				samples.append({"zoom":zoom,"actual_cell":box.size.x,"value":value,"elapsed_us":elapsed,"mean_channel_error":error})
 	app.board.animation_clock=Time.get_ticks_usec
 

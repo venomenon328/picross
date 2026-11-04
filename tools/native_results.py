@@ -1,7 +1,6 @@
 """Fail-closed native evidence gate. Standard library only; verify delivered bytes."""
 import hashlib
 import gzip
-import struct
 import json
 from pathlib import Path, PurePosixPath
 import re

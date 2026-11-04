@@ -335,7 +335,7 @@
         },
         "game/tests/hf149_probe.gd": {
           "before": "b4f2b5792284de5bebb97a528e7ddacaa332ce37",
-          "after": "a0284a896a6b0ad4ac6e93a0d88b91b4603a4aeb"
+          "after": "9b857bde6544578ce96778f45b744bbcc40d5042"
         },
         "game/tests/hn192_probe.gd": {
           "before": "fce62bad2b34a42a5f38a4e15948ad244a4efa45",
@@ -367,7 +367,7 @@
         },
         "game/tests/perf_b_probe.gd": {
           "before": "6ede0250109903d16df5223603606aabfefc2979",
-          "after": "c89a3115bf59639a96ec0f12e36989f1c0cad788"
+          "after": "55b452f49dd009b2da6f9b97f72428fb46dab8f8"
         },
         "game/tests/rp6_capture.gd": {
           "before": "4a053badf8e617d4ebcbad939eaf6b1f5f8376b5",
@@ -435,7 +435,7 @@
         },
         "tools/kat2_product.py": {
           "before": "cc73c9c495fe8b3f55fe55e1f15c4e0356b2e006",
-          "after": "9f0bdec1822cb421b187da0bffa41053b35cb13a"
+          "after": "88359152a8b078f34908f4b1b90a42326a7b6425"
         },
         "tools/native_artifacts.json": {
           "before": "f501c43e767ff4f74dbfc1931465d2285673721f",
@@ -455,7 +455,7 @@
         },
         "tools/native_results.py": {
           "before": "7869ec4d8769e3f055319324f6dc625ab0309792",
-          "after": "a168be4023cb425cdad2469b2bb9505817fce01f"
+          "after": "a514719c0a79fb3a92f5a33f789f5c3bbf4cd7a7"
         },
         "tools/native_runner.py": {
           "before": "a7dbd9060c73c7e0760ce9ad7962ebe5f8bfa12e",
@@ -464,6 +464,10 @@
         "tools/p1_current_visual.py": {
           "before": "3e4be1f03a851608e767b92af6f742304655ae3f",
           "after": "3c7ddacdf9f7c855207fe39eb3ff500633dda080"
+        },
+        "tools/p1_evidence.py": {
+          "before": "ddc4fc029f04bc4e9549358f04ef1212f4718e52",
+          "after": "298cde74cb447acefd26fc76c70789a742898513"
         },
         "tools/p1_product.py": {
           "before": "8e6e575c7b6a4db37525338852685442360daed3",
@@ -483,7 +487,7 @@
         },
         "tools/test_p1_evidence.py": {
           "before": "a12568136caa01f09c980b5d5fea5886a606a4ca",
-          "after": "35eb0e60fd61296fd97d3552aabbd4a1d51ee304"
+          "after": "b69f6c895252e3de861fde46c2ffe7b67d8e07df"
         },
         "tools/test_vs2_delivery.py": {
           "before": "f8532a0c6732977f2a3a09c33e9259ec4a048d07",
@@ -719,6 +723,13 @@
           "anchor": "import p1_current_visual",
           "sources": [
             "tools/p1_current_visual.py"
+          ]
+        },
+        {
+          "path": "tools/at_windows_probe.py",
+          "anchor": "from p1_evidence import source_identity",
+          "sources": [
+            "tools/p1_evidence.py"
           ]
         },
         {
