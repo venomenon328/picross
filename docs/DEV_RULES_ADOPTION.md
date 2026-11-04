@@ -20,3 +20,13 @@ Es waren keine vorhandenen Repositoryregeln zu migrieren. Lokale/globale Codex-E
 Die beiden Dokumentprüfskripte und der CI-Aufbau sind aus demselben dev-rules-Quellstand abgeleitet. Sie liegen bewusst außerhalb des unveränderten Regelpakets; angepasst sind insbesondere Zielpfade, erforderliche Setup-Dateien und Prüfgrenzen. Die CI benutzt den vorhandenen vollständigen Checkout-SHA-Pin der Quelle, keine bewegliche Action-Version.
 
 Nach Setup-Merge den [bereitgestellten Einstellungstext](CHATGPT_PROJECT_INSTRUCTIONS.md) separat in ChatGPT einsetzen und etwaige alte allgemeine Prozess-/Modelltexte ersetzen. Diese Datei oder ein Git-Merge ändert die ChatGPT-Oberfläche nicht. Andere Projekte bleiben unverändert.
+
+## Ausdrücklich beauftragte lokale CI-Ergänzung
+
+[#502 / P3-A](https://github.com/venomenon328/picross/issues/502) ergänzt gezielt
+Workflow §7 um den projektspezifischen Testlebenszyklus-/Featureabschlussvertrag.
+Damit ist `WORKFLOW.md` ab dieser Lieferung nicht mehr bytegleich zum oben
+gebundenen ursprünglichen Snapshot; die Herkunftstabelle beschreibt weiterhin
+die Übernahme. Die übrigen vier Snapshotdateien und das zentrale Quellrepository
+bleiben unverändert. Dies ist keine allgemeine Workflowaktualisierung und kein
+Vorgriff auf den separaten Auftrag zur lokalen Bereinigung/Wiederaufnahme.

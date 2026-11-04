@@ -54,7 +54,7 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
     return marker
 
 
-def run(root, workspace, output, engine, environment, phase, python_phase, host, imported_base):
+def run(root, workspace, output, engine, environment, run_phase, python_phase, host, imported_base):
     directory = output / "kat2"
     directory.mkdir()
     reports = []
@@ -114,13 +114,14 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host,
         env = environment.copy()
         env.update(P1_TEST_SAVE_ROOT=str(saves), KAT2_OUTPUT=str(directory), KAT2_MODE=mode)
         if mode in ("pages", "adapter", "at"):
-            phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
-        command = [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy",
-                   "--script", "res://tests/kat2_probe.gd", "--", "--p1-capture"]
+            run_phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
         if host == "Linux":
-            command = ["xvfb-run", "-a"] + command
             env["LIBGL_ALWAYS_SOFTWARE"] = "1"
-        phase("kat2-" + mode, command, "KAT2_PROBE_OK", phase_env=env)
+        # Keep the executable probe reader explicit for the lifecycle binding.
+        run_phase("kat2-" + mode, (["xvfb-run", "-a"] if host == "Linux" else []) +
+                  [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy",
+                   "--script", "res://tests/kat2_probe.gd", "--", "--p1-capture"],
+                  "KAT2_PROBE_OK", phase_env=env)
         report = json.loads((directory / (mode + ".json")).read_text(encoding="utf-8"))
         if report["failures"] or not report["checks"]:
             raise toolchain.PreflightError("KAT2 native assertions failed")
