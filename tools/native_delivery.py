@@ -36,12 +36,13 @@ def stage(output, destination, outcome, identity):
         except (OSError, ValueError) as error:
             issues.append(str(error))
 
-    result = None
+    result, foreign = None, False
     try:
         result = read(source(technical, 'native-result.json'))
         if not isinstance(result, dict):
             raise ValueError('Invalid native result object')
         if result.get('identity') != identity:
+            foreign = True
             raise ValueError('Native delivery source/run/attempt binding mismatch')
         groups, rows = result.get('groups'), result.get('results')
         if (not isinstance(groups, list) or not groups or
@@ -86,7 +87,7 @@ def stage(output, destination, outcome, identity):
         diagnostics['validation_paths'] = sorted(differences)
         validation_groups.update(name.split('/')[0] for name in differences
                                  if name.split('/')[0] in GROUPS)
-    for group in (result or {}).get('groups', GROUPS):
+    for group in (result or {}).get('groups', () if foreign else GROUPS):
         if group not in GROUPS:
             issues.append('Unknown native group')
             continue
