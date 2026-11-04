@@ -173,9 +173,11 @@ class Delivery(unittest.TestCase):
             with self.subTest(field=field), tempfile.TemporaryDirectory() as temp:
                 changed = deepcopy(self.result); changed['identity'] = dict(self.identity, **{field:'wrong'})
                 write(Path(temp)/'technical/native-result.json', changed)
+                write(Path(temp)/'technical/core/product-report.json', {'foreign': True})
                 result = stage(Path(temp), Path(temp)/'delivery', 'failure', self.identity)
                 self.assertTrue(result['issues'])
                 self.assertFalse((Path(temp)/'delivery/native-result.json').exists())
+                self.assertFalse((Path(temp)/'delivery/core').exists())
         with self.assertRaises(ValueError): self.deliver('success')
 
     def test_missing_and_traversing_oracle_originals_are_reported_not_substituted(self):
