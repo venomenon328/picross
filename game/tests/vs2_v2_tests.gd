@@ -3,6 +3,7 @@ extends SceneTree
 const Store = preload("res://model/save_store.gd")
 const Miniature = preload("res://ui/miniature.gd")
 var geometry: Script
+var native_png: Script
 var app: Control
 var canvas: SubViewport
 var output: String
@@ -22,6 +23,7 @@ class Lines extends Control:
 			draw_polyline(p,line.color,line.width,true)
 
 func _initialize() -> void:
+	native_png = load(get_script().resource_path.get_base_dir().path_join("native_png.gd"))
 	geometry = load(get_script().resource_path.get_base_dir().path_join("vs2_v2_cases.gd"))
 	call_deferred("run")
 
@@ -72,7 +74,7 @@ func projection(label: String, cell: Vector2i, expected: int) -> void:
 
 func save_image(name: String, image: Image) -> void:
 	var path: String = output.path_join(name+".png")
-	check(image.save_png(path)==OK,"V2 image saved")
+	check(native_png.write(image, path)==OK,"V2 image saved")
 	pictures.append({"file":name+".png","sha256":FileAccess.get_sha256(path)})
 
 func equal_projection() -> void:

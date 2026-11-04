@@ -9,6 +9,7 @@ HELP_SOURCES = tuple("game/ui/"+name+".gd" for name in ("help_panel", "help_exam
 HELP_ORIGINALS = {"integration/hil-"+name+".png" for name in (
     "work", "principle", "combination", "colors", "overlap", "legend", "pan")}
 SOURCES = (*RUNTIME, *HELP_SOURCES, "game/tests/help_cases.gd", "game/tests/help_native.gd",
+           "game/tests/native_png.gd",
            "game/ui/clue_typography.gd", "game/ui/scribble.gd", 'game/tests/book_integration.gd', 'game/tests/book-save-v1.json',
            'game/main.tscn', 'game/ui/main.gd', 'tools/book_contract.py')
 INTEGRATION_ASSERTIONS = {

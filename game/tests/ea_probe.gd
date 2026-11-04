@@ -65,7 +65,7 @@ func final_checks() -> void:
 func frame(name: String) -> void:
 	await RenderingServer.frame_post_draw
 	var image: Image = surface.get_texture().get_image()
-	check(image.save_png(output.path_join(name+".png")) == OK, "EA native frame "+name)
+	check(preload("res://tests/native_png.gd").write(image, output.path_join(name+".png")) == OK, "EA native frame "+name)
 
 func run() -> void:
 	output = OS.get_environment("EA_OUTPUT")
@@ -137,7 +137,7 @@ func run() -> void:
 			app.reveal_view.finish()
 			at_measurements.append({"window":context,"final":alpha_final,"reopen":alpha_reopen,"blend":alpha_blend})
 		for i: int in range(motion_images.size()):
-			check(motion_images[i].save_png(output.path_join(sequence[i].file)) == OK, "EA buffered actual motion frame")
+			check(preload("res://tests/native_png.gd").write(motion_images[i], output.path_join(sequence[i].file)) == OK, "EA buffered actual motion frame")
 		motion_images.clear()
 		# Rectangular eight-colour raster, long title, independent image aspect.
 		var rectangle_last := prepare(5)

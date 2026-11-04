@@ -48,7 +48,7 @@ func shot(name: String) -> void:
 	await RenderingServer.frame_post_draw
 	var image: Image = canvas.get_texture().get_image()
 	var path: String = output.path_join(name + ".png")
-	check(image.save_png(path) == OK, "native PNG write")
+	check(preload("res://tests/native_png.gd").write(image, path) == OK, "native PNG write")
 	var frame: Dictionary = frame_pixels(image) if app.work.visible and app.board.layout_valid else {}
 	pictures.append({"file":name+".png", "sha256":FileAccess.get_sha256(path), "client":[canvas.size.x,canvas.size.y],"frame_pixels":frame})
 

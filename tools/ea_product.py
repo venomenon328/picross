@@ -22,7 +22,7 @@ def copy_imported_base(base, project):
         copy_seconds=time.perf_counter()-began)
 
 
-def run(root, workspace, output, engine, environment, phase, python_phase, host, imported_base):
+def run(root, workspace, output, engine, environment, run_phase, python_phase, host, imported_base):
     directory = output / "ea"
     directory.mkdir()
     project = workspace / "ea/game"
@@ -41,16 +41,15 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host,
     saves.mkdir()
     env = environment.copy()
     env.update(P1_TEST_SAVE_ROOT=str(saves), EA_OUTPUT=str(directory))
-    phase("ea-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
+    run_phase("ea-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
     reports = []
     for mode in ("native", "restart"):
         env["EA_MODE"] = mode
-        command = [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy",
-                   "--script", "res://tests/ea_probe.gd", "--", "--p1-capture"]
         if host == "Linux":
-            command = ["xvfb-run", "-a"] + command
             env["LIBGL_ALWAYS_SOFTWARE"] = "1"
-        phase("ea-"+mode, command, "EA_PROBE_OK", phase_env=env)
+        run_phase("ea-"+mode, (["xvfb-run", "-a"] if host == "Linux" else []) +
+                  [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy",
+                   "--script", "res://tests/ea_probe.gd", "--", "--p1-capture"], "EA_PROBE_OK", phase_env=env)
         report = json.loads((directory / (mode+".json")).read_text(encoding="utf-8"))
         if report["failures"] or not report["checks"]:
             raise PreflightError("EA native assertions failed")

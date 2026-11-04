@@ -134,19 +134,7 @@ func shot(name: String) -> void:
 	var crop: Image = image.get_region(Rect2i(rectangle[0],rectangle[1],rectangle[2]-rectangle[0],rectangle[3]-rectangle[1]))
 	var crop_seconds: float = (Time.get_ticks_usec()-crop_started)/1000000.0
 	var write_started: int = Time.get_ticks_usec()
-	# detect_alpha() treats alpha 254 as opaque. Require exact 255 instead;
-	# keep the original RGBA crop for the independent readback hash below.
-	var pixels: PackedByteArray = crop.get_data()
-	var opaque: bool = true
-	for index: int in range(3,pixels.size(),4):
-		if pixels[index] != 255:
-			opaque = false
-			break
-	var encoded: Image = crop
-	if opaque:
-		encoded = crop.duplicate()
-		encoded.convert(Image.FORMAT_RGB8)
-	check(encoded.save_png(output.path_join(filename)) == OK, "native frame saved " + filename)
+	check(preload("res://tests/native_png.gd").write(crop, output.path_join(filename)) == OK, "native frame saved " + filename)
 	var write_seconds: float = (Time.get_ticks_usec()-write_started)/1000000.0
 	var hash_started: int = Time.get_ticks_usec()
 	var source_hash := HashingContext.new()

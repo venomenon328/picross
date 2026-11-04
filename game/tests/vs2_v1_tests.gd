@@ -151,7 +151,7 @@ func glyph_probe() -> void:
 			check(measurement.glyph_max[1] >= b.view.cell_size*0.6 and measurement.glyph_max[1] <= b.view.cell_size,"HC visible glyph height occupies the real cell")
 			var crop: Rect2i = Rect2i(b.row_clue_area().grow(3))
 			var name: String = "v1-glyphs-u%d-status%d.png" % [roundi(u*100),status]
-			check(canvas.get_texture().get_image().get_region(crop).save_png(output.path_join(name)) == OK,"V1 native 1:1 glyph strip")
+			check(preload("res://tests/native_png.gd").write(canvas.get_texture().get_image().get_region(crop), output.path_join(name)) == OK,"V1 native 1:1 glyph strip")
 			glyphs.append({"file":name,"sha256":FileAccess.get_sha256(output.path_join(name)),"ui_scale":u,"font_px":b.clue_font_size(),"status":status,"row_pitch":b.slot_pitch.x,"clipped":measurement.clipped_glyphs,"collisions":measurement.glyph_collisions})
 	b.queue_free()
 	await process_frame

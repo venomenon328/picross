@@ -10,7 +10,7 @@ static func capture(runner: Object, name: String, rect: Rect2) -> void:
 	var image: Image = runner.surface.get_texture().get_image()
 	var bounds := Rect2i(rect.intersection(Rect2(Vector2.ZERO, Vector2(image.get_size()))))
 	var filename := "hz-" + name + ".png"
-	runner.check(image.get_region(bounds).save_png(runner.output.path_join(filename)) == OK, "HZ native crop " + name)
+	runner.check(preload("res://tests/native_png.gd").write(image.get_region(bounds), runner.output.path_join(filename)) == OK, "HZ native crop " + name)
 
 static func run(runner: Object) -> void:
 	Glyphs.run(runner)
