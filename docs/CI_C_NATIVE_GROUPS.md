@@ -422,6 +422,20 @@ serielle Editorimport mit Wiederherstellung der Projektbytes bleibt erhalten.
 
 ## Bilder, Messung und Gate
 
+P2-C kopiert für EA die bereits importierten unveränderlichen Eingaben derselben
+Gruppe in ein eigenes Projekt. Datei-/Byte-/SHA-Inventar vor/nach Kopie und nach
+EA bindet die Isolation; ein neues Profil sowie der echte `ea-import` nach den
+EA-Fixtureänderungen und beide Spielprozesse bleiben erhalten. Die Messwerte
+stehen unter `ea.import_reuse`. Es werden keine Ergebnisse oder Saves übernommen.
+
+Die bereits nativ zugeschnittenen KAT-2-Kompositionen können als RGB-PNG
+gespeichert werden, wenn **jedes** Alpha-Byte exakt 255 ist. Godots tolerante
+`detect_alpha()`-Erkennung reicht dafür nicht. Der unveränderte RGBA-Readback
+bindet weiterhin den Python-Pixelvergleich und das Originaldatei-Gate; bei
+jedem anderen Alpha-Wert bleibt RGBA erhalten. Pflichtbildmenge, Rechtecke,
+Direktbilder und Fehlerbelege bleiben unverändert. Dies setzt die bereits
+zulässige verlustfreie Byteänderung aus der CI-Policy um.
+
 Katalogaufbereitung liest jeden der 56 tatsächlichen Kontextframes einmal, schneidet die
 unveränderten nativen Rechtecke und schreibt PNGs mit `optimize=False`,
 `compress_level=1`. Kein Resize, keine Palettenreduktion, keine neue Grafik.

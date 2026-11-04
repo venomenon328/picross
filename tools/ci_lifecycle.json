@@ -95,14 +95,6 @@
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / package P3-A implementer",
       "sources": {
-        "game/tests/kat2_probe.gd": {
-          "before": "0c3bd16e741beb30aefc9acdd164e1faafe721f7",
-          "after": "0ef6ddfca2232d9a0f070aba2b4aecf715b9227a"
-        },
-        "tools/p1_product.py": {
-          "before": "6e80ac152b864bcc8c53187e92929459f30b225b",
-          "after": "d83328ed6ab70e808ea9c599304298a85c015100"
-        },
         "tools/test_p1_product.py": {
           "before": "e2d6371c7e7d3b36c55fc8c1459797734b9c1078",
           "after": "a2dad3e21b0b6400be7402a4c27e20174d5304dc"
@@ -113,20 +105,6 @@
         }
       },
       "readers": [
-        {
-          "path": "tools/kat2_product.py",
-          "anchor": "\"res://tests/kat2_probe.gd\"",
-          "sources": [
-            "game/tests/kat2_probe.gd"
-          ]
-        },
-        {
-          "path": ".github/workflows/p1-product.yml",
-          "anchor": "python3 tools/p1_product.py",
-          "sources": [
-            "tools/p1_product.py"
-          ]
-        },
         {
           "path": ".github/workflows/ci-chromium.yml",
           "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
@@ -179,7 +157,7 @@
         "bytes": 32768,
         "pngs": 0
       },
-      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save budgets unchanged; F02 replaces only the KK process limit as explicitly authorized. Targeted diagnostic traces remain local, outside permanent CI. F01-D03 also exposes the unchanged drawing-capture command at the executable reader; positional caller and arguments remain identical. The same process-tree test covers procfs disappearance at open (ENOENT) and read (ESRCH), while permission errors still fail; no liveness assertion is relaxed. F02 adds six cheap tests: KK before warning, successful 301/599s completion with live flushed warning, preserved exit/marker/engine-error rejection, hard timeout at 600s, unchanged other caller budgets, and real Linux descendant cleanup with accelerated waits. No new native mode, frames, assertions or artifact class. Decision: https://github.com/venomenon328/picross/pull/506#issuecomment-6631521834 . The longer KK ceiling is not an estimate of added mandatory work; actual CI runtime remains separately measured in T01.",
+      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save budgets unchanged; F02 replaces only the KK process limit as explicitly authorized. Targeted diagnostic traces remain local, outside permanent CI. F01-D03 also exposes the unchanged drawing-capture command at the executable reader; positional caller and arguments remain identical. The same process-tree test covers procfs disappearance at open (ENOENT) and read (ESRCH), while permission errors still fail; no liveness assertion is relaxed. F02 adds six cheap tests: KK before warning, successful 301/599s completion with live flushed warning, preserved exit/marker/engine-error rejection, hard timeout at 600s, unchanged other caller budgets, and real Linux descendant cleanup with accelerated waits. No new native mode, frames, assertions or artifact class. Decision: https://github.com/venomenon328/picross/pull/506#issuecomment-6631521834 . The longer KK ceiling is not an estimate of added mandatory work; actual CI runtime remains separately measured in T01. P2-C transfers the two subsequently changed shared source paths into its own delta record; the historical F01/F02 assertions and budgets remain unchanged.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -238,14 +216,116 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p2-c-native-costs",
+      "kind": "permanent-small",
+      "purpose": "P2-C-V01: reuse immutable EA imported inputs and omit only exactly opaque PNG alpha; preserve existing native evidence and independent gates",
+      "level": "Existing completion and catalog paths; two tiny filesystem regressions and one tiny RGB/alpha gate regression; no new native invocation or retained image",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / package P2-C implementer",
+      "sources": {
+        "game/tests/kat2_probe.gd": {
+          "before": "0ef6ddfca2232d9a0f070aba2b4aecf715b9227a",
+          "after": "87f93ccc56fd32e2791cabedfebf995f4b36454c"
+        },
+        "tools/p1_product.py": {
+          "before": "d83328ed6ab70e808ea9c599304298a85c015100",
+          "after": "273c54df4c305e7408b1dd7a09efea4e137eb099"
+        },
+        "tools/ea_product.py": {
+          "before": "fe2f0b6f951d2e4131d70d0c8cbb7ee8c1c0a07d",
+          "after": "994c91f567bf77baca2f66a52442800bc150bf61"
+        },
+        "tools/test_ea_product.py": {
+          "before": null,
+          "after": "5204690862d7c4f0b6f2bb661af374a70dc07c61"
+        },
+        "tools/test_ci_c.py": {
+          "before": "f62199bc5fc1d8bde04dcad0278f7095caf71003",
+          "after": "808da00eacd1d7a69133cc3e5772b057b9e91ea7"
+        }
+      },
+      "readers": [
+        {
+          "path": "tools/kat2_product.py",
+          "anchor": "\"res://tests/kat2_probe.gd\"",
+          "sources": [
+            "game/tests/kat2_probe.gd"
+          ]
+        },
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/p1_product.py",
+          "sources": [
+            "tools/p1_product.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import ea_product",
+          "sources": [
+            "tools/ea_product.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_ea_product.py",
+            "tools/test_ci_c.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 1,
+        "wall_seconds": 1,
+        "files": 0,
+        "bytes": 1024,
+        "pngs": 0
+      },
+      "coverage": "Two copy isolation/corruption controls and one RGB acceptance/lost-alpha rejection control (255/254/80/0). Existing native imports, 2327 EA checks + 10 restart checks, 3440 KK checks, crop/original/alias/hash gates and inventory remain. ABBA import probe saves about 6.09 s minus 0.27 s isolated copy; two-order original-frame codec probe saves 4986706 logical bytes with exact RGBA equality. Cost is conservative additional small guards/report metadata, not a new heavy native workload. Local diagnostics are one-off, not CI obligations; full final CI and temporary remainder belong in T01.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle. D03 maintains the existing capture observation; no additional permanent test or native invocation. F02 adds six small runner regressions, including one accelerated real-process cleanup; native KK checks remain 3440.",
+    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle. D03 maintains the existing capture observation; no additional permanent test or native invocation. F02 adds six small runner regressions, including one accelerated real-process cleanup; native KK checks remain 3440. P2-C: two small imported-copy regressions and one small RGB/alpha gate regression; existing native modes only.",
     "removed": "No current product tests or required evidence removed.",
     "temporary": [],
-    "cost_change": "Estimate: original <=3 s Docs guard plus <=3 s F01/F02 runner regressions, unchanged native modes/images; only kat2-kk gets live warning at 300 s and hard timeout at 600 s. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate. D03 estimate <=0.01 s for atlas-frame observation, no additional files/readbacks/PNGs; measured isolated/parallel diagnostics and final CI are recorded in T01."
+    "cost_change": "Estimate: original <=3 s Docs guard plus <=3 s F01/F02 runner regressions, unchanged native modes/images; only kat2-kk gets live warning at 300 s and hard timeout at 600 s. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate. D03 estimate <=0.01 s for atlas-frame observation, no additional files/readbacks/PNGs; measured isolated/parallel diagnostics and final CI are recorded in T01. P2-C measured local import and codec savings, plus <=1 s estimated small regression/guard overhead and <=1024 B report metadata. Final CI measurements in P2-C-T01; no required images removed. P3-B remains separate."
   }
 }
