@@ -105,7 +105,7 @@
         },
         "tools/test_p1_product.py": {
           "before": "e2d6371c7e7d3b36c55fc8c1459797734b9c1078",
-          "after": "b43d301fde7752e61a1e6bd9427c18cca6c63f82"
+          "after": "a2dad3e21b0b6400be7402a4c27e20174d5304dc"
         },
         "tools/kat2_product.py": {
           "before": "150ecdf5975623eb2d7b490b61adbe99dfdacdf6",
