@@ -106,6 +106,10 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
         import resource
         usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
     path = logs / f"{name}.log"
+    # P3-A-F02: only KK may finish after the standard 300s boundary.
+    warning_seconds = 300 if name == "kat2-kk" else None
+    timeout = 600 if name == "kat2-kk" else timeout
+    warning_emitted = False
     timed_out = False
     with path.open("wb") as stream, import_settings(command):
         # xvfb-run waits for Godot: killing only the wrapper leaves the engine
@@ -114,7 +118,21 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
         with subprocess.Popen(command, env=environment, stdout=stream,
                               stderr=subprocess.STDOUT, start_new_session=grouped) as process:
             try:
-                exit_code = process.wait(timeout=timeout)
+                if warning_seconds is None:
+                    exit_code = process.wait(timeout=timeout)
+                else:
+                    waiting_started = time.monotonic()
+                    try:
+                        exit_code = process.wait(timeout=warning_seconds)
+                    except subprocess.TimeoutExpired:
+                        warning_emitted = True
+                        warning = f"WARNING: {name} reached {warning_seconds}s; continuing with {timeout}s hard timeout"
+                        stream.write(("\n" + warning + "\n").encode())
+                        stream.flush()
+                        print(warning, flush=True)
+                        # Warning/logging time consumes the same hard budget.
+                        remaining = max(0, timeout - (time.monotonic() - waiting_started))
+                        exit_code = process.wait(timeout=remaining)
             except BaseException as error:
                 if grouped:
                     try:
@@ -145,6 +163,8 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
                 process_role='import' if '--import' in command else 'export' if '--export-debug' in command else 'version' if '--version' in command else 'game',
                 rendered='--headless' not in command and '--version' not in command,
                 seconds=round(time.monotonic() - started, 3), timed_out=timed_out,
+                timeout_seconds=timeout, warning_seconds=warning_seconds,
+                warning_emitted=warning_emitted,
                 process_costs=costs,
                 log=bound_log(path))
 
@@ -490,7 +510,7 @@ def main(argv: list[str] | None = None) -> int:
                                        args.process_timeout_seconds, reporter.logs)
                     result["required_marker"] = marker
                     if result["timed_out"]:
-                        raise toolchain.PreflightError(f"{name} exceeded {args.process_timeout_seconds}s")
+                        raise toolchain.PreflightError(f"{name} exceeded {result['timeout_seconds']}s")
                     if expected_failure:
                         toolchain.require_expected_failure(result, "P1_EXPECTED_FAILURE")
                         if result["exit_code"] != 23 or "SCRIPT ERROR:" in result["output"] or "ERROR:" in result["output"]:
