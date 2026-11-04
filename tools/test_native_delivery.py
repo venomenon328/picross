@@ -128,6 +128,32 @@ class Delivery(unittest.TestCase):
         self.assertEqual((self.destination/'graphics/selected/drawing-renders/unusual.png').read_bytes(),
                          b'original frame')
 
+    def test_live_raw_tree_does_not_expand_existing_oracle_nomination(self):
+        self.mark_failed()
+        report_path = self.technical/'graphics/product-report.json'
+        report = read(report_path)
+        report['selected_evidence']['files'] = [dict(file='drawing-renders/actual.png', failure_priority=True)]
+        write(report_path, report)
+        write(self.output/'groups/graphics/drawing-renders/zs2-after.json',
+              dict(captures=['actual.png', 'unrelated.png']))
+        for name in ('actual.png', 'unrelated.png'):
+            path = self.output/'groups/graphics/drawing-renders'/name
+            path.write_bytes(name.encode())
+        # The actual oracle input survives even if its retained copy was lost.
+        self.deliver()
+        self.assertTrue((self.destination/'graphics/selected/drawing-renders/actual.png').is_file())
+        self.assertFalse((self.destination/'graphics/selected/drawing-renders/unrelated.png').exists())
+
+    def test_missing_partial_report_still_retains_actual_failure_capture(self):
+        self.mark_failed()
+        (self.technical/'graphics/product-report.json').unlink()
+        raw = self.output/'groups/graphics/renders'
+        raw.mkdir(parents=True)
+        (raw/'failure-actual.png').write_bytes(b'last native error frame')
+        result = self.deliver()
+        self.assertFalse(result['accepted'])
+        self.assertTrue((self.destination/'graphics/selected/renders/failure-actual.png').is_file())
+
     def test_validation_failure_retains_affected_originals_even_after_aliasing(self):
         self.mark_failed('graphics')
         self.result['results'][-2].update(status='success', exit_code=0)
