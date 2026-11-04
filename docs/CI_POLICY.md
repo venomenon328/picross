@@ -2,6 +2,15 @@
 
 Stand: 26.10.2026 · Version 3.3 · [CI2-Spezifikation #412](https://github.com/venomenon328/picross/issues/412) · ausführbare Ausgangsbasis `main@967314538df376a281020fb4c34f93f370a491df`
 
+**P3-A-F02 / #502, Eigentümerentscheidung 04.11.2026:** Ausschließlich
+`kat2-kk` erhält während der Laufzeit bei 300 s eine nicht-blockierende Warnung
+und bei 600 s einen harten Timeout. Erfolg dazwischen bleibt bei sämtlichen
+bisherigen Assertions, Markern und Belegen zulässig. Alle anderen Phasen behalten
+ihre bestehenden Grenzen; der Workflowparameter bleibt 300 s. Der
+[native Belegvertrag](CI_C_NATIVE_GROUPS.md#phasenschutz--502--p3-a-f02)
+bindet Laufzeit, Budget und Warn-/Timeoutstatus. Diese selektive Ausnahme ersetzt
+die frühere F01-Grenze ausschließlich für KK; sie ist kein CI2-Leistungsnachweis.
+
 **HIL-1 / #500, Eigentümeranweisung 03.11.2026:** Keine vollständige Buchprüfung
 und insbesondere keine Filmproduktion in CI. Die Exportgruppe führt nur die
 gezielte Hilfe-/Produktlebenszyklusroute mit Import, echten Viewportereignissen,
@@ -202,7 +211,7 @@ Docs-Fehler verhindert unverändert `ci-required`; kein weiterer Job/Prüfmatrix
 
 **Übergang:** P2-B maß 840,229 s native Auswahl und 151.886.625 ZIP-Bytes
 (144,850 MiB). <10 Minuten und der 75-MiB-Arbeitsrichtwert bleiben verfehlt.
-P3-A schaltet weder Gesamt-Byte-/Dateimaxima noch neue Zeitabbrüche,
+P3-A schaltet weder Gesamt-Byte-/Dateimaxima noch globale neue Zeitabbrüche,
 Testauslassungen oder Chromium ein. Weitere Optimierung P2-C und das globale
 Erfolgslimit P3-B brauchen ihre eigenen Aufträge und Entscheidungen.
 

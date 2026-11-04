@@ -90,8 +90,8 @@
     {
       "id": "p3-a-f01-harness",
       "kind": "permanent-small",
-      "purpose": "F01: observe pending or genuinely attempted debounced save; stop Linux wrapper descendants on phase abort",
-      "level": "Existing native information mode and phase runner; one bounded Python process-tree regression, no new native mode or images",
+      "purpose": "F01: observe pending or genuinely attempted debounced save; stop Linux wrapper descendants on phase abort; F02: KK-only live 300s warning and 600s hang protection",
+      "level": "Existing native information mode and phase runner; one bounded Python process-tree regression, no new native mode or images; deterministic clock/wait controls and one short real KK descendant cleanup case",
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / package P3-A implementer",
       "sources": {
@@ -101,11 +101,11 @@
         },
         "tools/p1_product.py": {
           "before": "6e80ac152b864bcc8c53187e92929459f30b225b",
-          "after": "8e88aa13818d44f8e7ef8e55d3be19a1e9866da3"
+          "after": "d83328ed6ab70e808ea9c599304298a85c015100"
         },
         "tools/test_p1_product.py": {
           "before": "e2d6371c7e7d3b36c55fc8c1459797734b9c1078",
-          "after": "13b78c4c7bfec5e2809d939f7ae4cac2db5b41df"
+          "after": "b43d301fde7752e61a1e6bd9427c18cca6c63f82"
         },
         "tools/kat2_product.py": {
           "before": "150ecdf5975623eb2d7b490b61adbe99dfdacdf6",
@@ -173,13 +173,13 @@
         "browser_request": null
       },
       "cost": {
-        "cpu_seconds": 1,
-        "wall_seconds": 2,
+        "cpu_seconds": 2,
+        "wall_seconds": 3,
         "files": 0,
-        "bytes": 4096,
+        "bytes": 32768,
         "pngs": 0
       },
-      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save/process budgets unchanged. Targeted diagnostic traces remain local, outside permanent CI. F01-D03 also exposes the unchanged drawing-capture command at the executable reader; positional caller and arguments remain identical. The same process-tree test covers procfs disappearance at open (ENOENT) and read (ESRCH), while permission errors still fail; no timeout or liveness assertion is relaxed.",
+      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save budgets unchanged; F02 replaces only the KK process limit as explicitly authorized. Targeted diagnostic traces remain local, outside permanent CI. F01-D03 also exposes the unchanged drawing-capture command at the executable reader; positional caller and arguments remain identical. The same process-tree test covers procfs disappearance at open (ENOENT) and read (ESRCH), while permission errors still fail; no liveness assertion is relaxed. F02 adds six cheap tests: KK before warning, successful 301/599s completion with live flushed warning, preserved exit/marker/engine-error rejection, hard timeout at 600s, unchanged other caller budgets, and real Linux descendant cleanup with accelerated waits. No new native mode, frames, assertions or artifact class. Decision: https://github.com/venomenon328/picross/pull/506#issuecomment-6631521834 . The longer KK ceiling is not an estimate of added mandatory work; actual CI runtime remains separately measured in T01.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -243,9 +243,9 @@
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle. D03 maintains the existing capture observation; no additional permanent test or native invocation.",
+    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle. D03 maintains the existing capture observation; no additional permanent test or native invocation. F02 adds six small runner regressions, including one accelerated real-process cleanup; native KK checks remain 3440.",
     "removed": "No current product tests or required evidence removed.",
     "temporary": [],
-    "cost_change": "Estimate: original <=3 s Docs guard plus <=2 s F01 regression, unchanged native modes/images and 300 s phase timeout. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate. D03 estimate <=0.01 s for atlas-frame observation, no additional files/readbacks/PNGs; measured isolated/parallel diagnostics and final CI are recorded in T01."
+    "cost_change": "Estimate: original <=3 s Docs guard plus <=3 s F01/F02 runner regressions, unchanged native modes/images; only kat2-kk gets live warning at 300 s and hard timeout at 600 s. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate. D03 estimate <=0.01 s for atlas-frame observation, no additional files/readbacks/PNGs; measured isolated/parallel diagnostics and final CI are recorded in T01."
   }
 }

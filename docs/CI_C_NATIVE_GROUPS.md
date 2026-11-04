@@ -18,13 +18,38 @@ Das heutige logische Pflichtinventar, seine physischen Aliase, alle Assertions,
 Quellen-, Head-/Basis-/Run-/Versuchsbindungen und Pixel-/Exportgates bleiben
 erhalten. Laufzeit, erzeugte/gelieferte PNGs und physische/logische Dateien/Bytes
 werden weiter gemessen. P3-A setzt keine globale 75-MiB-/10-Minuten-Grenze,
-ändert keine Zeitfenster und erteilt keinen Browserauftrag. P2-C/P3-B bleiben
+ändert keine funktionalen Zeitfenster und erteilt keinen Browserauftrag. P2-C/P3-B bleiben
 separat; bestehende Produktprüfungen werden nicht rückwirkend nach Namen verboten.
+
+## Phasenschutz · #502 / P3-A-F02
+
+Die [Eigentümerentscheidung vom 04.11.2026](https://github.com/venomenon328/picross/pull/506#issuecomment-6631521834)
+ersetzt ausschließlich für `kat2-kk` den bisherigen 300-s-Abbruch: Während der
+laufenden Phase wird bei 300 s einmal eine nicht-fatale Warnung in Konsole und
+geflushtes Phasenlog geschrieben; der harte Schutz endet bei 600 s. Warnung und
+Protokollierung verbrauchen denselben Rahmen. Erfolg zwischen den Grenzen bleibt
+zulässig, sofern normale Exit-/Enginefehler-, Marker-, Fach- und Ergebnisprüfungen
+bestehen. Alle 3.440 KK-Checks und Pflichtbilder bleiben erhalten.
+
+Die bestehenden Phasenergebnisse in `product-report.json` enthalten tatsächliche
+`seconds`, wirksame `timeout_seconds`, `warning_seconds`, `warning_emitted` und
+`timed_out`; das gebundene Originalphasenlog hält Warnung bzw. Timeouttext fest.
+Bei Timeout bleiben Fehlerstatus und die Bereinigung der eigenen Linux-
+Prozessgruppe samt Nachkommen erhalten. Andere Phasen, auch `kat2-kk-import`,
+übernehmen unverändert das jeweilige Aufruferbudget. Der Workflow bleibt bei
+`--process-timeout-seconds 300`; Scheduler, Renderer und Threadpolicy bleiben
+unverändert. Der gesonderte Buchproducer behält seine bestehenden Grenzen.
+
+Kontrollierte Uhr-/Waitfälle und ein kurzer echter Linux-Kind-/Enkelprozessfall
+prüfen diese Grenze im bestehenden Toolpfad ohne minutenlange Wartezeiten.
+600 s sind ein Hangschutz, kein Leistungsziel. Tatsächliche CI-Zeiten und
+verbleibende CI2-Zielverfehlungen werden in T01 am geprüften Head/Run ausgewiesen.
 
 ## Laufzeit und Originalpixel · #502 / P2-B
 
 Die aktuelle Auswahl, sämtliche Produktassertions, KAT-2-Modi, nativen Prozesse,
-Zeitgrenzen und isolierten Projekte/Profile bleiben erhalten. Nur Linux-
+funktionalen Zeitgrenzen und isolierten Projekte/Profile bleiben erhalten;
+den selektiven KK-Hangschutz ersetzt F02 wie oben beschrieben. Nur Linux-
 Softwarerenderprozesse erhalten `LP_NUM_THREADS=1`, ausgenommen die aktuellen
 kurzen Save-/Schraffur-/Atlasbewegungs- und echten Buch-Lifecyclezeitfenster
 (`kat2-information`, `current-drawing-capture`, `perf-b-native`, `book-integration`).
