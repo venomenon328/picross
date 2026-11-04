@@ -309,10 +309,6 @@
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / P2-C-V03 implementer",
       "sources": {
-        ".github/workflows/p1-product.yml": {
-          "before": "afd570590bd92da656ed34369c3c1564d18f8dec",
-          "after": "165f5cd4ab6a6a10956618c86be26d32fea8a4ef"
-        },
         "game/tests/at_alpha.gd": {
           "before": "fd21559461011ebe02abbf568e5547ff8c2e3213",
           "after": "d71f9da9ccf80ccf2e2eed9ce91855bfe558f87c"
@@ -453,21 +449,9 @@
           "before": "b3b2775fc9924ce275313976edbe9b451a22458e",
           "after": "273a9769321dcf7f369bb9fc3bddb75722acad35"
         },
-        "tools/native_results.py": {
-          "before": "7869ec4d8769e3f055319324f6dc625ab0309792",
-          "after": "a514719c0a79fb3a92f5a33f789f5c3bbf4cd7a7"
-        },
-        "tools/native_runner.py": {
-          "before": "a7dbd9060c73c7e0760ce9ad7962ebe5f8bfa12e",
-          "after": "33565a9c77940a2621e29ddf05b54764d30b318d"
-        },
         "tools/p1_current_visual.py": {
           "before": "3e4be1f03a851608e767b92af6f742304655ae3f",
           "after": "3c7ddacdf9f7c855207fe39eb3ff500633dda080"
-        },
-        "tools/p1_evidence.py": {
-          "before": "ddc4fc029f04bc4e9549358f04ef1212f4718e52",
-          "after": "298cde74cb447acefd26fc76c70789a742898513"
         },
         "tools/p1_product.py": {
           "before": "8e6e575c7b6a4db37525338852685442360daed3",
@@ -515,13 +499,6 @@
         }
       },
       "readers": [
-        {
-          "path": ".github/workflows/p1-product.yml",
-          "anchor": "on:\n  workflow_call:",
-          "sources": [
-            ".github/workflows/p1-product.yml"
-          ]
-        },
         {
           "path": "game/tests/ea_probe.gd",
           "anchor": "var alpha_final := await preload(\"res://tests/at_alpha.gd\").sample(self,app.reveal_view,\"final-%d\" % context[0])",
@@ -705,31 +682,10 @@
           ]
         },
         {
-          "path": "tools/ci_scope.py",
-          "anchor": "from native_results import validate_all",
-          "sources": [
-            "tools/native_results.py"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "from native_runner import run",
-          "sources": [
-            "tools/native_runner.py"
-          ]
-        },
-        {
           "path": "tools/p1_product.py",
           "anchor": "import p1_current_visual",
           "sources": [
             "tools/p1_current_visual.py"
-          ]
-        },
-        {
-          "path": "tools/at_windows_probe.py",
-          "anchor": "from p1_evidence import source_identity",
-          "sources": [
-            "tools/p1_evidence.py"
           ]
         },
         {
@@ -851,14 +807,133 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p3-b-l01-delivery",
+      "kind": "permanent-small",
+      "purpose": "Current native failure selection and unchanged independent success delivery; no new heavy phase or render work",
+      "level": "Existing standard-library runner and Docs tests; temporary synthetic filesystem inputs",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / P3-B-L01 implementer",
+      "sources": {
+        ".github/workflows/p1-product.yml": {
+          "before": "165f5cd4ab6a6a10956618c86be26d32fea8a4ef",
+          "after": "b6f7646b1372b92d7db38f606a62ca806ef16fc2"
+        },
+        "tools/native_delivery.py": {
+          "before": null,
+          "after": "b9a7c19cbea88db236b7cbbbe94cbd57883cfa07"
+        },
+        "tools/test_native_delivery.py": {
+          "before": null,
+          "after": "14c0a35983240b3dced25b5032821765ae763288"
+        },
+        "tools/native_runner.py": {
+          "before": "33565a9c77940a2621e29ddf05b54764d30b318d",
+          "after": "9eb82a888ce9ebc02a24bad11aec1f1d4a4af7c2"
+        },
+        "tools/native_results.py": {
+          "before": "a514719c0a79fb3a92f5a33f789f5c3bbf4cd7a7",
+          "after": "11567796646cb7e571f9be6998033a55001815d2"
+        },
+        "tools/p1_evidence.py": {
+          "before": "298cde74cb447acefd26fc76c70789a742898513",
+          "after": "60e652969a0873e6ce71c367a8f1db79fc8a43b3"
+        }
+      },
+      "readers": [
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "on:\n  workflow_call:",
+          "sources": [
+            ".github/workflows/p1-product.yml"
+          ]
+        },
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/native_delivery.py",
+          "sources": [
+            "tools/native_delivery.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_native_delivery.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "from native_runner import run",
+          "sources": [
+            "tools/native_runner.py"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "from native_results import validate_all",
+          "sources": [
+            "tools/native_results.py"
+          ]
+        },
+        {
+          "path": "tools/native_delivery.py",
+          "anchor": "from p1_evidence import native_failure_sources, source_identity",
+          "sources": [
+            "tools/p1_evidence.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 3,
+        "wall_seconds": 3,
+        "files": 1,
+        "bytes": 16384,
+        "pngs": 0
+      },
+      "coverage": "Small synthetic positive/negative delivery and workflow retention cases, using existing gate fixtures. No new native process, PNG production or permanent evidence. One diagnostic status replaces unrelated successful group trees only on failures; required success inventory unchanged. Estimates concern added checks/status only, not total delivery sizes. Full measured CI/T01 and separate self-review in PR; independent P3-B-L01-R01 before merge.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "V03 adds no job, native process or retained image. Existing negative controls target the reduced current oracle and actual retained pixel inputs. Historical small lifecycle/process/codec guards remain.",
-    "removed": "All 435 logical old PNG duties audited: H272 retired, E7 outside routine CI, D156 reduced. Ten minimal AT/HN raw inputs remain; 29 HS/ZS inputs are temporary. Retired native gallery/capture processes, HZ/KE/HC producers and KAT image readers deleted; historical packaging and quantity gates removed.",
+    "added": "P3-B-L01 small synthetic delivery/retention regressions in existing Docs discovery; no new heavy phase, job or PNG.",
+    "removed": "No current product regression removed. Failure uploader no longer retains successful unrelated group payloads.",
     "temporary": [],
-    "cost_change": "Strict reduction of existing execution/image/output work; added work estimate zero. Measure generated incl consumed temporary, delivered logical/physical PNGs, bytes/ZIP, process CPU/wall and gate/upload at final CI; no fabricated causal runtime claim. Exceptions reviewed at V03-R01 or 2026-11-18. No new historical archive; blocked old local data unchanged."
+    "cost_change": "Estimated added cheap tests/status at most 3 CPU/wall seconds; existing success bytes unchanged and failed delivery purpose-selected. Actual measured times, files/bytes and retained originals in L01-T01. Technical CI 7 days, players 14 days. No new historical archive or local blocked-data cleanup."
   }
 }

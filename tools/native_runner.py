@@ -138,6 +138,8 @@ def run(args):
         validate_payload(result, technical, output if 'export' in groups else None)
     except (ValueError, OSError, KeyError, TypeError) as error:
         result.update(status='failure', validation_error=str(error))
+        if getattr(error, 'native_group', None):
+            result['validation_group'] = error.native_group
         print('NATIVE EVIDENCE FAIL: '+str(error), flush=True)
     result['validation_seconds'] = round(time.monotonic()-validation_began,6)
     flush()

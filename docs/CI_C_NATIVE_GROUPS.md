@@ -30,8 +30,31 @@ Einmalbelege nur auf konkreten Auftrag außerhalb der Regel-CI. Kein Chromium.
 Die folgenden Lieferbeschreibungen bleiben historische Quellen ihrer jeweiligen
 Revision, soweit sie alte Bilder, Reader, Mengen oder Einführungsprozesse nennen.
 Die 300-/KK-600-s-Grenzen, Scheduler und funktionalen Zeitfenster ändern sich nicht.
-75 MiB/<10 Minuten bleiben Ziele, P3-B folgt separat.
+Das CI2-Ziel unter zehn Minuten bleibt ein Optimierungsbefund.
+P3-B-D01 verwirft den alten 75-MiB-Richtwert und feste Mengenobergrenzen.
 
+
+## Zweckgebundene Zustellung · #502 / P3-B-L01
+
+[Eigentümerentscheidung P3-B-D01](https://github.com/venomenon328/picross/issues/502#issuecomment-6641721279)
+ersetzt frühere feste Byte-/Datei-/PNG-Grenzen, auch die historischen P3-B-Pläne.
+`native_delivery.py` stellt im CI-Runner ein frisches Zustellungsverzeichnis bereit.
+Bei Producer-Erfolg und gebundenem erfolgreichem `native-result.json` übernimmt es
+sämtliche ursprünglichen Technikbytes unverändert unter demselben Artefaktnamen.
+Das unabhängige Gate prüft weiterhin Quelle/Run/Versuch, Inventar, Pixel und Player.
+
+Bei Fehlern bleiben das ursprüngliche Laufergebnis, kompakte Gruppenstatus und
+nur die betroffenen Gruppenberichte/Phasen-/Prozesslogs sowie echte nominierte
+Oracle-/Fehleroriginale erhalten. Validierungsfehler binden ihre Gruppe; deren
+benötigte Originale bleiben einschließlich physischer Aliasquellen verfügbar.
+Mehrere Fehler liefern mehrere Bereiche. Unterbrochene Producer dürfen vorhandene
+Teilberichte und Phasenoriginale liefern, ohne ein Erfolgsergebnis zu erzeugen.
+`diagnostics.json` weist ausdrücklich `accepted=false` aus; auch fehlende Dateien,
+Bindungsfehler oder Zustellungsstörungen bleiben Fehler. GitHub-Joblogs erhalten
+den frühen Fehlerpfad. Keine Wiederverwendung fremder Runs und kein Gesamtbaumdump.
+Technik-/Fehlerbelege sieben Tage, echte ausgewählte Spielerpakete vierzehn Tage;
+Feature-/Sichtbelege nur bis konkreter Abnahme/Review oder Ablauf. Keine neue
+historische Belegsammlung und kein impliziter Browserauftrag.
 
 ## Neue Prüfungen und Featureabschluss · #502 / P3-A
 
@@ -94,7 +117,7 @@ eine zusätzliche 15-Bild-ABBA-Probe misst CPU, Wandzeit, Spitzenspeicher und ZI
 Pillow-Stufen 1/3/6 rechtfertigten keine zusätzliche Rekodierung. Vollständige
 Istwerte, Producergrenzen, lokale Befristung und finaler CI-Vergleich gehören in
 V02-T01 am tatsächlichen Head/Run. Keine Behauptung eines kausalen CI-Zeitgewinns
-aus verschiedenen Runnern; 75 MiB bleibt Richtwert, P3-B bleibt separat.
+aus verschiedenen Runnern. Der damalige 75-MiB-Richtwert ist durch P3-B-D01 überholt.
 
 ## Phasenschutz · #502 / P3-A-F02
 
@@ -172,7 +195,7 @@ entfernen diese temporären Kopien auch nach Fehlern. Das feste logische Inventa
 Originalberichte und Einzelbindungen bleiben unverändert verpflichtend. Fehler-
 artefakte werden nicht dedupliziert. Physische und logische Dateien/PNGs/Bytes,
 erzeugte Arbeitsdateien sowie direkt im Technikbereich erzeugte HIL-PNGs werden
-getrennt ausgewiesen. Globale Budgetguards bleiben P3-B; neue Lebenszyklusregeln
+getrennt ausgewiesen. Globale Mengenguards sind durch P3-B-D01 verworfen; Lebenszyklusregeln
 stehen oben unter P3-A. CI2-Ziele gelten
 erst nach tatsächlicher Messung als erreicht. Messwerte und Restbefunde im P2-B-T01.
 
