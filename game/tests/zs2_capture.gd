@@ -132,13 +132,13 @@ func rework_motion(marker: String = "x") -> void:
 		for i: int in range(3):
 			# Three actual rendered instants; no dense readback/PNG sequence.
 			if i == 0:
-				# Observe the completed production draw. A pre-draw 30ms wait can
-				# discard a visible early frame and spend the next stroke rendering
-				# and reading back its replacement under software-renderer load.
-				# Skip empty atlas frame zero; the pixel oracle still requires
-				# visible native ink and the unchanged real-time stroke windows.
+				# Observe a completed early production draw. The first nonzero
+				# atlas frame may still have no visible hatch pixels (observed at
+				# 9ms on llvmpipe). Wait on post-draw timestamps, not an extra
+				# pre-draw delay/readback; the independent oracle still requires
+				# visible ink before 105ms and the unchanged second-stroke window.
 				await RenderingServer.frame_post_draw
-				while app.board.marks.Atlas.frame(rendered[0] - began) == 0:
+				while rendered[0] - began < 30000:
 					await RenderingServer.frame_post_draw
 			else:
 				var target_ms: int = [105,230][i-1]
