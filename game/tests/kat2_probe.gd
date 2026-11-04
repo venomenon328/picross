@@ -432,8 +432,29 @@ func information_saves() -> void:
 	check(app.information.visible and app.information_origin == "work", "dirty: successful retry permits work-origin information")
 	check(int(app.store.load_slot(app.session.definition).data.cells[2]) == 1, "dirty: retry persists confirmed cell")
 	app.store.fail_step = "after_temp"
+	var before_view: Dictionary = save_bytes()
+	check(app.slot_errors[0].is_empty() and not before_view.has("t01.tmp") and app.save_timer.is_stopped(), "dirty: view-save observation starts clean")
+	# Observe the scheduling signal synchronously. Native popup/frame work can
+	# legitimately outlast the unchanged 350 ms debounce before choose_view returns.
+	var observed: Dictionary = {"scheduled": false, "timeouts": 0, "failed_save": false}
+	var on_view: Callable = func():
+		observed.scheduled = not app.save_timer.is_stopped() and app.save_timer.time_left > 0.0 and app.save_timer.wait_time == 0.35
+	var on_timeout: Callable = func():
+		observed.timeouts += 1
+		# Connected after Main's save callback: require a fresh, validated temp
+		# candidate and exact failure, not merely an old error or stopped timer.
+		var after: Dictionary = save_bytes()
+		var candidate: Variant = JSON.parse_string(after.get("t01.tmp", PackedByteArray()).get_string_from_utf8())
+		after.erase("t01.tmp")
+		observed.failed_save = app.slot_errors[0] == "Testabbruch nach Tempvalidierung." and Store.validate(candidate, app.session.definition).is_empty() and after == before_view
+	app.board.view_changed.connect(on_view)
+	app.save_timer.timeout.connect(on_timeout)
 	await choose_view(1)
-	check(not app.save_timer.is_stopped(), "dirty: work-origin view still schedules mandatory save")
+	app.board.view_changed.disconnect(on_view)
+	app.save_timer.timeout.disconnect(on_timeout)
+	var pending: bool = observed.timeouts == 0 and not app.save_timer.is_stopped() and app.slot_errors[0].is_empty() and save_bytes() == before_view
+	var attempted: bool = observed.timeouts == 1 and app.save_timer.is_stopped() and observed.failed_save
+	check(observed.scheduled and (pending or attempted), "dirty: work-origin view still schedules mandatory save")
 	click(app.actions["nav-work"])
 	click(caption_button(app.settings_panel, "Beenden"))
 	app.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)

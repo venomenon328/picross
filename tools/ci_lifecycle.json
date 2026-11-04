@@ -86,14 +86,111 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p3-a-f01-harness",
+      "kind": "permanent-small",
+      "purpose": "F01: observe pending or genuinely attempted debounced save; stop Linux wrapper descendants on phase abort",
+      "level": "Existing native information mode and phase runner; one bounded Python process-tree regression, no new native mode or images",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / package P3-A implementer",
+      "sources": {
+        "game/tests/kat2_probe.gd": {
+          "before": "0c3bd16e741beb30aefc9acdd164e1faafe721f7",
+          "after": "0ef6ddfca2232d9a0f070aba2b4aecf715b9227a"
+        },
+        "tools/p1_product.py": {
+          "before": "6e80ac152b864bcc8c53187e92929459f30b225b",
+          "after": "6038ae66f52c165cdd3cff0bdcf40c0342e9f8c9"
+        },
+        "tools/test_p1_product.py": {
+          "before": "e2d6371c7e7d3b36c55fc8c1459797734b9c1078",
+          "after": "4a2612a0eafa1ad0f73def8ee0ba5413abf68ac5"
+        },
+        "tools/kat2_product.py": {
+          "before": "150ecdf5975623eb2d7b490b61adbe99dfdacdf6",
+          "after": "cc73c9c495fe8b3f55fe55e1f15c4e0356b2e006"
+        }
+      },
+      "readers": [
+        {
+          "path": "tools/kat2_product.py",
+          "anchor": "\"res://tests/kat2_probe.gd\"",
+          "sources": [
+            "game/tests/kat2_probe.gd"
+          ]
+        },
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/p1_product.py",
+          "sources": [
+            "tools/p1_product.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_p1_product.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import kat2_product",
+          "sources": [
+            "tools/kat2_product.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 1,
+        "wall_seconds": 2,
+        "files": 0,
+        "bytes": 4096,
+        "pngs": 0
+      },
+      "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save/process budgets unchanged. Targeted diagnostic traces remain local, outside permanent CI.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; existing product regressions retained.",
+    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle.",
     "removed": "No current product tests or required evidence removed.",
     "temporary": [],
-    "cost_change": "Estimate: <=3 s additional Docs/tool work and one <=32768-byte report, zero PNGs. Actual final CI costs and unresolved P2-C/P3-B targets belong to P3-A-T01; package awaiting independent R01."
+    "cost_change": "Estimate: original <=3 s Docs guard plus <=2 s F01 regression, unchanged native modes/images and 300 s phase timeout. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate."
   }
 }
