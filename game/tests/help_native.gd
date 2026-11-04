@@ -20,7 +20,7 @@ static func capture(t: SceneTree, name: String) -> void:
 	await t.frames(4)
 	await RenderingServer.frame_post_draw
 	var image: Image = t.root.get_texture().get_image()
-	t.check(image != null and image.save_png(t.output.path_join("hil-"+name+".png")) == OK,"HIL native original "+name)
+	t.check(image != null and preload("res://tests/native_png.gd").write(image, t.output.path_join("hil-"+name+".png")) == OK,"HIL native original "+name)
 
 static func layout(t: SceneTree, node: Node, width: float, u: float) -> void:
 	for child: Node in node.get_children():

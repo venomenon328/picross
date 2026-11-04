@@ -3,6 +3,7 @@ extends SceneTree
 ## independent of the runtime mapping, cache and vertex-color shader.
 const Store = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
+var native_png: Script
 var app: Control
 var output: String
 var failures: int = 0
@@ -22,7 +23,9 @@ class ReferenceInk extends Control:
 	func _draw() -> void:
 		if texture != null: draw_texture_rect_region(texture,target,source,Color.WHITE,false,true)
 
-func _initialize() -> void: call_deferred("run")
+func _initialize() -> void:
+	native_png = load(get_script().resource_path.get_base_dir().path_join("native_png.gd"))
+	call_deferred("run")
 func check(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok:
@@ -123,7 +126,7 @@ func structural() -> void:
 	check(app.session.player.commit(changes),"valid dense synthetic history")
 	app.refresh()
 	await settle()
-	root.get_texture().get_image().save_png(output.path_join("runtime-dense-t02.png"))
+	native_png.write(root.get_texture().get_image(), output.path_join("runtime-dense-t02.png"))
 	var before: Dictionary = app.board.marks.stats.duplicate()
 	var draws: Array[int] = draw_counts.duplicate()
 	for i: int in range(12):
@@ -276,7 +279,7 @@ func pictures() -> void:
 				strip.blit_rect(actual,Rect2i(Vector2i.ZERO,actual.get_size()),Vector2i(column*actual.get_width(),0))
 				column+=1
 				samples.append({"zoom":zoom,"actual_cell":box.size.x,"value":value,"elapsed_us":elapsed,"mean_channel_error":error})
-			strip.save_png(output.path_join("runtime-%d-%d.png" % [zoom,value]))
+			native_png.write(strip, output.path_join("runtime-%d-%d.png" % [zoom,value]))
 	app.board.animation_clock=Time.get_ticks_usec
 
 func run() -> void:

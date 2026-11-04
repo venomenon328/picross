@@ -10,6 +10,7 @@ var records: Array = []
 var app: Control
 var output: String
 var stage: String
+var native_png: Script
 
 func digest(bytes: PackedByteArray) -> String:
 	var hash: HashingContext = HashingContext.new()
@@ -23,6 +24,7 @@ func texture_digest(texture: Texture2D) -> String:
 	return digest(image.get_data())
 
 func _initialize() -> void:
+	native_png = load(get_script().resource_path.get_base_dir().path_join("native_png.gd"))
 	call_deferred("run")
 
 func check(ok: bool, label: String) -> void:
@@ -223,8 +225,8 @@ func captures() -> void:
 				var hs_window: Dictionary = hs_window_evidence(image,Vector2i(config.x,config.y))
 				var name: String = "hf-%d-%d-%s-z%d" % [config.x,roundi(config.z*100),axis,zoom]
 				var global_box: Rect2 = Rect2(b.global_position+g.rect.position,g.rect.size).grow(3)
-				image.get_region(Rect2i(global_box)).save_png(output.path_join(name+".png"))
-				if zoom == 72: image.save_png(output.path_join(name+"-scene.png"))
+				native_png.write(image.get_region(Rect2i(global_box)), output.path_join(name+".png"))
+				if zoom == 72: native_png.write(image, output.path_join(name+"-scene.png"))
 				var entries: Array = b.tooltip_entries(axis,index)
 				var token_boxes: Array = []
 				for box: Rect2 in g.boxes: token_boxes.append([box.position.x,box.position.y,box.size.x,box.size.y])
@@ -246,7 +248,7 @@ func captures() -> void:
 		await process_frame
 		await RenderingServer.frame_post_draw
 		var g: Dictionary = b.tooltip_geometry()
-		root.get_texture().get_image().get_region(Rect2i(Rect2(b.global_position+g.rect.position,g.rect.size).grow(3))).save_png(output.path_join("hf-%d-single.png" % config.x))
+		native_png.write(root.get_texture().get_image().get_region(Rect2i(Rect2(b.global_position+g.rect.position,g.rect.size).grow(3))), output.path_join("hf-%d-single.png" % config.x))
 		# Stationary pointer no longer targets overflow after G -> V.
 		var point: Vector2 = Vector2(b.row_clue_area().get_center().x,b.view.origin.y+b.view.cell_size/2)
 		b.update_clue_hover(point)
@@ -275,7 +277,7 @@ func captures() -> void:
 		await process_frame
 		await RenderingServer.frame_post_draw
 		var name: String = "hf-rectangle-z%d.png" % wish
-		root.get_texture().get_image().save_png(output.path_join(name))
+		native_png.write(root.get_texture().get_image(), output.path_join(name))
 		records.append({"kind":"reported", "file":name, "wish":wish, "cell":b.view.cell_size, "reserve":[b.reserve_slots.x,b.reserve_slots.y], "demand":[b.max_hints.x,b.max_hints.y], "overlay":not b.clue_hover_axis.is_empty()})
 	b.size = Vector2(100,100)
 	b._layout()

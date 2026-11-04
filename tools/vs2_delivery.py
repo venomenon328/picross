@@ -42,20 +42,20 @@ def read_geometry_report(path: Path) -> dict:
     return json.loads(gzip.decompress(data) if source.suffix == ".gz" else data)
 
 
-def capture_current(project, workspace, output, engine, render_command, environment, phase):
+def capture_current(project, workspace, output, engine, render_command, environment, run_phase):
     """Current VS2 coverage; historical imports remain explicit separate replays."""
     environment["VS2_PROBE_OUTPUT"] = str(output)
     environment["P1_TEST_SAVE_ROOT"] = str(workspace / "vs2-current-saves")
     try:
         for stage in ("write", "read"):
             environment["VS2_STAGE"] = stage
-            phase("vs2-roundtrip-" + stage,
+            run_phase("vs2-roundtrip-" + stage,
                   [engine, "--headless", "--path", str(project), "--script", "res://tests/vs2_roundtrip.gd"],
                   "VS2_ROUNDTRIP_" + stage.upper() + "_OK")
     finally:
         for key in ("VS2_STAGE", "VS2_PROBE_OUTPUT", "P1_TEST_SAVE_ROOT"):
             environment.pop(key, None)
-    phase("vs2-gf1-tests", [engine, "--headless", "--path", str(project), "--script",
+    run_phase("vs2-gf1-tests", [engine, "--headless", "--path", str(project), "--script",
                           "res://tests/vs2_gf1_tests.gd"], "VS2_GF1_TESTS_OK")
     hf_dir = output / "hf149"
     hf_dir.mkdir()
@@ -63,10 +63,10 @@ def capture_current(project, workspace, output, engine, render_command, environm
     try:
         for stage in ("write", "read"):
             environment["HF149_STAGE"] = stage
-            phase("hf149-" + stage, [engine, "--headless", "--path", str(project),
+            run_phase("hf149-" + stage, [engine, "--headless", "--path", str(project),
                   "--script", "res://tests/hf149_probe.gd"], "HF149_" + stage.upper() + "_OK")
         environment.pop("HF149_STAGE", None)
-        phase("hf149-native", ["res://tests/hf149_probe.gd" if part == "res://tests/capture.gd" else part
+        run_phase("hf149-native", ["res://tests/hf149_probe.gd" if part == "res://tests/capture.gd" else part
               for part in render_command], "HF149_NATIVE_OK")
     finally:
         environment.pop("HF149_OUTPUT", None)
@@ -75,10 +75,9 @@ def capture_current(project, workspace, output, engine, render_command, environm
     renders = output / "vs2-renders"
     renders.mkdir()
     environment["VS2_CAPTURE_DIR"] = str(renders)
-    command = ["res://tests/vs2_tests.gd" if part == "res://tests/capture.gd" else part
-               for part in render_command]
     try:
-        phase("vs2-regular-matrix", command, "VS2_TESTS_OK")
+        run_phase("vs2-regular-matrix", ["res://tests/vs2_tests.gd" if part == "res://tests/capture.gd" else part
+                  for part in render_command], "VS2_TESTS_OK")
     finally:
         environment.pop("VS2_CAPTURE_DIR", None)
     report = verify(renders)
@@ -86,7 +85,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     focused_dir.mkdir()
     environment["VS2_V1_CAPTURE_DIR"] = str(focused_dir)
     try:
-        phase("vs2-v1-focused", ["res://tests/vs2_v1_tests.gd" if part == "res://tests/capture.gd" else part
+        run_phase("vs2-v1-focused", ["res://tests/vs2_v1_tests.gd" if part == "res://tests/capture.gd" else part
                                 for part in render_command], "VS2_V1_OK")
     finally:
         environment.pop("VS2_V1_CAPTURE_DIR", None)
@@ -108,7 +107,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     try:
         for stage in ("write", "read"):
             environment["VS2_V2_STAGE"] = stage
-            phase("vs2-v2-" + stage,
+            run_phase("vs2-v2-" + stage,
                   ["res://tests/vs2_v2_tests.gd" if part == "res://tests/capture.gd" else part
                    for part in render_command], "VS2_V2_" + stage.upper() + "_OK")
     finally:
@@ -117,7 +116,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     v2 = verify_v2(v2_dir)
     v2["plan_sha256"] = toolchain.sha256_file(Path(__file__).resolve().parents[1] / "examples/vs2/v2-plan.json")
     v2["scripts"] = {name: toolchain.sha256_file(project / "tests" / name)
-                     for name in ("vs2_v2_tests.gd", "vs2_v2_cases.gd")}
+                     for name in ("vs2_v2_tests.gd", "vs2_v2_cases.gd", "native_png.gd")}
     selected += list(v2_dir.glob("*.json"))
     selected += [v2_dir / p["file"] for p in v2["write"]["pictures"]]
     font = project / "art/drawing/BaksoDaging-Regular.ttf"
@@ -126,7 +125,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     v3_dir.mkdir()
     environment["VS2_V3_CAPTURE_DIR"] = str(v3_dir)
     try:
-        phase("vs2-v3-current", ["res://tests/vs2_v3_tests.gd" if part == "res://tests/capture.gd" else part
+        run_phase("vs2-v3-current", ["res://tests/vs2_v3_tests.gd" if part == "res://tests/capture.gd" else part
               for part in render_command], "VS2_V3_OK")
     finally:
         environment.pop("VS2_V3_CAPTURE_DIR", None)
@@ -143,7 +142,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     hc_dir.mkdir()
     environment["HC92_OUTPUT"] = str(hc_dir)
     try:
-        phase("hc92-native-font-pixels", ["res://tests/hc92_capture.gd" if part == "res://tests/capture.gd" else part
+        run_phase("hc92-native-font-pixels", ["res://tests/hc92_capture.gd" if part == "res://tests/capture.gd" else part
                                         for part in render_command], "HC92_NATIVE_OK")
     finally:
         environment.pop("HC92_OUTPUT", None)
@@ -154,7 +153,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     hs_dir.mkdir()
     environment["HS186_OUTPUT"] = str(hs_dir)
     try:
-        phase("hs186-native-number-cross-pixels", ["res://tests/hs186_capture.gd" if part == "res://tests/capture.gd" else part
+        run_phase("hs186-native-number-cross-pixels", ["res://tests/hs186_capture.gd" if part == "res://tests/capture.gd" else part
                                                  for part in render_command], "HS186_NATIVE_OK")
     finally:
         environment.pop("HS186_OUTPUT", None)
@@ -164,7 +163,7 @@ def capture_current(project, workspace, output, engine, render_command, environm
     hn_dir.mkdir()
     environment["HN192_OUTPUT"] = str(hn_dir)
     try:
-        phase("hn192-native-input-cursor", ["res://tests/hn192_probe.gd" if part == "res://tests/capture.gd" else part
+        run_phase("hn192-native-input-cursor", ["res://tests/hn192_probe.gd" if part == "res://tests/capture.gd" else part
                                           for part in render_command], "HN192_NATIVE_OK")
     finally:
         environment.pop("HN192_OUTPUT", None)

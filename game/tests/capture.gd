@@ -62,7 +62,7 @@ func fail_capture(message: String, code: int = 5) -> void:
 			if picture == null:
 				continue
 			var name: String = "failure-" + str(frame.name) + ("-underlay" if kind == "material" else "") + ".png"
-			if picture.save_png(output.path_join(name)) == OK:
+			if preload("res://tests/native_png.gd").write(picture, output.path_join(name)) == OK:
 				failure_captures.append({"file": name, "frame": frame.name, "kind": kind, "crop": false})
 	write_report()
 	quit(code)
@@ -208,7 +208,7 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 			var box: Rect2 = app.board.view.cell_rect(Vector2i(2, 2)).merge(app.board.view.cell_rect(Vector2i(18, 8)))
 			box.position += app.board.global_position
 			saved = picture.get_region(Rect2i(box.grow(8)).intersection(Rect2i(Vector2i.ZERO, picture.get_size())))
-		if saved.save_png(output.path_join(name + ".png")) != OK:
+		if preload("res://tests/native_png.gd").write(saved, output.path_join(name + ".png")) != OK:
 			fail_capture("Cannot retain capture: " + name, 4)
 			return picture
 		record.merge({"file": name + ".png", "retained": true, "crop": crop}, true)
@@ -519,7 +519,7 @@ func capture_zr_counter(app: Main) -> void:
 				var record: Dictionary = {"name":name,"cursor":[samples[i].x,samples[i].y],"length":b.gesture_length(),"rect":[area.position.x,area.position.y,area.size.x,area.size.y],"font_size":p.font_size,"ui":app.ui_scale,"requested_zoom":zoom,"actual_cell":b.view.cell_size,"changed_pixels":changed}
 				if i==2 and zoom==12.0 or i==10:
 					var image: Image = picture if i==2 else picture.get_region(area.grow(4).intersection(Rect2i(Vector2i.ZERO,surface.size)))
-					image.save_png(output.path_join(name+".png"))
+					preload("res://tests/native_png.gd").write(image, output.path_join(name+".png"))
 					record["file"]=name+".png"
 					captures.append({"name":name,"file":name+".png","crop":i!=2,"retained":true})
 				zr_samples.append(record)
