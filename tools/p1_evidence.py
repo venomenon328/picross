@@ -75,6 +75,9 @@ def native_failure_sources(output: Path, phase: str, pixel_inputs=()) -> tuple[l
                else "probe.json" if phase.startswith("perf-b-") else None)
     bound, phase_images, native_failures = set(), set(), set()
     for path in reports:
+        if (path.is_symlink() or not path.resolve().is_relative_to(output.resolve())
+                or any((output / parent).is_symlink() for parent in path.relative_to(output).parents)):
+            continue
         try:
             report = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
