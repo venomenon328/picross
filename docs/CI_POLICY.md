@@ -1,5 +1,10 @@
 # Aktuelle CI-Policy
 
+**P3-B-L01 / #502:** [P3-B-D01](https://github.com/venomenon328/picross/issues/502#issuecomment-6641721279)
+ersetzt frühere numerische P3-B-Gesamtgrenzen durch Zweck, tatsächliche Leser,
+Featureabschluss und Aufbewahrung. Technische Erfolg-/Fehlerbelege sieben Tage,
+ausgewählte Spielerpakete vierzehn Tage. Kein historisches Fehlerarchiv.
+
 **Aktualisierung P2-C-V03 / #502:** Die [Eigentümerentscheidung](https://github.com/venomenon328/picross/issues/502#issuecomment-6637589747)
 ersetzt historische Bild-/Abnahmewiederholungen durch den [Minimalvertrag](CI_C_NATIVE_GROUPS.md)
 und den [435-Pflichten-Audit](P2_C_V03_AUDIT.md). Keine Erfolgs-Sichtbilder;
@@ -39,7 +44,7 @@ P2-B erhält dieselben Assertions und logischen Originalbindungen, liefert nativ
 KAT-2-Ausschnitte direkt und HN-Originalsamples mit unabhängigem Pixelreplay;
 byteidentische PNGs werden einmal physisch gespeichert. Gemessene Prozesskosten,
 Schedulergrenzen und temporäre Rekonstruktion bindet der Belegvertrag.
-Globale Größenlimits bleiben P3-B; den Neuzuwachs-/Lebenszyklusguard liefert
+P3-B-D01 verwirft globale Mengenlimits; den Neuzuwachs-/Lebenszyklusguard liefert
 P3-A gemäß dem folgenden Abschnitt. Übrige nach dem
 Gesamtdiff ausgewählte Gruppen bleiben erforderlich; historische Vollnachweise
 werden weder wiederholt noch als aktueller verkürzter Erfolg umgedeutet.
@@ -180,7 +185,12 @@ behalten die Vereinigung sämtlicher vorhandener Pflichtbereiche.
 | `temporary` | Offenes verlinktes Feature/Issue und festes ISO-Ablaufdatum. Ende beim früheren Ereignis: Featureabschluss, geschlossenes GitHub-Issue/PR oder Datum. Keine Standard-CI-Daueraktivierung bei abgeschlossenem Feature. |
 | `permanent-heavy` | Aktueller belegter Abdeckungsbedarf, messbare Kosten, separate ausdrückliche Eigentümerentscheidung und festes nächstes Review-/Ablaufdatum. Ablauf erzwingt erneute Entscheidung oder Rückbau. |
 
-Die kleinen Zahlen unterscheiden **nur neue deklarierte Prüflast**; sie sind
+Die kleinen Zahlen unterscheiden **nur neue deklarierte Prüflast**; sie begrenzen
+weder bestehende erforderliche Originale noch deren Lieferung. Sie erteilen keine
+Daueraufbewahrung: auch kleine Nachweise brauchen aktuellen Zweck und Leser,
+CI-Laufartefakte verfallen nach sieben Tagen, Spielerpakete nach vierzehn.
+Die Klassifikation bleibt für neue schwere Dauerprüfungen mit separater
+Eigentümerentscheidung und für befristete Featureprüfungen wirksam. Die Zahlen sind
 keine globale Laufzeit-, Artefakt- oder Prozessabbruchgrenze. Kosten sind explizite
 Schätzungen, keine automatische Beweisführung über beliebige Programme. Den
 fachlichen Zweck, minimale Ebene und die Plausibilität gegenüber ausführbaren
@@ -222,9 +232,10 @@ Docs-Fehler verhindert unverändert `ci-required`; kein weiterer Job/Prüfmatrix
 
 **Übergang:** P2-B maß 840,229 s native Auswahl und 151.886.625 ZIP-Bytes
 (144,850 MiB). <10 Minuten und der 75-MiB-Arbeitsrichtwert bleiben verfehlt.
-P3-A schaltet weder Gesamt-Byte-/Dateimaxima noch globale neue Zeitabbrüche,
-Testauslassungen oder Chromium ein. Weitere Optimierung P2-C und das globale
-Erfolgslimit P3-B brauchen ihre eigenen Aufträge und Entscheidungen.
+Diese P2-B-Werte sind historische Messungen. P3-B-D01 ersetzt den 75-MiB-
+Richtwert und frühere Pläne eines Gesamt-Byte-/Dateimaximums vollständig.
+Es gibt keine festen Byte-/Datei-/PNG-Obergrenzen oder entsprechenden Warnschwellen.
+Das CI2-Laufzeitziel und der bestehende Prozess-Hangschutz bleiben erhalten.
 
 [HIL-F01](https://github.com/venomenon328/picross/pull/501#issuecomment-6601103689)
 stellt blockierte lokale Arbeitsdaten nur für den damaligen Merge zurück.
@@ -942,12 +953,27 @@ größere Lieferung ist ein zu erklärender Messwert, kein automatischer Fehler.
 
 Erfolgreiche Product-Läufe liefern das reguläre Windows-Spielerpaket und eine
 begrenzte technische Auswahl. Technische Daten werden sieben Tage, Spielerpakete
-14 Tage aufbewahrt. Erforderliche persönliche Referenzen werden vor Ablauf gezielt
-dauerhaft gesichert. Preflight exportiert weiterhin wirklich, lädt standardmäßig
+14 Tage aufbewahrt. Temporäre Feature-/Sichtbelege enden bei konkreter Abnahme/Review oder Ablauf;
+ein späterer Bedarf verlangt einen neuen ausdrücklich beauftragten Kandidaten.
+Historische Belege bleiben über PR/Commit erreichbar, ohne neue Bild-/ZIP-Sammlung.
+Die ausdrücklich geschützte Referenz unten bleibt davon unberührt. Preflight exportiert weiterhin wirklich, lädt standardmäßig
 aber nur den kleinen Bericht und Logs hoch. Fachberichte sind ebenfalls begrenzt.
 
 Product schreibt Bericht und laufende Phasenlogs von Anfang an unter `technical/`;
-dieser Ordner wird auch nach Fehlern/Abbrüchen hochgeladen. Fehlermarker werden am vollständigen Log geprüft; Logs werden nicht bytebedingt gekürzt. Abgebrochene Phasen bleiben als solche sichtbar.
+der Upload wird durch `tools/native_delivery.py` zweckbezogen bereitgestellt.
+Erfolg übernimmt das vollständige Pflichtinventar unverändert. Bei Fehlern/Abbrüchen
+werden nur Status, relevante fehlgeschlagene Gruppen-/Phasenberichte, vollständige
+Prozesslogs und betroffene Originale geliefert; erfolgreiche andere Gruppen
+stehen im Status statt mit vollständigem Dateibaum. Fehlende Teilberichte bleiben
+ehrliche Diagnosebefunde. Fehlerartefakte sind keine erfolgsfähigen Belege. Fehlermarker werden am vollständigen Log geprüft; Logs werden nicht bytebedingt gekürzt. Abgebrochene Phasen bleiben als solche sichtbar.
+Auch vor Eintritt in einen Fachgruppenreader fehlgeschlagene Bildaliasbindungen
+werden unabhängig im Stager geprüft. Die Diagnose nennt Alias und Zielgruppe;
+eine sichere physische PNG-Quelle aus einer anderen Gruppe wird nur einzeln und
+bei fehlerhafter Aliasbindung unter ihrem tatsächlichen Pfad geliefert.
+Der bestehende ZS2-Bericht unterscheidet Draw-/Post-Draw-Ereignisse, die letzte
+Produktionsanimationsuhr und Beginn/Ende der drei Readbacks. Diese Zeitspur wird
+im Speicher gesammelt und erst nach dem Animationsfenster geschrieben; sie
+ersetzt weder Originalpixel noch die unveränderten Zeitfensterprüfungen.
 Laufzeitziele werden erst durch neue Messungen als erreicht ausgewiesen;
 Warteschlangenzeit und Runnerzeit werden getrennt betrachtet.
 
