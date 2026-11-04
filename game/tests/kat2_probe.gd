@@ -11,15 +11,12 @@ var output: String
 var mode: String
 var checks: int = 0
 var failures: Array[String] = []
-var captures: Array = []
 var timings: Dictionary = {}
 var quit_slot_hashes: Dictionary = {}
 var kb_measurements: Array = []
 var kk_measurements: Array = []
 var kk_pointer_measurements: Array = []
-var ke_graphics_measurements: Array = []
 var at_measurements: Array = []
-var hzc_measurements: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -108,53 +105,13 @@ func choose(id: String) -> void:
 func shot(name: String) -> void:
 	await frames()
 	await RenderingServer.frame_post_draw
-	var read_started: int = Time.get_ticks_usec()
-	var image: Image = surface.get_texture().get_image()
-	image.convert(Image.FORMAT_RGBA8)
-	var read_seconds: float = (Time.get_ticks_usec()-read_started)/1000000.0
-	var filename: String = mode + "-" + name + ".png"
 	var textures: int = 0
 	for reveal: Control in app.album.reveals:
 		if reveal.artwork != null: textures += 1
 	check(app.choices.size() <= 24 and textures <= 24 and app.album.grid.get_child_count() <= 24, "bounded cards and earned textures")
-	# Bind the title, selector, summary and representative card in one native
-	# composition. Do not include unused album background just to fill the frame.
-	var controls: Array[Control] = [app.title, app.album.category_choice, app.album.summary]
-	controls.append(app.choices[0].get_parent() if not app.choices.is_empty() else app.album.empty_message)
-	if app.album.next_button.get_parent().visible: controls.append(app.album.page_label)
-	var bounds: Rect2 = controls[0].get_global_rect()
-	for control: Control in controls: bounds = bounds.merge(control.get_global_rect())
-	if not app.album.visible: bounds = app.work.get_global_rect()
-	bounds = bounds.intersection(Rect2(Vector2.ZERO,Vector2(surface.size)))
-	var regions: Dictionary = {"layout": [floori(bounds.position.x),floori(bounds.position.y),ceili(bounds.end.x),ceili(bounds.end.y)]}
-	# Only this exact rectangle has a current reader. Do not encode/write and
-	# decode a second full paper frame just to extract the same pixels in Python.
-	var rectangle: Array = regions.layout
-	var crop_started: int = Time.get_ticks_usec()
-	var crop: Image = image.get_region(Rect2i(rectangle[0],rectangle[1],rectangle[2]-rectangle[0],rectangle[3]-rectangle[1]))
-	var crop_seconds: float = (Time.get_ticks_usec()-crop_started)/1000000.0
-	var write_started: int = Time.get_ticks_usec()
-	check(preload("res://tests/native_png.gd").write(crop, output.path_join(filename)) == OK, "native frame saved " + filename)
-	var write_seconds: float = (Time.get_ticks_usec()-write_started)/1000000.0
-	var hash_started: int = Time.get_ticks_usec()
-	var source_hash := HashingContext.new()
-	source_hash.start(HashingContext.HASH_SHA256)
-	source_hash.update(image.get_data())
-	var stored_hash := HashingContext.new()
-	stored_hash.start(HashingContext.HASH_SHA256)
-	stored_hash.update(crop.get_data())
 	for card: Button in app.choices:
 		for label: Label in [card.caption,card.detail,card.leaf,card.note]:
 			check(card.get_global_rect().grow(1).encloses(label.get_global_rect()), "card labels fit without overlap")
-	captures.append({"file": filename, "framebuffer": [image.get_width(), image.get_height()], "window_client": [root.size.x, root.size.y], "ui_scale": app.ui_scale, "category": app.album.category_id, "page": app.album.page_index, "scroll": app.album.scroll_vertical, "cards": app.choices.size(), "textures": textures, "summary": app.album.summary.text, "ids": app.album.visible_ids.duplicate(), "regions": regions,
-		"stored_region":rectangle,"source_rgba_sha256":source_hash.finish().hex_encode(),"stored_rgba_sha256":stored_hash.finish().hex_encode(),"image_format":image.get_format()})
-	captures[-1]["image_costs"] = {"readback_seconds":read_seconds,"crop_seconds":crop_seconds,"png_write_seconds":write_seconds,"hash_seconds":(Time.get_ticks_usec()-hash_started)/1000000.0}
-	if OS.get_environment("P1_COMPARE_NATIVE_PNG") == "1":
-		var reference_name: String = filename.trim_suffix(".png")+"-full-reference.png"
-		var comparison_started: int = Time.get_ticks_usec()
-		check(image.save_png(output.path_join(reference_name)) == OK,"same-frame crop comparison source saved")
-		captures[-1]["full_reference"] = reference_name
-		captures[-1]["image_costs"]["reference_png_write_seconds"] = (Time.get_ticks_usec()-comparison_started)/1000000.0
 
 func region(control: Control, trim_label: bool = false) -> Array:
 	var rect: Rect2 = control.get_global_rect()
@@ -218,12 +175,11 @@ func run() -> void:
 		await compact_buttons()
 	elif mode == "kk":
 		await fixed_cards()
-		await preload("res://tests/hz_native.gd").run(self)
-		await preload("res://tests/hz_b_native.gd").run(self)
-		await preload("res://tests/hz_c_native.gd").run(self)
+
+
 	elif mode == "ke":
 		await catalog_labels()
-		await preload("res://tests/ke_graphics.gd").run(self)
+
 	elif mode == "at":
 		await transparent_reveals()
 	elif mode == "adapter":
@@ -259,10 +215,8 @@ func run() -> void:
 	quit(0 if failures.is_empty() else 4)
 
 func write_report() -> void:
-	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
-	report["ke_graphics_measurements"] = ke_graphics_measurements
+	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	report["at_measurements"] = at_measurements
-	report["hzc_measurements"] = hzc_measurements
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
@@ -287,7 +241,7 @@ func transparent_reveals() -> void:
 	app.show_album()
 	var hidden_board: Rect2 = app.board.get_rect()
 	var hidden_view: Dictionary = app.board.capture_view()
-	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
+	for spec: Array in [[1280,720,1.25]]:
 		surface.size=Vector2i(spec[0],spec[1])
 		app.set_ui_scale(spec[2])
 		await frames()

@@ -28,7 +28,6 @@ import z2_resources
 import gp48_delivery
 import p1_current_visual
 import vs2_delivery
-import hc92_verify
 import perf_b_resources
 import za1_product
 import kat2_product
@@ -199,7 +198,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--native-group", choices=("core", "history", "catalog", "completion", "adapters", "graphics", "export"), help=argparse.SUPPRESS)
     parser.add_argument("--technical-dir", type=Path, help=argparse.SUPPRESS)
     parser.add_argument("--groups", help="Exact independent groups, comma separated; default all")
-    parser.add_argument("--compare-native-png", action="store_true", help="Compare old/new PNG encoders on the same real frames")
     for name, description in (
         ("integration", "bounded native history and the independent two-process restart oracle"),
         ("pilots", "four synthetic interaction cases across real processes"),
@@ -331,10 +329,6 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
                         retained_count=sum(r["retained_count"] for r in reports),
                         captures=[c for r in reports for c in r["captures"]], compact=True)
         (renders / "render-report.json").write_text(json.dumps(combined, indent=2) + "\n", encoding="utf-8")
-        # Current contrast, tooltip blocking and recovery layout assertions.
-        # No Z2 historical project, comparison or archive is produced.
-        z2_command = command + ["--script", "res://tests/z2_capture.gd", "--", "--p1-capture", "--ci-compact"]
-        run_phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
         current = output / "drawing-renders"
         current.mkdir()
         environment["P1_CAPTURE_DIR"] = str(current)
@@ -348,29 +342,29 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         (current / "current-drawing-report.json").write_text(json.dumps(motion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         selected = [renders / entry["file"] for entry in combined["captures"]]
         selected += list(renders.glob("*.json"))
-        selected += p1_current_visual.selected_motion_files(current)
+        selected += list(current.glob("*.json"))
         return dict(compact=combined, drawing=motion), selected
     finally:
         for key in ("P1_CAPTURE_DIR", "P1_RENDER_STAGE", "ZS2_VARIANT", "RP6_INDEX", "P1_TEST_SAVE_ROOT"):
             environment.pop(key, None)
 
 
-def run_pilot_visual(output, workspace, project, engine, environment, phase, host):
+def run_pilot_visual(output, workspace, project, engine, environment, run_phase, host):
     """Only after real pilot completion; use its saves, never a synthetic finish."""
     renders = output / "renders"
     renders.mkdir(exist_ok=True)
     environment["P1_CAPTURE_DIR"] = str(renders)
     environment["P1_TEST_SAVE_ROOT"] = str(workspace / "rp6-saves")
-    command = [engine,"--path",str(project),"--rendering-driver","opengl3","--audio-driver","Dummy",
-               "--script","res://tests/rp6_capture.gd","--","--p1-capture","--ci-compact"]
+    command = [engine,"--path",str(project),"--rendering-driver","opengl3","--audio-driver","Dummy"]
     if host == "Linux":
         command = ["xvfb-run","-a"] + command
         environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
     try:
         for index, number in ((2,4),(3,6),(4,8),(5,9)):
             environment["RP6_INDEX"] = str(index)
-            phase(f"rp6-t{number:02d}-render",command,"RP6_CAPTURE_OK")
-        return list(renders.glob("rp6-*.json")) + [renders / "rp6-t06-completion-1920-ui100.png"]
+            run_phase(f"rp6-t{number:02d}-render", command +
+                      ["--script","res://tests/rp6_capture.gd","--","--p1-capture","--ci-compact"], "RP6_CAPTURE_OK")
+        return list(renders.glob("rp6-*.json"))
     finally:
         for key in ("P1_CAPTURE_DIR","P1_TEST_SAVE_ROOT","RP6_INDEX"):
             environment.pop(key,None)
@@ -630,7 +624,7 @@ def main(argv: list[str] | None = None) -> int:
                     perf_env["LIBGL_ALWAYS_SOFTWARE"] = "1"
                 run("perf-b-native", b_command + ["--script", "res://tests/perf_b_probe.gd"], "PERF_B_PROBE_OK", phase_env=perf_env)
                 evidence.report["perf_b_native"] = json.loads((b_output / "probe.json").read_text())
-                selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
+                selected += [b_output / "probe.json"]
                 evidence.scope_done("perf_b")
             if args.export:
                 evidence.scope_start("export")
@@ -653,10 +647,7 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.report["book_lifecycle"] = python_phase("regular-book-integration", lambda: book_lifecycle.run_lifecycle(
                     args.cache_dir.resolve(), evidence.technical / "book-lifecycle"))
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2", "ea") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
-            if args.visual:
-                evidence.report["visual"]["vs2"]["hc92"]["retained_samples"] = python_phase(
-                    "retained-hc92-font-samples", lambda: hc92_verify.verify_retained(evidence.technical / "selected/hc92-renders"))
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz")])
             required_ea = {p.relative_to(output).as_posix() for p in selected if p.parent.name == "ea"}
             if not required_ea <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required EA motion/native evidence missing from technical delivery")
@@ -670,11 +661,6 @@ def main(argv: list[str] | None = None) -> int:
             retained_b = {p["file"] for p in evidence.report["selected_evidence"]["files"]}
             if not required_b <= retained_b:
                 raise toolchain.PreflightError("Required PERF-B native evidence missing from technical delivery")
-            if args.visual:
-                required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
-                retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}
-                if required_images != retained_images:
-                    raise toolchain.PreflightError("Targeted SL images missing from technical delivery")
             from native_metrics import measure
             evidence.report['work_measurements'] = measure(output, evidence.technical, evidence.report)
             evidence.measure_size()

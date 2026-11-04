@@ -1,5 +1,19 @@
 # Aktiver Bestand und historische Quellen
 
+**P2-C-V03 / #502:** [Audit aller 435 früheren PNG-Pflichten](P2_C_V03_AUDIT.md).
+Die aktiven HZ-/KE-Vergleichsproducer, HC-Galerie samt Reader, separate V1-/Z2-
+Captureproducer und KAT-Crop-Reader entfallen; frühere Quellen bleiben am
+[Basiscommit](https://github.com/venomenon328/picross/tree/5471a42e6291d9eeda9b2a04811547d21b0430ff).
+ZS2 ist ein kleiner eigenständiger aktueller Animationsproducer ohne Studienreplay;
+die Pythonreader enthalten keine historischen ZS2-/VS2-Archiv-/Galeriepaketierer mehr.
+Regulär verbleiben zehn minimale AT/HN-Rohpixeldateien; HS/ZS konsumieren und
+löschen temporäre Originale. HIL-M01 und persönliche KU-/VS2-Abnahmen bleiben offen.
+Kein neues Bildarchiv. Gesperrte V01/V02/HIL/P2-B-Arbeitsdaten wurden nicht angefasst.
+Die eigenen V03-Diagnosen unter `artifacts/502-p2cv03-local/` sind lokale,
+nicht versionierte Arbeitsdaten; Reviewfrist 18.11.2026 bzw. V03-R01, danach nur
+im zulässigen Bereinigungsweg entfernen. T01 nennt ihren tatsächlichen Restumfang.
+
+
 **B-B / #498:** `game/book/` enthält die gemeinsame Produktdarstellung samt drei
 unveränderten Materialbildern und deren Import-/Herkunftsmetadaten. Der reguläre
 Windows-/Webstart verwendet diese Quellen. P2-A / #502 entfernt

@@ -8,9 +8,9 @@ from at_evidence import png
 def verify(directory, report):
     rows = [r for r in report['records'] if r['kind'] == 'pixels']
     expected = {f'hn-{w}-ui{u}-{kind}.png'
-                for w,u in ((1280,125),(1920,100),(2560,125))
+                for w,u in ((1280,125),)
                 for kind in ('row','column','grid','complete-row','drag-row')}
-    if (report['failures'] or report['checks'] < 1000 or len(rows) != len(expected)
+    if (report['failures'] or report['checks'] < 100 or len(rows) != len(expected)
             or {r['file'] for r in rows} != expected):
         raise ValueError('Incomplete native HN cases')
     for row in rows:

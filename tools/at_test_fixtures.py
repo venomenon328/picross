@@ -11,11 +11,11 @@ def fixture(revision):
                 image_sha256=str(revision)*64,definitions={'T-01':{'revision':1},'T-04':{'revision':1}},registry_sha256='a'*64)
 
 
-def png(path,pixels):
+def png(path,pixels,height=1):
     def chunk(kind,raw):return struct.pack('>I',len(raw))+kind+raw+struct.pack('>I',zlib.crc32(kind+raw))
     path.parent.mkdir(parents=True,exist_ok=True)
-    path.write_bytes(b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',len(pixels),1,8,2,0,0,0))+
-                     chunk(b'IDAT',zlib.compress(b'\0'+bytes(c for p in pixels for c in p)))+chunk(b'IEND',b''))
+    path.write_bytes(b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',len(pixels)//height,height,8,2,0,0,0))+
+                     chunk(b'IDAT',zlib.compress(b''.join(b'\0'+bytes(c for p in pixels[y*len(pixels)//height:(y+1)*len(pixels)//height] for c in p) for y in range(height))))+chunk(b'IEND',b''))
 
 
 def browser_row(directory,row):

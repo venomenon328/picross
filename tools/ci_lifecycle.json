@@ -20,8 +20,8 @@
       },
       "readers": [
         {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "python3 tools/ci_lifecycle.py --base \"$CI_BASE\" --head \"$CI_HEAD\" --output \"$RUNNER_TEMP/ci-lifecycle.json\"",
+          "path": "tools/test_ci_lifecycle.py",
+          "anchor": "from ci_lifecycle import (FORMAT, MANIFEST, REPO, cost, digest, fingerprint, guarded,\n                          executable_anchor, is_feature_open, owner_decision, strict_json, validate)",
           "sources": [
             "tools/ci_lifecycle.py"
           ]
@@ -87,10 +87,6 @@
         "tools/test_p1_product.py": {
           "before": "e2d6371c7e7d3b36c55fc8c1459797734b9c1078",
           "after": "a2dad3e21b0b6400be7402a4c27e20174d5304dc"
-        },
-        "tools/kat2_product.py": {
-          "before": "150ecdf5975623eb2d7b490b61adbe99dfdacdf6",
-          "after": "cc73c9c495fe8b3f55fe55e1f15c4e0356b2e006"
         }
       },
       "readers": [
@@ -99,13 +95,6 @@
           "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
           "sources": [
             "tools/test_p1_product.py"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "import kat2_product",
-          "sources": [
-            "tools/kat2_product.py"
           ]
         }
       ],
@@ -147,61 +136,6 @@
         "pngs": 0
       },
       "coverage": "Existing 93 information checks retained with stronger causal timer assertion and one clean-start check. One Linux timeout test covers child/grandchild termination and unrelated-process isolation. Native command arguments and all save budgets unchanged; F02 replaces only the KK process limit as explicitly authorized. Targeted diagnostic traces remain local, outside permanent CI. F01-D03 also exposes the unchanged drawing-capture command at the executable reader; positional caller and arguments remain identical. The same process-tree test covers procfs disappearance at open (ENOENT) and read (ESRCH), while permission errors still fail; no liveness assertion is relaxed. F02 adds six cheap tests: KK before warning, successful 301/599s completion with live flushed warning, preserved exit/marker/engine-error rejection, hard timeout at 600s, unchanged other caller budgets, and real Linux descendant cleanup with accelerated waits. No new native mode, frames, assertions or artifact class. Decision: https://github.com/venomenon328/picross/pull/506#issuecomment-6631521834 . The longer KK ceiling is not an estimate of added mandatory work; actual CI runtime remains separately measured in T01. P2-C transfers the two subsequently changed shared source paths into its own delta record; the historical F01/F02 assertions and budgets remain unchanged.",
-      "expires": null,
-      "retire_when": null,
-      "owner_decision": null
-    },
-    {
-      "id": "p3-a-f01-draw-observation",
-      "kind": "permanent-small",
-      "purpose": "F01-D03: retain the first completed nonzero production atlas frame instead of discarding it at a pre-draw sampling deadline",
-      "level": "Maintenance of the existing native current-drawing-capture; unchanged three live frames and independent pixel oracles",
-      "feature": "https://github.com/venomenon328/picross/issues/502",
-      "owner": "venomenon328 / package P3-A implementer",
-      "sources": {
-        "game/tests/zs2_capture.gd": {
-          "before": "360124bb4c8596457d5a5f5d18d648613422e55f",
-          "after": "13924857d081e924e70acb5c245982198544671f"
-        }
-      },
-      "readers": [
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "\"res://tests/zs2_capture.gd\"",
-          "sources": [
-            "game/tests/zs2_capture.gd"
-          ]
-        }
-      ],
-      "selection": {
-        "selected": {
-          "docs": true,
-          "product": true,
-          "production": false,
-          "preflight": false,
-          "integration": false,
-          "pilots": false,
-          "visual": true,
-          "perf_b": true,
-          "web": false,
-          "delivery": false
-        },
-        "native_groups": [
-          "core",
-          "graphics",
-          "export"
-        ],
-        "production_groups": [],
-        "browser_request": null
-      },
-      "cost": {
-        "cpu_seconds": 0.01,
-        "wall_seconds": 0.01,
-        "files": 0,
-        "bytes": 0,
-        "pngs": 0
-      },
-      "coverage": "Native 12/24/36px X and fill captures retain production input, clock, renderer, dimensions and three readbacks. Existing X windows 0<t<105, 105<t<210 and t>=210, spatial ink, controlled pixel/negative controls and final context remain unchanged. No animation, timeout, worker pool, scheduler or CI selection change. Temporary frame/CPU diagnostics are local only.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -282,38 +216,6 @@
           "before": "c615ac948cf860118c0a82c871e61714022a98d8",
           "after": "1264d4f4f5c743725dce14f24ae7e8eb11b80c14"
         },
-        "game/tests/at_alpha.gd": {
-          "before": "022860e2d02eca26f949f74a68ddab3d01054d88",
-          "after": "fd21559461011ebe02abbf568e5547ff8c2e3213"
-        },
-        "game/tests/capture.gd": {
-          "before": "a1239e78ae6816b89874659f18802d5a7f6b9cb3",
-          "after": "5198c392868d58ae29f00c0a82616c560c5db318"
-        },
-        "game/tests/ea_probe.gd": {
-          "before": "b9861c93cee25bfea717aac96cdbecfc7a9c6636",
-          "after": "75b7e16dfcd34cedd5eda827975ce79dbff306e7"
-        },
-        "game/tests/help_native.gd": {
-          "before": "8e9e18b651a904130dea710d690f8098a1bb344c",
-          "after": "c93ac545e3820ceab199fe2c0b4aab6162a8cb67"
-        },
-        "game/tests/hf149_probe.gd": {
-          "before": "2c91972a87780482ce04cf9be77bd55296435bca",
-          "after": "b4f2b5792284de5bebb97a528e7ddacaa332ce37"
-        },
-        "game/tests/hz_native.gd": {
-          "before": "60d5b8880764ae64d46a2116df1034ae6baab3bf",
-          "after": "ac0eb3ee048ff5124aead61f2476995f77ae481c"
-        },
-        "game/tests/kat2_probe.gd": {
-          "before": "87f93ccc56fd32e2791cabedfebf995f4b36454c",
-          "after": "a2049473514e9371188ce0f4dd9d2210550c8595"
-        },
-        "game/tests/ke_graphics.gd": {
-          "before": "3b99459d853ecca96ebffc950d4a5684eb27b06a",
-          "after": "05672ae87deeba2dfb1cb2653da3b894546ff33f"
-        },
         "game/tests/native_png.gd": {
           "before": null,
           "after": "1b3f5f439e3928d74e23ec5e3b7eaa93472e1a80"
@@ -322,45 +224,9 @@
           "before": null,
           "after": "e56ffa3d99060fb363e6f8d8efcb85ad101517ba"
         },
-        "game/tests/perf_b_probe.gd": {
-          "before": "a2c590722503368a74082bf9537a24f1e51ebadb",
-          "after": "6ede0250109903d16df5223603606aabfefc2979"
-        },
         "game/tests/run_tests.gd": {
           "before": "4e78f7e1ecf9915335985f02101196568eb6c850",
           "after": "53a7dfd90f2b8c4da553ea52ed16f71bb23cf4be"
-        },
-        "game/tests/vs2_tests.gd": {
-          "before": "bcb90f32ea72e43b910a988edeb5ad6aba01854a",
-          "after": "2b6e20f1b555a6b75e55ed4fea894099ec9f3f38"
-        },
-        "game/tests/vs2_v1_tests.gd": {
-          "before": "1e9829c46152d5f7263f1fb8ff2e7dc0620fc6b9",
-          "after": "7555fe44a67b570db47c0e757aef6b2dc71a2855"
-        },
-        "game/tests/vs2_v2_tests.gd": {
-          "before": "fdb7d7e91c866ad8521d48e5f6689ed2f3a5b5ef",
-          "after": "172276def8f2cff07d870d52c5e1f1260562f39f"
-        },
-        "tools/book_contract.py": {
-          "before": "6ff8698278504b6b9d2db4875ee89e16d80e1fba",
-          "after": "87b4c91bd649aceea3d661ef261f8a1842ff987c"
-        },
-        "tools/ea_product.py": {
-          "before": "994c91f567bf77baca2f66a52442800bc150bf61",
-          "after": "63a3bc04aee7908531912d586c81f346377fb2fe"
-        },
-        "tools/p1_product.py": {
-          "before": "273c54df4c305e7408b1dd7a09efea4e137eb099",
-          "after": "8e6e575c7b6a4db37525338852685442360daed3"
-        },
-        "tools/test_ci_c.py": {
-          "before": "808da00eacd1d7a69133cc3e5772b057b9e91ea7",
-          "after": "087b139c0f18343ad2871c85a8b481f45ad3e4cc"
-        },
-        "tools/vs2_delivery.py": {
-          "before": "ac7ecff151a05cbb1a1b55cc5761f0240304c8ec",
-          "after": "6f13d3c8e9f9863e6dfee2547d61c4994de087c1"
         }
       },
       "readers": [
@@ -372,143 +238,24 @@
           ]
         },
         {
-          "path": "game/tests/kat2_probe.gd",
-          "anchor": "preload(\"res://tests/at_alpha.gd\")",
-          "sources": [
-            "game/tests/at_alpha.gd"
-          ]
-        },
-        {
-          "path": "game/tests/kat2_probe.gd",
-          "anchor": "preload(\"res://tests/hz_native.gd\")",
-          "sources": [
-            "game/tests/hz_native.gd"
-          ]
-        },
-        {
-          "path": "game/tests/kat2_probe.gd",
-          "anchor": "preload(\"res://tests/ke_graphics.gd\")",
-          "sources": [
-            "game/tests/ke_graphics.gd"
-          ]
-        },
-        {
-          "path": "game/tests/book_integration.gd",
-          "anchor": "preload(\"res://tests/help_native.gd\")",
-          "sources": [
-            "game/tests/help_native.gd"
-          ]
-        },
-        {
-          "path": "game/tests/kat2_probe.gd",
-          "anchor": "preload(\"res://tests/native_png.gd\")",
+          "path": "game/tests/at_alpha.gd",
+          "anchor": "probe.check(preload(\"res://tests/native_png.gd\").write(observations, probe.output.path_join(file)) == OK,\"AT original composition samples\")",
           "sources": [
             "game/tests/native_png.gd"
           ]
         },
         {
           "path": "game/tests/run_tests.gd",
-          "anchor": "preload(\"res://tests/native_png_cases.gd\")",
+          "anchor": "preload(\"res://tests/native_png_cases.gd\").run(self)",
           "sources": [
             "game/tests/native_png_cases.gd"
           ]
         },
         {
           "path": "tools/p1_product.py",
-          "anchor": "\"res://tests/capture.gd\"",
-          "sources": [
-            "game/tests/capture.gd"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "\"res://tests/perf_b_probe.gd\"",
-          "sources": [
-            "game/tests/perf_b_probe.gd"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "\"res://tests/run_tests.gd\"",
+          "anchor": "run(\"tests\", base + [\"--script\", \"res://tests/run_tests.gd\"], \"P1_TESTS_OK\")",
           "sources": [
             "game/tests/run_tests.gd"
-          ]
-        },
-        {
-          "path": "tools/vs2_delivery.py",
-          "anchor": "\"res://tests/hf149_probe.gd\"",
-          "sources": [
-            "game/tests/hf149_probe.gd"
-          ]
-        },
-        {
-          "path": "tools/vs2_delivery.py",
-          "anchor": "\"res://tests/vs2_tests.gd\"",
-          "sources": [
-            "game/tests/vs2_tests.gd"
-          ]
-        },
-        {
-          "path": "tools/vs2_delivery.py",
-          "anchor": "\"res://tests/vs2_v1_tests.gd\"",
-          "sources": [
-            "game/tests/vs2_v1_tests.gd"
-          ]
-        },
-        {
-          "path": "tools/vs2_delivery.py",
-          "anchor": "\"res://tests/vs2_v2_tests.gd\"",
-          "sources": [
-            "game/tests/vs2_v2_tests.gd"
-          ]
-        },
-        {
-          "path": "tools/kat2_product.py",
-          "anchor": "\"res://tests/kat2_probe.gd\"",
-          "sources": [
-            "game/tests/kat2_probe.gd"
-          ]
-        },
-        {
-          "path": "tools/ea_product.py",
-          "anchor": "\"res://tests/ea_probe.gd\"",
-          "sources": [
-            "game/tests/ea_probe.gd"
-          ]
-        },
-        {
-          "path": "tools/native_results.py",
-          "anchor": "from book_contract import",
-          "sources": [
-            "tools/book_contract.py"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "import ea_product",
-          "sources": [
-            "tools/ea_product.py"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "import vs2_delivery",
-          "sources": [
-            "tools/vs2_delivery.py"
-          ]
-        },
-        {
-          "path": ".github/workflows/p1-product.yml",
-          "anchor": "python3 tools/p1_product.py",
-          "sources": [
-            "tools/p1_product.py"
-          ]
-        },
-        {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
-          "sources": [
-            "tools/test_ci_c.py"
           ]
         }
       ],
@@ -553,14 +300,554 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p2-c-evidence-minimum",
+      "kind": "permanent-small",
+      "purpose": "Retire historical test/image obligations and reduce existing current oracles; maintenance delta, not authorization of historical suites",
+      "level": "Existing seven native groups and independent gate; no added job or rendered process. Historical H producers removed; D inputs minimized.",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / P2-C-V03 implementer",
+      "sources": {
+        ".github/workflows/p1-product.yml": {
+          "before": "afd570590bd92da656ed34369c3c1564d18f8dec",
+          "after": "165f5cd4ab6a6a10956618c86be26d32fea8a4ef"
+        },
+        "game/tests/at_alpha.gd": {
+          "before": "fd21559461011ebe02abbf568e5547ff8c2e3213",
+          "after": "d71f9da9ccf80ccf2e2eed9ce91855bfe558f87c"
+        },
+        "game/tests/capture.gd": {
+          "before": "5198c392868d58ae29f00c0a82616c560c5db318",
+          "after": "0d369d2a308b699e050fbc610be28686b2fbf9b3"
+        },
+        "game/tests/ea_probe.gd": {
+          "before": "75b7e16dfcd34cedd5eda827975ce79dbff306e7",
+          "after": "b5afd6aef02151336ac07e208e17c56750b927b7"
+        },
+        "game/tests/hc92_capture.gd": {
+          "before": "f715a8231ee748d006cef33729e9c9481a846bc7",
+          "after": null
+        },
+        "game/tests/help_native.gd": {
+          "before": "c93ac545e3820ceab199fe2c0b4aab6162a8cb67",
+          "after": "fe2db2b0e4a2480a5feb9117f38559b71d14622c"
+        },
+        "game/tests/hf149_probe.gd": {
+          "before": "b4f2b5792284de5bebb97a528e7ddacaa332ce37",
+          "after": "a0284a896a6b0ad4ac6e93a0d88b91b4603a4aeb"
+        },
+        "game/tests/hn192_probe.gd": {
+          "before": "fce62bad2b34a42a5f38a4e15948ad244a4efa45",
+          "after": "f952542ce50b5b41368f69c1f3862cf8e50c55fc"
+        },
+        "game/tests/hs186_capture.gd": {
+          "before": "7733375eb0eebdceb34d5029a908e3b3a4f2b913",
+          "after": "48fb1546422084515fe85c1a508619ee4b986267"
+        },
+        "game/tests/hz_b_native.gd": {
+          "before": "849bd91aa600bcdfb53e041ca9c17ce5af444a90",
+          "after": null
+        },
+        "game/tests/hz_c_native.gd": {
+          "before": "8f86a36d5dd60da304d6ec35f29347b4c5536682",
+          "after": null
+        },
+        "game/tests/hz_native.gd": {
+          "before": "ac0eb3ee048ff5124aead61f2476995f77ae481c",
+          "after": null
+        },
+        "game/tests/kat2_probe.gd": {
+          "before": "a2049473514e9371188ce0f4dd9d2210550c8595",
+          "after": "5e0fa127ec4ac308cb1c8a0143aebb75526118e6"
+        },
+        "game/tests/ke_graphics.gd": {
+          "before": "05672ae87deeba2dfb1cb2653da3b894546ff33f",
+          "after": null
+        },
+        "game/tests/perf_b_probe.gd": {
+          "before": "6ede0250109903d16df5223603606aabfefc2979",
+          "after": "c89a3115bf59639a96ec0f12e36989f1c0cad788"
+        },
+        "game/tests/rp6_capture.gd": {
+          "before": "4a053badf8e617d4ebcbad939eaf6b1f5f8376b5",
+          "after": "ab9e1ddc9202517ce9a7e64a71ab0026d29bdc0c"
+        },
+        "game/tests/vs2_tests.gd": {
+          "before": "2b6e20f1b555a6b75e55ed4fea894099ec9f3f38",
+          "after": "37b824b41c699a81d00209d637955e4985fcee8f"
+        },
+        "game/tests/vs2_v1_tests.gd": {
+          "before": "7555fe44a67b570db47c0e757aef6b2dc71a2855",
+          "after": null
+        },
+        "game/tests/vs2_v2_tests.gd": {
+          "before": "172276def8f2cff07d870d52c5e1f1260562f39f",
+          "after": "c1812ff7296314dced0970d90855113ebcacea44"
+        },
+        "game/tests/z2_capture.gd": {
+          "before": "be0587180793e102f35c920af9b1aed54b55fc07",
+          "after": null
+        },
+        "game/tests/za1_probe.gd": {
+          "before": "4e10d284230e1d6f6bb9ee8f03309c64cf921aeb",
+          "after": "1b5b2c9c19f835bdeccf2bb2760ce945a63f900d"
+        },
+        "game/tests/zs2_capture.gd": {
+          "before": "13924857d081e924e70acb5c245982198544671f",
+          "after": "5cea4b042d14415b37276fda2158475fc33f8886"
+        },
+        "tools/at_evidence.py": {
+          "before": "d2f80ca7b41239d5e9b315eaf5f34b1515fa7a0a",
+          "after": "365a26cc34df80be6c237a9fef3904d20ab0e25d"
+        },
+        "tools/at_test_fixtures.py": {
+          "before": "ac2b26e27611bba29272f04c6988d0f789f15878",
+          "after": "7e80adf048bf2fd078d50930c5dbb2b8c3787aef"
+        },
+        "tools/book_contract.py": {
+          "before": "87b4c91bd649aceea3d661ef261f8a1842ff987c",
+          "after": "165d0a5ef376f00e346876b0c34dfa665bea0655"
+        },
+        "tools/book_lifecycle.py": {
+          "before": "f2066e55eec90591b4ae35ab4f9d3ecc2d0ce1e7",
+          "after": "81457697d2552c0d22f1a39d1ff8d608efca816f"
+        },
+        "tools/ea_product.py": {
+          "before": "63a3bc04aee7908531912d586c81f346377fb2fe",
+          "after": "a0917aa541bc01ca90b1ae52e862f33a8b30a09a"
+        },
+        "tools/hc92_verify.py": {
+          "before": "af072d13602aae33c8f204f93cd1b30ff590cfa0",
+          "after": null
+        },
+        "tools/hf149_verify.py": {
+          "before": "ea24197bead2efb56c8de6e0dc857b40c40c29fb",
+          "after": "f4ca909a1b81e98736fc304f1e71c22ce8cbb71f"
+        },
+        "tools/hn_evidence.py": {
+          "before": "e0b59709d8f3502d29467f0f75f44fd0efd8aa86",
+          "after": "15dacf527e7bd00ded6684427f2d1fa20ad270f0"
+        },
+        "tools/hs186_verify.py": {
+          "before": "0552cbee145bd529bff999cbb713a87d9caf6ad4",
+          "after": "1384b68d94e5e41c3cfe0b0233466042bf486bd6"
+        },
+        "tools/kat2_product.py": {
+          "before": "cc73c9c495fe8b3f55fe55e1f15c4e0356b2e006",
+          "after": "9f0bdec1822cb421b187da0bffa41053b35cb13a"
+        },
+        "tools/native_artifacts.json": {
+          "before": "f501c43e767ff4f74dbfc1931465d2285673721f",
+          "after": "526b0abcfff8c724fe16de5296811b85426934b2"
+        },
+        "tools/native_contract.py": {
+          "before": "43dc01075bd03ca0cb6842bdbf1abd97b93a10ff",
+          "after": "db598591a35e5093a57d3e96e70c34b0dc3419fa"
+        },
+        "tools/native_images.py": {
+          "before": "b961916b364decb39bcec9a84b8387ec57a25241",
+          "after": null
+        },
+        "tools/native_metrics.py": {
+          "before": "b3b2775fc9924ce275313976edbe9b451a22458e",
+          "after": "273a9769321dcf7f369bb9fc3bddb75722acad35"
+        },
+        "tools/native_results.py": {
+          "before": "7869ec4d8769e3f055319324f6dc625ab0309792",
+          "after": "a168be4023cb425cdad2469b2bb9505817fce01f"
+        },
+        "tools/native_runner.py": {
+          "before": "a7dbd9060c73c7e0760ce9ad7962ebe5f8bfa12e",
+          "after": "33565a9c77940a2621e29ddf05b54764d30b318d"
+        },
+        "tools/p1_current_visual.py": {
+          "before": "3e4be1f03a851608e767b92af6f742304655ae3f",
+          "after": "3c7ddacdf9f7c855207fe39eb3ff500633dda080"
+        },
+        "tools/p1_product.py": {
+          "before": "8e6e575c7b6a4db37525338852685442360daed3",
+          "after": "e73cd9f9b016e52e93249a331fa645dab22be965"
+        },
+        "tools/test_at_evidence.py": {
+          "before": "5146d3463024bb4f6eedf22f7ad17de1acc19dff",
+          "after": "970f8981249a292f16848aa9046fd787f556477b"
+        },
+        "tools/test_book_lifecycle.py": {
+          "before": "d246df559e23b118c34d2a8581001ae67bcd9e93",
+          "after": "604aac29c2feb5d9cb3185e72436c5f6c5d524df"
+        },
+        "tools/test_ci_c.py": {
+          "before": "087b139c0f18343ad2871c85a8b481f45ad3e4cc",
+          "after": "ff0f5ee72e8e4ce0ca279f0ce5f245f2c5bdde2f"
+        },
+        "tools/test_p1_evidence.py": {
+          "before": "a12568136caa01f09c980b5d5fea5886a606a4ca",
+          "after": "35eb0e60fd61296fd97d3552aabbd4a1d51ee304"
+        },
+        "tools/test_vs2_delivery.py": {
+          "before": "f8532a0c6732977f2a3a09c33e9259ec4a048d07",
+          "after": "7b00aa96bf2cbcc82e947fdecda435fbd9d9f99e"
+        },
+        "tools/vs2_delivery.py": {
+          "before": "6f13d3c8e9f9863e6dfee2547d61c4994de087c1",
+          "after": "972b78ddf29cd5b14cbf9b86e916b137f7793fee"
+        },
+        "tools/vs2_v1_verify.py": {
+          "before": "1a4c190ee952e4439990b76bf6b7b199b6d13597",
+          "after": "9f5c1ab8cb0e15b086b04a2213f731ad363ae373"
+        },
+        "tools/vs2_windows_probe.py": {
+          "before": "94ee37d01b35842db37ee9c65da2adb89fad88e8",
+          "after": "19c43ae5d0cb3be7401fac0a1caf43787f84f6bc"
+        },
+        "tools/za1_product.py": {
+          "before": "d2c4f56330991ca652f10255239fc0edad34a7b9",
+          "after": "8121cb512e9399263a8da7baa98b1813b1dd4515"
+        },
+        "tools/zs2_delivery.py": {
+          "before": "1384f415f72963e9449792d1550195b4f2ffb803",
+          "after": "d993471420266f51107470c05b91082214ef07db"
+        }
+      },
+      "readers": [
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "on:\n  workflow_call:",
+          "sources": [
+            ".github/workflows/p1-product.yml"
+          ]
+        },
+        {
+          "path": "game/tests/ea_probe.gd",
+          "anchor": "var alpha_final := await preload(\"res://tests/at_alpha.gd\").sample(self,app.reveal_view,\"final-%d\" % context[0])",
+          "sources": [
+            "game/tests/at_alpha.gd"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "\"res://tests/capture.gd\"",
+          "sources": [
+            "game/tests/capture.gd"
+          ]
+        },
+        {
+          "path": "tools/ea_product.py",
+          "anchor": "run_phase(\"ea-\"+mode, ([\"xvfb-run\", \"-a\"] if host == \"Linux\" else []) +\n                  [engine, \"--path\", str(project), \"--rendering-driver\", \"opengl3\", \"--audio-driver\", \"Dummy\",\n                   \"--script\", \"res://tests/ea_probe.gd\", \"--\", \"--p1-capture\"], \"EA_PROBE_OK\", phase_env=env)",
+          "sources": [
+            "game/tests/ea_probe.gd"
+          ]
+        },
+        {
+          "path": "game/tests/book_integration.gd",
+          "anchor": "await preload(\"res://tests/help_native.gd\").run(self)",
+          "sources": [
+            "game/tests/help_native.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "run_phase(\"hf149-native\", [\"res://tests/hf149_probe.gd\" if part == \"res://tests/capture.gd\" else part\n              for part in render_command], \"HF149_NATIVE_OK\")",
+          "sources": [
+            "game/tests/hf149_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "run_phase(\"hn192-native-input-cursor\", [\"res://tests/hn192_probe.gd\" if part == \"res://tests/capture.gd\" else part\n                                          for part in render_command], \"HN192_NATIVE_OK\")",
+          "sources": [
+            "game/tests/hn192_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "run_phase(\"hs186-native-number-cross-pixels\", [\"res://tests/hs186_capture.gd\" if part == \"res://tests/capture.gd\" else part\n                                                 for part in render_command], \"HS186_NATIVE_OK\")",
+          "sources": [
+            "game/tests/hs186_capture.gd"
+          ]
+        },
+        {
+          "path": "tools/kat2_product.py",
+          "anchor": "run_phase(\"kat2-\" + mode, ([\"xvfb-run\", \"-a\"] if host == \"Linux\" else []) +\n                  [engine, \"--path\", str(project), \"--rendering-driver\", \"opengl3\", \"--audio-driver\", \"Dummy\",\n                   \"--script\", \"res://tests/kat2_probe.gd\", \"--\", \"--p1-capture\"],\n                  \"KAT2_PROBE_OK\", phase_env=env)",
+          "sources": [
+            "game/tests/kat2_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "run(\"perf-b-native\", b_command + [\"--script\", \"res://tests/perf_b_probe.gd\"], \"PERF_B_PROBE_OK\", phase_env=perf_env)",
+          "sources": [
+            "game/tests/perf_b_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "run_phase(f\"rp6-t{number:02d}-render\", command +\n                      [\"--script\",\"res://tests/rp6_capture.gd\",\"--\",\"--p1-capture\",\"--ci-compact\"], \"RP6_CAPTURE_OK\")",
+          "sources": [
+            "game/tests/rp6_capture.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "run_phase(\"vs2-regular-matrix\", [\"res://tests/vs2_tests.gd\" if part == \"res://tests/capture.gd\" else part\n                  for part in render_command], \"VS2_TESTS_OK\")",
+          "sources": [
+            "game/tests/vs2_tests.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "run_phase(\"vs2-v2-\" + stage,\n                  [\"res://tests/vs2_v2_tests.gd\" if part == \"res://tests/capture.gd\" else part\n                   for part in render_command], \"VS2_V2_\" + stage.upper() + \"_OK\")",
+          "sources": [
+            "game/tests/vs2_v2_tests.gd"
+          ]
+        },
+        {
+          "path": "tools/za1_product.py",
+          "anchor": "run_phase(\"za1-seed-old-slots\", command + [\"--script\",\"res://tests/za1_probe.gd\",\"--\",\"--p1-capture\"], \"ZA1_PROBE_OK\",phase_env=env)",
+          "sources": [
+            "game/tests/za1_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "run_phase(\"current-drawing-capture\",\n                  command + [\"--script\", \"res://tests/zs2_capture.gd\", \"--\", \"--p1-capture\", \"--ci-compact\"],\n                  \"ZS2_CAPTURE_OK\")",
+          "sources": [
+            "game/tests/zs2_capture.gd"
+          ]
+        },
+        {
+          "path": "tools/native_results.py",
+          "anchor": "from at_evidence import native",
+          "sources": [
+            "tools/at_evidence.py"
+          ]
+        },
+        {
+          "path": "tools/test_at_evidence.py",
+          "anchor": "from at_test_fixtures import browser_row, fixture_record, png",
+          "sources": [
+            "tools/at_test_fixtures.py"
+          ]
+        },
+        {
+          "path": "tools/book_lifecycle.py",
+          "anchor": "from book_contract import SOURCES",
+          "sources": [
+            "tools/book_contract.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import book_lifecycle",
+          "sources": [
+            "tools/book_lifecycle.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import ea_product",
+          "sources": [
+            "tools/ea_product.py"
+          ]
+        },
+        {
+          "path": "tools/hf149_windows_probe.py",
+          "anchor": "import hf149_verify",
+          "sources": [
+            "tools/hf149_verify.py"
+          ]
+        },
+        {
+          "path": "tools/native_results.py",
+          "anchor": "from hn_evidence import verify as verify_hn",
+          "sources": [
+            "tools/hn_evidence.py"
+          ]
+        },
+        {
+          "path": "tools/hs186_windows_probe.py",
+          "anchor": "import hs186_verify",
+          "sources": [
+            "tools/hs186_verify.py"
+          ]
+        },
+        {
+          "path": "tools/hz_windows_probe.py",
+          "anchor": "import kat2_product",
+          "sources": [
+            "tools/kat2_product.py"
+          ]
+        },
+        {
+          "path": "tools/native_contract.py",
+          "anchor": "Path(__file__).with_name('native_artifacts.json').read_text(encoding='utf-8')",
+          "sources": [
+            "tools/native_artifacts.json"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "import native_contract",
+          "sources": [
+            "tools/native_contract.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "from native_metrics import measure",
+          "sources": [
+            "tools/native_metrics.py"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "from native_results import validate_all",
+          "sources": [
+            "tools/native_results.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "from native_runner import run",
+          "sources": [
+            "tools/native_runner.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import p1_current_visual",
+          "sources": [
+            "tools/p1_current_visual.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/p1_product.py",
+          "sources": [
+            "tools/p1_product.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_at_evidence.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_book_lifecycle.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_ci_c.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_p1_evidence.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_vs2_delivery.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import vs2_delivery",
+          "sources": [
+            "tools/vs2_delivery.py"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "import vs2_v1_verify",
+          "sources": [
+            "tools/vs2_v1_verify.py"
+          ]
+        },
+        {
+          "path": "tools/ea_windows_probe.py",
+          "anchor": "from vs2_windows_probe import extract, direct_start",
+          "sources": [
+            "tools/vs2_windows_probe.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import za1_product",
+          "sources": [
+            "tools/za1_product.py"
+          ]
+        },
+        {
+          "path": "tools/p1_current_visual.py",
+          "anchor": "import zs2_delivery",
+          "sources": [
+            "tools/zs2_delivery.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 0,
+        "wall_seconds": 0,
+        "files": 0,
+        "bytes": 0,
+        "pngs": 0
+      },
+      "coverage": "Nonpositive added workload: 272 H and seven E image obligations retired, 156 D obligations reduced to native in-memory checks, 29 temporary consumed images and ten minimal AT/HN raw inputs. Native HZ/KE/HC/V1/V3/Z2 studies and EA film production removed, not reclassified as permanent. Current functional/save/recovery/export and independent pixel/geometry negatives remain. Cost fields describe added work only, not total historical suite costs. Exact per-family scope and ten exceptions with owner/review 2026-11-18 in docs/P2_C_V03_AUDIT.md; measured full CI and local remainder in V03-T01. No P3-B.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P3-A: 15 small lifecycle tests and one Docs guard/report; F01 adds one cheap process-tree regression and strengthens the existing native information save oracle. D03 maintains the existing capture observation; no additional permanent test or native invocation. F02 adds six small runner regressions, including one accelerated real-process cleanup; native KK checks remain 3440. P2-C: two small imported-copy regressions and one small RGB/alpha gate regression; existing native modes only. P2-C-V02: one shared lossless writer, 256 alpha-buffer controls in the existing core process, and independent HN format rejection; exact new HIL source/sparse binding.",
-    "removed": "No current product tests or required evidence removed.",
+    "added": "V03 adds no job, native process or retained image. Existing negative controls target the reduced current oracle and actual retained pixel inputs. Historical small lifecycle/process/codec guards remain.",
+    "removed": "All 435 logical old PNG duties audited: H272 retired, E7 outside routine CI, D156 reduced. Ten minimal AT/HN raw inputs remain; 29 HS/ZS inputs are temporary. Retired native gallery/capture processes, HZ/KE/HC producers and KAT image readers deleted; historical packaging and quantity gates removed.",
     "temporary": [],
-    "cost_change": "Estimate: original <=3 s Docs guard plus <=3 s F01/F02 runner regressions, unchanged native modes/images; only kat2-kk gets live warning at 300 s and hard timeout at 600 s. No new retained artifacts. Actual selected CI and local diagnosis are bound in P3-A-T01; independent R01 remains required. P2-C/P3-B remain separate. D03 estimate <=0.01 s for atlas-frame observation, no additional files/readbacks/PNGs; measured isolated/parallel diagnostics and final CI are recorded in T01. P2-C measured local import and codec savings, plus <=1 s estimated small regression/guard overhead and <=1024 B report metadata. Final CI measurements in P2-C-T01; no required images removed. P3-B remains separate. V02: <=1 s additional small guards and <=4096 B metadata estimated, zero additional files/PNGs/processes; measured encoder CPU/bytes decline. Full CI, memory tradeoff, unchanged logical inventory and bounded local diagnosis in V02-T01; 75 MiB remains advisory."
+    "cost_change": "Strict reduction of existing execution/image/output work; added work estimate zero. Measure generated incl consumed temporary, delivered logical/physical PNGs, bytes/ZIP, process CPU/wall and gate/upload at final CI; no fabricated causal runtime claim. Exceptions reviewed at V03-R01 or 2026-11-18. No new historical archive; blocked old local data unchanged."
   }
 }

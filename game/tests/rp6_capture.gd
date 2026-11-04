@@ -27,8 +27,7 @@ func shot(name: String) -> void:
 	await RenderingServer.frame_post_draw
 	var image: Image = surface.get_texture().get_image()
 	var filename: String = "rp6-t%02d-%s.png" % [int(app.session.definition.id.trim_prefix("T-")), name]
-	check(image.save_png(output.path_join(filename)) == OK, "native render " + filename)
-	captures.append({"file":filename,"size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,
+	captures.append({"size":[surface.size.x,surface.size.y],"ui_scale":app.ui_scale,
 		"completed":app.session.completed,"reveal":app.session.reveal(),
 		"palette":app.session.definition.palette,"own_miniature":app.mini.cells.duplicate(),
 		"font":app.board.clue_font().get_font_name(),"c1_color_ids":[2,4],
@@ -54,6 +53,7 @@ func shot(name: String) -> void:
 		app.tools_scroll.scroll_vertical=scroll_before
 		await process_frame
 	if not pending_failures.is_empty():
+		image.save_png(output.path_join(filename))
 		failure_captures.append({"file":filename,"reasons":pending_failures.duplicate(),"crop":false})
 		pending_failures.clear()
 		write_report()

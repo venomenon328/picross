@@ -5,12 +5,7 @@ const SaveStore = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
 const COMPACT_WORK_STEPS: Array[float] = [12.0, 16.0, 18.0, 22.0, 24.0, 72.0]
-# Review images are independent of assertion coverage. Failure frames are
-# always retained uncropped, including the preceding comparison images.
-const COMPACT_PICTURES: Array[String] = [
-	"1280x720-ui125-f2-independent-slots", "1920x1080-ui100-f1",
-	"separation-f1-24-confirmed", "separation-f2-24-confirmed", "f2-reveal",
-]
+# Success uses in-memory pixel assertions; failure frames stay bounded.
 var surface: SubViewport
 var output: String
 var captures: Array = []
@@ -202,17 +197,6 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 	record.merge({"row_clue_steps": nonzero_steps(app.board.row_clue_steps), "column_clue_steps": nonzero_steps(app.board.column_clue_steps),
 		"longest_row_window": [row_window.start, row_window.end, row_window.prefix_hidden, row_window.suffix_hidden],
 		"longest_column_window": [column_window.start, column_window.end, column_window.prefix_hidden, column_window.suffix_hidden]})
-	if not compact or name in COMPACT_PICTURES:
-		var saved: Image = picture
-		if crop:
-			var box: Rect2 = app.board.view.cell_rect(Vector2i(2, 2)).merge(app.board.view.cell_rect(Vector2i(18, 8)))
-			box.position += app.board.global_position
-			saved = picture.get_region(Rect2i(box.grow(8)).intersection(Rect2i(Vector2i.ZERO, picture.get_size())))
-		if preload("res://tests/native_png.gd").write(saved, output.path_join(name + ".png")) != OK:
-			fail_capture("Cannot retain capture: " + name, 4)
-			return picture
-		record.merge({"file": name + ".png", "retained": true, "crop": crop}, true)
-		captures.append(record)
 	return picture
 
 func close_color(actual: Color, expected: Color) -> bool:
@@ -517,11 +501,6 @@ func capture_zr_counter(app: Main) -> void:
 					return
 				pixel_checks+=5
 				var record: Dictionary = {"name":name,"cursor":[samples[i].x,samples[i].y],"length":b.gesture_length(),"rect":[area.position.x,area.position.y,area.size.x,area.size.y],"font_size":p.font_size,"ui":app.ui_scale,"requested_zoom":zoom,"actual_cell":b.view.cell_size,"changed_pixels":changed}
-				if i==2 and zoom==12.0 or i==10:
-					var image: Image = picture if i==2 else picture.get_region(area.grow(4).intersection(Rect2i(Vector2i.ZERO,surface.size)))
-					preload("res://tests/native_png.gd").write(image, output.path_join(name+".png"))
-					record["file"]=name+".png"
-					captures.append({"name":name,"file":name+".png","crop":i!=2,"retained":true})
 				zr_samples.append(record)
 				b.sync_gesture_counter()
 			b.cancel_gesture()
