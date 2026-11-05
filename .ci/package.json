@@ -1,30 +1,18 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/517",
-  "package": "W1-W4-workflow-v2",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "W4: konsolidierte Workflowverträge und Nutzerkorrektur prüfen. Reine Dokumente/Rätselproduktion buildfrei, gemischte Entwicklung buildpflichtig; Quell-/Modus-/Umbenennungsbindung und tatsächlich fehlender Player/Upload werden in 15 kleinen Kernfällen geprüft. tools prüft die gemeinsame Inhaltsklassifikation und bestehenden CI-Verträge nach dem Refactoring. Dieser PR enthält CI-Code und benötigt deshalb weiterhin den Windows-Build.",
-  "omitted": "Keine Spiel-/Fachmoduländerung: native.history/native.export/production.solver behalten ihre tatsächlichen Einführungsnachweise aus Run 42100395125 auf 4f56ebba7f4a2381392469be62af0335e1152e3f. HTML-Snapshots/Metadaten/Promptausgabe werden einmalig lokal geprüft; keine neue dauerhafte Sheetsuite oder technischen Uploads. Chromium bleibt manuell; PR #516 unabhängig.",
+  "issue": "https://github.com/venomenon328/picross/issues/519",
+  "package": "PS-1-puzzle-sheet-workspace",
+  "modules": [],
+  "purpose": "Nur Offline-HTML-Sheet, Authoring-Dokumentation und Paketplan. Kern docs/ci-required prüft Dokument-/Planintegrität; buildfrei gemäß CI_WORKFLOW_V2. Persönliche Einstellungen, Arbeitswurzel und Importgrenzen werden einmalig synthetisch in JavaScript/DOM geprüft.",
+  "omitted": "Keine Spiel-, Werkzeug-, Solver-, CI-Code- oder Produktressourcenänderung: keine tools/production/native/preflight/delivery-Module, kein Player und kein Chromium. Keine rätselspezifischen Replays oder dauerhafte Sheetsuite.",
   "test_changes": [
     {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "core",
-      "reason": "15 schnelle Kernfälle einschließlich Buildausnahme, realer Git-Diff-/Modusbindung und Ausführung ohne Player; Standardbibliothek, keine Engine/Browser/Netzwerklast. Dauerhaft begründet, weil sonst jeder Dokument-/Inhalts-PR wieder einen Build auslösen könnte."
-    },
-    {
-      "path": "tools/test_ci_chromium.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende Diagnoseworkflow-Tests an ausschließlich manuelle Aktivierung anpassen. Nur im ausdrücklich gewählten tools-Modul."
-    },
-    {
-      "path": "tools/test_ci_lifecycle.py",
-      "disposition": "change-scoped",
-      "reason": "Alten dauerhaften Mindestabdeckungs-Guard ablösen; Kompatibilität des historischen Helpers bleibt nur in tools prüfbar."
+      "path": "docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html",
+      "disposition": "temporary",
+      "reason": "Einmalige Syntax-/DOM-Prüfung der sieben Prompts, absoluten Pfade, Persistenz samt Speicherfehlern, Settings-Roundtrip, alten Sitzungen/Updates, Import-/Resetgrenzen und ZIP-Inhalte; eingebetteter Snapshot bytegleich. Temporäre Prüfscripte und npm-Abhängigkeiten nach gesicherter Lieferung entfernen."
     }
   ],
-  "core_change": "Schlanker Quellen-/Dokumentkern plus Windowsbau außerhalb reiner Dokument-/Rätselinhalte. Drei zusätzliche schnelle Vertragsfälle sichern die explizite Buildausnahme einschließlich tatsächlichem Git-Diff, gemischten Pfaden, Umbenennung/Dateimodus und Ausführung ohne Player ab. Keine harte Zeit-/Bytegrenze, keine zusätzliche Engine-/Browserlast. Main übernimmt keine Featuremodule.",
+  "core_change": "Keine Änderung am CI-Kern oder an dauerhaften Tests.",
   "evidence": {
     "mode": "none",
     "purpose": null,
