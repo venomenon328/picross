@@ -1,8 +1,8 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 27 · 05.11.2026**
+**Version 0.5.0 · Dokumentrevision 28 · 05.11.2026**
 
-Diese Revision konsolidiert die Entwicklungs-/CI-Anbindung. Inhaltsformate,
+Diese Revision ergänzt gespeicherte Sheet-Einstellungen und lokale Codex-Arbeitswurzeln. Inhaltsformate,
 Solverprofile, Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
 Regelwerksversion, Dokumentrevision, Datei-SHA-256 und tatsächlicher Repositorycommit
 binden den verwendeten Stand; keine nachträgliche Umetikettierung alter Pakete.
@@ -696,7 +696,7 @@ Inventarhash. Import, Dropdownwechsel, Sitzung und ZIP-Export erteilen keine
 Freigabe und ändern kein Repository. Erst das tatsächliche Absenden des passenden
 Freigabeauftrags ist eine menschliche Erklärung.
 
-Sitzungen v3 und Auftragsexporte erhalten Listen und Auswahl. Import eines alten
+Sitzungen v3/v4 und Auftragsexporte erhalten Listen und Auswahl. Import eines alten
 v1-Blocks/Records oder einer alten Sitzung entfernt vorherige Optionsdaten;
 Reset leert sie ebenfalls. Fehlerhafte Daten dürfen keinen Teilstand übernehmen.
 Die HTML-Datei bleibt offline ohne automatische Bild-/Repositoryabrufe. Bilder
@@ -708,6 +708,67 @@ Bei Pflege des Cheat-Sheets den eingebetteten Regelwerksnapshot sowie dessen
 Versions-/Revisionsanzeige gemeinsam mit diesem Dokument aktualisieren. Der
 Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
 muss über den tatsächlichen Arbeitsbranch/Commit erreichbar benannt werden.
+
+### Persönliche Einstellungen und lokale Codex-Arbeit
+
+Das bestehende Offline-Sheet trennt persönliche Einstellungen von Rätseldaten.
+Arbeitswurzel, Bereinigungsoption, Regelquelle/-pfad/-stand, Ablage-/Mergeoption
+und Farbschema werden im Browser gespeichert. Ein anderer Browser, ein geänderter
+Dateipfad oder gelöschte Browserdaten können einen Einstellungsimport erfordern.
+Fehlender oder gesperrter Browserspeicher wird sichtbar gemeldet; das Sheet bleibt
+mit manueller Eingabe und Sicherung nutzbar. Produktionsdaten und Bildbytes werden
+nicht automatisch dauerhaft gespeichert.
+
+Die gesonderte Sicherung `picross-cheatsheet-settings-v1` enthält genau `format`,
+`settings` und `theme`. `settings` enthält genau die Zeichenketten `workspaceRoot`,
+`cleanupMode` (`on|off`), `ruleSource` (`repo|attachment`), `rulePath`, `ruleRef`,
+`repoSave` (`repo|local`) und `mergeMode` (`merge|draft`); `theme` ist
+`system|light|dark`. Eine leere Arbeitswurzel bezeichnet noch fehlendes Setup.
+Nichtleere Wurzeln müssen absolute Windows-, UNC- oder POSIX-Verzeichnispfade
+ohne Steuerzeichen oder Punkt-/Elternsegmente sein. Vor einem Einstellungsimport
+alle Werte prüfen und die neue Wurzel samt Freigabeoptionen ausdrücklich zur
+Bestätigung zeigen; kein Teilimport bei ungültigen Daten.
+
+Neue Produktionssitzungen verwenden `picross-cheatsheet-session-v4`: dieselbe
+äußere Hülle wie v3, aber `fields` enthält ausschließlich Rätseldaten. Alte
+Sitzungen v1–v3 bleiben ladbar; darin enthaltene persönliche Einstellungen und
+Ablage-/Mergeoptionen werden bewusst nicht übernommen. Auch Sheet-Updates und
+Records ändern diese Einstellungen nicht. „Neues Rätsel“ entfernt Produktionsdaten,
+Optionslisten und Bildanhang, erhält aber alle persönlichen Einstellungen.
+Eine Sitzung ist weder Einstellungsbackup noch Produktionspaket oder Freigabe.
+
+Auftragsexporte verwenden `picross-authoring-request-v3`; zusätzlich zu den
+bisherigen Metadaten, Rätseldaten, Varianten und Bildbezügen enthält `execution`
+die tatsächliche `surface`, `local_workspace_root` (Zeichenkette oder `null`) und
+`cleanup_own_local_work` (Boolean). Die Freigabe ergibt sich weiterhin allein aus
+dem ausdrücklich abgesendeten Auftrag, nicht aus importierten Ergebnisdaten.
+Die Produktionsformate und `picross-cheatsheet-update-v1/v2` bleiben unverändert.
+
+Jeder Prompt verlangt aktuelle `AGENTS.md` und Pflichtquellen sowie
+[WORKSPACE](../dev-rules/WORKSPACE.md). Standardregelstand ist `main`, ein bewusst
+beauftragter Arbeitsbranch kann eingestellt werden. Der Anhang ist ein datierter
+Snapshot; bei widersprüchlichem Stand vor dem betroffenen Schritt klären, keine
+alten Regeln stillschweigend vorziehen. Das Sheet selbst ruft keine Quellen ab.
+
+Codex-Aufträge (3, 4, Merge sowie technische Korrektur/Wiederaufnahme) benötigen
+eine gültige absolute Arbeitswurzel; sonst bleiben Kopieren und ZIP-Export
+gesperrt. Neue eigene Checkouts, Worktrees, Downloads und temporäre Prozessdaten
+gehören in einen eigenen Auftragsunterordner darunter. Ist die Wurzel in der
+ausführenden Umgebung nicht erreichbar oder liegt ein benötigter bestehender
+Checkout außerhalb, den Konflikt vor der betroffenen Dateiarbeit melden; keinen
+Ausweichpfad wählen und keine fremden Daten verschieben oder löschen.
+Die Bildschritte in ChatGPT Work bleiben ohne lokale Codex-Wurzel ausführbar;
+deren Cloud-Arbeitsablage macht einen Windows-Pfad nicht zugänglich. Das Sheet
+übermittelt eine Arbeitsanweisung, setzt keine Dateisystemsandbox und verändert
+keine Zugriffsrechte.
+
+Die standardmäßig aktive lokale Bereinigungsoption beauftragt die Entfernung
+eigener gesicherter entbehrlicher Arbeitsdaten gemäß WORKSPACE. Noch benötigte
+Produktions-/Freigabe-/Reviewdateien, Benutzerdaten, Benutzercheckout und die
+Arbeitswurzel selbst bleiben erhalten. Restpfade und Gründe im Ergebnis nennen.
+Diese Option ist vom Produktionsabschluss nach §9 getrennt; auch ausgeschaltete
+lokale Bereinigung hebt den dort beauftragten Nachintegrationsabschluss nicht auf.
+Reine Rätselproduktion bleibt gemäß §1 ohne Player-Build und ohne eigene CI-Replays.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren
 
@@ -900,4 +961,3 @@ revisionsgenauen Abschlussweg; [T01](../CI2_E_VERIFICATION.md) bindet die Liefer
 Die frühere eng begrenzte Freigabe zum Nachintegrations-Cleanup einschließlich Merge
 in Schritt 5 bleibt bestehen. Werkzeug-/CI-Codepakete erben keine frühere
 Cleanup-Mergefreigabe. Historische CI2-E-Aufträge sind keine heutige Freigabe oder Sperre.
-
