@@ -1,5 +1,16 @@
 # Aktiver Bestand und historische Quellen
 
+**P2-F-A-V01-P01 / #502:** Der [native RP6-Vertrag](CI_C_NATIVE_GROUPS.md)
+entfernt zwei Captureprozesse und 30 Darstellungszustände aus der Dauer-CI.
+Zwei Original-JSONs und zwei Prozesslogs entfallen; keine Erfolgs-PNGs oder
+Produktdateien betroffen. Drei kleine Python-Gegenproben und die erweiterten
+verbleibenden Originalberichte sind in `tools/ci_lifecycle.json` gebunden.
+Die frühere Matrix bleibt über `4a65157063a71ca8f3239fd04994dc6a5e90598c`
+erreichbar. Eigene lokale Arbeitsdaten: `artifacts/502-p2f-local/`, Reviewfrist
+19.11.2026 beziehungsweise P2-F-A-V01-R01; keine automatische Löschung.
+T01 bilanziert tatsächliche Kosten und Restbestand. Geschützte/fremde Daten
+bleiben unberührt; technische CI-Belege sieben, Player vierzehn Tage.
+
 **P2-E-B-V01 / #502:** Der [Grafikvertrag](CI_C_NATIVE_GROUPS.md) reduziert mit
 D02-Abdeckungserlaubnis die native VS2-Matrix von 96 auf 18 und die fünf kompakten
 Renderstufen von 158 auf 66 Frames. Alle bisherigen Originalberichtspfade bleiben;

@@ -344,6 +344,7 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
 
 def run_pilot_visual(output, workspace, project, engine, environment, run_phase, host):
     """Only after real pilot completion; use its saves, never a synthetic finish."""
+    from native_contract import RP6_CAPTURES
     renders = output / "renders"
     renders.mkdir(exist_ok=True)
     environment["P1_CAPTURE_DIR"] = str(renders)
@@ -353,7 +354,7 @@ def run_pilot_visual(output, workspace, project, engine, environment, run_phase,
         command = ["xvfb-run","-a"] + command
         environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
     try:
-        for index, number in ((2,4),(3,6),(4,8),(5,9)):
+        for number, (index, _width, _height, _scale) in RP6_CAPTURES.items():
             environment["RP6_INDEX"] = str(index)
             run_phase(f"rp6-t{number:02d}-render", command +
                       ["--script","res://tests/rp6_capture.gd","--","--p1-capture","--ci-compact"], "RP6_CAPTURE_OK")

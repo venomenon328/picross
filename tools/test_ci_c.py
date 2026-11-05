@@ -12,11 +12,98 @@ from unittest.mock import patch
 
 from ci_scope import classify, apply_event_policy, evaluate, JOBS
 from native_contract import GROUPS, PATHS, SCOPES, checks, coverage
-from native_results import bind_files, read, digest, validate_all, validate_payload
+from native_results import bind_files, read, digest, validate_all, validate_payload, validate_rp6_capture
 from p1_product import parse_args
 from native_runner import requested
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def rp6_report(number):
+    """Small synthetic gate input, not substitute native/Save evidence."""
+    labels = [
+        ['fresh pilot hides reveal', 'own incorrect miniature retained', 'mouse undo', 'mouse redo',
+         'album own wrong miniature and no spoiler/name', 'bound regular clue font',
+         'work and critical controls accessible', 'native pixel wrong-block'],
+        ['nine real visible undo clicks remove the wrong block', 'real visible plus click retains normal zoom',
+         'selected partial has no reveal', 'native pixel wrong-corner'],
+        ['album no hidden reveal payload', 'selected partial has no reveal', 'native pixel wrong-corner'],
+        ['capture partial flush', 'native capture restores real mouse completion', 'capture completion slot freshly loaded'],
+        [],
+    ]
+    colors = ['#343f42'] if number == 4 else ['#253342','#637b58','#c89d56','#b55848']
+    size = 20 if number == 4 else 50
+    width, height, scale = (1920,1080,1.0) if number == 4 else (1280,720,1.25)
+    rows = []
+    for i, state in enumerate(('work','detail','album-partial','completion','album-completed')):
+        earned = i >= 3
+        cells = [-1]*(size*size)
+        cells[0] = 1
+        if state == 'work':
+            for y in range(2,5):
+                for x in range(2,5): cells[y*size+x] = 1
+        pixels = {'wrong-block' if i == 0 else 'wrong-corner':colors[0][1:]}
+        if earned:
+            labels[i] += ['selected earned artwork visible and proportional', 'selected earned artwork bound to slot',
+                          'native pixel reveal-center','native pixel reveal-background']
+            pixels = {'reveal-center':'ffffff','reveal-background':'6c9aab' if number == 4 else 'edca78'}
+        rows.append(dict(id=f'{state}-{width}-ui{int(scale*100)}', definition_id=f'T-{number:02d}',
+            slot=f't{number:02d}.json',size=[width,height],ui_scale=scale,completed=earned,
+            reveal=dict(version=1,definition_id=f'T-{number:02d}',name=f'TEST ONLY Muster {number}',
+                        image=f'res://art/fixtures/t{number:02d}.svg') if earned else {},
+            palette=[dict(id=i+1,color=c,symbol=chr(65+i)) for i,c in enumerate(colors)],
+            own_miniature=cells,font='Delight Coffee',layout_valid=True,grid_fit=True,pixels=pixels,
+            assertions=[dict(label=label,passed=True) for label in labels[i]],checks=len(labels[i])))
+    return dict(captures=rows,checks=sum(r['checks'] for r in rows),failures=0,
+                failure_captures=[],pending_failures=[],pending_assertions=[])
+
+
+class RP6CaptureGate(unittest.TestCase):
+    def test_selected_cases_slots_pixels_and_positive_checks_fail_closed(self):
+        for number in (4,6):
+            original = rp6_report(number)
+            validate_rp6_capture(original, number)
+            mutations = [
+                lambda d: d['captures'].pop(),
+                lambda d: d['captures'].append(deepcopy(d['captures'][0])),
+                lambda d: d['captures'].__setitem__(1,deepcopy(d['captures'][0])),
+                lambda d: d['captures'][0].update(slot='t08.json'),
+                lambda d: d['captures'][0].update(definition_id='T-08'),
+                lambda d: d['captures'][0].update(size=[1280,720] if number == 4 else [1920,1080]),
+                lambda d: d['captures'][0].update(ui_scale=2),
+                lambda d: d['captures'][0].update(checks=0),
+                lambda d: d['captures'][0]['assertions'][0].update(passed=False),
+                lambda d: d['captures'][0]['assertions'][0].update(label='unexecuted replacement'),
+                lambda d: d['captures'][1]['own_miniature'].__setitem__(2*(20 if number==4 else 50)+2,1),
+                lambda d: d['captures'][2].update(reveal={'spoiler':True}),
+                lambda d: d['captures'][3]['reveal'].update(definition_id='T-08'),
+                lambda d: d['captures'][3]['pixels'].update(**{'reveal-center':'000000'}),
+                lambda d: d['captures'][4].update(completed=False),
+                lambda d: d.update(checks=d['checks']+1),
+                lambda d: d.update(failures=1),
+                lambda d: d.update(pending_assertions=[dict(label='unobserved',passed=True)]),
+            ]
+            for i, mutate in enumerate(mutations):
+                changed = deepcopy(original); mutate(changed)
+                with self.subTest(number=number,mutation=i), self.assertRaises(ValueError):
+                    validate_rp6_capture(changed, number)
+
+    def test_producer_and_phase_contract_remove_only_two_render_processes(self):
+        from p1_product import run_pilot_visual
+        from native_contract import artifacts
+        expected = {f'rp6-t{n:02d}-{s}' for n in (4,6,8,9) for s in ('partial','finish','read')}
+        expected |= {'rp6-t04-render','rp6-t06-render','rp6-t04-foreign-slot-write','rp6-t04-foreign-slot-control'}
+        self.assertEqual({p for p in checks('adapters') if p.startswith('rp6-')},expected)
+        self.assertEqual([p for p in artifacts('adapters') if p.startswith('renders/')],
+                         ['renders/rp6-t04-renders.json','renders/rp6-t06-renders.json'])
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t); calls=[]; environment={}
+            def phase(name, command, marker):
+                calls.append((name,environment['RP6_INDEX'],environment['P1_TEST_SAVE_ROOT'],marker))
+            run_pilot_visual(root,root,root/'game','godot',environment,phase,'Linux')
+            self.assertEqual(calls,[(f'rp6-t{n:02d}-render',str(index),str(root/'rp6-saves'),'RP6_CAPTURE_OK')
+                                    for n,index in ((4,2),(6,3))])
+            self.assertNotIn('RP6_INDEX',environment)
 
 
 def write(path, value):
@@ -185,6 +272,40 @@ class NativeGate(unittest.TestCase):
             self.result=good
         for value in ('',None,'0','3'):
             with self.assertRaises(ValueError):validate_all(self.plan,self.root,None,dict(product_attempt=value),'2')
+
+    def test_adapter_payload_rehash_cannot_hide_missing_or_forged_selected_capture(self):
+        from native_contract import artifacts
+        (self.root/'core').rename(self.root/'adapters')
+        directory=self.root/'adapters'; path=directory/'product-report.json'
+        report=read(path); report.update(native_group='adapters',checks=[])
+        for name in checks('adapters'):
+            negative=name=='rp6-t04-foreign-slot-control'
+            row=dict(name=name,status='success',seconds=.1,exit_code=4 if negative else 0,expected_failure=negative)
+            if name not in ('current-resource-hashes','verified-toolchain-assets','current-atlas-resources','za1-test-only-registration'):
+                log=directory/'logs'/(name+'.log'); log.write_bytes(b'synthetic process output')
+                row['log']=dict(file=log.name,retained_bytes=24,original_bytes=24,abbreviated=False,sha256=digest(log))
+            report['checks'].append(row)
+        for name,scope in report['scope'].items():
+            scope.update(enabled=name=='pilots',status='success' if name=='pilots' else 'not_applicable')
+        selected=directory/'selected'
+        for name in artifacts('adapters'):
+            data=rp6_report(int(name[13:15])) if name.startswith('renders/rp6-') else dict(checks=1,failures=0)
+            write(selected/name,data)
+        self.result.update(groups=['adapters'],expected=coverage(['adapters']),
+                           results=[dict(group='adapters',status='success',exit_code=0)])
+        def refresh():
+            report['selected_evidence']['files']=bind_files(selected)
+            write(path,report)
+            self.result['files']=bind_files(self.root,exclude={'native-result.json'})
+        refresh(); validate_payload(self.result,self.root)
+        original=rp6_report(6); capture=selected/'renders/rp6-t06-renders.json'
+        for mutate in (lambda d:d['captures'][3].update(slot='t08.json'),
+                       lambda d:d['captures'].pop(),
+                       lambda d:d['captures'][4]['pixels'].update(**{'reveal-center':'000000'})):
+            changed=deepcopy(original); mutate(changed); write(capture,changed); refresh()
+            with self.assertRaisesRegex(ValueError,'RP6'):validate_payload(self.result,self.root)
+        capture.unlink(); refresh()
+        with self.assertRaisesRegex(ValueError,'mandatory files'):validate_payload(self.result,self.root)
 
     def test_missing_duplicate_skipped_failed_cancelled_groups_checks_and_artifacts(self):
         original=deepcopy(self.result)
