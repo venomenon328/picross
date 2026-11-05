@@ -2,14 +2,9 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/517",
   "package": "W1-W3-workflow-v2",
-  "modules": [
-    "tools",
-    "native.history",
-    "native.export",
-    "production.solver"
-  ],
-  "purpose": "Einmalige Integration der modularen CI: gesamte Toolregression plus jeweils ein echter Native- und Production-Produzent samt unabhängigen Lesern. Der Windowsbau gehört zum Kern. native.export prüft zusätzlich die Wiederverwendung ausschließlich der Laufzeitdateien/Lizenzen ohne technischen Produktreport.",
-  "omitted": "Kein geändertes Spiel- oder Browserverhalten. Keine pauschale native Vollmatrix, Bildproduktion, Delivery oder Chromium. UI-Logik des Offline-Sheets wird einmalig lokal geprüft; visuelle Browserabnahme separat ausweisen. PR #516 bleibt unabhängig.",
+  "modules": [],
+  "purpose": "Abschluss des Pakets: tatsächlichen reinen Kern einschließlich Windowsbau ohne optionale Python-Umgebung am aktuellen Head prüfen. Der vollständige Einführungsumfang tools/native.history/native.export/production.solver bestand auf 4f56ebba7f4a2381392469be62af0335e1152e3f im Lauf https://github.com/venomenon328/picross/actions/runs/42100395125; Modul-, Kern-, Test- und Spiel-/Produktionscode bleiben seitdem unverändert.",
+  "omitted": "Gemäß D01 im PR werden diese unveränderten Fachprüfungen nicht erneut gestartet. Letzter Diff: defensive Sheet-CSS und expliziter Paket-/Artefaktabschluss. Kein Browser- oder Spielverhalten geändert. Die lokale Sheet-DOM-Probe bleibt ein einmaliger Einführungsnachweis; native Darstellung und Windowsstart wurden nicht persönlich abgenommen. PR #516 bleibt unabhängig.",
   "test_changes": [
     {
       "path": "tools/test_ci_modular.py",
@@ -29,8 +24,8 @@
   ],
   "core_change": "Ersetzt automatische Großauswahl durch Paketvertrag und schlanken Quellen-/Dokumentkern plus obligatorischen Windowsbau. Keine harte Zeit-/Bytegrenze, keine geschützten Testfamilien. Main wiederholt keine abgelaufene Featureauswahl.",
   "evidence": {
-    "mode": "review",
-    "purpose": "R01 zu #517: Integration beider Original-Reader und Artefaktrückbau nachvollziehen. Nur für diesen PR; main exportiert keine technischen Belege.",
-    "expires": "2026-11-12"
+    "mode": "none",
+    "purpose": null,
+    "expires": null
   }
 }
