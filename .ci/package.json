@@ -1,15 +1,17 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/517",
-  "package": "W1-W3-workflow-v2",
-  "modules": [],
-  "purpose": "Abschluss des Pakets: tatsächlichen reinen Kern einschließlich Windowsbau ohne optionale Python-Umgebung am aktuellen Head prüfen. Der vollständige Einführungsumfang tools/native.history/native.export/production.solver bestand auf 4f56ebba7f4a2381392469be62af0335e1152e3f im Lauf https://github.com/venomenon328/picross/actions/runs/42100395125; Modul-, Kern-, Test- und Spiel-/Produktionscode bleiben seitdem unverändert.",
-  "omitted": "Gemäß D01 im PR werden diese unveränderten Fachprüfungen nicht erneut gestartet. Letzter Diff: defensive Sheet-CSS und expliziter Paket-/Artefaktabschluss. Kein Browser- oder Spielverhalten geändert. Die lokale Sheet-DOM-Probe bleibt ein einmaliger Einführungsnachweis; native Darstellung und Windowsstart wurden nicht persönlich abgenommen. PR #516 bleibt unabhängig.",
+  "package": "W1-W4-workflow-v2",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "W4: konsolidierte Workflowverträge und Nutzerkorrektur prüfen. Reine Dokumente/Rätselproduktion buildfrei, gemischte Entwicklung buildpflichtig; Quell-/Modus-/Umbenennungsbindung und tatsächlich fehlender Player/Upload werden in 15 kleinen Kernfällen geprüft. tools prüft die gemeinsame Inhaltsklassifikation und bestehenden CI-Verträge nach dem Refactoring. Dieser PR enthält CI-Code und benötigt deshalb weiterhin den Windows-Build.",
+  "omitted": "Keine Spiel-/Fachmoduländerung: native.history/native.export/production.solver behalten ihre tatsächlichen Einführungsnachweise aus Run 42100395125 auf 4f56ebba7f4a2381392469be62af0335e1152e3f. HTML-Snapshots/Metadaten/Promptausgabe werden einmalig lokal geprüft; keine neue dauerhafte Sheetsuite oder technischen Uploads. Chromium bleibt manuell; PR #516 unabhängig.",
   "test_changes": [
     {
       "path": "tools/test_ci_modular.py",
       "disposition": "core",
-      "reason": "Kleine schnelle Regression für Paketwahl, Quellenbindung, Artefaktlebenszyklus und fail-closed Ergebnisannahme; keine Engine/Browser/Netzwerklast."
+      "reason": "15 schnelle Kernfälle einschließlich Buildausnahme, realer Git-Diff-/Modusbindung und Ausführung ohne Player; Standardbibliothek, keine Engine/Browser/Netzwerklast. Dauerhaft begründet, weil sonst jeder Dokument-/Inhalts-PR wieder einen Build auslösen könnte."
     },
     {
       "path": "tools/test_ci_chromium.py",
@@ -22,7 +24,7 @@
       "reason": "Alten dauerhaften Mindestabdeckungs-Guard ablösen; Kompatibilität des historischen Helpers bleibt nur in tools prüfbar."
     }
   ],
-  "core_change": "Ersetzt automatische Großauswahl durch Paketvertrag und schlanken Quellen-/Dokumentkern plus obligatorischen Windowsbau. Keine harte Zeit-/Bytegrenze, keine geschützten Testfamilien. Main wiederholt keine abgelaufene Featureauswahl.",
+  "core_change": "Schlanker Quellen-/Dokumentkern plus Windowsbau außerhalb reiner Dokument-/Rätselinhalte. Drei zusätzliche schnelle Vertragsfälle sichern die explizite Buildausnahme einschließlich tatsächlichem Git-Diff, gemischten Pfaden, Umbenennung/Dateimodus und Ausführung ohne Player ab. Keine harte Zeit-/Bytegrenze, keine zusätzliche Engine-/Browserlast. Main übernimmt keine Featuremodule.",
   "evidence": {
     "mode": "none",
     "purpose": null,

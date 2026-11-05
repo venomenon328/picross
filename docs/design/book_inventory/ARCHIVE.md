@@ -36,20 +36,24 @@ sind von dieser Archivierung nicht betroffen.
 
 ## Historischen Lieferstand gezielt prüfen
 
-Die vollständigen alten Lieferprüfungen laufen ausschließlich in einer separaten
-Arbeitskopie des gebundenen Commits. Aus dem heutigen Repository zuerst genau
+Nur bei ausdrücklich beauftragter historischer Untersuchung ausführen, nicht als
+reguläre CI oder Routineabschluss. Die alten Lieferprüfungen laufen in einer
+eigenen Arbeitskopie unter der beauftragten Codex-Wurzel. Im Beispiel bezeichnet
+`BP_ARCHIVE_ROOT` einen neuen absoluten Unterpfad dieser Wurzel. Aus dem heutigen Repository zuerst genau
 den Archivstand und die drei von den alten Prüfern verwendeten Quellcommits holen:
 
 ```sh
 git fetch --no-tags --depth=1 origin fad885344874534629365917a2ab6a8d311cd3a7 0d3ad6a921578f94b3249ab83fbb215721549dfb 4ef926fe033418090512d82b9aba151031534c5f 66b9d39dd3dbce908ff663a18c059351cfccf557
-git worktree add --detach ../picross-bp-archive fad885344874534629365917a2ab6a8d311cd3a7
-cd ../picross-bp-archive
+git worktree add --detach "$BP_ARCHIVE_ROOT" fad885344874534629365917a2ab6a8d311cd3a7
+cd "$BP_ARCHIVE_ROOT"
 python3 tools/book_inventory/production.py verify
 python3 tools/book_inventory/artwork.py verify
 python3 tools/book_inventory/composition.py verify
 ```
 
-Der Zielordner muss neu sein. Die vorhandenen Originaldateien werden geprüft,
+Der Zielordner muss neu sein; nach gesicherter Übergabe gemäß
+[WORKSPACE](../../dev-rules/WORKSPACE.md) nur die eigene entbehrliche Arbeitskopie
+bereinigen. Die vorhandenen Originaldateien werden geprüft,
 nicht neu gerendert. Python 3.11 oder neuer und die Standardbibliothek reichen
 für diese drei historischen Verifikationen; Bildgenerierung, Browser und neue
 Fontdownloads sind dafür nicht erforderlich. Die ursprünglichen vollständigen
@@ -61,3 +65,4 @@ Die damaligen vollständigen Prüfergebnisse bleiben an ihre Quellen gebunden.
 Ein erfolgreicher historischer Lauf belegt diesen alten Lieferstand. Er ersetzt
 keine Prüfung oder Abnahme der aktuellen Spielfassung. Die bisherigen Review-
 und Abnahmeaussagen bleiben an ihre ursprünglichen Commits gebunden.
+

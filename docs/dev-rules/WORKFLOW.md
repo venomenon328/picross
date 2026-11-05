@@ -40,6 +40,9 @@ Problem, gewünschtes Verhalten, Nichtziele, überprüfbare Akzeptanz und releva
 Ein Paket liefert ein zusammenhängendes, eigenständig prüfbares Ergebnis. Tests und erforderliche Dokumentation gehören dazu. Standard: ein Paket pro PR; abhängig gestapelte PRs mit eindeutiger Basis und Integrationsreihenfolge. Ein Teilpaket schließt kein unerfülltes Gesamtissue.
 
 **Jedes Paket entscheidet seinen Prüfbedarf** nach [CI_CONTRACT.md](CI_CONTRACT.md): verpflichtender schlanker Projektkern, ausgewählte Module mit Gründen, bewusst ausgelassene Abdeckung/Risiken, einmalige Umsetzungsnachweise, neue/entfernte Dauerprüfungen und technische Artefakte mit Zweck/Ende. Auch `keine Zusatzmodule` ist eine explizite, begründete Entscheidung. Ein Test wird nicht dauerhaft, nur weil er für die Erstimplementierung sinnvoll war.
+Vereinbarte Produktgarantien und aktuelle Akzeptanznachweise bleiben verbindlich;
+der Prüfplan legt ihre geeignete Ebene und Ausführung fest. Ein Modul wegzulassen
+ist keine stillschweigende Aufhebung eines Akzeptanzkriteriums.
 
 Vor Umsetzung aktuellen Branch/PR, Abhängigkeiten, Quellenzugang und tatsächlich mögliche Prüfwege prüfen. Status: `umsetzungsbereit`, konkret `blockiert` oder zuerst `untersuchen/enger schneiden`. Aufträge dürfen diese Vorbereitung und Umsetzung verbinden. Für noch bevorstehende Ausführungs-/Modellentscheidungen gilt [MODEL_SELECTION.md](MODEL_SELECTION.md); keine rückblickende Empfehlung.
 
@@ -73,10 +76,14 @@ Nacharbeiten bleiben standardmäßig im selben PR. Nur beauftragte B-/technische
 
 Merge benötigt ausdrückliche oder passende bedingte Nutzerfreigabe. Der Sheet-Schalter ist standardmäßig aktiv und formuliert diese Freigabe **im kopierten Reviewauftrag**; das Sheet selbst führt keinen Merge aus. Ein JSON-Ergebnis, der Default oder ein grüner CI-Status allein erteilt keine Befugnis.
 
-Bei `Review und Merge, falls alles passt` ohne B-Befunde und ohne offene erforderliche Vor-Merge-Gates direkt fortfahren. Unmittelbar vorher aktuellen Head, Basis, vollständigen Reviewbezug, echte ausgewählte Checks und Konfliktfreiheit erneut kontrollieren; möglichst mit erwarteter Head-SHA mergen. Neue Commits werden neu geprüft. Bei Befunden dokumentieren und zur Nacharbeit übergeben, keine automatische Korrektur. Keine Wiederholungsfreigabe anfordern, wenn eine bestehende bedingte Freigabe den neuen geprüften Stand bereits umfasst.
+Bei `Review und Merge, falls alles passt` ohne B-Befunde und ohne offene erforderliche Vor-Merge-Gates direkt fortfahren. Unmittelbar vorher aktuellen Head, Basis, vollständigen Reviewbezug, echte ausgewählte Checks und Konfliktfreiheit erneut kontrollieren; möglichst mit erwarteter Head-SHA mergen. Neue Commits werden neu geprüft. Bei Befunden dokumentieren und zur Nacharbeit übergeben, sofern der Auftrag nur
+Review mit bedingtem Merge umfasst. Ist Korrektur ausdrücklich mitbeauftragt,
+diese im Scope ausführen und den geänderten Stand erneut prüfen; erforderliche
+unabhängige Abnahmen bleiben unabhängig. Keine Wiederholungsfreigabe anfordern, wenn eine bestehende bedingte Freigabe den neuen geprüften Stand bereits umfasst.
 
 Projektprofil bestimmt Mergeverfahren und automatische Deploymentwirkung. Zusätzliche Releases, Tags oder manuelle Deployments brauchen eigenen Auftrag. Tatsächlichen Mergezustand zurücklesen; vorgemerktes Auto-Merge ist noch kein Merge. Issue nur bei erfülltem Umfang schließen. Restgates und Bereinigungsreste ehrlich führen.
 
 ## 8. Übergabe
 
 Für den Sheet-Ablauf gilt [HANDOFF.md](HANDOFF.md): kurze Ergebnismeldung mit relevanten Links, genau ein vollständiges versioniertes JSON im Codeblock und ein kurzer nächster Schritt. Keine zusätzliche Handoff-Datei oder redundanter Folgeprompt. Das Sheet stellt daraus den nächsten Auftrag zusammen. Ohne Sheet bleibt eine kompakte menschlich lesbare Übergabe zulässig.
+

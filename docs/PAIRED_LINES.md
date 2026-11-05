@@ -146,5 +146,8 @@ Negativtests für überstarke/fehlende/veraltete Änderungen, falsche Bindungen,
 Widerspruch/Fixpunkt/Abschluss, Ressourcen-/Dateigrenzen und fehlende Freigaben.
 Durchstiche für Import, Reparatur, manuelle Ableitungen, ZA-1 und Registrierung
 verwenden ausschließlich künstliche Pakete. Alte Proofs/Diagnose/Exporte bleiben
-Regressionen. Tatsächliche Resultate, Head/Basis/Test-Merge und getrennter
-Selbstreview werden im gemeinsamen Draft-PR dokumentiert. #139 bleibt offen.
+fachliche Kompatibilitätsanforderungen. Die tatsächlich nötigen Regressionen
+wählt das aktuelle Paket nach [CI_WORKFLOW_V2](CI_WORKFLOW_V2.md), ohne historische
+Produktionsreplays. Resultate, Head/Basis/Test-Merge und getrenntes Selbstreview
+stehen im zugehörigen PR; aktuellen Paketstatus in #139 prüfen.
+

@@ -1,5 +1,15 @@
 # Änderungen am Regelpaket
 
+## 0.2.0-rc.2 — 2026-11-05
+
+Lokale Konsolidierung im selben beauftragten Picross-Fork (#517), kein zentraler Release.
+Auswahl von CI-Modulen und weiterhin verbindliche Akzeptanzkriterien getrennt;
+verbundene Review-/Korrekturaufträge ausdrücklich von reinem Review abgegrenzt.
+Sheet-JSON statt parallelem Codex-Prompt in die Ausgaberegel integriert.
+Modellkatalog anhand aktueller offizieller Quellen datiert aktualisiert.
+Reine Dokumente und reine Inhaltsproduktion ausdrücklich vom Player-Build ausgenommen;
+Picross setzt die Ausnahme diffgebunden auch im Main-Nachlauf um.
+
 ## 0.2.0-rc.1 — 2026-11-05
 
 Ausdrücklich beauftragter lokaler Picross-Fork (#517), kein zentraler Release.
@@ -30,3 +40,4 @@ Erster Abnahmekandidat; kein veröffentlichter Release und keine automatische Ak
 - Im Aufbau-Review präzisiert: neue Ideen setzen kein vorhandenes Issue voraus; Schutz vor direkten Zielbranchänderungen gilt auch ohne technische GitHub-Erzwingung.
 
 Die erste Fassung ersetzt bestehende Projektanweisungen erst nach deren expliziter, widerspruchsfreier Migration. Herkunftscommit und Übernahmeentscheidung werden im Zielrepository dokumentiert, nicht durch diese Versionsnummer allein bewiesen.
+

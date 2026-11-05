@@ -13,7 +13,7 @@ logische Katalogseite auf beide Buchhälften. Höchstens 24 aktive Karten,
 vollständige Schrift-/Metadaten-/Bild-/Resetbudgets und ID-Aktionen bleiben.
 Knappere Flächen verwenden weniger Spalten und Scrollen. Die revidierten Abstände
 folgen projizierter Papierkante und ruhender Falzwölbung. Der reguläre Katalog
-wird erst mit B-B umgestellt; bisherige KU-/HZ-Abnahmen bleiben gebunden.
+verwendet die integrierte B-B-Darstellung; bisherige KU-/HZ-Abnahmen bleiben gebunden.
 N03 entfernt den isolierten Hoverstrich und leere Tooltippanels, erhält sinnvolle
 Modus-/Reset-/Richtungshilfen und prüft deren verzögerte native Mauswege.
 N04 füllt zuerst die linke Hälfte bis zwölf Karten, dann die rechte bis zwölf;
@@ -24,7 +24,7 @@ N05 ergänzt neben dem Einstellungenzugang einen direkten Hilfezugang. Bei
 knapper Breite erhält die Fußnavigation eine zweite Zeile ohne kleinere Buttons.
 Beide Informationswege führen zum unveränderten Katalogkontext mit zwei Offsets zurück.
 
-**HZ · 21.10.2026, HZ-A/B integriert; HZ-C / #294 implementiert, Abnahmen offen:**
+**HZ · HZ-A/B/C integriert; aktuelle Abnahmeentscheidungen in #284/#294:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet Tidy Hand für normale
 Katalogtexte bei unveränderten Bakso-Überschriften und organischeren stabilen
 Kartenkonturen. HZ-A/B sind über PR #288/#289 integriert und in #284 abgenommen.
@@ -33,13 +33,13 @@ Vergleich der korrigierten kleinen Schriftgröße 14/15 einschließlich Kategori
 Papierstreifen, vollständige Metadaten, gleiche Kartenbereiche, Bildraum und
 Bedien-/Spoilergrenzen bleiben verbindlich.
 
-**AT · 19.10.2026, Umsetzungsvorbereitung V3; AT-A in Umsetzung:**
+**AT · Abschlussbildtransparenz:**
 Der [Transparenzstandard](REVEAL_TRANSPARENCY.md) ergänzt die verdienten
-Katalogbilder. AT-A schafft den begrenzten Bildänderungsweg mit synthetischen
-Alpha-/Spielstandsnachweisen; AT-B überarbeitet danach die Bestandsbilder mit
+Katalogbilder. AT-A liefert den begrenzten Bildänderungsweg mit synthetischen
+Alpha-/Spielstandsnachweisen; die AT-B-Bestandsübernahme verwendet
 konkreter neuer Bildfreigabe. Kartenaufteilung und ungelöste Vorschauen bleiben erhalten.
 
-Stand: 21.10.2026 · Spezifikation 2.2 · KU-A/B und HZ-A/B integriert; HZ-C implementiert, Abnahmen offen
+Fachstand: Spezifikation 2.2 · Workflowabgleich: 05.11.2026 · KU-A/B und HZ-A/B/C integriert
 
 Der Eigentümer hat die Katalogüberarbeitung am 18.10.2026 als Spezifikation
 freigegeben. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244)
@@ -135,7 +135,7 @@ nicht jeweils neu darin zentriert.
 Der [direkte Vergleich](HZ_C_VERIFICATION.md) der korrigierten kleinen Größen
 14/15 unter gleichen Bedingungen begründet die Wahl 15 bei UI100 und 19 bei
 UI125 für Kategorie, Größe, Schwierigkeit und Status. „Blatt NN“ bleibt 15/19.
-Die separate Eigentümersichtabnahme M01 bleibt offen. Textmaße und gemeinsame Kartenmaße
+Die tatsächliche separate Eigentümersichtabnahme M01 wird in #294/PR #296 geführt. Textmaße und gemeinsame Kartenmaße
 werden zusammen angepasst; die oben genannten Volltext-/Bildraumgrenzen bleiben.
 
 ## KE-D02 · Papieretikett und Moduspiktogramm
@@ -345,7 +345,7 @@ Standard ist je Paket ein Implementierungs-PR. Die Spezifikationslieferung begin
 keines dieser Pakete. KU-A/B sind inzwischen über PR #254/#255 integriert;
 Paketakzeptanz, technische Nachweise, Reviews und spätere Entscheidungen zu den
 persönlichen Abnahmen stehen im Gesamtissue. HZ-A/B sind in #284 abgeschlossen;
-das in Draft-PR #296 implementierte Folgepaket HZ-C / #294 besitzt eigene Gates gemäß
+das über PR #296 integrierte Folgepaket HZ-C / #294 hat seine eigene Prüfzuordnung gemäß
 [HAND_DRAWN_UI](HAND_DRAWN_UI.md).
 Historische [KE-Prüfnachweise](KE_VERIFICATION.md) bleiben an ihre damalige Lieferung
 gebunden und sind keine Abnahme der neuen KU-Darstellung.
@@ -353,10 +353,11 @@ gebunden und sind keine Abnahme der neuen KU-Darstellung.
 Die KU-Prüfzuordnung verlangt feste synthetische Fälle für alle
 fünf Stufen, fehlende Einstufung, beide Modi und die Status-/Fehlerzustände;
 keine Tests oder Replays pro echtem Produktionsrätsel. Geometrie und Darstellung
-folgen den drei gemeinsamen Konfigurationen der aktuellen CI-Policy sowie
-UI 100/125 %. Nachzuweisen sind die vollständige einzeilige Anzeige der längsten
+folgen bei gewähltem Modul dem [aktuellen Stichprobenvertrag](CI_C_NATIVE_GROUPS.md)
+und dem begründeten Paketbedarf; keine automatische Vollmatrix. Nachzuweisen sind die vollständige einzeilige Anzeige der längsten
 Metadaten, größere ausgerichtete Symbole, ausbleibende Schwierigkeitstooltips,
 erhaltene Modus-/Resettooltips und die Statusfußzeile. Filter-/Seitenwechsel,
 Undo/Redo, Fehler/Recovery, Reset und Spoilergrenzen bleiben relevante Regressionen.
-Native Windows- und Chromium-/Firefoxprüfungen folgen P1 und
-[WEB-1](WEB_HOSTING.md); KU-B ergänzt die eigenen Sortier-/Datennachweise.
+Native Windowsprüfungen folgen dem gewählten Modul; ausdrücklich manuelle
+Chromiumprüfungen dem [Webvertrag](WEB_HOSTING.md); KU-B ergänzt die eigenen Sortier-/Datennachweise.
+

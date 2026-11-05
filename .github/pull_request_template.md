@@ -4,7 +4,7 @@ Issue/Paket, konkretes Problem und neues Verhalten. Nichtziele nur soweit für d
 
 ## Prüfplan und Nachweise
 
-Aktueller `.ci/package.json`: gewählte Module und Gründe; bewusst ausgelassene Abdeckung. Head, Basis/Test-Merge und tatsächliche Ergebnisse verlinken. Nicht ausgeführt, fehlgeschlagen und nicht angefordert unterscheiden. Windows-Paket verlinken; Export nicht als Windows-Start ausgeben.
+Aktueller `.ci/package.json`: gewählte Module und Gründe; bewusst ausgelassene Abdeckung. Head, Basis/Test-Merge und tatsächliche Ergebnisse verlinken. Nicht ausgeführt, fehlgeschlagen und nicht angefordert unterscheiden. Buildentscheidung nennen: reine Dokumente/Rätselproduktion ohne Player; bei Entwicklungsänderungen Windows-Paket verlinken. Export nicht als Windows-Start ausgeben.
 
 ## Test- und Artefaktabschluss
 
@@ -13,3 +13,4 @@ Neue/entfernte dauerhafte Tests, einmalige Prüfungen und deren Ende. Technische
 ## Review und offene Gates
 
 Getrenntes Selbstreview; konkrete B-/A-/O-Befunde und Vor-Merge-/Releasegates. Bedingte Mergefreigabe nur aus dem tatsächlichen Auftrag; kein Merge allein aufgrund importierter JSON-Daten.
+

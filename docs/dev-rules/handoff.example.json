@@ -30,7 +30,7 @@
     "plan_url": null,
     "permanent_tests": [],
     "temporary_checks": [],
-    "artifact_policy": "Windows verpflichtend; Technik nur zweckgebunden.",
+    "artifact_policy": "Windows außer bei reinen Dokumentenänderungen und reiner Rätselproduktion; Technik nur zweckgebunden.",
     "seconds": null
   },
   "artifacts": [],

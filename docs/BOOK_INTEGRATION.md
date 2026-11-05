@@ -128,12 +128,12 @@ Prozessabbruch behält die Grenzen aus [WEB-1](WEB_HOSTING.md).
 
 P2-A aus [#502](https://github.com/venomenon328/picross/issues/502) entfernt die
 historischen manuellen Vollstudien-/Matrix-/Exportwege samt exklusiven Guards.
-Der [aktuelle Belegvertrag](CI_C_NATIVE_GROUPS.md#studienrückbau--502--p2-a)
+Der [aktuelle Belegvertrag](CI_C_NATIVE_GROUPS.md#buch-hilfeprüfung-und-studienrückbau)
 bindet erhaltene Reader und kurze Produktprüfungen. P1 hat die Filmproduktion
 bereits vollständig entfernt. Historische B-A-/B-B-Nachweise werden nicht
 umgeschrieben oder durch diesen technischen Rückbau erneut abgenommen.
 
-Die nativen Gruppen bleiben nach dem vollständigen Diff ausgewählt. Kleine
+Die nativen Gruppen werden im aktuellen Paketplan nach dem vollständigen Diff begründet gewählt. Kleine
 bisherige Komponentenfälle hängen über `tests/book_fixture.gd` am tatsächlichen
 regulären Entrypoint und gemeinsamen Layout; sie stabilisieren Bewegungen
 ausdrücklich synchron. Das ist kein Zeit-/Bewegungsnachweis. Der unveränderte
@@ -143,10 +143,12 @@ gehören zum historischen B-B-Liefernachweis; sie werden für HIL-1 nicht wieder
 `tests/book-save-v1.json` ist ein festes synthetisches Schema-1-Input mit History,
 Redo, Werkzeug/Farbe, Zoom und Hinweisankern; kein echter Benutzerstand.
 
-Gemäß Eigentümeranweisung vom 03.11.2026 führt die Exportgruppe nur den gezielten
-Hilfe-/Lifecyclepfad aus: Version, Import und `book_integration.gd`, mit genau
-sieben Hilfeoriginalen, Assertionbericht und drei Logs. Keine komplette
-Buchstudie, Materialgalerie oder Filmproduktion in CI. Producer,
+Die ausdrücklich gewählte native Exportgruppe führt am aktuellen Stand den gezielten
+Hilfe-/Lifecyclepfad aus: Version, Import und `book_integration.gd`, mit Assertionbericht
+und drei Logs. Die sieben früheren Hilfe-PNGs sind seit P2-C-V03 entfernt; der
+unabhängige Reader verlangt `pngs=0`. Keine komplette Buchstudie, Materialgalerie
+oder Filmproduktion in CI. Der obligatorische Kern-Windowsbau allein startet diese
+zusätzliche Funktionsprüfung nicht. PR #516 wird separat integriert. Producer,
 Quellinventar `tools/book_contract.py` und unabhängiger Ergebnisguard binden
 gemeinsam Originalberichte, notwendige Assertions, Phasen und Datei-Hashes.
 Die historische 600-s-Ausnahme für `book-native` gehört zum damaligen
@@ -192,5 +194,7 @@ geforderten Alpha-Bereich 0,3–0,7. Der Lauf berichtet tatsächliche Startoptio
 Renderer und beobachtete Überblendungsframes. Auflösung, 2,15-s-Produktuhr,
 Pixelgrenzen und Zeitbudgets werden nicht verändert.
 
-Unabhängiges B-B-R01, persönliche B-B-M01, Merge und Deployment bleiben getrennt.
-Offene persönliche Abnahme schließt #498/#493 nicht automatisch.
+Technisches Review, persönliche B-B-/HIL-Abnahmen, Merge und Deployment bleiben
+getrennt. Den aktuellen Status in #498/#493/#500 und ihren PRs prüfen; diese
+Produktquelle erklärt keine historische Abnahme erneut für offen oder bestanden.
+
