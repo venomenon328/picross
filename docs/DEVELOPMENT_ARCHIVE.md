@@ -1,5 +1,19 @@
 # Aktiver Bestand und historische Quellen
 
+**P2-F-C-V01 / #502, D03:** `regular-book-integration` mit drei Unterprozessen,
+fünf Bericht-/Logdateien und allen nativen HIL-/Buch-Lifecycleassertions entfällt
+aus Standard-CI und gewöhnlichen Vollläufen. [Risiken und Restprüfung](CI_C_NATIVE_GROUPS.md#p2-f-c-v01--502-buch-lifecycle-nur-auf-ausdrücklichen-anlass)
+sind ausdrücklich gebunden. `book_lifecycle.py`, `book_integration.gd`,
+`help_native.gd`, Frozen-Saveinput und separater Reader bleiben nur als ausdrücklich
+aufrufbare Diagnose bei konkreten Änderungen/Befunden erhalten, nicht als
+automatische Archiv-/Einführungsmatrix. Keine neue Quelle, native Teststufe oder
+Erfolgsgalerie; Lehrbeispiele bleiben im vorhandenen Core-Prozess.
+Lokale Messhilfen/Originale unter `artifacts/502-p2fc-local` und dem eigenen
+Unterpfad `/work/p2fc` im bestehenden Container sind zweckgebundene Reviewdaten
+bis 19.11.2026 beziehungsweise P2-F-C-R01, danach Abschlussprüfung ohne automatische
+Löschung. Fremde/geschützte Daten bleiben unberührt. T01/Selbstreview im PR binden
+Kosten und Bestand; Technik sieben, Player vierzehn Tage. #502 bleibt offen.
+
 **P2-F-B-V01 / #502:** Die aktuelle native ZS2-Core-Regression besitzt eine
 [bewusst reduzierte Fallpflicht](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe).
 Die 40er Strich-/zwölffache Font-/sechsfache Schalterwiederholung wird nicht in ein
@@ -70,7 +84,7 @@ Windows-/Webstart verwendet diese Quellen. P2-A / #502 entfernt
 `game/study/book/` samt 27 Definitions-/Revealpaaren, Vollstudienprüfern und
 Exportwegen; die historischen Quellen liegen am
 [gebundenen Vorgänger](https://github.com/venomenon328/picross/tree/fc86d2a2eff543f5b0c4ff328a71e815e4bc43a7/game/study/book).
-Aktive Reader sind `tools/book_lifecycle.py` für die kurze Hilfe-/Lifecycleprüfung
+Erhaltene Diagnosewege sind `tools/book_lifecycle.py` für die ausdrücklich angeforderte Hilfe-/Lifecycleprüfung
 und `tools/book_windows_probe.py` mit dem externen Beobachter
 `game/tests/book_windows_observer.gd` für ausdrücklich beauftragte Windowsdiagnosen.
 Beide kopieren den bestehenden kleinen Testkatalog über `product_fixtures`.
@@ -78,7 +92,8 @@ B-B-M01/HIL-M01 und der wechselnde Windows-Tooltipbefund P1-R01-O01 bleiben offe
 kein Studienreplay oder neuer Desktopauftrag. Der [Belegvertrag](CI_C_NATIVE_GROUPS.md)
 ordnet die erhaltenen aktuellen Produkt-/Tooltip-/Speicher-/PCK-Prüfungen zu.
 `game/tests/book_fixture.gd` bindet bestehende Komponentenprüfungen an dieselbe
-Produktwurzel, `book_integration.gd` prüft ihren unbeschleunigten Lebenszyklus.
+Produktwurzel, `book_integration.gd` prüft ihren unbeschleunigten Lebenszyklus
+seit P2-F-C ausschließlich auf ausdrücklichen Diagnoseauftrag.
 `book-save-v1.json` ist ein einzelner eingefrorener synthetischer Schema-1-Beleg.
 `tools/book_contract.py` bindet den begrenzten Runtime-/Prüfbestand; die beiden
 neuen Dokumente [Vertrag](BOOK_INTEGRATION.md) und [T01](B_B_VERIFICATION.md)

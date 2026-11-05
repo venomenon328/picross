@@ -1,5 +1,16 @@
 # Aktuelle CI-Policy
 
+**P2-F-C-V01 / #502, D03:** Die gesamte eigene Buch-/Hilfe-Lifecyclephase
+entfällt aus Standard-CI und gewöhnlichen Vollläufen. Der
+[Risiko-/Resttestvertrag](CI_C_NATIVE_GROUPS.md#p2-f-c-v01--502-buch-lifecycle-nur-auf-ausdrücklichen-anlass)
+ersetzt die früheren Mindestfälle und Schutzlisten ausdrücklich auch für
+Save-/Recovery-/Nullsession-/Motiontests. Produktgarantien bleiben bestehen.
+`book_lifecycle.py` ist nur noch ausdrücklich aufrufbare Diagnose; keine automatische
+Änderungsroute oder Ersatz-Smoke. Lehrbeispiele bleiben günstig im Core-Prozess,
+regulärer Import/Export und Player-/PCK-Audit bleiben aktiv. Verbleibende Phasen
+und Originale werden unabhängig fail-closed geprüft; Lifecycle-Altbelege sind
+kein Bestandteil eines aktuellen Standarderfolgs. Keine Browser-/Mergefreigabe.
+
 **P2-F-B-V01 / #502:** `core/current-drawing-tests` verwendet die
 [explizite ZS2-Stichprobe](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe)
 mit zehn Strichen, vier Schrift-/UI-Fällen und zwei Schalter-Blattfolgen.
@@ -63,7 +74,7 @@ ihre bestehenden Grenzen; der Workflowparameter bleibt 300 s. Der
 bindet Laufzeit, Budget und Warn-/Timeoutstatus. Diese selektive Ausnahme ersetzt
 die frühere F01-Grenze ausschließlich für KK; sie ist kein CI2-Leistungsnachweis.
 
-**HIL-1 / #500, Eigentümeranweisung 03.11.2026:** Keine vollständige Buchprüfung
+**Historische HIL-1-CI-Pflicht / #500, 03.11.2026, durch P2-F-C/D03 abgelöst:** Keine vollständige Buchprüfung
 und insbesondere keine Filmproduktion in CI. Die Exportgruppe führt nur die
 gezielte Hilfe-/Produktlebenszyklusroute mit Import, echten Viewportereignissen,
 Zustands-/Savekontrollen und sieben Originalbildern aus. Producer und Ergebnisgate
@@ -73,8 +84,9 @@ P1 aus [#502](https://github.com/venomenon328/picross/issues/502) entfernt die
 Filmproduktion zusätzlich vollständig aus manuellen Buchprüfwegen samt
 Filmphase, Hilfsfunktionen, Pflichtbelegen und Kostenfeldern. P2-A entfernt anschließend den ungenutzten historischen
 Studienumfang und dessen exklusive Reader/Guards aus dem aktiven Tree. Der
-kurze Producer heißt `tools/book_lifecycle.py`; Quellenbindung, Ergebnisgate und
-aktuelle Produkt-/Speicher-/Tooltip-/PCK-Prüfungen bleiben gemäß Belegvertrag.
+kurze Producer heißt `tools/book_lifecycle.py` und bleibt seit P2-F-C nur als
+ausdrückliche Diagnose mit eigenem Reader erhalten. Seine Standardpflicht entfällt;
+aktuelle übrige Produkt-/Speicher-/Tooltip-/PCK-Prüfungen folgen dem Belegvertrag.
 Der Windows-Diagnoseweg bleibt für die offenen Abnahmen/Befunde erhalten.
 P2-B erhält dieselben Assertions und logischen Originalbindungen, liefert native
 KAT-2-Ausschnitte direkt und HN-Originalsamples mit unabhängigem Pixelreplay;

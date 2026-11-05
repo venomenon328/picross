@@ -157,20 +157,7 @@ jobs:
             tools/vs2_delivery.py
             tools/vs2_v1_verify.py
             tools/p1_preflight.py
-            tools/book_contract.py
-            game/book/*
-            game/main.tscn
-            game/ui/main.gd
-            game/ui/help_panel.gd
-            game/ui/help_example.gd
-            game/ui/help_examples.gd
-            game/ui/clue_typography.gd
-            game/ui/scribble.gd
-            game/tests/book_integration.gd
-            game/tests/help_cases.gd
-            game/tests/help_native.gd
             game/tests/native_png.gd
-            game/tests/book-save-v1.json
             tools/p14_integration.py
             tools/native_artifacts.json
             tools/at_evidence.py

@@ -49,6 +49,12 @@ CI2-F / #424 optimiert ausschließlich die Katalog-Fachprüfung;
 [F-T01](docs/CI2_F_VERIFICATION.md) bindet Messung und Lieferung.
 Separates qualifiziertes CI2-F-R01 bleibt vor Merge erforderlich.
 Keine Bestandslöschung oder Merge aus der Spezifikationsfreigabe ableiten.
+P2-F-C / #502 setzt die neuere [D03](https://github.com/venomenon328/picross/issues/502#issuecomment-6665280802)
+um: Im beauftragten Scope sind keine CI-Testfamilien oder Mindestfallzahlen
+pauschal geschützt. Der [native Prüfvertrag](docs/CI_C_NATIVE_GROUPS.md)
+entfernt den eigenen HIL-/Buch-Lifecycle aus Standard-CI und normalen Vollläufen;
+er bleibt nur ausdrücklich aufrufbare Diagnose. Produktgarantien bleiben bestehen,
+konkrete Prüfverluste sind dokumentiert. Keine globale Entpflichtung anderer Pakete.
 Der aktuelle Umfang verlangt Chromium ausschließlich auf ausdrücklichen Auftrag und
 ersetzt die 500er-Historyroute durch höchstens 20 semantische Benutzerkommandos,
 höchstens sechs neue wirksame History-Transaktionen und genau zwei echte Spielprozesse.

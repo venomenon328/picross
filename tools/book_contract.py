@@ -1,4 +1,4 @@
-"""Shared B-B resource and lifecycle evidence inventory (no puzzle catalog)."""
+"""Product resources plus explicit diagnostic inventory; no CI lifecycle minimum."""
 RUNTIME = tuple('game/book/'+name for name in (
     'main.gd', 'content.gd', 'binding.gd', 'catalog.gd', 'information.gd',
     'information_routes.gd', 'surface.gd', 'page.gdshader', 'material.gdshader',

@@ -1,5 +1,13 @@
 # Projektprofil: picross
 
+**P2-F-C-V01 / #502:** [D03 und der aktuelle Buch-Prüfvertrag](CI_C_NATIVE_GROUPS.md#p2-f-c-v01--502-buch-lifecycle-nur-auf-ausdrücklichen-anlass)
+entfernen den eigenen HIL-/Buch-Lifecycle aus Standard-CI und normalen Vollläufen,
+einschließlich Save-/Recovery-/Nullsession-/Motionproben. Produktanforderungen
+bleiben gültig; die konkreten Testlücken sind bewusst dokumentiert. Der bestehende
+Lifecycle ist ausschließlich explizite Diagnose, ohne automatische Mindestfälle.
+Günstige Lehrbeispiele, übrige ausgewählte Gruppen und Player-/PCK-Prüfung bleiben;
+vollständige Pflicht-CI, unabhängiges R01 und Mergefreigabe sind getrennt.
+
 **P2-F-A-V01-P01 / #502:** [RP6-Darstellung](CI_C_NATIVE_GROUPS.md) verwendet
 zwei repräsentative Captureprozesse mit zehn Zuständen (Mono/UI100,
 50×50-Farbe/UI125) statt vier Prozessen/40 Zuständen. Bewusste kosmetische

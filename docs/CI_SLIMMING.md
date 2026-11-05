@@ -4,6 +4,14 @@ Stand: 27.10.2026 · freigegebener Sollvertrag · [Gesamtissue #412](https://git
 
 ## Status und Geltung
 
+P2-F-C / #502 setzt [D03](https://github.com/venomenon328/picross/issues/502#issuecomment-6665280802)
+im [nativen Buch-Prüfvertrag](CI_C_NATIVE_GROUPS.md#p2-f-c-v01--502-buch-lifecycle-nur-auf-ausdrücklichen-anlass)
+um: keine vorab geschützten CI-Testfamilien oder Mindestfallzahlen im P2-F-C-Scope.
+Der eigene Hilfe-/Buch-Lifecycle entfällt aus Standard-CI; konkrete Risiken und
+verbleibende ausdrückliche Diagnose sind dort geregelt. Produktgarantien und das
+fail-closed-Gate für verbleibende Pflichtprüfungen bleiben bestehen. Das ändert
+nicht stillschweigend andere Pakete oder deren tatsächlich ausgewählte Prüfungen.
+
 Der Eigentümer hat die analysierte Lösung als Spezifikation freigegeben und die
 500-Aktionen-Historyroute zusätzlich als unnötig verworfen. CI2-A ist nach
 separatem R01 über PR #419 auf `94e3ea7d9674babbdcd6bde6251e233191fd096f`
