@@ -35,20 +35,25 @@ Automatische Prüfungen verwenden temporäre Projekte und Profile.
 - [P1-Vertrag](docs/PROTOTYPE_P1.md): weiterhin geltende Eingabe-, Spiel- und Saveverträge.
 - [Zeichensprache](docs/UI_DRAWING_STYLE.md), [Zellrendering](docs/CELL_RENDERING.md)
   und [Rätselproduktion](docs/PUZZLE_PRODUCTION.md): aktuelle Fachverträge.
-- [CI-Policy](docs/CI_POLICY.md): Änderungsauswahl, Pflichtgate `ci-required`, Budgets und Nachweisgrenzen.
+- [CI-Policy](docs/CI_POLICY.md): Paketmodule, Pflichtgate `ci-required`, weiches Laufzeitziel und befristete Nachweise.
+- [Entwicklungssheet](docs/workflow/Entwicklungsworkflow_Cheat-Sheet.html): als HTML speichern
+  und lokal öffnen; Projekteinstellungen und JSON-Übergaben für den nächsten Auftrag.
 
 ## Prüfen
 
-Python 3.11+, Standardbibliothek für den schnellen Dokument-/Toolpfad:
+Python 3.11+, Standardbibliothek für den kleinen Dokument-/Paketkern:
 
 ```sh
-python -m unittest discover -s tools -p 'test_*.py' -v
+python -m unittest discover -s tools -p 'test_ci_modular.py' -v
 python tools/check_docs.py
 ```
 
-Die [CI](.github/workflows/ci-chromium.yml) ergänzt nach dem vollständigen Diff die
-aktuellen Produkt-, Produktions- und Toolchainprüfungen. `ci-required` verlangt
-den tatsächlichen Erfolg aller ausgewählten Jobs am zugeordneten Head/Test-Merge.
+Die [Package-CI](.github/workflows/ci-modular.yml) liefert immer das Windows-Paket
+und ergänzt ausschließlich die in `.ci/package.json` begründet gewählten Module.
+Der [Paketvertrag](docs/CI_WORKFLOW_V2.md) beschreibt Auswahl und Lebenszyklus;
+`tools` aktiviert bei Bedarf die vollständige Werkzeugtestsuite. `ci-required`
+verlangt echte erfolgreiche Prüfungen am zugeordneten Head/Test-Merge.
+Technische Uploads sind standardmäßig aus, Chromium ausschließlich manuell.
 Native Renderprüfung und Windows-Spielerexport ersetzen keine persönliche Mausprobe.
 
 ## Historische Nachweise

@@ -1,5 +1,11 @@
 # Herkunft und Aktivierung von dev-rules
 
+Aktuell wird der ausdrücklich beauftragte lokale Fork `0.2.0-rc.1` gemäß
+[#517](https://github.com/venomenon328/picross/issues/517) verwendet. Seine Änderungen
+stehen unten; die folgende Tabelle dokumentiert die ursprüngliche Übernahme.
+
+## Ursprüngliche Übernahme
+
 | Merkmal | Wert |
 | --- | --- |
 | Quellrepository | `venomenon328/dev-rules` |
@@ -21,7 +27,7 @@ Die beiden Dokumentprüfskripte und der CI-Aufbau sind aus demselben dev-rules-Q
 
 Nach Setup-Merge den [bereitgestellten Einstellungstext](CHATGPT_PROJECT_INSTRUCTIONS.md) separat in ChatGPT einsetzen und etwaige alte allgemeine Prozess-/Modelltexte ersetzen. Diese Datei oder ein Git-Merge ändert die ChatGPT-Oberfläche nicht. Andere Projekte bleiben unverändert.
 
-## Ausdrücklich beauftragte lokale CI-Ergänzung
+## Historischer Zwischenschritt: lokale CI-Ergänzung
 
 [#502 / P3-A](https://github.com/venomenon328/picross/issues/502) ergänzt gezielt
 Workflow §7 um den projektspezifischen Testlebenszyklus-/Featureabschlussvertrag.

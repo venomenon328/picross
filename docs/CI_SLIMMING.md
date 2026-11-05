@@ -224,7 +224,7 @@ Update erzeugt keine eigene historische Testfamilie. Lieferabschluss umfasst
 bereinigte Arbeitsdaten und aktuelle Statusverweise; keine Paketchronik in Einstiegen.
 
 P3-A aus [#502](https://github.com/venomenon328/picross/issues/502) macht diese
-Regel für neue Prüflast überprüfbar: [CI-Policy / Testlebenszyklus](CI_POLICY.md#testlebenszyklus-und-featureabschluss--502--p3-a)
+Regel für neue Prüflast überprüfbar: [aktueller Testlebenszyklus](dev-rules/CI_CONTRACT.md#lebenszyklus-statt-immer-größerer-dauersuite)
 bindet Zweck, Leser, minimale Ebene, Kosten, Verantwortung, Quellen und konkrete
 Ablaufentscheidung im bestehenden Docs-Pfad. Dauerhafte aktuelle Produktregressionen
 und befristete Einführungs-/Abnahmenachweise sind getrennt zu erklären.
