@@ -72,3 +72,11 @@ Bei bevorzugter Eigenumsetzung muss nicht zusätzlich ein gleichrangiger Codex-A
 Jeder an Codex zu delegierende **startbereite** Auftrag erhält einen direkt kopierbaren Codeblock. Er identifiziert Repository, Issue/Paket, Arbeits-/Zielbranch oder bestehenden PR, `AGENTS.md` als Einstieg und gewünschten Endzustand. Bei Nacharbeit den konkreten Reviewkommentar beziehungsweise die Revision und aktiven Befundkennungen referenzieren. Modellwahl wird in der Oberfläche getroffen; kein langer Modellmonolog im Arbeitsauftrag.
 
 Wenige Zeilen sind das Ziel, keine starre Zeichenzahl. Akzeptanzkriterien, allgemeine Tests, Commitregeln und Abschlussformat nicht aus den verbindlichen Quellen abschreiben. Neue fachliche Einschränkungen zuerst dort persistieren. Nur echte nicht anderweitig zuverlässig abrufbare Übergabeinformationen ergänzen. Ein Pflichtdokument ohne Zugriff wird nicht durch einen vermeintlich kompakten, aber unvollständigen Prompt ersetzt.
+
+## Strukturierte Sheet-Übergabe
+
+Bei einem Auftrag aus dem Entwicklungssheet gilt [HANDOFF.md](HANDOFF.md) für die
+Abschlussausgabe. Ausführungswahl und notwendige aktuelle Modellentscheidung im
+Paket festhalten; das JSON transportiert die maßgeblichen Quellen. Keinen zweiten
+parallelen Handoff-Prompt ausgeben, wenn das Sheet den Folgeauftrag erzeugt.
+Modellnamen werden nicht als dauerhafte Sheet-Defaults eingefroren.

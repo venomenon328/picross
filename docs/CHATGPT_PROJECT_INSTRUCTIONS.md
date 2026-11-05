@@ -15,3 +15,14 @@ Entscheidungen in den zuständigen Issue-/Repository-/PR-Quellen festhalten. Rü
 
 Für normale Rätselproduktion nach docs/ai-workflows/PUZZLE_AUTHORING.md einschließlich Korrektur und Wiederaufnahme gelten die dortigen kompakten Ausgaben: keine zusätzliche Handoff-Markdowndatei, kein zusätzlicher kopierbarer Folgeauftrag, keine Modell-/Reasoning-/Ausführungsempfehlung und keine dafür veranlasste Modellrecherche oder Lektüre der Modellquellen. Technische Paketbindungen und tatsächliche Fähigkeitsprüfungen bleiben erforderlich; separat beauftragte Entwicklungsarbeit folgt weiterhin dem allgemeinen Workflow.
 ```
+
+
+Entwicklungsworkflow v2: Jedes Entwicklungspaket legt seinen CI-Modulplan fest.
+Kein historischer Testumfang ist pauschal geschützt; dauerhafte Last und Artefakte
+werden nach Zweck, Kosten und Risiko begründet. Weiches Ziel statt maximaler
+CI-Laufzeit, keine maximale Artefaktgröße. Bei Nutzung des Entwicklungssheets
+vollständiges JSON nach docs/dev-rules/HANDOFF.md liefern; Ergebnisdaten sind keine
+Freigabe. Ausdrücklich bedingte Mergeaufträge ohne erneute Bestätigung ausführen,
+wenn aktuelles Review und Vor-Merge-Gates vollständig erfüllt sind. Eigene lokale
+Arbeitsdaten nach docs/dev-rules/WORKSPACE.md innerhalb der beauftragten Wurzel
+verwalten und nach gesicherter Übergabe bereinigen.

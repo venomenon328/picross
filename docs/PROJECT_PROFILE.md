@@ -1,5 +1,22 @@
 # Projektprofil: picross
 
+## Aktueller Entwicklungs- und CI-Vertrag · #517
+
+[Workflow v2](CI_WORKFLOW_V2.md) und [CI-Policy](CI_POLICY.md) bestimmen ab dieser
+Lieferung Prüfauswahl, Kernjobs, Artefakte, zehn Minuten als weiches Ziel und
+Arbeitsdatenabschluss. Frühere automatische Auswahl-/Vollumfangs-/Uploadpflichten
+und Aussagen zu unveränderlichem Workflow-Snapshot in den nachfolgenden historischen
+Lieferabschnitten sind damit ersetzt. Die vorhandenen Produktverträge bleiben
+maßgeblich. Aktuelle Checks: `docs` und `ci-required` im Workflow `Package CI`;
+Zusatzmodule gemäß aktuellem `.ci/package.json`, kein historischer Vollscope.
+Windows-Spielerbau gehört zum Kern, auch bei Dokument-/Inhaltsänderungen; keine
+neue Inhaltszertifizierung. Chromium ausschließlich ausdrücklich manuell.
+Keine numerische maximale CI-Laufzeit oder Artefaktgröße. Technische Originale
+werden im Lauf geprüft, befristeter Upload nur bei konkret begründetem Bedarf.
+Projektfremde Regeln werden nicht übertragen; das zentrale dev-rules-Repository
+bleibt unverändert. Die generische lokale Fassung kann bewusst übernommen werden.
+
+
 **P2-F-A-V01-P01 / #502:** [RP6-Darstellung](CI_C_NATIVE_GROUPS.md) verwendet
 zwei repräsentative Captureprozesse mit zehn Zuständen (Mono/UI100,
 50×50-Farbe/UI125) statt vier Prozessen/40 Zuständen. Bewusste kosmetische
