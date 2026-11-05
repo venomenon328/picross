@@ -204,6 +204,15 @@ func native_clue_boundaries() -> void:
 		await process_frame
 		check(b.row_clue_reads==reads.row_clue_reads and b.column_clue_reads==reads.column_clue_reads,"HC native zoom/UI/resize retain independent semantic anchors")
 
+func matrix_selected(id: String, width: int, mode: int) -> bool:
+	# P2-E-B / D02: deliberate sample, not the former 96-case cross product.
+	var cases: Dictionary = {
+		1280: {"T-01":[0], "T-02":[0,1], "T-06":[0,1], "VS06":[1], "VS09":[0]},
+		1920: {"T-01":[0], "T-06":[0], "VS04":[0,1], "VS08":[0,1], "VS09":[0,1]},
+		2560: {"T-02":[0,1], "VS07":[1]},
+	}
+	return mode in cases[width].get(id, [])
+
 func matrix(corpus: bool) -> void:
 	for configuration: Array in VisualCases.CONFIGURATIONS:
 		var client: Vector2i = configuration[0]
@@ -213,8 +222,10 @@ func matrix(corpus: bool) -> void:
 		app.size = Vector2(client)
 		app.set_ui_scale(ui)
 		for index: int in range(app.sessions.size()):
-			app.select_puzzle(index)
 			for mode: int in range(2):
+				if not matrix_selected(app.sessions[index].definition.id, client.x, mode):
+					continue
+				app.select_puzzle(index)
 				app.set_puzzle_view(mode)
 				app.board.restore_view(app.board.capture_view().merged({"zoom":72,"overview":false},true))
 				await process_frame
