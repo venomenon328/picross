@@ -198,18 +198,13 @@ class LifecycleTests(unittest.TestCase):
         with patch('ci_lifecycle.api', return_value={'state': 'closed'}):
             self.assertFalse(is_feature_open(FEATURE))
 
-    def test_workflow_runs_guard_before_tool_tests_with_exact_diff_and_retains_browser_gate(self):
-        workflow = Path(__file__).parents[1].joinpath('.github/workflows/ci-chromium.yml').read_text(encoding='utf-8')
-        block = workflow.split('      - name: Enforce test lifecycle and feature closeout\n')[1].split('      - name:')[0]
-        self.assertIn("if: steps.scope.outputs.content_only != 'true'", block)
-        self.assertIn('--base "$CI_BASE" --head "$CI_HEAD"', block)
-        self.assertNotIn('continue-on-error', block)
-        self.assertLess(workflow.index('Enforce test lifecycle'), workflow.index('Fast tool contracts'))
-        self.assertIn('${{ runner.temp }}/ci-lifecycle.json', workflow)
-        selected = classify(['tools/ci_lifecycle.py', MANIFEST, '.github/workflows/ci-chromium.yml'])
-        self.assertTrue(all(value for key, value in selected['selected'].items() if key != 'web'))
-        self.assertFalse(selected['selected']['web'])
-        self.assertIsNone(selected['browser_request'])
+    def test_package_workflow_replaces_historical_fingerprint_guard(self):
+        directory = Path(__file__).parents[1]/'.github/workflows'
+        workflow = (directory/'ci-modular.yml').read_text(encoding='utf-8')
+        self.assertIn('python3 tools/ci_modular.py plan', workflow)
+        self.assertNotIn('continue-on-error', workflow)
+        self.assertNotIn('ci_lifecycle.py', (directory/'ci-chromium.yml').read_text())
+        self.assertNotIn('ci-lifecycle.json', workflow)
 
     def test_real_git_cli_fails_for_unclassified_new_machine_without_running_it(self):
         with tempfile.TemporaryDirectory() as directory:

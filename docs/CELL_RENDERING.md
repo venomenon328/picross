@@ -267,11 +267,11 @@ Endformidentität, Farbe, Fugen und Prioritätswechsel. Gegenproben erkennen fal
 Varianten, alte Unterzeichnungen, bloßes Fade, Cachefehler und Vollinvalidierung.
 Ein einzelner Endzustands-Screenshot oder die reine Dateiexistenz genügt nicht.
 
-Die [aktuelle CI-Policy](CI_POLICY.md) bleibt maßgeblich: vollständige Diffauswahl,
+Der [aktuelle Paketvertrag](CI_WORKFLOW_V2.md) bleibt maßgeblich: begründete Modulauswahl für den vollständigen Diff,
 erfolgreiche ausgewählte Jobs und `ci-required`, kompakte statt pauschaler
 Screenshotmatrix und gemessene Laufzeiten/Artefaktgrößen ohne feste Obergrenzen
-(Eigentümerentscheidung #116). Die aktuelle CI-Policy bestimmt auch die reduzierte
-Fenstermatrix und die Ablösung erzwungener historischer Raster-Clipping-Replays.
+(Eigentümerentscheidung #116). Der [native Modulvertrag](CI_C_NATIVE_GROUPS.md) bestimmt die gewählten
+Stichproben; historische Raster-Clipping-Replays werden nicht automatisch Pflicht.
 Die Laufzeitpakete brauchen frische reguläre Windows-EXE-Starts und Prüfung der
 tatsächlich exportierten PCK-Ressourcen am Lieferhead. Alte Messungen, Renderer-
 und Reviewstände sind keine Nachweise für die neue Integration.
@@ -313,3 +313,4 @@ Keine neuen Motive, Spielregeln, Wertung, Eingabemodi, Hintergründe, Fonts oder
 Sidebarbilder; kein Engine-/Plattformwechsel, Saveformatwechsel, allgemeines
 Grafikframework oder Release. **Spezifiziert** ist nicht **umgesetzt**, und
 **technisch geprüft** ist nicht **persönlich abgenommen**.
+

@@ -35,7 +35,8 @@ class ChromiumBoundary(unittest.TestCase):
         self.assertEqual(edges['web-chromium.yml'], ['browser-chromium.yml'])
         self.assertEqual(edges['browser-chromium.yml'], [])
         source = (directory/'ci-chromium.yml').read_text()
-        self.assertIn('  pull_request:\n', source)
+        self.assertNotIn('  pull_request:\n', source)
+        self.assertIn('  workflow_dispatch:\n', source)
         self.assertIn('  ci-required:\n', source)
 
     def test_all_cli_inputs_rejected_before_playwright_import_or_output(self):

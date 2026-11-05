@@ -1,6 +1,6 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
-Stand: 21.10.2026 · Spezifikation 1.2 · **HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen**
+Fachstand: Spezifikation 1.2 · Workflowabgleich: 05.11.2026 · **HZ-A/B/C integriert**
 
 [Issue #284](https://github.com/venomenon328/picross/issues/284) dokumentiert den
 Abschluss von HZ-A und HZ-B einschließlich ihrer erfüllten T01/R01/M01-Gates.
@@ -13,8 +13,9 @@ Der Eigentümer hat am 21.10.2026 die besprochene Typografie-Nachbesserung und i
 [Folgeissue #294](https://github.com/venomenon328/picross/issues/294) führt dafür
 das zusammenhängende Paket HZ-C gemäß HZ-D07. Der anschließende ausdrückliche
 Implementierungsauftrag liefert [HZ-C](HZ_C_VERIFICATION.md) in
-[Draft-PR #296](https://github.com/venomenon328/picross/pull/296). R01/M01 und
-eine spätere Mergefreigabe bleiben getrennt offen.
+[PR #296](https://github.com/venomenon328/picross/pull/296), inzwischen integriert
+mit `a96910592838f63f0f4a6a78807f091872bcdded`. Die tatsächlichen R01-/M01- und
+Mergeentscheidungen stehen im Issue/PR; Integration allein ist kein Abnahmenachweis.
 
 ## 1. Ziel, Ausgangsstand und gezielte Ablösung
 
@@ -308,7 +309,7 @@ aus HZ-D06.
 | --- | --- | --- |
 | HZ-A · Schrift und Textlayout | HZ-D01/D02 vollständig, einschließlich aller normalen Textpfade, kontrollierter Zeichenbehandlung, gemessenem Layout, Ressourcen-/Exportnachweis und nachgeführter Anleitung | Integriert über PR #288 und separat abgenommen; Abschluss in #284. |
 | HZ-B · Gezeichnete Controls und Symbole | HZ-D03/D04/D05 vollständig auf den HZ-A-Textmaßen; sämtliche Konturen, geöffneten Menüs, Zustände und Piktogramme im regulären Spiel | Nach HZ-A über PR #289 integriert und separat abgenommen; #284 abgeschlossen. |
-| HZ-C · Optische Textausrichtung und kleine Schriftrolle | HZ-D07 vollständig: stabile Grundlinien, begründeter Vergleich 14/15, Kategorien und offene/geschlossene Dropdowns, passende gemeinsame Text-/Symbol-/Layoutmaße | #294: Auf integriertem HZ-A/B in Draft-PR #296 implementiert; [Prüfzuordnung](HZ_C_VERIFICATION.md). R01/M01 bleiben vor Merge offen. |
+| HZ-C · Optische Textausrichtung und kleine Schriftrolle | HZ-D07 vollständig: stabile Grundlinien, begründeter Vergleich 14/15, Kategorien und offene/geschlossene Dropdowns, passende gemeinsame Text-/Symbol-/Layoutmaße | #294: Über PR #296 integriert; historische [Prüfzuordnung](HZ_C_VERIFICATION.md), tatsächlicher Abnahmestand in Issue/PR. |
 
 HZ-D06 gilt für alle Pakete. Ein Implementierungs-PR je Paket enthält notwendige
 Regressionen und Dokumentation. HZ-B hielt Rahmen, Menüs und Icons zusammen,
@@ -324,8 +325,9 @@ HZ-C-A01–A06 stehen vollständig im
 [Folgeissue #294](https://github.com/venomenon328/picross/issues/294): belegte
 Ursache, stabile optische Ausrichtung, begründeter Größenvergleich, vollständiges
 Layout, Zustands-/Bedienregressionen und gebundene Liefernachweise.
-Die bereits erfüllten A/B-Gates bleiben historisch gebunden. HZ-C besitzt eigene
-Gates; frühere Abnahmen oder Mergeausnahmen erfüllen sie nicht:
+Die folgende ursprüngliche Gatezuordnung erklärt die damaligen Lieferungen;
+Ergebnisse und spätere Entscheidungen bleiben im jeweiligen Issue/PR gebunden.
+Sie erzeugt keine pauschale Wiederholungspflicht für neue Pakete:
 
 | Gate | Akteur, Nachweis und Zeitpunkt |
 | --- | --- |
@@ -337,11 +339,12 @@ Gates; frühere Abnahmen oder Mergeausnahmen erfüllen sie nicht:
 | HZ-C-R01 | Separater qualifizierter Review vor Implementierungsmerge am finalen Head: tatsächlicher Diff, Kriterien und technische/visuelle Originalbelege. Selbstreview oder Spezifikationsreview ersetzt dieses Gate nicht. |
 | HZ-C-M01 | Eigentümer vor HZ-C-Merge am gebundenen Build: optische Ausrichtung, begründete kleine Schriftgröße, Kategorien, Statusfußzeile, Metadaten und offene/geschlossene Dropdowns bei UI100/125 beurteilen. |
 
-Die aktuelle [CI-Policy](CI_POLICY.md) bestimmt anhand des vollständigen
-Basis-/Head-Diffs sämtliche erforderlichen Jobs. `docs`, `ci-required` und alle
+Der aktuelle [Paketvertrag](CI_WORKFLOW_V2.md) verlangt eine begründete Modulauswahl
+anhand des vollständigen Basis-/Head-Diffs. `docs`, `ci-required` und alle
 ausgewählten Bereiche müssen tatsächlich erfolgreich sein. Gemeinsamer UI-/
-Ressourcenbezug kann mehrere Bereiche auswählen; die Paketnamen sind keine
-Ausnahme. Die Darstellungsbasis sind **1280×720/UI125, 1920×1080/UI100 und
+Ressourcenbezug kann mehrere Module rechtfertigen; Chromium bleibt ausdrücklich
+manuell. Der [native Modulvertrag](CI_C_NATIVE_GROUPS.md) führt die aktuelle
+wiederkehrende Stichprobe. Die damalige HZ-Darstellungsbasis war **1280×720/UI125, 1920×1080/UI100 und
 2560×1440/UI125**, ergänzt nur um konkret nötige Text-/Popup-/Zustandsgrenzen.
 HZ-C vergleicht die korrigierten 14/15 unter gleichen Bedingungen und prüft
 UI100→125→100, Resize sowie Auswahl-/Status-/Ansichtswechsel; keine neue
@@ -352,7 +355,8 @@ Run/Attempt und Originalartefakte werden im Paket-PR gebunden. Historische
 Firefox-CI-Pflichten/-Läufe werden nicht wieder geöffnet.
 
 Die reine Spezifikationslieferung prüft nur den laut tatsächlichem Dokumentdiff
-ausgewählten Dokument-/Werkzeugpfad: schnelle Tooltests, Dokumentvalidator,
+benötigten Quellen-/Plankern ohne Player-Build: Dokumentvalidator,
 vollständiger Diffcheck und `ci-required`. Ein erfolgreicher Dokumentlauf nimmt
 kein HZ-T01/R01/M01-Produktgate ab. Technische Startprüfung und Ausführungswahl
 gehören erst zur späteren Vorbereitung des ausdrücklich beauftragten Pakets.
+

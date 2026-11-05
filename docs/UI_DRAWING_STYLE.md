@@ -1,6 +1,6 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
-**Aktuelle ZS2-Core-Prüfpflicht / P2-F-B-V01:** Die
+**Aktueller Umfang bei gewähltem `native.core` / P2-F-B-V01:** Die
 [risikobasierte ZS2-Stichprobe](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe)
 begrenzt die native Core-Wiederholung auf zehn enumerierte Striche,
 vier Font-/UI-Referenzen und zwei Schalter-Blattfolgen. Die dokumentierten übrigen
@@ -8,8 +8,8 @@ Kombinationen entfallen bewusst ohne Gleichwertigkeitsbehauptung. Dies reduziert
 Prüfumfang, nicht Produktanforderungen: Offline-Fonts/Lizenzen, lesbare gemeinsame
 Slots, statische Vorschau, gerichtete 210-ms-Effekte/120-ms-Entfernen, G1,
 Gegentastenabbruch, sofortige History/Save/Completion und die Sitzungsoption gelten
-unverändert. Geschützte reale Proben und separate Graphics-Echtzeit-Pixelorakel
-bleiben erhalten. Historische Studien-/Vollmatrizen werden nicht erneut Pflicht.
+unverändert. Die im Paket vereinbarten realen Proben und bei gewähltem `native.graphics`
+separaten Echtzeit-Pixelorakel bleiben erhalten. Historische Studien-/Vollmatrizen werden nicht erneut Pflicht.
 
 **B-B / #498:** Die [reguläre Buchdarstellung](BOOK_INTEGRATION.md) verstärkt beim
 Hover/Druck die vorhandene transparente Buttonkontur. Ein isolierter kurzer
@@ -21,7 +21,7 @@ Arbeitskopf. Informationsseiten erhalten echte reguläre Optionscontrols, eigene
 Scrollflächen und Seitentitel statt globaler Informationsüberschrift. Übergänge
 schließen Popups/Tooltips; Schrift- und Trefferbudgets werden nicht verkleinert.
 
-**HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
+**HZ · HZ-A/B/C integriert; tatsächliche Abnahmen in #284/#294 und ihren PRs:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) ist der Detailvertrag für
 Tidy Hand als normale UI-Schrift bei erhaltenen Überschriften, organischere Karten-/Button-/Dropdownrahmen,
 vollständig gezeichnete offene Menüs und die gesamte Piktogrammfamilie.
@@ -35,7 +35,8 @@ abgenommen. [HZ-C / #294](https://github.com/venomenon328/picross/issues/294)
 ergänzt die am 21.10.2026 freigegebene optische Ausrichtung und den begrenzten
 Größenvergleich gemäß HZ-D07. Die [Implementierung](HZ_C_VERIFICATION.md)
 wählt nach dem korrigierten 14/15-Vergleich die kleine Rolle 15/19 bei UI100/125;
-Blattkennungen bleiben 15/19. R01/M01 bleiben vor Merge offen.
+Blattkennungen bleiben 15/19. HZ-C ist über PR #296 integriert; der tatsächliche
+R01-/M01-Stand wird dort geführt.
 
 **KU / #244, integrierte Ausgangsbasis für HZ:** KU-A und KU-B sind über
 PR #254/#255 integriert; [KU-A](KU_VERIFICATION.md) und
@@ -433,7 +434,11 @@ gleichmäßiges Fade und falsche X-Zugreihenfolge
 und reale schnelle Mauseingaben. Ein Endzustands-Screenshot allein beweist keine
 Animation; erfolgreiche Dokumenttests beweisen keine Lesbarkeit oder Eingabeflüssigkeit.
 
-## 5. Lieferpakete und Abnahme
+## 5. Historische Lieferpakete und Prüfzuordnung
+
+Die folgende Tabelle hält damalige Lieferstände fest. Aktueller Abschluss und
+Abnahme stehen in den zugehörigen Issues/PRs; „offen“ ist hier kein heutiger Auftrag.
+Historische Größen- und Bildmatrizen sind keine dauerhafte Haupt-CI-Pflicht.
 
 | Paket | Ergebnis | Abhängigkeit und Gate |
 | --- | --- | --- |
@@ -448,10 +453,10 @@ für identische Vergleiche. ZS-2 ergänzte die vorhandenen regulären großen RP
 darunter F-07/100×100 Farbe. Relevante Flächen bleiben 1280×720, 1600×900,
 1920×1080 und 2560×1440 sowie UI 100/125 % und kleine/größere Arbeitszoomstufen.
 Gezielte Referenzen statt unnötiger vollständiger Kreuzprodukte; verpflichtende
-bestehende Regressionen bleiben aktiv.
+aktuelle Regressionen werden gemäß [CI_WORKFLOW_V2](CI_WORKFLOW_V2.md) bewusst gewählt.
 
 Der Spielerdownload bleibt schlank. Maßgeblich ist die aktuelle
-[CI-Policy #63](CI_POLICY.md): ausgewählte aktuelle Prüfungen und begrenzte technische
+[CI_WORKFLOW_V2](CI_WORKFLOW_V2.md): ausgewählte aktuelle Prüfungen und begrenzte technische
 Nachweise, kein allgemeiner Full-Evidence-Schalter und keine historischen Importe
 im Standardlauf. Head, Basis/Test-Merge, Run und relevante Datei-Hashes binden die
 Nachweise. Quellen-/Nachweis-/Sichtprüfung gehört zu jedem Umsetzungspaket.
@@ -467,15 +472,15 @@ ihrer offenen Befunde. Keine Änderung historischer Designartefakte oder Rätsel
 ZS1-M01 ist nach Merge von PR #55 auf `main@985cf08e` am 07.10.2026 vom Eigentümer
 bestätigt; #52 ist abgeschlossen. Die [reguläre ZS-2-Integration](ZS2_VERIFICATION.md)
 ist über PR #56 abgeschlossen. S0 und die technische V1-Lieferung sind abgeschlossen.
-V2 ist umgesetzt. Aktuelle kombinierte Nachweise werden commitgebunden im PR geführt.
-Unabhängiges Review des kombinierten Heads, VS2-M01 und passende Mergefreigabe bleiben offen.
+Die damalige V2-Lieferung und ihre kombinierten Nachweise stehen commitgebunden
+im PR zu #61; aktuellen Review-, M01- und Mergezustand dort prüfen.
 
 ## 7. VS2-E1 – kompakte, ausgewogene Scribble-Arbeitsansicht
 
 **Status am 10.10.2026: S0 abgeschlossen; V1/N01/N02/N04 technisch geliefert und
 in R2 positiv geprüft; V2/N03/N05 umgesetzt.**
 Auftrag und Teilpakete stehen in [#61](https://github.com/venomenon328/picross/issues/61).
-Aktuelle V1-Produktreferenz ist `40829b43db6509447863c9d27dbb87dcfaf2a988`
+Die damalige V1-Produktreferenz war `40829b43db6509447863c9d27dbb87dcfaf2a988`
 auf Basis `d7ec4e1e4a29d82b6979537a33868d57732d3713`; `2c332ad…` bleibt die
 historische reguläre Erstlieferung, nicht die spätere V2-Vergleichsbasis.
 Die fünf Regeln bilden eine begrenzte Erweiterung bestehender Fachverträge,
@@ -623,5 +628,6 @@ fortgeschrieben; HZ behauptet keine rückwirkende V3-Lieferung.
 V1s 24/18-Slots, Schriftmaßstab, GF1 und Reihenfolge Fit → Kapazität → Translation
 bleiben. V2s reine eigene Füllminiatur einschließlich Vorschau bleibt. Keine
 Änderung an Modell, Rätseln, Saveformat, atomarer History, H1/GP48, X oder Reveal.
-Die aktuelle CI-Policy gilt einschließlich kompakter Bildauswahl und Budgets;
+Der aktuelle Paketvertrag gilt mit begründeter Bildauswahl, weichem Zeitziel und ohne globale Mengenobergrenze;
 historische Pläne/Manifeste und persönliche Abnahmen bleiben commitgebunden.
+
