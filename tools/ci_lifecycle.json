@@ -365,6 +365,14 @@
           "before": "ac2b26e27611bba29272f04c6988d0f789f15878",
           "after": "7e80adf048bf2fd078d50930c5dbb2b8c3787aef"
         },
+        "tools/book_contract.py": {
+          "before": "87b4c91bd649aceea3d661ef261f8a1842ff987c",
+          "after": "165d0a5ef376f00e346876b0c34dfa665bea0655"
+        },
+        "tools/book_lifecycle.py": {
+          "before": "f2066e55eec90591b4ae35ab4f9d3ecc2d0ce1e7",
+          "after": "81457697d2552c0d22f1a39d1ff8d608efca816f"
+        },
         "tools/ea_product.py": {
           "before": "63a3bc04aee7908531912d586c81f346377fb2fe",
           "after": "a0917aa541bc01ca90b1ae52e862f33a8b30a09a"
@@ -389,6 +397,10 @@
           "before": "b961916b364decb39bcec9a84b8387ec57a25241",
           "after": null
         },
+        "tools/native_metrics.py": {
+          "before": "b3b2775fc9924ce275313976edbe9b451a22458e",
+          "after": "273a9769321dcf7f369bb9fc3bddb75722acad35"
+        },
         "tools/p1_current_visual.py": {
           "before": "3e4be1f03a851608e767b92af6f742304655ae3f",
           "after": "3c7ddacdf9f7c855207fe39eb3ff500633dda080"
@@ -396,6 +408,10 @@
         "tools/test_at_evidence.py": {
           "before": "5146d3463024bb4f6eedf22f7ad17de1acc19dff",
           "after": "970f8981249a292f16848aa9046fd787f556477b"
+        },
+        "tools/test_book_lifecycle.py": {
+          "before": "d246df559e23b118c34d2a8581001ae67bcd9e93",
+          "after": "604aac29c2feb5d9cb3185e72436c5f6c5d524df"
         },
         "tools/test_p1_evidence.py": {
           "before": "a12568136caa01f09c980b5d5fea5886a606a4ca",
@@ -493,6 +509,20 @@
           ]
         },
         {
+          "path": "tools/book_lifecycle.py",
+          "anchor": "from book_contract import SOURCES",
+          "sources": [
+            "tools/book_contract.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import book_lifecycle",
+          "sources": [
+            "tools/book_lifecycle.py"
+          ]
+        },
+        {
           "path": "tools/p1_product.py",
           "anchor": "import ea_product",
           "sources": [
@@ -522,6 +552,13 @@
         },
         {
           "path": "tools/p1_product.py",
+          "anchor": "from native_metrics import measure",
+          "sources": [
+            "tools/native_metrics.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
           "anchor": "import p1_current_visual",
           "sources": [
             "tools/p1_current_visual.py"
@@ -532,6 +569,13 @@
           "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
           "sources": [
             "tools/test_at_evidence.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_book_lifecycle.py"
           ]
         },
         {
@@ -600,7 +644,7 @@
         "bytes": 0,
         "pngs": 0
       },
-      "coverage": "Nonpositive added workload: 272 H and seven E image obligations retired, 156 D obligations reduced to native in-memory checks, 29 temporary consumed images and ten minimal AT/HN raw inputs. Native HZ/KE/HC/V1/V3/Z2 studies and EA film production removed, not reclassified as permanent. Current functional/save/recovery/export and independent pixel/geometry negatives remain. Cost fields describe added work only, not total historical suite costs. Exact per-family scope and ten exceptions with owner/review 2026-11-18 in docs/P2_C_V03_AUDIT.md; measured full CI and local remainder in V03-T01. No P3-B. P2-F-C/D03 now removes the book/HIL lifecycle from standard CI; retained help_native sources are explicit diagnostics only, not automatic coverage.",
+      "coverage": "Nonpositive added workload: 272 H and seven E image obligations retired, 156 D obligations reduced to native in-memory checks, 29 temporary consumed images and ten minimal AT/HN raw inputs. Native HZ/KE/HC/V1/V3/Z2 studies and EA film production removed, not reclassified as permanent. Current functional/save/recovery/export and independent pixel/geometry negatives remain. Cost fields describe added work only, not total historical suite costs. Exact per-family scope and ten exceptions with owner/review 2026-11-18 in docs/P2_C_V03_AUDIT.md; measured full CI and local remainder in V03-T01. No P3-B.",
       "expires": null,
       "retire_when": null,
       "owner_decision": null
@@ -997,6 +1041,10 @@
         "tools/native_artifacts.json": {
           "before": "526b0abcfff8c724fe16de5296811b85426934b2",
           "after": "235cd7a0b615511eb0ce83e0d2032bc3f5d5a4a0"
+        },
+        "tools/native_contract.py": {
+          "before": "6d158a236ad457192ab97329ddfa825c5df25056",
+          "after": "162852223561e85a3604af3b96064aa6a79eed97"
         }
       },
       "readers": [
@@ -1012,6 +1060,13 @@
           "anchor": "Path(__file__).with_name('native_artifacts.json').read_text(encoding='utf-8')",
           "sources": [
             "tools/native_artifacts.json"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "import native_contract",
+          "sources": [
+            "tools/native_contract.py"
           ]
         }
       ],
@@ -1065,6 +1120,10 @@
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / P2-F-B-V01 implementer",
       "sources": {
+        ".github/workflows/ci-chromium.yml": {
+          "before": "1651efdafa1613c2b44985e51dff4892ef07022f",
+          "after": "1c19fbaeb185ce0f2617eba044b567ad0adb9da0"
+        },
         "game/tests/zs2_rework_cases.gd": {
           "before": "1385b9d2019e8f996a0d87ced1fe4e3c31ceca6b",
           "after": "934251608da786109c683060fc22127119afce10"
@@ -1072,6 +1131,18 @@
         "game/tests/zs2_tests.gd": {
           "before": "ceab53c4b49a513cc9caf3249dadf242de6ee6e3",
           "after": "b17d164bd6ec500c3edd7480b5e5a65e2d9e81e4"
+        },
+        "tools/native_results.py": {
+          "before": "892f98b3b158e5c2e26e1cda8818d49336dc7af6",
+          "after": "b4258bb271bf9c68b6b59068534be4e8b0acc082"
+        },
+        "tools/p1_product.py": {
+          "before": "ba242affeead486f993ace0fb7c851c17c98a5e7",
+          "after": "32df92a64f0b62ec14664bcd59c906d34f6a1f96"
+        },
+        "tools/test_ci_c.py": {
+          "before": "06c495d2df6bf9c66fe64bb9b5186e3b7bdca9d9",
+          "after": "d32d72fa754f0f98e3908fd89aa07aed58b75281"
         },
         "tools/test_zs2_evidence.py": {
           "before": null,
@@ -1083,6 +1154,34 @@
         }
       },
       "readers": [
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "on:\n  pull_request:",
+          "sources": [
+            ".github/workflows/ci-chromium.yml"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_ci_c.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/p1_product.py",
+          "sources": [
+            "tools/p1_product.py"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "from native_results import validate_all",
+          "sources": [
+            "tools/native_results.py"
+          ]
+        },
         {
           "path": "tools/p1_product.py",
           "anchor": "res://tests/zs2_tests.gd",
@@ -1153,166 +1252,14 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
-    },
-    {
-      "id": "p2-f-c-v01-book-opt-in",
-      "kind": "permanent-small",
-      "purpose": "D03: remove the entire book/help lifecycle from standard CI, preserve an explicit diagnostic and exact remaining export gate",
-      "level": "Maintenance reduction; existing Python reader/tool tests only. No added engine, render, image or diagnostic cases.",
-      "feature": "https://github.com/venomenon328/picross/issues/502",
-      "owner": "venomenon328 / P2-F-C-V01 implementer",
-      "sources": {
-        ".github/workflows/ci-chromium.yml": {
-          "before": "1c19fbaeb185ce0f2617eba044b567ad0adb9da0",
-          "after": "a8971b85be57df75917a61b3af5e98e8c79751f5"
-        },
-        "tools/book_contract.py": {
-          "before": "165d0a5ef376f00e346876b0c34dfa665bea0655",
-          "after": "17a175dbb952e3f97fb6438721dd69a4378f2c7d"
-        },
-        "tools/book_lifecycle.py": {
-          "before": "81457697d2552c0d22f1a39d1ff8d608efca816f",
-          "after": "2108cf6ed30228651f70d4622a563765fb2bb6a4"
-        },
-        "tools/native_contract.py": {
-          "before": "162852223561e85a3604af3b96064aa6a79eed97",
-          "after": "01b22e7aefdc3a694cabe73ba1ad84e8530cbbb2"
-        },
-        "tools/native_metrics.py": {
-          "before": "273a9769321dcf7f369bb9fc3bddb75722acad35",
-          "after": "09a81b56503f8db1bf561a8c2fe3eec776e741ee"
-        },
-        "tools/native_results.py": {
-          "before": "b4258bb271bf9c68b6b59068534be4e8b0acc082",
-          "after": "b8d748c5444121e77d3363153fdef082ad3d6c5d"
-        },
-        "tools/p1_product.py": {
-          "before": "32df92a64f0b62ec14664bcd59c906d34f6a1f96",
-          "after": "1d0b1bca25e25c58844e92345f89d9c1fd1828ae"
-        },
-        "tools/test_book_lifecycle.py": {
-          "before": "604aac29c2feb5d9cb3185e72436c5f6c5d524df",
-          "after": "a2207e361587daec2df3fa6cd74e346feadc0d09"
-        },
-        "tools/test_ci_c.py": {
-          "before": "d32d72fa754f0f98e3908fd89aa07aed58b75281",
-          "after": "0365780ea73b7d0cc0a81f1643557db409ed0dfd"
-        }
-      },
-      "readers": [
-        {
-          "path": "tools/book_lifecycle.py",
-          "anchor": "from book_contract import SOURCES",
-          "sources": [
-            "tools/book_contract.py"
-          ]
-        },
-        {
-          "path": "tools/test_book_lifecycle.py",
-          "anchor": "import book_lifecycle",
-          "sources": [
-            "tools/book_lifecycle.py"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "from native_metrics import measure",
-          "sources": [
-            "tools/native_metrics.py"
-          ]
-        },
-        {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
-          "sources": [
-            "tools/test_book_lifecycle.py"
-          ]
-        },
-        {
-          "path": "tools/ci_scope.py",
-          "anchor": "import native_contract",
-          "sources": [
-            "tools/native_contract.py"
-          ]
-        },
-        {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "on:\n  pull_request:",
-          "sources": [
-            ".github/workflows/ci-chromium.yml"
-          ]
-        },
-        {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
-          "sources": [
-            "tools/test_ci_c.py"
-          ]
-        },
-        {
-          "path": ".github/workflows/p1-product.yml",
-          "anchor": "python3 tools/p1_product.py",
-          "sources": [
-            "tools/p1_product.py"
-          ]
-        },
-        {
-          "path": "tools/ci_scope.py",
-          "anchor": "from native_results import validate_all",
-          "sources": [
-            "tools/native_results.py"
-          ]
-        }
-      ],
-      "selection": {
-        "selected": {
-          "docs": true,
-          "product": true,
-          "production": true,
-          "preflight": true,
-          "integration": true,
-          "pilots": true,
-          "visual": true,
-          "perf_b": true,
-          "web": false,
-          "delivery": true
-        },
-        "native_groups": [
-          "core",
-          "history",
-          "catalog",
-          "completion",
-          "adapters",
-          "graphics",
-          "export"
-        ],
-        "production_groups": [
-          "solver",
-          "images",
-          "adapter",
-          "catalog"
-        ],
-        "browser_request": null
-      },
-      "cost": {
-        "cpu_seconds": 1,
-        "wall_seconds": 1,
-        "files": 5,
-        "bytes": 10000,
-        "pngs": 0
-      },
-      "coverage": "Retire regular-book-integration, version/import/rendered subphases, five payload/report files and all book/HIL native assertions from standard and ordinary full runs. Existing manual diagnostic and source/assertion/hash/identity reader remain explicitly callable, CLI now invokes the independent reader; no automatic change-trigger or minimum sample. New cheap counterchecks require each remaining export phase to exist/succeed and reject retired phase/aggregate/directory; existing sparse-gate test drops manual source dependency but still rejects a missing current History reader. Incremental costs above describe added controls, not the retained manual run or net savings. Risk/retention contract docs/CI_C_NATIVE_GROUPS.md, D03 https://github.com/venomenon328/picross/issues/502#issuecomment-6665280802, actual costs in PR T01. Reassess/remove with replacement of export selection or explicit diagnostic; no historical acceptance replay.",
-      "expires": null,
-      "retire_when": null,
-      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "Only cheap negative remaining-export tests and independent validation at explicit diagnostic CLI exit; no new native case, automatic process or image.",
-    "removed": "Entire regular-book-integration standard phase, its three subprocesses, five payload/report files, metrics aggregation and sparse source requirements. All twelve native HIL combinations/960 wheels and book Save/Recovery/nullsession/motion sequences now explicit diagnostics only; no equivalent automatic coverage claimed.",
+    "added": "P2-F-B-V01: actual ZS2 case/observation records, independent reader and cheap missing/duplicate/relabeled/trace/rehashed-payload/sparse-reader counterchecks. No new native processes.",
+    "removed": "30 stroke, 8 font/UI, 4 session-switch repetitions without equivalent replacement; protected probes, other phases and real-time pixels unchanged.",
     "temporary": [],
-    "cost_change": "Baseline CI block 79.167 wall seconds, book integration CPU 201.050 seconds; actual after costs in PR T01, no projected CI success. New small controls estimated <=1 CPU/wall second, five temporary log fixtures/10000 bytes, no PNG. Own artifacts/502-p2fc-local and /work/p2fc in existing container retained until 2026-11-19 / P2-F-C-R01 for closeout review; no automatic deletion or foreign-data authorization. Technical CI originals 7 days, player 14. Issue remains open; independent R01 and owner merge approval separate."
+    "cost_change": "Incremental estimated <=3 CPU/wall seconds and <=150000 log bytes, zero new files/PNGs; final net costs in T01. Own artifacts/502-p2fb-local and container picross-502-zs2 retained for review until 2026-11-19 / P2-F-B-V01-R01, then authorized closeout review; no automatic deletion or claim about protected foreign data. CI technology 7 days, player 14. Independent R01 and owner merge approval remain open."
   }
 }

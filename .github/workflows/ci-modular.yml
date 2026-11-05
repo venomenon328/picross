@@ -1,0 +1,113 @@
+name: Package CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      modules:
+        description: Explicit optional modules, comma separated; empty runs only the core
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: package-ci-${{ github.event_name }}-${{ github.ref }}-${{ inputs.modules || 'package' }}
+  cancel-in-progress: true
+
+jobs:
+  docs:
+    runs-on: ubuntu-24.04
+    outputs:
+      started_at: ${{ steps.clock.outputs.started_at }}
+    steps:
+      - name: Start soft CI clock
+        id: clock
+        run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Validate this package and its test lifecycle
+        run: python3 tools/ci_modular.py plan
+      - name: Small core contract regression
+        run: python3 -m unittest discover -s tools -p 'test_ci_modular.py' -v
+      - name: Document and source integrity
+        run: python3 tools/check_docs.py
+      - name: Reject generated archive classes without size caps
+        env:
+          CI_BASE: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
+          CI_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 tools/ci_growth.py --base "$CI_BASE" --head "$CI_HEAD" --output "${{ runner.temp }}/growth.json"
+
+  ci-required:
+    needs: docs
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require actual successful core checks
+        env:
+          DOCS_RESULT: ${{ needs.docs.result }}
+        run: test "$DOCS_RESULT" = success
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Resolve the same source-bound module selection
+        id: plan
+        run: python3 tools/ci_modular.py plan
+      - name: Restore verified official toolchain archives
+        id: toolchain
+        if: steps.plan.outputs.player == 'true'
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ runner.os }}-godot-4.7.2-cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4-f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
+      - name: Install image dependency only for selected modules
+        if: steps.plan.outputs.images == 'true'
+        run: |
+          python3 -m venv "${{ runner.temp }}/module-env"
+          "${{ runner.temp }}/module-env/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+          echo "${{ runner.temp }}/module-env/bin" >> "$GITHUB_PATH"
+      - name: Install SSH tooling only for delivery verification
+        if: steps.plan.outputs.delivery == 'true'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openssh-server
+      - name: Build Windows when required, run modules and verify originals
+        id: verify
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          CI_STARTED_AT: ${{ needs.docs.outputs.started_at }}
+        run: >-
+          python3 tools/ci_modular.py run
+          --output-dir "${{ runner.temp }}/package-output"
+          --cache-dir "${{ runner.temp }}/p1-toolchain-cache"
+      - name: Save verified official archives
+        if: success() && steps.plan.outputs.player == 'true' && steps.toolchain.outputs.cache-hit != 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ steps.toolchain.outputs.cache-primary-key }}
+      - name: Upload the playable Windows application
+        if: always() && steps.verify.outputs.player == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: picross-windows-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/package-output/player/
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 6
+      - name: Upload only requested and unexpired review or failure evidence
+        if: always() && steps.verify.outputs.diagnostics == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: package-evidence-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/package-output/diagnostics/
+          if-no-files-found: error
+          retention-days: ${{ steps.verify.outputs.retention }}
+

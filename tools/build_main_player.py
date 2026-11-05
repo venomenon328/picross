@@ -55,7 +55,7 @@ def stage_player(build: Path, destination: Path, source_commit: str,
     (destination / "README.txt").write_text(
         "picross · P1 – Windows x86_64\n"
         "Unsignierte Debug-Entwicklungsfassung (kein Release/Installer)\n"
-        f"Quellcommit (main): {source_commit}\n"
+        f"Quellcommit (gebauter Checkout): {source_commit}\n"
         f"Godot: {toolchain.RELEASE_TAG}\n\n"
         "Dieses eine Archiv vollständig entpacken und picross-p1.exe starten.\n"
         "picross-p1.exe und picross-p1.pck müssen im selben Ordner bleiben.\n"

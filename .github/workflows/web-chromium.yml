@@ -22,7 +22,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 4
     outputs:
       attempt: ${{ steps.producer.outputs.attempt }}
     steps:

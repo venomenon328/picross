@@ -398,7 +398,7 @@ class NativeGate(unittest.TestCase):
                            results=[dict(group='history',status='success',exit_code=0)])
         self.result['files']=bind_files(self.root,exclude={'native-result.json'})
         validate_payload(self.result,self.root)
-        # Reproduce ci-required's actual sparse file boundary in an isolated
+        # Reproduce the manual diagnostic gate's sparse boundary in an isolated
         # interpreter, so the full development checkout cannot hide imports.
         self.save()
         workflow=(ROOT/'.github/workflows/ci-chromium.yml').read_text()

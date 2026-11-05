@@ -330,66 +330,38 @@ godot --headless --path game --import
 godot --path game
 ```
 
-Direkter Entwicklerstart verwendet das normale Profil. Für isolierte technische
-Tests (mit temporär erzeugtem synthetischem Katalog) und Windows-Export den Harness mit der separaten Python-/Pillow-Umgebung
-nach der [Werkzeuganleitung](../tools/puzzle_production/README.md) verwenden:
+Direkter Entwicklerstart verwendet das normale Profil. Isolierte technische Prüfungen
+verwenden den Harness mit temporärem synthetischem Katalog und separater
+Python-/Pillow-Umgebung nach der [Werkzeuganleitung](../tools/puzzle_production/README.md).
+Die benötigte Gruppe ausdrücklich wählen, zum Beispiel für die kurze Historyroute:
 
 ```powershell
 $gameCache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
-python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-product
+python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-history --groups history
 ```
 
-Der Harness prüft offizielle Archive und Hashes, importiert eine temporäre Kopie,
-isoliert Benutzerpfade und führt Kern-/Save-/Recoverytests, echten Prozess-
-Roundtrip, Negativtest Exit 23, Start und Windows-Export aus. Unter Windows startet
-er zusätzlich die exportierte Fassung headless und mit nativer Oberfläche.
-Linux benötigt für die OpenGL-Prüfung Xvfb/Mesa. Preset und Appname bleiben
-`P1 Windows x86_64` und `picross · P1`, ebenso Schema 1 und Speicherort.
+Arbeits-/Cachepfade bei vorgegebener Arbeitswurzel darunter anlegen. Der Harness
+prüft offizielle Archive/Hashes und isoliert Projekte und Benutzerprofile.
+Linux-Renderprüfung benötigt Xvfb/Mesa. Gruppen und aktueller Umfang stehen im
+[nativen Vertrag](../docs/CI_C_NATIVE_GROUPS.md). Ohne `--groups` läuft lokal die
+vollständige Vereinigung; die alten Erweiterungsflags bleiben kompatibel, sind
+aber kein Anlass für routinemäßige Vollprüfungen.
 
-Im vorhandenen Harness sind `--integration`, `--pilots`, `--visual` und `--perf-b` lokal an.
-Die jeweiligen `--no-*`-Formen schalten sie ausdrücklich aus; CI wählt gemäß
-[CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Die vorhandene
-Integration prüft 17 Kommandos und einen echten Neustart in zwei Spielprozessen. Der `--pilots`-Bereich prüft vier synthetische Muster in echten
-Prozessen als feste Funktionsregression; der Fachlauf zertifiziert keine
-Bestandsrätsel erneut. Reine Rätselergänzungen starten keinen dieser Tests.
-Visual prüft aktuelle Pixel-/Animationsverträge, PERF-B den regulären Renderer
-samt Cache. Die sechs produktiven Atlanten und Importparameter werden unabhängig
-über `tools/cell_atlas_reference.json` geprüft. Historische Hersteller- und
-A/B-Vergleichsprogramme sind gemäß #70/N70-HIST-01 archiviert; sie sind kein
-aktueller Prüfweg.
+`history` prüft 17 Kommandos, vier Transaktionen und zwei echte Spielprozesse samt
+unabhängigem Orakel. Die alte 500er-Route wird nicht als Stressdefault fortgeführt.
+`adapters` verwendet vier feste synthetische Muster, keine Bestands-Rezertifizierung.
+`graphics` prüft die aktuellen ausgewählten Pixel-/Animations-/Atlasverträge.
+`export` prüft Windows-/PCK-Ausgabe und auf Windows auch tatsächliche EXE-Starts.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
-**CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), implementiert
-am 26.10.2026:** Der
-[CI2-Vertrag](../docs/CI_SLIMMING.md) ersetzt die 500-Aktionen-Pflicht durch eine
-kurze deterministische History-Regression. Sie umfasst insgesamt höchstens
-**20 semantische Befehle** einschließlich Blattwahl, Werkzeug-/Farbwahl,
-Navigation, Undo/Redo und regulärem Beenden, höchstens **6 neue wirksame
-History-Transaktionen** und exakt **2 tatsächliche Spielprozesse** für Schreiben
-und frisches Laden/Fortsetzen. Eine Mausgeste zählt als ein Befehl, Undo/Redo
-zählen als Befehle ohne neue History-Transaktion. Prozessstarts und reine
-Beobachtungen zählen nicht; versteckte Aktionen oder Wiederholungsschleifen
-vergrößern den Umfang nicht stillschweigend.
-
-Atomarer Strich, exakte Zustände, Undo/Redo-Verzweigung und dauerhaftes `undo_used`,
-Navigation ohne Zell-/Historymutation, gespeicherte Ansicht, Redo nach dem echten
-Neustart und byteidentische fremde synthetische Slots bleiben nachzuweisen.
-Ein unabhängiges Python-Orakel und billige Gegenproben mit manipulierten oder
-verkürzten Traces bleiben erhalten; dafür entstehen keine weiteren Spielprozesse.
-Die genaue Zählung und Abgrenzung stehen in [P1 §8.1](../docs/PROTOTYPE_P1.md).
-Mit CI2-D entfällt der alte Durchlauf auch aus `all`, `runtime`, `history`,
-`--integration` und normalen manuellen Läufen; er wird nicht bloß in einen
-manuellen Voll- oder Stresstest verlagert. `--groups history` wählt die kurze Route;
-[T01 und Messung](../docs/CI2_D_VERIFICATION.md) binden ihre Nachweise.
-Frühere #12-Nachweise und gemessene Berichte bleiben
-unverändert an ihre jeweiligen Commits gebunden.
-
-`technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige
-native Bilder/Fehlerdiagnostik. Erzeugte und gelieferte Mengen sowie Prozess-,
-Import- und Renderzeiten werden getrennt gemessen; es gelten die CI2-Laufzeitziele.
-Das reguläre Product-CI-ZIP enthält Spielanleitung, Commit-/Hashbericht und
-notwendige Lizenzen. Historische Produktionshilfen werden nicht ausgeliefert.
-Technische Motivspoiler sind separat.
+Die [Package-CI](../docs/CI_WORKFLOW_V2.md) liefert bei Entwicklungsänderungen den regulären Windows-
+Download und startet nur begründet gewählte Zusatzmodule. Reine Dokumente und
+reine Rätselproduktion bleiben ohne Player-Build, auch im Main-Nachlauf. Der Kern-Windowsbau ist kein voller Product-Harnesslauf
+und keine erneute Rätselprüfung. Das Spielerpaket enthält Startdateien, Anleitung
+und Lizenzen; technische Reports, Logs, Bilder und Studienpakete gehören nicht hinein.
+Technische Originale werden im Lauf geprüft und entfernt; Upload nur mit aktuellem
+Zweck und Ablauf. Zehn Minuten sind ein weiches Ziel, keine globale Höchstlaufzeit.
+Historische Hersteller-/A/B-Programme und Liefergalerien werden nicht reproduziert.
 Keine automatisierte Prüfung ersetzt eine persönliche Maus-/Komfortprobe.
 
 Aktuelle Verträge und Pflichtquellen: [Projektprofil](../docs/PROJECT_PROFILE.md).
@@ -397,3 +369,4 @@ Historische Studien, alte Abnahmen und Quellenbindungen:
 [Bestandsinventar](../docs/DEVELOPMENT_ARCHIVE.md). Die ursprüngliche Anleitung ist
 [am Stand vor Cleanup](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/README.md) erreichbar.
 Historische Prüferdokumente mit Motivspoiler: [F01](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F01_PROOF.md), [F02/F03](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F02_PROOF.md).
+

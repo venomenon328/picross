@@ -42,8 +42,8 @@ PATHS = {
         'table.png', 'table.png.import', 'table.json')},
     **{f'game/ui/{name}.gd': GROUPS for name in ('help_panel', 'help_example', 'help_examples')},
     'game/tests/help_cases.gd': ('core',),
-    # Diagnostic-source changes still select ordinary regression/build groups;
-    # these mappings do not schedule the opt-in book lifecycle itself (D03).
+    # Legacy manual diagnostic selection only; Package CI uses its explicit plan.
+    # These mappings do not schedule the opt-in book lifecycle itself (D03).
     'game/tests/help_native.gd': GROUPS,
     'game/tests/book_fixture.gd': GROUPS,
     'game/tests/book_integration.gd': GROUPS,
