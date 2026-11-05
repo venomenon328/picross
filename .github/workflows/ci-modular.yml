@@ -21,7 +21,12 @@ concurrency:
 jobs:
   docs:
     runs-on: ubuntu-24.04
+    outputs:
+      started_at: ${{ steps.clock.outputs.started_at }}
     steps:
+      - name: Start soft CI clock
+        id: clock
+        run: echo "started_at=$(date +%s)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 2
@@ -76,6 +81,7 @@ jobs:
         id: verify
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          CI_STARTED_AT: ${{ needs.docs.outputs.started_at }}
         run: >-
           python3 tools/ci_modular.py run
           --output-dir "${{ runner.temp }}/package-output"

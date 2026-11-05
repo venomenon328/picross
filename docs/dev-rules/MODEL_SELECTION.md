@@ -77,6 +77,7 @@ Wenige Zeilen sind das Ziel, keine starre Zeichenzahl. Akzeptanzkriterien, allge
 
 Bei einem Auftrag aus dem Entwicklungssheet gilt [HANDOFF.md](HANDOFF.md) für die
 Abschlussausgabe. Ausführungswahl und notwendige aktuelle Modellentscheidung im
-Paket festhalten; das JSON transportiert die maßgeblichen Quellen. Keinen zweiten
+Paket festhalten; das JSON transportiert sie in `execution` samt maßgeblicher Quelle.
+Nach erledigter Umsetzung stehen diese Empfehlungswerte auf `null`. Keinen zweiten
 parallelen Handoff-Prompt ausgeben, wenn das Sheet den Folgeauftrag erzeugt.
 Modellnamen werden nicht als dauerhafte Sheet-Defaults eingefroren.

@@ -35,7 +35,7 @@ Der manuelle Einstieg in Package CI erlaubt die ausdrücklich angegebenen Module
 
 ## Laufzeit und Artefakte
 
-Weiches Ziel: **600 Sekunden / zehn Minuten**. Der Runner warnt bei Überschreitung und arbeitet weiter. Gemessen werden Verifikation, Modulzeiten und Byteumfang; Job-/Queuezeiten kommen aus Actions. Es gibt keine maximale Gesamtlaufzeit oder Artefaktgröße als Projekt-Erfolgsgate. Bestehende Prozess-/Netzwerk-Hängerschutzgrenzen bleiben getrennt. Allgemeine Workflow-Timeouts des alten Browserpfads werden entfernt; Plattformgrenzen werden nicht umgangen.
+Weiches Ziel: **600 Sekunden / zehn Minuten**. Der Runner warnt bei Überschreitung und arbeitet weiter. Die weiche Uhr beginnt vor dem ersten Checkout und umfasst Kernprüfung, Wartezeit zwischen Jobs, Setup und Verifikation bis zum Upload. Verifikation, Modulzeiten und Byteumfang werden getrennt gemessen; anfängliche Queuezeit und endgültige Gesamtlaufzeit einschließlich Upload kommen aus Actions. Es gibt keine maximale Gesamtlaufzeit oder Artefaktgröße als Projekt-Erfolgsgate. Bestehende Prozess-/Netzwerk-Hängerschutzgrenzen bleiben getrennt. Allgemeine Workflow-Timeouts des alten Browserpfads werden entfernt; Plattformgrenzen werden nicht umgangen.
 
 Ohne gesonderte Anforderung bleiben technische Originale nur im eigenen temporären Laufordner. Nach den Readerprüfungen beseitigt der Kontextmanager diesen Ordner. Der kompakte Ergebnistext steht in Actions-Log/Summary. Ein dauerhafter Sammlungskatalog entsteht nicht.
 

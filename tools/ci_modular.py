@@ -216,7 +216,13 @@ def extract_player(archive, destination):
             if (path.is_absolute() or '..' in path.parts or '\\' in info.filename
                     or (info.external_attr >> 16) & 0o170000 == 0o120000):
                 raise ValueError('Unsafe player archive')
-        zipped.extractall(destination)
+        # The native archive also contains its technical product report.
+        # Reuse only runtime files, user guidance and licenses in the download.
+        for info in zipped.infolist():
+            if (info.filename in {'picross-p1.exe', 'picross-p1.console.exe',
+                                  'picross-p1.pck', 'README.txt', 'SPIELANLEITUNG.md'}
+                    or info.filename.startswith('licenses/')):
+                zipped.extract(info, destination)
     required = ('picross-p1.exe', 'picross-p1.console.exe', 'picross-p1.pck')
     if not all((destination / p).is_file() and (destination / p).stat().st_size > 0 for p in required):
         raise ValueError('Missing or empty Windows player exports')
@@ -235,7 +241,8 @@ def execute(plan, output, cache):
     player, diagnostics = output / 'player', output / 'diagnostics'
     started, rows, success, error = time.monotonic(), [], False, None
     player_ready = False
-    warning = threading.Timer(SOFT_SECONDS, lambda: print(
+    elapsed_before = max(0, time.time() - float(os.environ.get('CI_STARTED_AT', time.time())))
+    warning = threading.Timer(max(0, SOFT_SECONDS - elapsed_before), lambda: print(
         '::warning::CI exceeded the 10 minute soft goal; verification continues.', flush=True))
     warning.daemon = True
     warning.start()
@@ -309,7 +316,8 @@ def execute(plan, output, cache):
         def size(directory):
             return sum(p.stat().st_size for p in directory.rglob('*') if p.is_file()) if directory.exists() else 0
         report = {'accepted': success, 'binding': plan, 'modules': rows, 'seconds': seconds,
-                  'soft_goal_exceeded': seconds > SOFT_SECONDS, 'player_bytes': size(player),
+                  'ci_seconds_before_upload': round(elapsed_before + seconds, 3),
+                  'soft_goal_exceeded': elapsed_before + seconds > SOFT_SECONDS, 'player_bytes': size(player),
                   'diagnostic_bytes': size(diagnostics), 'error': error}
         # Compact metadata is an Actions log/summary, not an additional artifact.
         summary('## Modular CI result\n\n```json\n' + json.dumps(report, indent=2) + '\n```')
