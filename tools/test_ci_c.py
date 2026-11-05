@@ -15,6 +15,7 @@ from native_contract import GROUPS, PATHS, SCOPES, checks, coverage
 from native_results import bind_files, read, digest, validate_all, validate_payload, validate_rp6_capture
 from p1_product import parse_args
 from native_runner import requested
+from test_zs2_evidence import selected_log, selected_rows
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -246,8 +247,9 @@ class NativeGate(unittest.TestCase):
                 exit_code=23 if name=='expected-failure' else 0,expected_failure=name=='expected-failure'))
             if name not in ('current-resource-hashes','verified-toolchain-assets','current-atlas-resources'):
                 log=self.root/'core/logs'/(name+'.log');log.parent.mkdir(parents=True,exist_ok=True)
-                log.write_bytes(b'synthetic process output')
-                report['checks'][-1]['log']=dict(file=log.name,retained_bytes=24,original_bytes=24,abbreviated=False,sha256=digest(log))
+                log.write_bytes(selected_log().encode() if name == 'current-drawing-tests' else b'synthetic process output')
+                report['checks'][-1]['log']=dict(file=log.name,retained_bytes=log.stat().st_size,
+                    original_bytes=log.stat().st_size,abbreviated=False,sha256=digest(log))
         report['isolation']=dict(workspace='/tmp/core',project='/tmp/core/game',output='/tmp/output/core',
             profiles={k:'/tmp/core/'+k for k in ('XDG_DATA_HOME','XDG_CONFIG_HOME','XDG_CACHE_HOME')})
         write(self.root/'core/product-report.json',report)
@@ -272,6 +274,22 @@ class NativeGate(unittest.TestCase):
             self.result=good
         for value in ('',None,'0','3'):
             with self.assertRaises(ValueError):validate_all(self.plan,self.root,None,dict(product_attempt=value),'2')
+
+    def test_rehashed_core_log_cannot_hide_missing_or_forged_zs2_trace(self):
+        log = self.root/'core/logs/current-drawing-tests.log'
+        path = self.root/'core/product-report.json'
+        report = read(path)
+        self.check()
+        for mutate in (lambda rows: rows.pop(6),
+                       lambda rows: rows[6].update(id=rows[7]['id']),
+                       lambda rows: rows[6]['data']['effects'][0].__setitem__(1, 1000012)):
+            rows = selected_rows(); mutate(rows)
+            log.write_bytes(selected_log(rows).encode())
+            phase = next(p for p in report['checks'] if p['name'] == 'current-drawing-tests')
+            phase['log'].update(retained_bytes=log.stat().st_size, original_bytes=log.stat().st_size, sha256=digest(log))
+            write(path, report)
+            self.result['files'] = bind_files(self.root, exclude={'native-result.json'})
+            with self.assertRaisesRegex(ValueError, 'ZS2'): self.check()
 
     def test_adapter_payload_rehash_cannot_hide_missing_or_forged_selected_capture(self):
         from native_contract import artifacts

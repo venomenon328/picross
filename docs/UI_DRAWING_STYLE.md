@@ -1,5 +1,16 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
+**Aktuelle ZS2-Core-Prüfpflicht / P2-F-B-V01:** Die
+[risikobasierte ZS2-Stichprobe](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe)
+begrenzt die native Core-Wiederholung auf zehn enumerierte Striche,
+vier Font-/UI-Referenzen und zwei Schalter-Blattfolgen. Die dokumentierten übrigen
+Kombinationen entfallen bewusst ohne Gleichwertigkeitsbehauptung. Dies reduziert
+Prüfumfang, nicht Produktanforderungen: Offline-Fonts/Lizenzen, lesbare gemeinsame
+Slots, statische Vorschau, gerichtete 210-ms-Effekte/120-ms-Entfernen, G1,
+Gegentastenabbruch, sofortige History/Save/Completion und die Sitzungsoption gelten
+unverändert. Geschützte reale Proben und separate Graphics-Echtzeit-Pixelorakel
+bleiben erhalten. Historische Studien-/Vollmatrizen werden nicht erneut Pflicht.
+
 **B-B / #498:** Die [reguläre Buchdarstellung](BOOK_INTEGRATION.md) verstärkt beim
 Hover/Druck die vorhandene transparente Buttonkontur. Ein isolierter kurzer
 oberer Hoverstrich entfällt; Auswahl, Deaktivierung und Fokus behalten ihre
