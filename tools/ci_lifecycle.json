@@ -957,7 +957,7 @@
       "sources": {
         "game/tests/kat2_probe.gd": {
           "before": "5e0fa127ec4ac308cb1c8a0143aebb75526118e6",
-          "after": "4e67087ff7cc562df48aaaf22164cc7bdf4da14b"
+          "after": "c805deeb8d05bb7faf1f1b3ad49ae0b58df112b0"
         },
         "tools/kat2_product.py": {
           "before": "88359152a8b078f34908f4b1b90a42326a7b6425",
@@ -965,7 +965,7 @@
         },
         "tools/native_contract.py": {
           "before": "db598591a35e5093a57d3e96e70c34b0dc3419fa",
-          "after": "6309dc75ea8ac79805bf304c17a462b2fd0cf868"
+          "after": "6d158a236ad457192ab97329ddfa825c5df25056"
         },
         "tools/native_results.py": {
           "before": "3d0400f79a179e6ad371da484b79a20ae139fdd9",
@@ -1059,7 +1059,7 @@
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P2-E-A-V02: three small permanent Python gate/sample test methods; eight KE/twelve KK checkpoints and five resize measurements in existing original JSONs.",
+    "added": "P2-E-A-V02: three small permanent Python gate/sample test methods; eleven KE/twelve KK checkpoints and five resize measurements in existing original JSONs.",
     "removed": "D02-authorized KE/KK metadata, tooltip, pointer, resize and size/state cross products; deliberate coverage losses documented in current native contract. No Save/Recovery mode, native phase, original file or product function removed.",
     "temporary": [],
     "cost_change": "Incremental gate/JSON estimate <=1 CPU/wall second, <=8192 bytes, zero new files/PNGs; net native work reduction measured in V02-T01 against U01 originals. Own local diagnostics under artifacts/502-p2e-v02-local remain until review by 2026-11-19 / V02-R01, no automatic/protected-data cleanup. CI technology 7 days, players 14 days. #502, independent R01 and explicit merge permission remain open."

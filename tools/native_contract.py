@@ -9,7 +9,8 @@ SCOPES = dict(core=('core',), history=('integration',), catalog=('catalog',),
 CATALOG_MODES = ('regular', 'restart', 'pages', 'empty', 'invalid', 'adapter', 'information', 'kb', 'kk', 'ke', 'at')
 # P2-E-A-V02 / D02: selected native cases, deliberately not the old cross product.
 CATALOG_CASES = {
-    'ke': ('ke-layout-1280-ui125', 'ke-metadata-null-current-legacy-and-negative-hover',
+    'ke': ('ke-layout-1280-ui125', 'ke-metadata-null', 'ke-metadata-current',
+           'ke-negative-delayed-hover', 'ke-metadata-legacy',
            'ke-roundtrip-and-mode-tooltip', 'ke-pointer-card', 'ke-pointer-difficulty_icon',
            'ke-layout-1920-ui100', 'ke-resize-boundary', 'ke-own-fill-undo-x-spoiler'),
     'kk': ('kk-basic-1280-ui125', 'kk-empty-save', 'kk-pointer-edit-undo-spoiler',

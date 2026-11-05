@@ -856,6 +856,7 @@ func catalog_labels() -> void:
 			check(center_pixel.is_equal_approx(expected_color),"KU-A filled circle has the prescribed native centre pixel")
 			await hover(first.caption)
 			check(first.difficulty.tooltip_text.is_empty() and first.difficulty.get_tooltip().is_empty() and first.tooltip_ref == null,"KU-A every metadata shape is tooltip-free")
+			catalog_case("ke-metadata-"+("null" if value == null else "current" if value.method == "picross-difficulty-0.4" else "legacy"))
 			if value != null and value.method == "picross-difficulty-0.4" and value.r4_required:
 				for part: Control in [first.difficulty_icon,first.difficulty]:
 					await hover(part)
@@ -863,7 +864,7 @@ func catalog_labels() -> void:
 					check(visible_popups() == 0,"KU-A actual delayed circle/text hover has no popup")
 			if value != null and value.method == "picross-difficulty-0.4" and value.r4_required:
 				await shot("no-tooltip-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
-		catalog_case("ke-metadata-null-current-legacy-and-negative-hover")
+				catalog_case("ke-negative-delayed-hover")
 		app.set_ui_scale(1.0)
 		await frames()
 		app.set_ui_scale(float(spec[2]))
