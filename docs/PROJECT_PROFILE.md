@@ -364,8 +364,8 @@ oder Webrecherche. Die tatsächlichen Fähigkeiten und Zugriffe bleiben zu prüf
 Authoring §7 regelt die kompakte Ausgabe ohne zusätzliche Handoff-Markdowndatei
 oder kopierbaren Folgeauftrag; technische Paketbindungen bleiben erhalten.
 Separate Entwicklungsaufträge an Werkzeugen, Spiel oder CI folgen weiterhin dem
-allgemeinen Entwicklungsworkflow. Der eingebundene Snapshot in `docs/dev-rules/`
-bleibt unverändert.
+allgemeinen Entwicklungsworkflow. Herkunft und beauftragte lokale Änderungen
+in `docs/dev-rules/` stehen in [DEV_RULES_ADOPTION](DEV_RULES_ADOPTION.md).
 
 | Arbeit | Zusätzlich vollständig lesen |
 | --- | --- |
@@ -381,7 +381,8 @@ bleibt unverändert.
 | Produktion, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste und Paketnachweise |
 | Entwicklung an Schritt-4-Integration, Registrierungsbudgets, Paket-Prüfkontexten oder Publikationsguards/Recovery | [RI-Sollvertrag und Paketfolge](PUZZLE_INTEGRATION.md) |
 | Schwierigkeitsanalyse, Kalibrierung, Bewertungsdaten oder deren Katalog-/Integrationsweg | [SD2-Sollvertrag](PUZZLE_DIFFICULTY_V2.md), [SD-Fachvertrag](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md), [SD-C1](SD_CATALOG.md), [Rätselproduktion](PUZZLE_PRODUCTION.md), [Paarlinienvertrag](PAIRED_LINES.md), [Kategorien](CATEGORIES.md), [ZA-1](ZA1_ADAPTER.md), [Katalogdarstellung](CATALOG_PRESENTATION.md), [CI-Policy](CI_POLICY.md) |
-| CI, Prüfprogramme, Artefakte, Archivierung, Bestandsbereinigung oder neue Tests | [CI2-Sollvertrag](CI_SLIMMING.md), [CI-Policy und ausführbare Ausgangsbasis](CI_POLICY.md), [Bestandsinventar](DEVELOPMENT_ARCHIVE.md); bei Browserarbeit zusätzlich [Webvertrag](WEB_HOSTING.md), bei nativer Arbeit die betroffenen [KAT-2](KAT2_VERIFICATION.md)-, [EA](EA_VERIFICATION.md)- und [ZA-1](ZA1_VERIFICATION.md)-Verträge |
+| CI, Prüfprogramme, Artefakte oder neue Tests | [Workflow v2](CI_WORKFLOW_V2.md), [CI-Policy](CI_POLICY.md), tatsächlich betroffene Modulverträge; bei Browserarbeit [Webvertrag](WEB_HOSTING.md), bei nativer Arbeit betroffene [KAT-2](KAT2_VERIFICATION.md)-, [EA](EA_VERIFICATION.md)- und [ZA-1](ZA1_VERIFICATION.md)-Verträge |
+| Konkrete Archiv-/Bestandsbereinigung oder historische CI2-Nacharbeit | Zusätzlich [CI2](CI_SLIMMING.md) und [Bestandsinventar](DEVELOPMENT_ARCHIVE.md), soweit für den tatsächlichen Bestand relevant |
 
 PERF-A/PERF-B sind historische Lieferberichte, keine aktuellen Hersteller- oder
 A/B-Vergleichsgates. #70/N70-HIST-01 entfernt deren Reproduktion; die sechs
@@ -389,8 +390,8 @@ aktiven Zellatlanten, Import-/Shader-/Rendererverträge und native PERF-B-/PCK-
 Prüfungen bleiben unabhängig über `tools/cell_atlas_reference.json` gebunden.
 
 Historische Nachweise führen ihren damaligen Test-/Abnahmestand. Aktuelle
-Fachentscheidungen stehen in den verlinkten Verträgen; CI2 und CI-Policy ersetzen
-die dort ausdrücklich benannten älteren Auswahl-/Vollumfangs-/Budgetpflichten.
+Fachentscheidungen stehen in den verlinkten Verträgen; Workflow v2 und CI-Policy
+ersetzen ältere automatische Auswahl-/Vollumfangs-/Budgetpflichten einschließlich CI2.
 Bei konkreter historischer Nacharbeit zusätzlich sämtliche dort gebundenen
 Quellen und damaligen Issues lesen; Erinnerungen ersetzen keinen Quellenzugriff.
 
@@ -472,7 +473,7 @@ verwenden feste synthetische Inputs für Solver, unabhängigen Verifier, Import,
 Reparatur, Export, Registrierung und abgeschlossene Integrationsbindungen.
 Der Spieler benötigt weder Python noch Produktionspakete. Aktuelle Befehle und
 Formate stehen in der [Werkzeuganleitung](../tools/puzzle_production/README.md)
-und [ZA-1](ZA1_ADAPTER.md). CI-Auswahl und Nachweise regeln CI2 und CI-Policy.
+und [ZA-1](ZA1_ADAPTER.md). CI-Auswahl und Nachweise regeln Workflow v2 und CI-Policy.
 
 ```sh
 python3 -m unittest discover -s tests/puzzle_production -p 'test_*.py' -v
