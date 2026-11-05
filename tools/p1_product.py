@@ -526,6 +526,8 @@ def main(argv: list[str] | None = None) -> int:
             if args.catalog:
                 shutil.copyfile(root/"game/art/content/yin_yang_001.png", project/"tests/fixtures/ke-reveal.png")
             run("import", base + ["--import"])
+            # Bind/copy before any test can mutate the base's generated caches.
+            za1_prepared = za1_product.prepare_imports(project, workspace) if args.pilots else None
             if args.core:
                 run("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
                 run("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
@@ -596,7 +598,7 @@ def main(argv: list[str] | None = None) -> int:
             if args.pilots:
                 evidence.scope_start("pilots")
                 evidence.report["pilots"] = run_pilots(workspace, environment, base, run)
-                evidence.report["za1"], za1_files = za1_product.run(root, workspace, output, engine, environment, run, python_phase, host)
+                evidence.report["za1"], za1_files = za1_product.run(root, workspace, output, engine, environment, run, python_phase, host, za1_prepared)
                 selected += za1_files
                 selected += run_pilot_visual(output, workspace, project, engine, environment, run, host)
                 evidence.scope_done("pilots")
