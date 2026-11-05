@@ -40,8 +40,6 @@
     "adapters": [
       "renders/rp6-t04-renders.json",
       "renders/rp6-t06-renders.json",
-      "renders/rp6-t08-renders.json",
-      "renders/rp6-t09-renders.json",
       "za1/pz-test-direct-color-finish.json",
       "za1/pz-test-direct-color-oldreset.json",
       "za1/pz-test-direct-color-partial.json",
@@ -169,14 +167,6 @@
       "checks": "positive-int"
     },
     "renders/rp6-t06-renders.json": {
-      "failures": "zero-int",
-      "checks": "positive-int"
-    },
-    "renders/rp6-t08-renders.json": {
-      "failures": "zero-int",
-      "checks": "positive-int"
-    },
-    "renders/rp6-t09-renders.json": {
       "failures": "zero-int",
       "checks": "positive-int"
     },

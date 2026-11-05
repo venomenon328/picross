@@ -7,6 +7,9 @@ SCOPES = dict(core=('core',), history=('integration',), catalog=('catalog',),
               completion=('completion',), adapters=('pilots',),
               graphics=('visual', 'perf_b'), export=('export',))
 CATALOG_MODES = ('regular', 'restart', 'pages', 'empty', 'invalid', 'adapter', 'information', 'kb', 'kk', 'ke', 'at')
+# P2-F-A: representative real RP6 saves, not a presentation cross product.
+RP6_CAPTURES = {4: (2, 1920, 1080, 1.0), 6: (3, 1280, 720, 1.25)}
+RP6_STATES = ('work', 'detail', 'album-partial', 'completion', 'album-completed')
 # P2-E-A-V02 / D02: selected native cases, deliberately not the old cross product.
 CATALOG_CASES = {
     'ke': ('ke-layout-1280-ui125', 'ke-metadata-null', 'ke-metadata-current',
@@ -99,7 +102,8 @@ def checks(group, host='Linux'):
         'catalog': ['kat2-'+mode for mode in CATALOG_MODES]+['kat2-pages-import','kat2-adapter-import','kat2-at-import','kat2-imported-base-copies']
                    + ['kat2-adapter-export', 'kat2-adapter-register'],
         'completion': ['ea-import', 'ea-native', 'ea-restart'],
-        'adapters': [f'rp6-t{n:02d}-{s}' for n in (4,6,8,9) for s in ('partial','finish','read','render')]
+        'adapters': [f'rp6-t{n:02d}-{s}' for n in (4,6,8,9) for s in ('partial','finish','read')]
+                    + [f'rp6-t{n:02d}-render' for n in RP6_CAPTURES]
                     + ['rp6-t04-foreign-slot-write', 'rp6-t04-foreign-slot-control', 'za1-test-only-registration',
                        'za1-import', 'za1-save-recovery', 'za1-seed-old-slots', 'za1-windows-export', 'za1-pck-resources']
                     + [f'za1-pz-test-direct-{c}-{s}' for c in ('mono','color') for s in

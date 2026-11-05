@@ -13,7 +13,7 @@ Kosten und Reviewfrist stehen im Audit. 423+5+7 ist ausschließlich die Baseline
 HZ-/KE-/HC-Einführungsbilder, separate V1-/V3-/Z2-Läufe, ZS-Studienmatrix,
 EA-Film/Phasenbilder und HIL-Sichtdateien sind keine aktive Pflicht mehr.
 Die dazugehörige Produktion, Reader, Prozess-/Bildinventare und Gates entfallen.
-Mit den unten geregelten Ausnahmen P2-E-A-V02 und P2-E-B-V01 behalten
+Mit den unten geregelten Ausnahmen P2-E-A-V02, P2-E-B-V01 und P2-F-A-V01 behalten
 KAT/HF/V2/ZA1/RP6/PERF/Raster ihre aktuellen Fach-/Pixel-/Saveassertions
 ohne Erfolgsbilder. Aktuelle Layoutmathematik nutzt die vorhandenen VS2-Messungen.
 HS liest fünf temporäre Layerbilder, ZS 24 temporäre Bewegungs-Crops; beide
@@ -34,6 +34,73 @@ Die 300-/KK-600-s-Grenzen, Scheduler und funktionalen Zeitfenster ändern sich n
 Das CI2-Ziel unter zehn Minuten bleibt ein Optimierungsbefund.
 P3-B-D01 verwirft den alten 75-MiB-Richtwert und feste Mengenobergrenzen.
 
+
+## Risikobasierte RP6-Darstellung · #502 / P2-F-A-V01-P01
+
+Die [verbindliche Vorbereitung](https://github.com/venomenon328/picross/issues/502#issuecomment-6659141735)
+und [D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
+ersetzen ausschließlich die bisherige RP6-Darstellungsmatrix. Zwei echte native
+Captureprozesse mit zehn Zuständen ersetzen vier Prozesse mit 40 Zuständen:
+
+| Fixture | Verbleibende Konfiguration | Verbleibende Zustände |
+| --- | --- | --- |
+| T04, Mono 20×20 | 1920×1080/UI100 | work, detail, album-partial, completion, album-completed |
+| T06, vier Farben 50×50 | 1280×720/UI125 | dieselben fünf Zustände |
+
+`work` erhält die unkorrektierte eigene Füllung, falschen 3×3-Block, echte
+Undo-/Redo-Eingaben, Miniaturpixel, Hinweisfont, Fit und erreichbare Controls.
+`detail` beobachtet den Zustand nach neun echten Undo-Klicks und Plus-Klick;
+`album-partial` eigene falsche Vorschau und Spoilergrenze. Für `completion`
+wird die erste App verworfen und der zuvor in den echten Partial/Finish/Read-
+Prozessen erspielte Abschluss frisch geladen; `album-completed` beobachtet
+denselben verdienten Inhalt im Album. Beide Abschlussansichten prüfen konkrete
+native Weiß-/Hintergrundpixel und proportionale, slotgebundene Bildfläche.
+Kein vorbereiteter Abschlusssave ersetzt die reale Kette. Die bestehenden
+Komponentenproben verwenden `book_fixture.gd`; sie behaupten keinen zusätzlichen
+unbeschleunigten Buch-Lifecyclelauf.
+
+**Bewusster Entfall ohne gleichwertigen Ersatz:** T04 bei 1280/UI125, T06 bei
+1920/UI100 und T08/T09 jeweils bei beiden Konfigurationen verlieren jeweils
+alle fünf Zustände. T08/T09 sind weitere synthetische 40×40-Vierfarbmuster;
+ihre Integritätsketten bleiben vollständig. Die folgende Risikotabelle gilt für
+jede dieser sechs entfernten Fixture-/Fensterkombinationen, also 30 Zustände:
+
+| Entfernter Zustand | Nun möglicherweise unentdeckter Fehler / Spielerwirkung | Verbleibende Ebene und Risikodisposition |
+| --- | --- | --- |
+| work | Nur dort falsche Miniaturfarbe, Hinweis-/Buttonclipping oder unzugängliche Historyschaltfläche | Zwei ausgewählte RP6-Fälle, VS2/Graphics und Kataloggrundfälle prüfen gemeinsame Darstellung; keine identische Variantenabdeckung. Mittleres lokales Bedienrisiko bewusst akzeptiert. |
+| detail | Nur dort falsches Zoomlayout nach Undo/Plus oder versetzte Vorschau | Echte RP6-Undo-/Saveketten aller vier Fixtures und VS2 bleiben; das spezielle Ansichtsbild entfällt. Niedriges bis mittleres Darstellungsrisiko. |
+| album-partial | Nur dort abgeschnittene Karte oder falsche Darstellung eigener Markierung | Alle vier RP6-Partialprozesse prüfen weiter eigene Füllung, Undo/Redo und verborgene Payload/Namen; Katalog prüft Scroll-/Statuswege. Kosmetische Kombination nicht mehr beobachtet. |
+| completion | Nur dort falsch skalierte/gefärbte Abschlussanzeige | Alle vier Finish-/Readprozesse prüfen Lösung, Asset und Persistenz; EA und die zwei ausgewählten Captures prüfen Darstellung. Niedriges bis mittleres visuelles Risiko ohne Datenverlust. |
+| album-completed | Nur dort abgeschnittenes oder falsch gezeichnetes verdientes Albumbild | Alle vier Readprozesse binden verdientes Asset/Name; Katalog und zwei Captures bleiben. Niedriges bis mittleres visuelles Risiko. |
+
+T06 behält die größte Raster-/Farblast in der engen Konfiguration, T04 den
+normalen Monopfad. Seltene 40×40- oder jeweils größenabhängige Fehler können
+bewusst durchrutschen. Der bisherige positive Lauf enthielt keinen ungültigen
+RP6-Geometriefall; dessen Prüfzweig ist kein behaupteter neuer Nachweis.
+Keine Änderung an Spiel-/Save-/Registry-/Renderer-/Atlascode, ZA-1 oder PCK.
+Alle zwölf RP6-Partial/Finish/Read-Prozesse, die zwei T04-Fremdslotprozesse und
+deren Byteprüfungen sowie sämtliche ZA-1-Phasen bleiben unverändert.
+
+`RP6_CAPTURES`/`RP6_STATES` in `native_contract.py`, der Producer und
+`native_artifacts.json` verlangen nur die beiden Originalberichte und Phasen.
+`native_results.py` liest jeden ausgewählten Bericht unabhängig: exakte eindeutige
+Zustandsfolge, echte Slot-/Definitions-/Palette-/Viewportbindung, Einzelassertions
+mit positiven Ergebnissen, Checksumme, falsche eigene Zellen vor/nach Undo,
+Spoiler-/Abschlusszustand und tatsächliche Pixelwerte. Fehlende ausgewählte
+Originale, neu gehashte Manipulationen, Duplikate oder Fachfehler scheitern.
+Quell-/Head-/Basis-/Run-/Versuchsbindung und unveränderte übrige Gates bleiben.
+Drei kleine Python-Testmethoden sichern Auswahl, Reader und kompletten Payloadweg.
+Keine neue Prozess-/Bildfamilie; Erfolg weiterhin ohne RP6-PNGs.
+
+Baseline ist Run 42027188774/2 auf Test-Merge
+`5f13633003ceafecad6fa2d5b14d417c28f5d662`, treegleich zur Arbeitsbasis
+`4a65157063a71ca8f3239fd04994dc6a5e90598c`: vier Captures 80,427 s,
+Adapters 373,777 s, native Gesamtzeit 826,476 s. Der T01 am Liefer-PR vergleicht
+echte Linux-/Xvfb-/Mesa-Zeiten, CPU soweit gemessen, serielle Lane und Bytes;
+andere Gruppenschwankungen sind keine kausal zugerechnete Einsparung. <600 s
+bleibt Ziel, kein Hardgate. Auswahl, Scheduler, Budgets, Technikretention sieben
+und Playerretention vierzehn Tage bleiben. Unabhängiges P2-F-A-V01-R01 und
+ausdrückliche Mergefreigabe sind getrennte offene Gates; #502 bleibt offen.
 
 ## Risikobasierte Grafikstichprobe · #502 / P2-E-B-V01-P01
 
@@ -162,7 +229,8 @@ Pakete. Es entfallen nur die erneuten Importe unveränderter Basisressourcen.
 `za1/summary.json` und der Gruppenbericht binden Inventardigest, Datei-/Bytezahl
 und Kopier-/Prüfzeit. Vier eigene Registrierungen, zehn ZA-1-Spielprozesse,
 Save-/Recovery-/Fremdslotprüfungen, Windows-Export und externer PCK-Audit sowie
-sämtliche RP6-Prozesse und Captures bleiben erhalten. CI-Auswahl, Phaseninventar,
+sämtliche RP6-Prozesse und damaligen Captures blieben in P2-D erhalten; P2-F-A
+reduziert ausschließlich die Captureauswahl wie oben festgelegt. CI-Auswahl,
 Scheduler, Zeitbudgets und fachliche Orakel ändern sich nicht. Die konkrete
 Wirkung und die Grenzen der Messung werden in P2-D-V01-T01 am PR gebunden.
 
