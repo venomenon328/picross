@@ -1,5 +1,13 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
+**Prüfumfang P2-E-A-V02 / #502:** Die Produktregeln dieses Dokuments bleiben
+unverändert. [D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
+autorisiert den risikobasierten Abbau kosmetischer nativer KE-/KK-Kreuzprodukte.
+Der [aktuelle Stichprobenvertrag samt akzeptierten Prüflücken](CI_C_NATIVE_GROUPS.md)
+hat für die wiederkehrende Prüfung Vorrang vor älteren vollständigen
+Metadaten-/Tooltip-/Größenmatrizen. Keine Ablösung der Methodenunterstützung,
+Spoiler-, Save-/Recovery- oder übrigen Kataloggarantien.
+
 **B-B / #498:** Die [reguläre Buchdarstellung](BOOK_INTEGRATION.md) verteilt eine
 logische Katalogseite auf beide Buchhälften. Höchstens 24 aktive Karten,
 vollständige Schrift-/Metadaten-/Bild-/Resetbudgets und ID-Aktionen bleiben.

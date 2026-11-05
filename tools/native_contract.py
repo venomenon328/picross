@@ -7,6 +7,17 @@ SCOPES = dict(core=('core',), history=('integration',), catalog=('catalog',),
               completion=('completion',), adapters=('pilots',),
               graphics=('visual', 'perf_b'), export=('export',))
 CATALOG_MODES = ('regular', 'restart', 'pages', 'empty', 'invalid', 'adapter', 'information', 'kb', 'kk', 'ke', 'at')
+# P2-E-A-V02 / D02: selected native cases, deliberately not the old cross product.
+CATALOG_CASES = {
+    'ke': ('ke-layout-1280-ui125', 'ke-metadata-null-current-legacy-and-negative-hover',
+           'ke-roundtrip-and-mode-tooltip', 'ke-pointer-card', 'ke-pointer-difficulty_icon',
+           'ke-layout-1920-ui100', 'ke-resize-boundary', 'ke-own-fill-undo-x-spoiler'),
+    'kk': ('kk-basic-1280-ui125', 'kk-empty-save', 'kk-pointer-edit-undo-spoiler',
+           'kk-solved-save-reveal-pixels', 'kk-wide-tall-artwork',
+           'kk-long-name-reset-tooltip-roundtrip', 'kk-reset-target-foreign-slots',
+           'kk-basic-1920-ui100', 'kk-basic-2560-ui125', 'kk-recovery-pointer',
+           'kk-aspect-endpoints', 'kk-empty-write-error'),
+}
 # Exact paths only. Shared main/session/save/fixtures and unknown effects select all.
 PATHS = {
     **{f'game/art/cells/{kind}-{size}.png{suffix}': ('core', 'graphics', 'export')
