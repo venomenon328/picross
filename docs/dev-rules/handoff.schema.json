@@ -15,6 +15,7 @@
     "phase",
     "summary",
     "spec_url",
+    "execution",
     "review",
     "findings",
     "checks",
@@ -89,6 +90,60 @@
         "null"
       ],
       "pattern": "^https://[^\\s]+$"
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preferred",
+        "self_implementation",
+        "model",
+        "reasoning",
+        "reason",
+        "source_url"
+      ],
+      "properties": {
+        "preferred": {
+          "enum": [
+            null,
+            "ChatGPT",
+            "Codex"
+          ]
+        },
+        "self_implementation": {
+          "enum": [
+            null,
+            "yes",
+            "partial",
+            "no"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reasoning": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://[^\\s]+$"
+        }
+      }
     },
     "review": {
       "type": "object",

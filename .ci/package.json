@@ -5,9 +5,10 @@
   "modules": [
     "tools",
     "native.history",
+    "native.export",
     "production.solver"
   ],
-  "purpose": "Einmalige Integration der modularen CI: gesamte Toolregression plus jeweils ein echter Native- und Production-Produzent samt unabhängigen Lesern. Der Windowsbau gehört zum Kern.",
+  "purpose": "Einmalige Integration der modularen CI: gesamte Toolregression plus jeweils ein echter Native- und Production-Produzent samt unabhängigen Lesern. Der Windowsbau gehört zum Kern. native.export prüft zusätzlich die Wiederverwendung ausschließlich der Laufzeitdateien/Lizenzen ohne technischen Produktreport.",
   "omitted": "Kein geändertes Spiel- oder Browserverhalten. Keine pauschale native Vollmatrix, Bildproduktion, Delivery oder Chromium. UI-Logik des Offline-Sheets wird einmalig lokal geprüft; visuelle Browserabnahme separat ausweisen. PR #516 bleibt unabhängig.",
   "test_changes": [
     {

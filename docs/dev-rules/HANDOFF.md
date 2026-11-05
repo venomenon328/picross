@@ -8,6 +8,7 @@ Für Aufträge aus dem Entwicklungssheet am Ende genau einen vollständigen JSON
 | --- | --- |
 | `phase` | Tatsächlich abgeschlossene Phase oder `blocked`; kein Wunschstatus |
 | `head` | Vollständiger aktueller PR-Head; nach einer Umsetzung erforderlich |
+| `execution` | Nur für noch anstehende Umsetzung: bevorzugter Weg, Eigenumsetzbarkeit und gegebenenfalls konkrete Modell-/Reasoningempfehlung mit Begründung/Quelle; sonst null-Werte. Kein Modell wird durch Import umgestellt. |
 | `review.head`, `review.url`, `review.verdict` | Konkret geprüfter Stand und dokumentiertes Urteil; kein Selbstreview als unabhängige Abnahme ausgeben |
 | `findings` | Stabile B-/A-/O-Kennungen, Status und Gate; offene manuelle Abnahmen erhalten einen Eintrag |
 | `checks` | Tatsächliche Ergebnisse und Quell-/Testcommit; nicht ausgeführt ist nicht erfolgreich |

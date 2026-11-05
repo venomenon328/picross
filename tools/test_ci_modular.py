@@ -76,6 +76,14 @@ class PackageContract(unittest.TestCase):
                 with zipfile.ZipFile(root / 'player.zip', 'w') as archive: archive.writestr(member, b'content')
                 with self.assertRaises(ValueError): ci.extract_player(root / 'player.zip', root / 'player')
             self.assertFalse((root / 'escape').exists())
+            with zipfile.ZipFile(root / 'player.zip', 'w') as archive:
+                for name in ['picross-p1.exe', 'picross-p1.console.exe', 'picross-p1.pck',
+                             'licenses/NOTICE.txt', 'product-report.json', 'rp6-owner.ps1']:
+                    archive.writestr(name, b'content')
+            ci.extract_player(root / 'player.zip', root / 'player')
+            self.assertTrue((root / 'player/licenses/NOTICE.txt').is_file())
+            self.assertFalse((root / 'player/product-report.json').exists())
+            self.assertFalse((root / 'player/rp6-owner.ps1').exists())
 
     def test_source_changed_after_tests_is_failure_even_when_commands_return_zero(self):
         plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
@@ -123,6 +131,22 @@ class PackageContract(unittest.TestCase):
                 report = ci.execute(plan, root/'out', root/'cache')
             self.assertFalse(report['accepted'])
             self.assertIn('player=false', (root/'outputs').read_text())
+
+    def test_soft_goal_does_not_reject_a_clean_successful_run(self):
+        plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
+                'run_attempt': '1', 'modules': [], 'package': package()}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            def build(*args): (root/'out/player').mkdir(parents=True)
+            with patch.object(ci, 'legacy_binding', return_value={'native_groups': [], 'production_groups': []}), \
+                 patch.object(ci, 'command', side_effect=build), patch.object(ci, 'summary'), \
+                 patch.object(ci, 'git', side_effect=['', plan['tested_checkout']]), \
+                 patch.object(ci.threading, 'Timer') as timer, \
+                 patch.dict(os.environ, {'GITHUB_OUTPUT': '', 'CI_STARTED_AT': '1'}):
+                report = ci.execute(plan, root/'out', root/'cache')
+            self.assertTrue(report['accepted'])
+            self.assertTrue(report['soft_goal_exceeded'])
+            self.assertEqual(timer.call_args.args[0], 0)
 
 
 class GitBinding(unittest.TestCase):
