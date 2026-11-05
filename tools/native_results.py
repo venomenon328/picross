@@ -12,6 +12,7 @@ import time
 
 from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, CATALOG_CASES, RP6_CAPTURES, RP6_STATES, artifacts, checks, coverage
 from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
+from zs2_evidence import validate_log as validate_zs2_log
 def unique(pairs):
     result = {}
     for key, value in pairs:
@@ -247,6 +248,8 @@ def check_phases(report, expected, directory):
                 raise ValueError('Truncated native phase log')
             if row.get('required_marker') and row['required_marker'] not in (directory/'logs'/log['file']).read_text(encoding='utf-8'):
                 raise ValueError('Missing native success marker')
+            if row['name'] == 'current-drawing-tests':
+                validate_zs2_log((directory/'logs'/log['file']).read_text(encoding='utf-8'))
 
 
 def validate_book_lifecycle(report, directory, identity, host):

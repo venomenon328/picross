@@ -1,5 +1,72 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## P2-F-B-V01 / #502: risikobasierte ZS2-Core-Stichprobe
+
+Die [beauftragte Vorbereitung](https://github.com/venomenon328/picross/issues/502#issuecomment-6661639913)
+ersetzt ausschließlich Wiederholungsmatrizen in `core/current-drawing-tests`.
+D02 erlaubt bewusst geringere Abdeckung. Die separate Graphics-Phase
+`current-drawing-pixel-oracles`, ihre Echtzeitframes und Fehlerwege bleiben
+unverändert; daraus folgt keine neue Ausnahme oder Retry-Erlaubnis.
+
+| Länge | Tatsächlich ausgeführte Richtung / Maustaste |
+| --- | --- |
+| 1 | rechts / links; links / rechts |
+| 4 | unten / links; oben / rechts |
+| 16 | rechts / links; unten / rechts |
+| 17 | links / links; oben / rechts |
+| 50 | unten / links; rechts / rechts |
+
+Dies sind zehn statt 40 reale Striche auf T-06 (50×50 Farbe). Jede Längenklasse
+und beide Buttonbedeutungen bleiben erhalten; beide Achsen und Vorzeichen sind
+repräsentiert. Bei Länge eins ist die Richtung geometrisch wirkungslos. Die
+16/17-Grenze prüft reale Starts bei 12-ms-Schritten beziehungsweise
+180-ms-Verteilung, der Maximalstrich beide Ziele. Jede Probe prüft alle wirksamen
+Zellen, sofortige Miniatur/Modell/History und echte Savebytes sowie das Ende des
+letzten Effekts bei 209/210 ms ohne verzögerte Zustandsmutation.
+
+| Bewusst entfallene Variante | Möglicher unentdeckter Defekt / Spielerwirkung / Risikodisposition |
+| --- | --- |
+| Die übrigen sechs Richtungs-/Tastenkombinationen je Länge (30 gesamt) | Fehler nur bei einer bestimmten Länge plus Achse/Vorzeichen/Button können die gerichtete Zeichnung falsch ordnen oder betroffene Eingaben falsch zuordnen. Länge eins hat keine echte Richtung; bei längeren Strichen ist das Restrisiko real. Gemeinsamer Gesten-/Staffelcode und unveränderte G1-/Chord-/Saveproben begründen die Stichprobe, nicht behauptete Gleichwertigkeit. Keine 1:1-Ersatzprüfung und keine manuelle Vollmatrix als neue Pflicht. Die Datenintegritätsanforderung selbst gilt weiter. |
+| T-02/T-04/T-08/T-09 jeweils UI100/125 bei Schrift/Slots (acht von zwölf) | Nur auf einem mittleren Raster, einer konkreten Hinweislänge oder Palette auftretende Slot-/Fallbackabweichungen können übersehen werden; schlechter lesbare Hinweise sind die mögliche UX-Folge. T-01 Mono und T-06 maximale Farbe/Hinweise jeweils UI100/125 bleiben als vier Referenzen. Keine Behauptung vollständiger Blattabdeckung. |
+| Animation-aus-Seite/Reset auf T-02/T-04/T-08/T-09 (vier von sechs) | Ein blattspezifischer Verlust der Sitzungsoption könnte Effekte wieder einschalten. T-01/T-06 behalten dieselbe vollständige Wechsel-/Info-/Rückkehr-/Resetfolge. Echter Checkboxweg, Savebytes/View/History, erneutes An ohne Replay und frische App mit Default An bleiben. |
+
+`protection_and_g1`, `lifecycle`, `chords` und die geerbte `gesture_probe`
+bleiben inhaltlich unverändert, ebenso die abschließende G1-/Abbruch- und
+119/120/209/210-ms-Probe. Kein Eingriff in Produkt-/Rendererquellen, allgemeine
+Core-Tests, P13-Zweiprozessprüfung, Exit 23, Start oder andere native Gruppen.
+Die kleineren Schrift-/Schalterfolgen verlassen weniger geänderte synthetische
+Slots vor der weiterhin echten neuen App; deren Initialisierung wird mitgemessen.
+
+Quellabgleich: `run_tests.gd` schützt unter anderem echte Fokusabbruch-/Spoiler-
+und Abschlusswege, nicht die entfallene Fontkreuzmatrix. `hf149_probe.gd` prüft
+unabhängige Slotkapazität, semantische Leseanker samt Neustart und Overlaytext/
+Geometrie; `hn192_probe.gd` echte Hinweispointer-/Abbruch-/Fokuswege;
+`vs2_tests.gd` Ansichtsoption, Layout und Navigation. Diese bleiben ausgewählt,
+sind aber kein gleichwertiger Ersatz für jede entfernte ZS2-Kombination.
+Originalfont-/Lizenzprüfung über `z2_resources.py`, HC-/HF-/HN-Lesbarkeitsverträge,
+Offline-Fallback, Checkbox-/Spoiler- und Saveanforderungen bleiben verbindlich.
+
+Der reale Godot-Prozess schreibt 24 geordnete `ZS2_CASE`-Records in sein ohnehin
+gebundenes vollständiges Log: Setup, vier Fontfälle, Gestenprobe, zehn Striche,
+G1-Schutz, Lifecycle, Chords, Checkbox, zwei Blattfolgen, Neustart und Zeitgrenzen.
+Jeder enthält tatsächliche positive/negative Assertions und Zeit, die Striche
+zusätzlich beobachtete Effektstarts, vollständige Modell-/Miniatur-/Savezellhashes,
+echte History/Cursor und Savebytehash/-länge vor/nach Ablauf. Der unabhängige
+`tools/zs2_evidence.py`-Reader berechnet Zellmatrix, kanonische History und gerichtete
+Starts separat und prüft IDs, Assertions und Gesamtbilanz ohne feste Checkzahl.
+Er läuft im Harness und erneut im Ergebnisgate auf dem hashgebundenen Originallog.
+Fehlende/gedoppelte/umetikettierte Fälle, falsche Beobachtungen und auch nachträglich
+neu gehashte manipulierte Payloads scheitern. Der sparse Checkout des Gates enthält
+den Reader; die Workflowdatei autorisiert dadurch keinen Chromiumlauf.
+
+Keine neuen Prozesse, Bilddateien oder Studien. Kleine Python-Gegenproben sind
+aktuelle dauerhafte Integritätsregression, keine Abnahmearchivierung. Technische
+Logs bleiben sieben Tage, Spielerpakete 14 Tage. Lokale Messungen und endgültige
+CI-/Head-/Run-/Attempt-/Kostenbindung stehen im P2-F-B-V01-T01 des zugehörigen PR;
+R01 und ausdrückliche Mergefreigabe bleiben separat. Das CI2-Ziel unter 600 s ist
+offen: Die bisherige gesamte ZS2-Phase von 84,737 s reicht allein nicht, um die
+native Auswahl von 755,347 s unter 600 s zu bringen.
+
 ## Aktueller Minimalumfang · #502 / P2-C-V03
 
 Die [ersetzende Eigentümerentscheidung](https://github.com/venomenon328/picross/issues/502#issuecomment-6637589747)

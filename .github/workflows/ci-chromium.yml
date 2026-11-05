@@ -153,6 +153,7 @@ jobs:
             tools/web_tests/contract.py
             tools/web_tests/results.py
             tools/native_results.py
+            tools/zs2_evidence.py
             tools/vs2_delivery.py
             tools/vs2_v1_verify.py
             tools/p1_preflight.py

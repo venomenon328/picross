@@ -1,5 +1,19 @@
 # Aktiver Bestand und historische Quellen
 
+**P2-F-B-V01 / #502:** Die aktuelle native ZS2-Core-Regression besitzt eine
+[bewusst reduzierte Fallpflicht](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe).
+Die 40er Strich-/zwölffache Font-/sechsfache Schalterwiederholung wird nicht in ein
+manuelles Archiv verlagert. Zehn/vier/zwei Referenzen, unveränderte Schutzproben
+und 24 gebundene Fallrecords bleiben. `zs2_evidence.py` und die kleinen negativen
+Reader-/Payloadproben haben den aktuellen Integritätszweck; kein Studienreplay.
+Es entstehen keine neuen nativen Prozesse, PNGs oder dauerhaften Rohdateien.
+Temporäre lokale Messhilfen unter `artifacts/502-p2fb-local` und der eigene
+Linux-Container `picross-502-zs2` sind Untersuchungs-/Reviewmaterial bis
+19.11.2026 beziehungsweise P2-F-B-V01-R01; anschließend zulässigen Abschlussweg
+prüfen, keine automatische oder behauptete Löschung. Fremdbestand und bestehende
+Sperren bleiben unberührt. CI-Originallogs sieben Tage, Spielerpakete 14 Tage;
+T01 und Selbstreview bleiben als Text im Paket-PR, R01/Ownerabschluss separat.
+
 **P2-F-A-V01-P01 / #502:** Der [native RP6-Vertrag](CI_C_NATIVE_GROUPS.md)
 entfernt zwei Captureprozesse und 30 Darstellungszustände aus der Dauer-CI.
 Zwei Original-JSONs und zwei Prozesslogs entfallen; keine Erfolgs-PNGs oder
