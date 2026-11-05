@@ -2,6 +2,18 @@
 
 Stand: 11.10.2026 · Spezifikation 0.2 · PERF-A/B über PR #66 integriert
 
+**Prüfumfang P2-E-B-V01 / #502:** Die
+[Eigentümerentscheidung D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
+erlaubt für die VS2-Layoutmatrix und fünf kompakten Renderstufen ausdrücklich
+weniger Varianten ohne gleichwertige Ersatzabdeckung. Der
+[aktuelle Grafikvertrag](CI_C_NATIVE_GROUPS.md) nennt Auswahl und akzeptierte
+Lücken. In der Zellstichprobe bleiben die Schritte 12/16/18/24/72, alle bestätigten
+Farben, alle Previewfarben bei 24 und sonst Previewfarbe 1; 22 und reine
+Removal-Aufnahmen entfallen. Füll-/Moat-/Alphapixel und beide Mutanten bleiben
+in den gewählten Fällen echte native Prüfungen. Diese enge Ausnahme ersetzt
+insoweit die unten genannte Forderung nach vergleichbar aussagekräftigem Ersatz;
+Atlas-/Cache-/PERF-B-/ZS2-Prüfungen und alle Produktverträge bleiben unverändert.
+
 ## Geltung, Befund und Paketstand
 
 Der Eigentümer hat die besprochene Sprite-/Caching-Lösung am 11.10.2026 als
