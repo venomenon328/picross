@@ -34,6 +34,24 @@ Das CI2-Ziel unter zehn Minuten bleibt ein Optimierungsbefund.
 P3-B-D01 verwirft den alten 75-MiB-Richtwert und feste Mengenobergrenzen.
 
 
+## Adaptervorbereitung · #502 / P2-D-V01
+
+ZA-1 erhält eine eigene vollständige Kopie der gerade importierten synthetischen
+Basis, unmittelbar nach `import` und vor den ersten nativen Tests. Dateiliste,
+Größen und SHA-256 müssen für Quelle und Kopie übereinstimmen. Vor der späteren
+Registrierung wird die wartende Kopie nochmals gegen dieses Inventar geprüft.
+Danach gehören Projekt, Registrierung und Importe ausschließlich ZA-1;
+RP6 verwendet weiterhin sein eigenes Projekt und seine echten Spielstände.
+Das bestehende `za1-import` verarbeitet weiterhin alle vier neu registrierten
+Pakete. Es entfallen nur die erneuten Importe unveränderter Basisressourcen.
+
+`za1/summary.json` und der Gruppenbericht binden Inventardigest, Datei-/Bytezahl
+und Kopier-/Prüfzeit. Vier eigene Registrierungen, zehn ZA-1-Spielprozesse,
+Save-/Recovery-/Fremdslotprüfungen, Windows-Export und externer PCK-Audit sowie
+sämtliche RP6-Prozesse und Captures bleiben erhalten. CI-Auswahl, Phaseninventar,
+Scheduler, Zeitbudgets und fachliche Orakel ändern sich nicht. Die konkrete
+Wirkung und die Grenzen der Messung werden in P2-D-V01-T01 am PR gebunden.
+
 ## Zweckgebundene Zustellung · #502 / P3-B-L01
 
 [Eigentümerentscheidung P3-B-D01](https://github.com/venomenon328/picross/issues/502#issuecomment-6641721279)

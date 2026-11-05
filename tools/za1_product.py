@@ -2,8 +2,30 @@
 from pathlib import Path
 import json
 import shutil
+import hashlib
+import time
 
 import p1_preflight as toolchain
+from native_results import bind_files
+
+
+def require_inventory(project, inventory):
+    if bind_files(project) != inventory:
+        raise toolchain.PreflightError("ZA-1 prepared import inventory differs")
+
+
+def prepare_imports(imported_base, workspace):
+    """Snapshot only the just-imported inputs, before any native test runs."""
+    began = time.perf_counter()
+    inventory = bind_files(imported_base)
+    project = workspace / "za1-checkout/game"
+    shutil.copytree(imported_base, project)
+    require_inventory(project, inventory)
+    require_inventory(imported_base, inventory)
+    return inventory, dict(inventory_sha256=hashlib.sha256(
+        json.dumps(inventory, sort_keys=True).encode()).hexdigest(),
+        files=len(inventory), bytes=sum(row['bytes'] for row in inventory),
+        source_unchanged_at_copy=True, preparation_seconds=time.perf_counter()-began)
 
 
 def audit_pack(root, engine, executable, environment, run_phase, count, label):
@@ -22,12 +44,15 @@ def audit_pack(root, engine, executable, environment, run_phase, count, label):
             "method": "external native probe against actual separate PCK"}
 
 
-def run(root, workspace, output, engine, environment, run_phase, python_phase, host):
+def run(root, workspace, output, engine, environment, run_phase, python_phase, host, prepared):
     from tools.puzzle_production.za1_fixtures import replay, isolated_checkout
     from tools.puzzle_production.content_registry import check_checkout
     checkout = workspace / "za1-checkout"
-    from product_fixtures import copy_regression_game, install_runtime_fixtures
-    copy_regression_game(root, checkout / "game")
+    from product_fixtures import install_runtime_fixtures
+    inventory, reuse = prepared
+    began = time.perf_counter()
+    require_inventory(checkout / "game", inventory)
+    reuse.update(prepared_unchanged=True, verification_seconds=time.perf_counter()-began)
     isolated_checkout(checkout)
     python_phase("za1-test-only-registration", lambda: replay(workspace / "za1-replay", checkout))
     project = checkout / "game"
@@ -71,7 +96,8 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
     if host == "Windows":
         run_phase("za1-windows-exported-start",[str(build/"picross-p1.console.exe"),"--headless","--","--p1-smoke"],"P1_START_OK",phase_env=env)
     summary = {"format":"picross-za1-product-v1","test_only":True,"registered":4,"regular_processes":10,
-               "checks":checks,"pck":pack,"windows_exported_start":host == "Windows"}
+               "checks":checks,"pck":pack,"windows_exported_start":host == "Windows",
+               "import_reuse":reuse}
     (directory/"summary.json").write_text(json.dumps(summary,indent=2)+"\n",encoding="utf-8")
     # Actual native pixels are asserted in-process; only functional reports leave it.
     return summary, sorted(directory.glob("*.json"))
