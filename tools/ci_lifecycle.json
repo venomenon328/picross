@@ -1047,7 +1047,7 @@
       "sources": {
         "game/tests/rp6_capture.gd": {
           "before": "ab9e1ddc9202517ce9a7e64a71ab0026d29bdc0c",
-          "after": "e593325edae3bb9e334530c2a79c0e800725ef6b"
+          "after": "55a12cc06b655022e47f504a8f0339805ba9e7f6"
         },
         "tools/native_artifacts.json": {
           "before": "526b0abcfff8c724fe16de5296811b85426934b2",

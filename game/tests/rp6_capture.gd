@@ -195,7 +195,12 @@ func run() -> void:
 		app.open_puzzle()
 		await shot("completion-%d-ui%d" % [spec[0],spec[2]*100])
 		app.show_album()
-		app.album.ensure_control_visible(app.choices[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))])
+		# Album card layout must settle before scrolling to the actual artwork.
+		# The containing card can be taller than the tight UI125 viewport.
+		await process_frame
+		await process_frame
+		await process_frame
+		app.album.ensure_control_visible(app.album_reveals[app.album.visible_ids.find(str(app.session.definition.id))])
 		await shot("album-completed-%d-ui%d" % [spec[0],spec[2]*100])
 	write_report()
 	if failures == 0:
