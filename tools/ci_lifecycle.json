@@ -449,10 +449,6 @@
           "before": "3e4be1f03a851608e767b92af6f742304655ae3f",
           "after": "3c7ddacdf9f7c855207fe39eb3ff500633dda080"
         },
-        "tools/p1_product.py": {
-          "before": "8e6e575c7b6a4db37525338852685442360daed3",
-          "after": "e73cd9f9b016e52e93249a331fa645dab22be965"
-        },
         "tools/test_at_evidence.py": {
           "before": "5146d3463024bb4f6eedf22f7ad17de1acc19dff",
           "after": "970f8981249a292f16848aa9046fd787f556477b"
@@ -484,10 +480,6 @@
         "tools/vs2_windows_probe.py": {
           "before": "94ee37d01b35842db37ee9c65da2adb89fad88e8",
           "after": "19c43ae5d0cb3be7401fac0a1caf43787f84f6bc"
-        },
-        "tools/za1_product.py": {
-          "before": "d2c4f56330991ca652f10255239fc0edad34a7b9",
-          "after": "8121cb512e9399263a8da7baa98b1813b1dd4515"
         },
         "tools/zs2_delivery.py": {
           "before": "1384f415f72963e9449792d1550195b4f2ffb803",
@@ -678,13 +670,6 @@
           ]
         },
         {
-          "path": ".github/workflows/p1-product.yml",
-          "anchor": "python3 tools/p1_product.py",
-          "sources": [
-            "tools/p1_product.py"
-          ]
-        },
-        {
           "path": ".github/workflows/ci-chromium.yml",
           "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
           "sources": [
@@ -738,13 +723,6 @@
           "anchor": "from vs2_windows_probe import extract, direct_start",
           "sources": [
             "tools/vs2_windows_probe.py"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "import za1_product",
-          "sources": [
-            "tools/za1_product.py"
           ]
         },
         {
@@ -926,14 +904,100 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p2-d-adapter-imports",
+      "kind": "permanent-small",
+      "purpose": "Reduce duplicate ZA-1 base imports with a fully bound private input snapshot before any pilot process",
+      "level": "Existing adapters group; three cheap Python isolation/corruption tests, existing report metadata; no new native phase or process",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / P2-D-V01 implementer",
+      "sources": {
+        "tools/p1_product.py": {
+          "before": "e73cd9f9b016e52e93249a331fa645dab22be965",
+          "after": "47159b9d7eeb15432dbaf5444e75e871da041792"
+        },
+        "tools/za1_product.py": {
+          "before": "8121cb512e9399263a8da7baa98b1813b1dd4515",
+          "after": "75ef45fd916a6706a86020d8490e90cf14e58b85"
+        },
+        "tools/test_za1_product.py": {
+          "before": null,
+          "after": "7e6239f22ee2cb1977d65ba6100206bfdabf3e5f"
+        }
+      },
+      "readers": [
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/p1_product.py",
+          "sources": [
+            "tools/p1_product.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import za1_product",
+          "sources": [
+            "tools/za1_product.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_za1_product.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 4,
+        "wall_seconds": 5,
+        "files": 0,
+        "bytes": 2048,
+        "pngs": 0
+      },
+      "coverage": "Snapshot file/size/SHA equality at copy and consumption; corrupt destination, source race, changed/missing/extra pending inputs and independent writable copies. Four ZA-1 registrations, ten real game processes, save/recovery, export/PCK and all RP6 processes/oracles remain. Cost estimate is added hash/copy/check work and JSON metadata; it replaces the cold ZA-1 preparation and should reduce net wall time. Same two final private imported projects; no additional retained inventory or image class. Historical P2-C source paths transfer here with all remaining obligations intact. Actual net measurements in P2-D-V01-T01; independent R01 before merge.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P3-B-L01 small synthetic delivery/retention regressions in existing Docs discovery; no new heavy phase, job or PNG. F01: three alias regression methods and draw/readback timing metadata in the existing ZS2 JSON; no new artifact class.",
-    "removed": "No current product regression removed. Failure uploader no longer retains successful unrelated group payloads.",
+    "added": "P2-D-V01: three small permanent Python failure/isolation tests in existing Docs discovery; preparation timings and inventory digest in existing ZA-1 JSON reports.",
+    "removed": "No product regression or native phase/process removed. Only duplicate immutable base import work is reused through a verified private copy.",
     "temporary": [],
-    "cost_change": "Estimated added cheap tests/status at most 3 CPU/wall seconds; existing success bytes unchanged and failed delivery purpose-selected. Actual measured times, files/bytes and retained originals in L01-T01. Technical CI 7 days, players 14 days. No new historical archive or local blocked-data cleanup."
+    "cost_change": "Estimated additional hash/copy/check work <=4 CPU/5 wall seconds, <=2048 report bytes, no new retained files/PNGs; measured net import saving and full CI costs in P2-D-V01-T01. One-off local probe is not installed in CI; diagnostic review until 2026-11-12, no protected-data cleanup. Technical CI 7 days, players 14 days. Overall #502 and independent R01 remain open."
   }
 }
