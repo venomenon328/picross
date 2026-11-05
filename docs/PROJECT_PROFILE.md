@@ -1,5 +1,13 @@
 # Projektprofil: picross
 
+**P2-F-A-V01-P01 / #502:** [RP6-Darstellung](CI_C_NATIVE_GROUPS.md) verwendet
+zwei repräsentative Captureprozesse mit zehn Zuständen (Mono/UI100,
+50×50-Farbe/UI125) statt vier Prozessen/40 Zuständen. Bewusste kosmetische
+Prüflücken folgen D02; alle vier RP6-Spiel-/Save-/Neustartketten, Fremdslots,
+ZA-1, Recovery, Registrierung und PCK bleiben unverändert. T01 und getrennter
+Selbstreview binden reale Messungen am Liefer-PR; unabhängiges R01 und
+ausdrückliche Mergefreigabe bleiben getrennt. Kein Chromiumauftrag.
+
 **HIL-1 / #500:** Die vierteilige passive Spielerhilfe ist Teil der rechten
 [Buchinformationsseite](BOOK_INTEGRATION.md#spielerhilfe--hil-1--500).
 Inhalte, Lehrbeispiele und getrennte Abnahmen bindet

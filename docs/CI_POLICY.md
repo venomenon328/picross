@@ -1,5 +1,14 @@
 # Aktuelle CI-Policy
 
+**P2-F-A-V01-P01 / #502:** Der [RP6-Stichprobenvertrag](CI_C_NATIVE_GROUPS.md)
+ersetzt vier Captureprozesse/40 Darstellungszustände durch T04/1920/UI100 und
+T06/1280/UI125 mit jeweils fünf Zuständen. T08/T09 und die jeweils zweite
+Größe entfallen ausdrücklich mit dokumentiertem kosmetischem Abdeckungsverlust.
+Alle vier Spiel-/Save-/Neustartketten, Fremdslotkontrolle, ZA-1, Recovery,
+Registrierung und PCK bleiben unverändert. Der unabhängige Reader verlangt
+identifizierte Fälle, positive Einzelprüfungen und echte Pixel-/Slotbindung.
+Keine neue Zeitgrenze, Auswahlverkürzung anderer Gruppen oder Browserfreigabe.
+
 **P2-E-B-V01 / #502:** [Umsetzungsvorbereitung](https://github.com/venomenon328/picross/issues/502#issuecomment-6657459064)
 und D02 erlauben die im [Grafikvertrag](CI_C_NATIVE_GROUPS.md) dokumentierten
 Abdeckungslücken: 18 VS2-Layoutfälle und 66 Frames in weiterhin fünf getrennten
@@ -814,7 +823,8 @@ prüft 17 semantische Benutzerkommandos, vier neue wirksame Transaktionen und
 genau zwei Spielprozesse mit unabhängigem Python-Orakel. Das Gate wiederholt
 vollständigen Trace-/Save-/Ansichtsabgleich und die beiden Gegenproben aus den
 gebundenen Originaldateien; eine positive Zusammenfassung allein reicht nicht.
-`adapters` prüft die synthetischen Muster T04/T06/T08/T09 vollständig;
+`adapters` prüft die Spiel-/Saveketten der synthetischen Muster T04/T06/T08/T09 vollständig;
+die separate Darstellung folgt der oben gebundenen P2-F-A-Stichprobe.
 T04 enthält dabei die einzigartigen bisherigen RP3-Assertions einschließlich
 Pfadablehnung, Spoilergrenze und Bindung des verdienten Motivs. `graphics` enthält
 die aktuelle native Renderprüfung und den regulären Atlasrenderer samt Cache-/

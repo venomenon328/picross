@@ -10,7 +10,7 @@ from contextlib import contextmanager
 import shutil
 import time
 
-from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, CATALOG_CASES, artifacts, checks, coverage
+from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, CATALOG_CASES, RP6_CAPTURES, RP6_STATES, artifacts, checks, coverage
 from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
 def unique(pairs):
     result = {}
@@ -23,6 +23,71 @@ def unique(pairs):
 
 def read(path):
     return json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique)
+
+
+def validate_rp6_capture(report, number):
+    """Independently bind selected original states, slots and real native checks."""
+    _index, width, height, scale = RP6_CAPTURES[number]
+    expected_ids = [f'{state}-{width}-ui{int(scale*100)}' for state in RP6_STATES]
+    rows = report.get('captures', [])
+    if (type(report.get('failures')) is not int or report['failures'] != 0
+            or report.get('failure_captures') != [] or report.get('pending_failures') != []
+            or report.get('pending_assertions') != [] or not isinstance(rows, list)
+            or any(not isinstance(r, dict) for r in rows)
+            or [r.get('id') for r in rows] != expected_ids):
+        raise ValueError('Incomplete/failed RP6 capture selection')
+    colors = ['#343f42'] if number == 4 else ['#253342', '#637b58', '#c89d56', '#b55848']
+    palette = [dict(id=i+1, color=color, symbol=chr(65+i)) for i, color in enumerate(colors)]
+    definition_id = f'T-{number:02d}'
+    reveal = dict(version=1, definition_id=definition_id, name=f'TEST ONLY Muster {number}',
+                  image=f'res://art/fixtures/t{number:02d}.svg')
+    required = {
+        'work': {'fresh pilot hides reveal', 'own incorrect miniature retained', 'mouse undo', 'mouse redo',
+                 'album own wrong miniature and no spoiler/name', 'bound regular clue font',
+                 'work and critical controls accessible', 'native pixel wrong-block'},
+        'detail': {'nine real visible undo clicks remove the wrong block',
+                   'real visible plus click retains normal zoom', 'selected partial has no reveal',
+                   'native pixel wrong-corner'},
+        'album-partial': {'album no hidden reveal payload', 'selected partial has no reveal',
+                          'native pixel wrong-corner'},
+        'completion': {'capture partial flush', 'native capture restores real mouse completion',
+                       'capture completion slot freshly loaded'},
+        'album-completed': set(),
+    }
+    total = 0
+    for state, row in zip(RP6_STATES, rows):
+        earned = state in ('completion', 'album-completed')
+        assertions = row.get('assertions', [])
+        if (not isinstance(assertions, list) or not assertions
+                or any(not isinstance(a, dict) or set(a) != {'label','passed'}
+                       or not isinstance(a['label'], str) or not a['label']
+                       or a['passed'] is not True for a in assertions)
+                or type(row.get('checks')) is not int or row['checks'] != len(assertions)):
+            raise ValueError('Missing/failed RP6 native assertions')
+        labels = {a['label'] for a in assertions}
+        needed = required[state].copy()
+        pixels = {'wrong-block' if state == 'work' else 'wrong-corner': colors[0][1:]}
+        if earned:
+            needed.update({'selected earned artwork visible and proportional', 'selected earned artwork bound to slot',
+                           'native pixel reveal-center', 'native pixel reveal-background'})
+            pixels = {'reveal-center':'ffffff', 'reveal-background':'6c9aab' if number == 4 else 'edca78'}
+        if (not needed <= labels or row.get('pixels') != pixels
+                or row.get('definition_id') != definition_id or row.get('slot') != f't{number:02d}.json'
+                or row.get('size') != [width,height] or row.get('ui_scale') != scale
+                or row.get('completed') is not earned or row.get('reveal') != (reveal if earned else {})
+                or row.get('palette') != palette or row.get('font') != 'Delight Coffee'
+                or row.get('layout_valid') is not True or row.get('grid_fit') is not True):
+            raise ValueError('Wrong RP6 slot/state/layout/pixel evidence')
+        cells = row.get('own_miniature')
+        size = 20 if number == 4 else 50
+        if (not isinstance(cells, list) or len(cells) != size*size
+                or any(type(c) is not int or c not in range(-1,len(colors)+1) for c in cells)
+                or not earned and (cells[0] != 1 or any(cells[y*size+x] != (1 if state == 'work' else -1)
+                                                       for y in range(2,5) for x in range(2,5)))):
+            raise ValueError('RP6 own wrong cells/undo evidence missing')
+        total += row['checks']
+    if type(report.get('checks')) is not int or report['checks'] != total:
+        raise ValueError('RP6 assertion total mismatch')
 
 
 def validate_catalog_cases(report):
@@ -333,6 +398,9 @@ def validate_original_payload(result, root, player_root=None, failure_context=No
                             value == [] if rule == 'empty-list' else value is False)
                 if not accepted:
                     raise ValueError('Failed original native assertions: '+name+'/'+field)
+        if group == 'adapters':
+            for number in RP6_CAPTURES:
+                validate_rp6_capture(read(directory/'selected/renders'/f'rp6-t{number:02d}-renders.json'), number)
         if group == 'history':
             summary = read(directory/'selected/integration/summary.json')
             from p14_integration import verify_evidence

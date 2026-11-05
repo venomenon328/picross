@@ -341,10 +341,6 @@
           "before": "6ede0250109903d16df5223603606aabfefc2979",
           "after": "55b452f49dd009b2da6f9b97f72428fb46dab8f8"
         },
-        "game/tests/rp6_capture.gd": {
-          "before": "4a053badf8e617d4ebcbad939eaf6b1f5f8376b5",
-          "after": "ab9e1ddc9202517ce9a7e64a71ab0026d29bdc0c"
-        },
         "game/tests/vs2_v1_tests.gd": {
           "before": "7555fe44a67b570db47c0e757aef6b2dc71a2855",
           "after": null
@@ -397,10 +393,6 @@
           "before": "0552cbee145bd529bff999cbb713a87d9caf6ad4",
           "after": "1384b68d94e5e41c3cfe0b0233466042bf486bd6"
         },
-        "tools/native_artifacts.json": {
-          "before": "f501c43e767ff4f74dbfc1931465d2285673721f",
-          "after": "526b0abcfff8c724fe16de5296811b85426934b2"
-        },
         "tools/native_images.py": {
           "before": "b961916b364decb39bcec9a84b8387ec57a25241",
           "after": null
@@ -420,10 +412,6 @@
         "tools/test_book_lifecycle.py": {
           "before": "d246df559e23b118c34d2a8581001ae67bcd9e93",
           "after": "604aac29c2feb5d9cb3185e72436c5f6c5d524df"
-        },
-        "tools/test_ci_c.py": {
-          "before": "087b139c0f18343ad2871c85a8b481f45ad3e4cc",
-          "after": "ff0f5ee72e8e4ce0ca279f0ce5f245f2c5bdde2f"
         },
         "tools/test_p1_evidence.py": {
           "before": "a12568136caa01f09c980b5d5fea5886a606a4ca",
@@ -490,13 +478,6 @@
           "anchor": "run(\"perf-b-native\", b_command + [\"--script\", \"res://tests/perf_b_probe.gd\"], \"PERF_B_PROBE_OK\", phase_env=perf_env)",
           "sources": [
             "game/tests/perf_b_probe.gd"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "run_phase(f\"rp6-t{number:02d}-render\", command +\n                      [\"--script\",\"res://tests/rp6_capture.gd\",\"--\",\"--p1-capture\",\"--ci-compact\"], \"RP6_CAPTURE_OK\")",
-          "sources": [
-            "game/tests/rp6_capture.gd"
           ]
         },
         {
@@ -570,13 +551,6 @@
           ]
         },
         {
-          "path": "tools/native_contract.py",
-          "anchor": "Path(__file__).with_name('native_artifacts.json').read_text(encoding='utf-8')",
-          "sources": [
-            "tools/native_artifacts.json"
-          ]
-        },
-        {
           "path": "tools/p1_product.py",
           "anchor": "from native_metrics import measure",
           "sources": [
@@ -602,13 +576,6 @@
           "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
           "sources": [
             "tools/test_book_lifecycle.py"
-          ]
-        },
-        {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
-          "sources": [
-            "tools/test_ci_c.py"
           ]
         },
         {
@@ -892,10 +859,6 @@
           "before": "88359152a8b078f34908f4b1b90a42326a7b6425",
           "after": "56266b1f32ecf1054e195dbf4fe7c163ceff0b14"
         },
-        "tools/native_contract.py": {
-          "before": "db598591a35e5093a57d3e96e70c34b0dc3419fa",
-          "after": "6d158a236ad457192ab97329ddfa825c5df25056"
-        },
         "tools/test_kat2_product.py": {
           "before": null,
           "after": "a326ab491ec71b664dcb81b739987ba7e91a020b"
@@ -917,13 +880,6 @@
           ]
         },
         {
-          "path": "tools/ci_scope.py",
-          "anchor": "import native_contract",
-          "sources": [
-            "tools/native_contract.py"
-          ]
-        },
-        {
           "path": ".github/workflows/ci-chromium.yml",
           "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
           "sources": [
@@ -935,30 +891,19 @@
         "selected": {
           "docs": true,
           "product": true,
-          "production": true,
-          "preflight": true,
-          "integration": true,
-          "pilots": true,
-          "visual": true,
-          "perf_b": true,
+          "production": false,
+          "preflight": false,
+          "integration": false,
+          "pilots": false,
+          "visual": false,
+          "perf_b": false,
           "web": false,
-          "delivery": true
+          "delivery": false
         },
         "native_groups": [
-          "core",
-          "history",
-          "catalog",
-          "completion",
-          "adapters",
-          "graphics",
-          "export"
-        ],
-        "production_groups": [
-          "solver",
-          "images",
-          "adapter",
           "catalog"
         ],
+        "production_groups": [],
         "browser_request": null
       },
       "cost": {
@@ -996,14 +941,6 @@
         "game/tests/vs2_tests.gd": {
           "before": "37b824b41c699a81d00209d637955e4985fcee8f",
           "after": "733e1466e569ed59135d36237cd7197e02e95829"
-        },
-        "tools/native_results.py": {
-          "before": "12131810ec93b8bd57f868c2d56f2433220f4a85",
-          "after": "73f128de69a51b5b54b2048bbeb69daccff2629b"
-        },
-        "tools/p1_product.py": {
-          "before": "47159b9d7eeb15432dbaf5444e75e871da041792",
-          "after": "49b02f0bc7294456367ced36f45c2537117b8ad8"
         },
         "tools/test_vs2_delivery.py": {
           "before": "7b00aa96bf2cbcc82e947fdecda435fbd9d9f99e",
@@ -1048,20 +985,6 @@
           "anchor": "import vs2_delivery",
           "sources": [
             "tools/vs2_delivery.py"
-          ]
-        },
-        {
-          "path": ".github/workflows/p1-product.yml",
-          "anchor": "python3 tools/p1_product.py",
-          "sources": [
-            "tools/p1_product.py"
-          ]
-        },
-        {
-          "path": "tools/ci_scope.py",
-          "anchor": "from native_results import validate_all",
-          "sources": [
-            "tools/native_results.py"
           ]
         },
         {
@@ -1113,14 +1036,133 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p2-f-a-v01-rp6-captures",
+      "kind": "permanent-small",
+      "purpose": "Reduce RP6 presentation cross products under D02 while preserving every real play/save/restart and ZA-1/PCK process",
+      "level": "Two existing native capture processes, ten states and three small Python selection/reader/payload tests",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / P2-F-A-V01 implementer",
+      "sources": {
+        "game/tests/rp6_capture.gd": {
+          "before": "ab9e1ddc9202517ce9a7e64a71ab0026d29bdc0c",
+          "after": "55a12cc06b655022e47f504a8f0339805ba9e7f6"
+        },
+        "tools/native_artifacts.json": {
+          "before": "526b0abcfff8c724fe16de5296811b85426934b2",
+          "after": "235cd7a0b615511eb0ce83e0d2032bc3f5d5a4a0"
+        },
+        "tools/native_contract.py": {
+          "before": "6d158a236ad457192ab97329ddfa825c5df25056",
+          "after": "162852223561e85a3604af3b96064aa6a79eed97"
+        },
+        "tools/native_results.py": {
+          "before": "73f128de69a51b5b54b2048bbeb69daccff2629b",
+          "after": "892f98b3b158e5c2e26e1cda8818d49336dc7af6"
+        },
+        "tools/p1_product.py": {
+          "before": "49b02f0bc7294456367ced36f45c2537117b8ad8",
+          "after": "ba242affeead486f993ace0fb7c851c17c98a5e7"
+        },
+        "tools/test_ci_c.py": {
+          "before": "ff0f5ee72e8e4ce0ca279f0ce5f245f2c5bdde2f",
+          "after": "06c495d2df6bf9c66fe64bb9b5186e3b7bdca9d9"
+        }
+      },
+      "readers": [
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "run_phase(f\"rp6-t{number:02d}-render\", command +\n                      [\"--script\",\"res://tests/rp6_capture.gd\",\"--\",\"--p1-capture\",\"--ci-compact\"], \"RP6_CAPTURE_OK\")",
+          "sources": [
+            "game/tests/rp6_capture.gd"
+          ]
+        },
+        {
+          "path": "tools/native_contract.py",
+          "anchor": "Path(__file__).with_name('native_artifacts.json').read_text(encoding='utf-8')",
+          "sources": [
+            "tools/native_artifacts.json"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_ci_c.py"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "import native_contract",
+          "sources": [
+            "tools/native_contract.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/p1_product.py",
+          "sources": [
+            "tools/p1_product.py"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "from native_results import validate_all",
+          "sources": [
+            "tools/native_results.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 2,
+        "wall_seconds": 2,
+        "files": 0,
+        "bytes": 20000,
+        "pngs": 0
+      },
+      "coverage": "T04 mono at 1920/UI100 and T06 50x50 color at 1280/UI125, each work/detail/partial album/freshly loaded completion/earned album. Explicit case IDs, slot/palette/state binding, positive native assertion records, original miniature and reveal pixels. All twelve RP6 partial/finish/read processes, foreign-slot control, ZA-1/recovery/registration/PCK unchanged. Two processes and thirty cosmetic combinations removed without equivalent replacement: risks in docs/CI_C_NATIVE_GROUPS.md and delivery T01. D02 and scope https://github.com/venomenon328/picross/issues/502#issuecomment-6659141735 . Costs estimate incremental JSON/reader/pixel/test work, not net native reduction; up to 20 KB extra assertion fields in retained originals, zero new paths or PNGs. Source ownership transferred from prior records; unrelated contracts remain. Full CI and costs bound in delivery T01.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P2-E-B-V01: two small Python mutation test methods; strict original selection, metadata and summary readers using existing reports. No extra native phase or evidence path.",
-    "removed": "78 VS2 layout combinations and 92 compact render frames, with D02-authorized coverage loss. No protected assertions, product changes or foreign data deletion.",
+    "added": "P2-F-A-V01: three small Python methods for capture selection, native assertions/pixels and rehashed full payload mutations; explicit fields in two existing originals, no new process.",
+    "removed": "Two RP6 render processes/logs/original JSONs and thirty presentation states. All four play/save/restart chains, foreign slots, ZA-1/recovery/registration/PCK unchanged; D02 cosmetic coverage loss explicit.",
     "temporary": [],
-    "cost_change": "Added reader/test work estimated <=1 CPU/wall second, zero new files/bytes/PNGs; net native/CI costs measured separately in T01 against 42013628529/1. Own diagnostics artifacts/502-p2eb-local retained for review by 2026-11-19 / V01-R01; no automatic cleanup. Technical retention 7 days, player 14 days. #502, independent R01 and owner merge approval remain open."
+    "cost_change": "Incremental checks estimated <=2 CPU/wall seconds, zero new files/PNGs and <=20000 extra JSON bytes; net cost measured against 42027188774/2 in T01. Own artifacts/502-p2f-local retained until 2026-11-19 / P2-F-A-V01-R01; no automatic cleanup. CI technology 7 days, player 14 days; independent review and merge approval remain open."
   }
 }
