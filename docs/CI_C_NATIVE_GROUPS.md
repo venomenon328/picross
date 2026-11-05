@@ -1,5 +1,72 @@
 # CI-C: Native Prüfgruppen und Belegvertrag
 
+## P2-F-C-V01 / #502: Buch-Lifecycle nur auf ausdrücklichen Anlass
+
+[D03](https://github.com/venomenon328/picross/issues/502#issuecomment-6665280802)
+und die [aktualisierte Vorbereitung](https://github.com/venomenon328/picross/issues/502#issuecomment-6664748225)
+heben im P2-F-C-Scope den pauschalen Schutz von Testfamilien und Mindestfallzahlen
+auf. Produktfunktionen und Datenintegrität bleiben verbindlich. Der frühere
+U01-Abschluss betrachtete nur die kleine HIL-Matrix unter dem inzwischen
+abgelösten Schutzrahmen; er begrenzt diese neue Entscheidung nicht.
+
+Die gesamte Phase `regular-book-integration` entfällt aus `export`, Standard-CI,
+`all` und gewöhnlichen manuellen Vollläufen. Kein Ersatz-Smoke, keine automatische
+Änderungs-/Zeitplanroute und keine Pflicht, alle Kapitel oder Viewports anzuklicken.
+Damit entfallen drei Unterprozesse (Version, Import, gerenderte Integration),
+die aggregierte `book_lifecycle`-Pflicht und fünf Dateien unter `book-lifecycle/`
+(report.json, integration/integration.json und drei Logs). Der unabhängige
+Standardreader verlangt die verbleibenden Exportphasen exakt und weist
+mitgelieferte alte Lifecyclephasen, -Aggregate und -Verzeichnisse zurück.
+Die Sparse-Quellenbindung dieses Diagnosepfads entfällt im CI-Gate.
+
+`tools/book_lifecycle.py` bleibt ausschließlich als ausdrücklich aufrufbare
+Diagnose bei konkreten Buch-/Help-/Save-Navigationsänderungen oder Fehlerbefunden:
+`python tools/book_lifecycle.py --cache-dir <cache> --output-dir <leeres-ziel>`.
+Es gibt keinen obligatorischen Aufruf bei solchen Änderungen; der Auftrag entscheidet.
+Dann laufen die bisherigen Fälle vollständig mit isolierten synthetischen Daten,
+300-s-Phasengrenzen und ohne Bilder/Film. Die CLI liest das Ergebnis anschließend
+mit dem separaten `validate_book_lifecycle`: Originale, Assertions, Quellen,
+Hashes und Identität müssen stimmen. Diese Integritätsregeln sind keine
+Mindestabdeckung der Standard-CI. Der kleine Python-Test dieses weiterhin
+aufrufbaren Diagnosevertrags bleibt im bestehenden Toolpfad.
+
+Die Kostenbasis ist PR-Run `42058446334/2`, Technikoriginal `13434724730`:
+79,167 s für den gesamten Lifecycle, darin 9,241 s Import und 68,768 s Integration
+mit 201,050 s Kindprozess-CPU; fünf Dateien/110.787 Rohbytes, null PNGs.
+Lokale instrumentierte Kopien auf derselben Basis bestätigen die Größenordnung
+und trennen die Familien; keine der lokalen Zeiten ist eine CI-Prognose.
+Die kleine Matrixreduktion des U01 sparte nur 1,29–1,43 s. Der eigene Prozess
+ist deshalb die sinnvolle Kürzungseinheit, einschließlich seiner Start-/Importkosten.
+
+| Bisherige Familie / lokale Diagnosezeit | Verbleibende Stufe, konkrete Lücke und Risikobewertung |
+| --- | --- |
+| HIL-Lehrbeispiele `help_cases.gd`, 0,0053 s | Bleiben im vorhandenen Core-Prozess: unabhängige kleine Enumeration der tatsächlich dargestellten Daten. Falsche Lehrschlüsse können neue Spieler fehlleiten; sehr geringe Mehrkosten, kein eigener Prozess/Renderer. Keine pauschale Schutzpflicht, sondern positive Nutzenabwägung. |
+| Kapitel/Font/Diagramm/Clip/Wheel-Matrix, 3,705 s innerhalb HIL | Alle zwölf Varianten und 960 Wheel-Aktionen entfallen aus Standard-CI, auch die sieben U01-Kandidaten. Abgeschnittene Hilfe, falsche HZ-Trefferflächen, unerreichbares Ende oder Eingaben auf dem verdeckten Brett können unerkannt bleiben. Mittlere UX-Schwere, konkrete Auslöser sind Helptext-, Layout-, Font- oder GUI-Änderungen; keine gemessene Fehlerhäufigkeit. Nur ausdrückliche Diagnose, kein gleichwertiger Ersatz. |
+| HIL insgesamt, 17,215 s | Settings-Pan, Kapitel-/Scrollgedächtnis, Captureteilnahme, Work-/Catalog-Rückweg und passive Eingaben nicht mehr in dieser realzeitlichen Kette geprüft. Verlorene Position, falscher Rückweg oder unerwartete Zustandsmutation sind akzeptierte Testlücken; das Produkt darf sie weiterhin nicht haben. Semantikprüfung der Beispiele ersetzt diese Kette nicht. |
+| Start, Frozen-Schema-1 und erstes Öffnen, 6,710 s | Bestehende Core-/History-/PCK-Proben prüfen andere Start-/Persistenzaspekte. Spezifische Wiederherstellung von Redo, Werkzeug/Farbe, Zoom und Hinweisankern beim echten Buchöffnen bleibt als Lücke. Hoher Schaden bei Zustandsverlust, plausibler Auslöser ist Änderung der Aktivierungs-/Viewbindung; nur ausdrückliche Lifecycle-Diagnose deckt genau diese Kopplung ab. |
+| Work-Schreibfehler/Retry/Rückkehr, 2,526 s; Catalog-Fehler/Retry/Information, 2,356 s | Core/P13, ZA-1-Save-Recovery und KAT-2-Pages behalten tatsächliche Fehler-/Slot-/Retryproben. Sie sind kein Ersatz für den unbeschleunigten Buch-Flush, blockiertes Beenden oder sichtbares Retry während dieser Folge. Ungesicherter Fortschritt oder ein unbedienbarer Fehlerweg wären schwerwiegend. Teilweise gemeinsame SaveStorelogik rechtfertigt geringere Frequenz, nicht behauptete Abdeckungsneutralität. |
+| Frozen-View, Abbruch, stale callback, falsche ID, Slotwechsel, 4,776 s | Book-Generation-/Capture-Rennen werden nicht mehr realzeitlich durch diese Folge geprüft. Falsches Blatt oder falsche Slotbindung kann bis zu Datenverlust reichen. Hohe Schwere; Änderungen an asynchroner Navigation sind der konkrete Diagnoseanlass. Verbleibende Fremdslotproben prüfen andere Wege. |
+| Work→Settings→Help→Return, 3,878 s; letzte Rückkehr/Freigabe, 2,263 s | Verlust von Optionen/Besuchsursprung oder Ressourcenleck kann unbemerkt bleiben. Komponentenprüfungen mit `book_fixture.gd` stabilisieren synchron und belegen keine echte Bewegungs-/Freigabereihenfolge. Kein zusätzlicher Dauer-Smoke; explizite Diagnose bei betreffenden Änderungen/Befunden. |
+| Backup-only-Recovery, 6,888 s | ZA-1/P13 und KAT-2-KK behalten Recovery-/Fremdslotfälle. Die besondere Kopplung aus read-only Backup, Buch-Informationsseite, sichtbarer Reparatur und geänderter Katalogauswahl wird nur noch anlassbezogen geprüft. Überschriebenes Backup/falscher Slot wäre schwerer Datenverlust; die Produktgarantie bleibt, die reale Kopplungsprobe wird bewusst nicht dauerhaft verlangt. |
+| Leerer/ungültiger Katalog ohne Session, 9,210 s; realer Close, 1,264 s | KAT-2 prüft leere/ungültige Daten, aber nicht diese vollständigen Buchrouten und den tatsächlichen Close. Nicht erreichbare Hilfe/Einstellungen, Absturz oder hängenbleibender Prozess sind akzeptierte Prüflücken. Bei Registry-/Nullsession-/Closeänderungen ist die Diagnose sinnvoll, kein automatisches Pflichtprogramm. |
+| Version/Import und Diagnose-Reader | Kein eigener Standardprozess und keine Standardquell-/Dateipflicht mehr. Regulärer Import, echter Windows-Export, Entrypoint-/Ressourcen-/Player-PCK-Prüfung bleiben in Export; die zusätzliche Diagnosekopie liefert dafür keinen proportionalen Dauernutzen. Der erhaltene manuelle Reader bleibt fail-closed. |
+
+Die Zeiten der Matrix sind in HIL enthalten; CPU wird nicht zur Wandzeit addiert.
+Für seltene Fehler gibt es keine belastbare Frequenzstatistik. Die Entscheidung
+stützt sich auf konkrete Änderungsanlässe, teilweise vorhandene günstigere
+Prüfungen und den hohen wiederkehrenden eigenen Prozessaufwand. Insbesondere
+Save-/Recoverylücken sind ausdrücklich akzeptierte Risiken der Prüfstrategie,
+keine Aufhebung eines Datenversprechens. Kein Produktcode wird geändert.
+
+Andere Core-/History-/Catalog-/Completion-/Adapters-/Graphics-/Exportprüfungen
+bleiben in diesem Paket unverändert, weil ihre Neubewertung einen eigenen
+Folgeschnitt erfordert, nicht weil ihre Namen sie schützen. Auch die unveränderte
+Gruppenauswahl startet den manuellen Lifecycle bei Diagnosequelländerungen nicht.
+T01 im Paket-PR bindet tatsächliche Vorher-/Nachherkosten, Dateien, CPU,
+Runner/Head/Checkout/Run/Attempt; keine garantierte Unterschreitung von 600 s.
+Vollständige ausgewählte CI, getrennter Selbstreview, unabhängiges R01 und
+Eigentümer-Mergefreigabe bleiben getrennt. Kein Chromium oder automatischer Retry.
+
 ## P2-F-B-V01 / #502: risikobasierte ZS2-Core-Stichprobe
 
 Die [beauftragte Vorbereitung](https://github.com/venomenon328/picross/issues/502#issuecomment-6661639913)
@@ -362,7 +429,7 @@ Originaldateien; keine zusätzliche Kompressionsstufe oder Bildproduktion.
 | Catalog Layout / HZ / KE | `kat2_probe.gd`, `hz_native.gd`, `ke_graphics.gd` | Unveränderte native Assertions; `native_images.crop_native` dekodiert KAT-RGBA erneut und prüft Maße/Quellhash, `validate_catalog_images` und `validate_catalog_originals` binden Originale und Inventar. KAT ersetzt den bisherigen strikten Alpha-Loop durch denselben exakten Vertrag. |
 | Catalog / Completion AT | `at_alpha.gd` | Importierte Alpha-Fixture, native Kompositionswerte und `at_evidence.native` lesen tatsächliche Bild-/Papierpixel einschließlich Weißdetails, Alpha 80 und transparentem Hintergrund. Der Standardbibliothek-Decoder unterstützt RGB und RGBA bereits. |
 | Completion statische und gepufferte Bewegungsframes | `ea_probe.gd` | Native Commit-/Save-/Restart-/Zeit-/Geometrieassertions; `ea_product.prepare_images` behält die tatsächlichen Zeitstempel, fünf abgeleitete Phasen und APNG. Kodierung der gepufferten Bewegung erfolgt weiterhin erst nach dem Zeitfenster. |
-| Export sieben HIL-Flächen | `help_native.gd` | Native Hilfe-/Save-/Recoveryassertions; `book_contract.SOURCES` bindet zusätzlich den Encoder, auch im Sparse-Checkout des unabhängigen `validate_book_lifecycle`. Originalmaße 1920×1080, Dateihashes, Assertions und Pack-/Exportgates bleiben Pflicht. |
+| HIL-/Buch-Lifecycle | `help_native.gd`, `book_integration.gd` | Seit P2-F-C/D03 ausschließlich explizite Diagnose, keine Standard-CI-Flächen/Assertions oder Sparse-Quellpflicht; aktueller Risiko-/Resttestvertrag oben. Player-/PCK-Prüfungen bleiben im Export. |
 
 Unverändert bleiben HN-Samples (`hn192_probe`/`hn_evidence`: rohe RGBA-Hashbindung),
 HC92/HS186, Zeichnungs-/Zeitfolgen aus ZS1/ZS2, bereits RGB-kodierte V3-Originale,
@@ -468,12 +535,11 @@ erst nach tatsächlicher Messung als erreicht. Messwerte und Restbefunde im P2-B
 
 ## Studienrückbau · #502 / P2-A
 
-`tools/book_lifecycle.py` enthält ausschließlich den unveränderten kurzen
-Hilfe-/Produktlebenszyklus. `p1_product.py` ruft ihn als
-`regular-book-integration` auf; `validate_book_lifecycle` bleibt das unabhängige
-Ergebnisgate. `book_contract.SOURCES`, alle Pflichtassertions, sieben HIL-Originale,
-Phasen-, Hash-, Head-/Basis-/Checkout-/Run-/Versuchsbindung bleiben erhalten.
-Die manuelle CLI desselben Producers verlangt `--cache-dir` und `--output-dir`.
+P2-A erhielt `tools/book_lifecycle.py` als kurze Hilfe-/Produktprüfung.
+P2-F-C/D03 entfernt jetzt den automatischen Aufruf `regular-book-integration`.
+Nur die explizite Diagnose bindet weiterhin `book_contract.SOURCES`, Assertions,
+drei Phasen, Hashes und Head-/Basis-/Checkout-/Run-/Versuchsidentität.
+Die CLI verlangt `--cache-dir` und `--output-dir` und ruft den unabhängigen Reader auf.
 Es gibt keinen Vollstudien-, Fixturegenerator- oder Studienexportmodus mehr.
 
 Entfernt sind `tools/book_study.py`, dessen exklusive Tests und
@@ -507,9 +573,13 @@ Die Vollstudie lief bereits seit #501 nicht mehr in CI. Ihr Quellenrückbau
 belegt keine CI-Beschleunigung; aktuelle Kosten stehen im P2-A-T01 des PRs.
 Laufzeitoptimierung und neue Größen-/Lebenszyklusguards bleiben P2-B/P3.
 
-## Aktuelle gezielte Buchintegration · HIL-1 / #500
+## Abgelöste CI-Pflicht der gezielten Buchintegration · HIL-1 / #500
 
-Eigentümeranweisung vom 03.11.2026: In CI keine komplette Buchprüfung und keine
+Die folgende Pflicht vom 03.11.2026 ist durch P2-F-C/D03 oben vollständig aus
+der Standard-CI entfernt; P2-C hatte bereits die sieben Bilder abgekündigt.
+Die erhaltene explizite Diagnose liefert nur JSON und Logs.
+
+Historische Eigentümeranweisung vom 03.11.2026: In CI keine komplette Buchprüfung und keine
 Filmproduktion. `regular-book-integration` führt deshalb ausschließlich
 `book-version`, `book-import` und `book-integration` aus. Die letzte Phase nutzt
 den regulären Produktroot mit festen synthetischen Inputs für Hilfe, Navigation
@@ -526,7 +596,7 @@ weder erneut verlangt noch nachträglich als verkürzte Prüfung ausgegeben.
 ## Historischer B-B-Vollumfang / #493, #498
 
 Die folgenden Absätze beschreiben den damaligen Liefernachweis. Für aktuelle
-automatische Läufe gilt ausschließlich der gezielte Umfang oben.
+automatische Läufe gilt ausschließlich der aktuelle P2-F-C-Vertrag oben.
 
 Die Exportgruppe verlangt einmalig `regular-book-integration` und dessen
 [B-B-T01-Belege](B_B_VERIFICATION.md). Das Gate prüft originale Einzelassertions,

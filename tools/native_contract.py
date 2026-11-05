@@ -42,6 +42,8 @@ PATHS = {
         'table.png', 'table.png.import', 'table.json')},
     **{f'game/ui/{name}.gd': GROUPS for name in ('help_panel', 'help_example', 'help_examples')},
     'game/tests/help_cases.gd': ('core',),
+    # Diagnostic-source changes still select ordinary regression/build groups;
+    # these mappings do not schedule the opt-in book lifecycle itself (D03).
     'game/tests/help_native.gd': GROUPS,
     'game/tests/book_fixture.gd': GROUPS,
     'game/tests/book_integration.gd': GROUPS,
@@ -109,7 +111,7 @@ def checks(group, host='Linux'):
                     + [f'za1-pz-test-direct-{c}-{s}' for c in ('mono','color') for s in
                        (('partial','finish','read','reset') if c == 'mono' else ('partial','finish','read','oldreset','reset'))],
         'graphics': ['current-vs2-complete', 'perf-b-native'],
-        'export': ['player-content-import', 'windows-export', 'player-content-pck', 'regular-book-integration'],
+        'export': ['player-content-import', 'windows-export', 'player-content-pck'],
     }
     if host == 'Windows':
         cases['adapters'] += ['za1-windows-exported-start']
