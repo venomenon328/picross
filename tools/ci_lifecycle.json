@@ -212,10 +212,6 @@
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / P2-C-V02 implementer",
       "sources": {
-        ".github/workflows/ci-chromium.yml": {
-          "before": "c615ac948cf860118c0a82c871e61714022a98d8",
-          "after": "1264d4f4f5c743725dce14f24ae7e8eb11b80c14"
-        },
         "game/tests/native_png.gd": {
           "before": null,
           "after": "1b3f5f439e3928d74e23ec5e3b7eaa93472e1a80"
@@ -230,13 +226,6 @@
         }
       },
       "readers": [
-        {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "on:\n  pull_request:",
-          "sources": [
-            ".github/workflows/ci-chromium.yml"
-          ]
-        },
         {
           "path": "game/tests/at_alpha.gd",
           "anchor": "probe.check(preload(\"res://tests/native_png.gd\").write(observations, probe.output.path_join(file)) == OK,\"AT original composition samples\")",
@@ -263,14 +252,14 @@
         "selected": {
           "docs": true,
           "product": true,
-          "production": true,
-          "preflight": true,
+          "production": false,
+          "preflight": false,
           "integration": true,
           "pilots": true,
           "visual": true,
           "perf_b": true,
           "web": false,
-          "delivery": true
+          "delivery": false
         },
         "native_groups": [
           "core",
@@ -281,12 +270,7 @@
           "graphics",
           "export"
         ],
-        "production_groups": [
-          "solver",
-          "images",
-          "adapter",
-          "catalog"
-        ],
+        "production_groups": [],
         "browser_request": null
       },
       "cost": {
@@ -312,10 +296,6 @@
         "game/tests/at_alpha.gd": {
           "before": "fd21559461011ebe02abbf568e5547ff8c2e3213",
           "after": "d71f9da9ccf80ccf2e2eed9ce91855bfe558f87c"
-        },
-        "game/tests/capture.gd": {
-          "before": "5198c392868d58ae29f00c0a82616c560c5db318",
-          "after": "0d369d2a308b699e050fbc610be28686b2fbf9b3"
         },
         "game/tests/ea_probe.gd": {
           "before": "75b7e16dfcd34cedd5eda827975ce79dbff306e7",
@@ -364,10 +344,6 @@
         "game/tests/rp6_capture.gd": {
           "before": "4a053badf8e617d4ebcbad939eaf6b1f5f8376b5",
           "after": "ab9e1ddc9202517ce9a7e64a71ab0026d29bdc0c"
-        },
-        "game/tests/vs2_tests.gd": {
-          "before": "2b6e20f1b555a6b75e55ed4fea894099ec9f3f38",
-          "after": "37b824b41c699a81d00209d637955e4985fcee8f"
         },
         "game/tests/vs2_v1_tests.gd": {
           "before": "7555fe44a67b570db47c0e757aef6b2dc71a2855",
@@ -453,14 +429,6 @@
           "before": "a12568136caa01f09c980b5d5fea5886a606a4ca",
           "after": "b69f6c895252e3de861fde46c2ffe7b67d8e07df"
         },
-        "tools/test_vs2_delivery.py": {
-          "before": "f8532a0c6732977f2a3a09c33e9259ec4a048d07",
-          "after": "7b00aa96bf2cbcc82e947fdecda435fbd9d9f99e"
-        },
-        "tools/vs2_delivery.py": {
-          "before": "6f13d3c8e9f9863e6dfee2547d61c4994de087c1",
-          "after": "972b78ddf29cd5b14cbf9b86e916b137f7793fee"
-        },
         "tools/vs2_v1_verify.py": {
           "before": "1a4c190ee952e4439990b76bf6b7b199b6d13597",
           "after": "9f5c1ab8cb0e15b086b04a2213f731ad363ae373"
@@ -480,13 +448,6 @@
           "anchor": "var alpha_final := await preload(\"res://tests/at_alpha.gd\").sample(self,app.reveal_view,\"final-%d\" % context[0])",
           "sources": [
             "game/tests/at_alpha.gd"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "\"res://tests/capture.gd\"",
-          "sources": [
-            "game/tests/capture.gd"
           ]
         },
         {
@@ -536,13 +497,6 @@
           "anchor": "run_phase(f\"rp6-t{number:02d}-render\", command +\n                      [\"--script\",\"res://tests/rp6_capture.gd\",\"--\",\"--p1-capture\",\"--ci-compact\"], \"RP6_CAPTURE_OK\")",
           "sources": [
             "game/tests/rp6_capture.gd"
-          ]
-        },
-        {
-          "path": "tools/vs2_delivery.py",
-          "anchor": "run_phase(\"vs2-regular-matrix\", [\"res://tests/vs2_tests.gd\" if part == \"res://tests/capture.gd\" else part\n                  for part in render_command], \"VS2_TESTS_OK\")",
-          "sources": [
-            "game/tests/vs2_tests.gd"
           ]
         },
         {
@@ -662,20 +616,6 @@
           "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
           "sources": [
             "tools/test_p1_evidence.py"
-          ]
-        },
-        {
-          "path": ".github/workflows/ci-chromium.yml",
-          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
-          "sources": [
-            "tools/test_vs2_delivery.py"
-          ]
-        },
-        {
-          "path": "tools/p1_product.py",
-          "anchor": "import vs2_delivery",
-          "sources": [
-            "tools/vs2_delivery.py"
           ]
         },
         {
@@ -869,10 +809,6 @@
       "feature": "https://github.com/venomenon328/picross/issues/502",
       "owner": "venomenon328 / P2-D-V01 implementer",
       "sources": {
-        "tools/p1_product.py": {
-          "before": "e73cd9f9b016e52e93249a331fa645dab22be965",
-          "after": "47159b9d7eeb15432dbaf5444e75e871da041792"
-        },
         "tools/za1_product.py": {
           "before": "8121cb512e9399263a8da7baa98b1813b1dd4515",
           "after": "75ef45fd916a6706a86020d8490e90cf14e58b85"
@@ -883,13 +819,6 @@
         }
       },
       "readers": [
-        {
-          "path": ".github/workflows/p1-product.yml",
-          "anchor": "python3 tools/p1_product.py",
-          "sources": [
-            "tools/p1_product.py"
-          ]
-        },
         {
           "path": "tools/p1_product.py",
           "anchor": "import za1_product",
@@ -967,10 +896,6 @@
           "before": "db598591a35e5093a57d3e96e70c34b0dc3419fa",
           "after": "6d158a236ad457192ab97329ddfa825c5df25056"
         },
-        "tools/native_results.py": {
-          "before": "3d0400f79a179e6ad371da484b79a20ae139fdd9",
-          "after": "12131810ec93b8bd57f868c2d56f2433220f4a85"
-        },
         "tools/test_kat2_product.py": {
           "before": null,
           "after": "a326ab491ec71b664dcb81b739987ba7e91a020b"
@@ -996,13 +921,6 @@
           "anchor": "import native_contract",
           "sources": [
             "tools/native_contract.py"
-          ]
-        },
-        {
-          "path": "tools/ci_scope.py",
-          "anchor": "from native_results import validate_all",
-          "sources": [
-            "tools/native_results.py"
           ]
         },
         {
@@ -1054,14 +972,155 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p2-e-b-v01-graphics-sample",
+      "kind": "permanent-small",
+      "purpose": "D02-authorized reduction of VS2 layouts and compact render variants with explicit coverage loss",
+      "level": "Existing native processes and original report paths; two small Python mutation tests and independent JSON/geometry validation",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / P2-E-B-V01 implementer",
+      "sources": {
+        ".github/workflows/ci-chromium.yml": {
+          "before": "1264d4f4f5c743725dce14f24ae7e8eb11b80c14",
+          "after": "1651efdafa1613c2b44985e51dff4892ef07022f"
+        },
+        "game/tests/capture.gd": {
+          "before": "0d369d2a308b699e050fbc610be28686b2fbf9b3",
+          "after": "cb8427b3b65f3d9be26bfe0202b687281eb48e5a"
+        },
+        "game/tests/vs2_h1_cases.gd": {
+          "before": "08b54de389029a2b17c67dbe031bbce240cd5360",
+          "after": "e7bf664f9aef0775cb14f0b94d629dcea16e52be"
+        },
+        "game/tests/vs2_tests.gd": {
+          "before": "37b824b41c699a81d00209d637955e4985fcee8f",
+          "after": "733e1466e569ed59135d36237cd7197e02e95829"
+        },
+        "tools/native_results.py": {
+          "before": "12131810ec93b8bd57f868c2d56f2433220f4a85",
+          "after": "73f128de69a51b5b54b2048bbeb69daccff2629b"
+        },
+        "tools/p1_product.py": {
+          "before": "47159b9d7eeb15432dbaf5444e75e871da041792",
+          "after": "49b02f0bc7294456367ced36f45c2537117b8ad8"
+        },
+        "tools/test_vs2_delivery.py": {
+          "before": "7b00aa96bf2cbcc82e947fdecda435fbd9d9f99e",
+          "after": "ccd1a0f1eaa74daa2f9e85be5d914ff3d83ffe7c"
+        },
+        "tools/vs2_delivery.py": {
+          "before": "972b78ddf29cd5b14cbf9b86e916b137f7793fee",
+          "after": "2463446927a73ce68343941e8c1ddc1397d01ad7"
+        }
+      },
+      "readers": [
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "on:\n  pull_request:",
+          "sources": [
+            ".github/workflows/ci-chromium.yml"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "\"res://tests/capture.gd\"",
+          "sources": [
+            "game/tests/capture.gd"
+          ]
+        },
+        {
+          "path": "tools/vs2_delivery.py",
+          "anchor": "run_phase(\"vs2-regular-matrix\", [\"res://tests/vs2_tests.gd\" if part == \"res://tests/capture.gd\" else part\n                  for part in render_command], \"VS2_TESTS_OK\")",
+          "sources": [
+            "game/tests/vs2_tests.gd"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_vs2_delivery.py"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import vs2_delivery",
+          "sources": [
+            "tools/vs2_delivery.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/p1-product.yml",
+          "anchor": "python3 tools/p1_product.py",
+          "sources": [
+            "tools/p1_product.py"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "from native_results import validate_all",
+          "sources": [
+            "tools/native_results.py"
+          ]
+        },
+        {
+          "path": "game/tests/capture.gd",
+          "anchor": "preload(\"res://tests/vs2_h1_cases.gd\")",
+          "sources": [
+            "game/tests/vs2_h1_cases.gd"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 1,
+        "wall_seconds": 1,
+        "files": 0,
+        "bytes": 0,
+        "pngs": 0
+      },
+      "coverage": "18 of 96 VS2 cases; all 15 frame/reveal metadata cases. Five compact processes, 66 of 158 frames, 400 of 859 pixel checks. Exact surviving variants and accepted gaps in docs/CI_C_NATIVE_GROUPS.md. Save/HN/HF/HS/Atlas/cache/ZS2/Export and all remaining pixel oracles unchanged. D02 https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391 . No coverage-neutrality claim. Cost is conservative added Python reader/test work, not net native runtime; no added evidence fields/files. Sources transferred from prior records, their unrelated guarantees remain. Actual costs bound in delivery P2-E-B-V01-T01.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P2-E-A-V02: three small permanent Python gate/sample test methods; eleven KE/twelve KK checkpoints and five resize measurements in existing original JSONs.",
-    "removed": "D02-authorized KE/KK metadata, tooltip, pointer, resize and size/state cross products; deliberate coverage losses documented in current native contract. No Save/Recovery mode, native phase, original file or product function removed.",
+    "added": "P2-E-B-V01: two small Python mutation test methods; strict original selection, metadata and summary readers using existing reports. No extra native phase or evidence path.",
+    "removed": "78 VS2 layout combinations and 92 compact render frames, with D02-authorized coverage loss. No protected assertions, product changes or foreign data deletion.",
     "temporary": [],
-    "cost_change": "Incremental gate/JSON estimate <=1 CPU/wall second, <=8192 bytes, zero new files/PNGs; net native work reduction measured in V02-T01 against U01 originals. Own local diagnostics under artifacts/502-p2e-v02-local remain until review by 2026-11-19 / V02-R01, no automatic/protected-data cleanup. CI technology 7 days, players 14 days. #502, independent R01 and explicit merge permission remain open."
+    "cost_change": "Added reader/test work estimated <=1 CPU/wall second, zero new files/bytes/PNGs; net native/CI costs measured separately in T01 against 42013628529/1. Own diagnostics artifacts/502-p2eb-local retained for review by 2026-11-19 / V01-R01; no automatic cleanup. Technical retention 7 days, player 14 days. #502, independent R01 and owner merge approval remain open."
   }
 }

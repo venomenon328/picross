@@ -317,17 +317,10 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
             run_phase("render-" + stage, command + ["--script", "res://tests/capture.gd",
                       "--", "--p1-capture", "--ci-compact"], "P1_CAPTURE_OK")
             report = json.loads((renders / f"render-report-{stage}.json").read_text(encoding="utf-8"))
-            if (report.get("failed") or report.get("compact") is not True
-                    or report["rendered_count"] < 1
-                    or report["retained_count"] != len(report["captures"])
-                    or report["retained_count"] > report["rendered_count"]):
-                raise toolchain.PreflightError(f"Incomplete compact native stage: {stage}")
+            vs2_delivery.verify_compact_stage(stage, report)
             reports.append(report)
         environment.pop("P1_RENDER_STAGE", None)
-        combined = dict(stages=len(reports), pixel_checks=sum(r["pixel_checks"] for r in reports),
-                        rendered_count=sum(r["rendered_count"] for r in reports),
-                        retained_count=sum(r["retained_count"] for r in reports),
-                        captures=[c for r in reports for c in r["captures"]], compact=True)
+        combined = vs2_delivery.compact_summary(reports)
         (renders / "render-report.json").write_text(json.dumps(combined, indent=2) + "\n", encoding="utf-8")
         current = output / "drawing-renders"
         current.mkdir()

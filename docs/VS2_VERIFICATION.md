@@ -1,5 +1,16 @@
 # VS2 · reguläre Vollsichtintegration
 
+## Aktuelle Prüfauswahl · #502 / P2-E-B-V01
+
+Der [risikobasierte Grafikvertrag](CI_C_NATIVE_GROUPS.md#risikobasierte-grafikstichprobe--502--p2-e-b-v01-p01)
+ersetzt die bisherige vollständige 96er-Matrix durch 18 ausdrücklich ausgewählte
+Fälle. Die fünf kompakten Renderstufen besuchen zusammen 66 statt 158 Frames.
+D02 akzeptiert die dort einzeln genannten Abdeckungslücken; ältere Mengen in
+diesem Dokument sind historische Lieferstände. Save-/Restart-/GF1-/V2-, HF-/HS-/HN-,
+Atlas-/Cache-/ZS2-/Exportprüfungen und sämtliche 15 VS2-Bildfall-Metadaten bleiben.
+Die unabhängige Ergebnisprüfung liest die reduzierte Auswahl und ihre Originale
+vollständig. Die Produktverträge für Layout, Hinweise und Spielzustand ändern sich nicht.
+
 ## Aktueller Vertrag · Sidebar #65
 
 PR #62 / #61 ist seit 10.10.2026 in main `e323dcf5c83b085144e61707ef98ecab2bfac39b` integriert. Der neue zusammenhängende Stand A+B folgt auf `feat/65-sidebar-frames`; [SL-Umsetzung und Prüfzuordnung](SL65_IMPLEMENTATION.md) ist für die Sidebar maßgeblich. Frühere Draft-/Mergegate-Aussagen zu #62 und dessen V1/N04-Versatz, V3-05/V3-06-Leiste und prozedurale Gruppenfassungen sind historische Paketstände. Sie gelten nicht als aktuelle Bedienanweisung.

@@ -1,5 +1,13 @@
 # Aktuelle CI-Policy
 
+**P2-E-B-V01 / #502:** [Umsetzungsvorbereitung](https://github.com/venomenon328/picross/issues/502#issuecomment-6657459064)
+und D02 erlauben die im [Grafikvertrag](CI_C_NATIVE_GROUPS.md) dokumentierten
+Abdeckungslücken: 18 VS2-Layoutfälle und 66 Frames in weiterhin fünf getrennten
+kompakten Renderstufen. Verbleibende Originale und Summen werden unabhängig
+validiert; geschützte Save-/Hinweis-/Pixel-/Ressourcen-/Exportwege, Budgets,
+Gruppenauswahl und Retention bleiben unverändert. Keine Abdeckungsneutralität
+oder gleich große Verkürzung des kritischen CI-Pfads behaupten.
+
 **P2-E-A-V02 / #502:** [D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
 erlaubt ausdrücklich weniger native KE-/KK-Varianten ohne Ersatzorakel. Der
 [aktuelle Stichprobenvertrag](CI_C_NATIVE_GROUPS.md) bindet Auswahl, bewusst

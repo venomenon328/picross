@@ -13,7 +13,7 @@ Kosten und Reviewfrist stehen im Audit. 423+5+7 ist ausschließlich die Baseline
 HZ-/KE-/HC-Einführungsbilder, separate V1-/V3-/Z2-Läufe, ZS-Studienmatrix,
 EA-Film/Phasenbilder und HIL-Sichtdateien sind keine aktive Pflicht mehr.
 Die dazugehörige Produktion, Reader, Prozess-/Bildinventare und Gates entfallen.
-Mit der unten geregelten KE-/KK-Ausnahme P2-E-A-V02 behalten
+Mit den unten geregelten Ausnahmen P2-E-A-V02 und P2-E-B-V01 behalten
 KAT/HF/V2/ZA1/RP6/PERF/Raster ihre aktuellen Fach-/Pixel-/Saveassertions
 ohne Erfolgsbilder. Aktuelle Layoutmathematik nutzt die vorhandenen VS2-Messungen.
 HS liest fünf temporäre Layerbilder, ZS 24 temporäre Bewegungs-Crops; beide
@@ -34,6 +34,59 @@ Die 300-/KK-600-s-Grenzen, Scheduler und funktionalen Zeitfenster ändern sich n
 Das CI2-Ziel unter zehn Minuten bleibt ein Optimierungsbefund.
 P3-B-D01 verwirft den alten 75-MiB-Richtwert und feste Mengenobergrenzen.
 
+
+## Risikobasierte Grafikstichprobe · #502 / P2-E-B-V01-P01
+
+Die [verbindliche Umsetzungsvorbereitung](https://github.com/venomenon328/picross/issues/502#issuecomment-6657459064)
+und [D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
+erlauben ausdrücklich den folgenden Verlust automatischer Abdeckung.
+Ausgangsbasis ist `d5d3a0c5c7ab1a0e79a4133e5ea47cd675cf02cf`,
+Vergleichslauf 42013628529/1. Dies ist keine abdeckungsneutrale Konsolidierung.
+
+Die VS2-Matrix sinkt von 96 auf 18 Fälle (G/V sind die beiden Ansichten):
+
+| Client/UI | Beibehaltene Fälle | Zweck |
+|---|---|---|
+| 1280×720/125 | T-01 G; T-02 G/V; T-06 G/V; VS06 V; VS09 G | enger Mono-/Farbfall, großes Raster, beide bisher ungültigen V-Geometrien, breites Rechteck |
+| 1920×1080/100 | T-01 G; T-06 G; VS04 G/V; VS08 G/V; VS09 G/V | sämtliche bisherigen acht Rahmenpixel-Fälle |
+| 2560×1440/125 | T-02 G/V; VS07 V | großer Farbfall und hohes Rechteck |
+
+Die übrigen 78 Kombinationen entfallen ohne gleichwertigen Ersatz. Beispielsweise
+können ein nur bei T-08 auftretender Hinweisüberlauf oder ein ausschließlich bei
+VS03/1280/V falsches Fit-Limit unentdeckt bleiben. Die Assertions pro gewähltem
+Fall bleiben: unabhängige Layout-/Schriftmathematik, Fit/Zoom, Ecktreffer,
+gesperrte Eingabe bei ungültiger Geometrie und passive proportionale Miniatur.
+Alle 15 Bildfall-Metadaten einschließlich echter vierseitiger Rahmenpixel und
+die gesonderten fünf Rechteck-Eingabe-/Undo-/Reveal-Fälle bleiben erhalten.
+
+Die fünf getrennten kompakten Renderprozesse bleiben. Ihre Auswahl wird:
+
+| Stufe | Vorher → danach (Frames) | Entfall und akzeptiertes Risiko |
+|---|---:|---|
+| layout | 10 → 3 | Album, enger T-06 mit unabhängigen Slots und normaler T-02 bleiben. Sieben reine Aufnahmen ohne eigene Pixelassertion entfallen; deren zustandsabhängige Renderfehler werden nicht mehr durch diese Aufnahmen ausgelöst. |
+| cells-f1 | 18 → 10 | Schritte 12/16/18/24/72 bleiben, 22 und reine Removal-Aufnahmen entfallen. Ein nur bei 22 oder in der Removal-Komposition sichtbarer Fehler kann durchrutschen. |
+| cells-f2 | 36 → 13 | Bestätigte Füllungen aller Farben bei jedem gewählten Schritt; Preview aller Farben bei 24, sonst Farbe 1. Fehler einer anderen Previewfarbe nur bei kleinem/großem Schritt sind nicht mehr direkt geprüft. |
+| axis | 76 → 30 | Zehn feste Fälle unverändert. ZR: alle elf Positionen bei 1280/UI125/Zoom12; bei Zoom72 Cursor und gegenüberliegende Ecken (0/7/10) in allen drei Clients. 46 weitere ZR-Kreuzungen entfallen; z. B. ein nur rechts bei 2560/Zoom12 abgeschnittener Zähler kann unentdeckt bleiben. |
+| h1 | 18 → 10 | Off/On bei eng/G, normal/V und groß/V; Mono-/Farb-Reveal und Album bleiben. Drei weitere Ansichts-/Client-Paare und dritter Reveal entfallen; z. B. ein ausschließlich großes G betreffender Strichfehler bleibt möglich. |
+
+Zusammen 158 → 66 Frames. Füll-/Moat-/Alpha-Pixelassertions, beide vorhandenen
+Zellpixelmutanten, ZR-Glyph-/Hintergrund-/Randprüfung und H1-Token-/Cache-/Raster-/
+Miniaturassertions werden in den verbleibenden Fällen unverändert ausgeführt.
+HN/HF/HS, VS2-Save/Restart/V2/GF1, ZS2-Bewegungsoriginale und Mutanten,
+Atlas-/Cache-/Ressourcenprüfungen, PERF-B sowie Buch-/Playerexport bleiben
+unverändert. Es gibt keine Produktänderung, neue native Phase oder Erfolgs-PNG.
+Producer und unabhängiger Ergebnisleser verlangen exakt diese Auswahl;
+fehlende, doppelte und fremde Fälle sowie widersprüchliche Summen schlagen fehl.
+
+Baseline: Matrix 101,988 s, fünf Stufen 96,872 s, Grafikgruppe 495,543 s,
+gesamter nativer Lauf 806,678 s. Die Grafik endete bereits vor den seriellen
+Adaptern; eingesparte Grafikzeit ist daher kein behaupteter gleich großer
+Gewinn auf dem kritischen CI-Pfad. Tatsächliche Nachherzeiten, CPU-Zeit soweit
+gemessen, Dateizahlen/Bytes/PNGs, Selbstreview und ausgewählte Pflicht-CI werden
+im P2-E-B-V01-T01 der Liefer-PR an deren exakten Stand gebunden.
+Technische Artefakte bleiben sieben, Player vierzehn Tage erhalten; keine
+neuen Mengenlimits und keine Löschung geschützter oder fremder Daten.
+Unabhängiges R01 und ausdrückliche Eigentümerfreigabe bleiben vor Merge offen.
 
 ## Risikobasierte Katalogstichprobe · #502 / P2-E-A-V02
 

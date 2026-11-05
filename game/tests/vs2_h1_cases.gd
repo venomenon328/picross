@@ -23,6 +23,8 @@ static func run(c: SceneTree, app: Control) -> void:
 		app.size = Vector2(dims)
 		app.set_ui_scale(ui)
 		for mode: int in range(2):
+			if c.compact and mode != (0 if dims.x == 1280 else 1):
+				continue
 			app.set_puzzle_view(mode)
 			app.board.restore_view(app.board.capture_view().merged({"zoom":24,"overview":false},true))
 			await c.process_frame
