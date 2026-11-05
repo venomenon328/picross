@@ -1,5 +1,12 @@
 # Aktuelle CI-Policy
 
+**P2-E-A-V02 / #502:** [D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
+erlaubt ausdrücklich weniger native KE-/KK-Varianten ohne Ersatzorakel. Der
+[aktuelle Stichprobenvertrag](CI_C_NATIVE_GROUPS.md) bindet Auswahl, bewusst
+akzeptierte Prüflücken, Checkpoints und reale Resize-Grenzwerte. Die unabhängige
+Ergebnisprüfung bleibt für alle verbleibenden Fälle fail-closed. Save/Recovery,
+übrige Modi, Zeitfenster, 300-/KK-600-s-Schutz und CI-Auswahl bleiben unverändert.
+
 **P3-B-L01 / #502:** [P3-B-D01](https://github.com/venomenon328/picross/issues/502#issuecomment-6641721279)
 ersetzt frühere numerische P3-B-Gesamtgrenzen durch Zweck, tatsächliche Leser,
 Featureabschluss und Aufbewahrung. Technische Erfolg-/Fehlerbelege sieben Tage,
@@ -21,7 +28,7 @@ Stand: 26.10.2026 · Version 3.3 · [CI2-Spezifikation #412](https://github.com/
 **P3-A-F02 / #502, Eigentümerentscheidung 04.11.2026:** Ausschließlich
 `kat2-kk` erhält während der Laufzeit bei 300 s eine nicht-blockierende Warnung
 und bei 600 s einen harten Timeout. Erfolg dazwischen bleibt bei sämtlichen
-bisherigen Assertions, Markern und Belegen zulässig. Alle anderen Phasen behalten
+jeweils ausgewählten Assertions, Markern und Belegen zulässig. Alle anderen Phasen behalten
 ihre bestehenden Grenzen; der Workflowparameter bleibt 300 s. Der
 [native Belegvertrag](CI_C_NATIVE_GROUPS.md#phasenschutz--502--p3-a-f02)
 bindet Laufzeit, Budget und Warn-/Timeoutstatus. Diese selektive Ausnahme ersetzt

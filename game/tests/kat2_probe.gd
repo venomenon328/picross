@@ -15,6 +15,9 @@ var timings: Dictionary = {}
 var quit_slot_hashes: Dictionary = {}
 var kb_measurements: Array = []
 var kk_measurements: Array = []
+var catalog_cases: Array = []
+var case_checks: int = 0
+var ke_resize_samples: Array = []
 var kk_pointer_measurements: Array = []
 var at_measurements: Array = []
 
@@ -214,9 +217,16 @@ func run() -> void:
 	write_report()
 	quit(0 if failures.is_empty() else 4)
 
+func catalog_case(id: String) -> void:
+	# Checkpoints bind selected native paths to the independent result reader.
+	catalog_cases.append({"id":id,"checks":checks-case_checks})
+	case_checks = checks
+
 func write_report() -> void:
 	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	report["at_measurements"] = at_measurements
+	if mode in ["ke","kk"]: report["catalog_cases"] = catalog_cases
+	if mode == "ke": report["resize_samples"] = ke_resize_samples
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
@@ -791,11 +801,11 @@ func catalog_labels() -> void:
 	for index: int in range(app.sessions.size()):
 		var value: Variant = null
 		if levels[index] != null:
-			value = {"method":"picross-difficulty-0.4" if index % 2 else "picross-difficulty-0.3","level":levels[index],"assessment_type":"instrumented","confidence":"medium","plausible_range":[levels[index],levels[index]],"r4_required":index == 5}
+			value = {"method":"picross-difficulty-0.4","level":levels[index],"assessment_type":"instrumented","confidence":"medium","plausible_range":[levels[index],levels[index]],"r4_required":index == 5}
 		app.album.metadata[app.sessions[index].definition.id]["difficulty"] = value
 		for entry: Dictionary in Registry.cached.entries:
 			if entry.id == app.sessions[index].definition.id: entry.difficulty = value
-	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0]]:
 		surface.size = Vector2i(spec[0],spec[1])
 		app.set_ui_scale(float(spec[2]))
 		app.album._render(0)
@@ -827,15 +837,17 @@ func catalog_labels() -> void:
 			kk_measurements.append({"ku_surface":spec,"card_width":card.size.x,"minimum_width":card.minimum_card_width(app.ui_scale),"metadata_widths":card.metadata_widths(app.ui_scale),"label":card.difficulty.text,"circle_color":card.difficulty_icon.ink_color.to_html(false),"strip":card.label_area,"footer_y":card.note.position.y})
 		check(app.choices[1].difficulty.text == "Sehr leicht" and app.choices[5].difficulty.text == "Sehr schwer","KU-A full scale without numbers survives UI rebuilds")
 		await shot("labels-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
+		catalog_case("ke-layout-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
+		# Mutations, readbacks and input are sampled only at tight UI125.
+		if spec[0] != 1280: continue
 		var first: Card = app.choices[0]
 		var unknown_pixels: PackedByteArray = await button_pixels(first.unknown)
 		first.preview.width = app.choices[1].preview.width
 		first.preview.height = app.choices[1].preview.height
 		first.layout_content()
 		check(unknown_pixels == await button_pixels(first.unknown),"KE unknown drawing is invariant under distinct puzzle dimensions")
-		# All assessment shapes use the same tooltip-free label, including native
-		# Label's fallback for clipped text. These mutations are synthetic only.
-		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.1","level":"L5","assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false},{"method":"picross-difficulty-0.2","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true},{"method":"picross-difficulty-0.3","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true}]:
+		# Current/null plus one editorial legacy shape; no legacy x viewport matrix.
+		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.1","level":"L5","assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false}]:
 			first.set_metadata(50,50,false,value)
 			await frames()
 			await RenderingServer.frame_post_draw
@@ -844,40 +856,47 @@ func catalog_labels() -> void:
 			check(center_pixel.is_equal_approx(expected_color),"KU-A filled circle has the prescribed native centre pixel")
 			await hover(first.caption)
 			check(first.difficulty.tooltip_text.is_empty() and first.difficulty.get_tooltip().is_empty() and first.tooltip_ref == null,"KU-A every metadata shape is tooltip-free")
-			if value != null and value.method == "picross-difficulty-0.3" and value.r4_required:
+			if value != null and value.method == "picross-difficulty-0.4" and value.r4_required:
 				for part: Control in [first.difficulty_icon,first.difficulty]:
 					await hover(part)
 					await create_timer(0.8).timeout
 					check(visible_popups() == 0,"KU-A actual delayed circle/text hover has no popup")
-			if value != null and value.method == "picross-difficulty-0.3" and value.r4_required:
+			if value != null and value.method == "picross-difficulty-0.4" and value.r4_required:
 				await shot("no-tooltip-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
-			app.set_ui_scale(1.0 if app.ui_scale == 1.25 else 1.25)
-			await frames()
-			app.set_ui_scale(float(spec[2]))
-			await frames()
-			first = app.choices[0]
+		catalog_case("ke-metadata-null-current-legacy-and-negative-hover")
+		app.set_ui_scale(1.0)
+		await frames()
+		app.set_ui_scale(float(spec[2]))
+		await frames()
+		first = app.choices[0]
 		check(card_geometry() == geometry,"KE metadata and UI roundtrip preserve all rectangles")
 		await hover(first.mode_tip)
 		await create_timer(0.8).timeout
 		check(first.mode_tip.tooltip_ref != null and first.mode_tip.tooltip_ref.get_ref() != null,"KE native mode tooltip")
-		for part: String in ["dimensions","difficulty_icon","difficulty","mode_tip","paper","leaf","status_icon","note"]:
-			click(app.choices[0].get(part))
+		catalog_case("ke-roundtrip-and-mode-tooltip")
+		for part: String in ["card","difficulty_icon"]:
+			click(app.choices[0] if part == "card" else app.choices[0].get(part))
 			await frames()
 			check(app.work.visible and app.session.definition.id == "T-01","KE passive label click opens owning card: "+part)
 			app.show_album()
 			await frames()
-	# Grow the physical book at 16:9 through the supported layout range. A wider
-	# window alone leaves this height-fitted book at the same physical scale.
-	var previous_columns: int = 0
-	var transitions: int = 0
-	for width: int in range(1280,2561,32):
-		surface.size = Vector2i(width,roundi(width*9.0/16.0))
-		await frames()
-		if previous_columns > 0 and app.album.grid.columns != previous_columns: transitions += 1
-		previous_columns = app.album.grid.columns
-		for card: Card in app.choices:
-			check(card.size == app.choices[0].size and card.size.x >= card.minimum_card_width(app.ui_scale),"KU-A column transition preserves shared measured geometry")
-	check(transitions > 0,"KU-A resize crosses a new column threshold")
+			catalog_case("ke-pointer-"+part)
+	# Three reference sizes and a measured two-column boundary pair. The book
+	# grows with height; fixed-height window numbers would not be boundaries.
+	app.set_ui_scale(1.25)
+	for width: int in [1280,1920,2560]:
+		await ke_resize(width,"reference")
+	var middle: Dictionary = ke_resize_samples[1]
+	var large: Dictionary = ke_resize_samples[2]
+	var slope: float = (large.available-middle.available)/(large.width-middle.width)
+	check(slope > 0,"KE projected book grows between normal and large reference")
+	if slope > 0:
+		var threshold: float = 2*large.minimum_width+large.gap
+		var crossing: float = middle.width+(threshold-middle.available)/slope
+		await ke_resize(floori(crossing)-8,"below")
+		await ke_resize(ceili(crossing)+8,"above")
+		check(ke_resize_samples[3].columns == 1 and ke_resize_samples[4].columns == 2,"KE measured pair crosses actual two-column threshold")
+	catalog_case("ke-resize-boundary")
 	# Wrong own fill, X-only and redo-only are deliberately distinct from Neu.
 	var item: Session = app.sessions[0]
 	item.gesture.begin(item.player,Vector2i(0,0),1)
@@ -897,6 +916,18 @@ func catalog_labels() -> void:
 	await frames()
 	check(empty == await button_pixels(app.choices[0].preview) and not app.choices[0].unknown.visible,"KE X-only preview is neutral like empty begun preview")
 	await shot("x-only")
+	catalog_case("ke-own-fill-undo-x-spoiler")
+
+func ke_resize(width: int, role: String) -> void:
+	surface.size = Vector2i(width,roundi(width*9.0/16.0))
+	await frames()
+	var minimum: float = app.choices[0].minimum_card_width(app.ui_scale)
+	var gap: int = roundi(12*app.ui_scale)
+	var available: float = maxf(1,app.album.scroll.size.x-app.album.scroll.get_v_scroll_bar().get_combined_minimum_size().x-2*app.ui_scale)
+	for card: Card in app.choices:
+		check(card.size == app.choices[0].size and card.size.x >= minimum,"KE resize preserves shared measured geometry")
+	check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0,"KE resize has no horizontal overflow")
+	ke_resize_samples.append({"width":width,"height":surface.size.y,"ui_scale":app.ui_scale,"role":role,"minimum_width":minimum,"gap":gap,"available":available,"columns":app.album.grid.columns})
 
 func fixed_cards() -> void:
 	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
@@ -917,12 +948,15 @@ func fixed_cards() -> void:
 			check(card.image_area.encloses(Rect2(card.preview.position,card.preview.size)),"KK proportional own preview inside fixed area")
 			check(is_equal_approx(card.preview.size.x/card.preview.size.y,float(card.preview.width)/card.preview.height),"KK own preview preserves aspect")
 		await shot("new-%d" % spec[0])
+		catalog_case("kk-basic-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
+		if spec[0] != 1280: continue
 		# Actual validated empty save stays new, while the same slot's redo-only
 		# history stays begun. The native card controls are rebuilt in each step.
 		check(app._save_current(),"KK valid empty save written")
 		app.show_album()
 		await frames()
 		check(card_geometry() == initial and not app.album.reset_buttons["T-01"].visible,"KK empty save never changes geometry or reset visibility")
+		catalog_case("kk-empty-save")
 		click(app.choices[0])
 		await frames()
 		click_at(app.board.global_position+app.board.view.cell_rect(Vector2i(2,0)).get_center())
@@ -932,6 +966,7 @@ func fixed_cards() -> void:
 		check(card_geometry() == initial and app.choices[0].note.text == "Begonnen" and app.choices[0].reset.visible,"KK pointer edit/undo changes status but no rectangles")
 		check(app.album.previews[0].cells == app.sessions[0].player.cells and app.album.reveals[0].payload.is_empty(),"KK uncorrected own state and no early reveal")
 		await shot("begun-%d" % spec[0])
+		catalog_case("kk-pointer-edit-undo-spoiler")
 		# Finish the fixed synthetic input via the normal Session boundary.
 		var item: Session = app.sessions[0]
 		for y: int in range(item.player.height):
@@ -951,6 +986,7 @@ func fixed_cards() -> void:
 		app.choices[0].status_icon.kind = "Gelöst"
 		app.choices[0].status_icon.queue_redraw()
 		await shot("solved-%d" % spec[0])
+		catalog_case("kk-solved-save-reveal-pixels")
 		for aspect: Vector2i in [Vector2i(320,80),Vector2i(80,320)]:
 			var image: Image = Image.create(aspect.x,aspect.y,false,Image.FORMAT_RGBA8)
 			image.fill(Color("376a60"))
@@ -961,6 +997,7 @@ func fixed_cards() -> void:
 			check(Rect2(Vector2.ZERO,app.choices[0].picture.size).encloses(fitted) and is_equal_approx(fitted.size.x/fitted.size.y,float(aspect.x)/aspect.y),"KK wide/tall earned image fits completely without distortion")
 			check(card_geometry() == initial,"KK image aspect never changes grid geometry")
 			kk_measurements.append({"surface":spec,"artwork_size":aspect,"fitted":fitted})
+		catalog_case("kk-wide-tall-artwork")
 		item.definition.reveal.name = "TEST ONLY Ein außerordentlich langer verdienter Motivname mit Umlauten und mehr als zwei möglichen Zeilen ohne Änderung der Kachelgeometrie"
 		app.show_album()
 		await frames()
@@ -989,6 +1026,7 @@ func fixed_cards() -> void:
 		app.set_ui_scale(u)
 		await frames()
 		check(card_geometry() == initial,"KK UI roundtrip restores exact rectangles")
+		catalog_case("kk-long-name-reset-tooltip-roundtrip")
 		await choose("fahrzeuge-verkehr")
 		check(app.choices[0].size == initial[0].card.size and app.choices[0].image_area == initial[0].image and Rect2(app.choices[0].note.position,app.choices[0].note.size) == initial[0].status,"KK category removal reserves same metadata/image/footer space")
 		var foreign: Dictionary = save_bytes("t01")
@@ -1005,17 +1043,20 @@ func fixed_cards() -> void:
 		check(card_geometry() == initial and app.choices[0].caption.text == "???" and not app.choices[0].reset.visible,"KK reset returns exact original geometry with no stale hit")
 		await shot("reset-%d" % spec[0])
 		kk_measurements.append({"surface":spec,"initial":initial,"after_reset":card_geometry(),"columns":app.album.grid.columns})
+		catalog_case("kk-reset-target-foreign-slots")
 	await recovery_pointer_cases()
-	# A small resize band crosses real column thresholds, no content-dependent
-	# width/height response or horizontal catalogue scroll is allowed.
-	for width: int in [1279,1281,1599,1601,1919,1921]:
+	catalog_case("kk-recovery-pointer")
+	# Aspect endpoints only; actual column boundary coverage belongs to KE.
+	for width: int in [1279,1921]:
 		surface.size = Vector2i(width,1080)
 		app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		await frames()
 		for card: Control in app.choices: check(card.size == app.choices[0].size,"KK resize has one shared geometry")
-		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0,"KK column boundary has no horizontal scroll")
+		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0,"KK aspect endpoint has no horizontal scroll")
 		kk_measurements.append({"resize_width":width,"columns":app.album.grid.columns,"geometry":card_geometry()})
+	catalog_case("kk-aspect-endpoints")
 	await empty_write_error()
+	catalog_case("kk-empty-write-error")
 
 func pointer_button(point: Vector2, button: MouseButton, down: bool, mask: int = 0) -> void:
 	var event: InputEventMouseButton = InputEventMouseButton.new()

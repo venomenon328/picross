@@ -125,6 +125,8 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
         report = json.loads((directory / (mode + ".json")).read_text(encoding="utf-8"))
         if report["failures"] or not report["checks"]:
             raise toolchain.PreflightError("KAT2 native assertions failed")
+        from native_results import validate_catalog_cases
+        validate_catalog_cases(report)
         if mode == "information":
             after_quit = {p.name: toolchain.sha256_file(p) for p in (saves / "error-quit").iterdir() if p.is_file()}
             if not report["quit_slot_hashes"] or after_quit != report["quit_slot_hashes"]:
