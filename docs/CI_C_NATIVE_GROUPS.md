@@ -13,7 +13,8 @@ Kosten und Reviewfrist stehen im Audit. 423+5+7 ist ausschließlich die Baseline
 HZ-/KE-/HC-Einführungsbilder, separate V1-/V3-/Z2-Läufe, ZS-Studienmatrix,
 EA-Film/Phasenbilder und HIL-Sichtdateien sind keine aktive Pflicht mehr.
 Die dazugehörige Produktion, Reader, Prozess-/Bildinventare und Gates entfallen.
-KAT/HF/V2/ZA1/RP6/PERF/Raster behalten ihre aktuellen Fach-/Pixel-/Saveassertions
+Mit der unten geregelten KE-/KK-Ausnahme P2-E-A-V02 behalten
+KAT/HF/V2/ZA1/RP6/PERF/Raster ihre aktuellen Fach-/Pixel-/Saveassertions
 ohne Erfolgsbilder. Aktuelle Layoutmathematik nutzt die vorhandenen VS2-Messungen.
 HS liest fünf temporäre Layerbilder, ZS 24 temporäre Bewegungs-Crops; beide
 prüfen echte Originale und Pixelmutanten vor dem Löschen. Die Arbeitsmessung
@@ -33,6 +34,66 @@ Die 300-/KK-600-s-Grenzen, Scheduler und funktionalen Zeitfenster ändern sich n
 Das CI2-Ziel unter zehn Minuten bleibt ein Optimierungsbefund.
 P3-B-D01 verwirft den alten 75-MiB-Richtwert und feste Mengenobergrenzen.
 
+
+## Risikobasierte Katalogstichprobe · #502 / P2-E-A-V02
+
+[Auftrag P01](https://github.com/venomenon328/picross/issues/502#issuecomment-6655568794)
+und [Eigentümerentscheidung D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
+ersetzen für KE/KK ausdrücklich die bisherige Abdeckungsneutralität. Dieser
+Abschnitt ist der aktuelle Dauerprüfvertrag; frühere vollständige Größen-/Status-/
+Metadatenkreuzprodukte in KE/KU/KK-Berichten sind keine zusätzliche Pflicht.
+Produktfunktionen und Unterstützung der Difficulty-Methoden 0.1–0.4 ändern sich nicht.
+
+| Fallgruppe | Bisher / jetzt regulär | Bewusst verlorene Erkennung und Risikobegründung |
+| --- | --- | --- |
+| KE Grunddarstellung | Drei Flächen → 1280×720/UI125 und 1920×1080/UI100, jeweils null und aktuelle L1–L5, Schrift-/Metadaten-/Footer-/Spoilergeometrie | Nur bei 2560×1440 auftretende Metadaten-/Iconfehler werden nicht mehr in dieser Detailmatrix entdeckt. Enge Fläche und beide UI-Rollen bleiben; geringe kosmetische Wirkung ohne Saveeingriff. |
+| KE Mutation/Readback | 3×5 Formen → einmal null, aktive 0.4 und editoriale 0.1 mit breitem plausible_range; native Kreismitte, unbekanntes Motiv größeninvariant; ein UI-Rundweg statt 15 | 0.2-/0.3-spezifische native Farbe, Hover oder Geometrie sowie nur bei anderer Größe auftretende Legacyfehler können entgehen. Vorhandene günstige Core-/Schema-Kompatibilitätsprüfungen bleiben, ersetzen diese Grafikfälle aber nicht. |
+| KE Tooltip | Negativer verzögerter Kreis-/Texthover und positiver Modustooltip jeweils einmal unter UI125, unveränderte 0,8-s-Wartefenster | Legacy-/größenspezifische Popups oder fehlende Modushilfe bei anderer Größe werden nicht mehr vollständig beobachtet; begrenzte Bedienhilfe, keine Integritätswirkung. |
+| KE Resize | 41 Breiten → fünf: 1280, 1920, 2560 bei 16:9/UI125 plus abgeleitetes Grenzpaar | Zwischenbreiten und weitere Spaltengrenzen können Clipping-/Rundungsfehler verbergen. Beide Seiten einer echten Grenze sowie schmal/normal/groß bleiben; kein Anspruch auf alle Pixelabstände. |
+| KE Pointer | 8 Kindflächen × 3 Größen → einmal echte Karte und überlagernder Difficulty-Kreis unter UI125 | Ausschließlich auf Papier, Blatt, Status, Notiz, Modus oder Text beziehungsweise bei anderer Skalierung verlorene Klicks werden nicht mehr einzeln gefunden. Repräsentative echte Ereignisse bleiben, keine gleichwertige Hitflächenabdeckung. |
+| KE eigene Vorschau | Falsche eigene Füllung → Undo/Redo-only → X-only unverändert einmal | Kein Verzicht auf die bestehende Spielstand-/Spoileraussage. |
+| KK Zustand/Bild/Tooltip | Drei volle Ketten → eine bei 1280×720/UI125; UI100/1920 und UI125/2560 prüfen nur frische Grundgeometrie, Schrift, Status-/Reset-/Spoilergrenzen | Nur bei entfernter Größe und Begonnen/Gelöst/langem Namen/Reset auftretende Clips, Bild-/Häkchen-/Tooltipfehler können entgehen. Der enge Fall schützt den kompletten Lebenszyklus; die weggefallenen Größenkreuzprodukte werden bewusst nicht ersetzt. |
+| KK Resize | Sechs feste Zahlen → zwei Seitenverhältnis-Endpunkte 1279×1080 und 1921×1080 | Mittlere Seitenverhältnisse ohne Vollmatrix. Dies sind keine behaupteten Spaltenwechsel; der echte Grenzfall liegt in KE. |
+| KK Save/Recovery | Vollständiger Save-/Resetpfad einmal; recovery_pointer_cases und empty_write_error unverändert vollständig | Keine Streichung ihrer Fehler-, Fremdslot-, Ziel-ID-, Flush-, Reparatur-, Drag-/Rad-/Mauscapturegarantien. |
+
+KKs vollständige enge Kette enthält frisch/leeren Save, echte Pointerbearbeitung
+mit Undo, Begonnen ohne Reveal, Lösung über Session/Gesten und tatsächliches Save,
+Gelöst mit verdientem Titel und unabhängigem Häkchen-Pixelvergleich, breites/hohes
+Bild, langen Namen/Kategorie, negativen Karten-/positiven Resettooltip samt
+UI-Rundweg und bestätigten Reset bei Filterwechsel mit Fremdslot-Bytevergleich.
+Die weiteren neun Katalogmodi, Core, Graphics, Export/PCK bleiben unverändert.
+Elf echte native Spielprozesse und deren bestehende Projekt-/Profilisolation bleiben.
+
+Die Resize-Stichprobe misst verfügbare Scrollbreite abzüglich Balkenreserve und
+2×UI sowie Kartenminimum und Spaltengap. Aus den Messungen bei 1920/2560 wird
+bei gleichem Seitenverhältnis die physische Zweispaltengrenze interpoliert:
+`available = 2 * minimum_width + gap`. Das Paar liegt acht Pixel unter dem
+abgerundeten beziehungsweise über dem aufgerundeten Schnitt. Beide nativen
+Messungen müssen tatsächlich eine beziehungsweise zwei Spalten zeigen; ansonsten
+scheitert die Prüfung. Das Gate prüft zusätzlich Herleitung, 16:9, UI125,
+Referenzgrößen, identisches Minimum und gemessene Spaltenzahl. Keine willkürlichen
+Pseudo-Grenzzahlen und keine neue Suchschleife durch Zwischenbreiten.
+
+`CATALOG_CASES` in `native_contract.py` bindet elf KE- und zwölf KK-Checkpoints in
+Ausführungsreihenfolge. `kat2_probe.gd` meldet dort die tatsächlich seit dem letzten
+Checkpoint ausgeführten Checks; positive Anzahl und Summe müssen dem Original
+entsprechen. Producer und unabhängiger `native_results.py` lesen die verbleibenden
+Fälle und KE-Resize-Messwerte. Die Checkpoints belegen Pfadausführung, keine
+Ersatzorakel für gestrichene Varianten. Native Assertions und Gesamtfehlerliste
+bleiben maßgeblich. Alle Originaldateien, elf Phasen, Summarygleichheit, Hashes und
+Source/Base/Test-Merge/Run/Attempt bleiben unabhängig gebunden; das vorhandene
+Artefaktinventar bleibt unverändert. Drei kleine Python-Testmethoden prüfen
+Auswahl, fehlende/doppelte/unausgeführte Fälle und gefälschte Grenzbelege.
+
+Die gestrichenen Kreuzprodukte sind aus der Standard-CI entfernt, nicht heimlich
+in einen anderen Pflichtjob verlagert. Eine gezielte künftige Untersuchung einer
+konkreten Regression kann sie auf eigenen Auftrag wieder aufgreifen. Historische
+U01-Originale bleiben die Baseline. T01 am Liefer-PR bindet reale Linux-/Godot-/
+Xvfb-/Mesa-Kosten je KE, KK, Catalog, Gesamtauswahl und kritischem Pfad sowie
+bewusste Prüflücken. Keine isolierte Windowszeit als Linuxvergleich, keine
+unbelegte 1:1-Verkürzung der Gesamtlaufzeit. KK-Warnung 300 s/Schutz 600 s,
+übrige Phasenbudgets, fachliche Timer, Scheduler und CI2-Ziele bleiben unverändert.
+Unabhängiges P2-E-A-V02-R01 und ausdrückliche Mergefreigabe bleiben offen.
 
 ## Adaptervorbereitung · #502 / P2-D-V01
 
