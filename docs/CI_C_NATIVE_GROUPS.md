@@ -74,7 +74,7 @@ scheitert die Prüfung. Das Gate prüft zusätzlich Herleitung, 16:9, UI125,
 Referenzgrößen, identisches Minimum und gemessene Spaltenzahl. Keine willkürlichen
 Pseudo-Grenzzahlen und keine neue Suchschleife durch Zwischenbreiten.
 
-`CATALOG_CASES` in `native_contract.py` bindet acht KE- und zwölf KK-Checkpoints in
+`CATALOG_CASES` in `native_contract.py` bindet elf KE- und zwölf KK-Checkpoints in
 Ausführungsreihenfolge. `kat2_probe.gd` meldet dort die tatsächlich seit dem letzten
 Checkpoint ausgeführten Checks; positive Anzahl und Summe müssen dem Original
 entsprechen. Producer und unabhängiger `native_results.py` lesen die verbleibenden
