@@ -1,29 +1,45 @@
 # Modellkatalog
 
-**Extern geprüft: 2026-09-09.** Dieser Katalog enthält datierte Produktinformationen und lokale Startpunkte, keine Zusicherung der Verfügbarkeit im Nutzerkonto. Die stabilen Entscheidungsregeln stehen in [MODEL_SELECTION.md](MODEL_SELECTION.md).
+**Offizielle Angaben geprüft: 05.11.2026.** Datierte Orientierung, keine Zusicherung
+der Verfügbarkeit im Nutzerkonto. Stabile Entscheidungsregeln und der lokale
+High-Standard stehen in [MODEL_SELECTION](MODEL_SELECTION.md). Diese lokale
+Heuristik ist keine behauptete offizielle Standardkonfiguration.
 
-## Dokumentierte Modelle und lokale Zuordnung
+## Dokumentierte Modelle und lokale Startpunkte
 
-| Modell | Explizite Modell-ID | Lokaler Startpunkt, kein Leistungsversprechen |
+| Modell | API-/CLI-ID | Lokaler Startpunkt, kein Leistungsversprechen |
 | --- | --- | --- |
-| GPT-5.6 Luna | `gpt-5.6-luna` | Eindeutige mechanische Änderungen ohne fachlichen oder stilistischen Gestaltungsspielraum |
-| GPT-5.6 Terra | `gpt-5.6-terra` | Normale, klar definierte Feature-/Fixarbeit |
-| GPT-5.6 Sol | `gpt-5.6-sol` | Anspruchsvolles Verständnis, differenzierte Redaktion/Kuratierung und schwierige Implementierung |
-| GPT-6 Astra | `gpt-6-astra` | Schwierige, nicht sinnvoll weiter teilbare Gesamtprozesse |
+| GPT-6 Luna | `gpt-6-luna` | Eindeutige mechanische Änderungen mit engem, gut prüfbarem Ergebnis |
+| GPT-6.1 Terra | `gpt-6.1-terra` | Abgegrenzte normale Arbeit, insbesondere visuelle Prüfung, Bedienung und Redaktion |
+| GPT-6.1 Sol | `gpt-6.1-sol` | Zusammenhängende Feature-/Fixarbeit, anspruchsvolles Verständnis und differenzierte Synthese |
+| GPT-6 Astra | `gpt-6-astra` | Schwierige Gesamtprozesse mit hohem Analyse-/Integrationsbedarf |
 
-Die Namen und IDs sind in der offiziellen Modellübersicht dokumentiert. Die konkrete Paketzuordnung ist unsere Heuristik, nicht das Ergebnis eigener Benchmarks. Sie enthält keine Obergrenzen: Zusätzlicher erwarteter Qualitätsnutzen kann auch bei kleinen Paketen eine stärkere Klasse rechtfertigen; maßgeblich ist [MODEL_SELECTION.md](MODEL_SELECTION.md). Keine feste ewige Whitelist: Bei Ablösung oder Nichtverfügbarkeit anhand offizieller Quellen und der tatsächlich verwendeten Oberfläche aktualisieren.
+Namen/IDs sind den offiziellen Modellseiten entnommen; die Paketzuordnung ist
+unsere anpassbare Heuristik, kein eigener Benchmark. Die frühere 5.6-Liste wird
+nicht als aktuelle Empfehlung weitergeführt. Keine ewige Whitelist oder
+Obergrenze: Qualität, Risiko und tatsächliche Ausführungswege entscheiden.
 
-## Bezeichnungen und Grenzen
+## Reasoning und Verfügbarkeit
 
-Die offizielle Codex-Dokumentation unterscheidet unter anderem Low/Light, Medium, High, Extra High und Max; Bezeichnungen und Auswahlmöglichkeiten hängen von der Oberfläche ab. In Empfehlungen die tatsächlich auswählbare Bezeichnung verwenden. Ultra wird dort als Mehragentenmodus beschrieben und ist nicht einfach eine weitere Stufe derselben Einzelausführung.
+Low/Light, Medium, High, Extra High und Max sind oberflächenabhängige Bezeichnungen;
+konkret auswählbare Stufe prüfen. Ultra bezeichnet in der Work-/Codex-Dokumentation
+Mehragentenausführung und ist keine automatische Erweiterung des lokalen
+High-Standards. Keine automatische Mehragentenausführung.
 
-OpenAI weist auf Abhängigkeiten von Rollout, Anmeldung und Client hin. Diese Recherche bestätigt daher **nicht**, welche Kombination der Nutzer in seiner Installation auswählen kann. API-Angebot, Codex-Zugriff und Abrechnung nicht gleichsetzen. Preise und Quoten werden hier bewusst nicht festgeschrieben.
+Modelle, Optionen und Zugriff hängen von Client, Anmeldung, Tarif und Rollout ab.
+Eine API-ID beweist keine Auswahlmöglichkeit im Nutzerkonto. Preise, Quoten und
+Abrechnung werden hier nicht festgeschrieben oder vom API-Angebot auf ein
+Abonnement übertragen. Bei fehlender aktueller Prüfung Unsicherheit benennen.
 
 ## Quellen und Aktualisierung
 
-Offizielle Quellen, gelesen am oben genannten Prüfdatum:
+Am Prüfdatum tatsächlich geöffnet:
 
-- [Codex: Modelle, Reasoning und Verfügbarkeit](https://developers.openai.com/codex/models).
+- [Work/Codex: Modelle und Reasoning](https://learn.chatgpt.com/docs/models)
+  (neues Ziel des früheren Codex-Modelllinks).
 - [OpenAI API: Modellübersicht und IDs](https://developers.openai.com/api/docs/models).
 
-Vor einer konkreten Empfehlung den Katalog gegen aktuelle offizielle Angaben und bekannte Clientverfügbarkeit prüfen, wenn Änderungen plausibel sind oder die bisherigen Informationen nicht ausreichen. Aktualisierte Erkenntnisse samt Datum dokumentieren. Ist aktuelle Prüfung nicht möglich, die Unsicherheit benennen; keine frei erfundenen Namen, Einstellungen oder Zugangsbehauptungen.
+Vor einer konkreten noch anstehenden Empfehlung aktuelle offizielle Angaben und
+bekannte Clientverfügbarkeit prüfen, wenn Änderungen plausibel sind. Erkenntnisse
+mit Datum nachführen. Keine Modellrecherche allein für bereits erledigte Arbeit;
+projektlokale Ausnahmen, insbesondere Rätselproduktion, bleiben maßgeblich.

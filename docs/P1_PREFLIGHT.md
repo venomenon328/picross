@@ -24,7 +24,7 @@ Der lokale Editor meldete `4.7.2.stable.official.ed1daf0bf`. Binärarchive, extr
 
 ## Reproduzierbarer Ablauf
 
-Voraussetzungen sind Python 3.11 oder neuer, Netzwerkzugriff auf GitHub und ungefähr 1,5 GB Download- sowie zusätzlicher temporärer Speicherplatz. Der Download ist auf 1.200 Sekunden pro Asset, jeder Godot-Prozess standardmäßig auf 300 Sekunden und der CI-Job auf 40 Minuten begrenzt. Ein bereits vorhandener Cache wird vor Wiederverwendung vollständig gehasht.
+Voraussetzungen sind Python 3.11 oder neuer, Netzwerkzugriff auf GitHub und ungefähr 1,5 GB Download- sowie zusätzlicher temporärer Speicherplatz. Der Download ist auf 1.200 Sekunden pro Asset, jeder Godot-Prozess standardmäßig auf 300 Sekunden begrenzt. Dies sind Prozess-/Netzwerkgrenzen, kein CI-Gesamtlaufzeitgate. Ein bereits vorhandener Cache wird vor Wiederverwendung vollständig gehasht.
 
 Windows PowerShell:
 
@@ -60,19 +60,24 @@ Der Ablauf arbeitet in einem neuen temporären Verzeichnis, setzt unter Windows 
 
 Die Offline-Tests prüfen zusätzlich korrekte und falsche Hashes, abweichende Release-Metadaten, Prerelease-Ablehnung, Archivpfad-Traversal, die Windows-Editorpaarung und erlaubte Artefaktinhalte. Der bestehende Dokumentprüfweg bleibt unverändert zusätzlich erforderlich.
 
-## CI und Artefakt
+## Aktuelle CI-Einbindung und Artefakte
 
-Die separate [P1-Preflight-CI](../.github/workflows/p1-preflight.yml) läuft auf `ubuntu-24.04` für Pull Requests und manuelle Starts mit ausschließlich lesendem Repositoryrecht. Sie lädt den offiziellen Linux-Editor und dieselben Standard-Exportvorlagen, führt alle auf Linux möglichen Schritte aus und exportiert Windows x86_64. Der erwartete Negativtest muss dort ebenfalls ungleich null enden. Die CI behauptet keinen Start der Windows-Datei auf Linux.
+Der Paketplan wählt das Modul `preflight` bei begründetem Toolchain-/Harnessbedarf.
+[Package CI](CI_WORKFLOW_V2.md) führt den Smoke im eigenen temporären Laufordner
+aus; ohne Evidenceanforderung entsteht kein zusätzlicher technischer Download.
+Das obligatorische reguläre Windows-Spielerpaket ist davon getrennt. Ein
+Preflight-Smoke ist kein Spiel und kein behaupteter Windowsstart unter Linux.
 
-Bei Erfolg wird für sieben Tage ein Artefakt `p1-preflight-windows-x86_64-<commit>` bereitgestellt. Darin liegen:
+[p1-preflight.yml](../.github/workflows/p1-preflight.yml) bleibt ein manueller
+beziehungsweise wiederverwendbarer Diagnoseworkflow, ohne eigenen PR-/Push-Trigger.
+Sein aktueller Aufruf verwendet 180 s Download- und 90 s Prozess-Hängerschutz.
+Er lädt Berichte/Logs sieben Tage hoch, kein reguläres Spielerpaket. Die frühere
+40-Minuten-Jobgrenze und der frühere Smoke-ZIP-Standardupload gelten nicht mehr.
+Zeit-/Aufbewahrungspolitik folgt dem aktuellen CI-Vertrag.
 
-- `p1-preflight-windows-x86_64.zip` mit Haupt-EXE, Konsolen-EXE, Kurzanleitung und eingebettetem Bericht;
-- `preflight-report.json` mit Quellcommit, Host, Engineversion, tatsächlich geprüften Assethashes, Exitcodes und CI-Laufkennung.
+## Historische Startentscheidung
 
-Das ZIP ist nur die isolierte technische Probe. Es ist kein Release und kein P1-Testartefakt nach A-07.
+Die damalige Startentscheidung für #7 wurde mit den oben gebundenen Prüfungen und PR #13 integriert. Sie ist kein erneut offenes Setup-Gate. Bei aktuellen Toolchainänderungen sind passende neue Nachweise am tatsächlichen Head erforderlich; alte Ergebnisse belegen keine geänderte Toolchain.
 
-## Startentscheidung und verbleibende Gates
+D-06 hebt das frühere Controller-Startgate ausdrücklich auf. Für die damalige P1-Lieferung galten am seinerzeitigen `prototypes/p1` A-01 bis A-07 und M-01 bis M-04, M-06/M-07; M-05 ist nicht anwendbar. Der Preflight selbst ändert weder Engineversion noch Fachverträge. Der damalige P1.1-Produktweg und die damalige Eigentümer-Mausprobe K-06 stehen im [P1.1-Prüfbericht](P1_1_VERIFICATION.md).
 
-Der lokale Windows-Toolchainpfad ist technisch geeignet. Für eine positive Gesamtentscheidung von #7 müssen auf dem konkreten PR-Head zusätzlich die Preflight-CI, die bestehende Setup-CI, der vollständige Diffcheck und der Selbstreview grün sein. Fehlt einer dieser Nachweise, bleibt #7 entsprechend offen; ältere Dokument-CI zählt nicht als Ersatz.
-
-D-06 hebt das frühere Controller-Startgate ausdrücklich auf. Für die gesamte P1-Lieferung gelten am echten `prototypes/p1` A-01 bis A-07 und M-01 bis M-04, M-06/M-07; M-05 ist nicht anwendbar. Der Preflight selbst ändert weder Engineversion noch Fachverträge. Der echte P1.1-Produktweg und die offene Eigentümer-Mausprobe K-06 stehen im [P1.1-Prüfbericht](P1_1_VERIFICATION.md).

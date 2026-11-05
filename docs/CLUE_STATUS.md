@@ -12,10 +12,11 @@ Bei Hinweisarbeit zusammen mit [Typografie](CLUE_TYPOGRAPHY.md),
 [Projektprofil](PROJECT_PROFILE.md) lesen. Einstieg bleibt [AGENTS](../AGENTS.md).
 
 Der Eigentümer bestätigt die deutlichere Abschwächung und das handschriftliche X
-als Spezifikation. Der anschließende Implementierungsauftrag führt denselben
-Branch und Draft-PR #187 fort. HS-M01 ist laut Issue #186/V2 persönlich erteilt
+als Spezifikation. Die technische Lieferung und ihre späteren Entscheidungen
+stehen in PR #187. HS-M01 ist laut Issue #186/V2 persönlich erteilt
 für die unveränderte Darstellung auf `154ab42`; konkrete Prüfmetadaten wurden nicht
-nachgereicht. Technisches Review und Mergefreigabe bleiben separat offen.
+nachgereicht. Aktuellen technischen Review-/Mergezustand im Issue/PR prüfen;
+dieser Fachtext erteilt keine neue Befugnis.
 Historische Quellendiagnose: `main@09ffa51f2cc2bb8a97c71b26113d2892f98be6c9` zeichnet nur
 FILLED mit 78 %, CLOSED dagegen mit voller Zahlendeckkraft plus geradem Querstrich.
 Dies wird gezielt gestalterisch ersetzt; kein Fehler der Erkennung ist nachgewiesen.
@@ -151,18 +152,18 @@ Querstrichüberstände können einzelne Slots/Fontgrade verbessern; G/V-/Fitziel
 Mess-/Pixelregressionen und der frische Windows-/PCK-Weg stehen in der
 [HS-Prüfzuordnung](HS_VERIFICATION.md), konkrete Ergebnisse und Grenzen im PR.
 Nicht betroffene Quellen, Font-/Assetbytes, historische Pläne, Reports und Abnahmen
-bleiben unverändert. Das Projektprofil routet Hinweisarbeit bereits über
-CLUE_TYPOGRAPHY und damit auf diese Spezifikation; keine Änderung gemeinsamer dev-rules.
+bleiben unverändert. Das Projektprofil routet Hinweisarbeit über
+CLUE_TYPOGRAPHY und diese Spezifikation; neue Aufträge folgen dem aktuellen Workflow.
 
 ## Prüfung und Abnahme
 
-[Issue #186](https://github.com/venomenon328/picross/issues/186) bindet HS-A01–A06,
-den technischen Lieferweg HS-T01 und die getrennten Abnahmen HS-R01/HS-M01 vor
-Implementierungsmerge. Messdaten und native Pixel-/Sichtprüfung ergänzen einander;
+Die ursprüngliche Lieferung in [Issue #186](https://github.com/venomenon328/picross/issues/186)
+band HS-A01–A06, HS-T01 und die getrennten Abnahmen HS-R01/HS-M01 an ihren
+Implementierungsmerge. Das ist keine erneute Dauerprüfpflicht. Messdaten und native Pixel-/Sichtprüfung ergänzen einander;
 eine Alpha-Konstante oder eine größere Hülle allein beweist keine lesbare Zeichnung.
 Ein nicht ausgeführter Windows-Start oder eine fehlende Eigentümerprobe wird nicht
-als bestanden ausgegeben. Die [aktuelle CI-Policy](CI_POLICY.md) entscheidet die
-Prüfauswahl, einschließlich Web bei Product, ohne Bestandsrätsel neu zu zertifizieren.
-
-Das Paket bleibt bis zu vollständiger technischer Lieferung und Abnahme offen.
+als bestanden ausgegeben. Der [aktuelle Paketvertrag](CI_WORKFLOW_V2.md) regelt die
+begründete Modulauswahl; Product erzwingt keinen Browser. Chromium bleibt manuell,
+Bestandsrätsel werden nicht neu zertifiziert. Aktueller Paketabschluss steht im Issue/PR.
 Kein automatischer Merge, Release oder Deployment durch diese Spezifikation.
+

@@ -1,53 +1,26 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**SD2-C · 26.10.2026, nach separatem R01 über PR #410 integriert:** Der vor Code versionierte
-[Integrationsvertrag](../SD2_INTEGRATION.md) ergänzt den Schwierigkeitsweg um
-explizite Methodenwahl und neue geschlossene Hüllen. Beide Freezes bleiben;
-der reale Produktionsdefault ist durch [SD2-D-F01/T01](../SD2_D_ADOPTION.md)
-auf dem Arbeitsbranch ausdrücklich 0.4. Vorläufiger Kandidat, explizite
-Analyse/Import, Metadaten-Rebind auf den fertigen Export und kontrollierte
-Registrierung bleiben getrennte Schritte. Aktivierung und echte
-Bestandsumstellung im echten Katalog sind in diesem C-Auftrag ausgeschlossen.
-Der [synthetische T01-Nachweis](../SD2_C_VERIFICATION.md) bindet neue und
-geänderte Logik, historische Rebinds und die gemeinsame Transaktion.
+**Version 0.5.0 · Dokumentrevision 28 · 05.11.2026**
 
-**Version 0.5.0 · Dokumentrevision 26 · 29.10.2026**
+Diese Revision ergänzt gespeicherte Sheet-Einstellungen und lokale Codex-Arbeitswurzeln. Inhaltsformate,
+Solverprofile, Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
+Regelwerksversion, Dokumentrevision, Datei-SHA-256 und tatsächlicher Repositorycommit
+binden den verwendeten Stand; keine nachträgliche Umetikettierung alter Pakete.
 
-**Variantenwahl / #468:** Sheet-Übergabe v2 bietet Abschlussbilder für Auftrag 2
-und geprüfte Rasterpakete für Auftrag 4 als auswählbare Optionen an (§4.5/§7).
-Das [Offline-Cheat-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html) übernimmt die
-jeweiligen Dateibindungen gemeinsam. Auswahl und Empfehlung sind keine Freigabe.
-Handoff-, Inventar-, Adapter- und Freigabeformate bleiben unverändert; versiegelte
-Altstände behalten ihre ursprünglichen Bytes und Regelwerksbindung.
-
-Paarlinienprofile und Schwierigkeit 0.2 benötigen Version 0.5.0. Alte versiegelte
-0.4.x-Pakete behalten ihren Linienvertrag; sie werden nicht umetikettiert.
-Dokumentrevision, Datei-SHA-256 und Repositorycommit binden den verwendeten Snapshot.
-
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A integriert:**
-[AT](../REVEAL_TRANSPARENCY.md) ergänzt den transparenten Abschlussbildstandard
-und einen getrennten nachvollziehbaren Bildupdateweg. AT-A liefert dessen
-Technik und synthetische Regressionen; AT-B stellt danach den gebundenen Bestand
-mit tatsächlichen Bildfreigaben um. Version 0.5.0 bleibt erhalten; alte versiegelte
-Snapshots und ihre Freigaben werden nicht umgeschrieben. Diese Dokumentrevision
-startet keine Bildbearbeitung, Raster-/Logikproduktion oder Integration.
-Der getrennte [AT-B-V01-Auftrag](../AT_B_VERIFICATION.md) lieferte alle 26
-gebundenen Bilder in eigenen `at-b-r01`-Ablagen zunächst als `reveal_review`.
-Die anschließende [Eigentümerabnahme](../AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01
-mit kontrollierter Übernahme und AT-B-T01. Versiegelte ZIPs, Inventare und
-Handoffs behalten Dokumentrevision 21 und ihren damaligen Zustand. Die spätere
-Freigabe steht nach §6.1 separat; nur der äußere Record führt `registered`
-für den geprüften Arbeitsbranch. Paketrevision und aktive AT-Bildrevision 1
-sind verschieden; keine Rasterproduktion oder neue ZA-1-Adapterabnahme.
-
-**SD / [#235](https://github.com/venomenon328/picross/issues/235), SD-C1 nach R2 integriert:**
-Für Schwierigkeitsarbeit zusätzlich [Rätselschwierigkeit](../PUZZLE_DIFFICULTY.md)
-und [SD-C1](../SD_CATALOG.md) vollständig lesen. §5.2/§8 binden den externen
-0.3-Input für neue Registrierung und logikrelevante Updates. Authoring 0.5.0,
-versiegelte Pakete und historische 0.1-/0.2-Produktionsbindungen bleiben erhalten.
-SD-C2 hat nach bestandenem Vor-Übernahme-Review gemäß SD-C2-F01 die
-[26 Bestandsbewertungen kontrolliert übernommen](../SD_CATALOG.md), einschließlich
-echtem Wiederholungs-No-op. Separates qualifiziertes finales Datenreview und Merge bleiben offen.
+- [SD2-Integration](../SD2_INTEGRATION.md) regelt Methodenwahl, Analyse/Import,
+  Metadaten-Rebind und kontrollierte Registrierung. Der Produktionsdefault 0.4
+  wurde mit [SD2-D](../SD2_D_ADOPTION.md) integriert; alte 0.1–0.3-Bindungen bleiben
+  nach ihrem eigenen Vertrag lesbar. Diese Regelwerkpflege bewertet keine Inhalte neu.
+- [Abschlussbildtransparenz](../REVEAL_TRANSPARENCY.md) regelt neue Bilder und
+  getrennte Bildrevisionen. Frühere AT-B-Freigaben bleiben an ihren konkreten
+  Dateien und Belegen gebunden, keine erneut offene Bestandsproduktion.
+- Sheet-Übergabe v2 bietet Bild-/Rasteroptionen (§4.5/§7). Das
+  [Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html) übernimmt ihre Bindungen
+  gemeinsam; Auswahl/Empfehlung sind keine Freigabe. Die technischen Handoff-,
+  Inventar- und Adapterformate bleiben unverändert.
+- Paarprofile benötigen weiterhin Authoring 0.5.0; versiegelte 0.4.x-Pakete behalten
+  ihren Linienvertrag. [SD](../PUZZLE_DIFFICULTY.md) und
+  [SD-C1](../SD_CATALOG.md) bleiben kompatible Fachquellen bei Schwierigkeitsarbeit.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
@@ -76,7 +49,7 @@ an Werkzeugen, Spiel oder CI folgt weiterhin dem allgemeinen Entwicklungsworkflo
 
 - Sämtliche rätselbezogenen Prüfungen – Lösbarkeit, Eindeutigkeit, unabhängiger Proof, Herkunft, Reparatur, Gestaltung und Zielintegration – MUSS die KI für die jeweilige neue/geänderte Revision im Produktionsauftrag durchführen und dateigebunden belegen. Unveränderte, passend gebundene Nachweise wiederverwenden; erforderliche Neuprüfungen nach Abschnitt 4.4 bleiben Pflicht.
 - **Keine rätselspezifischen Unit-Tests, Test-Snapshots, CI-Falllisten oder dauerhaften Replayjobs anlegen.** Ein neues Rätsel darf weder den allgemeinen Testbestand noch einen CI-Korpus erweitern. Prüfscripte für den konkreten Auftrag nur temporär außerhalb der Test-Discovery ausführen; Ergebnisse ins Paket, keine CI-Anbindung.
-- Bei reinen Inhaltsänderungen den automatischen schlanken Inhaltspfad aus [CI_POLICY](../CI_POLICY.md) verwenden. Er prüft Änderungspfade und reguläre Dateimodi, keine Rätselqualität. Kein Solver/Proof-Replay, Unit-Testlauf, Godot-Start, Funktions-/Render-/Performancetest oder Spielerexport in dieser CI. Auch unveränderte Bestandsrätsel nicht erneut prüfen.
+- Für jeden Inhalts-/Ablage-/Cleanup-PR einen aktuellen `.ci/package.json` nach [CI_WORKFLOW_V2](../CI_WORKFLOW_V2.md) führen; vorhandenes Inhaltsissue/Paket verwenden oder den neuen Auftrag dort erfassen. Reine Inhalte wählen begründet `modules=[]` und `evidence.mode=none`. Der allgemeine Kern prüft Quellen-/Planintegrität; reine Rätselproduktion einschließlich Ablage, Integration und Datenbereinigung bleibt ohne Player-Build. Das gilt auch im Main-Nachlauf. Keine rätselspezifischen Solver-/Proof-Replays, vollständigen Fachtests oder nativen Funktions-/Rendermatrizen ergänzen; unveränderte Bestandsrätsel nicht erneut prüfen.
 - Code-, Tool-, gemeinsame UI-/Asset- und CI-Änderungen sind separate Entwicklungsarbeit mit den passenden allgemeinen Regressionen an einem festen technischen Testbestand. Nicht zur vermeintlichen Absicherung eines neuen Rätsels Code ändern oder den CI-Umfang manuell auf `all` erweitern.
 
 ## 2. Abschlussbild zuerst, danach Abstraktion
@@ -723,7 +696,7 @@ Inventarhash. Import, Dropdownwechsel, Sitzung und ZIP-Export erteilen keine
 Freigabe und ändern kein Repository. Erst das tatsächliche Absenden des passenden
 Freigabeauftrags ist eine menschliche Erklärung.
 
-Sitzungen v3 und Auftragsexporte erhalten Listen und Auswahl. Import eines alten
+Sitzungen v3/v4 und Auftragsexporte erhalten Listen und Auswahl. Import eines alten
 v1-Blocks/Records oder einer alten Sitzung entfernt vorherige Optionsdaten;
 Reset leert sie ebenfalls. Fehlerhafte Daten dürfen keinen Teilstand übernehmen.
 Die HTML-Datei bleibt offline ohne automatische Bild-/Repositoryabrufe. Bilder
@@ -735,6 +708,67 @@ Bei Pflege des Cheat-Sheets den eingebetteten Regelwerksnapshot sowie dessen
 Versions-/Revisionsanzeige gemeinsam mit diesem Dokument aktualisieren. Der
 Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
 muss über den tatsächlichen Arbeitsbranch/Commit erreichbar benannt werden.
+
+### Persönliche Einstellungen und lokale Codex-Arbeit
+
+Das bestehende Offline-Sheet trennt persönliche Einstellungen von Rätseldaten.
+Arbeitswurzel, Bereinigungsoption, Regelquelle/-pfad/-stand, Ablage-/Mergeoption
+und Farbschema werden im Browser gespeichert. Ein anderer Browser, ein geänderter
+Dateipfad oder gelöschte Browserdaten können einen Einstellungsimport erfordern.
+Fehlender oder gesperrter Browserspeicher wird sichtbar gemeldet; das Sheet bleibt
+mit manueller Eingabe und Sicherung nutzbar. Produktionsdaten und Bildbytes werden
+nicht automatisch dauerhaft gespeichert.
+
+Die gesonderte Sicherung `picross-cheatsheet-settings-v1` enthält genau `format`,
+`settings` und `theme`. `settings` enthält genau die Zeichenketten `workspaceRoot`,
+`cleanupMode` (`on|off`), `ruleSource` (`repo|attachment`), `rulePath`, `ruleRef`,
+`repoSave` (`repo|local`) und `mergeMode` (`merge|draft`); `theme` ist
+`system|light|dark`. Eine leere Arbeitswurzel bezeichnet noch fehlendes Setup.
+Nichtleere Wurzeln müssen absolute Windows-, UNC- oder POSIX-Verzeichnispfade
+ohne Steuerzeichen oder Punkt-/Elternsegmente sein. Vor einem Einstellungsimport
+alle Werte prüfen und die neue Wurzel samt Freigabeoptionen ausdrücklich zur
+Bestätigung zeigen; kein Teilimport bei ungültigen Daten.
+
+Neue Produktionssitzungen verwenden `picross-cheatsheet-session-v4`: dieselbe
+äußere Hülle wie v3, aber `fields` enthält ausschließlich Rätseldaten. Alte
+Sitzungen v1–v3 bleiben ladbar; darin enthaltene persönliche Einstellungen und
+Ablage-/Mergeoptionen werden bewusst nicht übernommen. Auch Sheet-Updates und
+Records ändern diese Einstellungen nicht. „Neues Rätsel“ entfernt Produktionsdaten,
+Optionslisten und Bildanhang, erhält aber alle persönlichen Einstellungen.
+Eine Sitzung ist weder Einstellungsbackup noch Produktionspaket oder Freigabe.
+
+Auftragsexporte verwenden `picross-authoring-request-v3`; zusätzlich zu den
+bisherigen Metadaten, Rätseldaten, Varianten und Bildbezügen enthält `execution`
+die tatsächliche `surface`, `local_workspace_root` (Zeichenkette oder `null`) und
+`cleanup_own_local_work` (Boolean). Die Freigabe ergibt sich weiterhin allein aus
+dem ausdrücklich abgesendeten Auftrag, nicht aus importierten Ergebnisdaten.
+Die Produktionsformate und `picross-cheatsheet-update-v1/v2` bleiben unverändert.
+
+Jeder Prompt verlangt aktuelle `AGENTS.md` und Pflichtquellen sowie
+[WORKSPACE](../dev-rules/WORKSPACE.md). Standardregelstand ist `main`, ein bewusst
+beauftragter Arbeitsbranch kann eingestellt werden. Der Anhang ist ein datierter
+Snapshot; bei widersprüchlichem Stand vor dem betroffenen Schritt klären, keine
+alten Regeln stillschweigend vorziehen. Das Sheet selbst ruft keine Quellen ab.
+
+Codex-Aufträge (3, 4, Merge sowie technische Korrektur/Wiederaufnahme) benötigen
+eine gültige absolute Arbeitswurzel; sonst bleiben Kopieren und ZIP-Export
+gesperrt. Neue eigene Checkouts, Worktrees, Downloads und temporäre Prozessdaten
+gehören in einen eigenen Auftragsunterordner darunter. Ist die Wurzel in der
+ausführenden Umgebung nicht erreichbar oder liegt ein benötigter bestehender
+Checkout außerhalb, den Konflikt vor der betroffenen Dateiarbeit melden; keinen
+Ausweichpfad wählen und keine fremden Daten verschieben oder löschen.
+Die Bildschritte in ChatGPT Work bleiben ohne lokale Codex-Wurzel ausführbar;
+deren Cloud-Arbeitsablage macht einen Windows-Pfad nicht zugänglich. Das Sheet
+übermittelt eine Arbeitsanweisung, setzt keine Dateisystemsandbox und verändert
+keine Zugriffsrechte.
+
+Die standardmäßig aktive lokale Bereinigungsoption beauftragt die Entfernung
+eigener gesicherter entbehrlicher Arbeitsdaten gemäß WORKSPACE. Noch benötigte
+Produktions-/Freigabe-/Reviewdateien, Benutzerdaten, Benutzercheckout und die
+Arbeitswurzel selbst bleiben erhalten. Restpfade und Gründe im Ergebnis nennen.
+Diese Option ist vom Produktionsabschluss nach §9 getrennt; auch ausgeschaltete
+lokale Bereinigung hebt den dort beauftragten Nachintegrationsabschluss nicht auf.
+Reine Rätselproduktion bleibt gemäß §1 ohne Player-Build und ohne eigene CI-Replays.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren
 
@@ -828,8 +862,8 @@ Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und da
    feste Identität/Slot/Kategorie und Revealbytes erhalten. Alte Saves bleiben
    unberührt und gelten bei anderer Runtime-Revision als inkompatibel.
 6. Tatsächliche Definition/Reveal/Nutzungshinweise, `content/registry.json`, deren Runtime-Projektion und die Prüfkopie unter `content/packages/…` kontrollieren, einschließlich Kategorienprojektion und eindeutiger Zuordnung im Katalog. Identischer Wiederholungsaufruf darf `no-op` sein; Konflikte nicht überschreiben. Bei offenem Registrierungsjournal nur den dokumentierten Recoverypfad verwenden.
-7. **Für reine Rätselinhalte genügt die Adapter-/Dateiprüfung aus 4–6.** Keine obligatorischen Godot-Spielstarts, Teilstand-/Neustart-, Undo-/Save-, Abschluss-/Album-, Render- oder Windows-/PCK-Tests je Rätsel; keinen Product-Harness und keinen Buildauftrag automatisch starten. Die visuelle Raster-/Abschlussbildprüfung gehört bereits zur Produktion. Nur bei konkretem Befund eine gezielte zusätzliche Probe mit benanntem Zweck ausführen, isoliert von echten Saves. Allgemeine Spiel-/Exportregressionen gehören zu relevanten Codeänderungen. Keine zusätzlich manuell gestarteten Bestands-Replays, `check-registry`-/`sync-runtime`-Vollprüfungen oder wiederholten `register`-Aufrufe zur Bestätigung; interne Adapterprüfungen unverändert lassen. Nicht ausgeführte native Prüfungen als `nicht erforderlich: reine Inhaltsintegration` vermerken, niemals als bestanden.
-8. Arbeitsrecord mit einmaligen Registrierungs-/Prüfbelegen aktualisieren, vollständigen Diff separat selbst prüfen, committen/pushen und Draft-PR mit Head/Basis/Checks/offenen Gates erstellen. Reine Rätseldateien müssen im Auswahlbericht `content_only=true` ergeben; dann sind nur `docs` (Pfad-/Dateimodusprüfung) und `ci-required` Pflicht. Keine vollständige Testsuite zusätzlich lokal oder per CI wiederholen. Bei unerwartet breiter Auswahl die tatsächlich geänderten Pfade prüfen; notwendige Codeänderungen getrennt behandeln, nichts am Gate vorbeischleusen. Nur mit passender ausdrücklicher Mergefreigabe nach bestandenen Pflichtprüfungen mergen; danach tatsächlichen Main-/Mergecommit prüfen. Erst dann „im Spiel auf main integriert“ melden; kein Release/Deployment ableiten.
+7. **Für reine Rätselinhalte genügt die Adapter-/Dateiprüfung aus 4–6.** Keine obligatorischen Godot-Spielstarts, Teilstand-/Neustart-, Undo-/Save-, Abschluss-/Album-, Render- oder Windows-/PCK-Funktionsproben je Rätsel; keinen zusätzlichen Product-Harness oder manuellen Buildauftrag automatisch starten. Auch im allgemeinen PR-/Main-Kern bleibt reine Rätselproduktion ohne Player-Build. Die visuelle Raster-/Abschlussbildprüfung gehört bereits zur Produktion. Nur bei konkretem Befund eine gezielte zusätzliche Probe mit benanntem Zweck ausführen, isoliert von echten Saves. Allgemeine Spiel-/Exportregressionen gehören zu relevanten Codeänderungen. Keine zusätzlich manuell gestarteten Bestands-Replays, `check-registry`-/`sync-runtime`-Vollprüfungen oder wiederholten `register`-Aufrufe zur Bestätigung; interne Adapterprüfungen unverändert lassen. Nicht ausgeführte native Prüfungen als `nicht erforderlich: reine Inhaltsintegration` vermerken, niemals als bestanden.
+8. Arbeitsrecord mit einmaligen Registrierungs-/Prüfbelegen aktualisieren, vollständigen Diff separat selbst prüfen, committen/pushen und Draft-PR mit Head/Basis/Checks/offenen Gates erstellen. Den aktuellen Paketplan gegenüber der PR-Basis ändern und reine Inhalte mit begründeter leerer Zusatzmodulliste führen. `docs` und `ci-required` ohne Player-Build müssen am tatsächlichen Head/Test-Merge erfolgreich sein. Das alte `content_only=true` ist kein Haupt-CI-Vertrag mehr. Keine vollständige Testsuite zusätzlich wiederholen; notwendige Codeänderungen getrennt beauftragen, nichts am Gate vorbeischleusen. Nur mit passender ausdrücklicher Mergefreigabe nach bestandenen Pflichtprüfungen mergen; danach tatsächlichen Main-/Mergecommit prüfen. Erst dann „im Spiel auf main integriert“ melden; kein Release/Deployment ableiten.
 
 Das Endergebnis nennt Paketfundort/-hash, Freigabebeleg, Runtime-ID/Revision/Slot, Export-/Registrierungs- und Dateiprüfbelege, gegebenenfalls begründete Zusatzprobe, PR/Head und Main-Mergecommit. Bei Fehlern den letzten belegten Zustand und nächsten erlaubten Schritt nennen; keine unvollständige Integration als Erfolg melden.
 
@@ -877,8 +911,9 @@ sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
    ist einschließlich Merge beauftragt, auch wenn der vorausgehende Integrations-PR
    zunächst als Draft vorgelegt wurde. Kein weiterer Routineprompt, kein dauerhaft
    offener Cleanup-Draft. Vor dem tatsächlichen Integrationsmerge nichts bereinigen;
-   bei Blocker genau diesen melden. Reine Datenbereinigung nutzt den schlanken
-   Inhaltspfad, ohne Spielerbuild oder rätselspezifische Tests. Danach Main-Commit
+   bei Blocker genau diesen melden. Reine Datenbereinigung führt einen eigenen aktualisierten Paketplan mit
+   begründet `modules=[]`; der allgemeine Quellen-/Plankern bleibt Pflicht, ohne Player-Build und
+   ohne rätselspezifische Tests. Danach Main-Commit
    und erhaltene Runtime-Dateien nachweisen.
 
 Spätere echte Rätseländerungen sind ein neuer Produktionsauftrag. Fehlende alte
@@ -924,7 +959,5 @@ revisionsgenauen Abschlussweg; [T01](../CI2_E_VERIFICATION.md) bindet die Liefer
    diese Bereinigung; aktive Leser und Rechtebindungen bleiben vorher geprüft.
 
 Die frühere eng begrenzte Freigabe zum Nachintegrations-Cleanup einschließlich Merge
-in Schritt 5 bleibt bestehen. Die damalige CI2-Spezifikationsfreigabe allein
-beauftragte keine Implementierung oder Löschung. Der eigene CI2-E-Auftrag umfasst
-Umsetzung und Draft-PR, keinen Merge. Werkzeug-/CI-Codepakete erben keine frühere
-Cleanup-Mergefreigabe.
+in Schritt 5 bleibt bestehen. Werkzeug-/CI-Codepakete erben keine frühere
+Cleanup-Mergefreigabe. Historische CI2-E-Aufträge sind keine heutige Freigabe oder Sperre.

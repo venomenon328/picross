@@ -19,7 +19,8 @@ umgeschrieben. A/B/C sind über PR #408/#409/#410 integriert.
 [D-V01](SD2_D_VERIFICATION.md) liefert die gesondert beauftragte echte Analyse
 und Vergleichsvorschau; [D-F01/T01](SD2_D_ADOPTION.md) übernimmt nach Abnahme
 aller 45 Vorschläge die aktiven Bewertungen und aktiviert den Produktionsdefault
-0.4 auf dem Arbeitsbranch. Finales Review und Merge bleiben offen.
+0.4, integriert über PR #411. Die tatsächlichen Review-/Ausnahmeentscheidungen
+bleiben im Issue/PR gebunden.
 
 [SD-A](SD_ANALYZER.md), [SD-B](SD_CALIBRATION.md) und [SD-C1](SD_CATALOG.md)
 führen die exakten bestehenden Analyse-, Methoden- und Datenverträge.
@@ -35,7 +36,7 @@ gelten außerhalb der gezielt fortgeschriebenen Schwierigkeit weiter.
 Sollstand in [Katalogdarstellung](CATALOG_PRESENTATION.md) zeigt die vorhandene
 Stufe als gefüllten Farbkreis mit vollständigem Namen, ohne sichtbare Ziffer und
 ohne Schwierigkeitstooltip. Die numerische Fünferskala, vorhandene Metadaten,
-Methodenfreeze und fachliche Aussagegrenzen bleiben unverändert; Umsetzung offen.
+Methodenfreeze und fachliche Aussagegrenzen bleiben unverändert; KU-A ist über PR #254 integriert.
 
 Jedes fertig eingestufte Rätsel erhält eine begründete, wiederholbare Schwierigkeit
 von 1 bis 5. Der logische Anspruch bestimmt die Bewertung; Größe darf einen
@@ -350,3 +351,4 @@ beauftragte Bestandsübernahme in einem eigenen Daten-PR auf der integrierten
 Werkzeugbasis liefern; die Werkzeuglieferung allein schließt SD-C nicht ab.
 Eine freie Methodennummer,
 eine gefüllte Skala oder ein grüner Testlauf allein schließt SD nicht ab.
+

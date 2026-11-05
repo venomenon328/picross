@@ -156,18 +156,21 @@ verwendet denselben Quellenkontext auf beiden Ereigniswegen; vollständige Folge
 orientieren ohne Overlay. Eingabebesitz und bestätigte semantische Leseanker bleiben
 getrennt. [Prüfzuordnung](HN_VERIFICATION.md) bindet die technischen Szenarien;
 konkrete Ergebnisse und Originalbelege stehen commitgebunden in Issue/PR.
-Historische Berichte und `docs/dev-rules/` bleiben unverändert.
+Historische Berichte bleiben an ihren damaligen Stand gebunden; der aktuelle
+Entwicklungsworkflow unter `docs/dev-rules/` regelt neue Aufträge.
 
 ## Prüfung und Abnahme
 
-Issue #192 bindet HN-A01–A07 und die getrennten Gates HN-T01, HN-R01 und HN-M01
-vor Implementierungsmerge. Echte Mausereignisrouten, sichtbare native Bänder/Overlay,
+Die ursprüngliche HN-Lieferung in Issue #192 band HN-A01–A07 und die getrennten
+Gates HN-T01, HN-R01 und HN-M01 vor ihrem Implementierungsmerge. Diese Zuordnung
+ist keine automatische Wiederholungspflicht für neue Pakete. Echte Mausereignisrouten, sichtbare native Bänder/Overlay,
 Zell-/History-Negativfälle, Cursorcache-Gegenprobe und aktuelle Save-/Browser-/
 Windows-Exportnachweise ergänzen einander. Eine interne Hovervariable oder ein
 Dokumenttest allein beweist keine sichtbare und sichere Interaktion.
 
-[CI-Policy](CI_POLICY.md) entscheidet die vollständige Diffauswahl und die kompakte
-Fenstermatrix; [Webvertrag](WEB_HOSTING.md) begrenzt den bestehenden Browserprüfweg.
+[CI_WORKFLOW_V2](CI_WORKFLOW_V2.md) regelt die begründete Paketauswahl,
+[der native Modulvertrag](CI_C_NATIVE_GROUPS.md) die gewählten Stichproben und
+[der Webvertrag](WEB_HOSTING.md) den ausdrücklich manuellen Browserprüfweg.
 Nur isolierte technische Profile, kein Zugriff auf echte Saves oder den Eigentümer-VPS.
 Native Windows-Originale sind für unabhängige Prüfung tatsächlich zugänglich zu
 liefern und an Head/Basis/Checkout, Run, EXE/PCK und Umgebung zu binden. Ein
@@ -176,3 +179,4 @@ Automation ersetzt keine persönliche Bedienabnahme.
 
 Keine allgemeine UI-/Eingabeplattform, neue Optionen, Produktionsinhalte, Assets,
 Saveformate, CI-Optimierung, Merge, Release oder Deployment aus dieser Spezifikation.
+

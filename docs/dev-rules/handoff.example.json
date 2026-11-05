@@ -1,0 +1,46 @@
+{
+  "format": "development-handoff/v1",
+  "repository": "venomenon328/picross",
+  "issue": 517,
+  "package": "W1-W3",
+  "pr": null,
+  "branch": "chore/517-workflow-v2",
+  "target": "main",
+  "head": null,
+  "phase": "specified",
+  "summary": "Workflow und CI zur Umsetzung vorbereitet.",
+  "spec_url": "https://github.com/venomenon328/picross/issues/517",
+  "execution": {
+    "preferred": null,
+    "self_implementation": null,
+    "model": null,
+    "reasoning": null,
+    "reason": null,
+    "source_url": null
+  },
+  "review": {
+    "url": null,
+    "head": null,
+    "verdict": null
+  },
+  "findings": [],
+  "checks": [],
+  "ci": {
+    "modules": [],
+    "plan_url": null,
+    "permanent_tests": [],
+    "temporary_checks": [],
+    "artifact_policy": "Windows außer bei reinen Dokumentenänderungen und reiner Rätselproduktion; Technik nur zweckgebunden.",
+    "seconds": null
+  },
+  "artifacts": [],
+  "cleanup": {
+    "status": "not_started",
+    "remaining": []
+  },
+  "merge_commit": null,
+  "next": {
+    "action": "implement",
+    "reason": "Freigegebenen Scope auf dem beauftragten Branch umsetzen."
+  }
+}
