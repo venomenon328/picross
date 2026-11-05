@@ -510,14 +510,14 @@ Projektpfad `game/`. Eigene Rasterzeichen-/Hit-Test-Komponente, UI-Bausteine fü
 
 ### 7.2 Ausführbarer Befehlsvertrag
 
-Für Auslöser, Umfang, Größen-/Zeitbudgets und Artefakte gilt ab #63 die
-[CI-Policy](CI_POLICY.md). Sie löst die pauschale Wiederholung historischer
+Für Auslöser, Modulauswahl, weiches Laufzeitziel und Artefakte gilt der
+[aktuelle CI-Vertrag](CI_WORKFLOW_V2.md). Sie löst die pauschale Wiederholung historischer
 Studien und aller früheren Lieferprüfungen ab; die fachlichen Verträge dieser
 Spezifikation bleiben bestehen. Aktuelle Regression, technische Abnahme und
 historische Nachweise werden getrennt ausgewiesen.
 
 **CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), freigegebener
-Sollvertrag vom 26.10.2026:** [CI2-D](CI_SLIMMING.md) ersetzt die fortlaufende
+Sollvertrag vom 26.10.2026:** Der [native Modulvertrag](CI_C_NATIVE_GROUPS.md) ersetzt die fortlaufende
 500-Aktionen-Pflicht durch die kompakte History-Integration in §8.1.
 `--integration` und `--groups history` führen jetzt 17 Kommandos, vier neue
 Transaktionen und zwei echte Spielprozesse aus. [D-T01](CI2_D_VERIFICATION.md)
@@ -537,7 +537,13 @@ Der Testrunner führt vereinbarte Logikprüfungen aus, gibt Anzahl/Ergebnis aus 
 
 Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `game/build/windows/` anlegen. Exportpfad relativ zum Godot-Projekt. ZIP mit allen Startdateien, Anleitung und Commitkennung; keine Godot-Installation beim Nutzer voraussetzen. Keine Signaturzertifikate, Releases oder Änderung von Windows-Schutzfunktionen beauftragt.
 
-`tools/p1_product.py` und [Produkt-CI](../.github/workflows/p1-product.yml) liefern Import, aktuelle Godot-Tests, kurzen absichtlichen Negativtest, echten Save-Roundtrip, kontrollierten Start und Windows-Export; unter Windows zusätzlich exportierten Start. `--integration`, `--pilots` und `--visual` wählen die nach CI-Policy erforderlichen ergänzenden Wege; bei lokalem Aufruf sind alle standardmäßig aktiv. Der Preflight wird bei Toolchain-/Harnessänderungen und auf manuellen Auftrag ausgeführt. Aktuelle Head-/Basis-/Test-Merge-/Artefaktzuordnung im PR; alte grüne Prüfungen belegen nicht die neuen Funktionen.
+`tools/p1_product.py` bietet die [nativen Gruppen](CI_C_NATIVE_GROUPS.md) für Import,
+Godot-Tests, Negativpfad, Save-Roundtrip, Start und Export. Lokal mit `--groups`
+gezielt wählen; ohne Auswahl bleibt der vollständige Umfang aktiv. Package CI
+startet nur die im Paketplan gewählten Module. Ihr obligatorischer Windowsbau ist
+keine automatische Auswahl aller nativen Export-/Funktionsprüfungen. Die alte
+[p1-product.yml](../.github/workflows/p1-product.yml) ist nur manuell/wiederverwendbar.
+`preflight` nach tatsächlichem Toolchain-/Harnessbedarf begründet auswählen. Aktuelle Head-/Basis-/Test-Merge-/Artefaktzuordnung im PR; alte grüne Prüfungen belegen nicht die neuen Funktionen.
 
 ## 8. Akzeptanz und Abnahme
 
@@ -545,7 +551,7 @@ Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `game/buil
 
 Die folgende Zuordnung beschreibt die fachlichen Prüfeigenschaften. Die
 verbindliche Auswahl pro Änderung, kompakte native Grenzmatrix und abschließende
-Erfolgsprüfung stehen in [CI-Policy #63](CI_POLICY.md). Eine deaktivierte
+Erfolgsprüfung stehen im [aktuellen CI-Vertrag](CI_WORKFLOW_V2.md). Eine deaktivierte
 optionale Route wird als nicht zutreffend ausgewiesen, nicht als ausgeführt.
 
 | ID | Prüffall und Erfolg |
@@ -817,3 +823,4 @@ VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
 pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
 zusammenhängende Zahlen auch im Drag und eine harte Raster-Fitgrenze sind aktiv.
 Historische Erstlieferung bleibt gebunden; normale P1-Defaults bleiben bestehen.
+

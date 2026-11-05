@@ -286,7 +286,8 @@ Liefergegenstände A/B/C und in deren Detailverträgen geschlossen.
 SD2-A/B/C sind nach separaten Reviews über PR #408/#409/#410 integriert.
 D liefert V01, den begrenzten Om-Folgeauftrag OM01 und nach vollständiger
 Vorschlagsabnahme F01/T01 mit Übernahme/Aktivierung. VR01 ist durch die
-Eigentümerentscheidung erlassen; finales R01 und Merge bleiben offen.
+Eigentümerentscheidung erlassen. D ist über [PR #411](https://github.com/venomenon328/picross/pull/411)
+integriert; die tatsächlichen Review-/Ausnahmeentscheidungen bleiben dort gebunden.
 Dieser Fachvertrag allein
 ist keine technische Startfreigabe und keine Modell-/Eigenumsetzungsempfehlung.
 
@@ -298,9 +299,10 @@ Farben/Symmetrien und Fehler-/Recoverygrenzen sind an festen unabhängigen
 synthetischen Inputs nachzuweisen. Es entstehen keine Tests aus dem realen
 Katalog oder daraus kopierten/abgeleiteten Fällen.
 
-Die [CI-Policy](CI_POLICY.md) bestimmt die Auswahl aus dem tatsächlichen
-Gesamtdiff. Reine Spezifikationspflege benötigt schnellen Docs-/Werkzeugpfad,
-Dokumentvalidator, Diffcheck und `ci-required`, keine Rätsel-/Produktläufe.
+Der aktuelle Paketplan nach [CI_WORKFLOW_V2](CI_WORKFLOW_V2.md) begründet die
+Prüfauswahl für den tatsächlichen Gesamtdiff. Reine Spezifikationspflege benötigt
+Quellen-/Planintegrität, Dokumentvalidator, Diffcheck und `ci-required`, keinen
+Player-Build und keine pauschalen Werkzeug-/Rätsel-/Produktläufe.
 Spätere Regeln/Bewertung, gemeinsame Datenintegration und echte Datenübernahme
 behalten ihre jeweils passenden Prüfwege; kein pauschaler Kurzpfad für SD2.
 
@@ -312,3 +314,4 @@ Lieferungen ergänzen ihre versionierten Detailverträge und die CLI-/Authoring-
 Anleitung vor der jeweils betroffenen Codeänderung. Historische 0.3-Verträge
 bleiben als solche erhalten. PRs binden tatsächliche Änderungen, Checks,
 Reviews und Freigaben; eine Spezifikationsfreigabe ersetzt keine dieser Lieferungen.
+

@@ -1,9 +1,9 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
-**SD2 · 25.10.2026:** [SD2-D05](PUZZLE_DIFFICULTY_V2.md) verlangt künftig die
-gemeinsame kompatible Projektion der Methode 0.4. Die folgenden exakten
-alten Schemas erlauben 0.4 nicht. [SD2-C-V01](SD2_INTEGRATION.md) spezifiziert
-vor Code Runtime-v5, Quellenpriorität und Alt-/Neuübergänge; keine zusätzlichen Rohprofile,
+**SD2 · integrierter Methodenvertrag:** [SD2-D05](PUZZLE_DIFFICULTY_V2.md) und
+[SD2-Integration](SD2_INTEGRATION.md) führen Runtime-v5, Quellenpriorität und
+Alt-/Neuübergänge für Methode 0.4. Die unten beschriebenen exakten Altschemas
+bleiben für ihre jeweiligen Generationen gültig; keine zusätzlichen Rohprofile,
 Scores oder Freitexte im Spieler. Kategorien, Identitäten, Added und AT bleiben
 bei einer reinen späteren Neueinstufung unverändert. [D-F01/T01](SD2_D_ADOPTION.md)
 übernimmt nach Eigentümerabnahme 45 Ratings auf 0.4 und projiziert Runtime-v5;
@@ -16,17 +16,18 @@ Bildfassungen des gebundenen Bestands. Historische Registry-/Paket-/Integrations
 bindungen bleiben unverändert. [AT-B-V01](AT_B_VERIFICATION.md) liefert die
 vollständige gebundene Bild-/Endfreigabevorlage. Nach
 [Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) ist AT-B-F01 mit kontrollierter
-Bildübernahme und AT-B-T01 beauftragt; finales separates Review und Merge bleiben offen.
+Bildübernahme und AT-B-T01 beauftragt. Tatsächlicher Liefer-/Review-/Mergezustand
+steht im zugehörigen Issue/PR, nicht in dieser historischen Auftragsbeschreibung.
 
-**KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
+**KU-B / #244, integrierter Datenvertrag:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt eine eigene autoritative,
 ID-gebundene Quelle für die erste Katalogaufnahme und deren minimale
 UTC-Zeitpunkt-/null-Projektion. Herkunftsbelege bleiben im Inhaltsbereich;
 historische Produktions-/Integrationsbindungen bleiben unverändert. Neue
 Formatversionen und der gemeinsame Writer-/Loader-/Validierungs-/Recoveryvertrag
-werden im KU-B-Paket vor der ersten betroffenen Codeänderung festgelegt.
-Die unten genannten exakten Inhalts-v2-/Runtime-v2/v3-Schemas sind der aktuelle
-Implementierungsstand und dürfen nicht still um zusätzliche Felder erweitert werden.
+sind im KU-B-Vertrag festgelegt. Die unten genannten exakten Inhalts-v2-/
+Runtime-v2/v3-Schemas bleiben Altverträge; aktuelle Ergänzungen stehen in den
+Abschnitten KU-B/AT und in SD2-Integration. Keine Generation still umdeuten.
 KU-A verändert diese Datenverträge nicht.
 
 **SD-C1, technischer Vertrag vom 17.10.2026:**
@@ -388,3 +389,4 @@ Auch eine zwischenzeitliche Bildrevision ohne sichtbare Runtimeänderung macht
 einen neuen SD-/Added-/AT-Plan stale. Erfolgreiche Wiederholung darf nur ihre
 exakt gebundenen eigenen Zielbytes im Speicher auf den Ausgangssnapshot
 zurückführen; jede andere Quellenänderung blockiert.
+

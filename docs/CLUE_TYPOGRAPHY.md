@@ -10,7 +10,7 @@ handschriftliches X über dem gesamten Token. Zahlfarbe, C1-Semantik und H1/GP48
 Zeichnung, tatsächliche Hüllen, Tooltipmessung und Web-Fit-Vorselektion werden
 zusammen angepasst. Die aktiven P1-/Design-/Zeichensprachepassagen und Anleitungen
 sind inline nachgeführt. [HS-Prüfzuordnung](HS_VERIFICATION.md) bindet die technische
-Lieferung; erneutes unabhängiges Review bleibt offen. HS-M01 ist für die unveränderte
+Lieferung; der aktuelle Review-/Mergezustand steht in #186/PR #187. HS-M01 ist für die unveränderte
 Darstellung persönlich erteilt (Issue #186/V2), ohne nachgereichte Prüfmetadaten.
 Fonts und übrige HC-/HF-Verträge bleiben.
 
@@ -83,7 +83,11 @@ History, Farbwerte, Reveal und Zellrenderer bleiben erhalten.
 
 ## Aktueller Prüfweg und Abnahme
 
-Die reguläre Product-Prüfung nach [CI-Policy](CI_POLICY.md) enthält:
+Der [Paketvertrag](CI_WORKFLOW_V2.md) und [native Modulvertrag](CI_C_NATIVE_GROUPS.md)
+regeln die aktuelle Auswahl und ihre verbleibenden Prüfungen. Die folgende Liste
+beschreibt die damalige HC-Einführung, keine heutige automatische Vollmatrix oder
+Uploadpflicht. Historische Bilder/Fontvergleiche werden nicht erneut produziert:
+
 
 - Kern-/Eingabe-/Save-/Recoveryregressionen und echte Prozessneustarts.
   Komponenten-Überlaufprüfungen verwenden ausdrücklich schmale Testbereiche:
@@ -104,13 +108,14 @@ Die reguläre Product-Prüfung nach [CI-Policy](CI_POLICY.md) enthält:
   tatsächliche separate PCK, Fontdatenhash, Glyphen 0–9 aus deren Font-RID
   und unveränderte Originalhinweise (`hc92_pack.gd`).
 
-Konkrete Ergebnisse stehen im Draft-PR, gebunden an Head, Basis, getesteten
-Checkout und Run, einschließlich getrenntem vollständigem Selbstreview.
-Unabhängiges Review und **HC-M01 durch den Eigentümer vor Merge bleiben offen**.
+Die damaligen Ergebnisse stehen in Issue #92 und dem zugehörigen PR, gebunden
+an Head, Basis, Checkout und Run samt Selbstreview. Der tatsächliche unabhängige
+Review-/HC-M01-/Mergezustand wird dort geführt; keine aktuelle Offenmeldung aus
+historischen Liefertexten ableiten.
 HC-M01 verlangt ein geeignetes Farbrätsel im gebundenen Windows-Export bei
 kleinem, mittlerem und großem Zoom samt Lesbarkeit, Zellraumnutzung, beiden
 Slotabständen und Linksdrag gemäß [HN](CLUE_INTERACTION.md). Technische Bilder ersetzen diese Sichtabnahme
-nicht. Commit, Push und Draft-PR sind beauftragt; kein Merge oder Release.
+nicht. Die historische HC-Beauftragung erteilt keinen neuen Umsetzungs-/Merge-/Releaseauftrag.
 
 ## HF · vollständiges Hinweis-Overlay (#149)
 
@@ -145,3 +150,4 @@ Querstrichs. Das X folgt der tatsächlichen Glyphenhülle; die alte Breite wäre
 keine sichere Untergrenze mehr. Web und nativ messen jeden Kandidaten vollständig
 mit derselben Hülle, ohne neue Monotonieannahme oder Schriftgradkappung.
 Die acht temporären Größenatlanten pro Font-RID bleiben erhalten.
+

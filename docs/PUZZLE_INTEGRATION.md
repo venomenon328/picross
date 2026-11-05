@@ -4,12 +4,11 @@ Spezifikationsstand: 29.10.2026 · RI-V01 · vom Eigentümer im Chat freigegeben
 Gesamtvorhaben: [RI / #477](https://github.com/venomenon328/picross/issues/477).
 Geprüfte Ausgangsbasis: `main@ddacc8dbf328923626cbd0235578fda2bfb99c37`.
 
-**Status: RI-A-V01 auf dem beauftragten Branch zu #478 implementiert;
-erneute unabhängige Abnahme und Merge offen.** RI-A-R01 benannte B-01/B-02/B-03;
-die beauftragte Nacharbeit und ihre neuen Nachweise stehen in
-[RI-A-T01](RI_A_VERIFICATION.md). RI-B und RI-C bleiben spätere, nicht beauftragte
-Pakete. Die Spezifikationsfreigabe allein erteilt weiterhin keinen
-Implementierungs- oder Mergeauftrag.
+Dieser Text beschreibt den freigegebenen RI-Sollvertrag. Aktuelle Umsetzung,
+Beauftragung und Abnahme stehen in #477 und den Paket-Issues/PRs, für RI-A in
+[#478](https://github.com/venomenon328/picross/issues/478). [RI-A-T01](RI_A_VERIFICATION.md)
+hält seine damaligen Befunde und Nachweise commitgebunden fest. Die Spezifikations-
+freigabe allein erteilt keinen Implementierungs- oder Mergeauftrag.
 
 ## 1. Problem, Belege und Ziel
 
@@ -34,7 +33,8 @@ Laufzeitanteile sind noch nicht gemessen.
 Die vorhandenen Optimierungen aus [#286](https://github.com/venomenon328/picross/pull/286)
 und [CI2-F/#425](https://github.com/venomenon328/picross/pull/425) sind Ausgangsbasis.
 Sie werden nicht erneut als neue Lieferung versprochen. [CI2/#412](https://github.com/venomenon328/picross/issues/412)
-bleibt ein separates Vorhaben mit seinen eigenen offenen Zeitbefunden.
+dokumentiert die frühere Kostenarbeit; aktuelle CI-Ziele stehen in
+[CI_WORKFLOW_V2](CI_WORKFLOW_V2.md).
 
 Ziel ist eine zuverlässig abschließbare, messbare neue Rätselintegration mit
 weniger wiederholter Prüf- und Dateisystemarbeit. Korrektheit, menschliche
@@ -200,11 +200,12 @@ wiederholbare Recovery. Bestehende kleine Fälle erweitern statt eine breite neu
 CI-Matrix aufzubauen. C benötigt wegen der geänderten Transaktionssemantik ein
 gesondertes qualifiziertes Review vor Merge.
 
-Die tatsächliche CI-Auswahl folgt weiter [CI2](CI_SLIMMING.md) und
-[CI-Policy](CI_POLICY.md). Werkzeugänderungen erben keine `content_only`-Ausnahme;
-alle tatsächlich ausgewählten Pflichtjobs müssen erfolgreich sein. Chromium nur
-auf ausdrücklichen Auftrag. Performancebelege erzeugen keinen automatischen
-Spiel-/Browser-/Buildauftrag und keinen zusätzlichen dauerhaften CI-Job.
+Die tatsächliche CI-Auswahl folgt dem aktuellen Paketplan nach
+[CI_WORKFLOW_V2](CI_WORKFLOW_V2.md). Werkzeugänderungen sind keine reine
+Rätselproduktion und bleiben buildpflichtig; reine Dokument-/Inhaltsänderungen
+bleiben buildfrei. Alle ausgewählten Pflichtprüfungen müssen erfolgreich sein.
+Chromium nur auf ausdrücklichen Auftrag. Performancebelege erzeugen keine
+zusätzliche automatische Spiel-/Browsermatrix oder dauerhafte CI-Last.
 Kompakte Messberichte bleiben als T01/PR-Belege gebunden, Rohprofile temporär.
 
 ## 5. Zuständige Dokumente und Übergang
@@ -228,3 +229,4 @@ gewöhnliche Rätselproduktion eingeführt.
 INT-01 und andere konkrete Produktionsblocker werden erst durch nachgewiesene
 erfolgreiche Wiederaufnahme im jeweiligen Produktionsauftrag erledigt. RI-T01
 prüft das Werkzeug an synthetischen Daten und nimmt keine echten Rätsel ab.
+
