@@ -6,8 +6,95 @@ import json
 from pathlib import Path
 import p1_preflight as toolchain
 import vs2_v1_verify
-import hf149_verify
-import hs186_verify
+
+# Independent of the native producer's table. D02 accepts the omitted combinations.
+MATRIX_CASES = tuple(
+    (name.startswith('VS'), name, w, h, ui, mode)
+    for w, h, ui, cases in (
+        (1280, 720, 1.25, {'T-01':'G', 'T-02':'GV', 'T-06':'GV', 'VS06':'V', 'VS09':'G'}),
+        (1920, 1080, 1.0, {'T-01':'G', 'T-06':'G', 'VS04':'GV', 'VS08':'GV', 'VS09':'GV'}),
+        (2560, 1440, 1.25, {'T-02':'GV', 'VS07':'V'}),
+    ) for name, modes in cases.items() for mode in modes)
+
+
+def compact_frames(stage):
+    """Exact selected native frames: name -> (client width, height, UI, fixture)."""
+    if stage == 'layout':
+        return {'album': (1920,1080,1.0,'T-06'),
+                '1280x720-ui125-f6-independent-slots': (1280,720,1.25,'T-06'),
+                '1920x1080-ui100-f2': (1920,1080,1.0,'T-02')}
+    if stage in ('cells-f1', 'cells-f2'):
+        fixture = int(stage[-1])
+        return {f'separation-f{fixture}-{step}-{suffix}': (1920,1080,1.0,f'T-{fixture:02d}')
+                for step in (12,16,18,24,72)
+                for suffix in ['confirmed'] + [f'preview-color{c}' for c in
+                    (range(1,5) if fixture == 2 and step == 24 else (1,))]}
+    if stage == 'axis':
+        frames = {name: (1920,1080,1.0,'T-06') for name in
+                  ('t06-grid-focus','gesture-counter-8','t06-full-clues-in-work-tooltip','t06-overview')}
+        frames.update({name: (1920,1080,1.0,fixture)
+                       for label, fixture in (('g1-t02','T-02'),('g1-t04','T-06'))
+                       for name in (label+'-old-arm','g1-counter-1-'+label,'g1-counter-4-'+label)})
+        frames.update({f'zr-{w}-ui{round(ui*100)}-z{zoom}-{i}': (w,h,ui,'T-01')
+                       for w,h,ui in vs2_v1_verify.VISUAL_CONFIGURATIONS
+                       for zoom in ((12,72) if w == 1280 else (72,))
+                       for i in (range(11) if zoom == 12 else (0,7,10))})
+        return frames
+    if stage == 'h1':
+        frames = {f'h1-vs2-{w}x{h}-ui{round(ui*100)}-{mode}-{state}': (w,h,ui,'T-01')
+                  for w,h,ui,mode in ((1280,720,1.25,'G'),(1920,1080,1.0,'V'),(2560,1440,1.25,'V'))
+                  for state in ('off','on')}
+        frames.update({f'f{i}-{state}': (2560,1440,1.25,f'T-{i:02d}')
+                       for i in (1,2) for state in ('reveal','earned-album')})
+        return frames
+    raise toolchain.PreflightError('Unknown compact render stage: '+stage)
+
+
+def verify_compact_stage(stage, report):
+    """Validate original native evidence, never accept a count-only success."""
+    expected = compact_frames(stage)
+    frames = report['frames']
+    counts = {'layout':0, 'cells-f1':27, 'cells-f2':76, 'axis':117, 'h1':180}
+    def require(ok):
+        if not ok:
+            raise toolchain.PreflightError('Incomplete/inconsistent compact render stage: '+stage)
+    require(report['failed'] is False and report['compact'] is True
+            and not report['failure'] and report['failure_captures'] == []
+            and report['captures'] == [] and report['retained_count'] == 0
+            and report['rendered_count'] == len(frames) == len(expected)
+            and {f['name'] for f in frames} == set(expected)
+            and report['pixel_checks'] == counts[stage])
+    by_name = {f['name']:f for f in frames}
+    for f in frames:
+        w,h,ui,fixture = expected[f['name']]
+        require(f['logical_surface'] == [w,h] and f['ui_scale'] == ui and f['fixture'] == fixture
+                and f['retained'] is False and f['crop'] is False and 0 < f['cell_pitch'] <= 72)
+        if stage.startswith('cells-'):
+            require(f['cell_pitch'] == int(f['name'].split('-')[2]))
+        if f['name'].startswith('h1-') and f['name'].endswith('-on'):
+            pair = f['h1_pair']
+            require(pair['off_frame'] == f['name'][:-2]+'off' and pair['searches_on_toggle'] == 0
+                    and pair['marked_tokens']['row'] > 0 and pair['marked_tokens']['column'] > 0
+                    and len(pair['colors']) > 0)
+    samples = report['zr_samples']
+    require(len(samples) == len([n for n in expected if n.startswith('zr-')])
+            and {s['name'] for s in samples} == {n for n in expected if n.startswith('zr-')})
+    for s in samples:
+        f = by_name[s['name']]
+        w,h,ui,_ = expected[s['name']]
+        x,y,rw,rh = s['rect']
+        require(s['requested_zoom'] == int(s['name'].split('-')[3][1:])
+                and s['actual_cell'] == f['cell_pitch'] and s['ui'] == ui
+                and s['font_size'] == round(24*ui) and s['length'] > 1
+                and x >= 0 and y >= 0 and rw > 0 and rh > 0 and x+rw <= w and y+rh <= h
+                and 3 <= s['changed_pixels'] < rw*rh*.8)
+
+
+def compact_summary(reports):
+    return dict(stages=len(reports), pixel_checks=sum(r['pixel_checks'] for r in reports),
+                rendered_count=sum(r['rendered_count'] for r in reports),
+                retained_count=sum(r['retained_count'] for r in reports),
+                captures=[c for r in reports for c in r['captures']], compact=True)
 
 
 def compact_geometry_reports(paths):
@@ -36,6 +123,8 @@ def read_geometry_report(path: Path) -> dict:
 
 
 def capture_current(project, workspace, output, engine, render_command, environment, run_phase):
+    import hf149_verify
+    import hs186_verify
     """Current functional VS2 coverage without historical reference replay."""
     environment["VS2_PROBE_OUTPUT"] = str(output)
     environment["P1_TEST_SAVE_ROOT"] = str(workspace / "vs2-current-saves")
@@ -191,11 +280,14 @@ def verify_v2(directory: Path) -> dict:
 
 
 def verify_records(report: dict) -> None:
-    expected = {(corpus,index,w,h,ui,mode) for corpus,indices in ((False,(0,1,3,5,7,8)),(True,range(10))) for index in indices for w,h,ui in vs2_v1_verify.VISUAL_CONFIGURATIONS for mode in ("G","V")}
-    actual = {(r["corpus"], int(r["id"].replace("T-","").replace("VS",""))-1,*r["client"],r["ui_scale"],r["mode"]) for r in report["records"]}
+    expected = set(MATRIX_CASES)
+    actual = {(r["corpus"],r["id"],*r["client"],r["ui_scale"],r["mode"]) for r in report["records"]}
     if report["failures"] or actual != expected or len(report["records"]) != len(expected):
         raise toolchain.PreflightError("Incomplete/failed VS2 regular matrix")
     for record in report["records"]:
+        invalid = record['client'][0] == 1280 and record['mode'] == 'V' and record['id'] in ('T-06','VS06')
+        if record['layout_valid'] is not (not invalid):
+            raise toolchain.PreflightError('VS2 selected valid/blocked geometry changed')
         if record["layout_valid"] and not record["grid_fit"]:
             raise toolchain.PreflightError("VS2 frame does not fit")
         if record["mode"] == "V" and record["hidden_tokens"]:

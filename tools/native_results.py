@@ -286,6 +286,7 @@ def validate_original_payload(result, root, player_root=None, failure_context=No
         if group == 'export':
             validate_book_lifecycle(report, directory/'book-lifecycle', result['identity'], result['host'])
         if group == 'graphics':
+            import vs2_delivery
             worker = read(directory/'vs2-worker/technical/product-report.json')
             if worker['status'] != 'success' or any(worker.get(k) != v for k,v in result['identity'].items()):
                 raise ValueError('Incomplete/wrong graphics worker')
@@ -295,6 +296,23 @@ def validate_original_payload(result, root, player_root=None, failure_context=No
             if report['visual']['vs2']['hn192'] != hn:
                 raise ValueError('HN original/group report mismatch')
             verify_hn(directory/'selected/hn192', hn)
+            # Re-read selected originals in the independent artifact gate.
+            matrix = vs2_delivery.verify(directory/'selected/vs2-renders')
+            for row in matrix['records']:
+                vs2_delivery.vs2_v1_verify.record(row['v1'])
+            if (report['visual']['vs2']['records'] != len(matrix['records'])
+                    or report['visual']['vs2']['rendered'] != len(matrix['pictures'])
+                    or report['visual']['vs2']['failures'] != matrix['failures']):
+                raise ValueError('VS2 selected original/group report mismatch')
+            render_reports = []
+            for stage in ('layout','cells-f1','cells-f2','axis','h1'):
+                original = read(directory/'selected/renders'/f'render-report-{stage}.json')
+                vs2_delivery.verify_compact_stage(stage, original)
+                render_reports.append(original)
+            combined = vs2_delivery.compact_summary(render_reports)
+            if (read(directory/'selected/renders/render-report.json') != combined
+                    or report['visual']['compact'] != combined):
+                raise ValueError('Compact render original/group report mismatch')
         required = set(artifacts(group))
         selected = report['selected_evidence']['files']
         if sorted(r['file'] for r in selected) != sorted(required) or report['selected_evidence']['omitted']:

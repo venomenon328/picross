@@ -4,7 +4,7 @@ const Main = preload("res://ui/main.gd")
 const SaveStore = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
-const COMPACT_WORK_STEPS: Array[float] = [12.0, 16.0, 18.0, 22.0, 24.0, 72.0]
+const COMPACT_WORK_STEPS: Array[float] = [12.0, 16.0, 18.0, 24.0, 72.0]
 # Success uses in-memory pixel assertions; failure frames stay bounded.
 var surface: SubViewport
 var output: String
@@ -367,17 +367,14 @@ func capture_layout(app: Main) -> void:
 func capture_compact_layout(app: Main) -> void:
 	app.show_album()
 	await snapshot(app, "album")
-	# Minimum client at the larger UI scale; regular 1080p at both scales.
-	# Each visits mono, color and the 50x50 case; independent reads remain
-	# visible on both axes at UI125 rather than repeating a 4x2 cross product.
+	# D02 accepts omitted layout combinations; retain tight slots and normal color.
 	for configuration: Dictionary in [
-		{"size": Vector2i(1280, 720), "scale": 1.25},
-		{"size": Vector2i(1920, 1080), "scale": 1.0},
-		{"size": Vector2i(1920, 1080), "scale": 1.25},
+		{"size": Vector2i(1280, 720), "scale": 1.25, "fixtures": [3]},
+		{"size": Vector2i(1920, 1080), "scale": 1.0, "fixtures": [1]},
 	]:
 		surface.size = configuration.size
 		app.set_ui_scale(configuration.scale)
-		for fixture: int in [0,1,3]:
+		for fixture: int in configuration.fixtures:
 			app.select_puzzle(fixture)
 			if app.ui_scale > 1.0:
 				app.board.zoom(1, app.board.view.viewport.get_center())
@@ -398,7 +395,7 @@ func capture_compact_layout(app: Main) -> void:
 			await snapshot(app, name)
 
 func capture_cells(app: Main, fixtures: Array) -> void:
-	# Same L/block at normal and five-cell boundaries, every color/work step.
+	# Same L/block at normal and five-cell boundaries, every confirmed color.
 	# This spatial renderer oracle covers the current cell-size boundaries;
 	# regular fit-bounded geometry is checked by VS2's native matrix.
 	var regular: Board = use_renderer_component(app)
@@ -417,12 +414,15 @@ func capture_cells(app: Main, fixtures: Array) -> void:
 			app.board.view.center = Vector2.ZERO
 			app.board.view.reframe()
 			await snapshot(app, "separation-f%d-%d-confirmed" % [fixture + 1, roundi(step)], true)
-			# Preview whole mixed-color removal: original values outside endpoint survive.
-			app.session.gesture.begin(app.session.player, Vector2i(2, 4), 1)
-			app.session.gesture.move(Vector2i(10, 4))
-			await snapshot(app, "separation-f%d-%d-removal" % [fixture + 1, roundi(step)], true)
-			app.session.gesture.cancel()
+			# Compact removal pictures had no pixel oracle; omit those render-only visits.
+			if not compact:
+				app.session.gesture.begin(app.session.player, Vector2i(2, 4), 1)
+				app.session.gesture.move(Vector2i(10, 4))
+				await snapshot(app, "separation-f%d-%d-removal" % [fixture + 1, roundi(step)], true)
+				app.session.gesture.cancel()
 			for color: int in range(1, app.session.definition.palette.size() + 1):
+				if compact and step != 24.0 and color != 1:
+					continue
 				app.session.gesture.begin(app.session.player, Vector2i(2, 3), color)
 				app.session.gesture.move(Vector2i(10, 3))
 				await snapshot(app, "separation-f%d-%d-preview-color%d" % [fixture + 1, roundi(step), color], true)
@@ -463,6 +463,8 @@ func capture_zr_counter(app: Main) -> void:
 		values.fill(-1)
 		replace_render_cells(app,values)
 		for zoom: float in [12.0,72.0]:
+			if compact and zoom == 12.0 and surface.size.x != 1280:
+				continue
 			set_pitch(app,zoom)
 			await process_frame
 			var b: Control = app.board
@@ -477,6 +479,8 @@ func capture_zr_counter(app: Main) -> void:
 				Vector2(s.x/2,-50),Vector2(s.x/2,s.y+50),Vector2(-50,-50),Vector2(s.x+50,-50),
 				Vector2(-50,s.y+50),s+Vector2(50,50)]
 			for i: int in range(samples.size()):
+				if compact and zoom == 72.0 and i not in [0,7,10]:
+					continue
 				b.pointer_move(b.get_global_transform_with_canvas().affine_inverse()*samples[i],false)
 				var name: String = "zr-%d-ui%d-z%d-%d" % [surface.size.x,roundi(app.ui_scale*100),roundi(zoom),i]
 				var picture: Image = await snapshot(app,name)
@@ -507,7 +511,7 @@ func capture_zr_counter(app: Main) -> void:
 
 func capture_h1(app: Main) -> void:
 	await preload("res://tests/vs2_h1_cases.gd").run(self, app)
-	for index: int in [0, 1, 2]:
+	for index: int in [0, 1] if compact else [0, 1, 2]:
 		app.select_puzzle(index)
 		var values: Array[int] = app.session.player.cells.duplicate()
 		values.fill(-1)

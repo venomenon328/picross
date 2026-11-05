@@ -1,5 +1,16 @@
 # Aktiver Bestand und historische Quellen
 
+**P2-E-B-V01 / #502:** Der [Grafikvertrag](CI_C_NATIVE_GROUPS.md) reduziert mit
+D02-Abdeckungserlaubnis die native VS2-Matrix von 96 auf 18 und die fünf kompakten
+Renderstufen von 158 auf 66 Frames. Alle bisherigen Originalberichtspfade bleiben;
+keine neuen Dateien oder Erfolgs-PNGs. Zwei kleine Python-Negativtests und der
+unabhängige Leser sind in `tools/ci_lifecycle.json` gebunden. Die volle frühere
+Auswahl bleibt an `d5d3a0c5c7ab1a0e79a4133e5ea47cd675cf02cf` historisch erreichbar.
+Eigene lokale Diagnosen liegen unter `artifacts/502-p2eb-local/`, Reviewfrist
+19.11.2026 beziehungsweise P2-E-B-V01-R01. T01 bilanziert den Restbestand;
+keine automatische Löschung, kein Zugriff auf geschützte/fremde Arbeitsdaten.
+Technik sieben Tage, Player vierzehn Tage; unabhängiges R01 und Mergefreigabe offen.
+
 **P2-E-A-V02 / #502:** Die KE-/KK-Dauermatrix wird gemäß
 [D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
 mit bewusstem Abdeckungsverlust verkleinert; das [aktive Inventar](CI_C_NATIVE_GROUPS.md)
