@@ -11,7 +11,6 @@ import shutil
 import time
 
 from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, CATALOG_CASES, RP6_CAPTURES, RP6_STATES, artifacts, checks, coverage
-from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
 from zs2_evidence import validate_log as validate_zs2_log
 def unique(pairs):
     result = {}
@@ -225,6 +224,8 @@ def verify_file(root, row):
 
 
 def check_phases(report, expected, directory):
+    if 'book_lifecycle' in report or (directory/'book-lifecycle').exists():
+        raise ValueError('Book lifecycle is an explicit diagnostic, not standard native evidence')
     rows = report['checks']
     if sorted(r['name'] for r in rows) != sorted(expected):
         raise ValueError('Missing/duplicate/unexpected native checks')
@@ -238,7 +239,7 @@ def check_phases(report, expected, directory):
             raise ValueError('Incorrect native process outcome')
         python_checks = {'current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'kat2-adapter-export',
                          'kat2-adapter-register', 'kat2-imported-base-copies', 'za1-test-only-registration',
-                         'current-vs2-complete', 'current-drawing-pixel-oracles', 'regular-book-integration'}
+                         'current-vs2-complete', 'current-drawing-pixel-oracles'}
         if ('log' in row) != (row['name'] not in python_checks):
             raise ValueError('Missing/unexpected native process log')
         if 'log' in row:
@@ -253,6 +254,8 @@ def check_phases(report, expected, directory):
 
 
 def validate_book_lifecycle(report, directory, identity, host):
+    """Independent reader for the explicitly requested diagnostic, never a CI minimum."""
+    from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
     study = read(directory/'report.json')
     expected_phases = ['book-version', 'book-import', 'book-integration']
     expected_files = {'integration/integration.json'} | {'logs/'+name+'.log' for name in expected_phases}
@@ -351,8 +354,6 @@ def validate_original_payload(result, root, player_root=None, failure_context=No
             if scope['enabled'] != (name in enabled) or scope['status'] != ('success' if name in enabled else 'not_applicable'):
                 raise ValueError('Unselected/skipped scope misreported')
         check_phases(report, checks(group, result['host']), directory)
-        if group == 'export':
-            validate_book_lifecycle(report, directory/'book-lifecycle', result['identity'], result['host'])
         if group == 'graphics':
             import vs2_delivery
             worker = read(directory/'vs2-worker/technical/product-report.json')

@@ -1,18 +1,26 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/519",
-  "package": "PS-1-puzzle-sheet-workspace",
-  "modules": [],
-  "purpose": "Nur Offline-HTML-Sheet, Authoring-Dokumentation und Paketplan. Kern docs/ci-required prüft Dokument-/Planintegrität; buildfrei gemäß CI_WORKFLOW_V2. Persönliche Einstellungen, Arbeitswurzel und Importgrenzen werden einmalig synthetisch in JavaScript/DOM geprüft.",
-  "omitted": "Keine Spiel-, Werkzeug-, Solver-, CI-Code- oder Produktressourcenänderung: keine tools/production/native/preflight/delivery-Module, kein Player und kein Chromium. Keine rätselspezifischen Replays oder dauerhafte Sheetsuite.",
+  "issue": "https://github.com/venomenon328/picross/issues/502",
+  "package": "P2-F-C-D03-workflow-v2-integration",
+  "modules": [
+    "tools",
+    "native.export"
+  ],
+  "purpose": "Buch-Lifecycle aus normalem Export entfernen und PR #516 mit Workflow v2 integrieren. tools prüft die bestehenden Producer-/Reader-, Auswahl-, Plan- und Negativfälle; native.export prüft den tatsächlich gekürzten Exportpfad einschließlich unabhängiger Originalprüfung und liefert den Windows-Kerndownload ohne zweiten Build.",
+  "omitted": "Keine Änderung an Spielcode, Ressourcen, Solver oder Produktionslogik: keine weiteren native-, production-, preflight- oder delivery-Module. Kein Chromium und kein echter Buch-Lifecycle; dessen bewusste Abdeckungslücken sind in CI_C_NATIVE_GROUPS dokumentiert. Gemeinsame Readeränderungen betreffen nur den entfernten Lifecycle und werden synthetisch im tools-Modul geprüft. Alte Vollmatrixläufe bleiben historische Nachweise.",
   "test_changes": [
     {
-      "path": "docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html",
-      "disposition": "temporary",
-      "reason": "Einmalige Syntax-/DOM-Prüfung der sieben Prompts, absoluten Pfade, Persistenz samt Speicherfehlern, Settings-Roundtrip, alten Sitzungen/Updates, Import-/Resetgrenzen und ZIP-Inhalte; eingebetteter Snapshot bytegleich. Temporäre Prüfscripte und npm-Abhängigkeiten nach gesicherter Lieferung entfernen."
+      "path": "tools/test_book_lifecycle.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende kleine Python-Regression im wählbaren tools-Modul: verbleibende Exportphasen vollständig verlangen, alte Lifecyclephase/-Aggregate/-Verzeichnisse ablehnen und den ausdrücklich aufrufbaren Diagnosevertrag synthetisch prüfen. Kein neuer Engineprozess oder Kerntest."
+    },
+    {
+      "path": "tools/test_ci_c.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende Sparse-/Readerregression an den entfallenen automatischen Diagnoseeingang anpassen; übrige Phasen-, Quell- und Ergebnisbindungen bleiben geprüft. Nur im wählbaren tools-Modul."
     }
   ],
-  "core_change": "Keine Änderung am CI-Kern oder an dauerhaften Tests.",
+  "core_change": "Keine Änderung an den Workflow-v2-Kernregeln oder dauerhafte zusätzliche Kernlast. Bei gewähltem native.export entfällt nur die eigene Buch-Diagnose; der Windows-Kerndownload nutzt weiterhin dessen geprüftes Spielerpaket.",
   "evidence": {
     "mode": "none",
     "purpose": null,

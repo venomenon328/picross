@@ -24,14 +24,14 @@ Produktgarantien und paketbezogene Abnahmen bestehen unabhängig vom CI-Ausführ
 | `native.completion` | EA-Import, native/restart mit eigenem Profil, sofortiger Commit/Save, Übergang/Abbruch, Geometrie, Reset und AT-Pixelprüfung |
 | `native.adapters` | Vier RP6-Spiel-/Save-/Readketten, Fremdslots, zwei RP6-Darstellungscaptures, synthetische ZA-1-Registrierung/Recovery und Windows-/PCK-Prüfung |
 | `native.graphics` | VS2/HF/HN/HS, 18er-Geometriestichprobe, fünf kompakte Renderstufen mit 66 Frames, aktuelle ZS2-Bewegungsorakel und PERF-B |
-| `native.export` | Regulärer Inhaltsimport, Windows-Debugexport, externe PCK-Prüfung und kurzer Hilfe-/Produktlebenszyklus; auf Windows zusätzlich tatsächliche EXE-Starts |
+| `native.export` | Regulärer Inhaltsimport, Windows-Debugexport, externe PCK-Prüfung; auf Windows zusätzlich tatsächliche EXE-Starts |
 
 Der Windowsbau des **CI-Kerns** außerhalb reiner Dokument-/Rätselinhaltsänderungen
 ist kein automatisch ausgewähltes
 `native.export` und behauptet dessen zusätzlichen Funktionsnachweis nicht. Bei
 gewähltem Modul wird sein geprüftes Spielerpaket ohne technische Berichte als
-Kerndownload wiederverwendet. PR #516 ist separate Arbeit: dieser Text beschreibt
-den tatsächlich vorhandenen Lifecyclepfad, keine vorweggenommene Integration.
+Kerndownload wiederverwendet. Der eigene Buch-/Hilfe-Lifecycle gehört seit
+P2-F-C/D03 auch bei Auswahl von `native.export` nicht mehr dazu.
 
 ## Originale und Aufbewahrung
 
@@ -74,6 +74,81 @@ produktive Historylogik und liest Plan, Trace, beide Saves, Fremdslot-Hashes und
 Summary. Zwei günstige Gegenproben verwerfen manipulierte Zellen und unvollständige
 Spuren. Keine versteckten Setupaktionen, 500er-Route oder automatische Stressmatrix.
 [CI2-D-T01](CI2_D_VERIFICATION.md) bleibt der historische Einführungsnachweis.
+
+## P2-F-C-V01 / #502: Buch-Lifecycle nur auf ausdrücklichen Anlass
+
+[D03](https://github.com/venomenon328/picross/issues/502#issuecomment-6665280802)
+und die [aktualisierte Vorbereitung](https://github.com/venomenon328/picross/issues/502#issuecomment-6664748225)
+heben im P2-F-C-Scope den pauschalen Schutz von Testfamilien und Mindestfallzahlen
+auf. Produktfunktionen und Datenintegrität bleiben verbindlich. Der frühere
+U01-Abschluss betrachtete nur die kleine HIL-Matrix unter dem inzwischen
+abgelösten Schutzrahmen; er begrenzt diese neue Entscheidung nicht.
+
+Die gesamte Phase `regular-book-integration` entfällt aus `export`, Standard-CI,
+`all` und gewöhnlichen manuellen Vollläufen. Kein Ersatz-Smoke, keine automatische
+Änderungs-/Zeitplanroute und keine Pflicht, alle Kapitel oder Viewports anzuklicken.
+Damit entfallen drei Unterprozesse (Version, Import, gerenderte Integration),
+die aggregierte `book_lifecycle`-Pflicht und fünf Dateien unter `book-lifecycle/`
+(report.json, integration/integration.json und drei Logs). Der unabhängige
+Standardreader verlangt die verbleibenden Exportphasen exakt und weist
+mitgelieferte alte Lifecyclephasen, -Aggregate und -Verzeichnisse zurück.
+Die Sparse-Quellenbindung dieses Diagnosepfads entfällt im CI-Gate.
+
+`tools/book_lifecycle.py` bleibt ausschließlich als ausdrücklich aufrufbare
+Diagnose bei konkreten Buch-/Help-/Save-Navigationsänderungen oder Fehlerbefunden:
+`python tools/book_lifecycle.py --cache-dir <cache> --output-dir <leeres-ziel>`.
+Es gibt keinen obligatorischen Aufruf bei solchen Änderungen; der Auftrag entscheidet.
+Dann laufen die bisherigen Fälle vollständig mit isolierten synthetischen Daten,
+300-s-Phasengrenzen und ohne Bilder/Film. Die CLI liest das Ergebnis anschließend
+mit dem separaten `validate_book_lifecycle`: Originale, Assertions, Quellen,
+Hashes und Identität müssen stimmen. Diese Integritätsregeln sind keine
+Mindestabdeckung der Standard-CI. Der kleine Python-Test dieses weiterhin
+aufrufbaren Diagnosevertrags bleibt im bestehenden Toolpfad.
+
+Die historische Kostenbasis vor Workflow v2 ist PR-Run `42058446334/2`, Technikoriginal `13434724730`:
+79,167 s für den gesamten Lifecycle, darin 9,241 s Import und 68,768 s Integration
+mit 201,050 s Kindprozess-CPU; fünf Dateien/110.787 Rohbytes, null PNGs.
+Lokale instrumentierte Kopien auf derselben Basis bestätigen die Größenordnung
+und trennen die Familien; keine der lokalen Zeiten ist eine CI-Prognose.
+Die kleine Matrixreduktion des U01 sparte nur 1,29–1,43 s. Der eigene Prozess
+ist deshalb die sinnvolle Kürzungseinheit, einschließlich seiner Start-/Importkosten.
+
+| Bisherige Familie / lokale Diagnosezeit | Verbleibende Stufe, konkrete Lücke und Risikobewertung |
+| --- | --- |
+| HIL-Lehrbeispiele `help_cases.gd`, 0,0053 s | Bleiben bei Auswahl von `native.core` in dessen vorhandenem Prozess: unabhängige kleine Enumeration der tatsächlich dargestellten Daten. Falsche Lehrschlüsse können neue Spieler fehlleiten; sehr geringe Mehrkosten, kein eigener Prozess/Renderer. Keine pauschale Schutzpflicht, sondern positive Nutzenabwägung. |
+| Kapitel/Font/Diagramm/Clip/Wheel-Matrix, 3,705 s innerhalb HIL | Alle zwölf Varianten und 960 Wheel-Aktionen entfallen aus Standard-CI, auch die sieben U01-Kandidaten. Abgeschnittene Hilfe, falsche HZ-Trefferflächen, unerreichbares Ende oder Eingaben auf dem verdeckten Brett können unerkannt bleiben. Mittlere UX-Schwere, konkrete Auslöser sind Helptext-, Layout-, Font- oder GUI-Änderungen; keine gemessene Fehlerhäufigkeit. Nur ausdrückliche Diagnose, kein gleichwertiger Ersatz. |
+| HIL insgesamt, 17,215 s | Settings-Pan, Kapitel-/Scrollgedächtnis, Captureteilnahme, Work-/Catalog-Rückweg und passive Eingaben nicht mehr in dieser realzeitlichen Kette geprüft. Verlorene Position, falscher Rückweg oder unerwartete Zustandsmutation sind akzeptierte Testlücken; das Produkt darf sie weiterhin nicht haben. Semantikprüfung der Beispiele ersetzt diese Kette nicht. |
+| Start, Frozen-Schema-1 und erstes Öffnen, 6,710 s | Bestehende Core-/History-/PCK-Proben prüfen andere Start-/Persistenzaspekte. Spezifische Wiederherstellung von Redo, Werkzeug/Farbe, Zoom und Hinweisankern beim echten Buchöffnen bleibt als Lücke. Hoher Schaden bei Zustandsverlust, plausibler Auslöser ist Änderung der Aktivierungs-/Viewbindung; nur ausdrückliche Lifecycle-Diagnose deckt genau diese Kopplung ab. |
+| Work-Schreibfehler/Retry/Rückkehr, 2,526 s; Catalog-Fehler/Retry/Information, 2,356 s | Core/P13, ZA-1-Save-Recovery und KAT-2-Pages behalten tatsächliche Fehler-/Slot-/Retryproben. Sie sind kein Ersatz für den unbeschleunigten Buch-Flush, blockiertes Beenden oder sichtbares Retry während dieser Folge. Ungesicherter Fortschritt oder ein unbedienbarer Fehlerweg wären schwerwiegend. Teilweise gemeinsame SaveStorelogik rechtfertigt geringere Frequenz, nicht behauptete Abdeckungsneutralität. |
+| Frozen-View, Abbruch, stale callback, falsche ID, Slotwechsel, 4,776 s | Book-Generation-/Capture-Rennen werden nicht mehr realzeitlich durch diese Folge geprüft. Falsches Blatt oder falsche Slotbindung kann bis zu Datenverlust reichen. Hohe Schwere; Änderungen an asynchroner Navigation sind der konkrete Diagnoseanlass. Verbleibende Fremdslotproben prüfen andere Wege. |
+| Work→Settings→Help→Return, 3,878 s; letzte Rückkehr/Freigabe, 2,263 s | Verlust von Optionen/Besuchsursprung oder Ressourcenleck kann unbemerkt bleiben. Komponentenprüfungen mit `book_fixture.gd` stabilisieren synchron und belegen keine echte Bewegungs-/Freigabereihenfolge. Kein zusätzlicher Dauer-Smoke; explizite Diagnose bei betreffenden Änderungen/Befunden. |
+| Backup-only-Recovery, 6,888 s | ZA-1/P13 und KAT-2-KK behalten Recovery-/Fremdslotfälle. Die besondere Kopplung aus read-only Backup, Buch-Informationsseite, sichtbarer Reparatur und geänderter Katalogauswahl wird nur noch anlassbezogen geprüft. Überschriebenes Backup/falscher Slot wäre schwerer Datenverlust; die Produktgarantie bleibt, die reale Kopplungsprobe wird bewusst nicht dauerhaft verlangt. |
+| Leerer/ungültiger Katalog ohne Session, 9,210 s; realer Close, 1,264 s | KAT-2 prüft leere/ungültige Daten, aber nicht diese vollständigen Buchrouten und den tatsächlichen Close. Nicht erreichbare Hilfe/Einstellungen, Absturz oder hängenbleibender Prozess sind akzeptierte Prüflücken. Bei Registry-/Nullsession-/Closeänderungen ist die Diagnose sinnvoll, kein automatisches Pflichtprogramm. |
+| Version/Import und Diagnose-Reader | Kein eigener Standardprozess und keine Standardquell-/Dateipflicht mehr. Regulärer Import, echter Windows-Export, Entrypoint-/Ressourcen-/Player-PCK-Prüfung bleiben in Export; die zusätzliche Diagnosekopie liefert dafür keinen proportionalen Dauernutzen. Der erhaltene manuelle Reader bleibt fail-closed. |
+
+Die Zeiten der Matrix sind in HIL enthalten; CPU wird nicht zur Wandzeit addiert.
+Für seltene Fehler gibt es keine belastbare Frequenzstatistik. Die Entscheidung
+stützt sich auf konkrete Änderungsanlässe, teilweise vorhandene günstigere
+Prüfungen und den hohen wiederkehrenden eigenen Prozessaufwand. Insbesondere
+Save-/Recoverylücken sind ausdrücklich akzeptierte Risiken der Prüfstrategie,
+keine Aufhebung eines Datenversprechens. Kein Produktcode wird geändert.
+
+Die genannten verbleibenden Prüfungen laufen nur bei Auswahl ihrer jeweiligen
+Module im aktuellen Paketplan. `native.core` ist kein Bestandteil des obligatorischen
+kleinen CI-Kerns. Andere Core-/History-/Catalog-/Completion-/Adapters-/Graphics-/
+Exportprüfungen bleiben in diesem Paket inhaltlich unverändert; ihre Namen schützen
+sie nicht vor einer späteren Neubewertung. Die alten manuellen Auswahlregeln starten
+den Lifecycle ebenfalls nicht bei Diagnosequelländerungen.
+
+Der Integrationsplan von PR #516 wählt `tools` für bestehende kleine Producer-/Reader-
+und Negativfälle sowie `native.export` für den tatsächlich geänderten Exportweg samt
+wiederverwendetem Windows-Kerndownload. Spielcode, Ressourcen und Produktionslogik
+ändern sich nicht; weitere Module werden nicht angefordert. Technische Originale
+werden im erzeugenden Job unabhängig gelesen und danach entfernt (`evidence.mode=none`).
+Alte T01-Vollmatrixmessungen bleiben an ihren damaligen Head/Base/Run/Attempt gebunden;
+sie belegen keinen neuen Workflow-v2-Lauf. Neue Ergebnisse stehen im Paket-PR.
+600 s sind ein weiches Ziel. Tests, Selbstreview, technisches Review und Mergefreigabe
+bleiben gemäß aktuellem Workflow getrennt. Kein Chromium oder automatischer Retry.
 
 ## P2-F-B-V01 / #502: risikobasierte ZS2-Core-Stichprobe
 
@@ -312,12 +387,13 @@ zugehörigen PR bindet die damalige Wirkung und Messgrenzen.
 
 ## Buch-/Hilfeprüfung und Studienrückbau
 
-`native.export` enthält am aktuellen Stand `regular-book-integration` über
-`tools/book_lifecycle.py`: `book-version`, `book-import`, `book-integration`.
-Der unabhängige Reader verlangt Quellbindung, sämtliche aktuellen Lifecycle-/HIL-
-Assertions, `integration/integration.json` und drei Prozesslogs. **Keine sieben
-Hilfe-PNGs mehr**; das aktuelle Inventar hat `pngs=0`. Die Product-/Save-/Recovery-
-Assertions werden durch den Bilderrückbau nicht zu einem behaupteten Sichtnachweis.
+`native.export` enthält seit [P2-F-C/D03](#p2-f-c-v01--502-buch-lifecycle-nur-auf-ausdrücklichen-anlass)
+keinen `regular-book-integration`-Prozess mehr. `tools/book_lifecycle.py` bleibt ein
+nur ausdrücklich aufrufbarer Diagnoseweg mit `book-version`, `book-import` und
+`book-integration`. Nur dieser Weg bindet Quellen, Lifecycle-/HIL-Assertions,
+`integration/integration.json` und drei Prozesslogs. Keine Hilfe-PNGs; sein
+Inventar hat `pngs=0`. Die bewusst entfallende automatische Kopplungsprüfung und
+verbleibende modulabhängige Abdeckung stehen im Risiko-/Resttestvertrag oben.
 
 Die frühere Vollstudie, Filmproduktion, Material-/Tooltip-/N03–N06-Matrix und
 Studienexporte sind aus dem aktiven Pfad entfernt. Historische B-A-/B-B-Nachweise

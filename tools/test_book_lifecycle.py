@@ -1,4 +1,4 @@
-"""Current short lifecycle producer, source binding and fail-closed gate."""
+"""Explicit diagnostic binding and standard CI's deliberately smaller export scope."""
 import json
 import ast
 from pathlib import Path
@@ -7,7 +7,7 @@ import unittest
 from copy import deepcopy
 import os
 import subprocess
-import struct
+import hashlib
 import sys
 from unittest.mock import patch
 from book_contract import SOURCES, INTEGRATION_ASSERTIONS
@@ -52,7 +52,7 @@ class BookLifecycleTests(unittest.TestCase):
             report = dict(book_lifecycle=study)
             validate_book_lifecycle(report,output,identity,host)
             # The same otherwise valid evidence fails when the checkout lacks
-            # an actual source, as in an incomplete gate sparse checkout.
+            # an actual source in an incomplete explicit diagnostic checkout.
             with patch('native_results.__file__',str(Path(temp)/'missing-checkout/tools/native_results.py')):
                 with self.assertRaises(FileNotFoundError):
                     validate_book_lifecycle(report,output,identity,host)
@@ -110,13 +110,39 @@ class BookLifecycleTests(unittest.TestCase):
         for job in ("product", "production", "preflight", "delivery"):
             self.assertTrue(selection["selected"][job])
 
-    def test_lifecycle_phase_is_required_once_and_recognized_as_python(self):
-        self.assertIn("regular-book-integration", checks("export"))
-        self.assertNotIn("regular-book-integration", checks("graphics"))
-        row = dict(name="regular-book-integration", status="success", seconds=.1, exit_code=0)
-        check_phases(dict(checks=[row]), ["regular-book-integration"], Path("unused"))
-        with self.assertRaises(ValueError):
-            check_phases(dict(checks=[]), ["regular-book-integration"], Path("unused"))
+    def test_standard_export_accepts_remaining_processes_and_rejects_retired_evidence(self):
+        expected = sorted(['current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources',
+                           'version', 'import', 'player-content-import', 'windows-export', 'player-content-pck'])
+        self.assertEqual(checks('export'), expected)
+        self.assertEqual(checks('export', 'Windows'), sorted(expected + ['windows-exported-start', 'windows-exported-gui-start']))
+        with tempfile.TemporaryDirectory() as temp:
+            directory = Path(temp)
+            (directory/'logs').mkdir()
+            rows = []
+            for name in expected:
+                row = dict(name=name, status='success', seconds=.1, exit_code=0)
+                if name not in ('current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources'):
+                    payload = (name+' OK\n').encode()
+                    (directory/'logs'/name).write_bytes(payload)
+                    row['log'] = dict(file=name, retained_bytes=len(payload), original_bytes=len(payload),
+                                      sha256=hashlib.sha256(payload).hexdigest(), abbreviated=False)
+                rows.append(row)
+            report = dict(checks=rows)
+            check_phases(report, expected, directory)
+            for name in expected:
+                with self.subTest(missing=name), self.assertRaises(ValueError):
+                    check_phases(dict(checks=[r for r in rows if r['name'] != name]), expected, directory)
+                bad = deepcopy(report)
+                next(r for r in bad['checks'] if r['name'] == name)['exit_code'] = 4
+                with self.subTest(failed=name), self.assertRaises(ValueError):
+                    check_phases(bad, expected, directory)
+            with self.assertRaises(ValueError):
+                check_phases(dict(checks=rows+[dict(name='regular-book-integration')]), expected, directory)
+            with self.assertRaises(ValueError):
+                check_phases(dict(report, book_lifecycle={}), expected, directory)
+            (directory/'book-lifecycle').mkdir()
+            with self.assertRaises(ValueError):
+                check_phases(report, expected, directory)
 
     def test_current_cli_rejects_retired_scopes_and_recording(self):
         root = Path(__file__).resolve().parents[1]

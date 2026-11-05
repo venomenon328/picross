@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the current short book/help/product lifecycle; no study or browser."""
+"""Explicit book/help diagnostic; excluded from standard CI and ordinary full runs."""
 from __future__ import annotations
 
 import argparse
@@ -21,7 +21,7 @@ from book_contract import SOURCES
 
 
 def run_lifecycle(cache: Path, output: Path) -> dict:
-    """Current help/product route; no complete study or material gallery."""
+    """On-demand help/product route; no automatic caller or complete study."""
     if output.exists() and any(output.iterdir()):
         raise ValueError("Output must be empty")
     logs = output / "logs"
@@ -72,4 +72,7 @@ if __name__ == "__main__":
     parser.add_argument("--cache-dir", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
     args = parser.parse_args()
-    run_lifecycle(args.cache_dir.resolve(), args.output_dir.resolve())
+    report = run_lifecycle(args.cache_dir.resolve(), args.output_dir.resolve())
+    from native_results import validate_book_lifecycle
+    validate_book_lifecycle(dict(book_lifecycle=report), args.output_dir.resolve(),
+                            source_identity(ROOT), platform.system())

@@ -639,12 +639,6 @@ def main(argv: list[str] | None = None) -> int:
                     run("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
                           "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
                 evidence.scope_done("export")
-            if args.export:
-                # HIL owner instruction: targeted help/lifecycle only in CI;
-                # only the current short product lifecycle is retained.
-                import book_lifecycle
-                evidence.report["book_lifecycle"] = python_phase("regular-book-integration", lambda: book_lifecycle.run_lifecycle(
-                    args.cache_dir.resolve(), evidence.technical / "book-lifecycle"))
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
             evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz")])
             required_ea = {p.relative_to(output).as_posix() for p in selected if p.parent.name == "ea"}

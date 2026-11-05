@@ -27,8 +27,9 @@ Fonts, Hinweis-/Zellgrafik und SL-Rahmen behalten ihre bisherigen Bytes/Rechte.
 
 P2-A / #502 entfernt die historische Hülle `game/study/book/` mit ihren
 27 Instanzen und Vollprüfern. Die Quellen bleiben über [BOOK_STUDY](BOOK_STUDY.md)
-commitgebunden erreichbar. `tools/book_lifecycle.py` prüft ausschließlich den
-aktuellen Produktroot und HIL mit dem bestehenden synthetischen Testkatalog.
+commitgebunden erreichbar. `tools/book_lifecycle.py` prüft auf ausdrücklichen
+Diagnoseauftrag den aktuellen Produktroot und HIL mit synthetischem Testkatalog.
+P2-F-C/D03 entfernt diesen eigenen Prozess aus `native.export` und normalen Vollläufen.
 Der externe Windows-Beobachter liegt unter `game/tests/`; technische Inputs,
 Prüfprogramme und Berichte bleiben aus regulären Paketen ausgeschlossen.
 Der PCK-Audit prüft den tatsächlichen Entrypoint und benötigte gemeinsame
@@ -91,12 +92,14 @@ Die aktiven Zahlen-/X- und Rasterzeichenhelfer werden gemeinsam verwendet.
 Captures nehmen die vollständige Controls-Hierarchie mit; kein eigenes Overlay
 oder stehenbleibendes Lehrbild während eines Übergangs.
 
-Die vorhandene Integration prüft zusätzlich die tatsächlichen Beispielschlüsse,
-Kapitelpointer, Scrollenden in den drei CI-Konfigurationen, Einstellungenpan,
-Katalog-/Rätselrückweg und Hilfe ohne Session. Spielstand, History, Werkzeug/Farbe,
-Zoom und Hinweisanker bleiben erhalten; der Pflicht-Flush echter Seitenwechsel
-bleibt bestehen. Sieben native Originale ergänzen den aktuellen Lieferumfang;
-Quellinventar und Ergebnisguard verlangen sie. Die B-B-Lieferberichte und
+Die günstige Prüfung der tatsächlichen Beispielschlüsse bleibt im wählbaren Modul
+`native.core`. Kapitelpointer, Scrollenden, Einstellungenpan, Katalog-/Rätselrückweg
+und Hilfe ohne Session werden seit P2-F-C/D03 nur noch bei ausdrücklich angeforderter
+Lifecycle-Diagnose geprüft. Der [Risiko-/Resttestvertrag](CI_C_NATIVE_GROUPS.md#p2-f-c-v01--502-buch-lifecycle-nur-auf-ausdrücklichen-anlass)
+benennt die bewusst entfallende automatische Abdeckung. Spielstand, History,
+Werkzeug/Farbe, Zoom, Hinweisanker und Pflicht-Flush echter Seitenwechsel bleiben
+Produktanforderungen. Sieben HIL-Bilder sind schon seit P2-C keine aktuelle Pflicht;
+die Diagnose liefert ausschließlich JSON und Logs. Die B-B-Lieferberichte und
 historischen Abnahmen werden dadurch nicht nachträglich geändert.
 Die getrennten HIL-T01/R01/M01-Gates stehen in
 [Issue #500](https://github.com/venomenon328/picross/issues/500).
@@ -137,29 +140,32 @@ Die nativen Gruppen werden im aktuellen Paketplan nach dem vollständigen Diff b
 bisherige Komponentenfälle hängen über `tests/book_fixture.gd` am tatsächlichen
 regulären Entrypoint und gemeinsamen Layout; sie stabilisieren Bewegungen
 ausdrücklich synchron. Das ist kein Zeit-/Bewegungsnachweis. Der unveränderte
-Produktroot in `tests/book_integration.gd` prüft Hilfe und echte Kernübergänge.
+Produktroot in `tests/book_integration.gd` prüft nur auf ausdrücklichen Diagnoseauftrag
+Hilfe und echte Kernübergänge. Keine automatische Mindestfallzahl daraus ableiten.
 Die umfangreichen Original-/Handoffprüfungen sowie Windows-/Chromium-Eingaben
 gehören zum historischen B-B-Liefernachweis; sie werden für HIL-1 nicht wiederholt.
 `tests/book-save-v1.json` ist ein festes synthetisches Schema-1-Input mit History,
 Redo, Werkzeug/Farbe, Zoom und Hinweisankern; kein echter Benutzerstand.
 
-Die ausdrücklich gewählte native Exportgruppe führt am aktuellen Stand den gezielten
-Hilfe-/Lifecyclepfad aus: Version, Import und `book_integration.gd`, mit Assertionbericht
-und drei Logs. Die sieben früheren Hilfe-PNGs sind seit P2-C-V03 entfernt; der
-unabhängige Reader verlangt `pngs=0`. Keine komplette Buchstudie, Materialgalerie
-oder Filmproduktion in CI. Der obligatorische Kern-Windowsbau allein startet diese
-zusätzliche Funktionsprüfung nicht. PR #516 wird separat integriert. Producer,
-Quellinventar `tools/book_contract.py` und unabhängiger Ergebnisguard binden
-gemeinsam Originalberichte, notwendige Assertions, Phasen und Datei-Hashes.
+Die frühere automatische Hilfe-/Lifecyclepflicht vom 03.11.2026 wird durch
+[D03](https://github.com/venomenon328/picross/issues/502#issuecomment-6665280802)
+und P2-F-C ausdrücklich aufgehoben. Auch das gewählte Modul `native.export` führt
+keinen eigenen Buch-Lifecycle mehr aus; alle zugehörigen Fälle/Unterphasen und
+fünf Dateien entfallen aus seinem Pflichtinventar. Kein neuer Ersatz-Smoke.
+Die manuelle CLI
+`python tools/book_lifecycle.py --cache-dir <cache> --output-dir <leeres-ziel>`
+bleibt als Diagnose bei konkreten Änderungen/Befunden erhalten, ohne automatische
+Aufrufpflicht. Nur dann binden Producer, `tools/book_contract.py` und separater
+Ergebnisreader echte Originalberichte, Assertions, Quellen, Phasen und Hashes.
 Die historische 600-s-Ausnahme für `book-native` gehört zum damaligen
-B-B-Vollnachweis. Diese Phase entfällt mit dem Vollstudienpfad; die aktuellen
-drei Lifecyclephasen behalten ihre 300-s-Grenzen.
-Die kurze Historyroute behält höchstens 20
+B-B-Vollnachweis. Diese Phase entfällt mit dem Vollstudienpfad; die drei manuell
+angeforderten Lifecyclephasen behalten ihre 300-s-Grenzen.
+Die kurze Historyroute im gewählten Modul `native.history` behält höchstens 20
 Kommandos, sechs neue Transaktionen und genau zwei echte Prozesse.
-Die Exportgruppe wartet unter Linux auf die bereits laufenden Katalog-/Grafik-
-gruppen, bevor sie die gezielte 3D-Hilfeintegration beginnt. So konkurrieren diese
-Software-Renderer nicht um dieselben CPUs; Prüfungen und Auflösung bleiben
-für ihren jeweils ausgewählten Umfang erhalten. Für die Renderthreads gilt die Renderer-Vorgabe.
+Die bestehende Abhängigkeit der Exportgruppe von ebenfalls gewählten Katalog-/
+Grafikgruppen bleibt in diesem Paket unverändert; sie startet keine
+3D-Hilfeintegration mehr. Für ausdrücklich angeforderte Diagnosen gilt weiterhin
+die bestehende Renderer-Vorgabe.
 
 `tools/book_windows_probe.py --build-cache <cache> --source <ziel>` exportiert
 headless den regulären Windowsroot mit synthetischen Daten. Zwei kleine
