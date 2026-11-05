@@ -131,6 +131,14 @@ bleiben für ihre jeweiligen Aussagen erhalten. Firefox bleibt aus CI ausgeschlo
 
 ## 4. Native Prüfung und kurze Historyroute
 
+P2-F-A-V01-P01 aus [#502](https://github.com/venomenon328/picross/issues/502)
+reduziert die RP6-Darstellung risikobasiert von vier Prozessen/40 Zuständen auf
+zwei Prozesse/zehn Zustände. Der [aktuelle native Vertrag](CI_C_NATIVE_GROUPS.md)
+bindet T04/UI100 und T06/UI125, konkrete bewusste Prüflücken und den unabhängigen
+Reader. Alle vier echten RP6-Spiel-/Saveketten sowie Fremdslot-, ZA-1-, Recovery-,
+Registrierungs- und PCK-Prüfungen bleiben unverändert. Keine behauptete
+Abdeckungsneutralität, keine neue historische Wiederholung oder Budgeterhöhung.
+
 [CI2-D / #416](https://github.com/venomenon328/picross/issues/416) ersetzt die
 500er-Route vollständig im aktiven Standard-, `history`-, `runtime`-, `all`-,
 `--integration`- und gewöhnlichen manuellen Vollumfang. Kein routinemäßiger
