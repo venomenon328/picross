@@ -1,5 +1,22 @@
 # ZS-2 · reguläre Integration und Prüfzuordnung
 
+## Aktuelle Core-Regression: P2-F-B-V01 / #502
+
+Die folgenden Lieferangaben von 09.10.2026 bleiben historisch. Für die aktuelle
+Core-Phase `current-drawing-tests` gilt die explizite
+[ZS2-Stichprobe samt bewusst entfallender Varianten](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe):
+zehn statt 40 Strichkombinationen, T-01/T-06 jeweils UI100/125 statt sechs Blätter
+mal zwei und zwei statt sechs Animation-aus-Blattfolgen. Alle Längen 1/4/16/17/50,
+Buttonbedeutungen, Achsen/Vorzeichen und sofortigen Datenzusagen bleiben repräsentiert.
+Geschützte Gesten-, G1-, Lifecycle-, Chord-, Save-/Completion- und Zeitgrenzproben
+bleiben unverändert. 24 tatsächliche Fallrecords werden unabhängig aus dem
+Originallog geprüft; Erfolg hängt nicht an historisch 3.526 oder einer neuen
+festen Gesamtzahl. Die separate Echtzeit-Pixelprüfung und deren Framefehler werden
+nicht geändert. T01 bindet tatsächliche Messungen und CI im Paket-PR; unabhängiges
+P2-F-B-V01-R01 und Eigentümer-Mergefreigabe folgen getrennt.
+
+## Historischer Lieferstand
+
 Stand: 09.10.2026 · ZS2-V1 / N01–N03 plus Tempo-/Schraffur-Nacharbeit · #53 · Arbeitsbranch `feat/53-zs2-regular-ui`, Ziel `main`.
 Historische native Auswahlreferenz: `985cf08e0cd7dda4186c3dd42b5eccbba1b80e3f`
 (integrierte ZS-1-Studie aus PR #55). Aktuelle integrierte main-Basis:

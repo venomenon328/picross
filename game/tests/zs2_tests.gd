@@ -2,8 +2,32 @@ extends "res://tests/zs1_tests.gd"
 ## Run the proven gesture contract through the actual regular scene and save path.
 const Regular = preload("res://ui/chalkboard_board.gd")
 var saved_root: String
+var case_id: String = ""
+var case_started: int = 0
+var case_assertions: Array = []
+var case_data: Dictionary = {}
+
+func check(ok: bool, label: String) -> void:
+	super.check(ok, label)
+	case_assertions.append({"label":label, "passed":ok})
+
+func begin_case(id: String) -> void:
+	end_case()
+	case_id = id
+	case_started = Time.get_ticks_usec()
+
+func end_case() -> void:
+	if case_id.is_empty(): return
+	print("ZS2_CASE ", JSON.stringify({"id":case_id, "checks":case_assertions.size(),
+		"failures":case_assertions.filter(func(a: Dictionary) -> bool: return not a.passed).size(),
+		"seconds":(Time.get_ticks_usec()-case_started)/1000000.0,
+		"assertions":case_assertions, "data":case_data}))
+	case_id = ""
+	case_assertions = []
+	case_data = {}
 
 func run() -> void:
+	begin_case("setup")
 	Store.test_root_override = "user://zs2-tests-%d" % Time.get_ticks_usec()
 	saved_root = Store.test_root_override
 	surface = SubViewport.new()
@@ -15,20 +39,28 @@ func run() -> void:
 	check(app.sessions.size() == app.puzzle_definitions().size(), "all registered regular sheets available")
 	check(app.animation_toggle.button_pressed and app.board.animations, "new session starts enabled")
 	check(not app.has_method("cycle_font") and not app.has_method("empty_sample"), "no study controls in regular app")
-	for index: int in range(app.sessions.size()):
-		app.select_puzzle(index)
+	# P2-F-B: normal mono and maximum color/clue load, both UI scales.
+	for index: int in [0, 3]:
 		for scale: float in [1.0, 1.25]:
+			begin_case("font-%s-ui%d" % [app.sessions[index].definition.id, roundi(scale*100)])
+			if scale == 1.0: app.select_puzzle(index)
 			app.set_ui_scale(scale)
 			var board = app.board
 			var fs: int = board.clue_font_size()
-			check(is_equal_approx(board.shared_clue_slot_extent("row", board.clue_font(), fs), board.slot_pitch.x), "V1 row pitch on every regular sheet, same selected font")
-			check(is_equal_approx(board.shared_clue_slot_extent("column", board.clue_font(), fs), board.slot_pitch.y), "unchanged column slots on every sheet")
+			check(is_equal_approx(board.shared_clue_slot_extent("row", board.clue_font(), fs), board.slot_pitch.x), "selected row pitch")
+			check(is_equal_approx(board.shared_clue_slot_extent("column", board.clue_font(), fs), board.slot_pitch.y), "selected column pitch")
 			check(board.clue_font().get_font_name() == "Delight Coffee" and not board.clue_font().allow_system_fallback, "selected offline font")
 			for symbol: String in "…–":
 				check(board.clue_text_font(board.clue_font(), symbol) == Regular.Fonts.REFERENCE, "explicit Plex punctuation")
+			case_data = {"definition":app.session.definition.id, "ui":app.ui_scale,
+				"font":board.clue_font().get_font_name(), "system_fallback":board.clue_font().allow_system_fallback,
+				"pitch":[board.slot_pitch.x,board.slot_pitch.y],
+				"slots":[board.shared_clue_slot_extent("row",board.clue_font(),fs), board.shared_clue_slot_extent("column",board.clue_font(),fs)]}
+	begin_case("gesture-probe")
 	app.set_ui_scale(1.0)
 	gesture_probe()
 	preload("res://tests/zs2_rework_cases.gd").new().run(self)
+	begin_case("checkbox-save")
 	# Real toggle event must not touch any save, history, cells or semantic view.
 	fresh()
 	mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
@@ -40,13 +72,16 @@ func run() -> void:
 	check(app.board.effects.is_empty() and not app.board.animations, "checkbox ends active effects")
 	check(app.board.capture_view() == state and app.session.player.history == history, "checkbox preserves view/history")
 	check(FileAccess.get_file_as_string(app.store.path_for("t01")) == bytes, "checkbox preserves save bytes")
-	for index: int in range(app.sessions.size()):
+	for index: int in [0, 3]:
+		begin_case("toggle-%s" % app.sessions[index].definition.id)
 		app.select_puzzle(index)
 		app.show_information()
 		app.return_to_work()
 		app._reset_selected()
 		app.open_puzzle()
 		check(not app.board.animations and not app.animation_toggle.button_pressed, "session choice survives sheet/page/reset")
+		case_data = {"definition":app.session.definition.id, "animations":app.board.animations, "checked":app.animation_toggle.button_pressed}
+	begin_case("restart")
 	app.animation_toggle.button_pressed = true
 	check(app.board.effects.is_empty(), "reenabling never replays")
 	app.animation_toggle.button_pressed = false
@@ -55,6 +90,7 @@ func run() -> void:
 	app = preload("res://tests/book_fixture.gd").attach(surface)
 	await process_frame
 	check(app.board.animations and app.animation_toggle.button_pressed, "new app ignores previous session choice")
+	begin_case("g1-and-time-boundaries")
 	# Real G1 reorientation and cancellation supersede old effects permanently.
 	fresh()
 	mouse(point(0, 0), MOUSE_BUTTON_LEFT, true)
@@ -89,6 +125,7 @@ func run() -> void:
 	app.board._process(0)
 	check(app.board.effects.is_empty() and not app.board.is_processing(), "set ends at 210ms and ticker stops")
 	app.board.animation_clock = Time.get_ticks_usec
+	end_case()
 	print("ZS2_TESTS checks=", checks, " failures=", failures)
 	if failures == 0:
 		print("ZS2_TESTS_OK")

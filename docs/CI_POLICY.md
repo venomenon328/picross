@@ -1,5 +1,17 @@
 # Aktuelle CI-Policy
 
+**P2-F-B-V01 / #502:** `core/current-drawing-tests` verwendet die
+[explizite ZS2-Stichprobe](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe)
+mit zehn Strichen, vier Schrift-/UI-Fällen und zwei Schalter-Blattfolgen.
+Bewusst entfallende Varianten und Risiken sind dort normativ benannt. Geschützte
+Eingabe-/History-/Save-/Completionfälle sowie andere Phasen bleiben unverändert.
+24 tatsächlich ausgeführte Fallrecords samt positiven/negativen Assertions und
+beobachteten Strichtraces werden im Harness und unabhängig im Ergebnisgate aus dem
+vollständigen gebundenen Log geprüft; fehlende, doppelte oder manipulierte Fälle
+sind kein Erfolg. Keine feste Gesamtcheckzahl, neue Prozesse/Bilder, Chromium-
+Auswahl, Pixelorakel-Ausnahme oder Retry-Berechtigung. Technische Retention sieben,
+Player 14 Tage; T01, separater Selbstreview und unabhängiges R01 bleiben gebunden.
+
 **P2-F-A-V01-P01 / #502:** Der [RP6-Stichprobenvertrag](CI_C_NATIVE_GROUPS.md)
 ersetzt vier Captureprozesse/40 Darstellungszustände durch T04/1920/UI100 und
 T06/1280/UI125 mit jeweils fünf Zuständen. T08/T09 und die jeweils zweite

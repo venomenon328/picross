@@ -509,6 +509,9 @@ def main(argv: list[str] | None = None) -> int:
                         result["expected_failure"] = True
                     else:
                         require_clean_output(result, marker)
+                        if name == 'current-drawing-tests':
+                            from zs2_evidence import validate_log
+                            validate_log(result['output'])
                 except Exception as exc:
                     reporter.complete(record, result, exc)
                     raise
