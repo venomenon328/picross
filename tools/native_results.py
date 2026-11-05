@@ -2,6 +2,7 @@
 import hashlib
 import gzip
 import json
+import math
 from pathlib import Path, PurePosixPath
 import re
 import zipfile
@@ -9,7 +10,7 @@ from contextlib import contextmanager
 import shutil
 import time
 
-from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, artifacts, checks, coverage
+from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, CATALOG_CASES, artifacts, checks, coverage
 from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
 def unique(pairs):
     result = {}
@@ -22,6 +23,53 @@ def unique(pairs):
 
 def read(path):
     return json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique)
+
+
+def validate_catalog_cases(report):
+    """Read original native checkpoints and measured resize evidence, fail closed.
+
+    Checkpoints attest execution, not replacement oracles for removed variants.
+    File/source/run binding and original failures are checked by validate_payload.
+    """
+    mode = report['mode']
+    if mode not in CATALOG_CASES:
+        return
+    rows = report.get('catalog_cases', [])
+    if (not isinstance(rows, list) or any(not isinstance(r, dict) for r in rows)
+            or [r.get('id') for r in rows] != list(CATALOG_CASES[mode])
+            or any(set(r) != {'id', 'checks'} or type(r['checks']) is not int
+                   or r['checks'] <= 0 for r in rows)
+            or sum(r['checks'] for r in rows) != report['checks']
+            or report.get('failures') != []):
+        raise ValueError('Incomplete/failed selected catalog cases: '+mode)
+    if mode != 'ke':
+        return
+    samples = report.get('resize_samples', [])
+    keys = {'width', 'height', 'ui_scale', 'role', 'minimum_width', 'gap', 'available', 'columns'}
+    if (not isinstance(samples, list) or len(samples) != 5
+            or any(not isinstance(r, dict) or set(r) != keys for r in samples)):
+        raise ValueError('Incomplete KE resize sample')
+    for r in samples:
+        if (any(type(r[k]) not in (int, float) or not math.isfinite(r[k]) or r[k] <= 0
+                for k in keys-{'role'})
+                or any(r[k] != int(r[k]) for k in ('width', 'height', 'columns'))
+                or r['ui_scale'] != 1.25 or r['gap'] != 15
+                or r['height'] != math.floor(r['width']*9/16+0.5)
+                or r['columns'] != min(6, max(1, math.floor(
+                    (r['available']+r['gap'])/(r['minimum_width']+r['gap']))))):
+            raise ValueError('Invalid KE native resize geometry')
+    middle, large, below, above = samples[1:]
+    slope = (large['available']-middle['available'])/(2560-1920)
+    if ([(r['width'], r['role']) for r in samples[:3]] !=
+            [(1280, 'reference'), (1920, 'reference'), (2560, 'reference')]
+            or (below['role'], above['role']) != ('below', 'above')
+            or len({r['minimum_width'] for r in samples}) != 1 or slope <= 0):
+        raise ValueError('Invalid KE resize reference/derivation')
+    crossing = middle['width']+(2*large['minimum_width']+large['gap']-middle['available'])/slope
+    if (below['width'] != math.floor(crossing)-8 or above['width'] != math.ceil(crossing)+8
+            or (below['columns'], above['columns']) != (1, 2)
+            or not 1280 <= below['width'] < above['width'] <= 2560):
+        raise ValueError('KE sample does not cross derived native column boundary')
 
 
 def safe(root, name):
@@ -292,6 +340,8 @@ def validate_original_payload(result, root, player_root=None, failure_context=No
                 raise ValueError('Catalog original reports disagree with summary')
             if report['kat2'] != summary:
                 raise ValueError('Catalog group/summary mismatch')
+            for mode in CATALOG_CASES:
+                validate_catalog_cases(read(directory/'selected/kat2'/(mode+'.json')))
             from at_evidence import native
             native(directory/'selected/kat2', read(directory/'selected/kat2/at.json'), ('small','hover'))
         if group == 'completion':

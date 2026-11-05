@@ -1,5 +1,17 @@
 # KK · feste Katalogkacheln (#174)
 
+**Aktueller Dauerprüfumfang P2-E-A-V02 / #502:** Nach
+[D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
+gilt die [risikobasierte native Stichprobe](CI_C_NATIVE_GROUPS.md). Die unten
+beschriebene dreifache Vollkette ist historisch: regulär bleibt die vollständige
+Neu/Leersave→Pointer/Undo→Begonnen→Sessionabschluss/Save→Reveal→Reset-Kette nur
+unter 1280×720/UI125, einschließlich Pixelhäkchen, breitem/hohem Bild, langem
+Namen, Resettooltip und Fremdslotbytes. UI100/1920 und UI125/2560 prüfen frische
+Grundgeometrie/Schrift/Status; Resize prüft zwei Seitenverhältnis-Endpunkte.
+Recovery-Pointer- und Empty-Write-Fehlerfälle bleiben vollständig. Seltene
+Größen-/Zustands-/Tooltipclips werden bewusst nicht mehr vollständig erkannt.
+Historische Bild-/Browser-/500er-Pflichten sind durch die aktuelle CI-Policy ersetzt.
+
 Vertrag: [vollständiges Issue einschließlich Umsetzungsvorbereitung V1](https://github.com/venomenon328/picross/issues/174).
 Startbasis `main@35465bed49055b01583a20aab7add9b37536c129`, nach KB/EA und
 den ausschließlich authoringbezogenen PRs #172/#173. Branch

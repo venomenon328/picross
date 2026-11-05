@@ -353,10 +353,6 @@
           "before": "ac0eb3ee048ff5124aead61f2476995f77ae481c",
           "after": null
         },
-        "game/tests/kat2_probe.gd": {
-          "before": "a2049473514e9371188ce0f4dd9d2210550c8595",
-          "after": "5e0fa127ec4ac308cb1c8a0143aebb75526118e6"
-        },
         "game/tests/ke_graphics.gd": {
           "before": "05672ae87deeba2dfb1cb2653da3b894546ff33f",
           "after": null
@@ -425,17 +421,9 @@
           "before": "0552cbee145bd529bff999cbb713a87d9caf6ad4",
           "after": "1384b68d94e5e41c3cfe0b0233466042bf486bd6"
         },
-        "tools/kat2_product.py": {
-          "before": "cc73c9c495fe8b3f55fe55e1f15c4e0356b2e006",
-          "after": "88359152a8b078f34908f4b1b90a42326a7b6425"
-        },
         "tools/native_artifacts.json": {
           "before": "f501c43e767ff4f74dbfc1931465d2285673721f",
           "after": "526b0abcfff8c724fe16de5296811b85426934b2"
-        },
-        "tools/native_contract.py": {
-          "before": "43dc01075bd03ca0cb6842bdbf1abd97b93a10ff",
-          "after": "db598591a35e5093a57d3e96e70c34b0dc3419fa"
         },
         "tools/native_images.py": {
           "before": "b961916b364decb39bcec9a84b8387ec57a25241",
@@ -537,13 +525,6 @@
           ]
         },
         {
-          "path": "tools/kat2_product.py",
-          "anchor": "run_phase(\"kat2-\" + mode, ([\"xvfb-run\", \"-a\"] if host == \"Linux\" else []) +\n                  [engine, \"--path\", str(project), \"--rendering-driver\", \"opengl3\", \"--audio-driver\", \"Dummy\",\n                   \"--script\", \"res://tests/kat2_probe.gd\", \"--\", \"--p1-capture\"],\n                  \"KAT2_PROBE_OK\", phase_env=env)",
-          "sources": [
-            "game/tests/kat2_probe.gd"
-          ]
-        },
-        {
           "path": "tools/p1_product.py",
           "anchor": "run(\"perf-b-native\", b_command + [\"--script\", \"res://tests/perf_b_probe.gd\"], \"PERF_B_PROBE_OK\", phase_env=perf_env)",
           "sources": [
@@ -635,24 +616,10 @@
           ]
         },
         {
-          "path": "tools/hz_windows_probe.py",
-          "anchor": "import kat2_product",
-          "sources": [
-            "tools/kat2_product.py"
-          ]
-        },
-        {
           "path": "tools/native_contract.py",
           "anchor": "Path(__file__).with_name('native_artifacts.json').read_text(encoding='utf-8')",
           "sources": [
             "tools/native_artifacts.json"
-          ]
-        },
-        {
-          "path": "tools/ci_scope.py",
-          "anchor": "import native_contract",
-          "sources": [
-            "tools/native_contract.py"
           ]
         },
         {
@@ -799,10 +766,6 @@
           "before": "33565a9c77940a2621e29ddf05b54764d30b318d",
           "after": "9eb82a888ce9ebc02a24bad11aec1f1d4a4af7c2"
         },
-        "tools/native_results.py": {
-          "before": "a514719c0a79fb3a92f5a33f789f5c3bbf4cd7a7",
-          "after": "3d0400f79a179e6ad371da484b79a20ae139fdd9"
-        },
         "tools/p1_evidence.py": {
           "before": "298cde74cb447acefd26fc76c70789a742898513",
           "after": "60e652969a0873e6ce71c367a8f1db79fc8a43b3"
@@ -839,13 +802,6 @@
           "anchor": "from native_runner import run",
           "sources": [
             "tools/native_runner.py"
-          ]
-        },
-        {
-          "path": "tools/ci_scope.py",
-          "anchor": "from native_results import validate_all",
-          "sources": [
-            "tools/native_results.py"
           ]
         },
         {
@@ -990,14 +946,122 @@
       "expires": null,
       "retire_when": null,
       "owner_decision": null
+    },
+    {
+      "id": "p2-e-a-v02-catalog-sample",
+      "kind": "permanent-small",
+      "purpose": "D02-authorized risk-based reduction of native KE/KK matrices with explicit accepted coverage loss",
+      "level": "Existing eleven native catalog modes and result reader; three small Python methods, no extra native process or image",
+      "feature": "https://github.com/venomenon328/picross/issues/502",
+      "owner": "venomenon328 / P2-E-A-V02 implementer",
+      "sources": {
+        "game/tests/kat2_probe.gd": {
+          "before": "5e0fa127ec4ac308cb1c8a0143aebb75526118e6",
+          "after": "c805deeb8d05bb7faf1f1b3ad49ae0b58df112b0"
+        },
+        "tools/kat2_product.py": {
+          "before": "88359152a8b078f34908f4b1b90a42326a7b6425",
+          "after": "56266b1f32ecf1054e195dbf4fe7c163ceff0b14"
+        },
+        "tools/native_contract.py": {
+          "before": "db598591a35e5093a57d3e96e70c34b0dc3419fa",
+          "after": "6d158a236ad457192ab97329ddfa825c5df25056"
+        },
+        "tools/native_results.py": {
+          "before": "3d0400f79a179e6ad371da484b79a20ae139fdd9",
+          "after": "12131810ec93b8bd57f868c2d56f2433220f4a85"
+        },
+        "tools/test_kat2_product.py": {
+          "before": null,
+          "after": "a326ab491ec71b664dcb81b739987ba7e91a020b"
+        }
+      },
+      "readers": [
+        {
+          "path": "tools/kat2_product.py",
+          "anchor": "run_phase(\"kat2-\" + mode, ([\"xvfb-run\", \"-a\"] if host == \"Linux\" else []) +\n                  [engine, \"--path\", str(project), \"--rendering-driver\", \"opengl3\", \"--audio-driver\", \"Dummy\",\n                   \"--script\", \"res://tests/kat2_probe.gd\", \"--\", \"--p1-capture\"],\n                  \"KAT2_PROBE_OK\", phase_env=env)",
+          "sources": [
+            "game/tests/kat2_probe.gd"
+          ]
+        },
+        {
+          "path": "tools/p1_product.py",
+          "anchor": "import kat2_product",
+          "sources": [
+            "tools/kat2_product.py"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "import native_contract",
+          "sources": [
+            "tools/native_contract.py"
+          ]
+        },
+        {
+          "path": "tools/ci_scope.py",
+          "anchor": "from native_results import validate_all",
+          "sources": [
+            "tools/native_results.py"
+          ]
+        },
+        {
+          "path": ".github/workflows/ci-chromium.yml",
+          "anchor": "python3 -m unittest discover -s tools -p 'test_*.py' -v",
+          "sources": [
+            "tools/test_kat2_product.py"
+          ]
+        }
+      ],
+      "selection": {
+        "selected": {
+          "docs": true,
+          "product": true,
+          "production": true,
+          "preflight": true,
+          "integration": true,
+          "pilots": true,
+          "visual": true,
+          "perf_b": true,
+          "web": false,
+          "delivery": true
+        },
+        "native_groups": [
+          "core",
+          "history",
+          "catalog",
+          "completion",
+          "adapters",
+          "graphics",
+          "export"
+        ],
+        "production_groups": [
+          "solver",
+          "images",
+          "adapter",
+          "catalog"
+        ],
+        "browser_request": null
+      },
+      "cost": {
+        "cpu_seconds": 1,
+        "wall_seconds": 1,
+        "files": 0,
+        "bytes": 8192,
+        "pngs": 0
+      },
+      "coverage": "KE: two layouts, three metadata mutations, one delayed negative/positive hover and UI roundtrip, two pointer targets, five measured resize widths. KK: one full tight UI125 state/save/reveal/reset chain, two basic layouts and two aspect endpoints. Recovery-pointer and empty-write-error functions and all other modes remain unchanged. New checkpoints/boundary reader reject missing or forged retained evidence; no equivalent replacement for removed metadata/size/tooltip/hit cross products. Accepted gaps and concrete counterexamples: docs/CI_C_NATIVE_GROUPS.md and P2-E-A-V02-T01 in delivery PR. D02: https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391 . Cost is conservative incremental Python/JSON work only; net native reduction measured separately. Existing original paths, identity/hash binding, budgets, scheduler and retention remain. Source ownership transfers from P2-C/P3-B; their other guarantees persist.",
+      "expires": null,
+      "retire_when": null,
+      "owner_decision": null
     }
   ],
   "closeout": {
     "feature": "https://github.com/venomenon328/picross/issues/502",
     "status": "in-progress",
-    "added": "P2-D-V01: three small permanent Python failure/isolation tests in existing Docs discovery; preparation timings and inventory digest in existing ZA-1 JSON reports.",
-    "removed": "No product regression or native phase/process removed. Only duplicate immutable base import work is reused through a verified private copy.",
+    "added": "P2-E-A-V02: three small permanent Python gate/sample test methods; eleven KE/twelve KK checkpoints and five resize measurements in existing original JSONs.",
+    "removed": "D02-authorized KE/KK metadata, tooltip, pointer, resize and size/state cross products; deliberate coverage losses documented in current native contract. No Save/Recovery mode, native phase, original file or product function removed.",
     "temporary": [],
-    "cost_change": "Estimated additional hash/copy/check work <=4 CPU/5 wall seconds, <=2048 report bytes, no new retained files/PNGs; measured net import saving and full CI costs in P2-D-V01-T01. One-off local probe is not installed in CI; diagnostic review until 2026-11-12, no protected-data cleanup. Technical CI 7 days, players 14 days. Overall #502 and independent R01 remain open."
+    "cost_change": "Incremental gate/JSON estimate <=1 CPU/wall second, <=8192 bytes, zero new files/PNGs; net native work reduction measured in V02-T01 against U01 originals. Own local diagnostics under artifacts/502-p2e-v02-local remain until review by 2026-11-19 / V02-R01, no automatic/protected-data cleanup. CI technology 7 days, players 14 days. #502, independent R01 and explicit merge permission remain open."
   }
 }

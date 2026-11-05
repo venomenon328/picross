@@ -1,5 +1,19 @@
 # Aktiver Bestand und historische Quellen
 
+**P2-E-A-V02 / #502:** Die KE-/KK-Dauermatrix wird gemäß
+[D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
+mit bewusstem Abdeckungsverlust verkleinert; das [aktive Inventar](CI_C_NATIVE_GROUPS.md)
+nennt jeden verbleibenden Fall und gestrichene Gegenbeispiele. Elf Prozesse,
+Original-JSONs und bestehende Artefaktpfade bleiben. Neue kleine Python-Gateprüfungen
+und Checkpoint-/Resize-Felder sind in `tools/ci_lifecycle.json` deklariert; keine
+neuen PNGs, Filme, Archivfamilien oder Produktquellen. Frühere native Vollmatrizen
+bleiben über `main@450b84feff0f43affe3f9dabd5bef94118f0411b` historisch erreichbar.
+Eigene lokale Diagnose-/CI-Daten liegen ausschließlich unter
+`artifacts/502-p2e-v02-local/`, Reviewfrist 19.11.2026 beziehungsweise V02-R01.
+T01 nennt den Restumfang; keine automatische Löschung daraus ableiten.
+Geschützte und fremde Alt-/Arbeitsdaten bleiben unberührt. Technikretention sieben,
+Player vierzehn Tage; #502 und unabhängiges R01 bleiben offen.
+
 **P2-C-V03 / #502:** [Audit aller 435 früheren PNG-Pflichten](P2_C_V03_AUDIT.md).
 Die aktiven HZ-/KE-Vergleichsproducer, HC-Galerie samt Reader, separate V1-/Z2-
 Captureproducer und KAT-Crop-Reader entfallen; frühere Quellen bleiben am
