@@ -1,5 +1,7 @@
 # CI2: Kurze CI und begrenzter aktiver Bestand
 
+> Aktuelle Auswahl, Aufbewahrung und allgemeiner Abschluss folgen [Workflow v2](CI_WORKFLOW_V2.md). Dieser Text bleibt historische beziehungsweise fachspezifische Quelle; frühere automatische Vollumfänge, Schutzlisten und Uploadpflichten gelten nicht weiter.
+
 Stand: 27.10.2026 · freigegebener Sollvertrag · [Gesamtissue #412](https://github.com/venomenon328/picross/issues/412)
 
 ## Status und Geltung

@@ -28,7 +28,6 @@ permissions:
 jobs:
   browser:
     runs-on: ubuntu-24.04
-    timeout-minutes: 7
     outputs:
       attempt: ${{ steps.producer.outputs.attempt }}
     steps:

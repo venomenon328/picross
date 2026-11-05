@@ -30,3 +30,15 @@ gebundenen ursprünglichen Snapshot; die Herkunftstabelle beschreibt weiterhin
 die Übernahme. Die übrigen vier Snapshotdateien und das zentrale Quellrepository
 bleiben unverändert. Dies ist keine allgemeine Workflowaktualisierung und kein
 Vorgriff auf den separaten Auftrag zur lokalen Bereinigung/Wiederaufnahme.
+
+## Workflow v2 · ausdrücklich beauftragte lokale Weiterentwicklung
+
+[Issue #517](https://github.com/venomenon328/picross/issues/517) beauftragt die
+Überarbeitung auf Basis der Picross-Erfahrungen einschließlich technischer CI.
+Lokale Paketversion: `0.2.0-rc.1`. WORKFLOW und MODEL_SELECTION werden fortgeschrieben;
+CI_CONTRACT, WORKSPACE, HANDOFF und das versionierte Übergabeschema kommen hinzu.
+Diese Fassung ist ein dokumentierter lokaler Fork der oben gebundenen Herkunft,
+kein neuer bytegleicher Import. Das zentrale Quellrepository und andere Projekte
+bleiben unverändert. Generische Regeln enthalten keine Picross-Laufzeitbindungen;
+[CI_WORKFLOW_V2](CI_WORKFLOW_V2.md) enthält die Projektadaption. Freigabe erfolgt über
+den zu #517 gelieferten PR; ein gespeichertes Sheet ist kein bereits vollzogener Merge.

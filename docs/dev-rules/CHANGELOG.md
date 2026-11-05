@@ -1,5 +1,13 @@
 # Änderungen am Regelpaket
 
+## 0.2.0-rc.1 — 2026-11-05
+
+Ausdrücklich beauftragter lokaler Picross-Fork (#517), kein zentraler Release.
+Generischer modularer CI-/Test-/Artefaktlebenszyklus, Arbeitswurzel und Bereinigung,
+versioniertes JSON-Handoff und überarbeitetes Review mit bedingter Mergefreigabe.
+Picross-Ausführung steht außerhalb dieses Pakets im Projektprofil/CI_WORKFLOW_V2.
+
+
 ## 0.1.0-rc.2 – 2026-09-09
 
 Überarbeiteter Abnahmekandidat nach der inhaltlichen Rückmeldung zur Modellwahl; weiterhin kein Release oder automatischer Rollout.

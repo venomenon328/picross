@@ -1,5 +1,7 @@
 # Aktiver Bestand und historische Quellen
 
+> Aktuelle Auswahl, Aufbewahrung und allgemeiner Abschluss folgen [Workflow v2](CI_WORKFLOW_V2.md). Dieser Text bleibt historische beziehungsweise fachspezifische Quelle; frühere automatische Vollumfänge, Schutzlisten und Uploadpflichten gelten nicht weiter.
+
 **P2-F-B-V01 / #502:** Die aktuelle native ZS2-Core-Regression besitzt eine
 [bewusst reduzierte Fallpflicht](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe).
 Die 40er Strich-/zwölffache Font-/sechsfache Schalterwiederholung wird nicht in ein

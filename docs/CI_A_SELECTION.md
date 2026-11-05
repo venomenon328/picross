@@ -1,5 +1,7 @@
 # CI-A: Ausführbare Prüfauswahl
 
+> Aktuelle Auswahl, Aufbewahrung und allgemeiner Abschluss folgen [Workflow v2](CI_WORKFLOW_V2.md). Dieser Text bleibt historische beziehungsweise fachspezifische Quelle; frühere automatische Vollumfänge, Schutzlisten und Uploadpflichten gelten nicht weiter.
+
 ## Aktuelle Ergänzung: CI2-B / #414
 
 A ist nach separatem R01 über PR #419 auf
