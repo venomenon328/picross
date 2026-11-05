@@ -8,7 +8,6 @@ def measure(output, technical, report):
     worker = technical/'vs2-worker/technical/product-report.json'
     if worker.is_file():
         phases += json.loads(worker.read_text(encoding='utf-8'))['checks']
-    phases += report.get('book_lifecycle', {}).get('phases', [])
     processes = [row for row in phases if 'log' in row]
     generated = [p for p in output.rglob('*') if p.is_file() and not p.is_relative_to(technical)]
     delivered = report['selected_evidence']['files']

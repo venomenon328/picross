@@ -6,7 +6,7 @@ Stand: 05.11.2026 · Auftrag [#517](https://github.com/venomenon328/picross/issu
 
 [WORKFLOW](dev-rules/WORKFLOW.md), [CI-Vertrag](dev-rules/CI_CONTRACT.md), [Arbeitsablage](dev-rules/WORKSPACE.md) und [Übergabe](dev-rules/HANDOFF.md) sind generisch. Dieses Profil bindet ihre tatsächliche Picross-Ausführung. Der lokale Regelstand wird ausdrücklich weiterentwickelt; `venomenon328/dev-rules` und andere Projekte werden nicht geändert.
 
-Dieser Vertrag ersetzt frühere automatische Vollauswahl, verpflichtende Gesamtlaufzeiten, feste CI-Artefaktmengen, pauschale technische Uploads und den P3-A-Fingerprint-Freigabeprozess. Die alten CI2-/P3-A-Berichte bleiben historische Nachweise. Produktgarantien und erforderliche aktuelle Abnahmen werden dadurch nicht aufgehoben. PR #516 und dessen tatsächliche Integration werden separat behandelt; neue Module verwenden die jeweils aktuellen nativen Reader/Verträge.
+Dieser Vertrag ersetzt frühere automatische Vollauswahl, verpflichtende Gesamtlaufzeiten, feste CI-Artefaktmengen, pauschale technische Uploads und den P3-A-Fingerprint-Freigabeprozess. Die alten CI2-/P3-A-Berichte bleiben historische Nachweise. Produktgarantien und erforderliche aktuelle Abnahmen werden dadurch nicht aufgehoben. Module verwenden die jeweils aktuellen nativen Reader/Verträge; [P2-F-C/D03](CI_C_NATIVE_GROUPS.md#p2-f-c-v01--502-buch-lifecycle-nur-auf-ausdrücklichen-anlass) entfernt den eigenen Buch-Lifecycle auch aus dem ausdrücklich gewählten `native.export`.
 
 ## Automatischer Kern
 

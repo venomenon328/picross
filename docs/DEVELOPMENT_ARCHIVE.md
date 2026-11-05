@@ -15,6 +15,7 @@ macht sie ebenso wenig dauerhaft notwendig. Für Tests/Artefakte gilt
 | `content/packages/` | Bis Abschluss gebundene Produktionskopie; danach kompakte [ZA-1-Integrationsbindung](ZA1_ADAPTER.md) |
 | Aktive Bild-, Rating-, Hinzugefügt- und Kategorienmetadaten | Produkt-/Freigabedaten gemäß Fachvertrag; keine CI-Laufgalerie |
 | Feste synthetische Testinputs, Freezes und tatsächlich verwendete Referenzen | Konkrete Regression, Kompatibilität oder methodischer Vertrag; keine echten Katalogkopien |
+| `tools/book_lifecycle.py`, `tools/book_contract.py`, `game/tests/book_integration.gd` und `help_native.gd` | Ausdrücklich beauftragte Buch-/Hilfe-/Save-Diagnose nach [P2-F-C/D03](CI_C_NATIVE_GROUPS.md#p2-f-c-v01--502-buch-lifecycle-nur-auf-ausdrücklichen-anlass); kein automatischer Lifecycle in `native.export` |
 | Laufbezogene Logs, Screenshots, Videos, Exporte und Vergleichsbäume | Temporäre Prüfdaten; befristeter Download nur für konkret benannten Review-/Diagnosezweck |
 | Frühere `*_VERIFICATION`, `*_IMPLEMENTATION`, `*_OWNER_TRIAL`, Selbstreviews und `docs/evidence/`-Berichte | Nachweise/Anleitungen ihres gebundenen Pakets; damalige „offen“-Angaben im aktuellen Issue/PR nachprüfen, keine neue Dauerpflicht |
 
@@ -52,6 +53,7 @@ ihrer heutigen Existenz, ihres Eigentümers oder eines erfolgten Löschens**:
 | P2-E-B-V01 | `artifacts/502-p2eb-local/` | P2-E-B-V01-R01 beziehungsweise 19.11.2026 |
 | P2-F-A-V01 | `artifacts/502-p2f-local/` | P2-F-A-V01-R01 beziehungsweise 19.11.2026 |
 | P2-F-B-V01 | `artifacts/502-p2fb-local/`, Container `picross-502-zs2` | P2-F-B-V01-R01 beziehungsweise 19.11.2026 |
+| P2-F-C-V01 | `artifacts/502-p2fc-local/`, Containerpfad `/work/p2fc` | P2-F-C-V01-R01 beziehungsweise 19.11.2026 |
 
 Frühere HIL/V01/V02/P2-B-Blockaden sind in den jeweiligen PRs gebunden. Sie werden
 weder umgangen noch als erledigt gemeldet. Vor Bereinigung tatsächlichen Pfad,
