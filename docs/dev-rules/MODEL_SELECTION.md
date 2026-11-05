@@ -63,17 +63,17 @@ Bei Nacharbeit zuerst den Fehlermechanismus beziehungsweise das Qualitätsdefizi
 
 Optional im PR knapp festhalten: tatsächlich verwendetes Modell/Reasoning, beobachtete Qualitätsunterschiede, wesentliche Korrekturschleifen und Ursache. Nutzerurteil, eigene Beobachtung und messbaren Nachweis unterscheiden; nur wirklich bekannte Daten erfassen. Daraus später die lokale Heuristik verbessern; kein Pflicht-Reporting für triviale Änderungen.
 
-## 6. Ausgabe und Prompt
+## 6. Ausgabe und Übergabe
 
 Zuerst `Bevorzugter Weg: ChatGPT` oder `Bevorzugter Weg: Codex` und die Einschätzung zur Eigenumsetzung mit kurzer Begründung nennen. Bei empfohlener Delegation zusätzlich genau eine Kombination im Format `Codex: <Modell> — Reasoning: <Stufe>` samt 1–3 Sätzen zu Qualitätsanspruch, Schwierigkeit, Risiko und Kostenabwägung liefern. Abweichungen vom High-Standard knapp begründen; bei höheren Einstellungen den erwarteten Zusatznutzen nennen. Keine Auswahlspanne wie „Terra oder Sol“ beziehungsweise „High bis Max“.
 
 Bei bevorzugter Eigenumsetzung muss nicht zusätzlich ein gleichrangiger Codex-Auftrag erzeugt werden. Eine ausdrücklich verlangte Codex-Alternative als Alternative kennzeichnen. Diese bewusste Vereinfachung ersetzt den bisherigen Zwang, für jede mögliche Eigenumsetzung dennoch eine vollständige parallele Codex-Empfehlung auszugeben.
 
-Jeder an Codex zu delegierende **startbereite** Auftrag erhält einen direkt kopierbaren Codeblock. Er identifiziert Repository, Issue/Paket, Arbeits-/Zielbranch oder bestehenden PR, `AGENTS.md` als Einstieg und gewünschten Endzustand. Bei Nacharbeit den konkreten Reviewkommentar beziehungsweise die Revision und aktiven Befundkennungen referenzieren. Modellwahl wird in der Oberfläche getroffen; kein langer Modellmonolog im Arbeitsauftrag.
+Ohne Sheet erhält jeder an Codex zu delegierende **startbereite** Auftrag einen direkt kopierbaren Codeblock. Er identifiziert Repository, Issue/Paket, Arbeits-/Zielbranch oder bestehenden PR, `AGENTS.md` als Einstieg und gewünschten Endzustand. Bei Nacharbeit den konkreten Reviewkommentar beziehungsweise die Revision und aktiven Befundkennungen referenzieren. Modellwahl wird in der Oberfläche getroffen; kein langer Modellmonolog im Arbeitsauftrag.
 
 Wenige Zeilen sind das Ziel, keine starre Zeichenzahl. Akzeptanzkriterien, allgemeine Tests, Commitregeln und Abschlussformat nicht aus den verbindlichen Quellen abschreiben. Neue fachliche Einschränkungen zuerst dort persistieren. Nur echte nicht anderweitig zuverlässig abrufbare Übergabeinformationen ergänzen. Ein Pflichtdokument ohne Zugriff wird nicht durch einen vermeintlich kompakten, aber unvollständigen Prompt ersetzt.
 
-## Strukturierte Sheet-Übergabe
+### Aufträge aus dem Entwicklungssheet
 
 Bei einem Auftrag aus dem Entwicklungssheet gilt [HANDOFF.md](HANDOFF.md) für die
 Abschlussausgabe. Ausführungswahl und notwendige aktuelle Modellentscheidung im
@@ -81,3 +81,4 @@ Paket festhalten; das JSON transportiert sie in `execution` samt maßgeblicher Q
 Nach erledigter Umsetzung stehen diese Empfehlungswerte auf `null`. Keinen zweiten
 parallelen Handoff-Prompt ausgeben, wenn das Sheet den Folgeauftrag erzeugt.
 Modellnamen werden nicht als dauerhafte Sheet-Defaults eingefroren.
+

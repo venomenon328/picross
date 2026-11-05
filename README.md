@@ -4,10 +4,10 @@ Ein thematisch zusammenhängendes Nonogramm-Spiel in Entwicklung: kuratierte
 Bildrätsel, präzise Mausbedienung und ein illustriertes Album.
 
 Das reguläre Godot-Spielprojekt liegt unter [game/](game/README.md). Der integrierte
-Stand bietet sechs unveränderte Katalogrätsel (F01, F02, F04, F06, F08, F09),
-Vollsicht, unabhängige Hinweisnavigation, Undo/Redo und lokale Save-/Backup-Recovery.
-Sidebar und Atlasrenderer sind über [PR #66](https://github.com/venomenon328/picross/pull/66)
-in `main` integriert. Es gibt keinen Release. Godot Standard 4.7.2-stable und
+Stand lädt registrierte Workflow-Rätsel aus `content/registry.json` und bietet
+Buchpräsentation, Vollsicht, unabhängige Hinweisnavigation, Undo/Redo sowie lokale
+Save-/Backup-Recovery. Der aktuelle [Projektvertrag](docs/PROJECT_PROFILE.md)
+führt Entwicklungsbindungen und Fachquellen. Es gibt keinen Release. Godot Standard 4.7.2-stable und
 Windows sind die aktuelle Entwicklungsbindung; die endgültige Engine- und
 Plattformentscheidung bleibt offen.
 
@@ -48,8 +48,8 @@ python -m unittest discover -s tools -p 'test_ci_modular.py' -v
 python tools/check_docs.py
 ```
 
-Die [Package-CI](.github/workflows/ci-modular.yml) liefert immer das Windows-Paket
-und ergänzt ausschließlich die in `.ci/package.json` begründet gewählten Module.
+Die [Package-CI](.github/workflows/ci-modular.yml) liefert das Windows-Paket außer bei reinen Dokumentenänderungen
+und reiner Rätselproduktion. Sie ergänzt ausschließlich die in `.ci/package.json` begründet gewählten Module.
 Der [Paketvertrag](docs/CI_WORKFLOW_V2.md) beschreibt Auswahl und Lebenszyklus;
 `tools` aktiviert bei Bedarf die vollständige Werkzeugtestsuite. `ci-required`
 verlangt echte erfolgreiche Prüfungen am zugeordneten Head/Test-Merge.
@@ -64,3 +64,4 @@ bestehen. Frühere Prüfberichte sind Nachweise ihres jeweiligen Commits.
 Referenzen, entfernte Studienprogramme und deren Commit-/Hashbindungen.
 [Regelherkunft](docs/DEV_RULES_ADOPTION.md) bindet die lokale Workflowkopie;
 [ChatGPT-Projekteinstellungen](docs/CHATGPT_PROJECT_INSTRUCTIONS.md) werden durch den Nutzer eingesetzt.
+

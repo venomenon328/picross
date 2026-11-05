@@ -16,6 +16,8 @@ import threading
 import time
 import zipfile
 
+from ci_paths import content_path
+
 ROOT = Path(__file__).resolve().parents[1]
 PLAN_PATH = '.ci/package.json'
 FORMAT = 'development-ci-plan/v1'
@@ -24,7 +26,7 @@ PRODUCTION = ('solver', 'images', 'adapter', 'catalog')
 MODULES = ('tools', 'preflight', 'delivery', *(f'native.{g}' for g in NATIVE),
            *(f'production.{g}' for g in PRODUCTION))
 CORE_PATHS = {__file__.replace(str(ROOT) + '/', ''), 'tools/test_ci_modular.py',
-              '.github/workflows/ci-modular.yml', 'tools/build_main_player.py'}
+              '.github/workflows/ci-modular.yml', 'tools/build_main_player.py', 'tools/ci_paths.py'}
 SOFT_SECONDS = 600
 
 
@@ -103,6 +105,38 @@ def git(*args, root=ROOT):
     return subprocess.check_output(['git', *args], cwd=root).decode('utf-8').strip()
 
 
+def player_requirement(paths, modules, *, event, nonregular=()):
+    """Exempt only actual documents/inert puzzle output, never mixed code changes."""
+    if event == 'workflow_dispatch':
+        return {'required': True, 'reason': 'Explicit manual build'}
+    if any(m == 'preflight' or m == 'delivery' or m.startswith('native.') for m in modules):
+        return {'required': True, 'reason': 'Explicit player/toolchain module'}
+    def document(path):
+        suffix = PurePosixPath(path).suffix.lower()
+        return (suffix == '.md' and (path.startswith(('docs/', 'game/', 'tools/', '.github/')) or '/' not in path)
+                or path.startswith('docs/') and suffix in {'.html', '.css', '.txt', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.pdf'})
+    if (paths and not nonregular and all(p == PLAN_PATH or content_path(p) or document(p) for p in paths)):
+        return {'required': False, 'reason': 'Only documents and/or inert puzzle production; no player build'}
+    return {'required': True, 'reason': 'Development changes or no safely classifiable diff'}
+
+
+def changed_metadata(base, head, *, root):
+    # NUL framing and both sides of a rename prevent a path from hiding changes.
+    raw = git('diff', '--raw', '--no-abbrev', '--no-renames', '-z', base, head, root=root)
+    fields = raw.split('\0') if raw else []
+    if fields and fields[-1] == '':
+        fields.pop()
+    if len(fields) % 2:
+        raise ValueError('Invalid changed-file metadata')
+    paths, nonregular = [], []
+    for metadata, path in zip(fields[::2], fields[1::2]):
+        old_mode, new_mode, *_ = metadata.lstrip(':').split()
+        paths.append(path)
+        if old_mode not in {'000000', '100644'} or new_mode not in {'000000', '100644'}:
+            nonregular.append(path)
+    return paths, nonregular
+
+
 def load_plan(base, head, event, *, modules='', repository='venomenon328/picross', root=ROOT):
     for sha in (base, head):
         if not re.fullmatch('[0-9a-f]{40}', sha):
@@ -110,6 +144,7 @@ def load_plan(base, head, event, *, modules='', repository='venomenon328/picross
     if event not in {'pull_request', 'push', 'workflow_dispatch'}:
         raise ValueError('Unsupported CI event')
     checkout = git('rev-parse', 'HEAD', root=root)
+    changed, nonregular = changed_metadata(base, head, root=root)
     if event == 'pull_request':
         # Read the PR head, never a working file or an inherited plan on main.
         raw = git('show', f'{head}:{PLAN_PATH}', root=root)
@@ -117,7 +152,6 @@ def load_plan(base, head, event, *, modules='', repository='venomenon328/picross
                                   capture_output=True, text=True)
         if previous.returncode == 0 and raw == previous.stdout.strip():
             raise ValueError('Inherited package plan: update .ci/package.json for this PR')
-        changed = git('diff', '--name-only', '--no-renames', base, head, root=root).splitlines()
         package = validate_package(strict_json(raw), changed, repository=repository)
         selected = selected_modules(package['modules'])
         if modules:
@@ -134,6 +168,7 @@ def load_plan(base, head, event, *, modules='', repository='venomenon328/picross
     return {'format': 'development-ci-run/v1', 'source_head': head, 'base_commit': base,
             'tested_checkout': checkout, 'event': event, 'run_id': os.environ.get('GITHUB_RUN_ID', 'local'),
             'run_attempt': os.environ.get('GITHUB_RUN_ATTEMPT', '1'), 'modules': selected,
+            'player': player_requirement(changed, selected, event=event, nonregular=nonregular),
             'package': package, 'plan_sha256': hashlib.sha256(raw.encode()).hexdigest()}
 
 
@@ -156,6 +191,12 @@ def original_plan():
         parents = git('show', '-s', '--format=%P', 'HEAD').split()
         if parents != [base, head]:
             raise ValueError('Test merge does not bind the original base and head')
+    elif event == 'push' and base != head:
+        present = subprocess.run(['git', 'cat-file', '-e', base + '^{commit}'], cwd=ROOT,
+                                 capture_output=True)
+        if present.returncode:
+            # Multi-commit pushes may put the original before-SHA outside depth=2.
+            git('fetch', '--no-tags', '--depth=1', 'origin', base)
     return load_plan(base, head, event, modules=modules, repository=repository)
 
 
@@ -247,6 +288,7 @@ def execute(plan, output, cache):
     warning.daemon = True
     warning.start()
     package = plan['package']
+    player_required = plan['player']['required']
     attempt = plan['run_attempt']
     os.environ.update(P1_PREFLIGHT_SOURCE_COMMIT=plan['source_head'], P1_BASE_COMMIT=plan['base_commit'],
                       RP1_SOURCE_HEAD=plan['source_head'], RP1_BASE_COMMIT=plan['base_commit'],
@@ -256,8 +298,8 @@ def execute(plan, output, cache):
             work = Path(temporary)
             binding = legacy_binding(plan)
             try:
-                # Build a playable package even when a requested test later fails.
-                if 'native.export' not in plan['modules']:
+                # When required, build before optional tests so failures retain a usable player.
+                if player_required and 'native.export' not in plan['modules']:
                     command([sys.executable, 'tools/build_main_player.py', '--cache-dir', str(cache),
                              '--output-dir', str(player)], 'windows-player', work, rows)
                     player_ready = True
@@ -286,7 +328,7 @@ def execute(plan, output, cache):
                              '--output-dir', str(work / 'web-player')], 'delivery-build', work, rows)
                     command([sys.executable, 'tools/web_tests/ssh_reference.py', '--build', str(work / 'web-player'),
                              '--output', str(work / 'delivery')], 'delivery', work, rows)
-                if not player_ready or not player.is_dir():
+                if player_required and (not player_ready or not player.is_dir()):
                     raise ValueError('Mandatory Windows player missing')
                 if git('status', '--porcelain') or git('rev-parse', 'HEAD') != plan['tested_checkout']:
                     raise ValueError('Tested sources changed during CI')
@@ -343,6 +385,7 @@ def main():
             if os.environ.get('GITHUB_OUTPUT'):
                 with open(os.environ['GITHUB_OUTPUT'], 'a') as stream:
                     for key, value in {'modules': ','.join(plan['modules']),
+                                       'player': str(plan['player']['required']).lower(),
                                        'images': str(any(m == 'tools' or m.startswith(('native.', 'production.')) for m in plan['modules'])).lower(),
                                        'delivery': str('delivery' in plan['modules']).lower()}.items():
                         stream.write(key + '=' + value + '\n')
@@ -357,3 +400,4 @@ def main():
 
 if __name__ == '__main__':
     raise SystemExit(main())
+

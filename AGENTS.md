@@ -12,16 +12,17 @@ Beauftragten Arbeitsbranch verwenden, sonst aktuellen main. Bereichsregeln beach
 
 Bei Entwicklungsarbeit zusätzlich [Picross-Adaption](docs/CI_WORKFLOW_V2.md) lesen.
 Jedes Paket entscheidet seinen Prüfbedarf in `.ci/package.json`; der kleine Kern
-liefert unter anderem das Windows-Paket. Keine pauschal geschützten Testfamilien,
+liefert bei Entwicklungsänderungen das Windows-Paket; reine Dokumentenänderungen
+und reine Rätselproduktion bleiben ohne Player-Build. Keine pauschal geschützten Testfamilien,
 keine unbegründeten Dauerregressionen und keine automatischen Reviewgalerien.
 Zehn Minuten sind ein weiches Ziel. Keine maximale CI-Laufzeit oder Artefaktgröße
 als Erfolgsgate. Aktuelle technische Nachweise werden im Lauf geprüft und danach
 entfernt; Upload nur mit Zweck und Ablauf. Chromium bleibt ausdrücklich manuell.
 
 Bei CI/Tests/Artefakten zusätzlich [CI-Policy](docs/CI_POLICY.md) und die tatsächlich
-betroffenen Modulverträge lesen. [CI2](docs/CI_SLIMMING.md) und
-[Bestandsinventar](docs/DEVELOPMENT_ARCHIVE.md) nur bei deren konkreter Fach-/Bestandsarbeit;
-ihre alten Auswahl-/Schutz-/Uploadvorgaben werden durch v2 ersetzt.
+betroffenen Modulverträge lesen. [CI2](docs/CI_SLIMMING.md) ist ein historischer Wegweiser,
+[DEVELOPMENT_ARCHIVE](docs/DEVELOPMENT_ARCHIVE.md) ordnet Bestand und Lieferberichte zu.
+Beide nur bei konkreter Herkunfts-/Bestandsarbeit zusätzlich laden.
 Produktgarantien sind keine unveränderliche Liste teurer Tests. Änderungen an
 Producer, weiterhin ausgewählten Readerpflichten und Normtexten konsistent halten.
 
@@ -46,6 +47,8 @@ unverändert. Der Benutzercheckout wird nicht als temporärer Checkout gelöscht
 | Hinweisnavigation/Overlay/Cursorlinien | [HN](docs/CLUE_INTERACTION.md) |
 | Zellrendering/Atlas/Cache | [Zellrendering](docs/CELL_RENDERING.md); historische PERF-A/B-Reproduktion ist keine Dauerpflicht |
 
+Das vollständige Fachrouting steht im Projektprofil; diese Tabelle ist eine Einstiegshilfe.
+
 Nur vor noch anstehender Implementierung/technischer Nacharbeit
 [MODEL_SELECTION](docs/dev-rules/MODEL_SELECTION.md) und
 [MODEL_CATALOG](docs/dev-rules/MODEL_CATALOG.md) vollständig lesen. Keine rückblickende
@@ -67,3 +70,4 @@ nutzen, sobald aktuelles Review und alle Vor-Merge-Gates erfüllt sind. Kein Mer
 allein aufgrund einer Sheet-Voreinstellung. Mergeverfahren und Betriebswirkung
 im Projektprofil prüfen. Keine ungefragte zentrale Regelaktualisierung;
 Herkunft in [DEV_RULES_ADOPTION](docs/DEV_RULES_ADOPTION.md).
+

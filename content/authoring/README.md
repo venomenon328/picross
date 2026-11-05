@@ -14,7 +14,11 @@ Dieser Index beschreibt Produktionen, nicht den Spielkatalog. Auch ungeprüfte
 Bildphasen und noch nicht endabgenommene Pakete dürfen hier liegen. Der Status
 und nächste erlaubte Schritt müssen diese Grenzen ausdrücklich nennen.
 Registrierte Inhalte verwaltet der Adapter unter `content/packages/` und in
-`content/registry.json`. Das Offline-Cheat-Sheet gehört nicht ins Repository.
+`content/registry.json`. Die gepflegte Vorlage des
+[Offline-Cheat-Sheets](../../docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html)
+liegt unter `docs/ai-workflows/`; persönliche Sitzungen und Auftragsexporte gehören
+nicht als zusätzliche Sheetkopien in die Authoringablage. Inhalts-/Cleanup-PRs
+führen einen eigenen aktuellen `.ci/package.json` gemäß allgemeinem CI-Vertrag.
 
 ## Abschluss
 
@@ -23,3 +27,4 @@ nachgewiesenem Merge auf main werden alle Arbeitsrevisionen der fertigen ID samt
 Indexeinträgen entfernt, gemäß PUZZLE_AUTHORING §9. Unter `content/packages/`
 bleibt nur der kompakte Integrationsdatensatz. Keine dauerhafte Replaypflicht;
 Runtime-Dateien und Nutzungshinweise bleiben erhalten.
+

@@ -18,7 +18,7 @@ Temporäre Featureprüfungen enden spätestens an ihrem benannten Abschluss-/Rev
 
 ## Artefakte
 
-Das Profil definiert das verpflichtende ausführbare Produkt und nötige Laufzeitdateien/Lizenzen. Diese gehören in einen klaren Download. Technische Reports, Prüfprofile, Exporte und Bildfolgen gehören nicht in das Spieler-/Nutzerpaket.
+Das Profil definiert das verpflichtende ausführbare Produkt, nötige Laufzeitdateien/Lizenzen und ausdrücklich buildfreie Änderungsklassen. Reine Dokumentenänderungen und reine Inhaltsproduktion benötigen standardmäßig keinen Player-Build; gemischte Entwicklungsänderungen fallen nicht unter diese Ausnahme. Produkt und Laufzeitdateien gehören bei einem Build in einen klaren Download. Technische Reports, Prüfprofile, Exporte und Bildfolgen gehören nicht in das Spieler-/Nutzerpaket.
 
 Technische Daten entstehen nur für einen aktuellen Prüfer oder benannten Review-/Diagnosezweck. Interne Originale möglichst im erzeugenden Lauf unabhängig prüfen und danach entfernen. Ein Joblog oder kompakter Ergebnistext ist kein Grund, ein zweites technisches Downloadpaket zu erzeugen. Uploads haben Zweck, Empfänger und Ablauf; Standard ist kein technischer Upload.
 
@@ -31,3 +31,4 @@ Keine feste maximale Artefaktgröße. Umfang minimieren durch Weglassen unnötig
 Das Profil setzt ein weiches Laufzeitziel. Überschreitung erzeugt Messung, Warnung und gegebenenfalls Optimierungsbedarf, keinen Fehlerstatus und keinen verpflichtenden Maximalwert. Keine pauschale Artefaktgrößen- oder CI-Laufzeitobergrenze. Prozess-Hängerschutz, Plattformgrenzen und funktionale Zeitverträge sind gesonderte technische Grenzen; ihre Werte begründen und nicht als Leistungsziel ausgeben.
 
 Gemessene Laufzeit, Wartezeit, Parallelität, erzeugte und hochgeladene Bytes unterscheiden. Nur tatsächliche Messungen als Wirkung behaupten. Erfolgreich, nicht angefordert, fehlend, abgebrochen und fehlgeschlagen bleiben unterscheidbar. Quelle, Basis, Test-Merge und Run/Versuch binden die Aussage. Standard-Main-Nachlauf wiederholt keine gesamte Featureprüfung.
+

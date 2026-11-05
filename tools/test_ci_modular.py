@@ -28,6 +28,56 @@ class PackageContract(unittest.TestCase):
         p = package(); p['modules'] = []
         self.assertEqual(self.validate(p)['modules'], [])
 
+    def test_player_exception_is_diff_bound_and_never_hides_development(self):
+        cases = [
+            (['README.md', ci.PLAN_PATH], [], False),
+            (['docs/workflow/Entwicklungsworkflow_Cheat-Sheet.html'], [], False),
+            (['content/authoring/pz-test/r1/package.zip'], [], False),
+            (['content/registry.json', 'content/packages/pz-test/r1/manifest.json',
+              'game/data/content/test.json', 'game/art/content/test.png', 'docs/CI_POLICY.md', ci.PLAN_PATH], [], False),
+            (['content/reveals/pz-test.json'], ['production.images'], False),
+            (['README.md'], ['tools'], False),
+            (['README.md'], ['native.history'], True),
+            (['README.md'], ['preflight'], True),
+            (['README.md'], ['delivery'], True),
+            (['README.md', 'game/main.gd'], [], True),
+            (['content/registry.json', 'tools/puzzle_production/solver.py'], [], True),
+            (['.github/workflows/ci-modular.yml'], [], True),
+            (['docs/helper.py'], [], True),
+            (['examples/rp1/SELECTION.md'], [], True),
+            (['game/art/shared.svg'], [], True),
+            (['game/data/content/new.gd'], [], True),
+            (['unknown'], [], True),
+            ([], [], True),
+        ]
+        for paths, modules, expected in cases:
+            for event in ('pull_request', 'push'):
+                with self.subTest(paths=paths, modules=modules, event=event):
+                    self.assertEqual(ci.player_requirement(paths, modules, event=event)['required'], expected)
+        self.assertTrue(ci.player_requirement(['README.md'], [], event='workflow_dispatch')['required'])
+        self.assertTrue(ci.player_requirement(['README.md'], [], event='push', nonregular=['README.md'])['required'])
+
+    def test_build_free_content_runs_selected_production_without_player_or_upload(self):
+        from types import SimpleNamespace
+        for modules in ([], ['production.solver']):
+            plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
+                    'player': {'required': False}, 'run_attempt': '1', 'modules': modules, 'package': package()}
+            with self.subTest(modules=modules), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                binding = {'native_groups': [], 'production_groups': ['solver'] if modules else []}
+                with patch.object(ci, 'legacy_binding', return_value=binding), \
+                     patch.object(ci, 'command') as command, patch.object(ci, 'summary'), \
+                     patch.object(ci, 'git', side_effect=['', plan['tested_checkout']]), \
+                     patch.dict('sys.modules', {'production_results': SimpleNamespace(validate_all=lambda *args: None)}), \
+                     patch.dict(os.environ, {'GITHUB_OUTPUT': str(root/'outputs')}):
+                    report = ci.execute(plan, root/'out', root/'cache')
+                self.assertTrue(report['accepted'], report['error'])
+                self.assertEqual([call.args[1] for call in command.call_args_list], ['production'] if modules else [])
+                self.assertEqual(report['player_bytes'], 0)
+                self.assertEqual(report['diagnostic_bytes'], 0)
+                self.assertFalse((root/'out/player').exists())
+                self.assertIn('player=false', (root/'outputs').read_text())
+
     def test_unknown_duplicate_and_nonlist_modules_are_rejected(self):
         for modules in [['native.typo'], ['tools', 'tools'], 'tools', [True]]:
             p = package(); p['modules'] = modules
@@ -87,7 +137,7 @@ class PackageContract(unittest.TestCase):
 
     def test_source_changed_after_tests_is_failure_even_when_commands_return_zero(self):
         plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
-                'run_attempt': '1', 'modules': [], 'package': package()}
+                'player': {'required': True}, 'run_attempt': '1', 'modules': [], 'package': package()}
         with tempfile.TemporaryDirectory() as directory:
             def build(args, name, work, rows):
                 (Path(directory) / 'out/player').mkdir(parents=True)
@@ -102,7 +152,7 @@ class PackageContract(unittest.TestCase):
 
     def test_native_reader_failure_cannot_be_relabelled_as_success(self):
         plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
-                'run_attempt': '1', 'modules': ['native.history'], 'package': package()}
+                'player': {'required': True}, 'run_attempt': '1', 'modules': ['native.history'], 'package': package()}
         from types import SimpleNamespace
         def reject(*args): raise ValueError('Missing original save trace')
         with tempfile.TemporaryDirectory() as directory:
@@ -118,7 +168,7 @@ class PackageContract(unittest.TestCase):
 
     def test_failed_build_never_publishes_a_partial_player(self):
         plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
-                'run_attempt': '1', 'modules': [], 'package': package()}
+                'player': {'required': True}, 'run_attempt': '1', 'modules': [], 'package': package()}
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             def fail(*args):
@@ -134,7 +184,7 @@ class PackageContract(unittest.TestCase):
 
     def test_soft_goal_does_not_reject_a_clean_successful_run(self):
         plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
-                'run_attempt': '1', 'modules': [], 'package': package()}
+                'player': {'required': True}, 'run_attempt': '1', 'modules': [], 'package': package()}
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             def build(*args): (root/'out/player').mkdir(parents=True)
@@ -150,6 +200,36 @@ class PackageContract(unittest.TestCase):
 
 
 class GitBinding(unittest.TestCase):
+    def test_real_git_diff_includes_renames_and_nonregular_document_modes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            def git(*args):
+                return subprocess.check_output(['git', *args], cwd=root, stderr=subprocess.DEVNULL).decode().strip()
+            def commit(message):
+                git('add', '.'); git('commit', '-qm', message)
+                return git('rev-parse', 'HEAD')
+            git('init', '-q'); git('config', 'user.name', 'test'); git('config', 'user.email', 'test@example.invalid')
+            (root/'.ci').mkdir(); p = package(); p['modules'] = []
+            (root/ci.PLAN_PATH).write_text(json.dumps(p))
+            (root/'game').mkdir(); (root/'game/main.gd').write_text('extends Node\n')
+            base = commit('base')
+            p['package'] = 'docs'; (root/ci.PLAN_PATH).write_text(json.dumps(p))
+            (root/'README.md').write_text('Documentation\n')
+            head = commit('documents')
+            for event in ('pull_request', 'push'):
+                self.assertFalse(ci.load_plan(base, head, event, root=root)['player']['required'])
+            (root/'game/main.gd').rename(root/'game/main.md')
+            head = commit('rename code to documentation')
+            self.assertTrue(ci.load_plan(base, head, 'pull_request', root=root)['player']['required'])
+            base = head
+            p['package'] = 'link'; (root/ci.PLAN_PATH).write_text(json.dumps(p))
+            # Set Git mode directly: this needs no Windows symlink privilege.
+            (root/'README.md').write_text('game/main.md')
+            git('add', '.')
+            git('update-index', '--cacheinfo', '120000,' + git('hash-object', '-w', 'README.md') + ',README.md')
+            git('commit', '-qm', 'document symlink'); head = git('rev-parse', 'HEAD')
+            self.assertTrue(ci.load_plan(base, head, 'pull_request', root=root)['player']['required'])
+
     def test_inherited_plan_fails_new_plan_passes_main_does_not_replay_it(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -173,3 +253,4 @@ class GitBinding(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
