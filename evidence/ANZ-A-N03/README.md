@@ -18,7 +18,7 @@ Die lokale Informationsprobe meldet **302 Checks/0 Fehler**. Sie wurde vor Commi
 
 ## Binärzugang und unabhängige Sicht
 
-Alle folgenden Original-PNGs wurden vom Implementierer direkt geöffnet. Größen/SHA-256 stehen im [Manifest](manifest.json). Öffentlicher binärer Rückdownload wird zusätzlich als download-verification.json dokumentiert. Originale vom konkreten Belegcommit per raw.githubusercontent.com, Contents mit Raw-Medientyp oder echtem Git-Checkout laden, Bytes prüfen und Bilder direkt öffnen.
+Alle folgenden Original-PNGs wurden vom Implementierer direkt geöffnet. Größen/SHA-256 stehen im [Manifest](manifest.json). [Tatsächlicher öffentlicher Binär-Rückdownload](download-verification.json): alle 29 Manifestdateien, 23.918.873 Bytes, fünf Dateien über 1 MiB. Die vier großen zurückgeladenen Katalog-/1080p-/Vollbild-PNGs wurden anschließend direkt in Originalauflösung erneut geöffnet. Originale vom konkreten Belegcommit per raw.githubusercontent.com, Contents mit Raw-Medientyp oder echtem Git-Checkout laden, Bytes prüfen und Bilder direkt öffnen.
 
 Bekannte Empfängergrenze: Der frühere ChatGPT-Contents-/UTF-8-Zugang aus N02-R03 konnte große Bilder nicht liefern. Derselbe textgebundene Zugang wird durch einen neuen Ref oder ZIP nicht binärfähig. R04 benötigt einen funktionierenden Binärdownloader/Bildanzeiger oder tatsächlich zugängliche Originalanhänge. Diese Zustellung schließt die unabhängige Sicht nicht selbst; N02-R03-A01 ist am neuen Endstand durch R04 zu prüfen. Historische N02-Berichte/Bilder behalten ihre alte Bindung.
 
