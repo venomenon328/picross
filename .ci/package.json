@@ -2,11 +2,29 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/533",
   "package": "BTI-A",
-  "modules": [],
-  "purpose": "BTI-A ist in diesem Draft ausschließlich Spezifikationsvorbereitung: neuem Bildtitel-Fachvertrag und konsistentem Routing in HZ, Buch, Design, Anzeige und Profil. Keine Bildassets/Spielcode/Teständerung. Nur docs und ci-required, buildfrei; die spätere Implementierung führt diesen Branch/PR fort und wählt bei wirklichem Produktdiff native.catalog.",
-  "omitted": "Keine nativen/Tool-/Produktionsmodule für den reinen Dokumentationsdiff; er enthält weder laufzeitwirksame Bilder noch Code. Die später benötigte native.catalog-Prüfung, tatsächliche Windows-Sicht und Ressourcenprüfung sind im Paket #533 vorab geplant, aber noch nicht ausgeführt. Keine stillschweigende zukünftige Testabdeckung durch Dokumenten-CI.",
-  "test_changes": [],
-  "core_change": "Keine Änderung am CI-Kern, Prüforakeln oder Player-Build. Dokumenten-/Paketplanintegrität bleibt maßgeblich.",
+  "modules": [
+    "native.catalog"
+  ],
+  "purpose": "BTI-A: three local illustrated page headings, fixed information headers and bottom navigation; catalog/information layout, resource mapping and fallback in native.catalog. Core builds the Windows player.",
+  "omitted": "No grid, history, completion, adapter, production or browser change. No native.graphics/core/history/completion/adapters/export, preflight, delivery or Chromium. One-time Windows rendering/interactions and actual Windows/Web PCK resource checks supplement catalog components; no full lifecycle gallery.",
+  "test_changes": [
+    {
+      "path": "game/tests/display_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Replace superseded visible Bakso page-heading assumptions; retain group/fallback roles and existing interaction checks."
+    },
+    {
+      "path": "game/tests/kat2_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Run the small BTI component checks inside existing information process, no new process or captures."
+    },
+    {
+      "path": "game/tests/view_title_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Cheap mapping/fallback, title/scroll/navigation geometry and scroll-end regression on synthetic data; only native.catalog."
+    }
+  ],
+  "core_change": "Player extras include the new title provenance and manifest; no CI selection or result gate change. One-time Windows/Web build and PCK checks verify this additive packaging change.",
   "evidence": {
     "mode": "none",
     "purpose": null,

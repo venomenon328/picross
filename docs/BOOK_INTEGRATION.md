@@ -88,17 +88,17 @@ folgen den abgenommenen gemeinsamen Verträgen. Die neun Textur-/Direktübergabe
 behalten maximal vier Kanalstufen und mittlere Abweichung höchstens 0,1 sowie
 Einpixel-/Alpha-Gegenproben.
 
-## Freigegebene Folgedarstellung · BTI-A / #533 (noch nicht integriert)
+## Bildhaupttitel · BTI-A / #533 (Arbeitsbranch, noch nicht integriert)
 
-[BTI](VIEW_TITLE_ART.md) führt als eigenständigen nächsten Paket-Sollstand drei
+[BTI](VIEW_TITLE_ART.md) führt auf dem Arbeitsbranch drei
 reine, transparente Schriftzugbilder ein: `Rätselkatalog` im linken Katalogkopf,
 `Hilfe` im rechten Infokopf und `Einstellungen` im linken Infokopf, jeweils
 innerhalb der sicheren projizierten Papierhälfte zentriert. Haupttitel der
-Informationsseiten liegen künftig außerhalb ihrer Scrollflächen. Die bislang
-oben angeordneten Buttons `Zurück` und Hilfe-/Einstellungswechsel liegen dann
+Informationsseiten liegen außerhalb ihrer Scrollflächen. Die zuvor
+oben angeordneten Buttons `Zurück` und Hilfe-/Einstellungswechsel liegen jetzt
 als feste untere Navigation außerhalb der Scrollflächen; der Kapitelzugang,
 Gruppenrahmen, Besuchskontext und alle Daten-/Save-/Recoverywege bleiben.
-**Diese Folgeregel ist freigegeben, aber noch kein implementierter Iststand.**
+**Implementierung ist keine unabhängige oder persönliche Abnahme; R01/M01 offen.**
 Aktuelle Kriterien und Abnahme in [#533](https://github.com/venomenon328/picross/issues/533).
 
 ## Spielerhilfe · HIL-1 / #500

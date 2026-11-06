@@ -177,6 +177,7 @@ func run() -> void:
 		preload("res://tests/hz_cases.gd").run(self)
 		preload("res://tests/hz_c_cases.gd").run(self)
 		await preload("res://tests/display_cases.gd").run(self)
+		await preload("res://tests/view_title_cases.gd").run(self)
 		await information_saves()
 	elif mode == "kb":
 		await compact_buttons()

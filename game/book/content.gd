@@ -3,6 +3,7 @@ extends "res://ui/main.gd"
 const Surface = preload("res://book/surface.gd")
 const CatalogSpread = preload("res://book/catalog.gd")
 const Information = preload("res://book/information.gd")
+const ViewTitle = preload("res://ui/view_title.gd")
 signal opening_requested(id: String)
 signal return_requested
 signal catalog_shown
@@ -13,6 +14,7 @@ var book: Node3D
 var info: RefCounted
 var presentation_locked: bool = false
 var save_retry: BookButton
+var catalog_title: ViewTitle
 
 func configure_catalog(_catalog: Control) -> void: pass
 
@@ -24,6 +26,11 @@ func _build() -> void:
 	laying_out = true
 	super._build()
 	laying_out = false
+	catalog_title = ViewTitle.new()
+	page.add_child(catalog_title)
+	var catalog_fallback: Label = label("Rätselkatalog",28)
+	catalog_fallback.add_theme_font_override("font",WORK_TITLE_FONT)
+	catalog_title.configure("catalog",catalog_fallback)
 	# Remove the old left tab completely. Reuse the three existing right slots;
 	# the middle menu remains the unchanged sidebar axis in the base layout.
 	album_button.free()
@@ -85,7 +92,8 @@ func _layout_book(prepare_board: bool = false) -> void:
 			# preview frame's alpha envelope below the 44-pixel hit targets.
 			actions[id].position.y = maxf(actions["menu"].position.y,paper_top+5*ui_scale)
 	layout_warning.position.x = maxf(layout_warning.position.x, title_origin.x)
-	title.visible = not information.visible
+	title.visible = work.visible or ending.visible
+	if catalog_title != null: catalog_title.visible = album.visible
 	if information.visible: info.layout()
 	if save_retry != null:
 		save_retry.visible = session != null and not slot_errors[sessions.find(session)].is_empty() and not work_repair_button.visible
@@ -114,7 +122,8 @@ func _layout_book(prepare_board: bool = false) -> void:
 		var footer_width: float = album.right_pager.get_child(0).get_combined_minimum_size().x+album.next_button.get_combined_minimum_size().x+12*ui_scale
 		album.right_pager.vertical = (edge-margin-album.fold_gap)/2 < footer_width
 		_place(album, Rect2(Vector2(margin,catalog_top),Vector2(edge-margin,left_paper.end.y-inset-catalog_top)))
-		_place(title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,45*ui_scale)))
+		_place(catalog_title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,45*ui_scale)))
+		catalog_title.fallback.add_theme_font_size_override("font_size",roundi(28*ui_scale))
 		if album.summary != null:
 			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(edge-right_heading,45*ui_scale)))
 			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))

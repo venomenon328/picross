@@ -1,11 +1,11 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
-**Freigegebene BTI-Folgepräzisierung (noch nicht produktiv implementiert):**
-[BTI-D01–D05](VIEW_TITLE_ART.md) ersetzt nach gesonderter Umsetzung **nur**
+**BTI-Folgepräzisierung auf dem Arbeitsbranch implementiert; R01/M01 offen:**
+[BTI-D01–D05](VIEW_TITLE_ART.md) ersetzt **nur**
 die drei großen sichtbaren Seitentitel `Rätselkatalog`, `Hilfe` und
 `Einstellungen` durch transparente handgezeichnete Bildschriftzüge.
-Die weiter unten beschriebenen bisherigen Bakso-/Fraunces-Rollen bleiben als
-integrierter Iststand bis BTI-A bestehen; insbesondere die beiden Bakso-
+Die weiter unten beschriebenen bisherigen Bakso-/Fraunces-Hauptrollen bleiben
+als Ressourcenfallbacks erhalten; insbesondere die beiden Bakso-
 Gruppentitel und sämtliche sonstigen Überschriften sind nicht betroffen.
 [Freigabe und Umsetzungspaket #533](https://github.com/venomenon328/picross/issues/533).
 
