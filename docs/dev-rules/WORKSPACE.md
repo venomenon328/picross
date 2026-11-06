@@ -6,6 +6,15 @@ Die Wurzel ist kein Löschauftrag für ihren gesamten Inhalt. Eigene Neuanlagen 
 
 Ein Implementierungsauftrag mit aktivierter Bereinigung erlaubt und verlangt, selbst erzeugte entbehrliche Arbeitsdaten nach Abschluss zu entfernen. Vorher Commits pushen, erforderliche aktuelle Reviewbelege übergeben und alle ungesicherten/fremden Änderungen ausschließen. Eigene saubere Worktrees mit dem dafür vorgesehenen Git-Befehl entfernen. Keine Löschung des Benutzer-Checkouts, des Arbeitswurzelverzeichnisses selbst oder entfernter Branches daraus ableiten.
 
+Bei deaktivierter Abschlussbereinigung ist kein nachgelagerter Ablage- oder
+Checkout-Rückbau beauftragt; eigene Anschlussdaten mit ihrem Zweck erhalten.
+Die laufinterne Bereinigung temporärer Testdaten gilt unabhängig von dieser
+Einstellung. Die Bereinigungsoption und eine gesetzte Arbeitswurzel werden im
+Auftrag als konkrete Parameter übergeben; die Schutz- und Ablaufregeln stehen
+hier. Ist keine Wurzel vorgegeben, die beauftragte Arbeitsumgebung und einen
+eindeutig eigenen Unterordner nutzen. Ein ausdrücklich nur für Codex gesetzter
+Pfad gilt für diese Ausführung, nicht ungefragt für eine andere Umgebung.
+
 Testprozesse verwalten ihre temporären Unterordner mit Kontextmanagern oder `try/finally` und kontrollieren den tatsächlichen Abschluss. Nach hartem Abbruch dürfen nur markierte eigene verwaiste Ordner nach Pfad-, Besitz-, Alter- und Lockprüfung aufgeräumt werden. Keine pauschale TEMP-/artifacts-Löschung, keine Umgehung einer abgelehnten Aktion und keine Änderung der Berechtigungssteuerung. Ein Full-Access-Profil ist keine Garantie, dass eine Plattform jede einzelne Löschung erlaubt.
 
 Ergebnis: bereinigt, noch für konkreten Review benötigt oder blockiert mit Restpfad und Grund. Keine vollständige Löschung bei Dateisperren oder Policyblockade behaupten. Abgelaufene lokale Altbestände anderer Läufe benötigen nachvollziehbares Eigentum und den passenden Auftrag; ein historischer Dateiname allein reicht nicht.

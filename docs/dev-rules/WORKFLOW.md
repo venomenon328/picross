@@ -62,6 +62,11 @@ Prüfungen sichern das geänderte Verhalten und wesentliche Risiken auf der gün
 
 Review beurteilt den tatsächlichen Diff und Belege, nicht allein die Abschlussmeldung. Geprüften Head, Basis und Umfang nennen. Berichtetes, durch Originale/CI Bestätigtes und selbst Geprüftes trennen. Eigenes Selbstreview ist keine unabhängige Zweitprüfung. Erforderliche unabhängige oder persönliche Abnahmen werden im Paket mit Akteur, Szenario und Gate-Zeitpunkt festgelegt; nicht nachträglich erfunden.
 
+Eine gemeldete persönliche Abnahme mit Akteur, tatsächlich getestetem Commit
+oder Artefakt, Umgebung, Szenarien, Ergebnis und Einschränkungen in Issue/PR
+festhalten. Fehlende Angaben nicht zu einer ausgeführten Prüfung ergänzen;
+die Aussage nur für den belegten Umfang und das vereinbarte Gate verwenden.
+
 | Befund | Bedeutung |
 | --- | --- |
 | B | Blockierender Fehler: Ort, Auslöser, Auswirkung und Erfolgskriterium |
@@ -85,5 +90,29 @@ Projektprofil bestimmt Mergeverfahren und automatische Deploymentwirkung. Zusät
 
 ## 8. Übergabe
 
-Für den Sheet-Ablauf gilt [HANDOFF.md](HANDOFF.md): kurze Ergebnismeldung mit relevanten Links, genau ein vollständiges versioniertes JSON im Codeblock und ein kurzer nächster Schritt. Keine zusätzliche Handoff-Datei oder redundanter Folgeprompt. Das Sheet stellt daraus den nächsten Auftrag zusammen. Ohne Sheet bleibt eine kompakte menschlich lesbare Übergabe zulässig.
+Für Aufträge aus dem Entwicklungssheet ist [HANDOFF.md](HANDOFF.md) vollständig
+zu lesen und einzuhalten. Dort stehen der verbindliche Übergabevertrag und die
+Abschlussausgabe; das Sheet stellt daraus den nächsten Auftrag zusammen.
+Ohne Sheet bleibt eine kompakte menschlich lesbare Übergabe zulässig.
+
+### Auftragsdaten und dauerhafte Regeln
+
+Sheet-Prompts enthalten Auftrag und Endzustand, Quellenverweise sowie den
+konkreten Kontext: Repository, Issue/Paket, PR, Branch/Head, Review und beauftragte
+Befundkennungen. Neue fachliche Angaben und optionale CI-Modulvorgaben gehören
+ebenfalls hinein; ihre verbindliche Entscheidung steht anschließend in den
+zuständigen Paket-/Repositoryquellen.
+
+Gewählte Befugnisse bleiben ausdrücklich im abgesendeten Auftrag: etwa nur
+Beratung, Umsetzung ohne Merge, Review ohne Korrektur, bedingter Merge oder
+Bereinigung eigener Arbeitsdaten. Ebenso bleibt eine eingestellte lokale
+Arbeitswurzel ein Auftragsparameter. Eine Repositoryregel oder ein importiertes
+Ergebnis darf diese Nutzerentscheidung nicht selbst ersetzen oder erweitern.
+
+Allgemeine Quellenprüfung, CI-/Test-/Artefaktregeln, Modellwahl, Reviewverfahren,
+Commit-/PR-/Mergeablauf und Bereinigungsverfahren werden aus ihren Pflichtquellen
+gelesen und nicht in jeden Prompt kopiert. Für den Abschluss verweist der Prompt
+verbindlich auf [HANDOFF.md](HANDOFF.md), ohne Schema, Feldliste oder Beispiel
+anzuhängen. Tatsächliche frühere Ergebnisdaten dürfen als Arbeitskontext
+mitgegeben werden; sie bleiben von Formatvorgaben und Freigaben getrennt.
 
