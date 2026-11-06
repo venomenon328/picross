@@ -132,5 +132,19 @@
     ],
     "processing": "Four built-in generative image edits, two delivered outputs and one unchanged catalogue anchor. G2 and G3 are rejected intermediates, not additional candidates; their hashes are recorded, binary retention is not required. G4 is a generative cleanup, not a pixel-identical deterministic extraction. Final outputs copied byte-for-byte without manual raster retouching, recolouring, cropping, alpha replacement or re-encoding. Static HTML previews display original images proportionally. Pillow used read-only for metrics. No font rasterization. Model/backend version, seed and unexposed parameters unknown.",
     "rights": "User-requested generated lettering, based on pinned previous BTI-B generated references. No downloaded third-party lettering or font raster. Existing project paper is a preview background only; provenance game/book/paper.json at product_head. No claim of exclusive rights or pixel-identical regeneration."
+  },
+  "upstream_V1_catalog": {
+    "variant": "V1",
+    "title": "catalog",
+    "output": "originals/V1-catalog.png",
+    "generated_filename": "exec-71e35ded-e03c-45d5-a8fa-272245f30ad8.png",
+    "prompt": "Use case: stylized-concept. Create ONE transparent PNG lettering asset, not a mockup or a sheet. Exact German text: \"Rätselkatalog\" (R ä t s e l k a t a l o g), two clear umlaut dots. Use the attached original C image as visual STYLE reference only: energetic hand-drawn slanted letterforms, visible double contours, rough dry-pen hatching and long gestural cross-stroke. Reinterpret it as V1 'Skizzenfeder': lean angular right-slant handwriting with a large open R, irregular narrow/wide lowercase rhythms, dark stems built up from several visible parallel graphite/ink strokes, intentional visible drawing corrections. A single low assertive sweeping cross-stroke in the composition, not ornamental looping flourishes. Strong handmade imperfect silhouette; coarse visible hatching remains visible when entire word is 320 pixels wide. NEUTRAL black/charcoal grey only; NO brown or sepia. Transparent alpha background, no paper, no shadows, no leaves, frames, objects, icons, extra text, labels or decorative ornaments. Single line centered, every letter and stroke complete with generous transparent safety margins on all sides. Landscape canvas. Do not typeset a polished script font. This is a visual variant for owner selection, not a final approved product.",
+    "reference": [
+      "owner reference C"
+    ],
+    "invocation": {
+      "num_last_images_to_include": 1,
+      "transparent_background": true
+    }
   }
 }
