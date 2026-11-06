@@ -114,21 +114,6 @@ func navigate_to(_normalized: Vector2) -> void:
 	# Compatibility no-op: passive miniature and legacy callers cannot move a grid.
 	pass
 
-func reset_clue_pan() -> void:
-	if session.gesture.active:
-		return
-	ensure_clue_steps()
-	row_clue_steps.fill(0)
-	column_clue_steps.fill(0)
-	for index: int in range(row_clue_reads.size()):
-		row_clue_reads[index] = ClueLayout.grid_end_position()
-	for index: int in range(column_clue_reads.size()):
-		column_clue_reads[index] = ClueLayout.grid_end_position()
-	clear_clue_hover()
-	view_changed.emit()
-	edited.emit()
-	queue_redraw()
-
 func ensure_clue_steps() -> void:
 	if session == null:
 		return

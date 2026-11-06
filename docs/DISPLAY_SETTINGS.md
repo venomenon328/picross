@@ -50,18 +50,32 @@ Auf der **vorhandenen linken Buch-Einstellungsseite** erscheint ein Abschnitt �
 
 Die Auswahl bleibt über Buchseiten, Hilfe-/Katalog-/Arbeitsrückkehr konsistent. Keine zusätzliche Einstellungsseite oder generelle Schrift-/Buttonneugestaltung. Dialog, Bestätigung und Fehlinformation müssen innerhalb des aktuellen Viewports erreichbar sein.
 
-Die [Eigentümer-Nacharbeit ANZ-A-N01](https://github.com/venomenon328/picross/issues/527#anz-a-n01)
-gliedert die vorhandene Seite in **Anzeige**, **Rätselansicht** und **Beenden**.
-UI-Skalierung gehört zu Anzeige, die vorhandenen Rätseloptionen zu Rätselansicht.
-Eine gemeinsame linksbündige Bedienungsspalte ist auf höchstens 640 × UI und die
-sichere Papierbreite begrenzt; bei 1080p/720p und UI100/125 bleibt alles vertikal
-erreichbar. HZ-Trefferflächen, vollständige Popupwerte und Fehlerwege bleiben.
-Im Ruhezustand entfallen die zusätzliche Clientflächenzeile und die positive
-Speichermeldung. Im Vollbild zeigt das deaktivierte Größenfeld direkt die aktuelle
+Die [Eigentümer-Nacharbeit ANZ-A-N02](https://github.com/venomenon328/picross/issues/527#anz-a-n02)
+ersetzt die N01-Anordnung: genau **Anzeige** und **Rätselansicht** erhalten stabile
+handgezeichnete Rahmen mit verbundenen Titellaschen. Der Block steht mittig in der
+sicheren linken Papierfläche, höchstens 640 × UI breit; Inhalte bleiben linksbündig.
+Der Seitentitel verwendet Fraunces 600, Grundgröße 28, wie die festgelegte
+Katalogtitel-Rolle. Label, HZ-Dropdown und fokussierbares Fragezeichen stehen in
+einer gemeinsamen Zeile. UI-Skalierung hat genau 100 % und 125 %, sitzungsgebunden.
+Die vollständige Ansichtserklärung und die Erklärung der Vollbild-Desktopauflösung
+stehen nur in den gestylten Fragezeichen-Tooltips, erreichbar per Hover und Fokus.
+Das separate Fragezeichen bleibt auch neben deaktivierter Größenwahl aktiv.
+Vertikales Scrollen erhält bei 1080p/720p × UI100/125 sämtliche Optionen.
+
+Beenden-Gruppe und manueller Hinweisreset entfallen vollständig, einschließlich
+des anderweitig produktiv ungenutzten `Board.reset_clue_pan()`. Kein Ersatzbefehl
+oder automatischer Reset beim Einstellungsbesuch. Individuelles Hinweisziehen,
+rasterseitige Slots, Default/Zoom-/Layoutnormalisierung und sichere Lesepositionen
+bleiben. Katalog-Ausgang, OS-Schließen und Save-/Flush-/Recovery-/Web-Lifecycle
+bleiben erhalten. Die native Probe prüft diese existierenden Exitwege weiter.
+
+N01-A03/A04 gelten weiter: keine zusätzliche Clientflächenzeile oder positive
+Speicherdauerzeile. Im Vollbild zeigt das deaktivierte Größenfeld die aktuelle
 Desktopauflösung; der gemerkte Fensterpreset bleibt unverändert. Countdown,
 Rücknahme-, Fehler- und Fallbackhinweise samt expliziter Übernahme bleiben sichtbar.
-N01-T01 liefert neue gezielte Windowsoriginale; unabhängiges N01-R02 bleibt vor
-Merge erforderlich. R01/W01 gelten nur für ihren früheren Head, M01 vor Release.
+Aktuelle N02-Windowsoriginale werden binär erreichbar für unabhängiges N02-R03
+vor Merge befristet zugestellt. R01/W01/N01-R02 bleiben an ihre früheren Heads
+gebunden; M01 bleibt persönliche Komfortprobe nach Integration vor Release.
 
 Ein Wechsel wird sofort **probeweise** wirksam und verlangt innerhalb von **15 Sekunden** eine explizite Bestätigung. In der Vorschau keine verketteten zweiten Moduswechsel. Abbrechen oder Timeout stellt den **letzten bestätigten funktionierenden** Zustand wieder her; auch bei fehlgeschlagener Anwendung muss ein sichtbar benutzbarer Zustand erreichbar bleiben. Ein bloßer Fokuswechsel/Alt-Tab darf nicht automatisch als Annahme gelten. Ein Prozessabbruch vor Bestätigung lässt die alte persistierte Auswahl bestehen. Erst ausdrücklich bestätigte und wirklich angewandte Änderungen werden geschrieben.
 

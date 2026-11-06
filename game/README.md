@@ -180,9 +180,13 @@ in den aktuellen Monitorarbeitsbereich passt. Nicht passende Größen sind deakt
 Vollbild verwendet die aktuelle Desktopauflösung, zeigt diese lesbar an und erhält
 den letzten Fensterpreset für die Rückkehr. Die Windows-Desktopauflösung wird nicht geändert.
 
-Die Einstellungen sind in **Anzeige**, **Rätselansicht** und **Beenden** gegliedert.
-UI-Skalierung steht unter Anzeige. Die kompakten linksbündigen Controls bleiben
-bei knapper Höhe durch vertikales Scrollen erreichbar. Das deaktivierte Größenfeld
+Die Einstellungen zeigen zwei handgezeichnete Gruppen **Anzeige** und
+**Rätselansicht**, mittig auf der linken Buchseite. Feldname, Auswahl und ein
+Fragezeichen stehen nebeneinander. Die Fragezeichen erklären die Felder beim
+Darüberfahren oder Tastaturfokus; die Fenstergrößenhilfe bleibt auch im Vollbild
+erreichbar. **UI-Skalierung** bietet **100 %** und **125 %** für die laufende Sitzung.
+Bei knapper Höhe bleibt alles durch vertikales Scrollen erreichbar.
+Beenden steht im Katalog; auch das normale Fensterschließen sichert den Stand. Das deaktivierte Größenfeld
 zeigt im Vollbild die Desktopauflösung; im Fenster den gewählten Preset.
 
 Jede Änderung wird sofort für **15 Sekunden** ausprobiert. **Beibehalten** speichert;
@@ -313,8 +317,6 @@ Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
   geht es durchgehend in Gegenrichtung. Am Anschlag bleibt die Folge stehen.
   Dort darf ein Platz frei bleiben, damit die Zahlen beim Einrasten nicht
   zurückspringen. Alle Zahlen bleiben über die Folge der Lesepositionen erreichbar.
-  „Hinweise rasterseitig ausrichten“ stellt
-  alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
 - Freie Breite und Höhe zeigen nach dem Fit zusätzliche vollständige Zeilen- und
   Spaltenhinweise, ohne kleinere Zellen dafür zu erzwingen. Passende Folgen haben
   keine Auslassungsmarker und lassen sich nicht in Leerraum verschieben.
@@ -333,7 +335,9 @@ Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
   Überdeckung. Das gilt auch bei Arbeitszoom und Resize; alle Zustände bleiben
   in ganzen Slots eingerastet. Vorübergehende Vollanzeige bewahrt die Anker auch
   beim Speichern und Neustart; beim Verengen kehrt derselbe Lesebereich zurück.
-  Die UI-Skalierung, Hinweisrücksetzung und H1 stehen auf der Informationsseite.
+  Die UI-Skalierung, Rätselansicht und H1 stehen auf der Informationsseite.
+  Ihr Öffnen erhält die individuellen Hinweislesepositionen; ein manueller
+  Hinweisrücksetzbefehl wird nicht angeboten.
   `?` führt direkt zur scrollbar erreichbaren Bedienhilfe rechts; das Menü
   öffnet die Einstellungen links. Der Pfeil im Arbeitskopf führt zum Katalog.
   Auch bei 1280×720/UI 125 % bleiben Werkzeuge,

@@ -70,7 +70,9 @@ func snapshot(full: bool = false) -> Dictionary:
 		row["screen_scale"] = DisplayServer.screen_get_scale()
 		row["ui_scale"] = app.ui_scale
 		row["section"] = app.info.section
-		row["scale_control"] = rect(app.ui_scale_button)
+		row["scale_control"] = rect(app.ui_scale_choice)
+		var scale_popup: PopupMenu = app.ui_scale_choice.get_popup()
+		row["scale_popup"] = {"visible":scale_popup.visible,"position":[scale_popup.position.x,scale_popup.position.y],"size":[scale_popup.size.x,scale_popup.size.y]}
 		row["info_switch"] = rect(app.information.get_node("help-access" if app.info.section == "settings" else "settings-access"))
 		row["info_return"] = rect(app.actions["nav-work"] if app.info.section == "settings" else app.info.right_return)
 		row["cells"] = session.player.cells

@@ -201,8 +201,13 @@ gemeinsame BP-3-Montierungen, die damaligen Fraunces-/Plex-Rollen, feste C1-Kont
 native N1-Informationsseite. Diese konkrete Arbeitsansicht ersetzt die historische
 BP-3-Empfehlung B, nicht die noch offene gesamte Themen-/Kapitelentscheidung.
 Raster und UI werden getrennt auf unverzerrtem A-Papier gezeichnet. N1 nutzt
-nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen,
-Hinweisreset, H1, Bedienhilfe und Beenden teilen sich eine Seite mit Rückweg.
+nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen und H1 nutzen die linke Informationsseite, Bedienhilfe die rechte.
+ANZ-A-N02 / #527 ersetzt die frühere gemeinsame Anordnung: zwei mittig auf dem
+linken Papier stehende handgezeichnete Gruppen mit Titellaschen und horizontalen
+Label-/Dropdown-/Fragezeichenzeilen. Einstellungen verwendet Fraunces 600/28 mit
+UI-Skalierung; Erklärungstexte liegen in den gestylten Hover-/Fokushilfen.
+Manueller Hinweisreset und Einstellungs-Beenden entfallen; individuelle Hinweis-
+navigation, Katalog-Ausgang und sichere OS-Schließwege bleiben erhalten.
 Keine neue Statistik/Albumarchitektur oder Vorwegnahme von #24. Native Abweichungen,
 Offline-Fonts und die historische Eigentümeranleitung stehen im [Z2-Prüfbericht](Z2_VERIFICATION.md).
 Die native Umsetzung ist über [PR #33](https://github.com/venomenon328/picross/pull/33)
