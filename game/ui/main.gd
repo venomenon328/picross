@@ -846,6 +846,7 @@ func _build_information() -> void:
 	settings_panel.add_theme_constant_override("separation",16)
 	content.add_child(settings_panel)
 	settings_title = label("Einstellungen",28)
+	settings_title.add_theme_font_override("font",WORK_TITLE_FONT)
 	settings_panel.add_child(settings_title)
 	info_scroll.get_v_scroll_bar().value_changed.connect(func(_value: float) -> void: BookButton.dismiss_all(get_tree()))
 	display_group = _settings_group("Anzeige", "display-options")
@@ -854,7 +855,7 @@ func _build_information() -> void:
 	ui_scale_choice.add_item("100 %")
 	ui_scale_choice.add_item("125 %")
 	ui_scale_choice.item_selected.connect(func(index: int) -> void: set_ui_scale(1.25 if index == 1 else 1.0))
-	display_group.add_child(_settings_field("UI-Skalierung",ui_scale_choice,"Vergrößert die Bedienoberfläche auf 100 % oder 125 %. Gilt für diese Sitzung; der Rasterzoom bleibt unabhängig."))
+	display_group.add_child(_settings_field("UI-Skalierung",ui_scale_choice))
 	var puzzle_group: VBoxContainer = _settings_group("Rätselansicht", "puzzle-options")
 	view_choice = BookChoice.new()
 	view_choice.name = "puzzle-view"
@@ -886,7 +887,7 @@ func _settings_group(caption: String, id: String) -> VBoxContainer:
 	settings_panel.add_child(group)
 	return group.content
 
-func _settings_field(caption: String, choice: OptionButton, explanation: String) -> SettingsField:
+func _settings_field(caption: String, choice: OptionButton, explanation: String = "") -> SettingsField:
 	var field := SettingsField.new()
 	field.configure(self,caption,choice,explanation)
 	settings_fields.append(field)

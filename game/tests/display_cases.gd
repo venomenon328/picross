@@ -121,6 +121,7 @@ static func run(r: SceneTree) -> void:
 	settle(control)
 	r.check(control.active.mode == "borderless" and FileAccess.get_file_as_bytes(path) == saved_bytes,"ANZ: monitor fallback remains transient and visible")
 	r.check(r.app.display_settings == null and r.app.ui_scale_choice.item_count == 2 and r.app.view_choice.item_count == 2,"N02: common non-native settings work without physical display controls")
+	r.check(r.app.ui_scale_choice.get_parent().help == null and r.app.view_choice.get_parent().help != null,"N03: common non-native UI has only the view help")
 	var panel := Settings.new()
 	r.app.display_group.add_child(panel)
 	r.app.display_group.move_child(panel,0)
@@ -154,24 +155,38 @@ static func run(r: SceneTree) -> void:
 		r.surface.size = size
 		r.app.size = Vector2(size)
 		for scale: float in [1.0,1.25]:
+			r.app.return_to_work()
 			r.app.set_ui_scale(scale)
+			await r.frames()
+			var catalog_font: Font = r.app.title.get_theme_font("font")
+			var catalog_size: int = r.app.title.get_theme_font_size("font_size")
+			r.check(r.app.album.visible and r.app.title.is_visible_in_tree() and catalog_font.resource_path == "res://art/drawing/BaksoDaging-Regular.ttf","N03: reference is the actual visible catalog title")
+			r.app.show_information("settings")
 			await r.frames()
 			var groups: Array = [r.app.settings_panel.get_node("display-options"),r.app.settings_panel.get_node("puzzle-options")]
 			r.check(groups[0].heading.text == "Anzeige" and groups[1].heading.text == "Rätselansicht" and r.app.settings_panel.get_child_count() == 3,"N02: exactly two framed settings groups")
-			var font: FontVariation = r.app.settings_title.get_theme_font("font")
-			r.check(font.base_font == r.app.TITLE_FONT and font.variation_opentype == {"wght":600.0} and r.app.settings_title.get_theme_font_size("font_size") == roundi(28*scale),"N02: settings uses specified catalog title role")
+			r.check(r.app.settings_title.get_theme_font("font") == catalog_font and catalog_size == roundi(28*scale) and r.app.settings_title.get_theme_font_size("font_size") == catalog_size,"N03: settings matches active Bakso catalog resource and size")
+			for group: Control in groups:
+				var font: FontVariation = group.heading.get_theme_font("font")
+				r.check(font.base_font == r.app.TITLE_FONT and font.variation_opentype == {"wght":600.0} and group.heading.get_theme_font_size("font_size") == roundi(20*scale),"N03: separate Fraunces 600/20 group role preserved")
 			var column: Rect2 = r.app.settings_panel.get_global_rect()
 			var scroll: Rect2 = r.app.info_scroll.get_global_rect()
 			r.check(column.size.x <= 640*scale+1 and column.size.x <= scroll.size.x and absf(column.get_center().x-scroll.get_center().x) < 10*scale and r.app.info_scroll.get_h_scroll_bar().max_value <= scroll.size.x,"N02: compact groups centred in safe left paper without horizontal scrolling "+str(column)+" / "+str(scroll)+" / max="+str(r.app.info_scroll.get_h_scroll_bar().max_value))
 			var last_x: float = -1
+			var help_count: int = 0
 			for field: Control in r.app.settings_fields:
 				var choice: OptionButton = field.choice
 				var help: Button = field.help
-				r.check(field.caption.global_position.x < choice.global_position.x and help.global_position.x >= choice.get_global_rect().end.x and absf(field.caption.get_global_rect().get_center().y-choice.get_global_rect().get_center().y) < 1,"N02: inline label, choice, question mark "+str(field.name))
-				r.check(choice.size.y >= 44*scale and help.size.x >= 44*scale and help.size.y >= 44*scale and help.focus_mode == Control.FOCUS_ALL and not help.tooltip_text.is_empty(),"N02: independent HZ help target "+str(field.name))
+				r.check(field.caption.global_position.x < choice.global_position.x and absf(field.caption.get_global_rect().get_center().y-choice.get_global_rect().get_center().y) < 1 and choice.size.y >= 44*scale,"N03: inline label and HZ choice "+str(field.name))
+				if field.caption.text in ["Fenstergröße","Rätselansicht"]:
+					help_count += 1
+					r.check(help != null and help.global_position.x >= choice.get_global_rect().end.x and absf(help.get_global_rect().end.x-field.get_global_rect().end.x) < 1 and help.size.x >= 44*scale and help.size.y >= 44*scale and help.focus_mode == Control.FOCUS_ALL and not help.tooltip_text.is_empty(),"N03: independent help at safe row edge "+str(field.name))
+				else:
+					r.check(help == null and field.get_child_count() == 2 and absf(choice.get_global_rect().end.x-field.get_global_rect().end.x) < 1,"N03: no help/focus placeholder; dropdown fills released width and gap "+str(field.name))
 				r.check(last_x < 0 or absf(choice.global_position.x-last_x)<1,"N02: common measured columns")
 				last_x = choice.global_position.x
 				r.check(column.grow(1).encloses(field.get_global_rect()),"N02: complete row inside frame")
+			r.check(help_count == 2,"N03: exactly two field help buttons")
 			r.check(r.app.ui_scale_choice.item_count == 2 and r.app.ui_scale_choice.get_item_text(0) == "100 %" and r.app.ui_scale_choice.get_item_text(1) == "125 %" and r.app.ui_scale_choice.selected == (1 if scale == 1.25 else 0),"N02: UI dropdown matches session scale")
 			r.check(not r.app.board.has_method("reset_clue_pan") and r.app.settings_panel.find_children("exit-options","",true,false).is_empty(),"N02: manual reset command and settings exit removed")
 			var tip_help: Button = panel.size_choice.get_parent().help

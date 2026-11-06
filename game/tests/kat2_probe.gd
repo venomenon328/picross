@@ -340,6 +340,10 @@ func information_profile(base: String, state: String) -> void:
 	foreign.close()
 	await new_app()
 
+func information_back_labels(destination: String) -> void:
+	for button: Button in [app.actions["nav-work"],app.info.right_return]:
+		check(button.text == "Zurück" and button.tooltip_text == destination and button.accessibility_name == destination,"N03: short information back label keeps actual destination: "+destination)
+
 func information_saves() -> void:
 	var base: String = Store.test_root_override
 	for state: String in ["error", "recovered", "recovered_missing", "backup_invalid"]:
@@ -352,6 +356,16 @@ func information_saves() -> void:
 		click(caption_button(app.album, "Einstellungen / Info"))
 		await frames()
 		check(app.information.visible and app.information_origin == "album", state + ": pointer opens catalog information")
+		information_back_labels("Zurück zum Katalog")
+		if state == "error":
+			click(app.information.get_node("help-access"))
+			await frames()
+			information_back_labels("Zurück zum Katalog")
+			click(app.info.right_return)
+			await frames()
+			check(app.album.visible and save_bytes() == original,"N03: help returns to catalog without touching damaged saves")
+			click(caption_button(app.album,"Einstellungen / Info"))
+			await frames()
 		await choose_view(1)
 		check(app.save_timer.is_stopped(), state + ": catalog view change schedules no slot save")
 		await create_timer(0.5).timeout
@@ -408,6 +422,7 @@ func information_saves() -> void:
 	click(app.actions["menu"])
 	await frames()
 	check(app.information.visible and app.information_origin == "work", "dirty: successful retry permits work-origin information")
+	information_back_labels("Zurück zum Rätsel")
 	check(int(app.store.load_slot(app.session.definition).data.cells[2]) == 1, "dirty: retry persists confirmed cell")
 	app.store.fail_step = "after_temp"
 	var before_view: Dictionary = save_bytes()
@@ -438,8 +453,14 @@ func information_saves() -> void:
 	app.book.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
 	await create_timer(0.5).timeout
 	check(app.information.visible and app.status_label.visible and not app.slot_errors[0].is_empty(), "dirty: view failure blocks return, catalog exit signal and real root WM close")
+	click(app.information.get_node("help-access"))
+	await frames()
+	information_back_labels("Zurück zum Rätsel")
+	click(app.info.right_return)
+	await frames()
+	check(app.information.visible and app.information_section == "help" and app.status_label.visible and not app.slot_errors[0].is_empty(),"N03: help back also blocks failed flush and keeps retry reachable")
 	app.store.fail_step = ""
-	click(app.actions["nav-work"])
+	click(app.info.right_return)
 	await frames()
 	check(app.work.visible and app.slot_errors[0].is_empty(), "dirty: retry clears failure and restores work")
 	# A fresh damaged profile tests the real Beenden path at the end of run().

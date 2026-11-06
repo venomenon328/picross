@@ -128,7 +128,7 @@ production/artwork/composition bleiben unverändert. PR #25/#28 sind keine Basis
 | GD-04: C1 | Feste dunkle Kontur für Hinweisfarben 2/4 an beiden Achsen, im Drag und Tooltip; unveränderte RGB-Füllung, Originalindizes und H1. Keine neue Option. |
 | GD-05: N1 | Eine native Informations-Control mit gemeinsamem Einstellungen-/Hilfebereich, drei Zugängen und Rückweg. Historische N1-Bindung: nur der UI-freie Hintergrund wird gespiegelt; Falz links. |
 
-Die aktuelle Informationsanordnung folgt B-B und [ANZ-A-N02](DISPLAY_SETTINGS.md):
+Die aktuelle Informationsanordnung folgt B-B und [ANZ-A-N03](DISPLAY_SETTINGS.md):
 kein manueller Hinweisreset und kein Beenden-Widget in Einstellungen; sichere
 Katalog-/OS-Exitpfade und normale Hinweisnavigation bleiben.
 

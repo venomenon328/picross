@@ -34,7 +34,7 @@ func configure(owner: Control, control: Controller) -> void:
 	mode_choice.item_selected.connect(func(index: int) -> void:
 		app._cancel_interaction()
 		controller.request(Preference.MODES[index],controller.active.preset))
-	add_child(app._settings_field("Anzeigemodus",mode_choice,"Fenster zeigt die gewählte feste Größe. Rahmenloses und exklusives Vollbild verwenden den aktuellen Desktopmodus."))
+	add_child(app._settings_field("Anzeigemodus",mode_choice))
 	size_choice = Choice.new()
 	size_choice.name = "display-size"
 	size_choice.paper_transparent = true

@@ -65,6 +65,13 @@ HZ-B, Produktgrenzen und die getrennten Gates bleiben erhalten.
 | Hinweisziffern, ihre Marker und ausdrücklich an HC gebundene Zähler | Delight Coffee und die kontrolliert gebündelten Plex-Marker gemäß [HC](CLUE_TYPOGRAPHY.md). Schrift-/Slot-/Fitgeometrie, Status, Zahlfarben und C1-Kontur bleiben unverändert. |
 | Fehlende UI-Zeichen | Ausschließlich gebündeltes Plex als lokaler Fallback; keine Systemfontsuche und keine weitere allgemeine Textrolle. |
 
+Gezielte [ANZ-A-N03-Fortschreibung](https://github.com/venomenon328/picross/issues/527#anz-a-n03):
+Die eigenständige Überschrift „Einstellungen“ verwendet wie der tatsächlich
+sichtbare Katalogtitel Bakso Daging bei 28 × UI. Die beiden Gruppentitel Anzeige
+und Rätselansicht bleiben davon entkoppelt Fraunces 600 bei 20 × UI.
+Andere Informations-, Hilfe-, Dialog- und Katalogtitel bleiben unverändert.
+Die frühere N02-Annahme einer Fraunces-Katalogtitelrolle gilt nicht als Sollstand.
+
 Die Fontauswahl ist abgeschlossen. Die bereitgestellte TTF bleibt byteidentisch;
 [Herkunft und Nutzungshinweis](../game/art/drawing/tidy-hand/NOTICE.txt) dokumentieren
 die Autorenaussage „This font is free for all use.“ auf der
