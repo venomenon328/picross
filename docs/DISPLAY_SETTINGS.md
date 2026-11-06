@@ -1,6 +1,6 @@
 # ANZ: Feste Fenstergrößen und native Anzeigemodi
 
-**Status: verbindlicher, am 06.11.2026 freigegebener Sollstand zu [Issue #527](https://github.com/venomenon328/picross/issues/527); noch nicht implementiert.** Paket ANZ-A umfasst die zusammenhängende Erstumsetzung. Dieses Dokument ist auf dem vorbereiteten Arbeitsbranch versioniert; ein Merge nach `main` ist nicht beauftragt. Das bisherige frei skalierbare Fenster ist der technische Iststand.
+**Status: ANZ-A auf dem Arbeitsbranch implementiert; technische Nachweise und getrennte Abnahmen stehen im Produkt-PR zu [Issue #527](https://github.com/venomenon328/picross/issues/527).** Eigentümerfreigabe der Spezifikation: 06.11.2026. Kein Merge oder Release aus dieser Implementierung ableiten.
 
 ## Geltung und Vorrang
 
@@ -63,3 +63,29 @@ Nicht Bestandteil: frei editierbare Größen, maximiertes Fenster als weitere Op
 Das **einzige Paket ANZ-A** enthält die zugehörige Godot-Implementierung, passende gezielte synthetische und echte Windows-Prüfungen sowie eine erst mit implementierter Funktion aktualisierte [Spielanleitung](../game/README.md). Akzeptanz A01–A06, T01, Windows-W01, unabhängiges Review R01 und persönliche spätere Komfortprobe M01 stehen im [Issue #527](https://github.com/venomenon328/picross/issues/527). Für CI gelten [CI_WORKFLOW_V2](CI_WORKFLOW_V2.md) und [CI_CONTRACT](dev-rules/CI_CONTRACT.md): kleiner Kern und Windows-Spieler, Paketmodule `native.catalog` + `native.graphics`, zielgerichtete zusätzliche Einführungsprüfungen, technische Originale ausschließlich zweck-/zeitgebunden, kein automatisch gestartetes Chromium.
 
 Technische Referenz: [Godot DisplayServer 4.6](https://docs.godotengine.org/en/4.6/classes/class_displayserver.html) zur Semantik der seit Godot 4 bestehenden Fenster-/Vollbildmodi. Das ist keine durchgeführte technische oder native 4.7.2-Abnahme.
+
+## Implementierungsbindung ANZ-A
+
+`display_policy.gd` filtert die festen Clientpresets anhand nativer Arbeitsbereichs-
+und Dekorationsmaße. `display_backend.gd` sperrt Resize, setzt ausschließlich
+Godot-Fenstermodi und kontrolliert tatsächliche Client-/Moduswerte. Der Controller
+serialisiert Anwendung, 15-s-Vorschau und Rücknahme; Monitoränderungen und
+externe Größenänderungen werden periodisch sicher abgeglichen. Die Anzeigecontrols
+verwenden die vorhandene HZ-Familie, die Bestätigung liegt innerhalb des Viewports.
+Web, Headless und synthetische SubViewports starten keinen physischen Controller.
+
+Die getrennte Präferenz verwendet Format `picross-display-preference-v1` und genau
+die drei Stringschlüssel `format`, `mode`, `preset`. Moduswerte sind `window`,
+`borderless`, `exclusive`, Presets beispielsweise `1920x1080`. Strikte JSON-Form,
+unbekannte Werte/Versionen, doppelte (auch escapte) und zusätzliche Schlüssel
+werden vor Anwendung geprüft. Nach Flush und erneuter Validierung der `.tmp`-Datei
+rotiert eine gültige Primary in `.bak`; anschließend wird der Kandidat auf den
+abwesenden Primarypfad verschoben. So wird Godots destruktives Windows-Overwrite
+vermieden. Ein Abbruch in der Veröffentlichungslücke lädt `.bak`; ein Fehler
+versucht die Rücknahme, ohne die gültige vorherige Fassung zu vernichten. `.tmp`
+ist nie Ladequelle. Dieser eigene transaktionale Weg ändert keine P1-Saves.
+
+Gezielte günstige Regressionen laufen in `catalog/information` bei Auswahl von
+`native.catalog`; die vorhandene Grafikgruppe bleibt unverändert. Einmalige
+Windows- und UI-Originale werden getrennt für R01 befristet zugestellt; die
+Produktquellen enthalten keine neue Galerie oder Windows-Diagnosefamilie.

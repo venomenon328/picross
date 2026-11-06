@@ -1,7 +1,7 @@
 # Produktdefinition: picross
 
-**ANZ / #527 · freigegebener Sollstand, noch nicht implementiert:**
-Die native Windowsfassung erhält ausschließlich feste wählbare Fenstergrößen
+**ANZ-A / #527 · auf dem Arbeitsbranch implementiert, Abnahmen im Produkt-PR:**
+Die native Windowsfassung bietet ausschließlich feste wählbare Fenstergrößen
 zwischen 1280×720 und 3840×2160 sowie die Anzeigemodi Fenster, rahmenloses
 Vollbild und exklusives Vollbild. Fensterpresets werden nach realem
 Monitorarbeitsbereich samt Dekorationen gefiltert; beide Vollbildmodi nutzen

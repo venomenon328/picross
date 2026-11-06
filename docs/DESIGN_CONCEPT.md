@@ -1,7 +1,7 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**ANZ / #527 · freigegebene native Anzeigeoptionen, noch nicht implementiert:**
-Die bestehende linke Buch-Einstellungsseite bekommt im handgezeichneten Stil
+**ANZ-A / #527 · native Anzeigeoptionen auf dem Arbeitsbranch implementiert:**
+Die bestehende linke Buch-Einstellungsseite bietet im handgezeichneten Stil
 zwei Auswahlen für feste zulässige Clientfenstergrößen und für Fenster,
 rahmenloses sowie exklusives Vollbild. Native Vollbildmodi verwenden die
 Desktopauflösung. Wechsel haben eine 15-s-Bestätigung mit Rücknahme,

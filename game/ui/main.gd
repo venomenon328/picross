@@ -22,6 +22,9 @@ const TITLE_FONT = preload("res://art/book/Fraunces.ttf")
 const WORK_TITLE_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
 const UiText = preload("res://ui/ui_text.gd")
 const HelpPanel = preload("res://ui/help_panel.gd")
+const DisplaySettings = preload("res://ui/display_settings.gd")
+var display_settings: DisplaySettings
+var display_controller: Node
 const TOOL_IDS: Array[String] = ["fill","erase","undo","redo","minus","plus"]
 var tools_scroll: ScrollContainer
 var tools_column: GridContainer
@@ -119,7 +122,7 @@ func _ready() -> void:
 	work_font.fallbacks = [punctuation]
 	get_tree().auto_accept_quit = false
 	store = create_store()
-	if not OS.has_feature("web") and DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
+	if not DisplaySettings.supported(self) and not OS.has_feature("web") and DisplayServer.get_name() != "headless" and not OS.get_cmdline_user_args().has("--p1-capture"):
 		var usable: Rect2i = DisplayServer.screen_get_usable_rect()
 		var decorations: Vector2i = (DisplayServer.window_get_size_with_decorations() - DisplayServer.window_get_size()).max(Vector2i(16, 48))
 		var client_offset: Vector2i = DisplayServer.window_get_position() - DisplayServer.window_get_position_with_decorations()
@@ -146,6 +149,14 @@ func _ready() -> void:
 		slot_errors.append("")
 	session = sessions[0] if not sessions.is_empty() else null
 	_build()
+	if DisplaySettings.supported(self):
+		display_controller = DisplaySettings.Controller.new()
+		add_child(display_controller)
+		display_settings = DisplaySettings.new()
+		settings_panel.add_child(display_settings)
+		settings_panel.move_child(display_settings,1)
+		display_settings.configure(self,display_controller)
+		display_controller.start(DisplaySettings.Backend.new(get_window()),DisplaySettings.Preference.new())
 	save_timer = Timer.new()
 	save_timer.one_shot = true
 	save_timer.wait_time = 0.35
@@ -287,6 +298,7 @@ func set_ui_scale(value: float) -> void:
 	theme.set_constant("line_spacing", "Label", roundi(3 * value))
 	_scale_labels(self)
 	help_panel.set_ui_scale(value)
+	if display_settings != null: display_settings.layout_card()
 	board.ui_scale = value
 	ui_scale_button.text = "UI %d %%" % roundi(ui_scale * 100)
 	_layout_book()

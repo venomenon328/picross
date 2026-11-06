@@ -174,6 +174,7 @@ func run() -> void:
 		await pages()
 		await sorting()
 	elif mode == "information":
+		await preload("res://tests/display_cases.gd").run(self)
 		await information_saves()
 	elif mode == "kb":
 		await compact_buttons()
