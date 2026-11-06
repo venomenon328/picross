@@ -93,3 +93,10 @@ Belegcommit. Produktdiff und Prüfauswahl bleiben ausschließlich BTI-C.
 Diese technischen Belege und das getrennte Selbstreview sind keine unabhängige
 BTI-C-R01-Abnahme oder persönliche Windows-Spielabnahme BTI-C-M01. Beide bleiben
 vor Merge offen. Kein Merge beauftragt.
+
+## Finaler CI-Spieler
+
+[Package CI 42310751535/1](https://github.com/venomenon328/picross/actions/runs/42310751535) ist erfolgreich: docs und ci-required mit native.catalog.
+[Regulärer Windows-Download](https://github.com/venomenon328/picross/actions/runs/42310751535/artifacts/13548169497), 119471955 ZIP-Bytes, Ablauf 21.11.2026 um 00:23:47 Europe/Berlin.
+Tatsächlich binär heruntergeladen, alle ausgelieferten Lizenz-/Herkunftsdateien gegen den finalen Produktbaum geprüft; [regulärer CI-Windows-PCK](pck-regular-ci-windows.json) mit 27 weiteren erfolgreichen Assertions und jedem Alphabyte geprüft.
+Die unveränderte reguläre EXE wurde ohne Observer als echtes Windowsfenster mit isoliertem Profil gestartet: [Originallog](actual-ci-windows-start.log), Exit 0, P1_START_OK, kein Rätselreplay. [Bindung](ci-player-check.json) enthält alle tatsächlichen Dateihashes.

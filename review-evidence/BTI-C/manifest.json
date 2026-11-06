@@ -2,6 +2,14 @@
   "source_head": "031565d941a60df5643adef561926d5721285322",
   "test_merge": "47e21e61c0375bc59567de02e631a9d1e81cc41d",
   "files": {
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "actual-ci-windows-start.log": {
+      "bytes": 581,
+      "sha256": "3f7de9b6162b21f097e28957d3a2480ec61a3a858ceef19cbf21d46edc63ed69"
+    },
     "audit_packs.py": {
       "bytes": 907,
       "sha256": "f0fc1d271acc9c5f752f472bad5eff227be137ac729edb63a37e5eb4636dd62c"
@@ -13,6 +21,10 @@
     "catalog-2560-ui125.png": {
       "bytes": 3451996,
       "sha256": "d340d2a2850dd3469098b169a48577e7d0e831401cb4e545f37cd223729693b6"
+    },
+    "ci-player-check.json": {
+      "bytes": 3895,
+      "sha256": "ba4ba71e03184910bd77448c5e3baaca03ef2801290edf6018c9ae20db66a298"
     },
     "fit-comparison.json": {
       "bytes": 1941,
@@ -50,6 +62,10 @@
       "bytes": 9026,
       "sha256": "abaaf6a46e0d3a72aa010f4e05c4170cc560911d3bc6924b2800c02822e86f87"
     },
+    "pck-regular-ci-windows.json": {
+      "bytes": 851,
+      "sha256": "e3913f3c38baed72a8b7f21ad10bc156edffb6f63ca62d44fe6dff7a74cde5f4"
+    },
     "pck-regular-web.json": {
       "bytes": 844,
       "sha256": "1be68696a3d2b4afcf449ab4b178a75c725b3b2a73dcd9c2074e7ba7b310c86a"
@@ -65,6 +81,10 @@
     "pck_probe.gd": {
       "bytes": 3518,
       "sha256": "34c1b0b9b7e7547feabc046e3fd6e417ad43b595dd1d885dcc9b84785610ca1d"
+    },
+    "README.md": {
+      "bytes": 7070,
+      "sha256": "e705e56668f85e62c92c396ffff6e373ffff5c077bdb363b23db031b1fb980d4"
     },
     "settings-1920-ui100.png": {
       "bytes": 1860334,
@@ -82,6 +102,10 @@
       "bytes": 172,
       "sha256": "2fafe0ae2ca2b18027e55a4d2e73bdda7a80b71ef535330fbbbfecac74f8864f"
     },
+    "verify_ci_player.py": {
+      "bytes": 1828,
+      "sha256": "db3531d2428a862bfe006c3a3d553ec989af9e25cc1996f8b8e9bcb80246b1b7"
+    },
     "win.py": {
       "bytes": 3759,
       "sha256": "46e86e9459946e84e2de921f09c4037ba73b36d56761bc1c2ec7594069113c4f"
@@ -89,14 +113,6 @@
     "windows.json": {
       "bytes": 37561,
       "sha256": "a08e949dfd594b291ef1c6f28b1cc4b0de519af95280a2f14046603e1d8b9848"
-    },
-    "README.md": {
-      "bytes": 6190,
-      "sha256": "99dd5f58255f68d908cdf7bf2e20809940a8b318ac9cb7255c80c21e86be4590"
-    },
-    ".gitattributes": {
-      "bytes": 8,
-      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
     }
   }
 }

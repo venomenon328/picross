@@ -1,0 +1,111 @@
+{
+  "source_head": "031565d941a60df5643adef561926d5721285322",
+  "artifact_id": 13548169497,
+  "run_id": 42310751535,
+  "attempt": 1,
+  "platform": "Windows",
+  "native_window": true,
+  "external_observer": false,
+  "smoke_exit": 0,
+  "seconds": 6.322484000003897,
+  "files": {
+    "picross-p1.console.exe": {
+      "bytes": 50176,
+      "sha256": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec"
+    },
+    "picross-p1.exe": {
+      "bytes": 103035904,
+      "sha256": "5543ab4b6fb453c5dbe7f4effa0aad7f1cc06d73c12e8436adfc9fb266ac34ee"
+    },
+    "picross-p1.pck": {
+      "bytes": 85105388,
+      "sha256": "1cda5c67045df316a8754352ebd441fe7aafd45fbc69bb7af74cb9f40ed8e2ea"
+    },
+    "README.txt": {
+      "bytes": 532,
+      "sha256": "b72df600b17156e0702f8afbb21943f414dd4d410f4cbe0d5b3d3eaf1a65c9da"
+    },
+    "SPIELANLEITUNG.md": {
+      "bytes": 31764,
+      "sha256": "39a9a3c2560580788ba507d1d38c7076f144afd9500358e54849fbb932586b37"
+    },
+    "licenses/Bakso-NOTICES.md": {
+      "bytes": 1389,
+      "sha256": "37deab48d0390bbd34d5971cb5a43664e9578f8f0effa1066a94a3c96497e3e9"
+    },
+    "licenses/Book-leather.json": {
+      "bytes": 1992,
+      "sha256": "e24de01610422872733237041fead2bf7cd06a30ef361a4568f0b1db5d63cbf4"
+    },
+    "licenses/Book-paper.json": {
+      "bytes": 2000,
+      "sha256": "4b03745631543dadf1be83021e64b7fba6dcfe63befb829b143849e7ed386986"
+    },
+    "licenses/Book-table.json": {
+      "bytes": 2587,
+      "sha256": "854e5483aa1c43036fc5ee53432f839573dc51ad74c3a84154366a444fe41827"
+    },
+    "licenses/Chalkboard-NOTICES.md": {
+      "bytes": 1168,
+      "sha256": "c126113cc639c597f5fefdb1cecb33e6666c0a4f814c416ecfb6d2ae84394862"
+    },
+    "licenses/DelightCoffee-NOTICES.md": {
+      "bytes": 2087,
+      "sha256": "b443284305899d2b14bcc4852cc088b883b4cb78ab2dc8b8f0c6856c108cc3e8"
+    },
+    "licenses/Fraunces-OFL.txt": {
+      "bytes": 4390,
+      "sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48"
+    },
+    "licenses/HZ-B-284-NOTICE.txt": {
+      "bytes": 723,
+      "sha256": "406139e9a2a92a33b9a88b3bf3ff95567c3f6fe30abf7bb4b216eaeacda503c7"
+    },
+    "licenses/KB-168-NOTICE.txt": {
+      "bytes": 632,
+      "sha256": "5a34a51eb0e99c969029cfeba719847344384441c6f83cbd82b5abd7ffece51b"
+    },
+    "licenses/PlexSans-OFL.txt": {
+      "bytes": 4362,
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+    },
+    "licenses/resources.json": {
+      "bytes": 5000,
+      "sha256": "8c5c724647a5859e9b09da7fef5a11eada7d9b5b738e7b470a7e87eba4551913"
+    },
+    "licenses/Sidebar-NOTICES.txt": {
+      "bytes": 560,
+      "sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d"
+    },
+    "licenses/ViewTitles-manifest.json": {
+      "bytes": 2485,
+      "sha256": "a7bdb114ae3cd37b77b962385aab924fe00dcac7af966f3e720189895c878c93"
+    },
+    "licenses/ViewTitles-NOTICE.txt": {
+      "bytes": 1995,
+      "sha256": "cc5f1eaa31f20a84038f910b54e8dd3098091f8a5f18fcfbc673ff8532cbf947"
+    },
+    "licenses/ViewTitles-provenance.json": {
+      "bytes": 16981,
+      "sha256": "cb2054a9f302c22c8533f20a4f5a78ff6c904384157746151acb802175aeb89b"
+    },
+    "licenses/delight-coffee/More Info.txt": {
+      "bytes": 419,
+      "sha256": "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0"
+    },
+    "licenses/delight-coffee/Read Me.pdf": {
+      "bytes": 536273,
+      "sha256": "a57f6f06a94723d5e1b274a5dfbbd2ca0f4c660894dbefd0cae28037a9e6c405"
+    },
+    "licenses/pangolin/NOTICE.txt": {
+      "bytes": 1087,
+      "sha256": "29406bb05fb950bd9c33a2d4233afcf767ea41325f11b4dee8e946471f6c2091"
+    },
+    "licenses/pangolin/OFL.txt": {
+      "bytes": 4483,
+      "sha256": "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c"
+    }
+  },
+  "packaged_licenses_equal": true,
+  "pck_report": "pck-regular-ci-windows.json"
+}
