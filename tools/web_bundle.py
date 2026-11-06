@@ -14,7 +14,8 @@ LICENSES = {'resources.json', 'Chalkboard-NOTICES.md', 'Bakso-NOTICES.md',
 # New exports include this notice through player_extras(). Keep previous WEB-1
 # bundles valid for explicit rollback; every present byte remains hash-bound.
 ADDITIONAL_LICENSES = {'KB-168-NOTICE.txt', 'tidy-hand/NOTICE.txt', 'HZ-B-284-NOTICE.txt',
-                       'Book-paper.json', 'Book-leather.json', 'Book-table.json'}
+                       'Book-paper.json', 'Book-leather.json', 'Book-table.json',
+                       'pangolin/NOTICE.txt', 'pangolin/OFL.txt'}
 
 
 def digest(path: Path) -> str:

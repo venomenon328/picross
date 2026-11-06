@@ -1,51 +1,60 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/527",
-  "package": "ANZ-A",
+  "issue": "https://github.com/venomenon328/picross/issues/531",
+  "package": "PANG-A",
   "modules": [
-    "native.catalog",
-    "native.graphics"
+    "native.catalog"
   ],
-  "purpose": "Feste native Windowsfenster und Vollbildmodi mit Vorschau, separater Persistenz und Monitorfallback. N02 liefert zwei zentrierte HZ-Gruppen, horizontale Formularzeilen, Fragezeichenhilfen und UI-Skala als Dropdown; manueller Hinweisreset und Einstellungs-Exit entfallen. native.catalog prüft Displaycontroller/-Präferenz, gemeinsame UI und Save-/Recovery-/Exit-/Retrypfade im vorhandenen Informationsprozess; native.graphics prüft Viewport-/Raster-/Hinweis-/Layoutfolgen einschließlich Testvorbereitung ohne Resetbefehl. Kern liefert docs und Windows-Spieler. N03 korrigiert die tatsächliche Bakso-Katalogtitelrolle, setzt nach Eigentümerpräzisierung N03-E01 auch beide Gruppentitel in kleinerem Bakso, lässt nur zwei Hilfen mit voller Breite der anderen Dropdowns und kürzt den sichtbaren Informations-Rücktext bei erhaltenen Guards. Einmalige aktuelle Windowsoriginale werden N03-R04 auf separatem befristetem Reviewref zugestellt.",
-  "omitted": "native.core/history/completion/adapters/export, tools, preflight, production.* und delivery nicht angefordert: keine Änderung an Save-Schema, History, Abschlusslogik, Katalogpräferenz, Produktion oder Export. Neue Displaypräferenz separat im Katalogprozess geprüft. Kein Chromiumauftrag; Web erhält keine Anzeigeoptionen. Physische 4K-/16:10-/Mehrmonitor-/DPI-Grenzen nur bei verfügbarer Hardware, sonst synthetisch mit benannten Grenzen. Die mitangepassten P12-/Z2-Komponentenfälle werden gezielt lokal geprüft; daraus folgt keine automatische Wahl der vollständigen native.core-Gruppe oder allgemeinen tools-Suite.",
+  "purpose": "PANG-A ersetzt die gemeinsame normale UI-Schrift einschließlich direkter Canvas-Warntexte, Hilfe, Katalog, Dropdowns, Dialoge und Tooltips durch bytegebundenes Pangolin. native.catalog prüft reale gemeinsame UI-/Informations-/Katalogpfade und die dort eingebundenen günstigen Glyphen-/Fallback-/Metrikregressionen. Kern liefert docs und regulären Windows-Spieler. Gezielte lokale Ressourcen-/Lizenz-/Webbundle-Gegenproben und tatsächliche Windows-/Web-PCK-Prüfung sichern die aktive Offline-Ressource. Einmalige native Text-/Layoutoriginale für PANG-A-R01 werden auf einem separaten Reviewref bis 2026-11-13 bereitgestellt.",
+  "omitted": "Keine Änderung an Raster-/Hinweisgeometrie oder Grafikzeichenhelfern: native.graphics nicht gewählt; die indirekt gemeinsame Schrift der normalen Canvas-Warnung wird gezielt lokal geprüft. native.core/history/completion/adapters/export, preflight, production.*, delivery und volle tools-Suite nicht angefordert: keine Spiel-/Save-/Lehrdaten-/Produktions-/CI-Architekturänderung. Angepasste bestehende Ressourcen-/PCK-/Browserassertions und kleine Python-Lizenzgegenproben werden gezielt lokal ausgeführt, ohne Chromium oder SSH. Browserfontdarstellung und unabhängiges R01/persönliches M01 bleiben getrennt; kein Linuxexport als Windowsstart.",
   "test_changes": [
     {
-      "path": "game/tests/display_cases.gd",
+      "path": "game/tests/hz_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Günstige Displaypolicy-/Präferenz-/Controller-/Bestätigungslayoutregression bei gewähltem native.catalog, ohne neue Prozesse oder Bildfamilie. Ungültige/duplizierte Präferenzen, Ersetzungsfehler, Timeout/Rollback und dekorationsblinde Presets erkennen. N01 ergänzt Gruppen, kompakte Spalte, UI100/125 bei 1080p/720p, Desktopbeschriftung, Fehler-/Fallbacksichtbarkeit und Popupabbau; kein zusätzlicher Prozess oder dauerhafte Bilddateien. N02 prüft zwei Rahmen/Titel, Zentrierung, Inlinefelder/Fragezeichen, Skalasynchronisierung, Scroll-/Popup-/Tooltipgrenzen und gemeinsamen nicht-nativen Komponentenpfad; Controller-/Persistenz-/Fehlerproben bleiben. N03 ersetzt die falsche Fraunces-Katalogassertion durch aktiven Katalog-/Einstellungstitelvergleich, prüft nach N03-E01 die kleineren Bakso-Gruppen und prüft zwei Hilfen sowie freie Dropdownbreite ohne Fokus-/Hitboxplatzhalter."
+      "reason": "Bestehendes Glyphen-/Ellipse-/RID-Orakel an Pangolin-Original und tatsächliche Interpunktionsabdeckung binden; Plex nur für fehlende Pfeile."
     },
     {
       "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Displayfälle im vorhandenen information-Prozess vor dessen unveränderten Save-/Navigationsfällen ausführen. N02 ersetzt UI-Buttonpfade durch echte Auswahl und erhält die Sicherheitsgarantie mit Katalog-Ausgang sowie WM-close am tatsächlichen Buchroot, Fehlerblockade, Retry und realem Prozessende. N03 prüft kurzen sichtbaren Rücktext mit zielbezogenem Tooltip/Accessibilityname, Katalog-/Rätselrückweg und Help-Saveblockade/Retry im selben Prozess."
-    },
-    {
-      "path": "game/tests/p12_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Entfallenen manuellen Reset nur im synthetischen Testaufbau durch semantische Viewdaten ersetzen; Benutzerprobe prüft stattdessen erhaltene Leseanker bei Einstellungsbesuch."
-    },
-    {
-      "path": "game/tests/capture.gd",
-      "disposition": "change-scoped",
-      "reason": "Graphics-Testinput verwendet dieselben semantischen Ausgangsanker ohne entfernte Produktmethode."
+      "reason": "Bestehende günstige Glyphen-/Metrikfälle im vorhandenen information-Prozess ausführen; kein neuer Prozess oder Bildinventar."
     },
     {
       "path": "game/tests/z2_cases.gd",
       "disposition": "change-scoped",
-      "reason": "N02 Skala/Fokus und lesepositionserhaltenden Einstellungsbesuch anpassen; Fehler-/Recoveryfall nutzt bestehende Ansichtsänderung statt entferntem Reset."
+      "reason": "Bestehende normale Fontrollenassertion auf Pangolin fortschreiben."
     },
     {
-      "path": "game/tests/book_windows_observer.gd",
+      "path": "game/tests/hz_pack.gd",
       "disposition": "change-scoped",
-      "reason": "Bestehenden rein lesenden Diagnosebeobachter an Skalauswahl anbinden; keine neue Standardprozesspflicht."
+      "reason": "Manuellen PCK-Diagnoseweg an aktive Pangolin-Rolle/Notice binden, keine zusätzliche Standardgalerie."
     },
     {
-      "path": "tools/book_windows_probe.py",
+      "path": "game/tests/content_pack_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Bestehende ausdrückliche Windowsdiagnose muss die neue Skalauswahl tatsächlich öffnen und wählen, statt den entfallenen Zyklusbutton zu erwarten; kein automatischer Diagnoseauftrag."
+      "reason": "Aktuelle exportierte Pangolin-/OFL-Bytes und Ausschluss des unbenutzten Tidy-Hand-Fonts im bestehenden externen PCK-Audit prüfen."
+    },
+    {
+      "path": "tools/test_z2_delivery.py",
+      "disposition": "change-scoped",
+      "reason": "Billige Byte-/Lizenzmutanten für neue Originalquelle, historische HZ-Bindung erhalten."
+    },
+    {
+      "path": "tools/test_web_delivery.py",
+      "disposition": "change-scoped",
+      "reason": "Aktive Pangolin-Lizenzen im gemeinsamen Paket und kompatible alte Rollbackbundles prüfen."
+    },
+    {
+      "path": "tools/web_tests/group_catalog.py",
+      "disposition": "change-scoped",
+      "reason": "Nur erwartete aktive Schrift aktualisieren; Browserlauf bleibt ausdrücklich manuell."
+    },
+    {
+      "path": "tools/web_tests/probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Beobachter prüft aktuellen Pangolin-Herkunftsbeleg statt historischen HZ-Notice."
     }
   ],
-  "core_change": null,
+  "core_change": "Dokumentvalidator erhält für die bytegebundene Original-OFL denselben Hashschutz wie bestehende Originalnotices; keine Normalisierung von CRLF oder Whitespace. Kern-Windowsbau verwendet gemeinsame aktive Pangolin-Lizenzen. Keine neue Suite/Prozess-/Browserpflicht.",
   "evidence": {
     "mode": "none",
     "purpose": null,

@@ -91,6 +91,19 @@ def verify():
     manifest["hz_standard_text"] = dict(file="art/drawing/TidyHand.ttf", sha256=digest,
         notice="art/drawing/tidy-hand/NOTICE.txt",
         notice_sha256=hashlib.sha256(notice.read_bytes()).hexdigest())
+    # PANG-A replaces the active role; the HZ original above stays historical.
+    pangolin = ROOT / "game/art/drawing/Pangolin-Regular.ttf"
+    license = ROOT / "game/art/drawing/pangolin/OFL.txt"
+    source = ROOT / "game/art/drawing/pangolin/NOTICE.txt"
+    font_hash = "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e"
+    license_hash = "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c"
+    assert pangolin.stat().st_size == 589884 and hashlib.sha256(pangolin.read_bytes()).hexdigest() == font_hash, "PANG original font bytes"
+    assert hashlib.sha256(license.read_bytes()).hexdigest() == license_hash, "PANG original OFL bytes"
+    text = source.read_text(encoding="utf-8")
+    assert font_hash in text and license_hash in text and "https://github.com/venomenon328/picross/issues/531" in text
+    manifest["standard_text"] = dict(file="art/drawing/Pangolin-Regular.ttf", sha256=font_hash,
+        license="art/drawing/pangolin/OFL.txt", license_sha256=license_hash,
+        notice="art/drawing/pangolin/NOTICE.txt", notice_sha256=hashlib.sha256(source.read_bytes()).hexdigest())
     return manifest
 
 

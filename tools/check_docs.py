@@ -21,7 +21,9 @@ SKIP_DIRS = {".git", "__pycache__", ".venv", "node_modules"}
 SKIP_CONTENT = {"content/authoring", "content/packages", "game/data/content", "game/art/content"}
 # Byte-bound upstream notices retain their original whitespace/line endings.
 ORIGINAL_NOTICES = {"game/art/drawing/delight-coffee/More Info.txt":
-                    "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0"}
+                    "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0",
+                    "game/art/drawing/pangolin/OFL.txt":
+                    "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c"}
 REQUIRED = (
     "README.md", "AGENTS.md", "docs/PROJECT_PROFILE.md",
     "docs/DEV_RULES_ADOPTION.md", "docs/CHATGPT_PROJECT_INSTRUCTIONS.md",
