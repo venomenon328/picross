@@ -1,11 +1,14 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/525",
-  "package": "EW2",
-  "modules": [],
-  "purpose": "Offline-Entwicklungssheet und lokale Workflowverträge. Der Kern prüft Plan und Dokumentintegrität. Einmalig alle Auftragsvarianten samt Import, Branchwahl, Sicherungen und Darstellung im Browser prüfen.",
-  "omitted": "Keine Änderungen an Spiel, Rätselproduktion, CI-Code oder Fachmodulen. Keine Zusatzmodule. Der bestehende Pfadklassifikator entscheidet über den Windows-Kernbuild.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/527",
+  "package": "ANZ-A",
+  "modules": ["native.catalog", "native.graphics"],
+  "purpose": "Feste native Windowsfenster und Vollbildmodi mit Vorschau, Persistenz und Monitorfallback. catalog prüft Informationsnavigation und gezielte Displayfälle im vorhandenen information-Prozess; graphics prüft Viewport-/Raster-/Hinweis-/Layoutfolgen. Kern liefert docs und Windows-Spieler. W01 liefert echte Windows-GUI-Originale für R01.",
+  "omitted": "native.core/history/completion/adapters/export, tools, preflight, production.* und delivery nicht angefordert: keine Änderung an Save-Schema, History, Abschlusslogik, Katalogpräferenz, Produktion oder Export. Neue Displaypräferenz separat im Katalogprozess geprüft. Kein Chromiumauftrag; Web erhält keine Anzeigeoptionen. Physische 4K-/16:10-/Mehrmonitor-/DPI-Grenzen nur bei verfügbarer Hardware, sonst synthetisch mit benannten Grenzen.",
+  "test_changes": [
+    {"path": "game/tests/display_cases.gd", "disposition": "change-scoped", "reason": "Günstige Displaypolicy-/Präferenz-/Controller-/Bestätigungslayoutregression bei gewähltem native.catalog, ohne neue Prozesse oder Bildfamilie. Ungültige/duplizierte Präferenzen, Ersetzungsfehler, Timeout/Rollback und dekorationsblinde Presets erkennen."},
+    {"path": "game/tests/kat2_probe.gd", "disposition": "change-scoped", "reason": "Displayfälle im vorhandenen information-Prozess vor dessen unveränderten Save-/Navigationsfällen ausführen."}
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

@@ -35,6 +35,13 @@ Bildfamilie. Die KE-Kapazitätsprüfung im unabhängigen Reader berücksichtigt
 dieselbe Obergrenze drei. Einmalige gerenderte KL-Einführungsbelege stehen am
 gebundenen PR, nicht als neue dauerhafte Galerie im Modul.
 
+ANZ-A / #527 ergänzt im vorhandenen `catalog/information`-Prozess günstige
+synthetische Displayfälle: dekorierte Presetgrenzen einschließlich 720p/4K/16:10,
+negative Monitorpositionen/DPI-Rahmen, strikte Präferenz-/Ersetzungsfehler,
+Vorschau/Annahme/Timeout/Rücknahme und sichere Bestätigung bei UI100/125.
+Der injizierte Fensterserver erzwingt keinen physischen Modus. Echte Windowsmodi
+und kurze UI-Originale bleiben einmalige paketgebundene W01-/R01-Nachweise.
+
 Der Windowsbau des **CI-Kerns** außerhalb reiner Dokument-/Rätselinhaltsänderungen
 ist kein automatisch ausgewähltes
 `native.export` und behauptet dessen zusätzlichen Funktionsnachweis nicht. Bei
