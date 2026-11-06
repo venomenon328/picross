@@ -92,6 +92,17 @@ die Aussage nur für den belegten Umfang und das vereinbarte Gate verwenden.
 
 Stabile Befundkennungen und einen konkreten Reviewlink führen. Urteil: `Nacharbeit erforderlich`, `Abnahme offen`, `mergefähig für den geprüften Stand` oder `Review unvollständig`. Offene Releasegates sind nicht automatisch Mergegates. Keine Abnahme aus vermuteter Prüfung ableiten.
 
+Wer technische Befunde zur Umsetzung vorbereitet, verankert jede beauftragte
+Kennung im konkreten Review- oder Befundbericht am geprüften Head. Dort stehen
+Definition, Erfolgskriterium und zuständiger Akteur. Vor der Übergabe den
+veröffentlichten Bericht über seinen Direktlink erneut lesen und jede Kennung
+inhaltlich abgleichen. Vorhandene passende Einträge wiederverwenden. Braucht
+ein belegter Befund eine Präzisierung, diese als verlinkten Nachtrag mit Quelle
+veröffentlichen und zurücklesen. Historische Reviews behalten ihr Urteil.
+Bei fehlendem Schreib-/Lesezugang oder ungeklärter Zuordnung den betroffenen
+Auftrag als blockiert melden. Eine persönliche Abnahme oder ein unabhängiges
+Review bleibt auch als offenes Vor-Merge-Gate beim benannten Prüfer.
+
 Nacharbeiten bleiben standardmäßig im selben PR. Nur beauftragte B-/technische A-Befunde beheben; O nicht ungefragt mitbauen. Anschließend Befunde gegen Erfolgskriterien prüfen und Auswirkungen des Diffs berücksichtigen. Eine offene persönliche Probe allein erfordert keine neue Codex-Implementierung.
 
 **Eigene Änderungswünsche nach dem Review.** Der Auftraggeber beschreibt das
@@ -101,6 +112,13 @@ vorhandener Befund den Wunsch ab, dessen Kennung verwenden. Für eine neue
 Anforderung den vereinbarten Umfang, die Abnahmekriterien und den Prüfbedarf
 im zugehörigen Issue/Paket festhalten und die Entscheidung im PR verlinken.
 Offene Produktfragen als solche dokumentieren und gezielt klären.
+
+Vor der Fertigmeldung den veröffentlichten Issue-Abschnitt und den PR-Verweis
+erneut öffnen. Prüfen, ob ein neuer Bearbeiter alleine aus den verlinkten
+Quellen Ziel, Kriterien, Prüfbedarf und Zuständigkeiten ermitteln kann. Für eine
+Ergänzung desselben Pakets gelten dessen publizierte Bezeichnungen. Eine
+Kriterienkennung behält ihre Bedeutung. Eine technische Beleglieferung und
+deren spätere unabhängige Sichtung als getrennte Aufgaben führen.
 
 Zusammengehörige Änderungen können im offenen PR und auf dessen Branch
 fortgeführt werden. Einen sachlich eigenständigen Wunsch oder eine Änderung

@@ -98,13 +98,39 @@ startbereit, meldet die Vorbereitung `phase: "specified"` und
 `next.action: "implement"`. `spec_url` verweist möglichst direkt auf die
 Paketentscheidung. Bei offener wesentlicher Klärung oder fehlender erforderlicher
 Dokumentation den konkreten Grund und `blocked` / `clarify` melden.
-Galt das positive Review dem bisherigen Umfang, seinen Link und Geltungsbereich
-in der Paketentscheidung festhalten. Für das noch ungeprüfte Folgepaket sind
+Das gilt auch für einen Nachtrag innerhalb desselben Pakets und PR. In
+`spec_url` die erneut gelesene Entscheidung nennen, etwa den genauen
+Issue-Abschnitt oder den PR-Entscheidungskommentar. Galt das positive Review
+dem bisherigen Umfang, seinen Link und Geltungsbereich in der Paketentscheidung
+festhalten. Für den noch ungeprüften Umfang sind
 `review.url`, `review.head` und `review.verdict` jeweils `null`, auch wenn
 beide Pakete zu diesem Zeitpunkt denselben PR-Head haben. Ein neuer Wunsch
 erzeugt keine Befundkennung. Tatsächlich bestehende relevante Befunde und Gates
 mit ihrem Status berücksichtigen. Die ausgeführte und zur Prüfung gelieferte
 Umsetzung empfiehlt `next.action: "review"` für den neuen Head.
+
+**Technische Befundnacharbeit.** Für `next.action: "rework"` muss der
+berichtete Head mit dem geprüften Commit des Befundberichts übereinstimmen.
+`review.url` führt zum veröffentlichten Bericht mit den konkreten Kennungen
+und ihrem Erfolgskriterium. `review.verdict` enthält dessen tatsächliches Urteil
+(`changes_required` oder `acceptance_pending` mit technischer Nacharbeit).
+Vor der Ausgabe am Direktlink nachlesen und Kennung, Bedeutung und Akteur
+abgleichen. Eine Kennung erstmals im JSON zu definieren oder eine vorhandene
+Abnahmekennung für einen anderen Test zu verwenden ist ein Übergabefehler.
+Für die Umsetzung nur technische Aufgaben zuordnen. Unabhängige Reviews,
+persönliche Abnahmen und Vor-Release-Gates bleiben für den zuständigen Prüfer
+sichtbar. Enthält der Bericht ausschließlich solche Gates, den passenden
+Review-/Abnahmeschritt bzw. eine konkrete Klärung empfehlen.
+
+Die Offline-Werkbank kann den Inhalt eines verlinkten Berichts nicht prüfen.
+Bei älteren Übergaben mit `specified/rework`, fehlendem Befundurteil und
+konkretem Issue-Abschnitt, PR-Entscheidungskommentar oder Spezifikationspfad
+im gebundenen Repository bietet die Vorschau einen Paketauftrag aus
+`spec_url` an. Die ursprüngliche Übergabe bleibt einsehbar. Der Auftrag
+enthält keine Befundzuweisung aus dem früheren Review. Fehlt eine passende
+Quelle, fordert die Werkbank eine Klärung an. Im echten Befundweg schlägt sie
+offene B-Befunde im Umsetzungsscope vor. Ein technischer A-Nachweis kann
+anhand der Zuständigkeit im Bericht gezielt ausgewählt werden.
 
 Umfang, Akzeptanz und Umsetzungshinweise gehören in die verlinkte
 Paketentscheidung. Die Arbeitsbindung steckt in `pr` und `branch`.

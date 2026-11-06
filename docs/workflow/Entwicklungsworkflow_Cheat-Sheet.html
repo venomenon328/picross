@@ -25,7 +25,7 @@
 <noscript><div class="nojs"><h1>Entwicklungsworkflow</h1><p>Diese Offline-Werkbank benötigt JavaScript zum Prüfen von Übergaben und Erstellen der Prompts. Sie funktioniert offline.</p><p>Der Ablauf: Spezifizieren → Umsetzen → Review → bei Bedarf Nacharbeiten. Maßgeblich bleiben die aktuelle AGENTS.md, der Issue- und PR-Stand. Ein Merge benötigt einen entsprechenden Auftrag.</p></div></noscript>
 <div class="app" id="app" hidden>
 <aside>
-<div class="brand"><div class="mark" aria-hidden="true">W</div><div><strong>Werkbank</strong><span>Entwicklungsworkflow · v2.3</span></div></div>
+<div class="brand"><div class="mark" aria-hidden="true">W</div><div><strong>Werkbank</strong><span>Entwicklungsworkflow · v2.4</span></div></div>
 <div class="project-control"><label for="projectSelect">Projekt<select id="projectSelect"></select></label><button id="newProject" title="Projekt hinzufügen" aria-label="Projekt hinzufügen">+</button></div>
 <nav class="side-nav" aria-label="Arbeitsschritt">
 <button data-stage="specify" aria-current="step"><span class="step-num">1</span>Spezifizieren</button>
@@ -67,7 +67,7 @@
 <details id="contextDetails"><summary>Commit, Prüfplan und Reviewbezug</summary><div class="field-grid">
 <label for="head" class="field-wide">Bekannter Head-Commit<input id="head" placeholder="Vollständige SHA; vor der Aktion erneut prüfen" spellcheck="false"></label>
 <label for="reviewUrl" class="field-wide">Maßgeblicher Reviewlink<input id="reviewUrl" placeholder="https://github.com/…" type="url"></label>
-<label for="findingIds" class="field-wide">Beauftragte Befunde<input id="findingIds" placeholder="z. B. B01, A02"></label>
+<label for="findingIds" class="field-wide">Beauftragte Befunde<input id="findingIds" placeholder="z. B. B01, A02"><small id="findingHint" hidden></small></label>
 <label for="modules" class="field-wide">CI-Zusatzmodule · optionale Vorgabe<input id="modules" placeholder="Im Paket festlegen; z. B. native.history, tools"></label>
 </div></details>
 <div id="resultSummary" class="result" hidden><h3>Letzte übernommene Übergabe</h3><p id="resultText"></p><div id="resultFacts" class="facts"></div><button class="quiet block-gap" id="showHandoff">Übergabe ansehen</button></div>
@@ -92,7 +92,7 @@
 <li>Beim Spezifizieren kommen Ziel, Entscheidungen und Prüfplan ins Issue oder Paket. Für eine reine Besprechung genügt der Chat.</li>
 <li>Jede KI-Antwort auf einen Sheet-Auftrag endet mit dem vollständigen Ergebnis-JSON nach <code>docs/dev-rules/HANDOFF.md</code>. Füge es unter „Ergebnis übernehmen“ ein und prüfe die Vorschau.</li>
 <li>Bei „Umsetzen“ wird ohne bestehenden Branch oder PR ein neuer Branch vom Zielbranch angelegt. Bei einer Fortsetzung wird der vorhandene Arbeitsstand ermittelt.</li>
-<li>Zum Review genügt der PR mit seinen verlinkten Originalbelegen. Das vollständige JSON kannst du im Sheet weiterhin ansehen. Mit „Eigene Änderungswünsche einbringen“ kannst du danach Wünsche für den offenen PR vorbereiten. Unter „Nacharbeiten“ findest du dieselbe Vorlage auch ohne importierte Übergabe. Für Befunde aus dem Review gibt es eigene Vorlagen mit Reviewlink und Befundkennungen.</li>
+<li>Zum Review genügt der PR mit seinen verlinkten Originalbelegen. Das vollständige JSON kannst du im Sheet weiterhin ansehen. Mit „Eigene Änderungswünsche einbringen“ kannst du danach Wünsche für den offenen PR vorbereiten. Unter „Nacharbeiten“ findest du dieselbe Vorlage auch ohne importierte Übergabe. Eigene Wünsche werden anhand der veröffentlichten Paketentscheidung umgesetzt. Für technische Befunde braucht der Folgeauftrag den Bericht, der die Kennungen tatsächlich definiert. Persönliche und unabhängige Abnahmen haben eigene Aufträge.</li>
 <li>Beim Freigeben eines besprochenen Entwurfs, Wiederaufnehmen oder Aufräumen kannst du noch unveröffentlichte Angaben gezielt aus der Übergabe auswählen und bearbeiten. Eine persönliche Abnahme gibst du selbst ein.</li>
 </ol>
 <p>Der Minimalreview braucht nur die PR-Nummer. Den bedingten Merge kannst du direkt am Reviewauftrag ein- oder ausschalten. Erst das Absenden des kopierten Auftrags erteilt die angezeigten Befugnisse.</p>
@@ -120,8 +120,8 @@ const TEMPLATES=[
 {id:'review-min',optional:[],stage:'review',title:'Review: Minimalprompt',who:'ChatGPT',scope:'Review ohne Korrektur',need:['pr'],merge:true},
 {id:'rereview',optional:['head','findingIds','brief'],stage:'review',title:'Nacharbeiten erneut prüfen',who:'ChatGPT',scope:'Befunde und Auswirkungen prüfen',need:['pr','reviewUrl'],merge:true},
 {id:'feedback',optional:['issue','head','reviewUrl'],stage:'rework',title:'Eigene Änderungswünsche vorbereiten',who:'ChatGPT',scope:'Wünsche dokumentieren · nur Vorbereitung',need:['pr','brief']},
-{id:'prepare-fix',optional:['head','findingIds','brief'],stage:'rework',title:'Nacharbeit zu Reviewbefunden vorbereiten',who:'ChatGPT',scope:'Vorbereiten · noch nicht ändern',need:['pr','reviewUrl']},
-{id:'fix',optional:['head','brief','modules'],stage:'rework',title:'Benannte Befunde beheben',who:'executor',scope:'Korrigieren · prüfen · pushen',need:['pr','reviewUrl','findingIds']},
+{id:'prepare-fix',optional:['issue','package','head','findingIds','brief'],stage:'rework',title:'Nacharbeit zu Reviewbefunden vorbereiten',who:'ChatGPT',scope:'Vorbereiten · noch nicht ändern',need:['pr','reviewUrl']},
+{id:'fix',optional:['issue','package','head','brief','modules'],stage:'rework',title:'Benannte Befunde beheben',who:'executor',scope:'Korrigieren · prüfen · pushen',need:['pr','reviewUrl','findingIds']},
 {id:'ci-fix',optional:['head','brief','modules'],stage:'rework',title:'Rote CI untersuchen und beheben',who:'executor',scope:'Ursache im bestehenden Scope beheben',need:['pr']},
 {id:'accept',optional:[],stage:'finish',title:'Tatsächliche manuelle Abnahme melden',who:'ChatGPT',scope:'Getesteten Stand dokumentieren',need:['pr','brief']},
 {id:'merge',optional:['head','reviewUrl','brief'],stage:'finish',title:'Merge nach erfüllten Gates freigeben',who:'ChatGPT',scope:'Ausdrücklicher Mergeauftrag',need:['pr']},
@@ -181,7 +181,34 @@ function validateSchema(value,schema){
  inspect(value,schema,'$');
  if(problems.length)throw Error(problems.join('\n'));
 }
-function validateHandoff(value){validateSchema(value,SCHEMA);const x=clone(value);const blockers=x.findings.filter(f=>f.status==='open'&&(f.kind==='B'||f.kind==='A'&&f.gate==='before_merge'));
+function sourceKind(h,link){
+ let url;
+ try{url=new URL(link);}catch{return '';}
+ if(url.protocol!=='https:' || url.username || url.password)return '';
+ if(url.origin!=='https://github.com')return 'external';
+ const base='/'+h.repository.toLowerCase()+'/', path=url.pathname.replace(/\/+$/,'').toLowerCase();
+ if(h.issue && path===base+'issues/'+h.issue)return url.hash.length>1?'issue-section':'issue';
+ if(h.pr && path===base+'pull/'+h.pr)return /^#issuecomment-\d+$/.test(url.hash)?'pr-comment':'pr';
+ if(h.pr && path===base+'pull/'+h.pr+'/files' && url.hash.length>1)return 'pr';
+ if(path.startsWith(base+'blob/') && /^[^/]+\/.+/.test(path.slice((base+'blob/').length)))return 'repo-file';
+ return '';
+}
+function hasFindingReview(h){
+ return Boolean(h?.pr && h.head && h.review.head===h.head &&
+  ['changes_required','acceptance_pending'].includes(h.review.verdict) && sourceKind(h,h.review.url));
+}
+function handoffNext(h){
+ if(h.next.action!=='rework' || hasFindingReview(h))return h.next;
+ if(h.phase==='specified' && h.issue && h.pr && h.review.verdict===null && h.spec_url!==h.review.url &&
+    ['issue-section','pr-comment','repo-file'].includes(sourceKind(h,h.spec_url)))
+  return {action:'implement',useSpec:true,reason:'Die Übergabe meldet „rework“ und lässt das Reviewurteil offen. Mit „Paketauftrag vorbereiten“ erstellst du einen Auftrag aus der verlinkten Entscheidung. Die gemeldeten Befundkennungen werden dabei ausgelassen.'};
+ return {action:'clarify',missingSource:true,reason:'Für die Befundbehebung werden der konkrete Bericht mit seinen Kennungen, ein Urteil zur Nacharbeit und der dazugehörige Head benötigt. Bei neuen Anforderungen die veröffentlichte Paketentscheidung als spec_url mit specified / implement übergeben.'};
+}
+function suggestedFindingIds(h){
+ if(!hasFindingReview(h))return '';
+ return h.findings.filter(f=>f.status==='open' && f.kind==='B' && f.gate!=='before_release').map(f=>f.id).join(', ');
+}
+function validateHandoff(value,stored=false){validateSchema(value,SCHEMA);const x=clone(value);const blockers=x.findings.filter(f=>f.status==='open'&&(f.kind==='B'||f.kind==='A'&&f.gate==='before_merge'));
  for(const field of ['issue','pr'])if(x[field]!==null&&!Number.isSafeInteger(x[field]))throw Error(field+': Zahl ist zu groß.');
  if(new Set(x.findings.map(f=>f.id)).size!==x.findings.length)throw Error('Befundkennungen sind doppelt.');
  if(['implemented','reworked','reviewed'].includes(x.phase)&&(!x.issue||!x.pr||!x.branch||!x.head))throw Error('Für diese Phase fehlen Issue, PR, Branch oder Head.');
@@ -191,6 +218,8 @@ function validateHandoff(value){validateSchema(value,SCHEMA);const x=clone(value
  if(x.phase==='merged'&&(!x.pr||!x.merge_commit))throw Error('Für einen gemergten Stand fehlt der tatsächliche Mergecommit.');
  if(x.next.action==='done'&&x.phase!=='merged')throw Error('Abgeschlossen benötigt einen tatsächlich gemergten Stand.');
  if(x.next.action==='rework'&&(!x.pr||!x.review.url||!blockers.length))throw Error('Nacharbeit benötigt einen konkreten Review und offene Befunde.');
+ const next=handoffNext(x);
+ if(!stored && next.missingSource)throw Error(next.reason);
  return x;
 }
 // JSON.parse accepts duplicate keys. This small scanner rejects them before import.
@@ -222,7 +251,7 @@ function validateBackup(value){
   if(!STAGES[task?.stage] || !TEMPLATES.some(t=>t.id===task.template && t.stage===task.stage) ||
      !task.fields || FIELD_IDS.some(k=>typeof task.fields[k]!=='string'))throw Error('Ungültige Aufgabe in der Sicherung.');
   if(task.handoff){
-   validateHandoff(task.handoff);
+   validateHandoff(task.handoff,true);
    if(task.handoff.repository!==p.repository || task.handoff.target!==p.target)throw Error('Projekt und Übergabe passen nicht zusammen.');
   }
   if(task.branchMode===undefined){
@@ -237,6 +266,13 @@ function validateBackup(value){
   if(!task.briefs || typeof task.briefs!=='object' || Array.isArray(task.briefs) ||
      Object.entries(task.briefs).some(([id,text])=>typeof text!=='string' || !TEMPLATES.some(t=>t.id===id)))
    throw Error('Ungültige Auftragsnotizen in der Sicherung.');
+  if(task.findingIdsEdited!==undefined && typeof task.findingIdsEdited!=='boolean')throw Error('Ungültige Befundauswahl.');
+  const h=sameTaskHandoff(task,p.target);
+  if(h && !task.findingIdsEdited && task.fields.reviewUrl===h.review.url){
+   // v2.3 prefilled all open pre-merge A gates, including independent reviews.
+   const oldIds=h.findings.filter(f=>f.status==='open' && (f.kind==='B' || f.kind==='A' && f.gate==='before_merge')).map(f=>f.id).join(', ');
+   if(task.fields.findingIds===oldIds)task.fields.findingIds=suggestedFindingIds(h);
+  }
   if(task.note!=null && (!['spec','approve','resume','closeout'].includes(task.note.template) ||
      typeof task.note.text!=='string'))throw Error('Ungültige Übergabenotiz.');
  }
@@ -249,13 +285,13 @@ function currentTemplate(){return TEMPLATES.find(t=>t.id===profile().task.templa
 function usesField(t,key){
  return t.need.includes(key) || t.optional.includes(key) || (key==='executor' && t.who==='executor');
 }
-function sameTaskHandoff(){
- const {handoff:h,fields:f}=profile().task;
+function sameTaskHandoff(task=profile().task,target=profile().target){
+ const {handoff:h,fields:f}=task;
  if(!h)return null;
  const same=(a,b)=>String(a??'').trim()===String(b??'').trim();
  if(!same(f.issue,h.issue) || !same(f.package,h.package) || !same(f.pr,h.pr))return null;
  if(f.head && h.head && f.head!==h.head)return null;
- const originalBranch=importedBranch(h.branch,profile().target);
+ const originalBranch=importedBranch(h.branch,target);
  if(f.branch && originalBranch && branchName(f.branch)!==originalBranch)return null;
  return h;
 }
@@ -295,7 +331,9 @@ function context(t,f){
  if(f.package)parts.push('Paket: '+f.package+'.');
  if(f.head && (prSource || branch))parts.push('Zuletzt bekannter Head: '+f.head+'.');
  const h=sameTaskHandoff();
- if(h?.spec_url && ['spec','approve','decision','prepare','implement','resume'].includes(t.id) &&
+ if(h?.spec_url && ['implement','resume','fix','prepare-fix'].includes(t.id))
+  parts.push('Paketentscheidung: '+h.spec_url);
+ else if(h?.spec_url && ['spec','approve','decision','prepare'].includes(t.id) &&
     h.spec_url!=='https://github.com/'+p.repository+'/issues/'+f.issue)parts.push('Spezifikation: '+h.spec_url);
  return parts.join('\n');
 }
@@ -321,6 +359,11 @@ function buildPrompt(){
  if(f.reviewUrl && !/^https:\/\/[^\s]+$/.test(f.reviewUrl))errs.push('Reviewlink muss eine HTTPS-Adresse sein.');
  if(usesField(t,'branch') && p.task.branchMode==='existing' && !importedBranch(f.branch,p.target))
   errs.push('Einen vorhandenen Arbeitsbranch angeben, der sich vom Zielbranch unterscheidet.');
+ const h=sameTaskHandoff();
+ if(t.id==='fix' && h && (!f.reviewUrl || f.reviewUrl===h.review.url) && !hasFindingReview(h)){
+  const reason=handoffNext(h).useSpec?'Verwende den Paketauftrag im empfohlenen nächsten Schritt.':'Gib den aktuellen Befundbericht mit den beauftragten Kennungen an.';
+  return {text:reason,errors:[reason],who:f.executor};
+ }
  const issue='#'+(f.issue||'⟨Issue⟩'),pr='#'+(f.pr||'⟨PR⟩');
  let body='';
  switch(t.id){
@@ -331,15 +374,19 @@ function buildPrompt(){
  case 'decision':body='Übernimm diese Entscheidung in Issue '+issue+' und die zuständigen verbindlichen Dokumente. Noch nicht implementieren oder mergen.\n\n'+f.brief;break;
  case 'prepare':body='Bereite Issue '+issue+' gemäß Workflow zur Umsetzung vor. Noch nicht implementieren oder mergen.';break;
  case 'next':body='Prüfe Issue '+issue+' und bereite das nächste sinnvoll umsetzbare Paket gemäß Workflow vor. Ist der gesamte Umfang erfüllt, dokumentiere den Abschluss und schließe das Issue. Noch nicht implementieren oder mergen.';break;
- case 'implement':case 'resume':body=(t.id==='resume'?'Setze die laufende Umsetzung von Issue ':'Implementiere Issue ')+issue+' im freigegebenen Scope vollständig gemäß Workflow. Liefere den Draft-PR mit Links zu den erforderlichen Reviewbelegen. Kein Merge.\n\n'+workspaceText();break;
- case 'review':case 'review-min':case 'rereview':body=(t.id==='rereview'?'Reviewe die Nacharbeit in PR '+pr+' zu den Befunden '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' einschließlich ihrer Auswirkungen.':t.id==='review-min'?'Reviewe PR '+pr+' gemäß Workflow.':'Reviewe PR '+pr+' anhand des Diffs und der im PR verlinkten Originalbelege.')+' Dokumentiere das Ergebnis im PR.\n\n'+mergeText();break;
+ case 'implement':case 'resume':
+  if(t.id==='implement' && h?.spec_url)
+   body='Setze ausschließlich den in der verlinkten Paketentscheidung freigegebenen Umfang von Issue '+issue+' um. Lies dort die Kriterien und den Prüfplan. Stelle die geforderten technischen Nachweise im Draft-PR für das anschließende Review bereit.';
+  else body=(t.id==='resume'?'Setze die laufende Umsetzung von Issue ':'Implementiere Issue ')+issue+' im freigegebenen Scope vollständig gemäß Workflow. Liefere den Draft-PR mit Links zu den erforderlichen Reviewbelegen.';
+  body+=' Kein Merge.\n\n'+workspaceText();break;
+ case 'review':case 'review-min':case 'rereview':body=(t.id==='rereview'?'Reviewe die Nacharbeit in PR '+pr+' zu den Befunden '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' einschließlich ihrer Auswirkungen. Prüfe die offenen Vor-Merge-Gates am neuen Head.':t.id==='review-min'?'Reviewe PR '+pr+' gemäß Workflow.':'Reviewe PR '+pr+' anhand des Diffs und der im PR verlinkten Originalbelege.')+' Dokumentiere das Ergebnis im PR.\n\n'+mergeText();break;
  case 'feedback':
-  body='Bereite meine Änderungswünsche zu PR '+pr+' vor. Gleiche sie mit Issue und bisherigem Review ab. Halte Umfang, Abnahmekriterien und Prüfbedarf im Issue/Paket fest und verlinke die Entscheidung im PR. Nutze für zusammengehörige Änderungen den offenen PR. Bei eigenständigem Umfang oder geschlossenem PR bereite ein separates Paket vor. Kläre offene Fachfragen. Nur Vorbereitung, keine Produktänderung und kein Merge.';
+  body='Bereite meine Änderungswünsche zu PR '+pr+' vor. Gleiche sie mit Issue und bisherigem Review ab. Halte Umfang, Abnahmekriterien und Prüfbedarf im Issue/Paket fest und verlinke die Entscheidung im PR. Nutze für zusammengehörige Änderungen den offenen PR. Bei eigenständigem Umfang oder geschlossenem PR bereite ein separates Paket vor. Kläre offene Fachfragen. Rufe die veröffentlichten Quellen erneut auf und gleiche Kennungen, Bedeutung und Zuständigkeit ab. Für neue, umsetzungsreife Anforderungen verwende die gelesene Paketentscheidung als spec_url und specified / implement. Befundnacharbeit setzt einen Bericht voraus, der genau diese Befunde definiert. Bei fehlender Quelle die Vorbereitung als blockiert melden. Nur Vorbereitung, keine Produktänderung und kein Merge.';
   if(f.reviewUrl)body+='\nBisheriges Review: '+f.reviewUrl;
   body+='\n\nMeine Änderungswünsche:\n'+f.brief;
   break;
- case 'prepare-fix':body='Bereite die offenen blockierenden oder technisch erforderlichen Befunde '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' zu PR '+pr+' gemäß Workflow zur Umsetzung vor. Noch nicht korrigieren oder mergen.';break;
- case 'fix':body='Behebe ausschließlich die beauftragten Befunde '+f.findingIds+' aus '+f.reviewUrl+' in PR '+pr+' gemäß Workflow. Aktualisiere die zugehörigen Beleglinks im PR. Kein Merge.\n\n'+workspaceText();break;
+ case 'prepare-fix':body='Bereite die offenen blockierenden oder technisch erforderlichen Befunde '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' zu PR '+pr+' gemäß Workflow zur Umsetzung vor. Präzisiere belegte Befunde bei Bedarf in einem verlinkten Nachtrag. Öffne den veröffentlichten Bericht erneut und prüfe Kennungen, Erfolgskriterien und Zuständigkeit. Melde unbelegte Kennungen als offen. Noch nicht korrigieren oder mergen.';break;
+ case 'fix':body='Behebe ausschließlich die beauftragten Befunde '+f.findingIds+' aus '+f.reviewUrl+' in PR '+pr+' gemäß Workflow. Gleiche jede Kennung mit Definition, Erfolgskriterium und Zuständigkeit im verlinkten Bericht ab. Liefere die technischen Belege im PR. Persönliche Abnahmen und das unabhängige Review erfolgen separat. Kein Merge.\n\n'+workspaceText();break;
  case 'ci-fix':body='Untersuche die aktuellen CI-Fehler von PR '+pr+' und behebe ihre Ursache im bestehenden Scope gemäß Workflow. Kein Merge.\n\n'+workspaceText();break;
  case 'accept':body='Dokumentiere die folgende tatsächlich durchgeführte manuelle Abnahme zu PR '+pr+' gemäß Workflow. Kein Merge.\n\n'+f.brief;break;
  case 'merge':body='Merge PR '+pr+' nach erfüllten Vor-Merge-Gates gemäß Workflow. Keine zusätzlichen Änderungen.'+(f.reviewUrl?'\nMaßgebliches Review: '+f.reviewUrl:'');break;
@@ -362,11 +409,17 @@ function renderContextChips(t){
 function renderInputs(t){
  const {fields,branchMode,note}=profile().task;
  const h=sameTaskHandoff(), feedback=t.id==='feedback';
- $('nextBanner').hidden=!h || (feedback && h.next.action!=='clarify');
+ $('nextBanner').hidden=!h || (feedback && handoffNext(h).action!=='clarify');
  const reviewed=h?.phase==='reviewed' && !$('nextBanner').hidden;
  $('feedbackAfterReview').hidden=!reviewed || feedback;
  $('openFeedback').hidden=reviewed || feedback || h?.phase==='merged' || !(t.stage==='review' || t.id==='merge');
  $('feedbackHint').hidden=!feedback;
+ $('findingHint').hidden=t.id!=='fix';
+ if(t.id==='fix'){
+  const candidates=h && hasFindingReview(h) && fields.reviewUrl===h.review.url ? h.findings.filter(f=>f.status==='open' && f.kind==='A' && f.gate==='before_merge') : [];
+  $('findingHint').textContent='Technische A-Nachweise bei Bedarf selbst auswählen. Persönliche Abnahmen und unabhängige Reviews separat beauftragen.'+
+   (candidates.length?' Offene A-Einträge im Bericht: '+candidates.map(f=>f.id+' – '+f.summary).join(' · '):'');
+ }
  $('briefLabel').textContent=feedback?'Was möchtest du am bisherigen Ergebnis ändern?':
   t.id==='accept'?'Getesteter Stand, Umgebung, Szenarien und Ergebnis':'Idee, Ziel oder ergänzender Auftrag';
  $('brief').placeholder=feedback?'Was soll anders aussehen oder funktionieren?':t.id==='accept'?'Wer hat welchen Stand in welcher Umgebung geprüft? Was war das Ergebnis?':
@@ -388,7 +441,31 @@ function renderInputs(t){
  $('handoffNote').value=editing?note.text:'';
 }
 function renderPrompt(){const p=profile(),t=currentTemplate(),result=buildPrompt(),advice=sameTaskHandoff()?.execution;renderInputs(t);renderContextChips(t);$('executionAdvice').hidden=!(t.who==='executor'&&advice?.preferred);$('executionAdvice').textContent=advice?.preferred?'Übergebene Empfehlung: '+advice.preferred+(advice.model?' · '+advice.model:'')+(advice.reasoning?' · Reasoning '+advice.reasoning:'')+'. '+(advice.reason||'')+' Verfügbarkeit vor der Umsetzung prüfen.':'';$('promptText').textContent=result.text;$('promptErrors').textContent=result.errors.join(' ');$('copyPrompt').disabled=!!result.errors.length;$('recipient').textContent=result.who;$('scopeBadge').textContent=t.merge&&p.merge?'Review + bedingter Merge':t.scope;$('promptStatus').textContent=result.errors.length?'Eingaben ergänzen':'Direkt kopierbar';$('mergeControl').hidden=!t.merge;$('mergeToggle').checked=p.merge;$('promptHint').textContent=t.merge&&p.merge?'Dieser kopierte Auftrag enthält eine bedingte Mergefreigabe. Erst das Absenden beauftragt sie.':'Der Auftrag wird nur kopiert. Erst das Absenden an ChatGPT oder Codex startet die Arbeit.';}
-function render(){renderTheme();const p=profile(),task=p.task,stage=STAGES[task.stage];$('repoHeading').textContent=p.repository;$('projectSelect').replaceChildren();for(const item of state.profiles){const o=document.createElement('option');o.value=item.id;o.textContent=item.name;$('projectSelect').append(o);}$('projectSelect').value=p.id;for(const b of document.querySelectorAll('[data-stage]')){if(b.dataset.stage===task.stage)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');}$('templateSelect').replaceChildren();for(const t of TEMPLATES.filter(t=>t.stage===task.stage)){const o=document.createElement('option');o.value=t.id;o.textContent=t.title;$('templateSelect').append(o);}$('templateSelect').value=task.template;for(const k of FIELD_IDS)$(k).value=task.fields[k];$('stepLabel').textContent='Schritt '+stage[0]+' · '+stage[1];$('stageTitle').textContent=stage[2];$('stageDesc').textContent=stage[3];const h=task.handoff;$('resultSummary').hidden=!h;if(h){$('resultText').textContent=h.summary;$('nextTitle').textContent=h.next.action==='done'?'Gemergten Abschluss übernommen':'Empfohlener nächster Schritt: '+({specify:'Spezifizieren',implement:'Umsetzen',review:'Review',rework:'Nacharbeiten',merge:'Merge prüfen',clarify:'Offene Punkte klären'}[h.next.action]||h.next.action);$('nextReason').textContent=h.next.reason;$('goNext').hidden=h.next.action==='done';$('resultFacts').replaceChildren();for(const [text,url]of [['Issue #'+h.issue,h.issue?'https://github.com/'+h.repository+'/issues/'+h.issue:null],['PR #'+h.pr,h.pr?'https://github.com/'+h.repository+'/pull/'+h.pr:null],['Review',h.review.url]])if(url){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;const el=document.createElement('span');el.className='fact';el.append(a);$('resultFacts').append(el);}const el=document.createElement('span');el.className='fact';el.textContent=h.findings.filter(f=>f.status==='open').length+' offene Befunde';$('resultFacts').append(el);}renderPrompt();}
+function render(){renderTheme();const p=profile(),task=p.task,stage=STAGES[task.stage];$('repoHeading').textContent=p.repository;$('projectSelect').replaceChildren();for(const item of state.profiles){const o=document.createElement('option');o.value=item.id;o.textContent=item.name;$('projectSelect').append(o);}$('projectSelect').value=p.id;for(const b of document.querySelectorAll('[data-stage]')){if(b.dataset.stage===task.stage)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');}$('templateSelect').replaceChildren();for(const t of TEMPLATES.filter(t=>t.stage===task.stage)){const o=document.createElement('option');o.value=t.id;o.textContent=t.title;$('templateSelect').append(o);}$('templateSelect').value=task.template;for(const k of FIELD_IDS)$(k).value=task.fields[k];$('stepLabel').textContent='Schritt '+stage[0]+' · '+stage[1];$('stageTitle').textContent=stage[2];$('stageDesc').textContent=stage[3];
+ const h=task.handoff;
+ $('resultSummary').hidden=!h;
+ if(h){
+  const next=handoffNext(h);
+  const labels={specify:'Spezifizieren',implement:'Umsetzen',review:'Review',rework:'Nacharbeiten',merge:'Merge prüfen',clarify:'Offene Punkte klären'};
+  $('resultText').textContent=h.summary;
+  $('nextTitle').textContent=next.action==='done'?'Gemergten Abschluss übernommen':'Empfohlener nächster Schritt: '+labels[next.action];
+  $('nextReason').textContent=next.reason;
+  $('goNext').hidden=next.action==='done';
+  $('goNext').textContent=next.useSpec?'Paketauftrag vorbereiten':next.missingSource?'Übergabe korrigieren':'Zum nächsten Schritt →';
+  const facts=$('resultFacts'), repoUrl='https://github.com/'+h.repository;
+  facts.replaceChildren();
+  const links=[['Issue #'+h.issue,h.issue?repoUrl+'/issues/'+h.issue:null],['PR #'+h.pr,h.pr?repoUrl+'/pull/'+h.pr:null],
+   ['Paketentscheidung',h.spec_url],[next.useSpec?'Früheres Review':'Review',h.review.url]];
+  for(const [text,url] of links){
+   if(!url)continue;
+   const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;
+   const el=document.createElement('span');el.className='fact';el.append(a);facts.append(el);
+  }
+  const count=document.createElement('span');count.className='fact';
+  count.textContent=h.findings.filter(f=>f.status==='open').length+' gemeldete offene Befunde';facts.append(count);
+ }
+ renderPrompt();
+}
 function changeStage(stage,id){
  const task=profile().task, next=id || TEMPLATES.find(t=>t.stage===stage).id;
  if(next!==task.template){
@@ -398,7 +475,12 @@ function changeStage(stage,id){
  task.stage=stage;task.template=next;persist();render();
 }
 function goNext(){
- const h=profile().task.handoff, next=h?.next.action;
+ const h=sameTaskHandoff();
+ if(!h)return;
+ const route=handoffNext(h), next=route.action;
+ if(route.missingSource){
+  $('importText').value=JSON.stringify(h,null,2);$('importDialog').showModal();previewImport();return;
+ }
  if(next==='merge'){
   changeStage('review','review');say('Ein berichtetes positives Review ersetzt keine aktuelle Quellenprüfung.');return;
  }
@@ -411,7 +493,7 @@ function goNext(){
  if(['specify','implement','review'].includes(next))changeStage(next);
 }
 function invalidateImport(){
- importRevision++;pending=null;$('applyImport').disabled=true;$('importPreview').textContent='';
+ importRevision++;pending=null;$('applyImport').disabled=true;$('applyImport').textContent='Daten übernehmen';$('importPreview').textContent='';
  $('importPreview').classList.remove('danger-text');$('repairHelp').hidden=true;
  $('repairText').hidden=true;$('repairText').textContent='';$('repairStatus').textContent='';
 }
@@ -433,8 +515,10 @@ function previewImport(){
  if(x.repository!==p.repository)mismatch='Übergabe gehört zu '+x.repository+'. Zuerst das passende Projekt wählen oder anlegen.';
  else if(x.target!==p.target)mismatch='Zielbranch '+x.target+' passt nicht zu den Projekteinstellungen ('+p.target+'). Vor dem Import bewusst angleichen.';
  if(mismatch){preview.classList.add('danger-text');preview.textContent=mismatch;return;}
+ const next=handoffNext(x);
  pending=x;
- preview.textContent='Geprüft: '+x.repository+'\nIssue: '+(x.issue||'offen')+' · Paket: '+(x.package||'–')+' · PR: '+(x.pr||'offen')+'\nPhase: '+x.phase+' · Head: '+(x.head||'noch nicht vorhanden')+'\n\n'+x.summary+'\n\nNächster Schritt: '+x.next.action+'\n'+x.next.reason+'\n\nDiese Aufgabendaten ersetzen den bisherigen Stand. Mergeoption, Arbeitswurzel und Bereinigung bleiben erhalten.';
+ if(next.useSpec)$('applyImport').textContent='Paketauftrag vorbereiten';
+ preview.textContent='Geprüft: '+x.repository+'\nIssue: '+(x.issue||'offen')+' · Paket: '+(x.package||'–')+' · PR: '+(x.pr||'offen')+'\nPhase: '+x.phase+' · Head: '+(x.head||'noch nicht vorhanden')+'\n\n'+x.summary+'\n\nNächster Schritt: '+next.action+'\n'+next.reason+(next.useSpec?'\nPaketentscheidung: '+x.spec_url:'')+'\n\nDiese Aufgabendaten ersetzen den bisherigen Stand. Mergeoption, Arbeitswurzel und Bereinigung bleiben erhalten.';
  $('applyImport').disabled=false;
 }
 function applyImport(){
@@ -442,13 +526,14 @@ function applyImport(){
  try{
   const x=validateHandoff(pending), p=profile();
   if(x.repository!==p.repository || x.target!==p.target)throw Error('Projekt oder Zielbranch wurde geändert. Erneut prüfen.');
+  const next=handoffNext(x);
   const branch=x.phase==='merged'?'':importedBranch(x.branch,p.target), f=p.task.fields;
   Object.assign(f,{issue:x.issue?String(x.issue):'',pr:x.pr?String(x.pr):'',package:x.package||'',branch,
-   head:(branch || x.pr)?x.head||'':'',reviewUrl:x.review.url||'',
-   findingIds:x.findings.filter(a=>a.status==='open' && (a.kind==='B' || a.kind==='A' && a.gate==='before_merge')).map(a=>a.id).join(', '),
+   head:(branch || x.pr)?x.head||'':'',reviewUrl:x.phase==='specified' && next.action==='implement'?'':x.review.url||'',
+   findingIds:suggestedFindingIds(x),
    modules:'',brief:''});
-  if(['implement','rework'].includes(x.next.action) && x.execution.preferred)f.executor=x.execution.preferred;
-  Object.assign(p.task,{handoff:x,branchMode:branch?'existing':'auto',briefs:{},note:null});
+  if(['implement','rework'].includes(next.action) && x.execution.preferred)f.executor=x.execution.preferred;
+  Object.assign(p.task,{handoff:x,branchMode:branch?'existing':'auto',briefs:{},note:null,findingIdsEdited:false});
   persist();$('importDialog').close();invalidateImport();render();goNext();say('Übergabe übernommen. Folgeauftrag ist vorbereitet.');
  }catch(e){say(e.message);}
 }
@@ -514,7 +599,15 @@ for(const key of FIELD_IDS)$(key).addEventListener('input',()=>{
   for(const field of linked){f[field]='';$(field).value='';}
   task.branchMode='auto';task.note=null;
  }
+ if(['head','branch','reviewUrl'].includes(key) && prior && prior!==value && sameTaskHandoff()){
+  const reported=task.handoff.review.url;
+  if(reported && f.reviewUrl===reported){
+   f.findingIds='';$('findingIds').value='';task.findingIdsEdited=false;
+   if(key!=='reviewUrl'){f.reviewUrl='';$('reviewUrl').value='';}
+  }
+ }
  if(key==='branch' && prior && prior!==value){f.head='';$('head').value='';}
+ if(key==='findingIds')task.findingIdsEdited=true;
  f[key]=value;persist();renderPrompt();
 });
 $('templateSelect').addEventListener('change',()=>changeStage(profile().task.stage,$('templateSelect').value));
