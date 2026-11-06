@@ -999,8 +999,10 @@ static func has_button_text(node: Node, text: String) -> bool:
 	return false
 
 static func seed_grid_reads(board: Control) -> void:
-	# Test input construction, not a product command or user interaction.
-	var state: Dictionary = board.capture_view()
-	for key: String in ["row_clue_reads","column_clue_reads"]:
-		for index: int in range(state[key].size()): state[key][index] = {"anchor":"grid_end"}
-	board.restore_view(state)
+	# Only synthetic input data: do not relayout the deliberately narrow probe.
+	board.ensure_clue_steps()
+	for reads: Array in [board.row_clue_reads,board.column_clue_reads]:
+		for index: int in range(reads.size()): reads[index] = ClueLayout.grid_end_position()
+	board.normalize_clue_steps()
+	board.clear_clue_hover()
+	board.queue_redraw()
