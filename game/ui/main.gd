@@ -32,6 +32,7 @@ var surface: BookSurface
 var information: Control
 var information_section: String = "settings"
 var settings_panel: VBoxContainer
+var display_group: VBoxContainer
 var help_panel: HelpPanel
 var info_scroll: ScrollContainer
 var information_origin: String = "album"
@@ -153,8 +154,8 @@ func _ready() -> void:
 		display_controller = DisplaySettings.Controller.new()
 		add_child(display_controller)
 		display_settings = DisplaySettings.new()
-		settings_panel.add_child(display_settings)
-		settings_panel.move_child(display_settings,1)
+		display_group.add_child(display_settings)
+		display_group.move_child(display_settings,1)
 		display_settings.configure(self,display_controller)
 		display_controller.start(DisplaySettings.Backend.new(get_window()),DisplaySettings.Preference.new())
 	save_timer = Timer.new()
@@ -842,39 +843,59 @@ func _build_information() -> void:
 	settings_panel.add_theme_constant_override("separation",16)
 	content.add_child(settings_panel)
 	settings_panel.add_child(label("Einstellungen",26))
+	display_group = _settings_group("Anzeige", "display-options")
 	ui_scale_button = _text_button("UI 100 %",func() -> void: set_ui_scale(1.25 if ui_scale == 1 else 1.0))
-	settings_panel.add_child(ui_scale_button)
-	settings_panel.add_child(label("Rätselansicht",20))
+	display_group.add_child(ui_scale_button)
+	var puzzle_group: VBoxContainer = _settings_group("Rätselansicht", "puzzle-options")
 	view_choice = BookChoice.new()
 	view_choice.name = "puzzle-view"
 	view_choice.add_item("Rasteransicht")
 	view_choice.add_item("Gesamtansicht mit allen Hinweisen")
 	view_choice.item_selected.connect(set_puzzle_view)
-	settings_panel.add_child(view_choice)
+	puzzle_group.add_child(view_choice)
 	var explanation: Label = label("Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen.",16)
 	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	settings_panel.add_child(explanation)
+	puzzle_group.add_child(explanation)
 	clue_reset_button = _text_button("Hinweise rasterseitig ausrichten",func() -> void:
 		if session != null: board.reset_clue_pan())
-	settings_panel.add_child(clue_reset_button)
+	puzzle_group.add_child(clue_reset_button)
 	clue_completion_toggle = CheckBox.new()
 	clue_completion_toggle.text = "Erfüllte Hinweise markieren"
 	clue_completion_toggle.button_pressed = mark_completed_clues
 	clue_completion_toggle.add_theme_color_override("font_color",BookButton.INK)
 	clue_completion_toggle.toggled.connect(set_clue_completion)
-	settings_panel.add_child(clue_completion_toggle)
+	puzzle_group.add_child(clue_completion_toggle)
 	animation_toggle = CheckBox.new()
 	animation_toggle.text = "Zellanimationen"
 	animation_toggle.button_pressed = true
 	animation_toggle.add_theme_color_override("font_color", BookButton.INK)
 	animation_toggle.toggled.connect(func(enabled: bool) -> void: board.set_animations(enabled))
-	settings_panel.add_child(animation_toggle)
-	settings_panel.add_child(_text_button("Beenden",leave_app))
+	puzzle_group.add_child(animation_toggle)
+	var exit_group: VBoxContainer = _settings_group("Beenden", "exit-options")
+	var quit_button: BookButton = _text_button("Beenden",leave_app)
+	quit_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	quit_button.custom_minimum_size.x = 180
+	exit_group.add_child(quit_button)
 	help_panel = HelpPanel.new()
 	content.add_child(help_panel)
 	help_panel.configure(self)
 	information.hide()
 	_information_section("settings")
+
+func _settings_group(caption: String, id: String) -> VBoxContainer:
+	var group := VBoxContainer.new()
+	group.name = id
+	settings_panel.add_child(group)
+	group.add_child(label(caption,20))
+	return group
+
+func _layout_settings(width: float) -> void:
+	# A single left-aligned column; its controls share the safe scroll width.
+	settings_panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	settings_panel.custom_minimum_size.x = minf(640*ui_scale,maxf(1,width-20*ui_scale))
+	settings_panel.add_theme_constant_override("separation",roundi(28*ui_scale))
+	for child: Node in settings_panel.get_children():
+		if child is VBoxContainer: child.add_theme_constant_override("separation",roundi(10*ui_scale))
 
 func _text_button(caption: String, action: Callable) -> BookButton:
 	var item: BookButton = BookButton.new()
@@ -1053,6 +1074,7 @@ func _layout_book(prepare_board: bool = false) -> void:
 	_place(information.get_node("settings-access"),Rect2(o+Vector2(180,110),Vector2(210*u,hit)))
 	_place(information.get_node("help-access"),Rect2(o+Vector2(410*u,110),Vector2(140*u,hit)))
 	_place(info_scroll,Rect2(o+Vector2(180,190),Vector2(w-360,h-300)))
+	_layout_settings(info_scroll.size.x)
 	for item: Control in [ui_scale_button,clue_reset_button,clue_completion_toggle]:
 		item.custom_minimum_size.y = hit
 	for item: Node in information.find_children("*","Button",true,false):

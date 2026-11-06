@@ -86,10 +86,8 @@ func layout() -> void:
 	app._place(switch,Rect2(Vector2(edge-210*u,top),Vector2(210*u,hit)))
 	var scroll: ScrollContainer = app.info_scroll if left else help_scroll
 	app._place(scroll,Rect2(Vector2(x,top+hit+24*u),Vector2(edge-x,bottom-top-hit-24*u)))
-	for panel: Control in [app.settings_panel,app.help_panel]:
-		panel.add_theme_constant_override("separation",roundi(16*u))
-		for child: Node in panel.get_children():
-			if child is Label: child.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	app._layout_settings(app.info_scroll.size.x)
+	app.help_panel.add_theme_constant_override("separation",roundi(16*u))
 	# ScrollContainer itself clamps each independent offset after reflow.
 	if app.get_viewport().gui_get_focus_owner() != null:
 		var focus: Control = app.get_viewport().gui_get_focus_owner()

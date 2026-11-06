@@ -41,6 +41,11 @@ negative Monitorpositionen/DPI-Rahmen, strikte Präferenz-/Ersetzungsfehler,
 Vorschau/Annahme/Timeout/Rücknahme und sichere Bestätigung bei UI100/125.
 Der injizierte Fensterserver erzwingt keinen physischen Modus. Echte Windowsmodi
 und kurze UI-Originale bleiben einmalige paketgebundene W01-/R01-Nachweise.
+N01 ergänzt in derselben Informationsprobe Gruppenfolge, kompakte linksbündige
+Breiten und 44/55-px-Trefferflächen bei 1080p/720p × UI100/125, Scroll-Erreichbarkeit,
+Popupgrenzen/-Abbau sowie Desktopwert und sichtbare Fehler-/Fallbackzustände ohne
+positive Dauerzeile. Keine neue Prozess-/Bildfamilie; die gezielte echte Windows-
+Sichtprobe bleibt einmalig für N01-R02.
 
 Der Windowsbau des **CI-Kerns** außerhalb reiner Dokument-/Rätselinhaltsänderungen
 ist kein automatisch ausgewähltes
