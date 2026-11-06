@@ -2,9 +2,10 @@
 
 **Status: ANZ-A auf dem Arbeitsbranch implementiert; technische Nachweise und getrennte Abnahmen stehen im Produkt-PR zu [Issue #527](https://github.com/venomenon328/picross/issues/527).** Eigentümerfreigabe der Spezifikation: 06.11.2026. Kein Merge oder Release aus dieser Implementierung ableiten.
 
-**BTI-A auf dem Arbeitsbranch implementiert, R01/M01 vor Merge offen:**
+**BTI-C auf dem Arbeitsbranch implementiert, R01/M01 vor Merge offen:**
 [BTI-D01–D04](VIEW_TITLE_ART.md) ersetzt ausschließlich den sichtbaren großen
-Einstellungs-Seitentitel durch den Bildschriftzug `Einstellungen` und verlegt
+Einstellungs-Seitentitel durch das unveränderte freigegebene V2-rev1-Original
+`Einstellungen` in neutralem schraffiertem Graphit und verlegt
 die beiden Informations-Navigationsaktionen von oben nach unten. Die Bakso-
 Gruppentitel sowie N03-Feld-/Rahmen-/Tooltip- und Display-Verträge bleiben.
 Diese Folgeregel löst auf diesem Branch die damalige Titel-/Navigationsanordnung
