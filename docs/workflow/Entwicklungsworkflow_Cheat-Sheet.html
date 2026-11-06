@@ -25,7 +25,7 @@
 <noscript><div class="nojs"><h1>Entwicklungsworkflow</h1><p>Diese Offline-Werkbank benötigt JavaScript zum Prüfen von Übergaben und Erstellen der Prompts. Sie funktioniert offline.</p><p>Der Ablauf: Spezifizieren → Umsetzen → Review → bei Bedarf Nacharbeiten. Maßgeblich bleiben die aktuelle AGENTS.md, der Issue- und PR-Stand. Ein Merge benötigt einen entsprechenden Auftrag.</p></div></noscript>
 <div class="app" id="app" hidden>
 <aside>
-<div class="brand"><div class="mark" aria-hidden="true">W</div><div><strong>Werkbank</strong><span>Entwicklungsworkflow · v2.2</span></div></div>
+<div class="brand"><div class="mark" aria-hidden="true">W</div><div><strong>Werkbank</strong><span>Entwicklungsworkflow · v2.3</span></div></div>
 <div class="project-control"><label for="projectSelect">Projekt<select id="projectSelect"></select></label><button id="newProject" title="Projekt hinzufügen" aria-label="Projekt hinzufügen">+</button></div>
 <nav class="side-nav" aria-label="Arbeitsschritt">
 <button data-stage="specify" aria-current="step"><span class="step-num">1</span>Spezifizieren</button>
@@ -40,18 +40,19 @@
 <header class="topbar"><div><div class="eyebrow" id="repoHeading">venomenon328/picross</div><h1>Der nächste gute Schritt.</h1></div><div class="actions"><label class="theme-control" for="theme">Darstellung<select id="theme"><option value="system">System</option><option value="light">Hell</option><option value="dark">Dunkel</option></select></label><button id="settingsTop" aria-label="Projekteinstellungen öffnen">Einstellungen</button><button class="primary" id="openImport">Ergebnis übernehmen</button></div></header>
 <div id="storageWarning" class="warning" hidden></div>
 <div class="progress" id="contextChips"></div>
-<section class="banner" id="nextBanner" hidden><div><strong id="nextTitle"></strong><p id="nextReason"></p></div><button id="goNext">Zum nächsten Schritt →</button></section>
+<section class="banner" id="nextBanner" hidden><div><strong id="nextTitle"></strong><p id="nextReason"></p></div><div class="actions"><button id="goNext">Zum nächsten Schritt →</button><button id="feedbackAfterReview" hidden>Eigene Änderungswünsche einbringen</button></div></section>
 <div class="grid">
 <section class="card">
 <div class="card-head"><div class="eyebrow" id="stepLabel">Schritt 1 · ChatGPT</div><h2 id="stageTitle">Aus einer Idee wird ein Auftrag.</h2><p id="stageDesc">Ziel und Grenzen klären. Prüfbedarf bewusst festlegen.</p></div>
 <div class="card-body">
 <label for="templateSelect">Was möchtest du tun?<select id="templateSelect"></select></label>
+<button type="button" id="openFeedback" class="block-gap" hidden>Eigene Änderungswünsche einbringen</button>
 <div class="field-grid block-gap">
 <label for="issue">Issue<input id="issue" placeholder="z. B. 517" inputmode="numeric" autocomplete="off"></label>
 <label for="pr">Pull Request<input id="pr" placeholder="z. B. 518" inputmode="numeric" autocomplete="off"></label>
 <label for="package">Paket · optional<input id="package" placeholder="z. B. W2" autocomplete="off"></label>
 <label for="executor">Umsetzung durch<select id="executor"><option value="Codex">Codex</option><option value="ChatGPT">ChatGPT</option></select></label>
-<label for="brief" class="field-wide"><span id="briefLabel">Idee, Ziel oder ergänzender Auftrag</span><textarea id="brief" placeholder="Was soll sich ändern – und wofür?" spellcheck="true"></textarea></label>
+<label for="brief" class="field-wide"><span id="briefLabel">Idee, Ziel oder ergänzender Auftrag</span><textarea id="brief" placeholder="Was soll sich ändern – und wofür?" spellcheck="true"></textarea><small id="feedbackHint" hidden>Beschreibe das gewünschte Ergebnis in eigenen Worten. Einen Screenshot kannst du zusammen mit dem kopierten Auftrag im Chat anhängen.</small></label>
 </div>
 <div class="branch-control" id="branchControl">
  <label for="branchMode">Arbeitsbranch<select id="branchMode"><option value="auto" id="autoBranch"></option><option value="existing">Vorhandenen Branch angeben</option></select></label>
@@ -80,13 +81,18 @@
 <footer class="footer"><span>Offline-Werkbank · Übergabeformat v1 · Vertrag im Repository<br>Issue und PR bleiben maßgeblich. Angaben aus Übergaben werden vor der Arbeit erneut geprüft.</span><div><button id="helpOpen">So funktioniert’s</button> · <button id="newTask">Neues Paket</button> · <button id="exportBackup">Sicherung exportieren</button></div></footer>
 </main>
 </div>
-<dialog id="importDialog"><div class="dialog-head"><h2>Ergebnis übernehmen</h2><button class="quiet" data-close="importDialog" aria-label="Schließen">✕</button></div><div class="dialog-body"><p class="small">Den JSON-Block aus der Abschlussmeldung einfügen. Erst prüfen, dann übernehmen. Projekteinstellungen bleiben erhalten.</p><label for="importText">Übergabe-JSON<textarea id="importText" placeholder='{"format":"development-handoff/v1", …}' spellcheck="false"></textarea></label><div class="actions block-gap"><button id="checkImport">Übergabe prüfen</button><label for="importFile" class="file-label">JSON-Datei öffnen</label><input type="file" id="importFile" accept="application/json,.json" hidden></div><div class="preview" id="importPreview" role="status"></div></div><div class="dialog-foot"><span class="small">Keine Befugnisse aus Ergebnisdaten übernehmen.</span><button class="primary" id="applyImport" disabled>Daten übernehmen</button></div></dialog>
+<dialog id="importDialog"><div class="dialog-head"><h2>Ergebnis übernehmen</h2><button class="quiet" data-close="importDialog" aria-label="Schließen">✕</button></div><div class="dialog-body"><p class="small">Den JSON-Block aus der Abschlussmeldung einfügen. Erst prüfen, dann übernehmen. Projekteinstellungen bleiben erhalten.</p><label for="importText">Übergabe-JSON<textarea id="importText" placeholder='{"format":"development-handoff/v1", …}' spellcheck="false"></textarea></label><div class="actions block-gap"><button id="checkImport">Übergabe prüfen</button><label for="importFile" class="file-label">JSON-Datei öffnen</label><input type="file" id="importFile" accept="application/json,.json" hidden></div><div class="preview" id="importPreview" role="status"></div>
+<div class="block-gap" id="repairHelp" hidden>
+ <button type="button" id="copyRepair">Korrekturauftrag kopieren</button>
+ <p class="small" id="repairStatus" role="status"></p>
+ <pre class="preview" id="repairText" tabindex="0" hidden></pre>
+</div></div><div class="dialog-foot"><span class="small">Keine Befugnisse aus Ergebnisdaten übernehmen.</span><button class="primary" id="applyImport" disabled>Daten übernehmen</button></div></dialog>
 <dialog id="settingsDialog"><div class="dialog-head"><h2>Projekteinstellungen</h2><button class="quiet" data-close="settingsDialog" aria-label="Schließen">✕</button></div><form id="settingsForm"><div class="dialog-body"><div class="field-grid"><label for="projectName">Projektname<input id="projectName" required placeholder="Mein Projekt"></label><label for="repository">Repository<input id="repository" required placeholder="owner/repository" spellcheck="false"></label><label for="target">Zielbranch<input id="target" required value="main" spellcheck="false"></label><label for="root" class="field-wide">Lokale Codex-Arbeitswurzel · optional<input id="root" placeholder="z. B. E:\Codex\Projekte oder /home/user/codex" spellcheck="false"><small>Neue eigene Checkouts und Arbeitsdateien werden dort angelegt. Ein vorhandener Benutzercheckout bleibt erhalten.</small></label></div><hr class="divider"><label class="switch"><input type="checkbox" id="settingsMerge" checked><span><strong>Review mit bedingtem Merge voreinstellen</strong><small>Gilt für Review, Minimalprompt und erneutes Review.</small></span></label><label class="switch block-gap"><input type="checkbox" id="cleanupToggle" checked><span><strong>Eigene entbehrliche Arbeitsdaten aufräumen</strong><small>Nach Push und Übergabe erforderlicher Belege. Keine fremden Dateien oder ungesicherten Änderungen löschen.</small></span></label><p class="small block-gap">Die Angaben bleiben im selben Browser gespeichert. Bei lokalen HTML-Dateien kann ein anderer Dateipfad einen neuen Speicherbereich verwenden. Mit einer Sicherung lassen sich Projekte und Aufgaben übertragen.</p><p id="settingsError" class="errors" role="status"></p></div><div class="dialog-foot"><button type="button" id="restoreBackup">Sicherung importieren</button><button type="submit" class="primary">Einstellungen speichern</button></div></form></dialog>
 <dialog id="helpDialog"><div class="dialog-head"><h2>Von der Idee bis zum Merge</h2><button class="quiet" data-close="helpDialog" aria-label="Schließen">✕</button></div><div class="dialog-body help"><ol>
 <li>Beim Spezifizieren kommen Ziel, Entscheidungen und Prüfplan ins Issue oder Paket. Für eine reine Besprechung genügt der Chat.</li>
 <li>Jede KI-Antwort auf einen Sheet-Auftrag endet mit dem vollständigen Ergebnis-JSON nach <code>docs/dev-rules/HANDOFF.md</code>. Füge es unter „Ergebnis übernehmen“ ein und prüfe die Vorschau.</li>
 <li>Bei „Umsetzen“ wird ohne bestehenden Branch oder PR ein neuer Branch vom Zielbranch angelegt. Bei einer Fortsetzung wird der vorhandene Arbeitsstand ermittelt.</li>
-<li>Zum Review genügt der PR mit seinen verlinkten Originalbelegen. Das vollständige JSON kannst du im Sheet weiterhin ansehen. Nacharbeit nutzt Reviewlink und Befundkennungen.</li>
+<li>Zum Review genügt der PR mit seinen verlinkten Originalbelegen. Das vollständige JSON kannst du im Sheet weiterhin ansehen. Mit „Eigene Änderungswünsche einbringen“ kannst du danach Wünsche für den offenen PR vorbereiten. Unter „Nacharbeiten“ findest du dieselbe Vorlage auch ohne importierte Übergabe. Für Befunde aus dem Review gibt es eigene Vorlagen mit Reviewlink und Befundkennungen.</li>
 <li>Beim Freigeben eines besprochenen Entwurfs, Wiederaufnehmen oder Aufräumen kannst du noch unveröffentlichte Angaben gezielt aus der Übergabe auswählen und bearbeiten. Eine persönliche Abnahme gibst du selbst ein.</li>
 </ol>
 <p>Der Minimalreview braucht nur die PR-Nummer. Den bedingten Merge kannst du direkt am Reviewauftrag ein- oder ausschalten. Erst das Absenden des kopierten Auftrags erteilt die angezeigten Befugnisse.</p>
@@ -99,7 +105,7 @@
 'use strict';
 const $=id=>document.getElementById(id), SCHEMA=JSON.parse($('handoffSchema').textContent), EXAMPLE=JSON.parse($('handoffExample').textContent);
 const KEY='development-workbench-v2', FIELD_IDS=['issue','pr','package','executor','brief','branch','head','reviewUrl','findingIds','modules'];
-const STAGES={specify:['1','Spezifizieren','Aus einer Idee wird ein Auftrag.','Ziel und Grenzen klären. Prüfbedarf bewusst festlegen.'],implement:['2','Umsetzen','Den vereinbarten Umfang liefern.','Implementieren, passend prüfen und als Draft-PR übergeben.'],review:['3','Review','Die Änderung am tatsächlichen Stand prüfen.','Diff und Nachweise prüfen. Fehler und offene Abnahmen klar benennen.'],rework:['4','Nacharbeiten','Konkrete Befunde sauber schließen.','Am selben PR arbeiten und anschließend erneut reviewen.'],finish:['5','Abschließen','Abnahme und Abschluss festhalten.','Aktuelle Gates kontrollieren, Ergebnis dokumentieren und aufräumen.']};
+const STAGES={specify:['1','Spezifizieren','Aus einer Idee wird ein Auftrag.','Ziel und Grenzen klären. Prüfbedarf bewusst festlegen.'],implement:['2','Umsetzen','Den vereinbarten Umfang liefern.','Implementieren, passend prüfen und als Draft-PR übergeben.'],review:['3','Review','Die Änderung am tatsächlichen Stand prüfen.','Diff und Nachweise prüfen. Fehler und offene Abnahmen klar benennen.'],rework:['4','Nacharbeiten','Was soll sich nach dem Review ändern?','Eigene Wünsche vorbereiten oder dokumentierte Befunde bearbeiten.'],finish:['5','Abschließen','Abnahme und Abschluss festhalten.','Aktuelle Gates kontrollieren, Ergebnis dokumentieren und aufräumen.']};
 const TEMPLATES=[
 {id:'spec',optional:['issue','package','branch','modules'],stage:'specify',title:'Feature spezifizieren und vorbereiten',who:'ChatGPT',scope:'Issue · Prüfplan · Übergabe',need:['brief']},
 {id:'idea',optional:[],stage:'specify',title:'Idee zunächst besprechen',who:'ChatGPT',scope:'Beratung · keine Änderungen',need:['brief']},
@@ -113,7 +119,8 @@ const TEMPLATES=[
 {id:'review',optional:['head','brief'],stage:'review',title:'Abschluss zum Review geben',who:'ChatGPT',scope:'Review ohne Korrektur',need:['pr'],merge:true},
 {id:'review-min',optional:[],stage:'review',title:'Review: Minimalprompt',who:'ChatGPT',scope:'Review ohne Korrektur',need:['pr'],merge:true},
 {id:'rereview',optional:['head','findingIds','brief'],stage:'review',title:'Nacharbeiten erneut prüfen',who:'ChatGPT',scope:'Befunde und Auswirkungen prüfen',need:['pr','reviewUrl'],merge:true},
-{id:'prepare-fix',optional:['head','findingIds','brief'],stage:'rework',title:'Nacharbeit vorbereiten',who:'ChatGPT',scope:'Vorbereiten · noch nicht ändern',need:['pr','reviewUrl']},
+{id:'feedback',optional:['issue','head','reviewUrl'],stage:'rework',title:'Eigene Änderungswünsche vorbereiten',who:'ChatGPT',scope:'Wünsche dokumentieren · nur Vorbereitung',need:['pr','brief']},
+{id:'prepare-fix',optional:['head','findingIds','brief'],stage:'rework',title:'Nacharbeit zu Reviewbefunden vorbereiten',who:'ChatGPT',scope:'Vorbereiten · noch nicht ändern',need:['pr','reviewUrl']},
 {id:'fix',optional:['head','brief','modules'],stage:'rework',title:'Benannte Befunde beheben',who:'executor',scope:'Korrigieren · prüfen · pushen',need:['pr','reviewUrl','findingIds']},
 {id:'ci-fix',optional:['head','brief','modules'],stage:'rework',title:'Rote CI untersuchen und beheben',who:'executor',scope:'Ursache im bestehenden Scope beheben',need:['pr']},
 {id:'accept',optional:[],stage:'finish',title:'Tatsächliche manuelle Abnahme melden',who:'ChatGPT',scope:'Getesteten Stand dokumentieren',need:['pr','brief']},
@@ -124,7 +131,7 @@ const clone=x=>JSON.parse(JSON.stringify(x));
 function blankTask(){return {stage:'specify',template:'spec',fields:Object.fromEntries(FIELD_IDS.map(k=>[k,k==='executor'?'Codex':''])),handoff:null,branchMode:'auto',briefs:{},note:null};}
 function newProfile(id,name,repository){return {id,name,repository,target:'main',root:'',merge:true,cleanup:true,task:blankTask()};}
 function initial(){return {format:'development-workbench-settings/v1',active:'picross',theme:'system',profiles:[newProfile('picross','Picross','venomenon328/picross')]};}
-let state=initial(), pending=null, adding=false, toastTimer;
+let state=initial(), pending=null, adding=false, toastTimer, importRevision=0;
 const THEMES = ['system','light','dark'];
 const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
 function renderTheme(){
@@ -135,15 +142,44 @@ function renderTheme(){
 function profile(){return state.profiles.find(p=>p.id===state.active);}
 function say(message){$('toast').textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',5000);}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));$('storageWarning').hidden=true;}catch{ $('storageWarning').textContent='Automatisches Speichern ist in diesem Browser nicht verfügbar. Exportiere eine Sicherung, bevor du die Datei schließt.';$('storageWarning').hidden=false;}}
-function validateSchema(value,schema,path='$'){
- if(schema.const!==undefined&&value!==schema.const)throw Error(path+': unbekanntes Format.');
- if(schema.enum&&!schema.enum.includes(value))throw Error(path+': unzulässiger Wert.');
- if(schema.type){const types=Array.isArray(schema.type)?schema.type:[schema.type];const type=value===null?'null':Array.isArray(value)?'array':typeof value; if(!types.includes(type)&&!(types.includes('integer')&&type==='number'&&Number.isInteger(value)))throw Error(path+': falscher Datentyp.');}
- if(value===null)return;
- if(typeof value==='string'){if(schema.minLength&&value.trim().length<schema.minLength)throw Error(path+': darf nicht leer sein.');if(schema.pattern&&!new RegExp(schema.pattern).test(value))throw Error(path+': ungültiges Format.');}
- if(typeof value==='number'&&(!Number.isFinite(value)||schema.minimum!==undefined&&value<schema.minimum))throw Error(path+': ungültige Zahl.');
- if(Array.isArray(value))value.forEach((v,i)=>validateSchema(v,schema.items,path+'['+i+']'));
- else if(typeof value==='object'){for(const key of schema.required||[])if(!Object.hasOwn(value,key))throw Error(path+'.'+key+': fehlt.');if(schema.additionalProperties===false)for(const key of Object.keys(value))if(!Object.hasOwn(schema.properties,key))throw Error(path+'.'+key+': unbekanntes Feld.');for(const [key,s]of Object.entries(schema.properties||{}))if(Object.hasOwn(value,key))validateSchema(value[key],s,path+'.'+key);}
+function validateSchema(value,schema){
+ const problems=[], limit=20;
+ function report(path,reason){
+  if(problems.length<limit)problems.push(path+': '+reason);
+  else if(problems.length===limit)problems.push('Weitere Abweichungen vorhanden.');
+ }
+ function inspect(v,rule,path){
+  if(problems.length>limit)return;
+  if(rule.const!==undefined && v!==rule.const)report(path,'erwartet '+rule.const+'.');
+  if(rule.enum && !rule.enum.includes(v))report(path,'zulässig sind '+rule.enum.map(String).join(', ')+'.');
+  if(rule.type){
+   const types=Array.isArray(rule.type)?rule.type:[rule.type];
+   const type=v===null?'null':Array.isArray(v)?'array':typeof v;
+   if(!types.includes(type) && !(types.includes('integer') && Number.isInteger(v))){
+    report(path,'erwarteter Typ: '+types.join(' / ')+'.');return;
+   }
+  }
+  if(v===null)return;
+  if(typeof v==='string'){
+   if(rule.minLength && v.trim().length<rule.minLength)report(path,'darf nicht leer sein.');
+   if(rule.pattern && !new RegExp(rule.pattern).test(v))
+    report(path,rule.pattern.startsWith('^https://')?'HTTPS-Link oder null erwartet.':'ungültiges Format.');
+  }
+  if(typeof v==='number' && (!Number.isFinite(v) || rule.minimum!==undefined && v<rule.minimum))report(path,'ungültige Zahl.');
+  if(Array.isArray(v)){
+   if(rule.items)v.forEach((item,i)=>inspect(item,rule.items,path+'['+i+']'));
+  }else if(typeof v==='object' && rule.properties){
+   for(const key of rule.required||[])if(!Object.hasOwn(v,key))report(path+'.'+key,'Pflichtfeld fehlt.');
+   if(rule.additionalProperties===false)for(const key of Object.keys(v)){
+    if(!Object.hasOwn(rule.properties,key))report(path+'.'+key.slice(0,80),'unbekanntes Feld.');
+   }
+   for(const [key,child] of Object.entries(rule.properties)){
+    if(Object.hasOwn(v,key))inspect(v[key],child,path+'.'+key);
+   }
+  }
+ }
+ inspect(value,schema,'$');
+ if(problems.length)throw Error(problems.join('\n'));
 }
 function validateHandoff(value){validateSchema(value,SCHEMA);const x=clone(value);const blockers=x.findings.filter(f=>f.status==='open'&&(f.kind==='B'||f.kind==='A'&&f.gate==='before_merge'));
  for(const field of ['issue','pr'])if(x[field]!==null&&!Number.isSafeInteger(x[field]))throw Error(field+': Zahl ist zu groß.');
@@ -272,7 +308,7 @@ function workspaceText(){
 function mergeText(){return profile().merge
  ?'Bei erfüllten Vor-Merge-Gates gemäß docs/dev-rules/WORKFLOW.md ist der Merge dieses PR ausdrücklich beauftragt. Keine Korrekturen.'
  :'Nur Review; keine Korrekturen und kein Merge.';}
-function outputText(){return 'Gib das vollständige Ergebnis-JSON gemäß docs/dev-rules/HANDOFF.md aus.';}
+function outputText(){return 'Nenne kurz Ergebnis, maßgebliche Quelle und nächsten Schritt. Schließe mit genau einem vollständigen Ergebnis-JSON gemäß docs/dev-rules/HANDOFF.md ab. Prüfe es gegen docs/dev-rules/handoff.schema.json.';}
 function buildPrompt(){
  const p=profile(),t=currentTemplate(),errs=[];
  const f=Object.fromEntries(FIELD_IDS.map(k=>[k,usesField(t,k)?p.task.fields[k].trim():'']));
@@ -297,6 +333,11 @@ function buildPrompt(){
  case 'next':body='Prüfe Issue '+issue+' und bereite das nächste sinnvoll umsetzbare Paket gemäß Workflow vor. Ist der gesamte Umfang erfüllt, dokumentiere den Abschluss und schließe das Issue. Noch nicht implementieren oder mergen.';break;
  case 'implement':case 'resume':body=(t.id==='resume'?'Setze die laufende Umsetzung von Issue ':'Implementiere Issue ')+issue+' im freigegebenen Scope vollständig gemäß Workflow. Liefere den Draft-PR mit Links zu den erforderlichen Reviewbelegen. Kein Merge.\n\n'+workspaceText();break;
  case 'review':case 'review-min':case 'rereview':body=(t.id==='rereview'?'Reviewe die Nacharbeit in PR '+pr+' zu den Befunden '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' einschließlich ihrer Auswirkungen.':t.id==='review-min'?'Reviewe PR '+pr+' gemäß Workflow.':'Reviewe PR '+pr+' anhand des Diffs und der im PR verlinkten Originalbelege.')+' Dokumentiere das Ergebnis im PR.\n\n'+mergeText();break;
+ case 'feedback':
+  body='Bereite meine Änderungswünsche zu PR '+pr+' vor. Gleiche sie mit Issue und bisherigem Review ab. Halte Umfang, Abnahmekriterien und Prüfbedarf im Issue/Paket fest und verlinke die Entscheidung im PR. Nutze für zusammengehörige Änderungen den offenen PR. Bei eigenständigem Umfang oder geschlossenem PR bereite ein separates Paket vor. Kläre offene Fachfragen. Nur Vorbereitung, keine Produktänderung und kein Merge.';
+  if(f.reviewUrl)body+='\nBisheriges Review: '+f.reviewUrl;
+  body+='\n\nMeine Änderungswünsche:\n'+f.brief;
+  break;
  case 'prepare-fix':body='Bereite die offenen blockierenden oder technisch erforderlichen Befunde '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' zu PR '+pr+' gemäß Workflow zur Umsetzung vor. Noch nicht korrigieren oder mergen.';break;
  case 'fix':body='Behebe ausschließlich die beauftragten Befunde '+f.findingIds+' aus '+f.reviewUrl+' in PR '+pr+' gemäß Workflow. Aktualisiere die zugehörigen Beleglinks im PR. Kein Merge.\n\n'+workspaceText();break;
  case 'ci-fix':body='Untersuche die aktuellen CI-Fehler von PR '+pr+' und behebe ihre Ursache im bestehenden Scope gemäß Workflow. Kein Merge.\n\n'+workspaceText();break;
@@ -304,7 +345,7 @@ function buildPrompt(){
  case 'merge':body='Merge PR '+pr+' nach erfüllten Vor-Merge-Gates gemäß Workflow. Keine zusätzlichen Änderungen.'+(f.reviewUrl?'\nMaßgebliches Review: '+f.reviewUrl:'');break;
  case 'closeout':body='Prüfe den Abschluss von Issue '+issue+' und führe den vereinbarten Test-/Artefaktrückbau sowie die Statusnachführung gemäß Workflow durch. Nötige Änderungen als Draft-PR liefern; das Issue nur bei erfülltem Gesamtumfang schließen. Kein Merge.\n\n'+workspaceText();break;
  }
- if(f.brief&&!['spec','idea','bug','decision','accept'].includes(t.id))body+='\n\nZusätzliche Angaben:\n'+f.brief;
+ if(f.brief&&!['spec','idea','bug','decision','accept','feedback'].includes(t.id))body+='\n\nZusätzliche Angaben:\n'+f.brief;
  if(f.modules)body+='\n\nCI-Modulvorgabe: '+f.modules+'.';
  if(note)body+='\n\n'+(t.id==='closeout'?'Gemeldete eigene Restpfade (Zuordnung prüfen)':'Ergänzender berichteter Arbeitsstand')+':\n'+note;
  return {text:context(t,f)+'\n\n'+body.trim()+'\n\n'+outputText(),errors:errs,who:t.who==='executor'?f.executor:t.who};
@@ -320,7 +361,15 @@ function renderContextChips(t){
 }
 function renderInputs(t){
  const {fields,branchMode,note}=profile().task;
- $('brief').placeholder=t.id==='accept'?'Wer hat welchen Stand in welcher Umgebung geprüft? Was war das Ergebnis?':
+ const h=sameTaskHandoff(), feedback=t.id==='feedback';
+ $('nextBanner').hidden=!h || (feedback && h.next.action!=='clarify');
+ const reviewed=h?.phase==='reviewed' && !$('nextBanner').hidden;
+ $('feedbackAfterReview').hidden=!reviewed || feedback;
+ $('openFeedback').hidden=reviewed || feedback || h?.phase==='merged' || !(t.stage==='review' || t.id==='merge');
+ $('feedbackHint').hidden=!feedback;
+ $('briefLabel').textContent=feedback?'Was möchtest du am bisherigen Ergebnis ändern?':
+  t.id==='accept'?'Getesteter Stand, Umgebung, Szenarien und Ergebnis':'Idee, Ziel oder ergänzender Auftrag';
+ $('brief').placeholder=feedback?'Was soll anders aussehen oder funktionieren?':t.id==='accept'?'Wer hat welchen Stand in welcher Umgebung geprüft? Was war das Ergebnis?':
   ['spec','idea','bug'].includes(t.id)?'Was soll sich ändern – und wofür?':
   t.id==='approve'?'Bei einem Chatwechsel die freigegebenen Punkte oder den Quellenlink ergänzen.':
   'Nur neue Angaben für diesen Auftrag ergänzen.';
@@ -338,8 +387,8 @@ function renderInputs(t){
  $('toggleNote').textContent=editing?'Ausgewählte Angaben verwerfen':offer?.label||'';
  $('handoffNote').value=editing?note.text:'';
 }
-function renderPrompt(){const p=profile(),t=currentTemplate(),result=buildPrompt(),advice=sameTaskHandoff()?.execution;renderInputs(t);renderContextChips(t);$('executionAdvice').hidden=!(t.who==='executor'&&advice?.preferred);$('executionAdvice').textContent=advice?.preferred?'Übergebene Empfehlung: '+advice.preferred+(advice.model?' · '+advice.model:'')+(advice.reasoning?' · Reasoning '+advice.reasoning:'')+'. '+(advice.reason||'')+' Verfügbarkeit vor der Umsetzung prüfen.':'';$('promptText').textContent=result.text;$('promptErrors').textContent=result.errors.join(' ');$('copyPrompt').disabled=!!result.errors.length;$('recipient').textContent=result.who;$('scopeBadge').textContent=t.merge&&p.merge?'Review + bedingter Merge':t.scope;$('promptStatus').textContent=result.errors.length?'Eingaben ergänzen':'Direkt kopierbar';$('mergeControl').hidden=!t.merge;$('mergeToggle').checked=p.merge;$('briefLabel').textContent=t.id==='accept'?'Getesteter Stand, Umgebung, Szenarien und Ergebnis':'Idee, Ziel oder ergänzender Auftrag';$('promptHint').textContent=t.merge&&p.merge?'Dieser kopierte Auftrag enthält eine bedingte Mergefreigabe. Erst das Absenden beauftragt sie.':'Der Auftrag wird nur kopiert. Erst das Absenden an ChatGPT oder Codex startet die Arbeit.';}
-function render(){renderTheme();const p=profile(),task=p.task,stage=STAGES[task.stage];$('repoHeading').textContent=p.repository;$('projectSelect').replaceChildren();for(const item of state.profiles){const o=document.createElement('option');o.value=item.id;o.textContent=item.name;$('projectSelect').append(o);}$('projectSelect').value=p.id;for(const b of document.querySelectorAll('[data-stage]')){if(b.dataset.stage===task.stage)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');}$('templateSelect').replaceChildren();for(const t of TEMPLATES.filter(t=>t.stage===task.stage)){const o=document.createElement('option');o.value=t.id;o.textContent=t.title;$('templateSelect').append(o);}$('templateSelect').value=task.template;for(const k of FIELD_IDS)$(k).value=task.fields[k];$('stepLabel').textContent='Schritt '+stage[0]+' · '+stage[1];$('stageTitle').textContent=stage[2];$('stageDesc').textContent=stage[3];const h=task.handoff;$('resultSummary').hidden=!h;$('nextBanner').hidden=!h;if(h){$('resultText').textContent=h.summary;$('nextTitle').textContent=h.next.action==='done'?'Gemergten Abschluss übernommen':'Empfohlener nächster Schritt: '+({specify:'Spezifizieren',implement:'Umsetzen',review:'Review',rework:'Nacharbeiten',merge:'Merge prüfen',clarify:'Offene Punkte klären'}[h.next.action]||h.next.action);$('nextReason').textContent=h.next.reason;$('goNext').hidden=h.next.action==='done';$('resultFacts').replaceChildren();for(const [text,url]of [['Issue #'+h.issue,h.issue?'https://github.com/'+h.repository+'/issues/'+h.issue:null],['PR #'+h.pr,h.pr?'https://github.com/'+h.repository+'/pull/'+h.pr:null],['Review',h.review.url]])if(url){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;const el=document.createElement('span');el.className='fact';el.append(a);$('resultFacts').append(el);}const el=document.createElement('span');el.className='fact';el.textContent=h.findings.filter(f=>f.status==='open').length+' offene Befunde';$('resultFacts').append(el);}renderPrompt();}
+function renderPrompt(){const p=profile(),t=currentTemplate(),result=buildPrompt(),advice=sameTaskHandoff()?.execution;renderInputs(t);renderContextChips(t);$('executionAdvice').hidden=!(t.who==='executor'&&advice?.preferred);$('executionAdvice').textContent=advice?.preferred?'Übergebene Empfehlung: '+advice.preferred+(advice.model?' · '+advice.model:'')+(advice.reasoning?' · Reasoning '+advice.reasoning:'')+'. '+(advice.reason||'')+' Verfügbarkeit vor der Umsetzung prüfen.':'';$('promptText').textContent=result.text;$('promptErrors').textContent=result.errors.join(' ');$('copyPrompt').disabled=!!result.errors.length;$('recipient').textContent=result.who;$('scopeBadge').textContent=t.merge&&p.merge?'Review + bedingter Merge':t.scope;$('promptStatus').textContent=result.errors.length?'Eingaben ergänzen':'Direkt kopierbar';$('mergeControl').hidden=!t.merge;$('mergeToggle').checked=p.merge;$('promptHint').textContent=t.merge&&p.merge?'Dieser kopierte Auftrag enthält eine bedingte Mergefreigabe. Erst das Absenden beauftragt sie.':'Der Auftrag wird nur kopiert. Erst das Absenden an ChatGPT oder Codex startet die Arbeit.';}
+function render(){renderTheme();const p=profile(),task=p.task,stage=STAGES[task.stage];$('repoHeading').textContent=p.repository;$('projectSelect').replaceChildren();for(const item of state.profiles){const o=document.createElement('option');o.value=item.id;o.textContent=item.name;$('projectSelect').append(o);}$('projectSelect').value=p.id;for(const b of document.querySelectorAll('[data-stage]')){if(b.dataset.stage===task.stage)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');}$('templateSelect').replaceChildren();for(const t of TEMPLATES.filter(t=>t.stage===task.stage)){const o=document.createElement('option');o.value=t.id;o.textContent=t.title;$('templateSelect').append(o);}$('templateSelect').value=task.template;for(const k of FIELD_IDS)$(k).value=task.fields[k];$('stepLabel').textContent='Schritt '+stage[0]+' · '+stage[1];$('stageTitle').textContent=stage[2];$('stageDesc').textContent=stage[3];const h=task.handoff;$('resultSummary').hidden=!h;if(h){$('resultText').textContent=h.summary;$('nextTitle').textContent=h.next.action==='done'?'Gemergten Abschluss übernommen':'Empfohlener nächster Schritt: '+({specify:'Spezifizieren',implement:'Umsetzen',review:'Review',rework:'Nacharbeiten',merge:'Merge prüfen',clarify:'Offene Punkte klären'}[h.next.action]||h.next.action);$('nextReason').textContent=h.next.reason;$('goNext').hidden=h.next.action==='done';$('resultFacts').replaceChildren();for(const [text,url]of [['Issue #'+h.issue,h.issue?'https://github.com/'+h.repository+'/issues/'+h.issue:null],['PR #'+h.pr,h.pr?'https://github.com/'+h.repository+'/pull/'+h.pr:null],['Review',h.review.url]])if(url){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;const el=document.createElement('span');el.className='fact';el.append(a);$('resultFacts').append(el);}const el=document.createElement('span');el.className='fact';el.textContent=h.findings.filter(f=>f.status==='open').length+' offene Befunde';$('resultFacts').append(el);}renderPrompt();}
 function changeStage(stage,id){
  const task=profile().task, next=id || TEMPLATES.find(t=>t.stage===stage).id;
  if(next!==task.template){
@@ -348,9 +397,46 @@ function changeStage(stage,id){
  }
  task.stage=stage;task.template=next;persist();render();
 }
-function goNext(){const next=profile().task.handoff?.next.action;if(next==='merge'){changeStage('review','review');say('Ein berichtetes positives Review ersetzt keine aktuelle Quellenprüfung.');return;}if(next==='rework'){changeStage('rework','fix');return;}if(['specify','implement','review'].includes(next))changeStage(next);else if(next==='clarify')changeStage('specify','prepare');}
-function invalidateImport(){pending=null;$('applyImport').disabled=true;$('importPreview').textContent='';}
-function previewImport(){try{const x=validateHandoff(parseJSON($('importText').value));if(x.repository!==profile().repository)throw Error('Übergabe gehört zu '+x.repository+'. Zuerst das passende Projekt wählen oder anlegen.');if(x.target!==profile().target)throw Error('Zielbranch '+x.target+' passt nicht zu den Projekteinstellungen ('+profile().target+'). Vor dem Import bewusst angleichen.');pending=x;$('importPreview').classList.remove('danger-text');$('importPreview').textContent='Geprüft: '+x.repository+'\nIssue: '+(x.issue||'offen')+' · Paket: '+(x.package||'–')+' · PR: '+(x.pr||'offen')+'\nPhase: '+x.phase+' · Head: '+(x.head||'noch nicht vorhanden')+'\n\n'+x.summary+'\n\nNächster Schritt: '+x.next.action+'\n'+x.next.reason+'\n\nDiese Aufgabendaten ersetzen den bisherigen Stand. Mergeoption, Arbeitswurzel und Bereinigung bleiben erhalten.';$('applyImport').disabled=false;}catch(e){invalidateImport();$('importPreview').classList.add('danger-text');$('importPreview').textContent='Nicht übernommen: '+e.message;}}
+function goNext(){
+ const h=profile().task.handoff, next=h?.next.action;
+ if(next==='merge'){
+  changeStage('review','review');say('Ein berichtetes positives Review ersetzt keine aktuelle Quellenprüfung.');return;
+ }
+ if(next==='rework'){changeStage('rework','fix');return;}
+ if(next==='clarify'){
+  if(currentTemplate().id==='feedback' && h.pr)changeStage('rework','feedback');
+  else changeStage('specify','prepare');
+  return;
+ }
+ if(['specify','implement','review'].includes(next))changeStage(next);
+}
+function invalidateImport(){
+ importRevision++;pending=null;$('applyImport').disabled=true;$('importPreview').textContent='';
+ $('importPreview').classList.remove('danger-text');$('repairHelp').hidden=true;
+ $('repairText').hidden=true;$('repairText').textContent='';$('repairStatus').textContent='';
+}
+function previewImport(){
+ invalidateImport();
+ const p=profile(), preview=$('importPreview');
+ let x;
+ try{x=validateHandoff(parseJSON($('importText').value));}
+ catch(e){
+  preview.classList.add('danger-text');preview.textContent='Übergabe ungültig:\n'+e.message;
+  if($('importText').value.trim()){
+   $('repairHelp').hidden=false;
+   $('repairStatus').textContent='Sende den Korrekturauftrag im Chat, der das JSON ausgegeben hat.';
+   $('repairText').textContent='Korrigiere die letzte Übergabe in diesem Chat für '+p.repository+' (Zielbranch '+p.target+'). Gehört sie zu einem anderen Projekt, benenne das und beende die Prüfung. Lies den aktuellen Issue-/PR-Stand sowie docs/dev-rules/HANDOFF.md und docs/dev-rules/handoff.schema.json im zugehörigen Arbeitsbranch, sonst im Zielbranch. Ändere ausschließlich die Antwort. Keine Repositoryänderung, Umsetzung oder Merge. Benenne Wünsche, die bisher nur im Chat stehen, und den nötigen nächsten Schritt. Melde ein vorbereitetes Paket nur mit belegter Entscheidung. Gib das kurze Ergebnis mit Quelle und danach genau einen vollständigen, schemageprüften v1-JSON-Block aus.';
+  }
+  return;
+ }
+ let mismatch='';
+ if(x.repository!==p.repository)mismatch='Übergabe gehört zu '+x.repository+'. Zuerst das passende Projekt wählen oder anlegen.';
+ else if(x.target!==p.target)mismatch='Zielbranch '+x.target+' passt nicht zu den Projekteinstellungen ('+p.target+'). Vor dem Import bewusst angleichen.';
+ if(mismatch){preview.classList.add('danger-text');preview.textContent=mismatch;return;}
+ pending=x;
+ preview.textContent='Geprüft: '+x.repository+'\nIssue: '+(x.issue||'offen')+' · Paket: '+(x.package||'–')+' · PR: '+(x.pr||'offen')+'\nPhase: '+x.phase+' · Head: '+(x.head||'noch nicht vorhanden')+'\n\n'+x.summary+'\n\nNächster Schritt: '+x.next.action+'\n'+x.next.reason+'\n\nDiese Aufgabendaten ersetzen den bisherigen Stand. Mergeoption, Arbeitswurzel und Bereinigung bleiben erhalten.';
+ $('applyImport').disabled=false;
+}
 function applyImport(){
  if(!pending)return;
  try{
@@ -368,7 +454,33 @@ function applyImport(){
 }
 function openSettings(isNew=false){adding=isNew;const p=isNew?newProfile('','Neues Projekt',''):profile();$('projectName').value=p.name;$('repository').value=p.repository;$('target').value=p.target;$('root').value=p.root;$('settingsMerge').checked=p.merge;$('cleanupToggle').checked=p.cleanup;$('settingsError').textContent='';$('settingsDialog').showModal();}
 function download(data,name){const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
-async function copyPrompt(){const text=buildPrompt().text;let ok=false;try{if(navigator.clipboard){await navigator.clipboard.writeText(text);ok=true;}}catch{}if(!ok){const area=document.createElement('textarea');area.value=text;area.style.cssText='position:fixed;left:-10000px;top:0';document.body.append(area);area.select();try{ok=document.execCommand('copy');}catch{}area.remove();$('copyPrompt').focus();}if(ok)say('Auftrag kopiert. An '+buildPrompt().who+' senden.');else{const range=document.createRange();range.selectNodeContents($('promptText'));getSelection().removeAllRanges();getSelection().addRange(range);say('Bitte den markierten Auftrag mit Strg+C oder Cmd+C kopieren.');}}
+async function copyText(source,button){
+ const text=source.textContent;
+ try{await navigator.clipboard.writeText(text);return true;}catch{}
+ const area=document.createElement('textarea');area.value=text;area.style.cssText='position:fixed;left:-10000px;top:0';
+ (button.closest('dialog')||document.body).append(area);area.select();
+ let ok=false;
+ try{ok=document.execCommand('copy');}catch{}
+ area.remove();button.focus();
+ if(!ok){
+  source.hidden=false;source.focus();
+  const range=document.createRange();range.selectNodeContents(source);
+  getSelection().removeAllRanges();getSelection().addRange(range);
+ }
+ return ok;
+}
+async function copyPrompt(){
+ const ok=await copyText($('promptText'),$('copyPrompt'));
+ say(ok?'Auftrag kopiert. An '+buildPrompt().who+' senden.':'Bitte den markierten Auftrag mit Strg+C oder Cmd+C kopieren.');
+}
+$('copyRepair').onclick=async()=>{
+ const ok=await copyText($('repairText'),$('copyRepair'));
+ $('repairStatus').textContent=ok?'Korrekturauftrag kopiert. Im bisherigen Chat absenden.':'Den markierten Korrekturauftrag mit Strg+C oder Cmd+C kopieren.';
+};
+$('openFeedback').onclick=$('feedbackAfterReview').onclick=()=>{
+ changeStage('rework','feedback');
+ (profile().task.fields.pr?$('brief'):$('pr')).focus();
+};
 $('theme').addEventListener('change',()=>{state.theme=$('theme').value;renderTheme();persist();});
 systemTheme.addEventListener('change',renderTheme);
 $('branchMode').addEventListener('change',()=>{
@@ -412,7 +524,21 @@ $('mergeToggle').addEventListener('change',()=>{profile().merge=$('mergeToggle')
 $('settingsSide').onclick=()=>openSettings();$('settingsTop').onclick=()=>openSettings();$('newProject').onclick=()=>openSettings(true);
 $('settingsForm').addEventListener('submit',e=>{e.preventDefault();const repository=$('repository').value.trim(),target=$('target').value.trim(),root=$('root').value.trim();if(!validRepo(repository)){ $('settingsError').textContent='Repository als owner/name eingeben.';return;}if(!target||/[\s~^:?*\[\\]/.test(target)||target.includes('..')){$('settingsError').textContent='Gültigen Zielbranch eingeben.';return;}if(root&&!/^(?:[A-Za-z]:[\\/]|\/|\\\\)/.test(root)){$('settingsError').textContent='Eine absolute Arbeitswurzel eingeben.';return;}let p=profile();if(adding){const id='p-'+Date.now().toString(36);p=newProfile(id,$('projectName').value.trim(),repository);state.profiles.push(p);state.active=id;}else if(repository!==p.repository||target!==p.target){if(!confirm('Repository oder Zielbranch ändern und die bisherige Aufgabe zurücksetzen?'))return;p.task=blankTask();}Object.assign(p,{name:$('projectName').value.trim(),repository,target,root,merge:$('settingsMerge').checked,cleanup:$('cleanupToggle').checked});persist();$('settingsDialog').close();render();say('Projekteinstellungen gespeichert.');});
 $('openImport').onclick=()=>{invalidateImport();$('importDialog').showModal();};$('importText').oninput=invalidateImport;$('checkImport').onclick=previewImport;$('applyImport').onclick=applyImport;
-$('importFile').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;if(file.size>1000000)throw Error('Bitte nur das kompakte Übergabe-JSON öffnen.');$('importText').value=await file.text();previewImport();}catch(e){say(e.message);}finally{$('importFile').value='';}};
+$('importFile').onchange=async e=>{
+ const file=e.target.files[0];if(!file)return;
+ invalidateImport();
+ const revision=importRevision;
+ $('importFile').value='';$('importText').value='';
+ try{
+  if(file.size>1000000)throw Error('Bitte nur das kompakte Übergabe-JSON öffnen.');
+  const raw=await file.text();
+  if(revision!==importRevision)return;
+  $('importText').value=raw;previewImport();
+ }catch(e){
+  if(revision!==importRevision)return;
+  $('importPreview').classList.add('danger-text');$('importPreview').textContent=e.message;
+ }
+};
 $('showHandoff').onclick=()=>{$('importText').value=JSON.stringify(profile().task.handoff,null,2);invalidateImport();$('importDialog').showModal();};
 $('goNext').onclick=goNext;$('copyPrompt').onclick=copyPrompt;$('helpOpen').onclick=()=>$('helpDialog').showModal();
 $('newTask').onclick=()=>{if(!confirm('Eine neue Aufgabe beginnen? Projekteinstellungen bleiben erhalten.'))return;profile().task=blankTask();persist();render();say('Neue Aufgabe bereit.');};

@@ -1,5 +1,12 @@
 # Änderungen am Regelpaket
 
+## 0.2.0-rc.5 — 2026-11-06
+
+Picross #529 ergänzt die Vorbereitung eigener Änderungswünsche nach einem
+Review. Issue/Paket hält die Entscheidung fest, der PR ihren Bezug zum bisherigen
+Stand. Der Abschluss erklärt Ergebnis und nächsten Schritt vor der vollständigen
+v1-Übergabe. Das Sheet hilft beim Korrigieren fehlerhafter Antworten.
+
 ## 0.2.0-rc.4 — 2026-11-06
 
 Picross #525 trennt die vollständige v1-Abschlussantwort von den kurzen
