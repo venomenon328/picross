@@ -1,0 +1,161 @@
+{
+  "format": "bti-b-generation/v1",
+  "date": "2026-11-06",
+  "tool": "Built-in image_gen.imagegen",
+  "model": null,
+  "backend_version": null,
+  "seed": null,
+  "parameters": {
+    "transparent_background": true
+  },
+  "reference_C": {
+    "source": "Owner attachment in this conversation, original proposal C, displayed as 656 x 161 pixels; actually viewed and supplied via recent-conversation image inputs.",
+    "byte_file_available": false,
+    "sha256": null,
+    "notes": "Reference only: rough slanted lettering and gestural cross-stroke retained; warm paper and brown coloration deliberately excluded. No replacement with BTI-A as style input."
+  },
+  "corrections": "None. All nine outputs copied byte-for-byte; no rasterized fonts, filters, retouching, alpha replacement, cropping or re-encoding.",
+  "images": [
+    {
+      "variant": "V1",
+      "title": "catalog",
+      "output": "originals/V1-catalog.png",
+      "generated_filename": "exec-71e35ded-e03c-45d5-a8fa-272245f30ad8.png",
+      "prompt": "Use case: stylized-concept. Create ONE transparent PNG lettering asset, not a mockup or a sheet. Exact German text: \"Rätselkatalog\" (R ä t s e l k a t a l o g), two clear umlaut dots. Use the attached original C image as visual STYLE reference only: energetic hand-drawn slanted letterforms, visible double contours, rough dry-pen hatching and long gestural cross-stroke. Reinterpret it as V1 'Skizzenfeder': lean angular right-slant handwriting with a large open R, irregular narrow/wide lowercase rhythms, dark stems built up from several visible parallel graphite/ink strokes, intentional visible drawing corrections. A single low assertive sweeping cross-stroke in the composition, not ornamental looping flourishes. Strong handmade imperfect silhouette; coarse visible hatching remains visible when entire word is 320 pixels wide. NEUTRAL black/charcoal grey only; NO brown or sepia. Transparent alpha background, no paper, no shadows, no leaves, frames, objects, icons, extra text, labels or decorative ornaments. Single line centered, every letter and stroke complete with generous transparent safety margins on all sides. Landscape canvas. Do not typeset a polished script font. This is a visual variant for owner selection, not a final approved product.",
+      "reference": [
+        "owner reference C"
+      ],
+      "invocation": {
+        "num_last_images_to_include": 1,
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V1",
+      "title": "help",
+      "output": "originals/V1-help.png",
+      "generated_filename": "exec-727cb4ea-dc49-4796-ad49-333da139dd53.png",
+      "prompt": "Use case: stylized-concept. Generate ONE original transparent PNG, independently drawn lettering in exactly the SAME hand as the attached V1 catalog style reference. Preserve lean slanted angular forms, dramatic thick/thin rhythm, stems built from visible parallel dark pencil/ink striations, rough doubled edges and irregular character heights. A low sweeping hand cross-stroke as part of lettering. Neutral charcoal black/grey, never brown. True alpha, no paper, no shadow, no ornaments or icons, no labels. All strokes complete with generous transparent margins. One line, NOT typeset font. Coarse texture visible in small book title size. Exact text only: \"Hilfe\" (H i l f e). Keep short word naturally compact; do not stretch it horizontally.",
+      "reference": [
+        "originals/V1-catalog.png"
+      ],
+      "invocation": {
+        "referenced_image_paths": [
+          "originals/V1-catalog.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V1",
+      "title": "settings",
+      "output": "originals/V1-settings.png",
+      "generated_filename": "exec-779cda24-bda9-421b-bb8e-bc0edc7b08e0.png",
+      "prompt": "Use case: stylized-concept. Generate ONE original transparent PNG, independently drawn lettering in exactly the SAME hand as the attached V1 catalog style reference. Preserve lean slanted angular forms, dramatic thick/thin rhythm, stems built from visible parallel dark pencil/ink striations, rough doubled edges and irregular character heights. A low sweeping hand cross-stroke as part of lettering. Neutral charcoal black/grey, never brown. True alpha, no paper, no shadow, no ornaments or icons, no labels. All strokes complete with generous transparent margins. One line, NOT typeset font. Coarse texture visible in small book title size. Exact text only: \"Einstellungen\" (E i n s t e l l u n g e n). Both adjacent l characters must be individually legible; vary their tilt naturally.",
+      "reference": [
+        "originals/V1-catalog.png"
+      ],
+      "invocation": {
+        "referenced_image_paths": [
+          "originals/V1-catalog.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V2",
+      "title": "catalog",
+      "output": "originals/V2-catalog.png",
+      "generated_filename": "exec-b3f41b6e-6d0b-4a2c-b555-a6a59cdf9736.png",
+      "prompt": "Use case: stylized-concept. Generate ONE transparent PNG lettering original. Exact text \"Rätselkatalog\" (R ä t s e l k a t a l o g), two umlaut marks. Input images: original user C reference on paper, and newly generated dark V1 catalog; use original C for its handmade drawing attitude, NOT the V1 letterforms. New distinct variant V2 'Werkstattgraphit': broad more upright lively semi-connected hand lettering, slightly blunt angular turns and uneven rounded bowls, alternating character heights and loose spacing, strong dark outlined strokes visibly built from coarse diagonal pencil hatching. Hatching gaps should be large intentional drawn strokes, not noise. Show clearly doubled construction lines and hand-corrected edges. A short oblique crossbar sweep through the lower part of the central lettering, no long ornamental underline looping around the word. Compared with slanted flowing V1, be more upright, open, chunky, independently drawn. Neutral charcoal BLACK and grey only, no brown or sepia. Must look like a skilled person drawing words freehand, not a polished font. Still legible when reduced to 320 px total width. No paper/no white rectangular background, true transparent alpha; no frames, objects, leaves, banners, shadows, labels or extra text. All strokes and umlaut dots fully inside canvas with at least 5 percent transparent edge margins. One line, landscape. Not an approved final asset.",
+      "reference": [
+        "owner reference C",
+        "V1-catalog contrast example"
+      ],
+      "invocation": {
+        "num_last_images_to_include": 2,
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V2",
+      "title": "help",
+      "output": "originals/V2-help.png",
+      "generated_filename": "exec-ed86ede6-5ae9-4ceb-bfb5-89d546ae3c04.png",
+      "prompt": "Use case: stylized-concept. Generate ONE original transparent PNG, independently hand-drawn in exactly the same family as the attached V2 catalog reference. V2 'Werkstattgraphit': broad nearly upright semi-connected letters, blunt angular turns and irregular rounded bowls, strong dark outlined downstrokes filled with coarse diagonal graphite hatch strokes, doubled construction contours, varied baseline and heights. Short oblique central hand cross-stroke, not full-width decorative underline. Neutral charcoal black/grey only. Keep the texture deliberately hand-drawn and coarse enough to see small. Background must be absolutely fully transparent outside individual letter strokes: no glow, no haze, no background patch, no grey ambient field, no paper, no shadows, no checkerboard pattern. No objects or ornaments, no label. Keep complete glyphs and generous transparent margins. Exact text: \"Hilfe\" (H i l f e). Do not stretch short word. Separate l and f clearly.",
+      "reference": [
+        "originals/V2-catalog.png"
+      ],
+      "invocation": {
+        "referenced_image_paths": [
+          "originals/V2-catalog.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V2",
+      "title": "settings",
+      "output": "originals/V2-settings.png",
+      "generated_filename": "exec-70eb16f0-4f29-40f0-9d45-e09e042a3c24.png",
+      "prompt": "Use case: stylized-concept. Generate ONE original transparent PNG, independently hand-drawn in exactly the same family as the attached V2 catalog reference. V2 'Werkstattgraphit': broad nearly upright semi-connected letters, blunt angular turns and irregular rounded bowls, strong dark outlined downstrokes filled with coarse diagonal graphite hatch strokes, doubled construction contours, varied baseline and heights. Short oblique central hand cross-stroke, not full-width decorative underline. Neutral charcoal black/grey only. Keep the texture deliberately hand-drawn and coarse enough to see small. Background must be absolutely fully transparent outside individual letter strokes: no glow, no haze, no background patch, no grey ambient field, no paper, no shadows, no checkerboard pattern. No objects or ornaments, no label. Keep complete glyphs and generous transparent margins. Exact text: \"Einstellungen\" (E i n s t e l l u n g e n). Two l characters, all twelve letters correct.",
+      "reference": [
+        "originals/V2-catalog.png"
+      ],
+      "invocation": {
+        "referenced_image_paths": [
+          "originals/V2-catalog.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V3",
+      "title": "catalog",
+      "output": "originals/V3-catalog.png",
+      "generated_filename": "exec-a018e96a-e165-4f26-879d-d39c0153cc80.png",
+      "prompt": "Use case: stylized-concept. ONE transparent PNG original of exact German word \"Rätselkatalog\" (R ä t s e l k a t a l o g). Two correct umlaut dots, nothing else written. Three inputs: earliest image is owner's original C on warm paper (STYLE reference); the other dark V1 and V2 candidates are contrast examples, DO NOT copy their thick filled shapes. Make clearly distinct V3 'Offene Kreuzschraffur': quick, lean, airy slanted fountain-pen freehand drawing, mostly open double-outline strokes with visible widely spaced diagonal CROSSHATCHING inside wider downstrokes; contrasting solid black thin hairlines. Much more exposed transparent space INSIDE the strokes than V1/V2. Unequal character sizes, irregular baseline, imperfect repeated a shapes and different l tilts. Some compact broken construction outlines and a sharp hand-drawn diagonal cross-stroke integrated into the central t/k area, no heavy full-length base underline. Like a designer's energetic pencil construction sketch written in neutral BLACK ink, not grey typeset calligraphy. Hatching and doubled edges remain visible at 320-pixel word width. Use 2-4 bold open hatch marks across each broad stroke, not fine noisy grain. Warm paper is NOT part of output: true transparent alpha background only. No brown/sepia, ornaments, leaves, icons, frames, drop shadows, labels, extra words. Landscape one line, all letter tips and strokes safely inside transparent margins (5% each side). Retain clear German orthography. A hand-drawn candidate for selection, not polished wedding script.",
+      "reference": [
+        "owner reference C",
+        "V1-catalog contrast example",
+        "V2-catalog contrast example"
+      ],
+      "invocation": {
+        "num_last_images_to_include": 3,
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V3",
+      "title": "help",
+      "output": "originals/V3-help.png",
+      "generated_filename": "exec-a4c37031-1df4-49a1-b1c3-1761e5584c10.png",
+      "prompt": "Use case: stylized-concept. ONE new transparent PNG lettering original in SAME family as attached V3 reference. V3 'Offene Kreuzschraffur': airy quick slanted freehand pen drawing, OPEN double-outline broad downstrokes with widely spaced strong diagonal crosshatching, thin solid black connectors, substantial transparent gaps inside stems. Unequal heights, hand-corrected edges, irregular baseline and individually drawn glyphs. Short sharp cross-stroke integrated into lettering, not long heavy underline. Mostly black ink outlines and open hatchwork, NOT solid filled charcoal shapes, NOT grey chalk or polished typesetting. Black neutral ink only. No paper, no glow, no shadow, no mist or semi-transparent background, no objects or ornamentation. True alpha transparent outside letter strokes. Clear complete letterforms and generous transparent safety margins; one line. Exact word: \"Hilfe\" (H i l f e). Compact natural proportions for short word; distinct l/f. Crosshatching visible even at small UI size.",
+      "reference": [
+        "originals/V3-catalog.png"
+      ],
+      "invocation": {
+        "referenced_image_paths": [
+          "originals/V3-catalog.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V3",
+      "title": "settings",
+      "output": "originals/V3-settings.png",
+      "generated_filename": "exec-aa7b0094-994a-4802-ae93-b19e5fee2ee5.png",
+      "prompt": "Use case: stylized-concept. ONE new transparent PNG lettering original in SAME family as attached V3 reference. V3 'Offene Kreuzschraffur': airy quick slanted freehand pen drawing, OPEN double-outline broad downstrokes with widely spaced strong diagonal crosshatching, thin solid black connectors, substantial transparent gaps inside stems. Unequal heights, hand-corrected edges, irregular baseline and individually drawn glyphs. Short sharp cross-stroke integrated into lettering, not long heavy underline. Mostly black ink outlines and open hatchwork, NOT solid filled charcoal shapes, NOT grey chalk or polished typesetting. Black neutral ink only. No paper, no glow, no shadow, no mist or semi-transparent background, no objects or ornamentation. True alpha transparent outside letter strokes. Clear complete letterforms and generous transparent safety margins; one line. Exact word: \"Einstellungen\" (E i n s t e l l u n g e n). Two adjacent l strokes, no omitted character. Crosshatching visible even at small UI size.",
+      "reference": [
+        "originals/V3-catalog.png"
+      ],
+      "invocation": {
+        "referenced_image_paths": [
+          "originals/V3-catalog.png"
+        ],
+        "transparent_background": true
+      }
+    }
+  ]
+}

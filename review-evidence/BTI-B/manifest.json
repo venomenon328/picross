@@ -1,0 +1,386 @@
+{
+  "format": "bti-b-candidates/v1",
+  "product_head": "51e58889583ccd6eeb40d21db1c09a0ff55a8433",
+  "review_ref": "review/533-bti-b",
+  "expires": "2026-11-13",
+  "purpose": "Owner BTI-B-M01 choice of three variants, no runtime integration",
+  "generator": "image_gen.imagegen",
+  "known_parameters": {
+    "transparent_background": true
+  },
+  "model_version": null,
+  "seed": null,
+  "image_inspection": "Pillow 12.3.0 (read-only checks); visual inspection of originals and HTML compositions",
+  "preview_renderer": "Microsoft Edge 156.0.4314.58 headless, device scale factor 1",
+  "original_count": 9,
+  "preview_count": 4,
+  "files": [
+    {
+      "path": "comparison.html",
+      "bytes": 2497,
+      "sha256": "e8d3d7278c21e427967fdee243d477260d9e68a42684fb5512c6709dd2e25293"
+    },
+    {
+      "path": "comparison.png",
+      "bytes": 379648,
+      "sha256": "55b6a7b4ff3f967c9fb7dfd7c1b7da0cd061440d567193d2e4561ece8b90fcaf",
+      "size": [
+        1480,
+        840
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "generation.json",
+      "bytes": 14518,
+      "sha256": "8851443649605497fa5cc8d1d39b3c5312a3db37de7d997ae056e9e10dd04976"
+    },
+    {
+      "path": "originals/V1-catalog.png",
+      "bytes": 1436267,
+      "sha256": "3de4d75f96999b15aa3c33d6260d0331e87c078423760a4304db0bc49358ef90",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2166,
+        724
+      ],
+      "visible_bbox_alpha16": [
+        41,
+        84,
+        2127,
+        649
+      ],
+      "fully_transparent_pixels": 953884,
+      "pixel_count": 1572528,
+      "ink_mean_rgb_alpha128": [
+        44.73848198422687,
+        44.41102204352392,
+        43.79702444806721
+      ]
+    },
+    {
+      "path": "originals/V1-help.png",
+      "bytes": 1807577,
+      "sha256": "024ac9a25151e796b10059eaf32d140c61c64b7f6a71afcdd4a6bbd2d2b6112c",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "alpha_bbox": [
+        41,
+        8,
+        1489,
+        1024
+      ],
+      "visible_bbox_alpha16": [
+        165,
+        138,
+        1367,
+        925
+      ],
+      "fully_transparent_pixels": 1116084,
+      "pixel_count": 1572864,
+      "ink_mean_rgb_alpha128": [
+        67.71127342681515,
+        66.97729083066564,
+        66.4059365465831
+      ]
+    },
+    {
+      "path": "originals/V1-settings.png",
+      "bytes": 1285653,
+      "sha256": "a6412b6cc2eb9e5980c6f0c7bc142e96311c71fa9a33cb959ade1e8c6734032c",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        39,
+        19,
+        2140,
+        724
+      ],
+      "visible_bbox_alpha16": [
+        43,
+        81,
+        2137,
+        668
+      ],
+      "fully_transparent_pixels": 1066266,
+      "pixel_count": 1572528,
+      "ink_mean_rgb_alpha128": [
+        67.71829341788784,
+        67.25073704670949,
+        66.70510530402159
+      ]
+    },
+    {
+      "path": "originals/V2-catalog.png",
+      "bytes": 1814749,
+      "sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        17,
+        0,
+        2172,
+        724
+      ],
+      "visible_bbox_alpha16": [
+        37,
+        75,
+        2133,
+        672
+      ],
+      "fully_transparent_pixels": 829458,
+      "pixel_count": 1572528,
+      "ink_mean_rgb_alpha128": [
+        51.3930534260871,
+        51.15510806173533,
+        49.7795092459849
+      ]
+    },
+    {
+      "path": "originals/V2-help.png",
+      "bytes": 2240661,
+      "sha256": "dbfc612ef1c1ce4d266d6795d02f4617beaa3575e4089ad78a655f667ea25573",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        1522,
+        1024
+      ],
+      "visible_bbox_alpha16": [
+        93,
+        105,
+        1451,
+        934
+      ],
+      "fully_transparent_pixels": 865748,
+      "pixel_count": 1572864,
+      "ink_mean_rgb_alpha128": [
+        69.30151403439585,
+        68.97081497230843,
+        68.0095283002692
+      ]
+    },
+    {
+      "path": "originals/V2-settings.png",
+      "bytes": 1452813,
+      "sha256": "e721ac257f822487294d9ffa2629526cdadda227bb3aab0725364af2f4fd8a5e",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        49,
+        0,
+        2150,
+        724
+      ],
+      "visible_bbox_alpha16": [
+        53,
+        84,
+        2140,
+        679
+      ],
+      "fully_transparent_pixels": 964524,
+      "pixel_count": 1572528,
+      "ink_mean_rgb_alpha128": [
+        54.6570376680946,
+        54.306198529367336,
+        53.649640196487155
+      ]
+    },
+    {
+      "path": "originals/V3-catalog.png",
+      "bytes": 733670,
+      "sha256": "17519c64fe889a6ef4ccbe24417d82c5f0df43b1c7f578fcc55cac2b11041f0f",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        23,
+        2166,
+        708
+      ],
+      "visible_bbox_alpha16": [
+        35,
+        60,
+        2139,
+        669
+      ],
+      "fully_transparent_pixels": 1184733,
+      "pixel_count": 1572528,
+      "ink_mean_rgb_alpha128": [
+        1.6873962399605151,
+        1.2502299546821016,
+        0.646150222102571
+      ]
+    },
+    {
+      "path": "originals/V3-help.png",
+      "bytes": 1087326,
+      "sha256": "711e3f678e19fcd1ad7b7cca174f73f9221af38d52800332272f62d8ee605774",
+      "size": [
+        1536,
+        1024
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        254
+      ],
+      "alpha_bbox": [
+        111,
+        105,
+        1391,
+        946
+      ],
+      "visible_bbox_alpha16": [
+        113,
+        107,
+        1389,
+        941
+      ],
+      "fully_transparent_pixels": 1376099,
+      "pixel_count": 1572864,
+      "ink_mean_rgb_alpha128": [
+        3.51139089315959,
+        4.208433274918496,
+        3.9381455410551873
+      ]
+    },
+    {
+      "path": "originals/V3-settings.png",
+      "bytes": 477784,
+      "sha256": "038b920e26064b4697bbb79112213ab34c6d3979bee84dd0a5389ae70a0b3f97",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA",
+      "alpha_range": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        66,
+        51,
+        2144,
+        686
+      ],
+      "visible_bbox_alpha16": [
+        69,
+        53,
+        2142,
+        683
+      ],
+      "fully_transparent_pixels": 1340377,
+      "pixel_count": 1572528,
+      "ink_mean_rgb_alpha128": [
+        0.16664403199034253,
+        0.08920325939339067,
+        0.04124792515467029
+      ]
+    },
+    {
+      "path": "README.md",
+      "bytes": 9181,
+      "sha256": "09d1f96de15b734c5867d21545a69fffe1205938e176cbefc5a7fc0a8ab43fd6"
+    },
+    {
+      "path": "V1-paper.html",
+      "bytes": 2476,
+      "sha256": "77a8d32a915f5239aea15b5171d0e0abe4a19b467ed7acb2b3eb23b2de733709"
+    },
+    {
+      "path": "V1-paper.png",
+      "bytes": 722816,
+      "sha256": "41dce75cb12ce94351ad14ee8642512a18d24815c1221462075fe9a17d908a5f",
+      "size": [
+        1480,
+        620
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "V2-paper.html",
+      "bytes": 2480,
+      "sha256": "2c677d5ed01b6d170b57b6dd5894a51bf4db2ba2e8fa06814967aea431ad7449"
+    },
+    {
+      "path": "V2-paper.png",
+      "bytes": 735902,
+      "sha256": "8499f8755a5a782b68fed9e65ba272cd81e6716692e17d644b7eb2f782c68e81",
+      "size": [
+        1480,
+        620
+      ],
+      "mode": "RGB"
+    },
+    {
+      "path": "V3-paper.html",
+      "bytes": 2485,
+      "sha256": "47b2b7eac433fb627e3813bffd19a942ac523565ea41a4d6bbdc893107957d17"
+    },
+    {
+      "path": "V3-paper.png",
+      "bytes": 722484,
+      "sha256": "9eb6bc1931680e0b9b4ea89644e4749ec23d46b350861847869d7875b1a03767",
+      "size": [
+        1480,
+        620
+      ],
+      "mode": "RGB"
+    }
+  ]
+}
