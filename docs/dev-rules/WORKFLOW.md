@@ -94,6 +94,23 @@ Stabile Befundkennungen und einen konkreten Reviewlink führen. Urteil: `Nacharb
 
 Nacharbeiten bleiben standardmäßig im selben PR. Nur beauftragte B-/technische A-Befunde beheben; O nicht ungefragt mitbauen. Anschließend Befunde gegen Erfolgskriterien prüfen und Auswirkungen des Diffs berücksichtigen. Eine offene persönliche Probe allein erfordert keine neue Codex-Implementierung.
 
+**Eigene Änderungswünsche nach dem Review.** Der Auftraggeber beschreibt das
+gewünschte Ergebnis in eigenen Worten und nennt den PR. Bei der Vorbereitung
+den Wunsch mit dem bisherigen Soll und dem Review abgleichen. Deckt ein
+vorhandener Befund den Wunsch ab, dessen Kennung verwenden. Für eine neue
+Anforderung den vereinbarten Umfang, die Abnahmekriterien und den Prüfbedarf
+im zugehörigen Issue/Paket festhalten und die Entscheidung im PR verlinken.
+Offene Produktfragen als solche dokumentieren und gezielt klären.
+
+Zusammengehörige Änderungen können im offenen PR und auf dessen Branch
+fortgeführt werden. Einen sachlich eigenständigen Wunsch oder eine Änderung
+nach geschlossenem PR als separates Paket vorbereiten. Der Vorbereitungsauftrag
+endet mit der dokumentierten Entscheidung oder Rückfrage. Eine spätere
+Umsetzung erfordert den zugehörigen Auftrag. Das bisherige Review belegt
+ausschließlich seinen Umfang und Commit. Vor einem Merge den erweiterten
+Umfang mit seinen Kriterien, erforderlichen Nachweisen und dem neuen Head
+erneut reviewen und die dafür geltende Mergefreigabe prüfen.
+
 ## 7. Merge und Abschluss
 
 Merge benötigt ausdrückliche oder passende bedingte Nutzerfreigabe. Der Sheet-Schalter ist standardmäßig aktiv und formuliert diese Freigabe **im kopierten Reviewauftrag**; das Sheet selbst führt keinen Merge aus. Ein JSON-Ergebnis, der Default oder ein grüner CI-Status allein erteilt keine Befugnis.
