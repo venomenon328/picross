@@ -1,6 +1,6 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
-Fachstand: Spezifikation 1.2 · Workflowabgleich: 05.11.2026 · **HZ-A/B/C integriert**
+Fachstand: Spezifikation 1.3 · Workflowabgleich: 06.11.2026 · **HZ-A/B/C integriert; PANG-A freigegebener Sollstand, noch nicht umgesetzt**
 
 [Issue #284](https://github.com/venomenon328/picross/issues/284) dokumentiert den
 Abschluss von HZ-A und HZ-B einschließlich ihrer erfüllten T01/R01/M01-Gates.
@@ -19,9 +19,10 @@ Mergeentscheidungen stehen im Issue/PR; Integration allein ist kein Abnahmenachw
 
 ## 1. Ziel, Ausgangsstand und gezielte Ablösung
 
-Die normale Spieleroberfläche trägt die Handschrift des vorhandenen Rätselbuchs
+Der integrierte Ausgangsstand trägt die Handschrift des vorhandenen Rätselbuchs
 durchgängig: Tidy Hand für Standardtext, erhaltene Überschriften, organischere kleine Rahmen,
 vollständig gezeichnete Dropdowns und eine gemeinsame Piktogrammfamilie.
+Die am 06.11.2026 freigegebene, **noch nicht implementierte** [Pangolin-Folgeentscheidung](https://github.com/venomenon328/picross/issues/531) ersetzt künftig genau die Standardtextrolle; der neue Sollstand steht in HZ-D08.
 Lesbarkeit, ruhige Anordnung und präzise Bedienung gehören zum Gestaltungsergebnis.
 Die Unregelmäßigkeit muss schon in tatsächlicher Einsatzgröße erkennbar sein.
 
@@ -73,7 +74,7 @@ Bakso-Ressource bei kleineren 20 × UI, in derselben Rahmen-/Titellaschenfamilie
 Andere Informations-, Hilfe-, Dialog- und Katalogtitel bleiben unverändert.
 Die frühere N02-Annahme einer Fraunces-Katalogtitelrolle gilt nicht als Sollstand.
 
-Die Fontauswahl ist abgeschlossen. Die bereitgestellte TTF bleibt byteidentisch;
+Die damalige HZ-A-Fontauswahl ist abgeschlossen. Die bereitgestellte TTF bleibt byteidentisch;
 [Herkunft und Nutzungshinweis](../game/art/drawing/tidy-hand/NOTICE.txt) dokumentieren
 die Autorenaussage „This font is free for all use.“ auf der
 [Quellseite](https://www.dafont.com/de/tidy-hand.font). ZIP und TTF sind per SHA-256
@@ -311,6 +312,83 @@ gemäß HZ-D03/D04 erhalten. HZ-C verändert weder Originalfontbytes noch die
 Gestaltungsregeln der HZ-B-Konturen, Iconquellen oder Produkt-/Datenverträge
 aus HZ-D06.
 
+## HZ-D08 · Pangolin als normale UI-Textschrift · PANG-A / #531
+
+**Eigentümerentscheidung vom 06.11.2026:** Aus drei vorgelegten Kandidaten ist
+**Pangolin Regular** für die **bestehende normale Standardtextrolle** ausgewählt.
+Dieser Abschnitt ist **freigegebene Spezifikation**, noch keine Implementierung
+oder native Abnahme. Er löst den aktiven Tidy-Hand-Teil von HZ-D01/D02 und die
+Tidy-Hand-spezifischen Textannahmen von HZ-D04/D07 gezielt ab, nicht deren
+historische damalige Lieferung, Bedienanforderungen oder Messprinzipien.
+[Issue #531 · PANG-A](https://github.com/venomenon328/picross/issues/531)
+führt Abnahmekriterien, Prüfbedarf und aktuelle Liefergates.
+
+### Verbindliche Rollenabgrenzung
+
+Normale Textpfade einschließlich zentraler Theme-/Fonthelfer und direkter
+Textzeichnung verwenden künftig **Pangolin Regular**: Hilfefließtext und
+Legenden, Katalogkategorien/-metadaten, Blatt-/Statuszeilen, Textbuttons,
+geschlossene und geöffnete Auswahlen, Einstellungen und sonstige Infotexte,
+Dialoginhalte, Tooltips sowie Warn-/Recoverytexte. Kein eigenständiger
+Hilfe-only-Font und keine wählbare Schriftoption.
+
+**Unverändert bleiben:** Bakso Daging in seinen tatsächlichen Katalog-, Blatt-,
+Kachel-, Einstellungs- und Gruppentitelrollen; Fraunces 600 in bestehenden
+sonstigen Informations-/Hilfe-/Vollhinweisüberschriften; Plex in nativen
+Dialogtiteln, ausdrücklich gepinnten Markern und als einzigem gebündelten
+lokalen Zeichenfallback; Delight Coffee in Hinweiszahlen und gebundenen
+Zählern. Keine Systemfontsuche und keine neue allgemeine zweite Textrolle.
+Hinweis-/Slot-/Raster-/Zell-, Buch-, Icon-, Eingabe- und Saveverträge bleiben
+erhalten.
+
+### Original, Zeichen und Layout
+
+Ausgewählte Quelle ist der **Eigentümeranhang** `font_candidates.zip`,
+`Pangolin/Pangolin-Regular.ttf`: **589884 Byte**, SHA-256
+`a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e`.
+Mitgegeben: `Pangolin/OFL.txt`, **SIL Open Font License 1.1**, SHA-256
+`414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c`;
+Copyright 2016 The Pangolin Project Authors. Diese Eingangsdateien sind
+bis zur Implementierung **nicht** im Repository gespeichert.
+Der Implementierer verifiziert die konkreten Bytes vor ihrer Einbindung;
+die öffentlich verfügbare namensgleiche TTF darf nicht ohne Hashprüfung
+als byteidentische Alternative gelten. Aktive Offline-Schrift und korrekte
+Copyright-/OFL-Hinweise gehören im Implementierungspaket in Windows- und
+Webexport; bisherige Tidy-Hand-Datei, NOTICE, HZ-Nachweise und Hashbindungen
+bleiben historisch intakt, ohne einen unbenutzten zweiten Standardfont zu
+aktivieren.
+
+Die ausgewählte TTF enthält die geprüften Umlaute, `ß`, `·`, `%`,
+U+2026 (`…`) und die wichtigen typografischen Zeichen `× „ ‚ – −`.
+Die geprüften Funktionspfeile `← → ↑ ↓` benötigen den gebündelten
+Plex-Fallback; tatsächliche aktuelle UI-Texte und zusätzliche Zeichen
+sind bei Umsetzung zu inventarisieren. Die alte Tidy-Hand-spezifische
+Fallbackzuordnung ist **kein** Grund, Pangolin-Zeichen unnötig aus Plex zu
+zeichnen. Fehlglyphen, fälschliche Dreipunkt-Auslassung, Systemfallback und
+zufällige Ersatzzeichen sind ausgeschlossen.
+
+Bestehende Textgrößen sind **Prüfausgangspunkte**, insbesondere Hilfe 16/20
+und die HZ-C-Kleinrolle 15/19 bei UI100/125. Keine pauschale Vergrößerung
+oder Kürzung der Pflichttexte. Breite, tatsächliche Glyphenhülle samt
+Fallback, Kerning, Zeilenhöhe, Umbruch, Scrollenden, Content-Margins und
+optische Position gemeinsam mit Pangolin nachmessen. Stabile Grundlinien
+pro Rolle/Schriftgröße statt wortabhängigen Springens: Statuswörter,
+Kategorien und wechselnde Menüwerte bleiben ruhig. Lange Hilfeabsätze,
+Beispielbeschriftungen, Katalogmetadaten, Dropdowns/Popups und Randtooltips
+passen bei den unterstützten Ansichten vollständig; ggf. die vorhandenen
+Layoutbudgets anpassen, ohne Hitboxen, Bildraum, Spoiler oder UX-Verhalten
+zu verkleinern. Zuerst gezielt bei 1280×720/UI125, 1920×1080/UI100
+und 2560×1440/UI125 sowie UI100→125→100 beurteilen.
+
+Die Fontumstellung ist **ein Paket PANG-A**, einschließlich Quellen-/Lizenz-
+und Exportbindung, passender gezielter Regressionen, vollständigem Diff und
+getrenntem Selbstreview. Die aktuelle Paket-CI wird am späteren tatsächlichen
+Code-Diff begründet festgelegt, ohne die früheren HZ-Galerien oder Chromium
+zur Dauerpflicht zu machen. Ein separates unabhängiges Review und die
+persönliche native Sichtprobe sind für den finalen Produkt-Head vor Merge
+im Issue vorgesehen. Keine Implementierungs- oder Mergefreigabe aus
+dieser Dokumentation.
+
 ## 2. Entwicklungspakete und Nachweise
 
 | Paket | Eigenständig abnehmbares Ergebnis | Status und Abhängigkeit |
@@ -318,6 +396,7 @@ aus HZ-D06.
 | HZ-A · Schrift und Textlayout | HZ-D01/D02 vollständig, einschließlich aller normalen Textpfade, kontrollierter Zeichenbehandlung, gemessenem Layout, Ressourcen-/Exportnachweis und nachgeführter Anleitung | Integriert über PR #288 und separat abgenommen; Abschluss in #284. |
 | HZ-B · Gezeichnete Controls und Symbole | HZ-D03/D04/D05 vollständig auf den HZ-A-Textmaßen; sämtliche Konturen, geöffneten Menüs, Zustände und Piktogramme im regulären Spiel | Nach HZ-A über PR #289 integriert und separat abgenommen; #284 abgeschlossen. |
 | HZ-C · Optische Textausrichtung und kleine Schriftrolle | HZ-D07 vollständig: stabile Grundlinien, begründeter Vergleich 14/15, Kategorien und offene/geschlossene Dropdowns, passende gemeinsame Text-/Symbol-/Layoutmaße | #294: Über PR #296 integriert; historische [Prüfzuordnung](HZ_C_VERIFICATION.md), tatsächlicher Abnahmestand in Issue/PR. |
+| PANG-A · Pangolin-Standardtext | HZ-D08 auf allen normalen Textpfaden; bytegebundene Schrift/Lizenz, gemessener Help-/Katalog-/Popup-/Dialog-Textfit und unveränderte Sonderrollen | [#531](https://github.com/venomenon328/picross/issues/531): Sollstand freigegeben, Implementierung und T01/R01/M01 offen; gleicher Branch/PR nach ausdrücklichem Folgeauftrag. |
 
 HZ-D06 gilt für alle Pakete. Ein Implementierungs-PR je Paket enthält notwendige
 Regressionen und Dokumentation. HZ-B hielt Rahmen, Menüs und Icons zusammen,
