@@ -88,6 +88,19 @@ folgen den abgenommenen gemeinsamen Verträgen. Die neun Textur-/Direktübergabe
 behalten maximal vier Kanalstufen und mittlere Abweichung höchstens 0,1 sowie
 Einpixel-/Alpha-Gegenproben.
 
+## Bildhaupttitel · BTI-C / #533 (Arbeitsbranch, noch nicht integriert)
+
+[BTI](VIEW_TITLE_ART.md) führt auf dem Arbeitsbranch drei
+reine, unveränderte freigegebene V2-rev1-Schriftzugbilder ein: `Rätselkatalog` im linken Katalogkopf,
+`Hilfe` im rechten Infokopf und `Einstellungen` im linken Infokopf, jeweils
+innerhalb der sicheren projizierten Papierhälfte zentriert. Haupttitel der
+Informationsseiten liegen außerhalb ihrer Scrollflächen. Die zuvor
+oben angeordneten Buttons `Zurück` und Hilfe-/Einstellungswechsel liegen jetzt
+als feste untere Navigation außerhalb der Scrollflächen; der Kapitelzugang,
+Gruppenrahmen, Besuchskontext und alle Daten-/Save-/Recoverywege bleiben.
+**Implementierung ist keine unabhängige oder persönliche Abnahme; R01/M01 offen.**
+Aktuelle Kriterien und Abnahme in [#533](https://github.com/venomenon328/picross/issues/533).
+
 ## Spielerhilfe · HIL-1 / #500
 
 Der gemeinsame `help_panel` enthält vier direkt anwählbare Kapitel, kurze
@@ -236,4 +249,3 @@ Pixelgrenzen und Zeitbudgets werden nicht verändert.
 Technisches Review, persönliche B-B-/HIL-Abnahmen, Merge und Deployment bleiben
 getrennt. Den aktuellen Status in #498/#493/#500 und ihren PRs prüfen; diese
 Produktquelle erklärt keine historische Abnahme erneut für offen oder bestanden.
-

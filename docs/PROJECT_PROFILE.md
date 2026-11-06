@@ -67,6 +67,7 @@ bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 | Hinweisnavigation, Overlay, Cursorlinien oder Hinweiszustände | [CLUE_INTERACTION](CLUE_INTERACTION.md), [CLUE_TYPOGRAPHY](CLUE_TYPOGRAPHY.md), [CLUE_STATUS](CLUE_STATUS.md) nach Änderungsbezug |
 | Zeichensprache, Vorschau, Zellanimation | [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), betroffene ZS-Verträge |
 | UI-Schrift, kleine Rahmen, Dropdowns, Piktogramme | [HAND_DRAWN_UI](HAND_DRAWN_UI.md), [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), [Z2-Ressourcenweg](Z2_SELECTION.md) |
+| Große bildbasierte Buchseitentitel und untere Informationsnavigation | [BTI-Bildtitel](VIEW_TITLE_ART.md), [Buchintegration](BOOK_INTEGRATION.md), [HZ](HAND_DRAWN_UI.md) |
 | Spriteherstellung, Zellrendering, Cache/Invalidierung | [CELL_RENDERING](CELL_RENDERING.md); PERF-A/B nur bei ihrer konkreten historischen Nacharbeit |
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Katalog, Metadaten oder Sortierung | [CATALOG_PRESENTATION](CATALOG_PRESENTATION.md), [CATALOG_SORTING](CATALOG_SORTING.md), [CATEGORIES](CATEGORIES.md) |

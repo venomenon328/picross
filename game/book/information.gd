@@ -1,9 +1,12 @@
 extends RefCounted
+const ViewTitle = preload("res://ui/view_title.gd")
 ## One instance of each regular settings/help control, two local clip regions.
 var app: Control
 var help_scroll: ScrollContainer
 var right_return: Button
 var section: String = "settings"
+var settings_heading: ViewTitle
+var help_heading: ViewTitle
 
 func _init(owner: Control) -> void:
 	app = owner
@@ -29,6 +32,12 @@ func _init(owner: Control) -> void:
 	# Reuse the existing section shortcuts; each belongs to the opposite page.
 	app.information.get_node("help-access").text = "Hilfe →"
 	app.information.get_node("settings-access").text = "← Einstellungen"
+	settings_heading = ViewTitle.new()
+	app.information.add_child(settings_heading)
+	settings_heading.configure("settings",app.settings_title)
+	help_heading = ViewTitle.new()
+	app.information.add_child(help_heading)
+	help_heading.configure("help",app.label("Hilfe",28))
 
 func positions() -> Vector2i:
 	return Vector2i(app.info_scroll.scroll_vertical,help_scroll.scroll_vertical)
@@ -86,10 +95,21 @@ func layout() -> void:
 	app.information.get_node("settings-access").visible = not left
 	app.info_scroll.visible = left
 	help_scroll.visible = not left
-	app._place(back,Rect2(Vector2(x,top),Vector2(260*u,hit)))
-	app._place(switch,Rect2(Vector2(edge-210*u,top),Vector2(210*u,hit)))
+	settings_heading.visible = left
+	help_heading.visible = not left
+	var heading: ViewTitle = settings_heading if left else help_heading
+	# Protect navigation/feedback and useful scrolling before decorative size.
+	# A percentage of the remaining paper scales down in the tight/error case.
+	var title_height: float = minf(176*u,(bottom-top-hit-32*u)*0.27)
+	app._place(heading,Rect2(Vector2(x,top),Vector2(edge-x,title_height)))
+	heading.fallback.add_theme_font_size_override("font_size",roundi(28*u))
+	# Bottom navigation is outside both scroll regions and above feedback.
+	var nav_top: float = bottom-hit
+	app._place(back,Rect2(Vector2(x,nav_top),Vector2(260*u,hit)))
+	app._place(switch,Rect2(Vector2(edge-210*u,nav_top),Vector2(210*u,hit)))
 	var scroll: ScrollContainer = app.info_scroll if left else help_scroll
-	app._place(scroll,Rect2(Vector2(x,top+hit+24*u),Vector2(edge-x,bottom-top-hit-24*u)))
+	var content_top: float = top+title_height+16*u
+	app._place(scroll,Rect2(Vector2(x,content_top),Vector2(edge-x,maxf(1,nav_top-16*u-content_top))))
 	app._layout_settings(app.info_scroll.size.x)
 	app.help_panel.add_theme_constant_override("separation",roundi(16*u))
 	# ScrollContainer itself clamps each independent offset after reflow.

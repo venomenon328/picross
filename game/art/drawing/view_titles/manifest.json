@@ -1,0 +1,98 @@
+{
+  "format": "picross-view-title-art-v1",
+  "style": "BTI-B-V2-rev1",
+  "created": "2026-11-06",
+  "tool": "Built-in image_gen.imagegen",
+  "model": null,
+  "version": null,
+  "seed": null,
+  "parameters": {
+    "transparent_background": true
+  },
+  "processing": "Unmodified approved original PNG bytes; lossless mipmapped Godot import. Alpha >=16 optical centring; fit retains the entire PNG including alpha-1 edge remnants.",
+  "approval": "BTI-B-M01 approves these exact V2-rev1 drawings; BTI-C-T01/R01/M01 concern their new game integration, not a new style selection.",
+  "provenance": "provenance.json",
+  "assets": [
+    {
+      "file": "catalog.png",
+      "title": "Rätselkatalog",
+      "width": 2172,
+      "height": 724,
+      "bytes": 1814749,
+      "sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4",
+      "source_commit": "9029a4a3a05d6da2c8d88327594a4598fd0db505",
+      "source_path": "review-evidence/BTI-B-V2-rev1/originals/catalog.png",
+      "optical_alpha_min": 16,
+      "optical_bounds": [
+        37,
+        75,
+        2133,
+        672
+      ],
+      "alpha_bounds": [
+        17,
+        0,
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "file": "help.png",
+      "title": "Hilfe",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2500745,
+      "sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a",
+      "source_commit": "9029a4a3a05d6da2c8d88327594a4598fd0db505",
+      "source_path": "review-evidence/BTI-B-V2-rev1/originals/help.png",
+      "optical_alpha_min": 16,
+      "optical_bounds": [
+        88,
+        102,
+        1449,
+        960
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1516,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        254
+      ]
+    },
+    {
+      "file": "settings.png",
+      "title": "Einstellungen",
+      "width": 2172,
+      "height": 724,
+      "bytes": 1427565,
+      "sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75",
+      "source_commit": "9029a4a3a05d6da2c8d88327594a4598fd0db505",
+      "source_path": "review-evidence/BTI-B-V2-rev1/originals/settings.png",
+      "optical_alpha_min": 16,
+      "optical_bounds": [
+        50,
+        86,
+        2143,
+        690
+      ],
+      "alpha_bounds": [
+        47,
+        5,
+        2145,
+        708
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ]
+}
