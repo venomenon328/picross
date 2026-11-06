@@ -17,8 +17,8 @@
   "files": [
     {
       "path": "comparison.html",
-      "bytes": 2497,
-      "sha256": "e8d3d7278c21e427967fdee243d477260d9e68a42684fb5512c6709dd2e25293"
+      "bytes": 2498,
+      "sha256": "2f7b20b25eeb90857212fb137cb02676ca87203d45825ad93cff871b18f1f74e"
     },
     {
       "path": "comparison.png",
@@ -32,8 +32,8 @@
     },
     {
       "path": "generation.json",
-      "bytes": 14518,
-      "sha256": "8851443649605497fa5cc8d1d39b3c5312a3db37de7d997ae056e9e10dd04976"
+      "bytes": 14357,
+      "sha256": "629e60825f6de6ba8959f04f9441e379b82c85a27ced314690a36d50067250b5"
     },
     {
       "path": "originals/V1-catalog.png",
@@ -339,8 +339,8 @@
     },
     {
       "path": "V1-paper.html",
-      "bytes": 2476,
-      "sha256": "77a8d32a915f5239aea15b5171d0e0abe4a19b467ed7acb2b3eb23b2de733709"
+      "bytes": 2477,
+      "sha256": "72d161c4cdbfc628d91be48023b6fc779ccdd359c6e6abb4484b519356be7df7"
     },
     {
       "path": "V1-paper.png",
@@ -354,8 +354,8 @@
     },
     {
       "path": "V2-paper.html",
-      "bytes": 2480,
-      "sha256": "2c677d5ed01b6d170b57b6dd5894a51bf4db2ba2e8fa06814967aea431ad7449"
+      "bytes": 2481,
+      "sha256": "4d8010463bbd178a32c3040967833186c44644dae44523f9e37c21a54f818d87"
     },
     {
       "path": "V2-paper.png",
@@ -369,8 +369,8 @@
     },
     {
       "path": "V3-paper.html",
-      "bytes": 2485,
-      "sha256": "47b2b7eac433fb627e3813bffd19a942ac523565ea41a4d6bbdc893107957d17"
+      "bytes": 2486,
+      "sha256": "2417ec63fc8bac599fddd94c6b68d548d9fc0742b36ea2b2ae7a685bc06f86cd"
     },
     {
       "path": "V3-paper.png",
