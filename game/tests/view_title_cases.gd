@@ -6,7 +6,7 @@ static func run(r: SceneTree) -> void:
 		var source: Image = heading.texture.get_image()
 		r.check(source != null and source.has_mipmaps() and source.detect_alpha() != Image.ALPHA_NONE,"BTI: local imported RGBA title with mipmaps "+heading.role)
 		var rect: Rect2 = heading.image_rect()
-		r.check(absf(rect.size.x/rect.size.y-heading.ink.size.x/heading.ink.size.y) < 0.001,"BTI: proportional ink fit "+heading.role)
+		r.check(absf(rect.size.x/rect.size.y-float(source.get_width())/source.get_height()) < 0.001,"BTI: whole original stays proportional "+heading.role)
 	for config: Vector3 in [Vector3(1280,720,1),Vector3(1280,720,1.25),Vector3(1920,1080,1),Vector3(1920,1080,1.25),Vector3(2560,1440,1),Vector3(2560,1440,1.25),Vector3(1920,1200,1.25)]:
 		r.surface.size = Vector2i(config.x,config.y)
 		app.size = Vector2(config.x,config.y)
@@ -19,6 +19,11 @@ static func run(r: SceneTree) -> void:
 		var safe_center: float = paper.get_center().x-paper.size.x*0.075/2
 		r.check(absf(catalog.get_global_rect().get_center().x-safe_center) < 1,"BTI: catalog centred on safe left paper")
 		r.check(catalog.get_global_rect().end.y <= app.album.get_global_rect().position.y,"BTI: catalog title outside card scrolls")
+		for title: Control in [app.catalog_title,app.info.help_heading,app.info.settings_heading]:
+			var image: Rect2 = title.image_rect()
+			var optical: Rect2 = title.ink_rect()
+			r.check(Rect2(Vector2.ZERO,title.size).encloses(image),"BTI-C: entire original including weak alpha fits "+title.role)
+			r.check(optical.get_center().distance_to(title.size/2) < 0.01,"BTI-C: meaningful ink centred "+title.role)
 		for section: String in ["settings","help"]:
 			app.show_information(section)
 			await r.frames()
@@ -43,11 +48,11 @@ static func run(r: SceneTree) -> void:
 			r.check(last.get_global_rect().end.y <= scroll.get_global_rect().end.y+1,"BTI: content end reachable")
 			scroll.scroll_vertical = 0
 	# Missing files do not create an empty heading or hard preload failure.
-	var heading: Control = app.info.help_heading
-	heading.load_art("res://art/drawing/view_titles/missing.png")
-	r.check(heading.texture == null and heading.fallback.visible and heading.fallback.text == "Hilfe","BTI: real missing resource selects exact readable fallback")
-	heading.load_art("res://art/drawing/view_titles/help.png")
-	r.check(heading.texture != null and not heading.fallback.visible,"BTI: restored resource removes duplicate text")
+	for heading: Control in [app.catalog_title,app.info.help_heading,app.info.settings_heading]:
+		heading.load_art("res://art/drawing/view_titles/missing.png")
+		r.check(heading.texture == null and heading.fallback.visible and heading.fallback.text == heading.TITLES[heading.role] and heading.fallback.get_theme_font_size("font_size") >= 28,"BTI: missing resource selects exact readable local fallback "+heading.role)
+		heading.load_art("res://art/drawing/view_titles/"+heading.role+".png")
+		r.check(heading.texture != null and not heading.fallback.visible,"BTI: restored resource removes duplicate text")
 	r.surface.size = Vector2i(1920,1080)
 	app.size = Vector2(1920,1080)
 	app.set_ui_scale(1.0)

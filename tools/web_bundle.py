@@ -16,7 +16,8 @@ LICENSES = {'resources.json', 'Chalkboard-NOTICES.md', 'Bakso-NOTICES.md',
 ADDITIONAL_LICENSES = {'KB-168-NOTICE.txt', 'tidy-hand/NOTICE.txt', 'HZ-B-284-NOTICE.txt',
                        'Book-paper.json', 'Book-leather.json', 'Book-table.json',
                        'pangolin/NOTICE.txt', 'pangolin/OFL.txt',
-                       'ViewTitles-NOTICE.txt', 'ViewTitles-manifest.json'}
+                       'ViewTitles-NOTICE.txt', 'ViewTitles-manifest.json',
+                       'ViewTitles-provenance.json'}
 
 
 def digest(path: Path) -> str:

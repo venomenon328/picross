@@ -1,20 +1,30 @@
-BTI-C-1 / 2026-11-06 / picross #533
+BTI-B-V2-rev1 / generated 2026-11-06 / integrated by BTI-C / picross #533
 
-Three original title drawings generated with the built-in OpenAI image_gen
-tool during the owner's expressly commissioned BTI-A implementation.
-Text and style brief: project specification docs/VIEW_TITLE_ART.md.
-No uploaded third-party image or font was used. Help and settings use the
-newly generated titles as visual style references. No TTF rasterization.
-These are generated outputs, not claimed public-domain assets, exclusive
-copyrights or hand-drawn works by a named human artist. No separate third-party
-asset license was supplied. Use in this project is the commissioned purpose;
-this notice makes no broader legal warranty or grant to third parties.
+Three owner-approved original title drawings generated with the built-in OpenAI
+image_gen.imagegen tool, not rasterized fonts or manual human lettering.
+Catalog is the unchanged V2 anchor. Help is revision G1, settings revision G4.
+The exact prompts, known/unknown parameters and reference chain are preserved
+in provenance.json. The initial owner C reference had no available original
+byte file/hash; it was viewed and used in the earlier generation conversation.
+It is not claimed as a newly downloaded input of this integration.
 
-The delivered PNGs are the unmodified generated originals. Pixel dimensions,
-byte counts and SHA-256 are in manifest.json. No manual retouching, alpha
-replacement, cropping or resizing was performed. The tool supplied RGBA;
-Godot imports losslessly with mipmaps and fits the visible alpha bounds.
-The tool's backend model version, seed and sampling settings were not exposed.
-See docs/design/view_titles/STYLE.md for the reusable grammar and exact prompts.
-The drawings are implementation candidates pending BTI-A-R01 and BTI-A-M01,
-not an owner-approved replacement inferred from the earlier concept sketch.
+V2 used the owner C style reference and generated V1 contrast example; help and
+settings were then generated from V2 catalog. Revision G1 used catalog + old
+help; G2 catalog + old settings; G3 catalog + G1 + G2; G4 generatively cleaned
+G3. G2/G3 were rejected intermediates, not additional product assets. G4 was
+not deterministic alpha extraction. No manual retouching, recolouring, cropping,
+resizing, alpha replacement or re-encoding of the delivered final PNGs.
+Backend/model version, seed and unexposed sampling parameters remain unknown.
+
+These are commissioned generated outputs, not claimed public-domain assets,
+exclusive copyrights or works hand-drawn by a named human artist. No separate
+third-party asset license was supplied. This notice makes no broader legal
+warranty or grant to third parties. No downloaded third-party lettering/font.
+
+The immutable PNG dimensions, byte counts and SHA-256 are in manifest.json.
+Godot uses lossless import with mipmaps and local linear sampling. Runtime
+centres alpha >=16 optical ink while fitting the entire original PNG, including
+very weak alpha remnants and the complete connected f/g swashes. No network
+or generator is required at startup; local text fallbacks retain exact names.
+BTI-B-M01 approved this exact style family. BTI-C-R01 and the personal Windows
+integration gate BTI-C-M01 remain separate from that design approval.

@@ -98,7 +98,9 @@ func layout() -> void:
 	settings_heading.visible = left
 	help_heading.visible = not left
 	var heading: ViewTitle = settings_heading if left else help_heading
-	var title_height: float = 88*u
+	# Protect navigation/feedback and useful scrolling before decorative size.
+	# A percentage of the remaining paper scales down in the tight/error case.
+	var title_height: float = minf(176*u,(bottom-top-hit-32*u)*0.27)
 	app._place(heading,Rect2(Vector2(x,top),Vector2(edge-x,title_height)))
 	heading.fallback.add_theme_font_size_override("font_size",roundi(28*u))
 	# Bottom navigation is outside both scroll regions and above feedback.
