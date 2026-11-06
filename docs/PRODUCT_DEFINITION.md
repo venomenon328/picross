@@ -1,5 +1,16 @@
 # Produktdefinition: picross
 
+**PANG-A / #531 · am 06.11.2026 freigegebene Schriftfolgeentscheidung, noch nicht implementiert:**
+Pangolin Regular ersetzt künftig **nur die normale Textrolle** des bisher
+integrierten Tidy Hand: Hilfe, Katalogmetadaten, Dropdowns/Popups, Buttons,
+Einstellungen, Dialoginhalte, Tooltips und Warn-/Recoverytexte. Die bestehenden
+Bakso-/Fraunces-Überschriften, Delight-Hinweiszahlen, Dialogtitel und der
+gebündelte Plex-Zeichenfallback bleiben erhalten. Maßgeblich sind
+[HZ-D08](HAND_DRAWN_UI.md) und [PANG-A / #531](https://github.com/venomenon328/picross/issues/531).
+Die dortige Fontwahl ist ein **Sollstand**, keine bereits geprüfte Laufzeitänderung;
+Rollen-/Umbruch-/Bedienabnahme folgen im eigenständigen Implementierungspaket.
+
+
 **ANZ-A / #527 · auf dem Arbeitsbranch implementiert, Abnahmen im Produkt-PR:**
 Die native Windowsfassung bietet ausschließlich feste wählbare Fenstergrößen
 zwischen 1280×720 und 3840×2160 sowie die Anzeigemodi Fenster, rahmenloses
