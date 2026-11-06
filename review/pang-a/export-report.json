@@ -1,0 +1,173 @@
+{
+  "source_head": "20001a0aa825be6768e85708e6379dc5ac64ddeb",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "phases": [
+    {
+      "name": "export-import",
+      "exit": 0,
+      "seconds": 11.085
+    },
+    {
+      "name": "windows-export",
+      "exit": 0,
+      "seconds": 5.132
+    },
+    {
+      "name": "windows-pck",
+      "exit": 0,
+      "seconds": 0.754
+    },
+    {
+      "name": "web-export",
+      "exit": 0,
+      "seconds": 3.837
+    },
+    {
+      "name": "web-pck",
+      "exit": 0,
+      "seconds": 0.752
+    }
+  ],
+  "windows": {
+    "files": {
+      "picross-p1.console.exe": {
+        "bytes": 50176,
+        "sha256": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec"
+      },
+      "picross-p1.exe": {
+        "bytes": 103035904,
+        "sha256": "5543ab4b6fb453c5dbe7f4effa0aad7f1cc06d73c12e8436adfc9fb266ac34ee"
+      },
+      "picross-p1.pck": {
+        "bytes": 79650396,
+        "sha256": "558550a5990e59d12dd835fc151352dd206031641f36453ead4bcab7bca39e73"
+      }
+    }
+  },
+  "web": {
+    "files": {
+      "index.apple-touch-icon.png": {
+        "bytes": 11944,
+        "sha256": "01d4f63e525941e06ce74f5187dad030d20a8d52a07ce365ae4e94af97a3b1f5"
+      },
+      "index.audio.position.worklet.js": {
+        "bytes": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "index.audio.worklet.js": {
+        "bytes": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "index.html": {
+        "bytes": 6337,
+        "sha256": "250fd0b4a12daea5e960c65f800612335f99ee029d43d85aa2d572d6b36d90f3"
+      },
+      "index.icon.png": {
+        "bytes": 5700,
+        "sha256": "ad3c35ad0facf487c618204bd98db543034fc95224eadc7f08c7a9ff38d5b3b5"
+      },
+      "index.js": {
+        "bytes": 315645,
+        "sha256": "ffc3898b59fba6f5af0c02f76e5ee526cc061e65c7d2d6f4f98186876cea15c4"
+      },
+      "index.pck": {
+        "bytes": 79650396,
+        "sha256": "558550a5990e59d12dd835fc151352dd206031641f36453ead4bcab7bca39e73"
+      },
+      "index.png": {
+        "bytes": 21443,
+        "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+      },
+      "index.wasm": {
+        "bytes": 37902138,
+        "sha256": "11ea19645368f8e73cf337b59cfd7ceeb4ebb51f7a3bbf77d1a5c3ddfedbc522"
+      }
+    }
+  },
+  "player": {
+    "picross-p1.console.exe": {
+      "bytes": 50176,
+      "sha256": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec"
+    },
+    "picross-p1.exe": {
+      "bytes": 103035904,
+      "sha256": "5543ab4b6fb453c5dbe7f4effa0aad7f1cc06d73c12e8436adfc9fb266ac34ee"
+    },
+    "picross-p1.pck": {
+      "bytes": 79650396,
+      "sha256": "558550a5990e59d12dd835fc151352dd206031641f36453ead4bcab7bca39e73"
+    },
+    "README.txt": {
+      "bytes": 532,
+      "sha256": "e4c36f10e260be58f5d47bfeaceed2400d295087b6272679f482d3bc23a28400"
+    },
+    "SPIELANLEITUNG.md": {
+      "bytes": 31550,
+      "sha256": "e5f2a97c81d1018bdaac669bb435fe2b4f6dd19992adc0ec7d80bef92900715e"
+    },
+    "licenses/Bakso-NOTICES.md": {
+      "bytes": 1389,
+      "sha256": "37deab48d0390bbd34d5971cb5a43664e9578f8f0effa1066a94a3c96497e3e9"
+    },
+    "licenses/Book-leather.json": {
+      "bytes": 1992,
+      "sha256": "e24de01610422872733237041fead2bf7cd06a30ef361a4568f0b1db5d63cbf4"
+    },
+    "licenses/Book-paper.json": {
+      "bytes": 2000,
+      "sha256": "4b03745631543dadf1be83021e64b7fba6dcfe63befb829b143849e7ed386986"
+    },
+    "licenses/Book-table.json": {
+      "bytes": 2587,
+      "sha256": "854e5483aa1c43036fc5ee53432f839573dc51ad74c3a84154366a444fe41827"
+    },
+    "licenses/Chalkboard-NOTICES.md": {
+      "bytes": 1168,
+      "sha256": "c126113cc639c597f5fefdb1cecb33e6666c0a4f814c416ecfb6d2ae84394862"
+    },
+    "licenses/DelightCoffee-NOTICES.md": {
+      "bytes": 2087,
+      "sha256": "b443284305899d2b14bcc4852cc088b883b4cb78ab2dc8b8f0c6856c108cc3e8"
+    },
+    "licenses/Fraunces-OFL.txt": {
+      "bytes": 4390,
+      "sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48"
+    },
+    "licenses/HZ-B-284-NOTICE.txt": {
+      "bytes": 723,
+      "sha256": "406139e9a2a92a33b9a88b3bf3ff95567c3f6fe30abf7bb4b216eaeacda503c7"
+    },
+    "licenses/KB-168-NOTICE.txt": {
+      "bytes": 632,
+      "sha256": "5a34a51eb0e99c969029cfeba719847344384441c6f83cbd82b5abd7ffece51b"
+    },
+    "licenses/PlexSans-OFL.txt": {
+      "bytes": 4362,
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+    },
+    "licenses/resources.json": {
+      "bytes": 5000,
+      "sha256": "8c5c724647a5859e9b09da7fef5a11eada7d9b5b738e7b470a7e87eba4551913"
+    },
+    "licenses/Sidebar-NOTICES.txt": {
+      "bytes": 560,
+      "sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d"
+    },
+    "licenses/delight-coffee/More Info.txt": {
+      "bytes": 419,
+      "sha256": "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0"
+    },
+    "licenses/delight-coffee/Read Me.pdf": {
+      "bytes": 536273,
+      "sha256": "a57f6f06a94723d5e1b274a5dfbbd2ca0f4c660894dbefd0cae28037a9e6c405"
+    },
+    "licenses/pangolin/NOTICE.txt": {
+      "bytes": 1087,
+      "sha256": "29406bb05fb950bd9c33a2d4233afcf767ea41325f11b4dee8e946471f6c2091"
+    },
+    "licenses/pangolin/OFL.txt": {
+      "bytes": 4483,
+      "sha256": "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c"
+    }
+  }
+}

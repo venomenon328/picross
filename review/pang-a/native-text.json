@@ -1,0 +1,292 @@
+{
+  "captures": [
+    {
+      "chapter": 0,
+      "file": "catalog-1920-ui100.png",
+      "section": "settings",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 0,
+      "file": "help-0-1920-ui100.png",
+      "section": "help",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 3,
+      "file": "help-3-1920-ui100.png",
+      "section": "help",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 1,
+      "file": "help-1-1280-ui125.png",
+      "section": "help",
+      "ui": 1.25,
+      "viewport": "(1280, 720)"
+    },
+    {
+      "chapter": 3,
+      "file": "settings-1280-ui125.png",
+      "section": "settings",
+      "ui": 1.25,
+      "viewport": "(1280, 720)"
+    },
+    {
+      "chapter": 3,
+      "file": "dropdown-open-1280-ui125.png",
+      "section": "settings",
+      "ui": 1.25,
+      "viewport": "(1280, 720)"
+    },
+    {
+      "chapter": 3,
+      "file": "catalog-2560-ui125.png",
+      "section": "settings",
+      "ui": 1.25,
+      "viewport": "(2560, 1440)"
+    },
+    {
+      "chapter": 2,
+      "file": "help-2-2560-ui125.png",
+      "section": "help",
+      "ui": 1.25,
+      "viewport": "(2560, 1440)"
+    },
+    {
+      "chapter": 3,
+      "file": "dropdown-long-closed-1920-ui100.png",
+      "section": "settings",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 3,
+      "file": "dropdown-long-open-1920-ui100.png",
+      "section": "settings",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 3,
+      "file": "tooltip-1920-ui100.png",
+      "section": "settings",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 3,
+      "file": "recovery-dialog-1920-ui100.png",
+      "section": "settings",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    }
+  ],
+  "checks": 28661,
+  "current_characters": "GemÃ¼s, Pilz&KrÃ¤ut20Ã—NchngfBa3VÃ¶465bdwkF1oSpEHR.DZÃŸv:LIUXA+=7JjW?MÂ·Oâ€“;-yÃ„T/%â€¦â€žâ€œÃ–Ãœ",
+  "display": "Windows",
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "failures": [],
+  "measurements": [
+    {
+      "card": "(284.0, 343.0)",
+      "kind": "catalog",
+      "minimum": 276.0,
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 0,
+      "clip_end": 1056.0,
+      "content": "(1588.444, 1646.0)",
+      "kind": "help",
+      "labels": 20,
+      "last_bottom": 1056.77770996094,
+      "lines": 22,
+      "paper": "[P: (228.4444, 137.7777), S: (1596.444, 918.2223)]",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 1,
+      "clip_end": 1056.0,
+      "content": "(1596.444, 694.0)",
+      "kind": "help",
+      "labels": 11,
+      "last_bottom": 831.777709960938,
+      "lines": 12,
+      "paper": "[P: (228.4444, 137.7777), S: (1596.444, 918.2223)]",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 2,
+      "clip_end": 1056.0,
+      "content": "(1588.444, 1793.0)",
+      "kind": "help",
+      "labels": 39,
+      "last_bottom": 1056.77770996094,
+      "lines": 47,
+      "paper": "[P: (228.4444, 137.7777), S: (1596.444, 918.2223)]",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "chapter": 3,
+      "clip_end": 1056.0,
+      "content": "(1596.444, 773.0)",
+      "kind": "help",
+      "labels": 11,
+      "last_bottom": 910.777709960938,
+      "lines": 13,
+      "paper": "[P: (228.4444, 137.7777), S: (1596.444, 918.2223)]",
+      "ui": 1.0,
+      "viewport": "(1920, 1080)"
+    },
+    {
+      "card": "(355.0, 429.0)",
+      "kind": "catalog",
+      "minimum": 345.0,
+      "ui": 1.25,
+      "viewport": "(1280, 720)"
+    },
+    {
+      "chapter": 0,
+      "clip_end": 690.0,
+      "content": "(1028.296, 2318.0)",
+      "kind": "help",
+      "labels": 20,
+      "last_bottom": 690.185180664063,
+      "lines": 30,
+      "paper": "[P: (166.2963, 143.1852), S: (1036.296, 546.8148)]",
+      "ui": 1.25,
+      "viewport": "(1280, 720)"
+    },
+    {
+      "chapter": 1,
+      "clip_end": 690.0,
+      "content": "(1028.296, 996.0)",
+      "kind": "help",
+      "labels": 11,
+      "last_bottom": 690.185180664063,
+      "lines": 16,
+      "paper": "[P: (166.2963, 143.1852), S: (1036.296, 546.8148)]",
+      "ui": 1.25,
+      "viewport": "(1280, 720)"
+    },
+    {
+      "chapter": 2,
+      "clip_end": 690.0,
+      "content": "(1028.296, 2734.0)",
+      "kind": "help",
+      "labels": 39,
+      "last_bottom": 690.185180664063,
+      "lines": 64,
+      "paper": "[P: (166.2963, 143.1852), S: (1036.296, 546.8148)]",
+      "ui": 1.25,
+      "viewport": "(1280, 720)"
+    },
+    {
+      "chapter": 3,
+      "clip_end": 690.0,
+      "content": "(1028.296, 1126.0)",
+      "kind": "help",
+      "labels": 11,
+      "last_bottom": 690.185180664063,
+      "lines": 18,
+      "paper": "[P: (166.2963, 143.1852), S: (1036.296, 546.8148)]",
+      "ui": 1.25,
+      "viewport": "(1280, 720)"
+    },
+    {
+      "card": "(355.0, 429.0)",
+      "kind": "catalog",
+      "minimum": 345.0,
+      "ui": 1.25,
+      "viewport": "(2560, 1440)"
+    },
+    {
+      "chapter": 0,
+      "clip_end": 1410.0,
+      "content": "(2124.593, 2039.0)",
+      "kind": "help",
+      "labels": 20,
+      "last_bottom": 1410.37036132813,
+      "lines": 21,
+      "paper": "[P: (302.5926, 176.3703), S: (2132.593, 1233.63)]",
+      "ui": 1.25,
+      "viewport": "(2560, 1440)"
+    },
+    {
+      "chapter": 1,
+      "clip_end": 1410.0,
+      "content": "(2132.593, 872.0)",
+      "kind": "help",
+      "labels": 11,
+      "last_bottom": 1048.37036132813,
+      "lines": 12,
+      "paper": "[P: (302.5926, 176.3703), S: (2132.593, 1233.63)]",
+      "ui": 1.25,
+      "viewport": "(2560, 1440)"
+    },
+    {
+      "chapter": 2,
+      "clip_end": 1410.0,
+      "content": "(2124.593, 2165.0)",
+      "kind": "help",
+      "labels": 39,
+      "last_bottom": 1410.37036132813,
+      "lines": 44,
+      "paper": "[P: (302.5926, 176.3703), S: (2132.593, 1233.63)]",
+      "ui": 1.25,
+      "viewport": "(2560, 1440)"
+    },
+    {
+      "chapter": 3,
+      "clip_end": 1410.0,
+      "content": "(2132.593, 909.0)",
+      "kind": "help",
+      "labels": 11,
+      "last_bottom": 1085.37036132813,
+      "lines": 11,
+      "paper": "[P: (302.5926, 176.3703), S: (2132.593, 1233.63)]",
+      "ui": 1.25,
+      "viewport": "(2560, 1440)"
+    }
+  ],
+  "os": "10.0.26200",
+  "renderer": "NVIDIA GeForce RTX 3070",
+  "source_head": "20001a0aa825be6768e85708e6379dc5ac64ddeb",
+  "export": {
+    "override.cfg": {
+      "bytes": 89,
+      "sha256": "191423df0e9fcdca93b99159473faf69d13634ee0741f1765ce7e4f265878eaf"
+    },
+    "picross-p1.console.exe": {
+      "bytes": 50176,
+      "sha256": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec"
+    },
+    "picross-p1.exe": {
+      "bytes": 103035904,
+      "sha256": "5543ab4b6fb453c5dbe7f4effa0aad7f1cc06d73c12e8436adfc9fb266ac34ee"
+    },
+    "picross-p1.pck": {
+      "bytes": 13207296,
+      "sha256": "dd122633ec4359320394157b81b712840d997d92a93bd2d4262802ccf74d963e"
+    }
+  },
+  "synthetic_catalog": true
+}
