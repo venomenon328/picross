@@ -48,14 +48,18 @@ func apply(selection: Dictionary) -> Dictionary:
 
 func keep_visible(selection: Dictionary) -> void:
 	if selection.mode == "window":
-		window.position = Policy.position(context(),window.size,window.position)
+		var position: Vector2i = DisplayServer.window_get_position()
+		var target: Vector2i = Policy.position(context(),Preference.pixels(selection.preset),position)
+		if target != position: window.position = target
 
 func settle(selection: Dictionary) -> void:
 	# Windows applies the fullscreen/style change through queued WM_SIZE events.
 	# Re-measure after those events, then impose the exact client preset again.
 	if selection.mode == "window" and DisplayServer.window_get_mode() == DisplayServer.WINDOW_MODE_WINDOWED:
 		var desired: Vector2i = Preference.pixels(selection.preset)
+		# Moving uses the native server's cached size on Windows. Do it before
+		# imposing client dimensions, and only when the position actually changes.
+		keep_visible(selection)
 		if DisplayServer.window_get_size() != desired:
 			window.size = desired
 			DisplayServer.window_set_size(desired)
-		keep_visible(selection)
