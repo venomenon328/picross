@@ -1,0 +1,262 @@
+{
+  "source_head": "2c988cb1d58d75bacd3c8429981e80304816fccf",
+  "originals_commit": "5042456af701ab6659e4d5531fd19379475146c5",
+  "method": "anonymous HTTPS binary raw.githubusercontent.com GET; exact original size and SHA-256",
+  "files": [
+    {
+      "path": "evidence/ANZ-A-N02/settings-1080p-ui100.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/settings-1080p-ui100.png",
+      "bytes": 1798249,
+      "sha256": "bb4723ddf60a218975f6467e6da034e867284964c20b9fe3b0697cd8696967ce",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/settings-1080p-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/settings-1080p-ui125.png",
+      "bytes": 1797310,
+      "sha256": "28ffd38bf7a71ef9ce57107981662edf9b95af695c380a44f273a1adf375bb5d",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/settings-1080p-ui125-view-help.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/settings-1080p-ui125-view-help.png",
+      "bytes": 1766374,
+      "sha256": "97949ee6b1769b235d897c72b9d445796b11a5a6f61b2def23c1bb7e8fbeccda",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/settings-720p-ui100.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/settings-720p-ui100.png",
+      "bytes": 933872,
+      "sha256": "c086a97dcf4eb542ac29a3e77bb7d5b01e72fcdd0111d3ad832ebdce338041c8",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/settings-720p-ui100-view-help.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/settings-720p-ui100-view-help.png",
+      "bytes": 913761,
+      "sha256": "22c5bf4ebae0e60b1333dfbe21101105302a96478b67ed11d0e13f127b801ef8",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/settings-720p-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/settings-720p-ui125.png",
+      "bytes": 958082,
+      "sha256": "37484dc3db4dc4a8280dccc8aa6b93a90583625c4c5d7fe5ba1bfc73c499000b",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/settings-720p-ui125-bottom.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/settings-720p-ui125-bottom.png",
+      "bytes": 917560,
+      "sha256": "aff71aa87a97c77e49779bc871ce2a74bc77ddfc4c7bcc3ae1597ad80be04037",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/settings-720p-ui125-view-help.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/settings-720p-ui125-view-help.png",
+      "bytes": 881405,
+      "sha256": "8336e88beea40970667d08b46cf15887d70184dac2e9e94f714c8a2644e9ebd3",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/scale-options-720p-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/scale-options-720p-ui125.png",
+      "bytes": 918047,
+      "sha256": "16886916db534cc551cfadd5043e4d0a63aa7d3bae65f116c635313ff9026730",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/mode-options-720p-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/mode-options-720p-ui125.png",
+      "bytes": 898522,
+      "sha256": "9c76adb11507c6f3a012ee530b0af7ca418c4f4b32cc46741311e4154336d580",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/size-hover-720p-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/size-hover-720p-ui125.png",
+      "bytes": 922419,
+      "sha256": "86c3630aa846ccc1cd42776ead7966ed7d26e586edfd52bca4dd43f70a90734a",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/preview-borderless-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/preview-borderless-ui125.png",
+      "bytes": 2816130,
+      "sha256": "d45e8cbe2f326058bea2901c1e2a8926e2b23b813eda58b1dcf684d0de60e4e2",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/fullscreen-size-help-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/fullscreen-size-help-ui125.png",
+      "bytes": 2869264,
+      "sha256": "7e2602c3ad30f8dfa211fd66ce10db63dc74382dc0ecb5458f20900b3a096e8c",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/preview-window-720p-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/preview-window-720p-ui125.png",
+      "bytes": 809456,
+      "sha256": "25f48dfe3e010bb5fcef7d9b1b93ac04c1f5ef45a50594b0ebe21c6934d17623",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/storage-error-720p-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/storage-error-720p-ui125.png",
+      "bytes": 970769,
+      "sha256": "94b885e6c0ef7d898a831b344ab8e5c4558eaa7e8bfd00dd5e6dfe2ae573bcc8",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/puzzle-options-720p-ui125.png",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/puzzle-options-720p-ui125.png",
+      "bytes": 905575,
+      "sha256": "78cd05d88ed8b7e297fac9e0f6fd9e154b589b68de51b0e3f63ea32906fc2bf9",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/n02-report.json",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/n02-report.json",
+      "bytes": 148327,
+      "sha256": "11d6e0e71effc63a3920f62c765dcc0017e2c81cc1ef66d62be2c52c3a5402c5",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/os.jsonl",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/os.jsonl",
+      "bytes": 9103,
+      "sha256": "d78936f221a2c58dd6dd193213d42bbde0e0306aa3b56c9f0d2bc6b95fdeeec5",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/engine.jsonl",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/engine.jsonl",
+      "bytes": 7739997,
+      "sha256": "ae31b112d364967d2a45d84cadec0cf75c79f26804a612b92a4d3c85b51a9816",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/stdout.log",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/stdout.log",
+      "bytes": 172,
+      "sha256": "2fafe0ae2ca2b18027e55a4d2e73bdda7a80b71ef535330fbbbfecac74f8864f",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/restart-report.json",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/restart-report.json",
+      "bytes": 47221,
+      "sha256": "fd5ce35c49da4cb587ae5177d72e689feb5b58736d0ffb40eaf38e654ef1e02c",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/restart-os.jsonl",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/restart-os.jsonl",
+      "bytes": 639,
+      "sha256": "25ffa9d5ee1bee1d2ee85dbe0fd3beb535fd1cbc0c4e8935018bfa4f93067815",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/restart-engine.jsonl",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/restart-engine.jsonl",
+      "bytes": 1452015,
+      "sha256": "b57c392ba03f48c4d52b82deb9e80f274b821a61df212ea2d503ff6fab9e0f45",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/restart-stdout.log",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/restart-stdout.log",
+      "bytes": 172,
+      "sha256": "2fafe0ae2ca2b18027e55a4d2e73bdda7a80b71ef535330fbbbfecac74f8864f",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/export.json",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/export.json",
+      "bytes": 14297,
+      "sha256": "0cf87f32cc2c9bc21e4c528c09f483f9db1ce04d0ab543326d490c3353f81b2a",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/observer-main.gd",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/observer-main.gd",
+      "bytes": 6507,
+      "sha256": "138d9ae60050a4aaed0841ce49a0c3de30b0721cef367489faaa14c9b091575c",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/observer.gd",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/observer.gd",
+      "bytes": 6750,
+      "sha256": "9f5ceef4fbad09cc966c91d58badd1da1d0523641c765cc4ede780fcbe7638ed",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/win.py",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/win.py",
+      "bytes": 3864,
+      "sha256": "f634f9d2973739fff36d4013d7dc8aaca343a5c800b08713f5a3869ac15a82c4",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/n02_gui.py",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/n02_gui.py",
+      "bytes": 8105,
+      "sha256": "0b6eba5c84009f0a0ce6fa55c3a7dd96ca8ee9cda7166559e22fb788de20238f",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/supplement.py",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/supplement.py",
+      "bytes": 2563,
+      "sha256": "8b527e6acf8058cbb9a80c3668a0dcdd3318c96ea819c97c5394b214673a3982",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/restart_gui.py",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/restart_gui.py",
+      "bytes": 1668,
+      "sha256": "cdd962ac411d0d85e640ae3007980beb6cde4633a6d0383b19ad7144b1ee42c1",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/launch.py",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/launch.py",
+      "bytes": 1066,
+      "sha256": "d4e784591ffd8333e6a181ebadb2ce7c02d9fb58bc221b4fb963fec8277a0245",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/pre-restart.json",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/pre-restart.json",
+      "bytes": 7245,
+      "sha256": "e4d6cde29d668af74b87bb5566d61f81c52421cca006992a4b1e1eea5d9f9e3b",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/core.log",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/core.log",
+      "bytes": 51862,
+      "sha256": "523e0a67743a1723dce640fd95519cec8249a39a6ecfef74701a2af1774593ca",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/n02_core.gd",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/n02_core.gd",
+      "bytes": 324,
+      "sha256": "f281b99fcb6b871491331c56ec84466b6f4696ab046a4035d852b41b75c6c045",
+      "passed": true
+    },
+    {
+      "path": "evidence/ANZ-A-N02/core_probe.py",
+      "url": "https://raw.githubusercontent.com/venomenon328/picross/5042456af701ab6659e4d5531fd19379475146c5/evidence/ANZ-A-N02/core_probe.py",
+      "bytes": 678,
+      "sha256": "2123309dcd8455fdee3729b8efee8fd7542b5ce27f6791c268a1900fe6735d01",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "bytes": 30579370,
+  "greater_than_1_mib": 7
+}
