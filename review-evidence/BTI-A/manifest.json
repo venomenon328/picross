@@ -21,8 +21,8 @@
     },
     {
       "path": "review-evidence/BTI-A/exports.json",
-      "bytes": 659,
-      "sha256": "8d34a3c49f320fdd9ec325c038b2d425ead51aff7c8cdaf2740c102f8470e942"
+      "bytes": 639,
+      "sha256": "c00cd0c0bcb996276122c656da89f5a4bffe4ba9d8badcaa4473f79c0e8b1470"
     },
     {
       "path": "review-evidence/BTI-A/help-1280x720-ui125.png",
@@ -46,8 +46,8 @@
     },
     {
       "path": "review-evidence/BTI-A/native.log",
-      "bytes": 200,
-      "sha256": "7047ba8b8fcbbf04ec995e90c1b6aa0958d29900a5a2cd0ddcdd357af2a2e208"
+      "bytes": 196,
+      "sha256": "729d9ee305939580495c8637518d2d0bb0ba868e443fa7842489c772f7b1688d"
     },
     {
       "path": "review-evidence/BTI-A/native_titles.gd",
@@ -61,8 +61,8 @@
     },
     {
       "path": "review-evidence/BTI-A/player-start.log",
-      "bytes": 172,
-      "sha256": "2fafe0ae2ca2b18027e55a4d2e73bdda7a80b71ef535330fbbbfecac74f8864f"
+      "bytes": 169,
+      "sha256": "3d47b43960893d72a93f13a10faadd5088d13c8b22cbea979d266d41f83044fb"
     },
     {
       "path": "review-evidence/BTI-A/settings-1280x720-ui125.png",
@@ -91,13 +91,13 @@
     },
     {
       "path": "review-evidence/BTI-A/web-titles-pck.log",
-      "bytes": 189,
-      "sha256": "d9fc7b16849f870e88d462f5125560283acc1740b0dc2a7ce4e107070158e9f2"
+      "bytes": 186,
+      "sha256": "e172d4f2eafe4c6c405bb300e08cb10c393cc51db00a5761be4f3acb1cc70a8a"
     },
     {
       "path": "review-evidence/BTI-A/windows-titles-pck.log",
-      "bytes": 189,
-      "sha256": "d9fc7b16849f870e88d462f5125560283acc1740b0dc2a7ce4e107070158e9f2"
+      "bytes": 186,
+      "sha256": "e172d4f2eafe4c6c405bb300e08cb10c393cc51db00a5761be4f3acb1cc70a8a"
     },
     {
       "path": "game/art/drawing/view_titles/catalog.png",
