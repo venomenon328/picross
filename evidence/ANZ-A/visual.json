@@ -1,0 +1,539 @@
+{
+  "head": "c624dc9972f9234fa0c1c08268acf57d0afe6a24",
+  "captures": {
+    "mode-options-720p-ui125": {
+      "accept": [
+        290.0,
+        221.5,
+        103.0,
+        55.0
+      ],
+      "active": {
+        "mode": "window",
+        "preset": "1280x720"
+      },
+      "adapter": "NVIDIA GeForce RTX 3070",
+      "applying": false,
+      "book_state": 4,
+      "borderless": false,
+      "cancel": [
+        290.0,
+        221.5,
+        95.0,
+        55.0
+      ],
+      "card": [
+        290.0,
+        221.5,
+        700.0,
+        3098.0
+      ],
+      "card_visible": false,
+      "catalog_cards": [],
+      "catalog_info": [
+        [
+          827.0,
+          664.0,
+          193.0,
+          55.0
+        ]
+      ],
+      "client": [
+        1280,
+        720
+      ],
+      "desktop": [
+        2560,
+        1440
+      ],
+      "dpi": 96,
+      "focused": true,
+      "help": [
+        922.5,
+        39.0,
+        55.0,
+        55.0
+      ],
+      "info": true,
+      "info_return": [
+        77.407470703125,
+        58.1851654052734,
+        325.0,
+        55.0
+      ],
+      "info_switch": [
+        851.203735351563,
+        58.1851654052734,
+        262.5,
+        55.0
+      ],
+      "menu": [
+        995.0,
+        39.0,
+        55.0,
+        55.0
+      ],
+      "message": "",
+      "mode": 0,
+      "mode_control": [
+        77.407470703125,
+        300.185180664063,
+        1028.0,
+        55.0
+      ],
+      "mode_popup": {
+        "items": [
+          [
+            "Fenster",
+            0
+          ],
+          [
+            "Rahmenloses Fenster",
+            1
+          ],
+          [
+            "Exklusives Vollbild",
+            2
+          ]
+        ],
+        "position": [
+          77,
+          355
+        ],
+        "size": [
+          1028,
+          152
+        ],
+        "visible": true
+      },
+      "os": "10.0.26200",
+      "outer": [
+        1286,
+        749
+      ],
+      "pid": 46976,
+      "position": [
+        2875,
+        151
+      ],
+      "preview": false,
+      "resize_disabled": true,
+      "resolution": "ClientflÃ¤che: 1280 Ã— 720 Pixel Â· nur GrÃ¶ÃŸen mit Platz fÃ¼r Rahmen und Taskleiste",
+      "saved": {
+        "mode": "window",
+        "preset": "1280x720"
+      },
+      "scale": [
+        77.407470703125,
+        525.185180664063,
+        1028.0,
+        55.0
+      ],
+      "screen": 1,
+      "screen_scale": 1.0,
+      "scroll": [
+        77.407470703125,
+        143.185165405273,
+        1036.29626464844,
+        546.814819335938
+      ],
+      "seconds": 0,
+      "section": "settings",
+      "server_client": [
+        1280,
+        720
+      ],
+      "settings_visible": true,
+      "size_control": [
+        77.407470703125,
+        408.185180664063,
+        1028.0,
+        55.0
+      ],
+      "size_disabled": false,
+      "size_popup": {
+        "disabled": [
+          false,
+          true
+        ],
+        "position": [
+          0,
+          0
+        ],
+        "size": [
+          100,
+          100
+        ],
+        "visible": false
+      },
+      "time": 8032,
+      "ui_scale": 1.25,
+      "usable": [
+        2560,
+        0,
+        2560,
+        1392
+      ],
+      "window_client": [
+        1280,
+        720
+      ]
+    },
+    "confirmation-720p-ui125": {
+      "accept": [
+        315.0,
+        363.0,
+        650.0,
+        55.0
+      ],
+      "active": {
+        "mode": "window",
+        "preset": "1280x720"
+      },
+      "adapter": "NVIDIA GeForce RTX 3070",
+      "applying": false,
+      "book_state": 4,
+      "borderless": false,
+      "cancel": [
+        315.0,
+        434.0,
+        650.0,
+        55.0
+      ],
+      "card": [
+        290.0,
+        206.0,
+        700.0,
+        308.0
+      ],
+      "card_visible": true,
+      "catalog_cards": [],
+      "catalog_info": [
+        [
+          827.0,
+          664.0,
+          193.0,
+          55.0
+        ]
+      ],
+      "client": [
+        1280,
+        720
+      ],
+      "desktop": [
+        2560,
+        1440
+      ],
+      "dpi": 96,
+      "focused": true,
+      "help": [
+        922.5,
+        39.0,
+        55.0,
+        55.0
+      ],
+      "info": true,
+      "info_return": [
+        77.407470703125,
+        58.1851654052734,
+        325.0,
+        55.0
+      ],
+      "info_switch": [
+        851.203735351563,
+        58.1851654052734,
+        262.5,
+        55.0
+      ],
+      "menu": [
+        995.0,
+        39.0,
+        55.0,
+        55.0
+      ],
+      "message": "",
+      "mode": 0,
+      "mode_control": [
+        77.407470703125,
+        300.185180664063,
+        1028.0,
+        55.0
+      ],
+      "mode_popup": {
+        "items": [
+          [
+            "Fenster",
+            0
+          ],
+          [
+            "Rahmenloses Fenster",
+            1
+          ],
+          [
+            "Exklusives Vollbild",
+            2
+          ]
+        ],
+        "position": [
+          77,
+          355
+        ],
+        "size": [
+          1028,
+          152
+        ],
+        "visible": false
+      },
+      "os": "10.0.26200",
+      "outer": [
+        1286,
+        749
+      ],
+      "pid": 46976,
+      "position": [
+        2875,
+        151
+      ],
+      "preview": true,
+      "resize_disabled": true,
+      "resolution": "ClientflÃ¤che: 1280 Ã— 720 Pixel Â· nur GrÃ¶ÃŸen mit Platz fÃ¼r Rahmen und Taskleiste",
+      "saved": {
+        "mode": "window",
+        "preset": "1366x768"
+      },
+      "scale": [
+        77.407470703125,
+        525.185180664063,
+        1028.0,
+        55.0
+      ],
+      "screen": 1,
+      "screen_scale": 1.0,
+      "scroll": [
+        77.407470703125,
+        143.185165405273,
+        1036.29626464844,
+        546.814819335938
+      ],
+      "seconds": 15,
+      "section": "settings",
+      "server_client": [
+        1280,
+        720
+      ],
+      "settings_visible": true,
+      "size_control": [
+        77.407470703125,
+        408.185180664063,
+        1028.0,
+        55.0
+      ],
+      "size_disabled": true,
+      "size_popup": {
+        "disabled": [
+          false,
+          true
+        ],
+        "position": [
+          80,
+          401
+        ],
+        "size": [
+          1101,
+          367
+        ],
+        "visible": false
+      },
+      "time": 10734,
+      "ui_scale": 1.25,
+      "usable": [
+        2560,
+        0,
+        2560,
+        1392
+      ],
+      "window_client": [
+        1280,
+        720
+      ]
+    },
+    "ui-exclusive-1440p-125": {
+      "accept": [
+        955.0,
+        723.0,
+        650.0,
+        55.0
+      ],
+      "active": {
+        "mode": "exclusive",
+        "preset": "1366x768"
+      },
+      "adapter": "NVIDIA GeForce RTX 3070",
+      "applying": false,
+      "book_state": 4,
+      "borderless": false,
+      "cancel": [
+        955.0,
+        794.0,
+        650.0,
+        55.0
+      ],
+      "card": [
+        930.0,
+        566.0,
+        700.0,
+        308.0
+      ],
+      "card_visible": true,
+      "catalog_cards": [],
+      "catalog_info": [
+        [
+          859.5,
+          664.0,
+          193.0,
+          55.0
+        ]
+      ],
+      "client": [
+        2560,
+        1440
+      ],
+      "desktop": [
+        2560,
+        1440
+      ],
+      "dpi": 96,
+      "focused": true,
+      "help": [
+        2240.0,
+        63.0,
+        55.0,
+        55.0
+      ],
+      "info": true,
+      "info_return": [
+        124.81494140625,
+        91.3703308105469,
+        325.0,
+        55.0
+      ],
+      "info_switch": [
+        1994.90747070313,
+        91.3703308105469,
+        262.5,
+        55.0
+      ],
+      "menu": [
+        2312.5,
+        63.0,
+        55.0,
+        55.0
+      ],
+      "message": "",
+      "mode": 4,
+      "mode_control": [
+        124.81494140625,
+        333.370330810547,
+        2132.0,
+        55.0
+      ],
+      "mode_popup": {
+        "items": [
+          [
+            "Fenster",
+            0
+          ],
+          [
+            "Rahmenloses Fenster",
+            1
+          ],
+          [
+            "Exklusives Vollbild",
+            2
+          ]
+        ],
+        "position": [
+          80,
+          357
+        ],
+        "size": [
+          1101,
+          152
+        ],
+        "visible": false
+      },
+      "os": "10.0.26200",
+      "outer": [
+        2560,
+        1440
+      ],
+      "pid": 46976,
+      "position": [
+        2560,
+        0
+      ],
+      "preview": true,
+      "resize_disabled": true,
+      "resolution": "ClientflÃ¤che: 2560 Ã— 1440 Pixel Â· aktuelle DesktopauflÃ¶sung",
+      "saved": {
+        "mode": "window",
+        "preset": "1366x768"
+      },
+      "scale": [
+        124.81494140625,
+        558.370361328125,
+        2132.0,
+        55.0
+      ],
+      "screen": 1,
+      "screen_scale": 1.0,
+      "scroll": [
+        124.81494140625,
+        176.370330810547,
+        2132.59252929688,
+        1233.62963867188
+      ],
+      "seconds": 15,
+      "section": "settings",
+      "server_client": [
+        2560,
+        1440
+      ],
+      "settings_visible": true,
+      "size_control": [
+        124.81494140625,
+        441.370330810547,
+        2132.0,
+        55.0
+      ],
+      "size_disabled": true,
+      "size_popup": {
+        "disabled": [
+          false,
+          true
+        ],
+        "position": [
+          80,
+          401
+        ],
+        "size": [
+          1101,
+          367
+        ],
+        "visible": false
+      },
+      "time": 12336,
+      "ui_scale": 1.25,
+      "usable": [
+        2560,
+        0,
+        2560,
+        1392
+      ],
+      "window_client": [
+        2560,
+        1440
+      ]
+    }
+  }
+}

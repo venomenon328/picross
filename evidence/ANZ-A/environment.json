@@ -1,0 +1,45 @@
+{
+  "platform": "Windows-11-10.0.26200-SP0",
+  "monitors": [
+    {
+      "bounds": [
+        -2560,
+        0,
+        0,
+        1440
+      ],
+      "work": [
+        -2560,
+        0,
+        0,
+        1392
+      ],
+      "primary": false,
+      "effective_dpi": [
+        96,
+        96
+      ]
+    },
+    {
+      "bounds": [
+        0,
+        0,
+        2560,
+        1440
+      ],
+      "work": [
+        0,
+        0,
+        2560,
+        1392
+      ],
+      "primary": true,
+      "effective_dpi": [
+        96,
+        96
+      ]
+    }
+  ],
+  "scope": "Own isolated synthetic player/profile; no desktop resolution changes",
+  "source_code_hashes_verified": true
+}
