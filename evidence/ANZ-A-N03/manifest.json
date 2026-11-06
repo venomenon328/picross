@@ -1,0 +1,124 @@
+{
+  "source_head": "9a86012810edf7f815fe095d829a09b51e07b915",
+  "base": "5d90b218e3c96c7cd133c2b6c5db39a65674ff5c",
+  "expires": "2026-11-13",
+  "purpose": "ANZ-A-N03-R04 original Windows/UI review for PR 528, including current large original views",
+  "files": {
+    "catalog-title-1080p-ui100.png": {
+      "bytes": 1989085,
+      "sha256": "684848f904140458dfe723cf9f4f520a51233a5b415b6fff9dea72375bc81686"
+    },
+    "settings-1080p-ui100.png": {
+      "bytes": 1795772,
+      "sha256": "975044cd75cd327b4c92a9d990d8d9ad465682ca91c32d97746d723de4eac634"
+    },
+    "settings-1080p-ui125.png": {
+      "bytes": 1793279,
+      "sha256": "33538e00412ce78e223712f35334a0bae926265257fe812476a6c20e68226651"
+    },
+    "settings-720p-ui100.png": {
+      "bytes": 929782,
+      "sha256": "be6c7c2fee897da6be483254556254897a9c18e4b2bc0d3bb7e91250dcaf2726"
+    },
+    "settings-720p-ui125.png": {
+      "bytes": 958576,
+      "sha256": "83674b07c97047324102a97d2aa7e83c634d33d2854d7760d8d6e8afc3b206c3"
+    },
+    "settings-720p-ui125-bottom.png": {
+      "bytes": 912646,
+      "sha256": "8571b351791ae3246640de04ea90cfaf5cae29801745d97f745be45d555aaead"
+    },
+    "size-hover-720p-ui125.png": {
+      "bytes": 924498,
+      "sha256": "e81566414818f3f079bddba1640405e5dcbff9831e9f93c00ca50d414c426711"
+    },
+    "view-focus-720p-ui125.png": {
+      "bytes": 876636,
+      "sha256": "f9334eeb7c274c6741cc2e6353bb7a88c11218643ab25d6a60597cfccaa13d83"
+    },
+    "mode-popup-720p-ui125.png": {
+      "bytes": 888826,
+      "sha256": "1fbb2f121a42278d3bc4251ea2fef35310df1fac3e18ed4e6692207c56f81536"
+    },
+    "fullscreen-size-help-ui125.png": {
+      "bytes": 2863532,
+      "sha256": "bfeef8238e24447f9f344de27908932d916c8cd13529749f5a396f27fd24cab6"
+    },
+    "preview-window-720p-ui125.png": {
+      "bytes": 812008,
+      "sha256": "dd58b2fe9b93d3101b87e9004708f5f1ae61978cfd3387c520091be3f2472680"
+    },
+    "storage-error-720p-ui125.png": {
+      "bytes": 965804,
+      "sha256": "e13ba1825ae6d0399d31f0f03e0fde6425496ae32533bb9fa0a50c2e0fb9580d"
+    },
+    "catalog-origin-help-back.png": {
+      "bytes": 1032649,
+      "sha256": "ec8e49c958a8401b5c26a54908ef49e118b4b7f9c43d32164b39b295b5f4db1a"
+    },
+    "work-origin-settings-back.png": {
+      "bytes": 965656,
+      "sha256": "31efd061f2639aa2fd755f6b9f4b99ea99d4609ed380976b769f877775a6e43a"
+    },
+    "work-origin-help-back.png": {
+      "bytes": 1032649,
+      "sha256": "ec8e49c958a8401b5c26a54908ef49e118b4b7f9c43d32164b39b295b5f4db1a"
+    },
+    "n03-report.json": {
+      "bytes": 328110,
+      "sha256": "716e41480e55b1c9ff5a723f018b4300294cf392d7ad391161692ca3a326e2e0"
+    },
+    "os.jsonl": {
+      "bytes": 6390,
+      "sha256": "a912d5edc85c007d7d1fef41e8adde78812962fee2280df3d4b5efbf4f97b9b5"
+    },
+    "engine.jsonl": {
+      "bytes": 4786958,
+      "sha256": "417650c74fb2717f057a38f04e0c9c97400e44b20a31780f5192f1d99577d7a3"
+    },
+    "stdout.log": {
+      "bytes": 172,
+      "sha256": "2fafe0ae2ca2b18027e55a4d2e73bdda7a80b71ef535330fbbbfecac74f8864f"
+    },
+    "export.json": {
+      "bytes": 14512,
+      "sha256": "dc7e4998321a024da61d3871d852f978d0386cac757dd30b02bf6cc4457deb50"
+    },
+    "export.py": {
+      "bytes": 1981,
+      "sha256": "78a9d20122620b94ffb496fb8eee2537ce460d4da9d3554fb74d16d6a645325f"
+    },
+    "observer.gd": {
+      "bytes": 7879,
+      "sha256": "33a7be6afa238e1fbf9dbd168d627b3dc6356c55c28bc121f03fada485f4a232"
+    },
+    "win.py": {
+      "bytes": 3864,
+      "sha256": "f634f9d2973739fff36d4013d7dc8aaca343a5c800b08713f5a3869ac15a82c4"
+    },
+    "n03_gui.py": {
+      "bytes": 9811,
+      "sha256": "b3f5f863b3de489413302255c5c3b9b7a61b7f2d5cd2b83d3410f8d7c8297bf3"
+    },
+    "launch.py": {
+      "bytes": 1066,
+      "sha256": "d4e784591ffd8333e6a181ebadb2ce7c02d9fb58bc221b4fb963fec8277a0245"
+    },
+    "probe.py": {
+      "bytes": 1914,
+      "sha256": "4890aba6145d97479680ac86146b901d86d1ce808ae2a372556706557bd567c1"
+    },
+    "information.log": {
+      "bytes": 273,
+      "sha256": "0f43983edf1582ff7ea12a0426146c4ec7fd8c8c86ffe3f20a2fc4c965c3f913"
+    },
+    "information.json": {
+      "bytes": 585,
+      "sha256": "766ed373d2fbeb7596fffd0123962804a6f2b2057aab6c70fb48956078f6fda8"
+    },
+    "source-binding.json": {
+      "bytes": 13960,
+      "sha256": "b0558d9f2db017e56d8264860cbe28278f7e326ff16cb8423a567c5f185d6da8"
+    }
+  }
+}
