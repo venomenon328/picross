@@ -1,5 +1,15 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**ANZ / #527 · freigegebene native Anzeigeoptionen, noch nicht implementiert:**
+Die bestehende linke Buch-Einstellungsseite bekommt im handgezeichneten Stil
+zwei Auswahlen für feste zulässige Clientfenstergrößen und für Fenster,
+rahmenloses sowie exklusives Vollbild. Native Vollbildmodi verwenden die
+Desktopauflösung. Wechsel haben eine 15-s-Bestätigung mit Rücknahme,
+Fenster/Arbeitszoom/UI-Skalierung bleiben getrennt. Keine neue Buchkamera,
+keine neue Informationsseite oder Web-Fensteroption und kein spezifischer
+Buchanimations-Wechseltest. [ANZ-Fachvertrag](DISPLAY_SETTINGS.md),
+[Issue #527](https://github.com/venomenon328/picross/issues/527).
+
 **B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
 und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
 Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
