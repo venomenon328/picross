@@ -1,5 +1,18 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+**ANZ-A / #527 · freigegebene Fenstermodus-Spezifikation, nicht implementiert:**
+[ANZ-Fachvertrag](DISPLAY_SETTINGS.md) löst D-07/D-21 und §5.2 **nur** für die
+native Wahl der Fenstergröße und die bisher erlaubte freie Resize-/Maximier-
+Bedienung ab: statt beliebiger Clientabmessungen feste monitorabhängige
+Presets 1280×720 bis 3840×2160, dazu Fenster/rahmenloses/exklusives Vollbild
+bei aktueller Desktopauflösung. Sicherer 15-s-Rollback und separate
+versionierte Anzeigepräferenz sind vorgesehen, ohne Schema-1-Migration.
+Der bestehende 1920×1080-Fensterstart bleibt passender Standard,
+1080p primäres Komfortziel und 720p begrenzter Fallback; Raster-/UI-Fit,
+Hinweise und Web-Verhalten bleiben unverändert. Kein neuer Spezialpfad
+für Moduswechsel während einer Buchseitenanimation. Noch keine
+Spielverhaltens- oder Windows-Abnahme. [Issue #527](https://github.com/venomenon328/picross/issues/527).
+
 **HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet Tidy Hand für
 normale Spielertexte einschließlich Warnungen und gemessene Textbudgets;
