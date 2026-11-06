@@ -119,6 +119,24 @@ historischen Abnahmen werden dadurch nicht nachträglich geändert.
 Die getrennten HIL-T01/R01/M01-Gates stehen in
 [Issue #500](https://github.com/venomenon328/picross/issues/500).
 
+## Einstellungsseite · ANZ-A-N03 / #527
+
+Zwei handgezeichnete Gruppen Anzeige/Rätselansicht stehen als begrenzter Block
+mittig in der sicheren linken Scrollfläche. Label und Dropdown bleiben in einer
+Zeile; nur Fenstergröße und Rätselansicht besitzen rechts eine fokussierbare
+Fragezeichenhilfe. Die anderen beiden Dropdowns füllen den freien Raum samt
+bisherigem Zwischenabstand. Bestehende Tooltipgestaltung trägt die Erklärungen.
+UI100/125 ist eine sitzungsgebundene Auswahl. Der Seitentitel nutzt wie der
+tatsächliche Katalogtitel Bakso Daging bei 28 × UI; beide Gruppentitel erhalten
+nach N03-E01 ebenfalls Bakso bei kleineren 20 × UI. Die N02-Fraunces-Annahme für
+den Katalogtitel ist damit korrigiert. Kein
+Beenden-Widget und kein manueller Hinweisreset auf dieser Seite. Einstellungen
+setzen keine Hinweisleseposition zurück; Katalog-Ausgang und OS-Schließen bleiben
+samt Fehlerblockade/Retry erhalten. [Anzeigevertrag](DISPLAY_SETTINGS.md).
+Beide Informationsseiten beschriften ihren oberen Rückbutton nur mit „Zurück“.
+Tooltip und Accessibilityname nennen das tatsächliche Katalog-/Rätselziel;
+Besuchsursprung, Übergang, Scroll-/Fokuskontext und Flush-/Recoveryguard bleiben.
+
 ## Speicher- und Fehlergrenzen
 
 Vor einer Zielanimation werden gültige Ziel-ID und notwendiger Flush geprüft.
@@ -136,7 +154,7 @@ Es gibt keine Migration. Gültiges Backup ohne Primary bleibt bis zur bestätigt
 Ein ungültiger Save sperrt nur sein Blatt. Leerer Katalog und Ladefehler bleiben
 verschiedene Anzeigen; Einstellungen, Hilfe und Beenden benötigen keine Session.
 
-Beenden-Button und native Fensterschließung invalidieren zunächst ausstehende
+Der Katalog-Beenden-Button und native Fensterschließung invalidieren zunächst ausstehende
 Übergänge und nutzen anschließend den vorhandenen Flush. Fehler lassen die App
 offen. Web wartet bei der eigenen Beendenaktion auf bestätigten Save- und
 Präferenzsync; Fehler bleiben mit Retry erreichbar. Browsergesteuerter Tab- oder

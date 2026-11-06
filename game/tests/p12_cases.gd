@@ -231,7 +231,7 @@ static func ui_cases(t: SceneTree) -> void:
 			t.check(column_window.end == column_22.size() and row_window.end == app.session.definition.rows[35].size(), "J-02 default windows retain grid-near ends")
 		elif position == 2:
 			t.check(column_window.start == 0 and row_window.start == 0, "J-02 outer beginnings reachable on both axes")
-	b.reset_clue_pan()
+	seed_grid_reads(b)
 	b.navigate_to(Vector2(0.5, 0.5))
 	var start: Vector2i = b.view.hit(b.view.viewport.get_center())
 	var point: Vector2 = b.get_global_transform() * b.view.cell_rect(start).get_center()
@@ -326,7 +326,7 @@ static func ui_cases(t: SceneTree) -> void:
 	b.size.x = 560
 	b._layout()
 	b.restore_view(b.capture_view().merged({"zoom":24,"overview":false},true))
-	b.reset_clue_pan()
+	seed_grid_reads(b)
 	await semantic_clue_geometry_routes(t, app)
 	await clue_navigation_routes(t, app, longest_row, longest_column)
 	await hint_drag_marker_routes(t, app, longest_row, longest_column)
@@ -364,7 +364,7 @@ static func ui_cases(t: SceneTree) -> void:
 static func followup_input_geometry(t: SceneTree, app: Main) -> void:
 	var b: Board = app.board
 	app.set_tool("fill")
-	b.reset_clue_pan()
+	seed_grid_reads(b)
 	var rows: Array[int] = visible_overflowing_lines(b, "row")
 	if rows.is_empty():
 		return
@@ -477,7 +477,7 @@ static func hint_drag_marker_routes(t: SceneTree, app: Main, row: int, column: i
 			b.cancel_gesture()
 			t.mouse_button(point, false, MOUSE_BUTTON_LEFT)
 			t.check(b.capture_view() == confirmed and b.pan_drag_distance == 0.0, "R3/B-03 %s cancel restores confirmed read at %d" % [axis, anchor])
-	b.reset_clue_pan()
+	seed_grid_reads(b)
 
 static func token_centers(visual: Dictionary) -> Dictionary:
 	var centers: Dictionary = {}
@@ -598,7 +598,7 @@ static func monotone_clue_route(t: SceneTree, board: Board, axis: String, index:
 
 static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int) -> void:
 	var board: Board = app.board
-	board.reset_clue_pan()
+	seed_grid_reads(board)
 	board.navigate_to(Vector2(float(column) / 50.0, float(row) / 50.0))
 	for axis: String in ["row", "column"]:
 		var index: int = row if axis == "row" else column
@@ -653,7 +653,7 @@ static func snap_geometry_routes(t: SceneTree, app: Main, row: int, column: int)
 	board = app.board
 	board.size.x = 560
 	board._layout()
-	board.reset_clue_pan()
+	seed_grid_reads(board)
 	board.navigate_to(Vector2(float(column) / 50.0, float(row) / 50.0))
 	monotone_clue_route(t, board, "row", row)
 	monotone_clue_route(t, board, "column", column)
@@ -670,7 +670,7 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	await t.process_frame
 	b.size.x = 560
 	b._layout()
-	b.reset_clue_pan()
+	seed_grid_reads(b)
 	set_work_zoom(b, 12.0)
 	var rows: Array[int] = overflowing_lines(b, "row")
 	var columns: Array[int] = overflowing_lines(b, "column")
@@ -721,7 +721,7 @@ static func semantic_clue_geometry_routes(t: SceneTree, app: Main) -> void:
 	b._layout()
 	current = check_semantic_transition(t, b, cases, current, "resize smaller")
 	check_restored_windows(t, current, initial, "resize round trip")
-	b.reset_clue_pan()
+	seed_grid_reads(b)
 	app.set_ui_scale(original_scale)
 	t.root.size = original_size
 	await t.process_frame
@@ -781,7 +781,7 @@ static func reading_signature(layout: Dictionary) -> Array:
 
 static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, longest_column: int) -> void:
 	var b: Control = app.board
-	b.reset_clue_pan()
+	seed_grid_reads(b)
 	var cells: Array[int] = app.session.player.cells.duplicate()
 	var history: Array = app.session.player.history.duplicate(true)
 	var undo_used: bool = app.session.player.undo_used
@@ -917,15 +917,15 @@ static func clue_navigation_routes(t: SceneTree, app: Main, longest_row: int, lo
 	t.check(b.row_clue_reads == expected_reads.row_clue_reads and b.column_clue_reads == expected_reads.column_clue_reads, "J-03 zoom/UI/resize preserve semantic per-line positions across changed capacities")
 	t.check(app.session.player.cells == cells and app.session.player.history == history and app.session.player.undo_used == undo_used and app.session.completed == completed and app.session.gesture.changes().is_empty(), "J-03 clue navigation preserves matrix/preview/history/undo/completion")
 	t.check(b.view.cell_size <= b.fit_ceiling and b.view.normalized_view() == mini_frame, "VS2 resize/zoom retain full grid without navigation")
-	# Visible reset control returns every line to its grid-side default.
+	# N02: settings must preserve the independent reads, without a reset command.
 	t.root.size = Vector2i(1280, 720)
 	app.set_ui_scale(1.0)
 	await t.process_frame
+	var settings_reads: Dictionary = b.capture_view()
 	app.show_information("settings")
 	await t.process_frame
-	t.check(app.clue_reset_button.is_visible_in_tree(), "H-04 clue reset control stays visible")
-	app.clue_reset_button.pressed.emit()
-	t.check(b.row_clue_steps.count(0) == b.row_clue_steps.size() and b.column_clue_steps.count(0) == b.column_clue_steps.size(), "J-03 reset control restores every grid-side clue window")
+	t.check(not b.has_method("reset_clue_pan"), "N02 no hidden manual clue reset")
+	t.check(b.row_clue_reads == settings_reads.row_clue_reads and b.column_clue_reads == settings_reads.column_clue_reads, "N02 settings preserve every semantic clue read")
 	app.return_to_work()
 	app.set_ui_scale(1.25)
 	b.size.x = 560
@@ -997,3 +997,12 @@ static func has_button_text(node: Node, text: String) -> bool:
 		if has_button_text(child, text):
 			return true
 	return false
+
+static func seed_grid_reads(board: Control) -> void:
+	# Only synthetic input data: do not relayout the deliberately narrow probe.
+	board.ensure_clue_steps()
+	for reads: Array in [board.row_clue_reads,board.column_clue_reads]:
+		for index: int in range(reads.size()): reads[index] = ClueLayout.grid_end_position()
+	board.normalize_clue_steps()
+	board.clear_clue_hover()
+	board.queue_redraw()

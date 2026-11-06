@@ -1,5 +1,15 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**ANZ-A / #527 · native Anzeigeoptionen auf dem Arbeitsbranch implementiert:**
+Die bestehende linke Buch-Einstellungsseite bietet im handgezeichneten Stil
+zwei Auswahlen für feste zulässige Clientfenstergrößen und für Fenster,
+rahmenloses sowie exklusives Vollbild. Native Vollbildmodi verwenden die
+Desktopauflösung. Wechsel haben eine 15-s-Bestätigung mit Rücknahme,
+Fenster/Arbeitszoom/UI-Skalierung bleiben getrennt. Keine neue Buchkamera,
+keine neue Informationsseite oder Web-Fensteroption und kein spezifischer
+Buchanimations-Wechseltest. [ANZ-Fachvertrag](DISPLAY_SETTINGS.md),
+[Issue #527](https://github.com/venomenon328/picross/issues/527).
+
 **B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
 und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
 Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
@@ -191,8 +201,17 @@ gemeinsame BP-3-Montierungen, die damaligen Fraunces-/Plex-Rollen, feste C1-Kont
 native N1-Informationsseite. Diese konkrete Arbeitsansicht ersetzt die historische
 BP-3-Empfehlung B, nicht die noch offene gesamte Themen-/Kapitelentscheidung.
 Raster und UI werden getrennt auf unverzerrtem A-Papier gezeichnet. N1 nutzt
-nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen,
-Hinweisreset, H1, Bedienhilfe und Beenden teilen sich eine Seite mit Rückweg.
+nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen und H1 nutzen die linke Informationsseite, Bedienhilfe die rechte.
+ANZ-A-N03 / #527 erhält die N02-Anordnung: zwei mittig auf dem
+linken Papier stehende handgezeichnete Gruppen mit Titellaschen und horizontalen
+Label-/Dropdownzeilen. Einstellungen verwendet wie der tatsächliche Katalogtitel
+Bakso Daging bei 28 × UI; Gruppenüberschriften erhalten nach N03-E01 ebenfalls
+Bakso bei kleineren 20 × UI, ohne neue Rahmen-/Titellaschengestaltung.
+Nur Fenstergröße und Rätselansicht besitzen gestylte Hover-/Fokushilfen, die
+anderen Dropdowns füllen die freie Zeilenbreite. Die Informations-Rücknavigation
+zeigt „Zurück“ bei unverändertem Ziel samt zielbezogenem Tooltip/Accessibilityname.
+Manueller Hinweisreset und Einstellungs-Beenden entfallen; individuelle Hinweis-
+navigation, Katalog-Ausgang und sichere OS-Schließwege bleiben erhalten.
 Keine neue Statistik/Albumarchitektur oder Vorwegnahme von #24. Native Abweichungen,
 Offline-Fonts und die historische Eigentümeranleitung stehen im [Z2-Prüfbericht](Z2_VERIFICATION.md).
 Die native Umsetzung ist über [PR #33](https://github.com/venomenon328/picross/pull/33)

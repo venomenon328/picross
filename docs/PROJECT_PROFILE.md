@@ -62,6 +62,7 @@ bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 | Thematik, Album, Motiventhüllung, UX/UI oder Eingabe/Wertung | [Gestaltungskonzept](DESIGN_CONCEPT.md) |
 | Spieltechnik, P1-Verträge, Save/Recovery | [P1](PROTOTYPE_P1.md), einschlägige Entscheidungen in [#5](https://github.com/venomenon328/picross/issues/5), [Preflight](P1_PREFLIGHT.md), [Spielanleitung](../game/README.md) |
 | Buchpräsentation, Seiten-/Informationswechsel, Spielerhilfe | [Buchintegration](BOOK_INTEGRATION.md), bei gezielter historischer Nacharbeit deren verlinkte Lieferbelege |
+| Native Windows-Fenstergrößen, Anzeigemodi und Display-Präferenzen | [ANZ](DISPLAY_SETTINGS.md), dazu [P1](PROTOTYPE_P1.md) und bei Abgrenzung [Webvertrag](WEB_HOSTING.md) |
 | Zellgesten, Cursorzähler und Raster-/Fenstergrenzen | [CELL_DRAG](CELL_DRAG.md), [Hinweisfont](CLUE_TYPOGRAPHY.md) |
 | Hinweisnavigation, Overlay, Cursorlinien oder Hinweiszustände | [CLUE_INTERACTION](CLUE_INTERACTION.md), [CLUE_TYPOGRAPHY](CLUE_TYPOGRAPHY.md), [CLUE_STATUS](CLUE_STATUS.md) nach Änderungsbezug |
 | Zeichensprache, Vorschau, Zellanimation | [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), betroffene ZS-Verträge |

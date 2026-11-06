@@ -243,6 +243,14 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
         button(True)
         button(False)
 
+    def choose_ui_scale(index):
+        click(center(state()['scale_control']))
+        popup = wait(lambda: state()['scale_popup'] if state()['scale_popup']['visible'] else None)
+        x, y = popup['position']
+        width, height = popup['size']
+        row = (height - 18) / 2
+        click([x + width / 2, y + 9 + (index + .5) * row])
+
     def cell_point(x=5, y=5):
         s = state()
         return [s['grid'][0]+(x+.5)*s['cell_size'], s['grid'][1]+(y+.5)*s['cell_size']]
@@ -317,7 +325,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
             click(center(state()['tips']['menu']['rect']))
             wait(lambda: state()['state'] == 4 and state()['section'] == 'settings' and not state()['barrier'])
             capture('fold-settings-ui100')
-            click(center(state()['scale_control']))
+            choose_ui_scale(1)
             wait(lambda: state()['ui_scale'] == 1.25 and not state()['barrier'])
             capture('fold-settings-ui125')
             click(center(state()['info_switch']))
@@ -340,7 +348,7 @@ def probe(source: Path, output: Path, expected_head: str, fold: bool = False) ->
             wait(lambda: state()['state'] == 3 and not state()['barrier'])
             click(center(state()['tips']['menu']['rect']))
             wait(lambda: state()['state'] == 4 and not state()['barrier'])
-            click(center(state()['scale_control']))
+            choose_ui_scale(0)
             wait(lambda: state()['ui_scale'] == 1.0 and not state()['barrier'])
             click(center(state()['info_return']))
             wait(lambda: state()['state'] == 3 and not state()['barrier'])

@@ -35,6 +35,29 @@ Bildfamilie. Die KE-Kapazitätsprüfung im unabhängigen Reader berücksichtigt
 dieselbe Obergrenze drei. Einmalige gerenderte KL-Einführungsbelege stehen am
 gebundenen PR, nicht als neue dauerhafte Galerie im Modul.
 
+ANZ-A / #527 ergänzt im vorhandenen `catalog/information`-Prozess günstige
+synthetische Displayfälle: dekorierte Presetgrenzen einschließlich 720p/4K/16:10,
+negative Monitorpositionen/DPI-Rahmen, strikte Präferenz-/Ersetzungsfehler,
+Vorschau/Annahme/Timeout/Rücknahme und sichere Bestätigung bei UI100/125.
+Der injizierte Fensterserver erzwingt keinen physischen Modus. Echte Windowsmodi
+und kurze UI-Originale bleiben einmalige paketgebundene W01-/R01-Nachweise.
+N01 ergänzt in derselben Informationsprobe Gruppenfolge, kompakte linksbündige
+Breiten und 44/55-px-Trefferflächen bei 1080p/720p × UI100/125, Scroll-Erreichbarkeit,
+Popupgrenzen/-Abbau sowie Desktopwert und sichtbare Fehler-/Fallbackzustände ohne
+positive Dauerzeile. Keine neue Prozess-/Bildfamilie; die gezielte echte Windows-
+Sichtprobe bleibt historisch an N01-R02 gebunden. N02 ersetzt die günstigen
+Gruppen-/Reset-/Beendenassertions durch zwei zentrierte HZ-Rahmen, Titelrolle,
+horizontale Felder, Skalauswahl und separate Hover-/Fokushilfen. Kein manueller
+Rücksetzbefehl; Testinputs setzen ihre Leseanker ausschließlich im Testaufbau.
+Saveblockade/Retry prüft den vorhandenen Katalog-Ausgang und WM-close am echten
+Buchroot; reguläres Beenden beendet weiterhin tatsächlich den Informationsprozess.
+N03 korrigiert in derselben Probe den Vergleich mit der tatsächlichen Bakso-
+Katalogtitelressource bei UI100/125, nach N03-E01 auch die kleinere Bakso-Gruppenrolle
+und prüft nur zwei Hilfen, volle Dropdownbreite ohne Fokus-/Hitboxplatzhalter
+sowie den sichtbaren Rücktext „Zurück“ bei unverändertem kontextabhängigem
+Rückziel, Saveblockade und Retry auf beiden Informationsseiten.
+Die einmalige Windows-Originalsicht für N03-R04 erzeugt keine neue Dauerfamilie.
+
 Der Windowsbau des **CI-Kerns** außerhalb reiner Dokument-/Rätselinhaltsänderungen
 ist kein automatisch ausgewähltes
 `native.export` und behauptet dessen zusätzlichen Funktionsnachweis nicht. Bei
