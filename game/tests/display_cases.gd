@@ -19,6 +19,7 @@ class Server extends RefCounted:
 		state.outer = Rect2i(geometry.usable.position,state.client+geometry.decorations)
 		return target
 	func keep_visible(_selection: Dictionary) -> void: pass
+	func settle(_selection: Dictionary) -> void: pass
 
 static func settle(control: Controller) -> void:
 	for i: int in range(3): control.advance(Time.get_ticks_msec())

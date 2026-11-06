@@ -95,6 +95,7 @@ func advance(now: int) -> void:
 	if applying:
 		settle_frames += 1
 		if settle_frames < 3: return
+		backend.settle(active)
 		if matches():
 			applying = false
 			monitor = backend.context()
