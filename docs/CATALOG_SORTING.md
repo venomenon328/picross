@@ -1,6 +1,6 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-**PANG-A / #531 · Schrift-Folgeentscheidung, noch nicht implementiert:**
+**PANG-A / #531 · auf dem Arbeitsbranch implementierte Schrift-Folgeentscheidung:**
 [HZ-D08](HAND_DRAWN_UI.md) führt Pangolin Regular für die bestehende
 Standardtextrolle auch in Sortierbuttons, geschlossenen und geöffneten
 Auswahllisten ein. Die nachstehenden HZ-A-/Tidy-Hand-Angaben sind die

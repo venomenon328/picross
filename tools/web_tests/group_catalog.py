@@ -12,7 +12,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     evidence['version'] = page.evaluate('navigator.userAgent')
     before = state(page, 'slots')['slots']
     data = state(page, 'hz', 'hz_b', 'labels', 'sort')
-    assert data['hz']['standard'] == 'Tidy Hand' and data['hz']['local_only'] and data['hz']['notice']
+    assert data['hz']['standard'] == 'Pangolin' and data['hz']['local_only'] and data['hz']['notice']
     assert data['hz_b']['notice']
     assert data['sort']['criterion'] == 'category' and data['sort']['direction'] == 'asc'
     assert all(x['unknown'] and not x['reveal'] and x['status'] == 'Neu' for x in data['labels'])
@@ -21,7 +21,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     page.screenshot(path=str(output/f'{name}-catalog.png'))
     control(page, name='catalog-category'); wait(page, 'picrossProbe.hz.menu.visible')
     menu = state(page, 'hz')['hz']['menu']
-    assert menu['font'] == 'Tidy Hand'
+    assert menu['font'] == 'Pangolin'
     x, y = menu['position']; w, h = menu['size']
     assert x >= 0 and y >= 0 and x+w <= 1920 and y+h <= 1080
     page.screenshot(path=str(output/f'{name}-category.png'))

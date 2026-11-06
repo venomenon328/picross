@@ -1,15 +1,16 @@
 # Z2: aktive Auswahl und native Integration
 
-## Ausgewählte Pangolin-Folgeentscheidung · #531 (nur Sollstand)
+## Aktive Pangolin-Standardtextrolle · #531 (Arbeitsbranch)
 
 Die [Pangolin-Standardtextentscheidung](HAND_DRAWN_UI.md) vom 06.11.2026 ist
 für das zusammenhängende [PANG-A-Paket](https://github.com/venomenon328/picross/issues/531)
-freigegeben, **aber noch nicht implementiert**. Bis zur späteren Spiel-/Exportänderung
-bleibt Tidy Hand die aktive normale UI-Ressource. Pangolin wird nur diese Rolle
-übernehmen: Hilfe, Katalog-/Status-/Einstellungstexte, Menüs, Dialoge und
+auf dem Paketbranch implementiert. Pangolin übernimmt nur die normale UI-Rolle: Hilfe, Katalog-/Status-/Einstellungstexte, Menüs, Dialoge und
 Tooltips; Bakso/Fraunces, Delight und lokaler Plex-Fallback bleiben erhalten.
-Der ausgewählte Originalfont und OFL-Hinweis müssen im Implementierungs-PR
-bytegebunden, offline und im Windows-/Webexport nachweisbar werden. Der bisherige
+Originalfont und OFL liegen bytegebunden unter `game/art/drawing/`;
+[Pangolin NOTICE](../game/art/drawing/pangolin/NOTICE.txt) bindet die Quelle.
+`z2_resources.py verify` prüft beide Hashes separat vom historischen HZ-Original.
+Windows/Web liefern die aktive Pangolin-OFL und Herkunft, keinen unbenutzten
+Tidy-Hand-Font. Technische Nachweise und getrennte R01/M01 stehen in PR #532. Der bisherige
 HZ-A-Herkunftsnachweis sowie historische Hashlisten und BP-/Iconquellen werden
 nicht rückwirkend ersetzt.
 

@@ -1,7 +1,7 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
-**PANG-A / #531 · am 06.11.2026 freigegebener, noch nicht implementierter Schrift-Sollstand:**
-Die bislang integrierte Tidy-Hand-Standardtextrolle wird gemäß
+**PANG-A / #531 · auf dem Arbeitsbranch implementierter Schriftvertrag:**
+Die bisherige Tidy-Hand-Standardtextrolle wird gemäß
 [HZ-D08](HAND_DRAWN_UI.md) gezielt durch Pangolin Regular ersetzt, auch
 in normalen Warn-/Recoverytexten und Bedienhilfe. Sonderfonts für Titel,
 Hinweiszahlen und Fallback, alle P1-Spiel-, Speicher-, Layout- und
