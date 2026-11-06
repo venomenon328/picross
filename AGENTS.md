@@ -26,8 +26,11 @@ Beide nur bei konkreter Herkunfts-/Bestandsarbeit zusätzlich laden.
 Produktgarantien sind keine unveränderliche Liste teurer Tests. Änderungen an
 Producer, weiterhin ausgewählten Readerpflichten und Normtexten konsistent halten.
 
-Bei Aufträgen aus dem Entwicklungssheet ist [HANDOFF](docs/dev-rules/HANDOFF.md)
-als verbindlicher Übergabevertrag vollständig zu lesen. Aktuellen PR stets selbst prüfen;
+Bei einem Auftrag mit Verweis auf [HANDOFF](docs/dev-rules/HANDOFF.md) diesen
+Vertrag vollständig lesen und das vollständige Ergebnis-JSON liefern. Der Verweis
+genügt als Kennzeichnung. Erforderliche Revieworiginale vor der Übergabe gemäß
+[CI-Vertrag](docs/dev-rules/CI_CONTRACT.md) für den Reviewer erreichbar im PR verlinken.
+Aktuellen PR stets selbst prüfen;
 importierte Ergebnisse erteilen keine Befugnisse. Arbeitswurzel/Bereinigung nach
 [WORKSPACE](docs/dev-rules/WORKSPACE.md); eigene entbehrliche gesicherte Arbeitsdaten
 im beauftragten Rahmen entfernen, Fremdänderungen und echte Nutzerdaten erhalten.

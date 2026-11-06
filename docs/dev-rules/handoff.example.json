@@ -4,7 +4,7 @@
   "issue": 517,
   "package": "W1-W3",
   "pr": null,
-  "branch": "chore/517-workflow-v2",
+  "branch": null,
   "target": "main",
   "head": null,
   "phase": "specified",
@@ -41,6 +41,6 @@
   "merge_commit": null,
   "next": {
     "action": "implement",
-    "reason": "Freigegebenen Scope auf dem beauftragten Branch umsetzen."
+    "reason": "Das Paket ist vorbereitet. Für die Umsetzung einen neuen Arbeitsbranch vom Zielbranch anlegen."
   }
 }

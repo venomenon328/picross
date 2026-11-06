@@ -26,6 +26,42 @@ Screenshots und Videos dürfen temporäre aktuelle Prüfinputs/Reviewbelege sein
 
 Keine feste maximale Artefaktgröße. Umfang minimieren durch Weglassen unnötiger Produktion, Daten und Doppelverpackung, nicht durch Abschneiden erforderlicher Logs/Originale. Ablauf früherer CI-Artefakte nicht als fortbestehende Verfügbarkeit behaupten. Kompakte Entscheidungen und Quellverweise bleiben in Git/PR; sie garantieren nicht den Erhalt alter Binärbelege.
 
+### Zustellung an einen unabhängigen Reviewer
+
+Schon im Prüfplan festlegen, welche Originale für welches Szenario erforderlich
+sind, wer sie öffnen können muss und bis wann. Der Implementierer stellt genau
+diese Dateien vor dem Review bereit. Bei einer Layoutprüfung können das etwa
+die benannten Original-PNGs und eine kleine Zuordnung von Auflösung und UI-Skala
+zum geprüften Produkt-Head sein.
+
+- **Eigener temporärer Reviewbranch.** Einen separaten Ref, etwa
+  `review/<issue>-<paket>`, vom geprüften Produkt-Head abzweigen und die Belege nur
+  dort committen und pushen. Der Produkt-PR behält seinen Head. Er erhält Links
+  auf die Dateien am konkreten Belegcommit. Der Belegbranch hat keinen Merge-PR
+  nach main und wird weder in den Produktbranch gemergt noch dorthin übernommen.
+- **Befristetes CI-Artefakt.** Wenn der Lauf die geforderten Originale erzeugt,
+  ausschließlich die im Paket benannten Dateien samt notwendiger Zuordnung
+  bereitstellen. Im PR den direkten Artefaktlink mit Lauf/Versuch und Ablauf
+  nennen. Liefert der verfügbare Uploader weitere, für diesen Review irrelevante
+  Daten oder fehlen die lokalen Originale im Lauf, den separaten Reviewbranch
+  verwenden.
+
+Im Lieferkommentar den geprüften Produkt-Head und gegebenenfalls Test-Merge,
+Szenarien/Dateinamen, Empfänger und Endpunkt festhalten. Zugriff auf die
+veröffentlichten Bytes testen. Wer im eigenen Konto prüft, benennt eine bekannte
+Zugriffsbeschränkung für den Empfänger. Die Sichtprüfung selbst bleibt Aufgabe
+des Reviewers. Ein lokaler Pfad, eine Hashliste oder ein erfolgreich gebauter
+Spieler allein liefert ihm keine Bilder. Fehlende, abgelaufene oder zum neuen
+Head unpassende Originale gezielt nachliefern, das erforderliche Gate bis dahin
+offen führen.
+
+Bereinigungszeitpunkt und Zuständigkeit im PR festhalten. Eigene Belege bis
+zur erforderlichen Prüfung verfügbar halten. Bei Fristablauf und weiter offenem
+Gate den Bedarf und die Zustellung erneut prüfen. Den eigenen temporären Ref im
+beauftragten Rückbau entfernen bzw. das CI-Artefakt auslaufen lassen. Vor Merge
+prüfen, dass der Produktdiff und seine zu integrierenden Commits frei von reinen
+Übergabedateien sind. Im PR bleibt die knappe Entscheidung mit ihrem Stand.
+
 ## Zeit und Ergebnis
 
 Das Profil setzt ein weiches Laufzeitziel. Überschreitung erzeugt Messung, Warnung und gegebenenfalls Optimierungsbedarf, keinen Fehlerstatus und keinen verpflichtenden Maximalwert. Keine pauschale Artefaktgrößen- oder CI-Laufzeitobergrenze. Prozess-Hängerschutz, Plattformgrenzen und funktionale Zeitverträge sind gesonderte technische Grenzen; ihre Werte begründen und nicht als Leistungsziel ausgeben.

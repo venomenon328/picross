@@ -6,7 +6,8 @@ Diese Datei definiert den verbindlichen Abschluss- und Übergabevertrag für
 Aufträge aus dem Entwicklungssheet. Sie wird über `AGENTS.md` und den
 [Workflow](WORKFLOW.md) als Pflichtquelle gelesen: in der aktuellen Fassung
 des beauftragten Arbeitsbranches, sonst des Zielbranches. Der Prompt verweist
-auf diesen Vertrag und transportiert keinen eigenen JSON-Vordruck.
+auf diesen Vertrag. Der Verweis kennzeichnet den strukturierten Abschluss auch
+ohne Herkunftssatz und ohne mitgegebenes früheres JSON.
 
 [handoff.schema.json](handoff.schema.json) definiert dazu die verpflichtenden
 Felder, Typen und zulässigen Werte. Die Bedeutungen und zusätzlichen
@@ -44,6 +45,44 @@ Für Aufträge aus dem Entwicklungssheet am Ende genau einen vollständigen JSON
 | `cleanup` | Tatsächliche Bereinigung oder verbliebene eigene Pfade |
 | `merge_commit` | Nur nach tatsächlich zurückgelesenem Merge; vollständige Commitkennung |
 | `next` | Empfohlene nächste Aktion und Grund; keine Befugnis |
+
+## Was in den nächsten Auftrag gehört
+
+Jede Antwort auf einen Sheet-Auftrag liefert den vollständigen v1-Block, auch bei
+Beratung, Blockade, Review und Abschluss. Das Sheet speichert ihn zur Ansicht
+und zum Ausfüllen der nächsten Vorlage. Keine der Vorlagen hängt den Block an
+den Folgeprompt an. Ein Link auf die konkrete Entscheidung oder Prüfung ist
+präziser und bleibt auch bei einer Korrektur im Issue oder PR verwendbar.
+
+| Kopiervorlage | Was der nächste Bearbeiter braucht |
+| --- | --- |
+| Idee besprechen | Neue Idee und Beratungsauftrag. Es ist noch keine Veröffentlichung beauftragt. |
+| Feature spezifizieren, Fehler erfassen | Neue Ziele bzw. Reproduktion und gegebenenfalls vorhandenes Issue/Paket. Bei einem Entwurf nur im vorigen Chat kann eine ausgewählte Gesprächsnotiz die Spezifikation ergänzen. |
+| Besprochene Spezifikation freigeben | Ausdrückliche Freigabe und Spezifikationsquelle. Im selben Gespräch genügt der besprochene Entwurf. Beim Chatwechsel ohne dokumentierte Entscheidung die konkreten Punkte als kurze, editierbare Notiz mitgeben. |
+| Entscheidung nachführen, Paket vorbereiten, nächstes Paket auswählen | Die neue Entscheidung bzw. das zu prüfende Issue/Paket. Anforderungen, Prüfplan und spätere Entscheidungen dort festhalten und wieder lesen. |
+| Paket umsetzen | Freigegebenes Issue/Paket, bei Bedarf ein genauerer Spezifikationslink, vorhandener Arbeitsbranch/PR oder Auftrag zur Neuanlage, gewählte Arbeitsparameter. |
+| Umsetzung fortsetzen | Derselbe Arbeitsstand. Den letzten gesicherten Zwischenstand im Issue/PR nachführen. Ausschließlich dort fehlende Zwischenstände oder Blockaden lassen sich als gezielter Text mitgeben. |
+| Abschluss zum Review geben, Minimalreview | Aktueller PR, dort Lieferkommentar, CI und erreichbare Revieworiginale. Der normale Review kann einen bekannten Head und aktuelle Hinweise mitgeben. Für den Minimalreview genügt die PR-Nummer im gewählten Projekt. Beide übernehmen die gewählte Mergeoption. |
+| Nacharbeit vorbereiten, Befunde beheben, Nacharbeit erneut prüfen | PR und konkreter Reviewkommentar, für die Behebung ausdrücklich die beauftragten Befundkennungen. Erfolgskriterien und Befundstatus stehen im Review. |
+| Rote CI beheben | PR und dessen aktuell fehlgeschlagener Lauf. Besondere neue Vorgaben im Auftrag kenntlich machen. |
+| Manuelle Abnahme melden, Merge freigeben | Bei Abnahme die neu gemeldete tatsächliche Probe, bei Merge die ausdrückliche Freigabe für den PR. Dokumentierte Nachweise und Gates aus dem PR prüfen. |
+| Paketabschluss und Rückbau | Issue/Paket und gegebenenfalls Liefer-PR. Noch benötigte eigene lokale Restpfade nur gezielt für die zuständige Arbeitsumgebung mitgeben. |
+
+`branch` benennt einen tatsächlich vorhandenen und zum Paket gehörenden
+Arbeitsbranch. Bei reiner Planung ohne Arbeitsbranch sind `branch` und der
+unbekannte `head` null. Ein separater Spezifikations-PR kann als `spec_url`
+dienen. Seine PR-/Branchkennung gehört nur dann in die Arbeitsbindung der
+Umsetzung, wenn diese dort tatsächlich fortgeführt wird. In alten Übergaben
+behandelt das Sheet den Zielbranch im Arbeitsbranchfeld als fehlenden Arbeitsbranch.
+Bei einem vorhandenen PR lässt sich dessen Branch direkt ermitteln.
+
+Berichtete CI-Module, Checks, Ausführungsempfehlungen, Freigaben und
+Bereinigungsreste sind keine neuen Aufträge. Eine neue Modulvorgabe gibt der
+Auftraggeber bei Bedarf im dafür vorgesehenen Feld ein. Lokale Pfade, komplette
+Prüfprotokolle oder ein weiteres `handoff.json` werden nicht routinemäßig im
+Repo archiviert. Für erforderliche Originaldateien gelten Zustellung, Bindung und
+Ablauf nach [CI_CONTRACT.md](CI_CONTRACT.md). In `artifacts` steht der erreichbare
+Verweis mit Zweck und Ablauf. Ein fehlender Zugriff bleibt als offenes Gate sichtbar.
 
 ## Plausibilität
 

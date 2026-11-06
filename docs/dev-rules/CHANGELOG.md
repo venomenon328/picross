@@ -1,5 +1,12 @@
 # Änderungen am Regelpaket
 
+## 0.2.0-rc.4 — 2026-11-06
+
+Picross #525 trennt die vollständige v1-Abschlussantwort von den kurzen
+Folgeaufträgen. Arbeitsbranch und Zielbranch haben getrennte Rollen. Ein
+Lieferkommentar bindet benötigte Revieworiginale an den geprüften Produkt-Head
+und an einen für den Reviewer erreichbaren, befristeten Ablageort.
+
 ## 0.2.0-rc.3 — 2026-11-06
 
 Lokale Weiterentwicklung für Picross #521, kein zentraler Release.

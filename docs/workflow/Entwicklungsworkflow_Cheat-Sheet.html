@@ -5,14 +5,27 @@
 <meta name="color-scheme" content="light dark">
 <title>Entwicklungsworkflow · Werkbank</title>
 <style>
-:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:#172c3b;background:#f3f5f5;font-size:15px;--paper:#fff;--ink:#172c3b;--muted:#586b77;--line:#d8e1e4;--soft:#f3f6f6;--accent:#126b60;--pale:#e2f2ed;--warn:#8b5011;--warn-bg:#fff3dc;--danger:#a32937;--shadow:0 12px 40px #233e4e0b}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}button,a,input,select,textarea,summary{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #54b5a5}button{border:1px solid var(--line);border-radius:9px;padding:.65rem .9rem;background:var(--paper);color:var(--ink);font-weight:650}button:hover:not(:disabled){border-color:var(--accent);background:var(--pale)}button.primary{background:var(--accent);color:white;border-color:var(--accent)}button.primary:hover:not(:disabled){background:#0b554b}.quiet{border-color:transparent;background:transparent}.small{font-size:.8rem;color:var(--muted)}.eyebrow{overflow-wrap:anywhere;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:750;color:var(--muted)}.app{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh}aside{background:var(--paper);border-right:1px solid var(--line);padding:30px 22px;display:flex;flex-direction:column;gap:28px}.brand{display:flex;gap:12px;align-items:center}.mark{display:grid;place-items:center;background:var(--ink);color:white;font-size:22px;width:42px;height:42px;border-radius:12px;font-weight:700}.brand strong{display:block;font-size:1.05rem;letter-spacing:-.03em}.brand span{font-size:.73rem;color:var(--muted)}.project-control{display:flex;gap:6px;align-items:end}.project-control label{flex:1;min-width:0}.project-control button{height:41px}.side-nav{display:grid;gap:7px}.side-nav button{border-color:transparent;display:flex;gap:12px;align-items:center;text-align:left;background:transparent;padding:12px 10px;font-weight:550}.step-num{border:1px solid var(--line);width:27px;height:27px;display:grid;place-items:center;border-radius:8px;font-size:.78rem;flex-shrink:0}.side-nav [aria-current=step]{background:var(--pale);color:var(--accent);font-weight:750}.side-nav [aria-current=step] .step-num{border-color:var(--accent);background:var(--accent);color:#fff}.aside-bottom{margin-top:auto;display:grid;gap:12px}.storage{font-size:.76rem;line-height:1.6;color:var(--muted)}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px}.workspace{max-width:1600px;padding:32px 42px 24px;width:100%;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:28px}.topbar h1{font-size:1.9rem;line-height:1.2;letter-spacing:-.055em;margin:5px 0 0;font-weight:700}.actions{display:flex;gap:8px;flex-wrap:wrap}.progress{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px}.pill{font-size:.76rem;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);padding:5px 9px;border-radius:99px;color:var(--muted)}.pill.accent{background:var(--pale);border-color:#b8dacf;color:var(--accent)}.banner{padding:15px 18px;border-radius:12px;background:var(--pale);border:1px solid #b8dacf;display:flex;align-items:center;gap:18px;justify-content:space-between;margin-bottom:20px}.banner p{margin:4px 0 0;font-size:.87rem;line-height:1.55}.warning{background:var(--warn-bg);border:1px solid #e9c98e;color:var(--warn);padding:12px 15px;border-radius:9px;font-size:.85rem;line-height:1.55}.grid{display:grid;grid-template-columns:minmax(330px,.95fr) minmax(360px,1.05fr);gap:22px;align-items:start}.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.card-head{padding:22px 24px 18px;border-bottom:1px solid var(--line)}.card-head h2{margin:7px 0 8px;font-size:1.25rem;letter-spacing:-.035em}.card-head p{font-size:.87rem;color:var(--muted);line-height:1.6;margin:0}.card-body{padding:23px 24px}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}label{min-width:0;display:block;font-size:.8rem;color:var(--muted);font-weight:650}input,select,textarea{min-width:0;display:block;margin-top:7px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:10px 11px;font-size:.9rem;line-height:1.45}select{height:43px}textarea{min-height:110px;resize:vertical}input::placeholder,textarea::placeholder{color:#88969e}.field-wide{grid-column:1/-1}.block-gap{margin-top:20px}details{margin-top:19px;padding-top:17px;border-top:1px solid var(--line)}summary{font-size:.83rem;cursor:pointer;font-weight:650;color:var(--muted)}details[open] summary{margin-bottom:17px}.switch{display:flex;align-items:flex-start;gap:11px;font-weight:500;line-height:1.5;color:var(--ink)}.switch input{appearance:none;flex:0 0 35px;width:35px;height:21px;border-radius:99px;padding:0;background:#b7c3c7;position:relative;margin:1px 0 0;border:0}.switch input:after{content:"";position:absolute;left:3px;top:3px;background:#fff;border-radius:50%;height:15px;width:15px;transition:left .12s}.switch input:checked{background:var(--accent)}.switch input:checked:after{left:17px}.switch strong{font-size:.88rem;display:block}.switch small{display:block;color:var(--muted);font-size:.79rem;margin-top:3px}.prompt-panel{position:sticky;top:22px}.prompt-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.prompt-top h2{margin:0;font-size:1rem}.prompt-meta{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}.prompt{margin:0;padding:22px 24px;max-height:580px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:12.8px/1.75 ui-monospace,"Cascadia Code",Consolas,monospace;background:var(--soft);tab-size:2}.prompt-foot{padding:18px 24px;border-top:1px solid var(--line)}.prompt-foot p{font-size:.78rem;color:var(--muted);margin:11px 0 0;line-height:1.5}.errors{margin:0 0 13px;color:var(--danger);font-size:.83rem;line-height:1.6}.result{margin-top:23px}.result h3{margin:0 0 10px;font-size:.95rem}.result p{line-height:1.6;font-size:.85rem;color:var(--muted)}.facts{display:flex;gap:9px;flex-wrap:wrap}.fact{background:var(--soft);border-radius:8px;padding:7px 10px;font-size:.76rem}.fact a{color:var(--accent);text-decoration:none}.footer{font-size:.75rem;color:var(--muted);line-height:1.65;display:flex;justify-content:space-between;gap:20px;margin:25px 2px 0}.footer button{font-size:.75rem;padding:0;border:0;background:none;color:var(--muted);text-decoration:underline}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:12px;box-shadow:0 8px 24px #0002;max-width:min(92vw,600px);font-size:.88rem;z-index:99}.toast:empty{display:none}dialog{border:1px solid var(--line);border-radius:17px;background:var(--paper);color:var(--ink);padding:0;width:min(760px,94vw);max-height:91vh;box-shadow:0 25px 100px #0004}dialog::backdrop{background:#142b3f70;backdrop-filter:blur(3px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;padding:20px 25px;border-bottom:1px solid var(--line)}.dialog-head h2{font-size:1.1rem;margin:0;letter-spacing:-.02em}.dialog-body{padding:24px 25px}.dialog-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 25px;border-top:1px solid var(--line);background:var(--soft)}dialog textarea{font-family:ui-monospace,Consolas,monospace;font-size:.79rem;min-height:210px}.preview{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:15px;font-size:.83rem;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.preview:empty{display:none}.file-label{display:inline-block;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:9px 13px;font-weight:650;color:var(--ink)}[hidden]{display:none!important}.help p{font-size:.88rem;line-height:1.75;margin:0 0 16px}.help ol{padding-left:22px;font-size:.88rem;line-height:1.8}.divider{border:0;border-top:1px solid var(--line);margin:22px 0}.nojs{padding:30px;max-width:800px;margin:auto}.danger-text{color:var(--danger)}@media(min-width:1500px){.workspace{padding:40px 64px}}@media(max-width:1120px){.app{grid-template-columns:210px minmax(0,1fr)}aside{padding:25px 16px}.workspace{padding:27px 25px}.grid{grid-template-columns:1fr}.prompt-panel{position:static}.prompt{max-height:420px}.topbar{align-items:flex-start}}@media(max-width:650px){.app{display:block}aside{padding:18px;border:0;border-bottom:1px solid var(--line);gap:15px}.brand{display:none}.project-control{max-width:none}.side-nav{grid-template-columns:repeat(5,1fr);gap:3px}.side-nav button{display:flex;flex-direction:column;gap:6px;padding:7px 2px;font-size:.67rem}.aside-bottom{display:none}.workspace{padding:24px 16px}.topbar{display:block;margin-bottom:20px}.topbar h1{font-size:1.65rem}.actions{margin-top:17px}.actions button{font-size:.81rem}.card-head,.card-body,.prompt,.prompt-foot{padding:19px}.field-grid{gap:13px}.banner{display:block}.banner button{margin-top:10px}.footer{display:block}.footer button{margin-top:12px}.dialog-body{padding:20px}.dialog-foot{flex-wrap:wrap}.progress{gap:5px}}@media(prefers-color-scheme:dark){:root{--paper:#18262e;--ink:#e5eef1;--muted:#a0b2bd;--line:#344751;--soft:#142128;--accent:#4cb9a5;--pale:#1d3a36;--warn:#f3c480;--warn-bg:#3a2e1c;--danger:#ff9aab;background:#111c22;color:var(--ink)}.mark{background:#4cb9a5;color:#142128}.banner{border-color:#315f55}.pill.accent{border-color:#315f55}.side-nav [aria-current=step] .step-num{color:#10271f}button.primary{color:#10271f}button.primary:hover:not(:disabled){background:#76cebc}.toast{background:#dce9eb;color:#172c3b}}
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color-scheme:light;color:var(--ink);background:var(--bg);font-size:15px;--bg:#f3f5f5;--paper:#fff;--ink:#172c3b;--muted:#586b77;--line:#d8e1e4;--soft:#f3f6f6;--accent:#126b60;--pale:#e2f2ed;--warn:#8b5011;--warn-bg:#fff3dc;--danger:#a32937;--shadow:0 12px 40px #233e4e0b}*{box-sizing:border-box}body{margin:0}button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.48}button,a,input,select,textarea,summary{outline-offset:4px}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #54b5a5}button{border:1px solid var(--line);border-radius:9px;padding:.65rem .9rem;background:var(--paper);color:var(--ink);font-weight:650}button:hover:not(:disabled){border-color:var(--accent);background:var(--pale)}button.primary{background:var(--accent);color:white;border-color:var(--accent)}button.primary:hover:not(:disabled){background:#0b554b}.quiet{border-color:transparent;background:transparent}.small{font-size:.8rem;color:var(--muted)}.eyebrow{overflow-wrap:anywhere;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:750;color:var(--muted)}.app{display:grid;grid-template-columns:252px minmax(0,1fr);min-height:100vh}aside{background:var(--paper);border-right:1px solid var(--line);padding:30px 22px;display:flex;flex-direction:column;gap:28px}.brand{display:flex;gap:12px;align-items:center}.mark{display:grid;place-items:center;background:var(--ink);color:white;font-size:22px;width:42px;height:42px;border-radius:12px;font-weight:700}.brand strong{display:block;font-size:1.05rem;letter-spacing:-.03em}.brand span{font-size:.73rem;color:var(--muted)}.project-control{display:flex;gap:6px;align-items:end}.project-control label{flex:1;min-width:0}.project-control button{height:41px}.side-nav{display:grid;gap:7px}.side-nav button{border-color:transparent;display:flex;gap:12px;align-items:center;text-align:left;background:transparent;padding:12px 10px;font-weight:550}.step-num{border:1px solid var(--line);width:27px;height:27px;display:grid;place-items:center;border-radius:8px;font-size:.78rem;flex-shrink:0}.side-nav [aria-current=step]{background:var(--pale);color:var(--accent);font-weight:750}.side-nav [aria-current=step] .step-num{border-color:var(--accent);background:var(--accent);color:#fff}.aside-bottom{margin-top:auto;display:grid;gap:12px}.storage{font-size:.76rem;line-height:1.6;color:var(--muted)}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px}.workspace{max-width:1600px;padding:32px 42px 24px;width:100%;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:28px}.topbar h1{font-size:1.9rem;line-height:1.2;letter-spacing:-.055em;margin:5px 0 0;font-weight:700}.actions{display:flex;gap:8px;flex-wrap:wrap}.progress{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:20px}.pill{font-size:.76rem;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--paper);padding:5px 9px;border-radius:99px;color:var(--muted)}.pill.accent{background:var(--pale);border-color:#b8dacf;color:var(--accent)}.banner{padding:15px 18px;border-radius:12px;background:var(--pale);border:1px solid #b8dacf;display:flex;align-items:center;gap:18px;justify-content:space-between;margin-bottom:20px}.banner p{margin:4px 0 0;font-size:.87rem;line-height:1.55}.warning{background:var(--warn-bg);border:1px solid #e9c98e;color:var(--warn);padding:12px 15px;border-radius:9px;font-size:.85rem;line-height:1.55}.grid{display:grid;grid-template-columns:minmax(330px,.95fr) minmax(360px,1.05fr);gap:22px;align-items:start}.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}.card-head{padding:22px 24px 18px;border-bottom:1px solid var(--line)}.card-head h2{margin:7px 0 8px;font-size:1.25rem;letter-spacing:-.035em}.card-head p{font-size:.87rem;color:var(--muted);line-height:1.6;margin:0}.card-body{padding:23px 24px}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}label{min-width:0;display:block;font-size:.8rem;color:var(--muted);font-weight:650}input,select,textarea{min-width:0;display:block;margin-top:7px;width:100%;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);padding:10px 11px;font-size:.9rem;line-height:1.45}select{height:43px}textarea{min-height:110px;resize:vertical}input::placeholder,textarea::placeholder{color:#88969e}.field-wide{grid-column:1/-1}.block-gap{margin-top:20px}details{margin-top:19px;padding-top:17px;border-top:1px solid var(--line)}summary{font-size:.83rem;cursor:pointer;font-weight:650;color:var(--muted)}details[open] summary{margin-bottom:17px}.switch{display:flex;align-items:flex-start;gap:11px;font-weight:500;line-height:1.5;color:var(--ink)}.switch input{appearance:none;flex:0 0 35px;width:35px;height:21px;border-radius:99px;padding:0;background:#b7c3c7;position:relative;margin:1px 0 0;border:0}.switch input:after{content:"";position:absolute;left:3px;top:3px;background:#fff;border-radius:50%;height:15px;width:15px;transition:left .12s}.switch input:checked{background:var(--accent)}.switch input:checked:after{left:17px}.switch strong{font-size:.88rem;display:block}.switch small{display:block;color:var(--muted);font-size:.79rem;margin-top:3px}.prompt-panel{position:sticky;top:22px}.prompt-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.prompt-top h2{margin:0;font-size:1rem}.prompt-meta{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}.prompt{margin:0;padding:22px 24px;max-height:580px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:12.8px/1.75 ui-monospace,"Cascadia Code",Consolas,monospace;background:var(--soft);tab-size:2}.prompt-foot{padding:18px 24px;border-top:1px solid var(--line)}.prompt-foot p{font-size:.78rem;color:var(--muted);margin:11px 0 0;line-height:1.5}.errors{margin:0 0 13px;color:var(--danger);font-size:.83rem;line-height:1.6}.result{margin-top:23px}.result h3{margin:0 0 10px;font-size:.95rem}.result p{line-height:1.6;font-size:.85rem;color:var(--muted)}.facts{display:flex;gap:9px;flex-wrap:wrap}.fact{background:var(--soft);border-radius:8px;padding:7px 10px;font-size:.76rem}.fact a{color:var(--accent);text-decoration:none}.footer{font-size:.75rem;color:var(--muted);line-height:1.65;display:flex;justify-content:space-between;gap:20px;margin:25px 2px 0}.footer button{font-size:.75rem;padding:0;border:0;background:none;color:var(--muted);text-decoration:underline}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:12px 20px;border-radius:12px;box-shadow:0 8px 24px #0002;max-width:min(92vw,600px);font-size:.88rem;z-index:99}.toast:empty{display:none}dialog{border:1px solid var(--line);border-radius:17px;background:var(--paper);color:var(--ink);padding:0;width:min(760px,94vw);max-height:91vh;box-shadow:0 25px 100px #0004}dialog::backdrop{background:#142b3f70;backdrop-filter:blur(3px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;padding:20px 25px;border-bottom:1px solid var(--line)}.dialog-head h2{font-size:1.1rem;margin:0;letter-spacing:-.02em}.dialog-body{padding:24px 25px}.dialog-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:17px 25px;border-top:1px solid var(--line);background:var(--soft)}dialog textarea{font-family:ui-monospace,Consolas,monospace;font-size:.79rem;min-height:210px}.preview{margin-top:16px;border:1px solid var(--line);border-radius:10px;padding:15px;font-size:.83rem;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.preview:empty{display:none}.file-label{display:inline-block;cursor:pointer;border:1px solid var(--line);border-radius:8px;padding:9px 13px;font-weight:650;color:var(--ink)}[hidden]{display:none!important}.help p{font-size:.88rem;line-height:1.75;margin:0 0 16px}.help ol{padding-left:22px;font-size:.88rem;line-height:1.8}.divider{border:0;border-top:1px solid var(--line);margin:22px 0}.nojs{padding:30px;max-width:800px;margin:auto}.danger-text{color:var(--danger)}@media(min-width:1500px){.workspace{padding:40px 64px}}@media(max-width:1120px){.app{grid-template-columns:210px minmax(0,1fr)}aside{padding:25px 16px}.workspace{padding:27px 25px}.grid{grid-template-columns:1fr}.prompt-panel{position:static}.prompt{max-height:420px}.topbar{align-items:flex-start}}@media(max-width:650px){.app{display:block}aside{padding:18px;border:0;border-bottom:1px solid var(--line);gap:15px}.brand{display:none}.project-control{max-width:none}.side-nav{grid-template-columns:repeat(5,1fr);gap:3px}.side-nav button{display:flex;flex-direction:column;gap:6px;padding:7px 2px;font-size:.67rem}.aside-bottom{display:none}.workspace{padding:24px 16px}.topbar{display:block;margin-bottom:20px}.topbar h1{font-size:1.65rem}.actions{margin-top:17px}.actions button{font-size:.81rem}.card-head,.card-body,.prompt,.prompt-foot{padding:19px}.field-grid{gap:13px}.banner{display:block}.banner button{margin-top:10px}.footer{display:block}.footer button{margin-top:12px}.dialog-body{padding:20px}.dialog-foot{flex-wrap:wrap}.progress{gap:5px}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#111c22;--paper:#18262e;--ink:#e5eef1;--muted:#a0b2bd;--line:#344751;--soft:#142128;--accent:#4cb9a5;--pale:#1d3a36;--warn:#f3c480;--warn-bg:#3a2e1c;--danger:#ff9aab}
+:root[data-theme="dark"] .mark{background:var(--accent);color:var(--soft)}
+:root[data-theme="dark"] :is(.banner,.pill.accent){border-color:#315f55}
+:root[data-theme="dark"] :is(button.primary,.side-nav [aria-current=step] .step-num){color:#10271f}
+:root[data-theme="dark"] button.primary:hover:not(:disabled){background:#76cebc}
+:root[data-theme="dark"] .toast{background:#dce9eb;color:#172c3b}
+.actions{align-items:center}
+.theme-control{display:inline-flex;align-items:center;gap:8px}
+.theme-control select{margin:0;height:auto;width:auto;padding:.55rem .65rem}
+.branch-control{margin-top:16px}
+.note-control{margin-top:12px}
+.note-control button{font-size:.8rem}
+.note-control textarea{min-height:76px}
 </style>
 </head>
 <body>
-<noscript><div class="nojs"><h1>Entwicklungsworkflow</h1><p>Diese Offline-Werkbank benötigt JavaScript zum Prüfen von Übergaben und Erstellen der Prompts. Sie lädt keine externen Dienste.</p><p>Der Ablauf: Spezifizieren → Umsetzen → Review → bei Bedarf Nacharbeiten. Maßgeblich bleiben die aktuelle AGENTS.md, der Issue- und PR-Stand. Ein Merge benötigt einen entsprechenden Auftrag.</p></div></noscript>
+<noscript><div class="nojs"><h1>Entwicklungsworkflow</h1><p>Diese Offline-Werkbank benötigt JavaScript zum Prüfen von Übergaben und Erstellen der Prompts. Sie funktioniert offline.</p><p>Der Ablauf: Spezifizieren → Umsetzen → Review → bei Bedarf Nacharbeiten. Maßgeblich bleiben die aktuelle AGENTS.md, der Issue- und PR-Stand. Ein Merge benötigt einen entsprechenden Auftrag.</p></div></noscript>
 <div class="app" id="app" hidden>
 <aside>
-<div class="brand"><div class="mark" aria-hidden="true">W</div><div><strong>Werkbank</strong><span>Entwicklungsworkflow · v2.1</span></div></div>
+<div class="brand"><div class="mark" aria-hidden="true">W</div><div><strong>Werkbank</strong><span>Entwicklungsworkflow · v2.2</span></div></div>
 <div class="project-control"><label for="projectSelect">Projekt<select id="projectSelect"></select></label><button id="newProject" title="Projekt hinzufügen" aria-label="Projekt hinzufügen">+</button></div>
 <nav class="side-nav" aria-label="Arbeitsschritt">
 <button data-stage="specify" aria-current="step"><span class="step-num">1</span>Spezifizieren</button>
@@ -21,10 +34,10 @@
 <button data-stage="rework"><span class="step-num">4</span>Nacharbeiten</button>
 <button data-stage="finish"><span class="step-num">5</span>Abschließen</button>
 </nav>
-<div class="aside-bottom"><button id="settingsSide">Projekteinstellungen</button><div class="storage" id="storageState"><span class="dot"></span>Automatisch gespeichert<br>Offline · keine Übertragung</div><div class="small">Eine Übergabe hinein.<br>Der nächste Auftrag heraus.</div></div>
+<div class="aside-bottom"><button id="settingsSide">Projekteinstellungen</button><div class="storage" id="storageState"><span class="dot"></span>Automatisch gespeichert<br>Offline · keine Übertragung</div></div>
 </aside>
 <main class="workspace">
-<header class="topbar"><div><div class="eyebrow" id="repoHeading">venomenon328/picross</div><h1>Der nächste gute Schritt.</h1></div><div class="actions"><button id="settingsTop" aria-label="Projekteinstellungen öffnen">Einstellungen</button><button class="primary" id="openImport">Ergebnis übernehmen</button></div></header>
+<header class="topbar"><div><div class="eyebrow" id="repoHeading">venomenon328/picross</div><h1>Der nächste gute Schritt.</h1></div><div class="actions"><label class="theme-control" for="theme">Darstellung<select id="theme"><option value="system">System</option><option value="light">Hell</option><option value="dark">Dunkel</option></select></label><button id="settingsTop" aria-label="Projekteinstellungen öffnen">Einstellungen</button><button class="primary" id="openImport">Ergebnis übernehmen</button></div></header>
 <div id="storageWarning" class="warning" hidden></div>
 <div class="progress" id="contextChips"></div>
 <section class="banner" id="nextBanner" hidden><div><strong id="nextTitle"></strong><p id="nextReason"></p></div><button id="goNext">Zum nächsten Schritt →</button></section>
@@ -40,10 +53,17 @@
 <label for="executor">Umsetzung durch<select id="executor"><option value="Codex">Codex</option><option value="ChatGPT">ChatGPT</option></select></label>
 <label for="brief" class="field-wide"><span id="briefLabel">Idee, Ziel oder ergänzender Auftrag</span><textarea id="brief" placeholder="Was soll sich ändern – und wofür?" spellcheck="true"></textarea></label>
 </div>
+<div class="branch-control" id="branchControl">
+ <label for="branchMode">Arbeitsbranch<select id="branchMode"><option value="auto" id="autoBranch"></option><option value="existing">Vorhandenen Branch angeben</option></select></label>
+ <label for="branch" id="branchNameControl" class="block-gap" hidden>Vorhandener Branchname<input id="branch" placeholder="z. B. feat/523-katalog" spellcheck="false"></label>
+</div>
+<div class="note-control" id="noteControl" hidden>
+ <button type="button" id="toggleNote"></button>
+ <label for="handoffNote" id="noteEditor" class="block-gap" hidden>Nur die noch fehlenden Angaben übernehmen<textarea id="handoffNote"></textarea></label>
+</div>
 <p id="executionAdvice" class="small block-gap" hidden></p>
 <div class="block-gap" id="mergeControl" hidden><label class="switch"><input type="checkbox" id="mergeToggle" checked><span><strong>Bei erfolgreichem Review direkt mergen</strong><small>Nur ohne blockierende Fehler und offene Vor-Merge-Gates. Keine automatische Korrektur.</small></span></label></div>
-<details id="contextDetails"><summary>Branch, Prüfplan und Reviewbezug</summary><div class="field-grid">
-<label for="branch" class="field-wide">Arbeitsbranch<input id="branch" placeholder="Vorhandener Branch oder automatisch passend anlegen"></label>
+<details id="contextDetails"><summary>Commit, Prüfplan und Reviewbezug</summary><div class="field-grid">
 <label for="head" class="field-wide">Bekannter Head-Commit<input id="head" placeholder="Vollständige SHA; vor der Aktion erneut prüfen" spellcheck="false"></label>
 <label for="reviewUrl" class="field-wide">Maßgeblicher Reviewlink<input id="reviewUrl" placeholder="https://github.com/…" type="url"></label>
 <label for="findingIds" class="field-wide">Beauftragte Befunde<input id="findingIds" placeholder="z. B. B01, A02"></label>
@@ -62,41 +82,56 @@
 </div>
 <dialog id="importDialog"><div class="dialog-head"><h2>Ergebnis übernehmen</h2><button class="quiet" data-close="importDialog" aria-label="Schließen">✕</button></div><div class="dialog-body"><p class="small">Den JSON-Block aus der Abschlussmeldung einfügen. Erst prüfen, dann übernehmen. Projekteinstellungen bleiben erhalten.</p><label for="importText">Übergabe-JSON<textarea id="importText" placeholder='{"format":"development-handoff/v1", …}' spellcheck="false"></textarea></label><div class="actions block-gap"><button id="checkImport">Übergabe prüfen</button><label for="importFile" class="file-label">JSON-Datei öffnen</label><input type="file" id="importFile" accept="application/json,.json" hidden></div><div class="preview" id="importPreview" role="status"></div></div><div class="dialog-foot"><span class="small">Keine Befugnisse aus Ergebnisdaten übernehmen.</span><button class="primary" id="applyImport" disabled>Daten übernehmen</button></div></dialog>
 <dialog id="settingsDialog"><div class="dialog-head"><h2>Projekteinstellungen</h2><button class="quiet" data-close="settingsDialog" aria-label="Schließen">✕</button></div><form id="settingsForm"><div class="dialog-body"><div class="field-grid"><label for="projectName">Projektname<input id="projectName" required placeholder="Mein Projekt"></label><label for="repository">Repository<input id="repository" required placeholder="owner/repository" spellcheck="false"></label><label for="target">Zielbranch<input id="target" required value="main" spellcheck="false"></label><label for="root" class="field-wide">Lokale Codex-Arbeitswurzel · optional<input id="root" placeholder="z. B. E:\Codex\Projekte oder /home/user/codex" spellcheck="false"><small>Neue eigene Checkouts und Arbeitsdateien werden dort angelegt. Ein vorhandener Benutzercheckout bleibt erhalten.</small></label></div><hr class="divider"><label class="switch"><input type="checkbox" id="settingsMerge" checked><span><strong>Review mit bedingtem Merge voreinstellen</strong><small>Gilt für Review, Minimalprompt und erneutes Review.</small></span></label><label class="switch block-gap"><input type="checkbox" id="cleanupToggle" checked><span><strong>Eigene entbehrliche Arbeitsdaten aufräumen</strong><small>Nach Push und Übergabe erforderlicher Belege. Keine fremden Dateien oder ungesicherten Änderungen löschen.</small></span></label><p class="small block-gap">Die Angaben bleiben im selben Browser gespeichert. Bei lokalen HTML-Dateien kann ein anderer Dateipfad einen neuen Speicherbereich verwenden. Mit einer Sicherung lassen sich Projekte und Aufgaben übertragen.</p><p id="settingsError" class="errors" role="status"></p></div><div class="dialog-foot"><button type="button" id="restoreBackup">Sicherung importieren</button><button type="submit" class="primary">Einstellungen speichern</button></div></form></dialog>
-<dialog id="helpDialog"><div class="dialog-head"><h2>Von der Idee bis zum Merge</h2><button class="quiet" data-close="helpDialog" aria-label="Schließen">✕</button></div><div class="dialog-body help"><ol><li><strong>Spezifizieren:</strong> Ziel eingeben, Auftrag kopieren und an ChatGPT senden. Das Ergebnis enthält ein JSON.</li><li><strong>Übernehmen:</strong> JSON einfügen und Vorschau prüfen. Issue, Paket, Branch, Commit und offene Befunde werden übernommen.</li><li><strong>Umsetzen:</strong> Auftrag an Codex oder ChatGPT senden. Arbeitswurzel und Bereinigung kommen aus deinen Einstellungen.</li><li><strong>Review:</strong> Ergebnis-JSON übernehmen. Der Reviewauftrag prüft den aktuellen PR; standardmäßig mit bedingtem Merge.</li><li><strong>Nacharbeiten:</strong> Bei Befunden dieselbe Runde mit konkretem Reviewlink und Befundkennungen. Sonst ist das Paket abgeschlossen.</li></ol><p>Die Prompts verweisen auf die verbindlichen Regeln im Repository. Der Übergabevertrag steht in <code>docs/dev-rules/HANDOFF.md</code> samt Schema; er wird nicht in jeden Auftrag kopiert. Fehlt er im gewählten Projekt, muss die Quelle zuerst geklärt werden. Eingebettetes Schema und Beispiel dienen nur der Offline-Prüfung und Bedienhilfe.</p><p>Die Vorlagen sind Alternativen, keine zusätzlichen Pflichtphasen. Auch ohne importiertes JSON kannst du beispielsweise nur eine PR-Nummer eingeben und den Minimalreview kopieren.</p><p>Ein positiver Ergebnistext ersetzt keine Quellenprüfung. Das Sheet führt weder GitHub-Aktionen noch lokale Löschungen aus. Eine Sicherung enthält deine Projekteinstellungen und Aufgaben; bewahre sie entsprechend auf.</p><button id="downloadExample">Beispiel-JSON herunterladen</button></div></dialog>
+<dialog id="helpDialog"><div class="dialog-head"><h2>Von der Idee bis zum Merge</h2><button class="quiet" data-close="helpDialog" aria-label="Schließen">✕</button></div><div class="dialog-body help"><ol>
+<li>Beim Spezifizieren kommen Ziel, Entscheidungen und Prüfplan ins Issue oder Paket. Für eine reine Besprechung genügt der Chat.</li>
+<li>Jede KI-Antwort auf einen Sheet-Auftrag endet mit dem vollständigen Ergebnis-JSON nach <code>docs/dev-rules/HANDOFF.md</code>. Füge es unter „Ergebnis übernehmen“ ein und prüfe die Vorschau.</li>
+<li>Bei „Umsetzen“ wird ohne bestehenden Branch oder PR ein neuer Branch vom Zielbranch angelegt. Bei einer Fortsetzung wird der vorhandene Arbeitsstand ermittelt.</li>
+<li>Zum Review genügt der PR mit seinen verlinkten Originalbelegen. Das vollständige JSON kannst du im Sheet weiterhin ansehen. Nacharbeit nutzt Reviewlink und Befundkennungen.</li>
+<li>Beim Freigeben eines besprochenen Entwurfs, Wiederaufnehmen oder Aufräumen kannst du noch unveröffentlichte Angaben gezielt aus der Übergabe auswählen und bearbeiten. Eine persönliche Abnahme gibst du selbst ein.</li>
+</ol>
+<p>Der Minimalreview braucht nur die PR-Nummer. Den bedingten Merge kannst du direkt am Reviewauftrag ein- oder ausschalten. Erst das Absenden des kopierten Auftrags erteilt die angezeigten Befugnisse.</p>
+<p>Der verbindliche Übergabevertrag und das Schema müssen im gewählten Repository zugänglich sein. Ergebnis-JSON und Sicherung haben verschiedene Zwecke. Die Sicherung enthält deine Projekte, Aufträge und Einstellungen.</p><button id="downloadExample">Beispiel-JSON herunterladen</button></div></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <input id="backupFile" type="file" accept="application/json,.json" hidden>
 <script id="handoffSchema" type="application/json">{"$schema": "https://json-schema.org/draft/2020-12/schema", "title": "Development workflow handoff v1", "type": "object", "additionalProperties": false, "required": ["format", "repository", "issue", "package", "pr", "branch", "target", "head", "phase", "summary", "spec_url", "execution", "review", "findings", "checks", "ci", "artifacts", "cleanup", "merge_commit", "next"], "properties": {"format": {"const": "development-handoff/v1"}, "repository": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"}, "issue": {"type": ["integer", "null"], "minimum": 1}, "package": {"type": ["string", "null"]}, "pr": {"type": ["integer", "null"], "minimum": 1}, "branch": {"type": ["string", "null"]}, "target": {"type": "string", "minLength": 1}, "head": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"}, "phase": {"enum": ["specified", "implemented", "reviewed", "reworked", "merged", "blocked"]}, "summary": {"type": "string", "minLength": 1}, "spec_url": {"type": ["string", "null"], "pattern": "^https://[^\\s]+$"}, "execution": {"type": "object", "additionalProperties": false, "required": ["preferred", "self_implementation", "model", "reasoning", "reason", "source_url"], "properties": {"preferred": {"enum": [null, "ChatGPT", "Codex"]}, "self_implementation": {"enum": [null, "yes", "partial", "no"]}, "model": {"type": ["string", "null"]}, "reasoning": {"type": ["string", "null"]}, "reason": {"type": ["string", "null"]}, "source_url": {"type": ["string", "null"], "pattern": "^https://[^\\s]+$"}}}, "review": {"type": "object", "additionalProperties": false, "required": ["url", "head", "verdict"], "properties": {"url": {"type": ["string", "null"], "pattern": "^https://[^\\s]+$"}, "head": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"}, "verdict": {"enum": [null, "changes_required", "acceptance_pending", "mergeable", "incomplete"]}}}, "findings": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["id", "kind", "status", "gate", "summary"], "properties": {"id": {"type": "string", "minLength": 1}, "kind": {"enum": ["B", "A", "O"]}, "status": {"enum": ["open", "resolved", "accepted"]}, "gate": {"enum": ["before_merge", "before_release", "none"]}, "summary": {"type": "string", "minLength": 1}}}}, "checks": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["name", "status", "source_head", "tested_commit", "url"], "properties": {"name": {"type": "string", "minLength": 1}, "status": {"enum": ["passed", "failed", "not_run", "not_applicable", "running", "cancelled"]}, "source_head": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"}, "tested_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"}, "url": {"type": ["string", "null"], "pattern": "^https://[^\\s]+$"}}}}, "ci": {"type": "object", "additionalProperties": false, "required": ["modules", "plan_url", "permanent_tests", "temporary_checks", "artifact_policy", "seconds"], "properties": {"modules": {"type": "array", "items": {"type": "string", "minLength": 1}}, "plan_url": {"type": ["string", "null"], "pattern": "^https://[^\\s]+$"}, "permanent_tests": {"type": "array", "items": {"type": "string"}}, "temporary_checks": {"type": "array", "items": {"type": "string"}}, "artifact_policy": {"type": "string"}, "seconds": {"type": ["number", "null"], "minimum": 0}}}, "artifacts": {"type": "array", "items": {"type": "object", "additionalProperties": false, "required": ["label", "url", "purpose", "expires"], "properties": {"label": {"type": "string", "minLength": 1}, "url": {"type": ["string", "null"], "pattern": "^https://[^\\s]+$"}, "purpose": {"type": "string", "minLength": 1}, "expires": {"type": ["string", "null"], "pattern": "^\\d{4}-\\d{2}-\\d{2}$"}}}}, "cleanup": {"type": "object", "additionalProperties": false, "required": ["status", "remaining"], "properties": {"status": {"enum": ["not_started", "complete", "retained", "blocked"]}, "remaining": {"type": "array", "items": {"type": "string"}}}}, "merge_commit": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"}, "next": {"type": "object", "additionalProperties": false, "required": ["action", "reason"], "properties": {"action": {"enum": ["specify", "implement", "review", "rework", "merge", "done", "clarify"]}, "reason": {"type": "string", "minLength": 1}}}}}</script>
-<script id="handoffExample" type="application/json">{"format": "development-handoff/v1", "repository": "venomenon328/picross", "issue": 517, "package": "W1-W3", "pr": null, "branch": "chore/517-workflow-v2", "target": "main", "head": null, "phase": "specified", "summary": "Workflow und CI zur Umsetzung vorbereitet.", "spec_url": "https://github.com/venomenon328/picross/issues/517", "execution": {"preferred": null, "self_implementation": null, "model": null, "reasoning": null, "reason": null, "source_url": null}, "review": {"url": null, "head": null, "verdict": null}, "findings": [], "checks": [], "ci": {"modules": [], "plan_url": null, "permanent_tests": [], "temporary_checks": [], "artifact_policy": "Windows außer bei reinen Dokumentenänderungen und reiner Rätselproduktion; Technik nur zweckgebunden.", "seconds": null}, "artifacts": [], "cleanup": {"status": "not_started", "remaining": []}, "merge_commit": null, "next": {"action": "implement", "reason": "Freigegebenen Scope auf dem beauftragten Branch umsetzen."}}</script>
+<script id="handoffExample" type="application/json">{"format": "development-handoff/v1", "repository": "venomenon328/picross", "issue": 517, "package": "W1-W3", "pr": null, "branch": null, "target": "main", "head": null, "phase": "specified", "summary": "Workflow und CI zur Umsetzung vorbereitet.", "spec_url": "https://github.com/venomenon328/picross/issues/517", "execution": {"preferred": null, "self_implementation": null, "model": null, "reasoning": null, "reason": null, "source_url": null}, "review": {"url": null, "head": null, "verdict": null}, "findings": [], "checks": [], "ci": {"modules": [], "plan_url": null, "permanent_tests": [], "temporary_checks": [], "artifact_policy": "Windows außer bei reinen Dokumentenänderungen und reiner Rätselproduktion; Technik nur zweckgebunden.", "seconds": null}, "artifacts": [], "cleanup": {"status": "not_started", "remaining": []}, "merge_commit": null, "next": {"action": "implement", "reason": "Das Paket ist vorbereitet. Für die Umsetzung einen neuen Arbeitsbranch vom Zielbranch anlegen."}}</script>
 <script>
 'use strict';
 const $=id=>document.getElementById(id), SCHEMA=JSON.parse($('handoffSchema').textContent), EXAMPLE=JSON.parse($('handoffExample').textContent);
 const KEY='development-workbench-v2', FIELD_IDS=['issue','pr','package','executor','brief','branch','head','reviewUrl','findingIds','modules'];
 const STAGES={specify:['1','Spezifizieren','Aus einer Idee wird ein Auftrag.','Ziel und Grenzen klären. Prüfbedarf bewusst festlegen.'],implement:['2','Umsetzen','Den vereinbarten Umfang liefern.','Implementieren, passend prüfen und als Draft-PR übergeben.'],review:['3','Review','Die Änderung am tatsächlichen Stand prüfen.','Diff und Nachweise prüfen. Fehler und offene Abnahmen klar benennen.'],rework:['4','Nacharbeiten','Konkrete Befunde sauber schließen.','Am selben PR arbeiten und anschließend erneut reviewen.'],finish:['5','Abschließen','Abnahme und Abschluss festhalten.','Aktuelle Gates kontrollieren, Ergebnis dokumentieren und aufräumen.']};
 const TEMPLATES=[
-{id:'spec',stage:'specify',title:'Feature spezifizieren und vorbereiten',who:'ChatGPT',scope:'Issue · Prüfplan · Übergabe',need:['brief']},
-{id:'idea',stage:'specify',title:'Idee zunächst besprechen',who:'ChatGPT',scope:'Beratung · keine Änderungen',need:['brief']},
-{id:'bug',stage:'specify',title:'Fehler untersuchen und erfassen',who:'ChatGPT',scope:'Analyse · Bugfix-Issue',need:['brief']},
-{id:'approve',stage:'specify',title:'Besprochene Spezifikation freigeben',who:'ChatGPT',scope:'Entscheidungen dokumentieren',need:[]},
-{id:'prepare',stage:'specify',title:'Vorhandenes Paket vorbereiten',who:'ChatGPT',scope:'Startfähigkeit prüfen',need:['issue']},
-{id:'next',stage:'specify',title:'Nächstes Paket auswählen',who:'ChatGPT',scope:'Stand prüfen · Paket vorbereiten',need:['issue']},
-{id:'decision',stage:'specify',title:'Entscheidung nachführen',who:'ChatGPT',scope:'Spezifikation aktualisieren',need:['issue','brief']},
-{id:'implement',stage:'implement',title:'Paket vollständig umsetzen',who:'executor',scope:'Ändern · prüfen · Draft-PR',need:['issue']},
-{id:'resume',stage:'implement',title:'Laufende Umsetzung fortsetzen',who:'executor',scope:'Aktuellen Scope fertigstellen',need:['issue']},
-{id:'review',stage:'review',title:'Abschluss zum Review geben',who:'ChatGPT',scope:'Review ohne Korrektur',need:['pr'],merge:true},
-{id:'review-min',stage:'review',title:'Review: Minimalprompt',who:'ChatGPT',scope:'Review ohne Korrektur',need:['pr'],merge:true},
-{id:'rereview',stage:'review',title:'Nacharbeiten erneut prüfen',who:'ChatGPT',scope:'Befunde und Auswirkungen prüfen',need:['pr','reviewUrl'],merge:true},
-{id:'prepare-fix',stage:'rework',title:'Nacharbeit vorbereiten',who:'ChatGPT',scope:'Vorbereiten · noch nicht ändern',need:['pr','reviewUrl']},
-{id:'fix',stage:'rework',title:'Benannte Befunde beheben',who:'executor',scope:'Korrigieren · prüfen · pushen',need:['pr','reviewUrl','findingIds']},
-{id:'ci-fix',stage:'rework',title:'Rote CI untersuchen und beheben',who:'executor',scope:'Ursache im bestehenden Scope beheben',need:['pr']},
-{id:'accept',stage:'finish',title:'Tatsächliche manuelle Abnahme melden',who:'ChatGPT',scope:'Getesteten Stand dokumentieren',need:['pr','brief']},
-{id:'merge',stage:'finish',title:'Merge nach erfüllten Gates freigeben',who:'ChatGPT',scope:'Ausdrücklicher Mergeauftrag',need:['pr']},
-{id:'closeout',stage:'finish',title:'Paket- und Arbeitsdatenabschluss prüfen',who:'executor',scope:'Rückbau · Abschluss dokumentieren',need:['issue']}
+{id:'spec',optional:['issue','package','branch','modules'],stage:'specify',title:'Feature spezifizieren und vorbereiten',who:'ChatGPT',scope:'Issue · Prüfplan · Übergabe',need:['brief']},
+{id:'idea',optional:[],stage:'specify',title:'Idee zunächst besprechen',who:'ChatGPT',scope:'Beratung · keine Änderungen',need:['brief']},
+{id:'bug',optional:['issue','package','branch','modules'],stage:'specify',title:'Fehler untersuchen und erfassen',who:'ChatGPT',scope:'Analyse · Bugfix-Issue',need:['brief']},
+{id:'approve',optional:['issue','package','branch','brief','modules'],stage:'specify',title:'Besprochene Spezifikation freigeben',who:'ChatGPT',scope:'Entscheidungen dokumentieren',need:[]},
+{id:'prepare',optional:['package','branch','brief','modules'],stage:'specify',title:'Vorhandenes Paket vorbereiten',who:'ChatGPT',scope:'Startfähigkeit prüfen',need:['issue']},
+{id:'next',optional:['branch','brief','modules'],stage:'specify',title:'Nächstes Paket auswählen',who:'ChatGPT',scope:'Stand prüfen · Paket vorbereiten',need:['issue']},
+{id:'decision',optional:['package','branch'],stage:'specify',title:'Entscheidung nachführen',who:'ChatGPT',scope:'Spezifikation aktualisieren',need:['issue','brief']},
+{id:'implement',optional:['package','pr','branch','head','brief','modules'],stage:'implement',title:'Paket vollständig umsetzen',who:'executor',scope:'Ändern · prüfen · Draft-PR',need:['issue']},
+{id:'resume',optional:['package','pr','branch','head','brief','modules'],stage:'implement',title:'Laufende Umsetzung fortsetzen',who:'executor',scope:'Aktuellen Scope fertigstellen',need:['issue']},
+{id:'review',optional:['head','brief'],stage:'review',title:'Abschluss zum Review geben',who:'ChatGPT',scope:'Review ohne Korrektur',need:['pr'],merge:true},
+{id:'review-min',optional:[],stage:'review',title:'Review: Minimalprompt',who:'ChatGPT',scope:'Review ohne Korrektur',need:['pr'],merge:true},
+{id:'rereview',optional:['head','findingIds','brief'],stage:'review',title:'Nacharbeiten erneut prüfen',who:'ChatGPT',scope:'Befunde und Auswirkungen prüfen',need:['pr','reviewUrl'],merge:true},
+{id:'prepare-fix',optional:['head','findingIds','brief'],stage:'rework',title:'Nacharbeit vorbereiten',who:'ChatGPT',scope:'Vorbereiten · noch nicht ändern',need:['pr','reviewUrl']},
+{id:'fix',optional:['head','brief','modules'],stage:'rework',title:'Benannte Befunde beheben',who:'executor',scope:'Korrigieren · prüfen · pushen',need:['pr','reviewUrl','findingIds']},
+{id:'ci-fix',optional:['head','brief','modules'],stage:'rework',title:'Rote CI untersuchen und beheben',who:'executor',scope:'Ursache im bestehenden Scope beheben',need:['pr']},
+{id:'accept',optional:[],stage:'finish',title:'Tatsächliche manuelle Abnahme melden',who:'ChatGPT',scope:'Getesteten Stand dokumentieren',need:['pr','brief']},
+{id:'merge',optional:['head','reviewUrl','brief'],stage:'finish',title:'Merge nach erfüllten Gates freigeben',who:'ChatGPT',scope:'Ausdrücklicher Mergeauftrag',need:['pr']},
+{id:'closeout',optional:['package','pr','branch','brief'],stage:'finish',title:'Paket- und Arbeitsdatenabschluss prüfen',who:'executor',scope:'Rückbau · Abschluss dokumentieren',need:['issue']}
 ];
 const clone=x=>JSON.parse(JSON.stringify(x));
-function blankTask(){return {stage:'specify',template:'spec',fields:Object.fromEntries(FIELD_IDS.map(k=>[k,k==='executor'?'Codex':''])),handoff:null};}
+function blankTask(){return {stage:'specify',template:'spec',fields:Object.fromEntries(FIELD_IDS.map(k=>[k,k==='executor'?'Codex':''])),handoff:null,branchMode:'auto',briefs:{},note:null};}
 function newProfile(id,name,repository){return {id,name,repository,target:'main',root:'',merge:true,cleanup:true,task:blankTask()};}
-function initial(){return {format:'development-workbench-settings/v1',active:'picross',profiles:[newProfile('picross','Picross','venomenon328/picross')]};}
+function initial(){return {format:'development-workbench-settings/v1',active:'picross',theme:'system',profiles:[newProfile('picross','Picross','venomenon328/picross')]};}
 let state=initial(), pending=null, adding=false, toastTimer;
+const THEMES = ['system','light','dark'];
+const systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+function renderTheme(){
+ const theme = state.theme === 'system' ? (systemTheme.matches ? 'dark' : 'light') : state.theme;
+ document.documentElement.dataset.theme = theme;
+ $('theme').value = state.theme;
+}
 function profile(){return state.profiles.find(p=>p.id===state.active);}
 function say(message){$('toast').textContent=message;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').textContent='',5000);}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));$('storageWarning').hidden=true;}catch{ $('storageWarning').textContent='Automatisches Speichern ist in diesem Browser nicht verfügbar. Exportiere eine Sicherung, bevor du die Datei schließt.';$('storageWarning').hidden=false;}}
@@ -129,18 +164,103 @@ function parseJSON(raw,limit=1000000){let s=raw.trim();if(s.startsWith('```')){i
  function val(){ws();if(s[i]==='{'){i++;ws();const keys=new Set();if(s[i]==='}'){i++;return;}while(i<s.length){ws();if(s[i]!=='"')throw Error('JSON-Feldname erwartet.');const key=str();if(keys.has(key))throw Error('Doppeltes JSON-Feld: '+key);keys.add(key);ws();if(s[i++]!==':')throw Error('JSON-Doppelpunkt fehlt.');val();ws();if(s[i]==='}'){i++;return;}if(s[i++]!==',')throw Error('Ungültiges JSON-Objekt.');}throw Error('Unvollständiges JSON-Objekt.');}if(s[i]==='['){i++;ws();if(s[i]===']'){i++;return;}while(i<s.length){val();ws();if(s[i]===']'){i++;return;}if(s[i++]!==',')throw Error('Ungültige JSON-Liste.');}throw Error('Unvollständige JSON-Liste.');}if(s[i]==='"'){str();return;}const m=s.slice(i).match(/^(?:null|true|false|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?)/);if(!m)throw Error('Ungültiger JSON-Wert.');i+=m[0].length;}
  val();ws();if(i!==s.length)throw Error('Zusätzlicher Text nach dem JSON.');return JSON.parse(s);
 }
-function validateBackup(x){if(!x||x.format!=='development-workbench-settings/v1'||!Array.isArray(x.profiles)||!x.profiles.length)throw Error('Keine gültige Werkbank-Sicherung.');const ids=new Set();for(const p of x.profiles){if(!p||typeof p.id!=='string'||ids.has(p.id)||typeof p.name!=='string'||!p.name.trim()||!validRepo(p.repository)||typeof p.target!=='string'||!p.target||typeof p.root!=='string'||typeof p.merge!=='boolean'||typeof p.cleanup!=='boolean')throw Error('Ungültige Projekteinstellungen.');ids.add(p.id);if(!STAGES[p.task?.stage]||!TEMPLATES.some(t=>t.id===p.task?.template&&t.stage===p.task.stage)||!p.task.fields||FIELD_IDS.some(k=>typeof p.task.fields[k]!=='string'))throw Error('Ungültige Aufgabe in der Sicherung.');if(p.task.handoff){validateHandoff(p.task.handoff);if(p.task.handoff.repository!==p.repository||p.task.handoff.target!==p.target)throw Error('Projekt und Übergabe passen nicht zusammen.');}}if(!ids.has(x.active))throw Error('Aktives Projekt fehlt.');return clone(x);}
+function branchName(value){
+ return value.trim().replace(/^refs\/heads\//,'');
+}
+function importedBranch(value,target){
+ const name = branchName(value || '');
+ return name === branchName(target) ? '' : name;
+}
+function validateBackup(value){
+ if(!value || value.format!=='development-workbench-settings/v1' || !Array.isArray(value.profiles) || !value.profiles.length)
+  throw Error('Keine gültige Werkbank-Sicherung.');
+ const x=clone(value), ids=new Set();
+ if(x.theme===undefined)x.theme='system';
+ if(!THEMES.includes(x.theme))throw Error('Ungültige Darstellung in der Sicherung.');
+ for(const p of x.profiles){
+  if(!p || typeof p.id!=='string' || ids.has(p.id) || typeof p.name!=='string' || !p.name.trim() ||
+     !validRepo(p.repository) || typeof p.target!=='string' || !p.target || typeof p.root!=='string' ||
+     typeof p.merge!=='boolean' || typeof p.cleanup!=='boolean')throw Error('Ungültige Projekteinstellungen.');
+  ids.add(p.id);
+  const task=p.task;
+  if(!STAGES[task?.stage] || !TEMPLATES.some(t=>t.id===task.template && t.stage===task.stage) ||
+     !task.fields || FIELD_IDS.some(k=>typeof task.fields[k]!=='string'))throw Error('Ungültige Aufgabe in der Sicherung.');
+  if(task.handoff){
+   validateHandoff(task.handoff);
+   if(task.handoff.repository!==p.repository || task.handoff.target!==p.target)throw Error('Projekt und Übergabe passen nicht zusammen.');
+  }
+  if(task.branchMode===undefined){
+   // Older sheets copied target and reported module choices into editable order fields.
+   task.fields.branch=importedBranch(task.fields.branch,p.target);
+   task.branchMode=task.fields.branch?'existing':'auto';
+   if(!task.fields.branch && !task.fields.pr && task.fields.head===task.handoff?.head)task.fields.head='';
+   if(task.fields.modules===task.handoff?.ci.modules.join(', '))task.fields.modules='';
+  }
+  if(!['auto','existing'].includes(task.branchMode))throw Error('Ungültige Branchwahl.');
+  if(task.briefs===undefined)task.briefs={};
+  if(!task.briefs || typeof task.briefs!=='object' || Array.isArray(task.briefs) ||
+     Object.entries(task.briefs).some(([id,text])=>typeof text!=='string' || !TEMPLATES.some(t=>t.id===id)))
+   throw Error('Ungültige Auftragsnotizen in der Sicherung.');
+  if(task.note!=null && (!['spec','approve','resume','closeout'].includes(task.note.template) ||
+     typeof task.note.text!=='string'))throw Error('Ungültige Übergabenotiz.');
+ }
+ if(!ids.has(x.active))throw Error('Aktives Projekt fehlt.');
+ return x;
+}
 function validRepo(s){return typeof s==='string'&&/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(s);}
 function labelFor(id){return {issue:'Issue',pr:'Pull Request',brief:'Beschreibung',reviewUrl:'Reviewlink',findingIds:'Befundkennungen'}[id]||id;}
 function currentTemplate(){return TEMPLATES.find(t=>t.id===profile().task.template);}
-function context(){
- const p=profile(),f=p.task.fields;
- const parts=['Auftrag aus dem Entwicklungssheet. Repository: '+p.repository+'.',
-  'Vor der Arbeit die aktuelle AGENTS.md im beauftragten Branch, sonst in '+p.target+', und ihre Pflichtquellen vollständig lesen und beachten.'];
- if(f.issue)parts.push('Issue #'+f.issue+(f.package?', Paket '+f.package:'')+'.');
- if(f.pr)parts.push('PR #'+f.pr+'.');
- parts.push('Zielbranch: '+p.target+'.'+(f.branch?' Arbeitsbranch: '+f.branch+'.':''));
- if(f.head)parts.push('Zuletzt übergebener Head: '+f.head+'.');
+function usesField(t,key){
+ return t.need.includes(key) || t.optional.includes(key) || (key==='executor' && t.who==='executor');
+}
+function sameTaskHandoff(){
+ const {handoff:h,fields:f}=profile().task;
+ if(!h)return null;
+ const same=(a,b)=>String(a??'').trim()===String(b??'').trim();
+ if(!same(f.issue,h.issue) || !same(f.package,h.package) || !same(f.pr,h.pr))return null;
+ if(f.head && h.head && f.head!==h.head)return null;
+ const originalBranch=importedBranch(h.branch,profile().target);
+ if(f.branch && originalBranch && branchName(f.branch)!==originalBranch)return null;
+ return h;
+}
+function noteOffer(t,h){
+ if(!h)return null;
+ if(['spec','approve'].includes(t.id))
+  return {label:'Gesprächsnotiz aus der Übergabe auswählen',text:h.summary};
+ if(t.id==='resume'){
+  const reason=h.phase==='blocked' && h.next.reason!==h.summary?'\nGemeldeter Grund: '+h.next.reason:'';
+  return {label:'Zwischenstand aus der Übergabe auswählen',text:h.summary+reason};
+ }
+ if(t.id==='closeout' && h.cleanup.remaining.length)
+  return {label:'Gemeldete Restpfade auswählen',text:h.cleanup.remaining.join('\n')};
+ return null;
+}
+function branchDefault(t,f){
+ if(t.id==='closeout')return 'Bei Änderungen passenden Arbeitsbranch ermitteln';
+ if(f.pr && ['implement','resume'].includes(t.id))return 'Arbeitsbranch aus PR #'+f.pr+' verwenden';
+ if(t.id==='implement')return 'Neuen Branch anlegen';
+ if(t.id==='resume')return 'Bestehenden Arbeitsbranch im Issue ermitteln';
+ return 'Zielbranch als Lesequelle verwenden';
+}
+function context(t,f){
+ const p=profile(), parts=['Repository: '+p.repository+' · Zielbranch: '+p.target+'.'];
+ const prSource=t.need.includes('pr') || (f.pr && ['implement','resume'].includes(t.id));
+ const branch=p.task.branchMode==='existing'?importedBranch(f.branch,p.target):'';
+ const source=prSource?'im aktuellen PR-Branch':branch?'in '+branch:
+  t.id==='resume'?'im über das Issue ermittelten Arbeitsbranch':'in '+p.target;
+ parts.push('Lies die aktuelle AGENTS.md '+source+' und ihre Pflichtquellen.');
+ if(branch)parts.push((prSource?'Erwarteter PR-Branch: ':'Arbeitsbranch: ')+branch+'.');
+ if(prSource && ['implement','resume'].includes(t.id))
+  parts.push('Führe die Umsetzung auf dem Arbeitsbranch dieses PR fort.');
+ if(f.pr && !t.need.includes('pr'))parts.push((t.id==='closeout'?'Liefer-PR':'Bestehender PR')+': #'+f.pr+'.');
+ if(t.id==='implement' && !branch && !f.pr)parts.push('Lege für die Umsetzung einen neuen Arbeitsbranch von '+p.target+' an.');
+ if(t.id==='resume' && !branch && !f.pr)parts.push('Ermittle den bestehenden Arbeitsbranch zu diesem Paket im Issue und setze ihn fort.');
+ if(f.issue && !t.need.includes('issue'))parts.push('Issue #'+f.issue+'.');
+ if(f.package)parts.push('Paket: '+f.package+'.');
+ if(f.head && (prSource || branch))parts.push('Zuletzt bekannter Head: '+f.head+'.');
+ const h=sameTaskHandoff();
+ if(h?.spec_url && ['spec','approve','decision','prepare','implement','resume'].includes(t.id) &&
+    h.spec_url!=='https://github.com/'+p.repository+'/issues/'+f.issue)parts.push('Spezifikation: '+h.spec_url);
  return parts.join('\n');
 }
 function workspaceText(){
@@ -152,43 +272,140 @@ function workspaceText(){
 function mergeText(){return profile().merge
  ?'Bei erfüllten Vor-Merge-Gates gemäß docs/dev-rules/WORKFLOW.md ist der Merge dieses PR ausdrücklich beauftragt. Keine Korrekturen.'
  :'Nur Review; keine Korrekturen und kein Merge.';}
-function outputText(){return 'Abschluss verbindlich nach docs/dev-rules/HANDOFF.md.';}
-function buildPrompt(){const p=profile(),f=p.task.fields,t=currentTemplate(),errs=[];if(!validRepo(p.repository))errs.push('Gültiges Repository fehlt.');for(const k of t.need)if(!f[k].trim())errs.push(labelFor(k)+' ergänzen.');for(const k of ['issue','pr'])if(f[k]&&(!/^[1-9]\d*$/.test(f[k])||!Number.isSafeInteger(Number(f[k]))))errs.push(labelFor(k)+' muss eine positive Nummer sein.');if(f.head&&!/^[0-9a-f]{40}$/.test(f.head))errs.push('Head als vollständige SHA eingeben.');if(f.reviewUrl&&!/^https:\/\/[^\s]+$/.test(f.reviewUrl))errs.push('Reviewlink muss eine HTTPS-Adresse sein.');const issue='#'+(f.issue||'⟨Issue⟩'),pr='#'+(f.pr||'⟨PR⟩'),pkg=f.package?', Paket '+f.package:'';let body='';
+function outputText(){return 'Gib das vollständige Ergebnis-JSON gemäß docs/dev-rules/HANDOFF.md aus.';}
+function buildPrompt(){
+ const p=profile(),t=currentTemplate(),errs=[];
+ const f=Object.fromEntries(FIELD_IDS.map(k=>[k,usesField(t,k)?p.task.fields[k].trim():'']));
+ const note=p.task.note?.template===t.id && noteOffer(t,sameTaskHandoff()) ? p.task.note.text.trim() : '';
+ if(!validRepo(p.repository))errs.push('Gültiges Repository fehlt.');
+ for(const k of t.need)if(!f[k] && !(k==='brief' && t.id==='spec' && note))errs.push(labelFor(k)+' ergänzen.');
+ for(const k of ['issue','pr'])
+  if(f[k] && (!/^[1-9]\d*$/.test(f[k]) || !Number.isSafeInteger(Number(f[k]))))errs.push(labelFor(k)+' muss eine positive Nummer sein.');
+ if(f.head && !/^[0-9a-f]{40}$/.test(f.head))errs.push('Head als vollständige SHA eingeben.');
+ if(f.reviewUrl && !/^https:\/\/[^\s]+$/.test(f.reviewUrl))errs.push('Reviewlink muss eine HTTPS-Adresse sein.');
+ if(usesField(t,'branch') && p.task.branchMode==='existing' && !importedBranch(f.branch,p.target))
+  errs.push('Einen vorhandenen Arbeitsbranch angeben, der sich vom Zielbranch unterscheidet.');
+ const issue='#'+(f.issue||'⟨Issue⟩'),pr='#'+(f.pr||'⟨PR⟩');
+ let body='';
  switch(t.id){
  case 'idea':body='Besprich die folgende Idee auf Grundlage des Projekts und schlage eine abgegrenzte Lösung vor. Nur Beratung; nichts anlegen oder ändern.\n\n'+f.brief;break;
  case 'spec':body='Spezifiziere das folgende Vorhaben, erstelle oder aktualisiere das passende Issue mit sinnvollen Paketen und bereite das erste umsetzbare Paket gemäß Workflow vor. Noch nicht implementieren oder mergen.\n\n'+f.brief;break;
  case 'bug':body='Untersuche den folgenden Fehler, erfasse ihn im passenden Bugfix-Issue und bereite die Behebung gemäß Workflow vor. Noch nicht implementieren oder mergen.\n\n'+f.brief;break;
  case 'approve':body='Die besprochene Lösung ist als Spezifikation freigegeben. Führe die zuständigen Issue-/Repositoryquellen nach und bereite das erste umsetzbare Paket vor. Noch nicht implementieren oder mergen.';break;
  case 'decision':body='Übernimm diese Entscheidung in Issue '+issue+' und die zuständigen verbindlichen Dokumente. Noch nicht implementieren oder mergen.\n\n'+f.brief;break;
- case 'prepare':body='Bereite Issue '+issue+pkg+' gemäß Workflow zur Umsetzung vor. Noch nicht implementieren oder mergen.';break;
+ case 'prepare':body='Bereite Issue '+issue+' gemäß Workflow zur Umsetzung vor. Noch nicht implementieren oder mergen.';break;
  case 'next':body='Prüfe Issue '+issue+' und bereite das nächste sinnvoll umsetzbare Paket gemäß Workflow vor. Ist der gesamte Umfang erfüllt, dokumentiere den Abschluss und schließe das Issue. Noch nicht implementieren oder mergen.';break;
- case 'implement':case 'resume':body=(t.id==='resume'?'Setze die laufende Umsetzung von Issue ':'Implementiere Issue ')+issue+pkg+' im freigegebenen Scope vollständig gemäß Workflow. Kein Merge.\n\n'+workspaceText();break;
- case 'review':case 'review-min':case 'rereview':body=(t.id==='rereview'?'Reviewe die Nacharbeit in PR '+pr+' zu den Befunden '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' einschließlich ihrer Auswirkungen.':'Reviewe den aktuellen PR '+pr+' gemäß Workflow.')+' Dokumentiere das Ergebnis im PR.\n\n'+mergeText();break;
+ case 'implement':case 'resume':body=(t.id==='resume'?'Setze die laufende Umsetzung von Issue ':'Implementiere Issue ')+issue+' im freigegebenen Scope vollständig gemäß Workflow. Liefere den Draft-PR mit Links zu den erforderlichen Reviewbelegen. Kein Merge.\n\n'+workspaceText();break;
+ case 'review':case 'review-min':case 'rereview':body=(t.id==='rereview'?'Reviewe die Nacharbeit in PR '+pr+' zu den Befunden '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' einschließlich ihrer Auswirkungen.':t.id==='review-min'?'Reviewe PR '+pr+' gemäß Workflow.':'Reviewe PR '+pr+' anhand des Diffs und der im PR verlinkten Originalbelege.')+' Dokumentiere das Ergebnis im PR.\n\n'+mergeText();break;
  case 'prepare-fix':body='Bereite die offenen blockierenden oder technisch erforderlichen Befunde '+(f.findingIds||'aus dem benannten Review')+' aus '+f.reviewUrl+' zu PR '+pr+' gemäß Workflow zur Umsetzung vor. Noch nicht korrigieren oder mergen.';break;
- case 'fix':body='Behebe ausschließlich die beauftragten Befunde '+f.findingIds+' aus '+f.reviewUrl+' in PR '+pr+' gemäß Workflow. Kein Merge.\n\n'+workspaceText();break;
+ case 'fix':body='Behebe ausschließlich die beauftragten Befunde '+f.findingIds+' aus '+f.reviewUrl+' in PR '+pr+' gemäß Workflow. Aktualisiere die zugehörigen Beleglinks im PR. Kein Merge.\n\n'+workspaceText();break;
  case 'ci-fix':body='Untersuche die aktuellen CI-Fehler von PR '+pr+' und behebe ihre Ursache im bestehenden Scope gemäß Workflow. Kein Merge.\n\n'+workspaceText();break;
  case 'accept':body='Dokumentiere die folgende tatsächlich durchgeführte manuelle Abnahme zu PR '+pr+' gemäß Workflow. Kein Merge.\n\n'+f.brief;break;
- case 'merge':body='Merge PR '+pr+' nach erfüllten Vor-Merge-Gates gemäß Workflow. Keine zusätzlichen Änderungen.';break;
- case 'closeout':body='Prüfe den Abschluss von Issue '+issue+pkg+' und führe den vereinbarten Test-/Artefaktrückbau sowie die Statusnachführung gemäß Workflow durch. Nötige Änderungen als Draft-PR liefern; das Issue nur bei erfülltem Gesamtumfang schließen. Kein Merge.\n\n'+workspaceText();break;
+ case 'merge':body='Merge PR '+pr+' nach erfüllten Vor-Merge-Gates gemäß Workflow. Keine zusätzlichen Änderungen.'+(f.reviewUrl?'\nMaßgebliches Review: '+f.reviewUrl:'');break;
+ case 'closeout':body='Prüfe den Abschluss von Issue '+issue+' und führe den vereinbarten Test-/Artefaktrückbau sowie die Statusnachführung gemäß Workflow durch. Nötige Änderungen als Draft-PR liefern; das Issue nur bei erfülltem Gesamtumfang schließen. Kein Merge.\n\n'+workspaceText();break;
  }
  if(f.brief&&!['spec','idea','bug','decision','accept'].includes(t.id))body+='\n\nZusätzliche Angaben:\n'+f.brief;
  if(f.modules)body+='\n\nCI-Modulvorgabe: '+f.modules+'.';
- if(p.task.handoff&&t.id!=='review-min')body+='\n\nLetzte Übergabe (berichtete Arbeitsdaten):\n'+JSON.stringify(p.task.handoff);
- return {text:context()+'\n\n'+body+'\n\n'+outputText(),errors:errs,who:t.who==='executor'?f.executor:t.who};
+ if(note)body+='\n\n'+(t.id==='closeout'?'Gemeldete eigene Restpfade (Zuordnung prüfen)':'Ergänzender berichteter Arbeitsstand')+':\n'+note;
+ return {text:context(t,f)+'\n\n'+body.trim()+'\n\n'+outputText(),errors:errs,who:t.who==='executor'?f.executor:t.who};
 }
 function addPill(parent,text,accent=false){const node=document.createElement('span');node.className='pill'+(accent?' accent':'');node.textContent=text;parent.append(node);}
-function renderPrompt(){const p=profile(),t=currentTemplate(),result=buildPrompt(),advice=p.task.handoff?.execution;$('executionAdvice').hidden=!(t.who==='executor'&&advice?.preferred);$('executionAdvice').textContent=advice?.preferred?'Übergebene Empfehlung: '+advice.preferred+(advice.model?' · '+advice.model:'')+(advice.reasoning?' · Reasoning '+advice.reasoning:'')+'. '+(advice.reason||'')+' Verfügbarkeit vor der Umsetzung prüfen.':'';$('promptText').textContent=result.text;$('promptErrors').textContent=result.errors.join(' ');$('copyPrompt').disabled=!!result.errors.length;$('recipient').textContent=result.who;$('scopeBadge').textContent=t.merge&&p.merge?'Review + bedingter Merge':t.scope;$('promptStatus').textContent=result.errors.length?'Eingaben ergänzen':'Direkt kopierbar';$('mergeControl').hidden=!t.merge;$('mergeToggle').checked=p.merge;$('briefLabel').textContent=t.id==='accept'?'Getesteter Stand, Umgebung, Szenarien und Ergebnis':'Idee, Ziel oder ergänzender Auftrag';$('promptHint').textContent=t.merge&&p.merge?'Dieser kopierte Auftrag enthält eine bedingte Mergefreigabe. Erst das Absenden beauftragt sie.':'Der Auftrag wird nur kopiert. Erst das Absenden an ChatGPT oder Codex startet die Arbeit.';}
-function render(){const p=profile(),task=p.task,stage=STAGES[task.stage];$('repoHeading').textContent=p.repository;$('projectSelect').replaceChildren();for(const item of state.profiles){const o=document.createElement('option');o.value=item.id;o.textContent=item.name;$('projectSelect').append(o);}$('projectSelect').value=p.id;for(const b of document.querySelectorAll('[data-stage]')){if(b.dataset.stage===task.stage)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');}$('templateSelect').replaceChildren();for(const t of TEMPLATES.filter(t=>t.stage===task.stage)){const o=document.createElement('option');o.value=t.id;o.textContent=t.title;$('templateSelect').append(o);}$('templateSelect').value=task.template;for(const k of FIELD_IDS)$(k).value=task.fields[k];$('stepLabel').textContent='Schritt '+stage[0]+' · '+stage[1];$('stageTitle').textContent=stage[2];$('stageDesc').textContent=stage[3];$('contextChips').replaceChildren();addPill($('contextChips'),p.name,true);if(task.fields.issue)addPill($('contextChips'),'Issue #'+task.fields.issue);if(task.fields.pr)addPill($('contextChips'),'PR #'+task.fields.pr);if(task.fields.head)addPill($('contextChips'),task.fields.head.slice(0,8));addPill($('contextChips'),p.root?'Arbeitswurzel gesetzt':'Arbeitsumgebung verwenden');const h=task.handoff;$('resultSummary').hidden=!h;$('nextBanner').hidden=!h;if(h){$('resultText').textContent=h.summary;$('nextTitle').textContent=h.next.action==='done'?'Gemergten Abschluss übernommen':'Empfohlener nächster Schritt: '+({specify:'Spezifizieren',implement:'Umsetzen',review:'Review',rework:'Nacharbeiten',merge:'Merge prüfen',clarify:'Offene Punkte klären'}[h.next.action]||h.next.action);$('nextReason').textContent=h.next.reason;$('goNext').hidden=h.next.action==='done';$('resultFacts').replaceChildren();for(const [text,url]of [['Issue #'+h.issue,h.issue?'https://github.com/'+h.repository+'/issues/'+h.issue:null],['PR #'+h.pr,h.pr?'https://github.com/'+h.repository+'/pull/'+h.pr:null],['Review',h.review.url]])if(url){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;const el=document.createElement('span');el.className='fact';el.append(a);$('resultFacts').append(el);}const el=document.createElement('span');el.className='fact';el.textContent=h.findings.filter(f=>f.status==='open').length+' offene Befunde';$('resultFacts').append(el);}renderPrompt();}
-function changeStage(stage,id){profile().task.stage=stage;profile().task.template=id||TEMPLATES.find(t=>t.stage===stage).id;persist();render();}
+function renderContextChips(t){
+ const p=profile(), f=p.task.fields, chips=$('contextChips');
+ chips.replaceChildren();addPill(chips,p.name,true);
+ if(f.issue && usesField(t,'issue'))addPill(chips,'Issue #'+f.issue);
+ if(f.pr && usesField(t,'pr'))addPill(chips,'PR #'+f.pr);
+ if(f.head && usesField(t,'head'))addPill(chips,f.head.slice(0,8));
+ if(t.who==='executor')addPill(chips,p.root && f.executor==='Codex'?'Arbeitswurzel gesetzt':'Arbeitsumgebung verwenden');
+}
+function renderInputs(t){
+ const {fields,branchMode,note}=profile().task;
+ $('brief').placeholder=t.id==='accept'?'Wer hat welchen Stand in welcher Umgebung geprüft? Was war das Ergebnis?':
+  ['spec','idea','bug'].includes(t.id)?'Was soll sich ändern – und wofür?':
+  t.id==='approve'?'Bei einem Chatwechsel die freigegebenen Punkte oder den Quellenlink ergänzen.':
+  'Nur neue Angaben für diesen Auftrag ergänzen.';
+ for(const key of FIELD_IDS){
+  if(key!=='branch')$(key).closest('label').hidden=!usesField(t,key);
+ }
+ $('contextDetails').hidden=!['head','reviewUrl','findingIds','modules'].some(key=>usesField(t,key));
+ $('branchControl').hidden=!usesField(t,'branch');
+ $('autoBranch').textContent=branchDefault(t,fields);
+ $('branchMode').value=branchMode;
+ $('branchNameControl').hidden=branchMode!=='existing';
+ const offer=noteOffer(t,sameTaskHandoff()), editing=Boolean(offer && note?.template===t.id);
+ $('noteControl').hidden=!offer;
+ $('noteEditor').hidden=!editing;
+ $('toggleNote').textContent=editing?'Ausgewählte Angaben verwerfen':offer?.label||'';
+ $('handoffNote').value=editing?note.text:'';
+}
+function renderPrompt(){const p=profile(),t=currentTemplate(),result=buildPrompt(),advice=sameTaskHandoff()?.execution;renderInputs(t);renderContextChips(t);$('executionAdvice').hidden=!(t.who==='executor'&&advice?.preferred);$('executionAdvice').textContent=advice?.preferred?'Übergebene Empfehlung: '+advice.preferred+(advice.model?' · '+advice.model:'')+(advice.reasoning?' · Reasoning '+advice.reasoning:'')+'. '+(advice.reason||'')+' Verfügbarkeit vor der Umsetzung prüfen.':'';$('promptText').textContent=result.text;$('promptErrors').textContent=result.errors.join(' ');$('copyPrompt').disabled=!!result.errors.length;$('recipient').textContent=result.who;$('scopeBadge').textContent=t.merge&&p.merge?'Review + bedingter Merge':t.scope;$('promptStatus').textContent=result.errors.length?'Eingaben ergänzen':'Direkt kopierbar';$('mergeControl').hidden=!t.merge;$('mergeToggle').checked=p.merge;$('briefLabel').textContent=t.id==='accept'?'Getesteter Stand, Umgebung, Szenarien und Ergebnis':'Idee, Ziel oder ergänzender Auftrag';$('promptHint').textContent=t.merge&&p.merge?'Dieser kopierte Auftrag enthält eine bedingte Mergefreigabe. Erst das Absenden beauftragt sie.':'Der Auftrag wird nur kopiert. Erst das Absenden an ChatGPT oder Codex startet die Arbeit.';}
+function render(){renderTheme();const p=profile(),task=p.task,stage=STAGES[task.stage];$('repoHeading').textContent=p.repository;$('projectSelect').replaceChildren();for(const item of state.profiles){const o=document.createElement('option');o.value=item.id;o.textContent=item.name;$('projectSelect').append(o);}$('projectSelect').value=p.id;for(const b of document.querySelectorAll('[data-stage]')){if(b.dataset.stage===task.stage)b.setAttribute('aria-current','step');else b.removeAttribute('aria-current');}$('templateSelect').replaceChildren();for(const t of TEMPLATES.filter(t=>t.stage===task.stage)){const o=document.createElement('option');o.value=t.id;o.textContent=t.title;$('templateSelect').append(o);}$('templateSelect').value=task.template;for(const k of FIELD_IDS)$(k).value=task.fields[k];$('stepLabel').textContent='Schritt '+stage[0]+' · '+stage[1];$('stageTitle').textContent=stage[2];$('stageDesc').textContent=stage[3];const h=task.handoff;$('resultSummary').hidden=!h;$('nextBanner').hidden=!h;if(h){$('resultText').textContent=h.summary;$('nextTitle').textContent=h.next.action==='done'?'Gemergten Abschluss übernommen':'Empfohlener nächster Schritt: '+({specify:'Spezifizieren',implement:'Umsetzen',review:'Review',rework:'Nacharbeiten',merge:'Merge prüfen',clarify:'Offene Punkte klären'}[h.next.action]||h.next.action);$('nextReason').textContent=h.next.reason;$('goNext').hidden=h.next.action==='done';$('resultFacts').replaceChildren();for(const [text,url]of [['Issue #'+h.issue,h.issue?'https://github.com/'+h.repository+'/issues/'+h.issue:null],['PR #'+h.pr,h.pr?'https://github.com/'+h.repository+'/pull/'+h.pr:null],['Review',h.review.url]])if(url){const a=document.createElement('a');a.href=url;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;const el=document.createElement('span');el.className='fact';el.append(a);$('resultFacts').append(el);}const el=document.createElement('span');el.className='fact';el.textContent=h.findings.filter(f=>f.status==='open').length+' offene Befunde';$('resultFacts').append(el);}renderPrompt();}
+function changeStage(stage,id){
+ const task=profile().task, next=id || TEMPLATES.find(t=>t.stage===stage).id;
+ if(next!==task.template){
+  task.briefs[task.template]=task.fields.brief;
+  task.fields.brief=task.briefs[next]||'';
+ }
+ task.stage=stage;task.template=next;persist();render();
+}
 function goNext(){const next=profile().task.handoff?.next.action;if(next==='merge'){changeStage('review','review');say('Ein berichtetes positives Review ersetzt keine aktuelle Quellenprüfung.');return;}if(next==='rework'){changeStage('rework','fix');return;}if(['specify','implement','review'].includes(next))changeStage(next);else if(next==='clarify')changeStage('specify','prepare');}
 function invalidateImport(){pending=null;$('applyImport').disabled=true;$('importPreview').textContent='';}
 function previewImport(){try{const x=validateHandoff(parseJSON($('importText').value));if(x.repository!==profile().repository)throw Error('Übergabe gehört zu '+x.repository+'. Zuerst das passende Projekt wählen oder anlegen.');if(x.target!==profile().target)throw Error('Zielbranch '+x.target+' passt nicht zu den Projekteinstellungen ('+profile().target+'). Vor dem Import bewusst angleichen.');pending=x;$('importPreview').classList.remove('danger-text');$('importPreview').textContent='Geprüft: '+x.repository+'\nIssue: '+(x.issue||'offen')+' · Paket: '+(x.package||'–')+' · PR: '+(x.pr||'offen')+'\nPhase: '+x.phase+' · Head: '+(x.head||'noch nicht vorhanden')+'\n\n'+x.summary+'\n\nNächster Schritt: '+x.next.action+'\n'+x.next.reason+'\n\nDiese Aufgabendaten ersetzen den bisherigen Stand. Mergeoption, Arbeitswurzel und Bereinigung bleiben erhalten.';$('applyImport').disabled=false;}catch(e){invalidateImport();$('importPreview').classList.add('danger-text');$('importPreview').textContent='Nicht übernommen: '+e.message;}}
-function applyImport(){if(!pending)return;try{const x=validateHandoff(pending);if(x.repository!==profile().repository||x.target!==profile().target)throw Error('Projekt oder Zielbranch wurde geändert. Erneut prüfen.');const f=profile().task.fields;Object.assign(f,{issue:x.issue?String(x.issue):'',pr:x.pr?String(x.pr):'',package:x.package||'',branch:x.branch||'',head:x.head||'',reviewUrl:x.review.url||'',findingIds:x.findings.filter(a=>a.status==='open'&&(a.kind==='B'||a.kind==='A'&&a.gate==='before_merge')).map(a=>a.id).join(', '),modules:x.ci.modules.join(', '),brief:''});if(['implement','rework'].includes(x.next.action)&&x.execution.preferred)f.executor=x.execution.preferred;profile().task.handoff=x;persist();$('importDialog').close();invalidateImport();render();goNext();say('Übergabe übernommen. Folgeauftrag ist vorbereitet.');}catch(e){say(e.message);}}
+function applyImport(){
+ if(!pending)return;
+ try{
+  const x=validateHandoff(pending), p=profile();
+  if(x.repository!==p.repository || x.target!==p.target)throw Error('Projekt oder Zielbranch wurde geändert. Erneut prüfen.');
+  const branch=x.phase==='merged'?'':importedBranch(x.branch,p.target), f=p.task.fields;
+  Object.assign(f,{issue:x.issue?String(x.issue):'',pr:x.pr?String(x.pr):'',package:x.package||'',branch,
+   head:(branch || x.pr)?x.head||'':'',reviewUrl:x.review.url||'',
+   findingIds:x.findings.filter(a=>a.status==='open' && (a.kind==='B' || a.kind==='A' && a.gate==='before_merge')).map(a=>a.id).join(', '),
+   modules:'',brief:''});
+  if(['implement','rework'].includes(x.next.action) && x.execution.preferred)f.executor=x.execution.preferred;
+  Object.assign(p.task,{handoff:x,branchMode:branch?'existing':'auto',briefs:{},note:null});
+  persist();$('importDialog').close();invalidateImport();render();goNext();say('Übergabe übernommen. Folgeauftrag ist vorbereitet.');
+ }catch(e){say(e.message);}
+}
 function openSettings(isNew=false){adding=isNew;const p=isNew?newProfile('','Neues Projekt',''):profile();$('projectName').value=p.name;$('repository').value=p.repository;$('target').value=p.target;$('root').value=p.root;$('settingsMerge').checked=p.merge;$('cleanupToggle').checked=p.cleanup;$('settingsError').textContent='';$('settingsDialog').showModal();}
 function download(data,name){const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 async function copyPrompt(){const text=buildPrompt().text;let ok=false;try{if(navigator.clipboard){await navigator.clipboard.writeText(text);ok=true;}}catch{}if(!ok){const area=document.createElement('textarea');area.value=text;area.style.cssText='position:fixed;left:-10000px;top:0';document.body.append(area);area.select();try{ok=document.execCommand('copy');}catch{}area.remove();$('copyPrompt').focus();}if(ok)say('Auftrag kopiert. An '+buildPrompt().who+' senden.');else{const range=document.createRange();range.selectNodeContents($('promptText'));getSelection().removeAllRanges();getSelection().addRange(range);say('Bitte den markierten Auftrag mit Strg+C oder Cmd+C kopieren.');}}
-for(const k of FIELD_IDS)$(k).addEventListener('input',()=>{profile().task.fields[k]=$(k).value;persist();renderPrompt();});
-$('templateSelect').addEventListener('change',()=>{profile().task.template=$('templateSelect').value;persist();renderPrompt();});
+$('theme').addEventListener('change',()=>{state.theme=$('theme').value;renderTheme();persist();});
+systemTheme.addEventListener('change',renderTheme);
+$('branchMode').addEventListener('change',()=>{
+ const task=profile().task;
+ task.branchMode=$('branchMode').value;
+ if(task.branchMode==='auto'){
+  task.fields.branch='';$('branch').value='';
+  if(!task.fields.pr){task.fields.head='';$('head').value='';}
+ }
+ persist();renderPrompt();
+ if(task.branchMode==='existing')$('branch').focus();
+});
+$('toggleNote').onclick=()=>{
+ const task=profile().task,t=currentTemplate(),offer=noteOffer(t,sameTaskHandoff());
+ if(!offer)return;
+ task.note=task.note?.template===t.id?null:{template:t.id,text:offer.text};
+ persist();renderPrompt();
+ if(task.note)$('handoffNote').focus();
+};
+$('handoffNote').addEventListener('input',()=>{
+ if(profile().task.note?.template!==currentTemplate().id)return;
+ profile().task.note.text=$('handoffNote').value;persist();renderPrompt();
+});
+for(const key of FIELD_IDS)$(key).addEventListener('input',()=>{
+ const task=profile().task, f=task.fields, prior=f[key], value=$(key).value;
+ if(prior && prior!==value && ['issue','package','pr'].includes(key) && sameTaskHandoff()){
+  // A different package or PR must not receive the old commit or review assignment.
+  const linked=['head','reviewUrl','findingIds','modules'];
+  if(key!=='pr')linked.push('pr');
+  linked.push('branch');
+  for(const field of linked){f[field]='';$(field).value='';}
+  task.branchMode='auto';task.note=null;
+ }
+ if(key==='branch' && prior && prior!==value){f.head='';$('head').value='';}
+ f[key]=value;persist();renderPrompt();
+});
+$('templateSelect').addEventListener('change',()=>changeStage(profile().task.stage,$('templateSelect').value));
 for(const b of document.querySelectorAll('[data-stage]'))b.addEventListener('click',()=>changeStage(b.dataset.stage));
 $('projectSelect').addEventListener('change',()=>{state.active=$('projectSelect').value;invalidateImport();persist();render();});
 $('mergeToggle').addEventListener('change',()=>{profile().merge=$('mergeToggle').checked;persist();renderPrompt();});

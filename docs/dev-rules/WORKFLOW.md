@@ -48,11 +48,28 @@ Vor Umsetzung aktuellen Branch/PR, Abhängigkeiten, Quellenzugang und tatsächli
 
 ## 5. Umsetzen
 
+Der Zielbranch ist die Lese- und Integrationsbasis. Eine Spezifikation allein im
+Issue braucht keinen Arbeitsbranch. Werden bereits Fachverträge versioniert,
+ist ein Branch für diesen Dokumentdiff sinnvoll. Im Paket festhalten, ob derselbe
+Branch für die Umsetzung vorgesehen ist oder der Dokument-PR separat integriert wird.
+
+Für die Erstumsetzung zuerst Issue und vorhandenen PR abgleichen. Einen bereits
+zugeordneten offenen PR auf seinem tatsächlichen Head-Branch fortführen. Fehlt
+ein Arbeitsbranch, einen neuen vom aktuellen Zielbranch (bei gestapelten Paketen
+von der vereinbarten Basis) anlegen. Bei einer Wiederaufnahme zuerst den laufenden
+Stand zuordnen. Eine fehlende Branchangabe autorisiert keine Umsetzung auf dem Zielbranch.
+
 Vor Änderungen Arbeitsbaum und Fremdänderungen prüfen. Standardbranch `feat/<issue>-<kurzname>`, `fix/<issue>-<kurzname>` oder `chore/<issue>-<kurzname>`; vorhandene beauftragte Branches fortführen. Keine Leercommits für vorzeitige PRs. Relevante Scope-/Produktwidersprüche konkret lösen, ohne unabhängige Arbeit anzuhalten.
 
 Gezielte Prüfungen nutzen; abschließend den vereinbarten Kern und die tatsächlich gewählten Module erfolgreich ausführen. Fehlende, abgebrochene, übersprungene und fehlgeschlagene Pflichtprüfungen sind kein Erfolg. Ungeeignete Prüfungen dürfen nach begründeter Vertragsänderung verkleinert oder entfernt werden; ein aktueller Fehler darf nicht durch gefälschte Resultate oder stilles Weglassen verschwinden. Erforderliche Abdeckungsentscheidungen stehen vor ihrer Anwendung im Paket und im Diff.
 
 Vollständigen Diff auf Scope, unbeabsichtigte Dateien, Secrets und Dokumentkonsistenz prüfen. Kompakte Nachweise im PR: Head, Basis/Test-Merge, tatsächliche Prüfungen, relevante Lauf-/Artefaktwerte, offene Gates und getrennter Selbstreview. Kein Pflichtroman und keine neue Belegchronik in Einstiegsdokumenten. Draft bis zur Abnahme, sofern nicht ausdrücklich anders vereinbart.
+
+Verlangt der Prüfplan eine vom Implementierer unabhängige Sichtung, enthält der
+Lieferkommentar bereits den Zugang zu den benötigten Originalen für den benannten
+Reviewer. Zustellung und Rückbau richten sich nach [CI_CONTRACT.md](CI_CONTRACT.md).
+Der unabhängige Reviewer öffnet die Originale selbst und dokumentiert seine Prüfung
+am beurteilten Produkt-Head.
 
 Lokale Arbeitswurzel, Eigentum und Bereinigung folgen [WORKSPACE.md](WORKSPACE.md). Der Abschluss enthält einen Test-/Artefakt-Rückbaucheck. Temporäre Studien verschwinden bei ihrem Endpunkt; ein gewünschter dauerhafter Rest wird begründet und konkret ausgewählt.
 
@@ -113,6 +130,7 @@ Allgemeine Quellenprüfung, CI-/Test-/Artefaktregeln, Modellwahl, Reviewverfahre
 Commit-/PR-/Mergeablauf und Bereinigungsverfahren werden aus ihren Pflichtquellen
 gelesen und nicht in jeden Prompt kopiert. Für den Abschluss verweist der Prompt
 verbindlich auf [HANDOFF.md](HANDOFF.md), ohne Schema, Feldliste oder Beispiel
-anzuhängen. Tatsächliche frühere Ergebnisdaten dürfen als Arbeitskontext
-mitgegeben werden; sie bleiben von Formatvorgaben und Freigaben getrennt.
+anzuhängen. Jeder Sheet-Auftrag fordert das vollständige Abschluss-JSON an.
+In den Folgeauftrag gelangen seine passenden Kennungen und Quellen sowie gezielt
+ausgewählte, sonst unzugängliche Angaben nach der Schritttabelle in [HANDOFF.md](HANDOFF.md).
 
