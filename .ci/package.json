@@ -6,18 +6,18 @@
     "native.catalog",
     "native.graphics"
   ],
-  "purpose": "Feste native Windowsfenster und Vollbildmodi mit Vorschau, Persistenz und Monitorfallback. catalog prÃ¼ft Informationsnavigation und gezielte DisplayfÃ¤lle im vorhandenen information-Prozess; graphics prÃ¼ft Viewport-/Raster-/Hinweis-/Layoutfolgen. Kern liefert docs und Windows-Spieler. W01 liefert echte Windows-GUI-Originale fÃ¼r R01. N01 gliedert die Einstellungsseite und begrenzt Controls; native.catalog prüft die vier Client/UI-Kombinationen und Status-/Popupregression im vorhandenen Prozess. Einmalige neue Windowsoriginale für N01-R02 liegen separat befristet.",
-  "omitted": "native.core/history/completion/adapters/export, tools, preflight, production.* und delivery nicht angefordert: keine Ã„nderung an Save-Schema, History, Abschlusslogik, KatalogprÃ¤ferenz, Produktion oder Export. Neue DisplayprÃ¤ferenz separat im Katalogprozess geprÃ¼ft. Kein Chromiumauftrag; Web erhÃ¤lt keine Anzeigeoptionen. Physische 4K-/16:10-/Mehrmonitor-/DPI-Grenzen nur bei verfÃ¼gbarer Hardware, sonst synthetisch mit benannten Grenzen.",
+  "purpose": "Feste native Windowsfenster und Vollbildmodi mit Vorschau, Persistenz und Monitorfallback. catalog prüft Informationsnavigation und gezielte Displayfälle im vorhandenen information-Prozess; graphics prüft Viewport-/Raster-/Hinweis-/Layoutfolgen. Kern liefert docs und Windows-Spieler. W01 liefert echte Windows-GUI-Originale für R01. N01 gliedert die Einstellungsseite und begrenzt Controls; native.catalog prüft die vier Client/UI-Kombinationen und Status-/Popupregression im vorhandenen Prozess. Einmalige neue Windowsoriginale für N01-R02 liegen separat befristet.",
+  "omitted": "native.core/history/completion/adapters/export, tools, preflight, production.* und delivery nicht angefordert: keine Änderung an Save-Schema, History, Abschlusslogik, Katalogpräferenz, Produktion oder Export. Neue Displaypräferenz separat im Katalogprozess geprüft. Kein Chromiumauftrag; Web erhält keine Anzeigeoptionen. Physische 4K-/16:10-/Mehrmonitor-/DPI-Grenzen nur bei verfügbarer Hardware, sonst synthetisch mit benannten Grenzen.",
   "test_changes": [
     {
       "path": "game/tests/display_cases.gd",
       "disposition": "change-scoped",
-      "reason": "GÃ¼nstige Displaypolicy-/PrÃ¤ferenz-/Controller-/BestÃ¤tigungslayoutregression bei gewÃ¤hltem native.catalog, ohne neue Prozesse oder Bildfamilie. UngÃ¼ltige/duplizierte PrÃ¤ferenzen, Ersetzungsfehler, Timeout/Rollback und dekorationsblinde Presets erkennen. N01 ergänzt Gruppen, kompakte Spalte, UI100/125 bei 1080p/720p, Desktopbeschriftung, Fehler-/Fallbacksichtbarkeit und Popupabbau; kein zusätzlicher Prozess oder dauerhafte Bilddateien."
+      "reason": "Günstige Displaypolicy-/Präferenz-/Controller-/Bestätigungslayoutregression bei gewähltem native.catalog, ohne neue Prozesse oder Bildfamilie. Ungültige/duplizierte Präferenzen, Ersetzungsfehler, Timeout/Rollback und dekorationsblinde Presets erkennen. N01 ergänzt Gruppen, kompakte Spalte, UI100/125 bei 1080p/720p, Desktopbeschriftung, Fehler-/Fallbacksichtbarkeit und Popupabbau; kein zusätzlicher Prozess oder dauerhafte Bilddateien."
     },
     {
       "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "DisplayfÃ¤lle im vorhandenen information-Prozess vor dessen unverÃ¤nderten Save-/NavigationsfÃ¤llen ausfÃ¼hren."
+      "reason": "Displayfälle im vorhandenen information-Prozess vor dessen unveränderten Save-/Navigationsfällen ausführen."
     }
   ],
   "core_change": null,
