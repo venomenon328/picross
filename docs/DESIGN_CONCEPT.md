@@ -1,5 +1,17 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**PANG-A / #531 · Schriftwahl am 06.11.2026 bestätigt, Umsetzung ausstehend:**
+Pangolin Regular wird die integrierte Tidy-Hand-Standardtextrolle auf sämtlichen
+normalen UI-Pfaden ablösen, insbesondere in der langen Spielerhilfe sowie in
+kleinen Katalog-/Dropdown-/Dialogbeschriftungen. Lesbarkeit auf dem warmen
+Buchpapier, gemessene Textbudgets und stabile optische Grundlinien bestimmen
+die Umsetzung. Fraunces-/Bakso-Überschriften, Delight-Zahlen, gebündelter
+Plex-Fallback, handgezeichnete Controls und die Buch-/Spielgestaltung bleiben.
+[HZ-D08](HAND_DRAWN_UI.md) ist der Fachvertrag, [#531](https://github.com/venomenon328/picross/issues/531)
+führt Paket und offene Gates. Die nachstehende HZ-Geschichte beschreibt den
+bislang integrierten Tidy-Hand-Stand; keine neue Schrift ist bereits im Spieler.
+
+
 **ANZ-A / #527 · native Anzeigeoptionen auf dem Arbeitsbranch implementiert:**
 Die bestehende linke Buch-Einstellungsseite bietet im handgezeichneten Stil
 zwei Auswahlen für feste zulässige Clientfenstergrößen und für Fenster,
