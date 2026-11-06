@@ -1,26 +1,18 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/502",
-  "package": "P2-F-C-D03-workflow-v2-integration",
-  "modules": [
-    "tools",
-    "native.export"
-  ],
-  "purpose": "Buch-Lifecycle aus normalem Export entfernen und PR #516 mit Workflow v2 integrieren. tools prüft die bestehenden Producer-/Reader-, Auswahl-, Plan- und Negativfälle; native.export prüft den tatsächlich gekürzten Exportpfad einschließlich unabhängiger Originalprüfung und liefert den Windows-Kerndownload ohne zweiten Build.",
-  "omitted": "Keine Änderung an Spielcode, Ressourcen, Solver oder Produktionslogik: keine weiteren native-, production-, preflight- oder delivery-Module. Kein Chromium und kein echter Buch-Lifecycle; dessen bewusste Abdeckungslücken sind in CI_C_NATIVE_GROUPS dokumentiert. Gemeinsame Readeränderungen betreffen nur den entfernten Lifecycle und werden synthetisch im tools-Modul geprüft. Alte Vollmatrixläufe bleiben historische Nachweise.",
+  "issue": "https://github.com/venomenon328/picross/issues/521",
+  "package": "S1-sheet-repo-contract",
+  "modules": [],
+  "purpose": "Quellenbindung und Kürzung aller Entwicklungs-Sheet-Prompts samt konsistenten Workflow-/Übergabedokumenten. Der Kern prüft Dokumente, Plan und bestehende kleine Vertragsregressionen. Die bestehende Pfadklassifikation fordert wegen docs/dev-rules/VERSION zusätzlich den Windows-Build. Promptauswahl, Freigaben, Arbeitswurzel und Importkompatibilität werden einmalig synthetisch in JavaScript/DOM geprüft.",
+  "omitted": "Offline-HTML, Markdown, lokale Regelversion und Paketplan; keine Spiel-/Werkzeug-/CI-Code- oder Produktressourcenänderung. Keine tools-, native-, production-, preflight- oder delivery-Zusatzmodule und kein Chromium. Die aktuelle CI behandelt die endungslose VERSION-Datei nicht als Dokument: den dadurch angeforderten Kern-Build ausführen, keine CI-Korrektur in dieses Paket aufnehmen. Kein neuer permanenter Sheettest.",
   "test_changes": [
     {
-      "path": "tools/test_book_lifecycle.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende kleine Python-Regression im wählbaren tools-Modul: verbleibende Exportphasen vollständig verlangen, alte Lifecyclephase/-Aggregate/-Verzeichnisse ablehnen und den ausdrücklich aufrufbaren Diagnosevertrag synthetisch prüfen. Kein neuer Engineprozess oder Kerntest."
-    },
-    {
-      "path": "tools/test_ci_c.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende Sparse-/Readerregression an den entfallenen automatischen Diagnoseeingang anpassen; übrige Phasen-, Quell- und Ergebnisbindungen bleiben geprüft. Nur im wählbaren tools-Modul."
+      "path": "docs/workflow/Entwicklungsworkflow_Cheat-Sheet.html",
+      "disposition": "temporary",
+      "reason": "Einmalige Syntax-/DOM-Prüfung aller 18 Vorlagen mit Merge-/Bereinigungsoption, Codex-/ChatGPT-Ausführung, Arbeitswurzel, Übergabe und Altzustand; unveränderte Schema-/Beispielkopien und Importgrenzen prüfen. Temporäre Prüfhilfen und Abhängigkeiten nach gesicherter Dokumentation der Ergebnisse entfernen."
     }
   ],
-  "core_change": "Keine Änderung an den Workflow-v2-Kernregeln oder dauerhafte zusätzliche Kernlast. Bei gewähltem native.export entfällt nur die eigene Buch-Diagnose; der Windows-Kerndownload nutzt weiterhin dessen geprüftes Spielerpaket.",
+  "core_change": "Keine Änderung an CI-Kern oder dauerhaften Prüfungen.",
   "evidence": {
     "mode": "none",
     "purpose": null,
