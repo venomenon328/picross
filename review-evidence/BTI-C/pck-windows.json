@@ -1,0 +1,46 @@
+{
+	"checks": 27,
+	"failures": [],
+	"pack": "windows",
+	"records": [
+		{
+			"every_alpha_byte_equal": true,
+			"file": "catalog.png",
+			"height": 724,
+			"optical_bounds": [
+				37,
+				75,
+				2133,
+				672
+			],
+			"source_sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4",
+			"width": 2172
+		},
+		{
+			"every_alpha_byte_equal": true,
+			"file": "help.png",
+			"height": 1024,
+			"optical_bounds": [
+				88,
+				102,
+				1449,
+				960
+			],
+			"source_sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a",
+			"width": 1536
+		},
+		{
+			"every_alpha_byte_equal": true,
+			"file": "settings.png",
+			"height": 724,
+			"optical_bounds": [
+				50,
+				86,
+				2143,
+				690
+			],
+			"source_sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75",
+			"width": 2172
+		}
+	]
+}

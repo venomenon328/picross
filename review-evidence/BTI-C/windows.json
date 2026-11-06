@@ -1,0 +1,1372 @@
+{
+  "package": "BTI-C-T01",
+  "source_head": "031565d941a60df5643adef561926d5721285322",
+  "base": "b8829d6df6b40fb15e278689821d6a7e35f0f326",
+  "test_merge": "47e21e61c0375bc59567de02e631a9d1e81cc41d",
+  "native_checkout": "031565d941a60df5643adef561926d5721285322",
+  "synthetic": true,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "renderer": "NVIDIA GeForce RTX 3070",
+  "dpi": 96,
+  "desktop_approval": "Owner explicitly approved isolated Windows windows/OS input/captures on 2026-11-07 in implementation conversation",
+  "stimulus": "Win32 mouse/keyboard and existing display controls; no Viewport injection or model mutation. External observer reads only and requests framebuffer captures.",
+  "capture": "Original native framebuffer PNGs from actual Windows export, unchanged EXE/PCK, external read-only autoload via private override.cfg; no study root, no animation acceleration.",
+  "images": [
+    {
+      "file": "catalog-1280-ui125.png",
+      "client": [
+        1280,
+        720
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          125.186561584473,
+          41.8656616210938,
+          452.014984130859,
+          93.2776184082031
+        ],
+        "fallback": false,
+        "image": [
+          102.143745422363,
+          4.0,
+          247.955810546875,
+          82.6519393920898
+        ],
+        "ink": [
+          106.367668151855,
+          12.5620098114014,
+          239.279647827148,
+          68.1536026000977
+        ],
+        "role": "catalog",
+        "semantic": "Rätselkatalog",
+        "visible": true
+      },
+      "purpose": "Current Windows EXE/PCK original, no resampling or composition"
+    },
+    {
+      "file": "help-1280-ui125.png",
+      "client": [
+        1280,
+        720
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          166.296295166016,
+          58.1851654052734,
+          1036.29626464844,
+          144.940002441406
+        ],
+        "fallback": false,
+        "image": [
+          419.053588867188,
+          4.0,
+          198.060119628906,
+          132.040084838867
+        ],
+        "ink": [
+          430.400787353516,
+          17.1524314880371,
+          175.494689941406,
+          110.635147094727
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "purpose": "Current Windows EXE/PCK original, no resampling or composition"
+    },
+    {
+      "file": "settings-1920-ui100.png",
+      "client": [
+        1920,
+        1080
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          95.1112060546875,
+          69.7777481079102,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          560.835571289063,
+          4.0,
+          470.226806640625,
+          156.742263793945
+        ],
+        "ink": [
+          571.660339355469,
+          22.6185569763184,
+          453.123718261719,
+          130.762878417969
+        ],
+        "role": "settings",
+        "semantic": "Einstellungen",
+        "visible": true
+      },
+      "purpose": "Current Windows EXE/PCK original, no resampling or composition"
+    },
+    {
+      "file": "catalog-2560-ui125.png",
+      "client": [
+        2560,
+        1440
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          227.873123168945,
+          68.7313232421875,
+          949.029968261719,
+          137.5
+        ],
+        "fallback": false,
+        "image": [
+          286.419250488281,
+          4.0,
+          376.538146972656,
+          125.512718200684
+        ],
+        "ink": [
+          292.833587646484,
+          17.0020084381104,
+          363.36279296875,
+          103.495986938477
+        ],
+        "role": "catalog",
+        "semantic": "Rätselkatalog",
+        "visible": true
+      },
+      "purpose": "Current Windows EXE/PCK original, no resampling or composition"
+    },
+    {
+      "file": "help-2560-ui125.png",
+      "client": [
+        2560,
+        1440
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          302.592590332031,
+          91.3703308105469,
+          2132.59252929688,
+          220.0
+        ],
+        "fallback": false,
+        "image": [
+          912.8857421875,
+          4.0,
+          306.621459960938,
+          204.414306640625
+        ],
+        "ink": [
+          930.452575683594,
+          24.3615818023682,
+          271.687377929688,
+          171.276824951172
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "purpose": "Current Windows EXE/PCK original, no resampling or composition"
+    },
+    {
+      "file": "settings-2560-ui125.png",
+      "client": [
+        2560,
+        1440
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          124.81494140625,
+          91.3703308105469,
+          2132.59252929688,
+          220.0
+        ],
+        "fallback": false,
+        "image": [
+          766.736999511719,
+          4.00000762939453,
+          593.381408691406,
+          197.793807983398
+        ],
+        "ink": [
+          780.396789550781,
+          27.49485206604,
+          571.798950195313,
+          165.010299682617
+        ],
+        "role": "settings",
+        "semantic": "Einstellungen",
+        "visible": true
+      },
+      "purpose": "Current Windows EXE/PCK original, no resampling or composition"
+    },
+    {
+      "file": "help-save-failure.png",
+      "client": [
+        1920,
+        1080
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          228.444427490234,
+          69.7777481079102,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          676.651550292969,
+          4.0,
+          242.983032226563,
+          161.988693237305
+        ],
+        "ink": [
+          690.572448730469,
+          20.1355934143066,
+          215.299423217773,
+          135.728805541992
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "purpose": "Current Windows EXE/PCK original, no resampling or composition"
+    }
+  ],
+  "assertions": [
+    {
+      "check": "settings-1920-ui100: full image fits",
+      "passed": true
+    },
+    {
+      "check": "settings-1920-ui100: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "settings-1920-ui100: only image title",
+      "passed": true
+    },
+    {
+      "check": "settings-1920-ui100: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "settings-1920-ui100: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "settings-1920-ui100: real return origin",
+      "passed": true
+    },
+    {
+      "check": "settings-1920-ui100",
+      "passed": true,
+      "client": [
+        1920,
+        1080
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          95.1112060546875,
+          69.7777481079102,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          560.835571289063,
+          4.0,
+          470.226806640625,
+          156.742263793945
+        ],
+        "ink": [
+          571.660339355469,
+          22.6185569763184,
+          453.123718261719,
+          130.762878417969
+        ],
+        "role": "settings",
+        "semantic": "Einstellungen",
+        "visible": true
+      },
+      "scroll": [
+        95.1112060546875,
+        261.777740478516,
+        1596.4443359375,
+        734.222290039063
+      ],
+      "section": "settings",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "help-1920-ui100: full image fits",
+      "passed": true
+    },
+    {
+      "check": "help-1920-ui100: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "help-1920-ui100: only image title",
+      "passed": true
+    },
+    {
+      "check": "help-1920-ui100: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "help-1920-ui100: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "help-1920-ui100: real return origin",
+      "passed": true
+    },
+    {
+      "check": "help-1920-ui100",
+      "passed": true,
+      "client": [
+        1920,
+        1080
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          228.444427490234,
+          69.7777481079102,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          676.651550292969,
+          4.0,
+          242.983032226563,
+          161.988693237305
+        ],
+        "ink": [
+          690.572448730469,
+          20.1355934143066,
+          215.299423217773,
+          135.728805541992
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "scroll": [
+        228.444427490234,
+        261.777740478516,
+        1596.4443359375,
+        734.222290039063
+      ],
+      "section": "help",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "OS wheel scrolls help",
+      "passed": true
+    },
+    {
+      "check": "chapter and scroll survive natural settings pan",
+      "passed": true
+    },
+    {
+      "check": "help-scroll-memory: full image fits",
+      "passed": true
+    },
+    {
+      "check": "help-scroll-memory: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "help-scroll-memory: only image title",
+      "passed": true
+    },
+    {
+      "check": "help-scroll-memory: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "help-scroll-memory: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "help-scroll-memory: real return origin",
+      "passed": true
+    },
+    {
+      "check": "help-scroll-memory",
+      "passed": true,
+      "client": [
+        1920,
+        1080
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          228.444427490234,
+          69.7777481079102,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          676.651550292969,
+          4.0,
+          242.983032226563,
+          161.988693237305
+        ],
+        "ink": [
+          690.572448730469,
+          20.1355934143066,
+          215.299423217773,
+          135.728805541992
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "scroll": [
+        228.444427490234,
+        261.777740478516,
+        1596.4443359375,
+        734.222290039063
+      ],
+      "section": "help",
+      "chapter": 2,
+      "positions": [
+        0,
+        917
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "confirmed client [1280, 720]",
+      "passed": true
+    },
+    {
+      "check": "settings-1280-ui125: full image fits",
+      "passed": true
+    },
+    {
+      "check": "settings-1280-ui125: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "settings-1280-ui125: only image title",
+      "passed": true
+    },
+    {
+      "check": "settings-1280-ui125: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "settings-1280-ui125: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "settings-1280-ui125: real return origin",
+      "passed": true
+    },
+    {
+      "check": "settings-1280-ui125",
+      "passed": true,
+      "client": [
+        1280,
+        720
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          77.407470703125,
+          58.1851654052734,
+          1036.29626464844,
+          144.940002441406
+        ],
+        "fallback": false,
+        "image": [
+          324.649780273438,
+          4.0,
+          383.290832519531,
+          127.763610839844
+        ],
+        "ink": [
+          333.473236083984,
+          19.1763401031494,
+          369.349761962891,
+          106.58731842041
+        ],
+        "role": "settings",
+        "semantic": "Einstellungen",
+        "visible": true
+      },
+      "scroll": [
+        77.407470703125,
+        223.12516784668,
+        1036.29626464844,
+        391.874816894531
+      ],
+      "section": "settings",
+      "chapter": 2,
+      "positions": [
+        0,
+        917
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "tight settings scroll end reachable",
+      "passed": true
+    },
+    {
+      "check": "tight help scroll end reachable",
+      "passed": true
+    },
+    {
+      "check": "help-1280-ui125: full image fits",
+      "passed": true
+    },
+    {
+      "check": "help-1280-ui125: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "help-1280-ui125: only image title",
+      "passed": true
+    },
+    {
+      "check": "help-1280-ui125: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "help-1280-ui125: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "help-1280-ui125: real return origin",
+      "passed": true
+    },
+    {
+      "check": "help-1280-ui125",
+      "passed": true,
+      "client": [
+        1280,
+        720
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          166.296295166016,
+          58.1851654052734,
+          1036.29626464844,
+          144.940002441406
+        ],
+        "fallback": false,
+        "image": [
+          419.053588867188,
+          4.0,
+          198.060119628906,
+          132.040084838867
+        ],
+        "ink": [
+          430.400787353516,
+          17.1524314880371,
+          175.494689941406,
+          110.635147094727
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "scroll": [
+        166.296295166016,
+        223.12516784668,
+        1036.29626464844,
+        391.874816894531
+      ],
+      "section": "help",
+      "chapter": 2,
+      "positions": [
+        193,
+        2280
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "help returns to catalog",
+      "passed": true
+    },
+    {
+      "check": "help returns to catalog after complete natural animation",
+      "passed": true
+    },
+    {
+      "check": "catalog-1280-ui125: full image fits",
+      "passed": true
+    },
+    {
+      "check": "catalog-1280-ui125: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "catalog-1280-ui125: only image title",
+      "passed": true
+    },
+    {
+      "check": "catalog-1280-ui125",
+      "passed": true,
+      "client": [
+        1280,
+        720
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          125.186561584473,
+          41.8656616210938,
+          452.014984130859,
+          93.2776184082031
+        ],
+        "fallback": false,
+        "image": [
+          102.143745422363,
+          4.0,
+          247.955810546875,
+          82.6519393920898
+        ],
+        "ink": [
+          106.367668151855,
+          12.5620098114014,
+          239.279647827148,
+          68.1536026000977
+        ],
+        "role": "catalog",
+        "semantic": "Rätselkatalog",
+        "visible": true
+      },
+      "scroll": [
+        166.296295166016,
+        223.12516784668,
+        1036.29626464844,
+        391.874816894531
+      ],
+      "section": "help",
+      "chapter": 2,
+      "positions": [
+        193,
+        2280
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "confirmed client [2560, 1440]",
+      "passed": true
+    },
+    {
+      "check": "settings-2560-ui125: full image fits",
+      "passed": true
+    },
+    {
+      "check": "settings-2560-ui125: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "settings-2560-ui125: only image title",
+      "passed": true
+    },
+    {
+      "check": "settings-2560-ui125: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "settings-2560-ui125: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "settings-2560-ui125: real return origin",
+      "passed": true
+    },
+    {
+      "check": "settings-2560-ui125",
+      "passed": true,
+      "client": [
+        2560,
+        1440
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          124.81494140625,
+          91.3703308105469,
+          2132.59252929688,
+          220.0
+        ],
+        "fallback": false,
+        "image": [
+          766.736999511719,
+          4.00000762939453,
+          593.381408691406,
+          197.793807983398
+        ],
+        "ink": [
+          780.396789550781,
+          27.49485206604,
+          571.798950195313,
+          165.010299682617
+        ],
+        "role": "settings",
+        "semantic": "Einstellungen",
+        "visible": true
+      },
+      "scroll": [
+        124.81494140625,
+        331.370330810547,
+        2132.59252929688,
+        1003.62963867188
+      ],
+      "section": "settings",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "help-2560-ui125: full image fits",
+      "passed": true
+    },
+    {
+      "check": "help-2560-ui125: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "help-2560-ui125: only image title",
+      "passed": true
+    },
+    {
+      "check": "help-2560-ui125: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "help-2560-ui125: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "help-2560-ui125: real return origin",
+      "passed": true
+    },
+    {
+      "check": "help-2560-ui125",
+      "passed": true,
+      "client": [
+        2560,
+        1440
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          302.592590332031,
+          91.3703308105469,
+          2132.59252929688,
+          220.0
+        ],
+        "fallback": false,
+        "image": [
+          912.8857421875,
+          4.0,
+          306.621459960938,
+          204.414306640625
+        ],
+        "ink": [
+          930.452575683594,
+          24.3615818023682,
+          271.687377929688,
+          171.276824951172
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "scroll": [
+        302.592590332031,
+        331.370330810547,
+        2132.59252929688,
+        1003.62963867188
+      ],
+      "section": "help",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "catalog-2560-ui125: full image fits",
+      "passed": true
+    },
+    {
+      "check": "catalog-2560-ui125: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "catalog-2560-ui125: only image title",
+      "passed": true
+    },
+    {
+      "check": "catalog-2560-ui125",
+      "passed": true,
+      "client": [
+        2560,
+        1440
+      ],
+      "ui": 1.25,
+      "title": {
+        "box": [
+          227.873123168945,
+          68.7313232421875,
+          949.029968261719,
+          137.5
+        ],
+        "fallback": false,
+        "image": [
+          286.419250488281,
+          4.0,
+          376.538146972656,
+          125.512718200684
+        ],
+        "ink": [
+          292.833587646484,
+          17.0020084381104,
+          363.36279296875,
+          103.495986938477
+        ],
+        "role": "catalog",
+        "semantic": "Rätselkatalog",
+        "visible": true
+      },
+      "scroll": [
+        302.592590332031,
+        331.370330810547,
+        2132.59252929688,
+        1003.62963867188
+      ],
+      "section": "help",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "confirmed client [1920, 1200]",
+      "passed": true
+    },
+    {
+      "check": "settings-1920x1200-ui100: full image fits",
+      "passed": true
+    },
+    {
+      "check": "settings-1920x1200-ui100: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "settings-1920x1200-ui100: only image title",
+      "passed": true
+    },
+    {
+      "check": "settings-1920x1200-ui100: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "settings-1920x1200-ui100: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "settings-1920x1200-ui100: real return origin",
+      "passed": true
+    },
+    {
+      "check": "settings-1920x1200-ui100",
+      "passed": true,
+      "client": [
+        1920,
+        1200
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          95.1112060546875,
+          69.7777709960938,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          560.835571289063,
+          4.0,
+          470.226806640625,
+          156.742263793945
+        ],
+        "ink": [
+          571.660339355469,
+          22.6185569763184,
+          453.123718261719,
+          130.762878417969
+        ],
+        "role": "settings",
+        "semantic": "Einstellungen",
+        "visible": true
+      },
+      "scroll": [
+        95.1112060546875,
+        261.777770996094,
+        1596.4443359375,
+        854.222229003906
+      ],
+      "section": "settings",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "help-1920x1200-ui100: full image fits",
+      "passed": true
+    },
+    {
+      "check": "help-1920x1200-ui100: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "help-1920x1200-ui100: only image title",
+      "passed": true
+    },
+    {
+      "check": "help-1920x1200-ui100: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "help-1920x1200-ui100: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "help-1920x1200-ui100: real return origin",
+      "passed": true
+    },
+    {
+      "check": "help-1920x1200-ui100",
+      "passed": true,
+      "client": [
+        1920,
+        1200
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          228.444427490234,
+          69.7777709960938,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          676.651550292969,
+          4.0,
+          242.983032226563,
+          161.988693237305
+        ],
+        "ink": [
+          690.572448730469,
+          20.1355934143066,
+          215.299423217773,
+          135.728805541992
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "scroll": [
+        228.444427490234,
+        261.777770996094,
+        1596.4443359375,
+        854.222229003906
+      ],
+      "section": "help",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "album",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "UI100 to125 to100 real popup round trip",
+      "passed": true
+    },
+    {
+      "check": "confirmed client [1920, 1080]",
+      "passed": true
+    },
+    {
+      "check": "work opens settings with distinct origin",
+      "passed": true
+    },
+    {
+      "check": "save inside own isolated profile",
+      "passed": true
+    },
+    {
+      "check": "failed flush preserves primary bytes",
+      "passed": true
+    },
+    {
+      "check": "settings back blocked by actual save failure",
+      "passed": true
+    },
+    {
+      "check": "settings-save-failure: full image fits",
+      "passed": true
+    },
+    {
+      "check": "settings-save-failure: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "settings-save-failure: only image title",
+      "passed": true
+    },
+    {
+      "check": "settings-save-failure: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "settings-save-failure: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "settings-save-failure: real return origin",
+      "passed": true
+    },
+    {
+      "check": "settings-save-failure",
+      "passed": true,
+      "client": [
+        1920,
+        1080
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          95.1112060546875,
+          69.7777481079102,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          560.835571289063,
+          4.0,
+          470.226806640625,
+          156.742263793945
+        ],
+        "ink": [
+          571.660339355469,
+          22.6185569763184,
+          453.123718261719,
+          130.762878417969
+        ],
+        "role": "settings",
+        "semantic": "Einstellungen",
+        "visible": true
+      },
+      "scroll": [
+        95.1112060546875,
+        261.777740478516,
+        1596.4443359375,
+        610.222290039063
+      ],
+      "section": "settings",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "work",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "help back blocked by same save failure",
+      "passed": true
+    },
+    {
+      "check": "help-save-failure: full image fits",
+      "passed": true
+    },
+    {
+      "check": "help-save-failure: optical ink centred",
+      "passed": true
+    },
+    {
+      "check": "help-save-failure: only image title",
+      "passed": true
+    },
+    {
+      "check": "help-save-failure: full hit targets",
+      "passed": true
+    },
+    {
+      "check": "help-save-failure: title scroll nav separate",
+      "passed": true
+    },
+    {
+      "check": "help-save-failure: real return origin",
+      "passed": true
+    },
+    {
+      "check": "help-save-failure",
+      "passed": true,
+      "client": [
+        1920,
+        1080
+      ],
+      "ui": 1.0,
+      "title": {
+        "box": [
+          228.444427490234,
+          69.7777481079102,
+          1596.4443359375,
+          176.0
+        ],
+        "fallback": false,
+        "image": [
+          676.651550292969,
+          4.0,
+          242.983032226563,
+          161.988693237305
+        ],
+        "ink": [
+          690.572448730469,
+          20.1355934143066,
+          215.299423217773,
+          135.728805541992
+        ],
+        "role": "help",
+        "semantic": "Hilfe",
+        "visible": true
+      },
+      "scroll": [
+        228.444427490234,
+        261.777740478516,
+        1596.4443359375,
+        610.222290039063
+      ],
+      "section": "help",
+      "chapter": 0,
+      "positions": [
+        0,
+        0
+      ],
+      "origin": "work",
+      "snapshots": 0,
+      "capture": false
+    },
+    {
+      "check": "retry back flushes and returns to actual work origin",
+      "passed": true
+    },
+    {
+      "check": "new work visit starts first help chapter",
+      "passed": true
+    },
+    {
+      "check": "actual back tooltip names work origin",
+      "passed": true
+    },
+    {
+      "check": "keyboard focus remains reachable on help",
+      "passed": true
+    },
+    {
+      "check": "info navigation leaves cells/history unchanged",
+      "passed": true
+    },
+    {
+      "check": "all capture resources freed after natural movement",
+      "passed": true
+    }
+  ],
+  "exports": {
+    "source_head": "031565d941a60df5643adef561926d5721285322",
+    "dirty": false,
+    "synthetic": true,
+    "files": {
+      "web/index.apple-touch-icon.png": {
+        "bytes": 11944,
+        "sha256": "01d4f63e525941e06ce74f5187dad030d20a8d52a07ce365ae4e94af97a3b1f5"
+      },
+      "web/index.audio.position.worklet.js": {
+        "bytes": 2973,
+        "sha256": "be33985bc7160d6bf9646f259cd86b259cd67b02ccb297ee5c44f8ac84327bc8"
+      },
+      "web/index.audio.worklet.js": {
+        "bytes": 7298,
+        "sha256": "5b476a9c9ce642c0ee4256436d1bc31d9c38f868aca0f9a8e2a57c18d2dec2a3"
+      },
+      "web/index.html": {
+        "bytes": 6337,
+        "sha256": "0a3581a64ef3f764b0ae6836c7b3b45863659eae160f77cb7abb648d1a1eb258"
+      },
+      "web/index.icon.png": {
+        "bytes": 5700,
+        "sha256": "ad3c35ad0facf487c618204bd98db543034fc95224eadc7f08c7a9ff38d5b3b5"
+      },
+      "web/index.js": {
+        "bytes": 315645,
+        "sha256": "ffc3898b59fba6f5af0c02f76e5ee526cc061e65c7d2d6f4f98186876cea15c4"
+      },
+      "web/index.pck": {
+        "bytes": 18662288,
+        "sha256": "4e8640124e9ff7c8231190b8789213a3b91b9808840463e5f7177edb5513e233"
+      },
+      "web/index.png": {
+        "bytes": 21443,
+        "sha256": "3cb4495c0b98dfbe4b663cbf2b6836473572339beb66d902367893162a70be0e"
+      },
+      "web/index.wasm": {
+        "bytes": 37902138,
+        "sha256": "11ea19645368f8e73cf337b59cfd7ceeb4ebb51f7a3bbf77d1a5c3ddfedbc522"
+      },
+      "windows/picross-p1.console.exe": {
+        "bytes": 50176,
+        "sha256": "4713fefc9bbe042da13a38724297710e810bcda3166dfa405c3efecf8db3cdec"
+      },
+      "windows/picross-p1.exe": {
+        "bytes": 103035904,
+        "sha256": "5543ab4b6fb453c5dbe7f4effa0aad7f1cc06d73c12e8436adfc9fb266ac34ee"
+      },
+      "windows/picross-p1.pck": {
+        "bytes": 18662288,
+        "sha256": "4e8640124e9ff7c8231190b8789213a3b91b9808840463e5f7177edb5513e233"
+      }
+    }
+  },
+  "code_sha256": {
+    "game/book/binding.gd": "794991d7088657c31d274a60ef1c595b688ebaf3efa3a552fa2715c484a1f76b",
+    "game/book/catalog.gd": "f3966e7de4e036437e863f09494d280b066c6fe1b7783e89368a06afbaee32b2",
+    "game/book/content.gd": "8b9715f8a495931bf0ff80f0117e12eea3efd33b8bfa0f160f5901e7de43a2d8",
+    "game/book/information.gd": "ecc69c69cf1e618bfae0b6ff5b5b147d2d61bcfcb9a2a9e50f732e35d8acaecf",
+    "game/book/information_routes.gd": "5ab935c602c79e240011c2bb781d43eedff0be076904fc369f62e1557cc056b1",
+    "game/book/main.gd": "3a09609161423173e89c4560ddad9466acc97a009c42bfac34d2bb0e873906f8",
+    "game/book/surface.gd": "075bdbe28745ae518a61fdd499a5134fef965a6071b6729474ffc08ae9cd6953",
+    "game/ui/atlas_marks.gd": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c",
+    "game/ui/board.gd": "0a754f2c2479bc2663f617b60f7cec5bccf7384ba02bcf9a8e4be9a15fabd5e0",
+    "game/ui/book_button.gd": "257b7dc17db5e8b2a7404739da5d445af06361d7bf15a70a92fa93f230b4a992",
+    "game/ui/book_choice.gd": "62c82a044119ee0387101dae122140ff6ecf396ac163b2872c03d8744363f38c",
+    "game/ui/book_controls.gd": "cf02cf5dbed491c4307041d0306d5476d5f7085096f6752a9ef30779f517a49c",
+    "game/ui/book_style.gd": "08cf9ba620da29d3c7dac300288394c9b464dd0f24441a7062f67e6efe40e82c",
+    "game/ui/book_surface.gd": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
+    "game/ui/book_tooltip.gd": "7abea08121abf45db2d1c7a8d1bc14a77d53ac81eddd12fadbb79f4fd7eb08a7",
+    "game/ui/catalog.gd": "7e59c00e2a22ccf3db4f34b0e141ca7134b5bda4004852ad357bf1fcfb49cdf0",
+    "game/ui/catalog_card.gd": "65225ca987afb1a86b92985623b7de43e872eef0a72697797db418dd117c6d98",
+    "game/ui/catalog_grid.gd": "eb731dad2446763cbe3e494d9cfa247438439bc3131ef2f642878aa6a1852922",
+    "game/ui/catalog_ink.gd": "6d71d747e1517c507d1043fb42b116dc3be926ff6f49311be8e85a8180dd76de",
+    "game/ui/catalog_tip.gd": "df7d0d4ccc1d403eaaf1ecf7a75ae3625401e5df9ca6fc4103686dff7237d40e",
+    "game/ui/cell_atlas.gd": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d",
+    "game/ui/chalkboard_board.gd": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad",
+    "game/ui/clue_layout.gd": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45",
+    "game/ui/clue_overlay.gd": "c3d6a5579c6412c1f5d57db105fffd4acef6b0dc29377a32e275af3e09e48be6",
+    "game/ui/clue_typography.gd": "e92e75d7928d6d1ada7357693d5a12f366dbbc05a22c0749379f08d51662cc5c",
+    "game/ui/completion.gd": "208d0996791ec23fa130e5d922ebccaffa46e11ca9154969471ed8c0fdcb72ea",
+    "game/ui/display_backend.gd": "b2cf5230770279d20d5b049a59a238160a0929c95c0269f4e1db9849b1423ee3",
+    "game/ui/display_controller.gd": "679ceb6dcca81c9796e9550bb8c2850c2c42d9853a299c72b08974717f30c363",
+    "game/ui/display_settings.gd": "3e752e1c96b420acfb7d56ccd4cab927f45298aca9fb4b2ab36045765062c5aa",
+    "game/ui/drawing_board.gd": "cf43e86369f3d12c6d592aea92c600940660c362f914ac1b232aba15e9364c0c",
+    "game/ui/drawing_font.gd": "7f32268ba4cac9a530fbe5a6d63f8a3c53c769fff281803f9fb104aabaed8cfc",
+    "game/ui/full_view_board.gd": "0839118703b65c96349e7f15d1560c59e68e4100ebb0b620e05a17c548213347",
+    "game/ui/gesture_counter.gd": "d27ac9a2178b2a457c875881c268caf22e661829385497c01598c37b0b082b4e",
+    "game/ui/grid_view.gd": "5b4c29e2e2c8291834d2169f9281d97bfeac212284fb85a817aae4bcdf25a946",
+    "game/ui/help_example.gd": "66d330615fd850c1e6f87f0c3376df64d2d951ad944f5036a9cfa089ba664cab",
+    "game/ui/help_examples.gd": "279178332e170398f2d4218aa19d3d462f62f866a598dbde7f8096f88c227bf1",
+    "game/ui/help_panel.gd": "0ce9c844f4f28d050a3fbaff5dd1f4f85bb361eeb2f43a479dbea57fcb5ae075",
+    "game/ui/main.gd": "3490e4bd5b0e96d2ec126abb1fae394da93bf0b49ec0e25f112dc38d2f4c3247",
+    "game/ui/miniature.gd": "ec84abc6768176ea95a99d4266c90c633db0006978d340d125bc6eceb8e768bf",
+    "game/ui/pencil_marks.gd": "bec00db704685bea4028b23fba0f3374f659041154cba20f5a85c9f203846947",
+    "game/ui/reveal.gd": "03f14a741db55de0a9ca4582396830e43680f52b790cf1c2b50e9c3d8223c392",
+    "game/ui/scribble.gd": "33ee9d5f1497a9c6eea3c65d80e10861fe5c147e562982c24cac68c9d07dbc6a",
+    "game/ui/settings_field.gd": "7f20b88bb9179b0ed14e84aba66ff96122af40d5711446448d9f65edeab032de",
+    "game/ui/settings_group.gd": "3f36351a2bb5eda8d06f29c643b84a483fd8bb2941c38678b8274c0ac1dfdbbd",
+    "game/ui/settings_help.gd": "6cc314aba5f7f073b5e2a2987691eb73e4cd0d18d1b0d1b264954ac64e414049",
+    "game/ui/ui_text.gd": "86447bef28871f2e80228ed5011f9d54e3895921e7ab4c0b04cdda3c6fbcc46b",
+    "game/ui/view_title.gd": "762c490be07d6d487d92cb606b931c3012abf5f123aa4b6e76806b3f7eb1dd3a",
+    "game/model/catalog_difficulty.gd": "7a77b61b294f38791c3c2eca8d0a9da371f676337eb72119ea3d7d9f9a7a0c1b",
+    "game/model/catalog_preference.gd": "8163543ea9d07dfc5127590889fa5a48a59214e010d78b1df09bd590f7a7f480",
+    "game/model/clue_completion.gd": "874cf7b849d3652bbafce9b45a331150450cc24d668488c4e25d83dc63634eda",
+    "game/model/content_registry.gd": "fafd5eb48e8e2a6d1a623db68a996cbab805f3069e89b81f5bb1222f1406d9a8",
+    "game/model/definition.gd": "c802b3452bd96a250561c05f83fb8243683e959eea80039f62d01f7f0fc8f354",
+    "game/model/display_policy.gd": "4caa61bde17e081e9cca3084cb894b34c8bbd86f70f6e74cd351a5eb009ca531",
+    "game/model/display_preference.gd": "b7cba47f4ffa59bba9d6289860d98fc908fb4c9779a193dc0bb73f988571adfa",
+    "game/model/gesture.gd": "1677342eeed02a1b9ddf1f4547d2e998d3949c299a71b3c3d5293bf978781801",
+    "game/model/player.gd": "659d52a100d81017bcbd2cf3e2b2323c16d69a4551b6cf60836bfe9b35b2a82b",
+    "game/model/save_store.gd": "e0b78ab7a8bf808756ceecb2755bf6bb536dedb5983953a6b938f2663d2cf713",
+    "game/model/session.gd": "dc1768a610cf4de0e89a0c0ecd4290e76e71b91b80e5b5c613761339ad9b5e71",
+    "game/model/web_storage.gd": "12fda08a95a0db5869a8fc33f02b18311bc9b1251b7a04649b9d8d43077ce9ef"
+  },
+  "notes": [
+    "The 16:10 checkpoint initially hit a desktop-occluded target after a multi-monitor fullscreen return; the owned window was repositioned and the route repeated. The driver now checks target PID before clicks and briefly raises only its own window. No product-code correction or timing change was needed.",
+    "A preceding exploratory window resize was intentionally restored by existing native display policy. Final captures use confirmed product presets or borderless desktop mode.",
+    "The local native information report was executed on f95c8b07 with identical runtime/test code and original PNGs; final head only adds display-document binding and upstream provenance. Final Package CI tests final test-merge independently."
+  ],
+  "expires": "2026-11-14T00:00:00+01:00",
+  "recipient": "Subsequent independent Codex reviewer of PR #534, with binary Git/HTTP access; owner for visual context. Personal M01 uses the regular CI player, not this synthetic catalog."
+}

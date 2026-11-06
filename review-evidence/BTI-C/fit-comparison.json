@@ -1,0 +1,80 @@
+[
+  {
+    "view": "settings-1920-ui100",
+    "current_visible_height": 130.76,
+    "old_calculated_height": 68.06,
+    "height_ratio": 1.921
+  },
+  {
+    "view": "help-1920-ui100",
+    "current_visible_height": 135.73,
+    "old_calculated_height": 69.49,
+    "height_ratio": 1.953
+  },
+  {
+    "view": "help-scroll-memory",
+    "current_visible_height": 135.73,
+    "old_calculated_height": 69.49,
+    "height_ratio": 1.953
+  },
+  {
+    "view": "settings-1280-ui125",
+    "current_visible_height": 106.59,
+    "old_calculated_height": 86.77,
+    "height_ratio": 1.228
+  },
+  {
+    "view": "help-1280-ui125",
+    "current_visible_height": 110.64,
+    "old_calculated_height": 88.6,
+    "height_ratio": 1.249
+  },
+  {
+    "view": "catalog-1280-ui125",
+    "current_visible_height": 68.15,
+    "old_calculated_height": 44.24,
+    "height_ratio": 1.541
+  },
+  {
+    "view": "settings-2560-ui125",
+    "current_visible_height": 165.01,
+    "old_calculated_height": 86.77,
+    "height_ratio": 1.902
+  },
+  {
+    "view": "help-2560-ui125",
+    "current_visible_height": 171.28,
+    "old_calculated_height": 88.6,
+    "height_ratio": 1.933
+  },
+  {
+    "view": "catalog-2560-ui125",
+    "current_visible_height": 103.5,
+    "old_calculated_height": 44.24,
+    "height_ratio": 2.34
+  },
+  {
+    "view": "settings-1920x1200-ui100",
+    "current_visible_height": 130.76,
+    "old_calculated_height": 68.06,
+    "height_ratio": 1.921
+  },
+  {
+    "view": "help-1920x1200-ui100",
+    "current_visible_height": 135.73,
+    "old_calculated_height": 69.49,
+    "height_ratio": 1.953
+  },
+  {
+    "view": "settings-save-failure",
+    "current_visible_height": 130.76,
+    "old_calculated_height": 68.06,
+    "height_ratio": 1.921
+  },
+  {
+    "view": "help-save-failure",
+    "current_visible_height": 135.73,
+    "old_calculated_height": 69.49,
+    "height_ratio": 1.953
+  }
+]
