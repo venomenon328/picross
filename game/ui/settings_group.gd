@@ -44,13 +44,23 @@ func _draw() -> void:
 			draw_polyline(lines[index],style.ink,1.5*ui_scale,true)
 			continue
 		# Break the top edge at the tab, so ink never crosses its caption.
-		var part := PackedVector2Array()
-		for point: Vector2 in lines[index]:
-			if point.x > tab.position.x+5*ui_scale and point.x < tab.end.x-5*ui_scale:
-				if part.size() > 1: draw_polyline(part,style.ink,1.5*ui_scale,true)
-				part.clear()
-			else: part.append(point)
-		if part.size() > 1: draw_polyline(part,style.ink,1.5*ui_scale,true)
+		var top: PackedVector2Array = lines[index]
+		var left: float = tab.position.x+4.5*ui_scale
+		var right: float = tab.end.x-4.5*ui_scale
+		var before := PackedVector2Array()
+		var after := PackedVector2Array()
+		for i: int in range(top.size()):
+			var point: Vector2 = top[i]
+			if i > 0:
+				var previous: Vector2 = top[i-1]
+				if previous.x < left and point.x >= left:
+					before.append(previous.lerp(point,(left-previous.x)/(point.x-previous.x)))
+				if previous.x < right and point.x >= right:
+					after.append(previous.lerp(point,(right-previous.x)/(point.x-previous.x)))
+			if point.x < left: before.append(point)
+			if point.x > right: after.append(point)
+		if before.size() > 1: draw_polyline(before,style.ink,1.5*ui_scale,true)
+		if after.size() > 1: draw_polyline(after,style.ink,1.5*ui_scale,true)
 	draw_style_box(Paper.make("settings-tab/"+str(name),ui_scale,Color.TRANSPARENT),tab)
 	var font: Font = heading.get_theme_font("font")
 	var fs: int = heading.get_theme_font_size("font_size")
