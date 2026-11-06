@@ -208,6 +208,16 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 
 ## 4. Visuelle Ausarbeitung
 
+**BTI-C · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
+großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`
+sind nach [BTI](VIEW_TITLE_ART.md) neutrale offen schraffierte V2-rev1-Graphit-
+Schriftzugbilder ohne umgebende Illustrationen. Die Titel zentrieren sich
+innerhalb ihrer jeweiligen Buchhälfte; die bestehende Informationsnavigation
+liegt am sicheren unteren Papierrand. Die übrigen Font-/Buchrollen und
+die Kapitel-/Gruppenüberschriften bleiben erhalten.
+[Freigabe #533](https://github.com/venomenon328/picross/issues/533).
+
+
 Für #23 gilt die [aktive Auswahl GD-01 bis GD-05](Z2_SELECTION.md): A-Inventarband,
 gemeinsame BP-3-Montierungen, die damaligen Fraunces-/Plex-Rollen, feste C1-Kontur und eine echte
 native N1-Informationsseite. Diese konkrete Arbeitsansicht ersetzt die historische

@@ -160,14 +160,14 @@ static func run(r: SceneTree) -> void:
 			await r.frames()
 			var catalog_font: Font = r.app.title.get_theme_font("font")
 			var catalog_size: int = r.app.title.get_theme_font_size("font_size")
-			r.check(r.app.album.visible and r.app.title.is_visible_in_tree() and catalog_font.resource_path == "res://art/drawing/BaksoDaging-Regular.ttf","N03: reference is the actual visible catalog title")
+			r.check(r.app.album.visible and r.app.catalog_title.is_visible_in_tree() and not r.app.title.visible and catalog_font.resource_path == "res://art/drawing/BaksoDaging-Regular.ttf","BTI: illustrated catalog replaces the hidden legacy title")
 			r.app.show_information("settings")
 			await r.frames()
 			var groups: Array = [r.app.settings_panel.get_node("display-options"),r.app.settings_panel.get_node("puzzle-options")]
-			r.check(groups[0].heading.text == "Anzeige" and groups[1].heading.text == "Rätselansicht" and r.app.settings_panel.get_child_count() == 3,"N02: exactly two framed settings groups")
-			r.check(r.app.settings_title.get_theme_font("font") == catalog_font and catalog_size == roundi(28*scale) and r.app.settings_title.get_theme_font_size("font_size") == catalog_size,"N03: settings matches active Bakso catalog resource and size")
+			r.check(groups[0].heading.text == "Anzeige" and groups[1].heading.text == "Rätselansicht" and r.app.settings_panel.get_child_count() == 2,"N02: exactly two framed settings groups")
+			r.check(r.app.settings_title.get_theme_font("font") == catalog_font and catalog_size == roundi(28*scale) and r.app.settings_title.get_theme_font_size("font_size") == catalog_size,"BTI: settings text fallback retains Bakso resource and size")
 			for group: Control in groups:
-				r.check(group.heading.get_theme_font("font") == catalog_font and group.heading.get_theme_font_size("font_size") == roundi(20*scale) and group.heading.get_theme_font_size("font_size") < catalog_size,"N03-E01: smaller Bakso 20 group titles share actual catalog resource")
+				r.check(group.heading.get_theme_font("font") == catalog_font and group.heading.get_theme_font_size("font_size") == roundi(20*scale) and group.heading.get_theme_font_size("font_size") < catalog_size,"N03-E01: smaller Bakso 20 group titles retain original resource")
 			var column: Rect2 = r.app.settings_panel.get_global_rect()
 			var scroll: Rect2 = r.app.info_scroll.get_global_rect()
 			r.check(column.size.x <= 640*scale+1 and column.size.x <= scroll.size.x and absf(column.get_center().x-scroll.get_center().x) < 10*scale and r.app.info_scroll.get_h_scroll_bar().max_value <= scroll.size.x,"N02: compact groups centred in safe left paper without horizontal scrolling "+str(column)+" / "+str(scroll)+" / max="+str(r.app.info_scroll.get_h_scroll_bar().max_value))

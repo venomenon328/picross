@@ -2,6 +2,15 @@
 
 **Status: ANZ-A auf dem Arbeitsbranch implementiert; technische Nachweise und getrennte Abnahmen stehen im Produkt-PR zu [Issue #527](https://github.com/venomenon328/picross/issues/527).** Eigentümerfreigabe der Spezifikation: 06.11.2026. Kein Merge oder Release aus dieser Implementierung ableiten.
 
+**BTI-C auf dem Arbeitsbranch implementiert, R01/M01 vor Merge offen:**
+[BTI-D01–D04](VIEW_TITLE_ART.md) ersetzt ausschließlich den sichtbaren großen
+Einstellungs-Seitentitel durch das unveränderte freigegebene V2-rev1-Original
+`Einstellungen` in neutralem schraffiertem Graphit und verlegt
+die beiden Informations-Navigationsaktionen von oben nach unten. Die Bakso-
+Gruppentitel sowie N03-Feld-/Rahmen-/Tooltip- und Display-Verträge bleiben.
+Diese Folgeregel löst auf diesem Branch die damalige Titel-/Navigationsanordnung
+ab; [#533](https://github.com/venomenon328/picross/issues/533).
+
 ## Geltung und Vorrang
 
 Der Vertrag ergänzt [Produktdefinition](PRODUCT_DEFINITION.md), [Gestaltungskonzept](DESIGN_CONCEPT.md), [P1](PROTOTYPE_P1.md) und [Buchintegration](BOOK_INTEGRATION.md). Für den **nativen Windows-Spieler** ersetzt ANZ-A gezielt P1/D-07/D-21 und §5.2 **nur bezüglich freier Fenstergrößenänderung und Startgrößenauswahl**. Die primäre 1080p-Komfortreferenz, 720p-Fallbackgrenze, gültigen Raster- und Hinweis-Fitbudgets, 100-/125-%-UI-Skalierung, 24-px-Arbeitszoom, getrennte View-/Save-Zustände und die responsive 3D-Buchgeometrie bleiben bestehen.

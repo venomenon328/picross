@@ -1,0 +1,150 @@
+{
+  "format": "picross-view-title-provenance-v1",
+  "first_source_commit": "ee4938b347e51ddc2d2d5a5e8f9a10780cecfb0f",
+  "reference_C": {
+    "source": "Owner attachment in this conversation, original proposal C, displayed as 656 x 161 pixels; actually viewed and supplied via recent-conversation image inputs.",
+    "byte_file_available": false,
+    "sha256": null,
+    "notes": "Reference only: rough slanted lettering and gestural cross-stroke retained; warm paper and brown coloration deliberately excluded. No replacement with BTI-A as style input."
+  },
+  "first_parameters": {
+    "transparent_background": true
+  },
+  "first_V2_calls": [
+    {
+      "variant": "V2",
+      "title": "catalog",
+      "output": "originals/V2-catalog.png",
+      "generated_filename": "exec-b3f41b6e-6d0b-4a2c-b555-a6a59cdf9736.png",
+      "prompt": "Use case: stylized-concept. Generate ONE transparent PNG lettering original. Exact text \"Rätselkatalog\" (R ä t s e l k a t a l o g), two umlaut marks. Input images: original user C reference on paper, and newly generated dark V1 catalog; use original C for its handmade drawing attitude, NOT the V1 letterforms. New distinct variant V2 'Werkstattgraphit': broad more upright lively semi-connected hand lettering, slightly blunt angular turns and uneven rounded bowls, alternating character heights and loose spacing, strong dark outlined strokes visibly built from coarse diagonal pencil hatching. Hatching gaps should be large intentional drawn strokes, not noise. Show clearly doubled construction lines and hand-corrected edges. A short oblique crossbar sweep through the lower part of the central lettering, no long ornamental underline looping around the word. Compared with slanted flowing V1, be more upright, open, chunky, independently drawn. Neutral charcoal BLACK and grey only, no brown or sepia. Must look like a skilled person drawing words freehand, not a polished font. Still legible when reduced to 320 px total width. No paper/no white rectangular background, true transparent alpha; no frames, objects, leaves, banners, shadows, labels or extra text. All strokes and umlaut dots fully inside canvas with at least 5 percent transparent edge margins. One line, landscape. Not an approved final asset.",
+      "reference": [
+        "owner reference C",
+        "V1-catalog contrast example"
+      ],
+      "invocation": {
+        "num_last_images_to_include": 2,
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V2",
+      "title": "help",
+      "output": "originals/V2-help.png",
+      "generated_filename": "exec-ed86ede6-5ae9-4ceb-bfb5-89d546ae3c04.png",
+      "prompt": "Use case: stylized-concept. Generate ONE original transparent PNG, independently hand-drawn in exactly the same family as the attached V2 catalog reference. V2 'Werkstattgraphit': broad nearly upright semi-connected letters, blunt angular turns and irregular rounded bowls, strong dark outlined downstrokes filled with coarse diagonal graphite hatch strokes, doubled construction contours, varied baseline and heights. Short oblique central hand cross-stroke, not full-width decorative underline. Neutral charcoal black/grey only. Keep the texture deliberately hand-drawn and coarse enough to see small. Background must be absolutely fully transparent outside individual letter strokes: no glow, no haze, no background patch, no grey ambient field, no paper, no shadows, no checkerboard pattern. No objects or ornaments, no label. Keep complete glyphs and generous transparent margins. Exact text: \"Hilfe\" (H i l f e). Do not stretch short word. Separate l and f clearly.",
+      "reference": [
+        "originals/V2-catalog.png"
+      ],
+      "invocation": {
+        "referenced_image_paths": [
+          "originals/V2-catalog.png"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "variant": "V2",
+      "title": "settings",
+      "output": "originals/V2-settings.png",
+      "generated_filename": "exec-70eb16f0-4f29-40f0-9d45-e09e042a3c24.png",
+      "prompt": "Use case: stylized-concept. Generate ONE original transparent PNG, independently hand-drawn in exactly the same family as the attached V2 catalog reference. V2 'Werkstattgraphit': broad nearly upright semi-connected letters, blunt angular turns and irregular rounded bowls, strong dark outlined downstrokes filled with coarse diagonal graphite hatch strokes, doubled construction contours, varied baseline and heights. Short oblique central hand cross-stroke, not full-width decorative underline. Neutral charcoal black/grey only. Keep the texture deliberately hand-drawn and coarse enough to see small. Background must be absolutely fully transparent outside individual letter strokes: no glow, no haze, no background patch, no grey ambient field, no paper, no shadows, no checkerboard pattern. No objects or ornaments, no label. Keep complete glyphs and generous transparent margins. Exact text: \"Einstellungen\" (E i n s t e l l u n g e n). Two l characters, all twelve letters correct.",
+      "reference": [
+        "originals/V2-catalog.png"
+      ],
+      "invocation": {
+        "referenced_image_paths": [
+          "originals/V2-catalog.png"
+        ],
+        "transparent_background": true
+      }
+    }
+  ],
+  "revision": {
+    "format": "bti-b-v2-revision-generation/v1",
+    "created": "2026-11-06",
+    "spec": "https://github.com/venomenon328/picross/issues/533#bti-b-d03",
+    "product_head": "51e58889583ccd6eeb40d21db1c09a0ff55a8433",
+    "tool": "image_gen.imagegen",
+    "backend_version": null,
+    "seed": null,
+    "known_parameters": {
+      "transparent_background": true
+    },
+    "catalog": {
+      "method": "Unmodified original bytes from V2-catalog.png",
+      "source_commit": "ee4938b347e51ddc2d2d5a5e8f9a10780cecfb0f",
+      "source_path": "review-evidence/BTI-B/originals/V2-catalog.png",
+      "sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4"
+    },
+    "calls": [
+      {
+        "output": "originals/help.png",
+        "source_filename": "exec-aa5f2519-871e-4686-bd50-c2ccf5d8d1c4.png",
+        "prompt": "Use case: style-transfer.\nAsset: one transparent illustrated German book-page heading, revision V2-rev1.\nInput image 1 (Rätselkatalog) is the EXACT PRIMARY STYLE REFERENCE. Input image 2 (Hilfe) is the edit target.\nText, verbatim: \"Hilfe\" (H i l f e), one word on one line.\nRedraw the target to match the catalogue reference's individual slightly slanted broad graphite letterforms and especially its COARSE OPEN DIAGONAL HATCHING: clearly spaced hand-drawn diagonal pencil strokes, irregular darker contour lines, lighter/transparent channels BETWEEN strokes, not solid black filled letters, not fine dense uniform texture. Match the catalogue's stroke substance, not the old Hilfe's denser fill. The five letters must look drawn by the same hand as image 1, with rough edges and slight height/rhythm variation. Keep natural short-word proportions.\nCritical change: remove the old detached short underline. The bottom terminal of the lowercase f must curve organically LEFT and continue as ONE tapering leftward swash under the preceding letters toward the H. It is visibly the continuous lower end of the f, with a natural rounded change of direction, not an independent straight bar pasted across the f. No rightward tail and no second underline. Preserve a clear recognisable f including its normal mid-height cross stroke, distinct from its lower leftward terminal.\nNeutral charcoal/black graphite only, no sepia. Genuine transparent background and transparent counters. Entire letters, i dot and complete connected f swash inside frame with clear transparent safety margins. No paper rectangle, fog, shadow, background texture, objects, labels, decorative motifs, other words or watermark. Output a single lossless RGBA PNG. Do not reproduce the catalogue word.",
+        "referenced_images": [
+          "originals/catalog.png",
+          "before/help.png"
+        ],
+        "id": "G1",
+        "status": "delivered",
+        "bytes": 2500745,
+        "sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a"
+      },
+      {
+        "output": null,
+        "source_filename": "exec-1868a83b-4055-49ab-9b37-d594fe18d474.png",
+        "prompt": "Use case: style-transfer.\nAsset: one transparent illustrated German book-page heading, revision V2-rev1.\nInput image 1 (Rätselkatalog) is the EXACT PRIMARY STYLE REFERENCE. Input image 2 (Einstellungen) is the edit target.\nText, verbatim: \"Einstellungen\" (E i n s t e l l u n g e n), one word on one line. Preserve both consecutive l letters.\nRedraw the target to match the catalogue reference's individual slightly slanted broad graphite letterforms and especially its COARSE OPEN DIAGONAL HATCHING: clearly spaced hand-drawn diagonal pencil strokes, irregular darker contour lines, lighter/transparent channels BETWEEN strokes, not solid black filled letters, not fine dense uniform texture. Match the catalogue's stroke substance, not the old Einstellungen's denser fill. These letters must look drawn by the same hand as image 1, with rough edges and slight height/rhythm variation. Keep natural wide-word proportions and a coherent weight.\nCritical change: remove the old detached underline below the middle of the word. The descender of the lowercase g near the end must curve down and LEFT, and its bottom bowl/return stroke must CONTINUE continuously leftward as ONE tapered long swash below the preceding letters, ending approximately beneath the s/t region. This is the clearly connected returning lower curve of the g, not an independent bar placed behind other letters and not a second underline. Keep the g clearly recognisable, with an open lower bowl and clean separation from neighbouring e/n; the rest of the letters sit above the swash. Natural flowing connection and variable hand pressure, no artificial right-angle join. The swash length should suit this word, not be copied from Hilfe.\nNeutral charcoal/black graphite only, no sepia. Genuine transparent background and transparent counters. Entire word, i dot, g descender and complete connected swash inside the frame with clear transparent safety margins. No paper rectangle, fog, shadow, background texture, objects, labels, decorative motifs, extra words or watermark. Output one wide lossless RGBA PNG. Do not reproduce the catalogue word.",
+        "referenced_images": [
+          "originals/catalog.png",
+          "before/settings.png"
+        ],
+        "id": "G2",
+        "status": "rejected: hatching too dense and regular",
+        "bytes": 1529061,
+        "sha256": "2df4a135e8822e3f94fb6579c72bac4f034402c3ff03eaff8895837139991bae"
+      },
+      {
+        "id": "G3",
+        "output": null,
+        "source_filename": "exec-c99a0ed6-9368-4993-888f-9e6c17032a89.png",
+        "prompt": "Use case: style-transfer. Make a focused texture correction to image 3 only.\nImage 1 is the approved primary STYLE ANCHOR \"Rätselkatalog\". Image 2 is the matching revised \"Hilfe\". Image 3 is the target \"Einstellungen\".\nPreserve the exact word \"Einstellungen\", all letter shapes and proportions, the two l letters, and the new long connected leftward swash growing out of the lower g bowl. Preserve its position and transparent margins.\nChange ONLY stroke construction/hatching to match image 1 much more closely. The current target is too evenly, densely striped and looks almost solid when small. Replace that uniform diagonal fill with FEWER, COARSER, distinctly irregular hand-drawn graphite hatching strokes. Make the irregular outlined letter contours dominant and open the stroke interiors with broad TRANSPARENT gaps, as in the catalogue's R, ä, t, k and g. In a thick stem use only a few clearly separated diagonal hatch strokes across its width instead of a field of many fine parallel lines. Leave substantial transparent openings inside broad letter strokes: no grey wash, no underlying solid fill, no dense noise. Occasional retraced construction strokes like image 1 are welcome. Retain enough contour weight for strong small-size legibility. Aim for the same ink-to-open-space balance as the catalogue, not a lighter opacity applied to a dense fill.\nNeutral charcoal/black. Actual alpha transparency, transparent counters and gaps. No white fill inside the letters, no background, fog, paper, shadows or added marks. Complete unchanged connected g swash, not a detached underline. Produce only the single revised word as lossless RGBA PNG, no comparison layout.",
+        "referenced_images": [
+          "originals/catalog.png",
+          "originals/help.png",
+          "G2"
+        ],
+        "status": "rejected: stray pale speckles outside the lettering",
+        "bytes": 1605733,
+        "sha256": "1a746b4e92bcb59222c62478e0428d2399224fb33158fa294983cc314e90a4f1"
+      },
+      {
+        "id": "G4",
+        "output": "originals/settings.png",
+        "source_filename": "exec-dddc96b4-ee40-4202-a9d6-203afa2258df.png",
+        "prompt": "Use case: background-extraction. Clean the supplied transparent lettering asset WITHOUT redesigning the word.\nKeep the exact \"Einstellungen\" lettering, its rough charcoal contours, coarse diagonal hatching and all letter proportions pixel-faithful as far as possible. Keep the connected long leftward g swash, full i dot and all intentional graphite details within letter strokes. Keep the neutral charcoal hue and current stroke weight.\nRemove ALL stray floating white/grey speckles and debris outside the word, especially scattered across the empty strip above the letters and near the outer canvas edges. Outside the complete letter-and-connected-swash silhouette the image must be fully transparent, not faintly foggy or filled. The gaps and counters remain transparent. Do not add white backing to the letters, do not draw a paper rectangle, do not add shadows or new texture. Do not crop the word or shorten the g swash. Preserve the full wide composition and a clear transparent margin.\nReturn only the cleaned original-size lossless RGBA PNG with genuine alpha. No labels or extra marks.",
+        "referenced_images": [
+          "G3"
+        ],
+        "status": "delivered",
+        "bytes": 1427565,
+        "sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75"
+      }
+    ],
+    "processing": "Four built-in generative image edits, two delivered outputs and one unchanged catalogue anchor. G2 and G3 are rejected intermediates, not additional candidates; their hashes are recorded, binary retention is not required. G4 is a generative cleanup, not a pixel-identical deterministic extraction. Final outputs copied byte-for-byte without manual raster retouching, recolouring, cropping, alpha replacement or re-encoding. Static HTML previews display original images proportionally. Pillow used read-only for metrics. No font rasterization. Model/backend version, seed and unexposed parameters unknown.",
+    "rights": "User-requested generated lettering, based on pinned previous BTI-B generated references. No downloaded third-party lettering or font raster. Existing project paper is a preview background only; provenance game/book/paper.json at product_head. No claim of exclusive rights or pixel-identical regeneration."
+  },
+  "upstream_V1_catalog": {
+    "variant": "V1",
+    "title": "catalog",
+    "output": "originals/V1-catalog.png",
+    "generated_filename": "exec-71e35ded-e03c-45d5-a8fa-272245f30ad8.png",
+    "prompt": "Use case: stylized-concept. Create ONE transparent PNG lettering asset, not a mockup or a sheet. Exact German text: \"Rätselkatalog\" (R ä t s e l k a t a l o g), two clear umlaut dots. Use the attached original C image as visual STYLE reference only: energetic hand-drawn slanted letterforms, visible double contours, rough dry-pen hatching and long gestural cross-stroke. Reinterpret it as V1 'Skizzenfeder': lean angular right-slant handwriting with a large open R, irregular narrow/wide lowercase rhythms, dark stems built up from several visible parallel graphite/ink strokes, intentional visible drawing corrections. A single low assertive sweeping cross-stroke in the composition, not ornamental looping flourishes. Strong handmade imperfect silhouette; coarse visible hatching remains visible when entire word is 320 pixels wide. NEUTRAL black/charcoal grey only; NO brown or sepia. Transparent alpha background, no paper, no shadows, no leaves, frames, objects, icons, extra text, labels or decorative ornaments. Single line centered, every letter and stroke complete with generous transparent safety margins on all sides. Landscape canvas. Do not typeset a polished script font. This is a visual variant for owner selection, not a final approved product.",
+    "reference": [
+      "owner reference C"
+    ],
+    "invocation": {
+      "num_last_images_to_include": 1,
+      "transparent_background": true
+    }
+  }
+}

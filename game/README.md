@@ -188,11 +188,13 @@ nebeneinander. Nur **Fenstergröße** und **Rätselansicht** haben ein Fragezeic
 das beim Darüberfahren oder Tastaturfokus erklärt; die Fenstergrößenhilfe bleibt auch im Vollbild
 erreichbar. **UI-Skalierung** bietet **100 %** und **125 %** für die laufende Sitzung.
 Anzeigemodus und UI-Skalierung nutzen ohne Fragezeichen die volle Zeilenbreite.
-„Einstellungen“ und die beiden Gruppenüberschriften tragen dieselbe Bakso-Schrift
-wie der Katalogtitel; die Gruppenüberschriften sind kleiner gesetzt.
-Der obere Button **Zurück** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
+Die drei großen Seitentitel **Rätselkatalog**, **Hilfe** und **Einstellungen** sind
+offen schraffierte Graphit-Schriftzugbilder der freigegebenen V2-rev1-Familie; die beiden Einstellungsgruppen behalten ihre
+Bakso-Überschriften. Die Titel stehen fest über dem scrollbaren Inhalt.
+Der untere Button **Zurück** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
 zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
-Bei knapper Höhe bleibt alles durch vertikales Scrollen erreichbar.
+Der Wechsel zwischen Hilfe und Einstellungen steht daneben ebenfalls fest unten.
+Bei knapper Höhe bleibt der Inhalt durch vertikales Scrollen erreichbar.
 Beenden steht im Katalog; auch das normale Fensterschließen sichert den Stand. Das deaktivierte Größenfeld
 zeigt im Vollbild die Desktopauflösung; im Fenster den gewählten Preset.
 
@@ -229,7 +231,7 @@ Leerlinienzeichen und Überlaufmarker. Diese Markierungen bestätigen keine Lös
 
 Jeder neue Besuch beginnt bei Spielprinzip, jede Kapitelwahl oben. Zwischen Hilfe
 und Einstellungen bleiben das Hilfekapitel und seine Lesestelle erhalten. Der
-beschriftete Rückweg oben führt zum gebundenen Katalog oder Rätsel zurück.
+beschriftete Rückweg unten führt zum gebundenen Katalog oder Rätsel zurück.
 Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
 
 ## Bearbeiten und zurücknehmen
@@ -409,4 +411,3 @@ Historische Studien, alte Abnahmen und Quellenbindungen:
 [Bestandsinventar](../docs/DEVELOPMENT_ARCHIVE.md). Die ursprüngliche Anleitung ist
 [am Stand vor Cleanup](https://github.com/venomenon328/picross/blob/0f89f08729539bbb4a02a590cbd18e58fbbda305/prototypes/p1/README.md) erreichbar.
 Historische Prüferdokumente mit Motivspoiler: [F01](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F01_PROOF.md), [F02/F03](https://github.com/venomenon328/picross/blob/37f500d5e6599a6c8ff85c8ca8edb4d190474c5f/game/F02_PROOF.md).
-
