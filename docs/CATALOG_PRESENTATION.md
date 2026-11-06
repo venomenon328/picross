@@ -24,13 +24,14 @@ N05 ergänzt neben dem Einstellungenzugang einen direkten Hilfezugang. Bei
 knapper Breite erhält die Fußnavigation eine zweite Zeile ohne kleinere Buttons.
 Beide Informationswege führen zum unveränderten Katalogkontext mit zwei Offsets zurück.
 
-**KL / #523 · freigegebener Layout-Sollstand vom 06.11.2026 (noch nicht implementiert):**
+**KL-A / #523 · Layoutimplementierung vom 06.11.2026 (Abnahmen im Issue/PR):**
 Das vorhandene Buch verteilt weiterhin je zwölf Karten links und rechts.
-Ein responsives Layout soll bei 2560×1440/UI100 drei Karten nebeneinander
-ermöglichen, bei geringerer nutzbarer Breite sicher auf zwei oder eine Spalte
-zurückfallen und jede Zeile einschließlich Teilzeilen eigenständig zentrieren.
+Das responsive Layout bestimmt maximal drei Spalten aus der schmaleren sicheren
+Kartenfläche beider Hälften und zentriert jede belegte Zeile eigenständig.
+Der flache Zeilencontainer erhält Karten und ID-Callbacks beim Umbruch;
+Filter-/Seitenwechsel behalten ihren bisherigen begrenzten Neuaufbau.
 Verbindlich ist [KL-D01](#kl-d01--responsives-katalograster-523); tatsächliche
-Erfüllung folgt erst durch Umsetzung und native Prüfung in [#523](https://github.com/venomenon328/picross/issues/523).
+Prüfstände und getrennte Abnahmen stehen in [#523](https://github.com/venomenon328/picross/issues/523).
 
 **HZ · HZ-A/B/C integriert; aktuelle Abnahmeentscheidungen in #284/#294:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet Tidy Hand für normale
@@ -111,6 +112,17 @@ das konkrete Paket, seine Akzeptanz A01–A07 und die maßvolle Modulprüfung
 stehen in [#523](https://github.com/venomenon328/picross/issues/523).
 [Zusätzliche Katalogfilter und Wiedereinstieg](https://github.com/venomenon328/picross/issues/485)
 bleiben ausdrücklich unabhängig.
+
+**KL-A-Ausführung:** `ui/catalog_grid.gd` ordnet die vorhandenen Kartenwrapper
+direkt an; eine Teilzeile reserviert nur ihre tatsächlichen Karten. Beide
+Scrollflächen reservieren die jeweilige reale Balkenbreite plus 2×UI, auch bei
+verborgenem Balken. Kapazität und gemeinsame Kartenbreite folgen der schmaleren
+Fläche; jede Zeile zentriert sich in ihrer eigenen sicheren Kartenfläche.
+Die Wunschbreite beträgt gemessenes Minimum plus höchstens 8×UI statt zuvor
+16×UI; Innenränder, Schrift, Titel/Reset, Metadaten und Bildhöhe bleiben gleich.
+Die native kleine Layoutregression läuft ausschließlich mit `native.catalog`
+im vorhandenen synthetischen pages-Prozess. Einmalige echte Buchdarstellungen
+und unabhängiges KL-A-R01 bleiben von dieser Komponentenprüfung getrennt.
 
 ---
 
