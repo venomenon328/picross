@@ -50,17 +50,27 @@ Auf der **vorhandenen linken Buch-Einstellungsseite** erscheint ein Abschnitt �
 
 Die Auswahl bleibt über Buchseiten, Hilfe-/Katalog-/Arbeitsrückkehr konsistent. Keine zusätzliche Einstellungsseite oder generelle Schrift-/Buttonneugestaltung. Dialog, Bestätigung und Fehlinformation müssen innerhalb des aktuellen Viewports erreichbar sein.
 
-Die [Eigentümer-Nacharbeit ANZ-A-N02](https://github.com/venomenon328/picross/issues/527#anz-a-n02)
+Die [Eigentümer-Nacharbeit ANZ-A-N03](https://github.com/venomenon328/picross/issues/527#anz-a-n03)
 ersetzt die N01-Anordnung: genau **Anzeige** und **Rätselansicht** erhalten stabile
 handgezeichnete Rahmen mit verbundenen Titellaschen. Der Block steht mittig in der
 sicheren linken Papierfläche, höchstens 640 × UI breit; Inhalte bleiben linksbündig.
-Der Seitentitel verwendet Fraunces 600, Grundgröße 28, wie die festgelegte
-Katalogtitel-Rolle. Label, HZ-Dropdown und fokussierbares Fragezeichen stehen in
-einer gemeinsamen Zeile. UI-Skalierung hat genau 100 % und 125 %, sitzungsgebunden.
+Der Seitentitel verwendet wie der tatsächlich sichtbare Katalogtitel Bakso Daging
+aus `WORK_TITLE_FONT`, Grundgröße 28 × UI. Die Gruppen behalten unabhängig davon
+Fraunces 600 bei 20 × UI. Dies korrigiert die falsche Fraunces-Katalogannahme aus
+N02; andere Titel und die vorhandenen Fontbytes bleiben unverändert.
+Label und HZ-Dropdown stehen in einer gemeinsamen Zeile. Nur Fenstergröße und
+Rätselansicht besitzen rechts ein eigenes fokussierbares Fragezeichen.
+Anzeigemodus und UI-Skalierung nutzen stattdessen die volle frei werdende Breite
+einschließlich Zwischenabstand, ohne Hilfe-/Fokusplatzhalter. Alle Zeilen behalten
+dieselben Label-/Dropdownanfänge und die sichere rechte Innenkante.
+UI-Skalierung hat genau 100 % und 125 %, sitzungsgebunden.
 Die vollständige Ansichtserklärung und die Erklärung der Vollbild-Desktopauflösung
 stehen nur in den gestylten Fragezeichen-Tooltips, erreichbar per Hover und Fokus.
 Das separate Fragezeichen bleibt auch neben deaktivierter Größenwahl aktiv.
 Vertikales Scrollen erhält bei 1080p/720p × UI100/125 sämtliche Optionen.
+Die obere Rücknavigation auf Einstellungen und Hilfe zeigt nur „Zurück“;
+Tooltip und Accessibilityname nennen weiterhin Katalog oder Rätsel als echtes
+Rückziel. Besuchsursprung, Buchübergang, Fokus, Scrollkontext und Saveguard bleiben.
 
 Beenden-Gruppe und manueller Hinweisreset entfallen vollständig, einschließlich
 des anderweitig produktiv ungenutzten `Board.reset_clue_pan()`. Kein Ersatzbefehl
@@ -73,8 +83,9 @@ N01-A03/A04 gelten weiter: keine zusätzliche Clientflächenzeile oder positive
 Speicherdauerzeile. Im Vollbild zeigt das deaktivierte Größenfeld die aktuelle
 Desktopauflösung; der gemerkte Fensterpreset bleibt unverändert. Countdown,
 Rücknahme-, Fehler- und Fallbackhinweise samt expliziter Übernahme bleiben sichtbar.
-Aktuelle N02-Windowsoriginale werden binär erreichbar für unabhängiges N02-R03
-vor Merge befristet zugestellt. R01/W01/N01-R02 bleiben an ihre früheren Heads
+Aktuelle N03-Windowsoriginale werden binär erreichbar für unabhängiges N03-R04
+vor Merge befristet zugestellt. R04 prüft auch die am N02-Stand noch unvollständige
+direkte Originalsicht am neuen Endstand. R01/W01/N01-R02/N02-R03 bleiben an ihre früheren Heads
 gebunden; M01 bleibt persönliche Komfortprobe nach Integration vor Release.
 
 Ein Wechsel wird sofort **probeweise** wirksam und verlangt innerhalb von **15 Sekunden** eine explizite Bestätigung. In der Vorschau keine verketteten zweiten Moduswechsel. Abbrechen oder Timeout stellt den **letzten bestätigten funktionierenden** Zustand wieder her; auch bei fehlgeschlagener Anwendung muss ein sichtbar benutzbarer Zustand erreichbar bleiben. Ein bloßer Fokuswechsel/Alt-Tab darf nicht automatisch als Annahme gelten. Ein Prozessabbruch vor Bestätigung lässt die alte persistierte Auswahl bestehen. Erst ausdrücklich bestätigte und wirklich angewandte Änderungen werden geschrieben.
@@ -114,5 +125,5 @@ ist nie Ladequelle. Dieser eigene transaktionale Weg ändert keine P1-Saves.
 
 Gezielte günstige Regressionen laufen in `catalog/information` bei Auswahl von
 `native.catalog`; die vorhandene Grafikgruppe bleibt gewählt. Aktuelle
-Windows- und UI-Originale werden getrennt für N02-R03 befristet zugestellt; die
+Windows- und UI-Originale werden getrennt für N03-R04 befristet zugestellt; die
 Produktquellen enthalten keine neue Galerie oder Windows-Diagnosefamilie.

@@ -51,7 +51,12 @@ horizontale Felder, Skalauswahl und separate Hover-/Fokushilfen. Kein manueller
 Rücksetzbefehl; Testinputs setzen ihre Leseanker ausschließlich im Testaufbau.
 Saveblockade/Retry prüft den vorhandenen Katalog-Ausgang und WM-close am echten
 Buchroot; reguläres Beenden beendet weiterhin tatsächlich den Informationsprozess.
-Die einmalige Windows-Originalsicht für N02-R03 erzeugt keine neue Dauerfamilie.
+N03 korrigiert in derselben Probe den Vergleich mit der tatsächlichen Bakso-
+Katalogtitelressource bei UI100/125, erhält die getrennte Fraunces-Gruppenrolle
+und prüft nur zwei Hilfen, volle Dropdownbreite ohne Fokus-/Hitboxplatzhalter
+sowie den sichtbaren Rücktext „Zurück“ bei unverändertem kontextabhängigem
+Rückziel, Saveblockade und Retry auf beiden Informationsseiten.
+Die einmalige Windows-Originalsicht für N03-R04 erzeugt keine neue Dauerfamilie.
 
 Der Windowsbau des **CI-Kerns** außerhalb reiner Dokument-/Rätselinhaltsänderungen
 ist kein automatisch ausgewähltes

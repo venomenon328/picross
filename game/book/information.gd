@@ -23,7 +23,7 @@ func _init(owner: Control) -> void:
 		panel.show()
 	for scroll: ScrollContainer in [app.info_scroll,help_scroll]:
 		scroll.mouse_force_pass_scroll_events = false
-	right_return = app._text_button("Zurück zum Katalog",app.return_to_work)
+	right_return = app._text_button("Zurück",app.return_to_work)
 	right_return.name = "information-return"
 	app.information.add_child(right_return)
 	# Reuse the existing section shortcuts; each belongs to the opposite page.
@@ -75,7 +75,7 @@ func layout() -> void:
 	var switch: Button = app.information.get_node("help-access" if left else "settings-access")
 	var caption: String = "Zurück zum Katalog" if app.information_origin == "album" else "Zurück zum Rätsel"
 	for button: Button in [app.actions["nav-work"],right_return]:
-		button.text = caption
+		button.text = "Zurück"
 		button.tooltip_text = caption
 		button.accessibility_name = caption
 		button.ui_scale = u

@@ -202,10 +202,13 @@ native N1-Informationsseite. Diese konkrete Arbeitsansicht ersetzt die historisc
 BP-3-Empfehlung B, nicht die noch offene gesamte Themen-/Kapitelentscheidung.
 Raster und UI werden getrennt auf unverzerrtem A-Papier gezeichnet. N1 nutzt
 nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen und H1 nutzen die linke Informationsseite, Bedienhilfe die rechte.
-ANZ-A-N02 / #527 ersetzt die frühere gemeinsame Anordnung: zwei mittig auf dem
+ANZ-A-N03 / #527 erhält die N02-Anordnung: zwei mittig auf dem
 linken Papier stehende handgezeichnete Gruppen mit Titellaschen und horizontalen
-Label-/Dropdown-/Fragezeichenzeilen. Einstellungen verwendet Fraunces 600/28 mit
-UI-Skalierung; Erklärungstexte liegen in den gestylten Hover-/Fokushilfen.
+Label-/Dropdownzeilen. Einstellungen verwendet wie der tatsächliche Katalogtitel
+Bakso Daging bei 28 × UI; Gruppenüberschriften bleiben Fraunces 600/20.
+Nur Fenstergröße und Rätselansicht besitzen gestylte Hover-/Fokushilfen, die
+anderen Dropdowns füllen die freie Zeilenbreite. Die Informations-Rücknavigation
+zeigt „Zurück“ bei unverändertem Ziel samt zielbezogenem Tooltip/Accessibilityname.
 Manueller Hinweisreset und Einstellungs-Beenden entfallen; individuelle Hinweis-
 navigation, Katalog-Ausgang und sichere OS-Schließwege bleiben erhalten.
 Keine neue Statistik/Albumarchitektur oder Vorwegnahme von #24. Native Abweichungen,

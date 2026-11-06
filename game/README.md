@@ -181,10 +181,15 @@ Vollbild verwendet die aktuelle Desktopauflösung, zeigt diese lesbar an und erh
 den letzten Fensterpreset für die Rückkehr. Die Windows-Desktopauflösung wird nicht geändert.
 
 Die Einstellungen zeigen zwei handgezeichnete Gruppen **Anzeige** und
-**Rätselansicht**, mittig auf der linken Buchseite. Feldname, Auswahl und ein
-Fragezeichen stehen nebeneinander. Die Fragezeichen erklären die Felder beim
-Darüberfahren oder Tastaturfokus; die Fenstergrößenhilfe bleibt auch im Vollbild
+**Rätselansicht**, mittig auf der linken Buchseite. Feldname und Auswahl stehen
+nebeneinander. Nur **Fenstergröße** und **Rätselansicht** haben ein Fragezeichen,
+das beim Darüberfahren oder Tastaturfokus erklärt; die Fenstergrößenhilfe bleibt auch im Vollbild
 erreichbar. **UI-Skalierung** bietet **100 %** und **125 %** für die laufende Sitzung.
+Anzeigemodus und UI-Skalierung nutzen ohne Fragezeichen die volle Zeilenbreite.
+„Einstellungen“ trägt dieselbe Bakso-Schrift wie der Katalogtitel; die beiden
+Gruppenüberschriften behalten ihre eigene Fraunces-Rolle.
+Der obere Button **Zurück** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
+zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
 Bei knapper Höhe bleibt alles durch vertikales Scrollen erreichbar.
 Beenden steht im Katalog; auch das normale Fensterschließen sichert den Stand. Das deaktivierte Größenfeld
 zeigt im Vollbild die Desktopauflösung; im Fenster den gewählten Preset.
