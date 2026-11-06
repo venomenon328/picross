@@ -1365,7 +1365,7 @@
   "notes": [
     "The 16:10 checkpoint initially hit a desktop-occluded target after a multi-monitor fullscreen return; the owned window was repositioned and the route repeated. The driver now checks target PID before clicks and briefly raises only its own window. No product-code correction or timing change was needed.",
     "A preceding exploratory window resize was intentionally restored by existing native display policy. Final captures use confirmed product presets or borderless desktop mode.",
-    "The local native information report was executed on f95c8b07 with identical runtime/test code and original PNGs; final head only adds display-document binding and upstream provenance. Final Package CI tests final test-merge independently."
+    "The local native information report was executed before commit, at Git HEAD 51e58889583ccd6eeb40d21db1c09a0ff55a8433 with the owned uncommitted BTI-C diff later secured as f95c8b07f57576825de5ff98b2a58f2b27079b1d. Runtime/test code and PNGs are byte-identical to final head; final Package CI independently tests its exact final test-merge."
   ],
   "expires": "2026-11-14T00:00:00+01:00",
   "recipient": "Subsequent independent Codex reviewer of PR #534, with binary Git/HTTP access; owner for visual context. Personal M01 uses the regular CI player, not this synthetic catalog."
