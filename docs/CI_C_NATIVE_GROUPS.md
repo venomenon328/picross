@@ -52,7 +52,7 @@ Rücksetzbefehl; Testinputs setzen ihre Leseanker ausschließlich im Testaufbau.
 Saveblockade/Retry prüft den vorhandenen Katalog-Ausgang und WM-close am echten
 Buchroot; reguläres Beenden beendet weiterhin tatsächlich den Informationsprozess.
 N03 korrigiert in derselben Probe den Vergleich mit der tatsächlichen Bakso-
-Katalogtitelressource bei UI100/125, erhält die getrennte Fraunces-Gruppenrolle
+Katalogtitelressource bei UI100/125, nach N03-E01 auch die kleinere Bakso-Gruppenrolle
 und prüft nur zwei Hilfen, volle Dropdownbreite ohne Fokus-/Hitboxplatzhalter
 sowie den sichtbaren Rücktext „Zurück“ bei unverändertem kontextabhängigem
 Rückziel, Saveblockade und Retry auf beiden Informationsseiten.

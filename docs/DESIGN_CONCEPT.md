@@ -205,7 +205,8 @@ nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen 
 ANZ-A-N03 / #527 erhält die N02-Anordnung: zwei mittig auf dem
 linken Papier stehende handgezeichnete Gruppen mit Titellaschen und horizontalen
 Label-/Dropdownzeilen. Einstellungen verwendet wie der tatsächliche Katalogtitel
-Bakso Daging bei 28 × UI; Gruppenüberschriften bleiben Fraunces 600/20.
+Bakso Daging bei 28 × UI; Gruppenüberschriften erhalten nach N03-E01 ebenfalls
+Bakso bei kleineren 20 × UI, ohne neue Rahmen-/Titellaschengestaltung.
 Nur Fenstergröße und Rätselansicht besitzen gestylte Hover-/Fokushilfen, die
 anderen Dropdowns füllen die freie Zeilenbreite. Die Informations-Rücknavigation
 zeigt „Zurück“ bei unverändertem Ziel samt zielbezogenem Tooltip/Accessibilityname.
