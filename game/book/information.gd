@@ -8,7 +8,11 @@ var section: String = "settings"
 func _init(owner: Control) -> void:
 	app = owner
 	var old: Node = app.settings_panel.get_parent()
-	app.settings_panel.reparent(app.info_scroll)
+	var centred := HBoxContainer.new()
+	centred.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	centred.alignment = BoxContainer.ALIGNMENT_CENTER
+	app.info_scroll.add_child(centred)
+	app.settings_panel.reparent(centred)
 	help_scroll = ScrollContainer.new()
 	help_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	app.information.add_child(help_scroll)
@@ -30,7 +34,7 @@ func positions() -> Vector2i:
 	return Vector2i(app.info_scroll.scroll_vertical,help_scroll.scroll_vertical)
 
 func focus_navigation() -> void:
-	var control: Control = app.ui_scale_button if section == "settings" else app.information.get_node("settings-access")
+	var control: Control = app.ui_scale_choice if section == "settings" else app.information.get_node("settings-access")
 	control.focus_mode = Control.FOCUS_ALL
 	control.grab_focus()
 

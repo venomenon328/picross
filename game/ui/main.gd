@@ -22,6 +22,8 @@ const TITLE_FONT = preload("res://art/book/Fraunces.ttf")
 const WORK_TITLE_FONT = preload("res://art/drawing/BaksoDaging-Regular.ttf")
 const UiText = preload("res://ui/ui_text.gd")
 const HelpPanel = preload("res://ui/help_panel.gd")
+const SettingsGroup = preload("res://ui/settings_group.gd")
+const SettingsField = preload("res://ui/settings_field.gd")
 const DisplaySettings = preload("res://ui/display_settings.gd")
 var display_settings: DisplaySettings
 var display_controller: Node
@@ -33,11 +35,13 @@ var information: Control
 var information_section: String = "settings"
 var settings_panel: VBoxContainer
 var display_group: VBoxContainer
+var settings_title: Label
+var settings_fields: Array[SettingsField] = []
 var help_panel: HelpPanel
 var info_scroll: ScrollContainer
 var information_origin: String = "album"
 var view_choice: OptionButton
-var ui_scale_button: Button
+var ui_scale_choice: OptionButton
 var actions: Dictionary = {}
 var laying_out: bool = false
 var sessions: Array[Session] = []
@@ -75,7 +79,6 @@ var palette_row: Control
 var sidebar: Control
 var page: Control
 var minimum_message: Label
-var clue_reset_button: Button
 var animation_toggle: CheckBox
 var clue_completion_toggle: CheckBox
 var mark_completed_clues: bool = true
@@ -155,7 +158,7 @@ func _ready() -> void:
 		add_child(display_controller)
 		display_settings = DisplaySettings.new()
 		display_group.add_child(display_settings)
-		display_group.move_child(display_settings,1)
+		display_group.move_child(display_settings,0)
 		display_settings.configure(self,display_controller)
 		display_controller.start(DisplaySettings.Backend.new(get_window()),DisplaySettings.Preference.new())
 	save_timer = Timer.new()
@@ -301,7 +304,7 @@ func set_ui_scale(value: float) -> void:
 	help_panel.set_ui_scale(value)
 	if display_settings != null: display_settings.layout_card()
 	board.ui_scale = value
-	ui_scale_button.text = "UI %d %%" % roundi(ui_scale * 100)
+	ui_scale_choice.select(1 if ui_scale == 1.25 else 0)
 	_layout_book()
 	board.queue_redraw()
 
@@ -842,23 +845,23 @@ func _build_information() -> void:
 	settings_panel = VBoxContainer.new()
 	settings_panel.add_theme_constant_override("separation",16)
 	content.add_child(settings_panel)
-	settings_panel.add_child(label("Einstellungen",26))
+	settings_title = label("Einstellungen",28)
+	settings_panel.add_child(settings_title)
+	info_scroll.get_v_scroll_bar().value_changed.connect(func(_value: float) -> void: BookButton.dismiss_all(get_tree()))
 	display_group = _settings_group("Anzeige", "display-options")
-	ui_scale_button = _text_button("UI 100 %",func() -> void: set_ui_scale(1.25 if ui_scale == 1 else 1.0))
-	display_group.add_child(ui_scale_button)
+	ui_scale_choice = BookChoice.new()
+	ui_scale_choice.name = "ui-scale"
+	ui_scale_choice.add_item("100 %")
+	ui_scale_choice.add_item("125 %")
+	ui_scale_choice.item_selected.connect(func(index: int) -> void: set_ui_scale(1.25 if index == 1 else 1.0))
+	display_group.add_child(_settings_field("UI-Skalierung",ui_scale_choice,"Vergrößert die Bedienoberfläche auf 100 % oder 125 %. Gilt für diese Sitzung; der Rasterzoom bleibt unabhängig."))
 	var puzzle_group: VBoxContainer = _settings_group("Rätselansicht", "puzzle-options")
 	view_choice = BookChoice.new()
 	view_choice.name = "puzzle-view"
 	view_choice.add_item("Rasteransicht")
 	view_choice.add_item("Gesamtansicht mit allen Hinweisen")
 	view_choice.item_selected.connect(set_puzzle_view)
-	puzzle_group.add_child(view_choice)
-	var explanation: Label = label("Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen.",16)
-	explanation.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	puzzle_group.add_child(explanation)
-	clue_reset_button = _text_button("Hinweise rasterseitig ausrichten",func() -> void:
-		if session != null: board.reset_clue_pan())
-	puzzle_group.add_child(clue_reset_button)
+	puzzle_group.add_child(_settings_field("Rätselansicht",view_choice,"Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen."))
 	clue_completion_toggle = CheckBox.new()
 	clue_completion_toggle.text = "Erfüllte Hinweise markieren"
 	clue_completion_toggle.button_pressed = mark_completed_clues
@@ -871,11 +874,6 @@ func _build_information() -> void:
 	animation_toggle.add_theme_color_override("font_color", BookButton.INK)
 	animation_toggle.toggled.connect(func(enabled: bool) -> void: board.set_animations(enabled))
 	puzzle_group.add_child(animation_toggle)
-	var exit_group: VBoxContainer = _settings_group("Beenden", "exit-options")
-	var quit_button: BookButton = _text_button("Beenden",leave_app)
-	quit_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	quit_button.custom_minimum_size.x = 180
-	exit_group.add_child(quit_button)
 	help_panel = HelpPanel.new()
 	content.add_child(help_panel)
 	help_panel.configure(self)
@@ -883,19 +881,30 @@ func _build_information() -> void:
 	_information_section("settings")
 
 func _settings_group(caption: String, id: String) -> VBoxContainer:
-	var group := VBoxContainer.new()
-	group.name = id
+	var group := SettingsGroup.new()
+	group.configure(self,caption,id)
 	settings_panel.add_child(group)
-	group.add_child(label(caption,20))
-	return group
+	return group.content
+
+func _settings_field(caption: String, choice: OptionButton, explanation: String) -> SettingsField:
+	var field := SettingsField.new()
+	field.configure(self,caption,choice,explanation)
+	settings_fields.append(field)
+	return field
 
 func _layout_settings(width: float) -> void:
-	# A single left-aligned column; its controls share the safe scroll width.
-	settings_panel.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	# Centre only in the left paper's safe scroll area; rows remain left aligned.
+	settings_panel.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	settings_panel.custom_minimum_size.x = minf(640*ui_scale,maxf(1,width-20*ui_scale))
-	settings_panel.add_theme_constant_override("separation",roundi(28*ui_scale))
+	settings_panel.add_theme_constant_override("separation",roundi(20*ui_scale))
+	var label_width: float = 0
+	for field: SettingsField in settings_fields:
+		if not is_instance_valid(field): continue
+		label_width = maxf(label_width,UiText.label_width(field.caption,field.caption.text,roundi(16*ui_scale)))
+	for field: SettingsField in settings_fields:
+		if is_instance_valid(field): field.set_columns(ceilf(label_width),ui_scale)
 	for child: Node in settings_panel.get_children():
-		if child is VBoxContainer: child.add_theme_constant_override("separation",roundi(10*ui_scale))
+		if child is SettingsGroup: child.set_scale_value(ui_scale)
 
 func _text_button(caption: String, action: Callable) -> BookButton:
 	var item: BookButton = BookButton.new()
@@ -936,7 +945,7 @@ func _information_section(section: String) -> void:
 	info_scroll.scroll_vertical = 0
 	# One shared settings instance; shortcuts change only the visible section.
 	if information.visible:
-		var target: Control = ui_scale_button if section == "settings" else information.get_node("help-access")
+		var target: Control = ui_scale_choice if section == "settings" else information.get_node("help-access")
 		target.focus_mode = Control.FOCUS_ALL
 		target.grab_focus()
 
@@ -972,7 +981,7 @@ func _place(item: Control, box: Rect2) -> void:
 	item.size = box.size
 
 func _layout_book(prepare_board: bool = false) -> void:
-	if laying_out or board == null or information == null or ui_scale_button == null:
+	if laying_out or board == null or information == null or ui_scale_choice == null:
 		return
 	if size.x < 1280 or size.y < 720:
 		return
@@ -1075,7 +1084,7 @@ func _layout_book(prepare_board: bool = false) -> void:
 	_place(information.get_node("help-access"),Rect2(o+Vector2(410*u,110),Vector2(140*u,hit)))
 	_place(info_scroll,Rect2(o+Vector2(180,190),Vector2(w-360,h-300)))
 	_layout_settings(info_scroll.size.x)
-	for item: Control in [ui_scale_button,clue_reset_button,clue_completion_toggle]:
+	for item: Control in [ui_scale_choice,clue_completion_toggle]:
 		item.custom_minimum_size.y = hit
 	for item: Node in information.find_children("*","Button",true,false):
 		item.custom_minimum_size.y = hit

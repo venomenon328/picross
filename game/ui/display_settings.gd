@@ -27,7 +27,6 @@ func configure(owner: Control, control: Controller) -> void:
 	app = owner
 	controller = control
 	name = "display-settings"
-	add_child(app.label("Anzeigemodus",16))
 	mode_choice = Choice.new()
 	mode_choice.name = "display-mode"
 	mode_choice.paper_transparent = true
@@ -35,8 +34,7 @@ func configure(owner: Control, control: Controller) -> void:
 	mode_choice.item_selected.connect(func(index: int) -> void:
 		app._cancel_interaction()
 		controller.request(Preference.MODES[index],controller.active.preset))
-	add_child(mode_choice)
-	add_child(app.label("Fenstergröße",16))
+	add_child(app._settings_field("Anzeigemodus",mode_choice,"Fenster zeigt die gewählte feste Größe. Rahmenloses und exklusives Vollbild verwenden den aktuellen Desktopmodus."))
 	size_choice = Choice.new()
 	size_choice.name = "display-size"
 	size_choice.paper_transparent = true
@@ -44,7 +42,7 @@ func configure(owner: Control, control: Controller) -> void:
 	size_choice.item_selected.connect(func(index: int) -> void:
 		app._cancel_interaction()
 		controller.request("window",Preference.PRESETS[index]))
-	add_child(size_choice)
+	add_child(app._settings_field("Fenstergröße",size_choice,"Im rahmenlosen und exklusiven Vollbild wird die aktuelle Desktopauflösung verwendet; der ausgewählte Fensterpreset gilt erst wieder im Fenstermodus."))
 	feedback = app.label("",16)
 	feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(feedback)

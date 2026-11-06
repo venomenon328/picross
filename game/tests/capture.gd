@@ -316,7 +316,7 @@ func run() -> void:
 		app.set_ui_scale(1.0)
 		app.select_puzzle(3)
 		set_pitch(app,24.0)
-		app.board.reset_clue_pan()
+		preload("res://tests/p12_cases.gd").seed_grid_reads(app.board)
 		await process_frame
 		await process_frame
 		match current:

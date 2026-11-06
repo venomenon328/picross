@@ -381,8 +381,9 @@ müssen über die erreichbare Zustandsfolge vollständig lesbar bleiben.
 Überfahren benachbarter Linien, des
 Rasters oder anderer UI übernimmt keine andere Folge und wird weder Raster-Pan noch
 Zellbearbeitung. Leere/kurze Folgen pannen nicht in leeren Raum. Anfang, Mitte und Ende
-jeder langen Folge bleiben erreichbar; „Hinweise rasterseitig ausrichten“ setzt alle
-Einzelpositionen bewusst zurück.
+jeder langen Folge bleiben erreichbar. ANZ-A-N02 / #527 entfernt den manuellen
+Hinweisreset vollständig; Einstellungsbesuche erhalten die individuellen Leseanker.
+Rasterseitiger Default, Slot-Ausrichtung und automatische Normalisierung bleiben.
 
 Die wirkungslosen Raster-/Miniaturnavigationsversuche erhalten sämtliche individuellen Lesepositionen.
 Vorübergehende Vollanzeige erhält alle semantischen Rand-/Mittelanker, auch beim Speichern und frischen Neustart; erneutes Verengen rekonstruiert die Lesestelle. Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,

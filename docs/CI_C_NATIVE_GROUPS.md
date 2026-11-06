@@ -45,7 +45,13 @@ N01 ergänzt in derselben Informationsprobe Gruppenfolge, kompakte linksbündige
 Breiten und 44/55-px-Trefferflächen bei 1080p/720p × UI100/125, Scroll-Erreichbarkeit,
 Popupgrenzen/-Abbau sowie Desktopwert und sichtbare Fehler-/Fallbackzustände ohne
 positive Dauerzeile. Keine neue Prozess-/Bildfamilie; die gezielte echte Windows-
-Sichtprobe bleibt einmalig für N01-R02.
+Sichtprobe bleibt historisch an N01-R02 gebunden. N02 ersetzt die günstigen
+Gruppen-/Reset-/Beendenassertions durch zwei zentrierte HZ-Rahmen, Titelrolle,
+horizontale Felder, Skalauswahl und separate Hover-/Fokushilfen. Kein manueller
+Rücksetzbefehl; Testinputs setzen ihre Leseanker ausschließlich im Testaufbau.
+Saveblockade/Retry prüft den vorhandenen Katalog-Ausgang und WM-close am echten
+Buchroot; reguläres Beenden beendet weiterhin tatsächlich den Informationsprozess.
+Die einmalige Windows-Originalsicht für N02-R03 erzeugt keine neue Dauerfamilie.
 
 Der Windowsbau des **CI-Kerns** außerhalb reiner Dokument-/Rätselinhaltsänderungen
 ist kein automatisch ausgewähltes

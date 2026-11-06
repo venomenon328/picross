@@ -120,9 +120,10 @@ static func run(r: SceneTree) -> void:
 	control.advance(Time.get_ticks_msec())
 	settle(control)
 	r.check(control.active.mode == "borderless" and FileAccess.get_file_as_bytes(path) == saved_bytes,"ANZ: monitor fallback remains transient and visible")
+	r.check(r.app.display_settings == null and r.app.ui_scale_choice.item_count == 2 and r.app.view_choice.item_count == 2,"N02: common non-native settings work without physical display controls")
 	var panel := Settings.new()
 	r.app.display_group.add_child(panel)
-	r.app.display_group.move_child(panel,1)
+	r.app.display_group.move_child(panel,0)
 	r.app.display_settings = panel
 	panel.configure(r.app,control)
 	r.check(panel.size_choice.disabled and panel.size_choice.text == "1280 × 720 (Desktop)" and control.active.preset == "1920x1080","ANZ N01: desktop in disabled size field without changing remembered preset")
@@ -155,16 +156,36 @@ static func run(r: SceneTree) -> void:
 		for scale: float in [1.0,1.25]:
 			r.app.set_ui_scale(scale)
 			await r.frames()
-			var groups: Array = [r.app.display_group,r.app.settings_panel.get_node("puzzle-options"),r.app.settings_panel.get_node("exit-options")]
-			r.check(groups[0].get_child(0).text == "Anzeige" and groups[1].get_child(0).text == "Rätselansicht" and groups[2].get_child(0).text == "Beenden" and r.app.ui_scale_button.get_parent() == groups[0],"ANZ N01: ordered sections and UI scaling under display")
+			var groups: Array = [r.app.settings_panel.get_node("display-options"),r.app.settings_panel.get_node("puzzle-options")]
+			r.check(groups[0].heading.text == "Anzeige" and groups[1].heading.text == "Rätselansicht" and r.app.settings_panel.get_child_count() == 3,"N02: exactly two framed settings groups")
+			var font: FontVariation = r.app.settings_title.get_theme_font("font")
+			r.check(font.base_font == r.app.TITLE_FONT and font.variation_opentype == {"wght":600.0} and r.app.settings_title.get_theme_font_size("font_size") == roundi(28*scale),"N02: settings uses specified catalog title role")
 			var column: Rect2 = r.app.settings_panel.get_global_rect()
-			r.check(column.size.x <= 640*scale+1 and column.size.x <= r.app.info_scroll.size.x and r.app.info_scroll.get_h_scroll_bar().max_value <= r.app.info_scroll.size.x,"ANZ N01: compact column fits safe paper without horizontal scrolling")
-			for item: Control in [panel.mode_choice,panel.size_choice,r.app.ui_scale_button,r.app.view_choice,r.app.clue_reset_button,r.app.clue_completion_toggle,r.app.animation_toggle]:
-				r.check(absf(item.global_position.x-column.position.x) < 1 and item.size.x <= column.size.x+1 and item.size.y >= 44*scale,"ANZ N01: aligned compact HZ target "+str(item.name))
-			var quit_button: Button = r.caption_button(groups[2],"Beenden")
-			r.app.info_scroll.ensure_control_visible(quit_button)
+			var scroll: Rect2 = r.app.info_scroll.get_global_rect()
+			r.check(column.size.x <= 640*scale+1 and column.size.x <= scroll.size.x and absf(column.get_center().x-scroll.get_center().x) < 10*scale and r.app.info_scroll.get_h_scroll_bar().max_value <= scroll.size.x,"N02: compact groups centred in safe left paper without horizontal scrolling "+str(column)+" / "+str(scroll)+" / max="+str(r.app.info_scroll.get_h_scroll_bar().max_value))
+			var last_x: float = -1
+			for field: Control in r.app.settings_fields:
+				var choice: OptionButton = field.choice
+				var help: Button = field.help
+				r.check(field.caption.global_position.x < choice.global_position.x and help.global_position.x >= choice.get_global_rect().end.x and absf(field.caption.get_global_rect().get_center().y-choice.get_global_rect().get_center().y) < 1,"N02: inline label, choice, question mark "+str(field.name))
+				r.check(choice.size.y >= 44*scale and help.size.x >= 44*scale and help.size.y >= 44*scale and help.focus_mode == Control.FOCUS_ALL and not help.tooltip_text.is_empty(),"N02: independent HZ help target "+str(field.name))
+				r.check(last_x < 0 or absf(choice.global_position.x-last_x)<1,"N02: common measured columns")
+				last_x = choice.global_position.x
+				r.check(column.grow(1).encloses(field.get_global_rect()),"N02: complete row inside frame")
+			r.check(r.app.ui_scale_choice.item_count == 2 and r.app.ui_scale_choice.get_item_text(0) == "100 %" and r.app.ui_scale_choice.get_item_text(1) == "125 %" and r.app.ui_scale_choice.selected == (1 if scale == 1.25 else 0),"N02: UI dropdown matches session scale")
+			r.check(not r.app.board.has_method("reset_clue_pan") and r.app.settings_panel.find_children("exit-options","",true,false).is_empty(),"N02: manual reset command and settings exit removed")
+			var tip_help: Button = panel.size_choice.get_parent().help
+			r.check(tip_help.tooltip_text.contains("Desktopauflösung") and not tip_help.disabled and r.app.view_choice.get_parent().help.tooltip_text.contains("kleinere Zellen"),"N02: complete explanations on separate question marks")
+			r.app.info_scroll.ensure_control_visible(r.app.animation_toggle)
 			await r.frames()
-			r.check(r.app.info_scroll.get_global_rect().grow(1).encloses(quit_button.get_global_rect()),"ANZ N01: bottom action reachable by vertical scroll "+str(r.app.info_scroll.get_global_rect())+" / "+str(quit_button.get_global_rect()))
+			r.check(scroll.grow(1).encloses(r.app.animation_toggle.get_global_rect()),"N02: bottom setting reachable by vertical scroll")
+			r.app.info_scroll.ensure_control_visible(tip_help)
+			tip_help.grab_focus()
+			await r.frames()
+			r.check(is_instance_valid(tip_help.focus_tip) and Rect2(Vector2.ZERO,Vector2(size)).encloses(tip_help.focus_tip.get_global_rect()),"N02: focus opens styled help inside viewport")
+			r.app.ui_scale_choice.grab_focus()
+			await r.frames()
+			r.check(not is_instance_valid(tip_help.focus_tip),"N02: focus exit dismisses help")
 			r.app.info_scroll.scroll_vertical = 0
 			await r.frames()
 			r.click(panel.mode_choice)
