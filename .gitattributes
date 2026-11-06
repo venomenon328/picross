@@ -11,3 +11,4 @@ docs/evidence/at-a/production/** -text
 docs/evidence/at-a/windows-start-preflight.json -text
 # Upstream notice is byte-bound (including CRLF/trailing spaces) by check_docs.
 "game/art/drawing/delight-coffee/More Info.txt" binary
+game/art/drawing/pangolin/OFL.txt binary

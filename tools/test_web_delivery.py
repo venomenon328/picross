@@ -52,7 +52,8 @@ class Delivery(unittest.TestCase):
         source = Path(__file__).resolve().parents[1]
         licenses = {name.removeprefix('licenses/') for name in player_extras(source, self.root)
                     if name.startswith('licenses/')}
-        self.assertEqual(licenses, web_bundle.LICENSES | web_bundle.ADDITIONAL_LICENSES)
+        self.assertEqual(licenses, (web_bundle.LICENSES | web_bundle.ADDITIONAL_LICENSES) - {'tidy-hand/NOTICE.txt'})
+        self.assertIn('pangolin/OFL.txt', licenses)
         self.assertIn('KB-168-NOTICE.txt', licenses)
         # The pre-KB v1 fixture remains a valid rollback bundle.
         web_bundle.validate(self.root)

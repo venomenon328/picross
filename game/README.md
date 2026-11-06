@@ -29,12 +29,14 @@ größere Textrolle. Beim Wechsel von Werten bleibt die Grundlinie ruhig;
 „Blatt NN“ behält seine bisherige Größe. UI100/125 skaliert die zugehörigen
 Abstände und Textbudgets gemeinsam. [HZ-C-Prüfstand](../docs/HZ_C_VERIFICATION.md).
 
-**Schrift und Lesbarkeit (HZ-A):** Normale Texte, Auswahlen, Hilfen und Tooltips
-verwenden Tidy Hand. Bestehende Überschriften und Delight-Coffee-Hinweiszahlen
+**Schrift und Lesbarkeit (PANG-A):** Normale Texte, Auswahlen, Hilfen und Tooltips
+verwenden Pangolin Regular. Bestehende Überschriften und Delight-Coffee-Hinweiszahlen
 bleiben unverändert. UI 100/125 % ändert Schrift und Textabstände gemeinsam;
 bei schmalen Fenstern darf „Sortieren nach“ innerhalb der Kopfzeile umbrechen.
 Lange Kategorien bleiben über vollständig umgebrochene Tooltips lesbar; die
-native Auswahlliste scrollt vertikal. [HZ](../docs/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise.
+native Auswahlliste scrollt vertikal. Pangolin und die lokale Plex-Ergänzung
+stehen offline bereit; die Original-OFL und Herkunft liegen unter
+`licenses/pangolin/` im Spielerpaket. [HZ](../docs/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise.
 
 **Rahmen, Menüs und Symbole (HZ-B):** Karten und kleine Papierbuttons haben
 ruhende handgezeichnete Konturen. Dropdowns öffnen auf opakem Papier; ein Haken

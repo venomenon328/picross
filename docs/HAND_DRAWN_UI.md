@@ -1,6 +1,6 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
-Fachstand: Spezifikation 1.3 · Workflowabgleich: 06.11.2026 · **HZ-A/B/C integriert; PANG-A freigegebener Sollstand, noch nicht umgesetzt**
+Fachstand: Spezifikation 1.3 · Workflowabgleich: 06.11.2026 · **HZ-A/B/C integriert; PANG-A auf dem Arbeitsbranch implementiert; R01/M01 offen**
 
 [Issue #284](https://github.com/venomenon328/picross/issues/284) dokumentiert den
 Abschluss von HZ-A und HZ-B einschließlich ihrer erfüllten T01/R01/M01-Gates.
@@ -22,7 +22,7 @@ Mergeentscheidungen stehen im Issue/PR; Integration allein ist kein Abnahmenachw
 Der integrierte Ausgangsstand trägt die Handschrift des vorhandenen Rätselbuchs
 durchgängig: Tidy Hand für Standardtext, erhaltene Überschriften, organischere kleine Rahmen,
 vollständig gezeichnete Dropdowns und eine gemeinsame Piktogrammfamilie.
-Die am 06.11.2026 freigegebene, **noch nicht implementierte** [Pangolin-Folgeentscheidung](https://github.com/venomenon328/picross/issues/531) ersetzt künftig genau die Standardtextrolle; der neue Sollstand steht in HZ-D08.
+Die am 06.11.2026 freigegebene, auf dem Arbeitsbranch implementierte [Pangolin-Folgeentscheidung](https://github.com/venomenon328/picross/issues/531) ersetzt genau die Standardtextrolle; der neue Sollstand steht in HZ-D08.
 Lesbarkeit, ruhige Anordnung und präzise Bedienung gehören zum Gestaltungsergebnis.
 Die Unregelmäßigkeit muss schon in tatsächlicher Einsatzgröße erkennbar sein.
 
@@ -316,8 +316,8 @@ aus HZ-D06.
 
 **Eigentümerentscheidung vom 06.11.2026:** Aus drei vorgelegten Kandidaten ist
 **Pangolin Regular** für die **bestehende normale Standardtextrolle** ausgewählt.
-Dieser Abschnitt ist **freigegebene Spezifikation**, noch keine Implementierung
-oder native Abnahme. Er löst den aktiven Tidy-Hand-Teil von HZ-D01/D02 und die
+Dieser freigegebene Vertrag ist auf dem Paketbranch in PR #532 implementiert;
+technische Lieferung und unabhängige/persönliche Abnahme bleiben getrennt. Er löst den aktiven Tidy-Hand-Teil von HZ-D01/D02 und die
 Tidy-Hand-spezifischen Textannahmen von HZ-D04/D07 gezielt ab, nicht deren
 historische damalige Lieferung, Bedienanforderungen oder Messprinzipien.
 [Issue #531 · PANG-A](https://github.com/venomenon328/picross/issues/531)
@@ -348,8 +348,9 @@ Ausgewählte Quelle ist der **Eigentümeranhang** `font_candidates.zip`,
 `a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e`.
 Mitgegeben: `Pangolin/OFL.txt`, **SIL Open Font License 1.1**, SHA-256
 `414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c`;
-Copyright 2016 The Pangolin Project Authors. Diese Eingangsdateien sind
-bis zur Implementierung **nicht** im Repository gespeichert.
+Copyright 2016 The Pangolin Project Authors. Originale sind jetzt unter
+`game/art/drawing/Pangolin-Regular.ttf` und `game/art/drawing/pangolin/OFL.txt`
+bytegleich gespeichert; [Herkunft](../game/art/drawing/pangolin/NOTICE.txt).
 Der Implementierer verifiziert die konkreten Bytes vor ihrer Einbindung;
 die öffentlich verfügbare namensgleiche TTF darf nicht ohne Hashprüfung
 als byteidentische Alternative gelten. Aktive Offline-Schrift und korrekte
@@ -396,7 +397,7 @@ dieser Dokumentation.
 | HZ-A · Schrift und Textlayout | HZ-D01/D02 vollständig, einschließlich aller normalen Textpfade, kontrollierter Zeichenbehandlung, gemessenem Layout, Ressourcen-/Exportnachweis und nachgeführter Anleitung | Integriert über PR #288 und separat abgenommen; Abschluss in #284. |
 | HZ-B · Gezeichnete Controls und Symbole | HZ-D03/D04/D05 vollständig auf den HZ-A-Textmaßen; sämtliche Konturen, geöffneten Menüs, Zustände und Piktogramme im regulären Spiel | Nach HZ-A über PR #289 integriert und separat abgenommen; #284 abgeschlossen. |
 | HZ-C · Optische Textausrichtung und kleine Schriftrolle | HZ-D07 vollständig: stabile Grundlinien, begründeter Vergleich 14/15, Kategorien und offene/geschlossene Dropdowns, passende gemeinsame Text-/Symbol-/Layoutmaße | #294: Über PR #296 integriert; historische [Prüfzuordnung](HZ_C_VERIFICATION.md), tatsächlicher Abnahmestand in Issue/PR. |
-| PANG-A · Pangolin-Standardtext | HZ-D08 auf allen normalen Textpfaden; bytegebundene Schrift/Lizenz, gemessener Help-/Katalog-/Popup-/Dialog-Textfit und unveränderte Sonderrollen | [#531](https://github.com/venomenon328/picross/issues/531): Sollstand freigegeben, Implementierung und T01/R01/M01 offen; gleicher Branch/PR nach ausdrücklichem Folgeauftrag. |
+| PANG-A · Pangolin-Standardtext | HZ-D08 auf allen normalen Textpfaden; bytegebundene Schrift/Lizenz, gemessener Help-/Katalog-/Popup-/Dialog-Textfit und unveränderte Sonderrollen | [#531](https://github.com/venomenon328/picross/issues/531): Auf demselben Paketbranch/PR #532 implementiert; T01-Lieferung im PR, R01/M01 vor Merge getrennt offen. |
 
 HZ-D06 gilt für alle Pakete. Ein Implementierungs-PR je Paket enthält notwendige
 Regressionen und Dokumentation. HZ-B hielt Rahmen, Menüs und Icons zusammen,

@@ -92,7 +92,7 @@ func observe(delta: float) -> void:
 			"notice":FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt")},
 		"catalog_scroll":[album.scroll.global_position.x,album.scroll.global_position.y,album.scroll.size.x,album.scroll.size.y],
 		"hz": {"standard":theme.default_font.get_font_name(),"heading":title.get_theme_font("font").get_font_name(),
-			"notice":FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"),
+			"notice":FileAccess.file_exists("res://art/drawing/pangolin/NOTICE.txt"),
 			"local_only":not UiText.font().allow_system_fallback and not UiText.font().fallbacks[0].allow_system_fallback,
 			"menu": {"visible":album.category_choice.get_popup().visible,
 				"font":album.category_choice.get_popup().get_theme_font("font").get_font_name(),

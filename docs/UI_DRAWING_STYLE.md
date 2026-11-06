@@ -1,5 +1,11 @@
 # Zeichnerische Spieloberfläche und Zellanimationen
 
+**PANG-A / #531 · Arbeitsbranch:** [HZ-D08](HAND_DRAWN_UI.md) ersetzt die
+normale Tidy-Hand-Textrolle durch Pangolin einschließlich direkter Warntexte.
+Die folgenden HZ-/ZS-Passagen behalten ihre historische Standbindung.
+Überschriften, Hinweise, Glyphenslots, Raster, Icons und Zellanimationen bleiben.
+Aktuelle technische Lieferung und getrennte R01/M01 stehen in PR #532.
+
 **Aktueller Umfang bei gewähltem `native.core` / P2-F-B-V01:** Die
 [risikobasierte ZS2-Stichprobe](CI_C_NATIVE_GROUPS.md#p2-f-b-v01--502-risikobasierte-zs2-core-stichprobe)
 begrenzt die native Core-Wiederholung auf zehn enumerierte Striche,

@@ -1,15 +1,15 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
-**PANG-A / #531 · Schriftwahl am 06.11.2026 bestätigt, Umsetzung ausstehend:**
-Pangolin Regular wird die integrierte Tidy-Hand-Standardtextrolle auf sämtlichen
-normalen UI-Pfaden ablösen, insbesondere in der langen Spielerhilfe sowie in
+**PANG-A / #531 · auf dem Arbeitsbranch implementiert; Abnahmen im Draft-PR:**
+Pangolin Regular ersetzt die bisherige Tidy-Hand-Standardtextrolle auf sämtlichen
+normalen UI-Pfaden, insbesondere in der langen Spielerhilfe sowie in
 kleinen Katalog-/Dropdown-/Dialogbeschriftungen. Lesbarkeit auf dem warmen
 Buchpapier, gemessene Textbudgets und stabile optische Grundlinien bestimmen
 die Umsetzung. Fraunces-/Bakso-Überschriften, Delight-Zahlen, gebündelter
 Plex-Fallback, handgezeichnete Controls und die Buch-/Spielgestaltung bleiben.
 [HZ-D08](HAND_DRAWN_UI.md) ist der Fachvertrag, [#531](https://github.com/venomenon328/picross/issues/531)
 führt Paket und offene Gates. Die nachstehende HZ-Geschichte beschreibt den
-bislang integrierten Tidy-Hand-Stand; keine neue Schrift ist bereits im Spieler.
+historischen Tidy-Hand-Stand; PANG-A-R01/M01 bleiben getrennte Vor-Merge-Gates.
 
 
 **ANZ-A / #527 · native Anzeigeoptionen auf dem Arbeitsbranch implementiert:**
@@ -328,7 +328,7 @@ Die bestätigte [Buchrichtung #493](BOOK_INTEGRATION.md) zeigt den Katalog als e
 Die Spielerhilfe nach [HIL-1 / #500](https://github.com/venomenon328/picross/issues/500)
 liegt in der rechten Informationsseite im vorhandenen Nahmaßstab. Vier beschriftete
 Papierbuttons führen direkt zu Spielprinzip, farbigen Rätseln, Bedienung und
-Lösungstipps. Tidy Hand trägt den Fließtext, Fraunces 600 auch kleine
+Lösungstipps. Pangolin trägt den Fließtext, Fraunces 600 auch kleine
 Abschnittsüberschriften; Lehrzahlen verwenden die aktive Delight-Typografie.
 Passive synthetische Raster teilen stabile Linien, Atlas-Endbilder, Stiftfarben
 und handschriftliche X mit der Spielansicht. Es gibt keine neue Bild-/Fontfamilie.
