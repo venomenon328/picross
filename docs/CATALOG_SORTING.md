@@ -1,5 +1,13 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
+**PANG-A / #531 · Schrift-Folgeentscheidung, noch nicht implementiert:**
+[HZ-D08](HAND_DRAWN_UI.md) führt Pangolin Regular für die bestehende
+Standardtextrolle auch in Sortierbuttons, geschlossenen und geöffneten
+Auswahllisten ein. Die nachstehenden HZ-A-/Tidy-Hand-Angaben sind die
+integrierte Ausgangsbasis; Auswahlsemantik, Fokus, Sortierzustand, Treffer-/
+Scrollflächen und Sicherheit bleiben unverändert. [PANG-A](https://github.com/venomenon328/picross/issues/531).
+
+
 **B-A-N05 / #493:** Die [isolierte Doppelseitenstudie](BOOK_STUDY.md) übernimmt
 diesen globalen Sortier-/Filtervertrag vor der logischen 24er-Paginierung.
 Beide Buchhälften teilen Filter/Sortierung/Seite/Auswahl, besitzen aber eigene
