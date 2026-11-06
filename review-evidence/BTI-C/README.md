@@ -65,8 +65,11 @@ Fensters erneut geprüft. Der Treiber prüft nun vor Klicks die Zielprozess-ID.
 Keine Produktkorrektur aus diesem Umgebungsbefund abgeleitet.
 
 Die kurze lokale [Informationsprobe](information.json) hat 1548 Assertions ohne
-Fehler. Sie lief auf `f95c8b07f57576825de5ff98b2a58f2b27079b1d` mit identischem
-Runtime-/Testcode und identischen PNGs; der finale Nachtrag ergänzt ausschließlich
+Fehler. Sie lief vor dem Commit auf dem anschließend als
+`f95c8b07f57576825de5ff98b2a58f2b27079b1d` gesicherten Quellbaum
+(Git-HEAD damals `51e58889583ccd6eeb40d21db1c09a0ff55a8433` mit eigenem
+uncommittierten BTI-C-Diff), mit identischem Runtime-/Testcode und identischen PNGs;
+der finale Nachtrag ergänzt ausschließlich
 Displaydokumentation und vorgeschaltete generative Herkunft. Die finale Package-CI
 prüft den finalen Head/Testmerge gesondert. Lokaler Dokumentvalidator/Diffcheck
 erfolgreich. Der lokale Windows-CI-Vertragstest hat einen unveränderten
