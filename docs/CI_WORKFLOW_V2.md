@@ -61,13 +61,24 @@ Ohne gesonderte Anforderung bleiben technische Originale nur im eigenen temporä
 
 `evidence.mode=review` liefert aktuelle begrenzte Originale/Logs für den benannten Reviewer; `failure` nur bei einem Fehllauf. Beide verlangen einen Zweck und ein Datum. Uploadretention höchstens sieben Tage und nicht über die gewählte Frist hinaus, Windows vierzehn Tage. Das ist eine Aufbewahrungsregel, kein Mengenlimit. Ein späterer Bedarf wird neu angefordert. Liegt eine persönliche Abnahme nach dem Ablauf, muss ihr passender Kandidat bis dahin anderweitig gesichert oder gezielt neu gebaut werden; die verfügbaren Bytes nicht nur behaupten.
 
+### Gezielte Reviewdateien
+
+Für erforderliche unabhängige Abnahmen gilt der [Zustellvertrag](dev-rules/CI_CONTRACT.md#zustellung-an-einen-unabhängigen-reviewer).
+Der aktuelle Package-Runner stellt mit `evidence.mode=review` die Logs und die von
+den gewählten Modulen bereitgestellten Diagnosedateien zusammen. Der Paketplan
+hat keinen Dateifilter. Vor Wahl dieses Wegs prüfen, welche Dateien tatsächlich
+im Download landen. Für gezielt lokal erzeugte PNGs oder wenn das Modul mehr
+Material liefern würde, die erforderlichen Dateien auf dem separaten Reviewbranch
+bereitstellen. Private lokale Laufwerkspfade werden dadurch für den Reviewer
+entbehrlich. Ein konkreter Reviewbedarf löst keine allgemeinen CI-Uploads aus.
+
 ## Lokale Arbeitsablage
 
 Die im Sheet gespeicherte Codex-Wurzel wird in den Auftrag übernommen; neue eigene Daten bleiben darunter. Bei aktivierter Bereinigungsoption beauftragt der kopierte Sheet-Prompt die Bereinigung, sobald eigene Änderungen gesichert und erforderliche Reviewdaten übergeben sind. Außerhalb des Sheets gilt der tatsächliche Auftrag. Fremde Checkouts und ungesicherte Änderungen bleiben erhalten. Dies konkretisiert [HIL-F01](https://github.com/venomenon328/picross/pull/501#issuecomment-6601103689); Full Access bleibt unverändert. Historisch blockierte Altpfade werden nicht als bereits bereinigt gemeldet.
 
 ## Sheet und Abnahme
 
-[Entwicklungssheet](workflow/Entwicklungsworkflow_Cheat-Sheet.html): Offline-Datei mit Projekten, Browserpersistenz, Sicherungsexport, geprüftem JSON-Import und aktiver bedingter Mergeoption. Einstellungen sind browser-/originabhängig; ein anderer Browser oder verschobene lokale Datei kann einen Sicherungsimport benötigen. JSON-Import ändert keine Merge-/Bereinigungsfreigabe oder lokale Arbeitswurzel.
+[Entwicklungssheet](workflow/Entwicklungsworkflow_Cheat-Sheet.html): Offline-Datei mit Projekten, Browserpersistenz, wählbarer Darstellung (System/Hell/Dunkel), Sicherungsexport, geprüftem JSON-Import und aktiver bedingter Mergeoption. Einstellungen sind browser-/originabhängig; ein anderer Browser oder verschobene lokale Datei kann einen Sicherungsimport benötigen. JSON-Import ändert keine Merge-/Bereinigungsfreigabe oder lokale Arbeitswurzel.
 
 Squash-Merge nur auf passenden Nutzerauftrag. Review bezieht sich auf aktuellen Head und tatsächliche Package-CI; bei Befunden gilt der beauftragte Review-/Nacharbeitsumfang, bei erfüllter bedingter Freigabe direkt Merge. Ein Merge startet den Main-Kern, kein Deployment. Release und manuelles Deployment brauchen eigenen Auftrag gemäß [Projektprofil](PROJECT_PROFILE.md). Der Implementierer liefert ein getrenntes Selbstreview; für #517 bleibt ein unabhängiges Review vor Merge erforderlich.
 

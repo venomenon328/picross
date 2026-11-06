@@ -3,8 +3,9 @@
 ## Aktueller Stand
 
 Das Repository verwendet den ausdrücklich beauftragten lokalen Fork
-`0.2.0-rc.3`: Grundlage [#517](https://github.com/venomenon328/picross/issues/517),
-Quellenbindung der Sheet-Prompts in [#521](https://github.com/venomenon328/picross/issues/521).
+`0.2.0-rc.4`: Grundlage [#517](https://github.com/venomenon328/picross/issues/517),
+Quellenbindung der Sheet-Prompts in [#521](https://github.com/venomenon328/picross/issues/521),
+schrittbezogene Übergaben und zugängliche Reviewbelege in [#525](https://github.com/venomenon328/picross/issues/525).
 [WORKFLOW](dev-rules/WORKFLOW.md), CI_CONTRACT, WORKSPACE, HANDOFF und Modellregeln
 bilden das portable Paket unter `docs/dev-rules/`. Projektwerte und Fachrouting
 stehen im [Projektprofil](PROJECT_PROFILE.md), die technische CI-Adaption in
