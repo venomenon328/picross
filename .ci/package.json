@@ -1,9 +1,9 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/525",
-  "package": "EW2",
+  "issue": "https://github.com/venomenon328/picross/issues/529",
+  "package": "EW3",
   "modules": [],
-  "purpose": "Offline-Entwicklungssheet und lokale Workflowverträge. Der Kern prüft Plan und Dokumentintegrität. Einmalig alle Auftragsvarianten samt Import, Branchwahl, Sicherungen und Darstellung im Browser prüfen.",
+  "purpose": "Eigene Wünsche nach dem Review vorbereiten und den Folgeauftrag an die veröffentlichte Entscheidung oder den befundtragenden Bericht binden. ANZ-Importfehler, Paketnachtrag im selben PR, getrennte Prüfzuständigkeiten, alte Sicherungen und den echten Befundweg einmalig im Browser prüfen. Der Kern prüft Plan und Dokumentintegrität.",
   "omitted": "Keine Änderungen an Spiel, Rätselproduktion, CI-Code oder Fachmodulen. Keine Zusatzmodule. Der bestehende Pfadklassifikator entscheidet über den Windows-Kernbuild.",
   "test_changes": [],
   "core_change": null,
