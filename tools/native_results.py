@@ -120,7 +120,7 @@ def validate_catalog_cases(report):
                 or any(r[k] != int(r[k]) for k in ('width', 'height', 'columns'))
                 or r['ui_scale'] != 1.25 or r['gap'] != 15
                 or r['height'] != math.floor(r['width']*9/16+0.5)
-                or r['columns'] != min(6, max(1, math.floor(
+                or r['columns'] != min(3, max(1, math.floor(
                     (r['available']+r['gap'])/(r['minimum_width']+r['gap']))))):
             raise ValueError('Invalid KE native resize geometry')
     middle, large, below, above = samples[1:]

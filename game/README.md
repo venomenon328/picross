@@ -65,6 +65,12 @@ offener Kreis und „Neu“, kleiner Stift und „Begonnen“, Haken und „Gel�
 Auch die Fußzeile öffnet dasselbe Blatt. Alle Karten einer Ansicht verwenden
 identische, anhand der vollständigen Metadaten gemessene Breiten. Bei wenig Platz
 erscheinen weniger Spalten; Schrift und Bildraum werden dafür nicht verkleinert.
+Jede Buchhälfte zeigt höchstens zwölf Karten in bis zu drei Spalten. Bei
+2560×1440/UI100 passen drei Spalten, bei 1920×1080/UI100 zwei; höhere UI-Skalierung
+oder weniger Papierfläche kann die Zahl weiter begrenzen. Jede Zeile, auch eine
+letzte mit nur einer oder zwei Karten, steht für sich mittig auf ihrer Hälfte.
+Beide Hälften scrollen unabhängig und behalten ihre Position beim Umbruch
+innerhalb der jeweils erreichbaren Grenzen.
 Verdiente Reveals und Stiftsymbole bleiben lokal geglättet.
 Aktueller Vertrag: [Kataloggestaltung](../docs/CATALOG_PRESENTATION.md).
 

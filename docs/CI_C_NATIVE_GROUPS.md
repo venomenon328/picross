@@ -26,6 +26,15 @@ Produktgarantien und paketbezogene Abnahmen bestehen unabhängig vom CI-Ausführ
 | `native.graphics` | VS2/HF/HN/HS, 18er-Geometriestichprobe, fünf kompakte Renderstufen mit 66 Frames, aktuelle ZS2-Bewegungsorakel und PERF-B |
 | `native.export` | Regulärer Inhaltsimport, Windows-Debugexport, externe PCK-Prüfung; auf Windows zusätzlich tatsächliche EXE-Starts |
 
+KL-A / #523 ergänzt im vorhandenen `catalog/pages`-Prozess eine kleine
+synthetische Zeilen-/Geometrieprobe: drei bzw. zwei Referenzspalten, selbständig
+zentrierte volle/angebrochene Zeilen für 1/2/5/11/12/13/23/24 Karten, gezielte
+UI-/Seitenverhältnis-Fallbacks, gleiche Karten-/Hitboxbudgets und erhaltene
+IDs/Scrollstände beim Umbruch sowie rechte Öffnung/Reset. Keine neue Prozess- oder
+Bildfamilie. Die KE-Kapazitätsprüfung im unabhängigen Reader berücksichtigt
+dieselbe Obergrenze drei. Einmalige gerenderte KL-Einführungsbelege stehen am
+gebundenen PR, nicht als neue dauerhafte Galerie im Modul.
+
 Der Windowsbau des **CI-Kerns** außerhalb reiner Dokument-/Rätselinhaltsänderungen
 ist kein automatisch ausgewähltes
 `native.export` und behauptet dessen zusätzlichen Funktionsnachweis nicht. Bei

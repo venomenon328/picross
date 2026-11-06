@@ -8,6 +8,7 @@ const BookButton = preload("res://ui/book_button.gd")
 const BookChoice = preload("res://ui/book_choice.gd")
 const PaperStyle = preload("res://ui/book_style.gd")
 const Card = preload("res://ui/catalog_card.gd")
+const CatalogGrid = preload("res://ui/catalog_grid.gd")
 const Preference = preload("res://model/catalog_preference.gd")
 const PAGE_SIZE: int = 24
 signal opened(id: String)
@@ -31,7 +32,7 @@ var feedback: Label
 var empty_message: Label
 var all_button: Button
 var scroll: ScrollContainer
-var grid: GridContainer
+var grid: CatalogGrid
 var previous_button: BookButton
 var next_button: BookButton
 var page_label: Label
@@ -106,8 +107,8 @@ func _ready() -> void:
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(scroll)
-	grid = GridContainer.new()
-	grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	grid = CatalogGrid.new()
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.add_theme_constant_override("h_separation", 16)
 	grid.add_theme_constant_override("v_separation", 14)
 	scroll.add_child(grid)
@@ -372,18 +373,25 @@ func _add_card(id: String) -> void:
 		repair_buttons[id] = repair
 	_diagnose(card,id)
 
+func _available_card_width(half: ScrollContainer) -> float:
+	# Keep the same safe band whether the scrollbar is visible or not.
+	return maxf(1, half.size.x - half.get_v_scroll_bar().get_combined_minimum_size().x - 2*ui_scale)
+
+func _shared_card_width() -> float:
+	return _available_card_width(scroll)
+
 func _layout_cards() -> void:
 	if grid == null: return
 	var gap: int = roundi(12 * ui_scale)
 	grid.add_theme_constant_override("h_separation", gap)
 	grid.add_theme_constant_override("v_separation", gap)
 	# Reserve the actual scrollbar width even before the first container sort.
-	var available: float = maxf(1, scroll.size.x - scroll.get_v_scroll_bar().get_combined_minimum_size().x - 2*ui_scale)
+	var available: float = _shared_card_width()
 	# KU-A: choose columns from the complete measured single-line metadata.
 	var minimum_width: float = choices[0].minimum_card_width(ui_scale) if not choices.is_empty() else 280*ui_scale
-	var capacity: int = maxi(1, floori((available + gap) / (minimum_width + gap)))
-	grid.columns = maxi(1, mini(capacity, choices.size()))
-	var card_width: float = minf(minimum_width+16*ui_scale, floorf((available-(capacity-1)*gap)/capacity))
+	var capacity: int = clampi(floori((available + gap) / (minimum_width + gap)), 1, 3)
+	grid.arrange(capacity, _available_card_width(scroll))
+	var card_width: float = maxf(minimum_width, minf(minimum_width+8*ui_scale, floorf((available-(capacity-1)*gap)/capacity)))
 	for node: Node in find_children("*", "Label", true, false):
 		if node.has_meta("base_font"): node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
 	for node: Node in find_children("*", "Button", true, false):
