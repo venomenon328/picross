@@ -1,5 +1,13 @@
 # Änderungen am Regelpaket
 
+## 0.2.0-rc.6 — 2026-11-06
+
+Picross #529 bindet einen Umsetzungsauftrag nach Eigentümerfeedback an die
+veröffentlichte Paketentscheidung, auch bei einem Nachtrag im selben PR.
+Die Vorbereitung liest die publizierten Kennungen mit Bedeutung und
+Zuständigkeit zurück. Technische Nachweise und unabhängige Abnahmen haben im
+Sheet getrennte Aufträge.
+
 ## 0.2.0-rc.5 — 2026-11-06
 
 Picross #529 ergänzt die Vorbereitung eigener Änderungswünsche nach einem
