@@ -11,6 +11,7 @@ var measured_dpi: int = 96
 func _init(owner: Window) -> void:
 	window = owner
 	window.unresizable = true
+	window.maximize_disabled = true
 	context()
 
 func context() -> Dictionary:
@@ -32,6 +33,7 @@ func observed() -> Dictionary:
 
 func apply(selection: Dictionary) -> Dictionary:
 	window.unresizable = true
+	window.maximize_disabled = true
 	# Switching back first obtains the actual decorated geometry on this monitor.
 	if selection.mode == "window":
 		window.mode = Window.MODE_WINDOWED
