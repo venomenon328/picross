@@ -208,12 +208,12 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 
 ## 4. Visuelle Ausarbeitung
 
-**BTI-A · freigegebene Folgegestaltung, noch nicht umgesetzt:** Die drei
+**BTI-A · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
 großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`
-werden nach [BTI](VIEW_TITLE_ART.md) zu reinen organisch-kalligrafischen
-Schriftzugbildern ohne umgebende Illustrationen. Die Titel zentrieren sich
+sind nach [BTI](VIEW_TITLE_ART.md) reine organisch-kalligrafische
+Schriftzugbilder ohne umgebende Illustrationen. Die Titel zentrieren sich
 innerhalb ihrer jeweiligen Buchhälfte; die bestehende Informationsnavigation
-wandert an den sicheren unteren Papierrand. Die übrigen Font-/Buchrollen und
+liegt am sicheren unteren Papierrand. Die übrigen Font-/Buchrollen und
 die Kapitel-/Gruppenüberschriften bleiben erhalten.
 [Freigabe #533](https://github.com/venomenon328/picross/issues/533).
 

@@ -1,0 +1,20 @@
+BTI-C-1 / 2026-11-06 / picross #533
+
+Three original title drawings generated with the built-in OpenAI image_gen
+tool during the owner's expressly commissioned BTI-A implementation.
+Text and style brief: project specification docs/VIEW_TITLE_ART.md.
+No uploaded third-party image or font was used. Help and settings use the
+newly generated titles as visual style references. No TTF rasterization.
+These are generated outputs, not claimed public-domain assets, exclusive
+copyrights or hand-drawn works by a named human artist. No separate third-party
+asset license was supplied. Use in this project is the commissioned purpose;
+this notice makes no broader legal warranty or grant to third parties.
+
+The delivered PNGs are the unmodified generated originals. Pixel dimensions,
+byte counts and SHA-256 are in manifest.json. No manual retouching, alpha
+replacement, cropping or resizing was performed. The tool supplied RGBA;
+Godot imports losslessly with mipmaps and fits the visible alpha bounds.
+The tool's backend model version, seed and sampling settings were not exposed.
+See docs/design/view_titles/STYLE.md for the reusable grammar and exact prompts.
+The drawings are implementation candidates pending BTI-A-R01 and BTI-A-M01,
+not an owner-approved replacement inferred from the earlier concept sketch.

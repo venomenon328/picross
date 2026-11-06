@@ -1,0 +1,43 @@
+{
+  "format": "picross-view-title-art-v1",
+  "style": "BTI-C-1",
+  "created": "2026-11-06",
+  "tool": "Built-in image_gen.imagegen",
+  "model": null,
+  "version": null,
+  "seed": null,
+  "parameters": {
+    "transparent_background": true
+  },
+  "processing": "Original RGBA PNG bytes copied without retouching, cropping or resampling; lossless Godot import with mipmaps; runtime proportional fit of alpha bounds.",
+  "approval": "Implementation candidates; BTI-A-R01 and owner BTI-A-M01 remain pending.",
+  "assets": [
+    {
+      "file": "catalog.png",
+      "title": "Rätselkatalog",
+      "width": 2172,
+      "height": 724,
+      "bytes": 1123776,
+      "sha256": "fb72a42595b779daaa9cbaf531c0efe276e8976a0afa82aea4d5cfe6bdae914a",
+      "source": "exec-9364064d-4f49-4b0f-b2a5-671cd9fd7446.png"
+    },
+    {
+      "file": "help.png",
+      "title": "Hilfe",
+      "width": 1644,
+      "height": 957,
+      "bytes": 1108805,
+      "sha256": "d2d9c56d8f6b87c046e36d58217458c36b78f8e385c0b00f697981c388361bec",
+      "source": "exec-12c970b4-16f8-4a5c-b49b-f51b12331d18.png"
+    },
+    {
+      "file": "settings.png",
+      "title": "Einstellungen",
+      "width": 2172,
+      "height": 724,
+      "bytes": 961405,
+      "sha256": "131920fe53a08a697b9a42725d8ab7bcaca9df3e5bac2a3531082b1a3bf20892",
+      "source": "exec-76e48789-d729-4033-9fa1-d1497f415f0c.png"
+    }
+  ]
+}

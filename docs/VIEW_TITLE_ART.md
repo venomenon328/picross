@@ -1,6 +1,6 @@
 # BTI · Bildbasierte Hauptüberschriften der Buchansichten
 
-**Freigegebener Sollstand vom 06.11.2026 · [Issue #533](https://github.com/venomenon328/picross/issues/533) · Paket BTI-A · Produktimplementierung und Abnahme ausstehend.** Die in der Ideendiskussion verwendete Vergleichstafel war ausschließlich eine Stilreferenz: **Stil C ohne beigefügte Blätter, Unterstreichungen, Schilder oder andere Bildmotive**. Sie ist kein finales oder bereits eingechecktes Produktasset. Aus einer freigegebenen Gestaltungsrichtung wird kein Beleg einer tatsächlichen nativen Darstellung.
+**Freigegebener Sollstand vom 06.11.2026 · [Issue #533](https://github.com/venomenon328/picross/issues/533) · Paket BTI-A · auf dem Arbeitsbranch implementiert, R01/M01 vor Merge offen.** Die in der Ideendiskussion verwendete Vergleichstafel war ausschließlich eine Stilreferenz: **Stil C ohne beigefügte Blätter, Unterstreichungen, Schilder oder andere Bildmotive**. Sie ist kein finales Produktasset. Die tatsächlichen drei Originale, Prompts und Herkunft bindet jetzt die [Stilquelle BTI-C-1](design/view_titles/STYLE.md); aktuelle technische Nachweise stehen in [Draft-PR #534](https://github.com/venomenon328/picross/pull/534). Aus einer freigegebenen Gestaltungsrichtung wird keine persönliche Sichtabnahme.
 
 ## BTI-D01 · Rolle und exakte Texte
 
@@ -12,7 +12,7 @@
 
 Alle drei werden **als lokal gebündelte, eigens gezeichnete transparente Bilder** dargestellt, nicht als zur Laufzeit mit einem Font gesetzter Schriftzug. Keine KI-Anfrage im Spieler und keine Abhängigkeit von einem externen Dienst. Der exakte Text wird als semantischer UI-/Accessibilityname und bei fehlender Bildressource als gut lesbarer Textfallback vorgehalten; keine doppelte sichtbare Beschriftung im Normalfall. Für die Hilfe darf der interne funktionale Begriff „Spielerhilfe“ bleiben; ausschließlich die große sichtbare Überschrift lautet „Hilfe“.
 
-**Begrenzte typografische Vorrangregel:** Nach erfolgreicher BTI-A-Integration ersetzen diese Bilder an *genau diesen drei Stellen* die jeweiligen bisherigen Bakso-/Fraunces-Labels aus [HZ-D01/D08](HAND_DRAWN_UI.md), [ANZ](DISPLAY_SETTINGS.md), [HIL](BOOK_INTEGRATION.md) und dem [Gestaltungskonzept](DESIGN_CONCEPT.md). Bis dahin sind deren derzeit integrierte sichtbare Fonts weiterhin der Iststand. Unberührt bleiben die Bakso-Gruppentitel „Anzeige“ und „Rätselansicht“ samt Titellaschen, sonstige Kachel-/Arbeitsblatt- und Abschlussüberschriften, Hilfe-Kapitelüberschriften in Fraunces, Pangolin-Normaltext, Plex-Dialog-/Fallbacktext sowie Delight-Hinweiszahlen. Keine neue allgemeine Text- oder Fontoption.
+**Begrenzte typografische Vorrangregel:** Auf dem BTI-A-Arbeitsbranch ersetzen diese Bilder an *genau diesen drei Stellen* die jeweiligen bisherigen Bakso-/Fraunces-Labels aus [HZ-D01/D08](HAND_DRAWN_UI.md), [ANZ](DISPLAY_SETTINGS.md), [HIL](BOOK_INTEGRATION.md) und dem [Gestaltungskonzept](DESIGN_CONCEPT.md). Die bisherigen Labels bleiben lesbare Ressourcenfallbacks. Unberührt bleiben die Bakso-Gruppentitel „Anzeige“ und „Rätselansicht“ samt Titellaschen, sonstige Kachel-/Arbeitsblatt- und Abschlussüberschriften, Hilfe-Kapitelüberschriften in Fraunces, Pangolin-Normaltext, Plex-Dialog-/Fallbacktext sowie Delight-Hinweiszahlen. Keine neue allgemeine Text- oder Fontoption.
 
 ## BTI-D02 · Die freigegebene Zeichenhand
 
