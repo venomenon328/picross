@@ -170,6 +170,7 @@ func run() -> void:
 		check(app.album.visible and app.session == null, "empty/error settings and return usable")
 		check(save_bytes().is_empty(), "empty/error path writes no saves")
 	elif mode == "pages":
+		await preload("res://tests/catalog_layout_cases.gd").run(self)
 		await pages()
 		await sorting()
 	elif mode == "information":
@@ -1270,7 +1271,7 @@ func compact_buttons() -> void:
 		var gap: float = 12*u
 		var available: float = app.album.scroll.size.x-app.album.scroll.get_v_scroll_bar().get_combined_minimum_size().x-2*u
 		var spare: float = available-columns*minimum-(columns-1)*gap
-		check(columns >= 1 and spare >= 0 and (columns >= mini(12,app.choices.size()) or spare < minimum+gap), "KB responsive columns fill the available book half")
+		check(columns >= 1 and columns <= 3 and spare >= 0 and (columns == 3 or spare < minimum+gap), "KB responsive columns fill the available book half up to three")
 		check(app.album.right_grid.columns == columns and app.album.right_grid.size.x <= app.album.right_scroll.size.x and app.album.right_scroll.scroll_horizontal == 0, "KB right half shares responsive columns without overflow")
 		kb_measurements.append({"surface":spec,"columns":app.album.grid.columns,"widths":widths,"interiors":interiors})
 		await shot("compact-%d-ui%d" % [spec[0],spec[2]*100])
