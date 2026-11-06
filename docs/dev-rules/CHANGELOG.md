@@ -1,5 +1,15 @@
 # Änderungen am Regelpaket
 
+## 0.2.0-rc.3 — 2026-11-06
+
+Lokale Weiterentwicklung für Picross #521, kein zentraler Release.
+HANDOFF samt Schema als verbindliche Repoquelle präzisiert; Sheet-Prompts
+transportieren Auftragsdaten und Freigaben statt Formatvordruck und Dauerregeln.
+Fehlende Vertragsquellen werden nicht durch einen Promptfallback ersetzt.
+Persönliche Abnahme und deaktivierte Abschlussbereinigung im zuständigen
+Verfahrensvertrag konkretisiert. Übergabeformat v1 und seine Feldstruktur bleiben
+unverändert; bestehende Plausibilitätsprüfungen sind vollständig benannt.
+
 ## 0.2.0-rc.2 — 2026-11-05
 
 Lokale Konsolidierung im selben beauftragten Picross-Fork (#517), kein zentraler Release.

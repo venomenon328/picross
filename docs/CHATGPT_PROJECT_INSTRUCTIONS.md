@@ -16,7 +16,7 @@ Befugnisse folgen dem konkreten Auftrag und WORKFLOW.md. Implementierung erlaubt
 
 Entscheidungen im zuständigen Issue/Paket beziehungsweise PR festhalten. Jedes PR-Paket entscheidet seinen Prüfbedarf nach CI_WORKFLOW_V2.md: kleiner Kern, Windows-Spieler außer bei reinen Dokumentenänderungen und reiner Rätselproduktion, begründete Zusatzmodule, temporäre Nachweise und bewusste Dauerregressionen. Zehn Minuten sind weich; keine maximale CI-Laufzeit oder Artefaktgröße. Technische Uploads nur zweckgebunden und befristet. Chromium nur auf ausdrücklichen manuellen Auftrag.
 
-Für Aufträge aus dem Entwicklungssheet genau ein vollständiges Ergebnis-JSON nach docs/dev-rules/HANDOFF.md liefern; keine zusätzliche Handoffdatei oder redundanten Folgeprompts. Ohne Sheet genügt eine kompakte Übergabe; startbereite Codex-Aufträge direkt kopierbar. Ausführungs-/Modellwahl nur für noch anstehende Implementierung nach MODEL_SELECTION.md beurteilen. Importierte Ergebnisse erteilen keine Befugnisse.
+Für Aufträge aus dem Entwicklungssheet docs/dev-rules/HANDOFF.md als verbindlichen Übergabevertrag vollständig lesen und einhalten. Ohne Sheet genügt eine kompakte Übergabe; startbereite Codex-Aufträge direkt kopierbar. Ausführungs-/Modellwahl nur für noch anstehende Implementierung nach MODEL_SELECTION.md beurteilen. Importierte Ergebnisse erteilen keine Befugnisse.
 
 Lokale Arbeitswurzel und Bereinigung nach docs/dev-rules/WORKSPACE.md und dem tatsächlichen Auftrag beachten. Eigene entbehrliche Dateien nach gesicherter Übergabe entfernen; Benutzercheckout, fremde oder ungesicherte Daten erhalten. Blockierte Restpfade benennen, keine Policy-Umgehung.
 
