@@ -50,6 +50,19 @@ Auf der **vorhandenen linken Buch-Einstellungsseite** erscheint ein Abschnitt �
 
 Die Auswahl bleibt über Buchseiten, Hilfe-/Katalog-/Arbeitsrückkehr konsistent. Keine zusätzliche Einstellungsseite oder generelle Schrift-/Buttonneugestaltung. Dialog, Bestätigung und Fehlinformation müssen innerhalb des aktuellen Viewports erreichbar sein.
 
+Die [Eigentümer-Nacharbeit ANZ-A-N01](https://github.com/venomenon328/picross/issues/527#anz-a-n01)
+gliedert die vorhandene Seite in **Anzeige**, **Rätselansicht** und **Beenden**.
+UI-Skalierung gehört zu Anzeige, die vorhandenen Rätseloptionen zu Rätselansicht.
+Eine gemeinsame linksbündige Bedienungsspalte ist auf höchstens 640 × UI und die
+sichere Papierbreite begrenzt; bei 1080p/720p und UI100/125 bleibt alles vertikal
+erreichbar. HZ-Trefferflächen, vollständige Popupwerte und Fehlerwege bleiben.
+Im Ruhezustand entfallen die zusätzliche Clientflächenzeile und die positive
+Speichermeldung. Im Vollbild zeigt das deaktivierte Größenfeld direkt die aktuelle
+Desktopauflösung; der gemerkte Fensterpreset bleibt unverändert. Countdown,
+Rücknahme-, Fehler- und Fallbackhinweise samt expliziter Übernahme bleiben sichtbar.
+N01-T01 liefert neue gezielte Windowsoriginale; unabhängiges N01-R02 bleibt vor
+Merge erforderlich. R01/W01 gelten nur für ihren früheren Head, M01 vor Release.
+
 Ein Wechsel wird sofort **probeweise** wirksam und verlangt innerhalb von **15 Sekunden** eine explizite Bestätigung. In der Vorschau keine verketteten zweiten Moduswechsel. Abbrechen oder Timeout stellt den **letzten bestätigten funktionierenden** Zustand wieder her; auch bei fehlgeschlagener Anwendung muss ein sichtbar benutzbarer Zustand erreichbar bleiben. Ein bloßer Fokuswechsel/Alt-Tab darf nicht automatisch als Annahme gelten. Ein Prozessabbruch vor Bestätigung lässt die alte persistierte Auswahl bestehen. Erst ausdrücklich bestätigte und wirklich angewandte Änderungen werden geschrieben.
 
 Die native Windowsfassung erhält die eigenständige versionierte, streng validierte Präferenzdatei `user://p1/display-preference.json` (Modus sowie zuletzt gewählter Fensterpreset). Sie wird fehlerbewusst/atomar gespeichert; unbekannte Versionen, ungültige Presets, doppelte/überzählige Schlüssel und korrupte Daten dürfen weder einen unsichtbaren Start verursachen noch echte User-Saves beschädigen. Fehler beim Schreiben sind sichtbar, die vorherige gültige Datei wird nicht zerstört oder die Änderung nicht fälschlich als dauerhaft gesichert angezeigt. Sie ist **nicht Teil von Save-Schema 1**, `user://p1/saves/`, Browser-IDBFS oder des bestehenden Katalogpräferenzformats; UI-Skalierung und Zellanimationen werden dadurch nicht zusätzlich dauerhaft gespeichert.

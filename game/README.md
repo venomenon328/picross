@@ -180,6 +180,11 @@ in den aktuellen Monitorarbeitsbereich passt. Nicht passende Größen sind deakt
 Vollbild verwendet die aktuelle Desktopauflösung, zeigt diese lesbar an und erhält
 den letzten Fensterpreset für die Rückkehr. Die Windows-Desktopauflösung wird nicht geändert.
 
+Die Einstellungen sind in **Anzeige**, **Rätselansicht** und **Beenden** gegliedert.
+UI-Skalierung steht unter Anzeige. Die kompakten linksbündigen Controls bleiben
+bei knapper Höhe durch vertikales Scrollen erreichbar. Das deaktivierte Größenfeld
+zeigt im Vollbild die Desktopauflösung; im Fenster den gewählten Preset.
+
 Jede Änderung wird sofort für **15 Sekunden** ausprobiert. **Beibehalten** speichert;
 **Abbrechen**, Escape oder Ablauf stellt die vorherige funktionierende Anzeige wieder her.
 Alt-Tab bestätigt nichts. Bei nicht verfügbarem Modus oder verändertem Monitor hilft

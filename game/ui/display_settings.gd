@@ -12,7 +12,6 @@ var app: Control
 var controller: Controller
 var mode_choice: OptionButton
 var size_choice: OptionButton
-var resolution: Label
 var feedback: Label
 var save_current: Button
 var shield: Control
@@ -28,7 +27,6 @@ func configure(owner: Control, control: Controller) -> void:
 	app = owner
 	controller = control
 	name = "display-settings"
-	add_child(app.label("Anzeige",26))
 	add_child(app.label("Anzeigemodus",16))
 	mode_choice = Choice.new()
 	mode_choice.name = "display-mode"
@@ -47,9 +45,6 @@ func configure(owner: Control, control: Controller) -> void:
 		app._cancel_interaction()
 		controller.request("window",Preference.PRESETS[index]))
 	add_child(size_choice)
-	resolution = app.label("",16)
-	resolution.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	add_child(resolution)
 	feedback = app.label("",16)
 	feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(feedback)
@@ -88,15 +83,15 @@ func refresh() -> void:
 	var choices: Array[String] = Policy.available(controller.backend.context())
 	mode_choice.select(Preference.MODES.find(state.mode))
 	size_choice.select(Preference.PRESETS.find(state.preset))
+	size_choice.text = size_choice.get_item_text(size_choice.selected)
+	if state.mode != "window":
+		var desktop: Vector2i = controller.backend.context().desktop
+		size_choice.text = "%d × %d (Desktop)" % [desktop.x,desktop.y]
 	mode_choice.disabled = busy
 	size_choice.disabled = busy or state.mode != "window"
 	for index: int in range(Preference.PRESETS.size()):
 		size_choice.set_item_disabled(index,Preference.PRESETS[index] not in choices)
-	var actual: Dictionary = controller.backend.observed()
-	resolution.text = "Clientfläche: %d × %d Pixel" % [actual.client.x,actual.client.y]
-	if state.mode != "window": resolution.text += " · aktuelle Desktopauflösung"
-	else: resolution.text += " · nur Größen mit Platz für Rahmen und Taskleiste"
-	feedback.text = controller.message
+	feedback.text = "" if controller.message == "Anzeige gespeichert." else controller.message
 	feedback.visible = not feedback.text.is_empty()
 	save_current.visible = not busy and state != controller.saved and state.mode in Preference.MODES
 	var was_visible: bool = shield.visible

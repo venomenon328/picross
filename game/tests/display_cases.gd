@@ -121,9 +121,60 @@ static func run(r: SceneTree) -> void:
 	settle(control)
 	r.check(control.active.mode == "borderless" and FileAccess.get_file_as_bytes(path) == saved_bytes,"ANZ: monitor fallback remains transient and visible")
 	var panel := Settings.new()
-	r.app.settings_panel.add_child(panel)
+	r.app.display_group.add_child(panel)
+	r.app.display_group.move_child(panel,1)
+	r.app.display_settings = panel
 	panel.configure(r.app,control)
-	r.check(panel.size_choice.disabled and panel.resolution.text.contains("1280 × 720"),"ANZ: fullscreen size disabled; observed resolution shown")
+	r.check(panel.size_choice.disabled and panel.size_choice.text == "1280 × 720 (Desktop)" and control.active.preset == "1920x1080","ANZ N01: desktop in disabled size field without changing remembered preset")
+	r.check(panel.feedback.visible and panel.save_current.visible,"ANZ N01: temporary fallback keeps its explanation and explicit acceptance")
+	control.request("borderless",control.active.preset)
+	settle(control)
+	control.confirm()
+	r.check(not panel.feedback.visible and not panel.save_current.visible,"ANZ N01: successful acceptance leaves no permanent success text")
+	control.request("window","1280x720")
+	settle(control)
+	control.cancel()
+	settle(control)
+	r.check(panel.feedback.visible,"ANZ N01: rollback feedback is not suppressed")
+	backend.geometry = Server.new().geometry
+	control.request("window","1920x1080")
+	settle(control)
+	control.confirm()
+	r.check(panel.size_choice.text == "1920 × 1080" and not panel.size_choice.disabled,"ANZ N01: window field restores preset after fullscreen label")
+	storage.fail_write = true
+	control.request("borderless",control.active.preset)
+	settle(control)
+	control.confirm()
+	settle(control)
+	r.check(panel.feedback.visible and panel.feedback.text.contains("nicht gespeichert"),"ANZ N01: storage error remains visible after failed acceptance")
+	storage.fail_write = false
+	r.app.show_information("settings")
+	for size: Vector2i in [Vector2i(1920,1080),Vector2i(1280,720)]:
+		r.surface.size = size
+		r.app.size = Vector2(size)
+		for scale: float in [1.0,1.25]:
+			r.app.set_ui_scale(scale)
+			await r.frames()
+			var groups: Array = [r.app.display_group,r.app.settings_panel.get_node("puzzle-options"),r.app.settings_panel.get_node("exit-options")]
+			r.check(groups[0].get_child(0).text == "Anzeige" and groups[1].get_child(0).text == "Rätselansicht" and groups[2].get_child(0).text == "Beenden" and r.app.ui_scale_button.get_parent() == groups[0],"ANZ N01: ordered sections and UI scaling under display")
+			var column: Rect2 = r.app.settings_panel.get_global_rect()
+			r.check(column.size.x <= 640*scale+1 and column.size.x <= r.app.info_scroll.size.x and r.app.info_scroll.get_h_scroll_bar().max_value <= r.app.info_scroll.size.x,"ANZ N01: compact column fits safe paper without horizontal scrolling")
+			for item: Control in [panel.mode_choice,panel.size_choice,r.app.ui_scale_button,r.app.view_choice,r.app.clue_reset_button,r.app.clue_completion_toggle,r.app.animation_toggle]:
+				r.check(absf(item.global_position.x-column.position.x) < 1 and item.size.x <= column.size.x+1 and item.size.y >= 44*scale,"ANZ N01: aligned compact HZ target "+str(item.name))
+			var quit_button: Button = r.caption_button(groups[2],"Beenden")
+			r.app.info_scroll.ensure_control_visible(quit_button)
+			await r.frames()
+			r.check(r.app.info_scroll.get_global_rect().grow(1).encloses(quit_button.get_global_rect()),"ANZ N01: bottom action reachable by vertical scroll "+str(r.app.info_scroll.get_global_rect())+" / "+str(quit_button.get_global_rect()))
+			r.app.info_scroll.scroll_vertical = 0
+			await r.frames()
+			r.click(panel.mode_choice)
+			await r.frames()
+			var popup: PopupMenu = panel.mode_choice.get_popup()
+			r.check(popup.visible and Rect2i(Vector2i.ZERO,size).encloses(Rect2i(popup.position,popup.size)),"ANZ N01: opened mode popup fits viewport")
+			r.app.show_information("help")
+			await r.frames()
+			r.check(not popup.visible,"ANZ N01: help transition dismisses popup")
+			r.app.show_information("settings")
 	control.request("borderless",control.active.preset)
 	settle(control)
 	for size: Vector2i in [Vector2i(1280,720),Vector2i(3840,2160),Vector2i(1920,1200)]:
@@ -137,6 +188,7 @@ static func run(r: SceneTree) -> void:
 			r.check(safe.encloses(panel.card.get_global_rect()) and panel.accept.custom_minimum_size.y == 44*scale,"ANZ: safe confirmation and HZ targets "+str(size)+" UI "+str(scale))
 	control.cancel()
 	settle(control)
+	r.app.display_settings = null
 	panel.free()
 	control.free()
 	DirAccess.remove_absolute(path)
@@ -145,3 +197,4 @@ static func run(r: SceneTree) -> void:
 	r.surface.size = Vector2i(1920,1080)
 	r.app.size = Vector2(1920,1080)
 	r.app.set_ui_scale(1.0)
+	r.app.return_to_work()
