@@ -1,0 +1,408 @@
+{
+  "accept": [
+    315.0,
+    363.0,
+    650.0,
+    55.0
+  ],
+  "active": {
+    "mode": "window",
+    "preset": "1280x720"
+  },
+  "adapter": "NVIDIA GeForce RTX 3070",
+  "animation": [
+    218.907470703125,
+    782.685180664063,
+    745.0,
+    55.0
+  ],
+  "applying": false,
+  "book_state": 4,
+  "borderless": false,
+  "cancel": [
+    315.0,
+    434.0,
+    650.0,
+    55.0
+  ],
+  "card": [
+    290.0,
+    206.0,
+    700.0,
+    308.0
+  ],
+  "card_visible": false,
+  "catalog_cards": [],
+  "catalog_info": [
+    [
+      650.0,
+      632.0,
+      193.0,
+      55.0
+    ]
+  ],
+  "client": [
+    1280,
+    720
+  ],
+  "desktop": [
+    2560,
+    1440
+  ],
+  "dpi": 96,
+  "feedback": "Vorherige Anzeige wiederhergestellt.",
+  "feedback_box": [
+    218.907470703125,
+    420.685180664063,
+    745.0,
+    27.0
+  ],
+  "feedback_visible": true,
+  "fields": [
+    {
+      "choice": [
+        374.907470703125,
+        462.685180664063,
+        521.0,
+        55.0
+      ],
+      "focus_tip": [],
+      "help": [
+        908.907470703125,
+        462.685180664063,
+        55.0,
+        55.0
+      ],
+      "help_focused": false,
+      "label": [
+        218.907470703125,
+        476.685180664063,
+        143.0,
+        27.0
+      ],
+      "name": "UI-Skalierung",
+      "row": [
+        218.907470703125,
+        462.685180664063,
+        745.0,
+        55.0
+      ],
+      "tooltip_text": "Vergrößert die Bedienoberfläche auf 100 % oder 125 %. Gilt für diese Sitzung; der Rasterzoom bleibt unabhängig."
+    },
+    {
+      "choice": [
+        374.907470703125,
+        642.685180664063,
+        521.0,
+        55.0
+      ],
+      "focus_tip": [],
+      "help": [
+        908.907470703125,
+        642.685180664063,
+        55.0,
+        55.0
+      ],
+      "help_focused": false,
+      "label": [
+        218.907470703125,
+        656.685180664063,
+        143.0,
+        27.0
+      ],
+      "name": "Rätselansicht",
+      "row": [
+        218.907470703125,
+        642.685180664063,
+        745.0,
+        55.0
+      ],
+      "tooltip_text": "Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen."
+    },
+    {
+      "choice": [
+        374.907470703125,
+        284.685180664063,
+        521.0,
+        55.0
+      ],
+      "focus_tip": [],
+      "help": [
+        908.907470703125,
+        284.685180664063,
+        55.0,
+        55.0
+      ],
+      "help_focused": false,
+      "label": [
+        218.907470703125,
+        298.685180664063,
+        143.0,
+        27.0
+      ],
+      "name": "Anzeigemodus",
+      "row": [
+        218.907470703125,
+        284.685180664063,
+        745.0,
+        55.0
+      ],
+      "tooltip_text": "Fenster zeigt die gewählte feste Größe. Rahmenloses und exklusives Vollbild verwenden den aktuellen Desktopmodus."
+    },
+    {
+      "choice": [
+        374.907470703125,
+        352.685180664063,
+        521.0,
+        55.0
+      ],
+      "focus_tip": [],
+      "help": [
+        908.907470703125,
+        352.685180664063,
+        55.0,
+        55.0
+      ],
+      "help_focused": false,
+      "label": [
+        218.907470703125,
+        366.685180664063,
+        143.0,
+        27.0
+      ],
+      "name": "Fenstergröße",
+      "row": [
+        218.907470703125,
+        352.685180664063,
+        745.0,
+        55.0
+      ],
+      "tooltip_text": "Im rahmenlosen und exklusiven Vollbild wird die aktuelle Desktopauflösung verwendet; der ausgewählte Fensterpreset gilt erst wieder im Fenstermodus."
+    }
+  ],
+  "focused": true,
+  "focused_control": "ui-scale",
+  "heading": {
+    "box": [
+      191.407470703125,
+      143.185165405273,
+      800.0,
+      44.0
+    ],
+    "font": "Fraunces",
+    "size": 35,
+    "weight": {
+      "wght": 600.0
+    }
+  },
+  "help": [
+    922.5,
+    39.0,
+    55.0,
+    55.0
+  ],
+  "info": true,
+  "info_return": [
+    77.407470703125,
+    58.1851654052734,
+    325.0,
+    55.0
+  ],
+  "info_switch": [
+    851.203735351563,
+    58.1851654052734,
+    262.5,
+    55.0
+  ],
+  "mark": [
+    218.907470703125,
+    712.685180664063,
+    745.0,
+    55.0
+  ],
+  "menu": [
+    995.0,
+    39.0,
+    55.0,
+    55.0
+  ],
+  "message": "Vorherige Anzeige wiederhergestellt.",
+  "mode": 0,
+  "mode_control": [
+    374.907470703125,
+    284.685180664063,
+    521.0,
+    55.0
+  ],
+  "mode_popup": {
+    "items": [
+      [
+        "Fenster",
+        0
+      ],
+      [
+        "Rahmenloses Fenster",
+        1
+      ],
+      [
+        "Exklusives Vollbild",
+        2
+      ]
+    ],
+    "position": [
+      374,
+      339
+    ],
+    "size": [
+      521,
+      152
+    ],
+    "visible": false
+  },
+  "native_tips": [],
+  "os": "10.0.26200",
+  "outer": [
+    1286,
+    747
+  ],
+  "pid": 30944,
+  "position": [
+    2563,
+    26
+  ],
+  "preview": false,
+  "quit_control": [],
+  "resize_disabled": true,
+  "resolution": "1280 × 720",
+  "save_current": [
+    218.907470703125,
+    284.685180664063,
+    263.0,
+    55.0
+  ],
+  "save_visible": false,
+  "saved": {
+    "mode": "window",
+    "preset": "1280x720"
+  },
+  "scale": [
+    374.907470703125,
+    462.685180664063,
+    521.0,
+    55.0
+  ],
+  "scale_popup": {
+    "position": [
+      418,
+      421
+    ],
+    "size": [
+      417,
+      86
+    ],
+    "visible": false
+  },
+  "screen": 1,
+  "screen_scale": 1.0,
+  "scroll": [
+    77.407470703125,
+    143.185165405273,
+    1036.29626464844,
+    546.814819335938
+  ],
+  "scroll_max": 722.0,
+  "scroll_page": 546.814819335938,
+  "scroll_value": 0,
+  "seconds": 0,
+  "section": "settings",
+  "section_boxes": [
+    {
+      "box": [
+        191.407470703125,
+        212.185165405273,
+        800.0,
+        333.0
+      ],
+      "heading": "Anzeige",
+      "name": "display-options"
+    },
+    {
+      "box": [
+        191.407470703125,
+        570.185180664063,
+        800.0,
+        295.0
+      ],
+      "heading": "Rätselansicht",
+      "name": "puzzle-options"
+    }
+  ],
+  "server_client": [
+    1280,
+    718
+  ],
+  "settings_access": [
+    180.0,
+    110.0,
+    262.5,
+    55.0
+  ],
+  "settings_box": [
+    191.407470703125,
+    143.185165405273,
+    800.0,
+    722.0
+  ],
+  "settings_visible": true,
+  "size_control": [
+    374.907470703125,
+    352.685180664063,
+    521.0,
+    55.0
+  ],
+  "size_disabled": false,
+  "size_popup": {
+    "disabled": [
+      false,
+      true
+    ],
+    "position": [
+      676,
+      424
+    ],
+    "size": [
+      521,
+      367
+    ],
+    "visible": false
+  },
+  "time": 221300,
+  "ui_scale": 1.25,
+  "usable": [
+    2560,
+    0,
+    2560,
+    1392
+  ],
+  "view_control": [
+    374.907470703125,
+    642.685180664063,
+    521.0,
+    55.0
+  ],
+  "view_popup": {
+    "position": [
+      374,
+      522
+    ],
+    "size": [
+      521,
+      109
+    ],
+    "visible": false
+  },
+  "window_client": [
+    1280,
+    720
+  ]
+}

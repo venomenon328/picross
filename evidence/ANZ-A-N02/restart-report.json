@@ -1,0 +1,2908 @@
+{
+  "assertions": [
+    {
+      "name": "fresh exported process restores confirmed display",
+      "passed": true
+    },
+    {
+      "name": "fresh process resets session UI scale to 100 percent",
+      "passed": true
+    },
+    {
+      "name": "actual work-origin settings retains visit origin",
+      "passed": true
+    },
+    {
+      "name": "settings and UI change preserve actual work cells history and semantic clue view",
+      "passed": true
+    },
+    {
+      "name": "regular WM close ends exported player after flush",
+      "passed": true
+    }
+  ],
+  "initial": {
+    "accept": [
+      360.0,
+      0.0,
+      82.0,
+      44.0
+    ],
+    "active": {
+      "mode": "window",
+      "preset": "1280x720"
+    },
+    "adapter": "NVIDIA GeForce RTX 3070",
+    "animation": [
+      180.0,
+      190.0,
+      148.0,
+      44.0
+    ],
+    "applying": false,
+    "book_state": 0,
+    "borderless": false,
+    "cancel": [
+      360.0,
+      0.0,
+      75.0,
+      44.0
+    ],
+    "card": [
+      360.0,
+      0.0,
+      560.0,
+      2506.0
+    ],
+    "card_visible": false,
+    "catalog_cards": [
+      [
+        197.686553955078,
+        143.865661621094,
+        302.0,
+        350.0
+      ],
+      [
+        197.686553955078,
+        505.865661621094,
+        302.0,
+        350.0
+      ],
+      [
+        197.686553955078,
+        867.865661621094,
+        302.0,
+        350.0
+      ],
+      [
+        197.686553955078,
+        1229.86572265625,
+        302.0,
+        350.0
+      ],
+      [
+        197.686553955078,
+        1591.86572265625,
+        302.0,
+        350.0
+      ],
+      [
+        197.686553955078,
+        1953.86572265625,
+        302.0,
+        350.0
+      ]
+    ],
+    "catalog_info": [
+      [
+        867.686584472656,
+        630.865661621094,
+        153.0,
+        44.0
+      ]
+    ],
+    "client": [
+      1280,
+      720
+    ],
+    "desktop": [
+      2560,
+      1440
+    ],
+    "dpi": 96,
+    "feedback": "",
+    "feedback_box": [
+      180.0,
+      190.0,
+      5.0,
+      22.0
+    ],
+    "feedback_visible": false,
+    "fields": [
+      {
+        "choice": [
+          180.0,
+          190.0,
+          117.0,
+          44.0
+        ],
+        "focus_tip": [],
+        "help": [
+          180.0,
+          190.0,
+          44.0,
+          44.0
+        ],
+        "help_focused": false,
+        "label": [
+          180.0,
+          190.0,
+          115.0,
+          22.0
+        ],
+        "name": "UI-Skalierung",
+        "row": [
+          180.0,
+          190.0,
+          296.0,
+          44.0
+        ],
+        "tooltip_text": "Vergrößert die Bedienoberfläche auf 100 % oder 125 %. Gilt für diese Sitzung; der Rasterzoom bleibt unabhängig."
+      },
+      {
+        "choice": [
+          180.0,
+          190.0,
+          312.0,
+          44.0
+        ],
+        "focus_tip": [],
+        "help": [
+          180.0,
+          190.0,
+          44.0,
+          44.0
+        ],
+        "help_focused": false,
+        "label": [
+          180.0,
+          190.0,
+          115.0,
+          22.0
+        ],
+        "name": "Rätselansicht",
+        "row": [
+          180.0,
+          190.0,
+          491.0,
+          44.0
+        ],
+        "tooltip_text": "Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen."
+      },
+      {
+        "choice": [
+          180.0,
+          190.0,
+          226.0,
+          44.0
+        ],
+        "focus_tip": [],
+        "help": [
+          180.0,
+          190.0,
+          44.0,
+          44.0
+        ],
+        "help_focused": false,
+        "label": [
+          180.0,
+          190.0,
+          115.0,
+          22.0
+        ],
+        "name": "Anzeigemodus",
+        "row": [
+          180.0,
+          190.0,
+          405.0,
+          44.0
+        ],
+        "tooltip_text": "Fenster zeigt die gewählte feste Größe. Rahmenloses und exklusives Vollbild verwenden den aktuellen Desktopmodus."
+      },
+      {
+        "choice": [
+          180.0,
+          190.0,
+          164.0,
+          44.0
+        ],
+        "focus_tip": [],
+        "help": [
+          180.0,
+          190.0,
+          44.0,
+          44.0
+        ],
+        "help_focused": false,
+        "label": [
+          180.0,
+          190.0,
+          115.0,
+          22.0
+        ],
+        "name": "Fenstergröße",
+        "row": [
+          180.0,
+          190.0,
+          343.0,
+          44.0
+        ],
+        "tooltip_text": "Im rahmenlosen und exklusiven Vollbild wird die aktuelle Desktopauflösung verwendet; der ausgewählte Fensterpreset gilt erst wieder im Fenstermodus."
+      }
+    ],
+    "focused": true,
+    "focused_control": "",
+    "heading": {
+      "box": [
+        180.0,
+        190.0,
+        201.0,
+        36.0
+      ],
+      "font": "Fraunces",
+      "size": 28,
+      "weight": {
+        "wght": 600.0
+      }
+    },
+    "help": [
+      956.5,
+      36.0,
+      44.0,
+      44.0
+    ],
+    "info": false,
+    "info_return": [
+      100.0,
+      110.0,
+      44.0,
+      44.0
+    ],
+    "info_switch": [
+      410.0,
+      110.0,
+      140.0,
+      44.0
+    ],
+    "information_origin": "album",
+    "mark": [
+      180.0,
+      190.0,
+      226.0,
+      44.0
+    ],
+    "menu": [
+      1014.5,
+      36.0,
+      44.0,
+      44.0
+    ],
+    "message": "",
+    "mode": 0,
+    "mode_control": [
+      180.0,
+      190.0,
+      226.0,
+      44.0
+    ],
+    "mode_popup": {
+      "items": [
+        [
+          "Fenster",
+          0
+        ],
+        [
+          "Rahmenloses Fenster",
+          1
+        ],
+        [
+          "Exklusives Vollbild",
+          2
+        ]
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "native_tips": [],
+    "os": "10.0.26200",
+    "outer": [
+      1286,
+      749
+    ],
+    "pid": 42996,
+    "player": {
+      "cells": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "cursor": 0,
+      "history": [],
+      "view": {
+        "active_color": 1,
+        "center": [
+          10.0,
+          10.0
+        ],
+        "column_clue_reads": [
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          }
+        ],
+        "overview": false,
+        "row_clue_reads": [
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          }
+        ],
+        "tool": "fill",
+        "zoom": 24
+      }
+    },
+    "position": [
+      2875,
+      151
+    ],
+    "preview": false,
+    "quit_control": [],
+    "resize_disabled": true,
+    "resolution": "1280 × 720",
+    "save_current": [
+      180.0,
+      190.0,
+      208.0,
+      44.0
+    ],
+    "save_visible": false,
+    "saved": {
+      "mode": "window",
+      "preset": "1280x720"
+    },
+    "scale": [
+      180.0,
+      190.0,
+      117.0,
+      44.0
+    ],
+    "scale_popup": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "screen": 1,
+    "screen_scale": 1.0,
+    "scroll": [
+      180.0,
+      190.0,
+      920.0,
+      420.0
+    ],
+    "scroll_max": 546.0,
+    "scroll_page": 420.0,
+    "scroll_value": 0,
+    "seconds": 0,
+    "section": "settings",
+    "section_boxes": [
+      {
+        "box": [
+          180.0,
+          190.0,
+          449.0,
+          234.0
+        ],
+        "heading": "Anzeige",
+        "name": "display-options"
+      },
+      {
+        "box": [
+          180.0,
+          190.0,
+          535.0,
+          236.0
+        ],
+        "heading": "Rätselansicht",
+        "name": "puzzle-options"
+      }
+    ],
+    "server_client": [
+      1280,
+      720
+    ],
+    "settings_access": [
+      180.0,
+      110.0,
+      210.0,
+      44.0
+    ],
+    "settings_box": [
+      180.0,
+      190.0,
+      640.0,
+      546.0
+    ],
+    "settings_visible": false,
+    "size_control": [
+      180.0,
+      190.0,
+      164.0,
+      44.0
+    ],
+    "size_disabled": false,
+    "size_popup": {
+      "disabled": [
+        false,
+        true
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "time": 25016,
+    "ui_scale": 1.0,
+    "usable": [
+      2560,
+      0,
+      2560,
+      1392
+    ],
+    "view_control": [
+      180.0,
+      190.0,
+      312.0,
+      44.0
+    ],
+    "view_popup": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "window_client": [
+      1280,
+      720
+    ]
+  },
+  "work_before": {
+    "accept": [
+      360.0,
+      0.0,
+      82.0,
+      44.0
+    ],
+    "active": {
+      "mode": "window",
+      "preset": "1280x720"
+    },
+    "adapter": "NVIDIA GeForce RTX 3070",
+    "animation": [
+      180.0,
+      190.0,
+      148.0,
+      44.0
+    ],
+    "applying": false,
+    "book_state": 3,
+    "borderless": false,
+    "cancel": [
+      360.0,
+      0.0,
+      75.0,
+      44.0
+    ],
+    "card": [
+      360.0,
+      0.0,
+      560.0,
+      2506.0
+    ],
+    "card_visible": false,
+    "catalog_cards": [],
+    "catalog_info": [
+      [
+        837.0,
+        639.0,
+        153.0,
+        44.0
+      ]
+    ],
+    "client": [
+      1280,
+      720
+    ],
+    "desktop": [
+      2560,
+      1440
+    ],
+    "dpi": 96,
+    "feedback": "",
+    "feedback_box": [
+      180.0,
+      190.0,
+      5.0,
+      22.0
+    ],
+    "feedback_visible": false,
+    "fields": [
+      {
+        "choice": [
+          180.0,
+          190.0,
+          117.0,
+          44.0
+        ],
+        "focus_tip": [],
+        "help": [
+          180.0,
+          190.0,
+          44.0,
+          44.0
+        ],
+        "help_focused": false,
+        "label": [
+          180.0,
+          190.0,
+          115.0,
+          22.0
+        ],
+        "name": "UI-Skalierung",
+        "row": [
+          180.0,
+          190.0,
+          296.0,
+          44.0
+        ],
+        "tooltip_text": "Vergrößert die Bedienoberfläche auf 100 % oder 125 %. Gilt für diese Sitzung; der Rasterzoom bleibt unabhängig."
+      },
+      {
+        "choice": [
+          180.0,
+          190.0,
+          312.0,
+          44.0
+        ],
+        "focus_tip": [],
+        "help": [
+          180.0,
+          190.0,
+          44.0,
+          44.0
+        ],
+        "help_focused": false,
+        "label": [
+          180.0,
+          190.0,
+          115.0,
+          22.0
+        ],
+        "name": "Rätselansicht",
+        "row": [
+          180.0,
+          190.0,
+          491.0,
+          44.0
+        ],
+        "tooltip_text": "Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen."
+      },
+      {
+        "choice": [
+          180.0,
+          190.0,
+          226.0,
+          44.0
+        ],
+        "focus_tip": [],
+        "help": [
+          180.0,
+          190.0,
+          44.0,
+          44.0
+        ],
+        "help_focused": false,
+        "label": [
+          180.0,
+          190.0,
+          115.0,
+          22.0
+        ],
+        "name": "Anzeigemodus",
+        "row": [
+          180.0,
+          190.0,
+          405.0,
+          44.0
+        ],
+        "tooltip_text": "Fenster zeigt die gewählte feste Größe. Rahmenloses und exklusives Vollbild verwenden den aktuellen Desktopmodus."
+      },
+      {
+        "choice": [
+          180.0,
+          190.0,
+          164.0,
+          44.0
+        ],
+        "focus_tip": [],
+        "help": [
+          180.0,
+          190.0,
+          44.0,
+          44.0
+        ],
+        "help_focused": false,
+        "label": [
+          180.0,
+          190.0,
+          115.0,
+          22.0
+        ],
+        "name": "Fenstergröße",
+        "row": [
+          180.0,
+          190.0,
+          343.0,
+          44.0
+        ],
+        "tooltip_text": "Im rahmenlosen und exklusiven Vollbild wird die aktuelle Desktopauflösung verwendet; der ausgewählte Fensterpreset gilt erst wieder im Fenstermodus."
+      }
+    ],
+    "focused": true,
+    "focused_control": "",
+    "heading": {
+      "box": [
+        180.0,
+        190.0,
+        201.0,
+        36.0
+      ],
+      "font": "Fraunces",
+      "size": 28,
+      "weight": {
+        "wght": 600.0
+      }
+    },
+    "help": [
+      1072.5,
+      38.1851654052734,
+      44.0,
+      44.0
+    ],
+    "info": false,
+    "info_return": [
+      100.0,
+      110.0,
+      44.0,
+      44.0
+    ],
+    "info_switch": [
+      410.0,
+      110.0,
+      140.0,
+      44.0
+    ],
+    "information_origin": "album",
+    "mark": [
+      180.0,
+      190.0,
+      226.0,
+      44.0
+    ],
+    "menu": [
+      1014.5,
+      38.1851654052734,
+      44.0,
+      44.0
+    ],
+    "message": "",
+    "mode": 0,
+    "mode_control": [
+      180.0,
+      190.0,
+      226.0,
+      44.0
+    ],
+    "mode_popup": {
+      "items": [
+        [
+          "Fenster",
+          0
+        ],
+        [
+          "Rahmenloses Fenster",
+          1
+        ],
+        [
+          "Exklusives Vollbild",
+          2
+        ]
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "native_tips": [],
+    "os": "10.0.26200",
+    "outer": [
+      1286,
+      749
+    ],
+    "pid": 42996,
+    "player": {
+      "cells": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "cursor": 0,
+      "history": [],
+      "view": {
+        "active_color": 1,
+        "center": [
+          10.0,
+          10.0
+        ],
+        "column_clue_reads": [
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          }
+        ],
+        "overview": false,
+        "row_clue_reads": [
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          }
+        ],
+        "tool": "fill",
+        "zoom": 24
+      }
+    },
+    "position": [
+      2875,
+      151
+    ],
+    "preview": false,
+    "quit_control": [],
+    "resize_disabled": true,
+    "resolution": "1280 × 720",
+    "save_current": [
+      180.0,
+      190.0,
+      208.0,
+      44.0
+    ],
+    "save_visible": false,
+    "saved": {
+      "mode": "window",
+      "preset": "1280x720"
+    },
+    "scale": [
+      180.0,
+      190.0,
+      117.0,
+      44.0
+    ],
+    "scale_popup": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "screen": 1,
+    "screen_scale": 1.0,
+    "scroll": [
+      180.0,
+      190.0,
+      920.0,
+      420.0
+    ],
+    "scroll_max": 546.0,
+    "scroll_page": 420.0,
+    "scroll_value": 0,
+    "seconds": 0,
+    "section": "settings",
+    "section_boxes": [
+      {
+        "box": [
+          180.0,
+          190.0,
+          449.0,
+          234.0
+        ],
+        "heading": "Anzeige",
+        "name": "display-options"
+      },
+      {
+        "box": [
+          180.0,
+          190.0,
+          535.0,
+          236.0
+        ],
+        "heading": "Rätselansicht",
+        "name": "puzzle-options"
+      }
+    ],
+    "server_client": [
+      1280,
+      720
+    ],
+    "settings_access": [
+      180.0,
+      110.0,
+      210.0,
+      44.0
+    ],
+    "settings_box": [
+      180.0,
+      190.0,
+      640.0,
+      546.0
+    ],
+    "settings_visible": false,
+    "size_control": [
+      180.0,
+      190.0,
+      164.0,
+      44.0
+    ],
+    "size_disabled": false,
+    "size_popup": {
+      "disabled": [
+        false,
+        true
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "time": 28747,
+    "ui_scale": 1.0,
+    "usable": [
+      2560,
+      0,
+      2560,
+      1392
+    ],
+    "view_control": [
+      180.0,
+      190.0,
+      312.0,
+      44.0
+    ],
+    "view_popup": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "window_client": [
+      1280,
+      720
+    ]
+  },
+  "work_after": {
+    "accept": [
+      290.0,
+      221.5,
+      103.0,
+      55.0
+    ],
+    "active": {
+      "mode": "window",
+      "preset": "1280x720"
+    },
+    "adapter": "NVIDIA GeForce RTX 3070",
+    "animation": [
+      321.5,
+      789.5,
+      745.0,
+      55.0
+    ],
+    "applying": false,
+    "book_state": 3,
+    "borderless": false,
+    "cancel": [
+      290.0,
+      221.5,
+      95.0,
+      55.0
+    ],
+    "card": [
+      290.0,
+      221.5,
+      700.0,
+      3098.0
+    ],
+    "card_visible": false,
+    "catalog_cards": [],
+    "catalog_info": [
+      [
+        827.0,
+        664.0,
+        193.0,
+        55.0
+      ]
+    ],
+    "client": [
+      1280,
+      720
+    ],
+    "desktop": [
+      2560,
+      1440
+    ],
+    "dpi": 96,
+    "feedback": "",
+    "feedback_box": [
+      321.5,
+      331.5,
+      6.0,
+      27.0
+    ],
+    "feedback_visible": false,
+    "fields": [
+      {
+        "choice": [
+          477.5,
+          469.5,
+          521.0,
+          55.0
+        ],
+        "focus_tip": [],
+        "help": [
+          1011.5,
+          469.5,
+          55.0,
+          55.0
+        ],
+        "help_focused": false,
+        "label": [
+          321.5,
+          483.5,
+          143.0,
+          27.0
+        ],
+        "name": "UI-Skalierung",
+        "row": [
+          321.5,
+          469.5,
+          745.0,
+          55.0
+        ],
+        "tooltip_text": "Vergrößert die Bedienoberfläche auf 100 % oder 125 %. Gilt für diese Sitzung; der Rasterzoom bleibt unabhängig."
+      },
+      {
+        "choice": [
+          477.5,
+          649.5,
+          521.0,
+          55.0
+        ],
+        "focus_tip": [],
+        "help": [
+          1011.5,
+          649.5,
+          55.0,
+          55.0
+        ],
+        "help_focused": false,
+        "label": [
+          321.5,
+          663.5,
+          143.0,
+          27.0
+        ],
+        "name": "Rätselansicht",
+        "row": [
+          321.5,
+          649.5,
+          745.0,
+          55.0
+        ],
+        "tooltip_text": "Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen."
+      },
+      {
+        "choice": [
+          477.5,
+          331.5,
+          521.0,
+          55.0
+        ],
+        "focus_tip": [],
+        "help": [
+          1011.5,
+          331.5,
+          55.0,
+          55.0
+        ],
+        "help_focused": false,
+        "label": [
+          321.5,
+          345.5,
+          143.0,
+          27.0
+        ],
+        "name": "Anzeigemodus",
+        "row": [
+          321.5,
+          331.5,
+          745.0,
+          55.0
+        ],
+        "tooltip_text": "Fenster zeigt die gewählte feste Größe. Rahmenloses und exklusives Vollbild verwenden den aktuellen Desktopmodus."
+      },
+      {
+        "choice": [
+          477.5,
+          399.5,
+          521.0,
+          55.0
+        ],
+        "focus_tip": [],
+        "help": [
+          1011.5,
+          399.5,
+          55.0,
+          55.0
+        ],
+        "help_focused": false,
+        "label": [
+          321.5,
+          413.5,
+          143.0,
+          27.0
+        ],
+        "name": "Fenstergröße",
+        "row": [
+          321.5,
+          399.5,
+          745.0,
+          55.0
+        ],
+        "tooltip_text": "Im rahmenlosen und exklusiven Vollbild wird die aktuelle Desktopauflösung verwendet; der ausgewählte Fensterpreset gilt erst wieder im Fenstermodus."
+      }
+    ],
+    "focused": true,
+    "focused_control": "",
+    "heading": {
+      "box": [
+        294.0,
+        190.0,
+        800.0,
+        44.0
+      ],
+      "font": "Fraunces",
+      "size": 35,
+      "weight": {
+        "wght": 600.0
+      }
+    },
+    "help": [
+      1067.5,
+      39.4351654052734,
+      55.0,
+      55.0
+    ],
+    "info": false,
+    "info_return": [
+      100.0,
+      110.0,
+      325.0,
+      55.0
+    ],
+    "info_switch": [
+      512.5,
+      110.0,
+      175.0,
+      55.0
+    ],
+    "information_origin": "work",
+    "mark": [
+      321.5,
+      719.5,
+      745.0,
+      55.0
+    ],
+    "menu": [
+      995.0,
+      39.4351654052734,
+      55.0,
+      55.0
+    ],
+    "message": "",
+    "mode": 0,
+    "mode_control": [
+      477.5,
+      331.5,
+      521.0,
+      55.0
+    ],
+    "mode_popup": {
+      "items": [
+        [
+          "Fenster",
+          0
+        ],
+        [
+          "Rahmenloses Fenster",
+          1
+        ],
+        [
+          "Exklusives Vollbild",
+          2
+        ]
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "native_tips": [],
+    "os": "10.0.26200",
+    "outer": [
+      1286,
+      749
+    ],
+    "pid": 42996,
+    "player": {
+      "cells": [
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1,
+        -1
+      ],
+      "cursor": 0,
+      "history": [],
+      "view": {
+        "active_color": 1,
+        "center": [
+          10.0,
+          10.0
+        ],
+        "column_clue_reads": [
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          }
+        ],
+        "overview": false,
+        "row_clue_reads": [
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          },
+          {
+            "anchor": "grid_end"
+          }
+        ],
+        "tool": "fill",
+        "zoom": 24
+      }
+    },
+    "position": [
+      2875,
+      151
+    ],
+    "preview": false,
+    "quit_control": [],
+    "resize_disabled": true,
+    "resolution": "1280 × 720",
+    "save_current": [
+      321.5,
+      331.5,
+      263.0,
+      55.0
+    ],
+    "save_visible": false,
+    "saved": {
+      "mode": "window",
+      "preset": "1280x720"
+    },
+    "scale": [
+      477.5,
+      469.5,
+      521.0,
+      55.0
+    ],
+    "scale_popup": {
+      "position": [
+        422,
+        389
+      ],
+      "size": [
+        417,
+        86
+      ],
+      "visible": false
+    },
+    "screen": 1,
+    "screen_scale": 1.0,
+    "scroll": [
+      180.0,
+      190.0,
+      920.0,
+      420.0
+    ],
+    "scroll_max": 682.0,
+    "scroll_page": 420.0,
+    "scroll_value": 0,
+    "seconds": 0,
+    "section": "settings",
+    "section_boxes": [
+      {
+        "box": [
+          294.0,
+          259.0,
+          800.0,
+          293.0
+        ],
+        "heading": "Anzeige",
+        "name": "display-options"
+      },
+      {
+        "box": [
+          294.0,
+          577.0,
+          800.0,
+          295.0
+        ],
+        "heading": "Rätselansicht",
+        "name": "puzzle-options"
+      }
+    ],
+    "server_client": [
+      1280,
+      720
+    ],
+    "settings_access": [
+      180.0,
+      110.0,
+      262.5,
+      55.0
+    ],
+    "settings_box": [
+      294.0,
+      190.0,
+      800.0,
+      682.0
+    ],
+    "settings_visible": false,
+    "size_control": [
+      477.5,
+      399.5,
+      521.0,
+      55.0
+    ],
+    "size_disabled": false,
+    "size_popup": {
+      "disabled": [
+        false,
+        true
+      ],
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "time": 32888,
+    "ui_scale": 1.25,
+    "usable": [
+      2560,
+      0,
+      2560,
+      1392
+    ],
+    "view_control": [
+      477.5,
+      649.5,
+      521.0,
+      55.0
+    ],
+    "view_popup": {
+      "position": [
+        0,
+        0
+      ],
+      "size": [
+        100,
+        100
+      ],
+      "visible": false
+    },
+    "window_client": [
+      1280,
+      720
+    ]
+  }
+}
