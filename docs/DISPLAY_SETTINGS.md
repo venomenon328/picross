@@ -113,6 +113,6 @@ versucht die Rücknahme, ohne die gültige vorherige Fassung zu vernichten. `.tm
 ist nie Ladequelle. Dieser eigene transaktionale Weg ändert keine P1-Saves.
 
 Gezielte günstige Regressionen laufen in `catalog/information` bei Auswahl von
-`native.catalog`; die vorhandene Grafikgruppe bleibt unverändert. Einmalige
-Windows- und UI-Originale werden getrennt für R01 befristet zugestellt; die
+`native.catalog`; die vorhandene Grafikgruppe bleibt gewählt. Aktuelle
+Windows- und UI-Originale werden getrennt für N02-R03 befristet zugestellt; die
 Produktquellen enthalten keine neue Galerie oder Windows-Diagnosefamilie.

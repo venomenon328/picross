@@ -126,10 +126,11 @@ production/artwork/composition bleiben unverändert. PR #25/#28 sind keine Basis
 | GD-02: gemeinsame BP-3-UI | Gefasste Miniatur, zwei Metallhalter, gemeinsame Farbmusterfassung, Werkzeuggruppen seit V3 senkrecht rechts (2/2/4), abgeschrägte Controls. Auswahl aus Sessionzustand: Werkzeug dunkel/unterstrichen, Farbe mit äußeren Eckmarkierungen. |
 | GD-03: Fraunces / IBM Plex Sans | V3: Bakso Daging für Arbeits-Blatttitel, sonst Fraunces 600; Plex Sans für UI/Hinweise als historischer Z2-Stand. ZS wählt Chalkboard für Hinweise. Gepinnte Fontbytes und Nutzungshinweise offline, keine Systemfontsuche. |
 | GD-04: C1 | Feste dunkle Kontur für Hinweisfarben 2/4 an beiden Achsen, im Drag und Tooltip; unveränderte RGB-Füllung, Originalindizes und H1. Keine neue Option. |
-| GD-05: N1 | Eine native Informations-Control mit gemeinsamem Einstellungen-/Hilfebereich, drei Zugängen und Rückweg. Historische N1-Bindung: nur der UI-freie Hintergrund wird gespiegelt; Falz links.
+| GD-05: N1 | Eine native Informations-Control mit gemeinsamem Einstellungen-/Hilfebereich, drei Zugängen und Rückweg. Historische N1-Bindung: nur der UI-freie Hintergrund wird gespiegelt; Falz links. |
+
 Die aktuelle Informationsanordnung folgt B-B und [ANZ-A-N02](DISPLAY_SETTINGS.md):
 kein manueller Hinweisreset und kein Beenden-Widget in Einstellungen; sichere
-Katalog-/OS-Exitpfade und normale Hinweisnavigation bleiben. |
+Katalog-/OS-Exitpfade und normale Hinweisnavigation bleiben.
 
 **Begrenzte Fortschreibung von GD-02 durch VS2-E1:** Die gezeichnete Fassung und
 sichere Lage von Miniatur/Palette sind nicht mehr an die alte native Form/Position
