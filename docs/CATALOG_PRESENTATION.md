@@ -24,6 +24,14 @@ N05 ergänzt neben dem Einstellungenzugang einen direkten Hilfezugang. Bei
 knapper Breite erhält die Fußnavigation eine zweite Zeile ohne kleinere Buttons.
 Beide Informationswege führen zum unveränderten Katalogkontext mit zwei Offsets zurück.
 
+**KL / #523 · freigegebener Layout-Sollstand vom 06.11.2026 (noch nicht implementiert):**
+Das vorhandene Buch verteilt weiterhin je zwölf Karten links und rechts.
+Ein responsives Layout soll bei 2560×1440/UI100 drei Karten nebeneinander
+ermöglichen, bei geringerer nutzbarer Breite sicher auf zwei oder eine Spalte
+zurückfallen und jede Zeile einschließlich Teilzeilen eigenständig zentrieren.
+Verbindlich ist [KL-D01](#kl-d01--responsives-katalograster-523); tatsächliche
+Erfüllung folgt erst durch Umsetzung und native Prüfung in [#523](https://github.com/venomenon328/picross/issues/523).
+
 **HZ · HZ-A/B/C integriert; aktuelle Abnahmeentscheidungen in #284/#294:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet Tidy Hand für normale
 Katalogtexte bei unveränderten Bakso-Überschriften und organischeren stabilen
@@ -39,7 +47,72 @@ Katalogbilder. AT-A liefert den begrenzten Bildänderungsweg mit synthetischen
 Alpha-/Spielstandsnachweisen; die AT-B-Bestandsübernahme verwendet
 konkreter neuer Bildfreigabe. Kartenaufteilung und ungelöste Vorschauen bleiben erhalten.
 
-Fachstand: Spezifikation 2.2 · Workflowabgleich: 05.11.2026 · KU-A/B und HZ-A/B/C integriert
+Fachstand: Spezifikation 2.3 · Workflowabgleich: 06.11.2026 · KU-A/B und HZ-A/B/C integriert; KL-D01 freigegebener Sollstand
+
+## KL-D01 · Responsives Katalograster (#523)
+
+**Eigentümerfreigabe 06.11.2026: Sollstand, keine Implementierungs- oder
+Sichtabnahme.** Der Katalog soll freie Papierbreite besser nutzen, ohne die
+bestehende Karten-/Buchfunktion zu ändern. Maßgeblich ist die *tatsächlich
+nutzbare Breite pro Buchhälfte* nach Papierprojektion, Falz- und sicheren
+Innenrändern, vorhandenen Kopf-/Fußaktionen, Scrollbereich und UI-Skalierung;
+eine feste 1440p-Auflösungsabfrage ist unzulässig.
+
+Pro physischer Buchseite bleiben **höchstens zwölf Karten**, mit globaler
+Filterung/Sortierung vor der unveränderten 24er-Paginierung und Zuordnung
+zuerst links, danach rechts. Beide Hälften haben dieselbe aus **gemessenen**
+Kartenmindestbreiten und jeweiligen Innenbreiten sicher bestimmte Spaltenzahl:
+**höchstens drei**, bei genügend Platz drei, sonst zwei oder im engen Grenzfall
+eine. Normalerweise entspricht dies bei drei Spalten **4×3** und bei zwei
+Spalten **6×2** Kartenpositionen je Buchhälfte. Diese Reihen sind logisch
+angeordnet; die vorhandene unabhängige vertikale Scrollmöglichkeit bleibt bei
+geringer sichtbarer Höhe bestehen. Es werden weder Karten hinzugefügt noch
+Seitenmitgliedschaften oder IDs durch den Umbruch geändert.
+
+**Jede belegte Zeile wird innerhalb ihrer Buchhälfte eigenständig horizontal
+zentriert**, auch eine letzte Zeile mit weniger Karten als Spalten. Ein nur
+insgesamt zentriertes Grid mit linksbündiger Teilzeile erfüllt dies nicht;
+leere unsichtbare Karten-/Hitbox-Platzhalter sind ebenfalls kein Ersatz.
+Gleich große Karten, ruhige symmetrische Abstände und stabile Konturen bleiben.
+Vorhandener Freiraum darf durch **behutsame Verringerung des Überschusses**
+zwischen Mindestkartenbreite und Wunschkartenbreite sowie maßvolle äußere
+Karten-/Zwischenabstände besser genutzt werden; es gibt kein pauschales
+Schrumpfen unter die Mindestbreite.
+
+**Die verbindlichen Inhaltsbudgets aus KE-D01/HZ-D02/D07 bleiben erhalten:**
+vollständige einzeilige Größe, Schwierigkeit (einschließlich „Nicht eingestuft“
+und „Sehr schwer“) und Moduspiktogramm, die abgestimmte kleine Schriftrolle
+15/19 bei UI100/125, Kategorie-/Titelfläche, vorreservierter Resetplatz,
+Fußzeile und Bildhöhe mindestens 112×UI bei proportionalem Fit. Die bislang
+geprüften rechteckigen Trefferflächen mindestens 44×44 bzw. 55×55,
+zeichnerische Konturüberstände, Fokus/Tooltips sowie Fehler-/Recoveryaktionen
+dürfen nicht geclippt, überdeckt oder funktionslos werden. Kein verkleinerter
+Pflichttext, kein abgekürzter Schwierigkeitsname und keine neuen
+Metadatentooltips zur Platzkompensation.
+
+**Angestrebte sichtbare Geometrie:** Im regulären nativen 3D-Buch soll
+2560×1440/UI100 mit zwölf Karten **drei Spalten und vier Zeilen** je Hälfte
+erreichen. Bei 1920×1080/UI100 sind normalerweise **zwei Spalten/sechs Zeilen**
+sinnvoll. UI125, 1920×1200 und enge Größen dürfen entsprechend gemessener
+Grenzen zurückfallen. Eine unlesbare Dreispaltenansicht ist kein Erfolg;
+1440p/UI125 ist keine pauschale Drei-Spalten-Garantie. 720p ist ein
+Fallbackfall. Verifikation muss tatsächliche Buchprojektion, Scroll-/Clip-
+und Kartenmaße nachweisen; Setup/Quellinspektion allein genügt nicht.
+
+Bestehende ID-gebundene Öffnung, Reset und Backup-/Recovery, beide
+Scrollpositionen, ausgewählte Karte, Filter/Sortierung, Fokus, Scroll-Restore
+und Capture/Seitenanimation bleiben beim Umbruch, Resize und UI100→125→100
+erhalten. Der Inhalt bleibt spoilerfrei: neue Karten zeigen das Fragezeichen,
+begonnene nur eigene Füllungen und abgeschlossene ihr verdientes Reveal.
+Weder Rätsel-/Save-/Registry-/Präferenzdaten noch Buchkörper, Falz, Fonts,
+Bildassets oder bestehende Animationszeiten werden geändert.
+[BOOK_INTEGRATION](BOOK_INTEGRATION.md) bindet die doppelseitige Präsentation;
+das konkrete Paket, seine Akzeptanz A01–A07 und die maßvolle Modulprüfung
+stehen in [#523](https://github.com/venomenon328/picross/issues/523).
+[Zusätzliche Katalogfilter und Wiedereinstieg](https://github.com/venomenon328/picross/issues/485)
+bleiben ausdrücklich unabhängig.
+
+---
 
 Der Eigentümer hat die Katalogüberarbeitung am 18.10.2026 als Spezifikation
 freigegeben. [Gesamtissue #244](https://github.com/venomenon328/picross/issues/244)

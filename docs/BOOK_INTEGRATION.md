@@ -49,6 +49,17 @@ Sortierung beginnen auf Seite 1, unveränderte Auswahl und Rückkehr erhalten
 Seite und beide Offsets. Miniaturen zeigen den aktuellen eigenen Stand;
 Motivname und Reveal bleiben bis zum gültigen Abschluss gesperrt.
 
+**KL / #523 · responsives Katalograster (freigegebener Sollstand, noch nicht
+implementiert):** Innerhalb jeder Hälfte bestimmt die tatsächliche nutzbare
+Papier-/Scrollbreite bei gemessenen Kartenmindestmaßen eine gemeinsame
+Kapazität von maximal drei Spalten. Bei 2560×1440/UI100 sind drei
+Spalten × vier Zeilen für zwölf Karten je Hälfte nachzuweisen; bei knapper
+Breite sicher zwei bzw. eine Spalte. Auch unvollständige letzte Zeilen werden
+je Hälfte für sich horizontal zentriert. Die bisherige 12/12-Zuordnung,
+unabhängige Scrollpositionen, Projektion, sichere Falzabstände und
+Animationsbudgets bleiben erhalten; [KL-D01](CATALOG_PRESENTATION.md#kl-d01--responsives-katalograster-523)
+regelt vollständige Karteninhalte und Fallbacks.
+
 Katalogblättern dauert 0,85 s; vorwärts rechts nach links, rückwärts umgekehrt.
 Neue/begonnene Blätter öffnen mit drei getrennten Blättern in insgesamt 3 s.
 Die große rechte Arbeitsseite erhält unveränderte Raster-, Hinweis-, Schrift-
