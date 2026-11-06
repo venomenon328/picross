@@ -127,8 +127,9 @@ Zeile; nur Fenstergröße und Rätselansicht besitzen rechts eine fokussierbare
 Fragezeichenhilfe. Die anderen beiden Dropdowns füllen den freien Raum samt
 bisherigem Zwischenabstand. Bestehende Tooltipgestaltung trägt die Erklärungen.
 UI100/125 ist eine sitzungsgebundene Auswahl. Der Seitentitel nutzt wie der
-tatsächliche Katalogtitel Bakso Daging bei 28 × UI; die Gruppen behalten unabhängig
-Fraunces 600/20. Die N02-Fraunces-Annahme für den Katalogtitel ist damit korrigiert. Kein
+tatsächliche Katalogtitel Bakso Daging bei 28 × UI; beide Gruppentitel erhalten
+nach N03-E01 ebenfalls Bakso bei kleineren 20 × UI. Die N02-Fraunces-Annahme für
+den Katalogtitel ist damit korrigiert. Kein
 Beenden-Widget und kein manueller Hinweisreset auf dieser Seite. Einstellungen
 setzen keine Hinweisleseposition zurück; Katalog-Ausgang und OS-Schließen bleiben
 samt Fehlerblockade/Retry erhalten. [Anzeigevertrag](DISPLAY_SETTINGS.md).

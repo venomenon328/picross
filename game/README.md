@@ -186,8 +186,8 @@ nebeneinander. Nur **Fenstergröße** und **Rätselansicht** haben ein Fragezeic
 das beim Darüberfahren oder Tastaturfokus erklärt; die Fenstergrößenhilfe bleibt auch im Vollbild
 erreichbar. **UI-Skalierung** bietet **100 %** und **125 %** für die laufende Sitzung.
 Anzeigemodus und UI-Skalierung nutzen ohne Fragezeichen die volle Zeilenbreite.
-„Einstellungen“ trägt dieselbe Bakso-Schrift wie der Katalogtitel; die beiden
-Gruppenüberschriften behalten ihre eigene Fraunces-Rolle.
+„Einstellungen“ und die beiden Gruppenüberschriften tragen dieselbe Bakso-Schrift
+wie der Katalogtitel; die Gruppenüberschriften sind kleiner gesetzt.
 Der obere Button **Zurück** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
 zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
 Bei knapper Höhe bleibt alles durch vertikales Scrollen erreichbar.

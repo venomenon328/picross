@@ -67,8 +67,9 @@ HZ-B, Produktgrenzen und die getrennten Gates bleiben erhalten.
 
 Gezielte [ANZ-A-N03-Fortschreibung](https://github.com/venomenon328/picross/issues/527#anz-a-n03):
 Die eigenständige Überschrift „Einstellungen“ verwendet wie der tatsächlich
-sichtbare Katalogtitel Bakso Daging bei 28 × UI. Die beiden Gruppentitel Anzeige
-und Rätselansicht bleiben davon entkoppelt Fraunces 600 bei 20 × UI.
+sichtbare Katalogtitel Bakso Daging bei 28 × UI. Nach Eigentümerpräzisierung
+N03-E01 verwenden auch die beiden Gruppentitel Anzeige und Rätselansicht diese
+Bakso-Ressource bei kleineren 20 × UI, in derselben Rahmen-/Titellaschenfamilie.
 Andere Informations-, Hilfe-, Dialog- und Katalogtitel bleiben unverändert.
 Die frühere N02-Annahme einer Fraunces-Katalogtitelrolle gilt nicht als Sollstand.
 

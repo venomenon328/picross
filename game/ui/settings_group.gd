@@ -11,10 +11,7 @@ func configure(app: Control, caption: String, id: String) -> void:
 	content = VBoxContainer.new()
 	add_child(content)
 	heading = app.label(caption,20)
-	var font := FontVariation.new()
-	font.base_font = app.TITLE_FONT
-	font.variation_opentype = {"wght":600.0}
-	heading.add_theme_font_override("font",font)
+	heading.add_theme_font_override("font",app.WORK_TITLE_FONT)
 	heading.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	heading.hide()
 	add_child(heading)

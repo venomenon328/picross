@@ -55,8 +55,9 @@ ersetzt die N01-Anordnung: genau **Anzeige** und **Rätselansicht** erhalten sta
 handgezeichnete Rahmen mit verbundenen Titellaschen. Der Block steht mittig in der
 sicheren linken Papierfläche, höchstens 640 × UI breit; Inhalte bleiben linksbündig.
 Der Seitentitel verwendet wie der tatsächlich sichtbare Katalogtitel Bakso Daging
-aus `WORK_TITLE_FONT`, Grundgröße 28 × UI. Die Gruppen behalten unabhängig davon
-Fraunces 600 bei 20 × UI. Dies korrigiert die falsche Fraunces-Katalogannahme aus
+aus `WORK_TITLE_FONT`, Grundgröße 28 × UI. Nach Eigentümerpräzisierung N03-E01
+verwenden auch beide Gruppentitel dieselbe Bakso-Ressource bei kleineren 20 × UI.
+Dies korrigiert die falsche Fraunces-Katalogannahme aus
 N02; andere Titel und die vorhandenen Fontbytes bleiben unverändert.
 Label und HZ-Dropdown stehen in einer gemeinsamen Zeile. Nur Fenstergröße und
 Rätselansicht besitzen rechts ein eigenes fokussierbares Fragezeichen.
