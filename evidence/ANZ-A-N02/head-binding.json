@@ -1,0 +1,15 @@
+{
+  "review_head": "ce729e130f13b0a43c723c8d2045e9767d801fad",
+  "base": "5d90b218e3c96c7cd133c2b6c5db39a65674ff5c",
+  "executed_product_head": "2c988cb1d58d75bacd3c8429981e80304816fccf",
+  "game_tree": "2ecbcc19604292c860bc13828038ec143015bd34",
+  "identical_game_tree": true,
+  "only_later_changes": [
+    ".ci/package.json",
+    "docs/DISPLAY_SETTINGS.md",
+    "docs/Z2_SELECTION.md"
+  ],
+  "originals_manifest": "manifest.json",
+  "originals_download_verification": "download-verification.json",
+  "reason": "Only package-plan prose and documentation formatting changed after the Windows/core probes. The complete game tree including code, fonts, assets, project and export settings is byte-identical. Original reports retain their actual executed head; no relabelling of original bytes. Final-head Package CI is checked separately."
+}

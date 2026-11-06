@@ -4,6 +4,10 @@ Produkt-Head: `2c988cb1d58d75bacd3c8429981e80304816fccf`. Main-Basis: `5d90b218e
 
 [Verbindliches Paket ANZ-A-N02](https://github.com/venomenon328/picross/issues/527#anz-a-n02), [Draft-PR #528](https://github.com/venomenon328/picross/pull/528). Empfänger: unabhängiger ANZ-A-N02-R03-Reviewer. Geplantes Ende **13.11.2026**; Git-Ref ohne automatische TTL. Nach R03 im beauftragten Rückbau entfernen, bei weiter offenem Gate Bedarf/Zustellung erneut prüfen. Kein Merge-PR; diese Dateien werden nicht in den Produktbranch übernommen.
 
+**Aktueller Review-Head:** `ce729e130f13b0a43c723c8d2045e9767d801fad`. [Bytebindung](head-binding.json): kompletter `game/`-Baum identisch zum tatsächlich ausgeführten Head oben. Danach nur Paketplan-Prosa und Dokumentformatierung; Originalberichte bleiben unverändert an ihren ausgeführten Head gebunden. Finale Package-CI wird separat am Review-Head geprüft.
+
+[Öffentlicher Binär-Rückdownload](download-verification.json): alle 36 manifestgebundenen Dateien, 30.579.370 Bytes, darunter sieben Dateien über 1 MiB. Die großen zurückgeladenen 1080p-/Vollbild-/Vorschauoriginale wurden erneut direkt in Originalauflösung geöffnet. Kein bekannter Zugriffsvorbehalt; der Reviewer benötigt einen binärfähigen Downloader und Bildanzeiger.
+
 ## Tatsächlich ausgeführt
 
 Exportierter Windows-Spieler aus sauberem Produkt-Checkout mit synthetischem Katalog und regulärem Buchroot. `export.json` bindet alle Produkt-GDScripts sowie EXE/PCK per SHA-256. Externer rein lesender Beobachter als isolierter Autoload; echte Win32-Maus-/Rad-/Tasteneingaben. Keine echten Saves. Windows 11 (10.0.26200), NVIDIA RTX 3070, zwei 2560×1440-Desktops, effektiv 96 DPI/Skala 1.0. Keine physische 4K-/16:10-/andere-DPI-Probe und kein Chromium.
