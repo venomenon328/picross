@@ -1,0 +1,21 @@
+{
+	"adapter": "",
+	"at_measurements": [],
+	"checks": 189,
+	"display_server": "headless",
+	"failures": [],
+	"format": "picross-kat2-native-v1",
+	"kb_measurements": [],
+	"kk_measurements": [],
+	"kk_pointer_measurements": [],
+	"mode": "information",
+	"quit_slot_hashes": {
+		"t01.bak": "9a454cbd97ccd5692704680d9b6ba9b0302e95760b1bafbdcfc4f256e168d0f3",
+		"t01.json": "9a454cbd97ccd5692704680d9b6ba9b0302e95760b1bafbdcfc4f256e168d0f3",
+		"t02.json": "5a69f08faa033b40d8f668f0db04f988937d4926821022c69f5863283f839cbc"
+	},
+	"test_only": true,
+	"timings_ms": {
+		"startup_ms": 1821.041
+	}
+}
