@@ -1,0 +1,189 @@
+{
+  "format": "bti-a-review-originals-v1",
+  "source_head": "51e58889583ccd6eeb40d21db1c09a0ff55a8433",
+  "expires": "2026-11-13",
+  "recipient": "BTI-A-R01 independent reviewer and BTI-A-M01 owner",
+  "files": [
+    {
+      "path": "review-evidence/BTI-A/catalog-1280x720-ui125.png",
+      "bytes": 974634,
+      "sha256": "c86448154a98215f02a91b2c6983f41f105d248069dd984440dfacce2353b211"
+    },
+    {
+      "path": "review-evidence/BTI-A/catalog-1920x1080-ui100.png",
+      "bytes": 2035617,
+      "sha256": "f0a8c140cdec22bda8a7d421688f11eed90acadb78ab8373308c229a25f2b6f3"
+    },
+    {
+      "path": "review-evidence/BTI-A/catalog-2560x1440-ui125.png",
+      "bytes": 3387969,
+      "sha256": "029c64f9d9aa57a4741e9419fdc3550060612907f34868e0a3daf2fa555ec8a1"
+    },
+    {
+      "path": "review-evidence/BTI-A/exports.json",
+      "bytes": 659,
+      "sha256": "8d34a3c49f320fdd9ec325c038b2d425ead51aff7c8cdaf2740c102f8470e942"
+    },
+    {
+      "path": "review-evidence/BTI-A/help-1280x720-ui125.png",
+      "bytes": 1030048,
+      "sha256": "0925a0cdb3ff4f0809187ffba2e7d04d8e98ee7f495a01dfd81d8d3c3eee7991"
+    },
+    {
+      "path": "review-evidence/BTI-A/help-1920x1080-ui100.png",
+      "bytes": 1982337,
+      "sha256": "973a7c8d419397fad4ced6f328d0830d435d9b9f4adb90264a5a1d87d6ffa2d9"
+    },
+    {
+      "path": "review-evidence/BTI-A/help-2560x1440-ui125.png",
+      "bytes": 3113610,
+      "sha256": "82227bfe53d5689b211a5f0a03fcbf299c093b952b5c3af3fe43b6266eca06f1"
+    },
+    {
+      "path": "review-evidence/BTI-A/native.json",
+      "bytes": 5944,
+      "sha256": "4bcb2436a1a70bd92aaa529b46ef7261914b36bc0d45a80ed49111b9cd631f63"
+    },
+    {
+      "path": "review-evidence/BTI-A/native.log",
+      "bytes": 200,
+      "sha256": "7047ba8b8fcbbf04ec995e90c1b6aa0958d29900a5a2cd0ddcdd357af2a2e208"
+    },
+    {
+      "path": "review-evidence/BTI-A/native_titles.gd",
+      "bytes": 7626,
+      "sha256": "78ca01d3d182ec08fc0ed6c57c289708f171d16763b81f56f05f879a6be1a463"
+    },
+    {
+      "path": "review-evidence/BTI-A/pack_titles.gd",
+      "bytes": 956,
+      "sha256": "4bc2efeade0ea2090250cf33c33dd5d251dbce6822c69c0ad7e8c9ef39ef515f"
+    },
+    {
+      "path": "review-evidence/BTI-A/player-start.log",
+      "bytes": 172,
+      "sha256": "2fafe0ae2ca2b18027e55a4d2e73bdda7a80b71ef535330fbbbfecac74f8864f"
+    },
+    {
+      "path": "review-evidence/BTI-A/settings-1280x720-ui125.png",
+      "bytes": 978719,
+      "sha256": "801d45dbfd71568f45030fa570ec9fc4a470c884261e95a67bca423a1ee4f335"
+    },
+    {
+      "path": "review-evidence/BTI-A/settings-1920x1080-ui100.png",
+      "bytes": 1809989,
+      "sha256": "b46023eafaf3373c294d668a2f38c6794d2f0e1fe2257241d0a1653ff061ef62"
+    },
+    {
+      "path": "review-evidence/BTI-A/settings-2560x1440-ui125.png",
+      "bytes": 2897098,
+      "sha256": "5a7e6dabc439190ec8b6d76fdcd065ecff020f6eec5dcb87e8f78dbe0541d0ed"
+    },
+    {
+      "path": "review-evidence/BTI-A/shipped-windows-catalog.png",
+      "bytes": 1480878,
+      "sha256": "dbac13dbfdef70fd4faf759c4e3d1343f97f9ecd3bb721ede7a663caa842c975"
+    },
+    {
+      "path": "review-evidence/BTI-A/start_export.py",
+      "bytes": 3453,
+      "sha256": "cee895a0170e080c9b4f7fb29c608a275004e6f64393016b2b16a107f6c8682e"
+    },
+    {
+      "path": "review-evidence/BTI-A/web-titles-pck.log",
+      "bytes": 189,
+      "sha256": "d9fc7b16849f870e88d462f5125560283acc1740b0dc2a7ce4e107070158e9f2"
+    },
+    {
+      "path": "review-evidence/BTI-A/windows-titles-pck.log",
+      "bytes": 189,
+      "sha256": "d9fc7b16849f870e88d462f5125560283acc1740b0dc2a7ce4e107070158e9f2"
+    },
+    {
+      "path": "game/art/drawing/view_titles/catalog.png",
+      "bytes": 1123776,
+      "sha256": "fb72a42595b779daaa9cbaf531c0efe276e8976a0afa82aea4d5cfe6bdae914a"
+    },
+    {
+      "path": "game/art/drawing/view_titles/help.png",
+      "bytes": 1108805,
+      "sha256": "d2d9c56d8f6b87c046e36d58217458c36b78f8e385c0b00f697981c388361bec"
+    },
+    {
+      "path": "game/art/drawing/view_titles/settings.png",
+      "bytes": 961405,
+      "sha256": "131920fe53a08a697b9a42725d8ab7bcaca9df3e5bac2a3531082b1a3bf20892"
+    }
+  ],
+  "alpha": [
+    {
+      "file": "catalog.png",
+      "mode": "RGBA",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_zero": 1128732,
+      "alpha_partial": 443383,
+      "alpha_opaque": 413,
+      "all_alpha_bounds": [
+        21,
+        23,
+        2154,
+        708
+      ],
+      "visible_alpha_gt8_bounds": [
+        26,
+        58,
+        2144,
+        687
+      ]
+    },
+    {
+      "file": "help.png",
+      "mode": "RGBA",
+      "size": [
+        1644,
+        957
+      ],
+      "alpha_zero": 1094560,
+      "alpha_partial": 478725,
+      "alpha_opaque": 23,
+      "all_alpha_bounds": [
+        0,
+        13,
+        1620,
+        957
+      ],
+      "visible_alpha_gt8_bounds": [
+        129,
+        82,
+        1515,
+        902
+      ]
+    },
+    {
+      "file": "settings.png",
+      "mode": "RGBA",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_zero": 1169282,
+      "alpha_partial": 402951,
+      "alpha_opaque": 295,
+      "all_alpha_bounds": [
+        80,
+        9,
+        2158,
+        699
+      ],
+      "visible_alpha_gt8_bounds": [
+        83,
+        90,
+        2121,
+        679
+      ]
+    }
+  ]
+}

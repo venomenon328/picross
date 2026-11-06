@@ -1,0 +1,21 @@
+{
+  "source_head": "51e58889583ccd6eeb40d21db1c09a0ff55a8433",
+  "packs": [
+    {
+      "platform": "windows",
+      "bytes": 83017452,
+      "sha256": "7227057ba6b5b75884513f8f42e836e831cf5ca631264283dd60bd0793481a9d"
+    },
+    {
+      "platform": "web",
+      "bytes": 83017452,
+      "sha256": "00c8dbc5738e949d300966869d146a61dcb819115d2771aef141f7a7ca9064e7"
+    }
+  ],
+  "exe_sha256": "5543ab4b6fb453c5dbe7f4effa0aad7f1cc06d73c12e8436adfc9fb266ac34ee",
+  "startup": "Unmodified Windows exe/PCK, isolated profile, actual native client PrintWindow capture; normal WM_CLOSE exit 0; no gameplay.",
+  "client": [
+    1920,
+    1080
+  ]
+}
