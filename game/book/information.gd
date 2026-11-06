@@ -8,7 +8,11 @@ var section: String = "settings"
 func _init(owner: Control) -> void:
 	app = owner
 	var old: Node = app.settings_panel.get_parent()
-	app.settings_panel.reparent(app.info_scroll)
+	var centred := HBoxContainer.new()
+	centred.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	centred.alignment = BoxContainer.ALIGNMENT_CENTER
+	app.info_scroll.add_child(centred)
+	app.settings_panel.reparent(centred)
 	help_scroll = ScrollContainer.new()
 	help_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	app.information.add_child(help_scroll)
@@ -19,7 +23,7 @@ func _init(owner: Control) -> void:
 		panel.show()
 	for scroll: ScrollContainer in [app.info_scroll,help_scroll]:
 		scroll.mouse_force_pass_scroll_events = false
-	right_return = app._text_button("Zurück zum Katalog",app.return_to_work)
+	right_return = app._text_button("Zurück",app.return_to_work)
 	right_return.name = "information-return"
 	app.information.add_child(right_return)
 	# Reuse the existing section shortcuts; each belongs to the opposite page.
@@ -30,7 +34,7 @@ func positions() -> Vector2i:
 	return Vector2i(app.info_scroll.scroll_vertical,help_scroll.scroll_vertical)
 
 func focus_navigation() -> void:
-	var control: Control = app.ui_scale_button if section == "settings" else app.information.get_node("settings-access")
+	var control: Control = app.ui_scale_choice if section == "settings" else app.information.get_node("settings-access")
 	control.focus_mode = Control.FOCUS_ALL
 	control.grab_focus()
 
@@ -71,7 +75,7 @@ func layout() -> void:
 	var switch: Button = app.information.get_node("help-access" if left else "settings-access")
 	var caption: String = "Zurück zum Katalog" if app.information_origin == "album" else "Zurück zum Rätsel"
 	for button: Button in [app.actions["nav-work"],right_return]:
-		button.text = caption
+		button.text = "Zurück"
 		button.tooltip_text = caption
 		button.accessibility_name = caption
 		button.ui_scale = u
@@ -86,10 +90,8 @@ func layout() -> void:
 	app._place(switch,Rect2(Vector2(edge-210*u,top),Vector2(210*u,hit)))
 	var scroll: ScrollContainer = app.info_scroll if left else help_scroll
 	app._place(scroll,Rect2(Vector2(x,top+hit+24*u),Vector2(edge-x,bottom-top-hit-24*u)))
-	for panel: Control in [app.settings_panel,app.help_panel]:
-		panel.add_theme_constant_override("separation",roundi(16*u))
-		for child: Node in panel.get_children():
-			if child is Label: child.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	app._layout_settings(app.info_scroll.size.x)
+	app.help_panel.add_theme_constant_override("separation",roundi(16*u))
 	# ScrollContainer itself clamps each independent offset after reflow.
 	if app.get_viewport().gui_get_focus_owner() != null:
 		var focus: Control = app.get_viewport().gui_get_focus_owner()

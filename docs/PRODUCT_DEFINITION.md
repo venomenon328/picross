@@ -1,5 +1,16 @@
 # Produktdefinition: picross
 
+**ANZ-A / #527 · auf dem Arbeitsbranch implementiert, Abnahmen im Produkt-PR:**
+Die native Windowsfassung bietet ausschließlich feste wählbare Fenstergrößen
+zwischen 1280×720 und 3840×2160 sowie die Anzeigemodi Fenster, rahmenloses
+Vollbild und exklusives Vollbild. Fensterpresets werden nach realem
+Monitorarbeitsbereich samt Dekorationen gefiltert; beide Vollbildmodi nutzen
+die aktuelle Desktopauflösung. Eine 15-s-Vorschau mit sicherer Rücknahme und
+eigener Display-Präferenz ergänzt die bestehende Buch-Einstellungsseite;
+P1-Saves und die Browserfenstersteuerung bleiben unverändert. Die Freigabe
+verlangt keinen Sonderfall für Änderungen während einer Buchseitenanimation.
+[ANZ-Fachvertrag](DISPLAY_SETTINGS.md), [Issue/Paket ANZ-A](https://github.com/venomenon328/picross/issues/527).
+
 **B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
 und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
 Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten

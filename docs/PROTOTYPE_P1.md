@@ -1,5 +1,18 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+**ANZ-A / #527 · auf dem Arbeitsbranch implementiert, Abnahmen im Produkt-PR:**
+[ANZ-Fachvertrag](DISPLAY_SETTINGS.md) löst D-07/D-21 und §5.2 **nur** für die
+native Wahl der Fenstergröße und die bisher erlaubte freie Resize-/Maximier-
+Bedienung ab: statt beliebiger Clientabmessungen feste monitorabhängige
+Presets 1280×720 bis 3840×2160, dazu Fenster/rahmenloses/exklusives Vollbild
+bei aktueller Desktopauflösung. Sicherer 15-s-Rollback und separate
+versionierte Anzeigepräferenz sind implementiert, ohne Schema-1-Migration.
+Der bestehende 1920×1080-Fensterstart bleibt passender Standard,
+1080p primäres Komfortziel und 720p begrenzter Fallback; Raster-/UI-Fit,
+Hinweise und Web-Verhalten bleiben unverändert. Kein neuer Spezialpfad
+für Moduswechsel während einer Buchseitenanimation. Technische Nachweise
+und getrennte Windows-/Reviewabnahmen im Produkt-PR. [Issue #527](https://github.com/venomenon328/picross/issues/527).
+
 **HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet Tidy Hand für
 normale Spielertexte einschließlich Warnungen und gemessene Textbudgets;
@@ -300,9 +313,10 @@ und in der nachfolgenden Bedienung; frühere Berichte bleiben historisch.
 
 D-21 präzisiert D-07: 1920×1080 ist die primäre Layoutreferenz und die gewünschte
 Clientfläche beim Fensterstart, soweit diese einschließlich des tatsächlichen Rahmens
-in den verfügbaren Monitorarbeitsbereich passt. Andernfalls wird die Clientfläche so
-begrenzt, dass der ganze Rahmen sichtbar bleibt. Kein Vollbildzwang, Offscreen-Start
-oder Eingriff in Windows-Einstellungen. 1280×720 bleibt Mindest-/Fallback-Test,
+in den verfügbaren Monitorarbeitsbereich passt. Im nativen Windows-Spieler gilt ANZ: andernfalls größter passender
+Preset bis höchstens 1920×1080; ohne passenden 720p-Preset rahmenloses Vollbild.
+Keine freie Größenänderung/Maximierung und kein Eingriff in Windows-Einstellungen.
+Webfenster bleiben browsergesteuert. 1280×720 bleibt Mindest-/Fallback-Test,
 1600×900 kleinerer Regressionstest und 2560×1440 unterstützte größere Fläche.
 
 Arbeitszoom, UI-/Hinweisskalierung und Fenstergröße sind getrennt. Technischer Ausgangswert: 24 logische Einheiten Zellabstand bei 100 % Arbeitszoom; eine begründete Feinanpassung nach Darstellungstests ist reversibles Implementierungsdetail. Vergrößern/Maximieren des Fensters vergrößert bei gleichem Zoom und UI-Maßstab nicht automatisch die Zellen. Stattdessen mehr Raster zeigen oder kleine Raster mit ruhigen Rändern platzieren. Eine ausdrücklich gewählte Gesamtansicht ist vom Arbeitszoom zu unterscheiden; „Arbeitsgröße“ stellt eine brauchbare Bearbeitungsgröße wieder her.
@@ -367,8 +381,9 @@ müssen über die erreichbare Zustandsfolge vollständig lesbar bleiben.
 Überfahren benachbarter Linien, des
 Rasters oder anderer UI übernimmt keine andere Folge und wird weder Raster-Pan noch
 Zellbearbeitung. Leere/kurze Folgen pannen nicht in leeren Raum. Anfang, Mitte und Ende
-jeder langen Folge bleiben erreichbar; „Hinweise rasterseitig ausrichten“ setzt alle
-Einzelpositionen bewusst zurück.
+jeder langen Folge bleiben erreichbar. ANZ-A-N02 / #527 entfernt den manuellen
+Hinweisreset vollständig; Einstellungsbesuche erhalten die individuellen Leseanker.
+Rasterseitiger Default, Slot-Ausrichtung und automatische Normalisierung bleiben.
 
 Die wirkungslosen Raster-/Miniaturnavigationsversuche erhalten sämtliche individuellen Lesepositionen.
 Vorübergehende Vollanzeige erhält alle semantischen Rand-/Mittelanker, auch beim Speichern und frischen Neustart; erneutes Verengen rekonstruiert die Lesestelle. Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,

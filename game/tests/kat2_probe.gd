@@ -174,6 +174,7 @@ func run() -> void:
 		await pages()
 		await sorting()
 	elif mode == "information":
+		await preload("res://tests/display_cases.gd").run(self)
 		await information_saves()
 	elif mode == "kb":
 		await compact_buttons()
@@ -211,8 +212,12 @@ func run() -> void:
 		for filename: String in save_bytes():
 			quit_slot_hashes[filename] = FileAccess.get_sha256(Store.test_root_override.path_join(filename))
 		write_report()
+		app.return_to_work()
+		await frames()
+		check(app.album.visible,"N02: actual catalog exit remains reachable")
+		write_report()
 		print("KAT2_QUIT_ATTEMPT catalog-origin information")
-		click(caption_button(app.settings_panel, "Beenden"))
+		click(caption_button(app.album, "Beenden"))
 		await frames()
 		check(false, "catalog-origin information permits regular process quit")
 	write_report()
@@ -280,10 +285,20 @@ func caption_button(parent: Node, caption: String) -> Button:
 	check(false, "UI button exists: " + caption)
 	return null
 
+func choose_scale(index: int) -> void:
+	await choose_option(app.ui_scale_choice,index)
+	check(app.ui_scale == (1.25 if index == 1 else 1.0),"N02 pointer applies session UI scale")
+
 func choose_view(index: int) -> void:
-	click(app.view_choice)
+	await choose_option(app.view_choice,index)
+	check(app.board.mode == ("V" if index == 1 else "G"),"pointer changes puzzle view")
+
+func choose_option(choice: OptionButton, index: int) -> void:
+	app.info_scroll.ensure_control_visible(choice)
 	await frames()
-	var popup: PopupMenu = app.view_choice.get_popup()
+	click(choice)
+	await frames()
+	var popup: PopupMenu = choice.get_popup()
 	check(popup.visible, "puzzle view popup opens by pointer")
 	# Native popup hit testing, including the actual item_selected signal.
 	for y: int in range(4, popup.size.y - 4, 4):
@@ -304,7 +319,7 @@ func choose_view(index: int) -> void:
 				surface.push_input(event, true)
 			break
 	await frames()
-	check(app.board.mode == ("V" if index == 1 else "G") and not popup.visible, "pointer changes puzzle view")
+	check(choice.selected == index and not popup.visible, "pointer selects actual option")
 
 func information_profile(base: String, state: String) -> void:
 	if app != null:
@@ -325,6 +340,10 @@ func information_profile(base: String, state: String) -> void:
 	foreign.close()
 	await new_app()
 
+func information_back_labels(destination: String) -> void:
+	for button: Button in [app.actions["nav-work"],app.info.right_return]:
+		check(button.text == "Zurück" and button.tooltip_text == destination and button.accessibility_name == destination,"N03: short information back label keeps actual destination: "+destination)
+
 func information_saves() -> void:
 	var base: String = Store.test_root_override
 	for state: String in ["error", "recovered", "recovered_missing", "backup_invalid"]:
@@ -337,13 +356,21 @@ func information_saves() -> void:
 		click(caption_button(app.album, "Einstellungen / Info"))
 		await frames()
 		check(app.information.visible and app.information_origin == "album", state + ": pointer opens catalog information")
+		information_back_labels("Zurück zum Katalog")
+		if state == "error":
+			click(app.information.get_node("help-access"))
+			await frames()
+			information_back_labels("Zurück zum Katalog")
+			click(app.info.right_return)
+			await frames()
+			check(app.album.visible and save_bytes() == original,"N03: help returns to catalog without touching damaged saves")
+			click(caption_button(app.album,"Einstellungen / Info"))
+			await frames()
 		await choose_view(1)
 		check(app.save_timer.is_stopped(), state + ": catalog view change schedules no slot save")
 		await create_timer(0.5).timeout
 		check(app.slot_errors[0].is_empty() and save_bytes() == original, state + ": no save attempt after debounce")
-		click(app.ui_scale_button)
-		await frames()
-		click(app.clue_reset_button)
+		await choose_scale(1)
 		click(app.clue_completion_toggle)
 		click(app.animation_toggle)
 		click(app.actions["nav-work"])
@@ -388,13 +415,14 @@ func information_saves() -> void:
 	click(app.actions["menu"])
 	click(app.album_button)
 	app.select_by_id("T-02")
-	app.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	app.book.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
 	await frames()
 	check(app.work.visible and app.session.definition.id == "T-01" and app.status_label.visible, "dirty: failed flush blocks info, catalog, slot switch and WM close")
 	app.store.fail_step = ""
 	click(app.actions["menu"])
 	await frames()
 	check(app.information.visible and app.information_origin == "work", "dirty: successful retry permits work-origin information")
+	information_back_labels("Zurück zum Rätsel")
 	check(int(app.store.load_slot(app.session.definition).data.cells[2]) == 1, "dirty: retry persists confirmed cell")
 	app.store.fail_step = "after_temp"
 	var before_view: Dictionary = save_bytes()
@@ -421,12 +449,18 @@ func information_saves() -> void:
 	var attempted: bool = observed.timeouts == 1 and app.save_timer.is_stopped() and observed.failed_save
 	check(observed.scheduled and (pending or attempted), "dirty: work-origin view still schedules mandatory save")
 	click(app.actions["nav-work"])
-	click(caption_button(app.settings_panel, "Beenden"))
-	app.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	app.album.quit_requested.emit() # Existing catalog exit signal, also while return is blocked.
+	app.book.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
 	await create_timer(0.5).timeout
-	check(app.information.visible and app.status_label.visible and not app.slot_errors[0].is_empty(), "dirty: view failure blocks return, Beenden and WM close")
+	check(app.information.visible and app.status_label.visible and not app.slot_errors[0].is_empty(), "dirty: view failure blocks return, catalog exit signal and real root WM close")
+	click(app.information.get_node("help-access"))
+	await frames()
+	information_back_labels("Zurück zum Rätsel")
+	click(app.info.right_return)
+	await frames()
+	check(app.information.visible and app.information_section == "help" and app.status_label.visible and not app.slot_errors[0].is_empty(),"N03: help back also blocks failed flush and keeps retry reachable")
 	app.store.fail_step = ""
-	click(app.actions["nav-work"])
+	click(app.info.right_return)
 	await frames()
 	check(app.work.visible and app.slot_errors[0].is_empty(), "dirty: retry clears failure and restores work")
 	# A fresh damaged profile tests the real Beenden path at the end of run().

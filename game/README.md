@@ -172,9 +172,41 @@ Scheitert ein verpflichtender Save, bleibt die aktuelle Ansicht offen und zeigt
 den Fehler. Album, Blattwechsel und reguläres Beenden gelingen nach einem
 erfolgreichen Retry.
 
-Startziel: 1920×1080 Clientfläche, auf den verfügbaren Arbeitsbereich einschließlich Fensterrahmen
-begrenzt. Unter 1280×720 erscheint eine verständliche Meldung. Vergrößern des Fensters
-zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht automatisch.
+Unter **Einstellungen → Anzeige** bietet Windows **Fenster**, **Rahmenloses Fenster**
+und **Exklusives Vollbild**. Fenster lassen sich verschieben; Größe und Maximieren
+sind gesperrt. Die Fenstergröße ist aus 1280×720, 1366×768, 1600×900, 1920×1080,
+1920×1200, 2560×1440, 2560×1600 und 3840×2160 wählbar, soweit der gesamte Rahmen
+in den aktuellen Monitorarbeitsbereich passt. Nicht passende Größen sind deaktiviert.
+Vollbild verwendet die aktuelle Desktopauflösung, zeigt diese lesbar an und erhält
+den letzten Fensterpreset für die Rückkehr. Die Windows-Desktopauflösung wird nicht geändert.
+
+Die Einstellungen zeigen zwei handgezeichnete Gruppen **Anzeige** und
+**Rätselansicht**, mittig auf der linken Buchseite. Feldname und Auswahl stehen
+nebeneinander. Nur **Fenstergröße** und **Rätselansicht** haben ein Fragezeichen,
+das beim Darüberfahren oder Tastaturfokus erklärt; die Fenstergrößenhilfe bleibt auch im Vollbild
+erreichbar. **UI-Skalierung** bietet **100 %** und **125 %** für die laufende Sitzung.
+Anzeigemodus und UI-Skalierung nutzen ohne Fragezeichen die volle Zeilenbreite.
+„Einstellungen“ und die beiden Gruppenüberschriften tragen dieselbe Bakso-Schrift
+wie der Katalogtitel; die Gruppenüberschriften sind kleiner gesetzt.
+Der obere Button **Zurück** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
+zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
+Bei knapper Höhe bleibt alles durch vertikales Scrollen erreichbar.
+Beenden steht im Katalog; auch das normale Fensterschließen sichert den Stand. Das deaktivierte Größenfeld
+zeigt im Vollbild die Desktopauflösung; im Fenster den gewählten Preset.
+
+Jede Änderung wird sofort für **15 Sekunden** ausprobiert. **Beibehalten** speichert;
+**Abbrechen**, Escape oder Ablauf stellt die vorherige funktionierende Anzeige wieder her.
+Alt-Tab bestätigt nichts. Bei nicht verfügbarem Modus oder verändertem Monitor hilft
+ein sichtbarer Fallback; er überschreibt die gespeicherte Auswahl erst nach ausdrücklicher
+Bestätigung. Speicherfehler werden angezeigt und nehmen die Vorschau zurück.
+Die eigene Datei `user://p1/display-preference.json` mit `.tmp`/`.bak` ist unabhängig
+von Rätselsaves und Katalogsortierung; eine unterbrochene Ersetzung lädt die gültige
+vorherige Fassung. Der Browser behält seine eigene Fenstersteuerung ohne diese Optionen.
+
+Startziel ist ein vollständig passendes 1920×1080-Fenster, andernfalls ein kleinerer
+Preset oder rahmenloses Vollbild. Unter 1280×720 erscheint die bestehende Mindestflächenmeldung.
+720p bleibt ein begrenzter Fallback, 1080p das Komfortziel. Mehr Fensterfläche
+zeigt mehr Raster oder ruhige Ränder; sie vergrößert die Arbeitszellen nicht automatisch.
 Die angebotenen Zoomstufen halten das gesamte Raster samt Rahmen innerhalb
 der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
 
@@ -290,8 +322,6 @@ Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
   geht es durchgehend in Gegenrichtung. Am Anschlag bleibt die Folge stehen.
   Dort darf ein Platz frei bleiben, damit die Zahlen beim Einrasten nicht
   zurückspringen. Alle Zahlen bleiben über die Folge der Lesepositionen erreichbar.
-  „Hinweise rasterseitig ausrichten“ stellt
-  alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
 - Freie Breite und Höhe zeigen nach dem Fit zusätzliche vollständige Zeilen- und
   Spaltenhinweise, ohne kleinere Zellen dafür zu erzwingen. Passende Folgen haben
   keine Auslassungsmarker und lassen sich nicht in Leerraum verschieben.
@@ -310,7 +340,9 @@ Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
   Überdeckung. Das gilt auch bei Arbeitszoom und Resize; alle Zustände bleiben
   in ganzen Slots eingerastet. Vorübergehende Vollanzeige bewahrt die Anker auch
   beim Speichern und Neustart; beim Verengen kehrt derselbe Lesebereich zurück.
-  Die UI-Skalierung, Hinweisrücksetzung und H1 stehen auf der Informationsseite.
+  Die UI-Skalierung, Rätselansicht und H1 stehen auf der Informationsseite.
+  Ihr Öffnen erhält die individuellen Hinweislesepositionen; ein manueller
+  Hinweisrücksetzbefehl wird nicht angeboten.
   `?` führt direkt zur scrollbar erreichbaren Bedienhilfe rechts; das Menü
   öffnet die Einstellungen links. Der Pfeil im Arbeitskopf führt zum Katalog.
   Auch bei 1280×720/UI 125 % bleiben Werkzeuge,

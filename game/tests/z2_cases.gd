@@ -64,7 +64,7 @@ static func run(t: SceneTree) -> void:
 		click(t,app.actions[route])
 		await t.process_frame
 		t.check(app.information.visible and not app.work.visible and app.information_section == ("help" if route == "help" else "settings"),"Z2-A03 shared N1 route " + route)
-		t.check(app.get_viewport().gui_get_focus_owner() == (app.information.get_node("settings-access") if route == "help" else app.ui_scale_button),"Z2-A03 deterministic focus " + route)
+		t.check(app.get_viewport().gui_get_focus_owner() == (app.information.get_node("settings-access") if route == "help" else app.ui_scale_choice),"Z2-A03 deterministic focus " + route)
 		var point: Vector2 = app.board.global_position+app.board.view.viewport.get_center()
 		t.mouse_button(point,true,MOUSE_BUTTON_RIGHT)
 		t.mouse_button(point,false,MOUSE_BUTTON_RIGHT)
@@ -106,12 +106,12 @@ static func run(t: SceneTree) -> void:
 	t.check(app.help_panel.is_visible_in_tree() and not app.settings_panel.is_visible_in_tree(),"Z2-A02 N1 help section event")
 	click(t,app.information.get_node("settings-access"))
 	t.check(app.settings_panel.is_visible_in_tree() and not app.help_panel.is_visible_in_tree(),"Z2-A02 N1 settings section event")
-	click(t,app.ui_scale_button)
+	app.ui_scale_choice.select(1)
+	app.ui_scale_choice.item_selected.emit(1)
 	t.check(app.ui_scale == 1.25,"Z2-A03 UI scale in N1")
 	click(t,app.clue_completion_toggle)
 	t.check(not app.mark_completed_clues,"Z2-A03 H1 in N1")
-	click(t,app.clue_reset_button)
-	t.check(app.board.row_clue_steps.count(0) == 40 and app.board.column_clue_steps.count(0) == 40,"Z2-A03 reset reads in N1")
+	t.check(app.board.column_clue_reads[21].anchor == "outer_start" and not app.board.has_method("reset_clue_pan"),"N02 settings keep clue reads and expose no reset")
 	t.root.size = Vector2i(1280,720)
 	await t.process_frame
 	app.return_to_work()
@@ -161,7 +161,7 @@ static func run(t: SceneTree) -> void:
 	app._save_current()
 	app.show_information("settings")
 	await t.process_frame
-	click(t,app.clue_reset_button)
+	app.set_puzzle_view(1) # A real retained view action still requires a safe flush.
 	app.store.fail_step = "after_rotation"
 	var information_state: Dictionary = state(app)
 	click(t,app.actions["nav-work"])
@@ -171,7 +171,7 @@ static func run(t: SceneTree) -> void:
 	t.check(app.repair_dialog.visible,"Z2-A04 recovery receives real click above information page")
 	app.repair_dialog.hide()
 	app.repair_dialog.confirmed.emit()
-	t.check(app.store.load_slot(app.session.definition).status == "loaded" and app.board.clue_step("row",35) == 0,"Z2-A04 N1 recovery saves the intended clue reset")
+	t.check(app.store.load_slot(app.session.definition).status == "loaded" and app.board.mode == "V","Z2-A04 N1 recovery saves the intended view change")
 	app.open_puzzle()
 	click(t,app.album_button)
 	app.finish_navigation()
