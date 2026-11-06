@@ -1,0 +1,2100 @@
+{
+  "source_head": "6f13c885a7e9e35e13765db4b366ac460316a494",
+  "assertions": [
+    {
+      "name": "supplement actual 1080p/UI125 with Bakso",
+      "passed": true
+    },
+    {
+      "name": "actual 1080p/UI125 view-help scene for prior large-original gate",
+      "passed": true
+    },
+    {
+      "name": "actual borderless preview with reachable modal at UI125",
+      "passed": true
+    },
+    {
+      "name": "supplement cancellation restores prior window",
+      "passed": true
+    },
+    {
+      "name": "supplement player closes through real WM close",
+      "passed": true
+    }
+  ],
+  "captures": {
+    "settings-1080p-ui125-view-help": {
+      "accept": [
+        630.0,
+        523.5,
+        520.0,
+        55.0
+      ],
+      "active": {
+        "mode": "window",
+        "preset": "1920x1080"
+      },
+      "adapter": "NVIDIA GeForce RTX 3070",
+      "album_visible": false,
+      "animation": [
+        520.611206054688,
+        768.277709960938,
+        745.0,
+        55.0
+      ],
+      "applying": false,
+      "board_cell": [
+        672.0,
+        382.119995117188,
+        24.0,
+        24.0
+      ],
+      "book_state": 4,
+      "borderless": false,
+      "cancel": [
+        630.0,
+        583.5,
+        520.0,
+        55.0
+      ],
+      "card": [
+        610.0,
+        391.5,
+        700.0,
+        308.0
+      ],
+      "card_visible": false,
+      "catalog_cards": [],
+      "catalog_heading": {
+        "base": "res://art/book/Fraunces.ttf",
+        "box": [
+          82.5599975585938,
+          42.1199989318848,
+          1152.0,
+          56.2499961853027
+        ],
+        "font": "Fraunces",
+        "instance": -9223371587477041384,
+        "resource": "",
+        "size": 35,
+        "text": "Rätselkatalog",
+        "visible": false,
+        "weight": {
+          "wght": 600.0
+        }
+      },
+      "catalog_info": [
+        [
+          859.5,
+          664.0,
+          193.0,
+          55.0
+        ]
+      ],
+      "client": [
+        1920,
+        1080
+      ],
+      "desktop": [
+        2560,
+        1440
+      ],
+      "dpi": 96,
+      "feedback": "",
+      "feedback_box": [
+        520.611206054688,
+        310.277740478516,
+        6.0,
+        27.0
+      ],
+      "feedback_visible": false,
+      "fields": [
+        {
+          "child_count": 2,
+          "choice": [
+            676.611206054688,
+            448.277740478516,
+            589.0,
+            55.0
+          ],
+          "focus_tip": [],
+          "help": [],
+          "help_focused": false,
+          "label": [
+            520.611206054688,
+            462.277740478516,
+            143.0,
+            27.0
+          ],
+          "name": "UI-Skalierung",
+          "row": [
+            520.611206054688,
+            448.277740478516,
+            745.0,
+            55.0
+          ],
+          "tooltip_text": ""
+        },
+        {
+          "child_count": 3,
+          "choice": [
+            676.611206054688,
+            628.277709960938,
+            521.0,
+            55.0
+          ],
+          "focus_tip": [
+            1265.61120605469,
+            638.277709960938,
+            555.0,
+            150.0
+          ],
+          "help": [
+            1210.61120605469,
+            628.277709960938,
+            55.0,
+            55.0
+          ],
+          "help_focused": true,
+          "label": [
+            520.611206054688,
+            642.277709960938,
+            143.0,
+            27.0
+          ],
+          "name": "Rätselansicht",
+          "row": [
+            520.611206054688,
+            628.277709960938,
+            745.0,
+            55.0
+          ],
+          "tooltip_text": "Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen."
+        },
+        {
+          "child_count": 2,
+          "choice": [
+            676.611206054688,
+            310.277740478516,
+            589.0,
+            55.0
+          ],
+          "focus_tip": [],
+          "help": [],
+          "help_focused": false,
+          "label": [
+            520.611206054688,
+            324.277740478516,
+            143.0,
+            27.0
+          ],
+          "name": "Anzeigemodus",
+          "row": [
+            520.611206054688,
+            310.277740478516,
+            745.0,
+            55.0
+          ],
+          "tooltip_text": ""
+        },
+        {
+          "child_count": 3,
+          "choice": [
+            676.611206054688,
+            378.277740478516,
+            521.0,
+            55.0
+          ],
+          "focus_tip": [],
+          "help": [
+            1210.61120605469,
+            378.277740478516,
+            55.0,
+            55.0
+          ],
+          "help_focused": false,
+          "label": [
+            520.611206054688,
+            392.277740478516,
+            143.0,
+            27.0
+          ],
+          "name": "Fenstergröße",
+          "row": [
+            520.611206054688,
+            378.277740478516,
+            745.0,
+            55.0
+          ],
+          "tooltip_text": "Im rahmenlosen und exklusiven Vollbild wird die aktuelle Desktopauflösung verwendet; der ausgewählte Fensterpreset gilt erst wieder im Fenstermodus."
+        }
+      ],
+      "focused": true,
+      "focused_control": "@Button@82",
+      "heading": {
+        "base": "",
+        "box": [
+          493.111206054688,
+          159.777740478516,
+          800.0,
+          53.0
+        ],
+        "font": "Bakso Daging",
+        "instance": -9223372004038539874,
+        "resource": "res://art/drawing/BaksoDaging-Regular.ttf",
+        "size": 35,
+        "text": "Einstellungen",
+        "visible": true,
+        "weight": {}
+      },
+      "help": [
+        1600.0,
+        51.0,
+        55.0,
+        55.0
+      ],
+      "help_return": [
+        160.296295166016,
+        53.1851654052734,
+        325.0,
+        55.0
+      ],
+      "info": true,
+      "info_return": [
+        101.111206054688,
+        74.7777481079102,
+        325.0,
+        55.0
+      ],
+      "info_switch": [
+        1423.05554199219,
+        74.7777481079102,
+        262.5,
+        55.0
+      ],
+      "information_origin": "album",
+      "left_back": {
+        "accessibility": "Zurück zum Katalog",
+        "box": [
+          101.111206054688,
+          74.7777481079102,
+          325.0,
+          55.0
+        ],
+        "text": "Zurück",
+        "tooltip": "Zurück zum Katalog",
+        "visible": true
+      },
+      "mark": [
+        520.611206054688,
+        698.277709960938,
+        745.0,
+        55.0
+      ],
+      "menu": [
+        1672.5,
+        51.0,
+        55.0,
+        55.0
+      ],
+      "message": "Anzeige gespeichert.",
+      "mode": 0,
+      "mode_control": [
+        676.611206054688,
+        310.277740478516,
+        589.0,
+        55.0
+      ],
+      "mode_popup": {
+        "items": [
+          [
+            "Fenster",
+            0
+          ],
+          [
+            "Rahmenloses Fenster",
+            1
+          ],
+          [
+            "Exklusives Vollbild",
+            2
+          ]
+        ],
+        "position": [
+          0,
+          0
+        ],
+        "size": [
+          100,
+          100
+        ],
+        "visible": false
+      },
+      "native_tips": [],
+      "os": "10.0.26200",
+      "outer": [
+        1926,
+        1109
+      ],
+      "pid": 46864,
+      "player": {
+        "cells": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "cursor": 0,
+        "history": [],
+        "view": {
+          "active_color": 1,
+          "center": [
+            10.0,
+            10.0
+          ],
+          "column_clue_reads": [
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            }
+          ],
+          "overview": false,
+          "row_clue_reads": [
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            }
+          ],
+          "tool": "fill",
+          "zoom": 24
+        }
+      },
+      "position": [
+        2868,
+        151
+      ],
+      "preview": false,
+      "quit_control": [],
+      "resize_disabled": true,
+      "resolution": "1920 × 1080",
+      "right_back": {
+        "accessibility": "Zurück zum Katalog",
+        "box": [
+          160.296295166016,
+          53.1851654052734,
+          325.0,
+          55.0
+        ],
+        "text": "Zurück",
+        "tooltip": "Zurück zum Katalog",
+        "visible": false
+      },
+      "save_current": [
+        520.611206054688,
+        310.277740478516,
+        263.0,
+        55.0
+      ],
+      "save_visible": false,
+      "saved": {
+        "mode": "window",
+        "preset": "1920x1080"
+      },
+      "scale": [
+        676.611206054688,
+        448.277740478516,
+        589.0,
+        55.0
+      ],
+      "scale_popup": {
+        "position": [
+          720,
+          412
+        ],
+        "size": [
+          471,
+          86
+        ],
+        "visible": false
+      },
+      "screen": 1,
+      "screen_scale": 1.0,
+      "scroll": [
+        101.111206054688,
+        159.777740478516,
+        1584.4443359375,
+        890.222290039063
+      ],
+      "scroll_max": 691.0,
+      "scroll_page": 691.0,
+      "scroll_value": 0,
+      "seconds": 12,
+      "section": "settings",
+      "section_boxes": [
+        {
+          "box": [
+            493.111206054688,
+            237.777740478516,
+            800.0,
+            293.0
+          ],
+          "font": {
+            "base": "",
+            "box": [
+              493.111206054688,
+              237.777740478516,
+              96.0,
+              38.0
+            ],
+            "font": "Bakso Daging",
+            "instance": -9223372004038539874,
+            "resource": "res://art/drawing/BaksoDaging-Regular.ttf",
+            "size": 25,
+            "text": "Anzeige",
+            "visible": false,
+            "weight": {}
+          },
+          "heading": "Anzeige",
+          "name": "display-options"
+        },
+        {
+          "box": [
+            493.111206054688,
+            555.777709960938,
+            800.0,
+            295.0
+          ],
+          "font": {
+            "base": "",
+            "box": [
+              493.111206054688,
+              555.777709960938,
+              176.0,
+              38.0
+            ],
+            "font": "Bakso Daging",
+            "instance": -9223372004038539874,
+            "resource": "res://art/drawing/BaksoDaging-Regular.ttf",
+            "size": 25,
+            "text": "Rätselansicht",
+            "visible": false,
+            "weight": {}
+          },
+          "heading": "Rätselansicht",
+          "name": "puzzle-options"
+        }
+      ],
+      "server_client": [
+        1920,
+        1080
+      ],
+      "settings_access": [
+        180.0,
+        110.0,
+        262.5,
+        55.0
+      ],
+      "settings_box": [
+        493.111206054688,
+        159.777740478516,
+        800.0,
+        691.0
+      ],
+      "settings_visible": true,
+      "size_control": [
+        676.611206054688,
+        378.277740478516,
+        521.0,
+        55.0
+      ],
+      "size_disabled": false,
+      "size_popup": {
+        "disabled": [
+          false,
+          true
+        ],
+        "position": [
+          422,
+          340
+        ],
+        "size": [
+          417,
+          290
+        ],
+        "visible": false
+      },
+      "time": 13402,
+      "ui_scale": 1.25,
+      "usable": [
+        2560,
+        0,
+        2560,
+        1392
+      ],
+      "view_control": [
+        676.611206054688,
+        628.277709960938,
+        521.0,
+        55.0
+      ],
+      "view_popup": {
+        "position": [
+          676,
+          683
+        ],
+        "size": [
+          521,
+          109
+        ],
+        "visible": false
+      },
+      "window_client": [
+        1920,
+        1080
+      ],
+      "work_visible": false
+    },
+    "preview-borderless-ui125": {
+      "accept": [
+        955.0,
+        723.0,
+        650.0,
+        55.0
+      ],
+      "active": {
+        "mode": "borderless",
+        "preset": "1920x1080"
+      },
+      "adapter": "NVIDIA GeForce RTX 3070",
+      "album_visible": false,
+      "animation": [
+        818.31494140625,
+        784.870361328125,
+        745.0,
+        55.0
+      ],
+      "applying": false,
+      "board_cell": [
+        672.0,
+        382.119995117188,
+        24.0,
+        24.0
+      ],
+      "book_state": 4,
+      "borderless": false,
+      "cancel": [
+        955.0,
+        794.0,
+        650.0,
+        55.0
+      ],
+      "card": [
+        930.0,
+        566.0,
+        700.0,
+        308.0
+      ],
+      "card_visible": true,
+      "catalog_cards": [],
+      "catalog_heading": {
+        "base": "res://art/book/Fraunces.ttf",
+        "box": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          56.2500038146973
+        ],
+        "font": "Fraunces",
+        "instance": -9223371520250736872,
+        "resource": "",
+        "size": 35,
+        "text": "Rätselkatalog",
+        "visible": false,
+        "weight": {
+          "wght": 600.0
+        }
+      },
+      "catalog_info": [
+        [
+          859.5,
+          664.0,
+          193.0,
+          55.0
+        ]
+      ],
+      "client": [
+        2560,
+        1440
+      ],
+      "desktop": [
+        2560,
+        1440
+      ],
+      "dpi": 96,
+      "feedback": "",
+      "feedback_box": [
+        818.31494140625,
+        326.870330810547,
+        6.0,
+        27.0
+      ],
+      "feedback_visible": false,
+      "fields": [
+        {
+          "child_count": 2,
+          "choice": [
+            974.31494140625,
+            464.870330810547,
+            589.0,
+            55.0
+          ],
+          "focus_tip": [],
+          "help": [],
+          "help_focused": false,
+          "label": [
+            818.31494140625,
+            478.870330810547,
+            143.0,
+            27.0
+          ],
+          "name": "UI-Skalierung",
+          "row": [
+            818.31494140625,
+            464.870330810547,
+            745.0,
+            55.0
+          ],
+          "tooltip_text": ""
+        },
+        {
+          "child_count": 3,
+          "choice": [
+            974.31494140625,
+            644.870361328125,
+            521.0,
+            55.0
+          ],
+          "focus_tip": [],
+          "help": [
+            1508.31494140625,
+            644.870361328125,
+            55.0,
+            55.0
+          ],
+          "help_focused": false,
+          "label": [
+            818.31494140625,
+            658.870361328125,
+            143.0,
+            27.0
+          ],
+          "name": "Rätselansicht",
+          "row": [
+            818.31494140625,
+            644.870361328125,
+            745.0,
+            55.0
+          ],
+          "tooltip_text": "Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen."
+        },
+        {
+          "child_count": 2,
+          "choice": [
+            974.31494140625,
+            326.870330810547,
+            589.0,
+            55.0
+          ],
+          "focus_tip": [],
+          "help": [],
+          "help_focused": false,
+          "label": [
+            818.31494140625,
+            340.870330810547,
+            143.0,
+            27.0
+          ],
+          "name": "Anzeigemodus",
+          "row": [
+            818.31494140625,
+            326.870330810547,
+            745.0,
+            55.0
+          ],
+          "tooltip_text": ""
+        },
+        {
+          "child_count": 3,
+          "choice": [
+            974.31494140625,
+            394.870330810547,
+            521.0,
+            55.0
+          ],
+          "focus_tip": [],
+          "help": [
+            1508.31494140625,
+            394.870330810547,
+            55.0,
+            55.0
+          ],
+          "help_focused": false,
+          "label": [
+            818.31494140625,
+            408.870330810547,
+            143.0,
+            27.0
+          ],
+          "name": "Fenstergröße",
+          "row": [
+            818.31494140625,
+            394.870330810547,
+            745.0,
+            55.0
+          ],
+          "tooltip_text": "Im rahmenlosen und exklusiven Vollbild wird die aktuelle Desktopauflösung verwendet; der ausgewählte Fensterpreset gilt erst wieder im Fenstermodus."
+        }
+      ],
+      "focused": true,
+      "focused_control": "@Button@358",
+      "heading": {
+        "base": "",
+        "box": [
+          790.81494140625,
+          176.370330810547,
+          800.0,
+          53.0
+        ],
+        "font": "Bakso Daging",
+        "instance": -9223372004038539874,
+        "resource": "res://art/drawing/BaksoDaging-Regular.ttf",
+        "size": 35,
+        "text": "Einstellungen",
+        "visible": true,
+        "weight": {}
+      },
+      "help": [
+        2240.0,
+        63.0,
+        55.0,
+        55.0
+      ],
+      "help_return": [
+        160.296295166016,
+        53.1851654052734,
+        325.0,
+        55.0
+      ],
+      "info": true,
+      "info_return": [
+        124.81494140625,
+        91.3703308105469,
+        325.0,
+        55.0
+      ],
+      "info_switch": [
+        1994.90747070313,
+        91.3703308105469,
+        262.5,
+        55.0
+      ],
+      "information_origin": "album",
+      "left_back": {
+        "accessibility": "Zurück zum Katalog",
+        "box": [
+          124.81494140625,
+          91.3703308105469,
+          325.0,
+          55.0
+        ],
+        "text": "Zurück",
+        "tooltip": "Zurück zum Katalog",
+        "visible": true
+      },
+      "mark": [
+        818.31494140625,
+        714.870361328125,
+        745.0,
+        55.0
+      ],
+      "menu": [
+        2312.5,
+        63.0,
+        55.0,
+        55.0
+      ],
+      "message": "",
+      "mode": 3,
+      "mode_control": [
+        974.31494140625,
+        326.870330810547,
+        589.0,
+        55.0
+      ],
+      "mode_popup": {
+        "items": [
+          [
+            "Fenster",
+            0
+          ],
+          [
+            "Rahmenloses Fenster",
+            1
+          ],
+          [
+            "Exklusives Vollbild",
+            2
+          ]
+        ],
+        "position": [
+          676,
+          365
+        ],
+        "size": [
+          589,
+          152
+        ],
+        "visible": false
+      },
+      "native_tips": [],
+      "os": "10.0.26200",
+      "outer": [
+        2560,
+        1440
+      ],
+      "pid": 46864,
+      "player": {
+        "cells": [
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1,
+          -1
+        ],
+        "cursor": 0,
+        "history": [],
+        "view": {
+          "active_color": 1,
+          "center": [
+            10.0,
+            10.0
+          ],
+          "column_clue_reads": [
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            }
+          ],
+          "overview": false,
+          "row_clue_reads": [
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            },
+            {
+              "anchor": "grid_end"
+            }
+          ],
+          "tool": "fill",
+          "zoom": 24
+        }
+      },
+      "position": [
+        2560,
+        0
+      ],
+      "preview": true,
+      "quit_control": [],
+      "resize_disabled": true,
+      "resolution": "2560 × 1440 (Desktop)",
+      "right_back": {
+        "accessibility": "Zurück zum Katalog",
+        "box": [
+          160.296295166016,
+          53.1851654052734,
+          325.0,
+          55.0
+        ],
+        "text": "Zurück",
+        "tooltip": "Zurück zum Katalog",
+        "visible": false
+      },
+      "save_current": [
+        818.31494140625,
+        326.870330810547,
+        263.0,
+        55.0
+      ],
+      "save_visible": false,
+      "saved": {
+        "mode": "window",
+        "preset": "1920x1080"
+      },
+      "scale": [
+        974.31494140625,
+        464.870330810547,
+        589.0,
+        55.0
+      ],
+      "scale_popup": {
+        "position": [
+          720,
+          412
+        ],
+        "size": [
+          471,
+          86
+        ],
+        "visible": false
+      },
+      "screen": 1,
+      "screen_scale": 1.0,
+      "scroll": [
+        124.81494140625,
+        176.370330810547,
+        2132.59252929688,
+        1233.62963867188
+      ],
+      "scroll_max": 691.0,
+      "scroll_page": 691.0,
+      "scroll_value": 0,
+      "seconds": 14,
+      "section": "settings",
+      "section_boxes": [
+        {
+          "box": [
+            790.81494140625,
+            254.370330810547,
+            800.0,
+            293.0
+          ],
+          "font": {
+            "base": "",
+            "box": [
+              790.81494140625,
+              254.370330810547,
+              96.0,
+              38.0
+            ],
+            "font": "Bakso Daging",
+            "instance": -9223372004038539874,
+            "resource": "res://art/drawing/BaksoDaging-Regular.ttf",
+            "size": 25,
+            "text": "Anzeige",
+            "visible": false,
+            "weight": {}
+          },
+          "heading": "Anzeige",
+          "name": "display-options"
+        },
+        {
+          "box": [
+            790.81494140625,
+            572.370361328125,
+            800.0,
+            295.0
+          ],
+          "font": {
+            "base": "",
+            "box": [
+              790.81494140625,
+              572.370361328125,
+              176.0,
+              38.0
+            ],
+            "font": "Bakso Daging",
+            "instance": -9223372004038539874,
+            "resource": "res://art/drawing/BaksoDaging-Regular.ttf",
+            "size": 25,
+            "text": "Rätselansicht",
+            "visible": false,
+            "weight": {}
+          },
+          "heading": "Rätselansicht",
+          "name": "puzzle-options"
+        }
+      ],
+      "server_client": [
+        2560,
+        1440
+      ],
+      "settings_access": [
+        180.0,
+        110.0,
+        262.5,
+        55.0
+      ],
+      "settings_box": [
+        790.81494140625,
+        176.370330810547,
+        800.0,
+        691.0
+      ],
+      "settings_visible": true,
+      "size_control": [
+        974.31494140625,
+        394.870330810547,
+        521.0,
+        55.0
+      ],
+      "size_disabled": true,
+      "size_popup": {
+        "disabled": [
+          false,
+          true
+        ],
+        "position": [
+          422,
+          340
+        ],
+        "size": [
+          417,
+          290
+        ],
+        "visible": false
+      },
+      "time": 15522,
+      "ui_scale": 1.25,
+      "usable": [
+        2560,
+        0,
+        2560,
+        1392
+      ],
+      "view_control": [
+        974.31494140625,
+        644.870361328125,
+        521.0,
+        55.0
+      ],
+      "view_popup": {
+        "position": [
+          676,
+          683
+        ],
+        "size": [
+          521,
+          109
+        ],
+        "visible": false
+      },
+      "window_client": [
+        2560,
+        1440
+      ],
+      "work_visible": false
+    }
+  }
+}
