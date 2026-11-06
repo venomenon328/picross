@@ -1,6 +1,13 @@
 # BTI · Bildbasierte Hauptüberschriften der Buchansichten
 
-**Freigegebener Sollstand vom 06.11.2026 · [Issue #533](https://github.com/venomenon328/picross/issues/533) · Paket BTI-A · auf dem Arbeitsbranch implementiert, R01/M01 vor Merge offen.** Die in der Ideendiskussion verwendete Vergleichstafel war ausschließlich eine Stilreferenz: **Stil C ohne beigefügte Blätter, Unterstreichungen, Schilder oder andere Bildmotive**. Sie ist kein finales Produktasset. Die tatsächlichen drei Originale, Prompts und Herkunft bindet jetzt die [Stilquelle BTI-C-1](design/view_titles/STYLE.md); aktuelle technische Nachweise stehen in [Draft-PR #534](https://github.com/venomenon328/picross/pull/534). Aus einer freigegebenen Gestaltungsrichtung wird keine persönliche Sichtabnahme.
+**BTI-C · V2-rev1-Integration auf dem Arbeitsbranch, eigene T01/R01/M01-Gates.**
+Maßgeblich ist [BTI-C mit D01–D03 und A01–A08](https://github.com/venomenon328/picross/issues/533#bti-c).
+Die drei konkreten V2-rev1-Originale sind durch BTI-B-M01 persönlich freigegeben
+und unabhängig am Original geprüft. Keine neue Stilwahl oder Generierung.
+Die [Stilquelle](design/view_titles/STYLE.md) und das aktive Manifest binden
+die unveränderten Bytes; aktuelle Integrationsnachweise stehen in
+[Draft-PR #534](https://github.com/venomenon328/picross/pull/534).
+Alte BTI-A-Nachweise gelten nur ihrem damaligen Stand.
 
 ## BTI-D01 · Rolle und exakte Texte
 
@@ -10,38 +17,51 @@
 | Hilfe | **Hilfe** | Kopf der rechten Informationsbuchseite; ersetzt nur den bisher sichtbaren Haupttitel „Spielerhilfe“ |
 | Einstellungen | **Einstellungen** | Kopf der linken Informationsbuchseite |
 
-Alle drei werden **als lokal gebündelte, eigens gezeichnete transparente Bilder** dargestellt, nicht als zur Laufzeit mit einem Font gesetzter Schriftzug. Keine KI-Anfrage im Spieler und keine Abhängigkeit von einem externen Dienst. Der exakte Text wird als semantischer UI-/Accessibilityname und bei fehlender Bildressource als gut lesbarer Textfallback vorgehalten; keine doppelte sichtbare Beschriftung im Normalfall. Für die Hilfe darf der interne funktionale Begriff „Spielerhilfe“ bleiben; ausschließlich die große sichtbare Überschrift lautet „Hilfe“.
+Alle drei werden **als lokal gebündelte, generativ hergestellte transparente Schriftzugbilder** dargestellt, nicht als zur Laufzeit mit einem Font gesetzter Schriftzug. Keine KI-Anfrage im Spieler und keine Abhängigkeit von einem externen Dienst. Der exakte Text wird als semantischer UI-/Accessibilityname und bei fehlender Bildressource als gut lesbarer Textfallback vorgehalten; keine doppelte sichtbare Beschriftung im Normalfall. Für die Hilfe darf der interne funktionale Begriff „Spielerhilfe“ bleiben; ausschließlich die große sichtbare Überschrift lautet „Hilfe“.
 
-**Begrenzte typografische Vorrangregel:** Auf dem BTI-A-Arbeitsbranch ersetzen diese Bilder an *genau diesen drei Stellen* die jeweiligen bisherigen Bakso-/Fraunces-Labels aus [HZ-D01/D08](HAND_DRAWN_UI.md), [ANZ](DISPLAY_SETTINGS.md), [HIL](BOOK_INTEGRATION.md) und dem [Gestaltungskonzept](DESIGN_CONCEPT.md). Die bisherigen Labels bleiben lesbare Ressourcenfallbacks. Unberührt bleiben die Bakso-Gruppentitel „Anzeige“ und „Rätselansicht“ samt Titellaschen, sonstige Kachel-/Arbeitsblatt- und Abschlussüberschriften, Hilfe-Kapitelüberschriften in Fraunces, Pangolin-Normaltext, Plex-Dialog-/Fallbacktext sowie Delight-Hinweiszahlen. Keine neue allgemeine Text- oder Fontoption.
+**Begrenzte typografische Vorrangregel:** Auf dem BTI-C-Arbeitsbranch ersetzen diese Bilder an *genau diesen drei Stellen* die jeweiligen bisherigen Bakso-/Fraunces-Labels aus [HZ-D01/D08](HAND_DRAWN_UI.md), [ANZ](DISPLAY_SETTINGS.md), [HIL](BOOK_INTEGRATION.md) und dem [Gestaltungskonzept](DESIGN_CONCEPT.md). Die bisherigen Labels bleiben lesbare Ressourcenfallbacks. Unberührt bleiben die Bakso-Gruppentitel „Anzeige“ und „Rätselansicht“ samt Titellaschen, sonstige Kachel-/Arbeitsblatt- und Abschlussüberschriften, Hilfe-Kapitelüberschriften in Fraunces, Pangolin-Normaltext, Plex-Dialog-/Fallbacktext sowie Delight-Hinweiszahlen. Keine neue allgemeine Text- oder Fontoption.
 
 ## BTI-D02 · Die freigegebene Zeichenhand
 
-**Zielcharakter: organisch-kalligrafische Titelzeichnung (Stil C), warm und sichtbar handgemacht.** Das Lettering verwendet erkennbar individuelle Buchstabenformen, lockere leichte Kursivität, ungleichmäßige Grundlinie und Abstände, kontrastierende dünne/dickere Striche, kurze raue/trockene Tintenpartien, unregelmäßig endende Feder-/Pinselzüge und wenige natürliche Überschneidungen. Dunkle, warme Buch-/Graphittinte mit hohem Kontrast zum vorhandenen warmen Papier; Schraffur höchstens als *innerer Buchstabenstrich*, nicht als eigenes Motiv. Die Strichzeichnung bleibt auch in tatsächlicher UI100-/UI125-Größe sichtbar handgezeichnet und dennoch sofort lesbar.
+**Freigegebene Zeichenhand: V2-rev1, dunkles neutrales offen schraffiertes Graphit.**
+Individuelle leicht geneigte breite Buchstaben, raue nachgezogene Konturen,
+wechselnde Höhen, Grundlinie und Abstände; grobe diagonale Striche mit offenen
+Zwischenräumen. Kein dominantes Braun/Sepia, keine glatt perfekte Kalligrafie
+oder nur verrauschte TTF. Die drei Originale bleiben unverändert.
 
-**Keine eigenständigen Bildelemente:** keine Blätter, Ranken, Puzzlestücke, Symbole, Banner, Holz-/Papierschilder, Rahmen, Fleckenhintergründe, frei schwebende Verzierungen, separate Zierränder oder unter den Text gesetzte Unterstreichung. Eine sanfte Bewegung innerhalb eines Buchstabenabschlusses ist erlaubt, wenn sie *Teil der Letterform* bleibt. Keine glatt perfekte Kalligrafie, keine stereotype geschwungene Computerfont, keine 3D-Block-/Comicbuchstaben. Die ausgewählte Referenz C bestimmt die zeichnerische Richtung, **nicht** ihre damals mitgezeichnete Dekoration.
-
-Die drei Titel bilden eine **gemeinsame Familie**: vergleichbare dunkle Strichsubstanz, optische Größe, Gewicht, Neigungs-/Schwungrichtung, Baselineschwankung und Randbehandlung. Kurze Wörter („Hilfe“) nicht künstlich horizontal strecken. Jeder Titel bekommt eine eigene lesbare Komposition; Ungleichmäßigkeit ist kontrolliert statt zufällig nach jedem Neuaufbau.
+Hilfe besitzt einen linkswärts aus dem unteren f-Ende wachsenden Querzug,
+Einstellungen einen längeren aus dem unteren g-Bogen. Diese buchstabengebundenen
+Schwünge sind freigegeben, kein pauschaler Unterstrichverzicht. Beim Katalog wird
+kein Anschluss erzwungen. Keine eigenständigen Blätter, Rahmen, Banner, Icons
+oder weiteren Illustrationen. Wortproportionen erhalten, Hilfe nicht strecken.
+Die konkrete Familie und Details sind bereits in BTI-B-M01 freigegeben;
+BTI-C-M01 beurteilt ihre tatsächliche größere Wirkung und Bedienbarkeit im Spiel.
 
 ## BTI-D03 · Nachvollziehbare spätere Produktion
 
 Reproduzierbarkeit bedeutet hier **weitgehend konsistent fortsetzbare Letteringgestaltung**, nicht das Versprechen, dass ein generatives Bildmodell mit demselben Prompt byteidentische Ergebnisse ausgibt. Darum sind **Stilbrief, tatsächliche Vorlagen und reale Quellen-/Bearbeitungsdaten zusammen** aufzubewahren. Prompt, Seed oder Modellname allein genügen nicht.
 
-Ein wiederverwendbarer **Masterbrief** darf für weitere *separat beauftragte* Wörter den Platzhalter `{TITEL}` einsetzen:
+Der textunabhängige aktuelle Brief steht in [STYLE](design/view_titles/STYLE.md).
+Die tatsächlichen vollständigen Prompts und Referenzketten der V2-Erstproduktion
+und vier Revisionsaufrufe bleiben in
+[provenance.json](../game/art/drawing/view_titles/provenance.json) erhalten.
+Backend-/Modellversion, Seed und unexponierte Parameter sind unbekannt.
+G4 war generative Sprenkelbereinigung, keine manuelle oder deterministische
+Retusche. Keine nachträgliche Freistellung, Beschneidung oder Neucodierung
+der freigegebenen finalen Bytes. Rechte-/Herkunftsgrenzen stehen in NOTICE.
 
-> Zeichne ausschließlich den genauen deutschen Schriftzug „{TITEL}“ als eigenständiges, handgefertigtes organisch-kalligrafisches Lettering: leicht kursive Feder-/trockene Pinselschrift, individuelle gut lesbare Glyphen, sichtbar wechselnde Strichdicke, subtile rauhe Papier-/Graphitspuren **nur innerhalb der Tintenstriche**, kleine unregelmäßige Grundlinie, warme nahezu schwarze/braune Tinte. Ruhige Buchästhetik, nicht glatt und nicht computerfontartig. Exakte Umlautpunkte und Orthografie. Der vollständige Schriftzug einschließlich aller Schwünge befindet sich im Bild, eng und gleichmäßig beschnitten mit etwas transparentem Sicherheitsrand. Echter transparenter Hintergrund. **Keine** zusätzlichen Gegenstände, Blätter, Ornamente, Schilder, Unterstreichungen, Rahmen, Schattenkulissen oder Papiertextur außerhalb der Buchstaben.
-
-Bei der tatsächlichen BTI-A-Herstellung dokumentieren und versionieren:
-
-1. **Style-Source:** den verwendeten finalen Stilbrief samt Negativvorgaben, Referenzversion/ausgewählte freigegebene finale Titel (nicht nur Chat-Verweis), bei Nutzung eines Generators dessen tatsächlich bekannten Werkzeug-/Modell-/Version-/Seed-/Parameterstand; Unbekanntes ausdrücklich als unbekannt bezeichnen. Spätere Textwünsche können die finalen Letterings als bildliche Stilreferenz nutzen.
-2. **Original/Korrektur:** vorhandene unbearbeitete Ausgangsbilder oder editierbare Quellen, sofern vorhanden und rechtlich zulässig; tatsächlich verwendete manuelle Texthilfe/Retusche/Freistellung/Konturkorrekturen mit Werkzeug und nachvollziehbaren Arbeitsschritten. Besonders die exakten Buchstaben `ä` und `ä`-Punkte des Katalogtitels sowie sämtliche übrigen Glyphen **visuell gegen den geforderten Text** kontrollieren, nicht eine KI-Buchstabenbehauptung übernehmen.
-3. **Endassets:** genau `Rätselkatalog`, `Hilfe`, `Einstellungen` als verlustfreie RGBA-PNGs ohne deckenden Papierhintergrund unter `game/art/drawing/view_titles/` (Dateinamen: `catalog.png`, `help.png`, `settings.png`). Die endgültigen Exportmaße und das Ziel-Fit werden an realen UI100/125-Referenzflächen gemessen; kein voreiliges starres Pixel- oder Breitenverhältnis. Saubere Alpha-/Anti-Aliasing-Kante, transparente Reserve für natürliche Federenden, sichtbare Hülle sauber zentriert, genug Auflösung für UI125. Keine vorgetäuschte Vektor-/SVG-Quelle.
-4. **Manifest/Herkunft:** Version der Stilgrammatik, Titel↔Dateiname, reale Pixelmaße, Bytezahl, SHA-256, Herkunft/Erzeuger/Nutzungsrechte, tatsächlich eingesetzte Arbeitsschritte und Auslieferungsbindung für die drei originalen PNGs dokumentieren. Quellen/Brief für zukünftige Stilkonstanz erhalten; unverworfene Alternativserien/Galerien nicht zur dauerhaften Produktlast machen. Bei bildgenerierten Outputs nur Rechte behaupten, die tatsächlich geklärt wurden.
-
-Die fertig gebundenen drei Titel sind die **dauerhaften visuellen Stilanker** für spätere *separat entschiedene* Wörter. Die frühere Chat-Konzepttafel ist weder eine verbotene Fremdquelle noch ein dauerhaft erreichbarer Assetpfad; ein späterer Ausführender muss die tatsächlichen freigegebenen Referenzbytes im Repository öffnen können. Wer die drei Ausgangsbilder nicht erzeugen/abrufen kann, meldet diese Fähigkeit als konkreten offenen Lieferpunkt, statt ein zufälliges TTF-Raster als fertiges Lettering auszugeben.
+Genau drei verlustfreie RGBA-PNGs unter `game/art/drawing/view_titles/`:
+`catalog.png`, `help.png`, `settings.png`. Manifest bindet Namen, Maße, Bytezahlen,
+SHA-256 sowie Alphahüllen. Die optische Hülle bei Alpha ≥16 bestimmt die
+Zentrierung; die gesamte PNG-Fläche einschließlich sehr schwacher Alpha-1-Reste
+wird proportional um diesen Mittelpunkt eingepasst, mit vier Pixeln Reserve.
+Kein Clipping der ä-/i-Punkte und f-/g-Enden. Godot importiert verlustfrei mit
+Mipmaps; Windows/Web liefern Titel und aktive Herkunftsressourcen offline.
+Keine dauerhafte Varianten-/Reviewgalerie. Historische Quellen nicht überschreiben.
 
 ## BTI-D04 · Geschützte Buch-/UI-Anordnung
 
-**Katalog:** Das Bild ersetzt nur den sichtbaren `Rätselkatalog`-Titel in der vorhandenen Kopfhöhe und ist innerhalb der *projizierten sicheren linken Papierhälfte* horizontal zentriert. Nicht fensterweit oder über dem Buchfalz. `game/book/content.gd` besitzt bereits getrennte Papierkoordinaten und eine rechte Zusammenfassung; deren Maße und die Filter-/Scroll-/Kartenflächen nicht durch einen festen Titel überdecken. Die aktuelle `title`-Labelrolle dient auch dem Arbeitsblatt und darf dafür nicht entfernt oder versehentlich zu einem Bildtitel gemacht werden.
+**Katalog:** Das Bild ersetzt nur den sichtbaren `Rätselkatalog`-Titel in einem größeren, aus der Papierhöhe bestimmten Kopfbereich und ist innerhalb der *projizierten sicheren linken Papierhälfte* horizontal zentriert. Nicht fensterweit oder über dem Buchfalz. `game/book/content.gd` besitzt bereits getrennte Papierkoordinaten und eine rechte Zusammenfassung; deren Maße und die Filter-/Scroll-/Kartenflächen nicht durch einen festen Titel überdecken. Die aktuelle `title`-Labelrolle dient auch dem Arbeitsblatt und darf dafür nicht entfernt oder versehentlich zu einem Bildtitel gemacht werden.
 
 **Hilfe/Einstellungen:** Auf der aktuell sichtbaren rechten beziehungsweise linken Informationsseite bilden drei feste Bereiche das Layout: **zentrierter Bildhaupttitel oben**, **unabhängig scrollender Inhaltsbereich in der Mitte**, **feste Navigation unten**. Haupttitel liegen außerhalb der Textscrollfläche, so dass sie beim Scrollen stehen bleiben. Bestehende Einstellungsgruppen, die begrenzte mittige Gruppengeometrie und die vier Kapitelwahlbuttons samt ihren Scrollbereichen bleiben erhalten. Das interne Hilfe-Label „Spielerhilfe“ verschwindet nur aus der sichtbaren Hauptrolle; andere Hilfe-Kapitelüberschriften bleiben echte Textlabels.
 
@@ -51,6 +71,6 @@ Die fertig gebundenen drei Titel sind die **dauerhaften visuellen Stilanker** f�
 
 ## BTI-D05 · Lieferung und Abnahmegrenzen
 
-Die **Paketkriterien BTI-A-A01–A08**, die begründete Modulauswahl, das befristete aktuelle Original-Review sowie die **getrennten BTI-A-T01/R01/M01-Gates** stehen vollständig in [Issue #533](https://github.com/venomenon328/picross/issues/533). Bei tatsächlicher Implementierung wird im Paketplan grundsätzlich `native.catalog` mit den betroffenen Katalog-/Informationspfaden geprüft; die kurze aktuelle Standard-CI liefert den Windowsspieler. Manuelle echte Windows-/UI-Sicht auf die Bildoriginale sowie die funktionalen Navigationsregressionen bleiben zusätzliche eigenständig zu belegende Erfordernisse. `native.graphics` und Chromium werden ohne weiteren Änderungsbezug nicht ausgewählt. Keine großflächige Dauer-Screenshotmatrix und keine dauerhafte temporäre Galerie. Vor dem Produktmerge sind unabhängiger Diff-/Originalreview und **persönliche Sichtabnahme** am konkreten Spieler-Head offen.
+Die **Paketkriterien BTI-C-A01–A08**, die begründete Modulauswahl, das befristete aktuelle Original-Review sowie die **getrennten BTI-C-T01/R01/M01-Gates** stehen vollständig in [Issue #533](https://github.com/venomenon328/picross/issues/533). Bei tatsächlicher Implementierung wird im Paketplan grundsätzlich `native.catalog` mit den betroffenen Katalog-/Informationspfaden geprüft; die kurze aktuelle Standard-CI liefert den Windowsspieler. Manuelle echte Windows-/UI-Sicht auf die Bildoriginale sowie die funktionalen Navigationsregressionen bleiben zusätzliche eigenständig zu belegende Erfordernisse. `native.graphics` und Chromium werden ohne weiteren Änderungsbezug nicht ausgewählt. Keine großflächige Dauer-Screenshotmatrix und keine dauerhafte temporäre Galerie. Vor dem Produktmerge sind unabhängiger Diff-/Originalreview und **persönliche Sichtabnahme** am konkreten Spieler-Head offen.
 
-**Spezifikations-/Implementierungsgrenze:** Eine Dokumentenfassung auf dem BTI-A-Branch ist kein Nachweis dafür, dass eines der PNGs, die Layoutänderung, ein Windowsstart oder eine Eigentümerprobe bereits stattgefunden haben.
+**Spezifikations-/Implementierungsgrenze:** Eine Dokumentenfassung auf dem BTI-C-Branch ist kein Nachweis dafür, dass eines der PNGs, die Layoutänderung, ein Windowsstart oder eine Eigentümerprobe bereits stattgefunden haben.

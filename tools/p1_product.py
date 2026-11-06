@@ -371,6 +371,7 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
         ("licenses/resources.json", "game/art/book/manifest.json"),
         ("licenses/ViewTitles-NOTICE.txt", "game/art/drawing/view_titles/NOTICE.txt"),
         ("licenses/ViewTitles-manifest.json", "game/art/drawing/view_titles/manifest.json"),
+        ("licenses/ViewTitles-provenance.json", "game/art/drawing/view_titles/provenance.json"),
         ("licenses/Book-paper.json", "game/book/paper.json"),
         ("licenses/Book-leather.json", "game/book/leather.json"),
         ("licenses/Book-table.json", "game/book/table.json"),

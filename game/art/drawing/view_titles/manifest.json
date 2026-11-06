@@ -1,6 +1,6 @@
 {
   "format": "picross-view-title-art-v1",
-  "style": "BTI-C-1",
+  "style": "BTI-B-V2-rev1",
   "created": "2026-11-06",
   "tool": "Built-in image_gen.imagegen",
   "model": null,
@@ -9,35 +9,90 @@
   "parameters": {
     "transparent_background": true
   },
-  "processing": "Original RGBA PNG bytes copied without retouching, cropping or resampling; lossless Godot import with mipmaps; runtime proportional fit of alpha bounds.",
-  "approval": "Implementation candidates; BTI-A-R01 and owner BTI-A-M01 remain pending.",
+  "processing": "Unmodified approved original PNG bytes; lossless mipmapped Godot import. Alpha >=16 optical centring; fit retains the entire PNG including alpha-1 edge remnants.",
+  "approval": "BTI-B-M01 approves these exact V2-rev1 drawings; BTI-C-T01/R01/M01 concern their new game integration, not a new style selection.",
+  "provenance": "provenance.json",
   "assets": [
     {
       "file": "catalog.png",
       "title": "Rätselkatalog",
       "width": 2172,
       "height": 724,
-      "bytes": 1123776,
-      "sha256": "fb72a42595b779daaa9cbaf531c0efe276e8976a0afa82aea4d5cfe6bdae914a",
-      "source": "exec-9364064d-4f49-4b0f-b2a5-671cd9fd7446.png"
+      "bytes": 1814749,
+      "sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4",
+      "source_commit": "9029a4a3a05d6da2c8d88327594a4598fd0db505",
+      "source_path": "review-evidence/BTI-B-V2-rev1/originals/catalog.png",
+      "optical_alpha_min": 16,
+      "optical_bounds": [
+        37,
+        75,
+        2133,
+        672
+      ],
+      "alpha_bounds": [
+        17,
+        0,
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
     },
     {
       "file": "help.png",
       "title": "Hilfe",
-      "width": 1644,
-      "height": 957,
-      "bytes": 1108805,
-      "sha256": "d2d9c56d8f6b87c046e36d58217458c36b78f8e385c0b00f697981c388361bec",
-      "source": "exec-12c970b4-16f8-4a5c-b49b-f51b12331d18.png"
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2500745,
+      "sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a",
+      "source_commit": "9029a4a3a05d6da2c8d88327594a4598fd0db505",
+      "source_path": "review-evidence/BTI-B-V2-rev1/originals/help.png",
+      "optical_alpha_min": 16,
+      "optical_bounds": [
+        88,
+        102,
+        1449,
+        960
+      ],
+      "alpha_bounds": [
+        0,
+        0,
+        1516,
+        1024
+      ],
+      "alpha_extrema": [
+        0,
+        254
+      ]
     },
     {
       "file": "settings.png",
       "title": "Einstellungen",
       "width": 2172,
       "height": 724,
-      "bytes": 961405,
-      "sha256": "131920fe53a08a697b9a42725d8ab7bcaca9df3e5bac2a3531082b1a3bf20892",
-      "source": "exec-76e48789-d729-4033-9fa1-d1497f415f0c.png"
+      "bytes": 1427565,
+      "sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75",
+      "source_commit": "9029a4a3a05d6da2c8d88327594a4598fd0db505",
+      "source_path": "review-evidence/BTI-B-V2-rev1/originals/settings.png",
+      "optical_alpha_min": 16,
+      "optical_bounds": [
+        50,
+        86,
+        2143,
+        690
+      ],
+      "alpha_bounds": [
+        47,
+        5,
+        2145,
+        708
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ]
     }
   ]
 }

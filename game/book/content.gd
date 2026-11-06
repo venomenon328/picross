@@ -118,11 +118,13 @@ func _layout_book(prepare_board: bool = false) -> void:
 		album.fold_gap = 2*(curve+12*ui_scale)
 		var right_heading: float = right_paper.position.x+curve+inset
 		var heading_top: float = maxf(left_paper.position.y+12*ui_scale,material.size.y*0.035+12*ui_scale)
-		var catalog_top: float = heading_top+53*ui_scale
+		# A larger drawing follows available paper height, with a compact fallback.
+		var title_height: float = clampf(left_paper.size.y*0.14,64*ui_scale,110*ui_scale)
+		var catalog_top: float = heading_top+title_height+8*ui_scale
 		var footer_width: float = album.right_pager.get_child(0).get_combined_minimum_size().x+album.next_button.get_combined_minimum_size().x+12*ui_scale
 		album.right_pager.vertical = (edge-margin-album.fold_gap)/2 < footer_width
 		_place(album, Rect2(Vector2(margin,catalog_top),Vector2(edge-margin,left_paper.end.y-inset-catalog_top)))
-		_place(catalog_title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,45*ui_scale)))
+		_place(catalog_title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,title_height)))
 		catalog_title.fallback.add_theme_font_size_override("font_size",roundi(28*ui_scale))
 		if album.summary != null:
 			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(edge-right_heading,45*ui_scale)))

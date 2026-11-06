@@ -208,9 +208,9 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 
 ## 4. Visuelle Ausarbeitung
 
-**BTI-A · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
+**BTI-C · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
 großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`
-sind nach [BTI](VIEW_TITLE_ART.md) reine organisch-kalligrafische
+sind nach [BTI](VIEW_TITLE_ART.md) neutrale offen schraffierte V2-rev1-Graphit-
 Schriftzugbilder ohne umgebende Illustrationen. Die Titel zentrieren sich
 innerhalb ihrer jeweiligen Buchhälfte; die bestehende Informationsnavigation
 liegt am sicheren unteren Papierrand. Die übrigen Font-/Buchrollen und

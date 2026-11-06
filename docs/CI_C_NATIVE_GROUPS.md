@@ -58,10 +58,10 @@ sowie den sichtbaren Rücktext „Zurück“ bei unverändertem kontextabhängig
 Rückziel, Saveblockade und Retry auf beiden Informationsseiten.
 Die einmalige Windows-Originalsicht für N03-R04 erzeugt keine neue Dauerfamilie.
 
-BTI-A / #533 ersetzt die abgelösten sichtbaren Bakso-Seitentitelannahmen
+BTI-C / #533 ersetzt die abgelösten sichtbaren Bakso-Seitentitelannahmen
 durch Bildtitel-/Fallbackrollen. Eine kleine Probe im bestehenden
 `catalog/information`-Prozess prüft die drei lokalen Ressourcen, semantischen
-Titel, proportionale feste Titelbereiche, getrennte untere Navigation und
+Titel, unveränderte V2-rev1-Ressourcen, optisch zentrierte proportionale Titelbereiche, getrennte untere Navigation und
 erreichbare Scrollenden bei UI100/125 sowie 16:10. Keine neue Prozess- oder
 Screenshotfamilie; echte Windowsdarstellungen und Bewegungs-/PCK-Nachweise
 bleiben einmalige paketgebundene Belege.
