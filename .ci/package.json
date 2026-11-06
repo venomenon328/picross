@@ -1,60 +1,12 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/531",
-  "package": "PANG-A",
-  "modules": [
-    "native.catalog"
-  ],
-  "purpose": "PANG-A ersetzt die gemeinsame normale UI-Schrift einschließlich direkter Canvas-Warntexte, Hilfe, Katalog, Dropdowns, Dialoge und Tooltips durch bytegebundenes Pangolin. native.catalog prüft reale gemeinsame UI-/Informations-/Katalogpfade und die dort eingebundenen günstigen Glyphen-/Fallback-/Metrikregressionen. Kern liefert docs und regulären Windows-Spieler. Gezielte lokale Ressourcen-/Lizenz-/Webbundle-Gegenproben und tatsächliche Windows-/Web-PCK-Prüfung sichern die aktive Offline-Ressource. Einmalige native Text-/Layoutoriginale für PANG-A-R01 werden auf einem separaten Reviewref bis 2026-11-13 bereitgestellt.",
-  "omitted": "Keine Änderung an Raster-/Hinweisgeometrie oder Grafikzeichenhelfern: native.graphics nicht gewählt; die indirekt gemeinsame Schrift der normalen Canvas-Warnung wird gezielt lokal geprüft. native.core/history/completion/adapters/export, preflight, production.*, delivery und volle tools-Suite nicht angefordert: keine Spiel-/Save-/Lehrdaten-/Produktions-/CI-Architekturänderung. Angepasste bestehende Ressourcen-/PCK-/Browserassertions und kleine Python-Lizenzgegenproben werden gezielt lokal ausgeführt, ohne Chromium oder SSH. Browserfontdarstellung und unabhängiges R01/persönliches M01 bleiben getrennt; kein Linuxexport als Windowsstart.",
-  "test_changes": [
-    {
-      "path": "game/tests/hz_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Bestehendes Glyphen-/Ellipse-/RID-Orakel an Pangolin-Original und tatsächliche Interpunktionsabdeckung binden; Plex nur für fehlende Pfeile."
-    },
-    {
-      "path": "game/tests/kat2_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Bestehende günstige Glyphen-/Metrikfälle im vorhandenen information-Prozess ausführen; kein neuer Prozess oder Bildinventar."
-    },
-    {
-      "path": "game/tests/z2_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Bestehende normale Fontrollenassertion auf Pangolin fortschreiben."
-    },
-    {
-      "path": "game/tests/hz_pack.gd",
-      "disposition": "change-scoped",
-      "reason": "Manuellen PCK-Diagnoseweg an aktive Pangolin-Rolle/Notice binden, keine zusätzliche Standardgalerie."
-    },
-    {
-      "path": "game/tests/content_pack_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Aktuelle exportierte Pangolin-/OFL-Bytes und Ausschluss des unbenutzten Tidy-Hand-Fonts im bestehenden externen PCK-Audit prüfen."
-    },
-    {
-      "path": "tools/test_z2_delivery.py",
-      "disposition": "change-scoped",
-      "reason": "Billige Byte-/Lizenzmutanten für neue Originalquelle, historische HZ-Bindung erhalten."
-    },
-    {
-      "path": "tools/test_web_delivery.py",
-      "disposition": "change-scoped",
-      "reason": "Aktive Pangolin-Lizenzen im gemeinsamen Paket und kompatible alte Rollbackbundles prüfen."
-    },
-    {
-      "path": "tools/web_tests/group_catalog.py",
-      "disposition": "change-scoped",
-      "reason": "Nur erwartete aktive Schrift aktualisieren; Browserlauf bleibt ausdrücklich manuell."
-    },
-    {
-      "path": "tools/web_tests/probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Beobachter prüft aktuellen Pangolin-Herkunftsbeleg statt historischen HZ-Notice."
-    }
-  ],
-  "core_change": "Dokumentvalidator erhält für die bytegebundene Original-OFL denselben Hashschutz wie bestehende Originalnotices; keine Normalisierung von CRLF oder Whitespace. Kern-Windowsbau verwendet gemeinsame aktive Pangolin-Lizenzen. Keine neue Suite/Prozess-/Browserpflicht.",
+  "issue": "https://github.com/venomenon328/picross/issues/533",
+  "package": "BTI-A",
+  "modules": [],
+  "purpose": "BTI-A ist in diesem Draft ausschließlich Spezifikationsvorbereitung: neuem Bildtitel-Fachvertrag und konsistentem Routing in HZ, Buch, Design, Anzeige und Profil. Keine Bildassets/Spielcode/Teständerung. Nur docs und ci-required, buildfrei; die spätere Implementierung führt diesen Branch/PR fort und wählt bei wirklichem Produktdiff native.catalog.",
+  "omitted": "Keine nativen/Tool-/Produktionsmodule für den reinen Dokumentationsdiff; er enthält weder laufzeitwirksame Bilder noch Code. Die später benötigte native.catalog-Prüfung, tatsächliche Windows-Sicht und Ressourcenprüfung sind im Paket #533 vorab geplant, aber noch nicht ausgeführt. Keine stillschweigende zukünftige Testabdeckung durch Dokumenten-CI.",
+  "test_changes": [],
+  "core_change": "Keine Änderung am CI-Kern, Prüforakeln oder Player-Build. Dokumenten-/Paketplanintegrität bleibt maßgeblich.",
   "evidence": {
     "mode": "none",
     "purpose": null,
