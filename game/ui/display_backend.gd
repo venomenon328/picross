@@ -29,7 +29,16 @@ func observed() -> Dictionary:
 	var name: String = "other"
 	for key: String in MODES:
 		if MODES[key] == mode: name = key
-	return {"mode": name, "client": DisplayServer.window_get_size(), "minimized": mode == DisplayServer.WINDOW_MODE_MINIMIZED, "outer": Rect2i(DisplayServer.window_get_position_with_decorations(),DisplayServer.window_get_size_with_decorations())}
+	var client: Vector2i = DisplayServer.window_get_size()
+	var outer: Vector2i = DisplayServer.window_get_size_with_decorations()
+	if name == "window":
+		# After multiwindow fullscreen, this Godot Windows backend can retain
+		# its fullscreen expansion subtraction in both DisplayServer size reads.
+		# Window.size follows WM_SIZE and matches the actual Win32 client. Restore
+		# the common subtraction to the outer size as well; frame metrics cancel.
+		outer += window.size-client
+		client = window.size
+	return {"mode": name, "client": client, "minimized": mode == DisplayServer.WINDOW_MODE_MINIMIZED, "outer": Rect2i(DisplayServer.window_get_position_with_decorations(),outer)}
 
 func apply(selection: Dictionary) -> Dictionary:
 	window.unresizable = true
