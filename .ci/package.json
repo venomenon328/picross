@@ -1,50 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/527",
-  "package": "ANZ-A",
-  "modules": [
-    "native.catalog",
-    "native.graphics"
-  ],
-  "purpose": "Feste native Windowsfenster und Vollbildmodi mit Vorschau, separater Persistenz und Monitorfallback. N02 liefert zwei zentrierte HZ-Gruppen, horizontale Formularzeilen, Fragezeichenhilfen und UI-Skala als Dropdown; manueller Hinweisreset und Einstellungs-Exit entfallen. native.catalog prüft Displaycontroller/-Präferenz, gemeinsame UI und Save-/Recovery-/Exit-/Retrypfade im vorhandenen Informationsprozess; native.graphics prüft Viewport-/Raster-/Hinweis-/Layoutfolgen einschließlich Testvorbereitung ohne Resetbefehl. Kern liefert docs und Windows-Spieler. N03 korrigiert die tatsächliche Bakso-Katalogtitelrolle, setzt nach Eigentümerpräzisierung N03-E01 auch beide Gruppentitel in kleinerem Bakso, lässt nur zwei Hilfen mit voller Breite der anderen Dropdowns und kürzt den sichtbaren Informations-Rücktext bei erhaltenen Guards. Einmalige aktuelle Windowsoriginale werden N03-R04 auf separatem befristetem Reviewref zugestellt.",
-  "omitted": "native.core/history/completion/adapters/export, tools, preflight, production.* und delivery nicht angefordert: keine Änderung an Save-Schema, History, Abschlusslogik, Katalogpräferenz, Produktion oder Export. Neue Displaypräferenz separat im Katalogprozess geprüft. Kein Chromiumauftrag; Web erhält keine Anzeigeoptionen. Physische 4K-/16:10-/Mehrmonitor-/DPI-Grenzen nur bei verfügbarer Hardware, sonst synthetisch mit benannten Grenzen. Die mitangepassten P12-/Z2-Komponentenfälle werden gezielt lokal geprüft; daraus folgt keine automatische Wahl der vollständigen native.core-Gruppe oder allgemeinen tools-Suite.",
-  "test_changes": [
-    {
-      "path": "game/tests/display_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Günstige Displaypolicy-/Präferenz-/Controller-/Bestätigungslayoutregression bei gewähltem native.catalog, ohne neue Prozesse oder Bildfamilie. Ungültige/duplizierte Präferenzen, Ersetzungsfehler, Timeout/Rollback und dekorationsblinde Presets erkennen. N01 ergänzt Gruppen, kompakte Spalte, UI100/125 bei 1080p/720p, Desktopbeschriftung, Fehler-/Fallbacksichtbarkeit und Popupabbau; kein zusätzlicher Prozess oder dauerhafte Bilddateien. N02 prüft zwei Rahmen/Titel, Zentrierung, Inlinefelder/Fragezeichen, Skalasynchronisierung, Scroll-/Popup-/Tooltipgrenzen und gemeinsamen nicht-nativen Komponentenpfad; Controller-/Persistenz-/Fehlerproben bleiben. N03 ersetzt die falsche Fraunces-Katalogassertion durch aktiven Katalog-/Einstellungstitelvergleich, prüft nach N03-E01 die kleineren Bakso-Gruppen und prüft zwei Hilfen sowie freie Dropdownbreite ohne Fokus-/Hitboxplatzhalter."
-    },
-    {
-      "path": "game/tests/kat2_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Displayfälle im vorhandenen information-Prozess vor dessen unveränderten Save-/Navigationsfällen ausführen. N02 ersetzt UI-Buttonpfade durch echte Auswahl und erhält die Sicherheitsgarantie mit Katalog-Ausgang sowie WM-close am tatsächlichen Buchroot, Fehlerblockade, Retry und realem Prozessende. N03 prüft kurzen sichtbaren Rücktext mit zielbezogenem Tooltip/Accessibilityname, Katalog-/Rätselrückweg und Help-Saveblockade/Retry im selben Prozess."
-    },
-    {
-      "path": "game/tests/p12_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Entfallenen manuellen Reset nur im synthetischen Testaufbau durch semantische Viewdaten ersetzen; Benutzerprobe prüft stattdessen erhaltene Leseanker bei Einstellungsbesuch."
-    },
-    {
-      "path": "game/tests/capture.gd",
-      "disposition": "change-scoped",
-      "reason": "Graphics-Testinput verwendet dieselben semantischen Ausgangsanker ohne entfernte Produktmethode."
-    },
-    {
-      "path": "game/tests/z2_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "N02 Skala/Fokus und lesepositionserhaltenden Einstellungsbesuch anpassen; Fehler-/Recoveryfall nutzt bestehende Ansichtsänderung statt entferntem Reset."
-    },
-    {
-      "path": "game/tests/book_windows_observer.gd",
-      "disposition": "change-scoped",
-      "reason": "Bestehenden rein lesenden Diagnosebeobachter an Skalauswahl anbinden; keine neue Standardprozesspflicht."
-    },
-    {
-      "path": "tools/book_windows_probe.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende ausdrückliche Windowsdiagnose muss die neue Skalauswahl tatsächlich öffnen und wählen, statt den entfallenen Zyklusbutton zu erwarten; kein automatischer Diagnoseauftrag."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/531",
+  "package": "PANG-A",
+  "modules": [],
+  "purpose": "Aktuelle PANG-A-Vorbereitung ist ausschließlich die freigegebene typografische Spezifikation in Markdown: HZ-D08 und begrenzte Produkt-/Design-/Z2-Verweise, noch keine TTF, keine Runtime- oder Teständerung. Der Paketbranch/PR wird später nach gesondertem Implementierungsauftrag fortgeführt; dann den Paketplan vor Code-/CI-Nutzung anhand des vollständigen Diffs auf die tatsächlich gewählten nativen Module und einmaligen Nachweise aktualisieren. Der aktuelle Dokument-PR braucht nur die schlanke docs-/ci-required-Quellen-/Planprüfung und keinen Player-Build.",
+  "omitted": "Keine Zusatzmodule für diesen ausschließlich dokumentierenden Diff: ohne Game-/Assetcode ist kein nativer Font-, Hilfe-, Katalog-, Grafik-, Export- oder Nutzerverhaltensnachweis möglich. Bei späterer Implementierung native.catalog als naheliegenden Text-/Katalog-/Informationsbereich prüfen; native.graphics/core nur bei begründeter tatsächlicher Betroffenheit. Kein Browser-/Chromiumauftrag. Die offenen PANG-A-Produktgates A01–A06/T01/R01/M01 sind durch Dokument-CI nicht erfüllt.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
