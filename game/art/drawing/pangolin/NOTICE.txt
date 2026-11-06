@@ -1,0 +1,21 @@
+Pangolin Regular - active normal UI text, PANG-A / #531
+Copyright 2016 The Pangolin Project Authors.
+Licensed under the SIL Open Font License, Version 1.1; see OFL.txt.
+
+Owner-supplied candidate: font_candidates.zip, Pangolin/Pangolin-Regular.ttf
+and Pangolin/OFL.txt. Re-supplied for implementation as pangolin.zip on
+2026-11-06; both extracted original files verified before integration.
+Selection and source binding:
+https://github.com/venomenon328/picross/issues/531
+
+Pangolin-Regular.ttf: 589884 bytes, SHA-256
+a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e
+OFL.txt: 4483 bytes, SHA-256
+414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c
+
+Both files retain their original bytes, including OFL line endings.
+No system fonts or network access are needed. Missing functional arrows use
+the bundled IBM Plex Sans, with its separate OFL notice. Heading fonts and
+Delight Coffee clue numbers retain their existing roles and rights.
+The earlier Tidy Hand source and notice remain historical repository inputs;
+they are not part of the active player export.

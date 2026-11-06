@@ -23,6 +23,8 @@ class Z2DeliveryTests(unittest.TestCase):
             notice = drawing / "tidy-hand/NOTICE.txt"
             shutil.copyfile(source / "TidyHand.ttf", font)
             shutil.copyfile(source / "tidy-hand/NOTICE.txt", notice)
+            shutil.copyfile(source / "Pangolin-Regular.ttf", drawing / "Pangolin-Regular.ttf")
+            shutil.copytree(source / "pangolin", drawing / "pangolin")
             with patch.object(z2_resources, "ROOT", root):
                 z2_resources.verify()
                 font.write_bytes(font.read_bytes() + b"changed")
@@ -32,6 +34,23 @@ class Z2DeliveryTests(unittest.TestCase):
                 notice.write_text("No author permission", encoding="utf-8")
                 with self.assertRaises(AssertionError):
                     z2_resources.verify()
+
+    def test_pangolin_original_and_license_are_independently_bound(self):
+        manifest = z2_resources.verify()["standard_text"]
+        self.assertEqual(manifest["sha256"], "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e")
+        with TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            drawing = root / "game/art/drawing"
+            shutil.copytree(z2_resources.ROOT / "game/art/drawing", drawing)
+            with patch.object(z2_resources, "ROOT", root):
+                z2_resources.verify()
+                for name, message in [("Pangolin-Regular.ttf", "font bytes"), ("pangolin/OFL.txt", "OFL bytes")]:
+                    path = drawing / name
+                    original = path.read_bytes()
+                    path.write_bytes(original + b"changed")
+                    with self.assertRaisesRegex(AssertionError, message):
+                        z2_resources.verify()
+                    path.write_bytes(original)
 
     def test_resources_match_selected_hashes_and_utf8_labels(self):
         manifest = z2_resources.verify()

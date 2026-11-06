@@ -1,5 +1,16 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+**PANG-A / #531 · auf dem Arbeitsbranch implementierter Schriftvertrag:**
+Die bisherige Tidy-Hand-Standardtextrolle wird gemäß
+[HZ-D08](HAND_DRAWN_UI.md) gezielt durch Pangolin Regular ersetzt, auch
+in normalen Warn-/Recoverytexten und Bedienhilfe. Sonderfonts für Titel,
+Hinweiszahlen und Fallback, alle P1-Spiel-, Speicher-, Layout- und
+Navigationsverträge bleiben erhalten. Frühere HZ-/P1-Fontpassagen
+beschreiben ihren historischen oder tatsächlich integrierten Ausgangsstand.
+[PANG-A / #531](https://github.com/venomenon328/picross/issues/531)
+führt Umsetzung und Abnahmen getrennt.
+
+
 **ANZ-A / #527 · auf dem Arbeitsbranch implementiert, Abnahmen im Produkt-PR:**
 [ANZ-Fachvertrag](DISPLAY_SETTINGS.md) löst D-07/D-21 und §5.2 **nur** für die
 native Wahl der Fenstergröße und die bisher erlaubte freie Resize-/Maximier-

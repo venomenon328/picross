@@ -1,5 +1,14 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
+**PANG-A / #531 · auf dem Arbeitsbranch implementierte normale Schriftrolle:**
+Gemäß [HZ-D08](HAND_DRAWN_UI.md) ersetzt Pangolin Regular Tidy Hand
+in vorhandenen normalen Katalogtexten einschließlich Kategorie, Metadaten,
+Status/Blattkennung, Sortier-/Auswahlbeschriftungen und Tooltips. Die darunter
+dokumentierten Tidy-Hand- und HZ-C-Angaben beschreiben den integrierten
+Ausgangsstand; Bakso-Motivtitel, vollständige Angaben, gemessene Budgets und
+Karten-/Bild-/Resetgeometrie bleiben verbindlich. [PANG-A](https://github.com/venomenon328/picross/issues/531).
+
+
 **Prüfumfang P2-E-A-V02 / #502:** Die Produktregeln dieses Dokuments bleiben
 unverändert. [D02](https://github.com/venomenon328/picross/issues/502#issuecomment-6655391391)
 autorisiert den risikobasierten Abbau kosmetischer nativer KE-/KK-Kreuzprodukte.
