@@ -1,0 +1,200 @@
+{
+  "method": "Manual body zones; alpha >=16 bounds; full original images, proportional CSS display without cropping or filters",
+  "files": {
+    "originals/catalog.png": {
+      "width": 2172,
+      "height": 724,
+      "visible_bbox_alpha16": [
+        37,
+        75,
+        2133,
+        672
+      ],
+      "body_top": 75,
+      "body_baseline": 570,
+      "body_height": 495,
+      "display": {
+        "42": {
+          "scale": 0.08484848484848485,
+          "full_file_size": [
+            184.291,
+            61.43
+          ],
+          "visible_ink_height": 50.655
+        },
+        "80": {
+          "scale": 0.16161616161616163,
+          "full_file_size": [
+            351.03,
+            117.01
+          ],
+          "visible_ink_height": 96.485
+        },
+        "96": {
+          "scale": 0.19393939393939394,
+          "full_file_size": [
+            421.236,
+            140.412
+          ],
+          "visible_ink_height": 115.782
+        }
+      }
+    },
+    "originals/help.png": {
+      "width": 1536,
+      "height": 1024,
+      "visible_bbox_alpha16": [
+        88,
+        102,
+        1449,
+        960
+      ],
+      "body_top": 105,
+      "body_baseline": 900,
+      "body_height": 795,
+      "display": {
+        "42": {
+          "scale": 0.052830188679245285,
+          "full_file_size": [
+            81.147,
+            54.098
+          ],
+          "visible_ink_height": 45.328
+        },
+        "80": {
+          "scale": 0.10062893081761007,
+          "full_file_size": [
+            154.566,
+            103.044
+          ],
+          "visible_ink_height": 86.34
+        },
+        "96": {
+          "scale": 0.12075471698113208,
+          "full_file_size": [
+            185.479,
+            123.653
+          ],
+          "visible_ink_height": 103.608
+        }
+      }
+    },
+    "originals/settings.png": {
+      "width": 2172,
+      "height": 724,
+      "visible_bbox_alpha16": [
+        50,
+        86,
+        2143,
+        690
+      ],
+      "body_top": 80,
+      "body_baseline": 600,
+      "body_height": 520,
+      "display": {
+        "42": {
+          "scale": 0.08076923076923077,
+          "full_file_size": [
+            175.431,
+            58.477
+          ],
+          "visible_ink_height": 48.785
+        },
+        "80": {
+          "scale": 0.15384615384615385,
+          "full_file_size": [
+            334.154,
+            111.385
+          ],
+          "visible_ink_height": 92.923
+        },
+        "96": {
+          "scale": 0.18461538461538463,
+          "full_file_size": [
+            400.985,
+            133.662
+          ],
+          "visible_ink_height": 111.508
+        }
+      }
+    },
+    "before/help.png": {
+      "width": 1536,
+      "height": 1024,
+      "visible_bbox_alpha16": [
+        93,
+        105,
+        1451,
+        934
+      ],
+      "body_top": 105,
+      "body_baseline": 900,
+      "body_height": 795,
+      "display": {
+        "42": {
+          "scale": 0.052830188679245285,
+          "full_file_size": [
+            81.147,
+            54.098
+          ],
+          "visible_ink_height": 43.796
+        },
+        "80": {
+          "scale": 0.10062893081761007,
+          "full_file_size": [
+            154.566,
+            103.044
+          ],
+          "visible_ink_height": 83.421
+        },
+        "96": {
+          "scale": 0.12075471698113208,
+          "full_file_size": [
+            185.479,
+            123.653
+          ],
+          "visible_ink_height": 100.106
+        }
+      }
+    },
+    "before/settings.png": {
+      "width": 2172,
+      "height": 724,
+      "visible_bbox_alpha16": [
+        53,
+        84,
+        2140,
+        679
+      ],
+      "body_top": 84,
+      "body_baseline": 600,
+      "body_height": 516,
+      "display": {
+        "42": {
+          "scale": 0.08139534883720931,
+          "full_file_size": [
+            176.791,
+            58.93
+          ],
+          "visible_ink_height": 48.43
+        },
+        "80": {
+          "scale": 0.15503875968992248,
+          "full_file_size": [
+            336.744,
+            112.248
+          ],
+          "visible_ink_height": 92.248
+        },
+        "96": {
+          "scale": 0.18604651162790697,
+          "full_file_size": [
+            404.093,
+            134.698
+          ],
+          "visible_ink_height": 110.698
+        }
+      }
+    }
+  }
+}

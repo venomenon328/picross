@@ -1,0 +1,62 @@
+{
+  "catalog": {
+    "bytes": 1814749,
+    "sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bbox_alpha16": [
+      37,
+      75,
+      2133,
+      672
+    ],
+    "max_visible_channel_difference": 32
+  },
+  "help": {
+    "bytes": 2500745,
+    "sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a",
+    "size": [
+      1536,
+      1024
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      254
+    ],
+    "bbox_alpha16": [
+      88,
+      102,
+      1449,
+      960
+    ],
+    "max_visible_channel_difference": 7
+  },
+  "settings": {
+    "bytes": 1427565,
+    "sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75",
+    "size": [
+      2172,
+      724
+    ],
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "bbox_alpha16": [
+      50,
+      86,
+      2143,
+      690
+    ],
+    "max_visible_channel_difference": 29
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "format": "bti-b-v2-revision-manifest/v1",
+  "date": "2026-11-06",
+  "expires": "2026-11-13",
+  "recipient": "picross owner and PR #534 reviewer",
+  "review_ref": "review/533-bti-b-v2r1",
+  "product_head": "51e58889583ccd6eeb40d21db1c09a0ff55a8433",
+  "spec": "https://github.com/venomenon328/picross/issues/533#bti-b-d03",
+  "files": [
+    {
+      "path": "before/help.png",
+      "bytes": 2240661,
+      "sha256": "dbfc612ef1c1ce4d266d6795d02f4617beaa3575e4089ad78a655f667ea25573",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA"
+    },
+    {
+      "path": "before/settings.png",
+      "bytes": 1452813,
+      "sha256": "e721ac257f822487294d9ffa2629526cdadda227bb3aab0725364af2f4fd8a5e",
+      "width": 2172,
+      "height": 724,
+      "mode": "RGBA"
+    },
+    {
+      "path": "before-after.html",
+      "bytes": 2646,
+      "sha256": "d8f41c0c1f0aefa9f657b26234a3d2cd1ebbe6be63bdd93544d4dc92751e16d8"
+    },
+    {
+      "path": "before-after.png",
+      "bytes": 583688,
+      "sha256": "40dd05e31c4ff699b535ab3f25216f24011c640467800fe4ee1fca3f0524f4dd",
+      "width": 1480,
+      "height": 650,
+      "mode": "RGB"
+    },
+    {
+      "path": "family.html",
+      "bytes": 2021,
+      "sha256": "b0765544054e515bd7bfd08d2edee493ed209e1a6216a9be8ec2755da246b82e"
+    },
+    {
+      "path": "family.png",
+      "bytes": 163964,
+      "sha256": "c89d903de24f81b0fcd2218690af617debf826678806f04bea337491e1d5437a",
+      "width": 1480,
+      "height": 470,
+      "mode": "RGB"
+    },
+    {
+      "path": "generation.json",
+      "bytes": 9905,
+      "sha256": "483c7c07dae21fa75acecb40a1f07da1dba5cc5f2a7ba9baf994e74627a7217c"
+    },
+    {
+      "path": "image-checks.json",
+      "bytes": 1046,
+      "sha256": "b333e824ba72ec8cfa876ab66348e176442ce275fdcd731b7fa616522de00c70"
+    },
+    {
+      "path": "originals/catalog.png",
+      "bytes": 1814749,
+      "sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4",
+      "width": 2172,
+      "height": 724,
+      "mode": "RGBA"
+    },
+    {
+      "path": "originals/help.png",
+      "bytes": 2500745,
+      "sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a",
+      "width": 1536,
+      "height": 1024,
+      "mode": "RGBA"
+    },
+    {
+      "path": "originals/settings.png",
+      "bytes": 1427565,
+      "sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75",
+      "width": 2172,
+      "height": 724,
+      "mode": "RGBA"
+    },
+    {
+      "path": "paper.html",
+      "bytes": 2895,
+      "sha256": "180b43cbdc79d9d437652775179928b93396031e68c8a43a225947fabd77dc9a"
+    },
+    {
+      "path": "paper.png",
+      "bytes": 511244,
+      "sha256": "3adc3a12ee5c83adaa58e178796dcd2562c23b68a394295cfef7127d00bb4cd6",
+      "width": 1480,
+      "height": 650,
+      "mode": "RGB"
+    },
+    {
+      "path": "preview-metrics.json",
+      "bytes": 4353,
+      "sha256": "ca9f4ac5e779222e7cc886263a10507ac4fdbc6a96729906d16b0b1f6df1b7ff"
+    },
+    {
+      "path": "README.md",
+      "bytes": 9722,
+      "sha256": "b8cbf93e7aeb99de8096113b2a884b4387649b3382299917f2c603b477472409"
+    }
+  ]
+}
