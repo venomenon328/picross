@@ -1,12 +1,15 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/523",
-  "package": "KL-S1-spec-preparation",
-  "modules": [],
-  "purpose": "Ausschließlich freigegebene KL-Layout-Spezifikation in CATALOG_PRESENTATION und BOOK_INTEGRATION sowie Issue #523 nachführen. Keine Produktcodeänderung. Der Dokumenten-/Plankern prüft Struktur, Links und Plan; die spätere Implementierung KL-A erhält einen neuen begründeten Paketplan mit nativer Katalogauswahl und gezieltem Buch-Layout-Nachweis.",
-  "omitted": "Nur Markdown-Fachverträge und .ci/package.json; keine Spielressourcen oder -codes. Kein nativer/Tools-/Produktions-/Browser-/Delivery-Zusatzlauf, kein Player-Build für diese reine Dokumentationsänderung. Tatsächliche 1080p-/1440p-Layout- und Scrollbedienung kann erst am späteren Produktstand geprüft werden.",
-  "test_changes": [],
-  "core_change": "Keine Änderung an Prüfprogrammen, CI-Kern, Testfamilien oder dauerhaften Artefakten.",
+  "package": "KL-A",
+  "modules": ["native.catalog"],
+  "purpose": "Responsives Katalograster mit maximal drei gemeinsam sicher passenden Spalten und eigenständig zentrierten Teilzeilen. native.catalog prüft bestehende ID-/Paging-/Sortier-/Reset-/Recovery-/Spoilerwege und die neue kleine synthetische Layoutprobe im vorhandenen pages-Prozess. Der Kern liefert den regulären Windows-Spieler. Einmalige lokale native Darstellungs-/Geometrienachweise am unveränderten 3D-Buchroot ergänzen 1440p/UI100 und UI125, 1080p/UI100 sowie Fallbacks und echte abgebrochene Navigation; keine dauerhafte Galerie.",
+  "omitted": "Keine Änderung an Rätsel-/Save-/Registrydaten, Fonts, Bildern, Buchprojektion, Timern oder Plattformwegen. tools, production.*, preflight, native.core/history/completion/adapters/graphics/export, delivery und Chromium werden nicht angefordert. Der angepasste native Ergebnisleser wird zusätzlich lokal mit test_kat2_product.py geprüft. Keine gesamte Buch-/Hilfe-Lifecycleprüfung und kein Windows-Bedien- oder Eigentümerkomfortnachweis aus dem Linux-Build ableiten. KL-A-R01 bleibt vor Merge, KL-A-M01 nach Merge vor Release offen.",
+  "test_changes": [
+    {"path": "game/tests/catalog_layout_cases.gd", "disposition": "change-scoped", "reason": "Kleine wiederverwendbare Geometrie-/ID-/Scrollregression für 1/2/5/11/12/13/23/24 Treffer, beide Referenzkapazitäten und gezielte UI-/Aspect-Fallbacks; nur im ausgewählten native.catalog und dessen bestehendem pages-Prozess, ohne PNGs oder neue Prozesse. Schützt den neuen Zeilencontainer und die gemeinsame Kapazität bei späteren Katalogänderungen."},
+    {"path": "game/tests/kat2_probe.gd", "disposition": "change-scoped", "reason": "Bindet die kleine KL-Probe an pages und aktualisiert die bisherige Kapazitätsassertion auf maximal drei. Vorhandene Metadaten-/Pointer-/Recoveryfälle bleiben erhalten; keine neue Vollmatrix."}
+  ],
+  "core_change": "Keine Änderung am CI-Kern. Der native Reader begrenzt die gemessene KE-Kapazität konsistent auf drei; Original-/Fehler-/Grenzpaarprüfung bleiben unverändert. Einmalige lokale Sichtdateien nur für KL-A-R01 bis spätestens 13.11.2026, danach entfernen; laufinterne technische CI-Originale werden geprüft und verworfen.",
   "evidence": {
     "mode": "none",
     "purpose": null,

@@ -4,7 +4,7 @@ signal page_requested(target: int)
 signal help_requested
 var locked: bool = false
 var right_scroll: ScrollContainer
-var right_grid: GridContainer
+var right_grid: CatalogGrid
 var spread: HBoxContainer
 var left_page: VBoxContainer
 var right_page: VBoxContainer
@@ -46,11 +46,13 @@ func _ready() -> void:
 	preference_feedback.get_parent().reparent(left_page)
 	for item: Node in [feedback, empty_message, all_button, scroll]: item.reparent(left_page)
 	right_scroll = ScrollContainer.new()
-	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	right_page.add_child(right_scroll)
-	right_grid = GridContainer.new()
+	right_grid = CatalogGrid.new()
+	right_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right_scroll.add_child(right_grid)
+	right_scroll.resized.connect(_layout_cards)
 	for half: ScrollContainer in [scroll,right_scroll]:
 		half.mouse_force_pass_scroll_events = false
 	var left_pager := HBoxContainer.new()
@@ -125,6 +127,10 @@ func _render(position: int) -> void:
 		next_button.visible = previous_button.get_parent().visible
 		restore_positions.call_deferred(pair,generation)
 
+func _shared_card_width() -> float:
+	var width: float = super._shared_card_width()
+	return minf(width, _available_card_width(right_scroll)) if right_scroll != null else width
+
 func _layout_cards() -> void:
 	if arranging: return
 	arranging = true
@@ -138,9 +144,9 @@ func _layout_cards() -> void:
 		for half: VBoxContainer in [left_page, right_page]: half.add_theme_constant_override("separation", roundi(8*ui_scale))
 	super._layout_cards()
 	if right_grid != null:
-		right_grid.columns = grid.columns
 		right_grid.add_theme_constant_override("h_separation", roundi(12*ui_scale))
 		right_grid.add_theme_constant_override("v_separation", roundi(12*ui_scale))
+		right_grid.arrange(grid.columns, _available_card_width(right_scroll))
 	arranging = false
 
 func ensure_control_visible(control: Control) -> void:
