@@ -368,6 +368,23 @@ Vorgeschlagen ist eine Unterscheidung zwischen vollständiger Sammlung und zusä
 
 ### 4.3 Motivtreue, detailliertere Enthüllung
 
+AR-A / #486 erweitert ausschließlich den stabilen Abschluss um **Bild | Raster**.
+Ein einzelnes rechteckiges On-Off-Control trägt Bild links und Raster rechts;
+sein heller Schieber kennzeichnet die aktive Seite. Dunkle Bereiche werden
+schraffiert statt deckend gefüllt, Konturen bleiben handgezeichnet. Der Schalter
+ist erst nach der Enthüllung bedienbar; sein Platz ist von Anfang an reserviert. Jeder neue Besuch beginnt mit Bild. Refresh, Resize, UI-Skalierung,
+Fokusverlust und Resetabbruch erhalten die Auswahl innerhalb desselben Besuchs.
+Das komplette schreibgeschützte Raster zeigt bestätigte Spielerfüllungen in der
+Originalpalette mit statischem Atlasstift, normalen und Fünferlinien sowie Außenrand.
+X und unbekannter Hintergrund bleiben leer; Hinweise, Werkzeuge und neue
+Zoom-/Panbedienung entfallen. Beide Ansichten passen proportional und zentriert
+in denselben Papierbereich. Umschalten verändert weder Zellen, History, Abschluss,
+gespeicherte Ansicht noch Savebytes und löst keine Sicherung oder Enthüllung aus.
+Katalog-/Informationsnavigation und bestätigter Reset verwerfen diese flüchtige
+Auswahl und die zusätzlichen Darstellungsdaten. Illustration, Katalogvorschau,
+Saveformat und übrige EA-Verträge bleiben erhalten.
+[Paket, Prüfplan und getrennte AR-A-T01/R01/M01-Gates](https://github.com/venomenon328/picross/issues/486).
+
 **Bestätigte Präzisierung:** Das Ergebnisbild darf sichtbar detaillierter als das Rätsel sein. Der Hauptgegenstand, wesentliche Formen, Bildaufbau und Proportionen müssen so zusammenpassen, dass das Raster sehr deutlich als Stilisierung des Bilds erkennbar ist. Feinere Konturen, Schattierungen, Oberflächen und kleinere passende Elemente sind erlaubt. Eine identische belegte Pixelmaske oder identische Auflösung ist ausdrücklich nicht erforderlich. Ein beliebiges neues Bild oder vollständig anderer Blickwinkel wäre weiterhin kein Ersatz.
 
 **AT · freigegebener Transparenzstandard:** Neutrale Außenflächen und echte
@@ -393,7 +410,7 @@ Die frühere P1.1-Prüfung auf identische Silhouetten war eine enge technische F
 
 EA / #170 legt den Ablauf fest: 250 ms Arbeitsraster einschließlich Rahmen, Hinweisen, X, Cursor und Sidebar ausblenden; 650 ms die bestätigten Füllungen aus ihrer tatsächlichen Bildschirmposition proportional zentrieren und von Schraffur zu lückenlosen Zellen überblenden; 400 ms halten; 650 ms in das vorhandene vollfarbige Ergebnisbild überblenden; anschließend in 200 ms Motivname und Reset einblenden. Auch bei Farbrätseln genügt die bloße Freistellung oder erneute Präsentation desselben gelösten Rasters nicht als bestätigtes Qualitätsziel; ihre Abschlussmotive folgen der konsistenten motivtreuen Verfeinerungsrichtung. Das schreibt weder identische Auflösungen noch eine allgemeine Assetpipeline oder eine hochaufgelöste Neuzeichnung jedes Motivs vor. Raster und Bild behalten jeweils ihr eigenes Seitenverhältnis und denselben Mittelpunkt in der nutzbaren Papierfläche unter dem neutralen Bakso-Titel „Blatt NN · W × H“. Name und Reset erhalten vorab reservierten Platz. Die frühere Vergleichsansicht, Vergleichsüberschriften, der Prototypsatz und der breite Albumknopf entfallen; der Buchreiter bleibt. P1 hat weiterhin keine Wertung.
 
-Gelöste Blätter öffnen unmittelbar denselben Endzustand. Fokusverlust, Resize und UI-Skalierung beenden die laufende Präsentation stabil; Navigation beendet sie ohne spätere Rückkehr. Der bestätigte Reset aus der Endansicht öffnet dasselbe leere Blatt, der Katalogreset bleibt im Katalog. Eine umschaltbare Rasteransicht und ein zusätzlicher Animationsschalter sind nicht beauftragt. [EA-Prüfzuordnung](EA_VERIFICATION.md). Davon getrennt ist das Abschalten der Zellanimationen inzwischen durch ZS bestätigt. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
+Gelöste Blätter öffnen unmittelbar denselben Endzustand. Fokusverlust, Resize und UI-Skalierung beenden die laufende Präsentation stabil; Navigation beendet sie ohne spätere Rückkehr. Der bestätigte Reset aus der Endansicht öffnet dasselbe leere Blatt, der Katalogreset bleibt im Katalog. AR-A / #486 ergänzt die oben beschriebene stabile Rasterumschaltung; ein zusätzlicher Animationsschalter bleibt außerhalb des Auftrags. [EA-Prüfzuordnung](EA_VERIFICATION.md). Davon getrennt ist das Abschalten der Zellanimationen inzwischen durch ZS bestätigt. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
 
 ### 4.4 Zeichnerische Hinweiszahlen und Zellmarkierungen nach E1
 

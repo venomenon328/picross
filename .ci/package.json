@@ -1,53 +1,38 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/539",
-  "package": "SBR-A",
+  "issue": "https://github.com/venomenon328/picross/issues/486",
+  "package": "AR-A",
   "modules": [
-    "native.catalog"
+    "native.completion"
   ],
-  "purpose": "SBR-A: gemeinsame native Scrollbar-Stilfamilie in Buch und Popups; bestehende catalog/pages- und information-Prozesse prüfen synthetische Layout-, Style-, Range- und Pointerfälle. Regulärer Windows-Spieler im Kern. Aktive PCK-/HZ-Reader führen die vier neuen lokalen Icons konsistent; einmalige reguläre Windows/Web-Exportprüfung ohne Browser/Deployment.",
-  "omitted": "Keine Spiel-/Save-/History-/Zellrenderer-/Adapter-/Produktionsänderung: native.core/history/completion/adapters/graphics/export, preflight, tools-Vollsuite, production.* und delivery nicht gewählt. Die kleine aktive SVG-Provisionierung wird gezielt mit z2_resources verify und test_z2_delivery geprüft; keine allgemeine Tooländerung. Kein Chromium. Physische OS-Mausprobe ohne ausdrückliche Desktopfreigabe nicht ausgeführt; Eigentümer-M01 bleibt offen.",
+  "purpose": "AR-A: stabile Bild/Raster-Abschlussumschaltung; vorhandener EA-Prozess plus wenige synthetische Zustands-/Pixel-/Geometriefälle und unabhängiger Reader. Regulärer Windows-Spieler im Kern. Eigentümerpräzisierung 07.11.: genau ein rechteckiger On-Off-Schalter mit Bild links, Raster rechts, hellem Schieber und schraffierter dunkler Spur; keine zwei Buttons.",
+  "omitted": "Keine allgemeinen Atlas-/Boardrenderer-, Save-, Katalog-, Adapter- oder Produktionsänderungen: native.core/history/catalog/adapters/export/graphics, tools-Vollsuite, production.*, preflight und delivery bewusst nicht gewählt. Gemeinsame Zeichen-/Materialhelfer nur wiederverwendet. Kein Chromium. Persönliche Windows-Mausprobe AR-A-M01 bleibt beim Eigentümer.",
   "test_changes": [
     {
-      "path": "game/tests/scrollbar_cases.gd",
+      "path": "game/tests/completion_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Günstige native Theme-/Icon-/Geometrie-, Gutter-, UI-Rundweg-, native Range-/Pointer- und Popupfälle im vorhandenen synthetischen Pages-Prozess; keine neue Prozess- oder Bildfamilie."
+      "reason": "Fünf günstige synthetische Abschlussfälle im bestehenden EA-Prozess; keine neue Prozess-/Dauerbildfamilie."
     },
     {
-      "path": "game/tests/kat2_probe.gd",
+      "path": "game/tests/ea_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Vorhandener Pages-Prozess bindet genau einen zusätzlichen SBR-Checkpoint."
+      "reason": "Vorhandene EA-Prüfungen und echter Neustart bleiben; AR-Beobachtungen ergänzen."
     },
     {
-      "path": "tools/native_contract.py",
+      "path": "tools/native_results.py",
       "disposition": "change-scoped",
-      "reason": "Unabhängiger Ergebnisleser verlangt denselben tatsächlichen SBR-Checkpoint; vorhandene Missing/Duplicate/Zero-Checks-Gegenproben bleiben wirksam."
+      "reason": "Unabhängiger Reader verlangt AR-Matrix, Palette, Pixel, Geometrie und Zustandsgrenzen."
     },
     {
-      "path": "game/tests/content_pack_probe.gd",
+      "path": "tools/test_ea_product.py",
       "disposition": "change-scoped",
-      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
-    },
-    {
-      "path": "game/tests/hz_b_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
-    },
-    {
-      "path": "game/tests/hz_pack.gd",
-      "disposition": "change-scoped",
-      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
-    },
-    {
-      "path": "game/tests/display_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Vorhandenes N02-Zentrierungsorakel misst die native Nutzfläche ohne tatsächlich sichtbaren Balken statt alter 10xUI-Toleranz zur Gesamtfläche; 1px genaue Zentrierung, Maximalbreite und horizontaler Überlaufschutz bleiben geprüft."
+      "reason": "Kleine Reader-Gegenproben gegen fehlende Fälle, frühe Freigabe, falsche Farben und Saveänderungen."
     }
   ],
-  "core_change": "Keine Kernänderung. Einmalige gerenderte native Originale für SBR-A-R01 auf separatem review/539-sbr-a, kein Produktdiff und kein CI-Galerieupload. Bedarf nach Review/Abnahme beenden, spätestens 2026-11-14 prüfen. Persönliche Windows-Abnahme SBR-A-M01 bleibt beim Eigentümer.",
+  "core_change": "Keine Kernänderung. Einmalige AR-A-T01: sechs gerenderte native Originale auf review/486-ar-a vom Produkt-Head, keine Produktbilder/ZIPs. Bedarf nach AR-A-R01/M01 bzw. Paketabschluss beenden; am 2026-11-14 bei offenen Gates neu prüfen.",
   "evidence": {
-    "mode": "failure",
-    "purpose": "SBR-A: begrenzte native.catalog-Fehlerdiagnose für den Implementierer und R01; kein Erfolgsarchiv.",
-    "expires": "2026-11-09"
+    "mode": "none",
+    "purpose": null,
+    "expires": null
   }
 }

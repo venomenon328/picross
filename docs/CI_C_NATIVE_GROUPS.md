@@ -1,5 +1,23 @@
 # Native Prüfmodule und Originalnachweise
 
+## AR-A / #486: stabile Abschlussumschaltung
+
+Im vorhandenen EA-native-Prozess prüfen fünf synthetische Kontexte den erst
+stabil freigegebenen Bild-/Rasterwechsel mit genau einem rechteckigen
+Schiebercontrol und nativer Handschraffur, Originalpalette und Atlasvarianten,
+Kleindetailstufe, vollständige Linien, proportionale Bounds, reale Viewportklicks,
+Refresh/Resize/UI/Fokus, Resetabbruch und Katalog-/Informationswiedereintritt.
+Session/History/Ansicht und sämtliche isolierten Slotbytes bleiben unverändert.
+Vorhandene EA-Zeit-/Alpha-/Resetfehler-/Neustartprüfungen bleiben erhalten.
+`ar_measurements` bindet Matrix, bestätigte Zellen/Palette, native Farb-/Leerproben,
+Geometrie und Zustandsbeobachtungen; `native_results.py` liest diese unabhängig.
+Günstige Mutanten verwerfen verfrühte Freigabe, falsche Farbquelle und Saveänderung.
+Keine neue Prozessfamilie oder dauerhafte Bilder. Die sechs einmaligen nativen
+Revieworiginale entstehen nur bei ausdrücklich gesetztem `AR_REVIEW_DIR` und
+werden gemäß [AR-A-Prüfplan](https://github.com/venomenon328/picross/issues/486)
+auf einem separaten befristeten Reviewref zugestellt. R01/M01 bleiben getrennt.
+
+
 ## SBR-A / #539: gemeinsame native Scrollbarfamilie
 
 Der bestehende `catalog/pages`-Prozess ergänzt den Checkpoint `sbr-scrollbars`:

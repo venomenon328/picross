@@ -519,6 +519,23 @@ D-06 stellt Tastatur-/Controllerbedienung für P1 zurück. Kein Controllergerät
 
 ### 5.4 Abschluss und detaillierteres Ergebnisbild
 
+AR-A / #486 erweitert ausschließlich den stabilen Abschluss um **Bild | Raster**.
+Ein einzelnes rechteckiges On-Off-Control trägt Bild links und Raster rechts;
+sein heller Schieber kennzeichnet die aktive Seite. Dunkle Bereiche werden
+schraffiert statt deckend gefüllt, Konturen bleiben handgezeichnet. Der Schalter
+ist erst nach der Enthüllung bedienbar; sein Platz ist von Anfang an reserviert. Jeder neue Besuch beginnt mit Bild. Refresh, Resize, UI-Skalierung,
+Fokusverlust und Resetabbruch erhalten die Auswahl innerhalb desselben Besuchs.
+Das komplette schreibgeschützte Raster zeigt bestätigte Spielerfüllungen in der
+Originalpalette mit statischem Atlasstift, normalen und Fünferlinien sowie Außenrand.
+X und unbekannter Hintergrund bleiben leer; Hinweise, Werkzeuge und neue
+Zoom-/Panbedienung entfallen. Beide Ansichten passen proportional und zentriert
+in denselben Papierbereich. Umschalten verändert weder Zellen, History, Abschluss,
+gespeicherte Ansicht noch Savebytes und löst keine Sicherung oder Enthüllung aus.
+Katalog-/Informationsnavigation und bestätigter Reset verwerfen diese flüchtige
+Auswahl und die zusätzlichen Darstellungsdaten. Illustration, Katalogvorschau,
+Saveformat und übrige EA-Verträge bleiben erhalten.
+[Paket, Prüfplan und getrennte AR-A-T01/R01/M01-Gates](https://github.com/venomenon328/picross/issues/486).
+
 Nach einer übernommenen Aktion gilt das Rätsel genau dann als gelöst, wenn jede Motivzelle in der richtigen Farbe gefüllt ist und jeder Lösungshintergrund unbekannt oder leer markiert ist. Zusatzfüllung, fehlende Füllung, falsche Farbe oder leer markierte Motivzelle verhindern den Abschluss. Keine Fehlermeldung, Prozent-richtig-Anzeige oder korrigierte Miniatur vor dem vollständigen Treffer.
 
 EA / #170 ersetzt die frühere Vergleichsansicht: insgesamt 2,15 s (250/650/400/650/200 ms) für Arbeitsdarstellung ausblenden, bestätigte eigene Füllungen unverzerrt zentrieren und lückenlos darstellen, halten, zum bestehenden farbigen Motivbild überblenden, dann Name und Reset. Titel bleibt neutral „Blatt NN · W × H“ in Bakso an derselben Stelle. Bild und Raster behalten unabhängig ihr Seitenverhältnis; Name und Reset sind von Anfang an im Layout reserviert. Der Buchreiter führt zurück. Keine Vergleichsüberschriften, doppelten Motivnamen oder Prototyptexte. Gelöste Blätter öffnen sofort denselben Endzustand ohne Replay. Reset bindet beim Öffnen des Dialogs stabile ID und Ursprung: aus der Endansicht nach Erfolg dasselbe leere Blatt öffnen, aus dem Katalog im Katalog bleiben. Fehler und Recovery bleiben erreichbar. Commit, History und Schema-1-Sicherung bleiben sofortig; Präsentationszustand wird nie gespeichert. Fokusverlust, Resize und UI-Skalierung zeigen den stabilen Endzustand; Navigation beendet die Präsentation ohne verspätete Rückkehr. [EA-Prüfzuordnung](EA_VERIFICATION.md). D-10: Das Ergebnisbild darf höhere Auflösung, feinere Konturen, zusätzliche Oberflächendetails, Schattierungen und kleine passende Motivelemente besitzen. Das Rätsel muss sehr deutlich als Stilisierung dieses Bilds erkennbar bleiben: gleicher Hauptgegenstand, nachvollziehbarer Bildaufbau, wesentliche Formen und Proportionen. Keine unabhängige Belohnungsillustration, aber auch keine Pflicht zu identischen belegten Rasterzellen.

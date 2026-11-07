@@ -414,7 +414,15 @@ erst nach bestätigtem Abschluss. Die registrierte Definition bindet Motivname u
 freigegebenes Ergebnisbild; vorher bleibt nur die eigene Füllminiatur sichtbar.
 Beim neuen Abschluss treten Raster, Hinweise und Werkzeuge zurück. Deine Füllungen bewegen sich zur Papiermitte, werden zu lückenlosen Farbflächen und gehen in das fertige Bild über. Die Folge dauert etwa 2,15 Sekunden. Die Speicherung erfolgt unmittelbar beim letzten Zug; etwaige Speicherfehler bleiben sichtbar. Danach erscheinen Motivname und „Rätsel zurücksetzen“. Der Titel bleibt „Blatt NN · W × H“, der Buchreiter führt zur Sammlung.
 
-Bereits gelöste Blätter öffnen direkt das fertige Bild. Fenster- oder UI-Größenänderung und Fokusverlust beenden eine laufende Enthüllung; sie wird danach nicht wiederholt. Bestätigtes Zurücksetzen unter dem Bild öffnet dasselbe Blatt leer. Abbrechen erhält den Stand. Der Reset einer Katalogkarte bleibt im Katalog. Nach erneutem Lösen läuft die Enthüllung wieder.
+Nach der Enthüllung bietet ein rechteckiger handgezeichneter Schalter mit
+hellem Schieber und schraffierter Spur **Bild** links und **Raster** rechts. Das
+Raster zeigt deine bestätigten Füllungen in Originalfarben und Stiftoptik mit
+Rasterlinien; Hintergrund-X und unbekannte Felder bleiben leer. Es lässt sich
+nicht bearbeiten oder zoomen. Beide Ansichten bleiben vollständig sichtbar.
+Jeder neue Besuch beginnt mit Bild; Resize, UI-Skalierung, Fokusverlust und
+gewöhnliches Refresh erhalten die Auswahl. Umschalten speichert nichts.
+
+Bereits gelöste Blätter öffnen direkt das fertige Bild. Fenster- oder UI-Größenänderung und Fokusverlust beenden eine laufende Enthüllung; sie wird danach nicht wiederholt. Bestätigtes Zurücksetzen unter dem Bild öffnet dasselbe Blatt leer. Abbrechen erhält den Stand und die gewählte Bild-/Rasteransicht. Der Reset einer Katalogkarte bleibt im Katalog. Nach erneutem Lösen läuft die Enthüllung wieder.
 
 Die früheren 100×100-Blätter werden nicht mehr angeboten.
 
