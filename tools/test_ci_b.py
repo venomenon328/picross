@@ -69,7 +69,12 @@ def fixture(plan, browser, root):
                    user_agent='synthetic test only', launch_options={'headless':True},
                    timings=[dict(scenario=key, seconds=1, operations={'query':{'calls':1,'seconds':1,'bytes':1}}) for key in ids])
         if group == 'regular': row['errors'] = []
-        if group == 'catalog': row['version'] = 'synthetic test only'
+        if group == 'catalog':
+            origin = dict(selected='T-01',page=0,scroll=0,criterion='category',direction='asc')
+            row.update(version='synthetic test only',book_navigation=dict(
+                presentation='res://book/main.gd',root='res://book/web_root.gd',opened_id='T-01',
+                origin=origin.copy(),returned=origin.copy(),
+                routes=['catalog-work','work-catalog','catalog-settings','settings-help','help-catalog']))
         if group == 'input': row['viewports'] = [dict(viewport=size,fit=True,minimum=False) for size in [[1280,720],[1920,1080]]]
         if group == 'persistence': row.update(lock_handoff={'held':[{}],'pending':[{}]}, **{key: {'history':[{}]} for key in ('reload','restart','retry')})
         if group == 'input': row['dpi'] = 1.5
@@ -170,6 +175,10 @@ class EvidenceGate(unittest.TestCase):
                    lambda r:r['groups'][1]['scenarios'].append(r['groups'][1]['scenarios'][0]),
                    lambda r:r['groups'][1].update(scenarios=['unknown']),
                    lambda r:r['groups'][1].update(graphics={}),
+                   lambda r:r['groups'][1].pop('book_navigation'),
+                   lambda r:r['groups'][1]['book_navigation'].update(presentation='res://study/book/main.gd'),
+                   lambda r:r['groups'][1]['book_navigation'].update(routes=[]),
+                   lambda r:r['groups'][1]['book_navigation']['returned'].update(page=1),
                    lambda r:r['groups'][2].update(viewports=[]),
                    lambda r:r['groups'][4].pop('lock_handoff'),
                    lambda r:r['groups'][4].pop('retry'),

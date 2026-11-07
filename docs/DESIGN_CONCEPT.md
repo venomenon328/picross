@@ -1,5 +1,40 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**PANG-A / #531 · auf dem Arbeitsbranch implementiert; Abnahmen im Draft-PR:**
+Pangolin Regular ersetzt die bisherige Tidy-Hand-Standardtextrolle auf sämtlichen
+normalen UI-Pfaden, insbesondere in der langen Spielerhilfe sowie in
+kleinen Katalog-/Dropdown-/Dialogbeschriftungen. Lesbarkeit auf dem warmen
+Buchpapier, gemessene Textbudgets und stabile optische Grundlinien bestimmen
+die Umsetzung. Fraunces-/Bakso-Überschriften, Delight-Zahlen, gebündelter
+Plex-Fallback, handgezeichnete Controls und die Buch-/Spielgestaltung bleiben.
+[HZ-D08](HAND_DRAWN_UI.md) ist der Fachvertrag, [#531](https://github.com/venomenon328/picross/issues/531)
+führt Paket und offene Gates. Die nachstehende HZ-Geschichte beschreibt den
+historischen Tidy-Hand-Stand; PANG-A-R01/M01 bleiben getrennte Vor-Merge-Gates.
+
+
+**ANZ-A / #527 · native Anzeigeoptionen auf dem Arbeitsbranch implementiert:**
+Die bestehende linke Buch-Einstellungsseite bietet im handgezeichneten Stil
+zwei Auswahlen für feste zulässige Clientfenstergrößen und für Fenster,
+rahmenloses sowie exklusives Vollbild. Native Vollbildmodi verwenden die
+Desktopauflösung. Wechsel haben eine 15-s-Bestätigung mit Rücknahme,
+Fenster/Arbeitszoom/UI-Skalierung bleiben getrennt. Keine neue Buchkamera,
+keine neue Informationsseite oder Web-Fensteroption und kein spezifischer
+Buchanimations-Wechseltest. [ANZ-Fachvertrag](DISPLAY_SETTINGS.md),
+[Issue #527](https://github.com/venomenon328/picross/issues/527).
+
+**B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
+Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
+füllen zuerst zwölf Karten links, dann zwölf rechts; beide Hälften scrollen
+unabhängig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
+bewusst geänderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unverändert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+[B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
+B-A-R08-V02 und B-A-M01 sind über PR #497 abgeschlossen; die
+[Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
+Merge und Deployment sind getrennt offen.
+
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) verwendet gemäß HZ-A-FONT02
 Tidy Hand für Standardtexte und erhält die bisherigen Überschriften. Kleine
@@ -136,7 +171,7 @@ Chalkboard/Stift/X/Timing sind nach ZS1-M01 bestätigt; die
 | Bereich | Bestätigte Entscheidung |
 | --- | --- |
 | Sammlung | Ein Album füllt sich mit erarbeiteten Bildern und kann einen erkennbar vollständigen Zustand erreichen. Keine zusätzlich beschlossene Raumansicht. |
-| Zeichenstil | Handgezeichnete 2D-Illustration mit klaren Konturen und ruhigen, nicht zu blassen Farbflächen. Nicht automatisch Retro-Pixel-Art für die gesamte Oberfläche. |
+| Zeichenstil | Realistischer räumlicher Buchkörper und sparsame Umgebung gemäß [#493](BOOK_STUDY.md); Inhalte/UI bleiben gezeichnet beziehungsweise geschrieben, Abschlussbilder illustriert. |
 | Stimmung | Warm, neugierig und dennoch ruhig. |
 | Spielbildschirm | Thematik bleibt dezent sichtbar; das geometrisch präzise Raster trägt selbst den gezeichneten Spielcharakter. Größere Fenster dürfen nicht zu unnötig riesigen Zellen führen. |
 | Zelllesbarkeit | Füllungen bleiben einzeln erkennbar, insbesondere an kräftigen Fünferlinien. Raster und Füllung dürfen nicht optisch zu einer gemeinsamen Fläche verschmelzen. |
@@ -173,13 +208,32 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 
 ## 4. Visuelle Ausarbeitung
 
+**BTI-C · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
+großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`
+sind nach [BTI](VIEW_TITLE_ART.md) neutrale offen schraffierte V2-rev1-Graphit-
+Schriftzugbilder ohne umgebende Illustrationen. Die Titel zentrieren sich
+innerhalb ihrer jeweiligen Buchhälfte; die bestehende Informationsnavigation
+liegt am sicheren unteren Papierrand. Die übrigen Font-/Buchrollen und
+die Kapitel-/Gruppenüberschriften bleiben erhalten.
+[Freigabe #533](https://github.com/venomenon328/picross/issues/533).
+
+
 Für #23 gilt die [aktive Auswahl GD-01 bis GD-05](Z2_SELECTION.md): A-Inventarband,
 gemeinsame BP-3-Montierungen, die damaligen Fraunces-/Plex-Rollen, feste C1-Kontur und eine echte
 native N1-Informationsseite. Diese konkrete Arbeitsansicht ersetzt die historische
 BP-3-Empfehlung B, nicht die noch offene gesamte Themen-/Kapitelentscheidung.
 Raster und UI werden getrennt auf unverzerrtem A-Papier gezeichnet. N1 nutzt
-nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen,
-Hinweisreset, H1, Bedienhilfe und Beenden teilen sich eine Seite mit Rückweg.
+nur eine Hintergrundspiegelung; Text und Bedienung bleiben nativ. Einstellungen und H1 nutzen die linke Informationsseite, Bedienhilfe die rechte.
+ANZ-A-N03 / #527 erhält die N02-Anordnung: zwei mittig auf dem
+linken Papier stehende handgezeichnete Gruppen mit Titellaschen und horizontalen
+Label-/Dropdownzeilen. Einstellungen verwendet wie der tatsächliche Katalogtitel
+Bakso Daging bei 28 × UI; Gruppenüberschriften erhalten nach N03-E01 ebenfalls
+Bakso bei kleineren 20 × UI, ohne neue Rahmen-/Titellaschengestaltung.
+Nur Fenstergröße und Rätselansicht besitzen gestylte Hover-/Fokushilfen, die
+anderen Dropdowns füllen die freie Zeilenbreite. Die Informations-Rücknavigation
+zeigt „Zurück“ bei unverändertem Ziel samt zielbezogenem Tooltip/Accessibilityname.
+Manueller Hinweisreset und Einstellungs-Beenden entfallen; individuelle Hinweis-
+navigation, Katalog-Ausgang und sichere OS-Schließwege bleiben erhalten.
 Keine neue Statistik/Albumarchitektur oder Vorwegnahme von #24. Native Abweichungen,
 Offline-Fonts und die historische Eigentümeranleitung stehen im [Z2-Prüfbericht](Z2_VERIFICATION.md).
 Die native Umsetzung ist über [PR #33](https://github.com/venomenon328/picross/pull/33)
@@ -214,7 +268,8 @@ Der begrenzte Rollenumfang und die Prüfung bei UI100/125 stehen in HZ-D07.
 
 Der folgende Verlauf ordnet die bereits integrierten Vorlagen und Studien ein.
 Frühere Start- und Auswahlgrenzen sind keine erneut offenen Z2-Entscheidungen;
-maßgeblich sind GD-01 bis GD-05 und der aktuelle #23-Vertrag. Die historischen
+damals galten GD-01 bis GD-05 und der #23-Vertrag. Die aktuelle Darstellung und
+Navigation werden durch [B-B](BOOK_INTEGRATION.md) gezielt abgelöst. Die historischen
 hashgebundenen Bilder, ZIPs, Manifeste und Prüfberichte bleiben unverändert.
 
 [#27 unter #21](https://github.com/venomenon328/picross/issues/27) konkretisierte
@@ -278,7 +333,19 @@ aufgehoben. #24 wurde noch nicht begonnen.
 
 Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Registern, Kapitelverzierungen und unterschiedlich großen Bildplätzen. Große Panoramen könnten eigene Seiten erhalten. Feste Seiten statt freier Dekoration sind ein Vorschlag, keine neue Spielmechanik.
 
-Beim Öffnen könnte das Rätselblatt zur großzügigen Arbeitsfläche werden. Materialanmutung und Kapitelakzente bleiben, Hinweise und Raster erhalten ausreichend Platz. Die linke Buchseite selbst wird zur großzügigen Bildschirmfläche; große Raster werden weder in eine kleine halbe Bildschirmfläche noch über einen Falz gezwungen. Perspektive, Ränder und Übergänge bleiben zu prüfen.
+Die bestätigte [Buchrichtung #493](BOOK_INTEGRATION.md) zeigt den Katalog als echte Doppelseite mit mittiger Bindung. Katalogblättern dauert 0,85 Sekunden, vorwärts rechts nach links und zurück umgekehrt. Drei einzelne Blätter und eine insgesamt dreisekündige Kamerafahrt führen zur großzügigen rechten Arbeitsseite, frontal und mit Bindung links. B-B übernimmt den abgenommenen Buchkörper, Papier-/Leder-/Tischmaterial, Falzgeometrie, transparente Controls und die 1,8-sekündige Rückkehr in den regulären Windows-/Webstart. Die frühere linke Arbeitsseite und das Verbot gezielter Kamerabewegung sind abgelöst. Hinweise und Raster behalten ihre vollständigen bisherigen Pixelbudgets. Große Raster werden weder auf eine halbe Bildschirmfläche verkleinert noch über den Falz gelegt. Die historischen Materialabnahmen bleiben im Studienvertrag gebunden; die neue Integrationslieferung folgt B-B-T01/R01/M01.
+
+Die Spielerhilfe nach [HIL-1 / #500](https://github.com/venomenon328/picross/issues/500)
+liegt in der rechten Informationsseite im vorhandenen Nahmaßstab. Vier beschriftete
+Papierbuttons führen direkt zu Spielprinzip, farbigen Rätseln, Bedienung und
+Lösungstipps. Pangolin trägt den Fließtext, Bakso Daging gemäß
+[HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535) die Abschnitts- und kleinen Werkzeugüberschriften; Lehrzahlen verwenden die aktive Delight-Typografie.
+Passive synthetische Raster teilen stabile Linien, Atlas-Endbilder, Stiftfarben
+und handschriftliche X mit der Spielansicht. Es gibt keine neue Bild-/Fontfamilie.
+Textumbruch, Diagramme und Trefferflächen folgen UI100/125 und der Papierfläche.
+Kapitelwahl beginnt oben; Hilfe↔Einstellungen erhält Kapitel und Lesestelle des
+Besuchs. Der obere Rückweg bleibt am Katalog-/Rätselursprung gebunden. Die Inhalte
+nehmen an den vorhandenen Captures und Buchbewegungen teil.
 
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
 
@@ -300,6 +367,23 @@ Ungelöste Plätze benötigen neutrale Kennungen statt vorweggenommener Motivnam
 Vorgeschlagen ist eine Unterscheidung zwischen vollständiger Sammlung und zusätzlicher Meisterschaft: jedes gelöste Rätsel liefert sein vollständiges Bild unabhängig von der Bewertung, perfekte Leistungen erhalten zusätzliche Kennzeichnungen. Bonusinhalte könnten als Zusatzblätter erscheinen statt dauerhaften Löchern. Konkrete Begriffe und Platzierung sind offen. Bestätigte Perfektions-Bonusrätsel nicht durch rein kosmetische Belohnung ersetzen.
 
 ### 4.3 Motivtreue, detailliertere Enthüllung
+
+AR-A / #486 erweitert ausschließlich den stabilen Abschluss um **Bild | Raster**.
+Ein einzelnes rechteckiges On-Off-Control trägt Bild links und Raster rechts;
+sein heller Schieber kennzeichnet die aktive Seite. Dunkle Bereiche werden
+schraffiert statt deckend gefüllt, Konturen bleiben handgezeichnet. Der Schalter
+ist erst nach der Enthüllung bedienbar; sein Platz ist von Anfang an reserviert. Jeder neue Besuch beginnt mit Bild. Refresh, Resize, UI-Skalierung,
+Fokusverlust und Resetabbruch erhalten die Auswahl innerhalb desselben Besuchs.
+Das komplette schreibgeschützte Raster zeigt bestätigte Spielerfüllungen in der
+Originalpalette mit statischem Atlasstift, normalen und Fünferlinien sowie Außenrand.
+X und unbekannter Hintergrund bleiben leer; Hinweise, Werkzeuge und neue
+Zoom-/Panbedienung entfallen. Beide Ansichten passen proportional und zentriert
+in denselben Papierbereich. Umschalten verändert weder Zellen, History, Abschluss,
+gespeicherte Ansicht noch Savebytes und löst keine Sicherung oder Enthüllung aus.
+Katalog-/Informationsnavigation und bestätigter Reset verwerfen diese flüchtige
+Auswahl und die zusätzlichen Darstellungsdaten. Illustration, Katalogvorschau,
+Saveformat und übrige EA-Verträge bleiben erhalten.
+[Paket, Prüfplan und getrennte AR-A-T01/R01/M01-Gates](https://github.com/venomenon328/picross/issues/486).
 
 **Bestätigte Präzisierung:** Das Ergebnisbild darf sichtbar detaillierter als das Rätsel sein. Der Hauptgegenstand, wesentliche Formen, Bildaufbau und Proportionen müssen so zusammenpassen, dass das Raster sehr deutlich als Stilisierung des Bilds erkennbar ist. Feinere Konturen, Schattierungen, Oberflächen und kleinere passende Elemente sind erlaubt. Eine identische belegte Pixelmaske oder identische Auflösung ist ausdrücklich nicht erforderlich. Ein beliebiges neues Bild oder vollständig anderer Blickwinkel wäre weiterhin kein Ersatz.
 
@@ -326,7 +410,7 @@ Die frühere P1.1-Prüfung auf identische Silhouetten war eine enge technische F
 
 EA / #170 legt den Ablauf fest: 250 ms Arbeitsraster einschließlich Rahmen, Hinweisen, X, Cursor und Sidebar ausblenden; 650 ms die bestätigten Füllungen aus ihrer tatsächlichen Bildschirmposition proportional zentrieren und von Schraffur zu lückenlosen Zellen überblenden; 400 ms halten; 650 ms in das vorhandene vollfarbige Ergebnisbild überblenden; anschließend in 200 ms Motivname und Reset einblenden. Auch bei Farbrätseln genügt die bloße Freistellung oder erneute Präsentation desselben gelösten Rasters nicht als bestätigtes Qualitätsziel; ihre Abschlussmotive folgen der konsistenten motivtreuen Verfeinerungsrichtung. Das schreibt weder identische Auflösungen noch eine allgemeine Assetpipeline oder eine hochaufgelöste Neuzeichnung jedes Motivs vor. Raster und Bild behalten jeweils ihr eigenes Seitenverhältnis und denselben Mittelpunkt in der nutzbaren Papierfläche unter dem neutralen Bakso-Titel „Blatt NN · W × H“. Name und Reset erhalten vorab reservierten Platz. Die frühere Vergleichsansicht, Vergleichsüberschriften, der Prototypsatz und der breite Albumknopf entfallen; der Buchreiter bleibt. P1 hat weiterhin keine Wertung.
 
-Gelöste Blätter öffnen unmittelbar denselben Endzustand. Fokusverlust, Resize und UI-Skalierung beenden die laufende Präsentation stabil; Navigation beendet sie ohne spätere Rückkehr. Der bestätigte Reset aus der Endansicht öffnet dasselbe leere Blatt, der Katalogreset bleibt im Katalog. Eine umschaltbare Rasteransicht und ein zusätzlicher Animationsschalter sind nicht beauftragt. [EA-Prüfzuordnung](EA_VERIFICATION.md). Davon getrennt ist das Abschalten der Zellanimationen inzwischen durch ZS bestätigt. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
+Gelöste Blätter öffnen unmittelbar denselben Endzustand. Fokusverlust, Resize und UI-Skalierung beenden die laufende Präsentation stabil; Navigation beendet sie ohne spätere Rückkehr. Der bestätigte Reset aus der Endansicht öffnet dasselbe leere Blatt, der Katalogreset bleibt im Katalog. AR-A / #486 ergänzt die oben beschriebene stabile Rasterumschaltung; ein zusätzlicher Animationsschalter bleibt außerhalb des Auftrags. [EA-Prüfzuordnung](EA_VERIFICATION.md). Davon getrennt ist das Abschalten der Zellanimationen inzwischen durch ZS bestätigt. Motiverkennung benötigt visuellen Vergleich; ein technischer Bildvalidator ersetzt diesen nicht. Die detailreiche Fassung erscheint erst nach tatsächlichem Abschluss, nie als Lösungsvorschau oder korrigierte Miniatur. Eine bloße Freistellung desselben Farbrasters genügt für F-02 ausdrücklich nicht mehr.
 
 ### 4.4 Zeichnerische Hinweiszahlen und Zellmarkierungen nach E1
 

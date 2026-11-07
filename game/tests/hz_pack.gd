@@ -64,10 +64,10 @@ func run() -> void:
 	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	await frames()
 	check(app.catalog_error.is_empty() and app.sessions.size() == 6,"actual PCK loads only six external synthetic fixtures: " + app.catalog_error)
-	check(Text.font().data == Text.SOURCE.data and not Text.font().allow_system_fallback,"actual PCK original Tidy bytes and local fallback")
-	check(FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"),"actual PCK includes author permission")
+	check(Text.font().data == Text.SOURCE.data and not Text.font().allow_system_fallback,"actual PCK original Pangolin bytes and local fallback")
+	check(FileAccess.file_exists("res://art/drawing/pangolin/NOTICE.txt"),"actual PCK includes author permission")
 	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
-	check(icons.size() == 23 and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"),"actual PCK complete HZ-B family/provenance")
+	check(icons.size() == 27 and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"),"actual PCK complete HZ-B/SBR family/provenance")
 	for id: String in icons:
 		var texture: Texture2D = load("res://art/book/"+id+".svg")
 		check(texture != null and texture.get_size() == Vector2(26,26),"actual PCK imported icon "+id)
@@ -76,7 +76,7 @@ func run() -> void:
 		root.size = Vector2i(spec[0],spec[1])
 		app.set_ui_scale(spec[2])
 		await frames()
-		check(app.theme.default_font.get_font_name() == "Tidy Hand" and app.title.get_theme_font("font") == app.WORK_TITLE_FONT,"actual PCK normal and heading roles across scale roundtrip")
+		check(app.theme.default_font.get_font_name() == "Pangolin" and app.title.get_theme_font("font") == app.WORK_TITLE_FONT,"actual PCK normal and heading roles across scale roundtrip")
 		for card: Control in app.choices:
 			for label: Label in [card.detail,card.dimensions,card.difficulty,card.note,card.leaf]:
 				check(label.get_theme_font_size("font_size") == Text.small_size(app.ui_scale),"HZ-C actual PCK shared small role and unchanged Blatt 15")
@@ -126,7 +126,7 @@ func run() -> void:
 	paper.set_content_margin_all(16)
 	panel.add_theme_stylebox_override("panel",paper)
 	var sample := Label.new()
-	sample.text = "Tidy Hand · Größe Straße ÄÖÜ äöü ß\n× · … % „Anführungen“ – − ← → ↑ ↓\nNicht eingestuft · Sehr leicht · Sehr schwer\n20 × 20 · 40 × 40 · 50 × 50"
+	sample.text = "Pangolin · Größe Straße ÄÖÜ äöü ß\n× · … % „Anführungen“ – − ← → ↑ ↓\nNicht eingestuft · Sehr leicht · Sehr schwer\n20 × 20 · 40 × 40 · 50 × 50"
 	sample.add_theme_font_override("font",Text.font())
 	sample.add_theme_font_size_override("font_size",24)
 	panel.add_child(sample)

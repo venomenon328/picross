@@ -10,7 +10,7 @@ SOURCE = ROOT / "docs/design/book_inventory"
 DEST = ROOT / "game/art/book"
 KB_ICONS = Path(__file__).with_name("book_icons_kb.json")
 HZ_ICONS = Path(__file__).with_name("book_icons_hz.json")
-ACTIVE_ICONS = {"fill", "erase", "undo", "redo", "minus", "plus", "help", "menu", "nav-album", "nav-information", "nav-work", "play", "reset", "arrow-left", "arrow-right", "arrow-up", "arrow-down", "chevron-down", "chevron-up", "check", "check-empty", "checkbox-empty", "checkbox-checked"}
+ACTIVE_ICONS = {"fill", "erase", "undo", "redo", "minus", "plus", "help", "menu", "nav-album", "nav-information", "nav-work", "play", "reset", "arrow-left", "arrow-right", "arrow-up", "arrow-down", "chevron-down", "chevron-up", "check", "check-empty", "checkbox-empty", "checkbox-checked", "scroll-up", "scroll-down", "scroll-left", "scroll-right"}
 
 
 def active_icons():
@@ -20,8 +20,10 @@ def active_icons():
     return icons
 
 
-def icon_svg(entry):
-    paths = "".join(f'<path d="{path}" stroke-width="{width}"/>' for path, width in zip(entry[2:], ("1.7", "0.85")) if path)
+def icon_svg(entry, *, filled=False):
+    paths = "".join(f'<path d="{path}" stroke-width="{width}"' + (f' fill="{fill}"' if filled else "") + "/>"
+                    for path, width, fill in zip(entry[2:], ("1.7", "0.85"),
+                                                 ("white" if filled else "none", "none")) if path)
     return ('<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">'
             '<g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round">' + paths + '</g></svg>\n')
 
@@ -53,7 +55,7 @@ def provision():
     icons = active_icons()
     (DEST / "icons.json").write_text(json.dumps(icons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     for name, entry in icons.items():
-        (DEST / (name + ".svg")).write_text(icon_svg(entry), encoding="utf-8", newline="\n")
+        (DEST / (name + ".svg")).write_text(icon_svg(entry, filled=name.startswith("scroll-")), encoding="utf-8", newline="\n")
     # Path ordering differs between Windows and POSIX; manifest bytes must not.
     for path in sorted(DEST.iterdir(), key=lambda path: path.name):
         if path.suffix in (".ttf", ".txt", ".png", ".svg", ".json") and path.name != "manifest.json":
@@ -73,7 +75,7 @@ def verify():
     actual = {p.name for p in DEST.iterdir() if p.suffix in (".ttf", ".txt", ".png", ".svg", ".json") and p.name != "manifest.json"}
     assert len(listed) == len(set(listed)) and set(listed) == actual, "Resource inventory mismatch"
     for name, entry in icons.items():
-        assert (DEST / (name + ".svg")).read_bytes() == icon_svg(entry).encode("utf-8"), name
+        assert (DEST / (name + ".svg")).read_bytes() == icon_svg(entry, filled=name.startswith("scroll-")).encode("utf-8"), name
     for item in manifest["files"]:
         assert hashlib.sha256((DEST / item["file"]).read_bytes()).hexdigest() == item["sha256"], item["file"]
     for item in json.loads((SOURCE / "composition/inputs/fonts.json").read_text(encoding="utf-8")):
@@ -91,6 +93,19 @@ def verify():
     manifest["hz_standard_text"] = dict(file="art/drawing/TidyHand.ttf", sha256=digest,
         notice="art/drawing/tidy-hand/NOTICE.txt",
         notice_sha256=hashlib.sha256(notice.read_bytes()).hexdigest())
+    # PANG-A replaces the active role; the HZ original above stays historical.
+    pangolin = ROOT / "game/art/drawing/Pangolin-Regular.ttf"
+    license = ROOT / "game/art/drawing/pangolin/OFL.txt"
+    source = ROOT / "game/art/drawing/pangolin/NOTICE.txt"
+    font_hash = "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e"
+    license_hash = "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c"
+    assert pangolin.stat().st_size == 589884 and hashlib.sha256(pangolin.read_bytes()).hexdigest() == font_hash, "PANG original font bytes"
+    assert hashlib.sha256(license.read_bytes()).hexdigest() == license_hash, "PANG original OFL bytes"
+    text = source.read_text(encoding="utf-8")
+    assert font_hash in text and license_hash in text and "https://github.com/venomenon328/picross/issues/531" in text
+    manifest["standard_text"] = dict(file="art/drawing/Pangolin-Regular.ttf", sha256=font_hash,
+        license="art/drawing/pangolin/OFL.txt", license_sha256=license_hash,
+        notice="art/drawing/pangolin/NOTICE.txt", notice_sha256=hashlib.sha256(source.read_bytes()).hexdigest())
     return manifest
 
 

@@ -8,26 +8,61 @@ func run(test: SceneTree) -> void:
 	t = test
 	app = t.app
 	app.board.animation_clock = func() -> int: return clock[0]
-	for length: int in [1, 4, 16, 17, 50]:
-		for axis: Vector2i in [Vector2i.RIGHT, Vector2i.LEFT, Vector2i.DOWN, Vector2i.UP]:
-			for button: MouseButton in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
-				reset(3)
-				var first: Vector2i = Vector2i(2, 2)
-				if axis.x != 0:
-					first.x = 0 if axis.x > 0 else length - 1
-				else:
-					first.y = 0 if axis.y > 0 else length - 1
-				var indices: Array[int] = []
-				for i: int in range(length):
-					var cell: Vector2i = first + axis * i
-					indices.append(cell.y * 50 + cell.x)
-				stroke(first, first + axis * (length - 1), button)
-				wave(indices, 1 if button == MOUSE_BUTTON_LEFT else 0)
+	# Deliberate sample, not a claim of the former 5 x 4 x 2 coverage.
+	for sample: Array in [
+		[1, Vector2i.RIGHT, MOUSE_BUTTON_LEFT], [1, Vector2i.LEFT, MOUSE_BUTTON_RIGHT],
+		[4, Vector2i.DOWN, MOUSE_BUTTON_LEFT], [4, Vector2i.UP, MOUSE_BUTTON_RIGHT],
+		[16, Vector2i.RIGHT, MOUSE_BUTTON_LEFT], [16, Vector2i.DOWN, MOUSE_BUTTON_RIGHT],
+		[17, Vector2i.LEFT, MOUSE_BUTTON_LEFT], [17, Vector2i.UP, MOUSE_BUTTON_RIGHT],
+		[50, Vector2i.DOWN, MOUSE_BUTTON_LEFT], [50, Vector2i.RIGHT, MOUSE_BUTTON_RIGHT],
+	]:
+		var length: int = sample[0]
+		var axis: Vector2i = sample[1]
+		var button: MouseButton = sample[2]
+		t.begin_case("stroke-%d-%d-%d-%d" % [length,axis.x,axis.y,button])
+		reset(3)
+		var first: Vector2i = Vector2i(2, 2)
+		if axis.x != 0:
+			first.x = 0 if axis.x > 0 else length - 1
+		else:
+			first.y = 0 if axis.y > 0 else length - 1
+		var indices: Array[int] = []
+		for i: int in range(length):
+			var cell: Vector2i = first + axis * i
+			indices.append(cell.y * 50 + cell.x)
+		stroke(first, first + axis * (length - 1), button)
+		t.case_data = observe()
+		wave(indices, 1 if button == MOUSE_BUTTON_LEFT else 0)
+		t.case_data["after"] = observe()
+	t.begin_case("protection-and-g1")
 	protection_and_g1()
+	t.begin_case("lifecycle")
 	lifecycle()
+	t.begin_case("chords")
 	chords()
 	app.board.animation_clock = Time.get_ticks_usec
 	t.fresh()
+
+func observe() -> Dictionary:
+	# Read actual model/miniature, effect records and actual saved bytes. The
+	# Python gate derives the expected cells/history/timestamps independently.
+	var raw: String = saved()
+	var data: Dictionary = JSON.parse_string(raw)
+	var saved_cells: Array[int] = []
+	for value: Variant in data.cells: saved_cells.append(int(value))
+	var effects: Array = []
+	for index: int in app.board.effects:
+		var effect: Dictionary = app.board.effects[index]
+		effects.append([index, int(effect.start), effect.after, effect.seconds])
+	return {"definition":app.session.definition.id,
+		"model":JSON.stringify(app.session.player.cells).sha256_text(),
+		"mini":JSON.stringify(app.mini.cells).sha256_text(),
+		"saved_cells":JSON.stringify(saved_cells).sha256_text(),
+		"history":app.session.player.history.duplicate(true), "cursor":app.session.player.cursor,
+		"saved_history":data.history, "saved_cursor":data.cursor,
+		"completed":app.session.completed, "saved_completed":data.completed,
+		"save_sha256":raw.sha256_text(), "save_bytes":raw.to_utf8_buffer().size(),
+		"effects":effects, "processing":app.board.is_processing()}
 
 func reset(sheet: int = 0) -> void:
 	clock[0] = 1000000

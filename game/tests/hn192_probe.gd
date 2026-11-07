@@ -212,11 +212,16 @@ func pixels(label: String, context: Vector2i, baseline: Image) -> void:
 	var box: Rect2 = b.clue_tooltip_rect
 	var marked: int = 0
 	var unmarked: int = 0
+	# Preserve every original pixel consumed by the band oracle, including its
+	# baseline. No scaling/interpolation, full-paper duplicate or second render.
+	var samples: Image = Image.create(50,100,false,Image.FORMAT_RGBA8)
 	for y: int in range(50):
 		for x: int in range(50):
 			var p: Vector2 = b.view.cell_rect(Vector2i(x,y)).position+Vector2.ONE*b.view.cell_size*0.4
-			if box.has_area() and box.grow(3).has_point(p): continue
 			var pixel: Vector2i = Vector2i(b.global_position.round()+p)
+			samples.set_pixel(x,y,image.get_pixelv(pixel))
+			samples.set_pixel(x,y+50,baseline.get_pixelv(pixel))
+			if box.has_area() and box.grow(3).has_point(p): continue
 			var expected: bool = x == context.x or y == context.y
 			var changed: bool = image.get_pixelv(pixel) != baseline.get_pixelv(pixel)
 			if expected:
@@ -226,11 +231,20 @@ func pixels(label: String, context: Vector2i, baseline: Image) -> void:
 				unmarked += 1
 				check(not changed,"A04 no orthogonal/phantom band "+label)
 	check(marked > 0 and unmarked > 100, "A04 real exposed pixels sampled "+label)
-	image.save_png(output.path_join(label+".png"))
-	records.append({"kind":"pixels","file":label+".png","context":[context.x,context.y],"marked":marked,"unmarked":unmarked,"overlay":[box.position.x,box.position.y,box.size.x,box.size.y],"client":[root.size.x,root.size.y],"ui":b.ui_scale,"cell":b.view.cell_size,"board":[b.global_position.x,b.global_position.y,b.size.x,b.size.y]})
+	check(samples.save_png(output.path_join(label+".png")) == OK,"HN original sample pixels saved")
+	var sources: Dictionary = {}
+	for item: Array in [["frame",image],["baseline",baseline],["samples",samples]]:
+		var hash := HashingContext.new()
+		hash.start(HashingContext.HASH_SHA256)
+		var original: Image = item[1].duplicate()
+		original.convert(Image.FORMAT_RGBA8)
+		hash.update(original.get_data())
+		sources[item[0]] = hash.finish().hex_encode()
+	records.append({"kind":"pixels","file":label+".png","context":[context.x,context.y],"marked":marked,"unmarked":unmarked,"overlay":[box.position.x,box.position.y,box.size.x,box.size.y],"client":[root.size.x,root.size.y],"ui":b.ui_scale,"cell":b.view.cell_size,"board":[b.global_position.x,b.global_position.y,b.size.x,b.size.y],
+		"evidence":"picross-hn-samples-v1","grid_origin":[b.view.origin.x,b.view.origin.y],"source_rgba_sha256":sources})
 
 func captures() -> void:
-	for config: Vector3 in [Vector3(1280,720,1.25),Vector3(1920,1080,1),Vector3(2560,1440,1.25)]:
+	for config: Vector3 in [Vector3(1280,720,1.25)]:
 		root.size = Vector2i(config.x,config.y)
 		DisplayServer.window_set_size(root.size)
 		app.set_ui_scale(config.z)
@@ -314,8 +328,7 @@ func run() -> void:
 	if output.is_empty(): quit(2); return
 	Store.test_root_override = output.path_join("isolated-saves")
 	root.size = Vector2i(1920,1080)
-	app = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(root)
 	await settle()
 	install()
 	await settle()

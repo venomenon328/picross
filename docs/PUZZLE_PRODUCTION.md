@@ -1,50 +1,25 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
-**SD2 · 26.10.2026, C-Integration nach separatem R01 über PR #410 integriert:**
-[Der neue Schwierigkeitsvertrag](PUZZLE_DIFFICULTY_V2.md) trennt Denkanspruch,
-Suchaufwand und Bearbeitungsumfang. [D-F01/T01](SD2_D_ADOPTION.md) übernimmt
-die 45 abgenommenen Vorschläge und aktiviert auf dem Arbeitsbranch den
-Produktionsstandard 0.4. Neue und umgestellte bestehende
-Rätsel verwenden denselben Freeze; unveränderte gültige Analysen werden
-wiederverwendet. Keine Bild-/Rasterproduktion oder Neubewertung durch diese
-Spezifikationspflege. Der [C-Integrationsvertrag](SD2_INTEGRATION.md) und die
-[CLI-Anleitung](../tools/puzzle_production/README.md) regeln explizite Methodenwahl,
-Import, Vorschau, Plan, Übernahme und Aktivierung. [C-T01](SD2_C_VERIFICATION.md)
-prüft ausschließlich synthetische Fälle; ursprüngliche Inhaltsfreigaben bleiben
-erhalten. [D-V01](SD2_D_VERIFICATION.md) bleibt der historische Bericht zu
-Bestandsanalyse, Vergleich und Übernahmevorschau vor F01.
+**Aktuelle Produktionsverträge (Workflowabgleich 05.11.2026):**
+[PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md) führt die operativen Aufträge,
+Freigaben und Übergaben. [SD2](PUZZLE_DIFFICULTY_V2.md) und
+[SD2-Integration](SD2_INTEGRATION.md) führen die aktuelle Methodenauswahl; seit
+[D / PR #411](SD2_D_ADOPTION.md) ist Produktionsstandard 0.4. Methode 0.3 bleibt
+für ihre gültigen Altbindungen und ausdrücklich gewählte kompatible Fälle erhalten;
+keine neue pauschale 0.3-Pflicht. Beide Freezes und versiegelte Pakete bleiben unverändert.
+Die [CLI-Anleitung](../tools/puzzle_production/README.md) dokumentiert die ausführbaren Befehle.
 
-**AT · Abschlussbildtransparenz, Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A integriert:**
-[Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) ergänzt echte Transparenz für
-neue Abschlussbilder und den eng begrenzten Austausch vorhandener Bildfassungen.
-AT-A liefert den Produktionsstandard, die getrennte aktive Bildbindung und den
-gemeinsamen abgesicherten Bildupdateweg; danach bearbeitet AT-B den gebundenen
-Bestand samt tatsächlichen Bildfreigaben. Historische Produktions- und
-Integrationsbelege bleiben unverändert. Die Spezifikationsfreigabe startet weder
-Bildbearbeitung noch Raster-/Logikproduktion oder Integration. Der gesonderte
-[AT-B-V01-Auftrag](AT_B_VERIFICATION.md) lieferte den vollständigen Bildsatz bis
-zur gemeinsamen Eigentümervorlage. Die anschließende
-[Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01 mit kontrollierter
-Übernahme und AT-B-T01, ohne Raster-/Logikproduktion oder neue Analyse.
+[Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) führt die aktive Bildbindung und
+den begrenzten Bildupdateweg; [AT-B](AT_B_OWNER_APPROVAL.md) dokumentiert seine
+konkrete Inhaltsfreigabe. Liefer-/Abnahmestände stehen in den jeweiligen Issues/PRs.
+Die folgenden RP-Abschnitte beschreiben Fachverträge und historische Herleitung;
+sie beauftragen keine Wiederholung abgeschlossener Produktion.
 
-**Prüfzuordnung für neue Arbeit (12.10.2026):** Sämtliche konkreten Rätselprüfungen
-finden einmalig je relevanter Revision während der Produktion/Integration statt,
-nicht in CI. Keine rätselspezifischen Unit-Tests oder Bestands-Replays hinzufügen.
-[Regelwerk](ai-workflows/PUZZLE_AUTHORING.md) und [CI-Policy](CI_POLICY.md) ersetzen
-die unten historisch dokumentierten pauschalen RP-Paket-/CI-Prüfpflichten.
-Allgemeine Werkzeugtests mit festem synthetischem Testbestand bleiben erforderlich.
-
-**SD / [#235](https://github.com/venomenon328/picross/issues/235), SD-C1 integriert (18.10.2026):**
-[Rätselschwierigkeit](PUZZLE_DIFFICULTY.md) ergänzt die instrumentierte
-Skala 1–5 und den ausdrücklich manuellen Bewertungsweg. [SD-A](SD_ANALYZER.md)
-liefert den separaten Analysator; [SD-B](SD_CALIBRATION.md) ergänzt die eingefrorene
-Methode 0.3 für den ausdrücklichen Einzelaufruf. Aktuelle Profile und
-Produktionsverträge gelten weiter. Die Integration neuer Bewertungen erfolgt
-über [SD-C1](SD_CATALOG.md); ein SD-B-Rating allein ändert keine Produktionsfreigabe.
-Neue Registrierung und logisch geänderte Definitionen verlangen den extern vollständig
-geprüften 0.3-Input. SD-C2 hat nach bestandenem Vor-Übernahme-Review gemäß SD-C2-F01
-26 Bewertungen kontrolliert übernommen, einschließlich echtem Wiederholungs-No-op.
-Separates qualifiziertes finales Datenreview und Merge bleiben offen.
+Konkrete Rätselprüfungen erfolgen bei der relevanten Produktion/Integration,
+nicht als wachsender CI-Korpus. Keine rätselspezifischen Unit-Tests oder Bestands-
+Replays. Neue Werkzeugpakete wählen passende synthetische Module nach
+[CI_WORKFLOW_V2](CI_WORKFLOW_V2.md); reine Dokumente und reine Rätselproduktion
+bleiben ohne Player-Build. Keine pauschalen RP-Prüfpflichten aus alten Lieferungen.
 
 [KAT-1](CATEGORIES.md) ergänzt den Produktionsfundus und ZA-1 um thematische Kategorien. Die Zuordnung steht spätestens vor dem kategorisierten Export fest und bleibt außerhalb von Raster-, Logik-, Proof- und Freigabeidentität. Arbeitsindex und Runtime-Registrierung bleiben getrennt.
 
@@ -502,9 +477,9 @@ Produktdefinition durch die kolorierte Enthüllung verständlicher werden; ein
 Farbrätsel soll bereits selbst als Bild erkennbar sein.
 
 Historische Produktionsbewertungen behalten 0.1/0.2 aus Authoring §5 einschließlich
-ihrer Schätzgrenzen. Neue Integrationen verwenden zusätzlich 0.3 nach
-[SD-C1](SD_CATALOG.md): geprüfte R0–R3-Regeln, synchrone Bewertungswellen,
-gemeinsam erfasste Fortschrittsmöglichkeiten und belegte Engstellen. Die
+ihrer Schätzgrenzen. Neue Integrationen verwenden die aktuell ausdrücklich gewählte Methode (Standard 0.4) nach
+[SD2-Integration](SD2_INTEGRATION.md) und dem gewählten Methodenvertrag: extern
+geprüfte Analyse mit getrennt ausgewiesenen Profilen und belegten Engstellen. Die
 eigene Bewertungsspur ersetzt keinen bestehenden Proof. R4-Notwendigkeit wird
 weiterhin nach §5.6 unabhängig belegt; auch anspruchsvolle reine Linienfälle
 können Stufe 5 erreichen. Alte Bewertungen behalten ihre Methodensemantik.
@@ -538,3 +513,4 @@ allgemeine Pflicht zum Produktions-Replay oder zur Wiederherstellung alter Paket
 
 Über das Paarlinienprofil hinausgehende Regeln, menschlich kalibrierte Schwierigkeit, öffentliche
 Editoren und Veröffentlichung bleiben gesonderte Folgeentscheidungen.
+

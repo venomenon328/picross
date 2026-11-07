@@ -1,6 +1,29 @@
 # Katalogsortierung und Hinzugefügt-Metadaten · KU-B
 
-Stand: 21.10.2026 · Spezifikation 1.3 · KU-B und HZ-A/B integriert; HZ-C implementiert, Abnahmen offen
+**PANG-A / #531 · auf dem Arbeitsbranch implementierte Schrift-Folgeentscheidung:**
+[HZ-D08](HAND_DRAWN_UI.md) führt Pangolin Regular für die bestehende
+Standardtextrolle auch in Sortierbuttons, geschlossenen und geöffneten
+Auswahllisten ein. Die nachstehenden HZ-A-/Tidy-Hand-Angaben sind die
+integrierte Ausgangsbasis; Auswahlsemantik, Fokus, Sortierzustand, Treffer-/
+Scrollflächen und Sicherheit bleiben unverändert. [PANG-A](https://github.com/venomenon328/picross/issues/531).
+
+
+**B-A-N05 / #493:** Die [isolierte Doppelseitenstudie](BOOK_STUDY.md) übernimmt
+diesen globalen Sortier-/Filtervertrag vor der logischen 24er-Paginierung.
+Beide Buchhälften teilen Filter/Sortierung/Seite/Auswahl, besitzen aber eigene
+Scrollstände. Die ersten bis zu zwölf Karten liegen links, der Rest rechts.
+Nur echte Seitenwechsel animieren.
+Filter und Sortierung wirken unmittelbar, während laufender Wechsel werden
+weitere Befehle verworfen. Die 1,8-s-Rückkehr erhält Filter, Sortierung, Richtung,
+Seite, beide Scrollpositionen und Auswahl bei aktuellem Fortschritt. Echte Filter-/
+Sortieränderungen setzen Seite und beide Offsets zurück, No-ops erhalten sie.
+Die Studie speichert ihre Auswahl nur im RAM;
+die reguläre Präferenzpersistenz folgt dem [integrierten B-B-Vertrag](BOOK_INTEGRATION.md).
+N05 bindet denselben vollständigen Katalogkontext vor einem Informationsbesuch.
+Auch Hilfe↔Einstellungen überschreibt diesen Ursprung nicht; eine interne Session
+im Katalog ist keine aktive Rätselansicht und erzeugt keine neue Savepflicht.
+
+Fachstand: Spezifikation 1.3 · Workflowabgleich: 05.11.2026 · KU-B und HZ-A/B/C integriert
 
 Der Eigentümer hat die Katalogüberarbeitung als Spezifikation freigegeben.
 [KU / #244](https://github.com/venomenon328/picross/issues/244) führt
@@ -11,8 +34,8 @@ KU-A und KU-B sind über ihre eigenen PRs #254/#255 integriert.
 auf `main` bleiben separat im Issue gebunden. Der [HZ-Stilstand](HAND_DRAWN_UI.md)
 aus HZ-A/B ist über PR #288/#289 integriert und in #284 abgenommen.
 HZ-C / [#294](https://github.com/venomenon328/picross/issues/294) ist als
-Typografie-Nachbesserung in [Draft-PR #296](https://github.com/venomenon328/picross/pull/296)
-implementiert; R01/M01 bleiben vor Merge offen. Historische
+Typografie-Nachbesserung über [PR #296](https://github.com/venomenon328/picross/pull/296)
+integriert; tatsächliche R01-/M01-Entscheidungen stehen dort und im Issue. Historische
 Abnahmen oder Mergeausnahmen erfüllen seine eigenen Gates nicht.
 
 ## Geltung und Ausgangsstand
@@ -83,10 +106,11 @@ Kategorienfilterung erhält das zuletzt gewählte Paar aus Kriterium und Richtun
 
 ## KU-B-D02 · Reihenfolge, Seiten und Identität
 
-Zuerst den gesamten gültigen sichtbaren Bestand nach Kategorie filtern, dann alle
+Zuerst den gesamten gültigen sichtbaren Bestand nach allen gemeinsam aktiven
+[K-A-Filtern](CATALOG_PRESENTATION.md#k-a--kombinierbare-sitzungsfilter-485) filtern, dann alle
 Treffer sortieren und erst danach Seiten mit höchstens 24 Karten bilden. Nur die
 aktuelle Seite zu sortieren erfüllt den Vertrag nicht. Leerbestand, leere Kategorie
-und ungültiger Katalog bleiben unterscheidbar; es entsteht kein neuer Filter.
+und ungültiger Katalog bleiben unterscheidbar; K-A ändert keine Sortierwerte.
 
 Bei gleichen Primärwerten entscheidet immer die unveränderte kanonische Blattfolge
 aufsteigend. Dieser Gleichstandsvergleich wird durch den Richtungsumschalter nicht
@@ -275,9 +299,9 @@ Alle automatisierten Prüfungen verwenden eigenständige synthetische Eingänge,
 einschließlich der Historien-, Rating-, Integrations- und Runtimefälle. Der echte
 Bestandsbericht ist ein redaktioneller Übernahmenachweis, kein neuer CI-Testbestand.
 Keine Solverläufe oder Produktionsreplays für den Datumsnachtrag. Native
-Darstellung/Bedienung und Browserpersistenz folgen der aktuellen CI-Policy mit
-den gemeinsamen Konfigurationen 1280×720/UI125, 1920×1080/UI100 und
-2560×1440/UI125; keine historische Prüfmatrix neu eröffnen.
+Darstellung/Bedienung folgt bei gewähltem Modul dem [aktuellen Stichprobenvertrag](CI_C_NATIVE_GROUPS.md).
+Browserpersistenz wird gemäß [Webvertrag](WEB_HOSTING.md) nur ausdrücklich manuell
+geprüft; keine historische Prüfmatrix neu eröffnen.
 
 Die folgende ursprüngliche KU-B-Gatezuordnung bleibt zur Einordnung erhalten;
 die tatsächlichen Ergebnisse und späteren paketbezogenen Mergeentscheidungen
@@ -409,3 +433,4 @@ Direkte Belege enthalten exakt `id,event,success,registered_at` mit
 `event=first-playable-registration` und `success=true`. Widersprüchliche direkte
 Zeitbelege ergeben begründetes unbekannt, keinen stillen Rückfall auf Git.
 Alle Ebenen werden vor Übernahme strukturell und gegen die Quellen geprüft.
+

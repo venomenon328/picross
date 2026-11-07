@@ -412,9 +412,11 @@ benötigten Originaldateien. Es behauptet keine vollständige Paketkopie.
 Der Spieler erhält Runtime-Ressourcen und einen `.txt`-Hinweis aus
 Urheber/Nutzungsgrundlage. Proofs, Quellen, Freigabeprotokolle und Testpakete
 bleiben ausgeschlossen. Für reine Inhaltsintegration gelten die Adapter-/Dateiprüfungen
-aus [PUZZLE_AUTHORING §8](ai-workflows/PUZZLE_AUTHORING.md); kein obligatorischer
-nativer Spiel-/Neustart-/PCK-Test oder Spielerbuild je Rätsel. Zusätzliche Proben
-nur wegen konkreter Befunde; allgemeine Code-/Exportregressionen bleiben separat.
+aus [PUZZLE_AUTHORING §8](ai-workflows/PUZZLE_AUTHORING.md); keine zusätzliche
+native Spiel-/Neustart-/PCK-Funktionsprobe je Rätsel. Der allgemeine
+[Quellen-/Plankern](CI_WORKFLOW_V2.md) gilt für jeden PR; reine Dokumente und reine Rätselinhalte bleiben ohne Player-Build.
+Weitere Proben nur mit konkretem Zweck; allgemeine Code-/Exportmodule werden
+im aktuellen Paketplan ausgewählt.
 
 Künstliche Freigaben sind `test_only=true`; Registrierung im echten eigenen
 Checkout wird verweigert. Die folgenden allgemeinen Entwicklungsprüfungen gehören
@@ -1096,3 +1098,4 @@ Neue Runtimeprojektionen sind v4; alte v2/v3 und ihre exakt abgegrenzten Journal
 bleiben nach den dortigen Kompatibilitätsregeln rückführbar. Keine Änderung an
 ID, Save-Slot, Rätseldefinition, Bewertung oder historischer Produktionsbindung
 allein zur Einführung von Hinzugefügt-Metadaten.
+

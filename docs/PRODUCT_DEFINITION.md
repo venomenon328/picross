@@ -1,5 +1,49 @@
 # Produktdefinition: picross
 
+**AR-A / #486:** Die stabile Abschlussansicht bietet **Bild | Raster** zum
+Vergleich mit den bestätigten Spielerfüllungen in Originalpalette und statischer
+Stift-/Rasteroptik. Die Auswahl bleibt innerhalb des Besuchs erhalten und wird
+nicht gespeichert. Jeder neue Eintritt beginnt bei Bild; Enthüllung, Spoiler-,
+Save- und Resetgrenzen bleiben. Kein interaktives Arbeitsboard oder neue Galerie.
+[Verhalten](PROTOTYPE_P1.md#54-abschluss-und-detaillierteres-ergebnisbild),
+[Paket und getrennte Gates](https://github.com/venomenon328/picross/issues/486).
+
+
+**PANG-A / #531 · auf dem Arbeitsbranch implementiert; R01/M01 vor Merge offen:**
+Pangolin Regular ersetzt **nur die normale Textrolle** des bisher
+integrierten Tidy Hand: Hilfe, Katalogmetadaten, Dropdowns/Popups, Buttons,
+Einstellungen, Dialoginhalte, Tooltips und Warn-/Recoverytexte. Die bestehenden
+Bakso-/Fraunces-Überschriften, Delight-Hinweiszahlen, Dialogtitel und der
+gebündelte Plex-Zeichenfallback bleiben erhalten. Maßgeblich sind
+[HZ-D08](HAND_DRAWN_UI.md) und [PANG-A / #531](https://github.com/venomenon328/picross/issues/531).
+Originalfont und OFL sind bytegebunden und offline eingebunden. Die technische
+Lieferung und die getrennten Review-/Eigentümergates stehen in Draft-PR #532.
+
+
+**ANZ-A / #527 · auf dem Arbeitsbranch implementiert, Abnahmen im Produkt-PR:**
+Die native Windowsfassung bietet ausschließlich feste wählbare Fenstergrößen
+zwischen 1280×720 und 3840×2160 sowie die Anzeigemodi Fenster, rahmenloses
+Vollbild und exklusives Vollbild. Fensterpresets werden nach realem
+Monitorarbeitsbereich samt Dekorationen gefiltert; beide Vollbildmodi nutzen
+die aktuelle Desktopauflösung. Eine 15-s-Vorschau mit sicherer Rücknahme und
+eigener Display-Präferenz ergänzt die bestehende Buch-Einstellungsseite;
+P1-Saves und die Browserfenstersteuerung bleiben unverändert. Die Freigabe
+verlangt keinen Sonderfall für Änderungen während einer Buchseitenanimation.
+[ANZ-Fachvertrag](DISPLAY_SETTINGS.md), [Issue/Paket ANZ-A](https://github.com/venomenon328/picross/issues/527).
+
+**B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
+Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
+füllen zuerst zwölf Karten links, dann zwölf rechts; beide Hälften scrollen
+unabhängig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
+bewusst geänderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unverändert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+[B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
+B-A-R08-V02 und B-A-M01 sind über PR #497 abgeschlossen; die
+[Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
+Merge und Deployment sind getrennt offen.
+
 **HZ · 21.10.2026, HZ-A/B integriert und abgenommen; HZ-C implementiert, Abnahmen offen:**
 Die [handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) erweitert den Buchstil
 auf alle normalen Spielertexte, Rahmen der Rätselkarten und kleinen Buttons,
@@ -118,7 +162,7 @@ Dieses Dokument entscheidet keine Engine, Programmiersprache, Betriebssystemmatr
 
 Ein thematisch zusammenhängendes Nonogramm-Spiel für PC, dessen Hauptreiz in logischen Erkenntnissen und dem Bearbeiten größerer Bildrätselprojekte liegt. Eine präzise, komfortable Bedienung soll auch große Raster und mehrteilige Spielsitzungen angenehm machen. Anspruch entsteht aus dem Rätsel, nicht aus vermeidbarem Zählen, Fehlbedienung oder Orientierungsverlust.
 
-Die Zielgruppe sind erfahrene Nonogramm-Spieler sowie interessierte Rätselspieler, die sich schnell einfinden. Es gibt einen Erklärungsbereich oder kurze Tutorial-Rätsel. Menschen umfassend das Nonogramm-Lösen beizubringen, ist nicht der Schwerpunkt; umfangreiche Hilfen und Übungsstrecken sind ausdrücklich nachrangig.
+Die Zielgruppe sind erfahrene Nonogramm-Spieler sowie interessierte Rätselspieler, die sich schnell einfinden. Die Spielerhilfe bietet vier direkt erreichbare Bereiche: Spielprinzip, farbige Rätsel, Bedienung und kurze freiwillige Lösungstipps. Feste passive Lehrbeispiele erklären vollständig bestimmte Linien, das Zusammenwirken von Zeile und Spalte, Überlappungen sowie Farbkontakt und Farbabstand. Sie verwenden die normalen Spielzeichen auf der rechten Buchseite. Menschen umfassend das Nonogramm-Lösen beizubringen, ist nicht der Schwerpunkt; umfangreiche Lernstrecken bleiben nachrangig ([HIL-1 / #500](https://github.com/venomenon328/picross/issues/500)).
 
 Prioritäten des Spielerlebnisses:
 
@@ -294,7 +338,7 @@ Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh u
 
 Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlungen, Bearbeitung und Enthüllungen gestalterisch zusammenführen. Eine komplexe Geschichte ist nicht erforderlich. Eine zusätzliche Wirtschaftssimulation, Währungen oder ein Aufbauspiel folgen daraus nicht automatisch.
 
-Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Die Gestaltung geht in Richtung handgezeichneter 2D-Illustration mit klaren gezeichneten Konturen und ruhigen, nicht zu blassen Farbflächen. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
+Als gemeinsame Grundlage ist ein sich füllendes Album beschlossen. Gemäß [Buchrichtung #493](BOOK_INTEGRATION.md) wirken Buchkörper und sparsame Umgebung realistisch und räumlich; Inhalte und UI behalten klare gezeichnete Konturen, handgeschriebene Texte und ruhige, nicht zu blasse Farbflächen. Feste ruhende Ansichten werden durch gezielte Kamera-/Blattbewegung verbunden; die Rätselöffnung beträgt insgesamt drei Sekunden. B-A ist der abgenommene Studienvorgänger, B-B integriert die Darstellung in den regulären Spieler. Die Stimmung soll warm, neugierig und dennoch ruhig sein. Die Thematik bleibt auch während des Rätsels zurückhaltend sichtbar. Das Raster bleibt geometrisch präzise und bekommt durch Hinweisziffern, Zellmarkierungen und kurze Zeichenanimationen selbst einen erkennbaren spielerischen Charakter. Die frühere Vorgabe eines ausdrücklich sachlichen Rasterstils ist insoweit durch die Spezifikationsfreigabe vom 07.10.2026 abgelöst.
 
 Die Freigabe [HZ vom 20.10.2026](HAND_DRAWN_UI.md) überträgt die Handschrift
 durchgängig auf die Bedienelemente: gemäß HZ-A-FONT02 Tidy Hand für Standardtext
@@ -412,7 +456,7 @@ Die vorhandenen Python-Dokumentprüfer sind keine Festlegung des Produktstacks. 
 
 ## 9. Abgrenzung des ersten Produkts
 
-Zum Produktkern gehören klassische und farbige kuratierte Bildrätsel, das reguläre Vollsichtziel mit 40×40 und mindestens 30×30 Größenkapazität, geeigneten Rechtecken und möglichen Großraster-Sonderfällen, komfortable Bearbeitung und Fortsetzung, frühe thematische/UI-Konzeption, Sammlungsprogression, Perfektions-Bonusrätsel, die beiden Fehler-Rückmeldungsmodi sowie Logbuch und vorgesehene Leistungsvergleiche.
+Zum Produktkern gehören klassische und farbige kuratierte Bildrätsel, das reguläre Vollsichtziel mit 40×40 und mindestens 30×30 Größenkapazität, geeigneten Rechtecken und möglichen Großraster-Sonderfällen, komfortable Bearbeitung und Fortsetzung, die vierteilige Grundhilfe mit festen Lehrbeispielen und kurzen optionalen Strategien, frühe thematische/UI-Konzeption, Sammlungsprogression, Perfektions-Bonusrätsel, die beiden Fehler-Rückmeldungsmodi sowie Logbuch und vorgesehene Leistungsvergleiche.
 
 Nicht als Startvoraussetzung beschlossen sind Verbundraster, Regionenbedingungen, Raster jenseits von 50×50, ein öffentlicher Editor, Community-/Workshop-Inhalte, Koop, spielerseitige Bildgenerierung, Wochenherausforderungen und umfangreiche Lern- oder Erklärhilfen. Diese Themen dürfen nicht stillschweigend den verbindlichen Umfang vergrößern. Unvollständige Hinweise sind vorerst ausgeschlossen.
 

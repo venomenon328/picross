@@ -166,8 +166,8 @@ geforderte fokussierte Außenloslassen. Beides muss getrennt berichtet werden.
 Ein gemeinsames Entwicklungspaket in #143 umfasst Endpunkt-/Ereignisverarbeitung,
 Cursoranzeige, notwendige Tests und aktualisierte Bedienhilfe. Keine unabhängigen
 Zwischenmerges mit widersprüchlichem Zähler-/Gestenverhalten. Die Spezifikation ist
-freigegeben; die Laufzeitumsetzung liegt im selben Draft-PR. Konkrete Prüfergebnisse
-und offene Abnahmen sind commitgebunden im Issue/PR auszuweisen.
+freigegeben; die Laufzeitlieferung und spätere Entscheidungen stehen in PR #145.
+Konkrete Prüfergebnisse und aktueller Abnahmestand sind commitgebunden im Issue/PR auszuweisen.
 
 Die Akzeptanzkennungen ZR-A01–A07 im Issue konkretisieren diesen Vertrag. Automatisierte
 gezielte Regressionen verwenden feste synthetische technische Eingaben und isolierte
@@ -177,7 +177,8 @@ Vorbelegungsschutz, Abbruch, No-op, Undo/Redo und unveränderte Save-/Animations
 
 Native Darstellungsproben prüfen tatsächliche Schrift, Kontur, Hintergrundfreiheit,
 Cursoranker und vollständige Anzeige an Clienträndern/Ecken. Die aktuelle
-[CI-Policy](CI_POLICY.md) bestimmt Pflichtselektion und kompakte Fenster-/UI-Matrix;
+[Paketauswahl](CI_WORKFLOW_V2.md) bestimmt den Prüfbedarf und der
+[native Modulvertrag](CI_C_NATIVE_GROUPS.md) die gewählte Stichprobe;
 keine neue vollständige Kreuzproduktgalerie oder rätselspezifische CI-Fallliste.
 Reine Spezifikationspflege verlangt keine behaupteten neuen Spielnachweise.
 
@@ -187,13 +188,14 @@ getrennt prüfen. Synthetische SubViewport-Tests ersetzen nicht die Ereigniszust
 über die Betriebssystem-Fenstergrenze. Commit/Artefakt, reale Client-/Bildschirmgröße,
 Windows-/UI-Skalierung und Ergebnis binden den Nachweis.
 
-Vor einem späteren Implementierungsmerge müssen ausgewählte Pflicht-CI, unabhängiges
-Review des konkreten Heads, native Windows-Nachweise und Eigentümerprobe ZR-M01
-vorliegen. Der technische Bearbeiter liefert Reproduktion und Belege; der Eigentümer
+Die ursprüngliche Lieferzuordnung verlangte ausgewählte Pflicht-CI, unabhängiges
+Review, native Windows-Nachweise und ZR-M01 vor Implementierungsmerge. Die unten
+gebundene spätere Eigentümerentscheidung ersetzt diese Gatezuordnung für PR #145. Der technische Bearbeiter liefert Reproduktion und Belege; der Eigentümer
 prüft schnellen linken/rechten Randzug, Außenloslassen, Randzähler und Lesbarkeit.
 Die längere [Spielerprobung #24](https://github.com/venomenon328/picross/issues/24)
 bleibt separat; alte Abnahmen werden weder erweitert noch wieder geöffnet.
-Eine passende spätere Mergefreigabe bleibt erforderlich.
+Für neue Arbeit gilt der konkrete Auftrag; keine Wiederholungsfreigabe für bereits
+beauftragte Schritte aus dieser historischen Beschreibung ableiten.
 
 **Eigentümerentscheidung vom 15.10.2026 für PR #145:** Merge beauftragt und
 ausdrücklich auf ZR-M01 sowie das unabhängige technische Review für diesen Merge
@@ -206,3 +208,4 @@ oder Sidebarlayout, Zellstil-/Timingänderung, Saveformatmigration, Wertung, zus
 Werkzeuge/Optionen/Modifier, allgemeine Eingabeplattform, Auto-Scrollen/Pan,
 Engine-/Plattformwechsel oder CI-Optimierung. Die vorhandene Schriftressource wird
 wiederverwendet; keine neuen Rechtebehauptungen oder geänderten Fontdateien.
+

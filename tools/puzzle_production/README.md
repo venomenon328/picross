@@ -14,14 +14,13 @@ Die anschließende [Eigentümerabnahme](../../docs/AT_B_OWNER_APPROVAL.md) erlau
 AT-B-F01 mit kontrolliertem `catalog_reveal plan/adopt` und AT-B-T01.
 Kein produktiver Request oder Plan mit ausstehenden Zustimmungen.
 
-**Aktuelle Prüfregel (12.10.2026):** Konkrete Rätsel werden während ihrer Produktion
-und Integration geprüft, niemals routinemäßig in CI. Keine rätselspezifischen
-Unit-Tests anlegen. CI führt bei Werkzeugänderungen allgemeine Tests an festen
-synthetischen Eingängen aus; reine Rätseldateien erhalten nur den schlanken
-Inhaltspfad. Historische Korpusläufe sind nur im gebundenen Altcheckout verfügbar;
-frühere Jobangaben sind abgelöst.
-Maßgeblich: [CI-Policy](../../docs/CI_POLICY.md) und
-[Regelwerk](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
+**Aktuelle Prüfzuordnung:** Konkrete Rätsel werden während ihrer Produktion und
+Integration geprüft, nicht als wachsender CI-Korpus. Keine rätselspezifischen
+Unit-Tests. Der aktuelle Paketplan wählt bei Werkzeugänderungen begründete Fachmodule
+mit festen synthetischen Eingängen. Reine Inhalts-PRs erhalten den allgemeinen Quellen-/Plankern ohne Player-Build;
+das ist keine erneute Logik-/Proof-/Rasterprüfung. Auch der Main-Nachlauf bleibt buildfrei.
+Maßgeblich: [CI-Vertrag](../../docs/CI_WORKFLOW_V2.md) und
+[Authoringworkflow](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
 
 KAT-1 ergänzt [Kategorien und Zuordnung](../../docs/CATEGORIES.md): neue ZA-1-Exporte verlangen `--category-id` und `--categories`; Snapshot, Manifest v2, Zielregistry und Runtimeprojektion werden gemeinsam geprüft. `sync-runtime --checkout .` übernimmt geprüfte Metadaten in die Projektion. `check-registry --checkout .` prüft laufende Produktionspakete per Replay, abgeschlossene Produktion über die kompakte Integrationsbindung. Alte Exporte bleiben prüfbar, benötigen zur neuen Registrierung aber einen kategorisierten Neu-Export.
 
@@ -820,20 +819,26 @@ Diese technischen Referenzen behaupten keine Motiv-/Pilotqualität.
 
 ## CI und Artefakte
 
-[puzzle-production.yml](../../.github/workflows/puzzle-production.yml) läuft bei
-PRs und Pushes nach `main` auf Ubuntu 24.04, Python 3.11+, lesenden Repositoryrechten
-ohne projektspezifisches CI-Joblaufzeitbudget. Der eigene Testort liegt außerhalb des bestehenden
-`tools`-Discoverys. `docs`, `product` und `preflight` bleiben unverändert aktiv.
+[Package CI](../../docs/CI_WORKFLOW_V2.md) wählt `production.solver/images/adapter/catalog`
+über den aktuellen Paketplan. [Fachgruppen](../../docs/CI_A_SELECTION.md) und
+`tools/production_contract.py` binden Tests und Integrationen. Kein pauschaler
+Fachlauf bei jedem PR/Main-Push. Der eigene Fachtestort liegt außerhalb des
+`tools`-Discoverys. Allgemeiner Windowsbau und Produktionsnachweis sind getrennt.
 
-`artifacts/puzzle-production/benchmark.json` (`picross-benchmark-v2`) bindet Source-Head,
-Checkout/Test-Merge, Basis und Arbeitsbaum; Profil/Profilhash und Eingänge stehen
-**je Fall**, kein pauschales Monoprofil für Farbläufe. Die bisherigen CI-Umgebungsnamen
-`RP1_SOURCE_HEAD`/`RP1_BASE_COMMIT` gelten für den gemeinsamen Lauf weiter.
-Pro Fall liegen Logik, Proof, Ergebnis,
-frische Prüfung, getrennte Prozessmessdaten und Logs vor. Der CI-Artefaktname enthält
-den Source-Head. Laufartefakte werden nicht eingecheckt. Ein anderer Head/eine neue
-Basis braucht passend zugeordnete aktuelle Checks. #41/#42/#43 sind integriert;
-Die Machbarkeitsphase #34 ist abgeschlossen; neue Produktionspakete benötigen eigene Aufträge.
+Der Solver-Benchmark (`picross-benchmark-v2`) bindet Head, Basis, tatsächlichen
+Checkout, Profil/Profilhash und Eingänge je Fall. Mono- und Farbreferenzen werden
+nicht gleichgesetzt. `RP1_SOURCE_HEAD`/`RP1_BASE_COMMIT` bleiben technische
+Umgebungsnamen des gemeinsamen Läufers. Originale umfassen Logik, Proof, Ergebnis,
+frische Prüfung, Prozessmessdaten und Logs; der unabhängige Reader prüft sie im
+selben Job, bevor temporäre Daten entfernt werden. Upload nur mit aktuellem Zweck
+und Ablauf. Die Referenz-Prozessbudgets oben sind funktionale Benchmarkgrenzen,
+keine maximale CI-Gesamtlaufzeit.
+
+[puzzle-production.yml](../../.github/workflows/puzzle-production.yml) bleibt ein
+manueller/wiederverwendbarer Diagnoseworkflow ohne eigenen PR-/Push-Trigger.
+Sein ausdrücklich beauftragter Belegtransport wird im Diagnosevertrag beschrieben;
+er begründet keinen Standardupload der Haupt-CI. Die Machbarkeitsphase RP1–RP6 ist
+historisch abgeschlossen; neue Produktionspakete benötigen eigene Aufträge.
 
 ## RP-3: isolierte Image-Umgebung und reale Befehle
 
@@ -1225,3 +1230,4 @@ werden; die dauerhafte Freigabe-/Revisionshistorie steht im aktiven Record.
 Unbekannte Optionen sind Fehler; kein Exit 0 für Teiladoption. Harter Kill kann
 kein stdout garantieren. Der bestehende Recoveryeinstieg behält seine Ausgabe
 `rolled-back/registered=false` bei Erfolg und seine 0/2/4-Konvention.
+

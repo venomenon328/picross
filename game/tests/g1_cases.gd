@@ -101,8 +101,7 @@ static func point(board: Control, cell: Vector2i) -> Vector2:
 
 static func gui_cases(t: SceneTree) -> void:
 	SaveStore.test_root_override += "-g1-routes"
-	var app: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	app.open_puzzle()
 	await t.process_frame
 	await t.process_frame
@@ -189,7 +188,7 @@ static func gui_cases(t: SceneTree) -> void:
 	t.check(app.session.gesture.endpoint == Vector2i(start.x,0), "ZR G-05 outside board reaches bound vertical edge")
 	t.mouse_button(b.get_global_rect().position - Vector2(10, 10), false)
 	t.check(app.session.player.cells[start.x] == 1 and app.session.player.cells[finish.y * 50 + finish.x] == -1, "ZR G-05 outside release commits final elastic arm")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await t.process_frame
 
 static func run(t: SceneTree) -> void:

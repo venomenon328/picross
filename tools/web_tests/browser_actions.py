@@ -92,6 +92,7 @@ def click(page, position):
 
 
 def control(page, text=None, name=None, tooltip=None, dialog=None):
+    wait_book(page)
     page.wait_for_timeout(150)
     items = state(page, 'controls')['controls']
     found = [item for item in items if not item['disabled'] and
@@ -104,6 +105,13 @@ def control(page, text=None, name=None, tooltip=None, dialog=None):
     assert len(found) == 1, (text, name, tooltip, items)
     click(page, point(page, found[0]['center']))
     page.wait_for_timeout(180)
+    wait_book(page)
+
+
+def wait_book(page):
+    # A rendered target inside the capture viewport is not yet an interactive
+    # destination. Observe the real root and its release barrier, never a setter.
+    wait(page, 'window.picrossProbe && picrossProbe.book && !picrossProbe.book.moving && !picrossProbe.book.blocked')
 
 
 def cell(page, x, y):
@@ -111,6 +119,7 @@ def cell(page, x, y):
 
 
 def draw(page, start, end=None, button='left', retract=None):
+    wait_book(page)
     page.mouse.move(*cell(page,*start))
     page.mouse.down(button=button)
     if end:

@@ -1,5 +1,12 @@
 # RI-B-T01: Prozesslokaler Paketprüfkontext
 
+Dieser historische Bericht bindet die Lieferung vom 30.10.2026 bis
+`8a6af2b0601316cffc20314c1f470b478af43a35`, einschließlich Revision 27 und
+damaliger CI. Die Nacharbeit RI-B-N01 / RI-B-R01-B-01 integriert spätere
+main-Regeln; ihre aktuellen Nachweise und der getrennte Selbstreview stehen
+im [PR #494](https://github.com/venomenon328/picross/pull/494). Alte Messungen
+und Urteile sind kein Pass des neuen Heads.
+
 ## Auftrag, Vertrag und Quellen
 
 Beauftragt: #479 auf `feat/479-ri-b-verified-context`, Basis

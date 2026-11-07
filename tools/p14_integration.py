@@ -105,6 +105,9 @@ def validate_trace(plan, trace_path):
         for key, value in expected.items():
             if observed.get(key) != value:
                 raise AssertionError(f"action {action['number']}: {key} differs from independent oracle")
+        recent = {} if action['number'] < 3 else dict(format='picross-recent-puzzle-v1', id='T-06', revision=2)
+        assert observed.get('recent') == recent, 'recent marker differs across action/restart'
+        assert observed.get('recent_id') == recent.get('id', ''), 'recent resolution differs'
         assert 4 < observed['actual_cell'] <= observed['fit_ceiling']+.001, 'bounded native geometry'
         view = observed['view']
         assert view['active_color'] == oracle.color and view['tool'] == oracle.tool, 'tool/color state'

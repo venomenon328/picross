@@ -1,0 +1,422 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Development workflow handoff v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "repository",
+    "issue",
+    "package",
+    "pr",
+    "branch",
+    "target",
+    "head",
+    "phase",
+    "summary",
+    "spec_url",
+    "execution",
+    "review",
+    "findings",
+    "checks",
+    "ci",
+    "artifacts",
+    "cleanup",
+    "merge_commit",
+    "next"
+  ],
+  "properties": {
+    "format": {
+      "const": "development-handoff/v1"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "issue": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "package": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "pr": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "branch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target": {
+      "type": "string",
+      "minLength": 1
+    },
+    "head": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "phase": {
+      "enum": [
+        "specified",
+        "implemented",
+        "reviewed",
+        "reworked",
+        "merged",
+        "blocked"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "spec_url": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^https://[^\\s]+$"
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preferred",
+        "self_implementation",
+        "model",
+        "reasoning",
+        "reason",
+        "source_url"
+      ],
+      "properties": {
+        "preferred": {
+          "enum": [
+            null,
+            "ChatGPT",
+            "Codex"
+          ]
+        },
+        "self_implementation": {
+          "enum": [
+            null,
+            "yes",
+            "partial",
+            "no"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reasoning": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://[^\\s]+$"
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "head",
+        "verdict"
+      ],
+      "properties": {
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://[^\\s]+$"
+        },
+        "head": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "verdict": {
+          "enum": [
+            null,
+            "changes_required",
+            "acceptance_pending",
+            "mergeable",
+            "incomplete"
+          ]
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "kind",
+          "status",
+          "gate",
+          "summary"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "B",
+              "A",
+              "O"
+            ]
+          },
+          "status": {
+            "enum": [
+              "open",
+              "resolved",
+              "accepted"
+            ]
+          },
+          "gate": {
+            "enum": [
+              "before_merge",
+              "before_release",
+              "none"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "status",
+          "source_head",
+          "tested_commit",
+          "url"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "passed",
+              "failed",
+              "not_run",
+              "not_applicable",
+              "running",
+              "cancelled"
+            ]
+          },
+          "source_head": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "tested_commit": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^https://[^\\s]+$"
+          }
+        }
+      }
+    },
+    "ci": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "modules",
+        "plan_url",
+        "permanent_tests",
+        "temporary_checks",
+        "artifact_policy",
+        "seconds"
+      ],
+      "properties": {
+        "modules": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "plan_url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^https://[^\\s]+$"
+        },
+        "permanent_tests": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "temporary_checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "artifact_policy": {
+          "type": "string"
+        },
+        "seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "label",
+          "url",
+          "purpose",
+          "expires"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^https://[^\\s]+$"
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expires": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        }
+      }
+    },
+    "cleanup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "remaining"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_started",
+            "complete",
+            "retained",
+            "blocked"
+          ]
+        },
+        "remaining": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "merge_commit": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "next": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "reason"
+      ],
+      "properties": {
+        "action": {
+          "enum": [
+            "specify",
+            "implement",
+            "review",
+            "rework",
+            "merge",
+            "done",
+            "clarify"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

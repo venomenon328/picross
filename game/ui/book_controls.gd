@@ -2,6 +2,7 @@ extends RefCounted
 ## Theme resources only: native controls retain all input and selection behavior.
 const Paper = preload("res://ui/book_style.gd")
 const Text = preload("res://ui/ui_text.gd")
+const ScrollInk = preload("res://ui/scrollbar_style.gd")
 const INK = Color("293e3d")
 static var textures: Dictionary = {}
 
@@ -68,17 +69,43 @@ static func popup_theme(id: String, u: float, font: Font) -> Theme:
 		result.set_icon(name,"PopupMenu",icon("check",u,true))
 	for name: String in ["unchecked_disabled","radio_unchecked_disabled"]:
 		result.set_icon(name,"PopupMenu",icon("check-empty",u,true))
-	for state: String in ["scroll","grabber","grabber_highlight","grabber_pressed"]:
-		var color: Color = Color("e3dfcf") if state == "scroll" else Color("c5d6cd") if state == "grabber_highlight" else Color("8ca99a") if state == "grabber_pressed" else Color("b4c6b5")
-		var bar = Paper.make(id+"/scroll",u,color)
-		bar.selected = state == "grabber_pressed"
-		bar.set_content_margin_all(7*u)
-		result.set_stylebox(state,"VScrollBar",bar)
-	for state: String in ["","_highlight","_pressed"]:
-		var tint: Color = Color("376a60") if state == "_highlight" else Color("172c2a") if state == "_pressed" else INK
-		result.set_icon("increment"+state,"VScrollBar",icon("chevron-down",u,false,tint))
-		result.set_icon("decrement"+state,"VScrollBar",icon("chevron-up",u,false,tint))
+	scrollbars(result,u)
 	return result
+
+static func scroll_arrow(id: String, u: float, state: String) -> Texture2D:
+	var key: String = "scroll/%s/%s/%s" % [id,u,state]
+	if not textures.has(key):
+		# Native ScrollBar draws its two icons outside the track StyleBox.
+		# Their own graphite backing keeps the light triangles legible there.
+		var mark: Image = icon(id,u,false,Color("fffdf5") if state == "hover" else Color("e5e1d7") if state == "pressed" else Color("f3f0e7")).get_image()
+		var image := Image.create(mark.get_width(),mark.get_height(),false,Image.FORMAT_RGBA8)
+		image.fill(Color("777570") if state == "hover" else Color("494a47") if state == "pressed" else ScrollInk.TRACK)
+		image.blend_rect(mark,Rect2i(Vector2i.ZERO,mark.get_size()),Vector2i.ZERO)
+		textures[key] = ImageTexture.create_from_image(image)
+	return textures[key]
+
+static func scrollbars(target: Theme, u: float) -> void:
+	# One family for inherited/dynamic ScrollContainers and explicit PopupMenu
+	# themes, including the horizontal fallback. No input handler is installed.
+	for type: String in ["VScrollBar","HScrollBar"]:
+		var horizontal: bool = type == "HScrollBar"
+		for name: String in ["scroll","scroll_focus","grabber","grabber_highlight","grabber_pressed"]:
+			var state: String = "focus" if name == "scroll_focus" else "hover" if name.ends_with("highlight") else "pressed" if name.ends_with("pressed") else "normal"
+			target.set_stylebox(name,type,ScrollInk.make(u,horizontal,name.begins_with("grabber"),state))
+		for suffix: String in ["","_highlight","_pressed"]:
+			var state: String = "hover" if suffix == "_highlight" else "pressed" if suffix == "_pressed" else "normal"
+			target.set_icon("decrement"+suffix,type,scroll_arrow("scroll-left" if horizontal else "scroll-up",u,state))
+			target.set_icon("increment"+suffix,type,scroll_arrow("scroll-right" if horizontal else "scroll-down",u,state))
+		# The drawing's own inset exposes the track; no extra native gutter.
+		for name: String in (["padding_top","padding_bottom"] if horizontal else ["padding_left","padding_right"]):
+			target.set_constant(name,type,0)
+
+static func scroll_steps(node: Node, u: float) -> void:
+	# ScrollContainer's internal bars default to step=0. Now that their native
+	# arrow buttons are visible, give them a useful native custom_step without
+	# quantising drag/wheel values or handling any events ourselves.
+	if node is ScrollBar: node.custom_step = roundi(32*u)
+	for child: Node in node.get_children(true): scroll_steps(child,u)
 
 static func checks(target: Theme, u: float) -> void:
 	for name: String in ["checked","unchecked","checked_disabled","unchecked_disabled"]:

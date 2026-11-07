@@ -1,5 +1,35 @@
 # Z2: aktive Auswahl und native Integration
 
+## Aktive Pangolin-Standardtextrolle · #531 (Arbeitsbranch)
+
+Die [Pangolin-Standardtextentscheidung](HAND_DRAWN_UI.md) vom 06.11.2026 ist
+für das zusammenhängende [PANG-A-Paket](https://github.com/venomenon328/picross/issues/531)
+auf dem Paketbranch implementiert. Pangolin übernimmt nur die normale UI-Rolle: Hilfe, Katalog-/Status-/Einstellungstexte, Menüs, Dialoge und
+Tooltips; Bakso/Fraunces, Delight und lokaler Plex-Fallback bleiben erhalten.
+Originalfont und OFL liegen bytegebunden unter `game/art/drawing/`;
+[Pangolin NOTICE](../game/art/drawing/pangolin/NOTICE.txt) bindet die Quelle.
+`z2_resources.py verify` prüft beide Hashes separat vom historischen HZ-Original.
+Windows/Web liefern die aktive Pangolin-OFL und Herkunft, keinen unbenutzten
+Tidy-Hand-Font. Technische Nachweise und getrennte R01/M01 stehen in PR #532. Der bisherige
+HZ-A-Herkunftsnachweis sowie historische Hashlisten und BP-/Iconquellen werden
+nicht rückwirkend ersetzt.
+
+
+## Reguläre Buchrichtung #493 / B-B
+
+**B-B / #498 · reguläre Buchintegration:** Der normale Entwickler-, Windows-
+und Webstart verwendet die abgenommene räumliche Buchdarstellung mit echtem
+Runtimekatalog und bestehendem Save-/Recovery-/Web-Lebenszyklus. Katalogseiten
+füllen zuerst zwölf Karten links, dann zwölf rechts; beide Hälften scrollen
+unabhängig. Der rechte Arbeitskopf bietet Katalogpfeil, Einstellungen und Hilfe.
+Einstellungen links und Hilfe rechts behalten ihren Besuchsursprung und die
+bewusst geänderten Optionen. Materialien, Fonts und Arbeitsbudgets bleiben
+unverändert. [Aktueller Buchvertrag](BOOK_INTEGRATION.md),
+[B-B-T01 und getrennte Abnahmen](B_B_VERIFICATION.md).
+B-A-R08-V02 und B-A-M01 sind über PR #497 abgeschlossen; die
+[Studienbelege](BOOK_STUDY.md) bleiben historisch gebunden. B-B-R01/B-B-M01,
+Merge und Deployment sind getrennt offen.
+
 ## Integrierter HZ-Stil und freigegebene Typografie-Nachbesserung
 
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md), 21.10.2026:
@@ -111,7 +141,11 @@ production/artwork/composition bleiben unverändert. PR #25/#28 sind keine Basis
 | GD-02: gemeinsame BP-3-UI | Gefasste Miniatur, zwei Metallhalter, gemeinsame Farbmusterfassung, Werkzeuggruppen seit V3 senkrecht rechts (2/2/4), abgeschrägte Controls. Auswahl aus Sessionzustand: Werkzeug dunkel/unterstrichen, Farbe mit äußeren Eckmarkierungen. |
 | GD-03: Fraunces / IBM Plex Sans | V3: Bakso Daging für Arbeits-Blatttitel, sonst Fraunces 600; Plex Sans für UI/Hinweise als historischer Z2-Stand. ZS wählt Chalkboard für Hinweise. Gepinnte Fontbytes und Nutzungshinweise offline, keine Systemfontsuche. |
 | GD-04: C1 | Feste dunkle Kontur für Hinweisfarben 2/4 an beiden Achsen, im Drag und Tooltip; unveränderte RGB-Füllung, Originalindizes und H1. Keine neue Option. |
-| GD-05: N1 | Eine native Informations-Control mit gemeinsamem Einstellungen-/Hilfebereich, drei Zugängen und Rückweg. Nur der UI-freie Hintergrund wird gespiegelt; Falz links. |
+| GD-05: N1 | Eine native Informations-Control mit gemeinsamem Einstellungen-/Hilfebereich, drei Zugängen und Rückweg. Historische N1-Bindung: nur der UI-freie Hintergrund wird gespiegelt; Falz links. |
+
+Die aktuelle Informationsanordnung folgt B-B und [ANZ-A-N03](DISPLAY_SETTINGS.md):
+kein manueller Hinweisreset und kein Beenden-Widget in Einstellungen; sichere
+Katalog-/OS-Exitpfade und normale Hinweisnavigation bleiben.
 
 **Begrenzte Fortschreibung von GD-02 durch VS2-E1:** Die gezeichnete Fassung und
 sichere Lage von Miniatur/Palette sind nicht mehr an die alte native Form/Position
@@ -159,8 +193,10 @@ VS2-E1/N01 verdichtet die horizontale Weite künftig weiter bei gleichem Schrift
 
 Der folgende Quellenweg beschreibt die Z2-Herkunft. Die aktive HZ-B-Familie
 liegt separat in [book_icons_hz.json](../tools/book_icons_hz.json):
-23 Ressourcen einschließlich der 13 bisherigen Bedeutungen sowie Pfeile,
-Chevrons, Auswahl- und Checkboxzeichen. `tools/z2_resources.py` erzeugt die
+27 Ressourcen einschließlich der 13 bisherigen Bedeutungen sowie Pfeile,
+Chevrons, Auswahl- und Checkboxzeichen und der vier lokalen gefüllten
+SBR-A-Scrolldreiecke aus [#539](https://github.com/venomenon328/picross/issues/539).
+`tools/z2_resources.py` erzeugt die
 SVGs und bindet Quellhash und Herkunft im aktiven Buchmanifest.
 `tools/book_icons_kb.json` und die BP-Iconquelle bleiben historische Originale.
 Die neue Bindung wird im tatsächlichen Spieler-/Webexport geprüft; sie

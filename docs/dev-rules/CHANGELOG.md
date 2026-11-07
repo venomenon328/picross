@@ -1,5 +1,55 @@
 # Änderungen am Regelpaket
 
+## 0.2.0-rc.6 — 2026-11-06
+
+Picross #529 bindet einen Umsetzungsauftrag nach Eigentümerfeedback an die
+veröffentlichte Paketentscheidung, auch bei einem Nachtrag im selben PR.
+Die Vorbereitung liest die publizierten Kennungen mit Bedeutung und
+Zuständigkeit zurück. Technische Nachweise und unabhängige Abnahmen haben im
+Sheet getrennte Aufträge.
+
+## 0.2.0-rc.5 — 2026-11-06
+
+Picross #529 ergänzt die Vorbereitung eigener Änderungswünsche nach einem
+Review. Issue/Paket hält die Entscheidung fest, der PR ihren Bezug zum bisherigen
+Stand. Der Abschluss erklärt Ergebnis und nächsten Schritt vor der vollständigen
+v1-Übergabe. Das Sheet hilft beim Korrigieren fehlerhafter Antworten.
+
+## 0.2.0-rc.4 — 2026-11-06
+
+Picross #525 trennt die vollständige v1-Abschlussantwort von den kurzen
+Folgeaufträgen. Arbeitsbranch und Zielbranch haben getrennte Rollen. Ein
+Lieferkommentar bindet benötigte Revieworiginale an den geprüften Produkt-Head
+und an einen für den Reviewer erreichbaren, befristeten Ablageort.
+
+## 0.2.0-rc.3 — 2026-11-06
+
+Lokale Weiterentwicklung für Picross #521, kein zentraler Release.
+HANDOFF samt Schema als verbindliche Repoquelle präzisiert; Sheet-Prompts
+transportieren Auftragsdaten und Freigaben statt Formatvordruck und Dauerregeln.
+Fehlende Vertragsquellen werden nicht durch einen Promptfallback ersetzt.
+Persönliche Abnahme und deaktivierte Abschlussbereinigung im zuständigen
+Verfahrensvertrag konkretisiert. Übergabeformat v1 und seine Feldstruktur bleiben
+unverändert; bestehende Plausibilitätsprüfungen sind vollständig benannt.
+
+## 0.2.0-rc.2 — 2026-11-05
+
+Lokale Konsolidierung im selben beauftragten Picross-Fork (#517), kein zentraler Release.
+Auswahl von CI-Modulen und weiterhin verbindliche Akzeptanzkriterien getrennt;
+verbundene Review-/Korrekturaufträge ausdrücklich von reinem Review abgegrenzt.
+Sheet-JSON statt parallelem Codex-Prompt in die Ausgaberegel integriert.
+Modellkatalog anhand aktueller offizieller Quellen datiert aktualisiert.
+Reine Dokumente und reine Inhaltsproduktion ausdrücklich vom Player-Build ausgenommen;
+Picross setzt die Ausnahme diffgebunden auch im Main-Nachlauf um.
+
+## 0.2.0-rc.1 — 2026-11-05
+
+Ausdrücklich beauftragter lokaler Picross-Fork (#517), kein zentraler Release.
+Generischer modularer CI-/Test-/Artefaktlebenszyklus, Arbeitswurzel und Bereinigung,
+versioniertes JSON-Handoff und überarbeitetes Review mit bedingter Mergefreigabe.
+Picross-Ausführung steht außerhalb dieses Pakets im Projektprofil/CI_WORKFLOW_V2.
+
+
 ## 0.1.0-rc.2 – 2026-09-09
 
 Überarbeiteter Abnahmekandidat nach der inhaltlichen Rückmeldung zur Modellwahl; weiterhin kein Release oder automatischer Rollout.
@@ -22,3 +72,4 @@ Erster Abnahmekandidat; kein veröffentlichter Release und keine automatische Ak
 - Im Aufbau-Review präzisiert: neue Ideen setzen kein vorhandenes Issue voraus; Schutz vor direkten Zielbranchänderungen gilt auch ohne technische GitHub-Erzwingung.
 
 Die erste Fassung ersetzt bestehende Projektanweisungen erst nach deren expliziter, widerspruchsfreier Migration. Herkunftscommit und Übernahmeentscheidung werden im Zielrepository dokumentiert, nicht durch diese Versionsnummer allein bewiesen.
+

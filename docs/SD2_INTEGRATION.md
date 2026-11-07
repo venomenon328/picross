@@ -253,11 +253,13 @@ R4/offene Versuche, alle Writer samt Cleanup, Stale/Fremdquellen/No-op-mtime,
 Journalgenerationen/Unterbrechung/wiederholtes Recovery, explizite Aktivierung,
 Python-/Godot-Zulassung und isolierte bestehende Saves. Beide Freezes werden
 zusätzlich gegen die Basis bytegeprüft. Neue Fälle sind unabhängig synthetisch.
-Der Gesamtdiff wählt docs, production, alle sieben nativen Gruppen, alle fünf
-Chromiumgruppen, delivery und ci-required; Preflight nur nach tatsächlicher
-Auswahl. Kein Firefox, keine Verkürzung der Selektoren. Lokale Adaptertests
+Die damalige SD2-C-Lieferung hatte eine vollständige Diffauswahl einschließlich
+nativer/Chromium-Gruppen; das ist kein heutiger automatischer Prüfauftrag.
+Neue Pakete wählen nach [CI_WORKFLOW_V2](CI_WORKFLOW_V2.md); Chromium bleibt
+explizit manuell. Lokale Adaptertests
 verwenden isoliert Python 3.11+ und exakt Pillow 12.3.0. T01 dokumentiert Head,
 Basis, CI-Test-Merge, Run/Jobs und einen getrennten Selbstreview. Das separate
 qualifizierte SD2-C-R01 war ein eigenes Gate vor Merge und ist über PR #410
 abgeschlossen. Die dortige Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate
 gilt nur für #410. C beauftragte weder Deployment noch #406.
+

@@ -25,11 +25,29 @@ func _initialize() -> void:
 
 func run() -> void:
 	walk("res://")
+	check(ProjectSettings.get_setting("application/config/name") == "picross · P1", "PCK unchanged application identity")
+	check(ProjectSettings.get_setting("application/run/main_scene") == "res://main.tscn", "PCK regular startup scene")
+	var scene: PackedScene = load("res://main.tscn")
+	var root_entry: Node = scene.instantiate()
+	check(root_entry is Node3D and root_entry.get_script().resource_path == "res://book/main.gd", "PCK regular book root, no hidden old entry")
+	root_entry.free()
+	for name: String in ["main.gd","content.gd","binding.gd","catalog.gd","information.gd","information_routes.gd","surface.gd","page.gdshader","material.gdshader","fold.gdshaderinc"]:
+		check(ResourceLoader.exists("res://book/"+name), "PCK shared book dependency "+name)
+	for name: String in ["web_probe.gd","web_root.gd","windows_observer.gd","fixtures.json","inputs.gd","verify.gd"]:
+		check(not ResourceLoader.exists("res://book/"+name) and not FileAccess.file_exists("res://book/"+name), "PCK excludes technical book input "+name)
+	for name: String in ["paper","leather","table"]:
+		var material: Texture2D = load("res://book/"+name+".png")
+		var provenance: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://book/"+name+".json"))
+		check(material != null and material.get_width() == provenance.size[0] and material.get_height() == provenance.size[1], "PCK imported material and rights "+name)
+	for name: String in ["help_panel","help_example","help_examples"]:
+		check(ResourceLoader.exists("res://ui/"+name+".gd"),"PCK passive help dependency "+name)
+	var examples = load("res://ui/help_examples.gd")
+	check(examples.all().size() == 16,"PCK complete passive teaching diagrams")
 	var ids: Array[String] = Registry.catalog_ids()
 	# Fixed shared KB resources, independent of the growing puzzle catalog.
 	var book_manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/manifest.json"))
 	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
-	check(icons.size() == 23 and icons.has("checkbox-checked") and icons.has("reset"), "PCK active HZ-B icon inventory")
+	check(icons.size() == 27 and icons.has("checkbox-checked") and icons.has("reset"), "PCK active HZ-B/SBR icon inventory")
 	check(book_manifest.has("hz_icon_source") and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"), "PCK HZ-B provenance")
 	for name: String in icons:
 		var texture: Texture2D = load("res://art/book/"+name+".svg")
@@ -38,17 +56,31 @@ func run() -> void:
 		for entry: Dictionary in book_manifest.files:
 			if entry.file == name+".svg": bound = true
 		check(bound, "PCK icon bound to resource manifest "+name)
+	# SBR resources must resolve from the actual Windows/Web pack as well as
+	# the source theme. The external probe itself is never shipped.
+	var controls = load("res://ui/book_controls.gd")
+	var scrollbar_theme := Theme.new()
+	controls.scrollbars(scrollbar_theme,1.25)
+	for type: String in ["VScrollBar","HScrollBar"]:
+		var style: StyleBox = scrollbar_theme.get_stylebox("grabber",type)
+		check(style.get_script().resource_path == "res://ui/scrollbar_style.gd" and style.ui_scale == 1.25,"PCK shared SBR StyleBox "+type)
+		for direction: String in ["increment","decrement"]:
+			check(scrollbar_theme.get_icon(direction,type).get_size() == Vector2(28,28),"PCK imported SBR triangle "+type+direction)
 	check(FileAccess.file_exists("res://art/book/KB-168-NOTICE.txt"), "PCK KB icon provenance notice")
 	# Actual exported font bytes/role, with controlled local fallbacks.
 	var ui_text = load("res://ui/ui_text.gd")
 	var normal: FontFile = ui_text.font()
-	check(normal.data == ui_text.SOURCE.data and not normal.allow_system_fallback, "PCK HZ original Tidy Hand/local role")
+	check(normal.data == ui_text.SOURCE.data and not normal.allow_system_fallback, "PCK HZ original Pangolin/local role")
 	var hash := HashingContext.new()
 	hash.start(HashingContext.HASH_SHA256)
 	hash.update(normal.data)
-	check(hash.finish().hex_encode() == "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6", "PCK HZ Tidy Hand bytes")
+	check(hash.finish().hex_encode() == "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e", "PCK HZ Pangolin bytes")
 	check(normal.fallbacks.size() == 1 and normal.fallbacks[0].get_font_name() == "IBM Plex Sans" and not normal.fallbacks[0].allow_system_fallback, "PCK HZ bundled fallback")
-	check(FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"), "PCK HZ source and usage permission")
+	check(FileAccess.file_exists("res://art/drawing/pangolin/NOTICE.txt"), "PCK PANG provenance")
+	hash.start(HashingContext.HASH_SHA256)
+	hash.update(FileAccess.get_file_as_bytes("res://art/drawing/pangolin/OFL.txt"))
+	check(hash.finish().hex_encode() == "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c", "PCK PANG original OFL bytes")
+	check(not ResourceLoader.exists("res://art/drawing/TidyHand.ttf") and not FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"), "PCK excludes inactive historical Tidy Hand")
 	check(Registry.load_error.is_empty(), "PCK registry/category format invalid")
 	var categories: Array[Dictionary] = Registry.categories()
 	check(not categories.is_empty(), "PCK categories projection missing")

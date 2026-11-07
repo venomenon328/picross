@@ -1,5 +1,58 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+## K-B: unabhängiger Fortsetzen-Merker
+
+[Paketentscheidung #485](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391).
+`user://p1/recent-puzzle.json` enthält höchstens 1024 UTF-8-Bytes mit genau
+`format: picross-recent-puzzle-v1`, kanonischer `id` und positiver ganzzahliger
+`revision` der Sessiondefinition. Keine Zeit-/Verlaufsliste und keine Savemigration.
+Fehlende, doppelte, unbekannte, übergroße oder beschädigte Daten werden ohne
+Ladeschreibvorgang ignoriert. Sichtbare Registry-ID, Definitionsrevision und normal
+validierter begonnener, nicht abgeschlossener Slot müssen zusammenpassen; Redo-only
+zählt als begonnen. Der Start bleibt immer der Katalog.
+
+Nur wirksame abgeschlossene Zellaktion oder echte Undo-/Redo-Änderung setzt nach
+validiertem erfolgreichem Save den Merker. Der Bearbeitungsanlass bleibt bei Savefehler
+für den ausdrücklichen Retry erhalten. Navigation, Werkzeuge, Vorschau, Abbruch,
+No-op und reine Ansichtssicherung markieren nicht. Abschluss/Reset eines anderen
+Rätsels überschreibt den Merker nicht. Eine fehlgeschlagene Abschluss-Sicherung
+behauptet keinen dauerhaften Abschluss; beim Neustart gilt der validierte Diskstand.
+Metadatenfehler erhalten alte gültige Bytes und einen separaten nichtmodalen Retry.
+
+Ein vollständiger Geschwister-Temp wird geflusht, geschlossen und strikt zurückgelesen.
+Windows benutzt MoveFileExW mit REPLACE_EXISTING und WRITE_THROUGH ohne COPY_ALLOWED
+über das lokale Windows PowerShell/.NET ohne Profil/Console; Pfade werden ausschließlich
+als Base64-Daten übergeben. Temp und Ziel liegen zwingend im selben Verzeichnis.
+Godots destruktives Windows-Ziel-Rename und File.Replace/ReplaceFileW (dokumentierter
+Zielverlust bei Fehler 1176) werden nicht verwendet. POSIX/Web verwenden Rename. Derselbe
+bereits gespeicherte Merker startet keinen Hilfsprozess. Ein fehlendes/gesperrtes
+PowerShell bleibt ein isolierter Merkerfehler, keine fehlgeschlagene Rätselsicherung.
+Verzeichnisse, Links, ungültige Pfade und fremde Dateinamen werden zurückgewiesen.
+
+**PANG-A / #531 · auf dem Arbeitsbranch implementierter Schriftvertrag:**
+Die bisherige Tidy-Hand-Standardtextrolle wird gemäß
+[HZ-D08](HAND_DRAWN_UI.md) gezielt durch Pangolin Regular ersetzt, auch
+in normalen Warn-/Recoverytexten und Bedienhilfe. Sonderfonts für Titel,
+Hinweiszahlen und Fallback, alle P1-Spiel-, Speicher-, Layout- und
+Navigationsverträge bleiben erhalten. Frühere HZ-/P1-Fontpassagen
+beschreiben ihren historischen oder tatsächlich integrierten Ausgangsstand.
+[PANG-A / #531](https://github.com/venomenon328/picross/issues/531)
+führt Umsetzung und Abnahmen getrennt.
+
+
+**ANZ-A / #527 · auf dem Arbeitsbranch implementiert, Abnahmen im Produkt-PR:**
+[ANZ-Fachvertrag](DISPLAY_SETTINGS.md) löst D-07/D-21 und §5.2 **nur** für die
+native Wahl der Fenstergröße und die bisher erlaubte freie Resize-/Maximier-
+Bedienung ab: statt beliebiger Clientabmessungen feste monitorabhängige
+Presets 1280×720 bis 3840×2160, dazu Fenster/rahmenloses/exklusives Vollbild
+bei aktueller Desktopauflösung. Sicherer 15-s-Rollback und separate
+versionierte Anzeigepräferenz sind implementiert, ohne Schema-1-Migration.
+Der bestehende 1920×1080-Fensterstart bleibt passender Standard,
+1080p primäres Komfortziel und 720p begrenzter Fallback; Raster-/UI-Fit,
+Hinweise und Web-Verhalten bleiben unverändert. Kein neuer Spezialpfad
+für Moduswechsel während einer Buchseitenanimation. Technische Nachweise
+und getrennte Windows-/Reviewabnahmen im Produkt-PR. [Issue #527](https://github.com/venomenon328/picross/issues/527).
+
 **HZ · 20.10.2026, Spezifikation freigegeben; HZ-A implementiert, technische Gates im Paket-PR; HZ-B offen:**
 [Handgezeichnete Bedienoberfläche](HAND_DRAWN_UI.md) bindet Tidy Hand für
 normale Spielertexte einschließlich Warnungen und gemessene Textbudgets;
@@ -300,9 +353,10 @@ und in der nachfolgenden Bedienung; frühere Berichte bleiben historisch.
 
 D-21 präzisiert D-07: 1920×1080 ist die primäre Layoutreferenz und die gewünschte
 Clientfläche beim Fensterstart, soweit diese einschließlich des tatsächlichen Rahmens
-in den verfügbaren Monitorarbeitsbereich passt. Andernfalls wird die Clientfläche so
-begrenzt, dass der ganze Rahmen sichtbar bleibt. Kein Vollbildzwang, Offscreen-Start
-oder Eingriff in Windows-Einstellungen. 1280×720 bleibt Mindest-/Fallback-Test,
+in den verfügbaren Monitorarbeitsbereich passt. Im nativen Windows-Spieler gilt ANZ: andernfalls größter passender
+Preset bis höchstens 1920×1080; ohne passenden 720p-Preset rahmenloses Vollbild.
+Keine freie Größenänderung/Maximierung und kein Eingriff in Windows-Einstellungen.
+Webfenster bleiben browsergesteuert. 1280×720 bleibt Mindest-/Fallback-Test,
 1600×900 kleinerer Regressionstest und 2560×1440 unterstützte größere Fläche.
 
 Arbeitszoom, UI-/Hinweisskalierung und Fenstergröße sind getrennt. Technischer Ausgangswert: 24 logische Einheiten Zellabstand bei 100 % Arbeitszoom; eine begründete Feinanpassung nach Darstellungstests ist reversibles Implementierungsdetail. Vergrößern/Maximieren des Fensters vergrößert bei gleichem Zoom und UI-Maßstab nicht automatisch die Zellen. Stattdessen mehr Raster zeigen oder kleine Raster mit ruhigen Rändern platzieren. Eine ausdrücklich gewählte Gesamtansicht ist vom Arbeitszoom zu unterscheiden; „Arbeitsgröße“ stellt eine brauchbare Bearbeitungsgröße wieder her.
@@ -367,8 +421,9 @@ müssen über die erreichbare Zustandsfolge vollständig lesbar bleiben.
 Überfahren benachbarter Linien, des
 Rasters oder anderer UI übernimmt keine andere Folge und wird weder Raster-Pan noch
 Zellbearbeitung. Leere/kurze Folgen pannen nicht in leeren Raum. Anfang, Mitte und Ende
-jeder langen Folge bleiben erreichbar; „Hinweise rasterseitig ausrichten“ setzt alle
-Einzelpositionen bewusst zurück.
+jeder langen Folge bleiben erreichbar. ANZ-A-N02 / #527 entfernt den manuellen
+Hinweisreset vollständig; Einstellungsbesuche erhalten die individuellen Leseanker.
+Rasterseitiger Default, Slot-Ausrichtung und automatische Normalisierung bleiben.
 
 Die wirkungslosen Raster-/Miniaturnavigationsversuche erhalten sämtliche individuellen Lesepositionen.
 Vorübergehende Vollanzeige erhält alle semantischen Rand-/Mittelanker, auch beim Speichern und frischen Neustart; erneutes Verengen rekonstruiert die Lesestelle. Zoom, Resize und UI-Skalierung bewahren denselben gelesenen Bereich soweit möglich,
@@ -464,6 +519,23 @@ D-06 stellt Tastatur-/Controllerbedienung für P1 zurück. Kein Controllergerät
 
 ### 5.4 Abschluss und detaillierteres Ergebnisbild
 
+AR-A / #486 erweitert ausschließlich den stabilen Abschluss um **Bild | Raster**.
+Ein einzelnes rechteckiges On-Off-Control trägt Bild links und Raster rechts;
+sein heller Schieber kennzeichnet die aktive Seite. Dunkle Bereiche werden
+schraffiert statt deckend gefüllt, Konturen bleiben handgezeichnet. Der Schalter
+ist erst nach der Enthüllung bedienbar; sein Platz ist von Anfang an reserviert. Jeder neue Besuch beginnt mit Bild. Refresh, Resize, UI-Skalierung,
+Fokusverlust und Resetabbruch erhalten die Auswahl innerhalb desselben Besuchs.
+Das komplette schreibgeschützte Raster zeigt bestätigte Spielerfüllungen in der
+Originalpalette mit statischem Atlasstift, normalen und Fünferlinien sowie Außenrand.
+X und unbekannter Hintergrund bleiben leer; Hinweise, Werkzeuge und neue
+Zoom-/Panbedienung entfallen. Beide Ansichten passen proportional und zentriert
+in denselben Papierbereich. Umschalten verändert weder Zellen, History, Abschluss,
+gespeicherte Ansicht noch Savebytes und löst keine Sicherung oder Enthüllung aus.
+Katalog-/Informationsnavigation und bestätigter Reset verwerfen diese flüchtige
+Auswahl und die zusätzlichen Darstellungsdaten. Illustration, Katalogvorschau,
+Saveformat und übrige EA-Verträge bleiben erhalten.
+[Paket, Prüfplan und getrennte AR-A-T01/R01/M01-Gates](https://github.com/venomenon328/picross/issues/486).
+
 Nach einer übernommenen Aktion gilt das Rätsel genau dann als gelöst, wenn jede Motivzelle in der richtigen Farbe gefüllt ist und jeder Lösungshintergrund unbekannt oder leer markiert ist. Zusatzfüllung, fehlende Füllung, falsche Farbe oder leer markierte Motivzelle verhindern den Abschluss. Keine Fehlermeldung, Prozent-richtig-Anzeige oder korrigierte Miniatur vor dem vollständigen Treffer.
 
 EA / #170 ersetzt die frühere Vergleichsansicht: insgesamt 2,15 s (250/650/400/650/200 ms) für Arbeitsdarstellung ausblenden, bestätigte eigene Füllungen unverzerrt zentrieren und lückenlos darstellen, halten, zum bestehenden farbigen Motivbild überblenden, dann Name und Reset. Titel bleibt neutral „Blatt NN · W × H“ in Bakso an derselben Stelle. Bild und Raster behalten unabhängig ihr Seitenverhältnis; Name und Reset sind von Anfang an im Layout reserviert. Der Buchreiter führt zurück. Keine Vergleichsüberschriften, doppelten Motivnamen oder Prototyptexte. Gelöste Blätter öffnen sofort denselben Endzustand ohne Replay. Reset bindet beim Öffnen des Dialogs stabile ID und Ursprung: aus der Endansicht nach Erfolg dasselbe leere Blatt öffnen, aus dem Katalog im Katalog bleiben. Fehler und Recovery bleiben erreichbar. Commit, History und Schema-1-Sicherung bleiben sofortig; Präsentationszustand wird nie gespeichert. Fokusverlust, Resize und UI-Skalierung zeigen den stabilen Endzustand; Navigation beendet die Präsentation ohne verspätete Rückkehr. [EA-Prüfzuordnung](EA_VERIFICATION.md). D-10: Das Ergebnisbild darf höhere Auflösung, feinere Konturen, zusätzliche Oberflächendetails, Schattierungen und kleine passende Motivelemente besitzen. Das Rätsel muss sehr deutlich als Stilisierung dieses Bilds erkennbar bleiben: gleicher Hauptgegenstand, nachvollziehbarer Bildaufbau, wesentliche Formen und Proportionen. Keine unabhängige Belohnungsillustration, aber auch keine Pflicht zu identischen belegten Rasterzellen.
@@ -510,14 +582,14 @@ Projektpfad `game/`. Eigene Rasterzeichen-/Hit-Test-Komponente, UI-Bausteine fü
 
 ### 7.2 Ausführbarer Befehlsvertrag
 
-Für Auslöser, Umfang, Größen-/Zeitbudgets und Artefakte gilt ab #63 die
-[CI-Policy](CI_POLICY.md). Sie löst die pauschale Wiederholung historischer
+Für Auslöser, Modulauswahl, weiches Laufzeitziel und Artefakte gilt der
+[aktuelle CI-Vertrag](CI_WORKFLOW_V2.md). Sie löst die pauschale Wiederholung historischer
 Studien und aller früheren Lieferprüfungen ab; die fachlichen Verträge dieser
 Spezifikation bleiben bestehen. Aktuelle Regression, technische Abnahme und
 historische Nachweise werden getrennt ausgewiesen.
 
 **CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), freigegebener
-Sollvertrag vom 26.10.2026:** [CI2-D](CI_SLIMMING.md) ersetzt die fortlaufende
+Sollvertrag vom 26.10.2026:** Der [native Modulvertrag](CI_C_NATIVE_GROUPS.md) ersetzt die fortlaufende
 500-Aktionen-Pflicht durch die kompakte History-Integration in §8.1.
 `--integration` und `--groups history` führen jetzt 17 Kommandos, vier neue
 Transaktionen und zwei echte Spielprozesse aus. [D-T01](CI2_D_VERIFICATION.md)
@@ -537,7 +609,13 @@ Der Testrunner führt vereinbarte Logikprüfungen aus, gibt Anzahl/Ergebnis aus 
 
 Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `game/build/windows/` anlegen. Exportpfad relativ zum Godot-Projekt. ZIP mit allen Startdateien, Anleitung und Commitkennung; keine Godot-Installation beim Nutzer voraussetzen. Keine Signaturzertifikate, Releases oder Änderung von Windows-Schutzfunktionen beauftragt.
 
-`tools/p1_product.py` und [Produkt-CI](../.github/workflows/p1-product.yml) liefern Import, aktuelle Godot-Tests, kurzen absichtlichen Negativtest, echten Save-Roundtrip, kontrollierten Start und Windows-Export; unter Windows zusätzlich exportierten Start. `--integration`, `--pilots` und `--visual` wählen die nach CI-Policy erforderlichen ergänzenden Wege; bei lokalem Aufruf sind alle standardmäßig aktiv. Der Preflight wird bei Toolchain-/Harnessänderungen und auf manuellen Auftrag ausgeführt. Aktuelle Head-/Basis-/Test-Merge-/Artefaktzuordnung im PR; alte grüne Prüfungen belegen nicht die neuen Funktionen.
+`tools/p1_product.py` bietet die [nativen Gruppen](CI_C_NATIVE_GROUPS.md) für Import,
+Godot-Tests, Negativpfad, Save-Roundtrip, Start und Export. Lokal mit `--groups`
+gezielt wählen; ohne Auswahl bleibt der vollständige Umfang aktiv. Package CI
+startet nur die im Paketplan gewählten Module. Ihr obligatorischer Windowsbau ist
+keine automatische Auswahl aller nativen Export-/Funktionsprüfungen. Die alte
+[p1-product.yml](../.github/workflows/p1-product.yml) ist nur manuell/wiederverwendbar.
+`preflight` nach tatsächlichem Toolchain-/Harnessbedarf begründet auswählen. Aktuelle Head-/Basis-/Test-Merge-/Artefaktzuordnung im PR; alte grüne Prüfungen belegen nicht die neuen Funktionen.
 
 ## 8. Akzeptanz und Abnahme
 
@@ -545,7 +623,7 @@ Exportpreset exakt `P1 Windows x86_64`; vorher passende Templates und `game/buil
 
 Die folgende Zuordnung beschreibt die fachlichen Prüfeigenschaften. Die
 verbindliche Auswahl pro Änderung, kompakte native Grenzmatrix und abschließende
-Erfolgsprüfung stehen in [CI-Policy #63](CI_POLICY.md). Eine deaktivierte
+Erfolgsprüfung stehen im [aktuellen CI-Vertrag](CI_WORKFLOW_V2.md). Eine deaktivierte
 optionale Route wird als nicht zutreffend ausgewiesen, nicht als ausgeführt.
 
 | ID | Prüffall und Erfolg |
@@ -817,3 +895,4 @@ VS-E1-R2 aus #57 §11 ersetzt für diese Studie die früheren R-/Hand- und
 pauschalen Hinweisreserven. Achsengetrennter tatsächlicher Bedarf, fünf vollständige
 zusammenhängende Zahlen auch im Drag und eine harte Raster-Fitgrenze sind aktiv.
 Historische Erstlieferung bleibt gebunden; normale P1-Defaults bleiben bestehen.
+

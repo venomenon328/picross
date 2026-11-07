@@ -1,15 +1,42 @@
 """Explicit disposable Chromium profile and guarded launch for CI."""
 from contract import require_browser
+import os
+import platform
 
 
 def options(name):
     require_browser(name)
-    return {'headless': True}
+    result = {'headless': True}
+    if platform.system() == 'Linux' and os.environ.get('PICROSS_WEB_SOFTWARE') == '1':
+        # The book's real 3D path needs a rendered frame inside the unchanged
+        # 0.3..0.7 reveal interval. Use the runner's Mesa OpenGL implementation;
+        # implicit SwiftShader skipped that interval at ~360 ms/frame.
+        # Use the installed full Chromium's documented new headless path and
+        # allow the Xvfb/Mesa driver instead of the shell's forced SwiftShader.
+        # https://playwright.dev/python/docs/browsers#chromium-new-headless-mode
+        # https://chromium.googlesource.com/chromium/src/+/main/docs/gpu/using-gpu-hardware-in-headless-chrome.md
+        # The recorded driver is Mesa llvmpipe, which Chromium's software
+        # rendering list entry 3 blocks categorically. This explicit isolated
+        # software run needs that driver; keep normal platform defaults intact.
+        # https://chromium.googlesource.com/chromium/src/+/main/gpu/config/software_rendering_list.json
+        result.update(channel='chromium', args=['--enable-gpu', '--use-gl=angle',
+                                               '--use-angle=gl', '--ignore-gpu-blocklist'])
+    return result
 
 
 def launch(pw, name, profile, **kwargs):
     require_browser(name)
     return pw.chromium.launch_persistent_context(profile, **options(name), **kwargs)
+
+
+def graphics_diagnostics(context):
+    """Read actual driver/feature decisions even if creating WebGL2 fails."""
+    session = context.browser.new_browser_cdp_session()
+    try:
+        gpu = session.send('SystemInfo.getInfo')['gpu']
+        return {key:gpu.get(key) for key in ('devices','auxAttributes','featureStatus')}
+    finally:
+        session.detach()
 
 
 def graphics(page):

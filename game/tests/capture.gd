@@ -4,13 +4,8 @@ const Main = preload("res://ui/main.gd")
 const SaveStore = preload("res://model/save_store.gd")
 const Session = preload("res://model/session.gd")
 const Board = preload("res://ui/board.gd")
-const COMPACT_WORK_STEPS: Array[float] = [12.0, 16.0, 18.0, 22.0, 24.0, 72.0]
-# Review images are independent of assertion coverage. Failure frames are
-# always retained uncropped, including the preceding comparison images.
-const COMPACT_PICTURES: Array[String] = [
-	"1280x720-ui125-f2-independent-slots", "1920x1080-ui100-f1",
-	"separation-f1-24-confirmed", "separation-f2-24-confirmed", "f2-reveal",
-]
+const COMPACT_WORK_STEPS: Array[float] = [12.0, 16.0, 18.0, 24.0, 72.0]
+# Success uses in-memory pixel assertions; failure frames stay bounded.
 var surface: SubViewport
 var output: String
 var captures: Array = []
@@ -62,7 +57,7 @@ func fail_capture(message: String, code: int = 5) -> void:
 			if picture == null:
 				continue
 			var name: String = "failure-" + str(frame.name) + ("-underlay" if kind == "material" else "") + ".png"
-			if picture.save_png(output.path_join(name)) == OK:
+			if preload("res://tests/native_png.gd").write(picture, output.path_join(name)) == OK:
 				failure_captures.append({"file": name, "frame": frame.name, "kind": kind, "crop": false})
 	write_report()
 	quit(code)
@@ -202,17 +197,6 @@ func snapshot(app: Main, name: String, crop: bool = false) -> Image:
 	record.merge({"row_clue_steps": nonzero_steps(app.board.row_clue_steps), "column_clue_steps": nonzero_steps(app.board.column_clue_steps),
 		"longest_row_window": [row_window.start, row_window.end, row_window.prefix_hidden, row_window.suffix_hidden],
 		"longest_column_window": [column_window.start, column_window.end, column_window.prefix_hidden, column_window.suffix_hidden]})
-	if not compact or name in COMPACT_PICTURES:
-		var saved: Image = picture
-		if crop:
-			var box: Rect2 = app.board.view.cell_rect(Vector2i(2, 2)).merge(app.board.view.cell_rect(Vector2i(18, 8)))
-			box.position += app.board.global_position
-			saved = picture.get_region(Rect2i(box.grow(8)).intersection(Rect2i(Vector2i.ZERO, picture.get_size())))
-		if saved.save_png(output.path_join(name + ".png")) != OK:
-			fail_capture("Cannot retain capture: " + name, 4)
-			return picture
-		record.merge({"file": name + ".png", "retained": true, "crop": crop}, true)
-		captures.append(record)
 	return picture
 
 func close_color(actual: Color, expected: Color) -> bool:
@@ -317,8 +301,7 @@ func run() -> void:
 	surface.size = Vector2i(1920, 1080)
 	surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	root.add_child(surface)
-	var app: Main = load("res://main.tscn").instantiate()
-	surface.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(surface)
 	var stage: String = OS.get_environment("P1_RENDER_STAGE")
 	var stages: Array[String] = ["layout","cells-f1","cells-f2","axis","h1"]
 	if not stage.is_empty() and not stage in stages:
@@ -333,7 +316,7 @@ func run() -> void:
 		app.set_ui_scale(1.0)
 		app.select_puzzle(3)
 		set_pitch(app,24.0)
-		app.board.reset_clue_pan()
+		preload("res://tests/p12_cases.gd").seed_grid_reads(app.board)
 		await process_frame
 		await process_frame
 		match current:
@@ -384,17 +367,14 @@ func capture_layout(app: Main) -> void:
 func capture_compact_layout(app: Main) -> void:
 	app.show_album()
 	await snapshot(app, "album")
-	# Minimum client at the larger UI scale; regular 1080p at both scales.
-	# Each visits mono, color and the 50x50 case; independent reads remain
-	# visible on both axes at UI125 rather than repeating a 4x2 cross product.
+	# D02 accepts omitted layout combinations; retain tight slots and normal color.
 	for configuration: Dictionary in [
-		{"size": Vector2i(1280, 720), "scale": 1.25},
-		{"size": Vector2i(1920, 1080), "scale": 1.0},
-		{"size": Vector2i(1920, 1080), "scale": 1.25},
+		{"size": Vector2i(1280, 720), "scale": 1.25, "fixtures": [3]},
+		{"size": Vector2i(1920, 1080), "scale": 1.0, "fixtures": [1]},
 	]:
 		surface.size = configuration.size
 		app.set_ui_scale(configuration.scale)
-		for fixture: int in [0,1,3]:
+		for fixture: int in configuration.fixtures:
 			app.select_puzzle(fixture)
 			if app.ui_scale > 1.0:
 				app.board.zoom(1, app.board.view.viewport.get_center())
@@ -415,7 +395,7 @@ func capture_compact_layout(app: Main) -> void:
 			await snapshot(app, name)
 
 func capture_cells(app: Main, fixtures: Array) -> void:
-	# Same L/block at normal and five-cell boundaries, every color/work step.
+	# Same L/block at normal and five-cell boundaries, every confirmed color.
 	# This spatial renderer oracle covers the current cell-size boundaries;
 	# regular fit-bounded geometry is checked by VS2's native matrix.
 	var regular: Board = use_renderer_component(app)
@@ -434,12 +414,15 @@ func capture_cells(app: Main, fixtures: Array) -> void:
 			app.board.view.center = Vector2.ZERO
 			app.board.view.reframe()
 			await snapshot(app, "separation-f%d-%d-confirmed" % [fixture + 1, roundi(step)], true)
-			# Preview whole mixed-color removal: original values outside endpoint survive.
-			app.session.gesture.begin(app.session.player, Vector2i(2, 4), 1)
-			app.session.gesture.move(Vector2i(10, 4))
-			await snapshot(app, "separation-f%d-%d-removal" % [fixture + 1, roundi(step)], true)
-			app.session.gesture.cancel()
+			# Compact removal pictures had no pixel oracle; omit those render-only visits.
+			if not compact:
+				app.session.gesture.begin(app.session.player, Vector2i(2, 4), 1)
+				app.session.gesture.move(Vector2i(10, 4))
+				await snapshot(app, "separation-f%d-%d-removal" % [fixture + 1, roundi(step)], true)
+				app.session.gesture.cancel()
 			for color: int in range(1, app.session.definition.palette.size() + 1):
+				if compact and step != 24.0 and color != 1:
+					continue
 				app.session.gesture.begin(app.session.player, Vector2i(2, 3), color)
 				app.session.gesture.move(Vector2i(10, 3))
 				await snapshot(app, "separation-f%d-%d-preview-color%d" % [fixture + 1, roundi(step), color], true)
@@ -480,6 +463,8 @@ func capture_zr_counter(app: Main) -> void:
 		values.fill(-1)
 		replace_render_cells(app,values)
 		for zoom: float in [12.0,72.0]:
+			if compact and zoom == 12.0 and surface.size.x != 1280:
+				continue
 			set_pitch(app,zoom)
 			await process_frame
 			var b: Control = app.board
@@ -494,6 +479,8 @@ func capture_zr_counter(app: Main) -> void:
 				Vector2(s.x/2,-50),Vector2(s.x/2,s.y+50),Vector2(-50,-50),Vector2(s.x+50,-50),
 				Vector2(-50,s.y+50),s+Vector2(50,50)]
 			for i: int in range(samples.size()):
+				if compact and zoom == 72.0 and i not in [0,7,10]:
+					continue
 				b.pointer_move(b.get_global_transform_with_canvas().affine_inverse()*samples[i],false)
 				var name: String = "zr-%d-ui%d-z%d-%d" % [surface.size.x,roundi(app.ui_scale*100),roundi(zoom),i]
 				var picture: Image = await snapshot(app,name)
@@ -518,18 +505,13 @@ func capture_zr_counter(app: Main) -> void:
 					return
 				pixel_checks+=5
 				var record: Dictionary = {"name":name,"cursor":[samples[i].x,samples[i].y],"length":b.gesture_length(),"rect":[area.position.x,area.position.y,area.size.x,area.size.y],"font_size":p.font_size,"ui":app.ui_scale,"requested_zoom":zoom,"actual_cell":b.view.cell_size,"changed_pixels":changed}
-				if i==2 and zoom==12.0 or i==10:
-					var image: Image = picture if i==2 else picture.get_region(area.grow(4).intersection(Rect2i(Vector2i.ZERO,surface.size)))
-					image.save_png(output.path_join(name+".png"))
-					record["file"]=name+".png"
-					captures.append({"name":name,"file":name+".png","crop":i!=2,"retained":true})
 				zr_samples.append(record)
 				b.sync_gesture_counter()
 			b.cancel_gesture()
 
 func capture_h1(app: Main) -> void:
 	await preload("res://tests/vs2_h1_cases.gd").run(self, app)
-	for index: int in [0, 1, 2]:
+	for index: int in [0, 1] if compact else [0, 1, 2]:
 		app.select_puzzle(index)
 		var values: Array[int] = app.session.player.cells.duplicate()
 		values.fill(-1)

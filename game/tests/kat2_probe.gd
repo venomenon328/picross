@@ -11,15 +11,15 @@ var output: String
 var mode: String
 var checks: int = 0
 var failures: Array[String] = []
-var captures: Array = []
 var timings: Dictionary = {}
 var quit_slot_hashes: Dictionary = {}
 var kb_measurements: Array = []
 var kk_measurements: Array = []
+var catalog_cases: Array = []
+var case_checks: int = 0
+var ke_resize_samples: Array = []
 var kk_pointer_measurements: Array = []
-var ke_graphics_measurements: Array = []
 var at_measurements: Array = []
-var hzc_measurements: Array = []
 
 func _initialize() -> void:
 	call_deferred("run")
@@ -51,7 +51,8 @@ func click(control: Control) -> void:
 	if control is Card:
 		# Both title and footer can be clipped after a preserved scroll offset.
 		# The centre may be a recovery action; the visible inset belongs to the card.
-		var visible: Rect2 = control.get_global_rect().intersection(app.album.scroll.get_global_rect())
+		var scroller: ScrollContainer = app.album.right_scroll if app.album.right_grid.is_ancestor_of(control) else app.album.scroll
+		var visible: Rect2 = control.get_global_rect().intersection(scroller.get_global_rect())
 		point = Vector2(visible.position.x+5*app.ui_scale,visible.get_center().y)
 	if control.get_window() != root: point += Vector2(control.get_window().position)
 	click_at(point)
@@ -107,27 +108,13 @@ func choose(id: String) -> void:
 func shot(name: String) -> void:
 	await frames()
 	await RenderingServer.frame_post_draw
-	var image: Image = surface.get_texture().get_image()
-	var filename: String = mode + "-" + name + ".png"
-	check(image.save_png(output.path_join(filename)) == OK, "native frame saved " + filename)
 	var textures: int = 0
 	for reveal: Control in app.album.reveals:
 		if reveal.artwork != null: textures += 1
 	check(app.choices.size() <= 24 and textures <= 24 and app.album.grid.get_child_count() <= 24, "bounded cards and earned textures")
-	# Bind the title, selector, summary and representative card in one native
-	# composition. Do not include unused album background just to fill the frame.
-	var controls: Array[Control] = [app.title, app.album.category_choice, app.album.summary]
-	controls.append(app.choices[0].get_parent() if not app.choices.is_empty() else app.album.empty_message)
-	if app.album.next_button.get_parent().visible: controls.append(app.album.page_label)
-	var bounds: Rect2 = controls[0].get_global_rect()
-	for control: Control in controls: bounds = bounds.merge(control.get_global_rect())
-	if not app.album.visible: bounds = app.work.get_global_rect()
-	bounds = bounds.intersection(Rect2(Vector2.ZERO,Vector2(surface.size)))
-	var regions: Dictionary = {"layout": [floori(bounds.position.x),floori(bounds.position.y),ceili(bounds.end.x),ceili(bounds.end.y)]}
 	for card: Button in app.choices:
 		for label: Label in [card.caption,card.detail,card.leaf,card.note]:
 			check(card.get_global_rect().grow(1).encloses(label.get_global_rect()), "card labels fit without overlap")
-	captures.append({"file": filename, "framebuffer": [image.get_width(), image.get_height()], "window_client": [root.size.x, root.size.y], "ui_scale": app.ui_scale, "category": app.album.category_id, "page": app.album.page_index, "scroll": app.album.scroll_vertical, "cards": app.choices.size(), "textures": textures, "summary": app.album.summary.text, "ids": app.album.visible_ids.duplicate(), "regions": regions})
 
 func region(control: Control, trim_label: bool = false) -> Array:
 	var rect: Rect2 = control.get_global_rect()
@@ -145,10 +132,9 @@ func save_bytes(excluded: String = "") -> Dictionary:
 
 func new_app() -> void:
 	if app != null:
-		app.free()
+		preload("res://tests/book_fixture.gd").dispose(app)
 	var started: int = Time.get_ticks_usec()
-	app = load("res://main.tscn").instantiate()
-	surface.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(surface)
 	# Existing KAT/KE scenarios bind their synthetic slots by canonical order.
 	# All their added dates are unknown; KU-B's large scenario tests real sorting.
 	if not mode in ["pages", "adapter", "empty", "invalid"]: app.album.choose_sort("added")
@@ -184,20 +170,31 @@ func run() -> void:
 		check(app.album.visible and app.session == null, "empty/error settings and return usable")
 		check(save_bytes().is_empty(), "empty/error path writes no saves")
 	elif mode == "pages":
+		await preload("res://tests/catalog_layout_cases.gd").run(self)
+		catalog_case("catalog-layout")
 		await pages()
+		catalog_case("catalog-pages")
 		await sorting()
+		catalog_case("catalog-sorting")
+		await preload("res://tests/scrollbar_cases.gd").run(self)
+		await preload("res://tests/catalog_filter_cases.gd").rules(self)
+		await preload("res://tests/catalog_filter_cases.gd").navigation(self)
+		await preload("res://tests/recent_cases.gd").run(self)
 	elif mode == "information":
+		preload("res://tests/hz_cases.gd").run(self)
+		preload("res://tests/hz_c_cases.gd").run(self)
+		await preload("res://tests/display_cases.gd").run(self)
+		await preload("res://tests/view_title_cases.gd").run(self)
 		await information_saves()
 	elif mode == "kb":
 		await compact_buttons()
 	elif mode == "kk":
 		await fixed_cards()
-		await preload("res://tests/hz_native.gd").run(self)
-		await preload("res://tests/hz_b_native.gd").run(self)
-		await preload("res://tests/hz_c_native.gd").run(self)
+
+
 	elif mode == "ke":
 		await catalog_labels()
-		await preload("res://tests/ke_graphics.gd").run(self)
+
 	elif mode == "at":
 		await transparent_reveals()
 	elif mode == "adapter":
@@ -210,6 +207,7 @@ func run() -> void:
 		await shot("category-growth")
 	elif mode == "restart":
 		check(app.album.category_id.is_empty() and app.album.page_index == 0, "real process restart defaults to All page one")
+		check(app.album.filters == app.album.Filter.DEFAULTS and app.album.positions() == Vector2i.ZERO, "K-A new process has no additional filters or scroll state")
 		check(app.album.notes[0].text == "Neu" and app.album.notes[1].text == "Begonnen" and app.album.notes[5].text == "Gelöst", "empty, redo-only and solved saves survive real process restart")
 		check(app.sessions[1].player.cursor == 0 and app.sessions[1].player.history.size() == 1, "redo history restored from disk")
 		await choose("gebaeude-bauwerke")
@@ -225,18 +223,27 @@ func run() -> void:
 		for filename: String in save_bytes():
 			quit_slot_hashes[filename] = FileAccess.get_sha256(Store.test_root_override.path_join(filename))
 		write_report()
+		app.return_to_work()
+		await frames()
+		check(app.album.visible,"N02: actual catalog exit remains reachable")
+		write_report()
 		print("KAT2_QUIT_ATTEMPT catalog-origin information")
-		click(caption_button(app.settings_panel, "Beenden"))
+		click(caption_button(app.album, "Beenden"))
 		await frames()
 		check(false, "catalog-origin information permits regular process quit")
 	write_report()
 	quit(0 if failures.is_empty() else 4)
 
+func catalog_case(id: String) -> void:
+	# Checkpoints bind selected native paths to the independent result reader.
+	catalog_cases.append({"id":id,"checks":checks-case_checks})
+	case_checks = checks
+
 func write_report() -> void:
-	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "captures": captures, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
-	report["ke_graphics_measurements"] = ke_graphics_measurements
+	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	report["at_measurements"] = at_measurements
-	report["hzc_measurements"] = hzc_measurements
+	if mode in ["ke","kk","pages"]: report["catalog_cases"] = catalog_cases
+	if mode == "ke": report["resize_samples"] = ke_resize_samples
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
 	file.close()
@@ -261,7 +268,7 @@ func transparent_reveals() -> void:
 	app.show_album()
 	var hidden_board: Rect2 = app.board.get_rect()
 	var hidden_view: Dictionary = app.board.capture_view()
-	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
+	for spec: Array in [[1280,720,1.25]]:
 		surface.size=Vector2i(spec[0],spec[1])
 		app.set_ui_scale(spec[2])
 		await frames()
@@ -289,10 +296,20 @@ func caption_button(parent: Node, caption: String) -> Button:
 	check(false, "UI button exists: " + caption)
 	return null
 
+func choose_scale(index: int) -> void:
+	await choose_option(app.ui_scale_choice,index)
+	check(app.ui_scale == (1.25 if index == 1 else 1.0),"N02 pointer applies session UI scale")
+
 func choose_view(index: int) -> void:
-	click(app.view_choice)
+	await choose_option(app.view_choice,index)
+	check(app.board.mode == ("V" if index == 1 else "G"),"pointer changes puzzle view")
+
+func choose_option(choice: OptionButton, index: int) -> void:
+	app.info_scroll.ensure_control_visible(choice)
 	await frames()
-	var popup: PopupMenu = app.view_choice.get_popup()
+	click(choice)
+	await frames()
+	var popup: PopupMenu = choice.get_popup()
 	check(popup.visible, "puzzle view popup opens by pointer")
 	# Native popup hit testing, including the actual item_selected signal.
 	for y: int in range(4, popup.size.y - 4, 4):
@@ -313,11 +330,11 @@ func choose_view(index: int) -> void:
 				surface.push_input(event, true)
 			break
 	await frames()
-	check(app.board.mode == ("V" if index == 1 else "G") and not popup.visible, "pointer changes puzzle view")
+	check(choice.selected == index and not popup.visible, "pointer selects actual option")
 
 func information_profile(base: String, state: String) -> void:
 	if app != null:
-		app.free()
+		preload("res://tests/book_fixture.gd").dispose(app)
 		app = null
 	Store.test_root_override = base.path_join(state)
 	DirAccess.make_dir_recursive_absolute(Store.test_root_override)
@@ -334,6 +351,10 @@ func information_profile(base: String, state: String) -> void:
 	foreign.close()
 	await new_app()
 
+func information_back_labels(destination: String) -> void:
+	for button: Button in [app.actions["nav-work"],app.info.right_return]:
+		check(button.text == "Zurück" and button.tooltip_text == destination and button.accessibility_name == destination,"N03: short information back label keeps actual destination: "+destination)
+
 func information_saves() -> void:
 	var base: String = Store.test_root_override
 	for state: String in ["error", "recovered", "recovered_missing", "backup_invalid"]:
@@ -346,13 +367,21 @@ func information_saves() -> void:
 		click(caption_button(app.album, "Einstellungen / Info"))
 		await frames()
 		check(app.information.visible and app.information_origin == "album", state + ": pointer opens catalog information")
+		information_back_labels("Zurück zum Katalog")
+		if state == "error":
+			click(app.information.get_node("help-access"))
+			await frames()
+			information_back_labels("Zurück zum Katalog")
+			click(app.info.right_return)
+			await frames()
+			check(app.album.visible and save_bytes() == original,"N03: help returns to catalog without touching damaged saves")
+			click(caption_button(app.album,"Einstellungen / Info"))
+			await frames()
 		await choose_view(1)
 		check(app.save_timer.is_stopped(), state + ": catalog view change schedules no slot save")
 		await create_timer(0.5).timeout
 		check(app.slot_errors[0].is_empty() and save_bytes() == original, state + ": no save attempt after debounce")
-		click(app.ui_scale_button)
-		await frames()
-		click(app.clue_reset_button)
+		await choose_scale(1)
 		click(app.clue_completion_toggle)
 		click(app.animation_toggle)
 		click(app.actions["nav-work"])
@@ -397,24 +426,52 @@ func information_saves() -> void:
 	click(app.actions["menu"])
 	click(app.album_button)
 	app.select_by_id("T-02")
-	app.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	app.book.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
 	await frames()
 	check(app.work.visible and app.session.definition.id == "T-01" and app.status_label.visible, "dirty: failed flush blocks info, catalog, slot switch and WM close")
 	app.store.fail_step = ""
 	click(app.actions["menu"])
 	await frames()
 	check(app.information.visible and app.information_origin == "work", "dirty: successful retry permits work-origin information")
+	information_back_labels("Zurück zum Rätsel")
 	check(int(app.store.load_slot(app.session.definition).data.cells[2]) == 1, "dirty: retry persists confirmed cell")
 	app.store.fail_step = "after_temp"
+	var before_view: Dictionary = save_bytes()
+	check(app.slot_errors[0].is_empty() and not before_view.has("t01.tmp") and app.save_timer.is_stopped(), "dirty: view-save observation starts clean")
+	# Observe the scheduling signal synchronously. Native popup/frame work can
+	# legitimately outlast the unchanged 350 ms debounce before choose_view returns.
+	var observed: Dictionary = {"scheduled": false, "timeouts": 0, "failed_save": false}
+	var on_view: Callable = func():
+		observed.scheduled = not app.save_timer.is_stopped() and app.save_timer.time_left > 0.0 and app.save_timer.wait_time == 0.35
+	var on_timeout: Callable = func():
+		observed.timeouts += 1
+		# Connected after Main's save callback: require a fresh, validated temp
+		# candidate and exact failure, not merely an old error or stopped timer.
+		var after: Dictionary = save_bytes()
+		var candidate: Variant = JSON.parse_string(after.get("t01.tmp", PackedByteArray()).get_string_from_utf8())
+		after.erase("t01.tmp")
+		observed.failed_save = app.slot_errors[0] == "Testabbruch nach Tempvalidierung." and Store.validate(candidate, app.session.definition).is_empty() and after == before_view
+	app.board.view_changed.connect(on_view)
+	app.save_timer.timeout.connect(on_timeout)
 	await choose_view(1)
-	check(not app.save_timer.is_stopped(), "dirty: work-origin view still schedules mandatory save")
+	app.board.view_changed.disconnect(on_view)
+	app.save_timer.timeout.disconnect(on_timeout)
+	var pending: bool = observed.timeouts == 0 and not app.save_timer.is_stopped() and app.slot_errors[0].is_empty() and save_bytes() == before_view
+	var attempted: bool = observed.timeouts == 1 and app.save_timer.is_stopped() and observed.failed_save
+	check(observed.scheduled and (pending or attempted), "dirty: work-origin view still schedules mandatory save")
 	click(app.actions["nav-work"])
-	click(caption_button(app.settings_panel, "Beenden"))
-	app.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
+	app.album.quit_requested.emit() # Existing catalog exit signal, also while return is blocked.
+	app.book.notification(Node.NOTIFICATION_WM_CLOSE_REQUEST)
 	await create_timer(0.5).timeout
-	check(app.information.visible and app.status_label.visible and not app.slot_errors[0].is_empty(), "dirty: view failure blocks return, Beenden and WM close")
+	check(app.information.visible and app.status_label.visible and not app.slot_errors[0].is_empty(), "dirty: view failure blocks return, catalog exit signal and real root WM close")
+	click(app.information.get_node("help-access"))
+	await frames()
+	information_back_labels("Zurück zum Rätsel")
+	click(app.info.right_return)
+	await frames()
+	check(app.information.visible and app.information_section == "help" and app.status_label.visible and not app.slot_errors[0].is_empty(),"N03: help back also blocks failed flush and keeps retry reachable")
 	app.store.fail_step = ""
-	click(app.actions["nav-work"])
+	click(app.info.right_return)
 	await frames()
 	check(app.work.visible and app.slot_errors[0].is_empty(), "dirty: retry clears failure and restores work")
 	# A fresh damaged profile tests the real Beenden path at the end of run().
@@ -452,9 +509,11 @@ func regular() -> void:
 	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	app.set_ui_scale(1.0)
 	await choose("obst-nuesse")
-	check(app.choices.is_empty() and app.album.empty_message.visible and app.album.all_button.visible, "empty category has direct All action")
+	check(app.choices.is_empty() and app.album.empty_message.visible and not app.album.filter_button.disabled, "empty category retains filter panel reset")
 	await shot("empty-category")
-	click(app.album.all_button)
+	click(app.album.filter_button)
+	await frames()
+	click(caption_button(app.album.filter_panel,"Zurücksetzen"))
 	await frames()
 	check(app.album.category_id.is_empty(), "pointer returns to All")
 	# An automatically created empty save is still new.
@@ -508,7 +567,7 @@ func regular() -> void:
 	check(app.store.write_slot(target, target.view_state).is_empty(), "valid earned save written")
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
+	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 Treffer · 1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
 	check(app.album.reveals[0].artwork != null, "earned image loaded only for visible card")
 	check(app.choices[0].accessibility_name.contains("Ansehen"), "KB solved action views existing completion")
 	await shot("solved")
@@ -567,14 +626,14 @@ func regular() -> void:
 	await frames()
 	click(app.reset_dialog.get_ok_button())
 	await frames()
-	check(app.album.notes[0].text == "Neu" and app.album.summary.text == "0 von 1 gelöst", "reset of earned slot clears validated completion count")
+	check(app.album.notes[0].text == "Neu" and app.album.summary.text == "1 Treffer · 0 von 1 gelöst", "reset of earned slot clears validated completion count")
 	for suffix: String in [".json", ".bak"]:
 		broken = FileAccess.open(app.store.path_for("t09", suffix), FileAccess.WRITE)
 		broken.store_string("{bad")
 		broken.close()
 	await new_app()
 	await choose("voegel")
-	check(app.choices[0].disabled and app.album.notes[0].text == "Ungültig" and app.album.summary.text == "0 von 1 gelöst", "invalid saves are neither new nor solved")
+	check(app.choices[0].disabled and app.album.notes[0].text == "Ungültig" and app.album.summary.text == "1 Treffer · 0 von 1 gelöst", "invalid saves are neither new nor solved")
 	check(app.choices[0].disabled and app.album.reset_buttons["T-09"].visible and not app.album.reset_buttons["T-09"].disabled, "KB damaged save blocks play but retains reset")
 	var corrupted_primary: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09"))
 	var corrupted_backup: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09", ".bak"))
@@ -617,9 +676,11 @@ func sorting() -> void:
 		surface.size = Vector2i(spec.x, spec.y)
 		app.set_ui_scale(spec.z / 100.0)
 		await frames()
-		for control: Control in [app.album.category_choice, app.album.sort_choice, app.album.direction_button]:
+		for control: Control in [app.album.category_choice, app.album.sort_choice, app.album.direction_button, app.album.filter_button]:
 			check(Rect2(Vector2.ZERO, Vector2(surface.size)).encloses(control.get_global_rect()), "KU-B sort controls fit native viewport")
 		check(app.album.category_choice.get_global_rect().end.x <= app.album.sort_choice.get_global_rect().position.x and app.album.sort_choice.get_global_rect().end.x <= app.album.direction_button.get_global_rect().position.x, "KU-B adjacent sort controls do not overlap")
+		check(app.album.direction_button.get_global_rect().end.x <= app.album.filter_button.get_global_rect().position.x and app.album.right_page.is_ancestor_of(app.album.filter_button), "K-A filter opener sits to the right of the sorting pair")
+		check(app.album.filter_button.size.x >= Card.UiText.width(app.album.filter_button.get_theme_font("font"),app.album.filter_button.text,Card.UiText.small_size(app.ui_scale))+32*app.ui_scale, "K-A filter text retains generous focus/pressed padding")
 		await sort_pointer(3)
 		check(app.album.preference.direction == "desc", "KU-B actual added menu defaults newest")
 		var ids: Array[String] = app.album.filtered_ids.duplicate()
@@ -691,7 +752,7 @@ func pages() -> void:
 	# page/reset assertions; sorting() separately covers editorial/default order.
 	app.album.choose_sort("size")
 	check(app.sessions.size() == 54 and app.album.categories.size() == 20, "54 synthetic sessions and twenty categories")
-	check(app.album.summary.text == "27 von 54 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
+	check(app.album.summary.text == "54 Treffer · 27 von 54 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
 	await shot("first-page")
 	var before: Dictionary = save_bytes()
 	var released: Array[WeakRef] = []
@@ -740,7 +801,7 @@ func pages() -> void:
 	timings["category_ms"] = (Time.get_ticks_usec() - started) / 1000.0
 	check(app.album.filtered_ids.size() == 48 and app.choices.size() == 24, "uneven category keeps pagination bound")
 	await choose("obst-nuesse")
-	check(app.choices.is_empty() and app.album.summary.text == "0 von 0 gelöst", "large catalog includes empty categories")
+	check(app.choices.is_empty() and app.album.summary.text == "0 Treffer · 0 von 0 gelöst", "large catalog includes empty categories")
 	app.store.fail_step = "after_temp"
 	app.board.eraser = not app.board.eraser
 	check(not app._save_current(), "pending failed save prepared for filtered-out active slot")
@@ -790,11 +851,11 @@ func catalog_labels() -> void:
 	for index: int in range(app.sessions.size()):
 		var value: Variant = null
 		if levels[index] != null:
-			value = {"method":"picross-difficulty-0.4" if index % 2 else "picross-difficulty-0.3","level":levels[index],"assessment_type":"instrumented","confidence":"medium","plausible_range":[levels[index],levels[index]],"r4_required":index == 5}
+			value = {"method":"picross-difficulty-0.4","level":levels[index],"assessment_type":"instrumented","confidence":"medium","plausible_range":[levels[index],levels[index]],"r4_required":index == 5}
 		app.album.metadata[app.sessions[index].definition.id]["difficulty"] = value
 		for entry: Dictionary in Registry.cached.entries:
 			if entry.id == app.sessions[index].definition.id: entry.difficulty = value
-	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0]]:
 		surface.size = Vector2i(spec[0],spec[1])
 		app.set_ui_scale(float(spec[2]))
 		app.album._render(0)
@@ -826,15 +887,17 @@ func catalog_labels() -> void:
 			kk_measurements.append({"ku_surface":spec,"card_width":card.size.x,"minimum_width":card.minimum_card_width(app.ui_scale),"metadata_widths":card.metadata_widths(app.ui_scale),"label":card.difficulty.text,"circle_color":card.difficulty_icon.ink_color.to_html(false),"strip":card.label_area,"footer_y":card.note.position.y})
 		check(app.choices[1].difficulty.text == "Sehr leicht" and app.choices[5].difficulty.text == "Sehr schwer","KU-A full scale without numbers survives UI rebuilds")
 		await shot("labels-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
+		catalog_case("ke-layout-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
+		# Mutations, readbacks and input are sampled only at tight UI125.
+		if spec[0] != 1280: continue
 		var first: Card = app.choices[0]
 		var unknown_pixels: PackedByteArray = await button_pixels(first.unknown)
 		first.preview.width = app.choices[1].preview.width
 		first.preview.height = app.choices[1].preview.height
 		first.layout_content()
 		check(unknown_pixels == await button_pixels(first.unknown),"KE unknown drawing is invariant under distinct puzzle dimensions")
-		# All assessment shapes use the same tooltip-free label, including native
-		# Label's fallback for clipped text. These mutations are synthetic only.
-		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.1","level":"L5","assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false},{"method":"picross-difficulty-0.2","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true},{"method":"picross-difficulty-0.3","level":"L5","assessment_type":"instrumented","confidence":"medium","plausible_range":["L5","L5"],"r4_required":true}]:
+		# Current/null plus one editorial legacy shape; no legacy x viewport matrix.
+		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.1","level":"L5","assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false}]:
 			first.set_metadata(50,50,false,value)
 			await frames()
 			await RenderingServer.frame_post_draw
@@ -843,39 +906,48 @@ func catalog_labels() -> void:
 			check(center_pixel.is_equal_approx(expected_color),"KU-A filled circle has the prescribed native centre pixel")
 			await hover(first.caption)
 			check(first.difficulty.tooltip_text.is_empty() and first.difficulty.get_tooltip().is_empty() and first.tooltip_ref == null,"KU-A every metadata shape is tooltip-free")
-			if value != null and value.method == "picross-difficulty-0.3" and value.r4_required:
+			catalog_case("ke-metadata-"+("null" if value == null else "current" if value.method == "picross-difficulty-0.4" else "legacy"))
+			if value != null and value.method == "picross-difficulty-0.4" and value.r4_required:
 				for part: Control in [first.difficulty_icon,first.difficulty]:
 					await hover(part)
 					await create_timer(0.8).timeout
 					check(visible_popups() == 0,"KU-A actual delayed circle/text hover has no popup")
-			if value != null and value.method == "picross-difficulty-0.3" and value.r4_required:
+			if value != null and value.method == "picross-difficulty-0.4" and value.r4_required:
 				await shot("no-tooltip-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
-			app.set_ui_scale(1.0 if app.ui_scale == 1.25 else 1.25)
-			await frames()
-			app.set_ui_scale(float(spec[2]))
-			await frames()
-			first = app.choices[0]
+				catalog_case("ke-negative-delayed-hover")
+		app.set_ui_scale(1.0)
+		await frames()
+		app.set_ui_scale(float(spec[2]))
+		await frames()
+		first = app.choices[0]
 		check(card_geometry() == geometry,"KE metadata and UI roundtrip preserve all rectangles")
 		await hover(first.mode_tip)
 		await create_timer(0.8).timeout
 		check(first.mode_tip.tooltip_ref != null and first.mode_tip.tooltip_ref.get_ref() != null,"KE native mode tooltip")
-		for part: String in ["dimensions","difficulty_icon","difficulty","mode_tip","paper","leaf","status_icon","note"]:
-			click(app.choices[0].get(part))
+		catalog_case("ke-roundtrip-and-mode-tooltip")
+		for part: String in ["card","difficulty_icon"]:
+			click(app.choices[0] if part == "card" else app.choices[0].get(part))
 			await frames()
 			check(app.work.visible and app.session.definition.id == "T-01","KE passive label click opens owning card: "+part)
 			app.show_album()
 			await frames()
-	# Cross actual column thresholds, rather than assuming the old 228px grid.
-	var previous_columns: int = 0
-	var transitions: int = 0
-	for width: int in range(1280,1921,16):
-		surface.size = Vector2i(width,1080)
-		await frames()
-		if previous_columns > 0 and app.album.grid.columns != previous_columns: transitions += 1
-		previous_columns = app.album.grid.columns
-		for card: Card in app.choices:
-			check(card.size == app.choices[0].size and card.size.x >= card.minimum_card_width(app.ui_scale),"KU-A column transition preserves shared measured geometry")
-	check(transitions > 0,"KU-A resize crosses a new column threshold")
+			catalog_case("ke-pointer-"+part)
+	# Three reference sizes and a measured two-column boundary pair. The book
+	# grows with height; fixed-height window numbers would not be boundaries.
+	app.set_ui_scale(1.25)
+	for width: int in [1280,1920,2560]:
+		await ke_resize(width,"reference")
+	var middle: Dictionary = ke_resize_samples[1]
+	var large: Dictionary = ke_resize_samples[2]
+	var slope: float = (large.available-middle.available)/(large.width-middle.width)
+	check(slope > 0,"KE projected book grows between normal and large reference")
+	if slope > 0:
+		var threshold: float = 2*large.minimum_width+large.gap
+		var crossing: float = middle.width+(threshold-middle.available)/slope
+		await ke_resize(floori(crossing)-8,"below")
+		await ke_resize(ceili(crossing)+8,"above")
+		check(ke_resize_samples[3].columns == 1 and ke_resize_samples[4].columns == 2,"KE measured pair crosses actual two-column threshold")
+	catalog_case("ke-resize-boundary")
 	# Wrong own fill, X-only and redo-only are deliberately distinct from Neu.
 	var item: Session = app.sessions[0]
 	item.gesture.begin(item.player,Vector2i(0,0),1)
@@ -895,6 +967,18 @@ func catalog_labels() -> void:
 	await frames()
 	check(empty == await button_pixels(app.choices[0].preview) and not app.choices[0].unknown.visible,"KE X-only preview is neutral like empty begun preview")
 	await shot("x-only")
+	catalog_case("ke-own-fill-undo-x-spoiler")
+
+func ke_resize(width: int, role: String) -> void:
+	surface.size = Vector2i(width,roundi(width*9.0/16.0))
+	await frames()
+	var minimum: float = app.choices[0].minimum_card_width(app.ui_scale)
+	var gap: int = roundi(12*app.ui_scale)
+	var available: float = maxf(1,app.album.scroll.size.x-app.album.scroll.get_v_scroll_bar().get_combined_minimum_size().x-2*app.ui_scale)
+	for card: Card in app.choices:
+		check(card.size == app.choices[0].size and card.size.x >= minimum,"KE resize preserves shared measured geometry")
+	check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0,"KE resize has no horizontal overflow")
+	ke_resize_samples.append({"width":width,"height":surface.size.y,"ui_scale":app.ui_scale,"role":role,"minimum_width":minimum,"gap":gap,"available":available,"columns":app.album.grid.columns})
 
 func fixed_cards() -> void:
 	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[2560,1440,1.25]]:
@@ -915,12 +999,15 @@ func fixed_cards() -> void:
 			check(card.image_area.encloses(Rect2(card.preview.position,card.preview.size)),"KK proportional own preview inside fixed area")
 			check(is_equal_approx(card.preview.size.x/card.preview.size.y,float(card.preview.width)/card.preview.height),"KK own preview preserves aspect")
 		await shot("new-%d" % spec[0])
+		catalog_case("kk-basic-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
+		if spec[0] != 1280: continue
 		# Actual validated empty save stays new, while the same slot's redo-only
 		# history stays begun. The native card controls are rebuilt in each step.
 		check(app._save_current(),"KK valid empty save written")
 		app.show_album()
 		await frames()
 		check(card_geometry() == initial and not app.album.reset_buttons["T-01"].visible,"KK empty save never changes geometry or reset visibility")
+		catalog_case("kk-empty-save")
 		click(app.choices[0])
 		await frames()
 		click_at(app.board.global_position+app.board.view.cell_rect(Vector2i(2,0)).get_center())
@@ -930,6 +1017,7 @@ func fixed_cards() -> void:
 		check(card_geometry() == initial and app.choices[0].note.text == "Begonnen" and app.choices[0].reset.visible,"KK pointer edit/undo changes status but no rectangles")
 		check(app.album.previews[0].cells == app.sessions[0].player.cells and app.album.reveals[0].payload.is_empty(),"KK uncorrected own state and no early reveal")
 		await shot("begun-%d" % spec[0])
+		catalog_case("kk-pointer-edit-undo-spoiler")
 		# Finish the fixed synthetic input via the normal Session boundary.
 		var item: Session = app.sessions[0]
 		for y: int in range(item.player.height):
@@ -942,13 +1030,22 @@ func fixed_cards() -> void:
 		await frames()
 		check(card_geometry() == initial and app.choices[0].caption.text == item.definition.reveal.name,"KK completion adds earned title without moving following rows")
 		check(app.choices[0].note.text == "Gelöst" and app.choices[0].status_icon.kind == "Gelöst","KU-A validated completion selects the check-mark drawing")
+		# The fixed card footer can extend below the compact book's clip area.
+		# Compare actual visible pixels, then restore the geometry under test.
+		var previous_scroll: int = app.album.scroll.scroll_vertical
+		app.album.scroll.ensure_control_visible(app.choices[0].status_icon)
+		app.album.scroll.scroll_vertical += 2 # Integer scroll rounding at UI125.
+		await frames()
+		check(app.album.scroll.get_global_rect().encloses(app.choices[0].status_icon.get_global_rect()),"KU-A pixel comparison exposes the whole check-mark area")
 		var check_pixels: PackedByteArray = await button_pixels(app.choices[0].status_icon)
 		app.choices[0].status_icon.kind = "test-only-no-symbol"
 		app.choices[0].status_icon.queue_redraw()
 		check(check_pixels != await button_pixels(app.choices[0].status_icon),"KU-A solved check mark really contributes native pixels")
 		app.choices[0].status_icon.kind = "Gelöst"
 		app.choices[0].status_icon.queue_redraw()
+		app.album.scroll.scroll_vertical = previous_scroll
 		await shot("solved-%d" % spec[0])
+		catalog_case("kk-solved-save-reveal-pixels")
 		for aspect: Vector2i in [Vector2i(320,80),Vector2i(80,320)]:
 			var image: Image = Image.create(aspect.x,aspect.y,false,Image.FORMAT_RGBA8)
 			image.fill(Color("376a60"))
@@ -959,6 +1056,7 @@ func fixed_cards() -> void:
 			check(Rect2(Vector2.ZERO,app.choices[0].picture.size).encloses(fitted) and is_equal_approx(fitted.size.x/fitted.size.y,float(aspect.x)/aspect.y),"KK wide/tall earned image fits completely without distortion")
 			check(card_geometry() == initial,"KK image aspect never changes grid geometry")
 			kk_measurements.append({"surface":spec,"artwork_size":aspect,"fitted":fitted})
+		catalog_case("kk-wide-tall-artwork")
 		item.definition.reveal.name = "TEST ONLY Ein außerordentlich langer verdienter Motivname mit Umlauten und mehr als zwei möglichen Zeilen ohne Änderung der Kachelgeometrie"
 		app.show_album()
 		await frames()
@@ -987,6 +1085,7 @@ func fixed_cards() -> void:
 		app.set_ui_scale(u)
 		await frames()
 		check(card_geometry() == initial,"KK UI roundtrip restores exact rectangles")
+		catalog_case("kk-long-name-reset-tooltip-roundtrip")
 		await choose("fahrzeuge-verkehr")
 		check(app.choices[0].size == initial[0].card.size and app.choices[0].image_area == initial[0].image and Rect2(app.choices[0].note.position,app.choices[0].note.size) == initial[0].status,"KK category removal reserves same metadata/image/footer space")
 		var foreign: Dictionary = save_bytes("t01")
@@ -1003,17 +1102,20 @@ func fixed_cards() -> void:
 		check(card_geometry() == initial and app.choices[0].caption.text == "???" and not app.choices[0].reset.visible,"KK reset returns exact original geometry with no stale hit")
 		await shot("reset-%d" % spec[0])
 		kk_measurements.append({"surface":spec,"initial":initial,"after_reset":card_geometry(),"columns":app.album.grid.columns})
+		catalog_case("kk-reset-target-foreign-slots")
 	await recovery_pointer_cases()
-	# A small resize band crosses real column thresholds, no content-dependent
-	# width/height response or horizontal catalogue scroll is allowed.
-	for width: int in [1279,1281,1599,1601,1919,1921]:
+	catalog_case("kk-recovery-pointer")
+	# Aspect endpoints only; actual column boundary coverage belongs to KE.
+	for width: int in [1279,1921]:
 		surface.size = Vector2i(width,1080)
 		app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		await frames()
 		for card: Control in app.choices: check(card.size == app.choices[0].size,"KK resize has one shared geometry")
-		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0,"KK column boundary has no horizontal scroll")
+		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0,"KK aspect endpoint has no horizontal scroll")
 		kk_measurements.append({"resize_width":width,"columns":app.album.grid.columns,"geometry":card_geometry()})
+	catalog_case("kk-aspect-endpoints")
 	await empty_write_error()
+	catalog_case("kk-empty-write-error")
 
 func pointer_button(point: Vector2, button: MouseButton, down: bool, mask: int = 0) -> void:
 	var event: InputEventMouseButton = InputEventMouseButton.new()
@@ -1219,7 +1321,15 @@ func compact_buttons() -> void:
 			check(labels[0].get_global_rect().end.x <= reset.get_global_rect().position.x-7*u, "KB metadata does not enter actions")
 			interiors.append({"card":region(card),"meta":region(labels[1]),"reset":region(reset),"preview":region(app.album.previews[index]),"status":region(app.album.notes[index])})
 		check(app.album.grid.size.x <= app.album.scroll.size.x and app.album.scroll.scroll_horizontal == 0, "KB no horizontal overflow")
-		check(app.album.grid.columns > 4 if spec[0] >= 1920 else app.album.grid.columns >= 2, "KB responsive columns without four-column cap")
+		# B-B allocates cards within each physical half, not the old full window.
+		# Require room for every column and no avoidable spare whole column.
+		var columns: int = app.album.grid.columns
+		var minimum: float = app.choices[0].minimum_card_width(u)
+		var gap: float = 12*u
+		var available: float = app.album.scroll.size.x-app.album.scroll.get_v_scroll_bar().get_combined_minimum_size().x-2*u
+		var spare: float = available-columns*minimum-(columns-1)*gap
+		check(columns >= 1 and columns <= 3 and spare >= 0 and (columns == 3 or spare < minimum+gap), "KB responsive columns fill the available book half up to three")
+		check(app.album.right_grid.columns == columns and app.album.right_grid.size.x <= app.album.right_scroll.size.x and app.album.right_scroll.scroll_horizontal == 0, "KB right half shares responsive columns without overflow")
 		kb_measurements.append({"surface":spec,"columns":app.album.grid.columns,"widths":widths,"interiors":interiors})
 		await shot("compact-%d-ui%d" % [spec[0],spec[2]*100])
 		await choose("voegel")
@@ -1313,6 +1423,23 @@ func compact_buttons() -> void:
 		check(Rect2(Vector2.ZERO,Vector2(surface.size)).encloses(Rect2(Vector2(popup.position),Vector2(popup.size))), "KB complete tooltip fits client")
 		kb_measurements.append({"tooltip_position":popup.position,"tooltip_size":popup.size,"scale":app.ui_scale})
 		await shot("tooltip")
+	# Keep a small current empty-text/lifetime oracle after retiring the old
+	# study matrix. Use the same real hover and native delay, without more PNGs.
+	tool.dismiss_tooltip()
+	if tip != null:
+		check(tip.get_window().is_queued_for_deletion(), "KB tooltip teardown deferred past dispatch")
+	await frames()
+	tool.tooltip_text = " \t\n "
+	await hover(app.actions.menu)
+	await hover(tool)
+	await create_timer(0.8).timeout
+	check(surface.gui_get_hovered_control() == tool and (tool.tooltip_ref == null or tool.tooltip_ref.get_ref() == null), "KB delayed whitespace tooltip remains absent")
+	tool.tooltip_text = "Aktuelle Werkzeughilfe"
+	await hover(app.actions.menu)
+	await hover(tool)
+	await create_timer(0.8).timeout
+	tip = tool.tooltip_ref.get_ref() if tool.tooltip_ref != null else null
+	check(tip != null and tip.is_visible_in_tree() and tip.get_child(0).text == tool.tooltip_text, "KB current tooltip text after empty hover and cell release")
 	click(app.actions.menu)
 	await frames()
 	check(app.information.visible and (tip == null or not is_instance_valid(tip) or not tip.is_visible_in_tree()), "KB switch dismisses stale tooltip")

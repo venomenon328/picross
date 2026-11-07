@@ -311,8 +311,7 @@ static func scene_cases(t: SceneTree) -> void:
 
 static func app_cases(t: SceneTree) -> void:
 	SaveStore.test_root_override = SaveStore.test_root_override.path_join("h1")
-	var app: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	app.open_puzzle()
 	await t.process_frame
@@ -369,10 +368,9 @@ static func app_cases(t: SceneTree) -> void:
 	var damaged: FileAccess = FileAccess.open(path, FileAccess.WRITE)
 	damaged.store_string("invalid isolated H1 primary")
 	damaged.close()
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await t.process_frame
-	app = load("res://main.tscn").instantiate()
-	t.root.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	app.open_puzzle()
 	await t.process_frame
@@ -382,5 +380,5 @@ static func app_cases(t: SceneTree) -> void:
 	app.set_clue_completion(false)
 	app.set_clue_completion(true)
 	t.check(app.slot_status[0] == "recovered" and FileAccess.get_file_as_string(path) == recovery_before, "H1 display cannot repair or overwrite recovery")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await t.process_frame

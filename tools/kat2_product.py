@@ -54,7 +54,7 @@ def fixture(project: Path, saves: Path, mode: str) -> dict:
     return marker
 
 
-def run(root, workspace, output, engine, environment, phase, python_phase, host, imported_base):
+def run(root, workspace, output, engine, environment, run_phase, python_phase, host, imported_base):
     directory = output / "kat2"
     directory.mkdir()
     reports = []
@@ -114,16 +114,19 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host,
         env = environment.copy()
         env.update(P1_TEST_SAVE_ROOT=str(saves), KAT2_OUTPUT=str(directory), KAT2_MODE=mode)
         if mode in ("pages", "adapter", "at"):
-            phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
-        command = [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy",
-                   "--script", "res://tests/kat2_probe.gd", "--", "--p1-capture"]
+            run_phase("kat2-" + mode + "-import", [engine, "--headless", "--path", str(project), "--import"], phase_env=env)
         if host == "Linux":
-            command = ["xvfb-run", "-a"] + command
             env["LIBGL_ALWAYS_SOFTWARE"] = "1"
-        phase("kat2-" + mode, command, "KAT2_PROBE_OK", phase_env=env)
+        # Keep the executable probe reader explicit for the lifecycle binding.
+        run_phase("kat2-" + mode, (["xvfb-run", "-a"] if host == "Linux" else []) +
+                  [engine, "--path", str(project), "--rendering-driver", "opengl3", "--audio-driver", "Dummy",
+                   "--script", "res://tests/kat2_probe.gd", "--", "--p1-capture"],
+                  "KAT2_PROBE_OK", phase_env=env)
         report = json.loads((directory / (mode + ".json")).read_text(encoding="utf-8"))
         if report["failures"] or not report["checks"]:
             raise toolchain.PreflightError("KAT2 native assertions failed")
+        from native_results import validate_catalog_cases
+        validate_catalog_cases(report)
         if mode == "information":
             after_quit = {p.name: toolchain.sha256_file(p) for p in (saves / "error-quit").iterdir() if p.is_file()}
             if not report["quit_slot_hashes"] or after_quit != report["quit_slot_hashes"]:
@@ -139,13 +142,6 @@ def run(root, workspace, output, engine, environment, phase, python_phase, host,
                     base_unchanged=True, elapsed_seconds=time.monotonic()-began)
     reuse = python_phase("kat2-imported-base-copies", verified_copies)
     write_json(directory/"import-copies.json", reuse)
-    # Keep compact native images without repeating the large paper background.
-    # Full framebuffer originals remain local; crops preserve exact native pixels.
-    from native_images import crop_native
-    import os
-    crops, image_costs = python_phase("kat2-image-processing", lambda: crop_native(
-        directory, reports, compare=os.environ.get("P1_COMPARE_NATIVE_PNG") == "1"))
-    summary = dict(format="picross-kat2-product-v1", test_only=True, reports=reports,
-                   crops=crops, image_costs=image_costs, crop="Native control rectangles and one tight layout; no resizing. Full contexts remain local.")
+    summary = dict(format="picross-kat2-product-v1", test_only=True, reports=reports)
     write_json(directory / "summary.json", summary)
-    return summary, sorted(p for p in directory.iterdir() if not p.name.endswith("-context.png"))
+    return summary, sorted(directory.iterdir())

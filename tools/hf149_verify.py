@@ -69,14 +69,10 @@ def verify(directory: Path) -> dict:
             and any(r["rows"] > 1 for r in overlays), "overflow on both axes and UI scales")
     for r in overlays:
         overlay(r)
-        require((directory / r["file"]).is_file(), "native original image")
-    for width in (1280,1920,2560):
-        require((directory / f"hf-{width}-single.png").is_file(), "one-line scene sample")
     reported = [r for r in native["records"] if r["kind"] == "reported"]
     require(len(reported) == 2 and [r["wish"] for r in reported] == [12,72]
             and reported[0]["cell"] < reported[1]["cell"]
             and not reported[0]["overlay"] and reported[1]["overlay"], "reported rectangle zoom transition")
-    require(all((directory / r["file"]).is_file() for r in reported), "reported native scene images")
     controls = []
     for label, source, checker, mutation in (
         ("unused fitting slot", slots[0], slot, lambda r: r["reserve"].__setitem__(1,r["reserve"][1]-1)),
@@ -93,7 +89,6 @@ def verify(directory: Path) -> dict:
             raise PreflightError("HF149 negative control escaped: " + label)
     result = {"slot_records":len(slots), "scene_records":len(views), "overlays":len(overlays),
               "fresh_processes":[reports[s]["checks"] for s in ("write","read")],
-              "native_checks":native["checks"], "negative_controls":controls,
-              "files":{p.name:sha256_file(p) for p in sorted(directory.glob("*.png"))}}
+              "native_checks":native["checks"], "negative_controls":controls}
     (directory / "hf-acceptance.json").write_text(json.dumps(result,indent=2)+"\n",encoding="utf-8")
     return result

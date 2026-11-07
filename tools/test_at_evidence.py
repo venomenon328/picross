@@ -27,10 +27,10 @@ class OriginalEvidenceTests(unittest.TestCase):
                 samples.append(dict(kind=kind,point=[x,0],source=[v/255 for v in source],
                                     actual=[v/255 for v in actual],background=[240/255]*3,opacity=1))
             name=f'at-catalog-{window[0]}'
-            png(self.root/(name+'.png'),pixels);png(self.root/(name+'-paper.png'),[[240]*3]*5)
+            png(self.root/(name+'.png'),pixels+[[240]*3]*5,height=2)
             report['at_measurements'].append(dict(window=window,small=dict(file=name+'.png',
-                background_file=name+'-paper.png',bounds=[0,0,5,1],framebuffer=window[:2],samples=samples)))
-        self.assertEqual(gate.native(self.root,report,('small',)),15)
+                bounds=[0,0,5,1],framebuffer=window[:2],samples=samples)))
+        self.assertEqual(gate.native(self.root,report,('small',)),5)
         for mutate in [lambda r:r['at_measurements'].pop(),
                        lambda r:r['at_measurements'][0]['small']['samples'][1]['source'].__setitem__(3,0),
                        lambda r:r['at_measurements'][0]['small']['samples'][3].update(opacity=.5)]:
@@ -38,7 +38,7 @@ class OriginalEvidenceTests(unittest.TestCase):
             with self.assertRaises(ValueError):gate.native(self.root,candidate,('small',))
         # Even a matching JSON assertion cannot bless a removed white detail.
         item=report['at_measurements'][0]['small'];pixels[1]=[240]*3
-        png(self.root/item['file'],pixels);item['samples'][1]['actual']=[240/255]*3
+        png(self.root/item['file'],pixels+[[240]*3]*5,height=2);item['samples'][1]['actual']=[240/255]*3
         with self.assertRaisesRegex(ValueError,'composition'):gate.native(self.root,report,('small',))
 
     def test_browser_rejects_finished_frame_reported_as_blend(self):
