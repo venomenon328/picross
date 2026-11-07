@@ -1,6 +1,6 @@
 {
   "format": "sbr-a-review-originals-v1",
-  "product_head": "a4909879efdc77c834c27e17736d8152c9d525c1",
+  "product_head": "57441873a58ca1906224cb98379d4d69b70ad66c",
   "base_commit": "dd6511ea65191bc7313a9adf562e148d6febbc7b",
   "environment": {
     "os": "Windows-11-10.0.26200-SP0",
@@ -163,5 +163,8 @@
       "sha256": "c6ecc95c2085f2002a119db9be891ea2c1e71d5e0e9a4dc2e673c140f98f9f1a"
     }
   ],
-  "note": "Final capture from the clean product branch after test-only inventory follow-up; runtime sources match every listed SHA-256. Review branch is binary transport only, never a product integration branch."
+  "note": "Fresh native capture from the clean final product branch after the N02 test-only correction. Every listed runtime source matches the captured project. Review branch is binary transport only, never a product integration branch.",
+  "capture_script_sha256": "de54a48a7202c4bacd1025c7664f2f13be4020a740b9da5e6f91e625c5507587",
+  "synthetic_fixture_sha256": "e3d0852799aefc375735e6aa89b1129ea6c3e12da680631054d5d547f0ec03db",
+  "capture_script_executed_sha256": "b5bd2e9f03ad3281d8d8aa5112fbe0ed3c6e8f5b9d82d75db3b6861047ffd981"
 }
