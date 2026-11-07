@@ -379,7 +379,7 @@ def cleanup_temps(root, j, raw, guard_fn, *, view):
 
 
 def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
-            publication_seconds=None, recovery_seconds=None):
+            publication_seconds=None, recovery_seconds=None, _verification=None):
     diagnostic.seconds(publication_seconds)
     diagnostic.seconds(recovery_seconds)
     from . import catalog_transaction as tx
@@ -391,15 +391,19 @@ def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
         with diagnostic.operation("Publication", 1800 if publication_seconds is None else publication_seconds,
                                   "registration-default" if publication_seconds is None else "override",
                                   recovery_seconds=recovery_seconds):
-            return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock)
+            return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock, _verification=_verification)
+    require(_verification is None, "Verification context requires registration")
     with io.budget(300):
         return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock)
 
 
-def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
+def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verification=None):
     from . import catalog_transaction as tx
     from .content_registry import check_checkout
     additions = additions or {}
+    if _verification is not None:
+        from .registration_verification import require_context
+        require_context(_verification)
     diagnostic.begin_segment("P0")
     tx.validate_journal(root, j, before_write=True)
     raw = journal_bytes(j)
@@ -413,6 +417,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
         sync_directory(p)
     if os.name != "nt": require(hasattr(ctypes.CDLL(None), "renameat2"), "Atomic no-replace rename unavailable")
     addition_preflight(root,[temps[n] for n in j['additions']])
+    if _verification is not None: _verification.writer(root, j, additions)
     _checkpoint("P0")
     diagnostic.begin_segment("P1")
     stage_name = "content/.registration-journal-" + io.checksum(raw) + ".tmp"
@@ -446,6 +451,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
         diagnostic.begin_segment("P3")
         for i, n in enumerate(sorted(j["additions"])):
             guard_fn()
+            if _verification is not None: _verification.addition(n, additions[n])
             data = io.read(additions[n].parent, additions[n].name, 64 * 1024 * 1024)
             require(io.checksum(data) == j["additions"][n], "Staged package changed")
             write(root, n, data, temps[n], guard_fn,package_addition=True)
@@ -460,7 +466,9 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
         if j["operation"] == "registration":
             from .target_adapter import verify_export
             before, after = (io.json_bytes(j[s][tx.REGISTRY].encode(), 8 * 1024 * 1024) for s in ("old", "new"))
-            verify_export(io.safe(root, tx._delta(j, before, after)))
+            package = tx._delta(j, before, after)
+            if _verification is None: verify_export(io.safe(root, package))
+            else: _verification.written(root, package, raw)
         diagnostic.begin_segment("P4")
         names = sorted(n for n in j["new"] if n != tx.RUNTIME and j["old"][n] != j["new"][n])
         if j["old"][tx.RUNTIME] != j["new"][tx.RUNTIME]: names.append(tx.RUNTIME)
@@ -479,7 +487,8 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None):
             _checkpoint("P5", tx.RUNTIME)
             if fail_step in ("crash-"+tx.RUNTIME,"crash-runtime"): raise InterruptedError("Injected transaction interruption: "+tx.RUNTIME)
             if fail_step == tx.RUNTIME: raise OSError("Injected update failure: "+tx.RUNTIME)
-        guard_fn(); check_checkout(root, replay=j['operation']=='registration', pending_journal=raw); guard_fn()
+        guard_fn(); check_checkout(root, replay=j['operation']=='registration', pending_journal=raw,
+                                   **({"_verification": _verification} if _verification is not None else {})); guard_fn()
         diagnostic.begin_segment("P6")
         cleanup_temps(root, j, raw, guard_fn, view=view)
         _checkpoint("P6"); guard_fn()

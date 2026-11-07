@@ -128,6 +128,39 @@ class SelectionTests(unittest.TestCase):
 
 
 class EvidenceTests(unittest.TestCase):
+    def test_package_runner_stages_compact_originals_for_the_real_reader(self):
+        import ci_modular as ci
+        import os
+        # Synthetic report fixtures exercise the real handoff/reader, not a
+        # production pass. The selected CI module still runs the actual replay.
+        plan = dict(source_head='a'*40, base_commit='b'*40, tested_checkout='c'*40,
+                    run_id='123', run_attempt='1', player={'required': False},
+                    modules=['production.adapter', 'production.catalog'],
+                    package={'evidence': {'mode': 'none', 'purpose': None, 'expires': None}})
+        binding = ci.legacy_binding(plan)
+        for mutation in (None, 'changed', 'missing', 'extra'):
+            with self.subTest(mutation=mutation), tempfile.TemporaryDirectory() as temporary:
+                root = Path(temporary)
+                def produce(args, name, work, rows):
+                    self.assertEqual(name, 'production')
+                    directory = Path(args[-1])
+                    report = fixture(binding, directory)
+                    write(directory/'za1-replay/internal-checkout/content/registry.json', {'synthetic': True})
+                    report['files'] = files(directory, staging=True)
+                    write(directory/'production-result.json', report)
+                    if mutation == 'changed': (directory/'tests.log').write_bytes(b'changed')
+                    if mutation == 'missing': (directory/'tests.json').unlink()
+                    if mutation == 'extra': (directory/'unbound.txt').write_bytes(b'unbound')
+                with patch.object(ci, 'command', side_effect=produce), patch.object(ci, 'summary'), \
+                     patch.object(ci, 'git', side_effect=['', plan['tested_checkout']]), \
+                     patch.dict(os.environ, {'GITHUB_OUTPUT': ''}):
+                    report = ci.execute(plan, root/'out', root/'cache')
+                self.assertEqual(report['accepted'], mutation is None, report['error'])
+                if mutation is not None:
+                    self.assertIn('production files', report['error'])
+                self.assertFalse((root/'out/diagnostics').exists())
+                self.assertFalse(list(root.glob('picross-ci-*')))
+
     def test_relative_output_becomes_absolute_for_checkout_replay(self):
         import os
         import production_ci
