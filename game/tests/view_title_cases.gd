@@ -1,4 +1,5 @@
 extends RefCounted
+const Text = preload("res://ui/ui_text.gd")
 ## Cheap layout/resource regression in the existing catalog/information process.
 static func run(r: SceneTree) -> void:
 	var app: Control = r.app
@@ -47,6 +48,30 @@ static func run(r: SceneTree) -> void:
 			var last: Control = app.animation_toggle if section == "settings" else app.help_panel.chapters[app.help_panel.chapter].get_children()[-1]
 			r.check(last.get_global_rect().end.y <= scroll.get_global_rect().end.y+1,"BTI: content end reachable")
 			scroll.scroll_vertical = 0
+	# Inspect the actual help labels in the existing information process.
+	app.show_information("help")
+	for scale: float in [1.0,1.25]:
+		app.set_ui_scale(scale)
+		await r.frames()
+		var sizes: Dictionary = {22: 0, 19: 0}
+		var corrected := false
+		var clue_copy := false
+		for chapter: VBoxContainer in app.help_panel.chapters:
+			var chapter_headings := 0
+			for node: Node in chapter.find_children("*","Label",true,false):
+				var label: Label = node
+				var base: int = int(label.get_meta("base_font"))
+				if label.has_meta("help_heading"):
+					chapter_headings += 1
+					r.check(base in [19,22] and label.get_theme_font("font") == app.WORK_TITLE_FONT,"HIL-TYPO: actual heading uses shared Bakso")
+					if base in sizes: sizes[base] += 1
+				else:
+					r.check(label.get_theme_font("font") == Text.font(),"HIL-TYPO: normal copy retains Pangolin")
+				if label.text == "Unbekannt heißt: Hier hast du noch nichts festgelegt. Eine Füllung trägt Farbe. Ein X bedeutet: Hier gehört keine Farbe hin. Radieren entfernt einen Eintrag und macht das Feld wieder unbekannt.": corrected = true
+				if label.text.contains("Gleich blasse Zahl mit handschriftlichem X:"): clue_copy = true
+				r.check(label.get_theme_font_size("font_size") == roundi(base*scale),"HIL-TYPO: base font scales")
+			r.check(chapter_headings > 0,"HIL-TYPO: headings in each chapter")
+		r.check(sizes[22] > 0 and sizes[19] > 0 and corrected and clue_copy,"HIL-TYPO: both roles and exact copy")
 	# Missing files do not create an empty heading or hard preload failure.
 	for heading: Control in [app.catalog_title,app.info.help_heading,app.info.settings_heading]:
 		heading.load_art("res://art/drawing/view_titles/missing.png")
