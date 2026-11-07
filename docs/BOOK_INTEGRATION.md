@@ -11,6 +11,18 @@ gegebenenfalls ausgefilterten Karte. Recovered/backup_invalid darf bei gültigem
 rekonstruiertem begonnenem Stand angeboten werden, behält aber seine Reparaturgrenzen.
 K-B-T02 prüft diesen Weg einmalig im echten Windows-Buch; keine neue Dauer-HIL-Suite.
 
+**RF-A / #541:** Schon die Katalogpräsentation während der gesperrten
+Buchaufnahme bindet die eigene Fortschrittsminiatur synchron; die normale
+Aktualisierung beobachtet zusätzlich Zelländerungen im offenen Katalog.
+Der Kasten bleibt links an der rechten Kopfzone ausgerichtet und verwendet
+ausschließlich deren halbe oder volle sichere Breite. Gemessener Textumbruch,
+aktuelle UI-Skala, vollständige Miniatur und Innenränder bestimmen den Fit;
+bei 2560×1440/UI100 passt Halbbreite. Die feste Kopfhöhe, Fehlerclip,
+Sortier-/Filterabstand, Karten und Fußnavigation bleiben geometrisch unabhängig.
+Die kleine Regression bleibt im vorhandenen `catalog/pages`-Prozess;
+[RF-A-T02/R01/M01](https://github.com/venomenon328/picross/issues/541) sind
+einmalige Windows-/Sichtgates am Lieferhead.
+
 Arbeitsvertrag zu [B-B-V01](https://github.com/venomenon328/picross/issues/498)
 unter [#493](https://github.com/venomenon328/picross/issues/493), Basis
 `2a0d9e4ae21802637dc26ff8fdf904bf27772972`. Die gewählte B-A-N06-Fassung ist

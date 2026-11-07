@@ -85,6 +85,7 @@ static func run(probe) -> void:
 	probe.check(app.recent_id() == id and app.session.player.cursor == 0,"K-B real Undo updates begun redo-only marker")
 	app._redo()
 	probe.check(app.recent_id() == id and app.session.player.cursor == 1,"K-B real Redo updates marker")
+	await freshness_layout(probe)
 	app.show_album()
 	app.album.apply_filters("solved","all",0,0,"","")
 	await probe.frames()
@@ -105,6 +106,77 @@ static func run(probe) -> void:
 	app.album.reset_filters()
 	await retry_layout(probe)
 	probe.catalog_case("k-b-recent")
+
+static func pixel(probe, index: int, filled: bool) -> void:
+	await probe.frames()
+	await RenderingServer.frame_post_draw
+	var preview = probe.app.recent_panel.preview
+	var step: float = preview.image_rect().size.x/preview.width
+	var point: Vector2 = preview.global_position+Vector2(index%preview.width+0.5,index/preview.width+0.5)*step
+	var actual: Color = probe.surface.get_texture().get_image().get_pixelv(Vector2i(point))
+	var expected: Color = Color(probe.app.session.definition.palette[0].color) if filled else Color("faf6ec")
+	probe.check(absf(actual.r-expected.r)+absf(actual.g-expected.g)+absf(actual.b-expected.b) < 0.03,"RF-A own miniature pixel before any hover (filled=%s)" % filled)
+
+static func freshness_layout(probe) -> void:
+	var app = probe.app
+	# This is the real catalog destination path during disabled capture. No
+	# _process, pointer movement, focus change or second refresh may bind it.
+	app.session.player.commit([{"index":84,"before":-1,"after":1}])
+	app._on_commit()
+	app.process_mode = Node.PROCESS_MODE_DISABLED
+	app.present_album()
+	probe.check(app.recent_panel.preview.cells == app.session.player.cells,"RF-A destination binds synchronously with processing disabled")
+	await pixel(probe,84,true)
+	app.process_mode = Node.PROCESS_MODE_INHERIT
+	# Live update with the catalog left open, then Undo/Redo without mouse.
+	app._undo()
+	await pixel(probe,84,false)
+	app._undo()
+	await pixel(probe,84,false)
+	probe.check(app.recent_panel.visible and app.session.player.cursor == 0 and not app.session.player.history.is_empty(),"RF-A valid empty redo-only miniature remains visible")
+	app._redo()
+	app._redo()
+	await pixel(probe,84,true)
+	for spec: Array in [[1280,720,1.25],[1920,1080,1.0],[1920,1080,1.25],[2560,1440,1.0],[2560,1440,1.25],[1920,1200,1.25],[2560,1440,1.0]]:
+		probe.surface.size = Vector2i(spec[0],spec[1])
+		app.set_ui_scale(spec[2])
+		await probe.frames()
+		var panel = app.recent_panel
+		var width: float = app.album.summary.size.x
+		probe.check(absf(panel.size.x-width/2) < 0.01 or absf(panel.size.x-width) < 0.01,"RF-A box is exactly half or full projected heading width")
+		if spec == [2560,1440,1.0]: probe.check(absf(panel.size.x-width/2) < 0.01,"RF-A 1440p UI100 half width")
+		if spec == [1280,720,1.25]: probe.check(absf(panel.size.x-width) < 0.01,"RF-A narrow UI125 full width")
+		probe.check(absf(panel.position.x-app.album.summary.position.x) < 0.01 and panel.get_rect().end.x <= app.album.summary.get_rect().end.x+0.01,"RF-A fixed left edge and safe right boundary")
+		probe.check(panel.fits(panel.size.x,panel.size.y),"RF-A both shaped text lines and full miniature fit")
+		var caption: Rect2 = panel.caption.get_global_rect()
+		var detail: Rect2 = panel.detail.get_global_rect()
+		var preview: Rect2 = panel.preview.get_global_rect()
+		probe.check(absf(caption.position.x-panel.global_position.x-12*app.ui_scale) < 0.01 and absf((caption.position.y+detail.end.y)/2-panel.get_global_rect().get_center().y) < 0.01,"RF-A text group retains inset and vertical centre")
+		probe.check(caption.end.x <= preview.position.x-8*app.ui_scale+0.01 and detail.end.x <= preview.position.x-8*app.ui_scale+0.01 and preview.size == Vector2.ONE*56*app.ui_scale,"RF-A no overlap or miniature shrink")
+		probe.check(absf(app.album.sort_choice.global_position.y-panel.get_global_rect().end.y-8*app.ui_scale) < 0.1,"RF-A unchanged eight UI gap to sorting/filter")
+		await pixel(probe,84,true)
+	# A fit-derived boundary, same geometry, and scale roundtrip: no arbitrary
+	# screen-size breakpoint and no intermediate width during the fallback.
+	var panel = app.recent_panel
+	var original: Vector2 = panel.size
+	var original_position: Vector2 = panel.position
+	var text_width: float = maxf(panel.caption.get_theme_font("font").get_string_size(panel.caption.text,HORIZONTAL_ALIGNMENT_LEFT,-1,15).x,panel.detail.get_theme_font("font").get_string_size(panel.detail.text,HORIZONTAL_ALIGNMENT_LEFT,-1,15).x)
+	var boundary: float = text_width+panel.caption.get_theme_stylebox("normal").get_minimum_size().x+84
+	for width: float in [boundary-2,boundary+2,boundary-2]:
+		probe.check(panel.fits(width,68) == (width > boundary),"RF-A shaped text fit switches directly at measured boundary")
+	probe.check(panel.size == original and panel.position == original_position,"RF-A fit measurement does not mutate control geometry")
+	app.select_puzzle(3)
+	await probe.frames()
+	app.session.player.commit([{"index":84,"before":-1,"after":1}])
+	app._on_commit()
+	app.show_album()
+	await pixel(probe,84,true)
+	probe.check(app.recent_panel.preview.style_identity == str(app.session.definition.id)+"/recent","RF-A another recent ID binds before hover")
+	# Return to the first ID for the existing filter/navigation/reset cases.
+	app.select_puzzle(1)
+	await probe.frames()
+	app._undo()
+	app._redo()
 
 static func retry_layout(probe) -> void:
 	# B-01: exercise clipping and actual edge hits, not just the Button minimum.
