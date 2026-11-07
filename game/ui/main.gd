@@ -70,6 +70,8 @@ var repair_id: String = ""
 var work: Control
 var ending: Control
 var completion_reset: BookButton
+var completion_image: BookButton
+var completion_grid: BookButton
 var title: Label
 var album_button: Button
 var undo_button: Button
@@ -271,6 +273,10 @@ func _build() -> void:
 	ending.add_child(completion_title)
 	completion_reset = _icon_button("reset", func() -> void: _ask_reset_id(str(session.definition.id), "ending"), ending)
 	completion_reset.tooltip_text = "Rätsel zurücksetzen"
+	completion_image = _text_button("Bild", func() -> void: _select_completion(false))
+	completion_grid = _text_button("Raster", func() -> void: _select_completion(true))
+	ending.add_child(completion_image)
+	ending.add_child(completion_grid)
 
 	minimum_message = label("Mindestens 1280 × 720 logische Fensterfläche benötigt.\nBitte das Fenster vergrößern oder die Anzeigeskalierung prüfen.", 20)
 	minimum_message.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -405,6 +411,7 @@ func present_album() -> void:
 
 func open_puzzle() -> void:
 	if session == null or slot_status[sessions.find(session)] == "error": return
+	reveal_view.select_grid(false)
 	information.hide()
 	album.hide()
 	album.suspend()
@@ -464,12 +471,30 @@ func _layout_completion() -> void:
 	var bottom := paper.end.y - 68*u
 	_place(completion_reset, Rect2(Vector2(paper.get_center().x-22*u,bottom-44*u),Vector2.ONE*44*u))
 	_place(completion_title, Rect2(Vector2(left,bottom-56*u-caption_height),Vector2(width,caption_height)))
-	var bounds := Rect2(Vector2(left,top),Vector2(width,maxf(1,completion_title.position.y-16*u-top)))
+	var switch_top := completion_title.position.y-56*u
+	_place(completion_image, Rect2(Vector2(paper.get_center().x-92*u,switch_top),Vector2(88,44)*u))
+	_place(completion_grid, Rect2(Vector2(paper.get_center().x+4*u,switch_top),Vector2(88,44)*u))
+	for item: BookButton in [completion_image,completion_grid]:
+		item.ui_scale = u
+		item.add_theme_font_size_override("font_size",roundi(15*u))
+	var bounds := Rect2(Vector2(left,top),Vector2(width,maxf(1,switch_top-16*u-top)))
 	var matrix: Array = []
 	if session.completed:
 		for y: int in range(session.player.height):
 			matrix.append(session.player.cells.slice(y*session.player.width,(y+1)*session.player.width))
-	reveal_view.configure(session.reveal(),matrix,session.definition.palette,bounds)
+	reveal_view.configure(session.reveal(),matrix,session.definition.palette,bounds,str(session.definition.id),int(session.definition.revision))
+	_update_completion_switch()
+
+func _select_completion(grid: bool) -> void:
+	reveal_view.select_grid(grid)
+	_update_completion_switch()
+
+func _update_completion_switch() -> void:
+	for item: BookButton in [completion_image,completion_grid]:
+		item.visible = not reveal_view.active and session != null and session.completed
+		item.disabled = reveal_view.active
+	completion_image.selected = not reveal_view.grid_selected
+	completion_grid.selected = reveal_view.grid_selected
 
 func _completion_progress(work_alpha: float, caption_alpha: float) -> void:
 	work.modulate.a = work_alpha
@@ -481,6 +506,7 @@ func _completion_progress(work_alpha: float, caption_alpha: float) -> void:
 	completion_title.modulate.a = caption_alpha
 	completion_reset.modulate.a = caption_alpha
 	completion_reset.disabled = reveal_view.active
+	_update_completion_switch()
 
 func _completion_finished() -> void:
 	work.hide()
