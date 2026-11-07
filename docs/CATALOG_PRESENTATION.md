@@ -65,7 +65,7 @@ Fachstand: Spezifikation 2.3 · Workflowabgleich: 06.11.2026 · KU-A/B und HZ-A/
 und die [Größenpräzisierung](https://github.com/venomenon328/picross/issues/485#issuecomment-6704802593) binden die Umsetzung und ihre getrennten Gates. Der Katalog führt einen gemeinsamen
 angewendeten Sitzungszustand: Kategorie, Status (Alle/Noch offen/Neu/Begonnen/Gelöst),
 Modus (Alle/Monochrom/Farbe), optionale inklusive Schwierigkeit von/bis L1–L5 und
-optionale maximale Breite/Höhe von je 1–50 Zellen. Alle Achsen gelten gemeinsam mit UND für den
+optionale maximale Breite/Höhe von je 1–99 Zellen. Alle Achsen gelten gemeinsam mit UND für den
 vollständigen sichtbaren validierten Bestand. Danach folgen das unveränderte
 Sortierpaar, 24er-Seiten und die unveränderte 12/12-Zuordnung mit KL-Raster.
 
@@ -88,9 +88,11 @@ Achsen. Die Schwierigkeitsdropdowns begrenzen einander auf auswählbare Stufen
 mit Minimum ≤ Maximum. Bei Bedarf folgt die Gegengrenze der zuletzt geänderten;
 gleiche Stufen und je ein unbeschränktes Ende bleiben möglich. Eine widersprüchliche
 Spanne kann nicht ausgewählt werden und erzeugt keine Fehlermeldung.
-Die Eingabefelder **Maximale Breite** und **Maximale Höhe** stehen nebeneinander.
+Die Größenzeile enthält **Breite** und **Höhe** mit schmalen, auf zwei Stellen
+begrenzten Eingabefeldern nebeneinander. Labels und Auswahlen sind in gemeinsamen
+Spalten ausgerichtet. Die Filtergrenze 99 erweitert nicht die Rätselgrenze 50×50.
 **Übernehmen** wendet den gesamten gültigen Entwurf an. Andere als leere oder
-positive ganzzahlige Breiten/Höhen bis 50 erhalten eine sichtbare Fehlermeldung;
+positive ganzzahlige Breiten/Höhen bis 99 erhalten eine sichtbare Fehlermeldung;
 die letzte gültige Auswahl und Trefferliste bleiben bestehen. Schließen verwirft den Entwurf. Bei knapper Höhe
 scrollt der Panelinhalt; Aktionen bleiben getrennt erreichbar. Kartenminimum,
 Bildhöhe, Schriftrollen, Kopf/Fuß und Falzabstände bleiben erhalten.
