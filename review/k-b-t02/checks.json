@@ -1,0 +1,97 @@
+[
+  {
+    "scenario": "excluded-both-scrolls",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "excluded-direct-open",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "both-scrolls-return",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "final-1920-ui100",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "final-1920-ui125",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "final-undo-marks-other-id",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "final-redo",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "real-marker-write-error-keeps-old-bytes",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "actual-marker-retry",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "actual-reset-removes-offer",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "actual-completion-removes-offer",
+    "pid": 29488,
+    "passed": true
+  },
+  {
+    "scenario": "completed-restart-hidden",
+    "pid": 39868,
+    "passed": true
+  },
+  {
+    "scenario": "final-1280-ui125",
+    "pid": 39868,
+    "passed": true
+  },
+  {
+    "scenario": "final-1280-ui100",
+    "pid": 39868,
+    "passed": true
+  },
+  {
+    "scenario": "recovered-marker-offered",
+    "pid": 41740,
+    "passed": true
+  },
+  {
+    "scenario": "recovered-opens-with-repair-boundary",
+    "pid": 41740,
+    "passed": true
+  },
+  {
+    "scenario": "explicit-backup-confirmation",
+    "pid": 41740,
+    "passed": true
+  },
+  {
+    "scenario": "cancel-keeps-recovery-required",
+    "pid": 41740,
+    "passed": true
+  },
+  {
+    "scenario": "final-started-marker-real-restart",
+    "pid": 43140,
+    "passed": true
+  }
+]

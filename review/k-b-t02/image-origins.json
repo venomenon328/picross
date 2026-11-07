@@ -1,0 +1,130 @@
+[
+  {
+    "path": "final-1920-ui100.png",
+    "source_frame_sha256": "3bfbdf675d095b0565cffce15b1782b2563be193592bfd55ee7736d27d9d1cc6",
+    "source_size": [
+      1920,
+      1080
+    ],
+    "crop": [
+      1000,
+      30,
+      1765,
+      240
+    ],
+    "size": [
+      765,
+      210
+    ],
+    "pixels": "Unscaled original viewport pixels; crop or unchanged complete PNG."
+  },
+  {
+    "path": "final-1920-ui125.png",
+    "source_frame_sha256": "d6332b4f30fea3b16bc73ea464bbac18b0c238abce72226ef75f90985ee811a6",
+    "source_size": [
+      1920,
+      1080
+    ],
+    "crop": [
+      1000,
+      30,
+      1765,
+      290
+    ],
+    "size": [
+      765,
+      260
+    ],
+    "pixels": "Unscaled original viewport pixels; crop or unchanged complete PNG."
+  },
+  {
+    "path": "final-1280-ui100.png",
+    "source_frame_sha256": "b74b6404fbb79ec13ac869af9d43316658785c0fb8b3e5676d1de49b0ffeac82",
+    "source_size": [
+      1280,
+      720
+    ],
+    "crop": [
+      650,
+      20,
+      1185,
+      230
+    ],
+    "size": [
+      535,
+      210
+    ],
+    "pixels": "Unscaled original viewport pixels; crop or unchanged complete PNG."
+  },
+  {
+    "path": "final-1280-ui125.png",
+    "source_frame_sha256": "73f3824f0c0147b9418f9e0688b0fd33352624b21252d4a100d88bf98f0a6568",
+    "source_size": [
+      1280,
+      720
+    ],
+    "crop": null,
+    "size": [
+      1280,
+      720
+    ],
+    "pixels": "Unscaled original viewport pixels; crop or unchanged complete PNG."
+  },
+  {
+    "path": "marker-retry.png",
+    "source_frame_sha256": "ad8187a1a88c5b26123cf0f72c4af584ffc9474128c9b6f138bac4f06e54333c",
+    "source_size": [
+      1920,
+      1080
+    ],
+    "crop": [
+      1000,
+      30,
+      1765,
+      240
+    ],
+    "size": [
+      765,
+      210
+    ],
+    "pixels": "Unscaled original viewport pixels; crop or unchanged complete PNG."
+  },
+  {
+    "path": "completed-hidden.png",
+    "source_frame_sha256": "7fe9ea3a45a608d69236094dc996ae67f6cf2743c5617425eac38eb7b084bfff",
+    "source_size": [
+      1920,
+      1080
+    ],
+    "crop": [
+      1000,
+      30,
+      1765,
+      240
+    ],
+    "size": [
+      765,
+      210
+    ],
+    "pixels": "Unscaled original viewport pixels; crop or unchanged complete PNG."
+  },
+  {
+    "path": "recovery-confirmation.png",
+    "source_frame_sha256": "804e57a7a6326844daff060bf313259e1aaa7d715aa51443da016b9a1bb02206",
+    "source_size": [
+      1280,
+      720
+    ],
+    "crop": [
+      230,
+      150,
+      1060,
+      580
+    ],
+    "size": [
+      830,
+      430
+    ],
+    "pixels": "Unscaled original viewport pixels; crop or unchanged complete PNG."
+  }
+]

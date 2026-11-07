@@ -1,0 +1,25 @@
+from gui_steps import *
+root=w/'gui/profile/appdata/Godot/app_userdata/picross · P1/p1'
+win.click_rect(win.state()['filter_button']);time.sleep(.3);menu('status_filter',0);win.click_rect(win.state()['buttons']['Übernehmen']);stable()
+win.click_rect(card('pz-test-kat2-001')['box']);stable()
+win.click_rect(win.state()['actions']['undo']);win.wait(lambda s:s['cursor']==0 and s['recent']['id']=='pz-test-kat2-001');record('final-undo-marks-other-id')
+win.click_rect(win.state()['actions']['redo']);win.wait(lambda s:s['cursor']==1);record('final-redo')
+win.click_rect(win.state()['catalog_return']);stable()
+tmp=root/'recent-puzzle.json.tmp';assert not tmp.exists();tmp.mkdir()
+old=(root/'recent-puzzle.json').read_bytes()
+win.click_rect(card('pz-test-kat2-003')['box']);stable()
+win.click_rect(win.state()['cell_boxes'][3]);win.wait(lambda s:bool(s['recent']['error']))
+assert (root/'recent-puzzle.json').read_bytes()==old;record('real-marker-write-error-keeps-old-bytes')
+win.click_rect(win.state()['catalog_return']);stable();win.capture('marker-retry')
+tmp.rmdir();win.click_rect(win.state()['recent']['retry']);win.wait(lambda s:s['recent']['id']=='pz-test-kat2-003' and not s['recent']['error']);record('actual-marker-retry')
+# Reset through the actual filtered card and modal confirmation.
+win.click_rect(card('pz-test-kat2-003')['reset']);time.sleep(.3)
+win.click_rect(win.state()['reset_ok']);stable();assert not win.state()['recent']['visible'];record('actual-reset-removes-offer')
+# Complete the two-cell synthetic puzzle by an actual second cell click.
+win.click_rect(card('pz-test-kat2-001')['box']);stable()
+win.click_rect(win.state()['actions']['undo']);win.wait(lambda s:s['recent']['id']=='pz-test-kat2-001')
+win.click_rect(win.state()['actions']['redo']);time.sleep(.2)
+win.click_rect(win.state()['cell_boxes'][1]);win.wait(lambda s:s['completed'],5);time.sleep(1)
+assert not win.state()['recent']['id'];record('actual-completion-removes-offer')
+win.click_rect(win.state()['catalog_return']);stable();win.capture('completed-hidden');assert not (root/'recent-puzzle.json').exists()
+win.u.PostMessageW(win.hwnd,0x10,0,0)
