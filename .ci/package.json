@@ -1,38 +1,21 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/485",
-  "package": "K-A",
-  "modules": [
-    "native.catalog"
-  ],
-  "purpose": "K-A: kombinierte sitzungsgebundene Katalogfilter auf der Buchdoppelseite, bestehende globale Sortierung/Pagination und ID-/Save-/Recoverygrenzen; Windows-Spieler durch den Kern.",
-  "omitted": "Keine Änderung an History, Solver, Produktion, Laufzeit-/Registry-/Savedaten, Renderern oder Exportpfad: native.core/history/completion/adapters/graphics/export, production.*, tools und Browser nicht ausgewählt. Bestehende catalog-Modi prüfen die betroffenen Oberflächen; einmalige Windows-Buchsicht deckt Panel/Fokus/Maus/Fit ab. Kein neuer Buch-/HIL-Lifecycle, kein K-B-Merker.",
+  "package": "K-B",
+  "modules": ["native.catalog", "native.history", "tools"],
+  "purpose": "K-B: separater Fortsetzen-Merker, sichere ID-Buchroute, atomare native Metadaten und eigene Web-Syncgenerationen gemäß Paketentscheidung 6705799391; Windows-Spieler im Kern.",
+  "omitted": "Keine Solver-, Produktions-, Renderer-, Export- oder Adapteränderung: keine zusätzlichen native.core/completion/adapters/graphics/export oder production-Module. Kein permanenter HIL-/Buch-Lifecycle. Chromium bleibt separat zu beauftragendes K-B-W01 vor Merge.",
   "test_changes": [
-    {
-      "path": "game/tests/catalog_filter_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Günstige dauerhafte Filter-/Status-/Grenz-/ID-/Return-/Scroll-/Clampingregression ausschließlich im vorhandenen catalog/pages-Prozess, ohne neue Prozesse oder Bilder."
-    },
-    {
-      "path": "game/tests/kat2_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Erwartete Trefferzahl aktualisieren; bestehende Layout-/Pages-/Sortierfälle und neue Filterfälle an den unabhängigen Ergebnisreader binden."
-    },
-    {
-      "path": "tools/native_contract.py",
-      "disposition": "change-scoped",
-      "reason": "Pages-Checkpoints vollständig benennen; Reader validiert weiterhin exakte Folge und echte positive Assertions."
-    },
-    {
-      "path": "tools/test_kat2_product.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende günstige Reader-Gegenproben auch für fehlende, doppelte oder gefälschte Pages-/Filter-Checkpoints; kein neues Modul."
-    }
+    {"path":"tools/test_ci2_c.py","disposition":"change-scoped","reason":"Bestehender Bridge-Aufrufer erwartet auch die neue sechste K-B-Prüfgruppe."},
+    {"path":"game/tests/recent_cases.gd","disposition":"change-scoped","reason":"Kleine Format-, Datei-, Fehler-, Auflösungs- und UI-Gegenproben im vorhandenen synthetischen catalog/pages-Prozess; keine neue Prozess- oder Bildfamilie."},
+    {"path":"game/tests/kat2_probe.gd","disposition":"change-scoped","reason":"Vorhandener Pages-Prozess bindet den K-B-Checkpoint."},
+    {"path":"tools/native_contract.py","disposition":"change-scoped","reason":"Unabhängiger Reader verlangt den zusätzlichen echten Pages-Checkpoint; bestehende Gegenproben decken fehlende/falsche Records ab."},
+    {"path":"game/tests/p14_integration.gd","disposition":"change-scoped","reason":"Passive Merkerbeobachtungen in unverändert 17 Benutzerkommandos, vier neuen Transaktionen und genau zwei Prozessen."},
+    {"path":"tools/p14_integration.py","disposition":"change-scoped","reason":"Unabhängige Erwartung des Merkers über wirksame Aktionen, Ansichtswechsel und echten Neustart."},
+    {"path":"tools/test_p14_integration.py","disposition":"change-scoped","reason":"Bestehende günstige Evidence-Fixture samt manipulierten Merker-/Neustartgegenproben."},
+    {"path":"tools/web_tests/storage_contract.cjs","disposition":"change-scoped","reason":"Günstige tatsächliche JS-Bridge mit Callbackrennen, Fehlerisolation, Startausnahme und Retry; kein behaupteter IndexedDB-Nachweis."},
+    {"path":"tools/test_web_storage_contract.py","disposition":"change-scoped","reason":"Kleine tools-Anbindung der JS-Probe; fehlendes Node ist ein Fehler, kein stiller Skip."}
   ],
-  "core_change": "Keine Änderung des CI-Kerns oder zusätzlicher Dauerprozess. K-A-T02 einmalig am finalen Windows-Head; temporäre Originale auf separatem Reviewbranch, nach R01/M01-Abschluss entfernen, spätestens Bedarf am 2026-11-14 prüfen.",
-  "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
+  "core_change": "Keine Kernänderung. Einmalige K-B-T02-Windows-Buchprobe am Lieferhead; notwendige Originalausschnitte auf separatem Reviewbranch für R01/M01, nach Abschluss entfernen, Bedarf spätestens 2026-11-21 prüfen.",
+  "evidence": {"mode":"none","purpose":null,"expires":null}
 }

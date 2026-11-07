@@ -1,5 +1,16 @@
 # Reguläre Buchdarstellung · B-B / #498
 
+## K-B: direkte Fortsetzung
+
+[Paketentscheidung #485](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391).
+Das reduzierte rechte Katalogkopfpanel ruft dieselbe kanonische ID-Route wie eine Karte
+auf. Erneute Auflösung unmittelbar beim Klick, vorheriger fallibler Slotflush,
+PREPARING-/Capture-/Releasebarriere und Generationen bleiben verbindlich. Filter,
+Kategorie, Seite und beide Scrollstände bleiben im Rückkehrkontext; kein Scrollen zur
+gegebenenfalls ausgefilterten Karte. Recovered/backup_invalid darf bei gültigem
+rekonstruiertem begonnenem Stand angeboten werden, behält aber seine Reparaturgrenzen.
+K-B-T02 prüft diesen Weg einmalig im echten Windows-Buch; keine neue Dauer-HIL-Suite.
+
 Arbeitsvertrag zu [B-B-V01](https://github.com/venomenon328/picross/issues/498)
 unter [#493](https://github.com/venomenon328/picross/issues/493), Basis
 `2a0d9e4ae21802637dc26ff8fdf904bf27772972`. Die gewählte B-A-N06-Fassung ist

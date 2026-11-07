@@ -1,5 +1,20 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
+## K-B: zuletzt bearbeitetes Rätsel
+
+[Paketentscheidung #485](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391).
+Die rechte Buchkopfzone oberhalb von Sortierung und Filter enthält ein reduziertes,
+als Ganzes anklickbares Panel: links „Zuletzt bearbeitetes Rätsel fortsetzen“ und
+neutrale Blattkennung/Dimensionen, rechts eine 56 × UI große eigene Fortschrittsminiatur.
+Sie ist kleiner als die reguläre Kartenvorschau und verrät weder Lösung noch Motivname.
+Ohne gültigen begonnenen, unvollständigen Stand bleibt das Panel verborgen. Abschluss
+oder Reset entfernt das Angebot sofort; es gibt keinen Rückfall auf ältere Rätsel.
+Die feste Kopfzone hält Zusammenfassung, Panel und scrollbare Fehlermeldungen getrennt;
+Kartenmaße, Filter und Sortiercontrols werden durch Fehler nicht verschoben.
+Die ID-gebundene Buchroute erhält Kategorie, Filter, globale Seite und beide Scrollstände,
+auch wenn die Karte des Ziels ausgefiltert ist. Ein Merkerfehler hat einen eigenen
+nichtmodalen Retry im Meldungsbereich; er sperrt andere Rätsel oder das Beenden nicht.
+
 **PANG-A / #531 · auf dem Arbeitsbranch implementierte normale Schriftrolle:**
 Gemäß [HZ-D08](HAND_DRAWN_UI.md) ersetzt Pangolin Regular Tidy Hand
 in vorhandenen normalen Katalogtexten einschließlich Kategorie, Metadaten,
