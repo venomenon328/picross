@@ -31,7 +31,7 @@ func _ready() -> void:
 	for item: Node in [top.get_child(0), category_choice]: item.reparent(category_row)
 	var sorting := HBoxContainer.new()
 	right_page.add_child(sorting)
-	for item: Node in [sort_label, sort_choice, direction_button]: item.reparent(sorting)
+	for item: Node in [sort_label, sort_choice, direction_button, filter_button]: item.reparent(sorting)
 	var actions := HBoxContainer.new()
 	for item: Node in top.get_children(): item.reparent(actions)
 	var help := BookButton.new()
@@ -66,7 +66,7 @@ func _ready() -> void:
 	next_button.reparent(right_pager)
 	next_button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	for node: Node in old_children:
-		if node.get_parent() == self:
+		if node.get_parent() == self and node != filter_panel:
 			remove_child(node)
 			node.free()
 	_layout_cards()
@@ -94,6 +94,15 @@ func restore_positions(pair: Vector2i, expected_generation: int) -> void:
 	scroll.scroll_vertical = pair.x
 	right_scroll.scroll_vertical = pair.y
 
+func open_filters() -> void:
+	if not locked: super.open_filters()
+
+func apply_filters(status: String, mode: String, lower: int, upper: int, cells: String) -> void:
+	if not locked: super.apply_filters(status,mode,lower,upper,cells)
+
+func reset_filters() -> void:
+	if not locked: super.reset_filters()
+
 func choose_category(id: String) -> void:
 	if not locked: super.choose_category(id)
 
@@ -115,11 +124,13 @@ func commit_page(target: int, position: int = 0, right_position: int = 0) -> voi
 
 func _render(position: int) -> void:
 	var pair := Vector2i(position,next_right_position)
+	var old_page: int = page_index
 	next_right_position = 0
 	# The base owns card lifecycle, metadata, stable IDs and spoiler gates.
 	if right_grid != null:
 		for child: Node in right_grid.get_children(): child.reparent(grid)
 	super._render(position)
+	if page_index != old_page: pair = Vector2i.ZERO
 	for item: Node in find_children("*","Button",true,false):
 		if item is BookButton: item.paper_transparent = true
 	if right_scroll != null:
