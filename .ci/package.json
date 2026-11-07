@@ -1,23 +1,53 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/541",
-  "package": "RF-A",
+  "issue": "https://github.com/venomenon328/picross/issues/539",
+  "package": "SBR-A",
   "modules": [
     "native.catalog"
   ],
-  "purpose": "RF-A: immediate own miniature before hover and binary half/full width from shaped text and projected book geometry; Windows player in core.",
-  "omitted": "native.history/graphics/core/completion/adapters/export, tools, production.* and delivery: diff only recent panel/catalog layout and focused catalog cases. Existing marker/save/Web semantics stay unchanged. No Chromium or new process/gallery.",
+  "purpose": "SBR-A: gemeinsame native Scrollbar-Stilfamilie in Buch und Popups; bestehende catalog/pages- und information-Prozesse prüfen synthetische Layout-, Style-, Range- und Pointerfälle. Regulärer Windows-Spieler im Kern. Aktive PCK-/HZ-Reader führen die vier neuen lokalen Icons konsistent; einmalige reguläre Windows/Web-Exportprüfung ohne Browser/Deployment.",
+  "omitted": "Keine Spiel-/Save-/History-/Zellrenderer-/Adapter-/Produktionsänderung: native.core/history/completion/adapters/graphics/export, preflight, tools-Vollsuite, production.* und delivery nicht gewählt. Die kleine aktive SVG-Provisionierung wird gezielt mit z2_resources verify und test_z2_delivery geprüft; keine allgemeine Tooländerung. Kein Chromium. Physische OS-Mausprobe ohne ausdrückliche Desktopfreigabe nicht ausgeführt; Eigentümer-M01 bleibt offen.",
   "test_changes": [
     {
-      "path": "game/tests/recent_cases.gd",
+      "path": "game/tests/scrollbar_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Small regression inside existing catalog/pages k-b-recent: synchronous destination snapshot while processing disabled, actual pre-hover pixels/empty Redo, live Undo/Redo and target change, real projected width/UI and measured fit boundary, stable header/ID/retry paths."
+      "reason": "Günstige native Theme-/Icon-/Geometrie-, Gutter-, UI-Rundweg-, native Range-/Pointer- und Popupfälle im vorhandenen synthetischen Pages-Prozess; keine neue Prozess- oder Bildfamilie."
+    },
+    {
+      "path": "game/tests/kat2_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Vorhandener Pages-Prozess bindet genau einen zusätzlichen SBR-Checkpoint."
+    },
+    {
+      "path": "tools/native_contract.py",
+      "disposition": "change-scoped",
+      "reason": "Unabhängiger Ergebnisleser verlangt denselben tatsächlichen SBR-Checkpoint; vorhandene Missing/Duplicate/Zero-Checks-Gegenproben bleiben wirksam."
+    },
+    {
+      "path": "game/tests/content_pack_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
+    },
+    {
+      "path": "game/tests/hz_b_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
+    },
+    {
+      "path": "game/tests/hz_pack.gd",
+      "disposition": "change-scoped",
+      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
+    },
+    {
+      "path": "game/tests/display_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Vorhandenes N02-Zentrierungsorakel misst die native Nutzfläche ohne tatsächlich sichtbaren Balken statt alter 10xUI-Toleranz zur Gesamtfläche; 1px genaue Zentrierung, Maximalbreite und horizontaler Überlaufschutz bleiben geprüft."
     }
   ],
-  "core_change": "No core change. One-off RF-A-T02 actual Windows EXE/PCK mouse/UI originals on a separate review ref for R01/M01; reassess 2026-11-21 and remove after those gates. No permanent capture gallery.",
+  "core_change": "Keine Kernänderung. Einmalige gerenderte native Originale für SBR-A-R01 auf separatem review/539-sbr-a, kein Produktdiff und kein CI-Galerieupload. Bedarf nach Review/Abnahme beenden, spätestens 2026-11-14 prüfen. Persönliche Windows-Abnahme SBR-A-M01 bleibt beim Eigentümer.",
   "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
+    "mode": "failure",
+    "purpose": "SBR-A: begrenzte native.catalog-Fehlerdiagnose für den Implementierer und R01; kein Erfolgsarchiv.",
+    "expires": "2026-11-09"
   }
 }

@@ -64,6 +64,12 @@ Pfeile, Werkzeuge und Checkboxen gehören zur selben gezeichneten Familie.
 Maus, Tastatur, Fokus und Scrollen bleiben wie gewohnt bedienbar.
 [HZ-B-Lieferung und Prüfstand](../docs/HZ_B_VERIFICATION.md).
 
+**Scrollleisten (SBR-A):** Buchseiten und lange Auswahllisten verwenden dieselben
+graphitgrauen, diagonal handschraffierten Leisten mit hellem Griff und hellen
+Dreieckspfeilen. Rad, Griffziehen, Spur- und Pfeilklicks bleiben die gewohnten
+nativen Scrollaktionen. Leisten erscheinen nur bei Bedarf; UI100/125 skaliert
+ihre Darstellung und Trefferbreite gemeinsam. [Stilvertrag](../docs/HAND_DRAWN_UI.md).
+
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
 Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
 „Rätselkatalog“. Lange Namen nutzen zwei Zeilen, danach eine Auslassung. Darunter

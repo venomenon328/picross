@@ -193,8 +193,10 @@ VS2-E1/N01 verdichtet die horizontale Weite künftig weiter bei gleichem Schrift
 
 Der folgende Quellenweg beschreibt die Z2-Herkunft. Die aktive HZ-B-Familie
 liegt separat in [book_icons_hz.json](../tools/book_icons_hz.json):
-23 Ressourcen einschließlich der 13 bisherigen Bedeutungen sowie Pfeile,
-Chevrons, Auswahl- und Checkboxzeichen. `tools/z2_resources.py` erzeugt die
+27 Ressourcen einschließlich der 13 bisherigen Bedeutungen sowie Pfeile,
+Chevrons, Auswahl- und Checkboxzeichen und der vier lokalen gefüllten
+SBR-A-Scrolldreiecke aus [#539](https://github.com/venomenon328/picross/issues/539).
+`tools/z2_resources.py` erzeugt die
 SVGs und bindet Quellhash und Herkunft im aktiven Buchmanifest.
 `tools/book_icons_kb.json` und die BP-Iconquelle bleiben historische Originale.
 Die neue Bindung wird im tatsächlichen Spieler-/Webexport geprüft; sie
