@@ -91,18 +91,21 @@ gleiche Stufen und je ein unbeschränktes Ende bleiben möglich. Eine widersprü
 Spanne kann nicht ausgewählt werden und erzeugt keine Fehlermeldung.
 Die Größenzeile enthält **Breite** und **Höhe** mit schmalen, auf zwei Stellen
 begrenzten Eingabefeldern nebeneinander. Labels und Auswahlen sind in gemeinsamen
-Spalten ausgerichtet. Die Filtergrenze 99 erweitert nicht die Rätselgrenze 50×50.
+Spalten ausgerichtet. Jedes Maßfeld schließt rechtsbündig unter seinem
+Schwierigkeitsdropdown ab und behält seine schmale Breite. Die Filtergrenze 99 erweitert nicht die Rätselgrenze 50×50.
 **Übernehmen** wendet den gesamten gültigen Entwurf an. Andere als leere oder
 positive ganzzahlige Breiten/Höhen bis 99 erhalten eine sichtbare Fehlermeldung;
 die letzte gültige Auswahl und Trefferliste bleiben bestehen. Schließen verwirft den Entwurf. Bei knapper Höhe
-scrollt der Panelinhalt; Aktionen bleiben getrennt erreichbar. Kartenminimum,
+scrollt der Panelinhalt. Die Höhe folgt dem tatsächlichen Inhalt statt einer
+festen Leerfläche; nur nötiger Platzbedarf vergrößert sie. Übernehmen /
+Zurücksetzen / Schließen bilden eine Zeile mit drei gleich großen Buttons. Kartenminimum,
 Bildhöhe, Schriftrollen, Kopf/Fuß und Falzabstände bleiben erhalten.
 
 Echte Filteränderungen setzen Seite und beide Scrollstände auf null; dieselbe
 Auswahl ist ein No-op. Rückkehr aus Arbeits-/End-/Informationsansicht erhält den
 angewendeten Zustand, Sortierung, Seite, beide Offsets und passende Auswahl-ID.
 Abschluss/Reset aktualisieren die Treffer vor Seiten-/Offsetbegrenzung; entfällt
-die letzte Seite, beginnt die begrenzte Seite oben. **Filter zurücksetzen**
+die letzte Seite, beginnt die begrenzte Seite oben. **Zurücksetzen**
 neutralisiert Kategorie und alle zusätzlichen Achsen, erhält das Sortierpaar.
 Diese Aktion steht ausschließlich im Filterpanel. Katalog-/Speicher- und
 Sortierfehlermeldungen stehen im festen freien Kopfbereich der rechten Buchseite

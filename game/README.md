@@ -116,7 +116,9 @@ Die Schwierigkeitslisten bieten nur miteinander verträgliche Stufen an:
 Minimum ≤ Maximum; nötigenfalls folgt die andere Grenze automatisch. Dafür
 erscheint keine Fehlermeldung. Ungültige Breiten-/Höhenwerte werden angezeigt und
 verändern die letzte gültige Auswahl nicht. **Schließen** verwirft den Entwurf. Der Panelinhalt scrollt bei
-knapper Höhe. **Filter zurücksetzen** setzt auch die Kategorie auf Alle und
+knapper Höhe; das Fenster bleibt ohne unnötigen vertikalen Leerraum am Inhalt
+bemessen. Übernehmen / Zurücksetzen / Schließen stehen gleich groß in einer Zeile.
+Breite/Höhe schließen jeweils rechtsbündig unter Von/Bis ab. **Zurücksetzen** setzt auch die Kategorie auf Alle und
 behält die Sortierung; diese Aktion befindet sich nur im Filterfenster.
 Von/Bis stehen wie Breite/Höhe nebeneinander. Fehlermeldungen stehen oben rechts
 über Sortieren/Filter in einer festen, bei Bedarf scrollbaren Kopfbereichsfläche;
