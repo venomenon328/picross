@@ -1029,12 +1029,20 @@ func fixed_cards() -> void:
 		await frames()
 		check(card_geometry() == initial and app.choices[0].caption.text == item.definition.reveal.name,"KK completion adds earned title without moving following rows")
 		check(app.choices[0].note.text == "Gelöst" and app.choices[0].status_icon.kind == "Gelöst","KU-A validated completion selects the check-mark drawing")
+		# The fixed card footer can extend below the compact book's clip area.
+		# Compare actual visible pixels, then restore the geometry under test.
+		var previous_scroll: int = app.album.scroll.scroll_vertical
+		app.album.scroll.ensure_control_visible(app.choices[0].status_icon)
+		app.album.scroll.scroll_vertical += 2 # Integer scroll rounding at UI125.
+		await frames()
+		check(app.album.scroll.get_global_rect().encloses(app.choices[0].status_icon.get_global_rect()),"KU-A pixel comparison exposes the whole check-mark area")
 		var check_pixels: PackedByteArray = await button_pixels(app.choices[0].status_icon)
 		app.choices[0].status_icon.kind = "test-only-no-symbol"
 		app.choices[0].status_icon.queue_redraw()
 		check(check_pixels != await button_pixels(app.choices[0].status_icon),"KU-A solved check mark really contributes native pixels")
 		app.choices[0].status_icon.kind = "Gelöst"
 		app.choices[0].status_icon.queue_redraw()
+		app.album.scroll.scroll_vertical = previous_scroll
 		await shot("solved-%d" % spec[0])
 		catalog_case("kk-solved-save-reveal-pixels")
 		for aspect: Vector2i in [Vector2i(320,80),Vector2i(80,320)]:
