@@ -298,7 +298,7 @@ func _update_feedback() -> void:
 		if not str(errors.get(id,"")).is_empty():
 			messages.append(items[id].neutral_title() + ": Speicherfehler: " + str(errors[id]))
 		elif statuses.get(id) == "error":
-			messages.append(items[id].neutral_title() + ": Ungültige Speicherdaten. Im Filterfenster zurücksetzen, um die Diagnose zu öffnen.")
+			messages.append(items[id].neutral_title() + ": Speicherdaten ungültig. Filter ggf. im Filterfenster zurücksetzen.")
 	feedback.text = messages[0] + (" · %d weitere Speicherprobleme" % (messages.size()-1) if messages.size()>1 else "") if not messages.is_empty() else ""
 	feedback.visible = not messages.is_empty()
 
@@ -458,15 +458,7 @@ func _layout_cards() -> void:
 	var capacity: int = clampi(floori((available + gap) / (minimum_width + gap)), 1, 3)
 	grid.arrange(capacity, _available_card_width(scroll))
 	var card_width: float = maxf(minimum_width, minf(minimum_width+8*ui_scale, floorf((available-(capacity-1)*gap)/capacity)))
-	for node: Node in find_children("*", "Label", true, false):
-		if node.has_meta("base_font"): node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
-	for node: Node in find_children("*", "Button", true, false):
-		if node is BookButton:
-			node.ui_scale = ui_scale
-			if node.content_surface: continue
-			node.add_theme_font_override("font", Card.UiText.small_font(Card.UiText.small_size(ui_scale)))
-			node.add_theme_font_size_override("font_size", Card.UiText.small_size(ui_scale))
-			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.text.is_empty() else Vector2(maxf(44*ui_scale,Card.UiText.width(node.get_theme_font("font"),node.text,Card.UiText.small_size(ui_scale))+(56 if node.image != null else 16)*ui_scale),44*ui_scale)
+	_style_controls(self)
 	# The filter opener reserves 16 logical pixels on each side of its text,
 	# including the inward HZ focus/pressed contour. Other buttons keep theirs.
 	filter_button.custom_minimum_size.x = maxf(44*ui_scale,Card.UiText.width(filter_button.get_theme_font("font"),filter_button.text,Card.UiText.small_size(ui_scale))+32*ui_scale)
@@ -500,6 +492,17 @@ func _layout_cards() -> void:
 			var full: String = Card.UiText.wrapped(text, int(tooltip_layout.x), tooltip_layout.y)
 			category_choice.get_popup().set_item_tooltip(index, full)
 	category_choice.tooltip_text = category_choice.get_popup().get_item_tooltip(category_choice.selected) if category_choice.selected >= 0 else ""
+
+func _style_controls(parent: Node) -> void:
+	for node: Node in parent.find_children("*", "Label", true, false):
+		if node.has_meta("base_font"): node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
+	for node: Node in parent.find_children("*", "Button", true, false):
+		if node is BookButton:
+			node.ui_scale = ui_scale
+			if node.content_surface: continue
+			node.add_theme_font_override("font", Card.UiText.small_font(Card.UiText.small_size(ui_scale)))
+			node.add_theme_font_size_override("font_size", Card.UiText.small_size(ui_scale))
+			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.text.is_empty() else Vector2(maxf(44*ui_scale,Card.UiText.width(node.get_theme_font("font"),node.text,Card.UiText.small_size(ui_scale))+(56 if node.image != null else 16)*ui_scale),44*ui_scale)
 
 func ensure_control_visible(control: Control) -> void:
 	scroll.ensure_control_visible(control)

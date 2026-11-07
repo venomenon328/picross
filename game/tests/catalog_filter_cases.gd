@@ -200,4 +200,26 @@ static func navigation(probe) -> void:
 	album.errors[opened] = ""
 	album._render(0)
 	await probe.frames()
+	# A message outside the visible cards must not move either page. Even a
+	# long save/sort error remains inside the existing free heading area.
+	var hidden: String = album.filtered_ids[-1]
+	for spec: Vector3i in [Vector3i(1280,720,125),Vector3i(1920,1080,100),Vector3i(2560,1440,100)]:
+		probe.surface.size = Vector2i(spec.x,spec.y)
+		app.set_ui_scale(spec.z/100.0)
+		await probe.frames()
+		var controls: Array = [album.scroll,album.right_scroll,album.category_choice,album.sort_choice,album.filter_button,album.previous_button,album.next_button]
+		controls.append_array(album.choices)
+		var before: Array = controls.map(func(control: Control) -> Vector2: return control.get_global_rect().position)
+		album.show_error(hidden,"TEST ONLY very long failed save message outside the visible page, with enough text to exercise wrapping in the bounded heading area.")
+		album.preference.error = "TEST ONLY sorting preference write failed"
+		album._preference_status()
+		await probe.frames()
+		probe.check(before == controls.map(func(control: Control) -> Vector2: return control.get_global_rect().position),"K-A save/sort messages never move cards, scroll areas or controls")
+		probe.check(album.notice_area.get_global_rect().end.y <= album.sort_choice.get_global_rect().position.y and album.notice_area.get_global_rect().position.x > spec.x/2.0,"K-A messages occupy fixed right heading above sorting/filter row")
+		album.errors[hidden] = ""
+		album._update_feedback()
+		album.preference.error = ""
+		album._preference_status()
+		await probe.frames()
+		probe.check(before == controls.map(func(control: Control) -> Vector2: return control.get_global_rect().position),"K-A clearing messages never moves catalog controls or cards")
 	probe.catalog_case("k-a-filter-navigation")

@@ -119,7 +119,9 @@ verändern die letzte gültige Auswahl nicht. **Schließen** verwirft den Entwur
 knapper Höhe. **Filter zurücksetzen** setzt auch die Kategorie auf Alle und
 behält die Sortierung; diese Aktion befindet sich nur im Filterfenster.
 Von/Bis stehen wie Breite/Höhe nebeneinander. Fehlermeldungen stehen oben rechts
-auf der Buchseite bzw. oben im Filterfenster. Die Trefferzahl steht über dem rechten Buchteil;
+über Sortieren/Filter in einer festen, bei Bedarf scrollbaren Kopfbereichsfläche;
+sie verschieben keine Kacheln oder Katalogcontrols. Entwurfsfehler stehen oben im
+Filterfenster. Die Trefferzahl steht über dem rechten Buchteil;
 keine passenden Treffer und Katalogladefehler sind getrennt beschriftet.
 Ungültige Saves zählen nicht als Neu oder Noch offen; unter Alle bleiben ihre
 Reset-/Diagnosewege erhalten. Speicherfehler bleiben auch außerhalb der Treffer

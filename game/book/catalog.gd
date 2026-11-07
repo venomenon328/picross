@@ -12,6 +12,8 @@ var arranging: bool = false
 var next_right_position: int = 0
 var fold_gap: float = 76.0
 var right_pager: BoxContainer
+var notice_area: ScrollContainer
+var notices: VBoxContainer
 
 func _ready() -> void:
 	super._ready()
@@ -42,9 +44,19 @@ func _ready() -> void:
 	actions.move_child(help,1)
 	actions.move_child(help,1)
 	summary.reparent(right_page)
+	notice_area = ScrollContainer.new()
+	notice_area.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	notice_area.mouse_force_pass_scroll_events = false
+	notices = VBoxContainer.new()
+	notices.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	notice_area.add_child(notices)
+	right_page.add_child(notice_area)
+	preference_feedback.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	preference_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	preference_feedback.get_parent().reparent(notices)
+	for item: Node in [feedback, empty_message]: item.reparent(notices)
+	visibility_changed.connect(func() -> void: notice_area.visible = is_visible_in_tree())
 	_detach_summary.call_deferred()
-	preference_feedback.get_parent().reparent(right_page)
-	for item: Node in [feedback, empty_message]: item.reparent(right_page)
 	scroll.reparent(left_page)
 	right_scroll = ScrollContainer.new()
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
@@ -75,6 +87,7 @@ func _ready() -> void:
 func _detach_summary() -> void:
 	# Parent is still in _ready while this catalog is constructed.
 	summary.reparent(get_parent())
+	notice_area.reparent(get_parent())
 	get_parent().get_parent()._layout_book()
 
 func positions() -> Vector2i:
@@ -155,6 +168,9 @@ func _layout_cards() -> void:
 		spread.add_theme_constant_override("separation", roundi(fold_gap))
 		for half: VBoxContainer in [left_page, right_page]: half.add_theme_constant_override("separation", roundi(8*ui_scale))
 	super._layout_cards()
+	if notice_area != null:
+		_style_controls(notice_area)
+		notices.add_theme_constant_override("separation",roundi(4*ui_scale))
 	if right_grid != null:
 		right_grid.add_theme_constant_override("h_separation", roundi(12*ui_scale))
 		right_grid.add_theme_constant_override("v_separation", roundi(12*ui_scale))
