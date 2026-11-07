@@ -1,5 +1,28 @@
 # Native Prüfmodule und Originalnachweise
 
+## K-B / #485: begrenzte Merkerregression
+
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391):
+`native.catalog`, `native.history`, `tools`. Im vorhandenen Pages-Prozess folgt auf
+die K-A-Filterfälle `k-b-recent`: strikte Format-/Dateigrenzen, Unterbrechung vor
+atomarem Austausch, eigene Wiederholung/Löschung, kanonische ID/Revision/Status,
+wirksamer Bearbeitungsanlass samt Save-Retry sowie ausgefilterte Panelnavigation.
+Producer, native_contract und unabhängiger Reader verlangen denselben Checkpoint.
+Die Historyroute bleibt bei 17 semantischen Kommandos, vier neuen wirksamen
+Transaktionen und genau zwei Prozessen; passive Diskmerker-/Auflösungsoracles prüfen
+Aktion, Ansicht und echten Neustart. Günstige Reader-Gegenproben verwerfen manipulierte
+Merker. Die tatsächliche JS-Bridge wird unter Node über einen tools-Unittest geprüft;
+kein Browserstart und kein stilles Überspringen bei fehlendem Node.
+K-B-T02 ist eine einmalige Windows-Buchprobe mit isolierten synthetischen Profilen.
+K-B-W01, unabhängiges R01 und persönliches M01 bleiben separate Gates. Keine neue
+Bild-/HIL-Familie, kein echter Produktionskatalog als automatisierter Testbestand.
+Die kleine B-01-Dauerregression bleibt im selben `k-b-recent`-Checkpoint:
+1280×720 und 1920×1080 jeweils UI100/125, Merker-/Savefehler, vollständig
+sichtbare 44/55-px-Trefferrechtecke nach Scrollen sowie echte Pointerklicks an
+allen vier Ecken und in der Mitte beider Retrybuttons. Überlange Meldungen
+dürfen Sortierung, Filter, Kartenflächen und Fortsetzen-Panel nicht verschieben.
+Aktuelle echte Windows-Originale bleiben ein einmaliger befristeter Reviewbeleg.
+
 ## Geltung und Auswahl
 
 Die sieben Module `native.core/history/catalog/completion/adapters/graphics/export`

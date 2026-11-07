@@ -11,6 +11,9 @@ const Reveal = preload("res://ui/reveal.gd")
 const Completion = preload("res://ui/completion.gd")
 const SaveStore = preload("res://model/save_store.gd")
 const WebStorage = preload("res://model/web_storage.gd")
+const RecentPuzzle = preload("res://model/recent_puzzle.gd")
+var recent: RecentPuzzle
+var pending_edits: Dictionary = {}
 var web_lifecycle_callback: JavaScriptObject
 var web_leaving: bool = false
 const BookButton = preload("res://ui/book_button.gd")
@@ -152,6 +155,8 @@ func _ready() -> void:
 		slot_status.append(str(result.status))
 		slot_errors.append("")
 	session = sessions[0] if not sessions.is_empty() else null
+	recent = RecentPuzzle.new(RecentPuzzle.PATH if SaveStore.test_root_override.is_empty() else store.root.path_join("recent-metadata/recent-puzzle.json"))
+	recent.load_record()
 	_build()
 	if DisplaySettings.supported(self):
 		display_controller = DisplaySettings.Controller.new()
@@ -483,6 +488,7 @@ func _notification(what: int) -> void:
 		leave_app()
 
 func _on_commit() -> void:
+	pending_edits[str(session.definition.id)] = true
 	# Capture before saving: a new error card may change the board layout.
 	var animate: bool = session.completed and work.visible and not reveal_view.active
 	var origin: Rect2
@@ -523,6 +529,7 @@ func _undo() -> void:
 	var old: int = session.player.cursor
 	session.undo()
 	if session.player.cursor != old:
+		pending_edits[str(session.definition.id)] = true
 		_save_current()
 	refresh()
 
@@ -546,6 +553,10 @@ func _save_current() -> bool:
 	slot_errors[sessions.find(session)] = save_error
 	if save_error.is_empty():
 		slot_status[sessions.find(session)] = "loaded"
+		var id: String = str(session.definition.id)
+		if pending_edits.has(id):
+			pending_edits.erase(id)
+			recent.edited(session)
 	else:
 		var disk_state: String = str(store.load_slot(session.definition).status)
 		if disk_state in ["recovered", "backup_invalid"]:
@@ -609,6 +620,8 @@ func _reset_selected() -> void:
 		if album.visible: album.present(sessions, slot_status, slot_errors, catalog_error, id)
 		return
 	sessions[index] = Session.new(target.definition)
+	pending_edits.erase(id)
+	recent.clear_matching(id)
 	slot_status[index] = "fresh"
 	slot_errors[index] = ""
 	if target == session:
@@ -675,6 +688,7 @@ func leave_app() -> void:
 	if web_leaving: return
 	_cancel_interaction()
 	if _flush_current():
+		if recent != null: recent.retry()
 		if OS.has_feature("web"):
 			web_leaving = true
 			get_tree().paused = true
@@ -688,12 +702,31 @@ func leave_app() -> void:
 					web_leaving = false
 					return
 				await get_tree().create_timer(0.05).timeout
+			# A marker-only failure must not turn a successful slot flush into a
+			# blocked exit. Wait for its actual callback, but keep errors separate.
+			while JavaScriptBridge.eval("window.picrossStorage.recentPending && !window.picrossStorage.recentError",true) and Time.get_ticks_msec() <= deadline:
+				await get_tree().create_timer(0.05).timeout
 		get_tree().quit()
 
 func _web_lifecycle(_arguments: Array) -> void:
 	if web_leaving: return
 	_cancel_interaction()
 	_flush_current()
+	if recent != null: recent.retry()
+
+func recent_id() -> String:
+	if recent == null or not catalog_error.is_empty(): return ""
+	var items: Dictionary = {}
+	var statuses: Dictionary = {}
+	for id: String in session_indices:
+		var index: int = int(session_indices[id])
+		items[id] = sessions[index]
+		statuses[id] = slot_status[index]
+	return recent.resolve(items,statuses)
+
+func resume_recent() -> void:
+	var id: String = recent_id()
+	if not id.is_empty(): select_by_id(id)
 
 static func label(text: String, font_size: int) -> Label:
 	var item: Label = Label.new()

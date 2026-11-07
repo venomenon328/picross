@@ -1,5 +1,34 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+## K-B: unabhängiger Fortsetzen-Merker
+
+[Paketentscheidung #485](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391).
+`user://p1/recent-puzzle.json` enthält höchstens 1024 UTF-8-Bytes mit genau
+`format: picross-recent-puzzle-v1`, kanonischer `id` und positiver ganzzahliger
+`revision` der Sessiondefinition. Keine Zeit-/Verlaufsliste und keine Savemigration.
+Fehlende, doppelte, unbekannte, übergroße oder beschädigte Daten werden ohne
+Ladeschreibvorgang ignoriert. Sichtbare Registry-ID, Definitionsrevision und normal
+validierter begonnener, nicht abgeschlossener Slot müssen zusammenpassen; Redo-only
+zählt als begonnen. Der Start bleibt immer der Katalog.
+
+Nur wirksame abgeschlossene Zellaktion oder echte Undo-/Redo-Änderung setzt nach
+validiertem erfolgreichem Save den Merker. Der Bearbeitungsanlass bleibt bei Savefehler
+für den ausdrücklichen Retry erhalten. Navigation, Werkzeuge, Vorschau, Abbruch,
+No-op und reine Ansichtssicherung markieren nicht. Abschluss/Reset eines anderen
+Rätsels überschreibt den Merker nicht. Eine fehlgeschlagene Abschluss-Sicherung
+behauptet keinen dauerhaften Abschluss; beim Neustart gilt der validierte Diskstand.
+Metadatenfehler erhalten alte gültige Bytes und einen separaten nichtmodalen Retry.
+
+Ein vollständiger Geschwister-Temp wird geflusht, geschlossen und strikt zurückgelesen.
+Windows benutzt MoveFileExW mit REPLACE_EXISTING und WRITE_THROUGH ohne COPY_ALLOWED
+über das lokale Windows PowerShell/.NET ohne Profil/Console; Pfade werden ausschließlich
+als Base64-Daten übergeben. Temp und Ziel liegen zwingend im selben Verzeichnis.
+Godots destruktives Windows-Ziel-Rename und File.Replace/ReplaceFileW (dokumentierter
+Zielverlust bei Fehler 1176) werden nicht verwendet. POSIX/Web verwenden Rename. Derselbe
+bereits gespeicherte Merker startet keinen Hilfsprozess. Ein fehlendes/gesperrtes
+PowerShell bleibt ein isolierter Merkerfehler, keine fehlgeschlagene Rätselsicherung.
+Verzeichnisse, Links, ungültige Pfade und fremde Dateinamen werden zurückgewiesen.
+
 **PANG-A / #531 · auf dem Arbeitsbranch implementierter Schriftvertrag:**
 Die bisherige Tidy-Hand-Standardtextrolle wird gemäß
 [HZ-D08](HAND_DRAWN_UI.md) gezielt durch Pangolin Regular ersetzt, auch
