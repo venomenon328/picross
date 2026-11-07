@@ -97,8 +97,8 @@ func restore_positions(pair: Vector2i, expected_generation: int) -> void:
 func open_filters() -> void:
 	if not locked: super.open_filters()
 
-func apply_filters(status: String, mode: String, lower: int, upper: int, cells: String) -> void:
-	if not locked: super.apply_filters(status,mode,lower,upper,cells)
+func apply_filters(status: String, mode: String, lower: int, upper: int, width: String, height: String) -> void:
+	if not locked: super.apply_filters(status,mode,lower,upper,width,height)
 
 func reset_filters() -> void:
 	if not locked: super.reset_filters()

@@ -104,15 +104,17 @@ Gleichstände behalten ihre feste Blattreihenfolge; Blattnummern ändern sich ni
 **Filter** rechts neben Sortierauswahl und Richtungspfeil öffnet die zusätzlichen
 Auswahlen: **Status**
 (Alle, Noch offen, Neu, Begonnen, Gelöst), **Modus** (Alle, Monochrom, Farbe),
-**Schwierigkeit von/bis** L1–L5 und **Maximale Zellzahl** (Breite × Höhe).
+**Schwierigkeit von/bis** L1–L5 sowie die nebeneinanderliegenden Felder
+**Maximale Breite** und **Maximale Höhe**.
 Alle aktiven Filter gelten gemeinsam. Grenzen sind einschließlich; gleiche
 Schwierigkeitsgrenzen wählen eine Stufe. Ohne Spanne bleiben nicht eingestufte
 Rätsel sichtbar; mit einer Grenze erscheinen nur passende eingestufte Rätsel.
-Die Zellzahl bleibt leer oder ist eine ganze Zahl von 1 bis 2500; 20×30 und
-30×20 zählen gleich als 600. **Übernehmen** wendet gültige Eingaben gemeinsam an.
+Beide Maßgrenzen funktionieren unabhängig: jeweils leer oder eine ganze Zellzahl
+von 1 bis 50. Gemeinsam müssen beide passen; Breite ≤20/Höhe ≤30 erlaubt
+20×30, aber nicht 30×20. **Übernehmen** wendet gültige Eingaben gemeinsam an.
 Die Schwierigkeitslisten bieten nur miteinander verträgliche Stufen an:
 Minimum ≤ Maximum; nötigenfalls folgt die andere Grenze automatisch. Dafür
-erscheint keine Fehlermeldung. Ungültige Zellzahlen werden angezeigt und
+erscheint keine Fehlermeldung. Ungültige Breiten-/Höhenwerte werden angezeigt und
 verändern die letzte gültige Auswahl nicht. **Schließen** verwirft den Entwurf. Der Panelinhalt scrollt bei
 knapper Höhe. **Filter zurücksetzen** setzt auch die Kategorie auf Alle und
 behält die Sortierung. Die Trefferzahl steht über dem rechten Buchteil;

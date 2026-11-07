@@ -50,13 +50,14 @@ Seite und beide Offsets. Miniaturen zeigen den aktuellen eigenen Stand;
 Motivname und Reveal bleiben bis zum gültigen Abschluss gesperrt.
 
 **K-A / #485:** Der gemeinsame Filterzustand umfasst Kategorie, Status, Modus,
-Schwierigkeitsspanne und maximale Zellzahl gemäß
+Schwierigkeitsspanne sowie unabhängige maximale Breite und Höhe gemäß
 [K-A-Katalogvertrag](CATALOG_PRESENTATION.md#k-a--kombinierbare-sitzungsfilter-485).
 Neben Sortierauswahl und Richtungspfeil in der rechten Kopfzeile öffnet **Filter**
 ein kompaktes Papierpanel; sein Entwurf
 verändert die Treffer erst nach gültigem Übernehmen. Die Schwierigkeitsdropdowns
 verhindern widersprüchliche Spannen durch gegenseitige Optionsgrenzen und
-Anpassung der Gegengrenze. Ungültige Zellzahlen bleiben sichtbar; Schließen
+Anpassung der Gegengrenze. Die beiden Maßfelder stehen nebeneinander.
+Ungültige Maßgrenzen bleiben sichtbar; Schließen
 verwirft den Entwurf. Das Panel begrenzt sich auf das Fenster und
 scrollt bei knapper Höhe, ohne Karten-/Bildbudgets zu reduzieren. Seiten-/UI-/
 Ansichtswechsel schließen es. Filterreset erhält die Sortierung. Beide unabhängigen

@@ -79,7 +79,7 @@ func _ready() -> void:
 	top.add_child(category_choice)
 	filter_button = _button("Filter", open_filters)
 	filter_button.action_id = "catalog-filters"
-	filter_button.tooltip_text = "Status, Modus, Schwierigkeit und maximale Zellzahl filtern"
+	filter_button.tooltip_text = "Status, Modus, Schwierigkeit sowie maximale Breite und Höhe filtern"
 	top.add_child(filter_button)
 	filter_panel = FilterPanel.new()
 	add_child(filter_panel)
@@ -189,8 +189,8 @@ func choose_category(id: String) -> void:
 func open_filters() -> void:
 	filter_panel.open(filters, filter_button.get_global_rect(), ui_scale)
 
-func apply_filters(status: String, mode: String, lower: int, upper: int, cells: String) -> void:
-	var result: Dictionary = Filter.validate(category_id,status,mode,lower,upper,cells)
+func apply_filters(status: String, mode: String, lower: int, upper: int, width: String, height: String) -> void:
+	var result: Dictionary = Filter.validate(category_id,status,mode,lower,upper,width,height)
 	if result.has("error"):
 		filter_panel.invalid(result.error)
 		return
@@ -333,7 +333,7 @@ func _render(position: int) -> void:
 	filtered_ids.sort_custom(_before)
 	if not selected_id in filtered_ids: selected_id = ""
 	filter_button.disabled = not load_error.is_empty()
-	var active: int = int(not category_id.is_empty()) + int(filters.status != "all") + int(filters.mode != "all") + int(filters.lower>0 or filters.upper>0) + int(filters.cells>0)
+	var active: int = int(not category_id.is_empty()) + int(filters.status != "all") + int(filters.mode != "all") + int(filters.lower>0 or filters.upper>0) + int(filters.width>0 or filters.height>0)
 	filter_button.text = "Filter" if active == 0 else "Filter (%d)" % active
 	_update_feedback()
 	sort_choice.select(Preference.CRITERIA.find(preference.criterion))
