@@ -21620,10 +21620,6 @@
       "bytes": 338526,
       "sha256": "20febad3c3922cbed1dd4bd21e1f11656e0d99617d3db8dd1db63abf81aca452"
     },
-    "manifest.json": {
-      "bytes": 442926,
-      "sha256": "1ed0015af599e01337ba28b569719e4b56b1fe6419b9dcfdc1bb914572d7a916"
-    },
     "mouse-events.jsonl": {
       "bytes": 7161,
       "sha256": "b91eac9ef65dea1e60ba81397f25d88e6d8ee801ed4f36229c13c900b898d383"
