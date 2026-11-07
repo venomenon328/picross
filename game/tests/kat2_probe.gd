@@ -171,8 +171,13 @@ func run() -> void:
 		check(save_bytes().is_empty(), "empty/error path writes no saves")
 	elif mode == "pages":
 		await preload("res://tests/catalog_layout_cases.gd").run(self)
+		catalog_case("catalog-layout")
 		await pages()
+		catalog_case("catalog-pages")
 		await sorting()
+		catalog_case("catalog-sorting")
+		await preload("res://tests/catalog_filter_cases.gd").rules(self)
+		await preload("res://tests/catalog_filter_cases.gd").navigation(self)
 	elif mode == "information":
 		preload("res://tests/hz_cases.gd").run(self)
 		preload("res://tests/hz_c_cases.gd").run(self)
@@ -200,6 +205,7 @@ func run() -> void:
 		await shot("category-growth")
 	elif mode == "restart":
 		check(app.album.category_id.is_empty() and app.album.page_index == 0, "real process restart defaults to All page one")
+		check(app.album.filters == app.album.Filter.DEFAULTS and app.album.positions() == Vector2i.ZERO, "K-A new process has no additional filters or scroll state")
 		check(app.album.notes[0].text == "Neu" and app.album.notes[1].text == "Begonnen" and app.album.notes[5].text == "Gelöst", "empty, redo-only and solved saves survive real process restart")
 		check(app.sessions[1].player.cursor == 0 and app.sessions[1].player.history.size() == 1, "redo history restored from disk")
 		await choose("gebaeude-bauwerke")
@@ -234,7 +240,7 @@ func catalog_case(id: String) -> void:
 func write_report() -> void:
 	var report: Dictionary = {"format": "picross-kat2-native-v1", "test_only": true, "mode": mode, "checks": checks, "failures": failures, "timings_ms": timings, "kb_measurements": kb_measurements, "kk_measurements": kk_measurements, "kk_pointer_measurements": kk_pointer_measurements, "quit_slot_hashes": quit_slot_hashes, "display_server": DisplayServer.get_name(), "adapter": RenderingServer.get_video_adapter_name()}
 	report["at_measurements"] = at_measurements
-	if mode in ["ke","kk"]: report["catalog_cases"] = catalog_cases
+	if mode in ["ke","kk","pages"]: report["catalog_cases"] = catalog_cases
 	if mode == "ke": report["resize_samples"] = ke_resize_samples
 	var file: FileAccess = FileAccess.open(output.path_join(mode + ".json"), FileAccess.WRITE)
 	file.store_string(JSON.stringify(report, "\t") + "\n")
@@ -557,7 +563,7 @@ func regular() -> void:
 	check(app.store.write_slot(target, target.view_state).is_empty(), "valid earned save written")
 	await new_app()
 	await choose("voegel")
-	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
+	check(app.album.notes[0].text == "Gelöst" and app.album.summary.text == "1 Treffer · 1 von 1 gelöst" and app.choices[0].caption.text == "TEST ONLY Muster 9", "validated solved card/name/count after restart")
 	check(app.album.reveals[0].artwork != null, "earned image loaded only for visible card")
 	check(app.choices[0].accessibility_name.contains("Ansehen"), "KB solved action views existing completion")
 	await shot("solved")
@@ -616,14 +622,14 @@ func regular() -> void:
 	await frames()
 	click(app.reset_dialog.get_ok_button())
 	await frames()
-	check(app.album.notes[0].text == "Neu" and app.album.summary.text == "0 von 1 gelöst", "reset of earned slot clears validated completion count")
+	check(app.album.notes[0].text == "Neu" and app.album.summary.text == "1 Treffer · 0 von 1 gelöst", "reset of earned slot clears validated completion count")
 	for suffix: String in [".json", ".bak"]:
 		broken = FileAccess.open(app.store.path_for("t09", suffix), FileAccess.WRITE)
 		broken.store_string("{bad")
 		broken.close()
 	await new_app()
 	await choose("voegel")
-	check(app.choices[0].disabled and app.album.notes[0].text == "Ungültig" and app.album.summary.text == "0 von 1 gelöst", "invalid saves are neither new nor solved")
+	check(app.choices[0].disabled and app.album.notes[0].text == "Ungültig" and app.album.summary.text == "1 Treffer · 0 von 1 gelöst", "invalid saves are neither new nor solved")
 	check(app.choices[0].disabled and app.album.reset_buttons["T-09"].visible and not app.album.reset_buttons["T-09"].disabled, "KB damaged save blocks play but retains reset")
 	var corrupted_primary: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09"))
 	var corrupted_backup: PackedByteArray = FileAccess.get_file_as_bytes(app.store.path_for("t09", ".bak"))
@@ -666,9 +672,11 @@ func sorting() -> void:
 		surface.size = Vector2i(spec.x, spec.y)
 		app.set_ui_scale(spec.z / 100.0)
 		await frames()
-		for control: Control in [app.album.category_choice, app.album.sort_choice, app.album.direction_button]:
+		for control: Control in [app.album.category_choice, app.album.sort_choice, app.album.direction_button, app.album.filter_button]:
 			check(Rect2(Vector2.ZERO, Vector2(surface.size)).encloses(control.get_global_rect()), "KU-B sort controls fit native viewport")
 		check(app.album.category_choice.get_global_rect().end.x <= app.album.sort_choice.get_global_rect().position.x and app.album.sort_choice.get_global_rect().end.x <= app.album.direction_button.get_global_rect().position.x, "KU-B adjacent sort controls do not overlap")
+		check(app.album.direction_button.get_global_rect().end.x <= app.album.filter_button.get_global_rect().position.x and app.album.right_page.is_ancestor_of(app.album.filter_button), "K-A filter opener sits to the right of the sorting pair")
+		check(app.album.filter_button.size.x >= Card.UiText.width(app.album.filter_button.get_theme_font("font"),app.album.filter_button.text,Card.UiText.small_size(app.ui_scale))+32*app.ui_scale, "K-A filter text retains generous focus/pressed padding")
 		await sort_pointer(3)
 		check(app.album.preference.direction == "desc", "KU-B actual added menu defaults newest")
 		var ids: Array[String] = app.album.filtered_ids.duplicate()
@@ -740,7 +748,7 @@ func pages() -> void:
 	# page/reset assertions; sorting() separately covers editorial/default order.
 	app.album.choose_sort("size")
 	check(app.sessions.size() == 54 and app.album.categories.size() == 20, "54 synthetic sessions and twenty categories")
-	check(app.album.summary.text == "27 von 54 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
+	check(app.album.summary.text == "54 Treffer · 27 von 54 gelöst" and app.choices.size() == 24, "valid saved completions counted across all pages")
 	await shot("first-page")
 	var before: Dictionary = save_bytes()
 	var released: Array[WeakRef] = []
@@ -789,7 +797,7 @@ func pages() -> void:
 	timings["category_ms"] = (Time.get_ticks_usec() - started) / 1000.0
 	check(app.album.filtered_ids.size() == 48 and app.choices.size() == 24, "uneven category keeps pagination bound")
 	await choose("obst-nuesse")
-	check(app.choices.is_empty() and app.album.summary.text == "0 von 0 gelöst", "large catalog includes empty categories")
+	check(app.choices.is_empty() and app.album.summary.text == "0 Treffer · 0 von 0 gelöst", "large catalog includes empty categories")
 	app.store.fail_step = "after_temp"
 	app.board.eraser = not app.board.eraser
 	check(not app._save_current(), "pending failed save prepared for filtered-out active slot")

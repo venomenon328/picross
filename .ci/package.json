@@ -1,25 +1,35 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/535",
-  "package": "HIL-TYPO-A",
+  "issue": "https://github.com/venomenon328/picross/issues/485",
+  "package": "K-A",
   "modules": [
     "native.catalog"
   ],
-  "purpose": "Help heading font and one copy correction: existing information process checks real headings and text; core builds Windows player.",
-  "omitted": "No grid, teaching logic, history, completion, adapters, export or browser change; native.core, native.graphics, native.history, native.completion, native.adapters, native.export, Chromium and historical HIL lifecycle are not selected. One-time native visual evidence covers text fit.",
+  "purpose": "K-A: kombinierte sitzungsgebundene Katalogfilter auf der Buchdoppelseite, bestehende globale Sortierung/Pagination und ID-/Save-/Recoverygrenzen; Windows-Spieler durch den Kern.",
+  "omitted": "Keine Änderung an History, Solver, Produktion, Laufzeit-/Registry-/Savedaten, Renderern oder Exportpfad: native.core/history/completion/adapters/graphics/export, production.*, tools und Browser nicht ausgewählt. Bestehende catalog-Modi prüfen die betroffenen Oberflächen; einmalige Windows-Buchsicht deckt Panel/Fokus/Maus/Fit ab. Kein neuer Buch-/HIL-Lifecycle, kein K-B-Merker.",
   "test_changes": [
     {
-      "path": "game/tests/help_native.gd",
+      "path": "game/tests/catalog_filter_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Update obsolete font assertion in manually invoked historical diagnostic; no new standard lifecycle."
+      "reason": "Günstige dauerhafte Filter-/Status-/Grenz-/ID-/Return-/Scroll-/Clampingregression ausschließlich im vorhandenen catalog/pages-Prozess, ohne neue Prozesse oder Bilder."
     },
     {
-      "path": "game/tests/view_title_cases.gd",
+      "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Cheap real help heading, copy and scaling regression in existing information process, without a new process."
+      "reason": "Erwartete Trefferzahl aktualisieren; bestehende Layout-/Pages-/Sortierfälle und neue Filterfälle an den unabhängigen Ergebnisreader binden."
+    },
+    {
+      "path": "tools/native_contract.py",
+      "disposition": "change-scoped",
+      "reason": "Pages-Checkpoints vollständig benennen; Reader validiert weiterhin exakte Folge und echte positive Assertions."
+    },
+    {
+      "path": "tools/test_kat2_product.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende günstige Reader-Gegenproben auch für fehlende, doppelte oder gefälschte Pages-/Filter-Checkpoints; kein neues Modul."
     }
   ],
-  "core_change": "No CI core change; required core builds Windows player.",
+  "core_change": "Keine Änderung des CI-Kerns oder zusätzlicher Dauerprozess. K-A-T02 einmalig am finalen Windows-Head; temporäre Originale auf separatem Reviewbranch, nach R01/M01-Abschluss entfernen, spätestens Bedarf am 2026-11-14 prüfen.",
   "evidence": {
     "mode": "none",
     "purpose": null,

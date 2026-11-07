@@ -24,7 +24,7 @@ def report(mode):
 
 class CatalogMatrix(unittest.TestCase):
     def test_selected_native_cases_and_all_eleven_modes(self):
-        for mode in ('ke', 'kk'):
+        for mode in ('ke', 'kk', 'pages'):
             validate_catalog_cases(report(mode))
         self.assertEqual(CATALOG_MODES, ('regular', 'restart', 'pages', 'empty', 'invalid',
                          'adapter', 'information', 'kb', 'kk', 'ke', 'at'))
@@ -36,7 +36,7 @@ class CatalogMatrix(unittest.TestCase):
             self.assertEqual(plan['browser_groups'], [])
 
     def test_missing_duplicate_reordered_unexecuted_or_failed_case_is_rejected(self):
-        for mode in ('ke', 'kk'):
+        for mode in ('ke', 'kk', 'pages'):
             original = report(mode)
             for index in range(len(original['catalog_cases'])):
                 changed = deepcopy(original)
