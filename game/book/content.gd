@@ -161,16 +161,16 @@ func _layout_book(prepare_board: bool = false) -> void:
 		_place(catalog_title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,title_height)))
 		catalog_title.fallback.add_theme_font_size_override("font_size",roundi(28*ui_scale))
 		if album.summary != null:
-			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(edge-right_heading,45*ui_scale)))
+			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(edge-right_heading,26*ui_scale)))
 			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))
 		# Messages use the existing free heading area. Its fixed, scrollable
 		# bounds never enter either page's card/control layout, even on failure.
 		if recent_panel != null:
 			recent_panel.ui_scale = ui_scale
-			_place(recent_panel,Rect2(Vector2(right_heading,heading_top+28*ui_scale),Vector2(edge-right_heading,68*ui_scale)))
+			_place(recent_panel,Rect2(Vector2(right_heading,catalog_top-76*ui_scale),Vector2(edge-right_heading,68*ui_scale)))
 			recent_panel.layout()
-		var notice_top: float = heading_top+98*ui_scale
-		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(edge-right_heading,maxf(1,catalog_top-8*ui_scale-notice_top))))
+		var notice_top: float = heading_top+28*ui_scale
+		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(edge-right_heading,28*ui_scale)))
 		album._layout_cards()
 
 func select_puzzle(index: int) -> void:

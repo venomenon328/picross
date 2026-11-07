@@ -19,6 +19,8 @@ static func run(probe) -> void:
 		marker.load_record()
 		probe.check(marker.record.is_empty() and FileAccess.get_file_as_string(path) == invalid,"K-B invalid bytes ignored without rewrite")
 	probe.check(Recent.decode(valid.to_utf8_buffer()).revision == 1,"K-B exact format accepted")
+	for bytes: PackedByteArray in [PackedByteArray([255]),PackedByteArray([192,128]),PackedByteArray([237,160,128]),PackedByteArray([244,144,128,128]),PackedByteArray([226,130])]:
+		probe.check(Recent.decode(bytes).is_empty(),"K-B malformed/overlong/surrogate/out-of-range/truncated UTF-8 ignored")
 	var first = app.Session.new(app.sessions[1].definition)
 	var second = app.Session.new(app.sessions[3].definition)
 	first.player.commit([{"index":0,"before":-1,"after":1}])
@@ -40,6 +42,11 @@ static func run(probe) -> void:
 	marker.fail_step = ""
 	probe.check(marker.retry() and not FileAccess.file_exists(path),"K-B deletion retry")
 	probe.check(marker.edited(first),"K-B marker restored")
+	original = FileAccess.get_file_as_bytes(path)
+	DirAccess.make_dir_absolute(path+".tmp")
+	probe.check(not marker.edited(second) and FileAccess.get_file_as_bytes(path) == original,"K-B temporary directory rejected without touching prior bytes")
+	DirAccess.remove_absolute(path+".tmp")
+	probe.check(marker.clear_matching(str(second.definition.id)) and marker.record.id == first.definition.id,"K-B reset of unpublished candidate retains older valid marker")
 	var items: Dictionary = {str(first.definition.id):first}
 	var statuses: Dictionary = {str(first.definition.id):"loaded"}
 	probe.check(marker.resolve(items,statuses) == first.definition.id,"K-B canonical ID resolution")

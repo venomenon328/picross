@@ -6,6 +6,9 @@
 Die rechte Buchkopfzone oberhalb von Sortierung und Filter enthält ein reduziertes,
 als Ganzes anklickbares Panel: links „Zuletzt bearbeitetes Rätsel fortsetzen“ und
 neutrale Blattkennung/Dimensionen, rechts eine 56 × UI große eigene Fortschrittsminiatur.
+Die Textzeilen sind gemeinsam vertikal zentriert, links um 12 × UI eingerückt.
+Der Kasten sitzt mit 8 × UI Abstand unmittelbar über Sortierung/Filter;
+Zusammenfassung und der feste scrollbare Meldungsbereich stehen darüber.
 Sie ist kleiner als die reguläre Kartenvorschau und verrät weder Lösung noch Motivname.
 Ohne gültigen begonnenen, unvollständigen Stand bleibt das Panel verborgen. Abschluss
 oder Reset entfernt das Angebot sofort; es gibt keinen Rückfall auf ältere Rätsel.
