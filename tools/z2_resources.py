@@ -10,7 +10,7 @@ SOURCE = ROOT / "docs/design/book_inventory"
 DEST = ROOT / "game/art/book"
 KB_ICONS = Path(__file__).with_name("book_icons_kb.json")
 HZ_ICONS = Path(__file__).with_name("book_icons_hz.json")
-ACTIVE_ICONS = {"fill", "erase", "undo", "redo", "minus", "plus", "help", "menu", "nav-album", "nav-information", "nav-work", "play", "reset", "arrow-left", "arrow-right", "arrow-up", "arrow-down", "chevron-down", "chevron-up", "check", "check-empty", "checkbox-empty", "checkbox-checked"}
+ACTIVE_ICONS = {"fill", "erase", "undo", "redo", "minus", "plus", "help", "menu", "nav-album", "nav-information", "nav-work", "play", "reset", "arrow-left", "arrow-right", "arrow-up", "arrow-down", "chevron-down", "chevron-up", "check", "check-empty", "checkbox-empty", "checkbox-checked", "scroll-up", "scroll-down", "scroll-left", "scroll-right"}
 
 
 def active_icons():
@@ -20,8 +20,10 @@ def active_icons():
     return icons
 
 
-def icon_svg(entry):
-    paths = "".join(f'<path d="{path}" stroke-width="{width}"/>' for path, width in zip(entry[2:], ("1.7", "0.85")) if path)
+def icon_svg(entry, *, filled=False):
+    paths = "".join(f'<path d="{path}" stroke-width="{width}"' + (f' fill="{fill}"' if filled else "") + "/>"
+                    for path, width, fill in zip(entry[2:], ("1.7", "0.85"),
+                                                 ("white" if filled else "none", "none")) if path)
     return ('<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">'
             '<g fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round">' + paths + '</g></svg>\n')
 
@@ -53,7 +55,7 @@ def provision():
     icons = active_icons()
     (DEST / "icons.json").write_text(json.dumps(icons, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
     for name, entry in icons.items():
-        (DEST / (name + ".svg")).write_text(icon_svg(entry), encoding="utf-8", newline="\n")
+        (DEST / (name + ".svg")).write_text(icon_svg(entry, filled=name.startswith("scroll-")), encoding="utf-8", newline="\n")
     # Path ordering differs between Windows and POSIX; manifest bytes must not.
     for path in sorted(DEST.iterdir(), key=lambda path: path.name):
         if path.suffix in (".ttf", ".txt", ".png", ".svg", ".json") and path.name != "manifest.json":
@@ -73,7 +75,7 @@ def verify():
     actual = {p.name for p in DEST.iterdir() if p.suffix in (".ttf", ".txt", ".png", ".svg", ".json") and p.name != "manifest.json"}
     assert len(listed) == len(set(listed)) and set(listed) == actual, "Resource inventory mismatch"
     for name, entry in icons.items():
-        assert (DEST / (name + ".svg")).read_bytes() == icon_svg(entry).encode("utf-8"), name
+        assert (DEST / (name + ".svg")).read_bytes() == icon_svg(entry, filled=name.startswith("scroll-")).encode("utf-8"), name
     for item in manifest["files"]:
         assert hashlib.sha256((DEST / item["file"]).read_bytes()).hexdigest() == item["sha256"], item["file"]
     for item in json.loads((SOURCE / "composition/inputs/fonts.json").read_text(encoding="utf-8")):

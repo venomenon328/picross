@@ -115,6 +115,7 @@ func validate_definition(data: Dictionary) -> String:
 	return Definition.validate(data)
 
 func _ready() -> void:
+	get_tree().node_added.connect(_scrollbar_added)
 	if OS.has_feature("web"):
 		if not JavaScriptBridge.eval("window.picrossStorage.attach(FS, GodotFS, IDBFS)"):
 			return
@@ -212,6 +213,7 @@ func _build() -> void:
 	theme.set_color("font_color","TooltipLabel",Board.INK)
 	BookControls.styles(theme,"Button","dialog-button",1.0)
 	BookControls.checks(theme,1.0)
+	BookControls.scrollbars(theme,1.0)
 	surface = BookSurface.new()
 	surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(surface)
@@ -303,6 +305,8 @@ func set_ui_scale(value: float) -> void:
 	theme.default_font_size = roundi(14 * value)
 	BookControls.styles(theme,"Button","dialog-button",value)
 	BookControls.checks(theme,value)
+	BookControls.scrollbars(theme,value)
+	BookControls.scroll_steps(self,value)
 	theme.set_stylebox("normal", "Label", UiText.label_style(value))
 	theme.set_constant("line_spacing", "Label", roundi(3 * value))
 	_scale_labels(self)
@@ -312,6 +316,11 @@ func set_ui_scale(value: float) -> void:
 	ui_scale_choice.select(1 if ui_scale == 1.25 else 0)
 	_layout_book()
 	board.queue_redraw()
+
+func _scrollbar_added(node: Node) -> void:
+	# Covers internal native bars in later cards, filter windows and popups.
+	if node is ScrollBar and is_ancestor_of(node):
+		node.custom_step = roundi(32*ui_scale)
 
 func _scale_labels(node: Node) -> void:
 	if node is Label:

@@ -176,6 +176,7 @@ func run() -> void:
 		catalog_case("catalog-pages")
 		await sorting()
 		catalog_case("catalog-sorting")
+		await preload("res://tests/scrollbar_cases.gd").run(self)
 		await preload("res://tests/catalog_filter_cases.gd").rules(self)
 		await preload("res://tests/catalog_filter_cases.gd").navigation(self)
 		await preload("res://tests/recent_cases.gd").run(self)
