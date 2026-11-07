@@ -1,5 +1,20 @@
 # WEB-1: Browserbuild und manuelles SSH-Deployment
 
+## K-B: Fortsetzen-Metadaten
+
+[Paketentscheidung #485](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391).
+Der Merker wird erst nach bestehender WebLock-/Hydrationsgrenze aus `user://p1`
+geladen. Es gibt keinen neuen Backend-, Lock- oder Speicherpfad. Die vorhandene
+serialisierte FS.syncfs-Schlange transportiert eigene recentGeneration/recentSaved-
+Zähler, Pending, Error und Retry. Nur der tatsächliche zugehörige Callback bestätigt
+seine Generation; ein älterer Callback, ein Slot-/Sortierungserfolg oder eine
+Startausnahme bestätigt keinen neueren Merker. Das Browserlabel zeigt auch ausstehende
+Merker; Savefehler behalten Vorrang. Blur/Visibility und Retry versuchen ausstehende
+Metadaten erneut. Beenden wartet begrenzt auf deren Callback, ein reiner Merkerfehler
+blockiert aber keinen erfolgreich gesicherten Spielstand. Das bestehende abrupte
+Verlustfenster bleibt. Die Node-Mechanismusprobe ist kein echter IndexedDB-Nachweis:
+K-B-W01 bleibt eine ausdrücklich zu beauftragende Chromiumdiagnose vor Merge.
+
 **B-B / #498:** Der reguläre Webexport startet denselben [Buchroot](BOOK_INTEGRATION.md)
 wie Windows. Produkt-HTML, Appidentität, IndexedDB-/Lock-/Retrywege bleiben erhalten.
 Die technische Beobachtung erweitert diesen Root; die persistenzlose Studienshell

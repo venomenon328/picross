@@ -15,6 +15,9 @@ var info: RefCounted
 var presentation_locked: bool = false
 var save_retry: BookButton
 var catalog_title: ViewTitle
+var recent_panel: BookButton
+var recent_retry: BookButton
+var recent_signature: String = ""
 
 func configure_catalog(_catalog: Control) -> void: pass
 
@@ -71,6 +74,36 @@ func _build() -> void:
 	save_retry.paper_transparent = true
 	page.add_child(save_retry)
 	save_retry.hide()
+	recent_panel = preload("res://ui/recent_panel.gd").new()
+	page.add_child(recent_panel)
+	recent_panel.pressed.connect(resume_recent)
+	recent_panel.hide()
+	recent_retry = _text_button("Fortsetzen-Merker: erneut versuchen",func() -> void: recent.retry())
+	recent_retry.paper_transparent = true
+	album.notices.add_child(recent_retry)
+	recent_retry.hide()
+
+func _process(_delta: float) -> void:
+	if recent_retry == null: return
+	var message: String = recent.message()
+	recent_retry.visible = not message.is_empty()
+	recent_retry.tooltip_text = message
+	# Both marker errors and retry are separate from save-slot diagnostics.
+	# They remain reachable on returning to the catalog, without blocking work.
+	if recent_panel != null:
+		var id: String = recent_id()
+		recent_panel.visible = album.visible and not id.is_empty()
+		recent_panel.disabled = presentation_locked or album.locked
+		if recent_panel.visible:
+			var item: Session = sessions[int(session_indices[id])]
+			var signature: String = id+"/"+str(hash(item.player.cells))+"/"+str(ui_scale)
+			if recent_signature != signature:
+				recent_signature = signature
+				recent_panel.present(item)
+
+func resume_recent() -> void:
+	if presentation_locked or album.locked or not album.visible: return
+	super.resume_recent()
 
 func _layout_book(prepare_board: bool = false) -> void:
 	super._layout_book(prepare_board)
@@ -106,6 +139,7 @@ func _layout_book(prepare_board: bool = false) -> void:
 			_place(save_retry,Rect2(work_repair_button.position,Vector2(340,44)*ui_scale))
 	if album.summary != null: album.summary.visible = album.visible and catalog_error.is_empty()
 	if album.notice_area != null: album.notice_area.visible = album.visible
+	if recent_panel != null: recent_panel.visible = album.visible and not recent_id().is_empty()
 	if album.visible:
 		# Projected paper is already in viewport pixels, including letterboxing.
 		# Use that one coordinate system for heading, clip areas and both footers.
@@ -119,20 +153,29 @@ func _layout_book(prepare_board: bool = false) -> void:
 		var right_heading: float = right_paper.position.x+curve+inset
 		var heading_top: float = maxf(left_paper.position.y+12*ui_scale,material.size.y*0.035+12*ui_scale)
 		# A larger drawing follows available paper height, with a compact fallback.
-		var title_height: float = clampf(left_paper.size.y*0.14,64*ui_scale,110*ui_scale)
-		var catalog_top: float = heading_top+title_height+8*ui_scale
+		var title_height: float = maxf(128*ui_scale,clampf(left_paper.size.y*0.14,64*ui_scale,110*ui_scale))
+		# Reserve a full retry target plus breathing room above the recent panel,
+		# even with no error. Showing/scrolling notices must not move the catalog.
+		var catalog_top: float = heading_top+title_height+28*ui_scale
 		var footer_width: float = album.right_pager.get_child(0).get_combined_minimum_size().x+album.next_button.get_combined_minimum_size().x+12*ui_scale
 		album.right_pager.vertical = (edge-margin-album.fold_gap)/2 < footer_width
 		_place(album, Rect2(Vector2(margin,catalog_top),Vector2(edge-margin,left_paper.end.y-inset-catalog_top)))
 		_place(catalog_title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,title_height)))
 		catalog_title.fallback.add_theme_font_size_override("font_size",roundi(28*ui_scale))
 		if album.summary != null:
-			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(edge-right_heading,45*ui_scale)))
+			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(edge-right_heading,26*ui_scale)))
 			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))
 		# Messages use the existing free heading area. Its fixed, scrollable
 		# bounds never enter either page's card/control layout, even on failure.
-		var notice_top: float = heading_top+30*ui_scale
-		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(edge-right_heading,maxf(1,catalog_top-8*ui_scale-notice_top))))
+		if recent_panel != null:
+			recent_panel.ui_scale = ui_scale
+			_place(recent_panel,Rect2(Vector2(right_heading,catalog_top-76*ui_scale),Vector2(edge-right_heading,68*ui_scale)))
+			recent_panel.layout()
+		var notice_top: float = heading_top+28*ui_scale
+		# This scroller is detached from album, so its controls need the same
+		# scaling pass explicitly (including both retry targets and long labels).
+		album._style_controls(album.notice_area)
+		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(edge-right_heading,48*ui_scale)))
 		album._layout_cards()
 
 func select_puzzle(index: int) -> void:
