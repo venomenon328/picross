@@ -47,7 +47,7 @@ func run() -> void:
 	# Fixed shared KB resources, independent of the growing puzzle catalog.
 	var book_manifest: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/manifest.json"))
 	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
-	check(icons.size() == 23 and icons.has("checkbox-checked") and icons.has("reset"), "PCK active HZ-B icon inventory")
+	check(icons.size() == 27 and icons.has("checkbox-checked") and icons.has("reset"), "PCK active HZ-B/SBR icon inventory")
 	check(book_manifest.has("hz_icon_source") and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"), "PCK HZ-B provenance")
 	for name: String in icons:
 		var texture: Texture2D = load("res://art/book/"+name+".svg")
@@ -56,6 +56,16 @@ func run() -> void:
 		for entry: Dictionary in book_manifest.files:
 			if entry.file == name+".svg": bound = true
 		check(bound, "PCK icon bound to resource manifest "+name)
+	# SBR resources must resolve from the actual Windows/Web pack as well as
+	# the source theme. The external probe itself is never shipped.
+	var controls = load("res://ui/book_controls.gd")
+	var scrollbar_theme := Theme.new()
+	controls.scrollbars(scrollbar_theme,1.25)
+	for type: String in ["VScrollBar","HScrollBar"]:
+		var style: StyleBox = scrollbar_theme.get_stylebox("grabber",type)
+		check(style.get_script().resource_path == "res://ui/scrollbar_style.gd" and style.ui_scale == 1.25,"PCK shared SBR StyleBox "+type)
+		for direction: String in ["increment","decrement"]:
+			check(scrollbar_theme.get_icon(direction,type).get_size() == Vector2(28,28),"PCK imported SBR triangle "+type+direction)
 	check(FileAccess.file_exists("res://art/book/KB-168-NOTICE.txt"), "PCK KB icon provenance notice")
 	# Actual exported font bytes/role, with controlled local fallbacks.
 	var ui_text = load("res://ui/ui_text.gd")

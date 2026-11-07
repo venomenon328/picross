@@ -5,7 +5,7 @@
   "modules": [
     "native.catalog"
   ],
-  "purpose": "SBR-A: gemeinsame native Scrollbar-Stilfamilie in Buch und Popups; bestehende catalog/pages- und information-Prozesse prüfen synthetische Layout-, Style-, Range- und Pointerfälle. Regulärer Windows-Spieler im Kern.",
+  "purpose": "SBR-A: gemeinsame native Scrollbar-Stilfamilie in Buch und Popups; bestehende catalog/pages- und information-Prozesse prüfen synthetische Layout-, Style-, Range- und Pointerfälle. Regulärer Windows-Spieler im Kern. Aktive PCK-/HZ-Reader führen die vier neuen lokalen Icons konsistent; einmalige reguläre Windows/Web-Exportprüfung ohne Browser/Deployment.",
   "omitted": "Keine Spiel-/Save-/History-/Zellrenderer-/Adapter-/Produktionsänderung: native.core/history/completion/adapters/graphics/export, preflight, tools-Vollsuite, production.* und delivery nicht gewählt. Die kleine aktive SVG-Provisionierung wird gezielt mit z2_resources verify und test_z2_delivery geprüft; keine allgemeine Tooländerung. Kein Chromium. Physische OS-Mausprobe ohne ausdrückliche Desktopfreigabe nicht ausgeführt; Eigentümer-M01 bleibt offen.",
   "test_changes": [
     {
@@ -22,6 +22,21 @@
       "path": "tools/native_contract.py",
       "disposition": "change-scoped",
       "reason": "Unabhängiger Ergebnisleser verlangt denselben tatsächlichen SBR-Checkpoint; vorhandene Missing/Duplicate/Zero-Checks-Gegenproben bleiben wirksam."
+    },
+    {
+      "path": "game/tests/content_pack_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
+    },
+    {
+      "path": "game/tests/hz_b_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
+    },
+    {
+      "path": "game/tests/hz_pack.gd",
+      "disposition": "change-scoped",
+      "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
     }
   ],
   "core_change": "Keine Kernänderung. Einmalige gerenderte native Originale für SBR-A-R01 auf separatem review/539-sbr-a, kein Produktdiff und kein CI-Galerieupload. Bedarf nach Review/Abnahme beenden, spätestens 2026-11-14 prüfen. Persönliche Windows-Abnahme SBR-A-M01 bleibt beim Eigentümer.",
