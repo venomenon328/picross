@@ -62,7 +62,8 @@ Fachstand: Spezifikation 2.3 · Workflowabgleich: 06.11.2026 · KU-A/B und HZ-A/
 ## K-A · Kombinierbare Sitzungsfilter (#485)
 
 [Die Paketentscheidung K-A](https://github.com/venomenon328/picross/issues/485#issuecomment-6704440743)
-bindet die Umsetzung und ihre getrennten Gates. Der Katalog führt einen gemeinsamen
+und die [bestätigte Bedienpräzisierung](https://github.com/venomenon328/picross/issues/485#issuecomment-6704732025)
+binden die Umsetzung und ihre getrennten Gates. Der Katalog führt einen gemeinsamen
 angewendeten Sitzungszustand: Kategorie, Status (Alle/Noch offen/Neu/Begonnen/Gelöst),
 Modus (Alle/Monochrom/Farbe), optionale inklusive Schwierigkeit von/bis L1–L5 und
 optionale maximale Zellzahl 1–2500. Alle Achsen gelten gemeinsam mit UND für den
@@ -82,10 +83,13 @@ Breite × Höhe, einschließlich Grenze und unabhängig von der Rechteckorientie
 Der Button **Filter** steht rechts neben Sortierauswahl und Richtungspfeil,
 mit 16×UI horizontalem Textinnenraum je Seite auch unter Fokus/Druck. Er
 öffnet ein handgezeichnetes Papierpanel mit den zusätzlichen
-Achsen. **Übernehmen** wendet den gesamten gültigen Entwurf an. Vertauschte
-Schwierigkeitsgrenzen und andere als leere oder positive ganzzahlige Zellzahlen
-bis 2500 erhalten eine sichtbare Fehlermeldung; die letzte gültige Auswahl und
-Trefferliste bleiben bestehen. Schließen verwirft den Entwurf. Bei knapper Höhe
+Achsen. Die Schwierigkeitsdropdowns begrenzen einander auf auswählbare Stufen
+mit Minimum ≤ Maximum. Bei Bedarf folgt die Gegengrenze der zuletzt geänderten;
+gleiche Stufen und je ein unbeschränktes Ende bleiben möglich. Eine widersprüchliche
+Spanne kann nicht ausgewählt werden und erzeugt keine Fehlermeldung.
+**Übernehmen** wendet den gesamten gültigen Entwurf an. Andere als leere oder
+positive ganzzahlige Zellzahlen bis 2500 erhalten eine sichtbare Fehlermeldung;
+die letzte gültige Auswahl und Trefferliste bleiben bestehen. Schließen verwirft den Entwurf. Bei knapper Höhe
 scrollt der Panelinhalt; Aktionen bleiben getrennt erreichbar. Kartenminimum,
 Bildhöhe, Schriftrollen, Kopf/Fuß und Falzabstände bleiben erhalten.
 

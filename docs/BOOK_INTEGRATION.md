@@ -54,8 +54,10 @@ Schwierigkeitsspanne und maximale Zellzahl gemäß
 [K-A-Katalogvertrag](CATALOG_PRESENTATION.md#k-a--kombinierbare-sitzungsfilter-485).
 Neben Sortierauswahl und Richtungspfeil in der rechten Kopfzeile öffnet **Filter**
 ein kompaktes Papierpanel; sein Entwurf
-verändert die Treffer erst nach gültigem Übernehmen. Ungültige Eingaben bleiben
-sichtbar, Schließen verwirft sie. Das Panel begrenzt sich auf das Fenster und
+verändert die Treffer erst nach gültigem Übernehmen. Die Schwierigkeitsdropdowns
+verhindern widersprüchliche Spannen durch gegenseitige Optionsgrenzen und
+Anpassung der Gegengrenze. Ungültige Zellzahlen bleiben sichtbar; Schließen
+verwirft den Entwurf. Das Panel begrenzt sich auf das Fenster und
 scrollt bei knapper Höhe, ohne Karten-/Bildbudgets zu reduzieren. Seiten-/UI-/
 Ansichtswechsel schließen es. Filterreset erhält die Sortierung. Beide unabhängigen
 Scrollstände, Seite und passende Auswahl bleiben bei Rückkehr erhalten;

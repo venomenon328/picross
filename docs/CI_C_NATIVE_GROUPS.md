@@ -38,7 +38,8 @@ gebundenen PR, nicht als neue dauerhafte Galerie im Modul.
 K-A / #485 ergänzt im selben `catalog/pages`-Prozess eine kleine synthetische
 Filterregression: Status inklusive leerem Save, Redo, Fehler und Recovery,
 Modus, vorhandene L1–L5/fehlende Stufe, inklusive Spannen und Zellzahlgrenzen,
-Rechteckflächen, UND-Kombination, mehrseitige Sortier-/ID-Zuordnung, No-op/Reset,
+Rechteckflächen, gegenseitig begrenzte Schwierigkeitsoptionen und Anpassung der
+Gegengrenze, UND-Kombination, mehrseitige Sortier-/ID-Zuordnung, No-op/Reset,
 beide Scrollstände, Return und Clamping nach Abschluss/Reset sowie sichtbare
 Fehler außerhalb der Treffer und unveränderte Save-/Präferenzbytes beim Filtern.
 Die fünf Checkpoints layout/pages/sorting/filter-rules/filter-navigation werden
