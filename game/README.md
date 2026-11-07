@@ -5,6 +5,12 @@
 Im rechten Katalogkopf öffnet „Zuletzt bearbeitetes Rätsel fortsetzen“ den zuletzt
 wirksam bearbeiteten, erfolgreich gespeicherten begonnenen Stand, auch außerhalb der
 aktuellen Filter. Eigene Füllungen erscheinen in einer verkleinerten Vorschau.
+Die Vorschau ist bei der Katalogrückkehr sofort ohne Darüberfahren sichtbar,
+auch nach Undo/Redo oder einem Wechsel des zuletzt bearbeiteten Blatts.
+Ein gültiger begonnener Stand ohne Füllungen zeigt eine leere Miniatur.
+Bei genügend Platz nutzt der Kasten genau die halbe rechte Kopfbreite,
+bei knapper Breite oder größerer UI-Skala die volle. Text und Vorschau bleiben
+vollständig; Fenster-/UI-Wechsel passen die Breite unmittelbar an.
 Ohne passenden Stand oder nach Abschluss/Reset ist das Panel verborgen. Öffnen oder
 Ändern der Ansicht allein setzt keinen Merker; echtes Undo/Redo schon. Ein neuer Start
 zeigt weiterhin den Katalog. Der separate `user://p1/recent-puzzle.json` ändert keine
