@@ -7,7 +7,7 @@
     "production.adapter",
     "production.catalog"
   ],
-  "purpose": "B-01 gemäß RI-B-R01 gezielt beheben und RI-B mit main vereinen. Vollständiger Featurediff: privater Registrierungsprüfkontext, Adapter-/Katalog-/Recoveryverträge, Authoring/Offline-Sheet. tools prüft Promptregression und Quellen-/Gruppenzuordnung; adapter/catalog prüfen synthetische Integration und Transaktionen. Regulärer Windows-Build im Kern wegen Werkzeugcode.",
+  "purpose": "B-01 gemäß RI-B-R01 gezielt beheben und RI-B mit main vereinen. Vollständiger Featurediff: privater Registrierungsprüfkontext, Adapter-/Katalog-/Recoveryverträge, Authoring/Offline-Sheet. tools prüft Promptregression und Quellen-/Gruppenzuordnung; adapter/catalog prüfen synthetische Integration und Transaktionen. Regulärer Windows-Build im Kern wegen Werkzeugcode. Zusätzlich ausdrücklich beauftragt: minimale v2-CI-Übergabekorrektur nach Run 42414457885; kompakte Originalbelege vor dem unveränderten Reader bereitstellen.",
   "omitted": "Keine neue Solver-, Bild-, Runtime-/Spielrenderer-, Browser-, Toolchain- oder Zustellungsänderung im Featurediff gegenüber aktuellem main. production.solver/images, native.*, preflight und delivery daher nicht angefordert; keine pauschale Vollsuite. Referenzmessungen bleiben an ihre damaligen Werkzeug-/Testcommits gebunden; keine neue Laufzeitwirkung behauptet. O-01 bleibt separat offen. B-01-Recheck und unabhängiges Review sowie Eigentümerfreigaben bleiben separat.",
   "test_changes": [
     {
@@ -24,9 +24,19 @@
       "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
       "reason": "Günstige tatsächliche Node-JS-Promptregression für B-01, Fallbacks, ausdrückliche gespeicherte Refwahl und Anhang; Snapshot bytegenau gegen Regelwerk. Nur mit tools gewählt, kein neuer Job und keine Browser-/Bildgalerie."
+    },
+    {
+      "path": "tools/test_ci_modular.py",
+      "disposition": "core",
+      "reason": "Vorhandenen isolierten Build-/Modulauswahltest an die kompakte Belegbereitstellung anpassen; kein zusätzlicher schwerer Kernfall."
+    },
+    {
+      "path": "tools/test_production_ci.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische Regression führt den echten Paketrunner und unveränderten Fachleser mit internen ZA-1-Arbeitsdateien aus; veränderte, fehlende und unerwartete Belege bleiben Fehler. Nur im gewählten tools-Modul, kein Solver/Replayaufbau."
     }
   ],
-  "core_change": "Keine Änderung des aktuellen main-Kerns. Einmalige Git-/Dokumentkonsistenzprüfung und Quellenauflösung main/PR-Ref im PR dokumentieren; temporäre Prüfdaten nach Lieferung entfernen. Historische RI-B-T01/Selbstreviews bleiben commitgebunden.",
+  "core_change": "Ausdrücklich freigegebene minimale CI-Korrektur: vor dem unveränderten unabhängigen Fachleser die schon vorgesehenen kompakten Originalbelege temporär bereitstellen. Keine Reader-/Hash-/Quellenlockerung, Modulabwahl, neue Jobfamilie oder technische Aufbewahrung. Vorhandenen isolierten Kerntest anpassen; neuer Runner-/Reader-Gegenbeweis nur bei tools. Historische RI-B-T01/Messungen bleiben gebunden; frühere Bereinigungsablehnung nicht umgehen.",
   "evidence": {
     "mode": "none",
     "purpose": null,

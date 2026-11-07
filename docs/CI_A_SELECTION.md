@@ -30,6 +30,10 @@ Der unabhängige [Ergebnisleser](../tools/production_results.py) prüft Original
 tatsächliche Test-IDs, Gruppen, Integrationen, nichtleere Logs/Proofs und Datei-/
 Bytehashes samt Head, Basis, Checkout, Run und Versuch. Package CI ruft ihn im
 selben erzeugenden Job auf; anschließend werden temporäre Originale verworfen.
+Vor dem Aufruf stellt der Paketrunner eine temporäre kompakte Belegansicht nach
+dem bestehenden Producerinventar bereit. Interne synthetische ZA-1-Checkouts
+bleiben Arbeitsdaten; der unveränderte Reader prüft die Originalbelege weiterhin
+exakt gegen deklarierte Dateiliste, Hashes und Pflichtumfang.
 Nur eine aktuelle befristete Evidenceanforderung bewirkt einen technischen Upload.
 Ein positives Joblabel oder eine leere Gruppe ersetzt diese Prüfung nicht.
 

@@ -321,8 +321,14 @@ def execute(plan, output, cache):
                 if binding['production_groups']:
                     command([sys.executable, 'tools/production_ci.py', '--groups', ','.join(binding['production_groups']),
                              '--output-dir', str(work / 'production')], 'production', work, rows)
-                    from production_results import validate_all
-                    validate_all(binding, work / 'production', {'production_attempt': attempt}, attempt)
+                    from production_results import files, validate_all
+                    # The reader consumes compact original evidence, as in the
+                    # diagnostic transport, not mutable internal ZA checkouts.
+                    evidence = work / 'production-check'
+                    for row in files(work / 'production', staging=True):
+                        copy_file(work / 'production' / row['file'], evidence / row['file'])
+                    copy_file(work / 'production/production-result.json', evidence / 'production-result.json')
+                    validate_all(binding, evidence, {'production_attempt': attempt}, attempt)
                 if 'delivery' in plan['modules']:
                     command([sys.executable, 'tools/build_web_player.py', '--cache-dir', str(cache),
                              '--output-dir', str(work / 'web-player')], 'delivery-build', work, rows)
