@@ -110,7 +110,7 @@ Alle aktiven Filter gelten gemeinsam. Grenzen sind einschließlich; gleiche
 Schwierigkeitsgrenzen wählen eine Stufe. Ohne Spanne bleiben nicht eingestufte
 Rätsel sichtbar; mit einer Grenze erscheinen nur passende eingestufte Rätsel.
 Beide Maßgrenzen funktionieren unabhängig: jeweils leer oder eine ganze Zellzahl
-von 1 bis 50. Gemeinsam müssen beide passen; Breite ≤20/Höhe ≤30 erlaubt
+von 1 bis 99. Gemeinsam müssen beide passen; Breite ≤20/Höhe ≤30 erlaubt
 20×30, aber nicht 30×20. **Übernehmen** wendet gültige Eingaben gemeinsam an.
 Die Schwierigkeitslisten bieten nur miteinander verträgliche Stufen an:
 Minimum ≤ Maximum; nötigenfalls folgt die andere Grenze automatisch. Dafür

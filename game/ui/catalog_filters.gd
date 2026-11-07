@@ -15,6 +15,7 @@ var width_input: LineEdit
 var height_input: LineEdit
 var error: Label
 var body: VBoxContainer
+var form: GridContainer
 var scroller: ScrollContainer
 var actions: HBoxContainer
 var ui_scale: float = 1.0
@@ -31,6 +32,10 @@ func _ready() -> void:
 	body = VBoxContainer.new()
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroller.add_child(body)
+	form = GridContainer.new()
+	form.columns = 2
+	form.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	body.add_child(form)
 	status = _choice("Status", ["Alle", "Noch offen", "Neu", "Begonnen", "Gelöst"])
 	mode_choice = _choice("Modus", ["Alle", "Monochrom", "Farbe"])
 	lower = _choice("Schwierigkeit von", ["Ohne Grenze", "L1 · Sehr leicht", "L2 · Leicht", "L3 · Mittel", "L4 · Schwer", "L5 · Sehr schwer"])
@@ -38,9 +43,10 @@ func _ready() -> void:
 	lower.item_selected.connect(func(_index: int) -> void: _bounds_changed(true))
 	upper.item_selected.connect(func(_index: int) -> void: _bounds_changed(false))
 	var dimensions := HBoxContainer.new()
-	body.add_child(dimensions)
-	width_input = _dimension("Maximale Breite", dimensions)
-	height_input = _dimension("Maximale Höhe", dimensions)
+	_label("Maximale Größe", form)
+	form.add_child(dimensions)
+	width_input = _dimension("Breite", dimensions)
+	height_input = _dimension("Höhe", dimensions)
 	error = Label.new()
 	error.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	error.add_theme_color_override("font_color", Color("863c32"))
@@ -62,45 +68,38 @@ func _ready() -> void:
 	outer.add_child(reset)
 	get_parent().get_viewport().size_changed.connect(hide)
 
-func _row(title: String) -> HBoxContainer:
-	var row := HBoxContainer.new()
-	body.add_child(row)
+func _label(title: String, parent: Container) -> void:
 	var label := Label.new()
 	label.text = title
-	row.add_child(label)
-	return row
+	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	parent.add_child(label)
 
 func _choice(title: String, entries: Array) -> Choice:
-	var row := _row(title)
+	_label(title, form)
 	var choice := Choice.new()
 	choice.name = "catalog-filter-" + title
 	choice.accessibility_name = title
 	choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	choice.fit_to_longest_item = false
 	for title_text: String in entries: choice.add_item(title_text)
-	row.add_child(choice)
+	form.add_child(choice)
 	return choice
 
 func _dimension(title: String, parent: HBoxContainer) -> LineEdit:
-	var column := VBoxContainer.new()
-	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	parent.add_child(column)
-	var label := Label.new()
-	label.text = title
-	column.add_child(label)
+	_label(title, parent)
 	var field := LineEdit.new()
 	field.name = "catalog-filter-" + title
-	field.accessibility_name = title + " (1 bis 50, leer ohne Grenze)"
-	field.placeholder_text = "1–50 oder leer"
-	field.max_length = 8
+	field.accessibility_name = "Maximale " + title + " (1 bis 99, leer ohne Grenze)"
+	field.placeholder_text = "Alle"
+	field.max_length = 2
+	field.add_theme_constant_override("minimum_character_width", 2)
 	field.add_theme_color_override("font_color", Color("293e3d"))
 	field.add_theme_color_override("font_placeholder_color", Color("64685f"))
 	field.add_theme_color_override("caret_color", Color("293e3d"))
 	field.add_theme_color_override("selection_color", Color("b4c6b5"))
 	field.add_theme_color_override("font_selected_color", Color("293e3d"))
-	field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	field.text_submitted.connect(func(_value: String) -> void: submit())
-	column.add_child(field)
+	parent.add_child(field)
 	return field
 
 func open(selection: Dictionary, anchor: Rect2, scale: float) -> void:
@@ -130,8 +129,11 @@ func open(selection: Dictionary, anchor: Rect2, scale: float) -> void:
 			node.ui_scale = scale
 			node.custom_minimum_size = Vector2(120,44)*scale
 		if node is BoxContainer: node.add_theme_constant_override("separation",roundi(8*scale))
+		if node is GridContainer:
+			node.add_theme_constant_override("h_separation",roundi(16*scale))
+			node.add_theme_constant_override("v_separation",roundi(8*scale))
 		if node is LineEdit:
-			node.custom_minimum_size = Vector2(140,44)*scale
+			node.custom_minimum_size = Vector2(60,44)*scale
 			for state: String in ["normal","focus","read_only"]:
 				var frame := Paper.make("catalog/filter-input/"+state,scale,Color("fff8e8"))
 				frame.content_margin_left = 12*scale

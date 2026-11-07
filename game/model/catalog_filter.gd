@@ -6,12 +6,12 @@ const MODES: Array[String] = ["all", "mono", "color"]
 
 static func _dimension(value: String, label: String) -> Dictionary:
 	if value.is_empty(): return {"value":0}
-	var message: String = label + ": ganze Zahl von 1 bis 50 oder leer."
-	if value.length() > 8: return {"error":message}
+	var message: String = label + ": ganze Zahl von 1 bis 99 oder leer."
+	if value.length() > 2: return {"error":message}
 	for character: String in value:
 		if character < "0" or character > "9": return {"error":message}
 	var limit: int = value.to_int()
-	if limit < 1 or limit > 50: return {"error":message}
+	if limit < 1 or limit > 99: return {"error":message}
 	return {"value":limit}
 
 static func validate(category: String, status: String, mode: String, lower: int, upper: int, width: String, height: String) -> Dictionary:

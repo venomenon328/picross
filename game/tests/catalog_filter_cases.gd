@@ -70,7 +70,7 @@ static func rules(probe) -> void:
 	probe.check(Array(album.filtered_ids) == [ids[49],ids[53]],"K-A all axes form one AND pipeline")
 	var valid: Dictionary = album.filters.duplicate()
 	var generation: int = album.generation
-	for spec: Array in [["0",""],["51",""],["-1",""],["1.5",""],["20×30",""],["abc",""],["","0"],["","51"],["","1.5"]]:
+	for spec: Array in [["0",""],["100",""],["-1",""],["1.5",""],["20×30",""],["abc",""],["","0"],["","100"],["","1.5"]]:
 		apply(album,"all","color",0,0,spec[0],spec[1])
 		probe.check(album.filters == valid and album.generation == generation and album.filter_panel.error.visible,"K-A invalid bounds/input visibly rejected, last valid selection retained")
 	# Mutual menu limits prevent contradictory UI choices. Programmatic or
@@ -96,7 +96,7 @@ static func rules(probe) -> void:
 	panel.lower.item_selected.emit(0)
 	probe.check(not panel.upper.is_item_disabled(1),"K-A removing both bounds restores full menus")
 	panel.hide()
-	for dimension: String in ["1","50",""]:
+	for dimension: String in ["1","99",""]:
 		probe.check(Filter.validate("","all","all",0,0,dimension,dimension).has("selection"),"K-A supported dimension boundary " + dimension)
 	var size_limit: Dictionary = Filter.validate("","all","all",0,0,"20","30").selection
 	probe.check(Filter.matches(size_limit,"","new",false,20,30,null) and not Filter.matches(size_limit,"","new",false,30,20,null),"K-A inclusive rectangle dimensions preserve orientation")
