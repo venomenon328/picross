@@ -62,29 +62,40 @@ static func range_input(probe, scroller: ScrollContainer) -> void:
 		probe.check(bar.value < before if ratio > 0 else bar.value == 0,"SBR native decrement at start/middle/end")
 	# Native track paging and thumb dragging; geometry from the documented
 	# StyleBox margins and range, with no replacement input controller.
-	bar.value = 0
-	probe.click_at(Vector2(rect.get_center().x,rect.end.y-arrow-5))
-	await probe.create_timer(0.3).timeout
-	probe.check(bar.value > 0,"SBR native track click pages down")
+	for ratio: float in [0.0,0.5,1.0]:
+		bar.value = limit*ratio
+		var before: float = bar.value
+		probe.click_at(Vector2(rect.get_center().x,rect.end.y-arrow-5))
+		await probe.create_timer(0.3).timeout
+		probe.check(bar.value > before if ratio < 1 else bar.value == limit,"SBR native track down at start/middle/end")
+		bar.value = before
+		probe.click_at(Vector2(rect.get_center().x,rect.position.y+arrow+5))
+		await probe.create_timer(0.3).timeout
+		probe.check(bar.value < before if ratio > 0 else bar.value == 0,"SBR native track up at start/middle/end")
 	bar.value = 0
 	var thumb_min: float = bar.get_theme_stylebox("grabber").get_minimum_size().y
 	var track_margin: float = bar.get_theme_stylebox("scroll").get_minimum_size().y
 	var area: float = rect.size.y-2*arrow-track_margin-thumb_min
 	var thumb_size: float = bar.page/(bar.max_value-bar.min_value)*area+thumb_min
-	var start := Vector2(rect.get_center().x,rect.position.y+arrow+track_margin*0.5+thumb_size*0.5)
-	motion(probe,start)
-	button(probe,start,true)
-	var delta: float = area*(limit/(bar.max_value-bar.min_value))*0.5
-	motion(probe,start+Vector2(0,delta),true)
-	button(probe,start+Vector2(0,delta),false)
-	probe.check(absf(bar.value-limit*0.5) <= 2,"SBR native thumb drag reaches middle")
-	bar.value = 0
-	probe.click_at(viewport_rect(probe,scroller).get_center(),MOUSE_BUTTON_WHEEL_DOWN)
-	await probe.frames()
-	probe.check(bar.value > 0,"SBR native wheel over content scrolls")
-	bar.value = limit
-	probe.click_at(viewport_rect(probe,scroller).get_center(),MOUSE_BUTTON_WHEEL_DOWN)
-	probe.check(bar.value == limit,"SBR wheel clamps at end")
+	for route: Vector2 in [Vector2(0,0.5),Vector2(0.5,1),Vector2(1,0)]:
+		bar.value = limit*route.x
+		var start := Vector2(rect.get_center().x,rect.position.y+arrow+track_margin*0.5+thumb_size*0.5+area*bar.value/(bar.max_value-bar.min_value))
+		motion(probe,start)
+		button(probe,start,true)
+		var delta: float = area*limit/(bar.max_value-bar.min_value)*(route.y-route.x)
+		motion(probe,start+Vector2(0,delta),true)
+		button(probe,start+Vector2(0,delta),false)
+		probe.check(absf(bar.value-limit*route.y) <= 2,"SBR native thumb from start/middle/end reaches middle/end/start")
+	for ratio: float in [0.0,0.5,1.0]:
+		bar.value = limit*ratio
+		var before: float = bar.value
+		probe.click_at(viewport_rect(probe,scroller).get_center(),MOUSE_BUTTON_WHEEL_DOWN)
+		await probe.frames()
+		probe.check(bar.value > before if ratio < 1 else bar.value == limit,"SBR wheel down over content at start/middle/end")
+		bar.value = before
+		probe.click_at(viewport_rect(probe,scroller).get_center(),MOUSE_BUTTON_WHEEL_UP)
+		await probe.frames()
+		probe.check(bar.value < before if ratio > 0 else bar.value == 0,"SBR wheel up over content at start/middle/end")
 	bar.value = 0
 
 static func run(probe) -> void:
