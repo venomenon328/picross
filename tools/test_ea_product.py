@@ -52,6 +52,7 @@ def completion_report():
             samples=samples,gated=True,initial_image=True,retained=True,reentry_image=True,unchanged=True,
             selections=[False,True,False,True],state_before='a'*64,state_after='a'*64,
             slots_before={'test.json':'b'*64},slots_after={'test.json':'b'*64},line_pixels=[.2]*8,
+            control='single-rectangular-toggle',hatch_count=28,hatch_pixels=[100,200],slider_positions=[87.5,128.5,87.5,128.5],
             area=[10,10,columns*10,lines*10],raster=[10,10,columns*10,lines*10],step=10,lod='small',
             fill_count=count,line_count=columns+lines+2))
     return dict(ar_measurements=rows)
@@ -68,6 +69,9 @@ class CompletionReader(unittest.TestCase):
             lambda r:r[0].update(state_after='c'*64),
             lambda r:r[0]['slots_after'].update({'test.json':'c'*64}),
             lambda r:r[0].update(line_pixels=[0]*8),
+            lambda r:r[0].update(control='two-buttons'),
+            lambda r:r[0].update(hatch_pixels=[100,0]),
+            lambda r:r[0].update(slider_positions=[87.5]*4),
             lambda r:r[0].update(raster=[10,10,10,10]),
             lambda r:r[0].update(selections=[True]*4)]
         for change in changes:

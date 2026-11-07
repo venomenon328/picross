@@ -70,8 +70,7 @@ var repair_id: String = ""
 var work: Control
 var ending: Control
 var completion_reset: BookButton
-var completion_image: BookButton
-var completion_grid: BookButton
+var completion_switch: Button
 var title: Label
 var album_button: Button
 var undo_button: Button
@@ -273,10 +272,9 @@ func _build() -> void:
 	ending.add_child(completion_title)
 	completion_reset = _icon_button("reset", func() -> void: _ask_reset_id(str(session.definition.id), "ending"), ending)
 	completion_reset.tooltip_text = "Rätsel zurücksetzen"
-	completion_image = _text_button("Bild", func() -> void: _select_completion(false))
-	completion_grid = _text_button("Raster", func() -> void: _select_completion(true))
-	ending.add_child(completion_image)
-	ending.add_child(completion_grid)
+	completion_switch = preload("res://ui/completion_switch.gd").new()
+	ending.add_child(completion_switch)
+	completion_switch.toggled.connect(_select_completion)
 
 	minimum_message = label("Mindestens 1280 × 720 logische Fensterfläche benötigt.\nBitte das Fenster vergrößern oder die Anzeigeskalierung prüfen.", 20)
 	minimum_message.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -472,11 +470,8 @@ func _layout_completion() -> void:
 	_place(completion_reset, Rect2(Vector2(paper.get_center().x-22*u,bottom-44*u),Vector2.ONE*44*u))
 	_place(completion_title, Rect2(Vector2(left,bottom-56*u-caption_height),Vector2(width,caption_height)))
 	var switch_top := completion_title.position.y-56*u
-	_place(completion_image, Rect2(Vector2(paper.get_center().x-92*u,switch_top),Vector2(88,44)*u))
-	_place(completion_grid, Rect2(Vector2(paper.get_center().x+4*u,switch_top),Vector2(88,44)*u))
-	for item: BookButton in [completion_image,completion_grid]:
-		item.ui_scale = u
-		item.add_theme_font_size_override("font_size",roundi(15*u))
+	_place(completion_switch, Rect2(Vector2(paper.get_center().x-112*u,switch_top),Vector2(224,44)*u))
+	completion_switch.ui_scale = u
 	var bounds := Rect2(Vector2(left,top),Vector2(width,maxf(1,switch_top-16*u-top)))
 	var matrix: Array = []
 	if session.completed:
@@ -490,11 +485,10 @@ func _select_completion(grid: bool) -> void:
 	_update_completion_switch()
 
 func _update_completion_switch() -> void:
-	for item: BookButton in [completion_image,completion_grid]:
-		item.visible = not reveal_view.active and session != null and session.completed
-		item.disabled = reveal_view.active
-	completion_image.selected = not reveal_view.grid_selected
-	completion_grid.selected = reveal_view.grid_selected
+	completion_switch.visible = not reveal_view.active and session != null and session.completed
+	completion_switch.disabled = reveal_view.active
+	completion_switch.set_pressed_no_signal(reveal_view.grid_selected)
+	completion_switch.queue_redraw()
 
 func _completion_progress(work_alpha: float, caption_alpha: float) -> void:
 	work.modulate.a = work_alpha

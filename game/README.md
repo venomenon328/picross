@@ -414,7 +414,8 @@ erst nach bestätigtem Abschluss. Die registrierte Definition bindet Motivname u
 freigegebenes Ergebnisbild; vorher bleibt nur die eigene Füllminiatur sichtbar.
 Beim neuen Abschluss treten Raster, Hinweise und Werkzeuge zurück. Deine Füllungen bewegen sich zur Papiermitte, werden zu lückenlosen Farbflächen und gehen in das fertige Bild über. Die Folge dauert etwa 2,15 Sekunden. Die Speicherung erfolgt unmittelbar beim letzten Zug; etwaige Speicherfehler bleiben sichtbar. Danach erscheinen Motivname und „Rätsel zurücksetzen“. Der Titel bleibt „Blatt NN · W × H“, der Buchreiter führt zur Sammlung.
 
-Nach der Enthüllung bietet **Bild | Raster** den unmittelbaren Vergleich. Das
+Nach der Enthüllung bietet ein rechteckiger handgezeichneter Schalter mit
+hellem Schieber und schraffierter Spur **Bild** links und **Raster** rechts. Das
 Raster zeigt deine bestätigten Füllungen in Originalfarben und Stiftoptik mit
 Rasterlinien; Hintergrund-X und unbekannte Felder bleiben leer. Es lässt sich
 nicht bearbeiten oder zoomen. Beide Ansichten bleiben vollständig sichtbar.

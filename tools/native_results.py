@@ -41,6 +41,9 @@ def validate_completion_cases(report):
                 or not row['slots_before'] or row['slots_before'] != row['slots_after']
                 or any(not re.fullmatch('[0-9a-f]{64}', h) for h in row['slots_before'].values())
                 or len(row['line_pixels']) != 8 or any(v <= .02 for v in row['line_pixels'])
+                or row['control'] != 'single-rectangular-toggle' or row['hatch_count'] <= 0
+                or len(row['hatch_pixels']) != 2 or any(v <= 0 for v in row['hatch_pixels'])
+                or row['slider_positions'] != [87.5,128.5,87.5,128.5]
                 or row['selections'] != [False,True,False,True]):
             raise ValueError('AR palette/cells/state boundary')
         # First/rectangle palette fixed independently; the 40/50-square
