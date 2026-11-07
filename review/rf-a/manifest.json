@@ -21597,8 +21597,8 @@
       "sha256": "d70cf493c97de0899a715b54f228cc5d0a0159ab7dae79b6ea9c62b217d4b4d2"
     },
     "build-binding.json": {
-      "bytes": 7608,
-      "sha256": "e06716d102a5ec473c93af94ce8733c144b8bc0d3148967ce43cd9f2860348b8"
+      "bytes": 7518,
+      "sha256": "df3f2b12d8d3fcd6d781b0269c7554c9b60e1b56374b267522278064bc1dee38"
     },
     "layout-1280x720-ui125.png": {
       "bytes": 164774,
@@ -21620,9 +21620,13 @@
       "bytes": 338526,
       "sha256": "20febad3c3922cbed1dd4bd21e1f11656e0d99617d3db8dd1db63abf81aca452"
     },
+    "manifest.json": {
+      "bytes": 442926,
+      "sha256": "1ed0015af599e01337ba28b569719e4b56b1fe6419b9dcfdc1bb914572d7a916"
+    },
     "mouse-events.jsonl": {
-      "bytes": 7210,
-      "sha256": "d9e0208e02282cb6d0322816d6641c630a25f7f352fcd26c0bd301a99dfcb44a"
+      "bytes": 7161,
+      "sha256": "b91eac9ef65dea1e60ba81397f25d88e6d8ee801ed4f36229c13c900b898d383"
     },
     "redo-before.png": {
       "bytes": 217696,
@@ -21633,8 +21637,8 @@
       "sha256": "4841e9ddc26a3c4f2460014e8b248d35544347ba7941d9cb6ae14881289c0d3d"
     },
     "drivers/build_gui.py": {
-      "bytes": 2903,
-      "sha256": "c36e78dadbba726cc7d11fefc4ba7b2bd646cf40bfeefd984ca20ded89686d1d"
+      "bytes": 2859,
+      "sha256": "8221406be71fee79bfe84da9e2003899d1610c41253bbd45b541708ee9c97073"
     },
     "drivers/gui_sizes.py": {
       "bytes": 1064,
@@ -21653,8 +21657,8 @@
       "sha256": "73ddd3b7997121a1618ee000e5087d2b67e89e76b7b60aba949ba328a6906429"
     },
     "drivers/prepare.py": {
-      "bytes": 1880,
-      "sha256": "beebdae2f4eedd314f6a07893b7411050458ea01f678a13a7426c62f645ed011"
+      "bytes": 1851,
+      "sha256": "6b967c358c85b34f09ab6093958cbe073cfe65ba30855efdc03a4654a13a60b8"
     },
     "drivers/win.py": {
       "bytes": 3890,
