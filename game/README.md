@@ -101,6 +101,36 @@ neuen Kriterium beginnt die Richtung aufsteigend; „Hinzugefügt“ zeigt zuers
 neuesten Rätsel. Ohne Datum oder Einstufung steht ein Blatt immer hinten.
 Gleichstände behalten ihre feste Blattreihenfolge; Blattnummern ändern sich nicht.
 
+**Filter** rechts neben Sortierauswahl und Richtungspfeil öffnet die zusätzlichen
+Auswahlen: **Status**
+(Alle, Noch offen, Neu, Begonnen, Gelöst), **Modus** (Alle, Monochrom, Farbe),
+**Schwierigkeit von/bis** (Sehr leicht bis Sehr schwer) sowie die nebeneinanderliegenden Felder
+**Maximale Breite** und **Maximale Höhe**.
+Alle aktiven Filter gelten gemeinsam. Grenzen sind einschließlich; gleiche
+Schwierigkeitsgrenzen wählen eine Stufe. Ohne Spanne bleiben nicht eingestufte
+Rätsel sichtbar; mit einer Grenze erscheinen nur passende eingestufte Rätsel.
+Beide Maßgrenzen funktionieren unabhängig: jeweils leer oder eine ganze Zellzahl
+von 1 bis 99. Gemeinsam müssen beide passen; Breite ≤20/Höhe ≤30 erlaubt
+20×30, aber nicht 30×20. **Übernehmen** wendet gültige Eingaben gemeinsam an.
+Die Schwierigkeitslisten bieten nur miteinander verträgliche Stufen an:
+Minimum ≤ Maximum; nötigenfalls folgt die andere Grenze automatisch. Dafür
+erscheint keine Fehlermeldung. Ungültige Breiten-/Höhenwerte werden angezeigt und
+verändern die letzte gültige Auswahl nicht. **Schließen** verwirft den Entwurf. Der Panelinhalt scrollt bei
+knapper Höhe; das Fenster bleibt ohne unnötigen vertikalen Leerraum am Inhalt
+bemessen. Übernehmen / Zurücksetzen / Schließen stehen gleich groß in einer Zeile.
+Breite/Höhe schließen jeweils rechtsbündig unter Von/Bis ab. **Zurücksetzen** setzt auch die Kategorie auf Alle und
+behält die Sortierung; diese Aktion befindet sich nur im Filterfenster.
+Von/Bis stehen wie Breite/Höhe nebeneinander. Fehlermeldungen stehen oben rechts
+über Sortieren/Filter in einer festen, bei Bedarf scrollbaren Kopfbereichsfläche;
+sie verschieben keine Kacheln oder Katalogcontrols. Entwurfsfehler stehen oben im
+Filterfenster. Die Trefferzahl steht über dem rechten Buchteil;
+keine passenden Treffer und Katalogladefehler sind getrennt beschriftet.
+Ungültige Saves zählen nicht als Neu oder Noch offen; unter Alle bleiben ihre
+Reset-/Diagnosewege erhalten. Speicherfehler bleiben auch außerhalb der Treffer
+sichtbar. Abschluss und Reset aktualisieren die Liste und begrenzen die Seite.
+Alle Filter gelten ausschließlich in der Sitzung; ein neuer Prozess startet
+unbeschränkt. Es wird keine zusätzliche Einstellung gespeichert.
+
 Die Sortierung bleibt lokal nach einem Neustart erhalten. Filter, Seite und
 Scrollposition gelten für die laufende Sitzung; die Rückkehr aus einem Rätsel
 behält sie. Ein tatsächlicher Filter- oder Sortierwechsel beginnt auf Seite 1.

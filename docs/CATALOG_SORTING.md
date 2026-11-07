@@ -106,10 +106,11 @@ Kategorienfilterung erhält das zuletzt gewählte Paar aus Kriterium und Richtun
 
 ## KU-B-D02 · Reihenfolge, Seiten und Identität
 
-Zuerst den gesamten gültigen sichtbaren Bestand nach Kategorie filtern, dann alle
+Zuerst den gesamten gültigen sichtbaren Bestand nach allen gemeinsam aktiven
+[K-A-Filtern](CATALOG_PRESENTATION.md#k-a--kombinierbare-sitzungsfilter-485) filtern, dann alle
 Treffer sortieren und erst danach Seiten mit höchstens 24 Karten bilden. Nur die
 aktuelle Seite zu sortieren erfüllt den Vertrag nicht. Leerbestand, leere Kategorie
-und ungültiger Katalog bleiben unterscheidbar; es entsteht kein neuer Filter.
+und ungültiger Katalog bleiben unterscheidbar; K-A ändert keine Sortierwerte.
 
 Bei gleichen Primärwerten entscheidet immer die unveränderte kanonische Blattfolge
 aufsteigend. Dieser Gleichstandsvergleich wird durch den Richtungsumschalter nicht
