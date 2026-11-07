@@ -3,8 +3,8 @@ extends RefCounted
 const Filter = preload("res://model/catalog_filter.gd")
 const Session = preload("res://model/session.gd")
 
-static func apply(album, status: String = "all", mode: String = "all", lower: int = 0, upper: int = 0, cells: String = "") -> void:
-	album.apply_filters(status,mode,lower,upper,cells)
+static func apply(album, status: String = "all", mode: String = "all", lower: int = 0, upper: int = 0, width: String = "", height: String = "") -> void:
+	album.apply_filters(status,mode,lower,upper,width,height)
 
 static func rules(probe) -> void:
 	var album = probe.app.album
@@ -60,17 +60,18 @@ static func rules(probe) -> void:
 		probe.check(album.filtered_ids.size() == 45,"K-A either difficulty boundary excludes only unrated")
 	apply(album)
 	probe.check(album.filtered_ids.size() == 54,"K-A no bounds includes unrated")
-	apply(album,"all","all",0,0,"400")
-	probe.check(album.filtered_ids.size() == 54,"K-A inclusive maximum cell count")
-	apply(album,"all","all",0,0,"399")
-	probe.check(album.filtered_ids.is_empty() and album.empty_message.text.contains("Filtern") and album.all_button.visible,"K-A explicit empty filtered result and reset")
+	apply(album,"all","all",0,0,"20","20")
+	probe.check(album.filtered_ids.size() == 54,"K-A inclusive width and height")
+	for limits: Array in [["19",""],["","19"],["19","20"]]:
+		apply(album,"all","all",0,0,limits[0],limits[1])
+		probe.check(album.filtered_ids.is_empty() and album.empty_message.text.contains("Filtern") and album.all_button.visible,"K-A independent/combined dimension boundaries and no hits")
 	album.choose_category("voegel")
-	apply(album,"new","mono",1,5,"400")
-	probe.check(Array(album.filtered_ids) == [ids[49],ids[53]],"K-A all five axes form one AND pipeline")
+	apply(album,"new","mono",1,5,"20","20")
+	probe.check(Array(album.filtered_ids) == [ids[49],ids[53]],"K-A all axes form one AND pipeline")
 	var valid: Dictionary = album.filters.duplicate()
 	var generation: int = album.generation
-	for spec: Array in [[0,0,"0"],[0,0,"2501"],[0,0,"-1"],[0,0,"1.5"],[0,0,"20×30"],[0,0,"abc"]]:
-		apply(album,"all","color",spec[0],spec[1],spec[2])
+	for spec: Array in [["0",""],["51",""],["-1",""],["1.5",""],["20×30",""],["abc",""],["","0"],["","51"],["","1.5"]]:
+		apply(album,"all","color",0,0,spec[0],spec[1])
 		probe.check(album.filters == valid and album.generation == generation and album.filter_panel.error.visible,"K-A invalid bounds/input visibly rejected, last valid selection retained")
 	# Mutual menu limits prevent contradictory UI choices. Programmatic or
 	# stale selections additionally follow the endpoint changed most recently.
@@ -95,10 +96,13 @@ static func rules(probe) -> void:
 	panel.lower.item_selected.emit(0)
 	probe.check(not panel.upper.is_item_disabled(1),"K-A removing both bounds restores full menus")
 	panel.hide()
-	for cells: String in ["1","2500",""]:
-		probe.check(Filter.validate("","all","all",0,0,cells).has("selection"),"K-A supported cell boundary " + cells)
-	var area: Dictionary = Filter.validate("","all","all",0,0,"600").selection
-	probe.check(Filter.matches(area,"","new",false,20,30,null) and Filter.matches(area,"","new",false,30,20,null) and not Filter.matches(area,"","new",false,20,31,null),"K-A rectangles use total area, independent of orientation")
+	for dimension: String in ["1","50",""]:
+		probe.check(Filter.validate("","all","all",0,0,dimension,dimension).has("selection"),"K-A supported dimension boundary " + dimension)
+	var size_limit: Dictionary = Filter.validate("","all","all",0,0,"20","30").selection
+	probe.check(Filter.matches(size_limit,"","new",false,20,30,null) and not Filter.matches(size_limit,"","new",false,30,20,null),"K-A inclusive rectangle dimensions preserve orientation")
+	var width_only: Dictionary = Filter.validate("","all","all",0,0,"20","").selection
+	var height_only: Dictionary = Filter.validate("","all","all",0,0,"","20").selection
+	probe.check(Filter.matches(width_only,"","new",false,20,50,null) and Filter.matches(height_only,"","new",false,50,20,null),"K-A either dimension independently unbounded")
 	probe.check(probe.save_bytes() == saved and FileAccess.get_file_as_bytes(album.preference.path) == preference,"K-A all filter/draft/reset operations never write saves or preferences")
 	album.items = originals
 	album.metadata = metadata
@@ -186,7 +190,7 @@ static func navigation(probe) -> void:
 	await probe.frames()
 	probe.check(not opened in album.filtered_ids,"K-A completion refreshes new filter on return")
 	album.show_error(opened,"TEST ONLY write failed")
-	apply(album,"all","all",0,0,"1")
+	apply(album,"all","all",0,0,"1","1")
 	await probe.frames()
 	probe.check(album.feedback.visible and album.feedback.text.contains("write failed") and album.filtered_ids.is_empty(),"K-A filtered-out save failure remains visible separately from no hits")
 	var sort_pair: Array = [album.preference.criterion,album.preference.direction]

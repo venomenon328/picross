@@ -61,12 +61,11 @@ Fachstand: Spezifikation 2.3 · Workflowabgleich: 06.11.2026 · KU-A/B und HZ-A/
 
 ## K-A · Kombinierbare Sitzungsfilter (#485)
 
-[Die Paketentscheidung K-A](https://github.com/venomenon328/picross/issues/485#issuecomment-6704440743)
-und die [bestätigte Bedienpräzisierung](https://github.com/venomenon328/picross/issues/485#issuecomment-6704732025)
-binden die Umsetzung und ihre getrennten Gates. Der Katalog führt einen gemeinsamen
+[Die Paketentscheidung K-A](https://github.com/venomenon328/picross/issues/485#issuecomment-6704440743), die [bestätigte Bedienpräzisierung](https://github.com/venomenon328/picross/issues/485#issuecomment-6704732025)
+und die [Größenpräzisierung](https://github.com/venomenon328/picross/issues/485#issuecomment-6704802593) binden die Umsetzung und ihre getrennten Gates. Der Katalog führt einen gemeinsamen
 angewendeten Sitzungszustand: Kategorie, Status (Alle/Noch offen/Neu/Begonnen/Gelöst),
 Modus (Alle/Monochrom/Farbe), optionale inklusive Schwierigkeit von/bis L1–L5 und
-optionale maximale Zellzahl 1–2500. Alle Achsen gelten gemeinsam mit UND für den
+optionale maximale Breite/Höhe von je 1–50 Zellen. Alle Achsen gelten gemeinsam mit UND für den
 vollständigen sichtbaren validierten Bestand. Danach folgen das unveränderte
 Sortierpaar, 24er-Seiten und die unveränderte 12/12-Zuordnung mit KL-Raster.
 
@@ -77,8 +76,10 @@ Alle erhält ihre Diagnose-/Resetwege bei passenden Metadaten; gültige rekonstr
 Stände behalten ihren Status und ihre Recoveryaktion. Ein Savefehler bleibt auch
 außerhalb der Treffer sichtbar. Modus bezeichnet das Rätsel. Schwierigkeit verwendet
 nur vorhandene validierte Werte: ohne Grenzen einschließlich fehlender Stufe,
-mit mindestens einer Grenze ausschließlich eingestufte passende Rätsel. Fläche ist
-Breite × Höhe, einschließlich Grenze und unabhängig von der Rechteckorientierung.
+mit mindestens einer Grenze ausschließlich eingestufte passende Rätsel. Breite und Höhe
+werden separat einschließlich ihrer Grenzen geprüft, ohne die Orientierung zu
+vertauschen. Leere Felder sind jeweils unbeschränkt; beide Maßgrenzen gelten
+bei gemeinsamer Auswahl mit UND.
 
 Der Button **Filter** steht rechts neben Sortierauswahl und Richtungspfeil,
 mit 16×UI horizontalem Textinnenraum je Seite auch unter Fokus/Druck. Er
@@ -87,8 +88,9 @@ Achsen. Die Schwierigkeitsdropdowns begrenzen einander auf auswählbare Stufen
 mit Minimum ≤ Maximum. Bei Bedarf folgt die Gegengrenze der zuletzt geänderten;
 gleiche Stufen und je ein unbeschränktes Ende bleiben möglich. Eine widersprüchliche
 Spanne kann nicht ausgewählt werden und erzeugt keine Fehlermeldung.
+Die Eingabefelder **Maximale Breite** und **Maximale Höhe** stehen nebeneinander.
 **Übernehmen** wendet den gesamten gültigen Entwurf an. Andere als leere oder
-positive ganzzahlige Zellzahlen bis 2500 erhalten eine sichtbare Fehlermeldung;
+positive ganzzahlige Breiten/Höhen bis 50 erhalten eine sichtbare Fehlermeldung;
 die letzte gültige Auswahl und Trefferliste bleiben bestehen. Schließen verwirft den Entwurf. Bei knapper Höhe
 scrollt der Panelinhalt; Aktionen bleiben getrennt erreichbar. Kartenminimum,
 Bildhöhe, Schriftrollen, Kopf/Fuß und Falzabstände bleiben erhalten.
