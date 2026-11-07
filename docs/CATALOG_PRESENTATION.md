@@ -17,6 +17,9 @@ Kartenmaße, Filter und Sortiercontrols werden durch Fehler nicht verschoben.
 Die ID-gebundene Buchroute erhält Kategorie, Filter, globale Seite und beide Scrollstände,
 auch wenn die Karte des Ziels ausgefiltert ist. Ein Merkerfehler hat einen eigenen
 nichtmodalen Retry im Meldungsbereich; er sperrt andere Rätsel oder das Beenden nicht.
+Der feste Meldungsclip reserviert 48 × UI Höhe für vollständige 44/55-px-Retryziele
+einschließlich Kontur. Die zusätzliche Kopfreserve gilt auch ohne Fehlermeldung;
+lange Meldungen und beide Retrywege scrollen darin, ohne Panel oder Controls zu versetzen.
 
 **PANG-A / #531 · auf dem Arbeitsbranch implementierte normale Schriftrolle:**
 Gemäß [HZ-D08](HAND_DRAWN_UI.md) ersetzt Pangolin Regular Tidy Hand
