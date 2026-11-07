@@ -1,0 +1,41 @@
+{
+	"adapter": "NVIDIA GeForce RTX 3070",
+	"at_measurements": [],
+	"catalog_cases": [
+		{
+			"checks": 1096,
+			"id": "catalog-layout"
+		},
+		{
+			"checks": 267,
+			"id": "catalog-pages"
+		},
+		{
+			"checks": 632,
+			"id": "catalog-sorting"
+		},
+		{
+			"checks": 54,
+			"id": "k-a-filter-rules"
+		},
+		{
+			"checks": 22,
+			"id": "k-a-filter-navigation"
+		}
+	],
+	"checks": 2071,
+	"display_server": "Windows",
+	"failures": [],
+	"format": "picross-kat2-native-v1",
+	"kb_measurements": [],
+	"kk_measurements": [],
+	"kk_pointer_measurements": [],
+	"mode": "pages",
+	"quit_slot_hashes": {},
+	"test_only": true,
+	"timings_ms": {
+		"category_ms": 727.646,
+		"page_ms": 1295.401,
+		"startup_ms": 4605.614
+	}
+}

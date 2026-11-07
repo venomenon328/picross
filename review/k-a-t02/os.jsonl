@@ -1,0 +1,90 @@
+{"at": 1794043995.7414637, "action": "click", "client_rect": [1347.02978515625, 170.298492431641, 68.0, 44.0], "screen": [-1164, 218], "target_pid": 41512}
+{"at": 1794043996.1317163, "action": "click", "client_rect": [1489.0, 552.0, 120.0, 44.0], "screen": [-996, 600], "target_pid": 41512}
+{"at": 1794043997.7801933, "action": "wheel", "amount": -240, "rect": [172.029830932617, 222.298492431641, 715.0, 747.0]}
+{"at": 1794043998.133123, "action": "wheel", "amount": -480, "rect": [1032.02978515625, 222.298492431641, 715.0, 747.0]}
+{"at": 1794043998.3546503, "action": "click", "client_rect": [1374.02978515625, 977.298461914063, 141.0, 44.0], "screen": [-1100, 1025], "target_pid": 41512}
+{"at": 1794043999.9999213, "action": "click", "client_rect": [95.1112060546875, 888.0, 260.0, 44.0], "screen": [-2320, 936], "target_pid": 41512}
+{"at": 1794044003.1331246, "action": "click", "client_rect": [1394.02978515625, 226.298492431641, 12, 317.0], "screen": [-1145, 411], "target_pid": 41512}
+{"at": 1794044007.4319487, "action": "click", "client_rect": [1634.0, 54.7777481079102, 44.0, 44.0], "screen": [-889, 103], "target_pid": 41512}
+{"at": 1794044011.48858, "action": "click", "client_rect": [245.029830932617, 170.298492431641, 642.0, 44.0], "screen": [-1979, 218], "target_pid": 41512}
+{"at": 1794044012.641692, "action": "choice", "key": "category", "index": 11}
+{"at": 1794044012.857018, "action": "click", "client_rect": [245.029830932617, 170.298492431641, 642.0, 44.0], "screen": [-1979, 218], "target_pid": 41512}
+{"at": 1794044013.842779, "action": "click", "client_rect": [1646.02978515625, 977.298461914063, 101.0, 44.0], "screen": [-848, 1025], "target_pid": 41512}
+{"at": 1794044016.482342, "action": "click", "client_rect": [172.029830932617, 977.298461914063, 104.0, 44.0], "screen": [-2321, 1025], "target_pid": 41512}
+{"at": 1794044019.1216958, "action": "click", "client_rect": [1374.02978515625, 977.298461914063, 141.0, 44.0], "screen": [-1100, 1025], "target_pid": 41512}
+{"at": 1794044020.7540324, "action": "click", "client_rect": [712.111206054688, 429.777740478516, 479.0, 44.0], "screen": [-1593, 478], "target_pid": 41512}
+{"at": 1794044022.1523085, "action": "choice", "key": "scale", "index": 1}
+{"at": 1794044022.3729346, "action": "click", "client_rect": [665.611206054688, 455.277740478516, 532.0, 55.0], "screen": [-1613, 509], "target_pid": 41512}
+{"at": 1794044022.9599257, "action": "choice", "key": "display_size", "index": 0}
+{"at": 1794044023.1781049, "action": "click", "client_rect": [315.0, 363.0, 650.0, 55.0], "screen": [-1905, 416], "target_pid": 41512}
+{"at": 1794044024.0740383, "action": "click", "client_rect": [77.407470703125, 635.0, 325.0, 55.0], "screen": [-2305, 688], "target_pid": 41512}
+{"at": 1794044027.3806565, "action": "click", "client_rect": [1044.1865234375, 145.143280029297, 108.0, 58.0], "screen": [-1447, 200], "target_pid": 41512}
+{"at": 1794044027.7831411, "action": "click", "client_rect": [822.5, 366.5, 75.0, 55.0], "screen": [-1685, 420], "target_pid": 41512}
+{"at": 1794044028.4636605, "action": "click", "client_rect": [963.5, 366.5, 75.0, 55.0], "screen": [-1544, 420], "target_pid": 41512}
+{"at": 1794044029.373929, "action": "click", "client_rect": [606.5, 566.5, 150.0, 55.0], "screen": [-1863, 620], "target_pid": 41512}
+{"at": 1794044030.6933923, "action": "click", "client_rect": [1043.1865234375, 145.143280029297, 111.0, 58.0], "screen": [-1446, 200], "target_pid": 41512}
+{"at": 1794044031.0888987, "action": "click", "client_rect": [822.5, 366.5, 75.0, 55.0], "screen": [-1685, 420], "target_pid": 41512}
+{"at": 1794044031.6874294, "action": "click", "client_rect": [963.5, 366.5, 75.0, 55.0], "screen": [-1544, 420], "target_pid": 41512}
+{"at": 1794044032.2837226, "action": "click", "client_rect": [1051.5, 301.5, 195.0, 55.0], "screen": [-1396, 355], "target_pid": 41512}
+{"at": 1794044032.823037, "action": "choice", "key": "upper_filter", "index": 4}
+{"at": 1794044033.041265, "action": "click", "client_rect": [808.5, 301.5, 195.0, 55.0], "screen": [-1639, 355], "target_pid": 41512}
+{"at": 1794044033.7216878, "action": "click", "client_rect": [808.5, 301.5, 195.0, 55.0], "screen": [-1639, 355], "target_pid": 41512}
+{"at": 1794044034.2617521, "action": "choice", "key": "lower_filter", "index": 4}
+{"at": 1794044034.4787958, "action": "click", "client_rect": [822.5, 366.5, 75.0, 55.0], "screen": [-1685, 420], "target_pid": 41512}
+{"at": 1794044035.1038177, "action": "click", "client_rect": [606.5, 566.5, 150.0, 55.0], "screen": [-1863, 620], "target_pid": 41512}
+{"at": 1794044036.6113634, "action": "click", "client_rect": [822.5, 402.5, 75.0, 55.0], "screen": [-1685, 456], "target_pid": 41512}
+{"at": 1794044037.2641637, "action": "click", "client_rect": [963.5, 402.5, 75.0, 55.0], "screen": [-1544, 456], "target_pid": 41512}
+{"at": 1794044037.91671, "action": "click", "client_rect": [760.5, 207.5, 486.0, 55.0], "screen": [-1541, 261], "target_pid": 41512}
+{"at": 1794044038.4279337, "action": "choice", "key": "status_filter", "index": 1}
+{"at": 1794044038.646006, "action": "click", "client_rect": [760.5, 272.5, 486.0, 55.0], "screen": [-1541, 326], "target_pid": 41512}
+{"at": 1794044039.2082245, "action": "choice", "key": "mode_filter", "index": 1}
+{"at": 1794044039.4240294, "action": "click", "client_rect": [606.5, 566.5, 150.0, 55.0], "screen": [-1863, 620], "target_pid": 41512}
+{"at": 1794044040.7299206, "action": "click", "client_rect": [1043.1865234375, 145.143280029297, 111.0, 58.0], "screen": [-1446, 200], "target_pid": 41512}
+{"at": 1794044041.1257656, "action": "click", "client_rect": [606.5, 631.5, 640.0, 55.0], "screen": [-1619, 685], "target_pid": 41512}
+{"at": 1794044042.5985043, "action": "click", "client_rect": [1044.1865234375, 145.143280029297, 85.0, 58.0], "screen": [-1458, 200], "target_pid": 41512}
+{"at": 1794044042.99377, "action": "click", "client_rect": [808.5, 301.5, 195.0, 55.0], "screen": [-1639, 355], "target_pid": 41512}
+{"at": 1794044043.6099095, "action": "choice", "key": "lower_filter", "index": 5}
+{"at": 1794044043.8278253, "action": "click", "client_rect": [1051.5, 301.5, 195.0, 55.0], "screen": [-1396, 355], "target_pid": 41512}
+{"at": 1794044044.339412, "action": "choice", "key": "upper_filter", "index": 5}
+{"at": 1794044044.5572665, "action": "click", "client_rect": [606.5, 566.5, 150.0, 55.0], "screen": [-1863, 620], "target_pid": 41512}
+{"at": 1794044045.6117306, "action": "wheel", "amount": -240, "rect": [125.186561584473, 210.143280029297, 459.0, 460.0]}
+{"at": 1794044045.8279405, "action": "click", "client_rect": [458.186553955078, 552.143310546875, 55.0, 55.0], "screen": [-2059, 606], "target_pid": 41512}
+{"at": 1794044046.2240129, "action": "click", "client_rect": [742.0, 414.0, 106.0, 55.0], "screen": [-1750, 468], "target_pid": 41512}
+{"at": 1794044046.925476, "action": "click", "client_rect": [1044.1865234375, 145.143280029297, 108.0, 58.0], "screen": [-1447, 200], "target_pid": 41512}
+{"at": 1794044047.3217015, "action": "click", "client_rect": [606.5, 631.5, 640.0, 55.0], "screen": [-1619, 685], "target_pid": 41512}
+{"at": 1794044048.7033553, "action": "click", "client_rect": [695.186584472656, 556.143310546875, 177.0, 55.0], "screen": [-1761, 610], "target_pid": 41512}
+{"at": 1794044050.3014102, "action": "click", "client_rect": [363.907470703125, 433.625183105469, 600.0, 55.0], "screen": [-1881, 487], "target_pid": 41512}
+{"at": 1794044051.627996, "action": "choice", "key": "scale", "index": 0}
+{"at": 1794044051.8431625, "action": "click", "client_rect": [410.407470703125, 390.225158691406, 479.0, 44.0], "screen": [-1895, 438], "target_pid": 41512}
+{"at": 1794044053.1727808, "action": "choice", "key": "scale", "index": 1}
+{"at": 1794044053.3919098, "action": "click", "client_rect": [363.907470703125, 433.625183105469, 600.0, 55.0], "screen": [-1881, 487], "target_pid": 41512}
+{"at": 1794044054.74422, "action": "choice", "key": "scale", "index": 0}
+{"at": 1794044054.9615536, "action": "click", "client_rect": [410.407470703125, 280.225158691406, 479.0, 44.0], "screen": [-1895, 328], "target_pid": 41512}
+{"at": 1794044055.7270715, "action": "choice", "key": "display_mode", "index": 1}
+{"at": 1794044055.9477935, "action": "click", "client_rect": [1020.0, 724.0, 520.0, 44.0], "screen": [-1280, 746], "target_pid": 41512}
+{"at": 1794044056.844085, "action": "click", "client_rect": [118.81494140625, 1372.0, 260.0, 44.0], "screen": [-2311, 1394], "target_pid": 41512}
+{"at": 1794044061.0463052, "action": "click", "client_rect": [1687.37316894531, 183.731323242188, 68.0, 44.0], "screen": [-839, 206], "target_pid": 41512}
+{"at": 1794044061.455711, "action": "click", "client_rect": [2056.0, 354.0, 157.0, 44.0], "screen": [-426, 376], "target_pid": 41512}
+{"at": 1794044062.002087, "action": "choice", "key": "upper_filter", "index": 4}
+{"at": 1794044062.226757, "action": "click", "client_rect": [1861.0, 354.0, 157.0, 44.0], "screen": [-620, 376], "target_pid": 41512}
+{"at": 1794044062.7378206, "action": "choice", "key": "lower_filter", "index": 3}
+{"at": 1794044062.9698782, "action": "click", "client_rect": [1861.0, 354.0, 157.0, 44.0], "screen": [-620, 376], "target_pid": 41512}
+{"at": 1794044064.282998, "action": "click", "client_rect": [1701.0, 618.0, 512.0, 44.0], "screen": [-603, 640], "target_pid": 41512}
+{"at": 1794044065.1925473, "action": "click", "client_rect": [1687.37316894531, 183.731323242188, 68.0, 44.0], "screen": [-839, 206], "target_pid": 41512}
+{"at": 1794044065.609026, "action": "click", "client_rect": [1823.0, 250.0, 390.0, 44.0], "screen": [-542, 272], "target_pid": 41512}
+{"at": 1794044066.151825, "action": "choice", "key": "status_filter", "index": 4}
+{"at": 1794044066.3867943, "action": "click", "client_rect": [1823.0, 302.0, 390.0, 44.0], "screen": [-542, 324], "target_pid": 41512}
+{"at": 1794044066.883728, "action": "choice", "key": "mode_filter", "index": 2}
+{"at": 1794044067.117472, "action": "click", "client_rect": [1701.0, 566.0, 120.0, 44.0], "screen": [-799, 588], "target_pid": 41512}
+{"at": 1794044068.1513352, "action": "click", "client_rect": [568.373107910156, 418.731323242188, 264.0, 44.0], "screen": [-1860, 441], "target_pid": 41512}
+{"at": 1794044068.5479555, "action": "click", "client_rect": [1359.0, 753.0, 83.0, 44.0], "screen": [-1160, 775], "target_pid": 41512}
+{"at": 1794044069.2487907, "action": "click", "client_rect": [1687.37316894531, 183.731323242188, 88.0, 44.0], "screen": [-829, 206], "target_pid": 41512}
+{"at": 1794044069.6448686, "action": "click", "client_rect": [1701.0, 618.0, 512.0, 44.0], "screen": [-603, 640], "target_pid": 41512}
+{"at": 1794044070.9295738, "action": "click", "client_rect": [1963.37316894531, 1323.73132324219, 141.0, 44.0], "screen": [-526, 1346], "target_pid": 41512}
+{"at": 1794044072.6174886, "action": "click", "client_rect": [1009.81494140625, 336.370330810547, 479.0, 44.0], "screen": [-1311, 358], "target_pid": 41512}
+{"at": 1794044073.6117713, "action": "choice", "key": "display_mode", "index": 0}
+{"at": 1794044073.8329027, "action": "click", "client_rect": [380.0, 364.0, 520.0, 44.0], "screen": [-1917, 412], "target_pid": 41512}
+{"at": 1794044074.2287533, "action": "click", "client_rect": [410.407470703125, 334.225158691406, 425.0, 44.0], "screen": [-1934, 382], "target_pid": 41512}
+{"at": 1794044075.0546718, "action": "choice", "key": "display_size", "index": 3}
+{"at": 1794044075.3751981, "action": "click", "client_rect": [700.0, 544.0, 520.0, 44.0], "screen": [-1597, 592], "target_pid": 41512}
+{"at": 1794044076.0563605, "action": "close-final-player"}

@@ -1,0 +1,609 @@
+{
+  "album": true,
+  "back": [
+    100.0,
+    110.0,
+    325.0,
+    55.0
+  ],
+  "barrier": false,
+  "book_state": 0,
+  "buttons": {
+    "Beenden": [
+      937.186584472656,
+      615.143310546875,
+      90.0,
+      55.0
+    ],
+    "Einstellungen / Info": [
+      694.186584472656,
+      615.143310546875,
+      177.0,
+      55.0
+    ],
+    "Filter (5)": [
+      1043.1865234375,
+      145.143280029297,
+      111.0,
+      58.0
+    ],
+    "Hilfe": [
+      875.186584472656,
+      615.143310546875,
+      58.0,
+      55.0
+    ],
+    "Kategorie": [
+      783.186584472656,
+      145.143280029297,
+      197.0,
+      58.0
+    ],
+    "TEST ONLY Zusatzkategorie mit einer besonders langen deutschen Bezeichnung zur lesbaren Katalogauswahl (48)": [
+      215.186553955078,
+      145.143280029297,
+      368.0,
+      55.0
+    ],
+    "catalog-direction": [
+      984.186584472656,
+      145.143280029297,
+      55.0,
+      58.0
+    ]
+  },
+  "capture": false,
+  "cards": [],
+  "catalog_return": [
+    4.0,
+    70.0,
+    55.0,
+    55.0
+  ],
+  "category": {
+    "box": [
+      215.186553955078,
+      145.143280029297,
+      368.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Alle Rätsel (54)"
+      },
+      {
+        "disabled": false,
+        "text": "Obst & Nüsse (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Gemüse, Pilze & Kräuter (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Gerichte & Herzhaftes (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Süßes & Getränke (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Säugetiere (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Vögel (6)"
+      },
+      {
+        "disabled": false,
+        "text": "Wasserwelt (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Insekten & kleine Tiere (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Blumen & Pflanzen (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Landschaften & Natur (0)"
+      },
+      {
+        "disabled": false,
+        "text": "TEST ONLY Zusatzkategorie mit einer besonders langen deutschen Bezeichnung zur lesbaren Katalogauswahl (48)"
+      },
+      {
+        "disabled": false,
+        "text": "Fahrzeuge & Verkehr (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Technik & Erfindungen (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Werkzeuge & Handwerk (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Haushalt & Alltag (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Kleidung & Accessoires (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Musik & Bühne (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Sport & Spiele (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Menschen & Berufe (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Mythen & Fantasie (0)"
+      }
+    ],
+    "position": [
+      245,
+      214
+    ],
+    "selected": 11,
+    "size": [
+      995,
+      720
+    ],
+    "visible": false
+  },
+  "client": [
+    1280,
+    720
+  ],
+  "display_accept": [
+    315.0,
+    363.0,
+    650.0,
+    55.0
+  ],
+  "display_mode": {
+    "box": [
+      466.5,
+      262.5,
+      600.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Fenster"
+      },
+      {
+        "disabled": false,
+        "text": "Rahmenloses Fenster"
+      },
+      {
+        "disabled": false,
+        "text": "Exklusives Vollbild"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "selected": 0,
+    "size": [
+      100,
+      100
+    ],
+    "visible": false
+  },
+  "display_preview": false,
+  "display_size": {
+    "box": [
+      466.5,
+      330.5,
+      532.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "1280 × 720"
+      },
+      {
+        "disabled": false,
+        "text": "1366 × 768"
+      },
+      {
+        "disabled": false,
+        "text": "1600 × 900"
+      },
+      {
+        "disabled": false,
+        "text": "1920 × 1080"
+      },
+      {
+        "disabled": false,
+        "text": "1920 × 1200"
+      },
+      {
+        "disabled": true,
+        "text": "2560 × 1440"
+      },
+      {
+        "disabled": true,
+        "text": "2560 × 1600"
+      },
+      {
+        "disabled": true,
+        "text": "3840 × 2160"
+      }
+    ],
+    "position": [
+      665,
+      510
+    ],
+    "selected": 0,
+    "size": [
+      532,
+      367
+    ],
+    "visible": false
+  },
+  "dpi": 96,
+  "empty": "Keine Rätsel passen zu diesen Filtern.",
+  "empty_box": [
+    694.186584472656,
+    213.143280029297,
+    460.0,
+    37.0
+  ],
+  "empty_visible": true,
+  "feedback": "Blatt 06 · 20 × 20: Speicherdaten ungültig. Filter ggf. im Filterfenster zurücksetzen.",
+  "feedback_box": [
+    702.798522949219,
+    79.3656616210938,
+    444.0,
+    56.0
+  ],
+  "feedback_visible": true,
+  "filter_button": [
+    1043.1865234375,
+    145.143280029297,
+    111.0,
+    58.0
+  ],
+  "filtered_ids": [],
+  "filters": {
+    "category": "gebaeude-bauwerke",
+    "height": 20,
+    "lower": 4,
+    "mode": "mono",
+    "status": "open",
+    "upper": 4,
+    "width": 20
+  },
+  "focus": "@Button@287",
+  "height_input": [
+    963.5,
+    402.5,
+    75.0,
+    55.0
+  ],
+  "height_text": "20",
+  "ids": [],
+  "info": false,
+  "lower_filter": {
+    "box": [
+      808.5,
+      337.5,
+      195.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Ohne Grenze"
+      },
+      {
+        "disabled": false,
+        "text": "Sehr leicht"
+      },
+      {
+        "disabled": false,
+        "text": "Leicht"
+      },
+      {
+        "disabled": false,
+        "text": "Mittel"
+      },
+      {
+        "disabled": false,
+        "text": "Schwer"
+      },
+      {
+        "disabled": true,
+        "text": "Sehr schwer"
+      }
+    ],
+    "position": [
+      808,
+      356
+    ],
+    "selected": 4,
+    "size": [
+      196,
+      281
+    ],
+    "visible": false
+  },
+  "mode_filter": {
+    "box": [
+      760.5,
+      272.5,
+      486.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Alle"
+      },
+      {
+        "disabled": false,
+        "text": "Monochrom"
+      },
+      {
+        "disabled": false,
+        "text": "Farbe"
+      }
+    ],
+    "position": [
+      760,
+      327
+    ],
+    "selected": 1,
+    "size": [
+      486,
+      152
+    ],
+    "visible": false
+  },
+  "ms": 50663,
+  "notice_area": [
+    702.798522949219,
+    79.3656616210938,
+    452.014953613281,
+    55.7776184082031
+  ],
+  "origin": "album",
+  "page": 0,
+  "panel": {
+    "error": "Maximale Breite: ganze Zahl von 1 bis 99 oder leer.",
+    "error_visible": false,
+    "position": [
+      589,
+      154
+    ],
+    "scroll": 0,
+    "size": [
+      675,
+      550
+    ],
+    "visible": false
+  },
+  "pid": 41512,
+  "positions": [
+    0,
+    0
+  ],
+  "renderer": "NVIDIA GeForce RTX 3070",
+  "repair_cancel": [
+    0.0,
+    0.0,
+    106.0,
+    36.5
+  ],
+  "repair_dialog": false,
+  "reset_cancel": [
+    0.0,
+    0.0,
+    106.0,
+    36.5
+  ],
+  "reset_dialog": false,
+  "reset_ok": [
+    0.0,
+    0.0,
+    131.0,
+    36.5
+  ],
+  "scale": {
+    "box": [
+      466.5,
+      400.5,
+      600.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "100 %"
+      },
+      {
+        "disabled": false,
+        "text": "125 %"
+      }
+    ],
+    "position": [
+      712,
+      473
+    ],
+    "selected": 1,
+    "size": [
+      479,
+      86
+    ],
+    "visible": false
+  },
+  "screen": [
+    2560,
+    1440
+  ],
+  "scrollers": [
+    [
+      125.186561584473,
+      210.143280029297,
+      458.0,
+      460.0
+    ],
+    [
+      694.186584472656,
+      260.143280029297,
+      460.0,
+      345.0
+    ]
+  ],
+  "section": "settings",
+  "selected_id": "",
+  "session": "pz-test-kat2-009",
+  "sort": {
+    "box": [
+      783.186584472656,
+      145.143280029297,
+      197.0,
+      58.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Kategorie"
+      },
+      {
+        "disabled": false,
+        "text": "Größe"
+      },
+      {
+        "disabled": false,
+        "text": "Schwierigkeit"
+      },
+      {
+        "disabled": false,
+        "text": "Hinzugefügt"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "selected": 0,
+    "size": [
+      100,
+      100
+    ],
+    "visible": false
+  },
+  "status_filter": {
+    "box": [
+      760.5,
+      207.5,
+      486.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Alle"
+      },
+      {
+        "disabled": false,
+        "text": "Noch offen"
+      },
+      {
+        "disabled": false,
+        "text": "Neu"
+      },
+      {
+        "disabled": false,
+        "text": "Begonnen"
+      },
+      {
+        "disabled": false,
+        "text": "Gelöst"
+      }
+    ],
+    "position": [
+      760,
+      262
+    ],
+    "selected": 1,
+    "size": [
+      486,
+      238
+    ],
+    "visible": false
+  },
+  "summary": "0 Treffer · 0 von 0 gelöst",
+  "ui": 1.25,
+  "upper_filter": {
+    "box": [
+      1051.5,
+      337.5,
+      195.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Ohne Grenze"
+      },
+      {
+        "disabled": true,
+        "text": "Sehr leicht"
+      },
+      {
+        "disabled": true,
+        "text": "Leicht"
+      },
+      {
+        "disabled": true,
+        "text": "Mittel"
+      },
+      {
+        "disabled": false,
+        "text": "Schwer"
+      },
+      {
+        "disabled": false,
+        "text": "Sehr schwer"
+      }
+    ],
+    "position": [
+      1051,
+      356
+    ],
+    "selected": 4,
+    "size": [
+      196,
+      281
+    ],
+    "visible": false
+  },
+  "width_input": [
+    822.5,
+    402.5,
+    75.0,
+    55.0
+  ],
+  "width_text": "20",
+  "work": false
+}
