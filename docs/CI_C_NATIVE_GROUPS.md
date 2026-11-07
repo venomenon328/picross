@@ -35,6 +35,19 @@ Bildfamilie. Die KE-Kapazitätsprüfung im unabhängigen Reader berücksichtigt
 dieselbe Obergrenze drei. Einmalige gerenderte KL-Einführungsbelege stehen am
 gebundenen PR, nicht als neue dauerhafte Galerie im Modul.
 
+K-A / #485 ergänzt im selben `catalog/pages`-Prozess eine kleine synthetische
+Filterregression: Status inklusive leerem Save, Redo, Fehler und Recovery,
+Modus, vorhandene L1–L5/fehlende Stufe, inklusive Spannen und unabhängige Breiten-/Höhengrenzen,
+Rechteckorientierung, gegenseitig begrenzte Schwierigkeitsoptionen und Anpassung der
+Gegengrenze, UND-Kombination, mehrseitige Sortier-/ID-Zuordnung, No-op/Reset,
+beide Scrollstände, Return und Clamping nach Abschluss/Reset sowie sichtbare
+Fehler außerhalb der Treffer und unveränderte Save-/Präferenzbytes beim Filtern.
+Die fünf Checkpoints layout/pages/sorting/filter-rules/filter-navigation werden
+vom bestehenden unabhängigen Reader in exakter Reihenfolge und mit tatsächlichen
+positiven Assertions geprüft; kleine Gegenproben sichern das geschlossene Protokoll.
+Keine neue Prozess-/Bildfamilie, kein Browser-/Buch-Lifecycle. Die einmalige echte
+Windows-Sicht K-A-T02 bleibt ein paketgebundener Reviewbeleg.
+
 ANZ-A / #527 ergänzt im vorhandenen `catalog/information`-Prozess günstige
 synthetische Displayfälle: dekorierte Presetgrenzen einschließlich 720p/4K/16:10,
 negative Monitorpositionen/DPI-Rahmen, strikte Präferenz-/Ersetzungsfehler,

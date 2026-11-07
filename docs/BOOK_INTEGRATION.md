@@ -49,6 +49,25 @@ Sortierung beginnen auf Seite 1, unveränderte Auswahl und Rückkehr erhalten
 Seite und beide Offsets. Miniaturen zeigen den aktuellen eigenen Stand;
 Motivname und Reveal bleiben bis zum gültigen Abschluss gesperrt.
 
+**K-A / #485:** Der gemeinsame Filterzustand umfasst Kategorie, Status, Modus,
+Schwierigkeitsspanne sowie unabhängige maximale Breite und Höhe gemäß
+[K-A-Katalogvertrag](CATALOG_PRESENTATION.md#k-a--kombinierbare-sitzungsfilter-485).
+Neben Sortierauswahl und Richtungspfeil in der rechten Kopfzeile öffnet **Filter**
+ein kompaktes Papierpanel; sein Entwurf
+verändert die Treffer erst nach gültigem Übernehmen. Die Schwierigkeitsdropdowns
+verhindern widersprüchliche Spannen durch gegenseitige Optionsgrenzen und
+Anpassung der Gegengrenze. Die beiden Maßfelder stehen nebeneinander.
+Ungültige Maßgrenzen bleiben sichtbar; Schließen
+verwirft den Entwurf. Das Panel begrenzt sich auf das Fenster und
+scrollt bei knapper Höhe, ohne Karten-/Bildbudgets zu reduzieren. Seine Höhe folgt
+dem Inhalt; Übernehmen / Zurücksetzen / Schließen stehen gleich groß in einer
+Zeile. Schmale Breite-/Höhe-Felder stehen rechtsbündig unter Von/Bis. Seiten-/UI-/
+Ansichtswechsel schließen es. Filterreset erhält die Sortierung. Beide unabhängigen
+Scrollstände, Seite und passende Auswahl bleiben bei Rückkehr erhalten;
+Abschluss/Reset aktualisieren und begrenzen die Trefferposition. Kein zusätzliches
+Speicherformat oder K-B-Button. Die kleine Filterprobe läuft im vorhandenen
+catalog/pages-Prozess; die einmalige Windows-Buchsicht liefert der K-A-PR.
+
 **KL-A / #523 · responsives Katalograster (Implementierung, Abnahmen im Issue/PR):**
 Innerhalb jeder Hälfte bestimmt die tatsächliche nutzbare
 Papier-/Scrollbreite bei gemessenen Kartenmindestmaßen eine gemeinsame
