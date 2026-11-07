@@ -1,35 +1,42 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/486",
-  "package": "AR-A",
+  "issue": "https://github.com/venomenon328/picross/issues/479",
+  "package": "RI-B-N01 / RI-B-R01-B-01",
   "modules": [
-    "native.completion"
+    "tools",
+    "production.adapter",
+    "production.catalog"
   ],
-  "purpose": "AR-A: stabile Bild/Raster-Abschlussumschaltung; vorhandener EA-Prozess plus wenige synthetische Zustands-/Pixel-/Geometriefälle und unabhängiger Reader. Regulärer Windows-Spieler im Kern. Eigentümerpräzisierung 07.11.: genau ein rechteckiger On-Off-Schalter mit Bild links, Raster rechts, hellem Schieber und schraffierter dunkler Spur; keine zwei Buttons.",
-  "omitted": "Keine allgemeinen Atlas-/Boardrenderer-, Save-, Katalog-, Adapter- oder Produktionsänderungen: native.core/history/catalog/adapters/export/graphics, tools-Vollsuite, production.*, preflight und delivery bewusst nicht gewählt. Gemeinsame Zeichen-/Materialhelfer nur wiederverwendet. Kein Chromium. Persönliche Windows-Mausprobe AR-A-M01 bleibt beim Eigentümer.",
+  "purpose": "B-01 gemäß RI-B-R01 gezielt beheben und RI-B mit main vereinen. Vollständiger Featurediff: privater Registrierungsprüfkontext, Adapter-/Katalog-/Recoveryverträge, Authoring/Offline-Sheet. tools prüft Promptregression und Quellen-/Gruppenzuordnung; adapter/catalog prüfen synthetische Integration und Transaktionen. Regulärer Windows-Build im Kern wegen Werkzeugcode. Zusätzlich ausdrücklich beauftragt: minimale v2-CI-Übergabekorrektur nach Run 42414457885; kompakte Originalbelege vor dem unveränderten Reader bereitstellen.",
+  "omitted": "Keine neue Solver-, Bild-, Runtime-/Spielrenderer-, Browser-, Toolchain- oder Zustellungsänderung im Featurediff gegenüber aktuellem main. production.solver/images, native.*, preflight und delivery daher nicht angefordert; keine pauschale Vollsuite. Referenzmessungen bleiben an ihre damaligen Werkzeug-/Testcommits gebunden; keine neue Laufzeitwirkung behauptet. O-01 bleibt separat offen. B-01-Recheck und unabhängiges Review sowie Eigentümerfreigaben bleiben separat.",
   "test_changes": [
     {
-      "path": "game/tests/completion_cases.gd",
+      "path": "tests/puzzle_production/test_registration_verification.py",
       "disposition": "change-scoped",
-      "reason": "Fünf günstige synthetische Abschlussfälle im bestehenden EA-Prozess; keine neue Prozess-/Dauerbildfamilie."
+      "reason": "Bestehende RI-B-Lieferung: kleine synthetische Bindungs-/Lebensdauer-/Byte-/Recoveryfälle im gewählten Katalogmodul; kein echter Rätselkatalog und keine zusätzliche Matrix."
     },
     {
-      "path": "game/tests/ea_probe.gd",
+      "path": "tests/puzzle_production/test_categories_adapter.py",
       "disposition": "change-scoped",
-      "reason": "Vorhandene EA-Prüfungen und echter Neustart bleiben; AR-Beobachtungen ergänzen."
+      "reason": "Bestehende RI-B-Lieferung: Fremdänderung nach den vier tatsächlich erreichten Prüfgrenzen injizieren; unabhängige Fremdbyte-/Recoveryorakel erhalten."
     },
     {
-      "path": "tools/native_results.py",
+      "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
-      "reason": "Unabhängiger Reader verlangt AR-Matrix, Palette, Pixel, Geometrie und Zustandsgrenzen."
+      "reason": "Günstige tatsächliche Node-JS-Promptregression für B-01, Fallbacks, ausdrückliche gespeicherte Refwahl und Anhang; Snapshot bytegenau gegen Regelwerk. Nur mit tools gewählt, kein neuer Job und keine Browser-/Bildgalerie."
     },
     {
-      "path": "tools/test_ea_product.py",
+      "path": "tools/test_ci_modular.py",
+      "disposition": "core",
+      "reason": "Vorhandenen isolierten Build-/Modulauswahltest an die kompakte Belegbereitstellung anpassen; kein zusätzlicher schwerer Kernfall."
+    },
+    {
+      "path": "tools/test_production_ci.py",
       "disposition": "change-scoped",
-      "reason": "Kleine Reader-Gegenproben gegen fehlende Fälle, frühe Freigabe, falsche Farben und Saveänderungen."
+      "reason": "Kleine synthetische Regression führt den echten Paketrunner und unveränderten Fachleser mit internen ZA-1-Arbeitsdateien aus; veränderte, fehlende und unerwartete Belege bleiben Fehler. Nur im gewählten tools-Modul, kein Solver/Replayaufbau."
     }
   ],
-  "core_change": "Keine Kernänderung. Einmalige AR-A-T01: sechs gerenderte native Originale auf review/486-ar-a vom Produkt-Head, keine Produktbilder/ZIPs. Bedarf nach AR-A-R01/M01 bzw. Paketabschluss beenden; am 2026-11-14 bei offenen Gates neu prüfen.",
+  "core_change": "Ausdrücklich freigegebene minimale CI-Korrektur: vor dem unveränderten unabhängigen Fachleser die schon vorgesehenen kompakten Originalbelege temporär bereitstellen. Keine Reader-/Hash-/Quellenlockerung, Modulabwahl, neue Jobfamilie oder technische Aufbewahrung. Vorhandenen isolierten Kerntest anpassen; neuer Runner-/Reader-Gegenbeweis nur bei tools. Historische RI-B-T01/Messungen bleiben gebunden; frühere Bereinigungsablehnung nicht umgehen.",
   "evidence": {
     "mode": "none",
     "purpose": null,

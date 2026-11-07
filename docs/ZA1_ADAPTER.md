@@ -112,7 +112,7 @@ Produktions-ID: `pz-[a-z0-9][a-z0-9-]{0,59}`. Explizite Dateistämme/Save-Slots:
 
 ## RI · Zeitbudget und Diagnose neuer Registrierungen
 
-**RI-A-V01 auf dem Arbeitsbranch zu #478 implementiert; getrennte Abnahme offen.**
+**RI-A über PR #484 integriert; RI-B auf dem Arbeitsbranch zu #479 implementiert.**
 [RI: Zuverlässige und messbare Rätselintegration](PUZZLE_INTEGRATION.md) /
 [#477](https://github.com/venomenon328/picross/issues/477) bindet Pakete und Abnahme.
 Ausgangsbasis ist `f47a30b904a8d4eba79ca9d3f82576aebcceaa38`;
@@ -227,6 +227,39 @@ darf dagegen keine bereits abgeschlossene Registrierung rückwirkend als
 nicht integriert oder abgebrochen ausweisen und keinen Rollback auslösen.
 Maßgeblich ist der nachgewiesene Abschlusszustand gemäß RI-D07. Der vollständige
 Transaktions-/Recoveryvertrag steht in [SD-C1](SD_CATALOG.md).
+
+## RI-B · Interne Wiederverwendung bei neuer Registrierung
+
+Der vor Code in #479 geschlossene RI-B-V01 und der Schnittstellenabgleich mit
+#480 gelten ausschließlich innerhalb eines mutierenden neuen `register`-Aufrufs.
+Die erste vollständige Eingangsprüfung und der unabhängige vollständige
+Staging-Replay bleiben. Erst dessen Erfolg erzeugt den privaten Prüfkontext;
+ein bloßer Hash oder externes Pass-JSON erzeugt keinen Prüfbeweis.
+
+Der Kontext bindet tatsächliche Original-/Stagingbytes, vollständige Inventare
+einschließlich leerer Verzeichnisse, Datei-/Verzeichnisidentitäten, Freigaben,
+Definition/Parameter, Checked-Input, Ausgangssnapshot und konkretes Journal mit
+Addition-Quellpfaden. Werkzeug-/Methodenbindung prüft tatsächliche lokale Python-
+und JSON-Quellen sowie Python-/Pillow-Binärbytes und benötigte Laufzeitversionen.
+Die Freezes werden weiterhin strikt geprüft. Änderungen/Austausch, zusätzliche
+oder fehlende Dateien und unpassende Quelle/Instanz invalidieren den Kontext.
+Prozess, Thread und aktive Instanz werden geprüft; Scopeende bei Erfolg, Fehler
+oder Abbruch entzieht die Wiederverwendung. Keine Serialisierung/Persistenz.
+
+Vor jedem Addition-Schreibschritt werden Stagingeigentum, Struktur und sichere
+Quellidentität geprüft; frische sichere Lektüre und Journalhashprüfung bleiben.
+P3 prüft das geschriebene Paket vollständig auf Inventar-/Bytegleichheit.
+P5 behält den vollständigen Checkout-/Projektions-/Identitätscheck; nur der
+nochmalige neue Paketproof wird durch dieselbe gebundene Nachprüfung ersetzt.
+Andere registrierte Pakete behalten ihren vollständigen Replayweg.
+
+Ohne privaten Kontext bleiben alle vollständigen Prüfwege erhalten. Getrennte
+CLI-Aufrufe prüfen unabhängig; `verify-export` bleibt immer vollständig.
+`plan` bleibt lesend, `register` ausdrücklich autorisiert. Updates und historische
+No-ops behalten ihren bisherigen Prüfweg. Keine zusätzlichen Flags oder Formate.
+Recovery erhält niemals einen B-Kontext. Globale Guards, P0–P6/R0–R2,
+Erkennungszeitpunkte, Journalgenerationen und Exit-/Rollbacksemantik bleiben.
+[RI-B-T01](RI_B_VERIFICATION.md) bindet Wirkung und tatsächliche Prüfgrenzen.
 
 ## Paarprofile, Schwierigkeit 0.2 und Export v4
 

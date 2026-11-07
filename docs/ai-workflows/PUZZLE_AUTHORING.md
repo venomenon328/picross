@@ -1,8 +1,9 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 28 · 05.11.2026**
+**Version 0.5.0 · Dokumentrevision 29 · 07.11.2026**
 
-Diese Revision ergänzt gespeicherte Sheet-Einstellungen und lokale Codex-Arbeitswurzeln. Inhaltsformate,
+Diese Revision erhält gespeicherte Sheet-Einstellungen und lokale Codex-Arbeitswurzeln
+und ergänzt den internen RI-B-Prüfkontext in §8. Inhaltsformate,
 Solverprofile, Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
 Regelwerksversion, Dokumentrevision, Datei-SHA-256 und tatsächlicher Repositorycommit
 binden den verwendeten Stand; keine nachträgliche Umetikettierung alter Pakete.
@@ -773,7 +774,7 @@ Reine Rätselproduktion bleibt gemäß §1 ohne Player-Build und ohne eigene CI-
 ## 8. Abgenommenes Paket ins Spiel integrieren
 
 RI-A-V01 zu [#478](https://github.com/venomenon328/picross/issues/478) liefert
-auf seinem Arbeitsbranch die [operativen CLI-/API-Grenzen](../ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen).
+seit PR #484 auf main die [operativen CLI-/API-Grenzen](../ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen).
 Neue Registrierung: `register --publication-seconds S --recovery-seconds S`,
 jeweils Default 1800 s; Warnung einmal ab 300 s. Ausdrückliche
 `recover-registration --recovery-seconds S` verwendet den eigenständigen
@@ -786,6 +787,18 @@ und optional `--operation-report <neue-externe-datei>`; Fortschritt steht auf
 stderr. Phasenzeiten sind inklusive und nicht zu summieren. Der getrennte
 [RI-A-T01-Nachweis](../RI_A_VERIFICATION.md) benennt reale Messungen und offene
 Abnahmen; eine längere Schutzfrist beweist weder Beschleunigung noch Integration.
+
+RI-B-V01 zu [#479](https://github.com/venomenon328/picross/issues/479) ergänzt
+auf seinem Arbeitsbranch die rein interne Wiederverwendung tatsächlich geprüfter
+neuer Paketbytes innerhalb eines mutierenden `register`-Aufrufs. Eingangsprüfung
+und unabhängiger Staging-Replay bleiben vollständig; spätere Paketnachprüfungen
+kontrollieren frisch Inventar, Bytes und Bindungen. Getrennte CLI-Aufrufe teilen
+keinen Prüfbeweis. Der Ablauf `export → plan → register`, tatsächliche Freigaben,
+lesender Plan und ausdrückliche Registrierungsautorisierung bleiben erhalten.
+Kein neuer Schalter, persistenter Prüfcache oder zusätzlicher Freigabeschritt.
+Alle globalen Guards und Recovery bleiben unverändert; Recovery prüft ohne
+B-Kontext. [RI-B-T01](../RI_B_VERIFICATION.md) nennt tatsächliche Nachweise und
+offene Gates; die Branchlieferung ist keine Merge- oder Inhaltsfreigabe.
 
 Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
 
