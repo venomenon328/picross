@@ -1,5 +1,35 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
+## SBR-A · gemeinsame Scrollbars (#539)
+
+[SBR-D01–D06 / Paket SBR-A](https://github.com/venomenon328/picross/issues/539)
+ergänzt die bestehende Controlfamilie: graphitgrauer Track mit offener,
+deterministisch variierter diagonaler Handschraffur, heller Thumb mit ruhender
+gezeichneter Kante und Griffstrich, helle geschlossene Dreieckspfeile.
+`book_controls.gd::scrollbars()` liefert denselben Themeweg an den gemeinsamen
+Spielroot und die expliziten Popup-Themes, einschließlich dynamischer Filter-,
+Meldungs-, Recovery- und Werkzeugscrollflächen. HScrollBar erhält die gedrehte
+Familie, ohne einen horizontalen Scrollweg hinzuzufügen.
+
+Die native Breite/Pfeilhöhe beträgt 22/28 px bei UI100/125, die minimale
+Thumblänge 28/35 px. Alle Zustände teilen dieselben Maße und Konturen; Hover
+hellt auf, Druck ergänzt einen zweiten Griffstrich, Fokus einen hellen Randzug.
+Godot bietet für ScrollBar keine eigenen Disabled-Theme-Slots: unveränderte
+native Bereichsgrenzen und bedarfsabhängige Sichtbarkeit gelten weiter.
+Für die nun sichtbaren nativen Pfeile wird `custom_step` auf 32×UI gesetzt;
+der interne Godot-Default `step=0` würde Pfeilklicks wirkungslos lassen.
+Drag-/Radwerte werden dadurch nicht quantisiert. Keine eigene Input-/Scrollsteuerung.
+Die tatsächliche Balkenbreite bleibt
+die Grundlage der Katalogreserve, auch bei verborgenem Balken.
+
+Die vier lokalen SVG-Dreiecke stehen in `tools/book_icons_hz.json`; Generator,
+Inventar, Herkunft und Manifest sind gemeinsam fortgeschrieben. Der schmale
+StyleBox-Pfad verwendet nur die stabile Identitätsfunktion aus `scribble.gd`,
+keine für große Papierflächen ausgelegten Kantenbögen. Buchmaterialien,
+Schriftrollen und übrige Icons bleiben Grundlage. Technische Lieferung im
+Paket-PR, unabhängiges SBR-A-R01 und persönliche Windows-Abnahme SBR-A-M01
+werden getrennt geführt; Implementierung nimmt sie nicht ab.
+
 **BTI-Folgepräzisierung auf dem Arbeitsbranch implementiert; R01/M01 offen:**
 [BTI-D01–D05](VIEW_TITLE_ART.md) ersetzt **nur**
 die drei großen sichtbaren Seitentitel `Rätselkatalog`, `Hilfe` und

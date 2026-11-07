@@ -1,5 +1,20 @@
 # Native Prüfmodule und Originalnachweise
 
+## SBR-A / #539: gemeinsame native Scrollbarfamilie
+
+Der bestehende `catalog/pages`-Prozess ergänzt den Checkpoint `sbr-scrollbars`:
+geerbte und explizite Themes samt horizontalem Fallback, helle geschlossene
+Dreiecke und Hover/Druck, begrenzte deterministische kurze/lange Schraffur,
+tatsächlicher Kataloggutter bei UI100/125 und 16:10, symmetrische 12/12-Zuordnung,
+native Range-/Pfeil-/Spur-/Thumb-/Radwege, Informations-/Katalogoffsets sowie
+Popup-Escape ohne Auswahl oder Durchklick. Die übrigen ausgewählten Katalog-
+und Informationsfälle laufen vollständig weiter. Vorhandener unabhängiger
+Reader und Missing-/Duplicate-/Zero-Checkpoint-Gegenproben binden denselben
+zusätzlichen Record. Keine neue Prozess- oder Dauerbildfamilie.
+Die einmaligen nativen Originale für SBR-A-R01 und die persönliche Windows-
+Bedien-/Stilabnahme SBR-A-M01 bleiben paketgebunden gemäß
+[Prüfplan #539](https://github.com/venomenon328/picross/issues/539).
+
 ## K-B / #485: begrenzte Merkerregression
 
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391):
