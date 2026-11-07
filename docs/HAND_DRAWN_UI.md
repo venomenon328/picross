@@ -69,7 +69,7 @@ HZ-B, Produktgrenzen und die getrennten Gates bleiben erhalten.
 | Rolle | Freigegebener Sollstand |
 | --- | --- |
 | Normale Spielertexte | Unverändertes `game/art/drawing/TidyHand.ttf` von Sean Johnson. Kategorien, Größe, Schwierigkeit, Blatt-/Statuszeilen, Textbuttons, Auswahlen, offene Menüzeilen, Einstellungen-/Infotexte, Dialoginhalt, Bedienhilfe, Tooltips und normale Warn-/Recoverytexte; auch direkte Textzeichnung. |
-| Bestehende Überschriften | Bakso für Katalog-/Arbeitsblatttitel und Kachel-Motivtitel/`???`; Fraunces 600 für bisherige übrige Überschriften einschließlich Abschlussbeschriftung und Information. Native Dialogtitel behalten ihren bisherigen Plex-Font. Die ursprünglichen Rollen, Größen und Fontbytes bleiben. |
+| Bestehende Überschriften | Bakso für Katalog-/Arbeitsblatttitel und Kachel-Motivtitel/`???`; Fraunces 600 für bisherige übrige Überschriften einschließlich Abschlussbeschriftung und Information; Hilfe-Abschnitts- und Werkzeugüberschriften verwenden gemäß [HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535) Bakso. Native Dialogtitel behalten ihren bisherigen Plex-Font. Die ursprünglichen Rollen, Größen und Fontbytes bleiben. |
 | Hierarchie und längere Texte | Rollenbezogene Größen, Abstände und Zeilenhöhe; Absätze bleiben ruhig lesbar. Tidy Hand ist keine Vereinheitlichung sämtlicher Überschriften. |
 | Vollhinweis-Überschrift | „Vollständiger Hinweis“ bleibt Fraunces 600 bei 13 × UI einschließlich bestehender Messung und sicherer Box. |
 | Hinweisziffern, ihre Marker und ausdrücklich an HC gebundene Zähler | Delight Coffee und die kontrolliert gebündelten Plex-Marker gemäß [HC](CLUE_TYPOGRAPHY.md). Schrift-/Slot-/Fitgeometrie, Status, Zahlfarben und C1-Kontur bleiben unverändert. |
@@ -342,8 +342,8 @@ Dialoginhalte, Tooltips sowie Warn-/Recoverytexte. Kein eigenständiger
 Hilfe-only-Font und keine wählbare Schriftoption.
 
 **Unverändert bleiben:** Bakso Daging in seinen tatsächlichen Katalog-, Blatt-,
-Kachel-, Einstellungs- und Gruppentitelrollen; Fraunces 600 in bestehenden
-sonstigen Informations-/Hilfe-/Vollhinweisüberschriften; Plex in nativen
+Kachel-, Einstellungs- und Gruppentitelrollen sowie gemäß [HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535) in Hilfe-Abschnitts- und Werkzeugüberschriften; Fraunces 600 in bestehenden
+sonstigen Informations- und Vollhinweisüberschriften; Plex in nativen
 Dialogtiteln, ausdrücklich gepinnten Markern und als einzigem gebündelten
 lokalen Zeichenfallback; Delight Coffee in Hinweiszahlen und gebundenen
 Zählern. Keine Systemfontsuche und keine neue allgemeine zweite Textrolle.
