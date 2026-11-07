@@ -38,8 +38,14 @@ func _ready() -> void:
 	body.add_child(form)
 	status = _choice("Status", ["Alle", "Noch offen", "Neu", "Begonnen", "Gelöst"])
 	mode_choice = _choice("Modus", ["Alle", "Monochrom", "Farbe"])
-	lower = _choice("Schwierigkeit von", ["Ohne Grenze", "L1 · Sehr leicht", "L2 · Leicht", "L3 · Mittel", "L4 · Schwer", "L5 · Sehr schwer"])
-	upper = _choice("Schwierigkeit bis", ["Ohne Grenze", "L1 · Sehr leicht", "L2 · Leicht", "L3 · Mittel", "L4 · Schwer", "L5 · Sehr schwer"])
+	var difficulty := HBoxContainer.new()
+	_label("Schwierigkeit", form)
+	form.add_child(difficulty)
+	var levels: Array = ["Ohne Grenze", "Sehr leicht", "Leicht", "Mittel", "Schwer", "Sehr schwer"]
+	lower = _choice("Von", levels, difficulty)
+	upper = _choice("Bis", levels, difficulty)
+	lower.accessibility_name = "Schwierigkeit von"
+	upper.accessibility_name = "Schwierigkeit bis"
 	lower.item_selected.connect(func(_index: int) -> void: _bounds_changed(true))
 	upper.item_selected.connect(func(_index: int) -> void: _bounds_changed(false))
 	var dimensions := HBoxContainer.new()
@@ -52,6 +58,7 @@ func _ready() -> void:
 	error.add_theme_color_override("font_color", Color("863c32"))
 	error.hide()
 	body.add_child(error)
+	body.move_child(error,0)
 	actions = HBoxContainer.new()
 	outer.add_child(actions)
 	for spec: Array in [["Übernehmen", submit], ["Schließen", hide]]:
@@ -74,15 +81,16 @@ func _label(title: String, parent: Container) -> void:
 	label.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	parent.add_child(label)
 
-func _choice(title: String, entries: Array) -> Choice:
-	_label(title, form)
+func _choice(title: String, entries: Array, parent: Container = null) -> Choice:
+	if parent == null: parent = form
+	_label(title, parent)
 	var choice := Choice.new()
 	choice.name = "catalog-filter-" + title
 	choice.accessibility_name = title
 	choice.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	choice.fit_to_longest_item = false
 	for title_text: String in entries: choice.add_item(title_text)
-	form.add_child(choice)
+	parent.add_child(choice)
 	return choice
 
 func _dimension(title: String, parent: HBoxContainer) -> LineEdit:
@@ -124,7 +132,7 @@ func open(selection: Dictionary, anchor: Rect2, scale: float) -> void:
 			node.add_theme_font_size_override("font_size", fs)
 		if node is Choice:
 			node.ui_scale = scale
-			node.custom_minimum_size = Vector2(170,44)*scale
+			node.custom_minimum_size = Vector2(140 if node in [lower,upper] else 170,44)*scale
 		if node is BookButton:
 			node.ui_scale = scale
 			node.custom_minimum_size = Vector2(120,44)*scale
@@ -146,7 +154,7 @@ func open(selection: Dictionary, anchor: Rect2, scale: float) -> void:
 					frame.ink = Color("376a60")
 				node.add_theme_stylebox_override(state,frame)
 	var viewport_size := Vector2i(get_parent().get_viewport().get_visible_rect().size)
-	var panel_size := Vector2i(mini(roundi(440*scale),viewport_size.x-32),mini(roundi(440*scale),viewport_size.y-32))
+	var panel_size := Vector2i(mini(roundi(540*scale),viewport_size.x-32),mini(roundi(440*scale),viewport_size.y-32))
 	scroller.custom_minimum_size = Vector2(0,panel_size.y-140*scale)
 	min_size = Vector2i.ZERO
 	size = panel_size

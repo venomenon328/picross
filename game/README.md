@@ -104,7 +104,7 @@ Gleichstände behalten ihre feste Blattreihenfolge; Blattnummern ändern sich ni
 **Filter** rechts neben Sortierauswahl und Richtungspfeil öffnet die zusätzlichen
 Auswahlen: **Status**
 (Alle, Noch offen, Neu, Begonnen, Gelöst), **Modus** (Alle, Monochrom, Farbe),
-**Schwierigkeit von/bis** L1–L5 sowie die nebeneinanderliegenden Felder
+**Schwierigkeit von/bis** (Sehr leicht bis Sehr schwer) sowie die nebeneinanderliegenden Felder
 **Maximale Breite** und **Maximale Höhe**.
 Alle aktiven Filter gelten gemeinsam. Grenzen sind einschließlich; gleiche
 Schwierigkeitsgrenzen wählen eine Stufe. Ohne Spanne bleiben nicht eingestufte
@@ -117,7 +117,9 @@ Minimum ≤ Maximum; nötigenfalls folgt die andere Grenze automatisch. Dafür
 erscheint keine Fehlermeldung. Ungültige Breiten-/Höhenwerte werden angezeigt und
 verändern die letzte gültige Auswahl nicht. **Schließen** verwirft den Entwurf. Der Panelinhalt scrollt bei
 knapper Höhe. **Filter zurücksetzen** setzt auch die Kategorie auf Alle und
-behält die Sortierung. Die Trefferzahl steht über dem rechten Buchteil;
+behält die Sortierung; diese Aktion befindet sich nur im Filterfenster.
+Von/Bis stehen wie Breite/Höhe nebeneinander. Fehlermeldungen stehen oben rechts
+auf der Buchseite bzw. oben im Filterfenster. Die Trefferzahl steht über dem rechten Buchteil;
 keine passenden Treffer und Katalogladefehler sind getrennt beschriftet.
 Ungültige Saves zählen nicht als Neu oder Noch offen; unter Alle bleiben ihre
 Reset-/Diagnosewege erhalten. Speicherfehler bleiben auch außerhalb der Treffer

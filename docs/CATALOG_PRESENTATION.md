@@ -84,7 +84,8 @@ bei gemeinsamer Auswahl mit UND.
 Der Button **Filter** steht rechts neben Sortierauswahl und Richtungspfeil,
 mit 16×UI horizontalem Textinnenraum je Seite auch unter Fokus/Druck. Er
 öffnet ein handgezeichnetes Papierpanel mit den zusätzlichen
-Achsen. Die Schwierigkeitsdropdowns begrenzen einander auf auswählbare Stufen
+Achsen. Die Schwierigkeitsfelder **Von/Bis** stehen nebeneinander und zeigen nur
+die Bezeichnungen Sehr leicht bis Sehr schwer ohne L-Präfix. Die Dropdowns begrenzen einander auf auswählbare Stufen
 mit Minimum ≤ Maximum. Bei Bedarf folgt die Gegengrenze der zuletzt geänderten;
 gleiche Stufen und je ein unbeschränktes Ende bleiben möglich. Eine widersprüchliche
 Spanne kann nicht ausgewählt werden und erzeugt keine Fehlermeldung.
@@ -103,6 +104,9 @@ angewendeten Zustand, Sortierung, Seite, beide Offsets und passende Auswahl-ID.
 Abschluss/Reset aktualisieren die Treffer vor Seiten-/Offsetbegrenzung; entfällt
 die letzte Seite, beginnt die begrenzte Seite oben. **Filter zurücksetzen**
 neutralisiert Kategorie und alle zusätzlichen Achsen, erhält das Sortierpaar.
+Diese Aktion steht ausschließlich im Filterpanel. Katalog-/Speicher- und
+Sortierfehlermeldungen stehen oben auf der rechten Buchseite, Entwurfsfehler oben
+im Filterpanel.
 Trefferzahl, leerer Trefferbestand, gültiger leerer Katalog und Ladefehler sind
 unterscheidbar. Ein neuer Prozess startet ohne Filter, bei Alle/Seite 1/oben.
 Es gibt keine Filterpersistenz, zusätzlichen Einstellungen oder K-B-Fortsetzen-Aktion.
