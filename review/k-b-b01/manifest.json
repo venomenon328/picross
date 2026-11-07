@@ -2,6 +2,10 @@
   "product_head": "6b4bede4d76cce539daa488027e66711a5538db5",
   "expires": "2026-11-21",
   "files": {
+    ".gitattributes": {
+      "bytes": 35,
+      "sha256": "3fd6907a39ba488c39e7a1f249abd03f9868af5211714975e304482d552c1492"
+    },
     "build.json": {
       "bytes": 7630,
       "sha256": "d51824477cc9dfea94f9a39efb57577842ef790967726dbea1f514a6cc624a1e"
