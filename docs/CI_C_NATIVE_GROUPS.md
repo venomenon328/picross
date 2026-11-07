@@ -1,5 +1,19 @@
 # Native Prüfmodule und Originalnachweise
 
+## RF-A / #541: unmittelbare Miniatur und binäre Panelbreite
+
+Im vorhandenen `catalog/pages`-/`k-b-recent`-Checkpoint prüft die kleine
+synthetische Regression die synchrone Zielbindung bei abgeschaltetem Prozess,
+tatsächliche eigene Füll-/Neutralpixel ohne Hover, Undo/Redo bis zur leeren
+Redo-Miniatur und den Zielwechsel. Reale Buchprojektion bei UI100/125 und
+16:10 sowie ein aus Schriftmaßen hergeleitetes Fit-Grenzpaar sichern exakt
+halbe/volle Breite, unveränderten linken Rand, Text-/Miniaturabstände und
+den 8×UI-Sortierabstand. Die bestehenden ID-/Reset-/Retryfälle bleiben erhalten.
+Kein neues Ergebnisformat, Prozess oder dauerhafte Bilder. Der unabhängige
+Reader verlangt weiterhin denselben echten Checkpoint mit allen Assertions.
+Einmalige Windows-Maus-/Originalnachweise bleiben am [RF-A-PR](https://github.com/venomenon328/picross/issues/541)
+für das separate R01/M01 erreichbar, danach werden sie zurückgebaut.
+
 ## K-B / #485: begrenzte Merkerregression
 
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391):
