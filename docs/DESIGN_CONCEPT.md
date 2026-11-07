@@ -338,8 +338,8 @@ Die bestätigte [Buchrichtung #493](BOOK_INTEGRATION.md) zeigt den Katalog als e
 Die Spielerhilfe nach [HIL-1 / #500](https://github.com/venomenon328/picross/issues/500)
 liegt in der rechten Informationsseite im vorhandenen Nahmaßstab. Vier beschriftete
 Papierbuttons führen direkt zu Spielprinzip, farbigen Rätseln, Bedienung und
-Lösungstipps. Pangolin trägt den Fließtext, Fraunces 600 auch kleine
-Abschnittsüberschriften; Lehrzahlen verwenden die aktive Delight-Typografie.
+Lösungstipps. Pangolin trägt den Fließtext, Bakso Daging gemäß
+[HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535) die Abschnitts- und kleinen Werkzeugüberschriften; Lehrzahlen verwenden die aktive Delight-Typografie.
 Passive synthetische Raster teilen stabile Linien, Atlas-Endbilder, Stiftfarben
 und handschriftliche X mit der Spielansicht. Es gibt keine neue Bild-/Fontfamilie.
 Textumbruch, Diagramme und Trefferflächen folgen UI100/125 und der Papierfläche.
