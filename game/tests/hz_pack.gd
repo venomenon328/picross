@@ -67,7 +67,7 @@ func run() -> void:
 	check(Text.font().data == Text.SOURCE.data and not Text.font().allow_system_fallback,"actual PCK original Pangolin bytes and local fallback")
 	check(FileAccess.file_exists("res://art/drawing/pangolin/NOTICE.txt"),"actual PCK includes author permission")
 	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
-	check(icons.size() == 23 and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"),"actual PCK complete HZ-B family/provenance")
+	check(icons.size() == 27 and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"),"actual PCK complete HZ-B/SBR family/provenance")
 	for id: String in icons:
 		var texture: Texture2D = load("res://art/book/"+id+".svg")
 		check(texture != null and texture.get_size() == Vector2(26,26),"actual PCK imported icon "+id)

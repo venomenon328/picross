@@ -27,7 +27,7 @@ static func run(runner: Object) -> void:
 			runner.check(not Geometry2D.triangulate_polygon(polygon).is_empty(),"HZ-B fill has no self-intersecting pen overruns")
 			runner.check(style.test_mask(Vector2(0.1,0.1),rect) and not style.test_mask(Vector2(-0.1,0),rect),"HZ-B rectangular boundary unchanged")
 	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
-	runner.check(icons.size() == 23,"HZ-B complete active icon family")
+	runner.check(icons.size() == 27,"HZ-B/SBR complete active icon family")
 	for id: String in icons:
 		var texture: Texture2D = load("res://art/book/"+id+".svg")
 		runner.check(texture != null and texture.get_size() == Vector2(26,26),"HZ-B imported texture "+id)
