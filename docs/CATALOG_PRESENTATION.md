@@ -105,7 +105,9 @@ Abschluss/Reset aktualisieren die Treffer vor Seiten-/Offsetbegrenzung; entfäll
 die letzte Seite, beginnt die begrenzte Seite oben. **Filter zurücksetzen**
 neutralisiert Kategorie und alle zusätzlichen Achsen, erhält das Sortierpaar.
 Diese Aktion steht ausschließlich im Filterpanel. Katalog-/Speicher- und
-Sortierfehlermeldungen stehen oben auf der rechten Buchseite, Entwurfsfehler oben
+Sortierfehlermeldungen stehen im festen freien Kopfbereich der rechten Buchseite
+über Sortieren/Filter. Bei Überlänge scrollt nur diese Meldungsfläche; Ein-/Ausblenden
+verschiebt weder Kacheln noch Katalogcontrols. Entwurfsfehler stehen oben
 im Filterpanel.
 Trefferzahl, leerer Trefferbestand, gültiger leerer Katalog und Ladefehler sind
 unterscheidbar. Ein neuer Prozess startet ohne Filter, bei Alle/Seite 1/oben.

@@ -99,13 +99,13 @@ func _layout_book(prepare_board: bool = false) -> void:
 		save_retry.visible = session != null and not slot_errors[sessions.find(session)].is_empty() and not work_repair_button.visible
 		if album.visible:
 			# Also reachable when a blocked slot is outside the current filter.
-			if save_retry.get_parent() != album.left_page: save_retry.reparent(album.left_page)
-			album.left_page.move_child(save_retry,1)
+			if save_retry.get_parent() != album.notices: save_retry.reparent(album.notices)
 			save_retry.custom_minimum_size.y = 44*ui_scale
 		else:
 			if save_retry.get_parent() != page: save_retry.reparent(page)
 			_place(save_retry,Rect2(work_repair_button.position,Vector2(340,44)*ui_scale))
 	if album.summary != null: album.summary.visible = album.visible and catalog_error.is_empty()
+	if album.notice_area != null: album.notice_area.visible = album.visible
 	if album.visible:
 		# Projected paper is already in viewport pixels, including letterboxing.
 		# Use that one coordinate system for heading, clip areas and both footers.
@@ -129,6 +129,10 @@ func _layout_book(prepare_board: bool = false) -> void:
 		if album.summary != null:
 			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(edge-right_heading,45*ui_scale)))
 			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))
+		# Messages use the existing free heading area. Its fixed, scrollable
+		# bounds never enter either page's card/control layout, even on failure.
+		var notice_top: float = heading_top+30*ui_scale
+		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(edge-right_heading,maxf(1,catalog_top-8*ui_scale-notice_top))))
 		album._layout_cards()
 
 func select_puzzle(index: int) -> void:
