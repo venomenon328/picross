@@ -55,6 +55,7 @@ func run() -> void:
 		output.store_line(JSON.stringify({"action":action,"changes":changes,"cells":player.cells,
 			"history":player.history,"cursor":player.cursor,"undo_used":player.undo_used,
 			"view":app.board.capture_view(),"actual_cell":app.board.view.cell_size,"fit_ceiling":app.board.fit_ceiling,"elapsed_us":Time.get_ticks_usec()-began,
+			"recent":app.RecentPuzzle.read(app.recent.path),"recent_id":app.recent_id(),
 			"pid":OS.get_process_id(),"engine":Engine.get_version_info()}))
 		output.flush()
 	output.close()

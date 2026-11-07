@@ -84,7 +84,7 @@ class ShortBrowser(unittest.TestCase):
         result = subprocess.run(['node', str(ROOT/'tools/web_tests/storage_contract.cjs'),
                                  str(ROOT/'game/web/storage.js')], capture_output=True, text=True, timeout=20)
         self.assertEqual(result.returncode, 0, result.stdout+result.stderr)
-        self.assertEqual(len([line for line in result.stdout.splitlines() if line.startswith('PASS ')]), 5)
+        self.assertEqual(len([line for line in result.stdout.splitlines() if line.startswith('PASS ')]), 6)
 
 
 if __name__ == '__main__':

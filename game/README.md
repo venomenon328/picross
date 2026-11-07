@@ -1,5 +1,18 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+## Zuletzt bearbeitetes Rätsel
+
+Im rechten Katalogkopf öffnet „Zuletzt bearbeitetes Rätsel fortsetzen“ den zuletzt
+wirksam bearbeiteten, erfolgreich gespeicherten begonnenen Stand, auch außerhalb der
+aktuellen Filter. Eigene Füllungen erscheinen in einer verkleinerten Vorschau.
+Ohne passenden Stand oder nach Abschluss/Reset ist das Panel verborgen. Öffnen oder
+Ändern der Ansicht allein setzt keinen Merker; echtes Undo/Redo schon. Ein neuer Start
+zeigt weiterhin den Katalog. Der separate `user://p1/recent-puzzle.json` ändert keine
+Slotdatei. Fehler des Merkers haben im Katalog einen eigenen Retry; Save-/Backupfehler
+und deren bewusste Reparatur bleiben davon getrennt. Windows verwendet für atomaren
+Metadatenaustausch das mitgelieferte Windows PowerShell/.NET; dessen Ausfall verhindert
+nur die Aktualisierung des Merkers.
+
 **Buchintegration B-B / #493, #498:** Windows und Web starten den regulären
 Rätselkatalog als räumliches Buch. Kurzes Blättern
 dauert 0,85 Sekunden; drei einzelne Blätter führen in insgesamt drei Sekunden

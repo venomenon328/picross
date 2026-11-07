@@ -83,4 +83,42 @@ async function confirm(t, error = null) {
   t.retry.onclick(); await confirm(t);
   assert.equal(t.store.pending, false);
   console.log('PASS isolated preference error, latest change and retry');
+
+  t = setup(); await confirm(t);
+  t.store.finished('foreign', 'broken slot'); await confirm(t);
+  t.store.recentChanged(); await tick();
+  t.store.recentChanged(); t.store.changed();
+  await confirm(t, new Error('marker quota'));
+  assert.equal(t.store.recentSaved, 0);
+  assert.equal(t.store.recentPending, true);
+  await confirm(t);
+  assert.ok(t.store.recentError, 'slot callback cannot acknowledge the marker');
+  assert.equal(t.store.error, 'broken slot');
+  t.store.preferenceChanged(); await confirm(t);
+  assert.ok(t.store.recentError, 'preference callback cannot clear marker failure');
+  t.store.recentRetry(); await tick();
+  t.store.recentChanged();
+  await confirm(t);
+  assert.equal(t.store.recentSaved, 2);
+  assert.equal(t.store.recentPending, true, 'old callback cannot confirm newer marker');
+  assert.notEqual(t.label.textContent, 'Im Browser gespeichert');
+  await confirm(t);
+  assert.equal(t.store.recentSaved, 3);
+  assert.equal(t.store.recentPending, false);
+  assert.equal(t.store.recentError, '');
+  assert.equal(t.store.error, 'broken slot', 'marker success cannot mask a save error');
+  // Exercise the real serialized wrapper's synchronous-start exception path.
+  const broken = new sandbox.Storage({}, {});
+  let throws = false, callback;
+  broken.attach({syncfs: (_, done) => { if (throws) throw Error('start'); callback = done; }},
+                {is_persistent: () => true}, {reconcile() {}});
+  await tick(); callback(null); await tick(); throws = true;
+  broken.recentChanged(); await tick(); await tick();
+  assert.ok(broken.recentError); assert.equal(broken.recentSaved, 0);
+  assert.equal(broken.error, '');
+  throws = false; broken.recentRetry(); await tick();
+  assert.equal(broken.recentPending, true);
+  callback(null); await tick();
+  assert.equal(broken.recentPending, false);
+  console.log('PASS recent callback ownership, isolation and retry');
 })().catch(error => { console.error(error); process.exitCode = 1; });

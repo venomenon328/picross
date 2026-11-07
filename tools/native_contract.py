@@ -13,7 +13,7 @@ RP6_STATES = ('work', 'detail', 'album-partial', 'completion', 'album-completed'
 # P2-E-A-V02 / D02: selected native cases, deliberately not the old cross product.
 CATALOG_CASES = {
     'pages': ('catalog-layout', 'catalog-pages', 'catalog-sorting',
-              'k-a-filter-rules', 'k-a-filter-navigation'),
+              'k-a-filter-rules', 'k-a-filter-navigation', 'k-b-recent'),
     'ke': ('ke-layout-1280-ui125', 'ke-metadata-null', 'ke-metadata-current',
            'ke-negative-delayed-hover', 'ke-metadata-legacy',
            'ke-roundtrip-and-mode-tooltip', 'ke-pointer-card', 'ke-pointer-difficulty_icon',

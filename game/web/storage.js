@@ -16,7 +16,11 @@ class PicrossStorage {
     this.preferenceSaved = 0;
     this.preferenceRunning = false;
     this.preferenceError = '';
-    retry.onclick = () => { if (window.picrossLifecycle) window.picrossLifecycle(); this.changed(); };
+    this.recentGeneration = 0;
+    this.recentSaved = 0;
+    this.recentRunning = false;
+    this.recentError = '';
+    retry.onclick = () => { if (window.picrossLifecycle) window.picrossLifecycle(); this.recentRetry(); this.changed(); };
   }
   attach(fs, godotFS, idbfs) {
     if (!godotFS.is_persistent()) return false;
@@ -43,6 +47,25 @@ class PicrossStorage {
   }
   viewChanged() { this.viewPending = true; this.pending = true; this.render(); }
   get preferencePending() { return this.preferenceSaved !== this.preferenceGeneration; }
+  get recentPending() { return this.recentSaved !== this.recentGeneration; }
+  recentChanged() {
+    this.recentGeneration++;
+    this.render();
+    queueMicrotask(() => this.recentSync());
+  }
+  recentRetry() { if (this.recentPending) this.recentSync(); }
+  recentSync() {
+    if (!this.ready || this.recentRunning || !this.recentPending) return;
+    this.recentRunning = true;
+    const generation = this.recentGeneration;
+    this.fs.syncfs(false, error => {
+      this.recentRunning = false;
+      this.recentError = error ? 'Fortsetzen-Merker nicht im Browser gespeichert. Erneut versuchen.' : '';
+      if (!error) this.recentSaved = generation;
+      this.render();
+      if (!error && this.recentPending) this.recentSync();
+    });
+  }
   preferenceChanged() {
     this.preferenceGeneration++;
     queueMicrotask(() => this.preferenceSync());
@@ -94,7 +117,7 @@ class PicrossStorage {
   }
   render() {
     this.error = this.syncError || Object.values(this.localErrors)[0] || '';
-    this.label.textContent = this.error || (this.pending ? 'Speichern läuft …' : 'Im Browser gespeichert');
-    this.retry.hidden = !this.error;
+    this.label.textContent = this.error || this.recentError || (this.pending || this.recentPending ? 'Speichern läuft …' : 'Im Browser gespeichert');
+    this.retry.hidden = !(this.error || this.recentError);
   }
 }
