@@ -59,7 +59,9 @@ verhindern widersprüchliche Spannen durch gegenseitige Optionsgrenzen und
 Anpassung der Gegengrenze. Die beiden Maßfelder stehen nebeneinander.
 Ungültige Maßgrenzen bleiben sichtbar; Schließen
 verwirft den Entwurf. Das Panel begrenzt sich auf das Fenster und
-scrollt bei knapper Höhe, ohne Karten-/Bildbudgets zu reduzieren. Seiten-/UI-/
+scrollt bei knapper Höhe, ohne Karten-/Bildbudgets zu reduzieren. Seine Höhe folgt
+dem Inhalt; Übernehmen / Zurücksetzen / Schließen stehen gleich groß in einer
+Zeile. Schmale Breite-/Höhe-Felder stehen rechtsbündig unter Von/Bis. Seiten-/UI-/
 Ansichtswechsel schließen es. Filterreset erhält die Sortierung. Beide unabhängigen
 Scrollstände, Seite und passende Auswahl bleiben bei Rückkehr erhalten;
 Abschluss/Reset aktualisieren und begrenzen die Trefferposition. Kein zusätzliches

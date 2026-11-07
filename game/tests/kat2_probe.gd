@@ -511,7 +511,7 @@ func regular() -> void:
 	await shot("empty-category")
 	click(app.album.filter_button)
 	await frames()
-	click(caption_button(app.album.filter_panel,"Filter zurücksetzen"))
+	click(caption_button(app.album.filter_panel,"Zurücksetzen"))
 	await frames()
 	check(app.album.category_id.is_empty(), "pointer returns to All")
 	# An automatically created empty save is still new.
