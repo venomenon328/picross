@@ -97,6 +97,7 @@ func _dimension(title: String, parent: HBoxContainer) -> LineEdit:
 	field.add_theme_color_override("font_placeholder_color", Color("64685f"))
 	field.add_theme_color_override("caret_color", Color("293e3d"))
 	field.add_theme_color_override("selection_color", Color("b4c6b5"))
+	field.add_theme_color_override("font_selected_color", Color("293e3d"))
 	field.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	field.text_submitted.connect(func(_value: String) -> void: submit())
 	column.add_child(field)
@@ -132,7 +133,16 @@ func open(selection: Dictionary, anchor: Rect2, scale: float) -> void:
 		if node is LineEdit:
 			node.custom_minimum_size = Vector2(140,44)*scale
 			for state: String in ["normal","focus","read_only"]:
-				node.add_theme_stylebox_override(state,Paper.make("catalog/filter-input/"+state,scale,Color("fff8e8")))
+				var frame := Paper.make("catalog/filter-input/"+state,scale,Color("fff8e8"))
+				frame.content_margin_left = 12*scale
+				frame.content_margin_right = 12*scale
+				frame.content_margin_top = 6*scale
+				frame.content_margin_bottom = 6*scale
+				if state == "focus":
+					frame.focus = true
+					frame.paper = Color.TRANSPARENT
+					frame.ink = Color("376a60")
+				node.add_theme_stylebox_override(state,frame)
 	var viewport_size := Vector2i(get_parent().get_viewport().get_visible_rect().size)
 	var panel_size := Vector2i(mini(roundi(440*scale),viewport_size.x-32),mini(roundi(440*scale),viewport_size.y-32))
 	scroller.custom_minimum_size = Vector2(0,panel_size.y-140*scale)
@@ -159,4 +169,9 @@ func submit() -> void:
 func invalid(message: String) -> void:
 	error.text = message
 	error.show()
-	scroller.ensure_control_visible(error)
+	_reveal_error.call_deferred()
+
+func _reveal_error() -> void:
+	# The newly wrapped error changes the container range during its next sort.
+	await get_tree().process_frame
+	if visible and error.visible: scroller.ensure_control_visible(error)

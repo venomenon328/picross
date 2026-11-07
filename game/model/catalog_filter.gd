@@ -6,7 +6,7 @@ const MODES: Array[String] = ["all", "mono", "color"]
 
 static func _dimension(value: String, label: String) -> Dictionary:
 	if value.is_empty(): return {"value":0}
-	var message: String = label + ": eine ganze Zahl von 1 bis 50 eingeben oder leer lassen."
+	var message: String = label + ": ganze Zahl von 1 bis 50 oder leer."
 	if value.length() > 8: return {"error":message}
 	for character: String in value:
 		if character < "0" or character > "9": return {"error":message}
