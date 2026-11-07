@@ -170,7 +170,13 @@ static func run(r: SceneTree) -> void:
 				r.check(group.heading.get_theme_font("font") == catalog_font and group.heading.get_theme_font_size("font_size") == roundi(20*scale) and group.heading.get_theme_font_size("font_size") < catalog_size,"N03-E01: smaller Bakso 20 group titles retain original resource")
 			var column: Rect2 = r.app.settings_panel.get_global_rect()
 			var scroll: Rect2 = r.app.info_scroll.get_global_rect()
-			r.check(column.size.x <= 640*scale+1 and column.size.x <= scroll.size.x and absf(column.get_center().x-scroll.get_center().x) < 10*scale and r.app.info_scroll.get_h_scroll_bar().max_value <= scroll.size.x,"N02: compact groups centred in safe left paper without horizontal scrolling "+str(column)+" / "+str(scroll)+" / max="+str(r.app.info_scroll.get_h_scroll_bar().max_value))
+			# ScrollContainer centres its child in the usable region beside the
+			# actual visible bar. SBR's wider track must not become a tolerance
+			# failure or move the settings onto the bar to satisfy the old oracle.
+			var bar: VScrollBar = r.app.info_scroll.get_v_scroll_bar()
+			var gutter: float = bar.get_combined_minimum_size().x if bar.visible else 0.0
+			var usable: Rect2 = Rect2(scroll.position,Vector2(scroll.size.x-gutter,scroll.size.y))
+			r.check(column.size.x <= 640*scale+1 and column.size.x <= usable.size.x and absf(column.get_center().x-usable.get_center().x) <= 1 and r.app.info_scroll.get_h_scroll_bar().max_value <= scroll.size.x,"N02: compact groups centred in usable safe left paper without horizontal scrolling "+str(column)+" / "+str(usable)+" / max="+str(r.app.info_scroll.get_h_scroll_bar().max_value))
 			var last_x: float = -1
 			var help_count: int = 0
 			for field: Control in r.app.settings_fields:
