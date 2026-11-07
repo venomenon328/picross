@@ -10,6 +10,7 @@ import os
 import platform
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import tempfile
@@ -27,7 +28,6 @@ import z2_resources
 import gp48_delivery
 import p1_current_visual
 import vs2_delivery
-import hc92_verify
 import perf_b_resources
 import za1_product
 import kat2_product
@@ -86,18 +86,75 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
     """Write live diagnostic output even if the runner is cancelled mid-phase."""
     print(f"RUN {name}", flush=True)
     started = time.monotonic()
+    environment = environment.copy()
+    # Only the Python toolchain downloader needs the short-lived read token.
+    # The engine and its native probes do not receive repository credentials.
+    environment.pop('GITHUB_TOKEN', None)
+    # Mesa otherwise builds a CPU-sized worker pool in every simultaneous
+    # llvmpipe process. Native groups already supply process-level parallelism.
+    # These existing oracles require short wall-clock windows. The one-thread
+    # countermeasurement missed a debounced-save boundary and hatch buildup;
+    # retain Mesa's original pool for them and the real lifecycle/atlas motion.
+    timing_sensitive = {"kat2-information", "current-drawing-capture", "book-integration", "perf-b-native"}
+    if (platform.system() == "Linux" and environment.get("LIBGL_ALWAYS_SOFTWARE") == "1"
+            and '--headless' not in command
+            and name not in timing_sensitive):
+        environment["LP_NUM_THREADS"] = "1"
+    usage_before = None
+    if platform.system() == "Linux":
+        import resource
+        usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
     path = logs / f"{name}.log"
+    # P3-A-F02: only KK may finish after the standard 300s boundary.
+    warning_seconds = 300 if name == "kat2-kk" else None
+    timeout = 600 if name == "kat2-kk" else timeout
+    warning_emitted = False
     timed_out = False
     with path.open("wb") as stream, import_settings(command):
-        try:
-            process = subprocess.run(command, env=environment, stdout=stream,
-                                     stderr=subprocess.STDOUT, timeout=timeout, check=False)
-            exit_code = process.returncode
-        except subprocess.TimeoutExpired:
-            timed_out = True
-            exit_code = None
-            stream.write(f"\n{name} exceeded {timeout}s\n".encode())
+        # xvfb-run waits for Godot: killing only the wrapper leaves the engine
+        # writing into a project/profile which the caller is about to remove.
+        grouped = platform.system() == "Linux"
+        with subprocess.Popen(command, env=environment, stdout=stream,
+                              stderr=subprocess.STDOUT, start_new_session=grouped) as process:
+            try:
+                if warning_seconds is None:
+                    exit_code = process.wait(timeout=timeout)
+                else:
+                    waiting_started = time.monotonic()
+                    try:
+                        exit_code = process.wait(timeout=warning_seconds)
+                    except subprocess.TimeoutExpired:
+                        warning_emitted = True
+                        warning = f"WARNING: {name} reached {warning_seconds}s; continuing with {timeout}s hard timeout"
+                        stream.write(("\n" + warning + "\n").encode())
+                        stream.flush()
+                        print(warning, flush=True)
+                        # Warning/logging time consumes the same hard budget.
+                        remaining = max(0, timeout - (time.monotonic() - waiting_started))
+                        exit_code = process.wait(timeout=remaining)
+            except BaseException as error:
+                if grouped:
+                    try:
+                        os.killpg(process.pid, signal.SIGKILL)
+                    except ProcessLookupError:
+                        pass
+                else:
+                    process.kill()
+                process.wait()
+                if not isinstance(error, subprocess.TimeoutExpired):
+                    raise
+                timed_out = True
+                exit_code = None
+                stream.write(f"\n{name} exceeded {timeout}s\n".encode())
     output = path.read_bytes().decode("utf-8", errors="replace")
+    costs = dict(software_render_threads=environment.get("LP_NUM_THREADS"),
+                 display=environment.get("DISPLAY"))
+    if usage_before is not None:
+        usage_after = resource.getrusage(resource.RUSAGE_CHILDREN)
+        costs.update(child_user_seconds=usage_after.ru_utime-usage_before.ru_utime,
+                     child_system_seconds=usage_after.ru_stime-usage_before.ru_stime,
+                     children_max_rss_so_far_kib=usage_after.ru_maxrss,
+                     child_involuntary_switches=usage_after.ru_nivcsw-usage_before.ru_nivcsw)
     print(output[-4000:], flush=True)
     if len(output) > 4000:
         print(f"[{name}: console tail only; diagnostic log retained separately]", flush=True)
@@ -105,6 +162,9 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
                 process_role='import' if '--import' in command else 'export' if '--export-debug' in command else 'version' if '--version' in command else 'game',
                 rendered='--headless' not in command and '--version' not in command,
                 seconds=round(time.monotonic() - started, 3), timed_out=timed_out,
+                timeout_seconds=timeout, warning_seconds=warning_seconds,
+                warning_emitted=warning_emitted,
+                process_costs=costs,
                 log=bound_log(path))
 
 
@@ -138,7 +198,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--native-group", choices=("core", "history", "catalog", "completion", "adapters", "graphics", "export"), help=argparse.SUPPRESS)
     parser.add_argument("--technical-dir", type=Path, help=argparse.SUPPRESS)
     parser.add_argument("--groups", help="Exact independent groups, comma separated; default all")
-    parser.add_argument("--compare-native-png", action="store_true", help="Compare old/new PNG encoders on the same real frames")
     for name, description in (
         ("integration", "bounded native history and the independent two-process restart oracle"),
         ("pilots", "four synthetic interaction cases across real processes"),
@@ -240,13 +299,12 @@ def run_pilot_isolation_control(workspace: Path, environment: dict, base: list[s
 
 
 def run_visual(output: Path, workspace: Path, project: Path, engine: str,
-               environment: dict, phase, python_phase, host: str) -> tuple[dict, list[Path]]:
+               environment: dict, run_phase, python_phase, host: str) -> tuple[dict, list[Path]]:
     renders = output / "renders"
     renders.mkdir(exist_ok=True)
     environment["P1_CAPTURE_DIR"] = str(renders)
     command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
-               "--audio-driver", "Dummy", "--script", "res://tests/capture.gd",
-               "--", "--p1-capture", "--ci-compact"]
+               "--audio-driver", "Dummy"]
     if host == "Linux":
         if not shutil.which("xvfb-run"):
             raise toolchain.PreflightError("Real render verification requires xvfb-run on Linux")
@@ -256,58 +314,51 @@ def run_visual(output: Path, workspace: Path, project: Path, engine: str,
         reports = []
         for stage in RENDER_STAGES:
             environment["P1_RENDER_STAGE"] = stage
-            phase("render-" + stage, command, "P1_CAPTURE_OK")
+            run_phase("render-" + stage, command + ["--script", "res://tests/capture.gd",
+                      "--", "--p1-capture", "--ci-compact"], "P1_CAPTURE_OK")
             report = json.loads((renders / f"render-report-{stage}.json").read_text(encoding="utf-8"))
-            if (report.get("failed") or report.get("compact") is not True
-                    or report["rendered_count"] < 1
-                    or report["retained_count"] != len(report["captures"])
-                    or report["retained_count"] > report["rendered_count"]):
-                raise toolchain.PreflightError(f"Incomplete compact native stage: {stage}")
+            vs2_delivery.verify_compact_stage(stage, report)
             reports.append(report)
         environment.pop("P1_RENDER_STAGE", None)
-        combined = dict(stages=len(reports), pixel_checks=sum(r["pixel_checks"] for r in reports),
-                        rendered_count=sum(r["rendered_count"] for r in reports),
-                        retained_count=sum(r["retained_count"] for r in reports),
-                        captures=[c for r in reports for c in r["captures"]], compact=True)
+        combined = vs2_delivery.compact_summary(reports)
         (renders / "render-report.json").write_text(json.dumps(combined, indent=2) + "\n", encoding="utf-8")
-        # Current contrast, tooltip blocking and recovery layout assertions.
-        # No Z2 historical project, comparison or archive is produced.
-        z2_command = ["res://tests/z2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
-        phase("current-book-capture", z2_command, "Z2_CAPTURE_OK")
         current = output / "drawing-renders"
         current.mkdir()
         environment["P1_CAPTURE_DIR"] = str(current)
         environment["ZS2_VARIANT"] = "after"
-        current_command = ["res://tests/zs2_capture.gd" if arg == "res://tests/capture.gd" else arg for arg in command]
-        phase("current-drawing-capture", current_command, "ZS2_CAPTURE_OK")
+        # Bind the unchanged native command at its executable lifecycle reader.
+        run_phase("current-drawing-capture",
+                  command + ["--script", "res://tests/zs2_capture.gd", "--", "--p1-capture", "--ci-compact"],
+                  "ZS2_CAPTURE_OK")
         motion = python_phase("current-drawing-pixel-oracles",
                               lambda: p1_current_visual.verify_regular_motion(Path(__file__).resolve().parents[1], current))
         (current / "current-drawing-report.json").write_text(json.dumps(motion, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         selected = [renders / entry["file"] for entry in combined["captures"]]
         selected += list(renders.glob("*.json"))
-        selected += p1_current_visual.selected_motion_files(current)
+        selected += list(current.glob("*.json"))
         return dict(compact=combined, drawing=motion), selected
     finally:
         for key in ("P1_CAPTURE_DIR", "P1_RENDER_STAGE", "ZS2_VARIANT", "RP6_INDEX", "P1_TEST_SAVE_ROOT"):
             environment.pop(key, None)
 
 
-def run_pilot_visual(output, workspace, project, engine, environment, phase, host):
+def run_pilot_visual(output, workspace, project, engine, environment, run_phase, host):
     """Only after real pilot completion; use its saves, never a synthetic finish."""
+    from native_contract import RP6_CAPTURES
     renders = output / "renders"
     renders.mkdir(exist_ok=True)
     environment["P1_CAPTURE_DIR"] = str(renders)
     environment["P1_TEST_SAVE_ROOT"] = str(workspace / "rp6-saves")
-    command = [engine,"--path",str(project),"--rendering-driver","opengl3","--audio-driver","Dummy",
-               "--script","res://tests/rp6_capture.gd","--","--p1-capture","--ci-compact"]
+    command = [engine,"--path",str(project),"--rendering-driver","opengl3","--audio-driver","Dummy"]
     if host == "Linux":
         command = ["xvfb-run","-a"] + command
         environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
     try:
-        for index, number in ((2,4),(3,6),(4,8),(5,9)):
+        for number, (index, _width, _height, _scale) in RP6_CAPTURES.items():
             environment["RP6_INDEX"] = str(index)
-            phase(f"rp6-t{number:02d}-render",command,"RP6_CAPTURE_OK")
-        return list(renders.glob("rp6-*.json")) + [renders / "rp6-t06-completion-1920-ui100.png"]
+            run_phase(f"rp6-t{number:02d}-render", command +
+                      ["--script","res://tests/rp6_capture.gd","--","--p1-capture","--ci-compact"], "RP6_CAPTURE_OK")
+        return list(renders.glob("rp6-*.json"))
     finally:
         for key in ("P1_CAPTURE_DIR","P1_TEST_SAVE_ROOT","RP6_INDEX"):
             environment.pop(key,None)
@@ -318,9 +369,16 @@ def player_extras(root: Path, output: Path) -> dict[str, Path]:
     for name, source in (
         ("SPIELANLEITUNG.md", "game/README.md"),
         ("licenses/resources.json", "game/art/book/manifest.json"),
+        ("licenses/ViewTitles-NOTICE.txt", "game/art/drawing/view_titles/NOTICE.txt"),
+        ("licenses/ViewTitles-manifest.json", "game/art/drawing/view_titles/manifest.json"),
+        ("licenses/ViewTitles-provenance.json", "game/art/drawing/view_titles/provenance.json"),
+        ("licenses/Book-paper.json", "game/book/paper.json"),
+        ("licenses/Book-leather.json", "game/book/leather.json"),
+        ("licenses/Book-table.json", "game/book/table.json"),
         ("licenses/Chalkboard-NOTICES.md", "game/art/drawing/NOTICES.md"),
         ("licenses/Bakso-NOTICES.md", "game/art/drawing/Bakso-NOTICES.md"),
-        ("licenses/tidy-hand/NOTICE.txt", "game/art/drawing/tidy-hand/NOTICE.txt"),
+        ("licenses/pangolin/NOTICE.txt", "game/art/drawing/pangolin/NOTICE.txt"),
+        ("licenses/pangolin/OFL.txt", "game/art/drawing/pangolin/OFL.txt"),
         ("licenses/DelightCoffee-NOTICES.md", "game/art/drawing/DelightCoffee-NOTICES.md"),
         ("licenses/delight-coffee/More Info.txt", "game/art/drawing/delight-coffee/More Info.txt"),
         ("licenses/delight-coffee/Read Me.pdf", "game/art/drawing/delight-coffee/Read Me.pdf"),
@@ -434,7 +492,7 @@ def main(argv: list[str] | None = None) -> int:
                 output=str(output))
             evidence.flush()
 
-            def phase(name: str, command: list[str], marker: str | None = None,
+            def run(name: str, command: list[str], marker: str | None = None,
                       expected_failure: bool = False, validator=None,
                       reporter=evidence, phase_env=None):
                 record = reporter.start(name)
@@ -444,7 +502,7 @@ def main(argv: list[str] | None = None) -> int:
                                        args.process_timeout_seconds, reporter.logs)
                     result["required_marker"] = marker
                     if result["timed_out"]:
-                        raise toolchain.PreflightError(f"{name} exceeded {args.process_timeout_seconds}s")
+                        raise toolchain.PreflightError(f"{name} exceeded {result['timeout_seconds']}s")
                     if expected_failure:
                         toolchain.require_expected_failure(result, "P1_EXPECTED_FAILURE")
                         if result["exit_code"] != 23 or "SCRIPT ERROR:" in result["output"] or "ERROR:" in result["output"]:
@@ -455,28 +513,33 @@ def main(argv: list[str] | None = None) -> int:
                         result["expected_failure"] = True
                     else:
                         require_clean_output(result, marker)
+                        if name == 'current-drawing-tests':
+                            from zs2_evidence import validate_log
+                            validate_log(result['output'])
                 except Exception as exc:
                     reporter.complete(record, result, exc)
                     raise
                 reporter.complete(record, result)
 
             evidence.report['setup_seconds'] = round(time.monotonic()-setup_started,6)
-            phase("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
+            run("version", [engine, "--version"], toolchain.EXPECTED_VERSION)
             base = [engine, "--headless", "--path", str(project)]
             if args.catalog:
                 shutil.copyfile(root/"game/art/content/yin_yang_001.png", project/"tests/fixtures/ke-reveal.png")
-            phase("import", base + ["--import"])
+            run("import", base + ["--import"])
+            # Bind/copy before any test can mutate the base's generated caches.
+            za1_prepared = za1_product.prepare_imports(project, workspace) if args.pilots else None
             if args.core:
-                phase("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
-                phase("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
-                phase("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
+                run("tests", base + ["--script", "res://tests/run_tests.gd"], "P1_TESTS_OK")
+                run("current-drawing-tests", base + ["--script", "res://tests/zs2_tests.gd", "--", "--p1-capture"], "ZS2_TESTS_OK")
+                run("expected-failure", base + ["--script", "res://tests/run_tests.gd", "--", "--force-failure"],
                       expected_failure=True)
                 environment["P1_TEST_SAVE_ROOT"] = str(workspace / "roundtrip-saves")
                 for stage in ("write", "read"):
-                    phase("roundtrip-" + stage, base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--" + stage],
+                    run("roundtrip-" + stage, base + ["--script", "res://tests/p13_roundtrip.gd", "--", "--" + stage],
                           "P1_ROUNDTRIP_" + stage.upper() + "_OK")
                 environment.pop("P1_TEST_SAVE_ROOT")
-                phase("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
+                run("controlled-start", base + ["--", "--p1-smoke"], "P1_START_OK")
                 evidence.scope_done("core")
             vs2_future = None
             vs2_result = None
@@ -500,7 +563,7 @@ def main(argv: list[str] | None = None) -> int:
                         command = ["xvfb-run", "-a"] + command
                         vs2_environment["LIBGL_ALWAYS_SOFTWARE"] = "1"
                     def vs2_phase(name, command, marker=None):
-                        return phase(name, command, marker, reporter=vs2_evidence, phase_env=vs2_environment)
+                        return run(name, command, marker, reporter=vs2_evidence, phase_env=vs2_environment)
                     try:
                         result = vs2_delivery.capture_current(vs2_project, workspace, output,
                                                              engine, command, vs2_environment, vs2_phase)
@@ -520,25 +583,25 @@ def main(argv: list[str] | None = None) -> int:
                 vs2_future = executor.submit(vs2_work)
             if args.integration:
                 evidence.scope_start("integration")
-                evidence.report["integration"] = run_integration(output, workspace, environment, base, phase, host)
+                evidence.report["integration"] = run_integration(output, workspace, environment, base, run, host)
                 selected += sorted((output / "integration").iterdir())
                 evidence.scope_done("integration")
             if args.catalog:
                 evidence.scope_start("catalog")
-                evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, phase, python_phase, host, project)
+                evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, run, python_phase, host, project)
                 selected += kat2_files
                 evidence.scope_done("catalog")
             if args.completion:
                 evidence.scope_start("completion")
-                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
+                evidence.report["ea"], ea_files = ea_product.run(root, workspace, output, engine, environment, run, python_phase, host, project)
                 selected += ea_files
                 evidence.scope_done("completion")
             if args.pilots:
                 evidence.scope_start("pilots")
-                evidence.report["pilots"] = run_pilots(workspace, environment, base, phase)
-                evidence.report["za1"], za1_files = za1_product.run(root, workspace, output, engine, environment, phase, python_phase, host)
+                evidence.report["pilots"] = run_pilots(workspace, environment, base, run)
+                evidence.report["za1"], za1_files = za1_product.run(root, workspace, output, engine, environment, run, python_phase, host, za1_prepared)
                 selected += za1_files
-                selected += run_pilot_visual(output, workspace, project, engine, environment, phase, host)
+                selected += run_pilot_visual(output, workspace, project, engine, environment, run, host)
                 evidence.scope_done("pilots")
             if args.visual:
                 evidence.scope_start("visual")
@@ -558,33 +621,30 @@ def main(argv: list[str] | None = None) -> int:
                 perf_env = environment.copy()
                 perf_env.update(PERF_B_OUTPUT=str(b_output), PERF_B_MANIFEST=str(root / "tools/cell_atlas_reference.json"))
                 b_command = [engine, "--path", str(project), "--rendering-driver", "opengl3",
-                             "--audio-driver", "Dummy", "--script", "res://tests/perf_b_probe.gd"]
+                             "--audio-driver", "Dummy"]
                 if host == "Linux":
                     b_command = ["xvfb-run", "-a"] + b_command
                     perf_env["LIBGL_ALWAYS_SOFTWARE"] = "1"
-                phase("perf-b-native", b_command, "PERF_B_PROBE_OK", phase_env=perf_env)
+                run("perf-b-native", b_command + ["--script", "res://tests/perf_b_probe.gd"], "PERF_B_PROBE_OK", phase_env=perf_env)
                 evidence.report["perf_b_native"] = json.loads((b_output / "probe.json").read_text())
-                selected += [b_output / "probe.json", *b_output.glob("runtime-*.png")]
+                selected += [b_output / "probe.json"]
                 evidence.scope_done("perf_b")
             if args.export:
                 evidence.scope_start("export")
                 if restore_player_catalog(root, project):
-                    phase("player-content-import", base + ["--import"])
+                    run("player-content-import", base + ["--import"])
                 build = project / "build/windows"
                 build.mkdir(parents=True)
-                phase("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
+                run("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
                 evidence.report["content_pack"] = za1_product.audit_pack(root, engine, build / "picross-p1.exe", environment,
-                    phase, sum(e["visible"] for e in registry["entries"]), "player-content-pck")
+                    run, sum(e["visible"] for e in registry["entries"]), "player-content-pck")
                 if host == "Windows":
-                    phase("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
-                    phase("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
+                    run("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
+                    run("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),
                           "--rendering-driver", "opengl3", "--", "--p1-smoke"], "P1_WINDOW_INFO")
                 evidence.scope_done("export")
             evidence.report["manual_acceptance"] = "Automated current CI evidence only; owner acceptance and merge/release authorization are separate."
-            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz") or p.parent.name in ("v3-renders", "perf-b", "za1", "kat2", "ea") or (p.parent.name == "hc92-renders" and p.name.endswith("-mono-s0.png"))])
-            if args.visual:
-                evidence.report["visual"]["vs2"]["hc92"]["retained_samples"] = python_phase(
-                    "retained-hc92-font-samples", lambda: hc92_verify.verify_retained(evidence.technical / "selected/hc92-renders"))
+            evidence.retain_files(selected, priority_sources=[p for p in selected if p.suffix == ".json" or p.name.endswith(".json.gz")])
             required_ea = {p.relative_to(output).as_posix() for p in selected if p.parent.name == "ea"}
             if not required_ea <= {p["file"] for p in evidence.report["selected_evidence"]["files"]}:
                 raise toolchain.PreflightError("Required EA motion/native evidence missing from technical delivery")
@@ -598,11 +658,6 @@ def main(argv: list[str] | None = None) -> int:
             retained_b = {p["file"] for p in evidence.report["selected_evidence"]["files"]}
             if not required_b <= retained_b:
                 raise toolchain.PreflightError("Required PERF-B native evidence missing from technical delivery")
-            if args.visual:
-                required_images = {p.name for p in selected if p.parent.name == "v3-renders" and p.suffix == ".png"}
-                retained_images = {Path(p["file"]).name for p in evidence.report["selected_evidence"]["files"] if Path(p["file"]).parent.name == "v3-renders" and p["file"].endswith(".png")}
-                if required_images != retained_images:
-                    raise toolchain.PreflightError("Targeted SL images missing from technical delivery")
             from native_metrics import measure
             evidence.report['work_measurements'] = measure(output, evidence.technical, evidence.report)
             evidence.measure_size()

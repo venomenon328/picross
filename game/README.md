@@ -1,17 +1,61 @@
 # picross: Spiel- und Entwicklungsanleitung
 
+## Zuletzt bearbeitetes Rätsel
+
+Im rechten Katalogkopf öffnet „Zuletzt bearbeitetes Rätsel fortsetzen“ den zuletzt
+wirksam bearbeiteten, erfolgreich gespeicherten begonnenen Stand, auch außerhalb der
+aktuellen Filter. Eigene Füllungen erscheinen in einer verkleinerten Vorschau.
+Die Vorschau ist bei der Katalogrückkehr sofort ohne Darüberfahren sichtbar,
+auch nach Undo/Redo oder einem Wechsel des zuletzt bearbeiteten Blatts.
+Ein gültiger begonnener Stand ohne Füllungen zeigt eine leere Miniatur.
+Bei genügend Platz nutzt der Kasten genau die halbe rechte Kopfbreite,
+bei knapper Breite oder größerer UI-Skala die volle. Text und Vorschau bleiben
+vollständig; Fenster-/UI-Wechsel passen die Breite unmittelbar an.
+Ohne passenden Stand oder nach Abschluss/Reset ist das Panel verborgen. Öffnen oder
+Ändern der Ansicht allein setzt keinen Merker; echtes Undo/Redo schon. Ein neuer Start
+zeigt weiterhin den Katalog. Der separate `user://p1/recent-puzzle.json` ändert keine
+Slotdatei. Fehler des Merkers haben im Katalog einen eigenen Retry; Save-/Backupfehler
+und deren bewusste Reparatur bleiben davon getrennt. Windows verwendet für atomaren
+Metadatenaustausch das mitgelieferte Windows PowerShell/.NET; dessen Ausfall verhindert
+nur die Aktualisierung des Merkers.
+
+**Buchintegration B-B / #493, #498:** Windows und Web starten den regulären
+Rätselkatalog als räumliches Buch. Kurzes Blättern
+dauert 0,85 Sekunden; drei einzelne Blätter führen in insgesamt drei Sekunden
+zur großen rechten Arbeitsseite mit Bindung links. Überarbeitete Papiertextur,
+sichtbare Buchkante, ruhende Wölbung und transparente Controls erhalten die
+Arbeitsbudgets. N03 revidiert Leder-/Randanschlüsse sowie Hover und leere
+Tooltips bei erhaltenen sinnvollen Hilfen. N04 ergänzt ein eigenes Tischbild,
+saubere innere Enden und sichere Fußbereiche auch bei 16:10. Bis zu zwölf Karten
+stehen zuerst links, weitere rechts; jede Hälfte scrollt unabhängig.
+Der linke Pfeil im rechten Arbeitskopf führt in 1,8 Sekunden zum vorherigen
+Katalogkontext mit beiden Scrollständen zurück. Daneben öffnen Menü und Fragezeichen
+Einstellungen links beziehungsweise Hilfe rechts in naher Ansicht. Zwischen
+beiden Seiten wird nur gepannt; die beschriftete Rückkehr führt zum ursprünglichen
+Katalog oder Rätsel. Bewusst geänderte Einstellungen bleiben erhalten.
+Bearbeitung und Sortierauswahl werden über die bisherigen Speicherwege gesichert.
+Bei einem Speicherfehler bleibt die Anwendung mit einer sichtbaren Wiederholung
+offen; notwendige Backupübernahme verlangt weiterhin Bestätigung. Die
+[historische Studie](../docs/BOOK_STUDY.md) ist aus dem aktiven Tree entfernt.
+Der kurze Prüfeinstieg `tools/book_lifecycle.py` verwendet den regulären Root
+mit synthetischen Daten und isolierten Speicherpfaden. [B-B-Vertrag](../docs/BOOK_INTEGRATION.md) und
+[Prüfstand](../docs/B_B_VERIFICATION.md) binden die Integration; unabhängige und
+persönliche Abnahmen bleiben gesondert.
+
 **Kleine Texte und Ausrichtung (HZ-C):** Kategorien, Kartenmetadaten, Status,
 Auswahllisten und kleine Papiertextbuttons verwenden eine gemeinsame etwas
 größere Textrolle. Beim Wechsel von Werten bleibt die Grundlinie ruhig;
 „Blatt NN“ behält seine bisherige Größe. UI100/125 skaliert die zugehörigen
 Abstände und Textbudgets gemeinsam. [HZ-C-Prüfstand](../docs/HZ_C_VERIFICATION.md).
 
-**Schrift und Lesbarkeit (HZ-A):** Normale Texte, Auswahlen, Hilfen und Tooltips
-verwenden Tidy Hand. Bestehende Überschriften und Delight-Coffee-Hinweiszahlen
+**Schrift und Lesbarkeit (PANG-A):** Normale Texte, Auswahlen, Hilfen und Tooltips
+verwenden Pangolin Regular. Bestehende Überschriften und Delight-Coffee-Hinweiszahlen
 bleiben unverändert. UI 100/125 % ändert Schrift und Textabstände gemeinsam;
 bei schmalen Fenstern darf „Sortieren nach“ innerhalb der Kopfzeile umbrechen.
 Lange Kategorien bleiben über vollständig umgebrochene Tooltips lesbar; die
-native Auswahlliste scrollt vertikal. [HZ](../docs/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise.
+native Auswahlliste scrollt vertikal. Pangolin und die lokale Plex-Ergänzung
+stehen offline bereit; die Original-OFL und Herkunft liegen unter
+`licenses/pangolin/` im Spielerpaket. [HZ](../docs/HAND_DRAWN_UI.md) bindet die Schriftrollen und Nachweise.
 
 **Rahmen, Menüs und Symbole (HZ-B):** Karten und kleine Papierbuttons haben
 ruhende handgezeichnete Konturen. Dropdowns öffnen auf opakem Papier; ein Haken
@@ -19,6 +63,12 @@ markiert die aktuelle Auswahl unabhängig von der angefahrenen Zeile.
 Pfeile, Werkzeuge und Checkboxen gehören zur selben gezeichneten Familie.
 Maus, Tastatur, Fokus und Scrollen bleiben wie gewohnt bedienbar.
 [HZ-B-Lieferung und Prüfstand](../docs/HZ_B_VERIFICATION.md).
+
+**Scrollleisten (SBR-A):** Buchseiten und lange Auswahllisten verwenden dieselben
+graphitgrauen, diagonal handschraffierten Leisten mit hellem Griff und hellen
+Dreieckspfeilen. Rad, Griffziehen, Spur- und Pfeilklicks bleiben die gewohnten
+nativen Scrollaktionen. Leisten erscheinen nur bei Bedarf; UI100/125 skaliert
+ihre Darstellung und Trefferbreite gemeinsam. [Stilvertrag](../docs/HAND_DRAWN_UI.md).
 
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
 Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
@@ -42,6 +92,12 @@ offener Kreis und „Neu“, kleiner Stift und „Begonnen“, Haken und „Gel�
 Auch die Fußzeile öffnet dasselbe Blatt. Alle Karten einer Ansicht verwenden
 identische, anhand der vollständigen Metadaten gemessene Breiten. Bei wenig Platz
 erscheinen weniger Spalten; Schrift und Bildraum werden dafür nicht verkleinert.
+Jede Buchhälfte zeigt höchstens zwölf Karten in bis zu drei Spalten. Bei
+2560×1440/UI100 passen drei Spalten, bei 1920×1080/UI100 zwei; höhere UI-Skalierung
+oder weniger Papierfläche kann die Zahl weiter begrenzen. Jede Zeile, auch eine
+letzte mit nur einer oder zwei Karten, steht für sich mittig auf ihrer Hälfte.
+Beide Hälften scrollen unabhängig und behalten ihre Position beim Umbruch
+innerhalb der jeweils erreichbaren Grenzen.
 Verdiente Reveals und Stiftsymbole bleiben lokal geglättet.
 Aktueller Vertrag: [Kataloggestaltung](../docs/CATALOG_PRESENTATION.md).
 
@@ -69,6 +125,36 @@ Kategorie folgt der redaktionellen Reihenfolge, Größe der Zellanzahl. Bei eine
 neuen Kriterium beginnt die Richtung aufsteigend; „Hinzugefügt“ zeigt zuerst die
 neuesten Rätsel. Ohne Datum oder Einstufung steht ein Blatt immer hinten.
 Gleichstände behalten ihre feste Blattreihenfolge; Blattnummern ändern sich nicht.
+
+**Filter** rechts neben Sortierauswahl und Richtungspfeil öffnet die zusätzlichen
+Auswahlen: **Status**
+(Alle, Noch offen, Neu, Begonnen, Gelöst), **Modus** (Alle, Monochrom, Farbe),
+**Schwierigkeit von/bis** (Sehr leicht bis Sehr schwer) sowie die nebeneinanderliegenden Felder
+**Maximale Breite** und **Maximale Höhe**.
+Alle aktiven Filter gelten gemeinsam. Grenzen sind einschließlich; gleiche
+Schwierigkeitsgrenzen wählen eine Stufe. Ohne Spanne bleiben nicht eingestufte
+Rätsel sichtbar; mit einer Grenze erscheinen nur passende eingestufte Rätsel.
+Beide Maßgrenzen funktionieren unabhängig: jeweils leer oder eine ganze Zellzahl
+von 1 bis 99. Gemeinsam müssen beide passen; Breite ≤20/Höhe ≤30 erlaubt
+20×30, aber nicht 30×20. **Übernehmen** wendet gültige Eingaben gemeinsam an.
+Die Schwierigkeitslisten bieten nur miteinander verträgliche Stufen an:
+Minimum ≤ Maximum; nötigenfalls folgt die andere Grenze automatisch. Dafür
+erscheint keine Fehlermeldung. Ungültige Breiten-/Höhenwerte werden angezeigt und
+verändern die letzte gültige Auswahl nicht. **Schließen** verwirft den Entwurf. Der Panelinhalt scrollt bei
+knapper Höhe; das Fenster bleibt ohne unnötigen vertikalen Leerraum am Inhalt
+bemessen. Übernehmen / Zurücksetzen / Schließen stehen gleich groß in einer Zeile.
+Breite/Höhe schließen jeweils rechtsbündig unter Von/Bis ab. **Zurücksetzen** setzt auch die Kategorie auf Alle und
+behält die Sortierung; diese Aktion befindet sich nur im Filterfenster.
+Von/Bis stehen wie Breite/Höhe nebeneinander. Fehlermeldungen stehen oben rechts
+über Sortieren/Filter in einer festen, bei Bedarf scrollbaren Kopfbereichsfläche;
+sie verschieben keine Kacheln oder Katalogcontrols. Entwurfsfehler stehen oben im
+Filterfenster. Die Trefferzahl steht über dem rechten Buchteil;
+keine passenden Treffer und Katalogladefehler sind getrennt beschriftet.
+Ungültige Saves zählen nicht als Neu oder Noch offen; unter Alle bleiben ihre
+Reset-/Diagnosewege erhalten. Speicherfehler bleiben auch außerhalb der Treffer
+sichtbar. Abschluss und Reset aktualisieren die Liste und begrenzen die Seite.
+Alle Filter gelten ausschließlich in der Sitzung; ein neuer Prozess startet
+unbeschränkt. Es wird keine zusätzliche Einstellung gespeichert.
 
 Die Sortierung bleibt lokal nach einem Neustart erhalten. Filter, Seite und
 Scrollposition gelten für die laufende Sitzung; die Rückkehr aus einem Rätsel
@@ -143,11 +229,65 @@ Scheitert ein verpflichtender Save, bleibt die aktuelle Ansicht offen und zeigt
 den Fehler. Album, Blattwechsel und reguläres Beenden gelingen nach einem
 erfolgreichen Retry.
 
-Startziel: 1920×1080 Clientfläche, auf den verfügbaren Arbeitsbereich einschließlich Fensterrahmen
-begrenzt. Unter 1280×720 erscheint eine verständliche Meldung. Vergrößern des Fensters
-zeigt mehr Raster oder ruhige Ränder; es vergrößert die Arbeitszellen nicht automatisch.
+Unter **Einstellungen → Anzeige** bietet Windows **Fenster**, **Rahmenloses Fenster**
+und **Exklusives Vollbild**. Fenster lassen sich verschieben; Größe und Maximieren
+sind gesperrt. Die Fenstergröße ist aus 1280×720, 1366×768, 1600×900, 1920×1080,
+1920×1200, 2560×1440, 2560×1600 und 3840×2160 wählbar, soweit der gesamte Rahmen
+in den aktuellen Monitorarbeitsbereich passt. Nicht passende Größen sind deaktiviert.
+Vollbild verwendet die aktuelle Desktopauflösung, zeigt diese lesbar an und erhält
+den letzten Fensterpreset für die Rückkehr. Die Windows-Desktopauflösung wird nicht geändert.
+
+Die Einstellungen zeigen zwei handgezeichnete Gruppen **Anzeige** und
+**Rätselansicht**, mittig auf der linken Buchseite. Feldname und Auswahl stehen
+nebeneinander. Nur **Fenstergröße** und **Rätselansicht** haben ein Fragezeichen,
+das beim Darüberfahren oder Tastaturfokus erklärt; die Fenstergrößenhilfe bleibt auch im Vollbild
+erreichbar. **UI-Skalierung** bietet **100 %** und **125 %** für die laufende Sitzung.
+Anzeigemodus und UI-Skalierung nutzen ohne Fragezeichen die volle Zeilenbreite.
+Die drei großen Seitentitel **Rätselkatalog**, **Hilfe** und **Einstellungen** sind
+offen schraffierte Graphit-Schriftzugbilder der freigegebenen V2-rev1-Familie; die beiden Einstellungsgruppen behalten ihre
+Bakso-Überschriften. Die Titel stehen fest über dem scrollbaren Inhalt.
+Der untere Button **Zurück** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
+zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
+Der Wechsel zwischen Hilfe und Einstellungen steht daneben ebenfalls fest unten.
+Bei knapper Höhe bleibt der Inhalt durch vertikales Scrollen erreichbar.
+Beenden steht im Katalog; auch das normale Fensterschließen sichert den Stand. Das deaktivierte Größenfeld
+zeigt im Vollbild die Desktopauflösung; im Fenster den gewählten Preset.
+
+Jede Änderung wird sofort für **15 Sekunden** ausprobiert. **Beibehalten** speichert;
+**Abbrechen**, Escape oder Ablauf stellt die vorherige funktionierende Anzeige wieder her.
+Alt-Tab bestätigt nichts. Bei nicht verfügbarem Modus oder verändertem Monitor hilft
+ein sichtbarer Fallback; er überschreibt die gespeicherte Auswahl erst nach ausdrücklicher
+Bestätigung. Speicherfehler werden angezeigt und nehmen die Vorschau zurück.
+Die eigene Datei `user://p1/display-preference.json` mit `.tmp`/`.bak` ist unabhängig
+von Rätselsaves und Katalogsortierung; eine unterbrochene Ersetzung lädt die gültige
+vorherige Fassung. Der Browser behält seine eigene Fenstersteuerung ohne diese Optionen.
+
+Startziel ist ein vollständig passendes 1920×1080-Fenster, andernfalls ein kleinerer
+Preset oder rahmenloses Vollbild. Unter 1280×720 erscheint die bestehende Mindestflächenmeldung.
+720p bleibt ein begrenzter Fallback, 1080p das Komfortziel. Mehr Fensterfläche
+zeigt mehr Raster oder ruhige Ränder; sie vergrößert die Arbeitszellen nicht automatisch.
 Die angebotenen Zoomstufen halten das gesamte Raster samt Rahmen innerhalb
 der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
+
+## Spielerhilfe im Buch
+
+Das Fragezeichen öffnet die rechte Informationsseite. Vier beschriftete Bereiche
+sind direkt erreichbar: **Spielprinzip**, **Farbige Rätsel**, **Bedienung** und
+**Lösungstipps**. Die Hilfe funktioniert auch ohne geöffnetes Rätsel. Sie erklärt
+Begriffe vor ihrer Verwendung und zeigt passive Beispiele mit denselben Zahlen,
+Stiftfüllungen, Rasterlinien und X wie das Spiel.
+
+Die Beispiele zeigen eine vollständig bestimmte Siebenerzeile, ein schrittweises
+5×5-Lehrbild, die Überlappung eines Fünferblocks in sieben Feldern und den
+Unterschied zwischen gleich- und verschiedenfarbigen Nachbarblöcken. Drei kurze
+Lösungstipps sind freiwillige Vertiefung. Die Bedienübersicht verbindet Eingabe,
+vorhandenes Symbol und Wirkung; die Anzeigenlegende erklärt auch Hinweiszustände,
+Leerlinienzeichen und Überlaufmarker. Diese Markierungen bestätigen keine Lösung.
+
+Jeder neue Besuch beginnt bei Spielprinzip, jede Kapitelwahl oben. Zwischen Hilfe
+und Einstellungen bleiben das Hilfekapitel und seine Lesestelle erhalten. Der
+beschriftete Rückweg unten führt zum gebundenen Katalog oder Rätsel zurück.
+Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
 
 ## Bearbeiten und zurücknehmen
 
@@ -241,8 +381,6 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   geht es durchgehend in Gegenrichtung. Am Anschlag bleibt die Folge stehen.
   Dort darf ein Platz frei bleiben, damit die Zahlen beim Einrasten nicht
   zurückspringen. Alle Zahlen bleiben über die Folge der Lesepositionen erreichbar.
-  „Hinweise rasterseitig ausrichten“ stellt
-  alle Linien auf ihren rasterseitigen Standardausschnitt zurück.
 - Freie Breite und Höhe zeigen nach dem Fit zusätzliche vollständige Zeilen- und
   Spaltenhinweise, ohne kleinere Zellen dafür zu erzwingen. Passende Folgen haben
   keine Auslassungsmarker und lassen sich nicht in Leerraum verschieben.
@@ -261,11 +399,14 @@ der tatsächlichen Fenster-/Hinweis-/UI-Grenzen.
   Überdeckung. Das gilt auch bei Arbeitszoom und Resize; alle Zustände bleiben
   in ganzen Slots eingerastet. Vorübergehende Vollanzeige bewahrt die Anker auch
   beim Speichern und Neustart; beim Verengen kehrt derselbe Lesebereich zurück.
-  Die UI-Skalierung, Hinweisrücksetzung und H1 stehen auf der Informationsseite.
-  `?` führt direkt zur dort scrollbar erreichbaren Bedienhilfe; Menü und rechter
-  Pfeil zu den Einstellungen. Auch bei 1280×720/UI 125 % bleiben Werkzeuge,
+  Die UI-Skalierung, Rätselansicht und H1 stehen auf der Informationsseite.
+  Ihr Öffnen erhält die individuellen Hinweislesepositionen; ein manueller
+  Hinweisrücksetzbefehl wird nicht angeboten.
+  `?` führt direkt zur scrollbar erreichbaren Bedienhilfe rechts; das Menü
+  öffnet die Einstellungen links. Der Pfeil im Arbeitskopf führt zum Katalog.
+  Auch bei 1280×720/UI 125 % bleiben Werkzeuge,
   eigene Miniatur und Hinweiszugriff auf der Arbeitsseite. Der Rückpfeil führt
-  zum erhaltenen Arbeitsstand zurück.
+  auf den Informationsseiten zum jeweiligen erhaltenen Ursprung zurück.
 
 Für den Abschluss genügen alle richtigen Füllungen ohne Zusatzfüllungen.
 Hintergrund muss nicht vollständig ausgekreuzt sein. Name und Ergebnisbild erscheinen
@@ -273,7 +414,15 @@ erst nach bestätigtem Abschluss. Die registrierte Definition bindet Motivname u
 freigegebenes Ergebnisbild; vorher bleibt nur die eigene Füllminiatur sichtbar.
 Beim neuen Abschluss treten Raster, Hinweise und Werkzeuge zurück. Deine Füllungen bewegen sich zur Papiermitte, werden zu lückenlosen Farbflächen und gehen in das fertige Bild über. Die Folge dauert etwa 2,15 Sekunden. Die Speicherung erfolgt unmittelbar beim letzten Zug; etwaige Speicherfehler bleiben sichtbar. Danach erscheinen Motivname und „Rätsel zurücksetzen“. Der Titel bleibt „Blatt NN · W × H“, der Buchreiter führt zur Sammlung.
 
-Bereits gelöste Blätter öffnen direkt das fertige Bild. Fenster- oder UI-Größenänderung und Fokusverlust beenden eine laufende Enthüllung; sie wird danach nicht wiederholt. Bestätigtes Zurücksetzen unter dem Bild öffnet dasselbe Blatt leer. Abbrechen erhält den Stand. Der Reset einer Katalogkarte bleibt im Katalog. Nach erneutem Lösen läuft die Enthüllung wieder.
+Nach der Enthüllung bietet ein rechteckiger handgezeichneter Schalter mit
+hellem Schieber und schraffierter Spur **Bild** links und **Raster** rechts. Das
+Raster zeigt deine bestätigten Füllungen in Originalfarben und Stiftoptik mit
+Rasterlinien; Hintergrund-X und unbekannte Felder bleiben leer. Es lässt sich
+nicht bearbeiten oder zoomen. Beide Ansichten bleiben vollständig sichtbar.
+Jeder neue Besuch beginnt mit Bild; Resize, UI-Skalierung, Fokusverlust und
+gewöhnliches Refresh erhalten die Auswahl. Umschalten speichert nichts.
+
+Bereits gelöste Blätter öffnen direkt das fertige Bild. Fenster- oder UI-Größenänderung und Fokusverlust beenden eine laufende Enthüllung; sie wird danach nicht wiederholt. Bestätigtes Zurücksetzen unter dem Bild öffnet dasselbe Blatt leer. Abbrechen erhält den Stand und die gewählte Bild-/Rasteransicht. Der Reset einer Katalogkarte bleibt im Katalog. Nach erneutem Lösen läuft die Enthüllung wieder.
 
 Die früheren 100×100-Blätter werden nicht mehr angeboten.
 
@@ -286,66 +435,38 @@ godot --headless --path game --import
 godot --path game
 ```
 
-Direkter Entwicklerstart verwendet das normale Profil. Für isolierte technische
-Tests (mit temporär erzeugtem synthetischem Katalog) und Windows-Export den Harness mit der separaten Python-/Pillow-Umgebung
-nach der [Werkzeuganleitung](../tools/puzzle_production/README.md) verwenden:
+Direkter Entwicklerstart verwendet das normale Profil. Isolierte technische Prüfungen
+verwenden den Harness mit temporärem synthetischem Katalog und separater
+Python-/Pillow-Umgebung nach der [Werkzeuganleitung](../tools/puzzle_production/README.md).
+Die benötigte Gruppe ausdrücklich wählen, zum Beispiel für die kurze Historyroute:
 
 ```powershell
 $gameCache = Join-Path $env:TEMP 'picross-p1-preflight-cache'
-python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-product
+python tools/p1_product.py --cache-dir $gameCache --output-dir artifacts/p1-history --groups history
 ```
 
-Der Harness prüft offizielle Archive und Hashes, importiert eine temporäre Kopie,
-isoliert Benutzerpfade und führt Kern-/Save-/Recoverytests, echten Prozess-
-Roundtrip, Negativtest Exit 23, Start und Windows-Export aus. Unter Windows startet
-er zusätzlich die exportierte Fassung headless und mit nativer Oberfläche.
-Linux benötigt für die OpenGL-Prüfung Xvfb/Mesa. Preset und Appname bleiben
-`P1 Windows x86_64` und `picross · P1`, ebenso Schema 1 und Speicherort.
+Arbeits-/Cachepfade bei vorgegebener Arbeitswurzel darunter anlegen. Der Harness
+prüft offizielle Archive/Hashes und isoliert Projekte und Benutzerprofile.
+Linux-Renderprüfung benötigt Xvfb/Mesa. Gruppen und aktueller Umfang stehen im
+[nativen Vertrag](../docs/CI_C_NATIVE_GROUPS.md). Ohne `--groups` läuft lokal die
+vollständige Vereinigung; die alten Erweiterungsflags bleiben kompatibel, sind
+aber kein Anlass für routinemäßige Vollprüfungen.
 
-Im vorhandenen Harness sind `--integration`, `--pilots`, `--visual` und `--perf-b` lokal an.
-Die jeweiligen `--no-*`-Formen schalten sie ausdrücklich aus; CI wählt gemäß
-[CI-Policy](../docs/CI_POLICY.md) nach vollständigem Änderungsumfang. Die vorhandene
-Integration prüft 17 Kommandos und einen echten Neustart in zwei Spielprozessen. Der `--pilots`-Bereich prüft vier synthetische Muster in echten
-Prozessen als feste Funktionsregression; der Fachlauf zertifiziert keine
-Bestandsrätsel erneut. Reine Rätselergänzungen starten keinen dieser Tests.
-Visual prüft aktuelle Pixel-/Animationsverträge, PERF-B den regulären Renderer
-samt Cache. Die sechs produktiven Atlanten und Importparameter werden unabhängig
-über `tools/cell_atlas_reference.json` geprüft. Historische Hersteller- und
-A/B-Vergleichsprogramme sind gemäß #70/N70-HIST-01 archiviert; sie sind kein
-aktueller Prüfweg.
+`history` prüft 17 Kommandos, vier Transaktionen und zwei echte Spielprozesse samt
+unabhängigem Orakel. Die alte 500er-Route wird nicht als Stressdefault fortgeführt.
+`adapters` verwendet vier feste synthetische Muster, keine Bestands-Rezertifizierung.
+`graphics` prüft die aktuellen ausgewählten Pixel-/Animations-/Atlasverträge.
+`export` prüft Windows-/PCK-Ausgabe und auf Windows auch tatsächliche EXE-Starts.
 Nicht ausgeführte Bereiche sind kein erfolgreicher Nachweis.
 
-**CI2-D / [#416](https://github.com/venomenon328/picross/issues/416), implementiert
-am 26.10.2026:** Der
-[CI2-Vertrag](../docs/CI_SLIMMING.md) ersetzt die 500-Aktionen-Pflicht durch eine
-kurze deterministische History-Regression. Sie umfasst insgesamt höchstens
-**20 semantische Befehle** einschließlich Blattwahl, Werkzeug-/Farbwahl,
-Navigation, Undo/Redo und regulärem Beenden, höchstens **6 neue wirksame
-History-Transaktionen** und exakt **2 tatsächliche Spielprozesse** für Schreiben
-und frisches Laden/Fortsetzen. Eine Mausgeste zählt als ein Befehl, Undo/Redo
-zählen als Befehle ohne neue History-Transaktion. Prozessstarts und reine
-Beobachtungen zählen nicht; versteckte Aktionen oder Wiederholungsschleifen
-vergrößern den Umfang nicht stillschweigend.
-
-Atomarer Strich, exakte Zustände, Undo/Redo-Verzweigung und dauerhaftes `undo_used`,
-Navigation ohne Zell-/Historymutation, gespeicherte Ansicht, Redo nach dem echten
-Neustart und byteidentische fremde synthetische Slots bleiben nachzuweisen.
-Ein unabhängiges Python-Orakel und billige Gegenproben mit manipulierten oder
-verkürzten Traces bleiben erhalten; dafür entstehen keine weiteren Spielprozesse.
-Die genaue Zählung und Abgrenzung stehen in [P1 §8.1](../docs/PROTOTYPE_P1.md).
-Mit CI2-D entfällt der alte Durchlauf auch aus `all`, `runtime`, `history`,
-`--integration` und normalen manuellen Läufen; er wird nicht bloß in einen
-manuellen Voll- oder Stresstest verlagert. `--groups history` wählt die kurze Route;
-[T01 und Messung](../docs/CI2_D_VERIFICATION.md) binden ihre Nachweise.
-Frühere #12-Nachweise und gemessene Berichte bleiben
-unverändert an ihre jeweiligen Commits gebunden.
-
-`technical/` enthält kompakte commitgebundene Ergebnisse, Logs und notwendige
-native Bilder/Fehlerdiagnostik. Erzeugte und gelieferte Mengen sowie Prozess-,
-Import- und Renderzeiten werden getrennt gemessen; es gelten die CI2-Laufzeitziele.
-Das reguläre Product-CI-ZIP enthält Spielanleitung, Commit-/Hashbericht und
-notwendige Lizenzen. Historische Produktionshilfen werden nicht ausgeliefert.
-Technische Motivspoiler sind separat.
+Die [Package-CI](../docs/CI_WORKFLOW_V2.md) liefert bei Entwicklungsänderungen den regulären Windows-
+Download und startet nur begründet gewählte Zusatzmodule. Reine Dokumente und
+reine Rätselproduktion bleiben ohne Player-Build, auch im Main-Nachlauf. Der Kern-Windowsbau ist kein voller Product-Harnesslauf
+und keine erneute Rätselprüfung. Das Spielerpaket enthält Startdateien, Anleitung
+und Lizenzen; technische Reports, Logs, Bilder und Studienpakete gehören nicht hinein.
+Technische Originale werden im Lauf geprüft und entfernt; Upload nur mit aktuellem
+Zweck und Ablauf. Zehn Minuten sind ein weiches Ziel, keine globale Höchstlaufzeit.
+Historische Hersteller-/A/B-Programme und Liefergalerien werden nicht reproduziert.
 Keine automatisierte Prüfung ersetzt eine persönliche Maus-/Komfortprobe.
 
 Aktuelle Verträge und Pflichtquellen: [Projektprofil](../docs/PROJECT_PROFILE.md).

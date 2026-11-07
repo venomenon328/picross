@@ -398,9 +398,10 @@ Nachweis implementierter AT-Funktionalität oder bereits transparenter Bildbytes
 AT-A verwendet feste synthetische Regressionen. AT-B prüft tatsächliche Bilder
 im Inhaltsauftrag außerhalb der CI; die Sichtkontrolle wird nicht zu einem
 automatischen Katalog-Replay oder einem vollständigen Probespiel je Rätsel.
-Reine zugelassene Inhaltsdateien behalten den kurzen CI-Pfad. Benötigt AT-A neue
-Nachweispfade, wird deren enge Zuordnung mit der technischen Änderung festgelegt.
-Gemischte Änderungen folgen weiterhin der Vereinigung des tatsächlichen Diffs.
+Reine Inhalts-PRs erhalten den allgemeinen [Quellen-/Plankern ohne Player-Build](CI_WORKFLOW_V2.md).
+Zusatzmodule werden anhand des vollständigen Diffs im aktuellen Paketplan begründet;
+keine automatische Vollauswahl oder erneute Bild-/Rätselzertifizierung. Neue
+Nachweispfade erhalten einen konkreten Zweck und Lebenszyklus.
 
 Kein neues Kataloglayout, kein anderer Enthüllungsablauf, keine Neubewertung oder
 Neuzertifizierung des Katalogs, keine Änderung von Rätsellogik, Saveformat oder
@@ -408,3 +409,4 @@ Hinzugefügt-Datum, keine allgemeine Registry-/Plattform-/Deploymentumstellung.
 Aktuelle Paketstände und spätere Startprüfung stehen im Issue; Modellauswahl wird
 erst bei ausdrücklich beauftragter Umsetzungsvorbereitung aktualitätsgebunden
 vorgenommen.
+

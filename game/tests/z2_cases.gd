@@ -15,13 +15,12 @@ static func state(app: Main) -> Dictionary:
 static func run(t: SceneTree) -> void:
 	SaveStore.test_root_override = SaveStore.test_root_override.path_join("z2")
 	t.root.size = Vector2i(1920,1080)
-	var app: Main = load("res://main.tscn").instantiate()
-	t.root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(t.root)
 	await t.process_frame
 	click(t,app.choices[app.album.visible_ids.find("T-02")])
 	await t.process_frame
 	t.check(app.work.visible and app.session == app.sessions[1],"Z2-A01 album opens regular T-02")
-	t.check(app.theme.default_font.get_font_name() == "Tidy Hand" and app.BODY_FONT.get_font_name() == "IBM Plex Sans" and app.TITLE_FONT.get_font_name() == "Fraunces","HZ normal Tidy Hand; Z2 bundled original families preserved")
+	t.check(app.theme.default_font.get_font_name() == "Pangolin" and app.BODY_FONT.get_font_name() == "IBM Plex Sans" and app.TITLE_FONT.get_font_name() == "Fraunces","HZ normal Pangolin; Z2 bundled original families preserved")
 	for tool: String in ["fill","erase"]:
 		click(t,app.actions[tool])
 		click(t,app.actions["color-2"])
@@ -54,8 +53,9 @@ static func run(t: SceneTree) -> void:
 	app.board.normalize_clue_steps()
 	click(t,app.actions.erase)
 	app._save_current()
-	for route: String in ["nav-information","help","menu"]:
-		if route == "nav-information":
+	# B-B: the former third information shortcut is now the catalog return.
+	for route: String in ["menu","help"]:
+		if route == "menu":
 			click(t,app.actions.plus)
 		else:
 			click(t,app.actions.minus)
@@ -64,14 +64,14 @@ static func run(t: SceneTree) -> void:
 		click(t,app.actions[route])
 		await t.process_frame
 		t.check(app.information.visible and not app.work.visible and app.information_section == ("help" if route == "help" else "settings"),"Z2-A03 shared N1 route " + route)
-		t.check(app.get_viewport().gui_get_focus_owner() == (app.information.get_node("help-access") if route == "help" else app.ui_scale_button),"Z2-A03 deterministic focus " + route)
+		t.check(app.get_viewport().gui_get_focus_owner() == (app.information.get_node("settings-access") if route == "help" else app.ui_scale_choice),"Z2-A03 deterministic focus " + route)
 		var point: Vector2 = app.board.global_position+app.board.view.viewport.get_center()
 		t.mouse_button(point,true,MOUSE_BUTTON_RIGHT)
 		t.mouse_button(point,false,MOUSE_BUTTON_RIGHT)
 		t.mouse_button(point,true,MOUSE_BUTTON_WHEEL_UP)
 		t.mouse_button(point,false,MOUSE_BUTTON_WHEEL_UP)
 		t.check(state(app) == before,"Z2-A03 hidden board ignores clicks/wheel")
-		click(t,app.actions["nav-work"])
+		click(t,app.info.right_return if route == "help" else app.actions["nav-work"])
 		await t.process_frame
 		t.check(app.work.visible and state(app) == before,"Z2-A03 full state survives return " + route)
 	click(t,app.actions.minus)
@@ -103,15 +103,15 @@ static func run(t: SceneTree) -> void:
 	app.show_information("settings")
 	await t.process_frame
 	click(t,app.information.get_node("help-access"))
-	t.check(app.help_panel.visible and not app.settings_panel.visible,"Z2-A02 N1 help section event")
+	t.check(app.help_panel.is_visible_in_tree() and not app.settings_panel.is_visible_in_tree(),"Z2-A02 N1 help section event")
 	click(t,app.information.get_node("settings-access"))
-	t.check(app.settings_panel.visible and not app.help_panel.visible,"Z2-A02 N1 settings section event")
-	click(t,app.ui_scale_button)
+	t.check(app.settings_panel.is_visible_in_tree() and not app.help_panel.is_visible_in_tree(),"Z2-A02 N1 settings section event")
+	app.ui_scale_choice.select(1)
+	app.ui_scale_choice.item_selected.emit(1)
 	t.check(app.ui_scale == 1.25,"Z2-A03 UI scale in N1")
 	click(t,app.clue_completion_toggle)
 	t.check(not app.mark_completed_clues,"Z2-A03 H1 in N1")
-	click(t,app.clue_reset_button)
-	t.check(app.board.row_clue_steps.count(0) == 40 and app.board.column_clue_steps.count(0) == 40,"Z2-A03 reset reads in N1")
+	t.check(app.board.column_clue_reads[21].anchor == "outer_start" and not app.board.has_method("reset_clue_pan"),"N02 settings keep clue reads and expose no reset")
 	t.root.size = Vector2i(1280,720)
 	await t.process_frame
 	app.return_to_work()
@@ -161,7 +161,7 @@ static func run(t: SceneTree) -> void:
 	app._save_current()
 	app.show_information("settings")
 	await t.process_frame
-	click(t,app.clue_reset_button)
+	app.set_puzzle_view(1) # A real retained view action still requires a safe flush.
 	app.store.fail_step = "after_rotation"
 	var information_state: Dictionary = state(app)
 	click(t,app.actions["nav-work"])
@@ -171,9 +171,10 @@ static func run(t: SceneTree) -> void:
 	t.check(app.repair_dialog.visible,"Z2-A04 recovery receives real click above information page")
 	app.repair_dialog.hide()
 	app.repair_dialog.confirmed.emit()
-	t.check(app.store.load_slot(app.session.definition).status == "loaded" and app.board.clue_step("row",35) == 0,"Z2-A04 N1 recovery saves the intended clue reset")
+	t.check(app.store.load_slot(app.session.definition).status == "loaded" and app.board.mode == "V","Z2-A04 N1 recovery saves the intended view change")
 	app.open_puzzle()
-	click(t,app.actions["nav-album"])
+	click(t,app.album_button)
+	app.finish_navigation()
 	t.check(app.album.visible,"Z2-A02 album register via viewport")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await t.process_frame

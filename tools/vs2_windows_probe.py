@@ -16,7 +16,6 @@ import zipfile
 from pathlib import Path
 import p1_preflight as toolchain
 import vs2_delivery
-import hc92_verify
 from p1_product import player_extras
 from gp48_delivery import verify_player_package
 def extract(archive: Path, destination: Path) -> None:
@@ -192,9 +191,6 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
         relative=Path(entry["file"])
         if relative.is_absolute() or ".." in relative.parts: raise ValueError("Unsafe evidence path")
         toolchain.verify_sha256(review/"selected"/relative,entry["sha256"])
-    hc_samples = hc92_verify.verify_retained(review/"selected/hc92-renders")
-    if hc_samples != review_report["visual"]["vs2"]["hc92"]["retained_samples"]:
-        raise ValueError("Missing bound HC native font samples")
     import perf_b_resources
     runtime_resources = perf_b_resources.verify_runtime(ROOT)
     if runtime_resources != review_report["perf_b_resources"]:
@@ -203,10 +199,6 @@ def probe(head: str, run_id: str, output: Path, engine: Path, cache: Path) -> di
     vs2_delivery.verify_records(matrix)
     if review_report["visual"]["vs2"]["v2"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v2-plan.json"):
         raise ValueError("Delivered V2 plan identity differs")
-    if review_report["visual"]["vs2"]["v3"]["plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/v3-plan.json"):
-        raise ValueError("Delivered V3 plan identity differs")
-    if review_report["visual"]["vs2"]["v3"]["sidebar_plan_sha256"] != toolchain.sha256_file(ROOT / "examples/vs2/sl65-plan.json"):
-        raise ValueError("Delivered SL plan identity differs")
     if review_report["visual"]["vs2"]["records"]!=96 or review_report["visual"]["vs2"]["rendered"]!=15:
         raise ValueError("Missing current native VS2 coverage")
     archive=cache/toolchain.EDITORS["Windows"].name

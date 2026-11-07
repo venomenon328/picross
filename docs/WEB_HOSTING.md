@@ -1,5 +1,26 @@
 # WEB-1: Browserbuild und manuelles SSH-Deployment
 
+## K-B: Fortsetzen-Metadaten
+
+[Paketentscheidung #485](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391).
+Der Merker wird erst nach bestehender WebLock-/Hydrationsgrenze aus `user://p1`
+geladen. Es gibt keinen neuen Backend-, Lock- oder Speicherpfad. Die vorhandene
+serialisierte FS.syncfs-Schlange transportiert eigene recentGeneration/recentSaved-
+Zähler, Pending, Error und Retry. Nur der tatsächliche zugehörige Callback bestätigt
+seine Generation; ein älterer Callback, ein Slot-/Sortierungserfolg oder eine
+Startausnahme bestätigt keinen neueren Merker. Das Browserlabel zeigt auch ausstehende
+Merker; Savefehler behalten Vorrang. Blur/Visibility und Retry versuchen ausstehende
+Metadaten erneut. Beenden wartet begrenzt auf deren Callback, ein reiner Merkerfehler
+blockiert aber keinen erfolgreich gesicherten Spielstand. Das bestehende abrupte
+Verlustfenster bleibt. Die Node-Mechanismusprobe ist kein echter IndexedDB-Nachweis:
+K-B-W01 bleibt eine ausdrücklich zu beauftragende Chromiumdiagnose vor Merge.
+
+**B-B / #498:** Der reguläre Webexport startet denselben [Buchroot](BOOK_INTEGRATION.md)
+wie Windows. Produkt-HTML, Appidentität, IndexedDB-/Lock-/Retrywege bleiben erhalten.
+Die technische Beobachtung erweitert diesen Root; die persistenzlose Studienshell
+ist kein Webspielernachweis. Der beauftragte Chromium-Kurzlauf und alle noch offenen
+Liefer-/Abnahmebindungen stehen in [B-B-T01](B_B_VERIFICATION.md).
+
 Zusätzliche statische Entwicklungsfassung aus [#162](https://github.com/venomenon328/picross/issues/162).
 Godot Standard 4.7.2-stable, Single-Thread, WebGL 2 und WebAssembly; Desktop mit
 Maus in Chromium und Firefox. Windows, Regeln, Schema 1 und Savevalidierung
@@ -10,11 +31,11 @@ Technische Ergebnisse und Artefaktbindung stehen im zugehörigen Draft-PR.
 
 ## Aktuelle CI-Auswahl und kurzer Browserauftrag
 
-CI2-A/B sind über PR #419/#420 integriert. CI2-C / #415 implementiert auf
-`chore/415-ci2-c-chromium` den kurzen Umfang aus [CI2](CI_SLIMMING.md).
-[Browserinventar](CI_B_BROWSER_GROUPS.md) bindet neun Kernfälle, zwölf Originalbilder,
-begrenzten Zusatzumfang und tatsächlichen Exportbedarf; [T01](CI2_C_VERIFICATION.md)
-führt Messungen und verbleibende Abnahmen. Separates R01 bleibt vor Merge offen.
+[Workflow v2](CI_WORKFLOW_V2.md) trennt automatische Package-CI und ausdrücklich
+manuelle Browserdiagnose. Das [Browserinventar](CI_B_BROWSER_GROUPS.md) bindet neun
+Kernfälle, deren temporäre Originale, begrenzten Zusatzumfang und tatsächlichen
+Exportbedarf. [CI2-C-T01](CI2_C_VERIFICATION.md) ist der historische Einführungsnachweis;
+aktuelle Aufträge und Abnahmen stehen im jeweiligen Issue/PR.
 
 Automatische PR-/Push-Ereignisse und allgemeine Scopes bleiben browserfrei.
 Der ausdrückliche Aufruf auf einem gebundenen Arbeitsbranch lautet:
@@ -33,14 +54,14 @@ gewählt. Firefox bleibt aus CI ausgeschlossen.
 Nur `browser_scope=export` fordert das gesonderte begrenzte Kompatibilitätsprofil
 regular-start/E01 an, mit zwei eigenständigen technischen Exporten zusätzlich zum
 Spielerexport. Keine implizite Ergänzung durch `short`, `all`, `toolchain` oder
-Dateipfade. Dieses Profil benötigt einen eigenen konkreten Auftrag. Ziel unter
-zehn Minuten; kurzer Kernumfang einschließlich Build höchstens acht Minuten.
+Dateipfade. Dieses Profil benötigt einen eigenen konkreten Auftrag. Zehn Minuten
+sind ein weiches Ziel, keine maximale CI-Gesamtlaufzeit; Prozess-Hängerschutz bleibt getrennt.
 
 Echter Input, natürliche Produktanimation, bestätigter IDBFS-Sync, Reload,
 Browserprozessneustart, Sperren und Fehlergrenzen bleiben für die jeweils benannten
 Aussagen verbindlich. Günstige Mechanismusprüfungen ersetzen die alten vollständigen
 Browservarianten; sie werden nicht als Browsernachweise ausgegeben. Native Prüfungen,
-Fachtests und SSH/HTTP bleiben unabhängig nach Diff ausgewählt. Originalinput-,
+Fachtests und SSH/HTTP werden unabhängig im aktuellen Paketplan ausgewählt. Originalinput-,
 Quell-/Run-/Versuchsbindung und Fail-closed-Gate folgen [CI-A](CI_A_SELECTION.md).
 Ein fehlender oder übersprungener Pflichtjob bleibt offen. Historische Belege
 sind ausschließlich Baseline, keine aktuellen Erfolge. Persönliche Produktabnahme,
@@ -58,8 +79,9 @@ python tools/build_web_player.py --cache-dir "$env:TEMP/picross-p1-preflight-cac
 
 Das Ausgabeverzeichnis muss leer sein. `build-manifest.json` bindet den tatsächlich
 ausgecheckten Commit, Engine, UTC-Bauzeit, Version und jede ausgelieferte Datei
-per SHA-256/Größe. CI checkt den Test-Merge aus; Head und Basis werden getrennt
-im CI-Auswahlbericht geführt. HTML zeigt die Buildkennung. `--development`
+per SHA-256/Größe. Package CI prüft bei PRs den zugehörigen Test-Merge;
+ein manueller Browserdispatch prüft seinen Branchcommit. Head, Basis und Checkout
+werden getrennt im jeweiligen Ergebnis geführt. HTML zeigt die Buildkennung. `--development`
 kennzeichnet veränderte Arbeitsbäume ausdrücklich als nicht deploybar; `--test`
 erstellt einen separaten technischen Spieler mit festen Fixtures und Beobachtung.
 Diese Prüfkopie gehört nicht auf den Spielserver. Import-/Exportfehler sind fatal.
@@ -214,3 +236,4 @@ lange Hinweise, Zoom/Fenstergröße, Teilstand, Reload und erneuter Browserstart
 WEB-D01 prüft vor erstem Live-Deployment tatsächliches Zielsystem, Benutzer,
 Hostschlüssel, Pfad, URL/TLS und öffentliche oder geschützte Auslieferung.
 Persönliche Probe, Mergefreigabe und Live-Deployment bleiben separate Aufträge.
+

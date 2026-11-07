@@ -1,4 +1,4 @@
-extends "res://ui/main.gd"
+extends "res://tests/book_fixture.gd".ImmediateContent
 ## Developer-only corpus injection through the REGULAR scene/layout/input path.
 const Catalog = preload("res://full_view_study/catalog.gd")
 const CorpusStore = preload("res://full_view_study/save_store.gd")

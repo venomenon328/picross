@@ -1,0 +1,35 @@
+{
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/479",
+  "package": "RI-B-N01 / RI-B-R01-B-01",
+  "modules": [
+    "tools",
+    "production.adapter",
+    "production.catalog"
+  ],
+  "purpose": "B-01 gemäß RI-B-R01 gezielt beheben und RI-B mit main vereinen. Vollständiger Featurediff: privater Registrierungsprüfkontext, Adapter-/Katalog-/Recoveryverträge, Authoring/Offline-Sheet. tools prüft Promptregression und Quellen-/Gruppenzuordnung; adapter/catalog prüfen synthetische Integration und Transaktionen. Regulärer Windows-Build im Kern wegen Werkzeugcode.",
+  "omitted": "Keine neue Solver-, Bild-, Runtime-/Spielrenderer-, Browser-, Toolchain- oder Zustellungsänderung im Featurediff gegenüber aktuellem main. production.solver/images, native.*, preflight und delivery daher nicht angefordert; keine pauschale Vollsuite. Referenzmessungen bleiben an ihre damaligen Werkzeug-/Testcommits gebunden; keine neue Laufzeitwirkung behauptet. O-01 bleibt separat offen. B-01-Recheck und unabhängiges Review sowie Eigentümerfreigaben bleiben separat.",
+  "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_registration_verification.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende RI-B-Lieferung: kleine synthetische Bindungs-/Lebensdauer-/Byte-/Recoveryfälle im gewählten Katalogmodul; kein echter Rätselkatalog und keine zusätzliche Matrix."
+    },
+    {
+      "path": "tests/puzzle_production/test_categories_adapter.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende RI-B-Lieferung: Fremdänderung nach den vier tatsächlich erreichten Prüfgrenzen injizieren; unabhängige Fremdbyte-/Recoveryorakel erhalten."
+    },
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Günstige tatsächliche Node-JS-Promptregression für B-01, Fallbacks, ausdrückliche gespeicherte Refwahl und Anhang; Snapshot bytegenau gegen Regelwerk. Nur mit tools gewählt, kein neuer Job und keine Browser-/Bildgalerie."
+    }
+  ],
+  "core_change": "Keine Änderung des aktuellen main-Kerns. Einmalige Git-/Dokumentkonsistenzprüfung und Quellenauflösung main/PR-Ref im PR dokumentieren; temporäre Prüfdaten nach Lieferung entfernen. Historische RI-B-T01/Selbstreviews bleiben commitgebunden.",
+  "evidence": {
+    "mode": "none",
+    "purpose": null,
+    "expires": null
+  }
+}

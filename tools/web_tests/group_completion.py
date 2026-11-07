@@ -9,7 +9,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     page, errors = open_page(context, url)
     control(page, text='Blatt 01'); draw(page, (2,2)); saved(page)
     foreign = page.evaluate("picrossStorage.fs.readFile(picrossProbe.root+'/t01.json',{encoding:'utf8'})")
-    control(page, name='nav-album'); control(page, text='Blatt 03')
+    control(page, name='catalog-return'); control(page, text='Blatt 03')
     # Arm only a read-only framebuffer observation. The actual gesture and
     # production clock still perform the complete 2.15-second transition.
     page.evaluate('window.picrossAtCapture = true')
@@ -28,7 +28,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     control(page, name='reset', tooltip='Rätsel zurücksetzen')
     control(page, text='Abbrechen', dialog=True)
     assert state(page, 'slots')['slots'][2] == solved and state(page, 'ending')['ending']
-    control(page, name='nav-album'); no_spoilers(page)
+    control(page, name='catalog-return'); no_spoilers(page)
     catalog(page, name, output, evidence)
     data = state(page, 'sort', 'labels')
     label = data['labels'][data['sort']['visible_ids'].index('T-04')]

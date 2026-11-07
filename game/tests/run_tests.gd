@@ -33,6 +33,7 @@ func run() -> void:
 	SaveStore.test_root_override = temporary.path_join("picross-p1-tests-%d" % Time.get_ticks_usec())
 	root.size = Vector2i(1280, 720)
 	fixture = Definition.load_fixture("t01")
+	preload("res://tests/native_png_cases.gd").run(self)
 	print("PHASE kat1")
 	preload("res://tests/kat1_cases.gd").run(self)
 	preload("res://tests/kat2_cases.gd").run(self)
@@ -42,6 +43,7 @@ func run() -> void:
 	preload("res://tests/hz_cases.gd").run(self)
 	preload("res://tests/hz_b_cases.gd").run(self)
 	preload("res://tests/hz_c_cases.gd").run(self)
+	preload("res://tests/help_cases.gd").run(self)
 	print("PHASE test_definition()")
 	test_definition()
 	print("PHASE test_gesture()")
@@ -253,8 +255,7 @@ func test_geometry() -> void:
 		check(v.hit(v.origin) == Vector2i.ZERO, "top left inclusive")
 
 func test_scene() -> void:
-	var app: Main = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(root)
 	app.album.choose_sort("added") # Unknown-date ties: canonical slots for these assertions.
 	await process_frame
 	await process_frame
@@ -323,7 +324,7 @@ func test_scene() -> void:
 	check(app.album_reveals[0].visible and not app.album_previews[0].visible and app.album_reveals[0].payload == fixture.reveal, "completed album has colored earned image")
 	if app.sessions.size() >= 3:
 		check(app.choices[2].caption.text == "???", "album refresh preserves the session title")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
 
 
@@ -351,8 +352,7 @@ func mouse_button(point: Vector2, pressed: bool, button: MouseButton = MOUSE_BUT
 
 func test_event_routing() -> void:
 	SaveStore.test_root_override += "-event-routes"
-	var app: Main = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(root)
 	app.open_puzzle()
 	await process_frame
 	await process_frame
@@ -383,5 +383,5 @@ func test_event_routing() -> void:
 	mouse_button(undo_point, true)
 	mouse_button(undo_point, false)
 	check(app.session.player.cells.count(-1) == 400 and not app.session.gesture.active, "real undo button dispatch without painting beneath UI")
-	app.queue_free()
+	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame

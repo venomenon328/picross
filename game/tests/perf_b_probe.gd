@@ -22,7 +22,8 @@ class ReferenceInk extends Control:
 	func _draw() -> void:
 		if texture != null: draw_texture_rect_region(texture,target,source,Color.WHITE,false,true)
 
-func _initialize() -> void: call_deferred("run")
+func _initialize() -> void:
+	call_deferred("run")
 func check(ok: bool, label: String) -> void:
 	checks += 1
 	if not ok:
@@ -123,7 +124,6 @@ func structural() -> void:
 	check(app.session.player.commit(changes),"valid dense synthetic history")
 	app.refresh()
 	await settle()
-	root.get_texture().get_image().save_png(output.path_join("runtime-dense-t02.png"))
 	var before: Dictionary = app.board.marks.stats.duplicate()
 	var draws: Array[int] = draw_counts.duplicate()
 	for i: int in range(12):
@@ -262,8 +262,6 @@ func pictures() -> void:
 				await settle()
 				check(difference(capture(box),end)<=1.0,"palette restoration repairs cache")
 			if value!=0 and value!=1: continue
-			var strip: Image = Image.create(blank.get_width()*9,blank.get_height(),false,Image.FORMAT_RGBA8)
-			var column: int = 0
 			for elapsed: int in [-1,0,30000,75000,105000,150000,180000,209000,210000]:
 				clock_us=1000000+maxi(0,elapsed)
 				app.board.effects[index]={"start":1000001 if elapsed<0 else 1000000,"after":value,"seconds":0.210}
@@ -273,17 +271,13 @@ func pictures() -> void:
 				var expected_image: Image = await expected(blank,box,cell,value,210000 if elapsed<0 else elapsed,0.56 if elapsed<0 else 1.0)
 				error=difference(actual,expected_image)
 				check(error<=1.0,"regular temporal pixels no underpaint/fade/form jump "+str([zoom,value,elapsed,error]))
-				strip.blit_rect(actual,Rect2i(Vector2i.ZERO,actual.get_size()),Vector2i(column*actual.get_width(),0))
-				column+=1
 				samples.append({"zoom":zoom,"actual_cell":box.size.x,"value":value,"elapsed_us":elapsed,"mean_channel_error":error})
-			strip.save_png(output.path_join("runtime-%d-%d.png" % [zoom,value]))
 	app.board.animation_clock=Time.get_ticks_usec
 
 func run() -> void:
 	output=OS.get_environment("PERF_B_OUTPUT")
 	Store.test_root_override=output.path_join("isolated-saves")
-	app=load("res://main.tscn").instantiate()
-	root.add_child(app)
+	app=preload("res://tests/book_fixture.gd").attach(root)
 	root.size=Vector2i(1920,1080)
 	await settle()
 	app.select_puzzle(1)

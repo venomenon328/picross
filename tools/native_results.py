@@ -2,13 +2,16 @@
 import hashlib
 import gzip
 import json
+import math
 from pathlib import Path, PurePosixPath
 import re
 import zipfile
+from contextlib import contextmanager
+import shutil
+import time
 
-from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, artifacts, checks, coverage
-
-
+from native_contract import GROUPS, SCOPES, WORKER_CHECKS, CATALOG_MODES, CATALOG_CASES, RP6_CAPTURES, RP6_STATES, artifacts, checks, coverage
+from zs2_evidence import validate_log as validate_zs2_log
 def unique(pairs):
     result = {}
     for key, value in pairs:
@@ -18,8 +21,167 @@ def unique(pairs):
     return result
 
 
+def validate_completion_cases(report):
+    """AR-A original values, palette, layout and state boundaries; no summary-only pass."""
+    rows = report['ar_measurements']
+    expected = [(1280,720,1.25,5,5,1), (1920,1080,1.0,40,40,4),
+                (2560,1440,1.25,50,30,8), (1600,900,1.0,50,30,8),
+                (1280,720,1.25,50,50,4)]
+    if len(rows) != len(expected):
+        raise ValueError('AR incomplete synthetic cases')
+    colors = ['343f42','edca78','bd604a','6c9aab','7c589e','529574','e28a45','b35280']
+    for row, (w,h,u,columns,lines,count) in zip(rows, expected):
+        if (row['window'] != [w,h,u] or (row['width'],row['height']) != (columns,lines)
+                or len(row['palette']) != count or len(row['cells']) != columns*lines
+                or row['fill_count'] != sum(v > 0 for v in row['cells'])
+                or row['line_count'] != columns+lines+2
+                or any(row[k] is not True for k in ('gated','initial_image','retained','reentry_image','unchanged'))
+                or row['state_before'] != row['state_after']
+                or not re.fullmatch('[0-9a-f]{64}', row['state_before'])
+                or not row['slots_before'] or row['slots_before'] != row['slots_after']
+                or any(not re.fullmatch('[0-9a-f]{64}', h) for h in row['slots_before'].values())
+                or len(row['line_pixels']) != 8 or any(v <= .02 for v in row['line_pixels'])
+                or row['control'] != 'single-rectangular-toggle' or row['hatch_count'] <= 0
+                or len(row['hatch_pixels']) != 2 or any(v <= 0 for v in row['hatch_pixels'])
+                or row['slider_positions'] != [87.5,128.5,87.5,128.5]
+                or row['selections'] != [False,True,False,True]):
+            raise ValueError('AR palette/cells/state boundary')
+        # First/rectangle palette fixed independently; the 40/50-square
+        # fixtures have the original regression palette, bound by their input.
+        if columns == 5 or lines == 30:
+            if [p['color'].lstrip('#').lower() for p in row['palette']] != colors[:count]:
+                raise ValueError('AR wrong original color source')
+        x,y,rw,rh = row['raster']; ax,ay,aw,ah = row['area']
+        if (rw <= 0 or rh <= 0 or abs(rw/rh-columns/lines) > .001
+                or x < ax-.01 or y < ay-.01 or x+rw > ax+aw+.01 or y+rh > ay+ah+.01
+                or abs(x+rw/2-ax-aw/2) > .01 or abs(y+rh/2-ay-ah/2) > .01
+                or abs(row['step']-rw/columns) > .001
+                or row['lod'] != ('small' if row['step'] < 18 else 'medium' if row['step'] <= 36 else 'large')):
+            raise ValueError('AR incomplete or distorted grid')
+        samples = row['samples']
+        if {s['value'] for s in samples} != set(row['cells']) or len(samples) != len(set(row['cells'])):
+            raise ValueError('AR missing original color/background pixels')
+        palette = {p['id']: tuple(int(p['color'].lstrip('#')[i:i+2],16)/255 for i in (0,2,4)) for p in row['palette']}
+        for sample in samples:
+            expected_color = palette[sample['value']] if sample['value'] > 0 else sample['paper']
+            if max(abs(a-b) for a,b in zip(sample['actual'],expected_color)) >= .16:
+                raise ValueError('AR wrong original raster pixel')
+
+
 def read(path):
     return json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique)
+
+
+def validate_rp6_capture(report, number):
+    """Independently bind selected original states, slots and real native checks."""
+    _index, width, height, scale = RP6_CAPTURES[number]
+    expected_ids = [f'{state}-{width}-ui{int(scale*100)}' for state in RP6_STATES]
+    rows = report.get('captures', [])
+    if (type(report.get('failures')) is not int or report['failures'] != 0
+            or report.get('failure_captures') != [] or report.get('pending_failures') != []
+            or report.get('pending_assertions') != [] or not isinstance(rows, list)
+            or any(not isinstance(r, dict) for r in rows)
+            or [r.get('id') for r in rows] != expected_ids):
+        raise ValueError('Incomplete/failed RP6 capture selection')
+    colors = ['#343f42'] if number == 4 else ['#253342', '#637b58', '#c89d56', '#b55848']
+    palette = [dict(id=i+1, color=color, symbol=chr(65+i)) for i, color in enumerate(colors)]
+    definition_id = f'T-{number:02d}'
+    reveal = dict(version=1, definition_id=definition_id, name=f'TEST ONLY Muster {number}',
+                  image=f'res://art/fixtures/t{number:02d}.svg')
+    required = {
+        'work': {'fresh pilot hides reveal', 'own incorrect miniature retained', 'mouse undo', 'mouse redo',
+                 'album own wrong miniature and no spoiler/name', 'bound regular clue font',
+                 'work and critical controls accessible', 'native pixel wrong-block'},
+        'detail': {'nine real visible undo clicks remove the wrong block',
+                   'real visible plus click retains normal zoom', 'selected partial has no reveal',
+                   'native pixel wrong-corner'},
+        'album-partial': {'album no hidden reveal payload', 'selected partial has no reveal',
+                          'native pixel wrong-corner'},
+        'completion': {'capture partial flush', 'native capture restores real mouse completion',
+                       'capture completion slot freshly loaded'},
+        'album-completed': set(),
+    }
+    total = 0
+    for state, row in zip(RP6_STATES, rows):
+        earned = state in ('completion', 'album-completed')
+        assertions = row.get('assertions', [])
+        if (not isinstance(assertions, list) or not assertions
+                or any(not isinstance(a, dict) or set(a) != {'label','passed'}
+                       or not isinstance(a['label'], str) or not a['label']
+                       or a['passed'] is not True for a in assertions)
+                or type(row.get('checks')) is not int or row['checks'] != len(assertions)):
+            raise ValueError('Missing/failed RP6 native assertions')
+        labels = {a['label'] for a in assertions}
+        needed = required[state].copy()
+        pixels = {'wrong-block' if state == 'work' else 'wrong-corner': colors[0][1:]}
+        if earned:
+            needed.update({'selected earned artwork visible and proportional', 'selected earned artwork bound to slot',
+                           'native pixel reveal-center', 'native pixel reveal-background'})
+            pixels = {'reveal-center':'ffffff', 'reveal-background':'6c9aab' if number == 4 else 'edca78'}
+        if (not needed <= labels or row.get('pixels') != pixels
+                or row.get('definition_id') != definition_id or row.get('slot') != f't{number:02d}.json'
+                or row.get('size') != [width,height] or row.get('ui_scale') != scale
+                or row.get('completed') is not earned or row.get('reveal') != (reveal if earned else {})
+                or row.get('palette') != palette or row.get('font') != 'Delight Coffee'
+                or row.get('layout_valid') is not True or row.get('grid_fit') is not True):
+            raise ValueError('Wrong RP6 slot/state/layout/pixel evidence')
+        cells = row.get('own_miniature')
+        size = 20 if number == 4 else 50
+        if (not isinstance(cells, list) or len(cells) != size*size
+                or any(type(c) is not int or c not in range(-1,len(colors)+1) for c in cells)
+                or not earned and (cells[0] != 1 or any(cells[y*size+x] != (1 if state == 'work' else -1)
+                                                       for y in range(2,5) for x in range(2,5)))):
+            raise ValueError('RP6 own wrong cells/undo evidence missing')
+        total += row['checks']
+    if type(report.get('checks')) is not int or report['checks'] != total:
+        raise ValueError('RP6 assertion total mismatch')
+
+
+def validate_catalog_cases(report):
+    """Read original native checkpoints and measured resize evidence, fail closed.
+
+    Checkpoints attest execution, not replacement oracles for removed variants.
+    File/source/run binding and original failures are checked by validate_payload.
+    """
+    mode = report['mode']
+    if mode not in CATALOG_CASES:
+        return
+    rows = report.get('catalog_cases', [])
+    if (not isinstance(rows, list) or any(not isinstance(r, dict) for r in rows)
+            or [r.get('id') for r in rows] != list(CATALOG_CASES[mode])
+            or any(set(r) != {'id', 'checks'} or type(r['checks']) is not int
+                   or r['checks'] <= 0 for r in rows)
+            or sum(r['checks'] for r in rows) != report['checks']
+            or report.get('failures') != []):
+        raise ValueError('Incomplete/failed selected catalog cases: '+mode)
+    if mode != 'ke':
+        return
+    samples = report.get('resize_samples', [])
+    keys = {'width', 'height', 'ui_scale', 'role', 'minimum_width', 'gap', 'available', 'columns'}
+    if (not isinstance(samples, list) or len(samples) != 5
+            or any(not isinstance(r, dict) or set(r) != keys for r in samples)):
+        raise ValueError('Incomplete KE resize sample')
+    for r in samples:
+        if (any(type(r[k]) not in (int, float) or not math.isfinite(r[k]) or r[k] <= 0
+                for k in keys-{'role'})
+                or any(r[k] != int(r[k]) for k in ('width', 'height', 'columns'))
+                or r['ui_scale'] != 1.25 or r['gap'] != 15
+                or r['height'] != math.floor(r['width']*9/16+0.5)
+                or r['columns'] != min(3, max(1, math.floor(
+                    (r['available']+r['gap'])/(r['minimum_width']+r['gap']))))):
+            raise ValueError('Invalid KE native resize geometry')
+    middle, large, below, above = samples[1:]
+    slope = (large['available']-middle['available'])/(2560-1920)
+    if ([(r['width'], r['role']) for r in samples[:3]] !=
+            [(1280, 'reference'), (1920, 'reference'), (2560, 'reference')]
+            or (below['role'], above['role']) != ('below', 'above')
+            or len({r['minimum_width'] for r in samples}) != 1 or slope <= 0):
+        raise ValueError('Invalid KE resize reference/derivation')
+    crossing = middle['width']+(2*large['minimum_width']+large['gap']-middle['available'])/slope
+    if (below['width'] != math.floor(crossing)-8 or above['width'] != math.ceil(crossing)+8
+            or (below['columns'], above['columns']) != (1, 2)
+            or not 1280 <= below['width'] < above['width'] <= 2560):
+        raise ValueError('KE sample does not cross derived native column boundary')
 
 
 def safe(root, name):
@@ -41,6 +203,66 @@ def bind_files(root, exclude=(), only=None):
             and (only is None or p.relative_to(root).as_posix() in only)]
 
 
+def deduplicate_images(root):
+    """Store identical original PNG bytes once, retaining each logical binding."""
+    originals = {}
+    aliases = []
+    for row in bind_files(root, exclude={'native-result.json'}):
+        if not row['file'].endswith('.png'):
+            continue
+        key = (row['sha256'],row['bytes'])
+        if key in originals:
+            source = originals[key]
+            # Hash collisions never authorize discarding different original bytes.
+            if safe(root,row['file']).read_bytes() != safe(root,source).read_bytes():
+                raise ValueError('Different native images share a digest')
+            aliases.append(dict(row, source=source))
+            safe(root,row['file']).unlink()
+        else:
+            originals[key] = row['file']
+    return aliases
+
+
+def validate_image_alias(root, row, physical, names):
+    """Check one binding without reconstructing or accepting a payload."""
+    name, source = row['file'], row['source']
+    safe(root, name)
+    safe(root, source)
+    if (set(row) != {'file','source','bytes','sha256'} or name in names
+            or source not in physical or not name.endswith('.png') or not source.endswith('.png')
+            or any(row[k] != physical[source][k] for k in ('bytes','sha256'))):
+        raise ValueError('Invalid/duplicate/chained native image alias')
+    verify_file(root, physical[source])
+
+
+@contextmanager
+def original_images(root, inventory, aliases):
+    """Reconstruct exact original paths only during independent verification."""
+    physical = {r['file']:r for r in inventory}
+    if len(physical) != len(inventory):
+        raise ValueError('Duplicate native physical inventory')
+    names = set(physical)
+    for row in aliases:
+        validate_image_alias(root, row, physical, names)
+        name = row['file']
+        names.add(name)
+    created = []
+    try:
+        for row in aliases:
+            target = safe(root,row['file'])
+            target.parent.mkdir(parents=True,exist_ok=True)
+            # Refuse to overwrite any actual delivery (including unlisted files).
+            with target.open('xb') as stream:
+                created.append(target)
+                with safe(root,row['source']).open('rb') as original:
+                    shutil.copyfileobj(original,stream)
+            verify_file(root,row)
+        yield
+    finally:
+        for path in created:
+            path.unlink()
+
+
 def verify_file(root, row):
     path = safe(root, row['file'])
     if (not path.is_file() or type(row['bytes']) is not int or row['bytes'] <= 0
@@ -49,6 +271,8 @@ def verify_file(root, row):
 
 
 def check_phases(report, expected, directory):
+    if 'book_lifecycle' in report or (directory/'book-lifecycle').exists():
+        raise ValueError('Book lifecycle is an explicit diagnostic, not standard native evidence')
     rows = report['checks']
     if sorted(r['name'] for r in rows) != sorted(expected):
         raise ValueError('Missing/duplicate/unexpected native checks')
@@ -61,8 +285,8 @@ def check_phases(report, expected, directory):
         if row.get('exit_code') != expected_exit or bool(row.get('expected_failure')) != negative:
             raise ValueError('Incorrect native process outcome')
         python_checks = {'current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources', 'kat2-adapter-export',
-                         'kat2-adapter-register', 'kat2-imported-base-copies', 'kat2-image-processing', 'ea-image-processing', 'za1-test-only-registration',
-                         'current-vs2-complete', 'retained-hc92-font-samples', 'current-drawing-pixel-oracles'}
+                         'kat2-adapter-register', 'kat2-imported-base-copies', 'za1-test-only-registration',
+                         'current-vs2-complete', 'current-drawing-pixel-oracles'}
         if ('log' in row) != (row['name'] not in python_checks):
             raise ValueError('Missing/unexpected native process log')
         if 'log' in row:
@@ -72,24 +296,67 @@ def check_phases(report, expected, directory):
                 raise ValueError('Truncated native phase log')
             if row.get('required_marker') and row['required_marker'] not in (directory/'logs'/log['file']).read_text(encoding='utf-8'):
                 raise ValueError('Missing native success marker')
+            if row['name'] == 'current-drawing-tests':
+                validate_zs2_log((directory/'logs'/log['file']).read_text(encoding='utf-8'))
 
 
-def validate_catalog_images(costs, summary, required, direct_images):
-    """Separate Python crops from unchanged images already emitted by KE natively."""
-    expected_crops = [dict(file=Path(capture['file']).stem+'-'+name+'.png',
-                           source=capture['file'], region=rectangle)
-                      for report in summary['reports'] for capture in report['captures']
-                      for name,rectangle in capture['regions'].items()]
-    if (costs['status'] != 'success' or summary['image_costs'] != costs
-            or costs['input_frames'] != sum(len(r['captures']) for r in summary['reports'])
-            or costs['crops'] != len(expected_crops) or costs['entries'] != summary['crops']
-            or [{k:r[k] for k in ('file','source','region')} for r in costs['entries']] != expected_crops
-            or {'kat2/'+r['file'] for r in costs['entries']} | set(direct_images)
-               != {p for p in required if p.endswith('.png')}):
-        raise ValueError('Incomplete native image costs/crops')
+def validate_book_lifecycle(report, directory, identity, host):
+    """Independent reader for the explicitly requested diagnostic, never a CI minimum."""
+    from book_contract import SOURCES as BOOK_SOURCES, INTEGRATION_ASSERTIONS
+    study = read(directory/'report.json')
+    expected_phases = ['book-version', 'book-import', 'book-integration']
+    expected_files = {'integration/integration.json'} | {'logs/'+name+'.log' for name in expected_phases}
+    source_root = Path(__file__).resolve().parents[1]
+    if (report.get('book_lifecycle') != study or study.get('package') != 'HIL-1-T01'
+            or study.get('scope') != 'help-and-product-lifecycle' or study.get('host') != host
+            or any(study.get(k) != v for k,v in identity.items())
+            or set(study.get('sources', {})) != set(BOOK_SOURCES)
+            or any(study['sources'][name] != hashlib.sha256((source_root/name).read_bytes()).hexdigest() for name in BOOK_SOURCES)
+            or [p['name'] for p in study.get('phases', [])] != expected_phases
+            or any(p['exit_code'] != 0 or p['timed_out'] or p['seconds'] < 0 for p in study['phases'])):
+        raise ValueError('Incomplete/failed help and product lifecycle binding')
+    actual = {p.relative_to(directory).as_posix() for p in directory.rglob('*') if p.is_file()} - {'report.json'}
+    if set(study.get('files', {})) != expected_files or actual != expected_files:
+        raise ValueError('Missing/unexpected targeted help evidence; no movie or gallery permitted')
+    for name,metadata in study['files'].items():
+        verify_file(directory, dict(file=name, **metadata))
+    integration = read(directory/'integration/integration.json')
+    if (integration.get('passed') is not True or not integration.get('assertions')
+            or any(row.get('passed') is not True for row in integration['assertions'])
+            or not INTEGRATION_ASSERTIONS <= {row.get('label') for row in integration['assertions']}):
+        raise ValueError('Incomplete/failed targeted help assertions')
+    cost = study.get('inventory_cost', {})
+    if cost != dict(files=len(expected_files), bytes=sum(f['bytes'] for f in study['files'].values()),
+                    pngs=0):
+        raise ValueError('Incorrect targeted help inventory cost')
 
 
 def validate_payload(result, root, player_root=None):
+    began = time.monotonic()
+    inventory = result['files']
+    aliases = result.get('image_aliases', [])
+    actual = sorted(p.relative_to(root).as_posix() for p in root.rglob('*')
+                    if p.is_file() and p.relative_to(root).as_posix() != 'native-result.json')
+    if sorted(r['file'] for r in inventory) != actual:
+        raise ValueError('Incomplete/unexpected native physical inventory')
+    reconstruction_began = time.monotonic()
+    with original_images(root,inventory,aliases):
+        reconstruction_seconds = time.monotonic()-reconstruction_began
+        expanded = dict(result, files=inventory+[{k:v for k,v in row.items() if k!='source'} for row in aliases])
+        context = {}
+        try:
+            summary = validate_original_payload(expanded, root, player_root, context)
+        except (ValueError, OSError, KeyError, TypeError) as error:
+            error.native_group = context.get('group')
+            raise
+    return dict(summary, files=len(inventory), bytes=sum(r['bytes'] for r in inventory),
+                logical_files=len(inventory)+len(aliases), shared_original_pngs=len(aliases),
+                reconstruction_seconds=round(reconstruction_seconds,6),
+                total_validation_seconds=round(time.monotonic()-began,6))
+
+
+def validate_original_payload(result, root, player_root=None, failure_context=None):
+    failure_context = failure_context if failure_context is not None else {}
     groups = result['groups']
     if (result.get('format') != 'picross-native-result-v1' or result['status'] != 'success'
             or groups != [g for g in GROUPS if g in groups] or not groups
@@ -106,7 +373,10 @@ def validate_payload(result, root, player_root=None):
     for row in inventory:
         verify_file(root, row)
     isolation_roots = set()
+    verification_times = {}
     for group in groups:
+        failure_context['group'] = group
+        group_began = time.monotonic()
         directory = root/group
         report = read(directory/'product-report.json')
         if report['status'] != 'success' or report['native_group'] != group or report['host'] != result['host']:
@@ -132,18 +402,34 @@ def validate_payload(result, root, player_root=None):
                 raise ValueError('Unselected/skipped scope misreported')
         check_phases(report, checks(group, result['host']), directory)
         if group == 'graphics':
+            import vs2_delivery
             worker = read(directory/'vs2-worker/technical/product-report.json')
             if worker['status'] != 'success' or any(worker.get(k) != v for k,v in result['identity'].items()):
                 raise ValueError('Incomplete/wrong graphics worker')
             check_phases(worker, WORKER_CHECKS, directory/'vs2-worker/technical')
+            from hn_evidence import verify as verify_hn
+            hn = read(directory/'selected/hn192/hn-native.json')
+            if report['visual']['vs2']['hn192'] != hn:
+                raise ValueError('HN original/group report mismatch')
+            verify_hn(directory/'selected/hn192', hn)
+            # Re-read selected originals in the independent artifact gate.
+            matrix = vs2_delivery.verify(directory/'selected/vs2-renders')
+            for row in matrix['records']:
+                vs2_delivery.vs2_v1_verify.record(row['v1'])
+            if (report['visual']['vs2']['records'] != len(matrix['records'])
+                    or report['visual']['vs2']['rendered'] != len(matrix['pictures'])
+                    or report['visual']['vs2']['failures'] != matrix['failures']):
+                raise ValueError('VS2 selected original/group report mismatch')
+            render_reports = []
+            for stage in ('layout','cells-f1','cells-f2','axis','h1'):
+                original = read(directory/'selected/renders'/f'render-report-{stage}.json')
+                vs2_delivery.verify_compact_stage(stage, original)
+                render_reports.append(original)
+            combined = vs2_delivery.compact_summary(render_reports)
+            if (read(directory/'selected/renders/render-report.json') != combined
+                    or report['visual']['compact'] != combined):
+                raise ValueError('Compact render original/group report mismatch')
         required = set(artifacts(group))
-        if group == 'completion':
-            native = read(directory/'selected/ea/native.json')
-            sequence = native['sequence']
-            if len(sequence) < 10:
-                raise ValueError('Incomplete actual EA motion sequence')
-            indices = {min(range(len(sequence)), key=lambda i:abs(sequence[i]['seconds']-t)) for t in (0,.5,1.1,1.65,2.15)}
-            required.update('ea/'+sequence[i]['file'] for i in indices)
         selected = report['selected_evidence']['files']
         if sorted(r['file'] for r in selected) != sorted(required) or report['selected_evidence']['omitted']:
             raise ValueError('Missing/duplicate/unexpected mandatory files for '+group)
@@ -163,6 +449,9 @@ def validate_payload(result, root, player_root=None):
                             value == [] if rule == 'empty-list' else value is False)
                 if not accepted:
                     raise ValueError('Failed original native assertions: '+name+'/'+field)
+        if group == 'adapters':
+            for number in RP6_CAPTURES:
+                validate_rp6_capture(read(directory/'selected/renders'/f'rp6-t{number:02d}-renders.json'), number)
         if group == 'history':
             summary = read(directory/'selected/integration/summary.json')
             from p14_integration import verify_evidence
@@ -182,35 +471,26 @@ def validate_payload(result, root, player_root=None):
                            or r['bytes'] != reuse['base_bytes'] or r['seconds'] < 0
                            or not r['project'].replace('\\','/').startswith(workspace+'/kat2-') for r in copies)):
                 raise ValueError('Incomplete/changed/shared catalog imported base copies')
-            costs = read(directory/'selected/kat2/image-costs.json')
             summary = read(directory/'selected/kat2/summary.json')
-            validate_catalog_images(costs, summary, required,
-                                    read(Path(__file__).with_name('native_artifacts.json'))['catalog_direct_images'])
-            if costs['comparison'] and any(r.get('identical') is not True for r in costs['entries']):
-                raise ValueError('Native PNG comparison failed')
-            for entry in costs['entries']:
-                if (not re.fullmatch('[0-9a-f]{64}', entry['source_sha256']) or
-                        len(entry['source_size']) != 2 or len(entry['region']) != 4):
-                    raise ValueError('Missing native input frame/region binding')
-                if costs['comparison'] and (entry['reference'] != entry['actual'] or
-                        entry['actual']['size'] != [entry['region'][2]-entry['region'][0],entry['region'][3]-entry['region'][1]]):
-                    raise ValueError('Native comparison dimensions/RGBA disagree')
             if summary['reports'] != [read(directory/'selected/kat2'/(mode+'.json')) for mode in
                                       CATALOG_MODES]:
                 raise ValueError('Catalog original reports disagree with summary')
             if report['kat2'] != summary:
                 raise ValueError('Catalog group/summary mismatch')
+            for mode in CATALOG_CASES:
+                validate_catalog_cases(read(directory/'selected/kat2'/(mode+'.json')))
             from at_evidence import native
             native(directory/'selected/kat2', read(directory/'selected/kat2/at.json'), ('small','hover'))
         if group == 'completion':
-            costs = read(directory/'selected/ea/image-costs.json')
-            if report['ea']['image_costs'] != costs or costs['input_frames'] != len(sequence):
-                raise ValueError('EA image timing/sequence mismatch')
             if report['ea']['reports'] != [read(directory/'selected/ea'/(mode+'.json')) for mode in ('native','restart')]:
                 raise ValueError('EA group/original mismatch')
             from at_evidence import native
             native(directory/'selected/ea', read(directory/'selected/ea/native.json'), ('final','reopen','blend'))
+            validate_completion_cases(read(directory/'selected/ea/native.json'))
+        verification_times[group] = round(time.monotonic()-group_began,6)
     if 'export' in groups:
+        failure_context['group'] = 'export'
+        player_began = time.monotonic()
         if player_root is None:
             raise ValueError('Selected export requires delivered player bytes')
         verify_file(player_root, result['player'])
@@ -222,7 +502,15 @@ def validate_payload(result, root, player_root=None):
             if set(export['export_files']) != {'picross-p1.exe','picross-p1.console.exe','picross-p1.pck'}:
                 raise ValueError('Incomplete export file contract')
             for name, expected in export['export_files'].items():
-                if not archive.read(name) or hashlib.sha256(archive.read(name)).hexdigest() != expected:
+                # Hash the actual decompressed member once. Reading it twice
+                # doubled decompression/allocation of the large Windows binary.
+                with archive.open(name) as stream:
+                    hasher = hashlib.sha256()
+                    size = 0
+                    for chunk in iter(lambda:stream.read(1024*1024), b''):
+                        hasher.update(chunk)
+                        size += len(chunk)
+                if not size or hasher.hexdigest() != expected:
                     raise ValueError('Wrong delivered Windows export')
             if json.loads(archive.read('product-report.json'), object_pairs_hook=unique) != export:
                 raise ValueError('Player source/report differs from actual export report')
@@ -232,9 +520,11 @@ def validate_payload(result, root, player_root=None):
                 or export['content_pack']['pack_sha256'] != export['export_files']['picross-p1.pck']
                 or export['content_pack']['executable_sha256'] != export['export_files']['picross-p1.exe']):
             raise ValueError('Player packaging audit mismatch')
+        verification_times['player_bytes'] = round(time.monotonic()-player_began,6)
     elif 'player' in result:
         raise ValueError('Unselected export reported')
-    return dict(groups=groups, files=len(inventory), bytes=sum(r['bytes'] for r in inventory))
+    return dict(groups=groups, files=len(inventory), bytes=sum(r['bytes'] for r in inventory),
+                verification_seconds=verification_times)
 
 
 def validate_all(plan, root, player_root, outputs, gate_attempt):

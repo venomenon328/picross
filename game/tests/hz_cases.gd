@@ -2,7 +2,7 @@ extends RefCounted
 ## Fixed synthetic glyph contract, also run against the delivered PCK.
 const Text = preload("res://ui/ui_text.gd")
 const GLYPHS = "äöüÄÖÜß × · … % ,.;:!?–−/\\()[]{}„“‚‘’\"'&+←→↑↓0123456789"
-const TIDY_SHA256 = "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6"
+const PANGOLIN_SHA256 = "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e"
 const PLEX_SHA256 = "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3"
 
 static func digest(bytes: PackedByteArray) -> String:
@@ -34,7 +34,7 @@ static func dot_columns(image: Image) -> int:
 
 static func run(runner: Object) -> void:
 	var font: FontFile = Text.font()
-	runner.check(font != Text.SOURCE and font.data == Text.SOURCE.data and digest(font.data) == TIDY_SHA256, "HZ original Tidy Hand bytes, private normal UI instance")
+	runner.check(font != Text.SOURCE and font.data == Text.SOURCE.data and digest(font.data) == PANGOLIN_SHA256, "HZ original Pangolin bytes, private normal UI instance")
 	runner.check(digest(Text.FALLBACK.data) == PLEX_SHA256, "HZ original local Plex bytes")
 	runner.check(not font.allow_system_fallback and font.fallbacks.size() == 1 and not font.fallbacks[0].allow_system_fallback, "HZ local fallback only")
 	var ts: TextServer = TextServerManager.get_primary_interface()
@@ -45,23 +45,23 @@ static func run(runner: Object) -> void:
 			runner.check(glyph.index > 0 and glyph.font_rid in font.get_rids(), "HZ complete locally shaped inventory at %d" % fs)
 		var ellipsis: Image = glyph_image(font, fs, 0x2026)
 		runner.check(dot_columns(ellipsis) == 3 and ellipsis.get_height() <= fs * 0.45, "HZ three distinct native ellipsis dots at %d" % fs)
-		runner.check(ellipsis.get_data() == glyph_image(Text.SOURCE, fs, 0x2026).get_data(), "HZ ellipse pixels come from original Tidy Hand")
+		runner.check(ellipsis.get_data() == glyph_image(Text.SOURCE, fs, 0x2026).get_data(), "HZ ellipse pixels come from original Pangolin")
 		var long_line := TextLine.new()
 		long_line.add_string("TEST lange Kategorie mit Größen und Äpfeln", font, fs)
 		ts.shaped_text_overrun_trim_to_width(long_line.get_rid(), 8 * fs, TextServer.OVERRUN_TRIM | TextServer.OVERRUN_ADD_ELLIPSIS)
 		var glyphs: Array[Dictionary] = ts.shaped_text_get_ellipsis_glyphs(long_line.get_rid())
-		runner.check(glyphs.size() == 1 and glyphs[0].font_rid == font.get_rids()[0] and glyphs[0].index == font.get_glyph_index(fs, 0x2026, 0), "HZ native automatic trimming uses Tidy Hand ellipse")
+		runner.check(glyphs.size() == 1 and glyphs[0].font_rid == font.get_rids()[0] and glyphs[0].index == font.get_glyph_index(fs, 0x2026, 0), "HZ native automatic trimming uses Pangolin ellipse")
 		runner.check(Text.ink(font, "Größe · … ←", fs).size.y > 0, "HZ measured fallback ink")
 	var bakso: FontFile = preload("res://art/drawing/BaksoDaging-Regular.ttf")
 	var wrong_ellipse: Image = glyph_image(bakso, 24, 0x2026)
 	runner.check(dot_columns(wrong_ellipse) != 3 or wrong_ellipse.get_height() > 24 * 0.45, "HZ negative control detects Bakso's incorrect ellipse; title workaround retained")
-	for character: String in ["×", "„", "‚", "–", "−", "←", "→", "↑", "↓"]:
+	for character: String in ["←", "→", "↑", "↓"]:
 		var line := TextLine.new()
 		line.add_string(character, font, 18)
 		var glyphs: Array[Dictionary] = ts.shaped_text_get_glyphs(line.get_rid())
 		runner.check(glyphs.size() == 1 and glyphs[0].font_rid == font.fallbacks[0].get_rids()[0], "HZ missing character bound to Plex: " + character)
-	for character: String in "äöüÄÖÜß·…%":
+	for character: String in "äöüÄÖÜß·…%×„‚–−":
 		var line := TextLine.new()
 		line.add_string(character, font, 18)
 		var glyphs: Array[Dictionary] = ts.shaped_text_get_glyphs(line.get_rid())
-		runner.check(glyphs.size() == 1 and glyphs[0].font_rid == font.get_rids()[0], "HZ original Tidy Hand character: " + character)
+		runner.check(glyphs.size() == 1 and glyphs[0].font_rid == font.get_rids()[0], "HZ original Pangolin character: " + character)

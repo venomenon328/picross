@@ -6,9 +6,7 @@ var surface: SubViewport
 
 func setup(viewport: Viewport) -> void:
 	target = viewport
-	app = load("res://main.tscn").instantiate()
-	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	target.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(target)
 	await process_frame
 	await process_frame
 	check(app.sessions.size() == Definition.catalog_ids().size() and app.sessions.size() >= 10, "old plus four artificial registrations")
@@ -30,6 +28,16 @@ func shot(stage: String) -> void:
 	app.refresh()
 	await process_frame
 	await process_frame
+	if app.album.visible:
+		var index: int = app.album.visible_ids.find(str(app.session.definition.id))
+		var observed: Control = app.album_reveals[index] if app.session.completed else app.album_previews[index]
+		# The compact book half scrolls independently. Observe the actual visible
+		# miniature/reveal rather than pixels of a clipped card below its viewport.
+		app.album.ensure_control_visible(observed)
+		await process_frame
+		await process_frame
+		var scroller: ScrollContainer = app.album.right_scroll if app.album.right_grid.is_ancestor_of(observed) else app.album.scroll
+		check(scroller.get_global_rect().encloses(observed.get_global_rect()),"native observed album image entirely visible")
 	await RenderingServer.frame_post_draw
 	var image: Image = surface.get_texture().get_image()
 	var ratio: float = float(app.session.player.width)/app.session.player.height
@@ -65,23 +73,6 @@ func shot(stage: String) -> void:
 					for entry: Dictionary in app.session.definition.palette:
 						if int(entry.id) == int(app.session.definition.solution[y][x]): expected = Color(entry.color)
 					check(image.get_pixelv(Vector2i(reveal.global_position+grid.position+Vector2(x+0.5,y+0.5)*step)).is_equal_approx(expected), "native solved raster cell/color")
-	var filename: String = OS.get_environment("ZA1_ID")+"-"+stage+".png"
-	var context_file: String = filename.trim_suffix(".png")+"-context.png"
-	check(image.save_png(output.path_join(context_file)) == OK, "local native context")
-	var area: Rect2
-	if earned:
-		var reveal: Control = app.album_reveals[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))] if app.album.visible else app.reveal_view
-		area = Rect2(reveal.global_position+reveal.artwork_rect().position,reveal.artwork_rect().size)
-		if reveal.paired:
-			var grid: Rect2 = reveal.raster_rect()
-			var raster_file: String = filename.trim_suffix(".png")+"-raster.png"
-			check(image.get_region(Rect2i(reveal.global_position+grid.position,grid.size)).save_png(output.path_join(raster_file)) == OK,"native solved raster crop")
-			captures.append({"file":raster_file,"stage":stage,"crop":true,"ratio":ratio})
-	else:
-		var preview: Control = app.album_previews[app.album.visible_ids.find(str(app.sessions[pilot_index].definition.id))] if app.album.visible else app.mini
-		area = Rect2(preview.global_position+preview.image_rect().position,preview.image_rect().size)
-	check(image.get_region(Rect2i(area)).save_png(output.path_join(filename)) == OK,"native relevant crop")
-	captures.append({"file":filename,"context_file":context_file,"stage":stage,"completed":earned,"native_size":[surface.size.x,surface.size.y],"crop":true,"crop_rect":[area.position.x,area.position.y,area.size.x,area.size.y],"ratio":ratio})
 
 func seed_old() -> void:
 	for index: int in [0,1,3]:

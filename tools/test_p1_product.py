@@ -1,9 +1,13 @@
 import tempfile
 import os
+import platform
+import signal
 import shutil
 import subprocess
 import sys
+import time
 import unittest
+from unittest.mock import MagicMock, patch
 import zipfile
 from pathlib import Path
 
@@ -15,6 +19,174 @@ from ci_scope import FLAGS, JOBS, classify, evaluate
 
 
 class ProductHarnessTests(unittest.TestCase):
+    def simulate_phase(self, name, duration, *, timeout=300, exit_code=0, output="KAT2_PROBE_OK\n"):
+        from p1_product import run_phase
+        clock = [0.0]
+        waits = []
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            log = root / (name + ".log")
+            process = MagicMock()
+            process.__enter__.return_value = process
+            def wait(timeout=None):
+                waits.append(timeout)
+                if len(waits) == 2 and name == "kat2-kk":
+                    # The warning must already be flushed while the child runs.
+                    self.assertIn("WARNING: kat2-kk reached 300s", log.read_text())
+                if timeout is not None and clock[0] + timeout < duration:
+                    clock[0] += timeout
+                    raise subprocess.TimeoutExpired(["probe"], timeout)
+                clock[0] = max(clock[0], duration) if timeout is not None else clock[0]
+                return exit_code
+            process.wait.side_effect = wait
+            def printed(*args, **kwargs):
+                if str(args[0]).startswith("WARNING:"):
+                    self.assertTrue(kwargs.get("flush"))
+                    self.assertEqual(clock[0], 300)
+                    clock[0] += 2  # Logging must not extend the 600s deadline.
+            def launch(*args, **kwargs):
+                kwargs["stdout"].write(output.encode())
+                kwargs["stdout"].flush()
+                return process
+            with patch("p1_product.subprocess.Popen", side_effect=launch), \
+                    patch("p1_product.time.monotonic", side_effect=lambda: clock[0]), \
+                    patch("p1_product.platform.system", return_value="Windows"), \
+                    patch("builtins.print", side_effect=printed):
+                result = run_phase(name, ["probe"], {}, timeout, root)
+            self.assertEqual(result["log"]["original_bytes"], log.stat().st_size)
+            return result, waits, process
+
+    def test_kk_finishes_before_warning(self):
+        result, waits, process = self.simulate_phase("kat2-kk", 299)
+        self.assertEqual(waits, [300])
+        self.assertEqual(result["timeout_seconds"], 600)
+        self.assertEqual(result["warning_seconds"], 300)
+        self.assertFalse(result["warning_emitted"])
+        self.assertFalse(result["timed_out"])
+        self.assertNotIn("WARNING:", result["output"])
+        require_clean_output(result, "KAT2_PROBE_OK")
+        process.kill.assert_not_called()
+
+    def test_kk_warning_allows_success_until_hard_deadline(self):
+        for duration in (301, 599):
+            with self.subTest(duration=duration):
+                result, waits, process = self.simulate_phase("kat2-kk", duration)
+                self.assertEqual(waits, [300, 298])
+                self.assertTrue(result["warning_emitted"])
+                self.assertFalse(result["timed_out"])
+                self.assertEqual(result["seconds"], max(302, duration))
+                self.assertEqual(result["output"].count("WARNING:"), 1)
+                require_clean_output(result, "KAT2_PROBE_OK")
+                process.kill.assert_not_called()
+
+    def test_kk_warning_preserves_exit_marker_and_engine_error_checks(self):
+        for exit_code, output in ((4, "KAT2_PROBE_OK\n"), (0, "missing marker\n"),
+                                  (0, "KAT2_PROBE_OK\nERROR: failure\n"),
+                                  (0, "KAT2_PROBE_OK\nSCRIPT ERROR: failure\n")):
+            with self.subTest(exit_code=exit_code, output=output):
+                result, _, _ = self.simulate_phase("kat2-kk", 350, exit_code=exit_code, output=output)
+                self.assertTrue(result["warning_emitted"])
+                self.assertFalse(result["timed_out"])
+                with self.assertRaises(PreflightError):
+                    require_clean_output(result, "KAT2_PROBE_OK")
+
+    def test_kk_hard_timeout_records_effective_budget_and_cleanup(self):
+        result, waits, process = self.simulate_phase("kat2-kk", 601)
+        self.assertEqual(waits, [300, 298, None])
+        self.assertEqual(result["seconds"], 600)
+        self.assertTrue(result["warning_emitted"])
+        self.assertTrue(result["timed_out"])
+        self.assertIsNone(result["exit_code"])
+        self.assertIn("kat2-kk exceeded 600s", result["output"])
+        process.kill.assert_called_once_with()
+
+    def test_other_phases_keep_caller_timeout_without_warning(self):
+        for name in ("kat2-kk-import", "kat2-information", "perf-b-native", "tests", "book-native"):
+            for timeout in (1, 300, 600):
+                with self.subTest(name=name, timeout=timeout):
+                    result, waits, process = self.simulate_phase(name, timeout + 1, timeout=timeout)
+                    self.assertEqual(waits, [timeout, None])
+                    self.assertEqual(result["timeout_seconds"], timeout)
+                    self.assertIsNone(result["warning_seconds"])
+                    self.assertFalse(result["warning_emitted"])
+                    self.assertTrue(result["timed_out"])
+                    self.assertNotIn("WARNING:", result["output"])
+                    process.kill.assert_called_once_with()
+
+    @unittest.skipUnless(platform.system() == "Linux", "Linux wrapper process-group contract")
+    def test_phase_timeout_stops_descendants_and_preserves_unrelated_process(self):
+        self.assert_phase_tree_stopped("timeout-tree", 1)
+
+    @unittest.skipUnless(platform.system() == "Linux", "Linux wrapper process-group contract")
+    def test_kk_hard_timeout_stops_real_descendants(self):
+        original_wait = subprocess.Popen.wait
+        clock = [0.0]
+        def accelerated_wait(process, timeout=None):
+            if timeout is None:
+                return original_wait(process)
+            self.assertEqual(timeout, 300)
+            try:
+                return original_wait(process, timeout=0.5)
+            except subprocess.TimeoutExpired:
+                clock[0] += timeout
+                raise subprocess.TimeoutExpired(process.args, timeout)
+        with patch("p1_product.time.monotonic", side_effect=lambda: clock[0]), \
+                patch.object(subprocess.Popen, "wait", accelerated_wait):
+            self.assert_phase_tree_stopped("kat2-kk", 600)
+
+    def assert_phase_tree_stopped(self, phase_name, effective_timeout):
+        from p1_product import run_phase
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            def alive(pid):
+                try:
+                    return Path(f"/proc/{pid}/stat").read_text().rsplit(")", 1)[1].split()[0] not in {"Z", "X"}
+                except (FileNotFoundError, ProcessLookupError):
+                    return False
+            # procfs can open stat before exit, then report ESRCH on read.
+            # Both disappearance paths mean dead; other read errors still fail.
+            for error in (FileNotFoundError(), ProcessLookupError()):
+                with patch.object(Path, "read_text", side_effect=error):
+                    self.assertFalse(alive(os.getpid()))
+            with patch.object(Path, "read_text", side_effect=PermissionError()):
+                with self.assertRaises(PermissionError):
+                    alive(os.getpid())
+            leaf = ("import os,pathlib,time; "
+                    f"pathlib.Path({str(root / 'leaf.pid')!r}).write_text(str(os.getpid())); "
+                    "time.sleep(60)")
+            child = ("import os,pathlib,subprocess,sys; "
+                     f"pathlib.Path({str(root / 'child.pid')!r}).write_text(str(os.getpid())); "
+                     f"subprocess.run([sys.executable, '-c', {leaf!r}])")
+            wrapper = f"import subprocess,sys; subprocess.run([sys.executable, '-c', {child!r}])"
+            # The kill scope must be this phase, even with another runner alive.
+            with subprocess.Popen([sys.executable, "-c", "import time; time.sleep(60)"]) as unrelated:
+                try:
+                    result = run_phase(phase_name, [sys.executable, "-c", wrapper],
+                                       os.environ.copy(), 1, root)
+                    self.assertTrue(result["timed_out"])
+                    self.assertIsNone(result["exit_code"])
+                    self.assertIn(f"{phase_name} exceeded {effective_timeout}s", result["output"])
+                    self.assertEqual(result["timeout_seconds"], effective_timeout)
+                    self.assertEqual(result["warning_emitted"], phase_name == "kat2-kk")
+                    self.assertIsNone(unrelated.poll())
+                    for name in ("child", "leaf"):
+                        pid = int((root / (name + ".pid")).read_text())
+                        deadline = time.perf_counter() + 0.5
+                        while alive(pid) and time.perf_counter() < deadline:
+                            time.sleep(0.01)
+                        self.assertFalse(alive(pid), f"{name} survived phase timeout")
+                finally:
+                    # Keep the negative case bounded if the regression returns.
+                    for name in ("child", "leaf"):
+                        pidfile = root / (name + ".pid")
+                        if pidfile.exists():
+                            try:
+                                os.kill(int(pidfile.read_text()), signal.SIGKILL)
+                            except ProcessLookupError:
+                                pass
+                    unrelated.kill()
+                    unrelated.wait()
+
     def test_import_setting_is_temporary_even_after_failed_process(self):
         from p1_product import run_phase
         with tempfile.TemporaryDirectory() as temporary:

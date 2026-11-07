@@ -3,7 +3,7 @@
 **SD2 · 25.10.2026:** [SD2-D05/D06](PUZZLE_DIFFICULTY_V2.md) spezifizieren den
 gemeinsamen 0.4-Integrations-/Aktivierungsweg in SD2-C (#405) und die
 gesonderte Bestandsumstellung SD2-D (#406). [D-F01/T01](SD2_D_ADOPTION.md)
-übernimmt die 45 abgenommenen Vorschläge und aktiviert 0.4 auf dem Arbeitsbranch.
+hat die 45 abgenommenen Vorschläge übernommen und 0.4 über PR #411 aktiviert.
 Alte Schemas, Freeze, Journale, AT-/Added-Bindungen und
 historische Nachweise bleiben erhalten; neue exakte Format-/Dispatchverträge
 stehen vor der betroffenen Codeänderung vollständig in
@@ -21,7 +21,7 @@ liefert die gebundene Bild-/Endfreigabevorlage. Die anschließende
 [Eigentümerabnahme](AT_B_OWNER_APPROVAL.md) erlaubt AT-B-F01 mit kontrollierter
 Bildübernahme und AT-B-T01. Keine Bewertungsübernahme oder neue Analyse.
 
-**KU / #244, freigegebene Ergänzung vom 18.10.2026; Umsetzung offen:**
+**KU / #244, integrierte Ergänzung:**
 [Katalogdarstellung](CATALOG_PRESENTATION.md) ersetzt mit KU-A ausschließlich
 sichtbare Schwierigkeitsziffern durch gefüllte Kreise und entfernt die bisherigen
 Schwierigkeitstooltips. Das löst die entsprechenden unten beschriebenen
@@ -38,7 +38,8 @@ Die folgenden Formate wurden vor der ersten Codeänderung festgelegt und werden
 von den neuen `catalog_*`-Modulen implementiert. [Befehlsanleitung](../tools/puzzle_production/README.md).
 SD-C1 ist nach qualifiziertem R2 mit PR #242 integriert. SD-C2 hat nach bestandenem
 Vor-Übernahme-Review gemäß SD-C2-F01 die 26 Bewertungen kontrolliert übernommen;
-separates qualifiziertes finales Datenreview und Merge bleiben offen.
+die Integration ist über PR #243 abgeschlossen. Nachfolgende damalige Gate-
+angaben bleiben historisch; aktueller Status und Entscheidungen stehen im Issue/PR.
 [SD](PUZZLE_DIFFICULTY.md), [SD-A](SD_ANALYZER.md) und der eingefrorene
 [SD-B-Vertrag](SD_CALIBRATION.md) gelten unverändert.
 

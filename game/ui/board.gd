@@ -114,21 +114,6 @@ func navigate_to(_normalized: Vector2) -> void:
 	# Compatibility no-op: passive miniature and legacy callers cannot move a grid.
 	pass
 
-func reset_clue_pan() -> void:
-	if session.gesture.active:
-		return
-	ensure_clue_steps()
-	row_clue_steps.fill(0)
-	column_clue_steps.fill(0)
-	for index: int in range(row_clue_reads.size()):
-		row_clue_reads[index] = ClueLayout.grid_end_position()
-	for index: int in range(column_clue_reads.size()):
-		column_clue_reads[index] = ClueLayout.grid_end_position()
-	clear_clue_hover()
-	view_changed.emit()
-	edited.emit()
-	queue_redraw()
-
 func ensure_clue_steps() -> void:
 	if session == null:
 		return
@@ -272,7 +257,7 @@ func _input(event: InputEvent) -> void:
 	if cell_buttons_blocked and event is InputEventMouse:
 		cell_buttons_blocked = (int(event.button_mask) & CELL_BUTTONS) != 0
 		if event is InputEventMouseButton and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
-			get_viewport().set_input_as_handled()
+			if event.pressed: get_viewport().set_input_as_handled()
 			return
 	if not is_visible_in_tree() or session == null:
 		return
@@ -284,8 +269,9 @@ func _input(event: InputEvent) -> void:
 		clue_pointer_global = global_position + local.position
 		clue_pointer_known = true
 	if pan_button != MOUSE_BUTTON_NONE or clue_press_owned:
-		# Own the whole mouse route, including releases over another Control.
-		if local is InputEventMouse:
+		# Model ownership includes releases over another Control. Let Up reach
+		# the GUI too: its native mouse focus still belongs to this Board.
+		if local is InputEventMouseMotion or (local is InputEventMouseButton and local.pressed):
 			get_viewport().set_input_as_handled()
 		if local is InputEventMouseButton and local.pressed and local.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
 			# A second Down (including a lost prior Up) is ambiguous, not a
@@ -327,7 +313,6 @@ func _input(event: InputEvent) -> void:
 			clue_press_owned = false
 			update_pointer_hover(local.position)
 			queue_redraw()
-			get_viewport().set_input_as_handled()
 		return
 	if not session.gesture.active:
 		return
@@ -349,7 +334,9 @@ func _input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 	elif local is InputEventMouseButton and not local.pressed and local.button_index == held_button:
 		pointer_release(local.position, get_viewport().gui_get_hovered_control() == self)
-		get_viewport().set_input_as_handled()
+		# _input consumption clears Godot's button mask but leaves mouse_focus
+		# on the Board. GUI delivery releases that owner before _gui_input;
+		# otherwise later motion reaches the Board instead of button tooltips.
 
 func _gui_input(event: InputEvent) -> void:
 	if session.completed:
@@ -727,30 +714,14 @@ func clue_identity(axis: String, line: int, token: int) -> String:
 	return "%s/%s/%d/%d" % [session.definition.id, axis, line, token]
 
 func draw_clue_number(font: Font, baseline: Vector2, text: String, fs: int, color: Color, status: int, identity: String = "") -> void:
-	font = clue_text_font(font, text)
-	if not text.is_valid_int(): status = ClueCompletion.Status.OPEN
-	var alpha: float = FILLED_ALPHA if status != ClueCompletion.Status.OPEN else 1.0
+	font = clue_text_font(font,text)
 	var outlined: bool = text.is_valid_int() and session.definition.palette.size() > 1 and (color.is_equal_approx(cell_color(2)) or color.is_equal_approx(cell_color(4)))
-	# Quarter-pixel outline: a 4x glyph drawn at 1/4 scale gives a 0.25px
-	# outer contour (C1 reference: 0.275px). Keep the original fill last.
-	if outlined:
-		var contour_scale: float = ui_scale/4.0
-		draw_set_transform(Vector2.ZERO,0,Vector2.ONE*contour_scale)
-		draw_string_outline(font,baseline/contour_scale,text,HORIZONTAL_ALIGNMENT_LEFT,-1,roundi(fs/contour_scale),1,Color(Color("293e3d"),alpha))
-		draw_set_transform(Vector2.ZERO)
-	draw_string(font, baseline, text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs, Color(color, alpha))
-	if status == ClueCompletion.Status.CLOSED:
+	ClueStatusDrawing.paint_number(self, baseline, text, fs, color, status, outlined, ui_scale, font)
+	if text.is_valid_int() and status == ClueCompletion.Status.CLOSED:
 		draw_clue_cross(font, baseline, text, fs, color, outlined, identity)
 
 func draw_clue_cross(font: Font, baseline: Vector2, text: String, fs: int, color: Color, outlined: bool, identity: String) -> void:
-	var strokes: Array[PackedVector2Array] = ClueStatusDrawing.cross_strokes(text, fs, identity, font, ui_scale)
-	for i: int in range(strokes.size()):
-		var points: PackedVector2Array = strokes[i]
-		for p: int in range(points.size()): points[p] += baseline
-		var thickness: float = ClueStatusDrawing.cross_width(fs, i)
-		if outlined:
-			draw_polyline(points, Color(Color("293e3d"), CROSS_ALPHA), thickness + ui_scale / 2.0, true)
-		draw_polyline(points, Color(color, CROSS_ALPHA), thickness, true)
+	ClueStatusDrawing.paint_cross(self, baseline, text, fs, color, identity, outlined, ui_scale, font)
 
 func clue_font_size() -> int:
 	if book_layout:

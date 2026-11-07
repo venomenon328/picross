@@ -18,8 +18,7 @@ func run() -> void:
 		return
 	SaveStore.test_root_override = isolated
 	root.size = Vector2i(1280, 720)
-	var app: Main = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	var app: Main = preload("res://tests/book_fixture.gd").attach(root)
 	await process_frame
 	await process_frame
 	if not require(app.mark_completed_clues and app.board.mark_completed_clues, "H1 new process defaults to enabled"):

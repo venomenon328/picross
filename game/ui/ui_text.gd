@@ -1,6 +1,6 @@
 extends RefCounted
-## HZ-A: Tidy Hand for normal text; heading and HC resources stay separate.
-const SOURCE = preload("res://art/drawing/TidyHand.ttf")
+## PANG-A: original Pangolin for normal text; heading and HC roles stay separate.
+const SOURCE = preload("res://art/drawing/Pangolin-Regular.ttf")
 const FALLBACK = preload("res://art/book/PlexSans.ttf")
 static var normal: FontFile
 static var dimension_widths: Dictionary = {}
@@ -62,8 +62,10 @@ static func small_label(label: Label, fs: int, u: float = 1.0) -> void:
 
 static func font() -> FontFile:
 	if normal == null:
-		normal = SOURCE.duplicate()
-		var punctuation: FontFile = FALLBACK.duplicate()
+		normal = FontFile.new()
+		normal.data = SOURCE.data
+		var punctuation := FontFile.new()
+		punctuation.data = FALLBACK.data
 		normal.allow_system_fallback = false
 		punctuation.allow_system_fallback = false
 		normal.fallbacks = [punctuation]

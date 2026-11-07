@@ -2,6 +2,10 @@ extends OptionButton
 ## Native OptionButton/PopupMenu with shared HZ-B paper and icon resources.
 const Controls = preload("res://ui/book_controls.gd")
 const Text = preload("res://ui/ui_text.gd")
+var paper_transparent: bool = false:
+	set(value):
+		paper_transparent = value
+		if is_inside_tree(): _style()
 var ui_scale: float = 1.0:
 	set(value):
 		if ui_scale == value: return
@@ -35,10 +39,19 @@ func _style() -> void:
 	add_theme_font_override("font", Text.small_font(fs))
 	add_theme_font_size_override("font_size", fs)
 	Controls.styles(theme,"OptionButton",str(name),ui_scale)
+	if paper_transparent:
+		for state: String in ["normal","hover","pressed","hover_pressed","disabled","focus"]:
+			var style: StyleBox = theme.get_stylebox(state,"OptionButton").duplicate()
+			style.paper = Color.TRANSPARENT
+			if state in ["pressed","hover_pressed"]: style.selected = true
+			elif state == "hover": style.ink = Color("376a60")
+			elif state == "disabled": style.ink = Color("8a887d")
+			theme.set_stylebox(state,"OptionButton",style)
 	theme.set_icon("arrow","OptionButton",Controls.icon("chevron-down",ui_scale))
 	theme.set_constant("modulate_arrow","OptionButton",0)
 	theme.set_constant("arrow_margin","OptionButton",roundi(10*ui_scale))
 	get_popup().theme = Controls.popup_theme(str(name),ui_scale,Text.small_font(fs))
+	Controls.scroll_steps(get_popup(),ui_scale)
 	get_popup().prefer_native_menu = false
 
 static func dismiss_all(tree: SceneTree) -> void:

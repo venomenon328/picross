@@ -1,5 +1,23 @@
 # KAT-2: Kategorienkatalog und Prüfzuordnung
 
+**Aktueller KE-/KK-Umfang P2-E-A-V02 / #502:** Der
+[native Stichprobenvertrag](CI_C_NATIVE_GROUPS.md) reduziert die Metadaten-,
+Tooltip-, Resize- und Größen-/Zustandskreuzprodukte ausdrücklich mit akzeptiertem
+Abdeckungsverlust gemäß D02. KE behält zwei Grundansichten, drei Mutationen,
+zwei Pointerziele und fünf echte Resize-Stichproben; KK eine volle enge UI125-Kette
+und zwei kurze Grundansichten. Recovery-/Empty-Write-Fehlerpfade und die übrigen
+neun Modi bleiben unverändert. Frühere Vollmatrizen unten sind historische Belege;
+sie werden nicht als unverändert ausgeführt behauptet. T01/Selbstreview stehen am
+Liefer-PR, unabhängiges R01 und Mergefreigabe bleiben getrennt.
+
+**Aktueller CI-Umfang nach P2-C-V03 / #502:** Die hier gebundenen damaligen
+Liefer-/Bildnachweise bleiben historisch. Der [vollständige Audit](P2_C_V03_AUDIT.md)
+und [aktuelle native Minimalvertrag](CI_C_NATIVE_GROUPS.md) ersetzen ausschließlich
+die wiederkehrenden Prüf-/Bild-/Inventarpflichten. Aktuelle Fach-, Pixel-, Save-,
+Recovery- und Exportprüfungen bleiben; offene persönliche Abnahmen werden dadurch
+nicht erledigt. Kein historisches Bild wird allein wegen dieses Berichts erneut erzeugt.
+
+
 **KU-B / #244, freigegebener Sollstand vom 18.10.2026; Umsetzung offen:**
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt die Bedienleiste und sortiert den
 vollständigen gefilterten Bestand vor der bestehenden Seiteneinteilung. Die
@@ -69,8 +87,9 @@ eine künstliche Testfreigabe. Nichts davon wird ins reguläre Spielerpaket kopi
 [CI-C (#249)](CI_C_NATIVE_GROUPS.md) führt KAT-2 über `--groups catalog`
 unabhängig von der 500er-Route aus. Die [CI-Policy](CI_POLICY.md) und das
 Gruppeninventar bestimmen alle weiterhin verpflichtenden Nachweise.
-Die eigenständig auswählbare Kataloggruppe erhält sämtliche aktuellen
-Eingabe-, Fehler-, Last-, Neustart-, Frame- und Exportaussagen. Katalogarbeit wählt
+Die eigenständig auswählbare Kataloggruppe erhält die im aktuellen
+Stichprobenvertrag ausgewählten Eingabe-, Fehler-, Last-, Neustart-, Frame- und
+Exportaussagen; die KE-/KK-Vollmatrizen entfallen ausdrücklich. Katalogarbeit wählt
 die 500er-Route oder alle Adapter/Piloten danach nur bei tatsächlicher gemeinsamer
 Abhängigkeit. Die gezielte KAT-1-Adapterzuwachsprobe bleibt Teil ihres Vertrags.
 

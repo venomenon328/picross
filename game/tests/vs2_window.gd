@@ -44,8 +44,7 @@ func click(control: Control) -> void:
 func run() -> void:
 	output = OS.get_environment("VS2_PROBE_OUTPUT")
 	check(DisplayServer.get_name() != "headless","actual native OS window")
-	app = load("res://main.tscn").instantiate()
-	root.add_child(app)
+	app = preload("res://tests/book_fixture.gd").attach(root)
 	await process_frame
 	await process_frame
 	check(app.album.visible and not app.work.visible,"regular PCK starts in collection")

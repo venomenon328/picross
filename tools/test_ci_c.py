@@ -12,11 +12,99 @@ from unittest.mock import patch
 
 from ci_scope import classify, apply_event_policy, evaluate, JOBS
 from native_contract import GROUPS, PATHS, SCOPES, checks, coverage
-from native_results import bind_files, read, digest, validate_all, validate_payload
+from native_results import bind_files, read, digest, validate_all, validate_payload, validate_rp6_capture
 from p1_product import parse_args
 from native_runner import requested
+from test_zs2_evidence import selected_log, selected_rows
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def rp6_report(number):
+    """Small synthetic gate input, not substitute native/Save evidence."""
+    labels = [
+        ['fresh pilot hides reveal', 'own incorrect miniature retained', 'mouse undo', 'mouse redo',
+         'album own wrong miniature and no spoiler/name', 'bound regular clue font',
+         'work and critical controls accessible', 'native pixel wrong-block'],
+        ['nine real visible undo clicks remove the wrong block', 'real visible plus click retains normal zoom',
+         'selected partial has no reveal', 'native pixel wrong-corner'],
+        ['album no hidden reveal payload', 'selected partial has no reveal', 'native pixel wrong-corner'],
+        ['capture partial flush', 'native capture restores real mouse completion', 'capture completion slot freshly loaded'],
+        [],
+    ]
+    colors = ['#343f42'] if number == 4 else ['#253342','#637b58','#c89d56','#b55848']
+    size = 20 if number == 4 else 50
+    width, height, scale = (1920,1080,1.0) if number == 4 else (1280,720,1.25)
+    rows = []
+    for i, state in enumerate(('work','detail','album-partial','completion','album-completed')):
+        earned = i >= 3
+        cells = [-1]*(size*size)
+        cells[0] = 1
+        if state == 'work':
+            for y in range(2,5):
+                for x in range(2,5): cells[y*size+x] = 1
+        pixels = {'wrong-block' if i == 0 else 'wrong-corner':colors[0][1:]}
+        if earned:
+            labels[i] += ['selected earned artwork visible and proportional', 'selected earned artwork bound to slot',
+                          'native pixel reveal-center','native pixel reveal-background']
+            pixels = {'reveal-center':'ffffff','reveal-background':'6c9aab' if number == 4 else 'edca78'}
+        rows.append(dict(id=f'{state}-{width}-ui{int(scale*100)}', definition_id=f'T-{number:02d}',
+            slot=f't{number:02d}.json',size=[width,height],ui_scale=scale,completed=earned,
+            reveal=dict(version=1,definition_id=f'T-{number:02d}',name=f'TEST ONLY Muster {number}',
+                        image=f'res://art/fixtures/t{number:02d}.svg') if earned else {},
+            palette=[dict(id=i+1,color=c,symbol=chr(65+i)) for i,c in enumerate(colors)],
+            own_miniature=cells,font='Delight Coffee',layout_valid=True,grid_fit=True,pixels=pixels,
+            assertions=[dict(label=label,passed=True) for label in labels[i]],checks=len(labels[i])))
+    return dict(captures=rows,checks=sum(r['checks'] for r in rows),failures=0,
+                failure_captures=[],pending_failures=[],pending_assertions=[])
+
+
+class RP6CaptureGate(unittest.TestCase):
+    def test_selected_cases_slots_pixels_and_positive_checks_fail_closed(self):
+        for number in (4,6):
+            original = rp6_report(number)
+            validate_rp6_capture(original, number)
+            mutations = [
+                lambda d: d['captures'].pop(),
+                lambda d: d['captures'].append(deepcopy(d['captures'][0])),
+                lambda d: d['captures'].__setitem__(1,deepcopy(d['captures'][0])),
+                lambda d: d['captures'][0].update(slot='t08.json'),
+                lambda d: d['captures'][0].update(definition_id='T-08'),
+                lambda d: d['captures'][0].update(size=[1280,720] if number == 4 else [1920,1080]),
+                lambda d: d['captures'][0].update(ui_scale=2),
+                lambda d: d['captures'][0].update(checks=0),
+                lambda d: d['captures'][0]['assertions'][0].update(passed=False),
+                lambda d: d['captures'][0]['assertions'][0].update(label='unexecuted replacement'),
+                lambda d: d['captures'][1]['own_miniature'].__setitem__(2*(20 if number==4 else 50)+2,1),
+                lambda d: d['captures'][2].update(reveal={'spoiler':True}),
+                lambda d: d['captures'][3]['reveal'].update(definition_id='T-08'),
+                lambda d: d['captures'][3]['pixels'].update(**{'reveal-center':'000000'}),
+                lambda d: d['captures'][4].update(completed=False),
+                lambda d: d.update(checks=d['checks']+1),
+                lambda d: d.update(failures=1),
+                lambda d: d.update(pending_assertions=[dict(label='unobserved',passed=True)]),
+            ]
+            for i, mutate in enumerate(mutations):
+                changed = deepcopy(original); mutate(changed)
+                with self.subTest(number=number,mutation=i), self.assertRaises(ValueError):
+                    validate_rp6_capture(changed, number)
+
+    def test_producer_and_phase_contract_remove_only_two_render_processes(self):
+        from p1_product import run_pilot_visual
+        from native_contract import artifacts
+        expected = {f'rp6-t{n:02d}-{s}' for n in (4,6,8,9) for s in ('partial','finish','read')}
+        expected |= {'rp6-t04-render','rp6-t06-render','rp6-t04-foreign-slot-write','rp6-t04-foreign-slot-control'}
+        self.assertEqual({p for p in checks('adapters') if p.startswith('rp6-')},expected)
+        self.assertEqual([p for p in artifacts('adapters') if p.startswith('renders/')],
+                         ['renders/rp6-t04-renders.json','renders/rp6-t06-renders.json'])
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t); calls=[]; environment={}
+            def phase(name, command, marker):
+                calls.append((name,environment['RP6_INDEX'],environment['P1_TEST_SAVE_ROOT'],marker))
+            run_pilot_visual(root,root,root/'game','godot',environment,phase,'Linux')
+            self.assertEqual(calls,[(f'rp6-t{n:02d}-render',str(index),str(root/'rp6-saves'),'RP6_CAPTURE_OK')
+                                    for n,index in ((4,2),(6,3))])
+            self.assertNotIn('RP6_INDEX',environment)
 
 
 def write(path, value):
@@ -45,7 +133,7 @@ class Selection(unittest.TestCase):
     def test_catalog_and_completion_consumers_select_exact_native_and_browser_groups(self):
         # Expectations follow the active probes, independently of PATHS:
         # RP6/ZA-1 navigate cards and render album/reveal; compact capture renders
-        # the album; KAT-2 KE also instantiates Completion in ke_graphics.gd.
+        # the album; KAT-2 also exercises completed catalog states.
         for path, native, browser in [
             ('game/ui/catalog.gd', ['core','catalog','completion','adapters','graphics','export'],
              ['regular','catalog','completion','persistence']),
@@ -159,8 +247,9 @@ class NativeGate(unittest.TestCase):
                 exit_code=23 if name=='expected-failure' else 0,expected_failure=name=='expected-failure'))
             if name not in ('current-resource-hashes','verified-toolchain-assets','current-atlas-resources'):
                 log=self.root/'core/logs'/(name+'.log');log.parent.mkdir(parents=True,exist_ok=True)
-                log.write_bytes(b'synthetic process output')
-                report['checks'][-1]['log']=dict(file=log.name,retained_bytes=24,original_bytes=24,abbreviated=False,sha256=digest(log))
+                log.write_bytes(selected_log().encode() if name == 'current-drawing-tests' else b'synthetic process output')
+                report['checks'][-1]['log']=dict(file=log.name,retained_bytes=log.stat().st_size,
+                    original_bytes=log.stat().st_size,abbreviated=False,sha256=digest(log))
         report['isolation']=dict(workspace='/tmp/core',project='/tmp/core/game',output='/tmp/output/core',
             profiles={k:'/tmp/core/'+k for k in ('XDG_DATA_HOME','XDG_CONFIG_HOME','XDG_CACHE_HOME')})
         write(self.root/'core/product-report.json',report)
@@ -185,6 +274,56 @@ class NativeGate(unittest.TestCase):
             self.result=good
         for value in ('',None,'0','3'):
             with self.assertRaises(ValueError):validate_all(self.plan,self.root,None,dict(product_attempt=value),'2')
+
+    def test_rehashed_core_log_cannot_hide_missing_or_forged_zs2_trace(self):
+        log = self.root/'core/logs/current-drawing-tests.log'
+        path = self.root/'core/product-report.json'
+        report = read(path)
+        self.check()
+        for mutate in (lambda rows: rows.pop(6),
+                       lambda rows: rows[6].update(id=rows[7]['id']),
+                       lambda rows: rows[6]['data']['effects'][0].__setitem__(1, 1000012)):
+            rows = selected_rows(); mutate(rows)
+            log.write_bytes(selected_log(rows).encode())
+            phase = next(p for p in report['checks'] if p['name'] == 'current-drawing-tests')
+            phase['log'].update(retained_bytes=log.stat().st_size, original_bytes=log.stat().st_size, sha256=digest(log))
+            write(path, report)
+            self.result['files'] = bind_files(self.root, exclude={'native-result.json'})
+            with self.assertRaisesRegex(ValueError, 'ZS2'): self.check()
+
+    def test_adapter_payload_rehash_cannot_hide_missing_or_forged_selected_capture(self):
+        from native_contract import artifacts
+        (self.root/'core').rename(self.root/'adapters')
+        directory=self.root/'adapters'; path=directory/'product-report.json'
+        report=read(path); report.update(native_group='adapters',checks=[])
+        for name in checks('adapters'):
+            negative=name=='rp6-t04-foreign-slot-control'
+            row=dict(name=name,status='success',seconds=.1,exit_code=4 if negative else 0,expected_failure=negative)
+            if name not in ('current-resource-hashes','verified-toolchain-assets','current-atlas-resources','za1-test-only-registration'):
+                log=directory/'logs'/(name+'.log'); log.write_bytes(b'synthetic process output')
+                row['log']=dict(file=log.name,retained_bytes=24,original_bytes=24,abbreviated=False,sha256=digest(log))
+            report['checks'].append(row)
+        for name,scope in report['scope'].items():
+            scope.update(enabled=name=='pilots',status='success' if name=='pilots' else 'not_applicable')
+        selected=directory/'selected'
+        for name in artifacts('adapters'):
+            data=rp6_report(int(name[13:15])) if name.startswith('renders/rp6-') else dict(checks=1,failures=0)
+            write(selected/name,data)
+        self.result.update(groups=['adapters'],expected=coverage(['adapters']),
+                           results=[dict(group='adapters',status='success',exit_code=0)])
+        def refresh():
+            report['selected_evidence']['files']=bind_files(selected)
+            write(path,report)
+            self.result['files']=bind_files(self.root,exclude={'native-result.json'})
+        refresh(); validate_payload(self.result,self.root)
+        original=rp6_report(6); capture=selected/'renders/rp6-t06-renders.json'
+        for mutate in (lambda d:d['captures'][3].update(slot='t08.json'),
+                       lambda d:d['captures'].pop(),
+                       lambda d:d['captures'][4]['pixels'].update(**{'reveal-center':'000000'})):
+            changed=deepcopy(original); mutate(changed); write(capture,changed); refresh()
+            with self.assertRaisesRegex(ValueError,'RP6'):validate_payload(self.result,self.root)
+        capture.unlink(); refresh()
+        with self.assertRaisesRegex(ValueError,'mandatory files'):validate_payload(self.result,self.root)
 
     def test_missing_duplicate_skipped_failed_cancelled_groups_checks_and_artifacts(self):
         original=deepcopy(self.result)
@@ -259,7 +398,7 @@ class NativeGate(unittest.TestCase):
                            results=[dict(group='history',status='success',exit_code=0)])
         self.result['files']=bind_files(self.root,exclude={'native-result.json'})
         validate_payload(self.result,self.root)
-        # Reproduce ci-required's actual sparse file boundary in an isolated
+        # Reproduce the manual diagnostic gate's sparse boundary in an isolated
         # interpreter, so the full development checkout cannot hide imports.
         self.save()
         workflow=(ROOT/'.github/workflows/ci-chromium.yml').read_text()
@@ -278,6 +417,8 @@ class NativeGate(unittest.TestCase):
                      str(checkout/'tools'),str(self.root)]
             positive=subprocess.run(command,cwd=checkout,capture_output=True)
             self.assertEqual(positive.returncode,0,positive.stderr)
+            self.assertFalse((checkout/'tools/book_contract.py').exists())
+            self.assertFalse((checkout/'game/tests/book_integration.gd').exists())
             (checkout/'tools/p14_integration.py').unlink()
             negative=subprocess.run(command,cwd=checkout,capture_output=True)
             self.assertNotEqual(negative.returncode,0)
@@ -345,6 +486,69 @@ class NativeGate(unittest.TestCase):
 
 
 class Isolation(unittest.TestCase):
+    def test_mesa_limit_preserves_timing_oracles_windows_and_callers_environment(self):
+        from p1_product import run_phase
+        from types import SimpleNamespace
+        usage=SimpleNamespace(ru_utime=0,ru_stime=0,ru_maxrss=1,ru_nivcsw=0)
+        resource=SimpleNamespace(RUSAGE_CHILDREN=-1,getrusage=lambda _:usage)
+        environment={**os.environ,'LIBGL_ALWAYS_SOFTWARE':'1','LP_NUM_THREADS':'8',
+                     'GITHUB_TOKEN':'test-only-placeholder'}
+        program='import os; print("THREADS="+os.environ["LP_NUM_THREADS"]); print("TOKEN_PRESENT="+str("GITHUB_TOKEN" in os.environ))'
+        with tempfile.TemporaryDirectory() as t:
+            for host,name,extra,expected in [
+                ('Linux','kat2-regular',[],1),('Linux','kat2-information',[],8),
+                ('Linux','current-drawing-capture',[],8),('Linux','perf-b-native',[],8),
+                ('Linux','book-integration',[],8),('Linux','import',['--headless'],8),
+                ('Windows','kat2-regular',[],8)]:
+                with self.subTest(host=host,name=name),patch('p1_product.platform.system',return_value=host), \
+                     patch.dict(sys.modules,{'resource':resource}):
+                    result=run_phase(name,[sys.executable,'-c',program,*extra],environment,5,Path(t))
+                    self.assertEqual(result['exit_code'],0)
+                    self.assertIn('THREADS='+str(expected),result['output'])
+                    self.assertIn('TOKEN_PRESENT=False',result['output'])
+                    self.assertEqual(environment['LP_NUM_THREADS'],'8')
+                    self.assertEqual(environment['GITHUB_TOKEN'],'test-only-placeholder')
+
+    def test_verified_warm_cache_starts_renderers_without_waiting_for_core(self):
+        import native_runner
+        import threading
+        with tempfile.TemporaryDirectory() as t:
+            started = {g: threading.Event() for g in ('core','catalog','graphics')}
+            finished = set()
+            def process(command, **kwargs):
+                group = command[command.index('--native-group')+1]
+                if group in started:
+                    started[group].set()
+                    for event in started.values(): self.assertTrue(event.wait(5))
+                if group == 'export':
+                    self.assertTrue({'core','catalog','graphics'} <= finished)
+                finished.add(group)
+                return subprocess.CompletedProcess(command,0)
+            args = parse_args(['--cache-dir',t+'/cache','--output-dir',t+'/output',
+                               '--groups','core,catalog,graphics,export'])
+            with patch('native_runner.subprocess.run',side_effect=process), \
+                 patch('native_runner.source_identity',return_value={'github_run_attempt':'1'}), \
+                 patch('native_runner.platform.system',return_value='Linux'), \
+                 patch('native_runner.cached_archives_ready',return_value=True), \
+                 patch('native_results.validate_payload'):
+                self.assertEqual(native_runner.run(args),0)
+            result = read(Path(t)/'output/technical/native-result.json')
+            self.assertTrue(result['cache_preparation']['verified_warm_archives'])
+            self.assertEqual(finished,{'core','catalog','graphics','export'})
+
+    def test_archive_cache_requires_both_original_hashes(self):
+        import native_runner
+        import p1_preflight as tc
+        with tempfile.TemporaryDirectory() as t:
+            cache = Path(t)
+            self.assertFalse(native_runner.cached_archives_ready(cache,'Linux'))
+            for asset in (tc.EDITORS['Linux'],tc.TEMPLATES):
+                (cache/asset.name).write_bytes(b'corrupt archive')
+            self.assertFalse(native_runner.cached_archives_ready(cache,'Linux'))
+            with patch('p1_preflight.verify_sha256') as verify:
+                self.assertTrue(native_runner.cached_archives_ready(cache,'Linux'))
+                self.assertEqual(verify.call_count,2)
+
     def test_linux_parallel_groups_are_primed_isolated_and_awaited(self):
         import native_runner
         import threading
@@ -398,47 +602,77 @@ class Isolation(unittest.TestCase):
 
 
 class Pixels(unittest.TestCase):
-    def test_native_ke_images_are_required_but_not_python_crop_work(self):
-        from native_results import validate_catalog_images
-        entries=[dict(file='frame-card.png',source='frame.png',region=[1,2,7,8])]
-        costs=dict(status='success',input_frames=1,crops=1,entries=entries)
-        summary=dict(image_costs=costs,crops=entries,reports=[dict(captures=[dict(file='frame.png',regions=dict(card=[1,2,7,8]))])])
-        required={'kat2/frame-card.png','kat2/direct.png','kat2/report.json'}
-        validate_catalog_images(costs,summary,required,['kat2/direct.png'])
-        for direct in ([],['kat2/direct.png','kat2/unexpected.png']):
-            with self.assertRaises(ValueError):validate_catalog_images(costs,summary,required,direct)
-        changed=deepcopy(summary);changed['reports'][0]['captures'][0]['regions']['card'][0]=0
-        with self.assertRaises(ValueError):validate_catalog_images(costs,changed,required,['kat2/direct.png'])
+    def test_identical_originals_are_stored_once_and_aliases_fail_closed(self):
+        from native_results import deduplicate_images,original_images
+        with tempfile.TemporaryDirectory() as t:
+            root=Path(t)
+            for name,data in [('a.png',b'original bytes'),('b.png',b'original bytes'),
+                              ('c.png',b'different original'),('report.json',b'{}')]:
+                (root/name).write_bytes(data)
+            original=bind_files(root)
+            aliases=deduplicate_images(root)
+            physical=bind_files(root)
+            self.assertEqual(len(aliases),1)
+            self.assertFalse((root/'b.png').exists())
+            with original_images(root,physical,aliases):
+                self.assertEqual(bind_files(root),original)
+            self.assertFalse((root/'b.png').exists())
+            for changed in [aliases*2,[{**aliases[0],'file':'../escape.png'}],
+                            [{**aliases[0],'file':'a.png'}],[{**aliases[0],'source':'b.png'}],
+                            [{**aliases[0],'sha256':'0'*64}],[{**aliases[0],'file':'false.json'}],
+                            [{**aliases[0],'source':'c.png'}]]:
+                with self.subTest(aliases=changed),self.assertRaises((ValueError,FileExistsError)):
+                    with original_images(root,physical,changed): pass
+                self.assertEqual(bind_files(root),physical)
+            with self.assertRaisesRegex(ValueError,'deliberate'):
+                with original_images(root,physical,aliases): raise ValueError('deliberate reader failure')
+            self.assertEqual(bind_files(root),physical)
+            # Even with self-consistent alias metadata, actual changed bytes fail.
+            (root/'a.png').write_bytes(b'changed source')
+            with self.assertRaises(ValueError):
+                with original_images(root,physical,aliases): pass
 
-    def test_lossless_crop_and_negative_rgba_alpha_dimension_controls(self):
+    def test_hn_samples_replay_all_bands_and_reject_rehashed_pixel_mutations(self):
         try:
             from PIL import Image
         except ImportError:
-            self.skipTest('Image dependency checked in isolated Product job')
-        from native_images import crop_native,require_identical
+            self.skipTest('Isolated Product image dependency')
+        import hashlib
+        from hn_evidence import verify
         with tempfile.TemporaryDirectory() as t:
             root=Path(t)
-            im=Image.new('RGBA',(19,13))
-            im.putdata([(x*7%256,x*17%256,x*31%256,x*13%256) for x in range(19*13)])
-            im.save(root/'native.png')
-            reports=[dict(captures=[dict(file='native.png',regions={'one':[1,2,17,11],'two':[0,0,19,13]})])]
-            crops,costs=crop_native(root,reports,compare=True)
-            self.assertEqual(costs['input_frames'],1);self.assertEqual(costs['crops'],2)
-            self.assertTrue(all(r['identical'] for r in crops))
-            target=root/'native-two.png'
-            for mode in ('rgb','alpha','size'):
-                changed=im.copy()
-                if mode=='size':changed=changed.crop((0,0,18,13))
-                else:
-                    pixel=list(changed.getpixel((0,0)));pixel[0 if mode=='rgb' else 3]^=1;changed.putpixel((0,0),tuple(pixel))
-                changed.save(root/'changed.png')
-                with self.assertRaises(ValueError):require_identical(target,root/'changed.png')
-
-    def test_partial_image_error_is_persisted(self):
-        try: import PIL
-        except ImportError: self.skipTest('Isolated Product image dependency')
-        from native_images import crop_native
-        with tempfile.TemporaryDirectory() as t:
-            root=Path(t)
-            with self.assertRaises(OSError):crop_native(root,[dict(captures=[dict(file='missing.png',regions={})])])
-            self.assertEqual(read(root/'image-costs.json')['status'],'failure')
+            rows=[]
+            for width,height,ui in ((1280,720,125),):
+                for kind,context in [('row',[-1,2]),('column',[2,-1]),('grid',[2,2]),
+                                     ('complete-row',[-1,49]),('drag-row',[-1,2])]:
+                    image=Image.new('RGBA',(50,100),(240,230,220,255))
+                    count=0
+                    for y in range(50):
+                        for x in range(50):
+                            if x==context[0] or y==context[1]:
+                                image.putpixel((x,y),(220,210,200,255));count+=1
+                    name=f'hn-{width}-ui{ui}-{kind}.png'
+                    image.save(root/name)
+                    rows.append(dict(kind='pixels',file=name,context=context,marked=count,unmarked=2500-count,
+                                     evidence='picross-hn-samples-v1',grid_origin=[4,4],board=[10,10,60,60],
+                                     overlay=[0,0,0,0],client=[width,height],ui=ui/100,cell=1,
+                                     source_rgba_sha256=dict(frame='a'*64,baseline='b'*64,
+                                         samples=hashlib.sha256(image.tobytes()).hexdigest())))
+            report=dict(checks=1001,failures=0,records=rows)
+            self.assertEqual(verify(root,report),5)
+            path=root/rows[0]['file'];original=path.read_bytes()
+            # HN requires the original RGBA readback representation.
+            with Image.open(path) as source:source.convert('RGB').save(path)
+            with self.assertRaisesRegex(ValueError,'readback'):verify(root,report)
+            path.write_bytes(original)
+            for pixel,color in [((20,20),(220,210,200,255)),((20,2),(240,230,220,255)),
+                                ((20,20),(240,230,220,0))]:
+                with Image.open(path) as source:changed=source.copy()
+                changed.putpixel(pixel,color);changed.save(path)
+                rows[0]['source_rgba_sha256']['samples']=hashlib.sha256(changed.tobytes()).hexdigest()
+                with self.subTest(pixel=pixel,color=color),self.assertRaisesRegex(ValueError,'band/phantom'):
+                    verify(root,report)
+                path.write_bytes(original)
+            with self.assertRaisesRegex(ValueError,'readback'):verify(root,report)
+            report['records']=rows[:-1]
+            with self.assertRaisesRegex(ValueError,'Incomplete native HN'):verify(root,report)

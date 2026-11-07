@@ -8,14 +8,22 @@ const BookButton = preload("res://ui/book_button.gd")
 const BookChoice = preload("res://ui/book_choice.gd")
 const PaperStyle = preload("res://ui/book_style.gd")
 const Card = preload("res://ui/catalog_card.gd")
+const CatalogGrid = preload("res://ui/catalog_grid.gd")
 const Preference = preload("res://model/catalog_preference.gd")
+const Filter = preload("res://model/catalog_filter.gd")
+const FilterPanel = preload("res://ui/catalog_filters.gd")
 const PAGE_SIZE: int = 24
 signal opened(id: String)
 signal reset_requested(id: String)
 signal repair_requested(id: String)
 signal information_requested
 signal quit_requested
-var category_id: String = ""
+var filters: Dictionary = Filter.DEFAULTS.duplicate()
+var category_id: String:
+	get: return filters.category
+	set(value): filters.category = value
+var filter_button: BookButton
+var filter_panel: FilterPanel
 var page_index: int = 0
 var selected_id: String = ""
 var ui_scale: float = 1.0
@@ -29,9 +37,8 @@ var preference_feedback: Label
 var summary: Label
 var feedback: Label
 var empty_message: Label
-var all_button: Button
 var scroll: ScrollContainer
-var grid: GridContainer
+var grid: CatalogGrid
 var previous_button: BookButton
 var next_button: BookButton
 var page_label: Label
@@ -69,6 +76,16 @@ func _ready() -> void:
 	category_choice.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
 	category_choice.item_selected.connect(func(index: int) -> void: choose_category(str(category_choice.get_item_metadata(index))))
 	top.add_child(category_choice)
+	filter_button = _button("Filter", open_filters)
+	filter_button.action_id = "catalog-filters"
+	filter_button.tooltip_text = "Status, Modus, Schwierigkeit sowie maximale Breite und Höhe filtern"
+	top.add_child(filter_button)
+	filter_panel = FilterPanel.new()
+	add_child(filter_panel)
+	filter_panel.submitted.connect(apply_filters)
+	filter_panel.reset_requested.connect(reset_filters)
+	visibility_changed.connect(func() -> void:
+		if not is_visible_in_tree(): filter_panel.hide())
 	sort_label = _label("Sortieren nach", 16)
 	sort_label.autowrap_mode = TextServer.AUTOWRAP_WORD
 	top.add_child(sort_label)
@@ -97,17 +114,14 @@ func _ready() -> void:
 	empty_message = _label("", 22)
 	empty_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(empty_message)
-	all_button = _button("Alle Rätsel", choose_category.bind(""))
-	all_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	add_child(all_button)
 	scroll = ScrollContainer.new()
 	# Child widths are recomputed on resize; old grid minima must not force the
 	# entire page beyond the client before that container sort can run.
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	add_child(scroll)
-	grid = GridContainer.new()
-	grid.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+	grid = CatalogGrid.new()
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	grid.add_theme_constant_override("h_separation", 16)
 	grid.add_theme_constant_override("v_separation", 14)
 	scroll.add_child(grid)
@@ -164,9 +178,42 @@ func _ids(category: String) -> Array[String]:
 
 func choose_category(id: String) -> void:
 	if category_id == id: return
-	category_id = id
+	var selection: Dictionary = filters.duplicate()
+	selection.category = id
+	_apply_selection(selection)
+
+func open_filters() -> void:
+	filter_panel.open(filters, filter_button.get_global_rect(), ui_scale)
+
+func apply_filters(status: String, mode: String, lower: int, upper: int, width: String, height: String) -> void:
+	var result: Dictionary = Filter.validate(category_id,status,mode,lower,upper,width,height)
+	if result.has("error"):
+		filter_panel.invalid(result.error)
+		return
+	_apply_selection(result.selection)
+	filter_panel.hide()
+
+func reset_filters() -> void:
+	_apply_selection(Filter.DEFAULTS.duplicate())
+	filter_panel.hide()
+
+func _apply_selection(selection: Dictionary) -> void:
+	if filters == selection: return
+	filters = selection
 	page_index = 0
 	_render(0)
+
+func _filter_status(id: String) -> String:
+	if statuses.get(id) == "error": return "error"
+	match progress(items[id]):
+		"Gelöst": return "solved"
+		"Begonnen": return "started"
+	return "new"
+
+func _matches(id: String) -> bool:
+	var item: Session = items[id]
+	var entry: Dictionary = metadata.get(id,{})
+	return Filter.matches(filters,str(entry.get("category_id","")),_filter_status(id),item.definition.palette.size()>1,item.player.width,item.player.height,entry.get("difficulty"))
 
 func choose_sort(criterion: String) -> void:
 	if not criterion in Preference.CRITERIA: return
@@ -232,6 +279,7 @@ func turn_page(delta: int) -> void:
 	_render(0)
 
 func suspend() -> void:
+	filter_panel.hide()
 	# The completion screen may load its own reveal while the catalog is hidden.
 	for picture: Reveal in reveals: picture.payload = {}
 
@@ -240,8 +288,19 @@ func show_error(id: String, message: String) -> void:
 	var index: int = visible_ids.find(id)
 	if index >= 0: _diagnose(choices[index], id)
 	# A blocked quit/switch remains visible even if the active slot is filtered out.
-	feedback.text = (items[id].neutral_title() + ": " if items.has(id) else "") + "Speicherfehler: " + message
-	feedback.show()
+	_update_feedback()
+
+func _update_feedback() -> void:
+	# Filtering never conceals a failed save/flush or an invalid slot. The
+	# reset control neutralizes all axes to expose its original recovery card.
+	var messages: Array[String] = []
+	for id: String in items:
+		if not str(errors.get(id,"")).is_empty():
+			messages.append(items[id].neutral_title() + ": Speicherfehler: " + str(errors[id]))
+		elif statuses.get(id) == "error":
+			messages.append(items[id].neutral_title() + ": Speicherdaten ungültig. Filter ggf. im Filterfenster zurücksetzen.")
+	feedback.text = messages[0] + (" · %d weitere Speicherprobleme" % (messages.size()-1) if messages.size()>1 else "") if not messages.is_empty() else ""
+	feedback.visible = not messages.is_empty()
 
 static func progress(item: Session) -> String:
 	if item.completed: return "Gelöst"
@@ -249,6 +308,7 @@ static func progress(item: Session) -> String:
 	return "Neu"
 
 func _render(position: int) -> void:
+	filter_panel.hide()
 	BookButton.dismiss_all(get_tree())
 	BookChoice.dismiss_all(get_tree())
 	generation += 1
@@ -263,8 +323,15 @@ func _render(position: int) -> void:
 	reset_buttons.clear()
 	repair_buttons.clear()
 	visible_ids.clear()
-	filtered_ids = _ids(category_id)
+	filtered_ids.clear()
+	for id: String in items:
+		if _matches(id): filtered_ids.append(id)
 	filtered_ids.sort_custom(_before)
+	if not selected_id in filtered_ids: selected_id = ""
+	filter_button.disabled = not load_error.is_empty()
+	var active: int = int(not category_id.is_empty()) + int(filters.status != "all") + int(filters.mode != "all") + int(filters.lower>0 or filters.upper>0) + int(filters.width>0 or filters.height>0)
+	filter_button.text = "Filter" if active == 0 else "Filter (%d)" % active
+	_update_feedback()
 	sort_choice.select(Preference.CRITERIA.find(preference.criterion))
 	direction_button.image = load("res://art/book/arrow-up.svg" if preference.direction == "asc" else "res://art/book/arrow-down.svg")
 	direction_button.tooltip_text = _direction_description()
@@ -276,14 +343,13 @@ func _render(position: int) -> void:
 	var solved: int = 0
 	for id: String in filtered_ids:
 		if items[id].completed and statuses[id] != "error": solved += 1
-	summary.text = "%d von %d gelöst" % [solved, filtered_ids.size()]
+	summary.text = "%d Treffer · %d von %d gelöst" % [filtered_ids.size(), solved, filtered_ids.size()]
 	summary.visible = load_error.is_empty()
 	for index: int in range(category_choice.item_count):
 		if str(category_choice.get_item_metadata(index)) == category_id: category_choice.select(index)
 	category_choice.tooltip_text = category_choice.text
-	empty_message.text = "Katalog konnte nicht geladen werden.\n" + load_error if not load_error.is_empty() else "Hier gibt es noch keine Rätsel"
+	empty_message.text = "Katalog konnte nicht geladen werden.\n" + load_error if not load_error.is_empty() else "Hier gibt es noch keine Rätsel" if items.is_empty() else "Keine Rätsel passen zu diesen Filtern."
 	empty_message.visible = not load_error.is_empty() or filtered_ids.is_empty()
-	all_button.visible = load_error.is_empty() and filtered_ids.is_empty() and not category_id.is_empty()
 	for id: String in filtered_ids.slice(page_index * PAGE_SIZE, (page_index + 1) * PAGE_SIZE):
 		_add_card(id)
 	page_label.text = "Seite %d von %d" % [page_index + 1, page_count]
@@ -372,27 +438,30 @@ func _add_card(id: String) -> void:
 		repair_buttons[id] = repair
 	_diagnose(card,id)
 
+func _available_card_width(half: ScrollContainer) -> float:
+	# Keep the same safe band whether the scrollbar is visible or not.
+	return maxf(1, half.size.x - half.get_v_scroll_bar().get_combined_minimum_size().x - 2*ui_scale)
+
+func _shared_card_width() -> float:
+	return _available_card_width(scroll)
+
 func _layout_cards() -> void:
 	if grid == null: return
+	if filter_panel != null and filter_panel.visible and filter_panel.ui_scale != ui_scale: filter_panel.hide()
 	var gap: int = roundi(12 * ui_scale)
 	grid.add_theme_constant_override("h_separation", gap)
 	grid.add_theme_constant_override("v_separation", gap)
 	# Reserve the actual scrollbar width even before the first container sort.
-	var available: float = maxf(1, scroll.size.x - scroll.get_v_scroll_bar().get_combined_minimum_size().x - 2*ui_scale)
+	var available: float = _shared_card_width()
 	# KU-A: choose columns from the complete measured single-line metadata.
 	var minimum_width: float = choices[0].minimum_card_width(ui_scale) if not choices.is_empty() else 280*ui_scale
-	var capacity: int = maxi(1, floori((available + gap) / (minimum_width + gap)))
-	grid.columns = maxi(1, mini(capacity, choices.size()))
-	var card_width: float = minf(minimum_width+16*ui_scale, floorf((available-(capacity-1)*gap)/capacity))
-	for node: Node in find_children("*", "Label", true, false):
-		if node.has_meta("base_font"): node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
-	for node: Node in find_children("*", "Button", true, false):
-		if node is BookButton:
-			node.ui_scale = ui_scale
-			if node.content_surface: continue
-			node.add_theme_font_override("font", Card.UiText.small_font(Card.UiText.small_size(ui_scale)))
-			node.add_theme_font_size_override("font_size", Card.UiText.small_size(ui_scale))
-			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.text.is_empty() else Vector2(maxf(44*ui_scale,Card.UiText.width(node.get_theme_font("font"),node.text,Card.UiText.small_size(ui_scale))+(56 if node.image != null else 16)*ui_scale),44*ui_scale)
+	var capacity: int = clampi(floori((available + gap) / (minimum_width + gap)), 1, 3)
+	grid.arrange(capacity, _available_card_width(scroll))
+	var card_width: float = maxf(minimum_width, minf(minimum_width+8*ui_scale, floorf((available-(capacity-1)*gap)/capacity)))
+	_style_controls(self)
+	# The filter opener reserves 16 logical pixels on each side of its text,
+	# including the inward HZ focus/pressed contour. Other buttons keep theirs.
+	filter_button.custom_minimum_size.x = maxf(44*ui_scale,Card.UiText.width(filter_button.get_theme_font("font"),filter_button.text,Card.UiText.small_size(ui_scale))+32*ui_scale)
 	for card: Card in choices:
 		card.ui_scale = ui_scale
 		for state: String in ["normal","hover","pressed","disabled","focus"]:
@@ -423,6 +492,17 @@ func _layout_cards() -> void:
 			var full: String = Card.UiText.wrapped(text, int(tooltip_layout.x), tooltip_layout.y)
 			category_choice.get_popup().set_item_tooltip(index, full)
 	category_choice.tooltip_text = category_choice.get_popup().get_item_tooltip(category_choice.selected) if category_choice.selected >= 0 else ""
+
+func _style_controls(parent: Node) -> void:
+	for node: Node in parent.find_children("*", "Label", true, false):
+		if node.has_meta("base_font"): node.add_theme_font_size_override("font_size", roundi(float(node.get_meta("base_font")) * ui_scale))
+	for node: Node in parent.find_children("*", "Button", true, false):
+		if node is BookButton:
+			node.ui_scale = ui_scale
+			if node.content_surface: continue
+			node.add_theme_font_override("font", Card.UiText.small_font(Card.UiText.small_size(ui_scale)))
+			node.add_theme_font_size_override("font_size", Card.UiText.small_size(ui_scale))
+			node.custom_minimum_size = Vector2(44,44)*ui_scale if node.text.is_empty() else Vector2(maxf(44*ui_scale,Card.UiText.width(node.get_theme_font("font"),node.text,Card.UiText.small_size(ui_scale))+(56 if node.image != null else 16)*ui_scale),44*ui_scale)
 
 func ensure_control_visible(control: Control) -> void:
 	scroll.ensure_control_visible(control)

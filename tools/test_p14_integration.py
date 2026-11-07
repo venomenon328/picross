@@ -19,6 +19,8 @@ def evidence_fixture(directory):
         if action['kind'] == 'zoom': view['zoom'] = 22
         row = dict(action=action, changes=changes, **oracle.state(), view=dict(view),
                    actual_cell=view['zoom'], fit_ceiling=24, pid=1 if action['process'] == 'writer' else 2, elapsed_us=1)
+        row['recent'] = {} if action['number'] < 3 else dict(format='picross-recent-puzzle-v1', id='T-06', revision=2)
+        row['recent_id'] = row['recent'].get('id', '')
         rows.append(row)
         if action['kind'] == 'quit':
             (directory/(action['process']+'-save.json')).write_text(json.dumps({**oracle.state(),'view':dict(view)}), encoding='utf-8')
@@ -69,6 +71,15 @@ class IntegrationContractTests(unittest.TestCase):
                 path.write_bytes(original)
             with self.assertRaisesRegex(AssertionError,'complete fixed'):
                 validate_trace(build_plan()[:-1],directory/'trace.jsonl')
+            path = directory/'trace.jsonl'
+            rows = [json.loads(line) for line in path.read_text().splitlines()]
+            for field, value in [('recent', {}), ('recent_id', 'foreign')]:
+                original = rows[14][field]
+                rows[14][field] = value
+                path.write_text(''.join(json.dumps(row)+'\n' for row in rows), encoding='utf-8')
+                with self.assertRaisesRegex(AssertionError, 'recent'):
+                    validate_trace(build_plan(), path)
+                rows[14][field] = original
 
 
 if __name__ == '__main__':

@@ -1,5 +1,12 @@
 # RI-B: Getrenntes Selbstreview
 
+Dieser historische Bericht bindet die Lieferung vom 30.10.2026 bis
+`8a6af2b0601316cffc20314c1f470b478af43a35`, einschließlich Revision 27 und
+damaliger CI. Die Nacharbeit RI-B-N01 / RI-B-R01-B-01 integriert spätere
+main-Regeln; ihre aktuellen Nachweise und der getrennte Selbstreview stehen
+im [PR #494](https://github.com/venomenon328/picross/pull/494). Alte Messungen
+und Urteile sind kein Pass des neuen Heads.
+
 Geprüfter Werkzeug-/Testhead: `a46d7c9945d2f06af7a5943ca4c9504a829fc59f`.
 Basis: `864c4e6289df15ea7b3522b850542ece3489160f` (main/RI-A).
 Nachfolgende T01-/Statusdokumentation und Testhakenkorrektur verändern keine
