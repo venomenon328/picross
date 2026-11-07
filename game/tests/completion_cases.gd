@@ -30,30 +30,31 @@ static func run(p: SceneTree) -> Array:
 		if context[0] == 5:
 			app.session.definition.reveal.name = "TEST ONLY Ein besonders langer deutscher Motivname mit mehreren Wörtern für den sicheren Zeilenumbruch"
 		await p.frames()
-		p.check(not app.completion_grid.is_visible_in_tree() and app.reveal_view.payload.is_empty(),"AR unsolved spoiler boundary")
+		p.check(not app.completion_switch.is_visible_in_tree() and app.reveal_view.payload.is_empty(),"AR unsolved spoiler boundary")
 		p.finish_stroke(last)
 		var view: Control = app.reveal_view
-		p.check(not app.completion_grid.visible and app.completion_grid.disabled,"AR switch unavailable during reveal")
+		p.check(not app.completion_switch.visible and app.completion_switch.disabled,"AR switch unavailable during reveal")
 		app._select_completion(true)
 		p.check(not view.grid_selected,"AR early selection rejected")
 		var initial_area: Rect2 = view.area
-		var gated: bool = not app.completion_grid.visible and app.completion_grid.disabled and not view.grid_selected
+		var gated: bool = not app.completion_switch.visible and app.completion_switch.disabled and not view.grid_selected
 		view.finish()
 		await p.frames()
-		p.check(not view.grid_selected and app.completion_image.selected and app.completion_grid.visible,"AR stable entry starts image")
+		p.check(not view.grid_selected and not app.completion_switch.button_pressed and app.completion_switch.visible,"AR stable entry starts image")
 		p.check(view.area == initial_area,"AR switch and caption space reserved from start")
 		var before: String = snapshot(app)
 		var bytes: Dictionary = p.save_bytes()
 		var row := {"window":context.slice(1),"width":app.session.player.width,"height":app.session.player.height,
 			"palette":app.session.definition.palette.duplicate(true),"cells":app.session.player.cells.duplicate(),"samples":[],
-			"gated":gated,"initial_image":not view.grid_selected,"selections":[]}
+			"gated":gated,"initial_image":not view.grid_selected,"selections":[],"slider_positions":[]}
 		var original_dir: String = OS.get_environment("AR_REVIEW_DIR")
 		var original_case: bool = result.size() < 3 and not original_dir.is_empty()
 		for selected: bool in [false,true,false,true]:
-			p.click(app.completion_grid if selected else app.completion_image)
+			if view.grid_selected != selected: p.click(app.completion_switch)
 			await p.frames()
 			p.check(view.grid_selected == selected and not view.active and not view.is_processing(),"AR real pointer switch without replay")
 			row.selections.append(view.grid_selected)
+			row.slider_positions.append(app.completion_switch.slider_rect().get_center().x/app.ui_scale)
 			p.check(view.stable_ink.visible == selected and view.art.visible != selected and not app.work.visible,"AR passive layer only")
 			p.check(view.area == initial_area,"AR switching preserves common layout")
 			if original_case and not row.has("grid_file" if selected else "image_file"):
@@ -65,10 +66,13 @@ static func run(p: SceneTree) -> Array:
 		var step: float = rect.size.x/app.session.player.width
 		p.check(view.area.grow(0.01).encloses(rect) and rect.get_center().is_equal_approx(view.area.get_center()),"AR full centered proportional raster")
 		p.check(is_equal_approx(rect.size.aspect(),float(app.session.player.width)/app.session.player.height),"AR original square cells")
-		for item: Control in [app.completion_image,app.completion_grid,app.completion_title,app.completion_reset]:
+		for item: Control in [app.completion_switch,app.completion_title,app.completion_reset]:
 			p.check(app.surface.material_rect().encloses(item.get_rect()),"AR controls within safe paper")
-		p.check(rect.end.y < app.completion_image.position.y and app.completion_grid.get_rect().end.y < app.completion_title.position.y,"AR separate image switch caption rows")
-		p.check(app.completion_grid.size.y == 44*app.ui_scale and app.completion_grid.size.x >= 44*app.ui_scale,"AR 44/55 switch target")
+		p.check(rect.end.y < app.completion_switch.position.y and app.completion_switch.get_rect().end.y < app.completion_title.position.y,"AR separate image switch caption rows")
+		p.check(app.completion_switch.size.y == 44*app.ui_scale and app.completion_switch.size.x >= 44*app.ui_scale,"AR 44/55 switch target")
+		p.check(app.ending.get_children().filter(func(node: Node) -> bool: return node is Button).size() == 2 and app.completion_switch.toggle_mode,"AR exactly one toggle plus reset")
+		row.control = "single-rectangular-toggle"
+		row.hatch_count = app.completion_switch.hatch_strokes().size()
 		var commands: Array = view.stable_ink.commands
 		p.check(commands.size() == app.session.player.cells.filter(func(v: int) -> bool: return v>0).size(),"AR only confirmed fills, no X")
 		p.check(view.strokes.size() == app.session.player.width+app.session.player.height+2,"AR all normal five outer lines")
@@ -82,6 +86,17 @@ static func run(p: SceneTree) -> Array:
 			p.check(command[2] == Atlas.region(Atlas.level(step),Atlas.variant(str(app.session.definition.id),int(app.session.definition.revision),Vector2i(i%app.session.player.width,i/app.session.player.width)),23),"AR original stable atlas variant")
 		await RenderingServer.frame_post_draw
 		var rendered: Image = p.surface.get_texture().get_image()
+		var track: Rect2 = app.completion_switch.track_rect()
+		track.position += app.completion_switch.global_position
+		var dark := 0
+		var light := 0
+		for y: int in range(ceili(track.position.y+5*app.ui_scale),floori(track.end.y-5*app.ui_scale)):
+			for x: int in range(ceili(track.position.x+6*app.ui_scale),floori(track.position.x+35*app.ui_scale)):
+				var pixel: Color = rendered.get_pixel(x,y)
+				if pixel.get_luminance() < 0.72: dark += 1
+				if pixel.get_luminance() > 0.80: light += 1
+		p.check(dark > 0 and light > 0,"AR dark toggle rail contains pencil and open paper, no solid fill")
+		row.hatch_pixels = [dark,light]
 		view.stable_ink.hide()
 		view.stable_lines.hide()
 		await RenderingServer.frame_post_draw
@@ -149,7 +164,7 @@ static func run(p: SceneTree) -> Array:
 		app.show_album()
 		p.check(view.solved.is_empty() and view.stable_ink.commands.is_empty() and view.strokes.is_empty() and view.stable_ink.material == null,"AR leave releases stable data")
 		app.select_puzzle(context[0])
-		p.check(not view.grid_selected and app.completion_image.selected,"AR catalog reentry image")
+		p.check(not view.grid_selected and not app.completion_switch.button_pressed,"AR catalog reentry image")
 		app._select_completion(true)
 		app.show_information("settings")
 		app.return_to_work()

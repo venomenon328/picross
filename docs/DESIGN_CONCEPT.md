@@ -369,8 +369,10 @@ Vorgeschlagen ist eine Unterscheidung zwischen vollständiger Sammlung und zusä
 ### 4.3 Motivtreue, detailliertere Enthüllung
 
 AR-A / #486 erweitert ausschließlich den stabilen Abschluss um **Bild | Raster**.
-Der Schalter ist erst nach der Enthüllung bedienbar; sein Platz ist von Anfang an
-reserviert. Jeder neue Besuch beginnt mit Bild. Refresh, Resize, UI-Skalierung,
+Ein einzelnes rechteckiges On-Off-Control trägt Bild links und Raster rechts;
+sein heller Schieber kennzeichnet die aktive Seite. Dunkle Bereiche werden
+schraffiert statt deckend gefüllt, Konturen bleiben handgezeichnet. Der Schalter
+ist erst nach der Enthüllung bedienbar; sein Platz ist von Anfang an reserviert. Jeder neue Besuch beginnt mit Bild. Refresh, Resize, UI-Skalierung,
 Fokusverlust und Resetabbruch erhalten die Auswahl innerhalb desselben Besuchs.
 Das komplette schreibgeschützte Raster zeigt bestätigte Spielerfüllungen in der
 Originalpalette mit statischem Atlasstift, normalen und Fünferlinien sowie Außenrand.

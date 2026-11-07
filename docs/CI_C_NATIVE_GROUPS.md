@@ -3,7 +3,8 @@
 ## AR-A / #486: stabile Abschlussumschaltung
 
 Im vorhandenen EA-native-Prozess prüfen fünf synthetische Kontexte den erst
-stabil freigegebenen Bild-/Rasterwechsel, Originalpalette und Atlasvarianten,
+stabil freigegebenen Bild-/Rasterwechsel mit genau einem rechteckigen
+Schiebercontrol und nativer Handschraffur, Originalpalette und Atlasvarianten,
 Kleindetailstufe, vollständige Linien, proportionale Bounds, reale Viewportklicks,
 Refresh/Resize/UI/Fokus, Resetabbruch und Katalog-/Informationswiedereintritt.
 Session/History/Ansicht und sämtliche isolierten Slotbytes bleiben unverändert.

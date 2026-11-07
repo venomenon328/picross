@@ -5,7 +5,7 @@
   "modules": [
     "native.completion"
   ],
-  "purpose": "AR-A: stabile Bild/Raster-Abschlussumschaltung; vorhandener EA-Prozess plus wenige synthetische Zustands-/Pixel-/Geometriefälle und unabhängiger Reader. Regulärer Windows-Spieler im Kern.",
+  "purpose": "AR-A: stabile Bild/Raster-Abschlussumschaltung; vorhandener EA-Prozess plus wenige synthetische Zustands-/Pixel-/Geometriefälle und unabhängiger Reader. Regulärer Windows-Spieler im Kern. Eigentümerpräzisierung 07.11.: genau ein rechteckiger On-Off-Schalter mit Bild links, Raster rechts, hellem Schieber und schraffierter dunkler Spur; keine zwei Buttons.",
   "omitted": "Keine allgemeinen Atlas-/Boardrenderer-, Save-, Katalog-, Adapter- oder Produktionsänderungen: native.core/history/catalog/adapters/export/graphics, tools-Vollsuite, production.*, preflight und delivery bewusst nicht gewählt. Gemeinsame Zeichen-/Materialhelfer nur wiederverwendet. Kein Chromium. Persönliche Windows-Mausprobe AR-A-M01 bleibt beim Eigentümer.",
   "test_changes": [
     {

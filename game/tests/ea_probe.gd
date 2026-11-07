@@ -79,7 +79,7 @@ func run() -> void:
 		await frames()
 		check(app.session.completed, "EA actual second process loads completed slot")
 		final_checks()
-		check(not app.reveal_view.grid_selected and app.completion_image.selected and app.completion_grid.visible, "AR real process restart starts at image")
+		check(not app.reveal_view.grid_selected and not app.completion_switch.button_pressed and app.completion_switch.visible, "AR real process restart starts at image")
 	else:
 		for context: Array in [[1280,720,1.25]]:
 			surface.size = Vector2i(context[0],context[1])
@@ -179,7 +179,7 @@ func run() -> void:
 		check(app.session.completed and app.status_label.visible and not app.save_error.is_empty(), "EA final-save failure remains explicit")
 		app.reveal_view.finish()
 		var failed_bytes := save_bytes()
-		click(app.completion_grid)
+		click(app.completion_switch)
 		await frames()
 		check(app.reveal_view.grid_selected and app.status_label.visible and not app.save_error.is_empty() and save_bytes() == failed_bytes, "AR grid switch preserves visible save error and all bytes")
 		app.show_album()
