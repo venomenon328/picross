@@ -1,0 +1,122 @@
+[
+  {
+    "check": "final EXE 1920/ui100 starts catalog",
+    "passed": true
+  },
+  {
+    "check": "catalog has no extra reset button and errors live on right page",
+    "passed": true
+  },
+  {
+    "check": "both native scroll halves move independently",
+    "passed": true
+  },
+  {
+    "check": "natural information return preserves both scroll positions",
+    "passed": true
+  },
+  {
+    "check": "OS mouse opens exact right-half ID",
+    "passed": true
+  },
+  {
+    "check": "natural work return restores both offsets",
+    "passed": true
+  },
+  {
+    "check": "category change filters whole catalog and resets both offsets",
+    "passed": true
+  },
+  {
+    "check": "filtered result has real second spread",
+    "passed": true
+  },
+  {
+    "check": "final EXE tight Windows client and UI125",
+    "passed": true
+  },
+  {
+    "check": "status and mode share aligned control column",
+    "passed": true
+  },
+  {
+    "check": "difficulty from/to share one row",
+    "passed": true
+  },
+  {
+    "check": "difficulty choices use names without level prefixes",
+    "passed": true
+  },
+  {
+    "check": "dimension fields end at matching difficulty dropdown right edges",
+    "passed": true
+  },
+  {
+    "check": "two compact size fields share row",
+    "passed": true
+  },
+  {
+    "check": "OS input capped at two digits with 99 supported",
+    "passed": true
+  },
+  {
+    "check": "three equal buttons in one row",
+    "passed": true
+  },
+  {
+    "check": "tight client panel follows content height",
+    "passed": true
+  },
+  {
+    "check": "independent maximum dimensions accept 99",
+    "passed": true
+  },
+  {
+    "check": "max L4 limits minimum to L1-L4 plus unbounded",
+    "passed": true
+  },
+  {
+    "check": "min L4 disables maxima below L4",
+    "passed": true
+  },
+  {
+    "check": "invalid width visible and last valid selection retained",
+    "passed": true
+  },
+  {
+    "check": "all five axes, clear no-hits and independent invalid save warning",
+    "passed": true
+  },
+  {
+    "check": "filter reset neutralizes all axes",
+    "passed": true
+  },
+  {
+    "check": "specific invalid slot remains visible under All status and matching metadata",
+    "passed": true
+  },
+  {
+    "check": "invalid-slot reset is reachable and cancels normally",
+    "passed": true
+  },
+  {
+    "check": "real UI100 to125 to100 menu roundtrip",
+    "passed": true
+  },
+  {
+    "check": "final EXE at 2560/ui100 through real display controls",
+    "passed": true
+  },
+  {
+    "check": "1440p panel has compact content height",
+    "passed": true
+  },
+  {
+    "check": "reset also reopens full endpoint choices",
+    "passed": true
+  },
+  {
+    "check": "recovered slot retains reachable confirmation and cancel",
+    "passed": true
+  }
+]

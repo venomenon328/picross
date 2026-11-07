@@ -1,0 +1,1421 @@
+{
+  "album": true,
+  "back": [
+    100.0,
+    110.0,
+    325.0,
+    55.0
+  ],
+  "barrier": false,
+  "book_state": 0,
+  "buttons": {
+    "@Button@11984": [
+      171.186553955078,
+      210.143280029297,
+      355.0,
+      429.0
+    ],
+    "@Button@12006": [
+      171.186553955078,
+      654.143310546875,
+      355.0,
+      429.0
+    ],
+    "@Button@12027": [
+      171.186553955078,
+      1098.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12048": [
+      171.186553955078,
+      1542.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12069": [
+      171.186553955078,
+      1986.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12090": [
+      171.186553955078,
+      2430.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12111": [
+      171.186553955078,
+      2874.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12132": [
+      171.186553955078,
+      3318.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12153": [
+      171.186553955078,
+      3762.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12174": [
+      171.186553955078,
+      4206.14306640625,
+      355.0,
+      429.0
+    ],
+    "@Button@12195": [
+      171.186553955078,
+      4650.14306640625,
+      355.0,
+      429.0
+    ],
+    "@Button@12216": [
+      171.186553955078,
+      5094.14306640625,
+      355.0,
+      429.0
+    ],
+    "@Button@12237": [
+      741.186584472656,
+      213.143280029297,
+      355.0,
+      429.0
+    ],
+    "@Button@12258": [
+      741.186584472656,
+      657.143310546875,
+      355.0,
+      429.0
+    ],
+    "@Button@12279": [
+      741.186584472656,
+      1101.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12300": [
+      741.186584472656,
+      1545.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12321": [
+      741.186584472656,
+      1989.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12342": [
+      741.186584472656,
+      2433.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12363": [
+      741.186584472656,
+      2877.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12384": [
+      741.186584472656,
+      3321.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12405": [
+      741.186584472656,
+      3765.14331054688,
+      355.0,
+      429.0
+    ],
+    "@Button@12426": [
+      741.186584472656,
+      4209.14306640625,
+      355.0,
+      429.0
+    ],
+    "@Button@12447": [
+      741.186584472656,
+      4653.14306640625,
+      355.0,
+      429.0
+    ],
+    "@Button@12468": [
+      741.186584472656,
+      5097.14306640625,
+      355.0,
+      429.0
+    ],
+    "Alle": [
+      746.5,
+      295.5,
+      500.0,
+      55.0
+    ],
+    "Backup übernehmen": [
+      184.186553955078,
+      440.143280029297,
+      329.0,
+      55.0
+    ],
+    "Beenden": [
+      937.186584472656,
+      556.143310546875,
+      90.0,
+      55.0
+    ],
+    "Einstellungen / Info": [
+      694.186584472656,
+      556.143310546875,
+      177.0,
+      55.0
+    ],
+    "Filter (2)": [
+      1043.1865234375,
+      145.143280029297,
+      111.0,
+      58.0
+    ],
+    "Hilfe": [
+      875.186584472656,
+      556.143310546875,
+      58.0,
+      55.0
+    ],
+    "Kategorie": [
+      783.186584472656,
+      145.143280029297,
+      197.0,
+      58.0
+    ],
+    "Ohne Grenze": [
+      812.5,
+      360.5,
+      184.0,
+      55.0
+    ],
+    "Schließen": [
+      1039.5,
+      490.5,
+      206.0,
+      55.0
+    ],
+    "Schwer": [
+      1062.5,
+      360.5,
+      184.0,
+      55.0
+    ],
+    "TEST ONLY Zusatzkategorie mit einer besonders langen deutschen Bezeichnung zur lesbaren Katalogauswahl (48)": [
+      215.186553955078,
+      145.143280029297,
+      368.0,
+      55.0
+    ],
+    "Weiter": [
+      1029.1865234375,
+      615.143310546875,
+      125.0,
+      55.0
+    ],
+    "Zurück": [
+      125.186561584473,
+      615.143310546875,
+      129.0,
+      55.0
+    ],
+    "Zurücksetzen": [
+      823.5,
+      490.5,
+      206.0,
+      55.0
+    ],
+    "catalog-direction": [
+      984.186584472656,
+      145.143280029297,
+      55.0,
+      58.0
+    ],
+    "reset-pz-test-kat2-000": [
+      458.186553955078,
+      223.143280029297,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-002": [
+      458.186553955078,
+      1111.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-004": [
+      458.186553955078,
+      1999.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-005": [
+      458.186553955078,
+      2443.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-006": [
+      458.186553955078,
+      2887.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-008": [
+      458.186553955078,
+      3775.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-010": [
+      458.186553955078,
+      4663.14306640625,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-012": [
+      1028.1865234375,
+      226.143280029297,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-014": [
+      1028.1865234375,
+      1114.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-016": [
+      1028.1865234375,
+      2002.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-018": [
+      1028.1865234375,
+      2890.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-020": [
+      1028.1865234375,
+      3778.14331054688,
+      55.0,
+      55.0
+    ],
+    "reset-pz-test-kat2-022": [
+      1028.1865234375,
+      4666.14306640625,
+      55.0,
+      55.0
+    ],
+    "Übernehmen": [
+      607.5,
+      490.5,
+      206.0,
+      55.0
+    ]
+  },
+  "capture": false,
+  "cards": [
+    {
+      "box": [
+        171.186553955078,
+        210.143280029297,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "Backup geladen. Zum Speichern bitte bewusst übernehmen.",
+      "id": "pz-test-kat2-000",
+      "repair": [
+        184.186553955078,
+        440.143280029297,
+        329.0,
+        55.0
+      ],
+      "reset": [
+        458.186553955078,
+        223.143280029297,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        171.186553955078,
+        654.143310546875,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-001",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        667.143310546875,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        171.186553955078,
+        1098.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-002",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        1111.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        171.186553955078,
+        1542.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-003",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        1555.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        171.186553955078,
+        1986.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-004",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        1999.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        171.186553955078,
+        2430.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "Speicherdaten ungültig. Öffnen gesperrt; bitte zurücksetzen.",
+      "id": "pz-test-kat2-005",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        2443.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Ungültig"
+    },
+    {
+      "box": [
+        171.186553955078,
+        2874.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-006",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        2887.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        171.186553955078,
+        3318.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-007",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        3331.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        171.186553955078,
+        3762.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-008",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        3775.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        171.186553955078,
+        4206.14306640625,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-009",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        4219.14306640625,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        171.186553955078,
+        4650.14306640625,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-010",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        4663.14306640625,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        171.186553955078,
+        5094.14306640625,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-011",
+      "repair": [],
+      "reset": [
+        458.186553955078,
+        5107.14306640625,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        741.186584472656,
+        213.143280029297,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-012",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        226.143280029297,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        741.186584472656,
+        657.143310546875,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-013",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        670.143310546875,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        741.186584472656,
+        1101.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-014",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        1114.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        741.186584472656,
+        1545.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-015",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        1558.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        741.186584472656,
+        1989.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-016",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        2002.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        741.186584472656,
+        2433.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-017",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        2446.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        741.186584472656,
+        2877.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-018",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        2890.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        741.186584472656,
+        3321.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-019",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        3334.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        741.186584472656,
+        3765.14331054688,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-020",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        3778.14331054688,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        741.186584472656,
+        4209.14306640625,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-021",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        4222.14306640625,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    },
+    {
+      "box": [
+        741.186584472656,
+        4653.14306640625,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-022",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        4666.14306640625,
+        55.0,
+        55.0
+      ],
+      "reset_visible": true,
+      "status": "Gelöst"
+    },
+    {
+      "box": [
+        741.186584472656,
+        5097.14306640625,
+        355.0,
+        429.0
+      ],
+      "diagnosis": "",
+      "id": "pz-test-kat2-023",
+      "repair": [],
+      "reset": [
+        1028.1865234375,
+        5110.14306640625,
+        55.0,
+        55.0
+      ],
+      "reset_visible": false,
+      "status": "Neu"
+    }
+  ],
+  "catalog_return": [
+    4.0,
+    70.0,
+    55.0,
+    55.0
+  ],
+  "category": {
+    "box": [
+      215.186553955078,
+      145.143280029297,
+      368.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Alle Rätsel (54)"
+      },
+      {
+        "disabled": false,
+        "text": "Obst & Nüsse (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Gemüse, Pilze & Kräuter (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Gerichte & Herzhaftes (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Süßes & Getränke (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Säugetiere (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Vögel (6)"
+      },
+      {
+        "disabled": false,
+        "text": "Wasserwelt (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Insekten & kleine Tiere (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Blumen & Pflanzen (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Landschaften & Natur (0)"
+      },
+      {
+        "disabled": false,
+        "text": "TEST ONLY Zusatzkategorie mit einer besonders langen deutschen Bezeichnung zur lesbaren Katalogauswahl (48)"
+      },
+      {
+        "disabled": false,
+        "text": "Fahrzeuge & Verkehr (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Technik & Erfindungen (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Werkzeuge & Handwerk (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Haushalt & Alltag (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Kleidung & Accessoires (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Musik & Bühne (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Sport & Spiele (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Menschen & Berufe (0)"
+      },
+      {
+        "disabled": false,
+        "text": "Mythen & Fantasie (0)"
+      }
+    ],
+    "position": [
+      245,
+      214
+    ],
+    "selected": 11,
+    "size": [
+      995,
+      720
+    ],
+    "visible": false
+  },
+  "client": [
+    1280,
+    720
+  ],
+  "display_accept": [
+    315.0,
+    363.0,
+    650.0,
+    55.0
+  ],
+  "display_mode": {
+    "box": [
+      466.5,
+      262.5,
+      600.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Fenster"
+      },
+      {
+        "disabled": false,
+        "text": "Rahmenloses Fenster"
+      },
+      {
+        "disabled": false,
+        "text": "Exklusives Vollbild"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "selected": 0,
+    "size": [
+      100,
+      100
+    ],
+    "visible": false
+  },
+  "display_preview": false,
+  "display_size": {
+    "box": [
+      466.5,
+      330.5,
+      532.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "1280 × 720"
+      },
+      {
+        "disabled": false,
+        "text": "1366 × 768"
+      },
+      {
+        "disabled": false,
+        "text": "1600 × 900"
+      },
+      {
+        "disabled": false,
+        "text": "1920 × 1080"
+      },
+      {
+        "disabled": false,
+        "text": "1920 × 1200"
+      },
+      {
+        "disabled": true,
+        "text": "2560 × 1440"
+      },
+      {
+        "disabled": true,
+        "text": "2560 × 1600"
+      },
+      {
+        "disabled": true,
+        "text": "3840 × 2160"
+      }
+    ],
+    "position": [
+      665,
+      510
+    ],
+    "selected": 0,
+    "size": [
+      532,
+      367
+    ],
+    "visible": false
+  },
+  "dpi": 96,
+  "empty": "Keine Rätsel passen zu diesen Filtern.",
+  "empty_box": [
+    694.186584472656,
+    145.143280029297,
+    6.0,
+    1390.0
+  ],
+  "empty_visible": false,
+  "feedback": "Blatt 06 · 20 × 20: Speicherdaten ungültig. Filter ggf. im Filterfenster zurücksetzen.",
+  "feedback_box": [
+    702.798522949219,
+    79.3656616210938,
+    444.0,
+    56.0
+  ],
+  "feedback_visible": true,
+  "filter_button": [
+    1043.1865234375,
+    145.143280029297,
+    111.0,
+    58.0
+  ],
+  "filtered_ids": [
+    "pz-test-kat2-000",
+    "pz-test-kat2-001",
+    "pz-test-kat2-002",
+    "pz-test-kat2-003",
+    "pz-test-kat2-004",
+    "pz-test-kat2-005",
+    "pz-test-kat2-006",
+    "pz-test-kat2-007",
+    "pz-test-kat2-008",
+    "pz-test-kat2-009",
+    "pz-test-kat2-010",
+    "pz-test-kat2-011",
+    "pz-test-kat2-012",
+    "pz-test-kat2-013",
+    "pz-test-kat2-014",
+    "pz-test-kat2-015",
+    "pz-test-kat2-016",
+    "pz-test-kat2-017",
+    "pz-test-kat2-018",
+    "pz-test-kat2-019",
+    "pz-test-kat2-020",
+    "pz-test-kat2-021",
+    "pz-test-kat2-022",
+    "pz-test-kat2-023",
+    "pz-test-kat2-024",
+    "pz-test-kat2-025",
+    "pz-test-kat2-026",
+    "pz-test-kat2-027",
+    "pz-test-kat2-028",
+    "pz-test-kat2-029",
+    "pz-test-kat2-030",
+    "pz-test-kat2-031",
+    "pz-test-kat2-032",
+    "pz-test-kat2-033",
+    "pz-test-kat2-034",
+    "pz-test-kat2-035",
+    "pz-test-kat2-036",
+    "pz-test-kat2-037",
+    "pz-test-kat2-038",
+    "pz-test-kat2-039",
+    "pz-test-kat2-040",
+    "pz-test-kat2-041",
+    "pz-test-kat2-042",
+    "pz-test-kat2-043",
+    "pz-test-kat2-044",
+    "pz-test-kat2-045",
+    "pz-test-kat2-046",
+    "pz-test-kat2-047"
+  ],
+  "filters": {
+    "category": "gebaeude-bauwerke",
+    "height": 99,
+    "lower": 0,
+    "mode": "all",
+    "status": "all",
+    "upper": 0,
+    "width": 99
+  },
+  "focus": "@Button@287",
+  "height_input": [
+    1171.5,
+    425.5,
+    75.0,
+    55.0
+  ],
+  "height_text": "",
+  "ids": [
+    "pz-test-kat2-000",
+    "pz-test-kat2-001",
+    "pz-test-kat2-002",
+    "pz-test-kat2-003",
+    "pz-test-kat2-004",
+    "pz-test-kat2-005",
+    "pz-test-kat2-006",
+    "pz-test-kat2-007",
+    "pz-test-kat2-008",
+    "pz-test-kat2-009",
+    "pz-test-kat2-010",
+    "pz-test-kat2-011",
+    "pz-test-kat2-012",
+    "pz-test-kat2-013",
+    "pz-test-kat2-014",
+    "pz-test-kat2-015",
+    "pz-test-kat2-016",
+    "pz-test-kat2-017",
+    "pz-test-kat2-018",
+    "pz-test-kat2-019",
+    "pz-test-kat2-020",
+    "pz-test-kat2-021",
+    "pz-test-kat2-022",
+    "pz-test-kat2-023"
+  ],
+  "info": false,
+  "lower_filter": {
+    "box": [
+      812.5,
+      360.5,
+      184.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Ohne Grenze"
+      },
+      {
+        "disabled": false,
+        "text": "Sehr leicht"
+      },
+      {
+        "disabled": false,
+        "text": "Leicht"
+      },
+      {
+        "disabled": false,
+        "text": "Mittel"
+      },
+      {
+        "disabled": false,
+        "text": "Schwer"
+      },
+      {
+        "disabled": true,
+        "text": "Sehr schwer"
+      }
+    ],
+    "position": [
+      812,
+      415
+    ],
+    "selected": 0,
+    "size": [
+      196,
+      281
+    ],
+    "visible": true
+  },
+  "mode_filter": {
+    "box": [
+      746.5,
+      295.5,
+      500.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Alle"
+      },
+      {
+        "disabled": false,
+        "text": "Monochrom"
+      },
+      {
+        "disabled": false,
+        "text": "Farbe"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "selected": 0,
+    "size": [
+      100,
+      100
+    ],
+    "visible": false
+  },
+  "ms": 45036,
+  "notice_area": [
+    702.798522949219,
+    79.3656616210938,
+    452.014953613281,
+    55.7776184082031
+  ],
+  "origin": "album",
+  "page": 0,
+  "panel": {
+    "error": "",
+    "error_visible": false,
+    "position": [
+      589,
+      213
+    ],
+    "scroll": 0,
+    "size": [
+      675,
+      350
+    ],
+    "visible": true
+  },
+  "pid": 39520,
+  "positions": [
+    0,
+    0
+  ],
+  "renderer": "NVIDIA GeForce RTX 3070",
+  "repair_cancel": [
+    0.0,
+    0.0,
+    106.0,
+    36.5
+  ],
+  "repair_dialog": false,
+  "reset_cancel": [
+    0.0,
+    0.0,
+    106.0,
+    36.5
+  ],
+  "reset_dialog": false,
+  "reset_ok": [
+    0.0,
+    0.0,
+    131.0,
+    36.5
+  ],
+  "scale": {
+    "box": [
+      466.5,
+      400.5,
+      600.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "100 %"
+      },
+      {
+        "disabled": false,
+        "text": "125 %"
+      }
+    ],
+    "position": [
+      712,
+      473
+    ],
+    "selected": 1,
+    "size": [
+      479,
+      86
+    ],
+    "visible": false
+  },
+  "screen": [
+    2560,
+    1440
+  ],
+  "scrollers": [
+    [
+      125.186561584473,
+      210.143280029297,
+      458.0,
+      395.0
+    ],
+    [
+      694.186584472656,
+      213.143280029297,
+      460.0,
+      333.0
+    ]
+  ],
+  "section": "settings",
+  "selected_id": "pz-test-kat2-000",
+  "session": "pz-test-kat2-009",
+  "sort": {
+    "box": [
+      783.186584472656,
+      145.143280029297,
+      197.0,
+      58.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Kategorie"
+      },
+      {
+        "disabled": false,
+        "text": "Größe"
+      },
+      {
+        "disabled": false,
+        "text": "Schwierigkeit"
+      },
+      {
+        "disabled": false,
+        "text": "Hinzugefügt"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "selected": 0,
+    "size": [
+      100,
+      100
+    ],
+    "visible": false
+  },
+  "status_filter": {
+    "box": [
+      746.5,
+      230.5,
+      500.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Alle"
+      },
+      {
+        "disabled": false,
+        "text": "Noch offen"
+      },
+      {
+        "disabled": false,
+        "text": "Neu"
+      },
+      {
+        "disabled": false,
+        "text": "Begonnen"
+      },
+      {
+        "disabled": false,
+        "text": "Gelöst"
+      }
+    ],
+    "position": [
+      0,
+      0
+    ],
+    "selected": 0,
+    "size": [
+      100,
+      100
+    ],
+    "visible": false
+  },
+  "summary": "48 Treffer · 24 von 48 gelöst",
+  "ui": 1.25,
+  "upper_filter": {
+    "box": [
+      1062.5,
+      360.5,
+      184.0,
+      55.0
+    ],
+    "items": [
+      {
+        "disabled": false,
+        "text": "Ohne Grenze"
+      },
+      {
+        "disabled": false,
+        "text": "Sehr leicht"
+      },
+      {
+        "disabled": false,
+        "text": "Leicht"
+      },
+      {
+        "disabled": false,
+        "text": "Mittel"
+      },
+      {
+        "disabled": false,
+        "text": "Schwer"
+      },
+      {
+        "disabled": false,
+        "text": "Sehr schwer"
+      }
+    ],
+    "position": [
+      1062,
+      415
+    ],
+    "selected": 4,
+    "size": [
+      196,
+      281
+    ],
+    "visible": false
+  },
+  "width_input": [
+    921.5,
+    425.5,
+    75.0,
+    55.0
+  ],
+  "width_text": "",
+  "work": false
+}
