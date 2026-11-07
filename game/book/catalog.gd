@@ -54,7 +54,8 @@ func _ready() -> void:
 	preference_feedback.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	preference_feedback.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	preference_feedback.get_parent().reparent(notices)
-	for item: Node in [feedback, empty_message]: item.reparent(notices)
+	feedback.reparent(notices)
+	empty_message.reparent(right_page)
 	visibility_changed.connect(func() -> void: notice_area.visible = is_visible_in_tree())
 	_detach_summary.call_deferred()
 	scroll.reparent(left_page)
@@ -144,6 +145,10 @@ func _render(position: int) -> void:
 	if right_grid != null:
 		for child: Node in right_grid.get_children(): child.reparent(grid)
 	super._render(position)
+	if notices != null:
+		var destination: Control = notices if not load_error.is_empty() else right_page
+		if empty_message.get_parent() != destination: empty_message.reparent(destination)
+		if destination == right_page: right_page.move_child(empty_message,1)
 	if page_index != old_page: pair = Vector2i.ZERO
 	for item: Node in find_children("*","Button",true,false):
 		if item is BookButton: item.paper_transparent = true
