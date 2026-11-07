@@ -37,7 +37,6 @@ var preference_feedback: Label
 var summary: Label
 var feedback: Label
 var empty_message: Label
-var all_button: Button
 var scroll: ScrollContainer
 var grid: CatalogGrid
 var previous_button: BookButton
@@ -115,9 +114,6 @@ func _ready() -> void:
 	empty_message = _label("", 22)
 	empty_message.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	add_child(empty_message)
-	all_button = _button("Filter zurücksetzen", reset_filters)
-	all_button.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
-	add_child(all_button)
 	scroll = ScrollContainer.new()
 	# Child widths are recomputed on resize; old grid minima must not force the
 	# entire page beyond the client before that container sort can run.
@@ -302,7 +298,7 @@ func _update_feedback() -> void:
 		if not str(errors.get(id,"")).is_empty():
 			messages.append(items[id].neutral_title() + ": Speicherfehler: " + str(errors[id]))
 		elif statuses.get(id) == "error":
-			messages.append(items[id].neutral_title() + ": Ungültige Speicherdaten. Filter zurücksetzen, um die Diagnose zu öffnen.")
+			messages.append(items[id].neutral_title() + ": Ungültige Speicherdaten. Im Filterfenster zurücksetzen, um die Diagnose zu öffnen.")
 	feedback.text = messages[0] + (" · %d weitere Speicherprobleme" % (messages.size()-1) if messages.size()>1 else "") if not messages.is_empty() else ""
 	feedback.visible = not messages.is_empty()
 
@@ -354,7 +350,6 @@ func _render(position: int) -> void:
 	category_choice.tooltip_text = category_choice.text
 	empty_message.text = "Katalog konnte nicht geladen werden.\n" + load_error if not load_error.is_empty() else "Hier gibt es noch keine Rätsel" if items.is_empty() else "Keine Rätsel passen zu diesen Filtern."
 	empty_message.visible = not load_error.is_empty() or filtered_ids.is_empty()
-	all_button.visible = load_error.is_empty() and (active > 0 and filtered_ids.is_empty() or feedback.visible and active > 0)
 	for id: String in filtered_ids.slice(page_index * PAGE_SIZE, (page_index + 1) * PAGE_SIZE):
 		_add_card(id)
 	page_label.text = "Seite %d von %d" % [page_index + 1, page_count]

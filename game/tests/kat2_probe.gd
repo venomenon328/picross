@@ -507,9 +507,11 @@ func regular() -> void:
 	app.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	app.set_ui_scale(1.0)
 	await choose("obst-nuesse")
-	check(app.choices.is_empty() and app.album.empty_message.visible and app.album.all_button.visible, "empty category has direct All action")
+	check(app.choices.is_empty() and app.album.empty_message.visible and not app.album.filter_button.disabled, "empty category retains filter panel reset")
 	await shot("empty-category")
-	click(app.album.all_button)
+	click(app.album.filter_button)
+	await frames()
+	click(caption_button(app.album.filter_panel,"Filter zurücksetzen"))
 	await frames()
 	check(app.album.category_id.is_empty(), "pointer returns to All")
 	# An automatically created empty save is still new.

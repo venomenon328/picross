@@ -43,8 +43,9 @@ func _ready() -> void:
 	actions.move_child(help,1)
 	summary.reparent(right_page)
 	_detach_summary.call_deferred()
-	preference_feedback.get_parent().reparent(left_page)
-	for item: Node in [feedback, empty_message, all_button, scroll]: item.reparent(left_page)
+	preference_feedback.get_parent().reparent(right_page)
+	for item: Node in [feedback, empty_message]: item.reparent(right_page)
+	scroll.reparent(left_page)
 	right_scroll = ScrollContainer.new()
 	right_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
 	right_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL

@@ -64,7 +64,7 @@ static func rules(probe) -> void:
 	probe.check(album.filtered_ids.size() == 54,"K-A inclusive width and height")
 	for limits: Array in [["19",""],["","19"],["19","20"]]:
 		apply(album,"all","all",0,0,limits[0],limits[1])
-		probe.check(album.filtered_ids.is_empty() and album.empty_message.text.contains("Filtern") and album.all_button.visible,"K-A independent/combined dimension boundaries and no hits")
+		probe.check(album.filtered_ids.is_empty() and album.empty_message.text.contains("Filtern") and not album.filter_button.disabled,"K-A independent/combined dimension boundaries and no hits with reachable filter panel")
 	album.choose_category("voegel")
 	apply(album,"new","mono",1,5,"20","20")
 	probe.check(Array(album.filtered_ids) == [ids[49],ids[53]],"K-A all axes form one AND pipeline")
