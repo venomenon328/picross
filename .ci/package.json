@@ -41,8 +41,8 @@
   ],
   "core_change": "Keine Kernänderung. Einmalige gerenderte native Originale für SBR-A-R01 auf separatem review/539-sbr-a, kein Produktdiff und kein CI-Galerieupload. Bedarf nach Review/Abnahme beenden, spätestens 2026-11-14 prüfen. Persönliche Windows-Abnahme SBR-A-M01 bleibt beim Eigentümer.",
   "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
+    "mode": "failure",
+    "purpose": "SBR-A: begrenzte native.catalog-Fehlerdiagnose für den Implementierer und R01; kein Erfolgsarchiv.",
+    "expires": "2026-11-09"
   }
 }
