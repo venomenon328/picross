@@ -1,0 +1,15 @@
+{
+  "product_head": "6b4bede4d76cce539daa488027e66711a5538db5",
+  "test_only": true,
+  "cases": 8,
+  "corner_centre_os_hits": 40,
+  "successful_retry_pairs": 4,
+  "checks": [
+    "Full visible width/height 44 at UI100, 55 at UI125, both retry targets",
+    "All four corner and centre OS clicks emit pressed on the intended retry",
+    "Real temporary-directory filesystem faults preserve prior marker/save bytes",
+    "Both faults removed and actual retry clears the corresponding error in each configuration",
+    "Long message scrolling and retry/error visibility preserve sort/filter/panel/card-scroll rectangles"
+  ],
+  "scope": "Only B-01; no Chromium, independent review or personal acceptance."
+}

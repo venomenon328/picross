@@ -1,0 +1,122 @@
+{
+  "product_head": "6b4bede4d76cce539daa488027e66711a5538db5",
+  "expires": "2026-11-21",
+  "files": {
+    "build.json": {
+      "bytes": 7630,
+      "sha256": "d51824477cc9dfea94f9a39efb57577842ef790967726dbea1f514a6cc624a1e"
+    },
+    "checks.json": {
+      "bytes": 705,
+      "sha256": "857a1ecd595366b99bd8340614ac82970b531e1de580699b7996e2d2907dafed"
+    },
+    "driver/build_gui.py": {
+      "bytes": 2903,
+      "sha256": "c36e78dadbba726cc7d11fefc4ba7b2bd646cf40bfeefd984ca20ded89686d1d"
+    },
+    "driver/gui_sizes.py": {
+      "bytes": 1064,
+      "sha256": "bcdbb0395df3e57daf9581da8d6b8a9f8d909dd0bf13efa1753d8f86d17a1b3a"
+    },
+    "driver/gui_steps.py": {
+      "bytes": 2385,
+      "sha256": "9ffdaadb6e8a98bf4d6cc837daee20a5c657c32762aa3192444adc3a1cfa1655"
+    },
+    "driver/observer.gd": {
+      "bytes": 7684,
+      "sha256": "4a1e423e73dead900f668c179ff15e4808c5044345a546c1582954c5677a20d4"
+    },
+    "driver/run_windows.py": {
+      "bytes": 4610,
+      "sha256": "0bb967323a7231520d8ed43264d2b91c1cbbfbd8714815802c0a9e285a441e6d"
+    },
+    "driver/win.py": {
+      "bytes": 3890,
+      "sha256": "2c0246a4964b1c961cc804883223b3f9e71c3cc019799194f28ccceaeab90825"
+    },
+    "marker-1280-ui100-crop.json": {
+      "bytes": 80,
+      "sha256": "02a117144e6d244330711c25a99280fbbff7cb0f87280a6a3ef4f7d832795714"
+    },
+    "marker-1280-ui100.png": {
+      "bytes": 144055,
+      "sha256": "60c81ecdfdf4ffc4eb2304603a9d6ba7a44f5d7397036c251abf4bc813a99da9"
+    },
+    "marker-1280-ui125-crop.json": {
+      "bytes": 80,
+      "sha256": "5f715bfc87ed572b798891b0627f354d083a4f2a1e7020dc2bc900a71bc21ef9"
+    },
+    "marker-1280-ui125.png": {
+      "bytes": 171470,
+      "sha256": "8ff06f5f63f65f0a28cc9a94708489a08527df3d0d9f161c6ffa5a06f67e0a90"
+    },
+    "marker-1920-ui100-crop.json": {
+      "bytes": 82,
+      "sha256": "7d3a1e3d4cf2dc555f61cbe22278ab8b8ef8f09fc17c15e93becb486cd5c9287"
+    },
+    "marker-1920-ui100.png": {
+      "bytes": 221188,
+      "sha256": "21a81a0842543ea103b14db5d61038aa9db90112bc00a14a64c0270c6d7d675b"
+    },
+    "marker-1920-ui125-crop.json": {
+      "bytes": 82,
+      "sha256": "f99bb1c2f1681b71c52adb77caea752d3f749e5d3996b305902c5364c43594fe"
+    },
+    "marker-1920-ui125.png": {
+      "bytes": 261504,
+      "sha256": "44532c0548013a132b2ce17099c5ee5d312194e7168691fb462841b6b1ff2967"
+    },
+    "observations.json": {
+      "bytes": 480589,
+      "sha256": "a3d38cae0c84f9a33d266b6cbe8dbc298875661a132746e80b637d42e1654a18"
+    },
+    "os.jsonl": {
+      "bytes": 17360,
+      "sha256": "3b1be894e209eab97dfb11d6f2a77f5079fc2161ce67f7e15306bc60e7ff1779"
+    },
+    "README.md": {
+      "bytes": 3305,
+      "sha256": "d765b6a7ec2b6397c375c4935702f5b85040a84e80f89f759f15d16c467217f6"
+    },
+    "save-1280-ui100-crop.json": {
+      "bytes": 80,
+      "sha256": "fc1a66ba5d3086f32bbccad605eece7a8abc3b484c0e48b98d4310b383046ef4"
+    },
+    "save-1280-ui100.png": {
+      "bytes": 140916,
+      "sha256": "d413f61a3eec3bfcf1666689e09efb3b921727a5dee21b53b4518a18a5158b1a"
+    },
+    "save-1280-ui125-crop.json": {
+      "bytes": 80,
+      "sha256": "5f715bfc87ed572b798891b0627f354d083a4f2a1e7020dc2bc900a71bc21ef9"
+    },
+    "save-1280-ui125.png": {
+      "bytes": 169575,
+      "sha256": "734fc798abcf4149f7387168ee871101765875246db80c8b67d683400cf399a8"
+    },
+    "save-1920-ui100-crop.json": {
+      "bytes": 82,
+      "sha256": "7d3a1e3d4cf2dc555f61cbe22278ab8b8ef8f09fc17c15e93becb486cd5c9287"
+    },
+    "save-1920-ui100.png": {
+      "bytes": 219506,
+      "sha256": "770351d0ee63fc11b927a95476f7140be77303b85899857d8c2ee337c790d9e6"
+    },
+    "save-1920-ui125-crop.json": {
+      "bytes": 82,
+      "sha256": "f99bb1c2f1681b71c52adb77caea752d3f749e5d3996b305902c5364c43594fe"
+    },
+    "save-1920-ui125.png": {
+      "bytes": 259879,
+      "sha256": "c21ddcbab6a1f1217f329a9e3d85b28490bce7fc0baabc43cc02f7f2162ae80e"
+    },
+    "stderr.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout.log": {
+      "bytes": 172,
+      "sha256": "2fafe0ae2ca2b18027e55a4d2e73bdda7a80b71ef535330fbbbfecac74f8864f"
+    }
+  }
+}
