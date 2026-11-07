@@ -74,6 +74,20 @@
       "information_positions": "(0, 0)",
       "scenario": "Synthetic native catalog pair: left at start, right at middle; actual projected book",
       "ui_scale": 1.25,
+      "visible_scrollbars": [
+        {
+          "maximum": 5313.0,
+          "page": 303.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@379/@ScrollContainer@372/_v_scroll",
+          "value": 0.0
+        },
+        {
+          "maximum": 5313.0,
+          "page": 241.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@380/@ScrollContainer@390/_v_scroll",
+          "value": 2536.0
+        }
+      ],
       "width": 1280,
       "bytes": 1032889,
       "sha256": "fd0ca13bc8598db4f3cef9f60d2c9596446897155f00f10598c93d4b4bed7130"
@@ -85,6 +99,14 @@
       "information_positions": "(83, 0)",
       "scenario": "Settings at native lower bound, fixed navigation",
       "ui_scale": 1.25,
+      "visible_scrollbars": [
+        {
+          "maximum": 475.0,
+          "page": 391.874816894531,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@Control@50/@ScrollContainer@53/_v_scroll",
+          "value": 83.1251831054688
+        }
+      ],
       "width": 1280,
       "bytes": 943495,
       "sha256": "3f1e17250676e9ae510af92f16a9218e0e5035babc6ccde7119485f547695283"
@@ -96,9 +118,29 @@
       "information_positions": "(55, 0)",
       "scenario": "Real long embedded category PopupMenu with synthetic extra options; middle",
       "ui_scale": 1.25,
+      "visible_scrollbars": [
+        {
+          "maximum": 3483.0,
+          "page": 324.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@379/@HBoxContainer@381/catalog-category/@PopupMenu@287/@PanelContainer@278/@VBoxContainer@279/@ScrollContainer@283/_v_scroll",
+          "value": 1579.5
+        },
+        {
+          "maximum": 5313.0,
+          "page": 303.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@379/@ScrollContainer@372/_v_scroll",
+          "value": 0.0
+        },
+        {
+          "maximum": 5313.0,
+          "page": 241.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@380/@ScrollContainer@390/_v_scroll",
+          "value": 2536.0
+        }
+      ],
       "width": 1280,
-      "bytes": 1036579,
-      "sha256": "3d3d02f39bf9c25bebacd7df2d56e88e46ad32faa8b65aaad79fe6dde1f88f27"
+      "bytes": 1032386,
+      "sha256": "8d4d39e4f979ce3112688fbe22583da2a35308b26b68691b872c0e5e61c71dcc"
     },
     {
       "catalog_positions": "(0, 2536)",
@@ -107,6 +149,26 @@
       "information_positions": "(55, 0)",
       "scenario": "Real narrow filter panel with overflowing synthetic draft error; end, fixed actions",
       "ui_scale": 1.25,
+      "visible_scrollbars": [
+        {
+          "maximum": 1756.0,
+          "page": 588.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/catalog-filter-panel/@VBoxContainer@291/@ScrollContainer@294/_v_scroll",
+          "value": 1168.0
+        },
+        {
+          "maximum": 5313.0,
+          "page": 303.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@379/@ScrollContainer@372/_v_scroll",
+          "value": 0.0
+        },
+        {
+          "maximum": 5313.0,
+          "page": 241.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@380/@ScrollContainer@390/_v_scroll",
+          "value": 2536.0
+        }
+      ],
       "width": 1280,
       "bytes": 727670,
       "sha256": "5120bf518b59e076060df1291ff40ace4b6041b4426056cb7e7c8f58fb2ea342"
@@ -118,6 +180,20 @@
       "information_positions": "(0, 0)",
       "scenario": "Synthetic native catalog pair: left at start, right at middle; actual projected book",
       "ui_scale": 1.0,
+      "visible_scrollbars": [
+        {
+          "maximum": 2118.0,
+          "page": 709.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@379/@ScrollContainer@372/_v_scroll",
+          "value": 0.0
+        },
+        {
+          "maximum": 2118.0,
+          "page": 709.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@380/@ScrollContainer@390/_v_scroll",
+          "value": 704.0
+        }
+      ],
       "width": 1920,
       "bytes": 1840886,
       "sha256": "998202099a09a82dc38b9a5d71067c64cd330dda9e0258b7773bc548883a3c70"
@@ -136,6 +212,14 @@
       "information_positions": "(0, 898)",
       "scenario": "Help at native lower bound, fixed navigation",
       "ui_scale": 1.0,
+      "visible_scrollbars": [
+        {
+          "maximum": 1633.0,
+          "page": 734.222290039063,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@Control@50/@ScrollContainer@256/_v_scroll",
+          "value": 898.777709960938
+        }
+      ],
       "width": 1920,
       "bytes": 1941474,
       "sha256": "bd62960cc300903e8547231838d66d749e2e0bf64dd289a079a4dd60563c9787"
@@ -147,6 +231,20 @@
       "information_positions": "(0, 898)",
       "scenario": "Synthetic native catalog pair: left at start, right at middle; actual projected book",
       "ui_scale": 1.25,
+      "visible_scrollbars": [
+        {
+          "maximum": 2649.0,
+          "page": 970.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@379/@ScrollContainer@372/_v_scroll",
+          "value": 0.0
+        },
+        {
+          "maximum": 2649.0,
+          "page": 970.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@380/@ScrollContainer@390/_v_scroll",
+          "value": 839.0
+        }
+      ],
       "width": 2560,
       "bytes": 3109141,
       "sha256": "15aebd400af30c279c88f9532a14cb2be98d18f5a0fe66c4e0850e208daab9f6"
@@ -158,13 +256,27 @@
       "information_positions": "(0, 898)",
       "scenario": "Synthetic native catalog pair: left at start, right at middle; actual projected book",
       "ui_scale": 1.25,
+      "visible_scrollbars": [
+        {
+          "maximum": 2649.0,
+          "page": 719.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@379/@ScrollContainer@372/_v_scroll",
+          "value": 0.0
+        },
+        {
+          "maximum": 2649.0,
+          "page": 719.0,
+          "path": "/root/@SubViewport@2/Picross/PlayerUI/@Control@16/@VBoxContainer@266/@HBoxContainer@378/@VBoxContainer@380/@ScrollContainer@390/_v_scroll",
+          "value": 965.0
+        }
+      ],
       "width": 1920,
       "bytes": 1858520,
       "sha256": "c6ecc95c2085f2002a119db9be891ea2c1e71d5e0e9a4dc2e673c140f98f9f1a"
     }
   ],
   "note": "Fresh native capture from the clean final product branch after the N02 test-only correction. Every listed runtime source matches the captured project. Review branch is binary transport only, never a product integration branch.",
-  "capture_script_sha256": "de54a48a7202c4bacd1025c7664f2f13be4020a740b9da5e6f91e625c5507587",
+  "capture_script_sha256": "aa9bb2b338573a0e55b0393d313f677a486acd3fa366f5a7a8b175dd635d569b",
   "synthetic_fixture_sha256": "e3d0852799aefc375735e6aa89b1129ea6c3e12da680631054d5d547f0ec03db",
-  "capture_script_executed_sha256": "b5bd2e9f03ad3281d8d8aa5112fbe0ed3c6e8f5b9d82d75db3b6861047ffd981"
+  "capture_script_executed_sha256": "aa9bb2b338573a0e55b0393d313f677a486acd3fa366f5a7a8b175dd635d569b"
 }

@@ -5,7 +5,10 @@ func capture(label: String, scenario: String) -> void:
  await RenderingServer.frame_post_draw
  var image: Image = surface.get_texture().get_image()
  image.save_png(output.path_join(label+".png"))
- captures.append({"file":label+".png","scenario":scenario,"width":surface.size.x,"height":surface.size.y,"ui_scale":app.ui_scale,"catalog_positions":str(app.album.positions()),"information_positions":str(app.info.positions())})
+ var regions: Array = []
+ for bar: ScrollBar in preload("res://tests/scrollbar_cases.gd").bars(app):
+  if bar.is_visible_in_tree(): regions.append({"path":str(bar.get_path()),"value":bar.value,"maximum":bar.max_value,"page":bar.page})
+ captures.append({"file":label+".png","scenario":scenario,"width":surface.size.x,"height":surface.size.y,"ui_scale":app.ui_scale,"catalog_positions":str(app.album.positions()),"information_positions":str(app.info.positions()),"visible_scrollbars":regions})
  print("CAPTURE ",label)
 func run() -> void:
  output = OS.get_environment("KAT2_OUTPUT")
@@ -51,6 +54,9 @@ func run() -> void:
    surface.notification(Node.NOTIFICATION_WM_WINDOW_FOCUS_OUT)
    await frames()
    choice.get_popup().scroll_to_item(30)
+   await frames()
+   for bar: ScrollBar in preload("res://tests/scrollbar_cases.gd").bars(choice.get_popup()):
+    if bar.is_visible_in_tree(): bar.value = (bar.max_value-bar.page)*0.5
    await capture("popup-1280-ui125-middle","Real long embedded category PopupMenu with synthetic extra options; middle")
    choice.get_popup().hide()
    while choice.item_count > count: choice.remove_item(choice.item_count-1)
