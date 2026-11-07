@@ -34,6 +34,8 @@ func _ready() -> void:
 	mode_choice = _choice("Modus", ["Alle", "Monochrom", "Farbe"])
 	lower = _choice("Schwierigkeit von", ["Ohne Grenze", "L1 · Sehr leicht", "L2 · Leicht", "L3 · Mittel", "L4 · Schwer", "L5 · Sehr schwer"])
 	upper = _choice("Schwierigkeit bis", ["Ohne Grenze", "L1 · Sehr leicht", "L2 · Leicht", "L3 · Mittel", "L4 · Schwer", "L5 · Sehr schwer"])
+	lower.item_selected.connect(func(_index: int) -> void: _bounds_changed(true))
+	upper.item_selected.connect(func(_index: int) -> void: _bounds_changed(false))
 	var row := _row("Maximale Zellzahl")
 	cells = LineEdit.new()
 	cells.name = "catalog-filter-cells"
@@ -93,6 +95,7 @@ func open(selection: Dictionary, anchor: Rect2, scale: float) -> void:
 	mode_choice.select(Filter.MODES.find(selection.mode))
 	lower.select(selection.lower)
 	upper.select(selection.upper)
+	_bounds_changed(true)
 	cells.text = "" if selection.cells == 0 else str(selection.cells)
 	error.hide()
 	scroller.scroll_vertical = 0
@@ -125,7 +128,18 @@ func open(selection: Dictionary, anchor: Rect2, scale: float) -> void:
 	popup()
 	status.grab_focus()
 
+func _bounds_changed(changed_lower: bool) -> void:
+	# The changed endpoint wins. The opposite endpoint follows if necessary;
+	# each menu keeps only compatible levels selectable, including equality.
+	if lower.selected > 0 and upper.selected > 0 and lower.selected > upper.selected:
+		if changed_lower: upper.select(lower.selected)
+		else: lower.select(upper.selected)
+	for index: int in range(1,6):
+		lower.set_item_disabled(index,upper.selected > 0 and index > upper.selected)
+		upper.set_item_disabled(index,lower.selected > 0 and index < lower.selected)
+
 func submit() -> void:
+	_bounds_changed(true)
 	submitted.emit(Filter.STATUSES[status.selected], Filter.MODES[mode_choice.selected], lower.selected, upper.selected, cells.text)
 
 func invalid(message: String) -> void:

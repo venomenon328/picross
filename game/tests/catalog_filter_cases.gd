@@ -69,9 +69,32 @@ static func rules(probe) -> void:
 	probe.check(Array(album.filtered_ids) == [ids[49],ids[53]],"K-A all five axes form one AND pipeline")
 	var valid: Dictionary = album.filters.duplicate()
 	var generation: int = album.generation
-	for spec: Array in [[5,1,""],[0,0,"0"],[0,0,"2501"],[0,0,"-1"],[0,0,"1.5"],[0,0,"20×30"],[0,0,"abc"]]:
+	for spec: Array in [[0,0,"0"],[0,0,"2501"],[0,0,"-1"],[0,0,"1.5"],[0,0,"20×30"],[0,0,"abc"]]:
 		apply(album,"all","color",spec[0],spec[1],spec[2])
 		probe.check(album.filters == valid and album.generation == generation and album.filter_panel.error.visible,"K-A invalid bounds/input visibly rejected, last valid selection retained")
+	# Mutual menu limits prevent contradictory UI choices. Programmatic or
+	# stale selections additionally follow the endpoint changed most recently.
+	album.open_filters()
+	var panel = album.filter_panel
+	panel.upper.select(4)
+	panel.upper.item_selected.emit(4)
+	for level: int in range(1,6):
+		probe.check(panel.lower.is_item_disabled(level) == (level>4),"K-A maximum L4 offers minima L1-L4 only")
+	panel.lower.select(5)
+	panel.lower.item_selected.emit(5)
+	probe.check(panel.upper.selected == 5 and not panel.error.visible,"K-A raised minimum adjusts maximum without error")
+	panel.upper.select(2)
+	panel.upper.item_selected.emit(2)
+	probe.check(panel.lower.selected == 2 and panel.upper.selected == 2,"K-A lowered maximum adjusts minimum to equality")
+	for level: int in range(1,6):
+		probe.check(panel.upper.is_item_disabled(level) == (level<2),"K-A minimum L2 offers maxima L2-L5 only")
+	panel.upper.select(0)
+	panel.upper.item_selected.emit(0)
+	probe.check(not panel.lower.is_item_disabled(5) and not panel.upper.is_item_disabled(0),"K-A independent unbounded endpoint stays selectable")
+	panel.lower.select(0)
+	panel.lower.item_selected.emit(0)
+	probe.check(not panel.upper.is_item_disabled(1),"K-A removing both bounds restores full menus")
+	panel.hide()
 	for cells: String in ["1","2500",""]:
 		probe.check(Filter.validate("","all","all",0,0,cells).has("selection"),"K-A supported cell boundary " + cells)
 	var area: Dictionary = Filter.validate("","all","all",0,0,"600").selection

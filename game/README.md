@@ -110,8 +110,10 @@ Schwierigkeitsgrenzen wählen eine Stufe. Ohne Spanne bleiben nicht eingestufte
 Rätsel sichtbar; mit einer Grenze erscheinen nur passende eingestufte Rätsel.
 Die Zellzahl bleibt leer oder ist eine ganze Zahl von 1 bis 2500; 20×30 und
 30×20 zählen gleich als 600. **Übernehmen** wendet gültige Eingaben gemeinsam an.
-Ungültige Spannen/Zahlen werden angezeigt und verändern die letzte gültige
-Auswahl nicht. **Schließen** verwirft den Entwurf. Der Panelinhalt scrollt bei
+Die Schwierigkeitslisten bieten nur miteinander verträgliche Stufen an:
+Minimum ≤ Maximum; nötigenfalls folgt die andere Grenze automatisch. Dafür
+erscheint keine Fehlermeldung. Ungültige Zellzahlen werden angezeigt und
+verändern die letzte gültige Auswahl nicht. **Schließen** verwirft den Entwurf. Der Panelinhalt scrollt bei
 knapper Höhe. **Filter zurücksetzen** setzt auch die Kategorie auf Alle und
 behält die Sortierung. Die Trefferzahl steht über dem rechten Buchteil;
 keine passenden Treffer und Katalogladefehler sind getrennt beschriftet.
