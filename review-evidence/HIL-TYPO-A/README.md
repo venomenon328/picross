@@ -15,3 +15,7 @@ Empfänger: unabhängiges R01; Rückbau des Reviewrefs nach R01/M01 durch Paketa
 | [1280-ui125-chapter2-top.png](1280-ui125-chapter2-top.png) | 1037948 | `82ffd4bba45e060ef85e6d5a2da4816b7d699efa373f788597bd6edab81f9064` |
 | [1280-ui125-chapter2-middle.png](1280-ui125-chapter2-middle.png) | 1055041 | `26bd46e64d858086a27c848e00bb16501f0e3ceca882b9f49b125b53f9c84555` |
 | [1280-ui125-chapter2-end.png](1280-ui125-chapter2-end.png) | 1082268 | `d959ffad0dc4215e486cb3fba444cf5099ee3006c087528fc828531661d8ab93` |
+| [1920-ui100-chapter1-top.png](1920-ui100-chapter1-top.png) | 1966758 | `36d8c0f10b85147ad53f2cdecf4df26ae1f073bd7f7e86a310754725a65d76a6` |
+| [1920-ui100-chapter3-top.png](1920-ui100-chapter3-top.png) | 1990560 | `b864e19728137acb671137f7294501ef86abba33fb53a1d2a19a6c21a0577873` |
+| [1280-ui125-chapter1-top.png](1280-ui125-chapter1-top.png) | 1029585 | `204afad4720d12a57a099d140ef5c8d9a59cd91f03f791e19cb1e15f3ddb7c5e` |
+| [1280-ui125-chapter3-top.png](1280-ui125-chapter3-top.png) | 1006949 | `b96d4d2f60afdebaba09b0067cfa144c957819d1c8df53a833816dea86f58ea0` |
