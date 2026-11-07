@@ -20,10 +20,11 @@ behauptet keinen dauerhaften Abschluss; beim Neustart gilt der validierte Diskst
 Metadatenfehler erhalten alte gültige Bytes und einen separaten nichtmodalen Retry.
 
 Ein vollständiger Geschwister-Temp wird geflusht, geschlossen und strikt zurückgelesen.
-Windows benutzt für vorhandene Ziele den atomaren .NET-File.Replace über das lokale
-Windows PowerShell ohne Profil/Console; Pfade werden ausschließlich als Base64-Daten
-übergeben. Godots destruktives Windows-Ziel-Rename wird nicht verwendet. Neue Ziele
-werden mit File.Move veröffentlicht; POSIX/Web verwenden atomaren Rename. Derselbe
+Windows benutzt MoveFileExW mit REPLACE_EXISTING und WRITE_THROUGH ohne COPY_ALLOWED
+über das lokale Windows PowerShell/.NET ohne Profil/Console; Pfade werden ausschließlich
+als Base64-Daten übergeben. Temp und Ziel liegen zwingend im selben Verzeichnis.
+Godots destruktives Windows-Ziel-Rename und File.Replace/ReplaceFileW (dokumentierter
+Zielverlust bei Fehler 1176) werden nicht verwendet. POSIX/Web verwenden Rename. Derselbe
 bereits gespeicherte Merker startet keinen Hilfsprozess. Ein fehlendes/gesperrtes
 PowerShell bleibt ein isolierter Merkerfehler, keine fehlgeschlagene Rätselsicherung.
 Verzeichnisse, Links, ungültige Pfade und fremde Dateinamen werden zurückgewiesen.
