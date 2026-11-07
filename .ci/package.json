@@ -1,30 +1,25 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/533",
-  "package": "BTI-C",
+  "issue": "https://github.com/venomenon328/picross/issues/535",
+  "package": "HIL-TYPO-A",
   "modules": [
     "native.catalog"
   ],
-  "purpose": "BTI-C: integrate exactly the three approved V2-rev1 originals, optical centring with full-alpha preservation, larger responsive book headings and preserved fixed bottom navigation. Full main-to-head diff includes BTI-A navigation/resource packaging; native.catalog checks catalog/information, core builds Windows.",
-  "omitted": "No grid, history, completion, adapter, production or browser change. No native.graphics/core/history/completion/adapters/export, preflight, delivery or Chromium. One-time Windows rendering/interactions and actual Windows/Web PCK resource checks supplement catalog components; no full lifecycle gallery.",
+  "purpose": "Help heading font and one copy correction: existing information process checks real headings and text; core builds Windows player.",
+  "omitted": "No grid, teaching logic, history, completion, adapters, export or browser change; native.core, native.graphics, native.history, native.completion, native.adapters, native.export, Chromium and historical HIL lifecycle are not selected. One-time native visual evidence covers text fit.",
   "test_changes": [
     {
-      "path": "game/tests/display_cases.gd",
+      "path": "game/tests/help_native.gd",
       "disposition": "change-scoped",
-      "reason": "Replace superseded visible Bakso page-heading assumptions; retain group/fallback roles and existing interaction checks."
-    },
-    {
-      "path": "game/tests/kat2_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Run the small BTI component checks inside existing information process, no new process or captures."
+      "reason": "Update obsolete font assertion in manually invoked historical diagnostic; no new standard lifecycle."
     },
     {
       "path": "game/tests/view_title_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Small existing information-process checks retain proportional full PNGs/weak alpha, optical centring, all three text fallbacks, safe larger title/scroll/navigation geometry and scroll ends. No new process or screenshot family."
+      "reason": "Cheap real help heading, copy and scaling regression in existing information process, without a new process."
     }
   ],
-  "core_change": "Windows/Web player extras include active title manifest, NOTICE and exact generative provenance. No CI core, selection or result gate change; one-time actual PCK counterchecks supplement selected catalog module.",
+  "core_change": "No CI core change; required core builds Windows player.",
   "evidence": {
     "mode": "none",
     "purpose": null,

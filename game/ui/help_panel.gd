@@ -46,6 +46,7 @@ func heading(text: String, fs: int = 22) -> Label:
 	# Explicit information-heading role, including sizes below label()'s old
 	# 26px threshold. No global change to settings or other text roles.
 	var item: Label = app.label(text,26)
+	item.add_theme_font_override("font",app.WORK_TITLE_FONT)
 	item.set_meta("base_font",fs)
 	item.set_meta("help_heading",true)
 	item.add_theme_font_size_override("font_size",fs)
@@ -106,7 +107,7 @@ func action(icon: String, input: String, effect: String) -> void:
 func principle() -> void:
 	section(0,"Ein Bild aus Hinweisen","Ein Nonogramm ist ein Bildrätsel auf einem Raster. Finde heraus, welche Felder Farbe bekommen und welche leer bleiben. Die Zahlen am Rand heißen Hinweise. Du brauchst keine Bildvorlage: Zeilen und Spalten geben gemeinsam alle Füllungen vor.")
 	section(0,"Zahlen werden zu Blöcken","Ein Block besteht aus direkt benachbarten gefüllten Feldern. Eine 3 verlangt genau drei davon. Lies die Hinweise einer Zeile von links nach rechts, die einer Spalte von oben nach unten. Ihre Reihenfolge gilt für die ganze Linie. Zwischen zwei Blöcken derselben Farbe bleibt mindestens ein Feld leer.")
-	section(0,"Drei Feldzustände","Unbekannt heißt: Hier hast du noch nichts festgelegt. Eine Füllung trägt Farbe. Ein handschriftliches X bedeutet: Hier gehört keine Farbe hin. Radieren entfernt einen Eintrag und macht das Feld wieder unbekannt.")
+	section(0,"Drei Feldzustände","Unbekannt heißt: Hier hast du noch nichts festgelegt. Eine Füllung trägt Farbe. Ein X bedeutet: Hier gehört keine Farbe hin. Radieren entfernt einen Eintrag und macht das Feld wieder unbekannt.")
 	legend(chapters[0],"unknown","Unbekannt: freies Papier.")
 	legend(chapters[0],"filled","Gefüllt: ein Feld des Bildes.")
 	legend(chapters[0],"empty","Als leer markiert: ein X.")

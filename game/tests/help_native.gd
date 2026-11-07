@@ -25,7 +25,7 @@ static func layout(t: SceneTree, node: Node, width: float, u: float) -> void:
 			t.check(child.get_theme_font_size("font_size") == roundi(child.get_meta("base_font")*u),"HIL nested text scales "+child.text.left(24))
 			var face: Font = child.get_theme_font("font")
 			if child.has_meta("help_heading"):
-				t.check(face is FontVariation and face.base_font == t.book.app.TITLE_FONT,"HIL explicit small information heading role")
+				t.check(face == t.book.app.WORK_TITLE_FONT,"HIL explicit small information heading role")
 			else: t.check(face == Text.font(),"HIL nested normal text role")
 		if child is Button:
 			t.check(child.size.y >= 44*u and child.size.x >= 44*u and child.paper_transparent,"HIL chapter target and transparent ink")
