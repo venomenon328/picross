@@ -1,0 +1,10 @@
+from gui_steps import *
+s=win.wait(lambda s:s['pid']==win.pid,10)
+assert s['album'] and s['recent']['id']=='pz-test-kat2-001';record('recovered-marker-offered')
+win.click_rect(s['recent']['box']);stable()
+assert win.state()['slot_status']=='recovered';record('recovered-opens-with-repair-boundary')
+win.click_rect(win.state()['work_repair']);time.sleep(.3)
+assert win.state()['repair_dialog'];record('explicit-backup-confirmation');win.capture('recovery-confirmation')
+win.click_rect(win.state()['repair_cancel']);time.sleep(.3)
+assert win.state()['slot_status']=='recovered';record('cancel-keeps-recovery-required')
+win.u.PostMessageW(win.hwnd,0x10,0,0)
