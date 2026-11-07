@@ -21,6 +21,50 @@ def unique(pairs):
     return result
 
 
+def validate_completion_cases(report):
+    """AR-A original values, palette, layout and state boundaries; no summary-only pass."""
+    rows = report['ar_measurements']
+    expected = [(1280,720,1.25,5,5,1), (1920,1080,1.0,40,40,4),
+                (2560,1440,1.25,50,30,8), (1600,900,1.0,50,30,8),
+                (1280,720,1.25,50,50,4)]
+    if len(rows) != len(expected):
+        raise ValueError('AR incomplete synthetic cases')
+    colors = ['343f42','edca78','bd604a','6c9aab','7c589e','529574','e28a45','b35280']
+    for row, (w,h,u,columns,lines,count) in zip(rows, expected):
+        if (row['window'] != [w,h,u] or (row['width'],row['height']) != (columns,lines)
+                or len(row['palette']) != count or len(row['cells']) != columns*lines
+                or row['fill_count'] != sum(v > 0 for v in row['cells'])
+                or row['line_count'] != columns+lines+2
+                or any(row[k] is not True for k in ('gated','initial_image','retained','reentry_image','unchanged'))
+                or row['state_before'] != row['state_after']
+                or not re.fullmatch('[0-9a-f]{64}', row['state_before'])
+                or not row['slots_before'] or row['slots_before'] != row['slots_after']
+                or any(not re.fullmatch('[0-9a-f]{64}', h) for h in row['slots_before'].values())
+                or len(row['line_pixels']) != 8 or any(v <= .02 for v in row['line_pixels'])
+                or row['selections'] != [False,True,False,True]):
+            raise ValueError('AR palette/cells/state boundary')
+        # First/rectangle palette fixed independently; the 40/50-square
+        # fixtures have the original regression palette, bound by their input.
+        if columns == 5 or lines == 30:
+            if [p['color'].lstrip('#').lower() for p in row['palette']] != colors[:count]:
+                raise ValueError('AR wrong original color source')
+        x,y,rw,rh = row['raster']; ax,ay,aw,ah = row['area']
+        if (rw <= 0 or rh <= 0 or abs(rw/rh-columns/lines) > .001
+                or x < ax-.01 or y < ay-.01 or x+rw > ax+aw+.01 or y+rh > ay+ah+.01
+                or abs(x+rw/2-ax-aw/2) > .01 or abs(y+rh/2-ay-ah/2) > .01
+                or abs(row['step']-rw/columns) > .001
+                or row['lod'] != ('small' if row['step'] < 18 else 'medium' if row['step'] <= 36 else 'large')):
+            raise ValueError('AR incomplete or distorted grid')
+        samples = row['samples']
+        if {s['value'] for s in samples} != set(row['cells']) or len(samples) != len(set(row['cells'])):
+            raise ValueError('AR missing original color/background pixels')
+        palette = {p['id']: tuple(int(p['color'].lstrip('#')[i:i+2],16)/255 for i in (0,2,4)) for p in row['palette']}
+        for sample in samples:
+            expected_color = palette[sample['value']] if sample['value'] > 0 else sample['paper']
+            if max(abs(a-b) for a,b in zip(sample['actual'],expected_color)) >= .16:
+                raise ValueError('AR wrong original raster pixel')
+
+
 def read(path):
     return json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique)
 
@@ -439,6 +483,7 @@ def validate_original_payload(result, root, player_root=None, failure_context=No
                 raise ValueError('EA group/original mismatch')
             from at_evidence import native
             native(directory/'selected/ea', read(directory/'selected/ea/native.json'), ('final','reopen','blend'))
+            validate_completion_cases(read(directory/'selected/ea/native.json'))
         verification_times[group] = round(time.monotonic()-group_began,6)
     if 'export' in groups:
         failure_context['group'] = 'export'

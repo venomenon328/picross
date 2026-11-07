@@ -1,6 +1,7 @@
 extends "res://tests/kat2_probe.gd"
 ## TEST ONLY. Native renderer and actual viewport mouse routes; isolated saves.
 var measurements: Array = []
+var ar_measurements: Array = []
 
 func event(point: Vector2, down: bool) -> void:
 	var input := InputEventMouseButton.new()
@@ -78,6 +79,7 @@ func run() -> void:
 		await frames()
 		check(app.session.completed, "EA actual second process loads completed slot")
 		final_checks()
+		check(not app.reveal_view.grid_selected and app.completion_image.selected and app.completion_grid.visible, "AR real process restart starts at image")
 	else:
 		for context: Array in [[1280,720,1.25]]:
 			surface.size = Vector2i(context[0],context[1])
@@ -146,15 +148,16 @@ func run() -> void:
 		# Every pixel across the filled row, including all cell boundaries.
 		var row_y := int(rect.position.y+2.5*step)
 		for pixel_x: int in range(ceili(rect.position.x),floori(rect.end.x)):
-			# Native rasterization chooses either adjacent cell at a fractional edge.
+			# Canvas transform and pixel-edge rounding can choose either adjacent
+			# cell within one physical pixel of a fractional edge.
 			# Require an opaque original neighbor color; paper/blending is a seam.
-			var low := clampi(floori((pixel_x-0.5-rect.position.x)/step),0,49)
-			var high := clampi(floori((pixel_x+0.5-rect.position.x)/step),0,49)
+			var low := clampi(floori((pixel_x-1.0-rect.position.x)/step),0,49)
+			var high := clampi(floori((pixel_x+1.0-rect.position.x)/step),0,49)
 			var actual := before_raster.get_pixel(pixel_x,row_y)
 			var matches := false
 			for column: int in range(low,high+1):
 				matches = matches or actual.is_equal_approx(app.board.cell_color(app.session.player.cells[2*app.session.player.width+column]))
-			check(matches, "EA native filled row has no residual seams")
+			check(matches, "EA native filled row has no residual seams: %d %s" % [pixel_x,before_raster.get_pixel(pixel_x,row_y)])
 		app.reveal_view.finish()
 		await frames()
 		final_checks()
@@ -165,6 +168,7 @@ func run() -> void:
 		var portrait: Rect2 = app.reveal_view.artwork_rect()
 		check(is_equal_approx(portrait.size.aspect(),30.0/80.0) and portrait.get_center().is_equal_approx(rect.get_center()), "EA portrait artwork independent of landscape raster, same center")
 		app.reveal_view.artwork = landscape
+		ar_measurements = await preload("res://tests/completion_cases.gd").run(self)
 		# Failed final save and mandatory leave flush preserve the visible end/error.
 		var failed_last := prepare()
 		await frames()
@@ -173,6 +177,11 @@ func run() -> void:
 		event(cell(failed_last), true)
 		event(cell(failed_last), false)
 		check(app.session.completed and app.status_label.visible and not app.save_error.is_empty(), "EA final-save failure remains explicit")
+		app.reveal_view.finish()
+		var failed_bytes := save_bytes()
+		click(app.completion_grid)
+		await frames()
+		check(app.reveal_view.grid_selected and app.status_label.visible and not app.save_error.is_empty() and save_bytes() == failed_bytes, "AR grid switch preserves visible save error and all bytes")
 		app.show_album()
 		check(not app.album.visible and app.ending.visible and app.status_label.visible, "EA failed mandatory flush blocks catalog without hiding error")
 		app.store.fail_step = ""
@@ -207,6 +216,7 @@ func run() -> void:
 		check(app.ending.visible and app.session.completed and app.status_label.visible and save_bytes() == before_failure, "EA failed reset stays visible with recoverable bytes")
 		app.store.fail_step = ""
 		app._save_current()
+		app._select_completion(true)
 		click(app.completion_reset)
 		await frames()
 		app.select_puzzle(0)
@@ -215,13 +225,14 @@ func run() -> void:
 		await frames()
 		check(app.session == app.sessions[2] and app.work.visible and not app.session.completed and app.session.player.history.is_empty(), "EA confirmation retains ending origin and selected ID, opens blank same sheet")
 		check(app.sessions[0].player.cells == other and app.store.load_slot(app.session.definition).status == "fresh" and app.save_timer.is_stopped(), "EA reset affects only bound slot; no delayed save")
+		check(not app.reveal_view.grid_selected and app.reveal_view.stable_ink.commands.is_empty() and app.reveal_view.strokes.is_empty(), "AR confirmed reset releases grid data and selection")
 		# Leave completed on disk for a real independent process restart.
 		var last := prepare()
 		await frames()
 		finish_stroke(last)
 		app.reveal_view.finish()
 		app.show_album()
-	var report := {"checks":checks,"failures":failures,"measurements":measurements,"at_measurements":at_measurements,"test_only":true,"mode":mode}
+	var report := {"checks":checks,"failures":failures,"measurements":measurements,"at_measurements":at_measurements,"ar_measurements":ar_measurements,"test_only":true,"mode":mode}
 	var file := FileAccess.open(output.path_join(mode+".json"),FileAccess.WRITE)
 	file.store_string(JSON.stringify(report,"\t")+"\n")
 	file.close()

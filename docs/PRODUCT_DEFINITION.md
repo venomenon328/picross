@@ -1,5 +1,14 @@
 # Produktdefinition: picross
 
+**AR-A / #486:** Die stabile Abschlussansicht bietet **Bild | Raster** zum
+Vergleich mit den bestätigten Spielerfüllungen in Originalpalette und statischer
+Stift-/Rasteroptik. Die Auswahl bleibt innerhalb des Besuchs erhalten und wird
+nicht gespeichert. Jeder neue Eintritt beginnt bei Bild; Enthüllung, Spoiler-,
+Save- und Resetgrenzen bleiben. Kein interaktives Arbeitsboard oder neue Galerie.
+[Verhalten](PROTOTYPE_P1.md#54-abschluss-und-detaillierteres-ergebnisbild),
+[Paket und getrennte Gates](https://github.com/venomenon328/picross/issues/486).
+
+
 **PANG-A / #531 · auf dem Arbeitsbranch implementiert; R01/M01 vor Merge offen:**
 Pangolin Regular ersetzt **nur die normale Textrolle** des bisher
 integrierten Tidy Hand: Hilfe, Katalogmetadaten, Dropdowns/Popups, Buttons,
