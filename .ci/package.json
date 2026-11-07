@@ -17,5 +17,5 @@
     {"path":"tools/test_web_storage_contract.py","disposition":"change-scoped","reason":"Kleine tools-Anbindung der JS-Probe; fehlendes Node ist ein Fehler, kein stiller Skip."}
   ],
   "core_change": "Keine Kernänderung. Einmalige K-B-T02-Windows-Buchprobe am Lieferhead; notwendige Originalausschnitte auf separatem Reviewbranch für R01/M01, nach Abschluss entfernen, Bedarf spätestens 2026-11-21 prüfen. B-01: current Windows EXE/PCK, both retry paths at 1280/1920 and UI100/125; small original header crops on separate review ref until review completion, reassess 2026-11-21.",
-  "evidence": {"mode": "none", "purpose": "Targeted local B-01 originals on a separate review ref; no CI technical upload.", "expires": null}
+  "evidence": {"mode":"none","purpose":null,"expires":null}
 }
