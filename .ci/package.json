@@ -37,6 +37,11 @@
       "path": "game/tests/hz_pack.gd",
       "disposition": "change-scoped",
       "reason": "Aktives Iconinventar konsistent 27 statt 23; der externe Content-PCK-Reader prüft außerdem den real geladenen gemeinsamen Scrollbarstil und alle vier importierten Dreiecke. Einmalige Windows/Web-PCK-Prüfung, keine neue Dauersuite oder Modulausweitung."
+    },
+    {
+      "path": "game/tests/display_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Vorhandenes N02-Zentrierungsorakel misst die native Nutzfläche ohne tatsächlich sichtbaren Balken statt alter 10xUI-Toleranz zur Gesamtfläche; 1px genaue Zentrierung, Maximalbreite und horizontaler Überlaufschutz bleiben geprüft."
     }
   ],
   "core_change": "Keine Kernänderung. Einmalige gerenderte native Originale für SBR-A-R01 auf separatem review/539-sbr-a, kein Produktdiff und kein CI-Galerieupload. Bedarf nach Review/Abnahme beenden, spätestens 2026-11-14 prüfen. Persönliche Windows-Abnahme SBR-A-M01 bleibt beim Eigentümer.",
