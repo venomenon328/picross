@@ -1,0 +1,422 @@
+{
+  "format": "picross-ar-a-review-originals-v1",
+  "test_only": true,
+  "product_head": "8b9445023051042cc7cc3a47f93ec5d9fc169c00",
+  "base": "12b73747cbaa9a6fdcee6e29476076a948eb3d5c",
+  "tested_checkout": "8b9445023051042cc7cc3a47f93ec5d9fc169c00",
+  "capture": "Actual native Windows OpenGL SubViewport frames on regular book paper; synthetic sessions; book navigation settled synchronously by book_fixture. Viewport pointer events, no physical OS mouse or owner acceptance.",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "OpenGL 3.3.0 NVIDIA 596.49; NVIDIA GeForce RTX 3070",
+  "reviewer": "Independent AR-A-R01 reviewer; owner AR-A-M01 uses the separate Windows player",
+  "lifetime": "Review originals only; remove own review/486-ar-a-v2 after R01 and M01 or agreed package completion. Recheck need/access on 2026-11-14 if gates remain open.",
+  "native_checks": 9913,
+  "restart_checks": 11,
+  "native_seconds": 97.404965,
+  "independent_reader": "native_results.validate_payload and validate_completion_cases passed on these originals/report values before temporary technical data cleanup.",
+  "geometry": [
+    {
+      "window": [
+        1280,
+        720,
+        1.25
+      ],
+      "width": 5,
+      "height": 5,
+      "area": [
+        125.0,
+        117.5,
+        1030.0,
+        313.5
+      ],
+      "raster": [
+        483.25,
+        117.5,
+        313.5,
+        313.5
+      ],
+      "step": 62.7,
+      "lod": "large",
+      "fill_count": 5,
+      "line_count": 12,
+      "line_pixels": [
+        0.756862744688988,
+        0.105882346630096,
+        0.701960772275925,
+        0.701960772275925,
+        0.75294117629528,
+        0.239215672016144,
+        0.756862744688988,
+        0.756862744688988
+      ],
+      "control": "single-rectangular-toggle",
+      "hatch_count": 28,
+      "hatch_pixels": [
+        348,
+        509
+      ],
+      "slider_positions": [
+        87.5,
+        128.5,
+        87.5,
+        128.5
+      ],
+      "unchanged": true,
+      "state_before": "e97d1e24b7ecf5b88bcad2fa1a888c220c560b7f0daee66d7cde564d369dd0ae",
+      "state_after": "e97d1e24b7ecf5b88bcad2fa1a888c220c560b7f0daee66d7cde564d369dd0ae",
+      "slots_before": {
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      },
+      "slots_after": {
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      }
+    },
+    {
+      "window": [
+        1920,
+        1080,
+        1.0
+      ],
+      "width": 40,
+      "height": 40,
+      "area": [
+        100.0,
+        99.120002746582,
+        1720.0,
+        748.880004882813
+      ],
+      "raster": [
+        585.559997558594,
+        99.1199951171875,
+        748.880004882813,
+        748.880004882813
+      ],
+      "step": 18.7220001220703,
+      "lod": "medium",
+      "fill_count": 1448,
+      "line_count": 82,
+      "line_pixels": [
+        0.749019607901573,
+        0.678431361913681,
+        0.75294117629528,
+        0.756862744688988,
+        0.75294117629528,
+        0.75294117629528,
+        0.75294117629528,
+        0.756862744688988
+      ],
+      "control": "single-rectangular-toggle",
+      "hatch_count": 28,
+      "hatch_pixels": [
+        177,
+        336
+      ],
+      "slider_positions": [
+        87.5,
+        128.5,
+        87.5,
+        128.5
+      ],
+      "unchanged": true,
+      "state_before": "649707aaadf4a4fac25d07048989fc7f6655f3035d5fa4f5d5c5eeaac2bc40fa",
+      "state_after": "649707aaadf4a4fac25d07048989fc7f6655f3035d5fa4f5d5c5eeaac2bc40fa",
+      "slots_before": {
+        "t02.bak": "58447263bdcd59e8bfcd1c5414afe48bfe8dd056a040643ceeafa7af0d89815e",
+        "t02.json": "91ae63916887a43ad0fdec5cca56fc4b5f9a0d2158b52e50d286d20553af94f7",
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      },
+      "slots_after": {
+        "t02.bak": "58447263bdcd59e8bfcd1c5414afe48bfe8dd056a040643ceeafa7af0d89815e",
+        "t02.json": "91ae63916887a43ad0fdec5cca56fc4b5f9a0d2158b52e50d286d20553af94f7",
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      }
+    },
+    {
+      "window": [
+        2560,
+        1440,
+        1.25
+      ],
+      "width": 50,
+      "height": 30,
+      "area": [
+        125.0,
+        127.410003662109,
+        2310.0,
+        1023.59002685547
+      ],
+      "raster": [
+        427.00830078125,
+        127.410003662109,
+        1705.9833984375,
+        1023.59002685547
+      ],
+      "step": 34.11966796875,
+      "lod": "medium",
+      "fill_count": 50,
+      "line_count": 82,
+      "line_pixels": [
+        0.749019607901573,
+        0.243137240409851,
+        0.760784313082695,
+        0.745098039507866,
+        0.75294117629528,
+        0.250980377197266,
+        0.749019607901573,
+        0.756862744688988
+      ],
+      "control": "single-rectangular-toggle",
+      "hatch_count": 28,
+      "hatch_pixels": [
+        349,
+        509
+      ],
+      "slider_positions": [
+        87.5,
+        128.5,
+        87.5,
+        128.5
+      ],
+      "unchanged": true,
+      "state_before": "3d0661f5174df563d48b3659a82ddcf5a559cd1bc146019ddcf21d9b21421930",
+      "state_after": "3d0661f5174df563d48b3659a82ddcf5a559cd1bc146019ddcf21d9b21421930",
+      "slots_before": {
+        "t02.bak": "58447263bdcd59e8bfcd1c5414afe48bfe8dd056a040643ceeafa7af0d89815e",
+        "t02.json": "91ae63916887a43ad0fdec5cca56fc4b5f9a0d2158b52e50d286d20553af94f7",
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      },
+      "slots_after": {
+        "t02.bak": "58447263bdcd59e8bfcd1c5414afe48bfe8dd056a040643ceeafa7af0d89815e",
+        "t02.json": "91ae63916887a43ad0fdec5cca56fc4b5f9a0d2158b52e50d286d20553af94f7",
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      }
+    },
+    {
+      "window": [
+        1600,
+        900,
+        1.0
+      ],
+      "width": 50,
+      "height": 30,
+      "area": [
+        100.0,
+        94.0,
+        1400.0,
+        535.0
+      ],
+      "raster": [
+        354.166656494141,
+        94.0,
+        891.666687011719,
+        535.0
+      ],
+      "step": 17.8333337402344,
+      "lod": "small",
+      "fill_count": 50,
+      "line_count": 82,
+      "line_pixels": [
+        0.75294117629528,
+        0.670588225126266,
+        0.749019607901573,
+        0.756862744688988,
+        0.756862744688988,
+        0.0980392098426819,
+        0.75294117629528,
+        0.756862744688988
+      ],
+      "control": "single-rectangular-toggle",
+      "hatch_count": 28,
+      "hatch_pixels": [
+        176,
+        338
+      ],
+      "slider_positions": [
+        87.5,
+        128.5,
+        87.5,
+        128.5
+      ],
+      "unchanged": true,
+      "state_before": "3d0661f5174df563d48b3659a82ddcf5a559cd1bc146019ddcf21d9b21421930",
+      "state_after": "3d0661f5174df563d48b3659a82ddcf5a559cd1bc146019ddcf21d9b21421930",
+      "slots_before": {
+        "t02.bak": "58447263bdcd59e8bfcd1c5414afe48bfe8dd056a040643ceeafa7af0d89815e",
+        "t02.json": "91ae63916887a43ad0fdec5cca56fc4b5f9a0d2158b52e50d286d20553af94f7",
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      },
+      "slots_after": {
+        "t02.bak": "58447263bdcd59e8bfcd1c5414afe48bfe8dd056a040643ceeafa7af0d89815e",
+        "t02.json": "91ae63916887a43ad0fdec5cca56fc4b5f9a0d2158b52e50d286d20553af94f7",
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      }
+    },
+    {
+      "window": [
+        1280,
+        720,
+        1.25
+      ],
+      "width": 50,
+      "height": 50,
+      "area": [
+        125.0,
+        117.5,
+        1030.0,
+        313.5
+      ],
+      "raster": [
+        483.25,
+        117.5,
+        313.5,
+        313.5
+      ],
+      "step": 6.27,
+      "lod": "small",
+      "fill_count": 2238,
+      "line_count": 102,
+      "line_pixels": [
+        0.756862744688988,
+        0.250980377197266,
+        0.75294117629528,
+        0.745098039507866,
+        0.75294117629528,
+        0.247058808803558,
+        0.749019607901573,
+        0.760784313082695
+      ],
+      "control": "single-rectangular-toggle",
+      "hatch_count": 28,
+      "hatch_pixels": [
+        348,
+        508
+      ],
+      "slider_positions": [
+        87.5,
+        128.5,
+        87.5,
+        128.5
+      ],
+      "unchanged": true,
+      "state_before": "d49e28952ec040168a22cb6c7052365b8d7e83aac04cab86cd80e934cdc60be0",
+      "state_after": "d49e28952ec040168a22cb6c7052365b8d7e83aac04cab86cd80e934cdc60be0",
+      "slots_before": {
+        "t02.bak": "58447263bdcd59e8bfcd1c5414afe48bfe8dd056a040643ceeafa7af0d89815e",
+        "t02.json": "91ae63916887a43ad0fdec5cca56fc4b5f9a0d2158b52e50d286d20553af94f7",
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t06.bak": "0ee67e6ca81cff421879352c6579c13faa1b89bb3ba5d2c28febeb82f494b534",
+        "t06.json": "76790c22e56213ba7e098209d0db7b9a55b59ef15491c8e123cf20d94cfef0e2",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      },
+      "slots_after": {
+        "t02.bak": "58447263bdcd59e8bfcd1c5414afe48bfe8dd056a040643ceeafa7af0d89815e",
+        "t02.json": "91ae63916887a43ad0fdec5cca56fc4b5f9a0d2158b52e50d286d20553af94f7",
+        "t04.bak": "9a44d103d13b8724f4d439e8e71b646df2eb519b8ca415632aeb38117bcef500",
+        "t04.json": "acce51ee4df8661ce5374e3b367d56c3c8290d9afc077ed5cf2dd2732659043c",
+        "t06.bak": "0ee67e6ca81cff421879352c6579c13faa1b89bb3ba5d2c28febeb82f494b534",
+        "t06.json": "76790c22e56213ba7e098209d0db7b9a55b59ef15491c8e123cf20d94cfef0e2",
+        "t09.bak": "40e201399cb730f6f03f0e35c404b6bba71660568c6e59c62cf9066a42dda4f0",
+        "t09.json": "4432df0ea3263ca43097d9b75262ba2dc55403a4f115f02e1c4a6858a1204576"
+      }
+    }
+  ],
+  "files": [
+    {
+      "path": "review-evidence/486-ar-a/ar-0-bild.png",
+      "product_head": "8b9445023051042cc7cc3a47f93ec5d9fc169c00",
+      "mode": "bild",
+      "viewport": [
+        1280,
+        720
+      ],
+      "ui_scale": 1.25,
+      "bytes": 799871,
+      "sha256": "01a672ef708b6014c49823dee3519cb389b691fb6ad01141fe0d89559c3236b2"
+    },
+    {
+      "path": "review-evidence/486-ar-a/ar-0-raster.png",
+      "product_head": "8b9445023051042cc7cc3a47f93ec5d9fc169c00",
+      "mode": "raster",
+      "viewport": [
+        1280,
+        720
+      ],
+      "ui_scale": 1.25,
+      "bytes": 822585,
+      "sha256": "04c362418dd08600c3f42450dca9c7bf5c185a7f8917cd210d5638fdd8cbe5b6"
+    },
+    {
+      "path": "review-evidence/486-ar-a/ar-1-bild.png",
+      "product_head": "8b9445023051042cc7cc3a47f93ec5d9fc169c00",
+      "mode": "bild",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "bytes": 1225843,
+      "sha256": "d5efed1e765319d5ac2ecefecd871de647e55a6f7a8857b3556466a594f8e368"
+    },
+    {
+      "path": "review-evidence/486-ar-a/ar-1-raster.png",
+      "product_head": "8b9445023051042cc7cc3a47f93ec5d9fc169c00",
+      "mode": "raster",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "bytes": 1799131,
+      "sha256": "60ccfbf4804be92cd2c21e8420c2d5ebff42b111b3acbf41ff63261577ec4f57"
+    },
+    {
+      "path": "review-evidence/486-ar-a/ar-2-bild.png",
+      "product_head": "8b9445023051042cc7cc3a47f93ec5d9fc169c00",
+      "mode": "bild",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.25,
+      "bytes": 2318078,
+      "sha256": "fd8bfdfbb6edfa5a78a7a591e277667f8f2efcb0451ec32a41edda17e1d60059"
+    },
+    {
+      "path": "review-evidence/486-ar-a/ar-2-raster.png",
+      "product_head": "8b9445023051042cc7cc3a47f93ec5d9fc169c00",
+      "mode": "raster",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.25,
+      "bytes": 2609057,
+      "sha256": "4fae6a2c5ad48e6c990a1b116a2803018fa8b837a9502f36752abafb904e4c1f"
+    }
+  ]
+}
