@@ -26,13 +26,33 @@ func _ready() -> void:
 
 func present(item) -> void:
 	detail.text = item.neutral_title()
-	preview.cells = item.visible_cells()
+	preview.cells = item.player.cells.duplicate()
 	preview.width = item.player.width
 	preview.height = item.player.height
 	preview.palette = item.definition.palette
 	preview.style_identity = str(item.definition.id)+"/recent"
 	preview.queue_redraw()
 	layout()
+
+func text_heights(width: float) -> Vector2:
+	var heights := Vector2.ZERO
+	for index: int in range(2):
+		var item: Label = caption if index == 0 else detail
+		UiText.small_label(item,UiText.small_size(ui_scale),ui_scale)
+		var paragraph := TextParagraph.new()
+		paragraph.width = maxf(1,width-item.get_theme_stylebox("normal").get_minimum_size().x)
+		paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+		paragraph.add_string(item.text,item.get_theme_font("font"),item.get_theme_font_size("font_size"))
+		heights[index] = UiText.label_height(item,UiText.small_size(ui_scale),maxi(1,paragraph.get_line_count()))
+	return heights
+
+func fits(width: float, height: float) -> bool:
+	# The same shaped font, wrapping and safety margins as the actual labels.
+	# Reserve the complete 56*UI miniature, text gap and both inner edges.
+	var text_width: float = width-84*ui_scale
+	if text_width <= 0 or width < 44*ui_scale or height < 68*ui_scale: return false
+	var heights: Vector2 = text_heights(text_width)
+	return heights.x+heights.y <= height-12*ui_scale
 
 func layout() -> void:
 	if preview == null: return
@@ -41,13 +61,13 @@ func layout() -> void:
 	preview.position = Vector2(size.x-side-8*u,6*u)
 	preview.size = Vector2.ONE*side
 	var width: float = maxf(1,preview.position.x-20*u)
+	var heights: Vector2 = text_heights(width)
 	for item: Label in [caption,detail]:
-		UiText.small_label(item,UiText.small_size(u),u)
 		item.position.x = 12*u
 		item.size.x = width
-	caption.size.y = 0
-	detail.size.y = 0
-	var caption_height: float = caption.get_minimum_size().y
-	var detail_height: float = detail.get_minimum_size().y
+	var caption_height: float = heights.x
+	var detail_height: float = heights.y
+	caption.size.y = caption_height
+	detail.size.y = detail_height
 	caption.position.y = maxf(0,(size.y-caption_height-detail_height)/2)
 	detail.position.y = caption.position.y+caption_height
