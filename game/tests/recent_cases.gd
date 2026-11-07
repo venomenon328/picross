@@ -103,4 +103,53 @@ static func run(probe) -> void:
 	await probe.frames()
 	probe.check(app.recent_id().is_empty() and not app.recent_panel.visible,"K-B reset removes marker and panel")
 	app.album.reset_filters()
+	await retry_layout(probe)
 	probe.catalog_case("k-b-recent")
+
+static func retry_layout(probe) -> void:
+	# B-01: exercise clipping and actual edge hits, not just the Button minimum.
+	# Stay in the existing pages process; no captures or extra history process.
+	var app = probe.app
+	var album = app.album
+	var hits: Array[int] = [0,0]
+	app.recent_retry.pressed.connect(func() -> void: hits[0] += 1)
+	app.save_retry.pressed.connect(func() -> void: hits[1] += 1)
+	for spec: Array in [[1280,720,1.0],[1280,720,1.25],[1920,1080,1.0],[1920,1080,1.25]]:
+		probe.surface.size = Vector2i(spec[0],spec[1])
+		app.set_ui_scale(spec[2])
+		await probe.frames()
+		app._layout_book()
+		await probe.frames()
+		var fixed: Array = [album.get_global_rect(),album.sort_choice.get_global_rect(),album.filter_button.get_global_rect(),app.recent_panel.get_global_rect(),album.scroll.get_global_rect(),album.right_scroll.get_global_rect()]
+		app.recent.fail_step = "open"
+		var candidate = app.Session.new(app.sessions[3].definition)
+		candidate.player.commit([{"index":0,"before":-1,"after":1}])
+		app.recent.edited(candidate)
+		app.store.fail_step = "after_temp"
+		app.session.gesture.begin(app.session.player,Vector2i.ZERO,1)
+		app.session.finish()
+		app._on_commit()
+		album.feedback.text = "Synthetischer langer Speicherfehler. ".repeat(60)
+		album.feedback.show()
+		await probe.frames()
+		var area: Rect2 = album.notice_area.get_global_rect()
+		probe.check(area.position.y >= album.summary.get_global_rect().end.y and area.end.y <= app.recent_panel.position.y,"B-01 notices remain between summary and recent panel")
+		for index: int in range(2):
+			var button: Button = app.recent_retry if index == 0 else app.save_retry
+			album.notice_area.ensure_control_visible(button)
+			await probe.frames()
+			var target: Rect2 = button.get_global_rect()
+			probe.check(button.is_visible_in_tree() and area.grow(0.001).encloses(target) and target.size.x >= 44*app.ui_scale and target.size.y >= 44*app.ui_scale,"B-01 full retry target survives ScrollContainer clipping")
+			var before: int = hits[index]
+			for point: Vector2 in [target.position+Vector2.ONE,target.position+Vector2(target.size.x-1,1),target.end-Vector2.ONE,target.position+Vector2(1,target.size.y-1),target.get_center()]:
+				probe.click_at(point)
+				await probe.frames()
+			probe.check(hits[index] == before+5,"B-01 retry receives all four corner and centre pointer clicks")
+		probe.check(album.notice_area.get_v_scroll_bar().max_value > area.size.y,"B-01 long errors scroll separately")
+		probe.check(fixed == [album.get_global_rect(),album.sort_choice.get_global_rect(),album.filter_button.get_global_rect(),app.recent_panel.get_global_rect(),album.scroll.get_global_rect(),album.right_scroll.get_global_rect()],"B-01 errors and scrolling never move catalog controls or recent panel")
+		app.store.fail_step = ""
+		app._save_current()
+		app.recent.fail_step = ""
+		app.recent.retry()
+		album.feedback.hide()
+		await probe.frames()

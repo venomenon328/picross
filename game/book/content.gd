@@ -154,7 +154,9 @@ func _layout_book(prepare_board: bool = false) -> void:
 		var heading_top: float = maxf(left_paper.position.y+12*ui_scale,material.size.y*0.035+12*ui_scale)
 		# A larger drawing follows available paper height, with a compact fallback.
 		var title_height: float = maxf(128*ui_scale,clampf(left_paper.size.y*0.14,64*ui_scale,110*ui_scale))
-		var catalog_top: float = heading_top+title_height+8*ui_scale
+		# Reserve a full retry target plus breathing room above the recent panel,
+		# even with no error. Showing/scrolling notices must not move the catalog.
+		var catalog_top: float = heading_top+title_height+28*ui_scale
 		var footer_width: float = album.right_pager.get_child(0).get_combined_minimum_size().x+album.next_button.get_combined_minimum_size().x+12*ui_scale
 		album.right_pager.vertical = (edge-margin-album.fold_gap)/2 < footer_width
 		_place(album, Rect2(Vector2(margin,catalog_top),Vector2(edge-margin,left_paper.end.y-inset-catalog_top)))
@@ -170,7 +172,10 @@ func _layout_book(prepare_board: bool = false) -> void:
 			_place(recent_panel,Rect2(Vector2(right_heading,catalog_top-76*ui_scale),Vector2(edge-right_heading,68*ui_scale)))
 			recent_panel.layout()
 		var notice_top: float = heading_top+28*ui_scale
-		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(edge-right_heading,28*ui_scale)))
+		# This scroller is detached from album, so its controls need the same
+		# scaling pass explicitly (including both retry targets and long labels).
+		album._style_controls(album.notice_area)
+		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(edge-right_heading,48*ui_scale)))
 		album._layout_cards()
 
 func select_puzzle(index: int) -> void:

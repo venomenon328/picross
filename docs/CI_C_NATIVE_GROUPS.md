@@ -16,6 +16,12 @@ kein Browserstart und kein stilles Überspringen bei fehlendem Node.
 K-B-T02 ist eine einmalige Windows-Buchprobe mit isolierten synthetischen Profilen.
 K-B-W01, unabhängiges R01 und persönliches M01 bleiben separate Gates. Keine neue
 Bild-/HIL-Familie, kein echter Produktionskatalog als automatisierter Testbestand.
+Die kleine B-01-Dauerregression bleibt im selben `k-b-recent`-Checkpoint:
+1280×720 und 1920×1080 jeweils UI100/125, Merker-/Savefehler, vollständig
+sichtbare 44/55-px-Trefferrechtecke nach Scrollen sowie echte Pointerklicks an
+allen vier Ecken und in der Mitte beider Retrybuttons. Überlange Meldungen
+dürfen Sortierung, Filter, Kartenflächen und Fortsetzen-Panel nicht verschieben.
+Aktuelle echte Windows-Originale bleiben ein einmaliger befristeter Reviewbeleg.
 
 ## Geltung und Auswahl
 
