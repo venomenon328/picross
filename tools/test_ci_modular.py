@@ -68,7 +68,9 @@ class PackageContract(unittest.TestCase):
                 with patch.object(ci, 'legacy_binding', return_value=binding), \
                      patch.object(ci, 'command') as command, patch.object(ci, 'summary'), \
                      patch.object(ci, 'git', side_effect=['', plan['tested_checkout']]), \
-                     patch.dict('sys.modules', {'production_results': SimpleNamespace(validate_all=lambda *args: None)}), \
+                     patch.dict('sys.modules', {'production_results': SimpleNamespace(
+                         files=lambda *args, **kwargs: [], validate_all=lambda *args: None)}), \
+                     patch.object(ci, 'copy_file'), \
                      patch.dict(os.environ, {'GITHUB_OUTPUT': str(root/'outputs')}):
                     report = ci.execute(plan, root/'out', root/'cache')
                 self.assertTrue(report['accepted'], report['error'])
