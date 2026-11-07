@@ -4,7 +4,7 @@
   "kb_icon_source": "tools/book_icons_kb.json; KB-168-NOTICE.txt",
   "hz_icon_source": {
     "file": "tools/book_icons_hz.json",
-    "sha256": "db148c0c2eb97f58908bb789d96ec397ec008ce667d8efcf28fc217ffb178bd6",
+    "sha256": "7134f1bfbc95dfc37ff258c24d4184f017b1e926f825fac957c9219195891dc1",
     "generator": "tools/z2_resources.py",
     "notice": "HZ-B-284-NOTICE.txt"
   },
@@ -19,7 +19,7 @@
     },
     {
       "file": "HZ-B-284-NOTICE.txt",
-      "sha256": "406139e9a2a92a33b9a88b3bf3ff95567c3f6fe30abf7bb4b216eaeacda503c7"
+      "sha256": "637ac854ec3813929a7aecc7f55df41e76813fa09bb63fd789950ff086d6836a"
     },
     {
       "file": "KB-168-NOTICE.txt",
@@ -111,7 +111,7 @@
     },
     {
       "file": "icons.json",
-      "sha256": "5599b1286710c005fa2148b97890102f04bcfd6db48bc3e588fa6638763f83c5"
+      "sha256": "c476c04dc2537e15c458b6c14c484e25a43d42e4db2f39a1fb39eabbb31ccf49"
     },
     {
       "file": "menu.svg",
@@ -148,6 +148,22 @@
     {
       "file": "reset.svg",
       "sha256": "ae593cdbb3f9601f91a5a37dc6b9fda1965e22965674626aeec7ec36cc381bdf"
+    },
+    {
+      "file": "scroll-down.svg",
+      "sha256": "3f1c4ef4315eeebd791072b66bde923967039814d6509834197f677deaccc195"
+    },
+    {
+      "file": "scroll-left.svg",
+      "sha256": "7b37135357121116fd4da10b066b96e5cc7f9cbc89051d423a8b4c47811261b2"
+    },
+    {
+      "file": "scroll-right.svg",
+      "sha256": "5a53c57e13be59797da7ccadc9234c7a67187550e92b9453374f194592cdf0a7"
+    },
+    {
+      "file": "scroll-up.svg",
+      "sha256": "68f910f2f460a8f17acd05a21925986f72f059c06374f78d4f2cab0838f88830"
     },
     {
       "file": "undo.svg",

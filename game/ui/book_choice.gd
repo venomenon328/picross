@@ -51,6 +51,7 @@ func _style() -> void:
 	theme.set_constant("modulate_arrow","OptionButton",0)
 	theme.set_constant("arrow_margin","OptionButton",roundi(10*ui_scale))
 	get_popup().theme = Controls.popup_theme(str(name),ui_scale,Text.small_font(fs))
+	Controls.scroll_steps(get_popup(),ui_scale)
 	get_popup().prefer_native_menu = false
 
 static func dismiss_all(tree: SceneTree) -> void:

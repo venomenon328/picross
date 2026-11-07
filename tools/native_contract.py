@@ -12,7 +12,7 @@ RP6_CAPTURES = {4: (2, 1920, 1080, 1.0), 6: (3, 1280, 720, 1.25)}
 RP6_STATES = ('work', 'detail', 'album-partial', 'completion', 'album-completed')
 # P2-E-A-V02 / D02: selected native cases, deliberately not the old cross product.
 CATALOG_CASES = {
-    'pages': ('catalog-layout', 'catalog-pages', 'catalog-sorting',
+    'pages': ('catalog-layout', 'catalog-pages', 'catalog-sorting', 'sbr-scrollbars',
               'k-a-filter-rules', 'k-a-filter-navigation', 'k-b-recent'),
     'ke': ('ke-layout-1280-ui125', 'ke-metadata-null', 'ke-metadata-current',
            'ke-negative-delayed-hover', 'ke-metadata-legacy',
