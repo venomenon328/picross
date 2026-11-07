@@ -90,16 +90,23 @@ func _process(_delta: float) -> void:
 	recent_retry.tooltip_text = message
 	# Both marker errors and retry are separate from save-slot diagnostics.
 	# They remain reachable on returning to the catalog, without blocking work.
-	if recent_panel != null:
-		var id: String = recent_id()
-		recent_panel.visible = album.visible and not id.is_empty()
-		recent_panel.disabled = presentation_locked or album.locked
-		if recent_panel.visible:
-			var item: Session = sessions[int(session_indices[id])]
-			var signature: String = id+"/"+str(hash(item.player.cells))+"/"+str(ui_scale)
-			if recent_signature != signature:
-				recent_signature = signature
-				recent_panel.present(item)
+	if _refresh_recent_panel(): _layout_book()
+
+func _refresh_recent_panel() -> bool:
+	if recent_panel == null: return false
+	var id: String = recent_id()
+	recent_panel.visible = album.visible and not id.is_empty()
+	recent_panel.disabled = presentation_locked or album.locked
+	if not recent_panel.visible:
+		recent_signature = ""
+		return false
+	var item: Session = sessions[int(session_indices[id])]
+	var signature: String = id+"/"+str(item.definition.revision)+"/"+str(ui_scale)
+	# Compare the owned cell snapshot, not just a hash or a mutable array alias.
+	if recent_signature == signature and recent_panel.preview.cells == item.player.cells: return false
+	recent_signature = signature
+	recent_panel.present(item)
+	return true
 
 func resume_recent() -> void:
 	if presentation_locked or album.locked or not album.visible: return
@@ -139,7 +146,10 @@ func _layout_book(prepare_board: bool = false) -> void:
 			_place(save_retry,Rect2(work_repair_button.position,Vector2(340,44)*ui_scale))
 	if album.summary != null: album.summary.visible = album.visible and catalog_error.is_empty()
 	if album.notice_area != null: album.notice_area.visible = album.visible
-	if recent_panel != null: recent_panel.visible = album.visible and not recent_id().is_empty()
+	# Layout also runs while processing is disabled for the book capture. Bind
+	# the destination now, before its first rendered frame, rather than waiting
+	# for _process (or any input) after the transition has settled.
+	_refresh_recent_panel()
 	if album.visible:
 		# Projected paper is already in viewport pixels, including letterboxing.
 		# Use that one coordinate system for heading, clip areas and both footers.
@@ -169,7 +179,10 @@ func _layout_book(prepare_board: bool = false) -> void:
 		# bounds never enter either page's card/control layout, even on failure.
 		if recent_panel != null:
 			recent_panel.ui_scale = ui_scale
-			_place(recent_panel,Rect2(Vector2(right_heading,catalog_top-76*ui_scale),Vector2(edge-right_heading,68*ui_scale)))
+			var available: float = edge-right_heading
+			var panel_height: float = 68*ui_scale
+			var panel_width: float = available/2 if recent_panel.fits(available/2,panel_height) else available
+			_place(recent_panel,Rect2(Vector2(right_heading,catalog_top-76*ui_scale),Vector2(panel_width,panel_height)))
 			recent_panel.layout()
 		var notice_top: float = heading_top+28*ui_scale
 		# This scroller is detached from album, so its controls need the same

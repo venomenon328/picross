@@ -21,6 +21,20 @@ Der feste Meldungsclip reserviert 48 × UI Höhe für vollständige 44/55-px-Ret
 einschließlich Kontur. Die zusätzliche Kopfreserve gilt auch ohne Fehlermeldung;
 lange Meldungen und beide Retrywege scrollen darin, ohne Panel oder Controls zu versetzen.
 
+**RF-A / #541:** Die eigene Miniatur bindet den bestätigten Zellstand bereits
+beim Anzeigen des Katalogziels, auch während der prozessgesperrten Buchaufnahme;
+Rückkehr, erneute Anzeige, Zielwechsel und Aktualisierung im offenen Katalog
+benötigen keinen Hover. Eine gültige Redo-History ohne Füllungen bleibt als leere
+Miniatur sichtbar. X und unbekannt bleiben neutral.
+Der Kasten ist genau halb oder ganz so breit wie die tatsächlich nutzbare rechte
+Kopfzone nach Papierprojektion und Innenrändern. Die Halbbreite wird nur gewählt,
+wenn die mit aktueller Pangolin-Rolle gemessenen, gegebenenfalls umgebrochenen
+Texte samt Innenabständen und vollständiger 56×UI-Miniatur in die feste Höhe
+passen; sonst unmittelbar volle Breite. Bei 2560×1440/UI100 gilt Halbbreite.
+Linker Rand, y-Position und 8×UI-Abstand zu Sortierung/Filter bleiben erhalten.
+Resize und UI100→125→100 messen neu. [Paketkriterien und Prüfplan](https://github.com/venomenon328/picross/issues/541)
+binden die einmaligen Windows-Originale und getrennten R01/M01-Gates.
+
 **PANG-A / #531 · auf dem Arbeitsbranch implementierte normale Schriftrolle:**
 Gemäß [HZ-D08](HAND_DRAWN_UI.md) ersetzt Pangolin Regular Tidy Hand
 in vorhandenen normalen Katalogtexten einschließlich Kategorie, Metadaten,
