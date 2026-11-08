@@ -1,0 +1,296 @@
+{
+  "format": "pa-v01-reference-plan-1",
+  "source_commit": "059bb003dc761e862b304957143b0dd45d92bb82",
+  "scope": "finite synthetic diagnostics only; no product validator or logical certificate",
+  "contexts": [
+    {
+      "id": "small",
+      "client": [
+        1280,
+        720
+      ],
+      "ui": 1.25,
+      "requested_cell": 24
+    },
+    {
+      "id": "normal",
+      "client": [
+        1920,
+        1080
+      ],
+      "ui": 1.0,
+      "requested_cell": 24
+    }
+  ],
+  "renderer": "unmodified game/ui/full_view_board.gd and atlas_marks.gd in regular book main; isolated synthetic catalog; additional native token panel with measured same typography",
+  "states": [
+    "OPEN",
+    "FILLED",
+    "CLOSED"
+  ],
+  "axes": [
+    "row",
+    "column"
+  ],
+  "tokens": [
+    "1",
+    "11"
+  ],
+  "comparison_candidates": [
+    "Oklab Euclidean distance scaled 100 (updated 2021 linear-sRGB matrices)",
+    "relative luminance contrast ratio and absolute luminance difference (diagnostic only)"
+  ],
+  "tuning": "F01-F07 development set; F08 values frozen now, evaluate only after first documented model hypothesis; no owner labels inferred",
+  "cases": [
+    {
+      "id": "F01",
+      "file": "F01.json",
+      "sha256": "d8eec381978fccf5dc1a3012843c0c51f2e07e9efaf65729027f28c92c5b9958",
+      "palette": [
+        {
+          "id": "c01",
+          "runtime_id": 1,
+          "srgb": "#cc3333",
+          "uses": 520
+        },
+        {
+          "id": "c02",
+          "runtime_id": 2,
+          "srgb": "#2678bd",
+          "uses": 518
+        }
+      ],
+      "comparisons": "all unordered used foreground pairs; paper/line contrast separately",
+      "question": "Sind Rot/Blau auf beiden Achsen auch blass klar zuzuordnen?",
+      "owner_verdict": null,
+      "held_out": false
+    },
+    {
+      "id": "F02",
+      "file": "F02.json",
+      "sha256": "2fafd3c849874b2c4bab7f7e91df1377c155eab48c5bd72eea5afdef99b711e2",
+      "palette": [
+        {
+          "id": "c01",
+          "runtime_id": 1,
+          "srgb": "#447799",
+          "uses": 520
+        },
+        {
+          "id": "c02",
+          "runtime_id": 2,
+          "srgb": "#487b9d",
+          "uses": 518
+        }
+      ],
+      "comparisons": "all unordered used foreground pairs; paper/line contrast separately",
+      "question": "Wo verschwinden nahe Schattierungen zuerst?",
+      "owner_verdict": null,
+      "held_out": false
+    },
+    {
+      "id": "F03",
+      "file": "F03.json",
+      "sha256": "4b2f351c4202008d9266e0384bbaadd8345416f605d37dbb8b55b7b2b7320b65",
+      "palette": [
+        {
+          "id": "c01",
+          "runtime_id": 1,
+          "srgb": "#b04444",
+          "uses": 520
+        },
+        {
+          "id": "c02",
+          "runtime_id": 2,
+          "srgb": "#337744",
+          "uses": 518
+        }
+      ],
+      "comparisons": "all unordered used foreground pairs; paper/line contrast separately",
+      "question": "Genügt unterschiedlicher Farbton bei ähnlicher relativer Luminanz?",
+      "owner_verdict": null,
+      "held_out": false
+    },
+    {
+      "id": "F04",
+      "file": "F04.json",
+      "sha256": "b3ae35a21576932370b34945b19733db9b08b3b56c500a44c5dad65c7a12803d",
+      "palette": [
+        {
+          "id": "c01",
+          "runtime_id": 1,
+          "srgb": "#284c70",
+          "uses": 520
+        },
+        {
+          "id": "c02",
+          "runtime_id": 2,
+          "srgb": "#8bb8e4",
+          "uses": 518
+        }
+      ],
+      "comparisons": "all unordered used foreground pairs; paper/line contrast separately",
+      "question": "Trägt eine deutliche Helligkeitsänderung bei ähnlichem Farbton?",
+      "owner_verdict": null,
+      "held_out": false
+    },
+    {
+      "id": "F05",
+      "file": "F05.json",
+      "sha256": "99f9214e69a786baefbe245ab8b96b44952e704f5775931751a9dfe93375796a",
+      "palette": [
+        {
+          "id": "c01",
+          "runtime_id": 1,
+          "srgb": "#fff4cf",
+          "uses": 269
+        },
+        {
+          "id": "c02",
+          "runtime_id": 2,
+          "srgb": "#eadca8",
+          "uses": 263
+        },
+        {
+          "id": "c03",
+          "runtime_id": 3,
+          "srgb": "#ffffff",
+          "uses": 251
+        },
+        {
+          "id": "c04",
+          "runtime_id": 4,
+          "srgb": "#f1d273",
+          "uses": 255
+        }
+      ],
+      "comparisons": "all unordered used foreground pairs; paper/line contrast separately",
+      "question": "Wie wirken helle Ziffern mit/ohne tatsächliche C1-Zuordnung auf Buchpapier?",
+      "owner_verdict": null,
+      "held_out": false
+    },
+    {
+      "id": "F06",
+      "file": "F06.json",
+      "sha256": "a575b91411c4505389bf4754ae31bdc278db5827ba3788cc2812858a6d373d76",
+      "palette": [
+        {
+          "id": "c01",
+          "runtime_id": 1,
+          "srgb": "#232b32",
+          "uses": 354
+        },
+        {
+          "id": "c02",
+          "runtime_id": 2,
+          "srgb": "#39414a",
+          "uses": 348
+        },
+        {
+          "id": "c03",
+          "runtime_id": 3,
+          "srgb": "#645248",
+          "uses": 336
+        }
+      ],
+      "comparisons": "all unordered used foreground pairs; paper/line contrast separately",
+      "question": "Bleiben dunkle Füllungen neben Fünferlinien getrennt?",
+      "owner_verdict": null,
+      "held_out": false
+    },
+    {
+      "id": "F07",
+      "file": "F07.json",
+      "sha256": "6fdcd8f30b683b6cc65ab57bc96d5cb4994403915bdb81583b4f7109518effca",
+      "palette": [
+        {
+          "id": "c01",
+          "runtime_id": 1,
+          "srgb": "#447799",
+          "uses": 159
+        },
+        {
+          "id": "c02",
+          "runtime_id": 2,
+          "srgb": "#dd9944",
+          "uses": 158
+        },
+        {
+          "id": "c03",
+          "runtime_id": 3,
+          "srgb": "#995577",
+          "uses": 142
+        },
+        {
+          "id": "c04",
+          "runtime_id": 4,
+          "srgb": "#557744",
+          "uses": 148
+        },
+        {
+          "id": "c05",
+          "runtime_id": 5,
+          "srgb": "#774433",
+          "uses": 152
+        },
+        {
+          "id": "c06",
+          "runtime_id": 6,
+          "srgb": "#778899",
+          "uses": 148
+        },
+        {
+          "id": "c07",
+          "runtime_id": 7,
+          "srgb": "#ddddbb",
+          "uses": 131
+        },
+        {
+          "id": "c08",
+          "runtime_id": 8,
+          "srgb": "#487b9d",
+          "uses": 1
+        }
+      ],
+      "comparisons": "all unordered used foreground pairs; paper/line contrast separately",
+      "question": "Wird c01/c08 trotz seltener isolierter c08 von jedem Paarmodell erfasst?",
+      "owner_verdict": null,
+      "held_out": false
+    },
+    {
+      "id": "F08",
+      "file": "F08.json",
+      "sha256": "6ce31126c64d255b15e2d4d0570d91bdae1536113276940b5bc52a291f5952d5",
+      "palette": [
+        {
+          "id": "c01",
+          "runtime_id": 1,
+          "srgb": "#447799",
+          "uses": 269
+        },
+        {
+          "id": "c02",
+          "runtime_id": 2,
+          "srgb": "#5a8daf",
+          "uses": 263
+        },
+        {
+          "id": "c03",
+          "runtime_id": 3,
+          "srgb": "#6a9dbf",
+          "uses": 251
+        },
+        {
+          "id": "c04",
+          "runtime_id": 4,
+          "srgb": "#77aacc",
+          "uses": 255
+        }
+      ],
+      "comparisons": "all unordered used foreground pairs; paper/line contrast separately",
+      "question": "Zurückgehalten: Welche gestuften Abstände wirken klein/abgeschwächt noch ausreichend?",
+      "owner_verdict": null,
+      "held_out": true
+    }
+  ]
+}
