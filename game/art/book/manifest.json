@@ -4,7 +4,7 @@
   "kb_icon_source": "tools/book_icons_kb.json; KB-168-NOTICE.txt",
   "hz_icon_source": {
     "file": "tools/book_icons_hz.json",
-    "sha256": "7134f1bfbc95dfc37ff258c24d4184f017b1e926f825fac957c9219195891dc1",
+    "sha256": "25fc61ac1d990821d7e78cfd779828cee3cd00462cf25d017fd72e58bdc837db",
     "generator": "tools/z2_resources.py",
     "notice": "HZ-B-284-NOTICE.txt"
   },
@@ -19,7 +19,7 @@
     },
     {
       "file": "HZ-B-284-NOTICE.txt",
-      "sha256": "637ac854ec3813929a7aecc7f55df41e76813fa09bb63fd789950ff086d6836a"
+      "sha256": "cc600af3a77c0f8f59ac80ee49cf865843c54e66169f6c3408e991a36d47e94e"
     },
     {
       "file": "KB-168-NOTICE.txt",
@@ -111,11 +111,11 @@
     },
     {
       "file": "icons.json",
-      "sha256": "c476c04dc2537e15c458b6c14c484e25a43d42e4db2f39a1fb39eabbb31ccf49"
+      "sha256": "26987510d0a7e5a11bbdfa6560e8aa9f07bbf03e9642d5e8811ef53fb29fe609"
     },
     {
       "file": "menu.svg",
-      "sha256": "1142024e816294593af1ef45cf5bc767a6188569c993b40604649d4416ed3576"
+      "sha256": "4dd71216041aeac0e2afd861516e715aa6b65ee0da696202dab854c65c5477dc"
     },
     {
       "file": "minus.svg",

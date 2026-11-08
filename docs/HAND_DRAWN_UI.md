@@ -1,5 +1,42 @@
 # HZ · Handgezeichnete Bedienoberfläche
 
+## NAV-A · Navigation und Symbolhilfen (#549)
+
+Das Zahnrad mit offener Mitte und acht erkennbaren Zähnen ersetzt das Menüzeichen.
+Es verwendet dieselbe stabile Strichfamilie, optische Größe und quadratische
+44/55-px-Fassung wie Rückpfeil und Hilfe. Der interne Ressourcenname `menu`
+bleibt erhalten; seine aktive Quelle `tools/book_icons_hz.json`, der Generator
+`tools/z2_resources.py`, SVG, Inventar, Herkunft und Manifest sind gemeinsam
+gebunden. Historische BP-/KB-Symbolquellen bleiben unverändert.
+Die aktuelle Informationsansicht ist zusätzlich unterstrichen; Hover und Fokus
+behalten ihre Konturzeichen. Positionen und Rückwege stehen im
+[Buchvertrag](BOOK_INTEGRATION.md), Titelvorrang in [BTI-D04](VIEW_TITLE_ART.md).
+
+Die einmalige Inventur von NAV-A umfasst die tatsächlich verwendeten reinen
+Symbolbuttons des regulären Spiels. Jeder besitzt auch im deaktivierten Zustand
+einen nichtleeren deutschen Tooltip und einen passenden zugänglichen Namen:
+
+| Verwendung | Tooltip / zugänglicher Funktionsname |
+| --- | --- |
+| Katalogpfeile | Exakt „Vorherige Seite“ / „Nächste Seite“ |
+| Sortierrichtung | Aktuelle Kategorienfolge/umgekehrte Folge, Kleinste/Größte, Sehr leichte/Sehr schwere oder Älteste/Neueste zuerst; Name ergänzt Kriterium |
+| Katalog-/Rätselkopf | „Einstellungen öffnen“, „Hilfe öffnen“, Rückpfeil „Zurück zum Katalog“ |
+| Informationskopf | „Zurück zum Katalog“ bzw. „Zurück zum Rätsel“; Gegenansicht öffnen oder „Einstellungen (aktuelle Ansicht)“ / „Hilfe (aktuelle Ansicht)“ |
+| Füllen / Radieren | „Füllen · links Farbe setzen, rechts leer markieren“ / „Radierer · Markierungen entfernen“ |
+| Undo / Redo | „Letzten Strich rückgängig machen“ / „Zurückgenommenen Strich wiederholen“ |
+| Minus / Plus | „Raster verkleinern“ / „Raster vergrößern“ |
+| Dynamische Farbfelder | „Farbe n wählen · aktiviert Füllen“ |
+| Katalog-/Abschlussreset | „Rätsel zurücksetzen“; Katalogname ergänzt gebundenes Blatt und Status |
+| Lokale Fragezeichen in Einstellungen | Vorhandene konkrete Erklärung für Fenstergröße bzw. Rätselansicht; Name nennt das erklärte Feld |
+
+Textbuttons, Checkboxen mit Text, Dropdowndekoration, passive Status-/Moduszeichen
+und Lehrsymbole werden dadurch nicht pauschal umgebaut. Keine Ganzkarten- oder
+Schwierigkeitstooltips; KE-D05 und bestehende gezielte Modushilfen bleiben.
+Native Scrollbarteile sind keine eigenen Button-Controls. Die kleine Inventur-/
+Geometrieregression läuft im vorhandenen `native.catalog`; aktuelle Originale
+und unabhängige/persönliche Abnahme folgen dem
+[NAV-A-Prüfplan](https://github.com/venomenon328/picross/issues/549).
+
 ## SBR-A · gemeinsame Scrollbars (#539)
 
 [SBR-D01–D06 / Paket SBR-A](https://github.com/venomenon328/picross/issues/539)

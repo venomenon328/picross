@@ -31,7 +31,7 @@ Hover/Druck die vorhandene transparente Buttonkontur. Ein isolierter kurzer
 oberer Hoverstrich entfällt; Auswahl, Deaktivierung und Fokus behalten ihre
 Zeichen. Sinnvolle verzögerte Hilfen bleiben, leere Panels entfallen. HZ-Fonts,
 Icons, Farbproben und große SL-Rahmen bleiben unverändert.
-Die aus N05 übernommene Darstellung verwendet dieselben HZ-Icons für Katalogpfeil links, Menü und Hilfe im rechten
+Die durch NAV-A fortgeschriebene Darstellung verwendet HZ-Icons für Katalogpfeil links, Zahnrad und Hilfe im rechten
 Arbeitskopf. Informationsseiten erhalten echte reguläre Optionscontrols, eigene
 Scrollflächen und Seitentitel statt globaler Informationsüberschrift. Übergänge
 schließen Popups/Tooltips; Schrift- und Trefferbudgets werden nicht verkleinert.

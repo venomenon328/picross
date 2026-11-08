@@ -74,6 +74,23 @@ getrennten synthetischen Prüfwegen nachgewiesen.
 
 ## Navigation und Darstellung
 
+**NAV-A / #549:** Auf der jeweils sichtbaren sicheren Papierseite steht eine
+ortsfeste Kopfgruppe. Im Katalog: Beenden als Textbefehl, dann Zahnrad und Hilfe.
+Auf Rätsel, Hilfe und Einstellungen: Rückpfeil, Zahnrad, Hilfe; auch Einstellungen
+verwendet den oberen rechten Rand ihrer linken Seite. Der aktive Informationsort
+ist unterstrichen und sein Klick verändert weder Abschnitt noch Lesestelle oder
+Bewegung. Tooltips und zugängliche Namen nennen Ziel bzw. aktuelle Ansicht;
+der Rückpfeil nennt den tatsächlichen Besuchsursprung.
+Der Katalogfuß enthält links nur den gezeichneten Rückpfeil, daneben „Seite n von m“,
+rechts nur den Vorwärtspfeil. Exakte Namen/Tooltips: „Vorherige Seite“ und
+„Nächste Seite“. Beide blättern ganze Doppelseiten; unmögliche Richtungen sind
+inaktiv, bei einer Seite beide. 44/55-px-Trefferflächen bleiben auch im engen Fall.
+Navigation, Trefferzahl, Fehlerclip, halb-/vollbreites Fortsetzen-Panel und
+Sortier-/Filterzeile besitzen getrennten Platz. BTI-D04-Fußnavigation wird damit
+ausdrücklich abgelöst. Save-/Retry-/Bewegungsgrenzen und alle Rückkehrkontexte
+bleiben bestehen. Kriterien, einmalige Nachweise und getrennte T01/R01/M01-Gates:
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/549).
+
 Der Start zeigt den echten Katalog mit höchstens 24 aktiven Karten: zunächst
 bis zu zwölf links, dann bis zu zwölf rechts. Vorhandene Filter und Sortierung
 wirken global vor Pagination. Beide Hälften scrollen unabhängig; neue Filter/
@@ -119,7 +136,7 @@ Katalogblättern dauert 0,85 s; vorwärts rechts nach links, rückwärts umgekeh
 Neue/begonnene Blätter öffnen mit drei getrennten Blättern in insgesamt 3 s.
 Die große rechte Arbeitsseite erhält unveränderte Raster-, Hinweis-, Schrift-
 und Trefferbudgets. Der Pfeil im rechten Kopf kehrt in 1,8 s zum gebundenen
-Katalogkontext zurück. Menü öffnet Einstellungen links, Fragezeichen Hilfe
+Katalogkontext zurück. Das Zahnrad öffnet Einstellungen links, Fragezeichen Hilfe
 rechts. Eintritt/Rückkehr dauern 0,85 s; Wechsel zwischen beiden Informations-
 seiten pannt in 0,65 s. Beide Informationsscrollstände und der Besuchsursprung
 bleiben getrennt vom Arbeits-/Katalogursprung. Bewusste Optionsänderungen bleiben.
@@ -145,9 +162,9 @@ Einpixel-/Alpha-Gegenproben.
 reine, unveränderte freigegebene V2-rev1-Schriftzugbilder ein: `Rätselkatalog` im linken Katalogkopf,
 `Hilfe` im rechten Infokopf und `Einstellungen` im linken Infokopf, jeweils
 innerhalb der sicheren projizierten Papierhälfte zentriert. Haupttitel der
-Informationsseiten liegen außerhalb ihrer Scrollflächen. Die zuvor
-oben angeordneten Buttons `Zurück` und Hilfe-/Einstellungswechsel liegen jetzt
-als feste untere Navigation außerhalb der Scrollflächen; der Kapitelzugang,
+Informationsseiten liegen außerhalb ihrer Scrollflächen. Die
+Buttons `Zurück` und Hilfe-/Einstellungswechsel wurden zunächst unten angeordnet;
+NAV-A ersetzt sie durch die feste obere Symbolgruppe außerhalb der Scrollflächen. Der Kapitelzugang,
 Gruppenrahmen, Besuchskontext und alle Daten-/Save-/Recoverywege bleiben.
 **Implementierung ist keine unabhängige oder persönliche Abnahme; R01/M01 offen.**
 Aktuelle Kriterien und Abnahme in [#533](https://github.com/venomenon328/picross/issues/533).
@@ -157,7 +174,7 @@ Aktuelle Kriterien und Abnahme in [#533](https://github.com/venomenon328/picross
 Der gemeinsame `help_panel` enthält vier direkt anwählbare Kapitel, kurze
 Absätze und passive Lehrdiagramme aus `ui/help_panel.gd`, `help_examples.gd`
 und `help_example.gd`. Die rechte eigene Scroll-/Clipfläche, Papier-/Falzränder,
-untere Rücknavigation und der Meldungsraum aus `information.gd` bleiben Grundlage.
+obere Rücknavigation und der Meldungsraum aus `information.gd` bleiben Grundlage.
 Ein neuer Informationsbesuch setzt Hilfe auf Spielprinzip zurück. Die Kapitelwahl
 zeigt dessen Anfang; ein Pan zu Einstellungen und zurück erhält Kapitel und
 Scrollstand. Das ist transienter Besuchskontext, kein Saveformat oder neue Option.
@@ -176,7 +193,7 @@ verwenden 20/25 px bei UI100/125 und sind bei hinreichender Breite auf 75
 mittlere Zeichenbreiten begrenzt (mit Wortumbruch Richtwert 60–75 Zeichen); Lehrbilder dürfen den weiteren Artikelraum nutzen.
 Kapitelwechsel beginnt oben, Einstellungenpan und Reflow erhalten die Lesestelle
 innerhalb des Besuchs. Register, Text und Diagramme bleiben in derselben
-Capturehierarchie. Bildhaupttitel, äußere untere Navigation, Papier/Falz und
+Capturehierarchie. Bildhaupttitel, äußere obere Navigation, Papier/Falz und
 Status-/Retryraum haben Vorrang. Inhalte, Regeln und Besuchsursprung bleiben.
 Die kleine Layout-/Bedienregression läuft bei ausgewähltem `native.catalog` im
 vorhandenen Informationsprozess; die einmaligen Buch-/Windowsbelege und
@@ -218,7 +235,7 @@ den Katalogtitel ist damit korrigiert. Kein
 Beenden-Widget und kein manueller Hinweisreset auf dieser Seite. Einstellungen
 setzen keine Hinweisleseposition zurück; Katalog-Ausgang und OS-Schließen bleiben
 samt Fehlerblockade/Retry erhalten. [Anzeigevertrag](DISPLAY_SETTINGS.md).
-Beide Informationsseiten beschriften ihren oberen Rückbutton nur mit „Zurück“.
+Beide Informationsseiten zeigen als Rückbutton ausschließlich den gezeichneten Linkspfeil.
 Tooltip und Accessibilityname nennen das tatsächliche Katalog-/Rätselziel;
 Besuchsursprung, Übergang, Scroll-/Fokuskontext und Flush-/Recoveryguard bleiben.
 

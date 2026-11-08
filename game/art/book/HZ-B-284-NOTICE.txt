@@ -17,3 +17,8 @@ SBR-A / Issue #539, 2026-11-07: four original local filled scroll triangles
 Their curved closed silhouettes and small retraces are independent of the
 existing dropdown chevrons. No third-party asset. The shared native scrollbar
 StyleBox is original local deterministic drawing in ui/scrollbar_style.gd.
+
+NAV-A / Issue #549, 2026-11-08: the active menu ID now draws an original
+local eight-tooth settings gear with an open centre. The same source and
+generator bind its two pen paths and current German navigation descriptions.
+Historical BP/KB symbol sources remain unchanged.
