@@ -1,0 +1,494 @@
+{
+  "format": "pa-v01-review-originals-1",
+  "product_head": "3e2bcfbd590a38e1a74764c3a52e88668f20edbe",
+  "base": "059bb003dc761e862b304957143b0dd45d92bb82",
+  "pr": "https://github.com/venomenon328/picross/pull/546",
+  "plan_commit": "1ac4d44a75af9a604bffcb985c0570954beea761",
+  "hypothesis_commit": "0c740677931dc3e5f38631a94c7b0f91045b4a46",
+  "plan": {
+    "file": "review-evidence/pa-v01/plan.json",
+    "bytes": 7674,
+    "sha256": "ebeb0fdd518cc1da23e2ed50a730b9b81e04a8ce2cbf53058e4d670c7b1b74b7"
+  },
+  "renderer_source_game_tree": "1aa9e0edf02c68f83faa8ebfd1212bf7428bc82c",
+  "base_game_tree": "1aa9e0edf02c68f83faa8ebfd1212bf7428bc82c",
+  "recipient": "Eigentümer P-A-M01 und unabhängiger Reviewer P-A-R01 mit binärfähigem Git-/HTTP-Client",
+  "expires": "2026-11-15",
+  "cleanup": "Keine Mergefreigabe; Belegrefs nach erledigter Sichtung im beauftragten Rückbau entfernen. Bei offenem Gate am Ablauf Bedarf/Zustellung neu prüfen.",
+  "original_bytes": 47743541,
+  "originals": [
+    {
+      "file": "review-evidence/pa-v01/originals/F01-normal-board.png",
+      "bytes": 2203107,
+      "sha256": "2bc4956f45ca463f463da660896306428cda7f61fbe5c6ca92ef1432ee6509cc",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F01-normal-tokens.png",
+      "bytes": 1798279,
+      "sha256": "e336f78f1c5ab970e31c06b733030fb358f357ad42125a6a7efd98c919b1bdc5",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F01-small-board.png",
+      "bytes": 1014230,
+      "sha256": "4486e7250b68b46b70e0bc9412049676215e9f839e9abff248cb481f99aa16fb",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F01-small-tokens.png",
+      "bytes": 959477,
+      "sha256": "17d643768082c1cc952978fe7fcd4b3812f362fb5b23439c308ffce670955a3b",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F02-normal-board.png",
+      "bytes": 2178971,
+      "sha256": "c446480053c350b4c5e2069b76df131c2e7ab78dd5a390576e0b9dfa6e576980",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F02-normal-tokens.png",
+      "bytes": 1798339,
+      "sha256": "56eff6d975af4e69bd985fc8bc00a3b0d2c0a428dfc3726026dcdb370db5d969",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F02-small-board.png",
+      "bytes": 1014059,
+      "sha256": "af535abd160b8e2bd9bb7ae020d8bb89b19a08a9bae6355dfaf55ad88d4bf4f7",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F02-small-tokens.png",
+      "bytes": 959359,
+      "sha256": "a888154227f6eb594ed94e86fd757235d43d51cd242e28beb7bd75136c993e45",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F03-normal-board.png",
+      "bytes": 2206038,
+      "sha256": "78835e3e8706bfbe79272d513fdf5c1e2273533c039573838f29c9bc8d1a40bc",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F03-normal-tokens.png",
+      "bytes": 1798077,
+      "sha256": "339d050aa5a2c1ae40fc09b46df82351deb01e3a4783b99e331c26e8db4e0f8f",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F03-small-board.png",
+      "bytes": 1014970,
+      "sha256": "81b5ba8cd1747d2cbf6b448d4a72652a11757ea4b9cb6f15c234915288052ce6",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F03-small-tokens.png",
+      "bytes": 959801,
+      "sha256": "843789868ab89de3579ccaf9a1c31dec74df669b140818e6ee58666884e47d4c",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F04-normal-board.png",
+      "bytes": 2189459,
+      "sha256": "6a8dc6699ce3c2577930af965674fa5f354d25cbb40b9629dd14c73a324bba62",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F04-normal-tokens.png",
+      "bytes": 1798812,
+      "sha256": "72334f9b718bc5468a087bcf8010d34fb440005b91ab6d5cb6aaf42489cdca4e",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F04-small-board.png",
+      "bytes": 1013519,
+      "sha256": "02f12f84c20f40ca10215a5bf07e837eca9b259ab1437c153ae418d112fab4ef",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F04-small-tokens.png",
+      "bytes": 959280,
+      "sha256": "fb86eb211c133a432b2154ed84a351c4d771114b10dd90e5b84da2858232e35b",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F05-normal-board.png",
+      "bytes": 2077097,
+      "sha256": "f560e59f45ed5009ff2fc705322a1ea0bb4f405b326a3329f85d53e68d7eedf9",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F05-normal-tokens.png",
+      "bytes": 1809926,
+      "sha256": "f0eea9f87433046cd26cbcef830a0b5a8dd01b0cbe5431e8b1565c1ce9d461ab",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F05-small-board.png",
+      "bytes": 994035,
+      "sha256": "01b5cb6cbcaaaf7f7b0763fbcdff20cab8eae9a7bb4360abed04d8ef31cb8b98",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F05-small-tokens.png",
+      "bytes": 967445,
+      "sha256": "acbae47535b6dab0da90e09c3bd3a06ed8105dee12706de5ddbdb0a79eecf526",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F06-normal-board.png",
+      "bytes": 2212636,
+      "sha256": "753365cc882cca81debe9f113ad05541c97518fd2592f47af4b2b63b3c502a10",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F06-normal-tokens.png",
+      "bytes": 1809030,
+      "sha256": "cd98f595bb457b3b2ec8ff984c30b7ee8044bbaa75b970592478ca4070d48aeb",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F06-small-board.png",
+      "bytes": 1013564,
+      "sha256": "08f99e8d60eab588a37a9c076dd4ec60c262c4ab693eb5c90b0fdfa3bbdc50db",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F06-small-tokens.png",
+      "bytes": 964590,
+      "sha256": "e2b3d1f164bf77f2694d4f793fd0014dd7cbf6a1098277de4ce9521629761a15",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F07-normal-board.png",
+      "bytes": 2209705,
+      "sha256": "d68a04e67b90fc67ef316fc9fc95502141376122e94ee409a5652626982fb98e",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F07-normal-tokens.png",
+      "bytes": 1846563,
+      "sha256": "65521251fdaaa451efebf8e48cc47bcc42eb9a384d94ce581f168ab94d95743a",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F07-small-board.png",
+      "bytes": 1002993,
+      "sha256": "5085c0b0e0f82c8fb43158e1e1c94f5e8bbfad4985bd76819985489059ab072e",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F07-small-tokens.png",
+      "bytes": 987978,
+      "sha256": "f5b2035299bbb9c14d9b60791ed17fe32fda3a15570f2c3fac66f7f41030d2be",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F08-normal-board.png",
+      "bytes": 2189574,
+      "sha256": "be7e1f03fc78525ba2c8f43979a9f369f1fa19b3ccccfca21a83279e1ceee018",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F08-normal-tokens.png",
+      "bytes": 1814735,
+      "sha256": "3ce322d3e0f6f3d650d085567c10c7e27840bfffd2579b16d84a01bdbd628cbe",
+      "image_size": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F08-small-board.png",
+      "bytes": 1008946,
+      "sha256": "4ed251e51fc88d58ea374be11e949304f97055ef129f81e7c4c022417e306311",
+      "image_size": [
+        1280,
+        720
+      ]
+    },
+    {
+      "file": "review-evidence/pa-v01/originals/F08-small-tokens.png",
+      "bytes": 968947,
+      "sha256": "4f964d2369ee826cfba10c9bffc2e8bf14f49e65b9357894b9222a3c9b8245d2",
+      "image_size": [
+        1280,
+        720
+      ]
+    }
+  ],
+  "renderer_sources": [
+    {
+      "file": "game/ui/full_view_board.gd",
+      "bytes": 24360,
+      "sha256": "0839118703b65c96349e7f15d1560c59e68e4100ebb0b620e05a17c548213347"
+    },
+    {
+      "file": "game/ui/drawing_board.gd",
+      "bytes": 6137,
+      "sha256": "cf43e86369f3d12c6d592aea92c600940660c362f914ac1b232aba15e9364c0c"
+    },
+    {
+      "file": "game/ui/chalkboard_board.gd",
+      "bytes": 1132,
+      "sha256": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad"
+    },
+    {
+      "file": "game/ui/board.gd",
+      "bytes": 44159,
+      "sha256": "0a754f2c2479bc2663f617b60f7cec5bccf7384ba02bcf9a8e4be9a15fabd5e0"
+    },
+    {
+      "file": "game/ui/atlas_marks.gd",
+      "bytes": 10789,
+      "sha256": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c"
+    },
+    {
+      "file": "game/ui/cell_atlas.gd",
+      "bytes": 1594,
+      "sha256": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d"
+    },
+    {
+      "file": "game/ui/atlas_mask.gdshader",
+      "bytes": 297,
+      "sha256": "b27c6ffee9cce0296df633a349a1aa286975541ef801923710c465a8c6dd73b6"
+    },
+    {
+      "file": "game/ui/clue_typography.gd",
+      "bytes": 6943,
+      "sha256": "e92e75d7928d6d1ada7357693d5a12f366dbbc05a22c0749379f08d51662cc5c"
+    },
+    {
+      "file": "game/ui/scribble.gd",
+      "bytes": 2518,
+      "sha256": "33ee9d5f1497a9c6eea3c65d80e10861fe5c147e562982c24cac68c9d07dbc6a"
+    },
+    {
+      "file": "game/ui/clue_font.tres",
+      "bytes": 211,
+      "sha256": "38cee56c272ba1d875528d844e4882231a92477de69f67c3a43058da4e5600c6"
+    },
+    {
+      "file": "game/art/drawing/DelightCoffee-Regular.ttf",
+      "bytes": 32268,
+      "sha256": "4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23"
+    },
+    {
+      "file": "game/book/main.gd",
+      "bytes": 19197,
+      "sha256": "3a09609161423173e89c4560ddad9466acc97a009c42bfac34d2bb0e873906f8"
+    },
+    {
+      "file": "game/book/page.gdshader",
+      "bytes": 3114,
+      "sha256": "378fa58cb3928aa1f25a12523e6b56148845429fd0fc0ef99149923c8f10fa27"
+    },
+    {
+      "file": "game/book/paper.png",
+      "bytes": 2564246,
+      "sha256": "1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f",
+      "image_size": [
+        1254,
+        1254
+      ]
+    },
+    {
+      "file": "game/art/cells/fill-small.png",
+      "bytes": 11462,
+      "sha256": "5e1dc76ef5eb9769dd61bf49ff6aba6e68ad99ccfd1247b69715404542ac595a",
+      "image_size": [
+        864,
+        576
+      ]
+    },
+    {
+      "file": "game/art/cells/fill-medium.png",
+      "bytes": 62134,
+      "sha256": "0f7223a09690d5985a2e6f79d1fec07eb152bde836f910f24c61b945511cf37d",
+      "image_size": [
+        1632,
+        1088
+      ]
+    },
+    {
+      "file": "game/art/cells/fill-large.png",
+      "bytes": 87328,
+      "sha256": "29ff8c8a7492d38155a58d5926ec9ec9b2c8e0e67652c1e2d614860e4d01d5f8",
+      "image_size": [
+        2400,
+        1600
+      ]
+    },
+    {
+      "file": "game/art/cells/x-small.png",
+      "bytes": 29069,
+      "sha256": "4546d2c57eda98c21057a73668697224d16c066f159a83ed6364c3058112ecf8",
+      "image_size": [
+        864,
+        576
+      ]
+    },
+    {
+      "file": "game/art/cells/x-medium.png",
+      "bytes": 72180,
+      "sha256": "0fb1e0797bc4b86fe120bab358fb3e309bf6a4c08baff0d61669952183c93bb9",
+      "image_size": [
+        1632,
+        1088
+      ]
+    },
+    {
+      "file": "game/art/cells/x-large.png",
+      "bytes": 64030,
+      "sha256": "a8efa25ece483d2574dbd8d1cca627416f37b47b6ec39cb1d0cbe0c2853cff07",
+      "image_size": [
+        2400,
+        1600
+      ]
+    }
+  ],
+  "diagnostic_source": {
+    "file": "game/tests/pa_v01.gd",
+    "bytes": 6635,
+    "sha256": "b2ac9c129e35dc5a40d080ee5eecdb9ae72c1a4f5ce1d9dff44d331c8eabc340"
+  },
+  "product_documents": [
+    {
+      "file": ".ci/package.json",
+      "bytes": 1511,
+      "sha256": "976e3b7abc1843e9e2b2e62414aa4524485f49c85e0f0465cb81ee3c9be86b45"
+    },
+    {
+      "file": "docs/PUZZLE_PRODUCTION.md",
+      "bytes": 38050,
+      "sha256": "2bfa9fcb5cf9c04834a1d5032b6429b804b4991b84bdb51965ae7787ce1b9eb2"
+    },
+    {
+      "file": "docs/PUZZLE_QUALITY.md",
+      "bytes": 39262,
+      "sha256": "d5de4cda0b5fe714c93b443f861843cb73299169a928cee61c255cf8d9d0dab2"
+    },
+    {
+      "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+      "bytes": 97767,
+      "sha256": "447e5ff3480f285c78bc4a8f150c3559094058a19125f579dfe927d71c953ede"
+    },
+    {
+      "file": "docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html",
+      "bytes": 182600,
+      "sha256": "32a43b229d3b5f9516d4c9278b17f88bbfcad25b79d62ac8624f4cd7bb620270"
+    },
+    {
+      "file": "tools/puzzle_production/README.md",
+      "bytes": 86445,
+      "sha256": "f7b91f8d0619260df9bd02785f8ecddbea0939896df55880d073360c0c4a7995"
+    }
+  ],
+  "engine_executable_sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
+  "native_report": {
+    "file": "review-evidence/pa-v01/native.json",
+    "bytes": 16107,
+    "sha256": "9a111f2c24b4b45ce5590a0786c689423152c14a85256f70dd71ac314b567140"
+  },
+  "measurements": {
+    "file": "review-evidence/pa-v01/recalculated.json",
+    "bytes": 12522,
+    "sha256": "f8fc7cb9ba886d99270f8136cc9b512f13ed4b7ed0d1d436397dc6707e02b2ac"
+  },
+  "verification": "32 originals/header/dimensions/hash vs native output; 47 pair outputs and fixed counts; F08 text values and F02 q match norm; binary64/Decimal80 exact q agreement; integer equality checks.",
+  "limitations": [
+    "No owner approval or independent review claimed.",
+    "Initial diagnostic attempt remained on catalog due synthetic SaveStore validation; corrected harness asserts actual work view. Only corrected final originals retained.",
+    "Importer expanded default metadata locally; no effective source shader/font/atlas/paper or product settings changed.",
+    "Windows CI core test path comparison fails on unchanged basis too; Linux CI is separate evidence."
+  ]
+}

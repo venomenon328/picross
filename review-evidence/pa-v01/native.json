@@ -1,0 +1,1031 @@
+{
+	"display": "Windows",
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"limitations": "Static native diagnostics. Token statuses injected into unchanged draw_clue_number, not an H1 proof. Book/cells/hint renderer unchanged; no perception or owner approval asserted.",
+	"os": "Windows",
+	"plan_sha256": "ebeb0fdd518cc1da23e2ed50a730b9b81e04a8ce2cbf53058e4d670c7b1b74b7",
+	"records": [
+		{
+			"board_rect": [
+				85.0,
+				102.5,
+				840.0,
+				520.0
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 13.49,
+			"client": [
+				1280,
+				720
+			],
+			"context": "small",
+			"family": "F01",
+			"files": [
+				{
+					"bytes": 1014230,
+					"file": "F01-small-board.png",
+					"sha256": "4486e7250b68b46b70e0bc9412049676215e9f839e9abff248cb481f99aa16fb",
+					"size": [
+						1280,
+						720
+					]
+				},
+				{
+					"bytes": 959477,
+					"file": "F01-small-tokens.png",
+					"sha256": "17d643768082c1cc952978fe7fcd4b3812f362fb5b23439c308ffce670955a3b",
+					"size": [
+						1280,
+						720
+					]
+				}
+			],
+			"font_size": 6,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 6,
+			"panel_slot_pitch": [
+				13.0,
+				13.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				13.0,
+				13.0
+			],
+			"ui": 1.25
+		},
+		{
+			"board_rect": [
+				85.0,
+				102.5,
+				840.0,
+				520.0
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 13.49,
+			"client": [
+				1280,
+				720
+			],
+			"context": "small",
+			"family": "F02",
+			"files": [
+				{
+					"bytes": 1014059,
+					"file": "F02-small-board.png",
+					"sha256": "af535abd160b8e2bd9bb7ae020d8bb89b19a08a9bae6355dfaf55ad88d4bf4f7",
+					"size": [
+						1280,
+						720
+					]
+				},
+				{
+					"bytes": 959359,
+					"file": "F02-small-tokens.png",
+					"sha256": "a888154227f6eb594ed94e86fd757235d43d51cd242e28beb7bd75136c993e45",
+					"size": [
+						1280,
+						720
+					]
+				}
+			],
+			"font_size": 6,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 6,
+			"panel_slot_pitch": [
+				13.0,
+				13.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				13.0,
+				13.0
+			],
+			"ui": 1.25
+		},
+		{
+			"board_rect": [
+				85.0,
+				102.5,
+				840.0,
+				520.0
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 13.49,
+			"client": [
+				1280,
+				720
+			],
+			"context": "small",
+			"family": "F03",
+			"files": [
+				{
+					"bytes": 1014970,
+					"file": "F03-small-board.png",
+					"sha256": "81b5ba8cd1747d2cbf6b448d4a72652a11757ea4b9cb6f15c234915288052ce6",
+					"size": [
+						1280,
+						720
+					]
+				},
+				{
+					"bytes": 959801,
+					"file": "F03-small-tokens.png",
+					"sha256": "843789868ab89de3579ccaf9a1c31dec74df669b140818e6ee58666884e47d4c",
+					"size": [
+						1280,
+						720
+					]
+				}
+			],
+			"font_size": 6,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 6,
+			"panel_slot_pitch": [
+				13.0,
+				13.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				13.0,
+				13.0
+			],
+			"ui": 1.25
+		},
+		{
+			"board_rect": [
+				85.0,
+				102.5,
+				840.0,
+				520.0
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 13.49,
+			"client": [
+				1280,
+				720
+			],
+			"context": "small",
+			"family": "F04",
+			"files": [
+				{
+					"bytes": 1013519,
+					"file": "F04-small-board.png",
+					"sha256": "02f12f84c20f40ca10215a5bf07e837eca9b259ab1437c153ae418d112fab4ef",
+					"size": [
+						1280,
+						720
+					]
+				},
+				{
+					"bytes": 959280,
+					"file": "F04-small-tokens.png",
+					"sha256": "fb86eb211c133a432b2154ed84a351c4d771114b10dd90e5b84da2858232e35b",
+					"size": [
+						1280,
+						720
+					]
+				}
+			],
+			"font_size": 6,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 6,
+			"panel_slot_pitch": [
+				13.0,
+				13.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				13.0,
+				13.0
+			],
+			"ui": 1.25
+		},
+		{
+			"board_rect": [
+				85.0,
+				102.5,
+				840.0,
+				520.0
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 13.49,
+			"client": [
+				1280,
+				720
+			],
+			"context": "small",
+			"family": "F05",
+			"files": [
+				{
+					"bytes": 994035,
+					"file": "F05-small-board.png",
+					"sha256": "01b5cb6cbcaaaf7f7b0763fbcdff20cab8eae9a7bb4360abed04d8ef31cb8b98",
+					"size": [
+						1280,
+						720
+					]
+				},
+				{
+					"bytes": 967445,
+					"file": "F05-small-tokens.png",
+					"sha256": "acbae47535b6dab0da90e09c3bd3a06ed8105dee12706de5ddbdb0a79eecf526",
+					"size": [
+						1280,
+						720
+					]
+				}
+			],
+			"font_size": 6,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 6,
+			"panel_slot_pitch": [
+				13.0,
+				13.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				13.0,
+				13.0
+			],
+			"ui": 1.25
+		},
+		{
+			"board_rect": [
+				85.0,
+				102.5,
+				840.0,
+				520.0
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 13.49,
+			"client": [
+				1280,
+				720
+			],
+			"context": "small",
+			"family": "F06",
+			"files": [
+				{
+					"bytes": 1013564,
+					"file": "F06-small-board.png",
+					"sha256": "08f99e8d60eab588a37a9c076dd4ec60c262c4ab693eb5c90b0fdfa3bbdc50db",
+					"size": [
+						1280,
+						720
+					]
+				},
+				{
+					"bytes": 964590,
+					"file": "F06-small-tokens.png",
+					"sha256": "e2b3d1f164bf77f2694d4f793fd0014dd7cbf6a1098277de4ce9521629761a15",
+					"size": [
+						1280,
+						720
+					]
+				}
+			],
+			"font_size": 6,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 6,
+			"panel_slot_pitch": [
+				13.0,
+				13.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				13.0,
+				13.0
+			],
+			"ui": 1.25
+		},
+		{
+			"board_rect": [
+				85.0,
+				102.5,
+				840.0,
+				520.0
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 13.4,
+			"client": [
+				1280,
+				720
+			],
+			"context": "small",
+			"family": "F07",
+			"files": [
+				{
+					"bytes": 1002993,
+					"file": "F07-small-board.png",
+					"sha256": "5085c0b0e0f82c8fb43158e1e1c94f5e8bbfad4985bd76819985489059ab072e",
+					"size": [
+						1280,
+						720
+					]
+				},
+				{
+					"bytes": 987978,
+					"file": "F07-small-tokens.png",
+					"sha256": "f5b2035299bbb9c14d9b60791ed17fe32fda3a15570f2c3fac66f7f41030d2be",
+					"size": [
+						1280,
+						720
+					]
+				}
+			],
+			"font_size": 6,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 6,
+			"panel_slot_pitch": [
+				13.0,
+				13.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				13.0,
+				13.0
+			],
+			"ui": 1.25
+		},
+		{
+			"board_rect": [
+				85.0,
+				102.5,
+				840.0,
+				520.0
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 13.49,
+			"client": [
+				1280,
+				720
+			],
+			"context": "small",
+			"family": "F08",
+			"files": [
+				{
+					"bytes": 1008946,
+					"file": "F08-small-board.png",
+					"sha256": "4ed251e51fc88d58ea374be11e949304f97055ef129f81e7c4c022417e306311",
+					"size": [
+						1280,
+						720
+					]
+				},
+				{
+					"bytes": 968947,
+					"file": "F08-small-tokens.png",
+					"sha256": "4f964d2369ee826cfba10c9bffc2e8bf14f49e65b9357894b9222a3c9b8245d2",
+					"size": [
+						1280,
+						720
+					]
+				}
+			],
+			"font_size": 6,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 6,
+			"panel_slot_pitch": [
+				13.0,
+				13.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				13.0,
+				13.0
+			],
+			"ui": 1.25
+		},
+		{
+			"board_rect": [
+				68.0,
+				93.120002746582,
+				1568.0,
+				908.880004882813
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 23.69,
+			"client": [
+				1920,
+				1080
+			],
+			"context": "normal",
+			"family": "F01",
+			"files": [
+				{
+					"bytes": 2203107,
+					"file": "F01-normal-board.png",
+					"sha256": "2bc4956f45ca463f463da660896306428cda7f61fbe5c6ca92ef1432ee6509cc",
+					"size": [
+						1920,
+						1080
+					]
+				},
+				{
+					"bytes": 1798279,
+					"file": "F01-normal-tokens.png",
+					"sha256": "e336f78f1c5ab970e31c06b733030fb358f357ad42125a6a7efd98c919b1bdc5",
+					"size": [
+						1920,
+						1080
+					]
+				}
+			],
+			"font_size": 17,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 17,
+			"panel_slot_pitch": [
+				26.0,
+				23.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				26.0,
+				23.0
+			],
+			"ui": 1.0
+		},
+		{
+			"board_rect": [
+				68.0,
+				93.120002746582,
+				1568.0,
+				908.880004882813
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 23.69,
+			"client": [
+				1920,
+				1080
+			],
+			"context": "normal",
+			"family": "F02",
+			"files": [
+				{
+					"bytes": 2178971,
+					"file": "F02-normal-board.png",
+					"sha256": "c446480053c350b4c5e2069b76df131c2e7ab78dd5a390576e0b9dfa6e576980",
+					"size": [
+						1920,
+						1080
+					]
+				},
+				{
+					"bytes": 1798339,
+					"file": "F02-normal-tokens.png",
+					"sha256": "56eff6d975af4e69bd985fc8bc00a3b0d2c0a428dfc3726026dcdb370db5d969",
+					"size": [
+						1920,
+						1080
+					]
+				}
+			],
+			"font_size": 17,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 17,
+			"panel_slot_pitch": [
+				26.0,
+				23.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				26.0,
+				23.0
+			],
+			"ui": 1.0
+		},
+		{
+			"board_rect": [
+				68.0,
+				93.120002746582,
+				1568.0,
+				908.880004882813
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 23.69,
+			"client": [
+				1920,
+				1080
+			],
+			"context": "normal",
+			"family": "F03",
+			"files": [
+				{
+					"bytes": 2206038,
+					"file": "F03-normal-board.png",
+					"sha256": "78835e3e8706bfbe79272d513fdf5c1e2273533c039573838f29c9bc8d1a40bc",
+					"size": [
+						1920,
+						1080
+					]
+				},
+				{
+					"bytes": 1798077,
+					"file": "F03-normal-tokens.png",
+					"sha256": "339d050aa5a2c1ae40fc09b46df82351deb01e3a4783b99e331c26e8db4e0f8f",
+					"size": [
+						1920,
+						1080
+					]
+				}
+			],
+			"font_size": 17,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 17,
+			"panel_slot_pitch": [
+				26.0,
+				23.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				26.0,
+				23.0
+			],
+			"ui": 1.0
+		},
+		{
+			"board_rect": [
+				68.0,
+				93.120002746582,
+				1568.0,
+				908.880004882813
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 23.69,
+			"client": [
+				1920,
+				1080
+			],
+			"context": "normal",
+			"family": "F04",
+			"files": [
+				{
+					"bytes": 2189459,
+					"file": "F04-normal-board.png",
+					"sha256": "6a8dc6699ce3c2577930af965674fa5f354d25cbb40b9629dd14c73a324bba62",
+					"size": [
+						1920,
+						1080
+					]
+				},
+				{
+					"bytes": 1798812,
+					"file": "F04-normal-tokens.png",
+					"sha256": "72334f9b718bc5468a087bcf8010d34fb440005b91ab6d5cb6aaf42489cdca4e",
+					"size": [
+						1920,
+						1080
+					]
+				}
+			],
+			"font_size": 17,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 17,
+			"panel_slot_pitch": [
+				26.0,
+				23.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				26.0,
+				23.0
+			],
+			"ui": 1.0
+		},
+		{
+			"board_rect": [
+				68.0,
+				93.120002746582,
+				1568.0,
+				908.880004882813
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 23.69,
+			"client": [
+				1920,
+				1080
+			],
+			"context": "normal",
+			"family": "F05",
+			"files": [
+				{
+					"bytes": 2077097,
+					"file": "F05-normal-board.png",
+					"sha256": "f560e59f45ed5009ff2fc705322a1ea0bb4f405b326a3329f85d53e68d7eedf9",
+					"size": [
+						1920,
+						1080
+					]
+				},
+				{
+					"bytes": 1809926,
+					"file": "F05-normal-tokens.png",
+					"sha256": "f0eea9f87433046cd26cbcef830a0b5a8dd01b0cbe5431e8b1565c1ce9d461ab",
+					"size": [
+						1920,
+						1080
+					]
+				}
+			],
+			"font_size": 18,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 18,
+			"panel_slot_pitch": [
+				25.0,
+				23.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				25.0,
+				23.0
+			],
+			"ui": 1.0
+		},
+		{
+			"board_rect": [
+				68.0,
+				93.120002746582,
+				1568.0,
+				908.880004882813
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 23.69,
+			"client": [
+				1920,
+				1080
+			],
+			"context": "normal",
+			"family": "F06",
+			"files": [
+				{
+					"bytes": 2212636,
+					"file": "F06-normal-board.png",
+					"sha256": "753365cc882cca81debe9f113ad05541c97518fd2592f47af4b2b63b3c502a10",
+					"size": [
+						1920,
+						1080
+					]
+				},
+				{
+					"bytes": 1809030,
+					"file": "F06-normal-tokens.png",
+					"sha256": "cd98f595bb457b3b2ec8ff984c30b7ee8044bbaa75b970592478ca4070d48aeb",
+					"size": [
+						1920,
+						1080
+					]
+				}
+			],
+			"font_size": 18,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 18,
+			"panel_slot_pitch": [
+				25.0,
+				23.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				25.0,
+				23.0
+			],
+			"ui": 1.0
+		},
+		{
+			"board_rect": [
+				68.0,
+				93.120002746582,
+				1568.0,
+				908.880004882813
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 23.69,
+			"client": [
+				1920,
+				1080
+			],
+			"context": "normal",
+			"family": "F07",
+			"files": [
+				{
+					"bytes": 2209705,
+					"file": "F07-normal-board.png",
+					"sha256": "d68a04e67b90fc67ef316fc9fc95502141376122e94ee409a5652626982fb98e",
+					"size": [
+						1920,
+						1080
+					]
+				},
+				{
+					"bytes": 1846563,
+					"file": "F07-normal-tokens.png",
+					"sha256": "65521251fdaaa451efebf8e48cc47bcc42eb9a384d94ce581f168ab94d95743a",
+					"size": [
+						1920,
+						1080
+					]
+				}
+			],
+			"font_size": 18,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 18,
+			"panel_slot_pitch": [
+				25.0,
+				23.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				25.0,
+				23.0
+			],
+			"ui": 1.0
+		},
+		{
+			"board_rect": [
+				68.0,
+				93.120002746582,
+				1568.0,
+				908.880004882813
+			],
+			"c1_runtime_ids": [
+				2,
+				4
+			],
+			"cell": 23.69,
+			"client": [
+				1920,
+				1080
+			],
+			"context": "normal",
+			"family": "F08",
+			"files": [
+				{
+					"bytes": 2189574,
+					"file": "F08-normal-board.png",
+					"sha256": "be7e1f03fc78525ba2c8f43979a9f369f1fa19b3ccccfca21a83279e1ceee018",
+					"size": [
+						1920,
+						1080
+					]
+				},
+				{
+					"bytes": 1814735,
+					"file": "F08-normal-tokens.png",
+					"sha256": "3ce322d3e0f6f3d650d085567c10c7e27840bfffd2579b16d84a01bdbd628cbe",
+					"size": [
+						1920,
+						1080
+					]
+				}
+			],
+			"font_size": 18,
+			"panel_axes": [
+				"row",
+				"column"
+			],
+			"panel_font_size": 18,
+			"panel_slot_pitch": [
+				25.0,
+				23.0
+			],
+			"panel_states": [
+				"OPEN",
+				"FILLED",
+				"CLOSED"
+			],
+			"panel_tokens": [
+				"1",
+				"11"
+			],
+			"slot_pitch": [
+				25.0,
+				23.0
+			],
+			"ui": 1.0
+		}
+	],
+	"renderer": "NVIDIA GeForce RTX 3070",
+	"screen_dpi": 96,
+	"screen_scale": 1.0,
+	"source_commit": "059bb003dc761e862b304957143b0dd45d92bb82"
+}
