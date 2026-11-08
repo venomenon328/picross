@@ -154,6 +154,7 @@ static func freshness_layout(probe) -> void:
 		probe.check(absf(caption.position.x-panel.global_position.x-12*app.ui_scale) < 0.01 and absf((caption.position.y+detail.end.y)/2-panel.get_global_rect().get_center().y) < 0.01,"RF-A text group retains inset and vertical centre")
 		probe.check(caption.end.x <= preview.position.x-8*app.ui_scale+0.01 and detail.end.x <= preview.position.x-8*app.ui_scale+0.01 and preview.size == Vector2.ONE*56*app.ui_scale,"RF-A no overlap or miniature shrink")
 		probe.check(absf(app.album.sort_choice.global_position.y-panel.get_global_rect().end.y-8*app.ui_scale) < 0.1,"RF-A unchanged eight UI gap to sorting/filter")
+		preload("res://tests/navigation_cases.gd").geometry(probe)
 		await pixel(probe,84,true)
 	# A fit-derived boundary, same geometry, and scale roundtrip: no arbitrary
 	# screen-size breakpoint and no intermediate width during the fallback.

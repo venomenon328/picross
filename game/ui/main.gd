@@ -352,6 +352,7 @@ func _update_palette() -> void:
 		var item: BookButton = _icon_button("color-%d" % int(entry.id), func() -> void: board.active_color = int(entry.id); set_tool("fill"), palette_row)
 		item.swatch = Color(entry.color)
 		item.tooltip_text = "Farbe %d wählen · aktiviert Füllen" % int(entry.id)
+		item.accessibility_name = item.tooltip_text
 	_update_actions()
 	_layout_book()
 

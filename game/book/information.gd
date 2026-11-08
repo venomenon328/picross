@@ -24,12 +24,14 @@ func _init(owner: Control) -> void:
 		panel.show()
 	for scroll: ScrollContainer in [app.info_scroll,help_scroll]:
 		scroll.mouse_force_pass_scroll_events = false
-	right_return = app._text_button("Zurück",app.return_to_work)
-	right_return.name = "information-return"
-	app.information.add_child(right_return)
-	# Reuse the existing section shortcuts; each belongs to the opposite page.
-	app.information.get_node("help-access").text = "Hilfe →"
-	app.information.get_node("settings-access").text = "← Einstellungen"
+	# One fixed group on whichever information page is visible. Reuse the
+	# regular controls and callbacks, including their motion/flush guards.
+	right_return = app.actions["nav-work"]
+	for id: String in ["settings","help"]:
+		var button: Button = app.information.get_node(id+"-access")
+		button.text = ""
+		button.image = load("res://art/book/"+("menu" if id == "settings" else "help")+".svg")
+		button.action_id = "information-"+id
 	settings_heading = ViewTitle.new()
 	app.information.add_child(settings_heading)
 	settings_heading.configure("settings",app.settings_title)
@@ -78,19 +80,20 @@ func layout() -> void:
 		app._place(app.status_label,Rect2(Vector2(x,bottom+8*u),Vector2(edge-x,64*u)))
 		app._place(app.work_repair_button,Rect2(Vector2(x,bottom+76*u),Vector2(340,44)*u))
 	var hit: float = 44*u
-	var back: Button = app.actions["nav-work"] if left else right_return
-	var switch: Button = app.information.get_node("help-access" if left else "settings-access")
 	var caption: String = "Zurück zum Katalog" if app.information_origin == "album" else "Zurück zum Rätsel"
-	for button: Button in [app.actions["nav-work"],right_return]:
-		button.text = "Zurück"
-		button.tooltip_text = caption
-		button.accessibility_name = caption
+	var buttons: Array[Button] = [right_return,app.information.get_node("settings-access"),app.information.get_node("help-access")]
+	for i: int in range(buttons.size()):
+		var button: Button = buttons[i]
+		var active: bool = i > 0 and section == ["","settings","help"][i]
+		var name: String = "Einstellungen" if i == 1 else "Hilfe"
+		button.text = ""
+		button.tooltip_text = caption if i == 0 else name+(" (aktuelle Ansicht)" if active else " öffnen")
+		button.accessibility_name = button.tooltip_text
 		button.ui_scale = u
-		button.custom_minimum_size = Vector2(260,44)*u
-	app.actions["nav-work"].visible = left
-	right_return.visible = not left
-	app.information.get_node("help-access").visible = left
-	app.information.get_node("settings-access").visible = not left
+		button.selected = active
+		button.show()
+		button.custom_minimum_size = Vector2.ONE*hit
+		app._place(button,Rect2(Vector2(edge-(160-i*58)*u,top),Vector2.ONE*hit))
 	app.info_scroll.visible = left
 	app.help_panel.visible = not left
 	settings_heading.visible = left
@@ -98,16 +101,13 @@ func layout() -> void:
 	var heading: ViewTitle = settings_heading if left else help_heading
 	# Protect navigation/feedback and useful scrolling before decorative size.
 	# A percentage of the remaining paper scales down in the tight/error case.
-	var title_height: float = minf(176*u,(bottom-top-hit-32*u)*0.27)
-	app._place(heading,Rect2(Vector2(x,top),Vector2(edge-x,title_height)))
+	var title_top: float = top+hit+12*u
+	var title_height: float = minf(176*u,(bottom-title_top-32*u)*0.27)
+	app._place(heading,Rect2(Vector2(x,title_top),Vector2(edge-x,title_height)))
 	heading.fallback.add_theme_font_size_override("font_size",roundi(28*u))
-	# Bottom navigation is outside both scroll regions and above feedback.
-	var nav_top: float = bottom-hit
-	app._place(back,Rect2(Vector2(x,nav_top),Vector2(260*u,hit)))
-	app._place(switch,Rect2(Vector2(edge-210*u,nav_top),Vector2(210*u,hit)))
 	var scroll: Control = app.info_scroll if left else app.help_panel
-	var content_top: float = top+title_height+16*u
-	app._place(scroll,Rect2(Vector2(x,content_top),Vector2(edge-x,maxf(1,nav_top-16*u-content_top))))
+	var content_top: float = title_top+title_height+16*u
+	app._place(scroll,Rect2(Vector2(x,content_top),Vector2(edge-x,maxf(1,bottom-content_top))))
 	app._layout_settings(app.info_scroll.size.x)
 	if not left: app.help_panel.layout_content()
 	# ScrollContainer itself clamps each independent offset after reflow.

@@ -163,6 +163,13 @@ func run() -> void:
 		check(app.catalog_error.is_empty() == (mode == "empty"), "valid empty and invalid registry distinguished")
 		check(app.album.empty_message.text.contains("noch keine") if mode == "empty" else app.album.empty_message.text.contains("nicht geladen"), "explicit empty/error message")
 		await shot("catalog")
+		check(app.album.navigation.is_visible_in_tree() and app.album.quit_button.is_visible_in_tree(),"NAV-A: empty/invalid header and quit reachable")
+		click(app.album.help_button)
+		await frames()
+		check(app.information.visible and app.info.section == "help","NAV-A: empty/invalid direct help pointer")
+		click(app.information.get_node("settings-access"))
+		await frames()
+		check(app.info.section == "settings","NAV-A: empty/invalid gear pointer")
 		app.show_information()
 		app.set_ui_scale(1.25)
 		app.set_puzzle_view(1)
@@ -172,6 +179,7 @@ func run() -> void:
 	elif mode == "pages":
 		await preload("res://tests/catalog_layout_cases.gd").run(self)
 		catalog_case("catalog-layout")
+		await preload("res://tests/navigation_cases.gd").catalog(self)
 		await pages()
 		catalog_case("catalog-pages")
 		await sorting()
@@ -185,6 +193,7 @@ func run() -> void:
 		preload("res://tests/hz_c_cases.gd").run(self)
 		await preload("res://tests/display_cases.gd").run(self)
 		await preload("res://tests/view_title_cases.gd").run(self)
+		await preload("res://tests/navigation_cases.gd").work(self)
 		await information_saves()
 	elif mode == "kb":
 		await compact_buttons()
@@ -228,7 +237,7 @@ func run() -> void:
 		check(app.album.visible,"N02: actual catalog exit remains reachable")
 		write_report()
 		print("KAT2_QUIT_ATTEMPT catalog-origin information")
-		click(caption_button(app.album, "Beenden"))
+		click(app.album.quit_button)
 		await frames()
 		check(false, "catalog-origin information permits regular process quit")
 	write_report()
@@ -353,7 +362,7 @@ func information_profile(base: String, state: String) -> void:
 
 func information_back_labels(destination: String) -> void:
 	for button: Button in [app.actions["nav-work"],app.info.right_return]:
-		check(button.text == "Zurück" and button.tooltip_text == destination and button.accessibility_name == destination,"N03: short information back label keeps actual destination: "+destination)
+		check(button.text.is_empty() and button.tooltip_text == destination and button.accessibility_name == destination,"NAV-A: arrow information back keeps actual destination: "+destination)
 
 func information_saves() -> void:
 	var base: String = Store.test_root_override
@@ -364,7 +373,7 @@ func information_saves() -> void:
 		var original: Dictionary = save_bytes()
 		var history: Array = app.session.player.history.duplicate(true)
 		await choose("fahrzeuge-verkehr")
-		click(caption_button(app.album, "Einstellungen / Info"))
+		click(app.album.settings_button)
 		await frames()
 		check(app.information.visible and app.information_origin == "album", state + ": pointer opens catalog information")
 		information_back_labels("Zurück zum Katalog")
@@ -375,7 +384,7 @@ func information_saves() -> void:
 			click(app.info.right_return)
 			await frames()
 			check(app.album.visible and save_bytes() == original,"N03: help returns to catalog without touching damaged saves")
-			click(caption_button(app.album,"Einstellungen / Info"))
+			click(app.album.settings_button)
 			await frames()
 		await choose_view(1)
 		check(app.save_timer.is_stopped(), state + ": catalog view change schedules no slot save")
@@ -481,7 +490,7 @@ func information_saves() -> void:
 		file.store_string("{TEST ONLY damaged quit")
 		file.close()
 	await new_app()
-	click(caption_button(app.album, "Einstellungen / Info"))
+	click(app.album.settings_button)
 	await frames()
 	await choose_view(1)
 	await create_timer(0.5).timeout

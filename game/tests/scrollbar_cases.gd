@@ -43,6 +43,13 @@ static func button(probe, p: Vector2, down: bool) -> void:
 	probe.surface.push_input(event,true)
 
 static func range_input(probe, scroller: ScrollContainer) -> void:
+	# A changed information header reflows the article. Its finite reading-
+	# anchor restore must finish before testing new user scroll commands.
+	if scroller == probe.app.info.help_scroll:
+		for frame: int in range(12):
+			if probe.app.help_panel.restore_frames <= 0: break
+			await probe.process_frame
+		probe.check(probe.app.help_panel.restore_frames <= 0,"SBR article reflow settled before pointer range test")
 	var bar: VScrollBar = scroller.get_v_scroll_bar()
 	var limit: float = bar.max_value-bar.page
 	probe.check(bar.is_visible_in_tree() and limit > 40,"SBR real overflowing native scroll range")

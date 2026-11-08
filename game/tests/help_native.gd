@@ -115,7 +115,7 @@ static func run(t: SceneTree) -> void:
 			var reached: bool = scroll.scroll_vertical == maxi(0,int(bar.max_value-bar.page)) and panel.chapters[i].get_global_rect().end.y <= scroll.get_global_rect().end.y+1
 			if not reached: print("HIL_SCROLL_RANGE ",spec," chapter=",i," offset=",scroll.scroll_vertical," end=",bar.max_value-bar.page," content=",panel.chapters[i].get_global_rect()," clip=",scroll.get_global_rect())
 			t.check(reached,"HIL final chapter content reachable")
-			t.check(app.info.right_return.get_global_rect().position.y > scroll.get_global_rect().end.y,"HIL return stays below independent clip")
+			t.check(app.info.right_return.get_global_rect().end.y < scroll.get_global_rect().position.y,"HIL return stays above independent clip")
 	t.check(layouts == 12,"HIL complete native chapter layout coverage")
 	t.check(panel.figures.all(func(item: Control) -> bool: return not item.is_processing() and not item.is_physics_processing()),"HIL passive diagrams have no processing tick")
 	t.root.mode = prior_mode
