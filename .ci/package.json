@@ -1,62 +1,22 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/549",
-  "package": "NAV-A",
+  "issue": "https://github.com/venomenon328/picross/issues/547",
+  "package": "KL-CARD-A",
   "modules": [
     "native.catalog"
   ],
-  "purpose": "Fixed book navigation on the visible safe page, settings gear and owner-requested quit X, arrow-only spread pagination, runtime icon tooltip/name inventory. Existing catalog/pages and catalog/information cover layout, state, boundaries, retry and input; the core builds the Windows x64 player.",
-  "omitted": "No save schema, motion/timing, puzzle/renderer/production or web persistence change. No native.core/history/completion/adapters/graphics/export, tools, production, preflight, delivery or Chromium. Once-only explicit book_lifecycle and isolated native Windows rendered viewport input/originals complement the selected component process; independent R01 and owner M01 remain before merge. The resource generator only adds the quit ID to its closed inventory; direct offline z2 delivery checks cover this, without selecting the whole tools module. Existing PCK inventory readers now include quit; no export mechanism changes.",
+  "purpose": "Compact catalog cards with preview beside neutral/earned heading, category and status; common measured horizontal/stacked geometry. Existing catalog/pages, KE and KK cover complete metadata, reflow, input, spoiler and recovery. Core supplies Windows x64 player.",
+  "omitted": "No definitions, assets, save schema, sorting/filter semantics, difficulty or renderer changes. No native.core/history/completion/adapters/graphics/export, tools, production.*, preflight, delivery or Chromium. One-time native regular-book before/after originals and synthetic long-text, wide-reveal and recovery input supplement component tests; independent R01 and owner M01 remain before merge. No physical desktop/mouse claim.",
   "test_changes": [
-    {
-      "path": "game/tests/navigation_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Small real-control inventory, geometry, boundary, active-no-op and visit restoration assertions in the existing pages/information processes; no new process or permanent pictures."
-    },
-    {
-      "path": "game/tests/view_title_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Replace superseded bottom-navigation geometry with fixed header placement; retain image-title and help-register checks."
-    },
     {
       "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Use actual detached header controls and arrow return; preserve save/retry cases. After count wrapping, scroll metadata pixel/hover/pointer targets into the real clip and restore the measurement offset before the unchanged geometry oracle."
+      "reason": "Replace superseded vertical title/category/footer oracles; retain existing metadata, wrong-fill, X/redo, completion, reset/recovery and pointer scenarios."
     },
     {
-      "path": "game/tests/recent_cases.gd",
+      "path": "game/tests/catalog_layout_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Check header separation beside half/full recent panels; measure their unchanged complete safe-paper budget independently of the count label now sharing its row with icons."
-    },
-    {
-      "path": "game/tests/help_native.gd",
-      "disposition": "change-scoped",
-      "reason": "Adapt the explicitly requested real-time lifecycle to navigation above the article clip; no automatic lifecycle."
-    },
-    {
-      "path": "game/tests/hz_pack.gd",
-      "disposition": "change-scoped",
-      "reason": "Keep the retained flat shared-UI PCK diagnostic on its own controls and include the new quit icon in its resource inventory."
-    },
-    {
-      "path": "tools/web_tests/group_catalog.py",
-      "disposition": "change-scoped",
-      "reason": "Retained manual browser diagnostic uses new stable control names; no Chromium execution requested."
-    },
-    {
-      "path": "game/tests/scrollbar_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Use the existing longer help chapter for overflow; the larger settings clip may have a small positive range instead of the old >40px assumption. Keep every start/middle/end arrow, track, thumb and wheel oracle, and wait for finite article reflow before commands."
-    },
-    {
-      "path": "game/tests/content_pack_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Keep the actual PCK resource inventory consistent with the new owner-requested quit SVG."
-    },
-    {
-      "path": "game/tests/hz_b_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Keep the retained shared resource inventory consistent with the additional quit icon."
+      "reason": "Small measured horizontal/stacked threshold and stable shared geometry/metadata checks inside existing pages checkpoint; no new process, result family or permanent images."
     }
   ],
   "core_change": null,

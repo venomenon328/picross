@@ -1,5 +1,20 @@
 # Native Prüfmodule und Originalnachweise
 
+## KL-CARD-A / #547: kompakte Karten
+
+Das gewählte `native.catalog` verwendet weiter dieselben elf Prozesse und
+Pages-/KE-/KK-Checkpoints. Die bestehenden Status-/Spoiler-/Save-/Reset-/
+Recovery-/Tooltip-/Pointerfolgen bleiben. Ihre Positionsorakel folgen nun dem
+seitlichen Textblock und unteren gemeinsamen Streifen statt der alten Fußzeile.
+Im vorhandenen `catalog-layout`-Checkpoint sichern wenige zusätzliche Assertions
+gemeinsame Orientierung/112×UI-Bildhöhe, sichtbare vollständige Kategorien auch
+unter Filter, UI125-Langtext mit Reset und flaches Reveal sowie ein aus echter
+Papierbreite hergeleitetes Stapel-/Seiten-Fitpaar. Fokus-Accept öffnet dieselbe
+verdiente ID. Keine neue Prozess-/Checkpoint-/Dauerbildfamilie oder schwere
+Kernpflicht. Die einmaligen Vorher-/Nachher-Buchoriginale und Fehler-/Recovery-
+Bedienbelege bleiben gemäß [Paketentscheidung](https://github.com/venomenon328/picross/issues/547#issuecomment-6727488115)
+auf einem getrennten befristeten Reviewref; R01 und Eigentümer-M01 bleiben getrennt.
+
 ## NAV-A / #549: feste Buchnavigation und Symbolhilfen
 
 Das ausgewählte `native.catalog` ergänzt im vorhandenen Pages-/Informationsprozess

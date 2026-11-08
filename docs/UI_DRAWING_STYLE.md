@@ -72,8 +72,10 @@ Entwurfsstarts sind 28–32 logische Pixel für Modussymbole, 12–14 für Kreis
 260–280 für die gemeinsame Kartenbreite. Tatsächliche Volltext-/Symbolmaße und
 Abstände bei UI 100/125 % bestimmen das Ergebnis; keine bereits gemessene
 Fitgarantie, keine Textkürzung oder Schriftverkleinerung als Breitenersatz.
-Der Status steht als Symbol mit „Neu“, „Begonnen“ oder „Gelöst“ rechts in der
-Fußzeile neben „Blatt NN“. Die Schriftrolle wird durch HZ erweitert; große proportionale Bildfläche,
+KL-CARD-A / #547 verlegt Statussymbol und ausgeschriebenes Wort in den festen
+Textblock neben beziehungsweise über der Vorschau; die neutrale Blattkennung
+steht vor Abschluss als Überschrift, nach Abschluss zusätzlich beim Status.
+[Aktuelle Aufteilung](CATALOG_PRESENTATION.md#ke-d01--feste-kartenaufteilung). Die Schriftrolle wird durch HZ erweitert; große proportionale Bildfläche,
 lokale Polygon-/Revealglättung, Spoiler-, Reset- und Recoverygrenzen bleiben.
 KU-B ergänzt die [Sortierbedienung](CATALOG_SORTING.md) neben dem Kategorienfilter.
 Statische Kreise und Stifte verändern weder Zell-/Hinweisrendering noch Animationen.
