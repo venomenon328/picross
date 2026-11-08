@@ -168,7 +168,8 @@ liegt es links vom Artikel; andernfalls bilden dieselben Controls eine kompakte,
 bei Bedarf mehrzeilige Leiste darüber. Schriftmetrik, UI-Skala, vollständige
 44/55-px-Trefferflächen, Diagramme und Scrollbarreserve bestimmen den Wechsel.
 Der aktive Eintrag erhält eine stabile leicht unregelmäßige Unterstreichung;
-Hover erhält eine dezente Fläche ohne Umrandung; zwei kurze seitliche
+Hover erhält denselben Unterstrich mit geringerer Deckkraft statt Fläche
+oder Umrandung; zwei kurze seitliche
 Stiftstriche kennzeichnen den Tastaturfokus. Nur der Artikel scrollt.
 Die erste vorhandene Abschnittsüberschrift beginnt den Artikel. Pangolin-Absätze
 verwenden 20/25 px bei UI100/125 und sind bei hinreichender Breite auf 75
