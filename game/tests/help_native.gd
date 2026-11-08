@@ -94,8 +94,6 @@ static func run(t: SceneTree) -> void:
 			# Real wheel events must reach the content end and must not zoom or
 			# edit the hidden work board. Bound enough for the longest chapter.
 			for n: int in range(200):
-				var range_end: float = scroll.get_v_scroll_bar().max_value-scroll.get_v_scroll_bar().page
-				if scroll.scroll_vertical >= maxi(0,int(range_end)): break
 				var event := InputEventMouseButton.new()
 				event.position = scroll.get_global_rect().get_center()
 				event.global_position = event.position
@@ -105,6 +103,13 @@ static func run(t: SceneTree) -> void:
 				event = event.duplicate()
 				event.pressed = false
 				t.root.push_input(event,true)
+				if n % 8 == 7:
+					# Native text/range invalidation may arrive with the input batch.
+					# Give it real frames before deciding the article has ended.
+					await t.frames(2)
+					var range_end: float = scroll.get_v_scroll_bar().max_value-scroll.get_v_scroll_bar().page
+					var last: Control = panel.chapters[i].get_children()[-1]
+					if scroll.scroll_vertical >= maxi(0,int(range_end)) and last.get_global_rect().end.y <= scroll.get_global_rect().end.y+1: break
 			await t.frames(4)
 			var bar: VScrollBar = scroll.get_v_scroll_bar()
 			var reached: bool = scroll.scroll_vertical == maxi(0,int(bar.max_value-bar.page)) and panel.chapters[i].get_global_rect().end.y <= scroll.get_global_rect().end.y+1
