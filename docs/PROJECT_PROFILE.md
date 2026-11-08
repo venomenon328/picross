@@ -72,7 +72,7 @@ bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Katalog, Metadaten oder Sortierung | [CATALOG_PRESENTATION](CATALOG_PRESENTATION.md), [CATALOG_SORTING](CATALOG_SORTING.md), [CATEGORIES](CATEGORIES.md) |
 | Abschlussbilder, Bildrevisionen oder Katalogvorschau | [REVEAL_TRANSPARENCY](REVEAL_TRANSPARENCY.md) und dort geroutete Produktions-/Integrationsquellen |
-| Neue Rätsel konzipieren, produzieren, korrigieren oder redaktionell abnehmen | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md) und dessen Pflichtquellen |
+| Neue Rätsel konzipieren, produzieren, korrigieren oder redaktionell abnehmen | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [redaktioneller Qualitätsvertrag](PUZZLE_QUALITY.md) und deren Pflichtquellen |
 | Produktionswerkzeuge, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste/Verträge |
 | Schritt-4-Integrationscode, Registrierungsbudgets, Prüfkontext, Publikationsguards/Recovery | [PUZZLE_INTEGRATION](PUZZLE_INTEGRATION.md), [ZA1_ADAPTER](ZA1_ADAPTER.md), aktuelles Paket; Soll und ausführbaren Stand unterscheiden |
 | Schwierigkeit, Analyse, Kalibrierung, Bewertung oder deren Integration | [SD2](PUZZLE_DIFFICULTY_V2.md), [SD](PUZZLE_DIFFICULTY.md), je nach Änderung [SD2-Analyse](SD2_ANALYZER.md), [SD2-Kalibrierung](SD2_CALIBRATION.md), [SD2-Integration](SD2_INTEGRATION.md), kompatible [SD-Analyse](SD_ANALYZER.md), [0.3-Freeze](SD_CALIBRATION.md), [Daten-/Recoveryvertrag](SD_CATALOG.md), [Paarlinien](PAIRED_LINES.md), Kategorien/ZA-1/Katalogdarstellung |

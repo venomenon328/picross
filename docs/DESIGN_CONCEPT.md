@@ -368,6 +368,12 @@ Vorgeschlagen ist eine Unterscheidung zwischen vollständiger Sammlung und zusä
 
 ### 4.3 Motivtreue, detailliertere Enthüllung
 
+Für die redaktionelle Beurteilung neuer Abschlussbilder, Motivvorlagen, Raster
+und Hinweisansichten gilt [PUZZLE_QUALITY](PUZZLE_QUALITY.md). Die dortigen
+Einzelkriterien konkretisieren diese Gestaltung; technische Gates bleiben
+getrennt. Sichtbare Entwürfe und eine begründete redaktionelle Annahme sind
+keine Zertifizierung oder automatische Integrationsfreigabe.
+
 AR-A / #486 erweitert ausschließlich den stabilen Abschluss um **Bild | Raster**.
 Ein einzelnes rechteckiges On-Off-Control trägt Bild links und Raster rechts;
 sein heller Schieber kennzeichnet die aktive Seite. Dunkle Bereiche werden

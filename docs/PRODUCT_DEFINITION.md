@@ -261,6 +261,12 @@ Vor Abschluss werden weder das fertige Lösungsbild noch der Motivname gezeigt. 
 
 ### 3.4 Inhaltsproduktion
 
+Die verbindliche redaktionelle Qualitätsreferenz für neue Produktionen ist
+[PUZZLE_QUALITY](PUZZLE_QUALITY.md). Sie bündelt Bild-/Motiv-/Raster-/Hinweisqualität
+und regelt die transparente Sichtung sowie gezielte redaktionelle Abweichungen.
+Technische Nachweise und tatsächliche Freigaben bleiben eigenständig erforderlich;
+Q-A / #488 ändert keinen abgenommenen Bestand und legt noch keine Farbmetrik fest.
+
 Das Basisprodukt enthält eine vorab kuratierte Sammlung, keinen notwendigen Laufzeitgenerator und keine Abhängigkeit von Community-Nachschub. Gewünscht ist ein externes Produktionswerkzeug, das Entwürfe aus Beschreibungen oder bereitgestellten Bildern unterstützt.
 
 Für neue Rätsel gilt die [KI-Arbeitsanweisung](ai-workflows/PUZZLE_AUTHORING.md): Aus Text oder Ausgangsbild entstehen zuerst farbige, detaillierte Abschlussbildvarianten im gemeinsamen Stil. Das ausdrücklich ausgewählte und freigegebene Abschlussbild ist die verbindliche Referenz. Erst daraus wird eine vereinfachte Motivvorlage abgeleitet und separat freigegeben; anschließend folgen Rasterproduktion, Logikprüfung, begrenzte motivgeschützte Überarbeitung und redaktionelle Endabnahme. Das Abschlussbild bleibt auch bei monochromen Rätseln farbig. Die [Produktionsspezifikation](PUZZLE_PRODUCTION.md) konkretisiert dafür den allgemeinen Prüfkern, frühe Farben und die historischen 100×100-Untersuchungen, einen dateibasierten Import mit erstem spielbarem Export sowie eine kleine Vergleichs- und Pilotproduktion. Wie weit sich damit gute Inhalte mit vertretbarem Aufwand herstellen lassen, bleibt Gegenstand dieser Untersuchung. Eine Bildvorlage liefert nicht automatisch ein geeignetes Rätsel.

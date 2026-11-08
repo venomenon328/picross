@@ -1,5 +1,14 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+**Q-A / #488:** [PUZZLE_QUALITY](../../docs/PUZZLE_QUALITY.md) ist die verbindliche
+redaktionelle Produktionsreferenz, zusammen mit dem
+[Authoringworkflow](../../docs/ai-workflows/PUZZLE_AUTHORING.md). Sie regelt auch
+Sichtungsentwürfe ohne vollständige Qualifikation und gezielte redaktionelle
+Einzelfallentscheidungen. Diese sind keine technischen Zertifikate; Proof,
+Herkunft/Rechte, Datei-/Freigabebindungen und bestehende Adaptergates bleiben
+Pflicht. Q-A führt keinen neuen Farbvalidator, CLI-Schalter oder Ausnahmeweg ein;
+die numerische Palettenregel folgt erst mit P-A/P-B.
+
 **AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
 für transparente Abschlussbilder und einen eigenen eng begrenzten Bildupdateweg.
