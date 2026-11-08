@@ -18,6 +18,9 @@ static func rows(probe, count: int, expected_columns: int = 0) -> void:
 		for column: Control in half.get_children():
 			var card: Card = column.get_child(0)
 			probe.check(card.size == first.size and card.size.x >= card.minimum_card_width(album.ui_scale), "KL equal complete card budgets on both halves")
+			probe.check(card.side_by_side == first.side_by_side and card.image_area.size.y == roundf(112*album.ui_scale), "KL-CARD common orientation and full image-height budget")
+			probe.check(not card.detail.text.is_empty() and card.detail.get_line_count() <= 2, "KL-CARD complete category also under filtering")
+			probe.check(card.leaf.visible == (card.note.text == "Gelöst"), "KL-CARD earned leaf supplements motif; neutral heading otherwise")
 			probe.check(card.get_global_rect() == column.get_global_rect(), "KL exact card and wrapper hit rectangles")
 			if not line.is_empty() and column.position.y != previous_y:
 				centred(probe, half, line)
@@ -98,4 +101,65 @@ static func run(probe) -> void:
 	album.selected_id = ""
 	album.items = original
 	album._render(0)
+	await probe.frames()
+	await compact(probe)
+
+static func compact(probe) -> void:
+	var app = probe.app
+	var album = app.album
+	app.set_ui_scale(1.25)
+	var samples: Array = []
+	for extent: Vector2i in [Vector2i(1920,1080),Vector2i(2560,1440)]:
+		probe.surface.size = extent
+		await probe.frames()
+		samples.append({"width":extent.x,"available":album._shared_card_width()})
+	var first: Card = album.choices[0]
+	var slope: float = (samples[1].available-samples[0].available)/(samples[1].width-samples[0].width)
+	probe.check(slope > 0,"KL-CARD measured safe paper grows with book projection")
+	if slope > 0:
+		var crossing: float = samples[0].width+(2*first.side_width_budget+roundi(12*app.ui_scale)-samples[0].available)/slope
+		var observations: Array[bool] = []
+		for width: int in [floori(crossing)-8,ceili(crossing)+8]:
+			probe.surface.size = Vector2i(width,roundi(width*9.0/16.0))
+			await probe.frames()
+			rows(probe,24,2)
+			observations.append(album.choices[0].side_by_side)
+		probe.check(observations == [false,true],"KL-CARD derived fit pair crosses shared stacked/side threshold")
+	# One long two-line category plus the longest metadata, visible reset and a
+	# flat earned image. This is a presentation-only synthetic sample.
+	probe.surface.size = Vector2i(2560,1440)
+	var category: Dictionary
+	for value: Dictionary in album.categories:
+		if value.id == album.metadata[album.visible_ids[0]].category_id: category = value
+	var old_name: String = category.name
+	category.name = "Eine lange technische Kategorie mit Äpfeln und Kräutern"
+	album._render(0)
+	await probe.frames()
+	first = album.choices[0]
+	probe.check(first.reset.visible and first.difficulty.text == "Nicht eingestuft" and first.detail.get_line_count() == 2,"KL-CARD UI125 complete long category, missing rating and separate reset")
+	var image := Image.create(480,48,false,Image.FORMAT_RGBA8)
+	image.fill(Color("376a60"))
+	first.picture.artwork = ImageTexture.create_from_image(image)
+	var stable: Vector2 = first.size
+	await probe.frames()
+	var fitted: Rect2 = first.picture.artwork_rect()
+	probe.check(is_equal_approx(fitted.size.x/fitted.size.y,10) and Rect2(Vector2.ZERO,first.picture.size).encloses(fitted) and first.size == stable,"KL-CARD flat reveal fits whole without row changes")
+	probe.check(first.caption.get_global_rect().end.x <= first.reset.get_global_rect().position.x-roundf(8*app.ui_scale),"KL-CARD title clears full UI125 reset target")
+	category.name = old_name
+	album._render(0)
+	probe.surface.size = Vector2i(1920,1080)
+	app.set_ui_scale(1.0)
+	await probe.frames()
+	first = album.choices[0]
+	album.ensure_control_visible(first)
+	await probe.frames()
+	first.grab_focus()
+	for down: bool in [true,false]:
+		var event := InputEventAction.new()
+		event.action = &"ui_accept"
+		event.pressed = down
+		probe.surface.push_input(event,true)
+	await probe.frames()
+	probe.check(app.ending.visible and str(app.session.definition.id) == first.action_id,"KL-CARD real focus accept opens earned stable ID")
+	app.show_album()
 	await probe.frames()

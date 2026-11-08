@@ -114,7 +114,7 @@ Katalogbilder. AT-A liefert den begrenzten Bildänderungsweg mit synthetischen
 Alpha-/Spielstandsnachweisen; die AT-B-Bestandsübernahme verwendet
 konkreter neuer Bildfreigabe. Kartenaufteilung und ungelöste Vorschauen bleiben erhalten.
 
-Fachstand: Spezifikation 2.3 · Workflowabgleich: 06.11.2026 · KU-A/B und HZ-A/B/C integriert; KL-D01 freigegebener Sollstand
+Fachstand: Spezifikation 2.4 · Workflowabgleich: 06.11.2026 · KU-A/B und HZ-A/B/C integriert; KL-D01 freigegebener Sollstand
 
 ## K-A · Kombinierbare Sitzungsfilter (#485)
 
@@ -212,7 +212,7 @@ Schrumpfen unter die Mindestbreite.
 vollständige einzeilige Größe, Schwierigkeit (einschließlich „Nicht eingestuft“
 und „Sehr schwer“) und Moduspiktogramm, die abgestimmte kleine Schriftrolle
 15/19 bei UI100/125, Kategorie-/Titelfläche, vorreservierter Resetplatz,
-Fußzeile und Bildhöhe mindestens 112×UI bei proportionalem Fit. Die bislang
+Statuszeile und Bildhöhe mindestens 112×UI bei proportionalem Fit. Die bislang
 geprüften rechteckigen Trefferflächen mindestens 44×44 bzw. 55×55,
 zeichnerische Konturüberstände, Fokus/Tooltips sowie Fehler-/Recoveryaktionen
 dürfen nicht geclippt, überdeckt oder funktionslos werden. Kein verkleinerter
@@ -288,18 +288,44 @@ gelten im übrigen Umfang weiter. Historische Prüfberichte bleiben unverändert
 
 ## KE-D01 · Feste Kartenaufteilung
 
-Alle Karten und Grid-Zellen haben bei gleichem Viewport und UI-Faktor dieselbe
-Größe. Reihenfolge von oben nach unten:
+**KL-CARD-A / #547** schreibt die bisherigen vertikalen Positionen und die
+Statusfußzeile gezielt fort. [K1–K4 und Paketprüfung](https://github.com/venomenon328/picross/issues/547#issuecomment-6727488115)
+binden Umsetzung und getrennte T01/R01/M01-Gates. Alle Karten und Grid-Zellen
+haben innerhalb derselben Konfiguration identische Maße:
 
-1. Motivtitel erst nach gültigem Abschluss, sonst `???`; vorhandene Bakso-Rolle,
-   höchstens zwei Zeilen mit bestehender Auslassungsregel. Reset oben rechts;
-   sein Platz bleibt auch bei verborgenem Reset reserviert.
-2. Kompakte Kategoriezeile: in „Alle Rätsel“ befüllt, bei Kategorienfilter leer
-   und weiterhin reserviert.
-3. Fester proportionaler Bildraum für Fragezeichen, eigene Füllminiatur,
-   verdientes Reveal oder bestehende Fehler-/Recoverydarstellung.
-4. Ein passiver Papierstreifen mit genau einer gemeinsamen Metadatenzeile.
-5. Feste Fußzeile mit „Blatt NN“ links und Statussymbol samt Statuswort rechts.
+1. Links liegt ein fester proportionaler Bildraum mit 112×UI Höhe und im
+   seitlichen Layout 112×UI Breite: Fragezeichen, eigene Füllminiatur,
+   verdientes Reveal oder scrollbare Diagnose mit separater Reparaturaktion.
+2. Rechts stehen Überschrift, reservierte bis zu zweizeilige Kategorie und
+   ausgeschriebener Status mit dem bisherigen Symbol. Neu/Begonnen tragen
+   die neutrale Bakso-Überschrift **Blatt NN**; nach gültigem Abschluss steht
+   dort der Motivtitel und neben **Gelöst** zusätzlich **· Blatt NN**.
+   Titel behalten zwei Zeilen mit der bestehenden Auslassungsregel. Der
+   obere rechte Resetplatz bleibt auch bei verborgenem Reset reserviert.
+3. Die Kategorie bleibt auch bei Kategorienfilter sichtbar, an einer festen
+   oberen Grundlinie innerhalb ihrer zwei reservierten Zeilen.
+4. Unten läuft genau ein passiver Papierstreifen über die innere Kartenbreite,
+   mit genau einer vollständigen gemeinsamen Metadatenzeile.
+
+Die gemeinsame Spaltenzahl bleibt aus den vollständigen Mindestbudgets und der
+schmaleren sicheren Scrollbreite gemessen, höchstens drei pro Hälfte. Für die
+seitliche Anordnung werden alle Kategorien und neutralen Blattkennungen des
+Katalogs mit den aktuellen Fontrollen gemessen, einschließlich Statussymbol,
+Titel-/Resetreserve, Innenrändern und Abständen. Reicht die jeweilige Zellenbreite
+nicht, wechseln **beide Hälften synchron** zur gestapelten Anordnung: derselbe
+Textblock, darunter der vollbreite proportionale Bildraum, zuletzt der Streifen.
+Die gemeinsame Breite darf für den gemessenen seitlichen Fit über die bisherige
+Wunschbreite Minimum+8×UI hinaus wachsen. Titel, Motivformat, Status, Diagnose
+und Reset ändern die gemeinsame Geometrie nicht. Keine Bildschirmauflösung
+entscheidet den Wechsel. NAV-A-Kopf, Fortsetzen, Filter/Sortierung und
+Blätteraktionen bleiben außerhalb der Karten.
+
+Schriftrollen und Größen, 10×UI Innenrand, 8×UI Inhaltsabstände,
+12×UI Zeilen-/Spaltengap und 44/55-px-Trefferrechtecke bleiben erhalten.
+Einmalige K2-Messungen zählen vollständig sichtbare Reihen in derselben echten
+nativen Buchprojektion bei 1080p/1440p und gleicher UI100/Seite/Scrollposition.
+Ziel sind 12 bzw. 24 sichtbare Karten; der tatsächliche Vorher-Fit und
+Abweichungen werden mit Karten-/Clipmaßen im Produkt-PR dokumentiert.
 
 | Papierstreifen | Inhalt |
 | --- | --- |
@@ -309,7 +335,7 @@ Größe. Reihenfolge von oben nach unten:
 
 Die drei Angaben stehen vertikal ausgewogen in derselben Zeile mit klaren
 Abständen; keine drei Einzelkästchen und keine zweite Metadatenzeile.
-Der Status steht ausschließlich in der Fußzeile. Größe und Modus werden nicht
+Der Status steht im festen Textblock neben beziehungsweise über dem Bild. Größe und Modus werden nicht
 zusätzlich sichtbar an anderer Stelle derselben Karte wiederholt. Das Etikett bleibt
 passiv: Klick öffnet dieselbe Karte; Reset und Recoveryaktionen behalten ihre
 eigenen vorhandenen Aktionen. KU-A ergänzt keine Filter, Sortieroptionen oder
@@ -340,8 +366,8 @@ Neuaufbau verändert bei gleicher ID und Größe nicht die gezeichnete Grundform
 
 [HZ-D07](HAND_DRAWN_UI.md) präzisiert die optische Textausrichtung: stabile
 Grundlinien pro Rolle/Größenstufe, keine wortabhängigen Höhenwechsel zwischen
-„Neu“, „Begonnen“ und „Gelöst“. Blattkennung, Statuswort und Statussymbol werden
-als gemeinsame Fußzeile betrachtet. Die Kategorie behält ihre feste Position im
+„Neu“, „Begonnen“ und „Gelöst“. Die zusätzliche verdiente Blattkennung, Statuswort und Statussymbol werden
+als gemeinsame Statuszeile betrachtet. Die Kategorie behält ihre feste Position im
 reservierten, bis zu zweizeiligen Bereich; ein- und zweizeilige Namen werden
 nicht jeweils neu darin zentriert.
 
@@ -482,8 +508,9 @@ folgen unverändert KE-D04/D05. EA-Timing, Speicherung und Reset ändern sich ni
 | Begonnen | Stift, gedecktes Ocker, „Begonnen“ | Ausschließlich eigene Füllzellen |
 | Abgeschlossen | Gezeichneter Haken, gedecktes Grün, „Gelöst“ | Verdientes farbiges Reveal |
 
-Symbol und Text erscheinen gemeinsam rechtsbündig in derselben festen Fußzeile
-wie „Blatt NN“ links; Farbe allein trägt keine Bedeutung. KU-A ersetzt das
+Symbol und Text erscheinen gemeinsam linksbündig im festen Textblock neben
+beziehungsweise über dem Bild. Bei Gelöst ergänzt „· Blatt NN“ die Motivüberschrift;
+sonst führt die neutrale Überschrift die Blattkennung. Farbe allein trägt keine Bedeutung. KU-A ersetzt das
 bisherige sichtbare Katalogwort „Fertig“ durch „Gelöst“. Dies ist eine
 Darstellungsänderung, keine Umbenennung des internen Statusmodells oder
 gespeicherter Werte. Die vorhandene Statusermittlung bleibt: gültiger Abschluss
@@ -508,7 +535,9 @@ Abschluss verborgen; kein vorzeitiges Laden des Reveals für den Platzhalter.
 Ein ungültiger Speicherstand darf nicht als Neu dargestellt werden. Vorhandene
 Fehlerkennzeichnung, Diagnose, Backup-/Recoveryaktionen und Reset bleiben
 erreichbar; Diagnose/Recovery nutzt weiterhin den festen Bildraum und wird nicht
-vom Fragezeichen verdeckt. Kein neuer Statusautomat. Reset bleibt bei gültigem,
+vom Fragezeichen verdeckt. Die Reparaturbeschriftung darf innerhalb ihres
+eigenen nativen Buttons umbrechen; dessen vollständiger 44/55-px-Treffer bleibt
+nach innerem Scrollen erreichbar, ohne die Karte zu verbreitern. Kein neuer Statusautomat. Reset bleibt bei gültigem,
 fehlerfreiem Neu verborgen und in den bisher vorgesehenen Bearbeitungs-/Fehler-
 und Recoveryzuständen verfügbar; vorhandene Bestätigung und Ursprungsbindung bleiben.
 
@@ -569,7 +598,7 @@ keine Tests oder Replays pro echtem Produktionsrätsel. Geometrie und Darstellun
 folgen bei gewähltem Modul dem [aktuellen Stichprobenvertrag](CI_C_NATIVE_GROUPS.md)
 und dem begründeten Paketbedarf; keine automatische Vollmatrix. Nachzuweisen sind die vollständige einzeilige Anzeige der längsten
 Metadaten, größere ausgerichtete Symbole, ausbleibende Schwierigkeitstooltips,
-erhaltene Modus-/Resettooltips und die Statusfußzeile. Filter-/Seitenwechsel,
+erhaltene Modus-/Resettooltips und die feste Statuszeile gemäß KL-CARD-A. Filter-/Seitenwechsel,
 Undo/Redo, Fehler/Recovery, Reset und Spoilergrenzen bleiben relevante Regressionen.
 Native Windowsprüfungen folgen dem gewählten Modul; ausdrücklich manuelle
 Chromiumprüfungen dem [Webvertrag](WEB_HOSTING.md); KU-B ergänzt die eigenen Sortier-/Datennachweise.

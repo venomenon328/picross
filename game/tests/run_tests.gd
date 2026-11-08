@@ -267,9 +267,9 @@ func test_scene() -> void:
 	for i: int in range(mini(app.sessions.size(), expected_catalog.size())):
 		var definition: Dictionary = app.sessions[i].definition
 		check(str(definition.id) == expected_catalog[i], "album includes correct sheet in position " + str(i))
-		check(app.choices[i].caption.text == "???" and app.choices[i].accessibility_name.contains("Blatt"), "KK unfinished caption and accessible sheet for " + str(definition.id))
+		check(app.choices[i].caption.text == app.sessions[i].neutral_title().split(" · ")[0] and app.choices[i].accessibility_name.contains("Blatt"), "KL-CARD unfinished neutral caption and accessible sheet for " + str(definition.id))
 	if app.sessions.size() >= 3:
-		check(app.sessions[2].definition.id == "T-04" and app.choices[2].leaf.text == "Blatt 03", "synthetic third sheet has a neutral title")
+		check(app.sessions[2].definition.id == "T-04" and app.choices[2].caption.text == "Blatt 03", "synthetic third sheet has a neutral title")
 	app.open_puzzle()
 	await process_frame
 	var board: Control = app.board
@@ -323,7 +323,7 @@ func test_scene() -> void:
 	check(app.choices[0].caption.text == fixture.reveal.name, "completed album entry")
 	check(app.album_reveals[0].visible and not app.album_previews[0].visible and app.album_reveals[0].payload == fixture.reveal, "completed album has colored earned image")
 	if app.sessions.size() >= 3:
-		check(app.choices[2].caption.text == "???", "album refresh preserves the session title")
+		check(app.choices[2].caption.text == "Blatt 03", "album refresh preserves the neutral session title")
 	preload("res://tests/book_fixture.gd").dispose(app,true)
 	await process_frame
 

@@ -136,6 +136,18 @@ Scrollbreiten einschließlich Balkenreserve. Der flache Zeilencontainer zentrier
 vollständige und angebrochene Reihen ohne zusätzliche Controls oder Reparenting
 beim Umbruch. Rechte Scrolländerungen lösen dieselbe Neuberechnung wie linke aus.
 
+**KL-CARD-A / #547:** Innerhalb derselben sicheren Papier-/Scrollflächen liegt
+die Vorschau neben Titel, Kategorie und Status; ein gemeinsamer passiver
+Metadatenstreifen schließt jede Karte unten ab. Die neutrale Blattüberschrift
+ersetzt `???`; verdiente Titel erhalten die Blattkennung zusätzlich beim Status.
+Auch gefilterte Karten zeigen ihre Kategorie. Gemeinsame gemessene Text-, Bild-,
+Symbol- und Resetbudgets entscheiden den synchronen Stapelfallback beider
+Hälften. Bis zu 12/12 Karten, maximal drei Spalten, zentrierte Teilreihen,
+beide Offsets und ID-Rückwege bleiben; Kopf, Fortsetzen, Meldungsclip,
+Filter/Sortierung und Pfeilfuß werden nicht eingeschränkt.
+[Kartenmaße und Zustände](CATALOG_PRESENTATION.md#ke-d01--feste-kartenaufteilung),
+[Paket und einmalige Buch-/Reviewnachweise](https://github.com/venomenon328/picross/issues/547#issuecomment-6727488115).
+
 Katalogblättern dauert 0,85 s; vorwärts rechts nach links, rückwärts umgekehrt.
 Neue/begonnene Blätter öffnen mit drei getrennten Blättern in insgesamt 3 s.
 Die große rechte Arbeitsseite erhält unveränderte Raster-, Hinweis-, Schrift-

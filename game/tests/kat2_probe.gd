@@ -247,6 +247,7 @@ func run() -> void:
 func catalog_case(id: String) -> void:
 	# Checkpoints bind selected native paths to the independent result reader.
 	catalog_cases.append({"id":id,"checks":checks-case_checks})
+	print("KAT2_CASE ", id, " checks=", checks-case_checks, " elapsed_ms=", Time.get_ticks_msec())
 	case_checks = checks
 
 func write_report() -> void:
@@ -402,6 +403,11 @@ func information_saves() -> void:
 		var foreign: Dictionary = save_bytes("t01")
 		var dialog: ConfirmationDialog = app.reset_dialog if state == "error" else app.repair_dialog
 		var action: Button = app.album.reset_buttons["T-01"] if state == "error" else app.album.repair_buttons["T-01"]
+		if state != "error":
+			app.choices[0].recovery.ensure_control_visible(action)
+			await frames()
+		app.album.ensure_control_visible(action)
+		await frames()
 		click(action)
 		await frames()
 		check(dialog.visible and save_bytes() == original, state + ": repair/reset requires confirmation")
@@ -533,7 +539,7 @@ func regular() -> void:
 	var original: Dictionary = save_bytes()
 	await choose("voegel")
 	check(save_bytes() == original, "category change writes no save")
-	check(app.album.visible_ids == ["T-09"] and app.choices[0].leaf.text == "Blatt 06", "filtered zero is global five and keeps number")
+	check(app.album.visible_ids == ["T-09"] and app.choices[0].caption.text == "Blatt 06" and not app.choices[0].leaf.visible, "KL-CARD filtered zero keeps global neutral leaf heading")
 	click(app.choices[0])
 	await frames()
 	check(app.session.definition.id == "T-09" and app.work.visible, "pointer opens stable filtered ID")
@@ -605,6 +611,9 @@ func regular() -> void:
 	await frames()
 	check(app.album.visible and app.album.category_id == "voegel", "KK recovery card returns to same filter")
 	foreign = save_bytes("t09")
+	recovered_card = app.choices[0]
+	recovered_card.recovery.ensure_control_visible(recovered_card.repair)
+	await frames()
 	click(app.album.repair_buttons["T-09"])
 	await frames()
 	click(app.repair_dialog.get_ok_button())
@@ -626,6 +635,9 @@ func regular() -> void:
 	click(app.album_button)
 	await frames()
 	check(app.album.visible and app.album.category_id == "voegel", "KK invalid-backup card returns to same filter")
+	damaged_backup_card = app.choices[0]
+	damaged_backup_card.recovery.ensure_control_visible(damaged_backup_card.repair)
+	await frames()
 	click(app.album.repair_buttons["T-09"])
 	await frames()
 	click(app.repair_dialog.get_ok_button())
@@ -881,8 +893,8 @@ func catalog_labels() -> void:
 			check(card.difficulty.position.x+card.difficulty.size.x+9*app.ui_scale <= card.mode_tip.position.x,"KU-A single-line difficulty and mode never overlap")
 			check(card.dimensions.position.y == card.difficulty.position.y and card.mode_tip.position.y == card.dimensions.position.y,"KU-A metadata shares one row")
 			check(card.dimensions.position.x+card.dimensions.size.x < card.difficulty_icon.position.x and card.difficulty_icon.position.x+card.difficulty_icon.size.x < card.difficulty.position.x,"KU-A dimension, filled circle and text have distinct gaps")
-			check(card.note.position.y == card.leaf.position.y and card.status_icon.kind == card.note.text,"KU-A footer status drawing matches label")
-			check(card.note.horizontal_alignment == HORIZONTAL_ALIGNMENT_RIGHT and is_equal_approx(card.note.position.x+card.note.size.x,card.size.x-roundf(10*app.ui_scale)),"KU-A status group ends at the shared right inset")
+			check(card.note.position.y == card.leaf.position.y and card.status_icon.kind == card.note.text,"KL-CARD status drawing matches label beside category")
+			check(card.note.horizontal_alignment == HORIZONTAL_ALIGNMENT_LEFT and card.note.position.x >= card.status_icon.position.x+card.status_icon.size.x,"KL-CARD status follows its separate symbol")
 			check(card.size.x >= card.minimum_card_width(app.ui_scale),"KU-A measured common width is respected")
 			var marks := Rect2()
 			var first_point: bool = true
@@ -1018,12 +1030,12 @@ func fixed_cards() -> void:
 		var u: float = app.ui_scale
 		for card: Control in app.choices:
 			check(card.size == app.choices[0].size and card.get_parent().size == app.choices[0].get_parent().size,"KK shared actual card AND grid cell dimensions")
-			check(card.caption.text == "???" and card.text.is_empty(),"KK only neutral question marks; no native hidden caption")
+			check(card.caption.text == app.album.items[card.action_id].neutral_title().split(" · ")[0] and card.text.is_empty(),"KL-CARD neutral leaf heading; no native hidden caption")
 			check(card.caption.get_theme_font("font") == app.WORK_TITLE_FONT and card.caption.get_theme_font_size("font_size") < app.title.get_theme_font_size("font_size"),"KK original smaller Bakso role")
 			check(card.caption.max_lines_visible == 2 and card.caption.text_overrun_behavior == TextServer.OVERRUN_TRIM_ELLIPSIS,"KK two-line bounded ellipsis")
 			check(not card.reset.visible and card.reset.focus_mode == Control.FOCUS_NONE,"KK new reset invisible and unfocusable")
 			check(card.find_children("play-*","Button",true,false).is_empty(),"KK play control, hit and focus station absent")
-			check(card.label_area.end.y < card.leaf.position.y and card.note.position.y == card.leaf.position.y and card.leaf.position.x+card.leaf.size.x < card.status_icon.position.x,"KU-A status and stable leaf share footer below metadata")
+			check(card.note.position.y == card.leaf.position.y and card.leaf.position.x >= card.note.position.x+card.note.size.x and card.label_area.position.y >= maxf(card.image_area.end.y,card.note.position.y+card.note.size.y)+roundf(8*u),"KL-CARD status and earned leaf precede the common bottom strip")
 			check(card.image_area.encloses(Rect2(card.preview.position,card.preview.size)),"KK proportional own preview inside fixed area")
 			check(is_equal_approx(card.preview.size.x/card.preview.size.y,float(card.preview.width)/card.preview.height),"KK own preview preserves aspect")
 		await shot("new-%d" % spec[0])
@@ -1090,12 +1102,17 @@ func fixed_cards() -> void:
 		await frames()
 		check(card_geometry() == initial and app.choices[0].caption.get_line_count() > 2 and app.choices[0].caption.get_visible_line_count() == 2,"KK long name overflows exactly the reserved two lines")
 		check(app.choices[0].accessibility_name.contains(item.definition.reveal.name),"KK full earned name remains accessible")
-		var category_name: String = app.album.categories[0].name
-		app.album.categories[0].name = "Eine lange technische Kategorienbezeichnung mit Äpfeln und Kräutern"
+		var category: Dictionary
+		for value: Dictionary in app.album.categories:
+			if value.id == app.album.metadata["T-01"].category_id: category = value
+		var category_name: String = category.name
+		category.name = "Eine lange technische Kategorienbezeichnung mit Äpfeln und Kräutern"
 		app.album._render(0)
 		await frames()
-		check(card_geometry() == initial and app.choices[0].detail.get_visible_line_count() <= 2,"KK representative long category cannot grow metadata or grid")
-		app.album.categories[0].name = category_name
+		for candidate: Card in app.choices:
+			check(candidate.size == app.choices[0].size and candidate.side_by_side == app.choices[0].side_by_side,"KL-CARD long category uses one shared configuration")
+		check(app.choices[0].detail.get_line_count() <= 2,"KL-CARD complete long category fits reserved two lines")
+		category.name = category_name
 		app.album._render(0)
 		await frames()
 		var card: Control = app.choices[0]
@@ -1115,7 +1132,7 @@ func fixed_cards() -> void:
 		check(card_geometry() == initial,"KK UI roundtrip restores exact rectangles")
 		catalog_case("kk-long-name-reset-tooltip-roundtrip")
 		await choose("fahrzeuge-verkehr")
-		check(app.choices[0].size == initial[0].card.size and app.choices[0].image_area == initial[0].image and Rect2(app.choices[0].note.position,app.choices[0].note.size) == initial[0].status,"KK category removal reserves same metadata/image/footer space")
+		check(app.choices[0].size == initial[0].card.size and app.choices[0].image_area == initial[0].image and Rect2(app.choices[0].note.position,app.choices[0].note.size) == initial[0].status and not app.choices[0].detail.text.is_empty(),"KL-CARD filtered category stays readable in the same reserved space")
 		var foreign: Dictionary = save_bytes("t01")
 		click(app.album.reset_buttons["T-01"])
 		await frames()
@@ -1127,7 +1144,7 @@ func fixed_cards() -> void:
 		await frames()
 		check(app.album.visible and not app.sessions[0].completed and save_bytes("t01") == foreign,"KK confirmed catalog reset remains catalog and owns only captured slot")
 		await choose("")
-		check(card_geometry() == initial and app.choices[0].caption.text == "???" and not app.choices[0].reset.visible,"KK reset returns exact original geometry with no stale hit")
+		check(card_geometry() == initial and app.choices[0].caption.text == item.neutral_title().split(" · ")[0] and not app.choices[0].reset.visible,"KL-CARD reset returns neutral leaf and exact original geometry with no stale hit")
 		await shot("reset-%d" % spec[0])
 		kk_measurements.append({"surface":spec,"initial":initial,"after_reset":card_geometry(),"columns":app.album.grid.columns})
 		catalog_case("kk-reset-target-foreign-slots")
@@ -1244,7 +1261,9 @@ func recovery_pointer_cases() -> void:
 			check(app.album.repair_buttons.has("T-01"),"KK "+state+": text recovery action retained")
 			card.recovery.ensure_control_visible(card.repair)
 			await frames()
-			check(card.recovery.get_global_rect().encloses(card.repair.get_global_rect()),"KK "+state+": scrolled repair pointer target fully inside clip")
+			# Fractional book projection plus integer scrolling can differ by
+			# <0.001px at the shared bottom; retain the complete physical target.
+			check(card.recovery.get_global_rect().grow(0.01).encloses(card.repair.get_global_rect()),"KK "+state+": scrolled repair pointer target fully inside clip")
 			click(card.repair)
 			await frames()
 			check(app.repair_dialog.visible,"KK "+state+": repair pointer opens confirmation")
@@ -1339,7 +1358,7 @@ func compact_buttons() -> void:
 			var id: String = app.album.visible_ids[index]
 			var reset: Button = app.album.reset_buttons[id]
 			widths.append(card.size.x)
-			check(card.size.x >= card.minimum_card_width(u) and card.size.x <= card.minimum_card_width(u)+16*u, "KU-A compact card follows measured metadata width")
+			check(card.size.x >= card.minimum_card_width(u) and card.size.x <= maxf(card.minimum_card_width(u)+16*u,card.side_width_budget if card.side_by_side else 0), "KL-CARD compact card follows measured metadata and side budgets")
 			check(card.get_global_rect().encloses(reset.get_global_rect()), "KB icons inside card")
 			check(reset.size.x >= 44*u and reset.size.y >= 44*u, "KB 44/55 pointer targets")
 			check(reset.position == Vector2(card.size.x-roundf(10*u)-44*u,roundf(10*u)), "KK fixed top/right reset anchor")
@@ -1361,7 +1380,7 @@ func compact_buttons() -> void:
 		kb_measurements.append({"surface":spec,"columns":app.album.grid.columns,"widths":widths,"interiors":interiors})
 		await shot("compact-%d-ui%d" % [spec[0],spec[2]*100])
 		await choose("voegel")
-		check(app.choices.size() == 1 and app.choices[0].size.x <= app.choices[0].minimum_card_width(u)+16*u, "KU-A single filtered card stays at common compact width")
+		check(app.choices.size() == 1 and app.choices[0].size.x <= maxf(app.choices[0].minimum_card_width(u)+16*u,app.choices[0].side_width_budget if app.choices[0].side_by_side else 0), "KL-CARD single filtered card stays at common compact width")
 		await choose("")
 	# Return to a normal frame and exercise real down/up actions independently.
 	surface.size = Vector2i(1920,1080)

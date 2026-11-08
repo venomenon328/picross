@@ -81,8 +81,14 @@ gefüllter farbiger Kreis mit vollständigem Schwierigkeitsnamen in der Mitte,
 größeres Mono-/Farbpiktogramm rechts. Die Fünferskala und vorhandenen Werte bleiben;
 die sichtbare Ziffer und Schwierigkeitstooltips entfallen. Fehlende Einstufung
 erscheint neutralgrau als „Nicht eingestuft“. Der Monostift steht ohne Farbprobe
-zentriert; das Farbsymbol behält drei Stifte. Die Fußzeile trägt „Blatt NN“ links
-und Statussymbol mit „Neu“, „Begonnen“ oder „Gelöst“ rechts. Dies ersetzt das
+zentriert; das Farbsymbol behält drei Stifte. KL-CARD-A / #547 ordnet die Vorschau
+links und Titel, stets sichtbare Kategorie sowie Statussymbol/-wort rechts an.
+Neu/Begonnen heißen neutral „Blatt NN“; Gelöst zeigt den verdienten Motivnamen
+und zusätzlich „· Blatt NN“ beim Status. Ein gemeinsamer Papierstreifen bleibt
+unten. Bei gemessenem Platzmangel stapeln beide Buchhälften synchron; Schrift,
+Bildhöhe und getrennte bestätigte Reset-/Recoveryaktionen bleiben erhalten.
+[Kartenvertrag](CATALOG_PRESENTATION.md#ke-d01--feste-kartenaufteilung).
+„Gelöst“ ersetzt das
 bisherige sichtbare „Fertig“, ohne Statusmodell oder Saves zu ändern.
 [Katalogsortierung](CATALOG_SORTING.md) ergänzt in KU-B neben dem Kategorienfilter
 die Sortierung nach Kategorie, Größe, Schwierigkeit und Hinzugefügt-Datum samt
