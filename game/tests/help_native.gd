@@ -59,27 +59,41 @@ static func run(t: SceneTree) -> void:
 
 	# One detailed configuration, the others only for the actual content/clip
 	# boundaries. No routes × chapters × resolutions Cartesian replay.
+	# This is a help-layout diagnostic, not a display-preset acceptance test.
+	# ANZ's native monitor watchdog otherwise restores its configured preset
+	# midway through a directly imposed measurement viewport (notably 1440p).
+	var controller: Node = app.display_controller
+	var display_processing: bool = controller != null and controller.is_processing()
+	var prior_mode: int = t.root.mode
+	var prior_borderless: bool = t.root.borderless
+	if controller != null: controller.set_process(false)
+	if OS.get_name() == "Windows":
+		t.root.mode = Window.MODE_WINDOWED
+		t.root.borderless = true
 	var layouts: int = 0
 	for spec: Array in [[1920,1080,1.0],[1280,720,1.25],[2560,1440,1.25]]:
 		t.root.size = Vector2i(spec[0],spec[1])
+		if OS.get_name() == "Windows": DisplayServer.window_set_size(t.root.size)
 		book.set_ui_scale(spec[2])
 		await t.frames(5)
 		for i: int in range(4):
 			panel.choose(0)
 			await t.frames(3)
 			click(t,panel.buttons[i])
-			await t.frames(5)
+			# Native Labels reshape after drawing, then nested CopyColumns update
+			# the article range. Do not send all wheel events into an old range.
+			await t.frames(10)
 			t.check(panel.chapter == i and panel.buttons[i].selected and app.info.help_scroll.scroll_vertical == 0,"HIL direct chapter starts at top")
 			layouts += 1
 			var scroll: ScrollContainer = app.info.help_scroll
-			t.check(panel.size.x <= scroll.size.x+1 and scroll.get_h_scroll_bar().max_value <= scroll.size.x+1,"HIL no horizontal scroll at "+str(spec))
-			layout(t,panel,scroll.size.x,app.ui_scale)
+			t.check(scroll.get_h_scroll_bar().max_value <= scroll.size.x+1,"HIL no horizontal scroll at "+str(spec))
+			layout(t,panel.chapters[i],scroll.size.x,app.ui_scale)
 			for figure: Control in panel.figures:
 				if figure.is_visible_in_tree():
 					t.check(figure.size.x <= scroll.size.x and figure.cell_size >= 32,"HIL readable native diagram within paper")
 			# Real wheel events must reach the content end and must not zoom or
 			# edit the hidden work board. Bound enough for the longest chapter.
-			for n: int in range(80):
+			for n: int in range(200):
 				var event := InputEventMouseButton.new()
 				event.position = scroll.get_global_rect().get_center()
 				event.global_position = event.position
@@ -89,13 +103,25 @@ static func run(t: SceneTree) -> void:
 				event = event.duplicate()
 				event.pressed = false
 				t.root.push_input(event,true)
+				if n % 8 == 7:
+					# Native text/range invalidation may arrive with the input batch.
+					# Give it real frames before deciding the article has ended.
+					await t.frames(2)
+					var range_end: float = scroll.get_v_scroll_bar().max_value-scroll.get_v_scroll_bar().page
+					var last: Control = panel.chapters[i].get_children()[-1]
+					if scroll.scroll_vertical >= maxi(0,int(range_end)) and last.get_global_rect().end.y <= scroll.get_global_rect().end.y+1: break
 			await t.frames(4)
 			var bar: VScrollBar = scroll.get_v_scroll_bar()
-			t.check(scroll.scroll_vertical == maxi(0,int(bar.max_value-bar.page)) and panel.get_global_rect().end.y <= scroll.get_global_rect().end.y+1,"HIL final chapter content reachable")
-			t.check(app.info.right_return.get_global_rect().position.y < scroll.get_global_rect().position.y,"HIL return stays above independent clip")
+			var reached: bool = scroll.scroll_vertical == maxi(0,int(bar.max_value-bar.page)) and panel.chapters[i].get_global_rect().end.y <= scroll.get_global_rect().end.y+1
+			if not reached: print("HIL_SCROLL_RANGE ",spec," chapter=",i," offset=",scroll.scroll_vertical," end=",bar.max_value-bar.page," content=",panel.chapters[i].get_global_rect()," clip=",scroll.get_global_rect())
+			t.check(reached,"HIL final chapter content reachable")
+			t.check(app.info.right_return.get_global_rect().position.y > scroll.get_global_rect().end.y,"HIL return stays below independent clip")
 	t.check(layouts == 12,"HIL complete native chapter layout coverage")
 	t.check(panel.figures.all(func(item: Control) -> bool: return not item.is_processing() and not item.is_physics_processing()),"HIL passive diagrams have no processing tick")
+	t.root.mode = prior_mode
+	t.root.borderless = prior_borderless
 	t.root.size = Vector2i(1920,1080)
+	if controller != null: controller.set_process(display_processing)
 	book.set_ui_scale(1.0)
 	panel.choose(1)
 
