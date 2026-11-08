@@ -247,6 +247,7 @@ func run() -> void:
 func catalog_case(id: String) -> void:
 	# Checkpoints bind selected native paths to the independent result reader.
 	catalog_cases.append({"id":id,"checks":checks-case_checks})
+	print("KAT2_CASE ", id, " checks=", checks-case_checks, " elapsed_ms=", Time.get_ticks_msec())
 	case_checks = checks
 
 func write_report() -> void:

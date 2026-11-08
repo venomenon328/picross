@@ -1,5 +1,5 @@
 {
-  "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+  "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
   "normalization": "UTF-8 text with LF",
   "sha256": {
     "game/book/binding.gd": "794991d7088657c31d274a60ef1c595b688ebaf3efa3a552fa2715c484a1f76b",
@@ -36,7 +36,7 @@
     "game/ui/book_surface.gd": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
     "game/ui/book_tooltip.gd": "7abea08121abf45db2d1c7a8d1bc14a77d53ac81eddd12fadbb79f4fd7eb08a7",
     "game/ui/catalog.gd": "243ac02b501b4f64285dd4b68ebe653e42d7125feb80acf84b091da5ac94b7c9",
-    "game/ui/catalog_card.gd": "498f3f08d30443e65c6670bb4c974b2e90e6d39b5f607730c38e9004da00b574",
+    "game/ui/catalog_card.gd": "a9d85e5a00a972bb5992ac04920bc798ca8668692df5617bd4cbd33fab105a1d",
     "game/ui/catalog_filters.gd": "05d4983e8a10c6a82eb5c1675337607adaac5cb5f37245223568315fa2562714",
     "game/ui/catalog_grid.gd": "eb731dad2446763cbe3e494d9cfa247438439bc3131ef2f642878aa6a1852922",
     "game/ui/catalog_ink.gd": "6d71d747e1517c507d1043fb42b116dc3be926ff6f49311be8e85a8180dd76de",

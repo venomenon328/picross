@@ -1,6 +1,6 @@
 # KL-CARD-A: befristete Revieworiginale
 
-Produkt: `76af078bbaaba4755a8e80136942ac25078a64b0`. Vorher: `d974886d18ce294c11c2b2467166bae24894e7cb`. Empfänger: unabhängiger R01-Reviewer
+Produkt: `e7121da67f910fda03a6418ee81ad07ba0508445`. Vorher: `d974886d18ce294c11c2b2467166bae24894e7cb`. Empfänger: unabhängiger R01-Reviewer
 und Eigentümer M01. Zweckbindung bis 15.11.2026; danach bei offenem Gate den Bedarf
 erneut prüfen. Rückbau des eigenen Remote-Belegrefs im Paketabschlussauftrag.
 Kein Merge dieses Branches in Produktbranch oder main.
