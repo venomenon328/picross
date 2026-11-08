@@ -122,6 +122,39 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(writes[-1], tx.RUNTIME)
         self.assertEqual(cr.check_checkout(self.root)['entries'], [])
 
+    def test_valid_but_wrong_phase_bytes_and_changed_staged_source(self):
+        for boundary, side in (('G2', 'new'), ('G5b', 'old')):
+            with self.subTest(boundary=boundary):
+                self.reset('wrong-' + boundary)
+                captured = []
+                def phase_change(at, name=None):
+                    if at == boundary:
+                        (self.root / tx.RUNTIME).write_text(self.journal[side][tx.RUNTIME], encoding='utf-8', newline='')
+                        captured.append(fixture.files(self.root))
+                # Suppress automatic recovery only to inspect the forward exact-
+                # phase rejection. These bytes are independently valid recovery
+                # states; recovery is allowed to restore them after this check.
+                with patch.object(pub, 'checkpoint', side_effect=phase_change), \
+                     patch.object(cr, 'recover', side_effect=InterruptedError('inspect retained journal')), \
+                     self.assertRaises((InvalidInput, InterruptedError)):
+                    self.execute()
+                self.assertEqual(fixture.files(self.root), captured[0])
+                cr.recover(self.root)
+        self.reset('staged-source')
+        name = sorted(self.journal['additions'])[0]
+        source = self.additions[name]; original = source.read_bytes(); reached = []
+        def change(at, target=None):
+            if at == 'temp-complete' and target == name and not reached:
+                source.write_bytes(b'FOREIGN'); reached.append(True)
+        try:
+            with patch.object(pub, 'checkpoint', side_effect=change), self.assertRaises(InvalidInput): self.execute()
+            self.assertEqual(reached, [True])
+            self.assertEqual(source.read_bytes(), b'FOREIGN')
+            self.assertFalse((self.root / tx.LOCK).exists())
+            self.assertEqual(cr.check_checkout(self.root)['entries'], [])
+        finally:
+            source.write_bytes(original)
+
     def test_interruptions_staging_and_repeated_recovery(self):
         phases = [(p, 1) for p in ('P0', 'journal-prefix', 'journal-complete', 'P1', 'P2', 'P3', 'P4', 'G5a', 'P5', 'P6')]
         for phase, occurrence in [*phases, ('P3', 2), ('P4', 2)]:

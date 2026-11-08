@@ -51,13 +51,18 @@ def main():
         def export(identifier, extra):
             label = identifier + '-' + str(extra) if identifier == 'pz-ri-c-new' else identifier
             package = f.make(args.work / label, identifier, 3, 3, 'mono')
-            for n in range(extra): (package / ('extra-' + str(n) + '.txt')).write_bytes(b'TEST ONLY bounded extra input\n')
-            f.seal(package, load_json(package / 'handoff.json'))
+            handoff = load_json(package / 'handoff.json')
+            for n, gate in enumerate(('reveal_approval', 'motif', 'provenance', 'logic', 'frame', 'visual', 'difficulty', 'reveal_consistency')[:extra]):
+                name = 'extra-' + str(n) + '.txt'
+                (package / name).write_bytes(b'TEST ONLY bounded extra input\n')
+                handoff['gate_evidence'][gate] = name
+            f.seal(package, handoff)
             approval = args.work / (identifier + '.json'); f.approve(package, approval)
             target = args.inputs / ('export-' + label)
             adapter.export(package, target, name='TEST ONLY RI-C', revision=1, stem=identifier, save_slot=identifier,
                            approval_path=approval, category_id='voegel', categories_path=args.inputs / 'catalog-0/content/categories.json')
             checked = f.difficulty_for_export(target)
+            assert len(inventory(target)) == 30 + extra, 'Measurement needs actual exported additions'
             (args.inputs / ('checked-' + label + '.json')).write_text(json.dumps(checked), encoding='utf-8')
             return target, checked
         with patch.object(added, 'registration', side_effect=fixed_added):
