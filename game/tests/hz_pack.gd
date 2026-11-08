@@ -67,7 +67,7 @@ func run() -> void:
 	check(Text.font().data == Text.SOURCE.data and not Text.font().allow_system_fallback,"actual PCK original Pangolin bytes and local fallback")
 	check(FileAccess.file_exists("res://art/drawing/pangolin/NOTICE.txt"),"actual PCK includes author permission")
 	var icons: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://art/book/icons.json"))
-	check(icons.size() == 27 and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"),"actual PCK complete HZ-B/SBR family/provenance")
+	check(icons.size() == 28 and icons.has("quit") and FileAccess.file_exists("res://art/book/HZ-B-284-NOTICE.txt"),"actual PCK complete HZ-B/SBR family/provenance")
 	for id: String in icons:
 		var texture: Texture2D = load("res://art/book/"+id+".svg")
 		check(texture != null and texture.get_size() == Vector2(26,26),"actual PCK imported icon "+id)
@@ -97,7 +97,11 @@ func run() -> void:
 		check(app.album.sort_choice.get_popup().get_theme_stylebox("panel").get_script().resource_path == "res://ui/book_style.gd","actual PCK HZ-B native popup paper")
 		await shot("controls-sort-%d" % spec[0])
 		check(app.album.sort_choice.get_theme_font_size("font_size") == Text.small_size(app.ui_scale) and app.album.sort_choice.get_popup().get_theme_font_size("font_size") == Text.small_size(app.ui_scale),"HZ-C actual PCK closed and open choice use measured small role")
-		click(app.album.settings_button)
+		# This retained diagnostic instantiates the shared flat UI directly.
+		for control: Node in app.album.sort_choice.get_parent().get_children():
+			if control is Button and control.text == "Einstellungen / Info":
+				click(control)
+				break
 		await frames()
 		check(not app.album.sort_choice.get_popup().visible and app.album.visible and not app.information.visible,"actual PCK Window outside click closes without activating parent")
 		app.show_information("settings")

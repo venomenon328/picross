@@ -250,8 +250,9 @@ Der **Rückpfeil oben rechts** auf Einstellungen und Hilfe kehrt zum Besuchsursp
 zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
 Daneben stehen **Zahnrad** und **?** fest am Kopf der sichtbaren Papierseite,
 auch auf der linken Einstellungsseite. Der aktuelle Ort ist unterstrichen.
-Ein Klick darauf erhält Kapitel und Lesestelle. Im Katalog steht **Beenden** links
-neben Zahnrad und Hilfe; diese Zugänge funktionieren auch ohne laufendes Rätsel.
+Ein Klick darauf erhält Kapitel und Lesestelle. Im Katalog steht ein handgezeichnetes
+**X** links neben Zahnrad und Hilfe. Tooltip und zugänglicher Name lauten **Beenden**;
+diese Zugänge funktionieren auch ohne laufendes Rätsel.
 Unten links blättert **←** die ganze Doppelseite zurück, unten rechts **→** weiter.
 Die separaten Worte **Seite n von m** stehen neben dem linken Pfeil. Die Tooltips
 heißen **Vorherige Seite** und **Nächste Seite**; unmögliche Richtungen sind inaktiv,

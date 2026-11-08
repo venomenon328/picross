@@ -26,6 +26,7 @@ static func geometry(r: SceneTree) -> void:
 	var album: Control = app.album
 	var u: float = app.ui_scale
 	var viewport := Rect2(Vector2.ZERO,app.size)
+	r.check(album.quit_button.text.is_empty() and album.quit_button.image != null and album.quit_button.size == Vector2.ONE*44*u and album.quit_button.tooltip_text == "Beenden" and album.quit_button.accessibility_name == "Beenden","NAV-A: owner-requested hand-drawn quit X has exact tooltip/name and target")
 	var prior: Rect2
 	for button: Control in [album.quit_button,album.settings_button,album.help_button]:
 		var box: Rect2 = button.get_global_rect()

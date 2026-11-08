@@ -8,6 +8,10 @@ Es verwendet dieselbe stabile Strichfamilie, optische Größe und quadratische
 bleibt erhalten; seine aktive Quelle `tools/book_icons_hz.json`, der Generator
 `tools/z2_resources.py`, SVG, Inventar, Herkunft und Manifest sind gemeinsam
 gebunden. Historische BP-/KB-Symbolquellen bleiben unverändert.
+Gemäß Eigentümerpräzisierung in #549 ersetzt ein handgezeichnetes X den
+Beenden-Textbutton im Katalog. Das neue `quit`-SVG verwendet zwei leicht gebogene,
+sparsam nachgezogene Stiftzüge derselben Familie und dieselbe quadratische
+44/55-px-Fassung. Aktive Quelle, Generatorinventar, SVG und Manifest umfassen es.
 Die aktuelle Informationsansicht ist zusätzlich unterstrichen; Hover und Fokus
 behalten ihre Konturzeichen. Positionen und Rückwege stehen im
 [Buchvertrag](BOOK_INTEGRATION.md), Titelvorrang in [BTI-D04](VIEW_TITLE_ART.md).
@@ -21,6 +25,7 @@ einen nichtleeren deutschen Tooltip und einen passenden zugänglichen Namen:
 | Katalogpfeile | Exakt „Vorherige Seite“ / „Nächste Seite“ |
 | Sortierrichtung | Aktuelle Kategorienfolge/umgekehrte Folge, Kleinste/Größte, Sehr leichte/Sehr schwere oder Älteste/Neueste zuerst; Name ergänzt Kriterium |
 | Katalog-/Rätselkopf | „Einstellungen öffnen“, „Hilfe öffnen“, Rückpfeil „Zurück zum Katalog“ |
+| Katalog-Beenden-X | Exakt „Beenden“ als Tooltip und zugänglicher Name |
 | Informationskopf | „Zurück zum Katalog“ bzw. „Zurück zum Rätsel“; Gegenansicht öffnen oder „Einstellungen (aktuelle Ansicht)“ / „Hilfe (aktuelle Ansicht)“ |
 | Füllen / Radieren | „Füllen · links Farbe setzen, rechts leer markieren“ / „Radierer · Markierungen entfernen“ |
 | Undo / Redo | „Letzten Strich rückgängig machen“ / „Zurückgenommenen Strich wiederholen“ |
