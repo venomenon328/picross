@@ -7,7 +7,9 @@ kleine Prüfungen tatsächlicher Controls: reine Pfeile mit exakten deutschen
 Tooltip-/Accessibilitynamen, alle verwendeten Symbolbuttons einschließlich
 dynamischer Farbfelder und deaktivierter Controls, erster/letzter/einziger
 gefilterter Spread, Kopf-/Fußgeometrie bei Resize/UI100/125, aktiver No-op,
-vollständiger Katalogbesuchskontext und beide Informationslesestellen.
+vollständiger Katalogbesuchskontext und beide Informationslesestellen. Trefferzahl
+und Informationsbildtitel teilen die obere Kante mit der seitlichen Symbolgruppe;
+kein zusätzlicher vertikaler Navigationsstreifen, vollständige Titelbilder ohne Kollision.
 Die bestehenden Retry-, Saveblockade-, Leer-/Fehler- und Bildtitelprüfungen
 werden auf die obere Symbolgruppe angepasst. Die Fortsetzen-Fälle prüfen
 deren Trennung vom halb-/vollbreiten Panel. Keine neue Prozessfamilie oder

@@ -5,9 +5,10 @@
 Auf der sicheren rechten Papierfläche stehen oben ortsfest ein handgezeichnetes
 **X** für Beenden, **Zahnrad** und **?**. Tooltip und zugänglicher Name des X
 lauten exakt **Beenden**. Hilfe/Einstellungen sind auch bei
-leerem oder fehlerhaftem Katalog ohne Session erreichbar. Die Kopfzeile besitzt
-einen eigenen Platz oberhalb von Trefferzahl, festem Fehler-/Retryclip,
-halb-/vollbreitem Fortsetzen-Panel und Sortierung/Filter. Diese Bereiche messen
+leerem oder fehlerhaftem Katalog ohne Session erreichbar. Die Symbolgruppe und
+Trefferzahl beginnen auf derselben Höhe; die Gruppe reserviert keine eigene
+Höhenzeile. Der gemessene seitliche Textbereich kann bei Bedarf umbrechen.
+Fester Fehler-/Retryclip, halb-/vollbreites Fortsetzen-Panel und Sortierung/Filter messen
 die nutzbare Papierfläche und verdecken weder Titel noch Controls.
 Der untere Rand enthält ausschließlich die beiden gezeichneten Blätterpfeile:
 links **←**, unmittelbar daneben die separate Anzeige **Seite n von m**,

@@ -26,7 +26,7 @@
     {
       "path": "game/tests/recent_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Check navigation separation beside half/full recent panels using the existing viewport cases."
+      "reason": "Check header separation beside half/full recent panels; measure their unchanged complete safe-paper budget independently of the count label now sharing its row with icons."
     },
     {
       "path": "game/tests/help_native.gd",
@@ -46,7 +46,7 @@
     {
       "path": "game/tests/scrollbar_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Wait for the finite article reading-anchor reflow after changed header geometry before beginning pointer scroll assertions; preserve all native range oracles."
+      "reason": "Use the existing longer help chapter for overflow; the larger settings clip may have a small positive range instead of the old >40px assumption. Keep every start/middle/end arrow, track, thumb and wheel oracle, and wait for finite article reflow before commands."
     },
     {
       "path": "game/tests/content_pack_probe.gd",
