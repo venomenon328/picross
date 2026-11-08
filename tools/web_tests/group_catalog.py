@@ -39,7 +39,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
         evidence['sorting'].append(current)
     control(page, name='catalog-sort'); wait(page, 'picrossProbe.sort.menu.visible')
     page.screenshot(path=str(output/f'{name}-sort.png'))
-    item = next(c for c in state(page, 'controls')['controls'] if c['text'] == 'Einstellungen / Info')
+    item = next(c for c in state(page, 'controls')['controls'] if c['name'] == 'catalog-settings')
     click(page, point(page, item['center']))
     wait(page, '!picrossProbe.sort.menu.visible'); assert state(page, 'album')['album']
     # Passive metadata opens its own stable ID even after sorting.
@@ -52,7 +52,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     wait(page, 'picrossProbe.work'); assert state(page, 'id')['id'] == chosen
     control(page, name='catalog-return'); wait(page, 'picrossProbe.album')
     assert {key:state(page, 'sort')['sort'][key] for key in origin} == origin
-    control(page, text='Einstellungen / Info')
+    control(page, name='catalog-settings')
     control(page, name='puzzle-view'); wait(page, 'picrossProbe.hz_b.view_popup')
     assert state(page, 'hz_b')['hz_b']['view_checked']
     page.screenshot(path=str(output/f'{name}-view.png'))
@@ -60,7 +60,7 @@ def exercise(pw, name, root, update, url, output, evidence, session):
     select_view(page, 1-selected)
     control(page, name='help-access')
     wait(page, "picrossProbe.information && picrossProbe.book.information_section === 'help'")
-    control(page, name='information-return'); wait(page, 'picrossProbe.album')
+    control(page, name='nav-work'); wait(page, 'picrossProbe.album')
     wait_book(page)
     evidence['book_navigation'] = dict(presentation=current['book']['presentation'],root=current['book']['root'],
                                       opened_id=chosen,origin=origin,returned=state(page,'sort')['sort'],

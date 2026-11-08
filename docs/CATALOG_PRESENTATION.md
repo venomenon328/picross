@@ -1,5 +1,27 @@
 # Katalogdarstellung und unbekannte Motive · KU
 
+## NAV-A · Katalogkopf und Blättern (#549)
+
+Auf der sicheren rechten Papierfläche stehen oben ortsfest ein handgezeichnetes
+**X** für Beenden, **Zahnrad** und **?**. Tooltip und zugänglicher Name des X
+lauten exakt **Beenden**. Hilfe/Einstellungen sind auch bei
+leerem oder fehlerhaftem Katalog ohne Session erreichbar. Die Symbolgruppe und
+Trefferzahl beginnen auf derselben Höhe; die Gruppe reserviert keine eigene
+Höhenzeile. Der gemessene seitliche Textbereich kann bei Bedarf umbrechen.
+Fester Fehler-/Retryclip, halb-/vollbreites Fortsetzen-Panel und Sortierung/Filter messen
+die nutzbare Papierfläche und verdecken weder Titel noch Controls.
+Der untere Rand enthält ausschließlich die beiden gezeichneten Blätterpfeile:
+links **←**, unmittelbar daneben die separate Anzeige **Seite n von m**,
+ganz rechts **→**. Die genauen Tooltips und zugänglichen Namen lauten
+**Vorherige Seite** und **Nächste Seite**. Jeder Pfeil blättert die gesamte
+gefilterte Doppelseite. Auf erster/letzter Seite ist die unmögliche Richtung
+inaktiv; bei einer Seite bleiben beide inaktiv sichtbar. Mindesttrefferflächen
+44/55 px und Falzabstände gelten auch bei UI125 und langen Beschriftungen.
+Die bisherigen unteren Einstellungen-/Hilfe-/Beendenbuttons entfallen.
+Filter, Sortierung, Seite, Auswahl und beide Scrollstände überleben den
+Informationsbesuch gemäß [Buchvertrag](BOOK_INTEGRATION.md).
+[N1–N6, Prüfplan und getrennte Gates](https://github.com/venomenon328/picross/issues/549).
+
 ## K-B: zuletzt bearbeitetes Rätsel
 
 [Paketentscheidung #485](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391).
@@ -64,8 +86,8 @@ N04 füllt zuerst die linke Hälfte bis zwölf Karten, dann die rechte bis zwöl
 Spaltenzahl und Scrollen verändern die Mitgliedschaft nicht. Beide Hälften
 scrollen getrennt. Kopf, Clipbereiche und Fußaktionen folgen einer einheitlichen
 Papierprojektion einschließlich des gezielten 1920×1200-Nachweises.
-N05 ergänzt neben dem Einstellungenzugang einen direkten Hilfezugang. Bei
-knapper Breite erhält die Fußnavigation eine zweite Zeile ohne kleinere Buttons.
+N05 ergänzte einen direkten Hilfezugang. NAV-A verlegt beide Informationszugänge
+und Beenden in die Kopfzone und gibt den Fuß für die reinen Blätterpfeile frei.
 Beide Informationswege führen zum unveränderten Katalogkontext mit zwei Offsets zurück.
 
 **KL-A / #523 · Layoutimplementierung vom 06.11.2026 (Abnahmen im Issue/PR):**

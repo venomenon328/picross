@@ -4,7 +4,7 @@
   "kb_icon_source": "tools/book_icons_kb.json; KB-168-NOTICE.txt",
   "hz_icon_source": {
     "file": "tools/book_icons_hz.json",
-    "sha256": "7134f1bfbc95dfc37ff258c24d4184f017b1e926f825fac957c9219195891dc1",
+    "sha256": "07c5971fef07b0d49ddbe43ec92993afcd35edf04a94aed789c5b44d96aaf345",
     "generator": "tools/z2_resources.py",
     "notice": "HZ-B-284-NOTICE.txt"
   },
@@ -19,7 +19,7 @@
     },
     {
       "file": "HZ-B-284-NOTICE.txt",
-      "sha256": "637ac854ec3813929a7aecc7f55df41e76813fa09bb63fd789950ff086d6836a"
+      "sha256": "f0e05321cfc9bbfebaf689e3993b0a84fc41dffc52ab233df360cd5f619046ff"
     },
     {
       "file": "KB-168-NOTICE.txt",
@@ -111,11 +111,11 @@
     },
     {
       "file": "icons.json",
-      "sha256": "c476c04dc2537e15c458b6c14c484e25a43d42e4db2f39a1fb39eabbb31ccf49"
+      "sha256": "6d9131df6b423a94be598cd0e66aa42774a16d6333e1c995372395935f2aac56"
     },
     {
       "file": "menu.svg",
-      "sha256": "1142024e816294593af1ef45cf5bc767a6188569c993b40604649d4416ed3576"
+      "sha256": "4dd71216041aeac0e2afd861516e715aa6b65ee0da696202dab854c65c5477dc"
     },
     {
       "file": "minus.svg",
@@ -140,6 +140,10 @@
     {
       "file": "plus.svg",
       "sha256": "78aad8146fe68d64f3033789e0f7240c6fd83738bd172bee900202b8b4c242f0"
+    },
+    {
+      "file": "quit.svg",
+      "sha256": "e73c034c8322dbcbe337d443cbd1b0f2b0c8640c4295c47ba288a04748253a04"
     },
     {
       "file": "redo.svg",

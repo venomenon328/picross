@@ -1,5 +1,26 @@
 # Native Prüfmodule und Originalnachweise
 
+## NAV-A / #549: feste Buchnavigation und Symbolhilfen
+
+Das ausgewählte `native.catalog` ergänzt im vorhandenen Pages-/Informationsprozess
+kleine Prüfungen tatsächlicher Controls: reine Pfeile mit exakten deutschen
+Tooltip-/Accessibilitynamen, alle verwendeten Symbolbuttons einschließlich
+dynamischer Farbfelder und deaktivierter Controls, erster/letzter/einziger
+gefilterter Spread, Kopf-/Fußgeometrie bei Resize/UI100/125, aktiver No-op,
+vollständiger Katalogbesuchskontext und beide Informationslesestellen. Trefferzahl
+und Informationsbildtitel teilen die obere Kante mit der seitlichen Symbolgruppe;
+kein zusätzlicher vertikaler Navigationsstreifen, vollständige Titelbilder ohne Kollision.
+Metadaten-Pixel, bestehende Modushilfe und passive Kartentreffer werden nach
+gezieltem Sichtbarscrollen innerhalb ihres echten Clips geprüft; die Farb-,
+Tooltip-, Klick- und Geometrieorakel bleiben bestehen.
+Die bestehenden Retry-, Saveblockade-, Leer-/Fehler- und Bildtitelprüfungen
+werden auf die obere Symbolgruppe angepasst. Die Fortsetzen-Fälle prüfen
+deren Trennung vom halb-/vollbreiten Panel. Keine neue Prozessfamilie oder
+Dauerbilder. Die einmalige ausdrücklich angeforderte reale Buchdiagnose und
+gebundene Windows-Darstellungen ergänzen diese Komponentenprüfung gemäß
+[NAV-A-T01/R01/M01](https://github.com/venomenon328/picross/issues/549).
+Der Lifecycle-Diagnoseweg wird dadurch nicht Teil der Standard-CI.
+
 ## HIL-REG-A / #548: festes Kapitelregister
 
 Bei ausgewähltem `native.catalog` prüft der bestehende `catalog/information`-
@@ -11,7 +32,7 @@ Einstellungenrückkehr und UI100→125→100-Leseanker werden geprüft. Bestehen
 BTI-/HIL-TYPO-Assertions bleiben; Titelzentrierung bezieht sich auf die ganze
 Hilfepapierfläche, nicht auf die versetzte Artikelspalte. Keine neue Prozess-,
 Ergebnis- oder Dauerbildfamilie. `help_native.gd` passt nur die Containment-
-und untere Navigationsannahmen des ausdrücklich manuellen Lifecycle an.
+und nun oberen Navigationsannahmen des ausdrücklich manuellen Lifecycle an.
 Seine Fenstermaßprobe pausiert den nativen Display-Presetwächter während der
 direkt gesetzten Messflächen und stellt ihn danach wieder her; sie prüft
 Hilfelayout, nicht die separat abgesicherten ANZ-Anzeigeoptionen.
@@ -156,14 +177,14 @@ Buchroot; reguläres Beenden beendet weiterhin tatsächlich den Informationsproz
 N03 korrigiert in derselben Probe den Vergleich mit der tatsächlichen Bakso-
 Katalogtitelressource bei UI100/125, nach N03-E01 auch die kleinere Bakso-Gruppenrolle
 und prüft nur zwei Hilfen, volle Dropdownbreite ohne Fokus-/Hitboxplatzhalter
-sowie den sichtbaren Rücktext „Zurück“ bei unverändertem kontextabhängigem
+sowie den durch NAV-A ersetzten Rückpfeil bei unverändertem kontextabhängigem
 Rückziel, Saveblockade und Retry auf beiden Informationsseiten.
 Die einmalige Windows-Originalsicht für N03-R04 erzeugt keine neue Dauerfamilie.
 
 BTI-C / #533 ersetzt die abgelösten sichtbaren Bakso-Seitentitelannahmen
 durch Bildtitel-/Fallbackrollen. Eine kleine Probe im bestehenden
 `catalog/information`-Prozess prüft die drei lokalen Ressourcen, semantischen
-Titel, unveränderte V2-rev1-Ressourcen, optisch zentrierte proportionale Titelbereiche, getrennte untere Navigation und
+Titel, unveränderte V2-rev1-Ressourcen, optisch zentrierte proportionale Titelbereiche, getrennte obere Navigation und
 erreichbare Scrollenden bei UI100/125 sowie 16:10. Keine neue Prozess- oder
 Screenshotfamilie; echte Windowsdarstellungen und Bewegungs-/PCK-Nachweise
 bleiben einmalige paketgebundene Belege.

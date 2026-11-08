@@ -212,8 +212,10 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`
 sind nach [BTI](VIEW_TITLE_ART.md) neutrale offen schraffierte V2-rev1-Graphit-
 Schriftzugbilder ohne umgebende Illustrationen. Die Titel zentrieren sich
-innerhalb ihrer jeweiligen Buchhälfte; die bestehende Informationsnavigation
-liegt am sicheren unteren Papierrand. Die übrigen Font-/Buchrollen und
+innerhalb ihrer jeweiligen Buchhälfte. NAV-A ersetzt die bisherige BTI-D04-
+Fußnavigation durch Rückpfeil, Zahnrad und Hilfe oben rechts auf der sichtbaren
+Papierseite. Im Katalog steht ein handgezeichnetes Beenden-X links neben Zahnrad/Hilfe; unten bleiben
+nur gezeichnete Blätterpfeile und die separate Seitenanzeige. Die übrigen Font-/Buchrollen und
 die Kapitel-/Gruppenüberschriften bleiben erhalten.
 [Freigabe #533](https://github.com/venomenon328/picross/issues/533).
 
@@ -231,7 +233,7 @@ Bakso Daging bei 28 × UI; Gruppenüberschriften erhalten nach N03-E01 ebenfalls
 Bakso bei kleineren 20 × UI, ohne neue Rahmen-/Titellaschengestaltung.
 Nur Fenstergröße und Rätselansicht besitzen gestylte Hover-/Fokushilfen, die
 anderen Dropdowns füllen die freie Zeilenbreite. Die Informations-Rücknavigation
-zeigt „Zurück“ bei unverändertem Ziel samt zielbezogenem Tooltip/Accessibilityname.
+zeigt gemäß NAV-A einen gezeichneten Linkspfeil bei unverändertem Ziel samt zielbezogenem Tooltip/Accessibilityname.
 Manueller Hinweisreset und Einstellungs-Beenden entfallen; individuelle Hinweis-
 navigation, Katalog-Ausgang und sichere OS-Schließwege bleiben erhalten.
 Keine neue Statistik/Albumarchitektur oder Vorwegnahme von #24. Native Abweichungen,
@@ -349,7 +351,7 @@ Passive synthetische Raster teilen stabile Linien, Atlas-Endbilder, Stiftfarben
 und handschriftliche X mit der Spielansicht. Es gibt keine neue Bild-/Fontfamilie.
 Textumbruch, Diagramme und Trefferflächen folgen UI100/125 und der Papierfläche.
 Kapitelwahl beginnt oben; Hilfe↔Einstellungen erhält Kapitel und Lesestelle des
-Besuchs. Der untere Rückweg bleibt am Katalog-/Rätselursprung gebunden. Die Inhalte
+Besuchs. Der obere Rückpfeil bleibt am Katalog-/Rätselursprung gebunden. Die Inhalte
 nehmen an den vorhandenen Captures und Buchbewegungen teil.
 
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.
