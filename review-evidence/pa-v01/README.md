@@ -6,12 +6,17 @@ als Elternstand, erhält **keinen Merge-PR** und wird nicht in den Produktbranch
 übernommen. Empfänger: Eigentümerperson für P-A-M01 und unabhängiger Reviewer
 für P-A-R01. Die Sichtung und endgültige Normfreigabe sind offen.
 
-`manifest.json` bindet alle 32 Original-PNGs (47.743.541 Bytes), Bildgrößen,
+`manifest.json` bindet alle 32 Original-PNGs samt vollständiger Bytezahl, Bildgrößen,
 SHA-256, native Messdaten, Normdateien, Rendererquellen und Enginebytes.
 `native.json` enthält Geometrie und Displaykontext pro Bild. Die PNGs sind
 unveränderte Godot-Viewportausgaben, keine Vorschaukopien oder Neukodierung.
 `Fxx-small-board.png` / `-tokens.png`: 1280×720/UI125;
 `Fxx-normal-board.png` / `-tokens.png`: 1920×1080/UI100.
+Jedes Panel enthält zusätzlich einen nativen 10×5-Zellausschnitt mit denselben
+Farb-IDs/RGB und exakt dem gemessenen Zellmaß: Leer/Papier, X, Nachbarfüllungen,
+normale und Fünferlinien samt tatsächlicher kleiner/großer Detailstufe.
+Er verwendet unverändert die geerbten Grid-/Atlas-Zeichenwege. Seine zusätzlichen
+Anzeigezellen verändern keine Nutzungszahl der fixierten Referenzmatrix.
 Board und Panel sind je Familie zusammen zu lesen; die Panel-Farbfelder allein
 genügen nicht. Native Schriftgrade 6 und 17/18 sind **tatsächlich gemessen**.
 Das 720p-Ziffernmaß ist eine offengelegte Einschränkung, kein bestandener
