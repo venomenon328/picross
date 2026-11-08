@@ -9,6 +9,12 @@ für ihre gültigen Altbindungen und ausdrücklich gewählte kompatible Fälle e
 keine neue pauschale 0.3-Pflicht. Beide Freezes und versiegelte Pakete bleiben unverändert.
 Die [CLI-Anleitung](../tools/puzzle_production/README.md) dokumentiert die ausführbaren Befehle.
 
+[PUZZLE_QUALITY](PUZZLE_QUALITY.md) ist die verbindliche redaktionelle Referenz
+für neue Produktionen: Einzelkriterien nach Darstellung, transparente Sichtung
+auch ohne vollständigen Kandidaten und gezielte redaktionelle Einzelfallannahme.
+Die technischen Invarianten dieses Vertrags und von ZA-1 bleiben zuständig;
+Q-A / #488 führt keine automatische Farbmetrik oder neue Adapterausnahme ein.
+
 [Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) führt die aktive Bildbindung und
 den begrenzten Bildupdateweg; [AT-B](AT_B_OWNER_APPROVAL.md) dokumentiert seine
 konkrete Inhaltsfreigabe. Liefer-/Abnahmestände stehen in den jeweiligen Issues/PRs.
@@ -468,6 +474,13 @@ erneute Prüfung, bevor eine logische Freigabe möglich ist.
 ## 7. Qualitätsurteil, Vergleichsproduktion und Pilot
 
 ### 7.1 Getrennte Qualitätsachsen
+
+Einzelurteile, Herkunft, Prüfzeitpunkte und Abweichungsklassen folgen dem
+[Qualitätsvertrag §§2–4](PUZZLE_QUALITY.md). Seine §§5–6 verpflichten nach
+begrenzter Suche zur Sichtung brauchbarer Entwürfe, auch bei technischen Lücken;
+solche Entwürfe sind ausdrücklich nicht integrationsbereit und keine Sheet-
+Rasterangebote. Eine menschlich angenommene redaktionelle Abweichung ist kein
+bestandener Test und heilt weder fehlenden Proof noch unklare Rechte.
 
 Technisch geprüft werden Logikdaten, vollständiger Nachweis, Reproduzierbarkeit
 und Exportidentität. Redaktionell beurteilt werden Hauptmotiv, wesentliche Formen,

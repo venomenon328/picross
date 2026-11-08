@@ -1,10 +1,12 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 30 · 08.11.2026**
+**Version 0.5.0 · Dokumentrevision 31 · 08.11.2026**
 
-Diese Revision ergänzt die RI-C-Phasengrenzen für Erstregistrierung v6 und Recovery
-in §8. Gespeicherte Sheet-Einstellungen, lokale Codex-Arbeitswurzeln, Inhaltsformate,
-Solverprofile, Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
+Diese Revision bindet den [redaktionellen Qualitätsvertrag](../PUZZLE_QUALITY.md)
+aus Q-A / #488 einschließlich transparenter Sichtung bei fehlenden vollständig
+qualifizierten Kandidaten ein (§§2.3/4.3/4.5/7). RI-C in §8, gespeicherte
+Sheet-Einstellungen, lokale Codex-Arbeitswurzeln, Inhaltsformate, Solverprofile,
+Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
 Regelwerksversion, Dokumentrevision, Datei-SHA-256 und tatsächlicher Repositorycommit
 binden den verwendeten Stand; keine nachträgliche Umetikettierung alter Pakete.
 
@@ -29,7 +31,7 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 
 ## 1. Einstieg und Befugnisse
 
-1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`. Vor Paarlinienprüfung oder Übergabe eines Paarprofilpakets zusätzlich `docs/PAIRED_LINES.md` vollständig lesen.
+1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_QUALITY.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`. Vor Paarlinienprüfung oder Übergabe eines Paarprofilpakets zusätzlich `docs/PAIRED_LINES.md` vollständig lesen.
 2. Zu Beginn Kategorienquelle, Arbeitsindex und Runtime-Registry lesen; Bestandsrätsel nicht einzeln laden oder nachprüfen. Kategorie nach Auftrag oder prägendem Hauptgegenstand gemäß [Kategorienvertrag](../CATEGORIES.md) zuordnen und in Briefing/Record führen. Repository-/Toolstand mit vollständiger Commit-SHA binden. Aktuelle Dateien und tatsächlich benötigte Fähigkeiten prüfen, keine historischen PR-Statuslisten abarbeiten. Abgeschlossene Lieferungen sind keine erneut offenen Voraussetzungen; nur eine konkrete aktuelle Lücke verfolgen.
 3. Bestehende technische Formate, Farbregeln, Solverprofile, Nachweise und Reparaturverträge verwenden. Dieses Regelwerk ersetzt sie nicht. Fehlende Pflichtquellen oder widersprüchliche Vorgaben vor dem betroffenen Schritt klären.
 4. Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine Funktionen, Prüfungen oder Ergebnisse behaupten, die nicht verfügbar beziehungsweise ausgeführt sind.
@@ -113,7 +115,14 @@ noch weiße Vordergrundfarben einer Farbmatrix.
 
 **Vermeiden:** Fotorealismus/3D-Look als Stilgrundlage, Skizzenrauschen, ausgefranste Doppelkonturen, entscheidende Haarlinien, überladene Hintergründe, schwache Ton-in-Ton-Trennung, zufällige Kleinstflächen, anatomische Artefakte, Schrift/Wasserzeichen und Dekoration allein zum Füllen freier Zellen.
 
-**Bei Abschlussbild, Motivvorlage und Raster prüfen:** Erkennbarkeit; Silhouette/Proportionen; wichtige Details und Negativräume; Palette beziehungsweise Mono-Lesbarkeit; Serienästhetik. Jedes Kriterium als `erfüllt`, `Korrektur nötig` oder `verfehlt` mit kurzer Begründung dokumentieren. Eine gute Gesamtnote darf einen beschädigten Identitätskern nicht verdecken.
+**Bei Abschlussbild, Motivvorlage, Raster und Hinweisansicht prüfen:** Der
+[Qualitätsvertrag §§2–4](../PUZZLE_QUALITY.md) führt die verbindlichen
+Einzelkriterien, Herkunft, Methoden/Prüfzeitpunkte und die Trennung von
+unabdingbaren Voraussetzungen und redaktionell abweichbaren Zielen.
+Je Kriterium `erfüllt`, `Warnung`, `nicht erfüllt` oder `nicht geprüft` mit
+Begründung und konkreter Datei-/Revisionsbindung dokumentieren. Keine gute
+Gesamtnote darf ein negatives Einzelkriterium verdecken. Historische Berichte
+behalten ihre damaligen Ergebniswörter und Bindungen.
 
 Im Raster nur diskrete Werte, keine Zwischenfarben oder Textur als Zellzustand. Farbige Raster müssen selbst erkennbar sein; bei Mono darf das Abschlussbild zusätzliche Klarheit schaffen. Bei der Abstraktion diese Details gezielt reduzieren, zusammenfassen oder weglassen, ohne Identität, Perspektive, Hauptproportionen und wichtige Negativflächen des Abschlussbilds zu verändern. Das Abschlussbild nicht nachträglich zur Rechtfertigung eines abweichenden Rasters umgestalten.
 
@@ -135,7 +144,7 @@ Ein Auftrag umfasst sämtliche nötigen Arbeiten bis zur nächsten menschlichen 
 | --- | --- | --- |
 | **1 · Abschlussbildauswahl** | Bildfähige KI erfasst Text/Bild, liest Quellen und erzeugt drei Abschlussbilder nach Abschnitt 2. | `brief_ready` → `reveal_review`: Einzeldateien, kurzer Vergleich, gesicherte Übergabe mit allen Abschlussbildoptionen; auf menschliche Auswahl/Freigabe warten. |
 | **2 · Abschlussbildfreigabe und Abstraktion** | KI bindet die tatsächliche Freigabe, empfiehlt bei offenen Angaben 2–3 Konfigurationen und erstellt unmittelbar die Abstraktion für ihre Empfehlung. Keine zusätzliche Konfigurationsrunde, sofern keine feste Grenze verletzt wird. | `reveal_approved` → `motif_review`: Bildvergleich, Detailverluste, eindeutiger vorgeschlagener Parameterkorridor, gesichertes Produktionspaket und Sheet-Daten; auf Motivfreigabe warten. |
-| **3 · Motivfreigabe und Produktion** | Codex protokolliert die menschliche Freigabe der Motivdatei samt Parameterkorridor; führt Abschnitte 4–7 einschließlich Variantenvergleich, Profilprüfung nach 4.2.1, begrenzter Reparatur, technischer und visueller Prüfung sowie Schwierigkeit aus. | `motif_approved` → `raster_review` → `content_ready`: vorzugsweise 2–3 geprüfte Rasterangebote nach §4.5, echte Ansichten, Abschlussbild, kompakter Vergleich und je Angebot ein geprüftes Paket. Menschliche Auswahl/Endabnahme offen; keine Spielregistrierung. |
+| **3 · Motivfreigabe und Produktion** | Codex protokolliert die menschliche Freigabe der Motivdatei samt Parameterkorridor; führt Abschnitte 4–7 einschließlich Variantenvergleich, Profilprüfung nach 4.2.1, begrenzter Reparatur, technischer und visueller Prüfung sowie Schwierigkeit aus. | `motif_approved` → `raster_review` → bei freigabefähigem Ergebnis `content_ready`: vorzugsweise 2–3 geprüfte Rasterangebote nach §4.5, echte Ansichten, Abschlussbild, kompakter Vergleich und je Angebot ein geprüftes Paket. Ohne vollständigen Kandidaten die brauchbaren Sichtungsentwürfe nach §4.5 zeigen. Menschliche Auswahl/Endabnahme offen; keine Spielregistrierung. |
 | **4 · Endabnahme und Integration** | Codex bindet die menschliche Endabnahme separat und führt Abschnitte 8–9 aus. | `editorially_approved` → `catalog_ready` → `registered`: Integrationsbelege und PR; bei passendem Mergeauftrag Main-Merge, anschließend geprüfte Bereinigung samt eigenem Merge. Ohne Integrationsmerge beim PR stoppen. |
 
 Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf beides übernehmen, wenn sie die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten besitzt. Diese Oberflächenzuordnung löst keine Modell- oder Ausführungsempfehlung aus (§1); keine Modell-API einbauen. Ein zusätzlicher Mergeauftrag ist nur ohne vorherige passende Freigabe nötig; Korrekturrunden und echte Zugriffsprobleme können weitere Nachrichten erfordern.
@@ -264,9 +273,27 @@ Keine zusätzlichen CI-Fälle oder erneute Prüfung unveränderter Bestandsräts
 
 ### 4.3 Redaktionelle Kriterien
 
-Flächennutzung, Hauptformen, Proportionen, Innenräume, isolierte Zellen, leere Innenzeilen/-spalten, Detaildichte und Farbunterscheidbarkeit prüfen. Ein Auge darf eine Einzelzelle sein; ein Henkel braucht einen Innenraum. Leere Innenstreifen nicht mechanisch entfernen.
+Verbindliche Referenz ist [PUZZLE_QUALITY §§2–4](../PUZZLE_QUALITY.md):
+Flächennutzung, zusammenhängende Hauptformen, Perspektive/Proportionen, Details
+und Negativräume, Farbrollen, tatsächliche Raster-/Hinweisansicht und
+Abschlussbildkonsistenz getrennt beurteilen. Mono und Farbe behalten ihre
+unterschiedlichen Erkennbarkeitsziele. Ein Auge darf eine Einzelzelle sein;
+ein Henkel braucht einen Innenraum. Leere Innenstreifen nicht mechanisch entfernen.
 
-Belegungsanteile unter 15 % oder über 85 %, isolierte Einzelzellen und vollständig leere Innenlinien **nur als Prüfanlass** markieren. Das sind redaktionelle Warnschwellen, keine harten Qualitätsgrenzen. Abweichungen sind bei motivischem Nutzen zulässig und kurz zu begründen. Nicht zugunsten einer Kennzahl Form oder Erkennbarkeit verschlechtern. Farben auch in kleiner Darstellung und, soweit verfügbar, mit Farbsinnsimulation kontrollieren; keine unbeschlossene Farbmetrik als Pflichtgrenze ausgeben.
+Belegungsanteile unter 15 % oder über 85 %, isolierte Einzelzellen und vollständig
+leere Innenlinien bleiben **nur Prüfanlässe**, keine automatischen Ablehnungen.
+Motivischen Nutzen beziehungsweise Mangel begründen; Form oder Erkennbarkeit
+nicht zugunsten einer Kennzahl verschlechtern. Alle tatsächlich verwendeten
+Vordergrundfarbpaare betrachten, auch seltene und unbenachbarte Farben. Kleine
+Zell-/Hinweisgrößen auf aktuellem Papier mit Kontur/Schraffur sowie normale,
+abgeschwächte und ausgekreuzte Hinweise prüfen; Farbsinnsimulation, soweit
+verfügbar, ergänzt dies. Die numerische Palettenregel ist erst P-A aus #488;
+keine unbeschlossene Farbmetrik als Pflichtgrenze ausgeben.
+
+Für einen konkreten redaktionellen Mangel gilt der externe, revisionsgebundene
+[Einzelfallprozess aus Qualitätsvertrag §6](../PUZZLE_QUALITY.md).
+Eine begründete Annahme bleibt getrennt vom negativen Einzelbefund und ersetzt
+keine technische Prüfung, Herkunft/Rechte oder tatsächliche Freigaben.
 
 ### 4.4 Reparaturen und Änderungen
 
@@ -351,17 +378,33 @@ Aus den ohnehin erzeugten Kandidaten SOLL Auftrag 3 **zwei bis drei sinnvoll
 unterschiedliche, vollständig geprüfte Raster** zur Endabnahme vorlegen. Alle
 angebotenen Varianten müssen den freigegebenen Parameterkorridor sowie §§4–5
 erfüllen: eigene vollständige technische Prüfung, visuelle Bewertung,
-Bildkonsistenz und gebundene Schwierigkeit. Gleiche Matrizen mit anderer Kennung
+Bildkonsistenz und gebundene Schwierigkeit; eine ausdrücklich angenommene
+redaktionelle Abweichung folgt [Qualitätsvertrag §6](../PUZZLE_QUALITY.md) und
+bleibt als solche sichtbar. Gleiche Matrizen mit anderer Kennung
 oder nur anderem Solverprofil sind keine zusätzlichen Angebote. Auswahl und
 Empfehlung der KI getrennt benennen; die endgültige Wahl trifft der Mensch.
 
 Die vorhandenen Kandidaten- und Reparaturbudgets werden nicht zur Erfüllung einer
-Quote erweitert. Sind nur ein beziehungsweise kein freigabefähiges Ergebnis
-vorhanden, dies mit Grund melden: eine Option anbieten beziehungsweise die Liste
-leer lassen und den konkreten Blocker/nächsten Korrekturschritt nennen. Nicht
-zertifizierte oder visuell ungeeignete Kandidaten bleiben im Entscheidungsprotokoll,
-werden aber nicht als Integrationsoption angeboten. Eine Empfehlung setzt keine
-Auswahl voraus und darf kein Angebot automatisch freigeben.
+Quote erweitert. Bei nur einem freigabefähigen Ergebnis eine Option anbieten.
+Bei keinem MUSS die KI nach [Qualitätsvertrag §5](../PUZZLE_QUALITY.md) zwei bis
+drei möglichst unterschiedliche beste brauchbare vorliegende Entwürfe zeigen,
+sofern vorhanden; bei nur einem diesen. Weitere sinnvolle Entwürfe im Protokoll
+auffindbar halten. Jede Sichtungsansicht nennt stabile ID/Revision, tatsächliches
+Raster und Abschlussbild mit echten Bild-/Dateilinks, technische Prüfungen/Lücken,
+maßgebliche Qualitätsdefizite und Korrekturmöglichkeiten sowie den Status
+`Sichtungsentwurf – nicht integrationsbereit`. Auch technisch nicht zertifizierte
+Entwürfe dürfen zur Diagnose betrachtet werden. Ohne brauchbaren Entwurf den
+konkreten Nichtfund und nächsten Korrekturschritt nennen, keine Dateien erfinden.
+
+Sichtungsentwürfe sind keine Integrationsoptionen: `Raster-Optionen=[]`, kein
+`content_ready`; tatsächlichen Stand als `raster_review` beziehungsweise `blocked`
+mit Grund führen. Eine mögliche gezielte redaktionelle Annahme nach
+[Qualitätsvertrag §6](../PUZZLE_QUALITY.md) bleibt extern an Kandidat, Palette,
+Inventar und Regelstand gebunden. Erst nach zulässiger Korrektur beziehungsweise
+dokumentierter Einzelfallentscheidung und vollständigen aktuellen technischen
+Prüfungen darf ein Kandidat im bestehenden gültigen Auswahlweg erscheinen.
+Fehlende Proofs oder unklare Rechte bleiben Blocker. Empfehlung und Auswahl
+erteilen keine automatische Freigabe.
 
 Jedes Angebot erhält eine im Auftrag stabile ID (etwa `R-A-r03`), eine kurze
 Beschreibung seiner Unterschiede, Maße/Modus/Istfarbzahl, Schwierigkeit und echte
@@ -557,6 +600,13 @@ Den Abschlussbericht auf eine kompakte Seite plus Beleglinks begrenzen. Er MUSS 
 
 Keine Ergebnis- oder Freigabefelder ohne Beleg als erfüllt ausgeben. Inhaltsfreigabe, Katalogfähigkeit und tatsächliche Integration getrennt halten. Ein unpassender oder fehlender Exportadapter darf nicht durch Umwidmung bestehender Pilotdefinitionen ersetzt werden.
 
+Bei einer Sichtung ohne freigabefähiges Angebot die echten Ansichten und Defizite
+nach [Qualitätsvertrag §5](../PUZZLE_QUALITY.md) direkt im Chat zeigen; die
+Sheet-Rasteroptionsliste bleibt leer. Redaktionell akzeptierte Abweichungen nach
+[Qualitätsvertrag §6](../PUZZLE_QUALITY.md) bleiben im Bericht negativ
+beziehungsweise als Warnung sichtbar und werden
+separat als menschliche Entscheidung belegt, niemals als bestandener Test.
+
 ### Einheitliche Chatübergabe
 
 Jede Phasenabschluss-, Korrektur-, Wiederaufnahme- oder Blockermeldung verwendet
@@ -656,6 +706,9 @@ darf als ID übernommen werden; sie ersetzt weiterhin keine Bildfreigabe.
 **Raster-Optionen:** Nach Auftrag 3 alle freigabefähigen Angebote aus §4.5 mit
 folgenden Feldern ausgeben. Sämtliche Felder sind Pflicht; nur `PR` darf `null`
 sein. Keine beispielhaften Hashes oder nicht existierenden Pfade in echten Daten.
+Sichtungsentwürfe bleiben außerhalb dieser Liste und werden nicht als
+`content_ready` angeboten; ihre Ansicht erfolgt mit echten Links im Chat nach
+[Qualitätsvertrag §5](../PUZZLE_QUALITY.md). Das v2-Format bleibt unverändert.
 
 | Feld je Rasteroption | Bedeutung |
 | --- | --- |
