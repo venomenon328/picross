@@ -341,7 +341,8 @@ liegt in der rechten Informationsseite im vorhandenen Nahmaßstab. Vier linksbü
 Spielprinzip, farbigen Rätseln, Bedienung und Lösungstipps. Das feste Register
 liegt links vom separat scrollenden Artikel oder bei knapper gemessener
 Papierbreite als umbrechende Textleiste darüber. Der aktive Eintrag trägt einen
-ruhenden handgezeichneten Unterstrich, Fokus zwei kurze seitliche Stiftstriche; Mouseover erhält einen weniger deckenden Unterstrich ohne Fläche oder Umrandung. Die normale
+ruhenden handgezeichneten Unterstrich, Mouseover oder Tastaturfokus auf einem anderen Kapitel einen weniger deckenden
+Unterstrich ohne Fläche, Umrandung oder seitliche Fokusstriche. Die normale
 Absatzspalte folgt ungefähr 60–75 Zeichen je Zeile; Lehrdiagramme dürfen breiter sein. Pangolin trägt den Fließtext, Bakso Daging gemäß
 [HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535) die Abschnitts- und kleinen Werkzeugüberschriften; Lehrzahlen verwenden die aktive Delight-Typografie.
 Passive synthetische Raster teilen stabile Linien, Atlas-Endbilder, Stiftfarben

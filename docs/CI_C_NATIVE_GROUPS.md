@@ -4,7 +4,7 @@
 
 Bei ausgewähltem `native.catalog` prüft der bestehende `catalog/information`-
 Prozess die vier Kapitel per Pointer und Fokus-Accept, aktiven stabilen Unterstrich
-mit getrenntem Fokus, gemessenen breiten/kompakten Umbruch und eine engere
+mit unabhängig bedienbarem Fokus, gemessenen breiten/kompakten Umbruch und eine engere
 Papierfläche mit mehrzeiliger Leiste. Registerrechtecke bleiben beim Scrollen
 fest; Artikelende, vollständige passive Diagramme, begrenzte Absatzspalte,
 Einstellungenrückkehr und UI100→125→100-Leseanker werden geprüft. Bestehende
