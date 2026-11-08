@@ -10,6 +10,9 @@ gefilterter Spread, Kopf-/Fußgeometrie bei Resize/UI100/125, aktiver No-op,
 vollständiger Katalogbesuchskontext und beide Informationslesestellen. Trefferzahl
 und Informationsbildtitel teilen die obere Kante mit der seitlichen Symbolgruppe;
 kein zusätzlicher vertikaler Navigationsstreifen, vollständige Titelbilder ohne Kollision.
+Metadaten-Pixel, bestehende Modushilfe und passive Kartentreffer werden nach
+gezieltem Sichtbarscrollen innerhalb ihres echten Clips geprüft; die Farb-,
+Tooltip-, Klick- und Geometrieorakel bleiben bestehen.
 Die bestehenden Retry-, Saveblockade-, Leer-/Fehler- und Bildtitelprüfungen
 werden auf die obere Symbolgruppe angepasst. Die Fortsetzen-Fälle prüfen
 deren Trennung vom halb-/vollbreiten Panel. Keine neue Prozessfamilie oder

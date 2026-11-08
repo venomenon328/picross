@@ -870,6 +870,7 @@ func catalog_labels() -> void:
 		app.set_ui_scale(float(spec[2]))
 		app.album._render(0)
 		await frames()
+		var geometry_positions: Vector2i = app.album.positions()
 		var geometry: Array = card_geometry()
 		for card: Card in app.choices:
 			check(card.unknown.visible and not card.preview.visible and card.picture.artwork == null,"KE new uses common drawing and never loads reveal")
@@ -909,33 +910,50 @@ func catalog_labels() -> void:
 		# Current/null plus one editorial legacy shape; no legacy x viewport matrix.
 		for value: Variant in [null,app.album.metadata["T-09"].difficulty,{"method":"picross-difficulty-0.1","level":"L5","assessment_type":"editorial_estimate","confidence":"low","plausible_range":["L1","L5"],"r4_required":false}]:
 			first.set_metadata(50,50,false,value)
+			# The shared count/navigation row can wrap at tight UI125. Read
+			# actual pixels and send input only after the target is in its clip.
+			app.album.ensure_control_visible(first.difficulty_icon)
 			await frames()
 			await RenderingServer.frame_post_draw
 			var expected_color: Color = Color("85857f") if value == null else Color({"L1":"52734e","L2":"74713e","L3":"997337","L4":"a36342","L5":"9b514b"}[value.level])
 			var center_pixel: Color = surface.get_texture().get_image().get_pixelv(Vector2i(first.difficulty_icon.get_global_rect().get_center()))
 			check(center_pixel.is_equal_approx(expected_color),"KU-A filled circle has the prescribed native centre pixel")
+			app.album.ensure_control_visible(first.caption)
+			await frames()
 			await hover(first.caption)
 			check(first.difficulty.tooltip_text.is_empty() and first.difficulty.get_tooltip().is_empty() and first.tooltip_ref == null,"KU-A every metadata shape is tooltip-free")
 			catalog_case("ke-metadata-"+("null" if value == null else "current" if value.method == "picross-difficulty-0.4" else "legacy"))
 			if value != null and value.method == "picross-difficulty-0.4" and value.r4_required:
 				for part: Control in [first.difficulty_icon,first.difficulty]:
+					app.album.ensure_control_visible(part)
+					await frames()
 					await hover(part)
 					await create_timer(0.8).timeout
 					check(visible_popups() == 0,"KU-A actual delayed circle/text hover has no popup")
 			if value != null and value.method == "picross-difficulty-0.4" and value.r4_required:
 				await shot("no-tooltip-%d-ui%d" % [spec[0],roundi(float(spec[2])*100)])
 				catalog_case("ke-negative-delayed-hover")
+		# Restore the original measurement offset before the geometry oracle;
+		# the intervening target-reveal scrolls are deliberate user preparation.
+		app.album.scroll.scroll_vertical = geometry_positions.x
+		app.album.right_scroll.scroll_vertical = geometry_positions.y
+		await frames()
 		app.set_ui_scale(1.0)
 		await frames()
 		app.set_ui_scale(float(spec[2]))
 		await frames()
 		first = app.choices[0]
 		check(card_geometry() == geometry,"KE metadata and UI roundtrip preserve all rectangles")
+		app.album.ensure_control_visible(first.mode_tip)
+		await frames()
 		await hover(first.mode_tip)
 		await create_timer(0.8).timeout
 		check(first.mode_tip.tooltip_ref != null and first.mode_tip.tooltip_ref.get_ref() != null,"KE native mode tooltip")
 		catalog_case("ke-roundtrip-and-mode-tooltip")
 		for part: String in ["card","difficulty_icon"]:
+			if part != "card":
+				app.album.ensure_control_visible(app.choices[0].get(part))
+				await frames()
 			click(app.choices[0] if part == "card" else app.choices[0].get(part))
 			await frames()
 			check(app.work.visible and app.session.definition.id == "T-01","KE passive label click opens owning card: "+part)
