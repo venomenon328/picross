@@ -21,6 +21,7 @@ var diagnosis: Label
 var recovery: ScrollContainer
 var recovery_content: VBoxContainer
 var repair: Button
+var repair_label: Label
 var image_area: Rect2
 var label_area: Rect2
 var unknown: Ink
@@ -35,6 +36,9 @@ var recovery_armed: bool = false
 var recovery_press_position: Vector2 = Vector2.ZERO
 var recovery_press_scroll: int = 0
 var small_text_size: int = UiText.SMALL_SIZE
+var side_by_side: bool = false
+var text_width_budget: float = 0
+var side_width_budget: float = 0
 
 func _make_custom_tooltip(_for_text: String) -> Object:
 	# BookButton's custom factory also runs for empty native tooltip text.
@@ -46,7 +50,7 @@ func _ready() -> void:
 	clip_contents = true
 	resized.connect(layout_content)
 
-func configure(title: String, meta: String, number: String) -> void:
+func configure(title: String, meta: String, number: String, earned: bool = false) -> void:
 	# No hidden native Button text: it otherwise contributes its font minimum.
 	text = ""
 	tooltip_text = ""
@@ -60,7 +64,8 @@ func configure(title: String, meta: String, number: String) -> void:
 	caption.ellipsis_char = "\uFFFF"
 	detail = label(meta, small_text_size)
 	detail.max_lines_visible = 2
-	leaf = label(number, 15, false)
+	leaf = label("· " + number, 15, false)
+	leaf.visible = earned
 	paper = Ink.new()
 	paper.kind = "paper"
 	add_child(paper)
@@ -159,6 +164,30 @@ func set_metadata(width: int, height: int, colored: bool, assessment: Variant) -
 	difficulty_icon.queue_redraw()
 	mode_icon.queue_redraw()
 
+func add_repair(button: Button, value: String) -> void:
+	repair = button
+	# The native button owns input/focus; a passive wrapping caption prevents
+	# its one-line minimum from widening the fixed diagnostic/image column.
+	repair.set_meta("caption",value)
+	repair_label = label(value,small_text_size)
+	repair_label.reparent(repair)
+	repair_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	repair_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	repair_label.max_lines_visible = -1
+	repair.resized.connect(_layout_repair)
+
+func _layout_repair() -> void:
+	if repair_label == null: return
+	var u: float = ui_scale
+	var pixels: int = roundi(small_text_size*u)
+	UiText.small_label(repair_label,pixels,u)
+	var text_width: float = maxf(1,repair.size.x-8*u)
+	var lines: int = UiText.wrapped(repair_label.text,pixels,text_width-4*u).split("\n").size()
+	var height: float = maxf(roundf(44*u),UiText.label_height(repair_label,pixels,lines)+8*u)
+	repair.custom_minimum_size = Vector2(0,height)
+	repair_label.position = Vector2(4,4)*u
+	repair_label.size = Vector2(text_width,height-8*u)
+
 func metadata_widths(u: float) -> Vector2:
 	var pixels: int = roundi(small_text_size*u)
 	# New cards are measured before their first scaled layout. Derive the
@@ -174,7 +203,37 @@ func minimum_card_width(u: float) -> float:
 	# Insets, strip padding, two gaps, circle plus gap, and the visible mode
 	# drawing are reserved in addition to the measured, unabridged text.
 	var measured: Vector2 = metadata_widths(u)
-	return ceilf(20*u+14*u+measured.x+measured.y+20*u+20*u+34*u)
+	return ceilf(maxf(20*u+14*u+measured.x+measured.y+20*u+20*u+34*u,20*u+text_width_budget))
+
+func _two_line_width(value: String, font: Font, pixels: int, u: float) -> float:
+	# Measure the same adaptive word wrapping as Label. The complete category
+	# fits its two reserved lines; motif titles retain their existing ellipsis.
+	var low: int = 1
+	var high: int = ceili(UiText.width(font,value,pixels))
+	while low < high:
+		var middle: int = (low+high)/2
+		var paragraph := TextParagraph.new()
+		paragraph.width = middle
+		paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+		paragraph.add_string(value,font,pixels)
+		if paragraph.get_line_count() <= 2: high = middle
+		else: low = middle+1
+	return high + UiText.label_style(u).get_minimum_size().x + 2*u
+
+func minimum_text_width(u: float, categories: Array[String], leaves: Array[String]) -> float:
+	var pixels: int = roundi(small_text_size*u)
+	var font: Font = UiText.small_font(pixels)
+	var margin: float = UiText.label_style(u).get_minimum_size().x
+	var status_width: float = 0
+	for value: String in ["Neu","Begonnen","Gelöst","Ungültig"]:
+		status_width = maxf(status_width,UiText.width(font,value,pixels)+margin)
+	var text_width: float = 0
+	for number: String in leaves:
+		text_width = maxf(text_width,20*u+status_width+4*u+UiText.width(font,"· "+number,pixels)+margin)
+		text_width = maxf(text_width,UiText.width(MOTIF_FONT,number,roundi(20*u))+44*u+8*u)
+	for value: String in categories:
+		text_width = maxf(text_width,_two_line_width(value,font,pixels,u))
+	return ceilf(text_width)
 
 func layout_content() -> void:
 	if caption == null: return
@@ -192,18 +251,34 @@ func layout_content() -> void:
 	var meta_height: float = UiText.label_height(detail, roundi(small_text_size*u), 2)
 	var footer_height: float = maxf(UiText.label_height(leaf, roundi(15*u)), UiText.label_height(note, roundi(small_text_size*u)))
 	var width: float = size.x - 2*inset
-	caption.position = Vector2(inset, inset)
-	caption.custom_maximum_size = Vector2(maxf(1, width-hit-gap), title_height)
+	var text_x: float = inset + roundf(112*u) + gap if side_by_side else inset
+	var text_width: float = size.x-inset-text_x
+	caption.position = Vector2(text_x, inset)
+	caption.custom_maximum_size = Vector2(maxf(1, text_width-hit-gap), title_height)
 	caption.size = caption.custom_maximum_size
 	if reset != null:
 		reset.ui_scale = u
 		reset.custom_minimum_size = Vector2.ONE*hit
 		reset.size = Vector2.ONE*hit
 		reset.position = Vector2(size.x-inset-hit, inset)
-	detail.position = Vector2(inset, inset+maxf(title_height,hit)+gap)
-	detail.custom_maximum_size = Vector2(width, meta_height)
+	detail.position = Vector2(text_x, inset+maxf(title_height,hit)+gap)
+	detail.custom_maximum_size = Vector2(text_width, meta_height)
 	detail.size = detail.custom_maximum_size
-	image_area = Rect2(Vector2(inset, detail.position.y+meta_height+gap), Vector2(width, roundf(112*u)))
+	var status_y: float = detail.position.y+meta_height+gap
+	var status_width: float = 0
+	for value: String in ["Neu","Begonnen","Gelöst","Ungültig"]:
+		status_width = maxf(status_width,UiText.label_width(note,value,roundi(small_text_size*u)))
+	status_icon.position = Vector2(text_x,status_y)
+	status_icon.size = Vector2(16*u,footer_height)
+	status_icon.trailing_text_width = -1
+	note.position = Vector2(text_x+20*u,status_y)
+	note.size = Vector2(status_width,footer_height)
+	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_LEFT
+	leaf.position = Vector2(note.position.x+status_width+4*u,status_y)
+	leaf.size = Vector2(UiText.label_width(leaf,leaf.text,roundi(15*u)),footer_height)
+	var content_end: float = status_y+footer_height
+	image_area = Rect2(Vector2(inset,inset if side_by_side else content_end+gap),Vector2(roundf(112*u) if side_by_side else width,roundf(112*u)))
+	content_end = maxf(content_end,image_area.end.y)
 	unknown.position = image_area.position
 	unknown.size = image_area.size
 	# The miniature's own regular draw/hit projection stays unchanged. Give it
@@ -223,10 +298,10 @@ func layout_content() -> void:
 		repair.ui_scale = u
 		repair.add_theme_font_override("font", UiText.small_font(UiText.small_size(u)))
 		repair.add_theme_font_size_override("font_size", UiText.small_size(u))
-		repair.custom_minimum_size = Vector2(0, hit)
+		_layout_repair()
 	# One passive strip, with identical reservations for every card and state.
 	var row_height: float = maxf(36*u,UiText.label_height(difficulty, roundi(small_text_size*u)))
-	label_area = Rect2(Vector2(inset,image_area.end.y+gap),Vector2(width,row_height+10*u))
+	label_area = Rect2(Vector2(inset,content_end+gap),Vector2(width,row_height+10*u))
 	paper.position = label_area.position
 	paper.size = label_area.size
 	var measured: Vector2 = metadata_widths(u)
@@ -244,19 +319,6 @@ func layout_content() -> void:
 	for drawing: Ink in [paper,mode_icon,status_icon,unknown,difficulty_icon]:
 		drawing.ui_scale = u
 		drawing.queue_redraw()
-	var bottom: float = label_area.end.y+gap
-	var leaf_width: float = UiText.label_width(leaf, leaf.text, roundi(15*u))
-	leaf.position = Vector2(inset,bottom)
-	leaf.size = Vector2(leaf_width,footer_height)
-	var status_width: float = 0
-	for value: String in ["Neu","Begonnen","Gelöst","Ungültig"]:
-		status_width = maxf(status_width,UiText.label_width(note, value, roundi(small_text_size*u)))
-	note.position = Vector2(size.x-inset-status_width,bottom)
-	note.size = Vector2(status_width,footer_height)
-	note.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	status_icon.position = note.position-Vector2(20*u,0)
-	status_icon.size = Vector2(status_width+16*u,footer_height)
-	status_icon.trailing_text_width = UiText.label_width(note, note.text, roundi(small_text_size*u))
-	custom_minimum_size.y = bottom+footer_height+inset
+	custom_minimum_size.y = label_area.end.y+inset
 	preview.queue_redraw()
 	picture.queue_redraw()

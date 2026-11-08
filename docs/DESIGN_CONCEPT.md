@@ -72,8 +72,15 @@ mittig, größeres Moduspiktogramm rechts. Keine drei Einzelkästchen. Die beste
 fünf gedeckten Stufenfarben bleiben, „Nicht eingestuft“ erhält einen neutralgrauen
 Kreis. Sichtbare Schwierigkeitsziffer und zugehöriger Tooltip entfallen. Ein
 zentrierter dunkler Monostift ohne Farbprobe steht den drei aufgefächerten
-Farbstiften gegenüber; der Modustooltip bleibt. Die Fußzeile zeigt „Blatt NN“ links
-und Statussymbol samt „Neu“, „Begonnen“ oder „Gelöst“ rechts.
+Farbstiften gegenüber; der Modustooltip bleibt. KL-CARD-A / #547 setzt die
+Vorschau links neben den festen Textblock aus Überschrift, stets sichtbarer
+Kategorie und ausgeschriebenem Status mit Symbol. Vor gültigem Abschluss heißt
+die Karte „Blatt NN“, danach trägt sie den verdienten Motivnamen und die
+Blattkennung zusätzlich beim Status. Der passive Papierstreifen schließt unten
+ab. Gemessener Platzmangel schaltet beide Buchhälften gemeinsam auf Textblock,
+Bild und Streifen untereinander um; zwei reservierte Titel-/Kategoriezeilen,
+Bildhöhenbudget, kleine Schriftrolle und separate Reset-/Recoveryziele bleiben.
+[Aktuelle Kartenaufteilung](CATALOG_PRESENTATION.md#ke-d01--feste-kartenaufteilung).
 
 Größere Symbole und vollständige Namen bestimmen die gemeinsame Kartenmindestbreite
 bei UI 100/125 %; nötigenfalls stehen weniger Spalten nebeneinander. Ausreichender
@@ -110,7 +117,7 @@ und ihre Textaktionen bleiben im Bildraum erreichbar. Eigene Vorschau/Reveal pas
 proportional. Responsive kompakte Breiten, BookButtons, Originalpalette und
 2×3-Werkzeuge bleiben. [Aktuelle Prüfzuordnung](KK_VERIFICATION.md).
 
-KAT-2 (#79) ergänzt den Entwicklungsstart als warmes Kartenraster auf dem vorhandenen Buch. Oberhalb stehen eine scrollbare Kategorienauswahl einschließlich leerer Gruppen und „x von y gelöst“. Die vorhandenen Godot-Controls behalten ihre Bediensemantik; Schrift, Konturen und auch geöffnete Listen folgen als neuer Sollstand [HZ](HAND_DRAWN_UI.md). Hover, Fokus und Auswahl bleiben erkennbar. Höchstens 24 Karten teilen sich eine Seite; Spaltenzahl und Scrollfläche richten sich nach Fenster und UI-Skalierung. Jede Karte trägt die stabile Blattkennung, Größe, Mono/Farbe und Status, in „Alle Rätsel“ zusätzlich die Kategorie. Eigene ungelöste Füllungen bleiben unkorrigiert; Motivname und proportionales Reveal erscheinen erst nach gültigem Abschluss. Die bisherige zusätzliche globale Auswahlvorschau entfällt. [Nachweise und offene KAT2-M01-Abnahme](KAT2_VERIFICATION.md).
+KAT-2 (#79) ergänzt den Entwicklungsstart als warmes Kartenraster auf dem vorhandenen Buch. Oberhalb stehen eine scrollbare Kategorienauswahl einschließlich leerer Gruppen und „x von y gelöst“. Die vorhandenen Godot-Controls behalten ihre Bediensemantik; Schrift, Konturen und auch geöffnete Listen folgen als neuer Sollstand [HZ](HAND_DRAWN_UI.md). Hover, Fokus und Auswahl bleiben erkennbar. Höchstens 24 Karten teilen sich eine Seite; Spaltenzahl und Scrollfläche richten sich nach Fenster und UI-Skalierung. Jede Karte trägt die stabile Blattkennung, Größe, Mono/Farbe und Status, stets auch bei Kategorienfilter die Kategorie gemäß KL-CARD-A. Eigene ungelöste Füllungen bleiben unkorrigiert; Motivname und proportionales Reveal erscheinen erst nach gültigem Abschluss. Die bisherige zusätzliche globale Auswahlvorschau entfällt. [Nachweise und offene KAT2-M01-Abnahme](KAT2_VERIFICATION.md).
 
 ## Aktueller Entwicklungsstand
 

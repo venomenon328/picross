@@ -71,9 +71,11 @@ nativen Scrollaktionen. Leisten erscheinen nur bei Bedarf; UI100/125 skaliert
 ihre Darstellung und Trefferbreite gemeinsam. [Stilvertrag](../docs/HAND_DRAWN_UI.md).
 
 Die kompakten Katalogkacheln bleiben gleich groß, auch nach Abschluss oder Reset.
-Oben steht der verdiente Motivname, vorher `???`, in derselben Bakso-Schrift wie
-„Rätselkatalog“. Lange Namen nutzen zwei Zeilen, danach eine Auslassung. Darunter
-steht in „Alle Rätsel“ die Kategorie; bei Filterung bleibt dieser Platz reserviert.
+Links steht die Vorschau, rechts die Überschrift in Bakso: vor Abschluss
+„Blatt NN“, danach der verdiente Motivname. Lange Namen nutzen zwei Zeilen,
+danach eine Auslassung. Die Kategorie bleibt darunter auch bei Filterung sichtbar.
+Es folgen Statussymbol und „Neu“, „Begonnen“ oder „Gelöst“; bei Gelöst steht
+zusätzlich „· Blatt NN“ neben dem Status.
 Neue Rätsel zeigen ein gezeichnetes Fragezeichen. Begonnene zeigen nur eigene
 Füllungen, auch falsche. X und unbekannte Zellen bleiben neutral. Ein begonnener
 Stand ohne Füllzellen, etwa nach Undo, zeigt eine leere Vorschau ohne Fragezeichen. Erst ein
@@ -87,9 +89,9 @@ Ohne Einstufung erscheint ein neutralgrauer Kreis mit „Nicht eingestuft“.
 Die Schwierigkeit hat keinen Tooltip. Der Modus erklärt sich beim Darüberfahren
 mit der Maus. Ein Klick auf den Streifen öffnet das zugehörige Blatt.
 
-In der festen Fußzeile steht links „Blatt NN“, rechts der Status mit Symbol:
-offener Kreis und „Neu“, kleiner Stift und „Begonnen“, Haken und „Gelöst“.
-Auch die Fußzeile öffnet dasselbe Blatt. Alle Karten einer Ansicht verwenden
+Ein offener Kreis bedeutet Neu, der kleine Stift Begonnen und der Haken Gelöst.
+Bei Platzmangel stapeln beide Buchhälften gemeinsam Textblock, Vorschau und
+Papierstreifen. Status und Blattkennung öffnen wie der Streifen dasselbe Blatt. Alle Karten einer Ansicht verwenden
 identische, anhand der vollständigen Metadaten gemessene Breiten. Bei wenig Platz
 erscheinen weniger Spalten; Schrift und Bildraum werden dafür nicht verkleinert.
 Jede Buchhälfte zeigt höchstens zwölf Karten in bis zu drei Spalten. Bei
