@@ -18,10 +18,12 @@ Q-A / #488 führt keine automatische Farbmetrik oder neue Adapterausnahme ein.
 Die [fachlich freigegebene P-A-Farbprüfregel](PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
 konkretisiert paarweise Oklab-Diagnose, Warn-/Fehlerstatus, Ist-Palettenbindung und
 das Verhältnis zur visuellen Freigabe. P-A-M01 ist vom Eigentümer ausdrücklich
-erteilt. **Die technische Produktionsprüfung ist noch nicht aktiviert**:
-Früh-/Endprüfung, konkrete Berichts-/Hashformate und geprüfter Ausnahmeweg
-folgen erst mit P-B. Kein neues CLI-/Adapterfeld und keine Umdeutung von Authoring 0.5.0,
-Sheet v2 oder Altfreigaben. Ein späterer positiver Farbwert ersetzt keine Sichtung,
+erteilt. **P-B1 liefert die freiwillig aufrufbare read-only Kandidatendiagnose**
+`check-palette` mit eigenem versioniertem Bericht und frischer Verifikation;
+[Bedienung, Hash-/Readervertrag und Grenzen](../tools/puzzle_production/README.md#p-b1-lesende-palettendiagnose).
+Die automatische Produktionspflicht, Endprüfung und der geprüfte Ausnahmeweg
+folgen erst P-B2. Keine neuen Adapter-/Freigabefelder und keine Umdeutung von Authoring 0.5.0,
+Sheet v2 oder Altfreigaben. Ein positiver Distanzstatus ersetzt keine Sichtung,
 ein negativer Wert bleibt bei einer zulässigen redaktionellen Annahme negativ.
 
 [Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) führt die aktive Bildbindung und
