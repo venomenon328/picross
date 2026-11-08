@@ -55,6 +55,8 @@ var metadata: Dictionary = {}
 var ordinals: Dictionary = {}
 var categories: Array[Dictionary] = []
 var statuses: Dictionary = {}
+var card_text_identity: Array = []
+var card_text_width: float = 0
 var errors: Dictionary = {}
 var load_error: String = ""
 var generation: int = 0
@@ -385,7 +387,7 @@ func _diagnose(card: Card, id: String) -> void:
 	var action: String = "Öffnen gesperrt" if state == "error" else "Ansehen" if items[id].completed else "Fortsetzen" if progress(items[id]) == "Begonnen" else "Spielen"
 	card.accessibility_name = "%s · %s · %s · %s · %s · %s · %s · %s" % [card.caption.text,card.leaf.text,card.detail.text,card.dimensions.text,card.mode_tip.tooltip_text,card.difficulty.text,card.note.text,action]
 	card.reset.accessibility_name = "Rätsel zurücksetzen · " + card.leaf.text + " · " + card.note.text
-	if card.repair != null: card.repair.accessibility_name = card.repair.text + " · " + card.leaf.text + " · " + card.note.text
+	if card.repair != null: card.repair.accessibility_name = str(card.repair.get_meta("caption")) + " · " + card.leaf.text + " · " + card.note.text
 
 func _add_card(id: String) -> void:
 	var item: Session = items[id]
@@ -412,10 +414,10 @@ func _add_card(id: String) -> void:
 	choices.append(card)
 	var leaf: String = item.neutral_title().split(" · ")[0]
 	var meta: String = ""
-	if category_id.is_empty():
-		for category: Dictionary in categories:
-			if category.id == metadata.get(id, {}).get("category_id"): meta = str(category.name)
-	card.configure(item.album_title() if item.completed and statuses[id] != "error" else "???",meta,leaf)
+	for category: Dictionary in categories:
+		if category.id == metadata.get(id, {}).get("category_id"): meta = str(category.name)
+	var earned: bool = item.completed and statuses[id] != "error"
+	card.configure(item.album_title() if earned else leaf,meta,leaf,earned)
 	card.set_metadata(item.player.width,item.player.height,item.definition.palette.size() > 1,metadata.get(id,{}).get("difficulty"))
 	var reset: BookButton = _button("",func() -> void: reset_requested.emit(id))
 	reset.action_id = "reset"
@@ -437,10 +439,9 @@ func _add_card(id: String) -> void:
 	reveals.append(card.picture)
 	notes.append(card.note)
 	if statuses[id] in ["recovered", "backup_invalid"]:
-		var repair: BookButton = _button("Backup erneuern" if statuses[id] == "backup_invalid" else "Backup übernehmen",func() -> void: repair_requested.emit(id))
-		repair.accessibility_name = repair.text + " · " + leaf
+		var repair: BookButton = _button("",func() -> void: repair_requested.emit(id))
 		card.recovery_content.add_child(repair)
-		card.repair = repair
+		card.add_repair(repair,"Backup erneuern" if statuses[id] == "backup_invalid" else "Backup übernehmen")
 		repair_buttons[id] = repair
 	_diagnose(card,id)
 
@@ -459,17 +460,34 @@ func _layout_cards() -> void:
 	grid.add_theme_constant_override("v_separation", gap)
 	# Reserve the actual scrollbar width even before the first container sort.
 	var available: float = _shared_card_width()
-	# KU-A: choose columns from the complete measured single-line metadata.
+	var category_names: Array[String] = []
+	for category: Dictionary in categories: category_names.append(str(category.name))
+	var leaf_names: Array[String] = []
+	for item: Session in items.values(): leaf_names.append(item.neutral_title().split(" · ")[0])
+	var identity: Array = [ui_scale,category_names,leaf_names]
+	if not choices.is_empty() and identity != card_text_identity:
+		card_text_width = choices[0].minimum_text_width(ui_scale,category_names,leaf_names)
+		card_text_identity = identity
+	for card: Card in choices: card.text_width_budget = card_text_width
+	# Complete one-line metadata and two-line categories also bound fallback.
 	var minimum_width: float = choices[0].minimum_card_width(ui_scale) if not choices.is_empty() else 280*ui_scale
 	var capacity: int = clampi(floori((available + gap) / (minimum_width + gap)), 1, 3)
 	grid.arrange(capacity, _available_card_width(scroll))
-	var card_width: float = maxf(minimum_width, minf(minimum_width+8*ui_scale, floorf((available-(capacity-1)*gap)/capacity)))
+	var cell_width: float = floorf((available-(capacity-1)*gap)/capacity)
+	# One decision for both halves, measured from the entire catalog rather
+	# than the current page/status/title. Reflow keeps every control and ID.
+	var side_minimum: float = 2*roundf(10*ui_scale)+roundf(112*ui_scale)+roundf(8*ui_scale)+card_text_width
+	var sideways: bool = cell_width >= side_minimum
+	var desired: float = maxf(minimum_width+8*ui_scale,side_minimum) if sideways else minimum_width+8*ui_scale
+	var card_width: float = maxf(minimum_width,minf(desired,cell_width))
 	_style_controls(self)
 	# The filter opener reserves 16 logical pixels on each side of its text,
 	# including the inward HZ focus/pressed contour. Other buttons keep theirs.
 	filter_button.custom_minimum_size.x = maxf(44*ui_scale,Card.UiText.width(filter_button.get_theme_font("font"),filter_button.text,Card.UiText.small_size(ui_scale))+32*ui_scale)
 	for card: Card in choices:
 		card.ui_scale = ui_scale
+		card.side_by_side = sideways
+		card.side_width_budget = side_minimum
 		for state: String in ["normal","hover","pressed","disabled","focus"]:
 			card.get_theme_stylebox(state).ui_scale = ui_scale
 		card.custom_minimum_size.x = card_width
