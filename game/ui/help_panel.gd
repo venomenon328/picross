@@ -187,7 +187,8 @@ func operation() -> void:
 	legend(chapters[2],"clue-filled","Blasse Zahl: ein anhand deiner Linienbelegung eindeutig vollständig gesetzter Block.")
 	legend(chapters[2],"clue-closed","Gleich blasse Zahl mit handschriftlichem X: zusätzlich an beiden Enden abgegrenzt. Unmittelbares X, echter Rasterrand oder direkt andere Füllfarbe zählen; unbekannte Nachbarn nicht.")
 	paragraph(chapters[2],"Ist „Erfüllte Hinweise markieren“ ausgeschaltet, erscheinen im Rätsel alle Hinweise normal. Der Schalter gilt für diese Sitzung.")
-	action("nav-work","Zurück und später fortsetzen","Der linke Pfeil in der Gruppe oben rechts führt zum Katalog oder Rätsel, aus dem du die Hilfe geöffnet hast. Sein Tooltip nennt das Ziel. Der Pfeil im Rätselkopf führt zum Katalog. Dein Arbeitsstand mit Rückgängig/Wiederholen wird lokal gespeichert und beim erneuten Öffnen fortgesetzt. Im Katalog blättern die beiden unteren Pfeile die ganze Doppelseite; Beenden steht oben rechts links neben dem Zahnrad.")
+	action("nav-work","Zurück und später fortsetzen","Der linke Pfeil in der Gruppe oben rechts führt zum Katalog oder Rätsel, aus dem du die Hilfe geöffnet hast. Sein Tooltip nennt das Ziel. Der Pfeil im Rätselkopf führt zum Katalog. Dein Arbeitsstand mit Rückgängig/Wiederholen wird lokal gespeichert und beim erneuten Öffnen fortgesetzt. Im Katalog blättern die beiden unteren Pfeile die ganze Doppelseite.")
+	action("quit","Beenden","Das handgezeichnete X oben rechts im Katalog, links neben dem Zahnrad, beendet das Spiel. Sein Tooltip heißt Beenden. Ausstehende Spielstände werden vorher gesichert; bei einem Speicherfehler bleibt die Anwendung mit einem Wiederholungsweg offen.")
 	paragraph(chapters[2],"Speicherfehler bleiben sichtbar. Lasse die Anwendung dann offen und versuche die Speicherung erneut. Eine angebotene Backupübernahme braucht deine Bestätigung. Im Browser warte auf die bestätigte Sicherung, bevor du den Tab schließt.")
 
 func tips() -> void:

@@ -41,6 +41,12 @@ func _ready() -> void:
 	add_child(navigation)
 	settings_button = top.get_child(0)
 	quit_button = top.get_child(1)
+	quit_button.text = ""
+	quit_button.action_id = "catalog-quit"
+	quit_button.name = "catalog-quit"
+	quit_button.image = preload("res://art/book/quit.svg")
+	quit_button.tooltip_text = "Beenden"
+	quit_button.accessibility_name = "Beenden"
 	quit_button.reparent(navigation)
 	settings_button.reparent(navigation)
 	settings_button.text = ""

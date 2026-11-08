@@ -10,7 +10,7 @@ SOURCE = ROOT / "docs/design/book_inventory"
 DEST = ROOT / "game/art/book"
 KB_ICONS = Path(__file__).with_name("book_icons_kb.json")
 HZ_ICONS = Path(__file__).with_name("book_icons_hz.json")
-ACTIVE_ICONS = {"fill", "erase", "undo", "redo", "minus", "plus", "help", "menu", "nav-album", "nav-information", "nav-work", "play", "reset", "arrow-left", "arrow-right", "arrow-up", "arrow-down", "chevron-down", "chevron-up", "check", "check-empty", "checkbox-empty", "checkbox-checked", "scroll-up", "scroll-down", "scroll-left", "scroll-right"}
+ACTIVE_ICONS = {"fill", "erase", "undo", "redo", "minus", "plus", "help", "menu", "quit", "nav-album", "nav-information", "nav-work", "play", "reset", "arrow-left", "arrow-right", "arrow-up", "arrow-down", "chevron-down", "chevron-up", "check", "check-empty", "checkbox-empty", "checkbox-checked", "scroll-up", "scroll-down", "scroll-left", "scroll-right"}
 
 
 def active_icons():

@@ -214,7 +214,7 @@ sind nach [BTI](VIEW_TITLE_ART.md) neutrale offen schraffierte V2-rev1-Graphit-
 Schriftzugbilder ohne umgebende Illustrationen. Die Titel zentrieren sich
 innerhalb ihrer jeweiligen Buchhälfte. NAV-A ersetzt die bisherige BTI-D04-
 Fußnavigation durch Rückpfeil, Zahnrad und Hilfe oben rechts auf der sichtbaren
-Papierseite. Im Katalog steht Beenden links neben Zahnrad/Hilfe; unten bleiben
+Papierseite. Im Katalog steht ein handgezeichnetes Beenden-X links neben Zahnrad/Hilfe; unten bleiben
 nur gezeichnete Blätterpfeile und die separate Seitenanzeige. Die übrigen Font-/Buchrollen und
 die Kapitel-/Gruppenüberschriften bleiben erhalten.
 [Freigabe #533](https://github.com/venomenon328/picross/issues/533).

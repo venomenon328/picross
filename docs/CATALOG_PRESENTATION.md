@@ -2,8 +2,9 @@
 
 ## NAV-A · Katalogkopf und Blättern (#549)
 
-Auf der sicheren rechten Papierfläche stehen oben ortsfest **Beenden** als
-abgesetzter Textbefehl, **Zahnrad** und **?**. Hilfe/Einstellungen sind auch bei
+Auf der sicheren rechten Papierfläche stehen oben ortsfest ein handgezeichnetes
+**X** für Beenden, **Zahnrad** und **?**. Tooltip und zugänglicher Name des X
+lauten exakt **Beenden**. Hilfe/Einstellungen sind auch bei
 leerem oder fehlerhaftem Katalog ohne Session erreichbar. Die Kopfzeile besitzt
 einen eigenen Platz oberhalb von Trefferzahl, festem Fehler-/Retryclip,
 halb-/vollbreitem Fortsetzen-Panel und Sortierung/Filter. Diese Bereiche messen

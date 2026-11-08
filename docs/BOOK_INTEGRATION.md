@@ -75,7 +75,8 @@ getrennten synthetischen Prüfwegen nachgewiesen.
 ## Navigation und Darstellung
 
 **NAV-A / #549:** Auf der jeweils sichtbaren sicheren Papierseite steht eine
-ortsfeste Kopfgruppe. Im Katalog: Beenden als Textbefehl, dann Zahnrad und Hilfe.
+ortsfeste Kopfgruppe. Im Katalog: handgezeichnetes Beenden-X, dann Zahnrad und Hilfe.
+Das X besitzt den Tooltip und zugänglichen Namen „Beenden“.
 Auf Rätsel, Hilfe und Einstellungen: Rückpfeil, Zahnrad, Hilfe; auch Einstellungen
 verwendet den oberen rechten Rand ihrer linken Seite. Der aktive Informationsort
 ist unterstrichen und sein Klick verändert weder Abschnitt noch Lesestelle oder

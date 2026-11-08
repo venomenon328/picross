@@ -5,8 +5,8 @@
   "modules": [
     "native.catalog"
   ],
-  "purpose": "Fixed book navigation on the visible safe page, settings gear, arrow-only spread pagination, runtime icon tooltip/name inventory. Existing catalog/pages and catalog/information cover layout, state, boundaries, retry and input; the core builds the Windows x64 player.",
-  "omitted": "No save schema, motion/timing, puzzle/renderer/production or web persistence change. No native.core/history/completion/adapters/graphics/export, tools, production, preflight, delivery or Chromium. Once-only explicit book_lifecycle and isolated native Windows rendered viewport input/originals complement the selected component process; independent R01 and owner M01 remain before merge.",
+  "purpose": "Fixed book navigation on the visible safe page, settings gear and owner-requested quit X, arrow-only spread pagination, runtime icon tooltip/name inventory. Existing catalog/pages and catalog/information cover layout, state, boundaries, retry and input; the core builds the Windows x64 player.",
+  "omitted": "No save schema, motion/timing, puzzle/renderer/production or web persistence change. No native.core/history/completion/adapters/graphics/export, tools, production, preflight, delivery or Chromium. Once-only explicit book_lifecycle and isolated native Windows rendered viewport input/originals complement the selected component process; independent R01 and owner M01 remain before merge. The resource generator only adds the quit ID to its closed inventory; direct offline z2 delivery checks cover this, without selecting the whole tools module. Existing PCK inventory readers now include quit; no export mechanism changes.",
   "test_changes": [
     {
       "path": "game/tests/navigation_cases.gd",
@@ -36,7 +36,7 @@
     {
       "path": "game/tests/hz_pack.gd",
       "disposition": "change-scoped",
-      "reason": "Retained manual PCK diagnostic points to the new actual header control."
+      "reason": "Keep the retained flat shared-UI PCK diagnostic on its own controls and include the new quit icon in its resource inventory."
     },
     {
       "path": "tools/web_tests/group_catalog.py",
@@ -47,6 +47,16 @@
       "path": "game/tests/scrollbar_cases.gd",
       "disposition": "change-scoped",
       "reason": "Wait for the finite article reading-anchor reflow after changed header geometry before beginning pointer scroll assertions; preserve all native range oracles."
+    },
+    {
+      "path": "game/tests/content_pack_probe.gd",
+      "disposition": "change-scoped",
+      "reason": "Keep the actual PCK resource inventory consistent with the new owner-requested quit SVG."
+    },
+    {
+      "path": "game/tests/hz_b_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Keep the retained shared resource inventory consistent with the additional quit icon."
     }
   ],
   "core_change": null,
