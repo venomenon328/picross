@@ -334,7 +334,7 @@ def addition_preflight(root, temps):
         path.unlink();sync_directory(path.parent)
 
 
-def write(root, name, data, temporary, guard_fn, *, package_addition=False):
+def write(root, name, data, temporary, guard_fn, *, package_addition=False, replace=None):
     target = durable_parents(root, name)
     if data is None:
         guard_fn()
@@ -366,7 +366,10 @@ def write(root, name, data, temporary, guard_fn, *, package_addition=False):
     _checkpoint("temp-complete", name)
     guard_fn()
     target = io.safe(root, name)
-    rename(io.safe(root, temporary), target, replace=target.exists())
+    # Explicit phase policy for RI-C: a new text target must stay no-replace
+    # even if a non-cooperating writer appears after the last guard. Historical
+    # callers retain their existing policy unless they explicitly opt in.
+    rename(io.safe(root, temporary), target, replace=target.exists() if replace is None else replace)
     diagnostic.count("published_files", work="published: " + name)
     diagnostic.count("published_bytes", len(data))
 

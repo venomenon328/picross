@@ -33,10 +33,13 @@ Ein nicht tatsächlich gemessener Plattformpunkt bleibt ausdrücklich T01-Gate.
 
 | Kriterium | Konkreter Nachweis |
 | --- | --- |
-| C01 | Neues `test_registration_publication`: echte Fremdänderung an G0/G2/G5a/G5b/G6, GR0/GR2 und lokalen Ziel-/Temp-/Elternprüfungen; alle T-/K-Dateien eines synthetischen Altbestands, erwartete Abwesenheiten, fremde Verzeichnisse, Alias/Hardlink und tatsächliche Freeze-Dateien. |
-| C02/C08 | Obige festgelegte Reihen; tatsächliche Messwerte und Plattformbindung werden mit Abschluss der Ausführung ergänzt. |
+| C01 | Neues `test_registration_publication`: echte Fremdänderung an G0/G2/G5a/G5b/G6, GR0/GR2 und lokalen Ziel-/Temp-/Elternprüfungen; alle T-/K-Dateien eines synthetischen Altbestands, erwartete Abwesenheiten, fremde Verzeichnisse, Alias/Hardlink und tatsächliche Freeze-Dateien. Gültige Bytes in falscher Phase werden abgewiesen; eine direkt vor OS-Rename injizierte Textneuanlage bleibt atomar no-replace geschützt. |
+| C02/C08 | Obige festgelegte Reihen; kompakte tatsächliche Tabellen, Plattform- und Quellbindung im RI-C-T01-M01-Anhang des PR. Der Treiber prüft 30/34/38 tatsächliche Exportdateien; die Zusätze sind im synthetischen Handoff als Gatebelege gebunden. |
 | C03–C05/C07 | Unterbrechungen P0, partielles/vollständiges Journal, P1/P2, mehrere P3/P4-Schritte, vor/nach Runtime, P6 und wiederholte R0/R1/R2-Recovery; echte Kill-/Rekill-/Signalprozesse. RI-A-Fälle prüfen getrennte Deadlines und dauerhaft abgeschlossenen Erfolg. |
 | C06 | Expliziter v6/Operationsdispatch; vorhandene vollständige Katalog-/Adaptertests prüfen alte Registrierung, Update, Sync, Metadaten, Bild- und Methodenpfade. RI-B-Positivfall erhält zwei vollständige Proofprüfungen, No-op-Bytes/mtimes und eigenständige Recovery. |
 | C09 | Ein Draft-PR mit finaler Head-/Basis-/Test-Mergebindung, ausgewählten tatsächlichen Checks und getrenntem Selbstreview. Qualifiziertes unabhängiges RI-C-R01 bleibt vor Merge erforderlich. |
 
-Ausführung läuft. Ein fehlender oder fehlgeschlagener Nachweis ist kein Pass.
+Der Abschlussstand, RI-C-T01-M01 mit Messwerten und RI-C-T01-CI mit tatsächlicher
+Head-/Basis-/Test-Mergebindung stehen im [Draft-PR #544](https://github.com/venomenon328/picross/pull/544).
+Dort wird auch der getrennte Selbstreview dokumentiert. Ein fehlender oder
+fehlgeschlagener Nachweis ist kein Pass; das unabhängige RI-C-R01 bleibt separat.
