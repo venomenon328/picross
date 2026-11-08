@@ -1,0 +1,4 @@
+lifecycle/** -text
+native.log -text
+observations.json -text
+probe.gd -text
