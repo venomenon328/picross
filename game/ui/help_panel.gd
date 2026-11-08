@@ -44,6 +44,8 @@ func configure(owner: Control) -> void:
 	scroll.mouse_force_pass_scroll_events = false
 	scroll.follow_focus = true
 	add_child(scroll)
+	# Theme propagation updates native scrollbar minima after the scale call.
+	scroll.get_v_scroll_bar().minimum_size_changed.connect(layout_content.call_deferred)
 	article = VBoxContainer.new()
 	article.size_flags_horizontal = SIZE_EXPAND_FILL
 	scroll.add_child(article)
