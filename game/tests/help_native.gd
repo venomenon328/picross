@@ -72,8 +72,8 @@ static func run(t: SceneTree) -> void:
 			t.check(panel.chapter == i and panel.buttons[i].selected and app.info.help_scroll.scroll_vertical == 0,"HIL direct chapter starts at top")
 			layouts += 1
 			var scroll: ScrollContainer = app.info.help_scroll
-			t.check(panel.size.x <= scroll.size.x+1 and scroll.get_h_scroll_bar().max_value <= scroll.size.x+1,"HIL no horizontal scroll at "+str(spec))
-			layout(t,panel,scroll.size.x,app.ui_scale)
+			t.check(scroll.get_h_scroll_bar().max_value <= scroll.size.x+1,"HIL no horizontal scroll at "+str(spec))
+			layout(t,panel.chapters[i],scroll.size.x,app.ui_scale)
 			for figure: Control in panel.figures:
 				if figure.is_visible_in_tree():
 					t.check(figure.size.x <= scroll.size.x and figure.cell_size >= 32,"HIL readable native diagram within paper")
@@ -91,8 +91,8 @@ static func run(t: SceneTree) -> void:
 				t.root.push_input(event,true)
 			await t.frames(4)
 			var bar: VScrollBar = scroll.get_v_scroll_bar()
-			t.check(scroll.scroll_vertical == maxi(0,int(bar.max_value-bar.page)) and panel.get_global_rect().end.y <= scroll.get_global_rect().end.y+1,"HIL final chapter content reachable")
-			t.check(app.info.right_return.get_global_rect().position.y < scroll.get_global_rect().position.y,"HIL return stays above independent clip")
+			t.check(scroll.scroll_vertical == maxi(0,int(bar.max_value-bar.page)) and panel.chapters[i].get_global_rect().end.y <= scroll.get_global_rect().end.y+1,"HIL final chapter content reachable")
+			t.check(app.info.right_return.get_global_rect().position.y > scroll.get_global_rect().end.y,"HIL return stays below independent clip")
 	t.check(layouts == 12,"HIL complete native chapter layout coverage")
 	t.check(panel.figures.all(func(item: Control) -> bool: return not item.is_processing() and not item.is_physics_processing()),"HIL passive diagrams have no processing tick")
 	t.root.size = Vector2i(1920,1080)

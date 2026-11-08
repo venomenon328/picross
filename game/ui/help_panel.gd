@@ -1,12 +1,33 @@
-extends VBoxContainer
+extends Control
 ## One transient help visit; editorial navigation never touches a game session.
 const Example = preload("res://ui/help_example.gd")
 const Examples = preload("res://ui/help_examples.gd")
-const BookButton = preload("res://ui/book_button.gd")
+const BookButton = preload("res://ui/help_chapter_button.gd")
+const Text = preload("res://ui/ui_text.gd")
 const TITLES = ["Spielprinzip","Farbige Rätsel","Bedienung","Lösungstipps"]
 var app: Control
 var chapter: int = 0
-var navigation: GridContainer
+# A measured paragraph column, independent of the wider diagram area.
+class CopyColumn extends Container:
+	var maximum: float = 0
+	func _get_minimum_size() -> Vector2:
+		return Vector2(0,get_child(0).get_combined_minimum_size().y)
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_SORT_CHILDREN:
+			fit_child_in_rect(get_child(0),Rect2(Vector2.ZERO,Vector2(minf(size.x,maximum),size.y)))
+
+var navigation: Control
+var scroll: ScrollContainer
+var article: VBoxContainer
+var copy_columns: Array[CopyColumn] = []
+var compact: bool = false
+var ui_scale: float = 1.0
+var paragraph_width: float = 0
+var layout_size := Vector2.ZERO
+var layout_scale: float = 0
+var reading_anchor: Dictionary = {}
+var restore_frames: int = 0
+var advances: Dictionary = {}
 var buttons: Array[Button] = []
 var chapters: Array[VBoxContainer] = []
 var figures: Array[Control] = []
@@ -16,9 +37,16 @@ func configure(owner: Control) -> void:
 	app = owner
 	mouse_filter = MOUSE_FILTER_PASS
 	size_flags_horizontal = SIZE_EXPAND_FILL
-	navigation = GridContainer.new()
-	navigation.columns = 2
+	navigation = Control.new()
 	add_child(navigation)
+	scroll = ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.mouse_force_pass_scroll_events = false
+	scroll.follow_focus = true
+	add_child(scroll)
+	article = VBoxContainer.new()
+	article.size_flags_horizontal = SIZE_EXPAND_FILL
+	scroll.add_child(article)
 	for i: int in range(TITLES.size()):
 		var button := BookButton.new()
 		button.text = TITLES[i]
@@ -33,13 +61,14 @@ func configure(owner: Control) -> void:
 		var page := VBoxContainer.new()
 		page.name = "help-chapter-"+str(i)
 		page.size_flags_horizontal = SIZE_EXPAND_FILL
-		add_child(page)
+		article.add_child(page)
 		chapters.append(page)
 	principle()
 	colors()
 	operation()
 	tips()
 	choose(0)
+	set_process(false)
 	set_ui_scale(app.ui_scale)
 
 func heading(text: String, fs: int = 22) -> Label:
@@ -54,11 +83,16 @@ func heading(text: String, fs: int = 22) -> Label:
 	return item
 
 func paragraph(parent: Node, text: String) -> Label:
-	var item: Label = app.label(text,16)
+	var item: Label = app.label(text,20)
 	item.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	item.size_flags_horizontal = SIZE_EXPAND_FILL
 	item.mouse_filter = MOUSE_FILTER_IGNORE
-	parent.add_child(item)
+	var column := CopyColumn.new()
+	column.size_flags_horizontal = SIZE_EXPAND_FILL
+	column.mouse_filter = MOUSE_FILTER_IGNORE
+	column.add_child(item)
+	parent.add_child(column)
+	copy_columns.append(column)
 	return item
 
 func section(index: int, caption: String, text: String) -> void:
@@ -169,20 +203,103 @@ func choose(index: int) -> void:
 	for i: int in range(chapters.size()):
 		chapters[i].visible = i == index
 		buttons[i].selected = i == index
-	var scroll: Node = get_parent()
-	if scroll is ScrollContainer: scroll.scroll_vertical = 0
+	reading_anchor = {}
+	restore_frames = 0
+	set_process(false)
+	scroll.scroll_vertical = 0
 
 func begin_visit() -> void: choose(0)
 
 func set_ui_scale(value: float) -> void:
-	add_theme_constant_override("separation",roundi(16*value))
-	navigation.add_theme_constant_override("h_separation",roundi(12*value))
-	navigation.add_theme_constant_override("v_separation",roundi(8*value))
+	if value != ui_scale: remember_reading()
+	ui_scale = value
+	article.add_theme_constant_override("separation",roundi(20*value))
 	for button: BookButton in buttons:
 		button.ui_scale = value
+		button.add_theme_font_size_override("font_size",roundi(20*value))
 		button.custom_minimum_size = Vector2(44,44)*value
 	for box: Node in find_children("*","BoxContainer",true,false):
 		box.add_theme_constant_override("separation",roundi((12 if box is HBoxContainer else 8)*value))
 	for page: VBoxContainer in chapters: page.add_theme_constant_override("separation",roundi(14*value))
 	for item: Control in figures: item.set_ui_scale(value)
 	for icon: TextureRect in icons: icon.custom_minimum_size = Vector2(44,44)*value
+
+	layout_content()
+
+func remember_reading() -> void:
+	if not reading_anchor.is_empty() or chapters.is_empty(): return
+	var offset: float = scroll.scroll_vertical
+	for item: Control in chapters[chapter].get_children():
+		if item.position.y <= offset:
+			reading_anchor = {"item":item,"fraction":(offset-item.position.y)/maxf(1,item.size.y)}
+
+func layout_content() -> void:
+	if scroll == null or size.x <= 0: return
+	var changed: bool = size != layout_size or ui_scale != layout_scale
+	if changed: remember_reading()
+	var u: float = ui_scale
+	var register_width: float = 44*u
+	for button: Button in buttons:
+		button.add_theme_font_override("font",Text.font())
+		button.add_theme_font_size_override("font_size",roundi(20*u))
+		register_width = maxf(register_width,Text.width(button.get_theme_font("font"),button.text,button.get_theme_font_size("font_size"))+24*u)
+	# Average advance of the real copy at its actual font size, rather than
+	# a window breakpoint or a fixed number of assumed monospace pixels.
+	var fs: int = roundi(20*u)
+	if not advances.has(fs):
+		var sample: String = ""
+		for column: CopyColumn in copy_columns: sample += column.get_child(0).text
+		advances[fs] = Text.font().get_string_size(sample,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x/maxi(1,sample.length())
+	var advance: float = advances[fs]
+	# The upper target leaves room for word-boundary raggedness (usually
+	# 60–75 actual characters). Two AA pixels separate register and article.
+	paragraph_width = ceilf(75*advance)+4*u
+	var diagram_width: float = 0
+	for item: Control in figures: diagram_width = maxf(diagram_width,item.get_combined_minimum_size().x)
+	var gutter: float = scroll.get_v_scroll_bar().get_combined_minimum_size().x+4*u
+	compact = size.x < register_width+34*u+maxf(paragraph_width,diagram_width)+gutter
+	var article_x: float = 0
+	var article_y: float = 0
+	if compact:
+		var pen := Vector2.ZERO
+		for button: Button in buttons:
+			var width: float = maxf(44*u,Text.width(button.get_theme_font("font"),button.text,button.get_theme_font_size("font_size"))+24*u)
+			if pen.x > 0 and pen.x+width > size.x:
+				pen.x = 0
+				pen.y += 48*u
+			button.position = pen
+			button.size = Vector2(width,44*u)
+			pen.x += width+8*u
+		article_y = pen.y+56*u
+		navigation.size = Vector2(size.x,article_y-8*u)
+	else:
+		for i: int in range(buttons.size()):
+			buttons[i].position = Vector2(0,i*52*u)
+			buttons[i].size = Vector2(register_width,44*u)
+		navigation.size = Vector2(register_width,4*52*u)
+		article_x = register_width+34*u
+	var target := Rect2(Vector2(article_x,article_y),Vector2(size.x-article_x,maxf(1,size.y-article_y)))
+	if scroll.get_rect() != target and not changed:
+		remember_reading()
+		changed = true
+	scroll.position = target.position
+	scroll.size = target.size
+	for column: CopyColumn in copy_columns:
+		column.maximum = paragraph_width
+		column.queue_sort()
+	layout_size = size
+	layout_scale = u
+	if changed:
+		restore_frames = 4
+		set_process(true)
+
+func _process(_delta: float) -> void:
+	# Containers settle over several deferred sorts. Keep a semantic paragraph
+	# anchor while width/font changes, including while the help page is hidden.
+	if not reading_anchor.is_empty():
+		var item: Control = reading_anchor.item
+		scroll.scroll_vertical = roundi(item.position.y+reading_anchor.fraction*item.size.y)
+	restore_frames -= 1
+	if restore_frames <= 0:
+		reading_anchor = {}
+		set_process(false)
