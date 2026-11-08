@@ -177,6 +177,7 @@ func run() -> void:
 		check(app.album.visible and app.session == null, "empty/error settings and return usable")
 		check(save_bytes().is_empty(), "empty/error path writes no saves")
 	elif mode == "pages":
+		preload("res://tests/navigation_cases.gd").inventory(self)
 		await preload("res://tests/catalog_layout_cases.gd").run(self)
 		catalog_case("catalog-layout")
 		await preload("res://tests/navigation_cases.gd").catalog(self)
