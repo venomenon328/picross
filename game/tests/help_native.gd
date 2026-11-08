@@ -59,9 +59,21 @@ static func run(t: SceneTree) -> void:
 
 	# One detailed configuration, the others only for the actual content/clip
 	# boundaries. No routes × chapters × resolutions Cartesian replay.
+	# This is a help-layout diagnostic, not a display-preset acceptance test.
+	# ANZ's native monitor watchdog otherwise restores its configured preset
+	# midway through a directly imposed measurement viewport (notably 1440p).
+	var controller: Node = app.display_controller
+	var display_processing: bool = controller != null and controller.is_processing()
+	var prior_mode: int = t.root.mode
+	var prior_borderless: bool = t.root.borderless
+	if controller != null: controller.set_process(false)
+	if OS.get_name() == "Windows":
+		t.root.mode = Window.MODE_WINDOWED
+		t.root.borderless = true
 	var layouts: int = 0
 	for spec: Array in [[1920,1080,1.0],[1280,720,1.25],[2560,1440,1.25]]:
 		t.root.size = Vector2i(spec[0],spec[1])
+		if OS.get_name() == "Windows": DisplayServer.window_set_size(t.root.size)
 		book.set_ui_scale(spec[2])
 		await t.frames(5)
 		for i: int in range(4):
@@ -99,7 +111,10 @@ static func run(t: SceneTree) -> void:
 			t.check(app.info.right_return.get_global_rect().position.y > scroll.get_global_rect().end.y,"HIL return stays below independent clip")
 	t.check(layouts == 12,"HIL complete native chapter layout coverage")
 	t.check(panel.figures.all(func(item: Control) -> bool: return not item.is_processing() and not item.is_physics_processing()),"HIL passive diagrams have no processing tick")
+	t.root.mode = prior_mode
+	t.root.borderless = prior_borderless
 	t.root.size = Vector2i(1920,1080)
+	if controller != null: controller.set_process(display_processing)
 	book.set_ui_scale(1.0)
 	panel.choose(1)
 
