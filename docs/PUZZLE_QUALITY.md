@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 1 · 08.11.2026 · Q-A / [#488](https://github.com/venomenon328/picross/issues/488)**
+**Vertrag 1.0 · Dokumentrevision 4 · 08.11.2026 · Q-A und P-A-V01 / [#488](https://github.com/venomenon328/picross/issues/488)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -15,11 +15,15 @@ ihre eigenen Invarianten. Deren Schemas und Grenzwerte werden hier nicht erneut
 definiert. Bei Widersprüchen vor dem betroffenen Schritt die zuständige Quelle
 klären, keine günstigere Regel auswählen.
 
-Q-A führt weder automatische Farbberechnung noch Adapter-/Spieländerungen ein.
-Die numerische Palettenprüfung bleibt das spätere Ergebnis von **P-A**, ihre
-Werkzeugintegration einschließlich eines geprüften Ausnahmewegs **P-B**.
-Es gibt heute keine beschlossene Delta-E-Grenze oder universelle Zusicherung
-der Farbwahrnehmung. Die visuelle Beurteilung bleibt bereits jetzt Pflicht.
+Der bestehende redaktionelle Vertrag gilt weiter. **§8 ist die durch
+[P-A-M01 ausdrücklich freigegebene](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147)
+Farbprüfregel für neue Rätsel.** Die fachliche Norm ist verbindlich,
+aber **noch kein aktivierter Produktionsvalidator**: Automatische Früh-/Endprüfung,
+Nachweisformate und der geprüfte Ausnahmeweg folgen erst in **P-B**.
+Bis dahin bleibt die vorhandene visuelle Produktionsprüfung maßgeblich;
+kein nicht ausgeführter numerischer Palettentest darf als `pass` gelten.
+Die tatsächlichen Farben und Hinweise sind weiter visuell zu beurteilen.
+Eine universelle Zusicherung der Farbwahrnehmung folgt daraus nicht.
 Abgenommene Bestandsrätsel, versiegelte Pakete, Freigaben, technische
 Regelversionen und historische Bewertungen werden nicht rückwirkend umgedeutet.
 
@@ -87,14 +91,14 @@ redaktionelle Abweichung autorisiert keine materielle Umgestaltung.
 | Q-R01 · Motivtreue und Erkennbarkeit | Produkt §3.3; Design §4.3; Authoring §§2.3/4.1/4.3 | Je Kandidat vor Auswahl sowie nach Reparatur das exakte Raster als verlustfreie Kleinvorschau, ohne Glättung vergrößert und mit Gitter mit Motivvorlage/Abschlussbild vergleichen. Farbe soll selbst ein erkennbares Bild ergeben; bei Mono darf die farbige Enthüllung die stärkere Abstraktion auflösen. In beiden Fällen müssen Hauptform, Perspektive und Identität nachvollziehbar zusammengehören. |
 | Q-R02 · Hauptformen, Negativräume und gezielte Details | Produktion §6; Authoring §§4.3–4.4 | An denselben Ansichten zusammenhängende Hauptformen, Proportionen, notwendige Öffnungen und Einzelzellen auf Motivfunktion prüfen. Ein Auge darf eine Zelle sein; eine wichtige Öffnung darf nicht für leichteren Solvererfolg verschwinden. Zufällige Artefakte und überladene Kleinstflächen konkret markieren. |
 | Q-R03 · Flächennutzung und Innenleerlinien | Authoring §4.3 | Je Kandidat Belegung, isolierte Einzelzellen und vollständig leere Innenzeilen/-spalten erfassen und ansehen. Die bisherigen 15-/85-%-Belegungswerte bleiben ausschließlich Prüfanlässe: weder automatische Ablehnung noch Rechtfertigung für Strecken, Randpixel oder blindes Entfernen von Leerstreifen. Motivischen Nutzen beziehungsweise störende Wirkung begründen. |
-| Q-R04 · Tatsächlich verwendete Palette, alle Farbpaare | Authoring §§2.1/4.3; #488 | Früh bei Paletten-/Rastervergleich und am endgültigen Raster sämtliche verwendeten Vordergrund-IDs samt Farbwerten paarweise visuell beurteilen, auch seltene und unbenachbarte Farben. Unterschiede müssen deutlich sichtbar sein; keine zusätzliche Farbe allein für Solvererfolg oder Verfügbarkeit. Unbenutzte Einträge nicht als verwendete Farben zählen. Kleine Darstellung und Q-H01/Q-H02 mitprüfen; ähnliche Schattierungen konkret nennen. Numerische Prüfung ausdrücklich erst P-A/P-B, heute kein erfundener Validator. |
+| Q-R04 · Tatsächlich verwendete Palette, alle Farbpaare | Authoring §§2.1/4.3; #488 | Früh bei Paletten-/Rastervergleich und am endgültigen Raster sämtliche verwendeten Vordergrund-IDs samt Farbwerten paarweise visuell beurteilen, auch seltene und unbenachbarte Farben. Unterschiede müssen deutlich sichtbar sein; keine zusätzliche Farbe allein für Solvererfolg oder Verfügbarkeit. Unbenutzte Einträge nicht als verwendete Farben zählen. Kleine Darstellung und Q-H01/Q-H02 mitprüfen; ähnliche Schattierungen konkret nennen. §8 konkretisiert die vorgeschlagene numerische Diagnose und Bindung; noch kein aktiver Produktionsvalidator. |
 
 ### 3.4 Hinweisansicht und Spielstruktur
 
 | ID / Kriterium | Herkunft | Methode und Zeitpunkt |
 | --- | --- | --- |
-| Q-H01 · Farb- und Zelllesbarkeit auf Papier | [Zeichenstil ZS-D02/03/05](UI_DRAWING_STYLE.md); Design §§2/4.4; #488 | Vor Endabnahme die tatsächliche Rasterpalette in repräsentativer Zell-/Hinweisgröße einschließlich kleiner Darstellung auf dem aktuellen Papier unter vorhandener Kontur und Schraffur beurteilen. Vordergrundfarben, Leergrund, Nachbarzellen und Fünferlinien müssen erkennbar bleiben. Große isolierte Farbfelder reichen nicht. Farbsinnsimulation, soweit verfügbar, nur ergänzend mit Methode/Grenzen angeben. |
-| Q-H02 · Lesbare Hinweisziffern und Farbzuordnung in allen Zuständen | [Hinweistypografie](CLUE_TYPOGRAPHY.md), [Hinweisstatus](CLUE_STATUS.md), [ZS-D01](UI_DRAWING_STYLE.md) | Vor Endabnahme wirkliche ein-/mehrstellige Hinweise beider Achsen in normalem, abgeschwächtem und zusätzlich ausgekreuztem Zustand prüfen; aktuelle Schrift, C1-Kontur und Papier verwenden. Zahl und Farbzugehörigkeit müssen auch klein erkennbar bleiben. Fehlende Darstellungsmöglichkeit als `nicht geprüft` melden, keine Sichtprüfung aus Proof/Dateihash ableiten. |
+| Q-H01 · Farb- und Zelllesbarkeit auf Papier | [Zeichenstil ZS-D02/03/05](UI_DRAWING_STYLE.md); Design §§2/4.4; #488 | Vor Endabnahme die tatsächliche Rasterpalette in repräsentativer Zell-/Hinweisgröße einschließlich kleiner Darstellung auf dem aktuellen Papier unter vorhandener Kontur und Schraffur beurteilen. Vordergrundfarben, Leergrund, Nachbarzellen und Fünferlinien müssen erkennbar bleiben. Große isolierte Farbfelder reichen nicht. Farbsinnsimulation, soweit verfügbar, nur ergänzend mit Methode/Grenzen angeben. Auch eine positive Diagnose nach dem Vorschlag §8 ersetzt dieses Sichturteil nicht. |
+| Q-H02 · Lesbare Hinweisziffern und Farbzuordnung in allen Zuständen | [Hinweistypografie](CLUE_TYPOGRAPHY.md), [Hinweisstatus](CLUE_STATUS.md), [ZS-D01](UI_DRAWING_STYLE.md) | Vor Endabnahme wirkliche ein-/mehrstellige Hinweise beider Achsen in normalem, abgeschwächtem und zusätzlich ausgekreuztem Zustand prüfen; aktuelle Schrift, C1-Kontur und Papier verwenden. Zahl und Farbzugehörigkeit müssen auch klein erkennbar bleiben. Fehlende Darstellungsmöglichkeit als `nicht geprüft` melden, keine Sichtprüfung aus Proof/Dateihash oder positivem Paarwert (§8) ableiten. |
 | Q-H03 · Spiel-/Hinweisstruktur und Arbeitsumfang | Produkt §§3.2/5; Produktion §7.1; Authoring §§4–5 | Nach finalem Proof vor Endabnahme tatsächliche Hinweisfolgen, Farbabhängigkeiten, Kleinteiligkeit, Engstellen und Umfang anhand des gebundenen Verlaufs beschreiben. Keine pauschale Abwertung vieler kleiner Zahlen/Farben, kein hoher Schwierigkeitsgrad allein aus Größe/Laufzeit. Die gebundene Bewertung ist separat H-06; Probespielen bleibt optional. |
 
 Diese Sichtungen gehören zu den bestehenden Bild-/Motiv-/Endabnahmen. Sie
@@ -218,3 +222,321 @@ Schritt mit §2/§4–6. Ergebnisse kompakt im Liefer-PR führen, unabhängigem 
 zugänglich; keine dauerhaften Beispielbilder, technischen Uploads oder neue
 Testfamilie. Das prüft den redaktionellen Entscheidungsvertrag, keine
 Farbmetrik, Bildqualität oder Adapterfunktion. P-A/P-B erhalten eigene Nachweise.
+
+## 8. P-A-V01: Freigegebene Regel für paarweise Farbunterscheidbarkeit
+
+### 8.1 Status, Referenzplan und Grenzen
+
+**Verbindliche Regel-ID `picross-palette-separation-1` (Version 1);
+fachlich freigegeben, technisch noch nicht aktiviert.**
+Die frühere Vorschlagskennung `picross-palette-separation-1-draft1`
+bezeichnet die mathematisch **unveränderte** Fassung, deren Formel,
+Quantisierung, Grenzen D=10/15 und Warnzone der Eigentümer
+[für die unveränderten Referenzen vollständig freigegeben hat](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147).
+Die ursprünglichen Referenzbilder und Testrechnungen bleiben nachvollziehbar.
+Die vollständige Originalbildsicht konnte mangels funktionierendem
+Binärzugang nicht erfolgen und wurde ausdrücklich als Merge-Gate erlassen;
+sie wird **nicht** als tatsächlich durchgeführt dargestellt.
+Die unabhängige Quellen-/Rechenprüfung ist im PR #546 dokumentiert.
+
+Die Regel ist ab ihrem Normmerge verbindlicher Sollstand für **neue** Rätsel.
+Automatische Prüfung und ein belastbarer technischer `pass` setzen erst
+die Implementierung von Formaten, Writer/Reader, Früh-/Endprüfung und
+paargebundenem Ausnahmeweg im gesonderten Paket **P-B** voraus.
+Bis dahin bleibt die vorhandene visuelle Produktionsprüfung maßgeblich.
+Authoring 0.5.0, Sheet v2 und versiegelte Altformate werden nicht umbenannt.
+Kein rückwirkendes Gate, keine Neubewertung oder Umfärbung des Bestands.
+
+Der [vor der Auswertung veröffentlichte Plan](https://github.com/venomenon328/picross/issues/488#issuecomment-6720934579)
+bindet `main@059bb003dc761e862b304957143b0dd45d92bb82`, synthetische 40×30-Matrizen,
+alle Farbwerte/Nutzungen und offene Fragen. Plancommit
+`1ac4d44a75af9a604bffcb985c0570954beea761`, `plan.json` SHA-256
+`ebeb0fdd518cc1da23e2ed50a730b9b81e04a8ce2cbf53058e4d670c7b1b74b7`.
+Kein Katalogrätsel oder Bestandsderivat. Die folgende kleine Textreferenz bleibt;
+Originalbilder, Berechnungsscripte und vollständige Paaroutputs sind befristete
+Reviewdaten im separaten Ref gemäß [CI-Vertrag](dev-rules/CI_CONTRACT.md).
+Der Lieferkommentar verlinkt ihren unveränderlichen Belegcommit und das Manifest
+mit Produkt-Head, Dateihashes/Bytes, Bildmaßen und Abruf-/Reproduktionsweg.
+
+Je Liste sind `c01…` aufsteigende Vordergrund-IDs, in Klammern die tatsächlichen
+Nutzungszahlen. Leer: 162 Zellen, außer F07 mit 161; 1.200 Zellen insgesamt.
+Alle ungeordneten Paare werden verglichen, nicht nur Nachbarschaften.
+
+| Familie / Frage | Eingangsfarben in ID-Reihenfolge |
+| --- | --- |
+| F01 · deutlich verschiedene Farbtöne | `#cc3333 (520), #2678bd (518)` |
+| F02 · nahe Schattierungen | `#447799 (520), #487b9d (518)` |
+| F03 · anderer Farbton bei ähnlicher Luminanz | `#b04444 (520), #337744 (518)` |
+| F04 · ähnliche Farbtonrolle, andere Helligkeit | `#284c70 (520), #8bb8e4 (518)` |
+| F05 · helle Farben auf Papier/C1 | `#fff4cf (269), #eadca8 (263), #ffffff (251), #f1d273 (255)` |
+| F06 · dunkle Füllungen/Fünferlinien | `#232b32 (354), #39414a (348), #645248 (336)` |
+| F07 · acht Farben, seltenes unbenachbartes kritisches Paar | `#447799 (159), #dd9944 (158), #995577 (142), #557744 (148), #774433 (152), #778899 (148), #ddddbb (131), #487b9d (1)` |
+| F08 · zurückgehaltene abgestufte Nahpaare | `#447799 (269), #5a8daf (263), #6a9dbf (251), #77aacc (255)` |
+
+F07 c08 sitzt bei (x=39,y=29), ihre direkten Nachbarn sind c02; c01 ist nicht
+benachbart. F08 war bereits im Plan fixiert. Die
+[erste Hypothese](https://github.com/venomenon328/picross/blob/0c740677931dc3e5f38631a94c7b0f91045b4a46/review-evidence/pa-v01/hypothesis.md)
+wurde nach F01–F07 und vor F08-Auswertung veröffentlicht; danach keine Farben
+oder Grenzen passend zum gewünschten Ergebnis geändert. Fragen und eigene
+Beobachtungen sind keine erfundenen Eigentümerurteile.
+
+### 8.2 Tatsächlich ausgeführte native Ansichten
+
+Godot Standard **4.7.2-stable**, Enginecommit
+`ed1daf0bf001b61586d9930840f2f1394092c079`, Windows/OpenGL Compatibility,
+NVIDIA GeForce RTX 3070. Je Familie und Kontext eine reguläre Buch-/Rasteransicht
+und ein isoliertes natives Zahlenpanel: insgesamt 32 Original-PNGs. Das Panel
+ruft denselben `full_view_board.gd`-/`draw_clue_number`-/`clue_typography.gd`-Pfad
+mit gemessener Geometrie auf. Zustände werden dort zur vollständigen Sichtprobe
+explizit eingespeist; dies ist kein H1-Status-/Logiknachweis. Der Produktzeichner,
+Atlas, Schrift und Buchshader sind unverändert. Der Diagnosekatalog verwendet nur
+die fixierten synthetischen Matrizen; keine echten Saves oder Produktionsfreigaben.
+
+| Kontext | Gemessene Zelle | Gemessener Schriftgrad / Slots horizontal × vertikal |
+| --- | --- | --- |
+| 1280×720, UI125, G, Zoomwunsch 24 | F01–06/F08: 13,49 px; F07: 13,40 px | 6; 13×13 px, auch im Panel |
+| 1920×1080, UI100, G, Zoomwunsch 24 | alle 23,69 px | F01–04: 17 / 26×23 px; F05–08: 18 / 25×23 px, jeweils auch im Panel |
+
+Das Raster zeigt reale Atlasfüllungen einschließlich kleiner Detailstufe,
+Schraffur, X, unbekannte Zellen/Papier, normale und Fünferlinien sowie farbige
+Hinweise beider Achsen. Das ergänzende Panel zeigt für jede Farbe `1` und `11`
+jeweils zeilenweise und spaltenweise in OPEN/FILLED/CLOSED auf dem echten
+Buchpapier. FILLED/CLOSED verwenden die bestehenden 60 %, CLOSED das bestehende X.
+C1 wird tatsächlich nach der aktuellen Runtimezuordnung für Farb-IDs 2/4
+angewendet, nicht anhand einer neuen Helligkeitsregel. F05 enthält deshalb
+helle Farben mit und ohne C1. Große Paarfelder im Panel sind nur Orientierung.
+Die Größen sind Messergebnisse dieses endlichen Satzes, keine Kapazitätsgarantie.
+Bei 720p sind Ziffern bereits sehr klein; diese Einschränkung bleibt ausdrücklich
+Teil der Eigentümersichtung und wird nicht durch Vergrößern des Originals verdeckt.
+
+### 8.3 Kandidatenvergleich und begründete Wahl
+
+Verglichen wurden Oklab-Distanz und getrennt relative Luminanz samt Kontrast.
+Quellen: [Ottossons Oklab, aktualisierte lineare sRGB-Matrizen von 2021](https://bottosson.github.io/posts/oklab/)
+und [W3C-Luminanzdefinition](https://www.w3.org/TR/WCAG22/#dfn-relative-luminance).
+Die Distanz berücksichtigt Helligkeit und Farbton gemeinsam; die Luminanzdiagnose
+verwendet `Y=0.2126 R+0.7152 G+0.0722 B` nach sRGB-Linearisierung,
+`C=(max(Y1,Y2)+0.05)/(min(Y1,Y2)+0.05)` und `abs(Y1-Y2)`.
+Diese Werte haben kein zusätzliches Gate und behaupten keine WCAG-Konformität.
+Papier `#faf6ec` und Linie `#343f42` sind nur feste Diagnose-Surrogate;
+der echte beleuchtete Papiergrund variiert. Keine daraus erfundene Pixelmessung.
+
+| Fall / Paar | Oklab D gemäß §8.4, Anzeige auf 6 Stellen | Luminanz-Kontrast unquantisiert | Berechneter Referenzbefund |
+| --- | --- | --- | --- |
+| F01 c01/c02 | 30.055714 | 1.101501 | positiv |
+| F02 c01/c02 | 1.341814 | 1.057795 | negativ |
+| F03 c01/c02 | 22.237602 | 1.028384 | positiv |
+| F04 c01/c02 | 35.939437 | 4.272436 | positiv |
+| F05 c02/c04 (kleinstes Paar) | 5.573296 | 1.077067 | negativ |
+| F05 c03/c04 (weiß/gelb) | 17.642013 | 1.478212 | metrisch positiv; F05 redaktionell angenommen, siehe §8.3.1 |
+| F06 c01/c02 (kleinstes Paar) | 8.714149 | 1.386788 | negativ |
+| F07 c01/c08 (kleinstes von 28 Paaren) | 1.341814 | 1.057795 | negativ, ungeachtet einer einzigen c08-Zelle |
+
+Ein Kontrastgate würde F01/F03 ähnlich wie F02 behandeln, obwohl die Originale
+deutlich andere Farbtöne zeigen. Oklab trennt diese Beispiele. Die frühere
+Implementiererbewertung schwacher F05-Hinweise ist durch das positive
+Eigentümer-Teilfeedback aus §8.3.1 als redaktionelles Urteil ersetzt.
+F05 zeigt nun den ausdrücklich offengelegten konservativen Modellfehlfall:
+metrischer Ausschluss trotz visueller Annahme dieser Referenz. F06 c01/c02
+ist dagegen auch nach Eigentümerurteil unzureichend, obwohl die Zellen durch
+Fugen weiterhin von Linien getrennt bleiben. Die **freigegebene Norm** ist
+**Oklab-Ausschluss plus bestehende visuelle Prüfung mit getrennter
+Einzelfallsemantik nach §6/§8.5**; ihre automatische Durchsetzung folgt erst mit
+P-B. Kontrast/Luminanz bleiben erklärende Diagnosen.
+
+Die vor F08 gewählten runden D-Grenzen 10/15 waren eine konservative
+Arbeitshypothese zwischen dunklen Nahpaaren unter 10 und den deutlich anderen
+Farbtonpaaren über 22; sie sind **inzwischen als Normgrenzen freigegeben**.
+Keine statistisch optimierte Schwelle, keine validierte menschliche Fehlerquote.
+10–15 bleibt bewusst als Unsicherheitszone sichtbar.
+Im zurückgehaltenen Satz ergeben sich ohne Nachjustierung:
+
+| F08-Paar | Exaktes ganzzahliges S gemäß §8.4 | D, Anzeige | Befund |
+| --- | --- | --- | --- |
+| c01/c02 | 5340838202 | 7.308104 | negativ |
+| c01/c03 | 15668070476 | 12.517216 | positiv mit Warnung |
+| c01/c04 | 27850476761 | 16.688462 | positiv |
+| c02/c03 | 2713502054 | 5.209129 | negativ |
+| c02/c04 | 8799172997 | 9.380391 | negativ |
+| c03/c04 | 1739945433 | 4.171265 | negativ |
+
+Die ganze F08-Palette bleibt metrisch negativ. Der Unterschied c01/c03 ist
+weiterhin ein **visueller Warnfall bei einem konkreten Rätsel**, nicht eine
+offene P-A-Normentscheidung; das positive Eigentümer-Teilfeedback zu c01/c04
+bestätigt nur dieses Paar. P-A-M01 hat die **gesamte Regel einschließlich
+Warnzonenbehandlung und F05-Modellfehlfall** inzwischen verbindlich freigegeben.
+Restunsicherheit:
+Schriftgröße, Konturzuordnung, Display/Farbmanagement, Sehvermögen und Kontext
+werden nicht durch einen skalaren Farbraumabstand beschrieben. Keine universelle
+Zugänglichkeitszusage oder neue Symbol-/Musterkennung.
+
+#### 8.3.1 B-01: gebundenes Eigentümer-Teilfeedback und Referenzeinordnung
+
+Quelle ist [P-A-R01 / B-01](https://github.com/venomenon328/picross/pull/546#pullrequestreview-5817832898)
+am geprüften Produkt-Head `3e2bcfbd590a38e1a74764c3a52e88668f20edbe`.
+Der Bericht dokumentiert das Teilfeedback der Eigentümerperson; veröffentlichender
+Akteur `venomenon328`, Berichtszeitpunkt **08.11.2026, 12:15:10 UTC**.
+Zeitpunkt und Umgebung der tatsächlichen Eigentümersichtung sowie die dabei
+einzeln geöffneten Dateien sind nicht separat berichtet. Die folgende Bindung
+ordnet das Feedback dem dort benannten unveränderten Referenzstand zu; sie
+behauptet keine nachträglich ausgeführte Sichtung aller Größen/Zustände.
+
+Gemeinsamer Originalstand: Belegcommit
+`1d5b7e90db4c8843d7737f83411f896ceeee6231`,
+[Manifest mit Datei-SHA-256, Bytes und Bildmaßen](https://github.com/venomenon328/picross/blob/1d5b7e90db4c8843d7737f83411f896ceeee6231/review-evidence/pa-v01/manifest.json).
+Je Familie gelten die Originaldateien
+`review-evidence/pa-v01/originals/Fxx-small-board.png`, `Fxx-small-tokens.png`,
+`Fxx-normal-board.png` und `Fxx-normal-tokens.png`; `Fxx` steht in den folgenden
+Zeilen für genau F05, F06 oder F08. Die Originale bleiben unverändert;
+der Nacharbeitsnachweis im PR bindet sie außen an den neuen Dokument-Head.
+
+| Referenz / Farb- und Paarbindung | Historisch berichtetes Eigentümer-Teilurteil | Getrennte Einordnung |
+| --- | --- | --- |
+| F05, Revision 1; c01 `#fff4cf`, c02 `#eadca8`, c03 `#ffffff`, c04 `#f1d273`; alle sechs Paare unten | „finde ich okay“ zur gezeigten F05-Referenz | Redaktionell positiv als Ganzes. Kein separat erklärtes Urteil zu jedem Paar oder jeder Bilddatei. Die früher behauptete visuelle Ablehnung des weiß/gelben Paars wird nicht fortgeführt; alle metrischen Negativ-/Warnbefunde bleiben erhalten. |
+| F08, Revision 1; c01 `#447799` / c04 `#77aacc`, S `27850476761`, D `16.688462` | „in Ordnung“ | Redaktionell positives Teilurteil zu genau diesem metrisch positiven Paar; weder Annahme der ganzen F08-Palette noch der gesamten Regel. c01/c03 bleibt offen. |
+| F06, Revision 1; c01 `#232b32` / c02 `#39414a`, S `7593640091`, D `8.714149` | c02 soll heller/blasser sein, um sich von c01 zu unterscheiden | Originalpaar unzureichend, konsistent mit `negative`. F06 bleibt unveränderter Negativfall. Keine neue Vergleichsvariante für diese redaktionelle Nacharbeit erforderlich. |
+
+Für F05 unter der unveränderten Berechnung der freigegebenen Regel
+`picross-palette-separation-1` gilt weiterhin:
+
+| Paar | Exaktes S | D, Anzeige | Berechneter Referenzbefund |
+| --- | --- | --- | --- |
+| c01/c02 | 5757002441 | 7.587491 | negativ |
+| c01/c03 | 3569810205 | 5.974789 | negativ |
+| c01/c04 | 14157451021 | 11.898509 | positiv mit Warnung |
+| c02/c03 | 16196735686 | 12.726640 | positiv mit Warnung |
+| c02/c04 | 3106163242 | 5.573296 | negativ |
+| c03/c04 | 31124061110 | 17.642013 | positiv |
+
+**Entscheidung der Nacharbeit: begründete Referenzeinordnung, keine metrische
+Revision.** F05 ist eine visuell angenommene synthetische Referenz mit negativem
+metrischem Gesamtbefund und drei negativen Paaren. Damit ist ein Fehlfall des
+konservativen Ausschlussvorschlags ausdrücklich bekannt. Eine globale Absenkung
+zur nachträglichen Erzeugung eines positiven F05-Werts wäre unbegründet: Das
+damalige Teilfeedback akzeptierte F05 als Referenz, legte aber keine
+alternative Grenze fest und hob die unzureichende F06-Trennung nicht auf.
+Die spätere vollständige [P-A-M01-Freigabe](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147)
+bestätigt Formel, Grenzen 10/15, Quantisierung und Warnzone
+**einschließlich** dieses offengelegten Modellfehlfalls ohne Revision.
+Sämtliche ursprünglichen Paaroutputs bleiben unverändert.
+
+Die Trennung von negativem Messbefund und separater redaktioneller Annahme folgt
+§6. Hier wird **keine Produktionsausnahme erteilt**: Die Referenzen besitzen kein
+freigabefähiges Produktionspaket/Inventar oder Inhaltszertifikat; eine solche
+Bindung wird nicht erfunden. Das historische Teilfeedback wird nicht zu einer ausdrücklich
+paargebundenen P-B-Ausnahme oder zu `pass` ergänzt. Auf Wunsch des
+Eigentümers entsteht **keine zusätzliche formale F05-Ausnahmeakte**. Eine spätere reale Übernahme
+mit negativem Palettenbefund benötigt weiterhin den von P-B implementierten und
+geprüften Ausnahmeweg mit vollständigen §6-Bindungen und harten Inhaltsgates.
+Vorabplan, Bilder und versiegelte Originalbelege werden nicht umgeschrieben.
+P-A-M01 ist für die vollständige Farbregel ausdrücklich erteilt.
+Die frühere Originalzugriffslücke bleibt als Tatsache dokumentiert; der
+Eigentümer hat die vollständige unabhängige Bildoriginalsicht mangels
+funktionierendem Binärzugriff [ausdrücklich erlassen](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147).
+Daraus wird keine tatsächlich ausgeführte Vollsicht. Ein neuer PR-Head
+benötigt weiterhin die aktuellen CI-/Diff-/Quellenchecks, aber keine
+erneute persönliche Farbregel- oder Originalbildabnahme.
+
+### 8.4 Verbindliche Berechnung und Randwerte
+
+Eingang: exakte Kandidatenmatrix mit zulässigen Maßen und stabilen Vordergrund-IDs;
+1–8 **tatsächlich verwendete** IDs mit jeweils opakem `#rrggbb` in sRGB.
+Alle Zellen validieren; unbekannte ID, ungültiges RGB oder null verwendete Farben
+sind Eingabefehler. Leer wird nicht als Farbe oder Paarpartner geprüft. Unbenutzte
+Einträge getrennt melden, nicht in die Paarmenge aufnehmen; dies hebt Authorings
+Bereinigungspflicht nicht auf. Gleiche RGB-Werte verschiedener verwendeter IDs
+ergeben Abstand null und bleiben ein negatives Paar. Eine verwendete Farbe:
+`positive`, Paarzahl 0, schlechtestes Paar/D null; Papierlesbarkeit weiter prüfen.
+
+IDs nach ihrer bestehenden ASCII-Grammatik lexikografisch sortieren. Paare
+`(i,j)` mit `i<j`, lexikografisch nach beiden IDs; bei acht Farben genau 28.
+Keine Nutzungsgewichtung und kein Mittelwert. Für jeden 8-Bit-Kanal `v`:
+
+```text
+c = v / 255
+linear(c) = c / 12.92                         falls c <= 0.04045
+            ((c + 0.055) / 1.055) ** 2.4      sonst
+
+(l,m,s) = M1 * (Rlinear,Glinear,Blinear)
+(L,a,b) = M2 * (l ** (1/3), m ** (1/3), s ** (1/3))
+
+M1 = ((0.4122214708, 0.5363325363, 0.0514459929),
+      (0.2119034982, 0.6806995451, 0.1073969566),
+      (0.0883024619, 0.2817188376, 0.6299787005))
+M2 = ((0.2104542553, 0.7936177850,-0.0040720468),
+      (1.9779984951,-2.4285922050, 0.4505937099),
+      (0.0259040371, 0.7827717662,-0.8086757660))
+
+q = round_half_even(1000000 * (L,a,b))         komponentenweise, ganze Zahlen
+Sij = sum((qi[k] - qj[k]) ** 2 for k=0,1,2)   exakte Ganzzahlarithmetik
+Dij = sqrt(Sij) / 10000                      nur Anzeige
+```
+
+Referenzarithmetik: Python `decimal` im lokalen Kontext Präzision 80,
+`ROUND_HALF_EVEN`, Dezimalkonstanten aus den obigen Zeichenfolgen; Divisionen,
+Potenzen und Einzeloperationen in diesem Kontext. Skalarprodukte von links nach
+rechts mit Startwert Dezimal-0, kein FMA. Kubikwurzel als Potenz mit dem im
+selben Kontext berechneten `1/3`; für 0 Ergebnis 0. Erst am Schluss komponentenweise
+`to_integral_value(ROUND_HALF_EVEN)` für q. Keine vorzeitige Kürzung der
+Matrixkonstanten. Eine alternative Implementierung muss diese q-Werte liefern;
+die unabhängige binary64-Rechnung stimmt für sämtliche fixierten Eingangsfarben
+überein, ist aber keine Zusage für ungeprüfte Rundungsrandfälle.
+Die Koordinatenquantisierung präzisiert H1 um weniger als 0,0002 D; sie ändert
+keinen der 47 Referenzpaarbefunde. Sie gehört ausdrücklich zur freigegebenen Regelversion.
+
+| Exakter Vergleich, ohne Epsilon | Technischer Regelstatus nach P-B-Aktivierung |
+| --- | --- |
+| irgendein S < 10000000000 | `negative`; alle verletzten Paare ausgeben |
+| kein negatives Paar, aber irgendein S < 22500000000 | `positive` mit `borderline`-Warnung und Liste dieser Paare |
+| alle S >= 22500000000 oder genau eine Farbe | `positive`, keine Distanzwarnung |
+
+Gleichheit an 10000000000 ist positiv mit Warnung, an 22500000000 positiv ohne
+Distanzwarnung. Angezeigte gerundete D-Werte entscheiden niemals. Ein negativer
+Gesamtbefund kann zusätzlich Warnpaare enthalten; keines verschweigen.
+Kleinreferenzen: F02 q(c01) = `(547849,-38928,-65872)`,
+q(c02) = `(561264,-38955,-65583)`; S = `180046475`.
+Schwarz q = `(0,0,0)`. Reduzergleichheit separat mit q-Differenz `(100000,0,0)`
+beziehungsweise `(150000,0,0)` prüfen; das sind künstliche Koordinatenproben,
+keine behaupteten exakten sRGB-Farbpaare. Zusätzlich S direkt eine Einheit unter/
+auf/über jeder Grenze prüfen. Diese endlichen Rechenproben sind einmalige
+Akzeptanzbelege, keine neue permanente CI-Familie.
+
+### 8.5 Ablauf, Bindung, Ausgabe und Freigabe
+
+Frühprüfung bei Entwurfs-/Palettenauswahl darf vorläufige Farben verwenden;
+ohne konkrete Matrix/Nutzung muss sie als vorläufig gekennzeichnet bleiben.
+Finale Prüfung liest ausschließlich die endgültige Ist-Matrix und ihre tatsächlich
+verwendete Palette. RGB, ID, Nutzung, Matrix oder Regelstand geändert: jede davon
+abhängige positive Aussage ist veraltet und vollständig neu zu berechnen/binden.
+Hinweise/Proof/Herkunft/Freigaben nach den bestehenden Fachverträgen neu prüfen,
+nicht allein wegen eines guten Palettenwerts als gültig übernehmen.
+
+Der spätere Bericht muss Regel-ID/Version und Normquellstand, Kandidaten-ID/
+Revision, exakte Matrixbindung einschließlich Maße und Zellreihenfolge,
+verwendete IDs/RGB/Nutzungszahlen, unbenutzte Einträge und getrennte Leerzahl binden.
+Paarliste vollständig und kanonisch mit q/S/angezeigtem D; schlechtestes Paar
+nach kleinstem S, Gleichstand nach Paarreihenfolge. Negativ- und Warnpaare nennen
+IDs, Werte, genaue verletzte Regel und Korrekturmöglichkeit. Kein Globalmittel.
+Visuelle Einzelurteile Q-R04/Q-H01/Q-H02 samt Ansichten/Stand separat binden.
+Die tatsächlichen Hash-/Schema-/Writer-/Readerverträge gehören vor Code in P-B;
+hier keine neuen Felder in geschlossene Produktionsformate einschleusen.
+
+Vereinbarte Fehlersemantik für die spätere P-B-Implementierung: `invalid_input` bei ungültiger Domäne/Bindung,
+`aborted` bei Budget-/Prozessabbruch, `error` bei Rechen-/Dateifehler;
+fehlende Prüfung `not_checked`. Keiner dieser Zustände ist `positive`.
+Kein teilweise ausgewerteter Satz als vollständiges Ergebnis. Ein lokaler
+Vergleich dieser Referenzen ist keine ausgeführte Produktionsprüfung.
+
+| Technischer / visueller Stand | Konsequenz nach Aktivierung in P-B |
+| --- | --- |
+| positiv, visuell erfüllt, aktuelle technische Inhaltsgates vollständig | Im bestehenden Auswahlweg grundsätzlich freigabefähig; echte Endabnahme/Integration weiterhin getrennt. |
+| positiv mit Warnung | Betroffene Paare in bestehenden Sicht-/Endabnahmen gezielt beurteilen und Entscheidung belegen. Kein automatisches Ablehnen oder automatisches visuelles Bestehen. |
+| positiv, Q-H01/Q-H02 visuell nicht erfüllt | Korrektur oder konkret gebundene redaktionelle Entscheidung nach §6; kein `content_ready` allein aufgrund des Messwerts. |
+| negatives Paar, auch wenn das Bild gefällt | Überarbeiten/kleinere Palette/neue motivtreue Variante oder als `Sichtungsentwurf – nicht integrationsbereit` zeigen. Kein Umbenennen in `pass`. |
+| negatives Paar plus ausdrückliche Eigentümerausnahme | Befund bleibt negativ. Übernahme erst über den von P-B implementierten/geprüften revisions- und paargebundenen Ausnahmeweg plus alle unveränderten harten Inhaltsgates. Bis dahin keine Freitext-Umgehung. |
+| fehlender Proof, ungeklärte Rechte oder stale/fehlende Bindung | Technischer Blocker unabhängig von Farbe oder redaktioneller Annahme; Diagnose-Sichtung möglich, kein freigabefähiges Sheet-Angebot. |
+
+Ausnahmebindungen folgen §6 einschließlich Regelversion, konkreten Farbpaaren,
+Kandidaten-/Paletten-/Inventarbindung, Begründung, Akteur und UTC-Zeitpunkt.
+Das technische Negativurteil und die separate Annahme bleiben beide sichtbar.
+Keine zusätzliche allgemeine Freigabeschleife oder Pflicht-Probespielrunde.
