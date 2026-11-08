@@ -61,8 +61,8 @@
   ],
   "core_change": null,
   "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
+    "mode": "failure",
+    "purpose": "NAV-A-T01 implementer: diagnose the failing selected native.catalog run at a898b339; retain only staged failure originals, restore none after diagnosis. Not independent R01/M01 acceptance.",
+    "expires": "2026-11-10"
   }
 }
