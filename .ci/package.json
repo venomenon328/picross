@@ -1,26 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/480",
-  "package": "RI-C-F01 / RI-C-V01",
-  "modules": [
-    "tools",
-    "production.catalog",
-    "production.adapter"
-  ],
-  "purpose": "Freigegebene v6-Erstregistrierung und ihre Recovery: phasenweise vollständige Quellenprüfungen, frische lokale Zielprüfungen, synthetische Fremdänderungs-/Abbruchfälle und begrenzte Vergleichsmessungen. tools prüft Quellenzuordnung, Dokumente und Authoring-Snapshot; catalog/adapter prüfen Transaktionen und vollständige Produktionsbindung. Regulärer Windows-Build im Kern.",
-  "omitted": "Keine Änderung an Solver, Bildherstellung, Spiel, nativen Modulen, Toolchain oder Zustellung. production.solver/images, native.*, preflight, delivery und Chromium nicht beauftragt. Keine echten Katalogtests, neue CI-Jobfamilie oder Galerie. Altwriters und Recoverygenerationen bleiben auf ihrem bisherigen vollständigen Prüfweg.",
-  "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_registration_publication.py",
-      "disposition": "change-scoped",
-      "reason": "RI-C-C01–C07: kleine synthetische vollständige Quellen-/Ziel-/Recoveryprüfungen, keine neue Pflicht im CI-Kern."
-    },
-    {
-      "path": "tests/puzzle_production/test_registration_verification.py",
-      "disposition": "change-scoped",
-      "reason": "Vorhandenen RI-B-Positivfall auf fünf RI-C-Grenzen plus unveränderte Journalvalidierungen anpassen; zwei vollständige Produktionsprüfungen bleiben Pflicht."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/488",
+  "package": "Q-A",
+  "modules": [],
+  "purpose": "Verbindlicher redaktioneller Qualitätsvertrag, Authoring-/Fachverweise und Offline-Sheet-Regelwerksnapshot. docs und ci-required prüfen den reinen Dokument-/Sheet-Diff ohne Player-Build. Lokal einmalig UTF-8/LF/Links, Snapshot-/Revisionsgleichlauf, vorhandene Offline-Sheet-Regression und vier endliche synthetische Entscheidungsszenarien Q-A04 prüfen; kompakte Ergebnisse im Draft-PR.",
+  "omitted": "Keine Solver-, Bild-, Adapter-, Spiel-, CI-Code- oder realen Inhaltsänderungen. Daher keine zusätzlichen tools/production.*/native.*-, preflight-, delivery- oder Chromium-Module. Die einmaligen Szenarien prüfen den Dokumentvertrag, keine tatsächliche Bildqualität, Farbmetrik oder technische Zertifizierung. P-A/P-B und unabhängiger PR-Review bleiben getrennt; keine Bestandsprüfung.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
