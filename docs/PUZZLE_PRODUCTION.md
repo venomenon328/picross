@@ -15,6 +15,15 @@ auch ohne vollständigen Kandidaten und gezielte redaktionelle Einzelfallannahme
 Die technischen Invarianten dieses Vertrags und von ZA-1 bleiben zuständig;
 Q-A / #488 führt keine automatische Farbmetrik oder neue Adapterausnahme ein.
 
+Der [P-A-V01-Vorschlag](PUZZLE_QUALITY.md#8-p-a-v01-vorschlag-für-paarweise-farbunterscheidbarkeit)
+konkretisiert paarweise Oklab-Diagnose, Warn-/Fehlerstatus, Ist-Palettenbindung und
+das Verhältnis zur visuellen Freigabe. Die Normfreigabe P-A-M01 und der unabhängige
+Review P-A-R01 bleiben vor Merge offen; keine aktivierte Produktionsregel.
+Früh-/Endprüfung, konkrete Berichts-/Hashformate und geprüfter Ausnahmeweg folgen
+erst mit P-B. Kein neues CLI-/Adapterfeld und keine Umdeutung von Authoring 0.5.0,
+Sheet v2 oder Altfreigaben. Ein späterer positiver Farbwert ersetzt keine Sichtung,
+ein negativer Wert bleibt bei einer zulässigen redaktionellen Annahme negativ.
+
 [Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) führt die aktive Bildbindung und
 den begrenzten Bildupdateweg; [AT-B](AT_B_OWNER_APPROVAL.md) dokumentiert seine
 konkrete Inhaltsfreigabe. Liefer-/Abnahmestände stehen in den jeweiligen Issues/PRs.

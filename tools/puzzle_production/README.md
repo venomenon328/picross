@@ -7,7 +7,12 @@ Sichtungsentwürfe ohne vollständige Qualifikation und gezielte redaktionelle
 Einzelfallentscheidungen. Diese sind keine technischen Zertifikate; Proof,
 Herkunft/Rechte, Datei-/Freigabebindungen und bestehende Adaptergates bleiben
 Pflicht. Q-A führt keinen neuen Farbvalidator, CLI-Schalter oder Ausnahmeweg ein;
-die numerische Palettenregel folgt erst mit P-A/P-B.
+der [P-A-V01-Normvorschlag](../../docs/PUZZLE_QUALITY.md#8-p-a-v01-vorschlag-für-paarweise-farbunterscheidbarkeit)
+ist noch nicht freigegeben oder aktiviert. Er beschreibt Formel, Grenzfall,
+Ist-Palettenbindung und getrennte visuelle Entscheidung. Die tatsächliche
+Werkzeugintegration einschließlich neuer Nachweisformate und eines geprüften
+revisions-/paargebundenen Ausnahmewegs ist erst P-B. Hier existiert weiterhin
+kein Palettenprüfbefehl; alte Formate und versiegelte Belege behalten ihre Semantik.
 
 **AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
