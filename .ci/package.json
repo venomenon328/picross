@@ -21,7 +21,7 @@
     {
       "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Use actual detached header controls and arrow return; preserve all save/retry cases."
+      "reason": "Use actual detached header controls and arrow return; preserve save/retry cases. After count wrapping, scroll metadata pixel/hover/pointer targets into the real clip and restore the measurement offset before the unchanged geometry oracle."
     },
     {
       "path": "game/tests/recent_cases.gd",
@@ -61,8 +61,8 @@
   ],
   "core_change": null,
   "evidence": {
-    "mode": "failure",
-    "purpose": "NAV-A-T01 implementer: diagnose the failing selected native.catalog run at a898b339; retain only staged failure originals, restore none after diagnosis. Not independent R01/M01 acceptance.",
-    "expires": "2026-11-10"
+    "mode": "none",
+    "purpose": null,
+    "expires": null
   }
 }
