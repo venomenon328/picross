@@ -1,11 +1,20 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/488",
-  "package": "P-A-V01",
-  "modules": [],
-  "purpose": "P-A-V01 B-02 / #488: Vollständig vom Eigentümer freigegebene, mathematisch unveränderte Oklab-Farbregel mit finaler Kennung picross-palette-separation-1 korrekt als normativ freigegeben, technisch erst nach P-B aktiviert dokumentieren. Qualitätsvertrag, Authoring 0.5.0 Dokumentrevision 34, Offline-Sheet-Snapshot samt Revisionsanzeigen, Produktions- und Werkzeugquellen konsistent nachführen. Kein Spiel-/Werkzeugcode und keine Formel-/Referenzänderung; docs/ci-required plus gezielte einmalige Konsistenzchecks.",
-  "omitted": "modules=[]: Ausschließlich sechs bestehende Dokument-/Sheet-/Paketplandateien. Keine native.*, production.*, tools, preflight, delivery, Chromium, Player-Build oder neue Bildproduktion. Die vollständige Bildoriginalsicht wurde vom Eigentümer bei fehlendem Binärzugang ausdrücklich erlassen, nicht als ausgeführt ausgewiesen. Keine neuen Dauertests; P-B integriert später automatischen Validator/Writer/Reader und technischen Ausnahmeweg. evidence.mode=none.",
-  "test_changes": [],
+  "package": "P-B1",
+  "modules": [
+    "tools",
+    "production.images"
+  ],
+  "purpose": "P-B1: Decimal80 Oklab core, explicit read-only candidate diagnosis and independent fresh assessment reader. production.images covers existing RP-3/image/candidate paths and five small numeric/reader/CLI regressions; tools covers the necessary single-source import-group audit entry. Regular Windows-x64 core build remains required for tool/CLI code.",
+  "omitted": "No target_adapter, solver, registry, renderer or existing content changes. No production.adapter/solver/catalog, native.*, preflight, delivery, Chromium or visual gallery: import-dispatch reachability explains solver/images source consumers but does not change solver semantics. Automatic early/final gates and exception records remain P-B2. No historical catalog replay or owner visual acceptance required.",
+  "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_images.py",
+      "disposition": "change-scoped",
+      "reason": "Five cheap numeric/domain/binding/CLI tests in existing images module; detect threshold drift, omitted pairs, forged/stale reports and input overwrite. No new generic test family or recurring P-A corpus."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",
