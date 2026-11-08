@@ -40,7 +40,8 @@ class AuthoringSheetTests(unittest.TestCase):
         snapshot = re.search(r'<script type="application/json" id="rulebookData">(.*?)</script>', html, re.S)[1]
         self.assertEqual(json.loads(snapshot).encode('utf-8'), authoring)
         self.assertIn('Standard: main.', html)
-        self.assertIn(f'Snapshot · 0.5.0 / Revision {revision}', html)
+        version = re.search(rb'Version ([0-9.]+)', authoring)[1].decode('ascii')
+        self.assertIn(f'Snapshot · {version} / Revision {revision}', html)
         form = Form()
         form.feed(html)
         form.elements['rulebookData']['textContent'] = snapshot

@@ -261,12 +261,14 @@ def inspect_manual(package, budget):
             package.json(c["bundle"] + "/logic.json") == logic, "Manual clues differ from replayed matrix")
     require(c["proof"] == c["bundle"] + "/certificate/proof.json", "Manual proof selection mismatch")
     puzzle = validate_logic(logic)
+    from .palette_gate import early
+    early(matrix, design, budget=budget)
     proof = load_json(package.file(c["proof"]), puzzle.proof_byte_limit)
     budget.deadline = min(budget.deadline, time.monotonic() + limits["verify_seconds"])
     budget.max_lines = min(budget.max_lines, budget.lines + limits["verify_lines"])
     # The existing independent DAG verifier receives hints/domains, never the matrix.
     if paired:
-        require(h["rulebook"]["version"] == "0.5.0", "Paired manual derivation requires authoring 0.5.0")
+        require(h["rulebook"]["version"] in ("0.5.0", "0.6.0"), "Paired manual derivation requires authoring 0.5.0/0.6.0")
         proof, checked = certification.inspect(puzzle, package.bundle(c["bundle"]) / "certificate", "",
                                                 plan["certification"], budget)
     else:

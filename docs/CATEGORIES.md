@@ -186,6 +186,13 @@ Methodenänderung folgt kein Ratinglauf. Bewertungsmethode, Stufengrenzen und
 
 ## Export und technische Übernahme
 
+Authoring 0.6.0 verwendet zusätzlich die additive
+[ZA-1-v5-Palettenhülle](ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5).
+Kategorie, Runtime und Transaktionsgeneration bleiben gleich. Quellenleser
+akzeptieren die exakten bedingten v5-Felder; vollständige Export-/Eingangs- und
+Stagingprüfungen rekonstruieren den Palettenbefund samt äußerer Ausnahme frisch.
+Altexporte v1–v4 und kompakte Integrationsreceipts erhalten keine neuen Gates.
+
 Der [ZA-1-Adapter](ZA1_ADAPTER.md) verlangt bei neuen Exporten ausdrücklich
 `--category-id <id> --categories content/categories.json`. API: `export(...,
 category_id=..., categories_path=Path(...))`. Keine Ableitung aus Dateiname, Motiv,

@@ -195,14 +195,16 @@ def package(root, entry):
         original["production"]["package_sha256"] = manifest["entry"]["production"]["package_sha256"]
         receipt(manifest, original, manifest["notice_sha256"])
         return original, manifest["notice_sha256"], manifest, set(prefix + "/" + n for n in files)
-    require(manifest.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4") and
+    require(manifest.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5") and
             isinstance(manifest.get("files"), dict) and set(files) == set(manifest["files"]) | {"manifest.json"}, "Invalid/incomplete export inventory")
     legacy = manifest['format'].endswith('-v1')
-    paired = manifest['format'].endswith('-v4')
-    manual = manifest['format'].endswith('-v3') or paired and 'manual_authorization' in manifest
+    palette = manifest['format'].endswith('-v5')
+    paired = manifest['format'].endswith('-v4') or palette and 'deduction' in manifest
+    manual = manifest['format'].endswith('-v3') or (paired or palette) and 'manual_authorization' in manifest
     exact_keys(manifest, {'format','adapter','definition_id','runtime_revision','package_revision','save_slot','stem','definition','reveal',
         'color_mapping','selection','handoff_sha256','inventory_sha256','approval_sha256','technical','editorial_approved','catalog_ready','registered','test_only','files'} |
-        (set() if legacy else {'category_id','categories'}) | ({'manual_authorization'} if manual else set()) | ({'deduction'} if paired else set()))
+        (set() if legacy else {'category_id','categories'}) | ({'manual_authorization'} if manual else set()) | ({'deduction'} if paired else set()) |
+        ({'palette_gate'} if palette else set()))
     require(io.checksum(raw) == entry["production"]["package_sha256"], "Export manifest binding differs")
     for name, checksum in manifest["files"].items():
         require(io.file_hash(root, prefix + "/" + name) == sha(checksum), "Altered export file: " + name)
@@ -212,6 +214,13 @@ def package(root, entry):
             (manifest["format"].endswith("-v1") or manifest["category_id"] == entry["category_id"]), "Export identity/category differs")
     require(all(manifest["files"].get("runtime/" + entry[k]) == entry["production"][k + "_sha256"] for k in ("definition", "reveal")), "Export runtime binding differs")
     inspection = io.json_bytes(io.read(root, prefix + '/inspection.json', 8 * 1024 * 1024), 8 * 1024 * 1024)
+    if palette:
+        from .palette_gate import same
+        same(inspection.get('format'), 'picross-target-inspection-v5', 'Missing v5 inspection')
+        same(inspection.get('palette_gate'), manifest['palette_gate'], 'Export/inspection palette binding differs')
+        exact_keys(manifest['palette_gate'], {'assessment','binding','visual_review','exception','allowed'})
+        require(manifest['palette_gate'].get('allowed') is True and inspection.get('technical') is True,
+                'Registered palette gate is blocked')
     require(isinstance(inspection,dict) and all(k in inspection and inspection[k] == entry['production'][k] for k in ('width','height','mode','difficulty','test_only')) and
             inspection.get('package_revision') == entry['production']['revision'], 'Historical production metadata differs')
     notice_hash=sha(manifest['files'].get('runtime/'+notice_path(entry).removeprefix('game/')))

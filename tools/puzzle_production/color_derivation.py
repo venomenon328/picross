@@ -217,6 +217,8 @@ def inspect_chain(package, auth, budget):
                            "manifest_sha256": file_hash(package.bundle(parent_bundle) / "manifest.json")},
                     "Color fixed parent binding mismatch")
         matrix, count = replay(matrix, design, record, plan, step["protected"], budget)
+        from .palette_gate import early
+        early(matrix, design, budget=budget)
         out = step["output"]
         directory = package.bundle(out["bundle"])
         current, proof, checked = inspect_candidate(directory, out["variant"], budget)

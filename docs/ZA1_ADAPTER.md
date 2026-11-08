@@ -1,5 +1,112 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+## P-B2 · Authoring 0.6.0 und additive Palettengeneration v5
+
+Vertrag vor Code, 08.11.2026, [P-B2 / #488](https://github.com/venomenon328/picross/issues/488).
+Neue Produktionen verwenden 0.6.0 mit dem tatsächlich gebundenen Snapshot.
+0.4.0/0.4.1/0.5.0 und Export v1–v4 behalten ihre ursprünglichen Regeln; sie
+belegen keinen neuen Produktionslauf. Ein nachträglich umbenanntes Paket ist
+kein nachgewiesener Altbestand. Paarprofile und feste manuelle Wege v1–v6
+bleiben auch unter 0.6.0 zulässig. Kein Journal-, Budget- oder Runtimewechsel.
+
+`picross-target-inspection-v5` ist die jeweils bisher passende Inspektion
+einschließlich ihrer bedingten manuellen/Paarnachweise plus genau `palette_gate`.
+`picross-target-export-v5` ist der kategorisierte v2-Export mit genau
+`palette_gate`, optional `manual_authorization` für manuelle Quellen und optional
+`deduction` ausschließlich für Paarprofile. Andere Zusatzfelder sind unzulässig.
+Nur 0.6.0 erzeugt/verlangt v5; Formatdowngrade oder v5 mit altem Snapshot scheitert.
+0.6.0 darf bereits `state=raster_review` zur Diagnose eingelesen werden,
+auch ohne manuelle Ableitung. Diese Lesbarkeit erteilt keine Freigabe; sämtliche
+Inhalts-/Paletten-/Endfreigabegates bleiben für einen Export Pflicht. Damit
+benötigt ein negativer Sichtungsentwurf kein vorgespiegeltes `content_ready`.
+Die bisherigen `tool_identity`-Felder bleiben; nur v5 bindet zusätzlich
+`palette_quality.py` und `palette_gate.py`. Originalbytes/Altidentitäten bleiben.
+
+Die finale Messung verwendet `picross-palette-assessment-v1` mit unveränderter
+Normrevision 4 / Commit `45b8fe697364bf73f4277c8b76f92d5c00400919`.
+Der Adapter rekonstruiert Matrix, Palette/Nutzung, Hinweise, Quellidentität und
+Revision aus dem geprüften Produktionsweg, berechnet alle Paare frisch und
+prüft den Bericht unabhängig. Kein gespeichertes Erfolgsflag oder Hash ersetzt
+diese Prüfung. Ein optionales `handoff.palette_assessment={file,sha256}` wird
+ebenfalls frisch verglichen, nie als Autorität übernommen. Ohne gespeicherten
+Report erzeugt die Inspektion den aktuellen Pflichtbeleg selbst. Vor Ausgabe
+von `content_ready` muss die geschriebene Paketfassung erfolgreich inspiziert
+sein; ihre Phase allein ist kein Prüfbeweis. Fehlende/vorgespiegelte v5-Belege
+im Export werden zurückgewiesen.
+
+`palette_gate` hat exakt `assessment,binding,visual_review,exception,allowed`.
+`assessment` ist der vollständige frisch geprüfte P-B1-Bericht. Kandidaten-ID:
+`source.candidate_id`, andernfalls SHA256 der kanonischen geprüften `source`;
+Kandidatenrevision 1 ist die unveränderte Revision der unterstützten RP-Eingänge.
+`normalized_sha256` bindet die normalisierte Referenzdatei. Die tatsächliche
+Paketrevision und vollständige Ableitung sind zusätzlich in `binding` gebunden.
+`binding` hat exakt `puzzle_id,revision,candidate,source,matrix_hash,logic_hash,
+palette_sha256,source_fingerprint,rulebook,handoff_sha256,inventory_sha256,
+original_zip_sha256`. `candidate` enthält exakt `bundle,variant,source_type` aus
+dem Handoff; `source` ist die rekonstruierte vollständige Inspektionsquelle,
+`rulebook` exakt `version,file,sha256`. Matrix-/Logikhash folgen dem bisherigen
+ZA-1-Vertrag, Palette/Fingerprint dem P-B1-Bericht. ZIP-Hash ist bei Ordnern null
+oder bei Teilkopien der ursprüngliche ZIP-Hash. C(x) sind die bestehenden
+kanonischen UTF-8-JSON-Bytes ohne LF; H(x)=SHA256(C(x)). Dateihashes binden alle
+tatsächlichen Bytes. Kreuzvergleiche verwenden C(x), unterscheiden bool/int.
+
+Bei Farbe verlangt `handoff.palette_review={file,sha256}` einen inventarisierten
+`picross-palette-visual-review-v1`-Record, exakt `format,puzzle_id,revision,
+matrix_hash,logic_hash,palette_sha256,criteria`. Diese Bindungen müssen aktuell
+sein. `criteria` hat exakt `Q-R04,Q-H01,Q-H02`, jedes Urteil exakt
+`result,accepted,actor,timestamp_utc,statement,reason,evidence`.
+`result` ist `erfüllt|Warnung|nicht erfüllt|nicht geprüft`; `accepted` Boolean.
+`actor,statement,reason` sind nichtleere Texte nach ZA-1, Zeit ist gültige UTC;
+`evidence` ist eine nichtleere Liste exakter `{file,sha256}`-Referenzen auf
+inventarisierte Ansichten/Entscheidungsbelege. Nur `erfüllt` oder eine ausdrücklich
+angenommene `Warnung`/`nicht erfüllt` erlaubt den redaktionellen Weg. `nicht
+geprüft` bleibt blockiert. Negative Urteile bleiben lesbar. Software prüft
+Aufzeichnung/Bindung, authentifiziert keine Menschen und erfindet keine Sichtung.
+Mono verwendet hier `visual_review=null`; sein bestehendes visuelles Gate bleibt.
+Die Inspektion führt bei fehlender Farb-Sichtung `visual_review=null` und Blocker,
+damit brauchbare Entwürfe sichtbar bleiben. Vorhandene falsche Records scheitern.
+
+`exception` ist null oder exakt `{record,sha256}`. `record` hat exakt
+`format,binding,negative_pairs,actor,timestamp_utc,statement,reason,
+approval_sha256,test_only`, Format `picross-palette-editorial-exception-v1`.
+`binding` muss dem gesamten aktuellen Gateobjekt entsprechen, `negative_pairs`
+der vollständigen kanonischen P-B1-Negativpaarliste mit IDs/RGB/q/exaktem S und
+Status. Keine Teilmenge, andere Revision oder pauschale Annahme. Texte/UTC nach
+ZA-1; `approval_sha256` bindet die tatsächliche gültige separate Endfreigabe,
+`test_only` ist exakt der Paketscope. Record höchstens 128 KiB, keine weiteren
+Schlüssel. Er wird ausschließlich explizit über `--palette-exception <datei>`
+an `inspect/export` übergeben, muss außerhalb des versiegelten Originals liegen
+und darf keine Links/Reparsepunkte verwenden. Ein unnötiger Record ohne negative
+Paare ist ungültig. Export kopiert die unveränderten Bytes als
+`palette-exception.json`; Hash und Record sind offline erneut zu prüfen.
+Manuelle Autorisierungen und dieser Record dürfen gemeinsam vorliegen und
+ersetzen einander nicht. Keine Originaldatei wird geändert.
+
+`allowed` ist ausschließlich nach vollständiger Berechnung wahr: technischer
+Status positiv oder gültige eng gebundene Ausnahme, dazu erfüllte/ausdrücklich
+angenommene visuelle Urteile. Ein angenommener negativer Messbefund bleibt
+`assessment.status=negative`. Fehlende Endabnahme, Proof, Rechte/Herkunft,
+Bild-/Motivfreigaben, Parameter, Difficulty, Randregel oder Arbeitsbefugnis
+bleiben getrennte Blocker. `technical/catalog_ready` und Export können bei
+gesperrtem Palettengate nicht wahr sein. `invalid_input`, `aborted`, `error`,
+`not_checked` sind kein Erfolg; bestehende 2/4-Fehlerkonventionen bleiben.
+
+`verify-export`, Plan, Register, Rasterersatz und deren Stagingreplay prüfen
+denselben v5-Vertrag. Der bestehende RI-Kontext bindet auch die neuen Dateien
+und Werkzeugbytes, ohne neuen Cache, Guard- oder Recoverybypass. Schnelle
+Quelleninventarleser akzeptieren die additive Hülle; sie ersetzen keinen der
+weiterhin erforderlichen vollständigen Eingangs-/Staging-/Offlineprüfwege.
+Kein neuer Pflichtbeleg für Altproduktion oder kompakte Integrationsreceipts.
+
+Frühdiagnosen laufen bei RP-3 vor Solve/Proof, bei RP-5 vor jeder Bewertung und
+bei festen manuellen Ableitungen spätestens an der rekonstruierten Matrix vor
+dem zugehörigen Endproof-Replay. Sie verwerfen keine negativen Entwürfe und
+verleihen keine Freigabe. Bestehende Vergleichsansichten/Ergebnisse nennen
+konkrete negative und Warnpaare. Alte geschlossene RP-Formate werden nicht um
+neue Pflichtfelder erweitert. Finale v5-Prüfung rekonstruiert immer neu.
+Ohne qualifizierten Kandidaten bleibt der Sichtungsweg mit echten Ansichten,
+Defiziten/Korrekturen und `Raster-Optionen=[]` nach Qualitätsvertrag §§5–6.
+
 **SD2 · 25.10.2026:** [Die neue Schwierigkeitsspezifikation](PUZZLE_DIFFICULTY_V2.md)
 führt einen gesonderten kompatiblen 0.4-Weg ein, dessen technische Lieferung
 SD2-C (#405) und tatsächliche Aktivierung SD2-D (#406) vorbehalten sind. Der
@@ -84,7 +191,7 @@ Ordner oder ein ZIP mit optional genau einem Wurzelordner. Mitgeliefertes HTML,
 Code und historische Archive werden niemals ausgeführt oder weiter entpackt.
 Das Werkzeug ruft weder Netzwerk noch Git-Schreibaktionen auf.
 
-Unterstützt: `picross-authoring-handoff-v2`, Regelwerk 0.4.0/0.4.1/0.5.0,
+Unterstützt: `picross-authoring-handoff-v2`, Regelwerk 0.4.0/0.4.1/0.5.0/0.6.0,
 `picross-authoring-file-inventory-v1` sowie unveränderte RP-3/RP-5-Verträge.
 Redaktionelle Zusatzfelder bleiben erhalten. Pflichtbindungen sind typisiert;
 unbekannte technische Schemas, doppelte JSON-Schlüssel, nichtendliche Zahlen
@@ -269,8 +376,9 @@ beide vollständigen Produktionsprüfungen und B-Bindungen bleiben unabhängig.
 ## Paarprofile, Schwierigkeit 0.2 und Export v4
 
 Der [Paarlinienvertrag](PAIRED_LINES.md) gilt zusätzlich für ausdrücklich gewählte
-Paarprofile. Authoring 0.5.0 samt tatsächlich als 0.5.0 bezeichnetem gebundenem
-Regelwerksnapshot ist Pflicht. Handoff `candidate.certification` muss exakt der
+Paarprofile. Authoring 0.5.0 oder 0.6.0 samt tatsächlich entsprechend bezeichnetem
+gebundenem Regelwerksnapshot ist Pflicht; neue Produktion verwendet 0.6.0/v5.
+Handoff `candidate.certification` muss exakt der
 aus Import/Reparatur/Manuellplan geprüften Konfiguration entsprechen. Alte
 Produktionsformate und 0.4.x-Snapshots weisen diese Nachweise zurück.
 

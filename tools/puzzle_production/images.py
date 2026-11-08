@@ -21,7 +21,7 @@ from .contract import (Aborted, Budget, InvalidInput, digest, exact_keys, intege
                        load_json, validate_logic, write_json)
 from .solver import solve
 from .verifier import verify
-from . import certification
+from . import certification, palette_gate
 
 VERSION = "rp3-image-1"
 PILLOW_VERSION = "12.3.0"
@@ -327,6 +327,7 @@ def inspect_candidate(directory: Path, variant_id: str, budget: Budget | None = 
     wire = logic_from_matrix(c["matrix"], d)
     if wire != load_json(directory / f"{variant_id}-logic.json"):
         raise InvalidInput("Stored clues differ from the final matrix")
+    palette_gate.early(c["matrix"], d, {k: c[k] for k in ("id", "revision", "source_id", "normalized_sha256")}, budget)
     puzzle = validate_logic(wire)
     if paired:
         proof, verified = certification.inspect(puzzle, directory, variant_id + "-", manifest["certification"], budget)
@@ -364,6 +365,8 @@ def comparison(directory: Path, manifest: dict, records: list[dict]) -> None:
                       '<pre>' + esc(status) + '</pre>', '<pre>Kandidat: ' + esc(c["id"]) + '\n' + esc(c["variant"]) + '</pre>',
                       f'<div class="images"><figure><figcaption>1 Pixel je Zelle ({wire["width"]}×{wire["height"]}); Datei in Originalgröße öffnen</figcaption><a href="{name}-raster.png"><img src="{name}-raster.png" alt="Raster bei Zellauflösung"></a></figure>',
                       f'<figure><figcaption>Vergrößert ohne Zwischenfarben</figcaption><img class="cells" src="{name}-raster.png" alt="Diskretes Raster vergrößert"></figure></div>'])
+        if "palette_assessment" in record:
+            parts.append('<pre>Palette (diagnosis, not editorial acceptance): ' + esc(record["palette_assessment"]) + '</pre>')
         for axis, lines in (("Zeilen", wire["row_clues"]), ("Spalten", wire["column_clues"])):
             parts.append(f'<h3>{axis}</h3><table><tr><th>Linie</th><th>Vollständige Hinweise (Länge:Farb-ID)</th></tr>')
             for i, line in enumerate(lines):
@@ -400,6 +403,8 @@ def import_image(source: Path, design_path: Path, output: Path, seconds: float =
             write_json(stage / f"{name}-candidate.json", c)
             write_json(stage / f"{name}-logic.json", wire)
             raster_image(c["matrix"], d).save(stage / f"{name}-raster.png")
+            palette = palette_gate.early(c["matrix"], d,
+                {k: c[k] for k in ("id", "revision", "source_id", "normalized_sha256")}, Budget(seconds, max_lines))
             puzzle = validate_logic(wire)
             started = time.perf_counter()
             if config:
@@ -419,8 +424,10 @@ def import_image(source: Path, design_path: Path, output: Path, seconds: float =
             if status["certified"] and proof["final_domains"] != [[[v] for v in row] for row in c["matrix"]]:
                 raise InvalidInput("Proven final raster differs from intended matrix")
             status["elapsed_seconds"] = time.perf_counter() - started
+            if palette["status"] != "positive" or palette["warning_pairs"]:
+                status["palette_assessment"] = palette
             write_json(stage / f"{name}-result.json", status)
-            records.append({"candidate": c, "logic": wire, "status": status})
+            records.append({"candidate": c, "logic": wire, "status": status, "palette_assessment": palette})
         manifest = {"format": "picross-image-manifest-v1", "versions": versions(), "design": d,
                     "original": original_name, "original_filename": source.name, "normalization": normalization,
                     "limits": {"encoded_bytes": MAX_BYTES, "decoded_pixels": MAX_PIXELS, "source_axis": MAX_AXIS,

@@ -1,18 +1,25 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/488",
-  "package": "P-B1",
+  "package": "P-B2",
   "modules": [
     "tools",
-    "production.images"
+    "production.images",
+    "production.adapter",
+    "production.catalog"
   ],
-  "purpose": "P-B1: Decimal80 Oklab core, explicit read-only candidate diagnosis and independent fresh assessment reader. production.images covers existing RP-3/image/candidate paths and five small numeric/reader/CLI regressions; tools covers the necessary single-source import-group audit entry. Regular Windows-x64 core build remains required for tool/CLI code.",
-  "omitted": "No target_adapter, solver, registry, renderer or existing content changes. No production.adapter/solver/catalog, native.*, preflight, delivery, Chromium or visual gallery: import-dispatch reachability explains solver/images source consumers but does not change solver semantics. Automatic early/final gates and exception records remain P-B2. No historical catalog replay or owner visual acceptance required.",
+  "purpose": "Authoring 0.6.0 automatic early/final palette gates, additive ZA-1 v5, external pair-bound exception and independent export/registration readers. Images covers import/repair diagnostics; adapter the gate and all fixed/paired paths; catalog the new export-reader generation and unchanged transaction/recovery guards. Tools covers CLI/source-graph and offline-sheet contracts. Regular Windows core build required.",
+  "omitted": "No solver algorithms, renderer, runtime, real content or difficulty-method changes. No production.solver, native.*, preflight, delivery or Chromium; import graph reachability via shared CLI is audited, not an automatic full selection. Existing synthetic images/adapter/catalog modules run fully. No new personal reference color acceptance or historical gallery replay.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_images.py",
+      "path": "tests/puzzle_production/test_palette_gate.py",
       "disposition": "change-scoped",
-      "reason": "Five cheap numeric/domain/binding/CLI tests in existing images module; detect threshold drift, omitted pairs, forged/stale reports and input overwrite. No new generic test family or recurring P-A corpus."
+      "reason": "Small synthetic boundary regressions: current/missing/forged evidence, complete exceptions, visual rejection, legacy/new generations and registration. No catalog puzzle copies or permanent gallery."
+    },
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Read current authoring version from authoritative snapshot instead of freezing 0.5.0; retain existing real offline-JS checks."
     }
   ],
   "core_change": null,

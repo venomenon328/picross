@@ -98,6 +98,12 @@ Eine bereits mit Paarprofil geprüfte Referenz darf nicht in einen alten
 Reparatur-/Ableitungsvertrag zurückfallen; auch Zwischenstufen führen die
 ausdrückliche Paarbindung weiter.
 
+P-B2 / #488 führt diese Profilverträge unter **Authoring 0.6.0** unverändert
+fort. Neue Produktionen verwenden dessen tatsächlichen Snapshot und die
+[zusätzliche ZA-1-v5-Palettenhülle](ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5),
+auch bei festen manuellen Ableitungen. Die folgenden 0.5.0-/v4-Bindungen bleiben
+für ihren Altstand gültig; keine Änderung an Profilen, Proofs oder Budgets.
+
 ### Konkrete Produktionsbindungen
 
 Die Konfiguration hat genau drei Schlüssel, beispielsweise
@@ -115,7 +121,7 @@ werden nicht nachträglich zu einer Produktionsfreigabe aufgewertet.
 Handoff-v2 ergänzt `candidate.certification`. `difficulty` bindet Methode 0.2,
 `profile_hash`, `evidence` als Pfad genau dieses Assessments und bei notwendigem
 R4 zusätzlich `logical_demand` mit dem obigen Label. Der neue Regelwerksnapshot
-muss seine Version 0.5.0 selbst ausweisen; eine umbenannte Handoff-Versionsangabe
+muss seine tatsächliche Version 0.5.0 beziehungsweise neu 0.6.0 selbst ausweisen; eine umbenannte Handoff-Versionsangabe
 allein genügt nicht. Die bestehenden Freigabe-/Inventarbindungen bleiben Pflicht.
 
 | Ableitung mit neuem Paarprofil | Neuer technischer Vertrag |
