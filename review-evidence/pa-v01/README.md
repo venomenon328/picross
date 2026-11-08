@@ -39,14 +39,19 @@ git worktree add --detach <eigener-reviewpfad> <belegcommit>
 ```
 
 Alternativ `download_originals.py <belegcommit> <neues-eigenes-ziel>` ausführen:
-ein angemeldeter binärfähiger `gh api` lädt Manifest/PNGs über die Contents API
-mit `Accept: application/vnd.github.raw+json`. Es prüft SHA-256/Bytes, PNG-CRCs,
+Python `urllib` lädt Manifest/PNGs binär von `raw.githubusercontent.com` am
+unveränderlichen Commit. Dieses Repository ist öffentlich, keine Anmeldung nötig.
+Es prüft SHA-256/Bytes, PNG-CRCs,
 IHDR und vollständige IDAT-Dekompression. Danach PNGs im eigenen Bildbetrachter
 **öffnen** und bei 100 % sowie im Zusammenhang beurteilen. Eine GitHub-Vorschau
 oder erfolgreicher Download ist kein persönliches Sichturteil. Über 1 MiB
 liegende Originale nicht über den normalen textgebundenen Contents-Abruf laden;
 ein leeres `content`-Feld bedeutet keinen Bildzugriff. Der Lieferkommentar
 berichtet den tatsächlich getesteten Abrufweg und dessen Kontogrenzen.
+Der lokale Windows-`gh api`-Versuch mit `Accept: application/vnd.github.raw+json`
+scheiterte für PNGs mit `transform: short source buffer`; deshalb diesen Weg
+hier nicht als funktionierend ausgeben. Der direkte binäre HTTP-Abruf ist davon
+unabhängig und wird für alle Originale gesondert geprüft.
 
 ## Einmalige Reproduktion
 

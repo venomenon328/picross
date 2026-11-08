@@ -1,9 +1,11 @@
-"""Binary retrieval, no preview conversion. Requires authenticated gh."""
+"""Public immutable Raw HTTP retrieval, no preview conversion or login."""
 from pathlib import Path
 import hashlib,json,struct,subprocess,sys,zlib
+from urllib.request import urlopen
 from concurrent.futures import ThreadPoolExecutor
 def fetch(commit,path):
- return subprocess.check_output(['gh','api','repos/venomenon328/picross/contents/'+path+'?ref='+commit,'-H','Accept: application/vnd.github.raw+json'])
+ with urlopen('https://raw.githubusercontent.com/venomenon328/picross/'+commit+'/'+path,timeout=60) as response:
+  return response.read()
 def verify_png(data,size):
  assert data[:8]==b'\x89PNG\r\n\x1a\n'
  offset=8;idat=[];dimensions=None;channels=None
@@ -33,8 +35,9 @@ def main():
   (target/Path(item['file']).name).write_bytes(data)
   return item['file']
  with ThreadPoolExecutor(max_workers=4) as pool:files=list(pool.map(one,manifest['originals']))
- report={'source_commit':commit,'product_head':manifest['product_head'],'method':'authenticated gh Contents API Accept raw+json; binary stdout; SHA256/bytes/PNG CRC/IHDR/full IDAT verified',
- 'count':len(files),'bytes':manifest['original_bytes'],'files':files,'account_scope':'implementer venomenon328; no independent recipient account check claimed','visual_opening':'separate image viewer required'}
+ report={'source_commit':commit,'product_head':manifest['product_head'],'method':'public raw.githubusercontent.com immutable commit; urllib binary HTTP; SHA256/bytes/PNG CRC/IHDR/full IDAT verified',
+ 'count':len(files),'bytes':manifest['original_bytes'],'files':files,'account_scope':'no authentication; repository public; no independent personal sighting claimed','visual_opening':'separate image viewer required',
+ 'failed_alternative':'Windows gh api Accept raw+json returned transform: short source buffer for PNGs. No successful binary access claimed for that path.'}
  (target/'access.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
  print('download verified:',len(files),'original PNGs,',manifest['original_bytes'],'bytes')
 if __name__=='__main__':main()
