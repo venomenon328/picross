@@ -1,0 +1,3612 @@
+{
+	"assertions": [
+		{
+			"label": "regular root and real SaveStore",
+			"passed": true
+		},
+		{
+			"label": "regular registry starts catalog",
+			"passed": true
+		},
+		{
+			"label": "unchanged preference identity",
+			"passed": true
+		},
+		{
+			"label": "frozen schema1 history redo and view load exactly",
+			"passed": true
+		},
+		{
+			"label": "valid opening accepted",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "opening reaches bound work",
+			"passed": true
+		},
+		{
+			"label": "opening/capture creates no save",
+			"passed": true
+		},
+		{
+			"label": "actual filesystem failure reported",
+			"passed": true
+		},
+		{
+			"label": "failed flush blocks return before preparation",
+			"passed": true
+		},
+		{
+			"label": "failed flush blocks information before preparation",
+			"passed": true
+		},
+		{
+			"label": "failed quit stays usable with retry",
+			"passed": true
+		},
+		{
+			"label": "failed navigation preserves pending state and primary bytes",
+			"passed": true
+		},
+		{
+			"label": "visible retry commits real slot",
+			"passed": true
+		},
+		{
+			"label": "return after retry accepted",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "capture and return do not rewrite save",
+			"passed": true
+		},
+		{
+			"label": "catalog pending write failure prepared",
+			"passed": true
+		},
+		{
+			"label": "catalog pending failure blocks information with visible retry",
+			"passed": true
+		},
+		{
+			"label": "catalog retry immediately clears feedback and preserves filter",
+			"passed": true
+		},
+		{
+			"label": "catalog information accepts successful retry",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "catalog information returns after retry",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "catalog retry clears feedback without changing primary values",
+			"passed": true
+		},
+		{
+			"label": "second valid slot accepted",
+			"passed": true
+		},
+		{
+			"label": "frozen tool color zoom and clue anchors survive activation",
+			"passed": true
+		},
+		{
+			"label": "cancelled opening restores source binding",
+			"passed": true
+		},
+		{
+			"label": "stale callback cannot revive capture",
+			"passed": true
+		},
+		{
+			"label": "passive opening preserves frozen save bytes",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "opening before wrong-ID negative control",
+			"passed": true
+		},
+		{
+			"label": "wrong session ID invalidates pending capture",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "invalid save blocks only its slot",
+			"passed": true
+		},
+		{
+			"label": "unrelated valid slot still opens",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "switching leaves unrelated bytes unchanged",
+			"passed": true
+		},
+		{
+			"label": "work information accepts durable origin",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "settings to help",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "information returns to bound work",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "options survive without transient camera save",
+			"passed": true
+		},
+		{
+			"label": "HIL help enters from work",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL fresh visit starts principle with four direct chapters",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [1920, 1080, 1.0]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Bild aus Hinweisen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Bild aus Hinweisen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Nonogramm ist ein Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Nonogramm ist ein Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zahlen werden zu Blöcken",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zahlen werden zu Blöcken",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Block besteht aus di",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Block besteht aus di",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Drei Feldzustände",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Drei Feldzustände",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Unbekannt heißt: Hier ha",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Unbekannt heißt: Hier ha",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Unbekannt: freies Papier",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Unbekannt: freies Papier",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gefüllt: ein Feld des Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gefüllt: ein Feld des Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Als leer markiert: ein X",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Als leer markiert: ein X",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Dein erster sicherer Zug",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Dein erster sicherer Zug",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Sieben Felder und die Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Sieben Felder und die Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3 + 1 Leerfeld + 3 = 7 F",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3 + 1 Leerfeld + 3 = 7 F",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zeile und Spalte helfen ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zeile und Spalte helfen ",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Jede Füllung gehört zugl",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Jede Füllung gehört zugl",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 1. Die mittlere Zeile un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 1. Die mittlere Zeile un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 2. Die äußeren Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 2. Die äußeren Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3. In den beiden übrigen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3. In den beiden übrigen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wann ist das Rätsel gelö",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wann ist das Rätsel gelö",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Alle richtigen Füllungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Alle richtigen Füllungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [1920, 1080, 1.0]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Zahl zählt, die Farb",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Zahl zählt, die Farb",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Hinweiszahl bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Hinweiszahl bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gleiche Farbe braucht Ab",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gleiche Farbe braucht Ab",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Aufeinanderfolgende Blöc",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Aufeinanderfolgende Blöc",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Drei rote Felder · ein L",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Drei rote Felder · ein L",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Andere Farben dürfen sic",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Andere Farben dürfen sic",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Verschiedenfarbige Blöck",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Verschiedenfarbige Blöck",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ohne Abstand: Rot 1–3, B",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ohne Abstand: Rot 1–3, B",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mit Abstand: Rot 1–3, Fe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mit Abstand: Rot 1–3, Fe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die kreuzenden Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die kreuzenden Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [1920, 1080, 1.0]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Eintragen und korrigiere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Eintragen und korrigiere",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Werkzeuge stehen rec",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Werkzeuge stehen rec",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Füllen · linke Maustaste",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Füllen · linke Maustaste",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Klicke auf ein unbekannt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Klicke auf ein unbekannt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Rechte Maustaste: Unbeka",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Rechte Maustaste: Unbeka",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Radieren · linke Maustas",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Radieren · linke Maustas",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wähle den Radierer und e",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wähle den Radierer und e",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gerade Linien ziehen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gerade Linien ziehen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Halte die Maustaste gedr",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Halte die Maustaste gedr",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Startest du auf unbekann",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Startest du auf unbekann",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die helle Vorschau zeigt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die helle Vorschau zeigt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Abbrechen statt übernehm",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Abbrechen statt übernehm",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Escape oder die andere M",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Escape oder die andere M",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Farbe wählen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Farbe wählen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Klicke auf ein Farbfeld ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Klicke auf ein Farbfeld ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Rückgängig",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Rückgängig",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der gebogene Rückpfeil n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der gebogene Rückpfeil n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wiederholen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wiederholen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der gebogene Vorwärtspfe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der gebogene Vorwärtspfe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Verkleinern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Verkleinern",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Minus oder das Mausrad n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Minus oder das Mausrad n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Vergrößern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Vergrößern",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Plus oder das Mausrad na",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Plus oder das Mausrad na",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Lange Hinweise lesen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Lange Hinweise lesen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ziehe eine gekürzte Zeil",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ziehe eine gekürzte Zeil",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Einstellungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Einstellungen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Das Menü öffnet die link",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Das Menü öffnet die link",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Anzeigenlegende",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Anzeigenlegende",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Miniatur zeigt deine",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Miniatur zeigt deine",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits – bedeutet: Diese ganze ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales – bedeutet: Diese ganze ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Legende für „Erfüllte Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Legende für „Erfüllte Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Kräftige Zahl: noch nich",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Kräftige Zahl: noch nich",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Blasse Zahl: ein anhand ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Blasse Zahl: ein anhand ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gleich blasse Zahl mit h",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gleich blasse Zahl mit h",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ist „Erfüllte Hinweise m",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ist „Erfüllte Hinweise m",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zurück und später fortse",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zurück und später fortse",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der beschriftete Rückweg",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der beschriftete Rückweg",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Speicherfehler bleiben s",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Speicherfehler bleiben s",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [1920, 1080, 1.0]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 1 · Vollständig bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 1 · Vollständig bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Beginne mit Linien, dere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Beginne mit Linien, dere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 2 · Überlappungen finden",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 2 · Überlappungen finden",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Eine 5 in sieben Feldern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Eine 5 in sieben Feldern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Sicher sind nur die mitt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Sicher sind nur die mitt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3 · Abgrenzen und kreuze",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3 · Abgrenzen und kreuze",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ist die Lage eines volls",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ist die Lage eines volls",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Prüfe danach die kreuzen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Prüfe danach die kreuzen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [1280, 720, 1.25]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Bild aus Hinweisen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Bild aus Hinweisen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Nonogramm ist ein Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Nonogramm ist ein Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zahlen werden zu Blöcken",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zahlen werden zu Blöcken",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Block besteht aus di",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Block besteht aus di",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Drei Feldzustände",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Drei Feldzustände",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Unbekannt heißt: Hier ha",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Unbekannt heißt: Hier ha",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Unbekannt: freies Papier",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Unbekannt: freies Papier",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gefüllt: ein Feld des Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gefüllt: ein Feld des Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Als leer markiert: ein X",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Als leer markiert: ein X",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Dein erster sicherer Zug",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Dein erster sicherer Zug",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Sieben Felder und die Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Sieben Felder und die Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3 + 1 Leerfeld + 3 = 7 F",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3 + 1 Leerfeld + 3 = 7 F",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zeile und Spalte helfen ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zeile und Spalte helfen ",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Jede Füllung gehört zugl",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Jede Füllung gehört zugl",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 1. Die mittlere Zeile un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 1. Die mittlere Zeile un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 2. Die äußeren Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 2. Die äußeren Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3. In den beiden übrigen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3. In den beiden übrigen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wann ist das Rätsel gelö",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wann ist das Rätsel gelö",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Alle richtigen Füllungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Alle richtigen Füllungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [1280, 720, 1.25]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Zahl zählt, die Farb",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Zahl zählt, die Farb",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Hinweiszahl bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Hinweiszahl bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gleiche Farbe braucht Ab",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gleiche Farbe braucht Ab",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Aufeinanderfolgende Blöc",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Aufeinanderfolgende Blöc",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Drei rote Felder · ein L",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Drei rote Felder · ein L",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Andere Farben dürfen sic",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Andere Farben dürfen sic",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Verschiedenfarbige Blöck",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Verschiedenfarbige Blöck",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ohne Abstand: Rot 1–3, B",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ohne Abstand: Rot 1–3, B",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mit Abstand: Rot 1–3, Fe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mit Abstand: Rot 1–3, Fe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die kreuzenden Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die kreuzenden Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [1280, 720, 1.25]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Eintragen und korrigiere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Eintragen und korrigiere",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Werkzeuge stehen rec",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Werkzeuge stehen rec",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Füllen · linke Maustaste",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Füllen · linke Maustaste",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Klicke auf ein unbekannt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Klicke auf ein unbekannt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Rechte Maustaste: Unbeka",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Rechte Maustaste: Unbeka",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Radieren · linke Maustas",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Radieren · linke Maustas",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wähle den Radierer und e",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wähle den Radierer und e",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gerade Linien ziehen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gerade Linien ziehen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Halte die Maustaste gedr",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Halte die Maustaste gedr",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Startest du auf unbekann",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Startest du auf unbekann",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die helle Vorschau zeigt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die helle Vorschau zeigt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Abbrechen statt übernehm",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Abbrechen statt übernehm",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Escape oder die andere M",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Escape oder die andere M",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Farbe wählen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Farbe wählen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Klicke auf ein Farbfeld ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Klicke auf ein Farbfeld ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Rückgängig",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Rückgängig",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der gebogene Rückpfeil n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der gebogene Rückpfeil n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wiederholen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wiederholen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der gebogene Vorwärtspfe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der gebogene Vorwärtspfe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Verkleinern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Verkleinern",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Minus oder das Mausrad n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Minus oder das Mausrad n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Vergrößern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Vergrößern",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Plus oder das Mausrad na",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Plus oder das Mausrad na",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Lange Hinweise lesen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Lange Hinweise lesen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ziehe eine gekürzte Zeil",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ziehe eine gekürzte Zeil",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Einstellungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Einstellungen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Das Menü öffnet die link",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Das Menü öffnet die link",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Anzeigenlegende",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Anzeigenlegende",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Miniatur zeigt deine",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Miniatur zeigt deine",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits – bedeutet: Diese ganze ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales – bedeutet: Diese ganze ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Legende für „Erfüllte Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Legende für „Erfüllte Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Kräftige Zahl: noch nich",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Kräftige Zahl: noch nich",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Blasse Zahl: ein anhand ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Blasse Zahl: ein anhand ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gleich blasse Zahl mit h",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gleich blasse Zahl mit h",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ist „Erfüllte Hinweise m",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ist „Erfüllte Hinweise m",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zurück und später fortse",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zurück und später fortse",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der beschriftete Rückweg",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der beschriftete Rückweg",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Speicherfehler bleiben s",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Speicherfehler bleiben s",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [1280, 720, 1.25]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 1 · Vollständig bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 1 · Vollständig bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Beginne mit Linien, dere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Beginne mit Linien, dere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 2 · Überlappungen finden",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 2 · Überlappungen finden",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Eine 5 in sieben Feldern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Eine 5 in sieben Feldern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Sicher sind nur die mitt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Sicher sind nur die mitt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3 · Abgrenzen und kreuze",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3 · Abgrenzen und kreuze",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ist die Lage eines volls",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ist die Lage eines volls",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Prüfe danach die kreuzen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Prüfe danach die kreuzen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [2560, 1440, 1.25]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Bild aus Hinweisen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Bild aus Hinweisen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Nonogramm ist ein Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Nonogramm ist ein Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zahlen werden zu Blöcken",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zahlen werden zu Blöcken",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ein Block besteht aus di",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ein Block besteht aus di",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Drei Feldzustände",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Drei Feldzustände",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Unbekannt heißt: Hier ha",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Unbekannt heißt: Hier ha",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Unbekannt: freies Papier",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Unbekannt: freies Papier",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gefüllt: ein Feld des Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gefüllt: ein Feld des Bi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Als leer markiert: ein X",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Als leer markiert: ein X",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Dein erster sicherer Zug",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Dein erster sicherer Zug",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Sieben Felder und die Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Sieben Felder und die Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3 + 1 Leerfeld + 3 = 7 F",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3 + 1 Leerfeld + 3 = 7 F",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zeile und Spalte helfen ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zeile und Spalte helfen ",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Jede Füllung gehört zugl",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Jede Füllung gehört zugl",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 1. Die mittlere Zeile un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 1. Die mittlere Zeile un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 2. Die äußeren Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 2. Die äußeren Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3. In den beiden übrigen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3. In den beiden übrigen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wann ist das Rätsel gelö",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wann ist das Rätsel gelö",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Alle richtigen Füllungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Alle richtigen Füllungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [2560, 1440, 1.25]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Zahl zählt, die Farb",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Zahl zählt, die Farb",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Hinweiszahl bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Hinweiszahl bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gleiche Farbe braucht Ab",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gleiche Farbe braucht Ab",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Aufeinanderfolgende Blöc",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Aufeinanderfolgende Blöc",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Drei rote Felder · ein L",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Drei rote Felder · ein L",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Andere Farben dürfen sic",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Andere Farben dürfen sic",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Verschiedenfarbige Blöck",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Verschiedenfarbige Blöck",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ohne Abstand: Rot 1–3, B",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ohne Abstand: Rot 1–3, B",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mit Abstand: Rot 1–3, Fe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mit Abstand: Rot 1–3, Fe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die kreuzenden Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die kreuzenden Zeilen un",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [2560, 1440, 1.25]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Eintragen und korrigiere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Eintragen und korrigiere",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Werkzeuge stehen rec",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Werkzeuge stehen rec",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Füllen · linke Maustaste",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Füllen · linke Maustaste",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Klicke auf ein unbekannt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Klicke auf ein unbekannt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Rechte Maustaste: Unbeka",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Rechte Maustaste: Unbeka",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Radieren · linke Maustas",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Radieren · linke Maustas",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wähle den Radierer und e",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wähle den Radierer und e",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gerade Linien ziehen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gerade Linien ziehen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Halte die Maustaste gedr",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Halte die Maustaste gedr",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Startest du auf unbekann",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Startest du auf unbekann",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die helle Vorschau zeigt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die helle Vorschau zeigt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Abbrechen statt übernehm",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Abbrechen statt übernehm",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Escape oder die andere M",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Escape oder die andere M",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Farbe wählen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Farbe wählen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Klicke auf ein Farbfeld ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Klicke auf ein Farbfeld ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Rückgängig",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Rückgängig",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der gebogene Rückpfeil n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der gebogene Rückpfeil n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Wiederholen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Wiederholen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der gebogene Vorwärtspfe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der gebogene Vorwärtspfe",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Verkleinern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Verkleinern",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Minus oder das Mausrad n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Minus oder das Mausrad n",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Vergrößern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Vergrößern",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Plus oder das Mausrad na",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Plus oder das Mausrad na",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Lange Hinweise lesen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Lange Hinweise lesen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ziehe eine gekürzte Zeil",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ziehe eine gekürzte Zeil",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Einstellungen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Einstellungen",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Das Menü öffnet die link",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Das Menü öffnet die link",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Anzeigenlegende",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Anzeigenlegende",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Die Miniatur zeigt deine",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Die Miniatur zeigt deine",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits – bedeutet: Diese ganze ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales – bedeutet: Diese ganze ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Legende für „Erfüllte Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Legende für „Erfüllte Hi",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Kräftige Zahl: noch nich",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Kräftige Zahl: noch nich",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Blasse Zahl: ein anhand ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Blasse Zahl: ein anhand ",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Gleich blasse Zahl mit h",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Gleich blasse Zahl mit h",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ist „Erfüllte Hinweise m",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ist „Erfüllte Hinweise m",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Zurück und später fortse",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Zurück und später fortse",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Der beschriftete Rückweg",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Der beschriftete Rückweg",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Speicherfehler bleiben s",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Speicherfehler bleiben s",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL direct chapter starts at top",
+			"passed": true
+		},
+		{
+			"label": "HIL no horizontal scroll at [2560, 1440, 1.25]",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 1 · Vollständig bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 1 · Vollständig bestimmt",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Beginne mit Linien, dere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Beginne mit Linien, dere",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 2 · Überlappungen finden",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 2 · Überlappungen finden",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Eine 5 in sieben Feldern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Eine 5 in sieben Feldern",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Mögliche Platzierung gan",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Sicher sind nur die mitt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Sicher sind nur die mitt",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits 3 · Abgrenzen und kreuze",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales 3 · Abgrenzen und kreuze",
+			"passed": true
+		},
+		{
+			"label": "HIL explicit small information heading role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Ist die Lage eines volls",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Ist die Lage eines volls",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL wrapped label fits Prüfe danach die kreuzen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested text scales Prüfe danach die kreuzen",
+			"passed": true
+		},
+		{
+			"label": "HIL nested normal text role",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL readable native diagram within paper",
+			"passed": true
+		},
+		{
+			"label": "HIL final chapter content reachable",
+			"passed": true
+		},
+		{
+			"label": "HIL return stays below independent clip",
+			"passed": true
+		},
+		{
+			"label": "HIL complete native chapter layout coverage",
+			"passed": true
+		},
+		{
+			"label": "HIL passive diagrams have no processing tick",
+			"passed": true
+		},
+		{
+			"label": "HIL help retains a nonzero reading position",
+			"passed": true
+		},
+		{
+			"label": "HIL editorial input preserves session history view and save",
+			"passed": true
+		},
+		{
+			"label": "HIL switches to settings",
+			"passed": true
+		},
+		{
+			"label": "HIL content participates in moving book captures",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL returns to help in same visit",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL chapter and scroll survive settings pan",
+			"passed": true
+		},
+		{
+			"label": "HIL returns to bound puzzle",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL work origin preserves all durable state",
+			"passed": true
+		},
+		{
+			"label": "HIL opens bound catalog",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL help enters from catalog",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL new catalog visit resets chapter and scroll",
+			"passed": true
+		},
+		{
+			"label": "HIL catalog return accepted",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL catalog context and capture lifetime preserved",
+			"passed": true
+		},
+		{
+			"label": "HIL restores test work origin",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "final work return",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "backup-only load stays write blocked",
+			"passed": true
+		},
+		{
+			"label": "backup can be viewed",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "read-only backup can open settings",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "backup-only write requires confirmation",
+			"passed": true
+		},
+		{
+			"label": "information recovery remains on reachable left paper",
+			"passed": true
+		},
+		{
+			"label": "backup-only quit preserves bytes and exposes recovery",
+			"passed": true
+		},
+		{
+			"label": "confirmed recovery remains ID bound",
+			"passed": true
+		},
+		{
+			"label": "null session context",
+			"passed": true
+		},
+		{
+			"label": "empty and invalid catalogs distinct",
+			"passed": true
+		},
+		{
+			"label": "null session settings reachable",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "null session help reachable",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL direct operation without any session",
+			"passed": true
+		},
+		{
+			"label": "null session catalog return",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "null session returns without retained resources",
+			"passed": true
+		},
+		{
+			"label": "null session context",
+			"passed": true
+		},
+		{
+			"label": "empty and invalid catalogs distinct",
+			"passed": true
+		},
+		{
+			"label": "null session settings reachable",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "null session help reachable",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "HIL direct operation without any session",
+			"passed": true
+		},
+		{
+			"label": "null session catalog return",
+			"passed": true
+		},
+		{
+			"label": "bounded motion settled",
+			"passed": true
+		},
+		{
+			"label": "null session returns without retained resources",
+			"passed": true
+		},
+		{
+			"label": "null session starts final preparation",
+			"passed": true
+		},
+		{
+			"label": "null session native close invalidates preparation",
+			"passed": true
+		}
+	],
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"passed": true
+}
