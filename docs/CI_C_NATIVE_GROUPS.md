@@ -1,5 +1,24 @@
 # Native Prüfmodule und Originalnachweise
 
+## HIL-REG-A / #548: festes Kapitelregister
+
+Bei ausgewähltem `native.catalog` prüft der bestehende `catalog/information`-
+Prozess die vier Kapitel per Pointer und Fokus-Accept, aktiven stabilen Unterstrich
+mit unabhängig bedienbarem Fokus, gemessenen breiten/kompakten Umbruch und eine engere
+Papierfläche mit mehrzeiliger Leiste. Registerrechtecke bleiben beim Scrollen
+fest; Artikelende, vollständige passive Diagramme, begrenzte Absatzspalte,
+Einstellungenrückkehr und UI100→125→100-Leseanker werden geprüft. Bestehende
+BTI-/HIL-TYPO-Assertions bleiben; Titelzentrierung bezieht sich auf die ganze
+Hilfepapierfläche, nicht auf die versetzte Artikelspalte. Keine neue Prozess-,
+Ergebnis- oder Dauerbildfamilie. `help_native.gd` passt nur die Containment-
+und untere Navigationsannahmen des ausdrücklich manuellen Lifecycle an.
+Seine Fenstermaßprobe pausiert den nativen Display-Presetwächter während der
+direkt gesetzten Messflächen und stellt ihn danach wieder her; sie prüft
+Hilfelayout, nicht die separat abgesicherten ANZ-Anzeigeoptionen.
+Einmalige native Windows-/Buchoriginale und unabhängige/persönliche Gates bleiben
+an die [Paketentscheidung #548](https://github.com/venomenon328/picross/issues/548#issuecomment-6724300292)
+gebunden. Keine Wiederaufnahme des Lifecycle in Standard-CI.
+
 ## AR-A / #486: stabile Abschlussumschaltung
 
 Im vorhandenen EA-native-Prozess prüfen fünf synthetische Kontexte den erst

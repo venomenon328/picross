@@ -16,10 +16,8 @@ func _init(owner: Control) -> void:
 	centred.alignment = BoxContainer.ALIGNMENT_CENTER
 	app.info_scroll.add_child(centred)
 	app.settings_panel.reparent(centred)
-	help_scroll = ScrollContainer.new()
-	help_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	app.information.add_child(help_scroll)
-	app.help_panel.reparent(help_scroll)
+	help_scroll = app.help_panel.scroll
+	app.help_panel.reparent(app.information)
 	old.free()
 	for panel: Control in [app.settings_panel,app.help_panel]:
 		panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -94,7 +92,7 @@ func layout() -> void:
 	app.information.get_node("help-access").visible = left
 	app.information.get_node("settings-access").visible = not left
 	app.info_scroll.visible = left
-	help_scroll.visible = not left
+	app.help_panel.visible = not left
 	settings_heading.visible = left
 	help_heading.visible = not left
 	var heading: ViewTitle = settings_heading if left else help_heading
@@ -107,11 +105,11 @@ func layout() -> void:
 	var nav_top: float = bottom-hit
 	app._place(back,Rect2(Vector2(x,nav_top),Vector2(260*u,hit)))
 	app._place(switch,Rect2(Vector2(edge-210*u,nav_top),Vector2(210*u,hit)))
-	var scroll: ScrollContainer = app.info_scroll if left else help_scroll
+	var scroll: Control = app.info_scroll if left else app.help_panel
 	var content_top: float = top+title_height+16*u
 	app._place(scroll,Rect2(Vector2(x,content_top),Vector2(edge-x,maxf(1,nav_top-16*u-content_top))))
 	app._layout_settings(app.info_scroll.size.x)
-	app.help_panel.add_theme_constant_override("separation",roundi(16*u))
+	if not left: app.help_panel.layout_content()
 	# ScrollContainer itself clamps each independent offset after reflow.
 	if app.get_viewport().gui_get_focus_owner() != null:
 		var focus: Control = app.get_viewport().gui_get_focus_owner()

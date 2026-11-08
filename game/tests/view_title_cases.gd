@@ -28,6 +28,7 @@ static func run(r: SceneTree) -> void:
 		for section: String in ["settings","help"]:
 			app.show_information(section)
 			await r.frames()
+			await r.frames()
 			var heading: Control = app.info.settings_heading if section == "settings" else app.info.help_heading
 			var scroll: ScrollContainer = app.info_scroll if section == "settings" else app.info.help_scroll
 			var back: Control = app.actions["nav-work"] if section == "settings" else app.info.right_return
@@ -35,7 +36,7 @@ static func run(r: SceneTree) -> void:
 			var viewport := Rect2(Vector2.ZERO,app.size)
 			r.check(heading.is_visible_in_tree() and heading.texture != null and not heading.fallback.visible,"BTI: imported image replaces text "+section)
 			r.check(heading.accessibility_name == ("Hilfe" if section == "help" else "Einstellungen"),"BTI: exact semantic information title")
-			r.check(absf(heading.get_global_rect().get_center().x-scroll.get_global_rect().get_center().x) < 1,"BTI: fixed title centres on same safe paper as content")
+			r.check(absf(heading.get_global_rect().get_center().x-(app.info_scroll if section == "settings" else app.help_panel).get_global_rect().get_center().x) < 1,"BTI: fixed title centres on same safe paper as content")
 			r.check(heading.get_global_rect().end.y < scroll.get_global_rect().position.y and scroll.get_global_rect().end.y < back.get_global_rect().position.y,"BTI: title, scroll and bottom navigation do not overlap")
 			for button: Control in [back,switch]:
 				r.check(viewport.encloses(button.get_global_rect()) and button.size.x >= 44*config.z and button.size.y >= 44*config.z,"BTI: visible bottom hit target")
@@ -48,6 +49,7 @@ static func run(r: SceneTree) -> void:
 			var last: Control = app.animation_toggle if section == "settings" else app.help_panel.chapters[app.help_panel.chapter].get_children()[-1]
 			r.check(last.get_global_rect().end.y <= scroll.get_global_rect().end.y+1,"BTI: content end reachable")
 			scroll.scroll_vertical = 0
+			if section == "help": await help_register(r,config.z)
 	# Inspect the actual help labels in the existing information process.
 	app.show_information("help")
 	for scale: float in [1.0,1.25]:
@@ -72,6 +74,21 @@ static func run(r: SceneTree) -> void:
 				r.check(label.get_theme_font_size("font_size") == roundi(base*scale),"HIL-TYPO: base font scales")
 			r.check(chapter_headings > 0,"HIL-TYPO: headings in each chapter")
 		r.check(sizes[22] > 0 and sizes[19] > 0 and corrected and clue_copy,"HIL-TYPO: both roles and exact copy")
+	# A tighter measured paper region exercises wrapping of the same controls,
+	# without adding an unsupported physical-window preset.
+	var panel: Control = app.help_panel
+	var prior: Vector2 = panel.size
+	var figure_width: float = 0
+	for figure: Control in panel.figures: figure_width = maxf(figure_width,figure.get_combined_minimum_size().x)
+	panel.size.x = figure_width+120*app.ui_scale
+	panel.layout_content()
+	await r.frames()
+	await r.frames()
+	r.check(panel.compact and panel.buttons[3].position.y > panel.buttons[0].position.y,"HIL-REG: measured tighter paper wraps compact register")
+	for button: Control in panel.buttons:
+		r.check(panel.get_global_rect().encloses(button.get_global_rect()) and not button.get_global_rect().intersects(panel.scroll.get_global_rect()),"HIL-REG: wrapped entries remain complete above article")
+	panel.size = prior
+	panel.layout_content()
 	# Missing files do not create an empty heading or hard preload failure.
 	for heading: Control in [app.catalog_title,app.info.help_heading,app.info.settings_heading]:
 		heading.load_art("res://art/drawing/view_titles/missing.png")
@@ -82,3 +99,67 @@ static func run(r: SceneTree) -> void:
 	app.size = Vector2(1920,1080)
 	app.set_ui_scale(1.0)
 	app.return_to_work()
+
+static func help_register(r: SceneTree, u: float) -> void:
+	var app: Control = r.app
+	var panel: Control = app.help_panel
+	var scroll: ScrollContainer = panel.scroll
+	var fixed: Array[Rect2] = []
+	for i: int in range(4):
+		var button: Button = panel.buttons[i]
+		fixed.append(button.get_global_rect())
+		r.check(button.text == panel.TITLES[i] and button.size.x >= 44*u and button.size.y >= 44*u,"HIL-REG: full measured chapter targets")
+		r.check(not scroll.is_ancestor_of(button) and panel.get_global_rect().encloses(button.get_global_rect()),"HIL-REG: register outside article and inside paper")
+		r.check(not button.get_global_rect().intersects(scroll.get_global_rect()),"HIL-REG: article never covers register")
+		for j: int in range(i): r.check(not button.get_global_rect().intersects(fixed[j]),"HIL-REG: compact entries do not overlap")
+	r.check(panel.compact == (r.surface.size.x == 1280 and u == 1.25),"HIL-REG: measured narrow fallback versus wide layout")
+	for i: int in range(4):
+		r.click(panel.buttons[i])
+		await r.frames()
+		r.check(panel.chapter == i and scroll.scroll_vertical == 0,"HIL-REG: pointer chapter selection resets article")
+		panel.buttons[(i+1)%4].grab_focus()
+		r.check(panel.buttons[i].selected and panel.buttons[(i+1)%4].has_focus() and not panel.buttons[(i+1)%4].selected,"HIL-REG: focus separate from active underline")
+		var line: Dictionary = panel.buttons[i].underline()
+		panel.buttons[i].queue_redraw()
+		r.check(line == panel.buttons[i].underline(),"HIL-REG: deterministic active underline")
+		# Use the native focused Button's existing accept route as well.
+		var event := InputEventAction.new()
+		event.action = "ui_accept"
+		event.pressed = true
+		r.surface.push_input(event,true)
+		event = event.duplicate()
+		event.pressed = false
+		r.surface.push_input(event,true)
+		await r.frames()
+		r.check(panel.chapter == (i+1)%4,"HIL-REG: focused accept chooses chapter")
+		panel.choose(i)
+		await r.frames()
+		scroll.scroll_vertical = int(scroll.get_v_scroll_bar().max_value)
+		await r.frames()
+		for j: int in range(4): r.check(panel.buttons[j].get_global_rect() == fixed[j],"HIL-REG: entire register fixed at article end")
+		var last: Control = panel.chapters[i].get_children()[-1]
+		r.check(last.get_global_rect().end.y <= scroll.get_global_rect().end.y+1,"HIL-REG: final copy reachable")
+		for figure: Control in panel.figures:
+			if figure.is_visible_in_tree(): r.check(figure.size.x <= scroll.size.x and figure.cell_size == 32*u,"HIL-REG: full passive diagrams fit")
+		r.check(scroll.get_h_scroll_bar().max_value <= scroll.size.x+1,"HIL-REG: no horizontal scroll")
+		for column: Control in panel.copy_columns:
+			if column.is_visible_in_tree(): r.check(column.get_child(0).size.x <= panel.paragraph_width+1,"HIL-REG: measured prose width cap")
+	panel.choose(2)
+	await r.frames()
+	scroll.scroll_vertical = 400
+	await r.frames()
+	var offset: int = scroll.scroll_vertical
+	app._information_section("settings")
+	await r.frames()
+	app._information_section("help")
+	await r.frames()
+	r.check(panel.chapter == 2 and scroll.scroll_vertical == offset,"HIL-REG: settings preserves chapter and reading offset")
+	# No new visit: scaling/reflow uses an article anchor, not raw old pixels.
+	var other: float = 1.25 if u == 1.0 else 1.0
+	app.set_ui_scale(other)
+	await r.frames()
+	await r.frames()
+	app.set_ui_scale(u)
+	await r.frames()
+	await r.frames()
+	r.check(panel.chapter == 2 and abs(scroll.scroll_vertical-offset) <= 2,"HIL-REG: UI roundtrip preserves reading anchor")

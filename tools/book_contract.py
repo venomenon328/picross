@@ -5,7 +5,7 @@ RUNTIME = tuple('game/book/'+name for name in (
     'fold.gdshaderinc', 'paper.png', 'paper.png.import', 'paper.json',
     'leather.png', 'leather.png.import', 'leather.json',
     'table.png', 'table.png.import', 'table.json'))
-HELP_SOURCES = tuple("game/ui/"+name+".gd" for name in ("help_panel", "help_example", "help_examples"))
+HELP_SOURCES = tuple("game/ui/"+name+".gd" for name in ("help_panel", "help_example", "help_examples", "help_chapter_button"))
 SOURCES = (*RUNTIME, *HELP_SOURCES, "game/tests/help_cases.gd", "game/tests/help_native.gd",
            "game/ui/clue_typography.gd", "game/ui/scribble.gd", 'game/tests/book_integration.gd', 'game/tests/book-save-v1.json',
            'game/main.tscn', 'game/ui/main.gd', 'tools/book_contract.py')

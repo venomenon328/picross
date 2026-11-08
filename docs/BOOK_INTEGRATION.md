@@ -157,10 +157,31 @@ Aktuelle Kriterien und Abnahme in [#533](https://github.com/venomenon328/picross
 Der gemeinsame `help_panel` enthält vier direkt anwählbare Kapitel, kurze
 Absätze und passive Lehrdiagramme aus `ui/help_panel.gd`, `help_examples.gd`
 und `help_example.gd`. Die rechte eigene Scroll-/Clipfläche, Papier-/Falzränder,
-obere Rücknavigation und der Meldungsraum aus `information.gd` bleiben Grundlage.
+untere Rücknavigation und der Meldungsraum aus `information.gd` bleiben Grundlage.
 Ein neuer Informationsbesuch setzt Hilfe auf Spielprinzip zurück. Die Kapitelwahl
 zeigt dessen Anfang; ein Pan zu Einstellungen und zurück erhält Kapitel und
 Scrollstand. Das ist transienter Besuchskontext, kein Saveformat oder neue Option.
+
+**HIL-REG-A / #548:** Die vier Kapitelzugänge stehen außerhalb des Artikelclips
+in einem festen, linksbündigen Register. Bei ausreichend gemessener Papierbreite
+liegt es links vom Artikel; andernfalls bilden dieselben Controls eine kompakte,
+bei Bedarf mehrzeilige Leiste darüber. Schriftmetrik, UI-Skala, vollständige
+44/55-px-Trefferflächen, Diagramme und Scrollbarreserve bestimmen den Wechsel.
+Der aktive Eintrag erhält eine stabile leicht unregelmäßige Unterstreichung;
+Hover und Tastaturfokus auf einem anderen Kapitel erhalten denselben
+Unterstrich mit geringerer Deckkraft statt Fläche, Umrandung oder seitlichen
+Fokusstrichen. Nur der Artikel scrollt.
+Die erste vorhandene Abschnittsüberschrift beginnt den Artikel. Pangolin-Absätze
+verwenden 20/25 px bei UI100/125 und sind bei hinreichender Breite auf 75
+mittlere Zeichenbreiten begrenzt (mit Wortumbruch Richtwert 60–75 Zeichen); Lehrbilder dürfen den weiteren Artikelraum nutzen.
+Kapitelwechsel beginnt oben, Einstellungenpan und Reflow erhalten die Lesestelle
+innerhalb des Besuchs. Register, Text und Diagramme bleiben in derselben
+Capturehierarchie. Bildhaupttitel, äußere untere Navigation, Papier/Falz und
+Status-/Retryraum haben Vorrang. Inhalte, Regeln und Besuchsursprung bleiben.
+Die kleine Layout-/Bedienregression läuft bei ausgewähltem `native.catalog` im
+vorhandenen Informationsprozess; die einmaligen Buch-/Windowsbelege und
+getrennten T01/R01/M01-Gates stehen in der
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/548#issuecomment-6724300292).
 
 Alle verschachtelten Labels tragen `base_font` und werden rekursiv skaliert;
 Überschriften erhalten ausdrücklich die Informationsrolle. Auch Kapitelbuttons
