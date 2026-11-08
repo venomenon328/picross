@@ -240,7 +240,7 @@ def _report_target(path, candidate_path):
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(description="Read-only palette diagnosis; automatic gates/exception path only in P-B2.")
+    parser = argparse.ArgumentParser(description="Read-only palette diagnosis; Authoring 0.6.0 final gates use ZA-1 v5 separately.")
     parser.add_argument("command", choices=("check-palette",))
     parser.add_argument("--candidate", type=Path, required=True)
     output = parser.add_mutually_exclusive_group()

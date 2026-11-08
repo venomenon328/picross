@@ -133,8 +133,8 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
         if m.get("format") == integrated_content.FORMAT:
             integrated_content.check(root, e, m)
             continue  # Final integration is checked by runtime hashes, never by production replay.
-        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4"), "Unsupported registered export")
-        if m["format"] in ("picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4"):
+        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5"), "Unsupported registered export")
+        if m["format"] != "picross-target-export-v1":
             require(m.get("category_id") == e["category_id"], "Registered category differs from export")
         if replay:
             from .target_adapter import verify_export

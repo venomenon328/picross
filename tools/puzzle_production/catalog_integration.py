@@ -52,7 +52,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
             "RI-A overrides require mutating new registration, not plan/update")
     from .content_registry import ROOT, export_entry, check_checkout, validate
     from .content_update import notice_path
-    from .target_adapter import verify_export, FORMAT, MANUAL_FORMAT, PAIRED_FORMAT
+    from .target_adapter import verify_export, FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, palette_gate
     root = catalog_io.external(root)
     update = expected_definition_sha256 is not None
     if update: sha(expected_definition_sha256)
@@ -64,7 +64,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     from . import registration_verification as verification
     original_state = verification.inventory(export_dir) if apply and not update else None
     m, report = verify_export(export_dir)  # Existing mandatory full production check.
-    require(m["format"] in (FORMAT, MANUAL_FORMAT, PAIRED_FORMAT), "Category-less legacy export: create a new categorized export")
+    require(m["format"] in (FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, palette_gate.EXPORT), "Category-less legacy export: create a new categorized export")
     require(not m["test_only"] or root != ROOT.resolve(), "Test-only fixtures cannot be registered in the real repository")
     category = categories.lookup(catalog, m["category_id"])
     entry = export_entry(export_dir, m, report, category)

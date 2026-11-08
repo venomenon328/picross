@@ -1,20 +1,82 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+## P-B2: automatische Frühdiagnose und finale Palettengates
+
+Vor Code festgelegter Vertrag, 08.11.2026: [ZA-1 P-B2](../../docs/ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)
+definiert die exakten geschlossenen Pflicht-/Optionalfelder, C(x)/H(x),
+Dateihashes, Fehlerzustände und Kreuzbindungen. Neue Produktionen verwenden
+Authoring 0.6.0 und ausschließlich `picross-target-inspection-v5` /
+`picross-target-export-v5`; 0.4.x/0.5.0 und v1–v4 bleiben unverändert lesbar.
+Der aktuelle Authoring-/Offline-Snapshot weist 0.6.0 selbst aus. Paarprofile und
+manuelle Autorisierungen v1–v6 bleiben zulässig. Kein Legacy-Schalter für neue
+Produktion, kein neuer Solver-/Runtime-/Recoveryvertrag.
+
+RP-3 prüft konkrete Matrizen vor dem Solver, RP-5 vor jeder Bewertung, feste
+manuelle Wege vor dem Endproof-Replay. Die bestehenden Vergleiche zeigen die
+Diagnose; negative Entwürfe bleiben vorhanden. Ein Palettenentwurf ohne Matrix
+ist nur vorläufig. Endprüfung in ZA-1 liest immer den tatsächlichen finalen
+Stand neu. Der unveränderte P-B1-Bericht bindet Normrevision 4 und bleibt die
+Rechenbasis; kein früherer positiver Report wird übernommen.
+
+`palette_gate` enthält genau `assessment,binding,visual_review,exception,allowed`.
+Die vollständige aktuelle Messung entsteht im Adapter selbst; ein optional
+inventarisiertes `palette_assessment={file,sha256}` wird zusätzlich frisch
+verifiziert. `binding` enthält genau `puzzle_id,revision,candidate,source,
+matrix_hash,logic_hash,palette_sha256,source_fingerprint,rulebook,handoff_sha256,
+inventory_sha256,original_zip_sha256` nach ZA-1. V5-Exporte führen dieselbe
+Gatehülle, gegebenenfalls die bisherige `manual_authorization` und bei Paarprofil
+`deduction`. Andere Felder oder Formatdowngrades sind Fehler.
+
+Farbpakete führen im Handoff `palette_review={file,sha256}` auf einen
+inventarisierten `picross-palette-visual-review-v1`-Record. Exakt `format,
+puzzle_id,revision,matrix_hash,logic_hash,palette_sha256,criteria`; die drei
+Kriterien Q-R04/Q-H01/Q-H02 führen je `result,accepted,actor,timestamp_utc,
+statement,reason,evidence`. Ergebniswörter sind die vier deutschen Urteile des
+Qualitätsvertrags. Belege sind nichtleere Listen exakter `{file,sha256}`-Refs.
+Nicht geprüft blockiert; Warnung/negatives Sichturteil braucht ausdrücklich
+`accepted=true` samt tatsächlichem Wortlaut/Begründung. Ein positives S allein
+erteilt keine Sichtfreigabe. Ohne Review bleibt die Diagnose sichtbar und
+gesperrt; Mono hat hier null, sein bisheriges visuelles Gate bleibt Pflicht.
+
+```sh
+python -m tools.puzzle_production.target_adapter inspect --input <paket> --report <neue-diagnose.json>
+python -m tools.puzzle_production.target_adapter inspect --input <paket> --approval <endfreigabe.json> --palette-exception <externe-einzelfallannahme.json>
+python -m tools.puzzle_production.target_adapter export --input <paket> --approval <endfreigabe.json> --palette-exception <externe-einzelfallannahme.json> --name "<Motiv>" --runtime-revision 1 --stem <stamm> --save-slot <slot> --category-id <kategorie> --categories <kategorien.json> --output-dir <neuer-export>
+```
+
+`--palette-exception` ausschließlich bei negativem vollständigem Paarset und
+echter Endfreigabe; mit `--manual-authorization` kombinierbar. Der äußere Record
+`picross-palette-editorial-exception-v1` hat exakt `format,binding,negative_pairs,
+actor,timestamp_utc,statement,reason,approval_sha256,test_only` (maximal 128 KiB).
+Er bindet das vollständige Gate-Binding und alle negativen P-B1-Paarobjekte,
+einschließlich exaktem S/RGB/IDs, plus Endfreigabebytes und Paketscope. Keine
+Links/Reparsepunkte, keine Ablage im Originalpaket. Export liefert ihn unverändert
+als `palette-exception.json`, sein Gatefeld `exception` hat exakt `record,sha256`.
+Die Software authentifiziert keine Menschen; eine tatsächliche Erklärung ist
+weiterhin notwendig. Teilmenge, Freitext, fremde oder mutierte Bindung scheitert.
+Der technische Status bleibt negativ; nur der Palettenredaktionsblocker entfällt.
+
+Vor `content_ready` die geschriebene Paketfassung inspizieren. Die 0.6.0-Diagnose
+liest schon `raster_review`, ohne daraus Bereitschaft abzuleiten. Export verlangt
+`technical=true` und echte Endabnahme. Offline-Reader, Plan/Register und
+Rasterersatz prüfen die Originale und Gatebindung erneut, nicht nur Flags/Hashes.
+Ungültige oder stale Records sind Eingabefehler; Budget-/Prozessabbruch kein
+Erfolg (bestehende Exitcodes 2/4). Rechte, Proof, Bild-/Motivabnahmen, feste
+Parameter, Difficulty, Randregel und Registrierungsauftrag bleiben unabhängig.
+Bei null freigabefähigen Angeboten echte Sichtungsentwürfe mit konkreten
+Defiziten/Korrekturen zeigen; `Raster-Optionen=[]`. Keine neue Oberfläche,
+Bestandsvalidierung, persönliche Referenzabnahme oder dauerhafte Bildgalerie.
+
 **Q-A / #488:** [PUZZLE_QUALITY](../../docs/PUZZLE_QUALITY.md) ist die verbindliche
 redaktionelle Produktionsreferenz, zusammen mit dem
 [Authoringworkflow](../../docs/ai-workflows/PUZZLE_AUTHORING.md). Sie regelt auch
 Sichtungsentwürfe ohne vollständige Qualifikation und gezielte redaktionelle
 Einzelfallentscheidungen. Diese sind keine technischen Zertifikate; Proof,
 Herkunft/Rechte, Datei-/Freigabebindungen und bestehende Adaptergates bleiben
-Pflicht. Q-A führt keinen neuen Farbvalidator, CLI-Schalter oder Ausnahmeweg ein;
-die [P-A-Farbprüfregel](../../docs/PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
-ist vom Eigentümer **fachlich freigegeben**, aber noch **nicht als
-automatischer Werkzeugvalidator aktiviert**. Sie beschreibt Formel, Grenzfälle,
-Ist-Palettenbindung und getrennte visuelle Entscheidung. Die tatsächliche
-automatische Früh-/Endintegration und der geprüfte revisions-/paargebundene
-Ausnahmeweg folgen erst in P-B2. P-B1 liefert die ausdrücklich aufrufbare
-[lesende Diagnose](#p-b1-lesende-palettendiagnose); alte Formate und versiegelte
-Belege behalten ihre Semantik.
+Pflicht. Q-A führt den Qualitätsvertrag; P-A normiert die unveränderte
+Farbregel und P-B1 liefert die lesende Diagnose. P-B2 aktiviert sie unter 0.6.0
+gemäß dem obigen v5-Vertrag. Altformate und versiegelte Belege behalten ihre
+Semantik, tatsächliche Sichtentscheidungen bleiben eigenständig.
 
 ## P-B1: lesende Palettendiagnose
 
@@ -94,13 +156,11 @@ werden ebenfalls ohne Links/Reparsepunkte gelesen. Reportpfade aus fremden
 JSONs werden nie geöffnet. Die CLI prüft den erzeugten Bericht vor Ausgabe
 erneut; optionale Reportdatei wird exklusiv neu angelegt und frisch gelesen.
 
-**Aktivierungsgrenze:** P-B1 ist eine freiwillig ausdrücklich aufrufbare Diagnose
-bei Kandidatenwahl. Keine erzwungene Frühprüfung in Import/Ableitungen und keine
-neuen ZA-1-/Export-/Registrygates; automatische Prüfung, Endbindung und technische
-Ausnahmefreigabe erst P-B2. Negative Entwürfe bleiben als
-`Sichtungsentwurf – nicht integrationsbereit` sichtbar. F05 bleibt metrisch
-negativ bei dokumentierter visueller Referenzannahme, ohne neue pauschale Ausnahme.
-Keine rückwirkende Bestandsprüfung, keine neue Standardausgabe der Produktion.
+**Aktivierungsgrenze:** Die einzelne P-B1-CLI bleibt freiwillige Diagnose,
+kein Zertifikat. Seit P-B2 laufen zusätzlich automatische Frühchecks und das
+verbindliche v5-Endgate für neue 0.6.0-Pakete. F05 bleibt metrisch negativ bei
+historisch dokumentierter visueller Referenzannahme, ohne Produktionsausnahme.
+Keine rückwirkende Bestandsprüfung oder zusätzliche Standard-Erfolgsausgabe.
 
 **AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
@@ -487,9 +547,11 @@ werden nicht angewendet. Ressourcenende ist `aborted`, kein starker Fixpunkt.
 `import-image` erhält dieselbe ausdrückliche `--profile`-Auswahl und Paarbudgets.
 Es schreibt Manifest v2 mit `certification` und je Variante Baseline/Assessment.
 Reparaturen binden diese Konfiguration im [Plan v2](../../examples/rp5/README.md).
-Handoff-v2 bindet sie in `candidate.certification`; Regelwerk 0.5.0 ist Pflicht.
+Handoff-v2 bindet sie in `candidate.certification`; mindestens Regelwerk 0.5.0,
+bei neuer Produktion 0.6.0 mit seinem zusätzlichen v5-Palettengate ist Pflicht.
 Alte Import-/Reparaturmanifeste und Authoring 0.4.x legitimieren keine Paarproofs.
-Neue ZA-1-Exporte verwenden v4, unveränderte Linienfälle weiter v2/v3.
+Die 0.5.0-ZA-1-Exporte verwenden v4, damalige Linienfälle v2/v3;
+0.6.0 verwendet für alle diese Wege ausschließlich v5.
 
 `assess` prüft die übergebenen gespeicherten Proofs frisch. Optionales
 `--diagnosis <A-Verzeichnis>` ergänzt den unveränderten A-Dateicheck, ohne eine
