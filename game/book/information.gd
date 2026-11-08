@@ -32,6 +32,8 @@ func _init(owner: Control) -> void:
 		button.text = ""
 		button.image = load("res://art/book/"+("menu" if id == "settings" else "help")+".svg")
 		button.action_id = "information-"+id
+		button.tooltip_text = ("Einstellungen" if id == "settings" else "Hilfe")+" öffnen"
+		button.accessibility_name = button.tooltip_text
 	settings_heading = ViewTitle.new()
 	app.information.add_child(settings_heading)
 	settings_heading.configure("settings",app.settings_title)
