@@ -1,6 +1,6 @@
 {
   "format": "kl-card-a-review-originals/v1",
-  "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+  "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
   "before_head": "d974886d18ce294c11c2b2467166bae24894e7cb",
   "evidence_branch": "review/547-kl-card-a",
   "purpose": "Independent KL-CARD-A-R01 visual/technical review and owner M01 reference; never merge these files into product/main.",
@@ -58,6 +58,7 @@
         1080
       ],
       "product_head": "d974886d18ce294c11c2b2467166bae24894e7cb",
+      "capture_head": "d974886d18ce294c11c2b2467166bae24894e7cb",
       "bytes": 1783118,
       "sha256": "d45b9058531ca2f0c3441edb7c215ab66f1a3ee7962529644130ec4ff4fbdb82",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -114,6 +115,7 @@
         1440
       ],
       "product_head": "d974886d18ce294c11c2b2467166bae24894e7cb",
+      "capture_head": "d974886d18ce294c11c2b2467166bae24894e7cb",
       "bytes": 2612926,
       "sha256": "93099d623e92203307b2fcfd8d969aae5c4470bab5a5e2f918e6840129bdaa77",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -177,7 +179,8 @@
         1920,
         1080
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 1814183,
       "sha256": "4db8aeb301e5874a35f628067ff261781e7bd93dc8888b45e76815d0d2c1f212",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -243,7 +246,8 @@
         2560,
         1440
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 2822779,
       "sha256": "d4cb6813bb173128dbdc155006f697549552b02bd7e5c73fa61824ba29a17ab8",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -307,7 +311,8 @@
         2560,
         1440
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 2827370,
       "sha256": "75d4adc243afb1334ded17e468e0c317ad552d44f82c6a29c331e6949376e667",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -363,7 +368,8 @@
         1280,
         720
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 1012977,
       "sha256": "dda476172133f86b61a993720edc2ae34f49d850cf433ac31c64134878a1a6dd",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -419,7 +425,8 @@
         1280,
         720
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 1024708,
       "sha256": "fb6fbe00a51da7058c913c007bb26c3c1a11620d00846f2e71439dfa76b933b3",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -479,7 +486,8 @@
         2149,
         1209
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 2154440,
       "sha256": "f9e16d20a3b0f78b5c8ba2d8a0e7ff7bc76f4e7bdb65d5ebd41ac7ee7ccf983f",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -541,7 +549,8 @@
         2166,
         1218
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 2189596,
       "sha256": "fb599a4c4ab65ef923657d4c54fe437e8b1c1fd815115a83ed1c9e7b569656a8",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -603,7 +612,8 @@
         1920,
         1080
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 2159938,
       "sha256": "0588d136bab1152a3f3316297165c5eb8dbffd2a1a271a64d2e16eb2b17a13c4",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -664,7 +674,8 @@
         1920,
         1080
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 2172087,
       "sha256": "036a720ed78a9457ef93f9b286b2ac03f9caebc5fac0f3fb66345a6e3fe6a418",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
@@ -725,7 +736,8 @@
         1920,
         1080
       ],
-      "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+      "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+      "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
       "bytes": 2176758,
       "sha256": "ce30841568bd729286079c2c19d7ebf16170cbad70cd5bd3a821cf38fb21d254",
       "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",

@@ -1,5 +1,6 @@
 {
-  "product_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
+  "product_head": "a050c6dbe862535bd7e940691b42e8cbfe2cd2c7",
+  "capture_head": "e7121da67f910fda03a6418ee81ad07ba0508445",
   "normalization": "UTF-8 text with LF",
   "sha256": {
     "game/book/binding.gd": "794991d7088657c31d274a60ef1c595b688ebaf3efa3a552fa2715c484a1f76b",

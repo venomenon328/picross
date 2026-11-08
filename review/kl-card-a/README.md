@@ -1,6 +1,6 @@
 # KL-CARD-A: befristete Revieworiginale
 
-Produkt: `e7121da67f910fda03a6418ee81ad07ba0508445`. Vorher: `d974886d18ce294c11c2b2467166bae24894e7cb`. Empfänger: unabhängiger R01-Reviewer
+Produkt: `a050c6dbe862535bd7e940691b42e8cbfe2cd2c7`. Vorher: `d974886d18ce294c11c2b2467166bae24894e7cb`. Empfänger: unabhängiger R01-Reviewer
 und Eigentümer M01. Zweckbindung bis 15.11.2026; danach bei offenem Gate den Bedarf
 erneut prüfen. Rückbau des eigenen Remote-Belegrefs im Paketabschlussauftrag.
 Kein Merge dieses Branches in Produktbranch oder main.
@@ -10,6 +10,12 @@ Szene, Render-/UI-Größe, Seite, Filter/Sortierung, beide Scrollstände, Produk
 Dateipfad, Bytes und SHA-256. Der im PR genannte unveränderliche Belegcommit bindet
 dieses Manifest und alle Originale. Binär über den Raw-Link an genau diesem Commit
 oder per Git laden, Bytes/Hash prüfen und öffnen; eine GitHub-Vorschauseite genügt nicht.
+
+Aufnahme-Head nachher: `e7121da67f910fda03a6418ee81ad07ba0508445`. Der native Originalbericht behält
+diese tatsächliche Herkunft. `application-sources.json` prüft alle verwendeten
+Anwendungsskripte/-szenen gegen den oben genannten Produkt-Head. Eine spätere
+reine Harness-/Dokumentänderung erlaubt nur bei vollständiger Quellbytegleichheit
+diese Wiederverwendung; bei Anwendungsabweichung bricht die Zustellung ab.
 
 Windows 11, Godot 4.7.2-stable, OpenGL 3.3, NVIDIA RTX 3070. Das unveränderte echte
 3D-Buch rendert in einem nativen SubViewport mit den angegebenen Clientmaßen. Kein
