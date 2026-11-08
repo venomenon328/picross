@@ -165,6 +165,8 @@ class Package:
         # Reading a historical manual handoff is not its acceptance. inspect()
         # still requires the external, exactly bound manual authorization.
         require(h.get("state") in ("content_ready", "editorially_approved", "catalog_ready") or
+                h.get("state") == "raster_review" and isinstance(h.get("rulebook"), dict) and
+                h["rulebook"].get("version") == "0.6.0" or
                 allow_manual_review and h.get("state") == "raster_review" and
                 isinstance(h.get("candidate"), dict) and h["candidate"].get("source_type") == "manual" or
                 allow_manual_review and h.get("state") == "blocked" and
@@ -176,11 +178,15 @@ class Package:
                 "Package is not content_ready")
         require(isinstance(h.get("repo_commit"), str) and re.fullmatch(r"[0-9a-f]{40}", h["repo_commit"]), "Missing producer commit")
         rule = h.get("rulebook")
-        require(isinstance(rule, dict) and rule.get("version") in ("0.4.0", "0.4.1", "0.5.0"), "Unsupported authoring rulebook")
+        require(isinstance(rule, dict) and rule.get("version") in ("0.4.0", "0.4.1", "0.5.0", "0.6.0"), "Unsupported authoring rulebook")
         rule_path = self.bound(rule)
-        if rule["version"] == "0.5.0":
-            require(re.search(r"^\*\*Version 0\.5\.0(?: | ·)", rule_path.read_text(encoding="utf-8"), re.M) is not None,
-                    "Rulebook 0.5.0 requires a matching versioned snapshot")
+        if rule["version"] in ("0.5.0", "0.6.0"):
+            require(re.search(r"^\*\*Version " + re.escape(rule["version"]) + r"(?: | ·)",
+                              rule_path.read_text(encoding="utf-8"), re.M) is not None,
+                    "Rulebook " + rule["version"] + " requires a matching versioned snapshot")
+        else:
+            require(re.search(r"^\*\*Version 0\.6\.0(?: | ·)", rule_path.read_text(encoding="utf-8"), re.M) is None,
+                    "Legacy rulebook label conflicts with snapshot")
         inv = h.get("inventory")
         require(isinstance(inv, dict) and inv.get("file") == "inventory.json", "Missing inventory binding")
         self.bound(inv)
@@ -252,8 +258,8 @@ class Package:
         if manifest_path.is_file():
             manifest = load_json(manifest_path)
             if isinstance(manifest, dict) and manifest.get("format") in ("picross-image-manifest-v2", "picross-repair-manifest-v2"):
-                require(self.handoff["rulebook"]["version"] == "0.5.0",
-                        "Paired production requires authoring rulebook 0.5.0")
+                require(self.handoff["rulebook"]["version"] in ("0.5.0", "0.6.0"),
+                        "Paired production requires authoring rulebook 0.5.0/0.6.0")
         return self.root / name
 
     def approval(self, record, kind):

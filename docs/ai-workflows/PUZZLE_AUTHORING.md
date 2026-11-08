@@ -1,19 +1,21 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 35 · 08.11.2026**
+**Version 0.6.0 · Dokumentrevision 36 · 08.11.2026**
 
-Diese Revision bindet die [vom Eigentümer freigegebene P-A-Farbprüfregel](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
-aus #488 einschließlich ihrer Referenzrechnungen ein (§4.3). Die fachliche
-Normfreigabe ist erteilt; P-B1 liefert eine ausdrücklich aufrufbare lesende
-Kandidatendiagnose. Automatische Produktionsprüfung und paargebundener
-Ausnahmeweg folgen erst P-B2. F05 bleibt
-eine visuell akzeptierte synthetische Referenz bei negativen Paarmessungen,
-keine gesonderte Produktionsausnahme.
-Q-A-Sichtung bei fehlenden vollständig qualifizierten Kandidaten, RI-C in §8, gespeicherte
-Sheet-Einstellungen, lokale Codex-Arbeitswurzeln, Inhaltsformate, Solverprofile,
-Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
-Regelwerksversion, Dokumentrevision, Datei-SHA-256 und tatsächlicher Repositorycommit
-binden den verwendeten Stand; keine nachträgliche Umetikettierung alter Pakete.
+Diese Revision aktiviert P-B2 aus [#488](https://github.com/venomenon328/picross/issues/488):
+Neue Produktionen verwenden **0.6.0**, automatische frühe Palettendiagnosen und
+die frische finale [ZA-1-v5-Prüfung](../ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5).
+Die unveränderte Farbregel bindet weiterhin Normrevision 4; F05 bleibt eine
+visuell angenommene synthetische Referenz mit negativen Messwerten, keine
+Produktionsausnahme. Messung, visuelle Urteile und konkrete Eigentümerausnahme
+werden getrennt geprüft. Altpakete 0.4.0/0.4.1/0.5.0 samt ihren damaligen
+Snapshots und v1–v4-Exporten behalten ihre Semantik; neue Arbeit nicht als
+Legacy deklarieren. Bei Wiederaufnahme den tatsächlichen gebundenen Regelstand
+erhalten, materielle Neuproduktion als neue Revision unter 0.6.0 führen.
+Q-A-Sichtung, Sheet v2, Paarprofile, feste manuelle Ableitungen und alle
+Proof-/Herkunfts-/Bild-/Motiv-/Endfreigaben sowie RI-Guards bleiben erhalten.
+Regelwerksversion, Dokumentrevision, Datei-SHA-256 und tatsächlicher Commit
+binden den verwendeten Stand; keine Umetikettierung versiegelter Originale.
 
 - [SD2-Integration](../SD2_INTEGRATION.md) regelt Methodenwahl, Analyse/Import,
   Metadaten-Rebind und kontrollierte Registrierung. Der Produktionsdefault 0.4
@@ -24,9 +26,9 @@ binden den verwendeten Stand; keine nachträgliche Umetikettierung alter Pakete.
   Dateien und Belegen gebunden, keine erneut offene Bestandsproduktion.
 - Sheet-Übergabe v2 bietet Bild-/Rasteroptionen (§4.5/§7). Das
   [Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html) übernimmt ihre Bindungen
-  gemeinsam; Auswahl/Empfehlung sind keine Freigabe. Die technischen Handoff-,
-  Inventar- und Adapterformate bleiben unverändert.
-- Paarprofile benötigen weiterhin Authoring 0.5.0; versiegelte 0.4.x-Pakete behalten
+  gemeinsam; Auswahl/Empfehlung sind keine Freigabe. Handoff v2 und Inventar v1 bleiben; 0.6.0 ergänzt die
+  Paletten-/Sichtbindung und verwendet ausschließlich ZA-1 v5.
+- Paarprofile benötigen mindestens Authoring 0.5.0, neu 0.6.0; versiegelte 0.4.x-Pakete behalten
   ihren Linienvertrag. [SD](../PUZZLE_DIFFICULTY.md) und
   [SD-C1](../SD_CATALOG.md) bleiben kompatible Fachquellen bei Schwierigkeitsarbeit.
 
@@ -295,29 +297,43 @@ abgeschwächte und ausgekreuzte Hinweise prüfen; Farbsinnsimulation, soweit
 verfügbar, ergänzt dies. [Qualitätsvertrag §8](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
 enthält die **fachlich freigegebene Regel** `picross-palette-separation-1`
 für paarweisen Oklab-Ausschluss, Warnzone und getrennte visuelle Beurteilung.
-**Normativ freigegeben, automatische Produktionspflicht erst P-B2:** Mit P-B1
-ist die freiwillig ausdrücklich aufrufbare Diagnose
-`python -m tools.puzzle_production check-palette --candidate <vorhandene-*-candidate.json>`
-bei der Kandidatenwahl nutzbar. Der [CLI-/Berichtsvertrag](../../tools/puzzle_production/README.md#p-b1-lesende-palettendiagnose)
-bindet die tatsächliche Matrix, Palette, Kandidatenidentität und Norm; `--verify`
-prüft gespeicherte Diagnosen frisch gegen den aktuellen Kandidaten. Optionale
-Berichte nur neu außerhalb von Checkout/Paket schreiben. Dies ist kein
-Import-, Proof-, Zertifizierungs- oder Freigabeschritt. Die erzwungene Frühprüfung
-in allen Ableitungswegen, Endbindung und der geprüfte Ausnahmeweg folgen P-B2.
-Eine nicht ausgeführte numerische Prüfung niemals als
-technisches Produktions-`pass` ausgeben. Bestehende visuelle Prüfung und
-technische Gates gelten weiter.
-Ein späteres positives Messergebnis ersetzt Q-H01/Q-H02 nicht; ein negatives
-Paar bleibt auch bei redaktioneller Annahme negativ. Bis zum geprüften P-B2-Weg
-keine Übernahme einer negativen Paarung durch Freitext-Ausnahme behaupten.
-Farb-/ID-/Nutzungs-/Matrixänderungen entziehen abhängigen Palettennachweisen ihre
-Gültigkeit; Neuprüfung und Freigaberücksprünge nach §4.4 bleiben erforderlich.
+**Aktiv unter Authoring 0.6.0:** RP-3 prüft die konkrete Matrix vor dem
+Solver, RP-5 jede Bewertung und feste manuelle Wege die rekonstruierte Matrix
+vor dem Endproof-Replay. Negative Entwürfe bleiben zur Diagnose sichtbar.
+`check-palette --candidate <vorhandene-*-candidate.json>` bleibt als zusätzliche
+lesende Diagnose verfügbar, ersetzt aber kein finales Gate. Nach jeder Änderung
+Matrix, IDs/RGB/Nutzung und Regelbindung frisch rekonstruieren; Rücksprünge nach
+§4.4 bleiben Pflicht. Ein reiner Palettenentwurf ohne Nutzung ist vorläufig.
+
+Vor `content_ready` das geschriebene Paket mit ZA-1 inspizieren: Der Adapter
+erzeugt selbst den aktuellen vollständigen Pflichtbefund und prüft alle Paare
+frisch. Ein optional inventarisierter `palette_assessment={file,sha256}` wird
+zusätzlich frisch verifiziert. Farbpakete führen `palette_review={file,sha256}`
+auf den inventarisierten `picross-palette-visual-review-v1`-Record mit einzeln
+gebundenen Q-R04/Q-H01/Q-H02-Urteilen und tatsächlichen Ansichten. Exakte Felder,
+Hashes und Bedienung stehen in [ZA-1 P-B2](../ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)
+und der [CLI-Anleitung](../../tools/puzzle_production/README.md#p-b2-automatische-frühdiagnose-und-finale-palettengates).
+Fehlende Sichtung, `nicht geprüft` oder stale/falsche Reports erlauben keine
+Freigabe. Positiver S-Wert allein erfüllt keine visuellen Kriterien; bei Warnung
+oder negativem Sichturteil muss eine konkrete Annahme nach Qualitätsvertrag §6
+mit ursprünglichem Urteil, Akteur, UTC, Wortlaut, Begründung und Beleg vorliegen.
+
+Ein negativer technischer Befund bleibt negativ. Für eine tatsächliche Übernahme
+braucht es den äußeren `picross-palette-editorial-exception-v1`-Record mit allen
+negativen Paaren, exakten S/RGB/IDs, Kandidaten-/Revisions-/Istmatrix-/Quell-/
+Regel-/Handoff-/Inventar-/Paketbindung und echter Endfreigabe. Diesen Record nur
+außerhalb versiegelter Originale führen und ausdrücklich mit `--palette-exception`
+übergeben; vorhandene manuelle Autorisierungen bleiben zusätzlich nötig.
+Die Ausnahme heilt ausschließlich den Palettenredaktionsblocker, niemals Proof,
+Rechte/Herkunft, Bild-/Motiv-/Endabnahme, feste Parameter, Difficulty oder Randregel.
+Fehlende Freigabe bleibt ein Blocker. Bei null qualifizierten Kandidaten §4.5
+mit echten Bild-/Rasterlinks, Defiziten/Korrekturen und `Raster-Optionen=[]` nutzen.
 
 Die [F05-Referenzeinordnung nach B-01](../PUZZLE_QUALITY.md#831-b-01-gebundenes-eigentümer-teilfeedback-und-referenzeinordnung)
 trennt positives Eigentümer-Teilfeedback von weiterhin negativen Paarmessungen.
 Sie ist keine Produktionsausnahme und darf weder als `pass` noch als Freigabe
 eines realen Kandidaten übernommen werden. Dafür bleiben §6 des Qualitätsvertrags
-und der spätere geprüfte P-B2-Ausnahmeweg maßgeblich. Die F05-Referenzannahme
+und der geprüfte P-B2-Ausnahmeweg maßgeblich. Die F05-Referenzannahme
 benötigt keine zusätzliche pauschale Eigentümerausnahme.
 
 Für einen konkreten redaktionellen Mangel gilt der externe, revisionsgebundene
@@ -387,7 +403,7 @@ Referenz, Ergebnis und markierten Zell-Diff vergleichen. `found` allein genügt 
 | Materielle Motivänderung | Zusätzlich erneute ausdrückliche menschliche Motivfreigabe |
 | Abschlussbild geändert | Neue Bildrevision und menschliche Abschlussbildfreigabe; Ableitung, Motiv-/Rasterkonsistenz und Endabnahme erneut prüfen. Materielle Änderungen setzen abhängige Motivfreigaben zurück. Kein neuer Logiklauf allein für eine Bildänderung bei nachweislich unverändertem Raster/Logikeingang; nötige Rasteränderungen vollständig neu nachweisen |
 | Nur Schwierigkeit/Kategorie/Metadaten | Keine neue Bild-/Rasterproduktion und keine neue Bild-/Endfreigabe allein wegen Kategorieänderung. Metadaten bei versiegelten Paketen außen ergänzen, neue Exportbindung separat aufzeichnen. Bewertungs-/Metadatenrevision; unveränderte Matrix-/Nachweisbindung erhalten |
-| Erstmals Paarprofil bei unveränderter Matrix | Neue ausdrücklich profilierte Produktionsbindung, eigener Baseline-/Paarproof und Assessment; keine geänderten Rasterwerte oder umetikettierten Altproofs. Bereits versiegelte Originale erhalten; die neue Lieferung als neue Revision mit echter Regelwerksbindung 0.5.0 führen. Bildfreigaben nur bei unverändertem Gegenstand passend wiederverwenden; Endfreigabe muss das tatsächlich gelieferte Handoff/Inventar binden. |
+| Erstmals Paarprofil bei unveränderter Matrix | Neue ausdrücklich profilierte Produktionsbindung, eigener Baseline-/Paarproof und Assessment; keine geänderten Rasterwerte oder umetikettierten Altproofs. Bereits versiegelte Originale erhalten; die neue Lieferung als neue Revision mit echter Regelwerksbindung 0.6.0 führen. Bildfreigaben nur bei unverändertem Gegenstand passend wiederverwenden; Endfreigabe muss das tatsächlich gelieferte Handoff/Inventar binden. |
 
 Eine reine Freistellung ist nach [AT](../REVEAL_TRANSPARENCY.md) eine neue
 Bildrevision mit tatsächlicher Abschlussbildfreigabe und erneut geprüfter
@@ -562,7 +578,7 @@ Die KI MUSS einen aktuellen Übergabedatensatz in diesem Begleitformat führen. 
 
 ```yaml
 format: picross-authoring-handoff-v2
-rulebook: {version: "0.5.0", file: "<Regelwerk>", sha256: null}
+rulebook: {version: "0.6.0", file: "<Regelwerk>", sha256: null}
 puzzle_id: "<stabile ID>"
 revision: "<Paketrevision>"
 repo_commit: "<vollständige tatsächlich gelesene SHA>"
@@ -572,6 +588,8 @@ approved_parameters: []
 reveal: {file: null, sha256: null, approval: null}
 motif: {file: null, sha256: null, derived_from_reveal_sha256: null, approval: null}
 candidate: {bundle: null, variant: null, proof: null, verification: null, certification: null}
+palette_review: null # 0.6.0: inventarisierter Sichtrecord bei Farbe vor content_ready
+palette_assessment: null # optionaler gespeicherter Befund, immer frisch nachgeprüft
 origin_verification: null
 repair: {reference: null, plan: null, replay: null}
 inventory: {file: null, sha256: null}
@@ -925,10 +943,11 @@ Ab SD-C1 zusätzlich den nach §5.2 vollständig geprüften 0.3-Input übernehme
 beziehungsweise passend neu binden. Die aktuelle
 Paket-/Exportbindung wird dadurch nicht rückwirkend geändert.
 
-Paarprofilpakete verlangen die tatsächliche Regelwerksbindung 0.5.0, passende
+Paarprofilpakete verlangen mindestens Regelwerksbindung 0.5.0, neu 0.6.0, passende
 `candidate.certification` und Schwierigkeit 0.2 mit den gebundenen Nachweisen.
 ZA-1 erzeugt dafür `picross-target-inspection-v4` und `picross-target-export-v4`.
-Diese Exportversion ist von den Versionen menschlicher Änderungsautorisierungen
+Unter 0.6.0 verwendet auch dieser Weg ausschließlich Inspektion/Export v5 samt
+Palettengate. Diese Exportversion ist von menschlichen Änderungsautorisierungen
 zu unterscheiden; sie erteilt selbst keine Ausnahme oder Freigabe.
 
 Manuelle Ableitungen benötigen den passenden externen ZA-1-Autorisierungsvertrag
@@ -959,7 +978,7 @@ Codex MUSS den aktuellen Entwicklungsworkflow und ZA-1 vollständig lesen und da
 1. Paket über `content/authoring/index.json` laden; ZIP-, Handoff-, Inventar- und Freigabebindung kontrollieren. Aktuellen `main` und vorhandene Arbeit prüfen, isolierten Arbeitsbranch verwenden. Keine fremden Änderungen aufnehmen.
 2. Vorliegende Produktionsbelege und echte Endfreigabe zuordnen. Kein zusätzliches routinemäßiges `inspect`: Der nachfolgende `export` prüft Eingang/Freigabe frisch und verifiziert seine geschriebenen Ausgaben selbst. Nur `technical=true` und `editorial_approved=true` erlauben den Export; Fehler stoppen. `inspect` separat nur zur Diagnose einer konkreten Lücke. Aktuelle Ergebnisse außen führen, versiegelte Originale nicht ändern.
 3. Produktions-ID unverändert als Runtime-ID verwenden. Motivname, kollisionsfreien Dateistamm/Save-Slot und numerische Runtime-Revision explizit wählen; bei neuen IDs gewöhnlich Revision 1. F01…F09 nicht umwidmen. ZA-1 unterstützt 1…50 pro Achse, Rechtecke, Mono und höchstens acht Vordergrundfarben; Paketrevision und Runtime-Revision bleiben getrennt.
-4. Kategorie-ID im äußeren Record und in der aktuellen Kategorienquelle abgleichen. `export` mit Paket, Endfreigabe, Name, Runtime-Revision, Stem, Slot sowie `--category-id <id> --categories content/categories.json` in ein neues temporäres Ziel ausführen. Erfolgsbericht und `inspection.json` binden; kein zusätzlicher Routineaufruf von `verify-export`. Ein bereits passend gebundener kategorisierter Export darf direkt dem Plan dienen. Kategorienlose Altexporte neu kategorisiert exportieren. Autorisierte manuelle Ableitungen benötigen weiterhin den gesonderten ZA-1-Vertrag samt tatsächlicher Autorisierung. Linienprofile verwenden Direkt-/Reparaturexport v2 beziehungsweise manuellen Export v3; Paarprofile verwenden auch bei manuellen Ableitungen Export v4. Keine automatische Ausnahme und keine manuelle Änderung der Exportversion. Das freigegebene Abschlussbild bleibt der bytegebundene Reveal. Matrix, Hinweise und Assets nicht manuell umschreiben.
+4. Kategorie-ID im äußeren Record und in der aktuellen Kategorienquelle abgleichen. `export` mit Paket, Endfreigabe, Name, Runtime-Revision, Stem, Slot sowie `--category-id <id> --categories content/categories.json` in ein neues temporäres Ziel ausführen. Erfolgsbericht und `inspection.json` binden; kein zusätzlicher Routineaufruf von `verify-export`. Ein bereits passend gebundener kategorisierter Export darf direkt dem Plan dienen. Kategorienlose Altexporte neu kategorisiert exportieren. Autorisierte manuelle Ableitungen benötigen weiterhin den gesonderten ZA-1-Vertrag samt tatsächlicher Autorisierung. Neue 0.6.0-Pakete verwenden ausschließlich Export v5, bei Bedarf zusätzlich mit manueller Autorisierung und Paarnachweis. Historische Linienprofile verwenden v2/v3, Paarprofile v4. Keine automatische Ausnahme und keine manuelle Änderung der Exportversion. Das freigegebene Abschlussbild bleibt der bytegebundene Reveal. Matrix, Hinweise und Assets nicht manuell umschreiben.
 5. `plan --export <export> --checkout <arbeitscheckout> --difficulty <checked.json>` ausführen, Kategorie-ID/aktuellen Anzeigenamen, konkrete Add-/Replace-Pfade und Registryänderungen auf Scope, Kollisionen und unveränderte Bestandsinhalte prüfen. Der Integrationsauftrag erlaubt anschließend `register` mit denselben Eingängen; keine zusätzliche routinemäßige Bestätigung verlangen. Ohne Auftrag beim Plan stoppen. Kein handgeschriebener Registryeintrag als Ersatz.
    Bei ausdrücklich beauftragtem Ersatz einer bestehenden Fassung stattdessen
    `plan-update` → `update` mit demselben Erwartungshash der bisherigen Definition

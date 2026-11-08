@@ -21,10 +21,13 @@ das Verhältnis zur visuellen Freigabe. P-A-M01 ist vom Eigentümer ausdrücklic
 erteilt. **P-B1 liefert die freiwillig aufrufbare read-only Kandidatendiagnose**
 `check-palette` mit eigenem versioniertem Bericht und frischer Verifikation;
 [Bedienung, Hash-/Readervertrag und Grenzen](../tools/puzzle_production/README.md#p-b1-lesende-palettendiagnose).
-Die automatische Produktionspflicht, Endprüfung und der geprüfte Ausnahmeweg
-folgen erst P-B2. Keine neuen Adapter-/Freigabefelder und keine Umdeutung von Authoring 0.5.0,
-Sheet v2 oder Altfreigaben. Ein positiver Distanzstatus ersetzt keine Sichtung,
-ein negativer Wert bleibt bei einer zulässigen redaktionellen Annahme negativ.
+P-B2 aktiviert für neue Authoring-0.6.0-Pakete automatische Früh-/Endprüfung
+und die additive ZA-1-v5-Hülle mit eng gebundener äußerer Eigentümerausnahme.
+[Felder und Readervertrag](ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5),
+[Bedienung](../tools/puzzle_production/README.md#p-b2-automatische-frühdiagnose-und-finale-palettengates).
+Altregeln 0.4.x/0.5.0 und v1–v4 behalten ihre Semantik. Ein positiver Distanzstatus
+ersetzt keine Sichtung, ein negativer Wert bleibt auch bei zulässiger Annahme
+negativ. Proof, Herkunft/Rechte und alle anderen harten Inhaltsgates bleiben.
 
 [Abschlussbildtransparenz](REVEAL_TRANSPARENCY.md) führt die aktive Bildbindung und
 den begrenzten Bildupdateweg; [AT-B](AT_B_OWNER_APPROVAL.md) dokumentiert seine
