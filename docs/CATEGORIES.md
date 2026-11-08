@@ -5,7 +5,11 @@ erneute Proof-Replays der neuen Produktion nach erfolgreicher Eingangs- und
 unabhängiger Stagingprüfung. Kategorie-Snapshot und übrige Paketbytes bleiben
 gebunden. Die vollständige unabhängige Katalogquellen-/Namespaceprüfung samt
 allen bisherigen Guards, Projektion und Recovery bleibt unverändert;
-ein B-Erfolg ersetzt keine Quellenaussage des späteren RI-C.
+ein B-Erfolg ersetzt keine Quellenaussage von RI-C. Die spätere Branchlieferung
+zu #480 ordnet ausschließlich bei Erstregistrierung v6 und deren Recovery diese
+vollständigen Quellenprüfungen den [RI-C-Phasengrenzen](SD_CATALOG.md#ri-c--phasengrenzen-für-erstregistrierung-v6)
+zu. Alle Quellen, negativen Sidecarbindungen und Namespaces bleiben maßgeblich;
+zwischen den Grenzen werden betroffene Ziele frisch lokal geprüft.
 [Vertrag und Nachweis](RI_B_VERIFICATION.md).
 
 **SD2 · integrierter Methodenvertrag:** [SD2-D05](PUZZLE_DIFFICULTY_V2.md) und

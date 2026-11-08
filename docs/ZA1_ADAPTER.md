@@ -257,8 +257,13 @@ Ohne privaten Kontext bleiben alle vollständigen Prüfwege erhalten. Getrennte
 CLI-Aufrufe prüfen unabhängig; `verify-export` bleibt immer vollständig.
 `plan` bleibt lesend, `register` ausdrücklich autorisiert. Updates und historische
 No-ops behalten ihren bisherigen Prüfweg. Keine zusätzlichen Flags oder Formate.
-Recovery erhält niemals einen B-Kontext. Globale Guards, P0–P6/R0–R2,
-Erkennungszeitpunkte, Journalgenerationen und Exit-/Rollbacksemantik bleiben.
+Recovery erhält niemals einen B-Kontext. Durch B bleiben globale Guards,
+P0–P6/R0–R2, Erkennungszeitpunkte, Journalgenerationen und Exit-/Rollbacksemantik
+unverändert. Die nachfolgende RI-C-Branchlieferung zu #480 ändert ausschließlich
+bei Erstregistrierung v6 und ihrer Recovery die Frequenz und Erkennungsgrenzen
+der vollständigen Quellenprüfungen gemäß [SD-Catalog](SD_CATALOG.md#ri-c--phasengrenzen-für-erstregistrierung-v6).
+Lokale frische Ziel-/Journal-/Tempprüfungen bleiben vor jedem betroffenen Schritt;
+beide vollständigen Produktionsprüfungen und B-Bindungen bleiben unabhängig.
 [RI-B-T01](RI_B_VERIFICATION.md) bindet Wirkung und tatsächliche Prüfgrenzen.
 
 ## Paarprofile, Schwierigkeit 0.2 und Export v4

@@ -772,10 +772,75 @@ T(R), K(R), Sidecarabwesenheiten und vollständige Namespaces bleiben eigenstän
 durch Capture, Journal und alle bisherigen Guards gebunden, einschließlich
 Kategorien, Ratings/Reports, Added/Reports, Revealquellen, Produktionsstandard
 und Freezes. B-Erfolg ist keine Katalogquellenaussage. RI-C muss seinen eigenen
-Quellensnapshot samt erlaubten Journaldeltas unabhängig definieren (#480).
+Quellensnapshot samt erlaubten Journaldeltas unabhängig definieren; der gelieferte
+v6-Schnitt folgt im nächsten Abschnitt (#480).
 **Keine Änderung globaler Guard-Aufrufstellen/-frequenz, P0–P6/R0–R2,
 Erkennungszeitpunkte oder Recoverysemantik durch B.** Neue Journale bleiben v6,
 historische Generationen und registration-v1-Sperre unverändert.
 Recovery verwendet ausschließlich die bisherigen Journal-/Quellen-/Eigentumsbeweise,
 auch nach B-Fehlern oder automatischem Rollback; keine Kontextrekonstruktion und
 keine Vorwärtsfortsetzung. [RI-B-T01](RI_B_VERIFICATION.md) führt aktuelle Belege.
+
+## RI-C · Phasengrenzen für Erstregistrierung v6
+
+Die Branchlieferung RI-C-F01 folgt der Paketentscheidung
+[RI-C-V01 / #480](https://github.com/venomenon328/picross/issues/480).
+Sie ersetzt die oben genannte Frequenz der vollständigen Guards **ausschließlich**
+für mutierende `picross-registration-journal-v6`-Erstregistrierungen und deren
+Recovery, einschließlich vollständiger gültiger Journal-Stagingreste. Update,
+Sync, Metadaten-, Bild- und Methodenwriter sowie ältere unterstützte Journale
+verwenden unverändert den bisherigen vollständigen Guardweg. V1 bleibt gesperrt.
+Die acht Journalfelder, Limits, Freigaben, Added-Zeitpunkt, Methodenfreezes,
+Runtimeversionen und getrennten RI-A-Budgets ändern sich nicht.
+
+| Grenze | Vollständig frisch geprüfte Ansicht |
+| --- | --- |
+| G0 / P0 | Validiertes Journal mit unabhängig rekonstruierter gültiger Alt-/Zielansicht, alle alten T-/K-Bytes, negativen Quellenbindungen und Namespaces; kein Lock, Staging oder Temp. |
+| G2 / P2 | Nach dauerhafter exklusiver Lockpublikation erneut exakt Altzustand, Abwesenheiten, Journal und Namespaces. |
+| G5a / P5 | Unmittelbar vor Runtimepublikation alle Quellen in der exakt erreichten eigenen Phasenbelegung; auch bei unveränderter Runtime. |
+| G5b / P5 | Nach vollständigem Checkoutcheck einschließlich unabhängig gebundener B-Nachprüfung erneut exakt neue Zielbelegung und unveränderte Retained-Quellen. |
+| G6 / P6 | Nach gezielter Tempbereinigung erneut vollständiger gültiger Zielstand, keine eigenen Temps, exakt ursprünglicher Lock; erst dann dauerhaft entfernen. |
+| GR0 / R0 | Ursprüngliches Journal, aktuelle eigene Alt-/Neu-/Additions-/Tempbytes und alle unveränderten Quellen; vollständige gültige Altansicht vor jeder Recoverymutation unabhängig rekonstruieren. |
+| GR2 / R2 | Vollständiger Checkoutcheck und frische Quellen-/Namespaceprüfung des wiederhergestellten Altstands; keine Additions/Temps, unveränderter Lock bzw. gültiges Staging; erst dann dauerhaft entfernen. |
+
+Jede vollständige Grenze liest T(Ralt/Rneu) einschließlich Kategorien, Registry,
+Runtime, Methodendefault, Definitionen, Live-Notices, Ratings, Added, AT-Text und
+erwarteten Abwesenheiten. K(Ralt) bindet aktive Bilder, vollständige Paketdateien
+oder Receipts und Berichte. Beide tatsächlichen Methodenfreezes werden erneut
+geprüft. Bekannte Paketbäume und Sidecarnamespaces schließen fremde Dateien,
+Verzeichnisse, Alias-/Linkpfade und Tempnamen aus. Erwartungswerte stammen aus
+dem Journal, niemals aus einem mtime-Cache oder früheren erfolgreichen Reads.
+Die schon bisher zulässigen leeren kanonischen Rating-/Reportverzeichnisse nach
+Rollback bleiben gültige Verzeichnisgerüste, keine Autorität für fremde Dateien.
+Ihre frische Typ-/Namens-/Leerheitsprüfung folgt dem bestehenden Namespacevertrag;
+zusätzliche Paketverzeichnisse außerhalb der gebundenen Dateibäume sind unzulässig.
+
+P1 schreibt das vollständige Journal exklusiv, flush/fsync/readback, no-replace
+als Lock und mit Verzeichnissicherung. P3 prüft vor jeder Addition frisch Lock,
+Stagingquellhash, sicheren unmittelbaren Eltern-/Zielnamensraum, Abwesenheit und
+eigene Tempbytes; danach no-replace und tatsächlicher Zielreadback. P4 behandelt
+nur geänderte Texte mit exakten Phasenerwartungen. Runtime bleibt das letzte
+Datenziel in P5. Innerhalb dieser Datei- und Tempschleifen findet keine vollständige
+Kataloginventur statt. P6 entfernt nur einzeln frisch verifizierte eigene Temps.
+
+R1 verwendet keine Vorwärtserwartungen oder B-Kontexte. Nach GR0 werden nur
+eindeutig eigene Daten gezielt zurückgeschrieben bzw. einzeln entfernt, mit
+frischen Journal-, Ziel-, Eltern- und Tempprüfungen; Runtime zuletzt. Ein erneuter
+Abbruch bleibt mit demselben Journal recoverbar. Fremde Daten blockieren Recovery
+vor deren Mutation, soweit bereits bei R0 vorhanden; es gibt weder rekursive
+Bereinigung noch automatische Vorwärtsfortsetzung.
+
+**Geänderte Erkennungszeit:** Ein fremdes gerade betroffenes Ziel wird vor seinem
+Schritt erkannt. Andere Fremdänderungen zwischen G2 und G5a spätestens an G5a,
+danach an G5b/G6; bei R1 spätestens an GR2. Keine ABA-/Dateisystemtransaktionsgarantie
+gegen nicht kooperierende OS-Schreiber. Der verbliebene Abstand zwischen letzter
+Pfadprüfung und atomarem OS-Replace ist eine ausdrücklich begrenzte Garantie.
+Nur der kooperative gemeinsame Lock wird unterstützt. Erkannte Fremdbytes bleiben
+erhalten, ein unsicherer Rollback lässt das Journal sichtbar offen. Fehler/Abbruch
+bleiben Exit 2/4; nach nachweislich dauerhafter Lockentfernung erzeugt ein späterer
+Deadlinecheck keinen falschen Fehlschlag.
+
+`catalog_boundary_attempts`/`catalog_boundaries` zählen begonnene/erfolgreiche
+G-Prüfungen, `target_guards` die lokalen Prüfungen; `guards` enthält zusätzlich
+die unveränderten vollständigen Journalvalidierungen. [RI-C-T01](RI_C_VERIFICATION.md)
+bindet synthetische Fälle, Messreihen, Plattformgrenzen und offenen Reviewbedarf.

@@ -195,7 +195,7 @@ werden. Kein Budgetbypass und kein Entfernen eines Locks als Fehlerbehandlung.
 | --- | --- | --- |
 | [RI-A / #478](https://github.com/venomenon328/picross/issues/478) | Budgetkonfiguration, Warnung/Fortschritt, Phasen-/I/O-Messung und gleichwertig gebündelte sichere Reads. | Über PR #484 auf `864c4e6` integriert; Abschlussentscheidung im Issue. |
 | [RI-B / #479](https://github.com/venomenon328/picross/issues/479) | Bytegebundene Wiederverwendung tatsächlich geprüfter Pakete in zusammenhängender Integration. | A-Messauswertung und B-V01/B/C-Abgleich vor Code dokumentiert; beauftragte Branchlieferung, T01/CI/Review standgebunden. |
-| [RI-C / #480](https://github.com/venomenon328/picross/issues/480) | Skalierende Katalogpublikation mit explizitem Kontroll- und Recoveryvertrag. | Nach A-Messauswertung/C-V01; geplante Umsetzung auf dem abgestimmten B-Kontext. |
+| [RI-C / #480](https://github.com/venomenon328/picross/issues/480) | Skalierende Katalogpublikation mit explizitem Kontroll- und Recoveryvertrag. | RI-C-F01-Branchlieferung nach V01 vom 08.11.2026: ausschließlich Erstregistrierung v6 und ihre Recovery; [T01](RI_C_VERIFICATION.md), getrenntes qualifiziertes Review vor Merge. |
 
 Geplante Folge: A → Messauswertung und gemeinsamer B/C-Vertragsabgleich → B → C.
 Die Auswertung entscheidet über den konkret wirksamen Optimierungsumfang.
