@@ -810,6 +810,10 @@ oder Receipts und Berichte. Beide tatsächlichen Methodenfreezes werden erneut
 geprüft. Bekannte Paketbäume und Sidecarnamespaces schließen fremde Dateien,
 Verzeichnisse, Alias-/Linkpfade und Tempnamen aus. Erwartungswerte stammen aus
 dem Journal, niemals aus einem mtime-Cache oder früheren erfolgreichen Reads.
+Die schon bisher zulässigen leeren kanonischen Rating-/Reportverzeichnisse nach
+Rollback bleiben gültige Verzeichnisgerüste, keine Autorität für fremde Dateien.
+Ihre frische Typ-/Namens-/Leerheitsprüfung folgt dem bestehenden Namespacevertrag;
+zusätzliche Paketverzeichnisse außerhalb der gebundenen Dateibäume sind unzulässig.
 
 P1 schreibt das vollständige Journal exklusiv, flush/fsync/readback, no-replace
 als Lock und mit Verzeichnissicherung. P3 prüft vor jeder Addition frisch Lock,
