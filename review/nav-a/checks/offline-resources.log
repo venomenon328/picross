@@ -1,0 +1,207 @@
+NAV-A product head 7e2e8c3e305a79a002fe89910b192ec9d8b86a33
+COMMAND python tools/z2_resources.py verify
+{
+  "source_commit": "c3a5386580d7a0da29b927b41bd692f0cca59274",
+  "sidebar_source": "SL-65; frames.json",
+  "kb_icon_source": "tools/book_icons_kb.json; KB-168-NOTICE.txt",
+  "hz_icon_source": {
+    "file": "tools/book_icons_hz.json",
+    "sha256": "07c5971fef07b0d49ddbe43ec92993afcd35edf04a94aed789c5b44d96aaf345",
+    "generator": "tools/z2_resources.py",
+    "notice": "HZ-B-284-NOTICE.txt"
+  },
+  "files": [
+    {
+      "file": "Fraunces-OFL.txt",
+      "sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48"
+    },
+    {
+      "file": "Fraunces.ttf",
+      "sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb"
+    },
+    {
+      "file": "HZ-B-284-NOTICE.txt",
+      "sha256": "f0e05321cfc9bbfebaf689e3993b0a84fc41dffc52ab233df360cd5f619046ff"
+    },
+    {
+      "file": "KB-168-NOTICE.txt",
+      "sha256": "5a34a51eb0e99c969029cfeba719847344384441c6f83cbd82b5abd7ffece51b"
+    },
+    {
+      "file": "PlexSans-OFL.txt",
+      "sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+    },
+    {
+      "file": "PlexSans.ttf",
+      "sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3"
+    },
+    {
+      "file": "Sidebar-NOTICES.txt",
+      "sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d"
+    },
+    {
+      "file": "arrow-down.svg",
+      "sha256": "f6868d894d866440bd3fe64a0c5913c62952fb50f0db8fc2392332ccde131215"
+    },
+    {
+      "file": "arrow-left.svg",
+      "sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca"
+    },
+    {
+      "file": "arrow-right.svg",
+      "sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c"
+    },
+    {
+      "file": "arrow-up.svg",
+      "sha256": "4dab3c772d0024ff839b71ee95a3e282e354750ffe1271e5b40abc57423f93bb"
+    },
+    {
+      "file": "bp2-a-inventarband.png",
+      "sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
+    },
+    {
+      "file": "check-empty.svg",
+      "sha256": "5effbb3665f6354ebccc97e4b7fea39ebc683340a3a0244e95140d862370df6f"
+    },
+    {
+      "file": "check.svg",
+      "sha256": "fe8a40a258f556f8afd52840b7ca0ce12296bf83ee751f0bf3540deff52225f0"
+    },
+    {
+      "file": "checkbox-checked.svg",
+      "sha256": "9baa482570478e355e5aae74090e5e1163dedfba3f9c82153f2aaf0c0cbfc703"
+    },
+    {
+      "file": "checkbox-empty.svg",
+      "sha256": "216c631f76b4a499672da877807b249ae8ccd969a1b70194d3ea056ec8c52ec8"
+    },
+    {
+      "file": "chevron-down.svg",
+      "sha256": "7147bbc61e9eeb2b2a97c7d66d11768d56664bc186810ecc01691114b4f44fa2"
+    },
+    {
+      "file": "chevron-up.svg",
+      "sha256": "b08a67fe48933274bececb92819f32dc8aee5e3a7dfa59facc54d8e9f0896e65"
+    },
+    {
+      "file": "erase.svg",
+      "sha256": "96685a23e7a1b93964c6d87649a2e8c2c2399513b07afceed57951140467ddbd"
+    },
+    {
+      "file": "fill.svg",
+      "sha256": "1adb0f8deeec7913d541f8b5bd2de3e5494a39c1abf32e293a325445528df8c6"
+    },
+    {
+      "file": "frame-palette.png",
+      "sha256": "9ac25082d5bba17f5ec6dfc847fe3882d41d398f019349bb3db3677af8b76e42"
+    },
+    {
+      "file": "frame-preview.png",
+      "sha256": "9187f1b1796aa3d8ef0603e01f82fde347f40fdcb5d0e3c66cc22e42657f12dd"
+    },
+    {
+      "file": "frame-tools.png",
+      "sha256": "d2155c30234045ec0e178322be5bdcd381c03516ca850e9152ebb64da557196d"
+    },
+    {
+      "file": "frames.json",
+      "sha256": "0fcf84d17c01943cba6a86b342023b35926d05f862c8110cf6dcfd813234de3d"
+    },
+    {
+      "file": "help.svg",
+      "sha256": "085ffa6e6b32cf8fe39e88a3ced2d94fb8395e8be0d03ccc064d5d8f6ce5572a"
+    },
+    {
+      "file": "icons.json",
+      "sha256": "6d9131df6b423a94be598cd0e66aa42774a16d6333e1c995372395935f2aac56"
+    },
+    {
+      "file": "menu.svg",
+      "sha256": "4dd71216041aeac0e2afd861516e715aa6b65ee0da696202dab854c65c5477dc"
+    },
+    {
+      "file": "minus.svg",
+      "sha256": "f230479b7b56e4d31671955e504731d15115261068f46e4b699a15132dc8b6c4"
+    },
+    {
+      "file": "nav-album.svg",
+      "sha256": "e59589030c0436baa93786b05711552eb3d104e021cf9f30ebd2c107daa2b290"
+    },
+    {
+      "file": "nav-information.svg",
+      "sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c"
+    },
+    {
+      "file": "nav-work.svg",
+      "sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca"
+    },
+    {
+      "file": "play.svg",
+      "sha256": "d57c49d4aa6787dfaa9b5b80e264361da47c8d553def8bf923d891e374d685f4"
+    },
+    {
+      "file": "plus.svg",
+      "sha256": "78aad8146fe68d64f3033789e0f7240c6fd83738bd172bee900202b8b4c242f0"
+    },
+    {
+      "file": "quit.svg",
+      "sha256": "e73c034c8322dbcbe337d443cbd1b0f2b0c8640c4295c47ba288a04748253a04"
+    },
+    {
+      "file": "redo.svg",
+      "sha256": "dda374601aba386dde33078f08fe8da1168c15b4137000cdb18792d3818063d4"
+    },
+    {
+      "file": "reset.svg",
+      "sha256": "ae593cdbb3f9601f91a5a37dc6b9fda1965e22965674626aeec7ec36cc381bdf"
+    },
+    {
+      "file": "scroll-down.svg",
+      "sha256": "3f1c4ef4315eeebd791072b66bde923967039814d6509834197f677deaccc195"
+    },
+    {
+      "file": "scroll-left.svg",
+      "sha256": "7b37135357121116fd4da10b066b96e5cc7f9cbc89051d423a8b4c47811261b2"
+    },
+    {
+      "file": "scroll-right.svg",
+      "sha256": "5a53c57e13be59797da7ccadc9234c7a67187550e92b9453374f194592cdf0a7"
+    },
+    {
+      "file": "scroll-up.svg",
+      "sha256": "68f910f2f460a8f17acd05a21925986f72f059c06374f78d4f2cab0838f88830"
+    },
+    {
+      "file": "undo.svg",
+      "sha256": "aa3746dce70beb30fe9f08ae04dc1f1742ce2ca841c8bfab79e42cf45859d9f2"
+    }
+  ],
+  "hz_standard_text": {
+    "file": "art/drawing/TidyHand.ttf",
+    "sha256": "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6",
+    "notice": "art/drawing/tidy-hand/NOTICE.txt",
+    "notice_sha256": "a1b09d2948f7c583bb1ed921a45b06fb313bb510a7746f87f0b6c1e7aa5e7e57"
+  },
+  "standard_text": {
+    "file": "art/drawing/Pangolin-Regular.ttf",
+    "sha256": "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e",
+    "license": "art/drawing/pangolin/OFL.txt",
+    "license_sha256": "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c",
+    "notice": "art/drawing/pangolin/NOTICE.txt",
+    "notice_sha256": "29406bb05fb950bd9c33a2d4233afcf767ea41325f11b4dee8e946471f6c2091"
+  }
+}
+COMMAND python -m unittest discover -s tools -p test_z2_delivery.py -v
+test_hz_rejects_changed_font_or_missing_permission (test_z2_delivery.Z2DeliveryTests.test_hz_rejects_changed_font_or_missing_permission) ... ok
+test_kb_provision_is_idempotent_and_verifies_active_icon_bytes (test_z2_delivery.Z2DeliveryTests.test_kb_provision_is_idempotent_and_verifies_active_icon_bytes) ... ok
+test_pangolin_original_and_license_are_independently_bound (test_z2_delivery.Z2DeliveryTests.test_pangolin_original_and_license_are_independently_bound) ... ok
+test_resources_match_selected_hashes_and_utf8_labels (test_z2_delivery.Z2DeliveryTests.test_resources_match_selected_hashes_and_utf8_labels) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.493s
+
+OK
+COMMAND python tools/check_docs.py
+PASS: text conventions, inline file links, version and rules portability
+Not checked: anchors, reference links, external URLs, snapshot identity, game behavior
+PASS: resource verification, four offline tests, docs; clean source head 7e2e8c3e305a79a002fe89910b192ec9d8b86a33

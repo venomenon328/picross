@@ -1,0 +1,288 @@
+{
+  "package": "NAV-A",
+  "issue": 549,
+  "pr": 554,
+  "product_head": "7e2e8c3e305a79a002fe89910b192ec9d8b86a33",
+  "base": "bd264554093bd4748b2fdd3d29d8f2e8db2d2c18",
+  "review_ref": "review/549-nav-a",
+  "purpose": "Required final-head native layout/input originals and once-only book lifecycle for independent NAV-A-R01 and owner NAV-A-M01; implementer selfreview is not acceptance",
+  "recipients": [
+    "NAV-A-R01 independent reviewer",
+    "NAV-A-M01 repository owner"
+  ],
+  "expires": "2026-11-15",
+  "cleanup": "Keep while review needs these originals. At R01/M01 completion or deadline, responsible next reviewer/owner reassesses then removes this temporary ref in the explicitly commissioned cleanup; never merge evidence. If gates remain open on expiry, renew delivery before review. Product PR remains free of technical evidence files.",
+  "setup": {
+    "engine": {
+      "build": "official",
+      "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+      "hex": 263938,
+      "major": 4,
+      "minor": 7,
+      "patch": 2,
+      "status": "stable",
+      "string": "4.7.2-stable (official)",
+      "timestamp": 0
+    },
+    "display_server": "Windows",
+    "adapter": "NVIDIA GeForce RTX 3070",
+    "dpi": 96,
+    "screen_pixels": "(2560, 1440)",
+    "screen_scale": 1.0,
+    "input": "native Windows root Window viewport events; isolated synthetic registry/profiles; unaccelerated regular book root; display watchdog paused only for measured viewport sizes; no OS desktop input"
+  },
+  "files": [
+    {
+      "file": "checks/offline-resources.log",
+      "bytes": 7760,
+      "sha256": "ca81c40079be239ed02523bc6170e98f030c04e30a51cca2899730577fabf4eb"
+    },
+    {
+      "file": "lifecycle/integration/integration.json",
+      "bytes": 76740,
+      "sha256": "59a8c4bbb24f653e26dc7a25275fb8dbedd14335272f0723238b10bdf6b2c227"
+    },
+    {
+      "file": "lifecycle/logs/book-import.log",
+      "bytes": 25184,
+      "sha256": "c58dec65be348a4f357170f4eb83601d67c9fd0f99741c1c275f5e667ba76701"
+    },
+    {
+      "file": "lifecycle/logs/book-integration.log",
+      "bytes": 193,
+      "sha256": "cecc4d1e4d5e4c4541c2e0d91ab707f0658b33ebe0c735baac4c003f51a56cd3"
+    },
+    {
+      "file": "lifecycle/logs/book-version.log",
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498"
+    },
+    {
+      "file": "lifecycle/report.json",
+      "bytes": 6356,
+      "sha256": "bf06057b080019c2f8305562b3dfdf465e3924dfd8b76d39b739be08527a7912"
+    },
+    {
+      "file": "native-input/nav_visual.gd",
+      "bytes": 10392,
+      "sha256": "73ec5a8c0a87ccdbe15f8dbbe6a14a3dd337c164a195e775ba2fc3540360d969"
+    },
+    {
+      "file": "native-input/run_lifecycle.py",
+      "bytes": 808,
+      "sha256": "912af25a7be63c11140e66f39aa32c84488ffe7927a00869906b60442b3491cd"
+    },
+    {
+      "file": "native-input/run_visual.py",
+      "bytes": 1922,
+      "sha256": "673c70640b51422064b4b81578f77cfc1f9c3acde1a9d21160f26a2d91fdce58"
+    },
+    {
+      "file": "native-input/verify_visual.py",
+      "bytes": 2171,
+      "sha256": "f6e5ab3346a8043deb898ed39d1f239785e1f8d06d3397d52167a10e47059087"
+    },
+    {
+      "file": "native-input/window.log",
+      "bytes": 201,
+      "sha256": "083d3ef6ac7924c054d936d411e1a5406e82c8b11aaa8753b7331739e1431c62"
+    },
+    {
+      "file": "native-windows/01-catalog-first-1920-ui100.png",
+      "bytes": 1780983,
+      "sha256": "190adc6226287a308ef06bf1ab308e433b4555c96d867f4364313ee54ccc67b1",
+      "scenario": {
+        "book_state": 0,
+        "file": "01-catalog-first-1920-ui100.png",
+        "origin": "album",
+        "page": 0,
+        "section": "settings",
+        "ui_scale": 1.0,
+        "viewport": [
+          1920,
+          1080
+        ]
+      }
+    },
+    {
+      "file": "native-windows/02-work-gear-tooltip-1920-ui100.png",
+      "bytes": 1834128,
+      "sha256": "193fa4475139699452aa41204017c34799af4d1f87bb60b215505db023e09b63",
+      "scenario": {
+        "book_state": 3,
+        "file": "02-work-gear-tooltip-1920-ui100.png",
+        "origin": "album",
+        "page": 0,
+        "section": "settings",
+        "ui_scale": 1.0,
+        "viewport": [
+          1920,
+          1080
+        ]
+      }
+    },
+    {
+      "file": "native-windows/03-help-active-1920-ui100.png",
+      "bytes": 2076238,
+      "sha256": "2d27ad30d287cb5e1eb0ec8b1378141ea6f5facf18f33ddb650296e8dd315637",
+      "scenario": {
+        "book_state": 4,
+        "file": "03-help-active-1920-ui100.png",
+        "origin": "work",
+        "page": 0,
+        "section": "help",
+        "ui_scale": 1.0,
+        "viewport": [
+          1920,
+          1080
+        ]
+      }
+    },
+    {
+      "file": "native-windows/04-settings-focus-1920-ui100.png",
+      "bytes": 1861381,
+      "sha256": "6adb77674a8e3ae2590c47ff48fb9af5c87c3473c27fd36ea6047a0ac70aab22",
+      "scenario": {
+        "book_state": 4,
+        "file": "04-settings-focus-1920-ui100.png",
+        "origin": "work",
+        "page": 0,
+        "section": "settings",
+        "ui_scale": 1.0,
+        "viewport": [
+          1920,
+          1080
+        ]
+      }
+    },
+    {
+      "file": "native-windows/05-catalog-recent-1920-ui100.png",
+      "bytes": 1790234,
+      "sha256": "c10da45b67f382b7be3e44863908ad46aee0e6d1f110f45f2644bbd0bd05d325",
+      "scenario": {
+        "book_state": 0,
+        "file": "05-catalog-recent-1920-ui100.png",
+        "origin": "work",
+        "page": 0,
+        "section": "settings",
+        "ui_scale": 1.0,
+        "viewport": [
+          1920,
+          1080
+        ]
+      }
+    },
+    {
+      "file": "native-windows/06-catalog-half-recent-2560-ui100.png",
+      "bytes": 2609956,
+      "sha256": "cc5a7641ae70bb2663303851ba80d09c6ac39b6885715b51cb40083b6dacd07b",
+      "scenario": {
+        "book_state": 0,
+        "file": "06-catalog-half-recent-2560-ui100.png",
+        "origin": "work",
+        "page": 0,
+        "section": "settings",
+        "ui_scale": 1.0,
+        "viewport": [
+          2560,
+          1431
+        ]
+      }
+    },
+    {
+      "file": "native-windows/07-catalog-last-2560-ui100.png",
+      "bytes": 2718979,
+      "sha256": "b7c822f0f63cdf909fbd10f9c3dcfcd5b848037cd2af4b86cc3f447d9f34c546",
+      "scenario": {
+        "book_state": 0,
+        "file": "07-catalog-last-2560-ui100.png",
+        "origin": "album",
+        "page": 1,
+        "section": "settings",
+        "ui_scale": 1.0,
+        "viewport": [
+          2560,
+          1431
+        ]
+      }
+    },
+    {
+      "file": "native-windows/08-catalog-error-full-recent-1280-ui125.png",
+      "bytes": 1011328,
+      "sha256": "b6201cd9d152b31ad5581e6f7053d0d0faf3fb484b1389674431173e06c728d6",
+      "scenario": {
+        "book_state": 0,
+        "file": "08-catalog-error-full-recent-1280-ui125.png",
+        "origin": "album",
+        "page": 1,
+        "section": "settings",
+        "ui_scale": 1.25,
+        "viewport": [
+          1280,
+          720
+        ]
+      }
+    },
+    {
+      "file": "native-windows/09-settings-1280-ui125.png",
+      "bytes": 998998,
+      "sha256": "29bf428f6a21af9f9e0cc05fde927dcce323335ec944d817a76f7d00a4800dbc",
+      "scenario": {
+        "book_state": 4,
+        "file": "09-settings-1280-ui125.png",
+        "origin": "album",
+        "page": 1,
+        "section": "settings",
+        "ui_scale": 1.25,
+        "viewport": [
+          1280,
+          720
+        ]
+      }
+    },
+    {
+      "file": "native-windows/10-help-1280-ui125.png",
+      "bytes": 1065981,
+      "sha256": "a1cb45c5dc85c5b07cbcdaf6c6c84124595395b586717cc37ab50af8e7f6c68b",
+      "scenario": {
+        "book_state": 4,
+        "file": "10-help-1280-ui125.png",
+        "origin": "album",
+        "page": 1,
+        "section": "help",
+        "ui_scale": 1.25,
+        "viewport": [
+          1280,
+          720
+        ]
+      }
+    },
+    {
+      "file": "native-windows/11-catalog-single-1280-ui125.png",
+      "bytes": 1087986,
+      "sha256": "b824e1206580105b3e0b9cf945baaa95ee1b65bf6ad0f383ab6f863e075dd565",
+      "scenario": {
+        "book_state": 0,
+        "file": "11-catalog-single-1280-ui125.png",
+        "origin": "album",
+        "page": 0,
+        "section": "help",
+        "ui_scale": 1.25,
+        "viewport": [
+          1280,
+          720
+        ]
+      }
+    },
+    {
+      "file": "native-windows/observations.json",
+      "bytes": 48476,
+      "sha256": "b86d56e1886d582e4aba4f2e8530266c57d6f570164220ff679ebfc06224f412"
+    },
+    {
+      "file": "native-windows/runtime-binding.json",
+      "bytes": 77151,
+      "sha256": "3ff7a006b7c1f9e91f2d85311d475a8a51fb6da15676af01097ed1787f789e9d"
+    }
+  ]
+}

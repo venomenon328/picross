@@ -1,0 +1,140 @@
+{
+  "package": "HIL-1-T01",
+  "scope": "help-and-product-lifecycle",
+  "source_commit": "7e2e8c3e305a79a002fe89910b192ec9d8b86a33",
+  "source_tree_dirty": false,
+  "base_commit": "bd264554093bd4748b2fdd3d29d8f2e8db2d2c18",
+  "tested_checkout_commit": "7e2e8c3e305a79a002fe89910b192ec9d8b86a33",
+  "base_identity_reason": "local merge-base",
+  "github_run_id": null,
+  "github_run_attempt": null,
+  "github_event_name": null,
+  "host": "Windows",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "phases": [
+    {
+      "name": "book-version",
+      "exit_code": 0,
+      "process_role": "version",
+      "rendered": false,
+      "seconds": 0.769,
+      "timed_out": false,
+      "timeout_seconds": 300,
+      "warning_seconds": null,
+      "warning_emitted": false,
+      "process_costs": {
+        "software_render_threads": null,
+        "display": null
+      },
+      "log": {
+        "file": "book-version.log",
+        "original_bytes": 33,
+        "retained_bytes": 33,
+        "abbreviated": false,
+        "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498"
+      }
+    },
+    {
+      "name": "book-import",
+      "exit_code": 0,
+      "process_role": "import",
+      "rendered": false,
+      "seconds": 13.016,
+      "timed_out": false,
+      "timeout_seconds": 300,
+      "warning_seconds": null,
+      "warning_emitted": false,
+      "process_costs": {
+        "software_render_threads": null,
+        "display": null
+      },
+      "log": {
+        "file": "book-import.log",
+        "original_bytes": 25184,
+        "retained_bytes": 25184,
+        "abbreviated": false,
+        "sha256": "c58dec65be348a4f357170f4eb83601d67c9fd0f99741c1c275f5e667ba76701"
+      }
+    },
+    {
+      "name": "book-integration",
+      "exit_code": 0,
+      "process_role": "game",
+      "rendered": true,
+      "seconds": 69.797,
+      "timed_out": false,
+      "timeout_seconds": 300,
+      "warning_seconds": null,
+      "warning_emitted": false,
+      "process_costs": {
+        "software_render_threads": null,
+        "display": null
+      },
+      "log": {
+        "file": "book-integration.log",
+        "original_bytes": 193,
+        "retained_bytes": 193,
+        "abbreviated": false,
+        "sha256": "cecc4d1e4d5e4c4541c2e0d91ab707f0658b33ebe0c735baac4c003f51a56cd3"
+      }
+    }
+  ],
+  "sources": {
+    "game/book/main.gd": "3a09609161423173e89c4560ddad9466acc97a009c42bfac34d2bb0e873906f8",
+    "game/book/content.gd": "ae327a6cb9d1375ae3a700220ee83c33b39472fe5158fc75b170c979c7df98ba",
+    "game/book/binding.gd": "794991d7088657c31d274a60ef1c595b688ebaf3efa3a552fa2715c484a1f76b",
+    "game/book/catalog.gd": "98fecddb58a2736b71ffdfc0ec5a1694e0094759c3eb9b1f28f2115f851866e3",
+    "game/book/information.gd": "afe5165936518bc5724aa69061871aaf5ecc9ca2ecd0e4baaab4a760a4888b62",
+    "game/book/information_routes.gd": "5ab935c602c79e240011c2bb781d43eedff0be076904fc369f62e1557cc056b1",
+    "game/book/surface.gd": "075bdbe28745ae518a61fdd499a5134fef965a6071b6729474ffc08ae9cd6953",
+    "game/book/page.gdshader": "378fa58cb3928aa1f25a12523e6b56148845429fd0fc0ef99149923c8f10fa27",
+    "game/book/material.gdshader": "320da479e53e2f0346fbaa618f70143d1965c6e7735aa7c4be16bcb02e1e3595",
+    "game/book/fold.gdshaderinc": "07f65313990ce5be2b2d0d19342d4f0d1f3512c0ed50e62b8c36a173ad43acfd",
+    "game/book/paper.png": "1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f",
+    "game/book/paper.png.import": "795991150e809dd08a0b97f0595afd323393f1da9c54bf5746070c68d2e54f28",
+    "game/book/paper.json": "4b03745631543dadf1be83021e64b7fba6dcfe63befb829b143849e7ed386986",
+    "game/book/leather.png": "58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41",
+    "game/book/leather.png.import": "6fa76d3a270ac361b4719d1d46731785b467bb0534091a05f0708ecd243540df",
+    "game/book/leather.json": "e24de01610422872733237041fead2bf7cd06a30ef361a4568f0b1db5d63cbf4",
+    "game/book/table.png": "5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da",
+    "game/book/table.png.import": "53c06887843f622e44f706aab91d2f88aa5970873245521e6127909a2eee6584",
+    "game/book/table.json": "854e5483aa1c43036fc5ee53432f839573dc51ad74c3a84154366a444fe41827",
+    "game/ui/help_panel.gd": "01565d1b5e6c60b9bdba40edab780ec728c39aacc2260f23fb661b95bbf6ab34",
+    "game/ui/help_example.gd": "66d330615fd850c1e6f87f0c3376df64d2d951ad944f5036a9cfa089ba664cab",
+    "game/ui/help_examples.gd": "279178332e170398f2d4218aa19d3d462f62f866a598dbde7f8096f88c227bf1",
+    "game/ui/help_chapter_button.gd": "c12af06a49833567a46016ab433611f3281578feb3ae22d97c3422ecb37771ef",
+    "game/tests/help_cases.gd": "612125fdaab37275be50a348e7dfb06ea36352df0f228cff01aab85526f4d299",
+    "game/tests/help_native.gd": "393b1a43cff55acbcea8ce3c2698f728ce7d5358c353035f7cfccf3d5f38b7d8",
+    "game/ui/clue_typography.gd": "e92e75d7928d6d1ada7357693d5a12f366dbbc05a22c0749379f08d51662cc5c",
+    "game/ui/scribble.gd": "33ee9d5f1497a9c6eea3c65d80e10861fe5c147e562982c24cac68c9d07dbc6a",
+    "game/tests/book_integration.gd": "5db60f3a540d7ea3a83213587e6e071234cb31611aee22651fc9943d0d9064bb",
+    "game/tests/book-save-v1.json": "50f34f73bc607713071a8f1c9d0137ae1311ea43aa959bd46ec239c57fcf95ea",
+    "game/main.tscn": "e34634142aa3fa66ef903dc9de7517daa7735a1e50df47d1238795e725ac3d6e",
+    "game/ui/main.gd": "1a3e9d56a7bfe463b4674d6bec635e5b10b7a5f705a692c4d84ef734fd2859d2",
+    "tools/book_contract.py": "9fd5e55681d91a430492962061ad266471c9a9c2e035adbd31f9ad1bb339fba8"
+  },
+  "files": {
+    "integration/integration.json": {
+      "bytes": 76740,
+      "sha256": "59a8c4bbb24f653e26dc7a25275fb8dbedd14335272f0723238b10bdf6b2c227"
+    },
+    "logs/book-import.log": {
+      "bytes": 25184,
+      "sha256": "c58dec65be348a4f357170f4eb83601d67c9fd0f99741c1c275f5e667ba76701"
+    },
+    "logs/book-integration.log": {
+      "bytes": 193,
+      "sha256": "cecc4d1e4d5e4c4541c2e0d91ab707f0658b33ebe0c735baac4c003f51a56cd3"
+    },
+    "logs/book-version.log": {
+      "bytes": 33,
+      "sha256": "bf8803022b574250bb04dea65053a46b7c58570725316c1f7fe2aa6735706498"
+    }
+  },
+  "inventory_cost": {
+    "files": 4,
+    "bytes": 102150,
+    "pngs": 0
+  }
+}

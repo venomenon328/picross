@@ -1,0 +1,1582 @@
+{
+  "product_head": "7e2e8c3e305a79a002fe89910b192ec9d8b86a33",
+  "runtime": "actual native root Window; product code/assets byte-equal; isolated synthetic registry; import sidecars preserve every source setting with engine-added defaults",
+  "bindings": [
+    {
+      "path": "game/export_presets.cfg",
+      "source_sha256": "97dd1a239f345f3f42e03d742a751c96200e9e0bf85db87f23b4b8509e58969f",
+      "tested_sha256": "97dd1a239f345f3f42e03d742a751c96200e9e0bf85db87f23b4b8509e58969f"
+    },
+    {
+      "path": "game/main.tscn",
+      "source_sha256": "e34634142aa3fa66ef903dc9de7517daa7735a1e50df47d1238795e725ac3d6e",
+      "tested_sha256": "e34634142aa3fa66ef903dc9de7517daa7735a1e50df47d1238795e725ac3d6e"
+    },
+    {
+      "path": "game/project.godot",
+      "source_sha256": "cd1a917360eddb036d317a29bec78b8cf54eff92b6eb5eb2f8cf7bc1b9dba8bc",
+      "tested_sha256": "cd1a917360eddb036d317a29bec78b8cf54eff92b6eb5eb2f8cf7bc1b9dba8bc"
+    },
+    {
+      "path": "game/README.md",
+      "source_sha256": "f0647593e764926d19ffb1f2d2529fb509c50341ebc4eb7a2e9684d0aa6ed659",
+      "tested_sha256": "f0647593e764926d19ffb1f2d2529fb509c50341ebc4eb7a2e9684d0aa6ed659"
+    },
+    {
+      "path": "game/book/binding.gd",
+      "source_sha256": "794991d7088657c31d274a60ef1c595b688ebaf3efa3a552fa2715c484a1f76b",
+      "tested_sha256": "794991d7088657c31d274a60ef1c595b688ebaf3efa3a552fa2715c484a1f76b"
+    },
+    {
+      "path": "game/book/catalog.gd",
+      "source_sha256": "98fecddb58a2736b71ffdfc0ec5a1694e0094759c3eb9b1f28f2115f851866e3",
+      "tested_sha256": "98fecddb58a2736b71ffdfc0ec5a1694e0094759c3eb9b1f28f2115f851866e3"
+    },
+    {
+      "path": "game/book/content.gd",
+      "source_sha256": "ae327a6cb9d1375ae3a700220ee83c33b39472fe5158fc75b170c979c7df98ba",
+      "tested_sha256": "ae327a6cb9d1375ae3a700220ee83c33b39472fe5158fc75b170c979c7df98ba"
+    },
+    {
+      "path": "game/book/fold.gdshaderinc",
+      "source_sha256": "07f65313990ce5be2b2d0d19342d4f0d1f3512c0ed50e62b8c36a173ad43acfd",
+      "tested_sha256": "07f65313990ce5be2b2d0d19342d4f0d1f3512c0ed50e62b8c36a173ad43acfd"
+    },
+    {
+      "path": "game/book/information.gd",
+      "source_sha256": "afe5165936518bc5724aa69061871aaf5ecc9ca2ecd0e4baaab4a760a4888b62",
+      "tested_sha256": "afe5165936518bc5724aa69061871aaf5ecc9ca2ecd0e4baaab4a760a4888b62"
+    },
+    {
+      "path": "game/book/information_routes.gd",
+      "source_sha256": "5ab935c602c79e240011c2bb781d43eedff0be076904fc369f62e1557cc056b1",
+      "tested_sha256": "5ab935c602c79e240011c2bb781d43eedff0be076904fc369f62e1557cc056b1"
+    },
+    {
+      "path": "game/book/leather.json",
+      "source_sha256": "e24de01610422872733237041fead2bf7cd06a30ef361a4568f0b1db5d63cbf4",
+      "tested_sha256": "e24de01610422872733237041fead2bf7cd06a30ef361a4568f0b1db5d63cbf4"
+    },
+    {
+      "path": "game/book/leather.png",
+      "source_sha256": "58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41",
+      "tested_sha256": "58372a4329973e3ad308fde17ab5bc77148d7f724e55671e540bb5344f8e0f41"
+    },
+    {
+      "path": "game/book/leather.png.import",
+      "source_sha256": "6fa76d3a270ac361b4719d1d46731785b467bb0534091a05f0708ecd243540df",
+      "tested_sha256": "6fa76d3a270ac361b4719d1d46731785b467bb0534091a05f0708ecd243540df",
+      "engine_added_defaults": {}
+    },
+    {
+      "path": "game/book/main.gd",
+      "source_sha256": "3a09609161423173e89c4560ddad9466acc97a009c42bfac34d2bb0e873906f8",
+      "tested_sha256": "3a09609161423173e89c4560ddad9466acc97a009c42bfac34d2bb0e873906f8"
+    },
+    {
+      "path": "game/book/material.gdshader",
+      "source_sha256": "320da479e53e2f0346fbaa618f70143d1965c6e7735aa7c4be16bcb02e1e3595",
+      "tested_sha256": "320da479e53e2f0346fbaa618f70143d1965c6e7735aa7c4be16bcb02e1e3595"
+    },
+    {
+      "path": "game/book/page.gdshader",
+      "source_sha256": "378fa58cb3928aa1f25a12523e6b56148845429fd0fc0ef99149923c8f10fa27",
+      "tested_sha256": "378fa58cb3928aa1f25a12523e6b56148845429fd0fc0ef99149923c8f10fa27"
+    },
+    {
+      "path": "game/book/paper.json",
+      "source_sha256": "4b03745631543dadf1be83021e64b7fba6dcfe63befb829b143849e7ed386986",
+      "tested_sha256": "4b03745631543dadf1be83021e64b7fba6dcfe63befb829b143849e7ed386986"
+    },
+    {
+      "path": "game/book/paper.png",
+      "source_sha256": "1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f",
+      "tested_sha256": "1af9f61957619d7cea98b69021688b0b78997d84baf93698c9f02dcbb866362f"
+    },
+    {
+      "path": "game/book/paper.png.import",
+      "source_sha256": "795991150e809dd08a0b97f0595afd323393f1da9c54bf5746070c68d2e54f28",
+      "tested_sha256": "c6bc3817dc7043bbe8001d60885286ee370ebfbc462b59f3c4c5b2eaa757ba24",
+      "engine_added_defaults": {
+        "[params]/compress/uastc_level": "0",
+        "[params]/compress/rdo_quality_loss": "0.0",
+        "[params]/compress/hdr_compression": "1",
+        "[params]/compress/normal_map": "0",
+        "[params]/compress/channel_pack": "0",
+        "[params]/roughness/mode": "0",
+        "[params]/roughness/src_normal": "\"\"",
+        "[params]/process/channel_remap/red": "0",
+        "[params]/process/channel_remap/green": "1",
+        "[params]/process/channel_remap/blue": "2",
+        "[params]/process/channel_remap/alpha": "3",
+        "[params]/process/normal_map_invert_y": "false",
+        "[params]/process/hdr_as_srgb": "false",
+        "[params]/process/hdr_clamp_exposure": "false"
+      }
+    },
+    {
+      "path": "game/book/surface.gd",
+      "source_sha256": "075bdbe28745ae518a61fdd499a5134fef965a6071b6729474ffc08ae9cd6953",
+      "tested_sha256": "075bdbe28745ae518a61fdd499a5134fef965a6071b6729474ffc08ae9cd6953"
+    },
+    {
+      "path": "game/book/table.json",
+      "source_sha256": "854e5483aa1c43036fc5ee53432f839573dc51ad74c3a84154366a444fe41827",
+      "tested_sha256": "854e5483aa1c43036fc5ee53432f839573dc51ad74c3a84154366a444fe41827"
+    },
+    {
+      "path": "game/book/table.png",
+      "source_sha256": "5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da",
+      "tested_sha256": "5b02fe08710efb47df7b23307f460035aebaa3fa411e846b4a06558cc79678da"
+    },
+    {
+      "path": "game/book/table.png.import",
+      "source_sha256": "53c06887843f622e44f706aab91d2f88aa5970873245521e6127909a2eee6584",
+      "tested_sha256": "53c06887843f622e44f706aab91d2f88aa5970873245521e6127909a2eee6584",
+      "engine_added_defaults": {}
+    },
+    {
+      "path": "game/full_view_study/catalog.gd",
+      "source_sha256": "82da9ba8f98c30f30d5fc83b4e7ba9d1a481dd8290ca44d718a39c276b226e37",
+      "tested_sha256": "82da9ba8f98c30f30d5fc83b4e7ba9d1a481dd8290ca44d718a39c276b226e37"
+    },
+    {
+      "path": "game/full_view_study/catalog.json",
+      "source_sha256": "88a539c2383c32c1950a62d00bba05ad9c2eea2323508e9cb38db2f3376e0ddc",
+      "tested_sha256": "88a539c2383c32c1950a62d00bba05ad9c2eea2323508e9cb38db2f3376e0ddc"
+    },
+    {
+      "path": "game/full_view_study/save_store.gd",
+      "source_sha256": "66381bfcac622212340000ef4dfc36aa8b9855d5a535e478caab1ee0bace3442",
+      "tested_sha256": "66381bfcac622212340000ef4dfc36aa8b9855d5a535e478caab1ee0bace3442"
+    },
+    {
+      "path": "game/model/catalog_difficulty.gd",
+      "source_sha256": "7a77b61b294f38791c3c2eca8d0a9da371f676337eb72119ea3d7d9f9a7a0c1b",
+      "tested_sha256": "7a77b61b294f38791c3c2eca8d0a9da371f676337eb72119ea3d7d9f9a7a0c1b"
+    },
+    {
+      "path": "game/model/catalog_filter.gd",
+      "source_sha256": "6b38fade717e5aab93b71894d8ea1857e53915127424186cd9ac288668158a06",
+      "tested_sha256": "6b38fade717e5aab93b71894d8ea1857e53915127424186cd9ac288668158a06"
+    },
+    {
+      "path": "game/model/catalog_preference.gd",
+      "source_sha256": "8163543ea9d07dfc5127590889fa5a48a59214e010d78b1df09bd590f7a7f480",
+      "tested_sha256": "8163543ea9d07dfc5127590889fa5a48a59214e010d78b1df09bd590f7a7f480"
+    },
+    {
+      "path": "game/model/clue_completion.gd",
+      "source_sha256": "874cf7b849d3652bbafce9b45a331150450cc24d668488c4e25d83dc63634eda",
+      "tested_sha256": "874cf7b849d3652bbafce9b45a331150450cc24d668488c4e25d83dc63634eda"
+    },
+    {
+      "path": "game/model/content_registry.gd",
+      "source_sha256": "fafd5eb48e8e2a6d1a623db68a996cbab805f3069e89b81f5bb1222f1406d9a8",
+      "tested_sha256": "fafd5eb48e8e2a6d1a623db68a996cbab805f3069e89b81f5bb1222f1406d9a8"
+    },
+    {
+      "path": "game/model/definition.gd",
+      "source_sha256": "c802b3452bd96a250561c05f83fb8243683e959eea80039f62d01f7f0fc8f354",
+      "tested_sha256": "c802b3452bd96a250561c05f83fb8243683e959eea80039f62d01f7f0fc8f354"
+    },
+    {
+      "path": "game/model/definition.gd.uid",
+      "source_sha256": "ad57995cf9d546751255d1e371f1efb939ff077f48663e2eb02a812b0f60c672",
+      "tested_sha256": "ad57995cf9d546751255d1e371f1efb939ff077f48663e2eb02a812b0f60c672"
+    },
+    {
+      "path": "game/model/display_policy.gd",
+      "source_sha256": "4caa61bde17e081e9cca3084cb894b34c8bbd86f70f6e74cd351a5eb009ca531",
+      "tested_sha256": "4caa61bde17e081e9cca3084cb894b34c8bbd86f70f6e74cd351a5eb009ca531"
+    },
+    {
+      "path": "game/model/display_preference.gd",
+      "source_sha256": "b7cba47f4ffa59bba9d6289860d98fc908fb4c9779a193dc0bb73f988571adfa",
+      "tested_sha256": "b7cba47f4ffa59bba9d6289860d98fc908fb4c9779a193dc0bb73f988571adfa"
+    },
+    {
+      "path": "game/model/gesture.gd",
+      "source_sha256": "1677342eeed02a1b9ddf1f4547d2e998d3949c299a71b3c3d5293bf978781801",
+      "tested_sha256": "1677342eeed02a1b9ddf1f4547d2e998d3949c299a71b3c3d5293bf978781801"
+    },
+    {
+      "path": "game/model/gesture.gd.uid",
+      "source_sha256": "2be64cf1a1948b6d5c1d52351b6523ccbbf083c20b085373f3b964a161b6dcf2",
+      "tested_sha256": "2be64cf1a1948b6d5c1d52351b6523ccbbf083c20b085373f3b964a161b6dcf2"
+    },
+    {
+      "path": "game/model/player.gd",
+      "source_sha256": "659d52a100d81017bcbd2cf3e2b2323c16d69a4551b6cf60836bfe9b35b2a82b",
+      "tested_sha256": "659d52a100d81017bcbd2cf3e2b2323c16d69a4551b6cf60836bfe9b35b2a82b"
+    },
+    {
+      "path": "game/model/player.gd.uid",
+      "source_sha256": "2500998e632d89f8512ea99e1ac30857b43bf219ac87405785b443d5422a6c05",
+      "tested_sha256": "2500998e632d89f8512ea99e1ac30857b43bf219ac87405785b443d5422a6c05"
+    },
+    {
+      "path": "game/model/recent_puzzle.gd",
+      "source_sha256": "f123398d21598d33097abb3615702cb80041fd19d0ceb9f8e9705e1a140c4e66",
+      "tested_sha256": "f123398d21598d33097abb3615702cb80041fd19d0ceb9f8e9705e1a140c4e66"
+    },
+    {
+      "path": "game/model/save_store.gd",
+      "source_sha256": "e0b78ab7a8bf808756ceecb2755bf6bb536dedb5983953a6b938f2663d2cf713",
+      "tested_sha256": "e0b78ab7a8bf808756ceecb2755bf6bb536dedb5983953a6b938f2663d2cf713"
+    },
+    {
+      "path": "game/model/session.gd",
+      "source_sha256": "dc1768a610cf4de0e89a0c0ecd4290e76e71b91b80e5b5c613761339ad9b5e71",
+      "tested_sha256": "dc1768a610cf4de0e89a0c0ecd4290e76e71b91b80e5b5c613761339ad9b5e71"
+    },
+    {
+      "path": "game/model/session.gd.uid",
+      "source_sha256": "45e5ca01873d8cb081b065fe6c949a7e4948fa341f43f70a7ac8d196aee3a55e",
+      "tested_sha256": "45e5ca01873d8cb081b065fe6c949a7e4948fa341f43f70a7ac8d196aee3a55e"
+    },
+    {
+      "path": "game/model/web_storage.gd",
+      "source_sha256": "12fda08a95a0db5869a8fc33f02b18311bc9b1251b7a04649b9d8d43077ce9ef",
+      "tested_sha256": "12fda08a95a0db5869a8fc33f02b18311bc9b1251b7a04649b9d8d43077ce9ef"
+    },
+    {
+      "path": "game/study/board.gd",
+      "source_sha256": "485f1d66a24ac4e832f5429946c9f6181535230a789a2dce1b3af726ac41fa22",
+      "tested_sha256": "485f1d66a24ac4e832f5429946c9f6181535230a789a2dce1b3af726ac41fa22"
+    },
+    {
+      "path": "game/study/fonts.gd",
+      "source_sha256": "fdeb3c877e8d56a58b8444a27d2693acd7311270d5431a69f9aab99ac37bae9d",
+      "tested_sha256": "fdeb3c877e8d56a58b8444a27d2693acd7311270d5431a69f9aab99ac37bae9d"
+    },
+    {
+      "path": "game/study/main.gd",
+      "source_sha256": "a95e65301571d08367b72f295a1dcf16ec295c77ad8a91e86d81549382a2de93",
+      "tested_sha256": "a95e65301571d08367b72f295a1dcf16ec295c77ad8a91e86d81549382a2de93"
+    },
+    {
+      "path": "game/study/main.tscn",
+      "source_sha256": "c798b35c95cf8dcf5c795c6606e546e0185f5b0a8e2e6e7fdb81bc60b193abe4",
+      "tested_sha256": "c798b35c95cf8dcf5c795c6606e546e0185f5b0a8e2e6e7fdb81bc60b193abe4"
+    },
+    {
+      "path": "game/study/marks.gd",
+      "source_sha256": "322d611d9106818bba180f58c20c4832458e33370454bb2ff516d561ec065388",
+      "tested_sha256": "322d611d9106818bba180f58c20c4832458e33370454bb2ff516d561ec065388"
+    },
+    {
+      "path": "game/study/numerals.gd",
+      "source_sha256": "22c77476e2073a9f1c9b3cd064944a3df61774ab4e4257a7296f3e93a1682ae8",
+      "tested_sha256": "22c77476e2073a9f1c9b3cd064944a3df61774ab4e4257a7296f3e93a1682ae8"
+    },
+    {
+      "path": "game/study/samples.gd",
+      "source_sha256": "b625521ba868108cd414f4598f87985462795e43a762974fba4c360aebaadebe",
+      "tested_sha256": "b625521ba868108cd414f4598f87985462795e43a762974fba4c360aebaadebe"
+    },
+    {
+      "path": "game/tests/at_alpha.gd",
+      "source_sha256": "54cd70337e3da465ede2269e9331baeb31fc4d58a3875675e582d962049e2fdf",
+      "tested_sha256": "54cd70337e3da465ede2269e9331baeb31fc4d58a3875675e582d962049e2fdf"
+    },
+    {
+      "path": "game/tests/at_pack.gd",
+      "source_sha256": "c4ec6cbd21bd99b959a23def8ba8bbde1a584fb22602b50dec574f730065827a",
+      "tested_sha256": "c4ec6cbd21bd99b959a23def8ba8bbde1a584fb22602b50dec574f730065827a"
+    },
+    {
+      "path": "game/tests/book_fixture.gd",
+      "source_sha256": "c4b8211d64341d48cb63c2b9ed6ffef2431e4d9f09d1a41958d504fd56d4a197",
+      "tested_sha256": "c4b8211d64341d48cb63c2b9ed6ffef2431e4d9f09d1a41958d504fd56d4a197"
+    },
+    {
+      "path": "game/tests/book_integration.gd",
+      "source_sha256": "5db60f3a540d7ea3a83213587e6e071234cb31611aee22651fc9943d0d9064bb",
+      "tested_sha256": "5db60f3a540d7ea3a83213587e6e071234cb31611aee22651fc9943d0d9064bb"
+    },
+    {
+      "path": "game/tests/book_windows_observer.gd",
+      "source_sha256": "729fabc62cacbf1215efc2e5d045f17b7e9c116ea88439ed6bbcd33e4099c5eb",
+      "tested_sha256": "729fabc62cacbf1215efc2e5d045f17b7e9c116ea88439ed6bbcd33e4099c5eb"
+    },
+    {
+      "path": "game/tests/capture.gd",
+      "source_sha256": "1931684ad956c0fbc3c03e45e34bbebedcd20657fa89f583daa664a02d3121eb",
+      "tested_sha256": "1931684ad956c0fbc3c03e45e34bbebedcd20657fa89f583daa664a02d3121eb"
+    },
+    {
+      "path": "game/tests/catalog_filter_cases.gd",
+      "source_sha256": "42ed151659f5e13fed3e2238f007562a87f7f99fe8a876e6644b4c9777da3464",
+      "tested_sha256": "42ed151659f5e13fed3e2238f007562a87f7f99fe8a876e6644b4c9777da3464"
+    },
+    {
+      "path": "game/tests/catalog_layout_cases.gd",
+      "source_sha256": "8b3343669a171288b9dee84e8fe594223b11aaf253a98271063bd46ef68d4e49",
+      "tested_sha256": "8b3343669a171288b9dee84e8fe594223b11aaf253a98271063bd46ef68d4e49"
+    },
+    {
+      "path": "game/tests/completion_cases.gd",
+      "source_sha256": "a23eae7d48b8cef9fcb66557ae91dbde1059306f337b136a9f0a479caa0a7e61",
+      "tested_sha256": "a23eae7d48b8cef9fcb66557ae91dbde1059306f337b136a9f0a479caa0a7e61"
+    },
+    {
+      "path": "game/tests/content_pack_probe.gd",
+      "source_sha256": "dba1fe24f627474e8191ba229cc3122514714a61403751eff92b67d66adefc58",
+      "tested_sha256": "dba1fe24f627474e8191ba229cc3122514714a61403751eff92b67d66adefc58"
+    },
+    {
+      "path": "game/tests/current_visual_cases.gd",
+      "source_sha256": "93582821a027cd4e576582ae617f477f8548580c5a9c9ee72b2f0f642e2de416",
+      "tested_sha256": "93582821a027cd4e576582ae617f477f8548580c5a9c9ee72b2f0f642e2de416"
+    },
+    {
+      "path": "game/tests/display_cases.gd",
+      "source_sha256": "8bb1aa4543e0cfc117f73e37542e632d562dd50986f694727390a3649bb797a0",
+      "tested_sha256": "8bb1aa4543e0cfc117f73e37542e632d562dd50986f694727390a3649bb797a0"
+    },
+    {
+      "path": "game/tests/ea_pack.gd",
+      "source_sha256": "a93187c269367c8595f06d4549d47c86727eb9115eca4e0649365e86cea99cf6",
+      "tested_sha256": "a93187c269367c8595f06d4549d47c86727eb9115eca4e0649365e86cea99cf6"
+    },
+    {
+      "path": "game/tests/ea_probe.gd",
+      "source_sha256": "ab1d462a841e0697b47f94d4a029e57cd10cc187f753a036d4292f85e7acceb8",
+      "tested_sha256": "ab1d462a841e0697b47f94d4a029e57cd10cc187f753a036d4292f85e7acceb8"
+    },
+    {
+      "path": "game/tests/g1_cases.gd",
+      "source_sha256": "af6a201c037cf3c79d25052fd6e8e2bd2ba32e8b573556b8460f25bb99a4ef48",
+      "tested_sha256": "af6a201c037cf3c79d25052fd6e8e2bd2ba32e8b573556b8460f25bb99a4ef48"
+    },
+    {
+      "path": "game/tests/gp48_cases.gd",
+      "source_sha256": "faa63fe21979cbb7718852281275e7ed57bfa2b284f2e2d2709d5a5266513ed6",
+      "tested_sha256": "faa63fe21979cbb7718852281275e7ed57bfa2b284f2e2d2709d5a5266513ed6"
+    },
+    {
+      "path": "game/tests/h1_capture.gd",
+      "source_sha256": "d58f0b21fef823b2df3082dcdb7d32d4022535f8e19ac3846239ebf844b5caa8",
+      "tested_sha256": "d58f0b21fef823b2df3082dcdb7d32d4022535f8e19ac3846239ebf844b5caa8"
+    },
+    {
+      "path": "game/tests/h1_cases.gd",
+      "source_sha256": "babad8445e2a13eec30cfe3f63ac24da66aa67b3646c84a1b696337de697e442",
+      "tested_sha256": "babad8445e2a13eec30cfe3f63ac24da66aa67b3646c84a1b696337de697e442"
+    },
+    {
+      "path": "game/tests/hc92_metrics.gd",
+      "source_sha256": "1dd91170b0341e4810524039eac155d05759919dc24086e89284af6436670cfe",
+      "tested_sha256": "1dd91170b0341e4810524039eac155d05759919dc24086e89284af6436670cfe"
+    },
+    {
+      "path": "game/tests/hc92_pack.gd",
+      "source_sha256": "32f10c3b17f8c070b3a8e76c878d0798244ba814e81b4c3e62364d1de54ea591",
+      "tested_sha256": "32f10c3b17f8c070b3a8e76c878d0798244ba814e81b4c3e62364d1de54ea591"
+    },
+    {
+      "path": "game/tests/help_cases.gd",
+      "source_sha256": "612125fdaab37275be50a348e7dfb06ea36352df0f228cff01aab85526f4d299",
+      "tested_sha256": "612125fdaab37275be50a348e7dfb06ea36352df0f228cff01aab85526f4d299"
+    },
+    {
+      "path": "game/tests/help_native.gd",
+      "source_sha256": "393b1a43cff55acbcea8ce3c2698f728ce7d5358c353035f7cfccf3d5f38b7d8",
+      "tested_sha256": "393b1a43cff55acbcea8ce3c2698f728ce7d5358c353035f7cfccf3d5f38b7d8"
+    },
+    {
+      "path": "game/tests/hf149_probe.gd",
+      "source_sha256": "d87a9ae27edd0c4565745b32a11b54eb911d3e3ae6599826df693f2b504f5104",
+      "tested_sha256": "d87a9ae27edd0c4565745b32a11b54eb911d3e3ae6599826df693f2b504f5104"
+    },
+    {
+      "path": "game/tests/hn192_probe.gd",
+      "source_sha256": "5fa2b7b8a1039c7fefcff579f4c91c26597614c5521d6910d3364948b3d7878c",
+      "tested_sha256": "5fa2b7b8a1039c7fefcff579f4c91c26597614c5521d6910d3364948b3d7878c"
+    },
+    {
+      "path": "game/tests/hs186_capture.gd",
+      "source_sha256": "57408f132b49eb546d6f85faf54908d0b1538a67843c7a483e7003c05122044a",
+      "tested_sha256": "57408f132b49eb546d6f85faf54908d0b1538a67843c7a483e7003c05122044a"
+    },
+    {
+      "path": "game/tests/hs186_cases.gd",
+      "source_sha256": "132a780b23bb6ca9e7aa5b302d9946b0b1d775887050e38d11df9e61d1fcdf60",
+      "tested_sha256": "132a780b23bb6ca9e7aa5b302d9946b0b1d775887050e38d11df9e61d1fcdf60"
+    },
+    {
+      "path": "game/tests/hz_b_cases.gd",
+      "source_sha256": "67772f7bc58d75a0ea38ae939cb2ecc3326769954656e76c73070dc6289107af",
+      "tested_sha256": "67772f7bc58d75a0ea38ae939cb2ecc3326769954656e76c73070dc6289107af"
+    },
+    {
+      "path": "game/tests/hz_cases.gd",
+      "source_sha256": "42df1cb0466a9579d88652c0f667f3141b5abaed327385734714acd754dca991",
+      "tested_sha256": "42df1cb0466a9579d88652c0f667f3141b5abaed327385734714acd754dca991"
+    },
+    {
+      "path": "game/tests/hz_c_cases.gd",
+      "source_sha256": "d4d200b64cc6634b18c0c5fbcb89d6a47f4a30681f71eb44a61f309e49bb15b8",
+      "tested_sha256": "d4d200b64cc6634b18c0c5fbcb89d6a47f4a30681f71eb44a61f309e49bb15b8"
+    },
+    {
+      "path": "game/tests/hz_c_sample.gd",
+      "source_sha256": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041",
+      "tested_sha256": "1344c6f82c89d91e0ec936644f8c605f3cfd4203a7fdd9e2cf23674d97d73041"
+    },
+    {
+      "path": "game/tests/hz_pack.gd",
+      "source_sha256": "bb3e9a06024ac874401113e9a5ea5ec256a8d6533896cd87218689f3d33ec04d",
+      "tested_sha256": "bb3e9a06024ac874401113e9a5ea5ec256a8d6533896cd87218689f3d33ec04d"
+    },
+    {
+      "path": "game/tests/kat1_cases.gd",
+      "source_sha256": "999df9d3c3d80417c9276c753fe914646aee9ef3d5cf8a12aa6ec91246617031",
+      "tested_sha256": "999df9d3c3d80417c9276c753fe914646aee9ef3d5cf8a12aa6ec91246617031"
+    },
+    {
+      "path": "game/tests/kat1_save_seed.gd",
+      "source_sha256": "b5bc655c1582fe1ca46198067dd359c891cee15e005433e887f2ae1fd0f7a80c",
+      "tested_sha256": "b5bc655c1582fe1ca46198067dd359c891cee15e005433e887f2ae1fd0f7a80c"
+    },
+    {
+      "path": "game/tests/kat2_cases.gd",
+      "source_sha256": "2f21befaa37322924b6676c9b9ef9ddb9bf5dd77b74504031bed7b54e5839652",
+      "tested_sha256": "2f21befaa37322924b6676c9b9ef9ddb9bf5dd77b74504031bed7b54e5839652"
+    },
+    {
+      "path": "game/tests/kat2_probe.gd",
+      "source_sha256": "54a6d44a3c1a4b9a73142fe2bb2112ced02e082bbe8b5e3b0b6d2f6a03d5c141",
+      "tested_sha256": "54a6d44a3c1a4b9a73142fe2bb2112ced02e082bbe8b5e3b0b6d2f6a03d5c141"
+    },
+    {
+      "path": "game/tests/ke_cases.gd",
+      "source_sha256": "65a043d96cf09357f6794ea006a13d31011030face19ac28f3a839a6bdc55ab2",
+      "tested_sha256": "65a043d96cf09357f6794ea006a13d31011030face19ac28f3a839a6bdc55ab2"
+    },
+    {
+      "path": "game/tests/ku_b_cases.gd",
+      "source_sha256": "5153597539375e87de6c48aa53b51ed875200ece07ee2f3399009826c974ce5d",
+      "tested_sha256": "5153597539375e87de6c48aa53b51ed875200ece07ee2f3399009826c974ce5d"
+    },
+    {
+      "path": "game/tests/multicolor_cases.gd",
+      "source_sha256": "2812c87103aca192a0a6ef3c9c247f3fae246ea2094fcfc8acd9a80ff27aa553",
+      "tested_sha256": "2812c87103aca192a0a6ef3c9c247f3fae246ea2094fcfc8acd9a80ff27aa553"
+    },
+    {
+      "path": "game/tests/native_png.gd",
+      "source_sha256": "170fff6422adcd56520515c5825907e5e1d4810e65899e21c910e3ddb2c7f9ce",
+      "tested_sha256": "170fff6422adcd56520515c5825907e5e1d4810e65899e21c910e3ddb2c7f9ce"
+    },
+    {
+      "path": "game/tests/native_png_cases.gd",
+      "source_sha256": "0930ca26ec883d60fb003f74f4ea9ea96dea903c0b55dc99bdb49479826a741c",
+      "tested_sha256": "0930ca26ec883d60fb003f74f4ea9ea96dea903c0b55dc99bdb49479826a741c"
+    },
+    {
+      "path": "game/tests/navigation_cases.gd",
+      "source_sha256": "7f5338a7ff7c131d357277cb4d1c785e148aea46d69e7f8dcea090c22e2ed4c0",
+      "tested_sha256": "7f5338a7ff7c131d357277cb4d1c785e148aea46d69e7f8dcea090c22e2ed4c0"
+    },
+    {
+      "path": "game/tests/p12_cases.gd",
+      "source_sha256": "09530fca4cf8c4cb455bca2e38fd55dc0ea7b7192e6255a9a40e8f76c4c153a4",
+      "tested_sha256": "09530fca4cf8c4cb455bca2e38fd55dc0ea7b7192e6255a9a40e8f76c4c153a4"
+    },
+    {
+      "path": "game/tests/p13_cases.gd",
+      "source_sha256": "4c15ab5cd1232f070ee1c46afcf64ab8f8599f85445d05999f62b3b138e13a8f",
+      "tested_sha256": "4c15ab5cd1232f070ee1c46afcf64ab8f8599f85445d05999f62b3b138e13a8f"
+    },
+    {
+      "path": "game/tests/p13_roundtrip.gd",
+      "source_sha256": "0c7099f92e1e05871fdfcfd8ce2b0b9e5f170384a216a4ff2ab1406b7fbff513",
+      "tested_sha256": "0c7099f92e1e05871fdfcfd8ce2b0b9e5f170384a216a4ff2ab1406b7fbff513"
+    },
+    {
+      "path": "game/tests/p14_cases.gd",
+      "source_sha256": "2b0f9a6c687ad5c2925c7c1a7595a3f209f0e8d21c92406eb6a1f9cdf1d61174",
+      "tested_sha256": "2b0f9a6c687ad5c2925c7c1a7595a3f209f0e8d21c92406eb6a1f9cdf1d61174"
+    },
+    {
+      "path": "game/tests/p14_integration.gd",
+      "source_sha256": "5a98c48f50f871b7d3063cf75b54155849398c320c85bbbb35db29bed098b22d",
+      "tested_sha256": "5a98c48f50f871b7d3063cf75b54155849398c320c85bbbb35db29bed098b22d"
+    },
+    {
+      "path": "game/tests/p14_profile.gd",
+      "source_sha256": "0432f10ead05c92c421042e291efd5787748b68f192564a4b36991dad76a6146",
+      "tested_sha256": "0432f10ead05c92c421042e291efd5787748b68f192564a4b36991dad76a6146"
+    },
+    {
+      "path": "game/tests/perf_b_cases.gd",
+      "source_sha256": "bf73fe9c759ca3ca5ac50bb1ce6a794051356229473711f03164fd05bd1ec16d",
+      "tested_sha256": "bf73fe9c759ca3ca5ac50bb1ce6a794051356229473711f03164fd05bd1ec16d"
+    },
+    {
+      "path": "game/tests/perf_b_probe.gd",
+      "source_sha256": "239f223ea864c9b4fdd838755ae35efb5bd35d8a43a80117becf36aa18c8cb69",
+      "tested_sha256": "239f223ea864c9b4fdd838755ae35efb5bd35d8a43a80117becf36aa18c8cb69"
+    },
+    {
+      "path": "game/tests/recent_cases.gd",
+      "source_sha256": "32a23c96243b03c3eb5ee708bc993efab9e15267f3295c415c6abcfcb8c54de4",
+      "tested_sha256": "32a23c96243b03c3eb5ee708bc993efab9e15267f3295c415c6abcfcb8c54de4"
+    },
+    {
+      "path": "game/tests/rp3_capture.gd",
+      "source_sha256": "cbc9829fa609321ab380318e1f6e6dcbdb3325fb014d3631f3b24259ff6663cf",
+      "tested_sha256": "cbc9829fa609321ab380318e1f6e6dcbdb3325fb014d3631f3b24259ff6663cf"
+    },
+    {
+      "path": "game/tests/rp3_probe.gd",
+      "source_sha256": "fc51f6e0cee58189cecfbad7092577274a7f7c11d9766e012df3070ca546823e",
+      "tested_sha256": "fc51f6e0cee58189cecfbad7092577274a7f7c11d9766e012df3070ca546823e"
+    },
+    {
+      "path": "game/tests/rp6_capture.gd",
+      "source_sha256": "61224370c5f1032316240fdadcb61b8808e6ba89ef3458cfec9c529f0800fb92",
+      "tested_sha256": "61224370c5f1032316240fdadcb61b8808e6ba89ef3458cfec9c529f0800fb92"
+    },
+    {
+      "path": "game/tests/rp6_probe.gd",
+      "source_sha256": "dc6467135bae9362ba60f021acfd59869ec7086348a93d1352edaeb034fd5f08",
+      "tested_sha256": "dc6467135bae9362ba60f021acfd59869ec7086348a93d1352edaeb034fd5f08"
+    },
+    {
+      "path": "game/tests/run_tests.gd",
+      "source_sha256": "d93f16b14548bd706c5db0882a519f0c5127a83f24f70176b16111ce8d9e25ce",
+      "tested_sha256": "d93f16b14548bd706c5db0882a519f0c5127a83f24f70176b16111ce8d9e25ce"
+    },
+    {
+      "path": "game/tests/scrollbar_cases.gd",
+      "source_sha256": "6bd9c4efc8e1a84a08accc5b8cbc4bde462e810cf52f2b15a301485c2c77381d",
+      "tested_sha256": "6bd9c4efc8e1a84a08accc5b8cbc4bde462e810cf52f2b15a301485c2c77381d"
+    },
+    {
+      "path": "game/tests/sd2_c_cases.gd",
+      "source_sha256": "6d8dc28f265400f803256f695f8097abf6bbc8b7bc68536f74113afa43613d7e",
+      "tested_sha256": "6d8dc28f265400f803256f695f8097abf6bbc8b7bc68536f74113afa43613d7e"
+    },
+    {
+      "path": "game/tests/view_title_cases.gd",
+      "source_sha256": "3ee91d5bcb711ee37cb02b096490e6fa68efcd1476e9b537b5f10c2c0a85918a",
+      "tested_sha256": "3ee91d5bcb711ee37cb02b096490e6fa68efcd1476e9b537b5f10c2c0a85918a"
+    },
+    {
+      "path": "game/tests/vs1_e1_cases.gd",
+      "source_sha256": "dee61588583cc7a0a7f6112a3dcc2058b8b72a017d20a156ebbdb5870456dffd",
+      "tested_sha256": "dee61588583cc7a0a7f6112a3dcc2058b8b72a017d20a156ebbdb5870456dffd"
+    },
+    {
+      "path": "game/tests/vs2_gf1_tests.gd",
+      "source_sha256": "f1017e323827e93fbdc87c35b02c16055a61ae4cb299e11078acb9143275e973",
+      "tested_sha256": "f1017e323827e93fbdc87c35b02c16055a61ae4cb299e11078acb9143275e973"
+    },
+    {
+      "path": "game/tests/vs2_h1_cases.gd",
+      "source_sha256": "0897c1e643724c5c25a53164641fd6f7da324b59fab7c1d284abe5293b39716b",
+      "tested_sha256": "0897c1e643724c5c25a53164641fd6f7da324b59fab7c1d284abe5293b39716b"
+    },
+    {
+      "path": "game/tests/vs2_measurements.gd",
+      "source_sha256": "33c1ee3c8b7c3527f0985c4ac1d2d9670caa35078f39b24247e991d8371e58a6",
+      "tested_sha256": "33c1ee3c8b7c3527f0985c4ac1d2d9670caa35078f39b24247e991d8371e58a6"
+    },
+    {
+      "path": "game/tests/vs2_roundtrip.gd",
+      "source_sha256": "b5ff6aa6bb1850c17a4342dc3c16afa2d702ef73a2d9032365203b41875bea72",
+      "tested_sha256": "b5ff6aa6bb1850c17a4342dc3c16afa2d702ef73a2d9032365203b41875bea72"
+    },
+    {
+      "path": "game/tests/vs2_scene.gd",
+      "source_sha256": "635dc0443811f8122e54fb24160b718b2ff7d5c874a91a80f986169220306e56",
+      "tested_sha256": "635dc0443811f8122e54fb24160b718b2ff7d5c874a91a80f986169220306e56"
+    },
+    {
+      "path": "game/tests/vs2_tests.gd",
+      "source_sha256": "cd3783acc5100e9ae9715d724e76dc40bfd81693d241744f2ce350bd3d888175",
+      "tested_sha256": "cd3783acc5100e9ae9715d724e76dc40bfd81693d241744f2ce350bd3d888175"
+    },
+    {
+      "path": "game/tests/vs2_v1_cases.gd",
+      "source_sha256": "b5299bfc15219c5cb6682d24080d346abbeca5a8cadc43891fd4dec69c66eb0c",
+      "tested_sha256": "b5299bfc15219c5cb6682d24080d346abbeca5a8cadc43891fd4dec69c66eb0c"
+    },
+    {
+      "path": "game/tests/vs2_v2_cases.gd",
+      "source_sha256": "a5fa1caa7a02d43145fc1c64dcee4b58eeea8915f443522903619793c3c11c9f",
+      "tested_sha256": "a5fa1caa7a02d43145fc1c64dcee4b58eeea8915f443522903619793c3c11c9f"
+    },
+    {
+      "path": "game/tests/vs2_v2_tests.gd",
+      "source_sha256": "4b85d410762f0fa53de333a27ba2b706bcff6dea45e28c9edfc4192139df64ed",
+      "tested_sha256": "4b85d410762f0fa53de333a27ba2b706bcff6dea45e28c9edfc4192139df64ed"
+    },
+    {
+      "path": "game/tests/vs2_v3_tests.gd",
+      "source_sha256": "de4e02608abb48a29686f6c5ca7700cd15f8e033ffa073cb7fe4a3ab6b376391",
+      "tested_sha256": "de4e02608abb48a29686f6c5ca7700cd15f8e033ffa073cb7fe4a3ab6b376391"
+    },
+    {
+      "path": "game/tests/vs2_window.gd",
+      "source_sha256": "b739ce0ccfc13dbc14c5739e6320a219dc18c60ae59d66426bcf12ab8c3eb42c",
+      "tested_sha256": "b739ce0ccfc13dbc14c5739e6320a219dc18c60ae59d66426bcf12ab8c3eb42c"
+    },
+    {
+      "path": "game/tests/z2_cases.gd",
+      "source_sha256": "b1532d65eca7547a01f9303c4215bd5a4d7deceaa356c56692d93308764bfd66",
+      "tested_sha256": "b1532d65eca7547a01f9303c4215bd5a4d7deceaa356c56692d93308764bfd66"
+    },
+    {
+      "path": "game/tests/za1_probe.gd",
+      "source_sha256": "fb85e2760827b325a824b156f0e0f0f6d020ad51d3dd0d1c5ea9dbe437a3efa8",
+      "tested_sha256": "fb85e2760827b325a824b156f0e0f0f6d020ad51d3dd0d1c5ea9dbe437a3efa8"
+    },
+    {
+      "path": "game/tests/za1_save_cases.gd",
+      "source_sha256": "a927a1f3d239616e7f17b77bd8bec0e8946e8f6efa55bac2226420729e6e0360",
+      "tested_sha256": "a927a1f3d239616e7f17b77bd8bec0e8946e8f6efa55bac2226420729e6e0360"
+    },
+    {
+      "path": "game/tests/zr_cases.gd",
+      "source_sha256": "7c73250e1f67c46b246e8b936e908205e875f54d8caef802dd90b8c7f0967877",
+      "tested_sha256": "7c73250e1f67c46b246e8b936e908205e875f54d8caef802dd90b8c7f0967877"
+    },
+    {
+      "path": "game/tests/zr_windows_probe.gd",
+      "source_sha256": "d387e875381baa237fe8f489d2df931f74a823d899df1da5a7a271494512389f",
+      "tested_sha256": "d387e875381baa237fe8f489d2df931f74a823d899df1da5a7a271494512389f"
+    },
+    {
+      "path": "game/tests/zs1_capture.gd",
+      "source_sha256": "d15456f37eecb57194a720796ad87462b8291164cef6f36a36c345a126620ea5",
+      "tested_sha256": "d15456f37eecb57194a720796ad87462b8291164cef6f36a36c345a126620ea5"
+    },
+    {
+      "path": "game/tests/zs1_tests.gd",
+      "source_sha256": "57b34f9da81a3e353d0ad52fd238cfb3faec214f7285686318ed5b6111b362b5",
+      "tested_sha256": "57b34f9da81a3e353d0ad52fd238cfb3faec214f7285686318ed5b6111b362b5"
+    },
+    {
+      "path": "game/tests/zs2_capture.gd",
+      "source_sha256": "d4b9b22d560547d74a2957f3e71a14566b9f687e43b0a70c43a8a08c16713772",
+      "tested_sha256": "d4b9b22d560547d74a2957f3e71a14566b9f687e43b0a70c43a8a08c16713772"
+    },
+    {
+      "path": "game/tests/zs2_numerals.gd",
+      "source_sha256": "aa9bbe0f7e2fe761860475ee2ec6c47e8936b42415788c131aea67f44ac80051",
+      "tested_sha256": "aa9bbe0f7e2fe761860475ee2ec6c47e8936b42415788c131aea67f44ac80051"
+    },
+    {
+      "path": "game/tests/zs2_rework_cases.gd",
+      "source_sha256": "85485805681b0380d25643cd50fa812cff62ac13d84acbf8045f4c9c72ea50d5",
+      "tested_sha256": "85485805681b0380d25643cd50fa812cff62ac13d84acbf8045f4c9c72ea50d5"
+    },
+    {
+      "path": "game/tests/zs2_tests.gd",
+      "source_sha256": "d40dac4b71f85da92629e65c1bdc9cc277ac6db89ad592800d96c88715da3cd2",
+      "tested_sha256": "d40dac4b71f85da92629e65c1bdc9cc277ac6db89ad592800d96c88715da3cd2"
+    },
+    {
+      "path": "game/tests/zv50_cases.gd",
+      "source_sha256": "242446fdb6c14764846c047c8aeb4c66812da658566cbfdca422d6c563fffd93",
+      "tested_sha256": "242446fdb6c14764846c047c8aeb4c66812da658566cbfdca422d6c563fffd93"
+    },
+    {
+      "path": "game/ui/atlas_marks.gd",
+      "source_sha256": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c",
+      "tested_sha256": "e1a15a6a9cc3041dd77ad5eb6194f1531719df9cdd5b4e239711f18c523ef39c"
+    },
+    {
+      "path": "game/ui/atlas_mask.gdshader",
+      "source_sha256": "b27c6ffee9cce0296df633a349a1aa286975541ef801923710c465a8c6dd73b6",
+      "tested_sha256": "b27c6ffee9cce0296df633a349a1aa286975541ef801923710c465a8c6dd73b6"
+    },
+    {
+      "path": "game/ui/board.gd",
+      "source_sha256": "0a754f2c2479bc2663f617b60f7cec5bccf7384ba02bcf9a8e4be9a15fabd5e0",
+      "tested_sha256": "0a754f2c2479bc2663f617b60f7cec5bccf7384ba02bcf9a8e4be9a15fabd5e0"
+    },
+    {
+      "path": "game/ui/board.gd.uid",
+      "source_sha256": "38ca46d9148fc5d6a317bf4f60f2ec8cb34312205580dab4eca80bacb7424ebd",
+      "tested_sha256": "38ca46d9148fc5d6a317bf4f60f2ec8cb34312205580dab4eca80bacb7424ebd"
+    },
+    {
+      "path": "game/ui/book_button.gd",
+      "source_sha256": "257b7dc17db5e8b2a7404739da5d445af06361d7bf15a70a92fa93f230b4a992",
+      "tested_sha256": "257b7dc17db5e8b2a7404739da5d445af06361d7bf15a70a92fa93f230b4a992"
+    },
+    {
+      "path": "game/ui/book_choice.gd",
+      "source_sha256": "ee773f5b55139ff0f8da09aea42477c13cd6cf27737e2439b4196383e9c09789",
+      "tested_sha256": "ee773f5b55139ff0f8da09aea42477c13cd6cf27737e2439b4196383e9c09789"
+    },
+    {
+      "path": "game/ui/book_controls.gd",
+      "source_sha256": "42249df81041e5314b8a2f24b7f570125567313ea94cdb3b997665b60fe4cf85",
+      "tested_sha256": "42249df81041e5314b8a2f24b7f570125567313ea94cdb3b997665b60fe4cf85"
+    },
+    {
+      "path": "game/ui/book_style.gd",
+      "source_sha256": "08cf9ba620da29d3c7dac300288394c9b464dd0f24441a7062f67e6efe40e82c",
+      "tested_sha256": "08cf9ba620da29d3c7dac300288394c9b464dd0f24441a7062f67e6efe40e82c"
+    },
+    {
+      "path": "game/ui/book_surface.gd",
+      "source_sha256": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7",
+      "tested_sha256": "8f45dd174fd7b7526d769082a20434af234e2182dc3abb865f86689a56a9e5c7"
+    },
+    {
+      "path": "game/ui/book_tooltip.gd",
+      "source_sha256": "7abea08121abf45db2d1c7a8d1bc14a77d53ac81eddd12fadbb79f4fd7eb08a7",
+      "tested_sha256": "7abea08121abf45db2d1c7a8d1bc14a77d53ac81eddd12fadbb79f4fd7eb08a7"
+    },
+    {
+      "path": "game/ui/book_tooltip.gd.uid",
+      "source_sha256": "64d4c0eb50a14e21a905f993c55777e38c106153737a8afee87979c5c8ba88a8",
+      "tested_sha256": "64d4c0eb50a14e21a905f993c55777e38c106153737a8afee87979c5c8ba88a8"
+    },
+    {
+      "path": "game/ui/catalog.gd",
+      "source_sha256": "6df9e763188c24b4a6ea4bbfbe8414b18c0878ba0fcde442b979c93305927909",
+      "tested_sha256": "6df9e763188c24b4a6ea4bbfbe8414b18c0878ba0fcde442b979c93305927909"
+    },
+    {
+      "path": "game/ui/catalog_card.gd",
+      "source_sha256": "65225ca987afb1a86b92985623b7de43e872eef0a72697797db418dd117c6d98",
+      "tested_sha256": "65225ca987afb1a86b92985623b7de43e872eef0a72697797db418dd117c6d98"
+    },
+    {
+      "path": "game/ui/catalog_filters.gd",
+      "source_sha256": "05d4983e8a10c6a82eb5c1675337607adaac5cb5f37245223568315fa2562714",
+      "tested_sha256": "05d4983e8a10c6a82eb5c1675337607adaac5cb5f37245223568315fa2562714"
+    },
+    {
+      "path": "game/ui/catalog_grid.gd",
+      "source_sha256": "eb731dad2446763cbe3e494d9cfa247438439bc3131ef2f642878aa6a1852922",
+      "tested_sha256": "eb731dad2446763cbe3e494d9cfa247438439bc3131ef2f642878aa6a1852922"
+    },
+    {
+      "path": "game/ui/catalog_ink.gd",
+      "source_sha256": "6d71d747e1517c507d1043fb42b116dc3be926ff6f49311be8e85a8180dd76de",
+      "tested_sha256": "6d71d747e1517c507d1043fb42b116dc3be926ff6f49311be8e85a8180dd76de"
+    },
+    {
+      "path": "game/ui/catalog_tip.gd",
+      "source_sha256": "df7d0d4ccc1d403eaaf1ecf7a75ae3625401e5df9ca6fc4103686dff7237d40e",
+      "tested_sha256": "df7d0d4ccc1d403eaaf1ecf7a75ae3625401e5df9ca6fc4103686dff7237d40e"
+    },
+    {
+      "path": "game/ui/cell_atlas.gd",
+      "source_sha256": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d",
+      "tested_sha256": "85e3bbda8383facd87f43385cc3b7e1baf64fbb9256da5bc887c7f9fec5b2f4d"
+    },
+    {
+      "path": "game/ui/chalkboard_board.gd",
+      "source_sha256": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad",
+      "tested_sha256": "dec8801adaf93eb3eda7b0ad8fc133108ae5641a1778011add4da5704dd244ad"
+    },
+    {
+      "path": "game/ui/clue_font.tres",
+      "source_sha256": "38cee56c272ba1d875528d844e4882231a92477de69f67c3a43058da4e5600c6",
+      "tested_sha256": "38cee56c272ba1d875528d844e4882231a92477de69f67c3a43058da4e5600c6"
+    },
+    {
+      "path": "game/ui/clue_layout.gd",
+      "source_sha256": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45",
+      "tested_sha256": "960d29e4254cea067aafed888332cceb3d31b323b60d601c82b69b714a2c0b45"
+    },
+    {
+      "path": "game/ui/clue_overlay.gd",
+      "source_sha256": "c3d6a5579c6412c1f5d57db105fffd4acef6b0dc29377a32e275af3e09e48be6",
+      "tested_sha256": "c3d6a5579c6412c1f5d57db105fffd4acef6b0dc29377a32e275af3e09e48be6"
+    },
+    {
+      "path": "game/ui/clue_typography.gd",
+      "source_sha256": "e92e75d7928d6d1ada7357693d5a12f366dbbc05a22c0749379f08d51662cc5c",
+      "tested_sha256": "e92e75d7928d6d1ada7357693d5a12f366dbbc05a22c0749379f08d51662cc5c"
+    },
+    {
+      "path": "game/ui/completion.gd",
+      "source_sha256": "a085b1f3f56f275b229571991674e3cdbfffeb437fce69e0cab03e9aeb1c4b79",
+      "tested_sha256": "a085b1f3f56f275b229571991674e3cdbfffeb437fce69e0cab03e9aeb1c4b79"
+    },
+    {
+      "path": "game/ui/completion_switch.gd",
+      "source_sha256": "d8ee9ce55f69e0ec21bcf1b19612e1964da7b79446a215d727fef44bc791fd0d",
+      "tested_sha256": "d8ee9ce55f69e0ec21bcf1b19612e1964da7b79446a215d727fef44bc791fd0d"
+    },
+    {
+      "path": "game/ui/display_backend.gd",
+      "source_sha256": "b2cf5230770279d20d5b049a59a238160a0929c95c0269f4e1db9849b1423ee3",
+      "tested_sha256": "b2cf5230770279d20d5b049a59a238160a0929c95c0269f4e1db9849b1423ee3"
+    },
+    {
+      "path": "game/ui/display_controller.gd",
+      "source_sha256": "679ceb6dcca81c9796e9550bb8c2850c2c42d9853a299c72b08974717f30c363",
+      "tested_sha256": "679ceb6dcca81c9796e9550bb8c2850c2c42d9853a299c72b08974717f30c363"
+    },
+    {
+      "path": "game/ui/display_settings.gd",
+      "source_sha256": "3e752e1c96b420acfb7d56ccd4cab927f45298aca9fb4b2ab36045765062c5aa",
+      "tested_sha256": "3e752e1c96b420acfb7d56ccd4cab927f45298aca9fb4b2ab36045765062c5aa"
+    },
+    {
+      "path": "game/ui/drawing_board.gd",
+      "source_sha256": "cf43e86369f3d12c6d592aea92c600940660c362f914ac1b232aba15e9364c0c",
+      "tested_sha256": "cf43e86369f3d12c6d592aea92c600940660c362f914ac1b232aba15e9364c0c"
+    },
+    {
+      "path": "game/ui/drawing_font.gd",
+      "source_sha256": "7f32268ba4cac9a530fbe5a6d63f8a3c53c769fff281803f9fb104aabaed8cfc",
+      "tested_sha256": "7f32268ba4cac9a530fbe5a6d63f8a3c53c769fff281803f9fb104aabaed8cfc"
+    },
+    {
+      "path": "game/ui/full_view_board.gd",
+      "source_sha256": "0839118703b65c96349e7f15d1560c59e68e4100ebb0b620e05a17c548213347",
+      "tested_sha256": "0839118703b65c96349e7f15d1560c59e68e4100ebb0b620e05a17c548213347"
+    },
+    {
+      "path": "game/ui/gesture_counter.gd",
+      "source_sha256": "d27ac9a2178b2a457c875881c268caf22e661829385497c01598c37b0b082b4e",
+      "tested_sha256": "d27ac9a2178b2a457c875881c268caf22e661829385497c01598c37b0b082b4e"
+    },
+    {
+      "path": "game/ui/grid_view.gd",
+      "source_sha256": "5b4c29e2e2c8291834d2169f9281d97bfeac212284fb85a817aae4bcdf25a946",
+      "tested_sha256": "5b4c29e2e2c8291834d2169f9281d97bfeac212284fb85a817aae4bcdf25a946"
+    },
+    {
+      "path": "game/ui/grid_view.gd.uid",
+      "source_sha256": "03b5fd62156f71f00b885b1831e02f5bfddee5eeb9074bdeb35f6b2eb914779e",
+      "tested_sha256": "03b5fd62156f71f00b885b1831e02f5bfddee5eeb9074bdeb35f6b2eb914779e"
+    },
+    {
+      "path": "game/ui/help_chapter_button.gd",
+      "source_sha256": "c12af06a49833567a46016ab433611f3281578feb3ae22d97c3422ecb37771ef",
+      "tested_sha256": "c12af06a49833567a46016ab433611f3281578feb3ae22d97c3422ecb37771ef"
+    },
+    {
+      "path": "game/ui/help_example.gd",
+      "source_sha256": "66d330615fd850c1e6f87f0c3376df64d2d951ad944f5036a9cfa089ba664cab",
+      "tested_sha256": "66d330615fd850c1e6f87f0c3376df64d2d951ad944f5036a9cfa089ba664cab"
+    },
+    {
+      "path": "game/ui/help_examples.gd",
+      "source_sha256": "279178332e170398f2d4218aa19d3d462f62f866a598dbde7f8096f88c227bf1",
+      "tested_sha256": "279178332e170398f2d4218aa19d3d462f62f866a598dbde7f8096f88c227bf1"
+    },
+    {
+      "path": "game/ui/help_panel.gd",
+      "source_sha256": "01565d1b5e6c60b9bdba40edab780ec728c39aacc2260f23fb661b95bbf6ab34",
+      "tested_sha256": "01565d1b5e6c60b9bdba40edab780ec728c39aacc2260f23fb661b95bbf6ab34"
+    },
+    {
+      "path": "game/ui/main.gd",
+      "source_sha256": "1a3e9d56a7bfe463b4674d6bec635e5b10b7a5f705a692c4d84ef734fd2859d2",
+      "tested_sha256": "1a3e9d56a7bfe463b4674d6bec635e5b10b7a5f705a692c4d84ef734fd2859d2"
+    },
+    {
+      "path": "game/ui/main.gd.uid",
+      "source_sha256": "f3366c26faa9aa9d58ee709bbff30487bdf006c95f905f8adb640d0dda7c9ea1",
+      "tested_sha256": "f3366c26faa9aa9d58ee709bbff30487bdf006c95f905f8adb640d0dda7c9ea1"
+    },
+    {
+      "path": "game/ui/miniature.gd",
+      "source_sha256": "ec84abc6768176ea95a99d4266c90c633db0006978d340d125bc6eceb8e768bf",
+      "tested_sha256": "ec84abc6768176ea95a99d4266c90c633db0006978d340d125bc6eceb8e768bf"
+    },
+    {
+      "path": "game/ui/miniature.gd.uid",
+      "source_sha256": "ff633e10515b33fb83ada86117ea6a9914d5199ca02e9ae974c5e457fa659952",
+      "tested_sha256": "ff633e10515b33fb83ada86117ea6a9914d5199ca02e9ae974c5e457fa659952"
+    },
+    {
+      "path": "game/ui/pencil_marks.gd",
+      "source_sha256": "bec00db704685bea4028b23fba0f3374f659041154cba20f5a85c9f203846947",
+      "tested_sha256": "bec00db704685bea4028b23fba0f3374f659041154cba20f5a85c9f203846947"
+    },
+    {
+      "path": "game/ui/recent_panel.gd",
+      "source_sha256": "83e62520b64258bff9bff0b488071851144170f01b27337090aea2fe50216729",
+      "tested_sha256": "83e62520b64258bff9bff0b488071851144170f01b27337090aea2fe50216729"
+    },
+    {
+      "path": "game/ui/reveal.gd",
+      "source_sha256": "03f14a741db55de0a9ca4582396830e43680f52b790cf1c2b50e9c3d8223c392",
+      "tested_sha256": "03f14a741db55de0a9ca4582396830e43680f52b790cf1c2b50e9c3d8223c392"
+    },
+    {
+      "path": "game/ui/reveal.gd.uid",
+      "source_sha256": "4e2b7c26bfdba5c254d18e11693f06d7daefc9b4b43ee875eaf260fdc01cab3e",
+      "tested_sha256": "4e2b7c26bfdba5c254d18e11693f06d7daefc9b4b43ee875eaf260fdc01cab3e"
+    },
+    {
+      "path": "game/ui/scribble.gd",
+      "source_sha256": "33ee9d5f1497a9c6eea3c65d80e10861fe5c147e562982c24cac68c9d07dbc6a",
+      "tested_sha256": "33ee9d5f1497a9c6eea3c65d80e10861fe5c147e562982c24cac68c9d07dbc6a"
+    },
+    {
+      "path": "game/ui/scrollbar_style.gd",
+      "source_sha256": "b457de4773685d7e726727a1857aec6ac987a24f583b7ae9ffe8c917521744b8",
+      "tested_sha256": "b457de4773685d7e726727a1857aec6ac987a24f583b7ae9ffe8c917521744b8"
+    },
+    {
+      "path": "game/ui/settings_field.gd",
+      "source_sha256": "7f20b88bb9179b0ed14e84aba66ff96122af40d5711446448d9f65edeab032de",
+      "tested_sha256": "7f20b88bb9179b0ed14e84aba66ff96122af40d5711446448d9f65edeab032de"
+    },
+    {
+      "path": "game/ui/settings_group.gd",
+      "source_sha256": "3f36351a2bb5eda8d06f29c643b84a483fd8bb2941c38678b8274c0ac1dfdbbd",
+      "tested_sha256": "3f36351a2bb5eda8d06f29c643b84a483fd8bb2941c38678b8274c0ac1dfdbbd"
+    },
+    {
+      "path": "game/ui/settings_help.gd",
+      "source_sha256": "6cc314aba5f7f073b5e2a2987691eb73e4cd0d18d1b0d1b264954ac64e414049",
+      "tested_sha256": "6cc314aba5f7f073b5e2a2987691eb73e4cd0d18d1b0d1b264954ac64e414049"
+    },
+    {
+      "path": "game/ui/ui_text.gd",
+      "source_sha256": "86447bef28871f2e80228ed5011f9d54e3895921e7ab4c0b04cdda3c6fbcc46b",
+      "tested_sha256": "86447bef28871f2e80228ed5011f9d54e3895921e7ab4c0b04cdda3c6fbcc46b"
+    },
+    {
+      "path": "game/ui/view_title.gd",
+      "source_sha256": "762c490be07d6d487d92cb606b931c3012abf5f123aa4b6e76806b3f7eb1dd3a",
+      "tested_sha256": "762c490be07d6d487d92cb606b931c3012abf5f123aa4b6e76806b3f7eb1dd3a"
+    },
+    {
+      "path": "game/web/shell.html",
+      "source_sha256": "be935d40c482b3f776a74eee226482e30d7f3e89a688690a12b91c4f0ee7f129",
+      "tested_sha256": "be935d40c482b3f776a74eee226482e30d7f3e89a688690a12b91c4f0ee7f129"
+    },
+    {
+      "path": "game/web/storage.js",
+      "source_sha256": "fccb7f3570d1b7f923de583de187859d2719a569b792ffd7453e4cc3c2b2b406",
+      "tested_sha256": "fccb7f3570d1b7f923de583de187859d2719a569b792ffd7453e4cc3c2b2b406"
+    },
+    {
+      "path": "game/study/fonts/BaksoDaging-Regular.ttf",
+      "source_sha256": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e",
+      "tested_sha256": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e"
+    },
+    {
+      "path": "game/study/fonts/Chalkboard-Regular.ttf",
+      "source_sha256": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d",
+      "tested_sha256": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d"
+    },
+    {
+      "path": "game/study/fonts/NOTICES.md",
+      "source_sha256": "f5a66716a6f8077b231f02f1c7466380a3b25197226c5969d5b271d09662b62e",
+      "tested_sha256": "f5a66716a6f8077b231f02f1c7466380a3b25197226c5969d5b271d09662b62e"
+    },
+    {
+      "path": "game/full_view_study/cases/vs01/definition.json",
+      "source_sha256": "9bf3f35847d8bb48705ba646f791aca2c620603377246a8550c3cef6d87921d4",
+      "tested_sha256": "9bf3f35847d8bb48705ba646f791aca2c620603377246a8550c3cef6d87921d4"
+    },
+    {
+      "path": "game/full_view_study/cases/vs01/reveal.svg",
+      "source_sha256": "602b5fa22cec2255292e209afb0a64c1d696aa5cd711c9d4b21044263bf1b15a",
+      "tested_sha256": "602b5fa22cec2255292e209afb0a64c1d696aa5cd711c9d4b21044263bf1b15a"
+    },
+    {
+      "path": "game/full_view_study/cases/vs02/definition.json",
+      "source_sha256": "98dcfb6613e63b7ea620ec6c5b55e7c17e0beebaedb23e7a4456f35ab2ac714c",
+      "tested_sha256": "98dcfb6613e63b7ea620ec6c5b55e7c17e0beebaedb23e7a4456f35ab2ac714c"
+    },
+    {
+      "path": "game/full_view_study/cases/vs02/reveal.png",
+      "source_sha256": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b",
+      "tested_sha256": "5017066bf077dbfede6009d160a6986218dfe4a5795a2027b9aeec0160b7d96b"
+    },
+    {
+      "path": "game/full_view_study/cases/vs03/definition.json",
+      "source_sha256": "a77478dcc7f0234295b1aedf7efe01fa61aae89b25e638bd82f68cdd0964c447",
+      "tested_sha256": "a77478dcc7f0234295b1aedf7efe01fa61aae89b25e638bd82f68cdd0964c447"
+    },
+    {
+      "path": "game/full_view_study/cases/vs03/reveal.png",
+      "source_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+      "tested_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86"
+    },
+    {
+      "path": "game/full_view_study/cases/vs04/definition.json",
+      "source_sha256": "ff8bdff7a01cd90e8b7e747bdfa7dfbe475ba088942f139fb2bd5c88e969ae67",
+      "tested_sha256": "ff8bdff7a01cd90e8b7e747bdfa7dfbe475ba088942f139fb2bd5c88e969ae67"
+    },
+    {
+      "path": "game/full_view_study/cases/vs04/reveal.png",
+      "source_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+      "tested_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1"
+    },
+    {
+      "path": "game/full_view_study/cases/vs05/definition.json",
+      "source_sha256": "d90809038f40b56368daca4d53462aa86a591284c3221b9b4be4f43747be66ae",
+      "tested_sha256": "d90809038f40b56368daca4d53462aa86a591284c3221b9b4be4f43747be66ae"
+    },
+    {
+      "path": "game/full_view_study/cases/vs05/reveal.png",
+      "source_sha256": "d08850f3c7293aacf397e21e19390e2ff7dadb98d16fe55cca16addb1a96c8cc",
+      "tested_sha256": "d08850f3c7293aacf397e21e19390e2ff7dadb98d16fe55cca16addb1a96c8cc"
+    },
+    {
+      "path": "game/full_view_study/cases/vs06/definition.json",
+      "source_sha256": "3d028440b7611ecaa49c5652267ba1e23ba4d4f06e6a26f15501d98e940c8b16",
+      "tested_sha256": "3d028440b7611ecaa49c5652267ba1e23ba4d4f06e6a26f15501d98e940c8b16"
+    },
+    {
+      "path": "game/full_view_study/cases/vs06/reveal.png",
+      "source_sha256": "b418af1099308d9f9a9940f1a104dcbda496dada3ff7e3c976f243e2e4e70121",
+      "tested_sha256": "b418af1099308d9f9a9940f1a104dcbda496dada3ff7e3c976f243e2e4e70121"
+    },
+    {
+      "path": "game/full_view_study/cases/vs07/definition.json",
+      "source_sha256": "de023a2a602e91f16d3059d45084787996577885290b0e45c8ee68750d510d7e",
+      "tested_sha256": "de023a2a602e91f16d3059d45084787996577885290b0e45c8ee68750d510d7e"
+    },
+    {
+      "path": "game/full_view_study/cases/vs07/reveal.png",
+      "source_sha256": "91304a15c6f2f6106b7169d224422da7c781cb630d7b6b1e727cf85fef47ec2d",
+      "tested_sha256": "91304a15c6f2f6106b7169d224422da7c781cb630d7b6b1e727cf85fef47ec2d"
+    },
+    {
+      "path": "game/full_view_study/cases/vs08/definition.json",
+      "source_sha256": "edd7f6a616fac2dd29150036a2cee105af0508aedb7e3d3e3351c6aa6f87f4df",
+      "tested_sha256": "edd7f6a616fac2dd29150036a2cee105af0508aedb7e3d3e3351c6aa6f87f4df"
+    },
+    {
+      "path": "game/full_view_study/cases/vs08/reveal.png",
+      "source_sha256": "50493120121531a15cdc6352a85efc2b08ac6b12793b22740f3fdfa468bf0562",
+      "tested_sha256": "50493120121531a15cdc6352a85efc2b08ac6b12793b22740f3fdfa468bf0562"
+    },
+    {
+      "path": "game/full_view_study/cases/vs09/definition.json",
+      "source_sha256": "cb36a6b20d7ec024bea47370165bcee7662293663655cf4d18d288388608b560",
+      "tested_sha256": "cb36a6b20d7ec024bea47370165bcee7662293663655cf4d18d288388608b560"
+    },
+    {
+      "path": "game/full_view_study/cases/vs09/reveal.png",
+      "source_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86",
+      "tested_sha256": "15f3b3a8baf09daf71aa9eb956e1d7ad2c11df323dce52eed763bc84eb96fa86"
+    },
+    {
+      "path": "game/full_view_study/cases/vs10/definition.json",
+      "source_sha256": "2674efa16321ade17005abc9a50798c82574b3805feba4c36b1b4851f4899c7e",
+      "tested_sha256": "2674efa16321ade17005abc9a50798c82574b3805feba4c36b1b4851f4899c7e"
+    },
+    {
+      "path": "game/full_view_study/cases/vs10/reveal.png",
+      "source_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1",
+      "tested_sha256": "b45d414e3651de6fba7c4eb5e1fc2b139759a8b386846ca43af237e7346f46c1"
+    },
+    {
+      "path": "game/art/book/arrow-down.svg",
+      "source_sha256": "f6868d894d866440bd3fe64a0c5913c62952fb50f0db8fc2392332ccde131215",
+      "tested_sha256": "f6868d894d866440bd3fe64a0c5913c62952fb50f0db8fc2392332ccde131215"
+    },
+    {
+      "path": "game/art/book/arrow-left.svg",
+      "source_sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca",
+      "tested_sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca"
+    },
+    {
+      "path": "game/art/book/arrow-right.svg",
+      "source_sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c",
+      "tested_sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c"
+    },
+    {
+      "path": "game/art/book/arrow-up.svg",
+      "source_sha256": "4dab3c772d0024ff839b71ee95a3e282e354750ffe1271e5b40abc57423f93bb",
+      "tested_sha256": "4dab3c772d0024ff839b71ee95a3e282e354750ffe1271e5b40abc57423f93bb"
+    },
+    {
+      "path": "game/art/book/bp2-a-inventarband.png",
+      "source_sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a",
+      "tested_sha256": "957c2eab39b2334825fb159287b9d36a17b77fff1c628ea88110f2cfb5f7a71a"
+    },
+    {
+      "path": "game/art/book/check-empty.svg",
+      "source_sha256": "5effbb3665f6354ebccc97e4b7fea39ebc683340a3a0244e95140d862370df6f",
+      "tested_sha256": "5effbb3665f6354ebccc97e4b7fea39ebc683340a3a0244e95140d862370df6f"
+    },
+    {
+      "path": "game/art/book/check.svg",
+      "source_sha256": "fe8a40a258f556f8afd52840b7ca0ce12296bf83ee751f0bf3540deff52225f0",
+      "tested_sha256": "fe8a40a258f556f8afd52840b7ca0ce12296bf83ee751f0bf3540deff52225f0"
+    },
+    {
+      "path": "game/art/book/checkbox-checked.svg",
+      "source_sha256": "9baa482570478e355e5aae74090e5e1163dedfba3f9c82153f2aaf0c0cbfc703",
+      "tested_sha256": "9baa482570478e355e5aae74090e5e1163dedfba3f9c82153f2aaf0c0cbfc703"
+    },
+    {
+      "path": "game/art/book/checkbox-empty.svg",
+      "source_sha256": "216c631f76b4a499672da877807b249ae8ccd969a1b70194d3ea056ec8c52ec8",
+      "tested_sha256": "216c631f76b4a499672da877807b249ae8ccd969a1b70194d3ea056ec8c52ec8"
+    },
+    {
+      "path": "game/art/book/chevron-down.svg",
+      "source_sha256": "7147bbc61e9eeb2b2a97c7d66d11768d56664bc186810ecc01691114b4f44fa2",
+      "tested_sha256": "7147bbc61e9eeb2b2a97c7d66d11768d56664bc186810ecc01691114b4f44fa2"
+    },
+    {
+      "path": "game/art/book/chevron-up.svg",
+      "source_sha256": "b08a67fe48933274bececb92819f32dc8aee5e3a7dfa59facc54d8e9f0896e65",
+      "tested_sha256": "b08a67fe48933274bececb92819f32dc8aee5e3a7dfa59facc54d8e9f0896e65"
+    },
+    {
+      "path": "game/art/book/erase.svg",
+      "source_sha256": "96685a23e7a1b93964c6d87649a2e8c2c2399513b07afceed57951140467ddbd",
+      "tested_sha256": "96685a23e7a1b93964c6d87649a2e8c2c2399513b07afceed57951140467ddbd"
+    },
+    {
+      "path": "game/art/book/fill.svg",
+      "source_sha256": "1adb0f8deeec7913d541f8b5bd2de3e5494a39c1abf32e293a325445528df8c6",
+      "tested_sha256": "1adb0f8deeec7913d541f8b5bd2de3e5494a39c1abf32e293a325445528df8c6"
+    },
+    {
+      "path": "game/art/book/frame-palette.png",
+      "source_sha256": "9ac25082d5bba17f5ec6dfc847fe3882d41d398f019349bb3db3677af8b76e42",
+      "tested_sha256": "9ac25082d5bba17f5ec6dfc847fe3882d41d398f019349bb3db3677af8b76e42"
+    },
+    {
+      "path": "game/art/book/frame-palette.png.import",
+      "source_sha256": "0977b9fa05aea5251e4ed715f272627dfa652b0c79b575090aa78a78a4dcdeea",
+      "tested_sha256": "0977b9fa05aea5251e4ed715f272627dfa652b0c79b575090aa78a78a4dcdeea",
+      "engine_added_defaults": {}
+    },
+    {
+      "path": "game/art/book/frame-preview.png",
+      "source_sha256": "9187f1b1796aa3d8ef0603e01f82fde347f40fdcb5d0e3c66cc22e42657f12dd",
+      "tested_sha256": "9187f1b1796aa3d8ef0603e01f82fde347f40fdcb5d0e3c66cc22e42657f12dd"
+    },
+    {
+      "path": "game/art/book/frame-preview.png.import",
+      "source_sha256": "7f8950cfdcebbb8f56ecd46e11772402f26adffc226a1f21aec5c0c8e1a8b8b7",
+      "tested_sha256": "7f8950cfdcebbb8f56ecd46e11772402f26adffc226a1f21aec5c0c8e1a8b8b7",
+      "engine_added_defaults": {}
+    },
+    {
+      "path": "game/art/book/frame-tools.png",
+      "source_sha256": "d2155c30234045ec0e178322be5bdcd381c03516ca850e9152ebb64da557196d",
+      "tested_sha256": "d2155c30234045ec0e178322be5bdcd381c03516ca850e9152ebb64da557196d"
+    },
+    {
+      "path": "game/art/book/frame-tools.png.import",
+      "source_sha256": "d7081cbd7e5b9754f8cf9b8437bbaefdd6de1d5885dde05cd0e4b93f52ef055a",
+      "tested_sha256": "d7081cbd7e5b9754f8cf9b8437bbaefdd6de1d5885dde05cd0e4b93f52ef055a",
+      "engine_added_defaults": {}
+    },
+    {
+      "path": "game/art/book/frames.json",
+      "source_sha256": "0fcf84d17c01943cba6a86b342023b35926d05f862c8110cf6dcfd813234de3d",
+      "tested_sha256": "0fcf84d17c01943cba6a86b342023b35926d05f862c8110cf6dcfd813234de3d"
+    },
+    {
+      "path": "game/art/book/Fraunces-OFL.txt",
+      "source_sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48",
+      "tested_sha256": "6732d6cc72c5d09292ff754dc1f39d9ea14918f74e87a17afa3f00a5120c3d48"
+    },
+    {
+      "path": "game/art/book/Fraunces.ttf",
+      "source_sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb",
+      "tested_sha256": "177ff6c0f14e5550a3c624247cd1189611d4eb65d000b14944c63d967958abbb"
+    },
+    {
+      "path": "game/art/book/help.svg",
+      "source_sha256": "085ffa6e6b32cf8fe39e88a3ced2d94fb8395e8be0d03ccc064d5d8f6ce5572a",
+      "tested_sha256": "085ffa6e6b32cf8fe39e88a3ced2d94fb8395e8be0d03ccc064d5d8f6ce5572a"
+    },
+    {
+      "path": "game/art/book/HZ-B-284-NOTICE.txt",
+      "source_sha256": "f0e05321cfc9bbfebaf689e3993b0a84fc41dffc52ab233df360cd5f619046ff",
+      "tested_sha256": "f0e05321cfc9bbfebaf689e3993b0a84fc41dffc52ab233df360cd5f619046ff"
+    },
+    {
+      "path": "game/art/book/icons.json",
+      "source_sha256": "6d9131df6b423a94be598cd0e66aa42774a16d6333e1c995372395935f2aac56",
+      "tested_sha256": "6d9131df6b423a94be598cd0e66aa42774a16d6333e1c995372395935f2aac56"
+    },
+    {
+      "path": "game/art/book/KB-168-NOTICE.txt",
+      "source_sha256": "5a34a51eb0e99c969029cfeba719847344384441c6f83cbd82b5abd7ffece51b",
+      "tested_sha256": "5a34a51eb0e99c969029cfeba719847344384441c6f83cbd82b5abd7ffece51b"
+    },
+    {
+      "path": "game/art/book/manifest.json",
+      "source_sha256": "565469cec4c2c7b6858895c06b7a9fd3c9329416d4108d58d13b3c467531b582",
+      "tested_sha256": "565469cec4c2c7b6858895c06b7a9fd3c9329416d4108d58d13b3c467531b582"
+    },
+    {
+      "path": "game/art/book/menu.svg",
+      "source_sha256": "4dd71216041aeac0e2afd861516e715aa6b65ee0da696202dab854c65c5477dc",
+      "tested_sha256": "4dd71216041aeac0e2afd861516e715aa6b65ee0da696202dab854c65c5477dc"
+    },
+    {
+      "path": "game/art/book/minus.svg",
+      "source_sha256": "f230479b7b56e4d31671955e504731d15115261068f46e4b699a15132dc8b6c4",
+      "tested_sha256": "f230479b7b56e4d31671955e504731d15115261068f46e4b699a15132dc8b6c4"
+    },
+    {
+      "path": "game/art/book/nav-album.svg",
+      "source_sha256": "e59589030c0436baa93786b05711552eb3d104e021cf9f30ebd2c107daa2b290",
+      "tested_sha256": "e59589030c0436baa93786b05711552eb3d104e021cf9f30ebd2c107daa2b290"
+    },
+    {
+      "path": "game/art/book/nav-information.svg",
+      "source_sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c",
+      "tested_sha256": "ca7c8a9d00d033509c00181d7a33125cf88a63c9fa102a8b808de428b9bbc63c"
+    },
+    {
+      "path": "game/art/book/nav-work.svg",
+      "source_sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca",
+      "tested_sha256": "f704e6e5da545690dd02da2b629097dd9f71330e5338a063481fab6f1e1519ca"
+    },
+    {
+      "path": "game/art/book/play.svg",
+      "source_sha256": "d57c49d4aa6787dfaa9b5b80e264361da47c8d553def8bf923d891e374d685f4",
+      "tested_sha256": "d57c49d4aa6787dfaa9b5b80e264361da47c8d553def8bf923d891e374d685f4"
+    },
+    {
+      "path": "game/art/book/PlexSans-OFL.txt",
+      "source_sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f",
+      "tested_sha256": "d741e57d5f865e294df801f96b7b5161a88b211df65887e4358d271c9fc5fb4f"
+    },
+    {
+      "path": "game/art/book/PlexSans.ttf",
+      "source_sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3",
+      "tested_sha256": "3b031aa4216174205bd8471f88a49b91f093169e9e87bd5262242bc5967fe2e3"
+    },
+    {
+      "path": "game/art/book/plus.svg",
+      "source_sha256": "78aad8146fe68d64f3033789e0f7240c6fd83738bd172bee900202b8b4c242f0",
+      "tested_sha256": "78aad8146fe68d64f3033789e0f7240c6fd83738bd172bee900202b8b4c242f0"
+    },
+    {
+      "path": "game/art/book/quit.svg",
+      "source_sha256": "e73c034c8322dbcbe337d443cbd1b0f2b0c8640c4295c47ba288a04748253a04",
+      "tested_sha256": "e73c034c8322dbcbe337d443cbd1b0f2b0c8640c4295c47ba288a04748253a04"
+    },
+    {
+      "path": "game/art/book/redo.svg",
+      "source_sha256": "dda374601aba386dde33078f08fe8da1168c15b4137000cdb18792d3818063d4",
+      "tested_sha256": "dda374601aba386dde33078f08fe8da1168c15b4137000cdb18792d3818063d4"
+    },
+    {
+      "path": "game/art/book/reset.svg",
+      "source_sha256": "ae593cdbb3f9601f91a5a37dc6b9fda1965e22965674626aeec7ec36cc381bdf",
+      "tested_sha256": "ae593cdbb3f9601f91a5a37dc6b9fda1965e22965674626aeec7ec36cc381bdf"
+    },
+    {
+      "path": "game/art/book/scroll-down.svg",
+      "source_sha256": "3f1c4ef4315eeebd791072b66bde923967039814d6509834197f677deaccc195",
+      "tested_sha256": "3f1c4ef4315eeebd791072b66bde923967039814d6509834197f677deaccc195"
+    },
+    {
+      "path": "game/art/book/scroll-left.svg",
+      "source_sha256": "7b37135357121116fd4da10b066b96e5cc7f9cbc89051d423a8b4c47811261b2",
+      "tested_sha256": "7b37135357121116fd4da10b066b96e5cc7f9cbc89051d423a8b4c47811261b2"
+    },
+    {
+      "path": "game/art/book/scroll-right.svg",
+      "source_sha256": "5a53c57e13be59797da7ccadc9234c7a67187550e92b9453374f194592cdf0a7",
+      "tested_sha256": "5a53c57e13be59797da7ccadc9234c7a67187550e92b9453374f194592cdf0a7"
+    },
+    {
+      "path": "game/art/book/scroll-up.svg",
+      "source_sha256": "68f910f2f460a8f17acd05a21925986f72f059c06374f78d4f2cab0838f88830",
+      "tested_sha256": "68f910f2f460a8f17acd05a21925986f72f059c06374f78d4f2cab0838f88830"
+    },
+    {
+      "path": "game/art/book/Sidebar-NOTICES.txt",
+      "source_sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d",
+      "tested_sha256": "f484eb2b0d3f7e9690d9cb144c808b0ee68263fa262b03bea4a4b2a0b50e483d"
+    },
+    {
+      "path": "game/art/book/undo.svg",
+      "source_sha256": "aa3746dce70beb30fe9f08ae04dc1f1742ce2ca841c8bfab79e42cf45859d9f2",
+      "tested_sha256": "aa3746dce70beb30fe9f08ae04dc1f1742ce2ca841c8bfab79e42cf45859d9f2"
+    },
+    {
+      "path": "game/art/cells/fill-large.png",
+      "source_sha256": "29ff8c8a7492d38155a58d5926ec9ec9b2c8e0e67652c1e2d614860e4d01d5f8",
+      "tested_sha256": "29ff8c8a7492d38155a58d5926ec9ec9b2c8e0e67652c1e2d614860e4d01d5f8"
+    },
+    {
+      "path": "game/art/cells/fill-large.png.import",
+      "source_sha256": "11a231ece1c40419d53548cfe43f6c50f6892153fbe3fb3a9442e9cda170fbbe",
+      "tested_sha256": "a36cebc3e5acb1e8f48d0afc9c6868cdcd21905871293a2af337874b3825dfe3",
+      "engine_added_defaults": {
+        "[remap]/uid": "\"uid://dok6cgw3nfgrb\"",
+        "[params]/compress/high_quality": "false",
+        "[params]/compress/lossy_quality": "0.7",
+        "[params]/compress/uastc_level": "0",
+        "[params]/compress/rdo_quality_loss": "0.0",
+        "[params]/compress/hdr_compression": "1",
+        "[params]/mipmaps/limit": "-1",
+        "[params]/roughness/mode": "0",
+        "[params]/roughness/src_normal": "\"\"",
+        "[params]/process/channel_remap/red": "0",
+        "[params]/process/channel_remap/green": "1",
+        "[params]/process/channel_remap/blue": "2",
+        "[params]/process/channel_remap/alpha": "3",
+        "[params]/process/normal_map_invert_y": "false",
+        "[params]/process/hdr_clamp_exposure": "false"
+      }
+    },
+    {
+      "path": "game/art/cells/fill-medium.png",
+      "source_sha256": "0f7223a09690d5985a2e6f79d1fec07eb152bde836f910f24c61b945511cf37d",
+      "tested_sha256": "0f7223a09690d5985a2e6f79d1fec07eb152bde836f910f24c61b945511cf37d"
+    },
+    {
+      "path": "game/art/cells/fill-medium.png.import",
+      "source_sha256": "8b0c6487f7e93693cef2f4cbc1353546569d8d6809fbba14c041fc7c7d7c03a0",
+      "tested_sha256": "7b4f6e09a06efb84d3c0c557acbdf3d55119ca7f8c7173481c115844cb306fe0",
+      "engine_added_defaults": {
+        "[remap]/uid": "\"uid://deuwxi6ohhe65\"",
+        "[params]/compress/high_quality": "false",
+        "[params]/compress/lossy_quality": "0.7",
+        "[params]/compress/uastc_level": "0",
+        "[params]/compress/rdo_quality_loss": "0.0",
+        "[params]/compress/hdr_compression": "1",
+        "[params]/mipmaps/limit": "-1",
+        "[params]/roughness/mode": "0",
+        "[params]/roughness/src_normal": "\"\"",
+        "[params]/process/channel_remap/red": "0",
+        "[params]/process/channel_remap/green": "1",
+        "[params]/process/channel_remap/blue": "2",
+        "[params]/process/channel_remap/alpha": "3",
+        "[params]/process/normal_map_invert_y": "false",
+        "[params]/process/hdr_clamp_exposure": "false"
+      }
+    },
+    {
+      "path": "game/art/cells/fill-small.png",
+      "source_sha256": "5e1dc76ef5eb9769dd61bf49ff6aba6e68ad99ccfd1247b69715404542ac595a",
+      "tested_sha256": "5e1dc76ef5eb9769dd61bf49ff6aba6e68ad99ccfd1247b69715404542ac595a"
+    },
+    {
+      "path": "game/art/cells/fill-small.png.import",
+      "source_sha256": "794d2cdd301be9677b858b26376b8ad19a5477d0e0228684ff0158a610e992a6",
+      "tested_sha256": "f1cb1b3bad0e651587dac7e3e66464c34ddb4b834e43a05a00e688ccda8285c8",
+      "engine_added_defaults": {
+        "[remap]/uid": "\"uid://bv5u5k2sepv0f\"",
+        "[params]/compress/high_quality": "false",
+        "[params]/compress/lossy_quality": "0.7",
+        "[params]/compress/uastc_level": "0",
+        "[params]/compress/rdo_quality_loss": "0.0",
+        "[params]/compress/hdr_compression": "1",
+        "[params]/mipmaps/limit": "-1",
+        "[params]/roughness/mode": "0",
+        "[params]/roughness/src_normal": "\"\"",
+        "[params]/process/channel_remap/red": "0",
+        "[params]/process/channel_remap/green": "1",
+        "[params]/process/channel_remap/blue": "2",
+        "[params]/process/channel_remap/alpha": "3",
+        "[params]/process/normal_map_invert_y": "false",
+        "[params]/process/hdr_clamp_exposure": "false"
+      }
+    },
+    {
+      "path": "game/art/cells/x-large.png",
+      "source_sha256": "a8efa25ece483d2574dbd8d1cca627416f37b47b6ec39cb1d0cbe0c2853cff07",
+      "tested_sha256": "a8efa25ece483d2574dbd8d1cca627416f37b47b6ec39cb1d0cbe0c2853cff07"
+    },
+    {
+      "path": "game/art/cells/x-large.png.import",
+      "source_sha256": "dfb63e41d1e599aa4a348f739b215ece1865e3cbc0c5fd4b7f6aa9f6335001ff",
+      "tested_sha256": "3baa80f2b47f76496dfb31cd32058551f0f41e397fd28de2e9962aa26dc8a681",
+      "engine_added_defaults": {
+        "[remap]/uid": "\"uid://b3ve3l0puh1mc\"",
+        "[params]/compress/high_quality": "false",
+        "[params]/compress/lossy_quality": "0.7",
+        "[params]/compress/uastc_level": "0",
+        "[params]/compress/rdo_quality_loss": "0.0",
+        "[params]/compress/hdr_compression": "1",
+        "[params]/mipmaps/limit": "-1",
+        "[params]/roughness/mode": "0",
+        "[params]/roughness/src_normal": "\"\"",
+        "[params]/process/channel_remap/red": "0",
+        "[params]/process/channel_remap/green": "1",
+        "[params]/process/channel_remap/blue": "2",
+        "[params]/process/channel_remap/alpha": "3",
+        "[params]/process/normal_map_invert_y": "false",
+        "[params]/process/hdr_clamp_exposure": "false"
+      }
+    },
+    {
+      "path": "game/art/cells/x-medium.png",
+      "source_sha256": "0fb1e0797bc4b86fe120bab358fb3e309bf6a4c08baff0d61669952183c93bb9",
+      "tested_sha256": "0fb1e0797bc4b86fe120bab358fb3e309bf6a4c08baff0d61669952183c93bb9"
+    },
+    {
+      "path": "game/art/cells/x-medium.png.import",
+      "source_sha256": "a34ab033f89922d0252e1f7ddd3cb099e5bbc8c1ce3b816a0ecf7cbebbc7ee27",
+      "tested_sha256": "91998a39afda8616272c4893f833766b7e0642fd60aef5590ca969f9817f577a",
+      "engine_added_defaults": {
+        "[remap]/uid": "\"uid://djm3enddxq284\"",
+        "[params]/compress/high_quality": "false",
+        "[params]/compress/lossy_quality": "0.7",
+        "[params]/compress/uastc_level": "0",
+        "[params]/compress/rdo_quality_loss": "0.0",
+        "[params]/compress/hdr_compression": "1",
+        "[params]/mipmaps/limit": "-1",
+        "[params]/roughness/mode": "0",
+        "[params]/roughness/src_normal": "\"\"",
+        "[params]/process/channel_remap/red": "0",
+        "[params]/process/channel_remap/green": "1",
+        "[params]/process/channel_remap/blue": "2",
+        "[params]/process/channel_remap/alpha": "3",
+        "[params]/process/normal_map_invert_y": "false",
+        "[params]/process/hdr_clamp_exposure": "false"
+      }
+    },
+    {
+      "path": "game/art/cells/x-small.png",
+      "source_sha256": "4546d2c57eda98c21057a73668697224d16c066f159a83ed6364c3058112ecf8",
+      "tested_sha256": "4546d2c57eda98c21057a73668697224d16c066f159a83ed6364c3058112ecf8"
+    },
+    {
+      "path": "game/art/cells/x-small.png.import",
+      "source_sha256": "41760004eb51656db7d5c937e3f1b0e6d1e27f324dafb9fee1b0e62d92aee14f",
+      "tested_sha256": "c6d233195e4387b4cd8c7cd90c9b579427315efab84bad8d5167917f8ad35bac",
+      "engine_added_defaults": {
+        "[remap]/uid": "\"uid://c1fm52yid5nso\"",
+        "[params]/compress/high_quality": "false",
+        "[params]/compress/lossy_quality": "0.7",
+        "[params]/compress/uastc_level": "0",
+        "[params]/compress/rdo_quality_loss": "0.0",
+        "[params]/compress/hdr_compression": "1",
+        "[params]/mipmaps/limit": "-1",
+        "[params]/roughness/mode": "0",
+        "[params]/roughness/src_normal": "\"\"",
+        "[params]/process/channel_remap/red": "0",
+        "[params]/process/channel_remap/green": "1",
+        "[params]/process/channel_remap/blue": "2",
+        "[params]/process/channel_remap/alpha": "3",
+        "[params]/process/normal_map_invert_y": "false",
+        "[params]/process/hdr_clamp_exposure": "false"
+      }
+    },
+    {
+      "path": "game/art/drawing/Bakso-NOTICES.md",
+      "source_sha256": "37deab48d0390bbd34d5971cb5a43664e9578f8f0effa1066a94a3c96497e3e9",
+      "tested_sha256": "37deab48d0390bbd34d5971cb5a43664e9578f8f0effa1066a94a3c96497e3e9"
+    },
+    {
+      "path": "game/art/drawing/BaksoDaging-Regular.ttf",
+      "source_sha256": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e",
+      "tested_sha256": "56372bf12a6e4fa47a655ff9b2c4cc73172ddd387b3a047093d3e637d081790e"
+    },
+    {
+      "path": "game/art/drawing/Chalkboard-Regular.ttf",
+      "source_sha256": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d",
+      "tested_sha256": "163d5acb0c4cc2f54a603501836fda2dcdd1d09579a8d1f790ab882d86175c4d"
+    },
+    {
+      "path": "game/art/drawing/DelightCoffee-NOTICES.md",
+      "source_sha256": "b443284305899d2b14bcc4852cc088b883b4cb78ab2dc8b8f0c6856c108cc3e8",
+      "tested_sha256": "b443284305899d2b14bcc4852cc088b883b4cb78ab2dc8b8f0c6856c108cc3e8"
+    },
+    {
+      "path": "game/art/drawing/DelightCoffee-Regular.ttf",
+      "source_sha256": "4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23",
+      "tested_sha256": "4031afdb556558ffdecd48488fd1ae7eee857e804f4622ac5154cc7bb0c4cb23"
+    },
+    {
+      "path": "game/art/drawing/NOTICES.md",
+      "source_sha256": "c126113cc639c597f5fefdb1cecb33e6666c0a4f814c416ecfb6d2ae84394862",
+      "tested_sha256": "c126113cc639c597f5fefdb1cecb33e6666c0a4f814c416ecfb6d2ae84394862"
+    },
+    {
+      "path": "game/art/drawing/Pangolin-Regular.ttf",
+      "source_sha256": "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e",
+      "tested_sha256": "a48db64eadc589c2e9f14a4ba79eed82a438c7f620f929dd19e352c20b2a922e"
+    },
+    {
+      "path": "game/art/drawing/TidyHand.ttf",
+      "source_sha256": "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6",
+      "tested_sha256": "9eacc0d857ab9decbc34b0dab150641ba5b5a9560a8d163b6494dd5babbcdfd6"
+    },
+    {
+      "path": "game/art/drawing/delight-coffee/More Info.txt",
+      "source_sha256": "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0",
+      "tested_sha256": "b6a4bf8aa33a02a4f1cbbf5335db113bfad3e3171e9d733c2c1a4356b48a3da0"
+    },
+    {
+      "path": "game/art/drawing/delight-coffee/Read Me.pdf",
+      "source_sha256": "a57f6f06a94723d5e1b274a5dfbbd2ca0f4c660894dbefd0cae28037a9e6c405",
+      "tested_sha256": "a57f6f06a94723d5e1b274a5dfbbd2ca0f4c660894dbefd0cae28037a9e6c405"
+    },
+    {
+      "path": "game/art/drawing/pangolin/NOTICE.txt",
+      "source_sha256": "29406bb05fb950bd9c33a2d4233afcf767ea41325f11b4dee8e946471f6c2091",
+      "tested_sha256": "29406bb05fb950bd9c33a2d4233afcf767ea41325f11b4dee8e946471f6c2091"
+    },
+    {
+      "path": "game/art/drawing/pangolin/OFL.txt",
+      "source_sha256": "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c",
+      "tested_sha256": "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c"
+    },
+    {
+      "path": "game/art/drawing/tidy-hand/NOTICE.txt",
+      "source_sha256": "a1b09d2948f7c583bb1ed921a45b06fb313bb510a7746f87f0b6c1e7aa5e7e57",
+      "tested_sha256": "a1b09d2948f7c583bb1ed921a45b06fb313bb510a7746f87f0b6c1e7aa5e7e57"
+    },
+    {
+      "path": "game/art/drawing/view_titles/catalog.png",
+      "source_sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4",
+      "tested_sha256": "0931abd9e2b67211b6895575f7ab157d10547348d62d2e99c4ba067ee4772cc4"
+    },
+    {
+      "path": "game/art/drawing/view_titles/catalog.png.import",
+      "source_sha256": "89a477a1e3170edaae9e338aef57901a887389ae195af4c99a5df6b323a39f27",
+      "tested_sha256": "89a477a1e3170edaae9e338aef57901a887389ae195af4c99a5df6b323a39f27",
+      "engine_added_defaults": {}
+    },
+    {
+      "path": "game/art/drawing/view_titles/help.png",
+      "source_sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a",
+      "tested_sha256": "5ae830d1fe70007c67ed04570c034b446a3007c8ec78676cc335875bf3f8e87a"
+    },
+    {
+      "path": "game/art/drawing/view_titles/help.png.import",
+      "source_sha256": "02f0a5f8a063d30f5d8a6a332922b067514d6e066f2106f75a9e21bf6b27880c",
+      "tested_sha256": "02f0a5f8a063d30f5d8a6a332922b067514d6e066f2106f75a9e21bf6b27880c",
+      "engine_added_defaults": {}
+    },
+    {
+      "path": "game/art/drawing/view_titles/manifest.json",
+      "source_sha256": "a7bdb114ae3cd37b77b962385aab924fe00dcac7af966f3e720189895c878c93",
+      "tested_sha256": "a7bdb114ae3cd37b77b962385aab924fe00dcac7af966f3e720189895c878c93"
+    },
+    {
+      "path": "game/art/drawing/view_titles/NOTICE.txt",
+      "source_sha256": "cc5f1eaa31f20a84038f910b54e8dd3098091f8a5f18fcfbc673ff8532cbf947",
+      "tested_sha256": "cc5f1eaa31f20a84038f910b54e8dd3098091f8a5f18fcfbc673ff8532cbf947"
+    },
+    {
+      "path": "game/art/drawing/view_titles/provenance.json",
+      "source_sha256": "cb2054a9f302c22c8533f20a4f5a78ff6c904384157746151acb802175aeb89b",
+      "tested_sha256": "cb2054a9f302c22c8533f20a4f5a78ff6c904384157746151acb802175aeb89b"
+    },
+    {
+      "path": "game/art/drawing/view_titles/settings.png",
+      "source_sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75",
+      "tested_sha256": "d4c84fbe95279c51e1a07df9511e3482b3d65591942d1849655c2ef8dc452c75"
+    },
+    {
+      "path": "game/art/drawing/view_titles/settings.png.import",
+      "source_sha256": "f2ce2a5101ad352b466c1fc7ced1bc874becfec01522c26e9420532d44ce06a7",
+      "tested_sha256": "f2ce2a5101ad352b466c1fc7ced1bc874becfec01522c26e9420532d44ce06a7",
+      "engine_added_defaults": {}
+    }
+  ]
+}

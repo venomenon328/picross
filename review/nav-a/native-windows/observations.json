@@ -1,0 +1,1991 @@
+{
+	"adapter": "NVIDIA GeForce RTX 3070",
+	"display_server": "Windows",
+	"dpi": 96,
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"failures": [],
+	"input": "native Windows root Window viewport events; isolated synthetic registry/profiles; unaccelerated regular book root; display watchdog paused only for measured viewport sizes; no OS desktop input",
+	"product_head": "7e2e8c3e305a79a002fe89910b192ec9d8b86a33",
+	"rows": [
+		{
+			"assertion": "actual native Windows display settings present",
+			"passed": true
+		},
+		{
+			"assertion": "unmodified regular product root",
+			"passed": true
+		},
+		{
+			"assertion": "first filtered spread boundary",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: color-1",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: dynamic colour function/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: fill",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: fill",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: erase",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: erase",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: undo",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: undo",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: redo",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: redo",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: minus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: minus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: plus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: plus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: nav-work",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: information-settings",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: information-help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: display-size-field/help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: puzzle-view-field/help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: menu",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: menu",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: nav-work",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-previous",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-direction",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-next",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-quit",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-settings",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: actual runtime icon inventory traversed",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "hand-drawn quit X exact tooltip/name and native hover/focus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: owner-requested hand-drawn quit X has exact tooltip/name and target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: full count wraps only within measured side space",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: arrows at opposite spread corners",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: separate page text after left arrow and before fold",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 01-catalog-first-1920-ui100.png",
+			"passed": true
+		},
+		{
+			"book_state": 0,
+			"file": "01-catalog-first-1920-ui100.png",
+			"origin": "album",
+			"page": 0,
+			"section": "settings",
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "pointer opens actual working leaf",
+			"passed": true
+		},
+		{
+			"assertion": "viewport cell click commits work",
+			"passed": true
+		},
+		{
+			"assertion": "actual delayed gear tooltip hover",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 02-work-gear-tooltip-1920-ui100.png",
+			"passed": true
+		},
+		{
+			"book_state": 3,
+			"file": "02-work-gear-tooltip-1920-ui100.png",
+			"origin": "album",
+			"page": 0,
+			"section": "settings",
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "work to help by pointer",
+			"passed": true
+		},
+		{
+			"assertion": "active help click keeps article and animation generation",
+			"passed": true
+		},
+		{
+			"assertion": "native information title at original top edge beside navigation",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 03-help-active-1920-ui100.png",
+			"passed": true
+		},
+		{
+			"book_state": 4,
+			"file": "03-help-active-1920-ui100.png",
+			"origin": "work",
+			"page": 0,
+			"section": "help",
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: color-1",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: dynamic colour function/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: fill",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: fill",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: erase",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: erase",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: undo",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: undo",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: redo",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: redo",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: minus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: minus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: plus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: plus",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: nav-work",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: information-settings",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: information-help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: display-size-field/help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: puzzle-view-field/help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: menu",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: menu",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: nav-work",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-previous",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-direction",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: current shared icon function: reset",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-next",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-quit",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-settings",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: icon tooltip/name defined, including disabled: catalog-help",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: actual runtime icon inventory traversed",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: passive card/difficulty stay without tooltip",
+			"passed": true
+		},
+		{
+			"actual_native_windows_symbol_inventory": [
+				{
+					"accessible_name": "Farbe 1 wählen · aktiviert Füllen",
+					"action": "color-1",
+					"disabled": false,
+					"tooltip": "Farbe 1 wählen · aktiviert Füllen"
+				},
+				{
+					"accessible_name": "Füllen · links Farbe setzen, rechts leer markieren",
+					"action": "fill",
+					"disabled": false,
+					"tooltip": "Füllen · links Farbe setzen, rechts leer markieren"
+				},
+				{
+					"accessible_name": "Radierer · Markierungen entfernen",
+					"action": "erase",
+					"disabled": false,
+					"tooltip": "Radierer · Markierungen entfernen"
+				},
+				{
+					"accessible_name": "Letzten Strich rückgängig machen",
+					"action": "undo",
+					"disabled": false,
+					"tooltip": "Letzten Strich rückgängig machen"
+				},
+				{
+					"accessible_name": "Zurückgenommenen Strich wiederholen",
+					"action": "redo",
+					"disabled": true,
+					"tooltip": "Zurückgenommenen Strich wiederholen"
+				},
+				{
+					"accessible_name": "Raster verkleinern",
+					"action": "minus",
+					"disabled": false,
+					"tooltip": "Raster verkleinern"
+				},
+				{
+					"accessible_name": "Raster vergrößern",
+					"action": "plus",
+					"disabled": false,
+					"tooltip": "Raster vergrößern"
+				},
+				{
+					"accessible_name": "Zurück zum Rätsel",
+					"action": "nav-work",
+					"disabled": false,
+					"tooltip": "Zurück zum Rätsel"
+				},
+				{
+					"accessible_name": "Einstellungen (aktuelle Ansicht)",
+					"action": "information-settings",
+					"disabled": false,
+					"tooltip": "Einstellungen (aktuelle Ansicht)"
+				},
+				{
+					"accessible_name": "Hilfe öffnen",
+					"action": "information-help",
+					"disabled": false,
+					"tooltip": "Hilfe öffnen"
+				},
+				{
+					"accessible_name": "Fenstergröße erklären",
+					"action": "display-size-field/help",
+					"disabled": false,
+					"tooltip": "Im rahmenlosen und exklusiven Vollbild wird die aktuelle Desktopauflösung verwendet; der ausgewählte Fensterpreset gilt erst wieder im Fenstermodus."
+				},
+				{
+					"accessible_name": "Rätselansicht erklären",
+					"action": "puzzle-view-field/help",
+					"disabled": false,
+					"tooltip": "Rasteransicht hält das ganze Raster sichtbar; lange Hinweise lassen sich einzeln verschieben. Die Gesamtansicht zeigt alle Hinweise und kann kleinere Zellen benötigen."
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Hilfe öffnen",
+					"action": "help",
+					"disabled": false,
+					"tooltip": "Hilfe öffnen"
+				},
+				{
+					"accessible_name": "Einstellungen öffnen",
+					"action": "menu",
+					"disabled": false,
+					"tooltip": "Einstellungen öffnen"
+				},
+				{
+					"accessible_name": "Zurück zum Katalog",
+					"action": "nav-work",
+					"disabled": false,
+					"tooltip": "Zurück zum Katalog"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 01 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 02 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 03 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 04 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 05 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 06 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 07 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 08 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 09 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 10 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 11 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 12 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Vorherige Seite",
+					"action": "catalog-previous",
+					"disabled": true,
+					"tooltip": "Vorherige Seite"
+				},
+				{
+					"accessible_name": "Sortierrichtung (Größe): Kleinste zuerst",
+					"action": "catalog-direction",
+					"disabled": false,
+					"tooltip": "Kleinste zuerst"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 13 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 14 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 15 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 16 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 17 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 18 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 19 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 20 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 21 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 22 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 23 · Gelöst",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Rätsel zurücksetzen · Blatt 24 · Neu",
+					"action": "reset",
+					"disabled": false,
+					"tooltip": "Rätsel zurücksetzen"
+				},
+				{
+					"accessible_name": "Nächste Seite",
+					"action": "catalog-next",
+					"disabled": false,
+					"tooltip": "Nächste Seite"
+				},
+				{
+					"accessible_name": "Beenden",
+					"action": "catalog-quit",
+					"disabled": false,
+					"tooltip": "Beenden"
+				},
+				{
+					"accessible_name": "Einstellungen öffnen",
+					"action": "catalog-settings",
+					"disabled": false,
+					"tooltip": "Einstellungen öffnen"
+				},
+				{
+					"accessible_name": "Hilfe öffnen",
+					"action": "catalog-help",
+					"disabled": false,
+					"tooltip": "Hilfe öffnen"
+				}
+			]
+		},
+		{
+			"assertion": "native information title at original top edge beside navigation",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 04-settings-focus-1920-ui100.png",
+			"passed": true
+		},
+		{
+			"book_state": 4,
+			"file": "04-settings-focus-1920-ui100.png",
+			"origin": "work",
+			"page": 0,
+			"section": "settings",
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "real pan preserves help chapter and reading",
+			"passed": true
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "real work-help-settings-back keeps work",
+			"passed": true
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "own work arrow restores bound catalog and recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: owner-requested hand-drawn quit X has exact tooltip/name and target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: full count wraps only within measured side space",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: arrows at opposite spread corners",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: separate page text after left arrow and before fold",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 05-catalog-recent-1920-ui100.png",
+			"passed": true
+		},
+		{
+			"book_state": 0,
+			"file": "05-catalog-recent-1920-ui100.png",
+			"origin": "work",
+			"page": 0,
+			"section": "settings",
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"assertion": "NAV-A: owner-requested hand-drawn quit X has exact tooltip/name and target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: full count wraps only within measured side space",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: arrows at opposite spread corners",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: separate page text after left arrow and before fold",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 06-catalog-half-recent-2560-ui100.png",
+			"passed": true
+		},
+		{
+			"book_state": 0,
+			"file": "06-catalog-half-recent-2560-ui100.png",
+			"origin": "work",
+			"page": 0,
+			"section": "settings",
+			"ui_scale": 1.0,
+			"viewport": [
+				2560,
+				1431
+			]
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "last filtered spread by pointer",
+			"passed": true
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "real filtered later catalog-help-settings-back restores both offsets",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: owner-requested hand-drawn quit X has exact tooltip/name and target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: full count wraps only within measured side space",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: arrows at opposite spread corners",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: separate page text after left arrow and before fold",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 07-catalog-last-2560-ui100.png",
+			"passed": true
+		},
+		{
+			"book_state": 0,
+			"file": "07-catalog-last-2560-ui100.png",
+			"origin": "album",
+			"page": 1,
+			"section": "settings",
+			"ui_scale": 1.0,
+			"viewport": [
+				2560,
+				1431
+			]
+		},
+		{
+			"assertion": "pending save blocks header help with visible retry",
+			"passed": true
+		},
+		{
+			"assertion": "pending save blocks actual quit X and keeps retry",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: owner-requested hand-drawn quit X has exact tooltip/name and target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: full count wraps only within measured side space",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: arrows at opposite spread corners",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: separate page text after left arrow and before fold",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 08-catalog-error-full-recent-1280-ui125.png",
+			"passed": true
+		},
+		{
+			"book_state": 0,
+			"file": "08-catalog-error-full-recent-1280-ui125.png",
+			"origin": "album",
+			"page": 1,
+			"section": "settings",
+			"ui_scale": 1.25,
+			"viewport": [
+				1280,
+				720
+			]
+		},
+		{
+			"assertion": "real retry clears pending error",
+			"passed": true
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "native information title at original top edge beside navigation",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 09-settings-1280-ui125.png",
+			"passed": true
+		},
+		{
+			"book_state": 4,
+			"file": "09-settings-1280-ui125.png",
+			"origin": "album",
+			"page": 1,
+			"section": "settings",
+			"ui_scale": 1.25,
+			"viewport": [
+				1280,
+				720
+			]
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "native information title at original top edge beside navigation",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "native whole title original clears symbol target",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 10-help-1280-ui125.png",
+			"passed": true
+		},
+		{
+			"book_state": 4,
+			"file": "10-help-1280-ui125.png",
+			"origin": "album",
+			"page": 1,
+			"section": "help",
+			"ui_scale": 1.25,
+			"viewport": [
+				1280,
+				720
+			]
+		},
+		{
+			"assertion": "real motion and release barrier settled",
+			"passed": true
+		},
+		{
+			"assertion": "single filtered spread both inactive",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: owner-requested hand-drawn quit X has exact tooltip/name and target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: fixed catalog header hit target",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: header beside count on same top edge, clear of retry and full recent panel",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: quit, gear, help in order",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: full count wraps only within measured side space",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination is arrow-only with exact hit size",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination outside card clips",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: pagination clears fold",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: exact pagination tooltip/name",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: arrows at opposite spread corners",
+			"passed": true
+		},
+		{
+			"assertion": "NAV-A: separate page text after left arrow and before fold",
+			"passed": true
+		},
+		{
+			"assertion": "original capture 11-catalog-single-1280-ui125.png",
+			"passed": true
+		},
+		{
+			"book_state": 0,
+			"file": "11-catalog-single-1280-ui125.png",
+			"origin": "album",
+			"page": 0,
+			"section": "help",
+			"ui_scale": 1.25,
+			"viewport": [
+				1280,
+				720
+			]
+		}
+	],
+	"screen_pixels": "(2560, 1440)",
+	"screen_scale": 1.0
+}
