@@ -11,9 +11,96 @@ die [P-A-Farbprüfregel](../../docs/PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-reg
 ist vom Eigentümer **fachlich freigegeben**, aber noch **nicht als
 automatischer Werkzeugvalidator aktiviert**. Sie beschreibt Formel, Grenzfälle,
 Ist-Palettenbindung und getrennte visuelle Entscheidung. Die tatsächliche
-Werkzeugintegration einschließlich neuer Nachweisformate und eines geprüften
-revisions-/paargebundenen Ausnahmewegs ist erst P-B. Hier existiert weiterhin
-kein Palettenprüfbefehl; alte Formate und versiegelte Belege behalten ihre Semantik.
+automatische Früh-/Endintegration und der geprüfte revisions-/paargebundene
+Ausnahmeweg folgen erst in P-B2. P-B1 liefert die ausdrücklich aufrufbare
+[lesende Diagnose](#p-b1-lesende-palettendiagnose); alte Formate und versiegelte
+Belege behalten ihre Semantik.
+
+## P-B1: lesende Palettendiagnose
+
+Vertrag vor Implementierung, #488 / P-B1, 08.11.2026. Regel unverändert
+`picross-palette-separation-1`, Normquelle `docs/PUZZLE_QUALITY.md`, Vertrag 1.0,
+Dokumentrevision 4, Quellcommit `45b8fe697364bf73f4277c8b76f92d5c00400919`, §8.4.
+Diese feste Normbindung bezeichnet die Berechnung, nicht den jeweiligen Tool-Head.
+
+```sh
+python -m tools.puzzle_production check-palette --candidate <bundle/area-candidate.json>
+python -m tools.puzzle_production check-palette --candidate <bundle/area-candidate.json> --report <neue-externe-datei.json>
+python -m tools.puzzle_production check-palette --candidate <bundle/area-candidate.json> --verify <gespeicherter-report.json>
+```
+
+Python 3.11+, für den Kandidatenleser bestehende Image-Umgebung. `--report` und
+`--verify` schließen einander aus. `--seconds` ist das kumulative kooperative
+Lese-/Rechen-/Prüfbudget (Default 120, endlich, nicht negativ; 0 bricht ab).
+Der reine Kern `palette_quality.assess(matrix, palette, identity, budget=None)`
+braucht nur die Standardbibliothek und kann später vor dem Solver aufgerufen
+werden. `identity` enthält exakt `id` (stabile Zeichenkette, 1..128 ohne
+Steuerzeichen), `revision` (Ganzzahl 1..1000000), `source_id` (bestehende
+ASCII-ID-Grammatik), `normalized_sha256` (64 kleine Hexzeichen).
+Matrix 1..100 je Achse, rechteckige Zeilenlisten, Zellen ausschließlich
+`empty` oder deklarierte Vordergrund-ID. Palette 1..8 eindeutige IDs mit jeweils
+`#rrggbb`; gleiche RGB unter verschiedenen IDs ergeben im reinen Kern S=0.
+Null verwendete Farben ist ungültig. Unbenutzte Einträge werden nur gemeldet.
+Der bestehende RP-3-Designleser lehnt doppelte RGB weiterhin gesondert ab.
+
+Der CLI-Leser validiert das geschlossene bestehende Kandidatenformat, Design,
+Variante, Produzentenversionen, Quellhash, Matrix und frisch abgeleiteten
+Logikhash und rekonstruiert die Kandidaten-ID. Er vertraut keinem Erfolgsflag.
+Er rekonstruiert weder Originalbild noch Proof: Quellen-ID, Herkunft/Rechte und
+Normalisierungshash sind gebundene Herkunftsangaben, keine verifizierte
+Bildableitung oder Rechtefreigabe. Dafür bleiben die bisherigen Replaygates nötig.
+
+### Diagnoseformat picross-palette-assessment-v1
+
+Alle folgenden Top-Level-Felder sind Pflicht, zusätzliche Felder unzulässig:
+
+| Feld | Inhalt |
+| --- | --- |
+| `format`, `rule_id`, `norm` | Formatkennung, obige Regel-ID; `norm` exakt `file,contract,document_revision,commit` nach obiger Normbindung. |
+| `candidate` | Exakte `identity` wie oben. |
+| `matrix` | Exakt `width,height,order,sha256`; `order=row-major`, Hash über kanonisches Objekt `{width,height,order,cells}` mit vollständiger Matrix als `cells` (Zeilenlisten). |
+| `palette_sha256` | Hash der nach ID sortierten vollständigen Liste `{id,rgb}`; RGB wird kleingeschrieben. Unbenutzte Einträge bleiben darin gebunden. |
+| `source_fingerprint` | Hash über `{rule_id,norm,candidate,matrix,palette_sha256}` aus diesem Bericht. |
+| `used` | Nach ID sortierte Liste, je exakt `id,rgb,cells,q`; q drei quantisierte Ganzzahlen nach §8.4. |
+| `unused_ids`, `empty_cells`, `pair_count` | Sortierte unbenutzte IDs, getrennte Leerzahl, vollständige Anzahl ungeordneter Paare (maximal 28). |
+| `pairs` | Alle Paare lexikografisch nach IDs; je exakt `ids,rgb,q,S,D,status,rule_id`. Zwei IDs/RGB/q in derselben Reihenfolge; S exakte Ganzzahl, D Dezimalzeichenkette mit sechs Nachkommastellen (Half-even), nur Anzeige. Status `negative` bei S<10000000000, sonst `borderline` bei S<22500000000, sonst `positive`. |
+| `worst_pair` | Vollständiges Paarobjekt mit kleinstem S, Gleichstand nach IDs; bei einer Farbe null. |
+| `negative_pairs`, `warning_pairs` | Vollständige Listen derselben Paarobjekte mit Status `negative` bzw. `borderline`, auch bei negativem Gesamtbefund. Korrektur: klarere Palette, weniger Farben oder motivtreue neue Variante; bestehende Freigaben beachten. |
+| `status`, `complete` | `negative` falls irgendein negatives Paar, sonst `positive`; `complete=true` ausschließlich nach vollständiger Auswertung. Eine Farbe: positive, 0 Paare. |
+
+Hashes verwenden die bestehenden kanonischen JSON-UTF-8-Bytes/SHA-256 (ohne LF),
+Dateien kanonisches JSON plus LF. Kein Zertifikat, `content_ready`, Sichturteil
+oder Ausnahmerecord. Technisches `positive` ersetzt Q-R04/Q-H01/Q-H02 nicht.
+`verify_assessment(report, matrix, palette, identity, budget=None)` rekonstruiert
+Bindungen, Nutzung, q, sämtliche Paare und den Gesamtstatus frisch, unabhängig
+von gespeicherten Behauptungen; fehlende/zusätzliche/falsche Felder sind Fehler.
+Andere Matrix, ID, RGB, Nutzung, Herkunft, Revision oder Normbindung ist stale.
+Das ist Integritätsprüfung, keine Signatur gegen gemeinsam neu erzeugte Eingänge.
+
+Stdout enthält genau ein kompaktes JSON: bei abgeschlossener Diagnose bzw.
+erfolgreichem `--verify` den vollständigen Bericht, auch bei `negative` Exit 0.
+Fehler liefern ausschließlich `picross-palette-error-v1` mit `status,message`:
+`invalid_input`/2 (auch stale/manipulierter Bericht, unsicheres Ausgabeziel),
+`aborted`/4 (Budget, Signal, Speicher), `error`/5 (Rechen-/Dateifehler).
+Argparsefehler verwenden Exit 2; harter Kill garantiert keine Abschlussausgabe.
+Fehler/Abbruch erzeugen keinen Assessmentbericht oder positiven Teilbefund.
+
+Ein Reportziel muss einen vorhandenen regulären Elternordner und einen neuen
+einfachen `.json`-Dateinamen besitzen. Kein Überschreiben (auch nicht bei Rennen),
+keine Links/Reparsepunkte, kein Ziel innerhalb eines Git-Checkouts, des
+Kandidatenordners oder eines anhand `handoff.json`, `inventory.json`,
+`manifest.json` oder `package.zip` erkannten Paketordners. Die Eingabepfade
+werden ebenfalls ohne Links/Reparsepunkte gelesen. Reportpfade aus fremden
+JSONs werden nie geöffnet. Die CLI prüft den erzeugten Bericht vor Ausgabe
+erneut; optionale Reportdatei wird exklusiv neu angelegt und frisch gelesen.
+
+**Aktivierungsgrenze:** P-B1 ist eine freiwillig ausdrücklich aufrufbare Diagnose
+bei Kandidatenwahl. Keine erzwungene Frühprüfung in Import/Ableitungen und keine
+neuen ZA-1-/Export-/Registrygates; automatische Prüfung, Endbindung und technische
+Ausnahmefreigabe erst P-B2. Negative Entwürfe bleiben als
+`Sichtungsentwurf – nicht integrationsbereit` sichtbar. F05 bleibt metrisch
+negativ bei dokumentierter visueller Referenzannahme, ohne neue pauschale Ausnahme.
+Keine rückwirkende Bestandsprüfung, keine neue Standardausgabe der Produktion.
 
 **AT · Umsetzungsvorbereitung V4 vom 19.10.2026; AT-A nach AT-A-R01 mit PR #263 integriert:**
 [AT](../../docs/REVEAL_TRANSPARENCY.md) ergänzt mit AT-A den Produktionsstandard
