@@ -1,0 +1,83 @@
+{
+  "package": "HIL-REG-A",
+  "product_head": "1dc337599e04a2b1bc2c87e0ac6421d60d930a72",
+  "base": "b3062f9bc2d2bcf75baee3c7851b3164972d3dc5",
+  "recipient": "HIL-REG-A-R01 independent reviewer; owner M01",
+  "expires": "2026-11-15",
+  "cleanup": "Remove separate review ref after required review, no later than expiry unless explicitly renewed; never merge evidence to product/main.",
+  "environment": "Native Windows Godot 4.7.2-stable, OpenGL 3.3 NVIDIA RTX 3070. Actual client size and PNG dimensions checked. Regular book root, synthetic registry and isolated profiles. Viewport mouse/wheel inputs only; no external desktop input. Display watchdog paused after startup only in diagnostic; windowed borderless flag provides exact client heights without decorations. No exclusive/display-resolution changes. Personal owner acceptance remains open.",
+  "files": [
+    {
+      "path": "1920-operation.png",
+      "scene": "1920x1080/UI100: operation start, active underline",
+      "bytes": 2047166,
+      "sha256": "6d551d31ff5e8c59b2a775e9e1cc0a8bc8d7038fc1ea4fa0a4b1ca5df68866d0",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "1920-hover-focus.png",
+      "scene": "1920x1080/UI100: active operation, hover principle, focus tips; underlines only",
+      "bytes": 2047689,
+      "sha256": "38f18b4b31e9aa9b00cd6d8425aa1266e63264e14064b44f5555ac9c364c019b",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "1920-end.png",
+      "scene": "1920x1080/UI100: long operation end",
+      "bytes": 2057449,
+      "sha256": "014fccb96466616470832583e7fde735d394e3aecc55f6a3a7dac30bd306af9b",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "1920-return.png",
+      "scene": "1920x1080/UI100: same chapter and reading offset after settings pan",
+      "bytes": 2057576,
+      "sha256": "df67188406c3b8d4af9229c5f30526f89b6de35d59ddb245cce162acfb467d7c",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "1920-settings-pan.png",
+      "scene": "1920x1080/UI100: real book movement with shared information capture",
+      "bytes": 1878072,
+      "sha256": "e0bca9fa145de69baf183c42e3131c1c348767c1346fcef84b97bb51854bba48",
+      "width": 1920,
+      "height": 1080
+    },
+    {
+      "path": "2560-diagram.png",
+      "scene": "2560x1440/UI100: color chapter and full passive diagram",
+      "bytes": 3113777,
+      "sha256": "8b79c14df01bffd9faa72993498cd743d347bc426607e8fbe4ac822fc2fd2908",
+      "width": 2560,
+      "height": 1440
+    },
+    {
+      "path": "1280-operation.png",
+      "scene": "1280x720/UI125: measured compact chapter bar",
+      "bytes": 1042222,
+      "sha256": "d744c8fbe36107ea57f054ba843f8d683ef4c3242a50416598358b2f465d2e77",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "1280-return.png",
+      "scene": "1280x720/UI125: preserved long-article end after settings",
+      "bytes": 1066482,
+      "sha256": "b4835b708ff7bcc1cc66e4e8fbc6e09edd9f3379f051825c436370fd4b3f95b2",
+      "width": 1280,
+      "height": 720
+    },
+    {
+      "path": "1280-status-retry.png",
+      "scene": "1280x720/UI125: protected title, chapter bar, article, bottom navigation and real failed-save retry",
+      "bytes": 1018027,
+      "sha256": "86c1e1bc9a5ca42893a7b000813f56a3ce9cfb35aaf874408bd5f42fcb2b7085",
+      "width": 1280,
+      "height": 720
+    }
+  ]
+}

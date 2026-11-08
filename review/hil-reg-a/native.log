@@ -1,0 +1,10 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 596.49 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 3070
+
+LAYOUT (1920, 1080)[1920, 1080, 1.0] size=(1596.444, 734.2223) scroll=(1420.444, 734.2223) compact=false prose=629.0 bar=(22.0, 76.0) actual=(22.0, 734.2223)
+PROSE_FULL_LINES [1920, 1080, 1.0] count=49 median=71 range=62-76
+LAYOUT (2560, 1440)[2560, 1440, 1.0] size=(2144.593, 1077.63) scroll=(1968.593, 1077.63) compact=false prose=629.0 bar=(22.0, 76.0) actual=(22.0, 1077.63)
+PROSE_FULL_LINES [2560, 1440, 1.0] count=49 median=71 range=62-76
+LAYOUT (1280, 720)[1280, 720, 1.25] size=(1036.296, 391.8748) scroll=(1036.296, 321.8748) compact=true prose=786.0 bar=(28.0, 96.0) actual=(28.0, 321.8748)
+PROSE_FULL_LINES [1280, 720, 1.25] count=49 median=71 range=62-76
+HIL_REVIEW_OK

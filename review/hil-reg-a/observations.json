@@ -1,0 +1,211 @@
+{
+  "assertions": [
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "native chapter pointer begins operation",
+      "passed": true
+    },
+    {
+      "label": "actual native compact/wide mode",
+      "passed": true
+    },
+    {
+      "label": "actual Windows client size [1920, 1080, 1.0]",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1920-operation",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1920-hover-focus",
+      "passed": true
+    },
+    {
+      "label": "native wheel reaches long article end",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1920-end",
+      "passed": true
+    },
+    {
+      "label": "real help/register capture in page movement",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1920-settings-pan",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "native settings return restores chapter and exact offset",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1920-return",
+      "passed": true
+    },
+    {
+      "label": "chapter pointer from article end starts new chapter",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1920-diagram",
+      "passed": true
+    },
+    {
+      "label": "native chapter pointer begins operation",
+      "passed": true
+    },
+    {
+      "label": "actual native compact/wide mode",
+      "passed": true
+    },
+    {
+      "label": "actual Windows client size [2560, 1440, 1.0]",
+      "passed": true
+    },
+    {
+      "label": "native PNG 2560-operation",
+      "passed": true
+    },
+    {
+      "label": "native wheel reaches long article end",
+      "passed": true
+    },
+    {
+      "label": "native PNG 2560-end",
+      "passed": true
+    },
+    {
+      "label": "real help/register capture in page movement",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "native settings return restores chapter and exact offset",
+      "passed": true
+    },
+    {
+      "label": "native PNG 2560-return",
+      "passed": true
+    },
+    {
+      "label": "chapter pointer from article end starts new chapter",
+      "passed": true
+    },
+    {
+      "label": "native PNG 2560-diagram",
+      "passed": true
+    },
+    {
+      "label": "native chapter pointer begins operation",
+      "passed": true
+    },
+    {
+      "label": "actual native compact/wide mode",
+      "passed": true
+    },
+    {
+      "label": "actual Windows client size [1280, 720, 1.25]",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1280-operation",
+      "passed": true
+    },
+    {
+      "label": "native wheel reaches long article end",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1280-end",
+      "passed": true
+    },
+    {
+      "label": "real help/register capture in page movement",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "native settings return restores chapter and exact offset",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1280-return",
+      "passed": true
+    },
+    {
+      "label": "chapter pointer from article end starts new chapter",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1280-diagram",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "real return reaches original catalog",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "new work visit resets principle",
+      "passed": true
+    },
+    {
+      "label": "native PNG 1280-status-retry",
+      "passed": true
+    },
+    {
+      "label": "save retry stays reachable",
+      "passed": true
+    },
+    {
+      "label": "real movement settles",
+      "passed": true
+    },
+    {
+      "label": "real work visit returns to original puzzle",
+      "passed": true
+    }
+  ],
+  "engine": "4.7.2-stable (official)",
+  "host": "Windows",
+  "renderer": "NVIDIA GeForce RTX 3070"
+}
