@@ -48,7 +48,6 @@ class Guards:
         self.packages = {e["production"]["package"] for r in self.view.registries for e in r["entries"]}
         self.allowed_files = set(self.j["old"]) | set(self.j["retained"]) | set(self.j["additions"]) | set(self.view.temps.values())
         self.allowed_dirs = {p.as_posix() for n in self.allowed_files for p in Path(n).parents}
-        self.allowed_dirs |= {"content/difficulty/reports", "content/added/reports"}
         self.temp_parents = {Path(n).parent.as_posix() for n in self.view.temps.values()}
 
     def read(self, name):
@@ -96,7 +95,12 @@ class Guards:
             temps = pub.guard(self.root, self.j, raw=self.raw, expected=self.expected,
                               old_only=before_lock or self.staged is not None,
                               additions=self.additions, _view=self.view)
-            for name in self.packages | {"content/difficulty", "content/added", "content/reveals"}:
+            # The shared guard freshly validates entire sidecar namespaces,
+            # including their existing allowance for empty canonical rating /
+            # report directories left by rollback. Such directories authorize
+            # no source bytes. Packages additionally bind every directory to
+            # the journal's file tree, including otherwise invisible empty ones.
+            for name in self.packages:
                 self.tree(name)
             for name in self.temp_parents:
                 self.temp_namespace(name)

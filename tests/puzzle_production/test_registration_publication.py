@@ -171,6 +171,16 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual(target.read_bytes(), b'FOREIGN')
         self.assertTrue((self.root / tx.LOCK).exists())
 
+    def test_valid_empty_rollback_namespaces_do_not_block_next_registration(self):
+        names = ('content/difficulty/pz-prior-rollback', 'content/difficulty/reports/prior-rollback')
+        for name in names: (self.root / name).mkdir(parents=True)
+        self.assertEqual(cr.check_checkout(self.root)['entries'], [])
+        self.execute()
+        self.assertEqual(len(cr.check_checkout(self.root)['entries']), 1)
+        for name in names:
+            self.assertTrue((self.root / name).is_dir())
+            self.assertEqual(list((self.root / name).iterdir()), [])
+
     def test_interruptions_staging_and_repeated_recovery(self):
         phases = [(p, 1) for p in ('P0', 'journal-prefix', 'journal-complete', 'P1', 'P2', 'P3', 'P4', 'G5a', 'P5', 'P6')]
         for phase, occurrence in [*phases, ('P3', 2), ('P4', 2)]:
@@ -317,7 +327,7 @@ class SourceTests(unittest.TestCase):
 
     def test_complete_namespaces_and_actual_freeze_sources(self):
         package = json.loads(self.journal['old'][tx.REGISTRY])['entries'][0]['production']['package']
-        for name in (package + '/unknown', 'content/difficulty/pz-foreign', 'content/difficulty/reports/foreign',
+        for name in (package + '/unknown', 'content/difficulty/pz-foreign/unknown', 'content/difficulty/reports/foreign/unknown',
                      'content/added/unknown', 'content/reveals/unknown', 'content/.registration-foreign.tmp'):
             with self.subTest(namespace=name), tempfile.TemporaryDirectory() as temp:
                 root = Path(temp) / 'checkout'; shutil.copytree(self.base, root)
