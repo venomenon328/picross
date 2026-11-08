@@ -29,9 +29,9 @@ Tooltips bei erhaltenen sinnvollen Hilfen. N04 ergänzt ein eigenes Tischbild,
 saubere innere Enden und sichere Fußbereiche auch bei 16:10. Bis zu zwölf Karten
 stehen zuerst links, weitere rechts; jede Hälfte scrollt unabhängig.
 Der linke Pfeil im rechten Arbeitskopf führt in 1,8 Sekunden zum vorherigen
-Katalogkontext mit beiden Scrollständen zurück. Daneben öffnen Menü und Fragezeichen
+Katalogkontext mit beiden Scrollständen zurück. Daneben öffnen Zahnrad und Fragezeichen
 Einstellungen links beziehungsweise Hilfe rechts in naher Ansicht. Zwischen
-beiden Seiten wird nur gepannt; die beschriftete Rückkehr führt zum ursprünglichen
+beiden Seiten wird nur gepannt; der Rückpfeil oben rechts führt zum ursprünglichen
 Katalog oder Rätsel. Bewusst geänderte Einstellungen bleiben erhalten.
 Bearbeitung und Sortierauswahl werden über die bisherigen Speicherwege gesichert.
 Bei einem Speicherfehler bleibt die Anwendung mit einer sichtbaren Wiederholung
@@ -246,9 +246,18 @@ Anzeigemodus und UI-Skalierung nutzen ohne Fragezeichen die volle Zeilenbreite.
 Die drei großen Seitentitel **Rätselkatalog**, **Hilfe** und **Einstellungen** sind
 offen schraffierte Graphit-Schriftzugbilder der freigegebenen V2-rev1-Familie; die beiden Einstellungsgruppen behalten ihre
 Bakso-Überschriften. Die Titel stehen fest über dem scrollbaren Inhalt.
-Der untere Button **Zurück** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
+Der **Rückpfeil oben rechts** auf Einstellungen und Hilfe kehrt zum Besuchsursprung
 zurück. Tooltip und Zugänglichkeitsname erläutern das jeweilige Katalog-/Rätselziel.
-Der Wechsel zwischen Hilfe und Einstellungen steht daneben ebenfalls fest unten.
+Daneben stehen **Zahnrad** und **?** fest am Kopf der sichtbaren Papierseite,
+auch auf der linken Einstellungsseite. Der aktuelle Ort ist unterstrichen.
+Ein Klick darauf erhält Kapitel und Lesestelle. Im Katalog steht ein handgezeichnetes
+**X** links neben Zahnrad und Hilfe. Tooltip und zugänglicher Name lauten **Beenden**;
+diese Zugänge funktionieren auch ohne laufendes Rätsel.
+Unten links blättert **←** die ganze Doppelseite zurück, unten rechts **→** weiter.
+Die separaten Worte **Seite n von m** stehen neben dem linken Pfeil. Die Tooltips
+heißen **Vorherige Seite** und **Nächste Seite**; unmögliche Richtungen sind inaktiv,
+bei nur einer Seite beide. Reine Symbolbuttons erklären ihre aktuelle Funktion
+im Tooltip und besitzen einen passenden zugänglichen Namen.
 Bei knapper Höhe bleibt der Inhalt durch vertikales Scrollen erreichbar.
 Beenden steht im Katalog; auch das normale Fensterschließen sichert den Stand. Das deaktivierte Größenfeld
 zeigt im Vollbild die Desktopauflösung; im Fenster den gewählten Preset.
@@ -286,7 +295,7 @@ Leerlinienzeichen und Überlaufmarker. Diese Markierungen bestätigen keine Lös
 
 Jeder neue Besuch beginnt bei Spielprinzip, jede Kapitelwahl oben. Zwischen Hilfe
 und Einstellungen bleiben das Hilfekapitel und seine Lesestelle erhalten. Der
-beschriftete Rückweg unten führt zum gebundenen Katalog oder Rätsel zurück.
+Rückpfeil oben rechts führt zum gebundenen Katalog oder Rätsel zurück.
 Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
 
 ## Bearbeiten und zurücknehmen
@@ -402,7 +411,7 @@ Die Beispiele lassen sich nicht bearbeiten und erzeugen keine Spielaktion.
   Die UI-Skalierung, Rätselansicht und H1 stehen auf der Informationsseite.
   Ihr Öffnen erhält die individuellen Hinweislesepositionen; ein manueller
   Hinweisrücksetzbefehl wird nicht angeboten.
-  `?` führt direkt zur scrollbar erreichbaren Bedienhilfe rechts; das Menü
+  `?` führt direkt zur scrollbar erreichbaren Bedienhilfe rechts; das Zahnrad
   öffnet die Einstellungen links. Der Pfeil im Arbeitskopf führt zum Katalog.
   Auch bei 1280×720/UI 125 % bleiben Werkzeuge,
   eigene Miniatur und Hinweiszugriff auf der Arbeitsseite. Der Rückpfeil führt

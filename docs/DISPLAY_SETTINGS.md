@@ -5,8 +5,8 @@
 **BTI-C auf dem Arbeitsbranch implementiert, R01/M01 vor Merge offen:**
 [BTI-D01–D04](VIEW_TITLE_ART.md) ersetzt ausschließlich den sichtbaren großen
 Einstellungs-Seitentitel durch das unveränderte freigegebene V2-rev1-Original
-`Einstellungen` in neutralem schraffiertem Graphit und verlegt
-die beiden Informations-Navigationsaktionen von oben nach unten. Die Bakso-
+`Einstellungen` in neutralem schraffiertem Graphit. NAV-A / #549 löst die
+damalige BTI-D04-Fußnavigation durch Rückpfeil, Zahnrad und Hilfe oben rechts ab. Die Bakso-
 Gruppentitel sowie N03-Feld-/Rahmen-/Tooltip- und Display-Verträge bleiben.
 Diese Folgeregel löst auf diesem Branch die damalige Titel-/Navigationsanordnung
 ab; [#533](https://github.com/venomenon328/picross/issues/533).
@@ -78,7 +78,7 @@ Die vollständige Ansichtserklärung und die Erklärung der Vollbild-Desktopaufl
 stehen nur in den gestylten Fragezeichen-Tooltips, erreichbar per Hover und Fokus.
 Das separate Fragezeichen bleibt auch neben deaktivierter Größenwahl aktiv.
 Vertikales Scrollen erhält bei 1080p/720p × UI100/125 sämtliche Optionen.
-Die obere Rücknavigation auf Einstellungen und Hilfe zeigt nur „Zurück“;
+Die obere Rücknavigation auf Einstellungen und Hilfe zeigt gemäß NAV-A nur den gezeichneten Linkspfeil;
 Tooltip und Accessibilityname nennen weiterhin Katalog oder Rätsel als echtes
 Rückziel. Besuchsursprung, Buchübergang, Fokus, Scrollkontext und Saveguard bleiben.
 

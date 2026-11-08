@@ -14,11 +14,14 @@ var fold_gap: float = 76.0
 var right_pager: BoxContainer
 var notice_area: ScrollContainer
 var notices: VBoxContainer
+var navigation: HBoxContainer
+var settings_button: BookButton
+var help_button: BookButton
+var quit_button: BookButton
 
 func _ready() -> void:
 	super._ready()
 	var top: HBoxContainer = category_choice.get_parent()
-	var pager: HBoxContainer = previous_button.get_parent()
 	var old_children: Array[Node] = get_children()
 	spread = HBoxContainer.new()
 	spread.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -34,15 +37,31 @@ func _ready() -> void:
 	var sorting := HBoxContainer.new()
 	right_page.add_child(sorting)
 	for item: Node in [sort_label, sort_choice, direction_button, filter_button]: item.reparent(sorting)
-	var actions := HBoxContainer.new()
-	for item: Node in top.get_children(): item.reparent(actions)
-	var help := BookButton.new()
-	help.text = "Hilfe"
-	help.action_id = "catalog-help"
-	help.pressed.connect(func() -> void: help_requested.emit())
-	actions.add_child(help)
-	actions.move_child(help,1)
-	actions.move_child(help,1)
+	navigation = HBoxContainer.new()
+	add_child(navigation)
+	settings_button = top.get_child(0)
+	quit_button = top.get_child(1)
+	quit_button.text = ""
+	quit_button.action_id = "catalog-quit"
+	quit_button.name = "catalog-quit"
+	quit_button.image = preload("res://art/book/quit.svg")
+	quit_button.tooltip_text = "Beenden"
+	quit_button.accessibility_name = "Beenden"
+	quit_button.reparent(navigation)
+	settings_button.reparent(navigation)
+	settings_button.text = ""
+	settings_button.action_id = "catalog-settings"
+	settings_button.name = "catalog-settings"
+	settings_button.image = preload("res://art/book/menu.svg")
+	settings_button.tooltip_text = "Einstellungen öffnen"
+	settings_button.accessibility_name = settings_button.tooltip_text
+	help_button = _button("",func() -> void: help_requested.emit())
+	help_button.action_id = "catalog-help"
+	help_button.name = "catalog-help"
+	help_button.image = preload("res://art/book/help.svg")
+	help_button.tooltip_text = "Hilfe öffnen"
+	help_button.accessibility_name = help_button.tooltip_text
+	navigation.add_child(help_button)
 	summary.reparent(right_page)
 	notice_area = ScrollContainer.new()
 	notice_area.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
@@ -56,7 +75,9 @@ func _ready() -> void:
 	preference_feedback.get_parent().reparent(notices)
 	feedback.reparent(notices)
 	empty_message.reparent(right_page)
-	visibility_changed.connect(func() -> void: notice_area.visible = is_visible_in_tree())
+	visibility_changed.connect(func() -> void:
+		notice_area.visible = is_visible_in_tree()
+		navigation.visible = is_visible_in_tree())
 	_detach_summary.call_deferred()
 	scroll.reparent(left_page)
 	right_scroll = ScrollContainer.new()
@@ -76,7 +97,6 @@ func _ready() -> void:
 	right_pager = BoxContainer.new()
 	right_pager.alignment = BoxContainer.ALIGNMENT_END
 	right_page.add_child(right_pager)
-	right_pager.add_child(actions)
 	next_button.reparent(right_pager)
 	next_button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	for node: Node in old_children:
@@ -89,6 +109,7 @@ func _detach_summary() -> void:
 	# Parent is still in _ready while this catalog is constructed.
 	summary.reparent(get_parent())
 	notice_area.reparent(get_parent())
+	navigation.reparent(get_parent())
 	get_parent().get_parent()._layout_book()
 
 func positions() -> Vector2i:
@@ -153,8 +174,9 @@ func _render(position: int) -> void:
 	for item: Node in find_children("*","Button",true,false):
 		if item is BookButton: item.paper_transparent = true
 	if right_scroll != null:
-		# Settings and quit share this row but are not pagination controls.
-		next_button.visible = previous_button.get_parent().visible
+		# The page number and both boundary arrows remain visible for one page.
+		previous_button.get_parent().show()
+		next_button.show()
 		restore_positions.call_deferred(pair,generation)
 
 func _shared_card_width() -> float:
@@ -176,6 +198,9 @@ func _layout_cards() -> void:
 	if notice_area != null:
 		_style_controls(notice_area)
 		notices.add_theme_constant_override("separation",roundi(4*ui_scale))
+	if navigation != null:
+		_style_controls(navigation)
+		navigation.add_theme_constant_override("separation",roundi(14*ui_scale))
 	if right_grid != null:
 		right_grid.add_theme_constant_override("h_separation", roundi(12*ui_scale))
 		right_grid.add_theme_constant_override("v_separation", roundi(12*ui_scale))

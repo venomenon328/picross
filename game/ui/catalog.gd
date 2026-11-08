@@ -128,12 +128,18 @@ func _ready() -> void:
 	var pager: HBoxContainer = HBoxContainer.new()
 	pager.alignment = BoxContainer.ALIGNMENT_CENTER
 	add_child(pager)
-	previous_button = _button("Zurück", turn_page.bind(-1))
+	previous_button = _button("", turn_page.bind(-1))
+	previous_button.action_id = "catalog-previous"
+	previous_button.tooltip_text = "Vorherige Seite"
+	previous_button.accessibility_name = "Vorherige Seite"
 	previous_button.image = preload("res://art/book/arrow-left.svg")
 	pager.add_child(previous_button)
 	page_label = _label("", 16)
 	pager.add_child(page_label)
-	next_button = _button("Weiter", turn_page.bind(1))
+	next_button = _button("", turn_page.bind(1))
+	next_button.action_id = "catalog-next"
+	next_button.tooltip_text = "Nächste Seite"
+	next_button.accessibility_name = "Nächste Seite"
 	next_button.image = preload("res://art/book/arrow-right.svg")
 	pager.add_child(next_button)
 	resized.connect(_layout_cards)
