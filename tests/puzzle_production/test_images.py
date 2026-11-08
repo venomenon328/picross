@@ -20,6 +20,147 @@ from tools.puzzle_production.p1_export import export_p1, validate_reveal
 ROOT = Path(__file__).resolve().parents[2]
 
 
+class PaletteQualityTests(unittest.TestCase):
+    """Small numeric and trust-boundary regression; no renderer/solver corpus."""
+
+    def inputs(self):
+        return ([["a", "empty", "b"]], [{"id": "a", "rgb": "#447799"},
+                {"id": "b", "rgb": "#487b9d"}],
+                {"id": "synthetic", "revision": 1, "source_id": "test-only", "normalized_sha256": "0" * 64})
+
+    def test_palette_fixed_arithmetic_and_thresholds(self):
+        from decimal import localcontext, ROUND_DOWN
+        from tools.puzzle_production import palette_quality as pq
+        with localcontext() as ctx:
+            ctx.prec, ctx.rounding = 6, ROUND_DOWN
+            self.assertEqual(pq.quantized_oklab("#447799"), [547849, -38928, -65872])
+            self.assertEqual(pq.quantized_oklab("#487b9d"), [561264, -38955, -65583])
+        self.assertEqual(pq.quantized_oklab("#000000"), [0, 0, 0])
+        report = pq.assess(*self.inputs())
+        self.assertEqual(report["pairs"][0]["S"], 180046475)
+        for s, status in ((9999999999, "negative"), (10000000000, "borderline"),
+                          (10000000001, "borderline"), (22499999999, "borderline"),
+                          (22500000000, "positive"), (22500000001, "positive")):
+            self.assertEqual(pq.pair_status(s), status)
+        # Synthetic q probes, deliberately not claimed as exact sRGB pairs.
+        for delta, status in ((100000, "borderline"), (150000, "positive")):
+            a = {"id": "a", "rgb": "#000000", "q": [0, 0, 0]}
+            b = {"id": "b", "rgb": "#ffffff", "q": [delta, 0, 0]}
+            self.assertEqual(pq._pair(a, b)["status"], status)
+
+    def test_palette_pair_coverage_unused_duplicate_rgb_and_mono(self):
+        from tools.puzzle_production import palette_quality as pq
+        _, _, identity = self.inputs()
+        palette = [{"id": f"c{i}", "rgb": rgb} for i, rgb in enumerate(
+            ("#447799", "#dd9944", "#995577", "#557744", "#774433", "#778899", "#ddddbb", "#487b9d"))]
+        # c7 appears once, separated from c0 by empty and six other colors.
+        matrix = [["c0"] * 20 + ["empty"] + [f"c{i}" for i in range(1, 8)]]
+        report = pq.assess(matrix, palette, identity)
+        self.assertEqual(report["pair_count"], 28)
+        self.assertEqual(report["worst_pair"]["ids"], ["c0", "c7"])
+        self.assertEqual(report, pq.assess(matrix, list(reversed(palette)), identity))
+        self.assertEqual(report["status"], "negative")
+        self.assertTrue(report["warning_pairs"])
+        pq.verify_assessment(report, matrix, palette, identity)
+        duplicate = [{"id": "a", "rgb": "#000000"}, {"id": "b", "rgb": "#000000"}]
+        self.assertEqual(pq.assess([["a", "b"]], duplicate, identity)["worst_pair"]["S"], 0)
+        mono = pq.assess([["a", "empty"]], duplicate, identity)
+        self.assertEqual((mono["status"], mono["pair_count"], mono["worst_pair"], mono["unused_ids"]),
+                         ("positive", 0, None, ["b"]))
+        self.assertEqual(mono["empty_cells"], 1)
+
+    def test_palette_reader_rejects_mutations_and_stale_sources(self):
+        from tools.puzzle_production import palette_quality as pq
+        matrix, palette, identity = self.inputs()
+        report = pq.assess(matrix, palette, identity)
+        pq.verify_assessment(report, matrix, palette, identity)
+        # The reader must not delegate to the producer or accept a forged flag.
+        with patch.object(pq, "assess", side_effect=AssertionError("producer called")):
+            pq.verify_assessment(report, matrix, palette, identity)
+        for key, value in (("status", "positive"), ("complete", 1), ("pair_count", 1.0),
+                           ("pairs", []), ("negative_pairs", []), ("warning_pairs", report["pairs"]),
+                           ("source_fingerprint", "0" * 64), ("extra", True)):
+            altered = copy.deepcopy(report)
+            altered[key] = value
+            with self.subTest(key=key), self.assertRaises(InvalidInput):
+                pq.verify_assessment(altered, matrix, palette, identity)
+        for branch, key, value in (("norm", "document_revision", 3), ("norm", "commit", "0" * 40),
+                                   ("pairs", "S", 0), ("pairs", "q", [[0, 0, 0], [0, 0, 0]])):
+            altered = copy.deepcopy(report)
+            (altered[branch][0] if branch == "pairs" else altered[branch])[key] = value
+            with self.assertRaises(InvalidInput):
+                pq.verify_assessment(altered, matrix, palette, identity)
+        changed = copy.deepcopy(palette)
+        changed[0]["rgb"] = "#000000"
+        for m, p, ident in (([["b", "empty", "a"]], palette, identity),
+                            ([["a", "a", "b"]], palette, identity), (matrix, changed, identity),
+                            (matrix, palette, {**identity, "revision": 2}),
+                            (matrix, palette, {**identity, "normalized_sha256": "1" * 64})):
+            with self.assertRaises(InvalidInput):
+                pq.verify_assessment(report, m, p, ident)
+
+    def test_palette_invalid_domain_and_abort_never_positive(self):
+        from tools.puzzle_production import palette_quality as pq
+        from tools.puzzle_production.contract import Aborted, Budget
+        matrix, palette, identity = self.inputs()
+        for bad in ([], [[]], [["empty"]], [["unknown"]], [[False]], [["a"], ["a", "b"]],
+                    [["a"] * 101], "a"):
+            with self.subTest(matrix=bad), self.assertRaises(InvalidInput):
+                pq.assess(bad, palette, identity)
+        for bad in ([], [{"id": "empty", "rgb": "#000000"}], [{"id": "Ä", "rgb": "#000000"}],
+                    [{"id": "a", "rgb": "#fff"}], palette * 2):
+            with self.assertRaises(InvalidInput):
+                pq.assess(matrix, bad, identity)
+        with self.assertRaises(Aborted):
+            pq.assess(matrix, palette, identity, Budget(0))
+
+    def test_palette_cli_read_only_report_and_fresh_verification(self):
+        from contextlib import redirect_stdout
+        from tools.puzzle_production import cli, palette_quality as pq
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            bundle = root / "input"
+            bundle.mkdir()
+            design = load_json(ROOT / "tests/puzzle_production/fixtures/image-design.json")
+            matrix, palette, _ = self.inputs()
+            design.update(width=3, height=1, mode="color", palette=palette)
+            data = candidate("0" * 64, validate_design(design), design["variants"][0], matrix)
+            path, report_path = bundle / "area-candidate.json", root / "report.json"
+            write_json(path, data)
+            original = path.read_bytes()
+
+            def run(*args):
+                stdout = io.StringIO()
+                with redirect_stdout(stdout):
+                    code = cli.main(["check-palette", "--candidate", str(path), *map(str, args)])
+                return code, json.loads(stdout.getvalue())
+
+            code, report = run("--report", report_path)
+            self.assertEqual((code, report["status"]), (0, "negative"))
+            self.assertNotIn("content_ready", report)
+            saved = report_path.read_bytes()
+            self.assertEqual(run("--verify", report_path), (0, report))
+            for unsafe in (path, bundle / "new.json", report_path, ROOT / "new-report.json"):
+                self.assertEqual(run("--report", unsafe)[0], 2)
+            self.assertEqual(path.read_bytes(), original)
+            self.assertEqual(report_path.read_bytes(), saved)
+            self.assertFalse((bundle / "new.json").exists())
+            self.assertEqual(run("--seconds", 0)[1]["status"], "aborted")
+            for failure, code, status in ((KeyboardInterrupt(), 4, "aborted"),
+                                           (OSError("read failure"), 5, "error")):
+                with patch.object(pq, "read_candidate", side_effect=failure):
+                    actual, error = run()
+                self.assertEqual((actual, error["status"]), (code, status))
+            forged = copy.deepcopy(data)
+            forged["design"]["palette"][0]["rgb"] = "#333333"
+            write_json(path, forged)
+            self.assertEqual(run()[1]["status"], "invalid_input")
+            # Even a correctly regenerated candidate cannot reuse the old report.
+            changed = candidate("0" * 64, forged["design"], forged["variant"], matrix)
+            write_json(path, changed)
+            self.assertEqual(run("--verify", report_path)[0], 2)
+
+
 class ImageTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 4 · 08.11.2026 · Q-A und P-A-V01 / [#488](https://github.com/venomenon328/picross/issues/488)**
+**Vertrag 1.0 · Dokumentrevision 5 · 08.11.2026 · Q-A, P-A-V01 und P-B1 / [#488](https://github.com/venomenon328/picross/issues/488)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -18,8 +18,9 @@ klären, keine günstigere Regel auswählen.
 Der bestehende redaktionelle Vertrag gilt weiter. **§8 ist die durch
 [P-A-M01 ausdrücklich freigegebene](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147)
 Farbprüfregel für neue Rätsel.** Die fachliche Norm ist verbindlich,
-aber **noch kein aktivierter Produktionsvalidator**: Automatische Früh-/Endprüfung,
-Nachweisformate und der geprüfte Ausnahmeweg folgen erst in **P-B**.
+aber **noch kein automatisches Produktionsgate**: P-B1 liefert die ausdrücklich
+aufrufbare [lesende Diagnose samt Berichts-/Prüffunktion](../tools/puzzle_production/README.md#p-b1-lesende-palettendiagnose).
+Automatische Früh-/Endprüfung und geprüfter Ausnahmeweg folgen erst in **P-B2**.
 Bis dahin bleibt die vorhandene visuelle Produktionsprüfung maßgeblich;
 kein nicht ausgeführter numerischer Palettentest darf als `pass` gelten.
 Die tatsächlichen Farben und Hinweise sind weiter visuell zu beurteilen.
@@ -91,13 +92,13 @@ redaktionelle Abweichung autorisiert keine materielle Umgestaltung.
 | Q-R01 · Motivtreue und Erkennbarkeit | Produkt §3.3; Design §4.3; Authoring §§2.3/4.1/4.3 | Je Kandidat vor Auswahl sowie nach Reparatur das exakte Raster als verlustfreie Kleinvorschau, ohne Glättung vergrößert und mit Gitter mit Motivvorlage/Abschlussbild vergleichen. Farbe soll selbst ein erkennbares Bild ergeben; bei Mono darf die farbige Enthüllung die stärkere Abstraktion auflösen. In beiden Fällen müssen Hauptform, Perspektive und Identität nachvollziehbar zusammengehören. |
 | Q-R02 · Hauptformen, Negativräume und gezielte Details | Produktion §6; Authoring §§4.3–4.4 | An denselben Ansichten zusammenhängende Hauptformen, Proportionen, notwendige Öffnungen und Einzelzellen auf Motivfunktion prüfen. Ein Auge darf eine Zelle sein; eine wichtige Öffnung darf nicht für leichteren Solvererfolg verschwinden. Zufällige Artefakte und überladene Kleinstflächen konkret markieren. |
 | Q-R03 · Flächennutzung und Innenleerlinien | Authoring §4.3 | Je Kandidat Belegung, isolierte Einzelzellen und vollständig leere Innenzeilen/-spalten erfassen und ansehen. Die bisherigen 15-/85-%-Belegungswerte bleiben ausschließlich Prüfanlässe: weder automatische Ablehnung noch Rechtfertigung für Strecken, Randpixel oder blindes Entfernen von Leerstreifen. Motivischen Nutzen beziehungsweise störende Wirkung begründen. |
-| Q-R04 · Tatsächlich verwendete Palette, alle Farbpaare | Authoring §§2.1/4.3; #488 | Früh bei Paletten-/Rastervergleich und am endgültigen Raster sämtliche verwendeten Vordergrund-IDs samt Farbwerten paarweise visuell beurteilen, auch seltene und unbenachbarte Farben. Unterschiede müssen deutlich sichtbar sein; keine zusätzliche Farbe allein für Solvererfolg oder Verfügbarkeit. Unbenutzte Einträge nicht als verwendete Farben zählen. Kleine Darstellung und Q-H01/Q-H02 mitprüfen; ähnliche Schattierungen konkret nennen. §8 konkretisiert die vorgeschlagene numerische Diagnose und Bindung; noch kein aktiver Produktionsvalidator. |
+| Q-R04 · Tatsächlich verwendete Palette, alle Farbpaare | Authoring §§2.1/4.3; #488 | Früh bei Paletten-/Rastervergleich und am endgültigen Raster sämtliche verwendeten Vordergrund-IDs samt Farbwerten paarweise visuell beurteilen, auch seltene und unbenachbarte Farben. Unterschiede müssen deutlich sichtbar sein; keine zusätzliche Farbe allein für Solvererfolg oder Verfügbarkeit. Unbenutzte Einträge nicht als verwendete Farben zählen. Kleine Darstellung und Q-H01/Q-H02 mitprüfen; ähnliche Schattierungen konkret nennen. §8 konkretisiert die freigegebene numerische Diagnose; P-B1 macht sie lesend ausführbar, automatische Produktionsgates erst P-B2. |
 
 ### 3.4 Hinweisansicht und Spielstruktur
 
 | ID / Kriterium | Herkunft | Methode und Zeitpunkt |
 | --- | --- | --- |
-| Q-H01 · Farb- und Zelllesbarkeit auf Papier | [Zeichenstil ZS-D02/03/05](UI_DRAWING_STYLE.md); Design §§2/4.4; #488 | Vor Endabnahme die tatsächliche Rasterpalette in repräsentativer Zell-/Hinweisgröße einschließlich kleiner Darstellung auf dem aktuellen Papier unter vorhandener Kontur und Schraffur beurteilen. Vordergrundfarben, Leergrund, Nachbarzellen und Fünferlinien müssen erkennbar bleiben. Große isolierte Farbfelder reichen nicht. Farbsinnsimulation, soweit verfügbar, nur ergänzend mit Methode/Grenzen angeben. Auch eine positive Diagnose nach dem Vorschlag §8 ersetzt dieses Sichturteil nicht. |
+| Q-H01 · Farb- und Zelllesbarkeit auf Papier | [Zeichenstil ZS-D02/03/05](UI_DRAWING_STYLE.md); Design §§2/4.4; #488 | Vor Endabnahme die tatsächliche Rasterpalette in repräsentativer Zell-/Hinweisgröße einschließlich kleiner Darstellung auf dem aktuellen Papier unter vorhandener Kontur und Schraffur beurteilen. Vordergrundfarben, Leergrund, Nachbarzellen und Fünferlinien müssen erkennbar bleiben. Große isolierte Farbfelder reichen nicht. Farbsinnsimulation, soweit verfügbar, nur ergänzend mit Methode/Grenzen angeben. Auch eine positive Diagnose nach §8 ersetzt dieses Sichturteil nicht. |
 | Q-H02 · Lesbare Hinweisziffern und Farbzuordnung in allen Zuständen | [Hinweistypografie](CLUE_TYPOGRAPHY.md), [Hinweisstatus](CLUE_STATUS.md), [ZS-D01](UI_DRAWING_STYLE.md) | Vor Endabnahme wirkliche ein-/mehrstellige Hinweise beider Achsen in normalem, abgeschwächtem und zusätzlich ausgekreuztem Zustand prüfen; aktuelle Schrift, C1-Kontur und Papier verwenden. Zahl und Farbzugehörigkeit müssen auch klein erkennbar bleiben. Fehlende Darstellungsmöglichkeit als `nicht geprüft` melden, keine Sichtprüfung aus Proof/Dateihash oder positivem Paarwert (§8) ableiten. |
 | Q-H03 · Spiel-/Hinweisstruktur und Arbeitsumfang | Produkt §§3.2/5; Produktion §7.1; Authoring §§4–5 | Nach finalem Proof vor Endabnahme tatsächliche Hinweisfolgen, Farbabhängigkeiten, Kleinteiligkeit, Engstellen und Umfang anhand des gebundenen Verlaufs beschreiben. Keine pauschale Abwertung vieler kleiner Zahlen/Farben, kein hoher Schwierigkeitsgrad allein aus Größe/Laufzeit. Die gebundene Bewertung ist separat H-06; Probespielen bleibt optional. |
 
@@ -228,7 +229,7 @@ Farbmetrik, Bildqualität oder Adapterfunktion. P-A/P-B erhalten eigene Nachweis
 ### 8.1 Status, Referenzplan und Grenzen
 
 **Verbindliche Regel-ID `picross-palette-separation-1` (Version 1);
-fachlich freigegeben, technisch noch nicht aktiviert.**
+fachlich freigegeben, P-B1-Diagnose ausführbar; automatische Pflicht erst P-B2.**
 Die frühere Vorschlagskennung `picross-palette-separation-1-draft1`
 bezeichnet die mathematisch **unveränderte** Fassung, deren Formel,
 Quantisierung, Grenzen D=10/15 und Warnzone der Eigentümer
@@ -240,9 +241,12 @@ sie wird **nicht** als tatsächlich durchgeführt dargestellt.
 Die unabhängige Quellen-/Rechenprüfung ist im PR #546 dokumentiert.
 
 Die Regel ist ab ihrem Normmerge verbindlicher Sollstand für **neue** Rätsel.
-Automatische Prüfung und ein belastbarer technischer `pass` setzen erst
-die Implementierung von Formaten, Writer/Reader, Früh-/Endprüfung und
-paargebundenem Ausnahmeweg im gesonderten Paket **P-B** voraus.
+Der freiwillige Diagnosebericht `picross-palette-assessment-v1` aus P-B1 bindet
+die unveränderte Berechnung ausdrücklich an Normrevision 4 am Quellcommit
+`45b8fe697364bf73f4277c8b76f92d5c00400919`; diese Dokumentrevision 5 ändert
+Formel, Quantisierung, Grenzen und Referenzwerte nicht. Automatische Prüfung,
+technisches Produktions-`pass`, Früh-/Endintegration und paargebundener
+Ausnahmeweg setzen erst die gesonderte Implementierung **P-B2** voraus.
 Bis dahin bleibt die vorhandene visuelle Produktionsprüfung maßgeblich.
 Authoring 0.5.0, Sheet v2 und versiegelte Altformate werden nicht umbenannt.
 Kein rückwirkendes Gate, keine Neubewertung oder Umfärbung des Bestands.
@@ -518,8 +522,10 @@ Paarliste vollständig und kanonisch mit q/S/angezeigtem D; schlechtestes Paar
 nach kleinstem S, Gleichstand nach Paarreihenfolge. Negativ- und Warnpaare nennen
 IDs, Werte, genaue verletzte Regel und Korrekturmöglichkeit. Kein Globalmittel.
 Visuelle Einzelurteile Q-R04/Q-H01/Q-H02 samt Ansichten/Stand separat binden.
-Die tatsächlichen Hash-/Schema-/Writer-/Readerverträge gehören vor Code in P-B;
-hier keine neuen Felder in geschlossene Produktionsformate einschleusen.
+Der [P-B1-Diagnosevertrag](../tools/puzzle_production/README.md#diagnoseformat-picross-palette-assessment-v1)
+konkretisiert Hash-/Berichts-/Readerbindung separat; geschlossene
+Produktionsformate erhalten dadurch keine neuen Felder. Pflichtintegration und
+Freigabe-/Ausnahmebindungen folgen erst P-B2.
 
 Vereinbarte Fehlersemantik für die spätere P-B-Implementierung: `invalid_input` bei ungültiger Domäne/Bindung,
 `aborted` bei Budget-/Prozessabbruch, `error` bei Rechen-/Dateifehler;

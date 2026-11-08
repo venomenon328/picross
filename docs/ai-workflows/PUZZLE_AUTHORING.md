@@ -1,11 +1,12 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 34 · 08.11.2026**
+**Version 0.5.0 · Dokumentrevision 35 · 08.11.2026**
 
 Diese Revision bindet die [vom Eigentümer freigegebene P-A-Farbprüfregel](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
 aus #488 einschließlich ihrer Referenzrechnungen ein (§4.3). Die fachliche
-Normfreigabe ist erteilt; die automatische Produktionsprüfung und der
-paargebundene Ausnahmeweg werden erst in P-B implementiert. F05 bleibt
+Normfreigabe ist erteilt; P-B1 liefert eine ausdrücklich aufrufbare lesende
+Kandidatendiagnose. Automatische Produktionsprüfung und paargebundener
+Ausnahmeweg folgen erst P-B2. F05 bleibt
 eine visuell akzeptierte synthetische Referenz bei negativen Paarmessungen,
 keine gesonderte Produktionsausnahme.
 Q-A-Sichtung bei fehlenden vollständig qualifizierten Kandidaten, RI-C in §8, gespeicherte
@@ -294,13 +295,20 @@ abgeschwächte und ausgekreuzte Hinweise prüfen; Farbsinnsimulation, soweit
 verfügbar, ergänzt dies. [Qualitätsvertrag §8](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
 enthält die **fachlich freigegebene Regel** `picross-palette-separation-1`
 für paarweisen Oklab-Ausschluss, Warnzone und getrennte visuelle Beurteilung.
-**Normativ freigegeben, technisch noch nicht aktiviert:** P-B muss die
-tatsächliche Früh-/Endprüfung, Nachweisbindung und den geprüften Ausnahmeweg
-implementieren. Eine nicht ausgeführte numerische Prüfung niemals als
+**Normativ freigegeben, automatische Produktionspflicht erst P-B2:** Mit P-B1
+ist die freiwillig ausdrücklich aufrufbare Diagnose
+`python -m tools.puzzle_production check-palette --candidate <vorhandene-*-candidate.json>`
+bei der Kandidatenwahl nutzbar. Der [CLI-/Berichtsvertrag](../../tools/puzzle_production/README.md#p-b1-lesende-palettendiagnose)
+bindet die tatsächliche Matrix, Palette, Kandidatenidentität und Norm; `--verify`
+prüft gespeicherte Diagnosen frisch gegen den aktuellen Kandidaten. Optionale
+Berichte nur neu außerhalb von Checkout/Paket schreiben. Dies ist kein
+Import-, Proof-, Zertifizierungs- oder Freigabeschritt. Die erzwungene Frühprüfung
+in allen Ableitungswegen, Endbindung und der geprüfte Ausnahmeweg folgen P-B2.
+Eine nicht ausgeführte numerische Prüfung niemals als
 technisches Produktions-`pass` ausgeben. Bestehende visuelle Prüfung und
 technische Gates gelten weiter.
 Ein späteres positives Messergebnis ersetzt Q-H01/Q-H02 nicht; ein negatives
-Paar bleibt auch bei redaktioneller Annahme negativ. Bis zum geprüften P-B-Weg
+Paar bleibt auch bei redaktioneller Annahme negativ. Bis zum geprüften P-B2-Weg
 keine Übernahme einer negativen Paarung durch Freitext-Ausnahme behaupten.
 Farb-/ID-/Nutzungs-/Matrixänderungen entziehen abhängigen Palettennachweisen ihre
 Gültigkeit; Neuprüfung und Freigaberücksprünge nach §4.4 bleiben erforderlich.
@@ -309,7 +317,8 @@ Die [F05-Referenzeinordnung nach B-01](../PUZZLE_QUALITY.md#831-b-01-gebundenes-
 trennt positives Eigentümer-Teilfeedback von weiterhin negativen Paarmessungen.
 Sie ist keine Produktionsausnahme und darf weder als `pass` noch als Freigabe
 eines realen Kandidaten übernommen werden. Dafür bleiben §6 des Qualitätsvertrags
-und der spätere geprüfte P-B-Ausnahmeweg maßgeblich.
+und der spätere geprüfte P-B2-Ausnahmeweg maßgeblich. Die F05-Referenzannahme
+benötigt keine zusätzliche pauschale Eigentümerausnahme.
 
 Für einen konkreten redaktionellen Mangel gilt der externe, revisionsgebundene
 [Einzelfallprozess aus Qualitätsvertrag §6](../PUZZLE_QUALITY.md).
