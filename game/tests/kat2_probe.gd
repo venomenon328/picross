@@ -403,6 +403,11 @@ func information_saves() -> void:
 		var foreign: Dictionary = save_bytes("t01")
 		var dialog: ConfirmationDialog = app.reset_dialog if state == "error" else app.repair_dialog
 		var action: Button = app.album.reset_buttons["T-01"] if state == "error" else app.album.repair_buttons["T-01"]
+		if state != "error":
+			app.choices[0].recovery.ensure_control_visible(action)
+			await frames()
+		app.album.ensure_control_visible(action)
+		await frames()
 		click(action)
 		await frames()
 		check(dialog.visible and save_bytes() == original, state + ": repair/reset requires confirmation")
