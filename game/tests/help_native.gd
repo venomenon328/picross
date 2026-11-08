@@ -80,7 +80,9 @@ static func run(t: SceneTree) -> void:
 			panel.choose(0)
 			await t.frames(3)
 			click(t,panel.buttons[i])
-			await t.frames(5)
+			# Native Labels reshape after drawing, then nested CopyColumns update
+			# the article range. Do not send all wheel events into an old range.
+			await t.frames(10)
 			t.check(panel.chapter == i and panel.buttons[i].selected and app.info.help_scroll.scroll_vertical == 0,"HIL direct chapter starts at top")
 			layouts += 1
 			var scroll: ScrollContainer = app.info.help_scroll
