@@ -131,7 +131,7 @@ class Guards:
         check = lambda: self.target(name, source=source)
         check()
         pub.write(self.root, name, data, self.view.temps[name], check,
-                  package_addition=name in self.j["additions"])
+                  package_addition=name in self.j["additions"], replace=self.expected[name] is not None)
         self.written(name, data)
 
     def cleanup(self):

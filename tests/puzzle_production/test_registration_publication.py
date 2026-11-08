@@ -155,6 +155,22 @@ class PublicationTests(unittest.TestCase):
         finally:
             source.write_bytes(original)
 
+    def test_new_text_race_remains_atomic_no_replace(self):
+        name = sorted(n for n in self.journal['old'] if self.journal['old'][n] is None
+                      and self.journal['new'][n] is not None)[0]
+        target = self.root / name
+        rename = pub.rename; reached = []
+        def collide(source, destination, *, replace):
+            if destination == target and not reached:
+                self.assertFalse(replace, 'New text must never become a replace based on a later exists()')
+                target.write_bytes(b'FOREIGN'); reached.append(True)
+            return rename(source, destination, replace=replace)
+        with patch.object(pub, 'rename', side_effect=collide), self.assertRaises((ValueError, OSError)):
+            self.execute()
+        self.assertEqual(reached, [True])
+        self.assertEqual(target.read_bytes(), b'FOREIGN')
+        self.assertTrue((self.root / tx.LOCK).exists())
+
     def test_interruptions_staging_and_repeated_recovery(self):
         phases = [(p, 1) for p in ('P0', 'journal-prefix', 'journal-complete', 'P1', 'P2', 'P3', 'P4', 'G5a', 'P5', 'P6')]
         for phase, occurrence in [*phases, ('P3', 2), ('P4', 2)]:
