@@ -336,15 +336,19 @@ Ein möglicher Albumaufbau sind redaktionell komponierte Doppelseiten mit Regist
 Die bestätigte [Buchrichtung #493](BOOK_INTEGRATION.md) zeigt den Katalog als echte Doppelseite mit mittiger Bindung. Katalogblättern dauert 0,85 Sekunden, vorwärts rechts nach links und zurück umgekehrt. Drei einzelne Blätter und eine insgesamt dreisekündige Kamerafahrt führen zur großzügigen rechten Arbeitsseite, frontal und mit Bindung links. B-B übernimmt den abgenommenen Buchkörper, Papier-/Leder-/Tischmaterial, Falzgeometrie, transparente Controls und die 1,8-sekündige Rückkehr in den regulären Windows-/Webstart. Die frühere linke Arbeitsseite und das Verbot gezielter Kamerabewegung sind abgelöst. Hinweise und Raster behalten ihre vollständigen bisherigen Pixelbudgets. Große Raster werden weder auf eine halbe Bildschirmfläche verkleinert noch über den Falz gelegt. Die historischen Materialabnahmen bleiben im Studienvertrag gebunden; die neue Integrationslieferung folgt B-B-T01/R01/M01.
 
 Die Spielerhilfe nach [HIL-1 / #500](https://github.com/venomenon328/picross/issues/500)
-liegt in der rechten Informationsseite im vorhandenen Nahmaßstab. Vier beschriftete
-Papierbuttons führen direkt zu Spielprinzip, farbigen Rätseln, Bedienung und
-Lösungstipps. Pangolin trägt den Fließtext, Bakso Daging gemäß
+liegt in der rechten Informationsseite im vorhandenen Nahmaßstab. Vier linksbündige Kapitelzeilen führen gemäß
+[HIL-REG-A / #548](https://github.com/venomenon328/picross/issues/548) direkt zu
+Spielprinzip, farbigen Rätseln, Bedienung und Lösungstipps. Das feste Register
+liegt links vom separat scrollenden Artikel oder bei knapper gemessener
+Papierbreite als umbrechende Textleiste darüber. Der aktive Eintrag trägt einen
+ruhenden handgezeichneten Unterstrich, Fokus eine eigene Kontur. Die normale
+Absatzspalte folgt ungefähr 60–75 Zeichen je Zeile; Lehrdiagramme dürfen breiter sein. Pangolin trägt den Fließtext, Bakso Daging gemäß
 [HIL-TYPO-D01](https://github.com/venomenon328/picross/issues/535) die Abschnitts- und kleinen Werkzeugüberschriften; Lehrzahlen verwenden die aktive Delight-Typografie.
 Passive synthetische Raster teilen stabile Linien, Atlas-Endbilder, Stiftfarben
 und handschriftliche X mit der Spielansicht. Es gibt keine neue Bild-/Fontfamilie.
 Textumbruch, Diagramme und Trefferflächen folgen UI100/125 und der Papierfläche.
 Kapitelwahl beginnt oben; Hilfe↔Einstellungen erhält Kapitel und Lesestelle des
-Besuchs. Der obere Rückweg bleibt am Katalog-/Rätselursprung gebunden. Die Inhalte
+Besuchs. Der untere Rückweg bleibt am Katalog-/Rätselursprung gebunden. Die Inhalte
 nehmen an den vorhandenen Captures und Buchbewegungen teil.
 
 Leicht gebrochenes Papierweiß, dunkle Konturen, matte Akzente und dezente Texturen sind mögliche Stilmittel, keine festgelegte Palette. Zahlen, Linien und Zellzustände müssen klar und unverzerrt bleiben. Handschriftliche Ziffern, Flecken und dekorative Gegenstände dürfen die Arbeit nicht erschweren. Handgezeichnet bedeutet weder verpflichtend beige noch absichtlich unpräzise.

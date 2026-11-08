@@ -1,25 +1,22 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/488",
-  "package": "P-B2",
+  "issue": "https://github.com/venomenon328/picross/issues/548",
+  "package": "HIL-REG-A",
   "modules": [
-    "tools",
-    "production.images",
-    "production.adapter",
-    "production.catalog"
+    "native.catalog"
   ],
-  "purpose": "Authoring 0.6.0 automatic early/final palette gates, additive ZA-1 v5, external pair-bound exception and independent export/registration readers. Images covers import/repair diagnostics; adapter the gate and all fixed/paired paths; catalog the new export-reader generation and unchanged transaction/recovery guards. Tools covers CLI/source-graph and offline-sheet contracts. Regular Windows core build required.",
-  "omitted": "No solver algorithms, renderer, runtime, real content or difficulty-method changes. No production.solver, native.*, preflight, delivery or Chromium; import graph reachability via shared CLI is audited, not an automatic full selection. Existing synthetic images/adapter/catalog modules run fully. No new personal reference color acceptance or historical gallery replay.",
+  "purpose": "Fixed responsive chapter register, measured prose column and independent article scroll. Existing catalog/information process verifies actual help/title layout and visit state; core builds the regular Windows player.",
+  "omitted": "No changes to diagram logic, sessions, saves, rendering, global navigation or production. No native.core/history/graphics/export, tools, preflight, delivery, production modules or Chromium. Once-only explicit book lifecycle and native Windows rendered viewport interaction complement component layout; R01 and personal M01 remain separate.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_palette_gate.py",
+      "path": "game/tests/view_title_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Small synthetic boundary regressions: current/missing/forged evidence, complete exceptions, visual rejection, legacy/new generations and registration. No catalog puzzle copies or permanent gallery."
+      "reason": "Small real layout/input/reading regression in existing catalog/information process; preserve BTI and HIL-TYPO checks. No new process or permanent images."
     },
     {
-      "path": "tools/test_authoring_sheet.py",
+      "path": "game/tests/help_native.gd",
       "disposition": "change-scoped",
-      "reason": "Read current authoring version from authoritative snapshot instead of freezing 0.5.0; retain existing real offline-JS checks."
+      "reason": "Adapt existing explicitly requested lifecycle to separate register/article containment and current bottom navigation. No standard-CI lifecycle."
     }
   ],
   "core_change": null,
