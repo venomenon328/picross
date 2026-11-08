@@ -24,6 +24,7 @@ from .images import (MAX_BYTES, file_hash, inspect_candidate, logic_from_matrix,
                      normalize, publish_bundle, versions)
 from . import categories
 from . import operation_diagnostics as diagnostic
+from . import palette_gate
 
 ADAPTER = "authoring-p1-rect-color-1"
 LEGACY_FORMAT = "picross-target-export-v1"
@@ -32,7 +33,7 @@ MANUAL_FORMAT = "picross-target-export-v3"
 PAIRED_FORMAT = "picross-target-export-v4"
 
 
-def tool_identity(legacy=False, manual=False, color=False, paired=False, accepted_raster=False):
+def tool_identity(legacy=False, manual=False, color=False, paired=False, accepted_raster=False, palette=False):
     root = Path(__file__).resolve().parents[2]
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root,
@@ -51,6 +52,8 @@ def tool_identity(legacy=False, manual=False, color=False, paired=False, accepte
         files.extend(("certification.py", "paired_verifier.py"))
     if accepted_raster:
         files.append("accepted_raster.py")
+    if palette:
+        files.extend(("palette_quality.py", "palette_gate.py"))
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -115,8 +118,11 @@ def final_approval(package, selection, approval_path=None):
 
 
 @diagnostic.measured("Input inspection", "full_input_inspections", attempt_counter="input_inspection_attempts")
-def inspect(package: Package, approval_path=None, *, legacy=False, manual_authorization=None):
+def inspect(package: Package, approval_path=None, *, legacy=False, manual_authorization=None, palette_exception=None):
     h = package.handoff
+    palette = h["rulebook"]["version"] == "0.6.0"
+    require(not palette or not legacy, "Authoring 0.6.0 requires export v5")
+    require(palette or palette_exception is None, "Palette exception requires authoring 0.6.0")
     for name in ("brief", "report", "decisions", "effort"):
         package.file(h.get(name))
     require(type(h.get("test_only", False)) is bool, "Invalid test-only marker")
@@ -218,7 +224,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(c.get("proof") == expected_proof, "Handoff proof selection differs")
     paired = proof["format"] == "picross-proof-v3"
     if paired:
-        require(not legacy and h["rulebook"]["version"] == "0.5.0" and
+        require(not legacy and h["rulebook"]["version"] in ("0.5.0", "0.6.0") and
                 c.get("certification") == checked.get("certification") and c.get("certification") is not None,
                 "Paired proof requires explicit authoring 0.5.0 profile binding")
     logic = logic_from_matrix(matrix, design)
@@ -273,7 +279,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(all(k in (("R0","R1","R2","R3","R4") if paired else ("R0","R1","R2","R3")) and isinstance(v,str) and bool(v.strip())
                 for k,v in difficulty["rule_families"].items()), "Invalid difficulty rule reasoning")
     if difficulty["method"] == "picross-difficulty-0.2":
-        require(h["rulebook"]["version"] == "0.5.0", "Difficulty 0.2 requires authoring 0.5.0")
+        require(h["rulebook"]["version"] in ("0.5.0", "0.6.0"), "Difficulty 0.2 requires authoring 0.5.0/0.6.0")
     if paired:
         from .certification import LABEL
         assessment = checked.get("assessment")
@@ -306,7 +312,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain, paired, late_raster),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain, paired, late_raster, palette),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
     if not legacy:
         report.update(format="picross-target-inspection-v2", category_id=None,
@@ -329,13 +335,19 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
         report.update(original_state=h["state"], original_motif_gate=gates["motif"],
                       late_motif_acceptance=False, approved_motif=auth["record"]["approved_motif"],
                       superseded_content_blockers=auth["record"]["superseded_content_blockers"])
+    if palette:
+        gate = palette_gate.inspect(package, design, matrix, logic, source, reference, approval, palette_exception, budget)
+        report.update(format="picross-target-inspection-v5", palette_gate=gate, technical=gate["allowed"])
+        if not gate["allowed"]:
+            report["blockers"].append("palette: current measurement/visual acceptance or bound exception required")
+            report["catalog_ready"] = False
     return report, design, matrix, logic, approval
 
 
 def categorize(report, catalog, category_id):
     categories.lookup(catalog, category_id)
     report.update(category_id=category_id, category_ready=True,
-                  catalog_ready=report["editorial_approved"])
+                  catalog_ready=report["editorial_approved"] and report["technical"])
 
 
 def definition(report, design, matrix, logic, name, revision, stem):
@@ -370,12 +382,14 @@ def player_notice(package, report=None):
 
 @diagnostic.measured("Export", "exports")
 def export(source, output, *, name, revision, stem, save_slot, approval_path=None,
-           category_id=None, categories_path=None, manual_authorization=None):
+           category_id=None, categories_path=None, manual_authorization=None, palette_exception=None):
     require(not output.exists(), "Export output exists; use a new path")
     require(isinstance(save_slot, str) and STEM.fullmatch(save_slot), "Invalid explicit save slot")
     relative(save_slot+".json")
     with open_package(source, allow_manual_review=manual_authorization is not None) as package:
-        report, design, matrix, logic, approval = inspect(package, approval_path, manual_authorization=manual_authorization)
+        report, design, matrix, logic, approval = inspect(package, approval_path, manual_authorization=manual_authorization,
+                                                        palette_exception=palette_exception)
+        require(report["technical"], "Export blocked: palette measurement/visual acceptance missing")
         require(approval is not None, "Export blocked: final_editorial approval missing")
         require(categories_path is not None, "Explicit categories source is required")
         catalog = categories.load(categories_path)
@@ -398,6 +412,10 @@ def export(source, output, *, name, revision, stem, save_slot, approval_path=Non
                 "original_zip_sha256": report["original_zip_sha256"], "handoff_sha256": report["handoff_sha256"],
                 "inventory_sha256": report["inventory_sha256"], "files": hashes(inputs)})
             shutil.copyfile(approval["path"], stage / "approval.json")
+            if palette_exception is not None:
+                shutil.copyfile(palette_exception, stage / palette_gate.EXCEPTION_FILE)
+                require(file_hash(stage / palette_gate.EXCEPTION_FILE) == report["palette_gate"]["exception"]["sha256"],
+                        "Palette exception changed during export")
             if manual_authorization is not None:
                 from .manual_derivation import authorization, AUTH_FILE, OWNER_FILE
                 auth = authorization(package, manual_authorization)
@@ -426,6 +444,8 @@ def export(source, output, *, name, revision, stem, save_slot, approval_path=Non
                 manifest["manual_authorization"] = {"file": AUTH_FILE, "sha256": file_hash(stage / AUTH_FILE)}
             if "deduction" in report:
                 manifest.update(format=PAIRED_FORMAT, deduction=report["deduction"])
+            if "palette_gate" in report:
+                manifest.update(format=palette_gate.EXPORT, palette_gate=report["palette_gate"])
             write_json(stage / "manifest.json", manifest)
             verify_export(stage)
             publish_bundle(stage, output)
@@ -441,15 +461,16 @@ def verify_export(directory):
     from .authoring_package import file_table
     files = file_table(directory, time.monotonic()+300)
     m = load_json(directory / "manifest.json")
-    require(isinstance(m, dict) and m.get("format") in (FORMAT, LEGACY_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT), "Unsupported target export format")
+    require(isinstance(m, dict) and m.get("format") in (FORMAT, LEGACY_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, palette_gate.EXPORT), "Unsupported target export format")
     legacy = m["format"] == LEGACY_FORMAT
-    paired = m["format"] == PAIRED_FORMAT
-    manual = m["format"] == MANUAL_FORMAT or paired and "manual_authorization" in m
+    palette = m["format"] == palette_gate.EXPORT
+    paired = m["format"] == PAIRED_FORMAT or palette and "deduction" in m
+    manual = m["format"] == MANUAL_FORMAT or (paired or palette) and "manual_authorization" in m
     exact_keys(m, {"format", "adapter", "definition_id", "runtime_revision", "package_revision",
         "save_slot", "stem", "definition", "reveal", "color_mapping", "selection", "handoff_sha256", "inventory_sha256", "approval_sha256",
         "technical", "editorial_approved", "catalog_ready", "registered", "test_only", "files"} |
         (set() if legacy else {"category_id", "categories"}) | ({"manual_authorization"} if manual else set()) |
-        ({"deduction"} if paired else set()))
+        ({"deduction"} if paired else set()) | ({"palette_gate"} if palette else set()))
     require(m["adapter"] == ADAPTER and isinstance(m["files"], dict) and
             set(files) == set(m["files"]) | {"manifest.json"}, "Invalid/incomplete target export")
     for name, expected in m["files"].items():
@@ -468,8 +489,20 @@ def verify_export(directory):
                 "Manual export authorization binding mismatch")
         manual_path = files[AUTH_FILE]
     with open_package(directory / "input", allow_manual_review=manual) as package:
+        require(palette == (package.handoff["rulebook"]["version"] == "0.6.0"), "Export format/rulebook palette generation differs")
+        exception_path = None
+        if palette:
+            exact_keys(m["palette_gate"], {"assessment", "binding", "visual_review", "exception", "allowed"})
+            if m["palette_gate"]["exception"] is not None:
+                exception_path = files.get(palette_gate.EXCEPTION_FILE)
+                require(exception_path is not None, "Missing palette exception original")
+            else:
+                require(palette_gate.EXCEPTION_FILE not in files, "Unbound palette exception original")
         report, design, matrix, logic, approval = inspect(package, directory / "approval.json", legacy=legacy,
-                                                        manual_authorization=manual_path)
+                                                        manual_authorization=manual_path, palette_exception=exception_path)
+        require(report["technical"], "Export blocked by current palette gate")
+        if palette:
+            palette_gate.same(m["palette_gate"], report["palette_gate"], "Stale or altered export palette gate")
         require((report["source"]["kind"] == "manual") == manual, "Export format/source mismatch")
         require(paired == ("deduction" in report) and (not paired or m["deduction"] == report["deduction"]),
                 "Export format/deduction binding mismatch")
@@ -542,6 +575,7 @@ def main(argv=None):
             p.add_argument("--category-id", required=True, action=ExplicitOnce)
             p.add_argument("--categories", type=Path, required=True, action=ExplicitOnce)
         p.add_argument("--manual-authorization", type=Path)
+        p.add_argument("--palette-exception", type=Path)
     for cmd in ("verify-export", "plan", "register", "plan-update", "update"):
         p = sub.add_parser(cmd)
         p.add_argument("--export", type=Path, required=True)
@@ -586,7 +620,7 @@ def main(argv=None):
             diagnostics.environment["tool_commit"] = diagnostic.source_commit()
             if args.operation_report is not None:
                 report_target = diagnostic.report_target(args.operation_report,
-                    [getattr(args, k, None) for k in ("checkout", "export", "input", "output_dir", "categories", "difficulty", "approval", "manual_authorization")] +
+                    [getattr(args, k, None) for k in ("checkout", "export", "input", "output_dir", "categories", "difficulty", "approval", "manual_authorization", "palette_exception")] +
                     [Path(__file__).resolve().parents[2]])
         if args.command == "retire-reveal-production":
             from .reveal_retirement import retire
@@ -596,7 +630,8 @@ def main(argv=None):
             result = retire(args.checkout, args.puzzle_id, args.integrated_commit)
         elif args.command == "inspect":
             with open_package(args.input, allow_manual_review=args.manual_authorization is not None) as package:
-                result = inspect(package, args.approval, manual_authorization=args.manual_authorization)[0]
+                result = inspect(package, args.approval, manual_authorization=args.manual_authorization,
+                                 palette_exception=args.palette_exception)[0]
             if args.report:
                 require(not args.report.exists(), "Inspection output exists")
                 write_json(args.report, result)
@@ -604,7 +639,7 @@ def main(argv=None):
             result = export(args.input, args.output_dir, name=args.name, revision=args.runtime_revision,
                             stem=args.stem, save_slot=args.save_slot, approval_path=args.approval,
                             category_id=args.category_id, categories_path=args.categories,
-                            manual_authorization=args.manual_authorization)
+                            manual_authorization=args.manual_authorization, palette_exception=args.palette_exception)
         elif args.command == "verify-export":
             result = verify_export(args.export)[1]
         elif args.command == "recover-registration":

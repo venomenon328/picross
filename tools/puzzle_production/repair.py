@@ -5,6 +5,7 @@ import argparse
 from collections import deque
 from copy import deepcopy
 import math
+import json
 from pathlib import Path
 import time
 
@@ -158,6 +159,8 @@ class Frontier:
 
 def evaluate(matrix, design, directory, prefix, budget, config=None):
     start, lines = time.monotonic(), budget.lines
+    from .palette_gate import early
+    early(matrix, design, budget=budget)
     puzzle = validate_logic(logic_from_matrix(matrix, design))
     write_json(directory / f"{prefix}-logic.json", puzzle.to_wire())
     if config:
@@ -322,6 +325,9 @@ def search(reference_dir, plan, output, cancelled=None):
 
 
 def make_views(directory, before, after, mask, design, changes, status):
+    import html
+    from .palette_gate import early
+    palette = early(after, design)
     from PIL import Image, ImageDraw
     for name, matrix in (("before", before), ("after", after)):
         raster_image(matrix, design).save(directory / f"{name}.png")
@@ -348,6 +354,8 @@ def make_views(directory, before, after, mask, design, changes, status):
         '<!doctype html><meta charset="utf-8"><title>RP-5 repair</title>'
         '<style>img{image-rendering:pixelated;min-width:300px}body{font:16px sans-serif}</style>'
         f'<h1>RP-5: {status}</h1><p>No editorial release. Pink: every changed cell. Blue: protected cells.</p>'
+        '<p>Palette diagnosis with provisional source identity; visual acceptance and ZA-1 final gates remain separate.</p>'
+        '<pre>' + html.escape(json.dumps(palette, ensure_ascii=False, sort_keys=True)) + '</pre>'
         '<img src="view.png" alt="Before, after, all changes, protection mask">'
         '<p><a href="repair.json">Full parent/edit history</a> <a href="result.json">Measured results</a></p>\n',
         encoding="utf-8", newline="\n")
@@ -420,6 +428,8 @@ def inspect_repair(directory, reference_dir, budget=None):
         require(digest(h["parent"]) == digest(parent) and digest(h["edit"]) == digest(edit) and h["matrix_hash"] == digest(state),
                 "Wrong candidate parent/edit/matrix")
         wire = logic_from_matrix(state, design)
+        from .palette_gate import early
+        early(state, design, budget=budget)
         require(h["logic_hash"] == digest(wire), "Stale candidate logic")
         prefix = f"candidate-{i:03d}"
         expected_files.update((f"{prefix}-logic.json", f"{prefix}-proof.json"))
@@ -521,6 +531,8 @@ def inspect_repair(directory, reference_dir, budget=None):
     if (directory / "final-proof.json").exists():
         expected_files.update(("final-logic.json", "final-proof.json"))
         wire = logic_from_matrix(end, design)
+        from .palette_gate import early
+        early(end, design, budget=budget)
         require(load_json(directory / "final-logic.json") == wire, "Stale final logic")
         puzzle = validate_logic(wire)
         if paired:
