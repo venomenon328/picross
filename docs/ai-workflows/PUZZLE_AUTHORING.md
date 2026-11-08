@@ -1,11 +1,13 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 33 · 08.11.2026**
+**Version 0.5.0 · Dokumentrevision 34 · 08.11.2026**
 
-Diese Revision bindet den [P-A-V01-Normvorschlag](../PUZZLE_QUALITY.md#8-p-a-v01-vorschlag-für-paarweise-farbunterscheidbarkeit)
-aus #488 samt Referenzvergleich und offener Eigentümer-Normfreigabe ein (§4.3).
-B-01 bindet das Eigentümer-Teilfeedback als getrennte Referenzeinordnung;
-die metrischen Negativbefunde und die offenen Norm-/Reviewgates bleiben erhalten.
+Diese Revision bindet die [vom Eigentümer freigegebene P-A-Farbprüfregel](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
+aus #488 einschließlich ihrer Referenzrechnungen ein (§4.3). Die fachliche
+Normfreigabe ist erteilt; die automatische Produktionsprüfung und der
+paargebundene Ausnahmeweg werden erst in P-B implementiert. F05 bleibt
+eine visuell akzeptierte synthetische Referenz bei negativen Paarmessungen,
+keine gesonderte Produktionsausnahme.
 Q-A-Sichtung bei fehlenden vollständig qualifizierten Kandidaten, RI-C in §8, gespeicherte
 Sheet-Einstellungen, lokale Codex-Arbeitswurzeln, Inhaltsformate, Solverprofile,
 Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
@@ -289,13 +291,14 @@ nicht zugunsten einer Kennzahl verschlechtern. Alle tatsächlich verwendeten
 Vordergrundfarbpaare betrachten, auch seltene und unbenachbarte Farben. Kleine
 Zell-/Hinweisgrößen auf aktuellem Papier mit Kontur/Schraffur sowie normale,
 abgeschwächte und ausgekreuzte Hinweise prüfen; Farbsinnsimulation, soweit
-verfügbar, ergänzt dies. [Qualitätsvertrag §8](../PUZZLE_QUALITY.md#8-p-a-v01-vorschlag-für-paarweise-farbunterscheidbarkeit)
-enthält den reproduzierbaren P-A-V01-Vorschlag `picross-palette-separation-1-draft1`
+verfügbar, ergänzt dies. [Qualitätsvertrag §8](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
+enthält die **fachlich freigegebene Regel** `picross-palette-separation-1`
 für paarweisen Oklab-Ausschluss, Warnzone und getrennte visuelle Beurteilung.
-**Noch keine aktivierte Produktionsregel:** P-A-M01/R01 sind vor Merge offen;
-P-B muss die tatsächliche Früh-/Endprüfung, Nachweisbindung und den Ausnahmeweg
-implementieren. Keine Vorschlagsmessung als technisches Produktions-`pass`
-ausgeben. Bestehende visuelle Prüfung und technische Gates gelten weiter.
+**Normativ freigegeben, technisch noch nicht aktiviert:** P-B muss die
+tatsächliche Früh-/Endprüfung, Nachweisbindung und den geprüften Ausnahmeweg
+implementieren. Eine nicht ausgeführte numerische Prüfung niemals als
+technisches Produktions-`pass` ausgeben. Bestehende visuelle Prüfung und
+technische Gates gelten weiter.
 Ein späteres positives Messergebnis ersetzt Q-H01/Q-H02 nicht; ein negatives
 Paar bleibt auch bei redaktioneller Annahme negativ. Bis zum geprüften P-B-Weg
 keine Übernahme einer negativen Paarung durch Freitext-Ausnahme behaupten.
