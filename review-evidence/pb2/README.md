@@ -10,7 +10,7 @@ Dieser Belegbranch hat keinen Merge-PR und gehört nicht nach main.
 
 - `acceptance.py`: exakt das einmalig ausgeführte Skript; kein Dauer-CI-Test.
 - `acceptance-result.json`: vollständiger erfolgreicher Lauf am obigen sauberen
-  Head; Python 3.13.12/Windows, isoliertes Pillow 12.3.0, 111,734 s.
+  Head; Python 3.13.14/Windows, isoliertes Pillow 12.3.0, 111,734 s.
 - `baseline-windows-core.log`: separat auf unverändertem Main-Checkout
   reproduzierter bestehender Windows-Kernfehler. Produktcode/CI-Kern wurde dafür
   nicht geändert. Der Linux-Package-CI-Pass wird im Produkt-PR separat gebunden.
