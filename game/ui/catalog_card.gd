@@ -203,7 +203,7 @@ func minimum_card_width(u: float) -> float:
 	# Insets, strip padding, two gaps, circle plus gap, and the visible mode
 	# drawing are reserved in addition to the measured, unabridged text.
 	var measured: Vector2 = metadata_widths(u)
-	return ceilf(maxf(20*u+14*u+measured.x+measured.y+20*u+20*u+34*u,20*u+text_width_budget))
+	return ceilf(maxf(20*u+14*u+measured.x+measured.y+20*u+20*u+34*u,2*roundf(10*u)+text_width_budget))
 
 func _two_line_width(value: String, font: Font, pixels: int, u: float) -> float:
 	# Measure the same adaptive word wrapping as Label. The complete category

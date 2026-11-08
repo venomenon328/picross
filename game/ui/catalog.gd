@@ -476,7 +476,7 @@ func _layout_cards() -> void:
 	var cell_width: float = floorf((available-(capacity-1)*gap)/capacity)
 	# One decision for both halves, measured from the entire catalog rather
 	# than the current page/status/title. Reflow keeps every control and ID.
-	var side_minimum: float = ceilf(140*ui_scale+card_text_width)
+	var side_minimum: float = 2*roundf(10*ui_scale)+roundf(112*ui_scale)+roundf(8*ui_scale)+card_text_width
 	var sideways: bool = cell_width >= side_minimum
 	var desired: float = maxf(minimum_width+8*ui_scale,side_minimum) if sideways else minimum_width+8*ui_scale
 	var card_width: float = maxf(minimum_width,minf(desired,cell_width))
