@@ -36,7 +36,7 @@ class Tokens extends "res://ui/full_view_board.gd":
 			draw_string(font,Vector2(x-step/2+2,35),session.definition.palette[i].color,HORIZONTAL_ALIGNMENT_LEFT,-1,label_size,INK)
 			draw_rect(Rect2(x-step/2+3,43,step-6,22),color)
 			for state: int in range(3):
-				var y: float = 98+state*64
+				var y: float = 98+state*40
 				draw_string(font,Vector2(x-step/2+2,y-18),"row "+["OPEN","FILLED","CLOSED"][state],HORIZONTAL_ALIGNMENT_LEFT,-1,label_size,INK)
 				for j: int in range(2):
 					var token: String = ["1","11"][j]
@@ -44,13 +44,24 @@ class Tokens extends "res://ui/full_view_board.gd":
 					var baseline := Vector2(x+(j-0.5)*slot_pitch.x-width/2,y+clue_baseline_offset(fs))
 					draw_clue_number(clue_font(),baseline,token,fs,color,state,clue_identity("row",id,j))
 			for state: int in range(3):
-				var y: float = 300+state*85
+				var y: float = 230+state*72
 				draw_string(font,Vector2(x-step/2+2,y-18),"col "+["OPEN","FILLED","CLOSED"][state],HORIZONTAL_ALIGNMENT_LEFT,-1,label_size,INK)
 				for j: int in range(2):
 					var token: String = ["1","11"][j]
 					var width: float = clue_font().get_string_size(token,HORIZONTAL_ALIGNMENT_LEFT,-1,fs).x
 					var baseline := Vector2(x-width/2,y+j*slot_pitch.y+clue_baseline_offset(fs))
 					draw_clue_number(clue_font(),baseline,token,fs,color,state,clue_identity("column",id,j))
+
+class CellPatch extends "res://ui/full_view_board.gd":
+	var measured_cell: float
+	func _layout() -> void:
+		if session == null: return
+		view.cell_size = measured_cell
+		view.configure(Rect2(Vector2.ONE,Vector2(10,5)*measured_cell),Vector2i(10,5))
+		view.center = Vector2(5,2.5)
+		view.reframe()
+		layout_valid = true
+	func _draw_clues(_first: Vector2i, _last: Vector2i) -> void: pass
 
 func _initialize() -> void: call_deferred("run")
 
@@ -110,6 +121,25 @@ func run() -> void:
 			panel.size = board.size
 			panel.prepare(board)
 			app.work.add_child(panel)
+			# Same-size native cell/rule context in each explicit status panel.
+			# This is a display-only swatch, not extra uses in the fixed matrix.
+			var patch := CellPatch.new()
+			var patch_data: Dictionary = app.session.definition.duplicate(true)
+			patch_data.id += "-display-patch"
+			patch_data.width = 10
+			patch_data.height = 5
+			patch_data.rows = [[],[],[],[],[]]
+			patch_data.columns = [[],[],[],[],[],[],[],[],[],[]]
+			patch.session = Session.new(patch_data)
+			patch.measured_cell = board.view.cell_size
+			patch.book_layout = true
+			patch.ui_scale = board.ui_scale
+			patch.position = Vector2(panel.size.x/2-5*patch.measured_cell,430)
+			patch.size = Vector2(10,5)*patch.measured_cell+Vector2.ONE*2
+			for y: int in range(5):
+				for x: int in range(10):
+					patch.session.player.cells[y*10+x] = -1 if x==8 else (0 if x==9 else 1+(x+y)%app.session.definition.palette.size())
+			panel.add_child(patch)
 			board.hide()
 			panel.queue_redraw()
 			rec["panel_font_size"] = panel.clue_font_size()
@@ -118,6 +148,7 @@ func run() -> void:
 			rec["panel_states"] = ["OPEN","FILLED","CLOSED"]
 			rec["panel_axes"] = ["row","column"]
 			rec["c1_runtime_ids"] = [2,4]
+			rec["display_patch"] = {"dimensions":[10,5],"cell":patch.measured_cell,"palette":"same IDs/RGB; display-only uses excluded from reference matrix counts","native_draw":"unmodified inherited full_view_board/drawing_board/atlas_marks/grid_stroke; clue drawing handled above"}
 			rec.files.append(await save_image(prefix+"-tokens.png"))
 			panel.free()
 			board.show()

@@ -15,7 +15,7 @@
   "recipient": "Eigentümer P-A-M01 und unabhängiger Reviewer P-A-R01 mit binärfähigem Git-/HTTP-Client",
   "expires": "2026-11-15",
   "cleanup": "Keine Mergefreigabe; Belegrefs nach erledigter Sichtung im beauftragten Rückbau entfernen. Bei offenem Gate am Ablauf Bedarf/Zustellung neu prüfen.",
-  "original_bytes": 47743541,
+  "original_bytes": 47848204,
   "originals": [
     {
       "file": "review-evidence/pa-v01/originals/F01-normal-board.png",
@@ -28,8 +28,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F01-normal-tokens.png",
-      "bytes": 1798279,
-      "sha256": "e336f78f1c5ab970e31c06b733030fb358f357ad42125a6a7efd98c919b1bdc5",
+      "bytes": 1812088,
+      "sha256": "7e92c7e002e58f0086929e6719984477581f68c3da2af677a09c7c5cc5fe42d1",
       "image_size": [
         1920,
         1080
@@ -46,8 +46,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F01-small-tokens.png",
-      "bytes": 959477,
-      "sha256": "17d643768082c1cc952978fe7fcd4b3812f362fb5b23439c308ffce670955a3b",
+      "bytes": 960528,
+      "sha256": "4a160ba5fbe4bf014df852a8991220b4572dcff2db9c3add1f043d68cb3708df",
       "image_size": [
         1280,
         720
@@ -64,8 +64,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F02-normal-tokens.png",
-      "bytes": 1798339,
-      "sha256": "56eff6d975af4e69bd985fc8bc00a3b0d2c0a428dfc3726026dcdb370db5d969",
+      "bytes": 1811266,
+      "sha256": "473ec48f544395dfa2fce671262c7b29b7937867ada2d2a8ee28880f698ce138",
       "image_size": [
         1920,
         1080
@@ -82,8 +82,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F02-small-tokens.png",
-      "bytes": 959359,
-      "sha256": "a888154227f6eb594ed94e86fd757235d43d51cd242e28beb7bd75136c993e45",
+      "bytes": 960367,
+      "sha256": "d35bd7de4eba6e6aa4420b6824f640474d1b097851494695e2312b72378837bd",
       "image_size": [
         1280,
         720
@@ -100,8 +100,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F03-normal-tokens.png",
-      "bytes": 1798077,
-      "sha256": "339d050aa5a2c1ae40fc09b46df82351deb01e3a4783b99e331c26e8db4e0f8f",
+      "bytes": 1811463,
+      "sha256": "4785f6dc047f0f9cc784ac81a7033569a6fa8cfdded15d1fc6daa2a527c4e6df",
       "image_size": [
         1920,
         1080
@@ -118,8 +118,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F03-small-tokens.png",
-      "bytes": 959801,
-      "sha256": "843789868ab89de3579ccaf9a1c31dec74df669b140818e6ee58666884e47d4c",
+      "bytes": 960568,
+      "sha256": "1dde2e70f05de1ff0a8193bbc693e65fd50681e3a362befd8f07ab5d4e7ab5db",
       "image_size": [
         1280,
         720
@@ -136,8 +136,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F04-normal-tokens.png",
-      "bytes": 1798812,
-      "sha256": "72334f9b718bc5468a087bcf8010d34fb440005b91ab6d5cb6aaf42489cdca4e",
+      "bytes": 1811742,
+      "sha256": "5fee14c0e64a0391f75229984f0df616a891f78392092f577df5600793f2b258",
       "image_size": [
         1920,
         1080
@@ -154,8 +154,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F04-small-tokens.png",
-      "bytes": 959280,
-      "sha256": "fb86eb211c133a432b2154ed84a351c4d771114b10dd90e5b84da2858232e35b",
+      "bytes": 960195,
+      "sha256": "9d141ff2ea5506825158816fafdc2513f74fa579ac2d4aa9f85c44e98d588e26",
       "image_size": [
         1280,
         720
@@ -172,8 +172,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F05-normal-tokens.png",
-      "bytes": 1809926,
-      "sha256": "f0eea9f87433046cd26cbcef830a0b5a8dd01b0cbe5431e8b1565c1ce9d461ab",
+      "bytes": 1819035,
+      "sha256": "aa97c22657d5c32f74507d09839d904d8b33047b0895c70cfa75c0a508a2da5d",
       "image_size": [
         1920,
         1080
@@ -190,8 +190,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F05-small-tokens.png",
-      "bytes": 967445,
-      "sha256": "acbae47535b6dab0da90e09c3bd3a06ed8105dee12706de5ddbdb0a79eecf526",
+      "bytes": 967885,
+      "sha256": "f88c52a00b012184a58dea25a1ebc6446c8884e15e6f693b08e553945afbfe7b",
       "image_size": [
         1280,
         720
@@ -208,8 +208,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F06-normal-tokens.png",
-      "bytes": 1809030,
-      "sha256": "cd98f595bb457b3b2ec8ff984c30b7ee8044bbaa75b970592478ca4070d48aeb",
+      "bytes": 1821682,
+      "sha256": "759b3ffba1bec8a47d0b4dde2dcab58cba98ae4158c5a7154b80d41638c8f65b",
       "image_size": [
         1920,
         1080
@@ -226,8 +226,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F06-small-tokens.png",
-      "bytes": 964590,
-      "sha256": "e2b3d1f164bf77f2694d4f793fd0014dd7cbf6a1098277de4ce9521629761a15",
+      "bytes": 966041,
+      "sha256": "424cc8dc8ea49963a7820dbfbb7982f8a93bcb382cf22173a1b23409bc1dfbe6",
       "image_size": [
         1280,
         720
@@ -244,8 +244,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F07-normal-tokens.png",
-      "bytes": 1846563,
-      "sha256": "65521251fdaaa451efebf8e48cc47bcc42eb9a384d94ce581f168ab94d95743a",
+      "bytes": 1858504,
+      "sha256": "fcc544fb753321e1e2cad1e333b4f9e20e73c154959f868107d652b23db95e64",
       "image_size": [
         1920,
         1080
@@ -262,8 +262,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F07-small-tokens.png",
-      "bytes": 987978,
-      "sha256": "f5b2035299bbb9c14d9b60791ed17fe32fda3a15570f2c3fac66f7f41030d2be",
+      "bytes": 986954,
+      "sha256": "4baf62740e43f789cd1ac5ea46cdd30e4cba55491afa14a1c8e246fda5f7ccbf",
       "image_size": [
         1280,
         720
@@ -280,8 +280,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F08-normal-tokens.png",
-      "bytes": 1814735,
-      "sha256": "3ce322d3e0f6f3d650d085567c10c7e27840bfffd2579b16d84a01bdbd628cbe",
+      "bytes": 1827548,
+      "sha256": "3b970c5e5b29608a7dce85ec2b388e169605a218a4f18296b033cc3db05775f6",
       "image_size": [
         1920,
         1080
@@ -298,8 +298,8 @@
     },
     {
       "file": "review-evidence/pa-v01/originals/F08-small-tokens.png",
-      "bytes": 968947,
-      "sha256": "4f964d2369ee826cfba10c9bffc2e8bf14f49e65b9357894b9222a3c9b8245d2",
+      "bytes": 969435,
+      "sha256": "9568c0bc1daa9eee4ebf7afb3926e493f9ec62b252258c89391b0edb862e1dcb",
       "image_size": [
         1280,
         720
@@ -438,8 +438,8 @@
   ],
   "diagnostic_source": {
     "file": "game/tests/pa_v01.gd",
-    "bytes": 6635,
-    "sha256": "b2ac9c129e35dc5a40d080ee5eecdb9ae72c1a4f5ce1d9dff44d331c8eabc340"
+    "bytes": 8213,
+    "sha256": "7c65ee39dece766ed8d0edf0e8a58ddf07172661e8fd3280a5f161a4cf249359"
   },
   "product_documents": [
     {
@@ -476,8 +476,8 @@
   "engine_executable_sha256": "c8f0a6bc45a19b33541501e57f6f7cd972ab18453743266339d495cbbe846643",
   "native_report": {
     "file": "review-evidence/pa-v01/native.json",
-    "bytes": 16107,
-    "sha256": "9a111f2c24b4b45ce5590a0786c689423152c14a85256f70dd71ac314b567140"
+    "bytes": 20938,
+    "sha256": "8ce4332815b8af19004f3ea01b97de9f6bed716ff1ee838db57fe3836be46d7a"
   },
   "measurements": {
     "file": "review-evidence/pa-v01/recalculated.json",
