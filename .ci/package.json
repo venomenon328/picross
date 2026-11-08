@@ -11,7 +11,7 @@
     {
       "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Replace superseded vertical title/category/footer oracles; retain existing metadata, wrong-fill, X/redo, completion, reset/recovery and pointer scenarios."
+      "reason": "Replace superseded vertical title/category/footer oracles; retain existing metadata, wrong-fill, X/redo, completion, reset/recovery and pointer scenarios. Log existing checkpoint progress for bounded timeout diagnosis; no new report family."
     },
     {
       "path": "game/tests/catalog_layout_cases.gd",
