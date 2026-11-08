@@ -1,0 +1,15 @@
+test_core_growth_and_test_changes_need_a_decision (test_ci_modular.PackageContract.test_core_growth_and_test_changes_need_a_decision) ... FAIL
+
+======================================================================
+FAIL: test_core_growth_and_test_changes_need_a_decision (test_ci_modular.PackageContract.test_core_growth_and_test_changes_need_a_decision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\Zeuch\Coding\picross_codex\488-pb2\baseline\tools\test_ci_modular.py", line 98, in test_core_growth_and_test_changes_need_a_decision
+    with self.assertRaisesRegex(ValueError, 'core change'):
+         ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)
