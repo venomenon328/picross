@@ -39,6 +39,7 @@ var small_text_size: int = UiText.SMALL_SIZE
 var side_by_side: bool = false
 var text_width_budget: float = 0
 var side_width_budget: float = 0
+var styled_ui_scale: float = 0
 
 func _make_custom_tooltip(_for_text: String) -> Object:
 	# BookButton's custom factory also runs for empty native tooltip text.
@@ -241,11 +242,15 @@ func layout_content() -> void:
 	var inset: float = roundf(10*u)
 	var gap: float = roundf(8*u)
 	var hit: float = roundf(44*u)
-	for control: Label in [caption, detail, leaf, note, dimensions, difficulty]:
-		control.add_theme_font_size_override("font_size", roundi(float(control.get_meta("base_font"))*u))
-	for control: Label in [detail, note, dimensions, difficulty]:
-		UiText.small_label(control, roundi(small_text_size*u), u)
-	UiText.small_label(leaf, roundi(15*u), u)
+	# Reflow changes geometry, not typefaces. Replacing identical label styles
+	# at every resize invalidates their layout again; refresh only on UI change.
+	if styled_ui_scale != u:
+		styled_ui_scale = u
+		for control: Label in [caption, detail, leaf, note, dimensions, difficulty]:
+			control.add_theme_font_size_override("font_size", roundi(float(control.get_meta("base_font"))*u))
+		for control: Label in [detail, note, dimensions, difficulty]:
+			UiText.small_label(control, roundi(small_text_size*u), u)
+		UiText.small_label(leaf, roundi(15*u), u)
 	mode_tip.ui_scale = u
 	var title_height: float = UiText.label_height(caption, roundi(20*u), 2)
 	var meta_height: float = UiText.label_height(detail, roundi(small_text_size*u), 2)
