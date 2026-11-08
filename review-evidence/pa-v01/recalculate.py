@@ -31,7 +31,12 @@ def main():
    assert independent==colors[p['id']],(p,independent,colors[p['id']])
   pairs=[]
   for a,b in combinations(sorted(colors),2):
-   value=d2(colors[a],colors[b]); pairs.append({'a':a,'b':b,'d2':value,'D':math.sqrt(value)/10000,'status':status(value)})
+   value=d2(colors[a],colors[b])
+   srgb={p['id']:p['srgb'] for p in c['palette']}
+   raw=measure.distance(srgb[a],srgb[b])
+   raw_status='negative' if raw<10 else ('positive_warning' if raw<15 else 'positive')
+   assert status(value)==raw_status,(c['id'],a,b,value,raw)
+   pairs.append({'a':a,'b':b,'d2':value,'D':math.sqrt(value)/10000,'status':status(value)})
   cases.append({'id':c['id'],'coordinates':colors,'pairs':pairs,'worst':min(pairs,key=lambda x:(x['d2'],x['a'],x['b']))})
  boundary=[(0,'negative'),(9999999999,'negative'),(10000000000,'positive_warning'),(10000000001,'positive_warning'),(22499999999,'positive_warning'),(22500000000,'positive'),(22500000001,'positive')]
  for value,expected in boundary: assert status(value)==expected
