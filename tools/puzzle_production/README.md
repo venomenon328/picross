@@ -7,8 +7,9 @@ Sichtungsentwürfe ohne vollständige Qualifikation und gezielte redaktionelle
 Einzelfallentscheidungen. Diese sind keine technischen Zertifikate; Proof,
 Herkunft/Rechte, Datei-/Freigabebindungen und bestehende Adaptergates bleiben
 Pflicht. Q-A führt keinen neuen Farbvalidator, CLI-Schalter oder Ausnahmeweg ein;
-der [P-A-V01-Normvorschlag](../../docs/PUZZLE_QUALITY.md#8-p-a-v01-vorschlag-für-paarweise-farbunterscheidbarkeit)
-ist noch nicht freigegeben oder aktiviert. Er beschreibt Formel, Grenzfall,
+die [P-A-Farbprüfregel](../../docs/PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
+ist vom Eigentümer **fachlich freigegeben**, aber noch **nicht als
+automatischer Werkzeugvalidator aktiviert**. Sie beschreibt Formel, Grenzfälle,
 Ist-Palettenbindung und getrennte visuelle Entscheidung. Die tatsächliche
 Werkzeugintegration einschließlich neuer Nachweisformate und eines geprüften
 revisions-/paargebundenen Ausnahmewegs ist erst P-B. Hier existiert weiterhin

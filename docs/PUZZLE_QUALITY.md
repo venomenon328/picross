@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 3 · 08.11.2026 · Q-A und P-A-V01 / [#488](https://github.com/venomenon328/picross/issues/488)**
+**Vertrag 1.0 · Dokumentrevision 4 · 08.11.2026 · Q-A und P-A-V01 / [#488](https://github.com/venomenon328/picross/issues/488)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -15,13 +15,15 @@ ihre eigenen Invarianten. Deren Schemas und Grenzwerte werden hier nicht erneut
 definiert. Bei Widersprüchen vor dem betroffenen Schritt die zuständige Quelle
 klären, keine günstigere Regel auswählen.
 
-Der bestehende redaktionelle Vertrag gilt weiter. **§8 ist ausschließlich ein
-noch nicht freigegebener P-A-Normvorschlag**, keine aktive Produktionspflicht.
-P-A-M01 (Eigentümersichtung/Normfreigabe) und P-A-R01 (unabhängiger Review)
-sind vor Merge offen. Erst eine dokumentierte Entscheidung am tatsächlichen
-PR-/Referenzstand kann die dortige Vorschlagsversion normativ freigeben;
-Werkzeugintegration und geprüfter Ausnahmeweg bleiben **P-B**. Es gibt keine
-universelle Zusicherung der Farbwahrnehmung. Die visuelle Prüfung bleibt Pflicht.
+Der bestehende redaktionelle Vertrag gilt weiter. **§8 ist die durch
+[P-A-M01 ausdrücklich freigegebene](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147)
+Farbprüfregel für neue Rätsel.** Die fachliche Norm ist verbindlich,
+aber **noch kein aktivierter Produktionsvalidator**: Automatische Früh-/Endprüfung,
+Nachweisformate und der geprüfte Ausnahmeweg folgen erst in **P-B**.
+Bis dahin bleibt die vorhandene visuelle Produktionsprüfung maßgeblich;
+kein nicht ausgeführter numerischer Palettentest darf als `pass` gelten.
+Die tatsächlichen Farben und Hinweise sind weiter visuell zu beurteilen.
+Eine universelle Zusicherung der Farbwahrnehmung folgt daraus nicht.
 Abgenommene Bestandsrätsel, versiegelte Pakete, Freigaben, technische
 Regelversionen und historische Bewertungen werden nicht rückwirkend umgedeutet.
 
@@ -221,20 +223,27 @@ zugänglich; keine dauerhaften Beispielbilder, technischen Uploads oder neue
 Testfamilie. Das prüft den redaktionellen Entscheidungsvertrag, keine
 Farbmetrik, Bildqualität oder Adapterfunktion. P-A/P-B erhalten eigene Nachweise.
 
-## 8. P-A-V01: Vorschlag für paarweise Farbunterscheidbarkeit
+## 8. P-A-V01: Freigegebene Regel für paarweise Farbunterscheidbarkeit
 
 ### 8.1 Status, Referenzplan und Grenzen
 
-**Vorschlags-ID `picross-palette-separation-1-draft1`, nicht aktiviert.**
-Vertrag 1.0 bleibt die redaktionelle Grundlage; diese Dokumentrevision benennt
-die neue, noch offene Vorschlagsregel gesondert. Normfreigabe P-A-M01 muss
-Originaldateien/Referenzmanifest, Produkt-Head, Umgebung, konkrete Grenzfallurteile,
-angenommene Formel/Grenzen sowie Akteur/Zeitpunkt und etwaige Änderungen binden.
-P-A-R01 prüft unabhängig Rechenweg, Diff und Originale. Bis dahin nur
-Vorschlagsdiagnosen, kein `pass` einer neuen Produktionsregel. Nach Entscheidung
-im selben PR endgültige Regelkennung/Status und betroffene Querverweise nachführen.
-Auch eine spätere Normfreigabe implementiert keinen Validator: P-B muss vor
-Aktivierung Formate, Writer/Reader, Früh-/Endprüfung und Ausnahmeweg liefern.
+**Verbindliche Regel-ID `picross-palette-separation-1` (Version 1);
+fachlich freigegeben, technisch noch nicht aktiviert.**
+Die frühere Vorschlagskennung `picross-palette-separation-1-draft1`
+bezeichnet die mathematisch **unveränderte** Fassung, deren Formel,
+Quantisierung, Grenzen D=10/15 und Warnzone der Eigentümer
+[für die unveränderten Referenzen vollständig freigegeben hat](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147).
+Die ursprünglichen Referenzbilder und Testrechnungen bleiben nachvollziehbar.
+Die vollständige Originalbildsicht konnte mangels funktionierendem
+Binärzugang nicht erfolgen und wurde ausdrücklich als Merge-Gate erlassen;
+sie wird **nicht** als tatsächlich durchgeführt dargestellt.
+Die unabhängige Quellen-/Rechenprüfung ist im PR #546 dokumentiert.
+
+Die Regel ist ab ihrem Normmerge verbindlicher Sollstand für **neue** Rätsel.
+Automatische Prüfung und ein belastbarer technischer `pass` setzen erst
+die Implementierung von Formaten, Writer/Reader, Früh-/Endprüfung und
+paargebundenem Ausnahmeweg im gesonderten Paket **P-B** voraus.
+Bis dahin bleibt die vorhandene visuelle Produktionsprüfung maßgeblich.
 Authoring 0.5.0, Sheet v2 und versiegelte Altformate werden nicht umbenannt.
 Kein rückwirkendes Gate, keine Neubewertung oder Umfärbung des Bestands.
 
@@ -312,7 +321,7 @@ Diese Werte haben kein zusätzliches Gate und behaupten keine WCAG-Konformität.
 Papier `#faf6ec` und Linie `#343f42` sind nur feste Diagnose-Surrogate;
 der echte beleuchtete Papiergrund variiert. Keine daraus erfundene Pixelmessung.
 
-| Fall / Paar | Oklab D gemäß §8.4, Anzeige auf 6 Stellen | Luminanz-Kontrast unquantisiert | Vorschlagsbefund |
+| Fall / Paar | Oklab D gemäß §8.4, Anzeige auf 6 Stellen | Luminanz-Kontrast unquantisiert | Berechneter Referenzbefund |
 | --- | --- | --- | --- |
 | F01 c01/c02 | 30.055714 | 1.101501 | positiv |
 | F02 c01/c02 | 1.341814 | 1.057795 | negativ |
@@ -330,15 +339,16 @@ Eigentümer-Teilfeedback aus §8.3.1 als redaktionelles Urteil ersetzt.
 F05 zeigt nun den ausdrücklich offengelegten konservativen Modellfehlfall:
 metrischer Ausschluss trotz visueller Annahme dieser Referenz. F06 c01/c02
 ist dagegen auch nach Eigentümerurteil unzureichend, obwohl die Zellen durch
-Fugen weiterhin von Linien getrennt bleiben. Der Vorschlag bleibt
+Fugen weiterhin von Linien getrennt bleiben. Die **freigegebene Norm** ist
 **Oklab-Ausschluss plus bestehende visuelle Prüfung mit getrennter
-Einzelfallsemantik nach §6/§8.5**; seine generelle Normfreigabe bleibt offen.
-Kontrast/Luminanz bleiben erklärende Diagnosen.
+Einzelfallsemantik nach §6/§8.5**; ihre automatische Durchsetzung folgt erst mit
+P-B. Kontrast/Luminanz bleiben erklärende Diagnosen.
 
-Die vor F08 gewählten runden D-Grenzen 10/15 sind eine konservative
+Die vor F08 gewählten runden D-Grenzen 10/15 waren eine konservative
 Arbeitshypothese zwischen dunklen Nahpaaren unter 10 und den deutlich anderen
-Farbtonpaaren über 22. Keine statistisch optimierte Schwelle, keine validierte
-menschliche Fehlerquote. 10–15 bleibt bewusst als Unsicherheitszone sichtbar.
+Farbtonpaaren über 22; sie sind **inzwischen als Normgrenzen freigegeben**.
+Keine statistisch optimierte Schwelle, keine validierte menschliche Fehlerquote.
+10–15 bleibt bewusst als Unsicherheitszone sichtbar.
 Im zurückgehaltenen Satz ergeben sich ohne Nachjustierung:
 
 | F08-Paar | Exaktes ganzzahliges S gemäß §8.4 | D, Anzeige | Befund |
@@ -350,11 +360,11 @@ Im zurückgehaltenen Satz ergeben sich ohne Nachjustierung:
 | c02/c04 | 8799172997 | 9.380391 | negativ |
 | c03/c04 | 1739945433 | 4.171265 | negativ |
 
-Die ganze F08-Palette bleibt metrisch negativ. Der Unterschied c01/c03 bleibt
-besonders klein/blass beurteilungsbedürftig; zu c01/c04 liegt inzwischen das
-positive Eigentümer-Teilfeedback aus §8.3.1 vor. Dieses bestätigt nur das Paar.
-P-A-M01 muss die gesamte Vorschlagsregel einschließlich c01/c03, der
-F05-Referenzeinordnung und der bestehenden Grenzfälle am neuen Head entscheiden.
+Die ganze F08-Palette bleibt metrisch negativ. Der Unterschied c01/c03 ist
+weiterhin ein **visueller Warnfall bei einem konkreten Rätsel**, nicht eine
+offene P-A-Normentscheidung; das positive Eigentümer-Teilfeedback zu c01/c04
+bestätigt nur dieses Paar. P-A-M01 hat die **gesamte Regel einschließlich
+Warnzonenbehandlung und F05-Modellfehlfall** inzwischen verbindlich freigegeben.
 Restunsicherheit:
 Schriftgröße, Konturzuordnung, Display/Farbmanagement, Sehvermögen und Kontext
 werden nicht durch einen skalaren Farbraumabstand beschrieben. Keine universelle
@@ -380,15 +390,16 @@ Je Familie gelten die Originaldateien
 Zeilen für genau F05, F06 oder F08. Die Originale bleiben unverändert;
 der Nacharbeitsnachweis im PR bindet sie außen an den neuen Dokument-Head.
 
-| Referenz / Farb- und Paarbindung | Berichtetes Eigentümerurteil | Getrennte Einordnung |
+| Referenz / Farb- und Paarbindung | Historisch berichtetes Eigentümer-Teilurteil | Getrennte Einordnung |
 | --- | --- | --- |
 | F05, Revision 1; c01 `#fff4cf`, c02 `#eadca8`, c03 `#ffffff`, c04 `#f1d273`; alle sechs Paare unten | „finde ich okay“ zur gezeigten F05-Referenz | Redaktionell positiv als Ganzes. Kein separat erklärtes Urteil zu jedem Paar oder jeder Bilddatei. Die früher behauptete visuelle Ablehnung des weiß/gelben Paars wird nicht fortgeführt; alle metrischen Negativ-/Warnbefunde bleiben erhalten. |
 | F08, Revision 1; c01 `#447799` / c04 `#77aacc`, S `27850476761`, D `16.688462` | „in Ordnung“ | Redaktionell positives Teilurteil zu genau diesem metrisch positiven Paar; weder Annahme der ganzen F08-Palette noch der gesamten Regel. c01/c03 bleibt offen. |
 | F06, Revision 1; c01 `#232b32` / c02 `#39414a`, S `7593640091`, D `8.714149` | c02 soll heller/blasser sein, um sich von c01 zu unterscheiden | Originalpaar unzureichend, konsistent mit `negative`. F06 bleibt unveränderter Negativfall. Keine neue Vergleichsvariante für diese redaktionelle Nacharbeit erforderlich. |
 
-Für F05 unter `picross-palette-separation-1-draft1` gilt weiterhin:
+Für F05 unter der unveränderten Berechnung der freigegebenen Regel
+`picross-palette-separation-1` gilt weiterhin:
 
-| Paar | Exaktes S | D, Anzeige | Technischer Vorschlagsbefund |
+| Paar | Exaktes S | D, Anzeige | Berechneter Referenzbefund |
 | --- | --- | --- | --- |
 | c01/c02 | 5757002441 | 7.587491 | negativ |
 | c01/c03 | 3569810205 | 5.974789 | negativ |
@@ -402,25 +413,31 @@ Revision.** F05 ist eine visuell angenommene synthetische Referenz mit negativem
 metrischem Gesamtbefund und drei negativen Paaren. Damit ist ein Fehlfall des
 konservativen Ausschlussvorschlags ausdrücklich bekannt. Eine globale Absenkung
 zur nachträglichen Erzeugung eines positiven F05-Werts wäre unbegründet: Das
-Feedback akzeptiert F05 als Referenz, legt aber weder eine alternative Grenze
-fest noch hebt es die unzureichende F06-Trennung auf. Formel, Grenzen 10/15,
-Quantisierung und sämtliche ursprünglichen Paaroutputs bleiben unverändert.
-P-A-M01 muss den Vorschlag einschließlich dieses Modellfehlfalls ausdrücklich
-annehmen oder seine Revision beauftragen; diese Nacharbeit nimmt das nicht vorweg.
+damalige Teilfeedback akzeptierte F05 als Referenz, legte aber keine
+alternative Grenze fest und hob die unzureichende F06-Trennung nicht auf.
+Die spätere vollständige [P-A-M01-Freigabe](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147)
+bestätigt Formel, Grenzen 10/15, Quantisierung und Warnzone
+**einschließlich** dieses offengelegten Modellfehlfalls ohne Revision.
+Sämtliche ursprünglichen Paaroutputs bleiben unverändert.
 
 Die Trennung von negativem Messbefund und separater redaktioneller Annahme folgt
 §6. Hier wird **keine Produktionsausnahme erteilt**: Die Referenzen besitzen kein
 freigabefähiges Produktionspaket/Inventar oder Inhaltszertifikat; eine solche
-Bindung wird nicht erfunden. Das Teilfeedback wird nicht zu einer ausdrücklich
-paargebundenen P-B-Ausnahme oder zu `pass` ergänzt. Eine spätere reale Übernahme
+Bindung wird nicht erfunden. Das historische Teilfeedback wird nicht zu einer ausdrücklich
+paargebundenen P-B-Ausnahme oder zu `pass` ergänzt. Auf Wunsch des
+Eigentümers entsteht **keine zusätzliche formale F05-Ausnahmeakte**. Eine spätere reale Übernahme
 mit negativem Palettenbefund benötigt weiterhin den von P-B implementierten und
 geprüften Ausnahmeweg mit vollständigen §6-Bindungen und harten Inhaltsgates.
 Vorabplan, Bilder und versiegelte Originalbelege werden nicht umgeschrieben.
-P-A-M01 und erneutes unabhängiges P-A-R01 am neuen Head bleiben vor Merge offen;
-die im Review benannte Originalzugriffslücke des unabhängigen Prüfers bleibt
-ausdrücklich unbehoben und darf nicht durch eigene Bildöffnung als erledigt gelten.
+P-A-M01 ist für die vollständige Farbregel ausdrücklich erteilt.
+Die frühere Originalzugriffslücke bleibt als Tatsache dokumentiert; der
+Eigentümer hat die vollständige unabhängige Bildoriginalsicht mangels
+funktionierendem Binärzugriff [ausdrücklich erlassen](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147).
+Daraus wird keine tatsächlich ausgeführte Vollsicht. Ein neuer PR-Head
+benötigt weiterhin die aktuellen CI-/Diff-/Quellenchecks, aber keine
+erneute persönliche Farbregel- oder Originalbildabnahme.
 
-### 8.4 Exakte vorgeschlagene Berechnung und Randwerte
+### 8.4 Verbindliche Berechnung und Randwerte
 
 Eingang: exakte Kandidatenmatrix mit zulässigen Maßen und stabilen Vordergrund-IDs;
 1–8 **tatsächlich verwendete** IDs mit jeweils opakem `#rrggbb` in sRGB.
@@ -465,9 +482,9 @@ Matrixkonstanten. Eine alternative Implementierung muss diese q-Werte liefern;
 die unabhängige binary64-Rechnung stimmt für sämtliche fixierten Eingangsfarben
 überein, ist aber keine Zusage für ungeprüfte Rundungsrandfälle.
 Die Koordinatenquantisierung präzisiert H1 um weniger als 0,0002 D; sie ändert
-keinen der 47 Referenzpaarbefunde. Sie gehört ausdrücklich zur Vorschlagsversion.
+keinen der 47 Referenzpaarbefunde. Sie gehört ausdrücklich zur freigegebenen Regelversion.
 
-| Exakter Vergleich, ohne Epsilon | Technischer Vorschlagsstatus |
+| Exakter Vergleich, ohne Epsilon | Technischer Regelstatus nach P-B-Aktivierung |
 | --- | --- |
 | irgendein S < 10000000000 | `negative`; alle verletzten Paare ausgeben |
 | kein negatives Paar, aber irgendein S < 22500000000 | `positive` mit `borderline`-Warnung und Liste dieser Paare |
@@ -504,7 +521,7 @@ Visuelle Einzelurteile Q-R04/Q-H01/Q-H02 samt Ansichten/Stand separat binden.
 Die tatsächlichen Hash-/Schema-/Writer-/Readerverträge gehören vor Code in P-B;
 hier keine neuen Felder in geschlossene Produktionsformate einschleusen.
 
-Vorgeschlagene Fehlersemantik: `invalid_input` bei ungültiger Domäne/Bindung,
+Vereinbarte Fehlersemantik für die spätere P-B-Implementierung: `invalid_input` bei ungültiger Domäne/Bindung,
 `aborted` bei Budget-/Prozessabbruch, `error` bei Rechen-/Dateifehler;
 fehlende Prüfung `not_checked`. Keiner dieser Zustände ist `positive`.
 Kein teilweise ausgewerteter Satz als vollständiges Ergebnis. Ein lokaler
