@@ -533,7 +533,7 @@ func regular() -> void:
 	var original: Dictionary = save_bytes()
 	await choose("voegel")
 	check(save_bytes() == original, "category change writes no save")
-	check(app.album.visible_ids == ["T-09"] and app.choices[0].leaf.text == "Blatt 06", "filtered zero is global five and keeps number")
+	check(app.album.visible_ids == ["T-09"] and app.choices[0].caption.text == "Blatt 06" and not app.choices[0].leaf.visible, "KL-CARD filtered zero keeps global neutral leaf heading")
 	click(app.choices[0])
 	await frames()
 	check(app.session.definition.id == "T-09" and app.work.visible, "pointer opens stable filtered ID")
@@ -605,6 +605,9 @@ func regular() -> void:
 	await frames()
 	check(app.album.visible and app.album.category_id == "voegel", "KK recovery card returns to same filter")
 	foreign = save_bytes("t09")
+	recovered_card = app.choices[0]
+	recovered_card.recovery.ensure_control_visible(recovered_card.repair)
+	await frames()
 	click(app.album.repair_buttons["T-09"])
 	await frames()
 	click(app.repair_dialog.get_ok_button())
@@ -626,6 +629,9 @@ func regular() -> void:
 	click(app.album_button)
 	await frames()
 	check(app.album.visible and app.album.category_id == "voegel", "KK invalid-backup card returns to same filter")
+	damaged_backup_card = app.choices[0]
+	damaged_backup_card.recovery.ensure_control_visible(damaged_backup_card.repair)
+	await frames()
 	click(app.album.repair_buttons["T-09"])
 	await frames()
 	click(app.repair_dialog.get_ok_button())

@@ -17,6 +17,11 @@
       "path": "game/tests/catalog_layout_cases.gd",
       "disposition": "change-scoped",
       "reason": "Small measured horizontal/stacked threshold and stable shared geometry/metadata checks inside existing pages checkpoint; no new process, result family or permanent images."
+    },
+    {
+      "path": "game/tests/run_tests.gd",
+      "disposition": "change-scoped",
+      "reason": "Align the retained core scene caption/leaf oracles with neutral Blatt NN headings. No new assertion family and no native.core selection merely because this shared reader contains superseded display text."
     }
   ],
   "core_change": null,
