@@ -1,6 +1,6 @@
 {
   "package": "HIL-REG-A",
-  "product_head": "47bfe6826bfd4bf7c666e1cd5b65945b5fdbf546",
+  "product_head": "6e71b4b9680c65c120bcb2d4be7c4c1e8c2738b3",
   "base": "b3062f9bc2d2bcf75baee3c7851b3164972d3dc5",
   "recipient": "HIL-REG-A-R01 independent reviewer; owner M01",
   "expires": "2026-11-15",
@@ -81,7 +81,7 @@
     }
   ],
   "captured_product_head": "1dc337599e04a2b1bc2c87e0ac6421d60d930a72",
-  "reuse_binding": "Original PNGs captured at captured_product_head. The only subsequent change is the explicitly manual help_native test wait (5 -> 10 frames); every runtime/product asset byte is identical at product_head. No PNG recoding or replacement.",
+  "reuse_binding": "Original PNGs captured at captured_product_head. Subsequent changes only stabilize the explicitly manual help_native wheel timing across native frames; every runtime/product asset byte is identical at product_head. No PNG recoding or replacement.",
   "runtime_hashes": {
     "game/ui/help_panel.gd": "1b08f2c59defce5d44d9639128ea40500934e7aac8b4c2a54f26279b5eec2887",
     "game/ui/help_chapter_button.gd": "c12af06a49833567a46016ab433611f3281578feb3ae22d97c3422ecb37771ef",
