@@ -1,42 +1,27 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/479",
-  "package": "RI-B-N01 / RI-B-R01-B-01",
+  "issue": "https://github.com/venomenon328/picross/issues/480",
+  "package": "RI-C-F01 / RI-C-V01",
   "modules": [
     "tools",
-    "production.adapter",
-    "production.catalog"
+    "production.catalog",
+    "production.adapter"
   ],
-  "purpose": "B-01 gemäß RI-B-R01 gezielt beheben und RI-B mit main vereinen. Vollständiger Featurediff: privater Registrierungsprüfkontext, Adapter-/Katalog-/Recoveryverträge, Authoring/Offline-Sheet. tools prüft Promptregression und Quellen-/Gruppenzuordnung; adapter/catalog prüfen synthetische Integration und Transaktionen. Regulärer Windows-Build im Kern wegen Werkzeugcode. Zusätzlich ausdrücklich beauftragt: minimale v2-CI-Übergabekorrektur nach Run 42414457885; kompakte Originalbelege vor dem unveränderten Reader bereitstellen.",
-  "omitted": "Keine neue Solver-, Bild-, Runtime-/Spielrenderer-, Browser-, Toolchain- oder Zustellungsänderung im Featurediff gegenüber aktuellem main. production.solver/images, native.*, preflight und delivery daher nicht angefordert; keine pauschale Vollsuite. Referenzmessungen bleiben an ihre damaligen Werkzeug-/Testcommits gebunden; keine neue Laufzeitwirkung behauptet. O-01 bleibt separat offen. B-01-Recheck und unabhängiges Review sowie Eigentümerfreigaben bleiben separat.",
+  "purpose": "Freigegebene v6-Erstregistrierung und ihre Recovery: phasenweise vollständige Quellenprüfungen, frische lokale Zielprüfungen, synthetische Fremdänderungs-/Abbruchfälle und begrenzte Vergleichsmessungen. tools prüft Quellenzuordnung, Dokumente und Authoring-Snapshot; catalog/adapter prüfen Transaktionen und vollständige Produktionsbindung. Regulärer Windows-Build im Kern.",
+  "omitted": "Keine Änderung an Solver, Bildherstellung, Spiel, nativen Modulen, Toolchain oder Zustellung. production.solver/images, native.*, preflight, delivery und Chromium nicht beauftragt. Keine echten Katalogtests, neue CI-Jobfamilie oder Galerie. Altwriters und Recoverygenerationen bleiben auf ihrem bisherigen vollständigen Prüfweg.",
   "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_registration_publication.py",
+      "disposition": "change-scoped",
+      "reason": "RI-C-C01–C07: kleine synthetische vollständige Quellen-/Ziel-/Recoveryprüfungen, keine neue Pflicht im CI-Kern."
+    },
     {
       "path": "tests/puzzle_production/test_registration_verification.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende RI-B-Lieferung: kleine synthetische Bindungs-/Lebensdauer-/Byte-/Recoveryfälle im gewählten Katalogmodul; kein echter Rätselkatalog und keine zusätzliche Matrix."
-    },
-    {
-      "path": "tests/puzzle_production/test_categories_adapter.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende RI-B-Lieferung: Fremdänderung nach den vier tatsächlich erreichten Prüfgrenzen injizieren; unabhängige Fremdbyte-/Recoveryorakel erhalten."
-    },
-    {
-      "path": "tools/test_authoring_sheet.py",
-      "disposition": "change-scoped",
-      "reason": "Günstige tatsächliche Node-JS-Promptregression für B-01, Fallbacks, ausdrückliche gespeicherte Refwahl und Anhang; Snapshot bytegenau gegen Regelwerk. Nur mit tools gewählt, kein neuer Job und keine Browser-/Bildgalerie."
-    },
-    {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "core",
-      "reason": "Vorhandenen isolierten Build-/Modulauswahltest an die kompakte Belegbereitstellung anpassen; kein zusätzlicher schwerer Kernfall."
-    },
-    {
-      "path": "tools/test_production_ci.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine synthetische Regression führt den echten Paketrunner und unveränderten Fachleser mit internen ZA-1-Arbeitsdateien aus; veränderte, fehlende und unerwartete Belege bleiben Fehler. Nur im gewählten tools-Modul, kein Solver/Replayaufbau."
+      "reason": "Vorhandenen RI-B-Positivfall auf fünf RI-C-Grenzen plus unveränderte Journalvalidierungen anpassen; zwei vollständige Produktionsprüfungen bleiben Pflicht."
     }
   ],
-  "core_change": "Ausdrücklich freigegebene minimale CI-Korrektur: vor dem unveränderten unabhängigen Fachleser die schon vorgesehenen kompakten Originalbelege temporär bereitstellen. Keine Reader-/Hash-/Quellenlockerung, Modulabwahl, neue Jobfamilie oder technische Aufbewahrung. Vorhandenen isolierten Kerntest anpassen; neuer Runner-/Reader-Gegenbeweis nur bei tools. Historische RI-B-T01/Messungen bleiben gebunden; frühere Bereinigungsablehnung nicht umgehen.",
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,

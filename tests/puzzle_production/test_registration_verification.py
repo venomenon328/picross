@@ -60,7 +60,7 @@ class VerificationTests(unittest.TestCase):
         with patch.object(tx, 'execute', side_effect=execute):
             return self.register()
 
-    def test_positive_two_full_checks_and_unchanged_guards_plan_noop(self):
+    def test_positive_two_full_checks_and_phased_guards_plan_noop(self):
         before = files(self.checkout)
         d = diag.Diagnostics('plan', stderr=streams.StringIO())
         with diag.observe(d):
@@ -72,7 +72,8 @@ class VerificationTests(unittest.TestCase):
             self.assertEqual(self.register()['status'], 'registered')
         self.assertEqual(d.counters['full_candidate_proof_checks'], 2)
         self.assertEqual(d.counters['verified_package_reuses'], 2)
-        self.assertEqual(guard.call_count, 80)
+        self.assertEqual(guard.call_count, 7)  # prepare, P0 validation, five RI-C boundaries
+        self.assertEqual(d.counters['catalog_boundaries'], 5)
         entry = cr.check_checkout(self.checkout, replay=True)['entries'][0]
         for kind in ('definition', 'reveal'):
             self.assertEqual((self.checkout / ('game/' + entry[kind])).read_bytes(),

@@ -1,9 +1,9 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 29 · 07.11.2026**
+**Version 0.5.0 · Dokumentrevision 30 · 08.11.2026**
 
-Diese Revision erhält gespeicherte Sheet-Einstellungen und lokale Codex-Arbeitswurzeln
-und ergänzt den internen RI-B-Prüfkontext in §8. Inhaltsformate,
+Diese Revision ergänzt die RI-C-Phasengrenzen für Erstregistrierung v6 und Recovery
+in §8. Gespeicherte Sheet-Einstellungen, lokale Codex-Arbeitswurzeln, Inhaltsformate,
 Solverprofile, Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
 Regelwerksversion, Dokumentrevision, Datei-SHA-256 und tatsächlicher Repositorycommit
 binden den verwendeten Stand; keine nachträgliche Umetikettierung alter Pakete.
@@ -796,9 +796,20 @@ kontrollieren frisch Inventar, Bytes und Bindungen. Getrennte CLI-Aufrufe teilen
 keinen Prüfbeweis. Der Ablauf `export → plan → register`, tatsächliche Freigaben,
 lesender Plan und ausdrückliche Registrierungsautorisierung bleiben erhalten.
 Kein neuer Schalter, persistenter Prüfcache oder zusätzlicher Freigabeschritt.
-Alle globalen Guards und Recovery bleiben unverändert; Recovery prüft ohne
-B-Kontext. [RI-B-T01](../RI_B_VERIFICATION.md) nennt tatsächliche Nachweise und
+Durch B bleiben globale Guards und Recovery unverändert; Recovery prüft ohne
+B-Kontext. [RI-B-T01](../RI_B_VERIFICATION.md) nennt seine gebundenen Nachweise und
 offene Gates; die Branchlieferung ist keine Merge- oder Inhaltsfreigabe.
+
+RI-C-F01 / RI-C-V01 zu [#480](https://github.com/venomenon328/picross/issues/480)
+ordnet ausschließlich bei mutierender Erstregistrierung v6 und ihrer Recovery
+die vollständigen Quellenprüfungen festen Phasengrenzen zu; unmittelbar betroffene
+Ziele, Journal, Eltern und Temps werden zusätzlich frisch lokal geprüft.
+Runtime bleibt letztes Datenziel. Fremde unbeteiligte Quellen werden spätestens
+an der nächsten vollständigen Grenze erkannt, unsicherer Rollback erhält das
+Journal. [SD-Catalog](../SD_CATALOG.md#ri-c--phasengrenzen-für-erstregistrierung-v6)
+führt die genaue Erkennungs-/Recoverygarantie, [RI-C-T01](../RI_C_VERIFICATION.md)
+die Nachweise. Auftragsfolge, Freigaben, CLI und Budgets bleiben unverändert;
+kein neuer Produktionsfreigabeschritt und keine pauschale Laufzeitzusage.
 
 Voraussetzungen: tatsächlicher Integrationsauftrag, unverändertes `content_ready`-Paket mit vollständigen Inhaltsgates und gesonderte menschliche Endfreigabe nach [ZA-1](../ZA1_ADAPTER.md). Die Freigabe bindet Originalhandoff, Inventar, Endkandidat, Matrix-/Logikhash und Abschlussbild; ein `pass`-Flag genügt nicht. Die Archivablage selbst erteilt keine Endabnahme. Probespielen bleibt optional.
 

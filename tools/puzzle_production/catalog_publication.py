@@ -398,6 +398,10 @@ def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
 
 
 def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verification=None):
+    from . import registration_publication as phased
+    if phased.supports(j):
+        return phased.execute(root, j, additions or {}, fail_step=fail_step,
+                              under_lock=under_lock, verification=_verification)
     from . import catalog_transaction as tx
     from .content_registry import check_checkout
     additions = additions or {}
@@ -530,6 +534,9 @@ def recover(root):
         raw = read_journal(root, remnants[0])
         j = io.json_bytes(raw, LIMIT)
         require(tx.modern(j) and raw == journal_bytes(j) and remnants[0] == "content/.registration-journal-" + io.checksum(raw) + ".tmp", "Incomplete/foreign journal staging")
+        from . import registration_publication as phased
+        if phased.supports(j):
+            return phased.recover(root, j, raw, staged=remnants[0])
         tx.validate_journal(root, j, before_write=True)
         guard(root, j, raw=raw, old_only=True)
         require(read_journal(root) is None and read_journal(root, remnants[0]) == raw, "Journal appeared/changed during staging recovery")
@@ -539,6 +546,9 @@ def recover(root):
         return {"status": "rolled-back", "registered": False}
     j = io.json_bytes(raw, LIMIT)
     require(tx.modern(j) and raw == journal_bytes(j), "Noncanonical transaction journal")
+    from . import registration_publication as phased
+    if phased.supports(j):
+        return phased.recover(root, j, raw)
     _, runtime = tx.validate_journal(root, j)
     view = _JournalView(j, raw)
     j = view.j
