@@ -1,0 +1,735 @@
+{
+  "format": "kl-card-a-review-originals/v1",
+  "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+  "before_head": "d974886d18ce294c11c2b2467166bae24894e7cb",
+  "evidence_branch": "review/547-kl-card-a",
+  "purpose": "Independent KL-CARD-A-R01 visual/technical review and owner M01 reference; never merge these files into product/main.",
+  "expires": "2026-11-15",
+  "cleanup": "Keep reachable through R01/M01; remove this temporary ref on package cleanup order. Reassess delivery if gates remain open at expiry.",
+  "files": [
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "before/catalog-1920-ui100.png",
+      "halves": [
+        {
+          "card": "(284.0, 343.0)",
+          "clip": "[P: (172.0298, 260.2985), S: (715.0, 709.0)]",
+          "columns": 2,
+          "fully_visible_cards": 4,
+          "fully_visible_rows": 2,
+          "gap": 12,
+          "grid": "[P: (172.0298, 260.2985), S: (693.0, 2118.0)]",
+          "image": "[P: (10.0, 136.0), S: (264.0, 112.0)]",
+          "minimum": 276.0,
+          "row_positions": [
+            260.298492431641,
+            615.298461914063
+          ],
+          "scroll_range": 1409.0
+        },
+        {
+          "card": "(284.0, 343.0)",
+          "clip": "[P: (1032.03, 260.2985), S: (715.0, 709.0)]",
+          "columns": 2,
+          "fully_visible_cards": 4,
+          "fully_visible_rows": 2,
+          "gap": 12,
+          "grid": "[P: (1032.03, 260.2985), S: (693.0, 2118.0)]",
+          "image": "[P: (10.0, 136.0), S: (264.0, 112.0)]",
+          "minimum": 276.0,
+          "row_positions": [
+            260.298492431641,
+            615.298461914063
+          ],
+          "scroll_range": 1409.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "product_head": "d974886d18ce294c11c2b2467166bae24894e7cb",
+      "bytes": 1783118,
+      "sha256": "d45b9058531ca2f0c3441edb7c215ab66f1a3ee7962529644130ec4ff4fbdb82",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "before/catalog-2560-ui100.png",
+      "halves": [
+        {
+          "card": "(284.0, 343.0)",
+          "clip": "[P: (223.3731, 273.7313), S: (964.0, 1042.0)]",
+          "columns": 3,
+          "fully_visible_cards": 6,
+          "fully_visible_rows": 2,
+          "gap": 12,
+          "grid": "[P: (223.3731, 273.7313), S: (942.0, 1408.0)]",
+          "image": "[P: (10.0, 136.0), S: (264.0, 112.0)]",
+          "minimum": 276.0,
+          "row_positions": [
+            273.731323242188,
+            628.731323242188
+          ],
+          "scroll_range": 366.0
+        },
+        {
+          "card": "(284.0, 343.0)",
+          "clip": "[P: (1372.373, 273.7313), S: (964.0, 1042.0)]",
+          "columns": 3,
+          "fully_visible_cards": 6,
+          "fully_visible_rows": 2,
+          "gap": 12,
+          "grid": "[P: (1372.373, 273.7313), S: (942.0, 1408.0)]",
+          "image": "[P: (10.0, 136.0), S: (264.0, 112.0)]",
+          "minimum": 276.0,
+          "row_positions": [
+            273.731323242188,
+            628.731323242188
+          ],
+          "scroll_range": 366.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ],
+      "product_head": "d974886d18ce294c11c2b2467166bae24894e7cb",
+      "bytes": 2612926,
+      "sha256": "93099d623e92203307b2fcfd8d969aae5c4470bab5a5e2f918e6840129bdaa77",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "after/catalog-1920-ui100.png",
+      "halves": [
+        {
+          "card": "(301.0, 223.0)",
+          "clip": "[P: (172.0298, 260.2985), S: (715.0, 709.0)]",
+          "columns": 2,
+          "fully_visible_cards": 6,
+          "fully_visible_rows": 3,
+          "gap": 12,
+          "grid": "[P: (172.0298, 260.2985), S: (693.0, 1398.0)]",
+          "image": "[P: (10.0, 10.0), S: (112.0, 112.0)]",
+          "minimum": 276.0,
+          "row_positions": [
+            260.298492431641,
+            495.298492431641,
+            730.298461914063
+          ],
+          "scroll_range": 689.0,
+          "side_by_side": true,
+          "side_minimum": 301.0,
+          "text_minimum": 161.0
+        },
+        {
+          "card": "(301.0, 223.0)",
+          "clip": "[P: (1032.03, 260.2985), S: (715.0, 709.0)]",
+          "columns": 2,
+          "fully_visible_cards": 6,
+          "fully_visible_rows": 3,
+          "gap": 12,
+          "grid": "[P: (1032.03, 260.2985), S: (693.0, 1398.0)]",
+          "image": "[P: (10.0, 10.0), S: (112.0, 112.0)]",
+          "minimum": 276.0,
+          "row_positions": [
+            260.298492431641,
+            495.298492431641,
+            730.298461914063
+          ],
+          "scroll_range": 689.0,
+          "side_by_side": true,
+          "side_minimum": 301.0,
+          "text_minimum": 161.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 1814183,
+      "sha256": "4db8aeb301e5874a35f628067ff261781e7bd93dc8888b45e76815d0d2c1f212",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "after/catalog-2560-ui100.png",
+      "halves": [
+        {
+          "card": "(301.0, 223.0)",
+          "clip": "[P: (223.3731, 273.7313), S: (964.0, 1042.0)]",
+          "columns": 3,
+          "fully_visible_cards": 12,
+          "fully_visible_rows": 4,
+          "gap": 12,
+          "grid": "[P: (223.3731, 273.7313), S: (964.0, 928.0)]",
+          "image": "[P: (10.0, 10.0), S: (112.0, 112.0)]",
+          "minimum": 276.0,
+          "row_positions": [
+            273.731323242188,
+            508.731323242188,
+            743.731323242188,
+            978.731323242188
+          ],
+          "scroll_range": 0.0,
+          "side_by_side": true,
+          "side_minimum": 301.0,
+          "text_minimum": 161.0
+        },
+        {
+          "card": "(301.0, 223.0)",
+          "clip": "[P: (1372.373, 273.7313), S: (964.0, 1042.0)]",
+          "columns": 3,
+          "fully_visible_cards": 12,
+          "fully_visible_rows": 4,
+          "gap": 12,
+          "grid": "[P: (1372.373, 273.7313), S: (964.0, 928.0)]",
+          "image": "[P: (10.0, 10.0), S: (112.0, 112.0)]",
+          "minimum": 276.0,
+          "row_positions": [
+            273.731323242188,
+            508.731323242188,
+            743.731323242188,
+            978.731323242188
+          ],
+          "scroll_range": 0.0,
+          "side_by_side": true,
+          "side_minimum": 301.0,
+          "text_minimum": 161.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 2822779,
+      "sha256": "d4cb6813bb173128dbdc155006f697549552b02bd7e5c73fa61824ba29a17ab8",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "after/long-wide-2560-ui125.png",
+      "halves": [
+        {
+          "card": "(439.0, 279.0)",
+          "clip": "[P: (227.8731, 328.7313), S: (956.0, 970.0)]",
+          "columns": 2,
+          "fully_visible_cards": 6,
+          "fully_visible_rows": 3,
+          "gap": 15,
+          "grid": "[P: (227.8731, 328.7313), S: (928.0, 1749.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            328.731323242188,
+            622.731323242188,
+            916.731323242188
+          ],
+          "scroll_range": 779.0,
+          "side_by_side": true,
+          "side_minimum": 439.0,
+          "text_minimum": 263.0
+        },
+        {
+          "card": "(439.0, 279.0)",
+          "clip": "[P: (1374.873, 328.7313), S: (957.0, 970.0)]",
+          "columns": 2,
+          "fully_visible_cards": 6,
+          "fully_visible_rows": 3,
+          "gap": 15,
+          "grid": "[P: (1374.873, 328.7313), S: (929.0, 1749.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            328.731323242188,
+            622.731323242188,
+            916.731323242188
+          ],
+          "scroll_range": 779.0,
+          "side_by_side": true,
+          "side_minimum": 439.0,
+          "text_minimum": 263.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.25,
+      "viewport": [
+        2560,
+        1440
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 2827370,
+      "sha256": "75d4adc243afb1334ded17e468e0c317ad552d44f82c6a29c331e6949376e667",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "after/narrow-long-1280-ui125.png",
+      "halves": [
+        {
+          "card": "(355.0, 429.0)",
+          "clip": "[P: (125.1866, 335.3657), S: (459.0, 270.0)]",
+          "columns": 1,
+          "fully_visible_cards": 0,
+          "fully_visible_rows": 0,
+          "gap": 15,
+          "grid": "[P: (125.1866, 335.3657), S: (431.0, 5313.0)]",
+          "image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [],
+          "scroll_range": 5043.0,
+          "side_by_side": false,
+          "side_minimum": 439.0,
+          "text_minimum": 263.0
+        },
+        {
+          "card": "(355.0, 429.0)",
+          "clip": "[P: (695.1866, 338.3657), S: (459.0, 267.0)]",
+          "columns": 1,
+          "fully_visible_cards": 0,
+          "fully_visible_rows": 0,
+          "gap": 15,
+          "grid": "[P: (695.1866, 338.3657), S: (431.0, 5313.0)]",
+          "image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [],
+          "scroll_range": 5046.0,
+          "side_by_side": false,
+          "side_minimum": 439.0,
+          "text_minimum": 263.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.25,
+      "viewport": [
+        1280,
+        720
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 1012977,
+      "sha256": "dda476172133f86b61a993720edc2ae34f49d850cf433ac31c64134878a1a6dd",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "after/narrow-metadata-1280-ui125.png",
+      "halves": [
+        {
+          "card": "(355.0, 429.0)",
+          "clip": "[P: (125.1866, 335.3657), S: (459.0, 270.0)]",
+          "columns": 1,
+          "fully_visible_cards": 0,
+          "fully_visible_rows": 0,
+          "gap": 15,
+          "grid": "[P: (125.1866, 194.3657), S: (431.0, 5313.0)]",
+          "image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [],
+          "scroll_range": 5043.0,
+          "side_by_side": false,
+          "side_minimum": 439.0,
+          "text_minimum": 263.0
+        },
+        {
+          "card": "(355.0, 429.0)",
+          "clip": "[P: (695.1866, 338.3657), S: (459.0, 267.0)]",
+          "columns": 1,
+          "fully_visible_cards": 0,
+          "fully_visible_rows": 0,
+          "gap": 15,
+          "grid": "[P: (695.1866, 338.3657), S: (431.0, 5313.0)]",
+          "image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [],
+          "scroll_range": 5046.0,
+          "side_by_side": false,
+          "side_minimum": 439.0,
+          "text_minimum": 263.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        141,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.25,
+      "viewport": [
+        1280,
+        720
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 1024708,
+      "sha256": "fb6fbe00a51da7058c913c007bb26c3c1a11620d00846f2e71439dfa76b933b3",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "after/fit-2149-ui125.png",
+      "halves": [
+        {
+          "card": "(355.0, 429.0)",
+          "clip": "[P: (194.7612, 320.1119), S: (797.0, 756.0)]",
+          "columns": 2,
+          "fully_visible_cards": 2,
+          "fully_visible_rows": 1,
+          "gap": 15,
+          "grid": "[P: (194.7612, 320.1119), S: (769.0, 2649.0)]",
+          "image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            320.111938476563
+          ],
+          "scroll_range": 1893.0,
+          "side_by_side": false,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        },
+        {
+          "card": "(355.0, 429.0)",
+          "clip": "[P: (1156.761, 320.1119), S: (797.0, 756.0)]",
+          "columns": 2,
+          "fully_visible_cards": 2,
+          "fully_visible_rows": 1,
+          "gap": 15,
+          "grid": "[P: (1156.761, 320.1119), S: (769.0, 2649.0)]",
+          "image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            320.111938476563
+          ],
+          "scroll_range": 1893.0,
+          "side_by_side": false,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.25,
+      "viewport": [
+        2149,
+        1209
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 2154440,
+      "sha256": "f9e16d20a3b0f78b5c8ba2d8a0e7ff7bc76f4e7bdb65d5ebd41ac7ee7ccf983f",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "gebaeude-bauwerke",
+      "direction": "asc",
+      "file": "after/fit-2166-ui125.png",
+      "halves": [
+        {
+          "card": "(377.0, 279.0)",
+          "clip": "[P: (196.5448, 320.4478), S: (803.0, 764.0)]",
+          "columns": 2,
+          "fully_visible_cards": 4,
+          "fully_visible_rows": 2,
+          "gap": 15,
+          "grid": "[P: (196.5448, 320.4478), S: (775.0, 1749.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            320.44775390625,
+            614.44775390625
+          ],
+          "scroll_range": 985.0,
+          "side_by_side": true,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        },
+        {
+          "card": "(377.0, 279.0)",
+          "clip": "[P: (1165.545, 320.4478), S: (803.0, 764.0)]",
+          "columns": 2,
+          "fully_visible_cards": 4,
+          "fully_visible_rows": 2,
+          "gap": 15,
+          "grid": "[P: (1165.545, 320.4478), S: (775.0, 1749.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            320.44775390625,
+            614.44775390625
+          ],
+          "scroll_range": 985.0,
+          "side_by_side": true,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.25,
+      "viewport": [
+        2166,
+        1218
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 2189596,
+      "sha256": "fb599a4c4ab65ef923657d4c54fe437e8b1c1fd815115a83ed1c9e7b569656a8",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "",
+      "direction": "asc",
+      "file": "after/invalid-1920-ui125.png",
+      "halves": [
+        {
+          "card": "(377.0, 279.0)",
+          "clip": "[P: (176.5298, 315.2985), S: (707.0, 636.0)]",
+          "columns": 1,
+          "fully_visible_cards": 2,
+          "fully_visible_rows": 2,
+          "gap": 15,
+          "grid": "[P: (176.5298, 315.2985), S: (679.0, 3513.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            315.298492431641,
+            609.298461914063
+          ],
+          "scroll_range": 2877.0,
+          "side_by_side": true,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        },
+        {
+          "card": "(377.0, 279.0)",
+          "clip": "[P: (1034.53, 315.2985), S: (708.0, 636.0)]",
+          "columns": 1,
+          "fully_visible_cards": 2,
+          "fully_visible_rows": 2,
+          "gap": 15,
+          "grid": "[P: (1034.53, 315.2985), S: (680.0, 3513.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            315.298492431641,
+            609.298461914063
+          ],
+          "scroll_range": 2877.0,
+          "side_by_side": true,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        0,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.25,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 2159938,
+      "sha256": "0588d136bab1152a3f3316297165c5eb8dbffd2a1a271a64d2e16eb2b17a13c4",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "",
+      "direction": "asc",
+      "file": "after/recovery-2-1920-ui125.png",
+      "halves": [
+        {
+          "card": "(377.0, 279.0)",
+          "clip": "[P: (176.5298, 315.2985), S: (707.0, 636.0)]",
+          "columns": 1,
+          "fully_visible_cards": 1,
+          "fully_visible_rows": 1,
+          "gap": 15,
+          "grid": "[P: (176.5298, 210.2985), S: (679.0, 3513.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            504.298492431641
+          ],
+          "scroll_range": 2877.0,
+          "side_by_side": true,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        },
+        {
+          "card": "(377.0, 279.0)",
+          "clip": "[P: (1034.53, 315.2985), S: (708.0, 636.0)]",
+          "columns": 1,
+          "fully_visible_cards": 2,
+          "fully_visible_rows": 2,
+          "gap": 15,
+          "grid": "[P: (1034.53, 315.2985), S: (680.0, 3513.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            315.298492431641,
+            609.298461914063
+          ],
+          "scroll_range": 2877.0,
+          "side_by_side": true,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        105,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.25,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 2172087,
+      "sha256": "036a720ed78a9457ef93f9b286b2ac03f9caebc5fac0f3fb66345a6e3fe6a418",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    },
+    {
+      "category": "",
+      "direction": "asc",
+      "file": "after/recovery-4-1920-ui125.png",
+      "halves": [
+        {
+          "card": "(377.0, 279.0)",
+          "clip": "[P: (176.5298, 315.2985), S: (707.0, 636.0)]",
+          "columns": 1,
+          "fully_visible_cards": 1,
+          "fully_visible_rows": 1,
+          "gap": 15,
+          "grid": "[P: (176.5298, -377.7015), S: (679.0, 3513.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            504.298492431641
+          ],
+          "scroll_range": 2877.0,
+          "side_by_side": true,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        },
+        {
+          "card": "(377.0, 279.0)",
+          "clip": "[P: (1034.53, 315.2985), S: (708.0, 636.0)]",
+          "columns": 1,
+          "fully_visible_cards": 2,
+          "fully_visible_rows": 2,
+          "gap": 15,
+          "grid": "[P: (1034.53, 315.2985), S: (680.0, 3513.0)]",
+          "image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+          "minimum": 345.0,
+          "row_positions": [
+            315.298492431641,
+            609.298461914063
+          ],
+          "scroll_range": 2877.0,
+          "side_by_side": true,
+          "side_minimum": 377.0,
+          "text_minimum": 201.0
+        }
+      ],
+      "page": 0,
+      "scene": "res://main.tscn / res://book/main.gd (unmodified)",
+      "scroll": [
+        693,
+        0
+      ],
+      "sort": "size",
+      "ui_scale": 1.25,
+      "viewport": [
+        1920,
+        1080
+      ],
+      "product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+      "bytes": 2176758,
+      "sha256": "ce30841568bd729286079c2c19d7ebf16170cbad70cd5bd3a821cf38fb21d254",
+      "native_host": "Windows / Godot 4.7.2-stable / OpenGL 3.3 / NVIDIA RTX 3070",
+      "presentation": "Unmodified regular main.tscn/book/main.gd in a native SubViewport of the stated client-equivalent size. Hidden host window; no OS mouse/desktop/DPI claim."
+    }
+  ]
+}

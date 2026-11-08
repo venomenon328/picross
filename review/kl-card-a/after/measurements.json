@@ -1,0 +1,648 @@
+{
+	"checks": [
+		{
+			"assertion": "UI125 actual long category, missing rating and reset",
+			"passed": true
+		},
+		{
+			"assertion": "full 10:1 earned reveal with distinct end markers",
+			"passed": true
+		},
+		{
+			"assertion": "long UI125 reset pointer opens correct confirmation",
+			"passed": true
+		},
+		{
+			"assertion": "long UI125 reset cancellation keeps card and catalog",
+			"passed": true
+		},
+		{
+			"assertion": "narrow UI125 common stacked fallback with full long category",
+			"passed": true
+		},
+		{
+			"assertion": "narrow full card width clears native scrollbar reserve",
+			"passed": true
+		},
+		{
+			"assertion": "narrow fallback full metadata reached by native scroll",
+			"passed": true
+		},
+		{
+			"assertion": "UI scale roundtrip preserves both scrolls, ID and save bytes",
+			"passed": true
+		},
+		{
+			"assertion": "UI scale roundtrip preserves both scrolls, ID and save bytes",
+			"passed": true
+		},
+		{
+			"assertion": "actual loader distinguishes invalid, backup-only and damaged backup",
+			"passed": true
+		},
+		{
+			"assertion": "invalid save cannot become new or reveal",
+			"passed": true
+		},
+		{
+			"assertion": "invalid reset pointer opens bound confirmation",
+			"passed": true
+		},
+		{
+			"assertion": "confirmed invalid reset owns only its slot",
+			"passed": true
+		},
+		{
+			"assertion": "entire recovery pointer target in inner clip",
+			"passed": true
+		},
+		{
+			"assertion": "recovery pointer opens separate bound confirmation",
+			"passed": true
+		},
+		{
+			"assertion": "confirmed recovery repairs target and preserves every foreign slot",
+			"passed": true
+		},
+		{
+			"assertion": "entire recovery pointer target in inner clip",
+			"passed": true
+		},
+		{
+			"assertion": "recovery pointer opens separate bound confirmation",
+			"passed": true
+		},
+		{
+			"assertion": "confirmed recovery repairs target and preserves every foreign slot",
+			"passed": true
+		}
+	],
+	"display_server": "Windows",
+	"measurements": [
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "catalog-1920-ui100.png",
+			"halves": [
+				{
+					"card": "(301.0, 223.0)",
+					"clip": "[P: (172.0298, 260.2985), S: (715.0, 709.0)]",
+					"columns": 2,
+					"fully_visible_cards": 6,
+					"fully_visible_rows": 3,
+					"gap": 12,
+					"grid": "[P: (172.0298, 260.2985), S: (693.0, 1398.0)]",
+					"image": "[P: (10.0, 10.0), S: (112.0, 112.0)]",
+					"minimum": 276.0,
+					"row_positions": [
+						260.298492431641,
+						495.298492431641,
+						730.298461914063
+					],
+					"scroll_range": 689.0,
+					"side_by_side": true,
+					"side_minimum": 301.0,
+					"text_minimum": 161.0
+				},
+				{
+					"card": "(301.0, 223.0)",
+					"clip": "[P: (1032.03, 260.2985), S: (715.0, 709.0)]",
+					"columns": 2,
+					"fully_visible_cards": 6,
+					"fully_visible_rows": 3,
+					"gap": 12,
+					"grid": "[P: (1032.03, 260.2985), S: (693.0, 1398.0)]",
+					"image": "[P: (10.0, 10.0), S: (112.0, 112.0)]",
+					"minimum": 276.0,
+					"row_positions": [
+						260.298492431641,
+						495.298492431641,
+						730.298461914063
+					],
+					"scroll_range": 689.0,
+					"side_by_side": true,
+					"side_minimum": 301.0,
+					"text_minimum": 161.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "catalog-2560-ui100.png",
+			"halves": [
+				{
+					"card": "(301.0, 223.0)",
+					"clip": "[P: (223.3731, 273.7313), S: (964.0, 1042.0)]",
+					"columns": 3,
+					"fully_visible_cards": 12,
+					"fully_visible_rows": 4,
+					"gap": 12,
+					"grid": "[P: (223.3731, 273.7313), S: (964.0, 928.0)]",
+					"image": "[P: (10.0, 10.0), S: (112.0, 112.0)]",
+					"minimum": 276.0,
+					"row_positions": [
+						273.731323242188,
+						508.731323242188,
+						743.731323242188,
+						978.731323242188
+					],
+					"scroll_range": 0.0,
+					"side_by_side": true,
+					"side_minimum": 301.0,
+					"text_minimum": 161.0
+				},
+				{
+					"card": "(301.0, 223.0)",
+					"clip": "[P: (1372.373, 273.7313), S: (964.0, 1042.0)]",
+					"columns": 3,
+					"fully_visible_cards": 12,
+					"fully_visible_rows": 4,
+					"gap": 12,
+					"grid": "[P: (1372.373, 273.7313), S: (964.0, 928.0)]",
+					"image": "[P: (10.0, 10.0), S: (112.0, 112.0)]",
+					"minimum": 276.0,
+					"row_positions": [
+						273.731323242188,
+						508.731323242188,
+						743.731323242188,
+						978.731323242188
+					],
+					"scroll_range": 0.0,
+					"side_by_side": true,
+					"side_minimum": 301.0,
+					"text_minimum": 161.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.0,
+			"viewport": [
+				2560,
+				1440
+			]
+		},
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "long-wide-2560-ui125.png",
+			"halves": [
+				{
+					"card": "(439.0, 279.0)",
+					"clip": "[P: (227.8731, 328.7313), S: (956.0, 970.0)]",
+					"columns": 2,
+					"fully_visible_cards": 6,
+					"fully_visible_rows": 3,
+					"gap": 15,
+					"grid": "[P: (227.8731, 328.7313), S: (928.0, 1749.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						328.731323242188,
+						622.731323242188,
+						916.731323242188
+					],
+					"scroll_range": 779.0,
+					"side_by_side": true,
+					"side_minimum": 439.0,
+					"text_minimum": 263.0
+				},
+				{
+					"card": "(439.0, 279.0)",
+					"clip": "[P: (1374.873, 328.7313), S: (957.0, 970.0)]",
+					"columns": 2,
+					"fully_visible_cards": 6,
+					"fully_visible_rows": 3,
+					"gap": 15,
+					"grid": "[P: (1374.873, 328.7313), S: (929.0, 1749.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						328.731323242188,
+						622.731323242188,
+						916.731323242188
+					],
+					"scroll_range": 779.0,
+					"side_by_side": true,
+					"side_minimum": 439.0,
+					"text_minimum": 263.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.25,
+			"viewport": [
+				2560,
+				1440
+			]
+		},
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "narrow-long-1280-ui125.png",
+			"halves": [
+				{
+					"card": "(355.0, 429.0)",
+					"clip": "[P: (125.1866, 335.3657), S: (459.0, 270.0)]",
+					"columns": 1,
+					"fully_visible_cards": 0,
+					"fully_visible_rows": 0,
+					"gap": 15,
+					"grid": "[P: (125.1866, 335.3657), S: (431.0, 5313.0)]",
+					"image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [],
+					"scroll_range": 5043.0,
+					"side_by_side": false,
+					"side_minimum": 439.0,
+					"text_minimum": 263.0
+				},
+				{
+					"card": "(355.0, 429.0)",
+					"clip": "[P: (695.1866, 338.3657), S: (459.0, 267.0)]",
+					"columns": 1,
+					"fully_visible_cards": 0,
+					"fully_visible_rows": 0,
+					"gap": 15,
+					"grid": "[P: (695.1866, 338.3657), S: (431.0, 5313.0)]",
+					"image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [],
+					"scroll_range": 5046.0,
+					"side_by_side": false,
+					"side_minimum": 439.0,
+					"text_minimum": 263.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.25,
+			"viewport": [
+				1280,
+				720
+			]
+		},
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "narrow-metadata-1280-ui125.png",
+			"halves": [
+				{
+					"card": "(355.0, 429.0)",
+					"clip": "[P: (125.1866, 335.3657), S: (459.0, 270.0)]",
+					"columns": 1,
+					"fully_visible_cards": 0,
+					"fully_visible_rows": 0,
+					"gap": 15,
+					"grid": "[P: (125.1866, 194.3657), S: (431.0, 5313.0)]",
+					"image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [],
+					"scroll_range": 5043.0,
+					"side_by_side": false,
+					"side_minimum": 439.0,
+					"text_minimum": 263.0
+				},
+				{
+					"card": "(355.0, 429.0)",
+					"clip": "[P: (695.1866, 338.3657), S: (459.0, 267.0)]",
+					"columns": 1,
+					"fully_visible_cards": 0,
+					"fully_visible_rows": 0,
+					"gap": 15,
+					"grid": "[P: (695.1866, 338.3657), S: (431.0, 5313.0)]",
+					"image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [],
+					"scroll_range": 5046.0,
+					"side_by_side": false,
+					"side_minimum": 439.0,
+					"text_minimum": 263.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				141,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.25,
+			"viewport": [
+				1280,
+				720
+			]
+		},
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "fit-2149-ui125.png",
+			"halves": [
+				{
+					"card": "(355.0, 429.0)",
+					"clip": "[P: (194.7612, 320.1119), S: (797.0, 756.0)]",
+					"columns": 2,
+					"fully_visible_cards": 2,
+					"fully_visible_rows": 1,
+					"gap": 15,
+					"grid": "[P: (194.7612, 320.1119), S: (769.0, 2649.0)]",
+					"image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						320.111938476563
+					],
+					"scroll_range": 1893.0,
+					"side_by_side": false,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				},
+				{
+					"card": "(355.0, 429.0)",
+					"clip": "[P: (1156.761, 320.1119), S: (797.0, 756.0)]",
+					"columns": 2,
+					"fully_visible_cards": 2,
+					"fully_visible_rows": 1,
+					"gap": 15,
+					"grid": "[P: (1156.761, 320.1119), S: (769.0, 2649.0)]",
+					"image": "[P: (13.0, 208.0), S: (329.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						320.111938476563
+					],
+					"scroll_range": 1893.0,
+					"side_by_side": false,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.25,
+			"viewport": [
+				2149,
+				1209
+			]
+		},
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "fit-2166-ui125.png",
+			"halves": [
+				{
+					"card": "(377.0, 279.0)",
+					"clip": "[P: (196.5448, 320.4478), S: (803.0, 764.0)]",
+					"columns": 2,
+					"fully_visible_cards": 4,
+					"fully_visible_rows": 2,
+					"gap": 15,
+					"grid": "[P: (196.5448, 320.4478), S: (775.0, 1749.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						320.44775390625,
+						614.44775390625
+					],
+					"scroll_range": 985.0,
+					"side_by_side": true,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				},
+				{
+					"card": "(377.0, 279.0)",
+					"clip": "[P: (1165.545, 320.4478), S: (803.0, 764.0)]",
+					"columns": 2,
+					"fully_visible_cards": 4,
+					"fully_visible_rows": 2,
+					"gap": 15,
+					"grid": "[P: (1165.545, 320.4478), S: (775.0, 1749.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						320.44775390625,
+						614.44775390625
+					],
+					"scroll_range": 985.0,
+					"side_by_side": true,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.25,
+			"viewport": [
+				2166,
+				1218
+			]
+		},
+		{
+			"category": "",
+			"direction": "asc",
+			"file": "invalid-1920-ui125.png",
+			"halves": [
+				{
+					"card": "(377.0, 279.0)",
+					"clip": "[P: (176.5298, 315.2985), S: (707.0, 636.0)]",
+					"columns": 1,
+					"fully_visible_cards": 2,
+					"fully_visible_rows": 2,
+					"gap": 15,
+					"grid": "[P: (176.5298, 315.2985), S: (679.0, 3513.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						315.298492431641,
+						609.298461914063
+					],
+					"scroll_range": 2877.0,
+					"side_by_side": true,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				},
+				{
+					"card": "(377.0, 279.0)",
+					"clip": "[P: (1034.53, 315.2985), S: (708.0, 636.0)]",
+					"columns": 1,
+					"fully_visible_cards": 2,
+					"fully_visible_rows": 2,
+					"gap": 15,
+					"grid": "[P: (1034.53, 315.2985), S: (680.0, 3513.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						315.298492431641,
+						609.298461914063
+					],
+					"scroll_range": 2877.0,
+					"side_by_side": true,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"category": "",
+			"direction": "asc",
+			"file": "recovery-2-1920-ui125.png",
+			"halves": [
+				{
+					"card": "(377.0, 279.0)",
+					"clip": "[P: (176.5298, 315.2985), S: (707.0, 636.0)]",
+					"columns": 1,
+					"fully_visible_cards": 1,
+					"fully_visible_rows": 1,
+					"gap": 15,
+					"grid": "[P: (176.5298, 210.2985), S: (679.0, 3513.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						504.298492431641
+					],
+					"scroll_range": 2877.0,
+					"side_by_side": true,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				},
+				{
+					"card": "(377.0, 279.0)",
+					"clip": "[P: (1034.53, 315.2985), S: (708.0, 636.0)]",
+					"columns": 1,
+					"fully_visible_cards": 2,
+					"fully_visible_rows": 2,
+					"gap": 15,
+					"grid": "[P: (1034.53, 315.2985), S: (680.0, 3513.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						315.298492431641,
+						609.298461914063
+					],
+					"scroll_range": 2877.0,
+					"side_by_side": true,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				105,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"category": "",
+			"direction": "asc",
+			"file": "recovery-4-1920-ui125.png",
+			"halves": [
+				{
+					"card": "(377.0, 279.0)",
+					"clip": "[P: (176.5298, 315.2985), S: (707.0, 636.0)]",
+					"columns": 1,
+					"fully_visible_cards": 1,
+					"fully_visible_rows": 1,
+					"gap": 15,
+					"grid": "[P: (176.5298, -377.7015), S: (679.0, 3513.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						504.298492431641
+					],
+					"scroll_range": 2877.0,
+					"side_by_side": true,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				},
+				{
+					"card": "(377.0, 279.0)",
+					"clip": "[P: (1034.53, 315.2985), S: (708.0, 636.0)]",
+					"columns": 1,
+					"fully_visible_cards": 2,
+					"fully_visible_rows": 2,
+					"gap": 15,
+					"grid": "[P: (1034.53, 315.2985), S: (680.0, 3513.0)]",
+					"image": "[P: (13.0, 13.0), S: (140.0, 140.0)]",
+					"minimum": 345.0,
+					"row_positions": [
+						315.298492431641,
+						609.298461914063
+					],
+					"scroll_range": 2877.0,
+					"side_by_side": true,
+					"side_minimum": 377.0,
+					"text_minimum": 201.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				693,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.25,
+			"viewport": [
+				1920,
+				1080
+			]
+		}
+	],
+	"product_head": "76af078bbaaba4755a8e80136942ac25078a64b0",
+	"renderer": "NVIDIA GeForce RTX 3070",
+	"tag": "originals-76af078b"
+}

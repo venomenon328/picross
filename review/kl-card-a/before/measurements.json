@@ -1,0 +1,109 @@
+{
+	"display_server": "Windows",
+	"measurements": [
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "catalog-1920-ui100.png",
+			"halves": [
+				{
+					"card": "(284.0, 343.0)",
+					"clip": "[P: (172.0298, 260.2985), S: (715.0, 709.0)]",
+					"columns": 2,
+					"fully_visible_cards": 4,
+					"fully_visible_rows": 2,
+					"gap": 12,
+					"grid": "[P: (172.0298, 260.2985), S: (693.0, 2118.0)]",
+					"image": "[P: (10.0, 136.0), S: (264.0, 112.0)]",
+					"minimum": 276.0,
+					"row_positions": [
+						260.298492431641,
+						615.298461914063
+					],
+					"scroll_range": 1409.0
+				},
+				{
+					"card": "(284.0, 343.0)",
+					"clip": "[P: (1032.03, 260.2985), S: (715.0, 709.0)]",
+					"columns": 2,
+					"fully_visible_cards": 4,
+					"fully_visible_rows": 2,
+					"gap": 12,
+					"grid": "[P: (1032.03, 260.2985), S: (693.0, 2118.0)]",
+					"image": "[P: (10.0, 136.0), S: (264.0, 112.0)]",
+					"minimum": 276.0,
+					"row_positions": [
+						260.298492431641,
+						615.298461914063
+					],
+					"scroll_range": 1409.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.0,
+			"viewport": [
+				1920,
+				1080
+			]
+		},
+		{
+			"category": "gebaeude-bauwerke",
+			"direction": "asc",
+			"file": "catalog-2560-ui100.png",
+			"halves": [
+				{
+					"card": "(284.0, 343.0)",
+					"clip": "[P: (223.3731, 273.7313), S: (964.0, 1042.0)]",
+					"columns": 3,
+					"fully_visible_cards": 6,
+					"fully_visible_rows": 2,
+					"gap": 12,
+					"grid": "[P: (223.3731, 273.7313), S: (942.0, 1408.0)]",
+					"image": "[P: (10.0, 136.0), S: (264.0, 112.0)]",
+					"minimum": 276.0,
+					"row_positions": [
+						273.731323242188,
+						628.731323242188
+					],
+					"scroll_range": 366.0
+				},
+				{
+					"card": "(284.0, 343.0)",
+					"clip": "[P: (1372.373, 273.7313), S: (964.0, 1042.0)]",
+					"columns": 3,
+					"fully_visible_cards": 6,
+					"fully_visible_rows": 2,
+					"gap": 12,
+					"grid": "[P: (1372.373, 273.7313), S: (942.0, 1408.0)]",
+					"image": "[P: (10.0, 136.0), S: (264.0, 112.0)]",
+					"minimum": 276.0,
+					"row_positions": [
+						273.731323242188,
+						628.731323242188
+					],
+					"scroll_range": 366.0
+				}
+			],
+			"page": 0,
+			"scene": "res://main.tscn / res://book/main.gd (unmodified)",
+			"scroll": [
+				0,
+				0
+			],
+			"sort": "size",
+			"ui_scale": 1.0,
+			"viewport": [
+				2560,
+				1440
+			]
+		}
+	],
+	"renderer": "NVIDIA GeForce RTX 3070",
+	"tag": "before"
+}
