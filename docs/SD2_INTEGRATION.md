@@ -28,7 +28,12 @@ prozesslokalen Paketprüfkontext nach unabhängig erfolgreichem Staging-Replay.
 Tatsächliche lokale Werkzeug-/Methodenbytes und Laufzeitstände werden gebunden;
 ein unveränderter Methodenname genügt nicht. Beide Freezes, aktuelle und
 historische Hüllen/Journalgenerationen, Produktionsstandard, Rating-/Rebind-
-regeln, alle globalen Guards und Recovery bleiben unverändert.
+regeln, alle globalen Guards und Recovery bleiben durch B unverändert.
+Die nachfolgende RI-C-Branchlieferung zu #480 ordnet ausschließlich die v6-
+Erstregistrierung und ihre Recovery den [vollständigen G-/GR-Grenzen](SD_CATALOG.md#ri-c--phasengrenzen-für-erstregistrierung-v6)
+und lokalen Zielprüfungen zu. Methodendefault einschließlich Abwesenheit, beide
+tatsächlichen Freezequellen, Ratings und Berichte bleiben frisch gebunden.
+Andere Writer und ältere Journalgenerationen behalten ihren vollständigen Weg.
 [RI-B-T01](RI_B_VERIFICATION.md) bindet die konkrete Lieferung.
 
 | Methode | Unveränderlicher Freezehash |

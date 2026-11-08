@@ -89,9 +89,21 @@ Diagnostik zählt `verified_package_reuses` getrennt von `full_*`; Nachprüfung 
 keine weitere vollständige Proofprüfung. Es gibt keinen neuen CLI-Schalter,
 persistenten Cache oder externen Pass-Beleg. Getrennte Befehle prüfen unabhängig;
 `verify-export` vollständig, `plan` lesend, `register` ausdrücklich autorisiert.
-Updates/No-ops, alle globalen Guards, P0–P6/R0–R2 und Recovery bleiben unverändert.
+Updates/No-ops, alle globalen Guards, P0–P6/R0–R2 und Recovery bleiben durch B unverändert.
 Recovery verwendet niemals den Kontext. [RI-B-T01](../../docs/RI_B_VERIFICATION.md)
 bindet Plattformmessungen, tatsächliche CI und offene Gates.
+
+**RI-C-F01 / RI-C-V01 · Branchlieferung zu #480:** Nur mutierende v6-
+Erstregistrierungen und deren Recovery verwenden vollständige G0/G2/G5a/G5b/G6-
+bzw. GR0/GR2-Prüfungen mit frischen lokalen Journal-/Ziel-/Eltern-/Tempprüfungen
+zwischen diesen Grenzen. Runtime bleibt letztes Datenziel. Unbeteiligte fremde
+Quellen seit G2 werden spätestens vor Runtime an G5a erkannt; danach an G5b/G6,
+bei Recovery an GR2. Unsicherer Rollback erhält Fremdbytes und Journal.
+Andere Writer/Generationenpfade, CLI, Limits und RI-A-Budgets bleiben erhalten.
+Der [Transaktionsvertrag](../../docs/SD_CATALOG.md#ri-c--phasengrenzen-für-erstregistrierung-v6)
+erklärt die geänderte Erkennungszeit, kooperativen Lock und verbleibende OS-Rennen.
+[RI-C-T01](../../docs/RI_C_VERIFICATION.md) bindet die tatsächlichen Nachweise;
+keine Sekundenbeschleunigung allein aus verringerten Guardzahlen ableiten.
 
 KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
 Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig
