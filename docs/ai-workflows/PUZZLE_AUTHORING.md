@@ -1,9 +1,11 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.5.0 · Dokumentrevision 32 · 08.11.2026**
+**Version 0.5.0 · Dokumentrevision 33 · 08.11.2026**
 
 Diese Revision bindet den [P-A-V01-Normvorschlag](../PUZZLE_QUALITY.md#8-p-a-v01-vorschlag-für-paarweise-farbunterscheidbarkeit)
 aus #488 samt Referenzvergleich und offener Eigentümer-Normfreigabe ein (§4.3).
+B-01 bindet das Eigentümer-Teilfeedback als getrennte Referenzeinordnung;
+die metrischen Negativbefunde und die offenen Norm-/Reviewgates bleiben erhalten.
 Q-A-Sichtung bei fehlenden vollständig qualifizierten Kandidaten, RI-C in §8, gespeicherte
 Sheet-Einstellungen, lokale Codex-Arbeitswurzeln, Inhaltsformate, Solverprofile,
 Bild-/Motiv-/Endfreigaben und versiegelte Altstände bleiben erhalten.
@@ -299,6 +301,12 @@ Paar bleibt auch bei redaktioneller Annahme negativ. Bis zum geprüften P-B-Weg
 keine Übernahme einer negativen Paarung durch Freitext-Ausnahme behaupten.
 Farb-/ID-/Nutzungs-/Matrixänderungen entziehen abhängigen Palettennachweisen ihre
 Gültigkeit; Neuprüfung und Freigaberücksprünge nach §4.4 bleiben erforderlich.
+
+Die [F05-Referenzeinordnung nach B-01](../PUZZLE_QUALITY.md#831-b-01-gebundenes-eigentümer-teilfeedback-und-referenzeinordnung)
+trennt positives Eigentümer-Teilfeedback von weiterhin negativen Paarmessungen.
+Sie ist keine Produktionsausnahme und darf weder als `pass` noch als Freigabe
+eines realen Kandidaten übernommen werden. Dafür bleiben §6 des Qualitätsvertrags
+und der spätere geprüfte P-B-Ausnahmeweg maßgeblich.
 
 Für einen konkreten redaktionellen Mangel gilt der externe, revisionsgebundene
 [Einzelfallprozess aus Qualitätsvertrag §6](../PUZZLE_QUALITY.md).

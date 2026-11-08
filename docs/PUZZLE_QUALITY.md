@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 2 · 08.11.2026 · Q-A und P-A-V01 / [#488](https://github.com/venomenon328/picross/issues/488)**
+**Vertrag 1.0 · Dokumentrevision 3 · 08.11.2026 · Q-A und P-A-V01 / [#488](https://github.com/venomenon328/picross/issues/488)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -319,16 +319,21 @@ der echte beleuchtete Papiergrund variiert. Keine daraus erfundene Pixelmessung.
 | F03 c01/c02 | 22.237602 | 1.028384 | positiv |
 | F04 c01/c02 | 35.939437 | 4.272436 | positiv |
 | F05 c02/c04 (kleinstes Paar) | 5.573296 | 1.077067 | negativ |
-| F05 c03/c04 (weiß/gelb) | 17.642013 | 1.478212 | positiv, visuell trotzdem problematisch |
+| F05 c03/c04 (weiß/gelb) | 17.642013 | 1.478212 | metrisch positiv; F05 redaktionell angenommen, siehe §8.3.1 |
 | F06 c01/c02 (kleinstes Paar) | 8.714149 | 1.386788 | negativ |
 | F07 c01/c08 (kleinstes von 28 Paaren) | 1.341814 | 1.057795 | negativ, ungeachtet einer einzigen c08-Zelle |
 
 Ein Kontrastgate würde F01/F03 ähnlich wie F02 behandeln, obwohl die Originale
-deutlich andere Farbtöne zeigen. Oklab trennt diese Beispiele. F05 zeigt seinen
-Fehlfall: das positive weiß/gelbe Einzelpaar löst die schwachen Hinweise auf
-Papier nicht. F06 zeigt begrenzte dunkle Tontrennung, obwohl die Zellen durch
-Fugen weiterhin von Linien getrennt bleiben. Daher **Oklab-Ausschluss plus
-bestehende visuelle Prüfung**; Kontrast/Luminanz bleiben erklärende Diagnosen.
+deutlich andere Farbtöne zeigen. Oklab trennt diese Beispiele. Die frühere
+Implementiererbewertung schwacher F05-Hinweise ist durch das positive
+Eigentümer-Teilfeedback aus §8.3.1 als redaktionelles Urteil ersetzt.
+F05 zeigt nun den ausdrücklich offengelegten konservativen Modellfehlfall:
+metrischer Ausschluss trotz visueller Annahme dieser Referenz. F06 c01/c02
+ist dagegen auch nach Eigentümerurteil unzureichend, obwohl die Zellen durch
+Fugen weiterhin von Linien getrennt bleiben. Der Vorschlag bleibt
+**Oklab-Ausschluss plus bestehende visuelle Prüfung mit getrennter
+Einzelfallsemantik nach §6/§8.5**; seine generelle Normfreigabe bleibt offen.
+Kontrast/Luminanz bleiben erklärende Diagnosen.
 
 Die vor F08 gewählten runden D-Grenzen 10/15 sind eine konservative
 Arbeitshypothese zwischen dunklen Nahpaaren unter 10 und den deutlich anderen
@@ -345,13 +350,75 @@ Im zurückgehaltenen Satz ergeben sich ohne Nachjustierung:
 | c02/c04 | 8799172997 | 9.380391 | negativ |
 | c03/c04 | 1739945433 | 4.171265 | negativ |
 
-Die ganze F08-Palette ist negativ. Der Unterschied c01/c03 bleibt besonders
-klein/blass beurteilungsbedürftig; c01/c04 ist stärker getrennt. Das sind
-Implementiererbeobachtungen, keine persönliche Abnahme. P-A-M01 muss gerade
-diese Paare, F05/C1 und F06 an den Originalen einordnen. Restunsicherheit:
+Die ganze F08-Palette bleibt metrisch negativ. Der Unterschied c01/c03 bleibt
+besonders klein/blass beurteilungsbedürftig; zu c01/c04 liegt inzwischen das
+positive Eigentümer-Teilfeedback aus §8.3.1 vor. Dieses bestätigt nur das Paar.
+P-A-M01 muss die gesamte Vorschlagsregel einschließlich c01/c03, der
+F05-Referenzeinordnung und der bestehenden Grenzfälle am neuen Head entscheiden.
+Restunsicherheit:
 Schriftgröße, Konturzuordnung, Display/Farbmanagement, Sehvermögen und Kontext
 werden nicht durch einen skalaren Farbraumabstand beschrieben. Keine universelle
 Zugänglichkeitszusage oder neue Symbol-/Musterkennung.
+
+#### 8.3.1 B-01: gebundenes Eigentümer-Teilfeedback und Referenzeinordnung
+
+Quelle ist [P-A-R01 / B-01](https://github.com/venomenon328/picross/pull/546#pullrequestreview-5817832898)
+am geprüften Produkt-Head `3e2bcfbd590a38e1a74764c3a52e88668f20edbe`.
+Der Bericht dokumentiert das Teilfeedback der Eigentümerperson; veröffentlichender
+Akteur `venomenon328`, Berichtszeitpunkt **08.11.2026, 12:15:10 UTC**.
+Zeitpunkt und Umgebung der tatsächlichen Eigentümersichtung sowie die dabei
+einzeln geöffneten Dateien sind nicht separat berichtet. Die folgende Bindung
+ordnet das Feedback dem dort benannten unveränderten Referenzstand zu; sie
+behauptet keine nachträglich ausgeführte Sichtung aller Größen/Zustände.
+
+Gemeinsamer Originalstand: Belegcommit
+`1d5b7e90db4c8843d7737f83411f896ceeee6231`,
+[Manifest mit Datei-SHA-256, Bytes und Bildmaßen](https://github.com/venomenon328/picross/blob/1d5b7e90db4c8843d7737f83411f896ceeee6231/review-evidence/pa-v01/manifest.json).
+Je Familie gelten die Originaldateien
+`review-evidence/pa-v01/originals/Fxx-small-board.png`, `Fxx-small-tokens.png`,
+`Fxx-normal-board.png` und `Fxx-normal-tokens.png`; `Fxx` steht in den folgenden
+Zeilen für genau F05, F06 oder F08. Die Originale bleiben unverändert;
+der Nacharbeitsnachweis im PR bindet sie außen an den neuen Dokument-Head.
+
+| Referenz / Farb- und Paarbindung | Berichtetes Eigentümerurteil | Getrennte Einordnung |
+| --- | --- | --- |
+| F05, Revision 1; c01 `#fff4cf`, c02 `#eadca8`, c03 `#ffffff`, c04 `#f1d273`; alle sechs Paare unten | „finde ich okay“ zur gezeigten F05-Referenz | Redaktionell positiv als Ganzes. Kein separat erklärtes Urteil zu jedem Paar oder jeder Bilddatei. Die früher behauptete visuelle Ablehnung des weiß/gelben Paars wird nicht fortgeführt; alle metrischen Negativ-/Warnbefunde bleiben erhalten. |
+| F08, Revision 1; c01 `#447799` / c04 `#77aacc`, S `27850476761`, D `16.688462` | „in Ordnung“ | Redaktionell positives Teilurteil zu genau diesem metrisch positiven Paar; weder Annahme der ganzen F08-Palette noch der gesamten Regel. c01/c03 bleibt offen. |
+| F06, Revision 1; c01 `#232b32` / c02 `#39414a`, S `7593640091`, D `8.714149` | c02 soll heller/blasser sein, um sich von c01 zu unterscheiden | Originalpaar unzureichend, konsistent mit `negative`. F06 bleibt unveränderter Negativfall. Keine neue Vergleichsvariante für diese redaktionelle Nacharbeit erforderlich. |
+
+Für F05 unter `picross-palette-separation-1-draft1` gilt weiterhin:
+
+| Paar | Exaktes S | D, Anzeige | Technischer Vorschlagsbefund |
+| --- | --- | --- | --- |
+| c01/c02 | 5757002441 | 7.587491 | negativ |
+| c01/c03 | 3569810205 | 5.974789 | negativ |
+| c01/c04 | 14157451021 | 11.898509 | positiv mit Warnung |
+| c02/c03 | 16196735686 | 12.726640 | positiv mit Warnung |
+| c02/c04 | 3106163242 | 5.573296 | negativ |
+| c03/c04 | 31124061110 | 17.642013 | positiv |
+
+**Entscheidung der Nacharbeit: begründete Referenzeinordnung, keine metrische
+Revision.** F05 ist eine visuell angenommene synthetische Referenz mit negativem
+metrischem Gesamtbefund und drei negativen Paaren. Damit ist ein Fehlfall des
+konservativen Ausschlussvorschlags ausdrücklich bekannt. Eine globale Absenkung
+zur nachträglichen Erzeugung eines positiven F05-Werts wäre unbegründet: Das
+Feedback akzeptiert F05 als Referenz, legt aber weder eine alternative Grenze
+fest noch hebt es die unzureichende F06-Trennung auf. Formel, Grenzen 10/15,
+Quantisierung und sämtliche ursprünglichen Paaroutputs bleiben unverändert.
+P-A-M01 muss den Vorschlag einschließlich dieses Modellfehlfalls ausdrücklich
+annehmen oder seine Revision beauftragen; diese Nacharbeit nimmt das nicht vorweg.
+
+Die Trennung von negativem Messbefund und separater redaktioneller Annahme folgt
+§6. Hier wird **keine Produktionsausnahme erteilt**: Die Referenzen besitzen kein
+freigabefähiges Produktionspaket/Inventar oder Inhaltszertifikat; eine solche
+Bindung wird nicht erfunden. Das Teilfeedback wird nicht zu einer ausdrücklich
+paargebundenen P-B-Ausnahme oder zu `pass` ergänzt. Eine spätere reale Übernahme
+mit negativem Palettenbefund benötigt weiterhin den von P-B implementierten und
+geprüften Ausnahmeweg mit vollständigen §6-Bindungen und harten Inhaltsgates.
+Vorabplan, Bilder und versiegelte Originalbelege werden nicht umgeschrieben.
+P-A-M01 und erneutes unabhängiges P-A-R01 am neuen Head bleiben vor Merge offen;
+die im Review benannte Originalzugriffslücke des unabhängigen Prüfers bleibt
+ausdrücklich unbehoben und darf nicht durch eigene Bildöffnung als erledigt gelten.
 
 ### 8.4 Exakte vorgeschlagene Berechnung und Randwerte
 
