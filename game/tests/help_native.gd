@@ -79,7 +79,9 @@ static func run(t: SceneTree) -> void:
 					t.check(figure.size.x <= scroll.size.x and figure.cell_size >= 32,"HIL readable native diagram within paper")
 			# Real wheel events must reach the content end and must not zoom or
 			# edit the hidden work board. Bound enough for the longest chapter.
-			for n: int in range(80):
+			for n: int in range(200):
+				var range_end: float = scroll.get_v_scroll_bar().max_value-scroll.get_v_scroll_bar().page
+				if scroll.scroll_vertical >= maxi(0,int(range_end)): break
 				var event := InputEventMouseButton.new()
 				event.position = scroll.get_global_rect().get_center()
 				event.global_position = event.position
@@ -91,7 +93,9 @@ static func run(t: SceneTree) -> void:
 				t.root.push_input(event,true)
 			await t.frames(4)
 			var bar: VScrollBar = scroll.get_v_scroll_bar()
-			t.check(scroll.scroll_vertical == maxi(0,int(bar.max_value-bar.page)) and panel.chapters[i].get_global_rect().end.y <= scroll.get_global_rect().end.y+1,"HIL final chapter content reachable")
+			var reached: bool = scroll.scroll_vertical == maxi(0,int(bar.max_value-bar.page)) and panel.chapters[i].get_global_rect().end.y <= scroll.get_global_rect().end.y+1
+			if not reached: print("HIL_SCROLL_RANGE ",spec," chapter=",i," offset=",scroll.scroll_vertical," end=",bar.max_value-bar.page," content=",panel.chapters[i].get_global_rect()," clip=",scroll.get_global_rect())
+			t.check(reached,"HIL final chapter content reachable")
 			t.check(app.info.right_return.get_global_rect().position.y > scroll.get_global_rect().end.y,"HIL return stays below independent clip")
 	t.check(layouts == 12,"HIL complete native chapter layout coverage")
 	t.check(panel.figures.all(func(item: Control) -> bool: return not item.is_processing() and not item.is_physics_processing()),"HIL passive diagrams have no processing tick")
