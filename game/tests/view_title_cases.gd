@@ -37,7 +37,10 @@ static func run(r: SceneTree) -> void:
 			r.check(heading.is_visible_in_tree() and heading.texture != null and not heading.fallback.visible,"BTI: imported image replaces text "+section)
 			r.check(heading.accessibility_name == ("Hilfe" if section == "help" else "Einstellungen"),"BTI: exact semantic information title")
 			r.check(absf(heading.get_global_rect().get_center().x-(app.info_scroll if section == "settings" else app.help_panel).get_global_rect().get_center().x) < 1,"BTI: fixed title centres on same safe paper as content")
-			r.check(back.get_global_rect().end.y < heading.get_global_rect().position.y and heading.get_global_rect().end.y < scroll.get_global_rect().position.y,"BTI: top navigation, title and scroll do not overlap")
+			r.check(is_equal_approx(back.global_position.y,heading.global_position.y) and heading.get_global_rect().end.y < scroll.get_global_rect().position.y,"BTI: title shares navigation top edge without added vertical row")
+			var image_box := Rect2(heading.global_position+heading.image_rect().position,heading.image_rect().size)
+			for button: Control in [back,app.information.get_node("settings-access"),app.information.get_node("help-access")]:
+				r.check(not image_box.intersects(button.get_global_rect()),"BTI: whole original title clears the lateral symbol group")
 			for button: Control in [back,switch]:
 				r.check(viewport.encloses(button.get_global_rect()) and button.size.x >= 44*config.z and button.size.y >= 44*config.z,"BTI: visible top hit target")
 			r.check(not back.get_global_rect().intersects(switch.get_global_rect()),"BTI: independent top actions")

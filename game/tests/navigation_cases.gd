@@ -31,9 +31,10 @@ static func geometry(r: SceneTree) -> void:
 	for button: Control in [album.quit_button,album.settings_button,album.help_button]:
 		var box: Rect2 = button.get_global_rect()
 		r.check(viewport.encloses(box) and box.size.x >= 44*u and box.size.y >= 44*u,"NAV-A: fixed catalog header hit target")
-		r.check(box.position.y < album.summary.global_position.y and not box.intersects(album.notice_area.get_global_rect()) and not box.intersects(app.recent_panel.get_global_rect()),"NAV-A: header clear of count, retry and full recent panel")
+		r.check(is_equal_approx(box.position.y,album.summary.global_position.y) and not box.intersects(album.summary.get_global_rect()) and not box.intersects(album.notice_area.get_global_rect()) and not box.intersects(app.recent_panel.get_global_rect()),"NAV-A: header beside count on same top edge, clear of retry and full recent panel")
 		if prior.has_area(): r.check(prior.end.x < box.position.x,"NAV-A: quit, gear, help in order")
 		prior = box
+	r.check(album.summary.size.x+1 >= album.summary.get_theme_font("font").get_multiline_string_size(album.summary.text,HORIZONTAL_ALIGNMENT_LEFT,album.summary.size.x,album.summary.get_theme_font_size("font_size")).x and album.summary.size.y+1 >= album.summary.get_minimum_size().y,"NAV-A: full count wraps only within measured side space")
 	var left: Rect2 = app.book.projected_paper(false,-1)
 	var right: Rect2 = app.book.projected_paper(false,1)
 	for button: Control in [album.previous_button,album.next_button]:

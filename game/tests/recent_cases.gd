@@ -142,11 +142,15 @@ static func freshness_layout(probe) -> void:
 		app.set_ui_scale(spec[2])
 		await probe.frames()
 		var panel = app.recent_panel
-		var width: float = app.album.summary.size.x
+		# The count now shares the row with navigation; the panel still uses
+		# the complete safe right-paper width, independently of that label.
+		var paper: Rect2 = app.book.projected_paper(false,1)
+		var safe_edge: float = paper.end.x-18*app.ui_scale
+		var width: float = safe_edge-app.album.summary.position.x
 		probe.check(absf(panel.size.x-width/2) < 0.01 or absf(panel.size.x-width) < 0.01,"RF-A box is exactly half or full projected heading width")
 		if spec == [2560,1440,1.0]: probe.check(absf(panel.size.x-width/2) < 0.01,"RF-A 1440p UI100 half width")
 		if spec == [1280,720,1.25]: probe.check(absf(panel.size.x-width) < 0.01,"RF-A narrow UI125 full width")
-		probe.check(absf(panel.position.x-app.album.summary.position.x) < 0.01 and panel.get_rect().end.x <= app.album.summary.get_rect().end.x+0.01,"RF-A fixed left edge and safe right boundary")
+		probe.check(absf(panel.position.x-app.album.summary.position.x) < 0.01 and panel.get_rect().end.x <= safe_edge+0.01,"RF-A fixed left edge and safe right boundary")
 		probe.check(panel.fits(panel.size.x,panel.size.y),"RF-A both shaped text lines and full miniature fit")
 		var caption: Rect2 = panel.caption.get_global_rect()
 		var detail: Rect2 = panel.detail.get_global_rect()

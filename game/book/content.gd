@@ -165,22 +165,26 @@ func _layout_book(prepare_board: bool = false) -> void:
 		var title_height: float = maxf(128*ui_scale,clampf(left_paper.size.y*0.14,64*ui_scale,110*ui_scale))
 		# Reserve a full retry target plus breathing room above the recent panel,
 		# even with no error. Showing/scrolling notices must not move the catalog.
-		# Fixed rows: global navigation, count, full retry clip, recent panel.
-		# A full-width recent panel can never compete with the navigation row.
-		var summary_top: float = heading_top+52*ui_scale
-		var notice_top: float = summary_top+30*ui_scale
-		var panel_top: float = notice_top+56*ui_scale
-		var catalog_top: float = panel_top+76*ui_scale
+		# Navigation and count share the top edge. Only actual text height,
+		# notices and the existing recent/title budget determine later rows.
+		album._style_controls(album.navigation)
+		var nav_width: float = album.navigation.get_combined_minimum_size().x
+		var summary_width: float = maxf(1,edge-nav_width-14*ui_scale-right_heading)
+		var summary_font: int = roundi(18*ui_scale)
+		album.summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		album.summary.add_theme_font_size_override("font_size",summary_font)
+		_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(summary_width,26*ui_scale)))
+		var summary_height: float = maxf(26*ui_scale,album.summary.get_minimum_size().y)
+		var notice_top: float = heading_top+summary_height+2*ui_scale
+		var panel_top: float = notice_top+52*ui_scale
+		var catalog_top: float = maxf(heading_top+title_height+28*ui_scale,panel_top+76*ui_scale)
 		album.right_pager.vertical = false
 		_place(album, Rect2(Vector2(margin,catalog_top),Vector2(edge-margin,left_paper.end.y-inset-catalog_top)))
 		_place(catalog_title, Rect2(Vector2(margin,heading_top),Vector2(left_paper.end.x-curve-inset-margin,title_height)))
 		catalog_title.fallback.add_theme_font_size_override("font_size",roundi(28*ui_scale))
 		if album.summary != null:
-			_place(album.summary,Rect2(Vector2(right_heading,summary_top),Vector2(edge-right_heading,26*ui_scale)))
-			album.summary.add_theme_font_size_override("font_size",roundi(18*ui_scale))
+			_place(album.summary,Rect2(Vector2(right_heading,heading_top),Vector2(summary_width,summary_height)))
 		if album.navigation != null:
-			album._style_controls(album.navigation)
-			var nav_width: float = album.navigation.get_combined_minimum_size().x
 			_place(album.navigation,Rect2(Vector2(edge-nav_width,heading_top),Vector2(nav_width,44*ui_scale)))
 		# Messages use the existing free heading area. Its fixed, scrollable
 		# bounds never enter either page's card/control layout, even on failure.
@@ -194,7 +198,8 @@ func _layout_book(prepare_board: bool = false) -> void:
 		# This scroller is detached from album, so its controls need the same
 		# scaling pass explicitly (including both retry targets and long labels).
 		album._style_controls(album.notice_area)
-		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(edge-right_heading,48*ui_scale)))
+		var notice_width: float = summary_width if notice_top < heading_top+44*ui_scale else edge-right_heading
+		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(notice_width,48*ui_scale)))
 		album._layout_cards()
 
 func select_puzzle(index: int) -> void:

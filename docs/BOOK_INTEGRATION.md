@@ -86,8 +86,11 @@ Der Katalogfuß enthält links nur den gezeichneten Rückpfeil, daneben „Seite
 rechts nur den Vorwärtspfeil. Exakte Namen/Tooltips: „Vorherige Seite“ und
 „Nächste Seite“. Beide blättern ganze Doppelseiten; unmögliche Richtungen sind
 inaktiv, bei einer Seite beide. 44/55-px-Trefferflächen bleiben auch im engen Fall.
-Navigation, Trefferzahl, Fehlerclip, halb-/vollbreites Fortsetzen-Panel und
-Sortier-/Filterzeile besitzen getrennten Platz. BTI-D04-Fußnavigation wird damit
+Navigation reserviert keine zusätzliche Höhenzeile: Trefferzahl steht auf derselben
+Höhe neben den Symbolen, Hilfe-/Einstellungstitel beginnen am bisherigen oberen
+Papierrand. Der seitliche Textbedarf wird gemessen und bei Bedarf umbrochen.
+Fehlerclip, halb-/vollbreites Fortsetzen-Panel und Sortier-/Filterzeile bleiben
+kollisionsfrei. BTI-D04-Fußnavigation wird damit
 ausdrücklich abgelöst. Save-/Retry-/Bewegungsgrenzen und alle Rückkehrkontexte
 bleiben bestehen. Kriterien, einmalige Nachweise und getrennte T01/R01/M01-Gates:
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/549).
