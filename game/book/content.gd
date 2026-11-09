@@ -230,7 +230,13 @@ func _layout_marginalia() -> void:
 	elif information.visible and info.section == "help":
 		key = "help"
 		paper = book.projected_information(1)
-		controls.append_array([info.help_heading,help_panel.navigation,help_panel.scroll.get_v_scroll_bar(),info.right_return,information.get_node("settings-access"),information.get_node("help-access")])
+		controls.append_array([info.help_heading,help_panel.navigation,info.right_return,information.get_node("settings-access"),information.get_node("help-access")])
+		# ScrollContainer sorts its child scrollbar later. Its old rectangle can
+		# still have the UI125 width after a UI100 reflow. Reserve the current
+		# measured width on the already placed article, across every chapter.
+		var scroll: Rect2 = help_panel.scroll.get_global_rect()
+		var bar_width: float = help_panel.scroll.get_v_scroll_bar().get_combined_minimum_size().x
+		hard.append(Rect2(Vector2(scroll.end.x-bar_width,scroll.position.y),Vector2(bar_width,scroll.size.y)))
 		# Reserve a state-independent reading envelope: all chapters, diagrams
 		# and tool-icon rows. Article scrolling never changes drawing placement.
 		var width: float = help_panel.paragraph_width+56*ui_scale
