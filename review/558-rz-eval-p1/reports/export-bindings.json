@@ -1,0 +1,442 @@
+{
+  "source_head": "90aefb84dccd9e1cdcda73f03df113855b856857",
+  "profiles": [
+    {
+      "profile": "baseline",
+      "windows_web_identical": true,
+      "pck_bytes": 90753400,
+      "pck_sha256": "707925b4ea9e2a062e57c17da530bd119ffa0074e76af516dffc1b43bcdde743",
+      "imports": []
+    },
+    {
+      "profile": "png-reference-2304",
+      "windows_web_identical": true,
+      "pck_bytes": 94254940,
+      "pck_sha256": "e6ca8ddaee60f2d3c36dd4395ec5cb32d8037e3c08e72d19bc9ab5983ef0ea8e",
+      "imports": [
+        {
+          "bytes": 764746,
+          "file": "tomate-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-2304.png-42b632985485fa0866ca4cabbafb3f63.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-2304.png",
+          "sha256": "d86798738563aa324e393d2afb12a4e6f8900a759dc7a6daab55cc53396e392b"
+        },
+        {
+          "bytes": 198772,
+          "file": "qualle-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-2304.png-958e5ae49b596f343a6ae3041d5dfa6b.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-2304.png",
+          "sha256": "3186ffacbc84100f43d01005db1ce73fea0817dd56fa1d2a3ce297c11fc0eb0d"
+        },
+        {
+          "bytes": 566332,
+          "file": "hills-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/hills-1-2304.png-bdf10c2e0b554a902745b3a6d467dc83.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-2304.png",
+          "sha256": "a6204f9acaea181a0775b9cfa2343c519013fe30d3c0eb0bf4893d7b33b174bd"
+        },
+        {
+          "bytes": 1077690,
+          "file": "petronas-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-2304.png-df51f0d0b49d8944ba85619e5ab5807d.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-2304.png",
+          "sha256": "18a99c6439b2b71aadc150a1722a1639c61264936bfb00dccd1b46fd456aa812"
+        },
+        {
+          "bytes": 891652,
+          "file": "basilisk-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-2304.png-99a3c39a96eecd572aeb362391f3be2a.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+          "sha256": "2b9ed03dac54b29a499825bbd0965d6ccff470c6e69509bd623288776b4f8f9f"
+        }
+      ]
+    },
+    {
+      "profile": "png-1536",
+      "windows_web_identical": true,
+      "pck_bytes": 92374076,
+      "pck_sha256": "e59e5543668751c839d4842dc14e1f061ef00163f91e7997a72dda7a80c15058",
+      "imports": [
+        {
+          "bytes": 354892,
+          "file": "tomate-1-1536.png.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-1536.png-7054c2009d4ffd5e393884fd97312757.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-1536.png",
+          "sha256": "aceef212ab385f923d147aeccefa929e313176a2423d42102c434572ec1b2139"
+        },
+        {
+          "bytes": 99810,
+          "file": "qualle-1-1536.png.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-1536.png-cfbacc06bac4e253f7659e7179a461b9.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-1536.png",
+          "sha256": "6c1eb41fe446214ef22bba61410e42f426503efedfb3248cf5e38279fdafe30a"
+        },
+        {
+          "bytes": 261300,
+          "file": "hills-1-1536.png.ctex",
+          "packed_import": "res://.godot/imported/hills-1-1536.png-7bfc662884b20baf523a81482ee01f33.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-1536.png",
+          "sha256": "034506ae9f2713998b1eb7ee90a3fcc21477b878968b950891f0e6d9447942a5"
+        },
+        {
+          "bytes": 487174,
+          "file": "petronas-1-1536.png.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-1536.png-c33e89cfdb3c1b0d7e47a784de2a9aea.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-1536.png",
+          "sha256": "b37d19ab552bbda5e5010b70aebeb070db200958d0b3c1588173a6f7d2d30243"
+        },
+        {
+          "bytes": 415152,
+          "file": "basilisk-1-1536.png.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-1536.png-4ea53f6275e9d545cd68319c4d9824bb.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-1536.png",
+          "sha256": "f4a6c73f91fda4d9afa631c5a2f6789443d05b2cc3fdbfa6107079897875b8c0"
+        }
+      ]
+    },
+    {
+      "profile": "png-2304",
+      "windows_web_identical": true,
+      "pck_bytes": 94254940,
+      "pck_sha256": "34d967251ef60bffee250db8e4a924c91ae642a3e42d6010c17f9818f2e953fb",
+      "imports": [
+        {
+          "bytes": 764746,
+          "file": "tomate-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-2304.png-42b632985485fa0866ca4cabbafb3f63.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-2304.png",
+          "sha256": "d86798738563aa324e393d2afb12a4e6f8900a759dc7a6daab55cc53396e392b"
+        },
+        {
+          "bytes": 198772,
+          "file": "qualle-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-2304.png-958e5ae49b596f343a6ae3041d5dfa6b.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-2304.png",
+          "sha256": "3186ffacbc84100f43d01005db1ce73fea0817dd56fa1d2a3ce297c11fc0eb0d"
+        },
+        {
+          "bytes": 566332,
+          "file": "hills-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/hills-1-2304.png-bdf10c2e0b554a902745b3a6d467dc83.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-2304.png",
+          "sha256": "a6204f9acaea181a0775b9cfa2343c519013fe30d3c0eb0bf4893d7b33b174bd"
+        },
+        {
+          "bytes": 1077690,
+          "file": "petronas-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-2304.png-df51f0d0b49d8944ba85619e5ab5807d.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-2304.png",
+          "sha256": "18a99c6439b2b71aadc150a1722a1639c61264936bfb00dccd1b46fd456aa812"
+        },
+        {
+          "bytes": 891652,
+          "file": "basilisk-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-2304.png-99a3c39a96eecd572aeb362391f3be2a.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+          "sha256": "2b9ed03dac54b29a499825bbd0965d6ccff470c6e69509bd623288776b4f8f9f"
+        }
+      ]
+    },
+    {
+      "profile": "png-3072",
+      "windows_web_identical": true,
+      "pck_bytes": 96665228,
+      "pck_sha256": "b27dcd00ada24bdd6ef2fd60081d1da987da8e783a3ba123c81a26ef1d05312e",
+      "imports": [
+        {
+          "bytes": 1291388,
+          "file": "tomate-1-3072.png.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-3072.png-fe829d5b4711efa53f9c922372d3bebc.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-3072.png",
+          "sha256": "0d4b57bc40bc0753addf65be0d6d57ded38b120d637cb64276cb5f9b8713375d"
+        },
+        {
+          "bytes": 331802,
+          "file": "qualle-1-3072.png.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-3072.png-512ee39fcfb20c4efa10c2ce9f7f5d69.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-3072.png",
+          "sha256": "ab3a7c446c9bdd84ff43ffc2766d575fee16dc6e6e1ec58ee1bb51d97e6cf4ce"
+        },
+        {
+          "bytes": 946006,
+          "file": "hills-1-3072.png.ctex",
+          "packed_import": "res://.godot/imported/hills-1-3072.png-1a406e5eb0eeb102d9bf66d839c936be.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-3072.png",
+          "sha256": "8c0f8c1d592eba6ac103873f0f8d48bc29b212ec8870ade616fe5b13c784a12b"
+        },
+        {
+          "bytes": 1844010,
+          "file": "petronas-1-3072.png.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-3072.png-e48148e341b3c2482bcc2ccca476ee1e.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-3072.png",
+          "sha256": "048138501949dc442e7f312a29bb4522bb160a32614464ecdc1c28448b4e7d51"
+        },
+        {
+          "bytes": 1496278,
+          "file": "basilisk-1-3072.png.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-3072.png-659009db31287c3a109b8336aeaf1c2b.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-3072.png",
+          "sha256": "3257212fa29a750601df4eb46ce10d640578abf79a697b0f2a571c606bc01655"
+        }
+      ]
+    },
+    {
+      "profile": "webp-lossless-1536",
+      "windows_web_identical": true,
+      "pck_bytes": 92374084,
+      "pck_sha256": "ce0b94f04d6e0bc9d1e3e3901daf8b821adecba3c18bc75dc0f8fa736a71ff3d",
+      "imports": [
+        {
+          "bytes": 354892,
+          "file": "tomate-1-1536.webp.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-1536.webp-68d523840b30862b7bcd5042f1973db0.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-1536.webp",
+          "sha256": "aceef212ab385f923d147aeccefa929e313176a2423d42102c434572ec1b2139"
+        },
+        {
+          "bytes": 99810,
+          "file": "qualle-1-1536.webp.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-1536.webp-92cdf6326723487a81c755442d3774cd.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-1536.webp",
+          "sha256": "6c1eb41fe446214ef22bba61410e42f426503efedfb3248cf5e38279fdafe30a"
+        },
+        {
+          "bytes": 261300,
+          "file": "hills-1-1536.webp.ctex",
+          "packed_import": "res://.godot/imported/hills-1-1536.webp-6dd5b2aa8bb5d99434edd52034be36de.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-1536.webp",
+          "sha256": "034506ae9f2713998b1eb7ee90a3fcc21477b878968b950891f0e6d9447942a5"
+        },
+        {
+          "bytes": 487174,
+          "file": "petronas-1-1536.webp.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-1536.webp-d0b0c7cefebf02eda0c92ea598ea9666.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-1536.webp",
+          "sha256": "b37d19ab552bbda5e5010b70aebeb070db200958d0b3c1588173a6f7d2d30243"
+        },
+        {
+          "bytes": 415152,
+          "file": "basilisk-1-1536.webp.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-1536.webp-35eed24f429bcd1f4a722e3e17d3c8a4.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-1536.webp",
+          "sha256": "f4a6c73f91fda4d9afa631c5a2f6789443d05b2cc3fdbfa6107079897875b8c0"
+        }
+      ]
+    },
+    {
+      "profile": "webp-lossless-2304",
+      "windows_web_identical": true,
+      "pck_bytes": 94254980,
+      "pck_sha256": "290a4ffa32462aa6f306b09e4eb987edb4101965efa6556c0379b9ac59514fb6",
+      "imports": [
+        {
+          "bytes": 764746,
+          "file": "tomate-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-2304.webp-1ccf5ce3b2fc9630691c1799ff03174c.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-2304.webp",
+          "sha256": "d86798738563aa324e393d2afb12a4e6f8900a759dc7a6daab55cc53396e392b"
+        },
+        {
+          "bytes": 198772,
+          "file": "qualle-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-2304.webp-cb6c6b6867309ec3af49498253db057d.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-2304.webp",
+          "sha256": "3186ffacbc84100f43d01005db1ce73fea0817dd56fa1d2a3ce297c11fc0eb0d"
+        },
+        {
+          "bytes": 566360,
+          "file": "hills-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/hills-1-2304.webp-5e58bed452076c96fdb6c248449277dd.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-2304.webp",
+          "sha256": "084e7169f08201e2c359c170fda8fa8d6191190fb8baba1a6572c6f51d65e76e"
+        },
+        {
+          "bytes": 1077690,
+          "file": "petronas-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-2304.webp-a2b9a7e6c45dc1ed247f7414ea1e7cfe.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-2304.webp",
+          "sha256": "18a99c6439b2b71aadc150a1722a1639c61264936bfb00dccd1b46fd456aa812"
+        },
+        {
+          "bytes": 891652,
+          "file": "basilisk-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-2304.webp-b8296cbd1157eb497f2cb34ea5599d6b.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-2304.webp",
+          "sha256": "2b9ed03dac54b29a499825bbd0965d6ccff470c6e69509bd623288776b4f8f9f"
+        }
+      ]
+    },
+    {
+      "profile": "webp-lossless-3072",
+      "windows_web_identical": true,
+      "pck_bytes": 96665252,
+      "pck_sha256": "ad0c3ab95e10c871348e24268910746af41fe9db8691582e655f7174628cc76d",
+      "imports": [
+        {
+          "bytes": 1291388,
+          "file": "tomate-1-3072.webp.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-3072.webp-50ac624130ff2a45159fdad678635166.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-3072.webp",
+          "sha256": "0d4b57bc40bc0753addf65be0d6d57ded38b120d637cb64276cb5f9b8713375d"
+        },
+        {
+          "bytes": 331802,
+          "file": "qualle-1-3072.webp.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-3072.webp-36f68b1240e865f8d58790612ac547a8.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-3072.webp",
+          "sha256": "ab3a7c446c9bdd84ff43ffc2766d575fee16dc6e6e1ec58ee1bb51d97e6cf4ce"
+        },
+        {
+          "bytes": 946018,
+          "file": "hills-1-3072.webp.ctex",
+          "packed_import": "res://.godot/imported/hills-1-3072.webp-69db15a49e0b7516ee83abcd9dcd9ad2.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-3072.webp",
+          "sha256": "d065d03f85be66471266b528c4da39edb5bdadfda86265ce04c9cddceb5a5242"
+        },
+        {
+          "bytes": 1844010,
+          "file": "petronas-1-3072.webp.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-3072.webp-9e3e70b0b1aeee5203877574fc24e1db.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-3072.webp",
+          "sha256": "048138501949dc442e7f312a29bb4522bb160a32614464ecdc1c28448b4e7d51"
+        },
+        {
+          "bytes": 1496278,
+          "file": "basilisk-1-3072.webp.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-3072.webp-eac5f9bf3b6cc2bf08f595439785d3db.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-3072.webp",
+          "sha256": "3257212fa29a750601df4eb46ce10d640578abf79a697b0f2a571c606bc01655"
+        }
+      ]
+    },
+    {
+      "profile": "webp-q85-2304",
+      "windows_web_identical": true,
+      "pck_bytes": 93939476,
+      "pck_sha256": "144122273a3a85141957422fa934f0da1a6c1c5cfbeb3cf7bad61b3d5ab06972",
+      "imports": [
+        {
+          "bytes": 693568,
+          "file": "tomate-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-2304.webp-1ccf5ce3b2fc9630691c1799ff03174c.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-2304.webp",
+          "sha256": "3c09d4fa16dff238925b92cc25bc6924ba71f6728585a6fecea3788363bd98ef"
+        },
+        {
+          "bytes": 213568,
+          "file": "qualle-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-2304.webp-cb6c6b6867309ec3af49498253db057d.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-2304.webp",
+          "sha256": "cc59b29ad5f727b89240efc6f0a801e973e212420f6ba5fe9fc205f72d33ef67"
+        },
+        {
+          "bytes": 525464,
+          "file": "hills-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/hills-1-2304.webp-5e58bed452076c96fdb6c248449277dd.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-2304.webp",
+          "sha256": "af676235de1cdf3496919f1f15759d63ca096221002cf0bd6440f186f33df3ba"
+        },
+        {
+          "bytes": 950644,
+          "file": "petronas-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-2304.webp-a2b9a7e6c45dc1ed247f7414ea1e7cfe.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-2304.webp",
+          "sha256": "531da10358ea4224d2646aae32f0f749c667737b3c36d6bd9be574c7a68066fa"
+        },
+        {
+          "bytes": 800488,
+          "file": "basilisk-1-2304.webp.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-2304.webp-b8296cbd1157eb497f2cb34ea5599d6b.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-2304.webp",
+          "sha256": "8242532f96e5c0d439e6f978819b3d269c2aec8134d1495ffe860c6cb764f9e3"
+        }
+      ]
+    },
+    {
+      "profile": "png-2304-no-mips",
+      "windows_web_identical": true,
+      "pck_bytes": 93239260,
+      "pck_sha256": "93f7e04163ad818e7aec2ee1091383c8980ff4bfd1f5d0d2c9c549d3de3c576b",
+      "imports": [
+        {
+          "bytes": 548992,
+          "file": "tomate-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-2304.png-42b632985485fa0866ca4cabbafb3f63.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-2304.png",
+          "sha256": "53bb1345cb9fdb787bec30e4f363b485eba17981fb775023b8151f33feaee4b7"
+        },
+        {
+          "bytes": 133682,
+          "file": "qualle-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-2304.png-958e5ae49b596f343a6ae3041d5dfa6b.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-2304.png",
+          "sha256": "7f76b3c264f2e2b980c023fe2c417b406bfb9911d463cf00607ad8984626a58d"
+        },
+        {
+          "bytes": 399198,
+          "file": "hills-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/hills-1-2304.png-bdf10c2e0b554a902745b3a6d467dc83.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-2304.png",
+          "sha256": "ed010bd84d00f659d1af76da2a4159bcb8f675de0b4d9bf40ae12484070c48fe"
+        },
+        {
+          "bytes": 770698,
+          "file": "petronas-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-2304.png-df51f0d0b49d8944ba85619e5ab5807d.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-2304.png",
+          "sha256": "dbdd168074e95cd1a4a31edb03f89084ac955c79219ec58e7dabcf8f056241ab"
+        },
+        {
+          "bytes": 630960,
+          "file": "basilisk-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-2304.png-99a3c39a96eecd572aeb362391f3be2a.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+          "sha256": "2a97500763d36ccfbbdfbc6ef4aa5a4d72bbcb141b37b96409e4274d8dbb5ae4"
+        }
+      ]
+    },
+    {
+      "profile": "png-LA-2304",
+      "windows_web_identical": true,
+      "pck_bytes": 93129436,
+      "pck_sha256": "dc80a0d74682c12d9f388ba57afa8ffb71a6e27d8cc73cf963af1be08cb9b4e0",
+      "imports": [
+        {
+          "bytes": 476676,
+          "file": "tomate-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/tomate-1-2304.png-42b632985485fa0866ca4cabbafb3f63.ctex",
+          "source": "res://art/drawing/rz_eval/tomate-1-2304.png",
+          "sha256": "f947c056aea55a99eda993a9abc165081249f0d4c8660efa24d9b054a45c8ab1"
+        },
+        {
+          "bytes": 126618,
+          "file": "qualle-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/qualle-1-2304.png-958e5ae49b596f343a6ae3041d5dfa6b.ctex",
+          "source": "res://art/drawing/rz_eval/qualle-1-2304.png",
+          "sha256": "d35b5a9e4fd60754a038c7aeff4d1ebb09f8884973f807947eb6116123452f71"
+        },
+        {
+          "bytes": 376092,
+          "file": "hills-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/hills-1-2304.png-bdf10c2e0b554a902745b3a6d467dc83.ctex",
+          "source": "res://art/drawing/rz_eval/hills-1-2304.png",
+          "sha256": "d51ec1e766e4885ebd788bcb7d5b8d5724a15d225826038f227f8afc79e35fef"
+        },
+        {
+          "bytes": 758210,
+          "file": "petronas-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/petronas-1-2304.png-df51f0d0b49d8944ba85619e5ab5807d.ctex",
+          "source": "res://art/drawing/rz_eval/petronas-1-2304.png",
+          "sha256": "20695518f82ca2c1ee26d362ab85890bee2f7eea718155434db6e6a677a57b76"
+        },
+        {
+          "bytes": 636094,
+          "file": "basilisk-1-2304.png.ctex",
+          "packed_import": "res://.godot/imported/basilisk-1-2304.png-99a3c39a96eecd572aeb362391f3be2a.ctex",
+          "source": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+          "sha256": "dbfa11129b739ce3bd4dce132e9ab94e2f077f6a30a7f676007e6936ef1870af"
+        }
+      ]
+    }
+  ]
+}

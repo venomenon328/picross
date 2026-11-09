@@ -1,0 +1,32 @@
+[
+	{
+		"bytes": 354892,
+		"file": "tomate-1-1536.webp.ctex",
+		"packed_import": "res://.godot/imported/tomate-1-1536.webp-68d523840b30862b7bcd5042f1973db0.ctex",
+		"source": "res://art/drawing/rz_eval/tomate-1-1536.webp"
+	},
+	{
+		"bytes": 99810,
+		"file": "qualle-1-1536.webp.ctex",
+		"packed_import": "res://.godot/imported/qualle-1-1536.webp-92cdf6326723487a81c755442d3774cd.ctex",
+		"source": "res://art/drawing/rz_eval/qualle-1-1536.webp"
+	},
+	{
+		"bytes": 261300,
+		"file": "hills-1-1536.webp.ctex",
+		"packed_import": "res://.godot/imported/hills-1-1536.webp-6dd5b2aa8bb5d99434edd52034be36de.ctex",
+		"source": "res://art/drawing/rz_eval/hills-1-1536.webp"
+	},
+	{
+		"bytes": 487174,
+		"file": "petronas-1-1536.webp.ctex",
+		"packed_import": "res://.godot/imported/petronas-1-1536.webp-d0b0c7cefebf02eda0c92ea598ea9666.ctex",
+		"source": "res://art/drawing/rz_eval/petronas-1-1536.webp"
+	},
+	{
+		"bytes": 415152,
+		"file": "basilisk-1-1536.webp.ctex",
+		"packed_import": "res://.godot/imported/basilisk-1-1536.webp-35eed24f429bcd1f4a722e3e17d3c8a4.ctex",
+		"source": "res://art/drawing/rz_eval/basilisk-1-1536.webp"
+	}
+]

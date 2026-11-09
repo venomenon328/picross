@@ -1,0 +1,1398 @@
+{
+  "source_head": "90aefb84dccd9e1cdcda73f03df113855b856857",
+  "template_sha256": "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011",
+  "profiles": [
+    {
+      "profile": "baseline",
+      "size": null,
+      "mipmaps": false,
+      "images": [],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": []
+      },
+      "import_ms": 11675.028800000291,
+      "windows_export_ms": 5908.470300000772,
+      "web_export_ms": 4333.153699999457,
+      "windows_pck_bytes": 90753400,
+      "web_pck_bytes": 90753400,
+      "windows_total_bytes": 193839480,
+      "web_total_bytes": 129026878,
+      "wall_ms": 22116.031499999735,
+      "windows_pck_growth": 0,
+      "web_pck_growth": 0
+    },
+    {
+      "profile": "png-reference-2304",
+      "size": [
+        2304,
+        576
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-2304.png",
+          "source_bytes": 754193,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 10.20550000066578,
+          "pixel_equal_to_png": true,
+          "sha256": "597b9eab1af1597a1bbde9dfaae23dfe64c247554eab949eb63315518d6fceb6",
+          "imported_bytes": 764746
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-2304.png",
+          "source_bytes": 183033,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 5.494499999258551,
+          "pixel_equal_to_png": true,
+          "sha256": "5e9b6e5ecf9e3b1bd7e3098058ea08bcb8dc03c9bf469ef35626ae6d12fca7b9",
+          "imported_bytes": 198772
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-2304.png",
+          "source_bytes": 537116,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 8.09300000037183,
+          "pixel_equal_to_png": true,
+          "sha256": "dda5386576b84bb152ee09cdfed2a155ccba2e4b9867490aa55dda0461384770",
+          "imported_bytes": 566332
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-2304.png",
+          "source_bytes": 1073264,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 10.859600000912906,
+          "pixel_equal_to_png": true,
+          "sha256": "78b4776f92cd8479750207e016f18bb0b376e882243127eeb541a43d2cc3a3f4",
+          "imported_bytes": 1077690
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-2304.png",
+          "source_bytes": 854584,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 9.367399999973713,
+          "pixel_equal_to_png": true,
+          "sha256": "bc7cc1ec3c1f6b83ed97b2c4a9fca383f6eb8d64acd975e80a37623b6bf6c94a",
+          "imported_bytes": 891652
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              13.773,
+              13.35,
+              13.091
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              6.249,
+              6.044,
+              6.631
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              12.407,
+              12.247,
+              12.538
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              15.112,
+              15.039,
+              15.523
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              13.574,
+              13.261,
+              13.478
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+            "width": 2304
+          }
+        ]
+      },
+      "import_ms": 5626.485400000092,
+      "windows_export_ms": 5032.861800000319,
+      "web_export_ms": 4425.312200000917,
+      "windows_pck_bytes": 94254940,
+      "web_pck_bytes": 94254940,
+      "windows_total_bytes": 197341020,
+      "web_total_bytes": 132528418,
+      "wall_ms": 16193.308800000523,
+      "windows_pck_growth": 3501540,
+      "web_pck_growth": 3501540
+    },
+    {
+      "profile": "png-1536",
+      "size": [
+        1536,
+        384
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-1536.png",
+          "source_bytes": 338098,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 4.0365000004385365,
+          "pixel_equal_to_png": true,
+          "sha256": "ee77be873176a12b15828d0aa3e9e2ca97b7f0be880a69135fe1d62d5229f590",
+          "imported_bytes": 354892
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-1536.png",
+          "source_bytes": 86922,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 2.7563000003283378,
+          "pixel_equal_to_png": true,
+          "sha256": "2330f1172c6c9988cea23e962e14201d731c5eda149d3e373825d1ea9e5afb58",
+          "imported_bytes": 99810
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-1536.png",
+          "source_bytes": 241200,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 4.002299998319359,
+          "pixel_equal_to_png": true,
+          "sha256": "f5cd83934232198fc588781535c212225daa68a5f508359f3a0d87d4077f55b7",
+          "imported_bytes": 261300
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-1536.png",
+          "source_bytes": 494728,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 5.031899998357403,
+          "pixel_equal_to_png": true,
+          "sha256": "3c8e33c8f4f25e37562ffa55fdad7686a587c26f88dd8a46a41114f0f046f24e",
+          "imported_bytes": 487174
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-1536.png",
+          "source_bytes": 400455,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 4.450999998880434,
+          "pixel_equal_to_png": true,
+          "sha256": "ae58cd99f551e8cf0336ab63b2e463daad58778a33515ce44b3f56792d679059",
+          "imported_bytes": 415152
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              6.487,
+              6.456,
+              6.087
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-1536.png",
+            "width": 1536
+          },
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              2.818,
+              3.027,
+              2.918
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-1536.png",
+            "width": 1536
+          },
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              5.762,
+              5.534,
+              5.678
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-1536.png",
+            "width": 1536
+          },
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              7.052,
+              6.986,
+              6.935
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-1536.png",
+            "width": 1536
+          },
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              6.427,
+              6.476,
+              6.294
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-1536.png",
+            "width": 1536
+          }
+        ]
+      },
+      "import_ms": 4631.380900000295,
+      "windows_export_ms": 4647.591799999645,
+      "web_export_ms": 4256.666100000075,
+      "windows_pck_bytes": 92374076,
+      "web_pck_bytes": 92374076,
+      "windows_total_bytes": 195460156,
+      "web_total_bytes": 130647554,
+      "wall_ms": 14064.984200000254,
+      "windows_pck_growth": 1620676,
+      "web_pck_growth": 1620676
+    },
+    {
+      "profile": "png-2304",
+      "size": [
+        2304,
+        576
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-2304.png",
+          "source_bytes": 739232,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 9.946299998773611,
+          "pixel_equal_to_png": true,
+          "sha256": "6977eff3b439f8ded3f305d1dc03a3e9b32ea93cec1ae2f4e7b4eebc0b3e8c0e",
+          "imported_bytes": 764746
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-2304.png",
+          "source_bytes": 190765,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 5.370400000174413,
+          "pixel_equal_to_png": true,
+          "sha256": "9ee2e1ca84c59b5bb56aba9b96344b31c6dab25a67d0d7fcd787ecb3ac86eda5",
+          "imported_bytes": 198772
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-2304.png",
+          "source_bytes": 545588,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 7.427300000927062,
+          "pixel_equal_to_png": true,
+          "sha256": "873233023de250d302f28273712405dfb4af6ba8d2ac24fc6df948a5524e6109",
+          "imported_bytes": 566332
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-2304.png",
+          "source_bytes": 1142969,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 10.6577999995352,
+          "pixel_equal_to_png": true,
+          "sha256": "dc54f67ae238b09767b338ba7311cdb4d74f92b8a218f2c2b0b8220c242a776b",
+          "imported_bytes": 1077690
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-2304.png",
+          "source_bytes": 910719,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 9.826100000282167,
+          "pixel_equal_to_png": true,
+          "sha256": "acec8030162cdc631a1058a8588451ecba363b271a83eac9d352f60e08ef732d",
+          "imported_bytes": 891652
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              14.016,
+              13.996,
+              13.371
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              6.501,
+              6.16,
+              6.945
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              12.833,
+              12.372,
+              12.865
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              15.375,
+              15.303,
+              15.3
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              13.889,
+              13.722,
+              13.673
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+            "width": 2304
+          }
+        ]
+      },
+      "import_ms": 5438.666099998954,
+      "windows_export_ms": 4734.506099999635,
+      "web_export_ms": 4248.46609999986,
+      "windows_pck_bytes": 94254940,
+      "web_pck_bytes": 94254940,
+      "windows_total_bytes": 197341020,
+      "web_total_bytes": 132528418,
+      "wall_ms": 15263.782700001684,
+      "windows_pck_growth": 3501540,
+      "web_pck_growth": 3501540
+    },
+    {
+      "profile": "png-3072",
+      "size": [
+        3072,
+        768
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-3072.png",
+          "source_bytes": 1218371,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 19.366299999092007,
+          "pixel_equal_to_png": true,
+          "sha256": "86d5c86cfb1f9a0ed62abd897f4e14d3819ab83221911b98690f3418340cd410",
+          "imported_bytes": 1291388
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-3072.png",
+          "source_bytes": 321720,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 10.103000000526663,
+          "pixel_equal_to_png": true,
+          "sha256": "96569f258ec5b9ce8bb2967c0bc80b5df8f16caa95334cf082522105d979bfd1",
+          "imported_bytes": 331802
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-3072.png",
+          "source_bytes": 908298,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 14.716200001203106,
+          "pixel_equal_to_png": true,
+          "sha256": "90bc19d4eddfb1de7b9bf3cc6420680a483404aee8c56a9dbe9b69656021ecff",
+          "imported_bytes": 946006
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-3072.png",
+          "source_bytes": 1956622,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 19.73320000070089,
+          "pixel_equal_to_png": true,
+          "sha256": "291006ba41ca47bbf6807e5f55efbce72dc62d5ae4aa6ccc3f2d5d8fbca5c09d",
+          "imported_bytes": 1844010
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-3072.png",
+          "source_bytes": 1541507,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 18.697200001042802,
+          "pixel_equal_to_png": true,
+          "sha256": "c30ada44a19124e056b8e103d0326020d5e1e9b83cda6cbc5cd1f259d3f622c2",
+          "imported_bytes": 1496278
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              24.731,
+              24.767,
+              24.872
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-3072.png",
+            "width": 3072
+          },
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              12.359,
+              13.153,
+              12.823
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-3072.png",
+            "width": 3072
+          },
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              21.279,
+              21.423,
+              21.304
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-3072.png",
+            "width": 3072
+          },
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              28.918,
+              28.258,
+              28.777
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-3072.png",
+            "width": 3072
+          },
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              25.826,
+              26.074,
+              25.374
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-3072.png",
+            "width": 3072
+          }
+        ]
+      },
+      "import_ms": 7045.621100000062,
+      "windows_export_ms": 5165.1882999995,
+      "web_export_ms": 4444.099700000152,
+      "windows_pck_bytes": 96665228,
+      "web_pck_bytes": 96665228,
+      "windows_total_bytes": 199751308,
+      "web_total_bytes": 134938706,
+      "wall_ms": 18088.50429999984,
+      "windows_pck_growth": 5911828,
+      "web_pck_growth": 5911828
+    },
+    {
+      "profile": "webp-lossless-1536",
+      "size": [
+        1536,
+        384
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-1536.webp",
+          "source_bytes": 240234,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 11.383100001694402,
+          "pixel_equal_to_png": true,
+          "sha256": "e90ad1187bd01f26b560889e1417c44325c8d136111546c3db5f50d30f45ab62",
+          "imported_bytes": 354892
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-1536.webp",
+          "source_bytes": 37624,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 4.665399999794317,
+          "pixel_equal_to_png": true,
+          "sha256": "4ab1814ed0896b20b5b14cc6500bf86a42481570b2c9aae6fe44f13c074304ee",
+          "imported_bytes": 99810
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-1536.webp",
+          "source_bytes": 145456,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 6.223700000191457,
+          "pixel_equal_to_png": true,
+          "sha256": "1655b1b301664883211f4f4b68f5e6b26fb1efa6d9322e02ccf614dc037314b1",
+          "imported_bytes": 261300
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-1536.webp",
+          "source_bytes": 261606,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 6.1492000004363945,
+          "pixel_equal_to_png": true,
+          "sha256": "31554f162de4ad9395fd7c2503357f28db0d80625ff71520791d9b75c9b6bdd0",
+          "imported_bytes": 487174
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-1536.webp",
+          "source_bytes": 194842,
+          "decoded_rgba_bytes": 2359296,
+          "decode_pillow_ms_median": 6.356699999741977,
+          "pixel_equal_to_png": true,
+          "sha256": "e59a6168b28be4e132dd6a4c71715ae1f4781b6fbc0c3cebd65b7514df5f1302",
+          "imported_bytes": 415152
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              7.36,
+              6.118,
+              6.351
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-1536.webp",
+            "width": 1536
+          },
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              2.925,
+              3.077,
+              2.865
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-1536.webp",
+            "width": 1536
+          },
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              5.636,
+              5.593,
+              5.593
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-1536.webp",
+            "width": 1536
+          },
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              7.165,
+              7.071,
+              7.154
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-1536.webp",
+            "width": 1536
+          },
+          {
+            "height": 384,
+            "image_bytes": 3145720,
+            "load_ms": [
+              6.364,
+              6.607,
+              6.501
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-1536.webp",
+            "width": 1536
+          }
+        ]
+      },
+      "import_ms": 4731.151500000124,
+      "windows_export_ms": 4810.912000000826,
+      "web_export_ms": 4348.873999999341,
+      "windows_pck_bytes": 92374084,
+      "web_pck_bytes": 92374084,
+      "windows_total_bytes": 195460164,
+      "web_total_bytes": 130647562,
+      "wall_ms": 14533.547799999724,
+      "windows_pck_growth": 1620684,
+      "web_pck_growth": 1620684
+    },
+    {
+      "profile": "webp-lossless-2304",
+      "size": [
+        2304,
+        576
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-2304.webp",
+          "source_bytes": 541578,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 19.530699999450007,
+          "pixel_equal_to_png": true,
+          "sha256": "93727e64434a20d16150b1f3981492bec27ef5c8ba0475d8d317807ce6b25a2f",
+          "imported_bytes": 764746
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-2304.webp",
+          "source_bytes": 82596,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 9.846800001469092,
+          "pixel_equal_to_png": true,
+          "sha256": "d8a59214d3f5f43cb9a5922f65e8bb1bde47f9125e21f816c4a30117ea9076c9",
+          "imported_bytes": 198772
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-2304.webp",
+          "source_bytes": 390112,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 16.264900001260685,
+          "pixel_equal_to_png": false,
+          "sha256": "f139d8e0049e86a84374f02b184c46380c041b36e985214b2201a1ade02f3f22",
+          "imported_bytes": 566360
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-2304.webp",
+          "source_bytes": 608206,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 15.717999998742016,
+          "pixel_equal_to_png": true,
+          "sha256": "d4e6518b0ebdc7eb02613a0282667080a478518e1cbfd1d225964a8680e2b3f3",
+          "imported_bytes": 1077690
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-2304.webp",
+          "source_bytes": 449264,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 12.715400000161026,
+          "pixel_equal_to_png": true,
+          "sha256": "362d6adbbbf720e5e5050dadf816483a3ea540cbea686e9e32d66ae10eba0ca0",
+          "imported_bytes": 891652
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              13.826,
+              13.14,
+              13.35
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-2304.webp",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              6.016,
+              6.742,
+              6.214
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-2304.webp",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              12.615,
+              12.464,
+              12.152
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-2304.webp",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              15.023,
+              15.184,
+              15.088
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-2304.webp",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              13.796,
+              13.583,
+              13.443
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-2304.webp",
+            "width": 2304
+          }
+        ]
+      },
+      "import_ms": 5578.461799999786,
+      "windows_export_ms": 4731.480999998894,
+      "web_export_ms": 4252.994200000103,
+      "windows_pck_bytes": 94254980,
+      "web_pck_bytes": 94254980,
+      "windows_total_bytes": 197341060,
+      "web_total_bytes": 132528458,
+      "wall_ms": 15663.448000001154,
+      "windows_pck_growth": 3501580,
+      "web_pck_growth": 3501580
+    },
+    {
+      "profile": "webp-lossless-3072",
+      "size": [
+        3072,
+        768
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-3072.webp",
+          "source_bytes": 907286,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 49.336800000673975,
+          "pixel_equal_to_png": true,
+          "sha256": "e4378648f8a5218733ec4e1556e89beeb77e3cf8ac2460dec41406eca1bee1d4",
+          "imported_bytes": 1291388
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-3072.webp",
+          "source_bytes": 141928,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 25.403100000403356,
+          "pixel_equal_to_png": true,
+          "sha256": "0b483574c9e6c07a767560829426024cb4b8ae82c5a48572a653ec1f529dcea9",
+          "imported_bytes": 331802
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-3072.webp",
+          "source_bytes": 644372,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 38.85380000065197,
+          "pixel_equal_to_png": false,
+          "sha256": "adcd9f4c361afcbe4e5fc024f696add5c973d63e695c9350c09fa6d426b36dd8",
+          "imported_bytes": 946018
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-3072.webp",
+          "source_bytes": 1065406,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 36.070699999982025,
+          "pixel_equal_to_png": true,
+          "sha256": "2119ad68a175e09e54786ce246632fbc82e149b4dc39736250e3670cef66de36",
+          "imported_bytes": 1844010
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-3072.webp",
+          "source_bytes": 777338,
+          "decoded_rgba_bytes": 9437184,
+          "decode_pillow_ms_median": 41.76010000082897,
+          "pixel_equal_to_png": true,
+          "sha256": "487fd8dc912ab89b974415b71da0a9e7f31325824fb1da3d2604ae7eb8e2894e",
+          "imported_bytes": 1496278
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              24.752,
+              23.823,
+              23.899
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-3072.webp",
+            "width": 3072
+          },
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              11.795,
+              11.87,
+              12.266
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-3072.webp",
+            "width": 3072
+          },
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              20.315,
+              20.206,
+              20.529
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-3072.webp",
+            "width": 3072
+          },
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              27.531,
+              27.66,
+              27.784
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-3072.webp",
+            "width": 3072
+          },
+          {
+            "height": 768,
+            "image_bytes": 12582904,
+            "load_ms": [
+              24.545,
+              24.621,
+              24.251
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-3072.webp",
+            "width": 3072
+          }
+        ]
+      },
+      "import_ms": 7082.7468000006775,
+      "windows_export_ms": 5053.448300001037,
+      "web_export_ms": 4453.19709999967,
+      "windows_pck_bytes": 96665252,
+      "web_pck_bytes": 96665252,
+      "windows_total_bytes": 199751332,
+      "web_total_bytes": 134938730,
+      "wall_ms": 18849.871200000052,
+      "windows_pck_growth": 5911852,
+      "web_pck_growth": 5911852
+    },
+    {
+      "profile": "webp-q85-2304",
+      "size": [
+        2304,
+        576
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-2304.webp",
+          "source_bytes": 217966,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 24.137800000971765,
+          "pixel_equal_to_png": false,
+          "sha256": "ad8cf78660b9c64f45284369bd8eae8211b47f700c725223a4841be8e18da2f8",
+          "imported_bytes": 693568
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-2304.webp",
+          "source_bytes": 87890,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 24.1611000001285,
+          "pixel_equal_to_png": false,
+          "sha256": "930e737240c4087a0dfa22e19d61a4f2f80c960dab45849941d793d5a7141197",
+          "imported_bytes": 213568
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-2304.webp",
+          "source_bytes": 199190,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 22.526900000229944,
+          "pixel_equal_to_png": false,
+          "sha256": "a7af20f850794725aea40ee6b82a6f74b08eb8b0fd3829b6a72d93bf5e6d13ef",
+          "imported_bytes": 525464
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-2304.webp",
+          "source_bytes": 380750,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 27.769000000262167,
+          "pixel_equal_to_png": false,
+          "sha256": "037be09a0af9ee33bc6f2ab31ca8d79e989f77cba0b6d59dbd2bf89b78a4c611",
+          "imported_bytes": 950644
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-2304.webp",
+          "source_bytes": 320510,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 27.556299999559997,
+          "pixel_equal_to_png": false,
+          "sha256": "e21e531d9410b3cf425afc9c179d5c355ae87f8a1c6d61c2d09b529548733da5",
+          "imported_bytes": 800488
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              14.753,
+              14.694,
+              14.151
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-2304.webp",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              7.644,
+              7.932,
+              7.945
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-2304.webp",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              13.462,
+              12.795,
+              12.84
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-2304.webp",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              15.913,
+              15.737,
+              16.193
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-2304.webp",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 7077844,
+            "load_ms": [
+              15.012,
+              14.973,
+              14.407
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-2304.webp",
+            "width": 2304
+          }
+        ]
+      },
+      "import_ms": 5949.497800000245,
+      "windows_export_ms": 5007.082300000548,
+      "web_export_ms": 4046.4853000012226,
+      "windows_pck_bytes": 93939476,
+      "web_pck_bytes": 93939476,
+      "windows_total_bytes": 197025556,
+      "web_total_bytes": 132212954,
+      "wall_ms": 46413.132899999255,
+      "windows_pck_growth": 3186076,
+      "web_pck_growth": 3186076
+    },
+    {
+      "profile": "png-2304-no-mips",
+      "size": [
+        2304,
+        576
+      ],
+      "mipmaps": false,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-2304.png",
+          "source_bytes": 739232,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 9.908799998811446,
+          "pixel_equal_to_png": true,
+          "sha256": "6977eff3b439f8ded3f305d1dc03a3e9b32ea93cec1ae2f4e7b4eebc0b3e8c0e",
+          "imported_bytes": 548992
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-2304.png",
+          "source_bytes": 190765,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 5.24050000058196,
+          "pixel_equal_to_png": true,
+          "sha256": "9ee2e1ca84c59b5bb56aba9b96344b31c6dab25a67d0d7fcd787ecb3ac86eda5",
+          "imported_bytes": 133682
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-2304.png",
+          "source_bytes": 545588,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 7.313399999475223,
+          "pixel_equal_to_png": true,
+          "sha256": "873233023de250d302f28273712405dfb4af6ba8d2ac24fc6df948a5524e6109",
+          "imported_bytes": 399198
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-2304.png",
+          "source_bytes": 1142969,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 10.71109999975306,
+          "pixel_equal_to_png": true,
+          "sha256": "dc54f67ae238b09767b338ba7311cdb4d74f92b8a218f2c2b0b8220c242a776b",
+          "imported_bytes": 770698
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-2304.png",
+          "source_bytes": 910719,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 9.615400000257068,
+          "pixel_equal_to_png": true,
+          "sha256": "acec8030162cdc631a1058a8588451ecba363b271a83eac9d352f60e08ef732d",
+          "imported_bytes": 630960
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 576,
+            "image_bytes": 5308416,
+            "load_ms": [
+              8.793,
+              8.784,
+              8.603
+            ],
+            "mipmaps": false,
+            "path": "res://art/drawing/rz_eval/tomate-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 5308416,
+            "load_ms": [
+              3.583,
+              3.647,
+              3.583
+            ],
+            "mipmaps": false,
+            "path": "res://art/drawing/rz_eval/qualle-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 5308416,
+            "load_ms": [
+              8.148,
+              8.259,
+              8.122
+            ],
+            "mipmaps": false,
+            "path": "res://art/drawing/rz_eval/hills-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 5308416,
+            "load_ms": [
+              10.162,
+              10.324,
+              9.95
+            ],
+            "mipmaps": false,
+            "path": "res://art/drawing/rz_eval/petronas-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 5308416,
+            "load_ms": [
+              9.404,
+              9.108,
+              9.176
+            ],
+            "mipmaps": false,
+            "path": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+            "width": 2304
+          }
+        ]
+      },
+      "import_ms": 5261.965100000452,
+      "windows_export_ms": 4565.7188999994105,
+      "web_export_ms": 4062.1888999994553,
+      "windows_pck_bytes": 93239260,
+      "web_pck_bytes": 93239260,
+      "windows_total_bytes": 196325340,
+      "web_total_bytes": 131512738,
+      "wall_ms": 14730.144400000427,
+      "windows_pck_growth": 2485860,
+      "web_pck_growth": 2485860
+    },
+    {
+      "profile": "png-LA-2304",
+      "size": [
+        2304,
+        576
+      ],
+      "mipmaps": true,
+      "images": [
+        {
+          "name": "tomate",
+          "file": "tomate-1-2304.png",
+          "source_bytes": 390409,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 7.254000000102678,
+          "pixel_equal_to_png": false,
+          "sha256": "f9b60ded8675c8103dea146491d7e4ffd4847dcffbdef76f0c66e8b893ee3cee",
+          "imported_bytes": 476676
+        },
+        {
+          "name": "qualle",
+          "file": "qualle-1-2304.png",
+          "source_bytes": 111453,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 5.757599999924423,
+          "pixel_equal_to_png": false,
+          "sha256": "02d604156eb29def5a6ba176fa0609f064a8a1d051a25f66085a2a0572f6d516",
+          "imported_bytes": 126618
+        },
+        {
+          "name": "hills",
+          "file": "hills-1-2304.png",
+          "source_bytes": 307986,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 7.22459999997227,
+          "pixel_equal_to_png": false,
+          "sha256": "a2a490b7d242c69573f972ef5b691003f721ebe6e34f96d45a476d06e0303606",
+          "imported_bytes": 376092
+        },
+        {
+          "name": "petronas",
+          "file": "petronas-1-2304.png",
+          "source_bytes": 605323,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 7.970700000441866,
+          "pixel_equal_to_png": false,
+          "sha256": "049eea9b855f62eed0d8223fb5af1a6db360f89c59575185bbc65d7497d14c65",
+          "imported_bytes": 758210
+        },
+        {
+          "name": "basilisk",
+          "file": "basilisk-1-2304.png",
+          "source_bytes": 500399,
+          "decoded_rgba_bytes": 5308416,
+          "decode_pillow_ms_median": 8.468599999105209,
+          "pixel_equal_to_png": false,
+          "sha256": "e5036e74791ca67c59d34972802794ac823ac17c644eedad0940a46e7e4ed18e",
+          "imported_bytes": 636094
+        }
+      ],
+      "packed_read": {
+        "executable": "E:/Zeuch/Coding/Parkey-Tools/Godot-4.7.2/Godot_v4.7.2-stable_win64.exe",
+        "failures": [],
+        "os": "Windows",
+        "rows": [
+          {
+            "height": 576,
+            "image_bytes": 3538922,
+            "load_ms": [
+              15.677,
+              15.31,
+              15.26
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/tomate-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 3538922,
+            "load_ms": [
+              8.295,
+              8.161,
+              8.257
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/qualle-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 3538922,
+            "load_ms": [
+              13.717,
+              14.122,
+              13.989
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/hills-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 3538922,
+            "load_ms": [
+              16.968,
+              16.687,
+              16.839
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/petronas-1-2304.png",
+            "width": 2304
+          },
+          {
+            "height": 576,
+            "image_bytes": 3538922,
+            "load_ms": [
+              15.278,
+              15.307,
+              15.223
+            ],
+            "mipmaps": true,
+            "path": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+            "width": 2304
+          }
+        ]
+      },
+      "import_ms": 4672.339700000521,
+      "windows_export_ms": 4622.796200001176,
+      "web_export_ms": 4225.638900001286,
+      "windows_pck_bytes": 93129436,
+      "web_pck_bytes": 93129436,
+      "windows_total_bytes": 196215516,
+      "web_total_bytes": 131402914,
+      "wall_ms": 14933.343700000478,
+      "windows_pck_growth": 2376036,
+      "web_pck_growth": 2376036
+    }
+  ]
+}

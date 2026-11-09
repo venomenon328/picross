@@ -1,0 +1,19 @@
+{
+  "product_head": "90aefb84dccd9e1cdcda73f03df113855b856857",
+  "original_book_and_diagnostics_head": "232932f9f3dc9efe72c8edb0fa229f4f216feb0f",
+  "current_hills_mono_resources_exports_head": "90aefb84dccd9e1cdcda73f03df113855b856857",
+  "reuse_scope": "All game code/shaders and 14 of 15 runtime illustrations are byte-identical; only hills-1 art, provenance and documentation changed. Its current book capture replaces the old candidate. Unchanged native diagnostics/profile captures are reused with this exact stated boundary.",
+  "changes": [
+    "docs/RZ_EVAL_P1.md",
+    "game/art/drawing/rz_eval/hills-1-2304.png",
+    "game/art/drawing/rz_eval/provenance.json"
+  ],
+  "book_renderer": "Windows, Godot 4.7.2 standard, OpenGL Compatibility, NVIDIA RTX 3070; real product scene and actual native SubViewport events; no OS-mouse/DPI proof or independent approval",
+  "pack_delivery": "Two complete original PCKs (baseline and PNG2304) to verify actual exported growth; Windows/Web packs are byte-identical in every measured profile. Other profiles provide exact packed CTEX originals and original reports/logs, no duplicate full game packs.",
+  "dates": {
+    "created": "2026-11-09",
+    "expires": "2026-11-16"
+  },
+  "recipient": "Independent R01 reviewer with repository access; owner venomenon328 for M01; D01 later decision",
+  "retirement": "No merge of review ref. Reassess and retire in the assigned follow-up after R01/M01 or at 2026-11-16; not an automatic expiry/deletion promise."
+}
