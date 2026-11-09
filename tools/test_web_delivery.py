@@ -82,7 +82,7 @@ class Delivery(unittest.TestCase):
         for path in paths:
             original = path.read_bytes()
             with self.subTest(name=path.name, case='corrupt'):
-                path.write_bytes(original + b'changed')
+                path.write_bytes(bytes([original[0] ^ 1]) + original[1:])
                 with self.assertRaises(ValueError): web_bundle.validate(self.root)
                 path.write_bytes(original)
             with self.subTest(name=path.name, case='missing'):
