@@ -217,6 +217,10 @@ func _layout_marginalia() -> void:
 	var controls: Array[Control] = [status_label,layout_warning,work_repair_button,save_retry]
 	if work.visible and session != null:
 		key = str(Registry.by_id(str(session.definition.id)).get("category_id",""))
+		# Unselected categories need no extra clue/font scan for absent artwork.
+		if not Marginalia.ORIGINALS.has(key):
+			marginalia.arrange(key,Rect2(),size,ui_scale,hard,soft)
+			return
 		paper = book.projected_paper(true)
 		controls.append_array([title,coordinate,tools_scroll])
 		for id: String in ["help","menu","nav-information"]: controls.append(actions[id])
