@@ -270,6 +270,30 @@ def _check_output(directory, report, png, budget, *, conflict=False):
             "output": _ref("background.png", png) if png is not None else None}
 
 
+def _verification_tool(request, reader, current):
+    """Keep producer provenance while requiring the same executable bytes/codecs."""
+    report = parse_json(reader.read("derivation.json", MAX_JSON), "derivation.json")
+    if not isinstance(report, dict):
+        raise BackgroundError("invalid_binding", "Derivation must be an object", "derivation.json")
+    if isinstance(report.get("format"), str) and report["format"] != "picross-background-derivation-v1":
+        raise BackgroundError("unsupported_format", "Unsupported declared derivation format", "derivation.json")
+    original = report.get("tool")
+    if not isinstance(original, dict) or set(original) != {"id", "commit", "dirty", "versions", "modules"}:
+        raise BackgroundError("invalid_binding", "Invalid original tool object", "derivation.json")
+    commit = original["commit"]
+    if (not isinstance(commit, str) or len(commit) != 40 or
+            any(c not in "0123456789abcdef" for c in commit) or type(original["dirty"]) is not bool):
+        raise BackgroundError("invalid_binding", "Invalid original tool provenance", "derivation.json")
+    if (report.get("tool_sha256") != digest(original) or
+            report["tool_sha256"] != request["expected_tool_sha256"] or
+            report.get("request_sha256") != digest(request) or
+            canonical(report.get("request")) != canonical(request)):
+        raise BackgroundError("invalid_binding", "Original request/tool binding differs", "derivation.json")
+    if any(original[key] != current[key] for key in ("id", "versions", "modules")):
+        raise BackgroundError("tool_mismatch", "Original tool differs from the actual implementation/codecs")
+    return original
+
+
 def _run(request, source_root, output, *, verifying, budget=None, request_reader=None):
     stage, published, remaining, made_parents = None, None, None, []
     result = None
@@ -277,7 +301,7 @@ def _run(request, source_root, output, *, verifying, budget=None, request_reader
         budget = budget if budget is not None else io.Budget()
         request = validate_request(request)
         tool = _tool(budget)
-        if request["expected_tool_sha256"] != digest(tool):
+        if not verifying and request["expected_tool_sha256"] != digest(tool):
             raise BackgroundError("tool_mismatch", "Requested tool hash differs from the actual implementation/codecs")
         source_root, output = io.roots(source_root, output)
         output_identity = io.identity(output.lstat())[:2]
@@ -292,10 +316,13 @@ def _run(request, source_root, output, *, verifying, budget=None, request_reader
                 raise BackgroundError("target_conflict", "Explicit output root identity changed")
 
         reader = io.Reader(source_root, budget)
-        report, png = _prepare(request, reader, tool, budget)
+        report_reader = io.Reader(output, budget) if verifying else None
+        producer = _verification_tool(request, report_reader, tool) if verifying else tool
+        report, png = _prepare(request, reader, producer, budget)
         if verifying:
             output_unchanged()
             refs = _check_output(output, report, png, budget)
+            report_reader.recheck()
             reader.recheck()
             if request_reader is not None:
                 request_reader.recheck()

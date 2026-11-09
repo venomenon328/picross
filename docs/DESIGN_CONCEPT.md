@@ -232,8 +232,10 @@ noch nicht aktivierten Weg mit einer ausgewählten Kontextzeichnung je Rätsel.
 Er übernimmt die bisherigen zwei Ecken und Ausblendregeln nicht als neue
 Gestaltungspflicht. Die eigentliche Ablösung des Rätselpiloten gehört zur
 Integration und Runtime aus [#561](https://github.com/venomenon328/picross/issues/561);
-bis dahin bleiben die vorhandenen Kategoriezeichnungen bestehen. HP-W1 ändert
-keine Runtime und beauftragt keine neuen Hilfe-, Katalog- oder Einstellungsbilder.
+bis dahin bleiben die vorhandenen Kategoriezeichnungen bestehen. HP-I1a liefert
+äußere Endabnahme und prüfbaren Export; Registrierung folgt HP-I1b, Darstellung
+HP-I2. Der Gesamtweg bleibt inaktiv. Keine neuen Hilfe-, Katalog- oder
+Einstellungsbilder sind beauftragt.
 
 **BTI-C · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
 großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`

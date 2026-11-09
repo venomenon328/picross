@@ -3,6 +3,7 @@ from copy import deepcopy
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -129,7 +130,9 @@ class AuthoringBuilderTests(unittest.TestCase):
             if binding[field] is not None:
                 self.h['gates'][gate] = 'pass'
                 self.h['gate_evidence'][gate] = binding[field]['root'] + '/' + binding[field]['ref']['file']
-        self.request.update(format=bc.BACKGROUND_FORMAT, document_revision=1)
+        revision = int(re.search(r'\*\*Version 0\.7\.0 · Dokumentrevision (\d+) ·',
+                                 snapshot.read_text(encoding='utf-8')).group(1))
+        self.request.update(format=bc.BACKGROUND_FORMAT, document_revision=revision)
         self.refresh()
         return fixture
 

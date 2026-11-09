@@ -416,28 +416,59 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
         raise error from exc
 
 
+def finalize_background(request, source_root, output_root, *, history_repo=None):
+    """Advance an existing outer record without rebuilding its sealed package."""
+    from .authoring_finalization import finalize_background as finalize
+    return finalize(request, source_root, output_root, history_repo=history_repo)
+
+
 def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    class FinalizerParser(argparse.ArgumentParser):
+        def error(self, message):
+            if arguments[:1] == ['finalize-background']:
+                raise InvalidInput(message)
+            super().error(message)
+    parser = FinalizerParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
     command = sub.add_parser('build')
     for option in ('request', 'source-root', 'output-root'):
         command.add_argument('--' + option, type=Path, required=True)
     command.add_argument('--publish-to', type=Path)
     command.add_argument('--history-repo', type=Path, help='Explicit local read-only Git history for PB-H discarded candidates')
-    args = parser.parse_args(argv)
+    finalizer = sub.add_parser('finalize-background')
+    for option in ('request', 'source-root', 'output-root'):
+        finalizer.add_argument('--' + option, type=Path, required=True)
+    finalizer.add_argument('--history-repo', type=Path, help='Explicit local read-only Git history for PB-H discarded candidates')
+    try:
+        args = parser.parse_args(arguments)
+    except InvalidInput as exc:
+        from .authoring_finalization import error_result
+        print(canonical_bytes(error_result(exc)).decode('utf-8'))
+        return 2
     request = None
     try:
         path = io.external(args.request)
         request = io.json_bytes(io.read(path.parent, path.name, 8 * 1024 * 1024), 8 * 1024 * 1024)
-        result = build(request, args.source_root, args.output_root, args.publish_to, history_repo=args.history_repo)
-        code = 0
+        if args.command == 'finalize-background':
+            result = finalize_background(request, args.source_root, args.output_root, history_repo=args.history_repo)
+            code = {'updated': 0, 'reused': 0, 'invalid_input': 2, 'conflict': 2,
+                    'aborted': 4, 'technical_error': 5}[result['status']]
+        else:
+            result = build(request, args.source_root, args.output_root, args.publish_to, history_repo=args.history_repo)
+            code = 0
     except (InvalidInput, OSError, ValueError, Aborted, KeyboardInterrupt) as exc:
         aborted = isinstance(exc, (Aborted, KeyboardInterrupt)) or getattr(exc, 'aborted', False)
-        result = {'format': ('picross-authoring-build-result-v2' if isinstance(request, dict) and request.get('format') == BACKGROUND_FORMAT
-                             else 'picross-authoring-build-result-v1'), 'status': 'aborted' if aborted else 'invalid_input',
-                  'message': str(exc), 'remaining': getattr(exc, 'remaining', None),
-                  'next_action': 'Inspect the retained complete revision/index; repeat the unchanged request after resolving the conflict.'}
-        code = 4 if aborted else 2
+        if args.command == 'finalize-background':
+            from .authoring_finalization import error_result
+            result = error_result(exc)
+            code = {'invalid_input': 2, 'conflict': 2, 'aborted': 4, 'technical_error': 5}[result['status']]
+        else:
+            result = {'format': ('picross-authoring-build-result-v2' if isinstance(request, dict) and request.get('format') == BACKGROUND_FORMAT
+                                 else 'picross-authoring-build-result-v1'), 'status': 'aborted' if aborted else 'invalid_input',
+                      'message': str(exc), 'remaining': getattr(exc, 'remaining', None),
+                      'next_action': 'Inspect the retained complete revision/index; repeat the unchanged request after resolving the conflict.'}
+            code = 4 if aborted else 2
     print(canonical_bytes(result).decode('utf-8'))
     return code
 

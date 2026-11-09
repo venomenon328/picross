@@ -57,6 +57,15 @@ Der vollständige ursprüngliche Request steht in `derivation.json.request`;
 ohne ursprüngliche Requestdatei darf die CLI dieses exakte Objekt aus einer
 eigenen temporären Datei verwenden. Transportierte Ergebnisordner bleiben
 prüfbar, solange die erforderlichen unveränderten Quellen erreichbar sind.
+Lesendes `verify` prüft originale Request-/Befund-/Toolhashes strikt, verlangt
+aber nur für `id`, vollständige `versions` und die exakte Modulpfad-/Bytehashmenge
+Gleichheit mit dem aktuellen Werkzeug. Originales `commit/dirty` bleibt
+Erzeugerherkunft; ein späterer reiner Contentcommit macht gleiche ausführbare
+Bytes nicht ungültig. Ausgabe und vollständigen Befund mit dem ursprünglichen
+Toolobjekt reproduzieren; geladene/gespeicherte Module und Eingänge müssen dabei
+unverändert bleiben. Echte Modul-/Codec-/Profiländerung bleibt `tool_mismatch`.
+`derive` einschließlich `reused` verlangt weiterhin den **vollständigen aktuellen**
+`expected_tool_sha256`. Keine Umschreibung alter Befunde oder Freigaben.
 
 `derive` und `verify` liefern genau `{status,derivation,output,error,remaining}`;
 Refs in erfolgreichen Antworten sind relativ zum Befundordner. Exit 0 mit
@@ -71,8 +80,9 @@ Veröffentlichungsvertrag stehen vollständig in Hintergrundvertrag §4.4.
 
 **Der vollständige Hintergrundweg bleibt inaktiv.** Authoring 0.6.0 und PB-A
 behalten ihre Hüllen und Gates. PB-H ergänzt den ausdrücklich gewählten
-Paketbau und die lesende Inhaltsprüfung unten; HP-I1/I2 liefern später finale
-Integration/Runtime, #490 die neue Sheetbedienung. Die Standalone-Fähigkeit
+Paketbau und die lesende Inhaltsprüfung unten; HP-I1a ergänzt äußere
+Fortschreibung und Export v6. HP-I1b/I2 liefern später finale Integration/Runtime,
+#490 die neue Sheetbedienung. Die Standalone-Fähigkeit
 allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
 
 ## PB-H: Hintergrundpakete und lesende Inhaltsprüfung
@@ -81,9 +91,9 @@ allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
 und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
 neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
 [Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 1, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Dokumentrevision 2, mit tatsächlichem Dateihash und gelesenem Quellencommit.
 Der aktive Authoringpfad und der eingebettete Offline-Sheet-Snapshot bleiben
-**0.6.0 / Dokumentrevision 40**. Das ist eine zusätzliche Vorbereitungsfähigkeit,
+**0.6.0 / Dokumentrevision 41**. Das ist eine zusätzliche Vorbereitungsfähigkeit,
 keine Aktivierung des vollständigen Hintergrundwegs.
 
 ```sh
@@ -155,14 +165,16 @@ history_repo=..., external_root=...)` und anschließend
 anzugeben. Das Ergebnis `picross-authoring-content-inspection-v1` unterscheidet
 `original_state` und frisch ermittelten `effective_state`, führt offene Gates
 und setzt stets `integration_ready=false`. Keine frühere Phase oder gespeicherte
-Erfolgsflagge ersetzt eine neue Inhaltsprüfung. Es gibt keinen neuen Inspect-CLI;
-die bisherigen Default-/Export-/Registrywege bleiben für 0.7.0 geschlossen.
+Erfolgsflagge ersetzt eine neue Inhaltsprüfung. PB-H selbst ergänzt keinen CLI;
+HP-I1a öffnet inspect/export ausschließlich über den ausdrücklichen Opt-in unten.
+Die bisherigen Default-/Registrywege bleiben für 0.7.0 geschlossen.
 
 Endfreigabe v2 muss das unveränderte Original-ZIP, Handoff, Inventar, Rasterwahl,
 Manifest, tatsächliche Entscheidung, Original, Ableitung, Profil, Ausgabe und
 `test_only` exakt binden. Sie wird weder erzeugt, neu datiert noch an neue Bytes
-angepasst. Späte äußere Fortschreibung, Export-/Registry-/Receiptgenerationen,
-Integration, Hintergrundersatz und Bereinigung gehören HP-I1/I2.
+angepasst. Späte äußere Fortschreibung und Export v6 folgen dem HP-I1a-Vertrag
+unten; Registry-/Receiptgenerationen, Integration, Hintergrundersatz und
+Bereinigung bleiben HP-I1b, Runtime HP-I2.
 
 Ergebnis ist `picross-authoring-build-result-v2` mit denselben Erfolgs-/Fehler-
 Schlüsseln wie v1; darin Record v2 und eine aus diesem Record plus frisch
@@ -179,6 +191,112 @@ Handoffkopie, exakter Dateisatz, Lock, unveränderter No-op, Kollisionsprüfung,
 Revisionspublikation vor atomarem Indexwechsel und ehrliche Restpfade bei
 Abbruch folgen vollständig dem untenstehenden PB-A-Vertrag. Ein erfolgreicher
 Bau schreibt keinen Gitcommit und behauptet keinen Sicherungsstand.
+
+## HP-I1a: äußere Endabnahme und Export v6
+
+[Paketentscheidung #561/HP-I1a](https://github.com/venomenon328/picross/issues/561#issuecomment-6752672149),
+[Hintergrundvertrag §7.4](../../docs/PUZZLE_BACKGROUNDS.md#74-hp-i1a-sichere-äußere-fortschreibung)
+und [ZA-1-v6](../../docs/ZA1_ADAPTER.md#hp-i1a--äußere-endabnahme-und-export-v6)
+schließen die neuen Auftrags-, Ergebnis-, Wiederaufnahme- und Transportformen.
+Die höchste effektive Phase ist `editorially_approved`. Auch ein frisch
+verifizierter v6-Export bleibt **nicht registrierbar**:
+`integration_ready/catalog_ready/registered=false`. Der aktive Default bleibt
+0.6.0; es gibt keine neue Phase „exportiert“ und keinen Hintergrund-Runtimeweg.
+
+```text
+python -m tools.puzzle_production.authoring_builder finalize-background --request <request.json> --source-root <neue-dateien> --output-root <authoring-root> [--history-repo <checkout>]
+```
+
+API: `authoring_builder.finalize_background(request, source_root, output_root,
+history_repo=...)`; `history_repo` nur als benannter Parameter. Bei Repositoryarbeit
+ist das Zielroot der Checkout, lokal die vorhandene Authoringwurzel.
+`picross-authoring-finalize-request-v1` hat exakt
+`format,record,sidecar_root,background,authorizations,files`. `record` bindet den
+erwarteten vorhandenen Record v2 mit Pfad, SHA und Bytezahl. `sidecar_root` ist
+ein neuer Ordner derselben Authoringrevision. `background` ist die vollständige
+Bindung an dasselbe Originalmanifest; `authorizations` enthält genau die vier
+Namen `approval.json`, `manual-authorization.json`, `owner-override.json`,
+`palette-exception.json`, jeweils `Ref|null` relativ zum Zielroot. `files` führt
+exakt die neuen Nutzdateien als `Ref` mit gleichen relativen Pfaden unter den
+getrennten Quellen-/Zielroots. Keine Globs, Dateisuche oder stillen Umbenennungen.
+
+Der Finalizer konsumiert vorhandene tatsächliche Entscheidungen und Befunde,
+er erzeugt keine Freigabeerklärung. Gültige frühe Wahl wiederverwenden;
+späte Wahl an `presented_package` binden. `none` braucht Erklärung und geprüften
+Nullbefund, gegebenenfalls auch den frühen Kandidatenverzicht. HP-W2 kann zuvor
+die autorisierte Ableitung erzeugen. Bereits gültig gebundene Autorisierungen
+dürfen durch null nicht verloren gehen. Original-ZIP, Handoffkopie, Inventar,
+ursprüngliche Gates und logische Nachweise bleiben bytegleich; Index v1 bleibt
+unverändert. Record v2 und Sheet-Update v3 zeigen nur den frisch geprüften Stand.
+`record.verification.authorizations` lokalisiert eng die tatsächlich geprüften
+vier Ref/null-Eingänge für die nächste Fortschreibung; kein neues Recordfeld
+auf oberster Ebene und keine zusätzliche Autorisierung.
+
+Gemeinsamer Authoringlock, eigener markierter Stage, vollständige Sidecarprüfung
+und Veröffentlichung des ganzen neuen Ordners ohne Ersetzen kommen vor dem
+**atomaren Recordcommit**. `operation.json` bindet Requesthash, Recordpfad,
+bytegenaue `record.before.json`/`record.after.json` und Nutzdateirefs. Diese
+internen Namen sind reserviert. Ein HP-W2-Befund liegt in eigenem Unterordner
+mit unverändertem exakten Dateisatz. Nach Abbruch denselben Request wiederholen:
+vollständigen unverreferenzierten Sidecar frisch prüfen und fortsetzen oder
+nach bereits erfolgtem Recordcommit echten Byte-/mtime-No-op melden. Fremde
+Bytes, veränderter Record oder Zielkollision sind Konflikte; keine pauschale
+Rest-/Locklöschung oder automatisch neue Zielwahl.
+
+`picross-authoring-finalize-result-v1` enthält bei Erfolg exakt
+`format,status,record,sheet,operation` mit `updated|reused`, sonst exakt
+`format,status,message,remaining,next_action` mit
+`invalid_input|conflict|aborted|technical_error`. `operation` ist ein Zielroot-Ref;
+`remaining` der tatsächliche eigene Restpfad oder null. Exit 0/2/4/5 und genau
+ein JSON auf stdout. Kein Gitcommit, Branchwechsel, Fetch oder Push; kein
+erfundener Sicherungsstand, keine Integration.
+
+Für finale Prüfung und Export die vorhandenen ZA-1-Befehle `inspect` und
+`export` ausdrücklich mit **`--allow-background`**, bei äußeren Belegen
+`--external-root <wurzel>` und bei benötigter lokaler History
+`--history-repo <checkout>` verwenden. Die API verwendet entsprechend
+`allow_background=True`, `external_root` und `history_repo`. Export verlangt
+vollständige Inhalts-/Hintergrundbereitschaft und echte Endfreigabe v2;
+`verify-export --export <exportordner>` erkennt die strikte Manifestgeneration.
+Die alten Defaultaufrufe und Registry-/Cleanupwege nehmen keine neuen
+Hintergrunddaten an.
+
+V6 transportiert das bytegleiche Original als `input/package.zip`, alle nötigen
+äußeren Dateien unter `external/<StoredRef.root>/<Ref.file>` und Endfreigabe/
+Autorisierungen an den bisherigen Exportorten. Befund und PNG behalten ihre
+inneren Pfade und denselben Elternordner. Nur ausgewähltes
+`runtime/art/backgrounds/<puzzle_id>.png` und dessen `.txt`-Notice sind neue
+Runtimebytes; `none` erzeugt keine Textur. Das geschlossene Manifest v6 bindet
+diese Daten, `input.discarded_files` und die vollständige Approval-v2-
+Hintergrundbindung; bestehende v5-Felder und Palettengates bleiben erhalten.
+
+Bei schlanken PB-H-Paketen die deklarierte lokale History zuerst vollständig
+prüfen. Nur tatsächlich fehlende **inaktive** Kandidatenrefs als ausdrücklich
+gebundene Ergänzung unter `input/discarded/<ref.file>` mitnehmen. Original- und
+aktuelle äußere Sicht getrennt prüfen: eine später aktiv gewählte Datei muss
+regulär vorliegen und darf nie aus dem Supplement gelesen werden. Doppelte,
+zusätzliche oder in keiner zulässigen Sicht benötigte Ergänzungen scheitern.
+Die genaue Manifest-/Ref-/Pfadbindung steht im ZA-1-Vertrag; allgemeiner
+PB-H-Historyvertrag und Originalinventar bleiben unverändert.
+
+Den vollständigen Export vor Veröffentlichung frisch prüfen. Danach kann
+`verify-export` alle Original-, Außen-, Supplement-, Freigabe-, Inhalts-, HP-W2-
+und Runtimebytes ohne ursprünglichen Quellcheckout/Historyroot/Netz prüfen.
+Er benötigt weiterhin die tatsächlich kompatible vollständige Modul-/Codec-/
+Profilbindung nach der engen lesenden HP-W2-Regel oben. Ein inkompatibler
+Altbefund im Original bleibt prüfpflichtig und blockiert; eine neue äußere
+Ableitung ersetzt ihn nicht. `picross-target-inspection-v6` unterscheidet
+originalen Erzeugerstand und aktuellen Prüfstand und setzt erst nach frischer
+Prüfung `export_verified=true`. Nur das deklarierte `input/package.zip` darf
+bis 128 MiB statt des gewöhnlichen 64-MiB-Dateilimits groß sein; übrige Limits,
+Alias-/Link-/Kollisions- und Quellenänderungsprüfungen bleiben erhalten.
+
+Registry, Erstregistrierung, reiner Hintergrundersatz, Katalog-Recovery und
+revisionsgenauer Abschluss folgen HP-I1b; Runtime, Import/Mipmaps und Bedarfsladen
+HP-I2. Alte volle/Quick-/Metadaten-/direkte API-Verbraucher weisen v6 vor jeder
+produktiven Mutation zurück. Kein Forcepfad und keine Änderung der bestehenden
+Registrierungsjournalgeneration v6. Gültige Altformate v1–v5 bleiben nutzbar;
+Sheetbedienung und Batch werden durch HP-I1a nicht erweitert.
 
 ## PB-A: deterministischer Authoring-Paketbau
 

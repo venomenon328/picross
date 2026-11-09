@@ -1,29 +1,40 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/489",
-  "package": "PB-H",
+  "issue": "https://github.com/venomenon328/picross/issues/561",
+  "package": "HP-I1a",
   "modules": [
     "tools",
     "production.images",
-    "production.adapter"
+    "production.adapter",
+    "production.catalog"
   ],
-  "purpose": "PB-H adds opt-in 0.7.0 background package construction and read-only content verification. tools checks routing, documentation and the unchanged 0.6.0 sheet snapshot; production.images covers the reused HP-W2 file, image, profile and codec verification; production.adapter covers typed background roots, explicit local history, deterministic phase-correct builds, inherited palette, proof, paired, provenance, difficulty and approval guarantees on the written ZIP, and rejection by legacy export writers.",
-  "omitted": "No production.solver/catalog, native, preflight, delivery or Chromium modules: no solver behavior, catalog/publication writer, runtime, web delivery or browser flow changes. Small synthetic change-scoped cases cover the changed boundaries; no real puzzle replay, image generation, gallery, new permanent core or technical artifact upload. The required development core supplies the regular Windows player package.",
+  "purpose": "HP-I1a implements the closed outer finalization and independently verified background export v6 from issue 561 comment 6752672149. tools checks the actual import graph, documentation and unchanged active 0.6.0 sheet generation; production.images checks real HP-W2 reproduction with preserved original tool provenance; production.adapter checks finalizer CAS, publication, recovery/no-op and portable v6 transport with full inherited content guarantees; production.catalog checks every reachable legacy consumer rejects v6 before mutation. The required core supplies the regular Windows player.",
+  "omitted": "No production.solver, native.*, preflight, delivery or Chromium: no solver, game/renderer or hosting behavior changes. No real puzzle replay, production assets, gallery, new core obligation or technical upload. Export is not integration and a Windows export is not a Windows startup or native Windows-Python test. Independent technical review of the concrete PR head remains required before merge; HP-I1b/I2 are deferred.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_background_package.py",
+      "path": "tests/puzzle_production/test_authoring_finalization.py",
       "disposition": "change-scoped",
-      "reason": "Small synthetic background reference, root, history, phase, derivation and deterministic transport cases for the changed package boundary; selected module only, no new core obligation."
+      "reason": "Small synthetic late selected/none and approval cases preserve original bytes and exercise shared lock, expected record, no-replace sidecars, record-last interruption, resumption and byte/mtime no-op in production.adapter only."
     },
     {
-      "path": "tests/puzzle_production/test_background_content.py",
+      "path": "tests/puzzle_production/test_background_export.py",
       "disposition": "change-scoped",
-      "reason": "Synthetic read-only 0.7.0 content and supplied-approval cases retain inherited guarantees and keep legacy writers closed; selected adapter module only."
+      "reason": "Real synthetic selected/none v6 exports, late external bindings and narrow discarded-history supplements are rechecked without source roots. Rehashed tampering, active missing bytes, extra payload, runtime identity and the exact ZIP size exception are tested in production.adapter; existing palette/proof/paired/difficulty regressions remain selected."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_assets.py",
+      "disposition": "change-scoped",
+      "reason": "Extend production.images for read-only verification across content commits while checking original tool hashes, actual module/codec/profile changes and mid-process exchange; writing derive/reused stays strict."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_catalog_boundary.py",
+      "disposition": "change-scoped",
+      "reason": "Targeted production.catalog cases check full, quick, CLI and direct API rejection of export v6 before any catalog mutation; the existing legacy catalog cases remain selected."
     },
     {
       "path": "tests/puzzle_production/test_authoring_builder.py",
       "disposition": "change-scoped",
-      "reason": "Extend the existing deterministic builder checks for v2 request/result, v3 handoff/update, phase and publication behavior while retaining v1/0.6.0 compatibility."
+      "reason": "Keep the existing PB-H builder fixture bound to the actual complete preview snapshot and its document revision; no new core coverage or relabeling of sealed historical inputs."
     }
   ],
   "core_change": null,

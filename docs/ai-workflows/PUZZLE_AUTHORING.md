@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 40 · 09.11.2026**
+**Version 0.6.0 · Dokumentrevision 41 · 09.11.2026**
 
 HP-W1 aus [#560](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307)
 spezifiziert den **zukünftigen, noch nicht aktivierten Hintergrundweg** in
@@ -9,8 +9,11 @@ spezifiziert den **zukünftigen, noch nicht aktivierten Hintergrundweg** in
 liefert dessen eigenständige Arbeits-/Entscheidungs-/Ableitungsformen sowie die
 lokale API/CLI `describe/derive/verify`. PB-H ergänzt den explizit gewählten
 Paketbau und die lesende Inhaltsprüfung nach dem vollständigen
-[0.7.0-Vorschausnapshot](PUZZLE_AUTHORING_0_7_0_PREVIEW.md). Diese Dokumentrevision
-führt den Unterstützungsstand nach; der aktive Produktionsweg bleibt **0.6.0**
+[0.7.0-Vorschausnapshot](PUZZLE_AUTHORING_0_7_0_PREVIEW.md). HP-I1a ergänzt sichere
+äußere Fortschreibung vorhandener Auswahl/Ableitung/Endfreigabe und prüfbaren
+Export v6; Registrierung, Hintergrundersatz und Abschluss bleiben HP-I1b,
+Runtime HP-I2. Diese Dokumentrevision führt den Unterstützungsstand nach;
+der aktive Produktionsweg bleibt **0.6.0**
 mit seinen bisherigen Formaten, Freigaben und ZA-1-Prüfungen. Version **0.7.0**
 wird erst mit dem tatsächlich unterstützten vollständigen Einzelweg aktiviert,
 wie in der Einführungsmatrix des Hintergrundvertrags beschrieben. Neue Daten
@@ -62,7 +65,9 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 Ergänzungen spezifizieren den Sollablauf nach dessen versionierter Einführung.
 HP-W2 erlaubt die eigenständige technische Vorbereitung nach §6.3; PB-H
 sichert sie in eigenen 0.7.0-Paketformen und prüft deren fällige Inhaltsgates
-lesend. Vollständiger Ablauf, finale Integration und neue Sheetbedienung bleiben
+lesend. HP-I1a führt äußere Records höchstens bis `editorially_approved` und
+exportiert v6 mit `integration_ready/catalog_ready/registered=false`.
+Vollständiger Ablauf, finale Integration und neue Sheetbedienung bleiben
 inaktiv. Keine Pflicht des bestehenden 0.6.0-Wegs wird geändert. Für beauftragte
 Hintergrundarbeit den zentralen Hintergrundvertrag einschließlich seines aktuellen Unterstützungsstands
 vollständig lesen; nur tatsächlich verfügbare Teilfähigkeiten verwenden.
@@ -777,8 +782,13 @@ der aktive 0.6.0-Weg und sein Offline-Sheet bleiben unverändert. `raster_ready`
 erfüllt alle bisherigen Inhaltsgarantien bei noch offener Hintergrundbereitschaft;
 `content_ready` verlangt zusätzlich gültige Wahl, Rechte/Sichturteile und frisch
 geprüfte Ableitung beziehungsweise ausdrückliches `none`. Endfreigabe v2 wird
-nur als bereits vorhandener, exakt gebundener Beleg gelesen. Spätere äußere
-Pflege, Export und Integration folgen in HP-I1, neue Sheetbedienung in #490.
+als bereits vorhandener, exakt gebundener Beleg gelesen. HP-I1a ergänzt den
+sicheren äußeren Finalizer nach Hintergrundvertrag §7.4 und den
+[v6-Export](../ZA1_ADAPTER.md#hp-i1a--äußere-endabnahme-und-export-v6).
+Original-ZIP, Handoff, Inventar und frühere Gates bleiben unverändert; der neue
+Record/Sheet-Stand reicht höchstens bis `editorially_approved`. Erstintegration,
+reiner Hintergrundersatz und Abschluss folgen HP-I1b, Runtime HP-I2,
+neue Sheetbedienung #490.
 HP-W2 unterstützt die eigenständigen Arbeits-/Entscheidungs-/Auftrags-/
 Befundformen nach Hintergrundvertrag §§3–4 sowie `describe/derive/verify`.
 Beauftragte frühe Bildarbeit darf damit als vorbereitet gesichert, eine tatsächlich
@@ -1091,7 +1101,7 @@ Import, Sitzung und Auftragsexport müssen bei ihrer Einführung alle neuen
 Bild-, Options-, Auswahl- und Paketbindungen verlustfrei erhalten; die dafür
 geplanten Generationen und konkreten Reader/Writer stehen im zentralen Vertrag.
 PB-H liefert die Record-v2-/Update-v3-Projektion im Paketbuilder. Das aktuelle
-Offline-Sheet erhält auch in PB-H ausschließlich den bytegleichen aktiven
+Offline-Sheet erhält bis einschließlich HP-I1a ausschließlich den bytegleichen aktiven
 0.6.0-Regelwerksnapshot und seine Versions-/Revisionsangaben. Neue Optionen,
 Importfähigkeit, Sitzungsformate und Promptlogik folgen gesondert in #490;
 die Builderprojektion ist keine behauptete Sheetfunktion.
@@ -1100,6 +1110,9 @@ die Builderprojektion ist keine behauptete Sheetfunktion.
 
 **Zukünftiger Hintergrundweg:** Die nachstehende ausführbare 0.6.0-/ZA-1-Route
 wird durch diesen Solltext nicht um neue Eingangsfelder oder Befehle erweitert.
+Der separate opt-in HP-I1a-Weg nach dem 0.7.0-Vorschausnapshot liefert äußere
+Endabnahme und prüfbaren Export v6, noch keine Registrierungsbereitschaft.
+`integration_ready`, `catalog_ready` und `registered` bleiben false.
 Erst der tatsächlich unterstützte #561-Weg übernimmt in Auftrag 4 gemeinsam mit
 dem endabgenommenen Rätsel **ausschließlich die konkret gewählte, gültig
 abgeleitete Auslieferungsdatei oder die ausdrücklich erklärte Leerentscheidung**.
@@ -1334,7 +1347,7 @@ Cleanup-Mergefreigabe. Historische CI2-E-Aufträge sind keine heutige Freigabe o
 ### Zukünftiger Hintergrundweg: Abschluss der Bildarbeit
 
 Der Lebenszyklus aus [PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md) ergänzt §9
-nach Einführung der passenden Abschlussfähigkeit. Die heutigen
+nach Einführung der passenden HP-I1b-Abschlussfähigkeit. Die heutigen
 `retire-production`-/`retire-reveal-production`-Befehle erhalten dadurch keine
 behauptete Unterstützung neuer Hintergrundformen. Keine gebundenen Originale
 mit einem ungeeigneten alten Reader bereinigen.
