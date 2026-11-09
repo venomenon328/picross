@@ -1,15 +1,79 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
-## HP-W1: Hintergrundvertrag ohne aktivierten Werkzeugweg
+## HP-W2: eigenständige Hintergrundableitung
 
-[PUZZLE_BACKGROUNDS](../../docs/PUZZLE_BACKGROUNDS.md) spezifiziert Ablauf,
-Datenformen, Auswahl-/Revisionsbindung und die Einführungsmatrix. HP-W1 liefert
-keine Hintergrund-API/CLI, keinen neuen Paketreader und keine Runtimeintegration.
-Authoring 0.6.0 und PB-A bleiben der unterstützte Weg; ihre bestehenden Hüllen
-erhalten keine zusätzlichen Hintergrundfelder. HP-W2 implementiert die gemeinsame
-Datei-/Ableitungsschnittstelle, PB-H den Paketbau und die neuen Reader, HP-I1/I2
-die finale Integration/Runtime und #490 den Sheettransport. Die dort geplanten
-Schnittstellen sind noch keine verfügbaren Befehle dieser Anleitung.
+[`background_assets`](background_assets.py) stellt die lokale API/CLI für die
+Arbeits-, Entscheidungs-, Auftrags- und Befundformen aus
+[PUZZLE_BACKGROUNDS §§3–4](../../docs/PUZZLE_BACKGROUNDS.md) bereit. Maßgeblich
+ist die [Paketentscheidung HP-W2](https://github.com/venomenon328/picross/issues/560#issuecomment-6748799473).
+Sie verarbeitet gespeicherte ausgewählte PNG-Bytes oder eine tatsächliche
+ausdrückliche Leerentscheidung. Die API erzeugt keine Kandidaten und trifft
+keine Auswahl. Noch ungeklärte Rechte und ausstehende Sichturteile bleiben
+auch nach erfolgreicher technischer Vorbereitung offen.
+
+Die folgenden Aufrufe verwenden `python` aus der
+[isolierten Bildumgebung](#rp-3-isolierte-image-umgebung-und-reale-befehle) mit
+**Pillow exakt 12.3.0** und starten im Repositoryroot:
+
+```text
+python -m tools.puzzle_production.background_assets describe
+python -m tools.puzzle_production.background_assets derive --request <request.json> --source-root <quellen> --output-root <ausgaben>
+python -m tools.puzzle_production.background_assets verify --request <request.json> --source-root <quellen> --output-dir <befundordner>
+```
+
+API: `describe()`, `derive(request, source_root, output_root)` und
+`verify(request, source_root, output_directory)` aus
+`tools.puzzle_production.background_assets`. `describe` liefert das vollständige
+feste Profil, dessen kanonischen Hash und den tatsächlichen Tool-/Codecstand
+samt Hash. Dessen `dirty` bezieht sich auf Abweichungen der tatsächlich verwendeten
+eigenen Module vom gebundenen Gitcommit. Für einen neuen Auftrag diese Werte verwenden; ein abweichender
+`expected_tool_sha256` wird vor dem Schreiben zurückgewiesen.
+
+Der geschlossene `picross-background-derive-request-v1` bindet das
+`picross-background-work-v1`-Manifest, die `picross-background-decision-v1`-
+Entscheidung und bei `selected` das genaue Original über Pfad, Bytezahl und
+Dateihash. Sein `profile` ist das vollständige Profil aus `describe`, `output`
+ein neuer relativer Verzeichnisname unter dem Ausgabe-Root. Die beiden Roots
+müssen bereits existieren, explizit gewählt, sicher und voneinander getrennt
+sein; aktive Spiel-/Katalogziele sind ausgeschlossen. Sämtliche benötigten
+Quellen/Belege liegen unter genau einem `source_root` mit unveränderten
+relativen Pfaden. ZIP-Entpacken, `StoredRef`-Paketauflösung oder Beschaffen
+fehlender Dateien gehören nicht zu diesem Werkzeug.
+
+`derive` prüft die vollständigen Formen und die tatsächlich benötigten
+Referenzen frisch. Nur das gewählte Original wird dekodiert und nach
+`picross-background-png2304-v1` proportional auf 2304×576 RGBA/sRGB eingepasst,
+mit gemeinsamem unteren mittigen Anker, vormultipliziertem Lanczos und
+transparentem Rest. Keine individuellen Crop-/Masken-/Positionsparameter.
+Im neuen Ausgabeordner entstehen ausschließlich `derivation.json` und bei
+`selected` `background.png`. Gültiges `none` erzeugt nur den Befund; ein früher
+Verzicht auf die Kandidatenproduktion braucht zusätzlich den tatsächlichen
+Eigentümerbeleg. Fehlende, offene, abgelehnte oder fehlerhafte Eingänge werden
+nicht als Leerentscheidung ausgegeben.
+
+`verify` erhält den tatsächlichen Befundordner, liest Eingänge und Ergebnis
+erneut, reproduziert die Ausgabe und verändert keine Quellen oder Resultate.
+Der vollständige ursprüngliche Request steht in `derivation.json.request`;
+ohne ursprüngliche Requestdatei darf die CLI dieses exakte Objekt aus einer
+eigenen temporären Datei verwenden. Transportierte Ergebnisordner bleiben
+prüfbar, solange die erforderlichen unveränderten Quellen erreichbar sind.
+
+`derive` und `verify` liefern genau `{status,derivation,output,error,remaining}`;
+Refs in erfolgreichen Antworten sind relativ zum Befundordner. Exit 0 mit
+`derived|none|reused|verified` bezeichnet nur technischen Erfolg, Exit 2
+ungültige Eingänge oder Konflikte, Exit 4 Abbruch und Exit 5 technischen Fehler.
+Stdout enthält genau ein JSON-Objekt, Diagnose steht auf stderr. Exakte
+Wiederholung wird nur nach frischer Prüfung als `reused` übernommen und erhält
+Bytes/mtimes; fremde, leere oder unvollständige Zielordner bleiben Konflikte.
+Bei Fehlern melden `error` die konkrete Ursache und `remaining` einen tatsächlich
+verbliebenen eigenen Restpfad oder null. Ressourcen-, Fehlercode-, Lock- und
+Veröffentlichungsvertrag stehen vollständig in Hintergrundvertrag §4.4.
+
+**Der vollständige Hintergrundweg bleibt inaktiv.** Authoring 0.6.0 und PB-A
+behalten ihre Hüllen und Gates. PB-H liefert erst den neuen Paketbau und die
+zugehörigen Reader, HP-I1/I2 finale Integration/Runtime und #490 den
+Sheettransport. Diese Standalone-Fähigkeit liefert keine Handoff-v3-/ZA-1-
+Zulassung, keinen Hintergrundersatz im Spiel und keinen Produktionsabschluss.
 
 ## PB-A: deterministischer Authoring-Paketbau
 
