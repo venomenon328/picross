@@ -1,5 +1,93 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+## PB-A: deterministischer Authoring-Paketbau
+
+Schnittstelle vor Implementierung, [Paketentscheidung #489/PB-A](https://github.com/venomenon328/picross/issues/489#issuecomment-6745424504).
+Der Builder sichert ausdrücklich benannte Produktionsdateien. Er erzeugt keine
+Bild-, Solver-, Bewertungs- oder Freigabeentscheidungen und führt keine Git-
+Schreibaktionen aus. PB-H/Hintergrundformate bleiben ein separates Folgepaket.
+
+```sh
+python -m tools.puzzle_production.authoring_builder build --request <request.json> --source-root <quellen> --output-root <arbeitsordner> [--publish-to <checkout>]
+```
+
+API: `authoring_builder.build(request, source_root, output_root, publish_to=None)`.
+Request ist ein JSON-Objekt mit exakt `format,handoff,document_revision,files,
+target,category_id,reveal_options,external`. Format:
+`picross-authoring-build-request-v1`. `handoff` ist der noch **unversiegelte**
+Authoring-v2-Datensatz mit `inventory=null`, ID, neuer Revision, tatsächlichem
+gelesenem `repo_commit`, Regelwerk 0.6.0 samt Snapshot-Dateihash und Phase.
+`document_revision` ist eine positive Ganzzahl und muss zum Snapshot passen.
+Der Quellencommit ist eine Herkunftsangabe, kein behaupteter Sicherungscommit.
+`target` ist `local` oder `repository` (nur mit `--publish-to`); Kategorie darf
+null bleiben. `files` enthält ausschließlich explizite Objekte
+`{path,source,sha256,bytes}`: normalisierter Paketpfad, sicherer relativer Pfad
+unter `source-root`, erwarteter Datei-SHA-256 und Bytezahl. Keine Ordnersuche.
+Unbekannte Requestfelder und deklarierte technische Formate sind Fehler;
+redaktionelle Ergänzungen stehen im Handoff unter `editorial` und bleiben erhalten.
+
+`reveal_options` enthält die tatsächlich noch angebotenen Bilder mit genau
+`ID,Beschreibung,Datei,SHA-256` gemäß Authoring §7; jedes Bild benötigt Herkunft.
+Nach Auswahl ist die Liste leer und `handoff.reveal` bindet die konkrete Datei
+samt Entscheidung. Historische verworfene Varianten werden in `editorial` als
+Commit/Pfad/Hash/Entscheidung referenziert, nicht als ZIP/Galerie kopiert.
+`external` ist eine Map expliziter äußerer Dateien auf `{source,sha256,bytes}`:
+zulässig sind `approval.json`, `manual-authorization.json`, `owner-override.json`
+und `palette-exception.json`. Diese Bytes werden separat erhalten; vorhandene
+Autorisierungen müssen zu den tatsächlich erzeugten Originalbindungen passen.
+
+Phasen: `brief_ready` verlangt Briefing und Regelwerk; `reveal_review` zusätzlich
+alle angebotenen Revealoriginale/Herkunft; `motif_review` ein tatsächlich
+freigegebenes Reveal sowie Motivdatei/-herkunft; `raster_review` zusätzlich eine
+Motivfreigabe und vorhandene Kandidaten-/Bündelbindungen. Entscheidungen/Aufwand
+werden, soweit geführt, erhalten. Alle vorhandenen Datei-/Freigabe-/Gatebelege
+werden geprüft, fehlende Entscheidungen bleiben offen. `content_ready` verlangt
+den vollständigen bisherigen ZA-1-Eingang: Bildfreigaben, Parameter, RP-3/RP-5,
+Proofs, Herkunft, Berichte, Difficulty und gegebenenfalls Palettensichtung.
+Nur dort wird das **geschriebene ZIP** frisch mit ZA-1 inspiziert; ausschließlich
+die fehlende separate finale Endabnahme darf als Inhaltsblocker übrig bleiben.
+Der Builder setzt keine Gates auf `pass` und erhöht keine Phase automatisch.
+
+Inventar v1 schließt sich und Handoff aus. Alle Quellen einschließlich sämtlicher
+manifestgebundener Dateien werden vor und nach dem Lesen gegen Größe, SHA-256
+und Dateidentität geprüft. Dateihashes bleiben von kanonischen Logik-/Vertrags-
+Hashes getrennt. Sichere Pfade, Windowsaliase, Link-/Reparseverbot sowie die
+ZA-1-Datei-/ZIP-/Mengenlimits und 300 Sekunden gelten auch hier. Bereits
+versiegelte Eingänge werden zurückgewiesen; der vorhandene lesende ZA-1-Weg
+für Altpakete und deklarierte Teilkopien bleibt unverändert.
+
+Stabile JSON-Bytes, Memberreihenfolge und ZIP-Metadaten ergeben aus demselben
+Request dieselben Bytes. Zunächst entsteht eine eigene temporäre Revision;
+frische sichere Extraktion prüft CRC, exakten Dateisatz, Hashes und die bytegleiche
+äußere Handoffkopie. Ergebnisdateien: `package.zip,handoff.json,record.json` plus
+explizite äußere Belege. Der Record bindet Phase, Prüfung, offene Freigaben,
+Paket/Inventar, Blocker und nächsten Schritt; Sheet-v2 wird ausschließlich daraus
+abgeleitet und auf stdout geliefert. Lokale ungesicherte Arbeit führt einen
+Sicherungsblocker und `Quellbranch / Commit=null`; kein erfundener Gitstand.
+
+Lokales Ziel ist `<output-root>/<ID>/<Revision>`, Repositoryziel ausschließlich
+`<checkout>/content/authoring/<ID>/<Revision>`. Output-root dient bei Publikation
+nur als explizite Arbeitswurzel; veröffentlicht wird im Checkout auf demselben
+Dateisystem. Ein kooperativer einzelner Writer sperrt den Zielindex/-baum über
+einen OS-Dateilock; Prozessende gibt ihn frei. Vollständige Revisionen werden
+ohne Ersatz publiziert. Identische Wiederholung prüft alle Bytes und bleibt
+auch hinsichtlich mtimes unverändert; anderer Request oder andere Bytes unter
+derselben Revision sind Konflikte. Spätere äußere Recordpflege wird nicht ersetzt.
+
+Der bestehende Index v1 wird zuerst gelesen, dann unter Lock frisch verglichen
+und erst nach vollständiger Revisionspublikation atomar ersetzt. Fremde Änderungen
+bleiben erhalten und ergeben Konflikt, keinen stillen Retry. Revision und Index
+sind keine gemeinsame Transaktion: Abbruch dazwischen hinterlässt höchstens eine
+vollständige unindexierte Revision. Das Ergebnis meldet Fehler und konkreten
+Restpfad; derselbe unveränderte Request kann sie erneut prüfen und indexieren.
+Eigene unveröffentlichte Stages werden bei behandeltem Fehler/Abbruch entfernt;
+nach hartem Kill dürfen markierte eigene Stages erst nach Lock-/Besitzprüfung
+gemäß WORKSPACE entfernt werden. Der kooperative Lock verhindert keine beliebigen
+fremden OS-Schreibzugriffe; Vergleichsprüfungen erkennen sie an den Grenzen.
+Exit 0: `built`/`reused`; 2: Eingangs-/Kollisions-/Dateifehler; 4: Abbruch.
+Keine Teilpublikation wird als Erfolg gemeldet, kein `editorially_approved`-
+Übergang und keine Runtime-/Index-Gitaktion durch den Builder.
+
 ## P-B2: automatische Frühdiagnose und finale Palettengates
 
 Vor Code festgelegter Vertrag, 08.11.2026: [ZA-1 P-B2](../../docs/ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)
