@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "/home/runner/work/picross/picross/tools/p1_product.py", line 595, in main
+    evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, run, python_phase, host, project)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/picross/picross/tools/kat2_product.py", line 121, in run
+    run_phase("kat2-" + mode, (["xvfb-run", "-a"] if host == "Linux" else []) +
+  File "/home/runner/work/picross/picross/tools/p1_product.py", line 509, in run
+    raise toolchain.PreflightError(f"{name} exceeded {result['timeout_seconds']}s")
+p1_preflight.PreflightError: kat2-pages exceeded 300s

@@ -15,10 +15,10 @@ func run() -> void:
 	app = book.app
 	await frames()
 	var id: String = "pz-20ecf7747bbf40828238ec26d1207172"
-	await open_id(id,1)
+	await open_id(id,0)
 	resource_record("mono-first-open")
 	await close_id()
-	await open_id(id,1)
+	await open_id(id,0)
 	resource_record("mono-same-image-reopened")
 	check(app.rz_eval.load_count == 2,"same illustration is reloaded without an unbounded cache")
 	for cell: Vector2i in [Vector2i(10,28),Vector2i(11,28),Vector2i(12,28)]:

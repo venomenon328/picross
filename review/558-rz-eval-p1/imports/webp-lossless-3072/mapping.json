@@ -6,10 +6,10 @@
 		"source": "res://art/drawing/rz_eval/tomate-1-3072.webp"
 	},
 	{
-		"bytes": 331802,
-		"file": "qualle-1-3072.webp.ctex",
-		"packed_import": "res://.godot/imported/qualle-1-3072.webp-36f68b1240e865f8d58790612ac547a8.ctex",
-		"source": "res://art/drawing/rz_eval/qualle-1-3072.webp"
+		"bytes": 432660,
+		"file": "qualle-2-3072.webp.ctex",
+		"packed_import": "res://.godot/imported/qualle-2-3072.webp-92245c9efe84e6cdc1648ba25a68cfbb.ctex",
+		"source": "res://art/drawing/rz_eval/qualle-2-3072.webp"
 	},
 	{
 		"bytes": 946018,
@@ -18,15 +18,15 @@
 		"source": "res://art/drawing/rz_eval/hills-1-3072.webp"
 	},
 	{
-		"bytes": 1844010,
-		"file": "petronas-1-3072.webp.ctex",
-		"packed_import": "res://.godot/imported/petronas-1-3072.webp-9e3e70b0b1aeee5203877574fc24e1db.ctex",
-		"source": "res://art/drawing/rz_eval/petronas-1-3072.webp"
+		"bytes": 2878530,
+		"file": "petronas-3-3072.webp.ctex",
+		"packed_import": "res://.godot/imported/petronas-3-3072.webp-64ee1e8b0628c69bb5aaaea827b878a8.ctex",
+		"source": "res://art/drawing/rz_eval/petronas-3-3072.webp"
 	},
 	{
-		"bytes": 1496278,
-		"file": "basilisk-1-3072.webp.ctex",
-		"packed_import": "res://.godot/imported/basilisk-1-3072.webp-eac5f9bf3b6cc2bf08f595439785d3db.ctex",
-		"source": "res://art/drawing/rz_eval/basilisk-1-3072.webp"
+		"bytes": 1556434,
+		"file": "basilisk-3-3072.webp.ctex",
+		"packed_import": "res://.godot/imported/basilisk-3-3072.webp-0a0f14f070daa9ce39fca3c4b6c9966e.ctex",
+		"source": "res://art/drawing/rz_eval/basilisk-3-3072.webp"
 	}
 ]

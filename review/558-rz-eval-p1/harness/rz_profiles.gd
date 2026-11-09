@@ -20,7 +20,7 @@ func run() -> void:
 			app.rz_eval.profile = entry[0]
 			app.rz_eval.extension = entry[1]
 			app.rz_eval.texture_filter = Control.TEXTURE_FILTER_LINEAR if entry[1] == "nomips.png" else Control.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
-			await open_id(id,1)
+			await open_id(id,0)
 			var label: String = Drawing.PILOTS[id]+"-"+entry[0]+"-"+entry[1]
 			await snapshot(label+"-1440")
 			resource_record(label+"-1440")

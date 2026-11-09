@@ -1,0 +1,14 @@
+test_batch_line_break_rejected_before_remote_access (test_web_delivery.Delivery.test_batch_line_break_rejected_before_remote_access) ... ok
+test_connection_loss_reports_unknown_activation_and_retained_lock (test_web_delivery.Delivery.test_connection_loss_reports_unknown_activation_and_retained_lock) ... ok
+test_current_license_inputs_and_legacy_kb_boundary (test_web_delivery.Delivery.test_current_license_inputs_and_legacy_kb_boundary) ... ok
+test_injected_paths_hashes_and_schema (test_web_delivery.Delivery.test_injected_paths_hashes_and_schema) ... ok
+test_local_config_boundaries (test_web_delivery.Delivery.test_local_config_boundaries) ... ok
+test_manifest_and_missing_corrupt_extra_files (test_web_delivery.Delivery.test_manifest_and_missing_corrupt_extra_files) ... ok
+test_missing_web_template_fails (test_web_delivery.Delivery.test_missing_web_template_fails) ... ok
+test_nested_manifest_is_not_hidden (test_web_delivery.Delivery.test_nested_manifest_is_not_hidden) ... ok
+test_ssh_stdin_preserves_posix_lf_on_windows (test_web_delivery.Delivery.test_ssh_stdin_preserves_posix_lf_on_windows) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.421s
+
+OK

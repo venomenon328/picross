@@ -47,7 +47,7 @@ func run() -> void:
 	app = book.app
 	await frames()
 	var id: String = "pz-c71563f1b8c940de998afdd62f09"
-	await open_id(id,1)
+	await open_id(id,0)
 	# Real viewport events create a small arbitrary player stand, never a solution.
 	var width: int = app.session.player.width
 	for cell: Vector2i in [Vector2i(2,18),Vector2i(3,18),Vector2i(4,18),Vector2i(2,19)]:

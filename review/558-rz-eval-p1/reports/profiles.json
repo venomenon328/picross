@@ -1,5 +1,5 @@
 {
-  "source_head": "90aefb84dccd9e1cdcda73f03df113855b856857",
+  "source_head": "535403d8ac89c2da4800719f0d4a0fe0ba041950",
   "template_sha256": "f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011",
   "profiles": [
     {
@@ -13,14 +13,14 @@
         "os": "Windows",
         "rows": []
       },
-      "import_ms": 11675.028800000291,
-      "windows_export_ms": 5908.470300000772,
-      "web_export_ms": 4333.153699999457,
-      "windows_pck_bytes": 90753400,
-      "web_pck_bytes": 90753400,
-      "windows_total_bytes": 193839480,
-      "web_total_bytes": 129026878,
-      "wall_ms": 22116.031499999735,
+      "import_ms": 12064.898699998594,
+      "windows_export_ms": 6268.798700002662,
+      "web_export_ms": 4229.659500000707,
+      "windows_pck_bytes": 90766360,
+      "web_pck_bytes": 90766360,
+      "windows_total_bytes": 193852440,
+      "web_total_bytes": 129039838,
+      "wall_ms": 22773.97810000184,
       "windows_pck_growth": 0,
       "web_pck_growth": 0
     },
@@ -34,53 +34,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-2304.png",
           "source_bytes": 754193,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 10.20550000066578,
+          "decode_pillow_ms_median": 9.971900002710754,
           "pixel_equal_to_png": true,
           "sha256": "597b9eab1af1597a1bbde9dfaae23dfe64c247554eab949eb63315518d6fceb6",
           "imported_bytes": 764746
         },
         {
           "name": "qualle",
-          "file": "qualle-1-2304.png",
-          "source_bytes": 183033,
+          "candidate": 2,
+          "file": "qualle-2-2304.png",
+          "source_bytes": 247899,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 5.494499999258551,
+          "decode_pillow_ms_median": 6.109699999797158,
           "pixel_equal_to_png": true,
-          "sha256": "5e9b6e5ecf9e3b1bd7e3098058ea08bcb8dc03c9bf469ef35626ae6d12fca7b9",
-          "imported_bytes": 198772
+          "sha256": "199f2f06bf17ec0a7de48b2ec827b21046f865a080abbe197f9c29cc2468681e",
+          "imported_bytes": 267144
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-2304.png",
           "source_bytes": 537116,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 8.09300000037183,
+          "decode_pillow_ms_median": 7.964499996887753,
           "pixel_equal_to_png": true,
           "sha256": "dda5386576b84bb152ee09cdfed2a155ccba2e4b9867490aa55dda0461384770",
           "imported_bytes": 566332
         },
         {
           "name": "petronas",
-          "file": "petronas-1-2304.png",
-          "source_bytes": 1073264,
+          "candidate": 3,
+          "file": "petronas-3-2304.png",
+          "source_bytes": 1587791,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 10.859600000912906,
+          "decode_pillow_ms_median": 21.855799997865688,
           "pixel_equal_to_png": true,
-          "sha256": "78b4776f92cd8479750207e016f18bb0b376e882243127eeb541a43d2cc3a3f4",
-          "imported_bytes": 1077690
+          "sha256": "6d71a948169a88ed9e4556268282eb203fb1e268c4e3b853934afe185c6a0b42",
+          "imported_bytes": 1664350
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-2304.png",
-          "source_bytes": 854584,
+          "candidate": 3,
+          "file": "basilisk-3-2304.png",
+          "source_bytes": 898690,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 9.367399999973713,
+          "decode_pillow_ms_median": 9.788499999558553,
           "pixel_equal_to_png": true,
-          "sha256": "bc7cc1ec3c1f6b83ed97b2c4a9fca383f6eb8d64acd975e80a37623b6bf6c94a",
-          "imported_bytes": 891652
+          "sha256": "3a553dc53a6be20b268f7f99168e4f83d62b01e54a9869f2f347a2f77be7c6dd",
+          "imported_bytes": 927034
         }
       ],
       "packed_read": {
@@ -92,9 +97,9 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              13.773,
-              13.35,
-              13.091
+              14.207,
+              14.176,
+              13.99
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-2304.png",
@@ -104,21 +109,21 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              6.249,
-              6.044,
-              6.631
+              7.558,
+              7.891,
+              7.93
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-2304.png",
+            "path": "res://art/drawing/rz_eval/qualle-2-2304.png",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              12.407,
-              12.247,
-              12.538
+              13.179,
+              12.747,
+              13.169
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-2304.png",
@@ -128,38 +133,38 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              15.112,
-              15.039,
-              15.523
+              18.501,
+              18.621,
+              18.312
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-2304.png",
+            "path": "res://art/drawing/rz_eval/petronas-3-2304.png",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              13.574,
-              13.261,
-              13.478
+              15.46,
+              14.919,
+              14.834
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+            "path": "res://art/drawing/rz_eval/basilisk-3-2304.png",
             "width": 2304
           }
         ]
       },
-      "import_ms": 5626.485400000092,
-      "windows_export_ms": 5032.861800000319,
-      "web_export_ms": 4425.312200000917,
-      "windows_pck_bytes": 94254940,
-      "web_pck_bytes": 94254940,
-      "windows_total_bytes": 197341020,
-      "web_total_bytes": 132528418,
-      "wall_ms": 16193.308800000523,
-      "windows_pck_growth": 3501540,
-      "web_pck_growth": 3501540
+      "import_ms": 6066.807800001698,
+      "windows_export_ms": 5154.109499999322,
+      "web_export_ms": 4972.322000001441,
+      "windows_pck_bytes": 94958300,
+      "web_pck_bytes": 94958300,
+      "windows_total_bytes": 198044380,
+      "web_total_bytes": 133231778,
+      "wall_ms": 17538.180399998964,
+      "windows_pck_growth": 4191940,
+      "web_pck_growth": 4191940
     },
     {
       "profile": "png-1536",
@@ -171,53 +176,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-1536.png",
           "source_bytes": 338098,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 4.0365000004385365,
+          "decode_pillow_ms_median": 4.105799998797011,
           "pixel_equal_to_png": true,
           "sha256": "ee77be873176a12b15828d0aa3e9e2ca97b7f0be880a69135fe1d62d5229f590",
           "imported_bytes": 354892
         },
         {
           "name": "qualle",
-          "file": "qualle-1-1536.png",
-          "source_bytes": 86922,
+          "candidate": 2,
+          "file": "qualle-2-1536.png",
+          "source_bytes": 117598,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 2.7563000003283378,
+          "decode_pillow_ms_median": 3.155700000206707,
           "pixel_equal_to_png": true,
-          "sha256": "2330f1172c6c9988cea23e962e14201d731c5eda149d3e373825d1ea9e5afb58",
-          "imported_bytes": 99810
+          "sha256": "345e3f147d11ff0ef3660205bf68c82fcd5f92cd2629506f747a328294b60551",
+          "imported_bytes": 135544
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-1536.png",
           "source_bytes": 241200,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 4.002299998319359,
+          "decode_pillow_ms_median": 4.007200001069577,
           "pixel_equal_to_png": true,
           "sha256": "f5cd83934232198fc588781535c212225daa68a5f508359f3a0d87d4077f55b7",
           "imported_bytes": 261300
         },
         {
           "name": "petronas",
-          "file": "petronas-1-1536.png",
-          "source_bytes": 494728,
+          "candidate": 3,
+          "file": "petronas-3-1536.png",
+          "source_bytes": 703549,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 5.031899998357403,
+          "decode_pillow_ms_median": 8.083700002316618,
           "pixel_equal_to_png": true,
-          "sha256": "3c8e33c8f4f25e37562ffa55fdad7686a587c26f88dd8a46a41114f0f046f24e",
-          "imported_bytes": 487174
+          "sha256": "8e694127b54fdab7b4f58cff4306c2ad5f4044e1bd08730db6c03420f6494391",
+          "imported_bytes": 741430
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-1536.png",
-          "source_bytes": 400455,
+          "candidate": 3,
+          "file": "basilisk-3-1536.png",
+          "source_bytes": 434829,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 4.450999998880434,
+          "decode_pillow_ms_median": 4.792300002009142,
           "pixel_equal_to_png": true,
-          "sha256": "ae58cd99f551e8cf0336ab63b2e463daad58778a33515ce44b3f56792d679059",
-          "imported_bytes": 415152
+          "sha256": "d798ee3cedc187315274db7019bc08ea404aa5b921a1b5b2841a71781fb66798",
+          "imported_bytes": 433200
         }
       ],
       "packed_read": {
@@ -229,9 +239,9 @@
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              6.487,
-              6.456,
-              6.087
+              7.33,
+              6.52,
+              6.593
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-1536.png",
@@ -241,21 +251,21 @@
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              2.818,
-              3.027,
-              2.918
+              3.653,
+              3.699,
+              4.19
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-1536.png",
+            "path": "res://art/drawing/rz_eval/qualle-2-1536.png",
             "width": 1536
           },
           {
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              5.762,
-              5.534,
-              5.678
+              6.049,
+              5.844,
+              6.185
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-1536.png",
@@ -265,38 +275,38 @@
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              7.052,
-              6.986,
-              6.935
+              8.1,
+              8.457,
+              8.044
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-1536.png",
+            "path": "res://art/drawing/rz_eval/petronas-3-1536.png",
             "width": 1536
           },
           {
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              6.427,
-              6.476,
-              6.294
+              6.737,
+              6.701,
+              6.362
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-1536.png",
+            "path": "res://art/drawing/rz_eval/basilisk-3-1536.png",
             "width": 1536
           }
         ]
       },
-      "import_ms": 4631.380900000295,
-      "windows_export_ms": 4647.591799999645,
-      "web_export_ms": 4256.666100000075,
-      "windows_pck_bytes": 92374076,
-      "web_pck_bytes": 92374076,
-      "windows_total_bytes": 195460156,
-      "web_total_bytes": 130647554,
-      "wall_ms": 14064.984200000254,
-      "windows_pck_growth": 1620676,
-      "web_pck_growth": 1620676
+      "import_ms": 4958.006700002443,
+      "windows_export_ms": 4975.748699998803,
+      "web_export_ms": 4600.814599998557,
+      "windows_pck_bytes": 92695068,
+      "web_pck_bytes": 92695068,
+      "windows_total_bytes": 195781148,
+      "web_total_bytes": 130968546,
+      "wall_ms": 15115.274300002056,
+      "windows_pck_growth": 1928708,
+      "web_pck_growth": 1928708
     },
     {
       "profile": "png-2304",
@@ -308,53 +318,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-2304.png",
           "source_bytes": 739232,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 9.946299998773611,
+          "decode_pillow_ms_median": 9.763199999724748,
           "pixel_equal_to_png": true,
           "sha256": "6977eff3b439f8ded3f305d1dc03a3e9b32ea93cec1ae2f4e7b4eebc0b3e8c0e",
           "imported_bytes": 764746
         },
         {
           "name": "qualle",
-          "file": "qualle-1-2304.png",
-          "source_bytes": 190765,
+          "candidate": 2,
+          "file": "qualle-2-2304.png",
+          "source_bytes": 255884,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 5.370400000174413,
+          "decode_pillow_ms_median": 5.958500001725042,
           "pixel_equal_to_png": true,
-          "sha256": "9ee2e1ca84c59b5bb56aba9b96344b31c6dab25a67d0d7fcd787ecb3ac86eda5",
-          "imported_bytes": 198772
+          "sha256": "a7756a7223cc6d2ceea7f4f2c8a96166bb8fc121cf205decd06a7e3037d3d1ac",
+          "imported_bytes": 267144
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-2304.png",
           "source_bytes": 545588,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 7.427300000927062,
+          "decode_pillow_ms_median": 7.6991999994788785,
           "pixel_equal_to_png": true,
           "sha256": "873233023de250d302f28273712405dfb4af6ba8d2ac24fc6df948a5524e6109",
           "imported_bytes": 566332
         },
         {
           "name": "petronas",
-          "file": "petronas-1-2304.png",
-          "source_bytes": 1142969,
+          "candidate": 3,
+          "file": "petronas-3-2304.png",
+          "source_bytes": 1576790,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 10.6577999995352,
+          "decode_pillow_ms_median": 18.229299999802606,
           "pixel_equal_to_png": true,
-          "sha256": "dc54f67ae238b09767b338ba7311cdb4d74f92b8a218f2c2b0b8220c242a776b",
-          "imported_bytes": 1077690
+          "sha256": "d01ece82b063ed0e882e6ffe22c92739ba87ada1781c3630229a0834162c21a8",
+          "imported_bytes": 1664350
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-2304.png",
-          "source_bytes": 910719,
+          "candidate": 3,
+          "file": "basilisk-3-2304.png",
+          "source_bytes": 980847,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 9.826100000282167,
+          "decode_pillow_ms_median": 9.97300000017276,
           "pixel_equal_to_png": true,
-          "sha256": "acec8030162cdc631a1058a8588451ecba363b271a83eac9d352f60e08ef732d",
-          "imported_bytes": 891652
+          "sha256": "7df90e10318262200300a0be8e1cc6edb1ec8514d6de43bf1598574628a5c64c",
+          "imported_bytes": 927034
         }
       ],
       "packed_read": {
@@ -366,9 +381,9 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              14.016,
-              13.996,
-              13.371
+              14.221,
+              13.799,
+              14.506
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-2304.png",
@@ -378,21 +393,21 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              6.501,
-              6.16,
-              6.945
+              8.12,
+              7.909,
+              8.007
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-2304.png",
+            "path": "res://art/drawing/rz_eval/qualle-2-2304.png",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              12.833,
-              12.372,
-              12.865
+              12.813,
+              12.583,
+              12.579
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-2304.png",
@@ -402,38 +417,38 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              15.375,
-              15.303,
-              15.3
+              18.256,
+              17.991,
+              18.506
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-2304.png",
+            "path": "res://art/drawing/rz_eval/petronas-3-2304.png",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              13.889,
-              13.722,
-              13.673
+              14.952,
+              15.128,
+              14.336
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+            "path": "res://art/drawing/rz_eval/basilisk-3-2304.png",
             "width": 2304
           }
         ]
       },
-      "import_ms": 5438.666099998954,
-      "windows_export_ms": 4734.506099999635,
-      "web_export_ms": 4248.46609999986,
-      "windows_pck_bytes": 94254940,
-      "web_pck_bytes": 94254940,
-      "windows_total_bytes": 197341020,
-      "web_total_bytes": 132528418,
-      "wall_ms": 15263.782700001684,
-      "windows_pck_growth": 3501540,
-      "web_pck_growth": 3501540
+      "import_ms": 5786.221799997293,
+      "windows_export_ms": 4964.278800001921,
+      "web_export_ms": 4408.2954000004975,
+      "windows_pck_bytes": 94958300,
+      "web_pck_bytes": 94958300,
+      "windows_total_bytes": 198044380,
+      "web_total_bytes": 133231778,
+      "wall_ms": 16178.519200002484,
+      "windows_pck_growth": 4191940,
+      "web_pck_growth": 4191940
     },
     {
       "profile": "png-3072",
@@ -445,53 +460,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-3072.png",
           "source_bytes": 1218371,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 19.366299999092007,
+          "decode_pillow_ms_median": 18.674599999940256,
           "pixel_equal_to_png": true,
           "sha256": "86d5c86cfb1f9a0ed62abd897f4e14d3819ab83221911b98690f3418340cd410",
           "imported_bytes": 1291388
         },
         {
           "name": "qualle",
-          "file": "qualle-1-3072.png",
-          "source_bytes": 321720,
+          "candidate": 2,
+          "file": "qualle-2-3072.png",
+          "source_bytes": 424965,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 10.103000000526663,
+          "decode_pillow_ms_median": 11.292099999991478,
           "pixel_equal_to_png": true,
-          "sha256": "96569f258ec5b9ce8bb2967c0bc80b5df8f16caa95334cf082522105d979bfd1",
-          "imported_bytes": 331802
+          "sha256": "6f347007776569452d0fc4531996848545296d2c3a310dd79e1035141d1b68d0",
+          "imported_bytes": 432660
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-3072.png",
           "source_bytes": 908298,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 14.716200001203106,
+          "decode_pillow_ms_median": 14.634099999966566,
           "pixel_equal_to_png": true,
           "sha256": "90bc19d4eddfb1de7b9bf3cc6420680a483404aee8c56a9dbe9b69656021ecff",
           "imported_bytes": 946006
         },
         {
           "name": "petronas",
-          "file": "petronas-1-3072.png",
-          "source_bytes": 1956622,
+          "candidate": 3,
+          "file": "petronas-3-3072.png",
+          "source_bytes": 2653702,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 19.73320000070089,
+          "decode_pillow_ms_median": 40.80020000037621,
           "pixel_equal_to_png": true,
-          "sha256": "291006ba41ca47bbf6807e5f55efbce72dc62d5ae4aa6ccc3f2d5d8fbca5c09d",
-          "imported_bytes": 1844010
+          "sha256": "71b59cc7b567a77ec3ba7f3da33e81343e19ff421b45e475af27d1bea9b855af",
+          "imported_bytes": 2878522
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-3072.png",
-          "source_bytes": 1541507,
+          "candidate": 3,
+          "file": "basilisk-3-3072.png",
+          "source_bytes": 1663049,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 18.697200001042802,
+          "decode_pillow_ms_median": 18.606400000862777,
           "pixel_equal_to_png": true,
-          "sha256": "c30ada44a19124e056b8e103d0326020d5e1e9b83cda6cbc5cd1f259d3f622c2",
-          "imported_bytes": 1496278
+          "sha256": "3cde3381de6156dc0f5f754bf8bacc94593b250ae256eebb3305f0f3167fbc95",
+          "imported_bytes": 1556434
         }
       ],
       "packed_read": {
@@ -503,9 +523,9 @@
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              24.731,
-              24.767,
-              24.872
+              24.661,
+              23.873,
+              24.564
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-3072.png",
@@ -515,21 +535,21 @@
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              12.359,
-              13.153,
-              12.823
+              12.908,
+              13.327,
+              13.349
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-3072.png",
+            "path": "res://art/drawing/rz_eval/qualle-2-3072.png",
             "width": 3072
           },
           {
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              21.279,
-              21.423,
-              21.304
+              20.562,
+              20.481,
+              20.556
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-3072.png",
@@ -539,38 +559,38 @@
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              28.918,
-              28.258,
-              28.777
+              31.284,
+              31.506,
+              30.909
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-3072.png",
+            "path": "res://art/drawing/rz_eval/petronas-3-3072.png",
             "width": 3072
           },
           {
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              25.826,
-              26.074,
-              25.374
+              23.873,
+              25.255,
+              24.084
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-3072.png",
+            "path": "res://art/drawing/rz_eval/basilisk-3-3072.png",
             "width": 3072
           }
         ]
       },
-      "import_ms": 7045.621100000062,
-      "windows_export_ms": 5165.1882999995,
-      "web_export_ms": 4444.099700000152,
-      "windows_pck_bytes": 96665228,
-      "web_pck_bytes": 96665228,
-      "windows_total_bytes": 199751308,
-      "web_total_bytes": 134938706,
-      "wall_ms": 18088.50429999984,
-      "windows_pck_growth": 5911828,
-      "web_pck_growth": 5911828
+      "import_ms": 7455.912500001432,
+      "windows_export_ms": 5153.106000001571,
+      "web_export_ms": 4503.578399999242,
+      "windows_pck_bytes": 97873724,
+      "web_pck_bytes": 97873724,
+      "windows_total_bytes": 200959804,
+      "web_total_bytes": 136147202,
+      "wall_ms": 18731.25400000208,
+      "windows_pck_growth": 7107364,
+      "web_pck_growth": 7107364
     },
     {
       "profile": "webp-lossless-1536",
@@ -582,53 +602,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-1536.webp",
           "source_bytes": 240234,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 11.383100001694402,
+          "decode_pillow_ms_median": 8.251999999629334,
           "pixel_equal_to_png": true,
           "sha256": "e90ad1187bd01f26b560889e1417c44325c8d136111546c3db5f50d30f45ab62",
           "imported_bytes": 354892
         },
         {
           "name": "qualle",
-          "file": "qualle-1-1536.webp",
-          "source_bytes": 37624,
+          "candidate": 2,
+          "file": "qualle-2-1536.webp",
+          "source_bytes": 59622,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 4.665399999794317,
+          "decode_pillow_ms_median": 4.515900000114925,
           "pixel_equal_to_png": true,
-          "sha256": "4ab1814ed0896b20b5b14cc6500bf86a42481570b2c9aae6fe44f13c074304ee",
-          "imported_bytes": 99810
+          "sha256": "8414609bb61617c251d0de2e286c2569436b42ab4b3b12ba59b137f40e56a018",
+          "imported_bytes": 135544
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-1536.webp",
           "source_bytes": 145456,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 6.223700000191457,
+          "decode_pillow_ms_median": 5.796500001451932,
           "pixel_equal_to_png": true,
           "sha256": "1655b1b301664883211f4f4b68f5e6b26fb1efa6d9322e02ccf614dc037314b1",
           "imported_bytes": 261300
         },
         {
           "name": "petronas",
-          "file": "petronas-1-1536.webp",
-          "source_bytes": 261606,
+          "candidate": 3,
+          "file": "petronas-3-1536.webp",
+          "source_bytes": 507932,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 6.1492000004363945,
+          "decode_pillow_ms_median": 8.842899998853682,
           "pixel_equal_to_png": true,
-          "sha256": "31554f162de4ad9395fd7c2503357f28db0d80625ff71520791d9b75c9b6bdd0",
-          "imported_bytes": 487174
+          "sha256": "bd54077a150a9deac17fbeb8178f0337dc891bd726dbfcc75f7627cff72f5530",
+          "imported_bytes": 741430
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-1536.webp",
-          "source_bytes": 194842,
+          "candidate": 3,
+          "file": "basilisk-3-1536.webp",
+          "source_bytes": 223940,
           "decoded_rgba_bytes": 2359296,
-          "decode_pillow_ms_median": 6.356699999741977,
+          "decode_pillow_ms_median": 6.699899997329339,
           "pixel_equal_to_png": true,
-          "sha256": "e59a6168b28be4e132dd6a4c71715ae1f4781b6fbc0c3cebd65b7514df5f1302",
-          "imported_bytes": 415152
+          "sha256": "6cb59a8af63c0cf3b4654fe46dd21291dc20bf3d9983bbd84ce3211aa30488f6",
+          "imported_bytes": 433200
         }
       ],
       "packed_read": {
@@ -640,9 +665,9 @@
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              7.36,
-              6.118,
-              6.351
+              7.144,
+              7.211,
+              6.194
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-1536.webp",
@@ -652,21 +677,21 @@
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              2.925,
-              3.077,
-              2.865
+              3.827,
+              4.129,
+              3.56
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-1536.webp",
+            "path": "res://art/drawing/rz_eval/qualle-2-1536.webp",
             "width": 1536
           },
           {
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              5.636,
-              5.593,
-              5.593
+              5.879,
+              6.182,
+              5.591
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-1536.webp",
@@ -676,38 +701,38 @@
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              7.165,
-              7.071,
-              7.154
+              8.878,
+              8.576,
+              8.998
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-1536.webp",
+            "path": "res://art/drawing/rz_eval/petronas-3-1536.webp",
             "width": 1536
           },
           {
             "height": 384,
             "image_bytes": 3145720,
             "load_ms": [
-              6.364,
-              6.607,
-              6.501
+              6.345,
+              6.531,
+              6.754
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-1536.webp",
+            "path": "res://art/drawing/rz_eval/basilisk-3-1536.webp",
             "width": 1536
           }
         ]
       },
-      "import_ms": 4731.151500000124,
-      "windows_export_ms": 4810.912000000826,
-      "web_export_ms": 4348.873999999341,
-      "windows_pck_bytes": 92374084,
-      "web_pck_bytes": 92374084,
-      "windows_total_bytes": 195460164,
-      "web_total_bytes": 130647562,
-      "wall_ms": 14533.547799999724,
-      "windows_pck_growth": 1620684,
-      "web_pck_growth": 1620684
+      "import_ms": 4864.045700000133,
+      "windows_export_ms": 5071.5239999990445,
+      "web_export_ms": 4429.608300000837,
+      "windows_pck_bytes": 92695076,
+      "web_pck_bytes": 92695076,
+      "windows_total_bytes": 195781156,
+      "web_total_bytes": 130968554,
+      "wall_ms": 15115.500600000814,
+      "windows_pck_growth": 1928716,
+      "web_pck_growth": 1928716
     },
     {
       "profile": "webp-lossless-2304",
@@ -719,53 +744,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-2304.webp",
           "source_bytes": 541578,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 19.530699999450007,
+          "decode_pillow_ms_median": 19.02479999989737,
           "pixel_equal_to_png": true,
           "sha256": "93727e64434a20d16150b1f3981492bec27ef5c8ba0475d8d317807ce6b25a2f",
           "imported_bytes": 764746
         },
         {
           "name": "qualle",
-          "file": "qualle-1-2304.webp",
-          "source_bytes": 82596,
+          "candidate": 2,
+          "file": "qualle-2-2304.webp",
+          "source_bytes": 131796,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 9.846800001469092,
+          "decode_pillow_ms_median": 10.897000000113621,
           "pixel_equal_to_png": true,
-          "sha256": "d8a59214d3f5f43cb9a5922f65e8bb1bde47f9125e21f816c4a30117ea9076c9",
-          "imported_bytes": 198772
+          "sha256": "e09a3899a403652a60bd357f64e4e20f7e36cc639808e44076e8219d0b8357b7",
+          "imported_bytes": 267144
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-2304.webp",
           "source_bytes": 390112,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 16.264900001260685,
+          "decode_pillow_ms_median": 16.981700002361322,
           "pixel_equal_to_png": false,
           "sha256": "f139d8e0049e86a84374f02b184c46380c041b36e985214b2201a1ade02f3f22",
           "imported_bytes": 566360
         },
         {
           "name": "petronas",
-          "file": "petronas-1-2304.webp",
-          "source_bytes": 608206,
+          "candidate": 3,
+          "file": "petronas-3-2304.webp",
+          "source_bytes": 1178092,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 15.717999998742016,
+          "decode_pillow_ms_median": 19.623500000307104,
           "pixel_equal_to_png": true,
-          "sha256": "d4e6518b0ebdc7eb02613a0282667080a478518e1cbfd1d225964a8680e2b3f3",
-          "imported_bytes": 1077690
+          "sha256": "7b98f1f7ba0d47fa01d2d68dedff13693cf64204bd94dba30138edcba3b8c5cc",
+          "imported_bytes": 1664350
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-2304.webp",
-          "source_bytes": 449264,
+          "candidate": 3,
+          "file": "basilisk-3-2304.webp",
+          "source_bytes": 512140,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 12.715400000161026,
+          "decode_pillow_ms_median": 18.48759999847971,
           "pixel_equal_to_png": true,
-          "sha256": "362d6adbbbf720e5e5050dadf816483a3ea540cbea686e9e32d66ae10eba0ca0",
-          "imported_bytes": 891652
+          "sha256": "46ee339846dc8721f2f9a4301f479e26a0eaa80485d34c0ff57c4619b5cf3423",
+          "imported_bytes": 927034
         }
       ],
       "packed_read": {
@@ -777,9 +807,9 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              13.826,
-              13.14,
-              13.35
+              14.819,
+              14.495,
+              14.759
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-2304.webp",
@@ -789,21 +819,21 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              6.016,
-              6.742,
-              6.214
+              8.161,
+              8.255,
+              7.984
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-2304.webp",
+            "path": "res://art/drawing/rz_eval/qualle-2-2304.webp",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              12.615,
-              12.464,
-              12.152
+              13.114,
+              12.967,
+              13.348
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-2304.webp",
@@ -813,38 +843,38 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              15.023,
-              15.184,
-              15.088
+              18.851,
+              18.944,
+              18.848
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-2304.webp",
+            "path": "res://art/drawing/rz_eval/petronas-3-2304.webp",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              13.796,
-              13.583,
-              13.443
+              15.922,
+              15.035,
+              14.994
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-2304.webp",
+            "path": "res://art/drawing/rz_eval/basilisk-3-2304.webp",
             "width": 2304
           }
         ]
       },
-      "import_ms": 5578.461799999786,
-      "windows_export_ms": 4731.480999998894,
-      "web_export_ms": 4252.994200000103,
-      "windows_pck_bytes": 94254980,
-      "web_pck_bytes": 94254980,
-      "windows_total_bytes": 197341060,
-      "web_total_bytes": 132528458,
-      "wall_ms": 15663.448000001154,
-      "windows_pck_growth": 3501580,
-      "web_pck_growth": 3501580
+      "import_ms": 5973.011699999915,
+      "windows_export_ms": 5076.431000001321,
+      "web_export_ms": 4408.428700000513,
+      "windows_pck_bytes": 94958340,
+      "web_pck_bytes": 94958340,
+      "windows_total_bytes": 198044420,
+      "web_total_bytes": 133231818,
+      "wall_ms": 16742.517200000293,
+      "windows_pck_growth": 4191980,
+      "web_pck_growth": 4191980
     },
     {
       "profile": "webp-lossless-3072",
@@ -856,53 +886,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-3072.webp",
           "source_bytes": 907286,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 49.336800000673975,
+          "decode_pillow_ms_median": 46.83360000126413,
           "pixel_equal_to_png": true,
           "sha256": "e4378648f8a5218733ec4e1556e89beeb77e3cf8ac2460dec41406eca1bee1d4",
           "imported_bytes": 1291388
         },
         {
           "name": "qualle",
-          "file": "qualle-1-3072.webp",
-          "source_bytes": 141928,
+          "candidate": 2,
+          "file": "qualle-2-3072.webp",
+          "source_bytes": 228292,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 25.403100000403356,
+          "decode_pillow_ms_median": 21.6325000001234,
           "pixel_equal_to_png": true,
-          "sha256": "0b483574c9e6c07a767560829426024cb4b8ae82c5a48572a653ec1f529dcea9",
-          "imported_bytes": 331802
+          "sha256": "12a953e49b065882379ad50fabd3bd49d5a0e0eef4b996ab3c94d721c9988c22",
+          "imported_bytes": 432660
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-3072.webp",
           "source_bytes": 644372,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 38.85380000065197,
+          "decode_pillow_ms_median": 44.255699998757336,
           "pixel_equal_to_png": false,
           "sha256": "adcd9f4c361afcbe4e5fc024f696add5c973d63e695c9350c09fa6d426b36dd8",
           "imported_bytes": 946018
         },
         {
           "name": "petronas",
-          "file": "petronas-1-3072.webp",
-          "source_bytes": 1065406,
+          "candidate": 3,
+          "file": "petronas-3-3072.webp",
+          "source_bytes": 2120380,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 36.070699999982025,
-          "pixel_equal_to_png": true,
-          "sha256": "2119ad68a175e09e54786ce246632fbc82e149b4dc39736250e3670cef66de36",
-          "imported_bytes": 1844010
+          "decode_pillow_ms_median": 41.90930000186199,
+          "pixel_equal_to_png": false,
+          "sha256": "b9bff408ed92396a7443d5401c68610d495c9ae966be9ff68fe16c75132202aa",
+          "imported_bytes": 2878530
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-3072.webp",
-          "source_bytes": 777338,
+          "candidate": 3,
+          "file": "basilisk-3-3072.webp",
+          "source_bytes": 885056,
           "decoded_rgba_bytes": 9437184,
-          "decode_pillow_ms_median": 41.76010000082897,
+          "decode_pillow_ms_median": 37.56640000210609,
           "pixel_equal_to_png": true,
-          "sha256": "487fd8dc912ab89b974415b71da0a9e7f31325824fb1da3d2604ae7eb8e2894e",
-          "imported_bytes": 1496278
+          "sha256": "947381d6ed8dc3fbbc8ebf7b0be40ad87fab62a5579d88418eab489a7c7b281b",
+          "imported_bytes": 1556434
         }
       ],
       "packed_read": {
@@ -914,9 +949,9 @@
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              24.752,
-              23.823,
-              23.899
+              25.137,
+              25.151,
+              25.145
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-3072.webp",
@@ -926,21 +961,21 @@
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              11.795,
-              11.87,
-              12.266
+              13.393,
+              13.61,
+              14.172
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-3072.webp",
+            "path": "res://art/drawing/rz_eval/qualle-2-3072.webp",
             "width": 3072
           },
           {
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              20.315,
-              20.206,
-              20.529
+              21.072,
+              21.401,
+              21.177
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-3072.webp",
@@ -950,38 +985,38 @@
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              27.531,
-              27.66,
-              27.784
+              31.622,
+              32.054,
+              31.848
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-3072.webp",
+            "path": "res://art/drawing/rz_eval/petronas-3-3072.webp",
             "width": 3072
           },
           {
             "height": 768,
             "image_bytes": 12582904,
             "load_ms": [
-              24.545,
-              24.621,
-              24.251
+              25.594,
+              24.772,
+              24.459
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-3072.webp",
+            "path": "res://art/drawing/rz_eval/basilisk-3-3072.webp",
             "width": 3072
           }
         ]
       },
-      "import_ms": 7082.7468000006775,
-      "windows_export_ms": 5053.448300001037,
-      "web_export_ms": 4453.19709999967,
-      "windows_pck_bytes": 96665252,
-      "web_pck_bytes": 96665252,
-      "windows_total_bytes": 199751332,
-      "web_total_bytes": 134938730,
-      "wall_ms": 18849.871200000052,
-      "windows_pck_growth": 5911852,
-      "web_pck_growth": 5911852
+      "import_ms": 7455.452499998501,
+      "windows_export_ms": 4968.501200000901,
+      "web_export_ms": 4404.033599999821,
+      "windows_pck_bytes": 97873764,
+      "web_pck_bytes": 97873764,
+      "windows_total_bytes": 200959844,
+      "web_total_bytes": 136147242,
+      "wall_ms": 19152.74159999899,
+      "windows_pck_growth": 7107404,
+      "web_pck_growth": 7107404
     },
     {
       "profile": "webp-q85-2304",
@@ -993,53 +1028,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-2304.webp",
           "source_bytes": 217966,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 24.137800000971765,
+          "decode_pillow_ms_median": 24.09529999931692,
           "pixel_equal_to_png": false,
           "sha256": "ad8cf78660b9c64f45284369bd8eae8211b47f700c725223a4841be8e18da2f8",
           "imported_bytes": 693568
         },
         {
           "name": "qualle",
-          "file": "qualle-1-2304.webp",
-          "source_bytes": 87890,
+          "candidate": 2,
+          "file": "qualle-2-2304.webp",
+          "source_bytes": 107604,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 24.1611000001285,
+          "decode_pillow_ms_median": 20.129300002736272,
           "pixel_equal_to_png": false,
-          "sha256": "930e737240c4087a0dfa22e19d61a4f2f80c960dab45849941d793d5a7141197",
-          "imported_bytes": 213568
+          "sha256": "05f9032615997f8bc888452ee9cca89c0217f0b8122f6b01491a5ca539ed65db",
+          "imported_bytes": 263510
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-2304.webp",
           "source_bytes": 199190,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 22.526900000229944,
+          "decode_pillow_ms_median": 23.42789999966044,
           "pixel_equal_to_png": false,
           "sha256": "a7af20f850794725aea40ee6b82a6f74b08eb8b0fd3829b6a72d93bf5e6d13ef",
           "imported_bytes": 525464
         },
         {
           "name": "petronas",
-          "file": "petronas-1-2304.webp",
-          "source_bytes": 380750,
+          "candidate": 3,
+          "file": "petronas-3-2304.webp",
+          "source_bytes": 542786,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 27.769000000262167,
+          "decode_pillow_ms_median": 31.716099998448044,
           "pixel_equal_to_png": false,
-          "sha256": "037be09a0af9ee33bc6f2ab31ca8d79e989f77cba0b6d59dbd2bf89b78a4c611",
-          "imported_bytes": 950644
+          "sha256": "322d89e538b1124b89c5bff62b3f9e6162e28d6c7300200f974b258336c18ae2",
+          "imported_bytes": 1377708
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-2304.webp",
-          "source_bytes": 320510,
+          "candidate": 3,
+          "file": "basilisk-3-2304.webp",
+          "source_bytes": 338244,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 27.556299999559997,
+          "decode_pillow_ms_median": 27.732599999580998,
           "pixel_equal_to_png": false,
-          "sha256": "e21e531d9410b3cf425afc9c179d5c355ae87f8a1c6d61c2d09b529548733da5",
-          "imported_bytes": 800488
+          "sha256": "050aec6742762e06922f67f100af09979c6eb808f4462402736f2a747c18db65",
+          "imported_bytes": 871144
         }
       ],
       "packed_read": {
@@ -1051,9 +1091,9 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              14.753,
-              14.694,
-              14.151
+              15.188,
+              15.146,
+              14.828
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-2304.webp",
@@ -1063,21 +1103,21 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              7.644,
-              7.932,
-              7.945
+              8.859,
+              9.091,
+              9.047
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-2304.webp",
+            "path": "res://art/drawing/rz_eval/qualle-2-2304.webp",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              13.462,
-              12.795,
-              12.84
+              13.676,
+              14.112,
+              13.628
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-2304.webp",
@@ -1087,38 +1127,38 @@
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              15.913,
-              15.737,
-              16.193
+              19.626,
+              20.098,
+              19.769
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-2304.webp",
+            "path": "res://art/drawing/rz_eval/petronas-3-2304.webp",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 7077844,
             "load_ms": [
-              15.012,
-              14.973,
-              14.407
+              17.081,
+              16.88,
+              16.564
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-2304.webp",
+            "path": "res://art/drawing/rz_eval/basilisk-3-2304.webp",
             "width": 2304
           }
         ]
       },
-      "import_ms": 5949.497800000245,
-      "windows_export_ms": 5007.082300000548,
-      "web_export_ms": 4046.4853000012226,
-      "windows_pck_bytes": 93939476,
-      "web_pck_bytes": 93939476,
-      "windows_total_bytes": 197025556,
-      "web_total_bytes": 132212954,
-      "wall_ms": 46413.132899999255,
-      "windows_pck_growth": 3186076,
-      "web_pck_growth": 3186076
+      "import_ms": 5972.054599998955,
+      "windows_export_ms": 4886.007500001142,
+      "web_export_ms": 4500.342600000295,
+      "windows_pck_bytes": 94500100,
+      "web_pck_bytes": 94500100,
+      "windows_total_bytes": 197586180,
+      "web_total_bytes": 132773578,
+      "wall_ms": 49415.33839999829,
+      "windows_pck_growth": 3733740,
+      "web_pck_growth": 3733740
     },
     {
       "profile": "png-2304-no-mips",
@@ -1130,53 +1170,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-2304.png",
           "source_bytes": 739232,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 9.908799998811446,
+          "decode_pillow_ms_median": 9.327899999334477,
           "pixel_equal_to_png": true,
           "sha256": "6977eff3b439f8ded3f305d1dc03a3e9b32ea93cec1ae2f4e7b4eebc0b3e8c0e",
           "imported_bytes": 548992
         },
         {
           "name": "qualle",
-          "file": "qualle-1-2304.png",
-          "source_bytes": 190765,
+          "candidate": 2,
+          "file": "qualle-2-2304.png",
+          "source_bytes": 255884,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 5.24050000058196,
+          "decode_pillow_ms_median": 6.4044999999168795,
           "pixel_equal_to_png": true,
-          "sha256": "9ee2e1ca84c59b5bb56aba9b96344b31c6dab25a67d0d7fcd787ecb3ac86eda5",
-          "imported_bytes": 133682
+          "sha256": "a7756a7223cc6d2ceea7f4f2c8a96166bb8fc121cf205decd06a7e3037d3d1ac",
+          "imported_bytes": 183732
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-2304.png",
           "source_bytes": 545588,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 7.313399999475223,
+          "decode_pillow_ms_median": 7.7635999987251125,
           "pixel_equal_to_png": true,
           "sha256": "873233023de250d302f28273712405dfb4af6ba8d2ac24fc6df948a5524e6109",
           "imported_bytes": 399198
         },
         {
           "name": "petronas",
-          "file": "petronas-1-2304.png",
-          "source_bytes": 1142969,
+          "candidate": 3,
+          "file": "petronas-3-2304.png",
+          "source_bytes": 1576790,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 10.71109999975306,
+          "decode_pillow_ms_median": 18.454199998814147,
           "pixel_equal_to_png": true,
-          "sha256": "dc54f67ae238b09767b338ba7311cdb4d74f92b8a218f2c2b0b8220c242a776b",
-          "imported_bytes": 770698
+          "sha256": "d01ece82b063ed0e882e6ffe22c92739ba87ada1781c3630229a0834162c21a8",
+          "imported_bytes": 1238026
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-2304.png",
-          "source_bytes": 910719,
+          "candidate": 3,
+          "file": "basilisk-3-2304.png",
+          "source_bytes": 980847,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 9.615400000257068,
+          "decode_pillow_ms_median": 9.19639999847277,
           "pixel_equal_to_png": true,
-          "sha256": "acec8030162cdc631a1058a8588451ecba363b271a83eac9d352f60e08ef732d",
-          "imported_bytes": 630960
+          "sha256": "7df90e10318262200300a0be8e1cc6edb1ec8514d6de43bf1598574628a5c64c",
+          "imported_bytes": 651686
         }
       ],
       "packed_read": {
@@ -1188,9 +1233,9 @@
             "height": 576,
             "image_bytes": 5308416,
             "load_ms": [
-              8.793,
-              8.784,
-              8.603
+              9.569,
+              9.764,
+              9.22
             ],
             "mipmaps": false,
             "path": "res://art/drawing/rz_eval/tomate-1-2304.png",
@@ -1200,21 +1245,21 @@
             "height": 576,
             "image_bytes": 5308416,
             "load_ms": [
-              3.583,
-              3.647,
-              3.583
+              5.049,
+              4.923,
+              5.374
             ],
             "mipmaps": false,
-            "path": "res://art/drawing/rz_eval/qualle-1-2304.png",
+            "path": "res://art/drawing/rz_eval/qualle-2-2304.png",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 5308416,
             "load_ms": [
-              8.148,
-              8.259,
-              8.122
+              8.509,
+              8.397,
+              8.337
             ],
             "mipmaps": false,
             "path": "res://art/drawing/rz_eval/hills-1-2304.png",
@@ -1224,38 +1269,38 @@
             "height": 576,
             "image_bytes": 5308416,
             "load_ms": [
-              10.162,
-              10.324,
-              9.95
+              13.206,
+              12.394,
+              12.407
             ],
             "mipmaps": false,
-            "path": "res://art/drawing/rz_eval/petronas-1-2304.png",
+            "path": "res://art/drawing/rz_eval/petronas-3-2304.png",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 5308416,
             "load_ms": [
-              9.404,
-              9.108,
-              9.176
+              10.082,
+              10.146,
+              9.922
             ],
             "mipmaps": false,
-            "path": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+            "path": "res://art/drawing/rz_eval/basilisk-3-2304.png",
             "width": 2304
           }
         ]
       },
-      "import_ms": 5261.965100000452,
-      "windows_export_ms": 4565.7188999994105,
-      "web_export_ms": 4062.1888999994553,
-      "windows_pck_bytes": 93239260,
-      "web_pck_bytes": 93239260,
-      "windows_total_bytes": 196325340,
-      "web_total_bytes": 131512738,
-      "wall_ms": 14730.144400000427,
-      "windows_pck_growth": 2485860,
-      "web_pck_growth": 2485860
+      "import_ms": 5691.569400001754,
+      "windows_export_ms": 5067.438499998389,
+      "web_export_ms": 4411.287699997047,
+      "windows_pck_bytes": 93790332,
+      "web_pck_bytes": 93790332,
+      "windows_total_bytes": 196876412,
+      "web_total_bytes": 132063810,
+      "wall_ms": 16109.475600002042,
+      "windows_pck_growth": 3023972,
+      "web_pck_growth": 3023972
     },
     {
       "profile": "png-LA-2304",
@@ -1267,53 +1312,58 @@
       "images": [
         {
           "name": "tomate",
+          "candidate": 1,
           "file": "tomate-1-2304.png",
           "source_bytes": 390409,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 7.254000000102678,
+          "decode_pillow_ms_median": 8.750799999688752,
           "pixel_equal_to_png": false,
           "sha256": "f9b60ded8675c8103dea146491d7e4ffd4847dcffbdef76f0c66e8b893ee3cee",
           "imported_bytes": 476676
         },
         {
           "name": "qualle",
-          "file": "qualle-1-2304.png",
-          "source_bytes": 111453,
+          "candidate": 2,
+          "file": "qualle-2-2304.png",
+          "source_bytes": 143060,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 5.757599999924423,
+          "decode_pillow_ms_median": 6.19150000056834,
           "pixel_equal_to_png": false,
-          "sha256": "02d604156eb29def5a6ba176fa0609f064a8a1d051a25f66085a2a0572f6d516",
-          "imported_bytes": 126618
+          "sha256": "a56723d976eac9a06ce9c5fb460e8cc770eb09e8c07fad7d3bcbc183e73ed197",
+          "imported_bytes": 180650
         },
         {
           "name": "hills",
+          "candidate": 1,
           "file": "hills-1-2304.png",
           "source_bytes": 307986,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 7.22459999997227,
+          "decode_pillow_ms_median": 7.453400001395494,
           "pixel_equal_to_png": false,
           "sha256": "a2a490b7d242c69573f972ef5b691003f721ebe6e34f96d45a476d06e0303606",
           "imported_bytes": 376092
         },
         {
           "name": "petronas",
-          "file": "petronas-1-2304.png",
-          "source_bytes": 605323,
+          "candidate": 3,
+          "file": "petronas-3-2304.png",
+          "source_bytes": 817613,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 7.970700000441866,
+          "decode_pillow_ms_median": 12.739699999656295,
           "pixel_equal_to_png": false,
-          "sha256": "049eea9b855f62eed0d8223fb5af1a6db360f89c59575185bbc65d7497d14c65",
-          "imported_bytes": 758210
+          "sha256": "11f5da2c993a1aff2993aedb881562b384f0a4a5b53a2cb306542e85be55afdf",
+          "imported_bytes": 1052652
         },
         {
           "name": "basilisk",
-          "file": "basilisk-1-2304.png",
-          "source_bytes": 500399,
+          "candidate": 3,
+          "file": "basilisk-3-2304.png",
+          "source_bytes": 518340,
           "decoded_rgba_bytes": 5308416,
-          "decode_pillow_ms_median": 8.468599999105209,
+          "decode_pillow_ms_median": 8.760100001381943,
           "pixel_equal_to_png": false,
-          "sha256": "e5036e74791ca67c59d34972802794ac823ac17c644eedad0940a46e7e4ed18e",
-          "imported_bytes": 636094
+          "sha256": "fd4435cae526018f18b80b2007ebc8e1f9839076789eb0d234a1ca3e9a707060",
+          "imported_bytes": 647154
         }
       ],
       "packed_read": {
@@ -1325,9 +1375,9 @@
             "height": 576,
             "image_bytes": 3538922,
             "load_ms": [
-              15.677,
-              15.31,
-              15.26
+              16.248,
+              15.693,
+              15.614
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/tomate-1-2304.png",
@@ -1337,21 +1387,21 @@
             "height": 576,
             "image_bytes": 3538922,
             "load_ms": [
-              8.295,
-              8.161,
-              8.257
+              9.575,
+              9.332,
+              9.982
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/qualle-1-2304.png",
+            "path": "res://art/drawing/rz_eval/qualle-2-2304.png",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 3538922,
             "load_ms": [
-              13.717,
-              14.122,
-              13.989
+              14.675,
+              14.779,
+              14.646
             ],
             "mipmaps": true,
             "path": "res://art/drawing/rz_eval/hills-1-2304.png",
@@ -1361,38 +1411,38 @@
             "height": 576,
             "image_bytes": 3538922,
             "load_ms": [
-              16.968,
-              16.687,
-              16.839
+              20.735,
+              20.182,
+              20.481
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/petronas-1-2304.png",
+            "path": "res://art/drawing/rz_eval/petronas-3-2304.png",
             "width": 2304
           },
           {
             "height": 576,
             "image_bytes": 3538922,
             "load_ms": [
-              15.278,
-              15.307,
-              15.223
+              16.814,
+              16.989,
+              16.817
             ],
             "mipmaps": true,
-            "path": "res://art/drawing/rz_eval/basilisk-1-2304.png",
+            "path": "res://art/drawing/rz_eval/basilisk-3-2304.png",
             "width": 2304
           }
         ]
       },
-      "import_ms": 4672.339700000521,
-      "windows_export_ms": 4622.796200001176,
-      "web_export_ms": 4225.638900001286,
-      "windows_pck_bytes": 93129436,
-      "web_pck_bytes": 93129436,
-      "windows_total_bytes": 196215516,
-      "web_total_bytes": 131402914,
-      "wall_ms": 14933.343700000478,
-      "windows_pck_growth": 2376036,
-      "web_pck_growth": 2376036
+      "import_ms": 5036.725300000398,
+      "windows_export_ms": 5246.249600000738,
+      "web_export_ms": 4403.465299998061,
+      "windows_pck_bytes": 93501932,
+      "web_pck_bytes": 93501932,
+      "windows_total_bytes": 196588012,
+      "web_total_bytes": 131775410,
+      "wall_ms": 16201.978599998256,
+      "windows_pck_growth": 2735572,
+      "web_pck_growth": 2735572
     }
   ]
 }
