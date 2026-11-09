@@ -292,7 +292,12 @@ func _reset_selected() -> void:
 	resetting_ending = false
 
 func activate(id: String) -> bool:
-	return session_indices.has(id) and _activate_session(int(session_indices[id]))
+	var accepted: bool = session_indices.has(id) and _activate_session(int(session_indices[id]))
+	# Begin only for an accepted visit, before the source-page capture. This
+	# gives decoding its existing preparation frames without delaying the book.
+	if accepted and rz_eval != null and rz_eval.enabled and RzEval.PILOTS.has(id) and not session.completed:
+		rz_eval.visit(id,rz_eval.path_for(id))
+	return accepted
 
 func set_ui_scale(value: float) -> void:
 	scale_changing.emit()

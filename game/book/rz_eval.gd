@@ -78,6 +78,7 @@ func visit(id: String, path: String) -> void:
 	active_id = id
 	desired_path = path
 	active_texture = null
+	canvas = Rect2()
 	queue_redraw()
 	if id.is_empty(): state = "idle"
 	elif transparent_control: state = "intentional-empty"
