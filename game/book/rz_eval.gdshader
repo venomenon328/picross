@@ -13,11 +13,6 @@ bool inside(vec2 p, vec4 r) {
 	return r.z > 0.0 && r.w > 0.0 && all(greaterThanEqual(p, r.xy)) && all(lessThan(p, r.xy + r.zw));
 }
 
-vec4 premultiplied(sampler2D source, vec2 uv) {
-	vec4 c = texture(source, clamp(uv, vec2(0.0), vec2(1.0)));
-	return vec4(c.rgb * c.a, c.a);
-}
-
 void vertex() {
 	page_pixel = VERTEX;
 }
@@ -31,15 +26,15 @@ void fragment() {
 			// Only decoration is sampled. No screen texture, functional UI or
 			// additional render target. Premultiplied averaging avoids alpha halos.
 			vec2 d = vec2(2.5) / max(canvas_pixels, vec2(1.0));
-			vec4 sum = premultiplied(TEXTURE, UV) * 4.0;
-			sum += premultiplied(TEXTURE, UV + vec2(d.x, 0.0)) * 2.0;
-			sum += premultiplied(TEXTURE, UV - vec2(d.x, 0.0)) * 2.0;
-			sum += premultiplied(TEXTURE, UV + vec2(0.0, d.y)) * 2.0;
-			sum += premultiplied(TEXTURE, UV - vec2(0.0, d.y)) * 2.0;
-			sum += premultiplied(TEXTURE, UV + d);
-			sum += premultiplied(TEXTURE, UV - d);
-			sum += premultiplied(TEXTURE, UV + vec2(d.x, -d.y));
-			sum += premultiplied(TEXTURE, UV + vec2(-d.x, d.y));
+			vec4 sum = vec4(0.0);
+			for (int y = -1; y <= 1; y++) {
+				for (int x = -1; x <= 1; x++) {
+					vec2 uv = clamp(UV + d * vec2(float(x), float(y)), vec2(0.0), vec2(1.0));
+					vec4 c = texture(TEXTURE, uv);
+					float weight = (x == 0 ? 2.0 : 1.0) * (y == 0 ? 2.0 : 1.0);
+					sum += vec4(c.rgb * c.a, c.a) * weight;
+				}
+			}
 			sum /= 16.0;
 			ink = vec4(sum.rgb / max(sum.a, 0.00001), sum.a);
 		} else if (overlap_mode == 3) {
