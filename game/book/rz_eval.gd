@@ -139,6 +139,7 @@ func arrange(paper: Rect2, viewport: Vector2, u: float, board_area: Rect2, prote
 	queue_redraw()
 
 func _draw() -> void:
+	if _ink_item.is_valid(): RenderingServer.canvas_item_clear(_ink_item)
 	if active_texture == null or not canvas.has_area(): return
 	ink.set_shader_parameter("overlap_mode",mode)
 	ink.set_shader_parameter("grid",Vector4(grid.position.x,grid.position.y,grid.size.x,grid.size.y))
