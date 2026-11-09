@@ -1,0 +1,458 @@
+{
+  "assertions": [
+    {
+      "description": "canonical open pz-test-kat2-053",
+      "ok": true
+    },
+    {
+      "description": "real opening reaches work",
+      "ok": true
+    },
+    {
+      "description": "saved native original independent-work-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original independent-work-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across independent-work with/without",
+      "ok": true
+    },
+    {
+      "description": "native layout independently omits one drawing",
+      "ok": true
+    },
+    {
+      "description": "real return reaches catalog",
+      "ok": true
+    },
+    {
+      "description": "canonical open pz-test-kat2-051",
+      "ok": true
+    },
+    {
+      "description": "real opening reaches work",
+      "ok": true
+    },
+    {
+      "description": "saved native original shallow-grid-overlap-1440-ui100-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original shallow-grid-overlap-1440-ui100-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across shallow-grid-overlap-1440-ui100 with/without",
+      "ok": true
+    },
+    {
+      "description": "real valid rectangular puzzle/zoom produces shallow retained overlap for paper/contrast assessment",
+      "ok": true
+    }
+  ],
+  "display": "Windows",
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+  "package": "RAND-P1",
+  "passed": true,
+  "physical_os_mouse": false,
+  "records": [
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1345.95544433594,
+          686.441162109375,
+          478.933288574219,
+          369.558807373047
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "landschaften-natur",
+      "file": "independent-work-with.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "cell_size": 15.49,
+        "grid": [
+          580.0,
+          223.119995117188,
+          774.5,
+          774.5
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          71.1111068725586,
+          49.7777481079102,
+          1777.77770996094,
+          2204.44458007813
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          230.399993896484,
+          61.7777481079102,
+          1152.0,
+          44.9999923706055
+        ],
+        "tools": [
+          1668.0,
+          453.119995117188,
+          92.0,
+          140.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1345.95544433594,
+          686.441162109375,
+          478.933288574219,
+          369.558807373047
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": false,
+      "family": "landschaften-natur",
+      "file": "independent-work-without.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "cell_size": 15.49,
+        "grid": [
+          580.0,
+          223.119995117188,
+          774.5,
+          774.5
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          71.1111068725586,
+          49.7777481079102,
+          1777.77770996094,
+          2204.44458007813
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          230.399993896484,
+          61.7777481079102,
+          1152.0,
+          44.9999923706055
+        ],
+        "tools": [
+          1668.0,
+          453.119995117188,
+          92.0,
+          140.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1861.18505859375,
+          958.684204101563,
+          580.0,
+          457.315826416016
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "wasserwelt",
+      "file": "shallow-grid-overlap-1440-ui100-with.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 37.0,
+        "grid": [
+          450.0,
+          192.160003662109,
+          1480.0,
+          1110.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 37.0,
+        "title": [
+          307.200012207031,
+          78.3703308105469,
+          1536.0,
+          45.0
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          1861.18505859375,
+          958.684204101563,
+          580.0,
+          457.315826416016
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": false,
+      "family": "wasserwelt",
+      "file": "shallow-grid-overlap-1440-ui100-without.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 37.0,
+        "grid": [
+          450.0,
+          192.160003662109,
+          1480.0,
+          1110.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 37.0,
+        "title": [
+          307.200012207031,
+          78.3703308105469,
+          1536.0,
+          45.0
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    }
+  ],
+  "renderer": "NVIDIA GeForce RTX 3070",
+  "samples": [
+    {
+      "actual": 30.0,
+      "overlap_area": 0.0,
+      "request": 30
+    },
+    {
+      "actual": 32.0,
+      "overlap_area": 0.0,
+      "request": 32
+    },
+    {
+      "actual": 34.0,
+      "overlap_area": 2332.57104492188,
+      "request": 34
+    },
+    {
+      "actual": 35.0,
+      "overlap_area": 9032.7880859375,
+      "request": 35
+    },
+    {
+      "actual": 36.0,
+      "overlap_area": 16034.5283203125,
+      "request": 36
+    },
+    {
+      "actual": 37.0,
+      "overlap_area": 24049.560546875,
+      "request": 37
+    },
+    {
+      "actual": 38.0,
+      "overlap_area": 0.0,
+      "request": 38
+    },
+    {
+      "actual": 39.0,
+      "overlap_area": 0.0,
+      "request": 39
+    },
+    {
+      "actual": 40.0,
+      "overlap_area": 0.0,
+      "request": 40
+    },
+    {
+      "actual": 40.36,
+      "overlap_area": 0.0,
+      "request": 42
+    },
+    {
+      "actual": 40.36,
+      "overlap_area": 0.0,
+      "request": 44
+    }
+  ],
+  "test_only": true,
+  "unmodified_product_root": true
+}

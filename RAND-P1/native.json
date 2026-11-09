@@ -1,0 +1,2395 @@
+{
+  "assertions": [
+    {
+      "description": "saved native original catalog-1440-ui100.png",
+      "ok": true
+    },
+    {
+      "description": "full 12/12 catalog has no pilot art",
+      "ok": true
+    },
+    {
+      "description": "canonical open pz-test-kat2-001",
+      "ok": true
+    },
+    {
+      "description": "real opening reaches work",
+      "ok": true
+    },
+    {
+      "description": "saved native original water-1080-ui100-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original water-1080-ui100-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across water-1080-ui100 with/without",
+      "ok": true
+    },
+    {
+      "description": "saved native original water-1440-ui100-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original water-1440-ui100-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across water-1440-ui100 with/without",
+      "ok": true
+    },
+    {
+      "description": "native GUI cell event passes with art active",
+      "ok": true
+    },
+    {
+      "description": "commit/undo preserve drawing and restore cells",
+      "ok": true
+    },
+    {
+      "description": "saved native original water-1440-high-zoom.png",
+      "ok": true
+    },
+    {
+      "description": "real return reaches catalog",
+      "ok": true
+    },
+    {
+      "description": "canonical open pz-test-kat2-001",
+      "ok": true
+    },
+    {
+      "description": "real opening reaches work",
+      "ok": true
+    },
+    {
+      "description": "reopening same leaf retains category drawing",
+      "ok": true
+    },
+    {
+      "description": "real return reaches catalog",
+      "ok": true
+    },
+    {
+      "description": "canonical open pz-test-kat2-003",
+      "ok": true
+    },
+    {
+      "description": "real opening reaches work",
+      "ok": true
+    },
+    {
+      "description": "saved native original nature-1080-ui100-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original nature-1080-ui100-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across nature-1080-ui100 with/without",
+      "ok": true
+    },
+    {
+      "description": "saved native original nature-1440-ui100-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original nature-1440-ui100-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across nature-1440-ui100 with/without",
+      "ok": true
+    },
+    {
+      "description": "native GUI cell event passes with art active",
+      "ok": true
+    },
+    {
+      "description": "commit/undo preserve drawing and restore cells",
+      "ok": true
+    },
+    {
+      "description": "saved native original nature-1440-high-zoom.png",
+      "ok": true
+    },
+    {
+      "description": "real return reaches catalog",
+      "ok": true
+    },
+    {
+      "description": "canonical open pz-test-kat2-003",
+      "ok": true
+    },
+    {
+      "description": "real opening reaches work",
+      "ok": true
+    },
+    {
+      "description": "reopening same leaf retains category drawing",
+      "ok": true
+    },
+    {
+      "description": "real return reaches catalog",
+      "ok": true
+    },
+    {
+      "description": "canonical open pz-test-kat2-001",
+      "ok": true
+    },
+    {
+      "description": "real opening reaches work",
+      "ok": true
+    },
+    {
+      "description": "real work-to-help transition",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-1080-ui100-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-1080-ui100-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across help-1080-ui100 with/without",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-1440-ui100-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-1440-ui100-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across help-1440-ui100 with/without",
+      "ok": true
+    },
+    {
+      "description": "chapter pointer and article wheel with drawings",
+      "ok": true
+    },
+    {
+      "description": "chapter/wheel keep same pair and placement",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-1440-ui100-scrolled.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-settings-pan-moving.png",
+      "ok": true
+    },
+    {
+      "description": "drawings reparent with live UI into real book capture",
+      "ok": true
+    },
+    {
+      "description": "settings has no pilot art",
+      "ok": true
+    },
+    {
+      "description": "saved native original settings-1440-ui100.png",
+      "ok": true
+    },
+    {
+      "description": "real settings pan return keeps article and drawings",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-1440-return.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-720-ui125-tight-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original help-720-ui125-tight-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across help-720-ui125-tight with/without",
+      "ok": true
+    },
+    {
+      "description": "real return reaches catalog",
+      "ok": true
+    },
+    {
+      "description": "canonical open pz-test-kat2-053",
+      "ok": true
+    },
+    {
+      "description": "real opening reaches work",
+      "ok": true
+    },
+    {
+      "description": "saved native original large-720-ui125-high-zoom-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original large-720-ui125-high-zoom-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across large-720-ui125-high-zoom with/without",
+      "ok": true
+    },
+    {
+      "description": "saved native original large-1440-ui125-high-zoom-with.png",
+      "ok": true
+    },
+    {
+      "description": "saved native original large-1440-ui125-high-zoom-without.png",
+      "ok": true
+    },
+    {
+      "description": "identical geometry/state across large-1440-ui125-high-zoom with/without",
+      "ok": true
+    },
+    {
+      "description": "real return reaches catalog",
+      "ok": true
+    },
+    {
+      "description": "saved native original catalog-1440-ui125.png",
+      "ok": true
+    }
+  ],
+  "display": "Windows",
+  "engine": {
+    "build": "official",
+    "hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+    "hex": 263938,
+    "major": 4,
+    "minor": 7,
+    "patch": 2,
+    "status": "stable",
+    "string": "4.7.2-stable (official)",
+    "timestamp": 0
+  },
+  "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+  "package": "RAND-P1",
+  "passed": true,
+  "physical_os_mouse": false,
+  "records": [
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "",
+      "file": "catalog-1440-ui100.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          4760.0,
+          4760.0,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          1280.0,
+          53.7313270568848,
+          1074.626953125,
+          1332.53735351563
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          45.0000038146973
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          228.444427490234,
+          897.839111328125,
+          255.431091308594,
+          158.160873413086
+        ],
+        [
+          1345.95544433594,
+          678.372802734375,
+          478.933288574219,
+          377.627197265625
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "wasserwelt",
+      "file": "water-1080-ui100-with.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          624.0,
+          329.119995117188,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          71.1111068725586,
+          49.7777481079102,
+          1777.77770996094,
+          2204.44458007813
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          230.399993896484,
+          61.7777481079102,
+          1152.0,
+          44.9999923706055
+        ],
+        "tools": [
+          1668.0,
+          399.119995117188,
+          92.0,
+          140.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "boxes": [
+        [
+          228.444427490234,
+          897.839111328125,
+          255.431091308594,
+          158.160873413086
+        ],
+        [
+          1345.95544433594,
+          678.372802734375,
+          478.933288574219,
+          377.627197265625
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": false,
+      "family": "wasserwelt",
+      "file": "water-1080-ui100-without.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          624.0,
+          329.119995117188,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          71.1111068725586,
+          49.7777481079102,
+          1777.77770996094,
+          2204.44458007813
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          230.399993896484,
+          61.7777481079102,
+          1152.0,
+          44.9999923706055
+        ],
+        "tools": [
+          1668.0,
+          399.119995117188,
+          92.0,
+          140.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1242.62622070313,
+          280.0,
+          173.373733520508
+        ],
+        [
+          1861.18505859375,
+          958.684204101563,
+          580.0,
+          457.315826416016
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "wasserwelt",
+      "file": "water-1440-ui100-with.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          307.200012207031,
+          78.3703308105469,
+          1536.0,
+          45.0
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1242.62622070313,
+          280.0,
+          173.373733520508
+        ],
+        [
+          1861.18505859375,
+          958.684204101563,
+          580.0,
+          457.315826416016
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": false,
+      "family": "wasserwelt",
+      "file": "water-1440-ui100-without.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          307.200012207031,
+          78.3703308105469,
+          1536.0,
+          45.0
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1250.42358398438,
+          267.407348632813,
+          165.576461791992
+        ],
+        [
+          1861.18505859375,
+          958.684204101563,
+          580.0,
+          457.315826416016
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "wasserwelt",
+      "file": "water-1440-high-zoom.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 56.94,
+        "grid": [
+          630.999938964844,
+          216.160003662109,
+          1138.79992675781,
+          1138.79992675781
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          307.200012207031,
+          78.3703308105469,
+          1536.0,
+          45.0
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          228.444427490234,
+          844.544982910156,
+          255.431091308594,
+          211.455017089844
+        ],
+        [
+          1345.95544433594,
+          686.441162109375,
+          478.933288574219,
+          369.558807373047
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "landschaften-natur",
+      "file": "nature-1080-ui100-with.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          624.0,
+          329.119995117188,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          71.1111068725586,
+          49.7777481079102,
+          1777.77770996094,
+          2204.44458007813
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          230.399993896484,
+          61.7777481079102,
+          1152.0,
+          44.9999923706055
+        ],
+        "tools": [
+          1668.0,
+          399.119995117188,
+          92.0,
+          140.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "boxes": [
+        [
+          228.444427490234,
+          844.544982910156,
+          255.431091308594,
+          211.455017089844
+        ],
+        [
+          1345.95544433594,
+          686.441162109375,
+          478.933288574219,
+          369.558807373047
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": false,
+      "family": "landschaften-natur",
+      "file": "nature-1080-ui100-without.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          93.120002746582,
+          1568.0,
+          908.880004882813
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          624.0,
+          329.119995117188,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          71.1111068725586,
+          49.7777481079102,
+          1777.77770996094,
+          2204.44458007813
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          230.399993896484,
+          61.7777481079102,
+          1152.0,
+          44.9999923706055
+        ],
+        "tools": [
+          1668.0,
+          399.119995117188,
+          92.0,
+          140.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1184.20593261719,
+          280.0,
+          231.794052124023
+        ],
+        [
+          1861.18505859375,
+          968.455200195313,
+          580.0,
+          447.544830322266
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "landschaften-natur",
+      "file": "nature-1440-ui100-with.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          307.200012207031,
+          78.3703308105469,
+          1536.0,
+          45.0
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1184.20593261719,
+          280.0,
+          231.794052124023
+        ],
+        [
+          1861.18505859375,
+          968.455200195313,
+          580.0,
+          447.544830322266
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": false,
+      "family": "landschaften-natur",
+      "file": "nature-1440-ui100-without.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          307.200012207031,
+          78.3703308105469,
+          1536.0,
+          45.0
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1194.63061523438,
+          267.407348632813,
+          221.369400024414
+        ],
+        [
+          1861.18505859375,
+          968.455200195313,
+          580.0,
+          447.544830322266
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "landschaften-natur",
+      "file": "nature-1440-high-zoom.png",
+      "geometry": {
+        "article": [
+          0.0,
+          0.0,
+          302.0,
+          0.0
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 56.94,
+        "grid": [
+          630.999938964844,
+          216.160003662109,
+          1138.79992675781,
+          1138.79992675781
+        ],
+        "help": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 0.0,
+        "register": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          307.200012207031,
+          78.3703308105469,
+          1536.0,
+          45.0
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 0,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          228.444427490234,
+          1014.78619384766,
+          166.0,
+          41.213794708252
+        ],
+        [
+          1313.95544433594,
+          746.7646484375,
+          478.933288574219,
+          309.235382080078
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "help",
+      "file": "help-1080-ui100-with.png",
+      "geometry": {
+        "article": [
+          404.444427490234,
+          261.777740478516,
+          1420.4443359375,
+          794.222290039063
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          228.444427490234,
+          261.777740478516,
+          1596.4443359375,
+          794.222290039063
+        ],
+        "paper": [
+          71.1111068725586,
+          49.7777481079102,
+          1777.77770996094,
+          2204.44458007813
+        ],
+        "paragraph_width": 629.0,
+        "register": [
+          228.444427490234,
+          261.777740478516,
+          142.0,
+          208.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          82.5599975585938,
+          42.1199989318848,
+          1152.0,
+          44.9999961853027
+        ],
+        "tools": [
+          1668.0,
+          399.119995117188,
+          92.0,
+          140.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 1013,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "boxes": [
+        [
+          228.444427490234,
+          1014.78619384766,
+          166.0,
+          41.213794708252
+        ],
+        [
+          1313.95544433594,
+          746.7646484375,
+          478.933288574219,
+          309.235382080078
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": false,
+      "family": "help",
+      "file": "help-1080-ui100-without.png",
+      "geometry": {
+        "article": [
+          404.444427490234,
+          261.777740478516,
+          1420.4443359375,
+          794.222290039063
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          228.444427490234,
+          261.777740478516,
+          1596.4443359375,
+          794.222290039063
+        ],
+        "paper": [
+          71.1111068725586,
+          49.7777481079102,
+          1777.77770996094,
+          2204.44458007813
+        ],
+        "paragraph_width": 629.0,
+        "register": [
+          228.444427490234,
+          261.777740478516,
+          142.0,
+          208.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          82.5599975585938,
+          42.1199989318848,
+          1152.0,
+          44.9999961853027
+        ],
+        "tools": [
+          1668.0,
+          399.119995117188,
+          92.0,
+          140.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 1013,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        1920,
+        1080
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1374.78625488281,
+          166.0,
+          41.213794708252
+        ],
+        [
+          1829.18505859375,
+          1041.50830078125,
+          580.0,
+          374.491668701172
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": true,
+      "family": "help",
+      "file": "help-1440-ui100-with.png",
+      "geometry": {
+        "article": [
+          472.592590332031,
+          278.370330810547,
+          1968.59252929688,
+          1137.62963867188
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          296.592590332031,
+          278.370330810547,
+          2144.59252929688,
+          1137.62963867188
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 629.0,
+        "register": [
+          296.592590332031,
+          278.370330810547,
+          142.0,
+          208.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          45.0000038146973
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 1013,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1374.78625488281,
+          166.0,
+          41.213794708252
+        ],
+        [
+          1829.18505859375,
+          1041.50830078125,
+          580.0,
+          374.491668701172
+        ]
+      ],
+      "chapter": 0,
+      "drawing_visible": false,
+      "family": "help",
+      "file": "help-1440-ui100-without.png",
+      "geometry": {
+        "article": [
+          472.592590332031,
+          278.370330810547,
+          1968.59252929688,
+          1137.62963867188
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          296.592590332031,
+          278.370330810547,
+          2144.59252929688,
+          1137.62963867188
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 629.0,
+        "register": [
+          296.592590332031,
+          278.370330810547,
+          142.0,
+          208.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          45.0000038146973
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 1013,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1374.78625488281,
+          166.0,
+          41.213794708252
+        ],
+        [
+          1829.18505859375,
+          1041.50830078125,
+          580.0,
+          374.491668701172
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": true,
+      "family": "help",
+      "file": "help-1440-ui100-scrolled.png",
+      "geometry": {
+        "article": [
+          472.592590332031,
+          278.370330810547,
+          1968.59252929688,
+          1137.62963867188
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          296.592590332031,
+          278.370330810547,
+          2144.59252929688,
+          1137.62963867188
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 629.0,
+        "register": [
+          296.592590332031,
+          278.370330810547,
+          142.0,
+          208.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          45.0000038146973
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 1706,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": true,
+      "family": "",
+      "file": "help-settings-pan-moving.png",
+      "geometry": {
+        "article": [
+          472.592590332031,
+          278.370330810547,
+          1968.59252929688,
+          1137.62963867188
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          296.592590332031,
+          278.370330810547,
+          2144.59252929688,
+          1137.62963867188
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 629.0,
+        "register": [
+          296.592590332031,
+          278.370330810547,
+          142.0,
+          208.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          45.0000038146973
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 1706,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": true,
+      "family": "",
+      "file": "settings-1440-ui100.png",
+      "geometry": {
+        "article": [
+          472.592590332031,
+          278.370330810547,
+          1968.59252929688,
+          1137.62963867188
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          296.592590332031,
+          278.370330810547,
+          2144.59252929688,
+          1137.62963867188
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 629.0,
+        "register": [
+          296.592590332031,
+          278.370330810547,
+          142.0,
+          208.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          45.0000038146973
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 1706,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          296.592590332031,
+          1374.78625488281,
+          166.0,
+          41.213794708252
+        ],
+        [
+          1829.18505859375,
+          1041.50830078125,
+          580.0,
+          374.491668701172
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": true,
+      "family": "help",
+      "file": "help-1440-return.png",
+      "geometry": {
+        "article": [
+          472.592590332031,
+          278.370330810547,
+          1968.59252929688,
+          1137.62963867188
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          296.592590332031,
+          278.370330810547,
+          2144.59252929688,
+          1137.62963867188
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 629.0,
+        "register": [
+          296.592590332031,
+          278.370330810547,
+          142.0,
+          208.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          45.0000038146973
+        ],
+        "tools": [
+          2308.0,
+          413.160003662109,
+          92.0,
+          140.000030517578
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 1706,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.0,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": true,
+      "family": "help",
+      "file": "help-720-ui125-tight-with.png",
+      "geometry": {
+        "article": [
+          166.296295166016,
+          293.125183105469,
+          1036.29626464844,
+          396.874816894531
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          166.296295166016,
+          223.12516784668,
+          1036.29626464844,
+          466.874816894531
+        ],
+        "paper": [
+          47.4074058532715,
+          33.1851654052734,
+          1185.18518066406,
+          1469.62963867188
+        ],
+        "paragraph_width": 786.0,
+        "register": [
+          166.296295166016,
+          223.12516784668,
+          1036.29626464844,
+          60.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          55.0400009155273,
+          28.0799999237061,
+          768.0,
+          56.25
+        ],
+        "tools": [
+          965.0,
+          427.5,
+          115.0,
+          175.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 2124,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.25,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": false,
+      "family": "help",
+      "file": "help-720-ui125-tight-without.png",
+      "geometry": {
+        "article": [
+          166.296295166016,
+          293.125183105469,
+          1036.29626464844,
+          396.874816894531
+        ],
+        "board": [
+          68.0,
+          107.160003662109,
+          2208.0,
+          1254.83996582031
+        ],
+        "cell_size": 24.0,
+        "grid": [
+          944.0,
+          516.160034179688,
+          480.0,
+          480.0
+        ],
+        "help": [
+          166.296295166016,
+          223.12516784668,
+          1036.29626464844,
+          466.874816894531
+        ],
+        "paper": [
+          47.4074058532715,
+          33.1851654052734,
+          1185.18518066406,
+          1469.62963867188
+        ],
+        "paragraph_width": 786.0,
+        "register": [
+          166.296295166016,
+          223.12516784668,
+          1036.29626464844,
+          60.0
+        ],
+        "requested_cell": 24.0,
+        "title": [
+          55.0400009155273,
+          28.0799999237061,
+          768.0,
+          56.25
+        ],
+        "tools": [
+          965.0,
+          427.5,
+          115.0,
+          175.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 2124,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.25,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": true,
+      "family": "landschaften-natur",
+      "file": "large-720-ui125-high-zoom-with.png",
+      "geometry": {
+        "article": [
+          166.296295166016,
+          293.125183105469,
+          1036.29626464844,
+          396.874816894531
+        ],
+        "board": [
+          85.0,
+          102.5,
+          840.0,
+          520.0
+        ],
+        "cell_size": 8.68,
+        "grid": [
+          359.0,
+          184.5,
+          434.0,
+          434.0
+        ],
+        "help": [
+          166.296295166016,
+          223.12516784668,
+          1036.29626464844,
+          466.874816894531
+        ],
+        "paper": [
+          47.4074058532715,
+          33.1851654052734,
+          1185.18518066406,
+          1469.62963867188
+        ],
+        "paragraph_width": 786.0,
+        "register": [
+          166.296295166016,
+          223.12516784668,
+          1036.29626464844,
+          60.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          153.600006103516,
+          48.1851654052734,
+          768.0,
+          56.25
+        ],
+        "tools": [
+          965.0,
+          495.0,
+          115.0,
+          175.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 2124,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.25,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": false,
+      "family": "landschaften-natur",
+      "file": "large-720-ui125-high-zoom-without.png",
+      "geometry": {
+        "article": [
+          166.296295166016,
+          293.125183105469,
+          1036.29626464844,
+          396.874816894531
+        ],
+        "board": [
+          85.0,
+          102.5,
+          840.0,
+          520.0
+        ],
+        "cell_size": 8.68,
+        "grid": [
+          359.0,
+          184.5,
+          434.0,
+          434.0
+        ],
+        "help": [
+          166.296295166016,
+          223.12516784668,
+          1036.29626464844,
+          466.874816894531
+        ],
+        "paper": [
+          47.4074058532715,
+          33.1851654052734,
+          1185.18518066406,
+          1469.62963867188
+        ],
+        "paragraph_width": 786.0,
+        "register": [
+          166.296295166016,
+          223.12516784668,
+          1036.29626464844,
+          60.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          153.600006103516,
+          48.1851654052734,
+          768.0,
+          56.25
+        ],
+        "tools": [
+          965.0,
+          495.0,
+          115.0,
+          175.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 2124,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.25,
+      "viewport": [
+        1280,
+        720
+      ]
+    },
+    {
+      "boxes": [
+        [
+          302.592590332031,
+          1282.17602539063,
+          154.407409667969,
+          127.823997497559
+        ],
+        [
+          1855.18505859375,
+          962.455200195313,
+          580.0,
+          447.544830322266
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": true,
+      "family": "landschaften-natur",
+      "file": "large-1440-ui125-high-zoom-with.png",
+      "geometry": {
+        "article": [
+          522.092590332031,
+          331.370330810547,
+          1913.09252929688,
+          1078.62963867188
+        ],
+        "board": [
+          85.0,
+          119.910003662109,
+          2120.0,
+          1222.58996582031
+        ],
+        "cell_size": 20.97,
+        "grid": [
+          772.0,
+          289.910003662109,
+          1048.5,
+          1048.5
+        ],
+        "help": [
+          302.592590332031,
+          331.370330810547,
+          2132.59252929688,
+          1078.62963867188
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 786.0,
+        "register": [
+          302.592590332031,
+          331.370330810547,
+          177.0,
+          260.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          307.200012207031,
+          81.3703308105469,
+          1536.0,
+          56.25
+        ],
+        "tools": [
+          2282.5,
+          569.910034179688,
+          115.0,
+          175.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 2124,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.25,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          302.592590332031,
+          1282.17602539063,
+          154.407409667969,
+          127.823997497559
+        ],
+        [
+          1855.18505859375,
+          962.455200195313,
+          580.0,
+          447.544830322266
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": false,
+      "family": "landschaften-natur",
+      "file": "large-1440-ui125-high-zoom-without.png",
+      "geometry": {
+        "article": [
+          522.092590332031,
+          331.370330810547,
+          1913.09252929688,
+          1078.62963867188
+        ],
+        "board": [
+          85.0,
+          119.910003662109,
+          2120.0,
+          1222.58996582031
+        ],
+        "cell_size": 20.97,
+        "grid": [
+          772.0,
+          289.910003662109,
+          1048.5,
+          1048.5
+        ],
+        "help": [
+          302.592590332031,
+          331.370330810547,
+          2132.59252929688,
+          1078.62963867188
+        ],
+        "paper": [
+          94.814811706543,
+          66.3703308105469,
+          2370.37036132813,
+          2939.25927734375
+        ],
+        "paragraph_width": 786.0,
+        "register": [
+          302.592590332031,
+          331.370330810547,
+          177.0,
+          260.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          307.200012207031,
+          81.3703308105469,
+          1536.0,
+          56.25
+        ],
+        "tools": [
+          2282.5,
+          569.910034179688,
+          115.0,
+          175.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 2124,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.25,
+      "viewport": [
+        2560,
+        1440
+      ]
+    },
+    {
+      "boxes": [
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ],
+      "chapter": 2,
+      "drawing_visible": true,
+      "family": "",
+      "file": "catalog-1440-ui125.png",
+      "geometry": {
+        "article": [
+          522.092590332031,
+          331.370330810547,
+          1913.09252929688,
+          1078.62963867188
+        ],
+        "board": [
+          85.0,
+          119.910003662109,
+          2120.0,
+          1222.58996582031
+        ],
+        "cell_size": 20.97,
+        "grid": [
+          772.0,
+          289.910003662109,
+          1048.5,
+          1048.5
+        ],
+        "help": [
+          302.592590332031,
+          331.370330810547,
+          2132.59252929688,
+          1078.62963867188
+        ],
+        "paper": [
+          1280.0,
+          53.7313270568848,
+          1074.626953125,
+          1332.53735351563
+        ],
+        "paragraph_width": 786.0,
+        "register": [
+          302.592590332031,
+          331.370330810547,
+          177.0,
+          260.0
+        ],
+        "requested_cell": 72.0,
+        "title": [
+          110.080001831055,
+          56.1599998474121,
+          1536.0,
+          56.2500038146973
+        ],
+        "tools": [
+          2282.5,
+          569.910034179688,
+          115.0,
+          175.0
+        ]
+      },
+      "head": "d767f2ba0b534aa7d404c19dfb351106c96e18c1",
+      "help_scroll": 2124,
+      "source": "unmodified main.tscn/book/main.gd; native Windows OpenGL3 Window framebuffer; synthetic catalog and isolated saves; no postprocessing",
+      "ui_scale": 1.25,
+      "viewport": [
+        2560,
+        1440
+      ]
+    }
+  ],
+  "renderer": "NVIDIA GeForce RTX 3070",
+  "test_only": true,
+  "unmodified_product_root": true
+}
