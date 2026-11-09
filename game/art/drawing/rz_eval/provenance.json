@@ -4,16 +4,16 @@
   "created": "2026-11-09",
   "decision": "https://github.com/venomenon328/picross/issues/558#issuecomment-6739323575",
   "source": "OpenAI built-in image_gen via imagegen skill; 20 independent generations plus 3 transparency correction edits, no third-party image inputs. Edit parent IDs preserve exact source provenance.",
-  "rights": "User-authorized original generations for this project; no exclusive-rights claim; final owner image approval pending.",
+  "rights": "User-authorized original generations for this project; no exclusive-rights claim. Owner selected Tomate 1, Qualle 2, Hills 1/rev2, Petronas 3/r3-alpha and Basilisk 3 on actual book images. No stock-adoption approval.",
   "processing": "Pillow 12.3.0. Same proportional LANCZOS contain, horizontal centre and bottom anchor on RGBA 4:1 canvas at every size; no crop, no art retouch, no alpha replacement, no per-ID layout. Original bytes preserved on separate expiring review ref. Shared runtime shader edge fade, not baked image retouch. KL alpha corrections were performed exclusively by ImageGen against the named parent originals.",
-  "owner_feedback": "Owner selected Tomate 1, Qualle 2, Hills 1/rev2, Basilisk 3 on the book. Previous KL trio rejected for missing big-city atmosphere; replacement trio pending. Clues must share grid transparency; no hard art cuts, soft edge fade permitted, whole motifs inside area preferred.",
+  "owner_feedback": "Owner selected Tomate 1, Qualle 2, Hills 1/rev2, Basilisk 3 on the book. Previous KL trio rejected for missing big-city atmosphere; replacement trio pending. Clues must share grid transparency; no hard art cuts, soft edge fade permitted, whole motifs inside area preferred. After inspecting immutable book links at c78da600a8bd7c5b655dcef9e0e1e2e7fdf1ab2a, owner: all look good, prefers KL option 3.",
   "images": [
     {
       "id": "tomate-1",
       "prompt": "Use case: illustration-story. Asset: one new original transparent ultra-wide graphite illustration for the bottom of a puzzle book leaf, RZ-EVAL-P1 / tomato-context candidate 1. Composition: a continuous low garden-bed panorama, a small old watering can, string spool, bamboo stakes and a hand trowel with loose soil and tiny non-identifiable seedlings across a long horizontal line. All marks fit inside a 3072 by 640 ultra-wide transparent canvas; keep the top half mostly transparent and leave much breathing room. Pale neutral-gray observational pencil, fine varied-pressure broken and retraced contours, sparse delicate crosshatching, unfinished edges, transparent interiors. NO tomato, NO tomato plant or recognisable tomato leaf, NO fruit, NO round vegetable. Never depict the concrete puzzle subject. No paper or opaque white/gray fill, no book, no UI, no text, no border, no grid. Genuinely transparent background including spaces between graphite strokes. Calm atmospheric drawing, not an icon or geometric substitute.",
       "generation_wall_ms": null,
       "briefing": "open",
-      "status": "candidate; final owner selection/approval pending",
+      "status": "owner-selected concrete book image; no series adoption",
       "bytes": 1321793,
       "sha256": "448b42fe03a43b41c777e94f573214558964b9c1868125852ab01aec0403d79b",
       "size": [
@@ -149,7 +149,7 @@
       "prompt": "Use case: illustration-story. New original transparent graphite marginal sketch for a puzzle book leaf RZ-EVAL-P1. Very wide low composition, 3:1 aspect, pale neutral-gray thin varied-pressure broken and retraced pencil lines, sparse crosshatching. ONLY THE GRAY PENCIL STROKES ARE VISIBLE PIXELS: every area between contours, inside objects and under the scene must have zero alpha. NO white pixels, NO opaque object interiors, NO gray or white ground wash, NO paper, no rectangle/background surface. Delicate open line drawing, calm and legible. Leave ample empty transparent space above. No book, text, UI, grids, border. Never draw the puzzle subject. OWNER BRIEF: seafloor, seagrass, a small shoal of tiny fish. Airy composition: a sparse low seagrass meadow anchored on the left and right, almost empty middle, six tiny fish swim in a diagonal loose group across the empty water. A few little pebbles imply the seabed. No jellyfish, medusae, tentacles or umbrella forms.",
       "generation_wall_ms": null,
       "briefing": "owner",
-      "status": "candidate; final owner selection/approval pending",
+      "status": "owner-selected concrete book image; no series adoption",
       "bytes": 472342,
       "sha256": "7c31b09a4c58bb3463b60e52675925da1d93c60296b538bee5cceb33c8e8c829",
       "size": [
@@ -449,7 +449,7 @@
       "prompt": "Use case: illustration-story. New transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition. Pale neutral-gray thin broken pencil contours and very sparse fine hatching, mostly transparent unfilled interiors, generous transparent space above, unfinished edges. No paper, white/gray wash, book, UI, writing, grid or border. No creature of any kind: no basilisk, reptile, lizard or animal silhouette. Broad low tropical vegetation study: overlapping banana and heliconia leaves at different angles with a slender fallen branch above shallow stream ripples, clear gaps between the leaves and roots. Entirely botanical scene, no flowers that look like eyes, no creature.",
       "generation_wall_ms": 27574,
       "briefing": "open",
-      "status": "candidate; final owner selection/approval pending",
+      "status": "owner-selected concrete book image; no series adoption",
       "bytes": 1804686,
       "sha256": "11d580e9edbf63bc46a55c223baf35ba1982b9f12d9d1f44a6a918715df410d9",
       "size": [
@@ -507,7 +507,7 @@
       "prompt": "Use case: illustration-story. New original transparent graphite marginal drawing for a puzzle-book leaf, RZ-EVAL-P1 rural Bohol context, candidate 1 revision 2. Very wide LOW 3:1 composition, with an airy U/half-U silhouette and a LOW horizontal center. Scene: a small EMPTY rustic wooden farm handcart with two spoked wheels at the far left; a low woven bamboo fence meanders across the LOWER foreground; a few loose coconut fronds stand at far right. Objects only, in one continuous quiet foreground vignette. ABSOLUTELY NO LANDSCAPE HORIZON, no background scenery, no distant land, no mounds, no hills, no mountains, NO Chocolate Hills, no animals. The specific puzzle subject must not appear, even as a tiny distant silhouette. Pale neutral-gray observational graphite pencil, delicate varied-pressure broken/retraced contours, very sparse fine hatching, mostly empty transparent interiors. ONLY pencil strokes have visible alpha. All space between and inside contours transparent. No white/gray surface fills or wash, no ground backdrop, no paper/book/UI/text/signs/grid/frame. Complete objects inside a generous safe margin and unfinished open sketch edges.",
       "generation_wall_ms": 13718,
       "briefing": "open",
-      "status": "candidate; final owner selection/approval pending",
+      "status": "owner-selected concrete book image; no series adoption",
       "bytes": 1055644,
       "sha256": "92a76501ed07e9e81e484ca6586730935db3951849a3db295d44fa249ecc161c",
       "size": [
@@ -684,7 +684,7 @@
       "prompt": "Edit this exact composition into a genuinely transparent graphite LINE DRAWING. Preserve the metropolitan Kuala Lumpur scene, its content, the low-center U composition and aspect ratio, but REMOVE ALL WHITE AND PALE SOLID FILL: buildings, roads, sky, foliage and object interiors must be completely transparent BETWEEN individual neutral-gray pencil strokes. Remove the ragged white paper-like surround entirely. There must be NO paper, NO opaque white pixels or milky wash anywhere, NO filled silhouettes or object surfaces. Only thin gray graphite linework and very sparse graphite hatching have alpha. Maintain generous fully transparent breathing margin around complete visible buildings and scene; no new elements, towers, text, book or UI. Never add Petronas Towers, twin identical spires or skybridge. This is a transparent asset, not a pencil picture on white paper.",
       "generation_wall_ms": null,
       "briefing": "owner revision: metropolitan Kuala Lumpur; alpha-only linework correction",
-      "status": "candidate; owner selection pending",
+      "status": "owner-selected concrete book image; no series adoption",
       "bytes": 2767696,
       "sha256": "dc9323b22668b529773d552daceb4d26504d5d0681d05d842d39efda67fa4274",
       "size": [
@@ -719,7 +719,7 @@
     "tomate": 1,
     "qualle": 2,
     "hills": 1,
-    "petronas": null,
+    "petronas": 3,
     "basilisk": 3
   }
 }

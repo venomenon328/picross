@@ -31,8 +31,10 @@ durch Handkarren und Bambuszaun ohne Landschaftshorizont. Auch dieser Fehlversuc
 bleibt im befristeten Originalsatz.
 
 Eigentümersichtung auf dem Buch: Tomate 1, Qualle 2, Chocolate Hills 1/rev2
-und Basilisk 3 sind gewählt. Die bisherigen drei Kuala-Lumpur-Fassungen sind
-abgelehnt; ihre Revision benötigt mehr Großstadt-Flair ohne Petronas Towers.
+und Basilisk 3 sind gewählt. Die bisherigen drei Kuala-Lumpur-Fassungen wurden
+wegen fehlendem Großstadt-Flair abgelehnt. Nach der Stadt-/Transparenzrevision
+hat der Eigentümer die konkreten neuen Buchbilder am Belegcommit `c78da600`
+als gut beurteilt und Kandidat 3 (Shophouses links, Bahn rechts) gewählt.
 Die Bildwahl ist keine Serienübernahme. Der Eigentümer verlangt außerdem
 dieselbe Durchlässigkeit für Hinweise und Raster und keine harten Bildabschnitte.
 Die frühere separate Hinweisaussparung ist deshalb aufgehoben.
@@ -116,8 +118,7 @@ werden ausschließlich im temporären Vergleichsprojekt vermessen. Die Entwickle
 Schalter `--rz-profile`/`--rz-format` setzen diese separat zugestellten Dateien
 voraus; sie sind keine Spielereinstellung und lösen keinen Netzwerkdownload aus.
 Die 15 lokalen Kandidaten sind aktuelle Versuchsressourcen, keine technische Galerie.
-Ohne Kandidatenschalter gilt die konkrete Eigentümerwahl für die vier gewählten
-Rätsel; Kuala Lumpur verwendet Kandidat 1 nur als noch ungeprüfte Referenz.
+Ohne Kandidatenschalter gilt die konkrete Eigentümerwahl für alle fünf Rätsel.
 Zusätzliche Profil-/Messbilder und Buchoriginale gehören nicht in den Spielerdownload.
 
 Prüfbedarf: [.ci/package.json](../.ci/package.json), `docs` und `ci-required`,

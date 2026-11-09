@@ -11,8 +11,8 @@ const PILOTS = {
 }
 enum Overlap { A, B1, B2, C }
 var mode: Overlap = Overlap.A
-const SELECTED = {"tomate":1,"qualle":2,"hills":1,"petronas":1,"basilisk":3}
-var candidate: int = 0 # Zero follows the owner's current per-ID choice; KL is provisional.
+const SELECTED = {"tomate":1,"qualle":2,"hills":1,"petronas":3,"basilisk":3}
+var candidate: int = 0 # Zero follows the owner's concrete book-image selection.
 var profile: String = "2304"
 var extension: String = "png"
 var enabled: bool = true
