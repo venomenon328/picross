@@ -228,14 +228,15 @@ func _layout_marginalia() -> void:
 			for control: Control in [title,coordinate,tools_scroll,status_label,layout_warning,work_repair_button,save_retry,actions["help"],actions["menu"],actions["nav-information"]]:
 				if control != null and control.is_visible_in_tree(): protection.append(control.get_global_rect())
 			var area: Rect2
+			var clues: Array[Rect2] = []
 			if board.layout_valid:
 				area = board.view.bounds().grow(board.FRAME_MARGIN)
 				area.position += board.position
 				for rect: Rect2 in [board.row_clue_area(),board.column_clue_area()]:
 					rect.position += board.position
-					protection.append(rect)
+					clues.append(rect)
 			rz_eval.visit(id,rz_eval.path_for(id))
-			rz_eval.arrange(book.projected_paper(true),size,ui_scale,area,protection)
+			rz_eval.arrange(book.projected_paper(true),size,ui_scale,area,protection,clues)
 			return
 		rz_eval.visit("","")
 	var key: String = ""

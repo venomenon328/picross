@@ -30,8 +30,19 @@ widersprechen dem ausdrücklichen Subjektausschluss. Kandidat 1/rev2 ersetzt ihn
 durch Handkarren und Bambuszaun ohne Landschaftshorizont. Auch dieser Fehlversuch
 bleibt im befristeten Originalsatz.
 
-Es gibt drei kreative Kandidaten je ID und zwei verworfene Vorgänger, zusammen
-17 unabhängige ImageGen-Generierungen. Herkunft, Originalhashes, Prompts und die
+Eigentümersichtung auf dem Buch: Tomate 1, Qualle 2, Chocolate Hills 1/rev2
+und Basilisk 3 sind gewählt. Die bisherigen drei Kuala-Lumpur-Fassungen sind
+abgelehnt; ihre Revision benötigt mehr Großstadt-Flair ohne Petronas Towers.
+Die Bildwahl ist keine Serienübernahme. Der Eigentümer verlangt außerdem
+dieselbe Durchlässigkeit für Hinweise und Raster und keine harten Bildabschnitte.
+Die frühere separate Hinweisaussparung ist deshalb aufgehoben.
+
+Es gibt drei aktuelle kreative Kandidaten je ID, insgesamt 20 unabhängige
+ImageGen-Generierungen und drei zugeordnete Transparenzkorrekturen per ImageGen.
+Acht Vorgänger sind verworfen/ersetzt: die ersten beiden Fehlversuche, drei
+vom Eigentümer abgelehnte Kuala-Lumpur-Fassungen und drei neue Stadtbilder mit
+unerwünschten weißen Flächen vor der Transparenzkorrektur.
+Herkunft, Originalhashes, Prompts, Elternbilder der Korrekturen und die
 15 ausgelieferten PNG-Ableitungen stehen in der [Provenienz](../game/art/drawing/rz_eval/provenance.json).
 Originale und zusätzliche Vergleichsprofile werden separat für R01/M01 zugestellt.
 Keine Zählung von Format-/Größenvarianten als kreative Kandidaten.
@@ -82,12 +93,17 @@ Gleiche 48-%-Grunddeckkraft, Illustration, Belegung und funktionale Geometrie:
 | `--rz-mode=B2` | Nur lokale 9-Sample-Unschärfe mit 2,5 Anzeige-Pixeln Radius |
 | `--rz-mode=C` | Deckender ruhiger Papierfarb-Untergrund für das gesamte Raster, einschließlich unbekannter/X-Zellen und Zwischenräume |
 
+Dieselbe A/B1/B2/C-Regel gilt getrennt für die tatsächlichen Zeilen- und
+Spaltenhinweisrechtecke. In A bleiben sie durchlässig, B1/B2 behandeln nur die
+darunterliegende Illustration und C hinterlegt auch die Hinweise deckend.
 Die funktionalen Zeichen werden danach scharf gezeichnet. B2 mittelt
 vormultiplizierte Farbe/Alpha ausschließlich aus der Illustration, ohne Screen-
 Textur, zusätzliche Kopie oder Renderziel. Alle Varianten schützen separat
-die realen Zeilen-/Spaltenhinweisflächen und sichtbaren Kopf-, Sidebar-, Werkzeug-
-und Meldungsrechtecke, indem die Illustration dort lokal transparent bleibt.
-Diese gemeinsame Schutzregel wird benannt und ist keine Motivmaske.
+sichtbare Kopf-, Sidebar-, Werkzeug- und Meldungsrechtecke. Ihre lokale
+Schutzregel läuft über acht Anzeige-Pixel weich aus. Die gemeinsame äußere
+3:1-Quellbildkante innerhalb der 4:1-Leinwand läuft über 3,5 % weich aus;
+keine individuelle Motivmaske oder Beschneidung. Vollständig innerhalb der
+Zeichenfläche komponierte Motive bleiben das Produktionsziel.
 Außerhalb der Rechtecke bleiben die Striche unverändert; keine Schwelle blendet
 Leinwand oder unbeteiligte Teile aus. C kann überdeckte Teile vollständig verdecken.
 Das ist ein Vergleich, noch keine ausgewählte Produktregel.
@@ -100,6 +116,8 @@ werden ausschließlich im temporären Vergleichsprojekt vermessen. Die Entwickle
 Schalter `--rz-profile`/`--rz-format` setzen diese separat zugestellten Dateien
 voraus; sie sind keine Spielereinstellung und lösen keinen Netzwerkdownload aus.
 Die 15 lokalen Kandidaten sind aktuelle Versuchsressourcen, keine technische Galerie.
+Ohne Kandidatenschalter gilt die konkrete Eigentümerwahl für die vier gewählten
+Rätsel; Kuala Lumpur verwendet Kandidat 1 nur als noch ungeprüfte Referenz.
 Zusätzliche Profil-/Messbilder und Buchoriginale gehören nicht in den Spielerdownload.
 
 Prüfbedarf: [.ci/package.json](../.ci/package.json), `docs` und `ci-required`,
