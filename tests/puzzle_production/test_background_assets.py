@@ -73,12 +73,37 @@ class BackgroundAssetsTests(unittest.TestCase):
             self.assertTrue(Path(result["remaining"]).is_absolute())
             self.assertTrue(Path(result["remaining"]).exists())
 
-    def cli(self, *arguments):
+    def cli(self, *arguments, cwd=ROOT):
         completed = subprocess.run(
             [sys.executable, "-m", "tools.puzzle_production.background_assets", *map(str, arguments)],
-            cwd=ROOT, capture_output=True, text=True, timeout=30)
+            cwd=cwd, capture_output=True, text=True, timeout=30)
         # json.loads also rejects a second object or trailing progress output.
         return completed.returncode, json.loads(completed.stdout), completed.stderr
+
+    def git(self, checkout, *arguments):
+        return subprocess.run(
+            ["git", "-c", "user.name=HP-W2 synthetic test", "-c", "user.email=hp-w2@example.invalid",
+             "-c", "commit.gpgsign=false", *arguments], cwd=checkout,
+            check=True, capture_output=True, text=True, timeout=15).stdout.strip()
+
+    def tool_checkout(self, *, dirty=False):
+        self.number += 1
+        checkout = self.root / f"tool-{self.number}"
+        for name in assets._MODULES:
+            destination = checkout / name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / name, destination)
+        (checkout / ".gitignore").write_text("__pycache__/\n", encoding="utf-8")
+        self.git(checkout, "init", "--quiet")
+        module = checkout / "tools/puzzle_production/background_assets.py"
+        loaded_bytes = module.read_bytes()
+        if dirty:
+            module.write_bytes(loaded_bytes + b"\n# Synthetic earlier committed source.\n")
+        self.git(checkout, "add", ".")
+        self.git(checkout, "commit", "--quiet", "--message", "Synthetic original tool")
+        if dirty:
+            module.write_bytes(loaded_bytes)
+        return checkout
 
     def test_describe_binds_actual_profile_modules_versions_and_import_boundary(self):
         description = assets.describe()
@@ -478,6 +503,186 @@ class BackgroundAssetsTests(unittest.TestCase):
                 self.assertEqual(snapshot(transported), before_output)
                 self.assertEqual(snapshot(fixture.source), before_source)
                 self.assertEqual(embedded["output"], "derived/bg01")
+
+    def test_verify_preserves_producer_bytes_across_content_commit_and_dirty_to_clean(self):
+        for dirty in (False, True):
+            with self.subTest(producer_dirty=dirty):
+                checkout = self.tool_checkout(dirty=dirty)
+                code, producer, stderr = self.cli("describe", cwd=checkout)
+                self.assertEqual(code, 0, stderr)
+                self.assertIs(producer["tool"]["dirty"], dirty)
+                fixtures = []
+                for none in (False, True):
+                    fixture = BackgroundFixture(self.root / f"inputs-{dirty}-{none}", producer, none=none)
+                    request = fixture.request_file()
+                    code, result, stderr = self.cli("derive", "--request", request,
+                        "--source-root", fixture.source, "--output-root", fixture.output, cwd=checkout)
+                    self.assertEqual(code, 0, stderr)
+                    self.assert_success(result, "none" if none else "derived", fixture.target)
+                    fixtures.append((fixture, request, snapshot(fixture.source), snapshot(fixture.target)))
+                (checkout / "content-note.txt").write_bytes(b"Synthetic later content commit.\n")
+                self.git(checkout, "add", ".")
+                self.git(checkout, "commit", "--quiet", "--message", "Save unchanged tool with content")
+                if not dirty:
+                    self.assertEqual(self.git(checkout, "diff", "--name-only", "HEAD^", "HEAD"), "content-note.txt")
+                code, current, stderr = self.cli("describe", cwd=checkout)
+                self.assertEqual(code, 0, stderr)
+                self.assertNotEqual(current["tool"]["commit"], producer["tool"]["commit"])
+                self.assertFalse(current["tool"]["dirty"])
+                self.assertNotEqual(current["tool_sha256"], producer["tool_sha256"])
+                for key in ("id", "versions", "modules"):
+                    self.assertEqual(current["tool"][key], producer["tool"][key])
+                for fixture, request, before_source, before_output in fixtures:
+                    code, result, stderr = self.cli("verify", "--request", request,
+                        "--source-root", fixture.source, "--output-dir", fixture.target, cwd=checkout)
+                    self.assertEqual(code, 0, stderr)
+                    self.assert_success(result, "verified", fixture.target)
+                    # Neither a fresh derive nor its reuse path may adopt the
+                    # historical producer hash after the checkout has changed.
+                    fresh = fixture.root / "fresh-output"
+                    fresh.mkdir()
+                    for output in (fixture.output, fresh):
+                        code, result, _ = self.cli("derive", "--request", request,
+                            "--source-root", fixture.source, "--output-root", output, cwd=checkout)
+                        self.assertEqual(code, 2)
+                        self.assert_error(result, "tool_mismatch")
+                    self.assertEqual(list(fresh.iterdir()), [])
+                    self.assertEqual(snapshot(fixture.source), before_source)
+                    self.assertEqual(snapshot(fixture.target), before_output)
+                    self.assertEqual(self.report(fixture)["tool"], producer["tool"])
+
+    def test_verify_rejects_changed_actual_module_in_a_fresh_process(self):
+        checkout = self.tool_checkout()
+        code, description, stderr = self.cli("describe", cwd=checkout)
+        self.assertEqual(code, 0, stderr)
+        fixture = BackgroundFixture(self.root / "inputs", description)
+        request = fixture.request_file()
+        code, result, stderr = self.cli("derive", "--request", request,
+            "--source-root", fixture.source, "--output-root", fixture.output, cwd=checkout)
+        self.assertEqual(code, 0, stderr)
+        self.assert_success(result, "derived", fixture.target)
+        before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+        module = checkout / "tools/puzzle_production/image_normalization.py"
+        module.write_bytes(module.read_bytes() + b"\n# Synthetic changed module loaded in a fresh process.\n")
+        code, result, _ = self.cli("verify", "--request", request,
+            "--source-root", fixture.source, "--output-dir", fixture.target, cwd=checkout)
+        self.assertEqual(code, 2)
+        self.assert_error(result, "tool_mismatch")
+        self.assertEqual(snapshot(fixture.source), before_source)
+        self.assertEqual(snapshot(fixture.target), before_output)
+
+    def test_verify_keeps_loaded_module_and_midprocess_stability_guards(self):
+        for timing in ("before_verify", "during_render", "commit_during_render"):
+            with self.subTest(timing=timing):
+                checkout = self.tool_checkout()
+                with patch.object(assets, "_ROOT", checkout):
+                    fixture = self.fixture()
+                    self.assert_success(self.derive(fixture), "derived", fixture.target)
+                    before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+                    module = checkout / "tools/puzzle_production/image_normalization.py"
+                    changed = module.read_bytes() + b"\n# Synthetic change after module load.\n"
+                    render = assets._render
+
+                    def change_module(*args, **kwargs):
+                        value = render(*args, **kwargs)
+                        if timing == "commit_during_render":
+                            (checkout / "content-note.txt").write_bytes(b"Synthetic concurrent content commit.\n")
+                            self.git(checkout, "add", ".")
+                            self.git(checkout, "commit", "--quiet", "--message", "Concurrent content commit")
+                        else:
+                            module.write_bytes(changed)
+                        return value
+
+                    if timing == "before_verify":
+                        module.write_bytes(changed)
+                    with patch.object(assets, "_render", side_effect=render if timing == "before_verify" else change_module):
+                        self.assert_error(assets.verify(fixture.request, fixture.source, fixture.target), "tool_mismatch")
+                    self.assertEqual(snapshot(fixture.source), before_source)
+                    self.assertEqual(snapshot(fixture.target), before_output)
+
+    def test_verify_requires_complete_current_codec_versions_and_stable_verification_stand(self):
+        for timing in ("before_verify", "during_render"):
+            with self.subTest(timing=timing):
+                fixture = self.fixture()
+                self.assert_success(self.derive(fixture), "derived", fixture.target)
+                before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+                version = assets.features.version_codec
+                render = assets._render
+                changed = timing == "before_verify"
+
+                def current_codec(name):
+                    return "synthetic-incompatible-codec" if changed else version(name)
+
+                def change_codec(*args, **kwargs):
+                    nonlocal changed
+                    value = render(*args, **kwargs)
+                    changed = True
+                    return value
+
+                with patch.object(assets.features, "version_codec", side_effect=current_codec), \
+                        patch.object(assets, "_render", side_effect=change_codec):
+                    self.assert_error(assets.verify(fixture.request, fixture.source, fixture.target), "tool_mismatch")
+                self.assertEqual(snapshot(fixture.source), before_source)
+                self.assertEqual(snapshot(fixture.target), before_output)
+
+    def test_verify_validates_original_tool_provenance_and_hashes(self):
+        for alteration in ("tool_hash", "request_tool_hash", "request_hash", "stale_tool_hash", "commit", "dirty", "extra"):
+            with self.subTest(alteration=alteration):
+                fixture = self.fixture(none=True)
+                self.assert_success(self.derive(fixture), "none", fixture.target)
+                report = self.report(fixture)
+                request = copy.deepcopy(fixture.request)
+                if alteration == "tool_hash":
+                    report["tool_sha256"] = "0" * 64
+                elif alteration == "request_tool_hash":
+                    request["expected_tool_sha256"] = "0" * 64
+                    report["request"] = request
+                    report["request_sha256"] = digest(request)
+                elif alteration == "request_hash":
+                    report["request_sha256"] = "0" * 64
+                elif alteration == "stale_tool_hash":
+                    report["tool"]["commit"] = "0" * 40
+                else:
+                    report["tool"][alteration] = {"commit": "not-a-commit", "dirty": 1, "extra": True}[alteration]
+                    report["tool_sha256"] = digest(report["tool"])
+                    request["expected_tool_sha256"] = report["tool_sha256"]
+                    report["request"] = request
+                    report["request_sha256"] = digest(request)
+                put_json(fixture.target, "derivation.json", report)
+                before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+                self.assert_error(assets.verify(request, fixture.source, fixture.target), "invalid_binding")
+                self.assertEqual(snapshot(fixture.source), before_source)
+                self.assertEqual(snapshot(fixture.target), before_output)
+
+    def test_verify_rejects_incompatible_original_tool_even_with_consistent_hashes(self):
+        for alteration in ("id", "python", "pillow", "zlib", "littlecms", "extra_version",
+                           "module_hash", "module_missing", "module_extra", "module_order"):
+            with self.subTest(alteration=alteration):
+                fixture = self.fixture(none=True)
+                self.assert_success(self.derive(fixture), "none", fixture.target)
+                report = self.report(fixture)
+                tool = report["tool"]
+                if alteration == "id":
+                    tool["id"] = "picross-background-incompatible"
+                elif alteration in ("python", "pillow", "zlib", "littlecms", "extra_version"):
+                    tool["versions"][alteration] = "synthetic-incompatible-version"
+                elif alteration == "module_hash":
+                    tool["modules"][0]["sha256"] = "0" * 64
+                elif alteration == "module_missing":
+                    tool["modules"].pop()
+                elif alteration == "module_extra":
+                    tool["modules"].append({"file": "tools/puzzle_production/unused.py", "sha256": "0" * 64})
+                else:
+                    tool["modules"].reverse()
+                report["tool_sha256"] = digest(tool)
+                request = copy.deepcopy(fixture.request)
+                request["expected_tool_sha256"] = report["tool_sha256"]
+                report.update(request=request, request_sha256=digest(request))
+                put_json(fixture.target, "derivation.json", report)
+                before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+                self.assert_error(assets.verify(request, fixture.source, fixture.target), "tool_mismatch")
+                self.assertEqual(snapshot(fixture.source), before_source)
+                self.assertEqual(snapshot(fixture.target), before_output)
 
     def test_verify_rejects_unknown_derivation_generation_without_fallback(self):
         fixture = self.fixture(none=True)

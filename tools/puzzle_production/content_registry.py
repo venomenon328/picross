@@ -163,6 +163,8 @@ def sync_runtime(root):
 
 
 def export_entry(export_dir, m, report, category):
+    require(m.get("format") != "picross-target-export-v6",
+            "Background export v6 is not supported by catalog consumers (HP-I1b required)")
     return {"id": m["definition_id"], "key": m["definition_id"], "save_slot": m["save_slot"],
          "definition": m["definition"].removeprefix("runtime/"), "reveal": m["reveal"].removeprefix("runtime/"), "visible": True,
          "category_id": category["id"],

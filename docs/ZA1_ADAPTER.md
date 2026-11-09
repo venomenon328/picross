@@ -19,7 +19,8 @@ Grenzen sind erforderlich; ohne sie wird die neue Generation zurückgewiesen.
 exakten `history`-Commit; kein Fetch/Checkout und kein Raten von Quellenwurzeln.
 `external_root` bezeichnet bei vorhandenen äußeren Belegen deren sichere Wurzel.
 Der PB-H-Builder verwendet diese Prüfung am tatsächlich geschriebenen ZIP.
-Kein neuer Inspect-CLI und kein automatischer Aufruf schreibender Folgeoperationen.
+PB-H selbst ergänzt keinen CLI und ruft keine schreibende Folgeoperation auf;
+der additive HP-I1a-Einstieg steht im folgenden Abschnitt.
 
 `raster_ready` muss sämtliche bisherigen 0.6.0-Inhaltsgarantien erfüllen:
 frische Ist-Palette und gebundene Norm, tatsächlicher Sichtrecord und gegebenenfalls
@@ -47,12 +48,150 @@ Entscheidung/Ableitung werden nur mit ausdrücklich gebundenen Wurzeln gelesen;
 aktive Belege bleiben vollständig erforderlich. Der Reader erzeugt keine
 Freigabe, datiert sie nicht neu und bindet sie nicht auf andere Bytes um.
 
-HP-I1 übernimmt erst die sicheren späteren Sidecar-/Recordwriter, finalen
-Export-/Registry-/Receiptgenerationen, Einzelintegration, Hintergrundersatz,
-Recovery-/Folgeoperationen und Produktionsabschluss. HP-I2 liefert die Runtime.
-PB-H liest die dafür nötigen Inhaltsbindungen vorab, liefert aber keinen
-vollständigen Integrationsweg. Versiegelte 0.4.x/0.5.0/0.6.0-Originale behalten
-ihre bisherigen Formen und Befugnisse.
+HP-I1a ergänzt sichere Sidecar-/Recordfortschreibung und Export v6. Registry,
+Receipt, Einzelintegration, Hintergrundersatz, Recovery-/Folgeoperationen und
+Produktionsabschluss bleiben HP-I1b; HP-I2 liefert die Runtime. Diese Teilwege
+aktivieren den vollständigen Produktionsweg nicht. Versiegelte
+0.4.x/0.5.0/0.6.0-Originale behalten ihre bisherigen Formen und Befugnisse.
+
+## HP-I1a · äußere Endabnahme und Export v6
+
+[Paket HP-I1a / #561](https://github.com/venomenon328/picross/issues/561#issuecomment-6752672149)
+ergänzt den sicheren Finalizer aus
+[PUZZLE_BACKGROUNDS §7.4](PUZZLE_BACKGROUNDS.md#74-hp-i1a-sichere-äußere-fortschreibung)
+und den folgenden geschlossenen Exportvertrag. Der Finalizer konsumiert bereits
+aufgezeichnete gültige Auswahl/Ableitung und gegebenenfalls Endfreigabe v2;
+er darf das versiegelte Original nicht verändern. Der Export setzt vollständig
+bestandene Inhalts-/Hintergrundgates **und** gültige Endfreigabe v2 voraus.
+Frühere gültige Auswahl darf erhalten bleiben; eine späte Auswahl bindet das
+tatsächlich vorgelegte Originalpaket. Auswahl, Export und Registrierung bleiben
+getrennt: höchste effektive Phase ist `editorially_approved`,
+`integration_ready`, `catalog_ready` und `registered` sind false. Keine neue
+Phase „exportiert“.
+
+Die bestehenden `inspect`-/`export`-CLI und APIs werden ausschließlich über
+`--allow-background` beziehungsweise `allow_background=True` geöffnet.
+Äußere Hintergrunddateien benötigen ausdrücklich `--external-root`/
+`external_root`, ausgelagerte verworfene Kandidaten bei der Exporterstellung
+gegebenenfalls `--history-repo`/`history_repo`. Keine implizite Rootwahl,
+Netzbeschaffung oder Freigabe durch Versionswhitelist. Defaultaufrufe bleiben
+bei ihren alten Eingangsgrenzen. `verify-export` dispatcht anhand des strikt
+geprüften Manifestformats und benötigt für v6 keine ursprüngliche Quell- oder
+Historywurzel.
+
+### Geschlossenes Manifest und Dateisatz
+
+`manifest.json` verwendet **`picross-target-export-v6`**. Alle v5-Felder und
+bedingten `manual_authorization`-/`deduction`-Felder behalten ihre Bedeutung;
+insbesondere gilt die vollständige Palettenprüfung auch unter 0.7.0.
+Zusätzlich sind exakt folgende Felder Pflicht. `Ref` und `Path` entsprechen
+Hintergrundvertrag §3.1; unbekannte Felder oder unechte Typen sind Fehler.
+
+| Feld | Exakte Form / Bedeutung |
+| --- | --- |
+| `input` | `{original_package:Ref,external_root:"external",discarded_files:[{manifest:Ref,ref:Ref,file:Path}]}`. `original_package.file` ist ausschließlich `input/package.zip`. |
+| `background` | Exakt die vollständige geprüfte `approval-v2.background`-Bindung; keine zweite Auswahl. |
+| `background_asset` | `Ref\|null`; bei selected exakt `runtime/art/backgrounds/<puzzle_id>.png`, bytegleich zur frisch verifizierten HP-W2-Ausgabe, bei none null. |
+| `background_notice` | `Ref\|null`; bei selected exakt `runtime/art/backgrounds/<puzzle_id>.txt` mit tatsächlicher aktiver Herkunft, Nutzungsgrundlage und Attribution, bei none null. |
+| `integration_ready` | Exakt false. |
+
+`technical` und `editorial_approved` sind true, `catalog_ready` und `registered`
+false. Der vollständige `files`-Hashkatalog bindet alle Dateien außer dem Manifest
+selbst. Bestehende Definition, Reveal und Notice behalten ihre ZA-1-Zielpfade.
+Hintergrunddaten ändern weder Logikdefinition noch Runtime-Rätselrevision oder
+Saveidentität. Nur das ausgewählte PNG und seine Notice gelangen zusätzlich
+nach `runtime/`; `none` liefert keine Textur. Originale, Alternativen und
+Freigaben bleiben technische Prüfeingänge außerhalb dieses Runtimebaums.
+
+V6 enthält **das byteidentische versiegelte Original-ZIP als `input/package.zip`**.
+Die alte v5-Teilkopie mit entpacktem `input/` und
+`picross-authoring-derivation-v1` erfüllt die Originalbindung von Approval v2
+nicht. Der neue Exportordner transportiert das Original; im Authoring-ZIP selbst
+bleibt ZIP-Verschachtelung verboten. Keine Neuversiegelung, Erweiterung des
+Originalinventars oder Behauptung eines Originalhashes ohne die echten Bytes.
+
+Benötigte äußere Dateien liegen unverändert unter
+`external/<StoredRef.root>/<Ref.file>`; `external_root="external"` lokalisiert
+diesen Transport, einschließlich der regelgerechten Root `.`. Innere Pfade,
+Hashes und Belege werden nicht umgeschrieben. HP-W2-Befund und PNG behalten
+ihren gemeinsamen Elternordner und dessen exakten Dateisatz. Endfreigabe und
+vorhandene manuelle/Palette-Autorisierungen behalten ihre bisherigen Exportorte
+und Bytes.
+
+### Eng begrenzte Transportergänzung für verworfene Kandidaten
+
+Bei kompakten PB-H-Eingängen prüft die Exporterstellung zuerst die deklarierte
+lokale History über den bestehenden PB-H-Weg: exakter bereits vorhandener
+Gitcommit, identisches Manifest und passende Dateien. Nur dort tatsächlich
+fehlende **inaktive** Kandidatenrefs dürfen zusätzlich als
+`input/discarded/<ref.file>` transportiert werden. `input.discarded_files` ist
+die exakte, nach Manifest-/Ref-Pfad sortierte Liste. Je Eintrag bindet `manifest`
+das konkrete bereits unverändert vorhandene Vorlagenmanifest, `ref` die darin
+gebundene Kandidatendatei und `file` deren sicheren Transportort.
+
+Zulässige fehlende inaktive Refs werden **getrennt** für Originalhandoff und
+aktuelle äußere Auswahl bestimmt. Ein ursprünglich verworfener, später gewählter
+Kandidat muss in der aktiven äußeren Sicht regulär erreichbar sein; die
+Supplementkopie ist dafür keine Quelle. Offline darf nur die identifizierte
+fehlende inaktive Ref aus dieser Ergänzung gelesen werden und muss mit Größe
+und Hash des Originalmanifests übereinstimmen. Aktive Quelle, Entscheidung,
+aktive Rechte-/Sichtbelege oder Ableitung sind dadurch niemals ersetzbar.
+Jeder Eintrag muss in mindestens einer geprüften Original-/Außensicht tatsächlich
+fehlen und dort inaktiv sein. Kein aktiver Lesezugriff darf das Supplement
+verwenden; vorhandene reguläre Bytes werden nie ersetzt. Doppelte, zusätzliche
+oder in keiner zulässigen Sicht benötigte Einträge scheitern.
+
+Dies ist ausschließlich eine **Export-Transportauflösung**. Sie behauptet
+offline keinen nachgeprüften Gitstand und verändert weder den allgemeinen
+PB-H-Builder-/Historyvertrag noch das versiegelte Inventar. Ohne diese ausdrücklich
+deklarierte Ergänzung bleibt die gewöhnliche typisierte Dateiauflösung erhalten.
+
+### Frische Prüfung und harte Verbrauchergrenze
+
+`inspection.json` verwendet **`picross-target-inspection-v6`** und enthält die
+vollständige bestehende Inhaltsprüfung mit `original_state`, `effective_state`
+und Hintergrundbefund. `export_verified=true` erst nach frischer Prüfung;
+`integration_ready`, `catalog_ready`, `registered` bleiben false und die effektive
+Phase höchstens `editorially_approved`. Der lesende
+`picross-authoring-content-inspection-v1` bleibt in seiner bisherigen Bedeutung
+erhalten. Keine gespeicherten Erfolgsflags ersetzen Prüfung.
+Der gespeicherte `fresh_verification`-Befund entspricht vollständig und
+typgenau dem frisch berechneten Befund der tatsächlichen Import-/Manual-/
+Repair-/Paired-Form. Das gespeicherte `tool.versions` hat genau die bisherigen
+Schlüssel `tool,pillow,jpeg,jpeg_turbo,littlecms,zlib`: Tool/Pillow als
+nichtleere Versionsstrings, Codecversionen als Versionsstring oder null.
+Zeitpunkt und Erzeuger-Commit bleiben Herkunft des gespeicherten Berichts;
+die Rückgabe der frischen Prüfung führt ihren tatsächlichen aktuellen Stand.
+
+`verify-export` prüft Original-ZIP, explizite äußere und ergänzende Dateien,
+Endfreigabe, frische Istpalette/Norm/Sicht-/Ausnahmebindung, vollständige
+Proofs/Paarbaseline, Herkunft, feste Parameter, Randregel, Difficulty,
+HP-W2-Befund, Runtimebytes, Notices und exakte Dateimenge erneut. Die enge
+lesende HP-W2-Regel aus Hintergrundvertrag §4.3 gilt: originale Erzeugerbindung
+bleibt unverändert, aktuelle vollständige Modul-/Codec-/Profilbindung muss
+kompatibel sein, Ausgabe und Befund werden frisch reproduziert. Der Bericht
+führt den aktuellen Prüfstand in `tool`; die unveränderte Erzeugerbindung samt
+Hashes bleibt im über `background.binding.derivation` gebundenen Originalbefund.
+Offline bedeutet ohne ursprünglichen Quellcheckout, Netzwerk oder ungenannte
+Wurzel, nicht beliebige zukünftige Werkzeugportabilität. Eine neue äußere
+Ableitung ersetzt keinen weiterhin prüfpflichtigen inkompatiblen Originalbefund;
+dieser blockiert vor Mutation.
+
+Nur für die exakt deklarierte Datei `input/package.zip` gilt die vorhandene
+ZIP-Grenze von 128 MiB anstelle des gewöhnlichen Dateilimits von 64 MiB.
+Alle anderen Datei-, Gesamt-, Pixel- und Zeitgrenzen bleiben erhalten. Den
+gesamten Exportordner sicher öffnen, Links, Aliase, Casefold-/Datei-Verzeichnis-
+Kollisionen und Quellenänderungen abweisen und den vollständigen Export **vor**
+seiner Veröffentlichung verifizieren.
+
+**Registry-, Plan-, Register-, Update-, Sync- und Cleanupverbraucher lehnen v6
+vor jeder produktiven Mutation ab**, auch Quick-/Metadatenreader und direkte
+API-Einstiege. Kein Weglassen unbekannter Hintergrundfelder und kein Forcepfad.
+Gültige v1–v5-Exporte bleiben nach ihren bisherigen Verträgen nutzbar. Neue
+Registry-/Receiptformen, Erstregistrierung, reiner Hintergrundersatz,
+Katalog-Recovery und revisionsgenauer Abschluss gehören HP-I1b; die Runtime
+gehört HP-I2. Die bestehende Registrierungsjournalgeneration v6 ist ein anderes
+Format und wird durch Export v6 nicht geändert.
 
 ## P-B2 · Authoring 0.6.0 und additive Palettengeneration v5
 
@@ -252,8 +391,10 @@ Redaktionelle Zusatzfelder bleiben erhalten. Pflichtbindungen sind typisiert;
 unbekannte technische Schemas, doppelte JSON-Schlüssel, nichtendliche Zahlen
 und fehlende Dateien sind Fehler. Das Inventar schließt Inventar und Handoff aus;
 alle anderen Originaldateien bindet es mit Größe und SHA-256. Die oben
-beschriebene explizite PB-H-Lese-API ergänzt Handoff v3/0.7.0; der Default-
-und Exportvertrag bleibt geschlossen.
+beschriebene explizite PB-H-Lese-API ergänzt Handoff v3/0.7.0; HP-I1a ergänzt
+den separat gewählten v6-Export. Defaultaufrufe und alte Exportformen bleiben
+geschlossen. Ausschließlich für v6-`input/package.zip` gilt die oben benannte
+128-MiB-Ausnahme vom Einzeldateilimit.
 
 | Grenze | Wert |
 | --- | --- |
