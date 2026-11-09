@@ -68,8 +68,9 @@ def timestamp(value):
             "Approval timestamp must be UTC")
 
 
-def file_table(root, deadline):
+def file_table(root, deadline, *, original_zip=None):
     """No symlinks, junctions, Windows aliases or file/directory collisions."""
+    require(original_zip in (None, "input/package.zip"), "Unsupported original ZIP exception")
     require(root.is_dir() and not root.is_symlink() and not (getattr(root.lstat(), "st_file_attributes", 0) & 1024),
             "Package directory missing/unsafe")
     files, names, total = {}, set(), 0
@@ -86,8 +87,11 @@ def file_table(root, deadline):
             info = path.lstat()
             require(not path.is_symlink() and not (getattr(info, "st_file_attributes", 0) & 1024),
                     "Symlinks/reparse points are unsupported")
-            if path.is_file():
-                require(stat.S_ISREG(info.st_mode) and info.st_size <= MAX_FILE, "Package file too large/unsafe")
+            require(stat.S_ISREG(info.st_mode) or stat.S_ISDIR(info.st_mode),
+                    "Special package files are unsupported")
+            if stat.S_ISREG(info.st_mode):
+                limit = MAX_ZIP if rel == original_zip else MAX_FILE
+                require(stat.S_ISREG(info.st_mode) and info.st_size <= limit, "Package file too large/unsafe")
                 total += info.st_size
                 files[rel] = path
                 require(len(files) <= MAX_FILES and total <= MAX_TOTAL, "Package resource limit")
@@ -96,11 +100,11 @@ def file_table(root, deadline):
 
 @contextmanager
 def open_package(source: Path, *, allow_manual_review=False, allow_background=False,
-                 history_repo=None, external_root=None):
+                 history_repo=None, external_root=None, transport=None):
     with open_files(source) as (root, deadline, archive_hash):
         package = Package(root, deadline, allow_manual_review=allow_manual_review,
                           allow_background=allow_background, history_repo=history_repo,
-                          external_root=external_root)
+                          external_root=external_root, transport=transport)
         package.archive_sha256 = archive_hash
         yield package
 
@@ -163,11 +167,15 @@ def open_files(source: Path, *, deadline=None):
 
 class Package:
     def __init__(self, root, deadline, *, allow_manual_review=False, allow_background=False,
-                 history_repo=None, external_root=None):
+                 history_repo=None, external_root=None, transport=None):
         self.root, self.deadline = root, deadline
         self.archive_sha256 = None
         self.history_repo, self.external_root = history_repo, external_root
+        # Only the explicit v6 transport supplies this context. It can resolve
+        # missing inactive refs, never ordinary or active package reads.
+        self.transport = transport
         self.background = None
+        self.effective_background = None
         self.files = file_table(root, deadline)
         self.used = set()
         self.handoff = self.json("handoff.json")
@@ -263,7 +271,7 @@ class Package:
         if self.background_enabled:
             from .background_package import validate
             self.background = validate(root, h, history_repo=history_repo, deadline=deadline,
-                                       external_root=external_root)
+                                       external_root=external_root, transport=transport)
             self.used.update(self.background["files"])
 
     def file(self, name):

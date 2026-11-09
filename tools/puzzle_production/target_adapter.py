@@ -33,6 +33,8 @@ FORMAT = "picross-target-export-v2"
 MANUAL_FORMAT = "picross-target-export-v3"
 PAIRED_FORMAT = "picross-target-export-v4"
 BACKGROUND_INSPECTION = "picross-authoring-content-inspection-v1"
+BACKGROUND_EXPORT = "picross-target-export-v6"
+BACKGROUND_EXPORT_INSPECTION = "picross-target-inspection-v6"
 
 
 def tool_identity(legacy=False, manual=False, color=False, paired=False, accepted_raster=False, palette=False,
@@ -58,7 +60,8 @@ def tool_identity(legacy=False, manual=False, color=False, paired=False, accepte
     if palette:
         files.extend(("palette_quality.py", "palette_gate.py"))
     if background:
-        files.extend(("background_package.py", "background_assets.py", "background_contract.py", "background_io.py"))
+        files.extend(("background_package.py", "background_assets.py", "background_contract.py", "background_io.py",
+                      "background_export.py", "authoring_staging.py"))
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -98,6 +101,25 @@ def validate_reveal(path, width, height):
             2 * height <= h <= 8192 and w * h <= 8_000_000,
             "Reveal requires >=2 pixels per cell/axis within image limits")
     return {"width": w, "height": h, "sha256": file_hash(path)}
+
+
+def _outer_presentation(package, checked):
+    """A late declaration binds the sealed input; an original choice is reusable."""
+    decision = checked["decision"]
+    if decision is None:
+        return
+    old = package.handoff["background"]["decision"]
+    if old is not None and checked["binding"]["decision"]["ref"] == old["ref"]:
+        return
+    if decision["carried_from"] is not None:
+        return  # The complete predecessor graph preserves the original human bytes.
+    h = package.handoff
+    require(package.archive_sha256 is not None and decision["presented_package"] == {
+        "puzzle_id": h["puzzle_id"], "revision": h["revision"],
+        "original_zip_sha256": package.archive_sha256,
+        "handoff_sha256": file_hash(package.file("handoff.json")),
+        "inventory_sha256": h["inventory"]["sha256"]},
+        "Late background declaration requires this exact presented original package")
 
 
 def final_approval(package, selection, approval_path=None):
@@ -141,27 +163,19 @@ def final_approval(package, selection, approval_path=None):
         binding = {k: b[k] for k in ("manifest", "decision", "derivation")}
         binding["history"] = h["background"]["history"]
         checked = validate_external(package.root, h, binding, history_repo=package.history_repo,
-                                    deadline=package.deadline, external_root=package.external_root)
+                                    deadline=package.deadline, external_root=package.external_root,
+                                    transport=package.transport)
         require(checked["ready"] and checked["status"] in ("selected", "none"),
                 "Final approval requires a ready selected background or explicit none")
         require(binding["manifest"]["ref"] == h["background"]["manifest"]["ref"],
                 "Final approval background differs from original work manifest")
         decision, derivation = checked["decision"], checked["derivation"]
-        original_decision = h["background"]["decision"]
         require(b["outcome"] == decision["outcome"] == derivation["outcome"] and
                 b["candidate_id"] == decision["candidate_id"] == derivation["candidate_id"] and
                 b["original"] == decision["original"] == derivation["source"] and
                 b["output"] == derivation["output"] and b["profile_sha256"] == derivation["profile_sha256"],
                 "Final approval background selection/profile/output binding differs")
-        presented = decision["presented_package"]
-        # An early, already-bound choice remains reusable. A newly supplied
-        # package-specific declaration must refer to this exact original ZIP.
-        if presented is not None and decision["carried_from"] is None and (original_decision is None or
-                                      binding["decision"]["ref"] != original_decision["ref"]):
-            require(presented == {"puzzle_id": h["puzzle_id"], "revision": h["revision"],
-                                 "original_zip_sha256": package.archive_sha256,
-                                 "handoff_sha256": a["handoff_sha256"], "inventory_sha256": a["inventory_sha256"]},
-                    "Final approval cannot transfer a background declaration from another package")
+        _outer_presentation(package, checked)
         require(io.read(approval_path.parent, approval_path.name, 128 * 1024) == approval_bytes,
                 "Final approval changed during inspection")
         result["background"] = checked
@@ -170,11 +184,13 @@ def final_approval(package, selection, approval_path=None):
 
 @diagnostic.measured("Input inspection", "full_input_inspections", attempt_counter="input_inspection_attempts")
 def inspect(package: Package, approval_path=None, *, legacy=False, manual_authorization=None,
-            palette_exception=None, allow_background=False):
+            palette_exception=None, allow_background=False, background_binding=None):
     h = package.handoff
     background = package.background_enabled
     require(not background or allow_background and not legacy,
-            "Background content requires explicit read-only inspection; export remains unsupported")
+            "Background content requires explicit read-only inspection admission")
+    require(background_binding is None or background and allow_background,
+            "Outer background binding requires explicit background inspection")
     palette = h["rulebook"]["version"] == "0.6.0" or background
     require(not palette or not legacy, "Authoring 0.6.0 requires export v5")
     require(palette or palette_exception is None, "Palette exception requires authoring 0.6.0 or admitted 0.7.0")
@@ -411,6 +427,16 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
             report["catalog_ready"] = False
     if background:
         current = approval["background"] if approval is not None else package.background
+        if background_binding is not None:
+            from .background_package import validate_external
+            supplied = validate_external(package.root, h, background_binding, history_repo=package.history_repo,
+                                         deadline=package.deadline, external_root=package.external_root,
+                                         transport=package.transport)
+            _outer_presentation(package, supplied)
+            require(approval is None or supplied["binding"] == current["binding"],
+                    "Supplied background binding differs from final approval")
+            current = supplied
+        package.effective_background = current
         require(h["state"] != "content_ready" or package.background["ready"],
                 "content_ready requires background readiness in the original package")
         report["blockers"].extend(current["blockers"])
@@ -424,7 +450,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
 
 
 def categorize(report, catalog, category_id):
-    require(report.get("format") != BACKGROUND_INSPECTION,
+    require(report.get("format") not in (BACKGROUND_INSPECTION, BACKGROUND_EXPORT_INSPECTION),
             "Background content inspection does not admit catalog integration")
     categories.lookup(catalog, category_id)
     report.update(category_id=category_id, category_ready=True,
@@ -465,7 +491,16 @@ def player_notice(package, report=None):
 
 @diagnostic.measured("Export", "exports")
 def export(source, output, *, name, revision, stem, save_slot, approval_path=None,
-           category_id=None, categories_path=None, manual_authorization=None, palette_exception=None):
+           category_id=None, categories_path=None, manual_authorization=None, palette_exception=None,
+           allow_background=False, external_root=None, history_repo=None):
+    if allow_background:
+        from .background_export import export_background
+        return export_background(source, output, name=name, revision=revision, stem=stem, save_slot=save_slot,
+                                 approval_path=approval_path, category_id=category_id, categories_path=categories_path,
+                                 manual_authorization=manual_authorization, palette_exception=palette_exception,
+                                 external_root=external_root, history_repo=history_repo)
+    require(external_root is None and history_repo is None,
+            "Background roots require explicit allow_background")
     require(not output.exists(), "Export output exists; use a new path")
     require(isinstance(save_slot, str) and STEM.fullmatch(save_slot), "Invalid explicit save slot")
     relative(save_slot+".json")
@@ -542,8 +577,14 @@ def hashes(root):
 @diagnostic.measured("Export/Proof validation", "full_export_validations", attempt_counter="export_validation_attempts")
 def verify_export(directory):
     from .authoring_package import file_table
+    from . import catalog_io as io
+    directory = io.external(directory)
+    manifest_bytes = io.read(directory, "manifest.json", 8 * 1024 * 1024)
+    m = io.json_bytes(manifest_bytes, 8 * 1024 * 1024)
+    if isinstance(m, dict) and m.get("format") == BACKGROUND_EXPORT:
+        from .background_export import verify_background_export
+        return verify_background_export(directory, m, manifest_bytes)
     files = file_table(directory, time.monotonic()+300)
-    m = load_json(directory / "manifest.json")
     require(isinstance(m, dict) and m.get("format") in (FORMAT, LEGACY_FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, palette_gate.EXPORT), "Unsupported target export format")
     legacy = m["format"] == LEGACY_FORMAT
     palette = m["format"] == palette_gate.EXPORT
@@ -659,6 +700,9 @@ def main(argv=None):
             p.add_argument("--categories", type=Path, required=True, action=ExplicitOnce)
         p.add_argument("--manual-authorization", type=Path)
         p.add_argument("--palette-exception", type=Path)
+        p.add_argument("--allow-background", action="store_true")
+        p.add_argument("--external-root", type=Path)
+        p.add_argument("--history-repo", type=Path)
     for cmd in ("verify-export", "plan", "register", "plan-update", "update"):
         p = sub.add_parser(cmd)
         p.add_argument("--export", type=Path, required=True)
@@ -712,9 +756,13 @@ def main(argv=None):
             from .integrated_content import retire
             result = retire(args.checkout, args.puzzle_id, args.integrated_commit)
         elif args.command == "inspect":
-            with open_package(args.input, allow_manual_review=args.manual_authorization is not None) as package:
+            require(args.allow_background or args.external_root is None and args.history_repo is None,
+                    "Background roots require explicit --allow-background")
+            with open_package(args.input, allow_manual_review=args.manual_authorization is not None,
+                              allow_background=args.allow_background, external_root=args.external_root,
+                              history_repo=args.history_repo) as package:
                 result = inspect(package, args.approval, manual_authorization=args.manual_authorization,
-                                 palette_exception=args.palette_exception)[0]
+                                 palette_exception=args.palette_exception, allow_background=args.allow_background)[0]
             if args.report:
                 require(not args.report.exists(), "Inspection output exists")
                 write_json(args.report, result)
@@ -722,7 +770,9 @@ def main(argv=None):
             result = export(args.input, args.output_dir, name=args.name, revision=args.runtime_revision,
                             stem=args.stem, save_slot=args.save_slot, approval_path=args.approval,
                             category_id=args.category_id, categories_path=args.categories,
-                            manual_authorization=args.manual_authorization, palette_exception=args.palette_exception)
+                            manual_authorization=args.manual_authorization, palette_exception=args.palette_exception,
+                            allow_background=args.allow_background, external_root=args.external_root,
+                            history_repo=args.history_repo)
         elif args.command == "verify-export":
             result = verify_export(args.export)[1]
         elif args.command == "recover-registration":
@@ -751,7 +801,7 @@ def main(argv=None):
                 diagnostics.environment["package_files"] = len(result["files"]) + 1
     except (InvalidInput, InvalidProof, Aborted, OSError, ValueError, KeyError, TypeError, StopIteration, KeyboardInterrupt) as exc:
         result = {"status": "blocked", "catalog_ready": False, "registered": False, "error": str(exc) or "interrupted"}
-        code = 4 if isinstance(exc, (Aborted, KeyboardInterrupt)) else 2
+        code = 4 if isinstance(exc, (Aborted, KeyboardInterrupt)) or getattr(exc, "status", None) == "aborted" else 2
     finally:
         diagnostic.current.reset(token)
         if previous_signal is not None:

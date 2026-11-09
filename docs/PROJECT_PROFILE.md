@@ -60,11 +60,13 @@ Entscheidungs-/Ableitungsformen und die lokale API/CLI `describe/derive/verify`.
 PB-H ergänzt mit dem explizit gewählten
 [0.7.0-Vorschausnapshot](ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md) den
 Paketbau, Record-/Sheetprojektion und die lesende Prüfung vollständiger
-Raster-/Inhaltsbereitschaft. Der vollständige Weg ist noch nicht aktiviert;
-Authoring 0.6.0 samt Offline-Sheet bleibt der aktive Produktionsdefault.
-Vorbereitete Hintergrundpakete sind keine finale Export-/Integrationszulassung.
-Spätere äußere Pflege und finale Integration folgen in HP-I1, Runtime in HP-I2,
-neue Sheetbedienung in #490 gemäß Einführungsmatrix. Runtimezeichnungen bleiben
+Raster-/Inhaltsbereitschaft. HP-I1a ergänzt sichere äußere Fortschreibung bereits
+vorhandener Auswahl/Ableitung/Endfreigabe und vollständig geprüften Export v6.
+Höchste Phase bleibt `editorially_approved`; `integration_ready`, `catalog_ready`
+und `registered` bleiben false. Registry, Erstintegration, Hintergrundersatz,
+Recovery und Abschluss folgen in HP-I1b, Runtime in HP-I2 und neue Sheetbedienung
+in #490. Der vollständige Weg ist noch nicht aktiviert; Authoring 0.6.0 samt
+Offline-Sheet bleibt der aktive Produktionsdefault. Runtimezeichnungen bleiben
 bis zu ihrem tatsächlich gelieferten Anschluss unverändert.
 
 ## Pflichtquellen nach Auftrag

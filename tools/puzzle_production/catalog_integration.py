@@ -52,8 +52,15 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
             "RI-A overrides require mutating new registration, not plan/update")
     from .content_registry import ROOT, export_entry, check_checkout, validate
     from .content_update import notice_path
-    from .target_adapter import verify_export, FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, palette_gate
+    from .target_adapter import verify_export, FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, BACKGROUND_EXPORT, palette_gate
     root = catalog_io.external(root)
+    export_dir = catalog_io.external(export_dir)
+    # A v6 export can be verified offline, but it cannot enter the old catalog
+    # projection. Reject it before catalog capture or production replay.
+    manifest = catalog_io.json_bytes(catalog_io.read(export_dir, "manifest.json", 8 * 1024 * 1024),
+                                     8 * 1024 * 1024)
+    require(not isinstance(manifest, dict) or manifest.get("format") != BACKGROUND_EXPORT,
+            "Background export v6 is not supported by catalog consumers (HP-I1b required)")
     update = expected_definition_sha256 is not None
     if update: sha(expected_definition_sha256)
     snapshot = tx.capture(root)

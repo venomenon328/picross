@@ -65,7 +65,7 @@ def validate_binding(value, *, package_only=True):
 class _Reads:
     """Fresh bounded physical reads plus a collision-checked HP-W2 source map."""
 
-    def __init__(self, root, external, deadline):
+    def __init__(self, root, external, deadline, transport=None):
         self.roots = {"package": io.external(root)}
         if external is not None:
             self.roots["external"] = io.external(external)
@@ -76,6 +76,7 @@ class _Reads:
         self.seen, self.assembly, self.edges = {}, {}, {}
         self.files, self.derivative_files = set(), set()
         self.total = 0
+        self.transport = transport
 
     def tick(self):
         io.tick()
@@ -121,6 +122,8 @@ class _Reads:
             self.seen[key] = observation
         if storage == "package":
             self.files.add(name)
+        elif self.transport is not None:
+            self.transport.external_file(name, raw)
         if assemble:
             logical = ref["file"]
             ap.require(logical not in self.assembly or self.assembly[logical] == raw,
@@ -270,11 +273,11 @@ def _readiness(manifest, decision, candidate, derivation):
     return not blockers, blockers
 
 
-def _validate(root, handoff, binding, *, history_repo, deadline, external_root, external):
+def _validate(root, handoff, binding, *, history_repo, deadline, external_root, external, transport=None):
     ap.require(type(handoff.get("test_only", False)) is bool, "Invalid package test_only marker")
     binding = validate_binding(binding, package_only=not external)
     deadline = min(deadline, time.monotonic() + ap.SECONDS) if deadline is not None else time.monotonic() + ap.SECONDS
-    reads = _Reads(root, external_root, deadline)
+    reads = _Reads(root, external_root, deadline, transport)
     manifest_location = reads.location(binding["manifest"])
     decision_location = reads.location(binding["decision"]) if binding["decision"] else None
     current_ref = binding["manifest"]["ref"]
@@ -359,9 +362,16 @@ def _validate(root, handoff, binding, *, history_repo, deadline, external_root, 
             for ref in _candidate_refs(row):
                 raw = reads.read(manifest_location, ref, owner=current_ref["file"], missing=can_omit and not active)
                 if raw is None:
-                    if history is None:
-                        history = _History(binding["history"], history_repo, reads, stack, current_ref)
-                    history.read(ref)
+                    # This is the only supplement resolution point: the ref
+                    # was actually absent and is inactive in THIS context.
+                    if transport is not None and transport.offline:
+                        transport.discarded_file(current_ref, ref)
+                    else:
+                        if history is None:
+                            history = _History(binding["history"], history_repo, reads, stack, current_ref)
+                        raw = history.read(ref)
+                        if transport is not None:
+                            transport.discarded_file(current_ref, ref, raw)
         selected_reveal = handoff.get("reveal")
         if current["context"]["reveal"] is not None and isinstance(selected_reveal, dict) and selected_reveal.get("file"):
             ap.require(current["context"]["reveal"]["sha256"] == selected_reveal.get("sha256"),
@@ -459,35 +469,37 @@ def _validate(root, handoff, binding, *, history_repo, deadline, external_root, 
                    for c in current["candidates"]] if current["presentation"]["status"] == "offered" else []
         return {"status": status, "ready": ready, "blockers": blockers, "binding": binding,
                 "manifest": current, "decision": decision, "derivation": derivation,
-                "options": options, "files": reads.files, "derivative_files": reads.derivative_files}
+                "options": options, "files": reads.files, "derivative_files": reads.derivative_files,
+                "external_files": {name for storage, name in reads.seen if storage == "external"},
+                "decision_refs": set(decisions)}
 
 
-def validate(root, handoff, *, history_repo=None, deadline=None, external_root=None):
+def validate(root, handoff, *, history_repo=None, deadline=None, external_root=None, transport=None):
     """Read an original package binding, preserving its historical status/gates."""
     if handoff.get("format") == "picross-authoring-handoff-v2":
         ap.require("background" not in handoff and handoff.get("rulebook", {}).get("version") in
                    ("0.4.0", "0.4.1", "0.5.0", "0.6.0"), "New background data in an old handoff")
         return {"status": "legacy", "ready": False, "blockers": [], "binding": None,
                 "manifest": None, "decision": None, "derivation": None, "options": [],
-                "files": set(), "derivative_files": set()}
+                "files": set(), "derivative_files": set(), "external_files": set(), "decision_refs": set()}
     ap.require(handoff.get("format") == "picross-authoring-handoff-v3" and
                handoff.get("rulebook", {}).get("version") == "0.7.0", "Unsupported background handoff generation")
     try:
         return _validate(root, handoff, handoff.get("background"), history_repo=history_repo,
-                         deadline=deadline, external_root=external_root, external=False)
+                         deadline=deadline, external_root=external_root, external=False, transport=transport)
     except bc.BackgroundError as exc:
         if exc.status == "aborted":
             raise Aborted(str(exc)) from exc
         raise InvalidInput("Background package: " + str(exc)) from exc
 
 
-def validate_external(root, handoff, binding, *, history_repo=None, deadline=None, external_root=None):
+def validate_external(root, handoff, binding, *, history_repo=None, deadline=None, external_root=None, transport=None):
     """Read explicitly provided outer bindings; never change the original handoff."""
     ap.require(handoff.get("format") == "picross-authoring-handoff-v3" and
                handoff.get("rulebook", {}).get("version") == "0.7.0", "Outer background binding requires v3/0.7.0")
     try:
         return _validate(root, handoff, binding, history_repo=history_repo, deadline=deadline,
-                         external_root=external_root, external=True)
+                         external_root=external_root, external=True, transport=transport)
     except bc.BackgroundError as exc:
         if exc.status == "aborted":
             raise Aborted(str(exc)) from exc
