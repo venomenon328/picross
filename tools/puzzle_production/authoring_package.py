@@ -96,9 +96,19 @@ def file_table(root, deadline):
 
 @contextmanager
 def open_package(source: Path, *, allow_manual_review=False):
-    deadline = time.monotonic() + SECONDS
+    with open_files(source) as (root, deadline, archive_hash):
+        package = Package(root, deadline, allow_manual_review=allow_manual_review)
+        package.archive_sha256 = archive_hash
+        yield package
+
+
+@contextmanager
+def open_files(source: Path, *, deadline=None):
+    """Bounded extraction only; does not certify a phase or an Authoring package."""
+    deadline = min(deadline, time.monotonic() + SECONDS) if deadline is not None else time.monotonic() + SECONDS
     if source.is_dir():
-        yield Package(source, deadline, allow_manual_review=allow_manual_review)
+        file_table(source, deadline)
+        yield source, deadline, None
         return
     require(source.is_file() and not source.is_symlink() and source.stat().st_size <= MAX_ZIP,
             "Missing/oversized ZIP")
@@ -145,10 +155,7 @@ def open_package(source: Path, *, allow_manual_review=False):
                     require(count == info.file_size, "ZIP size mismatch")
         except (zipfile.BadZipFile, NotImplementedError, RuntimeError) as exc:
             raise InvalidInput(f"Invalid ZIP: {exc}") from exc
-        package = Package(root / next(iter(roots)) if has_root else root, deadline,
-                          allow_manual_review=allow_manual_review)
-        package.archive_sha256 = archive_hash
-        yield package
+        yield root / next(iter(roots)) if has_root else root, deadline, archive_hash
 
 
 class Package:

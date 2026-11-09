@@ -1,22 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/550",
-  "package": "RAND-P1",
+  "issue": "https://github.com/venomenon328/picross/issues/489",
+  "package": "PB-A",
   "modules": [
-    "native.catalog"
+    "production.adapter"
   ],
-  "purpose": "Six original ImageGen pilot components on existing regular book work/help pages. Core builds Windows x64 player including provenance; native.catalog covers cheap deterministic placement, stable association, passive input, unchanged help geometry plus existing catalog/information behavior.",
-  "omitted": "No gameplay, save/registry schema, definitions, reveals, cell rendering, fonts, controls or catalog/settings illustrations change. No native.core/history/completion/adapters/graphics/export, tools, production.*, preflight, delivery or Chromium. Core delivery checks cover two added license extras. Real native with/without, tight UI125/zoom and transition/input evidence are one-time review originals, not replaced by catalog component passes. R01 and owner M01 remain before merge; issue 550 stays open for later scope.",
+  "purpose": "PB-A deterministic authoring builder: synthetic early/content_ready packages, original bindings, safe ZIP/publication, index conflicts and repeat/resume. production.adapter runs the new boundaries and existing complete ZA-1 readers/replay. Standard docs and ci-required include the Windows player because tool code changes.",
+  "omitted": "No production.images (no normalization changes), solver, catalog, native groups, preflight, tools infrastructure suite, delivery or Chromium. No real puzzle replay. PB-H remains separate. One-time offline-sheet snapshot check and source-consumer audit cover the narrow documentation/test-routing edits. Independent diff/CI review follows the separate self-review; no merge authorized.",
   "test_changes": [
     {
-      "path": "game/tests/marginalia_cases.gd",
+      "path": "tests/puzzle_production/test_authoring_builder.py",
       "disposition": "change-scoped",
-      "reason": "Small placement/input/geometry/association assertions in existing information process; detects functional displacement, dense overlaps and intercepted input flags without permanent images or a new matrix."
-    },
-    {
-      "path": "game/tests/kat2_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Call marginalia cases in existing native.catalog information mode; retain existing processes, reports, checks and independent readers."
+      "reason": "Small synthetic file/phase/publication regressions detect lost manifest members, fabricated readiness, unsafe paths, overwritten revisions and lost index updates. TemporaryDirectory removes generated fixtures. Only selected production.adapter runs them; no images/archive baseline or catalog corpus."
     }
   ],
   "core_change": null,
