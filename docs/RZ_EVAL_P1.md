@@ -25,8 +25,13 @@ Seine unabhängige Ersatzgenerierung bleibt Kandidat 1/rev2; das Original bleibt
 im befristeten Belegsatz als Fehlversuch. Die übrigen Entwürfe wurden als Entwürfe
 für okay befunden; das ist noch keine konkrete Bildabnahme auf dem Buchpapier.
 
-Es gibt drei kreative Kandidaten je ID und einen verworfenen Vorgänger, zusammen
-16 unabhängige ImageGen-Generierungen. Herkunft, Originalhashes, Prompts und die
+Der erste Bohol-Entwurf wurde ebenfalls verworfen: Kleine ferne Hügelformen
+widersprechen dem ausdrücklichen Subjektausschluss. Kandidat 1/rev2 ersetzt ihn
+durch Handkarren und Bambuszaun ohne Landschaftshorizont. Auch dieser Fehlversuch
+bleibt im befristeten Originalsatz.
+
+Es gibt drei kreative Kandidaten je ID und zwei verworfene Vorgänger, zusammen
+17 unabhängige ImageGen-Generierungen. Herkunft, Originalhashes, Prompts und die
 15 ausgelieferten PNG-Ableitungen stehen in der [Provenienz](../game/art/drawing/rz_eval/provenance.json).
 Originale und zusätzliche Vergleichsprofile werden separat für R01/M01 zugestellt.
 Keine Zählung von Format-/Größenvarianten als kreative Kandidaten.

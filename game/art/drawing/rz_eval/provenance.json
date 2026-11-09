@@ -217,7 +217,7 @@
       "prompt": "Use case: illustration-story. New transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Very wide low 3:1 composition. Pale neutral gray observational pencil sketch, thin broken/retraced contours, sparse fine hatching, large transparent gaps, unfinished edges. All interiors and all spaces between pencil lines genuinely transparent: no white fills, no white or gray ground wash, no rectangular backing, no paper or book, no UI, no text, no border or grid. Never depict the puzzle subject. Context of rural Bohol, Philippines, without any hills or mountains: a continuous tropical flat-country footpath, two small coconut palms, a low bamboo fence and a distant simple thatched farm shelter. Horizon strictly flat and very low. NO Chocolate Hills, NO rounded hill silhouettes, NO mountains. No farm animals.",
       "generation_wall_ms": 37115,
       "briefing": "open",
-      "status": "candidate; final owner selection/approval pending",
+      "status": "technically rejected: distant rounded hill forms conflict with explicit puzzle-subject exclusion; r2 replaces it",
       "bytes": 1599921,
       "sha256": "91aee6eedf63363e059bfe9c7915d08566d780653444beadef1e256bc5134a9d",
       "size": [
@@ -234,17 +234,7 @@
         2172,
         724
       ],
-      "derivatives": [
-        {
-          "path": "hills-1-2304.png",
-          "size": [
-            2304,
-            576
-          ],
-          "bytes": 880537,
-          "sha256": "552e9e5b6256c9af776873e94efed29025873f0c4f7487bee05b30d340d13fa3"
-        }
-      ]
+      "derivatives": []
     },
     {
       "id": "hills-2",
@@ -539,6 +529,40 @@
           ],
           "bytes": 1142969,
           "sha256": "dc54f67ae238b09767b338ba7311cdb4d74f92b8a218f2c2b0b8220c242a776b"
+        }
+      ]
+    },
+    {
+      "id": "hills-1-r2",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal drawing for a puzzle-book leaf, RZ-EVAL-P1 rural Bohol context, candidate 1 revision 2. Very wide LOW 3:1 composition, with an airy U/half-U silhouette and a LOW horizontal center. Scene: a small EMPTY rustic wooden farm handcart with two spoked wheels at the far left; a low woven bamboo fence meanders across the LOWER foreground; a few loose coconut fronds stand at far right. Objects only, in one continuous quiet foreground vignette. ABSOLUTELY NO LANDSCAPE HORIZON, no background scenery, no distant land, no mounds, no hills, no mountains, NO Chocolate Hills, no animals. The specific puzzle subject must not appear, even as a tiny distant silhouette. Pale neutral-gray observational graphite pencil, delicate varied-pressure broken/retraced contours, very sparse fine hatching, mostly empty transparent interiors. ONLY pencil strokes have visible alpha. All space between and inside contours transparent. No white/gray surface fills or wash, no ground backdrop, no paper/book/UI/text/signs/grid/frame. Complete objects inside a generous safe margin and unfinished open sketch edges.",
+      "generation_wall_ms": 13718,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 1055644,
+      "sha256": "92a76501ed07e9e81e484ca6586730935db3951849a3db295d44fa249ecc161c",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        163
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "hills-1-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 545588,
+          "sha256": "873233023de250d302f28273712405dfb4af6ba8d2ac24fc6df948a5524e6109"
         }
       ]
     }
