@@ -121,7 +121,12 @@ Rätsel; Kuala Lumpur verwendet Kandidat 1 nur als noch ungeprüfte Referenz.
 Zusätzliche Profil-/Messbilder und Buchoriginale gehören nicht in den Spielerdownload.
 
 Prüfbedarf: [.ci/package.json](../.ci/package.json), `docs` und `ci-required`,
-Windows-x64-Spieler und ausschließlich `native.catalog`. Die kleinen synthetischen
+Windows-x64-Spieler und `native.catalog`. Der zusätzliche Eigentümerauftrag zur
+wiederholt roten 300-s-Grenze ergänzt `tools`: `kat2-pages` warnt ab 300 s,
+läuft mit nachgewiesenem Fallfortschritt weiter und bricht nur nach 300 s ohne
+neu abgeschlossenen benannten Fall ab. Keine Anhebung eines Gesamtlaufzeitlimits.
+Der [native Vertrag](CI_C_NATIVE_GROUPS.md) und gezielte positive/negative
+Runnertests binden diese Änderung. Die kleinen synthetischen
 RZ-Fälle laufen im bestehenden Informationsprozess. Sie prüfen Canvasstabilität,
 passive Eingaben, unveränderte Geometrie/Savebytes, leer/fehlend/defekt,
 echte verzögerte Ressourcenanfragen und veraltete Besuchsergebnisse. Keine echten

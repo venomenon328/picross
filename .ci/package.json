@@ -3,11 +3,17 @@
   "issue": "https://github.com/venomenon328/picross/issues/558",
   "package": "RZ-EVAL-P1",
   "modules": [
+    "tools",
     "native.catalog"
   ],
-  "purpose": "Reversible five-ID puzzle illustration evaluation: one shared transparent canvas, bounded visit loading and A/B1/B2/C local overlap comparison. Core Windows delivery plus native.catalog synthetic placement, alpha, geometry, passive input and stale/failed-load cases in the existing information process.",
-  "omitted": "No puzzle logic, solutions, registry/package or save format, cell renderer, fonts, help/catalog/settings art or authoring workflow changes. No other native groups, tools, production.*, preflight, delivery or Chromium: actual book zoom/transition/input and PNG/WebP/import/Windows/Web-byte comparisons are one-time targeted evidence. Five real IDs are editorial references, never permanent regression fixtures. Independent R01 and owner M01/D01 remain open; no merge or stock adoption. Evidence on a separate expiring review ref, no gallery in CI/player downloads.",
+  "purpose": "Reversible five-ID illustration evaluation, shared canvas, bounded visit loading and grid/clue A/B1/B2/C comparison. Owner follow-up also authorizes replacing the repeatedly failing kat2-pages total-time boundary with a warning and structured-progress stall guard. tools verifies the runner's positive/negative timing and cleanup cases; native.catalog exercises the actual path. Regular Windows delivery remains required.",
+  "omitted": "No puzzle logic, solutions, registry/package or save format, cell renderer, fonts, help/catalog/settings art or authoring workflow changes. No other native groups, production.*, preflight, delivery or Chromium: actual book zoom/transition/input and PNG/WebP/import/Windows/Web-byte comparisons are one-time targeted evidence. tools is added only for the owner-requested Python runner change. Five real IDs are editorial references, never permanent regression fixtures. Independent R01 and owner M01/D01 remain open; no merge or stock adoption. Evidence on a separate expiring review ref, no gallery in CI/player downloads.",
   "test_changes": [
+    {
+      "path": "tools/test_p1_product.py",
+      "disposition": "core",
+      "reason": "Owner-requested kat2-pages progress watchdog: completed cases may continue beyond 300 seconds; stalled/duplicate/noisy output and real engine/exit/marker failures still fail. This runner contract remains relevant beyond the image experiment."
+    },
     {
       "path": "game/tests/rz_eval_cases.gd",
       "disposition": "change-scoped",

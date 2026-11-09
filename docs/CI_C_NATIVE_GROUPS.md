@@ -635,11 +635,18 @@ für echte Save-/Bewegungszeitfenster. Eine kürzere CPU-Zeit ist nicht automati
 ein gleich großer Gewinn des kritischen Pfads. Laufzeiten, Queue, CPU soweit
 messbar, Cachezustand und Uploadkosten getrennt ausweisen.
 
-Bestehende Prozess-/Netzwerk-Hängerschutzgrenzen bleiben technische Grenzen:
-der native Prozessstandard beträgt 300 s; `kat2-kk` warnt einmal bei 300 s und
-stoppt bei 600 s. Normale Exit-/Engine-/Marker-/Fachprüfungen gelten auch zwischen
-diesen Werten. Der Originalbericht bindet wirksame Timeout-/Warnwerte und tatsächliche
-Dauer; ein Timeout bleibt Fehler und räumt die eigene Prozessgruppe auf.
+Der Eigentümernachtrag zu #558 ersetzt für `kat2-pages` die wiederholt erreichte
+300-s-Gesamtgrenze: einmalige Warnung bei 300 s, keine harte Gesamtdauer. Nur ein
+neu abgeschlossener benannter Fall aus dem aktuellen Katalogvertrag erneuert
+den 300-s-Stillstandsschutz. Wiederholte/ unbekannte Marker und gewöhnlicher
+Logverkehr gelten nicht als Fortschritt. Ein echter Stillstand bleibt Fehler
+und räumt die eigene Prozessgruppe auf; Bericht/Log binden die letzten Fälle,
+Stillstandsgrenze und tatsächliche Dauer. Exit-/Engine-/Marker-/Fachprüfungen
+bleiben auch nach der Warnung verpflichtend.
+
+Die anderen Prozess-/Netzwerk-Hängerschutzgrenzen bleiben technische Grenzen:
+der übrige native Prozessstandard beträgt 300 s; `kat2-kk` warnt einmal bei 300 s
+und stoppt bei 600 s. Der Originalbericht bindet wirksame Timeout-/Warnwerte.
 Das ist keine maximale CI-Gesamtlaufzeit. Zehn Minuten bleiben das weiche Ziel.
 Die frühere `book-native`-Ausnahme betrifft eine entfernte Studienphase.
 

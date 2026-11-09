@@ -82,6 +82,36 @@ def import_settings(command: list[str]):
         settings.write_bytes(original)
 
 
+def wait_catalog_pages(process, path, stream, inactivity_seconds, progress):
+    """A completed, named case renews the stall guard; total time only warns."""
+    from native_contract import CATALOG_CASES
+    expected = set(CATALOG_CASES['pages'])
+    began = last_progress = time.monotonic()
+    seen = set()
+    warned = False
+    while True:
+        try:
+            return process.wait(timeout=min(1.0, max(0.001, inactivity_seconds - (time.monotonic() - last_progress)))), warned
+        except subprocess.TimeoutExpired:
+            now = time.monotonic()
+            output = path.read_text(encoding='utf-8', errors='replace')
+            completed = {match.group(1) for match in re.finditer(r'(?m)^KAT2_CASE ([a-z0-9-]+) checks=([1-9][0-9]*) elapsed_ms=[0-9]+\s*$', output)} & expected
+            if completed - seen:
+                seen |= completed
+                last_progress = now
+                progress['completed_cases'] = sorted(seen)
+                progress['last_progress_seconds'] = round(now - began, 3)
+            if not warned and now - began >= 300:
+                warned = True
+                progress['warning_emitted'] = True
+                warning = 'WARNING: kat2-pages reached 300s; continuing while named cases make progress (no total-time deadline)'
+                stream.write(('\n' + warning + '\n').encode())
+                stream.flush()
+                print(warning, flush=True)
+            if now - last_progress >= inactivity_seconds:
+                raise subprocess.TimeoutExpired(process.args, inactivity_seconds)
+
+
 def run_phase(name: str, command: list[str], environment: dict, timeout: int, logs: Path) -> dict:
     """Write live diagnostic output even if the runner is cancelled mid-phase."""
     print(f"RUN {name}", flush=True)
@@ -105,8 +135,11 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
         import resource
         usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
     path = logs / f"{name}.log"
-    # P3-A-F02: only KK may finish after the standard 300s boundary.
-    warning_seconds = 300 if name == "kat2-kk" else None
+    # Owner follow-up in #558: pages has a progress guard, no total deadline.
+    progress_guard = name == 'kat2-pages'
+    inactivity_seconds = timeout if progress_guard else None
+    progress = dict(completed_cases=[], last_progress_seconds=0.0, warning_emitted=False)
+    warning_seconds = 300 if name in {"kat2-kk", "kat2-pages"} else None
     timeout = 600 if name == "kat2-kk" else timeout
     warning_emitted = False
     timed_out = False
@@ -117,7 +150,9 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
         with subprocess.Popen(command, env=environment, stdout=stream,
                               stderr=subprocess.STDOUT, start_new_session=grouped) as process:
             try:
-                if warning_seconds is None:
+                if progress_guard:
+                    exit_code, warning_emitted = wait_catalog_pages(process, path, stream, timeout, progress)
+                elif warning_seconds is None:
                     exit_code = process.wait(timeout=timeout)
                 else:
                     waiting_started = time.monotonic()
@@ -145,7 +180,8 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
                     raise
                 timed_out = True
                 exit_code = None
-                stream.write(f"\n{name} exceeded {timeout}s\n".encode())
+                reason = f"{name} made no new completed-case progress for {timeout}s" if progress_guard else f"{name} exceeded {timeout}s"
+                stream.write(('\n' + reason + '\n').encode())
     output = path.read_bytes().decode("utf-8", errors="replace")
     costs = dict(software_render_threads=environment.get("LP_NUM_THREADS"),
                  display=environment.get("DISPLAY"))
@@ -162,8 +198,10 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
                 process_role='import' if '--import' in command else 'export' if '--export-debug' in command else 'version' if '--version' in command else 'game',
                 rendered='--headless' not in command and '--version' not in command,
                 seconds=round(time.monotonic() - started, 3), timed_out=timed_out,
-                timeout_seconds=timeout, warning_seconds=warning_seconds,
-                warning_emitted=warning_emitted,
+                timeout_seconds=None if progress_guard else timeout, warning_seconds=warning_seconds,
+                warning_emitted=warning_emitted or progress['warning_emitted'],
+                inactivity_timeout_seconds=inactivity_seconds,
+                progress=progress if progress_guard else None,
                 process_costs=costs,
                 log=bound_log(path))
 
@@ -506,6 +544,8 @@ def main(argv: list[str] | None = None) -> int:
                                        args.process_timeout_seconds, reporter.logs)
                     result["required_marker"] = marker
                     if result["timed_out"]:
+                        if result['inactivity_timeout_seconds'] is not None:
+                            raise toolchain.PreflightError(f"{name} stalled without a newly completed case for {result['inactivity_timeout_seconds']}s")
                         raise toolchain.PreflightError(f"{name} exceeded {result['timeout_seconds']}s")
                     if expected_failure:
                         toolchain.require_expected_failure(result, "P1_EXPECTED_FAILURE")

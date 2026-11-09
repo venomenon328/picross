@@ -19,6 +19,64 @@ from ci_scope import FLAGS, JOBS, classify, evaluate
 
 
 class ProductHarnessTests(unittest.TestCase):
+    def simulate_pages(self, duration, events=(), *, exit_code=0, output='KAT2_PROBE_OK\n', noise=False):
+        from p1_product import run_phase
+        clock = [0.0]
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            process = MagicMock(args=['probe'])
+            process.__enter__.return_value = process
+            emitted = set()
+            target = [None]
+            def wait(timeout=None):
+                if timeout is None: return -9
+                clock[0] = min(duration, clock[0] + timeout)
+                for index, (at, line) in enumerate(events):
+                    if at <= clock[0] and index not in emitted:
+                        target[0].write((line+'\n').encode()); target[0].flush(); emitted.add(index)
+                if noise:
+                    target[0].write(b'ordinary repeated output\nKAT2_CASE catalog-layout checks=1 elapsed_ms=1\n'); target[0].flush()
+                if clock[0] >= duration:
+                    target[0].write(output.encode()); target[0].flush()
+                    return exit_code
+                raise subprocess.TimeoutExpired(process.args, timeout)
+            process.wait.side_effect = wait
+            def launch(*args, **kwargs): target[0] = kwargs['stdout']; return process
+            with patch('p1_product.subprocess.Popen', side_effect=launch), patch('p1_product.time.monotonic', side_effect=lambda:clock[0]), patch('p1_product.platform.system', return_value='Windows'), patch('builtins.print'):
+                result = run_phase('kat2-pages', ['probe'], {}, 300, directory)
+            return result, process
+
+    def test_pages_progress_can_finish_past_300_and_600_seconds(self):
+        cases = ['catalog-layout','catalog-pages','catalog-sorting','sbr-scrollbars','k-a-filter-rules','k-a-filter-navigation','k-b-recent']
+        events = [(120*(i+1),f'KAT2_CASE {case} checks=10 elapsed_ms={120000*(i+1)}') for i,case in enumerate(cases)]
+        result, process = self.simulate_pages(900, events)
+        self.assertEqual(result['seconds'], 900)
+        self.assertIsNone(result['timeout_seconds'])
+        self.assertEqual(result['inactivity_timeout_seconds'], 300)
+        self.assertTrue(result['warning_emitted'])
+        self.assertEqual(result['output'].count('WARNING:'), 1)
+        self.assertFalse(result['timed_out'])
+        require_clean_output(result, 'KAT2_PROBE_OK')
+        process.kill.assert_not_called()
+
+    def test_pages_stall_guard_ignores_duplicate_unknown_and_noisy_output(self):
+        for events,noise in [((),False),((),True),(((100,'KAT2_CASE unknown-case checks=10 elapsed_ms=100000'),),False)]:
+            with self.subTest(events=events,noise=noise):
+                result, process = self.simulate_pages(1000, events, noise=noise)
+                self.assertTrue(result['timed_out'])
+                self.assertLessEqual(result['seconds'], 302)
+                self.assertIsNone(result['exit_code'])
+                self.assertIn('no new completed-case progress',result['output'])
+                process.kill.assert_called_once_with()
+
+    def test_pages_late_finish_still_requires_real_exit_marker_and_clean_engine(self):
+        events = [(200,'KAT2_CASE catalog-layout checks=10 elapsed_ms=200000')]
+        for code,output in [(4,'KAT2_PROBE_OK\n'),(0,'missing marker\n'),(0,'KAT2_PROBE_OK\nERROR: failure\n'),(0,'KAT2_PROBE_OK\nSCRIPT ERROR: failure\n')]:
+            with self.subTest(code=code,output=output):
+                result,_ = self.simulate_pages(350,events,exit_code=code,output=output)
+                self.assertFalse(result['timed_out'])
+                with self.assertRaises(PreflightError): require_clean_output(result,'KAT2_PROBE_OK')
+
     def simulate_phase(self, name, duration, *, timeout=300, exit_code=0, output="KAT2_PROBE_OK\n"):
         from p1_product import run_phase
         clock = [0.0]
@@ -118,6 +176,10 @@ class ProductHarnessTests(unittest.TestCase):
         self.assert_phase_tree_stopped("timeout-tree", 1)
 
     @unittest.skipUnless(platform.system() == "Linux", "Linux wrapper process-group contract")
+    def test_pages_stall_stops_descendants_and_preserves_unrelated_process(self):
+        self.assert_phase_tree_stopped('kat2-pages', None)
+
+    @unittest.skipUnless(platform.system() == "Linux", "Linux wrapper process-group contract")
     def test_kk_hard_timeout_stops_real_descendants(self):
         original_wait = subprocess.Popen.wait
         clock = [0.0]
@@ -165,7 +227,8 @@ class ProductHarnessTests(unittest.TestCase):
                                        os.environ.copy(), 1, root)
                     self.assertTrue(result["timed_out"])
                     self.assertIsNone(result["exit_code"])
-                    self.assertIn(f"{phase_name} exceeded {effective_timeout}s", result["output"])
+                    message = 'kat2-pages made no new completed-case progress for 1s' if phase_name == 'kat2-pages' else f"{phase_name} exceeded {effective_timeout}s"
+                    self.assertIn(message, result["output"])
                     self.assertEqual(result["timeout_seconds"], effective_timeout)
                     self.assertEqual(result["warning_emitted"], phase_name == "kat2-kk")
                     self.assertIsNone(unrelated.poll())
