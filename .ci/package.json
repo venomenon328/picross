@@ -1,27 +1,22 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/547",
-  "package": "KL-CARD-A",
+  "issue": "https://github.com/venomenon328/picross/issues/550",
+  "package": "RAND-P1",
   "modules": [
     "native.catalog"
   ],
-  "purpose": "Compact catalog cards with preview beside neutral/earned heading, category and status; common measured horizontal/stacked geometry. Existing catalog/pages, KE and KK cover complete metadata, reflow, input, spoiler and recovery. Core supplies Windows x64 player.",
-  "omitted": "No definitions, assets, save schema, sorting/filter semantics, difficulty or renderer changes. No native.core/history/completion/adapters/graphics/export, tools, production.*, preflight, delivery or Chromium. One-time native regular-book before/after originals and synthetic long-text, wide-reveal and recovery input supplement component tests; independent R01 and owner M01 remain before merge. No physical desktop/mouse claim.",
+  "purpose": "Six original ImageGen pilot components on existing regular book work/help pages. Core builds Windows x64 player including provenance; native.catalog covers cheap deterministic placement, stable association, passive input, unchanged help geometry plus existing catalog/information behavior.",
+  "omitted": "No gameplay, save/registry schema, definitions, reveals, cell rendering, fonts, controls or catalog/settings illustrations change. No native.core/history/completion/adapters/graphics/export, tools, production.*, preflight, delivery or Chromium. Core delivery checks cover two added license extras. Real native with/without, tight UI125/zoom and transition/input evidence are one-time review originals, not replaced by catalog component passes. R01 and owner M01 remain before merge; issue 550 stays open for later scope.",
   "test_changes": [
+    {
+      "path": "game/tests/marginalia_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Small placement/input/geometry/association assertions in existing information process; detects functional displacement, dense overlaps and intercepted input flags without permanent images or a new matrix."
+    },
     {
       "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Replace superseded vertical title/category/footer oracles; retain existing metadata, wrong-fill, X/redo, completion, reset/recovery and pointer scenarios. Log existing checkpoint progress for bounded timeout diagnosis; no new report family."
-    },
-    {
-      "path": "game/tests/catalog_layout_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Small measured horizontal/stacked threshold and stable shared geometry/metadata checks inside existing pages checkpoint; no new process, result family or permanent images."
-    },
-    {
-      "path": "game/tests/run_tests.gd",
-      "disposition": "change-scoped",
-      "reason": "Align the retained core scene caption/leaf oracles with neutral Blatt NN headings. No new assertion family and no native.core selection merely because this shared reader contains superseded display text."
+      "reason": "Call marginalia cases in existing native.catalog information mode; retain existing processes, reports, checks and independent readers."
     }
   ],
   "core_change": null,

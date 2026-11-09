@@ -1,5 +1,18 @@
 # Native Prüfmodule und Originalnachweise
 
+## RAND-P1 / #550: begrenzte passive Randzeichnungen
+
+Das gewählte `native.catalog` prüft im vorhandenen Informationsprozess kleine
+deterministische Fälle für getrennte Motivteile, unabhängiges Weglassen an harten
+Controls und dichten Leseflächen, erlaubte geringe Überlagerung, stabile
+Kategorie-/Hilfepaarung, Alphaoriginale, Capturehierarchie, Pointer-/Fokusignorieren
+und unveränderte Hilfegeometrie/Savebytes beim Zeichnungswechsel. Keine neue
+Prozess-, Ergebnis- oder Dauerbildfamilie; vorhandene Producer-/Readerfolge bleibt.
+Die einmaligen echten Buch-/Windowsvergleiche und Bewegungs-/Eingabenachweise
+ergänzen diese synchrone Komponentenprüfung; R01/M01 bleiben gemäß
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692)
+getrennte Vor-Merge-Gates, Originale auf befristetem separatem Reviewref.
+
 ## KL-CARD-A / #547: kompakte Karten
 
 Das gewählte `native.catalog` verwendet weiter dieselben elf Prozesse und

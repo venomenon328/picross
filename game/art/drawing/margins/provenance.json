@@ -1,0 +1,155 @@
+{
+  "format": "picross-margin-pilot-provenance-v1",
+  "created": "2026-11-09",
+  "package": "RAND-P1",
+  "decision": "https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692",
+  "source": "OpenAI built-in image_gen via imagegen skill; six independent original generations; no input image files or downloaded third-party art",
+  "parameters": {
+    "transparent_background": true
+  },
+  "model": null,
+  "seed": null,
+  "processing": "Original RGBA PNG bytes copied unchanged. Pillow 12.3.0 used read-only for dimensions, alpha extent and hashes. Runtime AtlasTexture regions remove empty margins, original alpha preserved; uniform runtime opacity only. No raster retouch, geometric substitute, UI composite or regeneration claim.",
+  "rights": "Original illustrations generated in this user-authorized task for this project. No third-party source assets. No claim of exclusive rights. Reference mock screenshots informed the text brief only and are not runtime assets.",
+  "selection": "Six reversible pilot candidates only, no final art-set approval. RAND-P1-R01 and owner RAND-P1-M01 remain separate before merge.",
+  "images": [
+    {
+      "name": "water_right",
+      "file": "exec-cc69d88e-61a4-47f4-83a2-326a276c1ce0.png",
+      "prompt": "Use case: illustration-story. Asset type: standalone transparent PNG graphite marginal illustration for a puzzle book, RAND-P1 water-world pilot, larger lower-right component. Subject: a gracefully branching frond of bladderwrack seaweed with paired air bladders and long twisting open blades, a tiny hint of rock at its foot. Style: an incidental observational pencil sketch, pale neutral gray graphite, varied pressure, fine broken and retraced contours, a few darker finely hatched details and much empty space between strokes; unfinished at the edges. Natural organic drawing, intricate at close range but quiet at display size about 450 by 350 pixels. Composition: diagonal growth from lower left toward upper right, all contours inside the canvas with a small clear margin. Background genuinely transparent including between pencil strokes; no paper, no book, no UI, no text, no grid, no border, no colors, no opaque white silhouette or background. This is only one separately placeable component; do not include shell or companion drawings.",
+      "output": "water_right.png",
+      "sha256": "cc720e94e0a9bd0af55d44aa4ca813982ce92bb28e8eb9554c0210146fd5de20",
+      "bytes": 1297261,
+      "size": [
+        1422,
+        1106
+      ],
+      "display_region": [
+        33,
+        18,
+        1371,
+        1081
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "status": "pilot candidate; personal selection RAND-P1-M01 pending"
+    },
+    {
+      "name": "water_left",
+      "file": "exec-9566d0fc-f36b-4c52-9efe-e70847c28204.png",
+      "prompt": "Use case: illustration-story. Asset type: independent transparent PNG pencil marginal drawing for a puzzle book. Subject: one small cockle shell seen obliquely, fan-shaped, with a few expressive curved ribs and a tiny loose strand of seaweed beside its base. Style: quiet observational graphite sketch; pale neutral gray thin strokes with variable pressure, open broken and retraced contours, small patches of fine crosshatching on ribs, unfinished edges; mostly empty transparent interiors, NO solid filled surfaces, no overall gray wash. An idle sketch rather than an icon. Composition: shell low and centered, full contour visible within small safe margin, horizontal little vignette to be displayed about 180 by 130 pixels. Genuinely transparent background, including shell interiors between the strokes; no paper, no white fill, no background texture, no book, no UI, no text, no grid, no border, no color. This is the small lower-left companion for a larger bladderwrack sketch, do not draw that larger sketch.",
+      "output": "water_left.png",
+      "sha256": "6f6e356e09874466f38a8e2e09367b60f31101d58e2f85a3db818db12ab9f0c4",
+      "bytes": 710420,
+      "size": [
+        1474,
+        1067
+      ],
+      "display_region": [
+        197,
+        389,
+        990,
+        613
+      ],
+      "alpha_extrema": [
+        0,
+        221
+      ],
+      "status": "pilot candidate; personal selection RAND-P1-M01 pending"
+    },
+    {
+      "name": "nature_right",
+      "file": "exec-8d8974ac-7d18-4db2-b06f-4cc4aa79c30d.png",
+      "prompt": "Use case: illustration-story. Asset type: independent transparent PNG graphite marginal drawing for a puzzle book, larger lower-right nature vignette. Subject: a short weathered wooden jetty entering quiet water, four or five irregular planks in perspective, two upright posts with a loosely hanging rope, reeds growing by the near post, a few thin broken water reflections. Style: incidental observational graphite drawing, pale neutral gray fine pencil strokes with varied pressure, open broken and retraced contours, grain indicated with loose fine hatching, a few denser details, ample transparent unfilled areas. No solid gray wash, no white or opaque fills. Quiet but recognizable at about 430 by 350 pixels. Composition: near post at right, planks leading leftward, whole small scene inside a modest safe margin, soft unfinished outer edges. Background genuinely transparent including between all strokes and inside objects; no paper, no book, no UI, no text, no grid, no frame, no color. Only this component, no separate feather.",
+      "output": "nature_right.png",
+      "sha256": "a7f6cf74752fa1c43b20e55f31934167df7179b6af4f93fa5c41f79fb64857ac",
+      "bytes": 1648717,
+      "size": [
+        1391,
+        1131
+      ],
+      "display_region": [
+        66,
+        110,
+        1283,
+        990
+      ],
+      "alpha_extrema": [
+        0,
+        252
+      ],
+      "status": "pilot candidate; personal selection RAND-P1-M01 pending"
+    },
+    {
+      "name": "nature_left",
+      "file": "exec-ed69affb-5f64-4ef8-bf72-f3bc81f39848.png",
+      "prompt": "Use case: illustration-story. Asset type: independent transparent PNG graphite marginal drawing for a puzzle book. Subject: a loose feather caught beside one slender reed bending above a few broken water ripples, small natural observational vignette. Style: idle pale neutral-gray graphite pencil sketch, fine varied-pressure broken and lightly retraced contours, several delicate barbs and sparse small crosshatched details; open interiors with no white or solid gray fill, lots of transparent air between strokes, unfinished outer edges. Composition: full feather and reed inside a compact horizontal canvas with safe margin, displayed about 210 by 160 pixels as the small lower-left companion to a wooden jetty vignette. Genuinely transparent background between and around strokes. No paper, no background texture, no UI, no text, no grid, no border, no color, no other illustrations.",
+      "output": "nature_left.png",
+      "sha256": "8c4b2517b7f3b15555c7a39bee27588bce386426ca9017a2a4ed691c67e68aba",
+      "bytes": 914022,
+      "size": [
+        1437,
+        1095
+      ],
+      "display_region": [
+        91,
+        35,
+        1243,
+        1029
+      ],
+      "alpha_extrema": [
+        0,
+        251
+      ],
+      "status": "pilot candidate; personal selection RAND-P1-M01 pending"
+    },
+    {
+      "name": "help_right",
+      "file": "exec-93a5bd74-22dc-41a4-a6ec-5786877acc19.png",
+      "prompt": "Use case: illustration-story. Asset type: independent transparent PNG graphite marginal illustration for the help page of a puzzle book. Subject: a small wooden pencil sharpener in three-quarter view with its metal blade and screw on top, beside a single long curling shaving which makes an open loose spiral. Style: an incidental hand-drawn pencil study, pale neutral gray graphite with varied pressure, open broken contours, light retracing, fine wood-grain hatching and a few denser blade/hole details, unfinished edges; leave interiors unfilled with transparent air between thin strokes, no uniform gray wash and no white fill. Composition: sharpener toward right, shaving curls toward left and below; all contours inside a modest clear margin, compact horizontal vignette readable at 410 by 300 pixels. Genuinely transparent background and object interiors between strokes. No page, no paper texture, no UI, no text, no grid, no border, no color; do not include a pencil companion.",
+      "output": "help_right.png",
+      "sha256": "4d425a0b0ee52cb441c15b6a23025a03fce9149fc0f09a58e83d003a8f4562d7",
+      "bytes": 1359623,
+      "size": [
+        1448,
+        1086
+      ],
+      "display_region": [
+        66,
+        106,
+        1318,
+        851
+      ],
+      "alpha_extrema": [
+        0,
+        205
+      ],
+      "status": "pilot candidate; personal selection RAND-P1-M01 pending"
+    },
+    {
+      "name": "help_left",
+      "file": "exec-a94a76bc-33cf-4f74-9f54-9166f23cc2d3.png",
+      "prompt": "Use case: illustration-story. Asset type: independent transparent PNG graphite marginal drawing for a puzzle book help page, smaller lower-left companion. Subject: a very short well-used wooden pencil stump lying diagonally, its blunt eraser at left and sharpened graphite point toward right, with two or three loose little test scribbles nearby. Style: casual observational pencil drawing in pale neutral gray, thin varied-pressure broken and retraced contours, sparse wood-grain hatching and a few stronger dark graphite-tip lines; no uniformly filled surfaces or gray wash, no white object fill, lots of transparent space inside the drawn shapes. Composition: complete stump and scribbles with clear margin, low horizontal vignette readable at 220 by 140 pixels. Genuinely transparent background including between strokes. No paper, no background texture, no book, no UI, no text or lettering on the pencil, no grid, no border, no color, no other objects.",
+      "output": "help_left.png",
+      "sha256": "879c30e29f25cf6d64e692ab3858f5a8e61c0c1ad1ca2d99827ebf6f5a85c738",
+      "bytes": 518528,
+      "size": [
+        1572,
+        1001
+      ],
+      "display_region": [
+        66,
+        557,
+        1450,
+        360
+      ],
+      "alpha_extrema": [
+        0,
+        247
+      ],
+      "status": "pilot candidate; personal selection RAND-P1-M01 pending"
+    }
+  ]
+}
