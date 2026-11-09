@@ -1,0 +1,3015 @@
+{
+	"failures": [],
+	"frames": [
+		{
+			"active_illustration": false,
+			"book_state": 0,
+			"capture": false,
+			"pending": false,
+			"phase": "catalog-before",
+			"static_cpu_memory": 661594666,
+			"texture_memory": 223307249.0,
+			"video_memory": 233564001.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 1,
+			"capture": true,
+			"pending": true,
+			"phase": "opening",
+			"static_cpu_memory": 662406150,
+			"texture_memory": 259876293.0,
+			"video_memory": 270133045.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 1,
+			"capture": true,
+			"pending": true,
+			"phase": "opening",
+			"static_cpu_memory": 662108502,
+			"texture_memory": 259876293.0,
+			"video_memory": 270114613.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 1,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662375486,
+			"texture_memory": 280323375.0,
+			"video_memory": 289904011.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662386174,
+			"texture_memory": 280323375.0,
+			"video_memory": 289904011.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662387802,
+			"texture_memory": 280323375.0,
+			"video_memory": 296294587.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662389286,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662390226,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662391190,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662392202,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662393190,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662394106,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662395022,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662396178,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662397094,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662398010,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662398926,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662399986,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662400902,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662402034,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662402950,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662403866,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662404782,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662405914,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662406830,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662407746,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662408662,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662409578,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662410830,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662411746,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662412662,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662413578,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662414830,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662415746,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662416662,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662417578,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662418494,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662419410,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662420326,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662421242,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662422158,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662423074,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662424494,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662425410,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662426326,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662427242,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662428662,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662429578,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662430494,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662431410,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662432326,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662433242,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662434158,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662435074,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662435990,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662436906,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662437822,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662438738,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662439654,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662440570,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662441486,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662442402,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662443318,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662444978,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662445894,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662446810,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662447726,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662449386,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662450302,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662451218,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662452134,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662453050,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662453966,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662454882,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662455798,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662456714,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662457630,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662458546,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662459462,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662460378,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662461294,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662462210,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662463126,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662464042,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662464958,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662465874,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662466790,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662467706,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662468622,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662469538,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662470454,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662471370,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662472286,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662473202,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662475246,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662476162,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662477078,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662477994,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662480038,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662480954,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662481870,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662482786,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662483702,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662484618,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662485534,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662486450,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662487366,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662488282,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662489198,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662490114,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662491030,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662491946,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662492862,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662493778,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662494694,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662495610,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662496526,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662497442,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662498358,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662499274,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662500190,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662501106,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662502022,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662502938,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662503854,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662504770,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662505686,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662506602,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662507518,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662508434,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662509350,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662510266,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662511182,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662512098,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662513014,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662513930,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662514846,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662515762,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662516678,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662517594,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662518510,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662521106,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662522022,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662522938,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662523854,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662526450,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662527366,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662528282,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662529198,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662530114,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662531030,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662531946,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662532862,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662533778,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662534694,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662535610,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662536526,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662537442,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662538358,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662539274,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662540190,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662541106,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662542022,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662542938,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662543854,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662544770,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662545686,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662546602,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662547518,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662548434,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662549350,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662550266,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662551182,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662552098,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662553014,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662553930,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662554846,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662555762,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662556678,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662557594,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662558510,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662559426,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662560342,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662561258,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662562174,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "opening",
+			"static_cpu_memory": 662563090,
+			"texture_memory": 280323375.0,
+			"video_memory": 302685163.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 3,
+			"capture": false,
+			"pending": false,
+			"phase": "work-settled",
+			"static_cpu_memory": 662582906,
+			"texture_memory": 231171523.0,
+			"video_memory": 253478591.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 1,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662756082,
+			"texture_memory": 260662723.0,
+			"video_memory": 282969791.0
+		},
+		{
+			"active_illustration": true,
+			"book_state": 1,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662629370,
+			"texture_memory": 260662723.0,
+			"video_memory": 282969791.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 1,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662732342,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662753790,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662754786,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662755702,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662756642,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662757606,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662758522,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662759510,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662760426,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662761342,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662762354,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662763270,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662764186,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662765102,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662766162,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662767078,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662767994,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662768910,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662769826,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662770742,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662771874,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662772790,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662776226,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662777142,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662778058,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662778974,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662779890,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662780806,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662781722,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662782974,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662783890,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662784806,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662785722,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662786638,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662787554,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662788470,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662789386,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662790302,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662791218,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662792134,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662793050,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662793966,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662794882,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662796302,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662797218,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662798134,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662799050,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662799966,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662800882,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662801798,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662802714,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662803630,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662804546,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662805462,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662806378,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662807294,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662808210,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662809126,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662810042,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662810958,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662811874,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662812790,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662813706,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662814622,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662816282,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662817198,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662818114,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662819030,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662819946,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662820862,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662821778,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662822694,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662823610,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662824526,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662825442,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662826358,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662827274,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662828190,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662829106,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662830022,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662830938,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662831854,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662832770,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662833686,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662834602,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662835518,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662836434,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662837350,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662838266,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662839182,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662840098,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662841014,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662841930,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662842846,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662843762,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662845806,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662846722,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662847638,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662848554,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662849470,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662850386,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662851302,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662852218,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662853134,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662854050,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662854966,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662855882,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662856798,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662857714,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662858630,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 2,
+			"capture": true,
+			"pending": false,
+			"phase": "returning",
+			"static_cpu_memory": 662859546,
+			"texture_memory": 273245531.0,
+			"video_memory": 296265003.0
+		},
+		{
+			"active_illustration": false,
+			"book_state": 0,
+			"capture": false,
+			"pending": false,
+			"phase": "catalog-after",
+			"static_cpu_memory": 662849714,
+			"texture_memory": 224093679.0,
+			"video_memory": 247113151.0
+		}
+	]
+}

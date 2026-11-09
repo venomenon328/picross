@@ -15,5 +15,14 @@
     "expires": "2026-11-16"
   },
   "recipient": "Independent R01 reviewer with repository access; owner venomenon328 for M01; D01 later decision",
-  "retirement": "No merge of review ref. Reassess and retire in the assigned follow-up after R01/M01 or at 2026-11-16; not an automatic expiry/deletion promise."
+  "retirement": "No merge of review ref. Reassess and retire in the assigned follow-up after R01/M01 or at 2026-11-16; not an automatic expiry/deletion promise.",
+  "current_product_head": "284194e42cc3c6fd4c39a5cabe0f394a9c18897c",
+  "owner_revision": "Current 15 book views, diagnostics, mono and resource records under owner-* supersede original book/diagnostics. The first two runs observed 3afa04032f37169d4c59769ac48eec5b292df9e5; only CI plan/Python runner tests/native contract/docs changed through current head, no game/art/shader changes. Exact run heads are in reports/owner-native-runs.json.",
+  "owner_selection": {
+    "tomate": 1,
+    "qualle": 2,
+    "hills": 1,
+    "petronas": null,
+    "basilisk": 3
+  }
 }

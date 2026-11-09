@@ -1,0 +1,40 @@
+{
+  "comparisons": [
+    {
+      "mode": 1,
+      "outside_grid_and_clues_bbox": null,
+      "difference_bbox": [
+        569,
+        883,
+        2170,
+        1359
+      ]
+    },
+    {
+      "mode": 2,
+      "outside_grid_and_clues_bbox": null,
+      "difference_bbox": [
+        569,
+        883,
+        2170,
+        1359
+      ]
+    },
+    {
+      "mode": 3,
+      "outside_grid_and_clues_bbox": null,
+      "difference_bbox": [
+        87,
+        110,
+        2256,
+        1359
+      ]
+    }
+  ],
+  "zoom_samples": 288,
+  "canvas_states": 1,
+  "texture_states": 1,
+  "load_count_states": 1,
+  "all_ready": true,
+  "failures": []
+}

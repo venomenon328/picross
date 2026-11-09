@@ -1,3 +1,34 @@
+# Aktuelle Eigentümerrevision · konkrete Buchbilder
+
+Produkt-Head: `284194e42cc3c6fd4c39a5cabe0f394a9c18897c`. Die **aktuellen** Originale stehen unter `owner-*`.
+Die frühere Sammlung weiter unten dokumentiert den verworfenen Masken-/Bildstand,
+nicht die aktuelle Bildwirkung. Empfänger R01/M01, Bedarf/Rückbau am 16.11.2026.
+
+**Kuala Lumpur, neue Großstadtfassungen (M01 offen):**
+
+1. [Monorail links · Kandidat 1](owner-book/petronas-c1-1440-A.png)
+2. [Nasse Großstadtstraße · Kandidat 2](owner-book/petronas-c2-1440-A.png)
+3. [Shophouses links, Bahn rechts · Kandidat 3](owner-book/petronas-c3-1440-A.png)
+
+Alle Links öffnen die unveränderte 2560×1440-Buchaufnahme, kein zusammengesetztes Mockup.
+Hinweise folgen hier derselben A/B1/B2/C-Regel wie das Raster; gemeinsame Bildränder
+laufen sanft aus. Die Eigentümerwahl für die übrigen Rätsel:
+
+- [Tomate 1](owner-book/tomate-c1-1440-A.png)
+- [Qualle 2](owner-book/qualle-c2-1440-A.png)
+- [Chocolate Hills 1/rev2](owner-book/hills-c1-1440-A.png)
+- [Stirnlappenbasilisk 3](owner-book/basilisk-c3-1440-A.png)
+
+Alle 15 Kandidaten einschließlich Mit-/Ohne-Proben: `owner-book/`.
+Aktuelle Zoom-/Interaktions-/Transparenz- und Größen-Gegenproben: `owner-diagnostics/`.
+Mono-Gegenprobe: `owner-mono/`; Übergangsressourcen: `owner-resources/`.
+`reports/owner-native-runs.json` bindet tatsächliche Laufstände/Dauern und Fehlerfreiheit.
+23 ImageGen-Aufrufe: 20 unabhängige Generierungen + 3 zugeordnete Transparenzkorrekturen,
+15 aktuelle Kandidaten und 8 verworfene/ersetzte Vorstufen. Alle Originalbytes bleiben erhalten.
+Profil-/Exportmessung nach der Eigentümerwahl folgt separat; alte Messwerte sind nicht aktuell.
+
+---
+
 # RZ-EVAL-P1 Â· befristete Revieworiginale
 
 Produkt-Head: `90aefb84dccd9e1cdcda73f03df113855b856857`, Draft-PR [#559](https://github.com/venomenon328/picross/pull/559).

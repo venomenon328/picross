@@ -1,0 +1,27 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 596.49 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 3070
+
+RZ_SHOT overlap-0-low
+RZ_SHOT overlap-0-mid
+RZ_SHOT overlap-0-high
+RZ_SHOT overlap-0-return
+RZ_SHOT overlap-1-low
+RZ_SHOT overlap-1-mid
+RZ_SHOT overlap-1-high
+RZ_SHOT overlap-1-return
+RZ_SHOT overlap-2-low
+RZ_SHOT overlap-2-mid
+RZ_SHOT overlap-2-high
+RZ_SHOT overlap-2-return
+RZ_SHOT overlap-3-low
+RZ_SHOT overlap-3-mid
+RZ_SHOT overlap-3-high
+RZ_SHOT overlap-3-return
+RZ_SHOT transparent-control
+RZ_SHOT reference-1080
+RZ_SHOT reference-720-ui125
+RZ_SHOT reference-4k
+RZ_SHOT reference-16x10
+RZ_SHOT moving-return-leaf
+RZ_SHOT after-rapid-abort
+RZ_DIAG_DONE failures 0

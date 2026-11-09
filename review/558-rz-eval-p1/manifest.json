@@ -1,12 +1,12 @@
 {
-  "product_head": "90aefb84dccd9e1cdcda73f03df113855b856857",
+  "product_head": "284194e42cc3c6fd4c39a5cabe0f394a9c18897c",
   "review_ref": "review/558-rz-eval-p1-90aefb84",
   "expires": "2026-11-16",
   "files": [
     {
       "path": "binding.json",
-      "bytes": 1503,
-      "sha256": "bac2a8dd5397bbb621b6dec91715d46498d5ed64ece737267bec57808744f4ef"
+      "bytes": 2064,
+      "sha256": "57c93b6a11ba0014b6ddd3e1a438b29d69064960a0f8607a4b5a745d59bb9652"
     },
     {
       "path": "book/basilisk-c1-1440-A-without.png",
@@ -1199,6 +1199,26 @@
       "mode": "RGBA"
     },
     {
+      "path": "originals/petronas-1-r3-alpha.png",
+      "bytes": 2425758,
+      "sha256": "49ee6c191048e97e7df4f7aee909ed2f88a56d9b0f9b1d5c778fbb62ac188a32",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "originals/petronas-1-r3.png",
+      "bytes": 2653236,
+      "sha256": "e732a75ced1cc7ae422e87a3d965f3e128d1df4f09c725c3186f1a8088f9c726",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA"
+    },
+    {
       "path": "originals/petronas-1.png",
       "bytes": 1904284,
       "sha256": "bd9697a90b0b422d8cd87212d34257250186105032d4958be94816cc4a3b1eef",
@@ -1209,9 +1229,49 @@
       "mode": "RGBA"
     },
     {
+      "path": "originals/petronas-2-r3-alpha.png",
+      "bytes": 2660137,
+      "sha256": "d4c866bfa9139243df7414b315c5f678529c5471b076256d6cf821a3ab3524db",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "originals/petronas-2-r3.png",
+      "bytes": 2871909,
+      "sha256": "bf41d600f84ab21b4bfead13b32fb4d1c7917a991c6c87117d35e84a5badb3f2",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA"
+    },
+    {
       "path": "originals/petronas-2.png",
       "bytes": 2805434,
       "sha256": "6a9d39423c6dac2ab2ee89702626e63f7cd9f51e493d590566d8a3ab98253dfe",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "originals/petronas-3-r3-alpha.png",
+      "bytes": 2767696,
+      "sha256": "dc9323b22668b529773d552daceb4d26504d5d0681d05d842d39efda67fa4274",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "originals/petronas-3-r3.png",
+      "bytes": 2944542,
+      "sha256": "cf59d5a6d734f8dacb3792153ced95744376d80f75fa4a6a422e2c89f9dfb717",
       "size": [
         2172,
         724
@@ -1297,6 +1357,621 @@
         768
       ],
       "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/basilisk-c1-1440-A-without.png",
+      "bytes": 3034239,
+      "sha256": "338cc5f679924fdf3a6f1dd26bd8ae16b83916389521e05f5a0985fed920e200",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/basilisk-c1-1440-A.png",
+      "bytes": 3221576,
+      "sha256": "b69014467fe6ee5011b22a645b2282ddc7723869e191fa8d4e04e582f15ea651",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/basilisk-c2-1440-A-without.png",
+      "bytes": 3034239,
+      "sha256": "338cc5f679924fdf3a6f1dd26bd8ae16b83916389521e05f5a0985fed920e200",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/basilisk-c2-1440-A.png",
+      "bytes": 3109090,
+      "sha256": "010c0091a39ebca2af6d4e93f1ddecb20bbfc0f74d0e313286508a1ed27aacd4",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/basilisk-c3-1440-A-without.png",
+      "bytes": 3034239,
+      "sha256": "338cc5f679924fdf3a6f1dd26bd8ae16b83916389521e05f5a0985fed920e200",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/basilisk-c3-1440-A.png",
+      "bytes": 3186536,
+      "sha256": "2291c133f2c53742f35e08e20be2aabbaec92a15e00d6768426fa63bae714168",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/console.log",
+      "bytes": 1172,
+      "sha256": "66973c8f641af8cfd036ac56e9547e9180e312e26c70d5044af65678eab74ebb"
+    },
+    {
+      "path": "owner-book/hills-c1-1440-A-without.png",
+      "bytes": 2998387,
+      "sha256": "bda7c59409678d1a4ae748f955737587e18e9b13448dbf29f50de93ef8024ecc",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/hills-c1-1440-A.png",
+      "bytes": 3078224,
+      "sha256": "bf1e806dec8db0a6aa49457587a67a930bde51cdd6eee834a1d4bae3cbd6dcb8",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/hills-c2-1440-A-without.png",
+      "bytes": 2998387,
+      "sha256": "bda7c59409678d1a4ae748f955737587e18e9b13448dbf29f50de93ef8024ecc",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/hills-c2-1440-A.png",
+      "bytes": 3142757,
+      "sha256": "a03652e242353597972c9b55cbf0d75a5f2b194ad4e305026587a39ac49b3320",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/hills-c3-1440-A-without.png",
+      "bytes": 2998387,
+      "sha256": "bda7c59409678d1a4ae748f955737587e18e9b13448dbf29f50de93ef8024ecc",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/hills-c3-1440-A.png",
+      "bytes": 3220552,
+      "sha256": "e276327df36fa728dab309ea278f9af6a7c43d65dd8b4780a2e212a90ffc4fc9",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/petronas-c1-1440-A-without.png",
+      "bytes": 3007947,
+      "sha256": "e8a6fcc6c7109ce8e3553007024872a717cdf98c90606a6165a4b64bb3ac762f",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/petronas-c1-1440-A.png",
+      "bytes": 3422253,
+      "sha256": "6f07a09cb88b88cf5828bcad2e9d7c027a94095b95d541748a59994fd088d413",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/petronas-c2-1440-A-without.png",
+      "bytes": 3007947,
+      "sha256": "e8a6fcc6c7109ce8e3553007024872a717cdf98c90606a6165a4b64bb3ac762f",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/petronas-c2-1440-A.png",
+      "bytes": 3355862,
+      "sha256": "ede2ceaa1ab8bea3c85802603d8ec7ca19a5a5aa9499b19cdb6d539613327902",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/petronas-c3-1440-A-without.png",
+      "bytes": 3007947,
+      "sha256": "e8a6fcc6c7109ce8e3553007024872a717cdf98c90606a6165a4b64bb3ac762f",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/petronas-c3-1440-A.png",
+      "bytes": 3350606,
+      "sha256": "e61946d909e110df787de8032c8e19d12c6fd4cb36b773a7350edadf8f937ea4",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/qualle-c1-1440-A-without.png",
+      "bytes": 3003067,
+      "sha256": "87ff1d5749377f320077708e6467cdf4bffbd4134945b04d34ff581dcdb407da",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/qualle-c1-1440-A.png",
+      "bytes": 3061577,
+      "sha256": "4e095cc75a579e1bc036a74a36b77dfefe9fa99da128d6487a55d1833ab9a5e4",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/qualle-c2-1440-A-without.png",
+      "bytes": 3003067,
+      "sha256": "87ff1d5749377f320077708e6467cdf4bffbd4134945b04d34ff581dcdb407da",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/qualle-c2-1440-A.png",
+      "bytes": 3069421,
+      "sha256": "7bcd59355286c7016f142489a4399c4700134c799ab9f295a54c88f1627d8f9e",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/qualle-c3-1440-A-without.png",
+      "bytes": 3003067,
+      "sha256": "87ff1d5749377f320077708e6467cdf4bffbd4134945b04d34ff581dcdb407da",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/qualle-c3-1440-A.png",
+      "bytes": 3105158,
+      "sha256": "be591f99a42e68392e3e38cace657d05c00c74434b42e1e0fa3e666d60cd9b37",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/report.json",
+      "bytes": 16858,
+      "sha256": "3209956825b9c84bf08534902b1bbb85075288855fa95fcc4514caa7cfe05996"
+    },
+    {
+      "path": "owner-book/tomate-c1-1440-A-without.png",
+      "bytes": 2912265,
+      "sha256": "d52ee63b8f79db1a6a5aa946cdcfda756393ce69f0f1f369903117bf5b038e8e",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/tomate-c1-1440-A.png",
+      "bytes": 3050984,
+      "sha256": "62e033ecc78bcace978f3cd3efc81daff4d46a1c60215fa4b0860a893e377bf2",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/tomate-c2-1440-A-without.png",
+      "bytes": 2912265,
+      "sha256": "d52ee63b8f79db1a6a5aa946cdcfda756393ce69f0f1f369903117bf5b038e8e",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/tomate-c2-1440-A.png",
+      "bytes": 2995585,
+      "sha256": "c4a381517150952945b9bc1941ecc0cfba8ad6857a4652b46814d0118cc0f206",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/tomate-c3-1440-A-without.png",
+      "bytes": 2912265,
+      "sha256": "d52ee63b8f79db1a6a5aa946cdcfda756393ce69f0f1f369903117bf5b038e8e",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-book/tomate-c3-1440-A.png",
+      "bytes": 3021168,
+      "sha256": "402844598e2cbd1be5fd0bdbdddfc3eb65469601f0d122705627a88e2c09cd7a",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/after-rapid-abort.png",
+      "bytes": 3422664,
+      "sha256": "50a833c97de521c80b89944a5ea03d3eb4656401739339a2bece3a650fb92289",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/console.log",
+      "bytes": 765,
+      "sha256": "2faf305df2961cbeefe616bc8103341ba38cd529e867fc0cbdb9b8febaaf410f"
+    },
+    {
+      "path": "owner-diagnostics/moving-return-leaf.png",
+      "bytes": 3145814,
+      "sha256": "732aac7d628ba287f70bd686c5e6fc1282912c40ade7bbf73dfdcba7e5d2c871",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-0-high.png",
+      "bytes": 3197393,
+      "sha256": "bc37979f64afec5a4b1daea826b77f25360295d2a8c95b64355bbbc04209db4e",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-0-low.png",
+      "bytes": 3099611,
+      "sha256": "b05892b1972a28bb153576bf1d5ad1fc7efda223e9924ebc033af0b084e8e185",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-0-mid.png",
+      "bytes": 3209510,
+      "sha256": "d1f37a5dd0b97b45af7f3bc4b6ccd50b5b143151664c0b77b7aa898e4eefffbd",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-0-return.png",
+      "bytes": 3099611,
+      "sha256": "b05892b1972a28bb153576bf1d5ad1fc7efda223e9924ebc033af0b084e8e185",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-1-high.png",
+      "bytes": 3096846,
+      "sha256": "350cc93679e46e5102be1c46bf0fa46ac838e47938e5a72d9305853282ba888d",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-1-low.png",
+      "bytes": 3097433,
+      "sha256": "75c3b84f415680e9238af13372bf41796b0c0f7fdc850f3cd6b5fdf3b6b2b1a4",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-1-mid.png",
+      "bytes": 3166457,
+      "sha256": "b7ebab2ef734adf3d7b30c7a775e9739bb4347f25b70fc58cf8dd6046964c1d7",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-1-return.png",
+      "bytes": 3097433,
+      "sha256": "75c3b84f415680e9238af13372bf41796b0c0f7fdc850f3cd6b5fdf3b6b2b1a4",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-2-high.png",
+      "bytes": 3127013,
+      "sha256": "d62181062f7a75c203188db46afc5e415b5d5aed709c2297edcd3f2a1f3b360d",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-2-low.png",
+      "bytes": 3098235,
+      "sha256": "c800cf2257d1c57a15a6ac5d34cff07b7abcacc6505ff8a8f56edfeb5bcd8b6d",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-2-mid.png",
+      "bytes": 3179320,
+      "sha256": "63389e6e9ae970d11437be43d6ae1bf2905e413f446e86e8d34bf44028b2a0d3",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-2-return.png",
+      "bytes": 3098235,
+      "sha256": "c800cf2257d1c57a15a6ac5d34cff07b7abcacc6505ff8a8f56edfeb5bcd8b6d",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-3-high.png",
+      "bytes": 1413032,
+      "sha256": "63afbdec5d5da5e7e80bd010a2ef3bb64a6574a29e6e0199ee222b7afd93ab42",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-3-low.png",
+      "bytes": 2935902,
+      "sha256": "05db020e944de9a69f79f4da19a35873b94a712aee1fa5f90edb661c4523426e",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-3-mid.png",
+      "bytes": 2092771,
+      "sha256": "26e29dc8bf251ecb734ccbc764426c0f3ab023467305b81bf9f5c0a8aa00e237",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/overlap-3-return.png",
+      "bytes": 2935902,
+      "sha256": "05db020e944de9a69f79f4da19a35873b94a712aee1fa5f90edb661c4523426e",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/pixel-analysis.json",
+      "bytes": 681,
+      "sha256": "f98b513d8ac1d4cb8a98dec21ae57680bb59ff6f0751c43f7ac0a9aa412f92a6"
+    },
+    {
+      "path": "owner-diagnostics/reference-1080.png",
+      "bytes": 1954730,
+      "sha256": "acf2621cad359e05979e29dcc0705571062a7ef3e2d4b8d137c4d50199ce88f1",
+      "size": [
+        1920,
+        1080
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/reference-16x10.png",
+      "bytes": 3406957,
+      "sha256": "6847ecd90015b2bcf9bb4605fa2473b41095609a19186645b51bbde4eb1f3602",
+      "size": [
+        2560,
+        1600
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/reference-4k.png",
+      "bytes": 5894773,
+      "sha256": "f49404def1c28d55acaf9839d41ba318421af9625dd43df09e8579407c712a3b",
+      "size": [
+        3840,
+        2160
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/reference-720-ui125.png",
+      "bytes": 1031198,
+      "sha256": "bce03208118769f3e0dc1c5ea485e820c9939920bff2abf93d85021d716c44d6",
+      "size": [
+        1280,
+        720
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/report.json",
+      "bytes": 82146,
+      "sha256": "538d7ea730cad0e0e7d22f6e4f2e9d412c0ddb3db973a6859ef10442a3eaecab"
+    },
+    {
+      "path": "owner-diagnostics/transparent-control.png",
+      "bytes": 2945606,
+      "sha256": "85c21db85e919b6c735b104bfa4192fa271e8d8407000398aee8a40ce00278a0",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-mono/console.log",
+      "bytes": 293,
+      "sha256": "f2e681c2fd2979cac101063aa03ebbe9b9dbc170ea07c8661dc5bda3d6fb2a5f"
+    },
+    {
+      "path": "owner-mono/mono-overlap-0.png",
+      "bytes": 3073534,
+      "sha256": "90ac6234a30faa6c69d3340fe53d9e20c202daa9f017a91c545fb568986d295d",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-mono/mono-overlap-1.png",
+      "bytes": 3054825,
+      "sha256": "e02e82d3c57b4a21eb5e7a0ff7ccc53feddae45986a17f113464e04f31a3cccc",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-mono/mono-overlap-2.png",
+      "bytes": 3061264,
+      "sha256": "8dca122bf2c8a67fe9ab24bc521ef0ccf8c2e7cdeef2a48e467b9761f07b5f0c",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-mono/mono-overlap-3.png",
+      "bytes": 2187174,
+      "sha256": "123ecf6a195d6c4a8927cad43d60af5f579aa0b3fda3896f3fab2c8c3bc15a21",
+      "size": [
+        2560,
+        1440
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-mono/report.json",
+      "bytes": 6653,
+      "sha256": "8681127fb09b9789e706aa0f09183d69649f7acd3202185966f254ab2e15ac13"
+    },
+    {
+      "path": "owner-resources/console.log",
+      "bytes": 213,
+      "sha256": "c1245290a863e6c0885c9b13f8a9f41b75e0b813773e5f8292de90ba483c394d"
+    },
+    {
+      "path": "owner-resources/report.json",
+      "bytes": 68120,
+      "sha256": "1ffb07182d1b144508f9462a72df8145f94318afd583082f6c0d6194f1001993"
     },
     {
       "path": "packs/baseline.pck",
@@ -1525,13 +2200,23 @@
     },
     {
       "path": "README.md",
-      "bytes": 7169,
-      "sha256": "e9f56c4f6fcdd064d50ecb70f88dd6643efdbd094ef29869da50e0fa65f2721d"
+      "bytes": 8837,
+      "sha256": "26eb198e8fd9d53eb05931517c04074380a8788e51a745019999c8aacde445f1"
+    },
+    {
+      "path": "reports/binary-access.json",
+      "bytes": 686,
+      "sha256": "43d17a5e94f6e53a612fe88435aac484b7640c10b1c3e4a1fd5396749b3b37ec"
     },
     {
       "path": "reports/book-batch-232932f9.json",
       "bytes": 16618,
       "sha256": "abaa86c89d9e46f63631ca1cc8617ca828a870ca7c447f68f03db5e4f18cd62d"
+    },
+    {
+      "path": "reports/current-provenance.json",
+      "bytes": 40222,
+      "sha256": "ba663f6752933175dea69be5ee648cbb633efccb40885ff8fe6e0ead3fef6ce2"
     },
     {
       "path": "reports/export-bindings.json",
@@ -1542,6 +2227,11 @@
       "path": "reports/hills-revision-90aefb84.json",
       "bytes": 1479,
       "sha256": "050895b33615910c7b4f6ec8843bf8eb8211e91bc7b487239a7074be302fdcd9"
+    },
+    {
+      "path": "reports/owner-native-runs.json",
+      "bytes": 735,
+      "sha256": "2e6b1e555c543e2059f3b4386e4c328816d1764496c843001302b8e7a0a3d044"
     },
     {
       "path": "reports/profiles.json",

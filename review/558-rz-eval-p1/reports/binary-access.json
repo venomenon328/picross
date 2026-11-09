@@ -1,0 +1,26 @@
+{
+  "commit": "17d3990ace241be2816ac8f57ce66574b8a5196e",
+  "route": "Fresh GitHub partial clone; explicit remote blob fetch, checkout and decoded PNG",
+  "files": [
+    {
+      "path": "originals/petronas-1-r2.png",
+      "bytes": 2015956,
+      "sha256": "8ab9dd79eb66d801d2c4180ff85048ecc6cb19b840cf8dd61ec4c8d31927da26",
+      "size": [
+        2172,
+        724
+      ],
+      "verified": true
+    },
+    {
+      "path": "diagnostics-delivery/reference-4k.png",
+      "bytes": 5982906,
+      "sha256": "0fae5ed3f5a6ee4a693a58b6290939c253cd1f323e3d61b0c7c7b11094f380fe",
+      "size": [
+        3840,
+        2160
+      ],
+      "verified": true
+    }
+  ]
+}

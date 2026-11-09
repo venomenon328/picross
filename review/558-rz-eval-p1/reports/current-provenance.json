@@ -1,0 +1,725 @@
+{
+  "format": "picross-rz-eval-provenance-v1",
+  "package": "RZ-EVAL-P1",
+  "created": "2026-11-09",
+  "decision": "https://github.com/venomenon328/picross/issues/558#issuecomment-6739323575",
+  "source": "OpenAI built-in image_gen via imagegen skill; 20 independent generations plus 3 transparency correction edits, no third-party image inputs. Edit parent IDs preserve exact source provenance.",
+  "rights": "User-authorized original generations for this project; no exclusive-rights claim; final owner image approval pending.",
+  "processing": "Pillow 12.3.0. Same proportional LANCZOS contain, horizontal centre and bottom anchor on RGBA 4:1 canvas at every size; no crop, no art retouch, no alpha replacement, no per-ID layout. Original bytes preserved on separate expiring review ref. Shared runtime shader edge fade, not baked image retouch. KL alpha corrections were performed exclusively by ImageGen against the named parent originals.",
+  "owner_feedback": "Owner selected Tomate 1, Qualle 2, Hills 1/rev2, Basilisk 3 on the book. Previous KL trio rejected for missing big-city atmosphere; replacement trio pending. Clues must share grid transparency; no hard art cuts, soft edge fade permitted, whole motifs inside area preferred.",
+  "images": [
+    {
+      "id": "tomate-1",
+      "prompt": "Use case: illustration-story. Asset: one new original transparent ultra-wide graphite illustration for the bottom of a puzzle book leaf, RZ-EVAL-P1 / tomato-context candidate 1. Composition: a continuous low garden-bed panorama, a small old watering can, string spool, bamboo stakes and a hand trowel with loose soil and tiny non-identifiable seedlings across a long horizontal line. All marks fit inside a 3072 by 640 ultra-wide transparent canvas; keep the top half mostly transparent and leave much breathing room. Pale neutral-gray observational pencil, fine varied-pressure broken and retraced contours, sparse delicate crosshatching, unfinished edges, transparent interiors. NO tomato, NO tomato plant or recognisable tomato leaf, NO fruit, NO round vegetable. Never depict the concrete puzzle subject. No paper or opaque white/gray fill, no book, no UI, no text, no border, no grid. Genuinely transparent background including spaces between graphite strokes. Calm atmospheric drawing, not an icon or geometric substitute.",
+      "generation_wall_ms": null,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 1321793,
+      "sha256": "448b42fe03a43b41c777e94f573214558964b9c1868125852ab01aec0403d79b",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        249
+      ],
+      "alpha_bbox": [
+        0,
+        15,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "tomate-1-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 739232,
+          "sha256": "6977eff3b439f8ded3f305d1dc03a3e9b32ea93cec1ae2f4e7b4eebc0b3e8c0e"
+        }
+      ]
+    },
+    {
+      "id": "tomate-2",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal sketch for a puzzle book leaf RZ-EVAL-P1. Very wide low composition, 3:1 aspect, pale neutral-gray thin varied-pressure broken and retraced pencil lines, sparse crosshatching. ONLY THE GRAY PENCIL STROKES ARE VISIBLE PIXELS: every area between contours, inside objects and under the scene must have zero alpha. NO white pixels, NO opaque object interiors, NO gray or white ground wash, NO paper, no rectangle/background surface. Delicate open line drawing, calm and legible. Leave ample empty transparent space above. No book, text, UI, grids, border. Never draw the puzzle subject. Airy composition of an empty terracotta flowerpot tipped on its side, a folded pair of gardening gloves and loose jute twine on the right half; two faint generic seedling marks far left. Absolutely no tomato, fruit, vegetables, tomato plants or tomato leaves.",
+      "generation_wall_ms": null,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 607470,
+      "sha256": "6553e9c31e838ddc78c70e4a5a9859430d129d32e1713a934c6253e0c67dfeb6",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        239
+      ],
+      "alpha_bbox": [
+        119,
+        81,
+        2108,
+        692
+      ],
+      "derivatives": [
+        {
+          "path": "tomate-2-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 339109,
+          "sha256": "687339570516a6c08168b52e022ca65ea76b072449e430000134b0e67e1e9ea1"
+        }
+      ]
+    },
+    {
+      "id": "tomate-3",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal sketch for a puzzle book leaf RZ-EVAL-P1. Very wide low composition, 3:1 aspect, pale neutral-gray thin varied-pressure broken and retraced pencil lines, sparse crosshatching. ONLY THE GRAY PENCIL STROKES ARE VISIBLE PIXELS: every area between contours, inside objects and under the scene must have zero alpha. NO white pixels, NO opaque object interiors, NO gray or white ground wash, NO paper, no rectangle/background surface. Delicate open line drawing, calm and legible. Leave ample empty transparent space above. No book, text, UI, grids, border. Never draw the puzzle subject. Wide potting-bench still life: weathered slatted crate with no contents, folded linen cloth, seed envelopes without any writing or plant pictures and a small wooden dibber. All in one loose low composition with large gaps. Absolutely no tomato, fruit, vegetables, tomato plants or tomato leaves.",
+      "generation_wall_ms": null,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 1059889,
+      "sha256": "c4a7fae263792f716bde5277ba64afdc9be4f1dca7841e9dadbaa4a527257659",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        243
+      ],
+      "alpha_bbox": [
+        45,
+        55,
+        2140,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "tomate-3-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 582406,
+          "sha256": "23f46ed24f40f91da984bca5af6a67bca92791a34e3c8e87344d6232f2b8ff33"
+        }
+      ]
+    },
+    {
+      "id": "qualle-1",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal sketch for a puzzle book leaf RZ-EVAL-P1. Very wide low composition, 3:1 aspect, pale neutral-gray thin varied-pressure broken and retraced pencil lines, sparse crosshatching. ONLY THE GRAY PENCIL STROKES ARE VISIBLE PIXELS: every area between contours, inside objects and under the scene must have zero alpha. NO white pixels, NO opaque object interiors, NO gray or white ground wash, NO paper, no rectangle/background surface. Delicate open line drawing, calm and legible. Leave ample empty transparent space above. No book, text, UI, grids, border. Never draw the puzzle subject. OWNER BRIEF: seafloor, seagrass, a small shoal of tiny fish. Continuous wide sandy-seafloor impression suggested by broken pencil ripples, small tufts of long ribbon seagrass across the width, five very tiny fish moving in a loose group above. No jellyfish, no medusae, no bell-shaped or tentacled creature.",
+      "generation_wall_ms": null,
+      "briefing": "owner",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 381378,
+      "sha256": "8e3a848a43b47f66c52c007f9820fdcb21c6044a0ef248fa36bb45a041101ee7",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        181
+      ],
+      "alpha_bbox": [
+        0,
+        297,
+        2162,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "qualle-1-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 190765,
+          "sha256": "9ee2e1ca84c59b5bb56aba9b96344b31c6dab25a67d0d7fcd787ecb3ac86eda5"
+        }
+      ]
+    },
+    {
+      "id": "qualle-2",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal sketch for a puzzle book leaf RZ-EVAL-P1. Very wide low composition, 3:1 aspect, pale neutral-gray thin varied-pressure broken and retraced pencil lines, sparse crosshatching. ONLY THE GRAY PENCIL STROKES ARE VISIBLE PIXELS: every area between contours, inside objects and under the scene must have zero alpha. NO white pixels, NO opaque object interiors, NO gray or white ground wash, NO paper, no rectangle/background surface. Delicate open line drawing, calm and legible. Leave ample empty transparent space above. No book, text, UI, grids, border. Never draw the puzzle subject. OWNER BRIEF: seafloor, seagrass, a small shoal of tiny fish. Airy composition: a sparse low seagrass meadow anchored on the left and right, almost empty middle, six tiny fish swim in a diagonal loose group across the empty water. A few little pebbles imply the seabed. No jellyfish, medusae, tentacles or umbrella forms.",
+      "generation_wall_ms": null,
+      "briefing": "owner",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 472342,
+      "sha256": "7c31b09a4c58bb3463b60e52675925da1d93c60296b538bee5cceb33c8e8c829",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        183
+      ],
+      "alpha_bbox": [
+        14,
+        144,
+        2160,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "qualle-2-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 255884,
+          "sha256": "a7756a7223cc6d2ceea7f4f2c8a96166bb8fc121cf205decd06a7e3037d3d1ac"
+        }
+      ]
+    },
+    {
+      "id": "qualle-3",
+      "prompt": "Use case: illustration-story. New transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Very wide low 3:1 composition. Pale neutral gray observational pencil sketch, thin broken/retraced contours, sparse fine hatching, large transparent gaps, unfinished edges. All interiors and all spaces between pencil lines genuinely transparent: no white fills, no white or gray ground wash, no rectangular backing, no paper or book, no UI, no text, no border or grid. Never depict the puzzle subject. OWNER BRIEF: seafloor, seagrass, a small shoal of tiny fish. A low meandering undersea pebble ridge, delicate short and tall seagrass along its sides, three separate clusters of tiny fish creating a gentle rhythm across the whole width; bottom line broken and unfinished. No jellyfish, no medusa or tentacled creature.",
+      "generation_wall_ms": 17984,
+      "briefing": "owner",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 698536,
+      "sha256": "2ce4cde68864fb1ac66fadeee0ca9924fdf16205dc6cda91b02a20874db99a5a",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        245
+      ],
+      "alpha_bbox": [
+        10,
+        23,
+        2172,
+        678
+      ],
+      "derivatives": [
+        {
+          "path": "qualle-3-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 385800,
+          "sha256": "bb7912e99fe0d7100fcf7b3227c68e17d33bcc5ea3c30a8c6cb14e28f89b8ff3"
+        }
+      ]
+    },
+    {
+      "id": "hills-1",
+      "prompt": "Use case: illustration-story. New transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Very wide low 3:1 composition. Pale neutral gray observational pencil sketch, thin broken/retraced contours, sparse fine hatching, large transparent gaps, unfinished edges. All interiors and all spaces between pencil lines genuinely transparent: no white fills, no white or gray ground wash, no rectangular backing, no paper or book, no UI, no text, no border or grid. Never depict the puzzle subject. Context of rural Bohol, Philippines, without any hills or mountains: a continuous tropical flat-country footpath, two small coconut palms, a low bamboo fence and a distant simple thatched farm shelter. Horizon strictly flat and very low. NO Chocolate Hills, NO rounded hill silhouettes, NO mountains. No farm animals.",
+      "generation_wall_ms": 37115,
+      "briefing": "open",
+      "status": "technically rejected: distant rounded hill forms conflict with explicit puzzle-subject exclusion; r2 replaces it",
+      "bytes": 1599921,
+      "sha256": "91aee6eedf63363e059bfe9c7915d08566d780653444beadef1e256bc5134a9d",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        163
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "hills-2",
+      "prompt": "Use case: illustration-story. New transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Very wide low 3:1 composition. Pale neutral gray observational pencil sketch, thin broken/retraced contours, sparse fine hatching, large transparent gaps, unfinished edges. All interiors and all spaces between pencil lines genuinely transparent: no white fills, no white or gray ground wash, no rectangular backing, no paper or book, no UI, no text, no border or grid. Never depict the puzzle subject. Airy Philippine rural travel context: a small woven palm-leaf hat and an empty bamboo basket beside a few coconut fronds and a simple trail signpost WITHOUT lettering; much empty transparent space across the middle. NO Chocolate Hills, NO hills or mountains.",
+      "generation_wall_ms": 55914,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 1012366,
+      "sha256": "a042df00ddff883bb5da121f3622f806d5241c493273219ebe73a9a4ea78db7d",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        194
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "hills-2-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 575247,
+          "sha256": "e8d0c4def5b70bcf66677cdae195a65dc80d2b4c604fff604c53fe67efd400bd"
+        }
+      ]
+    },
+    {
+      "id": "hills-3",
+      "prompt": "Use case: illustration-story. New transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Very wide low 3:1 composition. Pale neutral gray observational pencil sketch, thin broken/retraced contours, sparse fine hatching, large transparent gaps, unfinished edges. All interiors and all spaces between pencil lines genuinely transparent: no white fills, no white or gray ground wash, no rectangular backing, no paper or book, no UI, no text, no border or grid. Never depict the puzzle subject. A broad low close-up impression of coconut palm fronds crossing above a simple bamboo footbridge over a narrow flat irrigation ditch, two rice-stalk tufts, no landscape background. NO Chocolate Hills, NO hills or mountains anywhere.",
+      "generation_wall_ms": 72079,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 2650750,
+      "sha256": "b6d0171640b709b35e236105ba47615dd8fbc18c7f1b5bc0107ba2dc231ad0ef",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        181
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "hills-3-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 1398549,
+          "sha256": "f6d829785e52e4d92b650efc4483c9e760a96f030a8b2080fc1a28a1900d907a"
+        }
+      ]
+    },
+    {
+      "id": "petronas-1",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition, pale neutral-gray observational pencil, thin varied-pressure broken contours and very sparse fine crosshatching; lots of transparent negative space; no solid surface fills. Transparent background and interiors between strokes, NO paper, NO white/gray wash, no book, UI, text, lettering, grid or border. Never depict the concrete puzzle subject. OWNER BRIEF: credible impressions of Kuala Lumpur but absolutely no Petronas Towers. A low continuous architectural street impression of the Sultan Abdul Samad Building facing Merdeka Square: Moorish horseshoe arcades, slender central clock tower with copper onion dome and low flanking roofline, small tropical trees. No skyscrapers, no twin towers, no skybridge. Do not invent a pair of spires.",
+      "generation_wall_ms": 18660,
+      "briefing": "owner",
+      "status": "owner-rejected: tallest structure in middle; revision r2 generated",
+      "bytes": 1904284,
+      "sha256": "bd9697a90b0b422d8cd87212d34257250186105032d4958be94816cc4a3b1eef",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        249
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "petronas-2",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition, pale neutral-gray observational pencil, thin varied-pressure broken contours and very sparse fine crosshatching; lots of transparent negative space; no solid surface fills. Transparent background and interiors between strokes, NO paper, NO white/gray wash, no book, UI, text, lettering, grid or border. Never depict the concrete puzzle subject. OWNER BRIEF: credible Kuala Lumpur but absolutely no Petronas Towers. An airy street-level impression of old Petaling Street shophouses: two-storey narrow facades, covered five-foot-way arcades, tiled roofs, folded awnings and an unlettered kopitiam table at street edge. A couple of hanging lanterns. No skyline, no skyscrapers, no twin towers, no skybridge.",
+      "generation_wall_ms": 37266,
+      "briefing": "owner",
+      "status": "rejected by owner: needs more metropolitan city atmosphere",
+      "bytes": 2805434,
+      "sha256": "6a9d39423c6dac2ab2ee89702626e63f7cd9f51e493d590566d8a3ab98253dfe",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        190
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "petronas-3",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition, pale neutral-gray observational pencil, thin varied-pressure broken contours and very sparse fine crosshatching; lots of transparent negative space; no solid surface fills. Transparent background and interiors between strokes, NO paper, NO white/gray wash, no book, UI, text, lettering, grid or border. Never depict the concrete puzzle subject. OWNER BRIEF: credible Kuala Lumpur without Petronas Towers. Broad low sketch of historic Kuala Lumpur Central Market's art-deco entrance facade with stepped parapet and geometric pilasters, neighbouring low shophouse roofs and a few palms. All signs completely blank. No skyscrapers, twin towers, double spires or skybridge.",
+      "generation_wall_ms": 56930,
+      "briefing": "owner",
+      "status": "rejected by owner: needs more metropolitan city atmosphere",
+      "bytes": 2358635,
+      "sha256": "06be1ea1ac27005c882a1d3ceb05f06dbbb531ed279077b3f4562a90afba0a4b",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        167
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "basilisk-1",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition, pale neutral-gray observational pencil, thin varied-pressure broken contours and very sparse fine crosshatching; lots of transparent negative space; no solid surface fills. Transparent background and interiors between strokes, NO paper, NO white/gray wash, no book, UI, text, lettering, grid or border. Never depict the concrete puzzle subject. A continuous low tropical riverbank panorama: exposed roots of a leaning tree at left, flat ripples across the width, a few broad leaves and river stones at right. Calm water and vegetation only. Absolutely no basilisk, no reptile, no lizard, no animal, no silhouette or hint of any creature.",
+      "generation_wall_ms": 75288,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 1611520,
+      "sha256": "e5512c20305c74e9e0551353de0c8e1266518d203ab968a28de4cd4b9c7d467d",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        155
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "basilisk-1-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 910719,
+          "sha256": "acec8030162cdc631a1058a8588451ecba363b271a83eac9d352f60e08ef732d"
+        }
+      ]
+    },
+    {
+      "id": "basilisk-2",
+      "prompt": "Use case: illustration-story. New transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition. Pale neutral-gray thin broken pencil contours and very sparse fine hatching, mostly transparent unfilled interiors, generous transparent space above, unfinished edges. No paper, white/gray wash, book, UI, writing, grid or border. No creature of any kind: no basilisk, reptile, lizard or animal silhouette. Airy close-up of several wet tropical river pebbles and a small delicate fern leaning toward the water, only a few tiny ripple marks far across the otherwise empty width. A peaceful river-margin observation. Do not turn fern shapes or roots into a creature.",
+      "generation_wall_ms": 12534,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 500584,
+      "sha256": "9a4244ddcd5d1f4fbad8d29cdd1a050e1e501605d8a9b60dce010323d1435898",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        223
+      ],
+      "alpha_bbox": [
+        19,
+        228,
+        2051,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "basilisk-2-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 273333,
+          "sha256": "e0b071d02176c2819344ca28d426c6b976445cfb4e93507411ba85f76285ed34"
+        }
+      ]
+    },
+    {
+      "id": "basilisk-3",
+      "prompt": "Use case: illustration-story. New transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition. Pale neutral-gray thin broken pencil contours and very sparse fine hatching, mostly transparent unfilled interiors, generous transparent space above, unfinished edges. No paper, white/gray wash, book, UI, writing, grid or border. No creature of any kind: no basilisk, reptile, lizard or animal silhouette. Broad low tropical vegetation study: overlapping banana and heliconia leaves at different angles with a slender fallen branch above shallow stream ripples, clear gaps between the leaves and roots. Entirely botanical scene, no flowers that look like eyes, no creature.",
+      "generation_wall_ms": 27574,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 1804686,
+      "sha256": "11d580e9edbf63bc46a55c223baf35ba1982b9f12d9d1f44a6a918715df410d9",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        151
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "basilisk-3-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 980847,
+          "sha256": "7df90e10318262200300a0be8e1cc6edb1ec8514d6de43bf1598574628a5c64c"
+        }
+      ]
+    },
+    {
+      "id": "petronas-1-r2",
+      "prompt": "Use case: illustration-story. New ORIGINAL wide low 3:1 transparent graphite marginal drawing for a puzzle-book leaf, RZ-EVAL-P1 Kuala Lumpur candidate 1 revision 2. OWNER BRIEF: credible impressions of Kuala Lumpur WITHOUT Petronas Towers. OWNER COMPOSITION FEEDBACK: prefer U/half-U or a level top; do not put the tallest structure in the horizontal middle. Scene: a quiet street-level detail from Kuala Lumpur's historic Petaling Street: a row of narrow two-storey shophouses receding into the distance across the LOWER MIDDLE, a taller close-up corner facade at the far left, and a tropical shade tree at far right. Awnings, tiled roofs, covered five-foot-way arcades; airy and calm, no people. The horizontal center is low and open. Delicate pale neutral-gray observational pencil with thin varied-pressure broken contours and sparse fine crosshatching. ONLY pencil strokes have alpha: all surfaces between lines, including building facades, remain genuinely transparent. No white fill, no gray wash, no solid surfaces, no paper or background rectangle, no book/UI/text/sign writing/grid/border. No skyline, no skyscrapers, no towers, no spires, no skybridge, no depiction of the concrete puzzle subject. All artwork inside generous margins, sketch edges unfinished.",
+      "generation_wall_ms": 20208,
+      "briefing": "owner",
+      "status": "rejected by owner: needs more metropolitan city atmosphere",
+      "bytes": 2015956,
+      "sha256": "8ab9dd79eb66d801d2c4180ff85048ecc6cb19b840cf8dd61ec4c8d31927da26",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        151
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2158,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "hills-1-r2",
+      "prompt": "Use case: illustration-story. New original transparent graphite marginal drawing for a puzzle-book leaf, RZ-EVAL-P1 rural Bohol context, candidate 1 revision 2. Very wide LOW 3:1 composition, with an airy U/half-U silhouette and a LOW horizontal center. Scene: a small EMPTY rustic wooden farm handcart with two spoked wheels at the far left; a low woven bamboo fence meanders across the LOWER foreground; a few loose coconut fronds stand at far right. Objects only, in one continuous quiet foreground vignette. ABSOLUTELY NO LANDSCAPE HORIZON, no background scenery, no distant land, no mounds, no hills, no mountains, NO Chocolate Hills, no animals. The specific puzzle subject must not appear, even as a tiny distant silhouette. Pale neutral-gray observational graphite pencil, delicate varied-pressure broken/retraced contours, very sparse fine hatching, mostly empty transparent interiors. ONLY pencil strokes have visible alpha. All space between and inside contours transparent. No white/gray surface fills or wash, no ground backdrop, no paper/book/UI/text/signs/grid/frame. Complete objects inside a generous safe margin and unfinished open sketch edges.",
+      "generation_wall_ms": 13718,
+      "briefing": "open",
+      "status": "candidate; final owner selection/approval pending",
+      "bytes": 1055644,
+      "sha256": "92a76501ed07e9e81e484ca6586730935db3951849a3db295d44fa249ecc161c",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        163
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "hills-1-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 545588,
+          "sha256": "873233023de250d302f28273712405dfb4af6ba8d2ac24fc6df948a5524e6109"
+        }
+      ]
+    },
+    {
+      "id": "petronas-1-r3",
+      "prompt": "Use case: illustration-story. RZ-EVAL-P1, new independent Kuala Lumpur context candidate revision after owner rejected quiet low-rise drafts: needs much more convincing metropolitan big-city atmosphere, WITHOUT the Petronas Towers or any imitation of them. Original transparent 3:1 ultra-wide observational graphite drawing. Delicate pale neutral-gray varied-pressure pencil, retraced broken contours, sparse fine hatching, completely transparent negative spaces and object interiors; only pencil strokes opaque. No paper, no white or gray wash or opaque surfaces, no book, grid, UI, borders, writing or lettering. Compose a complete self-contained vignette with a generous transparent breathing margin on ALL FOUR EDGES; no object touches or is cut off by image boundaries. Lower central skyline, higher architectural mass at outer left and/or right, level/U/half-U rhythm, spacious center for overlapping puzzle grid; natural composition, not symmetrical. Never depict the concrete puzzle subject: no Petronas Towers, no paired identical spires, no twin-tower silhouette or skybridge. A lively Bukit Bintang-inspired Kuala Lumpur intersection: tall varied modern office slabs receding at far left, a sleek elevated single-beam monorail curving from left foreground toward a distant low central street, a few mature tropical roadside trees and modern commercial facades on the outer right. Tiny cars and pedestrians as subtle scale cues. A humid dense modern Asian metropolis, metropolitan street depth; no identifiable landmark tower. Complete tops and bases visible within the drawing.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur without Petronas Towers",
+      "status": "rejected implementation attempt: unwanted opaque white fills; corrected by linked ImageGen alpha edit",
+      "bytes": 2653236,
+      "sha256": "e732a75ced1cc7ae422e87a3d965f3e128d1df4f09c725c3186f1a8088f9c726",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        194
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "petronas-2-r3",
+      "prompt": "Use case: illustration-story. RZ-EVAL-P1, new independent Kuala Lumpur context candidate revision after owner rejected quiet low-rise drafts: needs much more convincing metropolitan big-city atmosphere, WITHOUT the Petronas Towers or any imitation of them. Original transparent 3:1 ultra-wide observational graphite drawing. Delicate pale neutral-gray varied-pressure pencil, retraced broken contours, sparse fine hatching, completely transparent negative spaces and object interiors; only pencil strokes opaque. No paper, no white or gray wash or opaque surfaces, no book, grid, UI, borders, writing or lettering. Compose a complete self-contained vignette with a generous transparent breathing margin on ALL FOUR EDGES; no object touches or is cut off by image boundaries. Lower central skyline, higher architectural mass at outer left and/or right, level/U/half-U rhythm, spacious center for overlapping puzzle grid; natural composition, not symmetrical. Never depict the concrete puzzle subject: no Petronas Towers, no paired identical spires, no twin-tower silhouette or skybridge. A distinct modern Kuala Lumpur city-street panorama after a tropical shower: asymmetrical cluster of tall glass residential/office buildings at the far right with varied flat and sloping rooflines, lower urban street terraces receding toward the center, broad wet pavement suggested by very few pencil reflections, palms at left, small moving cars and a bus. Urban density and authentic tropical metropolitan atmosphere. No skyline imitation of twin towers. All buildings whole inside wide transparent margin.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur without Petronas Towers",
+      "status": "rejected implementation attempt: unwanted opaque white fills; corrected by linked ImageGen alpha edit",
+      "bytes": 2871909,
+      "sha256": "bf41d600f84ab21b4bfead13b32fb4d1c7917a991c6c87117d35e84a5badb3f2",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        247
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "petronas-3-r3",
+      "prompt": "Use case: illustration-story. RZ-EVAL-P1, new independent Kuala Lumpur context candidate revision after owner rejected quiet low-rise drafts: needs much more convincing metropolitan big-city atmosphere, WITHOUT the Petronas Towers or any imitation of them. Original transparent 3:1 ultra-wide observational graphite drawing. Delicate pale neutral-gray varied-pressure pencil, retraced broken contours, sparse fine hatching, completely transparent negative spaces and object interiors; only pencil strokes opaque. No paper, no white or gray wash or opaque surfaces, no book, grid, UI, borders, writing or lettering. Compose a complete self-contained vignette with a generous transparent breathing margin on ALL FOUR EDGES; no object touches or is cut off by image boundaries. Lower central skyline, higher architectural mass at outer left and/or right, level/U/half-U rhythm, spacious center for overlapping puzzle grid; natural composition, not symmetrical. Never depict the concrete puzzle subject: no Petronas Towers, no paired identical spires, no twin-tower silhouette or skybridge. A wide Kuala Lumpur metropolitan scene with historic shophouse arcade in the lower left foreground contrasted against dense varied high-rise blocks at outer left and right, an overhead urban rail station/viaduct toward the outer right, tiny scooters and a street crossing at ground level. Clear big-city bustle and depth, lower open center. Every mass ends naturally before the transparent perimeter. No isolated grand civic building, no central tallest tower.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur without Petronas Towers",
+      "status": "rejected implementation attempt: unwanted opaque white fills; corrected by linked ImageGen alpha edit",
+      "bytes": 2944542,
+      "sha256": "cf59d5a6d734f8dacb3792153ced95744376d80f75fa4a6a422e2c89f9dfb717",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "petronas-1-r3-alpha",
+      "parent": "petronas-1-r3",
+      "prompt": "Edit this exact composition into a genuinely transparent graphite LINE DRAWING. Preserve the metropolitan Kuala Lumpur scene, its content, the low-center U composition and aspect ratio, but REMOVE ALL WHITE AND PALE SOLID FILL: buildings, roads, sky, foliage and object interiors must be completely transparent BETWEEN individual neutral-gray pencil strokes. Remove the ragged white paper-like surround entirely. There must be NO paper, NO opaque white pixels or milky wash anywhere, NO filled silhouettes or object surfaces. Only thin gray graphite linework and very sparse graphite hatching have alpha. Maintain generous fully transparent breathing margin around complete visible buildings and scene; no new elements, towers, text, book or UI. Never add Petronas Towers, twin identical spires or skybridge. This is a transparent asset, not a pencil picture on white paper.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur; alpha-only linework correction",
+      "status": "candidate; owner selection pending",
+      "bytes": 2425758,
+      "sha256": "49ee6c191048e97e7df4f7aee909ed2f88a56d9b0f9b1d5c778fbb62ac188a32",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        24,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "petronas-1-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 1395059,
+          "sha256": "0e0d324e0814e445d8bb550ba7e34eb4f0f894c25a8aad60b0edbdadfeffc2e9"
+        }
+      ]
+    },
+    {
+      "id": "petronas-2-r3-alpha",
+      "parent": "petronas-2-r3",
+      "prompt": "Edit this exact composition into a genuinely transparent graphite LINE DRAWING. Preserve the metropolitan Kuala Lumpur scene, its content, the low-center U composition and aspect ratio, but REMOVE ALL WHITE AND PALE SOLID FILL: buildings, roads, sky, foliage and object interiors must be completely transparent BETWEEN individual neutral-gray pencil strokes. Remove the ragged white paper-like surround entirely. There must be NO paper, NO opaque white pixels or milky wash anywhere, NO filled silhouettes or object surfaces. Only thin gray graphite linework and very sparse graphite hatching have alpha. Maintain generous fully transparent breathing margin around complete visible buildings and scene; no new elements, towers, text, book or UI. Never add Petronas Towers, twin identical spires or skybridge. This is a transparent asset, not a pencil picture on white paper.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur; alpha-only linework correction",
+      "status": "candidate; owner selection pending",
+      "bytes": 2660137,
+      "sha256": "d4c866bfa9139243df7414b315c5f678529c5471b076256d6cf821a3ab3524db",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        246
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "petronas-2-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 1496526,
+          "sha256": "327f7568488ea5390e5f095514e4644e04b3faf75ccdb68d5d401303246ee66a"
+        }
+      ]
+    },
+    {
+      "id": "petronas-3-r3-alpha",
+      "parent": "petronas-3-r3",
+      "prompt": "Edit this exact composition into a genuinely transparent graphite LINE DRAWING. Preserve the metropolitan Kuala Lumpur scene, its content, the low-center U composition and aspect ratio, but REMOVE ALL WHITE AND PALE SOLID FILL: buildings, roads, sky, foliage and object interiors must be completely transparent BETWEEN individual neutral-gray pencil strokes. Remove the ragged white paper-like surround entirely. There must be NO paper, NO opaque white pixels or milky wash anywhere, NO filled silhouettes or object surfaces. Only thin gray graphite linework and very sparse graphite hatching have alpha. Maintain generous fully transparent breathing margin around complete visible buildings and scene; no new elements, towers, text, book or UI. Never add Petronas Towers, twin identical spires or skybridge. This is a transparent asset, not a pencil picture on white paper.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur; alpha-only linework correction",
+      "status": "candidate; owner selection pending",
+      "bytes": 2767696,
+      "sha256": "dc9323b22668b529773d552daceb4d26504d5d0681d05d842d39efda67fa4274",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        220
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2170,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "petronas-3-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 1576790,
+          "sha256": "d01ece82b063ed0e882e6ffe22c92739ba87ada1781c3630229a0834162c21a8"
+        }
+      ]
+    }
+  ],
+  "comparison": "Other profiles/formats are temporary comparison data on the separate review ref; only 2304 PNG candidates ship in this experiment.",
+  "selection": {
+    "tomate": 1,
+    "qualle": 2,
+    "hills": 1,
+    "petronas": null,
+    "basilisk": 3
+  }
+}
