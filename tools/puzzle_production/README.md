@@ -1,5 +1,16 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+## HP-W1: Hintergrundvertrag ohne aktivierten Werkzeugweg
+
+[PUZZLE_BACKGROUNDS](../../docs/PUZZLE_BACKGROUNDS.md) spezifiziert Ablauf,
+Datenformen, Auswahl-/Revisionsbindung und die Einführungsmatrix. HP-W1 liefert
+keine Hintergrund-API/CLI, keinen neuen Paketreader und keine Runtimeintegration.
+Authoring 0.6.0 und PB-A bleiben der unterstützte Weg; ihre bestehenden Hüllen
+erhalten keine zusätzlichen Hintergrundfelder. HP-W2 implementiert die gemeinsame
+Datei-/Ableitungsschnittstelle, PB-H den Paketbau und die neuen Reader, HP-I1/I2
+die finale Integration/Runtime und #490 den Sheettransport. Die dort geplanten
+Schnittstellen sind noch keine verfügbaren Befehle dieser Anleitung.
+
 ## PB-A: deterministischer Authoring-Paketbau
 
 Schnittstelle vor Implementierung, [Paketentscheidung #489/PB-A](https://github.com/venomenon328/picross/issues/489#issuecomment-6745424504).

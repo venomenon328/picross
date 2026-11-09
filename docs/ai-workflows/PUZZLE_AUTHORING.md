@@ -1,13 +1,22 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 37 · 09.11.2026**
+**Version 0.6.0 · Dokumentrevision 38 · 09.11.2026**
+
+HP-W1 aus [#560](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307)
+spezifiziert den **zukünftigen, noch nicht aktivierten Hintergrundweg** in
+[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md). Diese Dokumentrevision ergänzt
+seine Einordnung in §§2–9; der aktive Produktionsweg bleibt **0.6.0** mit seinen
+bisherigen Formaten, Freigaben und ZA-1-Prüfungen. Die geplante Version **0.7.0**
+wird erst mit dem tatsächlich unterstützten vollständigen Einzelweg aktiviert,
+wie in der Einführungsmatrix des Hintergrundvertrags beschrieben. Neue Daten
+nicht in alte Hüllen schreiben und versiegelte Originale nicht umetikettieren.
 
 PB-A aus [#489](https://github.com/venomenon328/picross/issues/489#issuecomment-6745424504)
 ergänzt den lokalen deterministischen Paketbuilder nach §6.1. Bestehende
-Freigabe-, Phasen- und ZA-1-Verträge bleiben erhalten; Hintergrundformate
-sind dem separaten Folgepaket PB-H vorbehalten.
+Freigabe-, Phasen- und ZA-1-Verträge bleiben erhalten. Sein Anschluss an die
+neuen Hintergrundformen ist dem separaten Folgepaket PB-H vorbehalten.
 
-Diese Revision aktiviert P-B2 aus [#488](https://github.com/venomenon328/picross/issues/488):
+Der aktive Produktionsweg aus P-B2 / [#488](https://github.com/venomenon328/picross/issues/488) gilt weiter:
 Neue Produktionen verwenden **0.6.0**, automatische frühe Palettendiagnosen und
 die frische finale [ZA-1-v5-Prüfung](../ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5).
 Die unveränderte Farbregel bindet weiterhin Normrevision 4; F05 bleibt eine
@@ -40,6 +49,13 @@ binden den verwendeten Stand; keine Umetikettierung versiegelter Originale.
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING.md` im Repository `venomenon328/picross`.
 
 Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag über das zuerst freigegebene Abschlussbild bis zur geprüften Integration ins Spiel. **MUSS** bezeichnet eine Pflicht, **SOLL** den begründet abweichbaren Standard, **DARF** eine Option.
+
+**Geltungsgrenze:** Die ausdrücklich als „Zukünftiger Hintergrundweg“ bezeichneten
+Ergänzungen spezifizieren den Sollablauf nach dessen versionierter Einführung.
+Sie aktivieren keine heutige Werkzeug-, Sheet- oder Integrationsfähigkeit und
+ändern keine Pflicht des bestehenden 0.6.0-Wegs. Für beauftragte Hintergrundarbeit
+den zentralen Hintergrundvertrag einschließlich seines aktuellen Unterstützungsstands
+vollständig lesen; nur tatsächlich verfügbare Teilfähigkeiten verwenden.
 
 ## 1. Einstieg und Befugnisse
 
@@ -99,8 +115,9 @@ vorgelegte Fassung und ihre tatsächliche Freigabe bleiben maßgeblich.
 | Abschlussbild | Zuerst erzeugte farbige, detaillierte Illustration; nach ausdrücklicher menschlicher Auswahl/Freigabe verbindliche gestalterische Referenz für alle folgenden Darstellungen und spätere Belohnungsansicht. |
 | Motivvorlage | Aus genau dem freigegebenen Abschlussbild abgeleitete, vereinfachte, gespeicherte Illustration für den gewählten Rastermodus; eigene menschliche Freigabe vor der Rasterproduktion. |
 | Lösungsraster | Exakte diskrete Zellmatrix aus der Motivvorlage; alleinige Grundlage für Hinweise und Logiknachweis. |
+| Hintergrundzeichnung (zukünftiger Weg) | Eigenständige Kontextillustration mit eigener Bildrevision und tatsächlicher Auswahl; weder Abschlussbild noch Motivvorlage oder Quelle für Lösungszellen. |
 
-Verbindliche Richtung: **Input → Abschlussbild → freigegebene Abstraktion → Lösungsraster**. Alle Darstellungen müssen motivisch zusammenpassen, nicht pixelidentisch sein. Abschlussbild und Motivvorlage als getrennte Dateien und Revisionen führen; das detaillierte Original niemals mit seiner vereinfachten Ableitung überschreiben.
+Verbindliche Richtung: **Input → Abschlussbild → freigegebene Abstraktion → Lösungsraster**. Diese drei Darstellungen müssen motivisch zusammenpassen, nicht pixelidentisch sein. Abschlussbild und Motivvorlage als getrennte Dateien und Revisionen führen; das detaillierte Original niemals mit seiner vereinfachten Ableitung überschreiben. Der zukünftige Hintergrund hat einen Kontextbezug, gehört aber nicht zu dieser Ableitungskette.
 
 ### 2.3 Styleguide
 
@@ -148,9 +165,41 @@ Im Raster nur diskrete Werte, keine Zwischenfarben oder Textur als Zellzustand. 
 
 Korrekturen nur an der gewählten Darstellung durchführen, zu bewahrende Merkmale nennen und eine neue Revision speichern. Nach zwei erfolglosen Runden Ursache und geänderten Plan vorlegen. Ist die Abstraktion ungeeignet, zunächst Vereinfachung, Größe oder Rasterpalette korrigieren. Ein anderes Abschlussbild benötigt erneut die ausdrückliche Bildfreigabe; es darf nicht stillschweigend an technische Fehlschläge angepasst werden.
 
+### 2.5 Zukünftiger Hintergrundweg: Briefing und drei Kontextzeichnungen
+
+Nach [PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md) wird in Auftrag 1 bei
+feststehender Motivrichtung zusätzlich das Hintergrundbriefing erfasst:
+geeigneter Kontext, geschützte Merkmale und tatsächliche Eigentümervorgaben.
+Die Abschlussbildauswahl bleibt unverändert; keine Kreuzmatrix aus Reveal- und
+Hintergrundvarianten erzeugen. Offene Briefingideen sind keine Bildfreigabe.
+
+In Auftrag 2 nach der tatsächlichen Abschlussbildfreigabe **drei inhaltlich
+unterschiedliche Hintergrundkandidaten** mit ImageGen erzeugen und als drei
+gespeicherte Einzelbilder zusammen mit der Motivvorlage isoliert vorlegen.
+Auflösungs-/Formatvarianten desselben Bilds zählen nicht als verschiedene
+Kontexte. Keine selbständige Reduzierung auf einen Favoriten; nur eine
+ausdrückliche Eigentümervorgabe darf die anfängliche Anzahl im Einzelfall ändern.
+Ein endgültiges Raster wird für Erzeugung oder Auswahl nicht benötigt.
+
+Die Zeichnungen zeigen Umfeld oder Kontext, nicht den konkreten zu erratenden
+Gegenstand, seine Lösungssilhouette, Rasterkopie oder den Motivnamen. Sie hängen
+nicht vom Spielerfortschritt ab. Indirekte Hinweise durch Kontext bleiben möglich;
+keine universelle Spoilerfreiheit behaupten. Helle neutralgraue Graphitstriche,
+offene Konturen, sparsame Schraffur und echte Transparenz auch zwischen Strichen
+folgen dem eigenen Hintergrundteil des [Qualitätsvertrags](../PUZZLE_QUALITY.md).
+Der zentrale Hintergrundvertrag bindet die transparente 4:1-Leinwand und das
+gemeinsame Ableitungsprofil; keine individuellen Offsets, Crops oder Masken.
+
+Isolierte Bilder sind die Auswahlgrundlage. Keine Kandidaten-Testintegration,
+Buch-Composites, Spielstarts oder zusätzliche persönliche Buchabnahme verlangen.
+Die bestehenden AT-/Reveal- und Raster-/Hinweissichtungen bleiben eigenständig;
+deren Ansichtsanforderungen werden nicht auf Hintergrundkandidaten übertragen.
+
 ## 3. Standardablauf: vier Aufträge
 
 Ein Auftrag umfasst sämtliche nötigen Arbeiten bis zur nächsten menschlichen Freigabe. Prüfung, Schwierigkeit, Bericht, Verschlankung und Dateisicherung sind Teilaufgaben, keine zusätzlichen Dialogphasen. Keine routinemäßigen Rückfragen zum Weiterarbeiten, Packen, Prüfen oder Registrieren. Nur fehlende Freigaben, materielle Motivänderungen, wesentliche Entscheidungen oder konkrete Blocker unterbrechen den Ablauf.
+
+Die folgende Phasen-/Ausgabetabelle beschreibt den **aktiven 0.6.0-Weg**.
 
 | Auftrag | Akteur und verbindliche Arbeit | Ausgabe / Stopp |
 | --- | --- | --- |
@@ -165,7 +214,42 @@ Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf
 
 Freigaben müssen eindeutig die vorgelegten Dateien/Revisionen beziehungsweise das Paketinventar benennen. Hashes selbst aus diesen Dateien ermitteln; der Mensch muss sie nicht abtippen. Akteur, Zeitpunkt und tatsächliche Erklärung protokollieren, niemals eine Freigabe selbst erteilen. Korrekturwünsche erzeugen eine neue Vorlage zur Freigabe; Rücksprünge nach Abschnitt 4.4. `blocked`, `rejected` und `superseded` brauchen Grund und Revision. `registered` bezeichnet den geprüften Checkout, erst der nachgewiesene Merge die Integration auf `main`; Release bleibt separat.
 
+### Zukünftiger Hintergrundweg in denselben vier Aufträgen
+
+Diese Ergänzung gilt nach der Einführung von 0.7.0 und erzeugt keine zusätzliche
+Standardphase. Zustände, Gates und ihre geschlossenen Datenformen stehen in
+[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md).
+
+| Vorhandener Auftrag | Zusätzliche Hintergrundarbeit / Entscheidung |
+| --- | --- |
+| **1 · Abschlussbildauswahl** | Bei feststehender Motivrichtung Kontext und Hintergrundbriefing nach §2.5 sichern; Abschlussbilder weiterhin eigenständig auswählen. |
+| **2 · Abschlussbildfreigabe und Abstraktion** | Nach tatsächlicher Abschlussbildfreigabe drei gespeicherte Kontextzeichnungen zusammen mit der Motivvorlage isoliert vorlegen; Auswahl offen führen. |
+| **3 · Motivfreigabe und Produktion** | Hintergrundwahl möglichst im selben Eigentümerauftrag wie die Motivfreigabe an die konkrete Datei/Revision binden. Gewählte Bildrevision über Rastervarianten hinweg erhalten. Ohne Wahl bereits autorisierte unabhängige Rasterarbeit fortsetzen und sichern. |
+| **4 · Endabnahme und Integration** | Eine noch offene Hintergrundwahl darf mit der bestehenden Endabnahme gebündelt werden. Erst dann das konkret gewählte und gültig abgeleitete Bild oder die ausdrücklich erklärte Leerentscheidung gemeinsam mit dem endabgenommenen Rätsel über den unterstützten #561-Weg integrieren. |
+
+Technische Rasterreife, offene Bildentscheidung, vollständige Hintergrundbereitschaft
+und Integrationsberechtigung sind getrennte Aussagen. Eine Auswahlvorlage bei
+bereits fertig geprüftem Raster ist noch keine vollständige Integrationsbereitschaft.
+Eine fehlende Wahl wird weder zur Empfehlungsauswahl noch zu „bewusst leer“ ergänzt;
+sie blockiert nur die davon abhängigen Schritte. Die heutigen 0.6.0-Zustände werden
+dafür nicht umgedeutet: Bei `content_ready` bleiben die bisherigen ZA-1-Gates und
+allein die noch offene menschliche Endabnahme maßgeblich.
+
+Eine eindeutige frühere Auswahl zur Verwendung derselben unveränderten Datei
+genügt als Hintergrundentscheidung; keine zweite Bildbestätigung verlangen.
+Die gesonderte Endabnahme und tatsächliche Integrationsbefugnis bleiben erforderlich.
+Eine späte Entscheidung an einem versiegelten Rasterpaket nach §6.3 außen binden;
+die konkrete vorgelegte Raster-/Bildfassung muss im finalen Auftrag eindeutig sein.
+
 ## 4. Rasterproduktion und technische Pflichtprüfung
+
+**Zukünftiger Hintergrundweg:** Die folgenden Import-, Logik-, Paletten- und
+Rasterprüfungen behalten ihren eigenen Gegenstand. Hintergründe liefern keine
+Zellwerte und werden nicht über Solvererfolg freigegeben. Eine offene Hintergrundwahl
+stoppt bereits autorisierte unabhängige Rasterarbeit nicht; technische Rasterreife
+allein erfüllt die künftigen Hintergrund-/Integrationsgates aus
+[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md) jedoch nicht. Für 0.6.0 bleiben die
+nachfolgenden `content_ready`-Anforderungen unverändert.
 
 ### 4.1 Import und Rastervarianten
 
@@ -423,6 +507,21 @@ zusätzlichen Freigaben der obigen Tabelle erfasst.
 
 Materiell sind Änderungen an Identität, Pose, charakteristischen Proportionen, wichtigen Innenräumen, Gesichtszügen oder ausdrücklich geschützten Merkmalen. Eine einzelne Zelle kann materiell sein. Auch das Abschneiden ausschließlich leerer Außenlinien verändert das Rastermaß und benötigt neue Nachweise. Manuelle Ableitungen offen kennzeichnen, nicht als unveränderten Originalimport ausgeben.
 
+**Zukünftiger Hintergrundweg – gezielte Bildrevision:** Eine materielle Änderung
+an Hintergrundillustration, Komposition oder Transparenz benötigt eine neue
+Bildrevision und erneute Auswahl genau der geänderten Fassung; ihre abhängigen
+Ableitungen werden ungültig. Bei Ablehnung Grund und nächsten Korrekturschritt
+sichern, keine automatische Leerentscheidung treffen. Unveränderte andere
+Bilder und Rasterfreigaben bleiben passend gebunden. Die im Hintergrundvertrag
+vereinbarte deterministische Größenableitung und unveränderter Pakettransport
+brauchen keine erneute kreative Auswahl. Reine Rastergeometrie-/Palettenänderung
+erzeugt keine Buchabnahme und keine neue Dreierauswahl; tatsächlich geänderten
+Motivkontext gezielt gegen Briefing und gewähltes Bild beurteilen. Reiner
+Hintergrundersatz ändert keine Lösungs-, Hinweis-, Paletten-, Schwierigkeits- oder
+Saveidentität und erfordert keine unveränderten Logiknachweise. Für die spätere
+Bildoperation gelten §8 und der dann unterstützte #561-Vertrag, nicht der
+bestehende AT-Abschlussbild- oder Rasterersatzbefehl.
+
 ### 4.5 Geprüfte Raster zur menschlichen Auswahl
 
 Aus den ohnehin erzeugten Kandidaten SOLL Auftrag 3 **zwei bis drei sinnvoll
@@ -475,7 +574,24 @@ Wahl der ersten/empfohlenen oder vermeintlich neuesten Revision über den Index.
 Kein Neuversiegeln beim Wechsel im Sheet. Nicht gewählte Angebote bleiben bis zur
 finalen Integration erhalten; §9 regelt anschließend die Bereinigung.
 
+**Zukünftiger Hintergrundweg:** Eine einzige Hintergrundauswahl derselben
+unveränderten Bildrevision kann zu den motivisch passenden Rasterangeboten
+gehören; Rasterversuche erzeugen keine Reveal×Raster×Hintergrund-Kreuzmatrix.
+Bei noch offener Bildentscheidung die Angebote ausdrücklich als technisch
+rasterreif mit offener Hintergrundwahl kennzeichnen und nach dem künftigen
+Bereitschaftsvertrag sichern. Das ist kein heutiges 0.6.0-`content_ready`-Paket
+mit zusätzlichem unbeachtetem Blocker und keine Hintergrundoption im Sheet v2.
+Für spätere Auswahl und gemeinsame Endabnahme die Originalpakete unverändert
+erhalten und die tatsächliche Entscheidung extern nach §6.3 binden.
+
 ## 5. Schwierigkeit L1–L5
+
+**Zukünftiger Hintergrundweg:** Hintergrundstatus und Bildauswahl fließen nicht
+in die Schwierigkeit ein. Bei ausschließlich geänderter Hintergrundrevision
+bleiben passende unveränderte Analyse-/Proofbindungen erhalten; kein neuer
+Solver- oder Schwierigkeitslauf allein wegen dieser Bildarbeit. Für tatsächliche
+Logik-/Paletten-/Rasteränderungen gelten weiterhin die eigenen Nachweispflichten
+aus §4 und den nachfolgenden Bewertungsverträgen.
 
 ### 5.1 Historische Produktionsmethoden 0.1 und 0.2
 
@@ -560,6 +676,10 @@ begründen keine Behauptung empirischer menschlicher Kalibrierung.
 
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
+§§6.1–6.2 beschreiben die heute unterstützte Ablage und Übergabe unter 0.6.0.
+Für den noch nicht aktivierten Hintergrundweg gilt zusätzlich §6.3 mit den
+neuen Formen des zentralen Hintergrundvertrags; alte Hüllen bleiben unverändert.
+
 ### 6.1 Repositoryablage während der laufenden Produktion
 
 Die folgenden Aufbewahrungs- und Replaypflichten gelten bis zur finalen Integration. Danach löst Abschnitt 9 sie ab.
@@ -634,6 +754,48 @@ Gates verwenden `pending|pass|fail|blocked`. Jedes `pass` braucht einen konkrete
 Beim Übergang aus v1 fehlende Abschlussbildfreigabe oder Ableitungsbindung ausdrücklich als offen erfassen; niemals aus einer alten Motivfreigabe erfinden.
 
 Nach Chatwechsel zuerst den Repositoryindex auflösen, dann Regelwerk, Übergabe, Pflichtquellen, Freigaben und referenzierte Dateien lesen; Hashes prüfen. Nur den nächsten autorisierten Schritt fortsetzen. Fehlenden Gesprächskontext nicht erfinden, gültige Freigaben nicht unnötig erneut einholen und den Toolstand nicht heimlich wechseln.
+
+### 6.3 Zukünftiger Hintergrundweg: Sicherung, Auswahl und Wiederaufnahme
+
+[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md) definiert die geschlossenen
+Arbeits-, Entscheidungs- und Ableitungsformen sowie deren azyklische Hashbindungen.
+Für den vollständigen Weg sind Authoring **0.7.0**, Handoff **v3**, Record **v2**
+und Sheet-Update **v3** vorgesehen; Inventar **v1** und Arbeitsindex **v1** bleiben.
+Diese Formen sind heute nicht durch PB-A, ZA-1 oder das Offline-Sheet unterstützt.
+Frühe Bildarbeit darf nach Lieferung ihrer passenden Teilfähigkeit als vorbereitet
+gesichert werden; das erzeugt weder einen gültigen Altformeingang noch eine
+ZA-1-Zulassung. Nur die tatsächlich unterstützte Einführungsmatrix anwenden.
+
+Während einer offenen Auswahl müssen alle drei tatsächlich angebotenen
+Einzelbilder mit ihrem Arbeitsstand gespeichert und erreichbar sein. Pfade,
+Bildrevisionen, Originalbytes/-hashes, Herkunft/Rechte und tatsächlich bekannte
+Generierungsdaten binden; Unbekanntes ausdrücklich unbekannt lassen. Eine
+Vorschau, ein Prompt oder ein Dateiname ersetzt keine gesicherte Originaldatei.
+Ausstehend, vorgelegt, abgelehnt, konkret gewählt und ausdrücklich bewusst leer
+nach dem zentralen Vertrag unterscheiden. Legacy ist eine Einordnung alter
+Verträge, kein Zustand für neue Arbeit. Deklarierte fehlende, defekte,
+inkonsistente oder nicht unterstützte Daten sind Fehler und niemals „leer“.
+
+Eine tatsächliche Auswahl darf vor dem endgültigen Raster oder erst zusammen
+mit dessen Endabnahme erfolgen. An einem bereits versiegelten Kandidatenpaket
+wird sie **außerhalb des Originals** an dessen unveränderte Paket-, Handoff- und
+Inventarbytes sowie den genauen Hintergrundarbeitsstand gebunden. Die finale
+Endfreigabe bindet das wirklich vorgelegte Rasterpaket und die konkrete
+Auswahl-/Leerentscheidung samt erforderlicher Ableitung. Keine früheren Handoffs,
+Inventare, Freigaben oder Original-ZIPs nachträglich ändern und keine neue
+Versiegelung als angeblich identisches Original ausgeben. Eine passende frühere
+Auswahl unveränderter Bildbytes wiederverwenden; der Mensch muss keine Hashes
+abtippen und nicht dasselbe Bild erneut bestätigen.
+
+Bei Wiederaufnahme zuerst den genauen Arbeits-/Paketstand und alle externen
+Entscheidungen samt Bildbytes prüfen. Unabhängige bereits autorisierte Rasterarbeit
+darf bei offener Bildwahl weiterlaufen; das fehlende Hintergrundgate bleibt
+sichtbar. Nach Ablehnung oder materiellem Korrekturwunsch nur die betroffene neue
+Bildfassung erneut vorlegen, ungültige Ableitungen nach §4.4 ersetzen. Reiner
+späterer Hintergrundersatz ist ein eigener Bildauftrag mit Bindung an die aktive
+Integration; abgeschlossene Rasterproduktion dafür nicht rekonstruieren.
+Während laufender Arbeit erforderliche Originale erhalten; Erhalt und Ende der
+Arbeitsdateien folgen §9 und dem Hintergrundvertrag, nicht einem Dauerarchiv.
 
 ## 7. Freigaben und Abschlussausgabe
 
@@ -881,7 +1043,55 @@ Diese Option ist vom Produktionsabschluss nach §9 getrennt; auch ausgeschaltete
 lokale Bereinigung hebt den dort beauftragten Nachintegrationsabschluss nicht auf.
 Reine Rätselproduktion bleibt gemäß §1 ohne Player-Build und ohne eigene CI-Replays.
 
+### Zukünftiger Hintergrundweg: Ausgabe und verlustfreier Transport
+
+Nach Einführung des neuen Wegs bleiben die drei Teile Ergebnis, Sheet-Daten
+und nächster Schritt erhalten. Die obigen v2-Beispiele und die aktuelle
+Sheetbedienung gelten weiter ausschließlich für den unterstützten Altweg.
+Hintergrundtragende Ausgaben verwenden die neuen Formen aus
+[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md); keine Hintergrunddaten in
+Freitext oder scheinbar kompatiblen v1-Records/v2-Updates verstecken. Der heutige
+Recordimport projiziert nur bekannte Felder und erhält solche Zusätze nicht.
+Neue Generationen müssen vor Übernahme als nicht unterstützt zurückweisbar sein.
+
+Nach Auftrag 2 die drei tatsächlichen Hintergrunddateien gemeinsam mit der
+Motivvorlage isoliert zeigen, jeweils mit stabiler Kennung und Revision.
+Im kompakten Ergebnis Hintergrundstatus, tatsächliche Entscheidung oder offene
+Wahl, technische Ableitungsbefunde und visuelles Urteil getrennt nennen.
+Die vorliegenden Rasterangebote und ihre Hintergrundbereitschaft eindeutig
+zuordnen. Eine noch offene Wahl kann im selben Auftrag wie die Endabnahme
+gebunden werden; der finale Auftrag muss genau das vorgelegte Rasterpaket und
+die gewählte Bildfassung beziehungsweise ausdrückliche Leerentscheidung benennen.
+Die Auswahl zur Verwendung ist die Bildentscheidung, keine Einladung zu einer
+zweiten routinemäßigen Bestätigung. Endabnahme und Integrationsauftrag bleiben.
+
+Import, Sitzung und Auftragsexport müssen bei ihrer Einführung alle neuen
+Bild-, Options-, Auswahl- und Paketbindungen verlustfrei erhalten; die dafür
+geplanten Generationen und konkreten Reader/Writer stehen im zentralen Vertrag.
+HP-W1 aktualisiert hier ausschließlich den bytegleichen Regelwerksnapshot und
+seine Versions-/Revisionsangaben. Neue Optionen, Importfähigkeit, Sitzungsformate
+und Promptlogik sind gesonderte Lieferungen, heute keine Sheetfunktion.
+
 ## 8. Abgenommenes Paket ins Spiel integrieren
+
+**Zukünftiger Hintergrundweg:** Die nachstehende ausführbare 0.6.0-/ZA-1-Route
+wird durch diesen Solltext nicht um neue Eingangsfelder oder Befehle erweitert.
+Erst der tatsächlich unterstützte #561-Weg übernimmt in Auftrag 4 gemeinsam mit
+dem endabgenommenen Rätsel **ausschließlich die konkret gewählte, gültig
+abgeleitete Auslieferungsdatei oder die ausdrücklich erklärte Leerentscheidung**.
+Vorher müssen technische Rasterreife, vollständige Hintergrundbereitschaft,
+echte Endabnahme und Integrationsbefugnis gemäß
+[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md) belegt sein. Eine Auswahlvorlage
+oder gesicherte frühe Bildarbeit ist keine Integrationsberechtigung.
+
+Nur die gewählte Datei ableiten/integrieren; keine Kandidatenprobe im Spiel und
+keine zusätzliche Buchabnahme. Bewusst leer braucht keine Runtime-Nulltextur.
+Die finale Prüfung bindet unverändertes Originalpaket, tatsächliche externe
+Auswahl/Endabnahme und gültige Ableitung. Herkunft, Palette, Paarprofil,
+Schwierigkeit, bisherige Reveal-/Motivgates und Recoverygarantien bleiben
+erhalten. Eine spätere reine Hintergrundersetzung nutzt nur den dafür
+eingeführten Bildweg aus #561 und erhält Lösungs-/Saveidentität; sie ist keine
+heutige `plan-update`-/`update`- oder `catalog_reveal`-Operation.
 
 RI-A-V01 zu [#478](https://github.com/venomenon328/picross/issues/478) liefert
 seit PR #484 auf main die [operativen CLI-/API-Grenzen](../ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen).
@@ -1096,3 +1306,27 @@ revisionsgenauen Abschlussweg; [T01](../CI2_E_VERIFICATION.md) bindet die Liefer
 Die frühere eng begrenzte Freigabe zum Nachintegrations-Cleanup einschließlich Merge
 in Schritt 5 bleibt bestehen. Werkzeug-/CI-Codepakete erben keine frühere
 Cleanup-Mergefreigabe. Historische CI2-E-Aufträge sind keine heutige Freigabe oder Sperre.
+
+### Zukünftiger Hintergrundweg: Abschluss der Bildarbeit
+
+Der Lebenszyklus aus [PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md) ergänzt §9
+nach Einführung der passenden Abschlussfähigkeit. Die heutigen
+`retire-production`-/`retire-reveal-production`-Befehle erhalten dadurch keine
+behauptete Unterstützung neuer Hintergrundformen. Keine gebundenen Originale
+mit einem ungeeigneten alten Reader bereinigen.
+
+Bis zur Auswahl bleiben die drei Einzeldateien erreichbar; bis zur tatsächlichen
+finalen Integration alle noch benötigten Arbeits-, Rechte- und Auswahlbindungen
+erhalten. Nach bestätigter Endabnahme und Integration auf `main` die zugehörige
+abgeschlossene Hintergrundarbeit gezielt entfernen: verworfene Kandidaten,
+Prompts, Quellen-/Ableitungskopien, ZIPs und vorübergehende Diagnose-/Reviewdaten.
+Offene neuere Bildrevisionen und fremde Arbeit bleiben erhalten. Kein zusätzliches
+Kandidatenarchiv, keine Wiederherstellung abgeschlossener Rasterproduktion und
+kein Solver-/Bild-/Buchreplay allein für den Abschluss.
+
+Dauerhaft bleiben das aktive Auslieferungsasset beziehungsweise die ausdrücklich
+gebundene Leerentscheidung, Rechte/Attribution, aktive Bildrevision und kompakte
+Auswahl-/Ableitungs-/Integrationsbindungen mit bestätigtem Main-Stand. Historische
+Originalbelege nicht umschreiben, die aktive Bildfassung nicht zurücksetzen.
+Ein späterer reiner Hintergrundersatz erhält seinen eigenen revisionsgenauen
+Abschluss nach denselben Grenzen; offene Geschwisterrevisionen nicht mitlöschen.

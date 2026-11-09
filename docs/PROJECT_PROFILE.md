@@ -54,6 +54,12 @@ Main-Integration folgt der eigene Produktionsabschluss nach Authoring §9.
 Runtime, Rechte, aktive Metadaten und kompakte Freigabe-/Integrationsbindungen
 bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 
+Der [Hintergrundvertrag HP-W1](PUZZLE_BACKGROUNDS.md) spezifiziert den zukünftigen
+Weg für Kontextzeichnungen je Rätsel. Er ist noch nicht aktiviert; Authoring
+0.6.0 und der integrierte PB-A-Paketbau bleiben der unterstützte Produktionsweg.
+Der Vertrag trennt vorbereitete Bildarbeit, tatsächlich verfügbare Teilfähigkeiten
+und die spätere vollständige Einführung. HP-W1 ersetzt keine Runtimezeichnungen.
+
 ## Pflichtquellen nach Auftrag
 
 | Arbeit | Zusätzlich vollständig lesen |
@@ -72,6 +78,7 @@ bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Katalog, Metadaten oder Sortierung | [CATALOG_PRESENTATION](CATALOG_PRESENTATION.md), [CATALOG_SORTING](CATALOG_SORTING.md), [CATEGORIES](CATEGORIES.md) |
 | Abschlussbilder, Bildrevisionen oder Katalogvorschau | [REVEAL_TRANSPARENCY](REVEAL_TRANSPARENCY.md) und dort geroutete Produktions-/Integrationsquellen |
+| Hintergrundzeichnungen je Rätsel, ihre Auswahl, Ableitung oder Einführung | [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md), [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [PUZZLE_QUALITY](PUZZLE_QUALITY.md); spezifizierten Sollweg und tatsächlichen Unterstützungsstand unterscheiden |
 | Neue Rätsel konzipieren, produzieren, korrigieren oder redaktionell abnehmen | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [redaktioneller Qualitätsvertrag](PUZZLE_QUALITY.md) und deren Pflichtquellen |
 | Produktionswerkzeuge, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste/Verträge |
 | Schritt-4-Integrationscode, Registrierungsbudgets, Prüfkontext, Publikationsguards/Recovery | [PUZZLE_INTEGRATION](PUZZLE_INTEGRATION.md), [ZA1_ADAPTER](ZA1_ADAPTER.md), aktuelles Paket; Soll und ausführbaren Stand unterscheiden |
