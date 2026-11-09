@@ -4,6 +4,11 @@
   "expires": "2026-11-16",
   "files": [
     {
+      "path": ".gitattributes",
+      "bytes": 9,
+      "sha256": "48747480eddba024928d03be9bf83dc579e5515768647507a767e8187a85c9ab"
+    },
+    {
       "path": "binding.json",
       "bytes": 2064,
       "sha256": "57c93b6a11ba0014b6ddd3e1a438b29d69064960a0f8607a4b5a745d59bb9652"
