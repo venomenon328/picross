@@ -1,24 +1,29 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/560",
-  "package": "HP-W2",
+  "issue": "https://github.com/venomenon328/picross/issues/489",
+  "package": "PB-H",
   "modules": [
     "tools",
     "production.images",
-    "delivery"
+    "production.adapter"
   ],
-  "purpose": "HP-W2 implements standalone background describe/derive/verify. Small synthetic image, strict binding, filesystem, process-lock, fault and transport tests cover the new boundary. production.images also verifies shared RP-3 normalization extraction and the necessary GRAY-ICC correction for supported 1/L/LA images; tools audits routing and the authoring rulebook snapshot. B-HPW2-01 changes the shared web bundle license reader: tools covers current and legacy inventories and integrity, while delivery exercises a real web build and the isolated SSH/HTTP deployment and rollback path.",
-  "omitted": "No additional production.solver/adapter/catalog, native, preflight or Chromium modules: no solver, adapter, catalog writer, runtime or browser behavior changes; delivery is selected for the changed shared web bundle validator. Shared decoder changes are confined to color normalization and directly covered by existing and new image tests; imported path/I/O helpers remain unchanged. No real puzzle replay, image generation, gallery or technical artifact upload. The development core supplies the required Windows player package.",
+  "purpose": "PB-H adds opt-in 0.7.0 background package construction and read-only content verification. tools checks routing, documentation and the unchanged 0.6.0 sheet snapshot; production.images covers typed background roots, local history, fresh HP-W2 verification and deterministic phase-correct builds; production.adapter checks inherited palette, proof, paired, provenance, difficulty and approval guarantees on the written ZIP and rejection by legacy export writers.",
+  "omitted": "No production.solver/catalog, native, preflight, delivery or Chromium modules: no solver behavior, catalog/publication writer, runtime, web delivery or browser flow changes. Small synthetic change-scoped cases cover the changed boundaries; no real puzzle replay, image generation, gallery, new permanent core or technical artifact upload. The required development core supplies the regular Windows player package.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_background_assets.py",
+      "path": "tests/puzzle_production/test_background_package.py",
       "disposition": "change-scoped",
-      "reason": "Retain small synthetic regression cases for the persistent standalone API and its data integrity; executed only when production.images is selected, not as a new universal CI obligation."
+      "reason": "Small synthetic background reference, root, history, phase, derivation and deterministic transport cases for the changed package boundary; selected module only, no new core obligation."
     },
     {
-      "path": "tools/test_web_delivery.py",
+      "path": "tests/puzzle_production/test_background_content.py",
       "disposition": "change-scoped",
-      "reason": "Keep small synthetic current and legacy license inventory and tamper regressions for the persistent web bundle contract, run when tools is selected."
+      "reason": "Synthetic read-only 0.7.0 content and supplied-approval cases retain inherited guarantees and keep legacy writers closed; selected adapter module only."
+    },
+    {
+      "path": "tests/puzzle_production/test_authoring_builder.py",
+      "disposition": "change-scoped",
+      "reason": "Extend the existing deterministic builder checks for v2 request/result, v3 handoff/update, phase and publication behavior while retaining v1/0.6.0 compatibility."
     }
   ],
   "core_change": null,

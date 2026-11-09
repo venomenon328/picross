@@ -1,4 +1,4 @@
-"""Bounded, read-only Authoring v2 boundary. Package text/code is never executed."""
+"""Bounded Authoring inputs; v3 background content admission is explicitly opt-in."""
 from __future__ import annotations
 
 from contextlib import contextmanager
@@ -95,9 +95,12 @@ def file_table(root, deadline):
 
 
 @contextmanager
-def open_package(source: Path, *, allow_manual_review=False):
+def open_package(source: Path, *, allow_manual_review=False, allow_background=False,
+                 history_repo=None, external_root=None):
     with open_files(source) as (root, deadline, archive_hash):
-        package = Package(root, deadline, allow_manual_review=allow_manual_review)
+        package = Package(root, deadline, allow_manual_review=allow_manual_review,
+                          allow_background=allow_background, history_repo=history_repo,
+                          external_root=external_root)
         package.archive_sha256 = archive_hash
         yield package
 
@@ -159,19 +162,38 @@ def open_files(source: Path, *, deadline=None):
 
 
 class Package:
-    def __init__(self, root, deadline, *, allow_manual_review=False):
+    def __init__(self, root, deadline, *, allow_manual_review=False, allow_background=False,
+                 history_repo=None, external_root=None):
         self.root, self.deadline = root, deadline
         self.archive_sha256 = None
+        self.history_repo, self.external_root = history_repo, external_root
+        self.background = None
         self.files = file_table(root, deadline)
         self.used = set()
         self.handoff = self.json("handoff.json")
         h = self.handoff
-        require(isinstance(h, dict) and h.get("format") == "picross-authoring-handoff-v2", "Unsupported Authoring handoff")
+        require(isinstance(h, dict), "Unsupported Authoring handoff")
+        self.background_enabled = h.get("format") == "picross-authoring-handoff-v3"
+        require(h.get("format") == "picross-authoring-handoff-v2" or
+                self.background_enabled and allow_background,
+                "Unsupported Authoring handoff; background content requires explicit read-only admission")
+        require(self.background_enabled or "background" not in h,
+                "Background data requires Authoring handoff v3")
+        if self.background_enabled:
+            from .authoring_build_contract import BACKGROUND_GATES, HANDOFF_KEYS
+            require(set(h) <= HANDOFF_KEYS | {"background"}, "Unknown background handoff fields")
+            require(isinstance(h.get("gates"), dict) and set(h["gates"]) == BACKGROUND_GATES and
+                    isinstance(h.get("gate_evidence"), dict) and set(h["gate_evidence"]) == BACKGROUND_GATES,
+                    "Background handoff requires all twelve gates and evidence entries")
+            require(h.get("final_editorial_approval") is None and
+                    h["gates"]["final_editorial"] != "pass" and h["gates"]["target_export"] != "pass",
+                    "Sealed background handoff must leave final approval/export open")
         require(isinstance(h.get("puzzle_id"), str) and ID.fullmatch(h["puzzle_id"]), "Invalid production ID")
         require(isinstance(h.get("revision"), str) and REVISION.fullmatch(h["revision"]), "Invalid package revision")
         # Reading a historical manual handoff is not its acceptance. inspect()
         # still requires the external, exactly bound manual authorization.
-        require(h.get("state") in ("content_ready", "editorially_approved", "catalog_ready") or
+        require(h.get("state") in ("raster_ready", "content_ready") if self.background_enabled else
+                h.get("state") in ("content_ready", "editorially_approved", "catalog_ready") or
                 h.get("state") == "raster_review" and isinstance(h.get("rulebook"), dict) and
                 h["rulebook"].get("version") == "0.6.0" or
                 allow_manual_review and h.get("state") == "raster_review" and
@@ -185,14 +207,17 @@ class Package:
                 "Package is not content_ready")
         require(isinstance(h.get("repo_commit"), str) and re.fullmatch(r"[0-9a-f]{40}", h["repo_commit"]), "Missing producer commit")
         rule = h.get("rulebook")
-        require(isinstance(rule, dict) and rule.get("version") in ("0.4.0", "0.4.1", "0.5.0", "0.6.0"), "Unsupported authoring rulebook")
+        require(isinstance(rule, dict) and
+                (rule.get("version") == "0.7.0" if self.background_enabled else
+                 rule.get("version") in ("0.4.0", "0.4.1", "0.5.0", "0.6.0")),
+                "Unsupported authoring rulebook")
         rule_path = self.bound(rule)
-        if rule["version"] in ("0.5.0", "0.6.0"):
+        if rule["version"] in ("0.5.0", "0.6.0", "0.7.0"):
             require(re.search(r"^\*\*Version " + re.escape(rule["version"]) + r"(?: | ·)",
                               rule_path.read_text(encoding="utf-8"), re.M) is not None,
                     "Rulebook " + rule["version"] + " requires a matching versioned snapshot")
         else:
-            require(re.search(r"^\*\*Version 0\.6\.0(?: | ·)", rule_path.read_text(encoding="utf-8"), re.M) is None,
+            require(re.search(r"^\*\*Version 0\.[67]\.0(?: | ·)", rule_path.read_text(encoding="utf-8"), re.M) is None,
                     "Legacy rulebook label conflicts with snapshot")
         inv = h.get("inventory")
         require(isinstance(inv, dict) and inv.get("file") == "inventory.json", "Missing inventory binding")
@@ -235,6 +260,11 @@ class Package:
                 require(path.stat().st_size == entries[name]["bytes"] and file_hash(path) == entries[name]["sha256"],
                         "Inventory size/hash mismatch: " + name)
         self.used.update(("handoff.json", "inventory.json"))
+        if self.background_enabled:
+            from .background_package import validate
+            self.background = validate(root, h, history_repo=history_repo, deadline=deadline,
+                                       external_root=external_root)
+            self.used.update(self.background["files"])
 
     def file(self, name):
         relative(name)
@@ -265,8 +295,9 @@ class Package:
         if manifest_path.is_file():
             manifest = load_json(manifest_path)
             if isinstance(manifest, dict) and manifest.get("format") in ("picross-image-manifest-v2", "picross-repair-manifest-v2"):
-                require(self.handoff["rulebook"]["version"] in ("0.5.0", "0.6.0"),
-                        "Paired production requires authoring rulebook 0.5.0/0.6.0")
+                require(self.handoff["rulebook"]["version"] in ("0.5.0", "0.6.0") or
+                        self.background_enabled and self.handoff["rulebook"]["version"] == "0.7.0",
+                        "Paired production requires authoring rulebook 0.5.0/0.6.0 or admitted 0.7.0")
         return self.root / name
 
     def approval(self, record, kind):

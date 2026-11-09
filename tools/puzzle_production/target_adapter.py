@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -31,9 +32,11 @@ LEGACY_FORMAT = "picross-target-export-v1"
 FORMAT = "picross-target-export-v2"
 MANUAL_FORMAT = "picross-target-export-v3"
 PAIRED_FORMAT = "picross-target-export-v4"
+BACKGROUND_INSPECTION = "picross-authoring-content-inspection-v1"
 
 
-def tool_identity(legacy=False, manual=False, color=False, paired=False, accepted_raster=False, palette=False):
+def tool_identity(legacy=False, manual=False, color=False, paired=False, accepted_raster=False, palette=False,
+                  background=False):
     root = Path(__file__).resolve().parents[2]
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root,
@@ -54,6 +57,8 @@ def tool_identity(legacy=False, manual=False, color=False, paired=False, accepte
         files.append("accepted_raster.py")
     if palette:
         files.extend(("palette_quality.py", "palette_gate.py"))
+    if background:
+        files.extend(("background_package.py", "background_assets.py", "background_contract.py", "background_io.py"))
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -102,9 +107,19 @@ def final_approval(package, selection, approval_path=None):
         if ref is None:
             return None
         approval_path = package.file(ref)
-    a = exact_keys(load_json(approval_path), {"format", "actor", "timestamp_utc", "statement", "puzzle_id",
-                 "revision", "handoff_sha256", "inventory_sha256", "selection", "test_only"})
-    require(a["format"] == "picross-editorial-approval-v1", "Unsupported final editorial approval")
+    background = package.background_enabled
+    if background:
+        from . import catalog_io as io
+        approval_path = io.external(approval_path)
+        approval_bytes = io.read(approval_path.parent, approval_path.name, 128 * 1024)
+        value = io.json_bytes(approval_bytes, 128 * 1024)
+    else:
+        value = load_json(approval_path)
+    a = exact_keys(value, {"format", "actor", "timestamp_utc", "statement", "puzzle_id",
+                 "revision", "handoff_sha256", "inventory_sha256", "selection", "test_only"} |
+                 ({"original_zip_sha256", "background"} if background else set()))
+    require(a["format"] == ("picross-editorial-approval-v2" if background else "picross-editorial-approval-v1"),
+            "Unsupported final editorial approval")
     for key in ("actor", "statement"):
         string(a[key], "final approval " + key)
     timestamp(a["timestamp_utc"])
@@ -114,15 +129,55 @@ def final_approval(package, selection, approval_path=None):
             "Final editorial approval does not bind this handoff/selection")
     require(type(a["test_only"]) is bool and a["test_only"] == h.get("test_only", False),
             "Test-only approval scope mismatch")
-    return {"record": a, "sha256": file_hash(approval_path), "path": approval_path}
+    result = {"record": a, "sha256": hashlib.sha256(approval_bytes).hexdigest() if background else file_hash(approval_path),
+              "path": approval_path}
+    if background:
+        require(package.archive_sha256 is not None and package.derivation is None and
+                sha(a["original_zip_sha256"]) == package.archive_sha256,
+                "Background final approval requires the exact unchanged original ZIP")
+        from .background_package import validate_external
+        b = exact_keys(a["background"], {"manifest", "decision", "derivation", "outcome", "candidate_id",
+                                         "original", "output", "profile_sha256"})
+        binding = {k: b[k] for k in ("manifest", "decision", "derivation")}
+        binding["history"] = h["background"]["history"]
+        checked = validate_external(package.root, h, binding, history_repo=package.history_repo,
+                                    deadline=package.deadline, external_root=package.external_root)
+        require(checked["ready"] and checked["status"] in ("selected", "none"),
+                "Final approval requires a ready selected background or explicit none")
+        require(binding["manifest"]["ref"] == h["background"]["manifest"]["ref"],
+                "Final approval background differs from original work manifest")
+        decision, derivation = checked["decision"], checked["derivation"]
+        original_decision = h["background"]["decision"]
+        require(b["outcome"] == decision["outcome"] == derivation["outcome"] and
+                b["candidate_id"] == decision["candidate_id"] == derivation["candidate_id"] and
+                b["original"] == decision["original"] == derivation["source"] and
+                b["output"] == derivation["output"] and b["profile_sha256"] == derivation["profile_sha256"],
+                "Final approval background selection/profile/output binding differs")
+        presented = decision["presented_package"]
+        # An early, already-bound choice remains reusable. A newly supplied
+        # package-specific declaration must refer to this exact original ZIP.
+        if presented is not None and decision["carried_from"] is None and (original_decision is None or
+                                      binding["decision"]["ref"] != original_decision["ref"]):
+            require(presented == {"puzzle_id": h["puzzle_id"], "revision": h["revision"],
+                                 "original_zip_sha256": package.archive_sha256,
+                                 "handoff_sha256": a["handoff_sha256"], "inventory_sha256": a["inventory_sha256"]},
+                    "Final approval cannot transfer a background declaration from another package")
+        require(io.read(approval_path.parent, approval_path.name, 128 * 1024) == approval_bytes,
+                "Final approval changed during inspection")
+        result["background"] = checked
+    return result
 
 
 @diagnostic.measured("Input inspection", "full_input_inspections", attempt_counter="input_inspection_attempts")
-def inspect(package: Package, approval_path=None, *, legacy=False, manual_authorization=None, palette_exception=None):
+def inspect(package: Package, approval_path=None, *, legacy=False, manual_authorization=None,
+            palette_exception=None, allow_background=False):
     h = package.handoff
-    palette = h["rulebook"]["version"] == "0.6.0"
+    background = package.background_enabled
+    require(not background or allow_background and not legacy,
+            "Background content requires explicit read-only inspection; export remains unsupported")
+    palette = h["rulebook"]["version"] == "0.6.0" or background
     require(not palette or not legacy, "Authoring 0.6.0 requires export v5")
-    require(palette or palette_exception is None, "Palette exception requires authoring 0.6.0")
+    require(palette or palette_exception is None, "Palette exception requires authoring 0.6.0 or admitted 0.7.0")
     for name in ("brief", "report", "decisions", "effort"):
         package.file(h.get(name))
     require(type(h.get("test_only", False)) is bool, "Invalid test-only marker")
@@ -150,7 +205,19 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
                 "Manual authorization/source version mismatch")
     else:
         require(manual_authorization is None, "Manual authorization requires a manual source")
-        require(h.get("content_blockers", []) == [], "Unresolved content blockers")
+        if not background:
+            require(h.get("content_blockers", []) == [], "Unresolved content blockers")
+    if background:
+        permitted = set(package.background["blockers"]) | {"final_editorial: missing bound human final approval"}
+        if auth is not None:
+            # The existing authorization reader already bound these exact
+            # superseded statements and permissions to this input/owner record.
+            # All actual hard gates and source proofs still run below.
+            permitted.update(auth["record"]["superseded_content_blockers"])
+        for field in ("content_blockers", "blockers"):
+            blockers = h.get(field, [])
+            require(isinstance(blockers, list) and all(isinstance(v, str) and v in permitted for v in blockers),
+                    "Unresolved content blockers outside background/final approval")
     frame_exception = bool(edited_import and auth["record"]["frame_exception"])
     for gate in required:
         require(gates.get(gate) == "pass" or gate == "frame" and frame_exception and gates.get(gate) == "fail" or
@@ -224,7 +291,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(c.get("proof") == expected_proof, "Handoff proof selection differs")
     paired = proof["format"] == "picross-proof-v3"
     if paired:
-        require(not legacy and h["rulebook"]["version"] in ("0.5.0", "0.6.0") and
+        require(not legacy and h["rulebook"]["version"] in ("0.5.0", "0.6.0", "0.7.0") and
                 c.get("certification") == checked.get("certification") and c.get("certification") is not None,
                 "Paired proof requires explicit authoring 0.5.0 profile binding")
     logic = logic_from_matrix(matrix, design)
@@ -279,7 +346,8 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(all(k in (("R0","R1","R2","R3","R4") if paired else ("R0","R1","R2","R3")) and isinstance(v,str) and bool(v.strip())
                 for k,v in difficulty["rule_families"].items()), "Invalid difficulty rule reasoning")
     if difficulty["method"] == "picross-difficulty-0.2":
-        require(h["rulebook"]["version"] in ("0.5.0", "0.6.0"), "Difficulty 0.2 requires authoring 0.5.0/0.6.0")
+        require(h["rulebook"]["version"] in ("0.5.0", "0.6.0", "0.7.0"),
+                "Difficulty 0.2 requires authoring 0.5.0/0.6.0 or admitted 0.7.0")
     if paired:
         from .certification import LABEL
         assessment = checked.get("assessment")
@@ -312,7 +380,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain, paired, late_raster, palette),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain, paired, late_raster, palette, background),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
     if not legacy:
         report.update(format="picross-target-inspection-v2", category_id=None,
@@ -341,16 +409,31 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
         if not gate["allowed"]:
             report["blockers"].append("palette: current measurement/visual acceptance or bound exception required")
             report["catalog_ready"] = False
+    if background:
+        current = approval["background"] if approval is not None else package.background
+        require(h["state"] != "content_ready" or package.background["ready"],
+                "content_ready requires background readiness in the original package")
+        report["blockers"].extend(current["blockers"])
+        report.update(format=BACKGROUND_INSPECTION, original_state=h["state"],
+                      effective_state=("blocked" if not report["technical"] else
+                                       "editorially_approved" if approval is not None else
+                                       "content_ready" if current["ready"] else "raster_ready"),
+                      background={k: current[k] for k in ("status", "ready", "binding")},
+                      integration_ready=False, catalog_ready=False)
     return report, design, matrix, logic, approval
 
 
 def categorize(report, catalog, category_id):
+    require(report.get("format") != BACKGROUND_INSPECTION,
+            "Background content inspection does not admit catalog integration")
     categories.lookup(catalog, category_id)
     report.update(category_id=category_id, category_ready=True,
                   catalog_ready=report["editorial_approved"] and report["technical"])
 
 
 def definition(report, design, matrix, logic, name, revision, stem):
+    require(report.get("format") != BACKGROUND_INSPECTION,
+            "Background content inspection does not admit target export")
     integer(revision, 1, 1_000_000, "explicit runtime revision")
     string(name, "explicit motif name", 128)
     require(isinstance(stem, str) and Path(stem).name == stem and STEM.fullmatch(Path(stem).stem) and
