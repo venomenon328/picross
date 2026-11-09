@@ -52,6 +52,9 @@ die fünf Proben haben auch bei fehlendem Bild keinen Kategorie-Fallback.
 `--rz-transparent` ist ein ausdrücklich leerer Zustand ohne geladene Textur.
 Fehlend, defekt, leer, wartend, bereit und zu spät sind getrennte Zustände.
 
+Die Anfrage beginnt unmittelbar nach angenommener ID-Aktivierung, vor der
+Quellseitenaufnahme, und nutzt deren vorhandene Vorbereitungsframes ohne Warteblock.
+Bis zur Zielanordnung ist ihr Zeichenrechteck leer: kein Durchscheinen im Katalog.
 Pro Besuch höchstens eine aktive Textur und eine laufende Anfrage. Es gibt keine
 Vorladung der fünf/15 Bilder und keinen Verlaufscache. ResourceLoader-Anfragen
 lassen sich nicht abbrechen; eine veraltete Anfrage wird abgeschlossen und

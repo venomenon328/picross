@@ -21,6 +21,7 @@ static func run(r: SceneTree) -> void:
 	drawing.visit("synthetic-b","")
 	var stale: int = drawing.generation
 	drawing.visit("synthetic-c","")
+	r.check(not drawing.canvas.has_area(),"RZ: next visit cannot paint on the source page before target arrangement")
 	drawing.accept_result(stale,texture)
 	r.check(drawing.active_texture == null and drawing.stale_count == 1,"RZ: late result cannot cross a visit/ID")
 	drawing.accept_result(drawing.generation,null)
