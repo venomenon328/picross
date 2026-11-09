@@ -144,7 +144,10 @@ Grenzen, Felder, Kategorien und Referenzen vor Übernahme des gesamten Bestands.
 Daten; `load_error` unterscheidet einen ungültigen Bestand von einem gültigen leeren.
 Unbekannte Zuordnungen dürfen Inhalte nicht still aus dem Angebot entfernen.
 
-Kategorie und Anzeigename gehören ausschließlich zum Katalog. Definitionen,
+Kategorie und Anzeigename gehören zur Katalogmetadatenprojektion. RAND-P1 / #550
+nutzt zusätzlich die vorhandene Kategorie-ID für passive spoilerfreie
+[Randzeichnungen](UI_DRAWING_STYLE.md#zs-d04-buch-funktionale-ui-und-passive-pilotzeichnungen)
+auf der Arbeitsseite; keine neuen Felder oder rätselspezifische Motivableitung. Definitionen,
 Raster/Hinweise, Logik-/Proofhashes, Assets, Runtime-Revision, Save-Schema 1,
 Appidentität und `user://p1/saves/` bleiben unverändert. Umbenennen erzeugt keine
 neue Rätselidentität; Entfernen einer referenzierten Kategorie ist ein Fehler.

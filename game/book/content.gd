@@ -4,6 +4,7 @@ const Surface = preload("res://book/surface.gd")
 const CatalogSpread = preload("res://book/catalog.gd")
 const Information = preload("res://book/information.gd")
 const ViewTitle = preload("res://ui/view_title.gd")
+const Marginalia = preload("res://book/marginalia.gd")
 signal opening_requested(id: String)
 signal return_requested
 signal catalog_shown
@@ -18,6 +19,7 @@ var catalog_title: ViewTitle
 var recent_panel: BookButton
 var recent_retry: BookButton
 var recent_signature: String = ""
+var marginalia: Marginalia
 
 func configure_catalog(_catalog: Control) -> void: pass
 
@@ -81,6 +83,9 @@ func _build() -> void:
 	recent_retry.paper_transparent = true
 	album.notices.add_child(recent_retry)
 	recent_retry.hide()
+	marginalia = Marginalia.new()
+	page.add_child(marginalia)
+	page.move_child(marginalia,0)
 
 func _process(_delta: float) -> void:
 	if recent_retry == null: return
@@ -201,6 +206,51 @@ func _layout_book(prepare_board: bool = false) -> void:
 		var notice_width: float = summary_width if notice_top < heading_top+44*ui_scale else edge-right_heading
 		_place(album.notice_area,Rect2(Vector2(right_heading,notice_top),Vector2(notice_width,48*ui_scale)))
 		album._layout_cards()
+	_layout_marginalia()
+
+func _layout_marginalia() -> void:
+	if marginalia == null or book == null: return
+	var key: String = ""
+	var paper: Rect2
+	var hard: Array[Rect2] = []
+	var soft: Array[Rect2] = []
+	var controls: Array[Control] = [status_label,layout_warning,work_repair_button,save_retry]
+	if work.visible and session != null:
+		key = str(Registry.by_id(str(session.definition.id)).get("category_id",""))
+		# Unselected categories need no extra clue/font scan for absent artwork.
+		if not Marginalia.ORIGINALS.has(key):
+			marginalia.arrange(key,Rect2(),size,ui_scale,hard,soft)
+			return
+		paper = book.projected_paper(true)
+		controls.append_array([title,coordinate,tools_scroll])
+		for id: String in ["help","menu","nav-information"]: controls.append(actions[id])
+		hard.append_array([surface.card,surface.palette])
+		hard.append_array(surface.wells)
+		if board.layout_valid:
+			var ink: Rect2 = board.composition_envelope()
+			ink.position += board.position
+			soft.append(ink)
+		else: key = ""
+	elif information.visible and info.section == "help":
+		key = "help"
+		paper = book.projected_information(1)
+		controls.append_array([info.help_heading,help_panel.navigation,info.right_return,information.get_node("settings-access"),information.get_node("help-access")])
+		# ScrollContainer sorts its child scrollbar later. Its old rectangle can
+		# still have the UI125 width after a UI100 reflow. Reserve the current
+		# measured width on the already placed article, across every chapter.
+		var scroll: Rect2 = help_panel.scroll.get_global_rect()
+		var bar_width: float = help_panel.scroll.get_v_scroll_bar().get_combined_minimum_size().x
+		hard.append(Rect2(Vector2(scroll.end.x-bar_width,scroll.position.y),Vector2(bar_width,scroll.size.y)))
+		# Reserve a state-independent reading envelope: all chapters, diagrams
+		# and tool-icon rows. Article scrolling never changes drawing placement.
+		var width: float = help_panel.paragraph_width+56*ui_scale
+		for figure: Control in help_panel.figures: width = maxf(width,figure.get_combined_minimum_size().x)
+		var article: Rect2 = help_panel.scroll.get_global_rect()
+		article.size.x = minf(article.size.x,width)
+		soft.append(article)
+	for control: Control in controls:
+		if control != null and control.is_visible_in_tree(): hard.append(control.get_global_rect())
+	marginalia.arrange(key,paper,size,ui_scale,hard,soft)
 
 func select_puzzle(index: int) -> void:
 	if resetting_ending:
