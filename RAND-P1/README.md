@@ -38,7 +38,7 @@ Eine persönliche Erprobung am regulären Windows-Spieler bleibt M01.
 Nach Korrektur einer um sechs Pixel verzögerten Scrollbarreserve bei UI125→UI100 neu am finalen Head erzeugt. Die vollständige lokale Hilfe-Vorgängerfolge besteht mit 3.571 Assertions.
 
 79 erfolgreiche native Assertions in [native.json](native.json) und
-[native-extra.json](native-extra.json). 30 unveränderte PNGs, 75.241.190 Bytes.
+[native-extra.json](native-extra.json). 30 unveränderte PNGs, 75.260.632 Bytes.
 [manifest.json](manifest.json) ordnet Auflösung, UI-Skala, Zoom und SHA-256 zu;
 die Records enthalten außerdem Papier-, Raster-, Hinweis-/Text- und Motivgeometrie.
 Elf Mit-/Ohne-Paare behalten exakt dieselbe Geometrie. Der separate Pixelvergleich
