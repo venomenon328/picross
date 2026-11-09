@@ -89,6 +89,12 @@ Der reguläre exportierte PCK wird mit der bestehenden externen Paketprüfung au
 Runtime-Katalog und unerlaubte technische Beigaben geprüft.
 Der Windows-main-Build bleibt separat unverändert benutzbar.
 
+RZ-EVAL-P1 hält die gemeinsamen Auslieferungsrechte konsistent: Der statische
+Bundlereader akzeptiert die tatsächlich von `player_extras()` gelieferten
+Margins- und RZ-EVAL-Notices samt Provenienz. Die bisher zulässigen Bundles
+bleiben für explizites Rollback gültig; alle vorhandenen Dateien bleiben
+hashgebunden. Das erzeugt keinen Browser-, Hosting- oder Deploymentauftrag.
+
 Für die getrennte persönliche lokale Probe, ohne SSH oder Veröffentlichung:
 
 ```powershell

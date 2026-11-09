@@ -28,7 +28,7 @@
   "core_change": null,
   "evidence": {
     "mode": "failure",
-    "purpose": "Diagnose the native.catalog failure in run 42620495778 against the current unchanged game code. Retain exact failing process reports/logs for R01 only if this run fails; no routine review gallery.",
+    "purpose": "Retain exact failure reports/logs for R01 while verifying the owner-requested catalog progress guard and the current art-license delivery reader. Previous failures: native timeout 42623693107, license reader 42626864191. No routine review gallery.",
     "expires": "2026-11-16"
   }
 }
