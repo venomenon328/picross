@@ -9,6 +9,15 @@ für ihre gültigen Altbindungen und ausdrücklich gewählte kompatible Fälle e
 keine neue pauschale 0.3-Pflicht. Beide Freezes und versiegelte Pakete bleiben unverändert.
 Die [CLI-Anleitung](../tools/puzzle_production/README.md) dokumentiert die ausführbaren Befehle.
 
+**HP-W1 / #560 · spezifiziert, noch nicht aktiviert:**
+[PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md) führt Ablauf, Bild-/Auswahlbindungen,
+Datenformen und Einführungsmatrix für Kontextzeichnungen je Rätsel.
+Authoring 0.6.0 und der integrierte PB-A-Paketbau bleiben unverändert aktiv.
+Die gemeinsame Ableitung folgt in HP-W2, Paketbau/Reader in PB-H, finale
+Integration und Runtime in HP-I1/I2 sowie der Sheetanschluss in #490.
+Dieser Dokumentstand liefert dafür keine neuen ausführbaren Befehle und
+erweitert weder bestehende Hüllen noch die heutige Bedeutung von `content_ready`.
+
 [PUZZLE_QUALITY](PUZZLE_QUALITY.md) ist die verbindliche redaktionelle Referenz
 für neue Produktionen: Einzelkriterien nach Darstellung, transparente Sichtung
 auch ohne vollständigen Kandidaten und gezielte redaktionelle Einzelfallannahme.

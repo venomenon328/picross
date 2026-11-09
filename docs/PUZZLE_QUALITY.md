@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 6 · 08.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488)**
+**Vertrag 1.0 · Dokumentrevision 7 · 09.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488); HP-W1 / [#560](https://github.com/venomenon328/picross/issues/560)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -28,6 +28,10 @@ Die tatsächlichen Farben und Hinweise sind weiter visuell zu beurteilen.
 Eine universelle Zusicherung der Farbwahrnehmung folgt daraus nicht.
 Abgenommene Bestandsrätsel, versiegelte Pakete, Freigaben, technische
 Regelversionen und historische Bewertungen werden nicht rückwirkend umgedeutet.
+
+§9 ergänzt die Zielqualität des [Hintergrundvertrags HP-W1](PUZZLE_BACKGROUNDS.md).
+Dieser zukünftige Weg ist noch nicht aktiviert. Der aktive Authoringstand 0.6.0,
+seine bestehenden Qualitäts-/Freigabegates und die Farbregel bleiben unverändert.
 
 ## 2. Einzelurteile, Belege und Klassen
 
@@ -243,7 +247,7 @@ Die unabhängige Quellen-/Rechenprüfung ist im PR #546 dokumentiert.
 Die Regel ist ab ihrem Normmerge verbindlicher Sollstand für **neue** Rätsel.
 Der freiwillige Diagnosebericht `picross-palette-assessment-v1` aus P-B1 bindet
 die unveränderte Berechnung ausdrücklich an Normrevision 4 am Quellcommit
-`45b8fe697364bf73f4277c8b76f92d5c00400919`; diese Dokumentrevision 6 ändert
+`45b8fe697364bf73f4277c8b76f92d5c00400919`; diese Dokumentrevision 7 ändert
 Formel, Quantisierung, Grenzen und Referenzwerte nicht. **P-B2 aktiviert**
 Früh-/Endintegration und den geprüften äußeren Ausnahmeweg für neue 0.6.0-Pakete.
 Die visuelle Produktionsprüfung bleibt eigenständig. Authoring 0.5.0, Sheet v2
@@ -544,3 +548,76 @@ Ausnahmebindungen folgen §6 einschließlich Regelversion, konkreten Farbpaaren,
 Kandidaten-/Paletten-/Inventarbindung, Begründung, Akteur und UTC-Zeitpunkt.
 Das technische Negativurteil und die separate Annahme bleiben beide sichtbar.
 Keine zusätzliche allgemeine Freigabeschleife oder Pflicht-Probespielrunde.
+
+## 9. Hintergrundzeichnungen je Rätsel · noch nicht aktivierter Sollweg
+
+Dieser Abschnitt konkretisiert die Bildqualität für
+[HP-W1](PUZZLE_BACKGROUNDS.md). Dort stehen der geschlossene Datenvertrag,
+Phasen, tatsächliche Auswahl, gezielte Invalidierung und Einführung. HP-W1
+liefert weder Bilddateien noch ausgeführte Ableitungs-/Sichtnachweise.
+Vorbereitete Bildarbeit benötigt einen passenden Inhaltsauftrag und die dafür
+tatsächlich verfügbare Teilfähigkeit; sie aktiviert keinen vollständigen neuen
+Produktionsweg und erweitert keine 0.6.0-Hülle.
+
+### 9.1 Isolierte visuelle Beurteilung
+
+Jedes Urteil verwendet die Ergebniswörter aus §2, nennt Befund und Methode
+und bindet Regelstand, Kandidat, Bildrevision, tatsächlich betrachtete Datei/Hash,
+Prüfer und Zeitpunkt. Die Kontextgrenze und tatsächlichen Datei-/Freigabebindungen
+des Hintergrundvertrags bleiben Voraussetzungen; eine redaktionelle Annahme
+ersetzt sie nicht.
+
+| Kriterium | Gegenstand und Zeitpunkt der isolierten Sichtung |
+| --- | --- |
+| Q-HG01 · Kontext statt Rätselsubjekt | Vor der Auswahl jede Datei mit Briefing, freigegebenem Abschlussbild und geschützten Merkmalen vergleichen. Bezug zum Umfeld ist gewünscht; der konkrete zu erratende Gegenstand, seine Lösungssilhouette, Rasterkopien, der Motivname und aus dem Spielerfortschritt abgeleitete Informationen gehören nicht ins Hintergrundbild. Offenes Briefing und tatsächliche Eigentümervorgabe unterscheiden. Indirekte Hinweise durch den Kontext sind möglich; keine universelle Spoilerfreiheit behaupten. |
+| Q-HG02 · Helle Graphitzeichnung | Echte ImageGen-Zeichnung mit hellen neutralgrauen Strichen, offenen/nachgezogenen Konturen und sparsamer Schraffur prüfen. Keine geometrische Ersatzzeichnung, eingebrannte UI oder Buchoberfläche, Schrift/Wasserzeichen oder deckende Papierimitation. Die Zeichnung soll das vorhandene Papier durchscheinen lassen. |
+| Q-HG03 · Luftige gemeinsame Komposition | Die Komposition auf das gemeinsame transparente 4:1-Zielformat mit proportionalem Fit und gemeinsamem Anker auslegen; Originale dürfen andere native Maße haben. Durchgehende oder offene Kompositionen sind zulässig; zwei getrennte Ecken sind keine Pflicht. Niedrige Mitte, U- oder Halb-U-Form sind Gestaltungsrichtungen, keine individuelle Höhenmaske. Keine individuellen Crops, Offsets oder Motivmasken, kein Strecken oder Verkleinern des Funktionslayouts zur Anpassung eines Motivs. |
+| Q-HG04 · Echte Transparenz und saubere Striche | Vor Auswahl und nach materieller Bildänderung offene Flächen und Zwischenräume zwischen Strichen an der tatsächlichen Datei prüfen; bei Bedarf neutrale Prüfgründe oder ein Transparenzraster verwenden. Ein Alphakanal allein genügt nicht. Weiße Bildkästen, gemaltes Schachbrett, deckende Zwischenflächen, störende Säume oder verlorene feine Striche erfüllen das Ziel nicht. |
+
+Die drei inhaltlich unterschiedlichen Kandidaten werden als drei gespeicherte,
+erreichbare Einzelbilder vorgelegt. Reine Format-/Auflösungsvarianten desselben
+Motivs zählen nicht mehrfach. Ein endgültiges Lösungsraster ist dafür nicht
+erforderlich. Ein Defizit mit gezieltem Korrekturvorschlag benennen; eine positive
+Dateidiagnose darf es nicht verdecken. Nur eine ausdrückliche Eigentümervorgabe
+ändert die anfängliche Kandidatenzahl im Einzelfall.
+
+### 9.2 Technische Diagnose, Bildentscheidung und Integration
+
+Datei-, Format-, Maß-, Hash- und Alphadiagnose sind technische Befunde an den
+gespeicherten Bytes. Sie beweisen weder Bildqualität noch Herkunft/Rechte oder
+eine tatsächliche Auswahl. Nur tatsächlich ausgeführte Prüfungen als solche
+melden; ein lokaler PNG-Befund belegt keinen späteren Engineimport oder Mipmaps.
+Die gemeinsame technische Ableitung wird erst in HP-W2 implementiert und geprüft.
+
+Die tatsächliche Auswahl zur Verwendung bindet nach dem Hintergrundvertrag
+die vorgelegte Datei/Bildrevision; eine ausdrücklich erklärte Leerentscheidung
+bindet den konkreten Arbeitsstand ohne Bilddatei. Empfehlung, Formularzustand,
+Schweigen und Dateiexistenz ersetzen diese Erklärung nicht. Eine offene oder abgelehnte Wahl
+bleibt offen beziehungsweise abgelehnt; fehlende/defekte deklarierte Daten sind
+Fehler. Legacy ist keine neue Leerentscheidung. Bewusst leer benötigt keine
+Nulltextur und ist kein automatischer Ersatz für die verlangten Kandidaten.
+
+Die Wahl wird mit den vorhandenen Motiv-/Endabnahmen gebündelt. Eine eindeutige
+frühere Wahl derselben unveränderten Datei bleibt gültig. Isolierte Einzelbilder
+genügen: keine Kandidaten-Testintegration, Buchvorschau, Godot-Starts oder
+zusätzliche persönliche Buchabnahme als Auswahl-/Freigabegate. Erst der spätere
+finale Integrationsweg übernimmt das gewählte gültig abgeleitete Bild oder die
+ausdrückliche Leerentscheidung zusammen mit dem endabgenommenen Rätsel.
+
+Materielle Änderungen an Illustration, Komposition oder Transparenz erfordern
+eine neue Entscheidung zur geänderten Fassung und erneuern die abhängigen
+Ableitungen. Vereinbarte deterministische Größenableitung und unveränderter
+Transport benötigen keine weitere kreative Wahl. Reine Raster-/Palettenänderung
+erzeugt keine Buchsichtpflicht; ein geänderter Motivkontext wird gezielt beurteilt.
+Eine reine Hintergrundrevision ändert keine Lösungs-, Hinweis-, Paletten-,
+Schwierigkeits- oder Saveidentität und erzwingt keine unveränderten Logiknachweise.
+Sicherung während der Auswahl und Abschluss der Arbeitsdateien folgen
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md) und dem Hintergrundvertrag;
+nach bestätigter Integration bleibt kein dauerhaftes Kandidatenarchiv.
+
+**Bestehende Bild-/Rasterqualität bleibt erhalten:** §§3–8, die
+[AT-Anforderungen](REVEAL_TRANSPARENCY.md) an Abschlussbilder und sämtliche
+Reveal-, Motiv-, Raster-/Hinweis-, Paletten- und Endabnahmen gelten weiter für
+ihre bisherigen Gegenstände. Der helle Graphitstil ersetzt keine ausgearbeitete
+farbige Enthüllung. Umgekehrt werden deren Papier-/Katalogsichtungen nicht zu
+einer zusätzlichen Buchsichtpflicht für Hintergrundkandidaten.
