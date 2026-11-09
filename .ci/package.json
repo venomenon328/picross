@@ -7,7 +7,7 @@
     "production.images",
     "production.adapter"
   ],
-  "purpose": "PB-H adds opt-in 0.7.0 background package construction and read-only content verification. tools checks routing, documentation and the unchanged 0.6.0 sheet snapshot; production.images covers typed background roots, local history, fresh HP-W2 verification and deterministic phase-correct builds; production.adapter checks inherited palette, proof, paired, provenance, difficulty and approval guarantees on the written ZIP and rejection by legacy export writers.",
+  "purpose": "PB-H adds opt-in 0.7.0 background package construction and read-only content verification. tools checks routing, documentation and the unchanged 0.6.0 sheet snapshot; production.images covers the reused HP-W2 file, image, profile and codec verification; production.adapter covers typed background roots, explicit local history, deterministic phase-correct builds, inherited palette, proof, paired, provenance, difficulty and approval guarantees on the written ZIP, and rejection by legacy export writers.",
   "omitted": "No production.solver/catalog, native, preflight, delivery or Chromium modules: no solver behavior, catalog/publication writer, runtime, web delivery or browser flow changes. Small synthetic change-scoped cases cover the changed boundaries; no real puzzle replay, image generation, gallery, new permanent core or technical artifact upload. The required development core supplies the regular Windows player package.",
   "test_changes": [
     {
