@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 7 · 09.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488); HP-W1 / [#560](https://github.com/venomenon328/picross/issues/560)**
+**Vertrag 1.0 · Dokumentrevision 8 · 09.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488); HP-W1/HP-W2 / [#560](https://github.com/venomenon328/picross/issues/560)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -29,9 +29,11 @@ Eine universelle Zusicherung der Farbwahrnehmung folgt daraus nicht.
 Abgenommene Bestandsrätsel, versiegelte Pakete, Freigaben, technische
 Regelversionen und historische Bewertungen werden nicht rückwirkend umgedeutet.
 
-§9 ergänzt die Zielqualität des [Hintergrundvertrags HP-W1](PUZZLE_BACKGROUNDS.md).
-Dieser zukünftige Weg ist noch nicht aktiviert. Der aktive Authoringstand 0.6.0,
-seine bestehenden Qualitäts-/Freigabegates und die Farbregel bleiben unverändert.
+§9 ergänzt die Zielqualität des [Hintergrundvertrags](PUZZLE_BACKGROUNDS.md).
+HP-W2 liefert dessen eigenständige technische Datei-/Bildableitung, keine
+visuellen Urteile oder vollständige Produktionsbereitschaft. Der Gesamtweg ist
+noch nicht aktiviert. Der aktive Authoringstand 0.6.0, seine bestehenden
+Qualitäts-/Freigabegates und die Farbregel bleiben unverändert.
 
 ## 2. Einzelurteile, Belege und Klassen
 
@@ -247,7 +249,7 @@ Die unabhängige Quellen-/Rechenprüfung ist im PR #546 dokumentiert.
 Die Regel ist ab ihrem Normmerge verbindlicher Sollstand für **neue** Rätsel.
 Der freiwillige Diagnosebericht `picross-palette-assessment-v1` aus P-B1 bindet
 die unveränderte Berechnung ausdrücklich an Normrevision 4 am Quellcommit
-`45b8fe697364bf73f4277c8b76f92d5c00400919`; diese Dokumentrevision 7 ändert
+`45b8fe697364bf73f4277c8b76f92d5c00400919`; diese Dokumentrevision 8 ändert
 Formel, Quantisierung, Grenzen und Referenzwerte nicht. **P-B2 aktiviert**
 Früh-/Endintegration und den geprüften äußeren Ausnahmeweg für neue 0.6.0-Pakete.
 Die visuelle Produktionsprüfung bleibt eigenständig. Authoring 0.5.0, Sheet v2
@@ -552,9 +554,10 @@ Keine zusätzliche allgemeine Freigabeschleife oder Pflicht-Probespielrunde.
 ## 9. Hintergrundzeichnungen je Rätsel · noch nicht aktivierter Sollweg
 
 Dieser Abschnitt konkretisiert die Bildqualität für
-[HP-W1](PUZZLE_BACKGROUNDS.md). Dort stehen der geschlossene Datenvertrag,
-Phasen, tatsächliche Auswahl, gezielte Invalidierung und Einführung. HP-W1
-liefert weder Bilddateien noch ausgeführte Ableitungs-/Sichtnachweise.
+[PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md). Dort stehen der geschlossene
+Datenvertrag, Phasen, tatsächliche Auswahl, gezielte Invalidierung und Einführung.
+HP-W2 stellt die eigenständige technische Ableitung nach §9.2 bereit; eine
+Werkzeuglieferung ist keine Bildproduktion oder ausgeführte Sichtprüfung.
 Vorbereitete Bildarbeit benötigt einen passenden Inhaltsauftrag und die dafür
 tatsächlich verfügbare Teilfähigkeit; sie aktiviert keinen vollständigen neuen
 Produktionsweg und erweitert keine 0.6.0-Hülle.
@@ -587,7 +590,12 @@ Datei-, Format-, Maß-, Hash- und Alphadiagnose sind technische Befunde an den
 gespeicherten Bytes. Sie beweisen weder Bildqualität noch Herkunft/Rechte oder
 eine tatsächliche Auswahl. Nur tatsächlich ausgeführte Prüfungen als solche
 melden; ein lokaler PNG-Befund belegt keinen späteren Engineimport oder Mipmaps.
-Die gemeinsame technische Ableitung wird erst in HP-W2 implementiert und geprüft.
+HP-W2 stellt dafür die eigenständige API/CLI `describe/derive/verify` gemäß
+[Hintergrundvertrag §4](PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle)
+bereit. Die lesende Prüfung kontrolliert Quellen, Befund und reproduzierte
+Ausgabe frisch. Ungeklärte Rechte oder ausstehende Sichturteile bleiben auch
+nach erfolgreicher technischer Vorbereitung offen; Alpha-Zählungen ersetzen
+insbesondere kein Q-HG04-Urteil zur Transparenz zwischen Strichen.
 
 Die tatsächliche Auswahl zur Verwendung bindet nach dem Hintergrundvertrag
 die vorgelegte Datei/Bildrevision; eine ausdrücklich erklärte Leerentscheidung

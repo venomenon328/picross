@@ -1,11 +1,20 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/560",
-  "package": "HP-W1",
-  "modules": [],
-  "purpose": "HP-W1 documents the inactive background workflow, closed future data/selection contracts, HP-W2 interface and reader/writer rollout. The current Authoring 0.6.0 path and executable readers remain unchanged. The complete diff contains only Markdown, the matching HTML rulebook snapshot/revision metadata and this package plan.",
-  "omitted": "No tools, production.*, native.*, preflight, delivery or Chromium modules: no executable tool, image, integration, runtime or test code changes. No real puzzle replay or image production. One existing offline-sheet regression runs once for the updated snapshot and actual JavaScript prompt definitions; contract cases are inspected in the PR self-review and subsequent independent review.",
-  "test_changes": [],
+  "package": "HP-W2",
+  "modules": [
+    "tools",
+    "production.images"
+  ],
+  "purpose": "HP-W2 implements standalone background describe/derive/verify. Small synthetic image, strict binding, filesystem, process-lock, fault and transport tests cover the new boundary. production.images also verifies shared RP-3 normalization extraction and the necessary GRAY-ICC correction for supported 1/L/LA images; tools audits routing and the authoring rulebook snapshot.",
+  "omitted": "No additional production.solver/adapter/catalog, native, preflight, delivery or Chromium modules: no solver, adapter, catalog writer, runtime or browser behavior changes. Shared decoder changes are confined to color normalization and directly covered by existing and new image tests; imported path/I/O helpers remain unchanged. No real puzzle replay, image generation, gallery or technical artifact upload. The development core supplies the required Windows player package.",
+  "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_background_assets.py",
+      "disposition": "change-scoped",
+      "reason": "Retain small synthetic regression cases for the persistent standalone API and its data integrity; executed only when production.images is selected, not as a new universal CI obligation."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

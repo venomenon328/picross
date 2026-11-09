@@ -54,11 +54,14 @@ Main-Integration folgt der eigene Produktionsabschluss nach Authoring §9.
 Runtime, Rechte, aktive Metadaten und kompakte Freigabe-/Integrationsbindungen
 bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 
-Der [Hintergrundvertrag HP-W1](PUZZLE_BACKGROUNDS.md) spezifiziert den zukünftigen
-Weg für Kontextzeichnungen je Rätsel. Er ist noch nicht aktiviert; Authoring
-0.6.0 und der integrierte PB-A-Paketbau bleiben der unterstützte Produktionsweg.
-Der Vertrag trennt vorbereitete Bildarbeit, tatsächlich verfügbare Teilfähigkeiten
-und die spätere vollständige Einführung. HP-W1 ersetzt keine Runtimezeichnungen.
+Der [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md) spezifiziert den zukünftigen
+Weg für Kontextzeichnungen je Rätsel. HP-W2 liefert die eigenständigen Arbeits-/
+Entscheidungs-/Ableitungsformen und die lokale API/CLI `describe/derive/verify`.
+Der vollständige Weg ist noch nicht aktiviert; Authoring 0.6.0 und der integrierte
+PB-A-Paketbau bleiben der unterstützte Produktionsweg. Vorbereitete Bildarbeit
+ist keine Paket-/ZA-1-Zulassung oder finale Integration. HP-W2 ersetzt keine
+Runtimezeichnungen; neue Verbraucher und die vollständige Einführung folgen
+der Einführungsmatrix des Vertrags.
 
 ## Pflichtquellen nach Auftrag
 
