@@ -1,5 +1,59 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+## PB-H · opt-in 0.7.0-Inhaltsprüfung ohne finalen Export
+
+[Paket PB-H / #489](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
+ergänzt die rein lesende Prüfung von Handoff v3 mit dem vollständigen
+[Authoring-0.7.0-Vorschausnapshot](ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md).
+Geschlossene Formen, getrennte Dateiwurzeln, Hintergrundentscheidungen und
+Phasen stehen in [PUZZLE_BACKGROUNDS §§2–8](PUZZLE_BACKGROUNDS.md).
+Der aktive Default bleibt 0.6.0. Die folgenden bestehenden v1–v5-Export-,
+Registrierungs-, Recovery- und Abschlussverträge werden dadurch nicht für
+neue Hintergrunddaten geöffnet.
+
+Öffentliche API: `authoring_package.open_package(path, allow_background=True,
+history_repo=..., external_root=...)`, danach
+`target_adapter.inspect(package, ..., allow_background=True)`. Beide opt-in
+Grenzen sind erforderlich; ohne sie wird die neue Generation zurückgewiesen.
+`history_repo` ist nur der ausdrücklich übergebene lokale Gitkontext für den
+exakten `history`-Commit; kein Fetch/Checkout und kein Raten von Quellenwurzeln.
+`external_root` bezeichnet bei vorhandenen äußeren Belegen deren sichere Wurzel.
+Der PB-H-Builder verwendet diese Prüfung am tatsächlich geschriebenen ZIP.
+Kein neuer Inspect-CLI und kein automatischer Aufruf schreibender Folgeoperationen.
+
+`raster_ready` muss sämtliche bisherigen 0.6.0-Inhaltsgarantien erfüllen:
+frische Ist-Palette und gebundene Norm, tatsächlicher Sichtrecord und gegebenenfalls
+konkrete Ausnahme, vollständige unabhängige Proofs, Paarbaseline/`certification`,
+Herkunfts-Replay, Reveal-/Motivfreigaben, feste Parameter, Randregel und Difficulty.
+Nur Hintergrundbereitschaft und finale Endabnahme dürfen fehlen. `content_ready`
+verlangt zusätzlich eine gültige Auswahl, geklärte Nutzungsrechte, gebundene
+Q-HG-Urteile und mit HP-W2 frisch verifizierte Ableitung beziehungsweise eine
+ausdrückliche Leerentscheidung samt Nullbefund. Frühe Bildphasen erhalten nur
+ihre fällige Form-/Dateiprüfung, kein behauptetes Inhaltszertifikat. Kein
+vorübergehendes Umetikettieren auf 0.6.0 und keine schwächere zweite Prüfpipeline.
+
+Der lesende Bericht heißt `picross-authoring-content-inspection-v1` und führt
+neben den tatsächlich ausgeführten Inhaltsprüfungen `original_state`,
+`effective_state` und stets **`integration_ready=false`**. Das Originalhandoff
+bleibt unverändert; eine spätere tatsächlich vorhandene Entscheidung kann im
+lesenden Ergebnis weiter reichen als dessen ursprüngliche Phase. Der Bericht
+ist weder `picross-target-inspection-v5` noch ein Export-/Registrybeleg.
+
+Eine mitgegebene `approval.json` wird als `picross-editorial-approval-v2` nach
+Hintergrundvertrag §5 geprüft: tatsächlicher Akteur/Zeitpunkt/Erklärung,
+Original-ZIP-/Handoff-/Inventarhash, Rasterauswahl, Manifest, Entscheidung,
+Original, Ableitung, Profil, Ausgabe und `test_only`. Vorhandene äußere
+Entscheidung/Ableitung werden nur mit ausdrücklich gebundenen Wurzeln gelesen;
+aktive Belege bleiben vollständig erforderlich. Der Reader erzeugt keine
+Freigabe, datiert sie nicht neu und bindet sie nicht auf andere Bytes um.
+
+HP-I1 übernimmt erst die sicheren späteren Sidecar-/Recordwriter, finalen
+Export-/Registry-/Receiptgenerationen, Einzelintegration, Hintergrundersatz,
+Recovery-/Folgeoperationen und Produktionsabschluss. HP-I2 liefert die Runtime.
+PB-H liest die dafür nötigen Inhaltsbindungen vorab, liefert aber keinen
+vollständigen Integrationsweg. Versiegelte 0.4.x/0.5.0/0.6.0-Originale behalten
+ihre bisherigen Formen und Befugnisse.
+
 ## P-B2 · Authoring 0.6.0 und additive Palettengeneration v5
 
 Vertrag vor Code, 08.11.2026, [P-B2 / #488](https://github.com/venomenon328/picross/issues/488).
@@ -191,12 +245,15 @@ Ordner oder ein ZIP mit optional genau einem Wurzelordner. Mitgeliefertes HTML,
 Code und historische Archive werden niemals ausgeführt oder weiter entpackt.
 Das Werkzeug ruft weder Netzwerk noch Git-Schreibaktionen auf.
 
-Unterstützt: `picross-authoring-handoff-v2`, Regelwerk 0.4.0/0.4.1/0.5.0/0.6.0,
+Der bestehende Default-/Exportweg unterstützt `picross-authoring-handoff-v2`,
+Regelwerk 0.4.0/0.4.1/0.5.0/0.6.0,
 `picross-authoring-file-inventory-v1` sowie unveränderte RP-3/RP-5-Verträge.
 Redaktionelle Zusatzfelder bleiben erhalten. Pflichtbindungen sind typisiert;
 unbekannte technische Schemas, doppelte JSON-Schlüssel, nichtendliche Zahlen
 und fehlende Dateien sind Fehler. Das Inventar schließt Inventar und Handoff aus;
-alle anderen Originaldateien bindet es mit Größe und SHA-256.
+alle anderen Originaldateien bindet es mit Größe und SHA-256. Die oben
+beschriebene explizite PB-H-Lese-API ergänzt Handoff v3/0.7.0; der Default-
+und Exportvertrag bleibt geschlossen.
 
 | Grenze | Wert |
 | --- | --- |

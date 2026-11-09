@@ -1,6 +1,6 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**Vertrag 1.0 · Dokumentrevision 2 · 09.11.2026 · HP-W1/HP-W2 / #560**
+**Vertrag 1.0 · Dokumentrevision 3 · 09.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -10,8 +10,8 @@ Dieser Vertrag schließt den noch **nicht aktivierten** Produktionsweg aus
 Maßgeblich sind die [Eigentümerkorrektur zur isolierten Auswahl](https://github.com/venomenon328/picross/issues/560#issuecomment-6744957790)
 und [#558 / D01](https://github.com/venomenon328/picross/issues/558#issuecomment-6744063800).
 Die Evaluierung wird nicht übernommen; PR #559 bleibt geschlossen und ungemergt.
-Der integrierte RAND-P1 ist ein Konzeptpilot. HP-W1/HP-W2 ersetzen weder dessen
-Kategoriezeichnungen noch bereits ausführbare Reader oder Runtimepfade.
+Der integrierte RAND-P1 ist ein Konzeptpilot. HP-W1/HP-W2/PB-H ersetzen weder
+dessen Kategoriezeichnungen noch die Runtimepfade.
 
 Geprüfte Vertragsbasis: `main@e8da5dbdc48a355a3de5888f882ce1e25843915d`.
 **Aktiv bleibt Authoring 0.6.0**, mit der jeweils tatsächlich gebundenen
@@ -19,10 +19,15 @@ Dokumentrevision und dem dazugehörigen Snapshot. Auf den Dokumentvertrag HP-W1
 folgt die eigenständig nutzbare Teilfähigkeit
 [HP-W2](https://github.com/venomenon328/picross/issues/560#issuecomment-6748799473):
 Arbeitsmanifest, Entscheidung, Ableitungsauftrag und Befund nach §§3–4 sowie
-`describe`, `derive` und lesendes `verify` sind unterstützt. Der vollständige
-Produktionsweg bleibt **inaktiv**. Die neuen Handoff-/Paket-/Sheetformen und
-Phasen sind noch nicht unterstützt; Bildproduktion, ZA-1-Zulassung, finale
-Integration und Runtime werden durch HP-W2 nicht geliefert.
+`describe`, `derive` und lesendes `verify` sind unterstützt.
+[PB-H](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312),
+auf Basis `main@c0264ca84b99647bbe79460b16c57962c3130d33`, ergänzt den
+deterministischen Paketbau und die lesende Inhaltsprüfung mit dem vollständigen
+[0.7.0-Vorschausnapshot](ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md):
+Bauauftrag v2, Handoff v3, Record v2, Bauresultat v2 und Sheet-Update v3.
+Der vollständige Produktionsweg bleibt **inaktiv**. Spätere äußere Pflege,
+finaler Export/Integration und Runtime folgen in HP-I1/I2, neue Sheetbedienung
+in #490. Diese Werkzeugfähigkeiten sind keine ausgeführte Bildproduktion.
 
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) bleibt für vier Aufträge,
 vorhandene Bild-/Motiv-/Rasterfreigaben und Abschluss zuständig,
@@ -77,9 +82,12 @@ Buchabnahme oder zusätzliche Standarddialogphase.
 
 ### Phasen für Authoring 0.7.0 / Handoff v3
 
-Die folgende Semantik gilt ausschließlich für den zukünftigen Weg. Die heutige
-0.6.0-Bedeutung von `content_ready`, ihre Inhaltsgates und die ZA-1-Prüfung auf
-dem geschriebenen ZIP bleiben unverändert.
+Die folgende Semantik gilt für den ausdrücklich gewählten 0.7.0-Vorschaustand.
+PB-H baut die Phasen bis einschließlich `content_ready`; ein neues Original
+mit finalem Abnahme-/Exportzustand wird nicht gebaut. Die folgenden späteren
+Zustände beschreiben weiterhin HP-I1/I2. Die heutige 0.6.0-Bedeutung von
+`content_ready`, ihre Inhaltsgates und die ZA-1-Prüfung auf dem geschriebenen ZIP
+bleiben unverändert.
 
 | Phase | Erforderlicher Befund / zulässige offene Entscheidung |
 | --- | --- |
@@ -618,7 +626,9 @@ den exakten dokumentierten und ausführbaren Vertrag an der in §1 genannten
 Commitbasis. Die angegebenen Deltas sind vollständig; alte Generationen
 behalten ihre eigenen geschlossenen Feldmengen. Unbekannte deklarierte Formate
 und neue Felder in alten Hüllen werden abgewiesen, nicht entfernt oder als
-Freitext versteckt. Die folgenden Änderungen sind **nur spezifiziert**.
+Freitext versteckt. PB-H unterstützt §§7.1–7.2 und die **Ausgabe** von
+Sheet-Update v3 nach §7.3. Spätere äußere Fortschreibung gehört HP-I1;
+Sheetimport, Sitzung v5 und Auftrag v4 bleiben für #490 spezifiziert.
 
 ### 7.1 Hintergrundbindung und Handoff v3
 
@@ -666,6 +676,12 @@ nicht ersetzt werden. Der Reader unterscheidet die aktive erforderliche
 Referenzmenge von historischen verworfenen Alternativen; keine leere/defekte
 deklarierte aktive Datei wird als historisch erklärt. Ein lokaler Transport ohne
 erreichbaren gesicherten früheren Stand behält sämtliche angebotenen Dateien.
+PB-H erhält diesen Kontext ausschließlich als optionalen API-Parameter
+`history_repo` beziehungsweise `--history-repo <checkout>`. Der Reader liest
+die exakte bereits lokal vorhandene Gitrevision aus `history`; kein Fetch,
+Checkout, Schreibzugriff oder Raten einer Arbeitswurzel. Dies ist kein weiteres
+Bauauftragsfeld. Eine verlangte Weglassung ohne belegbaren lokalen Kontext
+ist ein Fehler; aktive Quellen oder Belege sind dadurch nie ersetzbar.
 
 ### 7.2 Äußerer Record v2, Inventar und Builder
 
@@ -702,7 +718,22 @@ dürfen in frühen Handoffs unabhängig vom finalen ZA-1-Gate gesichert werden.
 `approval.json` als finale Freigabe bleibt an vollständig geprüfte
 Inhaltsbereitschaft gebunden. Nachträgliche äußere Recordpflege bindet Sidecars
 nach §3.1/5/7.1, verändert keine Originalpaketbytes und ist keine erneute
-`build`-Versiegelung. Ihr tatsächlicher sicherer Writer gehört HP-I1.
+`build`-Versiegelung. Ihr tatsächlicher sicherer Writer gehört HP-I1. PB-H erzeugt oder datiert
+keine Endfreigabe und bindet vorhandene Erklärungen nicht auf neue Bytes um;
+er liest ausschließlich eine bereits passende `approval.json` v2.
+
+Bei `raster_ready` und `content_ready` wird das **geschriebene ZIP** frisch
+über die bestehenden Package-/Zieladapterprüfungen rein lesend kontrolliert.
+`raster_ready` verlangt sämtliche bisherigen 0.6.0-Inhaltsgarantien; nur
+Hintergrundbereitschaft und finale Endabnahme dürfen offen sein. `content_ready`
+verlangt zusätzlich gültige Hintergrundwahl, geklärte Rechte, konkrete
+Q-HG-Urteile und frisch mit HP-W2 geprüftes Asset beziehungsweise Nullbefund.
+Die Prüfung setzt keinen Produktstatus selbständig hoch und gibt keinen neuen
+Hintergrundeingang für alte v5-Exporte oder Registrierungswriter frei.
+Verschachtelte, gebundene Hintergrund-`derivation.json` ist erlaubt; die
+Authoring-Teilkopie im Root, ZIP-Verschachtelung und Neuversiegelung bleiben
+ausgeschlossen. Pfad-/Dateihashes und innere Ref-Pfade bleiben unverändert;
+nur äußere `StoredRef`-Wurzeln lokalisieren transportierte Bytes.
 
 **`picross-authoring-build-result-v2`** behält exakt die bisherige erfolgreiche
 Hülle `format,status,directory,indexed,record,sheet,files` beziehungsweise die
@@ -811,17 +842,18 @@ deshalb niemals neue Arbeit als scheinbar kompatiblen v1-Record ausgeben.
 | --- | --- |
 | **HP-W1 / #560:** dieser Fachvertrag, Authoring/Snapshot, Qualität, Profil, Produkt/Design, Produktions-/Werkzeugrouting | Geliefert: Sollvertrag und Dokumentrevision. Aktive Version 0.6.0, durch HP-W1 keine geänderten ausführbaren Reader/Writer. |
 | **HP-W2 / #560:** `tools/puzzle_production/background_assets.py` und zugehörige Hintergrundhilfen | Geliefert: eigenständige Arbeits-/Entscheidungs-/Ableitungsformen und API/CLI `describe/derive/verify` nach §3–4. Kleine synthetische Tests sichern die Datei-/Bildfähigkeit. Frühe Bildarbeit bleibt vorbereitet; kein Handoffbau oder ZA-1-/Runtimeversprechen. |
-| **PB-H / #489:** `tools/puzzle_production/authoring_build_contract.py`, `authoring_builder.py`, `authoring_package.py` | Geschlossene neue Format-/Phasenzulassung, sichere Referenzmenge für angebotene/gewählte Bilder, Builder v2, Record v2 und Sheet-v3-Projektion. Eigene Normalisierung verboten; HP-W2 verwenden. Frühe Pakete brauchen keinen finalen Adaptererfolg; `content_ready` weiterhin vollständige passende Prüfung. |
-| **HP-I1 / #561:** `tools/puzzle_production/target_adapter.py`, `authoring_package.py`, `content_registry.py`, `catalog_integration.py`, `integrated_content.py` | Finale v3-/0.7.0-Eingänge samt äußerer Hintergrundentscheidung/Ableitung und Endfreigabe v2 prüfen; sichere Einzelintegration und späterer reiner Hintergrundersatz. Export-/Registry-/Receiptformen erst mit ihren tatsächlich betroffenen Deltas versionieren. Eine bloße Versionswhitelist liefert diese Fähigkeit nicht. |
+| **PB-H / #489:** `tools/puzzle_production/authoring_build_contract.py`, `authoring_builder.py`, `background_package.py`, `authoring_package.py` und der lesende Teil von `target_adapter.py` | Geliefert: vollständiger opt-in 0.7.0-Vorschausnapshot, geschlossene Format-/Phasenzulassung, typisierte Referenzmenge samt explizitem lokalen Historykontext, Builder v2, Record v2 und Sheet-v3-Projektion. Frische HP-W2-Verifikation, vollständige lesende Inhaltsprüfung des geschriebenen ZIPs bei `raster_ready`/`content_ready` und Lesen bereits gebundener Endfreigabe v2. Kein späterer Sidecarwriter oder finaler Export. |
+| **HP-I1 / #561:** `tools/puzzle_production/target_adapter.py`, `authoring_package.py`, `content_registry.py`, `catalog_integration.py`, `integrated_content.py` | Noch offen: sichere spätere äußere Entscheidung/Ableitung/Endfreigabe und Recordfortschreibung, finaler Export, Einzelintegration und späterer reiner Hintergrundersatz. Die PB-H-Inhaltsprüfung wiederverwenden; Export-/Registry-/Receiptformen erst mit ihren tatsächlich betroffenen Deltas versionieren. Eine bloße Versionswhitelist liefert diese Fähigkeit nicht. |
 | **HP-I1 gemeinsame Veröffentlichung:** `catalog_transaction.py`, `catalog_publication.py`, `catalog_io.py`, `registration_publication.py`, `registration_verification.py`, betroffene Folgeoperationen `content_update.py`, `content_registry.py`, `catalog_reveal.py`, `reveal_source.py`, `reveal_retirement.py`, `integrated_content.py` unter `tools/puzzle_production/` | Aktive Hintergrundbindung in Quellen-/Namespaceprüfung, Konflikten, No-op, Recovery, Folgeoperationen und Abschluss erhalten; fremde/defekte Daten blockieren. Genaue Writer-/Journalergänzungen gehören HP-I1, HP-W1 erfindet keine neue ausführbare Transaktion. |
 | **HP-I2 / #561:** `game/model/content_registry.gd`, erzeugte `game/data/registry.json`, `game/book/content.gd`, `game/book/marginalia.gd` | Kompatibler neuer Runtimeeingang, Variante A, gemeinsames Assetlayout, verlustfreier Import/Mipmaps und Bedarfsladen. Der heutige `marginalia.gd`-Pilot mit Kategoriepreloads/individuellen Regionen ist keine Produktionsschnittstelle. Keine Kandidatenvorschau. |
-| **#490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html`, insbesondere `parseTransfer`, `validateChoices`, `saveSession`, `loadSession`, `brief`, `exportPackage` und zugehörige Prompt-/Auswahlprojektion | Record v2, Update v3, Sitzung v5 und Auftrag v4 verlustfrei führen; vorhandene v1–v4-Alteingänge getrennt erhalten. In HP-W1/HP-W2 ausschließlich bytegleicher Regelwerksnapshot und Revisionsangaben, keine neue Bedien-/Importfähigkeit. |
+| **#490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html`, insbesondere `parseTransfer`, `validateChoices`, `saveSession`, `loadSession`, `brief`, `exportPackage` und zugehörige Prompt-/Auswahlprojektion | Record v2, Update v3, Sitzung v5 und Auftrag v4 verlustfrei führen; vorhandene v1–v4-Alteingänge getrennt erhalten. In HP-W1/HP-W2/PB-H ausschließlich bytegleicher aktiver 0.6.0-Regelwerksnapshot und Revisionsangaben; PB-Hs neue Builderausgabe ist noch keine Bedien-/Importfähigkeit. |
 | **#491 / #492** | Nur tatsächlich gelieferte Fähigkeiten orchestrieren beziehungsweise in gesondert beauftragter Produktion erproben. Keine parallelen Hintergrundformate oder künstliche Vollintegration durch Ergebnisflags. |
 
-Die heute explizit an **0.6.0** gebundenen Palettengates in
-`target_adapter.inspect`/`verify_export` und die Paar-/Difficultyzulassung in
-`authoring_package`/`target_adapter` müssen für die neue Generation ausdrücklich
-mitgeführt werden. Handoff v3/0.7.0 erbt sämtliche bisherigen 0.6.0-Garantien:
+PB-H führt die zuvor explizit an **0.6.0** gebundenen Palettengates und
+Paar-/Difficultyzulassungen für die **lesende Inhaltsprüfung** der neuen
+Generation ausdrücklich mit. `verify_export` und die schreibenden Verbraucher
+bleiben bei ihren tatsächlich unterstützten alten Generationen; deren neuer
+Anschluss gehört HP-I1. Handoff v3/0.7.0 erbt sämtliche bisherigen 0.6.0-Garantien:
 frische Istpalette und Normbindung, echte Sichturteile/konkrete Ausnahme,
 vollständige unabhängige Proofs, Paarbaseline und `certification`, Herkunft,
 Bild-/Motiv-/Endfreigaben, feste Parameter, Randregel und Difficulty.
@@ -858,7 +890,7 @@ neues Kandidatenarchiv. Historische Freigaben werden nicht umgeschrieben.
 Noch offene/neuere Arbeit erhalten. Ein reiner späterer Hintergrundersatz hat
 seinen eigenen revisionsgenauen Abschluss; keine Wiederherstellung gelöschter
 Rasterproduktion. Die vorhandenen Cleanupbefehle unterstützen diese neuen
-Daten erst nach dem zuständigen HP-I1-Anschluss, nicht bereits durch HP-W1/HP-W2.
+Daten erst nach dem zuständigen HP-I1-Anschluss, nicht bereits durch HP-W1/HP-W2/PB-H.
 
 Die folgenden **synthetischen Vertragsfälle** sind keine erzeugten Bilder,
 Freigaben, ausgeführten Programme oder Produktionsnachweise:
@@ -878,9 +910,10 @@ Freigaben, ausgeführten Programme oder Produktionsnachweise:
 HP-W1 prüfte diese Verträge am tatsächlichen Dokumentdiff. HP-W2 ergänzt die
 ausführbare Datei-/Bildfähigkeit mit kleinen synthetischen Tests für Deterministik,
 Ressourcen-/Pfad-/Alpha-/Konfliktfälle; konkrete Laufnachweise gehören in seinen PR.
-Verbraucher und Runtime folgen in ihren Paketen, drei reale erreichbare Bilddateien
-im gesonderten Produktionsauftrag. HP-W1/HP-W2 schließen weder #560 noch den
-Gesamtplan #563.
+PB-H ergänzt kleine synthetische Paket-/Referenz-/Phasen-/Inhaltsfälle;
+konkrete Laufnachweise gehören in seinen PR. Finale Writer und Runtime folgen
+in ihren Paketen, drei reale erreichbare Bilddateien im gesonderten
+Produktionsauftrag. HP-W1/HP-W2/PB-H schließen weder #560 noch den Gesamtplan #563.
 
 ### 9.1 Vollständiges synthetisches Formbeispiel: früher bewusster Verzicht
 

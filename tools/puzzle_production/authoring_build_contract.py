@@ -1,4 +1,4 @@
-"""PB-A input and phase bindings. Early phases deliberately do not certify logic."""
+"""PB-A/PB-H input and phase bindings; early phases never certify logic."""
 from pathlib import PurePosixPath
 import re
 
@@ -6,7 +6,12 @@ from . import authoring_package as ap, catalog_io as io
 from .contract import canonical_bytes, exact_keys, integer, load_json
 
 FORMAT = 'picross-authoring-build-request-v1'
+BACKGROUND_FORMAT = 'picross-authoring-build-request-v2'
 STATES = ('brief_ready', 'reveal_review', 'motif_review', 'raster_review', 'content_ready')
+BACKGROUND_STATES = (*STATES, 'motif_approved', 'raster_ready')
+GATES = set('reveal_approval motif provenance logic frame visual difficulty '
+            'reveal_consistency final_editorial target_export'.split())
+BACKGROUND_GATES = GATES | {'background_choice', 'background_asset'}
 EXTERNAL = {'approval.json', 'manual-authorization.json', 'owner-override.json', 'palette-exception.json'}
 HANDOFF_KEYS = set('format puzzle_id revision repo_commit state rulebook inventory brief report decisions effort '
                    'approved_parameters proposed_parameters reveal motif candidate repair difficulty gates gate_evidence '
@@ -59,15 +64,19 @@ def names(paths):
                        for n in range(1, len(name.split('/')))), 'File/directory collision')
 
 
-def source_record(value, *, member=False):
+def source_record(value, *, member=False, background=False):
     exact_keys(value, {'source', 'sha256', 'bytes'} | ({'path'} if member else set()))
     ap.relative(value['source'])
     ap.sha(value['sha256'])
     integer(value['bytes'], 0, ap.MAX_FILE, 'source bytes')
     if member:
         ap.relative(value['path'])
-        ap.require(PurePosixPath(value['path']).name not in
-                   ('handoff.json', 'inventory.json', 'derivation.json', 'package.zip'),
+        reserved = {'handoff.json', 'inventory.json', 'derivation.json', 'package.zip'}
+        # Only PB-H may carry a nested, subsequently typed/verified HP-W2
+        # derivation. The root Authoring derivation and resealing stay forbidden.
+        if background and '/' in value['path']:
+            reserved.remove('derivation.json')
+        ap.require(PurePosixPath(value['path']).name not in reserved,
                    'Cannot reseal or embed a sealed authoring package')
         ap.require(not value['path'].lower().endswith('.zip'), 'Embedded archives are unsupported')
 
@@ -77,32 +86,41 @@ def validate_request(value):
     r = io.json_bytes(canonical_bytes(value), 8 * 1024 * 1024)
     exact_keys(r, {'format', 'handoff', 'document_revision', 'files', 'target',
                    'category_id', 'reveal_options', 'external'})
-    ap.require(r['format'] == FORMAT, 'Unsupported build request')
+    ap.require(r['format'] in (FORMAT, BACKGROUND_FORMAT), 'Unsupported build request')
+    background = r['format'] == BACKGROUND_FORMAT
     integer(r['document_revision'], 1, 1_000_000, 'rulebook document revision')
     ap.require(r['target'] in ('local', 'repository'), 'Invalid publication target')
     if r['category_id'] is not None:
         ap.require(isinstance(r['category_id'], str) and re.fullmatch(r'[a-z][a-z0-9-]{0,63}', r['category_id']),
                    'Invalid category ID')
     h = r['handoff']
-    ap.require(isinstance(h, dict) and set(h) <= HANDOFF_KEYS, 'Unknown handoff fields; use editorial for prose')
-    ap.require(h.get('format') == 'picross-authoring-handoff-v2' and h.get('inventory') is None,
-               'Only unsealed Authoring v2 drafts can be built')
+    ap.require(isinstance(h, dict) and set(h) <= HANDOFF_KEYS | ({'background'} if background else set()),
+               'Unknown handoff fields; use editorial for prose')
+    ap.require(h.get('format') == ('picross-authoring-handoff-v3' if background else 'picross-authoring-handoff-v2')
+               and h.get('inventory') is None, 'Only matching unsealed Authoring drafts can be built')
+    if background:
+        from .background_package import validate_binding
+        validate_binding(h.get('background'))
     ap.require(isinstance(h.get('puzzle_id'), str) and ap.ID.fullmatch(h['puzzle_id']), 'Invalid puzzle ID')
     ap.require(isinstance(h.get('revision'), str) and ap.REVISION.fullmatch(h['revision']), 'Invalid revision')
     names([h['puzzle_id'] + '/' + h['revision'] + '/record.json'])
-    ap.require(h.get('state') in STATES, 'Unsupported build phase')
+    ap.require(h.get('state') in (BACKGROUND_STATES if background else STATES), 'Unsupported build phase')
     ap.require(isinstance(h.get('repo_commit'), str) and re.fullmatch(r'[0-9a-f]{40}', h['repo_commit']),
                'Missing actual source commit')
     exact_keys(h.get('rulebook'), {'version', 'file', 'sha256'})
-    ap.require(h['rulebook']['version'] == '0.6.0', 'New production requires Authoring 0.6.0; old packages stay sealed')
+    ap.require(h['rulebook']['version'] == ('0.7.0' if background else '0.6.0'),
+               'Build generation and authoring rulebook differ; old packages stay sealed')
     ap.relative(h['rulebook']['file'])
     ap.sha(h['rulebook']['sha256'])
     for key in ('brief', 'next_action', 'authorization'):
         ap.string(h.get(key), key)
     ap.require(type(h.get('test_only', False)) is bool, 'Invalid test_only')
     ap.require(isinstance(h.get('gates'), dict), 'Missing phase gates')
-    ap.require(set(h['gates']) <= set('reveal_approval motif provenance logic frame visual difficulty '
-                                    'reveal_consistency final_editorial target_export'.split()), 'Unknown gate')
+    ap.require(set(h['gates']) == BACKGROUND_GATES if background else set(h['gates']) <= GATES,
+               'Unknown or missing gate')
+    if background:
+        ap.require(isinstance(h.get('gate_evidence'), dict) and set(h['gate_evidence']) == BACKGROUND_GATES,
+                   'Handoff v3 requires exactly twelve gate evidence fields')
     ap.require(all(v in ('pending', 'pass', 'fail', 'blocked') for v in h['gates'].values()), 'Invalid gate status')
     ap.require(h['gates'].get('final_editorial') != 'pass' and h['gates'].get('target_export') != 'pass' and
                h.get('final_editorial_approval') is None, 'Later final approval/export belongs outside the original handoff')
@@ -113,7 +131,7 @@ def validate_request(value):
     ap.require(isinstance(h.get('approved_parameters', []), list), 'Invalid parameter corridor')
     ap.require(isinstance(r['files'], list) and r['files'], 'Explicit file list required')
     for item in r['files']:
-        source_record(item, member=True)
+        source_record(item, member=True, background=background)
     names([item['path'] for item in r['files']] + ['handoff.json', 'inventory.json'])
     ap.require(sum(item['bytes'] for item in r['files']) <= ap.MAX_TOTAL, 'Package byte limit')
     ap.require(isinstance(r['external'], dict) and set(r['external']) <= EXTERNAL, 'Unknown external evidence')
@@ -133,7 +151,7 @@ def validate_request(value):
         ap.string(option['Beschreibung'], 'option description')
         ap.relative(option['Datei'])
         ap.sha(option['SHA-256'])
-    if h['state'] in ('motif_review', 'raster_review', 'content_ready'):
+    if h['state'] in ('motif_review', 'motif_approved', 'raster_review', 'raster_ready', 'content_ready'):
         ap.require(not r['reveal_options'], 'Selected reveal must not retain candidate gallery')
     if h['state'] == 'content_ready':
         ap.require(not h.get('content_blockers') and all(b == 'final_editorial: missing bound human final approval'
@@ -175,7 +193,8 @@ def references(p):
                 walk(child, parent)
         elif isinstance(value, dict):
             if 'format' in value:
-                ap.require(isinstance(value['format'], str) and value['format'] in FORMATS,
+                handoff_v3 = value is p.handoff and value.get('format') == 'picross-authoring-handoff-v3'
+                ap.require(isinstance(value['format'], str) and (value['format'] in FORMATS or handoff_v3),
                            'Unsupported declared technical format: ' + str(value['format']))
             # Historical references are deliberately external and must name an
             # exact Git location and decision. They cannot replace live inputs.
@@ -198,7 +217,7 @@ def references(p):
                     path = p.file((parent / ap.relative(name)).as_posix())
                     ap.require(ap.file_hash(path) == ap.sha(expected), 'Manifest file hash mismatch: ' + name)
             for key, child in value.items():
-                if key in ('files',):
+                if key == 'files' or key == 'background' and value is p.handoff:
                     continue
                 if isinstance(child, str) and key in ('evidence', 'prompt_file', 'proof', 'verification',
                                                        'baseline_proof', 'assessment_file'):
@@ -206,6 +225,8 @@ def references(p):
                 walk(child, parent)
 
     for name in sorted(p.files):
+        if name in getattr(p, 'background', {}).get('files', set()):
+            continue  # Already closed using explicit typed background roots.
         with p.file(name).open('rb') as stream:
             prefix = stream.read(128).lstrip()
         if name.endswith('.json') or prefix.startswith((b'{', b'[')):
@@ -213,15 +234,16 @@ def references(p):
             # for unformatted editorial records; unknown schemas are not dropped.
             # RP reports contain full-precision elapsed floats; the catalog-only
             # 16-character numeric-token rule does not apply to these originals.
-            value = load_json(p.file(name), ap.MAX_FILE)
+            value = p.handoff if name == 'handoff.json' else load_json(p.file(name), ap.MAX_FILE)
             walk(value, PurePosixPath(name).parent)
 
 
-def validate_phase(root, r, deadline):
+def validate_phase(root, r, deadline, *, history_repo=None):
     h = r['handoff']
     p = PhaseFiles(root, h, deadline)
     snapshot = p.bound(h['rulebook']).read_text(encoding='utf-8')
-    ap.require(re.search(r'^\*\*Version 0\.6\.0 · Dokumentrevision ' + str(r['document_revision']) + r' ·', snapshot, re.M),
+    ap.require(re.search(r'^\*\*Version ' + re.escape(h['rulebook']['version']) +
+                        r' · Dokumentrevision ' + str(r['document_revision']) + r' ·', snapshot, re.M),
                'Rulebook version/document revision does not match snapshot')
     p.file(h['brief'])
     for key in ('report', 'decisions', 'effort', 'origin_verification', 'difficulty',
@@ -265,11 +287,11 @@ def validate_phase(root, r, deadline):
     state = h['state']
     if state == 'reveal_review':
         ap.require(bool(r['reveal_options']) or 'reveal' in selected, 'Reveal review requires offered originals')
-    if state in ('motif_review', 'raster_review', 'content_ready'):
+    if state in ('motif_review', 'motif_approved', 'raster_review', 'raster_ready', 'content_ready'):
         ap.require('reveal' in selected and 'motif' in selected, 'Phase requires reveal and motif originals')
         p.approval(selected['reveal'], 'reveal')
         ap.require(selected['motif'].get('derived_from_reveal_sha256') == selected['reveal']['sha256'], 'Wrong motif derivation')
-    if state in ('raster_review', 'content_ready'):
+    if state in ('motif_approved', 'raster_review', 'raster_ready', 'content_ready'):
         p.approval(selected['motif'], 'motif')
         ap.require(bool(h.get('approved_parameters')), 'Raster work requires approved parameters')
     for kind, gate in (('reveal', 'reveal_approval'), ('motif', 'motif')):
@@ -295,5 +317,23 @@ def validate_phase(root, r, deadline):
         for key in ('plan', 'replay', 'record'):
             if repair.get(key):
                 p.file(repair[key])
+    if r['format'] == BACKGROUND_FORMAT:
+        from .background_package import validate
+        p.background = validate(root, h, history_repo=history_repo, deadline=deadline)
+        for name in p.files:
+            if PurePosixPath(name).name == 'derivation.json':
+                ap.require(name in p.background['derivative_files'],
+                           'Unbound nested background derivation')
+        status = p.background['status']
+        if state in ('motif_review', 'motif_approved', 'raster_review', 'raster_ready', 'content_ready'):
+            m = p.background['manifest']
+            # A later material correction can be pending after the original
+            # offer/decision. The first motif review must have the full offer
+            # or an explicit evidenced early none, never a silent omission.
+            if state == 'motif_review':
+                ap.require(m['presentation']['status'] == 'offered' or status == 'none',
+                           'Motif review requires offered backgrounds or explicit none')
+        if state == 'content_ready':
+            ap.require(p.background['ready'], 'Background is not ready: ' + '; '.join(p.background['blockers']))
     references(p)
     return p

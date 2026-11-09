@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 8 · 09.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488); HP-W1/HP-W2 / [#560](https://github.com/venomenon328/picross/issues/560)**
+**Vertrag 1.0 · Dokumentrevision 9 · 09.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488); HP-W1/HP-W2 / [#560](https://github.com/venomenon328/picross/issues/560); PB-H / [#489](https://github.com/venomenon328/picross/issues/489)**
 
 ## 1. Geltung und Zuständigkeit
 
@@ -31,9 +31,12 @@ Regelversionen und historische Bewertungen werden nicht rückwirkend umgedeutet.
 
 §9 ergänzt die Zielqualität des [Hintergrundvertrags](PUZZLE_BACKGROUNDS.md).
 HP-W2 liefert dessen eigenständige technische Datei-/Bildableitung, keine
-visuellen Urteile oder vollständige Produktionsbereitschaft. Der Gesamtweg ist
-noch nicht aktiviert. Der aktive Authoringstand 0.6.0, seine bestehenden
-Qualitäts-/Freigabegates und die Farbregel bleiben unverändert.
+visuellen Urteile oder vollständige Produktionsbereitschaft. PB-H prüft diese
+konkreten Belege lesend in opt-in 0.7.0-Hintergrundpaketen; `raster_ready`
+verlangt sämtliche bisherigen Inhaltsgarantien, `content_ready` zusätzlich die
+vollständige Hintergrundbereitschaft. Ein numerischer oder technischer Befund
+erzeugt kein Sichturteil. Der Gesamtweg ist noch nicht aktiviert. Der aktive
+Authoringstand 0.6.0, seine bestehenden Qualitäts-/Freigabegates und die Farbregel bleiben unverändert.
 
 ## 2. Einzelurteile, Belege und Klassen
 
@@ -556,8 +559,10 @@ Keine zusätzliche allgemeine Freigabeschleife oder Pflicht-Probespielrunde.
 Dieser Abschnitt konkretisiert die Bildqualität für
 [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md). Dort stehen der geschlossene
 Datenvertrag, Phasen, tatsächliche Auswahl, gezielte Invalidierung und Einführung.
-HP-W2 stellt die eigenständige technische Ableitung nach §9.2 bereit; eine
-Werkzeuglieferung ist keine Bildproduktion oder ausgeführte Sichtprüfung.
+HP-W2 stellt die eigenständige technische Ableitung nach §9.2 bereit; PB-H
+transportiert und prüft die Bild-/Entscheidungsbindungen in eigenen neuen
+Paketformen. Eine Werkzeuglieferung ist keine Bildproduktion oder ausgeführte
+Sichtprüfung.
 Vorbereitete Bildarbeit benötigt einen passenden Inhaltsauftrag und die dafür
 tatsächlich verfügbare Teilfähigkeit; sie aktiviert keinen vollständigen neuen
 Produktionsweg und erweitert keine 0.6.0-Hülle.
