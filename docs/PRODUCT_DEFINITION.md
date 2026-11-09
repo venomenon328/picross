@@ -358,8 +358,10 @@ Der [Hintergrundvertrag HP-W1](PUZZLE_BACKGROUNDS.md) spezifiziert als noch nich
 aktivierten Sollweg eigene Kontextzeichnungen je Rätsel mit isolierter Bildwahl.
 Die Ablösung der bisherigen kategorienspezifischen Rätselzeichnungen erfolgt
 erst über die gesonderte Integration und Runtime aus
-[#561](https://github.com/venomenon328/picross/issues/561). HP-W1 entfernt keine
-bestehenden Zeichnungen; der Hilfepilot gehört nicht zu dieser Umstellung.
+[#561](https://github.com/venomenon328/picross/issues/561). HP-I1a unterstützt
+äußere Endabnahme und prüfbaren Export, noch keine Registrierung oder Darstellung.
+Der vollständige Weg bleibt bis HP-I1b/I2 inaktiv; bestehende Zeichnungen bleiben,
+der Hilfepilot gehört nicht zu dieser Umstellung.
 
 Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh und parallel zur Funktionalität bearbeitet. Die Gestaltung ist kein abschließender Skin über einer bereits fertigen Oberfläche. Ebenso werden frühe Entwürfe nicht vor praktischer Erprobung unveränderlich festgeschrieben.
 

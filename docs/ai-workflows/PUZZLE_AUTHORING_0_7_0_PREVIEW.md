@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion · 0.7.0-Vorschaustand
 
-**Version 0.7.0 · Dokumentrevision 1 · 09.11.2026**
+**Version 0.7.0 · Dokumentrevision 2 · 09.11.2026**
 
 **Explizit wählbarer Vorbereitungsstand, kein aktiver Produktionsdefault.**
 [PB-H / #489](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
@@ -10,12 +10,12 @@ Parameter-, Rand- und Difficultygarantien von Authoring 0.6.0 und ergänzt die
 Hintergrundarbeit mit eigenen geschlossenen Formen und getrennten Phasen.
 Der kanonische [aktive Authoringweg](PUZZLE_AUTHORING.md) und das
 [Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html) bleiben **0.6.0 /
-Dokumentrevision 40**. Dieser Snapshot ersetzt ihren Default nicht und wird
+Dokumentrevision 41**. Dieser Snapshot ersetzt ihren Default nicht und wird
 nicht als aktiver Anhang in das Sheet eingebettet.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md` im Repository
 `venomenon328/picross`. Ein neuer 0.7.0-Bauauftrag bindet die vollständigen Bytes
-dieser Datei, Version 0.7.0, Dokumentrevision 1 und den tatsächlich gelesenen
+dieser Datei, Version 0.7.0, Dokumentrevision 2 und den tatsächlich gelesenen
 Quellencommit. Eine umbenannte oder nur im Header geänderte 0.6.0-Datei ist
 kein 0.7.0-Snapshot. Bereits versiegelte Originale behalten ihre eigenen Bytes,
 Versionen und damaligen Nachweise; kein Versionsdowngrade für neue Arbeit.
@@ -24,13 +24,19 @@ Versionen und damaligen Nachweise; kein Versionsdowngrade für neue Arbeit.
 Fachquelle für Typen, Datei-/Hashbindungen, Hintergrundqualität und Einführung.
 HP-W2 liefert `describe/derive/verify`; PB-H liefert Bauauftrag v2, Handoff v3,
 Record v2, Bauresultat v2, Sheet-Update v3 sowie die lesende Prüfung geschriebener
-Raster-/Inhaltspakete. Inventar v1, Arbeitsindex v1 und die technischen
+Raster-/Inhaltspakete. [HP-I1a](https://github.com/venomenon328/picross/issues/561#issuecomment-6752672149)
+ergänzt sichere äußere Fortschreibung und den vollständig prüfbaren Export v6.
+Inventar v1, Arbeitsindex v1 und die technischen
 RP-/Proof-/Difficultyformen behalten ihre bisherigen Verträge.
 
 **Geltungsgrenze:** PB-H baut `brief_ready`, `reveal_review`, `motif_review`,
-`motif_approved`, `raster_review`, `raster_ready` und `content_ready`. Spätere
-äußere Fortschreibung, finaler Export, Registry/Receipt, Integration,
-Hintergrundersatz und Bereinigung benötigen HP-I1; die Runtime benötigt HP-I2.
+`motif_approved`, `raster_review`, `raster_ready` und `content_ready`. HP-I1a
+konsumiert vorhandene tatsächliche Auswahl/Ableitung und gegebenenfalls
+Endfreigabe v2 für die äußere Record-/Sheetfortschreibung; v6-Export benötigt
+alle Inhaltsgates und Endfreigabe. Höchste Phase ist `editorially_approved`,
+`integration_ready`, `catalog_ready` und `registered` bleiben false.
+Registry/Receipt, Erstintegration, Hintergrundersatz, Recovery und Bereinigung
+benötigen HP-I1b; die Runtime benötigt HP-I2.
 Neue UI-Import-/Sitzungs-/Auftragsformen folgen in #490. Der vollständige
 Einzelweg ist noch nicht aktiviert. Eine vorhandene Endfreigabe v2 darf rein
 lesend auf ihre unveränderten Originalbindungen geprüft werden; kein neuer
@@ -43,6 +49,8 @@ mit negativen Messwerten, keine Produktionsausnahme. Messung, echte Sichturteile
 und konkrete Eigentümerausnahme werden getrennt geprüft. Der lesende Bericht
 ist `picross-authoring-content-inspection-v1`, kein v5-Altexport. Die bisherigen
 v1–v5-Export-/Registrierungswege bleiben für neue Hintergrunddaten geschlossen.
+V6 verwendet denselben Inhaltsweg und alle geerbten Gates; alte volle und
+Quick-/Metadaten-/direkte API-Verbraucher sperren ihn vor produktiver Mutation.
 
 [SD2-Integration](../SD2_INTEGRATION.md), [SD2-D](../SD2_D_ADOPTION.md),
 [Abschlussbildtransparenz](../REVEAL_TRANSPARENCY.md), [SD](../PUZZLE_DIFFICULTY.md)
@@ -58,7 +66,7 @@ begründet abweichbaren Standard, **DARF** eine Option.
 
 ## 1. Einstieg und Befugnisse
 
-1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_QUALITY.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`; für diesen Vorschaustand außerdem `docs/PUZZLE_BACKGROUNDS.md` und den PB-H-Abschnitt in `docs/ZA1_ADAPTER.md`. Vor Paarlinienprüfung oder Übergabe eines Paarprofilpakets zusätzlich `docs/PAIRED_LINES.md` vollständig lesen.
+1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_QUALITY.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`; für diesen Vorschaustand außerdem `docs/PUZZLE_BACKGROUNDS.md` und die PB-H-/HP-I1a-Abschnitte in `docs/ZA1_ADAPTER.md`. Vor Paarlinienprüfung oder Übergabe eines Paarprofilpakets zusätzlich `docs/PAIRED_LINES.md` vollständig lesen.
 2. Zu Beginn Kategorienquelle, Arbeitsindex und Runtime-Registry lesen; Bestandsrätsel nicht einzeln laden oder nachprüfen. Kategorie nach Auftrag oder prägendem Hauptgegenstand gemäß [Kategorienvertrag](../CATEGORIES.md) zuordnen und in Briefing/Record führen. Repository-/Toolstand mit vollständiger Commit-SHA binden. Aktuelle Dateien und tatsächlich benötigte Fähigkeiten prüfen, keine historischen PR-Statuslisten abarbeiten. Abgeschlossene Lieferungen sind keine erneut offenen Voraussetzungen; nur eine konkrete aktuelle Lücke verfolgen.
 3. Bestehende technische Formate, Farbregeln, Solverprofile, Nachweise und Reparaturverträge verwenden. Dieses Regelwerk ersetzt sie nicht. Fehlende Pflichtquellen oder widersprüchliche Vorgaben vor dem betroffenen Schritt klären.
 4. Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine Funktionen, Prüfungen oder Ergebnisse behaupten, die nicht verfügbar beziehungsweise ausgeführt sind.
@@ -207,7 +215,7 @@ sie ändern keine tatsächliche Freigabe oder Inhaltsgarantie.
 | **1 · Abschlussbildauswahl** | Bildfähige KI erfasst Text/Bild, liest Quellen, erzeugt drei Abschlussbilder und führt das Hintergrundbriefing nach Abschnitt 2. | `brief_ready` → `reveal_review`: Einzeldateien, Hintergrund-Arbeitsmanifest mit ehrlichem offenen Kontext, Vergleich und gesicherte Übergabe; auf Abschlussbildauswahl/Freigabe warten. |
 | **2 · Abschlussbildfreigabe und Abstraktion** | KI bindet die tatsächliche Freigabe, empfiehlt bei offenen Angaben 2–3 Konfigurationen und erstellt unmittelbar die Abstraktion. Nach Reveal-Freigabe drei gespeicherte Kontextzeichnungen erzeugen und isoliert zusammen mit der Motivvorlage zeigen; ausdrücklichen frühen Verzicht belegen. | `motif_review`: Bildvergleich, Detailverluste, Parameterkorridor, vollständige Hintergrundangebote und gesichertes Paket; auf Motivfreigabe und möglichst gebündelte Hintergrundwahl warten. Keine zusätzliche Konfigurationsrunde. |
 | **3 · Motivfreigabe und Produktion** | Codex bindet Motiv-/Parameterfreigabe und eine tatsächlich erklärte Hintergrundwahl; führt Abschnitte 4–7 einschließlich Profilprüfung, begrenzter Reparatur, technischer/visueller Prüfung und Difficulty aus. Offene Hintergrundwahl stoppt unabhängige autorisierte Rasterarbeit nicht. | `motif_approved` → `raster_review` → vollständig geprüftes `raster_ready`, bei zusätzlich vollständigem Hintergrund `content_ready`: vorzugsweise 2–3 geprüfte Rasterangebote, echte Ansichten und je ein geprüftes Paket. Hintergrundstatus getrennt nennen. Menschliche Rasterwahl/Endabnahme bleibt offen; keine Registrierung. |
-| **4 · Endabnahme und Integration** | Noch offene Hintergrundwahl darf mit der Endabnahme gebündelt werden. PB-H prüft ausschließlich schon vorhandene Endfreigabe v2 und ihre tatsächlichen Hintergrundbelege lesend. | Kein neuer finaler Bauzustand oder Integrationswriter in PB-H. Fehlenden HP-I1/I2-Anschluss als Blocker führen; `integration_ready=false`. Späterer Ablauf `editorially_approved` → `catalog_ready` → `registered` benötigt die tatsächlich gelieferte Integration nach §8 und erst danach Abschluss nach §9. |
+| **4 · Endabnahme und Integration** | Noch offene Hintergrundwahl darf mit der Endabnahme gebündelt werden. Vorhandene tatsächliche Entscheidung, geprüfte Ableitung und Endfreigabe v2 mit HP-I1a außen sichern; nach vollständiger Prüfung v6 exportieren. | Original unverändert, Record höchstens `editorially_approved`; `integration_ready/catalog_ready/registered=false`. Fehlenden HP-I1b/I2-Anschluss als Blocker führen. Registrierung und erst danach Abschluss bleiben von tatsächlich gelieferter Integration nach §§8–9 abhängig. |
 
 Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf beides übernehmen, wenn sie die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten besitzt. Diese Oberflächenzuordnung löst keine Modell- oder Ausführungsempfehlung aus (§1); keine Modell-API einbauen. Ein zusätzlicher Mergeauftrag ist nur ohne vorherige passende Freigabe nötig; Korrekturrunden und echte Zugriffsprobleme können weitere Nachrichten erfordern.
 
@@ -241,7 +249,7 @@ Eine eindeutige frühere Auswahl zur Verwendung derselben unveränderten Datei
 genügt als Hintergrundentscheidung; keine zweite Bildbestätigung verlangen.
 Die gesonderte Endabnahme und tatsächliche Integrationsbefugnis bleiben erforderlich.
 Eine späte Entscheidung an einem versiegelten Rasterpaket benötigt den
-späteren sicheren äußeren Writer nach §6.3; bereits vorhandene Belege sind lesbar;
+sicheren äußeren HP-I1a-Writer nach §6.3; bereits vorhandene Belege sind lesbar;
 die konkrete vorgelegte Raster-/Bildfassung muss im finalen Auftrag eindeutig sein.
 
 ## 4. Rasterproduktion und technische Pflichtprüfung
@@ -420,7 +428,8 @@ Regel-/Handoff-/Inventar-/Paketbindung und echter Endfreigabe. Diesen Record nur
 außerhalb versiegelter Originale erhalten und im 0.7.0-Leseweg ausdrücklich
 als `palette_exception` beziehungsweise als vorhandene äußere Builderdatei
 übergeben; vorhandene manuelle Autorisierungen bleiben zusätzlich nötig. Der
-0.6.0-CLI-Schalter eröffnet keinen neuen 0.7.0-Exportweg.
+0.6.0-CLI-Schalter allein eröffnet keinen 0.7.0-Exportweg; HP-I1a verlangt den
+ausdrücklichen Hintergrund-Opt-in und die vollständige v6-Prüfung nach §8.
 Die Ausnahme heilt ausschließlich den Palettenredaktionsblocker, niemals Proof,
 Rechte/Herkunft, Bild-/Motiv-/Endabnahme, feste Parameter, Difficulty oder Randregel.
 Fehlende Freigabe bleibt ein Blocker. Bei null qualifizierten Kandidaten §4.5
@@ -578,7 +587,7 @@ Die Sheet-Option bindet genau das jeweilige Paket samt Revision, Originalinventa
 Quelle und Bild-/Rasterbezügen. Auftrag 4 übernimmt ausschließlich die ausdrücklich
 gewählte Option; Auswahl-ID und Paketbindungen im Auftrag abgleichen. Eine
 bereits vorhandene Endfreigabe muss extern genau dieses Originalpaket binden;
-PB-H liest sie, der spätere sichere Writer gehört HP-I1. Keine automatische
+PB-H liest sie, HP-I1a schreibt die geprüften äußeren Bindungen sicher fort. Keine automatische
 Wahl der ersten/empfohlenen oder vermeintlich neuesten Revision über den Index.
 Kein Neuversiegeln beim Wechsel im Sheet. Nicht gewählte Angebote bleiben bis zur
 finalen Integration erhalten; §9 regelt anschließend die Bereinigung.
@@ -593,7 +602,7 @@ werden in Record v2 und Sheet-Update v3 geführt; das aktive Sheet-v2-UI
 unterstützt diesen neuen Transport noch nicht.
 Für spätere Auswahl und gemeinsame Endabnahme die Originalpakete unverändert
 erhalten; vorhandene tatsächliche äußere Entscheidungen nach §6.3 lesen,
-spätere sichere Fortschreibung erst mit HP-I1 ausführen.
+sichere Fortschreibung mit HP-I1a nach Hintergrundvertrag §7.4 ausführen.
 
 ## 5. Schwierigkeit L1–L5
 
@@ -799,7 +808,13 @@ Profil abgeleitet; ausdrücklich `none` liefert nur einen Nullbefund. Der Builde
 prüft deklarierte Ableitungen mit den tatsächlichen Quellen und Tool-/Codec-
 Bindungen frisch. Ungeklärte Rechte oder fehlende Q-HG-Urteile werden dadurch
 nicht zu positiven Belegen. [Lokale Aufrufe und Grenzen](../../tools/puzzle_production/README.md#pb-h-hintergrundpakete-und-lesende-inhaltsprüfung).
-Spätere äußere Fortschreibung und neue Sheetbedienung bleiben HP-I1/#490.
+HP-I1a unterstützt die sichere äußere Fortschreibung unten; neue Sheetbedienung
+bleibt #490. Die enge lesende HP-W2-Regel aus Hintergrundvertrag §4.3 erhält
+originale Producer-/Request-/Befundbytes und vergleicht aktuelle vollständige
+Modul-/Codec-/Profilbindung; nur ein anderer Git-HEAD/Dirtyzustand bei identischen
+ausführbaren Bytes verlangt keine neue Ableitung. `derive/reused` bleibt streng
+an den vollständigen aktuellen Toolhash gebunden. Ein inkompatibler eingebetteter
+Altbefund bleibt prüfpflichtig und blockiert auch bei neuer äußerer Ableitung.
 
 Während einer offenen Auswahl müssen alle drei tatsächlich angebotenen
 Einzelbilder mit ihrem Arbeitsstand gespeichert und erreichbar sein. Pfade,
@@ -812,8 +827,9 @@ Verträge, kein Zustand für neue Arbeit. Deklarierte fehlende, defekte,
 inkonsistente oder nicht unterstützte Daten sind Fehler und niemals „leer“.
 
 Eine tatsächliche Auswahl darf vor dem endgültigen Raster oder erst zusammen
-mit dessen Endabnahme erfolgen. Der sichere spätere Writer hierfür gehört
-HP-I1; PB-H liest nur bereits vorhandene passende Belege. An einem bereits
+mit dessen Endabnahme erfolgen. HP-I1a konsumiert die bereits tatsächlich
+aufgezeichneten passenden Belege mit dem sicheren Finalizer; PB-H liest sie.
+An einem bereits
 versiegelten Kandidatenpaket wird die Entscheidung **außerhalb des Originals** an dessen unveränderte Paket-, Handoff- und
 Inventarbytes sowie den genauen Hintergrundarbeitsstand gebunden. Die finale
 Endfreigabe bindet das wirklich vorgelegte Rasterpaket und die konkrete
@@ -833,6 +849,31 @@ Integration; abgeschlossene Rasterproduktion dafür nicht rekonstruieren.
 Während laufender Arbeit erforderliche Originale erhalten; Erhalt und Ende der
 Arbeitsdateien folgen §9 und dem Hintergrundvertrag, nicht einem Dauerarchiv.
 
+**Sichere äußere Fortschreibung:**
+
+```text
+python -m tools.puzzle_production.authoring_builder finalize-background --request <request.json> --source-root <neue-dateien> --output-root <authoring-root> [--history-repo <checkout>]
+```
+
+Der Befehl verwendet den geschlossenen Finalizerauftrag nach Hintergrundvertrag §7.4.
+Er bindet den erwarteten Record v2 als `Ref`, einen neuen Sidecarordner derselben
+Authoringrevision, vollständige Hintergrundbindung, genau vier explizite
+Autorisierungsrefs/null und exakt die neuen Nutzdateien. Keine menschliche
+Erklärung erzeugen und keine gültige Autorisierung still entfernen. Das
+Originalmanifest bleibt dieselbe Identität; materielle Bildänderung braucht
+eine neue reguläre Revision.
+
+Unter demselben Authoringlock werden Sidecardateien vollständig geprüft und
+ohne Ersetzen publiziert, danach der Record atomar zuletzt. `operation.json`
+bindet exakte Vorher-/Nachherrecords und Dateien; derselbe Request setzt einen
+vollständigen unverreferenzierten Rest fort oder liefert nach Recordcommit einen
+Byte-/mtime-No-op. Ein HP-W2-Befund braucht seinen eigenen exakten Unterordner.
+Index v1 und Originalbytes bleiben erhalten. Die geprüften Autorisierungsorte
+stehen eng in `record.verification.authorizations`; keine neuen Record-
+Top-Level-Felder. Resultat v1 liefert tatsächlichen Record v2 und Sheet-Update v3
+oder konkreten Fehler/Restpfad. Fehlende Integration und ungesicherter Gitstand
+bleiben sichtbar; keine Registrierung, Git-Schreiboperation oder Bereinigung.
+
 ### 6.4 Geschlossene 0.7.0-Formen und fällige Lesegates
 
 Die folgenden Feldmengen und Deltas sind vollständig. Die Feldtypen, Grenzen
@@ -846,6 +887,9 @@ sind Fehler. Ein technischer Quellpfad ist keine beliebig zu suchende Datei.
 | `picross-authoring-handoff-v3` | Sämtliche bisherigen Handoff-v2-Pflicht-/Optionalfelder mit unveränderten Typ-/Nullregeln, passende 0.7.0-Regelbindung und zusätzlich `background`. Exakt zwölf Gates und gleichnamige `gate_evidence`; Originalendfreigabe und Export bleiben offen. Keine Hintergrunddaten unter `editorial`. |
 | `picross-authoring-record-v2` | Bestehender vollständiger PB-A-Record plus `background`; geprüfter Zustand und tatsächlicher Prüfungsumfang, offene Blocker und nächster Schritt bleiben sichtbar. Ein Bau ist kein Git-Sicherungscommit. |
 | `picross-authoring-build-result-v2` | Erfolg exakt `format,status,directory,indexed,record,sheet,files`; Fehler exakt `format,status,message,remaining,next_action`. Verschachtelt Record v2/Update v3. |
+| `picross-authoring-finalize-request-v1` | Exakt `format,record,sidecar_root,background,authorizations,files`; vollständige Typ-/Pfad-/Null-/Wiederaufnahmeregeln in Hintergrundvertrag §7.4. |
+| `picross-authoring-finalization-v1` | Exakt `format,request_sha256,record,before,after,files`; operative Sidecarbindung mit bytegenauen Vorher-/Nachherrecords, keine neue Freigabe. |
+| `picross-authoring-finalize-result-v1` | Erfolg exakt `format,status,record,sheet,operation`; Fehler exakt `format,status,message,remaining,next_action`. Status-/Restregeln nach Hintergrundvertrag §7.4. |
 | Unverändert | `picross-authoring-file-inventory-v1`, `picross-authoring-index-v1`, bestehende RP-/Proof-/Difficultyformen. Die Authoring-Teilkopie `picross-authoring-derivation-v1` ist keine HP-W2-Hintergrundableitung. |
 
 Der Record führt weiterhin `puzzle_id,revision,state,category_id,
@@ -953,9 +997,10 @@ verwendet den vollständigen bestehenden Inhaltsweg; kein vorübergehendes
 Umetikettieren auf 0.6.0. Ihr Bericht
 `picross-authoring-content-inspection-v1` führt `original_state`, frisch
 geprüften `effective_state` und stets `integration_ready=false`. Nur tatsächlich
-ausgeführte Prüfungen werden im Record als solche geführt. Defaultreader,
-alte Inspect-CLI und Export-/Registrierungswriter akzeptieren diese neue
-Generation nicht automatisch.
+ausgeführte Prüfungen werden im Record als solche geführt. HP-I1a öffnet
+inspect/export nur mit ausdrücklichem `--allow-background` und erforderlichen
+`--external-root`-/`--history-repo`-Wurzeln. Defaultreader und alte
+Export-/Registrierungswriter akzeptieren diese neue Generation nicht automatisch.
 
 Eine schon vorhandene `picross-editorial-approval-v2` wird nur gelesen. Sie hat
 sämtliche bisherigen v1-Felder `format,actor,timestamp_utc,statement,puzzle_id,
@@ -965,8 +1010,8 @@ revision,handoff_sha256,inventory_sha256,selection,test_only` plus
 `selection` bindet weiterhin `variant,matrix_hash,logic_hash,reveal`.
 Alle Bindungen müssen zum unveränderten Original-ZIP und den tatsächlich
 vorliegenden Dateien passen. Kein Erzeugen, Neudatieren oder Umbinden einer
-Freigabe durch PB-H. Spätere äußere Writer und neue finale Exportformen gehören
-HP-I1, finale Runtime HP-I2.
+Freigabe durch Builder oder Finalizer. HP-I1a ergänzt sichere äußere
+Fortschreibung und v6-Export; Registry/Integration folgt HP-I1b, Runtime HP-I2.
 
 Die bisherigen Publikationsgarantien gelten unverändert: eigene temporäre
 Revision, deterministische Bytes/ZIP-Metadaten, frische sichere Extraktion,
@@ -1265,8 +1310,8 @@ isoliert zeigen. Status, menschliche Entscheidung, technische Ableitung und
 visuelle Urteile getrennt nennen. Eine echte frühere Wahl derselben unveränderten
 Datei bleibt gültig; keine zusätzliche Routinebestätigung. Eine späte Wahl darf
 mit Endabnahme gebündelt werden, benötigt aber die tatsächliche Raster-/Bildbindung
-und den späteren sicheren äußeren Writer. Die bereits vorhandene Endfreigabe v2
-wird in PB-H nur gelesen.
+und den sicheren äußeren HP-I1a-Writer. Die bereits vorhandene Endfreigabe v2
+wird geprüft und unverändert gebunden.
 
 Die geplante Sitzung v5 hat exakt `format,choices,fields,filter,image,background`,
 der geplante Auftrag v4 exakt `format,execution,created_at,rulebook,fields,choices,
@@ -1280,12 +1325,14 @@ Sitzungs-/Auftragsexporte und Promptfunktionen gehören **#490**; PB-H liefert
 nur Record v2 und die daraus korrekt abgeleitete Update-v3-Ausgabe. Das aktuelle
 Offline-Sheet erhält ausschließlich den aktiven 0.6.0-Snapshot samt Revision.
 
-## 8. Finale Integration: verbleibende Fähigkeit und geerbte Garantien
+## 8. Endabnahme, Export und verbleibende Integration
 
-**0.7.0-Grenze:** PB-H liefert keinen finalen Export-/Integrationswriter.
+**0.7.0-Grenze:** HP-I1a liefert äußere Endabnahme und v6-Export, keinen
+Registrierungs-/Integrationswriter und keine Runtime. Höchste effektive Phase
+ist `editorially_approved`; `integration_ready/catalog_ready/registered=false`.
 Die nachfolgend vollständig erhaltenen 0.6.0-/ZA-1-Verfahren dokumentieren die
 geerbten Integrationsgarantien und ihre bestehenden Werkzeuge. Sie sind für
-diesen neuen 0.7.0-Eingang **nicht ausführbar**, bis HP-I1/I2 die dazugehörigen
+diesen neuen 0.7.0-Eingang **nicht ausführbar**, bis HP-I1b/I2 die dazugehörigen
 Writer und Runtime tatsächlich liefern. Keine alten Befehle mit einer neuen
 Versionshülle umgehen.
 Erst der tatsächlich unterstützte #561-Weg übernimmt in Auftrag 4 gemeinsam mit
@@ -1304,6 +1351,44 @@ Schwierigkeit, bisherige Reveal-/Motivgates und Recoverygarantien bleiben
 erhalten. Eine spätere reine Hintergrundersetzung nutzt nur den dafür
 eingeführten Bildweg aus #561 und erhält Lösungs-/Saveidentität; sie ist keine
 heutige `plan-update`-/`update`- oder `catalog_reveal`-Operation.
+
+### HP-I1a: vorhandene Endabnahme sichern und v6 exportieren
+
+Nach tatsächlicher Auswahl und Endabnahme die Belege gemäß §6.3 außen sichern.
+Ein gültiges `none` bleibt eine explizite Entscheidung samt Nullbefund; fehlende
+Dateien oder ausstehende Antworten sind kein `none`. Die ursprünglichen
+Paket-/Handoff-/Inventarbytes und Inhaltsnachweise bleiben erhalten. Eine neue
+Auswahl auf derselben Vorlage bindet ihren wirklichen Vorgänger; ein anderes
+Manifest oder materiell geändertes Bild benötigt eine reguläre neue Revision.
+
+`target_adapter inspect/export` ausdrücklich mit `--allow-background`, bei
+äußeren Belegen `--external-root <wurzel>` und erforderlichenfalls
+`--history-repo <checkout>` verwenden. Vor Export Kategorie und alle bisherigen
+Inhaltsgates sowie tatsächliche Endfreigabe v2 prüfen. Die geschlossene
+[v6-Generation](../ZA1_ADAPTER.md#hp-i1a--äußere-endabnahme-und-export-v6)
+transportiert das unveränderte `input/package.zip`, benötigte äußere Dateien
+mit unveränderten inneren Pfaden und die vollständige Freigabebindung.
+Ausschließlich ausgewähltes PNG und passende Notice liegen zusätzlich im
+Runtimebaum; bei `none` keine Nulltextur. Keine Änderung von Logikdefinition,
+Runtime-Rätselrevision oder Saveidentität.
+
+Kompakte Historyeingänge werden beim Export lokal exakt geprüft. Nur tatsächlich
+fehlende inaktive Kandidatenrefs dürfen nach dem ZA-1-Vertrag ausdrücklich
+supplementiert werden; Original- und aktuelle Außensicht getrennt auswerten.
+Aktive Dateien sind regulär erforderlich, Supplemente ersetzen keine aktive
+Quelle oder Freigabe. Der Export wird vor Veröffentlichung vollständig frisch
+verifiziert; `verify-export` prüft ihn danach ohne ursprünglichen Quellcheckout
+oder Historyroot mit kompatibler tatsächlicher Modul-/Codec-/Profilbindung.
+Ein inkompatibler alter Befund im unveränderten Original bleibt ein Blocker;
+alte Freigaben/Requests nicht umschreiben. Keine beliebige spätere
+Werkzeugportabilität behaupten.
+
+`picross-target-inspection-v6` trennt Original-/Effektivstatus, technische und
+redaktionelle Bereitschaft vom fehlenden Integrationsanschluss. Nur die frische
+Exportprüfung erlaubt `export_verified=true`; es gibt keine zusätzliche Phase.
+Keine Registry-, Plan-, Register-, Update-, Sync- oder Cleanupoperation mit v6
+starten. Diese Verbraucher müssen v6 vor Mutation zurückweisen. Arbeitsbindungen
+bis zum späteren unterstützten Abschluss erhalten; keine vorgezogene Bereinigung.
 
 ### Geerbter 0.6.0-Referenzweg · kein 0.7.0-Integrationsaufruf
 
@@ -1433,10 +1518,10 @@ Das Endergebnis nennt Paketfundort/-hash, Freigabebeleg, Runtime-ID/Revision/Slo
 ## 9. Produktionsabschluss und Bereinigung
 
 **0.7.0-Grenze:** Die folgenden Aufbewahrungs-, Eigentums- und Abschlussgarantien
-bleiben erhalten. PB-H liefert weder Integration noch einen neuen Abschlusswriter.
+bleiben erhalten. HP-I1a liefert weder Integration noch einen neuen Abschlusswriter.
 Die bestehenden `retire-production`-/`retire-reveal-production`-Befehle sind
 keine unterstützten Befehle für neue Hintergrundpakete. Erst tatsächlich
-integrierte 0.7.0-Inhalte mit dem passenden HP-I1-Abschlussweg dürfen nach diesen
+integrierte 0.7.0-Inhalte mit dem passenden HP-I1b-Abschlussweg dürfen nach diesen
 Regeln bereinigt werden. Bis dahin alle benötigten aktiven Arbeitsbindungen erhalten.
 
 Eigentümerentscheidung vom 14.10.2026: **Ein fertiggestelltes und final auf `main`
@@ -1532,7 +1617,7 @@ Die frühere eng begrenzte Freigabe zum Nachintegrations-Cleanup einschließlich
 in Schritt 5 bleibt bestehen. Werkzeug-/CI-Codepakete erben keine frühere
 Cleanup-Mergefreigabe. Historische CI2-E-Aufträge sind keine heutige Freigabe oder Sperre.
 
-### Späterer Hintergrundabschluss nach HP-I1
+### Späterer Hintergrundabschluss nach HP-I1b
 
 Der Lebenszyklus aus [PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md) ergänzt §9
 nach Einführung der passenden Abschlussfähigkeit. Die heutigen

@@ -9,7 +9,7 @@ für ihre gültigen Altbindungen und ausdrücklich gewählte kompatible Fälle e
 keine neue pauschale 0.3-Pflicht. Beide Freezes und versiegelte Pakete bleiben unverändert.
 Die [CLI-Anleitung](../tools/puzzle_production/README.md) dokumentiert die ausführbaren Befehle.
 
-**HP-W2 / #560 und PB-H / #489 · Vorbereitung und Paketbau verfügbar, Gesamtweg noch nicht aktiviert:**
+**HP-W2 / #560, PB-H / #489 und HP-I1a / #561 · Teilfähigkeiten, Gesamtweg noch nicht aktiviert:**
 [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md) führt Ablauf, Bild-/Auswahlbindungen,
 Datenformen und Einführungsmatrix für Kontextzeichnungen je Rätsel.
 Authoring 0.6.0 und der integrierte PB-A-Paketbau bleiben unverändert aktiv.
@@ -23,10 +23,14 @@ Die lesende Prüfung des geschriebenen ZIPs erhält bei `raster_ready` sämtlich
 0.6.0-Inhaltsgarantien; nur Hintergrundbereitschaft und finale Endabnahme dürfen
 fehlen. `content_ready` verlangt zusätzlich Wahl, Rechte/Sichturteile und frisch
 geprüfte Ableitung beziehungsweise ausdrückliches `none`. Eine schon vorhandene
-Endfreigabe v2 wird nur auf ihre exakten Originalbindungen geprüft. Spätere
-äußere Pflege, finaler Export/Integration und Runtime folgen in HP-I1/I2, neue
-Sheetbedienung in #490. Alte Hüllen und die 0.6.0-Phasensemantik bleiben erhalten;
-diese Werkzeuglieferung aktiviert keine Bildproduktion.
+Endfreigabe v2 wird auf ihre exakten Originalbindungen geprüft. HP-I1a ergänzt
+den sicheren äußeren Finalizer für vorhandene Entscheidungen/Befunde/Freigaben
+und den vollständigen v6-Export samt unverändertem Original-ZIP. Höchstens
+`editorially_approved`; `integration_ready`, `catalog_ready` und `registered`
+bleiben false. Registry, Erstintegration, Hintergrundersatz, Recovery und
+Abschluss folgen in HP-I1b, Runtime in HP-I2, neue Sheetbedienung in #490.
+Alte Hüllen und die 0.6.0-Phasensemantik bleiben erhalten; diese Werkzeuglieferung
+aktiviert keine Bildproduktion oder Hintergrunddarstellung im Spiel.
 
 [PUZZLE_QUALITY](PUZZLE_QUALITY.md) ist die verbindliche redaktionelle Referenz
 für neue Produktionen: Einzelkriterien nach Darstellung, transparente Sichtung

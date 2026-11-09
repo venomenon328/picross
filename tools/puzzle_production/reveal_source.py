@@ -180,6 +180,8 @@ def package(root, entry):
     raw = io.read(root, prefix + "/manifest.json", 8 * 1024 * 1024)
     manifest = io.json_bytes(raw, 8 * 1024 * 1024)
     require(isinstance(manifest,dict), 'Invalid package manifest object')
+    require(manifest.get("format") != "picross-target-export-v6",
+            "Background export v6 is not supported by catalog consumers (HP-I1b required)")
     files = {}
     base = io.safe(root, prefix)
     for p in base.rglob("*"):
