@@ -15,7 +15,7 @@ keine automatische Vollauswahl. Der Quellen-/Plankern gilt für alle PRs; reine 
 | --- | --- |
 | `production.solver` | Solver, unabhängige Verifier, Analyse/Rating und sechs feste synthetische Mono-/Farbreferenzen |
 | `production.images` | Bildimport, Paarproduktion, Reparatur und synthetische RP6-Regressionen |
-| `production.adapter` | Zieladapter und unterstützte Ableitungswege, einschließlich synthetischem ZA-1-Durchstich |
+| `production.adapter` | Authoring-Paketbuilder, Zieladapter und unterstützte Ableitungswege, einschließlich synthetischem ZA-1-Durchstich |
 | `production.catalog` | Kategorien, Inhalts-/Bild-/Bewertungs-/Hinzugefügt-Daten, Transaktionen, Recovery und Registrierungsbudgets |
 
 [production_contract.py](../tools/production_contract.py) ordnet jedes aktive

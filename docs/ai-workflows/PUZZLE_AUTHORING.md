@@ -1,6 +1,11 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 36 · 08.11.2026**
+**Version 0.6.0 · Dokumentrevision 37 · 09.11.2026**
+
+PB-A aus [#489](https://github.com/venomenon328/picross/issues/489#issuecomment-6745424504)
+ergänzt den lokalen deterministischen Paketbuilder nach §6.1. Bestehende
+Freigabe-, Phasen- und ZA-1-Verträge bleiben erhalten; Hintergrundformate
+sind dem separaten Folgepaket PB-H vorbehalten.
 
 Diese Revision aktiviert P-B2 aus [#488](https://github.com/venomenon328/picross/issues/488):
 Neue Produktionen verwenden **0.6.0**, automatische frühe Palettendiagnosen und
@@ -569,7 +574,7 @@ Die folgenden Aufbewahrungs- und Replaypflichten gelten bis zur finalen Integrat
 - Ungebundene doppelte Berichte, stdout/stderr-Kopien, eingebettete Bildgalerien, temporäre Ansichten, Caches und vollständige Chat-/Repoarchive weglassen. Relevante Fehlversuche als kurze strukturierte Einträge erhalten. Dateien nicht allein anhand der Endung löschen; alle benötigten technischen **und redaktionellen** Referenzen nachverfolgen. HTML/Code aus Paketen nicht ausführen.
 - Ein neues Paket vor Inventarisierung verschlanken. Bereits versiegelte Pakete ausschließlich als deklarierte Teilkopie nach `picross-authoring-derivation-v1` ableiten: Originalhandoff/-inventar und ihre Hashes unverändert, Original-ZIP-Hash binden, tatsächlich enthaltene Dateien vollständig hashen. Weglassungen und Grund im äußeren Record dokumentieren. Keine erfundene neue Vollkopie, keine stillschweigende Neuversiegelung oder Umschreibung alter Freigaben. Nachweisbündel nicht intern kürzen. Das Original nicht destruktiv ersetzen.
 - Inventar und Handoff ohne Selbstreferenz nach ZA-1 binden; Datei-SHA-256 und kanonische Vertrags-Hashes unterscheiden. Nach Versiegelung spätere Endfreigabe und Integrationsstatus ausschließlich in separater Freigabe/Record führen; das Originalhandoff dafür nicht ändern.
-- Vor Ablage ZIP sicher öffnen, Dateimenge/Hashes und Handoffkopie prüfen. Ab `content_ready` zusätzlich ZA-1 `inspect` auf dem **geschriebenen ZIP** ausführen; fehlende Endabnahme darf als einziger entsprechender Blocker bleiben. Frühere Bildphasen sind noch kein ZA-1-Eingang: deren vorhandene Dateibindungen/Freigaben prüfen, keine Adapterzertifizierung behaupten. Für das Packen gibt es derzeit keinen eigenen CLI-Befehl; Standard-ZIP-Werkzeuge und vorhandene APIs benutzen, keinen Befehl erfinden.
+- Vor Ablage ZIP sicher öffnen, Dateimenge/Hashes und Handoffkopie prüfen. Ab `content_ready` zusätzlich ZA-1 `inspect` auf dem **geschriebenen ZIP** ausführen; fehlende Endabnahme darf als einziger entsprechender Blocker bleiben. Frühere Bildphasen sind noch kein ZA-1-Eingang: deren vorhandene Dateibindungen/Freigaben prüfen, keine Adapterzertifizierung behaupten. Der lokale [PB-A-Builder](../../tools/puzzle_production/README.md#pb-a-deterministischer-authoring-paketbau) übernimmt diese Schritte aus einem expliziten hashgebundenen Bauauftrag: `python -m tools.puzzle_production.authoring_builder build --request <request.json> --source-root <quellen> --output-root <arbeitsordner> [--publish-to <checkout>]`. Er sichert neue unversiegelte 0.6.0-Revisionen, erhält offene Entscheidungen und aktualisiert auf ausdrückliche Zielwahl nur den Authoringindex. Kein Git-Commit, keine Freigabe oder Registrierung. Bereits versiegelte Originale weiter unverändert lesen beziehungsweise nur nach dem bestehenden Teilkopievertrag ableiten.
 - `content/authoring/` bleibt außerhalb des Spiels. Nach Integration erzeugt ZA-1 die offline prüfbare Kopie unter `content/packages/<id>/<revision>/`; dieser Ort ist kein manuell zu befüllender Eingang. Keine zusätzlichen Voll-ZIPs dort erzeugen. Alte Produktionsstände über feste Git-Commits referenzieren; Bis zur finalen Integration keine gebundenen Nachweise löschen. Danach ist Abschnitt 9 Pflicht; keine LFS-Umstellung oder Git-Historienbereinigung.
 
 ### 6.2 Übergabedatensatz
@@ -722,6 +727,10 @@ den 64-stelligen Hash des Originalinventars, keinen ZIP-, Matrix- oder Logikhash
 `Quellbranch / Commit` ist ein tatsächlich erreichbarer Paketstand, bevorzugt eine
 volle Commit-SHA; ungesicherte lokale Arbeit als `null` plus Blocker berichten.
 Der Paketstand ist vom Stand des zu lesenden Regelwerks zu unterscheiden.
+Der PB-A-Builder leitet seine Sheet-Ausgabe aus demselben äußeren Record ab.
+Ein erfolgreicher lokaler Bau oder Indexeintrag belegt noch keinen Git-Sicherungs-
+commit; bis zur tatsächlichen Sicherung bleibt dieses Feld ausdrücklich `null`.
+Sein `repo_commit` bindet ausschließlich den zuvor gelesenen Quellenstand.
 
 `Nächster Schritt` verwendet genau einen dieser Namen: `1 · Abschlussbilder erzeugen`,
 `2 · Bild freigeben & abstrahieren`, `3 · Motiv freigeben & produzieren`,
