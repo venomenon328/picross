@@ -1,0 +1,503 @@
+{
+  "package": "RAND-P1",
+  "product_head": "2647c79e5d633b9e0a24e02aa0a445172578c524",
+  "files": {
+    "catalog-1440-ui100.png": {
+      "bytes": 2833677,
+      "sha256": "1607363d26d8698f9821fa4780a1c532b451b7ce8e15eb4debfff48fc260eb34",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "water-1080-ui100-with.png": {
+      "bytes": 1903606,
+      "sha256": "214104769b2bbaec6ec77c0b8cecdcc825ac884cdb7548ad30044fdebc6a5e6d",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "family": "wasserwelt",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "water-1080-ui100-without.png": {
+      "bytes": 1839596,
+      "sha256": "5517bf7c6bba8ea8648a72d1e7b31f594a3f6fcb33f3292a7cad5728af14344d",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "family": "wasserwelt",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "water-1440-ui100-with.png": {
+      "bytes": 3020678,
+      "sha256": "e70afcb48988e31557a72970eb8bf241195ed3edc5586b0cc5b131a5ca37f80f",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "wasserwelt",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "water-1440-ui100-without.png": {
+      "bytes": 2921087,
+      "sha256": "732e1f42b7e597b4f8e19448e2e0d40ed1d8e14454e092cbbcb869b56c6e8699",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "wasserwelt",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "water-1440-high-zoom.png": {
+      "bytes": 3046934,
+      "sha256": "9695dc48a756f54fb31fe7fd93992028ff6ecd9a6e2c031df77d64422d00cd7f",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "wasserwelt",
+      "requested_cell": 72.0,
+      "actual_cell": 56.94
+    },
+    "nature-1080-ui100-with.png": {
+      "bytes": 1917801,
+      "sha256": "2eddba9949127bfea98432329f996e3c1201c6e99b3982f2675a87d42a343482",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "family": "landschaften-natur",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "nature-1080-ui100-without.png": {
+      "bytes": 1839615,
+      "sha256": "8f2a1b353f91f35b833db7b82b0b7610bab42d8061ad3f7fb024ebc4a6fce5fe",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "family": "landschaften-natur",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "nature-1440-ui100-with.png": {
+      "bytes": 3045213,
+      "sha256": "9c30d4829a1c49a1e07c33697c25674bace66544c21f10108be7ccea25fdccbe",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "landschaften-natur",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "nature-1440-ui100-without.png": {
+      "bytes": 2921783,
+      "sha256": "3754b6448a05f5e5f41f64c5d9e76305568d5688bcbc387397ab77396bc9b285",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "landschaften-natur",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "nature-1440-high-zoom.png": {
+      "bytes": 3070200,
+      "sha256": "c8e43ec221916495d98705f4f4c6b18597cf1370c6277dc78b9572202a1c8fff",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "landschaften-natur",
+      "requested_cell": 72.0,
+      "actual_cell": 56.94
+    },
+    "help-1080-ui100-with.png": {
+      "bytes": 2010663,
+      "sha256": "f23bcd496bedc374a8952b7f1c2a4a9e6ff3d1b522d0f2fab717e1b61e44eb93",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "family": "help",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "help-1080-ui100-without.png": {
+      "bytes": 1978403,
+      "sha256": "e775ced5c5a7bfb5ffa61c39e0075f49ee9aa861aaf8bb745736a114d5c0a184",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "family": "help",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "help-1440-ui100-with.png": {
+      "bytes": 3181749,
+      "sha256": "745a7bf4ca720996cd97196a7ef2d03c18caac1afe75ec5ddb6818c26a628605",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "help",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "help-1440-ui100-without.png": {
+      "bytes": 3131916,
+      "sha256": "87028f5fef6d3b613a4ef181b35cd5b7adcad77bcdf21908df771469e9ad5297",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "help",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "help-1440-ui100-scrolled.png": {
+      "bytes": 3306782,
+      "sha256": "dda1b4c1c590636ab38bb735d6e3c91627faff57efaa35b2b366b047d1877cae",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "help",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "help-settings-pan-moving.png": {
+      "bytes": 3046870,
+      "sha256": "99e6f5fd242c6923617182997590cb0fd21811d26cd70d05a46ca9bb729b91bb",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "settings-1440-ui100.png": {
+      "bytes": 2931261,
+      "sha256": "0e21520ed77958e49c377b5c83e44b02aa562253e48a0bb355ab5c6afc05bfdb",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "help-1440-return.png": {
+      "bytes": 3307723,
+      "sha256": "2d62ef80caa115c96522027ef86d3d48f31e682950849c58cc1cd2b9c794624b",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "help",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "help-720-ui125-tight-with.png": {
+      "bytes": 1077081,
+      "sha256": "bb05dbd1fa60bedcca1e307b02d13abeaa7f9e6d2b6b1a58ca919f15df7515e9",
+      "viewport": [
+        1280,
+        720
+      ],
+      "ui_scale": 1.25,
+      "family": "help",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "help-720-ui125-tight-without.png": {
+      "bytes": 1077081,
+      "sha256": "bb05dbd1fa60bedcca1e307b02d13abeaa7f9e6d2b6b1a58ca919f15df7515e9",
+      "viewport": [
+        1280,
+        720
+      ],
+      "ui_scale": 1.25,
+      "family": "help",
+      "requested_cell": 24.0,
+      "actual_cell": 24.0
+    },
+    "large-720-ui125-high-zoom-with.png": {
+      "bytes": 1007947,
+      "sha256": "4fe42ac5c38d650029ff639aa968c9f1485c0690264df7dede8b54b39aa5e2c1",
+      "viewport": [
+        1280,
+        720
+      ],
+      "ui_scale": 1.25,
+      "family": "landschaften-natur",
+      "requested_cell": 72.0,
+      "actual_cell": 8.68
+    },
+    "large-720-ui125-high-zoom-without.png": {
+      "bytes": 1007947,
+      "sha256": "4fe42ac5c38d650029ff639aa968c9f1485c0690264df7dede8b54b39aa5e2c1",
+      "viewport": [
+        1280,
+        720
+      ],
+      "ui_scale": 1.25,
+      "family": "landschaften-natur",
+      "requested_cell": 72.0,
+      "actual_cell": 8.68
+    },
+    "large-1440-ui125-high-zoom-with.png": {
+      "bytes": 3331430,
+      "sha256": "0a26e9da7157291c71ef3fcff26ffe8264b92a67999528c4265b29dc523fa65e",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.25,
+      "family": "landschaften-natur",
+      "requested_cell": 72.0,
+      "actual_cell": 20.97
+    },
+    "large-1440-ui125-high-zoom-without.png": {
+      "bytes": 3218944,
+      "sha256": "ddcd93ae12e9bf19741b94b42d4c2bf121e28ad18a9ec881ebda9b84918dd201",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.25,
+      "family": "landschaften-natur",
+      "requested_cell": 72.0,
+      "actual_cell": 20.97
+    },
+    "catalog-1440-ui125.png": {
+      "bytes": 3040623,
+      "sha256": "8de6d923b28ed05ca097da0d5e5796b59cb4dc04d050dda74701f37425925fbf",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.25,
+      "family": "",
+      "requested_cell": 72.0,
+      "actual_cell": 20.97
+    },
+    "independent-work-with.png": {
+      "bytes": 2057230,
+      "sha256": "772b6b6797b2188ab0033f66fa8134aca8302fb794b6428a85977fef213aa711",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "family": "landschaften-natur",
+      "requested_cell": 72.0,
+      "actual_cell": 15.49
+    },
+    "independent-work-without.png": {
+      "bytes": 1990435,
+      "sha256": "12394fd34aeb801acacf4663b70731c4a95db5f52f4ce2149dcf95973a751a06",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "ui_scale": 1.0,
+      "family": "landschaften-natur",
+      "requested_cell": 72.0,
+      "actual_cell": 15.49
+    },
+    "shallow-grid-overlap-1440-ui100-with.png": {
+      "bytes": 3126230,
+      "sha256": "744f53a7d7b3d61157a923ccd6bdcc651f3415ba2703cc07105fff5dc78b0516",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "wasserwelt",
+      "requested_cell": 37.0,
+      "actual_cell": 37.0
+    },
+    "shallow-grid-overlap-1440-ui100-without.png": {
+      "bytes": 3050685,
+      "sha256": "5061873c43e9a00395039f27b5faa6bd940b984eab77f0451b551ee95f98fb8e",
+      "viewport": [
+        2560,
+        1440
+      ],
+      "ui_scale": 1.0,
+      "family": "wasserwelt",
+      "requested_cell": 37.0,
+      "actual_cell": 37.0
+    }
+  },
+  "comparisons": [
+    {
+      "with_file": "water-1080-ui100-with.png",
+      "without_file": "water-1080-ui100-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 64456,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        228,
+        678,
+        1825,
+        1056
+      ]
+    },
+    {
+      "with_file": "water-1440-ui100-with.png",
+      "without_file": "water-1440-ui100-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 88539,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        297,
+        959,
+        2441,
+        1416
+      ]
+    },
+    {
+      "with_file": "nature-1080-ui100-with.png",
+      "without_file": "nature-1080-ui100-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 103348,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        229,
+        686,
+        1825,
+        1056
+      ]
+    },
+    {
+      "with_file": "nature-1440-ui100-with.png",
+      "without_file": "nature-1440-ui100-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 146905,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        297,
+        968,
+        2441,
+        1416
+      ]
+    },
+    {
+      "with_file": "help-1080-ui100-with.png",
+      "without_file": "help-1080-ui100-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 84396,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        228,
+        747,
+        1793,
+        1056
+      ]
+    },
+    {
+      "with_file": "help-1440-ui100-with.png",
+      "without_file": "help-1440-ui100-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 121664,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        297,
+        1042,
+        2409,
+        1416
+      ]
+    },
+    {
+      "with_file": "help-720-ui125-tight-with.png",
+      "without_file": "help-720-ui125-tight-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 0,
+      "outside_drawing_regions": 0,
+      "difference_bounds": null
+    },
+    {
+      "with_file": "large-720-ui125-high-zoom-with.png",
+      "without_file": "large-720-ui125-high-zoom-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 0,
+      "outside_drawing_regions": 0,
+      "difference_bounds": null
+    },
+    {
+      "with_file": "large-1440-ui125-high-zoom-with.png",
+      "without_file": "large-1440-ui125-high-zoom-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 135195,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        303,
+        962,
+        2435,
+        1410
+      ]
+    },
+    {
+      "with_file": "independent-work-with.png",
+      "without_file": "independent-work-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 88832,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        1346,
+        686,
+        1825,
+        1056
+      ]
+    },
+    {
+      "with_file": "shallow-grid-overlap-1440-ui100-with.png",
+      "without_file": "shallow-grid-overlap-1440-ui100-without.png",
+      "geometry_identical": true,
+      "changed_pixels": 67097,
+      "outside_drawing_regions": 0,
+      "difference_bounds": [
+        1861,
+        959,
+        2441,
+        1416
+      ]
+    }
+  ],
+  "assertions": 79,
+  "passed": true
+}
