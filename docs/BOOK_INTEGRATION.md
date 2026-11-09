@@ -74,6 +74,13 @@ getrennten synthetischen Prüfwegen nachgewiesen.
 
 ## Navigation und Darstellung
 
+**RZ-EVAL-P1 / #558 · ausschließlich Versuchsbranch:** Die fünf gebundenen IDs
+verwenden eine gemeinsame papiergebundene transparente Leinwand und Bedarfsladen
+statt der Kategoriepaare. A/B1/B2/C vergleichen lokale Überlappung ohne globale
+Ausblendung oder Layoutänderung. [Versuchsvertrag](RZ_EVAL_P1.md) bindet Umfang,
+Motivausschluss, Eigentümerfeedback und getrennte T01/R01/M01/D01. Kein endgültiger
+Bildsatz und keine Freigabe zur Bestandsintegration.
+
 **RAND-P1 / #550:** Auf der rechten Arbeitsseite erscheinen ausschließlich für
 `wasserwelt` und `landschaften-natur` je zwei passive ImageGen-Pilotzeichnungen,
 auf der rechten Hilfe ein eigenes Paar. `book/marginalia.gd` liegt unter der

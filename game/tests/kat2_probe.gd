@@ -195,6 +195,7 @@ func run() -> void:
 		await preload("res://tests/display_cases.gd").run(self)
 		await preload("res://tests/view_title_cases.gd").run(self)
 		await preload("res://tests/marginalia_cases.gd").run(self)
+		await preload("res://tests/rz_eval_cases.gd").run(self)
 		await preload("res://tests/navigation_cases.gd").work(self)
 		await information_saves()
 	elif mode == "kb":

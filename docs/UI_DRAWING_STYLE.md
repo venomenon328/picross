@@ -298,6 +298,13 @@ Miniaturprojektion, nicht diesen Hauptraster- oder Zellzustandsvertrag.
 
 ### ZS-D04: Buch, funktionale UI und passive Pilotzeichnungen
 
+**RZ-EVAL-P1 / #558 · begrenzter Versuch:** Für genau fünf gebundene Rätsel gilt
+auf dessen Arbeitsbranch der [Versuchsvertrag](RZ_EVAL_P1.md): zusammenhängende
+gemeinsame Leinwand, Kontext ohne das konkrete Rätselmotiv und lokale A/B1/B2/C-
+Überlappungsprobe. Die bevorzugte niedrige Mitte ist keine harte Motivmaske.
+Die nachfolgenden RAND-P1-Zweiteilungs-/Ausblendregeln gelten weiterhin für die
+übrigen bisherigen Motive, nicht als Fallback für diese fünf Proben.
+
 RAND-P1 / [#550](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692)
 öffnet die frühere Dekorgrenze gezielt für drei reversible ImageGen-Motivpaare:
 Wasserwelt, Landschaften & Natur und Hilfe. Große helle Graphitskizze rechts

@@ -1,5 +1,16 @@
 # Native Prüfmodule und Originalnachweise
 
+## RZ-EVAL-P1 / #558: fünf rätselspezifische Leinwände
+
+Das gewählte `native.catalog` ergänzt im vorhandenen Informationsprozess kleine
+synthetische Fälle für stabile gemeinsame Leinwand bei wechselnder Überlappung,
+Pointer-/Fokusdurchlässigkeit, unveränderte Funktionsgeometrie/Savebytes,
+absichtlich leer gegenüber fehlend/defekt und echte asynchrone Anfragen mit
+veralteter Besuchsgeneration. Keine Produktionsrätsel, neue Prozess-/Ergebnis-
+oder Dauerbildfamilie. Technischer Realzeit-/Windows-/Formatvergleich und
+unabhängiges R01 sowie Eigentümer-M01/D01 bleiben gemäß
+[Versuchsvertrag](RZ_EVAL_P1.md) einmalige getrennte Aufgaben auf befristetem Reviewref.
+
 ## RAND-P1 / #550: begrenzte passive Randzeichnungen
 
 Das gewählte `native.catalog` prüft im vorhandenen Informationsprozess kleine

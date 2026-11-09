@@ -1,22 +1,22 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/550",
-  "package": "RAND-P1",
+  "issue": "https://github.com/venomenon328/picross/issues/558",
+  "package": "RZ-EVAL-P1",
   "modules": [
     "native.catalog"
   ],
-  "purpose": "Six original ImageGen pilot components on existing regular book work/help pages. Core builds Windows x64 player including provenance; native.catalog covers cheap deterministic placement, stable association, passive input, unchanged help geometry plus existing catalog/information behavior.",
-  "omitted": "No gameplay, save/registry schema, definitions, reveals, cell rendering, fonts, controls or catalog/settings illustrations change. No native.core/history/completion/adapters/graphics/export, tools, production.*, preflight, delivery or Chromium. Core delivery checks cover two added license extras. Real native with/without, tight UI125/zoom and transition/input evidence are one-time review originals, not replaced by catalog component passes. R01 and owner M01 remain before merge; issue 550 stays open for later scope.",
+  "purpose": "Reversible five-ID puzzle illustration evaluation: one shared transparent canvas, bounded visit loading and A/B1/B2/C local overlap comparison. Core Windows delivery plus native.catalog synthetic placement, alpha, geometry, passive input and stale/failed-load cases in the existing information process.",
+  "omitted": "No puzzle logic, solutions, registry/package or save format, cell renderer, fonts, help/catalog/settings art or authoring workflow changes. No other native groups, tools, production.*, preflight, delivery or Chromium: actual book zoom/transition/input and PNG/WebP/import/Windows/Web-byte comparisons are one-time targeted evidence. Five real IDs are editorial references, never permanent regression fixtures. Independent R01 and owner M01/D01 remain open; no merge or stock adoption. Evidence on a separate expiring review ref, no gallery in CI/player downloads.",
   "test_changes": [
     {
-      "path": "game/tests/marginalia_cases.gd",
+      "path": "game/tests/rz_eval_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Small placement/input/geometry/association assertions in existing information process; detects functional displacement, dense overlaps and intercepted input flags without permanent images or a new matrix."
+      "reason": "Small synthetic shared-canvas, transparent/absent/broken/stale load and passive geometry assertions; no catalog puzzle fixture, new process or permanent screenshot. Reassess/remove with the experiment after R01/M01/D01."
     },
     {
       "path": "game/tests/kat2_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Call marginalia cases in existing native.catalog information mode; retain existing processes, reports, checks and independent readers."
+      "reason": "Run the small RZ evaluation cases in the existing native.catalog information process; keep existing reports and independent readers."
     }
   ],
   "core_change": null,

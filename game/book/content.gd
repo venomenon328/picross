@@ -5,6 +5,7 @@ const CatalogSpread = preload("res://book/catalog.gd")
 const Information = preload("res://book/information.gd")
 const ViewTitle = preload("res://ui/view_title.gd")
 const Marginalia = preload("res://book/marginalia.gd")
+const RzEval = preload("res://book/rz_eval.gd")
 signal opening_requested(id: String)
 signal return_requested
 signal catalog_shown
@@ -20,6 +21,7 @@ var recent_panel: BookButton
 var recent_retry: BookButton
 var recent_signature: String = ""
 var marginalia: Marginalia
+var rz_eval: RzEval
 
 func configure_catalog(_catalog: Control) -> void: pass
 
@@ -86,6 +88,10 @@ func _build() -> void:
 	marginalia = Marginalia.new()
 	page.add_child(marginalia)
 	page.move_child(marginalia,0)
+	rz_eval = RzEval.new()
+	page.add_child(rz_eval)
+	page.move_child(rz_eval,1)
+	rz_eval.publish_allowed = func() -> bool: return book.state == book.State.PREPARING
 
 func _process(_delta: float) -> void:
 	if recent_retry == null: return
@@ -210,6 +216,28 @@ func _layout_book(prepare_board: bool = false) -> void:
 
 func _layout_marginalia() -> void:
 	if marginalia == null or book == null: return
+	if rz_eval != null:
+		var id: String = str(session.definition.id) if work.visible and session != null else ""
+		if RzEval.PILOTS.has(id):
+			marginalia.arrange("",Rect2(),size,ui_scale,[],[])
+			if not rz_eval.enabled:
+				rz_eval.visit("","")
+				return
+			var protection: Array[Rect2] = [surface.card,surface.palette]
+			protection.append_array(surface.wells)
+			for control: Control in [title,coordinate,tools_scroll,status_label,layout_warning,work_repair_button,save_retry,actions["help"],actions["menu"],actions["nav-information"]]:
+				if control != null and control.is_visible_in_tree(): protection.append(control.get_global_rect())
+			var area: Rect2
+			if board.layout_valid:
+				area = board.view.bounds().grow(board.FRAME_MARGIN)
+				area.position += board.position
+				for rect: Rect2 in [board.row_clue_area(),board.column_clue_area()]:
+					rect.position += board.position
+					protection.append(rect)
+			rz_eval.visit(id,rz_eval.path_for(id))
+			rz_eval.arrange(book.projected_paper(true),size,ui_scale,area,protection)
+			return
+		rz_eval.visit("","")
 	var key: String = ""
 	var paper: Rect2
 	var hard: Array[Rect2] = []
