@@ -1,0 +1,4 @@
+RAND-P1 marginal drawings: six original OpenAI ImageGen generations, 2026-11-09.
+User-authorized project pilot, not a final selected illustration set.
+See provenance.json for exact prompts, hashes, source and selection status.
+No downloaded third-party artwork or mock screenshot UI is included.

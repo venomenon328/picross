@@ -346,6 +346,13 @@ Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer�
 
 ### 5.2 Frühe visuelle Arbeit
 
+RAND-P1 / [#550](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692)
+erprobt drei zweiteilige passive ImageGen-Randzeichnungen auf Rätsel- und Hilfepapier.
+Die Kategorie allein bestimmt die Rätselzeichnung; Spoilergrenze, funktionales
+Layout und Eingabe bleiben maßgeblich. Ein begrenzter Pilot ist keine Freigabe
+eines endgültigen Motivsatzes. [Zeichen-/Platzvertrag](UI_DRAWING_STYLE.md#zs-d04-buch-funktionale-ui-und-passive-pilotzeichnungen)
+und persönliche Auswahl vor Produkt-Merge konkretisieren den Umfang.
+
 Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh und parallel zur Funktionalität bearbeitet. Die Gestaltung ist kein abschließender Skin über einer bereits fertigen Oberfläche. Ebenso werden frühe Entwürfe nicht vor praktischer Erprobung unveränderlich festgeschrieben.
 
 Das Spiel soll eine spürbare thematische Tätigkeit vermitteln und seine Sammlungen, Bearbeitung und Enthüllungen gestalterisch zusammenführen. Eine komplexe Geschichte ist nicht erforderlich. Eine zusätzliche Wirtschaftssimulation, Währungen oder ein Aufbauspiel folgen daraus nicht automatisch.

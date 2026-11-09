@@ -215,6 +215,17 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 
 ## 4. Visuelle Ausarbeitung
 
+RAND-P1 / [#550](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692)
+erprobt auf dem regulären Buch drei zweiteilige helle Graphitkompositionen aus
+ImageGen: Blasentang/Muschel für Wasserwelt, Steg/Schilf/Feder für Landschaften
+& Natur und Anspitzer/Stift für Hilfe. Dies ist eine begrenzte Öffnung der
+älteren Randdekorgrenze, keine finale Motivwahl oder neue Kataloggestaltung.
+Eine größere rechte und kleinere linke Zeichnung nutzen das nach Funktionslayout
+verbleibende Papier. Dezente Überlagerung darf nach Eigentümerpräzisierung
+an realen Bildern bewertet werden; dichte Fälle blenden Teile unabhängig aus.
+Raster, Lesespalte, Bedienelemente und Trefferbudgets werden dafür nicht verändert.
+[Aktueller Zeichenvertrag](UI_DRAWING_STYLE.md#zs-d04-buch-funktionale-ui-und-passive-pilotzeichnungen).
+
 **BTI-C · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
 großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`
 sind nach [BTI](VIEW_TITLE_ART.md) neutrale offen schraffierte V2-rev1-Graphit-

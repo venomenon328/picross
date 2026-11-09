@@ -74,6 +74,22 @@ getrennten synthetischen Prüfwegen nachgewiesen.
 
 ## Navigation und Darstellung
 
+**RAND-P1 / #550:** Auf der rechten Arbeitsseite erscheinen ausschließlich für
+`wasserwelt` und `landschaften-natur` je zwei passive ImageGen-Pilotzeichnungen,
+auf der rechten Hilfe ein eigenes Paar. `book/marginalia.gd` liegt unter der
+funktionalen UI innerhalb derselben Seiten-/Capturehierarchie. Es liest die
+bestehenden Papierprojektionen und belegten Geometrien, verändert keine davon
+und fängt weder Pointer, Fokus noch Scrollen ab. Auswahl und Lage hängen nicht
+an Zellstand, Undo, Kapitel oder Artikeloffset. Je Motivteil bestimmen sichere
+Falz-/Papierränder, Kopf, Sidebar, Meldungen und Leseflächen den nutzbaren Platz;
+bei dichten Überschneidungen entfällt nur der betroffene Teil. Eine geringe,
+an echten Bildern zu beurteilende Überlagerung ist gemäß Eigentümerpräzisierung
+zulässig; bei 1440p ist möglichst freie Platzierung das Ziel. Katalog,
+Einstellungen, Spiel-/Save-/Registrydaten und funktionale Budgets bleiben gleich.
+Keine neue Einstellung oder endgültige Motivsatzwahl. [Paket und Gates](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692),
+[Zeichenvertrag](UI_DRAWING_STYLE.md#zs-d04-buch-funktionale-ui-und-passive-pilotzeichnungen),
+[Originalherkunft](../game/art/drawing/margins/provenance.json).
+
 **NAV-A / #549:** Auf der jeweils sichtbaren sicheren Papierseite steht eine
 ortsfeste Kopfgruppe. Im Katalog: handgezeichnetes Beenden-X, dann Zahnrad und Hilfe.
 Das X besitzt den Tooltip und zugänglichen Namen „Beenden“.
