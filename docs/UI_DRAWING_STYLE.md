@@ -296,7 +296,28 @@ unterscheidbar. Normale und teilweise sichtbare Zellen verwenden dieselbe Geomet
 mit korrektem Anschnitt; keine Ersatzmarkierung am Viewportrand. N05 ändert nur die
 Miniaturprojektion, nicht diesen Hauptraster- oder Zellzustandsvertrag.
 
-### ZS-D04: Buch und funktionale UI ohne zusätzliche Randdekoration
+### ZS-D04: Buch, funktionale UI und passive Pilotzeichnungen
+
+RAND-P1 / [#550](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692)
+öffnet die frühere Dekorgrenze gezielt für drei reversible ImageGen-Motivpaare:
+Wasserwelt, Landschaften & Natur und Hilfe. Große helle Graphitskizze rechts
+unten, kleinere Antwort links unten; keine eingebrannte UI oder geometrische
+Ersatzzeichnung. Auswahl erfolgt ausschließlich nach sichtbarer Kategorie bzw.
+Hilfe, niemals nach Lösung oder Fortschritt. Die Originale und ihre
+[Herkunft](../game/art/drawing/margins/provenance.json) sind getrennt platzierbar.
+Das vorhandene Layout bestimmt danach den Dekorraum; die Zeichnung bleibt im
+Buch-Capture und ignoriert Eingaben/Fokus. Katalog/Einstellungen bleiben ohne Pilotmotive.
+
+Die Eigentümerpräzisierung erlaubt eine geringe Überlagerung unter Raster oder
+Hilfetext, wenn der native Mit-/Ohne-Vergleich den ruhigen Untergrund und die
+Lesbarkeit bestätigt. Bei 1440p bleibt eine freie Anordnung das Ziel. Dichte
+Überlagerungen und harte Bedienflächen lassen den jeweiligen Motivteil entfallen,
+statt ihn beliebig klein zu skalieren oder Funktionslayout zu verschieben.
+Kein neuer Rasteruntergrund ohne nachgewiesenen Bedarf. Unabhängiges R01 und
+persönliche Motivauswahl/Wirkungsprüfung M01 bleiben vor Produkt-Merge offen.
+
+Die folgende E1/N05-Passage beschreibt die frühere Studiengrenze; sie verbietet
+nicht den ausdrücklich beauftragten RAND-P1-Pilot.
 
 Die zusätzliche Studien-Randdekoration wird nach E1/N05 entfernt. Funktionale
 Buchmontierungen, Werkzeuge und Miniaturfassung bleiben erhalten. VS2-E1/N03/N04
