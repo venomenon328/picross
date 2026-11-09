@@ -3,10 +3,10 @@
   "package": "RZ-EVAL-P1",
   "created": "2026-11-09",
   "decision": "https://github.com/venomenon328/picross/issues/558#issuecomment-6739323575",
-  "source": "OpenAI built-in image_gen via imagegen skill; 16 independent original generations, no input/third-party asset bytes",
+  "source": "OpenAI built-in image_gen via imagegen skill; 20 independent generations plus 3 transparency correction edits, no third-party image inputs. Edit parent IDs preserve exact source provenance.",
   "rights": "User-authorized original generations for this project; no exclusive-rights claim; final owner image approval pending.",
-  "processing": "Pillow 12.3.0. Same proportional LANCZOS contain, horizontal centre and bottom anchor on RGBA 4:1 canvas at every size; no crop, no art retouch, no alpha replacement, no per-ID layout. Original bytes preserved on separate expiring review ref.",
-  "owner_feedback": "No puzzle subject in drawings. Prefer level/U/half-U silhouette with low centre, not a strict height restriction. Three-tower central peak rejected; others considered okay as drafts, not final book approval.",
+  "processing": "Pillow 12.3.0. Same proportional LANCZOS contain, horizontal centre and bottom anchor on RGBA 4:1 canvas at every size; no crop, no art retouch, no alpha replacement, no per-ID layout. Original bytes preserved on separate expiring review ref. Shared runtime shader edge fade, not baked image retouch. KL alpha corrections were performed exclusively by ImageGen against the named parent originals.",
+  "owner_feedback": "Owner selected Tomate 1, Qualle 2, Hills 1/rev2, Basilisk 3 on the book. Previous KL trio rejected for missing big-city atmosphere; replacement trio pending. Clues must share grid transparency; no hard art cuts, soft edge fade permitted, whole motifs inside area preferred.",
   "images": [
     {
       "id": "tomate-1",
@@ -333,7 +333,7 @@
       "prompt": "Use case: illustration-story. New original transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition, pale neutral-gray observational pencil, thin varied-pressure broken contours and very sparse fine crosshatching; lots of transparent negative space; no solid surface fills. Transparent background and interiors between strokes, NO paper, NO white/gray wash, no book, UI, text, lettering, grid or border. Never depict the concrete puzzle subject. OWNER BRIEF: credible Kuala Lumpur but absolutely no Petronas Towers. An airy street-level impression of old Petaling Street shophouses: two-storey narrow facades, covered five-foot-way arcades, tiled roofs, folded awnings and an unlettered kopitiam table at street edge. A couple of hanging lanterns. No skyline, no skyscrapers, no twin towers, no skybridge.",
       "generation_wall_ms": 37266,
       "briefing": "owner",
-      "status": "candidate; final owner selection/approval pending",
+      "status": "rejected by owner: needs more metropolitan city atmosphere",
       "bytes": 2805434,
       "sha256": "6a9d39423c6dac2ab2ee89702626e63f7cd9f51e493d590566d8a3ab98253dfe",
       "size": [
@@ -350,24 +350,14 @@
         2172,
         724
       ],
-      "derivatives": [
-        {
-          "path": "petronas-2-2304.png",
-          "size": [
-            2304,
-            576
-          ],
-          "bytes": 1614678,
-          "sha256": "05c5d92e0f6181d6add25447678498c248eb3c525e1f677a55b2a736c9302334"
-        }
-      ]
+      "derivatives": []
     },
     {
       "id": "petronas-3",
       "prompt": "Use case: illustration-story. New original transparent graphite marginal illustration for a puzzle-book leaf, RZ-EVAL-P1. Wide low 3:1 composition, pale neutral-gray observational pencil, thin varied-pressure broken contours and very sparse fine crosshatching; lots of transparent negative space; no solid surface fills. Transparent background and interiors between strokes, NO paper, NO white/gray wash, no book, UI, text, lettering, grid or border. Never depict the concrete puzzle subject. OWNER BRIEF: credible Kuala Lumpur without Petronas Towers. Broad low sketch of historic Kuala Lumpur Central Market's art-deco entrance facade with stepped parapet and geometric pilasters, neighbouring low shophouse roofs and a few palms. All signs completely blank. No skyscrapers, twin towers, double spires or skybridge.",
       "generation_wall_ms": 56930,
       "briefing": "owner",
-      "status": "candidate; final owner selection/approval pending",
+      "status": "rejected by owner: needs more metropolitan city atmosphere",
       "bytes": 2358635,
       "sha256": "06be1ea1ac27005c882a1d3ceb05f06dbbb531ed279077b3f4562a90afba0a4b",
       "size": [
@@ -384,17 +374,7 @@
         2172,
         724
       ],
-      "derivatives": [
-        {
-          "path": "petronas-3-2304.png",
-          "size": [
-            2304,
-            576
-          ],
-          "bytes": 1291765,
-          "sha256": "a72b8d439704dbdd7a80190836ded59dc86eba9b47460d48caec8cb6cd1f3497"
-        }
-      ]
+      "derivatives": []
     },
     {
       "id": "basilisk-1",
@@ -503,7 +483,7 @@
       "prompt": "Use case: illustration-story. New ORIGINAL wide low 3:1 transparent graphite marginal drawing for a puzzle-book leaf, RZ-EVAL-P1 Kuala Lumpur candidate 1 revision 2. OWNER BRIEF: credible impressions of Kuala Lumpur WITHOUT Petronas Towers. OWNER COMPOSITION FEEDBACK: prefer U/half-U or a level top; do not put the tallest structure in the horizontal middle. Scene: a quiet street-level detail from Kuala Lumpur's historic Petaling Street: a row of narrow two-storey shophouses receding into the distance across the LOWER MIDDLE, a taller close-up corner facade at the far left, and a tropical shade tree at far right. Awnings, tiled roofs, covered five-foot-way arcades; airy and calm, no people. The horizontal center is low and open. Delicate pale neutral-gray observational pencil with thin varied-pressure broken contours and sparse fine crosshatching. ONLY pencil strokes have alpha: all surfaces between lines, including building facades, remain genuinely transparent. No white fill, no gray wash, no solid surfaces, no paper or background rectangle, no book/UI/text/sign writing/grid/border. No skyline, no skyscrapers, no towers, no spires, no skybridge, no depiction of the concrete puzzle subject. All artwork inside generous margins, sketch edges unfinished.",
       "generation_wall_ms": 20208,
       "briefing": "owner",
-      "status": "candidate; final owner selection/approval pending",
+      "status": "rejected by owner: needs more metropolitan city atmosphere",
       "bytes": 2015956,
       "sha256": "8ab9dd79eb66d801d2c4180ff85048ecc6cb19b840cf8dd61ec4c8d31927da26",
       "size": [
@@ -520,17 +500,7 @@
         2158,
         724
       ],
-      "derivatives": [
-        {
-          "path": "petronas-1-2304.png",
-          "size": [
-            2304,
-            576
-          ],
-          "bytes": 1142969,
-          "sha256": "dc54f67ae238b09767b338ba7311cdb4d74f92b8a218f2c2b0b8220c242a776b"
-        }
-      ]
+      "derivatives": []
     },
     {
       "id": "hills-1-r2",
@@ -565,7 +535,191 @@
           "sha256": "873233023de250d302f28273712405dfb4af6ba8d2ac24fc6df948a5524e6109"
         }
       ]
+    },
+    {
+      "id": "petronas-1-r3",
+      "prompt": "Use case: illustration-story. RZ-EVAL-P1, new independent Kuala Lumpur context candidate revision after owner rejected quiet low-rise drafts: needs much more convincing metropolitan big-city atmosphere, WITHOUT the Petronas Towers or any imitation of them. Original transparent 3:1 ultra-wide observational graphite drawing. Delicate pale neutral-gray varied-pressure pencil, retraced broken contours, sparse fine hatching, completely transparent negative spaces and object interiors; only pencil strokes opaque. No paper, no white or gray wash or opaque surfaces, no book, grid, UI, borders, writing or lettering. Compose a complete self-contained vignette with a generous transparent breathing margin on ALL FOUR EDGES; no object touches or is cut off by image boundaries. Lower central skyline, higher architectural mass at outer left and/or right, level/U/half-U rhythm, spacious center for overlapping puzzle grid; natural composition, not symmetrical. Never depict the concrete puzzle subject: no Petronas Towers, no paired identical spires, no twin-tower silhouette or skybridge. A lively Bukit Bintang-inspired Kuala Lumpur intersection: tall varied modern office slabs receding at far left, a sleek elevated single-beam monorail curving from left foreground toward a distant low central street, a few mature tropical roadside trees and modern commercial facades on the outer right. Tiny cars and pedestrians as subtle scale cues. A humid dense modern Asian metropolis, metropolitan street depth; no identifiable landmark tower. Complete tops and bases visible within the drawing.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur without Petronas Towers",
+      "status": "rejected implementation attempt: unwanted opaque white fills; corrected by linked ImageGen alpha edit",
+      "bytes": 2653236,
+      "sha256": "e732a75ced1cc7ae422e87a3d965f3e128d1df4f09c725c3186f1a8088f9c726",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        194
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "petronas-2-r3",
+      "prompt": "Use case: illustration-story. RZ-EVAL-P1, new independent Kuala Lumpur context candidate revision after owner rejected quiet low-rise drafts: needs much more convincing metropolitan big-city atmosphere, WITHOUT the Petronas Towers or any imitation of them. Original transparent 3:1 ultra-wide observational graphite drawing. Delicate pale neutral-gray varied-pressure pencil, retraced broken contours, sparse fine hatching, completely transparent negative spaces and object interiors; only pencil strokes opaque. No paper, no white or gray wash or opaque surfaces, no book, grid, UI, borders, writing or lettering. Compose a complete self-contained vignette with a generous transparent breathing margin on ALL FOUR EDGES; no object touches or is cut off by image boundaries. Lower central skyline, higher architectural mass at outer left and/or right, level/U/half-U rhythm, spacious center for overlapping puzzle grid; natural composition, not symmetrical. Never depict the concrete puzzle subject: no Petronas Towers, no paired identical spires, no twin-tower silhouette or skybridge. A distinct modern Kuala Lumpur city-street panorama after a tropical shower: asymmetrical cluster of tall glass residential/office buildings at the far right with varied flat and sloping rooflines, lower urban street terraces receding toward the center, broad wet pavement suggested by very few pencil reflections, palms at left, small moving cars and a bus. Urban density and authentic tropical metropolitan atmosphere. No skyline imitation of twin towers. All buildings whole inside wide transparent margin.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur without Petronas Towers",
+      "status": "rejected implementation attempt: unwanted opaque white fills; corrected by linked ImageGen alpha edit",
+      "bytes": 2871909,
+      "sha256": "bf41d600f84ab21b4bfead13b32fb4d1c7917a991c6c87117d35e84a5badb3f2",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        247
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "petronas-3-r3",
+      "prompt": "Use case: illustration-story. RZ-EVAL-P1, new independent Kuala Lumpur context candidate revision after owner rejected quiet low-rise drafts: needs much more convincing metropolitan big-city atmosphere, WITHOUT the Petronas Towers or any imitation of them. Original transparent 3:1 ultra-wide observational graphite drawing. Delicate pale neutral-gray varied-pressure pencil, retraced broken contours, sparse fine hatching, completely transparent negative spaces and object interiors; only pencil strokes opaque. No paper, no white or gray wash or opaque surfaces, no book, grid, UI, borders, writing or lettering. Compose a complete self-contained vignette with a generous transparent breathing margin on ALL FOUR EDGES; no object touches or is cut off by image boundaries. Lower central skyline, higher architectural mass at outer left and/or right, level/U/half-U rhythm, spacious center for overlapping puzzle grid; natural composition, not symmetrical. Never depict the concrete puzzle subject: no Petronas Towers, no paired identical spires, no twin-tower silhouette or skybridge. A wide Kuala Lumpur metropolitan scene with historic shophouse arcade in the lower left foreground contrasted against dense varied high-rise blocks at outer left and right, an overhead urban rail station/viaduct toward the outer right, tiny scooters and a street crossing at ground level. Clear big-city bustle and depth, lower open center. Every mass ends naturally before the transparent perimeter. No isolated grand civic building, no central tallest tower.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur without Petronas Towers",
+      "status": "rejected implementation attempt: unwanted opaque white fills; corrected by linked ImageGen alpha edit",
+      "bytes": 2944542,
+      "sha256": "cf59d5a6d734f8dacb3792153ced95744376d80f75fa4a6a422e2c89f9dfb717",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        253
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": []
+    },
+    {
+      "id": "petronas-1-r3-alpha",
+      "parent": "petronas-1-r3",
+      "prompt": "Edit this exact composition into a genuinely transparent graphite LINE DRAWING. Preserve the metropolitan Kuala Lumpur scene, its content, the low-center U composition and aspect ratio, but REMOVE ALL WHITE AND PALE SOLID FILL: buildings, roads, sky, foliage and object interiors must be completely transparent BETWEEN individual neutral-gray pencil strokes. Remove the ragged white paper-like surround entirely. There must be NO paper, NO opaque white pixels or milky wash anywhere, NO filled silhouettes or object surfaces. Only thin gray graphite linework and very sparse graphite hatching have alpha. Maintain generous fully transparent breathing margin around complete visible buildings and scene; no new elements, towers, text, book or UI. Never add Petronas Towers, twin identical spires or skybridge. This is a transparent asset, not a pencil picture on white paper.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur; alpha-only linework correction",
+      "status": "candidate; owner selection pending",
+      "bytes": 2425758,
+      "sha256": "49ee6c191048e97e7df4f7aee909ed2f88a56d9b0f9b1d5c778fbb62ac188a32",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        24,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "petronas-1-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 1395059,
+          "sha256": "0e0d324e0814e445d8bb550ba7e34eb4f0f894c25a8aad60b0edbdadfeffc2e9"
+        }
+      ]
+    },
+    {
+      "id": "petronas-2-r3-alpha",
+      "parent": "petronas-2-r3",
+      "prompt": "Edit this exact composition into a genuinely transparent graphite LINE DRAWING. Preserve the metropolitan Kuala Lumpur scene, its content, the low-center U composition and aspect ratio, but REMOVE ALL WHITE AND PALE SOLID FILL: buildings, roads, sky, foliage and object interiors must be completely transparent BETWEEN individual neutral-gray pencil strokes. Remove the ragged white paper-like surround entirely. There must be NO paper, NO opaque white pixels or milky wash anywhere, NO filled silhouettes or object surfaces. Only thin gray graphite linework and very sparse graphite hatching have alpha. Maintain generous fully transparent breathing margin around complete visible buildings and scene; no new elements, towers, text, book or UI. Never add Petronas Towers, twin identical spires or skybridge. This is a transparent asset, not a pencil picture on white paper.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur; alpha-only linework correction",
+      "status": "candidate; owner selection pending",
+      "bytes": 2660137,
+      "sha256": "d4c866bfa9139243df7414b315c5f678529c5471b076256d6cf821a3ab3524db",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        246
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2172,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "petronas-2-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 1496526,
+          "sha256": "327f7568488ea5390e5f095514e4644e04b3faf75ccdb68d5d401303246ee66a"
+        }
+      ]
+    },
+    {
+      "id": "petronas-3-r3-alpha",
+      "parent": "petronas-3-r3",
+      "prompt": "Edit this exact composition into a genuinely transparent graphite LINE DRAWING. Preserve the metropolitan Kuala Lumpur scene, its content, the low-center U composition and aspect ratio, but REMOVE ALL WHITE AND PALE SOLID FILL: buildings, roads, sky, foliage and object interiors must be completely transparent BETWEEN individual neutral-gray pencil strokes. Remove the ragged white paper-like surround entirely. There must be NO paper, NO opaque white pixels or milky wash anywhere, NO filled silhouettes or object surfaces. Only thin gray graphite linework and very sparse graphite hatching have alpha. Maintain generous fully transparent breathing margin around complete visible buildings and scene; no new elements, towers, text, book or UI. Never add Petronas Towers, twin identical spires or skybridge. This is a transparent asset, not a pencil picture on white paper.",
+      "generation_wall_ms": null,
+      "briefing": "owner revision: metropolitan Kuala Lumpur; alpha-only linework correction",
+      "status": "candidate; owner selection pending",
+      "bytes": 2767696,
+      "sha256": "dc9323b22668b529773d552daceb4d26504d5d0681d05d842d39efda67fa4274",
+      "size": [
+        2172,
+        724
+      ],
+      "alpha_extrema": [
+        0,
+        220
+      ],
+      "alpha_bbox": [
+        0,
+        0,
+        2170,
+        724
+      ],
+      "derivatives": [
+        {
+          "path": "petronas-3-2304.png",
+          "size": [
+            2304,
+            576
+          ],
+          "bytes": 1576790,
+          "sha256": "d01ece82b063ed0e882e6ffe22c92739ba87ada1781c3630229a0834162c21a8"
+        }
+      ]
     }
   ],
-  "comparison": "Other profiles/formats are temporary comparison data on the separate review ref; only 2304 PNG candidates ship in this experiment."
+  "comparison": "Other profiles/formats are temporary comparison data on the separate review ref; only 2304 PNG candidates ship in this experiment.",
+  "selection": {
+    "tomate": 1,
+    "qualle": 2,
+    "hills": 1,
+    "petronas": null,
+    "basilisk": 3
+  }
 }

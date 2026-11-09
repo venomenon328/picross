@@ -11,7 +11,8 @@ const PILOTS = {
 }
 enum Overlap { A, B1, B2, C }
 var mode: Overlap = Overlap.A
-var candidate: int = 1
+const SELECTED = {"tomate":1,"qualle":2,"hills":1,"petronas":1,"basilisk":3}
+var candidate: int = 0 # Zero follows the owner's current per-ID choice; KL is provisional.
 var profile: String = "2304"
 var extension: String = "png"
 var enabled: bool = true
@@ -21,6 +22,7 @@ var active_texture: Texture2D
 var state: String = "idle"
 var canvas: Rect2
 var grid: Rect2
+var clue_areas: Array[Rect2] = []
 var protected_areas: Array[Rect2] = []
 var generation: int = 0
 var pending_path: String = ""
@@ -37,6 +39,7 @@ func _init() -> void:
 	mouse_filter = MOUSE_FILTER_IGNORE
 	focus_mode = FOCUS_NONE
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	set_process(false)
 	texture_filter = TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 	ink = ShaderMaterial.new()
 	ink.shader = INK_SHADER
@@ -70,7 +73,9 @@ static func placement(paper: Rect2, viewport: Vector2, u: float) -> Rect2:
 
 func path_for(id: String) -> String:
 	if not PILOTS.has(id): return ""
-	return "res://art/drawing/rz_eval/%s-%d-%s.%s" % [PILOTS[id],candidate,profile,extension]
+	var family: String = PILOTS[id]
+	var choice: int = candidate if candidate > 0 else SELECTED[family]
+	return "res://art/drawing/rz_eval/%s-%d-%s.%s" % [family,choice,profile,extension]
 
 func visit(id: String, path: String) -> void:
 	if active_id == id and desired_path == path: return
@@ -102,6 +107,7 @@ func _start_latest() -> void:
 	pending_generation = generation
 	state = "loading"
 	load_count += 1
+	set_process(true)
 
 func accept_result(token: int, texture: Texture2D) -> void:
 	if token != generation or active_id.is_empty():
@@ -131,10 +137,12 @@ func _process(_delta: float) -> void:
 	last_load_ms = (Time.get_ticks_usec()-requested_at)/1000.0
 	accept_result(token,texture)
 	_start_latest()
+	if pending_path.is_empty(): set_process(false)
 
-func arrange(paper: Rect2, viewport: Vector2, u: float, board_area: Rect2, protections: Array[Rect2]) -> void:
+func arrange(paper: Rect2, viewport: Vector2, u: float, board_area: Rect2, protections: Array[Rect2], clues: Array[Rect2] = []) -> void:
 	canvas = placement(paper,viewport,u)
 	grid = board_area
+	clue_areas = clues.duplicate()
 	protected_areas = protections.duplicate()
 	queue_redraw()
 
@@ -143,6 +151,9 @@ func _draw() -> void:
 	if active_texture == null or not canvas.has_area(): return
 	ink.set_shader_parameter("overlap_mode",mode)
 	ink.set_shader_parameter("grid",Vector4(grid.position.x,grid.position.y,grid.size.x,grid.size.y))
+	for i: int in range(2):
+		var area: Rect2 = clue_areas[i] if i < clue_areas.size() else Rect2()
+		ink.set_shader_parameter("row_clues" if i == 0 else "column_clues",Vector4(area.position.x,area.position.y,area.size.x,area.size.y))
 	ink.set_shader_parameter("canvas_pixels",canvas.size)
 	var rectangles: Array[Vector4] = []
 	for i: int in range(24):
@@ -153,7 +164,10 @@ func _draw() -> void:
 	draw_set_transform(Vector2.ZERO)
 	# Use a child CanvasItem for decoration material so C's opaque paper has
 	# no decoration shader/alpha. Entire grid including unknown/X/gaps is covered.
-	if mode == Overlap.C and grid.has_area(): draw_rect(grid,Color("faf6ec"))
+	if mode == Overlap.C:
+		if grid.has_area(): draw_rect(grid,Color("faf6ec"))
+		for area: Rect2 in clue_areas:
+			if area.has_area(): draw_rect(area,Color("faf6ec"))
 	RenderingServer.canvas_item_clear(ink_item())
 	RenderingServer.canvas_item_add_texture_rect(_ink_item,canvas,active_texture.get_rid(),false)
 	RenderingServer.canvas_item_set_visible(_ink_item,true)
