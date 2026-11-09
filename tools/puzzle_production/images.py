@@ -6,19 +6,18 @@ from __future__ import annotations
 
 import hashlib
 import html
-import io
 import re
 import shutil
 import tempfile
 import time
 import uuid
-import warnings
 from pathlib import Path
 
-from PIL import Image, ImageCms, ImageFilter, ImageOps, __version__, features
+from PIL import Image, ImageFilter, __version__, features
 
 from .contract import (Aborted, Budget, InvalidInput, digest, exact_keys, integer,
                        load_json, validate_logic, write_json)
+from .image_normalization import normalize_bytes
 from .solver import solve
 from .verifier import verify
 from . import certification, palette_gate
@@ -131,57 +130,8 @@ def normalize(path: Path) -> tuple[Image.Image, dict, bytes]:
     versions()
     with path.open("rb") as stream:
         original = stream.read(MAX_BYTES + 1)
-    if len(original) > MAX_BYTES:
-        raise InvalidInput(f"Image exceeds {MAX_BYTES} encoded bytes")
-    try:
-        with warnings.catch_warnings():
-            warnings.simplefilter("error", Image.DecompressionBombWarning)
-            with Image.open(io.BytesIO(original), formats=("PNG", "JPEG")) as source:
-                fmt, size, mode = source.format, source.size, source.mode
-                if max(size) > MAX_AXIS or size[0] * size[1] > MAX_PIXELS:
-                    raise InvalidInput(f"Source exceeds {MAX_AXIS} pixels/axis or {MAX_PIXELS} decoded pixels")
-                if getattr(source, "n_frames", 1) != 1:
-                    raise InvalidInput("Animated/multiple-frame PNG is unsupported")
-                if mode not in ("1", "L", "LA", "P", "RGB", "RGBA", "CMYK"):
-                    raise InvalidInput(f"Unsupported source pixel mode {mode}; no silent high-depth conversion")
-                orientation = source.getexif().get(274, 1)
-                if orientation not in range(1, 9):
-                    raise InvalidInput("Invalid EXIF orientation")
-                icc = source.info.get("icc_profile")
-                gamma = source.info.get("gamma")
-                srgb = source.info.get("srgb")
-                if not icc and gamma is not None and srgb is None and abs(gamma - 0.45455) > 0.0001:
-                    raise InvalidInput("Non-sRGB PNG gamma requires an ICC profile")
-                source.load()  # Strict decoding; LOAD_TRUNCATED_IMAGES stays false.
-                oriented = ImageOps.exif_transpose(source)
-                alpha = oriented.convert("RGBA").getchannel("A")
-                if icc:
-                    profile = ImageCms.ImageCmsProfile(io.BytesIO(icc))
-                    # P/1/alpha are converted to their actual RGB components; CMYK
-                    # and grayscale keep their profile's input mode.
-                    input_mode = mode if mode in ("CMYK", "L") else "RGB"
-                    color = ImageCms.profileToProfile(oriented.convert(input_mode), profile,
-                              ImageCms.createProfile("sRGB"), renderingIntent=0, outputMode="RGB")
-                    treatment = "ICC to sRGB, perceptual intent"
-                else:
-                    if mode == "CMYK":
-                        raise InvalidInput("Unprofiled CMYK JPEG is unsupported; supply ICC")
-                    color = oriented.convert("RGB")
-                    treatment = "untagged/sRGB RGB or gray interpreted as sRGB"
-                color.putalpha(alpha)
-                # Deliberately drop EXIF/ICC/text after the explicit transform.
-                normalized = Image.frombytes("RGBA", color.size, color.tobytes())
-                metadata = {"format": fmt, "source_size": list(size), "source_mode": mode,
-                            "orientation": orientation, "normalized_size": list(normalized.size),
-                            "color_treatment": treatment, "icc_sha256": hashlib.sha256(icc).hexdigest() if icc else None,
-                            "alpha": "preserved, composited against design background only during rasterization"}
-                return normalized, metadata, original
-    except InvalidInput:
-        raise
-    except (OSError, ValueError, SyntaxError, Image.DecompressionBombError,
-            Image.DecompressionBombWarning, ImageCms.PyCMSError) as exc:
-        raise InvalidInput(f"Damaged/unsupported PNG or JPEG: {exc}") from exc
-
+    return normalize_bytes(original, max_bytes=MAX_BYTES, max_axis=MAX_AXIS,
+                           max_pixels=MAX_PIXELS)
 
 def rasterize(normalized: Image.Image, design: dict, variant: dict) -> list[list[str]]:
     l, t, r, b = design["crop"]

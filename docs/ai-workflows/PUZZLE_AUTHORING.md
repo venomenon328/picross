@@ -1,11 +1,14 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 38 · 09.11.2026**
+**Version 0.6.0 · Dokumentrevision 39 · 09.11.2026**
 
 HP-W1 aus [#560](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307)
 spezifiziert den **zukünftigen, noch nicht aktivierten Hintergrundweg** in
-[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md). Diese Dokumentrevision ergänzt
-seine Einordnung in §§2–9; der aktive Produktionsweg bleibt **0.6.0** mit seinen
+[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md).
+[HP-W2](https://github.com/venomenon328/picross/issues/560#issuecomment-6748799473)
+liefert dessen eigenständige Arbeits-/Entscheidungs-/Ableitungsformen sowie die
+lokale API/CLI `describe/derive/verify`. Diese Dokumentrevision führt genau diese
+Teilfähigkeit nach; der aktive Produktionsweg bleibt **0.6.0** mit seinen
 bisherigen Formaten, Freigaben und ZA-1-Prüfungen. Die geplante Version **0.7.0**
 wird erst mit dem tatsächlich unterstützten vollständigen Einzelweg aktiviert,
 wie in der Einführungsmatrix des Hintergrundvertrags beschrieben. Neue Daten
@@ -52,9 +55,10 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 
 **Geltungsgrenze:** Die ausdrücklich als „Zukünftiger Hintergrundweg“ bezeichneten
 Ergänzungen spezifizieren den Sollablauf nach dessen versionierter Einführung.
-Sie aktivieren keine heutige Werkzeug-, Sheet- oder Integrationsfähigkeit und
-ändern keine Pflicht des bestehenden 0.6.0-Wegs. Für beauftragte Hintergrundarbeit
-den zentralen Hintergrundvertrag einschließlich seines aktuellen Unterstützungsstands
+HP-W2 erlaubt die eigenständige technische Vorbereitung nach §6.3; der
+vollständige Ablauf, neue Paket-/Sheetformen und finale Integration bleiben
+inaktiv. Keine Pflicht des bestehenden 0.6.0-Wegs wird geändert. Für beauftragte
+Hintergrundarbeit den zentralen Hintergrundvertrag einschließlich seines aktuellen Unterstützungsstands
 vollständig lesen; nur tatsächlich verfügbare Teilfähigkeiten verwenden.
 
 ## 1. Einstieg und Befugnisse
@@ -761,10 +765,15 @@ Nach Chatwechsel zuerst den Repositoryindex auflösen, dann Regelwerk, Übergabe
 Arbeits-, Entscheidungs- und Ableitungsformen sowie deren azyklische Hashbindungen.
 Für den vollständigen Weg sind Authoring **0.7.0**, Handoff **v3**, Record **v2**
 und Sheet-Update **v3** vorgesehen; Inventar **v1** und Arbeitsindex **v1** bleiben.
-Diese Formen sind heute nicht durch PB-A, ZA-1 oder das Offline-Sheet unterstützt.
-Frühe Bildarbeit darf nach Lieferung ihrer passenden Teilfähigkeit als vorbereitet
-gesichert werden; das erzeugt weder einen gültigen Altformeingang noch eine
-ZA-1-Zulassung. Nur die tatsächlich unterstützte Einführungsmatrix anwenden.
+Die neuen Transportformen sind heute nicht durch PB-A, ZA-1 oder das Offline-Sheet unterstützt.
+HP-W2 unterstützt dagegen die eigenständigen Arbeits-/Entscheidungs-/Auftrags-/
+Befundformen nach Hintergrundvertrag §§3–4 sowie `describe/derive/verify`.
+Beauftragte frühe Bildarbeit darf damit als vorbereitet gesichert, eine tatsächlich
+gewählte Datei abgeleitet und der Befund frisch lesend geprüft werden; ausdrücklich
+`none` liefert nur einen Nullbefund. [Lokale Aufrufe und Grenzen](../../tools/puzzle_production/README.md#hp-w2-eigenständige-hintergrundableitung).
+Das erzeugt weder einen gültigen Altformeingang noch eine ZA-1-Zulassung und
+ersetzt keine offenen Rechte-/Sichturteile. Nur die tatsächlich unterstützte
+Einführungsmatrix anwenden.
 
 Während einer offenen Auswahl müssen alle drei tatsächlich angebotenen
 Einzelbilder mit ihrem Arbeitsstand gespeichert und erreichbar sein. Pfade,
@@ -1068,8 +1077,8 @@ zweiten routinemäßigen Bestätigung. Endabnahme und Integrationsauftrag bleibe
 Import, Sitzung und Auftragsexport müssen bei ihrer Einführung alle neuen
 Bild-, Options-, Auswahl- und Paketbindungen verlustfrei erhalten; die dafür
 geplanten Generationen und konkreten Reader/Writer stehen im zentralen Vertrag.
-HP-W1 aktualisiert hier ausschließlich den bytegleichen Regelwerksnapshot und
-seine Versions-/Revisionsangaben. Neue Optionen, Importfähigkeit, Sitzungsformate
+HP-W1/HP-W2 aktualisieren hier ausschließlich den bytegleichen Regelwerksnapshot
+und seine Versions-/Revisionsangaben. Neue Optionen, Importfähigkeit, Sitzungsformate
 und Promptlogik sind gesonderte Lieferungen, heute keine Sheetfunktion.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren

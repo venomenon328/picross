@@ -9,14 +9,17 @@ für ihre gültigen Altbindungen und ausdrücklich gewählte kompatible Fälle e
 keine neue pauschale 0.3-Pflicht. Beide Freezes und versiegelte Pakete bleiben unverändert.
 Die [CLI-Anleitung](../tools/puzzle_production/README.md) dokumentiert die ausführbaren Befehle.
 
-**HP-W1 / #560 · spezifiziert, noch nicht aktiviert:**
+**HP-W2 / #560 · eigenständige Ableitung verfügbar, Gesamtweg noch nicht aktiviert:**
 [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md) führt Ablauf, Bild-/Auswahlbindungen,
 Datenformen und Einführungsmatrix für Kontextzeichnungen je Rätsel.
 Authoring 0.6.0 und der integrierte PB-A-Paketbau bleiben unverändert aktiv.
-Die gemeinsame Ableitung folgt in HP-W2, Paketbau/Reader in PB-H, finale
-Integration und Runtime in HP-I1/I2 sowie der Sheetanschluss in #490.
-Dieser Dokumentstand liefert dafür keine neuen ausführbaren Befehle und
-erweitert weder bestehende Hüllen noch die heutige Bedeutung von `content_ready`.
+HP-W2 unterstützt Arbeitsmanifest, Entscheidung, Ableitungsauftrag und Befund
+über die eigenständige lokale API/CLI `describe/derive/verify`; gespeicherte
+ausgewählte PNG-Bytes werden geprüft und nach dem festen Profil abgeleitet,
+ausdrückliches `none` liefert nur einen Nullbefund. [Aufrufe und Grenzen](../tools/puzzle_production/README.md#hp-w2-eigenständige-hintergrundableitung).
+Paketbau/Reader folgen in PB-H, finale Integration und Runtime in HP-I1/I2 sowie
+der Sheetanschluss in #490. Die Teilfähigkeit erweitert weder bestehende Hüllen
+noch die heutige Bedeutung von `content_ready` und aktiviert keine Bildproduktion.
 
 [PUZZLE_QUALITY](PUZZLE_QUALITY.md) ist die verbindliche redaktionelle Referenz
 für neue Produktionen: Einzelkriterien nach Darstellung, transparente Sichtung
