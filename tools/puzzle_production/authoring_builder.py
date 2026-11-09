@@ -250,6 +250,14 @@ def same_revision(target, stage):
         ap.require(io.read(target, name, limit) == io.read(stage, name, limit), 'Revision collision: different bytes/plan: ' + name)
 
 
+def verify_revision(target, expected):
+    ap.require({p.name for p in target.iterdir()} == set(expected), 'Published revision file set changed')
+    for name, binding in expected.items():
+        raw = io.read(target, name, ap.MAX_ZIP if name == 'package.zip' else ap.MAX_FILE)
+        ap.require(len(raw) == binding['bytes'] and io.checksum(raw) == binding['sha256'],
+                   'Published revision changed: ' + name)
+
+
 def build(request, source_root, output_root, publish_to=None):
     remaining = None
     try:
@@ -275,6 +283,9 @@ def build(request, source_root, output_root, publish_to=None):
                     ap.require(io.read(root, INDEX, 8 * 1024 * 1024) == before, 'Index changed before writer acquisition')
                 with tempfile.TemporaryDirectory(prefix='.pb-a-build-', dir=parent) as temporary:
                     work = Path(temporary)
+                    write_new(work / 'owner.json', json_data({'purpose': 'PB-A unpublished build stage',
+                              'pid': os.getpid(), 'started_unix': time.time(), 'target': str(target),
+                              'request_sha256': digest(r)}))
                     payload, stage = work / 'payload', work / 'revision'
                     payload.mkdir()
                     stage.mkdir()
@@ -315,6 +326,8 @@ def build(request, source_root, output_root, publish_to=None):
                     record = record_for(r, directory, package_raw, handoff, inspection)
                     record['build_request_sha256'] = request_hash
                     write_new(stage / 'record.json', json_data(record))
+                    revision_files = {p.name: {'bytes': p.stat().st_size, 'sha256': ap.file_hash(p)}
+                                      for p in sorted(stage.iterdir())}
                     checkpoint('before-publication')
                     verify_sources(sources, r)
                     if gitdir:
@@ -327,6 +340,7 @@ def build(request, source_root, output_root, publish_to=None):
                         publish_directory(stage, io.safe(root, directory))
                     remaining = str(target)
                     checkpoint('revision-published')
+                    verify_revision(target, revision_files)
                     if gitdir:
                         ap.require(io.read(root, INDEX, 8 * 1024 * 1024) == before, 'Index conflict after complete revision publication')
                         row = {'puzzle_id': record['puzzle_id'], 'revision': record['revision'], 'record': directory + '/record.json'}
@@ -341,15 +355,14 @@ def build(request, source_root, output_root, publish_to=None):
                             os.replace(replacement, io.safe(root, INDEX))
                         ap.require(row in index_value(io.read(root, INDEX, 8 * 1024 * 1024))['entries'], 'Index publication not confirmed')
                     checkpoint('publication-verified')
-                    # Read the actual outer files after publication too.
-                    ap.require(io.read(target, 'handoff.json', ap.MAX_FILE) == handoff and
-                               io.read(target, 'record.json', ap.MAX_FILE) == json_data(record) and
-                               io.read(target, 'package.zip', ap.MAX_ZIP) == package_raw, 'Published revision changed')
+                    # Check every sidecar as well as ZIP/record before and after
+                    # indexing; never return a success for changed approval bytes.
+                    verify_revision(target, revision_files)
                     return {'format': 'picross-authoring-build-result-v1', 'status': 'reused' if reused else 'built',
                             'directory': str(target), 'indexed': gitdir is not None, 'record': record,
-                            'sheet': sheet_from_record(record), 'files': {
-                                p.name: {'bytes': p.stat().st_size, 'sha256': ap.file_hash(p)} for p in sorted(target.iterdir())}}
-    except (InvalidInput, OSError, ValueError, Aborted, KeyboardInterrupt, MemoryError, RecursionError) as exc:
+                            'sheet': sheet_from_record(record), 'files': revision_files}
+    except (InvalidInput, OSError, ValueError, Aborted, KeyboardInterrupt, MemoryError, RecursionError,
+            subprocess.SubprocessError) as exc:
         error = BuildError(str(exc), remaining)
         if isinstance(exc, (Aborted, KeyboardInterrupt, MemoryError)):
             error.aborted = True

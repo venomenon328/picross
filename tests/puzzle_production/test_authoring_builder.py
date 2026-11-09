@@ -283,6 +283,17 @@ class AuthoringBuilderTests(unittest.TestCase):
         with builder.writer(lock), self.assertRaisesRegex(builder.BuildError, 'writer'):
             self.run_build()
 
+    def test_changed_revision_before_index_is_not_indexed(self):
+        self.repository()
+        def inject(name):
+            if name == 'revision-published':
+                target = self.checkout / 'content/authoring/pz-builder-test/r01/handoff.json'
+                target.write_text('foreign data', encoding='utf-8')
+        with patch.object(builder, 'checkpoint', inject), self.assertRaisesRegex(builder.BuildError, 'Published revision changed'):
+            self.run_build()
+        self.assertEqual(load_json(self.checkout / builder.INDEX)['entries'], [])
+        self.assertEqual((self.checkout / 'content/authoring/pz-builder-test/r01/handoff.json').read_text(), 'foreign data')
+
     def test_bad_written_zip_is_rejected_before_publication(self):
         def inject(name):
             if name == 'zip-written':
