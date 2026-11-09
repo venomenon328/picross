@@ -216,15 +216,24 @@ Als Vergleich wurde dasselbe angearbeitete 40×40-Farbrätsel mit vier Farben vo
 ## 4. Visuelle Ausarbeitung
 
 RAND-P1 / [#550](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692)
-erprobt auf dem regulären Buch drei zweiteilige helle Graphitkompositionen aus
-ImageGen: Blasentang/Muschel für Wasserwelt, Steg/Schilf/Feder für Landschaften
-& Natur und Anspitzer/Stift für Hilfe. Dies ist eine begrenzte Öffnung der
-älteren Randdekorgrenze, keine finale Motivwahl oder neue Kataloggestaltung.
-Eine größere rechte und kleinere linke Zeichnung nutzen das nach Funktionslayout
-verbleibende Papier. Dezente Überlagerung darf nach Eigentümerpräzisierung
-an realen Bildern bewertet werden; dichte Fälle blenden Teile unabhängig aus.
-Raster, Lesespalte, Bedienelemente und Trefferbudgets werden dafür nicht verändert.
-[Aktueller Zeichenvertrag](UI_DRAWING_STYLE.md#zs-d04-buch-funktionale-ui-und-passive-pilotzeichnungen).
+ist der bisher integrierte Konzeptpilot auf dem regulären Buch: drei zweiteilige
+helle Graphitkompositionen aus ImageGen mit Blasentang/Muschel für Wasserwelt,
+Steg/Schilf/Feder für Landschaften & Natur und Anspitzer/Stift für Hilfe.
+Der begrenzte Pilot öffnete die ältere Randdekorgrenze, ohne einen endgültigen
+Motivsatz oder eine neue Kataloggestaltung festzulegen. Im Pilot nutzen eine
+größere rechte und kleinere linke Zeichnung das nach Funktionslayout verbleibende
+Papier. Dezente Überlagerung darf dort nach Eigentümerpräzisierung an realen
+Bildern bewertet werden; dichte Fälle blenden Teile unabhängig aus. Raster,
+Lesespalte, Bedienelemente und Trefferbudgets bleiben dabei erhalten.
+[Zeichenvertrag des Piloten](UI_DRAWING_STYLE.md#zs-d04-buch-funktionale-ui-und-passive-pilotzeichnungen).
+
+Der [Hintergrundvertrag HP-W1](PUZZLE_BACKGROUNDS.md) beschreibt den zukünftigen,
+noch nicht aktivierten Weg mit einer ausgewählten Kontextzeichnung je Rätsel.
+Er übernimmt die bisherigen zwei Ecken und Ausblendregeln nicht als neue
+Gestaltungspflicht. Die eigentliche Ablösung des Rätselpiloten gehört zur
+Integration und Runtime aus [#561](https://github.com/venomenon328/picross/issues/561);
+bis dahin bleiben die vorhandenen Kategoriezeichnungen bestehen. HP-W1 ändert
+keine Runtime und beauftragt keine neuen Hilfe-, Katalog- oder Einstellungsbilder.
 
 **BTI-C · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
 großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`
