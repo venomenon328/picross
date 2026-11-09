@@ -5,13 +5,13 @@
   "files": [
     {
       "path": ".gitattributes",
-      "bytes": 9,
-      "sha256": "48747480eddba024928d03be9bf83dc579e5515768647507a767e8187a85c9ab"
+      "bytes": 73,
+      "sha256": "bd9663d71ffce4f030fba3bf7285472e2fab87ce8f71d180d20c14060d0c42a1"
     },
     {
       "path": "binding.json",
-      "bytes": 23765,
-      "sha256": "78f34f5bc3179f41ab572bf0be15504b09d5ca6988d75acf554e2784b997ef9f"
+      "bytes": 23982,
+      "sha256": "66e59a16070211e51888bf04e8e22a99a62b54cdacc406662c3c77ac2cea06d6"
     },
     {
       "path": "harness/analyze_owner_pixels.py",
@@ -82,6 +82,16 @@
       "path": "harness/rz_selected_profiles.gd",
       "bytes": 1849,
       "sha256": "685e86ab93d8248ea2ccdd1165a8a2eb22339858af79cdb56529ba4498f27a93"
+    },
+    {
+      "path": "harness/start_final_player.py",
+      "bytes": 1378,
+      "sha256": "79676d4c4f62721c37884d491e8e4b6209592b35374cee3ab64701e41ab38266"
+    },
+    {
+      "path": "harness/verify_blob_evidence.py",
+      "bytes": 1828,
+      "sha256": "1a72392170acabd6c0749b8aa89adc3a745249d090002fc61b94b01efe994792"
     },
     {
       "path": "imports/baseline/mapping.json",
@@ -627,6 +637,11 @@
       "path": "logs/test-web-delivery.log",
       "bytes": 1224,
       "sha256": "cbce1c808a01fff1071e95591bb40fbcda0e45ecba49f0a7359fbe9bb6162fc2"
+    },
+    {
+      "path": "logs/windows-start.log",
+      "bytes": 581,
+      "sha256": "3f7de9b6162b21f097e28957d3a2480ec61a3a858ceef19cbf21d46edc63ed69"
     },
     {
       "path": "originals/basilisk-1.png",
@@ -1695,13 +1710,23 @@
     },
     {
       "path": "README.md",
-      "bytes": 9462,
-      "sha256": "6cd8347b5980cac6291ec0abb56bacd0483ee8954af08db27bacbd36ab6376f2"
+      "bytes": 11047,
+      "sha256": "339fe220146a71a7d99c19cc95984d031213ffc400b8ee9536b421096197a158"
+    },
+    {
+      "path": "reports/binary-access-current.json",
+      "bytes": 1052,
+      "sha256": "5fb7e38f1a4c259633e24d17208e5eb43df6467d80f3e72fe55ac5881040f3de"
     },
     {
       "path": "reports/binary-access.json",
       "bytes": 686,
       "sha256": "43d17a5e94f6e53a612fe88435aac484b7640c10b1c3e4a1fd5396749b3b37ec"
+    },
+    {
+      "path": "reports/ci-summary.json",
+      "bytes": 990,
+      "sha256": "3e83adf21852b6a191cdc79d4c58dbcf31867862d8af7bbbca0c9867adec7295"
     },
     {
       "path": "reports/current-provenance.json",
@@ -1727,6 +1752,11 @@
       "path": "reports/profiles.json",
       "bytes": 44310,
       "sha256": "61f073548e8dd91e7c482ffb6dd2c6cbe0dc5752e38acfbc5d8fce05e0f8f390"
+    },
+    {
+      "path": "reports/windows-start.json",
+      "bytes": 1080,
+      "sha256": "93c23715a3d2b6d29f581bbf72f78500f9fafacedca2f3d945fbddb317b7a87c"
     },
     {
       "path": "variants/basilisk-1-1536.png",

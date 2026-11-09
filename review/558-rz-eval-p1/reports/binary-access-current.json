@@ -1,0 +1,32 @@
+{
+  "evidence_commit": "3588efc8523654d8b00b0a4def25d6f2d2fb5f84",
+  "product_head": "535403d8ac89c2da4800719f0d4a0fe0ba041950",
+  "route": "GitHub Git Blob API: complete base64 binary payload decoded to original bytes; Git blob SHA-1, byte length, SHA-256 and PNG decode checked. Two originals >1 MiB; exact CRLF log verified too. No truncated Contents content/preview substitute.",
+  "verified": [
+    {
+      "path": "originals/petronas-3-r3-alpha.png",
+      "bytes": 2767696,
+      "sha256": "dc9323b22668b529773d552daceb4d26504d5d0681d05d842d39efda67fa4274",
+      "size": [
+        2172,
+        724
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "owner-diagnostics/reference-4k.png",
+      "bytes": 5894773,
+      "sha256": "f49404def1c28d55acaf9839d41ba318421af9625dd43df09e8579407c712a3b",
+      "size": [
+        3840,
+        2160
+      ],
+      "mode": "RGBA"
+    },
+    {
+      "path": "logs/test-p1-owner.log",
+      "bytes": 4630,
+      "sha256": "f6dc667265349b2c0da3409ac93c157c9862040abfae1223a9933666dc3be2cc"
+    }
+  ]
+}

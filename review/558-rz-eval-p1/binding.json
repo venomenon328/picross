@@ -678,5 +678,6 @@
   "exports": "All 11 selected-image profiles imported/exported and packed textures read at current product head; Windows/Web PCKs are byte-identical. Two complete PCKs plus 50 exact extracted CTEX originals provided.",
   "recipient": "Independent R01 and owner result decision D01; concrete M01 image selection recorded separately.",
   "expires": "2026-11-16",
-  "retirement": "Reassess/retire review ref after R01 or at deadline in the assigned follow-up. No automatic deletion promise, no merge of evidence ref."
+  "retirement": "Reassess/retire review ref after R01 or at deadline in the assigned follow-up. No automatic deletion promise, no merge of evidence ref.",
+  "windows_start": "Actual exported artifact 13678883964, product head 535403d8ac89c2da4800719f0d4a0fe0ba041950, native GUI resource/catalog smoke passed; separate from product-scene SubViewport interaction proofs."
 }

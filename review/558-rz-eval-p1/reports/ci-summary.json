@@ -1,0 +1,24 @@
+{
+  "source_head": "535403d8ac89c2da4800719f0d4a0fe0ba041950",
+  "base_commit": "d65ffa78008b117bc4e2530b91d5f6821d3f9a00",
+  "tested_checkout": "e69ee2b927c2ddbfb1df0a2623ab7cd7c2f721c4",
+  "run_id": 42627286101,
+  "attempt": 1,
+  "url": "https://github.com/venomenon328/picross/actions/runs/42627286101",
+  "status": "success",
+  "modules": [
+    "tools",
+    "native.catalog"
+  ],
+  "tool_tests": 314,
+  "tool_test_seconds": 13.014,
+  "native_catalog_seconds": 507.540705,
+  "module_run_seconds": 545.404,
+  "ci_seconds_before_upload": 582.625,
+  "player_bytes": 206225707,
+  "success_diagnostic_bytes": 0,
+  "artifact_id": 13678883964,
+  "artifact_sha256": "e567066e90172f6a58d084a96fae32eb3ed8c4768a63689a4b42103195588922",
+  "artifact_expires": "2026-11-23",
+  "scope": "Compact transcription of the actual successful Actions job log; original source remains linked. No claim about kat2-pages-specific duration or warning occurrence because success evidence retention is disabled."
+}
