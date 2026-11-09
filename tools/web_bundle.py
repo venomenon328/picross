@@ -17,7 +17,9 @@ ADDITIONAL_LICENSES = {'KB-168-NOTICE.txt', 'tidy-hand/NOTICE.txt', 'HZ-B-284-NO
                        'Book-paper.json', 'Book-leather.json', 'Book-table.json',
                        'pangolin/NOTICE.txt', 'pangolin/OFL.txt',
                        'ViewTitles-NOTICE.txt', 'ViewTitles-manifest.json',
-                       'ViewTitles-provenance.json'}
+                       'ViewTitles-provenance.json',
+                       'Margins-NOTICE.txt', 'Margins-provenance.json',
+                       'RZ-EVAL-NOTICE.txt', 'RZ-EVAL-provenance.json'}
 
 
 def digest(path: Path) -> str:
