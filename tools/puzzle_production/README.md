@@ -70,17 +70,123 @@ verbliebenen eigenen Restpfad oder null. Ressourcen-, Fehlercode-, Lock- und
 Veröffentlichungsvertrag stehen vollständig in Hintergrundvertrag §4.4.
 
 **Der vollständige Hintergrundweg bleibt inaktiv.** Authoring 0.6.0 und PB-A
-behalten ihre Hüllen und Gates. PB-H liefert erst den neuen Paketbau und die
-zugehörigen Reader, HP-I1/I2 finale Integration/Runtime und #490 den
-Sheettransport. Diese Standalone-Fähigkeit liefert keine Handoff-v3-/ZA-1-
-Zulassung, keinen Hintergrundersatz im Spiel und keinen Produktionsabschluss.
+behalten ihre Hüllen und Gates. PB-H ergänzt den ausdrücklich gewählten
+Paketbau und die lesende Inhaltsprüfung unten; HP-I1/I2 liefern später finale
+Integration/Runtime, #490 die neue Sheetbedienung. Die Standalone-Fähigkeit
+allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
+
+## PB-H: Hintergrundpakete und lesende Inhaltsprüfung
+
+[Paketentscheidung #489/PB-H](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
+und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
+neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
+[Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
+Dokumentrevision 1, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Der aktive Authoringpfad und der eingebettete Offline-Sheet-Snapshot bleiben
+**0.6.0 / Dokumentrevision 40**. Das ist eine zusätzliche Vorbereitungsfähigkeit,
+keine Aktivierung des vollständigen Hintergrundwegs.
+
+```sh
+python -m tools.puzzle_production.authoring_builder build --request <request-v2.json> --source-root <quellen> --output-root <arbeitsordner> [--publish-to <checkout>] [--history-repo <lokaler-checkout>]
+```
+
+API: `authoring_builder.build(request, source_root, output_root, publish_to=None,
+history_repo=None)`, wobei `history_repo` nur als benannter Parameter übergeben
+wird. `picross-authoring-build-request-v2` behält exakt die acht v1-Schlüssel
+`format,handoff,document_revision,files,target,category_id,reveal_options,external`.
+`handoff` ist unversiegeltes `picross-authoring-handoff-v3` mit Regelwerk 0.7.0,
+`inventory=null`, vollständigen zwölf `gates`/`gate_evidence` und zusätzlichem
+`background={manifest,decision,derivation,history}`. Die neuen Gates heißen
+`background_choice` und `background_asset`. Die übrigen Felder und die
+`files`-Einträge `{path,source,sha256,bytes}` behalten ihren Vertrag. Die äußere
+Dateimenge bleibt `approval.json`, `manual-authorization.json`,
+`owner-override.json`, `palette-exception.json`; vorhandene Endfreigabe ist v2.
+Unbekannte Felder/Formate sind Fehler, keine erweiterbare Metadatenhülle.
+
+| Neue Bauphase | Fällige Prüfung |
+| --- | --- |
+| `brief_ready`, `reveal_review` | Bisherige frühe Bild-/Dateibindungen plus tatsächliches Arbeitsmanifest; offenes Briefing bleibt offen. |
+| `motif_review` | Freigegebenes Reveal, Motivvorlage und drei tatsächlich gesicherte Hintergrundangebote; abweichende Zahl oder frühes `none` braucht die gebundene Eigentümererklärung. |
+| `motif_approved`, `raster_review` | Motiv-/Parameterfreigabe und vorhandene Kandidatenbindungen; offene, vorgelegte oder abgelehnte Hintergrundwahl stoppt unabhängige autorisierte Rasterarbeit nicht. |
+| `raster_ready` | Vollständige bisherige 0.6.0-Inhaltsprüfung am geschriebenen ZIP, einschließlich frischer Palette/Norm/Sichtung, Proof/Paarbaseline, Herkunft, Parametern, Randregel und Difficulty. Nur Hintergrundbereitschaft und Endabnahme dürfen fehlen. |
+| `content_ready` | Zusätzlich gültige Auswahl mit geklärten Rechten, konkreten Q-HG-Urteilen und frisch geprüfter HP-W2-Ableitung oder tatsächlich erklärtes `none` mit Nullbefund. Nur Endabnahme bleibt gegebenenfalls offen. |
+
+Der Builder erhöht keine Phase und erzeugt keine menschliche Erklärung. Neue
+Originale mit `editorially_approved`, `catalog_ready` oder `registered` sowie
+bereits versiegelte Eingänge werden nicht gebaut. `final_editorial` und
+`target_export` bleiben im Originalhandoff offen; tatsächlich schon vorhandene
+separate Belege werden ausschließlich gelesen.
+
+`background_package` löst typisierte Referenzen mit getrennten Paket-, Manifest-,
+Entscheidungs-, Befund- und Historywurzeln auf. Innere Pfade, Bytes und Hashes
+bleiben unverändert; nur äußere `StoredRef={storage,root,ref}` lokalisieren sie.
+`norm.file` und Toolmodulpfade binden Quellcode/Normstand, keine Paketpayloads.
+Es gibt keine automatische Dateisuche, Rootvermutung oder Netzbeschaffung.
+Sichere Pfade, Windows-/Casefoldaliase, Datei-/Ordnerkonflikte und Links werden
+an der vollständigen Referenzmenge geprüft. Ein verschachtelter, gebundener
+HP-W2-Befund `derivation.json` ist erlaubt; Authoring-Teilkopie im Root,
+ZIP-Verschachtelung und Neuversiegelung bleiben ausgeschlossen.
+
+Vor Auswahl enthält das Paket alle angebotenen Originale und Belege. Nach
+Auswahl darf es ausschließlich verworfene Kandidatendateien weglassen, wenn
+`history` die frühere identische Manifestrevision und alle betroffenen Bytes
+belegt. Dafür dient ausschließlich das ausdrücklich übergebene lokale Gitrepo
+`--history-repo`/`history_repo`; der Reader liest die angegebene vorhandene
+Commit-SHA, ohne Fetch, Checkout oder Git-Schreibzugriff. Ohne erreichbaren
+Historykontext sämtliche Dateien behalten; eine verlangte Weglassung ist sonst
+ein Fehler. Aktive Quelle, Entscheidung, Rechte-/Sichtbelege und Ableitung sind
+nie durch History ersetzbar. Der Historykontext ist kein neues Requestfeld.
+
+Ein deklarierter Ableitungsbefund wird mit HP-W2 `verify` frisch gegen die
+tatsächlichen Quellen, Originalrequest, Profil, Ausgabe und Tool-/Codecbindung
+geprüft. Die typisierten Quellen werden dafür unter einer eigenen sicheren
+temporären Wurzel mit unveränderten inneren Ref-Pfaden bereitgestellt. Nur der
+gewählte Kandidat wird abgeleitet beziehungsweise reproduziert. Fehlende oder
+veraltete Ableitung bleibt offen oder wird bei falscher deklarierter Bindung
+zurückgewiesen; kein stilles Re-Derive und kein Wechsel der gebundenen Werkzeuge.
+Technischer Erfolg erfindet weder Nutzungsrechte noch visuelle Annahmen.
+
+Die öffentliche **rein lesende API** verwendet die vorhandenen Prüfer:
+`authoring_package.open_package(path, allow_background=True,
+history_repo=..., external_root=...)` und anschließend
+`target_adapter.inspect(package, ..., allow_background=True)`. Optionaler
+`approval_path` bezeichnet eine schon vorhandene `picross-editorial-approval-v2`;
+`external_root` ist nur bei tatsächlich äußeren Hintergrundbelegen ausdrücklich
+anzugeben. Das Ergebnis `picross-authoring-content-inspection-v1` unterscheidet
+`original_state` und frisch ermittelten `effective_state`, führt offene Gates
+und setzt stets `integration_ready=false`. Keine frühere Phase oder gespeicherte
+Erfolgsflagge ersetzt eine neue Inhaltsprüfung. Es gibt keinen neuen Inspect-CLI;
+die bisherigen Default-/Export-/Registrywege bleiben für 0.7.0 geschlossen.
+
+Endfreigabe v2 muss das unveränderte Original-ZIP, Handoff, Inventar, Rasterwahl,
+Manifest, tatsächliche Entscheidung, Original, Ableitung, Profil, Ausgabe und
+`test_only` exakt binden. Sie wird weder erzeugt, neu datiert noch an neue Bytes
+angepasst. Späte äußere Fortschreibung, Export-/Registry-/Receiptgenerationen,
+Integration, Hintergrundersatz und Bereinigung gehören HP-I1/I2.
+
+Ergebnis ist `picross-authoring-build-result-v2` mit denselben Erfolgs-/Fehler-
+Schlüsseln wie v1; darin Record v2 und eine aus diesem Record plus frisch
+geprüftem Manifest abgeleitete Sheet-v3-Projektion. Inventar v1 und Index v1
+bleiben unverändert. Offene Auswahl, tatsächliches `none`, technische Rasterreife
+und fehlende Integration bleiben in Record, Blockern und Projektion getrennt.
+Update v3 enthält zusätzlich `Hintergrunddaten`, `Hintergrundstatus`,
+`Hintergrund-Optionen` und `Hintergrundauswahl` nach dem Hintergrundvertrag.
+Das aktuelle Offline-Sheet importiert diese neue Generation noch nicht;
+Sitzung v5, Auftrag v4 und UI-/Promptanschluss folgen in #490.
+
+Determinismus, erneutes Lesen und Prüfen des geschriebenen ZIPs, bytegleiche
+Handoffkopie, exakter Dateisatz, Lock, unveränderter No-op, Kollisionsprüfung,
+Revisionspublikation vor atomarem Indexwechsel und ehrliche Restpfade bei
+Abbruch folgen vollständig dem untenstehenden PB-A-Vertrag. Ein erfolgreicher
+Bau schreibt keinen Gitcommit und behauptet keinen Sicherungsstand.
 
 ## PB-A: deterministischer Authoring-Paketbau
 
-Schnittstelle vor Implementierung, [Paketentscheidung #489/PB-A](https://github.com/venomenon328/picross/issues/489#issuecomment-6745424504).
+Bestehender 0.6.0-Bauvertrag, [Paketentscheidung #489/PB-A](https://github.com/venomenon328/picross/issues/489#issuecomment-6745424504).
 Der Builder sichert ausdrücklich benannte Produktionsdateien. Er erzeugt keine
 Bild-, Solver-, Bewertungs- oder Freigabeentscheidungen und führt keine Git-
-Schreibaktionen aus. PB-H/Hintergrundformate bleiben ein separates Folgepaket.
+Schreibaktionen aus. Die additive PB-H-Generation steht oben; der folgende
+v1-/0.6.0-Vertrag bleibt erhalten.
 
 ```sh
 python -m tools.puzzle_production.authoring_builder build --request <request.json> --source-root <quellen> --output-root <arbeitsordner> [--publish-to <checkout>]

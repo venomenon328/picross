@@ -57,11 +57,15 @@ bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 Der [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md) spezifiziert den zukünftigen
 Weg für Kontextzeichnungen je Rätsel. HP-W2 liefert die eigenständigen Arbeits-/
 Entscheidungs-/Ableitungsformen und die lokale API/CLI `describe/derive/verify`.
-Der vollständige Weg ist noch nicht aktiviert; Authoring 0.6.0 und der integrierte
-PB-A-Paketbau bleiben der unterstützte Produktionsweg. Vorbereitete Bildarbeit
-ist keine Paket-/ZA-1-Zulassung oder finale Integration. HP-W2 ersetzt keine
-Runtimezeichnungen; neue Verbraucher und die vollständige Einführung folgen
-der Einführungsmatrix des Vertrags.
+PB-H ergänzt mit dem explizit gewählten
+[0.7.0-Vorschausnapshot](ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md) den
+Paketbau, Record-/Sheetprojektion und die lesende Prüfung vollständiger
+Raster-/Inhaltsbereitschaft. Der vollständige Weg ist noch nicht aktiviert;
+Authoring 0.6.0 samt Offline-Sheet bleibt der aktive Produktionsdefault.
+Vorbereitete Hintergrundpakete sind keine finale Export-/Integrationszulassung.
+Spätere äußere Pflege und finale Integration folgen in HP-I1, Runtime in HP-I2,
+neue Sheetbedienung in #490 gemäß Einführungsmatrix. Runtimezeichnungen bleiben
+bis zu ihrem tatsächlich gelieferten Anschluss unverändert.
 
 ## Pflichtquellen nach Auftrag
 

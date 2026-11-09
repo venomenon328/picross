@@ -1,23 +1,28 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 39 · 09.11.2026**
+**Version 0.6.0 · Dokumentrevision 40 · 09.11.2026**
 
 HP-W1 aus [#560](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307)
 spezifiziert den **zukünftigen, noch nicht aktivierten Hintergrundweg** in
 [PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md).
 [HP-W2](https://github.com/venomenon328/picross/issues/560#issuecomment-6748799473)
 liefert dessen eigenständige Arbeits-/Entscheidungs-/Ableitungsformen sowie die
-lokale API/CLI `describe/derive/verify`. Diese Dokumentrevision führt genau diese
-Teilfähigkeit nach; der aktive Produktionsweg bleibt **0.6.0** mit seinen
-bisherigen Formaten, Freigaben und ZA-1-Prüfungen. Die geplante Version **0.7.0**
+lokale API/CLI `describe/derive/verify`. PB-H ergänzt den explizit gewählten
+Paketbau und die lesende Inhaltsprüfung nach dem vollständigen
+[0.7.0-Vorschausnapshot](PUZZLE_AUTHORING_0_7_0_PREVIEW.md). Diese Dokumentrevision
+führt den Unterstützungsstand nach; der aktive Produktionsweg bleibt **0.6.0**
+mit seinen bisherigen Formaten, Freigaben und ZA-1-Prüfungen. Version **0.7.0**
 wird erst mit dem tatsächlich unterstützten vollständigen Einzelweg aktiviert,
 wie in der Einführungsmatrix des Hintergrundvertrags beschrieben. Neue Daten
 nicht in alte Hüllen schreiben und versiegelte Originale nicht umetikettieren.
 
 PB-A aus [#489](https://github.com/venomenon328/picross/issues/489#issuecomment-6745424504)
 ergänzt den lokalen deterministischen Paketbuilder nach §6.1. Bestehende
-Freigabe-, Phasen- und ZA-1-Verträge bleiben erhalten. Sein Anschluss an die
-neuen Hintergrundformen ist dem separaten Folgepaket PB-H vorbehalten.
+Freigabe-, Phasen- und ZA-1-Verträge bleiben erhalten.
+[PB-H](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
+unterstützt daneben Bauauftrag v2, Handoff v3, Record v2 und Sheet-Update v3
+für den ausdrücklich gewählten 0.7.0-Vorschaustand. Das aktuelle Offline-Sheet
+bleibt bei 0.6.0; neue Import-/Sitzungs-/Auftragsformen folgen in #490.
 
 Der aktive Produktionsweg aus P-B2 / [#488](https://github.com/venomenon328/picross/issues/488) gilt weiter:
 Neue Produktionen verwenden **0.6.0**, automatische frühe Palettendiagnosen und
@@ -55,8 +60,9 @@ Diese Arbeitsanweisung regelt die Erstellung neuer Rätsel vom Motivauftrag übe
 
 **Geltungsgrenze:** Die ausdrücklich als „Zukünftiger Hintergrundweg“ bezeichneten
 Ergänzungen spezifizieren den Sollablauf nach dessen versionierter Einführung.
-HP-W2 erlaubt die eigenständige technische Vorbereitung nach §6.3; der
-vollständige Ablauf, neue Paket-/Sheetformen und finale Integration bleiben
+HP-W2 erlaubt die eigenständige technische Vorbereitung nach §6.3; PB-H
+sichert sie in eigenen 0.7.0-Paketformen und prüft deren fällige Inhaltsgates
+lesend. Vollständiger Ablauf, finale Integration und neue Sheetbedienung bleiben
 inaktiv. Keine Pflicht des bestehenden 0.6.0-Wegs wird geändert. Für beauftragte
 Hintergrundarbeit den zentralen Hintergrundvertrag einschließlich seines aktuellen Unterstützungsstands
 vollständig lesen; nur tatsächlich verfügbare Teilfähigkeiten verwenden.
@@ -765,14 +771,21 @@ Nach Chatwechsel zuerst den Repositoryindex auflösen, dann Regelwerk, Übergabe
 Arbeits-, Entscheidungs- und Ableitungsformen sowie deren azyklische Hashbindungen.
 Für den vollständigen Weg sind Authoring **0.7.0**, Handoff **v3**, Record **v2**
 und Sheet-Update **v3** vorgesehen; Inventar **v1** und Arbeitsindex **v1** bleiben.
-Die neuen Transportformen sind heute nicht durch PB-A, ZA-1 oder das Offline-Sheet unterstützt.
-HP-W2 unterstützt dagegen die eigenständigen Arbeits-/Entscheidungs-/Auftrags-/
+PB-H unterstützt diese neuen Paketformen und ihre lesende Inhaltsprüfung
+ausschließlich mit dem vollständigen [0.7.0-Vorschausnapshot](PUZZLE_AUTHORING_0_7_0_PREVIEW.md);
+der aktive 0.6.0-Weg und sein Offline-Sheet bleiben unverändert. `raster_ready`
+erfüllt alle bisherigen Inhaltsgarantien bei noch offener Hintergrundbereitschaft;
+`content_ready` verlangt zusätzlich gültige Wahl, Rechte/Sichturteile und frisch
+geprüfte Ableitung beziehungsweise ausdrückliches `none`. Endfreigabe v2 wird
+nur als bereits vorhandener, exakt gebundener Beleg gelesen. Spätere äußere
+Pflege, Export und Integration folgen in HP-I1, neue Sheetbedienung in #490.
+HP-W2 unterstützt die eigenständigen Arbeits-/Entscheidungs-/Auftrags-/
 Befundformen nach Hintergrundvertrag §§3–4 sowie `describe/derive/verify`.
 Beauftragte frühe Bildarbeit darf damit als vorbereitet gesichert, eine tatsächlich
 gewählte Datei abgeleitet und der Befund frisch lesend geprüft werden; ausdrücklich
 `none` liefert nur einen Nullbefund. [Lokale Aufrufe und Grenzen](../../tools/puzzle_production/README.md#hp-w2-eigenständige-hintergrundableitung).
-Das erzeugt weder einen gültigen Altformeingang noch eine ZA-1-Zulassung und
-ersetzt keine offenen Rechte-/Sichturteile. Nur die tatsächlich unterstützte
+Die eigenständige Ableitung erzeugt weder einen gültigen Altformeingang noch
+eine finale ZA-1-Zulassung und ersetzt keine offenen Rechte-/Sichturteile. Nur die tatsächlich unterstützte
 Einführungsmatrix anwenden.
 
 Während einer offenen Auswahl müssen alle drei tatsächlich angebotenen
@@ -1077,9 +1090,11 @@ zweiten routinemäßigen Bestätigung. Endabnahme und Integrationsauftrag bleibe
 Import, Sitzung und Auftragsexport müssen bei ihrer Einführung alle neuen
 Bild-, Options-, Auswahl- und Paketbindungen verlustfrei erhalten; die dafür
 geplanten Generationen und konkreten Reader/Writer stehen im zentralen Vertrag.
-HP-W1/HP-W2 aktualisieren hier ausschließlich den bytegleichen Regelwerksnapshot
-und seine Versions-/Revisionsangaben. Neue Optionen, Importfähigkeit, Sitzungsformate
-und Promptlogik sind gesonderte Lieferungen, heute keine Sheetfunktion.
+PB-H liefert die Record-v2-/Update-v3-Projektion im Paketbuilder. Das aktuelle
+Offline-Sheet erhält auch in PB-H ausschließlich den bytegleichen aktiven
+0.6.0-Regelwerksnapshot und seine Versions-/Revisionsangaben. Neue Optionen,
+Importfähigkeit, Sitzungsformate und Promptlogik folgen gesondert in #490;
+die Builderprojektion ist keine behauptete Sheetfunktion.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren
 

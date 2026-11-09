@@ -1,4 +1,4 @@
-"""Deterministic PB-A package builder; no Git writes, generation or approvals."""
+"""Deterministic PB-A/PB-H package builder; no Git writes or approval creation."""
 from __future__ import annotations
 
 import argparse
@@ -14,7 +14,7 @@ import time
 import zipfile
 
 from . import authoring_package as ap, catalog_io as io
-from .authoring_build_contract import validate_request, validate_phase
+from .authoring_build_contract import BACKGROUND_FORMAT, validate_request, validate_phase
 from .contract import Aborted, InvalidInput, canonical_bytes, digest, exact_keys
 
 INDEX = 'content/authoring/index.json'
@@ -153,7 +153,7 @@ def zip_payload(payload, destination, files):
     ap.require(destination.stat().st_size <= ap.MAX_ZIP, 'Written ZIP exceeds ZA-1 limit')
 
 
-def verify_zip(path, expected, handoff_raw, request, deadline):
+def verify_zip(path, expected, handoff_raw, request, deadline, *, history_repo=None):
     io.tick()
     with ap.open_files(path, deadline=deadline) as (root, _, archive_hash):
         files = ap.file_table(root, deadline)
@@ -163,51 +163,75 @@ def verify_zip(path, expected, handoff_raw, request, deadline):
             ap.require(len(raw) == binding['bytes'] and io.checksum(raw) == binding['sha256'],
                        'Written ZIP byte/hash mismatch: ' + name)
         ap.require(io.read(root, 'handoff.json', ap.MAX_FILE) == handoff_raw, 'Outer handoff copy differs')
-        validate_phase(root, request, deadline)
-    return archive_hash
+        phase = validate_phase(root, request, deadline, history_repo=history_repo)
+        background = getattr(phase, 'background', None)
+    return {'archive_sha256': archive_hash, 'background': background}
 
 
-def inspect_zip(path, external, state, deadline):
-    if state != 'content_ready':
+def inspect_zip(path, external, state, deadline, *, allow_background=False, history_repo=None):
+    if state != 'content_ready' and not (allow_background and state == 'raster_ready'):
         return None
     from .target_adapter import inspect
-    with ap.open_package(path, allow_manual_review='manual-authorization.json' in external) as package:
+    options = ({'allow_background': True, 'history_repo': history_repo,
+                'external_root': path.parent} if allow_background else {})
+    with ap.open_package(path, allow_manual_review='manual-authorization.json' in external, **options) as package:
         package.deadline = min(package.deadline, deadline)
-        report, design, matrix, _, _ = inspect(package,
+        report, design, matrix, _, approval = inspect(package,
             approval_path=external.get('approval.json'),
             manual_authorization=external.get('manual-authorization.json'),
-            palette_exception=external.get('palette-exception.json'))
-    ap.require(report['technical'] and all(b == 'final_editorial: missing bound human final approval'
-                                         for b in report['blockers']), 'Written ZIP has unresolved content errors')
+            palette_exception=external.get('palette-exception.json'),
+            **({'allow_background': True} if allow_background else {}))
+    ap.require(report['technical'] and all(
+        b == 'final_editorial: missing bound human final approval' or
+        allow_background and state == 'raster_ready' and b.startswith('background')
+        for b in report['blockers']), 'Written ZIP has unresolved content errors')
     # Only stable facts become identity bytes. Timings/check timestamps stay out
     # of the record, and are never reused as a substitute for a fresh inspection.
-    return {'format': report['format'], 'technical': True,
+    result = {'format': report['format'], 'technical': True,
             'editorial_approved': report['editorial_approved'], 'blockers': report['blockers'],
             'width': design['width'], 'height': design['height'], 'mode': design['mode'],
             'used_colors': len({v for row in matrix for v in row if v != 'empty'}),
             'difficulty': report['difficulty']}
+    if allow_background:
+        background = approval['background'] if approval is not None else package.background
+        result.update(original_state=state, effective_state=report['effective_state'],
+                      integration_ready=False, background_ready=background['ready'])
+        return result, background
+    return result
 
 
-def record_for(r, directory, package_raw, handoff_raw, inspection):
+def record_for(r, directory, package_raw, handoff_raw, inspection, background=None):
     h = r['handoff']
     blockers = list(dict.fromkeys([*h.get('blockers', []), *h.get('content_blockers', [])]))
     if inspection:
-        blockers = list(dict.fromkeys([*blockers, *inspection['blockers']]))
+        # Original open choice/final gates remain historical in the handoff.
+        # A valid supplied approval may resolve them in this new outer record.
+        blockers = (list(inspection['blockers']) if background is not None else
+                    list(dict.fromkeys([*blockers, *inspection['blockers']])))
     else:
         for kind, gate in (('reveal', 'reveal_approval'), ('motif', 'motif')):
             if not isinstance(h.get(kind), dict) or not h[kind].get('approval'):
                 blockers.append(gate + ': human decision pending')
+    if background is not None:
+        blockers.extend(background['blockers'])
+        blockers.append('integration: background integration requires HP-I1/HP-I2')
     blockers = list(dict.fromkeys([*blockers, UNSAVED]))
     def ref(name, raw):
         return {'file': directory + '/' + name, 'sha256': io.checksum(raw)}
     approval = r['external'].get('approval.json')
-    state = h['state']
+    state = inspection.get('effective_state', h['state']) if inspection else h['state']
     next_step = {'brief_ready': '1 · Abschlussbilder erzeugen',
                  'reveal_review': '2 · Bild freigeben & abstrahieren',
                  'motif_review': '3 · Motiv freigeben & produzieren',
+                 'motif_approved': '3 · Rätsel produzieren',
                  'raster_review': 'Korrigieren oder Fehler beheben',
-                 'content_ready': '4 · Abnehmen & ins Spiel integrieren'}[state]
-    return {'format': 'picross-authoring-record-v1', 'puzzle_id': h['puzzle_id'], 'revision': h['revision'],
+                 'raster_ready': '4 · Hintergrundbereitschaft klären und Rätsel abnehmen',
+                 'content_ready': '4 · Abnehmen & ins Spiel integrieren',
+                 'editorially_approved': 'Finale Integration nach verfügbarer HP-I1/HP-I2-Unterstützung'}[state]
+    if background is not None and state == 'content_ready':
+        next_step = '4 · Rätsel abnehmen; finale Hintergrundintegration benötigt HP-I1/HP-I2'
+    record = {'format': 'picross-authoring-record-v2' if background is not None else 'picross-authoring-record-v1',
+            'puzzle_id': h['puzzle_id'], 'revision': h['revision'],
             'state': state, 'category_id': r['category_id'], 'build_request_sha256': digest(r),
             'repo_commit': h['repo_commit'], 'document_revision': r['document_revision'], 'rulebook': h['rulebook'],
             'package': {**ref('package.zip', package_raw), 'bytes': len(package_raw)},
@@ -221,15 +245,21 @@ def record_for(r, directory, package_raw, handoff_raw, inspection):
             'integration': None, 'source_commit': None, 'pr': None,
             'reveal': h.get('reveal'), 'motif': h.get('motif'), 'reveal_options': r['reveal_options'],
             'parameters': h.get('approved_parameters') or h.get('proposed_parameters') or None}
+    if background is not None:
+        record['background'] = background['binding']
+        if inspection is None:
+            record['verification'] = {'technical': False, 'scope': 'phase and background file bindings only',
+                                      'background_ready': background['ready'], 'integration_ready': False}
+    return record
 
 
-def sheet_from_record(record):
-    """Pure projection: no independent status, backup commit or chosen option."""
+def sheet_from_record(record, background=None):
+    """Project the record and its freshly read bound manifest; no second state."""
     def image(kind):
         value = record[kind]
         return (value['file'] + ' · SHA-256 ' + value['sha256']) if value and value.get('file') else None
     parameters = record['parameters']
-    return {'format': 'picross-cheatsheet-update-v2', 'Motiv': None,
+    sheet = {'format': 'picross-cheatsheet-update-v2', 'Motiv': None,
             'Rasterbreite': record['width'], 'Rasterhöhe': record['height'], 'Größenvorgabe': 'Ungefähr',
             'Rätselmodus': {'mono': 'Monochrom', 'color': 'Farbig'}.get(record['mode'], 'KI empfiehlt'),
             'Farbanzahl': None, 'Farbvorgabe': 'Ungefähr', 'Verwendete Farben': record['used_colors'],
@@ -239,6 +269,16 @@ def sheet_from_record(record):
             'Motivvorlage': image('motif'), 'Parameterkorridor': canonical_bytes(parameters).decode() if parameters else None,
             'Inventar-SHA-256': record['inventory_sha256'], 'Quellbranch / Commit': record['source_commit'],
             'PR': record['pr'], 'Produktionsstatus': record['state'], 'Nächster Schritt': record['next_step']}
+    if record['format'] == 'picross-authoring-record-v2':
+        ap.require(background is not None and background['binding'] == record['background'],
+                   'Sheet v3 requires the verified background bound by this record')
+        decision = background['decision']
+        choice = (decision['candidate_id'] if background['status'] == 'selected' else
+                  'none' if background['status'] == 'none' else None)
+        sheet.update(format='picross-cheatsheet-update-v3', Hintergrunddaten=record['background'],
+                     Hintergrundstatus=background['status'], Hintergrundauswahl=choice)
+        sheet['Hintergrund-Optionen'] = background['options']
+    return sheet
 
 
 def same_revision(target, stage):
@@ -258,12 +298,14 @@ def verify_revision(target, expected):
                    'Published revision changed: ' + name)
 
 
-def build(request, source_root, output_root, publish_to=None):
+def build(request, source_root, output_root, publish_to=None, *, history_repo=None):
     remaining = None
     try:
         with io.budget(ap.SECONDS):
             deadline = time.monotonic() + ap.SECONDS
             r = validate_request(request)
+            background_enabled = r['format'] == BACKGROUND_FORMAT
+            ap.require(background_enabled or history_repo is None, 'history-repo is only supported by build request v2')
             ap.require((r['target'] == 'repository') == (publish_to is not None), 'Request target and publish-to differ')
             sources, output = io.external(source_root), io.external(output_root)
             ap.require(sources.is_dir() and output.is_dir(), 'Source/output roots must exist')
@@ -301,7 +343,7 @@ def build(request, source_root, output_root, publish_to=None):
                         write_new(stage / name, source_bytes(sources, item))
                         external[name] = stage / name
                     # Draft validation precedes sealing; the copied inputs remain unchanged.
-                    validate_phase(payload, r, deadline)
+                    validate_phase(payload, r, deadline, history_repo=history_repo)
                     inv = json_data({'format': 'picross-authoring-file-inventory-v1',
                                      'puzzle_id': r['handoff']['puzzle_id'], 'revision': r['handoff']['revision'],
                                      'excludes': ['inventory.json', 'handoff.json'], 'files': entries})
@@ -318,12 +360,16 @@ def build(request, source_root, output_root, publish_to=None):
                     zip_payload(payload, stage / 'package.zip', expected)
                     write_new(stage / 'handoff.json', handoff)
                     checkpoint('zip-written')
-                    verify_zip(stage / 'package.zip', expected, handoff, r, deadline)
-                    inspection = inspect_zip(stage / 'package.zip', external, r['handoff']['state'], deadline)
+                    verified = verify_zip(stage / 'package.zip', expected, handoff, r, deadline, history_repo=history_repo)
+                    background = verified['background']
+                    inspection = inspect_zip(stage / 'package.zip', external, r['handoff']['state'], deadline,
+                        **({'allow_background': True, 'history_repo': history_repo} if background_enabled else {}))
+                    if background_enabled and inspection is not None:
+                        inspection, background = inspection
                     # External final approval has meaning only after the full adapter check.
                     ap.require(not external or inspection is not None, 'External authorizations require content_ready inspection')
                     package_raw = io.read(stage, 'package.zip', ap.MAX_ZIP)
-                    record = record_for(r, directory, package_raw, handoff, inspection)
+                    record = record_for(r, directory, package_raw, handoff, inspection, background)
                     record['build_request_sha256'] = request_hash
                     write_new(stage / 'record.json', json_data(record))
                     revision_files = {p.name: {'bytes': p.stat().st_size, 'sha256': ap.file_hash(p)}
@@ -335,7 +381,7 @@ def build(request, source_root, output_root, publish_to=None):
                     reused = target.exists()
                     if reused:
                         same_revision(io.safe(root, directory), stage)
-                        verify_zip(target / 'package.zip', expected, handoff, r, deadline)
+                        verify_zip(target / 'package.zip', expected, handoff, r, deadline, history_repo=history_repo)
                     else:
                         publish_directory(stage, io.safe(root, directory))
                     remaining = str(target)
@@ -358,9 +404,10 @@ def build(request, source_root, output_root, publish_to=None):
                     # Check every sidecar as well as ZIP/record before and after
                     # indexing; never return a success for changed approval bytes.
                     verify_revision(target, revision_files)
-                    return {'format': 'picross-authoring-build-result-v1', 'status': 'reused' if reused else 'built',
+                    return {'format': 'picross-authoring-build-result-v2' if background_enabled else 'picross-authoring-build-result-v1',
+                            'status': 'reused' if reused else 'built',
                             'directory': str(target), 'indexed': gitdir is not None, 'record': record,
-                            'sheet': sheet_from_record(record), 'files': revision_files}
+                            'sheet': sheet_from_record(record, background), 'files': revision_files}
     except (InvalidInput, OSError, ValueError, Aborted, KeyboardInterrupt, MemoryError, RecursionError,
             subprocess.SubprocessError) as exc:
         error = BuildError(str(exc), remaining)
@@ -376,15 +423,18 @@ def main(argv=None):
     for option in ('request', 'source-root', 'output-root'):
         command.add_argument('--' + option, type=Path, required=True)
     command.add_argument('--publish-to', type=Path)
+    command.add_argument('--history-repo', type=Path, help='Explicit local read-only Git history for PB-H discarded candidates')
     args = parser.parse_args(argv)
+    request = None
     try:
         path = io.external(args.request)
         request = io.json_bytes(io.read(path.parent, path.name, 8 * 1024 * 1024), 8 * 1024 * 1024)
-        result = build(request, args.source_root, args.output_root, args.publish_to)
+        result = build(request, args.source_root, args.output_root, args.publish_to, history_repo=args.history_repo)
         code = 0
     except (InvalidInput, OSError, ValueError, Aborted, KeyboardInterrupt) as exc:
         aborted = isinstance(exc, (Aborted, KeyboardInterrupt)) or getattr(exc, 'aborted', False)
-        result = {'format': 'picross-authoring-build-result-v1', 'status': 'aborted' if aborted else 'invalid_input',
+        result = {'format': ('picross-authoring-build-result-v2' if isinstance(request, dict) and request.get('format') == BACKGROUND_FORMAT
+                             else 'picross-authoring-build-result-v1'), 'status': 'aborted' if aborted else 'invalid_input',
                   'message': str(exc), 'remaining': getattr(exc, 'remaining', None),
                   'next_action': 'Inspect the retained complete revision/index; repeat the unchanged request after resolving the conflict.'}
         code = 4 if aborted else 2
