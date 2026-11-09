@@ -4,15 +4,21 @@
   "package": "HP-W2",
   "modules": [
     "tools",
-    "production.images"
+    "production.images",
+    "delivery"
   ],
-  "purpose": "HP-W2 implements standalone background describe/derive/verify. Small synthetic image, strict binding, filesystem, process-lock, fault and transport tests cover the new boundary. production.images also verifies shared RP-3 normalization extraction and the necessary GRAY-ICC correction for supported 1/L/LA images; tools audits routing and the authoring rulebook snapshot.",
-  "omitted": "No additional production.solver/adapter/catalog, native, preflight, delivery or Chromium modules: no solver, adapter, catalog writer, runtime or browser behavior changes. Shared decoder changes are confined to color normalization and directly covered by existing and new image tests; imported path/I/O helpers remain unchanged. No real puzzle replay, image generation, gallery or technical artifact upload. The development core supplies the required Windows player package.",
+  "purpose": "HP-W2 implements standalone background describe/derive/verify. Small synthetic image, strict binding, filesystem, process-lock, fault and transport tests cover the new boundary. production.images also verifies shared RP-3 normalization extraction and the necessary GRAY-ICC correction for supported 1/L/LA images; tools audits routing and the authoring rulebook snapshot. B-HPW2-01 changes the shared web bundle license reader: tools covers current and legacy inventories and integrity, while delivery exercises a real web build and the isolated SSH/HTTP deployment and rollback path.",
+  "omitted": "No additional production.solver/adapter/catalog, native, preflight or Chromium modules: no solver, adapter, catalog writer, runtime or browser behavior changes; delivery is selected for the changed shared web bundle validator. Shared decoder changes are confined to color normalization and directly covered by existing and new image tests; imported path/I/O helpers remain unchanged. No real puzzle replay, image generation, gallery or technical artifact upload. The development core supplies the required Windows player package.",
   "test_changes": [
     {
       "path": "tests/puzzle_production/test_background_assets.py",
       "disposition": "change-scoped",
       "reason": "Retain small synthetic regression cases for the persistent standalone API and its data integrity; executed only when production.images is selected, not as a new universal CI obligation."
+    },
+    {
+      "path": "tools/test_web_delivery.py",
+      "disposition": "change-scoped",
+      "reason": "Keep small synthetic current and legacy license inventory and tamper regressions for the persistent web bundle contract, run when tools is selected."
     }
   ],
   "core_change": null,
