@@ -9,7 +9,7 @@ für ihre gültigen Altbindungen und ausdrücklich gewählte kompatible Fälle e
 keine neue pauschale 0.3-Pflicht. Beide Freezes und versiegelte Pakete bleiben unverändert.
 Die [CLI-Anleitung](../tools/puzzle_production/README.md) dokumentiert die ausführbaren Befehle.
 
-**HP-W2 / #560 · eigenständige Ableitung verfügbar, Gesamtweg noch nicht aktiviert:**
+**HP-W2 / #560 und PB-H / #489 · Vorbereitung und Paketbau verfügbar, Gesamtweg noch nicht aktiviert:**
 [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md) führt Ablauf, Bild-/Auswahlbindungen,
 Datenformen und Einführungsmatrix für Kontextzeichnungen je Rätsel.
 Authoring 0.6.0 und der integrierte PB-A-Paketbau bleiben unverändert aktiv.
@@ -17,9 +17,16 @@ HP-W2 unterstützt Arbeitsmanifest, Entscheidung, Ableitungsauftrag und Befund
 über die eigenständige lokale API/CLI `describe/derive/verify`; gespeicherte
 ausgewählte PNG-Bytes werden geprüft und nach dem festen Profil abgeleitet,
 ausdrückliches `none` liefert nur einen Nullbefund. [Aufrufe und Grenzen](../tools/puzzle_production/README.md#hp-w2-eigenständige-hintergrundableitung).
-Paketbau/Reader folgen in PB-H, finale Integration und Runtime in HP-I1/I2 sowie
-der Sheetanschluss in #490. Die Teilfähigkeit erweitert weder bestehende Hüllen
-noch die heutige Bedeutung von `content_ready` und aktiviert keine Bildproduktion.
+PB-H ergänzt den opt-in [0.7.0-Vorschausnapshot](ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
+Bauauftrag v2/Handoff v3/Record v2/Bauresultat v2 und die Sheet-v3-Projektion.
+Die lesende Prüfung des geschriebenen ZIPs erhält bei `raster_ready` sämtliche
+0.6.0-Inhaltsgarantien; nur Hintergrundbereitschaft und finale Endabnahme dürfen
+fehlen. `content_ready` verlangt zusätzlich Wahl, Rechte/Sichturteile und frisch
+geprüfte Ableitung beziehungsweise ausdrückliches `none`. Eine schon vorhandene
+Endfreigabe v2 wird nur auf ihre exakten Originalbindungen geprüft. Spätere
+äußere Pflege, finaler Export/Integration und Runtime folgen in HP-I1/I2, neue
+Sheetbedienung in #490. Alte Hüllen und die 0.6.0-Phasensemantik bleiben erhalten;
+diese Werkzeuglieferung aktiviert keine Bildproduktion.
 
 [PUZZLE_QUALITY](PUZZLE_QUALITY.md) ist die verbindliche redaktionelle Referenz
 für neue Produktionen: Einzelkriterien nach Darstellung, transparente Sichtung

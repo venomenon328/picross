@@ -1,8 +1,9 @@
-"""Small synthetic PB-A boundaries; no catalog puzzles or persistent archives."""
+"""Small synthetic PB-A/PB-H boundaries; no real puzzles or persistent archives."""
 from copy import deepcopy
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -16,6 +17,7 @@ from tools.puzzle_production.authoring_package import file_hash, open_package
 from tools.puzzle_production.contract import Aborted, load_json, write_json
 from tools.puzzle_production.za1_fixtures import make, FIXTURES
 from tools.puzzle_production.target_adapter import inspect
+from tests.puzzle_production.background_fixtures import BackgroundFixture, file_ref, put
 
 
 class AuthoringBuilderTests(unittest.TestCase):
@@ -92,6 +94,216 @@ class AuthoringBuilderTests(unittest.TestCase):
         path.parent.mkdir(parents=True)
         write_json(path, {'format': 'picross-authoring-index-v1', 'entries': []})
         self.request['target'] = 'repository'
+
+    def background(self, *, none=False, decision=True, derived=False):
+        from tools.puzzle_production import background_assets
+        fixture = BackgroundFixture(self.root / 'background-working', background_assets.describe(), none=none)
+        fixture.manifest['puzzle_id'] = fixture.decision['puzzle_id'] = self.h['puzzle_id']
+        if not none and self.h.get('reveal'):
+            reveal = self.h['reveal']
+            fixture.manifest['context']['reveal'] = put(fixture.source, 'context/reveal.png',
+                                                       (self.source / reveal['file']).read_bytes())
+            fixture.manifest['context']['reveal_approval'] = put(fixture.source, 'evidence/reveal.txt',
+                                                                (self.source / reveal['approval']).read_bytes())
+        fixture.refresh()
+        shutil.copytree(fixture.source, self.source / 'background')
+        if not decision:
+            (self.source / 'background/decisions/d01.json').unlink()
+        def stored(root, ref):
+            return {'storage': 'package', 'root': root, 'ref': deepcopy(ref)}
+        binding = {'manifest': stored('background', fixture.request['manifest']),
+                   'decision': stored('background', fixture.request['decision']) if decision else None,
+                   'derivation': None, 'history': None}
+        if derived:
+            result = background_assets.derive(fixture.request, fixture.source, fixture.output)
+            self.assertIn(result['status'], ('derived', 'none'), result)
+            shutil.copytree(fixture.target, self.source / 'outputs' / 'b01')
+            binding['derivation'] = stored('outputs', file_ref(self.source / 'outputs', 'b01/derivation.json'))
+        snapshot = Path(__file__).resolve().parents[2] / 'docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md'
+        (self.source / 'rulebook.md').write_bytes(snapshot.read_bytes())
+        self.h.update(format='picross-authoring-handoff-v3', background=binding,
+                      rulebook={'version': '0.7.0', 'file': 'rulebook.md', 'sha256': file_hash(self.source / 'rulebook.md')})
+        self.h['gates'] = {gate: self.h['gates'].get(gate, 'pending') for gate in bc.BACKGROUND_GATES}
+        self.h['gate_evidence'] = {gate: self.h.get('gate_evidence', {}).get(gate) for gate in bc.BACKGROUND_GATES}
+        for gate, field in (('background_choice', 'decision'), ('background_asset', 'derivation')):
+            if binding[field] is not None:
+                self.h['gates'][gate] = 'pass'
+                self.h['gate_evidence'][gate] = binding[field]['root'] + '/' + binding[field]['ref']['file']
+        self.request.update(format=bc.BACKGROUND_FORMAT, document_revision=1)
+        self.refresh()
+        return fixture
+
+    def test_background_pending_is_explicit_and_never_calls_content_adapter(self):
+        fixture = self.background(decision=False)
+        fixture.manifest.update(presentation={'status': 'pending', 'evidence': None}, candidates=[])
+        fixture.refresh()
+        shutil.copytree(fixture.source, self.source / 'background', dirs_exist_ok=True)
+        (self.source / 'background/decisions/d01.json').unlink()
+        self.h['background']['manifest']['ref'] = deepcopy(fixture.request['manifest'])
+        self.refresh()
+        with patch('tools.puzzle_production.target_adapter.inspect', side_effect=AssertionError('early content check')):
+            result = self.run_build()
+        self.assertEqual(result['format'], 'picross-authoring-build-result-v2')
+        self.assertEqual(result['record']['format'], 'picross-authoring-record-v2')
+        self.assertEqual(result['sheet']['format'], 'picross-cheatsheet-update-v3')
+        self.assertEqual(result['sheet']['Hintergrundstatus'], 'pending')
+        self.assertEqual(result['sheet']['Hintergrund-Optionen'], [])
+        self.assertFalse(result['record']['verification']['technical'])
+        self.assertIsNone(result['sheet']['Hintergrundauswahl'])
+
+    def test_background_offer_preserves_three_originals_and_inner_refs(self):
+        self.content()
+        self.h['state'] = 'motif_review'
+        fixture = self.background(decision=False)
+        before = (self.source / 'background/work/bg01.json').read_bytes()
+        result = self.run_build()
+        self.assertEqual(result['sheet']['Hintergrundstatus'], 'offered')
+        self.assertEqual([v['ID'] for v in result['sheet']['Hintergrund-Optionen']], ['A', 'B', 'C'])
+        self.assertEqual(result['record']['background'], self.h['background'])
+        self.assertIsNone(result['sheet']['Hintergrundauswahl'])
+        with zipfile.ZipFile(Path(result['directory']) / 'package.zip') as archive:
+            self.assertEqual(archive.read('background/work/bg01.json'), before)
+            for candidate in fixture.manifest['candidates']:
+                name = candidate['original']['file']
+                self.assertEqual(archive.read('background/' + name), (fixture.source / name).read_bytes())
+            self.assertEqual(json.loads(archive.read('inventory.json'))['format'], 'picross-authoring-file-inventory-v1')
+        self.assertIsNone(self.h['inventory'])
+
+    def test_background_raster_ready_rechecks_written_zip_and_inherited_proof(self):
+        self.content()
+        self.h['state'] = 'raster_ready'
+        self.background()
+        observed, original = [], builder.inspect_zip
+        def inspect_written(path, external, state, deadline, **kwargs):
+            self.assertTrue(path.is_file())
+            self.assertTrue(zipfile.is_zipfile(path))
+            self.assertTrue(kwargs['allow_background'])
+            observed.append(path)
+            return original(path, external, state, deadline, **kwargs)
+        with patch.object(builder, 'inspect_zip', inspect_written):
+            result = self.run_build()
+        self.assertEqual(len(observed), 1)
+        self.assertEqual(result['record']['state'], 'raster_ready')
+        self.assertTrue(result['record']['verification']['technical'])
+        self.assertFalse(result['record']['verification']['background_ready'])
+        self.assertFalse(result['record']['verification']['integration_ready'])
+        self.assertIn('background_asset: fresh bound derivation missing', result['record']['blockers'])
+        proof_path = self.source / 'production/import/area-proof.json'
+        proof = load_json(proof_path)
+        proof['logic_hash'] = '0' * 64
+        write_json(proof_path, proof)
+        manifest_path = proof_path.parent / 'manifest.json'
+        manifest = load_json(manifest_path)
+        manifest['files'][proof_path.name] = file_hash(proof_path)
+        write_json(manifest_path, manifest)
+        self.refresh()
+        with self.assertRaises(builder.BuildError):
+            self.run_build()
+
+    def test_background_none_publication_is_deterministic_and_resumes_after_abort(self):
+        self.content()
+        self.background(none=True, derived=True)
+        self.repository()
+        def interrupt(name):
+            if name == 'revision-published':
+                raise Aborted('Synthetic PB-H interruption')
+        with patch.object(builder, 'checkpoint', interrupt), self.assertRaises(builder.BuildError) as caught:
+            self.run_build()
+        target = Path(caught.exception.remaining)
+        before = {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in target.iterdir()}
+        self.assertEqual(load_json(self.checkout / builder.INDEX)['entries'], [])
+        result = self.run_build()
+        index_before = (self.checkout / builder.INDEX).stat().st_mtime_ns
+        self.assertEqual(result['status'], 'reused')
+        self.assertEqual(result['record']['state'], 'content_ready')
+        self.assertEqual(result['sheet']['Hintergrundauswahl'], 'none')
+        self.assertTrue(result['record']['verification']['background_ready'])
+        self.assertFalse(result['record']['verification']['editorial_approved'])
+        self.assertIsNone(result['record']['integration'])
+        self.assertEqual(self.run_build()['files'], result['files'])
+        self.assertEqual(index_before, (self.checkout / builder.INDEX).stat().st_mtime_ns)
+        self.assertEqual(before, {p.name: (p.read_bytes(), p.stat().st_mtime_ns) for p in target.iterdir()})
+        with zipfile.ZipFile(target / 'package.zip') as archive:
+            self.assertIn('outputs/b01/derivation.json', archive.namelist())
+            self.assertNotIn('outputs/b01/background.png', archive.namelist())
+            self.assertEqual(archive.read('handoff.json'), (target / 'handoff.json').read_bytes())
+
+    def test_background_generation_and_unbound_derivations_are_rejected(self):
+        self.background(decision=False)
+        for change in ('old-request', 'old-handoff', 'old-rulebook', 'missing-gate'):
+            request = deepcopy(self.request)
+            if change == 'old-request': request['format'] = bc.FORMAT
+            elif change == 'old-handoff': request['handoff']['format'] = 'picross-authoring-handoff-v2'
+            elif change == 'old-rulebook': request['handoff']['rulebook']['version'] = '0.6.0'
+            else: del request['handoff']['gates']['background_choice']
+            with self.subTest(change=change), self.assertRaises(builder.BuildError):
+                builder.build(request, self.source, self.output)
+        path = self.source / 'rogue/derivation.json'
+        path.parent.mkdir()
+        write_json(path, {'format': 'picross-background-derivation-v1'})
+        self.refresh()
+        with self.assertRaisesRegex(builder.BuildError, 'Unbound nested'):
+            self.run_build()
+        path.unlink()
+        write_json(self.source / 'derivation.json', {})
+        self.refresh()
+        with self.assertRaisesRegex(builder.BuildError, 'reseal'):
+            self.run_build()
+
+    def test_background_supplied_final_approval_projects_effective_record_without_resealing(self):
+        self.content()
+        self.background(none=True, derived=True)
+        self.h['blockers'] = ['final_editorial: missing bound human final approval']
+        built = self.run_build()
+        original = Path(built['directory'])
+        h = load_json(original / 'handoff.json')
+        with open_package(original / 'package.zip', allow_background=True) as package:
+            background = package.background
+        decision, derivation = background['decision'], background['derivation']
+        external = self.source / 'external'
+        external.mkdir()
+        path = external / 'approval.json'
+        write_json(path, {'format': 'picross-editorial-approval-v2', 'actor': 'TEST ONLY',
+            'timestamp_utc': '2026-11-09T12:00:00Z', 'statement': 'Synthetic test declaration, not owner acceptance.',
+            'puzzle_id': h['puzzle_id'], 'revision': h['revision'],
+            'handoff_sha256': file_hash(original / 'handoff.json'), 'inventory_sha256': h['inventory']['sha256'],
+            'original_zip_sha256': file_hash(original / 'package.zip'), 'test_only': True,
+            'selection': {key: h['candidate'][key] for key in ('variant', 'matrix_hash', 'logic_hash')} |
+                         {'reveal': {key: h['reveal'][key] for key in ('file', 'sha256')}},
+            'background': {key: h['background'][key] for key in ('manifest', 'decision', 'derivation')} |
+                          {'outcome': decision['outcome'], 'candidate_id': decision['candidate_id'],
+                           'original': decision['original'], 'output': derivation['output'],
+                           'profile_sha256': derivation['profile_sha256']}})
+        approval_before = path.read_bytes()
+        self.request['external'] = {'approval.json': {'source': 'external/approval.json',
+                                    'sha256': file_hash(path), 'bytes': path.stat().st_size}}
+        output = self.root / 'approved-output'
+        output.mkdir()
+        result = builder.build(self.request, self.source, output)
+        self.assertEqual(result['record']['state'], 'editorially_approved')
+        self.assertEqual(result['sheet']['Produktionsstatus'], 'editorially_approved')
+        self.assertEqual(result['record']['verification']['original_state'], 'content_ready')
+        self.assertTrue(result['record']['verification']['editorial_approved'])
+        self.assertNotIn('final_editorial: missing bound human final approval', result['record']['blockers'])
+        for name in ('package.zip', 'handoff.json'):
+            self.assertEqual((original / name).read_bytes(), (Path(result['directory']) / name).read_bytes())
+        self.assertEqual(approval_before, path.read_bytes())
+        self.assertIsNone(self.h.get('final_editorial_approval'))
+        self.assertIsNone(result['record']['integration'])
+
+    def test_background_cli_returns_matching_result_generation_on_error(self):
+        self.background(decision=False)
+        self.h['rulebook']['version'] = '0.6.0'
+        request = self.root / 'request-v2.json'
+        write_json(request, self.request)
+        run = subprocess.run([sys.executable, '-m', 'tools.puzzle_production.authoring_builder', 'build',
+                              '--request', str(request), '--source-root', str(self.source),
+                              '--output-root', str(self.output)], capture_output=True, text=True, encoding='utf-8')
+        self.assertEqual(run.returncode, 2, run.stderr + run.stdout)
+        result = json.loads(run.stdout)
+        self.assertEqual(result['format'], 'picross-authoring-build-result-v2')
+        self.assertEqual(result['status'], 'invalid_input')
+        self.assertIsNone(result['remaining'])
 
     def test_early_phase_has_no_adapter_or_fabricated_approvals(self):
         self.h['state'] = 'reveal_review'
