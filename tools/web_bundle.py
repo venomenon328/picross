@@ -11,13 +11,13 @@ BUILD_ID = re.compile(r"[0-9a-f]{40}-(player|test|dirty)-[0-9]{14}\Z")
 LICENSES = {'resources.json', 'Chalkboard-NOTICES.md', 'Bakso-NOTICES.md',
             'DelightCoffee-NOTICES.md', 'delight-coffee/More Info.txt',
             'delight-coffee/Read Me.pdf', 'Fraunces-OFL.txt', 'PlexSans-OFL.txt', 'Sidebar-NOTICES.txt'}
-# New exports include this notice through player_extras(). Keep previous WEB-1
+# New exports include these licenses through player_extras(). Keep previous WEB-1
 # bundles valid for explicit rollback; every present byte remains hash-bound.
 ADDITIONAL_LICENSES = {'KB-168-NOTICE.txt', 'tidy-hand/NOTICE.txt', 'HZ-B-284-NOTICE.txt',
                        'Book-paper.json', 'Book-leather.json', 'Book-table.json',
                        'pangolin/NOTICE.txt', 'pangolin/OFL.txt',
                        'ViewTitles-NOTICE.txt', 'ViewTitles-manifest.json',
-                       'ViewTitles-provenance.json'}
+                       'ViewTitles-provenance.json', 'Margins-NOTICE.txt', 'Margins-provenance.json'}
 
 
 def digest(path: Path) -> str:

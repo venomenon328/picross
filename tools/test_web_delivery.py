@@ -65,6 +65,38 @@ class Delivery(unittest.TestCase):
         notice.write_bytes(b'changed')
         with self.assertRaises(ValueError): web_bundle.validate(self.root)
 
+    def test_current_margins_licenses_inventory_and_legacy_rollback(self):
+        source = Path(__file__).resolve().parents[1]
+        extras = player_extras(source, self.root)
+        names = ('Margins-NOTICE.txt', 'Margins-provenance.json')
+        # Old v1 bundles do not contain these files and remain rollback-valid.
+        web_bundle.validate(self.root)
+        paths = []
+        for name in names:
+            path = self.root/'releases'/self.build/'licenses'/name
+            path.write_bytes(extras['licenses/'+name].read_bytes())
+            paths.append(path)
+        self.manifest['files'] = web_bundle.inventory(self.root)
+        self.write_manifest()
+        web_bundle.validate(self.root)
+        for path in paths:
+            original = path.read_bytes()
+            with self.subTest(name=path.name, case='corrupt'):
+                path.write_bytes(original + b'changed')
+                with self.assertRaises(ValueError): web_bundle.validate(self.root)
+                path.write_bytes(original)
+            with self.subTest(name=path.name, case='missing'):
+                path.unlink()
+                with self.assertRaises(ValueError): web_bundle.validate(self.root)
+                path.write_bytes(original)
+            with self.subTest(name=path.name, case='unlisted'):
+                entry = self.manifest['files'].pop(path.relative_to(self.root).as_posix())
+                self.write_manifest()
+                with self.assertRaises(ValueError): web_bundle.validate(self.root)
+                self.manifest['files'][path.relative_to(self.root).as_posix()] = entry
+                self.write_manifest()
+        web_bundle.validate(self.root)
+
     def test_injected_paths_hashes_and_schema(self):
         for update in ({'kind':'test'}, {'source_commit':'b'*40}, {'engine':'latest'}, {'built_at':'yesterday'}):
             candidate = {**self.manifest, **update}
