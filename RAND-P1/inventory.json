@@ -118,6 +118,10 @@
       "bytes": 2921783,
       "sha256": "3754b6448a05f5e5f41f64c5d9e76305568d5688bcbc387397ab77396bc9b285"
     },
+    "README.md": {
+      "bytes": 8949,
+      "sha256": "891827f86e190f08124ff2988dd9cbcade0a0e5f70890805b7db725f59e03052"
+    },
     "settings-1440-ui100.png": {
       "bytes": 2931261,
       "sha256": "0e21520ed77958e49c377b5c83e44b02aa562253e48a0bb355ab5c6afc05bfdb"

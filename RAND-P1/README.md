@@ -69,8 +69,8 @@ Weitere gezielt ausgewählte Originale:
 
 Die sechs Illustrationsoriginale liegen bereits bytegleich in diesem vom
 Produkt-Head abgezweigten Ref unter
-[game/art/drawing/margins](../../game/art/drawing/margins).
-[Provenienz mit vollständigen Prompts, Alpha-/Maß-/Hashangaben und Auswahlstatus](../../game/art/drawing/margins/provenance.json).
+[game/art/drawing/margins](../game/art/drawing/margins).
+[Provenienz mit vollständigen Prompts, Alpha-/Maß-/Hashangaben und Auswahlstatus](../game/art/drawing/margins/provenance.json).
 Built-in ImageGen über den tatsächlich gelesenen ImageGen-Skill, sechs
 eigenständige Aufrufe, `transparent_background=true`; Modell/Seed nicht exponiert.
 Originalbytes unverändert. Atlasregionen beschneiden nur die leeren Außenränder
