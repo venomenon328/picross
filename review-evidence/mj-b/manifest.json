@@ -1,0 +1,49 @@
+{
+  "package": "MJ-B",
+  "evidence": "MJ-B-T01",
+  "product_head": "de632607969cc5ed674b6df4043d0e7e7214fbeb",
+  "base": "a87cd91cbd82c5bd69f9206a5466b20e2aeff83c",
+  "recipient": "MJ-B-A01 independent technical reviewer",
+  "expires": "2026-11-17",
+  "file": {
+    "file": "01-adoption-1280x800.png",
+    "bytes": 120661,
+    "sha256": "414a3a3b2b5aad3a516d6286dfca9f0f5844111c520c181aeaa6cf4f95a53ed3",
+    "width": 1280,
+    "height": 800
+  },
+  "html_sha256": "5bc5564582d773101feca4b38db02bdf6d69d7436fc4d47824ce674ab605e900",
+  "environment": {
+    "os": "Windows",
+    "browser": "Chrome 157.0.8103.50",
+    "dpr": 1,
+    "offline": true,
+    "viewports": [
+      [
+        1440,
+        900
+      ],
+      [
+        1280,
+        800
+      ]
+    ]
+  },
+  "checks": {
+    "browser_scenarios": [
+      "FrÃ¼her Entwurf und globale doppelte pz-ID ohne TeilÃ¼bernahme geprÃ¼ft.",
+      "Requestvorschau verworfen/Ã¼bernommen, unverÃ¤nderte Originalbytes und Aâ†’Bâ†’A bedient.",
+      "Materieller Wunsch sperrt alten Request; identischer Reimport erhÃ¤lt Wunsch; bewusste RÃ¼cknahme bedient.",
+      "Expliziten Familienersatz in beide Richtungen mit gleicher lokaler Job-ID und vorher heruntergeladener Sitzung bedient.",
+      "1440Ã—900: wesentliche Aktionen per Seiten- und linker FormularscrollflÃ¤che erreicht; keine horizontale Ãœberdeckung.",
+      "1280Ã—800: wesentliche Aktionen per Seiten- und linker FormularscrollflÃ¤che erreicht; keine horizontale Ãœberdeckung.",
+      "Abschluss ausdrÃ¼cklich gemeldet, kompakte Sitzung heruntergeladen/wieder geladen; historische Refs und test_only erhalten, erneute Adoption gesperrt."
+    ],
+    "external_resources": [],
+    "page_errors": [],
+    "actual_downloads_independently_opened": 4,
+    "zip_exact_file_set_sizes_sha256_original_request_and_preview_snapshot": "passed",
+    "session_collection_original_bytes_and_compact_completion": "passed"
+  },
+  "cleanup": "Separate temporary review ref only; remove after completed A01 and authorized cleanup, no later than 2026-11-17. Product diff contains no review originals."
+}
