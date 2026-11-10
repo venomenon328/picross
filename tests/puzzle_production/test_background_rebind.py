@@ -326,4 +326,3 @@ r.adopt(Path(sys.argv[1]), Path(sys.argv[2]))
 
 
 if __name__ == "__main__": unittest.main()
-
