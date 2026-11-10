@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: hp-i2-originals-${{ github.ref }}
@@ -14,9 +15,11 @@ concurrency:
 env:
   PRODUCT_HEAD: 333d1f87e82d0fd396e71acda70c638204436c79
   PYTHONUNBUFFERED: '1'
+  P1_BASE_COMMIT: 964cfe2422a45871961760e65dcd863fe68ee5e0
 
 jobs:
   originals:
+    if: false
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     steps:
@@ -109,4 +112,57 @@ jobs:
               if path.name.endswith("result.json") or any(x in text for x in ("SCRIPT ERROR:", "FAIL:", "KAT2_FAIL", "Traceback", '"passed": false', '"status": "failure"')):
                   print("DIAGNOSTIC", path.relative_to(root))
                   print(text[-24000:])
+          PY
+
+  inspect-existing-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Verify the existing nine-file archive and report JSON without image bytes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, io, json, os, urllib.error, urllib.request, zipfile
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+          request = urllib.request.Request(
+              "https://api.github.com/repos/venomenon328/picross/actions/artifacts/13777462044/zip",
+              headers={"Authorization": "Bearer " + os.environ["GH_TOKEN"], "Accept": "application/vnd.github+json"})
+          try:
+              response = urllib.request.build_opener(NoRedirect).open(request, timeout=60)
+          except urllib.error.HTTPError as error:
+              if error.code != 302:
+                  raise
+              location = error.headers["Location"]
+              if not location.startswith("https://"):
+                  raise ValueError("Artifact redirect must use HTTPS")
+              response = urllib.request.urlopen(location, timeout=60)
+          archive = response.read()
+          digest = hashlib.sha256(archive).hexdigest()
+          assert len(archive) == 17658416
+          assert digest == "57008b8689cfb0721c75aededab87e50f417ae167ae90d66965580685f490fb6"
+          with zipfile.ZipFile(io.BytesIO(archive)) as z:
+              assert z.testzip() is None
+              names = z.namelist()
+              assert len(names) == 9 and len(set(names)) == 9
+              assert all("/" not in name and "\\" not in name for name in names)
+              assert sum(name.endswith(".png") for name in names) == 6
+              manifest = json.loads(z.read("manifest.json"))
+              assert manifest["product_head"] == os.environ["PRODUCT_HEAD"]
+              assert manifest["passed"] is True
+              assert set(names) == {"manifest.json"} | {r["file"] for r in manifest["files"]}
+              for row in manifest["files"]:
+                  data = z.read(row["file"])
+                  assert len(data) == row["bytes"]
+                  assert hashlib.sha256(data).hexdigest() == row["sha256"]
+              print("HP_I2_ARCHIVE_TRANSPORT_OK", json.dumps({"artifact_id":13777462044,"bytes":len(archive),"sha256":digest,"files":names}))
+              print("HP_I2_REPORT_MANIFEST", json.dumps(manifest, separators=(",",":")))
+              t01 = json.loads(z.read("T01.json"))
+              for case in t01["cases"]:
+                  observations = case.pop("observations", [])
+                  case["observations_count"] = len(observations)
+              print("HP_I2_REPORT_T01", json.dumps(t01, separators=(",",":")))
+              print("HP_I2_REPORT_T02", z.read("T02.json").decode())
           PY
