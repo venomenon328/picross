@@ -54,7 +54,7 @@ Main-Integration folgt der eigene Produktionsabschluss nach Authoring §9.
 Runtime, Rechte, aktive Metadaten und kompakte Freigabe-/Integrationsbindungen
 bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 
-Der [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md) spezifiziert den zukünftigen
+Der [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md) spezifiziert den versionierten
 Weg für Kontextzeichnungen je Rätsel. HP-W2 liefert die eigenständigen Arbeits-/
 Entscheidungs-/Ableitungsformen und die lokale API/CLI `describe/derive/verify`.
 PB-H ergänzt mit dem explizit gewählten
@@ -65,14 +65,20 @@ vorhandener Auswahl/Ableitung/Endfreigabe und vollständig geprüften Export v6.
 Höchste Exportphase bleibt `editorially_approved`; gespeicherte `integration_ready`,
 `catalog_ready` und `registered` bleiben false. HP-I1b1 ergänzt zielbezogene
 Erstregistrierung, kompakte aktive Source/Receipt, Recovery und ersten Abschluss.
-Die echte Zielfähigkeit bleibt ausdrücklich false bis zur Runtime samt technischer
-Abnahme in HP-I2; synthetische kompatible Ziele belegen nur den Werkzeugweg.
 HP-I1b2 ergänzt den eigenen Hintergrundwechsel mit Source v2, nullfähigem
-Binärrollback und revisionsgenauem Mainabschluss. Raster-/Revealneubindung bleibt
-HP-I1c, Runtime HP-I2, neue Sheetbedienung #490.
-Der vollständige Weg ist noch nicht aktiviert; Authoring 0.6.0 samt
-Offline-Sheet bleibt der aktive Produktionsdefault. Runtimezeichnungen bleiben
-bis zu ihrem tatsächlich gelieferten Anschluss unverändert.
+Binärrollback und revisionsgenauem Mainabschluss. HP-I1c schließt die erlaubte
+Raster-/Revealneubindung vorhandener Hintergrundziele. HP-I2 regelt in §13
+Runtime v6, gemeinsame 4:1-Papierfläche, begrenztes Bedarfsladen und isolierten
+Profilimport. selected/none ersetzen nur in der Rätselansicht den Kategoriepilot;
+Legacy und Hilfe behalten ihre bisherigen Zeichnungen. Die echte Capability
+darf erst mit funktionierendem und technisch abgenommenem Runtime-/Importweg
+true sein; den tatsächlichen Abnahmestand führt der aktuelle Produkt-PR.
+Synthetische kompatible Ziele belegen nur den Werkzeugweg.
+Authoring 0.6.0 samt Offline-Sheet bleibt der aktive Produktionsdefault; 0.7.0
+ist ausdrücklich opt-in. Capability und verpflichtende Gesamtaktivierung sind
+getrennt. Der konkrete verbleibende Einzelweg wird in #560 abgeglichen; neue
+Sheetbedienung bleibt #490. Keine automatische Umstellung alter Produktionen
+oder zusätzliche persönliche Buchabnahme pro Rätsel.
 
 ## Pflichtquellen nach Auftrag
 

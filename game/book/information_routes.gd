@@ -51,6 +51,7 @@ func request_return() -> bool:
 	source = book.app.info.section
 	target = origin.kind
 	book.direction = -1
+	if target in ["work","ending"]: book.app.begin_background_visit()
 	book._begin("info-return")
 	return true
 
@@ -62,6 +63,9 @@ func rect(endpoint: String) -> Vector4:
 func present(endpoint: String) -> void:
 	var app = book.app
 	if endpoint in ["settings","help"]:
+		# Source was captured already. Release the old visit before showing an
+		# information destination; a later real return gets a new visit token.
+		app.leave_background_visit()
 		app.info.present(endpoint)
 	elif endpoint == "catalog":
 		book.settling = true

@@ -298,6 +298,20 @@ Miniaturprojektion, nicht diesen Hauptraster- oder Zellzustandsvertrag.
 
 ### ZS-D04: Buch, funktionale UI und passive Pilotzeichnungen
 
+**HP-I2 / #561:** Für Runtime-v6-Rätsel ersetzt selected den Kategoriepilot durch
+die gewählte transparente 4:1-Leinwand; none lässt die Rätseldekoration leer.
+Der [Hintergrundvertrag §13](PUZZLE_BACKGROUNDS.md#13-hp-i2--runtime-darstellung-und-besuch)
+bindet eine gemeinsame Papierfläche, proportionalen Fit und denselben unteren
+mittigen Anker. Variante A zeichnet auch hinter Raster und Hinweisen. Zoom
+verändert weder Anker noch Bildzulassung oder Deckkraft; keine per-ID-Offsets,
+Masken oder Layoutkorrekturen. Die Ebene liegt in der tatsächlichen Capture-
+hierarchie und bleibt für Pointer, Fokus und Scrollen passiv. Funktionslayout
+und 44/55-px-Trefferflächen bleiben erhalten. Die einmalige unabhängige HP-I2-
+Renderer-/Gestaltungsabnahme ist keine neue persönliche Buchabnahme pro Rätsel.
+
+**Legacy und Hilfe:** Die folgenden RAND-P1-Regeln gelten weiter für bisherige
+Rätsel ohne neue Hintergrundbindung und für den unveränderten Hilfepiloten.
+
 RAND-P1 / [#550](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692)
 öffnet die frühere Dekorgrenze gezielt für drei reversible ImageGen-Motivpaare:
 Wasserwelt, Landschaften & Natur und Hilfe. Große helle Graphitskizze rechts
@@ -314,7 +328,8 @@ Lesbarkeit bestätigt. Bei 1440p bleibt eine freie Anordnung das Ziel. Dichte
 Überlagerungen und harte Bedienflächen lassen den jeweiligen Motivteil entfallen,
 statt ihn beliebig klein zu skalieren oder Funktionslayout zu verschieben.
 Kein neuer Rasteruntergrund ohne nachgewiesenen Bedarf. Unabhängiges R01 und
-persönliche Motivauswahl/Wirkungsprüfung M01 bleiben vor Produkt-Merge offen.
+persönliche Motivauswahl/Wirkungsprüfung M01 waren die eigenen Gates dieses
+Pilotpakets; sie erzeugen keine zusätzlichen HP-I2-Gates.
 
 Die folgende E1/N05-Passage beschreibt die frühere Studiengrenze; sie verbietet
 nicht den ausdrücklich beauftragten RAND-P1-Pilot.
@@ -328,8 +343,9 @@ Gate für #52/#53. Hintergrund und historische Artworkpakete bleiben unveränder
 
 Hinweise und Raster erhalten einen ruhigen Untergrund. Dekoration gibt weder
 Motivnamen noch eine vorzeitige Skizze der Lösung preis und enthält keine eingebrannten
-Bedienattrappen, Fülltexte oder Pseudoschrift. Bei engeren Ansichten beziehungsweise
-höherem Zoom tritt sie zugunsten der Arbeitsfläche zurück. ZV-50-Flächennutzung und
+Bedienattrappen, Fülltexte oder Pseudoschrift. Die Legacy-Pilotdekoration tritt
+bei engeren Ansichten beziehungsweise höherem Zoom zugunsten der Arbeitsfläche
+zurück; für HP-I2-selected gilt stattdessen Variante A oben. ZV-50-Flächennutzung und
 die Erreichbarkeit aller bestehenden Werkzeuge werden nicht eingeschränkt.
 Historische hashgebundene Designpakete bleiben unverändert; neue Lieferassets sind
 gesondert nach Herkunft, Rechten und Version zu dokumentieren.

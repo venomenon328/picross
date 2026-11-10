@@ -231,6 +231,7 @@ func request_open(id: String) -> bool:
 	# Resolve and flush once, before any target animation. A rejected slot or
 	# failed source write leaves the catalog and its retry/repair actions intact.
 	if not app.activate(id): return false
+	app.begin_background_visit()
 	selected_id = id
 	return_context = prior.duplicate(true)
 	if app.sessions[int(app.session_indices[id])].completed:

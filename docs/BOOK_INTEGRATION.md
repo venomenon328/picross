@@ -74,7 +74,25 @@ getrennten synthetischen Prüfwegen nachgewiesen.
 
 ## Navigation und Darstellung
 
-**RAND-P1 / #550:** Auf der rechten Arbeitsseite erscheinen ausschließlich für
+**HP-I2 / #561:** Runtime v6 bindet pro Rätsel legacy, none oder selected.
+selected verwendet die gemeinsame passive 4:1-Papierfläche hinter Raster und
+Hinweisen, none entfernt dort den Kategoriepilot. Legacy und Hilfe behalten
+RAND-P1. Das Bild folgt der tatsächlichen Seiten-/Capturehierarchie; Layout,
+Trefferflächen und feste Übergangsdauer bleiben unverändert. Der konkrete
+[Besuchs-/Publikationsvertrag](PUZZLE_BACKGROUNDS.md#133-besuch-publikationspunkt-und-begrenzte-ressourcen)
+beginnt nach erfolgreicher Zielaktivierung, bindet ID, Bildrevision und einen
+neuen Besuchstoken und fordert selected früh an. `content.open_puzzle()` friert
+vor dem ersten Ziellayout die einmalige Entscheidung ein: bereites Bild oder
+Auslassung für diesen Besuch. `_prepare()` und `_settle()` publizieren denselben
+Besuch idempotent; verspätete oder veraltete Ergebnisse springen nicht nach.
+Informationswechsel beendet den Besuch nach dem Source-Capture, Rückkehr beginnt
+einen neuen. Album, Abbruch und Wechsel geben eigene Referenzen frei; keine
+wachsende Queue, kein Verlaufscache oder zusätzlicher Dekor-Wartezustand.
+Native und nichtthreaded Web folgen derselben sichtbaren Entscheidung. Die
+einmaligen HP-I2-Nachweise am echten Produktroot werden im Produkt-PR geführt;
+der Vertrag allein behauptet keine ausgeführte Browser- oder Interaktionsprüfung.
+
+**RAND-P1 / #550, Legacy und Hilfe:** Auf der rechten Arbeitsseite erscheinen ausschließlich für
 `wasserwelt` und `landschaften-natur` je zwei passive ImageGen-Pilotzeichnungen,
 auf der rechten Hilfe ein eigenes Paar. `book/marginalia.gd` liegt unter der
 funktionalen UI innerhalb derselben Seiten-/Capturehierarchie. Es liest die

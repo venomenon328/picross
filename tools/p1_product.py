@@ -484,7 +484,9 @@ def main(argv: list[str] | None = None) -> int:
                                                 toolchain.template_directory(workspace, host))
             project = workspace / "p1"
             from product_fixtures import copy_regression_game, restore_player_catalog
+            import background_import
             copy_regression_game(root, project)
+            background_import.prepare_import(project)
             evidence.report["regression_catalog"] = "fixed test catalog; independent of authoring inventory"
             evidence.report["perf_b_resources"] = python_phase("current-atlas-resources", perf_b_resources.verify_runtime)
             environment = toolchain.isolated_environment(workspace, host)
@@ -590,6 +592,7 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("integration")
             if args.catalog:
                 evidence.scope_start("catalog")
+                run("background-contract", base + ["--script", "res://tests/background_tests.gd"], "BACKGROUND_TESTS_OK")
                 evidence.report["kat2"], kat2_files = kat2_product.run(root, workspace, output, engine, environment, run, python_phase, host, project)
                 selected += kat2_files
                 evidence.scope_done("catalog")
@@ -633,13 +636,17 @@ def main(argv: list[str] | None = None) -> int:
                 evidence.scope_done("perf_b")
             if args.export:
                 evidence.scope_start("export")
-                if restore_player_catalog(root, project):
+                background_sources = background_import.source_inventory(root)
+                if restore_player_catalog(root, project, background_inventory=background_sources):
+                    background_import.prepare_import(project, background_sources)
                     run("player-content-import", base + ["--import"])
+                evidence.report["background_import"] = background_import.verify_import(project, background_sources)
                 build = project / "build/windows"
                 build.mkdir(parents=True)
                 run("windows-export", base + ["--export-debug", "P1 Windows x86_64", str(build / "picross-p1.exe")])
                 evidence.report["content_pack"] = za1_product.audit_pack(root, engine, build / "picross-p1.exe", environment,
-                    run, sum(e["visible"] for e in registry["entries"]), "player-content-pck")
+                    run, sum(e["visible"] for e in registry["entries"]), "player-content-pck",
+                    background_inventory=background_sources)
                 if host == "Windows":
                     run("windows-exported-start", [str(build / "picross-p1.console.exe"), "--headless", "--", "--p1-smoke"], "P1_START_OK")
                     run("windows-exported-gui-start", [str(build / "picross-p1.console.exe"),

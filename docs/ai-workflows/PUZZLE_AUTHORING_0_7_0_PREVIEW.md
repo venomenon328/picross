@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion · 0.7.0-Vorschaustand
 
-**Version 0.7.0 · Dokumentrevision 4 · 10.11.2026**
+**Version 0.7.0 · Dokumentrevision 5 · 10.11.2026**
 
 **Explizit wählbarer Vorbereitungsstand, kein aktiver Produktionsdefault.**
 [PB-H / #489](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
@@ -10,12 +10,12 @@ Parameter-, Rand- und Difficultygarantien von Authoring 0.6.0 und ergänzt die
 Hintergrundarbeit mit eigenen geschlossenen Formen und getrennten Phasen.
 Der kanonische [aktive Authoringweg](PUZZLE_AUTHORING.md) und das
 [Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html) bleiben **0.6.0 /
-Dokumentrevision 43**. Dieser Snapshot ersetzt ihren Default nicht und wird
+Dokumentrevision 44**. Dieser Snapshot ersetzt ihren Default nicht und wird
 nicht als aktiver Anhang in das Sheet eingebettet.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md` im Repository
 `venomenon328/picross`. Ein neuer 0.7.0-Bauauftrag bindet die vollständigen Bytes
-dieser Datei, Version 0.7.0, Dokumentrevision 4 und den tatsächlich gelesenen
+dieser Datei, Version 0.7.0, Dokumentrevision 5 und den tatsächlich gelesenen
 Quellencommit. Eine umbenannte oder nur im Header geänderte 0.6.0-Datei ist
 kein 0.7.0-Snapshot. Bereits versiegelte Originale behalten ihre eigenen Bytes,
 Versionen und damaligen Nachweise; kein Versionsdowngrade für neue Arbeit.
@@ -36,11 +36,14 @@ Endfreigabe v2 für die äußere Record-/Sheetfortschreibung; v6-Export benötig
 alle Inhaltsgates und Endfreigabe. Höchste Phase ist `editorially_approved`,
 `integration_ready`, `catalog_ready` und `registered` bleiben false.
 HP-I1b1 ergänzt zielbezogene Erstregistrierung, kompakte aktive Source/Receipt,
-Recovery und ersten Produktionsabschluss. Die echte Zielfähigkeit bleibt false;
-erst HP-I2 mit tatsächlicher Runtime und technischer Abnahme darf sie aktivieren.
-HP-I1b2 ergänzt den eigenständigen Hintergrundwechsel und seinen revisionsgenauen Abschluss.
-Neue UI-Import-/Sitzungs-/Auftragsformen folgen in #490. Der vollständige
-Einzelweg ist noch nicht aktiviert. Eine vorhandene Endfreigabe v2 darf rein
+Recovery und ersten Produktionsabschluss. HP-I1b2 liefert den eigenständigen
+Hintergrundwechsel und seinen revisionsgenauen Abschluss; HP-I1c schließt die
+erlaubte Raster-/Revealneubindung vorhandener Hintergrundziele. Die echte
+Zielfähigkeit darf erst mit funktionierendem und technisch abgenommenem
+HP-I2-Runtime-/Importweg true sein. Dieser opt-in-Weg ersetzt den Default 0.6.0
+nicht; die verpflichtende Gesamtaktivierung wird anhand des tatsächlich
+unterstützten Einzelwegs in #560 festgestellt. Neue UI-Import-/Sitzungs-/
+Auftragsformen folgen in #490. Eine vorhandene Endfreigabe v2 darf rein
 lesend auf ihre unveränderten Originalbindungen geprüft werden; kein neuer
 finaler Originalzustand wird gebaut und keine fehlende Erklärung erzeugt.
 
@@ -69,7 +72,7 @@ begründet abweichbaren Standard, **DARF** eine Option.
 
 ## 1. Einstieg und Befugnisse
 
-1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_QUALITY.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`; für diesen Vorschaustand außerdem `docs/PUZZLE_BACKGROUNDS.md` und die PB-H-/HP-I1a-/HP-I1b1-/HP-I1b2-Abschnitte in `docs/ZA1_ADAPTER.md`. Vor Paarlinienprüfung oder Übergabe eines Paarprofilpakets zusätzlich `docs/PAIRED_LINES.md` vollständig lesen.
+1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_QUALITY.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`; für diesen Vorschaustand außerdem `docs/PUZZLE_BACKGROUNDS.md` und die PB-H-/HP-I1a-/HP-I1b1-/HP-I1b2-/HP-I1c-Abschnitte in `docs/ZA1_ADAPTER.md`. Vor Paarlinienprüfung oder Übergabe eines Paarprofilpakets zusätzlich `docs/PAIRED_LINES.md` vollständig lesen.
 2. Zu Beginn Kategorienquelle, Arbeitsindex und Runtime-Registry lesen; Bestandsrätsel nicht einzeln laden oder nachprüfen. Kategorie nach Auftrag oder prägendem Hauptgegenstand gemäß [Kategorienvertrag](../CATEGORIES.md) zuordnen und in Briefing/Record führen. Repository-/Toolstand mit vollständiger Commit-SHA binden. Aktuelle Dateien und tatsächlich benötigte Fähigkeiten prüfen, keine historischen PR-Statuslisten abarbeiten. Abgeschlossene Lieferungen sind keine erneut offenen Voraussetzungen; nur eine konkrete aktuelle Lücke verfolgen.
 3. Bestehende technische Formate, Farbregeln, Solverprofile, Nachweise und Reparaturverträge verwenden. Dieses Regelwerk ersetzt sie nicht. Fehlende Pflichtquellen oder widersprüchliche Vorgaben vor dem betroffenen Schritt klären.
 4. Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine Funktionen, Prüfungen oder Ergebnisse behaupten, die nicht verfügbar beziehungsweise ausgeführt sind.
@@ -218,7 +221,7 @@ sie ändern keine tatsächliche Freigabe oder Inhaltsgarantie.
 | **1 · Abschlussbildauswahl** | Bildfähige KI erfasst Text/Bild, liest Quellen, erzeugt drei Abschlussbilder und führt das Hintergrundbriefing nach Abschnitt 2. | `brief_ready` → `reveal_review`: Einzeldateien, Hintergrund-Arbeitsmanifest mit ehrlichem offenen Kontext, Vergleich und gesicherte Übergabe; auf Abschlussbildauswahl/Freigabe warten. |
 | **2 · Abschlussbildfreigabe und Abstraktion** | KI bindet die tatsächliche Freigabe, empfiehlt bei offenen Angaben 2–3 Konfigurationen und erstellt unmittelbar die Abstraktion. Nach Reveal-Freigabe drei gespeicherte Kontextzeichnungen erzeugen und isoliert zusammen mit der Motivvorlage zeigen; ausdrücklichen frühen Verzicht belegen. | `motif_review`: Bildvergleich, Detailverluste, Parameterkorridor, vollständige Hintergrundangebote und gesichertes Paket; auf Motivfreigabe und möglichst gebündelte Hintergrundwahl warten. Keine zusätzliche Konfigurationsrunde. |
 | **3 · Motivfreigabe und Produktion** | Codex bindet Motiv-/Parameterfreigabe und eine tatsächlich erklärte Hintergrundwahl; führt Abschnitte 4–7 einschließlich Profilprüfung, begrenzter Reparatur, technischer/visueller Prüfung und Difficulty aus. Offene Hintergrundwahl stoppt unabhängige autorisierte Rasterarbeit nicht. | `motif_approved` → `raster_review` → vollständig geprüftes `raster_ready`, bei zusätzlich vollständigem Hintergrund `content_ready`: vorzugsweise 2–3 geprüfte Rasterangebote, echte Ansichten und je ein geprüftes Paket. Hintergrundstatus getrennt nennen. Menschliche Rasterwahl/Endabnahme bleibt offen; keine Registrierung. |
-| **4 · Endabnahme und Integration** | Noch offene Hintergrundwahl darf mit der Endabnahme gebündelt werden. Vorhandene tatsächliche Entscheidung, geprüfte Ableitung und Endfreigabe v2 mit HP-I1a außen sichern; nach vollständiger Prüfung v6 exportieren. HP-I1b1 prüft die Zielkompatibilität gesondert. | Original unverändert, Record höchstens `editorially_approved`; gespeicherte `integration_ready/catalog_ready/registered=false`. Echte false-Capability bleibt konkreter Blocker bis HP-I2. Nur kompatibles Ziel erlaubt neue Registrierung und nach belegter Main-Integration den Abschluss nach §§8–9. |
+| **4 · Endabnahme und Integration** | Noch offene Hintergrundwahl darf mit der Endabnahme gebündelt werden. Vorhandene tatsächliche Entscheidung, geprüfte Ableitung und Endfreigabe v2 mit HP-I1a außen sichern; nach vollständiger Prüfung v6 exportieren. HP-I1b1 prüft die Zielkompatibilität gesondert. | Original unverändert, Record höchstens `editorially_approved`; gespeicherte `integration_ready/catalog_ready/registered=false`. Fehlende/false-Capability bleibt konkreter Blocker; true verlangt den HP-I2-Runtime-/Abnahmevertrag. Nur kompatibles Ziel erlaubt neue Registrierung und nach belegter Main-Integration den Abschluss nach §§8–9. |
 
 Standardarbeitsteilung: ChatGPT für 1–2, Codex für 3–4. Eine Umgebung darf beides übernehmen, wenn sie die tatsächlichen Bild-, Datei-, Repository- und Werkzeugfähigkeiten besitzt. Diese Oberflächenzuordnung löst keine Modell- oder Ausführungsempfehlung aus (§1); keine Modell-API einbauen. Ein zusätzlicher Mergeauftrag ist nur ohne vorherige passende Freigabe nötig; Korrekturrunden und echte Zugriffsprobleme können weitere Nachrichten erfordern.
 
@@ -1015,8 +1018,10 @@ Alle Bindungen müssen zum unveränderten Original-ZIP und den tatsächlich
 vorliegenden Dateien passen. Kein Erzeugen, Neudatieren oder Umbinden einer
 Freigabe durch Builder oder Finalizer. HP-I1a ergänzt sichere äußere
 Fortschreibung und v6-Export. HP-I1b1 ergänzt erste Registrierung und deren
-Abschluss im kompatiblen Ziel; echte Capability bleibt false bis HP-I2.
-HP-I1b2 ergänzt späteren Ersatz nach dem eigenen Requestvertrag. Ursprüngliche Freigaben bleiben unverändert.
+Abschluss im kompatiblen Ziel; die echte Capability folgt dem HP-I2-Runtime-/
+Abnahmevertrag. HP-I1b2 liefert späteren Ersatz nach dem eigenen Requestvertrag,
+HP-I1c die erlaubte Raster-/Revealneubindung bestehender Hintergrundziele.
+Ursprüngliche Freigaben bleiben unverändert.
 
 Die bisherigen Publikationsgarantien gelten unverändert: eigene temporäre
 Revision, deterministische Bytes/ZIP-Metadaten, frische sichere Extraktion,
@@ -1216,7 +1221,7 @@ dass das Sheet die Bytes oder Proofs selbst geprüft hätte. Nach Produktionsabs
 werden Optionslisten geleert, statt auf entfernte Arbeitsdateien zu verweisen.
 
 Der eingebettete aktive Sheet-Snapshot und seine Anzeige bleiben bei
-`PUZZLE_AUTHORING.md` 0.6.0/docrev43; dieser 0.7.0-Vorschausnapshot hat seinen
+`PUZZLE_AUTHORING.md` 0.6.0/docrev44; dieser 0.7.0-Vorschausnapshot hat seinen
 eigenen Pfad und wird nicht ungeprüft als UI-Default eingebettet. Der
 Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
 muss über den tatsächlichen Arbeitsbranch/Commit erreichbar benannt werden.
@@ -1336,12 +1341,17 @@ Offline-Sheet erhält ausschließlich den aktiven 0.6.0-Snapshot samt Revision.
 effektive Exportphase bleibt `editorially_approved` und gespeicherte
 `integration_ready/catalog_ready/registered=false`. HP-I1b1 öffnet anschließend
 frisch zielbezogene Planung/Erstregistrierung und deren Abschluss. Die feste
-`game/data/background-capability.json` muss dafür gültig true sein; im echten
-Repository bleibt sie false bis HP-I2 samt tatsächlicher Runtime und technischer
+`game/data/background-capability.json` muss dafür gültig true sein. HP-I2 erlaubt
+dies erst mit funktionierendem Runtime-/Importweg und tatsächlicher technischer
 Abnahme. Kein CLI-/API-/Umgebungsbypass, kein Aktivieren durch
 `--allow-background`. Synthetische kompatible Ziele sind nur Werkzeugnachweise.
 Die nachfolgenden 0.6.0-/ZA-1-Garantien bleiben geerbt; alte Formate nicht durch
-eine neue Versionshülle umgehen. Der vollständige Produktionsdefault bleibt 0.6.0.
+eine neue Versionshülle umgehen. Der Produktionsdefault bleibt 0.6.0; der
+0.7.0-Weg ist ausdrücklich opt-in. Die verpflichtende Gesamtaktivierung folgt
+dem konkreten Einzelwegabgleich in #560, nicht allein dem true-Flag oder einem
+pauschalen Abschluss von #490. Geänderte Capabilitybytes machen ältere Pläne
+stale; offene Altjournale bleiben nach ihrem Vertrag gesperrt und erhalten den
+regulären Recoveryweg.
 Erst der tatsächlich unterstützte #561-Weg übernimmt in Auftrag 4 gemeinsam mit
 dem endabgenommenen Rätsel **ausschließlich die konkret gewählte, gültig
 abgeleitete Auslieferungsdatei oder die ausdrücklich erklärte Leerentscheidung**.
@@ -1357,9 +1367,10 @@ Auswahl/Endabnahme und gültige Ableitung. Herkunft, Palette, Paarprofil,
 Schwierigkeit, bisherige Reveal-/Motivgates und Recoverygarantien bleiben
 erhalten. Eine spätere reine Hintergrundersetzung nutzt nur den dafür
 eingeführten Bildweg aus #561 und erhält Lösungs-/Saveidentität; sie ist keine
-heutige `plan-update`-/`update`- oder `catalog_reveal`-Operation. Rasterupdate
-und Revealadoption eines Hintergrundziels bleiben ebenfalls konkret vor
-Planung/Mutation gesperrt; ihre fachliche Neubindung ist Folgeumfang.
+`plan-update`-/`update`- oder `catalog_reveal`-Operation. Rasterupdate und
+Revealadoption vorhandener Hintergrundziele verwenden die geschlossenen
+HP-I1c-Bindungen nach Hintergrundvertrag §12; keine ungeprüfte Übernahme einer
+alten Bild-/Kontextfreigabe. Legacy-Erstnachrüstung bleibt gesperrt.
 
 ### HP-I1a: vorhandene Endabnahme sichern und v6 exportieren
 
@@ -1416,15 +1427,17 @@ Auswahl, Approval, Rechte, vier Q-HG-Urteile, Ableitung und Ursprungsbindung;
 Runtime v6 enthält nur legacy/none/selected, aktive Integerrevision und Assetref.
 Keine neue Bild-/Buchabnahme, keine geänderte Logik-/Saveidentität. Neue
 Quellen-/Plan-/Journalgenerationen erhalten Hintergründe bei zulässiger
-Metadatenpflege und Legacyzieloperationen. Hintergrundziel-Update/-Revealadoption
-bleiben gesperrt. No-op vor/nach Retirement vergleicht den ursprünglichen
+Metadatenpflege und Legacyzieloperationen. HP-I1c ergänzt die erlaubte
+Hintergrundziel-Update/-Revealadoption mit eigener vollständiger Neubindung.
+No-op vor/nach Retirement vergleicht den ursprünglichen
 Exportanker und schreibt weder Bytes/mtime noch Added neu.
 
 ### Geerbter 0.6.0-Referenzweg und gemeinsame Integrationsgarantien
 
 Alle folgenden Kommandos behalten ihre bisherigen unterstützten Eingänge und
 Vorbedingungen. Der zusätzliche 0.7.0-Weg ist ausschließlich unter den obigen
-HP-I1b1-Grenzen verfügbar; der echte inkompatible Zielstand bleibt gesperrt.
+HP-I1b1-/HP-I1b2-/HP-I1c-Grenzen verfügbar. Ein Ziel ohne gültige true-Capability
+bleibt gesperrt; die reale Runtimefähigkeit wird nach HP-I2 technisch abgenommen.
 
 RI-A-V01 zu [#478](https://github.com/venomenon328/picross/issues/478) liefert
 seit PR #484 auf main die [operativen CLI-/API-Grenzen](../ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen).
@@ -1551,7 +1564,7 @@ Das Endergebnis nennt Paketfundort/-hash, Freigabebeleg, Runtime-ID/Revision/Slo
 bleiben erhalten. HP-I1b1 erweitert `retire-production` für die tatsächlich
 erstmals auf main integrierte v6-Produktion und bewahrt Source/Receipt nach
 Hintergrundvertrag §10. Neue/offene/fremde Arbeit erhalten oder vor Mutation
-blockieren. Die reale Runtime bleibt vor HP-I2 inkompatibel; ein synthetischer
+blockieren. Die echte Runtimefähigkeit folgt dem HP-I2-Vertrag; ein synthetischer
 Abschluss ist keine reale Integration. `retire-reveal-production` wird kein
 Hintergrundabschlusswriter; späterer Ersatz samt Abschluss folgt dem eigenen HP-I1b2-Vertrag.
 
@@ -1687,9 +1700,10 @@ aktueller Source und aktuellem freigegebenem Reveal sichern; ursprüngliche
 Revealautorität bleibt in initial erhalten. Die aktuelle 0.6.0-Sheetoberfläche
 weist diesen neuen Recordtyp ausdrücklich zurück; Bedienung bleibt #490.
 Eigene Arbeitsrevision über `catalog_background_change store` samt Index sichern,
-danach `plan` und autorisiertes `adopt` gemäß Werkzeuganleitung. Capability false
-blockiert den echten Zielweg; kein Override. Vorhandene Freigaben nicht erneut
-abfragen. Raster-/Revealneubindung an Hintergrundtargets bleibt HP-I1c.
+danach `plan` und autorisiertes `adopt` gemäß Werkzeuganleitung. Fehlende oder
+false-Capability blockiert den Zielweg; kein Override. Vorhandene Freigaben
+nicht erneut abfragen. HP-I1c liefert die erlaubte Raster-/Revealneubindung
+vorhandener Hintergrundziele nach seinem eigenen Vertrag.
 
 Nach bestätigter Mainintegration `target_adapter retire-background-production
 --checkout <checkout> --integrated-commit <vollständige-main-SHA>

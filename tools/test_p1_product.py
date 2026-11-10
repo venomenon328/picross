@@ -244,20 +244,36 @@ class ProductHarnessTests(unittest.TestCase):
             (source / "game/data/content").mkdir(parents=True)
             (source / "game/art/content").mkdir(parents=True)
             (source / "game/model").mkdir()
+            (source / "content").mkdir()
             (source / "game/model/loader.gd").write_text("runtime code\n")
             shutil.copytree(root / "tests/puzzle_production/fixtures/catalog", source / "tests/puzzle_production/fixtures/catalog")
-            (source / "game/data/registry.json").write_text('{"actual":"catalog"}\n')
+            (source / "game/data/registry.json").write_text(json.dumps(dict(format="picross-runtime-registry-v5", categories=[], entries=[])))
+            (source / "content/registry.json").write_text(json.dumps(dict(format="picross-content-registry-v2", entries=[])))
             (source / "game/data/content/new.json").write_text("not a valid puzzle; must never be certified here")
             (source / "game/art/content/new.png").write_bytes(b"opaque bytes")
+            backgrounds = source / "game/art/backgrounds"
+            backgrounds.mkdir()
+            for name in ("pz-not-a-fixture.png", "pz-not-a-fixture.txt", "pz-not-a-fixture.png.import"):
+                (backgrounds / name).write_bytes(b"must not enter the regression copy")
             project = temp / "regression"
-            copy_regression_game(source, project)
+            original_copy = shutil.copyfile
+            def bounded_copy(src, dst, *args, **kwargs):
+                self.assertNotEqual(Path(src).parent, backgrounds)
+                return original_copy(src, dst, *args, **kwargs)
+            with patch("shutil.copyfile", side_effect=bounded_copy):
+                copy_regression_game(source, project)
             self.assertEqual(len(json.loads((project / "data/registry.json").read_text())["entries"]), 6)
             self.assertFalse((project / "data/content").exists())
             self.assertFalse((project / "art/content").exists())
+            self.assertFalse((project / "art/backgrounds").exists())
             self.assertTrue((project / "model/loader.gd").exists())
+            # The fake foreign namespace was only a copy exclusion counterexample,
+            # never a valid active background catalog for the regular exporter.
+            shutil.rmtree(backgrounds)
             self.assertTrue(restore_player_catalog(source, project))
             self.assertEqual((project / "data/registry.json").read_bytes(), (source / "game/data/registry.json").read_bytes())
             self.assertEqual((project / "art/content/new.png").read_bytes(), b"opaque bytes")
+            self.assertTrue(restore_player_catalog(source, project))
 
     def test_regular_identity_and_study_exclusions_survive_project_move(self):
         root = Path(__file__).resolve().parents[1] / "game"
