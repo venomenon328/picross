@@ -8,7 +8,7 @@ from pathlib import Path
 import re
 import stat
 
-from .authoring_package import require, sha
+from .authoring_package import relative, require, sha
 from .contract import canonical_bytes, digest, exact_keys, integer
 from . import catalog_io as io, catalog_rating as rating, categories
 
@@ -17,6 +17,8 @@ APPROVAL = "picross-reveal-approval-v1"
 ROOT = "content/reveals"
 LIMIT = 1024 * 1024
 IMAGE_LIMIT = 32 * 1024 * 1024
+RECEIPT = "picross-integrated-content-v1"
+BACKGROUND_RECEIPT = "picross-integrated-content-v2"
 
 
 def path(identifier):
@@ -103,12 +105,41 @@ def check_hash(value, field):
     require(sha(value[field]) == digest({k: v for k, v in value.items() if k != field}), "Wrong reveal " + field)
 
 
-def receipt(value, entry, notice_hash):
-    exact_keys(value, {"format", "entry", "integrated_commit", "notice_sha256"})
-    require(value["format"] == "picross-integrated-content-v1" and isinstance(value["integrated_commit"], str) and
-            re.fullmatch(r"[0-9a-f]{40}", value["integrated_commit"]) and value["entry"] == entry and
+def receipt(value, entry, notice_hash, *, background=False):
+    """Check a receipt's closed shape without opening historical input refs.
+
+    AT-v1 histories keep their original receipt-v1 contract. Only current
+    package readers explicitly admit the independently bound background form.
+    """
+    is_background = isinstance(value, dict) and value.get("format") == BACKGROUND_RECEIPT
+    exact_keys(value, {"format", "entry", "integrated_commit", "notice_sha256"} |
+               ({"background"} if is_background and background else set()))
+    require(value["format"] == (BACKGROUND_RECEIPT if is_background and background else RECEIPT) and
+            isinstance(value["integrated_commit"], str) and
+            re.fullmatch(r"[0-9a-f]{40}", value["integrated_commit"]) and canonical_bytes(value["entry"]) == canonical_bytes(entry) and
             sha(value["notice_sha256"]) == notice_hash, "Integrated receipt identity/category/notice differs")
+    if is_background:
+        from . import catalog_background as backgrounds
+        binding = exact_keys(value["background"], {"origin_sha256", "source"})
+        sha(binding["origin_sha256"])
+        ref = exact_keys(binding["source"], {"file", "sha256", "bytes"})
+        relative(ref["file"]); sha(ref["sha256"])
+        integer(ref["bytes"], 1, 1024 * 1024, "background source bytes")
+        require(ref["file"] == backgrounds.path(entry["id"]), "Wrong receipt background source path")
     return value
+
+
+def background_registry(root):
+    from .content_registry import REGISTRY
+    return io.json_bytes(io.read(root, REGISTRY, 8 * 1024 * 1024), 8 * 1024 * 1024)
+
+
+def require_legacy_target(root, entry, registry=None):
+    """B1 has no contract for rebinding a background target's raster/reveal."""
+    from . import catalog_background as backgrounds
+    registry = background_registry(root) if registry is None else registry
+    require(entry["id"] not in backgrounds.index(registry),
+            "Background target reveal/raster changes require a later integration contract")
 
 
 def validate(value, catalog):
@@ -180,36 +211,45 @@ def package(root, entry):
     raw = io.read(root, prefix + "/manifest.json", 8 * 1024 * 1024)
     manifest = io.json_bytes(raw, 8 * 1024 * 1024)
     require(isinstance(manifest,dict), 'Invalid package manifest object')
-    require(manifest.get("format") != "picross-target-export-v6",
-            "Background export v6 is not supported by catalog consumers (HP-I1b required)")
+    require(io.checksum(raw) == entry["production"]["package_sha256"], "Registered package binding changed")
     files = {}
     base = io.safe(root, prefix)
     for p in base.rglob("*"):
         name = p.relative_to(root).as_posix()
         p = io.safe(root, name)
         if p.is_file(): files[name.removeprefix(prefix + "/")] = p
-    if manifest.get("format") == "picross-integrated-content-v1":
-        exact_keys(manifest, {"format", "entry", "integrated_commit", "notice_sha256"})
+    if manifest.get("format") in (RECEIPT, BACKGROUND_RECEIPT):
+        exact_keys(manifest, {"format", "entry", "integrated_commit", "notice_sha256"} |
+                   ({"background"} if manifest["format"] == BACKGROUND_RECEIPT else set()))
         require(isinstance(manifest["entry"], dict) and isinstance(manifest["entry"].get("production"), dict) and
                 isinstance(manifest["entry"]["production"].get("package_sha256"), str), "Invalid receipt entry")
         require(set(files) == {"manifest.json"}, "Integrated package contains unbound files")
         original = deepcopy(entry)
         original["production"]["package_sha256"] = manifest["entry"]["production"]["package_sha256"]
-        receipt(manifest, original, manifest["notice_sha256"])
+        receipt(manifest, original, manifest["notice_sha256"], background=True)
+        from . import catalog_background as backgrounds
+        registry = background_registry(root)
+        require((entry["id"] in backgrounds.index(registry)) == (manifest["format"] == BACKGROUND_RECEIPT),
+                "Receipt generation differs from registered background authority")
+        if manifest["format"] == BACKGROUND_RECEIPT:
+            backgrounds.check_receipt(root, registry, entry, manifest)
         return original, manifest["notice_sha256"], manifest, set(prefix + "/" + n for n in files)
-    require(manifest.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5") and
+    require(manifest.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5", "picross-target-export-v6") and
             isinstance(manifest.get("files"), dict) and set(files) == set(manifest["files"]) | {"manifest.json"}, "Invalid/incomplete export inventory")
     legacy = manifest['format'].endswith('-v1')
-    palette = manifest['format'].endswith('-v5')
+    background = manifest['format'].endswith('-v6')
+    palette = manifest['format'].endswith('-v5') or background
     paired = manifest['format'].endswith('-v4') or palette and 'deduction' in manifest
     manual = manifest['format'].endswith('-v3') or (paired or palette) and 'manual_authorization' in manifest
     exact_keys(manifest, {'format','adapter','definition_id','runtime_revision','package_revision','save_slot','stem','definition','reveal',
         'color_mapping','selection','handoff_sha256','inventory_sha256','approval_sha256','technical','editorial_approved','catalog_ready','registered','test_only','files'} |
         (set() if legacy else {'category_id','categories'}) | ({'manual_authorization'} if manual else set()) | ({'deduction'} if paired else set()) |
-        ({'palette_gate'} if palette else set()))
+        ({'palette_gate'} if palette else set()) |
+        ({'input','background','background_asset','background_notice','integration_ready'} if background else set()))
     require(io.checksum(raw) == entry["production"]["package_sha256"], "Export manifest binding differs")
     for name, checksum in manifest["files"].items():
-        require(io.file_hash(root, prefix + "/" + name) == sha(checksum), "Altered export file: " + name)
+        require(io.file_hash(root, prefix + "/" + name, io.export_limit(base, name)) == sha(checksum),
+                "Altered export file: " + name)
     require(manifest["definition_id"] == entry["id"] and manifest["save_slot"] == entry["save_slot"] and
             manifest["definition"] == "runtime/" + entry["definition"] and manifest["reveal"] == "runtime/" + entry["reveal"] and
             manifest["package_revision"] == entry["production"]["revision"] and manifest["test_only"] == entry["production"]["test_only"] and
@@ -218,13 +258,24 @@ def package(root, entry):
     inspection = io.json_bytes(io.read(root, prefix + '/inspection.json', 8 * 1024 * 1024), 8 * 1024 * 1024)
     if palette:
         from .palette_gate import same
-        same(inspection.get('format'), 'picross-target-inspection-v5', 'Missing v5 inspection')
+        same(inspection.get('format'), 'picross-target-inspection-v6' if background else 'picross-target-inspection-v5',
+             'Missing matching palette/background inspection')
         same(inspection.get('palette_gate'), manifest['palette_gate'], 'Export/inspection palette binding differs')
         exact_keys(manifest['palette_gate'], {'assessment','binding','visual_review','exception','allowed'})
         require(manifest['palette_gate'].get('allowed') is True and inspection.get('technical') is True,
                 'Registered palette gate is blocked')
     require(isinstance(inspection,dict) and all(k in inspection and inspection[k] == entry['production'][k] for k in ('width','height','mode','difficulty','test_only')) and
             inspection.get('package_revision') == entry['production']['revision'], 'Historical production metadata differs')
+    if background:
+        from . import catalog_background as backgrounds
+        require(all(manifest[k] is False for k in ('integration_ready','catalog_ready','registered')) and
+                manifest['technical'] is True and manifest['editorial_approved'] is True,
+                'Invalid immutable background export readiness')
+        registry = background_registry(root)
+        require(entry['id'] in backgrounds.index(registry), 'Missing registered background authority')
+        source = backgrounds.load(root, registry, entry)
+        require(source['origin']['export_manifest_sha256'] == io.checksum(raw),
+                'Background origin export binding differs')
     notice_hash=sha(manifest['files'].get('runtime/'+notice_path(entry).removeprefix('game/')))
     return deepcopy(entry), notice_hash, None, set(prefix + "/" + n for n in files)
 
@@ -250,6 +301,8 @@ def resolve(root, entry, catalog, *, record=None):
     require(io.checksum(definition) == entry["production"]["definition_sha256"], "Registered definition binding changed")
     runtime_revision = rating.bytes_json(definition, 2 * 1024 * 1024)["revision"]
     record = load(root, entry, catalog) if record is None else validate(record, catalog)
+    if record is not None:
+        require_legacy_target(root, entry)
     effective_image, effective_notice = entry["production"]["reveal_sha256"], historical_notice
     if record:
         binding = record["bindings"][-1]
@@ -269,6 +322,7 @@ def resolve(root, entry, catalog, *, record=None):
 
 
 def revise(root, entry, catalog, image_hash, declaration, attribution, append=None):
+    require_legacy_target(root, entry)
     resolved = resolve(root, entry, catalog)
     old = load(root, entry, catalog)
     value = deepcopy(old)

@@ -155,6 +155,32 @@ def file_hash(root, name, limit=64 * 1024 * 1024):
     return checksum(read(root, name, limit))
 
 
+def export_limit(root, name):
+    """The sole large-file exception is a declared v6 original ZIP.
+
+    This is a bounded read policy, not export verification. The full consumer
+    still checks the manifest, every file and the original production proofs.
+    No basename, caller-supplied flag or arbitrary ZIP earns the exception.
+    """
+    from .authoring_package import MAX_FILE, MAX_ZIP, sha
+    from .contract import exact_keys, integer
+    if name != "input/package.zip":
+        return MAX_FILE
+    raw = read(root, "manifest.json", 8 * 1024 * 1024, missing=True)
+    if raw is None:
+        return MAX_FILE
+    manifest = json_bytes(raw, 8 * 1024 * 1024)
+    if not isinstance(manifest, dict) or manifest.get("format") != "picross-target-export-v6":
+        return MAX_FILE
+    inputs = exact_keys(manifest.get("input"), {"original_package", "external_root", "discarded_files"})
+    original = exact_keys(inputs["original_package"], {"file", "sha256", "bytes"})
+    require(original["file"] == name and inputs["external_root"] == "external" and
+            isinstance(manifest.get("files"), dict) and manifest["files"].get(name) == sha(original["sha256"]),
+            "Original ZIP exception requires its exact v6 manifest binding")
+    integer(original["bytes"], 1, MAX_ZIP, "original ZIP byte count")
+    return MAX_ZIP
+
+
 def json_bytes(raw, limit):
     require(isinstance(raw, bytes), "Catalog JSON must be bytes")
     if len(raw) > limit:

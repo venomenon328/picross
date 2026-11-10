@@ -18,6 +18,15 @@ except ImportError:
     from tests.puzzle_production.test_catalog_reveal import RevealTests, snapshot
 
 
+def pre_background_journal(journal):
+    """Build old fixtures only from strictly compatible inactive source views."""
+    for side in ('old', 'new'):
+        texts = {name: raw.encode() if raw is not None else None for name, raw in journal[side].items()}
+        historical = tx.pre_background_snapshot({'texts': texts, 'retained': journal['retained']})
+        journal[side] = {name: raw.decode() if raw is not None else None for name, raw in historical['texts'].items()}
+    return journal
+
+
 class RecoveryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -181,7 +190,7 @@ else: c.recover(Path(root))
         with self.assertRaises(InterruptedError):cr.registration(self.exported,empty,apply=True,difficulty=difficulty_for_export(self.exported),fail_step='crash-index')
         original=io.json_bytes((empty/tx.LOCK).read_bytes(),pub.LIMIT)
         for format in (tx.LEGACY_FORMATS['registration'],tx.PREVIOUS_FORMATS['registration']):
-            root=self.root/format;shutil.copytree(empty,root);j=deepcopy(original)
+            root=self.root/format;shutil.copytree(empty,root);j=pre_background_journal(deepcopy(original))
             j['format']=format;j.pop('replacements')
             legacy=format==tx.LEGACY_FORMATS['registration']
             for side in ('old','new'):
@@ -224,7 +233,7 @@ else: c.recover(Path(root))
             captured=tx.capture(root);old={n:b for n,(b,_) in snapshot(root).items()}
             with self.assertRaises(InterruptedError):
                 update(exported,root,self.entry['production']['definition_sha256'],apply=True,rebind_difficulty=True,fail_step='crash-content/registry.json')
-            j=io.json_bytes((root/tx.LOCK).read_bytes(),pub.LIMIT);j['format']=format;j.pop('replacements')
+            j=pre_background_journal(io.json_bytes((root/tx.LOCK).read_bytes(),pub.LIMIT));j['format']=format;j.pop('replacements')
             j['retained']=tx.historical_snapshot(captured)['retained']
             for side in ('old','new'):
                 j[side].pop(method.PATH)
@@ -248,7 +257,7 @@ else: c.recover(Path(root))
             root=self.root/format;shutil.copytree(self.checkout,root)
             legacy=format==tx.LEGACY_FORMATS['sync']
             if legacy:(root/added.path(self.identifier)).unlink();cr.sync_runtime(root)
-            captured=tx.capture(root);j=tx.prepare(root,captured,{},operation='sync')
+            captured=tx.capture(root);j=tx.prepare(root,captured,{},operation='sync',generation='sd2')
             j['format']=format
             if format!=tx.FORMATS['sync']:
                 for side in ('old','new'):

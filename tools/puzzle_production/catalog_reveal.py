@@ -13,7 +13,8 @@ from . import catalog_publication as publication, categories
 
 REQUEST = "picross-reveal-request-v1"
 LEGACY_FORMAT = "picross-reveal-plan-v1"
-FORMAT = "picross-reveal-plan-v2"
+SD2_FORMAT = "picross-reveal-plan-v2"
+FORMAT = "picross-reveal-plan-v3"
 RESULT = "picross-reveal-result-v1"
 PLAN_LIMIT = 128 * 1024 * 1024
 
@@ -22,8 +23,15 @@ def text_record(raw):
     return {"text": raw.decode("utf-8"), "sha256": io.checksum(raw)} if raw is not None else None
 
 
-def source_hashes(snapshot, plan_format=FORMAT):
+def plan_snapshot(snapshot, plan_format=FORMAT):
+    require(plan_format in (FORMAT, SD2_FORMAT, LEGACY_FORMAT), "Unsupported reveal plan format")
+    if plan_format != FORMAT: snapshot = tx.pre_background_snapshot(snapshot)
     if plan_format == LEGACY_FORMAT: snapshot = tx.pre_sd2_snapshot(snapshot)
+    return snapshot
+
+
+def source_hashes(snapshot, plan_format=FORMAT):
+    snapshot = plan_snapshot(snapshot, plan_format)
     return {**snapshot["retained"], **{n: io.checksum(v) for n, v in snapshot["texts"].items()}}
 
 
@@ -68,6 +76,8 @@ def build(root, ids, requests, input_dir, *, plan_format=FORMAT):
     snapshot = tx.capture(root)
     entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
     require(set(ids) <= set(entries), "Unknown reveal ID")
+    for identifier in ids: reveal.require_legacy_target(root, entries[identifier], snapshot["registry"])
+    scoped = plan_snapshot(snapshot, plan_format)
     catalog = io.json_bytes(snapshot["texts"][categories.PATH], 131072)
     rows, writes, replacements, files, total = [], {}, {}, {}, 0
     for identifier in ids:
@@ -95,10 +105,10 @@ def build(root, ids, requests, input_dir, *, plan_format=FORMAT):
                      "old_record": text_record(old_record), "new_record": text_record(new_record),
                      "old_notice": text_record(snapshot["texts"][notice_path]), "new_notice": text_record(writes[notice_path])})
     journal = tx.prepare(root, snapshot, writes, operation="reveal-adoption", replacements=replacements,
-                         generation="at" if plan_format == LEGACY_FORMAT else "sd2")
+                         generation="background" if plan_format == FORMAT else "sd2" if plan_format == SD2_FORMAT else "at")
     sources = source_hashes(snapshot, plan_format)
     require(len(sources) <= 100000, "Too many reveal plan sources")
-    plan = {"format": plan_format, "ids": ids, "snapshot": {"sources": sources, "namespaces": snapshot["namespaces"]},
+    plan = {"format": plan_format, "ids": ids, "snapshot": {"sources": sources, "namespaces": scoped["namespaces"]},
             "entries": rows, "writes": changes(journal["old"], journal["new"], replacements)}
     plan["plan_hash"] = digest(plan)
     if len(canonical_bytes(plan)) + 1 > PLAN_LIMIT: raise Aborted("resource_limit: reveal plan exceeds 128 MiB")
@@ -141,14 +151,15 @@ def plan(root, ids, input_path, output, *, seconds=300):
 
 def validate_plan(value):
     exact_keys(value, {"format", "ids", "snapshot", "entries", "writes", "plan_hash"})
-    require(value["format"] in (FORMAT, LEGACY_FORMAT) and value["ids"] == selection(value["ids"]), "Invalid reveal plan")
+    require(value["format"] in (FORMAT, SD2_FORMAT, LEGACY_FORMAT) and value["ids"] == selection(value["ids"]), "Invalid reveal plan")
     require(sha(value["plan_hash"]) == digest({k: v for k, v in value.items() if k != "plan_hash"}), "Wrong reveal plan hash")
     snap = exact_keys(value["snapshot"], {"sources", "namespaces"})
     require(isinstance(snap["sources"], dict) and len(snap["sources"]) <= 100000, "Invalid reveal source map")
     for name, h in snap["sources"].items():
         relative(name)
         if h is not None: sha(h)
-    exact_keys(snap["namespaces"], {"reveals", "difficulty", "added", "packages"})
+    exact_keys(snap["namespaces"], {"reveals", "difficulty", "added", "packages"} |
+               ({"backgrounds", "background_assets"} if value["format"] == FORMAT else set()))
     for paths in snap["namespaces"].values():
         require(isinstance(paths, list) and len(paths) <= 100000 and all(isinstance(n,str) for n in paths) and
                 paths == sorted(set(paths)), "Invalid reveal namespace snapshot")
@@ -188,6 +199,7 @@ def validate_delta(j, before, root):
     for entry in before["entries"]:
         name = reveal.path(entry["id"])
         if j["old"][name] == j["new"][name]: continue
+        reveal.require_legacy_target(root, entry, before)
         require(j["new"][name] is not None, "Cannot delete reveal history")
         new = reveal.validate(io.json_bytes(j["new"][name].encode(), reveal.LIMIT), catalog)
         old = reveal.validate(io.json_bytes(j["old"][name].encode(), reveal.LIMIT), catalog) if j["old"][name] is not None else None
@@ -250,6 +262,7 @@ def adopt(root, path, *, seconds=300, fail_step=None):
         snapshot = tx.capture(root)
         entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
         require(set(value["ids"]) <= set(entries), "Stale reveal selection")
+        for identifier in value["ids"]: reveal.require_legacy_target(root, entries[identifier], snapshot["registry"])
         old_texts = deepcopy(snapshot["texts"])
         original_hashes = source_hashes(snapshot, value["format"])
         target = True

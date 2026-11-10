@@ -24,7 +24,8 @@ def inventory(directory, *, contents=True):
     root = io.external(directory)
     before = root.lstat()
     require(stat.S_ISDIR(before.st_mode), "Verification tree is not a directory")
-    files = file_table(root, time.monotonic() + 300)
+    original_zip = "input/package.zip" if io.export_limit(root, "input/package.zip") > 64 * 1024 * 1024 else None
+    files = file_table(root, time.monotonic() + 300, original_zip=original_zip)
     nodes = {".": (before.st_dev, before.st_ino)}
     hashes = {}
     for path in sorted(root.rglob("*")):
@@ -34,7 +35,7 @@ def inventory(directory, *, contents=True):
         nodes[name] = ((info.st_dev, info.st_ino) if stat.S_ISDIR(info.st_mode)
                        else (*io.signature(info), info.st_ctime_ns))
         if name in files and contents:
-            hashes[name] = io.file_hash(root, name)
+            hashes[name] = io.file_hash(root, name, io.export_limit(root, name))
             require(nodes[name] == (*io.signature(path.lstat()), path.lstat().st_ctime_ns),
                     "Verification source changed while binding")
     require(nodes["."] == (root.lstat().st_dev, root.lstat().st_ino), "Verification tree exchanged")
@@ -104,11 +105,14 @@ class _Verification:
                     all(journal["old"].get(n) == (b.decode() if b is not None else None)
                         for n, b in self.snapshot["texts"].items()), "Verification source snapshot differs")
             require(all(tx.read(root, n) == b for n, b in self.snapshot["texts"].items()) and
-                    all(io.file_hash(root, n) == h for n, h in self.snapshot["retained"].items()) and
+                    all(tx.file_hash(root, n, journal) == h for n, h in self.snapshot["retained"].items()) and
                     tx.namespaces(root, before) == self.snapshot["namespaces"], "Verification sources changed")
             expected = {self.package + "/" + n: self.stage / n for n in self.stage_state[1]}
             manifest = self.result[0]
             expected["game/" + manifest["reveal"].removeprefix("runtime/")] = self.stage / manifest["reveal"]
+            if manifest.get("format") == "picross-target-export-v6" and manifest["background_asset"] is not None:
+                asset = manifest["background_asset"]["file"]
+                expected["game/" + asset.removeprefix("runtime/")] = self.stage / asset
             require(additions == expected and set(journal["additions"]) == set(expected), "Verification addition mapping differs")
             require(all(journal["additions"][n] == self.stage_state[1][p.relative_to(self.stage).as_posix()]
                         for n, p in expected.items()), "Verification addition bytes differ")
@@ -144,6 +148,11 @@ class _Verification:
             self._sources()
             nodes, hashes = inventory(io.safe(root, package))
             expected_dirs = {"."} | {parent.as_posix() for n in hashes for parent in Path(n).parents}
+            manifest = self.result[0]
+            if (manifest.get("format") == "picross-target-export-v6" and "external" in nodes and
+                    not any(n.startswith("external/") for n in hashes) and
+                    all(manifest["background"][k]["storage"] != "external" for k in ("manifest", "decision", "derivation"))):
+                expected_dirs.add("external")
             require(hashes == self.stage_state[1] and set(nodes) == set(hashes) | expected_dirs,
                     "Written package differs from verified bytes/inventory")
             require(self.published is None or nodes == self.published, "Published verification package exchanged")

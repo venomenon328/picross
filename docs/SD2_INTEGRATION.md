@@ -1,5 +1,10 @@
 # SD2-C · Kompatible Integration und expliziter Produktionsstandard
 
+**HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
+[Hintergrundzusatz](#hp-i1b1--erweiterte-quellen-ohne-methodenwechsel) ergänzt
+die aktuellen Plan-/Journal-/Runtimegenerationen; historische C-Verträge und
+beide Methodenfreezes bleiben unverändert.
+
 Vertragsstand: 25.10.2026 · SD2-C-V01 · vor Implementierung festgelegt.
 Status 26.10.2026: C nach separatem R01 über PR #410 auf
 `4e23e644f3457362e02b75f78fdb575a99265494` integriert.
@@ -268,3 +273,57 @@ qualifizierte SD2-C-R01 war ein eigenes Gate vor Merge und ist über PR #410
 abgeschlossen. Die dortige Eigentümerausnahme zum fehlenden Gesamt-CI-/Chromium-Gate
 gilt nur für #410. C beauftragte weder Deployment noch #406.
 
+## HP-I1b1 · Erweiterte Quellen ohne Methodenwechsel
+
+[Paket HP-I1b1 / #561](https://github.com/venomenon328/picross/issues/561#issuecomment-6754303684)
+erweitert die gemeinsame Quellenbindung nach
+[SD-Catalog](SD_CATALOG.md#hp-i1b1--hintergrundquellen-pläne-und-transaktionen).
+Es ändert weder Methode/Freeze, Checked-/Ratingobjekte, aktiven Difficultydefault
+noch Bewertungs-/Rebindregeln. Keine neue Analyse durch Lesen, Registrierung,
+Sync, Cleanup oder Recovery. Der aktuelle Produktionsdefault bleibt 0.4.
+
+`picross-catalog-difficulty-report-v5` behält exakt die v4-Felder
+`format,run_id,result,result_hash,operation`; `result` hat genau
+`selection,source_commit,method,method_hash,snapshot,sources,entries,distribution`.
+Zeilen einschließlich `assessment`, Hashregeln und operative Trennung bleiben.
+`result.sources` bindet die vollständige neue T/K-Menge, Capability/null, aktive
+Hintergrundsource, Notice, ausgewähltes PNG und erwartete Abwesenheiten.
+Registry/Kategorien/Runtime bleiben in `snapshot`. 16 MiB/10000 IDs/80004
+Quellen bleiben; neue Quellen rechtfertigen keine stille Limitanhebung.
+
+`picross-difficulty-activation-plan-v2` behält exakt
+`format,expected,target,sources,result_hash`, alle v1-Unterobjekte und den
+16-MiB-/80004-Quellenrahmen. Nur `sources` erhält die vollständige neue Bindung.
+Adoption ändert weiterhin allein `content/difficulty-method.json`, Runtime
+und Hintergründe bleiben bytegleich. Wiederholung verlangt den exakt eigenen
+Record, Vorgänger und erwartete nächste Revision, nicht bloß gleiche Methode.
+
+| Neue Generation | Operation / bisheriges Delta |
+| --- | --- |
+| `picross-registration-journal-v7` | Neue Registrierung, erweitert um die erste Hintergrundsource/Index und ausgewählte Asset/Notice oder none. |
+| `picross-content-update-journal-v6` | Unterstütztes Legacyziel im gemischten Katalog; keine Hintergrundzieländerung. |
+| `picross-catalog-metadata-journal-v4` | adoption/sync/added-adoption, Hintergründe vollständig erhalten. |
+| `picross-reveal-adoption-journal-v3` | Nur Legacyziel; gültige Runtime und Hintergründe bytegleich. |
+| `picross-difficulty-activation-journal-v2` | method-activation, ausschließlich Defaultrecord. |
+
+Alle Journale exakt die acht SD2-Felder
+`format,operation,old,new,retained,additions,report_run,replacements`, mit den
+erweiterten hergeleiteten Quellen und bisherigen Limits. Added-Plan-v4 und
+Reveal-Plan-v3 behalten ihre bisherigen Hüllen; Revealrequest/-result v1 und
+Defaultrecord v1 bleiben unverändert. Alte Pläne im Hintergrundkatalog sind
+stale/unsupported, nicht still vervollständigbar.
+
+Runtime-v6 erbt sämtliche v5-Difficulty-/Kategorie-/Addedfelder unverändert und
+ergänzt je Entry ausschließlich das Hintergrundobjekt nach
+[Hintergrundvertrag §10.3](PUZZLE_BACKGROUNDS.md#103-receipt-und-runtimeprojektion).
+Nur kompatible Ziele erhalten v6; Legacy-only weiter v5. Reale Capability false,
+Godot-Reader und Aktivierung erst HP-I2. Ungültiger deklarierter Hintergrund
+erlaubt keinen Downgrade oder stillen Legacyzustand.
+
+Historische Journale behalten alle bisherigen Schlüssel/Quellen/Projektionen.
+Nur fehlende oder streng gültige false-Capability darf bei gültigem
+Registry-v2-/Runtime-v2–v5-Altstand ohne Hintergrundnamespace inaktive zusätzliche
+Deklaration sein. True, Registry-v3/Runtime-v6 oder Hintergrundquellen blockieren
+alte ungebundene Recovery vor Mutation. Neue Generationen binden Capability
+immer exakt. RI-C-Phasengrenzen werden ausdrücklich auf registration-v7
+übertragen; andere Writer behalten ihre bisherige Guardfrequenz und Budgets.

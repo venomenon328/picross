@@ -1,5 +1,11 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
+**HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
+[Hintergrundzusatz](#hp-i1b1--hintergrundquellen-pläne-und-transaktionen) führt
+neue geschlossene Quellen-/Plan-/Journalgenerationen ein. Historische Abschnitte
+behalten ihre jeweilige Geltung; keine Umdeutung alter Formate. Die echte
+Hintergrund-Runtime bleibt unavailable, Authoringdefault 0.6.0.
+
 **SD2 · 25.10.2026:** [SD2-D05/D06](PUZZLE_DIFFICULTY_V2.md) spezifizieren den
 gemeinsamen 0.4-Integrations-/Aktivierungsweg in SD2-C (#405) und die
 gesonderte Bestandsumstellung SD2-D (#406). [D-F01/T01](SD2_D_ADOPTION.md)
@@ -844,3 +850,138 @@ Deadlinecheck keinen falschen Fehlschlag.
 G-Prüfungen, `target_guards` die lokalen Prüfungen; `guards` enthält zusätzlich
 die unveränderten vollständigen Journalvalidierungen. [RI-C-T01](RI_C_VERIFICATION.md)
 bindet synthetische Fälle, Messreihen, Plattformgrenzen und offenen Reviewbedarf.
+
+## HP-I1b1 · Hintergrundquellen, Pläne und Transaktionen
+
+Vertrag vor Code, 09.11.2026, Paketentscheidung
+[HP-I1b1 / #561](https://github.com/venomenon328/picross/issues/561#issuecomment-6754303684) auf
+`045189cc5ef34eaf4d06823f22f7ec811d209de5`. Die geschlossenen Capability-,
+Registry-, Source-, Receipt- und Runtimeformen stehen in
+[PUZZLE_BACKGROUNDS §10](PUZZLE_BACKGROUNDS.md#10-hp-i1b1--erste-registrierung-und-kompakter-produktionsabschluss).
+Dieser Zusatz erweitert den bestehenden gemeinsamen Writer, keine zweite Pipeline.
+Export v6 behält seine false-Felder; Bereitschaft wird frisch am Ziel ermittelt.
+Die echte Capability bleibt false; nur isolierte synthetische Ziele erlauben
+hier den vollständigen Durchstich. Kein Renderer-/Spielabnahmebeleg.
+
+### Vollständige Quellen und erlaubte Deltas
+
+`T(R)` enthält weiterhin sämtliche SD2-/AT-/Added-Textquellen und zusätzlich
+`game/data/background-capability.json` (exakte Bytes oder null), pro Registry-ID
+`content/backgrounds/<id>.json` und `game/art/backgrounds/<id>.txt`.
+Die Source fehlt ausschließlich bei gültigem Legacy; eine Notice ausschließlich
+bei Legacy/none. Erwartete Abwesenheiten bleiben explizit gebunden.
+`K(R)` enthält zusätzlich die ausgewählten Live-PNGs
+`game/art/backgrounds/<id>.png`; bei Legacy/none ihre sichere Abwesenheit prüfen.
+Bestehende Paket-, Receipt-, Reveal- und Berichtsquellen bleiben vollständig.
+Neue Source/Notice sind Textziele, neue ausgewählte PNGs Additions.
+
+`old/new` haben exakt dieselbe hergeleitete Menge `T(Ralt) ∪ T(Rneu) ∪ Q`,
+mit UTF-8-String oder null. Q bleibt ausschließlich das bereits erlaubte neue
+Berichtspaar/der Added-Bericht. `retained = K(Ralt) − keys(old) − keys(replacements)`;
+`additions` ist nur das vollständig geprüfte neue Paketinventar und die bei
+Registrierung tatsächlich neuen Live-Bilder. Hashbindungen sind SHA-256.
+Keine Überschneidung, freien Pfade oder belegten Neuanlageziele. Die einzige
+128-MiB-Ausnahme ist die exakt deklarierte v6-Datei `input/package.zip` unter
+ihrem hergeleiteten Paketpfad: durch Inventar, Staging, RI-B, Addition, Guard
+und Readback tragen. Alle anderen Datei-/Gesamt-/Pixel-/Zeitgrenzen bleiben.
+
+Die Namespaceprüfung ergänzt `backgrounds` (aktive Sourcepfade unter
+`content/backgrounds/`) und `background_assets` (Live-PNG/Notice unter
+`game/art/backgrounds/`). Beide sind nach geprüftem Registryindex/Status
+hergeleitete, lexikografisch sortierte Pfadlisten. Capability steht in den
+Quellen, nicht in einem frei wählbaren Namespace. Zusätzliche Dateien, falsche
+IDs, Casefold-/Datei-/Verzeichnisaliase, Links und ungebundene neue Quellen
+blockieren vor der zuständigen Grenze. Geprüfte leere kanonische Verzeichnisse
+dürfen nach Rollback bleiben. Bestehende Namespaces werden nicht abgeschwächt.
+
+| Operation | Ausschließlich erlaubtes neues Delta / Hintergrundgrenze |
+| --- | --- |
+| registration | Genau eine frisch vollständig geprüfte v6-Produktion samt Source/Index, ausgewähltem PNG/Notice oder ausdrücklichem none, Definition/Reveal/Notice und bestehender Rating-/Added-Bindung. Bestehende Entries bleiben identisch, erster Hintergrund hebt nur Registrywurzel auf v3. `replacements={}`. |
+| update | Bisheriges Rasterupdate nur eines Legacyziels; sämtliche Hintergründe bytegleich. Hintergrundziel schon vor Planung/Mutation konkret sperren. |
+| adoption / added-adoption | Bisherige ausgewählte Rating-/Added-Records, eigene Berichte und Runtime; Hintergründe und deren Quellen bleiben bytegleich. |
+| sync | Nur aus vollständig gültigen Quellen abgeleitete Runtime; bg-Katalog nur mit kompatibler Capability v6, Legacy-only weiterhin v5. Kein Downgrade defekter Quellen. |
+| reveal-adoption | Bisheriger AT-Binärersatz nur eines Legacyziels; Hintergründe unverändert, gültige Runtime bytegleich. Hintergrundziel vor Planung/Mutation sperren. |
+| method-activation | Ausschließlich bestehender Defaultrecord; Hintergrundquellen und Runtime unverändert. |
+| retire-production | Nur belegte abgeschlossene Arbeit und physischer Paket-/Receipt-/Indexwechsel nach Hintergrundvertrag §10.4; aktive Hintergrundsource, PNG/none/Notice, übrige aktive Daten und Runtime bleiben. |
+
+Eine schon zulässige Kategorienquell-/Anzeigenamenänderung bleibt separat möglich;
+freie Änderung historisch gebundener Entry-/Receiptkategorien wird nicht eröffnet.
+No-op verlangt frisch geprüfte vollständige Eingänge/Quellen und erhält Bytes,
+mtime, Revisionen und Added. Nach Retirement ursprünglichen Exportanker mit dem
+Eingang vergleichen, nicht den physischen Receipthash als neue Produktion deuten.
+Weder alte Pakete wiederherstellen noch fehlende Auswahl als Legacy/none ersetzen.
+
+### Geschlossene Journal- und Planmatrix
+
+Alle folgenden Journale haben exakt die acht Felder
+`format,operation,old,new,retained,additions,report_run,replacements`.
+Wirelayout, Größenklassifikation, sichere Journalpublikation und Eigentümerschaft
+folgen AT/SD2; keine Budget-/Capabilityflags im Journal. Registrierung und ihre
+Recovery behalten RI-A, andere Operationen ihre bisherigen Budgets.
+
+| Format | Operation | `report_run` | `replacements` |
+| --- | --- | --- | --- |
+| `picross-registration-journal-v7` | registration | null | `{}` |
+| `picross-content-update-journal-v6` | update eines Legacyziels | null | `{}` |
+| `picross-catalog-metadata-journal-v4` | adoption / sync / added-adoption | Gebundene SD-/Added-Run-ID bei Übernahme, sonst null | `{}` |
+| `picross-reveal-adoption-journal-v3` | reveal-adoption eines Legacyziels | null | Exakt erlaubtes vorhandenes AT-Revealdelta, unveränderter Binärseitenvertrag |
+| `picross-difficulty-activation-journal-v2` | method-activation | null | `{}` |
+
+Nichtbinäre Journale höchstens 24 MiB; Reveal-v3 erbt die 128-MiB- und
+Binärseitengrenzen von Reveal-v2. JSON-Tiefe höchstens 32. Keine stillen
+Grenzerhöhungen wegen neuer Quellen; vor Mutation gegebenenfalls begrenzen.
+
+| Gespeicherter Plan/Bericht | Exakte äußere Felder / neue Quellenbindung |
+| --- | --- |
+| `picross-catalog-difficulty-report-v5` | Wie v4: `format,run_id,result,result_hash,operation`; result genau `selection,source_commit,method,method_hash,snapshot,sources,entries,distribution`. Vollständige erweiterte Quellen in `result.sources`, übrige Zeilen-/Hash-/Methodenregeln unverändert. |
+| `picross-added-plan-v4` | Wie v3: `format,run_id,base_commit,sources,evidence,entries`; vollständige erweiterte `sources`, unveränderte Quellenbelege und Added-Semantik. |
+| `picross-reveal-plan-v3` | Wie v2: `format,ids,snapshot,entries,writes,plan_hash`; `snapshot` genau `sources,namespaces`. `namespaces` genau `reveals,difficulty,added,packages,backgrounds,background_assets`, vollständige Quellen inkl. Capability/null. Nur Legacytargets auswählbar. |
+| `picross-difficulty-activation-plan-v2` | Wie v1: `format,expected,target,sources,result_hash`; vollständige erweiterte `sources`, gleiche erwartete/gewählte Methode und Record-/Wiederholungsbindung. |
+
+Revealrequest/-result v1, aktive Rating-/Addedformen und
+`picross-difficulty-default-v1` bleiben unverändert. Bestehende jeweilige
+Listen-/Byte-/Zeitgrenzen bleiben. Alte Pläne sind im Hintergrundkatalog
+stale/unsupported; keine Quellen still ergänzen oder alte Reports umetikettieren.
+Sämtliche Full-/Quick-/CLI-/API-Einstiege und indirekte Verbraucher müssen
+denselben aktuellen Hintergrundstand prüfen und erhalten.
+
+### Historische Recovery und RI-B/C
+
+Alle alten Journale behalten ihre eigenen geschlossenen Felder, Quellenmengen,
+Projektionen und zulässigen Zustände; registration-v1 bleibt gesperrt.
+Einzige inaktive Zusatzdeklaration: bei gültigem Registry-v2-/Runtime-v2–v5-
+Altstand **ohne Hintergrundnamespace** darf Capability fehlen oder streng
+gültig false sein. Diese Datei allein sperrt alte Legacy-Recovery nicht.
+True-Capability, Registry-v3, Runtime-v6, deklarierte oder fremde Hintergrundquellen
+sperren dagegen den alten ungebundenen Recoveryweg vor Mutation. Neue Journale
+binden Capability stets exakt, auch deren Abwesenheit. Keine Locklöschung,
+Neuinterpretation alter Journalbytes oder automatische Budgeterhöhung.
+
+Der private prozessgebundene RI-B-Kontext bindet die vollständigen neuen
+Ein-/Ausgangsbytes. Frische Eingangsprüfung und unabhängiges Stagingreplay bleiben
+Pflicht. Keine Serialisierung, kein Cache aus alten Planungen und keine Verwendung
+bei Recovery. Tatsächlich geänderte HP-W2-Module, darunter `catalog_io.py` und
+`operation_diagnostics.py`, invalidieren inkompatible ältere Ableitungen weiterhin;
+frische synthetische Inputs am endgültigen Toolstand erstellen, keine alten
+Freigaben neu hashen.
+
+Die obigen RI-C-Grenzen gelten ausdrücklich auch für registration-v7 und dessen
+Recovery/staging, ohne ihre Erkennungszeitpunkte zu verschieben:
+
+| Grenze | Vollständige frische Prüfung einschließlich neuer Quellen |
+| --- | --- |
+| G0 / P0 | Gültige Alt-/Zielansicht, vollständige T/K, Abwesenheiten und Namespaces, kein fremder Lock/Rest. |
+| G2 / P2 | Vollständiger Altstand nach dauerhafter eigener exklusiver Lockpublikation. |
+| G5a / P5 | Vollständige tatsächlich erreichte Phasenbelegung unmittelbar vor Runtime, auch wenn deren Bytes unverändert sind. |
+| G5b / P5 | Vollständiger neuer Stand nach Checkout-/B-Nachprüfung, unveränderte Retained-Quellen. |
+| G6 / P6 | Vollständiger Zielstand ohne eigene Temps, exakt eigener Lock vor dauerhaftem Entfernen. |
+| GR0 / R0 | Journal, eigene Alt-/Neu-/Addition-/Tempbelegung, Retained/Namespaces und gültige Altansicht vor erster Recoverymutation. |
+| GR2 / R2 | Vollständiger Altcheckout ohne Additions/Temps, gültiger eigener Lock-/Stagingzustand vor dessen Entfernung. |
+
+Dazwischen frische lokale Ziel-/Eltern-/Lock-/Tempprüfungen. Kein Dispatchfallback
+auf den alten langsameren Weg nur wegen Kennung v7 und keine Ausdehnung der
+RI-C-Frequenz auf andere Operationen. Runtime bleibt letztes Datenziel.
+Recovery ist ausschließlich Rollback, auch bei vollständig neuer eigener
+Belegung. Unbekannte/fremde Bytes bleiben mit konkretem Rest und Journal sichtbar.
+Keine globale Erkennung vor jedem Dateischritt, keine neue Performancekampagne
+oder Geschwindigkeitsbehauptung. Lauf-/Reviewbelege bleiben am konkreten PR-Head.

@@ -156,7 +156,7 @@ class AddedTests(unittest.TestCase):
     def test_legacy_v3_journal_recovers_directly_to_v4(self):
         self.unstamp()
         snapshot_before = tx.capture(self.checkout)
-        journal = tx.prepare(self.checkout, snapshot_before, {}, operation='sync')
+        journal = tx.prepare(self.checkout, snapshot_before, {}, operation='sync', generation='sd2')
         journal['format'] = tx.LEGACY_FORMATS['sync']
         journal.pop('replacements')
         from tools.puzzle_production import catalog_method

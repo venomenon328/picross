@@ -9,7 +9,7 @@ für ihre gültigen Altbindungen und ausdrücklich gewählte kompatible Fälle e
 keine neue pauschale 0.3-Pflicht. Beide Freezes und versiegelte Pakete bleiben unverändert.
 Die [CLI-Anleitung](../tools/puzzle_production/README.md) dokumentiert die ausführbaren Befehle.
 
-**HP-W2 / #560, PB-H / #489 und HP-I1a / #561 · Teilfähigkeiten, Gesamtweg noch nicht aktiviert:**
+**HP-W2 / #560, PB-H / #489 und HP-I1a/HP-I1b1 / #561 · Teilfähigkeiten, Gesamtweg noch nicht aktiviert:**
 [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md) führt Ablauf, Bild-/Auswahlbindungen,
 Datenformen und Einführungsmatrix für Kontextzeichnungen je Rätsel.
 Authoring 0.6.0 und der integrierte PB-A-Paketbau bleiben unverändert aktiv.
@@ -26,9 +26,13 @@ geprüfte Ableitung beziehungsweise ausdrückliches `none`. Eine schon vorhanden
 Endfreigabe v2 wird auf ihre exakten Originalbindungen geprüft. HP-I1a ergänzt
 den sicheren äußeren Finalizer für vorhandene Entscheidungen/Befunde/Freigaben
 und den vollständigen v6-Export samt unverändertem Original-ZIP. Höchstens
-`editorially_approved`; `integration_ready`, `catalog_ready` und `registered`
-bleiben false. Registry, Erstintegration, Hintergrundersatz, Recovery und
-Abschluss folgen in HP-I1b, Runtime in HP-I2, neue Sheetbedienung in #490.
+`editorially_approved`; gespeicherte `integration_ready`, `catalog_ready` und
+`registered` bleiben false. HP-I1b1 ergänzt frische zielbezogene Erstregistrierung,
+aktive kompakte Hintergrundsource/Receipt, Recovery und ersten Main-gebundenen
+Abschluss. Die echte Zielfähigkeit bleibt false bis HP-I2-Runtime und technischer
+Abnahme; synthetische kompatible Ziele belegen nur den Werkzeugweg. Späterer
+reiner Hintergrundersatz folgt HP-I1b2, neue Sheetbedienung #490. Rasterupdate und
+Revealadoption eines Hintergrundziels bleiben bis zur konkreten Neubindung gesperrt.
 Alte Hüllen und die 0.6.0-Phasensemantik bleiben erhalten; diese Werkzeuglieferung
 aktiviert keine Bildproduktion oder Hintergrunddarstellung im Spiel.
 
