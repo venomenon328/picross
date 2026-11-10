@@ -1,7 +1,8 @@
-"""HP-I1b1 active background authority, separate from historical production.
+"""Compact background authority, separate from historical production.
 
-Only a freshly verified v6 registration creates this source. After retirement
-its inner references are historical identities, never file-reading requests.
+A freshly verified v6 registration creates v1. An authorized HP-I1b2 change
+retains that exact initial authority in v2 and replaces only the current image
+binding. After retirement inner references are identities, not file requests.
 """
 from copy import deepcopy
 from io import BytesIO
@@ -16,6 +17,8 @@ from . import catalog_io as io, catalog_rating as rating
 from .contract import canonical_bytes, exact_keys, integer, InvalidInput
 
 FORMAT = "picross-catalog-background-v1"
+CHANGE_FORMAT = "picross-catalog-background-v2"
+CHANGE_JOURNAL = "picross-background-adoption-journal-v1"
 REGISTRY_FORMAT = "picross-content-registry-v3"
 RUNTIME_FORMAT = "picross-runtime-registry-v6"
 RECEIPT_FORMAT = "picross-integrated-content-v2"
@@ -25,6 +28,28 @@ CAPABILITY = "game/data/background-capability.json"
 CAPABILITY_FORMAT = "picross-runtime-background-capability-v1"
 LIMIT = 1024 * 1024
 CAPABILITY_LIMIT = 4096
+IMAGE_FIELDS = ("image_revision", "candidate_revision", "decision", "derivation",
+                "provenance", "review", "asset", "notice")
+
+
+def initial(source):
+    """Return the immutable first-registration authority of a validated source."""
+    return source["initial"] if source["format"] == CHANGE_FORMAT else source
+
+
+def current(source):
+    """Return current image fields without changing the serialized source form."""
+    return source["current"] if source["format"] == CHANGE_FORMAT else source
+
+
+def effective(source):
+    """Internal view only: original identity plus effective current image fields."""
+    return {**initial(source), **{field: current(source)[field] for field in IMAGE_FIELDS}}
+
+
+def initial_ref(source):
+    original = initial(source)
+    return ref(path(original["puzzle_id"]), encoded(original))
 
 
 def path(identifier):
@@ -205,7 +230,31 @@ def _derivation(value, decision, approval, test_only):
     return value
 
 
-def validate(value, entry):
+def _active(value, entry, binding, test_only):
+    decision = bc.validate_decision(value["decision"])
+    ap.require(decision["puzzle_id"] == entry["id"] and decision["test_only"] == test_only and
+               decision["outcome"] in ("selected", "none"), "Wrong active background decision")
+    derivation = _derivation(value["derivation"], decision, binding, test_only)
+    if decision["outcome"] == "selected":
+        bc._revision(value["candidate_revision"])
+        bc._provenance(value["provenance"]); bc._review(value["review"], decision["original"])
+        ap.require(value["provenance"]["rights_status"] == "resolved" and value["review"] is not None,
+                   "Background requires resolved rights and review")
+        accepted = {r["criterion"] for r in decision["accepted_deviations"]}
+        ap.require(all(row["result"] == "erfüllt" or key != "Q-HG01" and key in accepted and
+                       row["result"] in ("Warnung", "nicht erfüllt") for key, row in value["review"].items()),
+                   "Background review is not ready")
+        _ref(derivation["output"], name="background.png", limit=bc.MAX_PNG)
+        _ref(value["asset"], name=asset_path(entry["id"]), limit=bc.MAX_PNG)
+        _ref(value["notice"], name=notice_path(entry["id"]), limit=65536)
+        ap.require(all(value["asset"][k] == derivation["output"][k] for k in ("sha256", "bytes")),
+                   "Background output binding differs")
+    else:
+        ap.require(all(value[k] is None for k in ("candidate_revision", "provenance", "review", "asset", "notice")) and
+                   derivation["output"] is None, "none must not carry an image, notice or candidate")
+
+
+def _validate_v1(value, entry):
     try:
         # The existing background JSON parser enforces depth 32, bounded keys,
         # duplicate-key rejection and exact JSON scalar types, without I/O.
@@ -238,29 +287,195 @@ def validate(value, entry):
         ap.require(origin["manifest"] == approval["manifest"], "Background original manifest differs")
         ap.require(origin["approval"]["selection"]["reveal"]["sha256"] == entry["production"]["reveal_sha256"],
                    "Historical background approval binds another reveal")
-        decision = bc.validate_decision(value["decision"])
-        ap.require(decision["puzzle_id"] == entry["id"] and decision["test_only"] == value["test_only"] and
-                   decision["outcome"] in ("selected", "none"), "Wrong active background decision")
-        derivation = _derivation(value["derivation"], decision, approval, value["test_only"])
-        if decision["outcome"] == "selected":
-            bc._revision(value["candidate_revision"])
-            bc._provenance(value["provenance"]); bc._review(value["review"], decision["original"])
-            ap.require(value["provenance"]["rights_status"] == "resolved" and value["review"] is not None,
-                       "Background requires resolved rights and review")
-            accepted = {r["criterion"] for r in decision["accepted_deviations"]}
-            ap.require(all(row["result"] == "erfüllt" or key != "Q-HG01" and key in accepted and
-                           row["result"] in ("Warnung", "nicht erfüllt") for key, row in value["review"].items()),
-                       "Background review is not ready")
-            _ref(derivation["output"], name="background.png", limit=bc.MAX_PNG)
-            _ref(value["asset"], name=asset_path(entry["id"]), limit=bc.MAX_PNG)
-            _ref(value["notice"], name=notice_path(entry["id"]), limit=65536)
-            ap.require(all(value["asset"][k] == derivation["output"][k] for k in ("sha256", "bytes")), "Background output binding differs")
-        else:
-            ap.require(all(value[k] is None for k in ("candidate_revision", "provenance", "review", "asset", "notice")) and
-                       derivation["output"] is None, "none must not carry an image, notice or candidate")
+        _active(value, entry, approval, value["test_only"])
         return value
     except bc.BackgroundError as exc:
         raise InvalidInput("Background source: " + str(exc)) from exc
+
+
+def _adoption(value, original):
+    exact_keys(value, {"request", "revision", "target", "background", "authorization"})
+    bc._revision(value["revision"])
+    directory = "content/authoring/" + original["puzzle_id"] + "/" + value["revision"]
+    _ref(value["request"], name=directory + "/record.json", limit=bc.MAX_JSON)
+    target = exact_keys(value["target"], {"source", "origin_sha256", "image_revision"})
+    _ref(target["source"], name=path(original["puzzle_id"]), limit=LIMIT)
+    ap.sha(target["origin_sha256"])
+    integer(target["image_revision"], 1, 999999, "previous background revision")
+    ap.require(target["origin_sha256"] == origin_hash(original), "Background change has another origin")
+    if target["image_revision"] == 1:
+        ap.require(target["source"] == initial_ref(original), "First background change has another initial source")
+    binding = bp.validate_binding(value["background"], package_only=False)
+    ap.require(binding["history"] is None, "Background change cannot omit historical candidates")
+    for field in ("manifest", "decision", "derivation"):
+        stored = binding[field]
+        ap.require(stored is not None and stored["storage"] == "external" and
+                   bp._join(stored["root"], stored["ref"]["file"]).startswith(directory + "/"),
+                   "Background change reference leaves its authoring revision")
+    bc._human(value["authorization"])
+    ap.relative(directory + "/" + value["authorization"]["evidence"]["file"])
+    return binding
+
+
+def validate(value, entry):
+    """Validate both closed generations without opening historical file refs."""
+    try:
+        bc._json_tree(value)
+        raw = encoded(value)
+        ap.require(len(raw) <= LIMIT, "Background source exceeds 1 MiB")
+        value = bc.parse_json(raw)
+        ap.require(isinstance(value, dict), "Background source must be an object")
+        if value.get("format") != CHANGE_FORMAT:
+            return _validate_v1(value, entry)
+        exact_keys(value, {"format", "initial", "current"})
+        original = _validate_v1(value["initial"], entry)
+        active = exact_keys(value["current"], set(IMAGE_FIELDS) | {"adoption"})
+        integer(active["image_revision"], 2, 1000000, "active background revision")
+        binding = _adoption(active["adoption"], original)
+        target = active["adoption"]["target"]
+        ap.require(active["image_revision"] == target["image_revision"] + 1,
+                   "Background revision must follow its bound predecessor")
+        decision = bc.validate_decision(active["decision"])
+        derivation = active["derivation"]
+        ap.require(isinstance(derivation, dict), "Invalid current background derivation")
+        # Preserve the complete original decision and report. The new adoption
+        # binds their locations; it is not a rewritten raster end approval.
+        authority = {**{key: binding[key] for key in ("manifest", "decision", "derivation")},
+                     "outcome": decision["outcome"], "candidate_id": decision["candidate_id"],
+                     "original": decision["original"], "output": derivation.get("output"),
+                     "profile_sha256": derivation.get("profile_sha256")}
+        _active(active, entry, authority, original["test_only"])
+        ap.require(binding["decision"]["ref"] == ref(binding["decision"]["ref"]["file"], encoded(decision)),
+                   "Current background decision ref differs from its retained bytes")
+        ap.require(binding["derivation"]["ref"] == ref(binding["derivation"]["ref"]["file"], encoded(derivation)),
+                   "Current background derivation ref differs from its retained bytes")
+        if decision["outcome"] == "selected":
+            candidate = {"id": decision["candidate_id"], "revision": active["candidate_revision"],
+                         "provenance": active["provenance"]}
+            _bound(active["notice"], notice_bytes(entry["id"], candidate), name=notice_path(entry["id"]), limit=65536)
+        return value
+    except bc.BackgroundError as exc:
+        raise InvalidInput("Background source: " + str(exc)) from exc
+
+
+def notice_bytes(identifier, candidate):
+    """Use the original background notice wording for a checked candidate."""
+    if candidate is None:
+        return None
+    p = candidate["provenance"]
+    lines = ["Production ID: " + identifier, "Background: " + candidate["id"],
+             "Image revision: " + candidate["revision"], "Artwork: " + p["author"], "Source: " + p["source"],
+             "Usage basis: " + p["usage_basis"]]
+    if p["attribution"] is not None:
+        lines.append("Attribution: " + p["attribution"])
+    raw = ("\n".join(lines) + "\n").encode("utf-8")
+    ap.require(len(raw) <= 65536, "Background notice exceeds byte limit")
+    return raw
+
+
+def _transition(previous, following):
+    ap.require(following["format"] == CHANGE_FORMAT and
+               encoded(initial(previous)) == encoded(initial(following)),
+               "Background change modifies its immutable initial authority")
+    old, new = current(previous), current(following)
+    target = new["adoption"]["target"]
+    ap.require(target == {"source": ref(path(initial(previous)["puzzle_id"]), encoded(previous)),
+                          "origin_sha256": origin_hash(previous), "image_revision": old["image_revision"]},
+               "Background change does not bind the immediately previous source")
+    ap.require(not (old["decision"]["outcome"] == new["decision"]["outcome"] == "none"),
+               "An unchanged none decision cannot create another image revision")
+    ap.require(any(encoded(old[k]) != encoded(new[k]) for k in IMAGE_FIELDS if k != "image_revision"),
+               "Background change has no new active binding")
+
+
+def build_change(old_source, entry, request, request_ref, graph, notice_raw):
+    """Project freshly checked change inputs; graph is never a persisted proof.
+
+    The caller must run background_package.validate_change with the actual
+    working files and bind the exact immutable request bytes before publication.
+    """
+    old_source = validate(old_source, entry)
+    exact_keys(request, {"format", "puzzle_id", "revision", "target", "background", "authorization", "files", "test_only"})
+    ap.require(request["format"] == "picross-background-adoption-request-v1" and
+               request["puzzle_id"] == entry["id"] and type(request["test_only"]) is bool and
+               request["test_only"] == initial(old_source)["test_only"], "Wrong background change request identity")
+    bc._revision(request["revision"])
+    directory = "content/authoring/" + entry["id"] + "/" + request["revision"]
+    _bound(request_ref, encoded(request), name=directory + "/record.json", limit=bc.MAX_JSON)
+    ap.require(graph["ready"] is True and encoded(graph["binding"]) == encoded(request["background"]),
+               "Background change needs the freshly checked exact binding")
+    work = bc.validate_manifest(graph["manifest"])
+    decision = bc.validate_decision(graph["decision"])
+    ap.require(work["puzzle_id"] == entry["id"] and work["test_only"] == request["test_only"],
+               "Background work identity differs from target")
+    candidate = bc._bind_decision(work, decision)
+    ap.require(not bp._readiness(work, decision, candidate, graph["derivation"])[1],
+               "Background change is not ready")
+    ap.require(notice_raw == notice_bytes(entry["id"], candidate), "Background notice differs from checked provenance")
+    png = graph["asset_bytes"]
+    if candidate is None:
+        ap.require(png is None, "none change cannot carry image bytes")
+    else:
+        _bound(graph["derivation"]["output"], png, name="background.png", limit=bc.MAX_PNG)
+    active = {"image_revision": current(old_source)["image_revision"] + 1,
+              "candidate_revision": candidate["revision"] if candidate else None,
+              "decision": deepcopy(decision), "derivation": deepcopy(graph["derivation"]),
+              "provenance": deepcopy(candidate["provenance"]) if candidate else None,
+              "review": deepcopy(candidate["review"]) if candidate else None,
+              "asset": ref(asset_path(entry["id"]), png) if png is not None else None,
+              "notice": ref(notice_path(entry["id"]), notice_raw) if notice_raw is not None else None,
+              "adoption": {"request": deepcopy(request_ref),
+                           **{key: deepcopy(request[key]) for key in ("revision", "target", "background", "authorization")}}}
+    source = validate({"format": CHANGE_FORMAT, "initial": deepcopy(initial(old_source)), "current": active}, entry)
+    _transition(old_source, source)
+    return source
+
+
+def validate_delta(journal, before, after, root=None):
+    """Close the one-target image mutation independently of authoring files.
+
+    Recovery reads compact old/new authorities and the journal's bound binary
+    sides; it does not need a retired working directory or raster ZIP.
+    """
+    ap.require(journal["format"] == CHANGE_JOURNAL and journal["operation"] == "background-adoption" and
+               journal["additions"] == {} and journal["report_run"] is None,
+               "Invalid background adoption journal operation")
+    ap.require(before["format"] == after["format"] == REGISTRY_FORMAT and
+               encoded(before["entries"]) == encoded(after["entries"]),
+               "Background adoption changes catalog entries")
+    previous_index, following_index = index(before), index(after)
+    ap.require(previous_index.keys() == following_index.keys(), "Background adoption changes declared target IDs")
+    changed = [identifier for identifier in previous_index if previous_index[identifier] != following_index[identifier]]
+    ap.require(len(changed) == 1, "Background adoption requires exactly one changed source")
+    identifier = changed[0]
+    entry = next(e for e in before["entries"] if e["id"] == identifier)
+    previous = _source(None, before, entry, journal["old"])
+    following = _source(None, after, entry, journal["new"])
+    _transition(previous, following)
+    for side, source in (("old", previous), ("new", following)):
+        capability(root, journal[side], required=True)
+        value = current(source)
+        raw = _raw(None, notice_path(identifier), 65536, journal[side], missing=True)
+        if value["notice"] is None:
+            ap.require(raw is None, "none background journal has a notice")
+        else:
+            _bound(value["notice"], raw, name=notice_path(identifier), limit=65536)
+    old_asset, new_asset = current(previous)["asset"], current(following)["asset"]
+    replacements = journal["replacements"]
+    if old_asset == new_asset:
+        ap.require(replacements == {}, "Unchanged background bytes are not a replacement")
+    else:
+        ap.require(set(replacements) == {asset_path(identifier)}, "Wrong background replacement paths")
+        pair = exact_keys(replacements[asset_path(identifier)], {"old", "new"})
+        for side, asset in (("old", old_asset), ("new", new_asset)):
+            binary = pair[side]
+            if asset is None:
+                ap.require(binary is None, "Background absence requires a null binary side")
+            else:
+                ap.require(isinstance(binary, dict) and
+                           all(binary.get(k) == asset[k] for k in ("sha256", "bytes")),
+                           "Background binary side differs from its active source")
+    return {path(identifier), notice_path(identifier), "content/registry.json", "game/data/registry.json"}
 
 
 def build(export_dir, manifest, report, entry):
@@ -364,17 +579,18 @@ def _source(root, registry, entry, texts=None):
 
 
 def origin_hash(source):
-    return io.checksum(canonical_bytes(source["origin"]))
+    return io.checksum(canonical_bytes(initial(source)["origin"]))
 
 
 def receipt_binding(source, source_ref):
-    return {"origin_sha256": origin_hash(source), "source": deepcopy(source_ref)}
+    return {"origin_sha256": origin_hash(source),
+            "source": initial_ref(source) if source["format"] == CHANGE_FORMAT else deepcopy(source_ref)}
 
 
 def _receipt(source, source_ref, receipt):
     value = exact_keys(receipt.get("background"), {"origin_sha256", "source"})
     ap.require(value == receipt_binding(source, source_ref), "Background receipt/index/origin binding differs")
-    ap.require(receipt["entry"]["production"]["package_sha256"] == source["origin"]["export_manifest_sha256"],
+    ap.require(receipt["entry"]["production"]["package_sha256"] == initial(source)["origin"]["export_manifest_sha256"],
                "Background receipt changed original export anchor")
 
 
@@ -384,14 +600,15 @@ def load(root, registry, entry, texts=None):
         for name in (asset_path(entry["id"]), notice_path(entry["id"])):
             ap.require(not io.safe(root, name).exists(), "Legacy entry has background files")
         return None
-    definition = source["identity"]["definition"]
+    active = effective(source)
+    definition = active["identity"]["definition"]
     raw = _raw(root, definition["file"], 2 * LIMIT, texts)
     _bound(definition, raw, limit=2 * LIMIT)
-    ap.require(io.json_bytes(raw, 2 * LIMIT)["revision"] == source["identity"]["runtime_revision"], "Background runtime revision differs")
+    ap.require(io.json_bytes(raw, 2 * LIMIT)["revision"] == active["identity"]["runtime_revision"], "Background runtime revision differs")
     for key, name, limit in (("asset", asset_path(entry["id"]), bc.MAX_PNG), ("notice", notice_path(entry["id"]), 65536)):
         raw = _raw(root, name, limit, texts, missing=True)
-        if source[key] is None: ap.require(raw is None, "none has a live background file")
-        else: _bound(source[key], raw, name=name, limit=limit)
+        if active[key] is None: ap.require(raw is None, "none has a live background file")
+        else: _bound(active[key], raw, name=name, limit=limit)
     manifest_raw = io.read(root, entry["production"]["package"] + "/manifest.json", 8 * LIMIT)
     manifest = io.json_bytes(manifest_raw, 8 * LIMIT)
     ap.require(io.checksum(manifest_raw) == entry["production"]["package_sha256"], "Background physical package binding differs")
@@ -399,29 +616,30 @@ def load(root, registry, entry, texts=None):
         _receipt(source, index(registry)[entry["id"]], manifest)
     else:
         ap.require(manifest.get("format") == "picross-target-export-v6" and
-                   source["origin"]["export_manifest_sha256"] == entry["production"]["package_sha256"],
+                   active["origin"]["export_manifest_sha256"] == entry["production"]["package_sha256"],
                    "Background source requires its original v6 export or v2 receipt")
-        ap.require(canonical_bytes(build(io.safe(root, entry["production"]["package"]), manifest, None, entry)) == canonical_bytes(source),
+        ap.require(canonical_bytes(build(io.safe(root, entry["production"]["package"]), manifest, None, entry)) == canonical_bytes(initial(source)),
                    "Active background source differs from original approved production")
     return source
 
 
-def check_receipt(root, registry, entry, receipt):
-    source = load(root, registry, entry)
+def check_receipt(root, registry, entry, receipt, texts=None):
+    source = load(root, registry, entry, texts)
     ap.require(source is not None and receipt.get("format") == RECEIPT_FORMAT, "Missing background receipt authority")
     _receipt(source, index(registry)[entry["id"]], receipt)
     return source
 
 
 def retained_names(root, registry, texts=None):
-    return {source["asset"]["file"] for entry in registry["entries"]
-            if (source := _source(root, registry, entry, texts)) is not None and source["asset"] is not None}
+    return {current(source)["asset"]["file"] for entry in registry["entries"]
+            if (source := _source(root, registry, entry, texts)) is not None and current(source)["asset"] is not None}
 
 
 def projection(registry, texts):
     result = {}
     for entry in registry["entries"]:
         source = _source(None, registry, entry, texts)
+        source = current(source) if source is not None else None
         result[entry["id"]] = {"status": source["decision"]["outcome"] if source else "legacy",
                                "image_revision": source["image_revision"] if source else None,
                                "asset": {**source["asset"], "file": source["asset"]["file"].removeprefix("game/")}

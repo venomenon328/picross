@@ -88,6 +88,7 @@ elements.ruleSource.value = 'attachment';
 assert.match(run('prompt(CARDS[3]).text'), new RegExp('PICROSS_PUZZLE_AUTHORING.md .*Dokumentrevision ' + input.revision));
 assert.equal(run('brief(CARDS[3]).rulebook.document_revision'), input.revision);
 assert.equal(run('RULEBOOK'), input.authoring);
+assert.throws(() => run("parseTransfer({format:'picross-background-adoption-request-v1'})"), /Eigenständige Hintergrundrevision/);
 assert.equal(elements.ruleRef.value, 'feat/479-ri-b-verified-context');
 console.log('PASS actual step-4 default, fallbacks, saved PR ref and attachment');
 console.log(normal.text);

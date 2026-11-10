@@ -1937,6 +1937,9 @@ Ersetzen unter `content/authoring/<id>/<revision>`; der vorhandene Authoringinde
 v1 erhält nur die exakte neue Zeile. Gemeinsamer Authoringlock, frische Vor-/Nach-
 Prüfung, Index zuletzt; vorhandene identische vollständige Revision/Zeile ist
 No-op, fremde/teilweise Belegung Konflikt. Keine Freigabe erzeugen oder ändern.
+Der Speicher-No-op gilt auch nach Adoption; er prüft identische Arbeitsbytes und
+den gültigen aktuellen Katalog, erteilt aber keine neue Übernahmebefugnis für ein
+inzwischen veraltetes Ziel. plan/adopt prüfen dessen vollständige Zielbindung.
 Der Request selbst ist der Record, kein Rasterpaket und kein registrierter Status.
 Die neue Familie wird im Index ausdrücklich dispatcht und im alten Sheet abgewiesen.
 
@@ -1949,6 +1952,16 @@ Nur der vollständig eigene Zielstand ist Byte-/mtime-No-op. Nach revisionsgenau
 Mainabschluss erfordert dieser reine No-op `--integrated-commit <40-stellige-SHA>`;
 fehlende/teilweise Arbeit darf niemals eine neue Mutation erlauben. Ein alter Plan
 bleibt nach ursprünglichem Paket-/Receiptwechsel stale, auch als No-op.
+
+Die CLI liefert genau ein JSON-Objekt `picross-background-adoption-result-v1`
+mit `format,status,puzzle_id,revision,plan_hash,error,recovery_required,remaining`.
+Status ist `stored,planned,adopted,no-op,invalid_input,aborted`; unbekannte
+Identitäts-/Planwerte und nicht vorhandene Fehler/Restpfade sind null.
+`error` enthält andernfalls `code,message`, `recovery_required` ist Boolean.
+Exitcodes: 0 bei Erfolg, 2 bei ungültiger Eingabe/Konflikt/I/O-Fehler,
+4 bei Abbruch. Ein nach Veröffentlichung fehlgeschlagener Sync oder Readback
+meldet den tatsächlich verbleibenden eigenen Plan-/Arbeitsordner; eine nur
+teilweise gespeicherte Revision wird nicht stillschweigend vervollständigt.
 
 retire-background-production benötigt aktualisiertes origin/main und dessen
 vollständigen bestätigten Commit, ausdrücklich wiederholbare `--authoring-revision
