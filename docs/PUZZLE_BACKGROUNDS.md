@@ -1,6 +1,6 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**Vertrag 1.0 · Dokumentrevision 7 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c / #561**
+**Vertrag 1.0 · Dokumentrevision 8 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -10,8 +10,9 @@ Dieser Vertrag schließt den noch **nicht aktivierten** Produktionsweg aus
 Maßgeblich sind die [Eigentümerkorrektur zur isolierten Auswahl](https://github.com/venomenon328/picross/issues/560#issuecomment-6744957790)
 und [#558 / D01](https://github.com/venomenon328/picross/issues/558#issuecomment-6744063800).
 Die Evaluierung wird nicht übernommen; PR #559 bleibt geschlossen und ungemergt.
-Der integrierte RAND-P1 ist ein Konzeptpilot. HP-W1/HP-W2/PB-H/HP-I1a ersetzen weder
-dessen Kategoriezeichnungen noch die Runtimepfade.
+Der integrierte RAND-P1 ist ein Konzeptpilot. Die Werkzeugpakete ersetzen weder
+dessen Kategoriezeichnungen noch die Runtimepfade. HP-I2 ergänzt den regulären
+Runtimevertrag nach §13; der Kategoriepilot bleibt für Legacy erhalten.
 
 Geprüfte Vertragsbasis für HP-I1a: `main@b994ce432fa0c436223f3eee8bb50b0f867a94ec`.
 **Aktiv bleibt Authoring 0.6.0**, mit der jeweils tatsächlich gebundenen
@@ -31,12 +32,16 @@ Ableitungen und Endfreigaben (§7.4) sowie den vollständig prüfbaren Export v6
 nach [ZA-1](ZA1_ADAPTER.md#hp-i1a--äußere-endabnahme-und-export-v6).
 HP-I1b1 ergänzt auf Basis `main@045189cc5ef34eaf4d06823f22f7ec811d209de5`
 die erste Registrierung, kompakte aktive Quelle, gemeinsame Transaktionen und
-den ersten Produktionsabschluss nach §10. Der vollständige Produktionsweg
-bleibt **inaktiv**: Die reale Zielfähigkeit ist ausdrücklich false, ihre
-Aktivierung zusammen mit tatsächlicher Runtime bleibt HP-I2. HP-I1b2 ergänzt
-den eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss nach §11;
-Raster-/Revealneubindung folgt HP-I1c (§12), neue Sheetbedienung #490. Synthetische kompatible
-Zielcheckouts prüfen den Werkzeugweg, keine Bildproduktion oder Spielabnahme.
+den ersten Produktionsabschluss nach §10. HP-I1b2 ergänzt den eigenständigen
+Hintergrundwechsel und revisionsgenauen Abschluss nach §11; HP-I1c ergänzt
+die aktuelle Raster-/Revealneubindung nach §12. Diese Werkzeugpakete sind auf
+der HP-I2-Basis `main@964cfe2422a45871961760e65dcd863fe68ee5e0` integriert.
+Der vollständige verpflichtende Produktionsweg bleibt **inaktiv**. Die echte
+Zielfähigkeit darf erst HP-I2 mit tatsächlicher Runtime und technischer Abnahme
+nach §13 liefern; deren Stand gehört in den konkreten PR. Eine aktivierte
+Runtime-Capability stellt den Authoringdefault nicht automatisch auf 0.7.0 um.
+Neue Sheetbedienung bleibt #490. Synthetische kompatible Zielcheckouts prüfen
+den Werkzeugweg, keine Bildproduktion oder persönliche Bildabnahme.
 
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) bleibt für vier Aufträge,
 vorhandene Bild-/Motiv-/Rasterfreigaben und Abschluss zuständig,
@@ -63,7 +68,7 @@ transparente 4:1-Leinwand; durchgehende luftige Kompositionen sind ebenso mögli
 wie niedrigere Mitte, U- oder Halb-U-Form. Keine Pflicht zu zwei Ecken und keine
 individuellen Positions-, Crop- oder Maskenparameter.
 
-Die spätere Runtime nach [#561](https://github.com/venomenon328/picross/issues/561)
+Die HP-I2-Runtime nach [#561](https://github.com/venomenon328/picross/issues/561)
 verwendet zunächst Variante A, dieselbe Grunddarstellung hinter Raster und
 Hinweisen, gemeinsamen Fit/Anker und den unteren sichtbaren Seitenbereich.
 Funktionslayout und Trefferflächen werden nicht verkleinert. Kein lokales
@@ -972,11 +977,12 @@ die vorgesehenen lesenden Gitprüfungen bleiben zulässig.
 | **HP-W2 / #560:** `tools/puzzle_production/background_assets.py` und zugehörige Hintergrundhilfen | Geliefert: eigenständige Arbeits-/Entscheidungs-/Ableitungsformen und API/CLI `describe/derive/verify` nach §3–4. Kleine synthetische Tests sichern die Datei-/Bildfähigkeit. Frühe Bildarbeit bleibt vorbereitet; kein Handoffbau oder ZA-1-/Runtimeversprechen. |
 | **PB-H / #489:** `tools/puzzle_production/authoring_build_contract.py`, `authoring_builder.py`, `background_package.py`, `authoring_package.py` und der lesende Teil von `target_adapter.py` | Geliefert: vollständiger opt-in 0.7.0-Vorschausnapshot, geschlossene Format-/Phasenzulassung, typisierte Referenzmenge samt explizitem lokalen Historykontext, Builder v2, Record v2 und Sheet-v3-Projektion. Frische HP-W2-Verifikation, vollständige lesende Inhaltsprüfung des geschriebenen ZIPs bei `raster_ready`/`content_ready` und Lesen bereits gebundener Endfreigabe v2. Kein späterer Sidecarwriter oder finaler Export. |
 | **HP-I1a / #561:** `tools/puzzle_production/authoring_builder.py`, `target_adapter.py` und Finalizer-/Hintergrund-/Exporthelfer | Sichere spätere äußere Entscheidung/Ableitung/Endfreigabe und Recordfortschreibung nach §7.4; v6-Export mit unverändertem Original-ZIP, expliziten Außen-/Transportbindungen und frischer Offlineprüfung. Höchstens `editorially_approved`, keine Registrierung; alte Verbraucher sperren v6 vor Mutation. |
-| **HP-I1b1 / #561:** `tools/puzzle_production/catalog_background.py`, `content_registry.py`, `catalog_integration.py`, `integrated_content.py` und Zieladapter | Erste v6-Registrierung im kompatiblen Ziel, Registry v3, kompakte aktive Quelle und Receipt v2 nach §10. Tatsächliche Zielfähigkeit im Repository bleibt false. Frische synthetische Durchstiche sind keine Runtimeabnahme. |
-| **HP-I1b1 gemeinsame Veröffentlichung:** `catalog_transaction.py`, `catalog_publication.py`, `catalog_io.py`, `registration_publication.py`, `registration_verification.py`, betroffene Folgeoperationen `content_update.py`, `content_registry.py`, `catalog_reveal.py`, `reveal_source.py`, `reveal_retirement.py`, `integrated_content.py` unter `tools/puzzle_production/` | Vollständige neue Quellen-/Plan-/Journalbindung nach §10 und SD-Catalog; No-op, Recovery und Main-gebundener erster Abschluss. Metadaten-/Legacyzieloperationen erhalten Hintergründe. Rasterupdate und Revealadoption eines Hintergrundziels blockieren vor Planung/Mutation. |
-| **HP-I1b2 / #561** | Eigener unveränderlicher Request, Source v2, Plan, nullable Binärrollback und revisionsgenauer Abschluss nach §11 für bereits hintergrundgebundene Ziele. Keine Legacy-Nachrüstung. Gesperrte Raster-/Revealneubindung bleibt HP-I1c. |
-| **HP-I2 / #561:** `game/model/content_registry.gd`, erzeugte `game/data/registry.json`, `game/book/content.gd`, `game/book/marginalia.gd` | Kompatibler neuer Runtimeeingang, Variante A, gemeinsames Assetlayout, verlustfreier Import/Mipmaps und Bedarfsladen. Der heutige `marginalia.gd`-Pilot mit Kategoriepreloads/individuellen Regionen ist keine Produktionsschnittstelle. Keine Kandidatenvorschau. |
-| **#490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html`, insbesondere `parseTransfer`, `validateChoices`, `saveSession`, `loadSession`, `brief`, `exportPackage` und zugehörige Prompt-/Auswahlprojektion | Record v2, Update v3, Sitzung v5 und Auftrag v4 verlustfrei führen; vorhandene v1–v4-Alteingänge getrennt erhalten. Bis einschließlich HP-I1b2 ausschließlich bytegleicher aktiver 0.6.0-Regelwerksnapshot und Revisionsangaben; die neue Builder-/Finalizerausgabe ist noch keine Bedien-/Importfähigkeit. |
+| **HP-I1b1 / #561:** `tools/puzzle_production/catalog_background.py`, `content_registry.py`, `catalog_integration.py`, `integrated_content.py` und Zieladapter | Geliefert: erste v6-Registrierung im kompatiblen Ziel, Registry v3, kompakte aktive Quelle und Receipt v2 nach §10. Runtimefähigkeit und deren Abnahme gehören zu HP-I2; synthetische Werkzeugdurchstiche ersetzen sie nicht. |
+| **HP-I1b1 gemeinsame Veröffentlichung:** `catalog_transaction.py`, `catalog_publication.py`, `catalog_io.py`, `registration_publication.py`, `registration_verification.py`, betroffene Folgeoperationen `content_update.py`, `content_registry.py`, `catalog_reveal.py`, `reveal_source.py`, `reveal_retirement.py`, `integrated_content.py` unter `tools/puzzle_production/` | Geliefert: vollständige Quellen-/Plan-/Journalbindung nach §10 und SD-Catalog; No-op, Recovery und Main-gebundener erster Abschluss. Metadaten-/Legacyzieloperationen erhalten Hintergründe; neue Hintergrundziel-Neubindungen verwenden gezielt §12. |
+| **HP-I1b2 / #561** | Geliefert: eigener unveränderlicher Request, Source v2, Plan, nullable Binärrollback und revisionsgenauer Abschluss nach §11 für bereits hintergrundgebundene Ziele. Keine Legacy-Nachrüstung. |
+| **HP-I1c / #561** | Geliefert: Source v3 mit unverändertem Erstursprung und aktuellen Raster-/Revealbindungen, genau begrenzte neue Plan-/Journalgenerationen und gemeinsame Reader-/Recoveryregeln nach §12. |
+| **HP-I2 / #561:** `game/model/content_registry.gd`, erzeugte `game/data/registry.json` und Buch-/Importanschluss | Regulärer Runtime-v6-Eingang, Variante A, gemeinsames Assetlayout, verlustfreier Import/Mipmaps und Bedarfsladen nach §13. Der Kategoriepilot bleibt ausschließlich Legacy; kein Produktionsvorschau-Renderer. Technische Abnahme und Lieferstand am konkreten PR prüfen. |
+| **#490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html`, insbesondere `parseTransfer`, `validateChoices`, `saveSession`, `loadSession`, `brief`, `exportPackage` und zugehörige Prompt-/Auswahlprojektion | Record v2, Update v3, Sitzung v5 und Auftrag v4 verlustfrei führen; vorhandene v1–v4-Alteingänge getrennt erhalten. Auch HP-I2 belässt den aktiven 0.6.0-Regelwerksnapshot mit bytegleichem Sheettext; die Builder-/Finalizerausgabe allein ist keine Bedien-/Importfähigkeit. |
 | **#491 / #492** | Nur tatsächlich gelieferte Fähigkeiten orchestrieren beziehungsweise in gesondert beauftragter Produktion erproben. Keine parallelen Hintergrundformate oder künstliche Vollintegration durch Ergebnisflags. |
 
 PB-H führt die zuvor explizit an **0.6.0** gebundenen Palettengates und
@@ -1164,9 +1170,9 @@ nach §3.1. Fehlend oder false bedeutet fehlende kompatible Hintergrund-Runtime;
 Hintergrundplanung und Registrierung stoppen vor Journal und Katalogmutation.
 Ungültige Formen, Kennungen, Typen oder Pfade sind Eingabefehler.
 
-**Im echten Repository bleibt `enabled=false`.** HP-I2 darf true erst gemeinsam
-mit tatsächlichem Runtime-Reader, Darstellung/Laden und technischer Abnahme
-liefern. Kein CLI-/API-/Umgebungs-Override, kein `force` und kein Aktivieren
+**HP-I1b1 allein belässt `enabled=false`.** HP-I2 darf true erst gemeinsam
+mit tatsächlichem Runtime-Reader, Darstellung/Laden, Import-/Lieferweg und
+technischer Abnahme nach §13 liefern. Kein CLI-/API-/Umgebungs-Override, kein `force` und kein Aktivieren
 durch `--allow-background`; letzteres lässt lediglich das Eingangsformat zu.
 Isolierte synthetische Ziele dürfen true mit test_only-Eingängen verwenden,
 ohne damit Spielerverhalten oder eine Bildabnahme zu belegen. Synthetische
@@ -1496,3 +1502,202 @@ oder Hintergrundänderungen machen ältere Pläne stale. Kein No-op am Lock vorb
 P0–P6/R0–R2, Journal vor Mutation, Runtime zuletzt, fremde Bytes erhalten,
 vollständige unabhängige Alt-/Zielprüfung und wiederholbare Recovery bleiben
 verbindlich. RI-B/C bleibt ausschließlich Erstregistrierung; kein neuer Cache.
+
+## 13. HP-I2 · Runtime, Darstellung und Besuch
+
+Vertrag vor konsumierendem Code, 10.11.2026,
+[HP-I2-K01–K12 und Prüfplan](https://github.com/venomenon328/picross/issues/561#issuecomment-6770077470),
+Basis `main@964cfe2422a45871961760e65dcd863fe68ee5e0`.
+Reader, Import, Bedarfsladen und Darstellung bilden einen gemeinsamen Einzelweg.
+Dieser Vertrag erteilt weder Bild-/Rätselproduktion noch Mergefreigabe; tatsächliche
+Lieferung, Prüfungen und unabhängige Abnahme werden am konkreten Produkt-Head
+im PR belegt. Die bestehenden Arbeits-, Export-, Source-, Receipt- und
+Transaktionsformen aus §§3–12 bleiben geschlossen und unverändert.
+
+### 13.1 Runtimeeingang und Fehlergrenze
+
+Der Godot-Katalogreader liest zusätzlich exakt `picross-runtime-registry-v6`
+nach §10.3. Die neun bisherigen v5-Felder, deren Typen und die v5-Difficulty-
+Semantik bleiben erhalten; ausschließlich `background` kommt hinzu. Runtime
+v2–v5 behalten ihre eigenen Feldmengen und bedeuten ohne Hintergrundfeld Legacy.
+Es gibt keine neue Rätseldefinition, Difficultygeneration oder Saveidentität.
+
+Bei v6 müssen `status,image_revision,asset` vollständig und widerspruchsfrei
+vorliegen: Legacy hat beide Nullwerte, none eine positive technische Bildrevision
+und asset null, selected eine positive technische Bildrevision und genau den
+Ref auf `art/backgrounds/<id>.png`. ID-/Pfad-/SHA-/Byte-/Revisionsgrenzen aus
+§§3.1 und 10 gelten auch im Godot-Reader. Unbekannte oder zusätzliche Felder,
+falsche Typen, unzulässige Nullkombinationen und Aliaspfade sind Katalogfehler.
+Eine fehlende oder nicht dekodierbare Datei bei sonst gültigem selected-Eintrag
+ist dagegen ein diagnostizierbarer Ladefehler. Die Dekoration wird für den
+betroffenen Besuch ausgelassen; gespeicherter Status und Logik-/Savedaten
+bleiben unverändert. Kein Fehler wird als none/Legacy oder Kategorieersatz ausgegeben.
+
+Die PNG-Refs binden die unveränderten Quellbytes. Die Produktions-/Buildprüfung
+vergleicht deren echte Größe/Hashes vor dem Engineimport. Der Laufzeitlader liest
+die dafür importierte beziehungsweise exportierte Texture2D, keine Produktions-
+oder Freigabeunterlagen. Importparameter, remappte Ressource, 2304×576-Maße und
+Mipmaps sind getrennt zu prüfen. Ein Quell-PNG-Hash ist kein Hash komprimierter
+Enginebytes; rohe PNG-Verfügbarkeit im PCK wird nicht vorausgesetzt und nicht
+durch eine zusätzliche Rohbildkopie erzwungen.
+
+### 13.2 Gemeinsame papiergebundene Fläche
+
+In der Rätselansicht ersetzt selected die Kategoriezeichnung durch genau die
+gewählte transparente 4:1-Leinwand; none entfernt dort die Zeichnung ohne
+Nulltextur. Legacy erhält den bisherigen Kategoriepilot einschließlich seiner
+bisherigen Regeln. Hilfe, Katalog und Einstellungen bleiben unverändert.
+
+Die neue Leinwand verwendet für jedes Rätsel denselben proportionalen Fit in
+eine gemeinsame Fläche im unteren sichtbaren Papierbereich, denselben Falz-/
+Randabstand und den unteren mittigen Anker. Keine per-ID-Offsets, Crops, Masken
+oder sonstigen Positionsmetadaten. Variante A zeichnet dieselbe Grunddarstellung
+auch hinter Raster und Zeilen-/Spaltenhinweisen. Zoom verändert weder Anker,
+Deckkraft noch Bildzulassung und startet keinen weiteren Ladevorgang. Die alten
+RAND-P1-Ausblendregeln gelten ausschließlich für dessen Legacyzeichnungen.
+
+Die Ebene liegt in der wirklichen Seiten-/Capturehierarchie, bleibt passiv und
+erhält keine Maus-, Fokus- oder Scrollroute. Raster, Hinweise, Werkzeuge,
+Meldungen und vorhandene 44/55-px-Trefferflächen behalten ihre Geometrie.
+Kein Ganzbild-Fading, B1/B2/C-Menü, Hinweisfont-/Kontrastumbau oder verdeckter
+Funktionslayoutausgleich gehört zu diesem Anschluss.
+
+### 13.3 Besuch, Publikationspunkt und begrenzte Ressourcen
+
+Ein Besuch beginnt mit der tatsächlichen Vorbereitung eines Zielrätsels und
+bindet mindestens ID, aktive technische Bildrevision und eine monotone
+Besuchs-/Übergangsgeneration. Wiederholtes `open_puzzle()` bei Vorbereitung
+und Settlement desselben Zielbesuchs bleibt idempotent: keine neue Generation
+und kein zweiter Request. Eine tatsächliche Rückkehr nach Verlassen beginnt
+einen neuen Besuch, auch bei derselben ID. Ein neuer Bildstand derselben ID
+ist ebenfalls eine andere Bindung; ein gleicher Ressourcenpfad darf keinen
+alten Godot-Cacheeintrag als neue Revision installieren.
+
+**Konkrete Anschlussstellen:** `game/book/content.gd` besitzt den monotonen
+Besuchstoken. `begin_background_visit()` erhöht ihn und ruft
+`puzzle_background.begin_visit(entry, token)` mit dem aktuellen geprüften Entry
+auf. `publish_background_visit()` ruft `publish(token)`,
+`leave_background_visit()` ruft `leave()`. Die Hintergrundkomponente verarbeitet
+ihre begrenzten Ladeergebnisse mit `PROCESS_MODE_ALWAYS`, auch wenn die
+Content-Elternverarbeitung während des Übergangs deaktiviert ist; das erteilt
+keine Eingaberoute. Ihre Sichtbarkeit bleibt an die Arbeitsansicht gebunden.
+
+`book.request_open()` beginnt den Besuch nach erfolgreichem `activate()` und
+vor `_begin()`. `content.open_puzzle()` publiziert **vor** `super.open_puzzle()`
+und dem ersten Ziellayout. Die vorhandenen Aufrufe aus `_prepare()` und
+`_settle()` benutzen denselben bestehenden Besuch und dieselbe einmalige
+Publikationsentscheidung. `present_album()` beendet den Besuch.
+`information_routes.present(settings/help)` beendet ihn nach dem Source-Capture
+und vor dem Informationsziel; dessen begrenzte alte Seitencapture bleibt dem
+bestehenden Übergang zugeordnet. `information_routes.request_return()` beginnt
+für work/ending vor `_begin()` einen neuen Besuch. Erreicht Rückkehr oder Abbruch
+die Arbeit ohne noch aktiven Besuch, legt `open_puzzle()` sicher einen neuen an
+und friert ihn unmittelbar ein; eine frühere Textur wird dadurch nicht wieder
+gültig. Kein zusätzlicher Frame oder Wartezustand wird für Dekoration eingefügt.
+
+| Ereignis / Zustand | Verbindliche Wirkung |
+| --- | --- |
+| Zielbesuch vorbereiten | Alten Besuch invalidieren, neue ID-/Revisions-/Besuchsbindung anlegen und selected früh anfordern. Legacy/none benötigen keinen neuen Bildrequest. Buch- und Eingabephase warten nicht auf Dekoration. |
+| Ergebnis vor Publikation | Nur zur aktuellen vollständigen Bindung passende, vollständig gültige Textur bereitstellen. Falsche, veraltete oder defekte Ergebnisse nicht installieren. |
+| Erste sichtbare Publikation der Zielseite | Vor jedem sichtbaren Zielcapture denselben Besuch einmalig festschreiben: rechtzeitig bereitgestellte gültige Textur sichtbar, andernfalls für diesen Besuch ausgelassen. Kein zusätzlicher Wartebildschirm oder längere bestehende Eingabesperre. |
+| Settlement desselben Zielbesuchs | Genau die bereits festgeschriebene Auswahl erhalten; weder Request noch Publikationsentscheidung wiederholen. |
+| Verspätetes Ergebnis | Nach festgeschriebener Auslassung nicht mehr anzeigen. Kein sichtbares Nachspringen; frühestens bei einem neuen tatsächlichen Besuch erneut versuchen. |
+| Verlassen, Informationswechsel oder Abbruch | Besuch invalidieren, eigene Textur-/Requestreferenzen freigeben und spätere Resultate verwerfen. Bestehende zeitlich begrenzte Übergangscaptures nach ihrem Settlement-/Abbruchende freigeben. |
+
+Die festgeschriebene Besuchsansicht und sämtliche sichtbaren Übergangscaptures
+müssen dieselbe Entscheidung zeigen. A→B→A, Rückkehr, Abbruch und Revisionwechsel
+werden über die vollständige Bindung behandelt, nicht allein über Pfad oder ID.
+Ein Diagnosebefund unterscheidet bereit, ausgelassen wegen Zeit und fehlgeschlagen;
+er ist kein neuer persistenter Produktionsstatus oder Spielerauswahldialog.
+
+Es gibt höchstens einen aktuellen aktiven Request und einen bereits laufenden
+veralteten Request. Bei weiteren Wechseln bleibt nur der neueste Zielwunsch
+vorgemerkt; keine wachsende Warteschlange oder Verlaufscache. Nicht abbrechbare
+Enginearbeit darf begrenzt auslaufen, ihr Ergebnis ist nicht mehr publizierbar.
+Keine bestandsweite Preload-/Prefetchliste. Eigene Referenzen und laufende
+Operationen sind die beobachtbare Grenze; sofortige Rückgabe sämtlicher Engine-,
+GPU- oder Allocatorbytes wird nicht behauptet.
+
+Der native Ladeadapter verwendet die strengere konkrete Grenze **ein laufender
+Engineauftrag plus ausschließlich die Metadaten des neuesten Zielwunschs**.
+Wird der laufende Auftrag veraltet, startet kein weiterer parallel; erst nach
+seinem Abschluss darf der aktuelle vorgemerkte Wunsch beginnen, sofern dessen
+Besuch noch vor Publikation liegt. Das ist kein Cache abgeschlossener Texturen.
+
+Das bisherige nichtthreaded Webexportprofil bleibt erhalten. Der Lade-/Auslassweg
+muss damit bedarfsgesteuert funktionieren, ohne neue COOP-/COEP-/Hostingpflicht
+oder ungeprüfte Threadvoraussetzung. Dauerhaft alle selected-Bilder im Web
+auszulassen ist keine funktionierende Webunterstützung. Lokales Bedarfsladen
+ändert nicht den gemeinsamen initialen PCK-Download und ist kein Netzwerkstreaming.
+
+### 13.4 Profilimport und Spielerexport in isolierten Kopien
+
+Der aktive `background_assets`-Quellnamensraum enthält ausschließlich seine
+gebundenen PNG-/TXT-Dateien. HP-I2 erweitert weder `catalog_background.source_paths()`
+noch Writer-/Journal-/Recoveryzulassung um ungebundene `.png.import`-Dateien.
+Ein gemeinsamer Importvorbereiter arbeitet ausschließlich in eigenen isolierten
+Godot-/Native-/Windows-/Webkopien. Er erhält die PNG2304-Bytes, setzt verlustfreie
+Texturkompression, Mipmaps und passende Mipmapfilterung und erzeugt technische
+Nebenprodukte nur dort. Keine individuelle Retusche oder Größenentscheidung.
+Direkter Editorimport im schreibenden Inhaltscheckout ist kein neuer unterstützter
+Produktionsweg; den isolierten Einstieg beschreibt die Werkzeuganleitung.
+
+Regressionskopien übernehmen keine wachsende Sammlung echter Hintergründe.
+Sie verwenden nur kleine feste synthetische selected-/none-/Legacyfälle.
+Vor regulärem Spielerexport sind die wirklichen aktiven Ressourcen konsistent
+zum aktuellen Runtimekatalog wiederherzustellen; synthetische Dateien und
+deren Importreste sind vollständig zu entfernen. Windows- und Web-PCK führen
+nur aktive ausgewählte Texturen, erforderliche Notices und kompakte Runtime-
+daten. Kandidaten, Produktionsoriginale, Freigabeunterlagen und Prüfprogramme
+bleiben ausgeschlossen. Hintergrund-TXT-Dateien müssen im Export enthalten sein.
+
+Quellbytes, Importbytes, jeweiliger PCK-Zuwachs und dekodierte Bild-/Mipmapbytes
+sind getrennte Messungen derselben begrenzten Stichprobe. Keine Seriengarantie
+oder neues hartes Größen-/Laufzeitgate. Ein tatsächlicher Windows-/Webexport
+belegt seine Lieferung und das geprüfte PCK, keinen Windowsstart oder ausgeführte
+Browserinteraktion. Technische Kopien und Nebenprodukte enden nach ihrer Prüfung;
+benötigte Revieworiginale folgen dem befristeten Paketplan.
+
+### 13.5 Echte Capability und Authoringaktivierung
+
+`enabled=true` nach §10.1 darf nur zusammen mit dem funktionierenden und technisch
+abgenommenen Reader-/Renderer-/Lade-/Importweg integriert werden. Die unabhängige
+Vor-Merge-Abnahme HP-I2-A01 bleibt am finalen Produkt-Head offen, bis der benannte
+Reviewer sie tatsächlich erklärt. Synthetische kompatible Ziele dürfen diese
+Fähigkeit prüfen; ihre Freigaben legitimieren keine echte Produktion.
+
+Vor der echten Aktivierung aktuellen Ziel-/Journalstand prüfen. Capabilitybytes
+sind Quellenbindung; Änderungen machen ältere daran gebundene Pläne stale.
+Offene Altjournale werden durch true nicht kompatibel. Ihre bestehenden Sperren
+erhalten und einen offenen Recoveryfall regulär abschließen; kein Flagwechsel,
+Umdeuten oder Löschen eines Journals als Umgehung. Der bestehende reale Katalog
+und Logik-/Saveidentitäten werden für HP-I2 nicht geändert; Legacy-only bleibt v5.
+Keine Legacy-Erstnachrüstung und keine neue Writer-/Journalgeneration.
+
+Der Authoring-/Offline-Sheetdefault bleibt 0.6.0. Der unterstützte 0.7.0-Weg ist
+ausdrücklich gewählt; Runtime-Capability und verpflichtender Produktionsdefault
+sind verschiedene Aussagen. Nach Lieferung wird der konkrete Einzelweg mit
+Versionen, PRs/Commits und tatsächlichen Restlücken in #560 nachgeführt. Die
+vollständige Umstellung wird nicht aus einem true-Flag oder grünen Teiltest
+abgeleitet; #490/#491 sind auch kein pauschales vorgeschaltetes Gesamtgate.
+Gültige Altwege, versiegelte Originale und historische false-Exportfelder bleiben
+erhalten. Neue Sheetbedienung und Formatgenerationen werden nicht vorweggenommen.
+
+### 13.6 Einmalige Entwicklung und spätere Inhaltsarbeit
+
+HP-I2-K01–K12 präzisieren HI03–HI05/HI07–HI09 und den Runtimeanschluss der bereits
+gelieferten HI01/HI02-Teile. HI06 bleibt entfallen. Der verbindliche Paketplan
+bestimmt die vier ausgewählten Module, die einmaligen nativen T01-/Import-PCK-
+T02-Belege, sechs unveränderte Original-PNGs und deren erreichbaren befristeten
+Transport. Keine neue Dauer-Buch-/Screenshot-/Browservollsuite und keine
+Umdeutung eines Screenshots zum Interaktionsnachweis.
+
+HP-I2-A01 prüft unabhängig Diff, ausgewählte CI, T01/T02 und Originale am finalen
+Produkt-Head, einschließlich gemeinsamer A-/Fit-/Transparenz-/Geometrie-/
+Passivitätsabnahme. Das getrennte Selbstreview ersetzt sie nicht. Es entsteht
+keine neue persönliche Buchabnahme und kein Kandidaten-Testimport pro Rätsel.
+Die konkrete isolierte Eigentümerauswahl bleibt die Bildentscheidung; nur das
+gewählte Asset wird im letzten regulären Integrationsschritt übernommen.
+Reale Bildproduktion/HW07, Mehrjob-Sheet, Batch und Serienpilot bleiben eigene
+offene Umfänge. Ein grüner Werkzeug- oder Runtimefall schließt #560/#561/#563
+nicht ohne Prüfung ihrer vollständigen zuständigen Kriterien.
