@@ -350,9 +350,9 @@ def adoption_fixtures():
             ok=False
         corpus.append({'text':raw,'accepted':ok})
     case(request)
-    for name in ['Bilder/Größe-🦔.png','絵/背景.png','z/\U00010000.txt','z/\ue000.txt','café.txt','weiss/straße.txt','other/K.txt','byte-\x7f.txt']:
+    for name in ['Bilder/Größe-🦔.png','絵/背景.png','z/\U00010000.txt','z/\ue000.txt','café.txt','weiss/straße.txt','other/K.txt','byte-\x7f.txt','\ufeff','other/\ufeff']:
         value=deepcopy(request);value['files'].append(ref(name));value['files'].sort(key=lambda row:row['file']);case(value)
-    for timestamp in ['20261110T121314Z','2026-W46-2T12:13:14+00:00','2026-11-10t12:13:14,123Z','2026-11-10T12Z','2026-1110T12:13Z','2026-11-10T24:00:00Z']:
+    for timestamp in ['20261110T121314Z','2026-W46-2T12:13:14+00:00','2026-11-10t12:13:14,123Z','2026-11-10T12Z','2026-1110T12:13Z','2026-11-10T24:00:00Z','2026-11-10T12:1314Z','2026-11-10T1213:14Z','9999-W52-7T12:00Z']:
         value=deepcopy(request);value['authorization']['timestamp_utc']=timestamp;case(value)
     for actor in ['\ufeff','\x1c','\x85','😺 Groß ß ς']:
         value=deepcopy(request);value['authorization']['actor']=actor;case(value)
