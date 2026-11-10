@@ -38,8 +38,11 @@ begrenztes Bedarfsladen und isolierten Profilimport. Die echte true-Capability
 setzt diesen funktionierenden und technisch abgenommenen Weg voraus;
 synthetische kompatible Ziele belegen nur den Werkzeugweg. Quell-PNG/Notice und
 Produktionsbelege bleiben von den technischen Importnebenprodukten getrennt.
-Neue Sheetbedienung bleibt #490. Alte Hüllen und die 0.6.0-Phasensemantik bleiben
-erhalten; 0.7.0 ist opt-in. Eine Runtimeaktivierung allein macht sie nicht zum
+[MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
+führt den regulären Mehrjob-Arbeitsbereich mit Update v3, Sitzung v5 und Auftrag v4
+nach [Hintergrundvertrag §7.5](PUZZLE_BACKGROUNDS.md#75-mj-a-mehrjob-arbeitsbereich-und-sichere-übernahme).
+Die eigene spätere Hintergrundrevision bleibt MJ-B. Alte Hüllen und die
+0.6.0-Phasensemantik bleiben erhalten; 0.7.0 ist opt-in. Eine Runtimeaktivierung allein macht sie nicht zum
 verpflichtenden Default und erzeugt keine zusätzliche persönliche Buchabnahme.
 Den tatsächlichen vollständigen Einzelweg und verbleibende Lücken führt #560.
 
