@@ -432,7 +432,7 @@ def classify(root, *, on_registration=None):
         # The historical decoder still enforces its complete closed schema.
         op = "update"
     else:
-        maps = (tx.BACKGROUND_FORMATS, tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS)
+        maps = (tx.REBIND_FORMATS, tx.BACKGROUND_FORMATS, tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS)
         op = j.get("operation")
         require(isinstance(op, str) and any(m.get(op) == fmt for m in maps), "Unsupported recovery journal format/operation")
         exact_keys(j, {"format", "operation", "old", "new", "retained", "additions", "report_run"} |

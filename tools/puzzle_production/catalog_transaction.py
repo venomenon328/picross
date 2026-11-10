@@ -16,6 +16,9 @@ from .contract import canonical_bytes, exact_keys
 from . import catalog_rating as rating, categories, catalog_added as added, catalog_io as io, reveal_source as reveal, catalog_method
 from . import operation_diagnostics as diagnostic
 from . import catalog_background as background_source
+from . import background_rebind as rebind
+
+REBIND_FORMATS = {"update": rebind.UPDATE, "reveal-adoption": rebind.REVEAL, "background-adoption": rebind.BACKGROUND}
 
 LOCK = "content/.registration-pending.json"
 REGISTRY = "content/registry.json"
@@ -43,15 +46,15 @@ REVEAL_LIMIT = 128 * 1024 * 1024
 
 
 def modern(j):
-    return isinstance(j, dict) and j.get("format") in (*BACKGROUND_FORMATS.values(), *FORMATS.values(), *AT_FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values(), *AT_FORMATS.values())
 
 
 def sd2(j):
-    return isinstance(j, dict) and j.get("format") in (*BACKGROUND_FORMATS.values(), *FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values())
 
 
 def background(j):
-    return isinstance(j, dict) and j.get("format") in BACKGROUND_FORMATS.values()
+    return isinstance(j, dict) and j.get("format") in (*REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values())
 
 
 def safe(root, name):
@@ -89,6 +92,9 @@ def file_limit(root, name, journal=None):
             require(len(raw) == ref["bytes"] and io.checksum(raw) == ref["sha256"], "Journal background source binding differs")
             source = background_source.validate(io.json_bytes(raw, background_source.LIMIT), entry)
             origin = background_source.initial(source)["origin"]
+            if source["format"] == rebind.FORMAT:
+                update = next((e for e in reversed(source["events"]) if e["operation"] == "update"), None)
+                if update and update["export_source"] is not None: origin = update["export_source"]["origin"]
             if (origin["package"] == prefix and bound.get(name) == origin["original_package"]["original_zip_sha256"] and
                     bound.get(prefix + "/manifest.json") == origin["export_manifest_sha256"]):
                 return MAX_ZIP
@@ -340,10 +346,17 @@ def prepare(root, snapshot, changes, *, operation, additions=None, report_run=No
     additions = additions or {}
     require(operation in BACKGROUND_FORMATS, "Unknown transaction operation")
     before = snapshot["registry"]
-    require(generation in ("background", "sd2", "at"), "Unknown journal generation")
-    require(operation != "background-adoption" or generation == "background",
+    require(generation in ("rebind", "background", "sd2", "at"), "Unknown journal generation")
+    if generation == "background" and operation in REBIND_FORMATS and any(
+            changes.get(background_source.path(e["id"]), snapshot["texts"].get(background_source.path(e["id"]))) !=
+            snapshot["texts"].get(background_source.path(e["id"])) and
+            (operation != "background-adoption" or
+             io.json_bytes(snapshot["texts"][background_source.path(e["id"])], background_source.LIMIT)["format"] == rebind.FORMAT)
+            for e in before["entries"] if e["id"] in background_source.index(before)):
+        generation = "rebind"
+    require(operation != "background-adoption" or generation in ("background", "rebind"),
             "Background adoption requires its own journal generation")
-    backgrounds = generation == "background"
+    backgrounds = generation in ("background", "rebind")
     current = generation != "at"
     if not backgrounds: snapshot = pre_background_snapshot(snapshot)
     if not current: snapshot = pre_sd2_snapshot(snapshot)
@@ -357,7 +370,7 @@ def prepare(root, snapshot, changes, *, operation, additions=None, report_run=No
         require(old[n] is None, "Target already exists/collides: " + n)
     new = {**old, **changes}
     require(all(b is None or isinstance(b, bytes) for b in new.values()), "Invalid transaction bytes")
-    j = {"format": (BACKGROUND_FORMATS if backgrounds else FORMATS if current else AT_FORMATS)[operation], "operation": operation,
+    j = {"format": (REBIND_FORMATS if generation == "rebind" else BACKGROUND_FORMATS if backgrounds else FORMATS if current else AT_FORMATS)[operation], "operation": operation,
          "old": {n: b.decode("utf-8") if b is not None else None for n, b in old.items()},
          "new": {n: b.decode("utf-8") if b is not None else None for n, b in new.items()},
          "retained": {n: h for n, h in snapshot["retained"].items() if n not in (replacements or {})},
@@ -384,7 +397,8 @@ def _delta(j, before, after, root=None):
     reveal_target = None
     background_target = None
     before_backgrounds, after_backgrounds = background_source.index(before), background_source.index(after)
-    if op not in ("registration", "background-adoption"):
+    rebound = j["format"] in REBIND_FORMATS.values()
+    if op not in ("registration", "background-adoption") and not rebound:
         require(before["format"] == after["format"] and before_backgrounds == after_backgrounds,
                 "Operation changes background registry authority")
     if op == "registration":
@@ -425,7 +439,10 @@ def _delta(j, before, after, root=None):
         pairs = [(a, b) for a, b in zip(before["entries"], after["entries"]) if a != b]
         require(len(before["entries"]) == len(after["entries"]) and len(pairs) == 1, "Invalid update delta")
         a, e = pairs[0]
-        require(a["id"] not in before_backgrounds, "Background target raster update requires a later package")
+        require(a["id"] not in before_backgrounds or j["format"] == rebind.UPDATE,
+                "Background target raster update requires bound journal v7")
+        if rebound:
+            mutable |= rebind.delta(j, before, after, [a["id"]] if a["id"] in before_backgrounds else [])
         active = j["old"].get(reveal.path(a["id"]))
         active = io.json_bytes(active.encode(), reveal.LIMIT) if active is not None else None
         require(all(a[k] == e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")) and
@@ -450,7 +467,8 @@ def _delta(j, before, after, root=None):
         require(j["report_run"] is None, "Background adoption cannot adopt reports")
         mutable |= background_source.validate_delta(j, before, after, root)
     else:
-        require(before == after, "Difficulty operation changes production registry")
+        require(before["entries"] == after["entries"] if rebound else before == after,
+                "Difficulty operation changes production registry")
         if op == "method-activation":
             mutable = {catalog_method.PATH}
             require(j["report_run"] is None and sd2(j), "Invalid activation transaction")
@@ -464,10 +482,13 @@ def _delta(j, before, after, root=None):
             require(current == catalog_method.record_for(plan, prior), "Invalid activation delta")
         elif op == "reveal-adoption":
             require(j["report_run"] is None, "Reveal adoption cannot adopt reports")
-            require(not any("game/" + e["reveal"] in j["replacements"] for e in before["entries"] if e["id"] in before_backgrounds),
+            require(rebound or not any("game/" + e["reveal"] in j["replacements"] for e in before["entries"] if e["id"] in before_backgrounds),
                     "Background target reveal adoption requires a later package")
             from .catalog_reveal import validate_delta
             mutable |= validate_delta(j, before, root)
+            if rebound:
+                mutable |= rebind.delta(j, before, after, [e["id"] for e in before["entries"]
+                    if e["id"] in before_backgrounds and "game/" + e["reveal"] in j["replacements"]])
         elif op == "adoption": mutable |= {rating.path(e["id"]) for e in before["entries"]} | report_names(j["report_run"], j["operation"])
         elif op == "added-adoption":
             mutable |= {added.path(e["id"]) for e in before["entries"]} | report_names(j["report_run"], op)
@@ -512,7 +533,7 @@ def validate_journal(root, j, *, before_write=False):
     exact_keys(j, {"format", "operation", "old", "new", "retained", "additions", "report_run"} | ({"replacements"} if current_generation else set()))
     require(isinstance(j["format"], str) and isinstance(j["operation"], str) and
             any(formats.get(j["operation"]) == j["format"] for formats in
-                (BACKGROUND_FORMATS, FORMATS, AT_FORMATS, PREVIOUS_FORMATS, LEGACY_FORMATS)),
+                (REBIND_FORMATS, BACKGROUND_FORMATS, FORMATS, AT_FORMATS, PREVIOUS_FORMATS, LEGACY_FORMATS)),
             "Unsupported catalog journal")
     legacy = j["format"] in LEGACY_FORMATS.values()
     for k in ("old", "new", "retained", "additions"): require(isinstance(j[k], dict), "Invalid journal map")
@@ -555,7 +576,7 @@ def validate_journal(root, j, *, before_write=False):
             source = added.validate(rating.bytes_json(raw.encode(), added.LIMIT), e["id"])["provenance"]["evidence"]
             if source: old_reports.add(source["path"])
     old_background = None
-    if j["operation"] == "background-adoption":
+    if background_generation:
         from .catalog_publication import decode_binary
         # Package bindings are immutable, but live source/image writes can be
         # between phases. Validate inventory against the journal's old view;

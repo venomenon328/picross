@@ -32,8 +32,8 @@ class BackgroundChangeConsumerTests(consumers.BackgroundConsumerTests):
     def test_legacy_raster_update_and_reveal_adoption_keep_background_bytes(self):
         super().test_legacy_raster_update_and_reveal_adoption_keep_background_bytes()
 
-    def test_background_target_raster_and_reveal_are_blocked_through_direct_apis(self):
-        super().test_background_target_raster_and_reveal_are_blocked_through_direct_apis()
+    def test_background_target_requires_authorized_current_bindings(self):
+        super().test_background_target_requires_authorized_current_bindings()
         work = create_work(self, self.checkout, self.root, 'blocked-legacy-background')
         request = deepcopy(work.request)
         original_directory = requests.directory(request)

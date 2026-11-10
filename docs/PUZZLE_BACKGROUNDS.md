@@ -1,6 +1,6 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**Vertrag 1.0 · Dokumentrevision 6 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2 / #561**
+**Vertrag 1.0 · Dokumentrevision 7 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c / #561**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -35,7 +35,7 @@ den ersten Produktionsabschluss nach §10. Der vollständige Produktionsweg
 bleibt **inaktiv**: Die reale Zielfähigkeit ist ausdrücklich false, ihre
 Aktivierung zusammen mit tatsächlicher Runtime bleibt HP-I2. HP-I1b2 ergänzt
 den eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss nach §11;
-Raster-/Revealneubindung bleibt HP-I1c, neue Sheetbedienung #490. Synthetische kompatible
+Raster-/Revealneubindung folgt HP-I1c (§12), neue Sheetbedienung #490. Synthetische kompatible
 Zielcheckouts prüfen den Werkzeugweg, keine Bildproduktion oder Spielabnahme.
 
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) bleibt für vier Aufträge,
@@ -1298,9 +1298,9 @@ Vertrag vor konsumierendem Code, 10.11.2026, [Paketentscheidung HP-I1b2](https:/
 Dieser Abschnitt ergänzt §10 ausdrücklich um den eigenen Änderungsweg für genau
 ein bereits gültig hintergrundgebundenes Ziel. Die unveränderten §3.1-Typen gelten
 für alle geschlossenen Formen; alte Generationen behalten ihre exakten Regeln.
-selected→selected, selected→none und none→selected sind erlaubt. Legacy-Nachrüstung,
-Rasterupdate und Revealadoption eines Hintergrundziels bleiben gesperrt; deren
-Neubindung gehört zu HP-I1c, Runtime/Import/Mipmaps/Laden zu HP-I2. Keine reale
+selected→selected, selected→none und none→selected sind erlaubt. Legacy-Nachrüstung
+bleibt gesperrt. Rasterupdate und Revealadoption benötigen den Rebind-Vertrag HP-I1c
+in §12; Runtime/Import/Mipmaps/Laden gehören zu HP-I2. Keine reale
 Bildproduktion, Katalogänderung, zusätzliche Eigentümerbestätigung oder Buchprobe.
 
 Konkrete Grenzen: Request/Manifest/Entscheidung/Befund je 2 MiB, Source 1 MiB,
@@ -1404,3 +1404,95 @@ Nur die vollständig belegten ausgewählten Arbeitsrevisionen und ihre Indexzeil
 Keine zusätzliche aktive Receiptdatei oder ständig wachsende Revisionsliste: der unveränderte Erstreceipt, initial und die aktuelle adoption-Bindung bleiben die kompakte Autorität. Der Abschluss erzeugt einen überprüfbaren lokalen Produktionsdiff, keinen automatischen Commit/Merge.
 
 Alle erreichbaren Katalog-/Quick-/Export-/Registrierungs-/Abschluss-/Metadatenreader erhalten denselben v1/v2-Quellenvertrag. Sync, Rating/Added, zulässige Kategorienpflege und Legacyziel-Update/-Revealadoption im gemischten Katalog erhalten die aktuelle v2-Quelle samt PNG/Notice unverändert. Die bisherigen vollständigen Quellen-/Plangenerationen dürfen diese neue Source nur unter ausdrücklich dokumentierter Readerkompatibilität konsumieren; ihre exakten alten Felder/Deltas bleiben. Ein Sourcewechsel macht vorhandene Pläne stale. Keine neue Generation allein für unveränderte Pfadmengen erfinden; bei tatsächlich geändertem externem Vertrag korrekt versionieren.
+
+## 12. HP-I1c · Aktuelle Raster-/Revealbindung
+
+Vertrag vor konsumierendem Code, 10.11.2026,
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/561#issuecomment-6766500497).
+Nur deklarierte gültige Hintergrundziele; keine Legacy-Erstnachrüstung.
+Echte Capability bleibt false. CLI und Budgets bleiben unverändert.
+
+### Geschlossene Source v3
+
+`picross-catalog-background-v3` hat exakt `format,base,entry,events`.
+`base` ist der unveränderte vollständige Source-v1- oder Source-v2-Ausgangsstand
+(niemals v3); `entry` der damalige normalisierte Registryentry mit Exporthash
+statt physischem Receipthash. Die ursprüngliche Source v1, ihre erste Freigabe
+und eine vorhandene v2-Adoption bleiben vollständig erhalten. Grenzen: 1 MiB,
+JSON-Tiefe 32 und 1…256 Events; bei Überschreitung vor Mutation abbrechen.
+
+Jedes Event hat exakt `operation,previous_source,binding,image,export_source`.
+`operation` ist `update`, `reveal-adoption` oder `background-adoption`.
+`previous_source` ist die Ref der exakt unmittelbar vorigen kanonischen Source
+(erst base, danach v3 mit dem vorigen Eventpräfix). Kein rekursiver Vorgänger.
+`binding` enthält exakt `entry,identity,reveal,notice,at`: normalisierter
+Registryentry; identity exakt wie Source v1 mit aktueller Definitions-Ref und
+Runtime-Revision; reveal/notice sind aktuelle Live-Refs am festen Zielpfad.
+`at` ist null ohne AT-Quelle, sonst exakt
+`binding_revision,image_revision,record_hash` des damaligen AT-Präfixes.
+Jeder gespeicherte Präfix wird gegen die aktuelle append-only AT-Quelle
+rekonstruiert und geprüft; alte Arbeitsdateien werden nicht geöffnet.
+
+`image` ist ausschließlich bei background-adoption das vollständige bisherige
+v2-current-Objekt, sonst null. Die aktive Bildentscheidung stammt vom letzten
+solchen Event beziehungsweise base. Eine Bildadoption erhält binding exakt.
+Rasterupdate erhält effektiven Revealhash und Bildfelder, erhöht Runtime-Revision
+und verwendet eine neue Paketrevision bei gleicher Identität/Kategorie/Pfaden.
+Revealadoption erhält entry/identity, erhöht ausschließlich die AT-Bildrevision
+mit gültiger Freigabe, Vorgängerhash und erhaltener Attribution.
+Writer und Journalprüfer verlangen jeweils genau ein neues passendes Event;
+keine Kombioperation und kein Umschreiben früherer Events.
+
+`export_source` ist nur bei einem v6-Rasterupdate dessen vollständig geprüfte
+Source v1, ansonsten null. Ein v5-Rasterexport erklärt keinen Hintergrundwechsel:
+die gültige aktive Autorität bleibt erhalten. Ein v6-Rasterexport muss alle
+aktuellen Bildfelder außer der technischen Bildrevision exakt erhalten
+(auch Entscheidung, Ableitung, Rechte, Kandidat, PNG/Notice oder none).
+Andernfalls vor Mutation ablehnen. Alte Exportgenerationen dürfen kein
+Hintergrundziel aktualisieren; v6 an einem Legacyziel bleibt Erstnachrüstung
+und gesperrt. Neue Exporte werden vollständig samt unabhängiger Stagingprüfung
+geprüft; frischer Difficulty-/Proof-/Palettenvertrag bleibt bestehen.
+
+### Leser, Abschluss und Wiederholung
+
+Die effektive identity stammt aus dem letzten Event; Initialursprung und
+Bildentscheidung bleiben getrennt. Aktuelle Produktionsbytes sind entweder
+der gebundene v5/v6-Export oder Receipt v2. Dessen unveränderte background-Form
+bindet weiterhin die erste Source v1; entry bindet den jeweiligen abgeschlossenen
+Export. Ein vorhandener ursprünglicher Receipt wird niemals umgeschrieben.
+Historische Export-/Arbeitsrefs sind nach Retirement Identitäten, keine
+Dateianforderungen. Der ursprüngliche identische v6-register-Aufruf darf nach
+frischer Export-/Gesamtcheckoutprüfung auch nach Neubindung ein reiner No-op sein;
+er stellt keine alten Definitionen, Bilder, Pakete oder Added-Daten wieder her.
+HP-I1b2 bleibt der einzige Bildwriter und erhält aktuelle Raster-/AT-Bindungen.
+Full/Quick, Projektion, Metadatenwriter und beide Retirementwege prüfen denselben
+aktuellen Zustand. Alte v1/v2 werden nicht gelockert.
+
+### Tatsächlich geänderte Generationen
+
+AT-Source `picross-catalog-reveal-v2` hat die gleiche geschlossene Form wie v1,
+erlaubt zusätzlich Receipt v2 in origin und ist für Hintergrundziele bestimmt.
+V1 bleibt auf Legacyziele begrenzt. Alle AT-Appendregeln bleiben gleich.
+
+Updatejournal v7 und Revealadoptionsjournal v4 erlauben die exakt hergeleitete
+Source-v3-/Indexänderung. Hintergrundadoptionsjournal v2 erlaubt v3-Fortsetzung;
+v1 bleibt für v1/v2-Ziele. Die acht Felder und T/K-/Namespacegrenzen bleiben gleich.
+Revealjournal v4 behält die bekannten nicht-null Binärseiten und 128-MiB-Grenze;
+Hintergrundjournal v2 die ausdrücklich nullable Seiten und bisherigen Grenzen.
+Update bleibt 24 MiB. Alte Generationen erhalten ihre bisherigen Zielgrenzen.
+Registrierung, Metadaten-/Aktivierungsjournale, Registry v3, Runtime v6, Request
+und Receipt v2 ändern weder Form noch Bedeutung und werden nicht umnummeriert.
+
+Revealplan v4 behält die bisherigen Felder einschließlich plan_hash; zusätzlich
+hat jede entries-Zeile `old_background,new_background` (TextRef oder beide null)
+und der Plan `old_registry,new_registry` (TextRef). Nur diese vollständigen
+Alt-/Neutexte erlauben unabhängig rekonstruierten eigenen Byte-/mtime-No-op.
+V3 bleibt für Legacy-Zielauswahl. Hintergrundplan v2 verwendet die unveränderte
+geschlossene v1-Form, erlaubt aber Source v3; v1 bindet nur v1/v2. Neue Writer
+wählen die kleinste passende Generation. Alle Quellen/Namespaces und exakten
+Planbytes werden frisch vor und unter Lock gebunden; Receipt-, Raster-, Reveal-
+oder Hintergrundänderungen machen ältere Pläne stale. Kein No-op am Lock vorbei.
+
+P0–P6/R0–R2, Journal vor Mutation, Runtime zuletzt, fremde Bytes erhalten,
+vollständige unabhängige Alt-/Zielprüfung und wiederholbare Recovery bleiben
+verbindlich. RI-B/C bleibt ausschließlich Erstregistrierung; kein neuer Cache.

@@ -10,11 +10,13 @@ from .authoring_package import require, relative, sha
 from .contract import Aborted, InvalidInput, canonical_bytes, digest, exact_keys, integer
 from . import catalog_io as io, reveal_source as reveal, catalog_transaction as tx
 from . import catalog_publication as publication, categories
+from . import catalog_background as bg, background_rebind as rebind
 
 REQUEST = "picross-reveal-request-v1"
 LEGACY_FORMAT = "picross-reveal-plan-v1"
 SD2_FORMAT = "picross-reveal-plan-v2"
 FORMAT = "picross-reveal-plan-v3"
+REBIND_FORMAT = "picross-reveal-plan-v4"
 RESULT = "picross-reveal-result-v1"
 PLAN_LIMIT = 128 * 1024 * 1024
 
@@ -24,8 +26,8 @@ def text_record(raw):
 
 
 def plan_snapshot(snapshot, plan_format=FORMAT):
-    require(plan_format in (FORMAT, SD2_FORMAT, LEGACY_FORMAT), "Unsupported reveal plan format")
-    if plan_format != FORMAT: snapshot = tx.pre_background_snapshot(snapshot)
+    require(plan_format in (REBIND_FORMAT, FORMAT, SD2_FORMAT, LEGACY_FORMAT), "Unsupported reveal plan format")
+    if plan_format not in (REBIND_FORMAT, FORMAT): snapshot = tx.pre_background_snapshot(snapshot)
     if plan_format == LEGACY_FORMAT: snapshot = tx.pre_sd2_snapshot(snapshot)
     return snapshot
 
@@ -72,11 +74,15 @@ def changes(old, new, replacements):
     return result
 
 
-def build(root, ids, requests, input_dir, *, plan_format=FORMAT):
+def build(root, ids, requests, input_dir, *, plan_format=None):
     snapshot = tx.capture(root)
     entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
     require(set(ids) <= set(entries), "Unknown reveal ID")
-    for identifier in ids: reveal.require_legacy_target(root, entries[identifier], snapshot["registry"])
+    declared = bg.index(snapshot["registry"])
+    if plan_format is None: plan_format = REBIND_FORMAT if set(ids) & declared.keys() else FORMAT
+    if plan_format != REBIND_FORMAT:
+        for identifier in ids: reveal.require_legacy_target(root, entries[identifier], snapshot["registry"])
+    registry = deepcopy(snapshot["registry"])
     scoped = plan_snapshot(snapshot, plan_format)
     catalog = io.json_bytes(snapshot["texts"][categories.PATH], 131072)
     rows, writes, replacements, files, total = [], {}, {}, {}, 0
@@ -104,12 +110,28 @@ def build(root, ids, requests, input_dir, *, plan_format=FORMAT):
                      "new_reveal": {"file": new_file, "sha256": io.checksum(image), "bytes": len(image)},
                      "old_record": text_record(old_record), "new_record": text_record(new_record),
                      "old_notice": text_record(snapshot["texts"][notice_path]), "new_notice": text_record(writes[notice_path])})
+        if plan_format == REBIND_FORMAT:
+            old_background = snapshot["texts"][bg.path(identifier)]
+            new_background = None
+            if identifier in declared:
+                source = bg.load(root, snapshot["registry"], entry)
+                bound = rebind.binding(root, source, entry, snapshot["texts"]["game/" + entry["definition"]],
+                                       image, writes[notice_path], record)
+                updated = rebind.append(source, entry, bound, "reveal-adoption")
+                new_background = bg.encoded(updated)
+                writes[bg.path(identifier)] = new_background
+                for indexed in registry["backgrounds"]:
+                    if indexed["id"] == identifier: indexed["source"] = bg.ref(bg.path(identifier), new_background)
+            rows[-1].update(old_background=text_record(old_background), new_background=text_record(new_background))
+    if plan_format == REBIND_FORMAT: writes[tx.REGISTRY] = bg.encoded(registry)
     journal = tx.prepare(root, snapshot, writes, operation="reveal-adoption", replacements=replacements,
-                         generation="background" if plan_format == FORMAT else "sd2" if plan_format == SD2_FORMAT else "at")
+                         generation="rebind" if plan_format == REBIND_FORMAT else "background" if plan_format == FORMAT else "sd2" if plan_format == SD2_FORMAT else "at")
     sources = source_hashes(snapshot, plan_format)
     require(len(sources) <= 100000, "Too many reveal plan sources")
     plan = {"format": plan_format, "ids": ids, "snapshot": {"sources": sources, "namespaces": scoped["namespaces"]},
             "entries": rows, "writes": changes(journal["old"], journal["new"], replacements)}
+    if plan_format == REBIND_FORMAT:
+        plan.update(old_registry=text_record(snapshot["texts"][tx.REGISTRY]), new_registry=text_record(writes[tx.REGISTRY]))
     plan["plan_hash"] = digest(plan)
     if len(canonical_bytes(plan)) + 1 > PLAN_LIMIT: raise Aborted("resource_limit: reveal plan exceeds 128 MiB")
     require(source_hashes(tx.capture(root), plan_format) == sources and tx.namespaces(root, snapshot["registry"]) == snapshot["namespaces"], "Checkout changed during reveal planning")
@@ -150,8 +172,15 @@ def plan(root, ids, input_path, output, *, seconds=300):
 
 
 def validate_plan(value):
-    exact_keys(value, {"format", "ids", "snapshot", "entries", "writes", "plan_hash"})
-    require(value["format"] in (FORMAT, SD2_FORMAT, LEGACY_FORMAT) and value["ids"] == selection(value["ids"]), "Invalid reveal plan")
+    rebinding = isinstance(value, dict) and value.get("format") == REBIND_FORMAT
+    exact_keys(value, {"format", "ids", "snapshot", "entries", "writes", "plan_hash"} |
+               ({"old_registry", "new_registry"} if rebinding else set()))
+    require(value["format"] in (REBIND_FORMAT, FORMAT, SD2_FORMAT, LEGACY_FORMAT) and value["ids"] == selection(value["ids"]), "Invalid reveal plan")
+    if rebinding:
+        for side in ("old", "new"):
+            record = exact_keys(value[side + "_registry"], {"text", "sha256"})
+            require(isinstance(record["text"], str) and len(record["text"].encode()) <= 8 * 1024 * 1024 and
+                    io.checksum(record["text"].encode()) == sha(record["sha256"]), "Invalid plan registry text")
     require(sha(value["plan_hash"]) == digest({k: v for k, v in value.items() if k != "plan_hash"}), "Wrong reveal plan hash")
     snap = exact_keys(value["snapshot"], {"sources", "namespaces"})
     require(isinstance(snap["sources"], dict) and len(snap["sources"]) <= 100000, "Invalid reveal source map")
@@ -159,14 +188,17 @@ def validate_plan(value):
         relative(name)
         if h is not None: sha(h)
     exact_keys(snap["namespaces"], {"reveals", "difficulty", "added", "packages"} |
-               ({"backgrounds", "background_assets"} if value["format"] == FORMAT else set()))
+               ({"backgrounds", "background_assets"} if value["format"] in (FORMAT, REBIND_FORMAT) else set()))
     for paths in snap["namespaces"].values():
         require(isinstance(paths, list) and len(paths) <= 100000 and all(isinstance(n,str) for n in paths) and
                 paths == sorted(set(paths)), "Invalid reveal namespace snapshot")
         for name in paths: relative(name)
     require(isinstance(value["entries"], list) and len(value["entries"]) == len(value["ids"]), "Invalid reveal entries")
     for identifier, row in zip(value["ids"], value["entries"]):
-        exact_keys(row, {"id", "old_image_revision", "new_image_revision", "binding_hash", "old_reveal", "new_reveal", "old_record", "new_record", "old_notice", "new_notice"})
+        exact_keys(row, {"id", "old_image_revision", "new_image_revision", "binding_hash", "old_reveal", "new_reveal", "old_record", "new_record", "old_notice", "new_notice"} |
+                   ({"old_background", "new_background"} if rebinding else set()))
+        if rebinding:
+            require((row["old_background"] is None) == (row["new_background"] is None), "Plan cannot retrofit background")
         require(identifier == row["id"], "Wrong reveal entry order")
         integer(row["old_image_revision"], 0, 255, "old image revision")
         integer(row["new_image_revision"], 1, 256, "new image revision")
@@ -176,12 +208,12 @@ def validate_plan(value):
             image = exact_keys(row[side + "_reveal"], {"file", "sha256", "bytes"})
             integer(image["bytes"], 1, reveal.IMAGE_LIMIT, "reveal image bytes"); sha(image["sha256"])
             require(image["file"] in [prefix + identifier + ext for ext in (".png", ".svg")], "Wrong plan image path")
-            for kind in ("record", "notice"):
+            for kind in (("record", "notice", "background") if rebinding else ("record", "notice")):
                 record = row[side + "_" + kind]
-                if kind == "record" and side == "old" and record is None: continue
+                if record is None and (kind == "background" or kind == "record" and side == "old"): continue
                 exact_keys(record, {"text", "sha256"})
                 require(isinstance(record["text"], str) and io.checksum(record["text"].encode()) == sha(record["sha256"]), "Invalid plan text binding")
-                require(len(record["text"].encode()) <= (reveal.LIMIT if kind == "record" else 65536), "Plan text exceeds source limit")
+                require(len(record["text"].encode()) <= (reveal.LIMIT if kind in ("record", "background") else 65536), "Plan text exceeds source limit")
     require(isinstance(value["writes"], list), "Invalid reveal write list")
     for row in value["writes"]:
         exact_keys(row, {"path", "kind", "old_sha256", "new_sha256", "bytes"})
@@ -199,9 +231,11 @@ def validate_delta(j, before, root):
     for entry in before["entries"]:
         name = reveal.path(entry["id"])
         if j["old"][name] == j["new"][name]: continue
-        reveal.require_legacy_target(root, entry, before)
+        declared = entry["id"] in bg.index(before)
+        require(not declared or j["format"] == rebind.REVEAL, "Background reveal needs journal v4")
         require(j["new"][name] is not None, "Cannot delete reveal history")
         new = reveal.validate(io.json_bytes(j["new"][name].encode(), reveal.LIMIT), catalog)
+        require(new["format"] == (reveal.BACKGROUND_FORMAT if declared else reveal.FORMAT), "Wrong reveal source generation")
         old = reveal.validate(io.json_bytes(j["old"][name].encode(), reveal.LIMIT), catalog) if j["old"][name] is not None else None
         require(new["id"] == entry["id"] and new["identity"] == reveal.identity(entry), "Reveal delta changes identity")
         n = reveal.identity(entry)["notice"]
@@ -211,7 +245,9 @@ def validate_delta(j, before, root):
                     new["record_revision"] == old["record_revision"] + 1, "Reveal delta rewrites history")
             previous = old["revisions"][-1]["reveal_sha256"]
         else:
-            original, _, integrated, _ = reveal.package(root, entry)
+            from .catalog_publication import decode_binary
+            old_view = (before, {**j["old"], **{n: decode_binary(pair["old"]) for n, pair in j["replacements"].items()}})
+            original, _, integrated, _ = reveal.package(root, entry, background_snapshot=old_view)
             definition = io.json_bytes(j['old']['game/' + entry['definition']].encode(), 2 * 1024 * 1024)
             expected_origin = {'entry': original, 'runtime_revision': definition['revision'],
                                'notice': reveal.make_notice(j['old'][n].encode()), 'receipt': integrated}
@@ -262,15 +298,26 @@ def adopt(root, path, *, seconds=300, fail_step=None):
         snapshot = tx.capture(root)
         entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
         require(set(value["ids"]) <= set(entries), "Stale reveal selection")
-        for identifier in value["ids"]: reveal.require_legacy_target(root, entries[identifier], snapshot["registry"])
+        if value["format"] != REBIND_FORMAT:
+            for identifier in value["ids"]: reveal.require_legacy_target(root, entries[identifier], snapshot["registry"])
         old_texts = deepcopy(snapshot["texts"])
         original_hashes = source_hashes(snapshot, value["format"])
         target = True
         requests = {}
+        if value["format"] == REBIND_FORMAT:
+            previous = value["old_registry"]["text"].encode()
+            current = value["new_registry"]["text"].encode()
+            require(snapshot["texts"][tx.REGISTRY] in (previous, current), "Stale reveal registry")
+            target &= snapshot["texts"][tx.REGISTRY] == current
+            old_texts[tx.REGISTRY] = previous
+            original_hashes[tx.REGISTRY] = io.checksum(previous)
         for row in value["entries"]:
             entry = entries[row["id"]]
             record_name, notice_name = reveal.path(row["id"]), reveal.identity(entry)["notice"]
-            for name, kind in ((record_name, "record"), (notice_name, "notice")):
+            pairs = [(record_name, "record"), (notice_name, "notice")]
+            if value["format"] == REBIND_FORMAT and row["old_background"] is not None:
+                pairs.append((bg.path(row["id"]), "background"))
+            for name, kind in pairs:
                 previous = row["old_" + kind]
                 previous = previous["text"].encode() if previous is not None else None
                 current = row["new_" + kind]["text"].encode()
