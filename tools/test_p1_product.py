@@ -30,9 +30,9 @@ class ProductHarnessTests(unittest.TestCase):
             process.__enter__.return_value = process
             def wait(timeout=None):
                 waits.append(timeout)
-                if len(waits) == 2 and name == "kat2-kk":
+                if len(waits) == 2 and name in ("kat2-kk", "kat2-pages"):
                     # The warning must already be flushed while the child runs.
-                    self.assertIn("WARNING: kat2-kk reached 300s", log.read_text())
+                    self.assertIn(f"WARNING: {name} reached 300s", log.read_text())
                 if timeout is not None and clock[0] + timeout < duration:
                     clock[0] += timeout
                     raise subprocess.TimeoutExpired(["probe"], timeout)
@@ -56,52 +56,58 @@ class ProductHarnessTests(unittest.TestCase):
             self.assertEqual(result["log"]["original_bytes"], log.stat().st_size)
             return result, waits, process
 
-    def test_kk_finishes_before_warning(self):
-        result, waits, process = self.simulate_phase("kat2-kk", 299)
-        self.assertEqual(waits, [300])
-        self.assertEqual(result["timeout_seconds"], 600)
-        self.assertEqual(result["warning_seconds"], 300)
-        self.assertFalse(result["warning_emitted"])
-        self.assertFalse(result["timed_out"])
-        self.assertNotIn("WARNING:", result["output"])
-        require_clean_output(result, "KAT2_PROBE_OK")
-        process.kill.assert_not_called()
-
-    def test_kk_warning_allows_success_until_hard_deadline(self):
-        for duration in (301, 599):
-            with self.subTest(duration=duration):
-                result, waits, process = self.simulate_phase("kat2-kk", duration)
-                self.assertEqual(waits, [300, 298])
-                self.assertTrue(result["warning_emitted"])
+    def test_kk_and_pages_finish_before_warning(self):
+        for name in ("kat2-kk", "kat2-pages"):
+            with self.subTest(name=name):
+                result, waits, process = self.simulate_phase(name, 299)
+                self.assertEqual(waits, [300])
+                self.assertEqual(result["timeout_seconds"], 600)
+                self.assertEqual(result["warning_seconds"], 300)
+                self.assertFalse(result["warning_emitted"])
                 self.assertFalse(result["timed_out"])
-                self.assertEqual(result["seconds"], max(302, duration))
-                self.assertEqual(result["output"].count("WARNING:"), 1)
+                self.assertNotIn("WARNING:", result["output"])
                 require_clean_output(result, "KAT2_PROBE_OK")
                 process.kill.assert_not_called()
 
-    def test_kk_warning_preserves_exit_marker_and_engine_error_checks(self):
-        for exit_code, output in ((4, "KAT2_PROBE_OK\n"), (0, "missing marker\n"),
-                                  (0, "KAT2_PROBE_OK\nERROR: failure\n"),
-                                  (0, "KAT2_PROBE_OK\nSCRIPT ERROR: failure\n")):
-            with self.subTest(exit_code=exit_code, output=output):
-                result, _, _ = self.simulate_phase("kat2-kk", 350, exit_code=exit_code, output=output)
-                self.assertTrue(result["warning_emitted"])
-                self.assertFalse(result["timed_out"])
-                with self.assertRaises(PreflightError):
+    def test_kk_and_pages_warning_allows_success_until_hard_deadline(self):
+        for name in ("kat2-kk", "kat2-pages"):
+            for duration in (301, 599):
+                with self.subTest(name=name, duration=duration):
+                    result, waits, process = self.simulate_phase(name, duration)
+                    self.assertEqual(waits, [300, 298])
+                    self.assertTrue(result["warning_emitted"])
+                    self.assertFalse(result["timed_out"])
+                    self.assertEqual(result["seconds"], max(302, duration))
+                    self.assertEqual(result["output"].count("WARNING:"), 1)
                     require_clean_output(result, "KAT2_PROBE_OK")
+                    process.kill.assert_not_called()
 
-    def test_kk_hard_timeout_records_effective_budget_and_cleanup(self):
-        result, waits, process = self.simulate_phase("kat2-kk", 601)
-        self.assertEqual(waits, [300, 298, None])
-        self.assertEqual(result["seconds"], 600)
-        self.assertTrue(result["warning_emitted"])
-        self.assertTrue(result["timed_out"])
-        self.assertIsNone(result["exit_code"])
-        self.assertIn("kat2-kk exceeded 600s", result["output"])
-        process.kill.assert_called_once_with()
+    def test_kk_and_pages_warning_preserves_exit_marker_and_engine_error_checks(self):
+        for name in ("kat2-kk", "kat2-pages"):
+            for exit_code, output in ((4, "KAT2_PROBE_OK\n"), (0, "missing marker\n"),
+                                      (0, "KAT2_PROBE_OK\nERROR: failure\n"),
+                                      (0, "KAT2_PROBE_OK\nSCRIPT ERROR: failure\n")):
+                with self.subTest(name=name, exit_code=exit_code, output=output):
+                    result, _, _ = self.simulate_phase(name, 350, exit_code=exit_code, output=output)
+                    self.assertTrue(result["warning_emitted"])
+                    self.assertFalse(result["timed_out"])
+                    with self.assertRaises(PreflightError):
+                        require_clean_output(result, "KAT2_PROBE_OK")
+
+    def test_kk_and_pages_hard_timeout_records_effective_budget_and_cleanup(self):
+        for name in ("kat2-kk", "kat2-pages"):
+            with self.subTest(name=name):
+                result, waits, process = self.simulate_phase(name, 601)
+                self.assertEqual(waits, [300, 298, None])
+                self.assertEqual(result["seconds"], 600)
+                self.assertTrue(result["warning_emitted"])
+                self.assertTrue(result["timed_out"])
+                self.assertIsNone(result["exit_code"])
+                self.assertIn(f"{name} exceeded 600s", result["output"])
+                process.kill.assert_called_once_with()
 
     def test_other_phases_keep_caller_timeout_without_warning(self):
-        for name in ("kat2-kk-import", "kat2-information", "perf-b-native", "tests", "book-native"):
+        for name in ("kat2-kk-import", "kat2-pages-import", "kat2-information", "perf-b-native", "tests", "book-native"):
             for timeout in (1, 300, 600):
                 with self.subTest(name=name, timeout=timeout):
                     result, waits, process = self.simulate_phase(name, timeout + 1, timeout=timeout)
@@ -167,7 +173,7 @@ class ProductHarnessTests(unittest.TestCase):
                     self.assertIsNone(result["exit_code"])
                     self.assertIn(f"{phase_name} exceeded {effective_timeout}s", result["output"])
                     self.assertEqual(result["timeout_seconds"], effective_timeout)
-                    self.assertEqual(result["warning_emitted"], phase_name == "kat2-kk")
+                    self.assertEqual(result["warning_emitted"], phase_name in ("kat2-kk", "kat2-pages"))
                     self.assertIsNone(unrelated.poll())
                     for name in ("child", "leaf"):
                         pid = int((root / (name + ".pid")).read_text())
@@ -244,20 +250,36 @@ class ProductHarnessTests(unittest.TestCase):
             (source / "game/data/content").mkdir(parents=True)
             (source / "game/art/content").mkdir(parents=True)
             (source / "game/model").mkdir()
+            (source / "content").mkdir()
             (source / "game/model/loader.gd").write_text("runtime code\n")
             shutil.copytree(root / "tests/puzzle_production/fixtures/catalog", source / "tests/puzzle_production/fixtures/catalog")
-            (source / "game/data/registry.json").write_text('{"actual":"catalog"}\n')
+            (source / "game/data/registry.json").write_text(json.dumps(dict(format="picross-runtime-registry-v5", categories=[], entries=[])))
+            (source / "content/registry.json").write_text(json.dumps(dict(format="picross-content-registry-v2", entries=[])))
             (source / "game/data/content/new.json").write_text("not a valid puzzle; must never be certified here")
             (source / "game/art/content/new.png").write_bytes(b"opaque bytes")
+            backgrounds = source / "game/art/backgrounds"
+            backgrounds.mkdir()
+            for name in ("pz-not-a-fixture.png", "pz-not-a-fixture.txt", "pz-not-a-fixture.png.import"):
+                (backgrounds / name).write_bytes(b"must not enter the regression copy")
             project = temp / "regression"
-            copy_regression_game(source, project)
+            original_copy = shutil.copyfile
+            def bounded_copy(src, dst, *args, **kwargs):
+                self.assertNotEqual(Path(src).parent, backgrounds)
+                return original_copy(src, dst, *args, **kwargs)
+            with patch("shutil.copyfile", side_effect=bounded_copy):
+                copy_regression_game(source, project)
             self.assertEqual(len(json.loads((project / "data/registry.json").read_text())["entries"]), 6)
             self.assertFalse((project / "data/content").exists())
             self.assertFalse((project / "art/content").exists())
+            self.assertFalse((project / "art/backgrounds").exists())
             self.assertTrue((project / "model/loader.gd").exists())
+            # The fake foreign namespace was only a copy exclusion counterexample,
+            # never a valid active background catalog for the regular exporter.
+            shutil.rmtree(backgrounds)
             self.assertTrue(restore_player_catalog(source, project))
             self.assertEqual((project / "data/registry.json").read_bytes(), (source / "game/data/registry.json").read_bytes())
             self.assertEqual((project / "art/content/new.png").read_bytes(), b"opaque bytes")
+            self.assertTrue(restore_player_catalog(source, project))
 
     def test_regular_identity_and_study_exclusions_survive_project_move(self):
         root = Path(__file__).resolve().parents[1] / "game"

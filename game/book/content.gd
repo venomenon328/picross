@@ -5,6 +5,7 @@ const CatalogSpread = preload("res://book/catalog.gd")
 const Information = preload("res://book/information.gd")
 const ViewTitle = preload("res://ui/view_title.gd")
 const Marginalia = preload("res://book/marginalia.gd")
+const PuzzleBackground = preload("res://book/puzzle_background.gd")
 signal opening_requested(id: String)
 signal return_requested
 signal catalog_shown
@@ -20,6 +21,9 @@ var recent_panel: BookButton
 var recent_retry: BookButton
 var recent_signature: String = ""
 var marginalia: Marginalia
+var puzzle_background: PuzzleBackground
+var background_visit: int = 0
+var background_binding: Dictionary = {}
 
 func configure_catalog(_catalog: Control) -> void: pass
 
@@ -86,6 +90,43 @@ func _build() -> void:
 	marginalia = Marginalia.new()
 	page.add_child(marginalia)
 	page.move_child(marginalia,0)
+	puzzle_background = PuzzleBackground.new()
+	page.add_child(puzzle_background)
+	page.move_child(puzzle_background,1)
+	puzzle_background.hide()
+	# Completion can hide work without another layout pass. Keep the passive
+	# layer tied to the actual work view, including that existing lifecycle.
+	work.visibility_changed.connect(func() -> void: puzzle_background.visible = work.visible)
+
+func _background_binding() -> Dictionary:
+	if session == null: return {}
+	var entry: Dictionary = Registry.by_id(str(session.definition.id))
+	return {"id":str(session.definition.id),"background":entry.get("background",{"status":"legacy","image_revision":null,"asset":null})}
+
+func begin_background_visit() -> void:
+	if puzzle_background == null or session == null: return
+	background_visit += 1
+	background_binding = _background_binding()
+	puzzle_background.begin_visit(Registry.by_id(str(session.definition.id)),background_visit)
+
+func publish_background_visit() -> void:
+	if puzzle_background == null or session == null: return
+	# Preparation and settlement publish the SAME visit. A restored source or
+	# changed image binding instead begins a fresh visit and freezes it now.
+	if background_binding.is_empty() or background_binding != _background_binding():
+		begin_background_visit()
+	puzzle_background.publish(background_visit)
+
+func leave_background_visit() -> void:
+	background_binding.clear()
+	if puzzle_background != null:
+		puzzle_background.leave()
+		puzzle_background.hide()
+
+func open_puzzle() -> void:
+	# Freeze before super exposes the destination or lays it out in a capture.
+	publish_background_visit()
+	super.open_puzzle()
 
 func _process(_delta: float) -> void:
 	if recent_retry == null: return
@@ -210,13 +251,22 @@ func _layout_book(prepare_board: bool = false) -> void:
 
 func _layout_marginalia() -> void:
 	if marginalia == null or book == null: return
+	if puzzle_background != null:
+		puzzle_background.visible = work.visible
+		puzzle_background.arrange(book.projected_paper(true),size,ui_scale)
 	var key: String = ""
 	var paper: Rect2
 	var hard: Array[Rect2] = []
 	var soft: Array[Rect2] = []
 	var controls: Array[Control] = [status_label,layout_warning,work_repair_button,save_retry]
 	if work.visible and session != null:
-		key = str(Registry.by_id(str(session.definition.id)).get("category_id",""))
+		var entry: Dictionary = Registry.by_id(str(session.definition.id))
+		# selected (including omitted/failed loads) and explicit none never
+		# borrow a Legacy category drawing. Help retains its existing pilot.
+		if str(entry.get("background",{}).get("status","legacy")) != "legacy":
+			marginalia.arrange("",Rect2(),size,ui_scale,hard,soft)
+			return
+		key = str(entry.get("category_id",""))
 		# Unselected categories need no extra clue/font scan for absent artwork.
 		if not Marginalia.ORIGINALS.has(key):
 			marginalia.arrange(key,Rect2(),size,ui_scale,hard,soft)
@@ -286,6 +336,7 @@ func return_to_work() -> void:
 	if book != null: book.information_routes.request_return()
 
 func present_album() -> void:
+	leave_background_visit()
 	super.present_album()
 	catalog_shown.emit()
 

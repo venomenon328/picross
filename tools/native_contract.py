@@ -103,7 +103,7 @@ def checks(group, host='Linux'):
     cases = {
         'core': ['tests', 'current-drawing-tests', 'expected-failure', 'roundtrip-write', 'roundtrip-read', 'controlled-start'],
         'history': ['integration-writer', 'integration-reader'],
-        'catalog': ['kat2-'+mode for mode in CATALOG_MODES]+['kat2-pages-import','kat2-adapter-import','kat2-at-import','kat2-imported-base-copies']
+        'catalog': ['background-contract']+['kat2-'+mode for mode in CATALOG_MODES]+['kat2-pages-import','kat2-adapter-import','kat2-at-import','kat2-imported-base-copies']
                    + ['kat2-adapter-export', 'kat2-adapter-register'],
         'completion': ['ea-import', 'ea-native', 'ea-restart'],
         'adapters': [f'rp6-t{n:02d}-{s}' for n in (4,6,8,9) for s in ('partial','finish','read')]

@@ -221,8 +221,8 @@ Feste Quelle `game/data/background-capability.json`, exakt
 `picross-runtime-background-capability-v1`, `picross-runtime-registry-v6`,
 `picross-background-png2304-v1` und Boolean `enabled`. Höchstens 4096 Bytes.
 Fehlend/false blockiert Hintergrundplan und -register vor Journal/Mutation;
-ungültige Form/Pfade sind Eingabefehler. Echte Repositorydatei bleibt false,
-Aktivierung erst mit HP-I2-Runtime und technischer Abnahme. Keine API-/CLI-/
+ungültige Form/Pfade sind Eingabefehler. True ist erst mit funktionierendem
+HP-I2-Runtime-/Importweg und technischer Abnahme zulässig. Keine API-/CLI-/
 Umgebungsumgehung; `allow_background` ist nur Eingangsformatzulassung.
 Testziele dürfen true verwenden, synthetische Inputs bleiben im echten Katalog
 verboten. Die Testfähigkeit belegt kein ausführbares Spielerverhalten.
@@ -1513,8 +1513,9 @@ Aktivierungsplan-v2-Generationen sind wegen identischer vollständiger Pfadmenge
 ausdrücklich mit v2 kompatibel, ohne neue Felder oder schwächere Deltas. Ein
 Sourcewechsel macht vorhandene Pläne stale. Metadaten und Legacyzieloperationen
 erhalten Source/PNG/Notice vollständig. Hintergrundziel-Rasterupdates und
-Revealadoption folgen dem gesonderten HP-I1c-Vertrag unten; echte Capability false
-bis HP-I2. Kein Solver-/Difficulty-/Bestandsreplay oder tatsächlicher Runtimebeleg.
+Revealadoption folgen dem gesonderten HP-I1c-Vertrag unten; die echte Capability
+folgt dem HP-I2-Runtime-/Abnahmevertrag. Der Werkzeugweg allein ist kein
+Solver-/Difficulty-/Bestandsreplay oder tatsächlicher Runtimebeleg.
 
 
 Erneute v6-Registrierung vergleicht ihren ursprünglichen vollständig geprüften
@@ -1545,5 +1546,27 @@ Runtime v6 und Receipt v2 bleiben unverändert. Aktive Bytes, historische erste
 Freigabe und normalisierter aktueller Exportanker werden getrennt geprüft, auch
 nach Retirement und bei ursprünglicher Registerwiederholung. Budgets, vollständige
 T/K-/Namespaceguards, frische Prüfung unter Lock, Runtime zuletzt und Recovery
-bleiben erhalten. Echte Capability bleibt false; nur isolierte synthetische
-test_only-Ziele verwenden true. Keine Authoring-/Sheet-Formatänderung.
+bleiben erhalten. HP-I1c allein aktiviert die echte Capability nicht; isolierte
+synthetische test_only-Ziele belegen nur seinen Werkzeugweg. Die echte
+Runtimefähigkeit folgt HP-I2 nach Hintergrundvertrag §13. Keine Authoring-/
+Sheet-Formatänderung.
+
+## HP-I2 · Runtimefähigkeit und isolierter Profilimport
+
+Der [Runtimevertrag §13](PUZZLE_BACKGROUNDS.md#13-hp-i2--runtime-darstellung-und-besuch)
+ergänzt den bestehenden v6-Katalogleser im regulären Spieler, ohne eine neue
+ZA-1-, Source-, Plan- oder Journalgeneration einzuführen. Legacy-only bleibt v5;
+alte Difficulty-, Logik-, Runtime-Rätsel- und Saveidentitäten bleiben erhalten.
+selected und none ersetzen die Rätseldekoration nur für gültige neue Bindungen.
+Der aktive PNG-/TXT-Namensraum erhält keine Importsidecars: der gemeinsame
+Vorbereiter arbeitet ausschließlich in isolierten Native-/Windows-/Webkopien.
+Quellhashes, Engineimport und tatsächlich gelieferte PCK-Texturen werden getrennt
+geprüft. Roh-PNG- oder Produktionsbelege werden nicht zusätzlich ausgeliefert.
+
+True-Capability verlangt funktionierenden Runtime-/Importweg und technische
+Abnahme; den tatsächlichen Head-/Abnahmestand führt der Produkt-PR. Geänderte
+Capabilitybytes machen gebundene Altpläne stale und eröffnen keine Recovery
+alter Journalgenerationen. Der gültige 0.6.0-Default und seine Originalformen
+bleiben erhalten, 0.7.0 ausdrücklich opt-in. Der vollständige verpflichtende
+Einzelweg wird gesondert in #560 abgeglichen. Keine zusätzliche persönliche
+Buchabnahme pro Rätsel und keine automatische Sheet- oder Produktionsaktivierung.

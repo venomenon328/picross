@@ -4,6 +4,7 @@ import json
 import shutil
 import hashlib
 import time
+import tempfile
 
 import p1_preflight as toolchain
 from native_results import bind_files
@@ -28,7 +29,7 @@ def prepare_imports(imported_base, workspace):
         source_unchanged_at_copy=True, preparation_seconds=time.perf_counter()-began)
 
 
-def audit_pack(root, engine, executable, environment, run_phase, count, label):
+def audit_pack(root, engine, executable, environment, run_phase, count, label, *, background_inventory=None):
     pack = executable.with_suffix(".pck")
     if not pack.is_file() or pack.stat().st_size <= 4:
         raise toolchain.PreflightError("Missing/empty separate player PCK")
@@ -37,8 +38,14 @@ def audit_pack(root, engine, executable, environment, run_phase, count, label):
             raise toolchain.PreflightError("Invalid separate player PCK header")
     env = environment.copy()
     env["ZA1_PACK_COUNT"] = str(count)
-    run_phase(label, [engine, "--headless", "--main-pack", str(pack), "--script",
-                  str(root / "game/tests/content_pack_probe.gd")], "CONTENT_PACK_OK", phase_env=env)
+    env["HP_BACKGROUND_PACK_TARGET"] = "windows"
+    with tempfile.TemporaryDirectory(prefix="picross-pack-backgrounds-") as temporary:
+        if background_inventory is not None:
+            expected = Path(temporary) / "expected.json"
+            expected.write_text(json.dumps(background_inventory), encoding="utf-8")
+            env["HP_BACKGROUND_EXPECTED"] = str(expected)
+        run_phase(label, [engine, "--headless", "--main-pack", str(pack), "--script",
+                      str(root / "game/tests/content_pack_probe.gd")], "CONTENT_PACK_OK", phase_env=env)
     return {"status": "success", "selected": count, "executable_sha256": toolchain.sha256_file(executable),
             "pack_file": pack.name, "pack_sha256": toolchain.sha256_file(pack), "pack_bytes": pack.stat().st_size,
             "method": "external native probe against actual separate PCK"}
