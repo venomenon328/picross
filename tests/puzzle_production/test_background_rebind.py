@@ -256,6 +256,9 @@ r.adopt(Path(sys.argv[1]), Path(sys.argv[2]))
         self.assertEqual(after, snapshot(self.checkout))
 
     def test_rehashed_source_history_and_mixed_mutation_are_rejected(self):
+        with self.assertRaisesRegex(InvalidInput, "registry generation"):
+            binding.delta({}, {"format": registry.FORMAT, "entries": []},
+                          {"format": registry.BACKGROUND_FORMAT, "entries": [], "backgrounds": []}, [])
         self.start("none")
         self.update(self.export_update())
         source = self.source()
