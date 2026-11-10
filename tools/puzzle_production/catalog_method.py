@@ -12,7 +12,8 @@ NEW = "picross-difficulty-0.4"
 METHODS = (OLD, NEW)
 PATH = "content/difficulty-method.json"
 FORMAT = "picross-difficulty-default-v1"
-PLAN = "picross-difficulty-activation-plan-v1"
+LEGACY_PLAN = "picross-difficulty-activation-plan-v1"
+PLAN = "picross-difficulty-activation-plan-v2"
 LIMIT = 4096
 PLAN_LIMIT = 16 * 1024 * 1024
 
@@ -62,14 +63,17 @@ def current(record):
             "revision": record["revision"] if record else 0}
 
 
-def source_hashes(snapshot):
+def source_hashes(snapshot, plan_format=PLAN):
+    if plan_format == LEGACY_PLAN:
+        from . import catalog_transaction as tx
+        snapshot = tx.pre_background_snapshot(snapshot)
     return {**snapshot["retained"], **{n: io.checksum(raw) for n, raw in snapshot["texts"].items()}}
 
 
 def validate_plan(value):
     from .catalog_rating import check_hash
     exact_keys(value, {"format", "expected", "target", "sources", "result_hash"})
-    require(value["format"] == PLAN and len(canonical_bytes(value)) + 1 <= PLAN_LIMIT, "Invalid activation plan format/size")
+    require(value["format"] in (PLAN, LEGACY_PLAN) and len(canonical_bytes(value)) + 1 <= PLAN_LIMIT, "Invalid activation plan format/size")
     exact_keys(value["expected"], {"method", "method_hash", "record_hash", "revision"})
     exact_keys(value["target"], {"method", "method_hash"})
     for side in ("expected", "target"):
@@ -108,7 +112,7 @@ def adopt(root, value, *, apply=True, fail_step=None):
     value = validate_plan(value)
     snapshot = tx.capture(root)
     previous = from_bytes(snapshot["texts"][PATH])
-    sources = source_hashes(snapshot)
+    sources = source_hashes(snapshot, value["format"])
     if previous and previous["activation_hash"] == value["result_hash"]:
         require(all(previous[k] == v for k, v in value["target"].items()) and
                 previous["previous_record_hash"] == value["expected"]["record_hash"] and
@@ -119,7 +123,8 @@ def adopt(root, value, *, apply=True, fail_step=None):
         return {"status": "no-op", "method": previous["method"]}
     require(current(previous) == value["expected"] and sources == value["sources"], "Stale activation plan")
     record = record_for(value, previous)
-    journal = tx.prepare(root, snapshot, {PATH: canonical_bytes(record) + b"\n"}, operation="method-activation")
+    journal = tx.prepare(root, snapshot, {PATH: canonical_bytes(record) + b"\n"}, operation="method-activation",
+                         generation="background" if value["format"] == PLAN else "sd2")
     if apply: tx.execute(root, journal, fail_step=fail_step)
     return {"status": "activated" if apply else "planned-activation", "method": record["method"], "record_hash": record["record_hash"]}
 

@@ -18,7 +18,7 @@ from . import catalog_io as io, reveal_source as reveal
 from . import operation_diagnostics as diagnostic
 
 PREFIX = b'{"format":"picross-reveal-adoption-journal-v1",'
-PREFIXES = (PREFIX, b'{"format":"picross-reveal-adoption-journal-v2",')
+PREFIXES = (PREFIX, b'{"format":"picross-reveal-adoption-journal-v2",', b'{"format":"picross-reveal-adoption-journal-v3",')
 NORMAL_LIMIT = 24 * 1024 * 1024
 LIMIT = 128 * 1024 * 1024
 
@@ -46,7 +46,7 @@ def read_journal(root, name="content/.registration-pending.json"):
 
 def journal_bytes(j):
     raw = b'{"format":' + canonical_bytes(j["format"]) + b"," + canonical_bytes({k: v for k, v in j.items() if k != "format"})[1:] + b"\n"
-    limit = LIMIT if j["format"] in ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2") else NORMAL_LIMIT
+    limit = LIMIT if j["format"] in ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2", "picross-reveal-adoption-journal-v3") else NORMAL_LIMIT
     if len(raw) > limit: raise Aborted("resource_limit: transaction journal exceeds byte limit")
     return raw
 
@@ -178,7 +178,7 @@ def inventory(j, raw, *, restore=None):
             for i, n in enumerate(names)}
 
 
-def temp_candidates(j, name, additions=None, *, restore=None):
+def temp_candidates(j, name, additions=None, *, restore=None, limit=64 * 1024 * 1024):
     from . import catalog_transaction as tx
     if name in j.get("replacements", {}):
         for v in j['replacements'][name].values(): yield decode_binary(v)
@@ -192,17 +192,19 @@ def temp_candidates(j, name, additions=None, *, restore=None):
             values.append(restore.encode())
         yield from values
     elif additions and name in additions:
-        yield io.read(additions[name].parent, additions[name].name, 64 * 1024 * 1024)
+        yield io.read(additions[name].parent, additions[name].name, limit)
 
 
 def check_temps(root, j, raw, *, additions=None, temps=None, restore=None):
+    from . import catalog_transaction as tx
     temps = inventory(j, raw, restore=restore) if temps is None else temps
     present = set()
     for name, temporary in temps.items():
-        data = io.read(root, temporary, 64 * 1024 * 1024, missing=True)
+        limit = tx.file_limit(root, name, j)
+        data = io.read(root, temporary, limit, missing=True)
         if data is None: continue
         if name in j.get('replacements',{}) or name in j['old'] or additions and name in additions:
-            require(any(candidate.startswith(data) for candidate in temp_candidates(j,name,additions,restore=restore)), "Foreign transaction temporary bytes: " + temporary)
+            require(any(candidate.startswith(data) for candidate in temp_candidates(j,name,additions,restore=restore,limit=limit)), "Foreign transaction temporary bytes: " + temporary)
         else:
             # Interrupted package additions have no backup bytes in the journal;
             # only complete, hash-bound temporaries are recoverable.
@@ -233,6 +235,8 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
     raw = journal_bytes(j) if raw is None else raw
     view = _JournalView(j, raw) if _view is None else _view
     j, registries = view.j, view.registries
+    if not tx.background(j):
+        tx.require_legacy_background(root, *registries, runtimes=(j["old"][tx.RUNTIME], j["new"][tx.RUNTIME]))
     if not old_only: require(read_journal(root) == raw, "Journal changed; preserve all transaction files")
     temps = check_temps(root, j, raw, additions=additions, temps=view.temps, restore=view.restore)
     require(not old_only or not temps, "Transaction temporary already exists")
@@ -241,6 +245,12 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
     reports = {n for n in j["retained"] if n.startswith(added.ROOT + "/reports/")}
     if j["operation"] == "added-adoption": reports |= tx.report_names(j["report_run"], j["operation"])
     added.source_paths(root, *registries, extra_reports=reports, temporary=temps)
+    if tx.background(j):
+        from . import catalog_background as background
+        sources, assets = background.source_paths(root, *registries, temporary=temps)
+        bound_backgrounds = {n for side in ("old", "new") for n, value in j[side].items() if value is not None}
+        bound_backgrounds |= set(j["retained"]) | set(j["additions"])
+        require(sources | assets <= bound_backgrounds, "Unbound background file; preserve journal")
     allowed_sd = {n for n in j["retained"] if n.startswith("content/difficulty/reports/")} | tx.report_names(j["report_run"], j["operation"])
     sd = io.safe(root, "content/difficulty/reports")
     if sd.exists():
@@ -258,9 +268,9 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
         require(checksum in ([pair["old"]["sha256"]] if old_only else [v["sha256"] for v in pair.values()]), "Foreign/missing reveal; preserve journal: " + n)
         if expected is not None: require(checksum == expected[n], "Binary publication phase changed: " + n)
     for n, h in j["retained"].items():
-        require(io.file_hash(root, n) == h, "Retained source changed; preserve journal: " + n)
+        require(tx.file_hash(root, n, j) == h, "Retained source changed; preserve journal: " + n)
     for n, h in j["additions"].items():
-        data = io.read(root, n, 64 * 1024 * 1024, missing=True)
+        data = io.read(root, n, tx.file_limit(root, n, j), missing=True)
         require(data is None if old_only else data is None or io.checksum(data) == h, "Foreign addition; preserve journal: " + n)
         if expected is not None: require(io.checksum(data) == expected[n], "Addition publication phase changed: " + n)
     packages = {e["production"]["package"] for r in registries for e in r["entries"]}
@@ -334,7 +344,7 @@ def addition_preflight(root, temps):
         path.unlink();sync_directory(path.parent)
 
 
-def write(root, name, data, temporary, guard_fn, *, package_addition=False, replace=None):
+def write(root, name, data, temporary, guard_fn, *, package_addition=False, replace=None, limit=64 * 1024 * 1024):
     target = durable_parents(root, name)
     if data is None:
         guard_fn()
@@ -350,7 +360,7 @@ def write(root, name, data, temporary, guard_fn, *, package_addition=False, repl
             for offset in range(0,len(data),io.CHUNK):
                 io.tick();require(stream.read(io.CHUNK)==data[offset:offset+io.CHUNK],'Package temporary readback differs')
             keep()
-        require(io.read(root,temporary,64*1024*1024)==data,'Complete package temporary differs')
+        require(io.read(root,temporary,limit)==data,'Complete package temporary differs')
         _checkpoint('temp-complete',name);guard_fn()
         rename(io.safe(root,temporary),io.safe(root,name),replace=False)
         diagnostic.count("published_files", work="published: " + name)
@@ -387,7 +397,7 @@ def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
     diagnostic.seconds(recovery_seconds)
     from . import catalog_transaction as tx
     require(isinstance(j, dict), "Invalid catalog journal")
-    registration = j.get("operation") == "registration" and j.get("format") in (tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    registration = j.get("operation") == "registration" and j.get("format") in (tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
     require(registration or publication_seconds is None and recovery_seconds is None,
             "RI-A overrides require a new registration")
     if registration:
@@ -459,9 +469,10 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verif
         for i, n in enumerate(sorted(j["additions"])):
             guard_fn()
             if _verification is not None: _verification.addition(n, additions[n])
-            data = io.read(additions[n].parent, additions[n].name, 64 * 1024 * 1024)
+            limit = tx.file_limit(root, n, j)
+            data = io.read(additions[n].parent, additions[n].name, limit)
             require(io.checksum(data) == j["additions"][n], "Staged package changed")
-            write(root, n, data, temps[n], guard_fn,package_addition=True)
+            write(root, n, data, temps[n], guard_fn,package_addition=True,limit=limit)
             expected[n] = io.checksum(data)
             _checkpoint("P3", n)
             if i == 0 and fail_step == "crash": raise InterruptedError("Injected registration interruption")

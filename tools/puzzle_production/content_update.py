@@ -50,6 +50,8 @@ def recover_update(checkout):
     catalog = categories.load(root/categories.PATH)
     before = validate(json.loads(j["old"][REGISTRY]),catalog)
     after = validate(json.loads(j["new"][REGISTRY]),catalog)
+    from . import catalog_transaction as tx
+    tx.require_legacy_background(root, before, after, runtimes=(j["old"].get(RUNTIME), j["new"].get(RUNTIME)))
     from .content_registry import reject_unbound_ratings
     reject_unbound_ratings(root, before, after)
     changed = [(a,b) for a,b in zip(before["entries"],after["entries"]) if a != b]

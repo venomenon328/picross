@@ -1,7 +1,7 @@
-"""RI-C v6 registration boundaries; no proof authority or persistent cache.
+"""RI-C v6/v7 registration boundaries; no proof authority or persistent cache.
 
 Expectations come from the validated journal. Every comparison reads the current
-filesystem. Only this generation opts in; the shared historical writer stays
+filesystem. Only these generations opt in; the shared historical writer stays
 unchanged. The cooperative lock cannot prevent arbitrary external OS writers.
 """
 from pathlib import Path
@@ -14,7 +14,7 @@ from .authoring_package import require
 
 def supports(journal):
     return (isinstance(journal, dict)
-            and journal.get("format") == "picross-registration-journal-v6"
+            and journal.get("format") in ("picross-registration-journal-v6", "picross-registration-journal-v7")
             and journal.get("operation") == "registration")
 
 
@@ -27,7 +27,7 @@ class Guards:
     """Exact phase expectations, never trusted observations of unchanged files."""
 
     def __init__(self, root, journal, raw, additions=None, *, recovering=False, staged=None):
-        require(supports(journal), "Phased guards require registration v6")
+        require(supports(journal), "Phased guards require registration v6/v7")
         self.root, self.raw = root, raw
         self.view = pub._JournalView(journal, raw)
         self.j = self.view.j
@@ -48,11 +48,28 @@ class Guards:
         self.packages = {e["production"]["package"] for r in self.view.registries for e in r["entries"]}
         self.allowed_files = set(self.j["old"]) | set(self.j["retained"]) | set(self.j["additions"]) | set(self.view.temps.values())
         self.allowed_dirs = {p.as_posix() for n in self.allowed_files for p in Path(n).parents}
+        if tx.background(self.j):
+            from . import catalog_background as background
+            bound = {**self.j["retained"], **self.j["additions"]}
+            for side, registry in zip(("old", "new"), self.view.registries):
+                refs = background.index(registry)
+                for entry in registry["entries"]:
+                    if entry["id"] not in refs: continue
+                    source = background.validate(io.json_bytes(self.j[side][background.path(entry["id"])].encode(), background.LIMIT), entry)
+                    origin = source["origin"]
+                    prefix = origin["package"] + "/external"
+                    binding = origin["approval"]["background"]
+                    if (bound.get(origin["package"] + "/manifest.json") == origin["export_manifest_sha256"] and
+                            not any(n.startswith(prefix + "/") for n in bound) and
+                            all(binding[k]["storage"] != "external" for k in ("manifest", "decision", "derivation"))):
+                        # Only the unused canonical transport root may remain;
+                        # tree() still rejects every child file or directory.
+                        self.allowed_dirs.add(prefix)
         self.temp_parents = {Path(n).parent.as_posix() for n in self.view.temps.values()}
 
     def read(self, name):
-        return (io.read(self.root, name, 64 * 1024 * 1024, missing=True)
-                if name in self.j["additions"] else tx.read(self.root, name))
+        return (io.read(self.root, name, tx.file_limit(self.root, name, self.j), missing=True)
+                if name in self.j["additions"] else tx.read(self.root, name, self.j))
 
     def journal(self, *, before_lock=False):
         require(pub.read_journal(self.root) == (None if before_lock or self.staged else self.raw),
@@ -117,11 +134,11 @@ class Guards:
         pub.check_temps(self.root, self.j, self.raw, additions=self.additions,
                         temps={name: temporary}, restore=self.view.restore)
         self.temp_namespace(Path(name).parent.as_posix())
-        if name.startswith("content/packages/") or name.startswith("content/difficulty/pz-"):
+        if name.startswith(("content/packages/", "content/difficulty/pz-", "content/backgrounds/", "game/art/backgrounds/")):
             self.tree(Path(name).parent.as_posix(), recursive=False)
         if source is not None:
             require(self.additions.get(name) == source and
-                    io.file_hash(source.parent, source.name) == self.j["additions"][name],
+                    io.file_hash(source.parent, source.name, tx.file_limit(self.root, name, self.j)) == self.j["additions"][name],
                     "Staged package changed before publication")
         io.safe(self.root, name)
         io.safe(self.root, temporary)
@@ -135,14 +152,15 @@ class Guards:
         check = lambda: self.target(name, source=source)
         check()
         pub.write(self.root, name, data, self.view.temps[name], check,
-                  package_addition=name in self.j["additions"], replace=self.expected[name] is not None)
+                  package_addition=name in self.j["additions"], replace=self.expected[name] is not None,
+                  limit=tx.file_limit(self.root, name, self.j))
         self.written(name, data)
 
     def cleanup(self):
         # Check precisely the temp about to be removed again, not just a prior
         # inventory. Unknown files/directories are never recursively deleted.
         for name, temporary in sorted(self.view.temps.items()):
-            if io.read(self.root, temporary, 64 * 1024 * 1024, missing=True) is not None:
+            if io.read(self.root, temporary, tx.file_limit(self.root, name, self.j), missing=True) is not None:
                 self.target(name)
                 target = io.safe(self.root, temporary)
                 target.unlink()
@@ -208,7 +226,7 @@ def execute(root, journal, additions, *, fail_step=None, under_lock=None, verifi
             if verification is not None:
                 verification.addition(name, additions[name])
             source = additions[name]
-            data = io.read(source.parent, source.name, 64 * 1024 * 1024)
+            data = io.read(source.parent, source.name, tx.file_limit(root, name, j))
             require(io.checksum(data) == j["additions"][name], "Staged package changed")
             state.write(name, data, source=source)
             pub._checkpoint("P3", name)
