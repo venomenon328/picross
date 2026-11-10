@@ -186,13 +186,21 @@ class BackgroundChangeTests(unittest.TestCase):
         self.assertEqual(snapshot(self.checkout), before)
         write_json(plan / "plan.json", value)
         for malformed in ([], 7, {"current": None}):
-            forged = deepcopy(value)
-            forged["old"][bg.path(self.identifier)] = json.dumps(malformed)
-            forged["plan_hash"] = digest({k: v for k, v in forged.items() if k != "plan_hash"})
-            write_json(plan / "plan.json", forged)
-            with self.subTest(malformed=malformed), self.assertRaisesRegex(InvalidInput, "source object"):
-                change.adopt(self.checkout, plan)
-            self.assertEqual(snapshot(self.checkout), before)
+            for rehash_index in (False, True):
+                forged = deepcopy(value)
+                name = bg.path(self.identifier)
+                forged["old"][name] = json.dumps(malformed)
+                if rehash_index:
+                    # A matching index hash still cannot authorize malformed source data.
+                    catalog = json.loads(forged["old"][tx.REGISTRY])
+                    row = next(r for r in catalog["backgrounds"] if r["id"] == self.identifier)
+                    row["source"] = bg.ref(name, forged["old"][name].encode())
+                    forged["old"][tx.REGISTRY] = bg.encoded(catalog).decode()
+                forged["plan_hash"] = digest({k: v for k, v in forged.items() if k != "plan_hash"})
+                write_json(plan / "plan.json", forged)
+                with self.subTest(malformed=malformed, rehash_index=rehash_index), self.assertRaises(InvalidInput):
+                    change.adopt(self.checkout, plan)
+                self.assertEqual(snapshot(self.checkout), before)
         write_json(plan / "plan.json", value)
         candidate = plan / "input" / requests.directory(work.request) / "original/B-b01.png"
         candidate.unlink()
