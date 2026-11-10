@@ -255,6 +255,8 @@ def record_for(r, directory, package_raw, handoff_raw, inspection, background=No
 
 def sheet_from_record(record, background=None):
     """Project the record and its freshly read bound manifest; no second state."""
+    ap.require(record.get('format') in ('picross-authoring-record-v1', 'picross-authoring-record-v2'),
+               'Unsupported authoring record family for the current sheet; background change work uses its own CLI')
     def image(kind):
         value = record[kind]
         return (value['file'] + ' · SHA-256 ' + value['sha256']) if value and value.get('file') else None

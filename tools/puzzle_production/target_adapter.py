@@ -727,10 +727,11 @@ def main(argv=None):
     p.add_argument("--checkout", type=Path, required=True)
     p.add_argument("--integrated-commit", required=True)
     p.add_argument("--puzzle-id", action="append", required=True)
-    p = sub.add_parser("retire-reveal-production")
-    p.add_argument("--checkout", type=Path, required=True)
-    p.add_argument("--integrated-commit", required=True)
-    p.add_argument("--authoring-revision", nargs=2, metavar=("ID", "REVISION"), action="append", required=True)
+    for command in ("retire-reveal-production", "retire-background-production"):
+        p = sub.add_parser(command)
+        p.add_argument("--checkout", type=Path, required=True)
+        p.add_argument("--integrated-commit", required=True)
+        p.add_argument("--authoring-revision", nargs=2, metavar=("ID", "REVISION"), action="append", required=True)
     args = parser.parse_args(argv)
     observed = args.command in ("export", "plan", "register", "recover-registration")
     diagnostics = diagnostic.Diagnostics(args.command, {k: str(v) if isinstance(v, Path) else v for k, v in vars(args).items()}, stderr=sys.stderr) if observed else None
@@ -749,7 +750,10 @@ def main(argv=None):
                 report_target = diagnostic.report_target(args.operation_report,
                     [getattr(args, k, None) for k in ("checkout", "export", "input", "output_dir", "categories", "difficulty", "approval", "manual_authorization", "palette_exception")] +
                     [Path(__file__).resolve().parents[2]])
-        if args.command == "retire-reveal-production":
+        if args.command == "retire-background-production":
+            from .background_retirement import retire
+            result = retire(args.checkout, args.authoring_revision, args.integrated_commit)
+        elif args.command == "retire-reveal-production":
             from .reveal_retirement import retire
             result = retire(args.checkout, args.authoring_revision, args.integrated_commit)
         elif args.command == "retire-production":

@@ -233,8 +233,10 @@ Er übernimmt die bisherigen zwei Ecken und Ausblendregeln nicht als neue
 Gestaltungspflicht. Die eigentliche Ablösung des Rätselpiloten gehört zur
 Integration und Runtime aus [#561](https://github.com/venomenon328/picross/issues/561);
 bis dahin bleiben die vorhandenen Kategoriezeichnungen bestehen. HP-I1a liefert
-äußere Endabnahme und prüfbaren Export; Registrierung folgt HP-I1b, Darstellung
-HP-I2. Der Gesamtweg bleibt inaktiv. Keine neuen Hilfe-, Katalog- oder
+äußere Endabnahme und prüfbaren Export; HP-I1b1 erste Registrierung, HP-I1b2
+eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss. Darstellung
+bleibt HP-I2, Raster-/Revealneubindung HP-I1c. Die echte Capability bleibt false
+und der Gesamtweg inaktiv. Keine neuen Hilfe-, Katalog- oder
 Einstellungsbilder sind beauftragt.
 
 **BTI-C · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei

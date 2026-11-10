@@ -37,7 +37,8 @@ FORMATS = {"registration": "picross-registration-journal-v6", "update": "picross
 BACKGROUND_FORMATS = {"registration": "picross-registration-journal-v7", "update": "picross-content-update-journal-v6",
            "adoption": "picross-catalog-metadata-journal-v4", "sync": "picross-catalog-metadata-journal-v4",
            "added-adoption": "picross-catalog-metadata-journal-v4", "reveal-adoption": "picross-reveal-adoption-journal-v3",
-           "method-activation": "picross-difficulty-activation-journal-v2"}
+           "method-activation": "picross-difficulty-activation-journal-v2",
+           "background-adoption": "picross-background-adoption-journal-v1"}
 REVEAL_LIMIT = 128 * 1024 * 1024
 
 
@@ -87,7 +88,7 @@ def file_limit(root, name, journal=None):
             ref = refs[entry["id"]]
             require(len(raw) == ref["bytes"] and io.checksum(raw) == ref["sha256"], "Journal background source binding differs")
             source = background_source.validate(io.json_bytes(raw, background_source.LIMIT), entry)
-            origin = source["origin"]
+            origin = background_source.initial(source)["origin"]
             if (origin["package"] == prefix and bound.get(name) == origin["original_package"]["original_zip_sha256"] and
                     bound.get(prefix + "/manifest.json") == origin["export_manifest_sha256"]):
                 return MAX_ZIP
@@ -136,7 +137,8 @@ def text_names(registry, *, legacy=False, previous=False, sd2=True, background=T
     return names
 
 
-def retained_names(root, registry, *, reports=None, previous=False, exclude=(), texts=None, background=True):
+def retained_names(root, registry, *, reports=None, previous=False, exclude=(), texts=None, background=True,
+                   background_snapshot=None):
     from .content_update import notice_path
     if reports is None: _, reports = added.source_paths(root, registry)
     names = set(reports)
@@ -149,7 +151,8 @@ def retained_names(root, registry, *, reports=None, previous=False, exclude=(), 
             names.update(p.relative_to(root).as_posix() for p in directory.rglob("*") if p.is_file())
         for entry in registry["entries"]:
             names.add("game/" + entry["reveal"])
-            names.update(reveal.package(root, entry)[3])
+            names.update(reveal.package(root, entry, **({"background_snapshot": background_snapshot}
+                         if background_snapshot is not None else {}))[3])
         return names - set(exclude)
     for e in registry["entries"]:
         manifest = e["production"]["package"] + "/manifest.json"
@@ -323,7 +326,7 @@ def _stage_check(root, texts, retained, additions=None, replacements=None, legac
                 data = io.read(additions[name].parent, additions[name].name, limit)
             elif replacements and name in replacements:
                 from .catalog_publication import decode_binary
-                data = decode_binary(replacements[name])
+                data = decode_binary(replacements[name]) if replacements[name] is not None else None
             else:
                 data = read(root, name, journal)
             if data is None: continue
@@ -335,9 +338,11 @@ def _stage_check(root, texts, retained, additions=None, replacements=None, legac
 
 def prepare(root, snapshot, changes, *, operation, additions=None, report_run=None, replacements=None, generation="background"):
     additions = additions or {}
-    require(operation in FORMATS, "Unknown transaction operation")
+    require(operation in BACKGROUND_FORMATS, "Unknown transaction operation")
     before = snapshot["registry"]
     require(generation in ("background", "sd2", "at"), "Unknown journal generation")
+    require(operation != "background-adoption" or generation == "background",
+            "Background adoption requires its own journal generation")
     backgrounds = generation == "background"
     current = generation != "at"
     if not backgrounds: snapshot = pre_background_snapshot(snapshot)
@@ -379,7 +384,7 @@ def _delta(j, before, after, root=None):
     reveal_target = None
     background_target = None
     before_backgrounds, after_backgrounds = background_source.index(before), background_source.index(after)
-    if op != "registration":
+    if op not in ("registration", "background-adoption"):
         require(before["format"] == after["format"] and before_backgrounds == after_backgrounds,
                 "Operation changes background registry authority")
     if op == "registration":
@@ -396,6 +401,7 @@ def _delta(j, before, after, root=None):
             require(background(j), "Background registration requires its bound journal generation")
             source_name, notice_name = background_source.path(e["id"]), background_source.notice_path(e["id"])
             source = background_source.validate(io.json_bytes(j["new"][source_name].encode(), background_source.LIMIT), e)
+            require(source["format"] == background_source.FORMAT, "First registration requires background Source v1")
             require(source["origin"]["export_manifest_sha256"] == e["production"]["package_sha256"], "Wrong new background export anchor")
             mutable.update((source_name, notice_name))
             if source["asset"] is not None:
@@ -440,6 +446,9 @@ def _delta(j, before, after, root=None):
             require(j["new"][rating.path(e["id"])] is not None, "Changed logic requires difficulty 0.3")
         package = e["production"]["package"]
         require(package != a["production"]["package"], "Update reuses old package")
+    elif op == "background-adoption":
+        require(j["report_run"] is None, "Background adoption cannot adopt reports")
+        mutable |= background_source.validate_delta(j, before, after, root)
     else:
         require(before == after, "Difficulty operation changes production registry")
         if op == "method-activation":
@@ -501,8 +510,10 @@ def validate_journal(root, j, *, before_write=False):
     new_generation = sd2(j)
     background_generation = background(j)
     exact_keys(j, {"format", "operation", "old", "new", "retained", "additions", "report_run"} | ({"replacements"} if current_generation else set()))
-    require(isinstance(j["format"], str) and isinstance(j["operation"], str) and j["operation"] in FORMATS and
-            j["format"] in (BACKGROUND_FORMATS[j["operation"]], FORMATS[j["operation"]], AT_FORMATS.get(j["operation"]), PREVIOUS_FORMATS.get(j["operation"]), LEGACY_FORMATS.get(j["operation"])), "Unsupported catalog journal")
+    require(isinstance(j["format"], str) and isinstance(j["operation"], str) and
+            any(formats.get(j["operation"]) == j["format"] for formats in
+                (BACKGROUND_FORMATS, FORMATS, AT_FORMATS, PREVIOUS_FORMATS, LEGACY_FORMATS)),
+            "Unsupported catalog journal")
     legacy = j["format"] in LEGACY_FORMATS.values()
     for k in ("old", "new", "retained", "additions"): require(isinstance(j[k], dict), "Invalid journal map")
     require(all(v is None or isinstance(v, str) for side in ("old", "new") for v in j[side].values()), "Invalid journal text")
@@ -543,9 +554,18 @@ def validate_journal(root, j, *, before_write=False):
         if raw is not None:
             source = added.validate(rating.bytes_json(raw.encode(), added.LIMIT), e["id"])["provenance"]["evidence"]
             if source: old_reports.add(source["path"])
+    old_background = None
+    if j["operation"] == "background-adoption":
+        from .catalog_publication import decode_binary
+        # Package bindings are immutable, but live source/image writes can be
+        # between phases. Validate inventory against the journal's old view;
+        # full live ownership guards and the isolated rollback check follow.
+        old_background = (before, {**j["old"], **{
+            name: decode_binary(pair["old"]) if pair["old"] is not None else None
+            for name, pair in j["replacements"].items()}})
     retained = retained_names(root, before, reports=old_reports, previous=not current_generation,
                               exclude=set(j.get("replacements", {})) | report_names(j["report_run"], j["operation"]),
-                              texts=j["old"], background=background_generation)
+                              texts=j["old"], background=background_generation, background_snapshot=old_background)
     require(set(j["retained"]) == retained, "Invalid retained source set")
     for side, registry in (("old", before), ("new", after)):
         from .content_registry import validate
@@ -700,7 +720,8 @@ def _publish_new(target, data):
         Path(temporary).unlink(missing_ok=True)
 
 
-def execute(root, j, additions=None, *, fail_step=None, publication_seconds=None, recovery_seconds=None, _verification=None):
+def execute(root, j, additions=None, *, fail_step=None, publication_seconds=None, recovery_seconds=None,
+            source_check=None, _verification=None):
     diagnostic.seconds(publication_seconds)
     diagnostic.seconds(recovery_seconds)
     require(isinstance(j, dict), "Invalid catalog journal")
@@ -710,7 +731,9 @@ def execute(root, j, additions=None, *, fail_step=None, publication_seconds=None
         from .catalog_publication import execute as current_execute
         return current_execute(root, j, additions, fail_step=fail_step,
                                publication_seconds=publication_seconds, recovery_seconds=recovery_seconds,
+                               **({"source_check": source_check} if source_check is not None else {}),
                                **({"_verification": _verification} if _verification is not None else {}))
+    require(source_check is None, "Source recheck requires background adoption")
     require(_verification is None, "Verification context cannot enter a legacy writer")
     from .content_registry import check_checkout
     additions = additions or {}

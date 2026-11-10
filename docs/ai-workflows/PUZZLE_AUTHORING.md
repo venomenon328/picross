@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 42 · 09.11.2026**
+**Version 0.6.0 · Dokumentrevision 43 · 10.11.2026**
 
 HP-W1 aus [#560](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307)
 spezifiziert den **zukünftigen, noch nicht aktivierten Hintergrundweg** in
@@ -14,7 +14,7 @@ Paketbau und die lesende Inhaltsprüfung nach dem vollständigen
 Export v6. HP-I1b1 ergänzt zielgebundene Erstregistrierung, kompakte aktive
 Source/Receipt, Recovery und ersten Produktionsabschluss. Die echte
 Zielfähigkeit bleibt false bis HP-I2 samt Runtimeabnahme; synthetische kompatible
-Ziele belegen nur den Werkzeugweg. Späterer Hintergrundersatz bleibt HP-I1b2.
+Ziele belegen nur den Werkzeugweg. HP-I1b2 ergänzt den eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss.
 Diese Dokumentrevision führt den Unterstützungsstand nach;
 der aktive Produktionsweg bleibt **0.6.0**
 mit seinen bisherigen Formaten, Freigaben und ZA-1-Prüfungen. Version **0.7.0**
@@ -792,7 +792,7 @@ sicheren äußeren Finalizer nach Hintergrundvertrag §7.4 und den
 Original-ZIP, Handoff, Inventar und frühere Gates bleiben unverändert; der neue
 Record/Sheet-Stand reicht höchstens bis `editorially_approved`. HP-I1b1 ergänzt
 zielgebundene Erstintegration und deren Abschluss; echte Capability false bis
-HP-I2. Späterer Ersatz bleibt HP-I1b2, neue Sheetbedienung #490.
+HP-I2. HP-I1b2 ergänzt späteren Ersatz nach dem eigenen Requestvertrag, neue Sheetbedienung #490.
 HP-W2 unterstützt die eigenständigen Arbeits-/Entscheidungs-/Auftrags-/
 Befundformen nach Hintergrundvertrag §§3–4 sowie `describe/derive/verify`.
 Beauftragte frühe Bildarbeit darf damit als vorbereitet gesichert, eine tatsächlich
@@ -1105,7 +1105,7 @@ Import, Sitzung und Auftragsexport müssen bei ihrer Einführung alle neuen
 Bild-, Options-, Auswahl- und Paketbindungen verlustfrei erhalten; die dafür
 geplanten Generationen und konkreten Reader/Writer stehen im zentralen Vertrag.
 PB-H liefert die Record-v2-/Update-v3-Projektion im Paketbuilder. Das aktuelle
-Offline-Sheet erhält bis einschließlich HP-I1b1 ausschließlich den bytegleichen aktiven
+Offline-Sheet erhält bis einschließlich HP-I1b2 ausschließlich den bytegleichen aktiven
 0.6.0-Regelwerksnapshot und seine Versions-/Revisionsangaben. Neue Optionen,
 Importfähigkeit, Sitzungsformate und Promptlogik folgen gesondert in #490;
 die Builderprojektion ist keine behauptete Sheetfunktion.
@@ -1365,7 +1365,7 @@ Mainbeleg bleibt getrennt im Receipt. Vor Löschung alle gewählten IDs/Bytes
 gegen tatsächlichen Main-Stand prüfen; offene/neuere/fremde Arbeit erhalten
 oder bei nicht trennbarem ID-Baum vor Mutation blockieren. Nach Abschluss sind
 alte innere Refs historische Identitäten, keine Pflicht zu erneutem Dateizugriff.
-Späterer Ersatz und sein revisionsgenauer Abschluss bleiben HP-I1b2;
+HP-I1b2 ergänzt späteren Ersatz und seinen revisionsgenauen Abschluss;
 `retire-reveal-production` wird dadurch kein Hintergrundabschlusswriter.
 
 Bis zur Auswahl bleiben die drei Einzeldateien erreichbar; bis zur tatsächlichen
@@ -1383,3 +1383,28 @@ Auswahl-/Ableitungs-/Integrationsbindungen mit bestätigtem Main-Stand. Historis
 Originalbelege nicht umschreiben, die aktive Bildfassung nicht zurücksetzen.
 Ein späterer reiner Hintergrundersatz erhält seinen eigenen revisionsgenauen
 Abschluss nach denselben Grenzen; offene Geschwisterrevisionen nicht mitlöschen.
+
+### HP-I1b2: eigene Hintergrundrevision und ihr Abschluss
+
+[Hintergrundvertrag §11](../PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel)
+definiert den unveränderlichen `picross-background-adoption-request-v1` als
+eigenen Arbeitsrecord. Tatsächliche Auswahl/Entfernung und Zielautorisierung
+aufzeichnen, keine neue Rasterfreigabe oder Dummy-ZIP. Kontext aus bytegleicher
+aktueller Source und aktuellem freigegebenem Reveal sichern; ursprüngliche
+Revealautorität bleibt in initial erhalten. Die aktuelle 0.6.0-Sheetoberfläche
+weist diesen neuen Recordtyp ausdrücklich zurück; Bedienung bleibt #490.
+Eigene Arbeitsrevision über `catalog_background_change store` samt Index sichern,
+danach `plan` und autorisiertes `adopt` gemäß Werkzeuganleitung. Capability false
+blockiert den echten Zielweg; kein Override. Vorhandene Freigaben nicht erneut
+abfragen. Raster-/Revealneubindung an Hintergrundtargets bleibt HP-I1c.
+
+Nach bestätigter Mainintegration `target_adapter retire-background-production
+--checkout <checkout> --integrated-commit <vollständige-main-SHA>
+--authoring-revision <pz-ID> <revision>` verwenden. origin/main vorher aktualisieren.
+Nur explizit gewählte, vollständig belegte Revisionen/Indexzeilen entfernen;
+neuere Arbeit und aktuelles PNG/none/Notice/Receipt unverändert erhalten.
+Eine frühere tatsächlich integrierte, inzwischen abgelöste Revision darf mit
+ihrem historischen Mainbeleg abgeschlossen werden. Ganze bereits entfernte
+Revision plus Indexzeile ergibt nach frischer Prüfung No-op, Teilreste nicht.
+Kein ursprüngliches Raster-ZIP rekonstruieren, kein Solver-/Buchreplay.
+Der Befehl liefert einen lokalen Diff, keinen automatischen Commit/Merge.

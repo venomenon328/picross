@@ -94,7 +94,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         same = reveal.normalized(root, existing) == entry
         if same and is_background:
             current_background = background.load(root, registry, existing)
-            same = current_background is not None and background.encoded(current_background) == background.encoded(
+            same = current_background is not None and background.encoded(background.initial(current_background)) == background.encoded(
                 background.build(export_dir, m, report, entry))
         if same:
             check_checkout(root, replay=not update and original.get("format") not in (INTEGRATED, background.RECEIPT_FORMAT))
