@@ -463,3 +463,22 @@ Bytegleiche Wiederholung braucht frische vollständige Prüfung, erhält mtime
 und Added und ist auch nach Receipt-v2-Abschluss ohne altes Raster-ZIP möglich.
 Receipt/Source bewahren ursprünglichen Exportanker und Mainbeleg getrennt;
 Produktionscleanup darf keine aktive Auswahl-/Rechtebindung entfernen.
+
+## HP-I1b2 · Hintergrundwechsel und Quellenkompatibilität
+
+Vertrag vor Code, 10.11.2026, [HP-I1b2](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809).
+Die vollständigen geschlossenen Request-/Source-v2-/Plan-/Journalformen und
+Main-/No-op-/Abschlussregeln stehen verbindlich in
+[Hintergrundvertrag §11](PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel).
+Registry v3 und Runtime v6 behalten ihre Felder. Alle Full-/Quick-/API-/CLI-Reader
+bestimmen denselben wirksamen Zustand: v1 direkt, bei v2 Identität/Ursprung aus
+initial und aktuelle Auswahl/Revision/PNG/Notice aus current. Der unveränderte
+Receipt v2 bindet den kanonischen ursprünglichen initial-v1-Ref. Historische Refs
+werden nach Retirement nicht erneut geöffnet; aktuelle Livebytes bleiben geprüft.
+Die vorhandenen SD-Report-v5-, Added-Plan-v4-, Reveal-Plan-v3- und
+Aktivierungsplan-v2-Generationen sind wegen identischer vollständiger Pfadmengen
+ausdrücklich mit v2 kompatibel, ohne neue Felder oder schwächere Deltas. Ein
+Sourcewechsel macht vorhandene Pläne stale. Metadaten und Legacyzieloperationen
+erhalten Source/PNG/Notice vollständig. Hintergrundziel-Rasterupdates und
+Revealadoption bleiben auch indirekt gesperrt (HP-I1c); echte Capability false
+bis HP-I2. Kein Solver-/Difficulty-/Bestandsreplay oder tatsächlicher Runtimebeleg.
