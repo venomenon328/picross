@@ -1630,6 +1630,31 @@ oder ungeprüfte Threadvoraussetzung. Dauerhaft alle selected-Bilder im Web
 auszulassen ist keine funktionierende Webunterstützung. Lokales Bedarfsladen
 ändert nicht den gemeinsamen initialen PCK-Download und ist kein Netzwerkstreaming.
 
+**Konkreter Webadapter:** Die verlustfreie Importkompression (Modus 0) und
+Mipmaps bleiben dieselben wie nativ. `JavaScriptBridge` startet höchstens einen
+gewöhnlichen Blob-Worker, ohne `SharedArrayBuffer` oder COOP-/COEP-Anforderung.
+Er erhält ausschließlich die Bytes des im Spielerpaket gebundenen Import-
+Remaps (`.ctex`), keine Pfade oder Dateien aus Produktionsquellen. Der Adapter
+prüft den fest gebundenen Godot-`GST2`-/Version-1-Container und die Grenzen seiner
+PNG-/WebP-Mipmapblöcke vor der Verarbeitung. Der Worker dekodiert sie asynchron
+mit `createImageBitmap` und `OffscreenCanvas` und gibt einen gepackten RGBA-
+Mipmap-`ArrayBuffer` zurück. Der Hauptthread übernimmt nur den begrenzten
+Bytetransfer und den `Texture2D`-Upload; kein synchrones Web-`ResourceLoader`-
+Laden, Bilddekodieren oder Warten auf den Worker. Eine externe Begleitdatei
+`game/web/background_loader.js` muss im Webexport nachweisbar enthalten sein.
+
+Der Webadapter hält dieselbe vollständige Besuchsbindung und dieselbe einmalige
+Publikationsentscheidung ein. Ein veralteter Worker wird beendet und seine
+Referenzen werden freigegeben; kein Verlaufscache und keine wachsende Queue.
+Fehlende Browser-APIs, ungültige Importcontainer oder fehlgeschlagene Dekodierung
+führen zur diagnostizierten Auslassung dieses Besuchs. Das ist kein pauschaler
+Webausschluss für selected. Das Lesen der gebundenen Importbytes, der begrenzte
+Transfer und der Upload der festen 2304×576-Textur samt Mipmaps bleiben reale
+Hauptthreadarbeit; eine Garantie für die gesamte Framedauer wird nicht behauptet.
+Günstige Node-Mechanikprüfungen und das tatsächliche Web-PCK prüfen Quellbindung
+und Lieferung, ersetzen aber keine ausgeführte Browserinteraktion. HP-I2 behauptet
+ohne einen solchen Lauf auch keine Browserabnahme.
+
 ### 13.4 Profilimport und Spielerexport in isolierten Kopien
 
 Der aktive `background_assets`-Quellnamensraum enthält ausschließlich seine
