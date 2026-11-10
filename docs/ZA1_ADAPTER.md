@@ -120,6 +120,14 @@ ihren gemeinsamen Elternordner und dessen exakten Dateisatz. Endfreigabe und
 vorhandene manuelle/Palette-Autorisierungen behalten ihre bisherigen Exportorte
 und Bytes.
 
+HP-I1b1 präzisiert den dateibasierten Transport: Wenn weder eine externe Ref
+noch eine externe Inventardatei benötigt wird, darf das kanonische leere
+Transportverzeichnis `external/` fehlen. Git und die Journal-Additions übertragen
+Dateien, keine leeren Verzeichnisse. `input.external_root="external"` bleibt
+unverändert; ein fehlender leerer Root gilt nur in diesem eng geprüften Fall
+als leer. Kein Dummyfile, kein zusätzlicher Leerordner und kein Ersatz fehlender
+aktiver Bytes. Externe Bindungen verlangen weiterhin echte sichere Root/Dateien.
+
 ### Eng begrenzte Transportergänzung für verworfene Kandidaten
 
 Bei kompakten PB-H-Eingängen prüft die Exporterstellung zuerst die deklarierte
