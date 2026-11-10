@@ -1,0 +1,219 @@
+{
+  "format": "picross-mj-a-t01-evidence-v1",
+  "product_head": "81b582f7d275f4e1cf8996f3f006e42c2e10efa9",
+  "product_branch": "feat/490-mj-a",
+  "pr": 572,
+  "spec_url": "https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064",
+  "html": {
+    "file": "docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html",
+    "bytes": 439806,
+    "sha256": "cf52d18a022fad4aced32819f3d1067eff5923217b5bcc9580b3c20c8140b864"
+  },
+  "purpose": "MJ-A-T01 originals for independent MJ-A-A01; no product change",
+  "recipient": "Independent A01 reviewer with repository access",
+  "expires": "2026-11-17",
+  "cleanup": "After A01 by separately authorized cleanup, no later than 2026-11-17. Reassess delivery if A01 is still open at expiry. No automatic branch expiry.",
+  "environment": {
+    "os": "Windows 11, NT 10.0.26200.0",
+    "browser": "Google Chrome 157.0.8103.50, headed",
+    "driver": "playwright-core 1.65.0 over loopback CDP",
+    "launch": "Explicit local Start-Process, dedicated empty profile, no-first-run; no security bypass flags",
+    "page": "file: local exact product HTML",
+    "offline": true,
+    "external_page_resources": [],
+    "input": "Real browser fill/select/click, file inputs, native confirmation dialogs, downloads, scrolling; no DOM stub or app-state setters"
+  },
+  "jobs": [
+    {
+      "local_id": "job-e451b913-f034-4448-8e12-fe8e9403043f",
+      "puzzle_id": "pz-t01-a",
+      "motif": "T01-A Â· Papierboot Â· spÃ¤ter pz-t01-a",
+      "phase": "ID-less briefing later assigned pz-t01-a"
+    },
+    {
+      "local_id": "job-2a9b1872-3260-46a6-a9fe-d6266a8b8ca3",
+      "puzzle_id": "pz-synthetic-a",
+      "motif": "T01-B Â· Drachen Â· synthetische Referenzdaten",
+      "phase": "raster_ready"
+    },
+    {
+      "local_id": "job-4156dac9-be4b-4ec6-ac04-8034e15125b3",
+      "puzzle_id": "pz-t01-03",
+      "motif": "T01-C Â· Stern Â· synthetisch",
+      "phase": "reveal_review"
+    },
+    {
+      "local_id": "job-43e5c0a3-1c32-4ab4-9c58-675bcd7be61a",
+      "puzzle_id": "pz-t01-04",
+      "motif": "T01-D Â· Blatt Â· synthetisch",
+      "phase": "motif_review"
+    },
+    {
+      "local_id": "job-d55ab1cb-f7fd-485e-b1e1-086890e68fd1",
+      "puzzle_id": "pz-t01-05",
+      "motif": "T01-E Â· Haus Â· synthetisch",
+      "phase": "brief_ready"
+    },
+    {
+      "local_id": "job-85a9c357-7faa-447b-94e5-e40cc5c075b5",
+      "puzzle_id": "pz-t01-06",
+      "motif": "T01-F Â· Tasse Â· synthetisch",
+      "phase": "raster_review"
+    },
+    {
+      "local_id": "job-3258026b-fb7a-45ce-80f2-e10186f9944a",
+      "puzzle_id": "pz-t01-07",
+      "motif": "T01-G Â· Fisch Â· synthetisch",
+      "phase": "reveal_review"
+    },
+    {
+      "local_id": "job-a553983e-cf98-4e1e-a8e3-c3a5bef1ba7e",
+      "puzzle_id": "pz-t01-08",
+      "motif": "T01-H Â· Blume Â· synthetisch",
+      "phase": "motif_review"
+    },
+    {
+      "local_id": "job-c768961b-06b7-4eef-9d45-6744241a1a64",
+      "puzzle_id": "pz-t01-09",
+      "motif": "T01-I Â· Mond Â· synthetisch",
+      "phase": "blocked"
+    },
+    {
+      "local_id": "job-67a2e0ac-75c7-4c33-9efc-4355eac44f1b",
+      "puzzle_id": "pz-t01-10",
+      "motif": "T01-J Â· Schirm Â· synthetisch",
+      "phase": "brief_ready"
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "S01",
+      "result": "passed",
+      "executed": "Ten jobs, briefing plus brief_ready/reveal_review/motif_review/raster_review/raster_ready/blocked; A initially ID-less then pz-t01-a."
+    },
+    {
+      "id": "S02",
+      "result": "passed",
+      "executed": "Unsaved edits, A-B-A / B-A-B, distinct job options and source/reveal images, C reveal-b, B raster-b with r02 and matching inventory."
+    },
+    {
+      "id": "S03",
+      "result": "passed",
+      "executed": "Bare Record v2 needs projection; matching Update v3 paired, discarded, then explicitly accepted as new B. Separate Update v3 updates existing B; session file reimport."
+    },
+    {
+      "id": "S04",
+      "result": "passed",
+      "executed": "Foreign nonempty production ID, duplicate local job ID and inconsistent production/package binding rejected atomically."
+    },
+    {
+      "id": "S05",
+      "result": "passed",
+      "executed": "Three background refs remain separate; explicit bg-2/bg-3/bg-2 intent preserves independent reveal. Offered status and null decision/derivation remain truthful. Separate motif-role export checked."
+    },
+    {
+      "id": "S06",
+      "result": "passed",
+      "executed": "Actual A/B session, A request and two B request ZIP downloads opened. Rulebook bytes, roles, image bytes, per-member sizes/SHA-256, job and raster/inventory binding checked."
+    },
+    {
+      "id": "S07",
+      "result": "passed",
+      "executed": "Whole collection downloaded/opened, discarded and accepted via preview. Ten ordered jobs, stable local IDs, active job, fields/options/choices/images identical on roundtrip."
+    },
+    {
+      "id": "S08",
+      "result": "passed",
+      "executed": "Explicitly confirmed J reset stays local, rejected collection restore keeps reset, accepted restore recovers baseline. Temporary job removal preserves original ten."
+    },
+    {
+      "id": "S09",
+      "result": "passed_with_observations",
+      "executed": "Two viewport layout inspections and original captures; no horizontal overflow, key controls reachable with document/sidebar scrolling. Ellipses and viewport cropping documented."
+    }
+  ],
+  "captures": [
+    {
+      "file": "01-jobs-1440x900.png",
+      "bytes": 109267,
+      "sha256": "a43df461439be0524bc72d85c19346d30df796f9674e98b660762e2f9f77376a",
+      "width": 1440,
+      "height": 900,
+      "captured_utc": "2026-11-10T19:26:44.846Z",
+      "device_scale_factor": 1,
+      "browser_zoom": "100%",
+      "document_scroll_y": 0,
+      "context_scroll_y": 0,
+      "unaltered": true
+    },
+    {
+      "file": "02-background-1280x800.png",
+      "bytes": 114434,
+      "sha256": "35db1a255bcc86383674493515f6df02e2c88e327aeabbef9a8460307488bb0e",
+      "width": 1280,
+      "height": 800,
+      "captured_utc": "2026-11-10T19:27:42.174Z",
+      "device_scale_factor": 1,
+      "browser_zoom": "100%",
+      "document_scroll_y": 1194,
+      "context_scroll_y": 370,
+      "unaltered": true
+    }
+  ],
+  "downloaded_exports": [
+    {
+      "file": "A-session.json",
+      "bytes": 1046,
+      "sha256": "02f290b5deffc97f8721ed20059c95899c24a8ccc266a0cd0849875669c57eb7",
+      "opened_and_checked": true,
+      "retained_for_review": false
+    },
+    {
+      "file": "B-session.json",
+      "bytes": 5097,
+      "sha256": "ab7bf557835ee492272c605a7bb83fd337c9e1dce8786ccb1943f92b3ea7670e",
+      "opened_and_checked": true,
+      "retained_for_review": false
+    },
+    {
+      "file": "A-request.zip",
+      "bytes": 133733,
+      "sha256": "541e1d114c9480f27f70cf6731eb9b0735766615b186c951ebe824d401fb5e0b",
+      "opened_and_checked": true,
+      "retained_for_review": false
+    },
+    {
+      "file": "B-reveal-request.zip",
+      "bytes": 161245,
+      "sha256": "98f5d1fe7082288e7d67feaab51444813bfb751a9f76fd04c6b36015483954cd",
+      "opened_and_checked": true,
+      "retained_for_review": false
+    },
+    {
+      "file": "B-motif-request.zip",
+      "bytes": 161258,
+      "sha256": "1d2d6ca849b31f36e0131d11187ba29f2cc56511fae0c826b03cd82a0a0531fa",
+      "opened_and_checked": true,
+      "retained_for_review": false
+    },
+    {
+      "file": "workspace-baseline.json",
+      "bytes": 21099,
+      "sha256": "25a408e4338a51d7b8d0cb4f80afc8a6c4d684080514bdcc3b9d01505624b2f9",
+      "opened_and_checked": true,
+      "retained_for_review": false
+    },
+    {
+      "file": "workspace-roundtrip.json",
+      "bytes": 21099,
+      "sha256": "25a408e4338a51d7b8d0cb4f80afc8a6c4d684080514bdcc3b9d01505624b2f9",
+      "opened_and_checked": true,
+      "retained_for_review": false
+    }
+  ],
+  "limitations": [
+    "Synthetic transport declarations include placeholder production hashes; not real package/proof/rights/approval validation. Background images are refs, not fetched or evaluated.",
+    "One explicit Chrome/Windows offline pass, not other browsers, mobile, forced race scheduling, game runtime or independent A01.",
+    "One preliminary screenshot had wrong restored CDP viewport (1249x1277), was discarded. Exactly these two final PNGs are delivered, directly captured without editing."
+  ]
+}
