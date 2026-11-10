@@ -42,6 +42,11 @@
       "reason": "Permanent small synthetic catalog cases exercise actual selected/none and late-source first registration, strict source/index/capability fields, mixed legacy projection and unchanged original/no-op bindings."
     },
     {
+      "path": "tests/puzzle_production/test_catalog_added.py",
+      "disposition": "change-scoped",
+      "reason": "Construct the historical Added recovery fixture with its explicit pre-background journal generation; retain exact old source fields and direct valid v4 rollback without weakening production guards."
+    },
+    {
       "path": "tests/puzzle_production/test_registration_budgets.py",
       "disposition": "change-scoped",
       "reason": "Preserve operation-specific RI-A budget dispatch and bounded journal classification for registration-v7 alongside supported historical generations; no timeout inflation for other writers."
@@ -50,6 +55,11 @@
       "path": "tests/puzzle_production/test_registration_publication.py",
       "disposition": "change-scoped",
       "reason": "Extend existing publication/recovery guards to registration-v7 while retaining the closed old-v6 path and the existing ownership/phase/foreign-byte guarantees; no new performance campaign."
+    },
+    {
+      "path": "tests/puzzle_production/test_reveal_recovery.py",
+      "disposition": "change-scoped",
+      "reason": "Keep historical registration/update/metadata fixtures within their closed source contracts: explicitly create SD2 journals or first validate and remove only inactive background bindings before the existing older-generation conversion. Preserve foreign-source rejection and exact rollback checks."
     },
     {
       "path": "tests/puzzle_production/test_sd2_catalog.py",
