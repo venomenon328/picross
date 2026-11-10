@@ -1,5 +1,13 @@
 # RI: Zuverlässige und messbare Rätselintegration
 
+**HP-I1b1 · 09.11.2026, Vertrag vor Code:**
+[Paketentscheidung #561](https://github.com/venomenon328/picross/issues/561#issuecomment-6754303684)
+überträgt RI-A/B/C ausdrücklich auf Erstregistrierungsjournal v7 und seine
+zusätzlichen Hintergrund-/Capabilityquellen nach dem
+[SD-Catalog-Zusatz](SD_CATALOG.md#hp-i1b1--hintergrundquellen-pläne-und-transaktionen).
+Die folgenden RI-Lieferbeschreibungen behalten ihre damalige Bindung. HP-I1b1
+ist keine neue Performancekampagne und behauptet keine Spiel-/Runtimeabnahme.
+
 Spezifikationsstand: 29.10.2026 · RI-V01 · vom Eigentümer im Chat freigegeben.
 Gesamtvorhaben: [RI / #477](https://github.com/venomenon328/picross/issues/477).
 Geprüfte Ausgangsbasis: `main@ddacc8dbf328923626cbd0235578fda2bfb99c37`.
@@ -256,4 +264,35 @@ gewöhnliche Rätselproduktion eingeführt.
 INT-01 und andere konkrete Produktionsblocker werden erst durch nachgewiesene
 erfolgreiche Wiederaufnahme im jeweiligen Produktionsauftrag erledigt. RI-T01
 prüft das Werkzeug an synthetischen Daten und nimmt keine echten Rätsel ab.
+
+## 6. HP-I1b1 · Erweiterung der belegten Quellenmenge
+
+RI-A-Budget-/Diagnosegrenzen gelten für neue registration-v7 und zugehörige
+Recovery unverändert; sichere Format-/Operationsklassifikation bleibt vor
+Mutation Pflicht. Andere Writer/Recovery behalten ihre bisherigen Fristen.
+Keine Budgetflags im Journal, kein Forcepfad und keine automatische Erhöhung.
+
+RI-B bindet die neuen vollständigen Ein-/Ausgangsbytes im privaten Kontext:
+v6-Original-ZIP/äußere Belege, kompakte Source, gewähltes PNG/Notice oder none
+und die tatsächlich gebundene Zielfähigkeit. Vollständige Eingangsprüfung und
+unabhängiges Stagingreplay bleiben. Die enge 128-MiB-Ausnahme folgt ausschließlich
+dem deklarierten `input/package.zip` bis Inventar/Addition/Guard/Readback; sonstige
+Grenzen unverändert. Keine serialisierte Prüfautorität, kein Cache aus `plan`
+und kein Kontext in Recovery. Tatsächliche HP-W2-Modul-/Codecänderungen weiterhin
+abweisen, ältere Freigaben/Ableitungen nicht auf neue Toolbytes umhängen.
+
+RI-C gilt ausdrücklich für registration-v7 mit vollständigem T/K samt
+Capability/null, Hintergrundsource/Notice/PNG, negativen Erwartungen und beiden
+neuen Namespaces. G0/P0, G2/P2, G5a/P5 (auch unveränderte Runtime), G5b/P5,
+G6/P6 sowie GR0/R0 und GR2/R2 bleiben die vollständigen Prüfgrenzen;
+dazwischen lokale Ziel-/Eltern-/Lock-/Tempprüfungen. Kein nur auf v6 begrenzter
+Dispatchfallback und keine Ausdehnung auf andere Operationen. Der vollständige
+Vertrag und genaue Mengen stehen in SD-Catalog, nicht in einem Zeit-/mtimecache.
+
+Recovery bleibt Rückführung des vollständig gültigen eigenen Altstands, keine
+Vorwärtsfortsetzung. Bei fremden/unklaren Bytes Dateien und Journal erhalten,
+Restzustand ehrlich melden. Runtime zuletzt, Lock erst nach belegtem vollständigem
+Abschluss entfernen. Kleine synthetische Zähl-/Änderungs-/Unterbrechungsfälle
+prüfen die übernommenen Grenzen; keine neue Windows/Linux-Messkampagne oder
+Geschwindigkeitsgarantie. Die reale Capability bleibt false bis HP-I2.
 
