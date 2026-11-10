@@ -92,8 +92,11 @@ func _build() -> void:
 	page.move_child(marginalia,0)
 	puzzle_background = PuzzleBackground.new()
 	page.add_child(puzzle_background)
-	page.move_child(puzzle_background,0)
+	page.move_child(puzzle_background,1)
 	puzzle_background.hide()
+	# Completion can hide work without another layout pass. Keep the passive
+	# layer tied to the actual work view, including that existing lifecycle.
+	work.visibility_changed.connect(func() -> void: puzzle_background.visible = work.visible)
 
 func _background_binding() -> Dictionary:
 	if session == null: return {}
