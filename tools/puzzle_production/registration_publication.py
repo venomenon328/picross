@@ -56,7 +56,7 @@ class Guards:
                 for entry in registry["entries"]:
                     if entry["id"] not in refs: continue
                     source = background.validate(io.json_bytes(self.j[side][background.path(entry["id"])].encode(), background.LIMIT), entry)
-                    origin = source["origin"]
+                    origin = background.initial(source)["origin"]
                     prefix = origin["package"] + "/external"
                     binding = origin["approval"]["background"]
                     if (bound.get(origin["package"] + "/manifest.json") == origin["export_manifest_sha256"] and

@@ -273,7 +273,32 @@ def _readiness(manifest, decision, candidate, derivation):
     return not blockers, blockers
 
 
-def _validate(root, handoff, binding, *, history_repo, deadline, external_root, external, transport=None):
+def _change_context(reads, location, manifest, request, source, entry):
+    """Bind preserved real reveal authority only for the HP-I1b2 request path."""
+    from . import catalog_background as bg
+    source = bg.validate(source, entry)
+    source_ref = bg.ref(bg.path(entry["id"]), bg.encoded(source))
+    ap.require(request["target"] == {"source": source_ref, "origin_sha256": bg.origin_hash(source),
+                                     "image_revision": bg.current(source)["image_revision"]},
+               "Background change targets another active source")
+    actual = reads.read(("package", "."), source_ref, limit=bg.LIMIT, assemble=False)
+    context = manifest["context"]
+    if context["reveal"] is None:
+        # A true early none decision has no candidate/context to review.
+        return
+    copied = reads.read(location, context["reveal_approval"], limit=bg.LIMIT)
+    ap.require(copied == actual, "Background context authority is not the current source bytes")
+    reveal = context["reveal"]
+    expected = bg.initial(source)["origin"]["approval"]["selection"]["reveal"]["sha256"]
+    ap.require(reveal["sha256"] == expected == entry["production"]["reveal_sha256"],
+               "Background context binds another approved reveal")
+    live_ref = {**reveal, "file": "game/" + entry["reveal"]}
+    live = reads.read(("package", "."), live_ref, assemble=False)
+    ap.require(reads.read(location, reveal) == live, "Background reveal copy differs from the live reveal")
+
+
+def _validate(root, handoff, binding, *, history_repo, deadline, external_root, external,
+              transport=None, change_context=None):
     ap.require(type(handoff.get("test_only", False)) is bool, "Invalid package test_only marker")
     binding = validate_binding(binding, package_only=not external)
     deadline = min(deadline, time.monotonic() + ap.SECONDS) if deadline is not None else time.monotonic() + ap.SECONDS
@@ -292,6 +317,9 @@ def _validate(root, handoff, binding, *, history_repo, deadline, external_root, 
         key = (ref["file"], ref["sha256"], ref["bytes"])
         if key not in manifests:
             value = bc.validate_manifest(reads.json(manifest_location, ref))
+            if change_context is not None:
+                ap.require(reads.assembly[ref["file"]] == bc.canonical(value) + b"\n",
+                           "Background change manifest bytes must be canonical")
             ap.require(value["puzzle_id"] == handoff["puzzle_id"] and value["test_only"] == handoff.get("test_only", False),
                        "Background and package puzzle/test_only identities differ")
             identity(revisions, ("manifest", value["job_id"], value["revision"]), ref)
@@ -321,6 +349,9 @@ def _validate(root, handoff, binding, *, history_repo, deadline, external_root, 
             return decisions[key]
         visiting.add(key)
         value = bc.validate_decision(reads.json(decision_location, ref))
+        if change_context is not None:
+            ap.require(reads.assembly[ref["file"]] == bc.canonical(value) + b"\n",
+                       "Background change decision bytes must be canonical")
         ap.require(tuple(value[k] for k in ("puzzle_id", "job_id", "test_only")) == job,
                    "Background predecessor belongs to another job")
         identity(revisions, ("decision", value["job_id"], value["revision"]), ref)
@@ -382,7 +413,10 @@ def _validate(root, handoff, binding, *, history_repo, deadline, external_root, 
                 ap.require(hashlib.sha256(raw).hexdigest() == current["context"]["reveal_approval"]["sha256"],
                            "Background context binds another reveal approval")
 
-        if external:
+        if change_context is not None:
+            _change_context(reads, manifest_location, current, handoff, *change_context)
+
+        if external and change_context is None:
             original_binding = validate_binding(handoff["background"])
             ap.require(original_binding["manifest"]["ref"] == current_ref,
                        "Outer background decision changes the sealed manifest")
@@ -395,7 +429,7 @@ def _validate(root, handoff, binding, *, history_repo, deadline, external_root, 
         # source namespace, even before a derivation is supplied.
         from .authoring_build_contract import names
         names(reads.assembly)
-        derivation = None
+        derivation, output_bytes = None, None
         if binding["derivation"] is not None:
             ap.require(status in ("selected", "none"), "Unselected/rejected background cannot carry a derivation")
             location = reads.location(binding["derivation"])
@@ -467,11 +501,15 @@ def _validate(root, handoff, binding, *, history_repo, deadline, external_root, 
         options = [{"ID": c["id"], "Beschreibung": c["description"], "Datei": c["original"]["file"],
                     "SHA-256": c["original"]["sha256"], "Bildrevision": c["revision"]}
                    for c in current["candidates"]] if current["presentation"]["status"] == "offered" else []
-        return {"status": status, "ready": ready, "blockers": blockers, "binding": binding,
-                "manifest": current, "decision": decision, "derivation": derivation,
-                "options": options, "files": reads.files, "derivative_files": reads.derivative_files,
-                "external_files": {name for storage, name in reads.seen if storage == "external"},
-                "decision_refs": set(decisions)}
+        result = {"status": status, "ready": ready, "blockers": blockers, "binding": binding,
+                  "manifest": current, "decision": decision, "derivation": derivation,
+                  "options": options, "files": reads.files, "derivative_files": reads.derivative_files,
+                  "external_files": {name for storage, name in reads.seen if storage == "external"},
+                  "decision_refs": set(decisions)}
+        if change_context is not None:
+            result.update(candidate=candidate, asset_bytes=output_bytes,
+                          used_files={name for storage, name in reads.seen if storage == "external"})
+        return result
 
 
 def validate(root, handoff, *, history_repo=None, deadline=None, external_root=None, transport=None):
@@ -504,3 +542,27 @@ def validate_external(root, handoff, binding, *, history_repo=None, deadline=Non
         if exc.status == "aborted":
             raise Aborted(str(exc)) from exc
         raise InvalidInput("Outer background binding: " + str(exc)) from exc
+
+
+def validate_change(root, request, source, entry, *, external_root=None, deadline=None):
+    """Fresh complete image-work verification, without a raster handoff or ZIP.
+
+    root is the current catalog view; external_root explicitly locates the
+    immutable authoring revision (or its unchanged plan input/ transport).
+    The source copy is accepted only here as retained context-approval evidence.
+    """
+    from . import background_request
+    request = background_request.validate(request)
+    ap.require(request["puzzle_id"] == entry["id"] and
+               request["test_only"] == entry["production"]["test_only"],
+               "Background change work and target identities differ")
+    try:
+        result = _validate(root, request, request["background"], history_repo=None, deadline=deadline,
+                           external_root=root if external_root is None else external_root,
+                           external=True, change_context=(source, entry))
+        ap.require(result["ready"], "Background change is not ready: " + "; ".join(result["blockers"]))
+        return result
+    except bc.BackgroundError as exc:
+        if exc.status == "aborted":
+            raise Aborted(str(exc)) from exc
+        raise InvalidInput("Background change: " + str(exc)) from exc

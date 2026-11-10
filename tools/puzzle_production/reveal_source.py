@@ -204,8 +204,14 @@ def validate(value, catalog):
     return value
 
 
-def package(root, entry):
-    """Check every stored export byte without replaying a deduction trace."""
+def package(root, entry, *, background_snapshot=None):
+    """Check every stored export byte without replaying a deduction trace.
+
+    A background journal may supply its old registry/text/binary view while
+    live files are between publication phases. Immutable package bytes are
+    still read afresh; the caller separately guards live ownership and stages
+    the complete rollback view before mutating anything.
+    """
     from .content_update import notice_path
     prefix = entry["production"]["package"]
     raw = io.read(root, prefix + "/manifest.json", 8 * 1024 * 1024)
@@ -228,11 +234,12 @@ def package(root, entry):
         original["production"]["package_sha256"] = manifest["entry"]["production"]["package_sha256"]
         receipt(manifest, original, manifest["notice_sha256"], background=True)
         from . import catalog_background as backgrounds
-        registry = background_registry(root)
+        registry = background_registry(root) if background_snapshot is None else background_snapshot[0]
+        texts = None if background_snapshot is None else background_snapshot[1]
         require((entry["id"] in backgrounds.index(registry)) == (manifest["format"] == BACKGROUND_RECEIPT),
                 "Receipt generation differs from registered background authority")
         if manifest["format"] == BACKGROUND_RECEIPT:
-            backgrounds.check_receipt(root, registry, entry, manifest)
+            backgrounds.check_receipt(root, registry, entry, manifest, texts=texts)
         return original, manifest["notice_sha256"], manifest, set(prefix + "/" + n for n in files)
     require(manifest.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5", "picross-target-export-v6") and
             isinstance(manifest.get("files"), dict) and set(files) == set(manifest["files"]) | {"manifest.json"}, "Invalid/incomplete export inventory")
@@ -271,10 +278,10 @@ def package(root, entry):
         require(all(manifest[k] is False for k in ('integration_ready','catalog_ready','registered')) and
                 manifest['technical'] is True and manifest['editorial_approved'] is True,
                 'Invalid immutable background export readiness')
-        registry = background_registry(root)
+        registry = background_registry(root) if background_snapshot is None else background_snapshot[0]
         require(entry['id'] in backgrounds.index(registry), 'Missing registered background authority')
-        source = backgrounds.load(root, registry, entry)
-        require(source['origin']['export_manifest_sha256'] == io.checksum(raw),
+        source = backgrounds.load(root, registry, entry, texts=None if background_snapshot is None else background_snapshot[1])
+        require(backgrounds.initial(source)['origin']['export_manifest_sha256'] == io.checksum(raw),
                 'Background origin export binding differs')
     notice_hash=sha(manifest['files'].get('runtime/'+notice_path(entry).removeprefix('game/')))
     return deepcopy(entry), notice_hash, None, set(prefix + "/" + n for n in files)

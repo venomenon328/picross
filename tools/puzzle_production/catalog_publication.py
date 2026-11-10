@@ -1,4 +1,4 @@
-"""AT durable publication and repeatable recovery, shared by all catalog writers.
+"""Durable publication and repeatable recovery, shared by all catalog writers.
 
 The journal is the only backup authority. Forward guards require the exact
 phase reached by this process; recovery accepts only fully verified own states.
@@ -6,19 +6,24 @@ phase reached by this process; recovery accepts only fully verified own states.
 import base64
 from copy import deepcopy
 import ctypes
+import io as streams
 import os
 from pathlib import Path
 import re
 import tempfile
 from contextlib import contextmanager
+from types import SimpleNamespace
 
 from .authoring_package import require, sha
-from .contract import canonical_bytes, exact_keys, integer, Aborted
+from .contract import canonical_bytes, exact_keys, integer, Aborted, InvalidInput
 from . import catalog_io as io, reveal_source as reveal
 from . import operation_diagnostics as diagnostic
 
 PREFIX = b'{"format":"picross-reveal-adoption-journal-v1",'
-PREFIXES = (PREFIX, b'{"format":"picross-reveal-adoption-journal-v2",', b'{"format":"picross-reveal-adoption-journal-v3",')
+BACKGROUND_FORMAT = "picross-background-adoption-journal-v1"
+BINARY_FORMATS = ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2",
+                  "picross-reveal-adoption-journal-v3", BACKGROUND_FORMAT)
+PREFIXES = tuple(b'{"format":' + canonical_bytes(value) + b',' for value in BINARY_FORMATS)
 NORMAL_LIMIT = 24 * 1024 * 1024
 LIMIT = 128 * 1024 * 1024
 
@@ -36,7 +41,7 @@ def read_journal(root, name="content/.registration-pending.json"):
     size = p.stat().st_size
     if size > LIMIT: raise Aborted("resource_limit: journal exceeds 128 MiB")
     with p.open("rb") as stream: prefix = stream.read(4096)
-    require(size <= NORMAL_LIMIT or prefix.startswith(PREFIXES), "Only reveal journals may exceed 24 MiB")
+    require(size <= NORMAL_LIMIT or prefix.startswith(PREFIXES), "Only declared binary journals may exceed 24 MiB")
     raw = io.read(root, name, LIMIT if prefix.startswith(PREFIXES) else NORMAL_LIMIT)
     active = diagnostic.frame.get()
     if active is not None and hasattr(active, "journal_raw"):
@@ -46,7 +51,7 @@ def read_journal(root, name="content/.registration-pending.json"):
 
 def journal_bytes(j):
     raw = b'{"format":' + canonical_bytes(j["format"]) + b"," + canonical_bytes({k: v for k, v in j.items() if k != "format"})[1:] + b"\n"
-    limit = LIMIT if j["format"] in ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2", "picross-reveal-adoption-journal-v3") else NORMAL_LIMIT
+    limit = LIMIT if j["format"] in BINARY_FORMATS else NORMAL_LIMIT
     if len(raw) > limit: raise Aborted("resource_limit: transaction journal exceeds byte limit")
     return raw
 
@@ -69,6 +74,8 @@ def binary_chunks(value):
     for start in range(0, len(value["base64"]), io.CHUNK):
         io.tick()
         encoded = value["base64"][start:start + io.CHUNK]
+        require(start + io.CHUNK >= len(value["base64"]) or "=" not in encoded,
+                "Noncanonical intermediate Base64 padding")
         raw = base64.b64decode(encoded, validate=True)
         require(base64.b64encode(raw).decode("ascii") == encoded, "Noncanonical Base64")
         yield raw
@@ -80,21 +87,68 @@ def decode_binary(value):
     return raw
 
 
+def nullable_binaries(j):
+    return j.get("format") == BACKGROUND_FORMAT and j.get("operation") == "background-adoption"
+
+
+def binary_hash(value):
+    return value["sha256"] if value is not None else None
+
+
+def replacement_hash(root, name, j):
+    # Missing is an actual state only in the new closed nullable generation.
+    return io.checksum(io.read(root, name, reveal.IMAGE_LIMIT, missing=nullable_binaries(j)))
+
+
+def _validate_background_image(path):
+    """Check an actual HP-W2 output, independently of its declared metadata."""
+    from PIL import Image, ImageFile
+    from . import background_assets as assets
+    from .background_contract import BackgroundError, MAX_PNG
+    raw = io.read(path.parent, path.name, MAX_PNG)
+    try:
+        assets._png(raw, SimpleNamespace(check=io.tick))
+        require(not ImageFile.LOAD_TRUNCATED_IMAGES, "Strict PNG decoding was disabled")
+        with Image.open(streams.BytesIO(raw), formats=("PNG",)) as image:
+            image.verify()
+        with Image.open(streams.BytesIO(raw), formats=("PNG",)) as image:
+            require(image.mode == "RGBA" and image.size == (2304, 576) and image.info == {"srgb": 0},
+                    "Background binary does not match the fixed PNG profile")
+            image.load()
+            assets._diagnostic(image)
+            pixels = image.tobytes()
+            for offset in range(0, len(pixels), 4 * 65536):
+                io.tick()
+                block = pixels[offset:offset + 4 * 65536]
+                require(all(block[i + 3] or block[i:i + 3] == b"\0\0\0" for i in range(0, len(block), 4)),
+                        "Background transparent RGB is not zero")
+    except (BackgroundError, OSError, ValueError, SyntaxError) as exc:
+        raise InvalidInput("Invalid background journal image: " + str(exc)) from exc
+
+
 def validate_replacements(j, registry):
     replacements = j["replacements"]
     require(isinstance(replacements, dict), "Invalid replacement map")
-    if j["operation"] != "reveal-adoption":
+    backgrounds = nullable_binaries(j)
+    if j["operation"] != "reveal-adoption" and not backgrounds:
         require(not replacements, "This journal cannot replace binaries")
         return
-    entries = {"game/" + e["reveal"]: e for e in registry["entries"]}
-    require(replacements and set(replacements) <= set(entries), "Invalid reveal replacement paths")
+    if backgrounds:
+        from . import catalog_background as background
+        entries = {background.asset_path(e["id"]): e for e in registry["entries"]
+                   if e["id"] in background.index(registry)}
+        require(len(replacements) <= 1 and set(replacements) <= set(entries), "Invalid background replacement paths")
+    else:
+        entries = {"game/" + e["reveal"]: e for e in registry["entries"]}
+        require(replacements and set(replacements) <= set(entries), "Invalid reveal replacement paths")
     total = 0
     for name, pair in replacements.items():
         exact_keys(pair, {"old", "new"})
         for value in pair.values():
+            if value is None and backgrounds: continue
             binary_shape(value)
             total += value["bytes"]
-        require(pair["old"]["sha256"] != pair["new"]["sha256"], "Binary replacement is unchanged")
+        require(binary_hash(pair["old"]) != binary_hash(pair["new"]), "Binary replacement is unchanged or both sides are null")
     if total > 96 * 1024 * 1024: raise Aborted("resource_limit: replacements exceed 96 MiB")
     from .target_adapter import validate_reveal
     with tempfile.TemporaryDirectory(prefix="at-image-check-") as directory:
@@ -102,10 +156,12 @@ def validate_replacements(j, registry):
             p = Path(directory) / ("image" + Path(name).suffix)
             entry = entries[name]
             for value in pair.values():
+                if value is None: continue
                 with p.open("wb") as stream:
                     for block in binary_chunks(value): stream.write(block)
                 require(p.stat().st_size == value["bytes"] and io.file_hash(p.parent, p.name, reveal.IMAGE_LIMIT) == value["sha256"], "Binary backup binding differs")
-                validate_reveal(p, entry["production"]["width"], entry["production"]["height"])
+                if backgrounds: _validate_background_image(p)
+                else: validate_reveal(p, entry["production"]["width"], entry["production"]["height"])
 
 
 @diagnostic.measured("Directory durability", "directory_flushes")
@@ -181,7 +237,8 @@ def inventory(j, raw, *, restore=None):
 def temp_candidates(j, name, additions=None, *, restore=None, limit=64 * 1024 * 1024):
     from . import catalog_transaction as tx
     if name in j.get("replacements", {}):
-        for v in j['replacements'][name].values(): yield decode_binary(v)
+        for v in j['replacements'][name].values():
+            if v is not None: yield decode_binary(v)
         return
     if name in j["old"]:
         values = [v.encode() for v in (j["old"][name], j["new"][name]) if v is not None]
@@ -249,7 +306,7 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
         from . import catalog_background as background
         sources, assets = background.source_paths(root, *registries, temporary=temps)
         bound_backgrounds = {n for side in ("old", "new") for n, value in j[side].items() if value is not None}
-        bound_backgrounds |= set(j["retained"]) | set(j["additions"])
+        bound_backgrounds |= set(j["retained"]) | set(j["additions"]) | set(j["replacements"])
         require(sources | assets <= bound_backgrounds, "Unbound background file; preserve journal")
     allowed_sd = {n for n in j["retained"] if n.startswith("content/difficulty/reports/")} | tx.report_names(j["report_run"], j["operation"])
     sd = io.safe(root, "content/difficulty/reports")
@@ -264,8 +321,9 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
         require(current in [v.encode() if v is not None else None for v in candidates], "Transaction target changed; preserve journal: " + n)
         if expected is not None: require(io.checksum(current) == expected[n], "Transaction phase changed: " + n)
     for n, pair in j.get("replacements", {}).items():
-        checksum = io.file_hash(root, n, reveal.IMAGE_LIMIT)
-        require(checksum in ([pair["old"]["sha256"]] if old_only else [v["sha256"] for v in pair.values()]), "Foreign/missing reveal; preserve journal: " + n)
+        checksum = replacement_hash(root, n, j)
+        require(checksum in ([binary_hash(pair["old"])] if old_only else [binary_hash(v) for v in pair.values()]),
+                "Foreign/missing binary; preserve journal: " + n)
         if expected is not None: require(checksum == expected[n], "Binary publication phase changed: " + n)
     for n, h in j["retained"].items():
         require(tx.file_hash(root, n, j) == h, "Retained source changed; preserve journal: " + n)
@@ -392,11 +450,13 @@ def cleanup_temps(root, j, raw, guard_fn, *, view):
 
 
 def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
-            publication_seconds=None, recovery_seconds=None, _verification=None):
+            publication_seconds=None, recovery_seconds=None, source_check=None, _verification=None):
     diagnostic.seconds(publication_seconds)
     diagnostic.seconds(recovery_seconds)
     from . import catalog_transaction as tx
     require(isinstance(j, dict), "Invalid catalog journal")
+    require(source_check is None or nullable_binaries(j) and callable(source_check),
+            "Source recheck requires background adoption")
     registration = j.get("operation") == "registration" and j.get("format") in (tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
     require(registration or publication_seconds is None and recovery_seconds is None,
             "RI-A overrides require a new registration")
@@ -407,10 +467,10 @@ def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
             return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock, _verification=_verification)
     require(_verification is None, "Verification context requires registration")
     with io.budget(300):
-        return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock)
+        return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock, source_check=source_check)
 
 
-def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verification=None):
+def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, source_check=None, _verification=None):
     from . import registration_publication as phased
     if phased.supports(j):
         return phased.execute(root, j, additions or {}, fail_step=fail_step,
@@ -423,6 +483,9 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verif
         require_context(_verification)
     diagnostic.begin_segment("P0")
     tx.validate_journal(root, j, before_write=True)
+    if nullable_binaries(j):
+        tx._stage_check(root, j["new"], j["retained"],
+                        replacements={name: pair["new"] for name, pair in j["replacements"].items()}, journal=j)
     raw = journal_bytes(j)
     view = _JournalView(j, raw)
     j, temps = view.j, view.temps
@@ -435,6 +498,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verif
     if os.name != "nt": require(hasattr(ctypes.CDLL(None), "renameat2"), "Atomic no-replace rename unavailable")
     addition_preflight(root,[temps[n] for n in j['additions']])
     if _verification is not None: _verification.writer(root, j, additions)
+    if source_check is not None: source_check()
     _checkpoint("P0")
     diagnostic.begin_segment("P1")
     stage_name = "content/.registration-journal-" + io.checksum(raw) + ".tmp"
@@ -457,12 +521,13 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verif
     _checkpoint("P1")
     diagnostic.begin_segment("P2")
     expected = {n: io.checksum(v.encode() if v is not None else None) for n, v in j["old"].items()}
-    expected.update({n: pair["old"]["sha256"] for n, pair in j["replacements"].items()})
+    expected.update({n: binary_hash(pair["old"]) for n, pair in j["replacements"].items()})
     expected.update({n: None for n in j["additions"]})
     guard_fn = lambda: guard(root, j, raw=raw, expected=expected, additions=additions, _view=view)
     # A failed P2 foreign-source guard preserves the published journal.
     guard_fn()
     try:
+        if source_check is not None: source_check()
         if under_lock: under_lock()
         _checkpoint("P2")
         diagnostic.begin_segment("P3")
@@ -478,8 +543,11 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verif
             if i == 0 and fail_step == "crash": raise InterruptedError("Injected registration interruption")
             if i == 0 and fail_step == "files": raise OSError("Injected registration interruption")
         for n, pair in sorted(j["replacements"].items()):
-            guard_fn(); write(root, n, decode_binary(pair["new"]), temps[n], guard_fn)
-            expected[n] = pair["new"]["sha256"]; _checkpoint("P3", n)
+            guard_fn()
+            data = decode_binary(pair["new"]) if pair["new"] is not None else None
+            write(root, n, data, temps[n], guard_fn,
+                  replace=pair["old"] is not None if nullable_binaries(j) else None)
+            expected[n] = binary_hash(pair["new"]); _checkpoint("P3", n)
         if fail_step == "crash-package": raise InterruptedError("Injected update crash after package")
         if j["operation"] == "registration":
             from .target_adapter import verify_export
@@ -494,7 +562,9 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, _verif
             if n == tx.RUNTIME: diagnostic.begin_segment("P5")
             guard_fn()
             data = j["new"][n].encode() if j["new"][n] is not None else None
-            write(root, n, data, temps[n], guard_fn); expected[n] = io.checksum(data)
+            write(root, n, data, temps[n], guard_fn,
+                  replace=j["old"][n] is not None if nullable_binaries(j) else None)
+            expected[n] = io.checksum(data)
             _checkpoint("P5" if n == tx.RUNTIME else "P4", n)
             if fail_step == "crash-" + n or n == tx.REGISTRY and fail_step == "crash-index" or n == tx.RUNTIME and fail_step == "crash-runtime": raise InterruptedError("Injected transaction interruption: " + n)
             if fail_step == n or n == tx.REGISTRY and fail_step == "index": raise OSError("Injected update failure: " + n)
@@ -572,16 +642,21 @@ def recover(root):
     cleanup_temps(root, j, raw, guard_fn, view=view)
     temps = view.temps
     for n, pair in sorted(j["replacements"].items()):
-        if io.file_hash(root, n, reveal.IMAGE_LIMIT) != pair["old"]["sha256"]:
+        current = replacement_hash(root, n, j)
+        if current != binary_hash(pair["old"]):
             guard_fn()
-            write(root, n, decode_binary(pair["old"]), temps[n], guard_fn)
+            data = decode_binary(pair["old"]) if pair["old"] is not None else None
+            write(root, n, data, temps[n], guard_fn,
+                  replace=current is not None if nullable_binaries(j) else None)
         _checkpoint("R1-binary", n)
     for n in sorted(j["old"]):
         if n == tx.RUNTIME: continue
         data = j["old"][n].encode() if j["old"][n] is not None else None
-        if tx.read(root, n) != data:
+        current = tx.read(root, n)
+        if current != data:
             guard_fn()
-            write(root, n, data, temps[n], guard_fn)
+            write(root, n, data, temps[n], guard_fn,
+                  replace=current is not None if nullable_binaries(j) else None)
         _checkpoint("R1-text", n)
     for n in sorted(j["additions"], reverse=True):
         target = io.safe(root, n)
@@ -595,6 +670,7 @@ def recover(root):
     diagnostic.begin_segment("R2")
     guard_fn(); check_checkout(root, pending_journal=raw); guard_fn()
     require(all(tx.read(root, n) == (v.encode() if v is not None else None) for n, v in {**j["old"], tx.RUNTIME: runtime}.items()) and
+            all(replacement_hash(root, n, j) == binary_hash(pair["old"]) for n, pair in j["replacements"].items()) and
             all(not io.safe(root, n).exists() for n in j["additions"]), "Recovery goal differs")
     cleanup_temps(root, j, raw, guard_fn, view=view)
     _checkpoint("R2"); guard_fn()
