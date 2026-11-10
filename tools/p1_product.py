@@ -105,9 +105,10 @@ def run_phase(name: str, command: list[str], environment: dict, timeout: int, lo
         import resource
         usage_before = resource.getrusage(resource.RUSAGE_CHILDREN)
     path = logs / f"{name}.log"
-    # P3-A-F02: only KK may finish after the standard 300s boundary.
-    warning_seconds = 300 if name == "kat2-kk" else None
-    timeout = 600 if name == "kat2-kk" else timeout
+    # P3-A-F02 / HP-I2: measured KK/pages retain the same 300s warning and 600s guard.
+    extended_guard = name in ("kat2-kk", "kat2-pages")
+    warning_seconds = 300 if extended_guard else None
+    timeout = 600 if extended_guard else timeout
     warning_emitted = False
     timed_out = False
     with path.open("wb") as stream, import_settings(command):
