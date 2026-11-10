@@ -12,6 +12,11 @@
   "omitted": "No production.solver, native.*, preflight, delivery or Chromium: no solver, Godot renderer/import/mipmaps, hosting or real content change. Real capability stays false. No legacy retrofit, migration, new performance campaign, automatic gallery or heavy core regression. Windows export does not prove Windows startup. Independent technical review of final diff and CI is the next gate; no merge authorized.",
   "test_changes": [
     {
+      "path": "tests/puzzle_production/test_background_change.py",
+      "disposition": "change-scoped",
+      "reason": "Keep malformed-plan rejection and exact no-mutation guarantees after full source/index validation moved earlier. Check both stale index hashes and rehashed malformed sources; no dependency on the former error wording."
+    },
+    {
       "path": "tests/puzzle_production/test_background_rebind.py",
       "disposition": "change-scoped",
       "reason": "Small real synthetic chronology, v1/v2 selected/none, full exports and Main receipts, current AT approvals, exact no-op/stale checks, journal rollback/foreign bytes and retirement. Reuses established fixtures and independent full/quick readers; no real catalog or retained binary corpus."
