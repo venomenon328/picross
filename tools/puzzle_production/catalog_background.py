@@ -34,17 +34,24 @@ IMAGE_FIELDS = ("image_revision", "candidate_revision", "decision", "derivation"
 
 def initial(source):
     """Return the immutable first-registration authority of a validated source."""
+    if source["format"] == "picross-catalog-background-v3": return initial(source["base"])
     return source["initial"] if source["format"] == CHANGE_FORMAT else source
 
 
 def current(source):
     """Return current image fields without changing the serialized source form."""
+    if source["format"] == "picross-catalog-background-v3":
+        from .background_rebind import image
+        return image(source)
     return source["current"] if source["format"] == CHANGE_FORMAT else source
 
 
 def effective(source):
     """Internal view only: original identity plus effective current image fields."""
-    return {**initial(source), **{field: current(source)[field] for field in IMAGE_FIELDS}}
+    result = {**initial(source), **{field: current(source)[field] for field in IMAGE_FIELDS}}
+    if source["format"] == "picross-catalog-background-v3":
+        result["identity"] = source["events"][-1]["binding"]["identity"]
+    return result
 
 
 def initial_ref(source):
@@ -293,7 +300,7 @@ def _validate_v1(value, entry):
         raise InvalidInput("Background source: " + str(exc)) from exc
 
 
-def _adoption(value, original):
+def _adoption(value, original, *, rebound=False):
     exact_keys(value, {"request", "revision", "target", "background", "authorization"})
     bc._revision(value["revision"])
     directory = "content/authoring/" + original["puzzle_id"] + "/" + value["revision"]
@@ -303,7 +310,7 @@ def _adoption(value, original):
     ap.sha(target["origin_sha256"])
     integer(target["image_revision"], 1, 999999, "previous background revision")
     ap.require(target["origin_sha256"] == origin_hash(original), "Background change has another origin")
-    if target["image_revision"] == 1:
+    if target["image_revision"] == 1 and not rebound:
         ap.require(target["source"] == initial_ref(original), "First background change has another initial source")
     binding = bp.validate_binding(value["background"], package_only=False)
     ap.require(binding["history"] is None, "Background change cannot omit historical candidates")
@@ -325,37 +332,45 @@ def validate(value, entry):
         ap.require(len(raw) <= LIMIT, "Background source exceeds 1 MiB")
         value = bc.parse_json(raw)
         ap.require(isinstance(value, dict), "Background source must be an object")
+        if value.get("format") == "picross-catalog-background-v3":
+            from . import background_rebind
+            return background_rebind.validate(value, entry)
         if value.get("format") != CHANGE_FORMAT:
             return _validate_v1(value, entry)
         exact_keys(value, {"format", "initial", "current"})
         original = _validate_v1(value["initial"], entry)
-        active = exact_keys(value["current"], set(IMAGE_FIELDS) | {"adoption"})
-        integer(active["image_revision"], 2, 1000000, "active background revision")
-        binding = _adoption(active["adoption"], original)
-        target = active["adoption"]["target"]
-        ap.require(active["image_revision"] == target["image_revision"] + 1,
-                   "Background revision must follow its bound predecessor")
-        decision = bc.validate_decision(active["decision"])
-        derivation = active["derivation"]
-        ap.require(isinstance(derivation, dict), "Invalid current background derivation")
-        # Preserve the complete original decision and report. The new adoption
-        # binds their locations; it is not a rewritten raster end approval.
-        authority = {**{key: binding[key] for key in ("manifest", "decision", "derivation")},
-                     "outcome": decision["outcome"], "candidate_id": decision["candidate_id"],
-                     "original": decision["original"], "output": derivation.get("output"),
-                     "profile_sha256": derivation.get("profile_sha256")}
-        _active(active, entry, authority, original["test_only"])
-        ap.require(binding["decision"]["ref"] == ref(binding["decision"]["ref"]["file"], encoded(decision)),
-                   "Current background decision ref differs from its retained bytes")
-        ap.require(binding["derivation"]["ref"] == ref(binding["derivation"]["ref"]["file"], encoded(derivation)),
-                   "Current background derivation ref differs from its retained bytes")
-        if decision["outcome"] == "selected":
-            candidate = {"id": decision["candidate_id"], "revision": active["candidate_revision"],
-                         "provenance": active["provenance"]}
-            _bound(active["notice"], notice_bytes(entry["id"], candidate), name=notice_path(entry["id"]), limit=65536)
+        validate_image(value["current"], original, entry)
         return value
     except bc.BackgroundError as exc:
         raise InvalidInput("Background source: " + str(exc)) from exc
+
+
+def validate_image(active, original, entry, *, rebound=False):
+    active = exact_keys(active, set(IMAGE_FIELDS) | {"adoption"})
+    integer(active["image_revision"], 2, 1000000, "active background revision")
+    binding = _adoption(active["adoption"], original, rebound=rebound)
+    target = active["adoption"]["target"]
+    ap.require(active["image_revision"] == target["image_revision"] + 1,
+               "Background revision must follow its bound predecessor")
+    decision = bc.validate_decision(active["decision"])
+    derivation = active["derivation"]
+    ap.require(isinstance(derivation, dict), "Invalid current background derivation")
+    # Preserve the complete original decision and report. The new adoption
+    # binds their locations; it is not a rewritten raster end approval.
+    authority = {**{key: binding[key] for key in ("manifest", "decision", "derivation")},
+                 "outcome": decision["outcome"], "candidate_id": decision["candidate_id"],
+                 "original": decision["original"], "output": derivation.get("output"),
+                 "profile_sha256": derivation.get("profile_sha256")}
+    _active(active, entry, authority, original["test_only"])
+    ap.require(binding["decision"]["ref"] == ref(binding["decision"]["ref"]["file"], encoded(decision)),
+               "Current background decision ref differs from its retained bytes")
+    ap.require(binding["derivation"]["ref"] == ref(binding["derivation"]["ref"]["file"], encoded(derivation)),
+               "Current background derivation ref differs from its retained bytes")
+    if decision["outcome"] == "selected":
+        candidate = {"id": decision["candidate_id"], "revision": active["candidate_revision"],
+                     "provenance": active["provenance"]}
+        _bound(active["notice"], notice_bytes(entry["id"], candidate), name=notice_path(entry["id"]), limit=65536)
+    return active
 
 
 def notice_bytes(identifier, candidate):
@@ -374,6 +389,11 @@ def notice_bytes(identifier, candidate):
 
 
 def _transition(previous, following):
+    if previous["format"] == "picross-catalog-background-v3":
+        from .background_rebind import transition, normalized
+        ap.require(following["format"] == "picross-catalog-background-v3", "Background change cannot downgrade Source v3")
+        transition(previous, following, normalized(previous), normalized(following), "background-adoption")
+        return
     ap.require(following["format"] == CHANGE_FORMAT and
                encoded(initial(previous)) == encoded(initial(following)),
                "Background change modifies its immutable initial authority")
@@ -426,7 +446,11 @@ def build_change(old_source, entry, request, request_ref, graph, notice_raw):
               "notice": ref(notice_path(entry["id"]), notice_raw) if notice_raw is not None else None,
               "adoption": {"request": deepcopy(request_ref),
                            **{key: deepcopy(request[key]) for key in ("revision", "target", "background", "authorization")}}}
-    source = validate({"format": CHANGE_FORMAT, "initial": deepcopy(initial(old_source)), "current": active}, entry)
+    if old_source["format"] == "picross-catalog-background-v3":
+        from .background_rebind import append
+        source = append(old_source, entry, old_source["events"][-1]["binding"], "background-adoption", image=active)
+    else:
+        source = validate({"format": CHANGE_FORMAT, "initial": deepcopy(initial(old_source)), "current": active}, entry)
     _transition(old_source, source)
     return source
 
@@ -437,7 +461,8 @@ def validate_delta(journal, before, after, root=None):
     Recovery reads compact old/new authorities and the journal's bound binary
     sides; it does not need a retired working directory or raster ZIP.
     """
-    ap.require(journal["format"] == CHANGE_JOURNAL and journal["operation"] == "background-adoption" and
+    from . import background_rebind as rebind
+    ap.require(journal["format"] in (CHANGE_JOURNAL, rebind.BACKGROUND) and journal["operation"] == "background-adoption" and
                journal["additions"] == {} and journal["report_run"] is None,
                "Invalid background adoption journal operation")
     ap.require(before["format"] == after["format"] == REGISTRY_FORMAT and
@@ -451,6 +476,8 @@ def validate_delta(journal, before, after, root=None):
     entry = next(e for e in before["entries"] if e["id"] == identifier)
     previous = _source(None, before, entry, journal["old"])
     following = _source(None, after, entry, journal["new"])
+    ap.require((previous["format"] == rebind.FORMAT) == (journal["format"] == rebind.BACKGROUND),
+               "Background journal generation differs from target")
     _transition(previous, following)
     for side, source in (("old", previous), ("new", following)):
         capability(root, journal[side], required=True)
@@ -584,13 +611,15 @@ def origin_hash(source):
 
 def receipt_binding(source, source_ref):
     return {"origin_sha256": origin_hash(source),
-            "source": initial_ref(source) if source["format"] == CHANGE_FORMAT else deepcopy(source_ref)}
+            "source": initial_ref(source)}
 
 
 def _receipt(source, source_ref, receipt):
     value = exact_keys(receipt.get("background"), {"origin_sha256", "source"})
     ap.require(value == receipt_binding(source, source_ref), "Background receipt/index/origin binding differs")
-    ap.require(receipt["entry"]["production"]["package_sha256"] == initial(source)["origin"]["export_manifest_sha256"],
+    expected = (source["events"][-1]["binding"]["entry"]["production"]["package_sha256"]
+                if source["format"] == "picross-catalog-background-v3" else initial(source)["origin"]["export_manifest_sha256"])
+    ap.require(receipt["entry"]["production"]["package_sha256"] == expected,
                "Background receipt changed original export anchor")
 
 
@@ -614,12 +643,27 @@ def load(root, registry, entry, texts=None):
     ap.require(io.checksum(manifest_raw) == entry["production"]["package_sha256"], "Background physical package binding differs")
     if manifest.get("format") == RECEIPT_FORMAT:
         _receipt(source, index(registry)[entry["id"]], manifest)
+    elif source["format"] == "picross-catalog-background-v3":
+        from . import background_rebind as rebind
+        ap.require(manifest.get("format") in ("picross-target-export-v5", "picross-target-export-v6") and
+                   entry["production"]["package_sha256"] == rebind.normalized(source)["production"]["package_sha256"],
+                   "Rebound background production differs")
+        update = next((e for e in reversed(source["events"]) if e["operation"] == "update"), None)
+        exported = update["export_source"] if update else initial(source)
+        ap.require((manifest["format"] == "picross-target-export-v6") == (exported is not None),
+                   "Rebound export generation differs")
+        if exported is not None:
+            ap.require(build(io.safe(root, entry["production"]["package"]), manifest, None, entry) == exported,
+                       "Rebound v6 export changes its approved background")
     else:
         ap.require(manifest.get("format") == "picross-target-export-v6" and
                    active["origin"]["export_manifest_sha256"] == entry["production"]["package_sha256"],
                    "Background source requires its original v6 export or v2 receipt")
         ap.require(canonical_bytes(build(io.safe(root, entry["production"]["package"]), manifest, None, entry)) == canonical_bytes(initial(source)),
                    "Active background source differs from original approved production")
+    if source["format"] == "picross-catalog-background-v3":
+        from .background_rebind import live
+        live(root, source, entry, texts)
     return source
 
 

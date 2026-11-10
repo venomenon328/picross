@@ -22,7 +22,8 @@ from . import operation_diagnostics as diagnostic
 PREFIX = b'{"format":"picross-reveal-adoption-journal-v1",'
 BACKGROUND_FORMAT = "picross-background-adoption-journal-v1"
 BINARY_FORMATS = ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2",
-                  "picross-reveal-adoption-journal-v3", BACKGROUND_FORMAT)
+                  "picross-reveal-adoption-journal-v3", "picross-reveal-adoption-journal-v4",
+                  "picross-background-adoption-journal-v2", BACKGROUND_FORMAT)
 PREFIXES = tuple(b'{"format":' + canonical_bytes(value) + b',' for value in BINARY_FORMATS)
 NORMAL_LIMIT = 24 * 1024 * 1024
 LIMIT = 128 * 1024 * 1024
@@ -88,7 +89,7 @@ def decode_binary(value):
 
 
 def nullable_binaries(j):
-    return j.get("format") == BACKGROUND_FORMAT and j.get("operation") == "background-adoption"
+    return j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2") and j.get("operation") == "background-adoption"
 
 
 def binary_hash(value):

@@ -365,8 +365,8 @@ gültige aktive Capability, ohne stillen Downgrade.
 | Revealadoption eines Legacyziels im gemischten Katalog | `picross-reveal-plan-v3`, `picross-reveal-adoption-journal-v3`; gültige Runtime/Hintergründe bytegleich. |
 
 Aktive Rating-/Added-/Defaultrecords und Revealrequest/-result v1 bleiben erhalten. Rasterupdate
-und Revealadoption **eines Hintergrundziels** scheitern konkret vor Planung/
-Mutation, auch indirekt. Späterer reiner Hintergrundersatz samt Binär-Add/Delete/
+und Revealadoption **eines Hintergrundziels** benötigen HP-I1c (unten);
+die älteren Generationen blockieren sie weiterhin. Reiner Hintergrundersatz samt Binär-Add/Delete/
 Replace-Recovery folgt HP-I1b2 unten; altes Raster-ZIP wird dafür keine Voraussetzung.
 Zulässige Kategorienquell-/Anzeigenamenpflege ist erhalten, keine neue freie
 Umklassifizierung historischer Entries/Receipts.
@@ -1919,7 +1919,7 @@ kein stdout garantieren. Der bestehende Recoveryeinstieg behält seine Ausgabe
 [vollständiger Normvertrag §11](../../docs/PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel).
 Pillow exakt 12.3.0 in der oben beschriebenen isolierten Imageumgebung; nur ein
 bereits gültig hintergrundgebundenes Ziel je Adoption. Echte Capability false
-bis HP-I2; Legacy-Nachrüstung und Raster-/Revealneubindung bleiben geschlossen.
+bis HP-I2; Legacy-Nachrüstung bleibt geschlossen, Raster-/Revealneubindung folgt HP-I1c.
 
 ```sh
 python -m tools.puzzle_production.catalog_background_change store --root <checkout> --record <record.json> --source-root <vollstaendige-arbeitsdateien>
@@ -1978,3 +1978,39 @@ production.adapter und production.catalog. Der Kern liefert bei Werkzeugentwickl
 Windows; das belegt keinen Windowsstart oder Hintergrundrenderer. Fachoriginale
 werden im Lauf geprüft und danach entfernt, evidence.mode=none; vor Merge bleibt
 ein unabhängiges technisches Review des konkreten Heads erforderlich.
+
+## HP-I1c: Rasterupdate und Revealadoption gültiger Hintergrundziele
+
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/561#issuecomment-6766500497),
+[exakte Formen, Grenzen und Versionsmatrix](../../docs/PUZZLE_BACKGROUNDS.md#12-hp-i1c--aktuelle-raster-revealbindung).
+Die bestehenden `target_adapter plan-update/update`- und
+`catalog_reveal plan/adopt`-Aufrufe bleiben unverändert. Ein Hintergrundziel
+erhält Source v3 mit vollständigem unverändertem v1/v2-Ausgangsstand und begrenzten
+chronologischen Events. Ein Rasterupdate erhält selected/none, technische
+Bildrevision, Rechte und PNG/Notice; v5 bedeutet keine Bildentscheidung.
+V6 muss exakt dieselben aktuellen Bild-/Entscheidungsdaten enthalten. Unpassende
+Exporte und Legacy-Nachrüstung scheitern vor Mutation. Revealadoption benötigt
+weiterhin die tatsächliche AT-Freigabe mit aktuellem Vorgängerhash.
+
+Die Writer wählen nur bei Hintergrundzielen Updatejournal v7 beziehungsweise
+Revealplan v4/Revealjournal v4 und AT-Source v2. Ein folgender separater
+Hintergrundwechsel verwendet Hintergrundplan/-journal v2 und erhält die aktuelle
+Raster-/Revealbindung. Alle übrigen zulässigen Formen bleiben erhalten.
+Die gemeinsam gebundenen Quellen und aktuelle Planbytes werden vor und unter
+Lock frisch geprüft. Alte Pläne nach Raster-, Reveal-, Hintergrund- oder
+Receiptwechsel sind stale; nur exakte eigene Wiederholung ist Byte-/mtime-No-op.
+Bei Unterbrechung bleibt `target_adapter recover-registration` der einzige
+Recoveryeinstieg, mit unverändertem 300-s-Rahmen für diese Operationen.
+
+Die beiden Produktionsabschlüsse prüfen Main und aktuelle Autorität ohne alte
+ZIPs wiederherzustellen. Originale v6-register-Wiederholung darf nach vollständiger
+Prüfung ein No-op sein und stellt keine frühere Definition/Bildwahl wieder her.
+Für Rückbau eines begonnenen Writers das Journal verwenden; eine abgeschlossene
+Source v3 darf nicht durch Entfernen von Events oder Umbenennen auf v1/v2
+zurückgebaut werden. Ein Software-Rollback braucht einen dazu kompatiblen
+Quellenstand. Keine neue aktive Authoring-/Sheetversion und keine reale Capability.
+
+Die kleinen synthetischen Regressionsfälle stehen in
+`tests/puzzle_production/test_background_rebind.py`; bestehende Legacy-,
+Bild-, Quellen- und Transaktionssuiten bleiben den ausgewählten Fachmodulen
+zugeordnet. Originale werden im Lauf geprüft und temporär entfernt.

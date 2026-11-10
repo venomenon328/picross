@@ -90,7 +90,7 @@ def _historical_adoption(history, old_registry, old_entry, row):
     require(source_ref is not None, 'Background revision has no main source')
     source_raw = history.bound(source_name, source_ref, background.LIMIT)
     source = background.validate(io.json_bytes(source_raw, background.LIMIT), old_entry)
-    require(source.get('format') == 'picross-catalog-background-v2' and
+    require(source.get('format') in ('picross-catalog-background-v2', 'picross-catalog-background-v3') and
             source_raw == background.encoded(source), 'Background revision was not adopted on main')
     current = background.current(source)
     expected_adoption = {'request': request_ref, **{key: request[key] for key in
@@ -142,12 +142,13 @@ def _historical_adoption(history, old_registry, old_entry, row):
             background.current(prior)['image_revision'] == request['target']['image_revision'],
             'Committed predecessor changes the immutable background origin')
     context_reveal = _stored_name({'root': manifest_root, 'ref': context['reveal']})
-    require(context_reveal in declared and declared[context_reveal]['sha256'] == old_entry['production']['reveal_sha256'] and
+    from .background_rebind import reveal_hash
+    require(context_reveal in declared and declared[context_reveal]['sha256'] == reveal_hash(source) and
             declared[context_reveal]['bytes'] == context['reveal']['bytes'] and
-            context['reveal']['sha256'] == old_entry['production']['reveal_sha256'] and
+            context['reveal']['sha256'] == reveal_hash(source) and
             history.regular(context_reveal) == history.regular('game/' + old_entry['reveal']),
             'Committed live reveal differs from the retained context')
-    definition = background.initial(source)['identity']['definition']
+    definition = background.effective(source)['identity']['definition']
     history.bound('game/' + old_entry['definition'], definition, 2 * 1024 * 1024)
     background.capability(None, {background.CAPABILITY: history.read(background.CAPABILITY, background.CAPABILITY_LIMIT)},
                           required=True)

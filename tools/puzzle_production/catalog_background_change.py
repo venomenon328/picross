@@ -15,6 +15,7 @@ from .contract import Aborted, InvalidInput, canonical_bytes, digest, exact_keys
 from .background_contract import BackgroundError
 
 FORMAT = "picross-background-adoption-plan-v1"
+REBIND_FORMAT = "picross-background-adoption-plan-v2"
 RESULT = "picross-background-adoption-result-v1"
 PLAN_LIMIT = 24 * 1024 * 1024
 validate_request = requests.validate
@@ -100,7 +101,8 @@ def _build(root, request, raw, payload, *, external_root=None, snapshot=None):
     files = {"input/" + requests.directory(request) + "/" + name: data for name, data in payload.items()}
     if previous is not None:
         files["previous/background.png"] = previous
-    value = {"format": FORMAT, "request": bg.ref("input/" + requests.record_name(request), raw),
+    value = {"format": REBIND_FORMAT if source["format"] == "picross-catalog-background-v3" else FORMAT,
+             "request": bg.ref("input/" + requests.record_name(request), raw),
              "snapshot": {"sources": source_hashes(snapshot), "namespaces": snapshot["namespaces"]},
              "old": journal["old"], "new": journal["new"],
              "files": [bg.ref(name, data) for name, data in sorted(files.items())]}
@@ -114,7 +116,7 @@ def _build(root, request, raw, payload, *, external_root=None, snapshot=None):
 def validate_plan(value):
     value = io.json_bytes(bg.encoded(value), PLAN_LIMIT)
     exact_keys(value, {"format", "request", "snapshot", "old", "new", "files", "plan_hash"})
-    require(value["format"] == FORMAT, "Unsupported background plan format")
+    require(value["format"] in (FORMAT, REBIND_FORMAT), "Unsupported background plan format")
     require(sha(value["plan_hash"]) == digest({k: v for k, v in value.items() if k != "plan_hash"}), "Wrong background plan hash")
     from .background_contract import _ref
     _ref(value["request"])
@@ -161,10 +163,18 @@ def load_plan(path):
     expected = {"input/" + requests.directory(request) + "/" + name for name in payload}
     old_source = value["old"].get(bg.path(request["puzzle_id"]))
     require(isinstance(old_source, str), "Plan lacks its old background source")
-    previous_source = io.json_bytes(old_source.encode(), bg.LIMIT)
-    # Full source validation is done by the independent reconstructed checkout.
-    require(isinstance(previous_source, dict), "Invalid old background source object")
-    prior = previous_source.get("current", previous_source)
+    from . import content_registry, categories
+    registry_text, category_text = value["old"].get(tx.REGISTRY), value["old"].get(categories.PATH)
+    require(isinstance(registry_text, str) and isinstance(category_text, str), "Plan lacks catalog text bindings")
+    registry = content_registry.validate(io.json_bytes(registry_text.encode(), 8 * 1024 * 1024),
+                                        io.json_bytes(category_text.encode(), 131072))
+    entry = next((e for e in registry["entries"] if e["id"] == request["puzzle_id"]), None)
+    require(entry is not None, "Plan lacks its background target entry")
+    previous_source = bg._source(None, registry, entry, value["old"])
+    require(previous_source is not None, "Plan lacks its background source")
+    require((previous_source.get("format") == "picross-catalog-background-v3") == (value["format"] == REBIND_FORMAT),
+            "Background plan generation differs from source")
+    prior = bg.current(previous_source)
     require(isinstance(prior, dict), "Invalid old current background source object")
     if prior.get("asset") is not None: expected.add("previous/background.png")
     require(set(files) == expected, "Background plan contains unbound or duplicate inputs")
