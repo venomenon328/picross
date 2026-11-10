@@ -12,7 +12,7 @@ from unittest.mock import patch
 
 from ci_scope import classify, apply_event_policy, evaluate, JOBS
 from native_contract import GROUPS, PATHS, SCOPES, checks, coverage
-from native_results import bind_files, read, digest, validate_all, validate_payload, validate_rp6_capture
+from native_results import bind_files, read, digest, validate_all, validate_payload, validate_rp6_capture, check_phases, validate_background_log
 from p1_product import parse_args
 from native_runner import requested
 from test_zs2_evidence import selected_log, selected_rows
@@ -110,6 +110,73 @@ class RP6CaptureGate(unittest.TestCase):
 def write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value)+'\n', encoding='utf-8')
+
+
+class BackgroundEvidenceGate(unittest.TestCase):
+    def test_background_result_is_one_closed_positive_integer_record(self):
+        for count in (1, 7):
+            text = 'Godot synthetic banner\nBACKGROUND_TESTS_OK '+json.dumps({'checks':count})+'\n'
+            self.assertEqual(validate_background_log(text), count)
+        payloads = [
+            '{}', '[]', 'null', '{"checks":0}', '{"checks":-1}', '{"checks":true}',
+            '{"checks":false}', '{"checks":null}', '{"checks":"1"}', '{"checks":1.0}',
+            '{"checks":1e0}', '{"checks":NaN}', '{"checks":Infinity}', '{"checks":1e309}',
+            '{"checks":1,"extra":true}', '{"checks":1,"checks":2}', '{"checks":',
+        ]
+        good = 'BACKGROUND_TESTS_OK {"checks":3}\n'
+        malformed = ['BACKGROUND_TESTS_OK '+payload+'\n' for payload in payloads]
+        malformed += ['', 'BACKGROUND_TESTS_OK\n', 'prefix '+good, good+good,
+                      good+'BACKGROUND_TEST_FAILED: synthetic failed assertion\n',
+                      good+'ERROR: synthetic engine failure\n',
+                      good+'SCRIPT ERROR: synthetic runtime failure\n']
+        for text in malformed:
+            with self.subTest(text=text), self.assertRaisesRegex(ValueError, 'BACKGROUND'):
+                validate_background_log(text)
+
+    def test_catalog_gate_rejects_rehashed_background_log_and_marker_changes(self):
+        # Exercise the actual independent phase gate with the complete selected
+        # catalog contract, real log bytes and fresh hashes; no native/PNG claim.
+        with tempfile.TemporaryDirectory() as temporary:
+            directory = Path(temporary)/'catalog'
+            (directory/'logs').mkdir(parents=True)
+            report = {'checks':[]}
+            no_log = {'current-resource-hashes', 'verified-toolchain-assets', 'current-atlas-resources',
+                      'kat2-adapter-export', 'kat2-adapter-register', 'kat2-imported-base-copies'}
+            good = 'BACKGROUND_TESTS_OK {"checks":3}\n'
+
+            def bind_log(row, text):
+                path = directory/'logs'/(row['name']+'.log')
+                path.write_text(text, encoding='utf-8')
+                row['log'] = dict(file=path.name, retained_bytes=path.stat().st_size,
+                                  original_bytes=path.stat().st_size, abbreviated=False, sha256=digest(path))
+
+            for name in checks('catalog'):
+                row = dict(name=name, status='success', seconds=.01, exit_code=0, expected_failure=False)
+                if name not in no_log:
+                    bind_log(row, good if name == 'background-contract' else 'synthetic process output\n')
+                if name == 'background-contract':
+                    row['required_marker'] = 'BACKGROUND_TESTS_OK'
+                report['checks'].append(row)
+            background = next(row for row in report['checks'] if row['name'] == 'background-contract')
+            check_phases(report, checks('catalog'), directory)
+            for text, marker in (
+                ('BACKGROUND_TESTS_OK {"checks":0}\n', 'BACKGROUND_TESTS_OK'),
+                ('BACKGROUND_TESTS_OK {"checks":true}\n', 'BACKGROUND_TESTS_OK'),
+                ('BACKGROUND_TESTS_OK {"checks":3,"extra":true}\n', 'BACKGROUND_TESTS_OK'),
+                (good+good, 'BACKGROUND_TESTS_OK'),
+                (good+'SCRIPT ERROR: synthetic runtime failure\n', 'BACKGROUND_TESTS_OK'),
+                ('FORGED_BACKGROUND_OK {"checks":3}\n', 'FORGED_BACKGROUND_OK'),
+                ('synthetic success with no result\n', None),
+                (good, None),
+                (good, ''),
+            ):
+                bind_log(background, text)
+                if marker is None:
+                    background.pop('required_marker', None)
+                else:
+                    background['required_marker'] = marker
+                with self.subTest(text=text, marker=marker), self.assertRaisesRegex(ValueError, 'BACKGROUND'):
+                    check_phases(report, checks('catalog'), directory)
 
 
 class Selection(unittest.TestCase):
