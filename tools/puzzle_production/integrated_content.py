@@ -82,23 +82,33 @@ def retire(root, ids, integrated_commit):
     index = io.json_bytes(index_bytes, LIMIT)
     rows = index_rows(index)
     original_rows = index_rows(io.json_bytes(git("show", integrated_commit + ":" + INDEX), LIMIT))
-    tree = {}
-    for item in git("ls-tree", "-rz", integrated_commit).split(b"\0"):
-        if item:
-            meta, name = item.split(b"\t", 1)
-            mode, kind, oid = meta.decode().split()
-            tree[name.decode("utf-8")] = (mode, kind, oid)
+    def git_tree(commit):
+        result = {}
+        for item in git("ls-tree", "-rz", commit).split(b"\0"):
+            if item:
+                meta, name = item.split(b"\t", 1)
+                result[name.decode("utf-8")] = tuple(meta.decode().split())
+        return result
 
-    def committed(name, raw):
+    tree = git_tree(integrated_commit)
+    # A later background adoption does not change the original completion
+    # receipt. Its actual current bytes must nevertheless already be on main.
+    main_tree = git_tree("origin/main")
+    main_catalog = categories.validate(io.json_bytes(git("show", "origin/main:" + categories.PATH), 131072))
+    main_registry = registry.validate(io.json_bytes(git("show", "origin/main:" + registry.REGISTRY), LIMIT), main_catalog)
+    main_runtime = io.json_bytes(git("show", "origin/main:" + registry.RUNTIME), LIMIT)
+
+    def committed(name, raw, expected_tree=None):
+        expected_tree = tree if expected_tree is None else expected_tree
         if raw is None:
-            require(name not in tree, "Missing integrated source: " + name)
+            require(name not in expected_tree, "Missing integrated source: " + name)
         else:
-            require(tree.get(name) == ("100644", "blob", blob_id(raw)), "Unmerged or modified production file: " + name)
+            require(expected_tree.get(name) == ("100644", "blob", blob_id(raw)), "Unmerged or modified production file: " + name)
             if os.name != "nt":
                 require(not io.safe(root, name).stat().st_mode & (stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH),
                         "Production file mode changed: " + name)
 
-    retained, removed, plans, scopes = set(), {}, [], {}
+    retained, main_retained, removed, plans, scopes = set(), set(), {}, [], {}
     current_backgrounds, original_backgrounds = backgrounds.index(current), backgrounds.index(original)
     for identifier in ids:
         entry = by_id[identifier]
@@ -111,47 +121,75 @@ def retire(root, ids, integrated_commit):
         selected = selection(identifier, revision)
         current_rows = {name: row for name, row in rows.items() if row["puzzle_id"] == identifier}
         old_rows = {name: row for name, row in original_rows.items() if row["puzzle_id"] == identifier}
-        require(set(old_rows) <= {selected}, "Other authoring revisions need a separate completion decision: " + authoring)
+        bg = identifier in current_backgrounds
+        siblings = (set(current_rows) | set(old_rows)) - {selected}
+        if siblings:
+            require(bg, "Other authoring revisions need a separate completion decision: " + authoring)
+            from .background_request import validate as validate_request
+            for name in sorted(siblings):
+                for selected_rows, historical in ((current_rows, False), (old_rows, True)):
+                    if name not in selected_rows: continue
+                    record_path = selected_rows[name]["record"]
+                    if historical:
+                        require(tree.get(record_path, ())[:2] == ("100644", "blob") and
+                                int(git("cat-file", "-s", integrated_commit + ":" + record_path)) <= 2 * 1024 * 1024,
+                                "Other authoring revisions need a separate completion decision: " + name)
+                        raw = git("show", integrated_commit + ":" + record_path)
+                    else:
+                        raw = io.read(root, record_path, 2 * 1024 * 1024)
+                    record = io.json_bytes(raw, 2 * 1024 * 1024)
+                    require(isinstance(record, dict) and record.get("format") == "picross-background-adoption-request-v1",
+                            "Other authoring revisions need a separate completion decision: " + name)
+                    record = validate_request(record)
+                    require(selection(record["puzzle_id"], record["revision"]) == name,
+                            "Background authoring sibling has the wrong identity")
+        # Preserve explicitly indexed background jobs, including newer/open
+        # ones. Unknown families or unindexed siblings remain a concrete block.
+        scopes[authoring] = _tree(root, authoring)
+        authoring_files_all, _ = scopes[authoring]
+        require(not io.safe(root, authoring).exists() or current_rows or bg and not any(scopes[authoring]),
+                "Unindexed authoring work prevents retirement: " + authoring)
+        require(all(any(name.startswith(directory + "/") for directory in current_rows)
+                    for name in authoring_files_all), "Unindexed authoring work prevents retirement: " + authoring)
+        selected_rows = {name: row for name, row in current_rows.items() if name == selected}
+        original_selected_rows = {name: row for name, row in old_rows.items() if name == selected}
         if existing_receipt is not None:
             require(existing_receipt["integrated_commit"] == integrated_commit,
                     "Already retired production has a different main proof")
-            require(not current_rows and not io.safe(root, authoring).exists(),
-                    "Retired production still has authoring work: " + authoring)
+            require(not selected_rows and not io.safe(root, selected).exists(),
+                    "Retired production still has original authoring work: " + selected)
             scopes[prefix] = _tree(root, prefix)
             require(scopes[prefix][0] == {prefix + "/manifest.json"}, "Retired package has remaining work")
         else:
-            require(current_rows == old_rows, "Unmerged authoring index changes: " + authoring)
-            bg = identifier in current_backgrounds
+            require(selected_rows == original_selected_rows, "Unmerged authoring index changes: " + selected)
             scopes[prefix] = _tree(root, prefix, empty={prefix + "/external"} if bg else ())
-            scopes[authoring] = _tree(root, authoring)
+            scopes[selected] = _tree(root, selected)
             package_files, package_dirs = scopes[prefix]
-            authoring_files, authoring_dirs = scopes[authoring]
-            require(not io.safe(root, authoring).exists() or current_rows,
-                    "Unindexed authoring work prevents retirement: " + authoring)
-            if current_rows:
-                require(authoring_files and all(name.startswith(selected + "/") for name in authoring_files) and
-                        authoring_dirs <= {selected} | {str(p) for n in authoring_files for p in PurePosixPath(n).parents},
-                        "Unknown/open authoring siblings prevent retirement: " + authoring)
-                record = io.json_bytes(io.read(root, current_rows[selected]["record"], LIMIT), LIMIT)
+            authoring_files, authoring_dirs = scopes[selected]
+            require(not io.safe(root, selected).exists() or selected_rows,
+                    "Unindexed authoring work prevents retirement: " + selected)
+            if selected_rows:
+                require(authoring_files, "Incomplete original authoring revision: " + selected)
+                record = io.json_bytes(io.read(root, selected_rows[selected]["record"], LIMIT), LIMIT)
                 require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2") and
                         record.get("puzzle_id") == identifier and record.get("revision") == revision and
                         record.get("state") == "registered" and record.get("blockers") == [],
                         "Authoring revision is not completed: " + selected)
             names = package_files | authoring_files
-            expected = {name for name in tree if name.startswith(prefix + "/") or name.startswith(authoring + "/")}
+            expected = {name for name in tree if name.startswith(prefix + "/") or name.startswith(selected + "/")}
             require(names == expected, "Unmerged additions/deletions in production: " + identifier)
             for name in sorted(names):
                 # Only the exact declared original archive receives its 128 MiB
                 # allowance. Arbitrary catalog/authoring files remain at 64 MiB.
                 limit = tx.file_limit(root, name)
-                if current_rows and name == selected + "/package.zip":
+                if selected_rows and name == selected + "/package.zip":
                     package_ref = record.get("package", {})
                     require(isinstance(package_ref, dict) and package_ref.get("file") == name,
                             "Unbound authoring archive")
                     limit = MAX_ZIP
                 raw = io.read(root, name, limit)
                 committed(name, raw)
-                if current_rows and name == selected + "/package.zip":
+                if selected_rows and name == selected + "/package.zip":
                     require(package_ref.get("bytes") == len(raw) and package_ref.get("sha256") == io.checksum(raw),
                             "Authoring archive binding differs")
                 removed[name] = (io.checksum(raw), len(raw), limit)
@@ -161,19 +199,42 @@ def retire(root, ids, integrated_commit):
                 source = backgrounds.load(root, current, entry)
                 receipt["background"] = backgrounds.receipt_binding(source, current_backgrounds[identifier])
             reveal_source.receipt(receipt, entry, historical_notice, background=True)
-            plans.append((entry, prefix, authoring, receipt, package_dirs, authoring_dirs))
-        require(current_backgrounds.get(identifier) == original_backgrounds.get(identifier),
-                "Background index differs from integrated main")
+            plans.append((entry, prefix, selected, receipt, package_dirs, authoring_dirs))
+        require((identifier in current_backgrounds) == (identifier in original_backgrounds),
+                "Background index membership differs from integrated main")
         retained.update(("game/" + entry["definition"], "game/" + entry["reveal"], reveal_source.identity(entry)["notice"],
                          reveal_source.path(identifier), catalog_rating.path(identifier), catalog_added.path(identifier)))
         if identifier in current_backgrounds:
-            retained.update((backgrounds.CAPABILITY, backgrounds.path(identifier),
-                             backgrounds.asset_path(identifier), backgrounds.notice_path(identifier)))
+            source = backgrounds.load(root, current, entry)
+            require(backgrounds.index(main_registry).get(identifier) == current_backgrounds[identifier],
+                    "Current background is not indexed on main")
+            require(isinstance(main_runtime, dict) and main_runtime.get("format") == backgrounds.RUNTIME_FORMAT and
+                    isinstance(main_runtime.get("entries"), list), "Current background runtime is not on main")
+            matches = [row for row in main_runtime["entries"] if isinstance(row, dict) and row.get("id") == identifier]
+            minimal = {"format": backgrounds.REGISTRY_FORMAT, "entries": [entry],
+                       "backgrounds": [{"id": identifier, "source": current_backgrounds[identifier]}]}
+            expected_projection = backgrounds.projection(minimal,
+                {backgrounds.path(identifier): backgrounds.encoded(source)})[identifier]
+            require(len(matches) == 1 and matches[0].get("background") == expected_projection,
+                    "Current background runtime differs from main")
+            old_ref = original_backgrounds[identifier]
+            require(tree.get(old_ref["file"], ())[:2] == ("100644", "blob") and
+                    int(git("cat-file", "-s", integrated_commit + ":" + old_ref["file"])) <= backgrounds.LIMIT,
+                    "Missing bounded original background source on main")
+            old_raw = git("show", integrated_commit + ":" + old_ref["file"])
+            old_source = backgrounds.validate(io.json_bytes(old_raw, backgrounds.LIMIT), old_entries[identifier])
+            require(backgrounds.ref(old_ref["file"], old_raw) == old_ref and old_raw == backgrounds.encoded(old_source) and
+                    backgrounds.initial(source) == backgrounds.initial(old_source),
+                    "Original background authority differs from integrated main")
+            main_retained.update((backgrounds.CAPABILITY, backgrounds.path(identifier),
+                                  backgrounds.asset_path(identifier), backgrounds.notice_path(identifier)))
         resolved = reveal_source.resolve(root, entry, catalog)
         require(resolved["historical_notice_sha256"] == historical_notice, "Historical notice changed during retirement")
 
     for name in sorted(retained):
         committed(name, io.read(root, name, tx.file_limit(root, name), missing=True))
+    for name in sorted(main_retained):
+        committed(name, io.read(root, name, tx.file_limit(root, name), missing=True), main_tree)
     affected = sorted(set(snapshot["texts"]) | set(snapshot["retained"]) | {INDEX} | set(scopes))
     for start in range(0, len(affected), 20):
         git("diff", "--cached", "--quiet", "--", *affected[start:start + 20])
@@ -190,16 +251,19 @@ def retire(root, ids, integrated_commit):
         return {"status": "no-op", "ids": ids, "integrated_commit": integrated_commit, "replaced_files": 0, "replaced_bytes": 0}
 
     try:
-        for entry, prefix, authoring, receipt, package_dirs, authoring_dirs in plans:
+        for entry, prefix, selected, receipt, package_dirs, authoring_dirs in plans:
             # Individual checked paths only. A racing foreign file survives and
             # prevents directory removal; recursive deletion would erase it.
             for name, (checksum, _, limit) in removed.items():
-                if (name.startswith(prefix + "/") and name != prefix + "/manifest.json") or name.startswith(authoring + "/"):
+                if (name.startswith(prefix + "/") and name != prefix + "/manifest.json") or name.startswith(selected + "/"):
                     require(io.file_hash(root, name, limit) == checksum, "Production changed before deletion: " + name)
                     io.safe(root, name).unlink()
             for directory in sorted(package_dirs | authoring_dirs, key=lambda name: len(name.split("/")), reverse=True):
                 io.safe(root, directory).rmdir()
-            if io.safe(root, authoring).exists(): io.safe(root, authoring).rmdir()
+            if io.safe(root, selected).exists():
+                io.safe(root, selected).rmdir()
+                authoring = str(PurePosixPath(selected).parent)
+                if not any(io.safe(root, authoring).iterdir()): io.safe(root, authoring).rmdir()
             manifest = prefix + "/manifest.json"
             checksum, _, limit = removed[manifest]
             require(_tree(root, prefix) == ({manifest}, set()) and io.file_hash(root, manifest, limit) == checksum,
@@ -207,7 +271,8 @@ def retire(root, ids, integrated_commit):
             raw = canonical_bytes(receipt) + b"\n"
             registry.atomic_bytes(io.safe(root, manifest), raw)
             entry["production"]["package_sha256"] = io.checksum(raw)
-        index["entries"] = [row for row in index["entries"] if row["puzzle_id"] not in ids]
+        completed = {plan[2] for plan in plans}
+        index["entries"] = [row for row in index["entries"] if selection(row["puzzle_id"], row["revision"]) not in completed]
         updated_index = canonical_bytes(index) + b"\n"
         require(io.read(root, INDEX, LIMIT) == index_bytes, "Authoring index changed before retirement replacement")
         if updated_index != index_bytes: registry.atomic_bytes(io.safe(root, INDEX), updated_index)

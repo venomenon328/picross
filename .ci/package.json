@@ -1,75 +1,55 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/561",
-  "package": "HP-I1b1",
+  "package": "HP-I1b2",
   "modules": [
     "tools",
     "production.images",
     "production.adapter",
     "production.catalog"
   ],
-  "purpose": "HP-I1b1 implements first background registration and compact production retirement from issue 561 comment 6754303684. tools checks the actual import graph, module mapping, documentation and the unchanged active 0.6.0 sheet generation. production.images verifies real consumed HP-W2 selected/none derivations and tool/codec/profile bindings. production.adapter exercises freshly verified v6 export inputs, complete approval/content/category/difficulty guarantees and the exact original-ZIP size exception. production.catalog checks the capability gate, strict active source/registry/receipt/runtime shapes, full plan/journal sources, RI-B/C boundaries, real publication/recovery, mixed consumers and main-bound retirement. Real capability stays false; synthetic compatible targets do not prove player behavior. The required core supplies the regular Windows player for tool development.",
-  "omitted": "No production.solver, native.*, preflight, delivery or Chromium: no solver/difficulty development, Godot reader/renderer, runtime activation or hosting changes. No real catalog changes, production assets, growing replay corpus, gallery, performance campaign, new core obligation or technical upload. A Windows export is not a Windows startup, native Windows-Python probe or background-rendering acceptance. HP-I1b2 background replacement and unsupported background-target raster/reveal rebinding remain later work; HP-I2 supplies runtime. Independent technical review of the concrete PR head remains required before merge.",
+  "purpose": "HP-I1b2 implements exactly issue 561 comment 6763700809: immutable background work without a raster ZIP, active source v2 preserving initial/receipt, independent plan/adopt with fresh HP-W2 verification, nullable binary add/delete/replace and rollback, exact Main-bound revision retirement and mixed-reader compatibility. tools checks actual imports/module ownership, closed authoring dispatch, byte-identical active 0.6.0/docrev43 snapshot and opt-in 0.7.0/docrev4. production.images runs real selected/none HP-W2/profile/codec/alpha checks; production.adapter verifies original v6 inputs and registration/receipt compatibility; production.catalog covers work/plan/source/guards, all binary directions, recovery, no-op, Git-main retirement and consumers. The required core supplies the regular Windows player for tool development; real capability remains false.",
+  "omitted": "No production.solver, native.*, preflight, delivery or Chromium: no solver/difficulty, engine/renderer/loading or hosting change. No actual catalog changes, production assets, replay corpus, gallery, RI-B/C optimization expansion, new performance campaign or heavy core obligation. Windows export is not a Windows startup, native Windows-Python test or background rendering acceptance. Background-target raster/reveal rebinding and Legacy retrofit remain blocked for HP-I1c; actual runtime capability stays with HP-I2. Independent technical review of this exact PR head is required before merge.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/background_catalog_fixtures.py",
+      "path": "tests/puzzle_production/background_change_fixtures.py",
       "disposition": "change-scoped",
-      "reason": "Small shared test-only helper creates freshly verified real HP-W2/v6 inputs and isolated compatible targets for catalog cases; no production fixture corpus or success stub."
+      "reason": "Small ephemeral helper creates real fresh HP-W2 inputs and actual source/reveal context copies; no successful verification stubs or retained production corpus."
     },
     {
-      "path": "tests/puzzle_production/test_background_catalog_boundary.py",
+      "path": "tests/puzzle_production/test_background_change.py",
       "disposition": "change-scoped",
-      "reason": "Retain the existing API/CLI mutation boundaries with explicit missing/false target capability, strict rejection of forged v6 headers and default rejection of direct unbound entry mapping; complete byte/mtime preservation remains checked."
+      "reason": "Small catalog regression for immutable work/index and plan inventory, independent derivation, full selected/none sequence, exact byte/mtime no-op, under-lock work conflict, capability and CLI/storage boundaries."
     },
     {
-      "path": "tests/puzzle_production/test_background_consumers.py",
+      "path": "tests/puzzle_production/test_background_source.py",
       "disposition": "change-scoped",
-      "reason": "Mixed catalog cases exercise supported metadata/legacy consumers, exact current plan sources, unchanged backgrounds and early rejection of background-target updates, stale plans and unbound old generations."
+      "reason": "Compact v2 source preserves original authority and receipt, strictly binds current decisions/derivations/rights and copied reveal context, rejects rehashed incompatible authorities."
     },
     {
-      "path": "tests/puzzle_production/test_background_retirement.py",
+      "path": "tests/puzzle_production/test_background_change_transactions.py",
       "disposition": "change-scoped",
-      "reason": "Synthetic real Git-main retirement verifies receipt v2, compact rights/approval/origin retention without old ZIP, repeat no-op, preflight of all selections and preservation or prior blocking of new/foreign work."
+      "reason": "Targeted nullable add/delete/replace publication and rollback, own absence and foreign bytes, old journal closure, actual process interruption, repeated recovery and finite 300-second operation dispatch."
     },
     {
-      "path": "tests/puzzle_production/test_background_transactions.py",
+      "path": "tests/puzzle_production/test_background_change_retirement.py",
       "disposition": "change-scoped",
-      "reason": "Small targeted catalog cases verify full new T/K and negative sources, capability changes at RI-C boundaries, namespaces/CAS, interruption and repeat rollback, retained PNGs, RI-B binding and the exact ZIP-size exception without a committed large fixture."
+      "reason": "Actual temporary Git/main histories prove current and superseded selected revisions, all-selection preflight, true no-op and original receipt lifecycle without historical image/ZIP downloads."
     },
     {
-      "path": "tests/puzzle_production/test_catalog_background.py",
+      "path": "tests/puzzle_production/test_background_change_consumers.py",
       "disposition": "change-scoped",
-      "reason": "Permanent small synthetic catalog cases exercise actual selected/none and late-source first registration, strict source/index/capability fields, mixed legacy projection and unchanged original/no-op bindings."
+      "reason": "Explicit mixed catalog cases preserve v2 during metadata and Legacy-target operations, invalidate old source-bound plans and retain background-target update/reveal blocks."
     },
     {
-      "path": "tests/puzzle_production/test_catalog_added.py",
+      "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
-      "reason": "Construct the historical Added recovery fixture with its explicit pre-background journal generation; retain exact old source fields and direct valid v4 rollback without weakening production guards."
-    },
-    {
-      "path": "tests/puzzle_production/test_registration_budgets.py",
-      "disposition": "change-scoped",
-      "reason": "Preserve operation-specific RI-A budget dispatch and bounded journal classification for registration-v7 alongside supported historical generations; no timeout inflation for other writers."
-    },
-    {
-      "path": "tests/puzzle_production/test_registration_publication.py",
-      "disposition": "change-scoped",
-      "reason": "Extend existing publication/recovery guards to registration-v7 while retaining the closed old-v6 path and the existing ownership/phase/foreign-byte guarantees; no new performance campaign."
+      "reason": "Existing inexpensive actual-JavaScript test checks exact embedded 0.6.0 snapshot/revision and explicit rejection of the independent background record; no new UI feature or browser job."
     },
     {
       "path": "tests/puzzle_production/test_reveal_recovery.py",
       "disposition": "change-scoped",
-      "reason": "Keep historical registration/update/metadata fixtures within their closed source contracts: explicitly create SD2 journals or first validate and remove only inactive background bindings before the existing older-generation conversion. Preserve foreign-source rejection and exact rollback checks."
-    },
-    {
-      "path": "tests/puzzle_production/test_sd2_catalog.py",
-      "disposition": "change-scoped",
-      "reason": "Keep existing SD2 adoption/recovery expectations aligned with the new source-bound metadata generation and construct legacy recovery fixtures through their exact historical sd2 generation instead of relabeling new sources."
-    },
-    {
-      "path": "tests/puzzle_production/test_background_export.py",
-      "disposition": "change-scoped",
-      "reason": "Retain the fully verified v6 adapter boundary with concrete missing-capability and bound-registration diagnostics instead of the superseded blanket HP-I1b rejection; both plan/register and update remain mutation-free in an incompatible target."
+      "reason": "Keep the existing rejection of oversized ordinary journals, unchanged bytes/mtime and Base64 guards; update only the obsolete reveal-only diagnostic expectation for the explicitly declared background binary generation."
     }
   ],
   "core_change": null,

@@ -985,3 +985,44 @@ Recovery ist ausschließlich Rollback, auch bei vollständig neuer eigener
 Belegung. Unbekannte/fremde Bytes bleiben mit konkretem Rest und Journal sichtbar.
 Keine globale Erkennung vor jedem Dateischritt, keine neue Performancekampagne
 oder Geschwindigkeitsbehauptung. Lauf-/Reviewbelege bleiben am konkreten PR-Head.
+
+## HP-I1b2 · Hintergrundwechsel und Quellenkompatibilität
+
+Vertrag vor Code, 10.11.2026, [HP-I1b2](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809).
+Die vollständigen geschlossenen Request-/Source-v2-/Plan-/Journalformen und
+Main-/No-op-/Abschlussregeln stehen verbindlich in
+[Hintergrundvertrag §11](PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel).
+Registry v3 und Runtime v6 behalten ihre Felder. Alle Full-/Quick-/API-/CLI-Reader
+bestimmen denselben wirksamen Zustand: v1 direkt, bei v2 Identität/Ursprung aus
+initial und aktuelle Auswahl/Revision/PNG/Notice aus current. Der unveränderte
+Receipt v2 bindet den kanonischen ursprünglichen initial-v1-Ref. Historische Refs
+werden nach Retirement nicht erneut geöffnet; aktuelle Livebytes bleiben geprüft.
+Die vorhandenen SD-Report-v5-, Added-Plan-v4-, Reveal-Plan-v3- und
+Aktivierungsplan-v2-Generationen sind wegen identischer vollständiger Pfadmengen
+ausdrücklich mit v2 kompatibel, ohne neue Felder oder schwächere Deltas. Ein
+Sourcewechsel macht vorhandene Pläne stale. Metadaten und Legacyzieloperationen
+erhalten Source/PNG/Notice vollständig. Hintergrundziel-Rasterupdates und
+Revealadoption bleiben auch indirekt gesperrt (HP-I1c); echte Capability false
+bis HP-I2. Kein Solver-/Difficulty-/Bestandsreplay oder tatsächlicher Runtimebeleg.
+
+
+`picross-background-adoption-journal-v1` ist ausdrücklich eine neue binäre
+Journalgeneration mit operation `background-adoption`, den acht bisherigen
+Top-Level-Feldern, additions={} und report_run=null. Genau eine Hintergrundsource,
+ihr Registryref, PNG/Notice/Abwesenheit und Runtime-background dürfen wechseln;
+Entries, ursprüngliches Paket/Receipt und alle anderen Quellen bleiben bytegleich.
+Nur hier darf jede old/new-Binärseite null sein; mindestens eine ist vorhanden,
+gleiche Seiten sind kein replacement. Grenzen 32 MiB je Seite, 96 MiB gesamt und
+128 MiB Journal; andere nichtbinäre Journale bleiben bei 24 MiB, alte Revealpaare
+bleiben beidseitig nichtnull. Keine Original-ZIP-Ausnahme für Hintergrundbilder.
+Dispatch/Wirelayout/Staging/Guard/Recovery binden die neue Kennung ausdrücklich.
+Vollständige T/K, negative Erwartungen und sechs Namespaces an allen bisherigen
+gemeinsamen Guards; keine RI-C-Frequenzoptimierung. Journal vor Mutation,
+no-replace für Neuanlage/Restore, eigene exakte Bytes vor Replace/Delete,
+Eltern-fsync, Runtime zuletzt und vollständiger Abschluss vor Lockentfernung.
+Rollback rekonstruiert zuerst unabhängig den gültigen Altstand. Nur tatsächlich
+nichtnull-Seiten begründen journalgebundene Temppräfixe. Fremde/mehrdeutige
+Bytes lassen Journal und tatsächliche Reste erhalten; wiederholte Recovery bleibt
+300 s. Workrecord/Inventar/Index zusätzlich bei P0 und unter Lock vor erster
+aktiver Mutation prüfen. Der ursprüngliche Receiptwechsel invalidiert alte
+Hintergrundpläne einschließlich No-op; nur neue Planung am aktuellen Stand.

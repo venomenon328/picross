@@ -51,7 +51,7 @@ Freigabe, datiert sie nicht neu und bindet sie nicht auf andere Bytes um.
 HP-I1a ergänzt sichere Sidecar-/Recordfortschreibung und Export v6. HP-I1b1
 ergänzt die zielgebundene erste Registrierung, kompakte aktive Quelle/Receipt,
 Recovery-/Folgeoperationen und ersten Produktionsabschluss im folgenden Vertrag.
-Reiner Hintergrundersatz bleibt HP-I1b2; HP-I2 liefert die Runtime und darf erst
+Reiner Hintergrundersatz folgt dem untenstehenden HP-I1b2-Vertrag; HP-I2 liefert die Runtime und darf erst
 mit deren Abnahme die echte Capability aktivieren. Diese Teilwege aktivieren
 den vollständigen Produktionsweg nicht. Versiegelte
 0.4.x/0.5.0/0.6.0-Originale behalten ihre bisherigen Formen und Befugnisse.
@@ -255,9 +255,8 @@ Alle Quick-/Full-/API-/CLI-Wege beachten die
 [Quellen-/Plan-/Journalmatrix](SD_CATALOG.md#hp-i1b1--hintergrundquellen-pläne-und-transaktionen).
 Zulässige Metadatenoperationen und Legacyziel-Update/-Revealadoption erhalten
 Hintergründe vollständig. Rasterupdate und Revealadoption eines Hintergrundziels
-sind vor Planung/Mutation konkret gesperrt. HP-I1b2 muss späteren Bildersatz,
-nullfähigen Binärwechsel und revisionsgenauen Abschluss ohne altes Raster-ZIP
-schließen; dieser Zwischenstand behauptet keinen vorhandenen Ersatzreader.
+sind vor Planung/Mutation konkret gesperrt. Der HP-I1b2-Zusatz unten ergänzt separat autorisierten Bildersatz,
+nullfähigen Binärwechsel und revisionsgenauen Abschluss ohne altes Raster-ZIP.
 
 ### Veröffentlichung, Wiederholung und Abschluss
 
@@ -1498,3 +1497,32 @@ bleiben nach den dortigen Kompatibilitätsregeln rückführbar. Keine Änderung 
 ID, Save-Slot, Rätseldefinition, Bewertung oder historischer Produktionsbindung
 allein zur Einführung von Hinzugefügt-Metadaten.
 
+## HP-I1b2 · Hintergrundwechsel und Quellenkompatibilität
+
+Vertrag vor Code, 10.11.2026, [HP-I1b2](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809).
+Die vollständigen geschlossenen Request-/Source-v2-/Plan-/Journalformen und
+Main-/No-op-/Abschlussregeln stehen verbindlich in
+[Hintergrundvertrag §11](PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel).
+Registry v3 und Runtime v6 behalten ihre Felder. Alle Full-/Quick-/API-/CLI-Reader
+bestimmen denselben wirksamen Zustand: v1 direkt, bei v2 Identität/Ursprung aus
+initial und aktuelle Auswahl/Revision/PNG/Notice aus current. Der unveränderte
+Receipt v2 bindet den kanonischen ursprünglichen initial-v1-Ref. Historische Refs
+werden nach Retirement nicht erneut geöffnet; aktuelle Livebytes bleiben geprüft.
+Die vorhandenen SD-Report-v5-, Added-Plan-v4-, Reveal-Plan-v3- und
+Aktivierungsplan-v2-Generationen sind wegen identischer vollständiger Pfadmengen
+ausdrücklich mit v2 kompatibel, ohne neue Felder oder schwächere Deltas. Ein
+Sourcewechsel macht vorhandene Pläne stale. Metadaten und Legacyzieloperationen
+erhalten Source/PNG/Notice vollständig. Hintergrundziel-Rasterupdates und
+Revealadoption bleiben auch indirekt gesperrt (HP-I1c); echte Capability false
+bis HP-I2. Kein Solver-/Difficulty-/Bestandsreplay oder tatsächlicher Runtimebeleg.
+
+
+Erneute v6-Registrierung vergleicht ihren ursprünglichen vollständig geprüften
+Export mit initial und validiert die aktuelle v2-Quelle unabhängig. Ein No-op
+schreibt niemals das alte Bild zurück. `retire-production` bindet seinen ersten
+Receipt auf initial, prüft den tatsächlichen aktuellen Main-/Livezustand und
+erhält oder blockiert neuere Hintergrundarbeit. Der eigene
+`retire-background-production`-Weg prüft alle ausdrücklich ausgewählten Revisionen
+vor erster Entfernung, auch bereits supersedierte tatsächliche Mainadoptionen;
+aktueller Zustand und unveränderter Erstanker werden separat geprüft. Keine
+zweite aktive Receiptdatei, kein ID-Gesamtabbau, keine neuen Importfreigaben.

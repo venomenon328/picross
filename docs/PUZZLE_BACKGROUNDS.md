@@ -1,6 +1,6 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**Vertrag 1.0 · Dokumentrevision 5 · 09.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1 / #561**
+**Vertrag 1.0 · Dokumentrevision 6 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2 / #561**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -33,8 +33,9 @@ HP-I1b1 ergänzt auf Basis `main@045189cc5ef34eaf4d06823f22f7ec811d209de5`
 die erste Registrierung, kompakte aktive Quelle, gemeinsame Transaktionen und
 den ersten Produktionsabschluss nach §10. Der vollständige Produktionsweg
 bleibt **inaktiv**: Die reale Zielfähigkeit ist ausdrücklich false, ihre
-Aktivierung zusammen mit tatsächlicher Runtime bleibt HP-I2. Späterer reiner
-Hintergrundersatz folgt HP-I1b2, neue Sheetbedienung #490. Synthetische kompatible
+Aktivierung zusammen mit tatsächlicher Runtime bleibt HP-I2. HP-I1b2 ergänzt
+den eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss nach §11;
+Raster-/Revealneubindung bleibt HP-I1c, neue Sheetbedienung #490. Synthetische kompatible
 Zielcheckouts prüfen den Werkzeugweg, keine Bildproduktion oder Spielabnahme.
 
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) bleibt für vier Aufträge,
@@ -973,9 +974,9 @@ die vorgesehenen lesenden Gitprüfungen bleiben zulässig.
 | **HP-I1a / #561:** `tools/puzzle_production/authoring_builder.py`, `target_adapter.py` und Finalizer-/Hintergrund-/Exporthelfer | Sichere spätere äußere Entscheidung/Ableitung/Endfreigabe und Recordfortschreibung nach §7.4; v6-Export mit unverändertem Original-ZIP, expliziten Außen-/Transportbindungen und frischer Offlineprüfung. Höchstens `editorially_approved`, keine Registrierung; alte Verbraucher sperren v6 vor Mutation. |
 | **HP-I1b1 / #561:** `tools/puzzle_production/catalog_background.py`, `content_registry.py`, `catalog_integration.py`, `integrated_content.py` und Zieladapter | Erste v6-Registrierung im kompatiblen Ziel, Registry v3, kompakte aktive Quelle und Receipt v2 nach §10. Tatsächliche Zielfähigkeit im Repository bleibt false. Frische synthetische Durchstiche sind keine Runtimeabnahme. |
 | **HP-I1b1 gemeinsame Veröffentlichung:** `catalog_transaction.py`, `catalog_publication.py`, `catalog_io.py`, `registration_publication.py`, `registration_verification.py`, betroffene Folgeoperationen `content_update.py`, `content_registry.py`, `catalog_reveal.py`, `reveal_source.py`, `reveal_retirement.py`, `integrated_content.py` unter `tools/puzzle_production/` | Vollständige neue Quellen-/Plan-/Journalbindung nach §10 und SD-Catalog; No-op, Recovery und Main-gebundener erster Abschluss. Metadaten-/Legacyzieloperationen erhalten Hintergründe. Rasterupdate und Revealadoption eines Hintergrundziels blockieren vor Planung/Mutation. |
-| **HP-I1b2 / #561** | Offen: separat autorisierter Ersatz selected→selected/none und none→selected, gegebenenfalls ausdrückliche Legacynachrüstung, eigener Binärersatz-/Rollback- und revisionsgenauer Abschlussvertrag ohne altes Raster-ZIP. Eine alte Approval v2 mit Raster-ZIP-Pflicht ist kein Ersatzvertrag. Die Neubindung gesperrter Rasterupdates/Revealadoption bleibt einem konkreten Folgeumfang zuzuordnen. |
+| **HP-I1b2 / #561** | Eigener unveränderlicher Request, Source v2, Plan, nullable Binärrollback und revisionsgenauer Abschluss nach §11 für bereits hintergrundgebundene Ziele. Keine Legacy-Nachrüstung. Gesperrte Raster-/Revealneubindung bleibt HP-I1c. |
 | **HP-I2 / #561:** `game/model/content_registry.gd`, erzeugte `game/data/registry.json`, `game/book/content.gd`, `game/book/marginalia.gd` | Kompatibler neuer Runtimeeingang, Variante A, gemeinsames Assetlayout, verlustfreier Import/Mipmaps und Bedarfsladen. Der heutige `marginalia.gd`-Pilot mit Kategoriepreloads/individuellen Regionen ist keine Produktionsschnittstelle. Keine Kandidatenvorschau. |
-| **#490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html`, insbesondere `parseTransfer`, `validateChoices`, `saveSession`, `loadSession`, `brief`, `exportPackage` und zugehörige Prompt-/Auswahlprojektion | Record v2, Update v3, Sitzung v5 und Auftrag v4 verlustfrei führen; vorhandene v1–v4-Alteingänge getrennt erhalten. Bis einschließlich HP-I1b1 ausschließlich bytegleicher aktiver 0.6.0-Regelwerksnapshot und Revisionsangaben; die neue Builder-/Finalizerausgabe ist noch keine Bedien-/Importfähigkeit. |
+| **#490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html`, insbesondere `parseTransfer`, `validateChoices`, `saveSession`, `loadSession`, `brief`, `exportPackage` und zugehörige Prompt-/Auswahlprojektion | Record v2, Update v3, Sitzung v5 und Auftrag v4 verlustfrei führen; vorhandene v1–v4-Alteingänge getrennt erhalten. Bis einschließlich HP-I1b2 ausschließlich bytegleicher aktiver 0.6.0-Regelwerksnapshot und Revisionsangaben; die neue Builder-/Finalizerausgabe ist noch keine Bedien-/Importfähigkeit. |
 | **#491 / #492** | Nur tatsächlich gelieferte Fähigkeiten orchestrieren beziehungsweise in gesondert beauftragter Produktion erproben. Keine parallelen Hintergrundformate oder künstliche Vollintegration durch Ergebnisflags. |
 
 PB-H führt die zuvor explizit an **0.6.0** gebundenen Palettengates und
@@ -1020,8 +1021,8 @@ neues Kandidatenarchiv. Historische Freigaben werden nicht umgeschrieben.
 Noch offene/neuere Arbeit erhalten. Ein reiner späterer Hintergrundersatz hat
 seinen eigenen revisionsgenauen Abschluss; keine Wiederherstellung gelöschter
 Rasterproduktion. HP-I1b1 erweitert `retire-production` ausschließlich für die
-belegte erste Integration nach §10. Späterer Hintergrundersatz und sein eigener
-Abschluss bleiben HP-I1b2; `retire-reveal-production` wird kein Hintergrundwriter.
+belegte erste Integration nach §10. HP-I1b2 ergänzt Hintergrundersatz und seinen eigenen
+Abschluss nach §11; `retire-reveal-production` wird kein Hintergrundwriter.
 
 Die folgenden **synthetischen Vertragsfälle** sind keine erzeugten Bilder,
 Freigaben, ausgeführten Programme oder Produktionsnachweise:
@@ -1045,7 +1046,7 @@ PB-H ergänzt kleine synthetische Paket-/Referenz-/Phasen-/Inhaltsfälle;
 HP-I1a ergänzt Finalizer-/No-op-/Unterbrechungs-/Transportfälle und die enge
 Verify-Regel. HP-I1b1 prüft Registrierung, Quellen-/Recoverybindung und Abschluss
 an kleinen synthetischen Fällen. Konkrete Laufnachweise gehören in die jeweiligen
-PRs; Runtime folgt HP-I2, spätere Bildersetzung HP-I1b2 und drei reale erreichbare
+PRs; Runtime folgt HP-I2, Bildersetzung folgt §11 und drei reale erreichbare
 Bilddateien einem gesonderten Produktionsauftrag. Diese Teilpakete schließen
 weder #560, #561 noch den Gesamtplan #563.
 
@@ -1238,9 +1239,9 @@ die beim ersten Abschluss tatsächliche kompakte Source. HP-I1b1 verlangt diesel
 Sourcebindung im aktuellen Hintergrundindex. `entry` bewahrt den ursprünglichen
 Exportmanifesthash; der aktuelle `production.package_sha256` bindet anschließend
 die echten Receiptbytes. V1 bleibt unverändert, Hintergrundproduktionen dürfen
-nicht in v1 schrumpfen. HP-I1b2 muss seinen späteren Vergleich zwischen aktuellem
-Bildstand und ursprünglichem Origin-/Receiptanker ausdrücklich versionieren;
-dieser Ersatzreader ist noch nicht Bestandteil von HP-I1b1.
+nicht in v1 schrumpfen. Für Source v2 erweitert §11.2 diesen Vergleich ausdrücklich: der ursprüngliche
+Receipt bindet initial, der aktuelle Registryref bindet die vollständige v2.
+Der geschlossene Source-v1-Vertrag bleibt unverändert.
 
 `picross-runtime-registry-v6` hat exakt `format,categories,entries`. Jeder
 Eintrag behält die neun v5-Felder und ergänzt genau `background` mit exakt
@@ -1290,3 +1291,116 @@ Zustand mit demselben Mainbeleg ist nach Prüfung No-op. Bei Teilfehlern tatsäc
 Reste benennen, keinen Erfolg behaupten. Der Befehl erzeugt einen überprüfbaren
 lokalen Diff und führt weder Commit noch Merge aus. Die Authoring-Cleanupfreigabe
 erteilt keine Mergefreigabe für dieses Werkzeugpaket.
+
+## 11. HP-I1b2 · Eigenständiger Hintergrundwechsel
+
+Vertrag vor konsumierendem Code, 10.11.2026, [Paketentscheidung HP-I1b2](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809), Basis `d28e015b701f07bceb847245fdde16a522868a44`.
+Dieser Abschnitt ergänzt §10 ausdrücklich um den eigenen Änderungsweg für genau
+ein bereits gültig hintergrundgebundenes Ziel. Die unveränderten §3.1-Typen gelten
+für alle geschlossenen Formen; alte Generationen behalten ihre exakten Regeln.
+selected→selected, selected→none und none→selected sind erlaubt. Legacy-Nachrüstung,
+Rasterupdate und Revealadoption eines Hintergrundziels bleiben gesperrt; deren
+Neubindung gehört zu HP-I1c, Runtime/Import/Mipmaps/Laden zu HP-I2. Keine reale
+Bildproduktion, Katalogänderung, zusätzliche Eigentümerbestätigung oder Buchprobe.
+
+Konkrete Grenzen: Request/Manifest/Entscheidung/Befund je 2 MiB, Source 1 MiB,
+JSON-Tiefe 32; höchstens 20 Kandidaten, 64 Parameter bzw. Einträge je übriger
+HP-W2-Liste und 256 Dateien/96 MiB im gebundenen Arbeitsgraph. Quellen-PNG
+32 MiB, höchstens 8192 je Achse und 8.000.000 Pixel. Das Requestinventar darf
+256 Dateien/96 MiB umfassen; der vollständige Plan zusätzlich genau die alte
+PNG-Seite (32 MiB), höchstens 128 MiB Nutzdateien. Plan-JSON höchstens 24 MiB;
+bei Überschreitung vor Mutation abbrechen. Plan-/Bildoperation/Recovery je
+endlicher kooperativer Rahmen 300 s; keine RI-B/C-Ausdehnung oder Budgeterhöhung.
+Die Binärjournalgrenzen unten sind ausschließlich für dessen neue Formatkennung.
+
+### 11.1 Eigenständiger unveränderlicher Arbeitsauftrag
+
+Die bisherige Raster-Record-v2-/Approval-v2-Form benötigt Original-ZIP/Handoff/Inventar und wird **nicht** für nachträgliche Bildarbeit umgedeutet. Eine neue Arbeitsrevision verwendet den bestehenden Pfad
+`content/authoring/<puzzle_id>/<revision>/record.json`
+mit **`picross-background-adoption-request-v1`**. Das ist zugleich unveränderlicher Auftrag und Arbeitsrecord; kein Dummy-ZIP, keine zweite gleichlautende Approvaldatei und kein späteres Umschreiben in einen vermeintlichen Rasterstatus.
+
+Exakte Top-Level-Felder: `format,puzzle_id,revision,target,background,authorization,files,test_only`.
+
+| Feld | Geschlossener Vertrag |
+| --- | --- |
+| `puzzle_id,revision,test_only` | Bestehende PuzzleID/Revision/Boolean-Typen. Eigene kollisionsfreie Authoringrevision, etwa `bg-r01`; kein Überschreiben bestehender Arbeit. test_only stimmt mit Ziel, Manifest, Entscheidung und Ableitung überein. |
+| `target` | Exakt `{source,origin_sha256,image_revision}`. source ist der tatsächliche Ref der unmittelbar vorherigen vollständigen aktiven Source am festen Pfad `content/backgrounds/<id>.json`; origin_sha256 bindet deren unveränderten Erstursprung; image_revision ist ihre aktive positive Integerrevision. Die Source bindet zusätzlich die vollständige unveränderte Rätselidentität. |
+| `background` | Bestehendes BackgroundBinding mit exakt `manifest,decision,derivation,history`. Alle drei StoredRefs sind nichtnull und ausschließlich `storage=external`; der explizite äußere Root ist die Checkoutwurzel, sämtliche Root/Ref-Kombinationen liegen innerhalb genau dieser Arbeitsrevision. history ist hier null. Vollständige benötigte Dateien einschließlich angebotener Kandidaten und Belege bleiben bis zu diesem revisionsgenauen Abschluss vorhanden; kein Paketstorage/ZIP oder impliziter historischer Fetch. |
+| `authorization` | Bestehendes Human-Objekt `{actor,timestamp_utc,statement,evidence}`, mit tatsächlich erklärtem Wechsel dieses Ziels zu genau der gebundenen Auswahl/Leerentscheidung. Derselbe tatsächliche Auswahl-/Entfernungsauftrag darf zugleich Entscheidung und Autorisierung belegen. evidence ist relativ zur Arbeitsrevision. Kein approved-Flag und kein erfundener Akteur/Zeitpunkt. |
+| `files` | Sortierte eindeutige Ref-Liste aller Dateien dieser Arbeitsrevision außer record.json selbst. Refs sind relativ zur Revision; sie erfassen auch alle Entscheidungs-/Rechte-/Sicht-/Kontextbelege und den vollständigen HP-W2-Ausgabeordner. Keine Globs, Selbstreferenzen, fremden Dateien, Links, Alias- oder Datei-/Verzeichniskollisionen. |
+| `format` | Exakt `picross-background-adoption-request-v1`; unbekannte Felder/Versionen und falsche Null-/Scalarformen sind Fehler. |
+
+Vorhandene Ref-/StoredRef-/Human-/kanonische JSON-, Pfad-, Datei-/Gesamt-/Pixel-/Zeitgrenzen weiterverwenden und die konkret angewandten Grenzwerte im Normtext nennen; keine generelle Größen- oder Zeitlockerung. Record höchstens 2 MiB. Der vorhandene Authoringindex v1 behält seine exakten Zeilen `{puzzle_id,revision,record}`; zuständige Reader erkennen die neue Arbeitsfamilie ausdrücklich, bewahren andere Zeilen und interpretieren sie nicht als Rasterrecord. Bestehende Sheetparser weisen die noch nicht unterstützte neue Form verständlich zurück; neue Sheetbedienung bleibt #490. Verbindliche Erstablage/Indexpflege und konkrete CLI/API in der Werkzeuganleitung dokumentieren; keine automatische Bildproduktion oder menschliche Freigabe durch einen Writer.
+
+**Kontext nach ursprünglichem Retirement:** Eine neue Bildvorlage darf nicht die gelöschte alte Reveal-Freigabedatei voraussetzen. In der neuen Arbeitsrevision werden die aktuell gültige Hintergrundsource und das unveränderte aktuelle Live-Reveal byteidentisch als ausdrücklich gebundene Kontextbelege gesichert. `context.reveal` bindet diese Reveal-Kopie; `context.reveal_approval` darf für genau diesen neuen Änderungsweg die Kopie der kompakten aktiven Source als erhaltene echte Freigabeautorität binden. Der Reader prüft deren Bytegleichheit mit target.source, den unveränderten Ursprung/Identität und den Revealhash der ursprünglichen `origin.approval.selection.reveal` gegen Entry und aktuelle Live-/Kopiebytes. Der ursprüngliche Reveal-Dateiname muss nicht dem Runtimepfad gleichen. Es wird keine gelöschte Approvaldatei rekonstruiert und keine neue Revealfreigabe erfunden. Diese enge Auslegung gilt ausschließlich im nachfolgend gebundenen Änderungsweg; keine allgemeine Absenkung der HP-W1-Kontextbindung.
+
+Ein neuer unabhängiger Hintergrundjob darf `previous_decision=null` verwenden; sein Austauschvorgänger ist target.source. Innerhalb desselben noch vorhandenen Jobs gelten die bisherigen wirklichen Vorgänger-/carried_from-Regeln weiter. Keine Wiederherstellung bereinigter Entscheidungsgraphen allein für einen neuen Job.
+
+### 11.2 Aktive Source v2 und unveränderter Erstursprung
+
+Neue **`picross-catalog-background-v2`**, exakt `{format,initial,current}`.
+
+- `initial` enthält genau das vollständige unveränderte Source-v1-Objekt der Erstintegration, niemals eine eingebettete v2. Bei v1→v2 wird dessen kanonischer Inhalt übernommen; bei v2→v2 bleibt derselbe initial-Teil erhalten. Die bereits vorgeschriebenen kanonischen JSON-plus-LF-Bytes erlauben den ursprünglichen tatsächlichen Sourceref ohne Reproduktion alter Bilddateien zu prüfen.
+- ID, identity, origin und test_only kommen ausschließlich aus initial. Kein zweiter widersprüchlicher Identitäts-/Ursprungsblock.
+- `current` hat exakt `image_revision,candidate_revision,decision,derivation,provenance,review,asset,notice,adoption`. Die ersten acht Felder verwenden die vorhandenen selected/none-Typen und Kreuzbindungen, nun zur tatsächlich aktuellen Wahl. decision/derivation und tatsächliche Herkunft/Q-HG-Urteile unverändert übernehmen; bei none gelten die bisherigen Nullregeln. Feste Livepfade bleiben `game/art/backgrounds/<id>.png` und `.txt`.
+- `adoption` hat exakt `{request,revision,target,background,authorization}`: request ist der Ref auf den unveränderlichen obigen record.json am festen Repositorypfad; die übrigen Felder sind die tatsächlich geprüften unveränderten Requestwerte. Keine komplette Kandidatenliste, kein voller Dateiinventarblock und keine rekursiv eingebetteten Vorläuferquellen. Historische Refbindungen bleiben nach Cleanup historische Identitäten.
+- Eine tatsächlich neue aktive Auswahl-/Leer-/Rechtebindung erhält `image_revision=target.image_revision+1`, maximal die bestehende Obergrenze. Dieselben PNGbytes allein sind kein Identitätsbeweis für verschiedene Jobs/Freigaben. Eine identische Wiederholung desselben vollständig gebundenen Auftrags erhöht nichts. Keine inhaltslose none→none-Neurevision; die unveränderte bereits übernommene Leerentscheidung kann nur als geprüfte Wiederholung zurückgemeldet werden.
+- Die bestehende 1-MiB-Sourcegrenze bleibt. Übergroße Source/Plan-/Journaldaten vor Mutation ablehnen; keine wachsende Historien- oder Bildgalerie.
+
+**Registry v3 und Runtime v6 behalten ihre Feldmengen.** Der Registryref bindet die vollständige aktuelle v1/v2-Datei; Runtime projiziert den wirksamen aktuellen selected/none-Zustand mit dessen technischer Bildrevision. Ein gemeinsamer Reader bestimmt initial/aktuellen Stand für alle Full-/Quick-/API-/CLI-Verbraucher.
+
+**Receipt v2 und ursprüngliches Produktionsergebnis behalten ihre historische Aussage.** Bei bereits beendeter Rasterproduktion bleiben Receiptbytes und `production.package_sha256` durch die Bildoperation unverändert. `receipt.background.origin_sha256` bindet initial.origin; `receipt.background.source` bindet den kanonischen ursprünglichen initial-v1-Ref, während der aktuelle Registryref v2 bindet. Das ist ein ausdrücklich versionierter Vergleich, keine Aufweichung des v1-Vertrags. Bei noch vollständigem v6-Export wird initial gegen dessen ursprüngliche geprüfte Projektion geprüft. Nach Retirement werden historische Refs nicht als wieder zu öffnende Original-/ZIP-/PNGdateien behandelt; aktuelle Livebytes werden gegen current geprüft.
+
+Erneute ursprüngliche v6-Registrierung bleibt nach frischer passender Prüfung des Ursprungs und des gültigen aktuellen Zielstands ein echter No-op und darf nach Bildwechsel niemals das alte Bild oder alte Source zurückschreiben. Der ursprüngliche `retire-production`-Weg muss auch bei gültiger v2-Source seinen Receipt auf initial binden, den tatsächlichen aktuellen Source-/Live-/Mainstand prüfen und neuere Hintergrundarbeit erhalten oder vor Mutation konkret blockieren. Das ist Verbraucherkonsistenz, kein zweiter Bildwechselwriter.
+
+### 11.3 Plan, Übernahme und Zielgrenze
+
+Eigener fachlicher Einstieg für Hintergrundänderungen, `python -m tools.puzzle_production.catalog_background_change plan ...` /
+`adopt ...`; gemeinsame sichere I/O-, Quellen-, Lock-, Publikations- und Recoveryimplementierung verwenden. Reveal-/Rasterbefehle erhalten ihre Bedeutung. Genau ein Ziel pro Übernahme; Batchorchestrierung bleibt #491.
+
+Planung ist gegenüber dem Checkout lesend. Sie prüft aktuelle Zielsource/Origin/Identität, vollständige Arbeitsrevision und echte Autorisierung sowie die neue Wahl/Rechte/Q-HG und frisch reproduzierte HP-W2-Ausgabe/none. Geschriebenen Planbundle ebenfalls frisch prüfen und ohne Ersetzen an ausdrücklich gewähltem sicherem Ort außerhalb des Checkouts publizieren. Kein geplanter Erfolg ist eine Übernahme.
+
+Neue **`picross-background-adoption-plan-v1`**, exakt
+`{format,request,snapshot,old,new,files,plan_hash}`:
+
+- request: Ref auf die unveränderten Requestbytes im Bundle unter `input/content/authoring/<id>/<revision>/record.json`; `input/` ist dessen expliziter externer Repositoryroot. Alle ursprünglichen inneren Root-/Refwerte bleiben unverändert.
+- snapshot: bestehende vollständige Form `{sources,namespaces}`, einschließlich aller Katalogquellen, Capability/Abwesenheit, aktiven Hintergründe und sechs Namespaces. Kein ausgewählter Einzelhash als Ersatz für den Gesamtsnapshot.
+- old/new: vollständige hergeleitete, gleichschlüsselige Textansichten T mit UTF-8-String oder null wie im Journal. Nur die unten erlaubten aktiven Deltas.
+- files: exaktes sortiertes Ref-Inventar des gesamten Bundles außer plan.json. Es enthält die unveränderte Arbeitsrevision unter input/ und, falls vorhanden, die alte PNG-Rollbackseite unter `previous/background.png`. Die neue Bildseite stammt unmittelbar aus dem gebundenen HP-W2-Ausgabeordner unter input/, ohne zusätzliche Bildkopie. Keine Datei bei einer null-Seite.
+- plan_hash: H der übrigen sechs Felder nach vorhandener kanonischer Funktion. Keine selbstbezogene Hashberechnung.
+
+Adopt liest Bundlebytes frisch, validiert alle geschlossenen Formen/Inventare, rekonstruiert die vollständige alte und neue Ansicht und leitet den Plan unabhängig erneut her. Ein selbst erklärter Planhash/„verified“ genügt nicht. Vor einer neuen Mutation müssen außerdem die gebundene aktuelle Authoringrevision, alle Request-/Inventarbytes und die ausgewählte Indexzeile unverändert vorhanden sein: bei der Eingangsprüfung und erneut unter der exklusiven Kataloglockeigentümerschaft unmittelbar vor erster aktiver Mutation. Das Bundle bleibt über den ganzen Lauf frisch bytegebunden; andere Indexzeilen werden nicht geschrieben. Ein alter abgelegter Plan überschreibt keine inzwischen neu entschiedene Arbeit. Quellenwechsel, Zusatzdateien, anderes Ziel oder andere Capability machen ihn stale.
+
+**Wiederholung:** Nur der exakt eigene vollständige Zielstand ist No-op, ohne Byte-/mtime-, Authoring-/Index-, Bildrevisions- oder Added-Änderung. Dazu aktuelle aktive Source/request-Bindung, gesamte gültige Zielansicht und die im Plan exakt erlaubten Eigenänderungen prüfen. Nach regulärem revisionsgenauem Main-Abschluss darf eine identische noch vorliegende vollständige Planlieferung nur diesen bereits übernommenen Zustand erkennen; ihre inzwischen ordnungsgemäß entfernte Arbeitsrevision wird nicht zurückgeschrieben. Dafür erhält adopt ein optionales API-/CLI-Argument `integrated_commit` / `--integrated-commit <vollständige SHA>`, das bei fehlender Arbeitsrevision zwingend ist und ausschließlich diesen No-op-Pfad zulässt: Commit ist Vorfahr des aktualisierten origin/main und lokalen HEAD, enthält den exakten Request samt Indexzeile und dessen wirkliche Source-/Liveübernahme; der aktuelle vollständige Zielzustand passt weiterhin exakt dazu, komplette Arbeitsrevision und ihre Indexzeile fehlen. Teilreste, geänderte Arbeit oder eine neuere aktive Bildrevision sind kein No-op. Ohne passenden Mainbeleg ist fehlende Arbeit ein Fehler; der Sonderpfad darf niemals publizieren oder Arbeit wiederherstellen. Ohne erhaltenes Planbundle müssen keine alten Arbeitsdateien rekonstruiert werden: der kompakte aktive Stand bleibt über Source/Receipt lesbar; `retire-background-production` hat seine eigene wiederholbare Prüfung. Keine Pflicht, Planbundle dauerhaft aufzubewahren. Der ursprüngliche `retire-production`-Paket-/Receiptwechsel ist dagegen eine andere aktive Katalogmutation und macht zuvor gebaute Hintergrundpläne stale, auch für deren No-op-Pfad. „Vor und nach ursprünglichem Retirement nutzbar“ meint jeweils frisch auf dem tatsächlichen Ausgangsstand geplante Bildoperationen; keine automatische Normalisierung eines alten Plans über den Receiptwechsel. Der bereits gültige kompakte aktuelle Bildstand bleibt lesbar, ohne eine neue Mutation oder Rekonstruktion alter Arbeit.
+
+Die echte `game/data/background-capability.json` bleibt **false**. Fehlend/false stoppt Planung und Mutation, ungültige Form ist Eingabefehler; Wechsel invalidiert Plan/Recovery. Kein CLI/API/Environment-Override. Nur isolierte synthetische kompatible test_only-Ziele prüfen diesen Weg. HP-I2 liefert die tatsächliche Runtimefähigkeit; Exportfalse-Felder, aktiver Authoringdefault und echte Kataloginhalte bleiben unverändert.
+
+### 11.4 Binärmutation und Rollback im gemeinsamen Writer
+
+Neue **`picross-background-adoption-journal-v1`**, `operation="background-adoption"`, exakt bestehende acht Top-Level-Felder
+`format,operation,old,new,retained,additions,report_run,replacements`.
+`additions={}`, `report_run=null`. Alle Binärwechsel dieser Operation stehen in replacements; Notice/Source/Registry/Runtime sind Textansichten.
+
+Erlaubtes Delta: genau eine aktive Hintergrundsource, ihr Registryref, ihre Live-PNG/Notice beziehungsweise deren ausdrücklich erwartete Abwesenheit und das entsprechende Runtime-background-Feld. Registry-Entryobjekte, ursprüngliches Paket/Receipt, Definition, Reveal/Revealnotice, Rating/Added und alle übrigen Quellen bleiben unverändert. Keine neue aktive Pfadfamilie.
+
+replacements hat ausschließlich den festen PNG-Pfad des gewählten Ziels, wenn seine Bytes/Existenz tatsächlich wechseln. Paar exakt `{old,new}`; jede Seite ist der bestehende gebundene Binärdatensatz `{sha256,bytes,base64}` **oder null**. Mindestens eine Seite nichtnull, keine gleichen Binärseiten. Bei unveränderter PNG-Seite, etwa tatsächlich neu autorisierter Herkunftsbindung derselben Bytes, bleibt sie vollständig retained und replacements ist leer. None ist exakte erwartete Abwesenheit, keine Erlaubnis zur Fremddateilöschung. Altjournale behalten ihre geschlossenen Form-/Delta-/Nichtnullregeln.
+
+Die neue Kennung ausdrücklich in Journalgrößenklassifikation, Wirelayout, Guards, Staging und Recoverydispatch berücksichtigen: bestehende 32-MiB-Binärseiten-, 96-MiB-Gesamt- und 128-MiB-Binärjournalgrenzen verwenden; gewöhnliche Journale nicht global vergrößern. Den bisherigen engen Original-ZIP-Sonderfall nicht auf Hintergrunddateien ausdehnen.
+
+Vollständige T/K-Quellen, Capability, negative Erwartungen und alle sechs Namespaces prüfen; gemeinsame exklusive Lockeigentümerschaft; gültige vollständige Alt-/Neuansichten; Journal dauerhaft vor aktiver Mutation; Runtime letzter Datenpfad; vollständige Abschlussprüfung vor Lockentfernung. **Bestehende vollständige gemeinsame Guards beibehalten.** RI-B-Kontextwiederverwendung und RI-C-Grenzoptimierung bleiben auf Erstregistrierung beschränkt. Bildoperation und Recovery behalten die bisherigen endlichen 300-s-Rahmen; keine geerbten 1800 s, automatische Verlängerung oder neue Performancekampagne.
+
+Neuanlage/Restore in Abwesenheit ohne Ersetzen; Ersatz nur gegen exakte eigene Altbytes; Löschung nur nach exakter Byte-/Identitätsprüfung mit anschließender Verzeichnissicherung. Tempnamen bleiben journalgebunden; nur Präfixe tatsächlich vorhandener nichtnull-Seiten dürfen eigene Reste sein. Für null wird kein scheinbares Nullbild geschrieben.
+
+Recovery bleibt Rollback. Vor erster Recoverymutation vollständigen Altstand unabhängig rekonstruieren/prüfen. Zulässige Abwesenheit aus der konkreten old/new-Seite herleiten, nicht pauschal akzeptieren. Alte Bildbytes wiederherstellen beziehungsweise ausschließlich eigene neu angelegte Bytes entfernen; Texte/Runtime zurückführen, Temps/Lock erst nach vollständig belegtem Altstand entfernen. Bei fremden/unklaren Bytes oder erneutem Abbruch Journal und belegte Reste erhalten und tatsächlichen Status melden. Kein Locklöschen als Reparatur, kein scheinbarer Erfolg eines gemischten Zustands.
+
+### 11.5 Revisionsgenauer Abschluss und gemeinsame Verbraucher
+
+Eigener `retire-background-production`-Einstieg mit ausdrücklich ausgewählten `(puzzle_id,authoring_revision)` und vollständigem bestätigtem Main-Commit. Vorhandene sichere Auswahl-/Index-/Gitbaumprüfungen des Revealabschlusses verwenden, ohne den Revealwriter umzudeuten.
+
+Aktualisiertes origin/main und lokale HEAD-Abstammung prüfen; **sämtliche ausgewählten Revisionen vor der ersten Entfernung** gegen ihren nachgewiesenen Main-Stand und tatsächliche Request-/Index-/Dateibytes abgleichen. Der dort gebundene Source-v2-adoption-Ref muss genau den ausgewählten Request/diese Autorisierung, Auswahl/Ableitung und Bildrevision führen. Bei noch aktuellem Bildzustand stimmen die wirklichen Source-/Livebindungen damit überein. Bereits durch eine spätere gültige Bildrevision abgelöste Arbeit darf ebenfalls abgeschlossen werden: ihre tatsächliche frühere Übernahme wird aus dem ausdrücklich benannten Main-Commit anhand kleiner Source-/Request-/Indexmetadaten und Gitbaumidentitäten belegt; der aktuelle Stand wird unabhängig vollständig geprüft und muss denselben unveränderten initial-/Origin-/Rätselidentitätsanker sowie eine mindestens so hohe Bildrevision haben. Bei gleicher Bildrevision muss auch dieselbe Adoption/Requestbindung vorliegen; eine widersprüchliche gleichnummerierte Übernahme gilt nicht als Nachfolger. Die neuesten Source-/PNG-oder-none-/Notice-/Runtime-/Receiptbytes bleiben unangetastet. Eine bloß geplante oder nie auf Main integrierte alte Arbeit reicht nicht. Damit entsteht weder ein Cleanup-Zwang vor jeder weiteren Bildrevision noch eine wachsende aktive Historienkette.
+
+Nur die vollständig belegten ausgewählten Arbeitsrevisionen und ihre Indexzeilen entfernen. Keine ganze-ID-Löschung. Neuere/offene Geschwister, unbekannte/fremde Dateien, staged Änderungen und aktive Ressourcen bleiben erhalten oder blockieren vor Mutation. Historische Originalblobs nicht herunterladen, um sie danach zu löschen: Gitbaumidentitäten und kleine aktuelle/gebundene Metadaten genügen. Gleiche bereits vollständig entfernte Arbeitsrevision mit identischem nachgewiesenem Mainbeleg ist nach Prüfung ihres historischen Abschlusses und des gültigen aktuellen Standes No-op, auch wenn mittlerweile eine spätere Bildrevision aktiv ist. Behandelte Teilfehler benennen tatsächliche Restpfade; ein Abbruch ist kein erfolgreicher Gesamtabschluss.
+
+Keine zusätzliche aktive Receiptdatei oder ständig wachsende Revisionsliste: der unveränderte Erstreceipt, initial und die aktuelle adoption-Bindung bleiben die kompakte Autorität. Der Abschluss erzeugt einen überprüfbaren lokalen Produktionsdiff, keinen automatischen Commit/Merge.
+
+Alle erreichbaren Katalog-/Quick-/Export-/Registrierungs-/Abschluss-/Metadatenreader erhalten denselben v1/v2-Quellenvertrag. Sync, Rating/Added, zulässige Kategorienpflege und Legacyziel-Update/-Revealadoption im gemischten Katalog erhalten die aktuelle v2-Quelle samt PNG/Notice unverändert. Die bisherigen vollständigen Quellen-/Plangenerationen dürfen diese neue Source nur unter ausdrücklich dokumentierter Readerkompatibilität konsumieren; ihre exakten alten Felder/Deltas bleiben. Ein Sourcewechsel macht vorhandene Pläne stale. Keine neue Generation allein für unveränderte Pfadmengen erfinden; bei tatsächlich geändertem externem Vertrag korrekt versionieren.

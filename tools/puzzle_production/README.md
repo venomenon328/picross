@@ -83,7 +83,7 @@ behalten ihre Hüllen und Gates. PB-H ergänzt den ausdrücklich gewählten
 Paketbau und die lesende Inhaltsprüfung unten; HP-I1a ergänzt äußere
 Fortschreibung und Export v6. HP-I1b1 ergänzt zielgebundene Erstregistrierung
 und ersten Abschluss; echte Capability bleibt false bis HP-I2. Späterer reiner
-Hintergrundersatz bleibt HP-I1b2, neue Sheetbedienung #490. Die Standalone-
+Hintergrundersatz folgt dem HP-I1b2-Weg unten, neue Sheetbedienung #490. Die Standalone-
 Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
 
 ## PB-H: Hintergrundpakete und lesende Inhaltsprüfung
@@ -92,9 +92,9 @@ Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabsc
 und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
 neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
 [Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 3, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Dokumentrevision 4, mit tatsächlichem Dateihash und gelesenem Quellencommit.
 Der aktive Authoringpfad und der eingebettete Offline-Sheet-Snapshot bleiben
-**0.6.0 / Dokumentrevision 42**. Das ist eine zusätzliche Vorbereitungsfähigkeit,
+**0.6.0 / Dokumentrevision 43**. Das ist eine zusätzliche Vorbereitungsfähigkeit,
 keine Aktivierung des vollständigen Hintergrundwegs.
 
 ```sh
@@ -176,7 +176,7 @@ Manifest, tatsächliche Entscheidung, Original, Ableitung, Profil, Ausgabe und
 `test_only` exakt binden. Sie wird weder erzeugt, neu datiert noch an neue Bytes
 angepasst. Späte äußere Fortschreibung und Export v6 folgen dem HP-I1a-Vertrag
 unten. HP-I1b1 ergänzt Registry-/Source-/Receiptformen, Erstintegration und
-deren Abschluss im kompatiblen Ziel; reiner Ersatz bleibt HP-I1b2, Runtime HP-I2.
+deren Abschluss im kompatiblen Ziel; reiner Ersatz folgt HP-I1b2 unten, Runtime HP-I2.
 
 Ergebnis ist `picross-authoring-build-result-v2` mit denselben Erfolgs-/Fehler-
 Schlüsseln wie v1; darin Record v2 und eine aus diesem Record plus frisch
@@ -294,7 +294,7 @@ bis 128 MiB statt des gewöhnlichen 64-MiB-Dateilimits groß sein; übrige Limit
 Alias-/Link-/Kollisions- und Quellenänderungsprüfungen bleiben erhalten.
 
 Der folgende HP-I1b1-Weg öffnet erste Registrierung und Abschluss; späterer
-Hintergrundersatz bleibt HP-I1b2, Runtime/Import/Mipmaps/Laden HP-I2. Alte volle/
+Hintergrundersatz folgt dem HP-I1b2-Weg unten, Runtime/Import/Mipmaps/Laden HP-I2. Alte volle/
 Quick-/Metadaten-/direkte API-Verbraucher bleiben geschlossen. Kein Forcepfad;
 Export v6 und Registrierungsjournal v6 sind getrennte Formate. Gültige v1–v5-
 Exporte bleiben nach ihren eigenen Verträgen nutzbar, neue Sheetbedienung/Batch
@@ -367,7 +367,7 @@ gültige aktive Capability, ohne stillen Downgrade.
 Aktive Rating-/Added-/Defaultrecords und Revealrequest/-result v1 bleiben erhalten. Rasterupdate
 und Revealadoption **eines Hintergrundziels** scheitern konkret vor Planung/
 Mutation, auch indirekt. Späterer reiner Hintergrundersatz samt Binär-Add/Delete/
-Replace-Recovery bleibt HP-I1b2; altes Raster-ZIP wird dafür keine Voraussetzung.
+Replace-Recovery folgt HP-I1b2 unten; altes Raster-ZIP wird dafür keine Voraussetzung.
 Zulässige Kategorienquell-/Anzeigenamenpflege ist erhalten, keine neue freie
 Umklassifizierung historischer Entries/Receipts.
 
@@ -1913,3 +1913,68 @@ Unbekannte Optionen sind Fehler; kein Exit 0 für Teiladoption. Harter Kill kann
 kein stdout garantieren. Der bestehende Recoveryeinstieg behält seine Ausgabe
 `rolled-back/registered=false` bei Erfolg und seine 0/2/4-Konvention.
 
+## HP-I1b2: eigenständiger Hintergrundwechsel und revisionsgenauer Abschluss
+
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809) und
+[vollständiger Normvertrag §11](../../docs/PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel).
+Pillow exakt 12.3.0 in der oben beschriebenen isolierten Imageumgebung; nur ein
+bereits gültig hintergrundgebundenes Ziel je Adoption. Echte Capability false
+bis HP-I2; Legacy-Nachrüstung und Raster-/Revealneubindung bleiben geschlossen.
+
+```sh
+python -m tools.puzzle_production.catalog_background_change store --root <checkout> --record <record.json> --source-root <vollstaendige-arbeitsdateien>
+python -m tools.puzzle_production.catalog_background_change plan --root <checkout> --record <content/authoring/pz-ID/bg-r01/record.json> --output <neuer-planordner-ausserhalb-checkout>
+python -m tools.puzzle_production.catalog_background_change adopt --root <checkout> --plan <planordner>
+python -m tools.puzzle_production.target_adapter retire-background-production --checkout <checkout> --integrated-commit <vollstaendige-main-SHA> --authoring-revision <pz-ID> <revision>
+```
+
+API: `store(root, record_path, source_root)`, `plan(root, record_path, output,
+seconds=300)`, `adopt(root, plan_path, seconds=300, integrated_commit=None)`;
+Retirement-API `background_retirement.retire(root, revisions, integrated_commit)`.
+store liest den bereits tatsächlich erklärten unveränderlichen Request und seinen
+vollständigen Dateisatz, prüft ihn und publiziert die neue Arbeitsrevision ohne
+Ersetzen unter `content/authoring/<id>/<revision>`; der vorhandene Authoringindex
+v1 erhält nur die exakte neue Zeile. Gemeinsamer Authoringlock, frische Vor-/Nach-
+Prüfung, Index zuletzt; vorhandene identische vollständige Revision/Zeile ist
+No-op, fremde/teilweise Belegung Konflikt. Keine Freigabe erzeugen oder ändern.
+Der Speicher-No-op gilt auch nach Adoption; er prüft identische Arbeitsbytes und
+den gültigen aktuellen Katalog, erteilt aber keine neue Übernahmebefugnis für ein
+inzwischen veraltetes Ziel. plan/adopt prüfen dessen vollständige Zielbindung.
+Der Request selbst ist der Record, kein Rasterpaket und kein registrierter Status.
+Die neue Familie wird im Index ausdrücklich dispatcht und im alten Sheet abgewiesen.
+
+plan ist gegenüber Checkout/Arbeit lesend und veröffentlicht das vollständig
+geprüfte Bundle am neuen externen Pfad ohne Ersetzen. input/ ist dessen explizite
+simulierte Checkoutwurzel; alle inneren Ref-/StoredRefwerte bleiben unverändert.
+adopt liest/reproduziert HP-W2 frisch, leitet Alt-/Neuansicht unabhängig her und
+prüft Arbeit/Index bei Eingang und unter Kataloglock vor erster aktiver Mutation.
+Nur der vollständig eigene Zielstand ist Byte-/mtime-No-op. Nach revisionsgenauem
+Mainabschluss erfordert dieser reine No-op `--integrated-commit <40-stellige-SHA>`;
+fehlende/teilweise Arbeit darf niemals eine neue Mutation erlauben. Ein alter Plan
+bleibt nach ursprünglichem Paket-/Receiptwechsel stale, auch als No-op.
+
+Die CLI liefert genau ein JSON-Objekt `picross-background-adoption-result-v1`
+mit `format,status,puzzle_id,revision,plan_hash,error,recovery_required,remaining`.
+Status ist `stored,planned,adopted,no-op,invalid_input,aborted`; unbekannte
+Identitäts-/Planwerte und nicht vorhandene Fehler/Restpfade sind null.
+`error` enthält andernfalls `code,message`, `recovery_required` ist Boolean.
+Exitcodes: 0 bei Erfolg, 2 bei ungültiger Eingabe/Konflikt/I/O-Fehler,
+4 bei Abbruch. Ein nach Veröffentlichung fehlgeschlagener Sync oder Readback
+meldet den tatsächlich verbleibenden eigenen Plan-/Arbeitsordner; eine nur
+teilweise gespeicherte Revision wird nicht stillschweigend vervollständigt.
+
+retire-background-production benötigt aktualisiertes origin/main und dessen
+vollständigen bestätigten Commit, ausdrücklich wiederholbare `--authoring-revision
+ID REVISION`-Paare. Alle ausgewählten tatsächlichen Mainadoptionen vor erster
+Entfernung prüfen; supersedierte Arbeit darf mit ihrem eigenen Mainbeleg enden,
+ohne aktuelle Source/PNG/none/Notice/Receipt oder jüngere Arbeit anzufassen.
+Wiederholung vollständig entfernter Arbeit ist nach frischer Prüfung No-op;
+Teilentfernung/Fremdbytes/Stagingfehler melden tatsächliche Reste. Kein Git-Commit,
+Fetch, Push oder Merge im Writer. Die alten Reveal-/Rasterbefehle behalten ihren
+Scope. Keine Rekonstruktion alter ZIPs oder dauerhafte Plankopie erforderlich.
+
+Die technischen Nachweise sind kleine synthetische Fälle in tools, production.images,
+production.adapter und production.catalog. Der Kern liefert bei Werkzeugentwicklung
+Windows; das belegt keinen Windowsstart oder Hintergrundrenderer. Fachoriginale
+werden im Lauf geprüft und danach entfernt, evidence.mode=none; vor Merge bleibt
+ein unabhängiges technisches Review des konkreten Heads erforderlich.
