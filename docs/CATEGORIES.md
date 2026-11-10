@@ -449,8 +449,8 @@ Methodenaktivierung erhalten Hintergrundsource/PNG/Notice und deren Bindungen.
 Eine freie Änderung historisch gebundener Entry-/Receiptkategorien wird nicht
 eingeführt. ID, Hinweise/Logik, Saves, Palette und Difficultyidentität bleiben.
 Legacyziel-Rasterupdate/Revealadoption im gemischten Katalog bleiben unter ihren
-neuen vollständigen Quellen-/Plangenerationen zulässig; ein Hintergrundziel
-blockiert diese beiden Operationen vor Planung/Mutation, auch indirekt.
+neuen vollständigen Quellen-/Plangenerationen zulässig. Hintergrundziele benötigen
+die eigene HP-I1c-Neubindung; ältere Generationen blockieren sie weiterhin.
 
 Snapshots erfassen Capability (auch null), Source/Notice, ausgewählte PNGs,
 Abwesenheiten und die Namespaces `backgrounds,background_assets` zusätzlich zu
@@ -480,5 +480,26 @@ Aktivierungsplan-v2-Generationen sind wegen identischer vollständiger Pfadmenge
 ausdrücklich mit v2 kompatibel, ohne neue Felder oder schwächere Deltas. Ein
 Sourcewechsel macht vorhandene Pläne stale. Metadaten und Legacyzieloperationen
 erhalten Source/PNG/Notice vollständig. Hintergrundziel-Rasterupdates und
-Revealadoption bleiben auch indirekt gesperrt (HP-I1c); echte Capability false
+Revealadoption folgen dem gesonderten HP-I1c-Vertrag unten; echte Capability false
 bis HP-I2. Kein Solver-/Difficulty-/Bestandsreplay oder tatsächlicher Runtimebeleg.
+
+## HP-I1c · Versionierte aktuelle Hintergrundbindung
+
+Der vor konsumierendem Code festgelegte geschlossene
+[HP-I1c-Vertrag §12](PUZZLE_BACKGROUNDS.md#12-hp-i1c--aktuelle-raster-revealbindung)
+ergänzt die früheren Hintergrundziel-Sperren gezielt: Source v3 erhält ihren
+vollständigen v1/v2-Ausgangsstand und bindet chronologisch aktuelle Definition,
+Runtime-Revision und effektiven AT-Reveal. Rasterupdate erhält die aktuelle
+Bildentscheidung; Revealadoption erhält Raster-/Saveidentität. Hintergrundwechsel
+bleibt der eigene Writer. V5 ist kein none-Downgrade; v6-Update verlangt exakt
+dieselben Bild-/Entscheidungsdaten. Keine Legacy-Erstnachrüstung.
+
+Neu sind ausschließlich Updatejournal v7, Revealjournal v4, Hintergrundjournal v2,
+AT-Source v2, Revealplan v4 und Hintergrundplan v2 mit den in §12 exakt definierten
+Feldern/Versionsgrenzen. Vorige Formen bleiben streng geschlossen. Registry v3,
+Runtime v6 und Receipt v2 bleiben unverändert. Aktive Bytes, historische erste
+Freigabe und normalisierter aktueller Exportanker werden getrennt geprüft, auch
+nach Retirement und bei ursprünglicher Registerwiederholung. Budgets, vollständige
+T/K-/Namespaceguards, frische Prüfung unter Lock, Runtime zuletzt und Recovery
+bleiben erhalten. Echte Capability bleibt false; nur isolierte synthetische
+test_only-Ziele verwenden true. Keine Authoring-/Sheet-Formatänderung.
