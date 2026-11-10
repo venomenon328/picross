@@ -1,0 +1,118 @@
+name: HP-I2 one-time originals
+
+on:
+  push:
+    branches: [review/561-hp-i2-evidence-8a1a8ce8]
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: hp-i2-originals-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PRODUCT_HEAD: 8a1a8ce81d4e92cfa2bc019c7bf486ac30002072
+  PYTHONUNBUFFERED: '1'
+  P1_BASE_COMMIT: 964cfe2422a45871961760e65dcd863fe68ee5e0
+
+jobs:
+  originals:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          path: review
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ env.PRODUCT_HEAD }}
+          path: product
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Restore verified official toolchain archives
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/p1-toolchain-cache
+          key: ${{ runner.os }}-godot-4.7.2-cadd3204e728a35d3f13adb7fd0d7902636b79f6b95c40c265eb73b6c35329e4-f298490b8d44d934be425a5a65a51bf15f422428b229a06a6e11d9ffea248011
+      - name: Prepare the bounded synthetic image environment
+        run: |
+          command -v xvfb-run
+          python3 -m venv "${{ runner.temp }}/hp-i2-env"
+          "${{ runner.temp }}/hp-i2-env/bin/pip" install --only-binary=:all: -r product/tools/puzzle_production/requirements-image.txt
+          mkdir -p "${{ runner.temp }}/hp-i2-tmp"
+      - name: Compile reconstructed temporary Python helpers
+        run: python3 -m py_compile review/tools/review_hp_i2/*.py
+      - name: Produce exactly T01 T02 and six native originals
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          TMPDIR: ${{ runner.temp }}/hp-i2-tmp
+        run: >-
+          "${{ runner.temp }}/hp-i2-env/bin/python"
+          review/tools/review_hp_i2/hp_i2_evidence.py
+          --root "$GITHUB_WORKSPACE/product"
+          --work "${{ runner.temp }}/hp-i2-work"
+          --output "${{ runner.temp }}/hp-i2-originals"
+          --cache "${{ runner.temp }}/p1-toolchain-cache"
+          --product-head "$PRODUCT_HEAD"
+      - name: Upload only the approved head-bound originals
+        id: originals
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: hp-i2-originals-${{ env.PRODUCT_HEAD }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/hp-i2-originals/
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 6
+      - name: Download and verify exactly the published nine-file original archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HP_ARTIFACT_ID: ${{ steps.originals.outputs.artifact-id }}
+          HP_ARTIFACT_DIGEST: ${{ steps.originals.outputs.artifact-digest }}
+        run: |
+          python3 - <<'PY'
+          import hashlib, io, json, os, urllib.error, urllib.request, zipfile
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  return None
+          artifact_id = int(os.environ["HP_ARTIFACT_ID"])
+          request = urllib.request.Request(
+              "https://api.github.com/repos/venomenon328/picross/actions/artifacts/" + str(artifact_id) + "/zip",
+              headers={"Authorization": "Bearer " + os.environ["GH_TOKEN"], "Accept": "application/vnd.github+json"})
+          try:
+              response = urllib.request.build_opener(NoRedirect).open(request, timeout=60)
+          except urllib.error.HTTPError as error:
+              if error.code != 302:
+                  raise
+              location = error.headers["Location"]
+              if not location.startswith("https://"):
+                  raise ValueError("Artifact redirect must use HTTPS")
+              response = urllib.request.urlopen(location, timeout=60)
+          archive = response.read()
+          digest = hashlib.sha256(archive).hexdigest()
+          assert digest == os.environ["HP_ARTIFACT_DIGEST"].removeprefix("sha256:")
+          with zipfile.ZipFile(io.BytesIO(archive)) as z:
+              assert z.testzip() is None
+              names = z.namelist()
+              assert len(names) == 9 and len(set(names)) == 9
+              assert all("/" not in name and "\\" not in name for name in names)
+              assert sum(name.endswith(".png") for name in names) == 6
+              manifest = json.loads(z.read("manifest.json"))
+              assert manifest["product_head"] == os.environ["PRODUCT_HEAD"]
+              assert manifest["passed"] is True
+              assert set(names) == {"manifest.json"} | {r["file"] for r in manifest["files"]}
+              for row in manifest["files"]:
+                  data = z.read(row["file"])
+                  assert len(data) == row["bytes"]
+                  assert hashlib.sha256(data).hexdigest() == row["sha256"]
+              print("HP_I2_ARCHIVE_TRANSPORT_OK", json.dumps({"artifact_id":artifact_id,"bytes":len(archive),"sha256":digest,"files":names}))
+              print("HP_I2_REPORT_MANIFEST", json.dumps(manifest, separators=(",",":")))
+              t01 = json.loads(z.read("T01.json"))
+              for case in t01["cases"]:
+                  observations = case.pop("observations", [])
+                  case["observations_count"] = len(observations)
+              print("HP_I2_REPORT_T01", json.dumps(t01, separators=(",",":")))
+              print("HP_I2_REPORT_T02", z.read("T02.json").decode())
+          PY
