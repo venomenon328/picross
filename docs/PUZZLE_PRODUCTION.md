@@ -9,6 +9,17 @@ für ihre gültigen Altbindungen und ausdrücklich gewählte kompatible Fälle e
 keine neue pauschale 0.3-Pflicht. Beide Freezes und versiegelte Pakete bleiben unverändert.
 Die [CLI-Anleitung](../tools/puzzle_production/README.md) dokumentiert die ausführbaren Befehle.
 
+**BA-A / #491 · lokale serielle Verarbeitung:**
+[PRODUCTION_BATCH](PRODUCTION_BATCH.md) schließt Plan, Checkpoint, Bericht und
+die festen `validate/run/resume/status`-Aufrufe. Der Runner konsumiert vorhandene
+Fachwerkzeuge mit ausdrücklichen Entscheidungen und endlichen gebuchten Budgets;
+Wiederaufnahme prüft Originale fachlich frisch. Reine Hintergrundänderungen
+erhalten unveränderte Logik-/Difficultyartefakte. Paketbau endet lokal am
+vollständigen v1/v2-Builderauftrag. [Paketentscheidung BA-A](https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657)
+und der Liefer-PR führen technische Nachweise und das unabhängige Vor-Merge-Review.
+Der Default bleibt 0.6.0, 0.7.0 ausdrücklich gewählt; BA-B und tatsächliche
+Inhaltsabnahme/Integration bleiben eigene Schritte.
+
 **HP-W2 / #560, PB-H / #489 und HP-I1a–HP-I2 / #561 · versionierter opt-in-Weg, Default bleibt 0.6.0:**
 [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md) führt Ablauf, Bild-/Auswahlbindungen,
 Datenformen und Einführungsmatrix für Kontextzeichnungen je Rätsel.

@@ -1,17 +1,28 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/490",
-  "package": "MJ-B",
+  "issue": "https://github.com/venomenon328/picross/issues/491",
+  "package": "BA-A",
   "modules": [
-    "tools"
+    "tools",
+    "production.adapter"
   ],
-  "purpose": "MJ-B D01–D06 / K01–K11: https://github.com/venomenon328/picross/issues/490#issuecomment-6778334390. Pflichtkern docs/ci-required einschließlich regulärem Windowsbau; einziges Zusatzmodul tools vollständig. Eigene Adoptionfamilie, unveränderte Originalbytes, geschlossene Sitzung/Sammlung v2, atomare Importe, fünf Aufträge und kompakter gemeldeter Abschluss.",
-  "omitted": "Kein production.*, native.*, preflight, delivery oder automatischer Browserlauf: kein Writer, Solver, Runtime-, Save- oder Recoverycode geändert. MJ-B-T01 einmalig offline im lokal gestarteten Browser bei 1440x900 und 1280x800; genau 01-adoption-1280x800.png plus kleine Notiz/Head-/Hashmanifest separat für unabhängigen Reviewer MJ-B-A01 vor Merge, Ende nach A01 und beauftragtem Rückbau, spätestens 2026-11-17. Unveränderte MJ-A-Belege wiederverwenden. Kein Merge und keine reale Produktion.",
+  "purpose": "BA-A D01–D07 / K01–K12: https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657. Pflichtkern docs/ci-required einschließlich regulärem Windowsbau; genau tools und production.adapter jeweils vollständig. Geschlossener serieller Laufplan, echte lokale Fachoperationen, menschliche Gates, dauerhaft reservierte Budgets und frische Wiederaufnahmeprüfung.",
+  "omitted": "production.solver, production.images, production.catalog, native.*, preflight, delivery und Chromium bleiben ausgelassen: Algorithmen/Freezes, Bildnormalisierung, gemeinsame Katalogwriter und Runtime unverändert. Kleine Adaptertests konsumieren reale Fachresultate. BA-A-T01 ist ein einmaliger echter CLI-Durchstich mit drei synthetischen Jobs, hartem Abbruch/Resume, Manipulation, Bildänderung und späterem lokalen Bauauftrag. Genau sechs Originale separat auf review/491-ba-a für unabhängigen BA-A-A01 vor Merge; nach A01 und beauftragtem Rückbau, spätestens 2026-11-17, entfernen. Kein neuer CI-Job, keine reale Produktion und kein Merge.",
   "test_changes": [
     {
-      "path": "tools/test_authoring_sheet.py",
+      "path": "tests/puzzle_production/test_batch_operations.py",
       "disposition": "change-scoped",
-      "reason": "Kleine Erweiterung des echten Inline-JS-/Node-vm-/DOM-Harness: reine Python-validate/encoded-Kompatibilität, Unicode/Pfade/Kanonbytes, gemischte Familien, Schritte, echte ZIP-/Sitzungs-/Sammlungsausgaben und gezielte Stale-Fortsetzungen. Node erforderlich, kein Skip; kein Bild-/Solverkorpus."
+      "reason": "Kleine synthetische Originale für alle zehn festen D03-Operationen, unabhängige Fachprüfung, tatsächliche solved/stalled/contradiction/uncertified-Resultate, aktive 0.4-Analyse, erhaltender historischer 0.3-Import und lokale Buildergrenze. Der Adaptergruppe fest zugeordnet; keine Bestandsrätsel oder neue Algorithmuslast."
+    },
+    {
+      "path": "tests/puzzle_production/test_batch.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine echte Runnerregressionen für geschlossene Formen, Identität/Roots/Locks, Entscheidungen, Crashbuchung, endliche erhaltene Versuche, manipulierte Originale, gezielte Invalidierung und lokalen Builder-No-op/Konflikt. Keine Erfolgsmocks statt Fachresultaten."
+    },
+    {
+      "path": "tests/puzzle_production/batch_probe.py",
+      "disposition": "temporary",
+      "reason": "Nur manuell aufgerufener BA-A-T01-Erzeuger, nicht Teil der CI-Discovery oder ein neuer Dauerjob. Liefert die genau sechs Revieworiginale am finalen Produkt-Head; synthetische Laufdaten danach bereinigen, Reviewref nach BA-A-A01 und beauftragtem Rückbau bis 2026-11-17."
     }
   ],
   "core_change": null,
