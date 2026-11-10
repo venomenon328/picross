@@ -29,7 +29,7 @@
     {
       "path": "tools/test_p1_product.py",
       "disposition": "change-scoped",
-      "reason": "Bounded fixture copy excludes real backgrounds before copy, and repeatable regular restoration replaces synthetic namespaces/import leftovers."
+      "reason": "Bounded fixture copy excludes real backgrounds before copy, and repeatable regular restoration replaces synthetic namespaces/import leftovers. Extend only the existing cheap simulated warning/deadline/error/cleanup cases to kat2-pages alongside kat2-kk, with exact-name exclusions, following https://github.com/venomenon328/picross/issues/561#issuecomment-6772219227. No additional real process-tree or native probe family."
     },
     {
       "path": "tools/test_background_web_contract.py",
