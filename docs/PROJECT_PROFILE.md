@@ -76,9 +76,12 @@ true sein; den tatsächlichen Abnahmestand führt der aktuelle Produkt-PR.
 Synthetische kompatible Ziele belegen nur den Werkzeugweg.
 Authoring 0.6.0 samt Offline-Sheet bleibt der aktive Produktionsdefault; 0.7.0
 ist ausdrücklich opt-in. Capability und verpflichtende Gesamtaktivierung sind
-getrennt. Der konkrete verbleibende Einzelweg wird in #560 abgeglichen; neue
-Sheetbedienung bleibt #490. Keine automatische Umstellung alter Produktionen
-oder zusätzliche persönliche Buchabnahme pro Rätsel.
+getrennt. Der konkrete verbleibende Einzelweg wird in #560 abgeglichen.
+[MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
+führt den regulären Mehrjob-Arbeitsbereich einschließlich Update v3, Sitzung v5
+und Auftrag v4; die separate spätere Hintergrundrevision bleibt MJ-B.
+Keine automatische Umstellung alter Produktionen oder zusätzliche persönliche
+Buchabnahme pro Rätsel.
 
 ## Pflichtquellen nach Auftrag
 

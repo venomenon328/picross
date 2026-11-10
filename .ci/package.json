@@ -1,53 +1,20 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/561",
-  "package": "HP-I2",
+  "issue": "https://github.com/venomenon328/picross/issues/490",
+  "package": "MJ-A",
   "modules": [
-    "tools",
-    "production.catalog",
-    "native.catalog",
-    "native.export"
+    "tools"
   ],
-  "purpose": "HP-I2 decision 6770077470: closed Runtime v6 reader, passive variant A, bounded per-visit publication/omission, native and threadless Web loaders, isolated lossless mipmap import, correct selected source restoration and Windows/Web inventory. tools checks import/copy/Worker and authoring consistency; production.catalog retains actual writer, identity, stale-plan and recovery coverage; native.catalog adds one cheap headless reader/state check and preserves its complete existing cases; native.export supplies the regular Windows player and actual PCK audit. Independent HP-I2-A01 reviews the final head, full selected CI and one-time T01/T02 originals before merge.",
-  "omitted": "No production.images/adapter/solver: HP-W2 derivation, export/approval schemas and puzzle logic are unchanged. No native.graphics/core/history/completion/adapters broad suites: existing cell/history/completion behavior is unchanged, and the new passive layer receives targeted T01 regular-root input/zoom/transition evidence. No extra preflight, delivery, Chromium, hosting or thread-profile change. T01/T02 run once from a separate temporary review ref bound to the product head: six exact native originals and actual Windows/Web package measurements. No real content, growing image corpus, benchmark campaign, new heavy main-core suite or merge.",
+  "purpose": "MJ-A decision https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064: regular offline multi-job workspace, strict atomic old/new imports, paired Record v2/Update v3, session v5/request v4 background transport, both exact rulebook snapshots, job-bound async operations and exports. Keep docs and ci-required core; select the complete existing tools module. K01-K12, actual HTML/ZIP mechanism coverage and the one-time T01 browser observation are reviewed independently in A01 on the final product head before merge.",
+  "omitted": "No production.*, native.*, preflight, delivery, browser automation, Chromium dependency, new heavy core family or content replay. Production formats, renderer and production tools are unchanged. Existing core Windows-build routing remains unchanged for test-code changes. T01 is one locally started offline browser pass with ten small synthetic jobs and exactly two original PNGs, 01-jobs-1440x900.png and 02-background-1280x800.png, plus a minimal product-head/hash note on a separate temporary review ref or artifact. Retain only until A01 and authorized cleanup, no later than 2026-11-17; no product-PR gallery or regular evidence bundle. MJ-B standalone background adoption remains out of scope; no merge.",
   "test_changes": [
     {
-      "path": "game/tests/background_tests.gd",
+      "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
-      "reason": "Cheap headless v2-v6 strict-reader negatives and generated-texture visit state tests: timely/late/failed publication, stale A-B-A, same-path revision, leave, idempotence and one-request bound; selected only in native.catalog, no images retained."
-    },
-    {
-      "path": "game/tests/content_pack_probe.gd",
-      "disposition": "change-scoped",
-      "reason": "Extend the existing actual Windows/Web PCK audit with exact selected background/notice/remap inventory, real decoded RGBA dimensions/mipmaps and optional source-pixel bindings; no raw PNG hash against imported bytes."
-    },
-    {
-      "path": "tools/test_background_import.py",
-      "disposition": "change-scoped",
-      "reason": "Small stdlib fixture/source/profile/copy/restore guards, independent of the real background corpus; no engine or production image generation in the core."
-    },
-    {
-      "path": "tools/test_p1_product.py",
-      "disposition": "change-scoped",
-      "reason": "Bounded fixture copy excludes real backgrounds before copy, and repeatable regular restoration replaces synthetic namespaces/import leftovers. Extend only the existing cheap simulated warning/deadline/error/cleanup cases to kat2-pages alongside kat2-kk, with exact-name exclusions, following https://github.com/venomenon328/picross/issues/561#issuecomment-6772219227. No additional real process-tree or native probe family."
-    },
-    {
-      "path": "tools/test_background_web_contract.py",
-      "disposition": "change-scoped",
-      "reason": "Small Node mechanism tests for the threadless Worker decoder, pinned compressed-container bounds, cancellation and unsupported API diagnosis; explicitly no browser execution claim."
-    },
-    {
-      "path": "tests/puzzle_production/test_catalog_background.py",
-      "disposition": "change-scoped",
-      "reason": "Replace the obsolete real-target false assertion with the delivered v6 capability while retaining strict Boolean, format and additional-field rejection; no writer/recovery compatibility relaxation."
-    },
-    {
-      "path": "tools/test_ci_c.py",
-      "disposition": "change-scoped",
-      "reason": "Cheap closed BACKGROUND_TESTS_OK reader and native.catalog phase-gate mutations bind the fixed marker, unique exact JSON shape and positive integer checks count; rehashed fake, zero and extra-field logs cannot pass. No fixed assertion count, native rerun or new main-core test family."
+      "reason": "Extend the existing lightweight test using the actual inline HTML script, Node vm and a small DOM stub: ten mixed-phase jobs, strict imports, record/projection pairing, background intent, controlled async races, real ZIP inventory/hash bindings and byte-exact snapshots. Small synthetic fixtures only; Node remains required and its absence must fail, never skip the mechanism proof. No permanent real image corpus or browser test family."
     }
   ],
-  "core_change": "The existing build_main_player entry must use the same source-bound isolated background import helper so its regular Windows build has the promised lossless mipmaps. This adds bounded selected-source/profile checks to its existing import/export, no new engine invocation, screenshots or heavy core test group.",
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,
