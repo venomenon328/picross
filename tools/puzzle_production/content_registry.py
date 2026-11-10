@@ -150,9 +150,10 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
         # Also enforce the category binding without the expensive production replay.
         m = load_json(package / "manifest.json")
         from . import integrated_content
-        declared = m.get("format") in ("picross-target-export-v6", background.RECEIPT_FORMAT)
+        source = background.load(root, r, e)
+        declared = m.get("format") in ("picross-target-export-v6", background.RECEIPT_FORMAT) or (
+            m.get("format") == "picross-target-export-v5" and source is not None and source["format"] == "picross-catalog-background-v3")
         require(declared == (e["id"] in background_index), "Background export v6/receipt requires its exact active index")
-        background.load(root, r, e)
         if m.get("format") in (integrated_content.FORMAT, background.RECEIPT_FORMAT):
             integrated_content.check(root, e, m)
             continue  # Final integration is checked by runtime hashes, never by production replay.
@@ -298,7 +299,7 @@ def _recover(root):
     raw = tx.read(root, tx.LOCK)
     if raw is None: return tx.recover(root)
     j = io.json_bytes(raw, tx.REVEAL_LIMIT)
-    if isinstance(j, dict) and j.get("format") in set(tx.BACKGROUND_FORMATS.values()) | set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
+    if isinstance(j, dict) and j.get("format") in set(tx.REBIND_FORMATS.values()) | set(tx.BACKGROUND_FORMATS.values()) | set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
         return tx.recover(root)
     if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
         from .content_update import recover_update

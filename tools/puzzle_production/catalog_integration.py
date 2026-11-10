@@ -8,6 +8,7 @@ import tempfile
 import time
 
 from . import catalog_io, catalog_background as background
+from . import background_rebind as rebind
 from . import operation_diagnostics as diagnostic
 from .authoring_package import file_hash, file_table, require, sha
 from .contract import canonical_bytes, load_json
@@ -63,7 +64,6 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     is_background = isinstance(manifest, dict) and manifest.get("format") == BACKGROUND_EXPORT
     if is_background:
         background.capability(root, required=True)
-        require(not update, "Background target raster update requires a future binding contract")
     if update: sha(expected_definition_sha256)
     snapshot = tx.capture(root)
     registry = snapshot["registry"]
@@ -78,11 +78,14 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     category = categories.lookup(catalog, m["category_id"])
     entry = export_entry(export_dir, m, report, category, background=is_background)
     existing = next((e for e in registry["entries"] if e["id"].casefold() == entry["id"].casefold()), None)
+    old_background = background.load(root, registry, existing) if existing else None
     active_reveal = reveal.load(root, existing, catalog) if existing else None
     n = "game/" + entry["definition"]
     if update:
         require(existing is not None, "Update requires an existing production ID")
-        require(existing["id"] not in background.index(registry), "Background target raster update requires a future binding contract")
+        require(not is_background or old_background is not None, "Legacy retrofit is unsupported")
+        require(old_background is None or m["format"] in (palette_gate.EXPORT, BACKGROUND_EXPORT),
+                "Background raster update requires v5 or v6")
         require(file_hash(tx.safe(root, "game/" + existing["definition"])) == expected_definition_sha256, "Stale expected definition hash")
         require(all(entry[k] == existing[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")),
                 "Raster update must retain identity, paths, visibility, category and save slot")
@@ -92,10 +95,14 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         from .integrated_content import FORMAT as INTEGRATED
         original = load_json(root / existing["production"]["package"] / "manifest.json")
         same = reveal.normalized(root, existing) == entry
-        if same and is_background:
-            current_background = background.load(root, registry, existing)
-            same = current_background is not None and background.encoded(background.initial(current_background)) == background.encoded(
-                background.build(export_dir, m, report, entry))
+        if is_background and old_background is not None:
+            exported_background = background.build(export_dir, m, report, entry)
+            if not update:
+                same = background.initial(old_background) == exported_background
+            elif same:
+                same = (next((event["export_source"] for event in reversed(old_background["events"]) if event["operation"] == "update"),
+                             background.initial(old_background)) if old_background["format"] == rebind.FORMAT else
+                        background.initial(old_background)) == exported_background
         if same:
             check_checkout(root, replay=not update and original.get("format") not in (INTEGRATED, background.RECEIPT_FORMAT))
             require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
@@ -126,7 +133,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     if existing: new["entries"][new["entries"].index(existing)] = entry
     else: new["entries"].append(entry)
     new["entries"].sort(key=lambda e: e["id"])
-    source = background.build(export_dir, m, report, entry) if is_background else None
+    source = background.build(export_dir, m, report, entry) if is_background and not existing else None
     if source is not None:
         new["format"] = background.REGISTRY_FORMAT
         new.setdefault("backgrounds", []).append({"id": entry["id"], "source": background.ref(background.path(entry["id"]), background.encoded(source))})
@@ -144,6 +151,17 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         rebound = reveal.rebind(active_reveal, entry, m["runtime_revision"], changes[notice], catalog)
         changes[reveal.path(entry["id"])] = canonical_bytes(rebound) + b"\n"
         changes[notice] = snapshot["texts"][notice]
+    if update and old_background is not None:
+        rebound_record = rebound if active_reveal else None
+        bound = rebind.binding(root, old_background, entry, raw,
+            catalog_io.read(root, "game/" + entry["reveal"], reveal.IMAGE_LIMIT), changes[notice], rebound_record)
+        rebound_background = rebind.append(old_background, existing, bound, "update",
+            export_source=background.build(export_dir, m, report, entry) if is_background else None)
+        name = background.path(entry["id"])
+        changes[name] = background.encoded(rebound_background)
+        for row in new["backgrounds"]:
+            if row["id"] == entry["id"]: row["source"] = background.ref(name, changes[name])
+        changes[tx.REGISTRY] = background.encoded(new)
     with tempfile.TemporaryDirectory(prefix="sd-c-integration-") as temp, ExitStack() as scope:
         stage = Path(temp) / "package"
         shutil.copytree(export_dir, stage)

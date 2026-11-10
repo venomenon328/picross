@@ -21,7 +21,7 @@ MODULES = {
     'catalog': ('test_background_catalog_boundary', 'test_background_change',
                 'test_background_change_consumers', 'test_background_change_retirement',
                 'test_background_change_transactions', 'test_background_source', 'test_background_consumers',
-                'test_background_retirement', 'test_background_transactions',
+                'test_background_rebind', 'test_background_retirement', 'test_background_transactions',
                 'test_catalog_added', 'test_catalog_background', 'test_catalog_integration', 'test_catalog_reveal',
                 'test_catalog_review', 'test_categories_adapter', 'test_content_update',
                 'test_integrated_content', 'test_ke_recovery', 'test_reveal_recovery',
@@ -136,6 +136,7 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('cat
  'tests/puzzle_production/test_background_content.py': ('adapter', 'catalog'),
  'tests/puzzle_production/test_background_export.py': ('adapter', 'catalog'),
  'tests/puzzle_production/test_background_package.py': ('adapter',),
+ 'tests/puzzle_production/test_background_rebind.py': ('catalog',),
  'tests/puzzle_production/test_background_retirement.py': ('catalog',),
  'tests/puzzle_production/test_background_source.py': ('catalog',),
  'tests/puzzle_production/test_background_transactions.py': ('catalog',),
@@ -194,6 +195,7 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('cat
  'tools/puzzle_production/background_export.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/background_io.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/background_package.py': ('solver', 'images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/background_rebind.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/background_request.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/background_retirement.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/benchmark.py': ('solver',),
@@ -257,6 +259,7 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('cat
  'tools/puzzle_production/target_adapter.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/verifier.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/za1_fixtures.py': ('images', 'adapter', 'catalog')}
+
 
 DATA_GROUPS = {
     **{'tools/puzzle_production/' + name: GROUPS for name in (

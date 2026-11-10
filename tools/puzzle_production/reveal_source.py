@@ -13,6 +13,7 @@ from .contract import canonical_bytes, digest, exact_keys, integer
 from . import catalog_io as io, catalog_rating as rating, categories
 
 FORMAT = "picross-catalog-reveal-v1"
+BACKGROUND_FORMAT = "picross-catalog-reveal-v2"
 APPROVAL = "picross-reveal-approval-v1"
 ROOT = "content/reveals"
 LIMIT = 1024 * 1024
@@ -145,7 +146,7 @@ def require_legacy_target(root, entry, registry=None):
 def validate(value, catalog):
     from .content_registry import validate as validate_registry, FORMAT as REGISTRY_FORMAT
     exact_keys(value, {"format", "id", "record_revision", "identity", "origin", "bindings", "revisions", "current", "record_hash"})
-    require(value["format"] == FORMAT, "Unknown reveal source format")
+    require(value["format"] in (FORMAT, BACKGROUND_FORMAT), "Unknown reveal source format")
     identifier = rating.identity(value["id"])
     exact_keys(value["identity"], {"key", "save_slot", "definition", "reveal", "notice"})
     origin = exact_keys(value["origin"], {"entry", "runtime_revision", "notice", "receipt"})
@@ -173,7 +174,8 @@ def validate(value, catalog):
         check_hash(binding, "binding_hash")
         previous = binding["binding_hash"]
         seen[previous] = binding
-    if origin["receipt"] is not None: receipt(origin["receipt"], origin["entry"], origin["notice"]["sha256"])
+    if origin["receipt"] is not None:
+        receipt(origin["receipt"], origin["entry"], origin["notice"]["sha256"], background=value["format"] == BACKGROUND_FORMAT)
     previous_image, previous_notice, last_binding = origin["entry"]["production"]["reveal_sha256"], origin["notice"]["text"], 1
     for index, revision in enumerate(revisions, 1):
         exact_keys(revision, {"image_revision", "binding_hash", "previous_reveal_sha256", "reveal_sha256", "notice", "approval", "provenance", "revision_hash"})
@@ -273,15 +275,19 @@ def package(root, entry, *, background_snapshot=None):
                 'Registered palette gate is blocked')
     require(isinstance(inspection,dict) and all(k in inspection and inspection[k] == entry['production'][k] for k in ('width','height','mode','difficulty','test_only')) and
             inspection.get('package_revision') == entry['production']['revision'], 'Historical production metadata differs')
+    from . import catalog_background as backgrounds
+    registry = background_registry(root) if background_snapshot is None else background_snapshot[0]
+    declared = entry['id'] in backgrounds.index(registry)
     if background:
-        from . import catalog_background as backgrounds
         require(all(manifest[k] is False for k in ('integration_ready','catalog_ready','registered')) and
                 manifest['technical'] is True and manifest['editorial_approved'] is True,
                 'Invalid immutable background export readiness')
-        registry = background_registry(root) if background_snapshot is None else background_snapshot[0]
-        require(entry['id'] in backgrounds.index(registry), 'Missing registered background authority')
+        require(declared, 'Missing registered background authority')
+    if declared:
         source = backgrounds.load(root, registry, entry, texts=None if background_snapshot is None else background_snapshot[1])
-        require(backgrounds.initial(source)['origin']['export_manifest_sha256'] == io.checksum(raw),
+        anchor = (source["events"][-1]["binding"]["entry"]["production"]["package_sha256"]
+                  if source["format"] == "picross-catalog-background-v3" else backgrounds.initial(source)['origin']['export_manifest_sha256'])
+        require(anchor == io.checksum(raw),
                 'Background origin export binding differs')
     notice_hash=sha(manifest['files'].get('runtime/'+notice_path(entry).removeprefix('game/')))
     return deepcopy(entry), notice_hash, None, set(prefix + "/" + n for n in files)
@@ -309,7 +315,12 @@ def resolve(root, entry, catalog, *, record=None):
     runtime_revision = rating.bytes_json(definition, 2 * 1024 * 1024)["revision"]
     record = load(root, entry, catalog) if record is None else validate(record, catalog)
     if record is not None:
-        require_legacy_target(root, entry)
+        from . import catalog_background as bg
+        declared = entry["id"] in bg.index(background_registry(root))
+        require(record["format"] == (BACKGROUND_FORMAT if declared else FORMAT), "Reveal source generation differs from target")
+        if declared:
+            require(bg._source(root, background_registry(root), entry)["format"] == "picross-catalog-background-v3",
+                    "Background reveal requires its current rebind authority")
     effective_image, effective_notice = entry["production"]["reveal_sha256"], historical_notice
     if record:
         binding = record["bindings"][-1]
@@ -329,7 +340,6 @@ def resolve(root, entry, catalog, *, record=None):
 
 
 def revise(root, entry, catalog, image_hash, declaration, attribution, append=None):
-    require_legacy_target(root, entry)
     resolved = resolve(root, entry, catalog)
     old = load(root, entry, catalog)
     value = deepcopy(old)
@@ -338,7 +348,9 @@ def revise(root, entry, catalog, image_hash, declaration, attribution, append=No
         original_notice = make_notice(io.read(root, identity(entry)["notice"], 65536))
         origin = {"entry": original, "runtime_revision": resolved["runtime_revision"], "notice": original_notice, "receipt": integrated}
         binding = hashed({"binding_revision": 1, **{k: origin[k] for k in ("entry", "runtime_revision", "notice")}, "previous_binding_hash": None}, "binding_hash")
-        value = {"format": FORMAT, "id": entry["id"], "record_revision": 0, "identity": identity(entry),
+        from . import catalog_background as bg
+        declared = entry["id"] in bg.index(background_registry(root))
+        value = {"format": BACKGROUND_FORMAT if declared else FORMAT, "id": entry["id"], "record_revision": 0, "identity": identity(entry),
                  "origin": origin, "bindings": [binding], "revisions": [], "current": {"binding_revision": 1, "image_revision": 0}}
     raw_notice = io.read(root, identity(entry)["notice"], 65536)
     if append is not None:

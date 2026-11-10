@@ -160,23 +160,24 @@ class BackgroundConsumerTests(unittest.TestCase):
         self.assertEqual(snapshot(self.checkout), after)
         self.assertEqual(self.protected(), protected)
 
-    def test_background_target_raster_and_reveal_are_blocked_through_direct_apis(self):
+    def test_background_target_requires_authorized_current_bindings(self):
         entries = self.entries(); entry = entries[self.background_id]
         before = snapshot(self.checkout)
         with patch.object(reveal, 'image_input', side_effect=AssertionError('background image was opened')):
             with self.assertRaisesRegex(InvalidInput, 'Background target'):
-                reveal.build(self.checkout, [self.background_id], {self.background_id: {}}, self.root)
-        with self.assertRaisesRegex(InvalidInput, 'Background target'):
+                reveal.build(self.checkout, [self.background_id], {self.background_id: {}}, self.root, plan_format=reveal.FORMAT)
+        with self.assertRaises(InvalidInput):
             reveal_source.revise(self.checkout, entry, load_json(self.checkout / 'content/categories.json'),
                                  '0' * 64, {}, {})
         snapshot_value = tx.capture(self.checkout)
         texts = {n: raw.decode() if raw is not None else None for n, raw in snapshot_value['texts'].items()}
         altered = deepcopy(texts); altered[reveal_source.path(self.background_id)] = '{}'
-        with self.assertRaisesRegex(InvalidInput, 'Background target'):
-            reveal.validate_delta({'old': texts, 'new': altered, 'replacements': {}}, snapshot_value['registry'], self.checkout)
-        for exported in (self.background.export, self.shadow_export):
+        with self.assertRaisesRegex(InvalidInput, 'Background reveal'):
+            reveal.validate_delta({'format': tx.BACKGROUND_FORMATS['reveal-adoption'], 'old': texts, 'new': altered,
+                                   'replacements': {}}, snapshot_value['registry'], self.checkout)
+        for exported in (self.shadow_export,):
             for apply in (False, True):
-                with self.subTest(export=exported.name, apply=apply), self.assertRaisesRegex(InvalidInput, 'Background target'):
+                with self.subTest(export=exported.name, apply=apply), self.assertRaisesRegex(InvalidInput, 'requires v5 or v6'):
                     content_update.update(exported, self.checkout, entry['production']['definition_sha256'], apply=apply)
         self.assertEqual(snapshot(self.checkout), before)
 

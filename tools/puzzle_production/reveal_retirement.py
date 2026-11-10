@@ -112,7 +112,11 @@ def retire(root, revisions, integrated_commit):
     for (identifier, revision), directory in zip(revisions, directories):
         require(identifier in entries and directory in original_rows, 'Revision is not integrated on main: ' + directory)
         entry = entries[identifier]
-        source.require_legacy_target(root, entry, snapshot['registry'])
+        from . import catalog_background as bg
+        if identifier in bg.index(snapshot['registry']):
+            require(bg.index(snapshot['registry'])[identifier] == bg.index(old_registry).get(identifier),
+                    'Background binding differs from integrated main')
+            retained.update((bg.CAPABILITY, bg.path(identifier), bg.asset_path(identifier), bg.notice_path(identifier)))
         row = original_rows[directory]
         record = historical_json(row['record'])
         require(isinstance(record, dict) and record.get('format') == 'picross-authoring-record-v1' and record.get('puzzle_id') == identifier and

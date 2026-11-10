@@ -288,8 +288,9 @@ def _change_context(reads, location, manifest, request, source, entry):
     copied = reads.read(location, context["reveal_approval"], limit=bg.LIMIT)
     ap.require(copied == actual, "Background context authority is not the current source bytes")
     reveal = context["reveal"]
-    expected = bg.initial(source)["origin"]["approval"]["selection"]["reveal"]["sha256"]
-    ap.require(reveal["sha256"] == expected == entry["production"]["reveal_sha256"],
+    from .background_rebind import reveal_hash
+    expected = reveal_hash(source)
+    ap.require(reveal["sha256"] == expected,
                "Background context binds another approved reveal")
     live_ref = {**reveal, "file": "game/" + entry["reveal"]}
     live = reads.read(("package", "."), live_ref, assemble=False)
