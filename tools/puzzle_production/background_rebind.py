@@ -235,4 +235,3 @@ def delta(j, before, after, identifiers):
         mutable.add(bg.path(identifier))
     if identifiers: mutable.add("content/registry.json")
     return mutable
-
