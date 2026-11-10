@@ -1146,6 +1146,12 @@ Transaktionen und gespeicherte Pläne stehen ergänzend in
 [SD-Catalog](SD_CATALOG.md#hp-i1b1--hintergrundquellen-pläne-und-transaktionen),
 Aufrufe in [ZA-1](ZA1_ADAPTER.md#hp-i1b1--zielgebundene-erste-registrierung).
 
+Für den vollständigen dateibasierten v6-Transport darf ausschließlich ein
+unbenötigtes leeres `external/` fehlen: keine externe Ref und keine externe
+Inventardatei. `input.external_root` bleibt `external`; Git und Journal müssen
+keinen leeren Ordner oder Dummyfile transportieren. Benötigte externe Roots/
+Dateien bleiben Pflicht, sonstige ungebundene Leerordner bleiben unzulässig.
+
 ### 10.1 Feste Zielkompatibilität
 
 `game/data/background-capability.json` hat exakt
