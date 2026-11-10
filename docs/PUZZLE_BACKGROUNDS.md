@@ -1,6 +1,6 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**Vertrag 1.0 · Dokumentrevision 9 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A / #490**
+**Vertrag 1.0 · Dokumentrevision 10 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -41,7 +41,7 @@ Zielfähigkeit darf erst HP-I2 mit tatsächlicher Runtime und technischer Abnahm
 nach §13 liefern; deren Stand gehört in den konkreten PR. Eine aktivierte
 Runtime-Capability stellt den Authoringdefault nicht automatisch auf 0.7.0 um.
 MJ-A aus #490 führt den regulären Mehrjob-Arbeitsbereich nach §7.5; die eigene
-spätere Hintergrundrevision bleibt MJ-B. Synthetische kompatible Zielcheckouts prüfen
+spätere Hintergrundrevision folgt MJ-B nach Hintergrundvertrag §7.6. Synthetische kompatible Zielcheckouts prüfen
 den Werkzeugweg, keine Bildproduktion oder persönliche Bildabnahme.
 
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) bleibt für vier Aufträge,
@@ -676,7 +676,7 @@ und neue Felder in alten Hüllen werden abgewiesen, nicht entfernt oder als
 Freitext versteckt. PB-H unterstützt §§7.1–7.2 und die **Ausgabe** von
 Sheet-Update v3 nach §7.3. HP-I1a ergänzt äußere Fortschreibung nach §7.4;
 MJ-A führt Sheetimport, Sitzung v5 und Auftrag v4 im regulären Arbeitsbereich
-nach §7.5. Der gesonderte spätere Änderungsjob bleibt MJ-B.
+nach §7.5. Der gesonderte spätere Änderungsjob folgt MJ-B nach Hintergrundvertrag §7.6.
 
 ### 7.1 Hintergrundbindung und Handoff v3
 
@@ -1057,7 +1057,7 @@ ausführbaren Code interpretieren oder ein historisches Zielgate für aufgehoben
 **Version und Hintergrund.** Neue Jobs starten mit 0.6.0/Sitzung v4. Bewusstes
 Aktivieren des Hintergrundwegs oder sichtbarer v3/v5-Import verwendet 0.7.0/v5.
 Beide eingebetteten Snapshots müssen ihren Markdownquellen bytegleich entsprechen:
-0.6.0/docrev45 und 0.7.0/docrev6. Jeder v5-Job bindet den Vorschaupfad beziehungsweise
+0.6.0/docrev46 und 0.7.0/docrev7. Jeder v5-Job bindet den Vorschaupfad beziehungsweise
 den passenden 0.7.0-Anhang. Bleiben nach Alteingang inkompatible Joboptionen erhalten,
 Prompt und ZIP bis zur ausdrücklichen kompatiblen Regelwahl sperren; kein stiller
 Pfadwechsel, keine Umschreibung alter Pakete, keine andere Produktionsformaterhöhung.
@@ -1095,6 +1095,102 @@ der Hinweis nennt den vorhandenen HP-I1b2-Werkzeugweg. Der eigene spätere Ände
 mit aktueller Ziel-/Sourcebindung gehört ausschließlich MJ-B. MJ-A schließt deshalb
 Issue #490 nicht vollständig ab und aktiviert keinen neuen Produktionsdefault.
 
+
+### 7.6 MJ-B: eigenständige Hintergrundrevision im Sheet
+
+Maßgeblich ist die [Paketentscheidung MJ-B / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6778334390).
+Dieser Bedienweg verwendet den unveränderten technischen Request aus §11.1.
+0.6.0 bleibt Default; keine neue Produktions-, Writer- oder Freigabefunktion.
+
+#### D01 · Versionierte Sammlung, bestehende Jobidentität
+
+Neue äußere **`picross-cheatsheet-workspace-v2`**, exakt `format,active_job_id,jobs`; jeder Job weiterhin exakt `job_id,session,options,record`.
+
+- Reguläre Jobs enthalten unverändert Sitzung v4/v5, vorhandene Optionen und null bzw. passenden Record v1/v2.
+- Adoptionjobs enthalten die neue eigene Sitzung aus D02; `record` ist **zwingend null**, damit es nur einen unveränderlichen Requestträger gibt.
+- Der neue Sammlungswriter schreibt v2. Der v1-Reader bleibt nach seinem alten geschlossenen Vertrag lesbar und akzeptiert weiterhin ausschließlich reguläre Jobs. Import einer alten Sammlung darf die neue Arbeitsfamilie nicht unter v1 verstecken; alte Originaldateien bleiben unverändert.
+- Lokale `job_id`, Reihenfolge und aktiver Job behalten die MJ-A-Regeln. **Jede nichtleere Rätsel-ID gehört weiterhin höchstens einem Job in der ganzen Sammlung**, unabhängig von der Familie. Revisionen werden innerhalb dieses Jobs geführt; kein stiller Wechsel auf Eindeutigkeit nur je Jobart.
+- Regulär ↔ Adoption ist ausschließlich als **sichtbarer vollständiger Ersatz** des ausdrücklich gewählten Zieljobs zulässig, bei gleicher oder noch leerer Rätsel-ID und mit erhaltener lokaler Job-ID. Die Vorschau nennt ersetzte Sitzung, Varianten/Anhänge/Quellrecord und Regelweg; vorherige Sicherung bleibt erreichbar. Kein Zusammenmischen. Andere nichtleere Rätsel-ID verlangt einen neuen Job.
+- Reset erhält lokale ID und Jobart, leert deren Arbeitsdaten/Request/Abschluss; Entfernen wirkt nur auf diesen Job. Persönliche Defaults und bestehende Joboptionen behalten ihre Bedeutung. Sammlung bleibt auf die vorhandenen Grenzen beschränkt: höchstens 200 Jobs und 50 MiB Eingabe; kleine gemischte Arbeitsbereiche müssen passen.
+
+Die neue Hülle ist eine **MJ-B-Entscheidung**, kein bereits bestehendes Format. Alte Updates, Sitzungen, Requests, Records und der Authoringindex behalten ihre Feldmengen.
+
+#### D02 · Eigene geschlossene Adoption-Sitzung
+
+**`picross-background-adoption-session-v1`** hat exakt `format,fields,request_text,completion`.
+
+| Bestandteil | Verbindlicher Inhalt |
+| --- | --- |
+| `fields` | Exakt `title,puzzle_id,revision,briefing,change_request,source_ref,pr,integrated_commit`. `title` ist Text bis 200 Zeichen; `briefing`/`change_request` Text bis 20.000 Zeichen. Gültige Unicode-Skalare, kein NUL. `puzzle_id`/`revision` sind vor Zuordnung null, sonst nach den vorhandenen HP-I1b2-ID-/Revisionsregeln; `source_ref` null oder sichere vorhandene Repo-Ref-Grammatik, `pr` null oder positive sicher darstellbare PR-Nummer. `integrated_commit` ist null oder ausdrücklich angegebene vollständige Main-SHA für den Abschlussauftrag, keine im Sheet verifizierte Mainintegration. `source_ref` bezeichnet den beauftragten Repository-Lesestand auch bei Dateiübergabe; eine separat bereitgestellte vollständige Arbeitsrevision kann im Briefing konkret benannt werden. Metadaten sind ein überlieferter Fundort, keine bestätigte Dateiverfügbarkeit und kein geprüfter Zielzustand. |
+| `request_text` | null oder vollständiger ursprünglicher UTF-8-Text eines Requests v1 einschließlich genau seiner End-LF, höchstens 2 MiB als UTF-8-Bytes. Strikt lesen gemäß D03; niemals trimmen, hübsch formatieren, neu autorisieren oder beim Export rekonstruieren. |
+| `completion` | null oder die geschlossene kompakte **gemeldete** Abschlussbindung aus D06. `request_text` und `completion` schließen einander aus. |
+
+Beide letzten Felder null bedeuten einen frühen Entwurf, keinen gültigen technischen Request. Bei nichtnull Request müssen dessen ID und Revision zu den Feldern passen; dieselbe Pflicht gilt für die aus einem Abschlussref ableitbare Identität. Kein zusätzlicher frei erfundener Produktionsstatus, keine Kandidatenliste aus Manifestrefs rekonstruieren, kein `registered`- oder Integrations-Erfolgsflag.
+
+Die Oberfläche zeigt den eigenen Typ, Ziel-ID/Arbeitsrevision, Request-/Sourcebindung und überlieferte Autorisierung lesbar sowie den tatsächlichen Umfang ihrer lokalen Prüfung. Request, target, background und authorization sind schreibgeschützt. Auswahl-/Erfolgsaussagen nicht aus dem freien Autorisierungstext parsen: Der Request selbst enthält keinen `selected|none`-Outcome und keine Kandidatenprojektion.
+
+Eine neue materielle `change_request` ist **neue Absicht** und sperrt die Übernahme des noch geladenen alten Requests. Den unveränderten alten Record zum Korrigieren/Abgleichen weiterreichen ist zulässig, ihn als Freigabe der neuen Bytes auszugeben nicht. Ein ausdrücklich angenommener neuer passender Request kann den Wunsch in derselben Importvorschau ablösen; identische alte Requestbytes heben ihn nicht still auf. Eine bewusste Rücknahme des Änderungswunsches ist getrennt erkennbar. Änderung gebundener Ziel-ID/Revision erfolgt nur über ausdrücklich neuen bzw. ersetzten Arbeitsstand. Ein anderer Request oder eine neue ID-/Revisionsbindung übernimmt keinen früheren Mainbeleg: `fields.integrated_commit` und eine alte Abschlussbindung werden in der sichtbaren Übernahme auf null gesetzt; auch die zugehörige PR wird bei geänderter Arbeitsrevision nicht still als neue PR übernommen.
+
+#### D03 · Strikter, atomarer Import mit ehrlicher Prüftiefe
+
+Direktimport des Original-Requests aus Datei oder exakt erhaltenem JSON-Text, neue Adoption-Sitzung, Sammlung v1/v2 und alle bisherigen regulären Einzelinputs unterstützen. Vollständige Vorschau und bewusste Übernahme wie in MJ-A; vor Fehler/Abbruch keine Teilmutation. Eine request-v1-Datei darf in keinen regulären Record-/Rasterpfad fallen. Bestehendes `pendingTransfer` muss Familie, Ziel, Generation und alle benötigten Daten binden.
+
+Die reine Requestform aus [`background_request.py`](https://github.com/venomenon328/picross/blob/a87cd91cbd82c5bd69f9206a5466b20e2aeff83c/tools/puzzle_production/background_request.py) unverändert lesen:
+
+- Exakt `format,puzzle_id,revision,target,background,authorization,files,test_only`; alle geschlossenen Unterformen, Typen und vorhandenen Grenzen berücksichtigen.
+- `target.source` am festen Pfad `content/backgrounds/<id>.json`, gültiger Ref, Ursprungshash und positive gebundene Bildrevision; drei nichtnull externe Background-Refs unter genau der eigenen Arbeitsrevision, `history=null`; echte Human-Form und deren passender Inventarref.
+- Sortiertes eindeutiges Dateiinventar gemäß bestehendem Vertrag, höchstens 256 Einträge, 32 MiB je Datei, 96 MiB deklarierte Gesamtbytes; kein Selbstref/Rootausbruch/erkennbarer Alias- oder Pfadpräfixkonflikt. Pfad-/Unicodevertrag nicht still auf ASCII einschränken.
+- Doppelte JSON-Schlüssel, unbekannte Felder/Versionen, falsche Scalars/Nullen, nichtendliche oder nicht sicher darstellbare Zahlen und ungültige Unicode-Skalare abweisen. Binärdatei mit fataler UTF-8-Dekodierung lesen; BOM oder unzulässige Bytes nicht still normalisieren.
+- Für diesen geschlossenen, ASCII-schlüsseligen Request nur **lesend** prüfen, dass der Originaltext `canonical_bytes(request) + LF` entspricht. Keine neue Produktionskanonisierung: eine abweichende Darstellung zurückweisen, nicht reparieren. Der Export verwendet ausschließlich den Originaltext/dessen identische UTF-8-Bytes. Dateihashes entstehen aus diesen tatsächlichen Bytes; vorhandene semantische Produktionshashes bleiben unverändert.
+- Lesekompatibilität mit den echten reinen Python-`validate`/`encoded`-Regeln nachweisen, einschließlich erlaubter Unicode-Pfade/Erklärungen, Alias-/Präfixkonflikten und kanonischen Negativfällen. Keine bloße Prüfsimulation oder erfundene Gleichheit aller JS-/Python-Namensvergleiche.
+
+**Grenze:** Das ist Form-/Byte-/innere Referenzprüfung. Die Oberfläche hat weder die in `files` genannten Originale gelesen noch aktuellen Source-/Capability-/Rechte-/Ableitungs-/Zielzustand geprüft. Keine vollständige `read`-/`plan`-Prüfung behaupten. `test_only` wird unverändert und sichtbar geführt; synthetische Autorisierung wird nicht als reale Inhaltsfreigabe ausgegeben. Fremde Plan-, Journal- und CLI-Ergebnishüllen bleiben kontrolliert abgewiesen.
+
+#### D04 · Eigene Aufträge, unveränderte Befugnisse
+
+Eigene Karten bzw. Schritte **`prepare,rework,resume,adopt,complete`**, getrennt von den vier regulären Rasteraufträgen:
+
+| Schritt | Mindestkontext und Verhalten |
+| --- | --- |
+| `prepare` | Zugeordnete Rätsel-ID, expliziter Quellstand und Briefing. Bestehende aktuelle Zielsource/Revealautorität im beauftragten Produktionsweg prüfen, drei isolierte Hintergrundkandidaten vorbereiten/vorlegen. Ein gespeicherter Request ist noch nicht erforderlich; keine erfundene Zielbindung. |
+| `rework` | Konkreter Auswahl-/Korrekturwunsch mit tatsächlich verfügbaren Datei-/Revisionsreferenzen; vorhandenen Request nur als unveränderten Bezug mitgeben. Eigentümertext unverändert und sichtbar in den Prompt übernehmen; materielle Änderungen haben neue passende Entscheidung, keine automatische Wiederverwendung alter Freigabe. |
+| `resume` | Konkreter Arbeitsstand bzw. gültig importierter Request und Fundort. Nur nächsten bereits autorisierten Schritt fortsetzen; keine neue Freigabe und kein erfundener bereits gespeicherter/adoptierter Zustand. |
+| `adopt` | Nichtnull strukturell gültiger Originalrequest, konkret benannter Repository- oder separat bereitgestellter Dateifundort der vollständigen Arbeitsrevision und keine offene materielle Änderungsabsicht. Vorhandene Auswahl/Zielautorisierung erhalten. Ausführender prüft vollständige Dateien und frisches Ziel, nutzt ausschließlich `store/plan/adopt` und beauftragten Gitablauf. Kein `request_text=null`- oder Abschlussfall als neue Adoption. |
+| `complete` | Request/zugeordnete Arbeitsrevision oder kompakte historische Abschlussbindung plus ausdrücklich benannter vollständiger integrierter Maincommit. `retire-background-production` prüft aktualisiertes origin/main und genau diese Revision; keine ganze-ID-Bereinigung, kein Wiederaufbau alter Rasterpakete. |
+
+Notwendige fehlende Angaben zeigen; technische `adopt`-/`complete`-Ausgabe bis dahin sperren, keine scheinbar ausführbare Integration mit Platzhaltern. Für reine Entwurfsaufträge erkennbare fehlende Angaben nach vorhandener Vorlagensemantik behandeln. `prepare/rework` sind Bild-/Auswahlaufträge für ChatGPT Work; `resume/adopt/complete` technische Aufträge für Codex mit gültiger eingestellter Arbeitswurzel.
+
+Auftragstexte verlangen aktuelle AGENTS.md, Pflichtquellen, Hintergrundvertrag und den tatsächlichen HP-I1b2-/§9-Weg. Kein reguläres OUTPUT_POLICY erzwingen, das den Adoptionrecord als Raster-Sheet-Update ausgibt: Ergebnis nennt tatsächliche Dateien/PR, Stand und nächsten Schritt; ein erzeugter echter Request wird unverändert als record.json geliefert, ohne konkurrierende Übergabeform. Normale Inhaltsaufträge bleiben von Modell-/Reasoningempfehlungen ausgenommen.
+
+Ablage-/Mergeoptionen stammen ausschließlich aus diesem Job und wirken erst im tatsächlich abgesendeten Auftrag. Der bloße Import, Jobwechsel, Kopieren oder Export erteilt keine Befugnis. Vorhandene eindeutige Auswahl nicht routinemäßig nochmals bestätigen; kein Testeinbau/Buchrender oder zusätzliche Rätsel-Endabnahme für einen reinen Hintergrundwechsel. Übernahme ist keine automatische Aktivierung von 0.7 als Default.
+
+#### D05 · Eigener Auftragsexport, sichere Originalbytes und Regelbindung
+
+Neue **`picross-background-adoption-sheet-request-v1`** mit exakt
+`format,execution,created_at,rulebook,fields,request,completion,requested_step,prompt_file,note`.
+
+- `execution` und `rulebook` verwenden exakt die bisherigen **äußeren** Sheettypen aus Auftrag v4; `fields` entspricht D02; `completion` entspricht D06. `requested_step` ist einer der fünf D04-Schritte, `prompt_file="auftrag.md"`.
+- `request` ist null oder Ref `{file:"original-request.json",sha256,bytes}` der wirklich ausgegebenen unveränderten Requestbytes. Der feste technische Repositorypfad bleibt aus ID/Revision ableitbar und wird im Prompt genannt; äußeres Transportfile und technischer Recordpfad sind verschiedene Dinge.
+- `created_at` ist nur die Exportzeit, niemals eine neue menschliche Autorisierungszeit. Fester `note`: „Bedienauftrag, keine Produktionsdateisammlung und kein frischer Freigabe-, Ziel- oder Prüfbeleg.“
+- ZIP enthält `auftrag.md`, `brief.json`, bei nichtnull Request `original-request.json`, bei Offline-Regelquelle den passenden `PICROSS_PUZZLE_AUTHORING.md`-Snapshot und `dateien.json` nach unverändertem `picross-request-files-v1`. Keine automatische Aufnahme der referenzierten `request.files`-Dateien. Die vollständige Arbeitsrevision muss dem Ausführenden im benannten Repositorystand oder ausdrücklich separat bereitgestellt erreichbar sein; der Fundort kann im vorhandenen Briefing genannt werden. Das Sheet bestätigt weder diese Verfügbarkeit noch Payloadvollständigkeit; fehlende Originale bleiben im externen `store/plan`-Weg ein echter Blocker. Kein Dummy-`package.zip` und kein Auftrags-v4-Etikett für die neue Familie.
+- Einzel-Sitzung und Sammlung sichern den Originaltext unverändert. Der Auftrag/ZIP bindet vor dem ersten await vollständigen unveränderlichen Job-, Options-, Regel-, Prompt-, Dateinamen- und Bytestand. Alle Hash-/Clipboard-/Downloadfortsetzungen verwenden die bestehende Job-/Besuchs-/Operationsticket-Disziplin; A→B→A, Reset, Typwechsel, Revision oder Entfernen machen veraltete Fortsetzungen ungültig.
+- Adoption verwendet ausdrücklich den 0.7-Preview-Regelweg; neue reguläre Jobs starten weiterhin im aktiven **0.6.0**-Default. Auswahl/Übernahme eines Adoptionjobs macht die 0.7-Wahl sichtbar und lokal. Keine Änderung persönlicher Defaults oder anderer Jobs. Bei unpassender erhaltener Regelquelle bleibt Prompt/ZIP bis zur bewussten passenden Wahl gesperrt.
+- Ausgangsstände sind **0.6.0/docrev46** und **0.7.0/docrev7**. Bei der Implementierung beide Dokumentrevisionen und vollständige eingebettete Snapshots konsistent nachführen; echte Snapshotbytes/Inventarhashes prüfen, ursprüngliche Request-/Produktionsbindungen nicht umetikettieren.
+
+Ein Import dieses äußeren Auftragsexports als Live-Sitzung oder einer CLI-Ergebnishülle ist nicht Bestandteil von MJ-B. Sitzung und Sammlung sind die expliziten Wiederaufnahmeformate.
+
+#### D06 · Gemeldeten Abschluss kompakt führen
+
+`completion` hat exakt `request,target,background,authorization,test_only,integrated_commit,report_url`.
+
+Über eine ausdrücklich bezeichnete Aktion **„Abschluss melden“** aus dem vorhandenen Originalrequest ableiten: `request` ist der Ref seiner tatsächlichen Bytes am festen `content/authoring/<id>/<revision>/record.json`-Pfad; `target,background,authorization` sind exakte unveränderte Kopien; `test_only` ist die unveränderte Boolean-Kopie und bleibt auch im historischen Abschluss sichtbar. Vollständiger tatsächlich gemeldeter Maincommit aus `fields.integrated_commit` und HTTPS-Link auf den konkreten Integrations-/Retirementabschluss werden ausdrücklich eingetragen; in einer abgeschlossenen Sitzung müssen beide Maincommitfelder übereinstimmen. Eine offene `change_request` sperrt diese Abschlusskonvertierung; sie muss zuvor durch den passenden neuen Arbeitsstand oder die getrennt erkennbare bewusste Rücknahme behandelt sein. Der Abschluss des alten Requests darf keinen neuen Änderungswunsch still entsorgen. Diese Angabe ist kein neues Inhaltsfreigaberitual und keine vom Sheet selbst geprüfte Mainintegration.
+
+Danach `request_text=null`; vollständige `files`-/Kandidaten-/Arbeitsdaten nicht als weiter verfügbare Inhalte behalten oder anbieten. Alle verbleibenden Refs sind klar **historische Identitäten**, Status **„Abschluss gemeldet“**, niemals „frisch geprüft“. `briefing`/`change_request` werden für den abgeschlossenen Stand geleert; Identität/Fundort/PR und kompakte Bindung bleiben. Ein späterer neuer Bildjob darf diese alte `target.source` nicht automatisch als heutige Quelle verwenden.
+
+Der Import einer solchen Sitzung prüft geschlossene Form und innere Querverbindungen einschließlich festem Recordpfad und ID/Revision; reale Belege verbleiben beim Ausführenden. `complete` kann den gebundenen erneuten Abschluss/No-op prüfen lassen. Neue materielle Arbeit benötigt einen ausdrücklich neuen Entwurf/Arbeitsstand. Keine Ergebnisflag-Rekonstruktion, keine Löschung im Browser und keine Wiederherstellung bereinigter Originale.
+
+
+
 ## 8. Konkrete Einführung und Reader-/Writermatrix
 
 | Paket / vorhandene Dateien | Fähigkeit und erlaubter Zwischenstand |
@@ -1109,7 +1205,7 @@ Issue #490 nicht vollständig ab und aktiviert keinen neuen Produktionsdefault.
 | **HP-I1c / #561** | Geliefert: Source v3 mit unverändertem Erstursprung und aktuellen Raster-/Revealbindungen, genau begrenzte neue Plan-/Journalgenerationen und gemeinsame Reader-/Recoveryregeln nach §12. |
 | **HP-I2 / #561:** `game/model/content_registry.gd`, erzeugte `game/data/registry.json` und Buch-/Importanschluss | Regulärer Runtime-v6-Eingang, Variante A, gemeinsames Assetlayout, verlustfreier Import/Mipmaps und Bedarfsladen nach §13. Der Kategoriepilot bleibt ausschließlich Legacy; kein Produktionsvorschau-Renderer. Technische Abnahme und Lieferstand am konkreten PR prüfen. |
 | **MJ-A / #490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html` und `tools/test_authoring_sheet.py` | Regulärer Mehrjob-Arbeitsbereich nach §7.5, gepaarter Record-v2-/Update-v3-Import, Sitzung v5 und Auftrag v4; vorhandene v1–v4-Alteingänge bleiben getrennt lesbar. Beide eingebetteten Regelwerksnapshots entsprechen bytegleich ihren Markdownquellen. 0.6.0 bleibt Default, 0.7.0 ausdrücklich gewählt. Technische Nachweise und unabhängiges Review gehören an den konkreten MJ-A-PR. |
-| **MJ-B / #490** | Noch separat zu entscheiden und umzusetzen: eigener späterer Job für `picross-background-adoption-request-v1`, gebunden an aktuelles Ziel und aktive Source. MJ-A weist ihn verständlich zurück; der vorhandene HP-I1b2-Werkzeugweg bleibt nutzbar. |
+| **MJ-B / #490** | Eigener Sheetjob nach §7.6: früher Entwurf, unveränderlicher Originalrequest, fünf passende Bedienaufträge und kompakter gemeldeter historischer Abschluss. Sammlung v2 erhält reguläre und Adoptionjobs. Form-/Byteprüfung ist keine physische Datei-/Zielprüfung; HP-I1b2 bleibt der technische Werkzeugweg. |
 | **#491 / #492** | Nur tatsächlich gelieferte Fähigkeiten orchestrieren beziehungsweise in gesondert beauftragter Produktion erproben. Keine parallelen Hintergrundformate oder künstliche Vollintegration durch Ergebnisflags. |
 
 PB-H führt die zuvor explizit an **0.6.0** gebundenen Palettengates und
@@ -1465,7 +1561,7 @@ Exakte Top-Level-Felder: `format,puzzle_id,revision,target,background,authorizat
 | `files` | Sortierte eindeutige Ref-Liste aller Dateien dieser Arbeitsrevision außer record.json selbst. Refs sind relativ zur Revision; sie erfassen auch alle Entscheidungs-/Rechte-/Sicht-/Kontextbelege und den vollständigen HP-W2-Ausgabeordner. Keine Globs, Selbstreferenzen, fremden Dateien, Links, Alias- oder Datei-/Verzeichniskollisionen. |
 | `format` | Exakt `picross-background-adoption-request-v1`; unbekannte Felder/Versionen und falsche Null-/Scalarformen sind Fehler. |
 
-Vorhandene Ref-/StoredRef-/Human-/kanonische JSON-, Pfad-, Datei-/Gesamt-/Pixel-/Zeitgrenzen weiterverwenden und die konkret angewandten Grenzwerte im Normtext nennen; keine generelle Größen- oder Zeitlockerung. Record höchstens 2 MiB. Der vorhandene Authoringindex v1 behält seine exakten Zeilen `{puzzle_id,revision,record}`; zuständige Reader erkennen die neue Arbeitsfamilie ausdrücklich, bewahren andere Zeilen und interpretieren sie nicht als Rasterrecord. Auch MJ-A weist diese eigenständige Form verständlich zurück und verweist auf den vorhandenen HP-I1b2-Werkzeugweg; ihre eigene Sheetbedienung bleibt MJ-B aus #490. Verbindliche Erstablage/Indexpflege und konkrete CLI/API in der Werkzeuganleitung dokumentieren; keine automatische Bildproduktion oder menschliche Freigabe durch einen Writer.
+Vorhandene Ref-/StoredRef-/Human-/kanonische JSON-, Pfad-, Datei-/Gesamt-/Pixel-/Zeitgrenzen weiterverwenden und die konkret angewandten Grenzwerte im Normtext nennen; keine generelle Größen- oder Zeitlockerung. Record höchstens 2 MiB. Der vorhandene Authoringindex v1 behält seine exakten Zeilen `{puzzle_id,revision,record}`; zuständige Reader erkennen die neue Arbeitsfamilie ausdrücklich, bewahren andere Zeilen und interpretieren sie nicht als Rasterrecord. MJ-B führt diese eigene Familie im Offline-Sheet nach §7.6; der reguläre MJ-A-Record-/Rasterpfad bleibt getrennt. Verbindliche Erstablage/Indexpflege und konkrete CLI/API in der Werkzeuganleitung dokumentieren; keine automatische Bildproduktion oder menschliche Freigabe durch einen Writer.
 
 **Kontext nach ursprünglichem Retirement:** Eine neue Bildvorlage darf nicht die gelöschte alte Reveal-Freigabedatei voraussetzen. In der neuen Arbeitsrevision werden die aktuell gültige Hintergrundsource und das unveränderte aktuelle Live-Reveal byteidentisch als ausdrücklich gebundene Kontextbelege gesichert. `context.reveal` bindet diese Reveal-Kopie; `context.reveal_approval` darf für genau diesen neuen Änderungsweg die Kopie der kompakten aktiven Source als erhaltene echte Freigabeautorität binden. Der Reader prüft deren Bytegleichheit mit target.source, den unveränderten Ursprung/Identität und den Revealhash der ursprünglichen `origin.approval.selection.reveal` gegen Entry und aktuelle Live-/Kopiebytes. Der ursprüngliche Reveal-Dateiname muss nicht dem Runtimepfad gleichen. Es wird keine gelöschte Approvaldatei rekonstruiert und keine neue Revealfreigabe erfunden. Diese enge Auslegung gilt ausschließlich im nachfolgend gebundenen Änderungsweg; keine allgemeine Absenkung der HP-W1-Kontextbindung.
 
@@ -1846,7 +1942,7 @@ vollständige Umstellung wird nicht aus einem true-Flag oder grünen Teiltest
 abgeleitet; #490/#491 sind auch kein pauschales vorgeschaltetes Gesamtgate.
 Gültige Altwege, versiegelte Originale und historische false-Exportfelder bleiben
 erhalten. MJ-A ergänzt ausschließlich den regulären Sheetweg nach §7.5;
-der eigenständige spätere Hintergrundänderungsjob bleibt MJ-B.
+der eigenständige spätere Hintergrundänderungsjob folgt MJ-B nach Hintergrundvertrag §7.6.
 
 ### 13.6 Einmalige Entwicklung und spätere Inhaltsarbeit
 

@@ -1,17 +1,17 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/490",
-  "package": "MJ-A",
+  "package": "MJ-B",
   "modules": [
     "tools"
   ],
-  "purpose": "MJ-A decision https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064: regular offline multi-job workspace, strict atomic old/new imports, paired Record v2/Update v3, session v5/request v4 background transport, both exact rulebook snapshots, job-bound async operations and exports. Keep docs and ci-required core; select the complete existing tools module. K01-K12, actual HTML/ZIP mechanism coverage and the one-time T01 browser observation are reviewed independently in A01 on the final product head before merge.",
-  "omitted": "No production.*, native.*, preflight, delivery, browser automation, Chromium dependency, new heavy core family or content replay. Production formats, renderer and production tools are unchanged. Existing core Windows-build routing remains unchanged for test-code changes. T01 is one locally started offline browser pass with ten small synthetic jobs and exactly two original PNGs, 01-jobs-1440x900.png and 02-background-1280x800.png, plus a minimal product-head/hash note on a separate temporary review ref or artifact. Retain only until A01 and authorized cleanup, no later than 2026-11-17; no product-PR gallery or regular evidence bundle. MJ-B standalone background adoption remains out of scope; no merge.",
+  "purpose": "MJ-B D01–D06 / K01–K11: https://github.com/venomenon328/picross/issues/490#issuecomment-6778334390. Pflichtkern docs/ci-required einschließlich regulärem Windowsbau; einziges Zusatzmodul tools vollständig. Eigene Adoptionfamilie, unveränderte Originalbytes, geschlossene Sitzung/Sammlung v2, atomare Importe, fünf Aufträge und kompakter gemeldeter Abschluss.",
+  "omitted": "Kein production.*, native.*, preflight, delivery oder automatischer Browserlauf: kein Writer, Solver, Runtime-, Save- oder Recoverycode geändert. MJ-B-T01 einmalig offline im lokal gestarteten Browser bei 1440x900 und 1280x800; genau 01-adoption-1280x800.png plus kleine Notiz/Head-/Hashmanifest separat für unabhängigen Reviewer MJ-B-A01 vor Merge, Ende nach A01 und beauftragtem Rückbau, spätestens 2026-11-17. Unveränderte MJ-A-Belege wiederverwenden. Kein Merge und keine reale Produktion.",
   "test_changes": [
     {
       "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
-      "reason": "Extend the existing lightweight test using the actual inline HTML script, Node vm and a small DOM stub: ten mixed-phase jobs, strict imports, record/projection pairing, background intent, controlled async races, real ZIP inventory/hash bindings and byte-exact snapshots. Small synthetic fixtures only; Node remains required and its absence must fail, never skip the mechanism proof. No permanent real image corpus or browser test family."
+      "reason": "Kleine Erweiterung des echten Inline-JS-/Node-vm-/DOM-Harness: reine Python-validate/encoded-Kompatibilität, Unicode/Pfade/Kanonbytes, gemischte Familien, Schritte, echte ZIP-/Sitzungs-/Sammlungsausgaben und gezielte Stale-Fortsetzungen. Node erforderlich, kein Skip; kein Bild-/Solverkorpus."
     }
   ],
   "core_change": null,
