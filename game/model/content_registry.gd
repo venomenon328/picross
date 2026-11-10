@@ -4,6 +4,7 @@ const PATH: String = "res://data/registry.json"
 const Difficulty = preload("res://model/catalog_difficulty.gd")
 static var cached: Dictionary = {}
 static var load_error: String = ""
+const LEGACY_BACKGROUND: Dictionary = {"status":"legacy", "image_revision":null, "asset":null}
 
 static func valid_category_id(value: Variant) -> bool:
 	if not value is String or value.length() < 1 or value.length() > 64:
@@ -16,7 +17,7 @@ static func valid_category_id(value: Variant) -> bool:
 	return true
 
 static func validate(raw: Variant) -> String:
-	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
+	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
 		return "Unsupported runtime registry format"
 	if raw.categories.size() > 256 or raw.entries.size() > 10000:
 		return "Registry count limit exceeded"
@@ -41,11 +42,15 @@ static func validate(raw: Variant) -> String:
 		previous_order = int(order)
 	var seen: Dictionary = {}
 	var current: bool = raw.format != "picross-runtime-registry-v2"
-	var dated: bool = raw.format in ["picross-runtime-registry-v4", "picross-runtime-registry-v5"]
-	var version: int = 5 if raw.format == "picross-runtime-registry-v5" else 4
+	var backgrounds: bool = raw.format == "picross-runtime-registry-v6"
+	var dated: bool = raw.format in ["picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6"]
+	# v6 adds background metadata, not a new difficulty generation.
+	var version: int = 5 if raw.format in ["picross-runtime-registry-v5", "picross-runtime-registry-v6"] else 4
 	for item: Variant in raw.entries:
-		if not item is Dictionary or item.size() != (9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
+		if not item is Dictionary or item.size() != (10 if backgrounds else 9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
 			return "Invalid registry entry fields"
+		if backgrounds and not valid_background(item):
+			return "Invalid catalog background"
 		if dated and (not item.has("added_at") or not valid_added(item.added_at)):
 			return "Invalid catalog added timestamp"
 		if current and (not item.has("difficulty") or not Difficulty.valid(item.difficulty, version)):
@@ -69,6 +74,40 @@ static func validate(raw: Variant) -> String:
 		if not valid_category_id(item.category_id) or not category_ids.has(item.category_id):
 			return "Missing or unknown category for " + str(item.id)
 	return ""
+
+static func bounded_integer(value: Variant, minimum: int, maximum: int) -> bool:
+	# JSON numbers are floats in Godot. Booleans, fractions and non-finite values
+	# must not be accepted as integer revisions or byte counts.
+	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and value >= minimum and value <= maximum
+
+static func valid_background(item: Dictionary) -> bool:
+	var identifier: Variant = item.get("id")
+	if not identifier is String or identifier.length() < 4 or identifier.length() > 63 or not identifier.begins_with("pz-") or not identifier[3] in "abcdefghijklmnopqrstuvwxyz0123456789":
+		return false
+	for letter: String in identifier.substr(3):
+		if not letter in "abcdefghijklmnopqrstuvwxyz0123456789-": return false
+	var value: Variant = item.get("background")
+	if not value is Dictionary or value.size() != 3 or not value.get("status") is String or not value.has("image_revision") or not value.has("asset"):
+		return false
+	if value.status == "legacy":
+		return value.image_revision == null and value.asset == null
+	if not value.status in ["none", "selected"] or not bounded_integer(value.image_revision, 1, 1000000):
+		return false
+	if value.status == "none": return value.asset == null
+	var asset: Variant = value.asset
+	if not asset is Dictionary or asset.size() != 3 or not asset.get("file") is String or asset.file != "art/backgrounds/" + identifier + ".png" or not bounded_integer(asset.get("bytes"), 0, 67108864):
+		return false
+	var digest: Variant = asset.get("sha256")
+	if not digest is String or digest.length() != 64: return false
+	for letter: String in digest:
+		if not letter in "0123456789abcdef": return false
+	return true
+
+static func background(entry: Dictionary) -> Dictionary:
+	# Only old entries lacking the field are legacy. A declared invalid value
+	# is never silently converted into a deliberate none/legacy state.
+	var value: Variant = entry.get("background", LEGACY_BACKGROUND)
+	return value.duplicate(true) if value is Dictionary else {}
 
 static func valid_added(value: Variant) -> bool:
 	if value == null: return true

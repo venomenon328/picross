@@ -103,6 +103,9 @@ def main(argv: list[str] | None = None) -> int:
             shutil.copytree(root / "game", project,
                             ignore=shutil.ignore_patterns(".godot", "build"))
             from p1_product import player_extras, player_guide, project_name
+            import background_import
+            background_sources = background_import.source_inventory(root)
+            background_import.prepare_import(project, background_sources)
             project_name(project / "project.godot")
             env = toolchain.isolated_environment(workspace, host)
             commands = (
@@ -119,6 +122,8 @@ def main(argv: list[str] | None = None) -> int:
                 toolchain.require_success(result, marker)
                 if "SCRIPT ERROR:" in result["output"] or "ERROR:" in result["output"]:
                     raise toolchain.PreflightError(f"{name} logged a Godot error")
+                if name == "import":
+                    background_import.verify_import(project, background_sources)
             extra_dir = workspace / "extras"
             extra_dir.mkdir()
             files = stage_player(project / "build/windows", args.output_dir.resolve(),

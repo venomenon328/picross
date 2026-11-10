@@ -227,17 +227,24 @@ Bildern bewertet werden; dichte Fälle blenden Teile unabhängig aus. Raster,
 Lesespalte, Bedienelemente und Trefferbudgets bleiben dabei erhalten.
 [Zeichenvertrag des Piloten](UI_DRAWING_STYLE.md#zs-d04-buch-funktionale-ui-und-passive-pilotzeichnungen).
 
-Der [Hintergrundvertrag HP-W1](PUZZLE_BACKGROUNDS.md) beschreibt den zukünftigen,
-noch nicht aktivierten Weg mit einer ausgewählten Kontextzeichnung je Rätsel.
-Er übernimmt die bisherigen zwei Ecken und Ausblendregeln nicht als neue
-Gestaltungspflicht. Die eigentliche Ablösung des Rätselpiloten gehört zur
-Integration und Runtime aus [#561](https://github.com/venomenon328/picross/issues/561);
-bis dahin bleiben die vorhandenen Kategoriezeichnungen bestehen. HP-I1a liefert
-äußere Endabnahme und prüfbaren Export; HP-I1b1 erste Registrierung, HP-I1b2
-eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss. Darstellung
-bleibt HP-I2, Raster-/Revealneubindung HP-I1c. Die echte Capability bleibt false
-und der Gesamtweg inaktiv. Keine neuen Hilfe-, Katalog- oder
-Einstellungsbilder sind beauftragt.
+Der [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md) beschreibt den versionierten Weg
+mit einer ausgewählten Kontextzeichnung je Rätsel. HP-I2 aus
+[#561](https://github.com/venomenon328/picross/issues/561) verwendet dafür eine
+gemeinsame 4:1-Papierfläche mit proportionalem Fit und unterem mittigem Anker.
+Variante A bleibt auch hinter Raster und Hinweisen sichtbar; keine per-ID-Offsets,
+Masken, Zoomausblendung oder Gesamtbildabschwächung. selected ersetzt im Rätsel
+den Kategoriepilot, none lässt diese Fläche leer. Legacy behält die bisherigen
+zwei Ecken und Ausblendregeln. Hilfe, Katalog und Einstellungen erhalten keine
+neuen Bilder. Die passiven Ebenen verändern keine Funktions- oder Treffergeometrie.
+
+HP-I1a liefert äußere Endabnahme und prüfbaren Export, HP-I1b1 erste Registrierung,
+HP-I1b2 eigenen Hintergrundwechsel und revisionsgenauen Abschluss; HP-I1c schließt
+die erlaubte Raster-/Revealneubindung vorhandener Hintergrundziele. Die echte
+Capability verlangt den funktionierenden und technisch abgenommenen HP-I2-Weg.
+Die einmalige unabhängige Prüfung seiner Darstellung begründet keine zusätzliche
+persönliche Buchabnahme pro Bild. Authoring 0.6.0 bleibt Default, 0.7.0 opt-in;
+die verpflichtende Gesamtaktivierung wird gesondert anhand des tatsächlich
+unterstützten Einzelwegs in #560 festgestellt.
 
 **BTI-C · auf dem Arbeitsbranch umgesetzt, R01/M01 offen:** Die drei
 großen Seitenüberschriften `Rätselkatalog`, `Hilfe` und `Einstellungen`

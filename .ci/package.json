@@ -1,43 +1,48 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/561",
-  "package": "HP-I1c",
+  "package": "HP-I2",
   "modules": [
     "tools",
-    "production.images",
-    "production.adapter",
-    "production.catalog"
+    "production.catalog",
+    "native.catalog",
+    "native.export"
   ],
-  "purpose": "Issue 561 decision 6766500497: bounded background Source v3 preserves original v1/v2 and chronologically binds authorized raster updates and AT reveals. tools audits source/CLI/version ownership; production.images covers real PNG/none/profile bytes; production.adapter covers full v5/v6 admission, original register no-op and compact receipts; production.catalog covers chronological writers, all readers, fresh plans, atomic journals and recovery. Core supplies the regular Windows export.",
-  "omitted": "No production.solver, native.*, preflight, delivery or Chromium: no solver, Godot renderer/import/mipmaps, hosting or real content change. Real capability stays false. No legacy retrofit, migration, new performance campaign, automatic gallery or heavy core regression. Windows export does not prove Windows startup. Independent technical review of final diff and CI is the next gate; no merge authorized.",
+  "purpose": "HP-I2 decision 6770077470: closed Runtime v6 reader, passive variant A, bounded per-visit publication/omission, native and threadless Web loaders, isolated lossless mipmap import, correct selected source restoration and Windows/Web inventory. tools checks import/copy/Worker and authoring consistency; production.catalog retains actual writer, identity, stale-plan and recovery coverage; native.catalog adds one cheap headless reader/state check and preserves its complete existing cases; native.export supplies the regular Windows player and actual PCK audit. Independent HP-I2-A01 reviews the final head, full selected CI and one-time T01/T02 originals before merge.",
+  "omitted": "No production.images/adapter/solver: HP-W2 derivation, export/approval schemas and puzzle logic are unchanged. No native.graphics/core/history/completion/adapters broad suites: existing cell/history/completion behavior is unchanged, and the new passive layer receives targeted T01 regular-root input/zoom/transition evidence. No extra preflight, delivery, Chromium, hosting or thread-profile change. T01/T02 run once from a separate temporary review ref bound to the product head: six exact native originals and actual Windows/Web package measurements. No real content, growing image corpus, benchmark campaign, new heavy main-core suite or merge.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_background_change.py",
+      "path": "game/tests/background_tests.gd",
       "disposition": "change-scoped",
-      "reason": "Keep malformed-plan rejection and exact no-mutation guarantees after full source/index validation moved earlier. Check both stale index hashes and rehashed malformed sources; no dependency on the former error wording."
+      "reason": "Cheap headless v2-v6 strict-reader negatives and generated-texture visit state tests: timely/late/failed publication, stale A-B-A, same-path revision, leave, idempotence and one-request bound; selected only in native.catalog, no images retained."
     },
     {
-      "path": "tests/puzzle_production/test_background_rebind.py",
+      "path": "game/tests/content_pack_probe.gd",
       "disposition": "change-scoped",
-      "reason": "Small real synthetic chronology, v1/v2 selected/none, full exports and Main receipts, current AT approvals, exact no-op/stale checks, journal rollback/foreign bytes and retirement. Reuses established fixtures and independent full/quick readers; no real catalog or retained binary corpus."
+      "reason": "Extend the existing actual Windows/Web PCK audit with exact selected background/notice/remap inventory, real decoded RGBA dimensions/mipmaps and optional source-pixel bindings; no raw PNG hash against imported bytes."
     },
     {
-      "path": "tests/puzzle_production/test_background_consumers.py",
+      "path": "tools/test_background_import.py",
       "disposition": "change-scoped",
-      "reason": "Replace obsolete blanket background-target denial with strict old-generation plan/journal and unsupported export rejection; preserve existing mixed Legacy and metadata consumer cases."
+      "reason": "Small stdlib fixture/source/profile/copy/restore guards, independent of the real background corpus; no engine or production image generation in the core."
     },
     {
-      "path": "tests/puzzle_production/test_background_change_consumers.py",
+      "path": "tools/test_p1_product.py",
       "disposition": "change-scoped",
-      "reason": "Run the same retained admission checks after Source v2 adoption; keep explicit legacy retrofit denial."
+      "reason": "Bounded fixture copy excludes real backgrounds before copy, and repeatable regular restoration replaces synthetic namespaces/import leftovers."
     },
     {
-      "path": "tests/puzzle_production/test_background_change_transactions.py",
+      "path": "tools/test_background_web_contract.py",
       "disposition": "change-scoped",
-      "reason": "Move the unknown binary-journal version negative to v3 because explicitly bound v2 is now supported; retain all existing size, PNG, null-side, crash and foreign-byte tests."
+      "reason": "Small Node mechanism tests for the threadless Worker decoder, pinned compressed-container bounds, cancellation and unsupported API diagnosis; explicitly no browser execution claim."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_background.py",
+      "disposition": "change-scoped",
+      "reason": "Replace the obsolete real-target false assertion with the delivered v6 capability while retaining strict Boolean, format and additional-field rejection; no writer/recovery compatibility relaxation."
     }
   ],
-  "core_change": null,
+  "core_change": "The existing build_main_player entry must use the same source-bound isolated background import helper so its regular Windows build has the promised lossless mipmaps. This adds bounded selected-source/profile checks to its existing import/export, no new engine invocation, screenshots or heavy core test group.",
   "evidence": {
     "mode": "none",
     "purpose": null,

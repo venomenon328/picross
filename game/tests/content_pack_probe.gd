@@ -4,6 +4,104 @@ const Registry = preload("res://model/content_registry.gd")
 const Definition = preload("res://model/definition.gd")
 var failures: int = 0
 
+func digest(bytes: PackedByteArray) -> String:
+	var context := HashingContext.new()
+	context.start(HashingContext.HASH_SHA256)
+	context.update(bytes)
+	return context.finish().hex_encode()
+
+func backgrounds() -> void:
+	# Inspect actual remaps and decoded mipmaps, not source-PNG hashes against
+	# unrelated compressed bytes. Expected source bindings arrive outside the PCK.
+	var expected: Dictionary = {}
+	var expected_path: String = OS.get_environment("HP_BACKGROUND_EXPECTED")
+	if not expected_path.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(expected_path))
+		check(parsed is Dictionary, "PCK external background inventory is readable")
+		if parsed is Dictionary: expected = parsed
+		check(expected.get("registry_sha256", "") == digest(FileAccess.get_file_as_bytes(Registry.PATH)), "PCK background inventory binds actual runtime bytes")
+	var expected_rows: Dictionary = {}
+	for row: Dictionary in expected.get("assets", []): expected_rows[row.id] = row
+	var wanted: Array[String] = []
+	var wanted_imports: Array[String] = []
+	var reports: Array[Dictionary] = []
+	for entry: Dictionary in Registry.entries():
+		var background: Dictionary = Registry.background(entry)
+		if background.status != "selected": continue
+		var path: String = "res://" + str(background.asset.file)
+		var notice: String = path.get_basename() + ".txt"
+		wanted.append(path.get_file())
+		wanted.append(notice.get_file())
+		check(FileAccess.file_exists(path + ".import"), "PCK background import remap " + entry.id)
+		check(FileAccess.file_exists(notice), "PCK background notice " + entry.id)
+		check(not FileAccess.file_exists(path), "PCK does not duplicate raw background PNG " + entry.id)
+		var config := ConfigFile.new()
+		if config.load(path + ".import") != OK:
+			check(false, "PCK readable background remap " + entry.id)
+			continue
+		var imported: String = str(config.get_value("remap", "path", ""))
+		var canonical: String = "res://.godot/imported/" + path.get_file() + "-" + path.md5_text() + ".ctex"
+		wanted_imports.append(canonical.get_file())
+		check(config.get_value("remap", "importer", "") == "texture" and config.get_value("remap", "type", "") == "CompressedTexture2D" and imported == canonical, "PCK background texture import " + entry.id)
+		check(FileAccess.file_exists(imported), "PCK background imported bytes " + entry.id)
+		var resource: Resource = ResourceLoader.load(path, "Texture2D", ResourceLoader.CACHE_MODE_IGNORE)
+		if not resource is Texture2D:
+			check(false, "PCK background texture load " + entry.id)
+			continue
+		var texture: Texture2D = resource as Texture2D
+		var decoded: Image = texture.get_image()
+		if decoded == null:
+			check(false, "PCK background decoded pixels " + entry.id)
+			continue
+		check(texture.get_size() == Vector2(2304,576) and decoded.get_size() == Vector2i(2304,576), "PCK background PNG2304 dimensions " + entry.id)
+		check(decoded.get_format() == Image.FORMAT_RGBA8 and decoded.has_mipmaps() and decoded.get_mipmap_count() == 11, "PCK background RGBA/full mipmaps " + entry.id)
+		var total_bytes: int = decoded.get_data().size()
+		var mipmaps: int = decoded.get_mipmap_count()
+		decoded.clear_mipmaps()
+		var base: PackedByteArray = decoded.get_data()
+		var row: Dictionary = {"id":entry.id, "image_revision":background.image_revision, "asset":background.asset,
+			"remap":imported, "imported_bytes":FileAccess.get_file_as_bytes(imported).size(),
+			"base_rgba_sha256":digest(base), "decoded_base_bytes":base.size(),
+			"decoded_with_mips_bytes":total_bytes, "mipmap_count":mipmaps,
+			"notice_sha256":digest(FileAccess.get_file_as_bytes(notice))}
+		if not expected_path.is_empty():
+			check(expected_rows.has(entry.id), "PCK selected background matches external inventory " + entry.id)
+			if expected_rows.has(entry.id):
+				var source: Dictionary = expected_rows[entry.id]
+				check(source.asset == background.asset and source.image_revision == background.image_revision and source.notice.sha256 == row.notice_sha256 and int(source.notice.bytes) == FileAccess.get_file_as_bytes(notice).size(), "PCK background/notice source binding " + entry.id)
+				if source.has("rgba_sha256"):
+					check(source.rgba_sha256 == row.base_rgba_sha256, "PCK background lossless base RGBA " + entry.id)
+		reports.append(row)
+	var actual: Array[String] = []
+	var directory := DirAccess.open("res://art/backgrounds")
+	if directory != null:
+		check(directory.get_directories().is_empty(), "PCK background namespace has no authoring subdirectories")
+		for name: String in directory.get_files():
+			actual.append(name.trim_suffix(".import") if name.ends_with(".png.import") else name)
+	wanted.sort()
+	actual.sort()
+	check(actual == wanted, "PCK exact selected background/notice inventory")
+	var actual_imports: Array[String] = []
+	var imported_directory := DirAccess.open("res://.godot/imported")
+	if imported_directory != null:
+		for name: String in imported_directory.get_files():
+			if not name.ends_with(".ctex") or not ".png-" in name: continue
+			var source_name: String = name.get_slice(".png-",0) + ".png"
+			var source_path: String = "res://art/backgrounds/" + source_name
+			if name == source_name + "-" + source_path.md5_text() + ".ctex": actual_imports.append(name)
+	wanted_imports.sort()
+	actual_imports.sort()
+	check(actual_imports == wanted_imports, "PCK exact selected background import inventory")
+	if not expected_path.is_empty(): check(reports.size() == expected_rows.size(), "PCK exact background source selection")
+	var web: bool = OS.get_environment("HP_BACKGROUND_PACK_TARGET") == "web"
+	check(FileAccess.file_exists("res://web/background_loader.js") == web, "PCK platform-specific background decoder")
+	check(not FileAccess.file_exists("res://web/shell.html") and not FileAccess.file_exists("res://web/storage.js"), "PCK excludes external Web delivery files")
+	var output: String = OS.get_environment("HP_BACKGROUND_REPORT")
+	if not output.is_empty():
+		var file := FileAccess.open(output, FileAccess.WRITE)
+		check(file != null, "PCK background report destination")
+		if file != null: file.store_string(JSON.stringify({"format":"picross-background-pack-v1", "target":"web" if web else "windows", "images":reports, "inventory":actual, "imported_inventory":actual_imports}, "\t") + "\n")
+
 func check(ok: bool, message: String) -> void:
 	if not ok:
 		failures += 1
@@ -82,6 +180,7 @@ func run() -> void:
 	check(hash.finish().hex_encode() == "414e35e9875605ea0dfe549a6bdad6d1f1f3d5427c97af2060213adb6709484c", "PCK PANG original OFL bytes")
 	check(not ResourceLoader.exists("res://art/drawing/TidyHand.ttf") and not FileAccess.file_exists("res://art/drawing/tidy-hand/NOTICE.txt"), "PCK excludes inactive historical Tidy Hand")
 	check(Registry.load_error.is_empty(), "PCK registry/category format invalid")
+	backgrounds()
 	var categories: Array[Dictionary] = Registry.categories()
 	check(not categories.is_empty(), "PCK categories projection missing")
 	var category_ids: Array[String] = []

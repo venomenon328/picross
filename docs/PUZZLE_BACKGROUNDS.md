@@ -4,7 +4,7 @@
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
-Dieser Vertrag schließt den noch **nicht aktivierten** Produktionsweg aus
+Dieser Vertrag schließt den noch **nicht als Default aktivierten** Produktionsweg aus
 [#560](https://github.com/venomenon328/picross/issues/560) und dem
 [Paket HP-W1](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307).
 Maßgeblich sind die [Eigentümerkorrektur zur isolierten Auswahl](https://github.com/venomenon328/picross/issues/560#issuecomment-6744957790)
@@ -1037,7 +1037,7 @@ Freigaben, ausgeführten Programme oder Produktionsnachweise:
 | --- | --- |
 | Drei Dateien A/B/C offen | Manifest offered, Entscheidung null, keine Vorauswahl. Nach Motivfreigabe unabhängige Rasterarbeit zulässig; technisch fertiges Raster 0.7.0 nur `raster_ready`. |
 | „B verwenden“ gemeinsam mit Motivfreigabe | Separate Entscheidung bindet B/Manifest/Profil; nur B ableiten, dieselbe Wahl über Rastervarianten erhalten. Keine zweite Bildbestätigung. |
-| Späte Auswahl B plus Endabnahme am versiegelten Rasterpaket | `presented_package` bindet Originalbytes. HP-I1a ergänzt vorhandene Entscheidung/Ableitung/Endfreigabe v2 außen; Originalhandoff/-inventar/-ZIP unverändert. Exportfalse-Felder bleiben; HP-I1b1 prüft das Registrierungsziel gesondert. Die reale false-Capability blockiert. |
+| Späte Auswahl B plus Endabnahme am versiegelten Rasterpaket | `presented_package` bindet Originalbytes. HP-I1a ergänzt vorhandene Entscheidung/Ableitung/Endfreigabe v2 außen; Originalhandoff/-inventar/-ZIP unverändert. Exportfalse-Felder bleiben; HP-I1b1 prüft das Registrierungsziel gesondert. Fehlende/false-Capability blockiert; true folgt §13. |
 | „Bewusst ohne Hintergrund“ | none mit tatsächlicher Erklärung; vor Kandidatenproduktion zusätzlich belegte Ausnahme von drei Bildern. HP-W2-Nullbefund, keine Nulltextur. |
 | Gültiges 0.6.0-Altpaket ohne Hintergrund | Nach altem Vertrag lesbar, Hintergrund als Legacy eingeordnet. Keine rückwirkende Wahl, neue Pflicht oder Migration. |
 | Deklarierte Quelle fehlt, Hash falsch oder Format unbekannt | Konkreter Eingangsfehler/Blocker, kein none/Legacy und keine Integration. |
@@ -1262,7 +1262,8 @@ Eintrag behält die neun v5-Felder und ergänzt genau `background` mit exakt
 Keine Freigabetexte, Produktionsoriginale, Alternativen oder individuellen
 Positionsangaben im Runtimekatalog. Defekte deklarierte Quellen erzeugen keinen
 gültigen Leer-/Legacyzustand. V6 nur im kompatiblen Ziel; Godot-Reader, Darstellung A,
-Mipmaps und Laden sind weiterhin HP-I2. Das Paket ändert keinen echten Katalog.
+Mipmaps und Laden folgen dem HP-I2-Vertrag §13. Kein Werkzeugpaket migriert den
+echten Katalog oder ersetzt die technische Runtimeabnahme.
 
 ### 10.4 Gemeinsame Verbraucher und erste Abschlussgrenze
 
@@ -1272,9 +1273,10 @@ Alle Full-/Quick-/API-/CLI-Verbraucher erhalten dieselbe aktive Autorität:
 `catalog_reveal/reveal_source/reveal_retirement` und Rating-/Added-/Methodenpläne.
 Zulässige Metadatenoperationen und Legacyziel-Update/-Revealadoption im gemischten
 Katalog erhalten Hintergründe vollständig. Freie Kategorienumklassifizierung
-historisch gebundener Entries/Receipts wird nicht eröffnet. Rasterupdate und
-Revealadoption eines Hintergrundziels blockieren vor Planung oder Mutation,
-auch durch indirekte Aufrufe. Ihre Neubindung bleibt ausdrücklich Folgeumfang.
+historisch gebundener Entries/Receipts wird nicht eröffnet. Der HP-I1b1-
+Grundvertrag blockiert Rasterupdate und Revealadoption eines Hintergrundziels
+vor Planung oder Mutation, auch durch indirekte Aufrufe. Ausschließlich die
+versionierte HP-I1c-Neubindung nach §12 öffnet diese Zieloperationen.
 
 Erneute identische v6-Registrierung vor und nach Retirement ist nach frischer
 passender Eingangs-/Checkoutprüfung ein Byte-/mtime-No-op. Der ursprüngliche
@@ -1379,7 +1381,12 @@ Adopt liest Bundlebytes frisch, validiert alle geschlossenen Formen/Inventare, r
 
 **Wiederholung:** Nur der exakt eigene vollständige Zielstand ist No-op, ohne Byte-/mtime-, Authoring-/Index-, Bildrevisions- oder Added-Änderung. Dazu aktuelle aktive Source/request-Bindung, gesamte gültige Zielansicht und die im Plan exakt erlaubten Eigenänderungen prüfen. Nach regulärem revisionsgenauem Main-Abschluss darf eine identische noch vorliegende vollständige Planlieferung nur diesen bereits übernommenen Zustand erkennen; ihre inzwischen ordnungsgemäß entfernte Arbeitsrevision wird nicht zurückgeschrieben. Dafür erhält adopt ein optionales API-/CLI-Argument `integrated_commit` / `--integrated-commit <vollständige SHA>`, das bei fehlender Arbeitsrevision zwingend ist und ausschließlich diesen No-op-Pfad zulässt: Commit ist Vorfahr des aktualisierten origin/main und lokalen HEAD, enthält den exakten Request samt Indexzeile und dessen wirkliche Source-/Liveübernahme; der aktuelle vollständige Zielzustand passt weiterhin exakt dazu, komplette Arbeitsrevision und ihre Indexzeile fehlen. Teilreste, geänderte Arbeit oder eine neuere aktive Bildrevision sind kein No-op. Ohne passenden Mainbeleg ist fehlende Arbeit ein Fehler; der Sonderpfad darf niemals publizieren oder Arbeit wiederherstellen. Ohne erhaltenes Planbundle müssen keine alten Arbeitsdateien rekonstruiert werden: der kompakte aktive Stand bleibt über Source/Receipt lesbar; `retire-background-production` hat seine eigene wiederholbare Prüfung. Keine Pflicht, Planbundle dauerhaft aufzubewahren. Der ursprüngliche `retire-production`-Paket-/Receiptwechsel ist dagegen eine andere aktive Katalogmutation und macht zuvor gebaute Hintergrundpläne stale, auch für deren No-op-Pfad. „Vor und nach ursprünglichem Retirement nutzbar“ meint jeweils frisch auf dem tatsächlichen Ausgangsstand geplante Bildoperationen; keine automatische Normalisierung eines alten Plans über den Receiptwechsel. Der bereits gültige kompakte aktuelle Bildstand bleibt lesbar, ohne eine neue Mutation oder Rekonstruktion alter Arbeit.
 
-Die echte `game/data/background-capability.json` bleibt **false**. Fehlend/false stoppt Planung und Mutation, ungültige Form ist Eingabefehler; Wechsel invalidiert Plan/Recovery. Kein CLI/API/Environment-Override. Nur isolierte synthetische kompatible test_only-Ziele prüfen diesen Weg. HP-I2 liefert die tatsächliche Runtimefähigkeit; Exportfalse-Felder, aktiver Authoringdefault und echte Kataloginhalte bleiben unverändert.
+HP-I1b2 allein aktiviert die echte `game/data/background-capability.json` nicht.
+Fehlend/false stoppt Planung und Mutation, ungültige Form ist Eingabefehler;
+Wechsel invalidiert Plan/Recovery. Kein CLI/API/Environment-Override. Isolierte
+synthetische kompatible test_only-Ziele belegen nur den Werkzeugweg. Die echte
+Runtimefähigkeit folgt HP-I2 nach §13; Exportfalse-Felder, aktiver
+Authoringdefault und echte Kataloginhalte bleiben unverändert.
 
 ### 11.4 Binärmutation und Rollback im gemeinsamen Writer
 
@@ -1416,7 +1423,8 @@ Alle erreichbaren Katalog-/Quick-/Export-/Registrierungs-/Abschluss-/Metadatenre
 Vertrag vor konsumierendem Code, 10.11.2026,
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/561#issuecomment-6766500497).
 Nur deklarierte gültige Hintergrundziele; keine Legacy-Erstnachrüstung.
-Echte Capability bleibt false. CLI und Budgets bleiben unverändert.
+HP-I1c allein aktiviert die echte Capability nicht; diese folgt HP-I2 nach §13.
+CLI und Budgets bleiben unverändert.
 
 ### Geschlossene Source v3
 
@@ -1662,7 +1670,11 @@ gebundenen PNG-/TXT-Dateien. HP-I2 erweitert weder `catalog_background.source_pa
 noch Writer-/Journal-/Recoveryzulassung um ungebundene `.png.import`-Dateien.
 Ein gemeinsamer Importvorbereiter arbeitet ausschließlich in eigenen isolierten
 Godot-/Native-/Windows-/Webkopien. Er erhält die PNG2304-Bytes, setzt verlustfreie
-Texturkompression, Mipmaps und passende Mipmapfilterung und erzeugt technische
+Texturkompression (`compress/mode=0`), Mipmaps (`mipmaps/generate=true`), keine
+Alpha-Randveränderung oder Premultiplikation (`process/fix_alpha_border=false`,
+`process/premult_alpha=false`), keine Größenbegrenzung (`process/size_limit=0`)
+und keine 3D-Profilerkennung (`detect_3d/compress_to=0`). Passende
+Mipmapfilterung gehört zum Renderer. Der Vorbereiter erzeugt technische
 Nebenprodukte nur dort. Keine individuelle Retusche oder Größenentscheidung.
 Direkter Editorimport im schreibenden Inhaltscheckout ist kein neuer unterstützter
 Produktionsweg; den isolierten Einstieg beschreibt die Werkzeuganleitung.
