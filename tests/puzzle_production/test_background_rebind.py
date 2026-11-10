@@ -263,6 +263,8 @@ r.adopt(Path(sys.argv[1]), Path(sys.argv[2]))
         self.update(self.export_update())
         source = self.source()
         entry = self.entries()[self.identifier]
+        with self.assertRaisesRegex(InvalidInput, "cannot downgrade"):
+            bg._transition(source, source["base"])
         for mutate in (
             lambda v: v["events"][0]["binding"]["identity"].update(runtime_revision=True),
             lambda v: v["events"][0]["binding"]["reveal"].update(sha256="0" * 64),
