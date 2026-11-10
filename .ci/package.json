@@ -65,6 +65,11 @@
       "path": "tests/puzzle_production/test_sd2_catalog.py",
       "disposition": "change-scoped",
       "reason": "Keep existing SD2 adoption/recovery expectations aligned with the new source-bound metadata generation and construct legacy recovery fixtures through their exact historical sd2 generation instead of relabeling new sources."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_export.py",
+      "disposition": "change-scoped",
+      "reason": "Retain the fully verified v6 adapter boundary with concrete missing-capability and bound-registration diagnostics instead of the superseded blanket HP-I1b rejection; both plan/register and update remain mutation-free in an incompatible target."
     }
   ],
   "core_change": null,
