@@ -1002,7 +1002,7 @@ Aktivierungsplan-v2-Generationen sind wegen identischer vollständiger Pfadmenge
 ausdrücklich mit v2 kompatibel, ohne neue Felder oder schwächere Deltas. Ein
 Sourcewechsel macht vorhandene Pläne stale. Metadaten und Legacyzieloperationen
 erhalten Source/PNG/Notice vollständig. Hintergrundziel-Rasterupdates und
-Revealadoption bleiben auch indirekt gesperrt (HP-I1c); echte Capability false
+Revealadoption folgen dem gesonderten HP-I1c-Vertrag unten; echte Capability false
 bis HP-I2. Kein Solver-/Difficulty-/Bestandsreplay oder tatsächlicher Runtimebeleg.
 
 
@@ -1026,3 +1026,24 @@ Bytes lassen Journal und tatsächliche Reste erhalten; wiederholte Recovery blei
 300 s. Workrecord/Inventar/Index zusätzlich bei P0 und unter Lock vor erster
 aktiver Mutation prüfen. Der ursprüngliche Receiptwechsel invalidiert alte
 Hintergrundpläne einschließlich No-op; nur neue Planung am aktuellen Stand.
+
+## HP-I1c · Versionierte aktuelle Hintergrundbindung
+
+Der vor konsumierendem Code festgelegte geschlossene
+[HP-I1c-Vertrag §12](PUZZLE_BACKGROUNDS.md#12-hp-i1c--aktuelle-raster-revealbindung)
+ergänzt die früheren Hintergrundziel-Sperren gezielt: Source v3 erhält ihren
+vollständigen v1/v2-Ausgangsstand und bindet chronologisch aktuelle Definition,
+Runtime-Revision und effektiven AT-Reveal. Rasterupdate erhält die aktuelle
+Bildentscheidung; Revealadoption erhält Raster-/Saveidentität. Hintergrundwechsel
+bleibt der eigene Writer. V5 ist kein none-Downgrade; v6-Update verlangt exakt
+dieselben Bild-/Entscheidungsdaten. Keine Legacy-Erstnachrüstung.
+
+Neu sind ausschließlich Updatejournal v7, Revealjournal v4, Hintergrundjournal v2,
+AT-Source v2, Revealplan v4 und Hintergrundplan v2 mit den in §12 exakt definierten
+Feldern/Versionsgrenzen. Vorige Formen bleiben streng geschlossen. Registry v3,
+Runtime v6 und Receipt v2 bleiben unverändert. Aktive Bytes, historische erste
+Freigabe und normalisierter aktueller Exportanker werden getrennt geprüft, auch
+nach Retirement und bei ursprünglicher Registerwiederholung. Budgets, vollständige
+T/K-/Namespaceguards, frische Prüfung unter Lock, Runtime zuletzt und Recovery
+bleiben erhalten. Echte Capability bleibt false; nur isolierte synthetische
+test_only-Ziele verwenden true. Keine Authoring-/Sheet-Formatänderung.
