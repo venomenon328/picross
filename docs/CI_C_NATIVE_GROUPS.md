@@ -1,5 +1,18 @@
 # Native Prüfmodule und Originalnachweise
 
+## HP-I2 / #561: geschlossener Hintergrundnachweis
+
+Das ausgewählte `native.catalog` führt zusätzlich zu den elf KAT-2-Modi die kleine
+Headless-Phase `background-contract` für Runtimeformen und Besuchszustände aus.
+Der unabhängige Leser verlangt genau eine vollständige Zeile
+`BACKGROUND_TESTS_OK {"checks":<positive Ganzzahl>}` mit ausschließlich diesem
+JSON-Feld. Fehlende, doppelte oder widersprüchliche Records und Enginefehler, boolesche/
+nichtganzzahlige/nullwertige Zähler und zusätzliche/duplizierte Felder sind Fehler.
+Der feste Marker kann durch Produzentmetadaten weder ausgelassen noch ersetzt
+werden. Kleine Gegenproben im ausgewählten `tools`-Modul prüfen auch neu gehashte
+Logmanipulationen durch denselben vollständigen Katalog-Phasenleser. Keine feste
+Assertionzahl, neue Bildfamilie oder zusätzliche Main-Kernprüfung.
+
 ## RAND-P1 / #550: begrenzte passive Randzeichnungen
 
 Das gewählte `native.catalog` prüft im vorhandenen Informationsprozess kleine
