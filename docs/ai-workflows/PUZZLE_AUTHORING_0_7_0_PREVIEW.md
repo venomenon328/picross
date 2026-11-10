@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion · 0.7.0-Vorschaustand
 
-**Version 0.7.0 · Dokumentrevision 7 · 10.11.2026**
+**Version 0.7.0 · Dokumentrevision 8 · 10.11.2026**
 
 **Explizit wählbarer Vorbereitungsstand, kein aktiver Produktionsdefault.**
 [PB-H / #489](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
@@ -9,7 +9,7 @@ unterstützt neue Hintergrundpakete nach diesem vollständigen Snapshot. Er
 Parameter-, Rand- und Difficultygarantien von Authoring 0.6.0 und ergänzt die
 Hintergrundarbeit mit eigenen geschlossenen Formen und getrennten Phasen.
 Der kanonische [aktive Authoringweg](PUZZLE_AUTHORING.md) bleibt **0.6.0 /
-Dokumentrevision 46**, ebenso der Default neuer Jobs im
+Dokumentrevision 47**, ebenso der Default neuer Jobs im
 [Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html).
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
 führt mehrere unabhängige Jobs und den ausdrücklich gewählten 0.7.0-Weg.
@@ -18,7 +18,7 @@ seinen tatsächlich gewählten Regelstand. Dieser Snapshot ersetzt den Default n
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md` im Repository
 `venomenon328/picross`. Ein neuer 0.7.0-Bauauftrag bindet die vollständigen Bytes
-dieser Datei, Version 0.7.0, Dokumentrevision 7 und den tatsächlich gelesenen
+dieser Datei, Version 0.7.0, Dokumentrevision 8 und den tatsächlich gelesenen
 Quellencommit. Eine umbenannte oder nur im Header geänderte 0.6.0-Datei ist
 kein 0.7.0-Snapshot. Bereits versiegelte Originale behalten ihre eigenen Bytes,
 Versionen und damaligen Nachweise; kein Versionsdowngrade für neue Arbeit.
@@ -31,6 +31,14 @@ Raster-/Inhaltspakete. [HP-I1a](https://github.com/venomenon328/picross/issues/5
 ergänzt sichere äußere Fortschreibung und den vollständig prüfbaren Export v6.
 Inventar v1, Arbeitsindex v1 und die technischen
 RP-/Proof-/Difficultyformen behalten ihre bisherigen Verträge.
+
+[BA-A / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657)
+ergänzt die lokale serielle Verarbeitung ausdrücklich ausgewählter vorbereiteter
+Jobs mit vorhandenen Fachwerkzeugen nach [PRODUCTION_BATCH](../PRODUCTION_BATCH.md).
+Der Runner erhält vorhandene Entscheidungen, führt keine Bildwahl aus und endet
+spätestens am lokalen Paketbau. Seine technischen Zustände erteilen keine
+Inhaltsfreigabe. Die vier Aufträge und die Sheetbedienung bleiben erhalten;
+die Orchestrierung der Weitergabe und Integration gehört zum getrennten Folgepaket BA-B.
 
 **Geltungsgrenze:** PB-H baut `brief_ready`, `reveal_review`, `motif_review`,
 `motif_approved`, `raster_review`, `raster_ready` und `content_ready`. HP-I1a
@@ -726,6 +734,7 @@ Die folgenden Aufbewahrungs- und Replaypflichten gelten bis zur finalen Integrat
 - Ein neues Paket vor Inventarisierung verschlanken. Bereits versiegelte Pakete ausschließlich als deklarierte Teilkopie nach `picross-authoring-derivation-v1` ableiten: Originalhandoff/-inventar und ihre Hashes unverändert, Original-ZIP-Hash binden, tatsächlich enthaltene Dateien vollständig hashen. Weglassungen und Grund im äußeren Record dokumentieren. Keine erfundene neue Vollkopie, keine stillschweigende Neuversiegelung oder Umschreibung alter Freigaben. Nachweisbündel nicht intern kürzen. Das Original nicht destruktiv ersetzen.
 - Inventar und Handoff ohne Selbstreferenz nach ZA-1 binden; Datei-SHA-256 und kanonische Vertrags-Hashes unterscheiden. Nach Versiegelung spätere Endfreigabe und Integrationsstatus ausschließlich in separater Freigabe/Record führen; das Originalhandoff dafür nicht ändern.
 - Vor Ablage ZIP sicher öffnen, Dateimenge/Hashes und bytegleiche Handoffkopie prüfen. Ab `raster_ready` und bei `content_ready` die vollständige lesende Inhaltsprüfung auf dem **geschriebenen ZIP** ausführen. Nur die phasengemäß offene Hintergrundbereitschaft und finale Endabnahme dürfen als entsprechende Blocker bleiben. Frühe Bildphasen erhalten ihre fällige Datei-/Freigabeprüfung; kein behauptetes Inhaltszertifikat. Der lokale [PB-H-Builder](../../tools/puzzle_production/README.md#pb-h-hintergrundpakete-und-lesende-inhaltsprüfung) übernimmt dies aus dem expliziten hashgebundenen Bauauftrag v2: `python -m tools.puzzle_production.authoring_builder build --request <request-v2.json> --source-root <quellen> --output-root <arbeitsordner> [--publish-to <checkout>] [--history-repo <lokaler-checkout>]`. Er sichert nur neue unversiegelte Revisionen bis `content_ready`, erhält offene Entscheidungen und aktualisiert bei ausdrücklicher Zielwahl den Authoringindex. Kein Gitcommit, keine Freigabe oder Registrierung. Bereits versiegelte Originale bleiben unverändert; keine erneute Bauversiegelung.
+- BA-A verwendet den vorhandenen Builder ausschließlich mit `target=local` und `publish_to=None`. Der vollständige Bauauftrag, seine Quellen-, Regelwerks- und Freigabebindungen bleiben unverändert; fehlt der Auftrag, wartet die Stufe mit `waiting_input`. Ein ausdrücklich fortgeschriebener Plan darf den tatsächlichen Auftrag ergänzen. Der Runner erzeugt keinen Request und ersetzt keine fehlende Erklärung. `package`, `handoff` und `record` verweisen auf die wirklichen Builderdateien; `sheet_update` ist dessen unveränderte `sheet`-Projektion im technischen Runnerresultat, keine zusätzliche Builderdatei. Lokaler Bau belegt weder Repositorysicherung noch Endabnahme oder Integration.
 - `content/authoring/` bleibt außerhalb des Spiels. Erst nach Lieferung der neuen Integrationsfähigkeit erzeugt ZA-1 die offline prüfbare Kopie unter `content/packages/<id>/<revision>/`; dieser Ort ist kein manuell zu befüllender Eingang. Keine zusätzlichen Voll-ZIPs dort erzeugen. Alte Produktionsstände über feste Git-Commits referenzieren; Bis zur finalen Integration keine gebundenen Nachweise löschen. Danach ist Abschnitt 9 Pflicht; keine LFS-Umstellung oder Git-Historienbereinigung.
 
 ### 6.2 Übergabedatensatz
@@ -805,6 +814,18 @@ Gates verwenden `pending|pass|fail|blocked`. Jedes `pass` braucht einen konkrete
 Beim Übergang aus v1 fehlende Abschlussbildfreigabe oder Ableitungsbindung ausdrücklich als offen erfassen; niemals aus einer alten Motivfreigabe erfinden.
 
 Nach Chatwechsel zuerst den Repositoryindex auflösen, dann Regelwerk, Übergabe, Pflichtquellen, Freigaben und referenzierte Dateien lesen; Hashes prüfen. Nur den nächsten autorisierten Schritt fortsetzen. Fehlenden Gesprächskontext nicht erfinden, gültige Freigaben nicht unnötig erneut einholen und den Toolstand nicht heimlich wechseln.
+
+Für lokale BA-A-Arbeitsstände gelten zusätzlich die geschlossenen Plan-/Checkpoint-
+und Budgetregeln aus [PRODUCTION_BATCH](../PRODUCTION_BATCH.md). Wiederaufnahme
+prüft die tatsächlichen Originale fachlich frisch; ein gespeicherter Erfolg oder
+Dateihash allein genügt nicht. Verbrauchte Versuche bleiben auch nach Unterbrechung
+und Planfortschreibung erhalten. `status` zeigt nur den historischen, nicht frisch
+fachlich geprüften Stand. Offene Entscheidungen blockieren ihre abhängigen Stufen;
+bereits autorisierte unabhängige Arbeit darf weiterlaufen. `completed` bezeichnet
+den erledigten technischen Schritt, niemals automatisch `content_ready` oder eine
+menschliche Endabnahme. Reine Hintergrundänderungen entwerten keine unveränderten
+Logik-/Proof-/Difficultyartefakte. Finale Fortschreibung und Integration bleiben
+außerhalb dieses Runners.
 
 ### 6.3 Hintergrundarbeit: Sicherung, Auswahl und Wiederaufnahme
 
@@ -1230,7 +1251,7 @@ dass das Sheet die Bytes oder Proofs selbst geprüft hätte. Nach Produktionsabs
 werden Optionslisten geleert, statt auf entfernte Arbeitsdateien zu verweisen.
 
 Beide eingebetteten Sheet-Snapshots sind bytegleich mit ihren Markdownquellen:
-`PUZZLE_AUTHORING.md` 0.6.0/docrev46 und dieser Vorschaupfad 0.7.0/docrev7.
+`PUZZLE_AUTHORING.md` 0.6.0/docrev47 und dieser Vorschaupfad 0.7.0/docrev8.
 Neue Jobs starten mit 0.6.0; ausdrücklich gewählte v5-Jobs binden den Vorschaupfad
 beziehungsweise dessen 0.7.0-Anhang. Der
 Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow

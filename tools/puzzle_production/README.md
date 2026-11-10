@@ -1,5 +1,36 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+## BA-A: lokale Batchverarbeitung und Wiederaufnahme
+
+[`batch_cli`](batch_cli.py) verarbeitet ausdrücklich vorbereitete Jobs seriell.
+[PRODUCTION_BATCH](../../docs/PRODUCTION_BATCH.md) beschreibt die vollständigen
+geschlossenen Formen, festen Operationen, Entscheidungen, Budgets und Zustände;
+maßgeblich ist [BA-A / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657).
+Die Befehle laufen im Repositoryroot mit Python aus der isolierten
+[Bildumgebung](#rp-3-isolierte-image-umgebung-und-reale-befehle), Pillow exakt 12.3.0:
+
+```text
+python -m tools.puzzle_production.batch_cli validate --plan <plan.json> --source-root <quellen> --repo-root <checkout>
+python -m tools.puzzle_production.batch_cli run --plan <plan.json> --source-root <quellen> --work-root <neuer-leerer-root> --repo-root <checkout>
+python -m tools.puzzle_production.batch_cli resume --plan <plan.json> --source-root <quellen> --work-root <eigener-bisheriger-root> --repo-root <checkout>
+python -m tools.puzzle_production.batch_cli status --work-root <eigener-bisheriger-root>
+```
+
+Die API `validate/run/resume/status` liegt in `batch_runner`. Ein ausdrücklich
+angegebener `--history-root` wird nur lesend vom vorhandenen lokalen Builder
+verwendet. Plan-/Werkzeug-/Dateibindungen müssen aktuell sein; ein Nachfolgeplan
+bindet die exakten Vorgängerbytes und erhält sämtliche verbrauchten Versuche.
+`run` braucht einen neuen leeren Root außerhalb von Quellen und Checkout.
+`resume` prüft frühere Ausgaben mit einem eigenen begrenzten Prüfversuch neu.
+`status` bleibt lesend und kennzeichnet den Bericht mit `fresh=false`.
+
+Ein fehlender menschlicher Entscheid wartet als `waiting_human`, ein noch nicht
+gelieferter vollständiger Bauauftrag als `waiting_input`. Unabhängige Zweige
+laufen weiter. Paketbau verwendet ausschließlich `target=local` und
+`publish_to=None`; der technische Abschluss enthält keine Inhaltsfreigabe.
+Ein Exit 0 kann einen korrekt geprüften stalled-/Widerspruchsbefund enthalten.
+Vorhandene fachliche Status und Zertifizierungen bleiben im Bericht getrennt.
+
 ## HP-W2: eigenständige Hintergrundableitung
 
 [`background_assets`](background_assets.py) stellt die lokale API/CLI für die
@@ -94,10 +125,10 @@ Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabsc
 und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
 neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
 [Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 7, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Dokumentrevision 8, mit tatsächlichem Dateihash und gelesenem Quellencommit.
 Der aktive Authoringpfad und der Default neuer Offline-Sheetjobs bleiben
-**0.6.0 / Dokumentrevision 46**. Beide eingebetteten Snapshots entsprechen ihren
-Markdownquellen; 0.7.0 / Dokumentrevision 7 bleibt ausdrücklich opt-in. Die
+**0.6.0 / Dokumentrevision 47**. Beide eingebetteten Snapshots entsprechen ihren
+Markdownquellen; 0.7.0 / Dokumentrevision 8 bleibt ausdrücklich opt-in. Die
 verpflichtende Gesamtaktivierung wird am konkreten Einzelweg in #560 abgeglichen.
 Versiegelte ältere Pakete behalten ihren gebundenen Snapshot unverändert.
 
