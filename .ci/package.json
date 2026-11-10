@@ -40,6 +40,11 @@
       "path": "tests/puzzle_production/test_catalog_background.py",
       "disposition": "change-scoped",
       "reason": "Replace the obsolete real-target false assertion with the delivered v6 capability while retaining strict Boolean, format and additional-field rejection; no writer/recovery compatibility relaxation."
+    },
+    {
+      "path": "tools/test_ci_c.py",
+      "disposition": "change-scoped",
+      "reason": "Cheap closed BACKGROUND_TESTS_OK reader and native.catalog phase-gate mutations bind the fixed marker, unique exact JSON shape and positive integer checks count; rehashed fake, zero and extra-field logs cannot pass. No fixed assertion count, native rerun or new main-core test family."
     }
   ],
   "core_change": "The existing build_main_player entry must use the same source-bound isolated background import helper so its regular Windows build has the promised lossless mipmaps. This adds bounded selected-source/profile checks to its existing import/export, no new engine invocation, screenshots or heavy core test group.",
