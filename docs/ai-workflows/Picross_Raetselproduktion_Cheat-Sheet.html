@@ -1206,7 +1206,7 @@ function renderJobs(){
 }
 function ruleMismatch(session=sessionSnapshot(),options=formOptions()){
  const expected=isAdoption(session)||session.format==='picross-cheatsheet-session-v5'?PREVIEW_RULE_PATH:DEFAULT_RULE_PATH;
- return options.rulePath!==expected?'Sitzung '+(session.format.endsWith('5')?'0.7':'0.6')+' benötigt '+expected+'. Regelweg bewusst anpassen.':'';
+ return options.rulePath!==expected?'Sitzung '+(isAdoption(session)||session.format.endsWith('5')?'0.7':'0.6')+' benötigt '+expected+'. Regelweg bewusst anpassen.':'';
 }
 function ruleInfo(){
  const preview=activeFamily()===5,text=preview?RULEBOOK_PREVIEW:RULEBOOK;
@@ -1447,13 +1447,17 @@ function requestCanonical(value){
  if(Array.isArray(value))return '['+value.map(requestCanonical).join(',')+']';
  return '{'+Object.keys(value).sort(codepointCompare).map(key=>JSON.stringify(key)+':'+requestCanonical(value[key])).join(',')+'}';
 }
-function adoptionPath(value,label){scalarText(value,label,240);return contractPath(value,label);}
+function adoptionPath(value,label){
+ scalarText(value,label,240);
+ transportRequire(!value.startsWith('/')&&!/[\\:]/.test(value)&&!value.split('/').some(part=>!part||part==='.'||part==='..'||/[ .]$/.test(part)||/[\x00-\x1f<>"|?*]/.test(part)||/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])$/.test(unicodeCasefold(part.split('.')[0]))),label+': unsicherer relativer POSIX-Pfad.');
+ return value;
+}
 function adoptionRef(value,label='Ref',limit=Number.MAX_SAFE_INTEGER,min=0){
  exactKeys(value,['file','sha256','bytes'],label);adoptionPath(value.file,label);contractHash(value.sha256,label);contractInteger(value.bytes,label,min,limit);return value;
 }
 function validateUTC(value){
  scalarText(value,'UTC',64);
- const match=/^(\d{4}-\d{2}-\d{2}|\d{8}|\d{4}-W\d{2}(?:-\d)?|\d{4}W\d{2}\d?)[Tt](\d{2})(?:(?::?(\d{2}))(?::?(\d{2}))?)?(?:[.,]\d+)?(?:Z|\+00:00)$/.exec(value);
+ const match=/^(\d{4}-\d{2}-\d{2}|\d{8}|\d{4}-W\d{2}(?:-\d)?|\d{4}W\d{2}\d?)[Tt](\d{2})(?::(\d{2})(?::(\d{2}))?|(\d{2})(\d{2})?)?(?:[.,]\d+)?(?:Z|\+00:00)$/.exec(value);
  transportRequire(!!match,'Ungültiger UTC-Zeitpunkt.');
  let date=match[1],year,month,day;
  if(date.includes('W')){
@@ -1461,13 +1465,14 @@ function validateUTC(value){
   const dec28=new Date(0);dec28.setUTCFullYear(year,11,28);dec28.setUTCHours(0,0,0,0);
   const jan4=new Date(0);jan4.setUTCFullYear(year,0,4);jan4.setUTCHours(0,0,0,0);
   const start=jan4.getTime()-((jan4.getUTCDay()+6)%7)*86400000;
-  transportRequire(year>=1&&w>=1&&w<=Math.floor((dec28-start)/604800000)+1&&d>=1&&d<=7,'Ungültiges ISO-Wochendatum.');
+  const actualYear=new Date(start+((w-1)*7+d-1)*86400000).getUTCFullYear();
+  transportRequire(year>=1&&actualYear>=1&&actualYear<=9999&&w>=1&&w<=Math.floor((dec28-start)/604800000)+1&&d>=1&&d<=7,'Ungültiges ISO-Wochendatum.');
  }else{
   date=date.replaceAll('-','');year=Number(date.slice(0,4));month=Number(date.slice(4,6));day=Number(date.slice(6,8));
   const check=new Date(0);check.setUTCFullYear(year,month-1,day);
   transportRequire(year>=1&&check.getUTCFullYear()===year&&check.getUTCMonth()===month-1&&check.getUTCDate()===day,'Ungültiges UTC-Datum.');
  }
- transportRequire(Number(match[2])<24&&Number(match[3]||0)<60&&Number(match[4]||0)<60,'Ungültige UTC-Uhrzeit.');return value;
+ transportRequire(Number(match[2])<24&&Number(match[3]||match[5]||0)<60&&Number(match[4]||match[6]||0)<60,'Ungültige UTC-Uhrzeit.');return value;
 }
 function adoptionHuman(value){exactKeys(value,['actor','timestamp_utc','statement','evidence'],'Autorisierung');scalarText(value.actor,'Akteur',4096);scalarText(value.statement,'Erklärung',4096);validateUTC(value.timestamp_utc);adoptionRef(value.evidence);return value;}
 function adoptionIdentity(id,revision){transportRequire(typeof id==='string'&&CONTRACT_PUZZLE.test(id),'Ungültige Ziel-ID.');transportRequire(typeof revision==='string'&&CONTRACT_REVISION.test(revision),'Ungültige Arbeitsrevision.');return 'content/authoring/'+id+'/'+revision;}
