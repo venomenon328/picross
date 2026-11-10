@@ -79,7 +79,7 @@ ist ausdrücklich opt-in. Capability und verpflichtende Gesamtaktivierung sind
 getrennt. Der konkrete verbleibende Einzelweg wird in #560 abgeglichen.
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
 führt den regulären Mehrjob-Arbeitsbereich einschließlich Update v3, Sitzung v5
-und Auftrag v4; die separate spätere Hintergrundrevision bleibt MJ-B.
+und Auftrag v4; MJ-B ergänzt die eigene spätere Hintergrundrevision nach Hintergrundvertrag §7.6.
 Keine automatische Umstellung alter Produktionen oder zusätzliche persönliche
 Buchabnahme pro Rätsel.
 

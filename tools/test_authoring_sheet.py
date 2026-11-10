@@ -318,6 +318,62 @@ async function exported(){return Promise.all(downloads.map(async item=>({name:it
 """
 
 
+def adoption_fixtures():
+    """Only shape/bytes: use the real pure HP-I1b2 validator and encoder."""
+    from tools.puzzle_production import background_request as br
+    from tools.puzzle_production.contract import InvalidInput
+    def ref(name):
+        raw=('synthetic fixture: '+name).encode('utf-8')
+        return {'file': name, 'sha256': hashlib.sha256(raw).hexdigest(), 'bytes': len(raw)}
+    base='content/authoring/pz-synthetic-adoption/bg-r01'
+    files=[ref(name) for name in ['evidence/choice.txt','work/manifest.json','decisions/d01.json','output/derivation.json']]
+    by_name={row['file']:row for row in files}
+    request={'format':br.FORMAT,'puzzle_id':'pz-synthetic-adoption','revision':'bg-r01',
+             'target':{'source':ref('content/backgrounds/pz-synthetic-adoption.json'),
+                       'origin_sha256':hashlib.sha256(b'synthetic origin').hexdigest(),'image_revision':2},
+             'background':{key:{'storage':'external','root':base,'ref':by_name[name]}
+                           for key,name in [('manifest','work/manifest.json'),('decision','decisions/d01.json'),('derivation','output/derivation.json')]},
+             'authorization':{'actor':'Synthetischer Prüfer 🦔','timestamp_utc':'2026-11-10T12:13:14.123456Z',
+                              'statement':'Synthetische Erklärung: „B verwenden“ – keine echte Inhaltsfreigabe.\nDateirevision bleibt gebunden.',
+                              'evidence':by_name['evidence/choice.txt']},
+             'files':sorted(files,key=lambda row:row['file']),'test_only':True}
+    request['background']['history']=None
+    request=br.validate(request)
+    corpus=[]
+    def case(value):
+        try:
+            validated=br.validate(value)
+            raw=br.encoded(validated).decode('utf-8')
+            ok=True
+        except (InvalidInput, ValueError, UnicodeError):
+            raw=canonical(value).decode('utf-8')+'\n'
+            ok=False
+        corpus.append({'text':raw,'accepted':ok})
+    case(request)
+    for name in ['Bilder/Größe-🦔.png','絵/背景.png','z/\U00010000.txt','z/\ue000.txt','café.txt','weiss/straße.txt','other/K.txt','byte-\x7f.txt','\ufeff','other/\ufeff']:
+        value=deepcopy(request);value['files'].append(ref(name));value['files'].sort(key=lambda row:row['file']);case(value)
+    for timestamp in ['20261110T121314Z','2026-W46-2T12:13:14+00:00','2026-11-10t12:13:14,123Z','2026-11-10T12Z','2026-1110T12:13Z','2026-11-10T24:00:00Z','2026-11-10T12:1314Z','2026-11-10T1213:14Z','9999-W52-7T12:00Z']:
+        value=deepcopy(request);value['authorization']['timestamp_utc']=timestamp;case(value)
+    for actor in ['\ufeff','\x1c','\x85','😺 Groß ß ς']:
+        value=deepcopy(request);value['authorization']['actor']=actor;case(value)
+    value=deepcopy(request)
+    value['files']=[dict(row,bytes=32*1024*1024) for row in value['files']];case(value)
+    value=deepcopy(request);value['files'] += [ref('extra/'+str(n)) for n in range(257)];value['files'].sort(key=lambda row:row['file']);case(value)
+    for pair in [('a.txt','A.txt'),('straße.txt','STRASSE.txt'),('ß/a.txt','ss/b.txt'),('Ä/a.txt','ä/b.txt'),('x','x/y.txt'),('w/Σ/a','w/ς/b')]:
+        value=deepcopy(request);value['files'] += [ref(name) for name in pair];value['files'].sort(key=lambda row:row['file']);case(value)
+    for change in [lambda v:v.update(extra=1),lambda v:v.update(test_only=1),
+                   lambda v:v['target'].update(image_revision=True),lambda v:v['target'].update(source=ref('elsewhere.json')),
+                   lambda v:v['background'].update(history={}),lambda v:v['background']['manifest'].update(storage='package'),
+                   lambda v:v['background']['manifest'].update(root='content/authoring/pz-other/bg-r01'),
+                   lambda v:v['authorization'].update(actor=''),lambda v:v['authorization'].update(timestamp_utc='2026-02-30T12:00:00Z'),
+                   lambda v:v['authorization'].update(timestamp_utc='2026-11-10T12:00:00+01:00'),
+                   lambda v:v['files'].append(ref('record.json')),lambda v:v['files'].append(ref('../escape')),
+                   lambda v:v['files'][0].update(bytes=32*1024*1024+1),lambda v:v['files'].reverse(),
+                   lambda v:v['files'].pop(),lambda v:v['files'][0].update(sha256='bad')]:
+        value=deepcopy(request);change(value);case(value)
+    return {'text':br.encoded(request).decode('utf-8'),'corpus':corpus}
+
+
 class AuthoringSheetTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -331,6 +387,7 @@ class AuthoringSheetTests(unittest.TestCase):
         cls.elements = form.elements
         cls.script = re.search(r'<script>\s*(.*?)</script>', cls.html, re.S)[1]
         cls.fixture = fixtures()
+        cls.fixture['adoption'] = adoption_fixtures()
         cls.node = shutil.which('node')
         if cls.node is None:
             raise AssertionError('tools authoring regression requires Node; no silent skip')
@@ -538,7 +595,7 @@ assert.deepEqual(snapshot(),withID,'staging itself must not alter the job');
 assert.equal(run('applyTransfer()'),true);assert.equal(elements.revision.value,'r02');
 run('createJob()');edit('motif','unrelated job');const stable=snapshot();
 const cases=[
- x=>x.unexpected=true,x=>x.format='picross-cheatsheet-workspace-v2',
+ x=>x.unexpected=true,x=>x.format='picross-cheatsheet-workspace-v3',
  x=>x.jobs[1].job_id=x.jobs[0].job_id,
  x=>x.jobs[1].session.fields.puzzleId=x.jobs[0].session.fields.puzzleId,
  x=>x.active_job_id='not-present',x=>x.jobs[0].options.workspaceRoot='/foreign/root',
@@ -575,7 +632,7 @@ for(const generation of [1,2,3,4]){
  assert.ok(!Object.hasOwn(loaded.session,'background'));
 }
 const empty={format:'picross-cheatsheet-workspace-v1',active_job_id:null,jobs:[]};
-await importValue(empty);assert.deepEqual(snapshot(),empty);
+await importValue(empty);assert.deepEqual(snapshot(),{...empty,format:'picross-cheatsheet-workspace-v2'});
 run('createJob()');assert.equal(snapshot().jobs.length,1);
 """)
 
@@ -778,7 +835,7 @@ assert.equal(downloads.length,3);return exported();
     def test_image_commit_and_settings_changes_cancel_other_pending_work(self):
         self.javascript(r"""
 set('workspaceRoot','/home/synthetic/picross');edit('motif','Stable job');
-const importGate=deferred();sandbox.importFile={size:100,text:()=>importGate.promise};
+const importGate=deferred();sandbox.importFile={size:100,arrayBuffer:async()=>Buffer.from(await importGate.promise)};
 const importing=run('loadImportFile(importFile)');
 sandbox.imageFile=pngFile();assert.equal(await run('acceptImage(imageFile)'),true);
 const afterImage=snapshot();importGate.resolve(JSON.stringify(input.fixtures.legacy_sheet));
@@ -881,7 +938,7 @@ assert.equal(downloads.length,1,'the unchanged validated image still exports');
                 self.assertNotIn('jobWorkspace', self.elements[identifier]['ancestors'])
         self.javascript(r"""
 assert.equal(run('removeJob()'),true);
-assert.deepEqual(snapshot(),{format:'picross-cheatsheet-workspace-v1',active_job_id:null,jobs:[]});
+assert.deepEqual(snapshot(),{format:'picross-cheatsheet-workspace-v2',active_job_id:null,jobs:[]});
 assert.equal(elements.jobWorkspace.hidden,true);assert.equal(elements.emptyWorkspace.hidden,false);
 for(const id of ['transferInput','importTarget','transferText','previewTransfer','applyTransfer','discardTransfer']){
  assert.equal(elements[id].hidden,false,id);
@@ -907,7 +964,7 @@ for(const trigger of ['importTarget','transferText','companionText'])for(const d
  set('importTarget',b);await elements.importTarget.emit('change');
  const release=deferred(), entered=deferred();
  if(delay==='text'){
-  elements.recordInput.files=[{size:200,text:()=>{entered.resolve();return release.promise;}}];
+  elements.recordInput.files=[{size:200,arrayBuffer:async()=>{entered.resolve();return Buffer.from(await release.promise);}}];
  }else{
   const session=clone(original.jobs.find(job=>job.job_id===b).session);
   session.image={name:'incoming.png',dataUrl:'data:image/png;base64,'+input.fixtures.png};
@@ -955,7 +1012,7 @@ for(const action of ['visit','reset','revision','remove']){
 function PNG_SIZE(){return Buffer.from(input.fixtures.png,'base64').length;}
 // File.text can finish after A -> B -> A without becoming current again.
 sandbox.a=run('activeJobId');const fileGate=deferred();
-sandbox.lateJSON={size:100,text:()=>fileGate.promise};const importing=run('loadImportFile(lateJSON)');
+sandbox.lateJSON={size:100,arrayBuffer:async()=>Buffer.from(await fileGate.promise)};const importing=run('loadImportFile(lateJSON)');
 run('createJob()');run('switchJob(a)');const afterVisit=snapshot();
 fileGate.resolve(JSON.stringify(input.fixtures.legacy_sheet));await importing;
 assert.equal(run('pendingTransfer'),null);assert.deepEqual(snapshot(),afterVisit);
@@ -970,4 +1027,159 @@ const button=document.querySelector('[data-copy="start"]'), prior=button.textCon
 sandbox.button=button;const copying=run("copyCard(CARDS.find(c=>c.id==='start'),button)");
 run('createJob()');const copyLive=elements.live.textContent;clipboard.resolve();await copying;
 assert.equal(button.textContent,prior);assert.equal(elements.live.textContent,copyLive);
+""")
+
+    def test_adoption_real_python_form_canonical_utf8_and_unicode_paths(self):
+        self.javascript(r"""
+const initial=snapshot();
+for(const entry of input.fixtures.adoption.corpus){
+ sandbox.raw=entry.text;
+ if(entry.accepted)assert.doesNotThrow(()=>run('validateAdoptionRequest(raw)'));
+ else assert.throws(()=>run('validateAdoptionRequest(raw)'),entry.text);
+ assert.deepEqual(snapshot(),initial);
+}
+const original=input.fixtures.adoption.text;
+const noncanonical=[original.trimEnd(),original+'\n',' '+original,original.replace(':',': '),original.replace('🦔','\\ud83e\\udd94'),original.replace('{','{"format":"duplicate",'),original.replace('true','9007199254740993'),original.replace('true','1e9999'),original.replace('🦔','\\ud800')];
+for(const raw of noncanonical){sandbox.raw=raw;assert.throws(()=>run('validateAdoptionRequest(raw)'));}
+for(const bytes of [Buffer.from([0xff,0xfe]),Buffer.concat([Buffer.from([239,187,191]),Buffer.from(original)])]){
+ sandbox.file=new File([bytes],'bad.json');assert.equal(await run('loadImportFile(file)'),false);assert.deepEqual(snapshot(),initial);
+}
+sandbox.file=new File([original],'record.json');assert.equal(await run('loadImportFile(file)'),true);
+assert.deepEqual(snapshot(),initial);assert.match(elements.transferPreview.textContent,/Hintergrundwechsel/);
+run('discardTransfer()');assert.deepEqual(snapshot(),initial);
+set('transferText',original);await run('previewText()');assert.equal(run('applyTransfer()'),true);
+assert.equal(snapshot().jobs[0].session.request_text,original);
+assert.equal(snapshot().jobs[0].record,null);
+""")
+
+    def test_adoption_mixed_workspace_identity_family_replacement_and_reset(self):
+        self.javascript(r"""
+edit('motif','Regular 0.6');const a=run('activeJobId');
+await importValue(input.fixtures.sheet,'new');const b=run('activeJobId');
+run('createAdoption()');const c=run('activeJobId');
+set('adoption-title','Eigener Entwurf');run("adoptionChanged('title')");
+set('adoption-puzzle_id','pz-synthetic-adoption');run("adoptionChanged('puzzle_id')");
+const before=snapshot(),options=clone(before.jobs[2].options),personal=plain(run('settingsSnapshot()'));
+sandbox.file=new File([input.fixtures.adoption.text],'record.json');await run('loadImportFile(file)');run('discardTransfer()');assert.deepEqual(snapshot(),before);
+await run('loadImportFile(file)');assert.equal(run('applyTransfer()'),true);
+assert.equal(run('activeJobId'),c);assert.deepEqual(snapshot().jobs[2].options,options);
+assert.equal(elements.regularFields.hidden,true);assert.equal(elements.regularRoute.hidden,true);
+for(const card of run('CARDS'))assert.equal(elements['card-'+card.id].hidden,!card.adoptionStep);
+run('switchJob('+JSON.stringify(a)+')');assert.equal(elements.regularFields.hidden,false);
+run('switchJob('+JSON.stringify(c)+')');assert.equal(snapshot().jobs[2].session.request_text,input.fixtures.adoption.text);
+const mixed=snapshot();assert.equal(mixed.format,'picross-cheatsheet-workspace-v2');await importValue(mixed);assert.deepEqual(snapshot(),mixed);
+set('adoption-puzzle_id','pz-synthetic-a');run("adoptionChanged('puzzle_id')");assert.match(elements.adoptionError.textContent,/bereits/);assert.deepEqual(snapshot(),mixed,'rejected form identity cannot enter memory or a later job switch');
+run('switchJob('+JSON.stringify(a)+')');run('switchJob('+JSON.stringify(c)+')');assert.deepEqual(snapshot(),mixed);
+sandbox.bad=clone(mixed);sandbox.bad.format='picross-cheatsheet-workspace-v1';await assert.rejects(run('stageTransfer(bad)'));assert.deepEqual(snapshot(),mixed);
+sandbox.bad=clone(mixed);sandbox.bad.jobs[2].record=input.fixtures.record;await assert.rejects(run('stageTransfer(bad)'));
+sandbox.bad=clone(mixed);sandbox.bad.jobs[0].session.fields.puzzleId='pz-synthetic-adoption';await assert.rejects(run('stageTransfer(bad)'));assert.deepEqual(snapshot(),mixed);
+// Visible full replacement is the only cross-family path, retaining local ID/options.
+const regular=clone(mixed.jobs[0].session);regular.fields.puzzleId='pz-synthetic-adoption';sandbox.regular=regular;
+await run('stageTransfer(regular)');assert.match(elements.transferPreview.textContent,/VOLLSTÄNDIGER FAMILIENERSATZ/);assert.deepEqual(snapshot(),mixed);
+run('applyTransfer()');assert.equal(run('activeJobId'),c);assert.equal(snapshot().jobs[2].session.format,'picross-cheatsheet-session-v4');
+assert.deepEqual(snapshot().jobs[2].options,options);assert.ok(run('ruleMismatch()'));
+await run('loadImportFile(file)');assert.match(elements.transferPreview.textContent,/VOLLSTÄNDIGER FAMILIENERSATZ/);run('applyTransfer()');
+run('resetJob()');assert.equal(snapshot().jobs[2].session.format,'picross-background-adoption-session-v1');assert.equal(snapshot().jobs[2].session.request_text,null);
+assert.deepEqual(snapshot().jobs.slice(0,2),mixed.jobs.slice(0,2));assert.deepEqual(plain(run('settingsSnapshot()')),personal);
+run('removeJob()');assert.deepEqual(snapshot().jobs,mixed.jobs.slice(0,2));
+// v1 regular collection remains readable and is written as v2.
+const old=clone(snapshot());old.format='picross-cheatsheet-workspace-v1';sandbox.old=old;await importValue(old);assert.equal(snapshot().format,'picross-cheatsheet-workspace-v2');
+""")
+
+    def test_adoption_intent_requests_steps_and_reported_historical_completion(self):
+        result=self.javascript(r"""
+set('workspaceRoot','/home/synthetic/picross');run('createAdoption()');
+const editAd=(key,value)=>{set('adoption-'+key,value);run('adoptionChanged('+JSON.stringify(key)+')');};
+editAd('puzzle_id','pz-synthetic-adoption');editAd('source_ref','work/background');editAd('briefing','Vollständige Arbeitsrevision im genannten Quellstand; drei isolierte Bilder.');
+sandbox.card=run("CARDS.find(c=>c.adoptionStep==='adopt')");assert.ok(run('choiceBlock(card)'));assert.equal(await run('exportPackage(card)'),false);
+assert.ok(!run("prompt(CARDS.find(c=>c.adoptionStep==='prepare')).missing").length);
+sandbox.file=new File([input.fixtures.adoption.text],'record.json');await run('loadImportFile(file)');run('applyTransfer()');
+editAd('integrated_commit','a'.repeat(40));editAd('pr','123');
+const owner='B in work/B-r02.png verwenden; Transparenz korrigieren.\nKeine unbekannten Bytes freigegeben.';editAd('change_request',owner);
+assert.ok(run('choiceBlock(card)'));await run('loadImportFile(file)');run('applyTransfer()');
+assert.equal(snapshot().jobs.at(-1).session.fields.change_request,owner,'identical bytes do not withdraw intent');
+for(const step of ['prepare','rework','resume','adopt','complete']){
+ sandbox.step=step;const prompt=run('adoptionPrompt(CARDS.find(c=>c.adoptionStep===step))');
+ assert.match(prompt.text,/HP-I1b2/);assert.ok(prompt.text.includes(owner));assert.ok(!prompt.text.includes('genau ein Sheet-Daten-JSON'));
+}
+run('withdrawAdoptionChange()');assert.equal(run('choiceBlock(card)'),'');
+const r=JSON.parse(input.fixtures.adoption.text);r.authorization.statement+=' Neue passende Erklärung.';
+sandbox.changed=run('requestCanonical('+JSON.stringify(r)+')')+'\n';sandbox.newfile=new File([sandbox.changed],'record.json');await run('loadImportFile(newfile)');
+assert.match(elements.transferPreview.textContent,/Mainbeleg: null/);run('applyTransfer()');assert.equal(elements['adoption-integrated_commit'].value,'');
+assert.equal(elements['adoption-pr'].value,'123','same revision retains explicitly associated PR');
+editAd('integrated_commit','b'.repeat(40));set('completionReport','https://github.com/venomenon328/picross/pull/123#issuecomment-1');
+assert.equal(await run('reportAdoptionCompletion()'),true);
+const complete=snapshot().jobs.at(-1).session;
+assert.equal(complete.request_text,null);assert.equal(complete.completion.test_only,true);assert.equal(complete.fields.briefing,'');
+assert.equal(complete.fields.change_request,'');assert.ok(!Object.hasOwn(complete.completion,'files'));assert.match(elements.adoptionBinding.textContent,/Historische|Historischer/);
+assert.equal(run('choiceBlock(card)').includes('Originalrequest'),true,'completed work cannot be adopted');
+sandbox.session=complete;assert.doesNotThrow(()=>run('validateAdoptionSession(session)'));await importValue(complete);
+sandbox.bad=clone(complete);sandbox.bad.completion.request.file='content/authoring/pz-other/bg-r01/record.json';await assert.rejects(run('stageTransfer(bad)'));
+sandbox.bad=clone(complete);sandbox.bad.completion.integrated_commit='c'.repeat(40);await assert.rejects(run('stageTransfer(bad)'));
+run('saveSession()');run('saveWorkspace()');return {complete,downloads:await exported(),original:sandbox.changed};
+""")
+        binding=result['complete']['completion']['request']
+        raw=result['original'].encode('utf-8')
+        self.assertEqual(binding['sha256'],hashlib.sha256(raw).hexdigest())
+        self.assertEqual(binding['bytes'],len(raw))
+        outputs=[json.loads(base64.b64decode(item['bytes'])) for item in result['downloads']]
+        self.assertEqual(outputs[0],result['complete'])
+        self.assertEqual(outputs[1]['jobs'][-1]['session'],result['complete'])
+
+    def test_adoption_actual_zip_and_session_collection_preserve_original_bytes(self):
+        result=self.javascript(r"""
+set('workspaceRoot','/home/synthetic/picross');run('createAdoption()');
+set('adoption-source_ref','work/full-revision');run("adoptionChanged('source_ref')");
+set('adoption-briefing','Die vollständige Arbeitsrevision liegt im ausdrücklich benannten Repositorystand.');run("adoptionChanged('briefing')");
+sandbox.file=new File([input.fixtures.adoption.text],'record.json');await run('loadImportFile(file)');run('applyTransfer()');
+sandbox.card=run("CARDS.find(c=>c.adoptionStep==='adopt')");assert.equal(run('choiceBlock(card)'),'');
+for(const source of ['repo','attachment']){set('ruleSource',source);await elements.ruleSource.emit('change');assert.equal(await run('exportPackage(card)'),true);}
+run('saveSession()');run('saveWorkspace()');return exported();
+""")
+        original=self.fixture['adoption']['text'].encode('utf-8')
+        for index,item in enumerate(result[:2]):
+            with zipfile.ZipFile(io.BytesIO(base64.b64decode(item['bytes']))) as archive:
+                names={'auftrag.md','brief.json','original-request.json','dateien.json'}
+                if index: names.add('PICROSS_PUZZLE_AUTHORING.md')
+                self.assertEqual(set(archive.namelist()),names)
+                self.assertEqual(archive.read('original-request.json'),original)
+                brief=json.loads(archive.read('brief.json'))
+                self.assertEqual(set(brief),set('format execution created_at rulebook fields request completion requested_step prompt_file note'.split()))
+                self.assertEqual(brief['format'],'picross-background-adoption-sheet-request-v1')
+                self.assertEqual(brief['requested_step'],'adopt')
+                self.assertEqual(brief['request'],{'file':'original-request.json','bytes':len(original),'sha256':hashlib.sha256(original).hexdigest()})
+                inventory=json.loads(archive.read('dateien.json'))
+                self.assertEqual(inventory['format'],'picross-request-files-v1')
+                self.assertEqual({row['file'] for row in inventory['files']},names-{'dateien.json'})
+                for row in inventory['files']:
+                    raw=archive.read(row['file']);self.assertEqual(row['bytes'],len(raw));self.assertEqual(row['sha256'],hashlib.sha256(raw).hexdigest())
+                if index:self.assertEqual(archive.read('PICROSS_PUZZLE_AUTHORING.md'),(ROOT/'docs/ai-workflows'/RULEBOOKS[1]).read_bytes())
+        session=json.loads(base64.b64decode(result[2]['bytes']))
+        workspace=json.loads(base64.b64decode(result[3]['bytes']))
+        self.assertEqual(session['request_text'].encode('utf-8'),original)
+        self.assertEqual(workspace['jobs'][-1]['session'],session)
+
+    def test_adoption_stale_import_hash_export_completion_and_clipboard(self):
+        self.javascript(r"""
+set('workspaceRoot','/home/synthetic/picross');run('createAdoption()');
+set('adoption-source_ref','work/full');run("adoptionChanged('source_ref')");set('adoption-briefing','Complete revision at source.');run("adoptionChanged('briefing')");
+sandbox.file=new File([input.fixtures.adoption.text],'record.json');await run('loadImportFile(file)');run('applyTransfer()');
+const saved=snapshot(),a=run('activeJobId');sandbox.a=a;sandbox.saved=saved;
+sandbox.card=run("CARDS.find(c=>c.adoptionStep==='adopt')");
+for(const action of ['visit','reset','replace','remove']){
+ await importValue(saved);digestGate=deferred();const count=downloads.length,exporting=run('exportPackage(card)');await tick();
+ if(action==='visit'){run('createJob()');run('switchJob(a)');}
+ if(action==='reset')run('resetJob()');
+ if(action==='replace'){const other=clone(saved.jobs[0].session);other.fields.puzzleId='pz-synthetic-adoption';await importValue(other);}
+ if(action==='remove')run('removeJob()');
+ const stable=snapshot();digestGate.resolve();assert.equal(await exporting,false);digestGate=null;assert.equal(downloads.length,count);assert.deepEqual(snapshot(),stable);
+}
+await importValue(saved);
+const gate=deferred();sandbox.delayed={size:100,arrayBuffer:()=>gate.promise};const loading=run('loadImportFile(delayed)');
+run('resetJob()');const stable=snapshot();gate.resolve(Buffer.from(input.fixtures.adoption.text));assert.equal(await loading,false);assert.deepEqual(snapshot(),stable);
+await importValue(saved);set('adoption-integrated_commit','d'.repeat(40));run("adoptionChanged('integrated_commit')");set('completionReport','https://example.com/report');
+digestGate=deferred();const completing=run('reportAdoptionCompletion()');await tick();run('resetJob()');const reset=snapshot();digestGate.resolve();assert.equal(await completing,false);digestGate=null;assert.deepEqual(snapshot(),reset);
+await importValue(saved);const clipboard=deferred();sandbox.navigator.clipboard.writeText=()=>clipboard.promise;
+sandbox.button=elements['card-adoption-adopt'].querySelector('.copy');const text=sandbox.button.textContent;
+const copying=run('copyCard(card,button)');run('createJob()');run('switchJob(a)');const status=elements.live.textContent;clipboard.resolve();assert.equal(await copying,false);assert.equal(sandbox.button.textContent,text);assert.equal(elements.live.textContent,status);
 """)
