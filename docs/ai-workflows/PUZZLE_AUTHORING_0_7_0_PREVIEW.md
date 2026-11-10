@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion · 0.7.0-Vorschaustand
 
-**Version 0.7.0 · Dokumentrevision 6 · 10.11.2026**
+**Version 0.7.0 · Dokumentrevision 7 · 10.11.2026**
 
 **Explizit wählbarer Vorbereitungsstand, kein aktiver Produktionsdefault.**
 [PB-H / #489](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
@@ -9,7 +9,7 @@ unterstützt neue Hintergrundpakete nach diesem vollständigen Snapshot. Er
 Parameter-, Rand- und Difficultygarantien von Authoring 0.6.0 und ergänzt die
 Hintergrundarbeit mit eigenen geschlossenen Formen und getrennten Phasen.
 Der kanonische [aktive Authoringweg](PUZZLE_AUTHORING.md) bleibt **0.6.0 /
-Dokumentrevision 45**, ebenso der Default neuer Jobs im
+Dokumentrevision 46**, ebenso der Default neuer Jobs im
 [Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html).
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
 führt mehrere unabhängige Jobs und den ausdrücklich gewählten 0.7.0-Weg.
@@ -18,7 +18,7 @@ seinen tatsächlich gewählten Regelstand. Dieser Snapshot ersetzt den Default n
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md` im Repository
 `venomenon328/picross`. Ein neuer 0.7.0-Bauauftrag bindet die vollständigen Bytes
-dieser Datei, Version 0.7.0, Dokumentrevision 6 und den tatsächlich gelesenen
+dieser Datei, Version 0.7.0, Dokumentrevision 7 und den tatsächlich gelesenen
 Quellencommit. Eine umbenannte oder nur im Header geänderte 0.6.0-Datei ist
 kein 0.7.0-Snapshot. Bereits versiegelte Originale behalten ihre eigenen Bytes,
 Versionen und damaligen Nachweise; kein Versionsdowngrade für neue Arbeit.
@@ -47,7 +47,7 @@ HP-I2-Runtime-/Importweg true sein. Dieser opt-in-Weg ersetzt den Default 0.6.0
 nicht; die verpflichtende Gesamtaktivierung wird anhand des tatsächlich
 unterstützten Einzelwegs in #560 festgestellt. MJ-A führt regulären Sheetimport,
 Sitzung v5 und Auftrag v4 nach Hintergrundvertrag §7.5; der eigene spätere
-Hintergrundänderungsjob bleibt MJ-B. Eine vorhandene Endfreigabe v2 darf rein
+Hintergrundänderungsjob folgt MJ-B nach Hintergrundvertrag §7.6. Eine vorhandene Endfreigabe v2 darf rein
 lesend auf ihre unveränderten Originalbindungen geprüft werden; kein neuer
 finaler Originalzustand wird gebaut und keine fehlende Erklärung erzeugt.
 
@@ -1152,7 +1152,7 @@ auf `null` setzen; Reveal und Runtime-Inhalte bleiben erreichbar.
 
 Abschlussbild- und Rasteroptionsliste samt Auswahlfeldern bleiben Pflicht.
 Die zusätzliche Hintergrundliste und ihre vier Felder folgen unten. Alte
-v1/v2-Updates behalten ihre Semantik; das heutige UI ist weiterhin ein Altreader. Jede Liste enthält höchstens 20 Einträge.
+v1/v2-Updates behalten ihre Semantik. MJ-A liest den regulären v3-Weg; MJ-B ergänzt ausschließlich die eigene Adoptionfamilie. Jede Liste enthält höchstens 20 Einträge.
 IDs sind innerhalb ihrer Liste eindeutig, höchstens 64 Zeichen lang und bestehen
 aus Buchstaben, Ziffern, Bindestrich oder Unterstrich, beginnend mit einem
 Buchstaben/einer Ziffer. Groß-/Kleinschreibung ist maßgeblich. Eine Auswahl muss
@@ -1230,7 +1230,7 @@ dass das Sheet die Bytes oder Proofs selbst geprüft hätte. Nach Produktionsabs
 werden Optionslisten geleert, statt auf entfernte Arbeitsdateien zu verweisen.
 
 Beide eingebetteten Sheet-Snapshots sind bytegleich mit ihren Markdownquellen:
-`PUZZLE_AUTHORING.md` 0.6.0/docrev45 und dieser Vorschaupfad 0.7.0/docrev6.
+`PUZZLE_AUTHORING.md` 0.6.0/docrev46 und dieser Vorschaupfad 0.7.0/docrev7.
 Neue Jobs starten mit 0.6.0; ausdrücklich gewählte v5-Jobs binden den Vorschaupfad
 beziehungsweise dessen 0.7.0-Anhang. Der
 Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
@@ -1248,7 +1248,7 @@ Vor jedem Jobwechsel den aktuellen Formularstand im Arbeitsspeicher sichern.
 „Neuer Job“ beginnt mit persönlichen Voreinstellungen; Reset und Entfernen
 betreffen ausschließlich den gewählten Job. Jobs werden nicht automatisch dauerhaft
 gespeichert. Einzelne Sitzungen bleiben nutzbar, die vollständige manuelle Sicherung
-verwendet `picross-cheatsheet-workspace-v1` nach
+verwendet `picross-cheatsheet-workspace-v2` (v1 bleibt für reguläre Jobs lesbar) nach
 [Hintergrundvertrag §7.5](../PUZZLE_BACKGROUNDS.md#75-mj-a-mehrjob-arbeitsbereich-und-sichere-übernahme).
 Sie erhält Reihenfolge, aktiven Job, Sitzungen, Joboptionen und passende Records.
 Der Sammlungsimport ersetzt nach ausdrücklicher Vorschau die ganze Sammlung;
@@ -1388,6 +1388,45 @@ Bildanhang bleibt unabhängig von kompakten Hintergrundrefs. Eine frühe bewusst
 Leerabsicht verzichtet im abgesendeten Auftrag ausdrücklich auf die drei Kandidaten.
 Unveränderte gültige Entscheidungen bleiben erhalten; materielle Bindungsänderungen
 übertragen keine alte Bildentscheidung auf neue Daten.
+
+### MJ-B: Hintergrundrevision im Offline-Sheet
+
+Der eigene Bedienweg nach [Hintergrundvertrag §7.6](../PUZZLE_BACKGROUNDS.md#76-mj-b-eigenständige-hintergrundrevision-im-sheet)
+führt Entwurf, Originalrequest und gemeldeten Abschluss getrennt von Rasterjobs.
+Die geschlossene Sitzung `picross-background-adoption-session-v1` enthält exakt
+`format,fields,request_text,completion`; Felder, Grenzen und Querverbindungen
+sind vollständig in §7.6 D02/D06 festgelegt. Sammlung v2 erlaubt beide Familien,
+v1 ausschließlich reguläre Jobs. Globale eindeutige Rätsel-ID bleibt erforderlich.
+Jobfamilienwechsel ist ein ausdrücklich bestätigter vollständiger Ersatz; vorher
+Sitzung oder Sammlung sichern. Andere Jobs und persönliche Defaults bleiben erhalten.
+
+„Neuer Hintergrundwechsel“ wählt für diesen Job sichtbar den 0.7-Previewpfad.
+Originalrequest aus Datei oder exakt erhaltenem JSON-Text prüfen, Vorschau bewusst
+übernehmen oder verwerfen. Request/target/background/authorization bleiben
+schreibgeschützt. Das Sheet prüft Form, kanonische Originalbytes und innere Refs,
+keine Payloaddateien, Rechte, Source, Capability oder aktuelle Zielbereitschaft.
+`test_only` bleibt sichtbar. Neue materielle Wünsche sperren die Adoption alter
+Bytes; identischer Reimport hebt sie nicht auf. Rücknahme erfolgt ausdrücklich.
+
+Die eigenen Schritte `prepare,rework,resume,adopt,complete` folgen §7.6 D04.
+Bild-/Auswahlaufträge laufen in ChatGPT Work; technische Aufträge benötigen eine
+gültige Codex-Arbeitswurzel. Fehlende Mindestangaben sperren adopt/complete.
+Ergebnis nennt tatsächliche Dateien/PR, Stand und nächsten Schritt; ein echter
+Request wird unverändert als record.json geliefert. Kein Raster-Sheet-Update
+oder konkurrierendes Ergebnisformat für diese Familie erzwingen.
+
+Auftragsexport `picross-background-adoption-sheet-request-v1` und ZIP folgen D05:
+Originaltext bytegleich als original-request.json, Prompt, brief.json, Dateiinventar
+und bei Anhang genau der 0.7-Snapshot. Referenzierte Payloaddateien werden nicht
+mitgeliefert; die vollständige Arbeitsrevision muss am ausdrücklich genannten
+Quellstand oder separat erreichbar sein. Kein Dummy-ZIP oder Buchtesteinbau.
+
+„Abschluss melden“ benötigt vollständigen gemeldeten Maincommit und konkreten
+HTTPS-Berichtslink. Es leitet nur die kompakte historische Bindung aus dem
+Originalrequest ab, leert dessen vollständige Arbeitsliste sowie Briefing/Wunsch
+und behauptet keine selbst geprüfte Mainintegration. Revisionsgenaues Retirement
+bleibt Aufgabe des vorhandenen HP-I1b2-/§9-Wegs. Neue Arbeit erfordert ausdrücklich
+einen neuen Entwurf/Arbeitsstand; alte historische Quellen sind keine heutige Source.
 
 ## 8. Endabnahme, Export und verbleibende Integration
 
@@ -1751,9 +1790,8 @@ definiert den unveränderlichen `picross-background-adoption-request-v1` als
 eigenen Arbeitsrecord. Tatsächliche Auswahl/Entfernung und Zielautorisierung
 aufzeichnen, keine neue Rasterfreigabe oder Dummy-ZIP. Kontext aus bytegleicher
 aktueller Source und aktuellem freigegebenem Reveal sichern; ursprüngliche
-Revealautorität bleibt in initial erhalten. Auch der MJ-A-Arbeitsbereich weist
-`picross-background-adoption-request-v1` verständlich zurück und nennt diesen
-bestehenden Werkzeugweg. Seine eigene Sheetbedienung bleibt MJ-B aus #490.
+Revealautorität bleibt in initial erhalten. MJ-B führt die eigene Sheetbedienung nach Hintergrundvertrag §7.6: Der Request
+bleibt unveränderlich, reguläre Rasterjobs verwenden weiterhin MJ-A.
 Eigene Arbeitsrevision über `catalog_background_change store` samt Index sichern,
 danach `plan` und autorisiertes `adopt` gemäß Werkzeuganleitung. Fehlende oder
 false-Capability blockiert den Zielweg; kein Override. Vorhandene Freigaben

@@ -85,7 +85,7 @@ Fortschreibung und Export v6. HP-I1b1 ergänzt zielgebundene Erstregistrierung
 und ersten Abschluss. Die echte Capability folgt dem HP-I2-Runtime-/Abnahmevertrag.
 Späterer reiner Hintergrundersatz folgt dem HP-I1b2-Weg, erlaubte Raster-/
 Revealneubindung vorhandener Hintergrundziele HP-I1c. MJ-A führt den regulären
-Sheetweg; der eigene spätere Hintergrundänderungsjob bleibt MJ-B aus #490. Die Standalone-
+Sheetweg; MJ-B ergänzt den eigenen Hintergrundänderungsjob nach §7.6. Die Standalone-
 Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
 
 ## PB-H: Hintergrundpakete und lesende Inhaltsprüfung
@@ -94,10 +94,10 @@ Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabsc
 und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
 neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
 [Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 6, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Dokumentrevision 7, mit tatsächlichem Dateihash und gelesenem Quellencommit.
 Der aktive Authoringpfad und der Default neuer Offline-Sheetjobs bleiben
-**0.6.0 / Dokumentrevision 45**. Beide eingebetteten Snapshots entsprechen ihren
-Markdownquellen; 0.7.0 / Dokumentrevision 6 bleibt ausdrücklich opt-in. Die
+**0.6.0 / Dokumentrevision 46**. Beide eingebetteten Snapshots entsprechen ihren
+Markdownquellen; 0.7.0 / Dokumentrevision 7 bleibt ausdrücklich opt-in. Die
 verpflichtende Gesamtaktivierung wird am konkreten Einzelweg in #560 abgeglichen.
 Versiegelte ältere Pakete behalten ihren gebundenen Snapshot unverändert.
 
@@ -221,9 +221,8 @@ Neue Jobs starten mit 0.6.0/v4; der reguläre Hintergrundweg ist ausdrücklich
 0.7.0/v5 mit Auftrag v4 und passendem Regelpfad. Beide eingebetteten Regeltexte sind
 bytegleich mit ihren Markdownquellen. Nach Authoring §9 bleiben kompakte echte
 Abschlussbezüge erhalten, bereinigte Produktionsdateien werden nicht rekonstruiert.
-Der separate `picross-background-adoption-request-v1` wird weiterhin verständlich
-abgewiesen und auf den HP-I1b2-Werkzeugweg verwiesen; seine Sheetbedienung bleibt
-MJ-B. Keine Batchausführung, automatische Bildproduktion oder neue Modell-API.
+Der separate `picross-background-adoption-request-v1` folgt MJ-B mit eigener
+Sitzung v1 und Sammlung v2 nach Hintergrundvertrag §7.6. Keine Batchausführung, automatische Bildproduktion oder neue Modell-API.
 
 ## HP-I1a: äußere Endabnahme und Export v6
 
@@ -1974,8 +1973,8 @@ Der Speicher-No-op gilt auch nach Adoption; er prüft identische Arbeitsbytes un
 den gültigen aktuellen Katalog, erteilt aber keine neue Übernahmebefugnis für ein
 inzwischen veraltetes Ziel. plan/adopt prüfen dessen vollständige Zielbindung.
 Der Request selbst ist der Record, kein Rasterpaket und kein registrierter Status.
-Die neue Familie wird im Index ausdrücklich dispatcht und auch im MJ-A-Sheet
-verständlich abgewiesen; ihre eigene Sheetbedienung bleibt MJ-B aus #490.
+Die neue Familie wird im Index ausdrücklich dispatcht. MJ-B führt ihre eigene
+Sheetbedienung nach Hintergrundvertrag §7.6; keine Umdeutung zum Rasterrecord.
 
 plan ist gegenüber Checkout/Arbeit lesend und veröffentlicht das vollständig
 geprüfte Bundle am neuen externen Pfad ohne Ersetzen. input/ ist dessen explizite
@@ -2120,3 +2119,26 @@ Capabilitybytes machen vorhandene daran gebundene Pläne stale; sie erlauben
 keine alte Recovery auf inzwischen inkompatiblen Daten. Kein Flagwechsel als
 Umgehung und keine Änderung historischer Exportfalse-Felder. Echte Bestands-
 rätsel werden durch HP-I2 nicht migriert; Legacy-only bleibt Runtime v5.
+
+## MJ-B: eigener Hintergrundwechsel im Offline-Sheet
+
+[Vertrag §7.6](../../docs/PUZZLE_BACKGROUNDS.md#76-mj-b-eigenständige-hintergrundrevision-im-sheet)
+führt die geschlossenen äußeren Formen. „Neuer Hintergrundwechsel“ legt einen
+separaten 0.7-Job an; neue reguläre Jobs bleiben 0.6. Originalrequestdatei mit
+kanonischen Bytes einschließlich End-LF nach Vorschau übernehmen, unverändert
+als Sitzung sichern oder in Sammlung v2 gemeinsam mit regulären Jobs exportieren.
+Alte v1-Sammlungen bleiben ausschließlich für reguläre Jobs lesbar. Familienwechsel
+ist ausdrücklich vollständiger Ersatz mit erhaltener lokaler Job-ID.
+
+`prepare/rework` sind Bild-/Auswahlaufträge; `resume/adopt/complete` verwenden
+Codex mit eingestellter Arbeitswurzel. Ein neuer materieller Wunsch sperrt die
+Adoption des alten Requests. `adopt` braucht vollständigen Originalrequest,
+benannten Quellstand und den konkreten Fundort der vollständigen Arbeitsrevision.
+ZIP enthält nur Bedienauftrag/Metadaten, Originalrequest und bei gewähltem Anhang
+den 0.7-Snapshot, niemals die automatisch eingesammelten `request.files`.
+Originale separat bereitstellen; `store/plan` prüft sie und das frische Ziel.
+
+„Abschluss melden“ benötigt tatsächlich gemeldeten vollständigen Maincommit und
+konkreten HTTPS-Bericht. Danach bleiben kompakte historische Refs und `test_only`;
+Arbeitsinventar/Originaltext werden aus der Sitzung entfernt. Das ersetzt keine
+Retirementprüfung oder Mainverifikation. Keine neuen Writer oder CLI-Ergebnisimporte.
