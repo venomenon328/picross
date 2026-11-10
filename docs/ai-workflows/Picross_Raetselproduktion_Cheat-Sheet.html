@@ -69,12 +69,13 @@
 <p class="privacy">Persönliches Setup und Defaults werden in diesem Browser gespeichert. Jobdaten und ihre Optionen separat als Sammlung sichern. Einzelimporte behalten die Zieljoboptionen; neue Hintergrundformen zeigen den vorgeschlagenen Regelpfad in der Vorschau. Die Arbeitswurzel ist eine Anweisung, keine Dateisystemsperre.</p>
 </details>
 <noscript><p class="noscript">Dieses Cheat-Sheet benötigt JavaScript. Lade die HTML-Datei herunter und öffne sie im Browser.</p></noscript>
+<details id="transferInput" class="settings-panel"><summary>KI-Übergabe übernehmen</summary><p class="note">Den vollständigen Block „Sheet-Daten“ aus der KI-Antwort hier einfügen. Alternativ eine record.json laden. Ziel zuerst wählen, Daten prüfen und die Vorschau ausdrücklich übernehmen. Für Record v2 zusätzlich das passende vollständige Sheet-Update v3 angeben.</p><label for="importTarget">Importziel<select id="importTarget"><option value="new">Neuen Job anlegen</option></select></label><label for="transferText">Sheet-Daten<textarea id="transferText" spellcheck="false" placeholder='{"format":"picross-cheatsheet-update-v2", …}'></textarea></label><details><summary>Record v2: passendes Sheet-Update v3 ergänzen</summary><label for="companionText">Zugehöriges Sheet-Update<textarea id="companionText" spellcheck="false"></textarea></label><button id="loadCompanion" type="button" class="btn">Ergänzungsdatei laden</button><input id="companionInput" type="file" accept="application/json,.json" hidden></details><div class="inline-actions"><button id="previewTransfer" type="button" class="btn">Daten prüfen</button><button id="applyTransfer" type="button" class="btn primary" disabled>Daten übernehmen</button><button id="discardTransfer" type="button" class="btn ghost">Verwerfen</button></div><p id="transferPreview" class="note" role="status"></p></details>
 <div class="workspace" id="jobWorkspace">
 <aside class="context" aria-label="Mitscrollende Rätseldaten"><details id="contextPanel" open>
 <summary class="context-head"><strong>Rätseldaten</strong><span id="compactSummary">Motiv oder Bild genügt</span><span class="small">Ein-/ausklappen</span></summary>
 <div class="context-body">
 <div class="inline-actions"><button type="button" class="btn" id="openTransfer">Sheet-Daten einfügen</button><button type="button" class="btn ghost" id="loadRecord">JSON laden</button><input id="recordInput" type="file" accept="application/json,.json" hidden></div>
-<details id="transferInput"><summary>KI-Übergabe übernehmen</summary><p class="note">Den vollständigen Block „Sheet-Daten“ aus der KI-Antwort hier einfügen. Alternativ eine record.json laden. Ziel zuerst wählen, Daten prüfen und die Vorschau ausdrücklich übernehmen. Für Record v2 zusätzlich das passende vollständige Sheet-Update v3 angeben.</p><label for="importTarget">Importziel<select id="importTarget"><option value="new">Neuen Job anlegen</option></select></label><label for="transferText">Sheet-Daten<textarea id="transferText" spellcheck="false" placeholder='{"format":"picross-cheatsheet-update-v2", …}'></textarea></label><details><summary>Record v2: passendes Sheet-Update v3 ergänzen</summary><label for="companionText">Zugehöriges Sheet-Update<textarea id="companionText" spellcheck="false"></textarea></label><button id="loadCompanion" type="button" class="btn">Ergänzungsdatei laden</button><input id="companionInput" type="file" accept="application/json,.json" hidden></details><div class="inline-actions"><button id="previewTransfer" type="button" class="btn">Daten prüfen</button><button id="applyTransfer" type="button" class="btn primary" disabled>Daten übernehmen</button><button id="discardTransfer" type="button" class="btn ghost">Verwerfen</button></div><p id="transferPreview" class="note" role="status"></p></details>
+
 <label for="motif" class="spaced">Motiv<textarea id="motif" placeholder="Was soll das Rätsel zeigen? Text oder eigenes Bild genügt."></textarea></label>
 <div class="fields three"><label for="width">Rasterbreite<input id="width" type="number" min="1" max="50" step="1" placeholder="offen"></label><label for="height">Rasterhöhe<input id="height" type="number" min="1" max="50" step="1" placeholder="offen"></label><label for="sizePolicy">Größenvorgabe<select id="sizePolicy"><option value="approximate">Ungefähr</option><option value="fixed">Fest</option></select></label></div>
 <div class="fields"><label for="mode">Rätselmodus<select id="mode"><option value="auto">KI empfiehlt</option><option value="mono">Monochrom</option><option value="color">Farbig</option></select></label><label for="colorCount">Farbanzahl<input id="colorCount" type="number" min="1" max="8" step="1" placeholder="KI empfiehlt"></label><label for="colorPolicy">Farbvorgabe<select id="colorPolicy"><option value="approximate">Ungefähr</option><option value="exact">Genau</option></select></label></div>
@@ -1027,8 +1028,11 @@ function assertTarget(target,session){
  if(oldId&&newId&&oldId!==newId)throw new Error('Andere Rätsel-ID: ausdrücklich einen neuen Job wählen.');
  if(newId&&jobs.some(job=>job.job_id!==target&&(job.job_id===activeJobId?val('puzzleId'):job.session.fields.puzzleId)===newId))throw new Error('Produktions-ID gehört bereits zu einem anderen Job.');
 }
-function discardTransfer(){
+function invalidateImports(){
  for(const runtime of jobRuntime.values())runtime.tickets.import=(runtime.tickets.import||0)+1;
+}
+function discardTransfer(){
+ invalidateImports();
  pendingTransfer=null;pendingRecord=null;$('applyTransfer').disabled=true;$('transferPreview').textContent='Vorschau verworfen. Jobs und Einstellungen bleiben erhalten.';
 }
 function importDescription(job,target){
@@ -1408,7 +1412,7 @@ $('recordInput').addEventListener('change',event=>loadImportFile(event.target.fi
 $('loadCompanion').addEventListener('click',()=>$('companionInput').click());
 $('companionInput').addEventListener('change',event=>loadCompanion(event.target.files[0]));
 $('openTransfer').addEventListener('click',()=>{$('transferInput').open=true;$('transferText').focus();});
-for(const id of ['transferText','companionText','importTarget'])$(id).addEventListener(id==='importTarget'?'change':'input',()=>{runtimeFor(activeJobId).tickets.import=(runtimeFor(activeJobId).tickets.import||0)+1;pendingTransfer=null;pendingRecord=null;$('applyTransfer').disabled=true;$('transferPreview').textContent='';});
+for(const id of ['transferText','companionText','importTarget'])$(id).addEventListener(id==='importTarget'?'change':'input',()=>{invalidateImports();pendingTransfer=null;pendingRecord=null;$('applyTransfer').disabled=true;$('transferPreview').textContent='';});
 $('previewTransfer').addEventListener('click',previewText);
 $('discardTransfer').addEventListener('click',discardTransfer);
 $('applyTransfer').addEventListener('click',()=>{try{applyTransfer();}catch(error){say('Nicht übernommen: '+error.message);}});
