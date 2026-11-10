@@ -112,6 +112,7 @@ def retire(root, revisions, integrated_commit):
     for (identifier, revision), directory in zip(revisions, directories):
         require(identifier in entries and directory in original_rows, 'Revision is not integrated on main: ' + directory)
         entry = entries[identifier]
+        source.require_legacy_target(root, entry, snapshot['registry'])
         row = original_rows[directory]
         record = historical_json(row['record'])
         require(isinstance(record, dict) and record.get('format') == 'picross-authoring-record-v1' and record.get('puzzle_id') == identifier and
@@ -164,7 +165,7 @@ def retire(root, revisions, integrated_commit):
     for start in range(0, len(affected), 20):
         git('diff', '--cached', '--quiet', '--', *affected[start:start+20])
     require(all(tx.read(root, n) == raw for n, raw in snapshot['texts'].items()) and
-            all(io.file_hash(root, n) == h for n, h in snapshot['retained'].items()) and
+            all(tx.file_hash(root, n) == h for n, h in snapshot['retained'].items()) and
             tx.namespaces(root, snapshot['registry']) == snapshot['namespaces'] and
             io.read(root, INDEX, LIMIT) == index_bytes, 'Checkout changed during retirement planning')
     for directory in directories:

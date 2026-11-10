@@ -81,9 +81,10 @@ Veröffentlichungsvertrag stehen vollständig in Hintergrundvertrag §4.4.
 **Der vollständige Hintergrundweg bleibt inaktiv.** Authoring 0.6.0 und PB-A
 behalten ihre Hüllen und Gates. PB-H ergänzt den ausdrücklich gewählten
 Paketbau und die lesende Inhaltsprüfung unten; HP-I1a ergänzt äußere
-Fortschreibung und Export v6. HP-I1b/I2 liefern später finale Integration/Runtime,
-#490 die neue Sheetbedienung. Die Standalone-Fähigkeit
-allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
+Fortschreibung und Export v6. HP-I1b1 ergänzt zielgebundene Erstregistrierung
+und ersten Abschluss; echte Capability bleibt false bis HP-I2. Späterer reiner
+Hintergrundersatz bleibt HP-I1b2, neue Sheetbedienung #490. Die Standalone-
+Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
 
 ## PB-H: Hintergrundpakete und lesende Inhaltsprüfung
 
@@ -91,9 +92,9 @@ allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
 und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
 neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
 [Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 2, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Dokumentrevision 3, mit tatsächlichem Dateihash und gelesenem Quellencommit.
 Der aktive Authoringpfad und der eingebettete Offline-Sheet-Snapshot bleiben
-**0.6.0 / Dokumentrevision 41**. Das ist eine zusätzliche Vorbereitungsfähigkeit,
+**0.6.0 / Dokumentrevision 42**. Das ist eine zusätzliche Vorbereitungsfähigkeit,
 keine Aktivierung des vollständigen Hintergrundwegs.
 
 ```sh
@@ -167,14 +168,15 @@ anzugeben. Das Ergebnis `picross-authoring-content-inspection-v1` unterscheidet
 und setzt stets `integration_ready=false`. Keine frühere Phase oder gespeicherte
 Erfolgsflagge ersetzt eine neue Inhaltsprüfung. PB-H selbst ergänzt keinen CLI;
 HP-I1a öffnet inspect/export ausschließlich über den ausdrücklichen Opt-in unten.
-Die bisherigen Default-/Registrywege bleiben für 0.7.0 geschlossen.
+Die bisherigen Defaultwege bleiben für 0.7.0 geschlossen; der neue
+zielgebundene HP-I1b1-Katalogweg steht unten.
 
 Endfreigabe v2 muss das unveränderte Original-ZIP, Handoff, Inventar, Rasterwahl,
 Manifest, tatsächliche Entscheidung, Original, Ableitung, Profil, Ausgabe und
 `test_only` exakt binden. Sie wird weder erzeugt, neu datiert noch an neue Bytes
 angepasst. Späte äußere Fortschreibung und Export v6 folgen dem HP-I1a-Vertrag
-unten; Registry-/Receiptgenerationen, Integration, Hintergrundersatz und
-Bereinigung bleiben HP-I1b, Runtime HP-I2.
+unten. HP-I1b1 ergänzt Registry-/Source-/Receiptformen, Erstintegration und
+deren Abschluss im kompatiblen Ziel; reiner Ersatz bleibt HP-I1b2, Runtime HP-I2.
 
 Ergebnis ist `picross-authoring-build-result-v2` mit denselben Erfolgs-/Fehler-
 Schlüsseln wie v1; darin Record v2 und eine aus diesem Record plus frisch
@@ -291,12 +293,129 @@ Prüfung `export_verified=true`. Nur das deklarierte `input/package.zip` darf
 bis 128 MiB statt des gewöhnlichen 64-MiB-Dateilimits groß sein; übrige Limits,
 Alias-/Link-/Kollisions- und Quellenänderungsprüfungen bleiben erhalten.
 
-Registry, Erstregistrierung, reiner Hintergrundersatz, Katalog-Recovery und
-revisionsgenauer Abschluss folgen HP-I1b; Runtime, Import/Mipmaps und Bedarfsladen
-HP-I2. Alte volle/Quick-/Metadaten-/direkte API-Verbraucher weisen v6 vor jeder
-produktiven Mutation zurück. Kein Forcepfad und keine Änderung der bestehenden
-Registrierungsjournalgeneration v6. Gültige Altformate v1–v5 bleiben nutzbar;
-Sheetbedienung und Batch werden durch HP-I1a nicht erweitert.
+Der folgende HP-I1b1-Weg öffnet erste Registrierung und Abschluss; späterer
+Hintergrundersatz bleibt HP-I1b2, Runtime/Import/Mipmaps/Laden HP-I2. Alte volle/
+Quick-/Metadaten-/direkte API-Verbraucher bleiben geschlossen. Kein Forcepfad;
+Export v6 und Registrierungsjournal v6 sind getrennte Formate. Gültige v1–v5-
+Exporte bleiben nach ihren eigenen Verträgen nutzbar, neue Sheetbedienung/Batch
+bleiben separat.
+
+## HP-I1b1: erste Hintergrundregistrierung und Produktionsabschluss
+
+[Paketentscheidung #561/HP-I1b1](https://github.com/venomenon328/picross/issues/561#issuecomment-6754303684),
+[Datenvertrag](../../docs/PUZZLE_BACKGROUNDS.md#10-hp-i1b1--erste-registrierung-und-kompakter-produktionsabschluss)
+und [Transaktionsmatrix](../../docs/SD_CATALOG.md#hp-i1b1--hintergrundquellen-pläne-und-transaktionen)
+führen die genaue Zulassung. Bestehende CLI/API verwenden; kein neuer Export
+oder alternativer Zertifizierungseingang. Ein unveränderter frisch geprüfter
+v6-Export darf genau eine neue ID im kompatiblen Ziel registrieren.
+
+### Zielfähigkeit vor Planung und Mutation
+
+Feste Datei `game/data/background-capability.json`, exakt
+`format,runtime_format,profile_id,enabled` mit
+`picross-runtime-background-capability-v1`, `picross-runtime-registry-v6`,
+`picross-background-png2304-v1` und Boolean `enabled`. Höchstens 4096 Bytes.
+Fehlend/false blockiert den Hintergrund-Plan/-Registeraufruf vor Journal und
+Katalogänderung. Ungültige Form/Pfade sind Eingabefehler. **Die echte
+Repositorydatei bleibt false bis HP-I2-Runtime samt technischer Abnahme.**
+Keine Änderung dieser Datei als Bedienhilfe, kein API-/CLI-/Umgebungs-Override;
+`--allow-background` lässt nur den inspect/export-Eingang zu. Isolierte
+synthetische Ziele dürfen true/test_only verwenden, ohne Spielerverhalten oder
+reale Produktionsabnahme zu belegen. Testinputs bleiben im echten Katalog verboten.
+
+Exportfalse-Felder, Original-ZIP, Approval und Finalizerrecord bleiben unverändert.
+Bereitschaft wird frisch am konkreten Ziel außerhalb des Manifests ermittelt.
+Unter diesen Voraussetzungen folgt nach regulärer Difficultybindung:
+
+```sh
+python -m tools.puzzle_production.target_adapter plan --export <v6-export> --checkout <kompatibles-ziel> --difficulty <checked.json>
+python -m tools.puzzle_production.target_adapter register --export <v6-export> --checkout <kompatibles-ziel> --difficulty <checked.json>
+```
+
+Die vorhandene ausdrücklich gewählte `--rebind-difficulty`-Alternative und
+Kategorie-/Zielbindungen bleiben. `register` führt eigene volle Eingangsprüfung
+und unabhängiges Stagingreplay aus; ein früherer Plan ist kein Vertrauenscache.
+Ein erfolgreicher Lauf bedeutet registrierten Checkout. Main-Integration
+verlangt weiterhin den tatsächlich bestätigten Merge und passende Befugnis.
+
+### Dauerhafte Source, minimale Runtime und Folgeoperationen
+
+Registry v3 hat exakt `format,entries,backgrounds`. Bestehende Entryformen
+bleiben unverändert. Jeder neue v6-Entry erhält den indexierten Ref auf
+`content/backgrounds/<id>.json`, auch none. `picross-catalog-background-v1`
+bewahrt ursprünglichen Exportanker/Approval, tatsächliche Entscheidung/Ableitung,
+gewählte Herkunft/Rechte/Q-HG-Urteile, feste Identität, aktive Integerrevision 1
+und gewähltes PNG/Notice oder null. Keine Alternativen/Prompts. Nur selected
+erzeugt `game/art/backgrounds/<id>.png` und `.txt`; none erzeugt keine Nulltextur.
+Die genaue geschlossene Unterform steht im Datenvertrag, kein freies Metadatenobjekt.
+
+Runtime v6 ergänzt je Entry genau `background={status,image_revision,asset}`.
+Legacy ist nur ein gültiger alter Eintrag, none braucht ausdrücklichen Verzicht,
+selected enthält Ref auf `art/backgrounds/<id>.png`. Keine Freigabetexte oder
+Produktionsdateien in Runtime. Ungültige deklarierte Quelle wird nie als
+Legacy/none behandelt. Legacy-only bleibt Runtime-v5; Hintergrundkatalog verlangt
+gültige aktive Capability, ohne stillen Downgrade.
+
+| Verbraucher | Neue geschlossene Generation / Umfang |
+| --- | --- |
+| Erste Registrierung / Recovery | `picross-registration-journal-v7`; vollständige neue Quellen, `replacements={}`, nur Neuanlagen/Textdelta. |
+| Rating-/Added-Pflege und Sync | `picross-catalog-difficulty-report-v5`, `picross-added-plan-v4`, `picross-catalog-metadata-journal-v4`; Hintergründe bytegleich. |
+| Methodenaktivierung | `picross-difficulty-activation-plan-v2`, `picross-difficulty-activation-journal-v2`; nur bisheriger Defaultrecord, Runtime/Hintergründe bytegleich. |
+| Rasterupdate eines Legacyziels im gemischten Katalog | `picross-content-update-journal-v6`; Hintergründe erhalten. |
+| Revealadoption eines Legacyziels im gemischten Katalog | `picross-reveal-plan-v3`, `picross-reveal-adoption-journal-v3`; gültige Runtime/Hintergründe bytegleich. |
+
+Aktive Rating-/Added-/Defaultrecords und Revealrequest/-result v1 bleiben erhalten. Rasterupdate
+und Revealadoption **eines Hintergrundziels** scheitern konkret vor Planung/
+Mutation, auch indirekt. Späterer reiner Hintergrundersatz samt Binär-Add/Delete/
+Replace-Recovery bleibt HP-I1b2; altes Raster-ZIP wird dafür keine Voraussetzung.
+Zulässige Kategorienquell-/Anzeigenamenpflege ist erhalten, keine neue freie
+Umklassifizierung historischer Entries/Receipts.
+
+### Quellen, Recovery und No-op
+
+Neue Quellenmengen binden Capability/null, Hintergrundsource/Notice pro ID,
+ausgewählte PNGs und alle erwarteten Abwesenheiten; vollständige Namespaces
+`backgrounds,background_assets` kommen zu den bisherigen vier. Fremde Dateien,
+Aliase, Links und Quellenwechsel blockieren. Alte Pläne werden im neuen Katalog
+stale/unsupported; kein stilles Auffüllen. Alte Journale behalten ihre Originalform.
+Nur bei gültigem Legacy-Registry-v2-/Runtime-v2–v5-Stand ohne Hintergrundnamespace
+darf fehlende/streng gültige false-Capability als inaktive Deklaration bestehen.
+True oder neue Registry-/Runtime-/Hintergrunddaten blockieren alte Recovery.
+
+Gemeinsamer Writerlock, vollständige Alt-/Zielansicht, sichere Neuanlagen und
+Runtime zuletzt bleiben. RI-B erhält alle neuen Bytes privat im Prozess;
+registration-v7 übernimmt ausdrücklich G0/G2/G5a/G5b/G6/GR0/GR2 samt lokalen
+Prüfungen dazwischen. Keine Performancezusage oder globale Prüfung vor jedem
+Dateischritt. Recovery bleibt Rollback; fremde Bytes/Locks erhalten, tatsächliche
+Reste nennen. RI-A-Budgets unverändert, keine automatische Erhöhung.
+Nur das deklarierte v6-Original-ZIP erhält über Inventar/Staging/Additions/
+Guard/Readback die 128-MiB-Grenze; andere Limits bleiben.
+
+Identische Registrierung vor/nach Retirement prüft Eingänge und Checkout frisch
+und endet byte-/mtimegleich ohne neue Added-Daten. Der ursprüngliche Exporthash
+ist Vergleichsanker; den späteren Receipthash nicht als anderes Original deuten.
+Kein Wiederherstellen bereits abgeschlossener Produktionsdateien.
+
+### Main-gebundener erster Produktionsabschluss
+
+Nach tatsächlich bestätigter Main-Integration `origin/main` aktualisieren und
+den bisherigen `retire-production --integrated-commit <volle-main-SHA>` verwenden.
+Vor erster Entfernung alle ausgewählten IDs/Arbeitsbytes, Source/Index,
+PNG/none/Notice gegen tatsächlichen Main-Stand samt Abstammung prüfen.
+`picross-integrated-content-v2` hat die bisherigen vier Receiptfelder plus
+`background={origin_sha256,source}`. Source/Ursprung bleiben unverändert;
+der Mainbeleg steht im Receipt, aktueller `production.package_sha256` bindet
+dessen echte Bytes. V1-Receipts bleiben für alte Inhalte unverändert gültig.
+
+Nur belegte abgeschlossene Arbeit entfernen. Neuere/offene Geschwister und
+fremde/unklare Dateien erhalten oder bei nicht trennbarem ID-Baum vor Mutation
+blockieren. Aktive Definition/Reveal/Hintergrund, Rechte, kompakte echte
+Freigabe-/Ableitungsbindungen, Rating, Added und Runtime bleiben. Danach prüft
+der Reader Receipt/Source/Livebytes und interne historische Identitäten; er öffnet
+keine gelöschten ZIPs/Kandidaten neu und behauptet keine Bild-/Proofreproduktion.
+Gleicher vollständiger Abschluss mit gleichem Mainbeleg ist No-op. Teilfehler
+mit tatsächlichen Resten melden. Der Befehl erzeugt einen lokalen Diff und führt
+keinen Commit/Merge aus; Werkzeugpakete erben keine Authoring-Cleanup-Mergefreigabe.
 
 ## PB-A: deterministischer Authoring-Paketbau
 

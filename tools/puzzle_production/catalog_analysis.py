@@ -22,8 +22,9 @@ from . import catalog_method
 LEGACY_FORMAT = "picross-catalog-difficulty-report-v1"
 PREVIOUS_FORMAT = "picross-catalog-difficulty-report-v2"
 AT_FORMAT = "picross-catalog-difficulty-report-v3"
-FORMAT = "picross-catalog-difficulty-report-v4"
-SOURCE_FORMATS = (FORMAT, AT_FORMAT, PREVIOUS_FORMAT)
+SD2_FORMAT = "picross-catalog-difficulty-report-v4"
+FORMAT = "picross-catalog-difficulty-report-v5"
+SOURCE_FORMATS = (FORMAT, SD2_FORMAT, AT_FORMAT, PREVIOUS_FORMAT)
 REPORT_LIMIT = 16 * 1024 * 1024
 
 
@@ -115,10 +116,10 @@ def validate_report(report):
     run_id(report["run_id"])
     r = exact_keys(report["result"], {"selection", "source_commit", "method_hash", "snapshot", "entries", "distribution"} |
                    ({"sources"} if report["format"] in SOURCE_FORMATS else set()) |
-                   ({"method"} if report["format"] == FORMAT else set()))
+                   ({"method"} if report["format"] in (FORMAT, SD2_FORMAT) else set()))
     if report["format"] in SOURCE_FORMATS:
         from .authoring_package import relative
-        require(isinstance(r["sources"], dict) and len(r["sources"]) <= (80004 if report["format"] == FORMAT else 80003 if report["format"] == AT_FORMAT else 70003), "Invalid report sources")
+        require(isinstance(r["sources"], dict) and len(r["sources"]) <= (80004 if report["format"] in (FORMAT, SD2_FORMAT) else 80003 if report["format"] == AT_FORMAT else 70003), "Invalid report sources")
         for name, value in r["sources"].items():
             relative(name)
             if value is not None: sha(value)
@@ -134,14 +135,14 @@ def validate_report(report):
     for row in rows:
         exact_keys(row, {"id", "current_source", "logic_binding", "old", "proposed", "status", "reason", "rating_hash", "checked_hash", "previous_record_hash"} |
                    ({"previous_rating_revision"} if report["format"] in SOURCE_FORMATS else set()) |
-                   ({"assessment"} if report["format"] == FORMAT else set()))
+                   ({"assessment"} if report["format"] in (FORMAT, SD2_FORMAT) else set()))
         if report["format"] in SOURCE_FORMATS:
             if row["previous_record_hash"] is None:
                 require(row["previous_rating_revision"] is None, "Unexpected previous rating revision")
             else:
                 integer(row["previous_rating_revision"], 1, 1000000, "previous rating revision")
         ids.append(rating.identity(row["id"]))
-        for k in ("old", "proposed"): catalog_difficulty.validate_projection(row[k], version=5 if report["format"] == FORMAT else 4)
+        for k in ("old", "proposed"): catalog_difficulty.validate_projection(row[k], version=5 if report["format"] in (FORMAT, SD2_FORMAT) else 4)
         for k in ("rating_hash", "checked_hash", "previous_record_hash"):
             if row[k] is not None: sha(row[k])
         if row["current_source"] is not None:
@@ -155,7 +156,7 @@ def validate_report(report):
             require(row["reason"] is None and row["proposed"] is not None and row["proposed"]["method"] == method, "Invalid rated report row")
         else:
             require(row["proposed"] is None and isinstance(row["reason"], str) and 1 <= len(row["reason"]) <= 2048, "Missing open-case reason")
-        if report["format"] == FORMAT:
+        if report["format"] in (FORMAT, SD2_FORMAT):
             if row["status"] == "rated" and method == catalog_method.NEW:
                 from .sd2_catalog_rating import assessment
                 assessment(row["assessment"], {"wave_count": 80000, "new_singletons": 2500}, row["proposed"]["r4_required"])
@@ -183,7 +184,7 @@ def markdown(report):
     for row in r["entries"]:
         reason = (row["reason"] or "vollständig geprüft").replace("|", "\\|").replace("\n", " ").replace("\r", " ")
         def label(value, absent):
-            return (value['method'] + ' / ' if report['format'] == FORMAT else '') + value['level'] if value else absent
+            return (value['method'] + ' / ' if report['format'] in (FORMAT, SD2_FORMAT) else '') + value['level'] if value else absent
         lines.append(f"| {row['id']} | {label(row['old'], 'Nicht eingestuft')} | "
                      f"{label(row['proposed'], 'offen')} | {row['status']}: {reason} |")
     lines += ["", "Verteilung (Alt / Vorschlag):", ""]
@@ -258,8 +259,9 @@ def preview(root, output, run, source_commit, *, ids=None, all_entries=False, ch
 
 
 def source_hashes(snapshot, report_format=FORMAT):
-    if report_format != FORMAT: snapshot = tx.pre_sd2_snapshot(snapshot)
-    if report_format not in (FORMAT, AT_FORMAT): snapshot = tx.historical_snapshot(snapshot)
+    if report_format != FORMAT: snapshot = tx.pre_background_snapshot(snapshot)
+    if report_format not in (FORMAT, SD2_FORMAT): snapshot = tx.pre_sd2_snapshot(snapshot)
+    if report_format not in (FORMAT, SD2_FORMAT, AT_FORMAT): snapshot = tx.historical_snapshot(snapshot)
     return {**snapshot["retained"], **{n: hashlib.sha256(raw).hexdigest() if raw is not None else None
             for n, raw in snapshot["texts"].items() if n not in (tx.REGISTRY, tx.RUNTIME, "content/categories.json")}}
 
@@ -294,7 +296,7 @@ def check_repeat(report, snapshot):
                 if modern: current[name] = r["sources"][name]
         projections[row["id"]]["difficulty"] = row["old"]
     candidates = [runtime]
-    if report["format"] == FORMAT:
+    if report["format"] in (FORMAT, SD2_FORMAT) and runtime["format"] != "picross-runtime-registry-v6":
         for version in (2, 3, 4):
             old = deepcopy(runtime)
             old["format"] = "picross-runtime-registry-v" + str(version)
@@ -314,8 +316,9 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
     report = validate_report(rating.bytes_json(report_bytes, REPORT_LIMIT))
     require(safe_external(workspace / "report.md").read_bytes() == markdown(report).encode(), "Preview Markdown differs")
     snapshot = tx.capture(root)
-    if report["format"] != FORMAT: tx.pre_sd2_snapshot(snapshot)
-    if report["format"] not in (FORMAT, AT_FORMAT): tx.historical_snapshot(snapshot)
+    if report["format"] != FORMAT: tx.pre_background_snapshot(snapshot)
+    if report["format"] not in (FORMAT, SD2_FORMAT): tx.pre_sd2_snapshot(snapshot)
+    if report["format"] not in (FORMAT, SD2_FORMAT, AT_FORMAT): tx.historical_snapshot(snapshot)
     entries = {e["id"]: e for e in snapshot["registry"]["entries"]}
     rows = report["result"]["entries"]
     if report["result"]["selection"] == "all": require(sorted(entries) == [r["id"] for r in rows], "Catalog selection changed")
@@ -340,7 +343,7 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
         rating.validate(checked, active=False, production_mode=e["production"]["mode"])
         require(checked["checked_hash"] == row["checked_hash"] and checked["rating"]["rating_hash"] == row["rating_hash"] and
                 rating.project(checked) == row["proposed"], "Checked preview input changed")
-        if report["format"] == FORMAT:
+        if report["format"] in (FORMAT, SD2_FORMAT):
             require(row["assessment"] == checked["rating"]["result"].get("assessment"), "Checked preview assessment changed")
         value = rating.active_record(checked, prior, report={"run_id": report["run_id"], "result_hash": report["result_hash"]})
         if prior != value:
@@ -362,7 +365,7 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
         require(source_hashes(snapshot, report["format"]) == report["result"]["sources"], "Checkout sources changed since preview")
     changes.update(durable)
     journal = tx.prepare(root, snapshot, changes, operation="adoption", report_run=report["run_id"],
-                         generation="sd2" if report["format"] == FORMAT else "at")
+                         generation="background" if report["format"] == FORMAT else "sd2" if report["format"] == SD2_FORMAT else "at")
     require(all(safe_external(p).read_bytes() == b for p, b in externals.items()), "Preview inputs changed during planning")
     plan = {"status": "planned-adoption", "changes": sorted(n for n in journal["new"] if journal["old"][n] != journal["new"][n]),
             "report_hash": report["result_hash"], "open_ids": [r["id"] for r in rows if r["status"] != "rated"]}

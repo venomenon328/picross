@@ -288,8 +288,15 @@ def _snapshot(directory, manifest):
         if name != "manifest.json":
             ap.require(checksum == ap.sha(manifest["files"][name]), "Altered background export file: " + name)
         observations[name] = (identity, checksum)
-    allowed_dirs = {"external"} | {str(parent) for n in files for parent in PurePosixPath(n).parents if str(parent) != "."}
+    allowed_dirs = {str(parent) for n in files for parent in PurePosixPath(n).parents if str(parent) != "."}
+    binding = manifest.get("background")
+    external_needed = isinstance(binding, dict) and any(isinstance(binding.get(k), dict) and
+        binding[k].get("storage") == "external" for k in ("manifest", "decision", "derivation"))
     actual_dirs = {p.relative_to(directory).as_posix() for p in directory.rglob("*") if p.is_dir()}
+    # Empty directories cannot survive file-based catalog publication or Git.
+    # Only this unused canonical transport root is optional; active refs and
+    # all external inventory files still require their real safe directory.
+    if external_needed or "external" in actual_dirs: allowed_dirs.add("external")
     ap.require(actual_dirs == allowed_dirs, "Unbound background export directory")
     return files, observations
 
@@ -327,8 +334,9 @@ def verify_background_export(directory, manifest, manifest_bytes, *, _pending=Fa
         gate = exact_keys(manifest["palette_gate"], {"assessment", "binding", "visual_review", "exception", "allowed"})
         exception = files.get(palette_gate.EXCEPTION_FILE) if gate["exception"] is not None else None
         ap.require((exception is not None) == (gate["exception"] is not None), "Missing palette exception original")
+        external = io.safe(directory, "external")
         with ap.open_package(files[ORIGINAL], allow_background=True, allow_manual_review=manual,
-                             external_root=directory / "external", transport=transport) as package:
+                             external_root=external if external.exists() else None, transport=transport) as package:
             ap.require(package.background_enabled, "Export v6 requires original handoff v3 / Authoring 0.7.0")
             inspected, design, matrix, logic, approval = adapter.inspect(package, files["approval.json"], allow_background=True,
                 manual_authorization=manual_path, palette_exception=exception)

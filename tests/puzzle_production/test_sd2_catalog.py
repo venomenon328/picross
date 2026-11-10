@@ -212,7 +212,7 @@ class CatalogTests(unittest.TestCase):
         before = fixtures.snapshot(self.checkout)
         with self.assertRaises(InterruptedError): ca.adopt(self.checkout, self.root / 'sd2-test', apply=True, fail_step='crash-runtime')
         journal = load_json(self.checkout / tx.LOCK)
-        self.assertEqual(journal['format'], tx.FORMATS['adoption'])
+        self.assertEqual(journal['format'], tx.BACKGROUND_FORMATS['adoption'])
         self.assertIn(method.PATH, journal['old'])
         def stop(phase, name=None):
             if phase == 'R1-runtime': raise InterruptedError('synthetic recovery interruption')
@@ -428,7 +428,7 @@ class ProjectionTests(unittest.TestCase):
             root = isolated_checkout(Path(directory)/'checkout')
             cr.sync_runtime(root)
             snapshot = tx.capture(root)
-            current = tx.prepare(root,snapshot,{},operation='sync')
+            current = tx.prepare(root,snapshot,{},operation='sync',generation='sd2')
             for formats in (tx.AT_FORMATS,tx.PREVIOUS_FORMATS,tx.LEGACY_FORMATS):
                 old = deepcopy(current); old['format'] = formats['sync']
                 for side in ('old','new'): old[side].pop(method.PATH)

@@ -1,6 +1,6 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**Vertrag 1.0 · Dokumentrevision 4 · 09.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a / #561**
+**Vertrag 1.0 · Dokumentrevision 5 · 09.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1 / #561**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -29,10 +29,13 @@ Bauauftrag v2, Handoff v3, Record v2, Bauresultat v2 und Sheet-Update v3.
 ergänzt die sichere äußere Fortschreibung bereits vorhandener Entscheidungen,
 Ableitungen und Endfreigaben (§7.4) sowie den vollständig prüfbaren Export v6
 nach [ZA-1](ZA1_ADAPTER.md#hp-i1a--äußere-endabnahme-und-export-v6).
-Der vollständige Produktionsweg bleibt **inaktiv**. Registry, Erstregistrierung,
-reiner Hintergrundersatz, Recovery und Abschluss folgen in HP-I1b, die Runtime
-in HP-I2 und neue Sheetbedienung in #490. Diese Werkzeugfähigkeiten sind keine
-ausgeführte Bildproduktion oder Integration.
+HP-I1b1 ergänzt auf Basis `main@045189cc5ef34eaf4d06823f22f7ec811d209de5`
+die erste Registrierung, kompakte aktive Quelle, gemeinsame Transaktionen und
+den ersten Produktionsabschluss nach §10. Der vollständige Produktionsweg
+bleibt **inaktiv**: Die reale Zielfähigkeit ist ausdrücklich false, ihre
+Aktivierung zusammen mit tatsächlicher Runtime bleibt HP-I2. Späterer reiner
+Hintergrundersatz folgt HP-I1b2, neue Sheetbedienung #490. Synthetische kompatible
+Zielcheckouts prüfen den Werkzeugweg, keine Bildproduktion oder Spielabnahme.
 
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) bleibt für vier Aufträge,
 vorhandene Bild-/Motiv-/Rasterfreigaben und Abschluss zuständig,
@@ -968,17 +971,18 @@ die vorgesehenen lesenden Gitprüfungen bleiben zulässig.
 | **HP-W2 / #560:** `tools/puzzle_production/background_assets.py` und zugehörige Hintergrundhilfen | Geliefert: eigenständige Arbeits-/Entscheidungs-/Ableitungsformen und API/CLI `describe/derive/verify` nach §3–4. Kleine synthetische Tests sichern die Datei-/Bildfähigkeit. Frühe Bildarbeit bleibt vorbereitet; kein Handoffbau oder ZA-1-/Runtimeversprechen. |
 | **PB-H / #489:** `tools/puzzle_production/authoring_build_contract.py`, `authoring_builder.py`, `background_package.py`, `authoring_package.py` und der lesende Teil von `target_adapter.py` | Geliefert: vollständiger opt-in 0.7.0-Vorschausnapshot, geschlossene Format-/Phasenzulassung, typisierte Referenzmenge samt explizitem lokalen Historykontext, Builder v2, Record v2 und Sheet-v3-Projektion. Frische HP-W2-Verifikation, vollständige lesende Inhaltsprüfung des geschriebenen ZIPs bei `raster_ready`/`content_ready` und Lesen bereits gebundener Endfreigabe v2. Kein späterer Sidecarwriter oder finaler Export. |
 | **HP-I1a / #561:** `tools/puzzle_production/authoring_builder.py`, `target_adapter.py` und Finalizer-/Hintergrund-/Exporthelfer | Sichere spätere äußere Entscheidung/Ableitung/Endfreigabe und Recordfortschreibung nach §7.4; v6-Export mit unverändertem Original-ZIP, expliziten Außen-/Transportbindungen und frischer Offlineprüfung. Höchstens `editorially_approved`, keine Registrierung; alte Verbraucher sperren v6 vor Mutation. |
-| **HP-I1b / #561:** `tools/puzzle_production/content_registry.py`, `catalog_integration.py`, `integrated_content.py` und Zieladapter | Noch offen: kompatible Registry-/Receiptformen, Einzelintegration und späterer reiner Hintergrundersatz mit eigener aktiver Ziel-/Freigabebindung. Eine alte Approval v2 mit Raster-ZIP-Pflicht ist nach dessen Abschluss kein Ersatzvertrag. |
-| **HP-I1b gemeinsame Veröffentlichung:** `catalog_transaction.py`, `catalog_publication.py`, `catalog_io.py`, `registration_publication.py`, `registration_verification.py`, betroffene Folgeoperationen `content_update.py`, `content_registry.py`, `catalog_reveal.py`, `reveal_source.py`, `reveal_retirement.py`, `integrated_content.py` unter `tools/puzzle_production/` | Aktive Hintergrundbindung in Quellen-/Namespaceprüfung, Konflikten, No-op, Recovery, Folgeoperationen und Abschluss erhalten; fremde/defekte Daten blockieren. Genaue Writer-/Journalergänzungen gehören HP-I1b; HP-I1a liefert keine Katalogtransaktion. |
+| **HP-I1b1 / #561:** `tools/puzzle_production/catalog_background.py`, `content_registry.py`, `catalog_integration.py`, `integrated_content.py` und Zieladapter | Erste v6-Registrierung im kompatiblen Ziel, Registry v3, kompakte aktive Quelle und Receipt v2 nach §10. Tatsächliche Zielfähigkeit im Repository bleibt false. Frische synthetische Durchstiche sind keine Runtimeabnahme. |
+| **HP-I1b1 gemeinsame Veröffentlichung:** `catalog_transaction.py`, `catalog_publication.py`, `catalog_io.py`, `registration_publication.py`, `registration_verification.py`, betroffene Folgeoperationen `content_update.py`, `content_registry.py`, `catalog_reveal.py`, `reveal_source.py`, `reveal_retirement.py`, `integrated_content.py` unter `tools/puzzle_production/` | Vollständige neue Quellen-/Plan-/Journalbindung nach §10 und SD-Catalog; No-op, Recovery und Main-gebundener erster Abschluss. Metadaten-/Legacyzieloperationen erhalten Hintergründe. Rasterupdate und Revealadoption eines Hintergrundziels blockieren vor Planung/Mutation. |
+| **HP-I1b2 / #561** | Offen: separat autorisierter Ersatz selected→selected/none und none→selected, gegebenenfalls ausdrückliche Legacynachrüstung, eigener Binärersatz-/Rollback- und revisionsgenauer Abschlussvertrag ohne altes Raster-ZIP. Eine alte Approval v2 mit Raster-ZIP-Pflicht ist kein Ersatzvertrag. Die Neubindung gesperrter Rasterupdates/Revealadoption bleibt einem konkreten Folgeumfang zuzuordnen. |
 | **HP-I2 / #561:** `game/model/content_registry.gd`, erzeugte `game/data/registry.json`, `game/book/content.gd`, `game/book/marginalia.gd` | Kompatibler neuer Runtimeeingang, Variante A, gemeinsames Assetlayout, verlustfreier Import/Mipmaps und Bedarfsladen. Der heutige `marginalia.gd`-Pilot mit Kategoriepreloads/individuellen Regionen ist keine Produktionsschnittstelle. Keine Kandidatenvorschau. |
-| **#490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html`, insbesondere `parseTransfer`, `validateChoices`, `saveSession`, `loadSession`, `brief`, `exportPackage` und zugehörige Prompt-/Auswahlprojektion | Record v2, Update v3, Sitzung v5 und Auftrag v4 verlustfrei führen; vorhandene v1–v4-Alteingänge getrennt erhalten. Bis einschließlich HP-I1a ausschließlich bytegleicher aktiver 0.6.0-Regelwerksnapshot und Revisionsangaben; die neue Builder-/Finalizerausgabe ist noch keine Bedien-/Importfähigkeit. |
+| **#490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html`, insbesondere `parseTransfer`, `validateChoices`, `saveSession`, `loadSession`, `brief`, `exportPackage` und zugehörige Prompt-/Auswahlprojektion | Record v2, Update v3, Sitzung v5 und Auftrag v4 verlustfrei führen; vorhandene v1–v4-Alteingänge getrennt erhalten. Bis einschließlich HP-I1b1 ausschließlich bytegleicher aktiver 0.6.0-Regelwerksnapshot und Revisionsangaben; die neue Builder-/Finalizerausgabe ist noch keine Bedien-/Importfähigkeit. |
 | **#491 / #492** | Nur tatsächlich gelieferte Fähigkeiten orchestrieren beziehungsweise in gesondert beauftragter Produktion erproben. Keine parallelen Hintergrundformate oder künstliche Vollintegration durch Ergebnisflags. |
 
 PB-H führt die zuvor explizit an **0.6.0** gebundenen Palettengates und
 Paar-/Difficultyzulassungen für die **lesende Inhaltsprüfung** der neuen
 Generation ausdrücklich mit. HP-I1a übernimmt diese für Export v6 und dessen
-`verify_export`; Registry-/Integrationsverbraucher bleiben bei ihren alten
-Generationen und sperren v6. Deren neuer Anschluss gehört HP-I1b.
+`verify_export`; HP-I1b1 öffnet ausschließlich den nach §10 frisch geprüften
+Registrierungsweg mit kompatiblem Ziel. Alte Verbraucher bleiben geschlossen.
 Handoff v3/0.7.0 erbt sämtliche bisherigen 0.6.0-Garantien:
 frische Istpalette und Normbindung, echte Sichturteile/konkrete Ausnahme,
 vollständige unabhängige Proofs, Paarbaseline und `certification`, Herkunft,
@@ -1015,8 +1019,9 @@ mit ihrer abgeschlossenen Produktion; keine dauerhafte Reproduzierbarkeit oder
 neues Kandidatenarchiv. Historische Freigaben werden nicht umgeschrieben.
 Noch offene/neuere Arbeit erhalten. Ein reiner späterer Hintergrundersatz hat
 seinen eigenen revisionsgenauen Abschluss; keine Wiederherstellung gelöschter
-Rasterproduktion. Die vorhandenen Cleanupbefehle unterstützen diese neuen
-Daten erst nach dem zuständigen HP-I1b-Anschluss, nicht bereits durch HP-I1a.
+Rasterproduktion. HP-I1b1 erweitert `retire-production` ausschließlich für die
+belegte erste Integration nach §10. Späterer Hintergrundersatz und sein eigener
+Abschluss bleiben HP-I1b2; `retire-reveal-production` wird kein Hintergrundwriter.
 
 Die folgenden **synthetischen Vertragsfälle** sind keine erzeugten Bilder,
 Freigaben, ausgeführten Programme oder Produktionsnachweise:
@@ -1025,7 +1030,7 @@ Freigaben, ausgeführten Programme oder Produktionsnachweise:
 | --- | --- |
 | Drei Dateien A/B/C offen | Manifest offered, Entscheidung null, keine Vorauswahl. Nach Motivfreigabe unabhängige Rasterarbeit zulässig; technisch fertiges Raster 0.7.0 nur `raster_ready`. |
 | „B verwenden“ gemeinsam mit Motivfreigabe | Separate Entscheidung bindet B/Manifest/Profil; nur B ableiten, dieselbe Wahl über Rastervarianten erhalten. Keine zweite Bildbestätigung. |
-| Späte Auswahl B plus Endabnahme am versiegelten Rasterpaket | `presented_package` bindet Originalbytes. HP-I1a ergänzt vorhandene Entscheidung/Ableitung/Endfreigabe v2 außen; Originalhandoff/-inventar/-ZIP unverändert. Vollständig geprüft höchstens `editorially_approved`, v6-Export bleibt nicht registrierbar. |
+| Späte Auswahl B plus Endabnahme am versiegelten Rasterpaket | `presented_package` bindet Originalbytes. HP-I1a ergänzt vorhandene Entscheidung/Ableitung/Endfreigabe v2 außen; Originalhandoff/-inventar/-ZIP unverändert. Exportfalse-Felder bleiben; HP-I1b1 prüft das Registrierungsziel gesondert. Die reale false-Capability blockiert. |
 | „Bewusst ohne Hintergrund“ | none mit tatsächlicher Erklärung; vor Kandidatenproduktion zusätzlich belegte Ausnahme von drei Bildern. HP-W2-Nullbefund, keine Nulltextur. |
 | Gültiges 0.6.0-Altpaket ohne Hintergrund | Nach altem Vertrag lesbar, Hintergrund als Legacy eingeordnet. Keine rückwirkende Wahl, neue Pflicht oder Migration. |
 | Deklarierte Quelle fehlt, Hash falsch oder Format unbekannt | Konkreter Eingangsfehler/Blocker, kein none/Legacy und keine Integration. |
@@ -1038,9 +1043,11 @@ ausführbare Datei-/Bildfähigkeit mit kleinen synthetischen Tests für Determin
 Ressourcen-/Pfad-/Alpha-/Konfliktfälle; konkrete Laufnachweise gehören in seinen PR.
 PB-H ergänzt kleine synthetische Paket-/Referenz-/Phasen-/Inhaltsfälle;
 HP-I1a ergänzt Finalizer-/No-op-/Unterbrechungs-/Transportfälle und die enge
-Verify-Regel. Konkrete Laufnachweise gehören in die jeweiligen PRs. Registry
-und Runtime folgen in HP-I1b/I2, drei reale erreichbare Bilddateien im gesonderten
-Produktionsauftrag. HP-I1a schließt weder #560, #561 noch den Gesamtplan #563.
+Verify-Regel. HP-I1b1 prüft Registrierung, Quellen-/Recoverybindung und Abschluss
+an kleinen synthetischen Fällen. Konkrete Laufnachweise gehören in die jeweiligen
+PRs; Runtime folgt HP-I2, spätere Bildersetzung HP-I1b2 und drei reale erreichbare
+Bilddateien einem gesonderten Produktionsauftrag. Diese Teilpakete schließen
+weder #560, #561 noch den Gesamtplan #563.
 
 ### 9.1 Vollständiges synthetisches Formbeispiel: früher bewusster Verzicht
 
@@ -1126,3 +1133,160 @@ tatsächliche vollständige Bytes einschließlich der Ausnahme:
   "test_only": true
 }
 ```
+
+## 10. HP-I1b1 · Erste Registrierung und kompakter Produktionsabschluss
+
+Vertrag vor konsumierendem Code, 09.11.2026, Paketentscheidung
+[HP-I1b1 / #561](https://github.com/venomenon328/picross/issues/561#issuecomment-6754303684). Die Basis ist
+`045189cc5ef34eaf4d06823f22f7ec811d209de5`; HP-I1a ist über PR #567 integriert.
+Dieser Abschnitt öffnet nur die erste Registrierung und ihren Abschluss.
+Die Typen, kanonischen Bytes und Hashfunktionen aus §3.1 gelten unverändert;
+alle folgenden Feldmengen sind geschlossen, Boolean ist kein Integer.
+Transaktionen und gespeicherte Pläne stehen ergänzend in
+[SD-Catalog](SD_CATALOG.md#hp-i1b1--hintergrundquellen-pläne-und-transaktionen),
+Aufrufe in [ZA-1](ZA1_ADAPTER.md#hp-i1b1--zielgebundene-erste-registrierung).
+
+Für den vollständigen dateibasierten v6-Transport darf ausschließlich ein
+unbenötigtes leeres `external/` fehlen: keine externe Ref und keine externe
+Inventardatei. `input.external_root` bleibt `external`; Git und Journal müssen
+keinen leeren Ordner oder Dummyfile transportieren. Benötigte externe Roots/
+Dateien bleiben Pflicht, sonstige ungebundene Leerordner bleiben unzulässig.
+
+### 10.1 Feste Zielkompatibilität
+
+`game/data/background-capability.json` hat exakt
+`format,runtime_format,profile_id,enabled`: Format
+`picross-runtime-background-capability-v1`, Runtimeformat
+`picross-runtime-registry-v6`, Profil `picross-background-png2304-v1` und
+Boolean `enabled`. Datei höchstens 4096 Bytes, sichere reguläre UTF-8-JSON-Datei
+nach §3.1. Fehlend oder false bedeutet fehlende kompatible Hintergrund-Runtime;
+Hintergrundplanung und Registrierung stoppen vor Journal und Katalogmutation.
+Ungültige Formen, Kennungen, Typen oder Pfade sind Eingabefehler.
+
+**Im echten Repository bleibt `enabled=false`.** HP-I2 darf true erst gemeinsam
+mit tatsächlichem Runtime-Reader, Darstellung/Laden und technischer Abnahme
+liefern. Kein CLI-/API-/Umgebungs-Override, kein `force` und kein Aktivieren
+durch `--allow-background`; letzteres lässt lediglich das Eingangsformat zu.
+Isolierte synthetische Ziele dürfen true mit test_only-Eingängen verwenden,
+ohne damit Spielerverhalten oder eine Bildabnahme zu belegen. Synthetische
+Inhalte bleiben im echten Katalog verboten.
+
+Neue Pläne/Journale binden die exakten Capabilitybytes oder ihre ausdrückliche
+Abwesenheit; Änderung macht den Snapshot stale. Ein vorhandener Hintergrundkatalog
+ohne aktive gültige Capability blockiert neue Mutationen, ohne Downgrade nach v5.
+Gültige Legacy-only-Kataloge behalten Runtime-v5. Die HP-I1a-Exportfelder bleiben
+unverändert false; erst frische zielbezogene Prüfung außerhalb des Manifests
+ermittelt Bereitschaft. `registered` bedeutet abgeschlossenen Checkoutlauf,
+Integration auf main weiterhin bestätigten Merge. Keine Neuversiegelung von
+Original, Finalizerrecord oder Approval.
+
+### 10.2 Registry und aktive kompakte Quelle
+
+`picross-content-registry-v3` hat exakt `format,entries,backgrounds`.
+`entries` behält den vollständigen bestehenden Registry-v2-Eintragsvertrag
+einschließlich `production`. `backgrounds` ist eine nach ID sortierte eindeutige
+Liste aus exakt `{id,source}`. Die ID bezeichnet einen vorhandenen Entry;
+`source:Ref` bindet ausschließlich `content/backgrounds/<id>.json` mit echtem
+Dateihash und Bytezahl. Jeder neue v6-Export erhält eine Zeile, auch bei none.
+Fehlen ist ausschließlich für nach altem Export-/Receiptvertrag gültige
+Legacyeinträge zulässig. Die erste Hintergrundregistrierung hebt nur die
+Wurzelgeneration an; vorhandene Entryobjekte und ihre Entscheidungen bleiben.
+Keine automatische Bestandsmigration oder erfundene Legacy-Leerentscheidung.
+
+`picross-catalog-background-v1` hat exakt
+`format,puzzle_id,identity,origin,image_revision,candidate_revision,decision,
+derivation,provenance,review,asset,notice,test_only`.
+
+| Feld | Exakter Inhalt und Bindung |
+| --- | --- |
+| `puzzle_id` | Registrierte `PuzzleID`, identisch zu Entry, Ursprung, Entscheidung und Ableitung. |
+| `identity` | Exakt `{key,save_slot,definition,runtime_revision}`. Key/Slot wie Entry; `definition:Ref` bindet `game/<entry.definition>` und echte Livebytes, numerische Rätselrevision wie Definition. Keine Kategorie-/Added-/Ratingkopie. |
+| `origin` | Exakt `{package,export_manifest_sha256,original_package,manifest,approval_ref,approval}`. `package` ist der ursprüngliche `content/packages/<id>/<revision>`-Pfad; Exporthash bindet das ursprüngliche v6-Manifest. `original_package:PackageBinding`, `manifest:StoredRef` aus der ursprünglichen geprüften Hintergrundbindung; `approval_ref:Ref` bindet die ursprünglichen `approval.json`-Bytes. `approval` ist das vollständige unveränderte Approval-v2-Objekt. Dieser Ursprung ist vom späteren physischen Receipthash getrennt. |
+| `image_revision` | Positive technische Integerrevision, bei erster Integration genau `1`. Sie identifiziert den aktiven Bild-/Leerzustand für die Runtime und erzeugt keine menschliche Erklärung. Spätere tatsächlich andere aktive Übernahme benötigt HP-I1b2. |
+| `candidate_revision` | Bei selected die tatsächliche unveränderte Kandidatenrevision vom Typ `Revision`, bei none null. Gleiche Zeichenketten aus verschiedenen Jobs sind keine identische aktive Übernahme. |
+| `decision`, `derivation` | Vollständige unveränderte `picross-background-decision-v1` und `picross-background-derivation-v1`: reale Akteure, UTC, Wortlaut, Auswahl/Verzicht, Arbeits-/Entscheidungsrevisionen, Original-/Profil-/Tool-/Ausgabebindungen bleiben. |
+| `provenance`, `review` | Bei selected exakt Herkunfts-/Rechteobjekt und die vier Q-HG-Urteile der gewählten Manifestzeile; bei none beide null. Keine Alternativen oder Prompts. |
+| `asset`, `notice` | Bei selected `Ref` genau auf `game/art/backgrounds/<id>.png` und `game/art/backgrounds/<id>.txt`; bytegleich zu den frisch geprüften v6-Runtimeausgaben. Bei none beide null, keine Nulltextur oder leere Ersatznotice. |
+| `test_only` | Exakt wie die geprüften Eingänge und die Registryproduktion. |
+
+ID-/Job-/Revisions-, Auswahl-/Outcome-/Profil-/Approval- und Ausgabehashbindungen
+müssen zusammenpassen. Die Hintergrundübernahme ändert weder Definition,
+Runtime-Rätselrevision, Slot, Lösung, Hinweise, Palette noch Difficultyidentität.
+Der Dateihash steht im äußeren Ref; kein Selbsthashfeld. Quelle höchstens
+1 MiB, JSON-Tiefe höchstens 32. Inhaltsregistry und Runtime behalten 8 MiB und
+10000 Entries; höchstens eine Hintergrundzeile pro Entry. Unbekannte Felder,
+unerwartete Nullwerte und defekte deklarierte Quellen sind Fehler, kein Fallback.
+
+Die Source entsteht ausschließlich aus vollständig frisch geprüfter
+Erstintegration. Sie ist kein alternativer Export-/Zertifizierungseingang.
+Vor Retirement müssen die ursprünglichen Paketinputs weiterhin die vollständige
+normale Prüfung bestehen. Nach zulässigem Retirement sind innere alte Dateirefs
+historische Identitäten, keine erneut zu öffnenden Arbeitsdateien. Reader prüfen
+geschlossene Formen, interne Kreuzbindungen, Rechte, unveränderten Ursprung und
+echte Livehashes anhand von Receipt, Index und aktiver Source. Sie behaupten keine
+erneute Bild-/Proof-/Solverreproduktion und rufen dafür keinen alten Dateivalidator
+auf. Kein dauerhaftes Original-ZIP, Kandidaten- oder Ableitungscodearchiv.
+Der spätere Mainbeleg gehört in den Receipt, nicht in eine umgeschriebene Source.
+
+### 10.3 Receipt und Runtimeprojektion
+
+`picross-integrated-content-v2` hat exakt
+`format,entry,integrated_commit,notice_sha256,background`.
+Die vier alten Felder behalten ihre v1-Bedeutung. `background` ist exakt
+`{origin_sha256,source}`: `origin_sha256=H(Source.origin)`, `source:Ref` bindet
+die beim ersten Abschluss tatsächliche kompakte Source. HP-I1b1 verlangt dieselbe
+Sourcebindung im aktuellen Hintergrundindex. `entry` bewahrt den ursprünglichen
+Exportmanifesthash; der aktuelle `production.package_sha256` bindet anschließend
+die echten Receiptbytes. V1 bleibt unverändert, Hintergrundproduktionen dürfen
+nicht in v1 schrumpfen. HP-I1b2 muss seinen späteren Vergleich zwischen aktuellem
+Bildstand und ursprünglichem Origin-/Receiptanker ausdrücklich versionieren;
+dieser Ersatzreader ist noch nicht Bestandteil von HP-I1b1.
+
+`picross-runtime-registry-v6` hat exakt `format,categories,entries`. Jeder
+Eintrag behält die neun v5-Felder und ergänzt genau `background` mit exakt
+`{status,image_revision,asset}`:
+
+| Zustand | `status` | `image_revision` | `asset` |
+| --- | --- | --- | --- |
+| Gültiger alter Entry ohne Hintergrunddeklaration | `legacy` | null | null |
+| Ausdrücklich leer | `none` | Positive aktive Integerrevision aus der Source | null |
+| Gewählte Illustration | `selected` | Positive aktive Integerrevision aus der Source | `Ref`, festes `file="art/backgrounds/<id>.png"`, echte Größe/Hash der aktiven Source |
+
+Keine Freigabetexte, Produktionsoriginale, Alternativen oder individuellen
+Positionsangaben im Runtimekatalog. Defekte deklarierte Quellen erzeugen keinen
+gültigen Leer-/Legacyzustand. V6 nur im kompatiblen Ziel; Godot-Reader, Darstellung A,
+Mipmaps und Laden sind weiterhin HP-I2. Das Paket ändert keinen echten Katalog.
+
+### 10.4 Gemeinsame Verbraucher und erste Abschlussgrenze
+
+Alle Full-/Quick-/API-/CLI-Verbraucher erhalten dieselbe aktive Autorität:
+`content_registry`, `catalog_integration`, `catalog_transaction/publication`,
+`registration_publication/verification`, `integrated_content`, `content_update`,
+`catalog_reveal/reveal_source/reveal_retirement` und Rating-/Added-/Methodenpläne.
+Zulässige Metadatenoperationen und Legacyziel-Update/-Revealadoption im gemischten
+Katalog erhalten Hintergründe vollständig. Freie Kategorienumklassifizierung
+historisch gebundener Entries/Receipts wird nicht eröffnet. Rasterupdate und
+Revealadoption eines Hintergrundziels blockieren vor Planung oder Mutation,
+auch durch indirekte Aufrufe. Ihre Neubindung bleibt ausdrücklich Folgeumfang.
+
+Erneute identische v6-Registrierung vor und nach Retirement ist nach frischer
+passender Eingangs-/Checkoutprüfung ein Byte-/mtime-No-op. Der ursprüngliche
+Exportanker bleibt Vergleichsgrundlage; der physische Receiptwechsel ist keine
+neue Produktion. Keine alten ZIPs zurückschreiben, keine Added-Neudatierung,
+keine neue Revision oder Spielidentität.
+
+`retire-production` prüft den tatsächlichen vollständigen Main-Commit und seine
+Abstammung zum aktualisierten `origin/main`. Vor dem ersten Entfernen alle
+ausgewählten IDs, Arbeits-/Quellbytes und Hintergrundindex/-Source, Asset/none
+und Notice gegen den bestätigten Main-Stand prüfen. Receipt v2 bewahrt den
+Ursprung. Definition, Reveal, Hintergrund, Rechte, kompakte echte Auswahl-/
+Ableitungs-/Freigabebindungen, Rating, Added und Runtime bleiben erhalten.
+
+Nur belegte abgeschlossene Arbeit entfernen. Neuere/offene Geschwister, fremde
+Änderungen und unbekannte Dateien erhalten; ist der ID-Baum nicht sicher trennbar,
+vor Mutation konkret blockieren. Kein pauschales Löschen aller Hintergrundarbeit
+und kein Wiederherstellen alter Rasterproduktion. Derselbe vollständig beendete
+Zustand mit demselben Mainbeleg ist nach Prüfung No-op. Bei Teilfehlern tatsächliche
+Reste benennen, keinen Erfolg behaupten. Der Befehl erzeugt einen überprüfbaren
+lokalen Diff und führt weder Commit noch Merge aus. Die Authoring-Cleanupfreigabe
+erteilt keine Mergefreigabe für dieses Werkzeugpaket.

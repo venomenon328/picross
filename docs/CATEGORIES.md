@@ -1,5 +1,10 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
+[Hintergrundzusatz](#hp-i1b1--hintergrundindex-und-kompatible-projektion)
+ergänzt Inhaltsregistry v3 und Runtime-v6 ausschließlich im kompatiblen Ziel.
+Bestehende Entry-/Kategoriebindungen bleiben; die reale Capability bleibt false.
+
 **RI-B · #479:** Der prozesslokale Paketprüfkontext ersetzt ausschließlich zwei
 erneute Proof-Replays der neuen Produktion nach erfolgreicher Eingangs- und
 unabhängiger Stagingprüfung. Kategorie-Snapshot und übrige Paketbytes bleiben
@@ -412,3 +417,49 @@ einen neuen SD-/Added-/AT-Plan stale. Erfolgreiche Wiederholung darf nur ihre
 exakt gebundenen eigenen Zielbytes im Speicher auf den Ausgangssnapshot
 zurückführen; jede andere Quellenänderung blockiert.
 
+## HP-I1b1 · Hintergrundindex und kompatible Projektion
+
+[HP-I1b1 / #561](https://github.com/venomenon328/picross/issues/561#issuecomment-6754303684)
+führt die geschlossenen Formen aus
+[PUZZLE_BACKGROUNDS §10](PUZZLE_BACKGROUNDS.md#10-hp-i1b1--erste-registrierung-und-kompakter-produktionsabschluss)
+ein. `picross-content-registry-v3` hat exakt `format,entries,backgrounds`;
+Entryobjekte einschließlich Kategorie/production bleiben wie v2. Der sortierte
+Hintergrundindex enthält je genau `{id,source}`, source als Ref fest auf
+`content/backgrounds/<id>.json`. V6-Produktion benötigt genau eine Zeile,
+auch none; fehlen darf sie nur bei nach altem Export/Receipt gültigem Legacy.
+Die erste Registrierung hebt die Wurzelgeneration an, ohne vorhandene Entries
+umzuschreiben oder Altbestand automatisch zu migrieren. Maximal 10000 Entries,
+8 MiB und höchstens eine Hintergrundzeile pro Entry.
+
+`picross-runtime-registry-v6` behält exakt `format,categories,entries` und je Entry
+die neun v5-Felder `id,key,save_slot,definition,reveal,visible,category_id,
+difficulty,added_at` plus `background`, exakt `{status,image_revision,asset}`.
+Legacy erhält legacy/null/null, belegtes none none/positive Integerrevision/null,
+selected selected/positive Integerrevision/Ref auf `art/backgrounds/<id>.png`
+mit echten aktiven Bytes. Keine Quelle für Produktionsfreitexte oder Freigaben
+im Spieler. Defekte deklarierte Quelle ist Fehler und kein gültiger Fallback.
+Diese Projektion verlangt die gültige true-Capability; im echten Repository
+bleibt sie bis HP-I2 false. Legacy-only verwendet weiter v5. Der Godot-Reader
+wird erst in HP-I2 erweitert; synthetische Projektion ist keine Spielabnahme.
+
+Die aktive Hintergrundsource bindet Definition/Key/Slot/Rätselrevision und
+unveränderten Ursprung, enthält aber keine unabhängige Kategorie-/Added-/Ratingkopie.
+Zulässige Kategorienquell-/Anzeigenamenpflege, Rating/Added, Sync und
+Methodenaktivierung erhalten Hintergrundsource/PNG/Notice und deren Bindungen.
+Eine freie Änderung historisch gebundener Entry-/Receiptkategorien wird nicht
+eingeführt. ID, Hinweise/Logik, Saves, Palette und Difficultyidentität bleiben.
+Legacyziel-Rasterupdate/Revealadoption im gemischten Katalog bleiben unter ihren
+neuen vollständigen Quellen-/Plangenerationen zulässig; ein Hintergrundziel
+blockiert diese beiden Operationen vor Planung/Mutation, auch indirekt.
+
+Snapshots erfassen Capability (auch null), Source/Notice, ausgewählte PNGs,
+Abwesenheiten und die Namespaces `backgrounds,background_assets` zusätzlich zu
+den bestehenden vier. Quellen, Phasengrenzen, exakte erlaubte Deltas und die
+vollständige Plan-/Journalmatrix stehen in
+[SD-Catalog](SD_CATALOG.md#hp-i1b1--hintergrundquellen-pläne-und-transaktionen).
+SD-Report-v5, Added-Plan-v4, Reveal-Plan-v3 und Aktivierungsplan-v2 führen die
+neue vollständige Quellenbindung; alte ungebundene Pläne/Journale nicht erweitern.
+Bytegleiche Wiederholung braucht frische vollständige Prüfung, erhält mtime
+und Added und ist auch nach Receipt-v2-Abschluss ohne altes Raster-ZIP möglich.
+Receipt/Source bewahren ursprünglichen Exportanker und Mainbeleg getrennt;
+Produktionscleanup darf keine aktive Auswahl-/Rechtebindung entfernen.
