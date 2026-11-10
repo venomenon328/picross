@@ -48,10 +48,12 @@ Entscheidung/Ableitung werden nur mit ausdrücklich gebundenen Wurzeln gelesen;
 aktive Belege bleiben vollständig erforderlich. Der Reader erzeugt keine
 Freigabe, datiert sie nicht neu und bindet sie nicht auf andere Bytes um.
 
-HP-I1a ergänzt sichere Sidecar-/Recordfortschreibung und Export v6. Registry,
-Receipt, Einzelintegration, Hintergrundersatz, Recovery-/Folgeoperationen und
-Produktionsabschluss bleiben HP-I1b; HP-I2 liefert die Runtime. Diese Teilwege
-aktivieren den vollständigen Produktionsweg nicht. Versiegelte
+HP-I1a ergänzt sichere Sidecar-/Recordfortschreibung und Export v6. HP-I1b1
+ergänzt die zielgebundene erste Registrierung, kompakte aktive Quelle/Receipt,
+Recovery-/Folgeoperationen und ersten Produktionsabschluss im folgenden Vertrag.
+Reiner Hintergrundersatz bleibt HP-I1b2; HP-I2 liefert die Runtime und darf erst
+mit deren Abnahme die echte Capability aktivieren. Diese Teilwege aktivieren
+den vollständigen Produktionsweg nicht. Versiegelte
 0.4.x/0.5.0/0.6.0-Originale behalten ihre bisherigen Formen und Befugnisse.
 
 ## HP-I1a · äußere Endabnahme und Export v6
@@ -184,14 +186,92 @@ gesamten Exportordner sicher öffnen, Links, Aliase, Casefold-/Datei-Verzeichnis
 Kollisionen und Quellenänderungen abweisen und den vollständigen Export **vor**
 seiner Veröffentlichung verifizieren.
 
-**Registry-, Plan-, Register-, Update-, Sync- und Cleanupverbraucher lehnen v6
-vor jeder produktiven Mutation ab**, auch Quick-/Metadatenreader und direkte
-API-Einstiege. Kein Weglassen unbekannter Hintergrundfelder und kein Forcepfad.
-Gültige v1–v5-Exporte bleiben nach ihren bisherigen Verträgen nutzbar. Neue
-Registry-/Receiptformen, Erstregistrierung, reiner Hintergrundersatz,
-Katalog-Recovery und revisionsgenauer Abschluss gehören HP-I1b; die Runtime
-gehört HP-I2. Die bestehende Registrierungsjournalgeneration v6 ist ein anderes
-Format und wird durch Export v6 nicht geändert.
+**Alte Registry-, Plan-, Register-, Update-, Sync- und Cleanupverbraucher lehnen
+v6 vor produktiver Mutation ab**, auch Quick-/Metadatenreader und direkte APIs.
+Der folgende HP-I1b1-Vertrag öffnet ausschließlich seine vollständig gebundenen
+neuen Verbraucher. Kein Weglassen unbekannter Hintergrundfelder und kein
+Forcepfad. Gültige v1–v5-Exporte bleiben nach ihren bisherigen Verträgen nutzbar.
+Export v6 und Registrierungsjournal v6 sind verschiedene Formate; nur HP-I1b1
+führt für die neue Quellenmenge Registrierungsjournal v7 ein.
+
+## HP-I1b1 · Zielgebundene erste Registrierung
+
+Vertrag vor Code, 09.11.2026,
+[Paket HP-I1b1 / #561](https://github.com/venomenon328/picross/issues/561#issuecomment-6754303684),
+Basis `045189cc5ef34eaf4d06823f22f7ec811d209de5`.
+[Hintergrundvertrag §10](PUZZLE_BACKGROUNDS.md#10-hp-i1b1--erste-registrierung-und-kompakter-produktionsabschluss)
+definiert vollständig die neuen geschlossenen Formen. Bestehende Einstiege
+`target_adapter plan/register` und APIs konsumieren Export v6 mit vollständiger
+frischer Inhalts-/Freigabe-/HP-W2-Prüfung und genau einem neuen Entry.
+Kein neues Exportformat und keine zweite Integrationspipeline. Ein vorheriger
+Plan ersetzt weder die eigene frische Registerprüfung noch unabhängiges Staging.
+
+### Zielfähigkeit und Bereitschaft
+
+Feste Quelle `game/data/background-capability.json`, exakt
+`format,runtime_format,profile_id,enabled`, mit Kennungen
+`picross-runtime-background-capability-v1`, `picross-runtime-registry-v6`,
+`picross-background-png2304-v1` und Boolean `enabled`. Höchstens 4096 Bytes.
+Fehlend/false blockiert Hintergrundplan und -register vor Journal/Mutation;
+ungültige Form/Pfade sind Eingabefehler. Echte Repositorydatei bleibt false,
+Aktivierung erst mit HP-I2-Runtime und technischer Abnahme. Keine API-/CLI-/
+Umgebungsumgehung; `allow_background` ist nur Eingangsformatzulassung.
+Testziele dürfen true verwenden, synthetische Inputs bleiben im echten Katalog
+verboten. Die Testfähigkeit belegt kein ausführbares Spielerverhalten.
+
+Exportmanifest, Inspektion und Finalizerrecord behalten ihre historischen
+false-Felder und höchste Phase `editorially_approved`. Nur die frische
+zielbezogene Prüfung außerhalb dieser Originale ermittelt Bereitschaft.
+`registered` bedeutet vollständig publizierten Checkout, main erst bestätigten
+Merge. Kategorie, aktive Schwierigkeit, Freigabe, Logik, Reveal/Motiv,
+Herkunft, Palette/Paarproofs, IDs/Slots und test_only bleiben verbindlich.
+
+### Datenformen und Verbraucher
+
+| Form | Exakte äußere Felder / zuständiger Untervertrag |
+| --- | --- |
+| `picross-content-registry-v3` | `format,entries,backgrounds`; Entryobjekte wie v2, sortierter Index je `{id,source}` auf `content/backgrounds/<id>.json`. |
+| `picross-catalog-background-v1` | `format,puzzle_id,identity,origin,image_revision,candidate_revision,decision,derivation,provenance,review,asset,notice,test_only`; genaue Unterfelder und aktuelle/historische Refsemantik in Hintergrundvertrag §10.2. |
+| `picross-integrated-content-v2` | `format,entry,integrated_commit,notice_sha256,background`; background genau `{origin_sha256,source}`, Ursprung und ursprünglicher Source-Ref bleiben erhalten. |
+| `picross-runtime-registry-v6` | `format,categories,entries`; jeder Entry neun v5-Felder plus background `{status,image_revision,asset}`, strikt legacy/none/selected nach §10.3. |
+
+Keine neuen per-ID-Positionen, Umklassifizierung, Runtime-/Saveidentitäten oder
+Difficultyneuberechnung. Nur ausgewähltes PNG/Notice, bei none keine Dateien.
+Vor Retirement vollständigen Originalexport weiter prüfen; danach Receipt,
+aktive Source/Index und Livebytes mit internen historischen Bindungen prüfen.
+Keine alten ZIPs oder Arbeitsbelege erneut öffnen/reproduzieren. Source ist kein
+alternativer Eingang für Zertifizierung. `image_revision=1` bei Erstintegration;
+gespeicherte reale Auswahl-/Approval-/Ableitungsobjekte bleiben unverändert.
+
+Alle Quick-/Full-/API-/CLI-Wege beachten die
+[Quellen-/Plan-/Journalmatrix](SD_CATALOG.md#hp-i1b1--hintergrundquellen-pläne-und-transaktionen).
+Zulässige Metadatenoperationen und Legacyziel-Update/-Revealadoption erhalten
+Hintergründe vollständig. Rasterupdate und Revealadoption eines Hintergrundziels
+sind vor Planung/Mutation konkret gesperrt. HP-I1b2 muss späteren Bildersatz,
+nullfähigen Binärwechsel und revisionsgenauen Abschluss ohne altes Raster-ZIP
+schließen; dieser Zwischenstand behauptet keinen vorhandenen Ersatzreader.
+
+### Veröffentlichung, Wiederholung und Abschluss
+
+Neuanlagen umfassen den vollständigen unveränderten Export, aktive Source,
+ausgewählte Live-PNG/Notice oder none und die bisher notwendigen Rätselquellen.
+Registrierungsjournal v7 hat `replacements={}`. Gemeinsamer Lock, vollständige
+Alt-/Zielansichten, No-replace-Neuanlagen und Runtime zuletzt bleiben Pflicht.
+Die enge 128-MiB-Ausnahme gilt nur für das deklarierte Original-ZIP über alle
+Inventar-/Staging-/RI-B-/Guard-/Readbackwege. Übrige Limits bleiben erhalten.
+RI-B bindet alle neuen Bytes privat im selben Prozess; RI-C gilt ausdrücklich
+für v7 an G0/G2/G5a/G5b/G6/GR0/GR2, mit lokalen Prüfungen dazwischen. Recovery
+bleibt Rollback ohne Kontextcache; fremde Bytes erhalten, unsicheren Rest melden.
+
+Identische Registrierung ist vor/nach Retirement nach frischer passender Prüfung
+Byte-/mtime-No-op anhand des ursprünglichen Exportankers, ohne neue Added-Daten
+oder wiederhergestellte Produktionsoriginale. `retire-production` prüft tatsächlichen
+Main-Commit/Abstammung und alle ausgewählten Arbeits-/Quellbytes einschließlich
+Hintergrund vor erster Entfernung. Nur abgeschlossene belegte Arbeit entfernen,
+neuere/offene/fremde Dateien erhalten oder bei nicht trennbarem ID-Baum vorher
+blockieren. Receipt v2 erhält Source/Ursprung; aktive Daten bleiben. Gleicher
+abgeschlossener Zustand mit gleichem Mainbeleg ist No-op. Lokaler Diff, kein
+automatischer Commit/Merge; Teilfehler niemals als Abschluss melden.
 
 ## P-B2 · Authoring 0.6.0 und additive Palettengeneration v5
 
