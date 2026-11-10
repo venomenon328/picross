@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 46 · 10.11.2026**
+**Version 0.6.0 · Dokumentrevision 47 · 10.11.2026**
 
 HP-W1 aus [#560](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307)
 spezifiziert den **versionierten Hintergrundweg außerhalb des aktiven Defaults** in
@@ -32,6 +32,13 @@ Freigabe-, Phasen- und ZA-1-Verträge bleiben erhalten.
 [PB-H](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
 unterstützt daneben Bauauftrag v2, Handoff v3, Record v2 und Sheet-Update v3
 für den ausdrücklich gewählten 0.7.0-Vorschaustand.
+[BA-A / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657)
+ergänzt die lokale serielle Verarbeitung ausdrücklich ausgewählter vorbereiteter
+Jobs mit vorhandenen Fachwerkzeugen nach [PRODUCTION_BATCH](../PRODUCTION_BATCH.md).
+Der Runner erhält vorhandene Entscheidungen, führt keine Bildwahl aus und endet
+spätestens am lokalen Paketbau. Seine technischen Zustände erteilen keine
+Inhaltsfreigabe. Die vier Aufträge und die Sheetbedienung bleiben erhalten;
+die Orchestrierung der Weitergabe und Integration gehört zum getrennten Folgepaket BA-B.
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
 ergänzt den regulären Mehrjob-Arbeitsbereich sowie Update v3, Sitzung v5 und
 Auftrag v4 nach [Hintergrundvertrag §7.5](../PUZZLE_BACKGROUNDS.md#75-mj-a-mehrjob-arbeitsbereich-und-sichere-übernahme).
@@ -725,6 +732,7 @@ Die folgenden Aufbewahrungs- und Replaypflichten gelten bis zur finalen Integrat
 - Ein neues Paket vor Inventarisierung verschlanken. Bereits versiegelte Pakete ausschließlich als deklarierte Teilkopie nach `picross-authoring-derivation-v1` ableiten: Originalhandoff/-inventar und ihre Hashes unverändert, Original-ZIP-Hash binden, tatsächlich enthaltene Dateien vollständig hashen. Weglassungen und Grund im äußeren Record dokumentieren. Keine erfundene neue Vollkopie, keine stillschweigende Neuversiegelung oder Umschreibung alter Freigaben. Nachweisbündel nicht intern kürzen. Das Original nicht destruktiv ersetzen.
 - Inventar und Handoff ohne Selbstreferenz nach ZA-1 binden; Datei-SHA-256 und kanonische Vertrags-Hashes unterscheiden. Nach Versiegelung spätere Endfreigabe und Integrationsstatus ausschließlich in separater Freigabe/Record führen; das Originalhandoff dafür nicht ändern.
 - Vor Ablage ZIP sicher öffnen, Dateimenge/Hashes und Handoffkopie prüfen. Ab `content_ready` zusätzlich ZA-1 `inspect` auf dem **geschriebenen ZIP** ausführen; fehlende Endabnahme darf als einziger entsprechender Blocker bleiben. Frühere Bildphasen sind noch kein ZA-1-Eingang: deren vorhandene Dateibindungen/Freigaben prüfen, keine Adapterzertifizierung behaupten. Der lokale [PB-A-Builder](../../tools/puzzle_production/README.md#pb-a-deterministischer-authoring-paketbau) übernimmt diese Schritte aus einem expliziten hashgebundenen Bauauftrag: `python -m tools.puzzle_production.authoring_builder build --request <request.json> --source-root <quellen> --output-root <arbeitsordner> [--publish-to <checkout>]`. Er sichert neue unversiegelte 0.6.0-Revisionen, erhält offene Entscheidungen und aktualisiert auf ausdrückliche Zielwahl nur den Authoringindex. Kein Git-Commit, keine Freigabe oder Registrierung. Bereits versiegelte Originale weiter unverändert lesen beziehungsweise nur nach dem bestehenden Teilkopievertrag ableiten.
+- BA-A verwendet den vorhandenen Builder ausschließlich mit `target=local` und `publish_to=None`. Der vollständige Bauauftrag, seine Quellen-, Regelwerks- und Freigabebindungen bleiben unverändert; fehlt der Auftrag, wartet die Stufe mit `waiting_input`. Ein ausdrücklich fortgeschriebener Plan darf den tatsächlichen Auftrag ergänzen. Der Runner erzeugt keinen Request und ersetzt keine fehlende Erklärung. `package`, `handoff` und `record` verweisen auf die wirklichen Builderdateien; `sheet_update` ist dessen unveränderte `sheet`-Projektion im technischen Runnerresultat, keine zusätzliche Builderdatei. Lokaler Bau belegt weder Repositorysicherung noch Endabnahme oder Integration.
 - `content/authoring/` bleibt außerhalb des Spiels. Nach Integration erzeugt ZA-1 die offline prüfbare Kopie unter `content/packages/<id>/<revision>/`; dieser Ort ist kein manuell zu befüllender Eingang. Keine zusätzlichen Voll-ZIPs dort erzeugen. Alte Produktionsstände über feste Git-Commits referenzieren; Bis zur finalen Integration keine gebundenen Nachweise löschen. Danach ist Abschnitt 9 Pflicht; keine LFS-Umstellung oder Git-Historienbereinigung.
 
 ### 6.2 Übergabedatensatz
@@ -784,6 +792,18 @@ Gates verwenden `pending|pass|fail|blocked`. Jedes `pass` braucht einen konkrete
 Beim Übergang aus v1 fehlende Abschlussbildfreigabe oder Ableitungsbindung ausdrücklich als offen erfassen; niemals aus einer alten Motivfreigabe erfinden.
 
 Nach Chatwechsel zuerst den Repositoryindex auflösen, dann Regelwerk, Übergabe, Pflichtquellen, Freigaben und referenzierte Dateien lesen; Hashes prüfen. Nur den nächsten autorisierten Schritt fortsetzen. Fehlenden Gesprächskontext nicht erfinden, gültige Freigaben nicht unnötig erneut einholen und den Toolstand nicht heimlich wechseln.
+
+Für lokale BA-A-Arbeitsstände gelten zusätzlich die geschlossenen Plan-/Checkpoint-
+und Budgetregeln aus [PRODUCTION_BATCH](../PRODUCTION_BATCH.md). Wiederaufnahme
+prüft die tatsächlichen Originale fachlich frisch; ein gespeicherter Erfolg oder
+Dateihash allein genügt nicht. Verbrauchte Versuche bleiben auch nach Unterbrechung
+und Planfortschreibung erhalten. `status` zeigt nur den historischen, nicht frisch
+fachlich geprüften Stand. Offene Entscheidungen blockieren ihre abhängigen Stufen;
+bereits autorisierte unabhängige Arbeit darf weiterlaufen. `completed` bezeichnet
+den erledigten technischen Schritt, niemals automatisch `content_ready` oder eine
+menschliche Endabnahme. Reine Hintergrundänderungen entwerten keine unveränderten
+Logik-/Proof-/Difficultyartefakte. Finale Fortschreibung und Integration bleiben
+außerhalb dieses Runners.
 
 ### 6.3 Zukünftiger Hintergrundweg: Sicherung, Auswahl und Wiederaufnahme
 
@@ -1031,7 +1051,7 @@ werden Optionslisten geleert, statt auf entfernte Arbeitsdateien zu verweisen.
 
 Bei Pflege des Cheat-Sheets beide eingebetteten Regelwerksnapshots und ihre
 Versions-/Revisionsanzeigen bytegleich mit den jeweiligen Markdownquellen halten:
-0.6.0/docrev46 und 0.7.0/docrev7. Jeder Auftrag verwendet den zum Job passenden Stand.
+0.6.0/docrev47 und 0.7.0/docrev8. Jeder Auftrag verwendet den zum Job passenden Stand.
 Der Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
 muss über den tatsächlichen Arbeitsbranch/Commit erreichbar benannt werden.
 
