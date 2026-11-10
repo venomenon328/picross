@@ -366,7 +366,7 @@ class BackgroundExportTests(unittest.TestCase):
                 with self.assertRaises(InvalidInput):
                     adapter.verify_export(output)
 
-    def test_fully_verified_v6_still_cannot_be_projected_or_registered(self):
+    def test_fully_verified_v6_requires_capability_and_bound_registration(self):
         from tools.puzzle_production import content_registry, content_update
         _, _, _, archive, approval = self.early(choice="none")
         output, _ = self.export(archive, approval)
@@ -375,11 +375,11 @@ class BackgroundExportTests(unittest.TestCase):
         checkout.mkdir()
         before = adapter.hashes(output), list(checkout.iterdir())
         for apply in (False, True):
-            with self.subTest(apply=apply), self.assertRaisesRegex(InvalidInput, "HP-I1b"):
+            with self.subTest(apply=apply), self.assertRaisesRegex(InvalidInput, "enabled compatible target capability"):
                 content_registry.registration(output, checkout, apply=apply)
-            with self.subTest(update=apply), self.assertRaisesRegex(InvalidInput, "HP-I1b"):
+            with self.subTest(update=apply), self.assertRaisesRegex(InvalidInput, "enabled compatible target capability"):
                 content_update.update(output, checkout, "0" * 64, apply=apply)
-        with self.assertRaisesRegex(InvalidInput, "HP-I1b"):
+        with self.assertRaisesRegex(InvalidInput, "full target-bound registration path"):
             content_registry.export_entry(output, manifest, report, {"id": "voegel"})
         self.assertEqual(before, (adapter.hashes(output), list(checkout.iterdir())))
 
