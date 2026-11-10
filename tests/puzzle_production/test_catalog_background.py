@@ -141,10 +141,10 @@ class CatalogBackgroundTests(unittest.TestCase):
         self.assertEqual(active["origin"]["approval"], load_json(approval))
         self.assertIsNotNone(active["decision"]["presented_package"])
 
-    def test_real_capability_remains_strictly_inactive(self):
+    def test_runtime_capability_is_active_with_unchanged_strict_shape(self):
         value = load_json(ROOT / bg.CAPABILITY)
-        self.assertIs(value["enabled"], False)
-        self.assertFalse(bg.capability(ROOT))
+        self.assertIs(value["enabled"], True)
+        self.assertTrue(bg.capability(ROOT))
         f = prepare(self)
         before = snapshot(f.checkout)
         for malformed in ({**value, "enabled": 1}, {**value, "unexpected": None}, {**value, "runtime_format": "future"}):

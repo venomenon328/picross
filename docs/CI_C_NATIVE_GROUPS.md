@@ -1,5 +1,18 @@
 # Native Prüfmodule und Originalnachweise
 
+## HP-I2 / #561: geschlossener Hintergrundnachweis
+
+Das ausgewählte `native.catalog` führt zusätzlich zu den elf KAT-2-Modi die kleine
+Headless-Phase `background-contract` für Runtimeformen und Besuchszustände aus.
+Der unabhängige Leser verlangt genau eine vollständige Zeile
+`BACKGROUND_TESTS_OK {"checks":<positive Ganzzahl>}` mit ausschließlich diesem
+JSON-Feld. Fehlende, doppelte oder widersprüchliche Records und Enginefehler, boolesche/
+nichtganzzahlige/nullwertige Zähler und zusätzliche/duplizierte Felder sind Fehler.
+Der feste Marker kann durch Produzentmetadaten weder ausgelassen noch ersetzt
+werden. Kleine Gegenproben im ausgewählten `tools`-Modul prüfen auch neu gehashte
+Logmanipulationen durch denselben vollständigen Katalog-Phasenleser. Keine feste
+Assertionzahl, neue Bildfamilie oder zusätzliche Main-Kernprüfung.
+
 ## RAND-P1 / #550: begrenzte passive Randzeichnungen
 
 Das gewählte `native.catalog` prüft im vorhandenen Informationsprozess kleine
@@ -625,12 +638,19 @@ ein gleich großer Gewinn des kritischen Pfads. Laufzeiten, Queue, CPU soweit
 messbar, Cachezustand und Uploadkosten getrennt ausweisen.
 
 Bestehende Prozess-/Netzwerk-Hängerschutzgrenzen bleiben technische Grenzen:
-der native Prozessstandard beträgt 300 s; `kat2-kk` warnt einmal bei 300 s und
-stoppt bei 600 s. Normale Exit-/Engine-/Marker-/Fachprüfungen gelten auch zwischen
-diesen Werten. Der Originalbericht bindet wirksame Timeout-/Warnwerte und tatsächliche
-Dauer; ein Timeout bleibt Fehler und räumt die eigene Prozessgruppe auf.
-Das ist keine maximale CI-Gesamtlaufzeit. Zehn Minuten bleiben das weiche Ziel.
-Die frühere `book-native`-Ausnahme betrifft eine entfernte Studienphase.
+der native Prozessstandard beträgt 300 s; `kat2-kk` und `kat2-pages` warnen einmal
+bei 300 s und stoppen bei 600 s. Die gezielte Pages-Erweiterung folgt der
+[HP-I2-Präzisierung](https://github.com/venomenon328/picross/issues/561#issuecomment-6772219227):
+Im [gepaarten Lauf](https://github.com/venomenon328/picross/actions/runs/42848507277)
+bestanden Basis und Kandidat dieselben sieben Fälle mit 5.040 Checks in
+332,898 s beziehungsweise 310,620 s. Getrennte gleichartige Runner belegen keine
+Produktbeschleunigung; beide erfolgreichen Läufe überschritten den alten Schutz.
+Normale Exit-/Engine-/Marker-/Fachprüfungen gelten auch zwischen diesen Werten.
+Der Originalbericht bindet wirksame Timeout-/Warnwerte und tatsächliche Dauer;
+Warnung/Logging verlängern die harte Frist nicht. Ein Timeout bleibt Fehler und
+räumt die eigene Prozessgruppe auf. Das ist keine maximale CI-Gesamtlaufzeit.
+Zehn Minuten bleiben das weiche Ziel. Die frühere `book-native`-Ausnahme betrifft
+eine entfernte Studienphase.
 
 ## Historische Quellen
 

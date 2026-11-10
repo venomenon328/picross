@@ -57,11 +57,14 @@ def build(cache: Path, output: Path, *, test: bool = False, development: bool = 
         engine = str(tc.extract_editor(cache/editor.name, work/'engine', host))
         extract_web_templates(cache/tc.TEMPLATES.name, tc.template_directory(work, host))
         project = work/'game'
-        shutil.copytree(root/'game', project, ignore=shutil.ignore_patterns('.godot', 'build', *(['content'] if test else [])))
+        import background_import
+        if test:
+            from product_fixtures import copy_regression_game
+            copy_regression_game(root, project)
+        else:
+            shutil.copytree(root/'game', project, ignore=shutil.ignore_patterns('.godot', 'build'))
         from p1_product import player_extras, player_guide, run_phase, require_clean_output
         if test:
-            from product_fixtures import install_runtime_fixtures
-            install_runtime_fixtures(root, project)
             from web_tests.fixtures import adapt
             adapt(project)
             from at_fixtures import install
@@ -75,6 +78,8 @@ def build(cache: Path, output: Path, *, test: bool = False, development: bool = 
             if original_scene.count('res://book/main.gd') != 1:
                 raise ValueError('Technical observer must use the regular book root')
             scene.write_text(original_scene.replace('res://book/main.gd', 'res://book/web_root.gd'), encoding='utf-8', newline='\n')
+        background_sources = background_import.prepare_import(project,
+            None if test else background_import.source_inventory(root))
         exported = work/'export'
         exported.mkdir()
         logs = output.parent/(output.name+'-logs')
@@ -87,11 +92,16 @@ def build(cache: Path, output: Path, *, test: bool = False, development: bool = 
         ):
             result = run_phase(name, [engine, *args], env, 300, logs)
             require_clean_output(result, marker)
+            if name == 'import':
+                background_import.verify_import(project, background_sources)
         if not test:
             # Inspect the actual exported pack using the existing external probe.
             # This checks package boundaries, not every production puzzle.
             registry = json.loads((root/'content/registry.json').read_text(encoding='utf-8'))
-            pack_env = {**env, 'ZA1_PACK_COUNT': str(sum(e['visible'] for e in registry['entries']))}
+            expected = work/'background-sources.json'
+            expected.write_text(json.dumps(background_sources), encoding='utf-8')
+            pack_env = {**env, 'ZA1_PACK_COUNT': str(sum(e['visible'] for e in registry['entries'])),
+                        'HP_BACKGROUND_PACK_TARGET': 'web', 'HP_BACKGROUND_EXPECTED': str(expected)}
             result = run_phase('web-content-pck', [engine, '--headless', '--main-pack', str(exported/'index.pck'),
                 '--script', str(root/'game/tests/content_pack_probe.gd')], pack_env, 300, logs)
             require_clean_output(result, 'CONTENT_PACK_OK')

@@ -1,9 +1,9 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 43 · 10.11.2026**
+**Version 0.6.0 · Dokumentrevision 44 · 10.11.2026**
 
 HP-W1 aus [#560](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307)
-spezifiziert den **zukünftigen, noch nicht aktivierten Hintergrundweg** in
+spezifiziert den **versionierten Hintergrundweg außerhalb des aktiven Defaults** in
 [PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md).
 [HP-W2](https://github.com/venomenon328/picross/issues/560#issuecomment-6748799473)
 liefert dessen eigenständige Arbeits-/Entscheidungs-/Ableitungsformen sowie die
@@ -12,14 +12,18 @@ Paketbau und die lesende Inhaltsprüfung nach dem vollständigen
 [0.7.0-Vorschausnapshot](PUZZLE_AUTHORING_0_7_0_PREVIEW.md). HP-I1a ergänzt sichere
 äußere Fortschreibung vorhandener Auswahl/Ableitung/Endfreigabe und prüfbaren
 Export v6. HP-I1b1 ergänzt zielgebundene Erstregistrierung, kompakte aktive
-Source/Receipt, Recovery und ersten Produktionsabschluss. Die echte
-Zielfähigkeit bleibt false bis HP-I2 samt Runtimeabnahme; synthetische kompatible
-Ziele belegen nur den Werkzeugweg. HP-I1b2 ergänzt den eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss.
-Diese Dokumentrevision führt den Unterstützungsstand nach;
+Source/Receipt, Recovery und ersten Produktionsabschluss. HP-I1b2 ergänzt den
+eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss, HP-I1c die
+erlaubte Raster-/Revealneubindung vorhandener Hintergrundziele. HP-I2 regelt
+Runtime v6, papiergebundene Darstellung, begrenztes Bedarfsladen und isolierten
+Profilimport. Eine echte true-Capability setzt diesen funktionierenden und
+technisch abgenommenen Weg voraus; synthetische kompatible Ziele belegen nur
+den Werkzeugweg. Diese Dokumentrevision führt den Unterstützungsstand nach;
 der aktive Produktionsweg bleibt **0.6.0**
 mit seinen bisherigen Formaten, Freigaben und ZA-1-Prüfungen. Version **0.7.0**
-wird erst mit dem tatsächlich unterstützten vollständigen Einzelweg aktiviert,
-wie in der Einführungsmatrix des Hintergrundvertrags beschrieben. Neue Daten
+wird ausdrücklich opt-in verwendet. Ihre verpflichtende Gesamtaktivierung wird
+erst anhand des tatsächlich unterstützten vollständigen Einzelwegs in #560
+festgestellt; ein true-Flag allein stellt den Default nicht um. Neue Daten
 nicht in alte Hüllen schreiben und versiegelte Originale nicht umetikettieren.
 
 PB-A aus [#489](https://github.com/venomenon328/picross/issues/489#issuecomment-6745424504)
@@ -31,7 +35,7 @@ für den ausdrücklich gewählten 0.7.0-Vorschaustand. Das aktuelle Offline-Shee
 bleibt bei 0.6.0; neue Import-/Sitzungs-/Auftragsformen folgen in #490.
 
 Der aktive Produktionsweg aus P-B2 / [#488](https://github.com/venomenon328/picross/issues/488) gilt weiter:
-Neue Produktionen verwenden **0.6.0**, automatische frühe Palettendiagnosen und
+Neue Produktionen verwenden im Default **0.6.0**, automatische frühe Palettendiagnosen und
 die frische finale [ZA-1-v5-Prüfung](../ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5).
 Die unveränderte Farbregel bindet weiterhin Normrevision 4; F05 bleibt eine
 visuell angenommene synthetische Referenz mit negativen Messwerten, keine
@@ -39,7 +43,8 @@ Produktionsausnahme. Messung, visuelle Urteile und konkrete Eigentümerausnahme
 werden getrennt geprüft. Altpakete 0.4.0/0.4.1/0.5.0 samt ihren damaligen
 Snapshots und v1–v4-Exporten behalten ihre Semantik; neue Arbeit nicht als
 Legacy deklarieren. Bei Wiederaufnahme den tatsächlichen gebundenen Regelstand
-erhalten, materielle Neuproduktion als neue Revision unter 0.6.0 führen.
+erhalten, materielle Neuproduktion als neue Revision unter dem ausdrücklich
+gewählten Regelstand führen; ohne Wahl des Hintergrundwegs bleibt dies 0.6.0.
 Q-A-Sichtung, Sheet v2, Paarprofile, feste manuelle Ableitungen und alle
 Proof-/Herkunfts-/Bild-/Motiv-/Endfreigaben sowie RI-Guards bleiben erhalten.
 Regelwerksversion, Dokumentrevision, Datei-SHA-256 und tatsächlicher Commit
@@ -70,9 +75,10 @@ HP-W2 erlaubt die eigenständige technische Vorbereitung nach §6.3; PB-H
 sichert sie in eigenen 0.7.0-Paketformen und prüft deren fällige Inhaltsgates
 lesend. HP-I1a führt äußere Records höchstens bis `editorially_approved` und
 exportiert v6 mit `integration_ready/catalog_ready/registered=false`.
-HP-I1b1 prüft Bereitschaft frisch außerhalb dieser Originale am Ziel; der echte
-Zielstand bleibt gesperrt. Vollständiger Ablauf und neue Sheetbedienung bleiben
-inaktiv. Keine Pflicht des bestehenden 0.6.0-Wegs wird geändert. Für beauftragte
+HP-I1b1 prüft Bereitschaft frisch außerhalb dieser Originale am Ziel; fehlende
+oder false-Capability blockiert vor Mutation. HP-I2 trennt die tatsächlich
+abgenommene Runtimefähigkeit vom unveränderten Produktionsdefault. Neue
+Sheetbedienung bleibt #490. Keine Pflicht des bestehenden 0.6.0-Wegs wird geändert. Für beauftragte
 Hintergrundarbeit den zentralen Hintergrundvertrag einschließlich seines aktuellen Unterstützungsstands
 vollständig lesen; nur tatsächlich verfügbare Teilfähigkeiten verwenden.
 
@@ -791,8 +797,10 @@ sicheren äußeren Finalizer nach Hintergrundvertrag §7.4 und den
 [v6-Export](../ZA1_ADAPTER.md#hp-i1a--äußere-endabnahme-und-export-v6).
 Original-ZIP, Handoff, Inventar und frühere Gates bleiben unverändert; der neue
 Record/Sheet-Stand reicht höchstens bis `editorially_approved`. HP-I1b1 ergänzt
-zielgebundene Erstintegration und deren Abschluss; echte Capability false bis
-HP-I2. HP-I1b2 ergänzt späteren Ersatz nach dem eigenen Requestvertrag, neue Sheetbedienung #490.
+zielgebundene Erstintegration und deren Abschluss. Die echte Capability folgt
+dem HP-I2-Runtime-/Abnahmevertrag. HP-I1b2 liefert späteren Ersatz nach dem
+eigenen Requestvertrag, HP-I1c die erlaubte Raster-/Revealneubindung bestehender
+Hintergrundziele; neue Sheetbedienung bleibt #490.
 HP-W2 unterstützt die eigenständigen Arbeits-/Entscheidungs-/Auftrags-/
 Befundformen nach Hintergrundvertrag §§3–4 sowie `describe/derive/verify`.
 Beauftragte frühe Bildarbeit darf damit als vorbereitet gesichert, eine tatsächlich
@@ -1105,7 +1113,7 @@ Import, Sitzung und Auftragsexport müssen bei ihrer Einführung alle neuen
 Bild-, Options-, Auswahl- und Paketbindungen verlustfrei erhalten; die dafür
 geplanten Generationen und konkreten Reader/Writer stehen im zentralen Vertrag.
 PB-H liefert die Record-v2-/Update-v3-Projektion im Paketbuilder. Das aktuelle
-Offline-Sheet erhält bis einschließlich HP-I1b2 ausschließlich den bytegleichen aktiven
+Offline-Sheet erhält auch in HP-I2 ausschließlich den bytegleichen aktiven
 0.6.0-Regelwerksnapshot und seine Versions-/Revisionsangaben. Neue Optionen,
 Importfähigkeit, Sitzungsformate und Promptlogik folgen gesondert in #490;
 die Builderprojektion ist keine behauptete Sheetfunktion.
@@ -1118,10 +1126,15 @@ Der separate opt-in HP-I1a-Weg nach dem 0.7.0-Vorschausnapshot liefert äußere
 Endabnahme und prüfbaren Export v6; dessen gespeicherte `integration_ready`,
 `catalog_ready` und `registered` bleiben false. HP-I1b1 führt die anschließende
 frische zielbezogene Prüfung, erste Registrierung und deren Abschluss ein.
-`game/data/background-capability.json` bleibt im echten Repository false;
+`game/data/background-capability.json` ist die echte Zielfähigkeit;
 fehlende/false-Capability sperrt Hintergrundplanung/-registrierung vor Mutation.
-Nur HP-I2 mit tatsächlicher Runtime und technischer Abnahme darf sie aktivieren.
+Nur HP-I2 mit tatsächlicher Runtime und technischer Abnahme erlaubt true.
 Synthetische kompatible Ziele sind keine Spieler-/Produktionsabnahme.
+Ein Capabilitywechsel macht ältere daran gebundene Pläne stale und schaltet
+offene Altjournale nicht frei; deren Sperren und regulären Recoveryweg erhalten.
+0.6.0 bleibt Default, der gesonderte 0.7.0-Weg opt-in. Die verpflichtende
+Gesamtaktivierung wird anhand des konkreten Einzelwegs in #560 abgeglichen,
+nicht allein aus der Runtimefähigkeit oder pauschal aus dem Abschluss von #490.
 Erst der tatsächlich unterstützte #561-Weg übernimmt in Auftrag 4 gemeinsam mit
 dem endabgenommenen Rätsel **ausschließlich die konkret gewählte, gültig
 abgeleitete Auslieferungsdatei oder die ausdrücklich erklärte Leerentscheidung**.
@@ -1137,9 +1150,10 @@ Auswahl/Endabnahme und gültige Ableitung. Herkunft, Palette, Paarprofil,
 Schwierigkeit, bisherige Reveal-/Motivgates und Recoverygarantien bleiben
 erhalten. Eine spätere reine Hintergrundersetzung nutzt nur den dafür
 eingeführten Bildweg aus #561 und erhält Lösungs-/Saveidentität; sie ist keine
-heutige `plan-update`-/`update`- oder `catalog_reveal`-Operation. Rasterupdate
-und Revealadoption eines Hintergrundziels bleiben ebenfalls konkret gesperrt,
-bis deren neue Bindung in einem Folgepaket geschlossen ist.
+`plan-update`-/`update`- oder `catalog_reveal`-Operation. Rasterupdate und
+Revealadoption vorhandener Hintergrundziele verwenden die geschlossenen
+HP-I1c-Bindungen nach Hintergrundvertrag §12; keine ungeprüfte Übernahme einer
+alten Bild-/Kontextfreigabe. Legacy-Erstnachrüstung bleibt gesperrt.
 
 RI-A-V01 zu [#478](https://github.com/venomenon328/picross/issues/478) liefert
 seit PR #484 auf main die [operativen CLI-/API-Grenzen](../ZA1_ADAPTER.md#ri--zeitbudget-und-diagnose-neuer-registrierungen).
@@ -1394,9 +1408,10 @@ aktueller Source und aktuellem freigegebenem Reveal sichern; ursprüngliche
 Revealautorität bleibt in initial erhalten. Die aktuelle 0.6.0-Sheetoberfläche
 weist diesen neuen Recordtyp ausdrücklich zurück; Bedienung bleibt #490.
 Eigene Arbeitsrevision über `catalog_background_change store` samt Index sichern,
-danach `plan` und autorisiertes `adopt` gemäß Werkzeuganleitung. Capability false
-blockiert den echten Zielweg; kein Override. Vorhandene Freigaben nicht erneut
-abfragen. Raster-/Revealneubindung an Hintergrundtargets bleibt HP-I1c.
+danach `plan` und autorisiertes `adopt` gemäß Werkzeuganleitung. Fehlende oder
+false-Capability blockiert den Zielweg; kein Override. Vorhandene Freigaben
+nicht erneut abfragen. HP-I1c liefert die erlaubte Raster-/Revealneubindung
+vorhandener Hintergrundziele nach seinem eigenen Vertrag.
 
 Nach bestätigter Mainintegration `target_adapter retire-background-production
 --checkout <checkout> --integrated-commit <vollständige-main-SHA>

@@ -78,12 +78,13 @@ Bei Fehlern melden `error` die konkrete Ursache und `remaining` einen tatsächli
 verbliebenen eigenen Restpfad oder null. Ressourcen-, Fehlercode-, Lock- und
 Veröffentlichungsvertrag stehen vollständig in Hintergrundvertrag §4.4.
 
-**Der vollständige Hintergrundweg bleibt inaktiv.** Authoring 0.6.0 und PB-A
+**Der Produktionsdefault bleibt 0.6.0.** Authoring 0.6.0 und PB-A
 behalten ihre Hüllen und Gates. PB-H ergänzt den ausdrücklich gewählten
 Paketbau und die lesende Inhaltsprüfung unten; HP-I1a ergänzt äußere
 Fortschreibung und Export v6. HP-I1b1 ergänzt zielgebundene Erstregistrierung
-und ersten Abschluss; echte Capability bleibt false bis HP-I2. Späterer reiner
-Hintergrundersatz folgt dem HP-I1b2-Weg unten, neue Sheetbedienung #490. Die Standalone-
+und ersten Abschluss. Die echte Capability folgt dem HP-I2-Runtime-/Abnahmevertrag.
+Späterer reiner Hintergrundersatz folgt dem HP-I1b2-Weg, erlaubte Raster-/
+Revealneubindung vorhandener Hintergrundziele HP-I1c, neue Sheetbedienung #490. Die Standalone-
 Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
 
 ## PB-H: Hintergrundpakete und lesende Inhaltsprüfung
@@ -92,10 +93,11 @@ Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabsc
 und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
 neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
 [Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 4, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Dokumentrevision 5, mit tatsächlichem Dateihash und gelesenem Quellencommit.
 Der aktive Authoringpfad und der eingebettete Offline-Sheet-Snapshot bleiben
-**0.6.0 / Dokumentrevision 43**. Das ist eine zusätzliche Vorbereitungsfähigkeit,
-keine Aktivierung des vollständigen Hintergrundwegs.
+**0.6.0 / Dokumentrevision 44**. 0.7.0 bleibt ausdrücklich opt-in; die
+verpflichtende Gesamtaktivierung wird am konkreten Einzelweg in #560 abgeglichen.
+Versiegelte ältere Pakete behalten ihren gebundenen Snapshot unverändert.
 
 ```sh
 python -m tools.puzzle_production.authoring_builder build --request <request-v2.json> --source-root <quellen> --output-root <arbeitsordner> [--publish-to <checkout>] [--history-repo <lokaler-checkout>]
@@ -201,9 +203,10 @@ Bau schreibt keinen Gitcommit und behauptet keinen Sicherungsstand.
 und [ZA-1-v6](../../docs/ZA1_ADAPTER.md#hp-i1a--äußere-endabnahme-und-export-v6)
 schließen die neuen Auftrags-, Ergebnis-, Wiederaufnahme- und Transportformen.
 Die höchste effektive Phase ist `editorially_approved`. Auch ein frisch
-verifizierter v6-Export bleibt **nicht registrierbar**:
-`integration_ready/catalog_ready/registered=false`. Der aktive Default bleibt
-0.6.0; es gibt keine neue Phase „exportiert“ und keinen Hintergrund-Runtimeweg.
+verifizierter v6-Export behält seine historischen Felder
+`integration_ready/catalog_ready/registered=false`; die frische zielbezogene
+Registrierungsprüfung folgt HP-I1b1. Der aktive Default bleibt 0.6.0; es gibt
+keine neue Phase „exportiert“. Der Runtimeanschluss folgt HP-I2 unten.
 
 ```text
 python -m tools.puzzle_production.authoring_builder finalize-background --request <request.json> --source-root <neue-dateien> --output-root <authoring-root> [--history-repo <checkout>]
@@ -316,8 +319,8 @@ Feste Datei `game/data/background-capability.json`, exakt
 `picross-runtime-background-capability-v1`, `picross-runtime-registry-v6`,
 `picross-background-png2304-v1` und Boolean `enabled`. Höchstens 4096 Bytes.
 Fehlend/false blockiert den Hintergrund-Plan/-Registeraufruf vor Journal und
-Katalogänderung. Ungültige Form/Pfade sind Eingabefehler. **Die echte
-Repositorydatei bleibt false bis HP-I2-Runtime samt technischer Abnahme.**
+Katalogänderung. Ungültige Form/Pfade sind Eingabefehler. **True verlangt den
+funktionierenden HP-I2-Runtime-/Importweg samt technischer Abnahme.**
 Keine Änderung dieser Datei als Bedienhilfe, kein API-/CLI-/Umgebungs-Override;
 `--allow-background` lässt nur den inspect/export-Eingang zu. Isolierte
 synthetische Ziele dürfen true/test_only verwenden, ohne Spielerverhalten oder
@@ -1918,8 +1921,9 @@ kein stdout garantieren. Der bestehende Recoveryeinstieg behält seine Ausgabe
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809) und
 [vollständiger Normvertrag §11](../../docs/PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel).
 Pillow exakt 12.3.0 in der oben beschriebenen isolierten Imageumgebung; nur ein
-bereits gültig hintergrundgebundenes Ziel je Adoption. Echte Capability false
-bis HP-I2; Legacy-Nachrüstung bleibt geschlossen, Raster-/Revealneubindung folgt HP-I1c.
+bereits gültig hintergrundgebundenes Ziel je Adoption. Die echte Capability
+folgt HP-I2; Legacy-Nachrüstung bleibt geschlossen, Raster-/Revealneubindung
+vorhandener Hintergrundziele verwendet HP-I1c.
 
 ```sh
 python -m tools.puzzle_production.catalog_background_change store --root <checkout> --record <record.json> --source-root <vollstaendige-arbeitsdateien>
@@ -2008,9 +2012,81 @@ Prüfung ein No-op sein und stellt keine frühere Definition/Bildwahl wieder her
 Für Rückbau eines begonnenen Writers das Journal verwenden; eine abgeschlossene
 Source v3 darf nicht durch Entfernen von Events oder Umbenennen auf v1/v2
 zurückgebaut werden. Ein Software-Rollback braucht einen dazu kompatiblen
-Quellenstand. Keine neue aktive Authoring-/Sheetversion und keine reale Capability.
+Quellenstand. HP-I1c ändert keine aktive Authoring-/Sheetversion und aktiviert
+allein keine reale Capability; der Runtimeanschluss steht im folgenden Abschnitt.
 
 Die kleinen synthetischen Regressionsfälle stehen in
 `tests/puzzle_production/test_background_rebind.py`; bestehende Legacy-,
 Bild-, Quellen- und Transaktionssuiten bleiben den ausgewählten Fachmodulen
 zugeordnet. Originale werden im Lauf geprüft und temporär entfernt.
+
+## HP-I2: Runtimeanschluss und isolierter Hintergrundimport
+
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/561#issuecomment-6770077470)
+und [normativer Runtimevertrag §13](../../docs/PUZZLE_BACKGROUNDS.md#13-hp-i2--runtime-darstellung-und-besuch)
+führen Reader v6, papiergebundene Darstellung A und begrenztes Bedarfsladen im
+regulären Buch. Die bestehende `game/data/background-capability.json` darf erst
+mit diesem funktionierenden und technisch abgenommenen Weg true sein. Die
+einmalige unabhängige Renderer-/Gestaltungsabnahme steht am konkreten Produkt-
+Head; sie ist keine zusätzliche persönliche Buchabnahme pro produzierter Datei.
+Authoring-/Sheetdefault bleibt 0.6.0, der gesonderte 0.7.0-Weg opt-in. Kein
+Capabilityflag ersetzt den vollständigen Einzelwegabgleich in #560.
+
+### Regulärer Import- und Exportweg
+
+Die vorhandenen Builder verwenden den gemeinsamen Importvorbereiter automatisch
+in ihren eigenen temporären Godotkopien:
+
+```sh
+python tools/build_main_player.py --cache-dir <engine-cache> --output-dir <windows-ausgabe>
+python tools/build_web_player.py --cache-dir <engine-cache> --output-dir <web-ausgabe>
+```
+
+Die normalen nativen Prüf-/Exportwege verwenden denselben Helfer in ihrer
+isolierten Spielkopie. Es gibt keine neue öffentliche Import-CLI und keinen
+Editorimport im schreibenden Inhaltscheckout. Insbesondere erlaubt HP-I2 keine
+`.png.import`-Dateien im aktiven `game/art/backgrounds/`-Quellnamensraum und
+öffnet dessen Quellen-/Writer-/Journalguards nicht für technische Nebenprodukte.
+Aktive Dateien bleiben die gebundenen PNGs und Notices; bei none gibt es keine
+Nulltextur. Ausgewählte Quelldateien bleiben bytegleich und am kompakten
+Source-/Runtime-Ref gebunden.
+
+Der interne Helfer `tools/background_import.py` trennt vier Aufgaben:
+
+| Aufruf | Wirkung und Grenze |
+| --- | --- |
+| `source_inventory(root)` | Prüft die tatsächliche kompakte Inhaltsautorität, Runtimeprojektion, gewählte PNG2304-/Noticebytes und den geschlossenen aktiven Namensraum. Kein Solver- oder Produktionsreplay. |
+| `prepare_import(project, inventory=None)` | Prüft die isolierte Kopie und ihre exakte Bindung, schreibt nur deren eigene Importsidecars vor Godot. Ohne Inventar sind ausschließlich technische Kopien ohne selected zulässig. |
+| `verify_import(project, inventory)` | Prüft nach Godot tatsächliche Sidecars, Profilwerte, Importremap und `.ctex`-Header sowie getrennte Importbytes/-hashes. Dekodierte Pixel und vollständige Mipmaps benötigen die gesonderte tatsächliche PCK-Probe. |
+| `restore_sources(root, project, inventory=None)` | Stellt vor regulärem Export die wirklichen aktiven Hintergrundressourcen passend zum tatsächlichen Katalog wieder her und entfernt synthetische Dateien samt eigenen Importresten aus der isolierten Kopie. |
+
+Das feste Profil erhält 2304×576 RGBA und verwendet verlustfreie Kompression
+(`compress/mode=0`), generierte Mipmaps (`mipmaps/generate=true`), keine Alpha-
+Randkorrektur/Premultiplikation, keine Größenbegrenzung und keine 3D-Erkennung.
+Der Renderer verwendet passende Mipmapfilterung. Native und Web verwenden
+dieselbe Quelle und dasselbe Profil; die nichtthreaded Webkonfiguration bleibt.
+Der Webexport enthält `web/background_loader.js` für den gebundenen Workerweg
+nach §13.3, ohne eine neue Hosting-/COOP-/COEP-Pflicht.
+
+### Was die Nachweise aussagen
+
+Quell-PNG-Hash und Engineimporthash sind verschiedene Bindungen. Das PCK muss
+die tatsächlich importierte ausgewählte Textur samt Mipmaps und benötigter
+Notice enthalten; eine zusätzliche rohe PNG-Kopie wird nicht vorausgesetzt.
+Kein Kandidatensatz, Originalproduktions-ZIP, Freigabedokument oder Prüfprogramm
+gehört in den Spielerexport. Kleine feste synthetische Regressionen erweitern
+keinen echten Produktionskorpus. Ein tatsächlicher Windows-/Webexport und
+PCK-Audit belegen Lieferung, keinen ausgeführten Windowsstart oder Browserlauf.
+
+HP-I2-T01/T02 binden die einmalige echte native Interaktion, sechs unveränderte
+Originalbilder und getrennte Quellen-/Import-/PCK-/Dekodiermessungen an den
+konkreten Head. Das Paket führt keinen neuen Gameplaydauerlauf und kein hartes
+Laufzeit- oder Größenbudget ein. Revieworiginale werden nach dem befristeten
+Paketplan zugänglich gehalten; eigene technische Kopien enden nach ihrer Prüfung.
+Die unabhängige HP-I2-A01-Abnahme bleibt bis zur tatsächlichen Erklärung offen.
+
+Vor Capabilityänderung Zielstand und offene Journale prüfen. Geänderte
+Capabilitybytes machen vorhandene daran gebundene Pläne stale; sie erlauben
+keine alte Recovery auf inzwischen inkompatiblen Daten. Kein Flagwechsel als
+Umgehung und keine Änderung historischer Exportfalse-Felder. Echte Bestands-
+rätsel werden durch HP-I2 nicht migriert; Legacy-only bleibt Runtime v5.

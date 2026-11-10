@@ -94,6 +94,8 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
                            '<circle cx="400" cy="400" r="200" fill="#ffffff"/></svg>\n', encoding="utf-8")
     if append:
         current = json.loads((project / "data/registry.json").read_text(encoding="utf-8"))
+        if current['format'] == 'picross-runtime-registry-v6':
+            raise ValueError("Legacy geometry IDs cannot be appended to a v6 production catalog")
         catalog["categories"] = current["categories"]
         if current['format'] in ('picross-runtime-registry-v4', 'picross-runtime-registry-v5'):
             catalog['format'] = current['format']
@@ -104,12 +106,20 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
 
 def copy_regression_game(root: Path, project: Path) -> None:
     """Never copy the growing authoring/runtime content corpus into test projects."""
-    shutil.copytree(root / "game", project, ignore=shutil.ignore_patterns(".godot", "build", "content"))
+    ordinary = shutil.ignore_patterns(".godot", "build", "content")
+    def ignored(directory, names):
+        result = ordinary(directory, names)
+        if Path(directory) == root / "game/art":
+            result.add("backgrounds")
+        return result
+    shutil.copytree(root / "game", project, ignore=ignored)
     install_runtime_fixtures(root, project)
 
 
-def restore_player_catalog(root: Path, project: Path) -> bool:
+def restore_player_catalog(root: Path, project: Path, *, background_inventory: dict | None = None) -> bool:
     """Use actual delivered content for export, without certifying/replaying it."""
+    from background_import import require_isolated, restore_sources
+    require_isolated(project, {"source_game": str((root / "game").resolve())})
     source = root / "game/data/registry.json"
     target = project / "data/registry.json"
     changed = source.read_bytes() != target.read_bytes()
@@ -122,7 +132,13 @@ def restore_player_catalog(root: Path, project: Path) -> bool:
             shutil.rmtree(path)
             changed = True
     shutil.copyfile(source, target)
+    had_backgrounds = (project / "art/backgrounds").exists()
+    background_inventory = restore_sources(root, project, background_inventory)
+    changed = changed or had_backgrounds or bool(background_inventory["assets"])
     for name in ("data/content", "art/content"):
+        if (project / name).exists():
+            shutil.rmtree(project / name)
+            changed = True
         if (root / "game" / name).exists():
             shutil.copytree(root / "game" / name, project / name)
             changed = True

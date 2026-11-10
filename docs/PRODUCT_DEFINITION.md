@@ -348,21 +348,31 @@ Hypothesen als mögliche Zustände „unsicher gesetzt“ und „unsicher leer�
 
 RAND-P1 / [#550](https://github.com/venomenon328/picross/issues/550#issuecomment-6729097692)
 ist der bisher integrierte Konzeptpilot mit drei zweiteiligen passiven
-ImageGen-Randzeichnungen auf Rätsel- und Hilfepapier. Im bestehenden Rätselpfad
+ImageGen-Randzeichnungen auf Rätsel- und Hilfepapier. Im Legacy-Rätselpfad
 bestimmt allein die Kategorie die Zeichnung; Spoilergrenze, funktionales Layout
 und Eingabe bleiben maßgeblich. Der begrenzte Pilot legt keinen endgültigen
 Motivsatz fest. Sein [Zeichen-/Platzvertrag](UI_DRAWING_STYLE.md#zs-d04-buch-funktionale-ui-und-passive-pilotzeichnungen)
 und die damalige Auswahl bleiben an diesen Pilotstand gebunden.
 
-Der [Hintergrundvertrag HP-W1](PUZZLE_BACKGROUNDS.md) spezifiziert als noch nicht
-aktivierten Sollweg eigene Kontextzeichnungen je Rätsel mit isolierter Bildwahl.
-Die Ablösung der bisherigen kategorienspezifischen Rätselzeichnungen erfolgt
-erst über die gesonderte Integration und Runtime aus
-[#561](https://github.com/venomenon328/picross/issues/561). HP-I1a unterstützt
-äußere Endabnahme und prüfbaren Export. HP-I1b1 liefert erste Registrierung,
-HP-I1b2 eigenständigen Hintergrundwechsel und revisionsgenauen Abschluss.
-Die echte Capability bleibt bis HP-I2 samt Runtimeabnahme false; bestehende Zeichnungen bleiben,
-der Hilfepilot gehört nicht zu dieser Umstellung.
+Der [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md) regelt eigene Kontextzeichnungen
+je Rätsel mit isolierter Bildwahl. HP-I1a liefert äußere Endabnahme und prüfbaren
+Export, HP-I1b1 erste Registrierung, HP-I1b2 eigenständigen Hintergrundwechsel
+und revisionsgenauen Abschluss, HP-I1c die erlaubte Raster-/Revealneubindung.
+HP-I2 aus [#561](https://github.com/venomenon328/picross/issues/561) verbindet
+diesen Weg mit dem regulären Buch: selected zeichnet genau die gewählte
+transparente 4:1-Leinwand proportional unten mittig in einer gemeinsamen
+Papierfläche, auch hinter Raster und Hinweisen. Zoom blendet sie nicht aus.
+none lässt die Rätseldekoration leer; beide ersetzen dort den Kategoriepilot.
+Legacy und Hilfepilot behalten ihre bisherigen Regeln. Die Ebene bleibt passiv,
+Layout und Trefferflächen bleiben erhalten. Bedarfsladen darf den Buchwechsel
+nicht verzögern; die erste sichtbare Publikation entscheidet für den ganzen
+Besuch zwischen bereitem Bild und diagnostizierter Auslassung.
+
+Die echte Capability setzt funktionierende Runtime und technische Abnahme
+voraus. Die einmalige unabhängige Renderer-/Gestaltungsabnahme gehört zur
+Entwicklung von HP-I2, nicht als zusätzliche persönliche Buchabnahme zu jeder
+Bildproduktion. Authoring 0.6.0 bleibt Default, 0.7.0 ausdrücklich opt-in;
+ein true-Flag allein aktiviert keinen verpflichtenden Gesamtproduktionsweg.
 
 Thematik, visuelle Identität und weit ausgearbeitete UI-Konzepte werden früh und parallel zur Funktionalität bearbeitet. Die Gestaltung ist kein abschließender Skin über einer bereits fertigen Oberfläche. Ebenso werden frühe Entwürfe nicht vor praktischer Erprobung unveränderlich festgeschrieben.
 
