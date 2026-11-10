@@ -21,6 +21,24 @@ def unique(pairs):
     return result
 
 
+def validate_background_log(text):
+    """Read the fixed HP-I2 result independently of producer marker metadata."""
+    marker = 'BACKGROUND_TESTS_OK'
+    records = [line[len(marker)+1:] for line in text.splitlines()
+               if line.startswith(marker+' ')]
+    if (len(records) != 1 or text.count(marker) != 1
+            or 'BACKGROUND_TEST_FAILED:' in text or 'ERROR:' in text):
+        raise ValueError('BACKGROUND missing, ambiguous or failed contract result')
+    try:
+        result = json.loads(records[0], object_pairs_hook=unique)
+    except ValueError as error:
+        raise ValueError('BACKGROUND invalid result JSON') from error
+    if (type(result) is not dict or set(result) != {'checks'}
+            or type(result['checks']) is not int or result['checks'] <= 0):
+        raise ValueError('BACKGROUND requires exactly a positive integer checks count')
+    return result['checks']
+
+
 def validate_completion_cases(report):
     """AR-A original values, palette, layout and state boundaries; no summary-only pass."""
     rows = report['ar_measurements']
@@ -294,6 +312,10 @@ def check_phases(report, expected, directory):
             verify_file(directory/'logs', dict(file=log['file'], bytes=log['retained_bytes'], sha256=log['sha256']))
             if log['abbreviated'] or log['original_bytes'] != log['retained_bytes']:
                 raise ValueError('Truncated native phase log')
+            if row['name'] == 'background-contract':
+                if row.get('required_marker') != 'BACKGROUND_TESTS_OK':
+                    raise ValueError('BACKGROUND producer cannot omit or replace the fixed marker')
+                validate_background_log((directory/'logs'/log['file']).read_text(encoding='utf-8'))
             if row.get('required_marker') and row['required_marker'] not in (directory/'logs'/log['file']).read_text(encoding='utf-8'):
                 raise ValueError('Missing native success marker')
             if row['name'] == 'current-drawing-tests':
