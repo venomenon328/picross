@@ -283,9 +283,8 @@ def _change_context(reads, location, manifest, request, source, entry):
                "Background change targets another active source")
     actual = reads.read(("package", "."), source_ref, limit=bg.LIMIT, assemble=False)
     context = manifest["context"]
-    if context["reveal"] is None:
-        # A true early none decision has no candidate/context to review.
-        return
+    ap.require(context["reveal"] is not None and context["reveal_approval"] is not None,
+               "Background change requires retained source and reveal context")
     copied = reads.read(location, context["reveal_approval"], limit=bg.LIMIT)
     ap.require(copied == actual, "Background context authority is not the current source bytes")
     reveal = context["reveal"]

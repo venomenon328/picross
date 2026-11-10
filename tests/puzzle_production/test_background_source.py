@@ -1,10 +1,12 @@
 """HP-I1b2 compact source and narrowly authorized retained-context authority."""
 from copy import deepcopy
+import shutil
 import unittest
 
 from tests.puzzle_production.background_catalog_fixtures import prepare
 from tests.puzzle_production.background_change_fixtures import create_work
 from tests.puzzle_production.background_fixtures import file_ref, put_json
+from tools.puzzle_production import background_assets as assets
 from tools.puzzle_production import background_package as package, background_request as requests
 from tools.puzzle_production import catalog_background as bg, content_registry as registry
 from tools.puzzle_production.contract import InvalidInput, load_json
@@ -106,6 +108,57 @@ class BackgroundSourceTests(unittest.TestCase):
         request["files"] = [file_ref(base, p.relative_to(base).as_posix())
                             for p in sorted(base.rglob("*")) if p.is_file() and p.name != "record.json"]
         with self.assertRaisesRegex(InvalidInput, "context authority is not the current source bytes"):
+            package.validate_change(fixture.checkout, request, original, entry)
+
+    def test_none_change_requires_retained_context_even_with_a_real_candidate_waiver(self):
+        fixture = prepare(self, registered=True)
+        work = create_work(self, fixture.checkout, fixture.case.root, choice="none")
+        catalog = load_json(fixture.checkout / registry.REGISTRY)
+        entry = catalog["entries"][0]
+        original = bg.load(fixture.checkout, catalog, entry)
+        request = deepcopy(work.request)
+        base = fixture.checkout / requests.directory(request)
+        manifest = load_json(base / "work/bg01.json")
+        self.assertEqual(manifest["candidates"], [])
+        self.assertIsNotNone(manifest["candidate_policy"]["exception"])
+        graph = package.validate_change(fixture.checkout, request, original, entry)
+        self.assertTrue(graph["ready"])
+        self.assertIsNone(graph["candidate"])
+        self.assertIsNone(graph["asset_bytes"])
+
+        # Keep the actual none declaration/waiver, but remove both context
+        # copies and freshly rederive every dependent binding. A stale hash
+        # or report must not be the reason this work is rejected.
+        for key in ("reveal", "reveal_approval"):
+            (base / manifest["context"][key]["file"]).unlink()
+            manifest["context"][key] = None
+        (base / "context").rmdir()
+        manifest_ref = put_json(base, "work/bg01.json", manifest)
+        decision = load_json(base / "decisions/d01.json")
+        decision["manifest"] = manifest_ref
+        decision_ref = put_json(base, "decisions/d01.json", decision)
+        output_directory = base / "outputs/background"
+        derive_request = load_json(output_directory / "derivation.json")["request"]
+        derive_request.update(manifest=manifest_ref, decision=decision_ref)
+        source_root = fixture.case.root / "contextless-none-source"
+        shutil.copytree(base, source_root)
+        output_root = fixture.case.root / "contextless-none-output"
+        output_root.mkdir()
+        derived = assets.derive(derive_request, source_root, output_root)
+        self.assertEqual(derived["status"], "none", derived)
+        (output_directory / "derivation.json").write_bytes(
+            (output_root / derive_request["output"] / "derivation.json").read_bytes())
+        verified = assets.verify(derive_request, source_root, output_root / derive_request["output"])
+        self.assertEqual(verified["status"], "verified", verified)
+        request["background"]["manifest"]["ref"] = manifest_ref
+        request["background"]["decision"]["ref"] = decision_ref
+        request["background"]["derivation"]["ref"] = file_ref(base / "outputs", "background/derivation.json")
+        request["files"] = [file_ref(base, p.relative_to(base).as_posix())
+                            for p in sorted(base.rglob("*")) if p.is_file() and p.name != "record.json"]
+        put_json(base, "record.json", request)
+        checked, _, _ = requests.read(fixture.checkout, work.record_path)
+        self.assertEqual(checked, request)
+        with self.assertRaisesRegex(InvalidInput, "Background change requires retained source and reveal context"):
             package.validate_change(fixture.checkout, request, original, entry)
 
 
