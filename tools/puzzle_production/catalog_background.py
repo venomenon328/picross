@@ -391,6 +391,7 @@ def notice_bytes(identifier, candidate):
 def _transition(previous, following):
     if previous["format"] == "picross-catalog-background-v3":
         from .background_rebind import transition, normalized
+        ap.require(following["format"] == "picross-catalog-background-v3", "Background change cannot downgrade Source v3")
         transition(previous, following, normalized(previous), normalized(following), "background-adoption")
         return
     ap.require(following["format"] == CHANGE_FORMAT and
