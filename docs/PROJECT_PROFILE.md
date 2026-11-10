@@ -62,10 +62,13 @@ PB-H ergänzt mit dem explizit gewählten
 Paketbau, Record-/Sheetprojektion und die lesende Prüfung vollständiger
 Raster-/Inhaltsbereitschaft. HP-I1a ergänzt sichere äußere Fortschreibung bereits
 vorhandener Auswahl/Ableitung/Endfreigabe und vollständig geprüften Export v6.
-Höchste Phase bleibt `editorially_approved`; `integration_ready`, `catalog_ready`
-und `registered` bleiben false. Registry, Erstintegration, Hintergrundersatz,
-Recovery und Abschluss folgen in HP-I1b, Runtime in HP-I2 und neue Sheetbedienung
-in #490. Der vollständige Weg ist noch nicht aktiviert; Authoring 0.6.0 samt
+Höchste Exportphase bleibt `editorially_approved`; gespeicherte `integration_ready`,
+`catalog_ready` und `registered` bleiben false. HP-I1b1 ergänzt zielbezogene
+Erstregistrierung, kompakte aktive Source/Receipt, Recovery und ersten Abschluss.
+Die echte Zielfähigkeit bleibt ausdrücklich false bis zur Runtime samt technischer
+Abnahme in HP-I2; synthetische kompatible Ziele belegen nur den Werkzeugweg.
+Späterer reiner Hintergrundersatz bleibt HP-I1b2, neue Sheetbedienung #490.
+Der vollständige Weg ist noch nicht aktiviert; Authoring 0.6.0 samt
 Offline-Sheet bleibt der aktive Produktionsdefault. Runtimezeichnungen bleiben
 bis zu ihrem tatsächlich gelieferten Anschluss unverändert.
 

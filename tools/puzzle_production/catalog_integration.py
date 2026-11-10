@@ -7,7 +7,7 @@ import shutil
 import tempfile
 import time
 
-from . import catalog_io
+from . import catalog_io, catalog_background as background
 from . import operation_diagnostics as diagnostic
 from .authoring_package import file_hash, file_table, require, sha
 from .contract import canonical_bytes, load_json
@@ -55,13 +55,15 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     from .target_adapter import verify_export, FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, BACKGROUND_EXPORT, palette_gate
     root = catalog_io.external(root)
     export_dir = catalog_io.external(export_dir)
-    # A v6 export can be verified offline, but it cannot enter the old catalog
-    # projection. Reject it before catalog capture or production replay.
+    # Admission of v6 input never substitutes for a compatible target. This
+    # fixed capability is checked before catalog capture, journals or replay.
     manifest = catalog_io.json_bytes(catalog_io.read(export_dir, "manifest.json", 8 * 1024 * 1024),
                                      8 * 1024 * 1024)
-    require(not isinstance(manifest, dict) or manifest.get("format") != BACKGROUND_EXPORT,
-            "Background export v6 is not supported by catalog consumers (HP-I1b required)")
     update = expected_definition_sha256 is not None
+    is_background = isinstance(manifest, dict) and manifest.get("format") == BACKGROUND_EXPORT
+    if is_background:
+        background.capability(root, required=True)
+        require(not update, "Background target raster update requires a future binding contract")
     if update: sha(expected_definition_sha256)
     snapshot = tx.capture(root)
     registry = snapshot["registry"]
@@ -71,15 +73,16 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     from . import registration_verification as verification
     original_state = verification.inventory(export_dir) if apply and not update else None
     m, report = verify_export(export_dir)  # Existing mandatory full production check.
-    require(m["format"] in (FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, palette_gate.EXPORT), "Category-less legacy export: create a new categorized export")
+    require(m["format"] in (FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, palette_gate.EXPORT, BACKGROUND_EXPORT), "Category-less legacy export: create a new categorized export")
     require(not m["test_only"] or root != ROOT.resolve(), "Test-only fixtures cannot be registered in the real repository")
     category = categories.lookup(catalog, m["category_id"])
-    entry = export_entry(export_dir, m, report, category)
+    entry = export_entry(export_dir, m, report, category, background=is_background)
     existing = next((e for e in registry["entries"] if e["id"].casefold() == entry["id"].casefold()), None)
     active_reveal = reveal.load(root, existing, catalog) if existing else None
     n = "game/" + entry["definition"]
     if update:
         require(existing is not None, "Update requires an existing production ID")
+        require(existing["id"] not in background.index(registry), "Background target raster update requires a future binding contract")
         require(file_hash(tx.safe(root, "game/" + existing["definition"])) == expected_definition_sha256, "Stale expected definition hash")
         require(all(entry[k] == existing[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")),
                 "Raster update must retain identity, paths, visibility, category and save slot")
@@ -89,10 +92,14 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         from .integrated_content import FORMAT as INTEGRATED
         original = load_json(root / existing["production"]["package"] / "manifest.json")
         same = reveal.normalized(root, existing) == entry
+        if same and is_background:
+            current_background = background.load(root, registry, existing)
+            same = current_background is not None and background.encoded(current_background) == background.encoded(
+                background.build(export_dir, m, report, entry))
         if same:
-            check_checkout(root, replay=not update and original.get("format") != INTEGRATED)
+            check_checkout(root, replay=not update and original.get("format") not in (INTEGRATED, background.RECEIPT_FORMAT))
             require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
-                    all(file_hash(tx.safe(root, name)) == h for name, h in snapshot["retained"].items()) and
+                    all(tx.file_hash(root, name) == h for name, h in snapshot["retained"].items()) and
                     tx.namespaces(root,registry)==snapshot['namespaces'], "Checkout changed during planning")
             return {"status": "no-op", "registered": True, "id": entry["id"], "category": category, "changes": []}
         require(update, "Occupied production ID/revision: update is outside ZA-1")
@@ -119,11 +126,20 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     if existing: new["entries"][new["entries"].index(existing)] = entry
     else: new["entries"].append(entry)
     new["entries"].sort(key=lambda e: e["id"])
+    source = background.build(export_dir, m, report, entry) if is_background else None
+    if source is not None:
+        new["format"] = background.REGISTRY_FORMAT
+        new.setdefault("backgrounds", []).append({"id": entry["id"], "source": background.ref(background.path(entry["id"]), background.encoded(source))})
+        new["backgrounds"].sort(key=lambda row: row["id"])
     validate(new, catalog)
     notice = notice_path(entry)
     changes = {tx.REGISTRY: canonical_bytes(new) + b"\n", n: raw,
                notice: (export_dir / ("runtime/" + notice.removeprefix("game/"))).read_bytes(),
                rating.path(entry["id"]): rating.encoded(active) if active is not None else None}
+    if source is not None:
+        changes[background.path(entry["id"])] = background.encoded(source)
+        if source["notice"] is not None:
+            changes[source["notice"]["file"]] = catalog_io.read(export_dir, m["background_notice"]["file"], 65536)
     if active_reveal:
         rebound = reveal.rebind(active_reveal, entry, m["runtime_revision"], changes[notice], catalog)
         changes[reveal.path(entry["id"])] = canonical_bytes(rebound) + b"\n"
@@ -136,16 +152,22 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         if checked is None:
             verify_export(stage)  # Preserve the existing independent staging replay.
         require(file_hash(stage / "manifest.json") == entry["production"]["package_sha256"], "Export changed during staging")
-        additions = {package + "/" + name: p for name, p in file_table(stage, time.monotonic() + 300).items()}
+        additions = {package + "/" + name: p for name, p in file_table(stage, time.monotonic() + 300,
+                     **({"original_zip": "input/package.zip"} if is_background else {})).items()}
         if diagnostic.current.get():
             diagnostic.current.get().environment["package_files"] = len(additions)
         target=tx.safe(root,package)
         if target.exists():
             parents={str(parent).replace('\\','/') for name in additions for parent in Path(name).parents}
+            if is_background and not any(name.startswith("external/") for name in m["files"]) and not any(
+                    m["background"][key]["storage"] == "external" for key in ("manifest", "decision", "derivation")):
+                parents.add(package + "/external")
             require(target.is_dir() and all(tx.safe(root,p.relative_to(root).as_posix()).is_dir() and
                     p.relative_to(root).as_posix() in parents for p in target.rglob('*')),
                     'Update package revision already exists' if update else 'Target already exists: '+package)
         if not existing: additions["game/" + entry["reveal"]] = stage / m["reveal"]
+        if source is not None and source["asset"] is not None:
+            additions[source["asset"]["file"]] = stage / m["background_asset"]["file"]
         # A read-only registration plan does not allocate its first timestamp.
         if not existing and apply:
             changes[added.path(entry["id"])] = added.encoded(added.registration(entry["id"]))
@@ -159,7 +181,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
             proposed[tx.RUNTIME] = tx.projection(proposed, new).decode()
             tx._stage_check(root, proposed, snapshot["retained"], additions)
             require(all(tx.read(root, name) == value for name, value in old.items()) and
-                    all(file_hash(tx.safe(root, name)) == checksum for name, checksum in snapshot["retained"].items()), "Checkout changed during registration planning")
+                    all(tx.file_hash(root, name) == checksum for name, checksum in snapshot["retained"].items()), "Checkout changed during registration planning")
             planned_changes = [{"path": name, "operation": "add" if old[name] is None else "replace"}
                                for name in sorted(names) if old[name] != (proposed[name].encode() if proposed[name] is not None else None)]
             planned_changes.append({"path": added.path(entry["id"]), "operation": "add-on-success"})

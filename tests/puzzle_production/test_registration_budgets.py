@@ -477,7 +477,7 @@ class PublicationTests(unittest.TestCase):
 
     def test_classification_current_legacy_fake_staging_and_other_override(self):
         lock = self.root/tx.LOCK
-        for generation in (tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS):
+        for generation in (tx.BACKGROUND_FORMATS, tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS):
             value = deepcopy(self.journal); value['format'] = generation['registration']
             if not tx.modern(value): value.pop('replacements')
             lock.write_bytes(pub.journal_bytes(value))

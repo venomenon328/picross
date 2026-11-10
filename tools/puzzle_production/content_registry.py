@@ -20,6 +20,7 @@ import os
 REGISTRY = "content/registry.json"
 RUNTIME = "game/data/registry.json"
 FORMAT = "picross-content-registry-v2"
+BACKGROUND_FORMAT = "picross-content-registry-v3"
 JOURNAL = "picross-registration-journal-v2"
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -37,27 +38,40 @@ def atomic_bytes(path, data):
         temp.unlink(missing_ok=True)
 
 
-def projection(registry, catalog, root=None, *, ratings=None, added=None, version=5):
-    from . import catalog_rating
+def projection(registry, catalog, root=None, *, ratings=None, added=None, backgrounds=None, version=None):
+    from . import catalog_rating, catalog_background as background
     if ratings is None:
         ratings = catalog_rating.load_sources(root, registry) if root is not None else {}
     if added is None:
         added = catalog_added.load_sources(root, registry) if root is not None else {}
-    require(type(version) is int and version in (3, 4, 5), "Unsupported projection version")
+    if version is None:
+        version = 6 if registry["format"] == BACKGROUND_FORMAT else 5
+    require(type(version) is int and version in (3, 4, 5, 6), "Unsupported projection version")
+    require(registry["format"] != BACKGROUND_FORMAT or version == 6, "Background registry cannot be downgraded")
+    if version == 6 and backgrounds is None:
+        require(root is not None, "Background projection requires its bound active sources")
+        background.capability(root, required=True)
+        texts = {name: catalog_io.read(root, name, background.LIMIT, missing=True)
+                 for name in background.text_names(registry)}
+        backgrounds = background.projection(registry, texts)
     result = {"format": "picross-runtime-registry-v" + str(version), "categories": categories.ordered(catalog), "entries": [
         {**{k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")},
          "difficulty": catalog_rating.project(ratings[e["id"]]) if e["id"] in ratings else
                        catalog_difficulty.project(e["production"]["difficulty"]),
-         **({"added_at": added[e["id"]]["added_at"] if e["id"] in added else None} if version >= 4 else {})}
+         **({"added_at": added[e["id"]]["added_at"] if e["id"] in added else None} if version >= 4 else {}),
+         **({"background": backgrounds[e["id"]]} if version == 6 else {})}
         for e in registry["entries"]]}
-    for entry in result["entries"]: catalog_difficulty.validate_projection(entry["difficulty"], version=version)
+    for entry in result["entries"]: catalog_difficulty.validate_projection(entry["difficulty"], version=min(version, 5))
+    require(len(canonical_bytes(result)) + 1 <= 8 * 1024 * 1024, "Runtime registry exceeds 8 MiB")
     return result
 
 
 def validate(registry, catalog):
     categories.validate(catalog)
-    exact_keys(registry, {"format", "entries"})
-    require(registry["format"] == FORMAT and isinstance(registry["entries"], list) and len(registry["entries"]) <= 10000,
+    modern = isinstance(registry, dict) and registry.get("format") == BACKGROUND_FORMAT
+    exact_keys(registry, {"format", "entries"} | ({"backgrounds"} if modern else set()))
+    require(registry["format"] in (FORMAT, BACKGROUND_FORMAT) and isinstance(registry["entries"], list) and len(registry["entries"]) <= 10000 and
+            len(canonical_bytes(registry)) + 1 <= 8 * 1024 * 1024,
             "Unsupported registry")
     seen = {k: set() for k in ("id", "key", "save_slot", "definition", "reveal")}
     for e in registry["entries"]:
@@ -89,11 +103,14 @@ def validate(registry, catalog):
                 p["mode"] in ("mono","color") and isinstance(p["difficulty"],dict), "Invalid index metadata")
         catalog_difficulty.project(p["difficulty"])
     require(registry["entries"] == sorted(registry["entries"], key=lambda e: e["id"]), "Registry entries must be sorted")
+    if modern:
+        from . import catalog_background
+        catalog_background.index(registry)
     return registry
 
 
 def check_checkout(root, replay=False, *, check_projection=True, pending_journal=None, _verification=None):
-    from . import catalog_io as io, reveal_source as reveal
+    from . import catalog_io as io, reveal_source as reveal, catalog_background as background
     if _verification is not None:
         from .registration_verification import require_context
         require_context(_verification)
@@ -103,15 +120,18 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
     require(not lock.exists() or pending_journal is not None and lock.read_bytes() == pending_journal,
             "Interrupted registration: recovery required")
     catalog = categories.load(root / categories.PATH)
-    r = validate(load_json(root / REGISTRY), catalog)
+    r = validate(io.json_bytes(io.read(root, REGISTRY, 8 * 1024 * 1024), 8 * 1024 * 1024), catalog)
     from . import catalog_method
     catalog_method.load(root)
     reveal.source_paths(root, r)
+    background.capability(root, required=r["format"] == BACKGROUND_FORMAT)
+    background.source_paths(root, r)
+    background_index = background.index(r)
     expected = projection(r, catalog, root)
     if check_projection:
         allowed = [canonical_bytes(expected)+b"\n"]
         has_sd2 = any(e["difficulty"] and e["difficulty"]["method"] == catalog_method.NEW for e in expected["entries"])
-        if not has_sd2:
+        if not has_sd2 and r["format"] != BACKGROUND_FORMAT:
             older = deepcopy(expected); older["format"] = "picross-runtime-registry-v4"
             allowed.append(canonical_bytes(older) + b"\n")
             if not catalog_added.load_sources(root, r):
@@ -121,7 +141,7 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
                 older["format"] = "picross-runtime-registry-v2"
                 for e in older["entries"]: del e["difficulty"]
                 allowed.append(canonical_bytes(older) + b"\n")
-        require((root / RUNTIME).read_bytes() in allowed, "Runtime registry is stale")
+        require(io.read(root, RUNTIME, 8 * 1024 * 1024) in allowed, "Runtime registry is stale")
     for e in r["entries"]:
         p = e["production"]
         require(not p["test_only"] or root.resolve() != ROOT.resolve(), "Test-only content cannot enter the real catalog")
@@ -130,10 +150,13 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
         # Also enforce the category binding without the expensive production replay.
         m = load_json(package / "manifest.json")
         from . import integrated_content
-        if m.get("format") == integrated_content.FORMAT:
+        declared = m.get("format") in ("picross-target-export-v6", background.RECEIPT_FORMAT)
+        require(declared == (e["id"] in background_index), "Background export v6/receipt requires its exact active index")
+        background.load(root, r, e)
+        if m.get("format") in (integrated_content.FORMAT, background.RECEIPT_FORMAT):
             integrated_content.check(root, e, m)
             continue  # Final integration is checked by runtime hashes, never by production replay.
-        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5"), "Unsupported registered export")
+        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5", "picross-target-export-v6"), "Unsupported registered export")
         if m["format"] != "picross-target-export-v1":
             require(m.get("category_id") == e["category_id"], "Registered category differs from export")
         if replay:
@@ -162,9 +185,9 @@ def sync_runtime(root):
             "categories": len(categories.load(root / categories.PATH)["categories"])}
 
 
-def export_entry(export_dir, m, report, category):
-    require(m.get("format") != "picross-target-export-v6",
-            "Background export v6 is not supported by catalog consumers (HP-I1b required)")
+def export_entry(export_dir, m, report, category, *, background=False):
+    require(m.get("format") != "picross-target-export-v6" or background,
+            "Background export v6 requires the full target-bound registration path")
     return {"id": m["definition_id"], "key": m["definition_id"], "save_slot": m["save_slot"],
          "definition": m["definition"].removeprefix("runtime/"), "reveal": m["reveal"].removeprefix("runtime/"), "visible": True,
          "category_id": category["id"],
@@ -275,7 +298,7 @@ def _recover(root):
     raw = tx.read(root, tx.LOCK)
     if raw is None: return tx.recover(root)
     j = io.json_bytes(raw, tx.REVEAL_LIMIT)
-    if isinstance(j, dict) and j.get("format") in set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
+    if isinstance(j, dict) and j.get("format") in set(tx.BACKGROUND_FORMATS.values()) | set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
         return tx.recover(root)
     if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
         from .content_update import recover_update
@@ -293,6 +316,7 @@ def _recover(root):
     catalog = categories.load(root / categories.PATH)
     old_registry = validate(json.loads(j["old"][REGISTRY]), catalog)
     new_registry = validate(json.loads(j["new"][REGISTRY]), catalog)
+    tx.require_legacy_background(root, old_registry, new_registry, runtimes=(j["old"][RUNTIME], j["new"][RUNTIME]))
     reject_unbound_ratings(root, old_registry, new_registry)
     runtime = recovery_projection(j, old_registry, new_registry, catalog)
     added = [e for e in new_registry["entries"] if e not in old_registry["entries"]]

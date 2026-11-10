@@ -376,7 +376,7 @@ def _early_registration(raw, *, staged=False):
     if fields is None:
         return False
     fmt = fields.get("format")
-    modern = fmt in (tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    modern = fmt in (tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
     previous = fmt in (tx.PREVIOUS_FORMATS["registration"], tx.LEGACY_FORMATS["registration"])
     if staged and not modern:
         return False
@@ -432,7 +432,7 @@ def classify(root, *, on_registration=None):
         # The historical decoder still enforces its complete closed schema.
         op = "update"
     else:
-        maps = (tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS)
+        maps = (tx.BACKGROUND_FORMATS, tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS)
         op = j.get("operation")
         require(isinstance(op, str) and any(m.get(op) == fmt for m in maps), "Unsupported recovery journal format/operation")
         exact_keys(j, {"format", "operation", "old", "new", "retained", "additions", "report_run"} |
