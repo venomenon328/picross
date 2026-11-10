@@ -84,7 +84,8 @@ Paketbau und die lesende Inhaltsprüfung unten; HP-I1a ergänzt äußere
 Fortschreibung und Export v6. HP-I1b1 ergänzt zielgebundene Erstregistrierung
 und ersten Abschluss. Die echte Capability folgt dem HP-I2-Runtime-/Abnahmevertrag.
 Späterer reiner Hintergrundersatz folgt dem HP-I1b2-Weg, erlaubte Raster-/
-Revealneubindung vorhandener Hintergrundziele HP-I1c, neue Sheetbedienung #490. Die Standalone-
+Revealneubindung vorhandener Hintergrundziele HP-I1c. MJ-A führt den regulären
+Sheetweg; der eigene spätere Hintergrundänderungsjob bleibt MJ-B aus #490. Die Standalone-
 Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabschluss.
 
 ## PB-H: Hintergrundpakete und lesende Inhaltsprüfung
@@ -93,9 +94,10 @@ Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabsc
 und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
 neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
 [Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 5, mit tatsächlichem Dateihash und gelesenem Quellencommit.
-Der aktive Authoringpfad und der eingebettete Offline-Sheet-Snapshot bleiben
-**0.6.0 / Dokumentrevision 44**. 0.7.0 bleibt ausdrücklich opt-in; die
+Dokumentrevision 6, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Der aktive Authoringpfad und der Default neuer Offline-Sheetjobs bleiben
+**0.6.0 / Dokumentrevision 45**. Beide eingebetteten Snapshots entsprechen ihren
+Markdownquellen; 0.7.0 / Dokumentrevision 6 bleibt ausdrücklich opt-in. Die
 verpflichtende Gesamtaktivierung wird am konkreten Einzelweg in #560 abgeglichen.
 Versiegelte ältere Pakete behalten ihren gebundenen Snapshot unverändert.
 
@@ -187,14 +189,41 @@ bleiben unverändert. Offene Auswahl, tatsächliches `none`, technische Rasterre
 und fehlende Integration bleiben in Record, Blockern und Projektion getrennt.
 Update v3 enthält zusätzlich `Hintergrunddaten`, `Hintergrundstatus`,
 `Hintergrund-Optionen` und `Hintergrundauswahl` nach dem Hintergrundvertrag.
-Das aktuelle Offline-Sheet importiert diese neue Generation noch nicht;
-Sitzung v5, Auftrag v4 und UI-/Promptanschluss folgen in #490.
+MJ-A übernimmt diese tatsächliche Projektion allein oder gemeinsam mit dem
+passenden Record v2; Sitzung v5 und Auftrag v4 erhalten alle Hintergrundbindungen.
+Ein nackter Record v2 reicht für Status und Kandidaten nicht aus und bleibt bis
+zur ausdrücklich zugeordneten v3-Projektion ohne Zustandsänderung.
 
 Determinismus, erneutes Lesen und Prüfen des geschriebenen ZIPs, bytegleiche
 Handoffkopie, exakter Dateisatz, Lock, unveränderter No-op, Kollisionsprüfung,
 Revisionspublikation vor atomarem Indexwechsel und ehrliche Restpfade bei
 Abbruch folgen vollständig dem untenstehenden PB-A-Vertrag. Ein erfolgreicher
 Bau schreibt keinen Gitcommit und behauptet keinen Sicherungsstand.
+
+## MJ-A: reguläre Jobs im Offline-Sheet
+
+[Paketentscheidung #490/MJ-A](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
+und [Hintergrundvertrag §7.5](../../docs/PUZZLE_BACKGROUNDS.md#75-mj-a-mehrjob-arbeitsbereich-und-sichere-übernahme)
+regeln Jobidentität, persönliche Globals/Joboptionen, atomare Importvorschau,
+geschlossene Sammlung v1 und die Bindung asynchroner Vorgänge. Einzelne Sitzungen
+bleiben nutzbar; die Sammlung sichert Reihenfolge, aktive lokale Jobkennung,
+Sitzungen v4/v5, Joboptionen und passend importierte Records. Import und Export
+erteilen keine Freigabe und prüfen keine tatsächliche Repositoryverfügbarkeit.
+
+Für Record v2 das erfolgreiche Builder-/Finalizerresultat mit seinem wirklichen
+Update v3 oder beide ausdrücklich zugeordneten lokalen Eingänge verwenden. Der
+Record allein enthält keine vollständige Kandidaten-/Statusprojektion. Keine Daten
+aus Refs nachladen oder erfinden, keine fremden Hashwerte durch JSON-Neuhashung
+ersetzen. Vollständige Updates v3 bleiben eigenständig ladbar. Historische false-
+Readiness, offene Auswahl und wirkliche `none`-Entscheidung bleiben unterscheidbar.
+
+Neue Jobs starten mit 0.6.0/v4; der reguläre Hintergrundweg ist ausdrücklich
+0.7.0/v5 mit Auftrag v4 und passendem Regelpfad. Beide eingebetteten Regeltexte sind
+bytegleich mit ihren Markdownquellen. Nach Authoring §9 bleiben kompakte echte
+Abschlussbezüge erhalten, bereinigte Produktionsdateien werden nicht rekonstruiert.
+Der separate `picross-background-adoption-request-v1` wird weiterhin verständlich
+abgewiesen und auf den HP-I1b2-Werkzeugweg verwiesen; seine Sheetbedienung bleibt
+MJ-B. Keine Batchausführung, automatische Bildproduktion oder neue Modell-API.
 
 ## HP-I1a: äußere Endabnahme und Export v6
 
@@ -300,8 +329,8 @@ Der folgende HP-I1b1-Weg öffnet erste Registrierung und Abschluss; späterer
 Hintergrundersatz folgt dem HP-I1b2-Weg unten, Runtime/Import/Mipmaps/Laden HP-I2. Alte volle/
 Quick-/Metadaten-/direkte API-Verbraucher bleiben geschlossen. Kein Forcepfad;
 Export v6 und Registrierungsjournal v6 sind getrennte Formate. Gültige v1–v5-
-Exporte bleiben nach ihren eigenen Verträgen nutzbar, neue Sheetbedienung/Batch
-bleiben separat.
+Exporte bleiben nach ihren eigenen Verträgen nutzbar. MJ-A führt den regulären
+Sheetweg; Batchbetrieb gehört nicht zu diesem Paket.
 
 ## HP-I1b1: erste Hintergrundregistrierung und Produktionsabschluss
 
@@ -1945,7 +1974,8 @@ Der Speicher-No-op gilt auch nach Adoption; er prüft identische Arbeitsbytes un
 den gültigen aktuellen Katalog, erteilt aber keine neue Übernahmebefugnis für ein
 inzwischen veraltetes Ziel. plan/adopt prüfen dessen vollständige Zielbindung.
 Der Request selbst ist der Record, kein Rasterpaket und kein registrierter Status.
-Die neue Familie wird im Index ausdrücklich dispatcht und im alten Sheet abgewiesen.
+Die neue Familie wird im Index ausdrücklich dispatcht und auch im MJ-A-Sheet
+verständlich abgewiesen; ihre eigene Sheetbedienung bleibt MJ-B aus #490.
 
 plan ist gegenüber Checkout/Arbeit lesend und veröffentlicht das vollständig
 geprüfte Bundle am neuen externen Pfad ohne Ersetzen. input/ ist dessen explizite

@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion · 0.7.0-Vorschaustand
 
-**Version 0.7.0 · Dokumentrevision 5 · 10.11.2026**
+**Version 0.7.0 · Dokumentrevision 6 · 10.11.2026**
 
 **Explizit wählbarer Vorbereitungsstand, kein aktiver Produktionsdefault.**
 [PB-H / #489](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
@@ -8,14 +8,17 @@ unterstützt neue Hintergrundpakete nach diesem vollständigen Snapshot. Er
 übernimmt die Inhalts-, Freigabe-, Herkunfts-, Proof-, Paar-, Paletten-,
 Parameter-, Rand- und Difficultygarantien von Authoring 0.6.0 und ergänzt die
 Hintergrundarbeit mit eigenen geschlossenen Formen und getrennten Phasen.
-Der kanonische [aktive Authoringweg](PUZZLE_AUTHORING.md) und das
-[Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html) bleiben **0.6.0 /
-Dokumentrevision 44**. Dieser Snapshot ersetzt ihren Default nicht und wird
-nicht als aktiver Anhang in das Sheet eingebettet.
+Der kanonische [aktive Authoringweg](PUZZLE_AUTHORING.md) bleibt **0.6.0 /
+Dokumentrevision 45**, ebenso der Default neuer Jobs im
+[Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html).
+[MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
+führt mehrere unabhängige Jobs und den ausdrücklich gewählten 0.7.0-Weg.
+Das Sheet enthält beide bytegleichen Dokument-Snapshots; der jeweilige Job bindet
+seinen tatsächlich gewählten Regelstand. Dieser Snapshot ersetzt den Default nicht.
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md` im Repository
 `venomenon328/picross`. Ein neuer 0.7.0-Bauauftrag bindet die vollständigen Bytes
-dieser Datei, Version 0.7.0, Dokumentrevision 5 und den tatsächlich gelesenen
+dieser Datei, Version 0.7.0, Dokumentrevision 6 und den tatsächlich gelesenen
 Quellencommit. Eine umbenannte oder nur im Header geänderte 0.6.0-Datei ist
 kein 0.7.0-Snapshot. Bereits versiegelte Originale behalten ihre eigenen Bytes,
 Versionen und damaligen Nachweise; kein Versionsdowngrade für neue Arbeit.
@@ -42,8 +45,9 @@ erlaubte Raster-/Revealneubindung vorhandener Hintergrundziele. Die echte
 Zielfähigkeit darf erst mit funktionierendem und technisch abgenommenem
 HP-I2-Runtime-/Importweg true sein. Dieser opt-in-Weg ersetzt den Default 0.6.0
 nicht; die verpflichtende Gesamtaktivierung wird anhand des tatsächlich
-unterstützten Einzelwegs in #560 festgestellt. Neue UI-Import-/Sitzungs-/
-Auftragsformen folgen in #490. Eine vorhandene Endfreigabe v2 darf rein
+unterstützten Einzelwegs in #560 festgestellt. MJ-A führt regulären Sheetimport,
+Sitzung v5 und Auftrag v4 nach Hintergrundvertrag §7.5; der eigene spätere
+Hintergrundänderungsjob bleibt MJ-B. Eine vorhandene Endfreigabe v2 darf rein
 lesend auf ihre unveränderten Originalbindungen geprüft werden; kein neuer
 finaler Originalzustand wird gebaut und keine fehlende Erklärung erzeugt.
 
@@ -604,8 +608,8 @@ gehören; Rasterversuche erzeugen keine Reveal×Raster×Hintergrund-Kreuzmatrix.
 Bei noch offener Bildentscheidung die Angebote ausdrücklich als technisch
 rasterreif mit offener Hintergrundwahl kennzeichnen und nach diesem
 Bereitschaftsvertrag als `raster_ready` sichern. Die zusätzlichen Bindungen
-werden in Record v2 und Sheet-Update v3 geführt; das aktive Sheet-v2-UI
-unterstützt diesen neuen Transport noch nicht.
+werden in Record v2 und Sheet-Update v3 geführt. MJ-A übernimmt Record v2
+ausschließlich mit seiner passenden tatsächlichen Update-v3-Projektion.
 Für spätere Auswahl und gemeinsame Endabnahme die Originalpakete unverändert
 erhalten; vorhandene tatsächliche äußere Entscheidungen nach §6.3 lesen,
 sichere Fortschreibung mit HP-I1a nach Hintergrundvertrag §7.4 ausführen.
@@ -814,8 +818,9 @@ Profil abgeleitet; ausdrücklich `none` liefert nur einen Nullbefund. Der Builde
 prüft deklarierte Ableitungen mit den tatsächlichen Quellen und Tool-/Codec-
 Bindungen frisch. Ungeklärte Rechte oder fehlende Q-HG-Urteile werden dadurch
 nicht zu positiven Belegen. [Lokale Aufrufe und Grenzen](../../tools/puzzle_production/README.md#pb-h-hintergrundpakete-und-lesende-inhaltsprüfung).
-HP-I1a unterstützt die sichere äußere Fortschreibung unten; neue Sheetbedienung
-bleibt #490. Die enge lesende HP-W2-Regel aus Hintergrundvertrag §4.3 erhält
+HP-I1a unterstützt die sichere äußere Fortschreibung unten; MJ-A transportiert
+deren tatsächliches Record-v2-/Update-v3-Ergebnis im regulären Produktionsjob.
+Die enge lesende HP-W2-Regel aus Hintergrundvertrag §4.3 erhält
 originale Producer-/Request-/Befundbytes und vergleicht aktuelle vollständige
 Modul-/Codec-/Profilbindung; nur ein anderer Git-HEAD/Dirtyzustand bei identischen
 ausführbaren Bytes verlangt keine neue Ableitung. `derive/reused` bleibt streng
@@ -1076,9 +1081,10 @@ genau diese Reihenfolge; kurze Arbeitsfortschrittsmeldungen benötigen keinen Da
 
 Damit ist die Chatübergabe vollständig. Keine zusätzliche Handoff-Markdowndatei
 und keinen weiteren kopierbaren Folgeauftrag ausgeben, auch nicht nach Auftrag 2.
-Für den Vorschauweg die v3-Daten aus dem Paket/Record weitergeben. Das aktuelle
-Offline-Sheet unterstützt diesen Import noch nicht; bis #490 keinen v2-Datensatz
-mit verlorenen Hintergrundbindungen erzeugen und keine neue Sheetfähigkeit behaupten.
+Für den Vorschauweg die tatsächliche v3-Projektion aus Builder oder Finalizer
+weitergeben. MJ-A übernimmt ein vollständiges Update v3 allein oder zusammen mit
+seinem passenden Record v2; ein nackter Record v2 benötigt die erzeugte Projektion.
+Keinen v2-Datensatz mit verlorenen Hintergrundbindungen erzeugen.
 Keine Modell-, Reasoning- oder Ausführungsempfehlung anfügen und keine dafür
 veranlasste Modellrecherche durchführen (§1). Die technische Übergabe nach §6
 und die menschlichen Freigaben werden dadurch nicht ersetzt oder verkürzt.
@@ -1203,7 +1209,7 @@ Nach Abschlussbildfreigabe wird nur deren konkrete Datei weitergegeben; der
 spätere Rasterdialog bietet keinen unbemerkten Wechsel des freigegebenen Bildes.
 Bei neuen Bildfassungen gelten unverändert die Rücksprünge/Freigaben aus §4.4.
 
-Der in #490 zu liefernde neue Sheetweg muss die Auswahl mit Beschreibung und Dateireferenz zeigen; die folgenden UI-Regeln sind bis dahin ein Implementierungsvertrag. Wechsel eines
+Das Sheet zeigt die Auswahl mit Beschreibung und Dateireferenz. Wechsel eines
 Rasters übernimmt alle zugehörigen Bindungen gemeinsam; Einzelbearbeitung dieser
 Felder ist bei Optionslisten gesperrt. Solange keine Auswahl getroffen wurde,
 sind die davon abhängigen Freigabeaufträge gesperrt. Auftrag 2 nennt Datei, ID
@@ -1212,29 +1218,70 @@ Inventarhash. Import, Dropdownwechsel, Sitzung und ZIP-Export erteilen keine
 Freigabe und ändern kein Repository. Erst das tatsächliche Absenden des passenden
 Freigabeauftrags ist eine menschliche Erklärung.
 
-Für diesen Vorschauweg sind Sitzung v5 und Auftrag v4 nach Hintergrundvertrag §7.3 vorgesehen; erst #490 liefert ihren verlustfreien UI-Transport. Die alten Sitzungen v3/v4 und Auftragsexporte erhalten ausschließlich ihre bisherigen Listen und Auswahl. Import eines alten
-v1-Blocks/Records oder einer alten Sitzung entfernt vorherige Optionsdaten;
-Reset leert sie ebenfalls. Fehlerhafte Daten dürfen keinen Teilstand übernehmen.
+Sitzung v5 und Auftrag v4 erhalten diesen Vorschauweg nach Hintergrundvertrag §7.3
+verlustfrei. Alte Sitzungen v3/v4 und Auftragsexporte behalten ihre bisherigen
+Listen und Auswahl. Alteingänge entfernen nur im ausdrücklich gewählten Zieljob
+vorherige neue Options-/Hintergrunddaten nach ihrem Altvertrag; Joboptionen bleiben
+erhalten. Reset leert nur den aktiven Job. Fehlerhafte Daten dürfen keinen
+Teilstand übernehmen.
 Die HTML-Datei bleibt offline ohne automatische Bild-/Repositoryabrufe. Bilder
 stehen im Chat beziehungsweise Paket; Pfade im Dropdown sind keine Behauptung,
 dass das Sheet die Bytes oder Proofs selbst geprüft hätte. Nach Produktionsabschluss
 werden Optionslisten geleert, statt auf entfernte Arbeitsdateien zu verweisen.
 
-Der eingebettete aktive Sheet-Snapshot und seine Anzeige bleiben bei
-`PUZZLE_AUTHORING.md` 0.6.0/docrev44; dieser 0.7.0-Vorschausnapshot hat seinen
-eigenen Pfad und wird nicht ungeprüft als UI-Default eingebettet. Der
+Beide eingebetteten Sheet-Snapshots sind bytegleich mit ihren Markdownquellen:
+`PUZZLE_AUTHORING.md` 0.6.0/docrev45 und dieser Vorschaupfad 0.7.0/docrev6.
+Neue Jobs starten mit 0.6.0; ausdrücklich gewählte v5-Jobs binden den Vorschaupfad
+beziehungsweise dessen 0.7.0-Anhang. Der
 Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
 muss über den tatsächlichen Arbeitsbranch/Commit erreichbar benannt werden.
 
-### Bestehende persönliche Einstellungen und lokale Codex-Arbeit
+### Mehrere unabhängige Produktionsjobs
 
-Das bestehende Offline-Sheet trennt persönliche Einstellungen von Rätseldaten.
-Arbeitswurzel, Bereinigungsoption, Regelquelle/-pfad/-stand, Ablage-/Mergeoption
-und Farbschema werden im Browser gespeichert. Ein anderer Browser, ein geänderter
-Dateipfad oder gelöschte Browserdaten können einen Einstellungsimport erfordern.
-Fehlender oder gesperrter Browserspeicher wird sichtbar gemeldet; das Sheet bleibt
-mit manueller Eingabe und Sicherung nutzbar. Produktionsdaten und Bildbytes werden
-nicht automatisch dauerhaft gespeichert.
+MJ-A führt eine geordnete Sammlung mit stabilen lokalen Jobkennungen, auch vor
+Vergabe einer Rätsel-ID. Die Übersicht zeigt Motiv, Rätsel-ID, Produktionsstatus,
+nächsten Schritt und Hintergrundstatus getrennt. Blocker stammen ausschließlich
+aus einem passend gebundenen importierten Record; andernfalls steht dort
+„nicht mitgeliefert“. Die Anzeige erfindet keine technische Prüfung oder Freigabe.
+
+Vor jedem Jobwechsel den aktuellen Formularstand im Arbeitsspeicher sichern.
+„Neuer Job“ beginnt mit persönlichen Voreinstellungen; Reset und Entfernen
+betreffen ausschließlich den gewählten Job. Jobs werden nicht automatisch dauerhaft
+gespeichert. Einzelne Sitzungen bleiben nutzbar, die vollständige manuelle Sicherung
+verwendet `picross-cheatsheet-workspace-v1` nach
+[Hintergrundvertrag §7.5](../PUZZLE_BACKGROUNDS.md#75-mj-a-mehrjob-arbeitsbereich-und-sichere-übernahme).
+Sie erhält Reihenfolge, aktiven Job, Sitzungen, Joboptionen und passende Records.
+Der Sammlungsimport ersetzt nach ausdrücklicher Vorschau die ganze Sammlung;
+Abbrechen oder fehlerhafte Daten ändern keinen Job.
+
+Vor Einzelimporten vorhandenen Zieljob oder neuen Job ausdrücklich bestimmen.
+Die Vorschau zeigt Ziel, Rätsel-ID, Revision, ersetzte Daten und relevante
+Joboptionen. Eine bisher leere Rätsel-ID darf eine noch freie ID erhalten;
+unterschiedliche nichtleere Rätsel-IDs werden nicht vermischt. Neue Revisionen
+ersetzen nur nach ausdrücklicher Bestätigung den gewählten Job. Hintergrundbindungen
+und Paketvarianten werden gemeinsam übernommen. Eine Änderung maßgeblicher
+Bindungen verwirft den dazu nicht mehr passenden Anzeige-Record.
+
+Nach §9 bleiben der tatsächliche Integrationscommit und kompakte Abschlussbezüge
+sichtbar. Bereinigte Paket-ZIPs, Arbeitsbilder oder Proofs werden weder als verfügbar
+angeboten noch rekonstruiert. Der Arbeitsbereich bleibt offline: keine automatischen
+Bild-/Repositoryabrufe, Batchaufträge oder Modell-API.
+
+### Persönliche Einstellungen und lokale Codex-Arbeit
+
+Das Offline-Sheet trennt persönliche Globals, Voreinstellungen und Jobdaten.
+Arbeitswurzel (`workspaceRoot`), Bereinigungsoption (`cleanupMode`) und Farbschema
+(`theme`) gelten persönlich für alle Jobs. `repoSave`, `mergeMode`, `ruleSource`,
+`rulePath` und `ruleRef` gehören zum einzelnen Job; neue Jobs erhalten dafür die
+persönlichen Voreinstellungen. Jobwechsel, Jobbearbeitung und Produktionsimporte
+ändern diese Voreinstellungen nicht. Keine fremde Arbeitswurzel oder
+Bereinigungsbefugnis aus Sitzungen, Records oder Sammlungen übernehmen.
+
+Persönliche Einstellungen können im Browser gespeichert werden. Ein anderer Browser,
+ein geänderter Dateipfad oder gelöschte Browserdaten können einen Einstellungsimport
+erfordern. Fehlender oder gesperrter Browserspeicher wird sichtbar gemeldet; das
+Sheet bleibt mit manueller Eingabe und Sicherung nutzbar. Produktionsdaten und
+Bildbytes werden nicht automatisch dauerhaft gespeichert.
 
 Die gesonderte Sicherung `picross-cheatsheet-settings-v1` enthält genau `format`,
 `settings` und `theme`. `settings` enthält genau die Zeichenketten `workspaceRoot`,
@@ -1246,12 +1293,15 @@ ohne Steuerzeichen oder Punkt-/Elternsegmente sein. Vor einem Einstellungsimport
 alle Werte prüfen und die neue Wurzel samt Freigabeoptionen ausdrücklich zur
 Bestätigung zeigen; kein Teilimport bei ungültigen Daten.
 
-Neue Produktionssitzungen verwenden `picross-cheatsheet-session-v4`: dieselbe
-äußere Hülle wie v3, aber `fields` enthält ausschließlich Rätseldaten. Alte
-Sitzungen v1–v3 bleiben ladbar; darin enthaltene persönliche Einstellungen und
-Ablage-/Mergeoptionen werden bewusst nicht übernommen. Auch Sheet-Updates und
-Records ändern diese Einstellungen nicht. „Neues Rätsel“ entfernt Produktionsdaten,
-Optionslisten und Bildanhang, erhält aber alle persönlichen Einstellungen.
+Neue Jobs verwenden standardmäßig `picross-cheatsheet-session-v4`: dieselbe
+äußere Hülle wie v3, aber `fields` enthält ausschließlich Rätseldaten. Alte Sitzungen
+v1–v3 bleiben ladbar und werden ohne Wechsel ihrer Fachsemantik nach v4 normalisiert;
+ihre früheren persönlichen Einstellungen und Ablage-/Mergeoptionen werden nicht
+übernommen. Im Zieljob bleiben die vorhandenen Joboptionen erhalten. Bewusste Wahl
+des Hintergrundwegs oder sichtbarer Import v3/v5 aktiviert den 0.7.0-/v5-Weg.
+Ein Konflikt zwischen gewähltem Weg und erhaltenem Regelpfad sperrt Prompt und
+ZIP, bis der Nutzer einen kompatiblen Stand ausdrücklich wählt; das gilt auch für
+einen Alteingang mit erhaltenem 0.7.0-Pfad. Kein stiller Regelwechsel.
 Eine Sitzung ist weder Einstellungsbackup noch Produktionspaket oder Freigabe.
 
 Der aktive 0.6.0-Sheetweg verwendet `picross-authoring-request-v3`; zusätzlich zu den
@@ -1260,8 +1310,8 @@ die tatsächliche `surface`, `local_workspace_root` (Zeichenkette oder `null`) u
 `cleanup_own_local_work` (Boolean). Die Freigabe ergibt sich weiterhin allein aus
 dem ausdrücklich abgesendeten Auftrag, nicht aus importierten Ergebnisdaten.
 Die alten Produktions-/Sheetformen bleiben unverändert. Die 0.7.0-Generation
-verwendet die neuen Formen aus §6.4 und dem folgenden Abschnitt; ihr UI-Import
-und Auftragsexport werden erst in #490 implementiert.
+verwendet Auftrag v4 mit `background` nach §7.3 des Hintergrundvertrags; MJ-A
+führt ihren regulären Import und Auftragsexport.
 
 Jeder Prompt verlangt aktuelle `AGENTS.md` und Pflichtquellen sowie
 [WORKSPACE](../dev-rules/WORKSPACE.md). Standardregelstand ist `main`, ein bewusst
@@ -1289,7 +1339,7 @@ Diese Option ist vom Produktionsabschluss nach §9 getrennt; auch ausgeschaltete
 lokale Bereinigung hebt den dort beauftragten Nachintegrationsabschluss nicht auf.
 Reine Rätselproduktion bleibt gemäß §1 ohne Player-Build und ohne eigene CI-Replays.
 
-### Hintergrunddaten im Update v3 und Grenze des aktuellen Sheets
+### Hintergrunddaten im Update v3 und regulären Arbeitsbereich
 
 Die vier zusätzlichen Pflichtfelder sind `Hintergrunddaten:BackgroundBinding|null`,
 `Hintergrundstatus:pending|offered|rejected|selected|none|legacy|null`,
@@ -1323,17 +1373,21 @@ mit Endabnahme gebündelt werden, benötigt aber die tatsächliche Raster-/Bildb
 und den sicheren äußeren HP-I1a-Writer. Die bereits vorhandene Endfreigabe v2
 wird geprüft und unverändert gebunden.
 
-Die geplante Sitzung v5 hat exakt `format,choices,fields,filter,image,background`,
-der geplante Auftrag v4 exakt `format,execution,created_at,rulebook,fields,choices,
+Sitzung v5 hat exakt `format,choices,fields,filter,image,background`,
+Auftrag v4 exakt `format,execution,created_at,rulebook,fields,choices,
 input_image,note,requested_step,prompt_file,background`. `background` ist jeweils
 `{binding,status,options,selection}`; nur `selection` darf als neue Formularabsicht
 abweichen. Die tatsächliche historische Entscheidung wird dadurch nicht geändert.
 Rasterwechsel muss seine Paket-/Hintergrundbindungen gemeinsam übernehmen.
 Unbekannte Generation/Felder, widersprüchliche Nullwerte oder unvollständige
-Optionen verwerfen den gesamten Import atomar. Diese neuen UI-Reader/-Writer,
-Sitzungs-/Auftragsexporte und Promptfunktionen gehören **#490**; PB-H liefert
-nur Record v2 und die daraus korrekt abgeleitete Update-v3-Ausgabe. Das aktuelle
-Offline-Sheet erhält ausschließlich den aktiven 0.6.0-Snapshot samt Revision.
+Optionen verwerfen den gesamten Import atomar. MJ-A führt diesen regulären Weg
+nach [Hintergrundvertrag §7.5](../PUZZLE_BACKGROUNDS.md#75-mj-a-mehrjob-arbeitsbereich-und-sichere-übernahme).
+Record v2 ist nur mit seiner tatsächlich erzeugten passenden v3-Projektion ladbar;
+fehlende Kandidaten, Status oder Freigaben werden nicht rekonstruiert. Der separate
+Bildanhang bleibt unabhängig von kompakten Hintergrundrefs. Eine frühe bewusste
+Leerabsicht verzichtet im abgesendeten Auftrag ausdrücklich auf die drei Kandidaten.
+Unveränderte gültige Entscheidungen bleiben erhalten; materielle Bindungsänderungen
+übertragen keine alte Bildentscheidung auf neue Daten.
 
 ## 8. Endabnahme, Export und verbleibende Integration
 
@@ -1697,8 +1751,9 @@ definiert den unveränderlichen `picross-background-adoption-request-v1` als
 eigenen Arbeitsrecord. Tatsächliche Auswahl/Entfernung und Zielautorisierung
 aufzeichnen, keine neue Rasterfreigabe oder Dummy-ZIP. Kontext aus bytegleicher
 aktueller Source und aktuellem freigegebenem Reveal sichern; ursprüngliche
-Revealautorität bleibt in initial erhalten. Die aktuelle 0.6.0-Sheetoberfläche
-weist diesen neuen Recordtyp ausdrücklich zurück; Bedienung bleibt #490.
+Revealautorität bleibt in initial erhalten. Auch der MJ-A-Arbeitsbereich weist
+`picross-background-adoption-request-v1` verständlich zurück und nennt diesen
+bestehenden Werkzeugweg. Seine eigene Sheetbedienung bleibt MJ-B aus #490.
 Eigene Arbeitsrevision über `catalog_background_change store` samt Index sichern,
 danach `plan` und autorisiertes `adopt` gemäß Werkzeuganleitung. Fehlende oder
 false-Capability blockiert den Zielweg; kein Override. Vorhandene Freigaben
