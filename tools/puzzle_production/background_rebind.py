@@ -219,6 +219,7 @@ def transition(old, new, old_entry, entry, operation):
 
 
 def delta(j, before, after, identifiers):
+    require(before["format"] == after["format"], "Rebind changes registry generation")
     old_index, new_index = bg.index(before), bg.index(after)
     require(old_index.keys() == new_index.keys(), "Rebind changes background IDs")
     require({i for i in old_index if old_index[i] != new_index[i]} == set(identifiers),

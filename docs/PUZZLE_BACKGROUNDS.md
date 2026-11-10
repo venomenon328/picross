@@ -1298,8 +1298,8 @@ Vertrag vor konsumierendem Code, 10.11.2026, [Paketentscheidung HP-I1b2](https:/
 Dieser Abschnitt ergänzt §10 ausdrücklich um den eigenen Änderungsweg für genau
 ein bereits gültig hintergrundgebundenes Ziel. Die unveränderten §3.1-Typen gelten
 für alle geschlossenen Formen; alte Generationen behalten ihre exakten Regeln.
-selected→selected, selected→none und none→selected sind erlaubt. Legacy-Nachrüstung,
-Rasterupdate und Revealadoption benötigen den gesonderten Rebind-Vertrag HP-I1c
+selected→selected, selected→none und none→selected sind erlaubt. Legacy-Nachrüstung
+bleibt gesperrt. Rasterupdate und Revealadoption benötigen den Rebind-Vertrag HP-I1c
 in §12; Runtime/Import/Mipmaps/Laden gehören zu HP-I2. Keine reale
 Bildproduktion, Katalogänderung, zusätzliche Eigentümerbestätigung oder Buchprobe.
 
@@ -1404,6 +1404,7 @@ Nur die vollständig belegten ausgewählten Arbeitsrevisionen und ihre Indexzeil
 Keine zusätzliche aktive Receiptdatei oder ständig wachsende Revisionsliste: der unveränderte Erstreceipt, initial und die aktuelle adoption-Bindung bleiben die kompakte Autorität. Der Abschluss erzeugt einen überprüfbaren lokalen Produktionsdiff, keinen automatischen Commit/Merge.
 
 Alle erreichbaren Katalog-/Quick-/Export-/Registrierungs-/Abschluss-/Metadatenreader erhalten denselben v1/v2-Quellenvertrag. Sync, Rating/Added, zulässige Kategorienpflege und Legacyziel-Update/-Revealadoption im gemischten Katalog erhalten die aktuelle v2-Quelle samt PNG/Notice unverändert. Die bisherigen vollständigen Quellen-/Plangenerationen dürfen diese neue Source nur unter ausdrücklich dokumentierter Readerkompatibilität konsumieren; ihre exakten alten Felder/Deltas bleiben. Ein Sourcewechsel macht vorhandene Pläne stale. Keine neue Generation allein für unveränderte Pfadmengen erfinden; bei tatsächlich geändertem externem Vertrag korrekt versionieren.
+
 ## 12. HP-I1c · Aktuelle Raster-/Revealbindung
 
 Vertrag vor konsumierendem Code, 10.11.2026,
@@ -1482,7 +1483,7 @@ Update bleibt 24 MiB. Alte Generationen erhalten ihre bisherigen Zielgrenzen.
 Registrierung, Metadaten-/Aktivierungsjournale, Registry v3, Runtime v6, Request
 und Receipt v2 ändern weder Form noch Bedeutung und werden nicht umnummeriert.
 
-Revealplan v4 behält die bisherigen sechs Kernfelder und plan_hash; zusätzlich
+Revealplan v4 behält die bisherigen Felder einschließlich plan_hash; zusätzlich
 hat jede entries-Zeile `old_background,new_background` (TextRef oder beide null)
 und der Plan `old_registry,new_registry` (TextRef). Nur diese vollständigen
 Alt-/Neutexte erlauben unabhängig rekonstruierten eigenen Byte-/mtime-No-op.

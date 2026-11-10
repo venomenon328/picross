@@ -260,7 +260,6 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('cat
  'tools/puzzle_production/verifier.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/za1_fixtures.py': ('images', 'adapter', 'catalog')}
 
-
 DATA_GROUPS = {
     **{'tools/puzzle_production/' + name: GROUPS for name in (
         'difficulty_method_0_3.json', 'difficulty_calibration_0_3.json', 'difficulty_references_0_3.json',
