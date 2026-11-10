@@ -67,7 +67,9 @@ Höchste Exportphase bleibt `editorially_approved`; gespeicherte `integration_re
 Erstregistrierung, kompakte aktive Source/Receipt, Recovery und ersten Abschluss.
 Die echte Zielfähigkeit bleibt ausdrücklich false bis zur Runtime samt technischer
 Abnahme in HP-I2; synthetische kompatible Ziele belegen nur den Werkzeugweg.
-Späterer reiner Hintergrundersatz bleibt HP-I1b2, neue Sheetbedienung #490.
+HP-I1b2 ergänzt den eigenen Hintergrundwechsel mit Source v2, nullfähigem
+Binärrollback und revisionsgenauem Mainabschluss. Raster-/Revealneubindung bleibt
+HP-I1c, Runtime HP-I2, neue Sheetbedienung #490.
 Der vollständige Weg ist noch nicht aktiviert; Authoring 0.6.0 samt
 Offline-Sheet bleibt der aktive Produktionsdefault. Runtimezeichnungen bleiben
 bis zu ihrem tatsächlich gelieferten Anschluss unverändert.
