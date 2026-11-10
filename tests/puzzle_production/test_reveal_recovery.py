@@ -300,7 +300,7 @@ class JournalTests(unittest.TestCase):
         with lock.open('wb') as f:
             f.write(b'{"format":"picross-catalog-metadata-journal-v2",');f.truncate(pub.NORMAL_LIMIT+1)
         before=lock.stat().st_mtime_ns
-        with self.assertRaisesRegex(ValueError,'Only reveal'): pub.read_journal(self.checkout)
+        with self.assertRaisesRegex(ValueError,'Only declared binary journals may exceed 24 MiB'): pub.read_journal(self.checkout)
         self.assertEqual(lock.stat().st_mtime_ns,before)
         lock.unlink()
 

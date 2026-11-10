@@ -45,6 +45,11 @@
       "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
       "reason": "Existing inexpensive actual-JavaScript test checks exact embedded 0.6.0 snapshot/revision and explicit rejection of the independent background record; no new UI feature or browser job."
+    },
+    {
+      "path": "tests/puzzle_production/test_reveal_recovery.py",
+      "disposition": "change-scoped",
+      "reason": "Keep the existing rejection of oversized ordinary journals, unchanged bytes/mtime and Base64 guards; update only the obsolete reveal-only diagnostic expectation for the explicitly declared background binary generation."
     }
   ],
   "core_change": null,
