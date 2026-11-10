@@ -43,6 +43,7 @@ class Form(HTMLParser):
         super().__init__()
         self.elements = {}
         self.select = None
+        self.stack = []
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
@@ -50,6 +51,7 @@ class Form(HTMLParser):
             self.elements[attrs['id']] = {
                 'value': attrs.get('value', ''), 'tagName': tag.upper(),
                 'attributes': attrs, 'options': [],
+                'ancestors': [identifier for _, identifier in self.stack if identifier],
             }
         if tag == 'select':
             self.select = self.elements[attrs['id']]
@@ -57,10 +59,17 @@ class Form(HTMLParser):
             self.select['options'].append({'value': attrs['value']})
             if len(self.select['options']) == 1 or 'selected' in attrs:
                 self.select['value'] = attrs['value']
+        if tag not in ('area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+                       'link', 'meta', 'param', 'source', 'track', 'wbr'):
+            self.stack.append((tag, attrs.get('id')))
 
     def handle_endtag(self, tag):
         if tag == 'select':
             self.select = None
+        for index in range(len(self.stack) - 1, -1, -1):
+            if self.stack[index][0] == tag:
+                del self.stack[index:]
+                break
 
 
 def canonical(value):
@@ -862,6 +871,64 @@ for(const change of mutations){
 run('source=structuredClone(originalSource)');
 assert.equal(await run("exportPackage(CARDS.find(c=>c.id==='start'))"),true);
 assert.equal(downloads.length,1,'the unchanged validated image still exports');
+""")
+
+    def test_empty_workspace_keeps_import_controls_outside_hidden_editor(self):
+        controls = ('transferInput', 'importTarget', 'transferText',
+                    'previewTransfer', 'applyTransfer', 'discardTransfer')
+        for identifier in controls:
+            with self.subTest(control=identifier):
+                self.assertNotIn('jobWorkspace', self.elements[identifier]['ancestors'])
+        self.javascript(r"""
+assert.equal(run('removeJob()'),true);
+assert.deepEqual(snapshot(),{format:'picross-cheatsheet-workspace-v1',active_job_id:null,jobs:[]});
+assert.equal(elements.jobWorkspace.hidden,true);assert.equal(elements.emptyWorkspace.hidden,false);
+for(const id of ['transferInput','importTarget','transferText','previewTransfer','applyTransfer','discardTransfer']){
+ assert.equal(elements[id].hidden,false,id);
+ for(const ancestor of input.elements[id].ancestors)assert.equal(elements[ancestor].hidden,false,id+' hidden under '+ancestor);
+}
+set('importTarget','new');await elements.importTarget.emit('change');
+set('transferText',JSON.stringify(input.fixtures.legacy_sheet));await elements.transferText.emit('input');
+await elements.previewTransfer.emit('click');
+assert.equal(elements.transferInput.open,true);assert.equal(elements.applyTransfer.disabled,false);
+await elements.applyTransfer.emit('click');
+const imported=snapshot();assert.equal(imported.jobs.length,1);
+assert.equal(imported.jobs[0].session.fields.puzzleId,'pz-synthetic-a');
+assert.equal(elements.jobWorkspace.hidden,false);assert.equal(elements.emptyWorkspace.hidden,true);
+""")
+
+    def test_import_edit_listeners_cancel_work_for_inactive_target(self):
+        self.javascript(r"""
+edit('motif','Active A');const a=run('activeJobId');
+run('createJob()');edit('motif','Target B');const b=run('activeJobId');
+run('createJob()');edit('motif','Target C');const c=run('activeJobId');
+run('switchJob('+JSON.stringify(a)+')');const original=snapshot(), originalImage=sandbox.Image;
+for(const trigger of ['importTarget','transferText','companionText'])for(const delay of ['text','decode']){
+ set('importTarget',b);await elements.importTarget.emit('change');
+ const release=deferred(), entered=deferred();
+ if(delay==='text'){
+  elements.recordInput.files=[{size:200,text:()=>{entered.resolve();return release.promise;}}];
+ }else{
+  const session=clone(original.jobs.find(job=>job.job_id===b).session);
+  session.image={name:'incoming.png',dataUrl:'data:image/png;base64,'+input.fixtures.png};
+  elements.recordInput.files=[new File([JSON.stringify(session)],'session.json',{type:'application/json'})];
+  sandbox.Image=class extends originalImage {
+   set src(value){entered.resolve();release.promise.then(()=>{super.src=value;});}
+  };
+ }
+ const loading=elements.recordInput.emit('change');await entered.promise;
+ set(trigger,trigger==='importTarget'?c:'Edited while another target is being read');
+ await elements[trigger].emit(trigger==='importTarget'?'change':'input');
+ const preview=elements.transferPreview.textContent;
+ assert.equal(run('activeJobId'),a,'changing import target is not a job switch');
+ release.resolve(delay==='text'?JSON.stringify(input.fixtures.legacy_sheet):undefined);
+ await loading;sandbox.Image=originalImage;
+ assert.equal(run('pendingTransfer'),null,trigger+'/'+delay);
+ assert.equal(run('pendingRecord'),null);assert.equal(elements.applyTransfer.disabled,true);
+ assert.equal(elements.transferPreview.textContent,preview,trigger+'/'+delay+' must not revive target B');
+ assert.deepEqual(snapshot(),original);
+ if(trigger==='importTarget')assert.equal(elements.importTarget.value,c);
+}
 """)
 
     def test_late_image_import_export_and_clipboard_completions(self):
