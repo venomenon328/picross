@@ -1,6 +1,6 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**Vertrag 1.0 · Dokumentrevision 10 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490**
+**Vertrag 1.0 · Dokumentrevision 11 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A / #491**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -43,6 +43,15 @@ Runtime-Capability stellt den Authoringdefault nicht automatisch auf 0.7.0 um.
 MJ-A aus #490 führt den regulären Mehrjob-Arbeitsbereich nach §7.5; die eigene
 spätere Hintergrundrevision folgt MJ-B nach Hintergrundvertrag §7.6. Synthetische kompatible Zielcheckouts prüfen
 den Werkzeugweg, keine Bildproduktion oder persönliche Bildabnahme.
+
+[BA-A](PRODUCTION_BATCH.md) verarbeitet ausdrücklich vorbereitete lokale Jobs
+seriell und verwendet dabei die unveränderten HP-W2-Aufträge, Entscheidungen und
+Prüfungen. Offene Bildwahl blockiert nur ihre abhängigen Stufen; eine reine
+Hintergrundänderung erhält unveränderte Logik-/Difficultyartefakte. Technischer
+Laufabschluss erteilt keine Bild-/Inhaltsfreigabe. Der Runner endet spätestens
+am lokalen PB-A-/PB-H-Paketbau; Finalizer, Spielerexport, gemeinsame Writer und
+Retirement sind nicht enthalten. BA-B mit kontrollierter Weitergabe/Integration
+bleibt ein eigener Folgeumfang. Default, Sheetbedienung und §§2–7 bleiben erhalten.
 
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) bleibt für vier Aufträge,
 vorhandene Bild-/Motiv-/Rasterfreigaben und Abschluss zuständig,
@@ -1057,7 +1066,7 @@ ausführbaren Code interpretieren oder ein historisches Zielgate für aufgehoben
 **Version und Hintergrund.** Neue Jobs starten mit 0.6.0/Sitzung v4. Bewusstes
 Aktivieren des Hintergrundwegs oder sichtbarer v3/v5-Import verwendet 0.7.0/v5.
 Beide eingebetteten Snapshots müssen ihren Markdownquellen bytegleich entsprechen:
-0.6.0/docrev46 und 0.7.0/docrev7. Jeder v5-Job bindet den Vorschaupfad beziehungsweise
+0.6.0/docrev47 und 0.7.0/docrev8. Jeder v5-Job bindet den Vorschaupfad beziehungsweise
 den passenden 0.7.0-Anhang. Bleiben nach Alteingang inkompatible Joboptionen erhalten,
 Prompt und ZIP bis zur ausdrücklichen kompatiblen Regelwahl sperren; kein stiller
 Pfadwechsel, keine Umschreibung alter Pakete, keine andere Produktionsformaterhöhung.
@@ -1206,7 +1215,8 @@ Der Import einer solchen Sitzung prüft geschlossene Form und innere Querverbind
 | **HP-I2 / #561:** `game/model/content_registry.gd`, erzeugte `game/data/registry.json` und Buch-/Importanschluss | Regulärer Runtime-v6-Eingang, Variante A, gemeinsames Assetlayout, verlustfreier Import/Mipmaps und Bedarfsladen nach §13. Der Kategoriepilot bleibt ausschließlich Legacy; kein Produktionsvorschau-Renderer. Technische Abnahme und Lieferstand am konkreten PR prüfen. |
 | **MJ-A / #490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html` und `tools/test_authoring_sheet.py` | Regulärer Mehrjob-Arbeitsbereich nach §7.5, gepaarter Record-v2-/Update-v3-Import, Sitzung v5 und Auftrag v4; vorhandene v1–v4-Alteingänge bleiben getrennt lesbar. Beide eingebetteten Regelwerksnapshots entsprechen bytegleich ihren Markdownquellen. 0.6.0 bleibt Default, 0.7.0 ausdrücklich gewählt. Technische Nachweise und unabhängiges Review gehören an den konkreten MJ-A-PR. |
 | **MJ-B / #490** | Eigener Sheetjob nach §7.6: früher Entwurf, unveränderlicher Originalrequest, fünf passende Bedienaufträge und kompakter gemeldeter historischer Abschluss. Sammlung v2 erhält reguläre und Adoptionjobs. Form-/Byteprüfung ist keine physische Datei-/Zielprüfung; HP-I1b2 bleibt der technische Werkzeugweg. |
-| **#491 / #492** | Nur tatsächlich gelieferte Fähigkeiten orchestrieren beziehungsweise in gesondert beauftragter Produktion erproben. Keine parallelen Hintergrundformate oder künstliche Vollintegration durch Ergebnisflags. |
+| **BA-A / #491:** [PRODUCTION_BATCH](PRODUCTION_BATCH.md) | Lokale serielle Verarbeitung vorbereiteter Jobs mit frischer Fachprüfung, erhaltener Versuchsbuchführung und gezielter Wiederaufnahme. HP-W2-Originale und Entscheidungen unverändert, PB-H ausschließlich lokal mit vollständigem Request. Keine zusätzliche Sheetfunktion oder Integrationsfreigabe. |
+| **BA-B / #491; #492** | Kontrollierte Weitergabe/Integration beziehungsweise gesondert beauftragte Serienproduktion bleiben eigene Folgeumfänge. Nur tatsächlich gelieferte Fähigkeiten verwenden; keine parallelen Hintergrundformate oder künstliche Vollintegration durch Ergebnisflags. |
 
 PB-H führt die zuvor explizit an **0.6.0** gebundenen Palettengates und
 Paar-/Difficultyzulassungen für die **lesende Inhaltsprüfung** der neuen
