@@ -9,6 +9,7 @@ const [origin, token, expectedHash, mode = 'late'] = process.argv.slice(2);
 class Element {
   constructor(tag) { this.tag = tag; this.children = []; this.dataset = {}; this.classList = {toggle(){}}; }
   append(...children) { this.children.push(...children); }
+  before() {}
   replaceChildren(...children) { this.children = children; }
   setAttribute() {}
   close() {}
@@ -60,6 +61,7 @@ const context = vm.createContext({
 });
 const run = code => vm.runInContext(code, context);
 (async () => {
+  run(readFileSync(__dirname + '/ui/workflow.js', 'utf8'));
   run(readFileSync(__dirname + '/ui/app.js', 'utf8'));
   await until(() => cards().length === 6 && active === 2);
   if (mode === 'abort') {

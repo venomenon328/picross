@@ -171,7 +171,7 @@ def retire(root, ids, integrated_commit):
             if selected_rows:
                 require(authoring_files, "Incomplete original authoring revision: " + selected)
                 record = io.json_bytes(io.read(root, selected_rows[selected]["record"], LIMIT), LIMIT)
-                require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2") and
+                require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2", "picross-authoring-record-v3") and
                         record.get("puzzle_id") == identifier and record.get("revision") == revision and
                         record.get("state") == "registered" and record.get("blockers") == [],
                         "Authoring revision is not completed: " + selected)

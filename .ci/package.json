@@ -1,22 +1,29 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/578",
-  "package": "PW-A2",
+  "package": "PW-B",
   "modules": [
-    "tools"
+    "tools",
+    "production.adapter",
+    "production.catalog"
   ],
-  "purpose": "PW-A2 / #578: Start vor Git-Suche, einzeln laufende Hintergrundaktualisierung, verbindlicher Branch content/pw/<puzzle_id>, flacher gezielter Gitabruf und vollständige einzelne Startdatei. Entscheidung: https://github.com/venomenon328/picross/issues/578#issuecomment-6798166149. Kern docs/ci-required und genau tools.",
-  "omitted": "Keine production.*, native.*, preflight, delivery oder automatischen Chromiumläufe: nur lesende Discovery/Start/Transport, unveränderte fachliche Werkzeuge und Runtime. Synthetische echte Git-/HTTP-/UI-/Launcherregressionen sowie einmalige lesende Messung am tatsächlichen Repository. Windowsprobe bleibt separat; Linuxmessung und Windows-Spielerbau ersetzen sie nicht. Keine WIP-Migration, echte Inhaltsproduktion, Zeit-Dauerbenchmarks oder technischen Uploads; evidence.mode=none.",
+  "purpose": "PW-B / #578: fünfstufiger Authoring-0.8.0-Assistent, Handoff v4 / Builder v3 / Record v3, qualifizierte Rasterwahl vor Hintergrund, automatische Projektion v2 und bestehender Finalizer-/Export-/Registrierungsanschluss. Entscheidung: https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194.",
+  "omitted": "Keine production.solver, production.images, native.*, preflight, delivery oder automatischen Chromiumläufe: unveränderte Algorithmen und Runtime. Einmalige synthetische T01/T02/T03-Nachweise und separate echte Windows-/Browserprobe; kein Pilot, WIP-Import oder Dauerkorpus. evidence.mode=none. Zwei befristete Original-UI-PNGs nur für PW-B-A01; Eigentümerprobe PW-B-M01 bleibt eigenes Gate.",
   "test_changes": [
     {
-      "path": "tools/test_production_workspace.py",
+      "path": "tests/puzzle_production/test_authoring_workflow.py",
       "disposition": "change-scoped",
-      "reason": "Kleine change-scoped Regressionen: 300 alte Branches ausgeschlossen, unveränderte Scans wiederverwendet, eigene Standardkonfiguration eingeengt, flacher Remoteabruf mit expliziter History, HTTP/Oberfläche während blockierter Gitquelle und Originalsnapshots erreichbar, nur ein Updateworker, Fehlerabschluss sowie exakt aus Quellen gebauter Singlefile-Starter mit wirksamer Programmüberlagerung. Vorhandene Byte-/Sicherheits-/Bildabbruchfälle bleiben. Keine neue Kernfamilie oder Dauerbenchmark."
+      "reason": "Kleine echte Git-/Builder-/Finalizerregressionen für frühes background=null, automatische Projektion, explizite Rasterwahl, stale Quellen, No-op und unveränderte Endfreigabebindung; keine neue Solver-/Bildfamilie."
+    },
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Ersetzt obsolete Offline-Sheet-/Sessiontests durch tatsächlichen fünfstufigen Promptgenerator, Quellen-/Befugnisgrenzen und statischen Launchereinstieg. Keine Legacy-Lesegarantie."
     },
     {
       "path": "tools/production_workspace/check_ui_loading.cjs",
       "disposition": "change-scoped",
-      "reason": "Bestehende browserfreie UI-Ladeprüfung berücksichtigt jetzt den asynchronen Updateabschluss. Weiterhin tatsächliches app.js und echter Loopbackdienst, keine Browser-/Layoutabnahme."
+      "reason": "Vorhandene browserfreie Lade-/Abbruchprüfung lädt den echten neuen Promptcode und berücksichtigt die Auftragsoberfläche. Keine Layout-/Browserabnahme."
     }
   ],
   "core_change": null,

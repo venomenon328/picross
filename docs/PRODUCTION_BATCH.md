@@ -444,6 +444,9 @@ nicht. Nachweise, tatsächliche CI, Head und Rückbau stehen im Draft-PR.
 
 ## 8. BA-B: autorisierte serielle Einzelintegration
 
+PW-B ergänzt ausschließlich die native Originalgeneration 0.8.0/Handoff v4/Record v3.
+Form, Mengen, Budgets und Autorität bleiben unverändert; [PW-B](PW_B_CONTRACT.md).
+
 Vertrag vor konsumierendem Code, 11.11.2026. Maßgeblich ist die
 [BA-B-Paketentscheidung D01–D06/K01–K12](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272).
 BA-A und seine geschlossenen v1-Formen bleiben unverändert. BA-B bietet genau
@@ -500,7 +503,7 @@ case-eindeutig und vollständig.
 | --- | --- |
 | Plan | `format` = `picross-integration-batch-plan-v1`; `batch_id`: Name; `revision`: Integer 1..1000000; `previous_plan_sha256`: Hash/null; `source_commit`: Commit; `jobs`: geordnete Liste 1..32 Jobs |
 | Job | `job_id`: Name; `puzzle_id`: pz-ID; `revision`: Produktions-/Bildrevision; `operation`: `register`/`background_adopt`; `rulebook`: Regelbindung; `authorization`: FileRef/null; `inputs`: artspezifisch; `parameters`: artspezifisch; `budgets`: artspezifisch; `max_attempts`: artspezifisch |
-| Regelbindung | `version`: `0.6.0`/`0.7.0`; `document_revision`: Integer 1..1000000; `snapshot`: FileRef |
+| Regelbindung | `version`: `0.6.0`/`0.7.0`/`0.8.0`; `document_revision`: Integer 1..1000000; `snapshot`: FileRef |
 | FileRef | `file`: relativer Pfad; `sha256`: Hash; `bytes`: Integer 0..134217728 |
 | DirectoryRef | `directory`: relativer Pfad oder `.`; `files`: vollständige Liste FileRef relativ zu diesem Verzeichnis |
 

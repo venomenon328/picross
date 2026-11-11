@@ -16,6 +16,8 @@ from .sources import Archive, JSON_LIMIT, INDEX, check_commit, production_path
 
 FORMAT = 'picross-production-presentation-v1'
 REQUEST = 'picross-production-presentation-request-v1'
+CURRENT_FORMAT = 'picross-production-presentation-v2'
+CURRENT_REQUEST = 'picross-production-presentation-request-v2'
 ROLES = ('reveal', 'motif', 'raster', 'raster_draft', 'background')
 OPTION = re.compile(r'[A-Za-z0-9][A-Za-z0-9_-]{0,63}\Z')
 
@@ -54,7 +56,7 @@ def reference(value, measured):
 def validate(value, measured=True):
     value = parse(data(value))
     exact_keys(value, {'format', 'puzzle_id', 'revision', 'record', 'title', 'assets', 'offers'})
-    ap.require(value['format'] == (FORMAT if measured else REQUEST), 'Unbekanntes Projektionsformat.')
+    ap.require(value['format'] in ((FORMAT, CURRENT_FORMAT) if measured else (REQUEST, CURRENT_REQUEST)), 'Unbekanntes Projektionsformat.')
     ap.require(isinstance(value['puzzle_id'], str) and ap.ID.fullmatch(value['puzzle_id']), 'Ungültige Rätsel-ID.')
     ap.require(isinstance(value['revision'], str) and ap.REVISION.fullmatch(value['revision']), 'Ungültige Revision.')
     reference(value['record'], measured)
@@ -112,6 +114,37 @@ def bind(raw, ref):
     return raw
 
 
+def registration(source, record):
+    """Read an actual committed registration receipt, without running a catalog writer."""
+    value = exact_keys(record['integration'], {'operation', 'commit', 'manifest', 'registry', 'runtime'})
+    ap.require(value['operation'] == 'register', 'Unbekannter Abschluss.')
+    check_commit(value['commit'])
+    directory = f"content/packages/{record['puzzle_id']}/{record['revision']}"
+    loaded = {}
+    for key, name in (('manifest', directory + '/manifest.json'), ('registry', 'content/registry.json'),
+                      ('runtime', 'game/data/registry.json')):
+        ref = exact_keys(value[key], {'file', 'sha256', 'bytes'})
+        ap.require(ref['file'] == name, 'Nichtkanonischer Registrierungsbeleg.')
+        ap.sha(ref['sha256']); integer(ref['bytes'], 1, 8 * JSON_LIMIT, 'Registrierungsbeleggröße')
+        loaded[key] = parse(bind(source.read(value['commit'], name, 8 * JSON_LIMIT), ref), 8 * JSON_LIMIT)
+    m = loaded['manifest']
+    ap.require(m.get('format') == 'picross-target-export-v6' and m.get('definition_id') == record['puzzle_id'] and
+               m.get('package_revision') == record['revision'] and m.get('editorial_approved') is True and
+               m.get('technical') is True and m['input']['original_package']['sha256'] == record['package']['sha256'] and
+               m['input']['original_package']['bytes'] == record['package']['bytes'] and
+               m['approval_sha256'] == record['final_editorial_approval']['sha256'], 'Registrierung gehört nicht zur freigegebenen Lieferung.')
+    rows = [e for e in loaded['registry']['entries'] if e['id'] == record['puzzle_id']]
+    runtime = [e for e in loaded['runtime']['entries'] if e['id'] == record['puzzle_id']]
+    ap.require(len(rows) == len(runtime) == 1, 'Registrierung oder Runtimeeintrag fehlt.')
+    entry = rows[0]; production = entry['production']
+    ap.require(production['status'] == 'registered' and production['blockers'] == [] and
+               production['package'] == directory and production['revision'] == record['revision'] and
+               production['package_sha256'] == value['manifest']['sha256'] and
+               all(runtime[0][k] == entry[k] for k in ('id', 'definition', 'reveal', 'save_slot')),
+               'Registrierung und Runtimezuordnung unterscheiden sich.')
+    return value
+
+
 def image(raw):
     from PIL import Image
     ap.require(len(raw) <= 32 * 1024 * 1024 and raw.startswith((b'\x89PNG\r\n\x1a\n', b'\xff\xd8\xff')),
@@ -140,20 +173,28 @@ class Record:
         if 'sha256' in ref:
             bind(self.raw, ref)
         self.value = r = parse(self.raw)
-        exact_keys(r, RECORD_KEYS)
-        ap.require(r['format'] == 'picross-authoring-record-v2' and r['puzzle_id'] == puzzle_id and
+        self.current = current = r.get('format') == 'picross-authoring-record-v3'
+        exact_keys(r, RECORD_KEYS | ({'raster_selection', 'presentation', 'candidate'} if current else set()))
+        ap.require(r['format'] in ('picross-authoring-record-v2', 'picross-authoring-record-v3') and r['puzzle_id'] == puzzle_id and
                    isinstance(r['revision'], str) and ap.REVISION.fullmatch(r['revision']), 'Recordgeneration oder Identität stimmt nicht.')
         self.directory = f"content/authoring/{puzzle_id}/{r['revision']}"
         ap.require(ref['file'] == self.directory + '/record.json', 'Nichtkanonischer Angebotsrecord.')
-        ap.require(r['rulebook']['version'] == '0.7.0', 'Nur aktuelle veröffentlichte v3-/v2-Arbeitsstände sind lesbar.')
+        ap.require(r['rulebook']['version'] == ('0.8.0' if current else '0.7.0'), 'Regelwerk und Recordgeneration unterscheiden sich.')
         ap.require(r['state'] in ('brief_ready', 'reveal_review', 'motif_review', 'motif_approved', 'raster_review',
-                                 'raster_ready', 'content_ready', 'editorially_approved'), 'Unbekannter Produktionszustand.')
+                                 'raster_ready', 'background_review', 'content_ready', 'editorially_approved', 'registered'), 'Unbekannter Produktionszustand.')
         ap.require(isinstance(r['verification'], dict) and isinstance(r['reveal_options'], list) and
                    isinstance(r['blockers'], list), 'Ungültige Recordmetadaten.')
+        if r['state'] == 'registered':
+            ap.require(current and r['blockers'] == [] and r['verification'].get('effective_state') == 'editorially_approved',
+                       'Registrierung ohne vorherige Endabnahme.')
+            registration(source, r)
+        elif current:
+            ap.require(r['integration'] is None, 'Verfrühter Registrierungsbeleg.')
         ap.sha(r['build_request_sha256'])
         ap.sha(r['inventory_sha256'])
         check_commit(r['repo_commit'])
-        validate_binding(r['background'], package_only=False)
+        if r['background'] is not None or not current:
+            validate_binding(r['background'], package_only=False)
         ap.require(r['package']['file'] == self.directory + '/package.zip' and
                    r['handoff']['file'] == self.directory + '/handoff.json', 'Paket-/Handoffpfad stimmt nicht.')
         raw = source.read(self.commit, r['package']['file'], ap.MAX_ZIP)
@@ -164,10 +205,16 @@ class Record:
             ap.require(handoff_raw == source.read(self.commit, r['handoff']['file']), 'Äußerer Handoff unterscheidet sich vom Original.')
             bind(handoff_raw, r['handoff'])
             self.handoff = h = parse(handoff_raw)
-            ap.require(h['format'] == 'picross-authoring-handoff-v3' and h['puzzle_id'] == puzzle_id and
+            ap.require(h['format'] == ('picross-authoring-handoff-v4' if current else 'picross-authoring-handoff-v3') and h['puzzle_id'] == puzzle_id and
                        h['revision'] == r['revision'] and h['rulebook'] == r['rulebook'], 'Handoffidentität stimmt nicht.')
             for key in ('reveal', 'motif'):
                 ap.require(r[key] == h.get(key), 'Bildbezug weicht vom Handoff ab.')
+            if current:
+                from tools.puzzle_production import authoring_workflow as workflow
+                workflow.phase(h)
+                workflow.presentation(r['presentation'])
+                ap.require(r['raster_selection'] == h['raster_selection'] and r['candidate'] == h.get('candidate'),
+                           'Rasterwahl weicht vom Original ab.')
             inv_raw = self.archive.read('inventory.json', JSON_LIMIT)
             bind(inv_raw, h['inventory'])
             ap.require(io.checksum(inv_raw) == r['inventory_sha256'], 'Inventarbindung stimmt nicht.')
@@ -210,6 +257,9 @@ class Record:
     def json(self, name, expected=None):
         return parse(self.member(name, expected), 8 * JSON_LIMIT)
 
+    def external_name(self, name):
+        return name if name.startswith(self.directory + '/') else self.directory + '/' + name
+
     def allow(self, role, ref, key=None):
         self.member(ref['file'], ref['sha256'])
         self.allowed[role][ref['file']] = ref['sha256']
@@ -236,6 +286,8 @@ class Record:
 
     def _images(self):
         h, r = self.handoff, self.value
+        self.background_choice = None
+        self.background_labels = {}
         ap.require(not r['reveal_options'] or h.get('reveal') is None, 'Angebote und gewähltes Reveal widersprechen sich.')
         for offer in r['reveal_options']:
             exact_keys(offer, {'ID', 'Beschreibung', 'Datei', 'SHA-256'})
@@ -274,9 +326,9 @@ class Record:
             else:
                 raise InvalidInput('Rastermanifest wird nicht unterstützt.')
             v = r['verification']
-            complete = (v.get('technical') is True and r['state'] in ('raster_ready', 'content_ready', 'editorially_approved') and
-                        v.get('format') == 'picross-authoring-content-inspection-v1' and
-                        v.get('original_state') == h['state'] and v.get('effective_state') == r['state'] and
+            complete = (v.get('technical') is True and r['state'] in ('raster_ready', 'background_review', 'content_ready', 'editorially_approved', 'registered') and
+                        v.get('format') == ('picross-authoring-content-inspection-v2' if self.current else 'picross-authoring-content-inspection-v1') and
+                        v.get('original_state') == h['state'] and v.get('effective_state') == ('editorially_approved' if r['state'] == 'registered' else r['state']) and
                         v.get('integration_ready') is False and
                         all(v.get(k) == r[k] for k in ('width', 'height', 'mode', 'used_colors', 'difficulty')) and
                         all(b == 'final_editorial: missing bound human final approval' or b.startswith('background')
@@ -284,7 +336,7 @@ class Record:
             role = 'raster' if ready and complete else 'raster_draft'
             self.allow(role, {'file': bundle + '/' + name, 'sha256': expected}, variant if role == 'raster' else None)
         binding = r['background']
-        if binding['manifest']:
+        if binding is not None and binding['manifest']:
             stored = binding['manifest']
             ref, root = stored['ref'], stored['root']
             name = ref['file'] if root == '.' else root + '/' + ref['file']
@@ -294,24 +346,35 @@ class Record:
                 for candidate in manifest['candidates']:
                     ref = deepcopy(candidate['original'])
                     ref['file'] = ref['file'] if root == '.' else root + '/' + ref['file']
+                    self.background_labels[ref['file']] = candidate['description'][:512]
                     if ref['file'] in self.entries:
                         self.allow('background', ref, candidate['id'] if manifest['presentation']['status'] == 'offered' else None)
                     else:
                         self.historical_background(binding, manifest, candidate, ref['file'])
             else:
                 # Finalizer may bind external, but still repository-published, background work.
-                raw = self.source.read(self.commit, self.directory + '/' + name)
+                raw = self.source.read(self.commit, self.external_name(name))
                 bind(raw, ref)
                 manifest = validate_manifest(parse(raw))
                 ap.require(manifest['puzzle_id'] == r['puzzle_id'], 'Hintergrundmotiv stimmt nicht.')
                 for candidate in manifest['candidates']:
                     inner = candidate['original']
                     path = ('' if root == '.' else root + '/') + inner['file']
-                    original = self.source.read(self.commit, self.directory + '/' + path, 32 * JSON_LIMIT)
+                    path = self.external_name(path)[len(self.directory) + 1:]
+                    self.background_labels[path] = candidate['description'][:512]
+                    original = self.source.read(self.commit, self.external_name(path), 32 * JSON_LIMIT)
                     bind(original, inner)
                     self.allowed['background'][path] = inner['sha256']
                     if manifest['presentation']['status'] == 'offered':
                         self.offer_keys[('background', candidate['id'])] = path
+            if binding['decision'] is not None:
+                stored = binding['decision']; ref = stored['ref']
+                name = ('' if stored['root'] == '.' else stored['root'] + '/') + ref['file']
+                raw = (self.member(name, ref['sha256']) if stored['storage'] == 'package' else
+                       bind(self.source.read(self.commit, self.external_name(name)), ref))
+                decision = validate_decision(parse(raw))
+                _bind_decision(manifest, decision)
+                self.background_choice = 'none' if decision['outcome'] == 'none' else decision['candidate_id']
 
     def historical_background(self, binding, manifest, candidate, current_name):
         history = binding['history']
@@ -346,7 +409,7 @@ class Record:
             if stored['storage'] == 'package':
                 decision = validate_decision(self.json(name, stored['ref']['sha256']))
             else:
-                decision = validate_decision(parse(bind(self.source.read(self.commit, self.directory + '/' + name), stored['ref'])))
+                decision = validate_decision(parse(bind(self.source.read(self.commit, self.external_name(name)), stored['ref'])))
             ap.require(decision['manifest'] == manifest_ref, 'Entscheidung bindet ein anderes Manifest.')
             _bind_decision(manifest, decision)
             ap.require(decision.get('outcome') != 'selected' or decision.get('candidate_id') != candidate['id'],
@@ -413,6 +476,7 @@ def inspect(source, snapshot, value):
             if outer is None:
                 outer = ctx
             contexts[key] = ctx
+        ap.require(outer.current == (p['format'] == CURRENT_FORMAT), 'Projektion und Originalgeneration unterscheiden sich.')
         for a in p['assets']:
             owners = [key for key, ctx in contexts.items() if ctx.matches(a)]
             ap.require(owners, 'Bildrolle oder Originalquelle stimmt nicht: ' + a['id'])
@@ -438,6 +502,11 @@ def inspect(source, snapshot, value):
                 ap.require(any(a['role'] == role and outer.asset_name(a) == name for a in p['assets']),
                            'Pflichtbild fehlt in der Projektion: ' + name)
         return {'state': outer.value['state'], 'blockers': outer.value['blockers'],
+                'authoring_version': outer.value['rulebook']['version'],
+                'background_status': ('pending' if outer.value['background'] is None else
+                                      'ready' if outer.value['verification'].get('background_ready') else 'offered'),
+                'background_choice': outer.background_choice,
+                'next_step': outer.value['next_step'],
                 'test_only': outer.handoff.get('test_only', False), 'verification': 'Überlieferter Produktionsbefund; keine neue Inhaltsprüfung.'}
     finally:
         for ctx in contexts.values():

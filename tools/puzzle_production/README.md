@@ -1,5 +1,29 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](../../docs/ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+
+## PW-B: neue Produktion 0.8.0
+
+Build v3 veröffentlicht Handoff v4/Record v3 und die automatisch geprüfte
+workspace.json gemeinsam mit der Revision im expliziten Repositoryziel.
+Request v3 ergänzt `presentation={title,raster_offers}`. Frühe background- und
+raster_selection-Felder sind null. Erst die gebundene menschliche Rasterwahl
+öffnet background_review. Finalizer v2 aktualisiert den bestehenden Record v3
+und die zugehörige Projektion; keine alten Originalbytes werden verändert.
+Die vollständigen neuen Formen, Beispiele und Aufrufe stehen in
+[PW-B](../../docs/PW_B_CONTRACT.md) und [Authoring §§6–8](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
+Alle folgenden älteren formatgebundenen CLIs bleiben unter ihren ursprünglichen
+Grenzen verfügbar; der neue reguläre Bedienweg ist der lokale Assistent.
+
+
 ## BA-A: lokale Batchverarbeitung und Wiederaufnahme
 
 [`batch_cli`](batch_cli.py) verarbeitet ausdrücklich vorbereitete Jobs seriell.

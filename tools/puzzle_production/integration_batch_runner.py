@@ -122,13 +122,13 @@ def _metadata(job, source):
                     "Declared final approval covers another identity/revision")
     if inputs["record"] is not None:
         record = bio.json_bytes(_file(inputs["record"], source)[1])
-        bio.require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2") and
+        bio.require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2", "picross-authoring-record-v3") and
                     all(record.get(k) == job[k] for k in ("puzzle_id", "revision")), "Declared authoring record covers another original")
     rule = handoff.get("rulebook", {})
     bio.require(isinstance(rule, dict), "Package rulebook must be an object")
     # Historical native forms remain native. If a package declares these
     # current authoring versions, its original rule snapshot must agree.
-    if rule.get("version") in ("0.6.0", "0.7.0"):
+    if rule.get("version") in ("0.6.0", "0.7.0", "0.8.0"):
         bio.require(rule["version"] == job["rulebook"]["version"] and
                     rule.get("sha256") == job["rulebook"]["snapshot"]["sha256"],
                     "Package rulebook differs from the actual batch snapshot")

@@ -61,7 +61,7 @@ def tool_identity(legacy=False, manual=False, color=False, paired=False, accepte
         files.extend(("palette_quality.py", "palette_gate.py"))
     if background:
         files.extend(("background_package.py", "background_assets.py", "background_contract.py", "background_io.py",
-                      "background_export.py", "authoring_staging.py"))
+                      "background_export.py", "authoring_staging.py", "authoring_workflow.py"))
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -307,7 +307,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(c.get("proof") == expected_proof, "Handoff proof selection differs")
     paired = proof["format"] == "picross-proof-v3"
     if paired:
-        require(not legacy and h["rulebook"]["version"] in ("0.5.0", "0.6.0", "0.7.0") and
+        require(not legacy and h["rulebook"]["version"] in ("0.5.0", "0.6.0", "0.7.0", "0.8.0") and
                 c.get("certification") == checked.get("certification") and c.get("certification") is not None,
                 "Paired proof requires explicit authoring 0.5.0 profile binding")
     logic = logic_from_matrix(matrix, design)
@@ -362,7 +362,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     require(all(k in (("R0","R1","R2","R3","R4") if paired else ("R0","R1","R2","R3")) and isinstance(v,str) and bool(v.strip())
                 for k,v in difficulty["rule_families"].items()), "Invalid difficulty rule reasoning")
     if difficulty["method"] == "picross-difficulty-0.2":
-        require(h["rulebook"]["version"] in ("0.5.0", "0.6.0", "0.7.0"),
+        require(h["rulebook"]["version"] in ("0.5.0", "0.6.0", "0.7.0", "0.8.0"),
                 "Difficulty 0.2 requires authoring 0.5.0/0.6.0 or admitted 0.7.0")
     if paired:
         from .certification import LABEL
@@ -440,17 +440,19 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
         require(h["state"] != "content_ready" or package.background["ready"],
                 "content_ready requires background readiness in the original package")
         report["blockers"].extend(current["blockers"])
-        report.update(format=BACKGROUND_INSPECTION, original_state=h["state"],
+        from .authoring_workflow import is_current
+        report.update(format='picross-authoring-content-inspection-v2' if is_current(h) else BACKGROUND_INSPECTION, original_state=h["state"],
                       effective_state=("blocked" if not report["technical"] else
                                        "editorially_approved" if approval is not None else
-                                       "content_ready" if current["ready"] else "raster_ready"),
+                                       "content_ready" if current["ready"] else
+                                       "background_review" if is_current(h) and h['background'] is not None else "raster_ready"),
                       background={k: current[k] for k in ("status", "ready", "binding")},
                       integration_ready=False, catalog_ready=False)
     return report, design, matrix, logic, approval
 
 
 def categorize(report, catalog, category_id):
-    require(report.get("format") not in (BACKGROUND_INSPECTION, BACKGROUND_EXPORT_INSPECTION),
+    require(report.get("format") not in (BACKGROUND_INSPECTION, BACKGROUND_EXPORT_INSPECTION, 'picross-authoring-content-inspection-v2'),
             "Background content inspection does not admit catalog integration")
     categories.lookup(catalog, category_id)
     report.update(category_id=category_id, category_ready=True,

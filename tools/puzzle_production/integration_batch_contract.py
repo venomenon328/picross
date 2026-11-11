@@ -99,7 +99,7 @@ def validate_plan(value):
         operation = job["operation"]
         require(isinstance(operation, str) and operation in PHASES, "Unknown integration operation")
         rule = exact_keys(job["rulebook"], {"version", "document_revision", "snapshot"})
-        require(rule["version"] in ("0.6.0", "0.7.0"), "Unsupported rulebook version")
+        require(rule["version"] in ("0.6.0", "0.7.0", "0.8.0"), "Unsupported rulebook version")
         integer(rule["document_revision"], 1, 1000000, "rulebook revision")
         file_ref(rule["snapshot"])
         source_ref(job["authorization"])

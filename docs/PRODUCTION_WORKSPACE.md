@@ -1,10 +1,21 @@
 # PW · Git-gestützter Produktionsassistent
 
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+
+
 **Spezifikation 1.0 · 11.11.2026 · [Issue #578](https://github.com/venomenon328/picross/issues/578)**
 
-Freigegebener Sollstand, noch nicht implementiert. Ausgangsbasis ist
-`main@9cc07b411155adeab0aa6516ab5b4c4341f48184`. Dieser Dokumentstand
-aktiviert keinen neuen Produktionsdefault und erteilt keinen Mergeauftrag.
+PW-B liefert diesen Produktionsweg auf Basis des integrierten PW-A2-Starts
+(`main@f9764a91fc0e0c717d9d4ffeb0a769ec8ec0aab9`). Der neue Default ist 0.8.0.
+Dieser Vertrag erteilt keinen Mergeauftrag.
 Paketentscheidungen, Prüfungen und tatsächliche Lieferung stehen in #578.
 
 ## 1. Auftrag, Vorrang und Grenzen
@@ -24,11 +35,10 @@ alte Jobs. Vorhandene WIP-Dateien werden durch diesen Auftrag nicht gelöscht.
 Bereits integrierte Inhalte, Spielstände, IDs, Rechte und kompakte historische
 Belege sind keine WIP-Kompatibilitätslast und bleiben unverändert.
 
-Die hier festgelegte neue Reihenfolge ersetzt für die künftige neue Produktion
-die vierstufige Planung aus [Authoring](ai-workflows/PUZZLE_AUTHORING.md) und
-dem [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md). Bis PW-B die Änderungen samt
-Verbrauchern tatsächlich liefert, bleiben deren ausführbare Fassungen als
-Iststand erkennbar. Kein bloßes Umschalten des Defaults auf unpassende Regeln.
+Die hier festgelegte Reihenfolge gilt für neue Produktion nach
+[Authoring](ai-workflows/PUZZLE_AUTHORING.md) und dem
+[Hintergrundvertrag](PUZZLE_BACKGROUNDS.md). Die geschlossenen neuen Formen
+und ihre tatsächlich umgestellten Verbraucher stehen im [PW-B-Vertrag](PW_B_CONTRACT.md).
 Der neue fünfstufige Authoringstand wird als **0.8.0** eingeführt; 0.7.0 bezeichnet
 weiterhin seinen bisherigen vierstufigen Stand, nicht denselben Ablauf unter
 neuem Etikett. Unveränderte technische Dateiformen brauchen keine neue Version

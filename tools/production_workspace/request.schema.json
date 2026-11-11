@@ -13,7 +13,7 @@
   ],
   "properties": {
     "format": {
-      "const": "picross-production-presentation-request-v1"
+      "enum": ["picross-production-presentation-request-v1", "picross-production-presentation-request-v2"]
     },
     "puzzle_id": {
       "type": "string",
