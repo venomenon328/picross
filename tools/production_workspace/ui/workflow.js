@@ -4,8 +4,36 @@ const PW = (()=>{
  const steps=['Abschlussbilder','Motivvorlage','Rasterangebote','Kontextzeichnungen','Integration'];
  const phase={brief_ready:1,reveal_review:1,motif_review:2,motif_approved:3,raster_review:3,raster_ready:3,background_review:4,content_ready:5,editorially_approved:5,registered:5};
  function step(value){return value?phase[value.facts.state]||null:1;}
+ function orderStep(value){
+  return ({reveal_review:2,motif_review:3,raster_ready:4})[value?.facts.state] || step(value);
+ }
+ function gridRequest(grid = {}){
+  const parts = [];
+  function integer(value, min, max, label){
+   if(!/^\d+$/.test(value) || Number(value)<min || Number(value)>max){
+    throw Error(`Bitte für ${label} eine ganze Zahl von ${min} bis ${max} eingeben.`);
+   }
+   return Number(value);
+  }
+  function accuracy(value){
+   if(!value || value==='approx')return 'ungefähr';
+   if(value==='exact')return 'exakt';
+   throw Error('Bitte die Genauigkeit der Rastervorgabe wählen.');
+  }
+  if(grid.width || grid.height){
+   if(!grid.width || !grid.height)throw Error('Bitte Breite und Höhe gemeinsam angeben oder beide offenlassen.');
+   const width=integer(grid.width,1,50,'die Breite'),height=integer(grid.height,1,50,'die Höhe');
+   parts.push(`Rastergröße: ${accuracy(grid.sizeAccuracy)} ${width} × ${height} Zellen (Breite × Höhe).`);
+  }
+  if(grid.mode==='mono')parts.push('Rastermodus: monochrom, genau eine Vordergrundfarbe.');
+  if(grid.mode==='color'){
+   parts.push('Rastermodus: farbig.');
+   if(grid.colors)parts.push(`Farbzahl: ${accuracy(grid.colorAccuracy)} ${integer(grid.colors,2,8,'die Farbzahl')} Vordergrundfarben (ohne Leerfelder).`);
+  }
+  return parts.join(' ');
+ }
  function prompt(value,intent,options){
-  const current=step(value),n=({reveal_review:2,motif_review:3,raster_ready:4})[value?.facts.state]||current,action=intent.action||'continue';
+  const n=orderStep(value),action=intent.action||'continue';
   if(!n)throw Error('Dieser Stand benötigt einen eigenen ausdrücklich beauftragten Folgeauftrag.');
   if(value&&value.facts.authoring_version!=='0.8.0')throw Error('Dieser historische Stand gehört nicht zum neuen 0.8-Produktionsweg.');
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
@@ -57,6 +85,16 @@ const PW = (()=>{
   }else{
    lines.push('Schritt 5: Ich erteile die abschließende redaktionelle Freigabe für die im gebundenen Record exakt bezeichnete Raster-, Reveal- und Hintergrundfassung einschließlich der ausdrücklichen Leerentscheidung, falls vorhanden. Integriere ausschließlich diese Lieferung über den bestehenden Finalizer-, Export-, frischen Plan- und Registrierungsweg.');
   }
+  if(n===1 && intent.notes?.trim())lines.push(`Zusätzliche Motivhinweise für die Abschlussbilder:\n${intent.notes.trim()}`);
+  if(n<=2 || (n===3 && action==='rework')){
+   const grid=gridRequest(intent.grid);
+   if(grid){
+    lines.push(`Vorgaben für das spätere Lösungsraster: ${grid}`);
+    if(n===1)lines.push('Halte diese Vorgaben im veröffentlichten Motivbriefing für den Folgeauftrag fest. Das Abschlussbild bleibt detailliert und farbig.');
+    if(n===3)lines.push('Lege den geänderten Parameterkorridor zur Entscheidung vor. Bis dahin gilt die bisherige Freigabe.');
+   }
+  }
+  if(n===2)lines.push('Berücksichtige die bereits veröffentlichten Vorgaben aus dem Motivbriefing. Offene Einstellungen bleiben der begründeten Empfehlung überlassen.');
   if((n===2||n===3)&&intent.parameters?.trim())lines.push(`Parameterwunsch: ${intent.parameters.trim()}. Materielle Änderungen am freigegebenen Korridor zuerst zur Entscheidung vorlegen.`);
   if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}.`);
   if(options.workroot?.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${options.workroot.trim()}.`);
@@ -65,6 +103,6 @@ const PW = (()=>{
   lines.push('Vor der Übergabe neue Revision, Index und automatisch geprüfte workspace.json mit sämtlichen benötigten Originalen auf demselben Produktionsbranch committen und pushen. Nur tatsächlich erreichte Zustände melden.');
   return lines.join('\n\n');
  }
- return {steps,step,prompt};
+ return {steps,step,orderStep,prompt};
 })();
 if(typeof module!=='undefined')module.exports=PW;
