@@ -74,8 +74,9 @@ Legacy und Hilfe behalten ihre bisherigen Zeichnungen. Die echte Capability
 darf erst mit funktionierendem und technisch abgenommenem Runtime-/Importweg
 true sein; den tatsächlichen Abnahmestand führt der aktuelle Produkt-PR.
 Synthetische kompatible Ziele belegen nur den Werkzeugweg.
-Authoring 0.6.0 samt Offline-Sheet bleibt der aktive Produktionsdefault; 0.7.0
-ist ausdrücklich opt-in. Capability und verpflichtende Gesamtaktivierung sind
+PW-B führt für neue Produktionen den fünfstufigen Authoringstandard 0.8.0 ein
+([geschlossener Vertrag](PW_B_CONTRACT.md)); 0.6/0.7 beschreiben ihre alten Generationen.
+Der lokale Assistent ersetzt das Offline-Sheet ohne Alt-WIP-Migration. Capability und verpflichtende Gesamtaktivierung sind
 getrennt. Der konkrete verbleibende Einzelweg wird in #560 abgeglichen.
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
 führt den regulären Mehrjob-Arbeitsbereich einschließlich Update v3, Sitzung v5
@@ -87,7 +88,9 @@ Buchabnahme pro Rätsel.
 lokale Jobs seriell mit bestehenden Fachwerkzeugen, frischer Wiederaufnahmeprüfung
 und erhaltenen Versuchsbudgets. Der Runner endet spätestens am lokalen Paketbau.
 Technischer Abschluss belegt keine Inhaltsfreigabe oder Repositorysicherung.
-Default 0.6.0, opt-in 0.7.0 und die vorhandenen Freigaben bleiben erhalten.
+BA-A behält seine lokalen v1/v2-Eingänge; der obligatorische Repositorybau
+der neuen 0.8-Produktion erfolgt direkt über Builder v3. Vorhandene Freigaben
+bleiben an ihren tatsächlichen Originalen gebunden.
 [BA-B](PRODUCTION_BATCH.md) führt separat bereits vollständig vorbereitete und
 autorisierte Einzelintegrationen seriell aus: `export → plan → register` oder
 für reine Hintergrundrevisionen `store → plan → adopt`. Frische native Prüfungen,

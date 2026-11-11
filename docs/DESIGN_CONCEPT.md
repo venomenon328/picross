@@ -1,5 +1,16 @@
 # Gestaltungskonzept: Album, Rätselarbeit und Enthüllung
 
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+
+
 **PANG-A / #531 · auf dem Arbeitsbranch implementiert; Abnahmen im Draft-PR:**
 Pangolin Regular ersetzt die bisherige Tidy-Hand-Standardtextrolle auf sämtlichen
 normalen UI-Pfaden, insbesondere in der langen Spielerhilfe sowie in

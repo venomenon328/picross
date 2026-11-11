@@ -50,7 +50,9 @@ class PaletteGateTests(unittest.TestCase):
                  repaired=repaired, colors=len(colors) if colors else 2)
         h = load_json(package / "handoff.json")
         h["state"] = "raster_review"
-        shutil.copyfile(ROOT / "docs/ai-workflows/PUZZLE_AUTHORING.md", package / "rulebook.md")
+        (package / "rulebook.md").write_text(
+            "**Version 0.6.0 · Dokumentrevision 1 · TEST ONLY**\nSynthetic unchanged legacy-contract fixture.\n",
+            encoding="utf-8")
         h["rulebook"] = {"version": "0.6.0", "file": "rulebook.md", "sha256": images.file_hash(package / "rulebook.md")}
         seal(package, h)
         return package
