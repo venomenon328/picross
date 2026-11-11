@@ -41,6 +41,7 @@ unverändert. Der Benutzercheckout wird nicht als temporärer Checkout gelöscht
 
 | Auftrag | Zusätzlich vollständig lesen |
 | --- | --- |
+| Produktionsassistent, lokaler Git-/Bildzugriff, Launcher oder fünfstufiger neuer Produktionsweg | [PW](docs/PRODUCTION_WORKSPACE.md) und aktuelles Paket #578; bestehende WIP sind kein Kompatibilitätsziel, bereits integrierte Inhalte bleiben geschützt |
 | Produkt/UX/Plattform | Pflichtquellen im Projektprofil, insbesondere Produktdefinition und Gestaltungskonzept |
 | Schritt-4-Integrationscode, Budgets, Prüfkontext oder Publikations-/Recoveryguards | [RI](docs/PUZZLE_INTEGRATION.md) und aktuelles Paket; bestehende Ausführung und freigegebenen Sollstand unterscheiden |
 | Abschlussbilder/Bildrevisionen/Katalogvorschau | [Transparenz](docs/REVEAL_TRANSPARENCY.md) und dort geroutete Produktions-/Integrationsquellen |
