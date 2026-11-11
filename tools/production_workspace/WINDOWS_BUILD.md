@@ -74,6 +74,8 @@ Einige Python-Distributionen lassen die Tcl-Lizenz aus; dafür ist die unveränd
 [Tcl-8.6.15-Lizenz](licenses/Tcl-8.6.15.txt) aus dem
 [offiziellen Versionsref](https://github.com/tcltk/tcl/blob/core-8-6-15/license.terms)
 versioniert. Die Ersatzquelle wird nur mit tatsächlich geprüftem Tcl 8.6.15 benutzt.
+Die [weiteren Runtime-Lizenzen](licenses/README.md) ergänzen OpenSSL, Expat, zlib,
+bzip2, liblzma und mpdecimal; der Build prüft die aus Python abrufbaren Versionen.
 Die PyInstaller-Ausnahme ersetzt keine Abhängigkeitslizenzen.
 
 Die Lieferung bleibt **unsigniert**. Kein Zertifikat, keine neuen Secrets und

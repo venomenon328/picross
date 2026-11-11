@@ -10,6 +10,11 @@ import shutil
 import subprocess
 import sys
 import zipfile
+import ssl
+import zlib
+import pyexpat
+import decimal
+import tkinter
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
@@ -23,6 +28,13 @@ def build(destination):
     if sys.platform != 'win32' or platform.machine().lower() not in ('amd64', 'x86_64') or platform.python_version() != '3.13.14':
         raise RuntimeError('Build benötigt CPython 3.13.14 Windows x64.')
     versions = {}
+    runtime_versions = {'Tcl/Tk': tkinter.Tcl().eval('info patchlevel'), 'OpenSSL': ssl.OPENSSL_VERSION,
+                        'Expat': pyexpat.EXPAT_VERSION, 'zlib': zlib.ZLIB_RUNTIME_VERSION,
+                        'mpdecimal': decimal.__libmpdec_version__, 'bzip2': '1.0.8', 'liblzma': '5.2.5', 'libffi': '3.4.4'}
+    if (runtime_versions['Tcl/Tk'] != '8.6.15' or runtime_versions['OpenSSL'] != 'OpenSSL 3.0.21 9 Jun 2026' or
+            runtime_versions['Expat'] != 'expat_2.8.1' or runtime_versions['zlib'] != '1.3.1' or
+            runtime_versions['mpdecimal'] != '4.0.0'):
+        raise RuntimeError('Runtime-Komponenten passen nicht zum versionierten Lizenzinventar.')
     for line in (PACKAGE / 'requirements-windows.txt').read_text().splitlines():
         if not line or line.startswith('#'):
             continue
@@ -48,7 +60,7 @@ def build(destination):
     resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
     manifest = {'format': 'picross-windows-app-v1', 'version': '588-P3', 'commit': commit,
                 'architecture': 'windows-x64', 'python': platform.python_version(), 'components': versions,
-                'resources': resources, 'signed': False}
+                'runtime_components': runtime_versions, 'resources': resources, 'signed': False}
     manifest_file = work / 'build.json'
     manifest_file.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', '--onedir', '--windowed',
@@ -65,6 +77,8 @@ def build(destination):
     shutil.copyfile(manifest_file, app / 'components.json')
     licenses = app / 'LICENSES'; licenses.mkdir()
     shutil.copyfile(Path(sys.base_prefix) / 'LICENSE.txt', licenses / 'Python.txt')
+    for notice in (PACKAGE / 'licenses').glob('*.txt'):
+        shutil.copyfile(notice, licenses / notice.name)
     for name in ('Pillow', 'PyInstaller'):
         dist = metadata.distribution(name)
         copied = False
@@ -82,7 +96,6 @@ def build(destination):
             candidates = list((Path(sys.base_prefix) / 'tcl' / name).glob('*License*'))
         if not candidates:
             if name == 'tcl8.6':
-                import tkinter
                 if tkinter.Tcl().eval('info patchlevel') != '8.6.15':
                     raise RuntimeError('Tcl-Lizenzbindung prüfen; erwartet 8.6.15.')
                 candidates = [PACKAGE / 'licenses/Tcl-8.6.15.txt']
