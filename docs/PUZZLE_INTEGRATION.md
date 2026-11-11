@@ -1,5 +1,29 @@
 # RI: Zuverlässige und messbare Rätselintegration
 
+**BA-B · 11.11.2026, serielle Einzelintegration:**
+[Paketentscheidung #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272)
+und [PRODUCTION_BATCH](PRODUCTION_BATCH.md) orchestrieren die vorhandenen
+Einzelaufrufe. Ein frischer lesender Katalogplan geht jeder autorisierten
+Register-/Adopt-Publikation voraus;
+`registration(apply=True)` behält seine eigene erneute Planung. Der Batch hält
+höchstens einen Writer je kanonischem Zielcheckout, auch über verschiedene
+Arbeitsroots hinweg, und stoppt beim ersten ungeklärten Fehler oder Recoveryrest.
+Er ersetzt keine native Sperre, Vollprüfung oder Recovery.
+
+Registrierungspublikation und ihre Recovery behalten getrennte endliche
+1800-s-Defaults, die 300-s-Warnung und ihre zulässigen vorab festgelegten
+Overrides. Export-/Plan-/Authoringgrenzen sowie die jeweils 300 s für
+Hintergrundplan, -adoption und -recovery bleiben eigenständig. Ein äußerer
+Runnerrahmen darf die eigene Recovery nicht auf den verbrauchten
+Publikationsrest kürzen. BA-B ruft synchron im CLI-Prozess auf und führt kein
+globales 300-s-Budget ein. Phasen, reservierte Versuche, Native-Ergebnis und Exit
+werden dauerhaft getrennt erfasst. Das vom Runner beobachtete reale
+RI-Diagnoseobjekt bindet auch Aufrufe ohne eigene native CLI-Diagnostik;
+unbekannte Zeiten bleiben null, inklusive Phasenzeiten werden nicht addiert.
+Resume bestätigt den heutigen Zielzustand
+nach den drei Fällen des Batchvertrags rein lesend, ohne serialisierten
+RI-B-Prüfkontext, pauschale Wiederholung oder automatische Recovery.
+
 **HP-I1b1 · 09.11.2026, Vertrag vor Code:**
 [Paketentscheidung #561](https://github.com/venomenon328/picross/issues/561#issuecomment-6754303684)
 überträgt RI-A/B/C ausdrücklich auf Erstregistrierungsjournal v7 und seine

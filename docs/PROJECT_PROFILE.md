@@ -88,7 +88,12 @@ lokale Jobs seriell mit bestehenden Fachwerkzeugen, frischer Wiederaufnahmeprüf
 und erhaltenen Versuchsbudgets. Der Runner endet spätestens am lokalen Paketbau.
 Technischer Abschluss belegt keine Inhaltsfreigabe oder Repositorysicherung.
 Default 0.6.0, opt-in 0.7.0 und die vorhandenen Freigaben bleiben erhalten.
-Die Orchestrierung der Weitergabe und Integration gehört zum getrennten BA-B-Folgeumfang.
+[BA-B](PRODUCTION_BATCH.md) führt separat bereits vollständig vorbereitete und
+autorisierte Einzelintegrationen seriell aus: `export → plan → register` oder
+für reine Hintergrundrevisionen `store → plan → adopt`. Frische native Prüfungen,
+ein gemeinsamer Batchwriter je Zielcheckout und begrenzte Wiederaufnahme erhalten
+die Einzelverträge. Finalisierung, Inhaltsentscheidungen, Gitabschluss und
+Retirement bleiben eigene Schritte; Batchabschluss ist keine Mainintegration.
 
 ## Pflichtquellen nach Auftrag
 
@@ -111,7 +116,7 @@ Die Orchestrierung der Weitergabe und Integration gehört zum getrennten BA-B-Fo
 | Hintergrundzeichnungen je Rätsel, ihre Auswahl, Ableitung oder Einführung | [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md), [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [PUZZLE_QUALITY](PUZZLE_QUALITY.md); spezifizierten Sollweg und tatsächlichen Unterstützungsstand unterscheiden |
 | Neue Rätsel konzipieren, produzieren, korrigieren oder redaktionell abnehmen | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [redaktioneller Qualitätsvertrag](PUZZLE_QUALITY.md) und deren Pflichtquellen |
 | Produktionswerkzeuge, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste/Verträge |
-| Lokale Batchverarbeitung, Checkpoints oder Wiederaufnahme vorbereiteter Produktionsjobs | [PRODUCTION_BATCH](PRODUCTION_BATCH.md) und die tatsächlich verwendeten Einzelverträge; Authoringfreigaben und spätere Integration bleiben getrennt |
+| Batchverarbeitung, Checkpoints oder Wiederaufnahme vorbereiteter Produktions-/Integrationsjobs | [PRODUCTION_BATCH](PRODUCTION_BATCH.md) und die tatsächlich verwendeten Einzelverträge; BA-A endet lokal, BA-B orchestriert separat autorisierte Einzelintegration, Gitabschluss bleibt getrennt |
 | Schritt-4-Integrationscode, Registrierungsbudgets, Prüfkontext, Publikationsguards/Recovery | [PUZZLE_INTEGRATION](PUZZLE_INTEGRATION.md), [ZA1_ADAPTER](ZA1_ADAPTER.md), aktuelles Paket; Soll und ausführbaren Stand unterscheiden |
 | Schwierigkeit, Analyse, Kalibrierung, Bewertung oder deren Integration | [SD2](PUZZLE_DIFFICULTY_V2.md), [SD](PUZZLE_DIFFICULTY.md), je nach Änderung [SD2-Analyse](SD2_ANALYZER.md), [SD2-Kalibrierung](SD2_CALIBRATION.md), [SD2-Integration](SD2_INTEGRATION.md), kompatible [SD-Analyse](SD_ANALYZER.md), [0.3-Freeze](SD_CALIBRATION.md), [Daten-/Recoveryvertrag](SD_CATALOG.md), [Paarlinien](PAIRED_LINES.md), Kategorien/ZA-1/Katalogdarstellung |
 | CI, Prüfprogramme, Artefakte oder neue Tests | [CI_WORKFLOW_V2](CI_WORKFLOW_V2.md), [CI_POLICY](CI_POLICY.md), tatsächlich betroffene [Native](CI_C_NATIVE_GROUPS.md)-/[Fach](CI_A_SELECTION.md)-/[Browser](CI_B_BROWSER_GROUPS.md)-Verträge |

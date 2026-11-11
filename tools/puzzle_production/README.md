@@ -31,6 +31,90 @@ laufen weiter. Paketbau verwendet ausschließlich `target=local` und
 Ein Exit 0 kann einen korrekt geprüften stalled-/Widerspruchsbefund enthalten.
 Vorhandene fachliche Status und Zertifizierungen bleiben im Bericht getrennt.
 
+## BA-B: autorisierte serielle Einzelintegration
+
+[`integration_batch_cli`](integration_batch_cli.py) verarbeitet ausschließlich
+vollständig vorbereitete und tatsächlich autorisierte Integrationsjobs.
+[PRODUCTION_BATCH](../../docs/PRODUCTION_BATCH.md) schließt Plan, Checkpoint,
+Bericht, Phasen und Wiederaufnahmefälle; maßgeblich ist
+[BA-B / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272).
+BA-A bleibt der getrennte lokale Produktionsrunner. Die folgenden Befehle laufen
+im Werkzeugcheckout mit Python aus der isolierten Bildumgebung und Pillow
+exakt 12.3.0:
+
+```text
+python -m tools.puzzle_production.integration_batch_cli validate --plan <batch-plan.json> --source-root <vorbereitete-quellen> --repo-root <werkzeugcheckout> --target-root <zielcheckout>
+python -m tools.puzzle_production.integration_batch_cli run --plan <batch-plan.json> --source-root <vorbereitete-quellen> --repo-root <werkzeugcheckout> --target-root <zielcheckout> --work-root <noch-nicht-vorhandener-root>
+python -m tools.puzzle_production.integration_batch_cli resume --plan <batch-plan.json> --source-root <vorbereitete-quellen> --repo-root <werkzeugcheckout> --target-root <zielcheckout> --work-root <eigener-bisheriger-root>
+python -m tools.puzzle_production.integration_batch_cli status --work-root <eigener-bisheriger-root>
+```
+
+API: `integration_batch_runner.validate/run/resume/status`. `validate` darf
+zusätzlich `--work-root` erhalten und bleibt lesend; es bestätigt Form, erreichbare
+gebundene Eingänge und aufgezeichnete Autorisierung, keine Inhaltsfreigabe oder
+ausgeführte Integration. Ein optionaler `--history-root` lokalisiert ausschließlich
+den ausdrücklich vorhandenen lesenden Gitkontext des nativen Exports. Kein Fetch
+oder Erraten von Quellen. Werkzeug- und Zielcheckout dürfen identisch sein;
+Arbeits-/Ausgabebereiche bleiben von Eingängen und aktiven Zielbäumen getrennt.
+`run` verlangt einen noch nicht vorhandenen eigenen Arbeitsroot, `resume` dessen bestehende
+unveränderte Buchführung. `status` ist ausschließlich historisch mit `fresh=false`.
+
+| Job | Vollständiger Eingang und native Folge |
+| --- | --- |
+| `register` | Originalpaket samt tatsächlicher Endfreigabe, benötigten äußeren Dateien, manuellen Autorisierungen/Palettenausnahme und geprüftem Difficultyinput. `target_adapter.export` prüft seinen Eingang und geschriebenen Export vollständig; anschließend unmittelbar `content_registry.registration(apply=False)` und autorisiert `apply=True`. Kategorie, Parameter und gegebenenfalls erlaubtes Difficulty-Rebind sind ausdrücklich gebunden. |
+| `background_adopt` | Byteidentischer `picross-background-adoption-request-v1` samt vollständigem Inventar seiner Arbeitsdateien und tatsächlichem Bildänderungsauftrag. Native Folge `catalog_background_change.store → plan → adopt`; unveränderte Ziel-/Source-/Capability- und HP-W2-Prüfungen. |
+
+`register.authorization` bindet einen bereits vorbereiteten
+`picross-integration-order-v1` mit Ref auf die tatsächliche ursprüngliche
+Auftragserklärung; Endfreigabe bleibt ein eigener nativer Eingang. Bei
+`background_adopt` ist die Autorisierungsref exakt die Ref des unveränderten
+Requests. Der Runner erzeugt oder ergänzt keine dieser Erklärungen.
+
+Ein bereits vorbereitetes lokales Rasterpaket benötigt weder einen zusätzlich
+erfundenen Authoring-Store noch einen vorherigen Finalizerlauf. Für den
+Hintergrundwechsel bleibt die native reale Arbeits-/Indexablage dagegen Pflicht.
+Keine routinemäßigen zusätzlichen `inspect`-/`verify-export`-Runden;
+`registration(apply=True)` erzeugt selbst einen aktuellen nativen Plan und
+übernimmt keinen Prüfbeweis aus dem vorangehenden lesenden Aufruf.
+Ein vollständig bestätigter nativer Plan-No-op beendet den Job ohne
+mutierende Wiederholung.
+
+Der kooperative Batchlock bindet den kanonischen Zielcheckout, auch bei
+verschiedenen Arbeitsroots. Native Locks und Journale bleiben zuständig.
+Der erste ungeklärte Fehler, Teilstore, offene Journal-/Stagingrest oder unsichere
+native Abschluss stoppt die ganze Auswahl. Bereits erfolgreiche Jobs bleiben;
+kein Batchrollback, automatische Wiederholung, Locklöschen oder Recoverykommando.
+Erforderliche native Recovery gesondert autorisiert ausführen, danach `resume`.
+
+Resume unterscheidet nativ publizierten, noch ungebuchten Registererfolg
+(frisches lesendes natives No-op), entsprechend ungebuchte Bildadoption
+(ursprüngliches Planbundle mit Pythonoption `adopt(..., no_op_only=True)`) und
+bereits gebuchte Erfolge nach späteren erfolgreichen Jobs. Für den letzten Fall
+einmal den heutigen vollständigen Katalog prüfen und erreichte jobbezogene
+Bindungen abgleichen; alte stale Bildpläne nicht erneut adoptieren. Die additive
+Pythonoption darf ausschließlich den vollständig eigenen nativen No-op liefern
+und weist erforderliche Mutation im selben Kontrollfluss zurück. Sie führt
+keinen neuen nativen CLI-Befehl ein und lockert keinen Plan-/Retirementvertrag.
+
+Vor jeder Phase wird der endliche Versuch dauerhaft reserviert; auch ein harter
+Abbruch verbraucht ihn. Planfortschreibung, Umbenennen oder neuer Root setzen
+die Versuchslinie nicht zurück. Export/Plan/Authoring behalten ihre nativen
+300-s-Teilgrenzen; neue Registrierungspublikation und ihre Recovery getrennt
+je 1800 s mit zulässigen vorab festgelegten Overrides und 300-s-Warnung.
+Hintergrundplan/-adoption/-recovery bleiben jeweils bei 300 s. Der Runner läuft
+synchron im CLI-Prozess; Recovery erhält ihren eigenen Rahmen.
+Native Ergebnisse/Exits und das vom Runner beobachtete reale RI-Diagnoseobjekt
+bleiben im Bericht getrennt. Das gilt auch für Aufrufe ohne eigene native
+CLI-Diagnostik; inklusive Phasenzeiten nicht addieren, unbekannte Zeiten null.
+Batch-Exit 0 bedeutet vollständig frisch bestätigt,
+2 ungültigen Eingang, 3 unvollständigen Lauf, 4 Abbruch, 5 technischen Fehler.
+
+Batchabschluss belegt den Zielcheckout; `status` ist keine neue Zielprüfung.
+Gitabschluss und spätere Main-gebundene Bereinigung folgen weiterhin Authoring
+§§8–9. Der Runner erzeugt keine Entscheidungen/Freigaben, führt keine Gitaktionen,
+Retirement-, Rasterupdate- oder Revealadoptionsoperation aus. Aktiver Default
+0.6.0 und ausdrückliches 0.7.0-Opt-in bleiben erhalten.
+
 ## HP-W2: eigenständige Hintergrundableitung
 
 [`background_assets`](background_assets.py) stellt die lokale API/CLI für die
@@ -125,10 +209,10 @@ Fähigkeit allein liefert keinen Hintergrundersatz im Spiel oder Produktionsabsc
 und [Hintergrundvertrag §§2–8](../../docs/PUZZLE_BACKGROUNDS.md) legen die
 neue geschlossene Generation fest. Sie verwendet ausdrücklich den vollständigen
 [Authoring-0.7.0-Vorschausnapshot](../../docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
-Dokumentrevision 8, mit tatsächlichem Dateihash und gelesenem Quellencommit.
+Dokumentrevision 9, mit tatsächlichem Dateihash und gelesenem Quellencommit.
 Der aktive Authoringpfad und der Default neuer Offline-Sheetjobs bleiben
-**0.6.0 / Dokumentrevision 47**. Beide eingebetteten Snapshots entsprechen ihren
-Markdownquellen; 0.7.0 / Dokumentrevision 8 bleibt ausdrücklich opt-in. Die
+**0.6.0 / Dokumentrevision 48**. Beide eingebetteten Snapshots entsprechen ihren
+Markdownquellen; 0.7.0 / Dokumentrevision 9 bleibt ausdrücklich opt-in. Die
 verpflichtende Gesamtaktivierung wird am konkreten Einzelweg in #560 abgeglichen.
 Versiegelte ältere Pakete behalten ihren gebundenen Snapshot unverändert.
 

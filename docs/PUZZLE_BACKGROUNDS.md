@@ -1,6 +1,6 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**Vertrag 1.0 · Dokumentrevision 11 · 10.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A / #491**
+**Vertrag 1.0 · Dokumentrevision 12 · 11.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -50,8 +50,12 @@ Prüfungen. Offene Bildwahl blockiert nur ihre abhängigen Stufen; eine reine
 Hintergrundänderung erhält unveränderte Logik-/Difficultyartefakte. Technischer
 Laufabschluss erteilt keine Bild-/Inhaltsfreigabe. Der Runner endet spätestens
 am lokalen PB-A-/PB-H-Paketbau; Finalizer, Spielerexport, gemeinsame Writer und
-Retirement sind nicht enthalten. BA-B mit kontrollierter Weitergabe/Integration
-bleibt ein eigener Folgeumfang. Default, Sheetbedienung und §§2–7 bleiben erhalten.
+Retirement sind nicht enthalten. Der eigene [BA-B-Integrationsrunner](PRODUCTION_BATCH.md)
+führt dagegen ausdrücklich autorisierte, vollständig vorbereitete Einzeljobs
+seriell aus. Neue Rätsel verwenden den bestehenden Export-/Plan-/Registerweg;
+reine spätere Bildrevisionen den unveränderten Request nach §11.1 und
+`store → plan → adopt`. Keine neue Finalisierung, Bildwahl oder Pflichtabnahme.
+Default, Sheetbedienung und §§2–7 bleiben erhalten.
 
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) bleibt für vier Aufträge,
 vorhandene Bild-/Motiv-/Rasterfreigaben und Abschluss zuständig,
@@ -1066,7 +1070,7 @@ ausführbaren Code interpretieren oder ein historisches Zielgate für aufgehoben
 **Version und Hintergrund.** Neue Jobs starten mit 0.6.0/Sitzung v4. Bewusstes
 Aktivieren des Hintergrundwegs oder sichtbarer v3/v5-Import verwendet 0.7.0/v5.
 Beide eingebetteten Snapshots müssen ihren Markdownquellen bytegleich entsprechen:
-0.6.0/docrev47 und 0.7.0/docrev8. Jeder v5-Job bindet den Vorschaupfad beziehungsweise
+0.6.0/docrev48 und 0.7.0/docrev9. Jeder v5-Job bindet den Vorschaupfad beziehungsweise
 den passenden 0.7.0-Anhang. Bleiben nach Alteingang inkompatible Joboptionen erhalten,
 Prompt und ZIP bis zur ausdrücklichen kompatiblen Regelwahl sperren; kein stiller
 Pfadwechsel, keine Umschreibung alter Pakete, keine andere Produktionsformaterhöhung.
@@ -1216,7 +1220,8 @@ Der Import einer solchen Sitzung prüft geschlossene Form und innere Querverbind
 | **MJ-A / #490:** `docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html` und `tools/test_authoring_sheet.py` | Regulärer Mehrjob-Arbeitsbereich nach §7.5, gepaarter Record-v2-/Update-v3-Import, Sitzung v5 und Auftrag v4; vorhandene v1–v4-Alteingänge bleiben getrennt lesbar. Beide eingebetteten Regelwerksnapshots entsprechen bytegleich ihren Markdownquellen. 0.6.0 bleibt Default, 0.7.0 ausdrücklich gewählt. Technische Nachweise und unabhängiges Review gehören an den konkreten MJ-A-PR. |
 | **MJ-B / #490** | Eigener Sheetjob nach §7.6: früher Entwurf, unveränderlicher Originalrequest, fünf passende Bedienaufträge und kompakter gemeldeter historischer Abschluss. Sammlung v2 erhält reguläre und Adoptionjobs. Form-/Byteprüfung ist keine physische Datei-/Zielprüfung; HP-I1b2 bleibt der technische Werkzeugweg. |
 | **BA-A / #491:** [PRODUCTION_BATCH](PRODUCTION_BATCH.md) | Lokale serielle Verarbeitung vorbereiteter Jobs mit frischer Fachprüfung, erhaltener Versuchsbuchführung und gezielter Wiederaufnahme. HP-W2-Originale und Entscheidungen unverändert, PB-H ausschließlich lokal mit vollständigem Request. Keine zusätzliche Sheetfunktion oder Integrationsfreigabe. |
-| **BA-B / #491; #492** | Kontrollierte Weitergabe/Integration beziehungsweise gesondert beauftragte Serienproduktion bleiben eigene Folgeumfänge. Nur tatsächlich gelieferte Fähigkeiten verwenden; keine parallelen Hintergrundformate oder künstliche Vollintegration durch Ergebnisflags. |
+| **BA-B / #491:** [PRODUCTION_BATCH](PRODUCTION_BATCH.md) | Getrennter serieller Integrationsrunner für vollständig vorbereitete und tatsächlich autorisierte `register`-/`background_adopt`-Jobs; frische native Einzelprüfung, ein Batchwriter je Zielcheckout, dauerhafte Versuche und sichere lesende Wiederaufnahme. Kein Finalizer, Gitabschluss, Retirement oder Defaultwechsel. |
+| **#492** | Gesondert beauftragte Serienproduktion bleibt ein eigener Folgeumfang. Ein Werkzeugbatch ersetzt weder echte Motive noch Bild-/Inhaltsabnahmen oder deren tatsächlichen Produktionsnachweis. |
 
 PB-H führt die zuvor explizit an **0.6.0** gebundenen Palettengates und
 Paar-/Difficultyzulassungen für die **lesende Inhaltsprüfung** der neuen
@@ -1613,6 +1618,27 @@ Neue **`picross-background-adoption-plan-v1`**, exakt
 Adopt liest Bundlebytes frisch, validiert alle geschlossenen Formen/Inventare, rekonstruiert die vollständige alte und neue Ansicht und leitet den Plan unabhängig erneut her. Ein selbst erklärter Planhash/„verified“ genügt nicht. Vor einer neuen Mutation müssen außerdem die gebundene aktuelle Authoringrevision, alle Request-/Inventarbytes und die ausgewählte Indexzeile unverändert vorhanden sein: bei der Eingangsprüfung und erneut unter der exklusiven Kataloglockeigentümerschaft unmittelbar vor erster aktiver Mutation. Das Bundle bleibt über den ganzen Lauf frisch bytegebunden; andere Indexzeilen werden nicht geschrieben. Ein alter abgelegter Plan überschreibt keine inzwischen neu entschiedene Arbeit. Quellenwechsel, Zusatzdateien, anderes Ziel oder andere Capability machen ihn stale.
 
 **Wiederholung:** Nur der exakt eigene vollständige Zielstand ist No-op, ohne Byte-/mtime-, Authoring-/Index-, Bildrevisions- oder Added-Änderung. Dazu aktuelle aktive Source/request-Bindung, gesamte gültige Zielansicht und die im Plan exakt erlaubten Eigenänderungen prüfen. Nach regulärem revisionsgenauem Main-Abschluss darf eine identische noch vorliegende vollständige Planlieferung nur diesen bereits übernommenen Zustand erkennen; ihre inzwischen ordnungsgemäß entfernte Arbeitsrevision wird nicht zurückgeschrieben. Dafür erhält adopt ein optionales API-/CLI-Argument `integrated_commit` / `--integrated-commit <vollständige SHA>`, das bei fehlender Arbeitsrevision zwingend ist und ausschließlich diesen No-op-Pfad zulässt: Commit ist Vorfahr des aktualisierten origin/main und lokalen HEAD, enthält den exakten Request samt Indexzeile und dessen wirkliche Source-/Liveübernahme; der aktuelle vollständige Zielzustand passt weiterhin exakt dazu, komplette Arbeitsrevision und ihre Indexzeile fehlen. Teilreste, geänderte Arbeit oder eine neuere aktive Bildrevision sind kein No-op. Ohne passenden Mainbeleg ist fehlende Arbeit ein Fehler; der Sonderpfad darf niemals publizieren oder Arbeit wiederherstellen. Ohne erhaltenes Planbundle müssen keine alten Arbeitsdateien rekonstruiert werden: der kompakte aktive Stand bleibt über Source/Receipt lesbar; `retire-background-production` hat seine eigene wiederholbare Prüfung. Keine Pflicht, Planbundle dauerhaft aufzubewahren. Der ursprüngliche `retire-production`-Paket-/Receiptwechsel ist dagegen eine andere aktive Katalogmutation und macht zuvor gebaute Hintergrundpläne stale, auch für deren No-op-Pfad. „Vor und nach ursprünglichem Retirement nutzbar“ meint jeweils frisch auf dem tatsächlichen Ausgangsstand geplante Bildoperationen; keine automatische Normalisierung eines alten Plans über den Receiptwechsel. Der bereits gültige kompakte aktuelle Bildstand bleibt lesbar, ohne eine neue Mutation oder Rekonstruktion alter Arbeit.
+
+**BA-B: additive lesende Diagnose und spätere Batchjobs.**
+[BA-B / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272)
+ergänzt ausschließlich die Pythonoption `adopt(..., no_op_only=True)`, ohne
+neuen nativen CLI-Befehl. Sie prüft mit dem ursprünglichen vollständigen
+Planbundle denselben nativen eigenen No-op. Ist dieser nicht vollständig
+belegt, verwirft derselbe Kontrollfluss den Aufruf vor jeder Publikation;
+ein getrennter Vorabcheck mit anschließend allgemeinem Adopt wäre unzureichend.
+Plan-/Quellen-/Namespace-/Journalprüfungen und obige Main-/Retirementgrenzen
+bleiben erhalten. Dieser Weg dient einem nativ abgeschlossenen Bildwechsel,
+dessen Batchabschluss wegen Unterbrechung noch nicht gebucht ist.
+
+Bei bereits dauerhaft gebuchtem Erfolg und anschließend erfolgreichen weiteren
+Batchjobs ist der alte vollständige Bildplansnapshot dagegen gewöhnlich stale.
+BA-B ruft ihn nicht erneut auf. Es erhält den historischen Erfolg, prüft einmal
+den heutigen vollständigen Katalog über den gemeinsamen Reader und vergleicht
+jobbezogen die tatsächlich erreichten Source-/Request-/Revisions-/PNG-/Notice-
+bindungen. Das ist die eigene rein lesende Batchabstimmung nach
+[PRODUCTION_BATCH](PRODUCTION_BATCH.md), kein gelockerter nativer No-op und
+kein Zurücksetzen späterer Änderungen. Fehlende, fremde oder teilweise passende
+Bytes stoppen; abgeschlossene entfernte Arbeit wird nicht rekonstruiert.
 
 HP-I1b2 allein aktiviert die echte `game/data/background-capability.json` nicht.
 Fehlend/false stoppt Planung und Mutation, ungültige Form ist Eingabefehler;
