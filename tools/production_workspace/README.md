@@ -121,6 +121,9 @@ jeder Angebotsrecord liegt im Index seines ausdrücklich gebundenen Snapshots.
 Angebotsmitgliedschaft und Beschriftungen stammen aus der tatsächlichen
 Auswahlvorlage. Es gibt keinen PNG-Verzeichnisscan. Historische Quellen benötigen
 volle Commit-SHAs; `null` bezeichnet die gemeinsam zu sichernden Arbeitsbytes.
+Verworfene Hintergrundoriginale dürfen über die ausdrückliche Historybindung
+aus einem bytegleichen früheren Manifest gelesen werden; aktive Originale
+müssen regulär vorliegen. Verlorene historische Gitobjekte sind ein Fehler.
 
 Bei direkter Repositoryquelle ist `container=null`; der Pfad bezeichnet die zum
 Record gehörende Originaldatei unter dessen Produktionsrevision. ZIP-Mitgliedspfade

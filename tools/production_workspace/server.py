@@ -50,6 +50,7 @@ class Service:
     def detail(self, jid):
         job = self.job(jid)
         facts = p.inspect(job['_source'], job['commit'], job['_projection'])
+        self.views.put(('validated', job['commit'], io.checksum(p.data(job['_projection']))), b'1')
         return {**job['_projection'], 'facts': facts, 'source': job['source'], 'commit': job['commit'],
                 'publication': job['publication'], 'status': 'Originalbindungen und Bildbytes geprüft; keine neue Inhaltsfreigabe'}
 
