@@ -13,43 +13,185 @@ for(const key of ['workroot','cleanup','merge']){
  $(key).onchange=()=>{try{localStorage.setItem('pw-options',JSON.stringify(options()));}catch{}updatePrompt();};
 }
 function updatePrompt(){
- const box=$('orderText'),button=$('copyOrder');if(!box||!button)return;
- try{box.value=PW.prompt(detail,intent,options());button.disabled=false;$('orderStatus').textContent='In ChatGPT oder Codex senden. Kopieren bestätigt noch keine Entscheidung.';}
- catch(exc){box.value='';button.disabled=true;$('orderStatus').textContent=exc.message;}
+ const box=$('orderText'),button=$('copyOrder'),status=$('orderStatus');
+ if(!box || !button)return;
+ try{
+  box.value=PW.prompt(detail,intent,options());
+  button.disabled=false;
+  status.textContent='Den kopierten Auftrag im Chat senden.';
+  status.className='hint';
+ }catch(exc){
+  box.value='';button.disabled=true;
+  status.textContent=exc.message;
+  status.className='validation';
+ }
+}
+function remember(key,value){
+ intent[key]=value;
+ if(draft){
+  draft[key]=value;
+  saveDrafts();
+ }
+ updatePrompt();
 }
 function field(parent,label,key,placeholder){
- const wrap=node('label',label),input=node('textarea');input.rows=2;input.maxLength=4096;input.placeholder=placeholder||'';input.value=intent[key]||'';
- input.oninput=()=>{intent[key]=input.value;if(draft&&key==='brief'){draft.brief=input.value;saveDrafts();}updatePrompt();};wrap.append(input);parent.append(wrap);return input;
+ const wrap=node('label',label),input=node('textarea');
+ input.rows=2;input.maxLength=4096;input.placeholder=placeholder||'';input.value=intent[key]||'';
+ input.oninput=()=>{
+  remember(key,input.value);
+  if(key==='brief')renderDrafts();
+ };
+ wrap.append(input);parent.append(wrap);
+ return input;
+}
+function gridFields(parent,expanded){
+ const panel=node('details',undefined,'gridSettings');
+ const summary=node('summary','Rastervorgaben');
+ summary.append(node('small','Maße, Modus und Farbzahl'));
+ panel.append(summary,node('p','Optional für das spätere Lösungsraster. Offene Werte werden bei der Motivvorlage empfohlen.','hint'));
+ const grid={...intent.grid};
+ panel.open=expanded || Boolean(grid.width || grid.height || grid.mode);
+ function control(group,label,key,choices,placeholder){
+  const wrap=node('label',label);
+  const input=node(choices?'select':'input');
+  if(choices){
+   for(const [id,caption] of choices){
+    const option=node('option',caption);option.value=id;input.append(option);
+   }
+  }else{
+   input.type='text';input.inputMode='numeric';input.placeholder=placeholder;
+  }
+  input.value=grid[key] || (choices?choices[0][0]:'');
+  input[choices?'onchange':'oninput']=()=>{
+   grid[key]=input.value;
+   if(key==='mode'){
+    palette.hidden=grid.mode!=='color';
+    if(palette.hidden){
+     delete grid.colors;delete grid.colorAccuracy;
+     colors.value='';precision.value='approx';
+    }
+   }
+   remember('grid',grid);
+  };
+  wrap.append(input);group.append(wrap);
+  return input;
+ }
+ const sizes=node('fieldset'),dims=node('div',undefined,'gridRow');
+ sizes.append(node('legend','Rastergröße'),dims);
+ const accuracy=[['approx','Ungefähr'],['exact','Exakt']];
+ control(dims,'Breite (Zellen)','width',null,'1–50');
+ control(dims,'Höhe (Zellen)','height',null,'1–50');
+ control(dims,'Maßvorgabe','sizeAccuracy',accuracy);
+ const modes=node('fieldset'),row=node('div',undefined,'gridRow');
+ modes.append(node('legend','Rasterfarben'),row);
+ control(row,'Farbmodus','mode',[['','Offen'],['mono','Monochrom'],['color','Farbig']]);
+ const palette=node('div',undefined,'paletteFields');
+ const colors=control(palette,'Vordergrundfarben','colors',null,'2–8 oder offen');
+ const precision=control(palette,'Farbzahlvorgabe','colorAccuracy',accuracy);
+ palette.hidden=grid.mode!=='color';
+ row.append(palette);panel.append(sizes,modes);parent.append(panel);
+ return panel;
 }
 function workflow(view,value){
- detail=value;const n=PW.step(value),section=node('section',undefined,'nextAction');
- const progress=node('ol',undefined,'steps');PW.steps.forEach((label,i)=>{const li=node('li',`${i+1} ${label}`);if(i+1===n)li.setAttribute('aria-current','step');progress.append(li);});view.append(progress);
- section.append(node('h3',value?.facts.next_step||'1 · Dein Motiv beschreiben'));
+ detail=value;
+ const n=PW.step(value),order=PW.orderStep(value),section=node('section',undefined,'nextAction');
+ const progress=node('ol',undefined,'steps');
+ progress.setAttribute('aria-label','Produktionsschritte');
+ PW.steps.forEach((label,i)=>{
+  const li=node('li');
+  li.append(node('span',String(i+1),'stepNumber'),node('span',label));
+  if(i+1===n)li.setAttribute('aria-current','step');
+  if(i+1<n)li.className='past';
+  progress.append(li);
+ });
+ view.append(progress);
+ section.append(node('h3',value?.facts.next_step||'Motiv beschreiben'));
  if(!value){
-  field(section,'Was soll dein Rätsel zeigen?','brief','Motiv, wichtige Merkmale und gewünschte Stimmung');
-  const label=node('label','Optional: eigenes Eingangsbild'),input=node('input');input.type='file';input.accept='image/png,image/jpeg';
-  input.onchange=()=>{intent.inputImage=input.files[0]?.name||'';updatePrompt();};label.append(input);section.append(label,node('p','Die Datei anschließend selbst an den Chat anhängen. Sie wird hier nicht hochgeladen.','hint'));
+  field(section,'Was soll dein Rätsel zeigen?','brief','Zum Beispiel eine reife Erdbeere');
+ }
+ if(order===1){
+  field(section,'Zusätzliche Motivhinweise (optional)','notes','Welche Details, Perspektive oder Stimmung sind dir wichtig?');
+ }
+ if(!value){
+  const label=node('label','Referenzbild (optional)','reference'),input=node('input');
+  input.type='file';input.accept='image/png,image/jpeg';
+  input.onchange=()=>{intent.inputImage=input.files[0]?.name||'';updatePrompt();};
+  label.append(input);section.append(label,node('p','Die ausgewählte Datei beim Senden an den Chat anhängen.','hint'));
  }
  if(value){
   const label=node('label','Nächste Aktion'),select=node('select');
-  for(const [id,text] of [['continue','Fortsetzen / Entscheidung senden'],['rework','Gezielt korrigieren'],['resume','Arbeit wieder aufnehmen'],...(value.facts.state==='registered'?[['background_change','Separater Hintergrundfolgeauftrag']]:[])]){const opt=node('option',text);opt.value=id;select.append(opt);}
-  select.onchange=()=>{intent.action=select.value;correction.hidden=!['rework','background_change'].includes(select.value);updatePrompt();};label.append(select);section.append(label);
-  const correction=node('div');correction.hidden=true;field(correction,'Was soll geändert werden?','feedback');section.append(correction);
+  for(const [id,text] of [['continue','Fortsetzen / Entscheidung senden'],['rework','Gezielt korrigieren'],['resume','Arbeit wieder aufnehmen'],...(value.facts.state==='registered'?[['background_change','Separater Hintergrundfolgeauftrag']]:[])]){
+   const opt=node('option',text);opt.value=id;select.append(opt);
+  }
+  label.append(select);section.append(label);
+  const correction=node('div');correction.hidden=true;
+  field(correction,'Was soll geändert werden?','feedback');section.append(correction);
+  if(order===3)gridFields(correction,false);
+  select.onchange=()=>{
+   intent.action=select.value;
+   correction.hidden=!['rework','background_change'].includes(select.value);
+   updatePrompt();
+  };
  }
- if(n===2||n===3){const d=node('details');d.append(node('summary','Optional: Größe, Modus und Farbzahl'));field(d,'Dein Parameterwunsch','parameters','Beispiel: etwa 30 × 25, farbig, KI empfiehlt die Farbzahl');section.append(d);}
- if(n===4){const d=node('details');d.append(node('summary','Optional: gewünschter Kontext'));field(d,'Kontextwunsch','context');section.append(d);}
+ if(order===1 || order===2){
+  gridFields(section,order===2);
+  if(order===2)field(section,'Weitere Wünsche zur Motivvorlage (optional)','parameters','Zum Beispiel Merkmale, die bei der Vereinfachung erhalten bleiben sollen');
+ }
+ if(order===4){const d=node('details');d.append(node('summary','Optionaler Kontextwunsch'));field(d,'Kontextwunsch','context');section.append(d);}
  if(value?.facts.state==='background_review'){
   const none=node('button','Bewusst keinen Hintergrund wählen');none.onclick=()=>choose('none','background',none);section.append(none);
  }
  if(n===5)section.append(node('p',value.facts.background_choice==='none'?'Bestätigt: bewusst kein Hintergrund.':value.facts.background_choice?'Bestätigte Hintergrundwahl: '+value.facts.background_choice:'Hintergrundstatus: '+value.facts.background_status));
- const selected=node('p','Noch keine neue Auswahl gesendet.','hint');selected.id='selectionStatus';section.append(selected);
+ if(value?.offers.length || value?.facts.state==='background_review'){
+  const selected=node('p','Die gewünschte Variante auf der Bildkarte wählen.','hint');
+  selected.id='selectionStatus';section.append(selected);
+ }
+ const actions=node('div',undefined,'orderActions');
  const copy=node('button','Auftrag kopieren','primary');copy.id='copyOrder';
- copy.onclick=async()=>{try{await navigator.clipboard.writeText($('orderText').value);$('orderStatus').textContent='Kopiert. Sende den Auftrag jetzt im Chat; der Produktionsstand bleibt bis zu neuen Gitdaten unverändert.';}catch{$('orderText').focus();$('orderText').select();$('orderStatus').textContent='Bitte den markierten Auftrag manuell kopieren.';}};
- const status=node('p',undefined,'hint');status.id='orderStatus';const d=node('details');d.append(node('summary','Auftrag ansehen'));const text=node('textarea');text.id='orderText';text.rows=12;text.readOnly=true;d.append(text);section.append(copy,status,d);view.append(section);updatePrompt();
+ const status=node('p',undefined,'hint');status.id='orderStatus';status.setAttribute('role','status');
+ const preview=node('details',undefined,'orderPreview');preview.append(node('summary','Auftrag ansehen'));
+ const text=node('textarea');text.id='orderText';text.rows=10;text.readOnly=true;text.setAttribute('aria-label','Auftragstext');preview.append(text);
+ copy.onclick=async()=>{
+  try{
+   await navigator.clipboard.writeText(text.value);
+   status.textContent='Kopiert. Der Auftrag ist bereit zum Senden.';
+  }catch{
+   preview.open=true;text.focus();text.select();
+   status.textContent='Bitte den markierten Auftrag manuell kopieren.';
+  }
+ };
+ actions.append(copy,status);section.append(actions,preview);view.append(section);updatePrompt();
 }
 function choose(id,kind,button){const label=id==='none'?'kein Hintergrund':detail?.offers.find(o=>o.id===id&&o.kind===kind)?.label||id;intent.selection=id;intent.kind=kind;document.querySelectorAll('[data-choice]').forEach(b=>b.setAttribute('aria-pressed','false'));button.dataset.choice=id;button.setAttribute('aria-pressed','true');$('selectionStatus').textContent=`Vorgemerkt: ${label}. Erst der gesendete Auftrag erklärt deine Wahl.`;updatePrompt();}
-function newDraft(id){dispose();active=null;detail=null;draft=drafts.find(d=>d.id===id)||{id:crypto.randomUUID(),brief:''};if(!drafts.includes(draft)){drafts.push(draft);drafts=drafts.slice(-20);saveDrafts();}intent={brief:draft.brief};$('view').replaceChildren(node('h2','Neues Motiv'));workflow($('view'),null);renderDrafts();}
-function renderDrafts(){let list=$('draftList');if(!list){list=node('div');list.id='draftList';$('jobList').before(list);}list.replaceChildren();for(const d of drafts){const b=node('button',(d.brief||'Neues Motiv').slice(0,42),'job');b.onclick=()=>newDraft(d.id);list.append(b);}if(draft){const remove=node('button','Diesen lokalen Entwurf verwerfen');remove.onclick=()=>{drafts=drafts.filter(d=>d.id!==draft.id);draft=null;saveDrafts();renderDrafts();if(listing?.jobs.length)open(listing.jobs[0].id);else $('view').replaceChildren(node('p','Über „Neues Motiv“ beginnen.'));};list.append(remove);}}
+function newDraft(id){
+ dispose();active=null;detail=null;
+ draft=drafts.find(d=>d.id===id)||{id:crypto.randomUUID(),brief:''};
+ if(!drafts.includes(draft)){drafts.push(draft);drafts=drafts.slice(-20);saveDrafts();}
+ intent={brief:draft.brief,notes:draft.notes||'',grid:{...draft.grid}};
+ $('view').replaceChildren(node('h2','Neues Motiv'));
+ workflow($('view'),null);renderDrafts();
+ for(const el of $('jobList').children)el.setAttribute('aria-current','false');
+ if(listing?.jobs.length)$('jobs').selectedIndex=-1;
+}
+function renderDrafts(){
+ const list=$('draftList');list.replaceChildren();
+ if(!drafts.length)return;
+ list.append(node('p','Lokale Entwürfe','navLabel'));
+ for(const d of drafts){
+  const b=node('button',(d.brief.trim()||'Unbenannter Entwurf').slice(0,42),'job');
+  b.setAttribute('aria-current',String(d===draft));b.onclick=()=>newDraft(d.id);list.append(b);
+ }
+ if(draft){
+  const remove=node('button','Entwurf verwerfen','discard');
+  remove.onclick=()=>{
+   drafts=drafts.filter(d=>d.id!==draft.id);draft=null;saveDrafts();renderDrafts();
+   if(listing?.jobs.length)open(listing.jobs[0].id);
+   else if(drafts.length)newDraft(drafts.at(-1).id);
+   else $('view').replaceChildren(node('p','Über „Neues Motiv“ beginnen.'));
+  };
+  list.append(remove);
+ }
+}
 $('newJob').onclick=()=>newDraft();renderDrafts();
 const roleNames={reveal:'Abschlussbilder',motif:'Motivvorlage',raster:'Rasterangebote',raster_draft:'Sichtungsentwürfe',background:'Hintergrundangebote'};
 function node(tag,text,cls){const el=document.createElement(tag);if(text!==undefined)el.textContent=text;if(cls)el.className=cls;return el;}
@@ -86,10 +228,15 @@ function drainImages(){
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
 function dispose(){generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];$('large').close();}
 function sourceStatus(value){return (value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert')));}
-function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();$('jobList').replaceChildren();if(!value.jobs.length){$('jobs').append(node('option','Keine veröffentlichten Jobs'));if(keepDraft){newDraft(keepDraft);return;}$('view').replaceChildren(node('h2','Noch keine veröffentlichten Arbeitsstände'),node('p','Der Produktionsakteur muss Record, Originale und die geprüfte workspace.json gemeinsam in Git sichern. Bestehende WIP werden nicht konvertiert.'));return;}
+function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();$('jobList').replaceChildren();if(!value.jobs.length){
+  $('jobs').append(node('option','Keine veröffentlichten Jobs'));
+  newDraft(keepDraft || drafts.at(-1)?.id);
+  $('jobs').selectedIndex=0;
+  return;
+ }
  for(const [jobIndex,job] of value.jobs.entries()){const label=`${job.title} · Stand ${jobIndex+1} (${job.source==='local'?'lokal':'Remote'})`;const opt=node('option',label);opt.value=job.id;$('jobs').append(opt);const button=node('button',job.title,'job');button.dataset.job=job.id;button.append(node('small',`Stand ${jobIndex+1}${job.conflict?' · Quellenkonflikt':''}`));button.onclick=()=>{$('jobs').value=job.id;open(job.id);};$('jobList').append(button);}
  if(keepDraft){newDraft(keepDraft);return;}const retained=value.jobs.find(j=>active&&j.puzzle_id===active.puzzle_id&&j.revision===active.revision&&j.source===active.source);$('jobs').value=(retained||value.jobs[0]).id;open($('jobs').value);}
-async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts();const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);for(const el of $('jobList').children)el.setAttribute('aria-current',String(el.dataset.job===id));$('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));try{const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;const view=$('view');view.replaceChildren(node('h2',value.title));view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));view.append(node('p',value.publication,'hint'));workflow(view,value);if(value.facts.blockers.length){const d=node('details');d.append(node('summary','Überlieferte offene Produktionspunkte'));const ul=node('ul');for(const b of value.facts.blockers)ul.append(node('li',b));d.append(ul);view.append(d);}
+async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts();const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=id;for(const el of $('jobList').children)el.setAttribute('aria-current',String(el.dataset.job===id));$('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));try{const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;const view=$('view');view.replaceChildren(node('h2',value.title));view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));view.append(node('p',value.publication,'hint'));workflow(view,value);if(value.facts.blockers.length){const d=node('details');d.append(node('summary','Überlieferte offene Produktionspunkte'));const ul=node('ul');for(const b of value.facts.blockers)ul.append(node('li',b));d.append(ul);view.append(d);}
  const phase=value.facts.state;const groups=phase==='background_review'?[['background']]:[['reveal','motif'],['raster'],['raster_draft'],...(PW.step(value)===5?[['background']]:[])];const shownComparisons=new Set();for(const roles of groups){const assets=value.assets.filter(a=>{
   if(!roles.includes(a.role))return false;
   if(['reveal','motif'].includes(a.role)){const key=a.role+':'+a.location.sha256;if(shownComparisons.has(key))return false;shownComparisons.add(key);}

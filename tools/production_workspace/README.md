@@ -10,7 +10,15 @@ Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist nur noch
 ein Einstieg zur einzigen Startdatei.
 
 „Neues Motiv“ beginnt mit einem Briefing und optional einer eigenen Datei, die
-dem Chat tatsächlich beigegeben werden muss. Eine ID entsteht erst im Auftrag.
+dem Chat tatsächlich beigegeben werden muss. Zusätzliche Motivhinweise wie Blickwinkel,
+Stimmung und unverzichtbare Merkmale haben ein eigenes Feld. Unter „Rastervorgaben“
+lassen sich Breite und Höhe (je 1–50 Zellen, auch rechteckig), Modus und für
+Farbrätsel 2–8 Vordergrundfarben angeben. Maße und Farbzahl haben getrennte
+Genauigkeiten. Ohne Vorgabe bleibt die Wahl offen; das Abschlussbild ist immer
+farbig. Die lokalen Motivbriefings merken sich diese Eingaben pro Entwurf.
+Beim Übergang vom gewählten Abschlussbild zur Motivvorlage sind Rasterwünsche
+direkt zugänglich. Änderungen an einem vorgelegten Korridor laufen über
+„Gezielt korrigieren“. Eine ID entsteht erst im Auftrag.
 Die fünf Schritte zeigen Abschlussbilder, Motivvorlage, geprüfte Rasterangebote,
 danach Kontextzeichnungen und schließlich Endabnahme/Integration. Ein Klick
 merkt eine Auswahl nur vor. „Auftrag kopieren“ erzeugt den gebundenen Auftrag;
