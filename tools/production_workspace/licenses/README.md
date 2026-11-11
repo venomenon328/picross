@@ -1,10 +1,10 @@
 # Gebundene Runtime-Lizenztexte
 
-Unveränderte Originaltexte der tatsächlich verwendeten CPython-3.13.14-x64-
-Komponenten, ergänzend zu Python-, Pillow- und PyInstaller-Lizenzen aus deren
+UnverÃ¤nderte Originaltexte der tatsÃ¤chlich verwendeten CPython-3.13.14-x64-
+Komponenten, ergÃ¤nzend zu Python-, Pillow- und PyInstaller-Lizenzen aus deren
 Distributionen. Die Quelle wird beim Bau nicht neu heruntergeladen.
 
-| Datei | Gebundene Primärquelle |
+| Datei | Gebundene PrimÃ¤rquelle |
 | --- | --- |
 | [Tcl-8.6.15.txt](Tcl-8.6.15.txt) | [Tcl core-8-6-15](https://github.com/tcltk/tcl/blob/core-8-6-15/license.terms) |
 | [OpenSSL-3.0.21.txt](OpenSSL-3.0.21.txt) | [OpenSSL 3.0.21](https://github.com/openssl/openssl/blob/openssl-3.0.21/LICENSE.txt) |
@@ -15,9 +15,9 @@ Distributionen. Die Quelle wird beim Bau nicht neu heruntergeladen.
 | [mpdecimal-4.0.0.txt](mpdecimal-4.0.0.txt) | [CPython-Quelldependenz mpdecimal](https://github.com/python/cpython-source-deps/blob/mpdecimal-4.0.0/COPYRIGHT.txt) |
 
 Die [Windows-Dependenzbindung von CPython 3.13.14](https://github.com/python/cpython/blob/v3.13.14/PCbuild/get_externals.bat)
-führt bzip2 1.0.8, xz/liblzma 5.2.5 und libffi 3.4.4; Python.txt enthält bereits
+fÃ¼hrt bzip2 1.0.8, xz/liblzma 5.2.5 und libffi 3.4.4; Python.txt enthÃ¤lt bereits
 den libffi-Text und die Hinweise zu Microsoft Distributable Code.
-Der Build liest Tcl/OpenSSL/Expat/zlib/mpdecimal tatsächlich aus der Laufzeit
+Der Build liest Tcl/OpenSSL/Expat/zlib/mpdecimal tatsÃ¤chlich aus der Laufzeit
 und verweigert unpassende Versionen. In xz ist allein die public-domain-
 liblzma eingebunden, keine GPL-Kommandozeilenwerkzeuge oder Buildskripte.
-Tk erhält seinen Originaltext zusätzlich aus der konkreten Pythoninstallation.
+Tk erhÃ¤lt seinen Originaltext zusÃ¤tzlich aus der konkreten Pythoninstallation.
