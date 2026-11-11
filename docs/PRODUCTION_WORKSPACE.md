@@ -128,11 +128,26 @@ Ein Windowsstarter öffnet anschließend die lokale Browseroberfläche. Der
 Zustandsordner liegt nicht in `content/`, `game/` oder einem fremden Arbeitsbaum.
 [WORKSPACE](dev-rules/WORKSPACE.md) gilt; persönliche Pfade werden nicht committed.
 
-Standard ist der konfigurierte Zielbranch `main` plus die regulären
-Produktionsbranches `content/*`. Weitere ausdrücklich konfigurierte Branches
-können hinzugefügt werden. Der Benutzer wählt nötigenfalls einen Job-/Quellstand,
-aber keine einzelnen Bildpfade. Gitrevision und Produktionsrevision sind
-verschiedene Kennungen.
+Verbindliches Schema für neue PW-Produktionen: `content/pw/<puzzle_id>`, zum
+Beispiel `content/pw/pz-eule`. Eine Produktion behält ihren Branch; ihre
+Revisionen liegen weiterhin in der bestehenden Ablage. Die Rätsel-ID besteht
+aus `pz-` und kleingeschriebenen Buchstaben/Ziffern mit optionalen Bindestrichen.
+Standardauswahl: `main` und `content/pw/*`; ausdrücklich kleinere Auswahlen
+daraus sind zulässig. Andere Produktionsbranches werden weder synchronisiert
+noch inhaltlich durchsucht. Auf einem Produktionsbranch liest der Assistent
+nur Indexeinträge der im Branchnamen gebundenen Rätsel-ID. Auf `main` bleiben
+alle dort veröffentlichten PW-Produktionen lesbar. Der Produktionsakteur muss
+neue PW-Übergaben auf dem zugehörigen Branch veröffentlichen; PW-B übernimmt
+diese Vorgabe in seine Aufträge. Keine Umbenennung/Löschung alter Branches.
+
+Die unveränderte bisherige Standardeinrichtung `main` + `content/*` wird einmalig
+im eigenen Zustand auf den neuen Filter eingeengt. Abweichende alte Auswahlen
+werden mit einer verständlichen Neueinrichtungsaufforderung zurückgewiesen,
+nicht still erweitert. Der neue Leser verwendet `git-cache-pw-v1` und den
+zugehörigen Synchronisierungsstatus. Ein vorhandener alter Cache bleibt
+unangetastet und wird nicht durchsucht. Der Benutzer wählt nötigenfalls einen
+Job-/Quellstand, aber keine einzelnen Bildpfade. Gitrevision und
+Produktionsrevision sind verschiedene Kennungen.
 
 ### 4.2 Lesend gegenüber dem Projekt
 
@@ -144,7 +159,10 @@ Ein lokaler Commit ist lokal lesbar; daraus folgt keine Remote-Erreichbarkeit.
 Die einmalige Einrichtung bietet „Nur lokale Gitstände“ oder „Mit konfiguriertem
 Remote aktualisieren“. Im zweiten Fall werden beim Start und über eine klar
 bezeichnete Aktualisierungsaktion die gewählten Refs in einen eigenen Gitcache
-geholt. Das ist ausschließlich Cachepflege. Keine Schreiboperation im
+geholt. Der Browser öffnet vor dieser Arbeit; eine einzelne Hintergrundoperation
+liefert Fortschrittsstatus und meldet auch einen Fehlerabschluss. Status- und
+vorhandene Bildansichten bleiben währenddessen erreichbar. Aktualisieren erzeugt
+keinen zweiten parallelen Suchlauf. Das ist ausschließlich Cachepflege. Keine Schreiboperation im
 Benutzercheckout, kein Pull, Checkout, Reset, Stash, Add, Commit, Push oder Merge.
 Keine automatische Authentifizierungsänderung. Bestehende Git-Anmeldung nutzen;
 kein GitHub-Token in HTML, Browserstorage, Prompt oder Protokoll aufnehmen.
@@ -175,6 +193,13 @@ Alte Bildantworten dürfen nach Job-/Revisionswechsel keine neue Karte überschr
 Historische Bildreferenzen werden bei Bedarf aus den erreichbaren Gitobjekten
 aufgelöst; fehlende Objekte sind Fehler, keine Aufforderung zum Einzelbildupload.
 Es entsteht kein allgemeiner Archivbrowser für alte WIP.
+
+Der eigene Cache holt nur die gewählten Branchspitzen mit flacher Historie und
+ohne Bildblobs. Ausdrücklich gebundene historische Commits und benötigte Blobs
+werden gezielt nachgeladen. Unveränderte Index-/Projektionsbefunde werden
+commitgebunden in einem begrenzten Prozesscache wiederverwendet. Statusabrufe
+lesen ausschließlich den zuletzt fertiggestellten Listenstand und starten
+keine erneute Git-Suche.
 
 ## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist
 

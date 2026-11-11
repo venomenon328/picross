@@ -75,6 +75,7 @@ const run = code => vm.runInContext(code, context);
     const thirdOpenSeconds = (Date.now() - started) / 1000;
     assert.equal(cards().length, 6, 'third job opens without manual navigation');
     await document.getElementById('refresh').onclick();
+    await until(() => document.getElementById('load').hidden === false);
     assert(!document.getElementById('load').hidden, 'metadata refresh remains available');
     await until(() => cards().length === 6 && cards().every(c => descendants(c).some(el => el.tag === 'img')), 30000);
     assert.equal(metadataBusy, 0, 'aborted images never exhaust metadata capacity');
@@ -94,7 +95,8 @@ const run = code => vm.runInContext(code, context);
   oldJob = run('active.id');
   // Real metadata access while slow images occupy the two image slots.
   await document.getElementById('refresh').onclick();
-  assert(!document.getElementById('load').hidden);
+  await until(() => document.getElementById('load').hidden === false);
+    assert(!document.getElementById('load').hidden);
   await until(() => cards().length === 6 && cards().every(c => descendants(c).some(el => el.tag === 'img')));
   assert.equal(peak, 2);
   assert.equal(retries, 1);

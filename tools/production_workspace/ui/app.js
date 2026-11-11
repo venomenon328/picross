@@ -52,8 +52,23 @@ async function open(id){dispose();const current=generation,signal=controller.sig
  }catch(exc){if(current===generation&&exc.name!=='AbortError')$('view').replaceChildren(node('h2','Arbeitsstand kann nicht geöffnet werden'),node('p',exc.message,'error'),node('p','Quellenveröffentlichung korrigieren und danach neuere Ergebnisse suchen.','hint'));}}
 function zoom(){const img=$('largeImage'),value=$('zoom').value;img.classList.toggle('zoomed',value!=='fit');if(value==='fit')img.removeAttribute('width');else img.width=img.naturalWidth*Number(value);}
 $('largeImage').onload=zoom;$('zoom').onchange=zoom;$('close').onclick=()=>$('large').close();$('jobs').onchange=()=>open($('jobs').value);
-$('refresh').onclick=async()=>{const button=$('refresh');button.disabled=true;try{pending=await(await request('/api/refresh',{method:'POST'})).json();$('sourceStatus').textContent=sourceStatus(pending)+' · aktive Ansicht bleibt unverändert';$('load').hidden=false;error(pending.errors.join('\n'));}catch(exc){error(exc.message);}finally{button.disabled=false;}};
+let pollTimer=null;
+async function checkSources(value){
+ clearTimeout(pollTimer);
+ const update=value.update||{state:'done'};
+ $('refresh').disabled=update.state==='running';
+ if(update.state==='running'){
+  $('sourceStatus').textContent=`Arbeitsstände werden gesucht · ${Math.floor(update.elapsed_seconds||0)} Sekunden`;
+ }else if(!listing&&value.snapshot){adopt(value);}
+ else if(listing&&value.snapshot!==listing.snapshot&&value.snapshot!==pending?.snapshot){
+  pending=value;$('load').hidden=false;$('sourceStatus').textContent=sourceStatus(value)+' · aktive Ansicht bleibt unverändert';error(value.errors.join('\n'));
+ }
+ if(update.state==='error')error(update.error||'Aktualisierung fehlgeschlagen. Erneut suchen.');
+ if(update.state==='running')pollTimer=setTimeout(pollSources,1000);
+}
+async function pollSources(){try{await checkSources(await(await request('/api/jobs')).json());}catch(exc){$('refresh').disabled=false;error(exc.message);}}
+$('refresh').onclick=async()=>{const button=$('refresh');button.disabled=true;try{await checkSources(await(await request('/api/refresh',{method:'POST'})).json());}catch(exc){error(exc.message);button.disabled=false;}};
 $('load').onclick=()=>{if(pending)adopt(pending);};
 function theme(value){document.documentElement.dataset.theme=value;try{localStorage.setItem('pw-theme',value);}catch{}}
 $('theme').onchange=()=>theme($('theme').value);try{$('theme').value=localStorage.getItem('pw-theme')||'system';}catch{}theme($('theme').value);
-request('/api/jobs').then(r=>r.json()).then(adopt).catch(exc=>error(exc.message));
+pollSources();

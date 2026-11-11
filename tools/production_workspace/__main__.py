@@ -47,13 +47,13 @@ def main(argv=None):
         if not 0 <= args.port <= 65535:
             raise InvalidInput('Port muss zwischen 0 und 65535 liegen.')
         repository = Repository(args.state)
-        repository.refresh()
         service = Service(repository)
         try:
             server = Server(service, args.port)
         except OSError as exc:
             raise InvalidInput('Port ist belegt. Ohne --port automatisch einen freien Port wählen.') from exc
         url = server.origin + '/#' + service.secret
+        service.start_refresh()
         print('Produktionsansicht läuft. Beenden mit Strg+C. Sitzungsschlüssel werden nicht protokolliert.')
         if not args.no_browser:
             if not webbrowser.open(url):

@@ -74,21 +74,33 @@ def git(directory, *args, timeout=30):
 
 
 class GitSource:
-    def __init__(self, repository, fetch_object=None):
+    def __init__(self, repository, fetch_object=None, fetch_commit=None):
         self.root = io.external(repository)
         self.fetch_object = fetch_object
+        self.fetch_commit = fetch_commit
         ap.require(self.root.is_dir(), 'Projektcheckout fehlt.')
         git(self.root, 'rev-parse', '--git-dir')
         self.cache, self.tree_cache = LRU(), LRU(4 * 1024 * 1024)
+        self.commits = LRU(16384)
         self.bytes_read = 0
 
     def resolve(self, ref):
         ap.require(isinstance(ref, str) and (ref.startswith('refs/') or SHA1.fullmatch(ref)), 'Ungültiger Quellref.')
-        return check_commit(git(self.root, 'rev-parse', '--verify', ref + '^{commit}').decode().strip())
+        commit = check_commit(git(self.root, 'rev-parse', '--verify', ref + '^{commit}').decode().strip())
+        self.commits.put(commit, b'1')
+        return commit
 
     def blob(self, commit, name, missing=False):
         check_commit(commit)
         production_path(name)
+        if self.commits.get(commit) is None:
+            try:
+                resolved = self.resolve(commit)
+            except InvalidInput:
+                ap.require(self.fetch_commit is not None, 'Gebundener historischer Commit fehlt; Quelle aktualisieren.')
+                self.fetch_commit(commit)
+                resolved = self.resolve(commit)
+            ap.require(resolved == commit, 'Historische Quelle muss ein Commit sein.')
         parent = ''
         parts = name.split('/')
         for number, part in enumerate(parts):
