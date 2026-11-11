@@ -94,9 +94,10 @@ class BatchFixture:
         self.path = self.root / "plan-initial.json"
 
     def rulebook(self, name, version):
-        source = ROOT / ("docs/ai-workflows/PUZZLE_AUTHORING.md" if version == "0.6.0"
-                         else "docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md")
-        raw = source.read_bytes()
+        # BA-A remains a separate local generation; never relabel current 0.8 rules.
+        raw = ("**Version 0.6.0 · Dokumentrevision 1 · TEST ONLY**\n"
+               "Synthetic BA-A snapshot; not a production rulebook.\n").encode("utf-8") if version == "0.6.0" else (
+                   ROOT / "docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md").read_bytes()
         revision = int(re.search(r"\*\*Version " + re.escape(version) +
                                  r" · Dokumentrevision (\d+) ·", raw.decode()).group(1))
         return {"version": version, "document_revision": revision,

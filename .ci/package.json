@@ -29,6 +29,21 @@
       "path": "tools/test_production_workspace.py",
       "disposition": "change-scoped",
       "reason": "Bestehende Lade-/Abbruchfälle verwenden sechs unterschiedliche gebundene Originalbilder, da PW-B identische Vergleichsbilder zusammenfasst. Unverändert sechs echte Transfers, Hashvergleich und Kapazitäts-/Abbruchguards; keine neue Testfamilie."
+    },
+    {
+      "path": "tests/puzzle_production/batch_fixtures.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische 0.6-Fälle verwenden einen ausdrücklich als TEST ONLY bezeichneten 0.6-Snapshot statt der inzwischen aktiven 0.8-Norm. Keine Umetikettierung, neue Familie oder Änderung der alten Formatprüfung."
+    },
+    {
+      "path": "tests/puzzle_production/test_palette_gate.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische 0.6-Fälle verwenden einen ausdrücklich als TEST ONLY bezeichneten 0.6-Snapshot statt der inzwischen aktiven 0.8-Norm. Keine Umetikettierung, neue Familie oder Änderung der alten Formatprüfung."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_rebind.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische 0.6-Fälle verwenden einen ausdrücklich als TEST ONLY bezeichneten 0.6-Snapshot statt der inzwischen aktiven 0.8-Norm. Keine Umetikettierung, neue Familie oder Änderung der alten Formatprüfung."
     }
   ],
   "core_change": null,
