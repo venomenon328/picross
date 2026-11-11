@@ -1,6 +1,7 @@
 """Configured local refs and optional remote sync into a private bare cache."""
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import re
 import threading
@@ -282,8 +283,15 @@ def configure(repository, state, *, remote=None, refs=None, launcher=False):
     ap.require(not config.exists(), 'Einrichtung existiert bereits; den vorhandenen Starter verwenden.')
     ap.require(not any(f for f in state.iterdir() if not (launcher and f.name == '.launcher' and f.is_dir())),
                'Neuer eigener, leerer Zustandsordner erforderlich.')
-    with config.open('xb') as stream:
-        stream.write(p.data(value))
+    temporary = io.safe(state, 'config-setup.tmp')
+    try:
+        with temporary.open('xb') as stream:
+            stream.write(p.data(value))
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.link(temporary, config)  # Publish complete bytes, never replace existing configuration.
+    finally:
+        temporary.unlink(missing_ok=True)
     return value
 
 

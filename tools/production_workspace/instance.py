@@ -104,6 +104,7 @@ class StateLock:
         # Acquired OS lock proves the previous owner has ended, irrespective of
         # PID reuse. Stale state is never used to kill or open anything.
         self.metadata.unlink(missing_ok=True)
+        (self.directory / 'instance.tmp').unlink(missing_ok=True)
         return True
 
     def publish(self, value):
@@ -168,6 +169,7 @@ def control(metadata, action):
 def existing(lock, build, action='open', timeout=15):
     deadline = time.monotonic() + timeout
     while True:
+        metadata = None
         try:
             metadata = lock.read()
             identity = control(metadata, 'identify')
@@ -180,3 +182,14 @@ def existing(lock, build, action='open', timeout=15):
             if time.monotonic() >= deadline:
                 raise ValueError('Start läuft noch oder ist nicht erreichbar. Warten und erneut starten; historische CMD vorher mit Strg+C beenden.') from None
             time.sleep(0.1)
+        except ValueError:
+            # A crash/restart may replace the authenticated metadata between
+            # read and connect. Retry only a demonstrably changed record.
+            if metadata is None:
+                raise
+            try:
+                changed = lock.read() != metadata
+            except FileNotFoundError:
+                changed = True
+            if not changed or time.monotonic() >= deadline:
+                raise
