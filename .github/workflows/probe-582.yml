@@ -1,0 +1,31 @@
+name: Bedienprobe Produktionswerkstatt 582
+on:
+  push:
+    branches: ['diag/582-werkstatt']
+permissions:
+  contents: read
+jobs:
+  werkstatt:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          persist-credentials: false
+      - name: Bedientest vorbereiten und unveränderten Lieferhead auschecken
+        run: |
+          mkdir -p "$RUNNER_TEMP/werkstatt"
+          cp probe/probe.py "$RUNNER_TEMP/werkstatt/probe.py"
+          git checkout --detach 04457d1e43851c6a4f90dc2dee743c34c0f447e4
+          python -m venv "$RUNNER_TEMP/werkstatt/venv"
+          "$RUNNER_TEMP/werkstatt/venv/bin/pip" install playwright==1.55.0
+      - name: Felder, Zwischenablage, Entwürfe und Layout im Browser prüfen
+        run: '"$RUNNER_TEMP/werkstatt/venv/bin/python" "$RUNNER_TEMP/werkstatt/probe.py"'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Sichtprobe-Produktionswerkstatt
+          path: ${{ runner.temp }}/werkstatt/*.png
+          if-no-files-found: warn
+          retention-days: 1
