@@ -76,7 +76,9 @@ class BackgroundRebindTests(unittest.TestCase):
         package = make(self.root / ("input-" + str(revision)), self.identifier, 3, 3, "mono")
         h = load_json(package / "handoff.json")
         h["revision"] = "r" + str(revision)
-        shutil.copyfile(ROOT / "docs/ai-workflows/PUZZLE_AUTHORING.md", package / "rulebook.md")
+        (package / "rulebook.md").write_text(
+            "**Version 0.6.0 · Dokumentrevision 1 · TEST ONLY**\nSynthetic unchanged legacy-contract fixture.\n",
+            encoding="utf-8")
         h["rulebook"] = {"version": "0.6.0", "file": "rulebook.md", "sha256": io.file_hash(package, "rulebook.md")}
         # A new, explicitly approved test package consumes the actual active reveal.
         image = (self.checkout / ("game/" + entry["reveal"])).read_bytes()

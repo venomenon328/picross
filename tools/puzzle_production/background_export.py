@@ -125,7 +125,7 @@ def _same(actual, expected):
 
 def _report(report, catalog, category_id, *, verified):
     from . import target_adapter as adapter
-    ap.require(report["format"] == adapter.BACKGROUND_INSPECTION and report["technical"] and
+    ap.require(report["format"] in (adapter.BACKGROUND_INSPECTION, 'picross-authoring-content-inspection-v2') and report["technical"] and
                report["editorial_approved"] and report["background"]["ready"] and
                report["effective_state"] == "editorially_approved",
                "Background export requires full content readiness and final approval v2")
@@ -196,7 +196,7 @@ def export_background(source, output, *, name, revision, stem, save_slot, approv
         with ap.open_package(source, allow_background=True, allow_manual_review=manual_authorization is not None,
                              external_root=external_root, history_repo=history_repo, transport=transport) as package:
             ap.require(package.background_enabled and package.archive_sha256 == io.checksum(original),
-                       "Background export requires a stable original 0.7.0 ZIP")
+                       "Background export requires a stable original 0.7.0/0.8.0 ZIP")
             inspected, design, matrix, logic, approval = adapter.inspect(package, approval_path,
                 allow_background=True, manual_authorization=manual_authorization, palette_exception=palette_exception)
             catalog_raw = read_source(categories_path, 128 * 1024)
@@ -337,7 +337,7 @@ def verify_background_export(directory, manifest, manifest_bytes, *, _pending=Fa
         external = io.safe(directory, "external")
         with ap.open_package(files[ORIGINAL], allow_background=True, allow_manual_review=manual,
                              external_root=external if external.exists() else None, transport=transport) as package:
-            ap.require(package.background_enabled, "Export v6 requires original handoff v3 / Authoring 0.7.0")
+            ap.require(package.background_enabled, "Export v6 requires original handoff v3/0.7.0 or v4/0.8.0")
             inspected, design, matrix, logic, approval = adapter.inspect(package, files["approval.json"], allow_background=True,
                 manual_authorization=manual_path, palette_exception=exception)
             report = _report(inspected, catalog, manifest["category_id"], verified=not _pending)

@@ -7,7 +7,7 @@ import zipfile
 
 ROOT = Path(__file__).parent
 FILES = ['__init__.py', '__main__.py', 'presentation.py', 'repository.py', 'server.py', 'sources.py',
-         'ui/index.html', 'ui/app.js', 'ui/style.css']
+         'ui/index.html', 'ui/workflow.js', 'ui/app.js', 'ui/style.css']
 
 
 def build():
@@ -15,6 +15,7 @@ def build():
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as archive:
         for name in FILES:
             info = zipfile.ZipInfo(name, (2026, 1, 1, 0, 0, 0))
+            info.create_system = 3  # Stable ZIP bytes on Windows and Linux producers.
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             archive.writestr(info, (ROOT / name).read_bytes())

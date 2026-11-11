@@ -5,10 +5,12 @@ const assert = require('node:assert/strict');
 const {readFileSync} = require('node:fs');
 const {createHash} = require('node:crypto');
 const vm = require('node:vm');
-const [origin, token, expectedHash, mode = 'late'] = process.argv.slice(2);
+const [origin, token, expectedHashesJson, mode = 'late'] = process.argv.slice(2);
+const expectedHashes = JSON.parse(expectedHashesJson);
 class Element {
   constructor(tag) { this.tag = tag; this.children = []; this.dataset = {}; this.classList = {toggle(){}}; }
   append(...children) { this.children.push(...children); }
+  before() {}
   replaceChildren(...children) { this.children = children; }
   setAttribute() {}
   close() {}
@@ -60,6 +62,7 @@ const context = vm.createContext({
 });
 const run = code => vm.runInContext(code, context);
 (async () => {
+  run(readFileSync(__dirname + '/ui/workflow.js', 'utf8'));
   run(readFileSync(__dirname + '/ui/app.js', 'utf8'));
   await until(() => cards().length === 6 && active === 2);
   if (mode === 'abort') {
@@ -83,7 +86,7 @@ const run = code => vm.runInContext(code, context);
     assert(imageBusy > 4, 'automatic recovery outlasts the previous four-retry limit');
     assert(peak <= 2, 'bounded client image load');
     assert.equal(hashes.length, 6, 'all six current cards recover automatically');
-    assert(hashes.every(hash => hash === expectedHash), 'exact original PNG bytes');
+    assert(new Set(hashes).size === 6 && hashes.every(hash => expectedHashes.includes(hash)), 'exact original PNG bytes');
     assert.equal(run('urls.length'), 6, 'no stale image URLs rendered');
     assert(cards().every(c => descendants(c).find(el => el.textContent === 'Großansicht öffnen').disabled === false));
     console.log(JSON.stringify({probe: 'real transport abort, two job switches, five-second readers',
@@ -101,7 +104,7 @@ const run = code => vm.runInContext(code, context);
   assert.equal(peak, 2);
   assert.equal(retries, 1);
   assert.equal(hashes.length, 6);
-  assert(hashes.every(hash => hash === expectedHash), 'exact original PNG bytes');
+  assert(new Set(hashes).size === 6 && hashes.every(hash => expectedHashes.includes(hash)), 'exact original PNG bytes');
   assert(cards().every(c => descendants(c).find(el => el.textContent === 'Großansicht öffnen').disabled === false));
 
   // A failed card offers its own retry without reopening the complete job.

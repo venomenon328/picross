@@ -1,12 +1,25 @@
-# Lokale Produktionsansicht (PW-A)
+# Lokaler Produktionsassistent (PW-B)
 
-Die lesende Job-/Bildansicht für neu veröffentlichte Handoff-v3-/Record-v2-
-Arbeitsstände. [Fachvertrag](../../docs/PRODUCTION_WORKSPACE.md),
-[Paketentscheidung PW-A](https://github.com/venomenon328/picross/issues/578#issuecomment-6793791025).
-[Startkorrektur PW-A2](https://github.com/venomenon328/picross/issues/578#issuecomment-6798166149)
-engt das Branchschema ein und lädt Git im Hintergrund.
-Der neue Produktionsdefault und die fünfstufige Auftragssteuerung gehören zu PW-B.
-Das bestehende Offline-Sheet und vorhandene WIP bleiben unverändert.
+Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
+Handoff v4, Record v3 und Projektion v2. Verbindlich sind der
+[PW-B-Vertrag](../../docs/PW_B_CONTRACT.md),
+[Authoringstandard](../../docs/ai-workflows/PUZZLE_AUTHORING.md) und die
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194).
+Die lesende PW-A2-Start-/Git-/Sicherheitsarchitektur bleibt erhalten.
+Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist nur noch
+ein Einstieg zur einzigen Startdatei.
+
+„Neues Motiv“ beginnt mit einem Briefing und optional einer eigenen Datei, die
+dem Chat tatsächlich beigegeben werden muss. Eine ID entsteht erst im Auftrag.
+Die fünf Schritte zeigen Abschlussbilder, Motivvorlage, geprüfte Rasterangebote,
+danach Kontextzeichnungen und schließlich Endabnahme/Integration. Ein Klick
+merkt eine Auswahl nur vor. „Auftrag kopieren“ erzeugt den gebundenen Auftrag;
+erst das Absenden und der folgende veröffentlichte Gitstand bestätigen Fortschritt.
+Fortsetzen und Korrektur verwenden dieselben Originalquellen. Eine vorhandene
+gültige Endabnahme wird nicht nochmals angefordert. Arbeitswurzel, Bereinigung
+und bedingte Mergefreigabe sind persönliche Optionen, niemals Recordbefugnisse.
+Ein ungepushter Stand oder lokaler Testremote bleibt sichtbar, liefert aber
+keinen als Cloudquelle ausgegebenen Folgeauftrag.
 
 ## Start und einmalige Einrichtung
 
@@ -65,8 +78,7 @@ zweiter manueller Einrichtungspfad.
 ## Einzelne ausführbare Startdatei
 
 [Picross-Start.cmd](Picross-Start.cmd) enthält den zugehörigen lesenden Programmstand
-samt Oberfläche. Sie kann auch mit einem unveränderten PW-A-Checkout verwendet
-werden. Doppelklick genügt; bei Bedarf einmal den Projektordner angeben.
+samt Oberfläche. Sie benötigt den zugehörigen vertrauenswürdigen PW-B-Programmcheckout. Doppelklick genügt; bei Bedarf einmal den Projektordner angeben.
 Die vorhandene Einrichtung und isolierte Pythonumgebung werden wiederverwendet;
 Pillow 12.3.0 wird nur bei Bedarf dort installiert. Python/Git bleiben
 Voraussetzung. Store-Python- und Junctionpfade werden innerhalb von Python
@@ -94,7 +106,7 @@ separat benannte Windowsprobe; eine Linuxmessung belegt diese nicht.
 Job/Revision wählen; Bildkarten nach Rollen und der Reveal-/Motivvergleich
 laden ihre Originale. Großansicht bietet Einpassen, 100/200/400 Prozent und
 neutralen Transparenzprüfgrund. Alle Texte werden als Klartext gerendert.
-Es gibt keine Freigabeschaltfläche, automatische Rasterwahl oder neue Zertifizierung.
+Auswahlschaltflächen erzeugen nur Auftragsabsichten, keine Freigabe oder Zertifizierung.
 Die Anzeige benennt vorhandene Prüfungen ausdrücklich als überlieferte Befunde.
 
 „Neuere Ergebnisse suchen“ aktualisiert lokale Refs und bei gewählter
@@ -142,7 +154,8 @@ Metadatenaufrufe wiederholen höchstens viermal; fehlgeschlagene Bildkarten biet
 „Bild erneut laden“. Jobwechsel verwirft alte Warteschlangeneinträge und Antworten.
 Die Jobliste liest keine ZIPs. Ein Job wird vor Bildausgabe gegen
 Originale geprüft, anschließend werden nur gebundene Bildkennungen ausgeliefert.
-Kein Browserbildarchiv: nur die Darstellungseinstellung bleibt im Local Storage;
+Kein Browserbildarchiv: Darstellung, persönliche Auftragsoptionen und höchstens
+20 lokale Motivbriefings bleiben im Local Storage;
 der zufällige Sitzungsschlüssel liegt bis zum Schließen im Session Storage,
 damit Neuladen funktioniert. Er erscheint weder in Logs noch technischen Details.
 
@@ -150,8 +163,9 @@ damit Neuladen funktioniert. Er erscheint weder in Logs noch technischen Details
 
 Vor der beauftragten Phasensicherung erzeugt der Produktionsakteur automatisch
 die neue Ansichtsdatei. Dies ist kein zusätzlicher manueller Schritt für den
-Benutzer. PW-A liefert die API/CLI; erst PW-B bindet sie obligatorisch in den
-neuen Produktionsablauf ein.
+Benutzer. Builder v3 und Finalizer v2 erzeugen und prüfen sie obligatorisch.
+Der Finalizer aktualisiert die Projektion nach dem guarded Recordwechsel; eine
+unterbrochene Wiederholung vervollständigt genau diese gebundenen Bytes.
 
 ```sh
 python -m tools.production_workspace.projector --repository /absoluter/projektcheckout --request /absoluter/request.json
@@ -168,7 +182,7 @@ Beispiel für eine einzelne Assetquelle im Auftrag:
 
 Das Beispiel ist nur ein Feldbeispiel; der komplette Auftrag enthält exakt
 `format,puzzle_id,revision,record,title,assets,offers`. Format:
-`picross-production-presentation-request-v1`. `record` ist `{commit:null,file:...}`
+`picross-production-presentation-request-v2` für aktuelle 0.8-Originale. `record` ist `{commit:null,file:...}`
 an der kanonischen Indexposition. `offers[]` enthält `id,kind,label,record,asset_ids`;
 jeder Angebotsrecord liegt im Index seines ausdrücklich gebundenen Snapshots.
 Angebotsmitgliedschaft und Beschriftungen stammen aus der tatsächlichen
@@ -181,7 +195,7 @@ müssen regulär vorliegen. Verlorene historische Gitobjekte sind ein Fehler.
 Bei direkter Repositoryquelle ist `container=null`; der Pfad bezeichnet die zum
 Record gehörende Originaldatei unter dessen Produktionsrevision. ZIP-Mitgliedspfade
 sind relativ zur Paketwurzel, auch bei ZIPs mit einer einzelnen äußeren Wurzel.
-Voraussetzung sind heutige v3-/v2-Pakete; kein WIP-Import und keine automatische
+Voraussetzung sind aktuelle v4-/v3-Pakete; kein WIP-Import und keine automatische
 Konvertierung. Reveal-/Motivbezüge, Revealangebote, vorhandene Import-/Reparatur-
 Rasteransichten und Hintergrundmanifestkandidaten werden an ihren Originalen
 geprüft. Unvollständige Raster bleiben `raster_draft`; sie sind kein Rasterangebot.
@@ -202,6 +216,21 @@ Exit 0 bei Erfolg, 2 bei ungültigen oder kollidierenden Quellen. Git-Sicherung
 von Index, Record, Projektion und Originalen bleibt ausdrücklich Aufgabe des
 beauftragten Produktionsakteurs. Die HTTP-API kann den Projektor nicht aufrufen.
 
+## Tatsächlicher Registrierungsabschluss
+
+Nach sicherer Registrierung deren tatsächliche Dateien committen. Anschließend:
+
+```sh
+python -m tools.production_workspace.projector --repository /absoluter/checkout --complete-record content/authoring/pz-beispiel/r02/record.json --integration-commit <volle-SHA>
+```
+
+Dieser Aufruf registriert nichts. Er bindet den bereits committeten Registry-/
+Export-/Runtimestand an genau das freigegebene Original, aktualisiert Record und
+Projektion und ist identisch wiederholbar. Danach beide Dateien committen/pushen.
+Der Assistent meldet „lokal registriert“, niemals dadurch bereits Mainintegration.
+Ein separater Hintergrundfolgeauftrag liest danach zuerst die aktive integrierte
+Source und verwendet ausschließlich den vorhandenen HP-I1b2-Weg.
+
 ## Sicherheits- und Prüfgrenzen
 
 Loopback, exakter Host/Origin, Sitzungsschlüssel und keine CORS-Freigabe.
@@ -218,7 +247,7 @@ des tatsächlichen UI-Ladecodes gegen einen langsamen lokalen HTTP-Dienst.
 Die DOM-Testnachbildung prüft keine Darstellung oder echte Browserbedienung.
 Sie prüft getrennt echte Fetch-Abbrüche bei fünf Sekunden weiterlaufender
 Serverarbeit und verspätet eintreffende Bildantworten.
-Der einmalige PW-A-T01-Durchstich und die
+Der einmalige PW-B-T01-Durchstich und die
 wirkliche Windows-/Browserprobe T02 werden am konkreten Lieferhead im PR geführt.
 Linux-/HTTP-Tests ersetzen die Windowsprobe nicht. Die getrennten Vor-Merge-Gates
-PW-A-A01 und PW-A-A02 stehen in der Paketentscheidung.
+PW-B-A01 und PW-B-M01 stehen in der Paketentscheidung.

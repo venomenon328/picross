@@ -269,7 +269,7 @@ def inspect_manual(package, budget):
     # The existing independent DAG verifier receives hints/domains, never the matrix.
     if paired:
         require(h["rulebook"]["version"] in ("0.5.0", "0.6.0") or
-                getattr(package, "background_enabled", False) and h["rulebook"]["version"] == "0.7.0",
+                getattr(package, "background_enabled", False) and h["rulebook"]["version"] in ("0.7.0", "0.8.0"),
                 "Paired manual derivation requires authoring 0.5.0/0.6.0 or admitted 0.7.0")
         proof, checked = certification.inspect(puzzle, package.bundle(c["bundle"]) / "certificate", "",
                                                 plan["certification"], budget)

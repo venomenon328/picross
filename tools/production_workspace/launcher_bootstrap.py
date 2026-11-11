@@ -117,7 +117,7 @@ def unpack_program(destination):
 
 
 def main():
-    print('Picross - lokale Produktionsansicht (PW-A2)\n', flush=True)
+    print('Picross - Produktionsassistent (PW-B / 0.8.0)\n', flush=True)
     if sys.version_info < (3, 11):
         raise RuntimeError('Python 3.11 oder neuer ist erforderlich.')
     if not shutil.which('git'):

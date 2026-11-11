@@ -2,6 +2,7 @@
 from copy import deepcopy
 from io import BytesIO
 import http.client
+import json
 from pathlib import Path
 import stat
 import subprocess
@@ -29,7 +30,7 @@ def commit(root):
     return git(root, 'rev-parse', 'HEAD').decode().strip()
 
 
-def fixture(root, revision='r01'):
+def fixture(root, revision='r01', image_count=1):
     """Today's v3/v2 early-phase forms; synthetic source bytes, no content success."""
     directory = f'content/authoring/pz-workspace-test/{revision}'
     target = root / directory
@@ -37,6 +38,11 @@ def fixture(root, revision='r01'):
     png = BytesIO(); Image.new('RGBA', (8, 5), (40, 90, 80, 128)).save(png, format='PNG')
     files = {'reveal.png': png.getvalue(), 'rulebook.md': b'**Version 0.7.0 synthetic**\n',
              'brief.txt': b'TEST ONLY\n'}
+    for n in range(1, image_count):
+        extra = BytesIO(); Image.new('RGBA', (8, 5), (40 + n, 90, 80, 128)).save(extra, format='PNG')
+        files[f'reveal-{n}.png'] = extra.getvalue()
+        files[f'reveal-{n}.provenance.json'] = p.data({'puzzle_id': 'pz-workspace-test', 'file': f'reveal-{n}.png',
+            'sha256': io.checksum(extra.getvalue()), 'author': 'TEST ONLY', 'usage_basis': 'Synthetic pixels'})
     files['reveal.provenance.json'] = p.data({'puzzle_id': 'pz-workspace-test', 'file': 'reveal.png',
             'sha256': io.checksum(files['reveal.png']), 'author': 'TEST ONLY', 'usage_basis': 'Synthetic pixels'})
     # Current closed HP-W2 pending manifest, no legacy compatibility fixtures.
@@ -68,6 +74,8 @@ def fixture(root, revision='r01'):
     package = archive.getvalue()
     options = [{'ID': 'A', 'Beschreibung': 'Synthetic reveal', 'Datei': 'reveal.png',
                 'SHA-256': io.checksum(files['reveal.png'])}]
+    options.extend({'ID': f'A{n}', 'Beschreibung': 'Synthetic reveal', 'Datei': f'reveal-{n}.png',
+                    'SHA-256': io.checksum(files[f'reveal-{n}.png'])} for n in range(1, image_count))
     record = builder.record_for({'handoff': h, 'external': {}, 'category_id': None,
             'document_revision': 1, 'reveal_options': options}, directory, package,
             files['handoff.json'], None, {'ready': False, 'binding': background, 'blockers': []})
@@ -83,6 +91,9 @@ def fixture(root, revision='r01'):
                            'location': {'commit': None, 'storage': 'package', 'container': directory + '/package.zip', 'file': 'reveal.png'}}],
                'offers': [{'id': 'A', 'kind': 'reveal', 'label': 'Variante A',
                            'record': {'commit': None, 'file': directory + '/record.json'}, 'asset_ids': ['reveal-A']}]}
+    for n in range(1, image_count):
+        request['assets'].append({'id': f'reveal-A{n}', 'role': 'reveal', 'caption': f'Abschlussbild A{n}',
+            'location': {'commit': None, 'storage': 'package', 'container': directory + '/package.zip', 'file': f'reveal-{n}.png'}})
     return request, files['reveal.png']
 
 
@@ -426,11 +437,16 @@ class WorkspaceTests(unittest.TestCase):
                           (self.repo / '.git/index').read_bytes()), before)
 
     def ui_service(self):
-        for request in (self.request, fixture(self.repo, 'r02')[0]):
-            asset = request['assets'][0]
-            request['assets'] = [{**deepcopy(asset), 'id': 'image-' + str(n)} for n in range(6)]
-            request['offers'][0]['asset_ids'] = ['image-0']
+        # Six distinct originals: the UI deliberately coalesces repeated comparison images.
+        # Build in the existing r01 directory after removing this test's uncommitted fixture.
+        shutil.rmtree(self.directory)
+        (self.repo / INDEX).unlink()
+        self.request, self.png = fixture(self.repo, image_count=6)
+        for request in (self.request, fixture(self.repo, 'r02', image_count=6)[0]):
             project(request, self.repo)
+        with zipfile.ZipFile(self.directory / 'package.zip') as archive:
+            self.ui_hashes = json.dumps([io.checksum(archive.read(a['location']['file']))
+                                        for a in self.request['assets']])
         commit(self.repo); configure(self.repo, self.root / 'state')
         service = Service(Repository(self.root / 'state'))
         service.listing()
@@ -448,7 +464,7 @@ class WorkspaceTests(unittest.TestCase):
         node = shutil.which('node')
         self.assertIsNotNone(node, 'Node.js is required for the small UI loading regression (no browser).')
         check = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
-        result = subprocess.run([node, str(check), server.origin, service.secret, io.checksum(self.png)],
+        result = subprocess.run([node, str(check), server.origin, service.secret, self.ui_hashes],
                                 capture_output=True, text=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
@@ -475,7 +491,7 @@ class WorkspaceTests(unittest.TestCase):
             node = shutil.which('node')
             self.assertIsNotNone(node, 'Node.js is required for the real transport abort regression (no browser).')
             check = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
-            result = subprocess.run([node, str(check), server.origin, service.secret, io.checksum(self.png), 'abort'],
+            result = subprocess.run([node, str(check), server.origin, service.secret, self.ui_hashes, 'abort'],
                                     capture_output=True, text=True, timeout=45)
             self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
             print(result.stdout.strip())

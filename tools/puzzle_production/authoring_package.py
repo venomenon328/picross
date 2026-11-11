@@ -181,7 +181,8 @@ class Package:
         self.handoff = self.json("handoff.json")
         h = self.handoff
         require(isinstance(h, dict), "Unsupported Authoring handoff")
-        self.background_enabled = h.get("format") == "picross-authoring-handoff-v3"
+        current = h.get('format') == 'picross-authoring-handoff-v4'
+        self.background_enabled = h.get("format") in ("picross-authoring-handoff-v3", 'picross-authoring-handoff-v4')
         require(h.get("format") == "picross-authoring-handoff-v2" or
                 self.background_enabled and allow_background,
                 "Unsupported Authoring handoff; background content requires explicit read-only admission")
@@ -189,7 +190,7 @@ class Package:
                 "Background data requires Authoring handoff v3")
         if self.background_enabled:
             from .authoring_build_contract import BACKGROUND_GATES, HANDOFF_KEYS
-            require(set(h) <= HANDOFF_KEYS | {"background"}, "Unknown background handoff fields")
+            require(set(h) <= HANDOFF_KEYS | {"background"} | ({'raster_selection'} if current else set()), "Unknown background handoff fields")
             require(isinstance(h.get("gates"), dict) and set(h["gates"]) == BACKGROUND_GATES and
                     isinstance(h.get("gate_evidence"), dict) and set(h["gate_evidence"]) == BACKGROUND_GATES,
                     "Background handoff requires all twelve gates and evidence entries")
@@ -200,7 +201,7 @@ class Package:
         require(isinstance(h.get("revision"), str) and REVISION.fullmatch(h["revision"]), "Invalid package revision")
         # Reading a historical manual handoff is not its acceptance. inspect()
         # still requires the external, exactly bound manual authorization.
-        require(h.get("state") in ("raster_ready", "content_ready") if self.background_enabled else
+        require(h.get("state") in (("raster_ready", "background_review", "content_ready") if current else ("raster_ready", "content_ready")) if self.background_enabled else
                 h.get("state") in ("content_ready", "editorially_approved", "catalog_ready") or
                 h.get("state") == "raster_review" and isinstance(h.get("rulebook"), dict) and
                 h["rulebook"].get("version") == "0.6.0" or
@@ -216,16 +217,16 @@ class Package:
         require(isinstance(h.get("repo_commit"), str) and re.fullmatch(r"[0-9a-f]{40}", h["repo_commit"]), "Missing producer commit")
         rule = h.get("rulebook")
         require(isinstance(rule, dict) and
-                (rule.get("version") == "0.7.0" if self.background_enabled else
+                (rule.get("version") == ('0.8.0' if current else "0.7.0") if self.background_enabled else
                  rule.get("version") in ("0.4.0", "0.4.1", "0.5.0", "0.6.0")),
                 "Unsupported authoring rulebook")
         rule_path = self.bound(rule)
-        if rule["version"] in ("0.5.0", "0.6.0", "0.7.0"):
+        if rule["version"] in ("0.5.0", "0.6.0", "0.7.0", '0.8.0'):
             require(re.search(r"^\*\*Version " + re.escape(rule["version"]) + r"(?: | ·)",
                               rule_path.read_text(encoding="utf-8"), re.M) is not None,
                     "Rulebook " + rule["version"] + " requires a matching versioned snapshot")
         else:
-            require(re.search(r"^\*\*Version 0\.[67]\.0(?: | ·)", rule_path.read_text(encoding="utf-8"), re.M) is None,
+            require(re.search(r"^\*\*Version 0\.[678]\.0(?: | ·)", rule_path.read_text(encoding="utf-8"), re.M) is None,
                     "Legacy rulebook label conflicts with snapshot")
         inv = h.get("inventory")
         require(isinstance(inv, dict) and inv.get("file") == "inventory.json", "Missing inventory binding")
@@ -268,6 +269,9 @@ class Package:
                 require(path.stat().st_size == entries[name]["bytes"] and file_hash(path) == entries[name]["sha256"],
                         "Inventory size/hash mismatch: " + name)
         self.used.update(("handoff.json", "inventory.json"))
+        if current:
+            from .authoring_workflow import selection
+            self.used.update(selection(root, h))
         if self.background_enabled:
             from .background_package import validate
             self.background = validate(root, h, history_repo=history_repo, deadline=deadline,
@@ -304,7 +308,7 @@ class Package:
             manifest = load_json(manifest_path)
             if isinstance(manifest, dict) and manifest.get("format") in ("picross-image-manifest-v2", "picross-repair-manifest-v2"):
                 require(self.handoff["rulebook"]["version"] in ("0.5.0", "0.6.0") or
-                        self.background_enabled and self.handoff["rulebook"]["version"] == "0.7.0",
+                        self.background_enabled and self.handoff["rulebook"]["version"] in ("0.7.0", '0.8.0'),
                         "Paired production requires authoring rulebook 0.5.0/0.6.0 or admitted 0.7.0")
         return self.root / name
 
