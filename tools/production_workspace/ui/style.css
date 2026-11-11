@@ -186,7 +186,6 @@ dialog::backdrop { background: #07120fc4; }
   aside h2 { display: inline; }
   #newJob { width: auto; margin: 0 0 0 8px; }
   #navigation > summary { display: list-item; margin-top: 10px; }
-  #jobList { display: none; }
   aside details,.jobPicker,.navLabel { margin-top: 10px; }
   .source { align-items: flex-start; }
   .sourceInfo { gap: 2px 10px; }
@@ -207,3 +206,10 @@ dialog::backdrop { background: #07120fc4; }
   .gridRow > label:last-child,.paletteFields { grid-column: 1 / -1; }
   .gridSettings summary small { display: block; margin-left: 1.2em; }
 }
+
+.publishedContext { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
+.publishedContext h3 { font-size: 1.1rem; }
+.publishedContext h4 { margin: 12px 0 5px; font-size: .86rem; }
+.sourceRole { color: var(--accent); margin-top: 5px; font-size: .9rem; }
+.sourceParameters { background: var(--wash); padding: 10px; margin: 0 0 10px; }
+.briefText { white-space: pre-wrap; overflow-wrap: anywhere; margin-top: 10px; max-height: 18rem; overflow: auto; font-size: .9rem; }

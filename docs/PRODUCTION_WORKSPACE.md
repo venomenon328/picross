@@ -135,6 +135,22 @@ Bedienabsichten. Keine zweite unabhängig bearbeitbare Produktionsdatenbank.
 Ein importierter Erfolgsstatus oder eine geprüfte Dateiprüfsumme ist keine
 frische Logikprüfung, keine Rechteklärung und keine menschliche Abnahme.
 
+Beim Wiederöffnen zeigt die Detailansicht die tatsächlich veröffentlichten
+Rasterwünsche und den als freigegeben überlieferten Korridor getrennt. Quelle
+ist der gebundene Handoff; der Record muss dessen bestehender Parameterprojektion
+entsprechen. Ein Statuswort beweist keine menschliche Freigabe. Eindeutig
+abbildbare Einzelwünsche belegen die Rasterfelder vor, andere Formen und mehrere
+Optionen bleiben vollständig lesbar. Nur nachweislich fehlende Wünsche heißen
+„Keine Vorgabe hinterlegt“. Das inventarisierte `handoff.brief` wird aus demselben
+geprüften Originalpaket als UTF-8-Klartext mit Absätzen gelesen (höchstens 1 MiB).
+Fehlende oder widersprüchliche Originale sind Fehler.
+
+Veröffentlichte Stände haben genau ein Dropdown mit Revision und tatsächlicher
+Quelle; bei Namensgleichheit kommen ID/Branch hinzu. Lokale Entwürfe und deren
+Verwerfen bleiben getrennt. Job-/Revisions-/Quellwechsel und das ausdrückliche
+Laden eines neueren Standes verwerfen ungesendete Absichten. Ein bloßes Suchen
+neuer Ergebnisse erhält die aktive gebundene Ansicht und ihre Eingaben.
+
 ## 4. Quelle, Synchronisierung und Snapshot
 
 ### 4.1 Einmalige Einrichtung
@@ -387,6 +403,15 @@ Der Empfänger löst die vollständigen Definitionen und Bilder aus diesen Quell
 auf. Ein relativer Paketpfad allein beweist keinen Zugang. Cloudschritte dürfen
 keine localhost-Adresse oder bloß lokale Windowsdatei als erreichbare Quelle
 bekommen; ungesicherte neue Bilder erst passend veröffentlichen.
+
+Vorgefüllte Quellwerte sind keine neue Absicht oder Freigabe. Der Folgeauftrag
+trennt den veröffentlichten Kontext von Änderungen, ausdrücklich aufgehobenen
+Rasterwünschen und neuen/zusätzlichen Wünschen zur Motivvorlage. Bloßes Leeren
+oder „Offen“ hebt einen vorhandenen Wunsch nicht auf; dafür gibt es eine eigene
+beschriftete Aufhebungswahl. Diese hat Vorrang vor den Eingabefeldern der Gruppe.
+Ein geänderter freigegebener Korridor geht über den bestehenden Korrekturweg zur
+erneuten Entscheidung. Die bewusst angeforderte reguläre Freigabe in Schritt 3
+bleibt erhalten.
 
 Die Auswahl im Assistenten ist zunächst Bedienabsicht. Erst der ausdrücklich
 abgesendete Auftrag erklärt eine Bild-/Motiv-/Endfreigabe oder beauftragt eine

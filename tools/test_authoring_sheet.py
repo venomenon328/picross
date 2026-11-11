@@ -81,6 +81,45 @@ assert.doesNotMatch(correction,/Ich gebe.*frei/);
                                 text=True, encoding='utf-8')
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_published_context_changes_removal_and_approval_boundaries(self):
+        probe = r"""
+const assert=require('node:assert/strict'),P=require('./tools/production_workspace/ui/workflow.js');
+const p={width:18,height:18,mode:'color',foreground_colors:3,size_constraint:'approximate',foreground_color_constraint:'exact',status:'approved'};
+const published={proposed:[p],approved:[],role:'proposed',brief:{file:'brief.md',sha256:'c'.repeat(64)}};
+const record={file:'record.json',sha256:'a'.repeat(64)};
+const v={source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),record,
+ puzzle_id:'pz-test',revision:'r01',facts:{state:'reveal_review',authoring_version:'0.8.0',published},offers:[{id:'A',kind:'reveal',record}]};
+const selected={kind:'reveal',selection:'A'};
+const base=P.publishedGrid(v);
+assert.deepEqual(base,{width:'18',height:'18',sizeAccuracy:'approx',mode:'color',colors:'3',colorAccuracy:'exact'});
+for(const intent of [selected,{...selected,grid:base}]){
+ const text=P.prompt(v,intent,{});
+ assert.match(text,/Quellkontext.*keine neue Freigabe/);assert.doesNotMatch(text,/Neue Absicht|Vorgaben für das spätere Lösungsraster/);
+ assert.match(text,/Schritt 2: Ich wähle/);assert.doesNotMatch(text,/Ich gebe.*Parameterkorridor frei/);
+}
+let text=P.prompt(v,{...selected,grid:{width:'20'},parameters:'Kelch erhalten\nMehr Platz'},{});
+assert.match(text,/Neue Absicht.*ungefähr 20 × 18/);assert.match(text,/Neue\/zusätzliche Wünsche.*Kelch erhalten\nMehr Platz/);
+assert.throws(()=>P.prompt(v,{...selected,grid:{mode:''}},{}),/ausdrücklich aufheben/);
+assert.throws(()=>P.prompt(v,{...selected,grid:{width:'',height:''}},{}),/ausdrücklich aufheben/);
+assert.throws(()=>P.prompt(v,{...selected,grid:{colors:''}},{}),/ausdrücklich aufheben/);
+text=P.prompt(v,{...selected,removeGrid:{size:true,mode:true,colors:true}},{});
+assert.match(text,/Rastergröße: bisherigen Wunsch ausdrücklich aufheben/);assert.match(text,/Farbzahl: bisherigen Wunsch ausdrücklich aufheben/);
+published.approved=[{...p,width:22}];
+assert.equal(P.publishedGrid(v).width,'22');
+text=P.prompt(v,{...selected,grid:{width:'25'}},{});assert.match(text,/Korrekturweg.*erneuten Entscheidung/);
+v.facts.state='motif_review';
+assert.match(P.prompt(v,{},{}),/Schritt 3: Ich gebe.*Parameterkorridor frei/);
+text=P.prompt(v,{action:'rework',feedback:'Anpassen',grid:{width:'25'}},{});
+assert.match(text,/Neue Absicht/);assert.doesNotMatch(text,/Ich gebe.*frei/);
+published.approved=[];published.proposed=[p,{width:30}];assert.deepEqual(P.publishedGrid(v),{});
+published.proposed=[{...p,width:[15,20]}];assert.equal(P.publishedGrid(v).width,undefined);
+published.proposed=[{...p,free_corridor:'around 18'}];assert.deepEqual(P.publishedGrid(v),{});
+published.proposed={free:'fully preserved'};assert.deepEqual(P.publishedGrid(v),{});
+published.proposed=null;assert.deepEqual(P.publishedGrid(v),{});
+"""
+        result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_old_sheet_is_only_a_launcher_entry_without_embedded_state_machine(self):
         text=(ROOT/'docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html').read_text(encoding='utf-8')
         self.assertIn('Picross-Start.cmd',text)

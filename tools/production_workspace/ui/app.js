@@ -54,7 +54,7 @@ function gridFields(parent,expanded){
  const summary=node('summary','Rastervorgaben');
  summary.append(node('small','Maße, Modus und Farbzahl'));
  panel.append(summary,node('p','Optional für das spätere Lösungsraster. Offene Werte werden bei der Motivvorlage empfohlen.','hint'));
- const grid={...intent.grid};
+ const grid={...PW.publishedGrid(detail),...intent.grid};
  panel.open=expanded || Boolean(grid.width || grid.height || grid.mode);
  function control(group,label,key,choices,placeholder){
   const wrap=node('label',label);
@@ -76,7 +76,7 @@ function gridFields(parent,expanded){
      colors.value='';precision.value='approx';
     }
    }
-   remember('grid',grid);
+   remember('grid',{...intent.grid,[key]:input.value,...(key==='mode'&&grid.mode!=='color'?{colors:'',colorAccuracy:''}:{})});
   };
   wrap.append(input);group.append(wrap);
   return input;
@@ -94,8 +94,43 @@ function gridFields(parent,expanded){
  const colors=control(palette,'Vordergrundfarben','colors',null,'2–8 oder offen');
  const precision=control(palette,'Farbzahlvorgabe','colorAccuracy',accuracy);
  palette.hidden=grid.mode!=='color';
- row.append(palette);panel.append(sizes,modes);parent.append(panel);
+ row.append(palette);panel.append(sizes,modes);
+ if(detail?.facts.published){
+  panel.append(node('p','Vorgefüllte Werte sind Quellkontext. Änderungen werden als neue Wünsche formuliert. Leeren allein hebt keine Vorgabe auf.','hint'));
+  for(const [key,label] of [['size','Rastergröße'],['mode','Rastermodus'],['colors','Farbzahl']]){
+   const wrap=node('label'),check=node('input');check.type='checkbox';check.checked=intent.removeGrid?.[key]===true;
+   check.onchange=()=>remember('removeGrid',{...intent.removeGrid,[key]:check.checked});
+   wrap.append(check,node('span',` ${label}: bisherigen Wunsch ausdrücklich aufheben`));panel.append(wrap);
+  }
+ }
+ parent.append(panel);
  return panel;
+}
+function publishedContext(view,value){
+ const p=value.facts.published,section=node('section',undefined,'publishedContext');
+ section.append(node('h3','Überlieferte Vorgaben & Motivbriefing'));
+ const status=p.role==='approved'?'Als freigegebener Parameterkorridor überliefert; keine neue Freigabeprüfung.':p.role==='proposed'?'Veröffentlichter Wunsch, noch nicht freigegebener Parameterkorridor.':'Keine Vorgabe hinterlegt.';
+ section.append(node('p',status,'sourceRole'));
+ const grid=PW.publishedGrid(value);
+ if(Object.keys(grid).length){
+  const words=[];
+  if(grid.width)words.push(`Raster: ${grid.sizeAccuracy==='exact'?'exakt':'ungefähr'} ${grid.width} × ${grid.height} Zellen (Breite × Höhe)`);
+  if(grid.mode)words.push(`Modus: ${grid.mode==='mono'?'monochrom':'farbig'}`);
+  if(grid.colors)words.push(`${grid.colorAccuracy==='exact'?'Exakt':'Ungefähr'} ${grid.colors} Vordergrundfarben`);
+  section.append(node('p',words.join(' · ')));
+ }
+ const originals=node('details');originals.open=!Object.keys(grid).length;
+ originals.append(node('summary','Vollständige Parameteroriginale'));
+ for(const [key,label] of [['proposed','Vorgeschlagene Rasterwünsche'],['approved','Überlieferter freigegebener Korridor']]){
+  if(p[key] && (!Array.isArray(p[key])||p[key].length)){
+   originals.append(node('h4',label),node('pre',JSON.stringify(p[key],null,2),'sourceParameters'));
+  }
+ }
+ if(p.role!=='absent')section.append(originals);
+ section.append(node('p',`Quelle: ${active?.source==='local'?'Lokal':'Remote'} · ${active?.ref||''} · ${value.revision} · ${value.commit.slice(0,8)}. Statuswörter in den Originalangaben erteilen keine Freigabe.`,'hint'));
+ const briefing=node('details');briefing.open=true;
+ briefing.append(node('summary','Veröffentlichtes Motivbriefing'),node('div',p.brief.text,'briefText'));
+ section.append(briefing);view.append(section);
 }
 function workflow(view,value){
  detail=value;
@@ -110,6 +145,7 @@ function workflow(view,value){
   progress.append(li);
  });
  view.append(progress);
+ if(value?.facts.published)publishedContext(view,value);
  section.append(node('h3',value?.facts.next_step||'Motiv beschreiben'));
  if(!value){
   field(section,'Was soll dein Rätsel zeigen?','brief','Zum Beispiel eine reife Erdbeere');
@@ -140,7 +176,7 @@ function workflow(view,value){
  }
  if(order===1 || order===2){
   gridFields(section,order===2);
-  if(order===2)field(section,'Weitere Wünsche zur Motivvorlage (optional)','parameters','Zum Beispiel Merkmale, die bei der Vereinfachung erhalten bleiben sollen');
+  if(order===2)field(section,'Neue/zusätzliche Wünsche zur Motivvorlage (optional)','parameters','Zum Beispiel Merkmale, die bei der Vereinfachung erhalten bleiben sollen');
  }
  if(order===4){const d=node('details');d.append(node('summary','Optionaler Kontextwunsch'));field(d,'Kontextwunsch','context');section.append(d);}
  if(value?.facts.state==='background_review'){
@@ -175,7 +211,6 @@ function newDraft(id){
  intent={brief:draft.brief,notes:draft.notes||'',grid:{...draft.grid}};
  $('view').replaceChildren(node('h2','Neues Motiv'));
  workflow($('view'),null);renderDrafts();
- for(const el of $('jobList').children)el.setAttribute('aria-current','false');
  if(listing?.jobs.length)$('jobs').selectedIndex=-1;
 }
 function renderDrafts(){
@@ -233,7 +268,7 @@ function drainImages(){
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
 function dispose(){generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];$('large').close();}
 function sourceStatus(value){return (value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert')));}
-function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();$('jobList').replaceChildren();if(!value.jobs.length){
+function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();if(!value.jobs.length){
   $('jobs').append(node('option','Keine Gitstände'));
   if(active && !keepDraft){
    active=null;detail=null;intent={};
@@ -244,9 +279,14 @@ function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=
   $('jobs').selectedIndex=0;
   return;
  }
- for(const [jobIndex,job] of value.jobs.entries()){const label=`${job.title} · Stand ${jobIndex+1} (${job.source==='local'?'lokal':'Remote'})`;const opt=node('option',label);opt.value=job.id;$('jobs').append(opt);const button=node('button',job.title,'job');button.dataset.job=job.id;button.append(node('small',`Stand ${jobIndex+1}${job.conflict?' · Quellenkonflikt':''}`));button.onclick=()=>{$('jobs').value=job.id;open(job.id);};$('jobList').append(button);}
- if(keepDraft){newDraft(keepDraft);return;}const retained=value.jobs.find(j=>active&&j.puzzle_id===active.puzzle_id&&j.revision===active.revision&&j.source===active.source);$('jobs').value=(retained||value.jobs[0]).id;open($('jobs').value);}
-async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts();const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=id;for(const el of $('jobList').children)el.setAttribute('aria-current',String(el.dataset.job===id));$('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));try{const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;const view=$('view');view.replaceChildren(node('h2',value.title));view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));view.append(node('p',value.publication,'hint'));workflow(view,value);if(value.facts.blockers.length){const d=node('details');d.append(node('summary','Überlieferte offene Produktionspunkte'));const ul=node('ul');for(const b of value.facts.blockers)ul.append(node('li',b));d.append(ul);view.append(d);}
+ for(const job of value.jobs){
+  let label=`${job.title} · ${job.revision} · ${job.source==='local'?'Lokal':'Remote'}: ${job.ref}`;
+  if(value.jobs.some(other=>other.id!==job.id&&other.title===job.title&&other.revision===job.revision&&other.ref===job.ref&&other.source===job.source))label+=` · ${job.puzzle_id} · ${job.commit.slice(0,8)}`;
+  if(job.conflict)label+=' · Quellenkonflikt';
+  const opt=node('option',label);opt.value=job.id;$('jobs').append(opt);
+ }
+ if(keepDraft){newDraft(keepDraft);return;}const retained=value.jobs.find(j=>active&&j.puzzle_id===active.puzzle_id&&j.revision===active.revision&&j.source===active.source&&j.ref===active.ref);$('jobs').value=(retained||value.jobs[0]).id;open($('jobs').value);}
+async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts();const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=id;$('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));try{const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;const view=$('view');view.replaceChildren(node('h2',value.title));view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));view.append(node('p',value.publication,'hint'));workflow(view,value);if(value.facts.blockers.length){const d=node('details');d.append(node('summary','Überlieferte offene Produktionspunkte'));const ul=node('ul');for(const b of value.facts.blockers)ul.append(node('li',b));d.append(ul);view.append(d);}
  const phase=value.facts.state;const groups=phase==='background_review'?[['background']]:[['reveal','motif'],['raster'],['raster_draft'],...(PW.step(value)===5?[['background']]:[])];const shownComparisons=new Set();for(const roles of groups){const assets=value.assets.filter(a=>{
   if(!roles.includes(a.role))return false;
   if(['reveal','motif'].includes(a.role)){const key=a.role+':'+a.location.sha256;if(shownComparisons.has(key))return false;shownComparisons.add(key);}
