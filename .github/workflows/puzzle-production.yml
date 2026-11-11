@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: d43eaa39f3d14916458ad815496944a31b4cef56
+          ref: c634550e9da38f4c73935e6cd8d258f28cf8cdcc
           fetch-depth: 2
           persist-credentials: false
       - name: Install selected image dependency
