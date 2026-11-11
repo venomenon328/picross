@@ -101,6 +101,14 @@ Schemafelder als Hauptoberfläche.
 - Beginn: Motiv und optionales Referenzbild. Weitere Gestaltungswünsche auf
   Wunsch; Rastermaße/Modus/Farbzahl dürfen früh als Einschränkung mitgegeben
   werden, sind aber keine Pflichtfelder der Abschlussbilderzeugung.
+  Das eigene optionale Feld für Motivhinweise gelangt unverändert in den ersten
+  Auftrag. Die optionalen Rastervorgaben unterscheiden Breite/Höhe in Zellen,
+  Genauigkeit der Maße, Modus und bei Farbrätseln die Anzahl der Vordergrundfarben
+  mit eigener Genauigkeit. Wünsche werden im Motivbriefing des Produktionsauftrags
+  festgehalten. Bei der Abschlussbildauswahl für den Motivauftrag lassen sie sich
+  konkretisieren. Nach Vorlage des Parameterkorridors laufen Änderungen über die
+  Korrektur. Die Grenzen und die stets farbige Abschlussillustration folgen
+  [Authoring §2.1](ai-workflows/PUZZLE_AUTHORING.md).
 - Motiv-/Rasterphase: Konfiguration, geschützte Merkmale, echte Bildvergleiche
   und verständlich bezeichnete Rasteroptionen. Maße, Farben und Schwierigkeit
   sind Ergebnisdaten, keine zu kopierenden technischen Eingaben.

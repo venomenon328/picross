@@ -1,49 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/578",
-  "package": "PW-B",
+  "issue": "https://github.com/venomenon328/picross/issues/582",
+  "package": "PW-Motivbriefing",
   "modules": [
-    "tools",
-    "production.adapter",
-    "production.catalog"
+    "tools"
   ],
-  "purpose": "PW-B / #578: fünfstufiger Authoring-0.8.0-Assistent, Handoff v4 / Builder v3 / Record v3, qualifizierte Rasterwahl vor Hintergrund, automatische Projektion v2 und bestehender Finalizer-/Export-/Registrierungsanschluss. Entscheidung: https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194.",
-  "omitted": "Keine production.solver, production.images, native.*, preflight, delivery oder automatischen Chromiumläufe: unveränderte Algorithmen und Runtime. Einmalige synthetische T01/T02/T03-Nachweise und separate echte Windows-/Browserprobe; kein Pilot, WIP-Import oder Dauerkorpus. evidence.mode=none. Zwei befristete Original-UI-PNGs nur für PW-B-A01; Eigentümerprobe PW-B-M01 bleibt eigenes Gate.",
+  "purpose": "Motivhinweise, strukturierte Rastervorgaben und die Darstellung der Produktionswerkstatt einschließlich eingebettetem Starter prüfen.",
+  "omitted": "Keine production.*, native.*, preflight oder delivery. Die Änderung betrifft Formulare, Auftragsprojektion und Darstellung. Produktionsdatenformen, Spiel und Integrationswerkzeuge sind unverändert. Einmalige lokale Browserprobe, keine zusätzliche Browser-CI.",
   "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_authoring_workflow.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine echte Git-/Builder-/Finalizerregressionen für frühes background=null, automatische Projektion, explizite Rasterwahl, stale Quellen, No-op und unveränderte Endfreigabebindung; keine neue Solver-/Bildfamilie."
-    },
     {
       "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
-      "reason": "Ersetzt obsolete Offline-Sheet-/Sessiontests durch tatsächlichen fünfstufigen Promptgenerator, Quellen-/Befugnisgrenzen und statischen Launchereinstieg. Keine Legacy-Lesegarantie."
-    },
-    {
-      "path": "tools/production_workspace/check_ui_loading.cjs",
-      "disposition": "change-scoped",
-      "reason": "Vorhandene browserfreie Lade-/Abbruchprüfung lädt den echten neuen Promptcode und berücksichtigt die Auftragsoberfläche. Keine Layout-/Browserabnahme."
-    },
-    {
-      "path": "tools/test_production_workspace.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende Lade-/Abbruchfälle verwenden sechs unterschiedliche gebundene Originalbilder, da PW-B identische Vergleichsbilder zusammenfasst. Unverändert sechs echte Transfers, Hashvergleich und Kapazitäts-/Abbruchguards; keine neue Testfamilie."
-    },
-    {
-      "path": "tests/puzzle_production/batch_fixtures.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende lokale BA-A-Jobs binden die unveränderte ausdrückliche 0.7-Jobnorm; ihre alten eigenständigen 0.6-Eingänge sind als TEST ONLY bezeichnete synthetische Snapshots. Keine Umdeutung der aktiven 0.8-Norm, neue Testfamilie oder Änderung der Formatprüfung."
-    },
-    {
-      "path": "tests/puzzle_production/test_palette_gate.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende synthetische 0.6-Fälle verwenden einen ausdrücklich als TEST ONLY bezeichneten 0.6-Snapshot statt der inzwischen aktiven 0.8-Norm. Keine Umetikettierung, neue Familie oder Änderung der alten Formatprüfung."
-    },
-    {
-      "path": "tests/puzzle_production/test_background_rebind.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende synthetische 0.6-Fälle verwenden einen ausdrücklich als TEST ONLY bezeichneten 0.6-Snapshot statt der inzwischen aktiven 0.8-Norm. Keine Umetikettierung, neue Familie oder Änderung der alten Formatprüfung."
+      "reason": "Den bestehenden Promptgenerator gegen unabhängige Genauigkeiten, ungültige Rastervorgaben, Farbmodi und die Bindung an die richtige Auftragsphase absichern."
     }
   ],
   "core_change": null,

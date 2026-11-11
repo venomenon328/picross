@@ -42,6 +42,45 @@ assert.throws(()=>P.prompt(v,{},opts),/historische/);
         result=subprocess.run(['node','-e',probe],cwd=ROOT,capture_output=True,text=True,encoding='utf-8')
         self.assertEqual(result.returncode,0,result.stderr)
 
+    def test_motif_notes_and_independent_raster_constraints(self):
+        probe = r"""
+const assert = require('node:assert/strict');
+const P = require('./tools/production_workspace/ui/workflow.js');
+const base = {brief: 'Erdbeere', notes: 'Kelch erhalten.\nDreiviertelansicht.'};
+const grid = {width:'28', height:'19', sizeAccuracy:'exact', mode:'color', colors:'4', colorAccuracy:'approx'};
+const build = settings => P.prompt(null,{...base,grid:settings},{});
+const first = build(grid);
+assert.ok(first.includes(base.notes));
+assert.match(first,/exakt 28 × 19 Zellen/);
+assert.match(first,/ungefähr 4 Vordergrundfarben/);
+assert.match(first,/Abschlussbild bleibt detailliert und farbig/);
+assert.match(build({...grid,sizeAccuracy:'approx',colorAccuracy:'exact'}),/ungefähr 28 × 19.*exakt 4/s);
+assert.match(build({mode:'mono'}),/monochrom, genau eine Vordergrundfarbe/);
+assert.doesNotMatch(build({...grid,mode:'mono'}),/4 Vordergrundfarben/);
+assert.doesNotMatch(build({mode:'color'}),/Farbzahl:/);
+assert.doesNotMatch(build({}),/Rastergröße:|Rastermodus:|Farbzahl:/);
+for(const bad of [{width:'20'},{height:'10'},{...grid,width:'0'},{...grid,height:'51'},
+                  {...grid,height:'1.5'},{...grid,width:'x'},{...grid,colors:'9'},{...grid,colors:'1'}]){
+ assert.throws(()=>build(bad),/Bitte/);
+}
+assert.match(build({...grid,width:'1',height:'50',colors:'8'}),/exakt 1 × 50/);
+const record={file:'record.json',sha256:'a'.repeat(64)};
+const value={source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),
+ record,puzzle_id:'pz-test',revision:'r01',facts:{state:'reveal_review',authoring_version:'0.8.0'},
+ offers:[{id:'A',kind:'reveal',record}]};
+const intent={grid,kind:'reveal',selection:'A'};
+assert.equal(P.orderStep(value),2);
+assert.match(P.prompt(value,intent,{}),/Schritt 2.*exakt 28 × 19/s);
+value.facts.state='motif_review';
+assert.doesNotMatch(P.prompt(value,intent,{}),/exakt 28 × 19/);
+const correction=P.prompt(value,{...intent,action:'rework',feedback:'Raster anpassen'},{});
+assert.match(correction,/exakt 28 × 19/);
+assert.doesNotMatch(correction,/Ich gebe.*frei/);
+"""
+        result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True,
+                                text=True, encoding='utf-8')
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_old_sheet_is_only_a_launcher_entry_without_embedded_state_machine(self):
         text=(ROOT/'docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html').read_text(encoding='utf-8')
         self.assertIn('Picross-Start.cmd',text)
