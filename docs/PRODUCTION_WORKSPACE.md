@@ -157,9 +157,15 @@ neuer Ergebnisse erhält die aktive gebundene Ansicht und ihre Eingaben.
 ### 4.1 Einmalige Einrichtung
 
 Der Launcher erhält genau einen vorhandenen lokalen Projektcheckout und einen
-separaten eigenen Zustands-/Cacheordner. Python 3.11+ und Git werden geprüft;
-fehlende Voraussetzungen verständlich melden, nicht ungefragt global installieren.
-Ein Windowsstarter öffnet anschließend die lokale Browseroberfläche. Der
+separaten eigenen Zustands-/Cacheordner. Primärer Einstieg ist das portable
+Windows-x64-App-Image mit `Picross-Start.exe`, privater Python-/Pillow-/Tcl/Tk-
+Laufzeit und sämtlichen benötigten unveränderten Readern aus einem Buildcommit.
+Kein globales Python/Node oder Laufzeitdownload. Git mit `--no-lazy-fetch` bleibt
+externe Voraussetzung; vorhandene Anmeldung wiederverwenden, Fehler früh auf Deutsch
+melden. Native Einrichtung/Status, Browser öffnen und geordneter Stop gehören dazu.
+Die CMD bleibt Entwicklerfallback mit vertrauenswürdigem Programmcheckout.
+Die vollständige [P3-Entscheidung](https://github.com/venomenon328/picross/issues/588#issuecomment-6809498803)
+und [Bau-/Lieferbindung](../tools/production_workspace/WINDOWS_BUILD.md) sind maßgeblich. Der
 Zustandsordner liegt nicht in `content/`, `game/` oder einem fremden Arbeitsbaum.
 [WORKSPACE](dev-rules/WORKSPACE.md) gilt; persönliche Pfade werden nicht committed.
 
@@ -296,8 +302,42 @@ bleiben verbindlich. Kein allgemeiner Gitwriter, keine freie URL-/Ref-/Pfad-API.
 Kleine Git-/Endpointregressionen laufen nur im gewählten `tools`-Modul. Echte
 isolierte Remotetransaktionen und die Windows-/Browserbedienprobe sind einmalige
 P2-T01–T03-Nachweise; ausschließlich synthetische Testrefs dürfen dafür entfallen.
-Zwei gezielte PNG-Originale für P2-A01 liegen getrennt vom Produktdiff bis zum
-unabhängigen Review, höchstens sieben Tage. P3-Paketierung bleibt separat.
+Die nicht gelieferten P2-Browser-/PNG-/A01-Gates wurden durch die
+[Eigentümerentscheidung](https://github.com/venomenon328/picross/pull/590#issuecomment-6809311950)
+aufgehoben. P3-Paketierung und deren neue Nachweise bleiben separat.
+
+### 4.5 P3 · Instanz, Origin und geordneter Stop
+
+`config.json`, explizite Ref-/Remotewahl und vorhandene PW-Caches bleiben erhalten.
+Neue Launcherdateien liegen getrennt in `.launcher/`. Ein OS-Dateilock sichert
+atomar pro Benutzer und kanonischem Zustand; kurzlebige Instanzschlüssel erhalten
+unter Windows eine geschützte DACL für den eigenen Benutzer und SYSTEM.
+Datei-PID/-Portwerte allein erlauben weder Übernahme noch Prozessbeendigung.
+Versionierter Kontrollweg `/control/v1`: ausschließlich challenge-authentisierte
+Identifikation, Öffnen und Stop, mit signierter Antwort und eigener Instanz-/
+Buildbindung. Keine freien Pfade, Ziel-URLs oder Programme. Die passend gebundene
+Browseradresse wird ausschließlich nach Authentisierung zurückgegeben; Geheimnisse
+erscheinen nicht in Logs, Prompts oder dauerhaften Optionen. Bestehender Browser-
+Sitzungs-/Host-/Origin-/CSP- und P2-Bestätigungsschutz bleibt bestehen.
+
+Die erste Bereitschaft und Browseröffnung gehen der Git-Suche voraus. Die
+Loopbackadresse wird ab P3 pro Zustand gespeichert und wiederverwendet. Bei
+Fremdbelegung kein stiller Portwechsel: Wiederholen oder ausdrücklich neuen Port
+mit Hinweis auf getrennte Browseroptionen/Entwürfe wählen. Frühere Zufallsport-
+Browserdaten bleiben unverändert; Migration wird nicht behauptet. Eine historische
+CMD ohne Protokoll zuerst regulär beenden. Produktionsbranches und Datencheckout
+liefern niemals ausführbaren Code. Fehlende Reader, UI/Tcl/Tk und echte
+Pillowdekodierung werden vor Bereitschaft geprüft.
+
+Fensterschließen und „Assistent beenden“ sperren neue Arbeit, warten auf eigene
+Requests und Worker und geben Port/Lock erst nach deren Ende frei. Eine begonnene
+P2-Transaktion samt Ergebnisprüfung läuft unverändert aus; unbekannter Ausgang
+bleibt unbekannt, kein automatischer Retry. Keine pauschale Python-/Gitbeendigung.
+Minimieren/Tab schließen stoppt nicht. Absturzreste werden nach tatsächlich
+freigegebenem OS-Lock ersetzt, nicht anhand eines PIDs als sicher angenommen.
+Updates ersetzen nach Stop den vollständigen App-Ordner bei erhaltenem Zustand.
+Kein MSI, Updater oder Dienst. Das App-Image ist ohne Zertifikatauftrag unsigniert;
+Lizenzen und mögliche SmartScreenhinweise gehören zur Lieferung.
 
 ## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist
 

@@ -259,7 +259,7 @@ def remote_url(value):
     return value
 
 
-def configure(repository, state, *, remote=None, refs=None):
+def configure(repository, state, *, remote=None, refs=None, launcher=False):
     root, state = io.external(repository), io.external(state)
     ap.require(root.is_dir(), 'Projektcheckout fehlt.')
     actual = Path(git(root, 'rev-parse', '--show-toplevel').decode().strip())
@@ -280,7 +280,8 @@ def configure(repository, state, *, remote=None, refs=None):
     state.mkdir(parents=True, exist_ok=True)
     config = io.safe(state, 'config.json')
     ap.require(not config.exists(), 'Einrichtung existiert bereits; den vorhandenen Starter verwenden.')
-    ap.require(not any(state.iterdir()), 'Neuer eigener, leerer Zustandsordner erforderlich.')
+    ap.require(not any(f for f in state.iterdir() if not (launcher and f.name == '.launcher' and f.is_dir())),
+               'Neuer eigener, leerer Zustandsordner erforderlich.')
     with config.open('xb') as stream:
         stream.write(p.data(value))
     return value

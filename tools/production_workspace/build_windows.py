@@ -1,0 +1,110 @@
+"""Clean Windows x64 onedir/windowed build; never builds from a data checkout."""
+import argparse
+import hashlib
+import importlib.metadata as metadata
+import json
+import os
+from pathlib import Path
+import platform
+import shutil
+import subprocess
+import sys
+import zipfile
+
+ROOT = Path(__file__).resolve().parents[2]
+PACKAGE = ROOT / 'tools/production_workspace'
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def build(destination):
+    if sys.platform != 'win32' or platform.machine().lower() not in ('amd64', 'x86_64') or platform.python_version() != '3.13.14':
+        raise RuntimeError('Build benötigt CPython 3.13.14 Windows x64.')
+    versions = {}
+    for line in (PACKAGE / 'requirements-windows.txt').read_text().splitlines():
+        if not line or line.startswith('#'):
+            continue
+        name, version = line.split('==')
+        if metadata.version(name) != version:
+            raise RuntimeError('Falsche Buildabhängigkeit: ' + name)
+        versions[name] = version
+    if metadata.version('pip') != '26.1.2':
+        raise RuntimeError('Build benötigt pip 26.1.2.')
+    def git(*args):
+        return subprocess.check_output(['git', '-C', str(ROOT), *args], text=True).strip()
+    if git('status', '--porcelain'):
+        raise RuntimeError('Nur aus sauberem, gesichertem Quellstand bauen.')
+    commit = git('rev-parse', 'HEAD')
+    destination = destination.resolve()
+    if destination.exists() or destination.is_relative_to(ROOT):
+        raise RuntimeError('Neuen eigenen Buildordner außerhalb des Checkouts wählen.')
+    destination.mkdir(parents=True)
+    work = destination / 'work'; work.mkdir()
+    env = os.environ.copy()
+    env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
+    resources = {f'ui/{name}': sha(PACKAGE / 'ui' / name) for name in ('index.html', 'app.js', 'workflow.js', 'style.css')}
+    resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
+    manifest = {'format': 'picross-windows-app-v1', 'version': '588-P3', 'commit': commit,
+                'architecture': 'windows-x64', 'python': platform.python_version(), 'components': versions,
+                'resources': resources, 'signed': False}
+    manifest_file = work / 'build.json'
+    manifest_file.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', '--onedir', '--windowed',
+                    '--noupx', '--name', 'Picross-Start', '--icon', str(PACKAGE / 'assets/launcher.ico'),
+                    '--distpath', str(destination / 'dist'),
+                    '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
+                    '--collect-submodules', 'tools.puzzle_production',
+                    '--add-data', str(PACKAGE / 'ui') + ':tools/production_workspace/ui',
+                    '--add-data', str(PACKAGE / 'assets/launcher.ico') + ':tools/production_workspace/assets',
+                    '--add-data', str(manifest_file) + ':tools/production_workspace',
+                    str(PACKAGE / 'desktop_entry.py')], check=True, cwd=ROOT, env=env)
+    app = destination / 'dist/Picross-Start'
+    shutil.copyfile(PACKAGE / 'START-WINDOWS.txt', app / 'START.txt')
+    shutil.copyfile(manifest_file, app / 'components.json')
+    licenses = app / 'LICENSES'; licenses.mkdir()
+    shutil.copyfile(Path(sys.base_prefix) / 'LICENSE.txt', licenses / 'Python.txt')
+    for name in ('Pillow', 'PyInstaller'):
+        dist = metadata.distribution(name)
+        copied = False
+        for file in dist.files:
+            if '.dist-info/licenses/' in str(file).replace('\\', '/'):
+                target = licenses / name / Path(str(file).split('licenses/', 1)[-1])
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(dist.locate_file(file), target)
+                copied = True
+        if not copied:
+            raise RuntimeError('Lizenzinventar fehlt: ' + name)
+    for name in ('tcl8.6', 'tk8.6'):
+        candidates = list((Path(sys.base_prefix) / 'tcl' / name).glob('*license*'))
+        if not candidates:
+            candidates = list((Path(sys.base_prefix) / 'tcl' / name).glob('*License*'))
+        if not candidates:
+            if name == 'tcl8.6':
+                import tkinter
+                if tkinter.Tcl().eval('info patchlevel') != '8.6.15':
+                    raise RuntimeError('Tcl-Lizenzbindung prüfen; erwartet 8.6.15.')
+                candidates = [PACKAGE / 'licenses/Tcl-8.6.15.txt']
+            else:
+                raise RuntimeError('Tcl/Tk-Lizenz fehlt: ' + name)
+        for file in candidates:
+            shutil.copyfile(file, licenses / (name + '-' + file.name + '.txt'))
+    files = [{'file': f.relative_to(app).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
+             for f in sorted(app.rglob('*')) if f.is_file()]
+    (app / 'inventory.json').write_text(json.dumps({'commit': commit, 'files': files}, indent=2) + '\n', encoding='utf-8')
+    archive = destination / 'Picross-Start-windows-x64.zip'
+    with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as output:
+        for file in sorted(app.rglob('*')):
+            if file.is_file():
+                output.write(file, 'Picross-Start/' + file.relative_to(app).as_posix())
+    report = {**manifest, 'zip_bytes': archive.stat().st_size, 'zip_sha256': sha(archive),
+              'exe_bytes': (app / 'Picross-Start.exe').stat().st_size, 'exe_sha256': sha(app / 'Picross-Start.exe')}
+    (destination / 'delivery.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+    print(json.dumps(report, ensure_ascii=False))
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, required=True)
+    build(parser.parse_args().output)
