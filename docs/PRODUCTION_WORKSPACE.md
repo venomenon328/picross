@@ -388,6 +388,10 @@ Das Issue definiert PW-A-K01 bis K12, T01/T02 sowie die separaten Vor-Merge-Gate
 PW-B ist erst nach dem tatsächlich gelieferten PW-A-Vertrag fein zu schneiden;
 die produktseitigen Anforderungen dieses Dokuments sind bereits freigegeben.
 
+Die ausführbare PW-A-Schnittstelle, Einrichtung und Schutzgrenzen stehen in der
+[Werkzeuganleitung](../tools/production_workspace/README.md); der konkrete
+Liefer-/Prüfstand einschließlich offener Plattformgates steht in PR #579.
+
 ## 10. Nachführung beim späteren PW-B
 
 In einem konsistenten Implementierungsdiff mindestens diese Quellen abgleichen:
