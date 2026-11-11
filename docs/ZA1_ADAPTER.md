@@ -1,5 +1,40 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+## BA-B · Serielle Orchestrierung der bestehenden Einzelwege
+
+[BA-B / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272)
+und [PRODUCTION_BATCH](PRODUCTION_BATCH.md) ergänzen einen eigenen
+`integration_batch_runner` mit CLI `integration_batch_cli`. Ein `register`-Job
+übergibt das tatsächliche Originalpaket, passende äußere Belege, Endfreigabe
+und explizite Parameter/Kategorie an `target_adapter.export`; vorhandene
+manuelle Autorisierungen und Palettenausnahmen bleiben ausdrücklich gebunden.
+Ein vorheriger Finalizerlauf oder eine zusätzliche Authoring-Repositoryablage
+ist für ein bereits vollständig vorbereitetes lokales Paket keine neue Pflicht.
+Export führt seine vollständige Eingangs- und Ausgabenprüfung selbst aus.
+
+Unmittelbar vor der Übernahme folgt `content_registry.registration(apply=False)`
+gegen den aktuellen Zielcheckout mit dem geprüften Difficultyinput, danach
+dieselbe gebundene Eingabe mit `apply=True`. Ein vollständig bestätigter nativer
+Plan-No-op beendet den Job ohne mutierende Wiederholung. Der mutierende
+Einzelaufruf plant selbst erneut frisch; der
+vorangehende lesende Plan ist kein atomarer Schreibbeleg und kein übertragbarer
+RI-B-Prüfkontext. Native Quellen-, Freigabe-, Capability-, Budget-, Lock- und
+Recoveryregeln bleiben erhalten. Bei ungeklärtem Ergebnis oder offenem Journal
+einschließlich zulässiger Stagingreste stoppt die ganze Auswahl.
+
+Ein eigener `background_adopt`-Job verwendet ausschließlich den unveränderten
+Request samt Arbeitsdateien und `catalog_background_change.store/plan/adopt`.
+Für eine native Übernahme ohne gebuchten Batchabschluss erlaubt ausschließlich
+`catalog_background_change.adopt(..., no_op_only=True)` die vollständig geprüfte
+eigene Wiederholung; jede dafür erforderliche Mutation wird im selben nativen
+Kontrollfluss vor Publikation zurückgewiesen. Die additive Pythonoption eröffnet
+keinen neuen nativen CLI-Befehl. Die drei Resumewege und dauerhafte
+Versuchsbuchführung stehen im Batchvertrag. Bereits gebuchter Erfolg wird nicht
+mit einem inzwischen durch spätere Jobs veralteten Bildplan erneut adoptiert.
+Keine neue Raster-/Revealoperation, Inhaltsentscheidung, Finalisierung,
+Gitaktion oder Retirementfunktion. Exportfalse-Felder und historische Freigaben
+bleiben unverändert; registrierter Checkout und bestätigtes main bleiben getrennt.
+
 ## PB-H · opt-in 0.7.0-Inhaltsprüfung ohne finalen Export
 
 [Paket PB-H / #489](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)

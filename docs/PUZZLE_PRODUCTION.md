@@ -17,8 +17,23 @@ Wiederaufnahme prüft Originale fachlich frisch. Reine Hintergrundänderungen
 erhalten unveränderte Logik-/Difficultyartefakte. Paketbau endet lokal am
 vollständigen v1/v2-Builderauftrag. [Paketentscheidung BA-A](https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657)
 und der Liefer-PR führen technische Nachweise und das unabhängige Vor-Merge-Review.
-Der Default bleibt 0.6.0, 0.7.0 ausdrücklich gewählt; BA-B und tatsächliche
-Inhaltsabnahme/Integration bleiben eigene Schritte.
+Der Default bleibt 0.6.0, 0.7.0 ausdrücklich gewählt; tatsächliche Inhaltsabnahme
+und die folgende Integration bleiben eigene Schritte.
+
+**BA-B / #491 · autorisierte serielle Einzelintegration:**
+Der getrennte [Integrationsrunner](PRODUCTION_BATCH.md) konsumiert vollständige
+Originalpakete samt tatsächlicher Endfreigabe oder unveränderte
+`picross-background-adoption-request-v1`-Aufträge samt vollständigen Arbeitsdateien.
+Er führt ausschließlich `export → frischer plan → register` beziehungsweise
+`store → frischer plan → adopt` mit den bestehenden RI-/ZA-1-/HP-I1b2-Werkzeugen
+aus. Die [Paketentscheidung BA-B](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272)
+bindet Formen, separate Phasenbudgets, dauerhafte Versuchsbuchführung und die
+drei unterscheidbaren Wiederaufnahmefälle. Der erste ungeklärte Fehler stoppt
+die gesamte Auswahl; erfolgreiche frühere Jobs bleiben erhalten. Ein technisch
+vollständiger Batch bestätigt den aktuellen Checkout, keinen Git-/Mainabschluss.
+Finalizer, neue menschliche Entscheidungen, Raster-/Revealupdates, Retirement
+und Gitaktionen gehören nicht in diesen Runner. Native Prüfungen und
+0.6.0-Default/0.7.0-Opt-in bleiben unverändert.
 
 **HP-W2 / #560, PB-H / #489 und HP-I1a–HP-I2 / #561 · versionierter opt-in-Weg, Default bleibt 0.6.0:**
 [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md) führt Ablauf, Bild-/Auswahlbindungen,

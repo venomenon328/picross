@@ -267,7 +267,9 @@ def _current_expected(value, journal, new):
     return sources, namespaces
 
 
-def adopt(root, plan_path, *, seconds=300, integrated_commit=None, fail_step=None):
+def adopt(root, plan_path, *, seconds=300, integrated_commit=None, fail_step=None, no_op_only=False):
+    """Replay the complete native checks; optionally forbid any publication."""
+    require(type(no_op_only) is bool, "Background no_op_only must be boolean")
     with io.budget(seconds):
         root = io.external(root)
         path = outside(plan_path, root)
@@ -321,6 +323,7 @@ def adopt(root, plan_path, *, seconds=300, integrated_commit=None, fail_step=Non
             require(source_hashes(tx.capture(root)) == expected_sources and
                     tx.namespaces(root, snapshot["registry"]) == expected_namespaces, "Checkout changed before background adoption")
             if is_target: return result("no-op", value, request)
+            require(not no_op_only, "Background no-op-only check requires the exact adopted target")
             require(not absent, "Missing work cannot authorize background publication")
             tx.execute(root, journal, fail_step=fail_step, source_check=work_check)
         return result("adopted", value, request)
