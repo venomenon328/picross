@@ -19,6 +19,11 @@
       "reason": "Bestehende Startreihenfolge prüft nun denselben gemeinsamen Lifecycle; Einzelstarter bleibt bytegeprüft."
     },
     {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Vorhandener Offline-Einstiegstest folgt dem ausdrücklich freigegebenen EXE-Primäreinstieg; keine neue Browserprüfung."
+    },
+    {
       "path": "tools/production_workspace/smoke_windows.py",
       "disposition": "temporary",
       "reason": "Einmaliger Windows-Frozen-Lieferdurchstich T02 bis P3-A01; manueller Einstieg, kein CI-Trigger. Danach Bedarf/Rückbau entscheiden."
