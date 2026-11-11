@@ -165,9 +165,11 @@ class BatchFixture:
                 "matrix": put(self.source, prefix + "/matrix.json", matrix),
                 "logic": put(self.source, prefix + "/logic.json", wire), "image": motif_ref,
                 "handoff": handoff}
+        # The local BA-A job binds the unchanged explicit 0.7 snapshot; its
+        # standalone legacy input above remains a labelled synthetic 0.6 fixture.
         job = {"job_id": name, "puzzle_id": identifier, "revision": "r01",
                "background_revision": "bg01" if background else None,
-               "rulebook": self.rulebook(prefix + "/background-rulebook.md", "0.7.0") if background else rulebook,
+               "rulebook": self.rulebook(prefix + "/batch-rulebook.md", "0.7.0"),
                "decisions": {"motif": source_ref(self.source, prefix + "/motif-approval.json"),
                              "parameters": params, "repair": None, "background": None}, "stages": []}
         self.data[name] = data
