@@ -2257,3 +2257,12 @@ Originale separat bereitstellen; `store/plan` prüft sie und das frische Ziel.
 konkreten HTTPS-Bericht. Danach bleiben kompakte historische Refs und `test_only`;
 Arbeitsinventar/Originaltext werden aus der Sitzung entfernt. Das ersetzt keine
 Retirementprüfung oder Mainverifikation. Keine neuen Writer oder CLI-Ergebnisimporte.
+
+## PW-A: lesende Git-/Bildansicht
+
+[Launcher, Projektor und geschlossene Datenformen](../production_workspace/README.md)
+stehen separat bereit. PW-A liest neu veröffentlichte Handoff-v3-/Record-v2-
+Arbeitsstände über Index und `workspace.json`; keine Alt-WIP-Konvertierung.
+Der Projektor schreibt ausschließlich die neue Ansichtsdatei, der HTTP-Dienst
+ist projektseitig Leser. Der fünfstufige Default und die verbindliche
+Phasenveröffentlichung folgen erst PW-B; bestehende Produktionsbefehle bleiben.

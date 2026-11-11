@@ -1,11 +1,19 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/578",
-  "package": "PW-A-SPEC",
-  "modules": [],
-  "purpose": "Reine Spezifikationspflege für PW / #578: freigegebener Git-gestützter Produktionsassistent, fünf Schritte, automatische Originalbildansicht, lokale lesende Dienstgrenze und ausdrücklicher Verzicht auf WIP-Rückwärtskompatibilität. Erster Implementierungsumfang PW-A mit K01–K12 und T01/T02 steht in https://github.com/venomenon328/picross/issues/578#issuecomment-6793791025. Dieser Diff ändert ausschließlich Markdown und diesen Paketplan. Pflichtkern docs/ci-required, buildfrei; keine Produktimplementierung oder Aktivierung des Produktionsdefaults.",
-  "omitted": "Alle Zusatzmodule einschließlich tools, production.*, native.*, preflight und delivery sowie Chromium sind für diesen reinen Dokumentdiff nicht angefordert. Keine neuen Tests, keine Bilder oder technischen Artefakte. Die spätere PW-A-Codeumsetzung ersetzt diesen Plan durch den im Issue festgelegten tools-Prüfumfang einschließlich des dann buildpflichtigen Kerns und liefert die eigenen einmaligen Funktionsnachweise. Dokumentgrün ersetzt keine PW-A-Abnahme.",
-  "test_changes": [],
+  "package": "PW-A",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "PW-A / #578: geschlossener Projektor für workspace.json, lesender Git-/ZIP-/Bildresolver, begrenzter lokaler Dienst, Windowsstarter und Job-/Bildoberfläche. Pflichtkern docs/ci-required einschließlich regulärem Windows-Spielerpaket; genau tools. Paketentscheidung: https://github.com/venomenon328/picross/issues/578#issuecomment-6793791025.",
+  "omitted": "Keine production.*, native.*, preflight, delivery oder automatischen Chromiumläufe: bestehende Fachreader werden nur konsumiert, keine Produktsemantik oder Runtime geändert. Einmaliger synthetischer T01; T02 und unabhängiges A01 vor Merge separat. evidence.mode=none. Die zwei erforderlichen Windows-Original-PNGs sind bei T02 gezielt höchstens sieben Tage für A01 bereitzustellen; fehlende Plattform ist kein Pass.",
+  "test_changes": [
+    {
+      "path": "tools/test_production_workspace.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische echte Git-/ZIP-/Projektor-/HTTP-Regressionen gegen Rollen-/Hash-/Snapshot-/Pfadfehler; keine neue Kernfamilie, keine realen Produktionsinputs und kein Solver-Replay."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",
