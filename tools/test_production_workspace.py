@@ -259,14 +259,17 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual((git(self.repo, 'show-ref'), git(self.repo, 'status', '--porcelain'),
                           (self.repo / '.git/index').read_bytes()), before)
 
-    def test_ui_queues_six_slow_originals_retries_and_ignores_old_responses(self):
+    def ui_service(self):
         for request in (self.request, fixture(self.repo, 'r02')[0]):
             asset = request['assets'][0]
             request['assets'] = [{**deepcopy(asset), 'id': 'image-' + str(n)} for n in range(6)]
             request['offers'][0]['asset_ids'] = ['image-0']
             project(request, self.repo)
         commit(self.repo); configure(self.repo, self.root / 'state')
-        service = Service(Repository(self.root / 'state'))
+        return Service(Repository(self.root / 'state'))
+
+    def test_ui_queues_six_slow_originals_retries_and_ignores_old_responses(self):
+        service = self.ui_service()
         picture = service.picture
         def slow(jid, aid):
             time.sleep(.25)
@@ -280,6 +283,43 @@ class WorkspaceTests(unittest.TestCase):
         result = subprocess.run([node, str(check), server.origin, service.secret, io.checksum(self.png)],
                                 capture_output=True, text=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_real_transport_aborts_preserve_metadata_and_images_recover_automatically(self):
+        service = self.ui_service()
+        picture = service.picture
+        counts = {'active': 0, 'peak': 0, 'completed': 0}
+        condition = threading.Condition()
+        def slow(jid, aid):
+            with condition:
+                counts['active'] += 1
+                counts['peak'] = max(counts['peak'], counts['active'])
+            try:
+                time.sleep(5)
+                return picture(jid, aid)
+            finally:
+                with condition:
+                    counts['active'] -= 1
+                    counts['completed'] += 1
+                    condition.notify_all()
+        service.picture = slow
+        server = Server(service); thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
+        try:
+            node = shutil.which('node')
+            self.assertIsNotNone(node, 'Node.js is required for the real transport abort regression (no browser).')
+            check = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
+            result = subprocess.run([node, str(check), server.origin, service.secret, io.checksum(self.png), 'abort'],
+                                    capture_output=True, text=True, timeout=45)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+            print(result.stdout.strip())
+        finally:
+            # Aborted transports leave real readers alive: wait before deleting fixtures.
+            with condition:
+                finished = condition.wait_for(lambda: counts['active'] == 0, timeout=10)
+            server.shutdown(); server.server_close(); thread.join()
+            self.assertTrue(finished, 'real image readers must finish before fixture cleanup')
+        self.assertEqual(counts['peak'], 2)
+        self.assertGreaterEqual(counts['completed'], 8)  # Two aborted originals plus six final cards.
+        print('server_image_work: ' + p.data(counts).decode().strip())
 
     def test_http_capability_host_origin_paths_and_exact_original(self):
         self.publish(); configure(self.repo, self.root / 'state')

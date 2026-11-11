@@ -21,6 +21,9 @@ class Service:
         self.snapshots, self.jobs, self.views = OrderedDict(), {}, LRU()
         self.lock = threading.RLock()
         self.workers = threading.BoundedSemaphore(4)
+        # Transport cancellation does not stop a running Python reader. Keep
+        # its image slot until completion, reserving two total slots for metadata.
+        self.image_workers = threading.BoundedSemaphore(2)
         self.metrics = {'image_requests': 0, 'image_cache_hits': 0, 'image_seconds': 0.0}
 
     def listing(self, refresh=False):
@@ -117,7 +120,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def handle_request(self, method):
         service = self.server.service
-        acquired = False
+        acquired = image_acquired = False
         try:
             self.connection.settimeout(10)
             ap.require(self.headers.get('Host') == urlsplit(self.server.origin).netloc, 'Fremder Host abgewiesen.')
@@ -134,6 +137,11 @@ class Handler(BaseHTTPRequestHandler):
             token = self.headers.get('X-Workspace-Session', '')
             ap.require(hmac.compare_digest(token.encode(), service.secret.encode()), 'Sitzung fehlt oder ist ungültig. Starter erneut öffnen.')
             ap.require(not self.headers.get('Transfer-Encoding') and self.headers.get('Content-Length', '0') == '0', 'Anfrageinhalt ist nicht erlaubt.')
+            parts = self.path.strip('/').split('/')
+            if method == 'GET' and len(parts) == 5 and parts[:2] == ['api', 'jobs'] and parts[3] == 'assets':
+                image_acquired = service.image_workers.acquire(blocking=False)
+                if not image_acquired:
+                    return self.reply(503, p.data({'error': 'Bilder werden noch geladen; gleich erneut versuchen.'}), 'application/json')
             acquired = service.workers.acquire(blocking=False)
             if not acquired:
                 return self.reply(503, p.data({'error': 'Dienst ist beschäftigt; gleich erneut versuchen.'}), 'application/json')
@@ -142,7 +150,6 @@ class Handler(BaseHTTPRequestHandler):
             elif method == 'POST' and self.path == '/api/refresh':
                 value = service.listing(refresh=True)
             else:
-                parts = self.path.strip('/').split('/')
                 ap.require(method == 'GET' and len(parts) in (3, 5) and parts[:2] == ['api', 'jobs'], 'Unbekannter API-Aufruf.')
                 if len(parts) == 3:
                     value = service.detail(parts[2])
@@ -151,6 +158,8 @@ class Handler(BaseHTTPRequestHandler):
                     raw, mime = service.picture(parts[2], parts[4])
                     return self.reply(200, raw, mime)
             return self.reply(200, p.data(value), 'application/json; charset=utf-8')
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+            pass  # A closed transport is not a source failure; finally releases the slots.
         except (ValueError, OSError, RuntimeError, KeyError, TypeError) as exc:
             # All errors are data; never include source URLs or a Python traceback.
             message = str(exc) if isinstance(exc, ValueError) else 'Quelle konnte nicht vollständig gelesen werden. Veröffentlichung prüfen und neu laden.'
@@ -158,3 +167,5 @@ class Handler(BaseHTTPRequestHandler):
         finally:
             if acquired:
                 service.workers.release()
+            if image_acquired:
+                service.image_workers.release()
