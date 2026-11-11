@@ -1,5 +1,13 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
+**PE / #576 · freigegebener Sollstand, noch nicht implementiert:**
+[PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) trennt die aktuelle
+Namens-/Kategoriezuordnung von Produktionsangaben in Inhaltsregistry v4 und
+projiziert Runtime v7. Kategorienpflege einschließlich Löschung nach vollständiger
+Neuzuordnung erhält historische Belege; deren Ursprungskategorie muss dann nicht
+mehr aktuell existieren. Die unten beschriebenen v2/v3-Bindungen behalten bis
+zur jeweiligen Umstellung ihre exakten Altregeln.
+
 **HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
 [Hintergrundzusatz](#hp-i1b1--hintergrundindex-und-kompatible-projektion)
 ergänzt Inhaltsregistry v3 und Runtime-v6 ausschließlich im kompatiblen Ziel.

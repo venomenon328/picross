@@ -1,5 +1,13 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
+**PE / #576 · freigegebener Sollstand, noch nicht implementiert:**
+[PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) ergänzt aktuelle
+Namens-/Kategorieprojektion ohne neue Rätselrevision und ohne Saveänderung.
+Der spätere [PE-A3-Revisionswechsel](PUZZLE_EDITOR.md#5-rastertext-und-spielstandrevision)
+beginnt eindeutig zuordenbare ältere Rasterrevisionen automatisch neu; defekte,
+fremde und neuere Saves behalten ihre Fehler-/Recoverybehandlung. Bis PE-A3 bleibt
+die unten beschriebene bewusste Resetpflicht der implementierte Stand.
+
 ## K-B: unabhängiger Fortsetzen-Merker
 
 [Paketentscheidung #485](https://github.com/venomenon328/picross/issues/485#issuecomment-6705799391).

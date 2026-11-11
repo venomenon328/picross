@@ -1,5 +1,12 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+**PE-A1 / #576 · freigegebener Sollstand, noch nicht implementiert:**
+[PE-A1](PUZZLE_EDITOR.md#73-migration-und-laufende-produktion) trennt die aktuelle
+Namens-/Kategorieautorität von den weiterhin geprüften Produktionsangaben.
+Bei Erstregistrierung ist die Kategorie aktuell erforderlich; bei vorhandener ID
+bleibt deren aktive Metadatenzeile erhalten, während ein Folgeexport seine eigene
+gebundene Kategorieherkunft behält. Alte Exportformen werden nicht umgedeutet.
+
 ## BA-B · Serielle Orchestrierung der bestehenden Einzelwege
 
 [BA-B / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272)

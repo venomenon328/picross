@@ -1,5 +1,13 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
+**PE-A1 / #576 · freigegebener Sollstand, noch nicht implementiert:**
+[Aktuelle Metadaten](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag)
+kommen als Tabelle in der bereits gebundenen Inhaltsregistry hinzu. Reine
+Namens-/Kategoriepflege ändert weder Definition noch Rating- oder Bildbindungen.
+Die neuen Pflege-/Migrationsoperationen verwenden den gemeinsamen Transaktionsweg;
+aktuelle Writer erhalten die Metadaten, historische Belege bleiben vollständig
+geprüft. Vorhandene geschlossene Plan-/Journalformen werden nicht blind erweitert.
+
 **HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
 [Hintergrundzusatz](#hp-i1b1--hintergrundquellen-pläne-und-transaktionen) führt
 neue geschlossene Quellen-/Plan-/Journalgenerationen ein. Historische Abschnitte
