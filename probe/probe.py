@@ -72,6 +72,11 @@ with sync_playwright() as pw:
         page.set_viewport_size({'width':width,'height':840})
         assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'), width
     page.set_viewport_size({'width':390,'height':844})
+    nav=page.get_by_text('Entwürfe und Gitstände',exact=True)
+    assert nav.is_visible() and not page.get_by_role('button',name='Qualle',exact=True).is_visible()
+    nav.click()
+    assert page.get_by_role('button',name='Qualle',exact=True).is_visible()
+    nav.click()
     page.screenshot(path=str(root/'mobile-dark.png'),full_page=True)
     mode.select_option('mono')
     assert not count.is_visible()

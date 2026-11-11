@@ -17,10 +17,15 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/werkstatt"
           cp probe/probe.py "$RUNNER_TEMP/werkstatt/probe.py"
-          git checkout --detach 04457d1e43851c6a4f90dc2dee743c34c0f447e4
           python -m venv "$RUNNER_TEMP/werkstatt/venv"
           "$RUNNER_TEMP/werkstatt/venv/bin/pip" install playwright==1.55.0
+      - uses: actions/checkout@v4
+        with:
+          ref: 087219fb02327694c3121f99e169edb979620ceb
+          persist-credentials: false
+          path: produkt
       - name: Felder, Zwischenablage, Entwürfe und Layout im Browser prüfen
+        working-directory: produkt
         run: '"$RUNNER_TEMP/werkstatt/venv/bin/python" "$RUNNER_TEMP/werkstatt/probe.py"'
       - uses: actions/upload-artifact@v4
         if: always()
