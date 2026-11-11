@@ -1,36 +1,61 @@
-name: Bedienprobe Produktionswerkstatt 582
+name: Einzelstarter unter Windows · 582
 on:
   push:
     branches: ['diag/582-werkstatt']
 permissions:
   contents: read
 jobs:
-  werkstatt:
-    runs-on: ubuntu-24.04
-    timeout-minutes: 8
+  starter:
+    runs-on: windows-latest
+    timeout-minutes: 6
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          ref: 087219fb02327694c3121f99e169edb979620ceb
+          path: lieferung
+          sparse-checkout: tools/production_workspace
           persist-credentials: false
-      - name: Bedientest vorbereiten und unveränderten Lieferhead auschecken
-        run: |
-          mkdir -p "$RUNNER_TEMP/werkstatt"
-          cp probe/probe.py "$RUNNER_TEMP/werkstatt/probe.py"
-          python -m venv "$RUNNER_TEMP/werkstatt/venv"
-          "$RUNNER_TEMP/werkstatt/venv/bin/pip" install playwright==1.55.0
       - uses: actions/checkout@v4
         with:
-          ref: 087219fb02327694c3121f99e169edb979620ceb
+          ref: 7fe51fd454f006f735125c56c805c66c744d7551
+          path: programm
+          sparse-checkout: tools
           persist-credentials: false
-          path: produkt
-      - name: Felder, Zwischenablage, Entwürfe und Layout im Browser prüfen
-        working-directory: produkt
-        run: '"$RUNNER_TEMP/werkstatt/venv/bin/python" "$RUNNER_TEMP/werkstatt/probe.py"'
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - uses: actions/setup-python@v5
         with:
-          name: Sichtprobe-Produktionswerkstatt
-          path: ${{ runner.temp }}/werkstatt/*.png
-          if-no-files-found: warn
-          retention-days: 1
+          python-version: '3.12'
+      - name: Einzelne CMD mit bisherigem Main starten und ausgelieferte UI prüfen
+        working-directory: programm
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $env:LOCALAPPDATA = Join-Path $env:RUNNER_TEMP 'pw582-data'
+          New-Item -ItemType Directory $env:LOCALAPPDATA | Out-Null
+          $lieferung = Join-Path $env:GITHUB_WORKSPACE 'lieferung/tools/production_workspace'
+          $file = Join-Path $env:RUNNER_TEMP 'Picross-Start.cmd'
+          Copy-Item (Join-Path $lieferung 'Picross-Start.cmd') $file
+          $state = Join-Path $env:LOCALAPPDATA 'state'
+          $output = Join-Path $env:RUNNER_TEMP 'pw582-stdout'
+          $err = Join-Path $env:RUNNER_TEMP 'pw582-stderr'
+          $url = 'http://127.0.0.1:38621'
+          $argsLine = '/d /c ""' + $file + '" --setup --state "' + $state + '" --no-browser --port 38621"'
+          $child = Start-Process cmd.exe -ArgumentList $argsLine -PassThru -RedirectStandardOutput $output -RedirectStandardError $err
+          try {
+            $ready = $false
+            for ($i=0; $i -lt 120; $i++) {
+              if ($child.HasExited) { break }
+              try { $ready = (Invoke-WebRequest "$url/" -TimeoutSec 2).StatusCode -eq 200 } catch {}
+              if ($ready) { break }
+              Start-Sleep -Seconds 1
+            }
+            if (!$ready) { Get-Content $output,$err; throw 'Starter liefert keine Oberfläche' }
+            foreach ($name in 'index.html','style.css','workflow.js','app.js') {
+              $route = if ($name -eq 'index.html') { '/' } else { "/$name" }
+              $received = Join-Path $env:RUNNER_TEMP "pw582-$name"
+              Invoke-WebRequest "$url$route" -OutFile $received
+              if ((Get-FileHash $received).Hash -ne (Get-FileHash (Join-Path $lieferung "ui/$name")).Hash) { throw "UI unterscheidet sich: $name" }
+            }
+            'Windows-Einzelstarter und vier per HTTP ausgelieferte UI-Dateien am Lieferhead bestätigt; Produktionsbibliotheken aus bestehendem main.'
+          } finally {
+            if (!$child.HasExited) { taskkill.exe /PID $child.Id /T /F | Out-Null }
+          }
