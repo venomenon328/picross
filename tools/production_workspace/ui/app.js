@@ -5,6 +5,11 @@ try{if(token)sessionStorage.setItem('pw-session',token);else token=sessionStorag
 history.replaceState(null,'',location.pathname);
 let listing=null,pending=null,generation=0,controller=null,urls=[],active=null;
 let detail=null,intent={},draft=null,drafts=[];
+if(typeof matchMedia==='function'){
+ const narrow=matchMedia('(max-width: 800px)');
+ const fitNavigation=()=>{$('navigation').open=!narrow.matches;};
+ fitNavigation();narrow.addEventListener('change',fitNavigation);
+}
 try{drafts=JSON.parse(localStorage.getItem('pw-briefs')||'[]');if(!Array.isArray(drafts))drafts=[];drafts=drafts.filter(d=>d&&typeof d.id==='string'&&typeof d.brief==='string').slice(-20);}catch{}
 function saveDrafts(){try{localStorage.setItem('pw-briefs',JSON.stringify(drafts));}catch{}}
 function options(){return {workroot:$('workroot').value,cleanup:$('cleanup').checked,merge:$('merge').checked};}
@@ -229,8 +234,13 @@ function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQu
 function dispose(){generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];$('large').close();}
 function sourceStatus(value){return (value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert')));}
 function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();$('jobList').replaceChildren();if(!value.jobs.length){
-  $('jobs').append(node('option','Keine veröffentlichten Jobs'));
-  newDraft(keepDraft || drafts.at(-1)?.id);
+  $('jobs').append(node('option','Keine Gitstände'));
+  if(active && !keepDraft){
+   active=null;detail=null;intent={};
+   $('view').replaceChildren(node('h2','Noch keine veröffentlichten Arbeitsstände'),node('p','Über „Neues Motiv“ beginnen oder einen lokalen Entwurf öffnen.','hint'));
+  }else{
+   newDraft(keepDraft || drafts.at(-1)?.id);
+  }
   $('jobs').selectedIndex=0;
   return;
  }
