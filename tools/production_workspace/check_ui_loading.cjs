@@ -13,8 +13,9 @@ class Element {
   before() {}
   replaceChildren(...children) { this.children = children; }
   setAttribute() {}
-  close() {}
-  showModal() {}
+  close() { this.open=false; }
+  showModal() { this.open=true; }
+  focus() {}
 }
 const elements = new Map();
 const document = {
@@ -40,6 +41,7 @@ const context = vm.createContext({
   crypto: require('node:crypto').webcrypto,
   URL: {createObjectURL() { return 'blob:test-' + hashes.length; }, revokeObjectURL(){}},
   fetch: async (path, options) => {
+    if(path.startsWith('/api/removal/'))options={...options,headers:{...options.headers,Origin:origin}};
     if (!path.includes('/assets/')) {
       const delayed=holdDetail&&path.startsWith('/api/jobs/');
       if(delayed)holdDetail=false;
@@ -69,6 +71,28 @@ const run = code => vm.runInContext(code, context);
 (async () => {
   run(readFileSync(__dirname + '/ui/workflow.js', 'utf8'));
   run(readFileSync(__dirname + '/ui/app.js', 'utf8'));
+  if(mode==='removal'){
+    await until(()=>run('detail!==null'));
+    const target=run('listing.jobs.find(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")');
+    await run(`open(${JSON.stringify(target.id)})`);
+    await run('previewRemoval({job_id:active.id,snapshot:listing.snapshot})');
+    const nodes=()=>descendants(document.getElementById('removalBody'));
+    assert(nodes().some(e=>e.textContent==='r01, r02'));
+    assert(nodes().some(e=>e.textContent==='refs/heads/content/pw/pz-workspace-test'));
+    const input=nodes().find(e=>e.id==='removalConfirmation');
+    const button=nodes().find(e=>e.textContent==='Remote-Branch jetzt entfernen');
+    assert.equal(button.disabled,true);
+    input.value='main';input.oninput();assert.equal(button.disabled,true);
+    input.value=target.ref;input.oninput();assert.equal(button.disabled,false);
+    await button.onclick();
+    assert(nodes().some(e=>e.textContent==='Remote-Branch entfernt'));
+    const optional=nodes().find(e=>e.type==='checkbox');assert.equal(optional.checked,false);
+    assert(nodes().find(e=>e.textContent==='Lokale Bereinigung vorprüfen').disabled);
+    assert(run('listing.jobs.some(j=>j.source==="local"&&j.ref==="content/pw/pz-workspace-test")'));
+    assert(!run('listing.jobs.some(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")'));
+    console.log('P2 controller: exact branch/revisions, typed confirmation, real HTTP deletion, local remainder and default-off cleanup passed. No browser-rendering claim.');
+    return;
+  }
   if(mode==='published'){
     await until(()=>run('detail!==null'));
     const first=run('active.id'),second=run('listing.jobs.find(j=>j.revision==="r02").id');

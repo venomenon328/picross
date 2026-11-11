@@ -5,6 +5,8 @@ from pathlib import Path
 import re
 import threading
 from urllib.parse import urlsplit
+from urllib.parse import urlencode
+from urllib.request import Request, build_opener, HTTPRedirectHandler
 
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from tools.puzzle_production.authoring_builder import index_value
@@ -16,6 +18,216 @@ DEFAULT_REFS = ['main', 'content/pw/*']
 PRODUCTION_BRANCH = re.compile(r'content/pw/pz-[a-z0-9]+(?:-[a-z0-9]+)*\Z')
 CACHE = 'git-cache-pw-v1'
 SYNC = 'sync-pw-v1.json'
+
+
+def github_identity(url):
+    return bool(re.fullmatch(
+        r'(?:https://github\.com/|git@github\.com:|ssh://git@github\.com/)'
+        r'venomenon328/picross(?:\.git)?', url or ''))
+
+
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, *_args, **_kwargs):
+        return None
+
+
+def github_get(path):
+    """Only fixed public GitHub reads; no credential discovery or redirects."""
+    try:
+        request = Request('https://api.github.com/repos/venomenon328/picross' + path,
+                          headers={'Accept': 'application/vnd.github+json',
+                                   'User-Agent': 'Picross-Production-Workspace',
+                                   'X-GitHub-Api-Version': '2022-11-28'})
+        with build_opener(NoRedirect).open(request, timeout=10) as response:
+            return p.parse(response.read(8 * JSON_LIMIT + 1), 8 * JSON_LIMIT)
+    except (ValueError, OSError) as exc:
+        raise ap.InvalidInput('GitHub-Status nicht prüfbar (Zugang, Rate-Limit oder Netzwerk). Entfernung gesperrt.') from exc
+
+
+class ProductionRemoval:
+    """One conditional ref deletion, never a general Git writer.
+
+    Tests subclass target()/pull_requests() for their owned synthetic bare remote.
+    No config, environment or HTTP switch enables that adapter in the product.
+    All methods are called under the repository's transaction lock.
+    """
+    def __init__(self, repository):
+        self.repository = repository
+
+    def availability(self, job):
+        if not self.repository.remote:
+            return 'Nur lokale Gitstände: keine Remoteentfernung möglich.'
+        if job['source'] != 'remote':
+            return 'Diese Quelle ist lokal. Die zugehörige Remotequelle ausdrücklich auswählen.'
+        if job['ref'] != 'content/pw/' + job['puzzle_id'] or not PRODUCTION_BRANCH.fullmatch(job['ref']):
+            return 'Nur der gesamte zugeordnete Produktionsbranch ist entfernbar; main bleibt erhalten.'
+        if job.get('conflict'):
+            return 'Widersprüchliche Quellen: erst die Veröffentlichung klären.'
+        if self.repository.sync_error:
+            return 'Remoteansicht ist veraltet oder offline. Quellen erst erfolgreich aktualisieren.'
+        if not github_identity(self.repository.remote):
+            return 'Entfernung nur für den konfigurierten GitHub-Remote venomenon328/picross über HTTPS/SSH freigegeben.'
+        return None
+
+    def target(self):
+        repo = self.repository
+        ap.require(github_identity(repo.remote), 'Zielrepository ist nicht zur Entfernung freigegeben.')
+        self.check_urls()
+        metadata = github_get('')
+        ap.require(isinstance(metadata, dict) and metadata.get('full_name') == 'venomenon328/picross' and metadata.get('private') is False,
+                   'GitHub-Repositoryidentität oder öffentliche PR-Sicht nicht bestätigt.')
+        return 'venomenon328/picross'
+
+    def check_urls(self):
+        repo = self.repository
+        ap.require(repo.cached is not None, 'Kein Remote eingerichtet.')
+        for root in (repo.local.root, repo.cached.root):
+            # Includes effective system/global/local config, without exposing values.
+            config = git(root, 'config', '--null', '--list').decode('utf-8')
+            keys = [entry.split('\n', 1)[0].lower() for entry in config.split('\0') if entry]
+            ap.require(not any(k.startswith('url.') and k.endswith(('.insteadof', '.pushinsteadof')) for k in keys),
+                       'Git-URL-Umschreibung gefunden; eindeutiges Löschziel nicht nachweisbar.')
+            effective = git(root, 'ls-remote', '--get-url', repo.remote).decode().strip()
+            ap.require(effective == repo.remote, 'Effektives Remoteziel weicht von der Einrichtung ab.')
+            for name in git(root, 'remote').decode().splitlines():
+                urls = git(root, 'remote', 'get-url', '--all', name).decode().splitlines()
+                if repo.remote in urls or any(github_identity(u) for u in urls):
+                    pushed = git(root, 'remote', 'get-url', '--push', '--all', name).decode().splitlines()
+                    ap.require(urls == [repo.remote] and pushed == [repo.remote],
+                               'Abweichende oder mehrere Fetch-/Pushziele gefunden. Entfernung gesperrt.')
+
+    def remote_head(self, ref):
+        from .sources import check_commit
+        raw = git(self.repository.cached.root, '-c', 'http.followRedirects=false',
+                  'ls-remote', '--refs', '--', self.repository.remote, ref).decode().splitlines()
+        ap.require(len(raw) <= 1, 'Remote-Ref ist nicht eindeutig.')
+        if not raw:
+            return None
+        sha, actual = raw[0].split('\t')
+        ap.require(actual == ref, 'Remote lieferte einen anderen Ref.')
+        return check_commit(sha)
+
+    def pull_requests(self, branch):
+        rows = []
+        for page in range(1, 101):
+            values = github_get('/pulls?' + urlencode({'state': 'all', 'head': 'venomenon328:' + branch,
+                                                       'per_page': 100, 'page': page}))
+            ap.require(isinstance(values, list), 'GitHub-PR-Antwort ist ungültig.')
+            for value in values:
+                ap.require(isinstance(value, dict) and value.get('state') in ('open', 'closed') and
+                           isinstance(value.get('number'), int) and 'merged_at' in value,
+                           'GitHub-PR-Status ist unvollständig.')
+                head = value.get('head') or {}
+                ap.require(isinstance(head, dict) and head.get('ref') == branch and isinstance(head.get('repo'), dict) and
+                           head['repo'].get('full_name') == 'venomenon328/picross',
+                           'GitHub-PR-Quelle ist nicht eindeutig zugeordnet.')
+                rows.append({'number': value['number'], 'state': value['state'],
+                             'merged': value['merged_at'] is not None})
+            if len(values) < 100:
+                return rows
+        raise ap.InvalidInput('GitHub-PR-Abfrage nicht vollständig; Entfernung gesperrt.')
+
+    def local_state(self, ref, expected):
+        from .sources import check_commit
+        root = self.repository.local.root
+        raw = git(root, 'for-each-ref', '--format=%(refname) %(objectname) %(symref)', ref).decode().splitlines()
+        # for-each-ref also matches descendants: accept only the exact ref.
+        matches = [line.split(' ', 2) for line in raw if line.startswith(ref + ' ')]
+        ap.require(len(matches) <= 1, 'Lokaler Ref ist nicht eindeutig.')
+        ap.require(not matches or len(matches[0]) == 3 and not matches[0][2], 'Symbolischer lokaler Ref ist kein Löschziel.')
+        local = check_commit(matches[0][1]) if matches else None
+        worktrees = git(root, 'worktree', 'list', '--porcelain', '-z').decode('utf-8')
+        checked_out = sum(item == 'branch ' + ref for item in worktrees.split('\0'))
+        blockers = []
+        if checked_out:
+            blockers.append(f'Zielbranch ist in {checked_out} Worktree(s) ausgecheckt. Dort zuerst sicher auf einen anderen Branch wechseln.')
+        if local is not None and local != expected:
+            blockers.append('Lokaler Branch hat eine andere SHA (eigene oder abweichende Commits). Zuerst außerhalb des Assistenten sichern und klären.')
+        return {'sha': local, 'checked_out': checked_out}, blockers
+
+    def main_state(self, puzzle_id):
+        repo = self.repository
+        sha = self.remote_head('refs/heads/main')
+        ap.require(sha is not None, 'Remote-main nicht prüfbar; Entfernung gesperrt.')
+        # A private-cache read of the fresh main tip, never a local/main mutation.
+        raw = repo.cached.read(sha, INDEX, 8 * JSON_LIMIT, missing=True)
+        revisions = [e['revision'] for e in index_value(raw)['entries'] if e['puzzle_id'] == puzzle_id] if raw else []
+        registry = repo.cached.read(sha, 'content/registry.json', 8 * JSON_LIMIT, missing=True)
+        registered = False
+        if registry:
+            value = p.parse(registry, 8 * JSON_LIMIT)
+            ap.require(isinstance(value, dict) and isinstance(value.get('entries'), list) and
+                       all(isinstance(row, dict) and isinstance(row.get('id'), str) for row in value['entries']),
+                       'Mainkatalog nicht prüfbar.')
+            registered = any(row.get('id') == puzzle_id for row in value['entries'])
+        return {'commit': sha, 'revisions': sorted(revisions), 'registered': registered}
+
+    def probe(self, job):
+        reason = self.availability(job)
+        ap.require(reason is None, reason or '')
+        repository = self.target()
+        branch, expected = job['ref'], job['commit']
+        ref = 'refs/heads/' + branch
+        actual = self.remote_head(ref)
+        ap.require(actual is not None, 'Remote-Branch fehlt bereits. Quellen neu laden; keine Entfernung ausgeführt.')
+        ap.require(actual == expected, 'Remote-Head wurde geändert. Neueren Stand laden und erneut vorprüfen.')
+        local, blockers = self.local_state(ref, expected)
+        prs = self.pull_requests(branch)
+        if any(row['state'] == 'open' for row in prs):
+            blockers.append('Offener Pull Request für diesen Branch: Entfernung gesperrt.')
+        main = self.main_state(job['puzzle_id'])
+        scan = self.repository.scan(self.repository.cached, expected, job['puzzle_id'])
+        ap.require(not scan['errors'], 'Nicht alle Produktionsrevisionen sind lesbar. Entfernung gesperrt.')
+        revisions = sorted({row['revision'] for row in scan['jobs']})
+        ap.require(job['revision'] in revisions, 'Ausgewählte Revision ist nicht mehr nachgewiesen.')
+        warnings = []
+        if any(row['state'] == 'closed' and not row['merged'] for row in prs):
+            warnings.append('Geschlossener, nicht gemergter PR vorhanden. Seine Produktion wird durch die Branchentfernung nicht integriert.')
+        if main['revisions'] or main['registered'] or any(row['merged'] for row in prs):
+            warnings.append('Mainintegration bzw. gemergter PR vorhanden: integrierte Inhalte bleiben auf main erhalten.')
+        return {'repository': repository, 'source': 'remote', 'branch': branch, 'ref': ref,
+                'sha': expected, 'puzzle_id': job['puzzle_id'], 'title': job['title'], 'revisions': revisions,
+                'local': local, 'prs': prs, 'main': main, 'warnings': warnings, 'blockers': blockers}
+
+    def push_delete(self, facts):
+        # Explicit URL + single refspec: no named-remote mirror/refspec/pushurl defaults.
+        # Lease is enforced by receive-pack even if the tip changes AFTER the probe.
+        git(self.repository.cached.root, '-c', 'http.followRedirects=false', '-c', 'protocol.allow=never',
+            '-c', 'protocol.https.allow=always', '-c', 'protocol.ssh.allow=always',
+            '-c', 'protocol.file.allow=always', '-c', 'push.followTags=false',
+            'push', '--porcelain', '--no-verify', '--no-follow-tags', '--no-signed',
+            '--recurse-submodules=no', '--receive-pack=git-receive-pack',
+            '--force-with-lease=' + facts['ref'] + ':' + facts['sha'],
+            '--', self.repository.remote, ':' + facts['ref'])
+
+    def remove(self, job, facts):
+        fresh = self.probe(job)
+        ap.require(not fresh['blockers'], ' '.join(fresh['blockers']))
+        ap.require(fresh == facts, 'Vorprüfungsbefunde haben sich geändert. Neu vorprüfen und bestätigen.')
+        try:
+            self.push_delete(facts)
+        except ValueError:
+            return {'removed': False, 'message': 'Push abgelehnt oder nicht rechtzeitig bestätigt (Lease, Rechte oder Netzwerk). Ausgang nicht als Erfolg bestätigt; Quellen neu prüfen.'}
+        try:
+            absent = self.remote_head(facts['ref']) is None
+        except ValueError:
+            absent = False
+        if not absent:
+            return {'removed': False, 'message': 'Push beendet, aber Fehlen des Remote-Refs nicht bestätigt. Quellen neu prüfen; kein Erfolg nachgewiesen.'}
+        return {'removed': True, 'message': 'Remote-Branch entfernt und sein Fehlen geprüft. Maininhalte und lokale Quellen bleiben erhalten.'}
+
+    def local_probe(self, facts):
+        self.target()
+        ap.require(self.remote_head(facts['ref']) is None, 'Remote-Branch ist wieder vorhanden. Lokale Bereinigung gesperrt.')
+        local, blockers = self.local_state(facts['ref'], facts['sha'])
+        ap.require(not blockers, ' '.join(blockers))
+        ap.require(local['sha'] == facts['sha'], 'Lokaler Ref fehlt oder wurde geändert. Keine lokale Bereinigung.')
+
+    def remove_local(self, facts):
+        self.local_probe(facts)
+        git(self.repository.local.root, 'update-ref', '--no-deref', '-d', facts['ref'], facts['sha'])
+        local, _ = self.local_state(facts['ref'], facts['sha'])
+        ap.require(local['sha'] is None, 'Lokale Refentfernung nicht bestätigt.')
 
 
 def patterns(values):
@@ -149,10 +361,19 @@ class Repository:
             self.sync_error = None
             if self.remote:
                 try:
-                    specs = ['+refs/heads/' + ref + ':refs/pw/' + ref for ref in self.refs]
+                    # Fetch fails on an explicitly selected ref that disappeared.
+                    # Observe first, then prune only absent exact refs after a successful fetch.
+                    advertised = git(self.cached.root, 'ls-remote', '--refs', '--', self.remote,
+                                     *['refs/heads/' + ref for ref in self.refs]).decode().splitlines()
+                    present = {line.split('\t')[1] for line in advertised}
+                    missing = [ref for ref in self.refs if '*' not in ref and 'refs/heads/' + ref not in present]
+                    specs = ['+refs/heads/' + ref + ':refs/pw/' + ref for ref in self.refs if ref not in missing]
                     # Prune only the destinations of these explicit refspecs. Atomic
                     # ref updates keep the previous cache intact on a failed fetch.
-                    self.fetch(*specs, filtered=True, prune=True, shallow=True)
+                    if specs:
+                        self.fetch(*specs, filtered=True, prune=True, shallow=True)
+                    for ref in missing:
+                        git(self.cached.root, 'update-ref', '-d', 'refs/pw/' + ref)
                     self.synced_at = datetime.now(timezone.utc).isoformat()
                     raw = p.data({'synced_at': self.synced_at})
                     temporary = io.safe(self.state, 'sync-pw-v1.tmp')
