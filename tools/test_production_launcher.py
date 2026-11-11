@@ -1,6 +1,7 @@
 """Change-scoped lifecycle regressions; real locks/HTTP, synthetic data only."""
 import http.client
 import json
+import os
 from pathlib import Path
 import socket
 import subprocess
@@ -168,7 +169,10 @@ class LauncherTests(unittest.TestCase):
         host.request_stop(); self.assertTrue(host.stopped.wait(5))
         restarted = self.start(); self.assertEqual(restarted.metadata['port'], port)
         restarted.request_stop(); self.assertTrue(restarted.stopped.wait(5))
-        foreign = socket.socket(); foreign.bind(('127.0.0.1', port)); foreign.listen()
+        foreign = socket.socket()
+        if os.name != 'nt':
+            foreign.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        foreign.bind(('127.0.0.1', port)); foreign.listen()
         try:
             with self.assertRaises(runtime.PortConflict):
                 self.start()
