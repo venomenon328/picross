@@ -74,6 +74,11 @@ letzten Synchronisierung und Remote-/Offlinefehler sind getrennt sichtbar.
 Ein lokaler Commit ist keine bestätigte Remote-Sicherung. Offline bleibt ein
 vorhandener Cache lesbar; noch nicht geladene Gitobjekte können dann fehlen.
 Ein Dirty-Checkout ist zulässig, seine Arbeitsdateien werden nicht angezeigt.
+Eine defekte Projektion wird ihrem Indexeintrag zugeordnet; andere gültige
+Revisionen bleiben sichtbar. Erfolgreiche Synchronisierung entfernt weggefallene
+Remote-Branches ausschließlich aus den konfigurierten eigenen Cache-Refs.
+Bereits geöffnete Snapshots bleiben gebunden; bei Offlinefehlern bleiben die
+zuletzt gespeicherten Refs erhalten.
 
 Der Dienst schreibt nur `config.json`, den eigenen nackten `git-cache` und dessen
 letzten Synchronisierungszeitpunkt. Kein Pull/Checkout/Reset/Stash/Add/Commit/Push
@@ -87,7 +92,11 @@ anlegen; dies ist eine lokale Schutzgrenze, keine CI-Artefaktgrenze.
 Blob-/Bildcaches sind nur im Prozess (je höchstens 64 MiB/512 Einträge),
 Baummetadaten höchstens 4 MiB. Große ZIPs werden einzeln geöffnet und wieder
 freigegeben. Höchstens vier Datenoperationen laufen gleichzeitig; weitere erhalten
-„beschäftigt“. Die Jobliste liest keine ZIPs. Ein Job wird vor Bildausgabe gegen
+„beschäftigt“. Die Oberfläche lädt Bilder mit einer Zweierwarteschlange und hält
+damit Kapazität für Job-/Metadatenzugriffe frei. Bei „beschäftigt“ wiederholt sie
+höchstens viermal mit wachsendem Abstand; fehlgeschlagene Bildkarten bieten
+„Bild erneut laden“. Jobwechsel verwirft alte Warteschlangeneinträge und Antworten.
+Die Jobliste liest keine ZIPs. Ein Job wird vor Bildausgabe gegen
 Originale geprüft, anschließend werden nur gebundene Bildkennungen ausgeliefert.
 Kein Browserbildarchiv: nur die Darstellungseinstellung bleibt im Local Storage;
 der zufällige Sitzungsschlüssel liegt bis zum Schließen im Session Storage,
@@ -160,7 +169,10 @@ Die vorhandenen 128/64/512-MiB-/2048-Datei-Paketgrenzen und 32-MiB-/8-Megapixel-
 Bildgrenzen gelten weiter. Der Reader bestätigt keine neue Inhaltsfreigabe.
 
 Kleine Regressionen: `python -m unittest tools.test_production_workspace -v`
-in der isolierten Imageumgebung. Der einmalige PW-A-T01-Durchstich und die
+in der isolierten Imageumgebung, mit Node.js 22+ für die browserfreie Ausführung
+des tatsächlichen UI-Ladecodes gegen einen langsamen lokalen HTTP-Dienst.
+Die DOM-Testnachbildung prüft keine Darstellung oder echte Browserbedienung.
+Der einmalige PW-A-T01-Durchstich und die
 wirkliche Windows-/Browserprobe T02 werden am konkreten Lieferhead im PR geführt.
 Linux-/HTTP-Tests ersetzen die Windowsprobe nicht. Die getrennten Vor-Merge-Gates
 PW-A-A01 und PW-A-A02 stehen in der Paketentscheidung.

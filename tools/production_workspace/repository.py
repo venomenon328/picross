@@ -98,13 +98,14 @@ class Repository:
             if status:
                 self.synced_at = p.parse(status)['synced_at']
 
-    def fetch(self, *specs, filtered=False):
+    def fetch(self, *specs, filtered=False, prune=False):
         # All mutations are confined to this application's private bare cache.
         size = sum(f.stat().st_size for f in (self.cached.root / 'objects').rglob('*') if f.is_file())
         ap.require(size < 384 * 1024 * 1024, 'Gitcache ist voll (512 MiB). Neuen eigenen Zustandsordner einrichten.')
         git(self.cached.root, '-c', 'protocol.allow=never', '-c', 'protocol.https.allow=always',
             '-c', 'protocol.http.allow=always', '-c', 'protocol.ssh.allow=always', '-c', 'protocol.file.allow=always',
             'fetch', '--no-tags', '--no-auto-maintenance', '--no-recurse-submodules', '--no-write-fetch-head',
+            *(['--prune', '--atomic'] if prune else []),
             *(['--filter=blob:none'] if filtered else []), '--', 'pw-source', *specs, timeout=30)
         after = sum(f.stat().st_size for f in (self.cached.root / 'objects').rglob('*') if f.is_file())
         ap.require(after <= 512 * 1024 * 1024, 'Gitcache überschreitet 512 MiB; neuen eigenen Zustand einrichten.')
@@ -121,7 +122,9 @@ class Repository:
             if self.remote:
                 try:
                     specs = ['+refs/heads/' + ref + ':refs/pw/' + ref for ref in self.refs]
-                    self.fetch(*specs, filtered=True)
+                    # Prune only the destinations of these explicit refspecs. Atomic
+                    # ref updates keep the previous cache intact on a failed fetch.
+                    self.fetch(*specs, filtered=True, prune=True)
                     self.synced_at = datetime.now(timezone.utc).isoformat()
                     raw = p.data({'synced_at': self.synced_at})
                     temporary = io.safe(self.state, 'sync.tmp')
@@ -153,10 +156,10 @@ class Repository:
                     index = index_value(index_raw)
                     for row in index['entries']:
                         file = row['record'].rsplit('/', 1)[0] + '/workspace.json'
-                        raw = source.read(commit, file, JSON_LIMIT, missing=True)
-                        if raw is None:
-                            continue
                         try:
+                            raw = source.read(commit, file, JSON_LIMIT, missing=True)
+                            if raw is None:
+                                continue
                             projection = p.validate(p.parse(raw))
                             ap.require(projection['puzzle_id'] == row['puzzle_id'] and projection['revision'] == row['revision'],
                                        'Index und Projektion stimmen nicht.')
