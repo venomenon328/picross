@@ -1,71 +1,36 @@
 name: Puzzle production verification
-
 on:
-  workflow_call:
-    inputs:
-      groups:
-        type: string
-        required: true
-      selection_attempt:
-        type: string
-        required: true
-    outputs:
-      production_attempt:
-        value: ${{ jobs.puzzle-production.outputs.production_attempt }}
   workflow_dispatch:
     inputs:
       groups:
-        description: Explicit Fachgruppen (solver, images, adapter, catalog)
+        description: Temporary PW-B diagnostic, selected groups only
         type: string
-        required: true
-        default: solver,images,adapter,catalog
-
+        default: adapter,catalog
 permissions:
   contents: read
-
-concurrency:
-  group: puzzle-production-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  puzzle-production:
+  diagnose:
     runs-on: ubuntu-24.04
-    outputs:
-      production_attempt: ${{ steps.attempt.outputs.value }}
     steps:
-      - name: Bind producer attempt
-        id: attempt
-        run: echo "value=$GITHUB_RUN_ATTEMPT" >> "$GITHUB_OUTPUT"
-      - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          fetch-depth: 1
+          ref: 0293675df2f7e9cf4c54dca86d3c01fca0202afb
+          fetch-depth: 2
           persist-credentials: false
-      - name: Python version
-        run: python3 --version
-      - name: Isolated image dependency
+      - name: Install selected image dependency
         run: |
-          python3 -m venv "${{ runner.temp }}/rp3-image-env"
-          "${{ runner.temp }}/rp3-image-env/bin/python" -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
-          echo "${{ runner.temp }}/rp3-image-env/bin" >> "$GITHUB_PATH"
-      - name: Selected Fachtests with measured fixtures and assigned integrations
-        env:
-          PRODUCTION_GROUPS: ${{ inputs.groups }}
-          CI_SELECTION_ATTEMPT: ${{ inputs.selection_attempt || github.run_attempt }}
-          RP1_SOURCE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
-          RP1_BASE_COMMIT: ${{ github.event.pull_request.base.sha || github.event.before || github.sha }}
-        run: python3 tools/production_ci.py --groups "$PRODUCTION_GROUPS" --output-dir artifacts/puzzle-production
-      - name: Upload reports, proofs and measurements
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
-        with:
-          name: puzzle-production-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
-          path: |
-            artifacts/puzzle-production/production-result.json
-            artifacts/puzzle-production/tests.json
-            artifacts/puzzle-production/tests.log
-            artifacts/puzzle-production/*.log
-            artifacts/puzzle-production/references/
-            artifacts/puzzle-production/za1-replay/replay.json
-          if-no-files-found: error
-          retention-days: 7
+          python3 -m venv "${{ runner.temp }}/pw-diagnostic-env"
+          "${{ runner.temp }}/pw-diagnostic-env/bin/pip" install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
+          echo "${{ runner.temp }}/pw-diagnostic-env/bin" >> "$GITHUB_PATH"
+      - name: Source-bound first failure in selected families, logs only
+        run: |
+          git rev-parse HEAD
+          python3 - <<'PY'
+          import sys, unittest
+          sys.path[:0] = ['.', 'tests/puzzle_production']
+          from tools.production_contract import MODULES
+          names = list(MODULES['adapter']) + list(MODULES['catalog'])
+          suite = unittest.TestLoader().loadTestsFromNames(names)
+          result = unittest.TextTestRunner(verbosity=2, failfast=True).run(suite)
+          raise SystemExit(not result.wasSuccessful())
+          PY
