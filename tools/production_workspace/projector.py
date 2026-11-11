@@ -130,7 +130,7 @@ def automatic(root, directory, stage, index, *, overlay=None):
                     chosen = [o for o in offers if o['record'] == ref]
                     # An empty list does not silently promote a draft; only a freshly
                     # qualified current raster has an automatically offered identity.
-                    if not chosen and ref == own_ref and ctx.value['state'] == 'raster_ready':
+                    if not offers and ref == own_ref and ctx.value['state'] == 'raster_ready':
                         chosen = [{'id': keys[0], 'label': 'Raster ' + ctx.value['revision']}] if keys else []
                     for o in chosen:
                         value['offers'].append({'id': o['id'], 'kind': role, 'label': o['label'], 'record': measured, 'asset_ids': [aid]})
