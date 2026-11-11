@@ -24,6 +24,11 @@
       "path": "tools/production_workspace/check_ui_loading.cjs",
       "disposition": "change-scoped",
       "reason": "Vorhandene browserfreie Lade-/Abbruchprüfung lädt den echten neuen Promptcode und berücksichtigt die Auftragsoberfläche. Keine Layout-/Browserabnahme."
+    },
+    {
+      "path": "tools/test_production_workspace.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende Lade-/Abbruchfälle verwenden sechs unterschiedliche gebundene Originalbilder, da PW-B identische Vergleichsbilder zusammenfasst. Unverändert sechs echte Transfers, Hashvergleich und Kapazitäts-/Abbruchguards; keine neue Testfamilie."
     }
   ],
   "core_change": null,
