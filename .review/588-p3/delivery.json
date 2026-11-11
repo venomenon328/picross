@@ -1,7 +1,7 @@
 {
   "format": "picross-windows-app-v1",
   "version": "588-P3",
-  "commit": "853b8d703e3752d5d0e3ed25b97dfa668aa2fcfb",
+  "commit": "b07622239fba6282ab150cad516589672161098c",
   "architecture": "windows-x64",
   "python": "3.13.14",
   "components": {
@@ -32,8 +32,8 @@
     "assets/launcher.ico": "be439fa4c88bbea59d9fc1deceedd9baebb3a1472015ecbbd4688caaeb9b3082"
   },
   "signed": false,
-  "zip_bytes": 21288383,
-  "zip_sha256": "9844cf42b93956cede1a8f7fc7816b61c9d3b98f720184380ae1d7593967bdc4",
+  "zip_bytes": 21288385,
+  "zip_sha256": "3daa4a42c1cc1d2602b18f3a19599b1819b697b626ef86f411d94ef5718b2e29",
   "exe_bytes": 4137574,
-  "exe_sha256": "58b5aa19299c9a6c1d3e53a27e0a13e34328bc45e5870ece66572196700ba404"
+  "exe_sha256": "2ee6a1391cf5908e76be493c7314d1fbc539245a4b25daf98933ddf740b75656"
 }
