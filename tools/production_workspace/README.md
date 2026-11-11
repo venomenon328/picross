@@ -111,7 +111,28 @@ separat benannte Windowsprobe; eine Linuxmessung belegt diese nicht.
 
 ## Bedienung und Quellenstatus
 
-Job/Revision wählen; Bildkarten nach Rollen und der Reveal-/Motivvergleich
+Den veröffentlichten Stand im einzigen Dropdown wählen. Revision und lokale/
+Remotequelle samt Branch unterscheiden auch gleichnamige Motive; die frühere
+zusätzliche Buttonliste entfällt. Lokale Motivbriefings samt „Entwurf verwerfen“
+sind davon getrennte Browserentwürfe.
+
+Die Detailansicht zeigt überlieferte Parameterrollen und das inventarisierte
+Originalbriefing aus dem geprüften Paket als Klartext mit Absätzen. Eindeutige
+Einzelwünsche belegen die Felder vor; mehrere Optionen und freie Formen bleiben
+vollständig lesbar. Die Anzeige bestätigt keine neue menschliche Freigabe.
+Record und Handoff müssen übereinstimmen; fehlende/beschädigte Originale und
+ungültiger UTF-8-Text erscheinen als Fehler. Briefings sind auf 1 MiB begrenzt.
+
+Unveränderte Werte bleiben im kopierten Auftrag Quellkontext. Änderungen sowie
+„Neue/zusätzliche Wünsche zur Motivvorlage“ sind neue Absichten. Zum Aufheben
+eines bisherigen Wunsches die entsprechende ausdrückliche Aufhebungswahl
+verwenden; sie hat Vorrang vor den Feldern der Gruppe. Leeren oder „Offen“ allein
+sperrt den Auftrag, solange dadurch eine bestehende Vorgabe entfallen würde.
+Freigegebene Korridore werden über die Korrektur erneut zur Entscheidung vorgelegt.
+Job-, Revisions-, Quellwechsel und „Neueren Stand laden“ verwerfen ungesendete
+Absichten; ein bloßer Refresh erhält sie. Entwurfswerte überlagern keine Gitdaten.
+
+Bildkarten nach Rollen und der Reveal-/Motivvergleich
 laden ihre Originale. Großansicht bietet Einpassen, 100/200/400 Prozent und
 neutralen Transparenzprüfgrund. Alle Texte werden als Klartext gerendert.
 Auswahlschaltflächen erzeugen nur Auftragsabsichten, keine Freigabe oder Zertifizierung.
