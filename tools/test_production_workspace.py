@@ -100,6 +100,172 @@ class WorkspaceTests(unittest.TestCase):
         project(self.request, self.repo)
         return commit(self.repo)
 
+    def test_new_branch_namespace_skips_old_refs_and_reuses_unchanged_scans(self):
+        sha = self.publish()
+        updates = ''.join(f'create refs/heads/content/old-{n} {sha}\n' for n in range(300))
+        subprocess.run(['git', '-C', str(self.repo), 'update-ref', '--stdin'], input=updates.encode(), check=True,
+                       stdout=subprocess.DEVNULL)
+        git(self.repo, 'branch', 'content/pw/pz-workspace-test')
+        git(self.repo, 'branch', 'content/pw/not-a-puzzle')
+        configure(self.repo, self.root / 'state')
+        repo = Repository(self.root / 'state')
+        with patch.object(repo.local, 'resolve', wraps=repo.local.resolve) as resolve, \
+                patch.object(repo.local, 'read', wraps=repo.local.read) as read:
+            first = repo.listing()
+            self.assertEqual({j['ref'] for j in first['jobs']}, {'main', 'content/pw/pz-workspace-test'})
+            self.assertEqual(resolve.call_count, 2)
+            reads = read.call_count
+            second = repo.listing()
+            self.assertEqual(len(second['jobs']), 2)
+            self.assertEqual(read.call_count, reads, 'unchanged commits must not reread indices/projections')
+        with self.assertRaises(ValueError):
+            configure(self.repo, self.root / 'bad-state', refs=['main', 'content/*'])
+
+    def test_original_default_configuration_upgrades_only_own_filter(self):
+        self.publish()
+        configure(self.repo, self.root / 'state')
+        path = self.root / 'state/config.json'
+        value = p.parse(path.read_bytes()); value['refs'] = ['main', 'content/*']
+        path.write_bytes(p.data(value))
+        old_cache = self.root / 'state/git-cache'; old_cache.mkdir()
+        sentinel = old_cache / 'untouched'; sentinel.write_bytes(b'old cache')
+        before = (git(self.repo, 'show-ref'), (self.repo / '.git/index').read_bytes())
+        repo = Repository(self.root / 'state')
+        self.assertEqual(repo.refs, ['main', 'content/pw/*'])
+        self.assertEqual(p.parse(path.read_bytes())['refs'], repo.refs)
+        self.assertEqual((git(self.repo, 'show-ref'), (self.repo / '.git/index').read_bytes()), before)
+        self.assertEqual(sentinel.read_bytes(), b'old cache')
+        value['refs'] = ['main', 'content/special']; path.write_bytes(p.data(value))
+        with self.assertRaises(ValueError):
+            Repository(self.root / 'state')
+        self.assertEqual(p.parse(path.read_bytes())['refs'], value['refs'])
+
+    def test_shallow_remote_fetch_resolves_only_requested_historical_commit(self):
+        old = self.publish()
+        name = (Path(self.request['record']['file']).parent / 'reveal.png').as_posix()
+        (self.repo / name).write_bytes(b'later bytes'); commit(self.repo)
+        remote = self.root / 'remote'; remote.mkdir(); git(remote, 'init', '--bare', '-q')
+        git(remote, 'config', 'uploadpack.allowFilter', 'true')
+        git(self.repo, 'push', str(remote), 'main')
+        configure(self.repo, self.root / 'state', remote=str(remote))
+        repo = Repository(self.root / 'state'); repo.refresh()
+        self.assertTrue((repo.cached.root / 'shallow').is_file())
+        with self.assertRaises(ValueError):
+            git(repo.cached.root, 'cat-file', '-t', old)
+        self.assertEqual(repo.cached.read(old, name), self.png)
+        self.assertEqual(git(repo.cached.root, 'cat-file', '-t', old).strip(), b'commit')
+
+    def test_background_refresh_does_not_block_http_or_existing_snapshots(self):
+        self.publish(); configure(self.repo, self.root / 'state')
+        repo = Repository(self.root / 'state'); service = Service(repo)
+        initial = service.listing(); jid = initial['jobs'][0]['id']
+        entered, release = threading.Event(), threading.Event()
+        original = repo.refresh
+        def blocked():
+            entered.set()
+            if not release.wait(10):
+                raise RuntimeError('test release missing')
+            return original()
+        repo.refresh = blocked
+        server = Server(service)
+        thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
+        try:
+            service.start_refresh(); self.assertTrue(entered.wait(2))
+            worker = service.update_thread
+            service.start_refresh(); self.assertIs(service.update_thread, worker)
+            def get(path):
+                c = http.client.HTTPConnection('127.0.0.1', server.server_port, timeout=2)
+                c.request('GET', path, headers={'X-Workspace-Session': service.secret})
+                r = c.getresponse(); value = r.read(); status = r.status; c.close()
+                self.assertEqual(status, 200)
+                return value
+            self.assertIn(b'<!doctype html>', get('/'))
+            state = p.parse(get('/api/jobs'))
+            self.assertEqual(state['update']['state'], 'running')
+            self.assertEqual(state['snapshot'], initial['snapshot'])
+            self.assertEqual(get('/api/jobs/' + jid + '/assets/reveal-A'), self.png)
+            release.set(); worker.join(10); self.assertFalse(worker.is_alive())
+            self.assertEqual(service.status()['update']['state'], 'done')
+            self.assertEqual(service.picture(jid, 'reveal-A')[0], self.png)
+            with patch.object(repo, 'refresh', side_effect=OSError('must not leak')):
+                service.start_refresh(); service.update_thread.join(2)
+                state = service.status()
+                self.assertEqual(state['update']['state'], 'error')
+                self.assertNotIn('must not leak', state['update']['error'])
+                self.assertTrue(state['jobs'])
+        finally:
+            release.set()
+            if service.update_thread:
+                service.update_thread.join(10)
+            server.shutdown(); server.server_close(); thread.join()
+
+    def test_actual_main_opens_browser_before_git_refresh_finishes(self):
+        from tools.production_workspace import __main__ as application
+        self.publish(); configure(self.repo, self.root / 'state')
+        repo = Repository(self.root / 'state')
+        entered, release, opened = threading.Event(), threading.Event(), threading.Event()
+        original = repo.refresh
+        server_holder, urls, result = [], [], []
+        def blocked():
+            entered.set(); release.wait(10)
+            return original()
+        def server(service, port):
+            value = Server(service, port); server_holder.append(value); return value
+        def browser(url):
+            urls.append(url); opened.set(); return True
+        repo.refresh = blocked
+        with patch.object(application, 'Repository', return_value=repo), \
+                patch.object(application, 'Server', side_effect=server), \
+                patch.object(application.webbrowser, 'open', side_effect=browser):
+            runner = threading.Thread(target=lambda: result.append(application.main(['--state', str(self.root / 'state')])))
+            runner.start()
+            try:
+                self.assertTrue(entered.wait(2)); self.assertTrue(opened.wait(2))
+                self.assertFalse(release.is_set(), 'browser opened while source is still blocked')
+                c = http.client.HTTPConnection('127.0.0.1', server_holder[0].server_port, timeout=2)
+                c.request('GET', '/'); response = c.getresponse()
+                self.assertEqual(response.status, 200); response.read(); c.close()
+            finally:
+                release.set()
+                if server_holder:
+                    server_holder[0].service.update_thread.join(10)
+                    server_holder[0].shutdown()
+                runner.join(10)
+            self.assertFalse(runner.is_alive()); self.assertEqual(result, [0])
+
+    def test_single_file_launcher_bundles_exact_program_and_keeps_checkout_unchanged(self):
+        from tools.production_workspace.build_launcher import build, FILES, ROOT
+        launcher = (ROOT / 'Picross-Start.cmd').read_text(encoding='utf-8')
+        self.assertEqual(launcher, build(), 'regenerate the launcher after changing a bundled source')
+        bootstrap = launcher.split('\n# === PICROSS_PYTHON_BEGIN ===\n', 1)[1]
+        scope = {'__name__': 'launcher_test'}
+        exec(compile(bootstrap, 'Picross-Start.cmd', 'exec'), scope)
+        destination = self.root / 'program'; destination.mkdir()
+        scope['unpack_program'](destination)
+        for name in FILES:
+            self.assertEqual((destination / name).read_bytes(), (ROOT / name).read_bytes())
+        # An older trusted checkout may lack the new DEFAULT_REFS. The launcher's
+        # package overlay must still import this bundled reader, without patching it.
+        baseline = self.root / 'baseline'
+        package = baseline / 'tools/production_workspace'; package.mkdir(parents=True)
+        (baseline / 'tools/__init__.py').write_text('')
+        (package / '__init__.py').write_text('')
+        (package / 'repository.py').write_text("raise RuntimeError('old reader must not run')\n")
+        # The production dependencies are unchanged and stay in the trusted checkout.
+        import os
+        command = ('import sys; import tools; tools.__path__.append(sys.argv[2]); '
+                   'import tools.production_workspace as p; p.__path__[:]=[sys.argv[1]]; '
+                   'from tools.production_workspace.repository import DEFAULT_REFS; '
+                   "assert DEFAULT_REFS == ['main', 'content/pw/*']")
+        result = subprocess.run([__import__('sys').executable, '-c', command, str(destination), str(ROOT.parent)],
+                                cwd=baseline, env={**os.environ, 'PYTHONPATH': str(baseline)},
+                                capture_output=True, text=True, timeout=10)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn('old reader must not run', (package / 'repository.py').read_text())
+        scope['PROGRAM_SHA256'] = '0' * 64
+        with self.assertRaises(RuntimeError):
+            scope['unpack_program'](destination)
+
     def test_projector_only_writes_view_and_reuses_identical_mtimes(self):
         before = {f: (f.read_bytes(), f.stat().st_mtime_ns) for f in self.repo.rglob('*') if f.is_file() and '.git' not in f.parts}
         self.assertEqual(project(self.request, self.repo)['status'], 'published')
@@ -181,7 +347,7 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_conflicting_revision_and_missing_projection_are_not_guessed(self):
         self.publish()
-        git(self.repo, 'checkout', '-qb', 'content/conflict')
+        git(self.repo, 'checkout', '-qb', 'content/pw/pz-workspace-test')
         path = self.directory / 'workspace.json'
         value = p.parse(path.read_bytes()); value['title'] = 'Different bytes'; path.write_bytes(p.data(value)); commit(self.repo)
         configure(self.repo, self.root / 'state')
@@ -218,17 +384,17 @@ class WorkspaceTests(unittest.TestCase):
                 self.assertEqual(service.picture(job['id'], 'reveal-A')[0], self.png)
 
     def test_deleted_remote_ref_is_pruned_without_touching_foreign_refs_or_snapshots(self):
-        # The only published job is on content/demo, not main.
+        # The only published job is on content/pw/pz-workspace-test, not main.
         (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': []}))
         commit(self.repo)
-        git(self.repo, 'checkout', '-qb', 'content/demo')
+        git(self.repo, 'checkout', '-qb', 'content/pw/pz-workspace-test')
         (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': [
             {'puzzle_id': self.request['puzzle_id'], 'revision': 'r01', 'record': self.request['record']['file']}]}))
         published = self.publish()
         remote = self.root / 'remote'; remote.mkdir(); git(remote, 'init', '--bare', '-q')
         git(remote, 'config', 'uploadpack.allowFilter', 'true')
-        git(self.repo, 'push', str(remote), 'main', 'content/demo')
-        git(self.repo, 'checkout', 'main'); git(self.repo, 'branch', '-D', 'content/demo')
+        git(self.repo, 'push', str(remote), 'main', 'content/pw/pz-workspace-test')
+        git(self.repo, 'checkout', 'main'); git(self.repo, 'branch', '-D', 'content/pw/pz-workspace-test')
         (self.repo / 'sentinel.txt').write_text('dirty')
         before = (git(self.repo, 'show-ref'), git(self.repo, 'status', '--porcelain'), (self.repo / '.git/index').read_bytes())
         configure(self.repo, self.root / 'state', remote=str(remote))
@@ -239,16 +405,16 @@ class WorkspaceTests(unittest.TestCase):
         # Same namespace, but outside the configured refspecs, as well as a foreign namespace.
         for ref in ('refs/pw/other', 'refs/foreign/keep'):
             git(repo.cached.root, 'update-ref', ref, published)
-        git(self.repo, 'push', str(remote), '--delete', 'content/demo')
+        git(self.repo, 'push', str(remote), '--delete', 'content/pw/pz-workspace-test')
         second = service.listing(refresh=True)
         self.assertIsNone(second['sync_error'])
         self.assertEqual(second['jobs'], [])
-        self.assertNotIn('content/demo', [s['ref'] for s in second['sources']])
+        self.assertNotIn('content/pw/pz-workspace-test', [s['ref'] for s in second['sources']])
         for ref in ('refs/pw/other', 'refs/foreign/keep'):
             self.assertEqual(repo.cached.resolve(ref), published)
         self.assertEqual(service.picture(jid, 'reveal-A')[0], self.png)
         # Republish, cache, then make the remote unavailable: failure must retain its refs.
-        git(self.repo, 'push', str(remote), published + ':refs/heads/content/demo')
+        git(self.repo, 'push', str(remote), published + ':refs/heads/content/pw/pz-workspace-test')
         service.listing(refresh=True)
         cached_refs = git(repo.cached.root, 'show-ref')
         remote.rename(self.root / 'offline')
@@ -266,7 +432,9 @@ class WorkspaceTests(unittest.TestCase):
             request['offers'][0]['asset_ids'] = ['image-0']
             project(request, self.repo)
         commit(self.repo); configure(self.repo, self.root / 'state')
-        return Service(Repository(self.root / 'state'))
+        service = Service(Repository(self.root / 'state'))
+        service.listing()
+        return service
 
     def test_ui_queues_six_slow_originals_retries_and_ignores_old_responses(self):
         service = self.ui_service()
@@ -324,6 +492,7 @@ class WorkspaceTests(unittest.TestCase):
     def test_http_capability_host_origin_paths_and_exact_original(self):
         self.publish(); configure(self.repo, self.root / 'state')
         service = Service(Repository(self.root / 'state'))
+        service.listing()
         server = Server(service); thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
         self.addCleanup(lambda: (server.shutdown(), server.server_close(), thread.join()))
         def call(path, headers=None, method='GET'):
@@ -344,6 +513,8 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual((code, raw), (200, self.png))
         self.assertEqual(call('/api/jobs/' + job['id'] + '/assets/../../secret', auth)[0], 400)
         self.assertEqual(call('/api/refresh', auth, method='POST')[0], 200)
+        service.update_thread.join(10)
+        self.assertFalse(service.update_thread.is_alive())
 
     def test_zip_guards_cover_aliases_links_sizes_and_actual_crc(self):
         for entries in ([('../escape', b'x')], [('C:/escape', b'x')], [('a.png', b'x'), ('A.png', b'x')],
