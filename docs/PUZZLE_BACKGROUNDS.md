@@ -1,5 +1,14 @@
 # Rätselbezogene Hintergrundzeichnungen
 
+**PE / #576 · freigegebener Sollstand, noch nicht implementiert:**
+[PE-A2](PUZZLE_EDITOR.md#4-bilder-und-hintergrundauswahl) ergänzt später fertige
+2304×576-Dateien ohne Neukodierung, die erste individuelle Zuordnung bei einem
+Legacyrätsel und die schreibbare Auswahl Standard/eigenes Bild/kein Hintergrund.
+Die bisherige Ableitung und Legacy-Sperre beschreiben weiter den vorhandenen Weg.
+[PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) führt davor
+Runtime v7 mit identischem v6-Hintergrundteilvertrag ein; Capability-v1 bleibt
+unverändert, Legacy-only aktiviert keine Hintergründe.
+
 **Vertrag 1.0 · Dokumentrevision 12 · 11.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
