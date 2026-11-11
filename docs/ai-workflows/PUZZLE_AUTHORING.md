@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.6.0 · Dokumentrevision 47 · 10.11.2026**
+**Version 0.6.0 · Dokumentrevision 48 · 11.11.2026**
 
 HP-W1 aus [#560](https://github.com/venomenon328/picross/issues/560#issuecomment-6747196307)
 spezifiziert den **versionierten Hintergrundweg außerhalb des aktiven Defaults** in
@@ -37,8 +37,10 @@ ergänzt die lokale serielle Verarbeitung ausdrücklich ausgewählter vorbereite
 Jobs mit vorhandenen Fachwerkzeugen nach [PRODUCTION_BATCH](../PRODUCTION_BATCH.md).
 Der Runner erhält vorhandene Entscheidungen, führt keine Bildwahl aus und endet
 spätestens am lokalen Paketbau. Seine technischen Zustände erteilen keine
-Inhaltsfreigabe. Die vier Aufträge und die Sheetbedienung bleiben erhalten;
-die Orchestrierung der Weitergabe und Integration gehört zum getrennten Folgepaket BA-B.
+Inhaltsfreigabe. [BA-B / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272)
+ergänzt separat die serielle Integration bereits vollständig vorbereiteter und
+tatsächlich autorisierter Jobs nach §8. Die vier Aufträge, Inhaltsfreigaben und
+Sheetbedienung bleiben erhalten.
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
 ergänzt den regulären Mehrjob-Arbeitsbereich sowie Update v3, Sitzung v5 und
 Auftrag v4 nach [Hintergrundvertrag §7.5](../PUZZLE_BACKGROUNDS.md#75-mj-a-mehrjob-arbeitsbereich-und-sichere-übernahme).
@@ -1051,7 +1053,7 @@ werden Optionslisten geleert, statt auf entfernte Arbeitsdateien zu verweisen.
 
 Bei Pflege des Cheat-Sheets beide eingebetteten Regelwerksnapshots und ihre
 Versions-/Revisionsanzeigen bytegleich mit den jeweiligen Markdownquellen halten:
-0.6.0/docrev47 und 0.7.0/docrev8. Jeder Auftrag verwendet den zum Job passenden Stand.
+0.6.0/docrev48 und 0.7.0/docrev9. Jeder Auftrag verwendet den zum Job passenden Stand.
 Der Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
 muss über den tatsächlichen Arbeitsbranch/Commit erreichbar benannt werden.
 
@@ -1225,6 +1227,44 @@ bleibt Aufgabe des vorhandenen HP-I1b2-/§9-Wegs. Neue Arbeit erfordert ausdrüc
 einen neuen Entwurf/Arbeitsstand; alte historische Quellen sind keine heutige Source.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren
+
+### BA-B: mehrere vorbereitete Einzelintegrationen
+
+Bei ausdrücklichem Integrationsauftrag darf der getrennte
+[BA-B-Runner](../PRODUCTION_BATCH.md) vollständig vorbereitete Jobs seriell
+übernehmen. `register` verwendet Originalpaket, tatsächliche Endfreigabe und
+sämtliche benötigten äußeren Belege über `export → frischer plan → register`.
+Ein vorheriger Finalizerlauf oder zusätzlicher Repository-Store ist keine neue
+Voraussetzung für bereits passende lokale Eingänge. `background_adopt` verwendet
+den vollständigen unveränderten HP-I1b2-Request samt Arbeitsdateien über
+`store → frischer plan → adopt`. Der Hintergrundweg bleibt ausdrücklich opt-in;
+keine Bildwahl, Endabnahme oder neue Autorisierung aus einem Batchflag ableiten.
+
+Plan, exakte Eingangs-/Auftragsbytes, Phasenbudgets und Versuche bleiben gebunden.
+`validate` prüft lesend die Vorbereitung, `run` führt aus, `resume` prüft frisch,
+`status` zeigt ausschließlich den historischen Stand mit `fresh=false`.
+[CLI und API](../../tools/puzzle_production/README.md#ba-b-autorisierte-serielle-einzelintegration)
+verlangen ausdrücklich benannte Quellen-, Werkzeug-, Ziel- und Arbeitswurzeln.
+Bei der Wiederaufnahme sind drei Fälle getrennt:
+
+| Belegter Stand | Zulässige frische Prüfung |
+| --- | --- |
+| Registrierung publiziert, Batchabschluss noch ungebucht | Lesendes natives `registration(apply=False)` muss den vollständig eigenen No-op bestätigen; kein zweiter Writer. |
+| Bildadoption publiziert, Batchabschluss noch ungebucht | Ursprüngliches Planbundle mit nativem `adopt(..., no_op_only=True)` vollständig prüfen; jeder erforderliche Schreibschritt bleibt gesperrt. |
+| Erfolg gebucht, danach weitere Jobs erfolgreich | Heutigen Gesamtkatalog einmal vollständig prüfen und erreichte Jobbindungen abgleichen; den inzwischen stale Bildplan nicht erneut adoptieren. |
+
+Der erste ungeklärte Fehler, offene Journal-/Stagingrest oder unsichere
+Abschluss stoppt alle folgenden Jobs; erfolgreiche frühere Übernahmen bleiben.
+Nötige native Recovery gesondert im bestehenden autorisierten Weg ausführen,
+danach frisch wiederaufnehmen. Kein automatischer Retry, Batchrollback oder
+Nachfüllen verbrauchter Versuche. RI-/Authoring-/Bildbudgets bleiben getrennt;
+ein Batch erzeugt weder Solver-/Difficultyarbeit noch zusätzliche Routineprüfungen.
+
+`completed` bestätigt den aktuell geprüften Zielcheckout. Originalfalse-Felder
+und historische Freigaben werden nicht umgeschrieben. Arbeitsrecord, Diffprüfung,
+Commit/Push/Draft-PR, CI und gegebenenfalls autorisierter Merge folgen weiter
+diesem §8; der Main-gebundene Abschluss folgt §9. Der Runner selbst führt weder
+Gitaktionen noch Retirement oder Raster-/Revealupdates aus.
 
 **Zukünftiger Hintergrundweg:** Die nachstehende ausführbare 0.6.0-/ZA-1-Route
 wird durch diesen Solltext nicht um neue Eingangsfelder oder Befehle erweitert.

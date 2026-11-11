@@ -6,3 +6,4 @@ web-deploy.local.json
 .godot/
 game/build/
 examples/rp5/baseline/
+/.picross-integration-batches/
