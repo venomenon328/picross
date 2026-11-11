@@ -1,23 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/582",
-  "package": "PW-Motivbriefing",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "Motivhinweise, strukturierte Rastervorgaben und die Darstellung der Produktionswerkstatt einschließlich eingebettetem Starter prüfen.",
-  "omitted": "Keine production.*, native.*, preflight oder delivery. Die Änderung betrifft Formulare, Auftragsprojektion und Darstellung. Produktionsdatenformen, Spiel und Integrationswerkzeuge sind unverändert. Einmalige lokale Browserprobe, keine zusätzliche Browser-CI.",
-  "test_changes": [
-    {
-      "path": "tools/test_authoring_sheet.py",
-      "disposition": "change-scoped",
-      "reason": "Den bestehenden Promptgenerator gegen unabhängige Genauigkeiten, ungültige Rastervorgaben, Farbmodi und die Bindung an die richtige Auftragsphase absichern."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/586",
+  "package": "Erdbeere-Schritt-1-r01",
+  "modules": [],
+  "purpose": "Allgemeine Quellen- und Planintegrität der reinen Abschlussbildablage nach Authoring 0.8.0 prüfen. Die konkrete Bild-, Inventar-, ZIP- und Projektionsprüfung erfolgt im Produktionsauftrag.",
+  "omitted": "Keine Zusatzmodule und kein Player-Build: ausschließlich frühe Produktionsdaten mit drei Abschlussbildoriginalen, keine Werkzeug-, Spiel- oder Runtimeänderung. Noch keine Motiv-/Rasterproduktion, Solver-/Proof-/Paletten-/Difficultyprüfung, Bestandsreplays oder Browserprüfung. Keine neuen oder geänderten Tests; technische lokale Prüfansichten enden nach Sicherung und Übergabe.",
+  "test_changes": [],
   "core_change": null,
-  "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
+  "evidence": {"mode": "none", "purpose": null, "expires": null}
 }
