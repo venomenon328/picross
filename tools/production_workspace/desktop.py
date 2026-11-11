@@ -102,7 +102,7 @@ def run_headless(args, lock, build):
 def run_gui(args, lock, build):
     import tkinter as tk
     from tkinter import ttk, messagebox
-    root = tk.Tk(); root.title('Picross · Produktionsassistent'); root.minsize(590, 230)
+    root = tk.Tk(); root.title('Picross · Produktionsassistent'); root.minsize(620, 320)
     if os.name == 'nt':
         root.iconbitmap(str(Path(__file__).parent / 'assets/launcher.ico'))
     runtime = None

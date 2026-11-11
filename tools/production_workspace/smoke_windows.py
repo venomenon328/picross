@@ -83,7 +83,7 @@ def smoke(archive, destination):
         metadata = lock.read()
         try:
             return metadata if control(metadata, 'identify')['state'] == 'ready' else None
-        except (ConnectionError, TimeoutError):
+        except (ConnectionError, TimeoutError, ValueError):
             return None
     def stop(process, metadata):
         control(metadata, 'stop')
@@ -150,6 +150,17 @@ def smoke(archive, destination):
         missing_git = {**env, 'PATH': str(Path(os.environ['SystemRoot']) / 'System32')}
         if start(environment=missing_git).wait(timeout=15) != 2:
             raise RuntimeError('Fehlendes Git nicht früh erkannt.')
+        fake_git = destination / 'ungeeignetes Git'; fake_git.mkdir()
+        stub = fake_git / 'git.cs'
+        stub.write_text('public class GitStub { public static int Main() { return 129; } }\n')
+        compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+        if not compiler.is_file():
+            raise RuntimeError('T02-Teststub benötigt den vorhandenen Windows-.NET-Framework-C#-Compiler; keine Installation.')
+        subprocess.run([str(compiler), '/nologo', '/target:winexe', '/out:' + str(fake_git / 'git.exe'), str(stub)],
+                       check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, creationflags=subprocess.CREATE_NO_WINDOW)
+        unsuitable = {**env, 'PATH': str(fake_git) + os.pathsep + str(Path(os.environ['SystemRoot']) / 'System32')}
+        if start(environment=unsuitable).wait(timeout=15) != 2:
+            raise RuntimeError('Ungeeignetes Git nicht früh erkannt.')
         resource = app / '_internal/tools/production_workspace/ui/app.js'
         saved = resource.read_bytes(); resource.write_bytes(b'')
         try:
@@ -159,7 +170,7 @@ def smoke(archive, destination):
             resource.write_bytes(saved)
         if (state / 'config.json').read_bytes() != config_bytes or git(repo, 'show-ref') != before[1] or git(repo, 'status', '--porcelain') != before[2]:
             raise RuntimeError('Testcheckout oder Konfiguration wurde verändert.')
-        checks.append('missing Git/corrupt UI rejected; config and data refs/files preserved')
+        checks.append('missing/unsuitable Git and corrupt UI rejected; config and data refs/files preserved')
         result = {'format': 'picross-launcher-smoke-v1', 'commit': inventory['commit'],
                   'zip_sha256': hashlib.sha256(archive.read_bytes()).hexdigest(),
                   'exe_sha256': hashlib.sha256(executable.read_bytes()).hexdigest(), 'checks': checks,

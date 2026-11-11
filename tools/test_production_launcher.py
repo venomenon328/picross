@@ -3,6 +3,8 @@ import http.client
 import json
 from pathlib import Path
 import socket
+import subprocess
+import sys
 import tempfile
 import threading
 import time
@@ -86,6 +88,28 @@ class LauncherTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             instance.control(bad, 'stop')
         self.assertFalse(host.stop_requested.is_set())
+
+    def test_near_simultaneous_process_starts_share_one_server(self):
+        configure(self.repository, self.state)
+        arguments = [sys.executable, '-m', 'tools.production_workspace', '--headless', '--no-browser', '--state', str(self.state)]
+        children = [subprocess.Popen(arguments, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) for _ in range(2)]
+        lock = instance.StateLock(self.state)
+        try:
+            deadline = time.monotonic() + 15
+            while time.monotonic() < deadline and not any(c.poll() == 0 for c in children):
+                time.sleep(0.05)
+            self.assertEqual(sum(c.poll() is None for c in children), 1)
+            self.assertEqual(sum(c.poll() == 0 for c in children), 1)
+            metadata = lock.read()
+            self.assertEqual(instance.control(metadata, 'identify')['state'], 'ready')
+            instance.control(metadata, 'stop')
+            for child in children:
+                self.assertEqual(child.wait(timeout=10), 0)
+            self.assertFalse(lock.metadata.exists())
+        finally:
+            for child in children:
+                if child.poll() is None:
+                    child.kill(); child.wait(timeout=10)  # Exact owned synthetic source-test child.
 
     def test_foreign_responder_cannot_learn_key_or_forge_readiness(self):
         from http.server import BaseHTTPRequestHandler, HTTPServer
