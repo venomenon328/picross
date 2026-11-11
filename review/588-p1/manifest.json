@@ -1,0 +1,35 @@
+{
+  "purpose": "P1-A01 independent technical and visual review for PR #589; no product merge",
+  "product_head": "0bdde650c97d1f84720edb4f8775358ac7c96a6c",
+  "base": "307e87099ff462150779b030fbffbe2001d6238e",
+  "environment": "Windows 11, Chrome 157.0.8103.50 headless real browser via CDP; single CMD startup, isolated state/profile; UI scale 100%, device scale factor 1",
+  "fixture_commit": "6f0df35a55afce275a2d68f977d806d7edc3f05f",
+  "fixture": "Genuine current authoring builder v3/handoff v4/record v3/projection v2; local synthetic test pixels, main and production-branch views, no real production",
+  "recipient": "P1-A01 reviewer",
+  "expires": "2026-11-13",
+  "cleanup": "Keep this separate review ref for A01; remove after completed viewing, by 2026-11-13. If gate remains open at expiry, explicitly renew access. No merge PR for this ref.",
+  "files": [
+    {
+      "file": "desktop.png",
+      "theme": "light",
+      "resolution": [
+        1440,
+        1400
+      ],
+      "bytes": 152298,
+      "sha256": "844d7fc22af3c842a2c8df44b0f6cef41d60601c8d3a1f145c5be0dcde1883b0",
+      "scenario": "Unchanged actual local source wishes, status, plain-text briefing and single dropdown; screenshot before test-only cloud URL injection"
+    },
+    {
+      "file": "narrow.png",
+      "theme": "dark",
+      "resolution": [
+        390,
+        1400
+      ],
+      "bytes": 80907,
+      "sha256": "5194a241539b509531a2bb3b2ed94eea9ef405c14cafc81e5e56cce9278a0a1a",
+      "scenario": "Unchanged actual local source wishes, status, plain-text briefing and single dropdown; screenshot before test-only cloud URL injection"
+    }
+  ]
+}
