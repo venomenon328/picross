@@ -1,0 +1,428 @@
+# PW · Git-gestützter Produktionsassistent
+
+**Spezifikation 1.0 · 11.11.2026 · [Issue #578](https://github.com/venomenon328/picross/issues/578)**
+
+Freigegebener Sollstand, noch nicht implementiert. Ausgangsbasis ist
+`main@9cc07b411155adeab0aa6516ab5b4c4341f48184`. Dieser Dokumentstand
+aktiviert keinen neuen Produktionsdefault und erteilt keinen Mergeauftrag.
+Paketentscheidungen, Prüfungen und tatsächliche Lieferung stehen in #578.
+
+## 1. Auftrag, Vorrang und Grenzen
+
+Der Eigentümer bestätigt einen lokalen, per Launcher/Skript gestarteten
+Produktionsassistenten mit automatischem Git-/Dateizugriff, sichtbaren
+Originalbildern, reduzierter Bedienoberfläche und fünf aufeinanderfolgenden
+Produktionsschritten. Manuelle Bild-/ZIP- und Routine-JSON-Importe sind kein
+regulärer Transportweg mehr. Einmalige Repositoryeinrichtung ist zulässig.
+
+**Nachträgliche Präzisierung:** Bestehende WIP-Stände müssen nicht lesbar bleiben.
+Es gibt keinen Migrationsauftrag, keinen Alt-Sitzungsimport und keinen parallel
+zu pflegenden alten Produktionsmodus. Keine Kompatibilitätsmatrix und keine
+neuen Altdatenregressionen als Voraussetzung der Lieferung. Die Wiederverwendung
+bewährter aktueller Datenformen ist erlaubt; sie erzeugt keine Zusicherung für
+alte Jobs. Vorhandene WIP-Dateien werden durch diesen Auftrag nicht gelöscht.
+Bereits integrierte Inhalte, Spielstände, IDs, Rechte und kompakte historische
+Belege sind keine WIP-Kompatibilitätslast und bleiben unverändert.
+
+Die hier festgelegte neue Reihenfolge ersetzt für die künftige neue Produktion
+die vierstufige Planung aus [Authoring](ai-workflows/PUZZLE_AUTHORING.md) und
+dem [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md). Bis PW-B die Änderungen samt
+Verbrauchern tatsächlich liefert, bleiben deren ausführbare Fassungen als
+Iststand erkennbar. Kein bloßes Umschalten des Defaults auf unpassende Regeln.
+Der neue fünfstufige Authoringstand wird als **0.8.0** eingeführt; 0.7.0 bezeichnet
+weiterhin seinen bisherigen vierstufigen Stand, nicht denselben Ablauf unter
+neuem Etikett. Unveränderte technische Dateiformen brauchen keine neue Version
+allein wegen eines neuen UI-Labels; geänderte geschlossene Semantik wird vor Code
+im zugehörigen Fachvertrag eindeutig dem neuen Regelstand zugeordnet.
+
+#490 und #491 bleiben abgeschlossene Lieferungen. #563 führt die neue
+Priorisierung vor dem Serienpilot #492. #560 behält die tatsächliche
+HW-Kriterienbilanz, insbesondere reale Bild-/Auswahlbelege. Der getrennte
+Bestandseditor #576 bearbeitet vorhandene Spielinhalte; PW erstellt keine
+konkurrierenden Inhaltswriter und wartet nicht pauschal auf diesen Editor.
+
+## 2. Fünf Schritte, nicht fünf neue Freigaberituale
+
+| Schritt | Arbeit und Entscheidung | Ende des Schritts |
+| --- | --- | --- |
+| 1 · Abschlussbilder erstellen | Motivtext und optional eigene Referenz; drei tatsächliche farbige detaillierte Abschlussbilder erzeugen und im Repository sichern | Bildangebote zur Auswahl; noch keine Abstraktion |
+| 2 · Motivvorlage erstellen | Tatsächliche Abschlussbildfreigabe binden; passende Konfiguration empfehlen und aus genau diesem Bild abstrahieren | Vergleich Abschlussbild/Motivvorlage und klarer Parameterkorridor |
+| 3 · Rätsel produzieren | Tatsächliche Motiv-/Parameterfreigabe binden; Varianten, nötige Reparaturen, technische und visuelle Prüfung sowie Schwierigkeit | Vollständig geprüfte Rasterangebote oder ehrlich bezeichnete Sichtungsentwürfe; Rasterwahl |
+| 4 · Hintergrund gestalten | Zum gewählten Motiv und Raster drei unterschiedliche Kontextzeichnungen erzeugen, speichern, isoliert zeigen; Wahl/Korrektur oder ausdrückliches `none` | Konkrete Hintergrundentscheidung oder offene Korrektur; kein Spieleinbau |
+| 5 · Abnehmen und integrieren | Tatsächliche Endabnahme des gewählten Rasterpakets, gültige Hintergrundentscheidung und Integrationsauftrag prüfen; Ableitung finalisieren, nur gewählte Lieferung gemeinsam integrieren | Draft-PR oder bei passendem Auftrag tatsächlicher Merge; danach regulärer Produktionsabschluss |
+
+Die Gestaltung des Hintergrunds gehört weder in Abschlussbild- noch in
+Abstraktions- oder Rasterproduktionsprompts. In Schritten 1–3 keine Aufforderung
+zum Hintergrundbriefing, zu drei Hintergrundmotiven oder zur Hintergrundwahl.
+Ein intern erforderlicher Status `pending` ist keine Benutzeraufgabe und darf
+keinen sichtbaren Blocker vor dem fälligen Schritt erzeugen.
+
+Die bisherige 0.7-Pflicht, schon bei `motif_review` drei Hintergründe zu besitzen,
+entfällt für 0.8.0. `raster_ready` bleibt die sinnvolle Trennung zwischen
+vollständiger Rasterprüfung und noch offener Hintergrundbereitschaft.
+`content_ready` setzt die gültige gewählte Hintergrunddisposition und die
+fälligen technischen/visuellen Belege voraus; Endabnahme und Integration sind
+davon weiterhin getrennt. Eine bloß angeklickte Bildkarte setzt keinen Gatewert.
+
+Vor Schritt 4 muss ein tatsächlich qualifiziertes Rasterangebot gewählt sein.
+Das ist noch keine Endabnahme oder Integrationsfreigabe. Die bereits gültige
+Bild-/Motivfreigabe wird nicht erneut abgefragt. Eine noch offene Hintergrundwahl
+kann mit dem abschließenden Auftrag erklärt werden; keine zusätzliche Nachricht
+nur zum Wiederholen derselben unveränderten Bildentscheidung verlangen.
+
+Die [Qualitätsregeln](PUZZLE_QUALITY.md) und der
+[Abschlussbildstandard](REVEAL_TRANSPARENCY.md) bleiben erhalten. Hintergrundbilder
+zeigen Kontext, nicht Rätselsubjekt, Lösung oder Motivname. Drei unterschiedliche
+Bildinhalte sind der Standard, nicht drei Dateiformate desselben Motivs.
+`none` ist eine ausdrückliche Entscheidung, kein Ersatz für fehlende Dateien.
+Keine Buchvorschau, Kandidaten-Testintegration oder zusätzliche Buchabnahme.
+Hintergrundkorrekturen erneuern nur die betroffenen Bildbindungen; unveränderte
+Raster erhalten ihre gültigen Nachweise. Ein nachträglicher eigener
+Hintergrundwechsel bleibt unter weiteren Aktionen getrennt vom neuen Regelweg.
+
+## 3. Bedienoberfläche und Datenautorität
+
+Der normale Einstieg zeigt die laufenden Produktionen, ihren verständlichen
+Stand und die nächste fällige Handlung. Ein gewählter Job hat eine kompakte
+Fünf-Schritte-Anzeige, den aktuellen Arbeitsbereich und eine primäre Aktion.
+Keine gleichrangige Sammlung sämtlicher Promptkarten, Suchfilter und
+Schemafelder als Hauptoberfläche.
+
+- Beginn: Motiv und optionales Referenzbild. Weitere Gestaltungswünsche auf
+  Wunsch; Rastermaße/Modus/Farbzahl dürfen früh als Einschränkung mitgegeben
+  werden, sind aber keine Pflichtfelder der Abschlussbilderzeugung.
+- Motiv-/Rasterphase: Konfiguration, geschützte Merkmale, echte Bildvergleiche
+  und verständlich bezeichnete Rasteroptionen. Maße, Farben und Schwierigkeit
+  sind Ergebnisdaten, keine zu kopierenden technischen Eingaben.
+- Hintergrundphase: optionaler Kontextwunsch, drei isolierte Bildkarten,
+  Original-Großansicht und klare Auswahl/Korrektur. Keine Engineansicht.
+- Schluss: gewähltes Raster, Abschlussbild und Hintergrund sowie die tatsächlich
+  noch fehlende Endabnahme/Integrationsbefugnis in einer kompakten Übersicht.
+
+IDs, Revisionen, Prüfsummen, Paketpfade und Commits werden aus den Quellen
+übernommen. Technische Details bleiben aufklappbar und kopierbar, aber nicht
+als reguläre editierbare Pflichtfelder. Bei fehlenden Quellen lautet die Aktion
+etwa „Veröffentlichung fehlt“ oder „Neuere Ergebnisse laden“, nicht „64-stelligen
+Hash eingeben“. Ein Defekt bleibt sichtbar; die Oberfläche rät keine Werte.
+
+System/Hell/Dunkel, Tastaturfokus, beschriftete Controls und sinnvolle
+Fensteranpassung gehören zum Werkzeug. Es muss nicht die Godot-Buchoberfläche
+nachbauen. Bildansichten erhalten das Seitenverhältnis, bieten Zoom/Großansicht
+und für transparente Bilder einen neutralen Prüfgrund. Keine unmarkiert
+umgerechneten Bilder als Freigabeoriginale verwenden.
+
+Git enthält die fachlichen Produktionsdaten. Browser-/Anwendungseinstellungen
+enthalten ausschließlich Einrichtung, Ansicht und noch nicht abgesendete
+Bedienabsichten. Keine zweite unabhängig bearbeitbare Produktionsdatenbank.
+Ein importierter Erfolgsstatus oder eine geprüfte Dateiprüfsumme ist keine
+frische Logikprüfung, keine Rechteklärung und keine menschliche Abnahme.
+
+## 4. Quelle, Synchronisierung und Snapshot
+
+### 4.1 Einmalige Einrichtung
+
+Der Launcher erhält genau einen vorhandenen lokalen Projektcheckout und einen
+separaten eigenen Zustands-/Cacheordner. Python 3.11+ und Git werden geprüft;
+fehlende Voraussetzungen verständlich melden, nicht ungefragt global installieren.
+Ein Windowsstarter öffnet anschließend die lokale Browseroberfläche. Der
+Zustandsordner liegt nicht in `content/`, `game/` oder einem fremden Arbeitsbaum.
+[WORKSPACE](dev-rules/WORKSPACE.md) gilt; persönliche Pfade werden nicht committed.
+
+Standard ist der konfigurierte Zielbranch `main` plus die regulären
+Produktionsbranches `content/*`. Weitere ausdrücklich konfigurierte Branches
+können hinzugefügt werden. Der Benutzer wählt nötigenfalls einen Job-/Quellstand,
+aber keine einzelnen Bildpfade. Gitrevision und Produktionsrevision sind
+verschiedene Kennungen.
+
+### 4.2 Lesend gegenüber dem Projekt
+
+Der Dienst liest **committete Objekte**, nicht ungeprüft gemischte Arbeitsbytes.
+Auch ein verschmutzter Benutzercheckout darf verbunden werden: Seine Änderungen
+bleiben unangetastet und werden nicht als veröffentlichter Stand dargestellt.
+Ein lokaler Commit ist lokal lesbar; daraus folgt keine Remote-Erreichbarkeit.
+
+Die einmalige Einrichtung bietet „Nur lokale Gitstände“ oder „Mit konfiguriertem
+Remote aktualisieren“. Im zweiten Fall werden beim Start und über eine klar
+bezeichnete Aktualisierungsaktion die gewählten Refs in einen eigenen Gitcache
+geholt. Das ist ausschließlich Cachepflege. Keine Schreiboperation im
+Benutzercheckout, kein Pull, Checkout, Reset, Stash, Add, Commit, Push oder Merge.
+Keine automatische Authentifizierungsänderung. Bestehende Git-Anmeldung nutzen;
+kein GitHub-Token in HTML, Browserstorage, Prompt oder Protokoll aufnehmen.
+
+Remote und erlaubte Refs kommen aus der bewusst bestätigten Einrichtung, niemals
+aus einem Produktionspaket. Keine frei parametrierbare Git-/Shell-API. Kommandos
+als Argumentlisten, ohne Shellauswertung; Submodule, Hooks, externe Filter und
+beliebige Remote-Helper nicht als Teil des Lesepfads ausführen. Cachepflege darf
+keine fremden Gitrefs löschen. Bei Offline-/Authentifizierungsfehlern einen
+vorhandenen gebundenen Stand weiter anzeigen, aber Alter und Fehler klar nennen.
+
+### 4.3 Konsistenz
+
+Vor einer Anzeige jeden Ref in eine volle Commit-SHA auflösen. Index, Records,
+Paket, Projektion und Bilder werden innerhalb dieser Ansicht ausschließlich aus
+diesem Snapshot oder aus ausdrücklich darin gebundenen historischen Commits
+gelesen. Keine Mischung aus `main` von eben und einem Bild vom späteren Head.
+
+Doppelte identische ID-/Revisionsbindungen verschiedener Refs dürfen zusammen-
+gefasst werden. Abweichende Bytes unter derselben ID/Revision sind ein Konflikt,
+kein Anlass, nach Dateiname, Zeitstempel oder größter Revisionszeichenfolge zu
+raten. Unterschiedliche angebotene Rasterrevisionen bleiben Angebote; eine
+neuere Revision wird nicht automatisch gewählt oder freigegeben.
+
+Ein Refwechsel während der Betrachtung lässt die aktive Ansicht unverändert.
+Die Oberfläche meldet einen neueren Stand und lädt ihn ausdrücklich vollständig.
+Alte Bildantworten dürfen nach Job-/Revisionswechsel keine neue Karte überschreiben.
+Historische Bildreferenzen werden bei Bedarf aus den erreichbaren Gitobjekten
+aufgelöst; fehlende Objekte sind Fehler, keine Aufforderung zum Einzelbildupload.
+Es entsteht kein allgemeiner Archivbrowser für alte WIP.
+
+## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist
+
+Der aktuelle [Builder](../tools/puzzle_production/authoring_builder.py) erzeugt
+`record`, Handoff und Paket; seine `sheet_from_record`-Projektion setzt die
+Rasteroptionsliste zunächst auf `[]`. Die gemeinsame Angebotsliste wird nach
+[Authoring §7](ai-workflows/PUZZLE_AUTHORING.md) bislang in der Chatübergabe
+geführt. Ein Repositoryreader darf diese nicht aus allen gefundenen PNGs oder
+der lexikografisch letzten Paketrevision erraten.
+
+Für neue, mit PW veröffentlichte Arbeitsstände kommt deshalb eine kompakte
+**`workspace.json`-Ansichtsprojektion** neben den zuständigen `record.json`.
+Sie enthält keine neuen Proofs oder Freigaben und ersetzt kein Originalpaket.
+Sie macht die tatsächlich angebotenen Optionen und ihre Bildbezüge maschinen-
+lesbar im Repository verfügbar. Fachliche Werte müssen zu den referenzierten
+Originalrecords, Handoffs, Inventaren und Entscheidungen passen; bei Konflikten
+wird die Projektion abgewiesen, nicht zur neuen Wahrheit erklärt.
+
+Der Produktionsakteur lässt sie automatisch aus seinem vorhandenen Arbeitsstand
+erzeugen und sichert sie mit den zugehörigen Quellen in demselben
+Phasen-Sicherungscommit. Kein zusätzlicher manueller Benutzerschritt. Ein
+veröffentlichtes Bild-/Rasterangebot ohne erreichbare Originale und gültige
+Projektion ist für den neuen Assistenten nicht vollständig übergeben.
+
+PW-A liefert dafür einen kleinen Projektor mit API/CLI neben dem bestehenden
+Paketbau. Er schreibt ausschließlich eine neue, geprüfte `workspace.json` in die
+zugehörige lokale Arbeitsrevision. Ein identischer Wiederholungsaufruf ist No-op;
+abweichende bereits veröffentlichte Bytes werden nicht überschrieben. Record,
+Handoff, ZIP, Entscheidungen, Index und Spielkatalog bleiben unverändert.
+Die normale beauftragte Git-Sicherung bleibt Aufgabe des Produktionsakteurs.
+Vor Publikation die gebundenen Quellbytes erneut vergleichen; bei zwischen-
+zeitlicher Änderung keine scheinbar passende Projektion veröffentlichen.
+
+PW-B integriert diesen Aufruf verbindlich in jede fällige Übergabe des neuen
+Produktionswegs. Die bisherigen Chat-Sheet-Daten können als Diagnose entfallen;
+der Nutzer muss sie nicht mehr in eine zweite Datenhaltung kopieren.
+
+## 6. Geschlossener Sichtvertrag für PW-A
+
+### 6.1 Datenform
+
+`picross-production-presentation-v1` enthält genau:
+
+| Feld | Bedeutung |
+| --- | --- |
+| `format` | Exakt `picross-production-presentation-v1` |
+| `puzzle_id`, `revision` | Bestehende gültige Authoring-ID und Revision des äußeren Arbeitsrecords |
+| `record` | Bytebindung des zugehörigen äußeren Records gemäß untenstehendem Referenztyp |
+| `title` | Kurzer redaktioneller Anzeigename; keine neue Namensautorität für das Spiel |
+| `assets` | Liste tatsächlich verfügbarer Betrachtungsdateien |
+| `offers` | Liste der in dieser Lieferung tatsächlich angebotenen Auswahlmöglichkeiten |
+
+Eine Dateireferenz enthält genau `commit,file,sha256,bytes`.
+`commit=null` bedeutet den vom Reader bereits fixierten Publikationssnapshot;
+eine volle SHA bezeichnet eine explizite historische Quelle im selben
+Repository. `file` ist ein sicherer repositoryrelativer Pfad; SHA-256 und
+Bytezahl werden aus den tatsächlichen Bytes bestimmt. Es wird kein zukünftiger
+Sicherungscommit in die Datei hineingeschrieben: dadurch keine Commit-Selbstreferenz.
+Der äußere `record` liegt an der kanonischen ID-/Revisionsposition des Index.
+
+Jedes Asset enthält genau `id,role,caption,location`.
+`role` ist `reveal`, `motif`, `raster`, `raster_draft` oder `background`.
+`location` enthält genau `commit,storage,container,file,sha256,bytes`:
+
+- `storage=repository`: `container=null`, `file` ist der gebundene relative
+  Dateipfad im erlaubten Produktionsbaum.
+- `storage=package`: `container` ist genau `{file,sha256,bytes}` für das
+  Original-ZIP im Repository; `file` bezeichnet dessen sicheren Mitgliedspfad.
+  Beide liegen im durch `location.commit` bestimmten Snapshot.
+
+Jedes Angebot enthält genau `id,kind,label,record,asset_ids`.
+`kind` ist `reveal`, `raster` oder `background`; `record` bindet die dafür
+zuständige echte Revision derselben Rätsel-ID. `asset_ids` verweist auf die
+passenden Assets dieser Projektion. IDs sind je Liste eindeutig und folgen
+den vorhandenen Options-ID-Grenzen. Kein verstecktes `approved=true`, keine
+Auswahl aus der Listenreihenfolge, keine freien URLs oder absoluten Pfade.
+
+`title`, `caption` und `label` sind nichtleere Klartexte mit höchstens 512 Zeichen.
+Höchstens 100 Assets und 20 Angebote je Projektion; der eigentliche Dreier-
+Hintergrundauftrag wird dadurch nicht erweitert. Die Projektionsdatei bleibt
+höchstens 1 MiB. Diese Grenzen schützen den lokalen Leser, sind keine Grenzen
+für CI-Artefakte oder eine erzwungene Produktionsausbeute.
+
+### 6.2 Ableitung und Prüfung
+
+Projektor und Reader prüfen ID/Revision, geschlossene Formen, referenzierte
+Dateien und tatsächliche Hashes. Das Paket muss dem Record entsprechen; äußere
+Handoffkopie und Inventarbindung müssen stimmen. Assetrollen werden mit den
+jeweiligen Originalbezügen abgeglichen: Revealangebote/-auswahl, Motivbezug,
+konkreter Rasterkandidat und dessen inventarisierte Ansicht beziehungsweise
+Hintergrundmanifest samt Kandidatenrevision. Eine fremde PNG mit passendem
+Namen ist keine passende Option.
+
+Rasterangebote binden jeweils ihre eigene Revision, den tatsächlichen
+Handoffkandidaten und eine passende vollständige vorhandene Inhaltsprüfung;
+`raster_ready` mit offener Hintergrundarbeit ist dabei zulässig. Ein
+`raster_draft` kann betrachtet werden, gehört aber nicht in ein freigabefähiges
+Rasterangebot. Die Anzeige benennt den fachlichen Zustand als überlieferten
+Produktionsbefund. Der Reader führt keine neue Solver-/Proof-/Difficultyprüfung
+und erteilt kein eigenes Inhaltszertifikat.
+
+Die Angebotsmitgliedschaft und kurze Beschriftung liefert der Produktionsakteur
+aus der tatsächlich erstellten Auswahlvorlage. Der Projektor übernimmt keine
+ungeprüften Hashangaben und erfindet keine Angebote durch Verzeichnissuche.
+Vor dem Implementieren die Requestschema-Datei für den Projektor aus exakt diesen
+Eingaben ableiten; sie darf nur Identitäten/Beschriftungen und vorhandene
+Quellreferenzen transportieren, keine Erfolgs- oder Freigabeoverrides.
+
+Der Index bleibt der vorhandene `content/authoring/index.json`. Der Reader sucht
+neben dessen kanonischen Records nach `workspace.json`; fehlende Projektionen
+sind nicht für PW veröffentlicht und werden nicht automatisch konvertiert.
+Es gibt keinen Scan aller Bilder im Repository. PW-A wird an neu erzeugten
+synthetischen heutigen Handoff-v3-/Record-v2-Paketen geprüft. Das ist die
+Wiederverwendung vorhandener Formen, kein Auftrag, den bestehenden WIP-Bestand
+lesbar zu machen. PW-B bindet den neuen Authoringstand ausdrücklich an die
+angepassten Fachleser.
+
+## 7. Lokale Auslieferung und Schutzgrenzen
+
+Eine kleine Pythonanwendung stellt vertrauenswürdige UI-Dateien und eine eng
+begrenzte JSON-/Bildschnittstelle bereit. Keine Freigabe des gesamten Checkout-
+Verzeichnisses durch einen generischen Dateiserver. Nur Loopback binden; Host
+und Origin gegen die tatsächlich gestartete Adresse prüfen. Ein zufälliges
+Sitzungsgeheimnis schützt sämtliche Daten-/Aktualisierungszugriffe. Keine
+freigebende CORS-Konfiguration. Ein fremder Browserursprung darf weder Inhalte
+lesen noch Aktualisierungen auslösen. Geheimnisse nicht in Logs oder kopierte
+Aufträge aufnehmen.
+
+Die Oberfläche und die API stammen aus demselben vertrauenswürdigen
+Programmstand. Betrachtete Produktionsbranches liefern ausschließlich Daten,
+niemals ausführbaren UI-/Python-/JavaScriptcode. HTML aus einem Paket wird
+nicht ausgeführt, SVG nicht als aktive Webseite eingebettet. Text als Text
+rendern. CSP gezielt auf eigene UI-/API-Ressourcen und lokal erzeugte
+Bild-Blob-URLs begrenzen; keine pauschale Freigabe beliebiger Netzwerkziele.
+
+HTTP-Endpunkte akzeptieren serverseitig vergebene Snapshot-/Job-/Assetkennungen,
+keine beliebigen Dateipfade, Shellkommandos, URLs oder Archivpfade. Der Server
+löst ausschließlich die von validierten Projektionen freigegebenen Ressourcen
+auf. Gitobjekte nach Typ und Größe prüfen; Symlinks, Submodule und Links aus dem
+Produktionsbaum heraus nicht verfolgen. Pfade in ZIPs vollständig normalisieren;
+Elternpfade, absolute Pfade, Laufwerke, Aliase, doppelte/Windows-kollidierende
+Namen, Dateitypkonflikte und Spezialdateien ablehnen.
+
+Die aktuellen [Authoring-Paketgrenzen](../tools/puzzle_production/authoring_package.py)
+bleiben maßgeblich: ZIP höchstens 128 MiB, einzelne Datei höchstens 64 MiB,
+2048 Dateien und insgesamt höchstens 512 MiB entpackte Daten. CRC, tatsächlich
+gelesene Bytezahl und SHA-256 prüfen. Nur benötigte Mitglieder lesen; keine
+rekursive Entpackung weiterer Archive. Bewährte vorhandene Guards wiederverwenden,
+ohne dadurch unbeabsichtigt Solver/Export/Writer aufzurufen. PNG/JPEG anhand
+Bytes und tatsächlicher Dekodierung prüfen; Bildressourcengrenzen der bestehenden
+Produktionswerkzeuge erhalten. Bilder unverändert ausliefern. Jede Darstellung
+mit künstlichem Prüfgrund ist eine Ansicht, kein neues Original.
+
+Index-/Jobliste zuerst günstig lesen; Pakete und Originalbilder bedarfsabhängig
+laden. Metadaten dürfen vor vollständiger Bildprüfung angezeigt werden, jedoch
+mit entsprechendem Status. Keine vorzeitige Meldung „vollständig geprüft“.
+Cacheeinträge an Gitblob, Paket-/Dateihash und Readerstand binden, begrenzen und
+bei Neustart/Änderung korrekt prüfen. Keine vollständige Bestandsentpackung,
+kein permanentes Kandidatenarchiv und kein Speichern sämtlicher Bilder im
+Browserstorage. Langsame/abgebrochene Ladevorgänge lassen andere Jobs bedienbar.
+
+## 8. Auftragstransport und Befugnisse im vollständigen Assistenten
+
+PW-B erzeugt pro Handlung einen kurzen, überprüfbaren Auftrag mit Repository,
+fixiertem Quellencommit, Projektions-/Recordpfad und tatsächlichen Auswahl-IDs.
+Der Empfänger löst die vollständigen Definitionen und Bilder aus diesen Quellen
+auf. Ein relativer Paketpfad allein beweist keinen Zugang. Cloudschritte dürfen
+keine localhost-Adresse oder bloß lokale Windowsdatei als erreichbare Quelle
+bekommen; ungesicherte neue Bilder erst passend veröffentlichen.
+
+Die Auswahl im Assistenten ist zunächst Bedienabsicht. Erst der ausdrücklich
+abgesendete Auftrag erklärt eine Bild-/Motiv-/Endfreigabe oder beauftragt eine
+Integration. Ein neuer Quellstand oder geänderte relevante Bildbytes entwerten
+stale Auswahlabsichten gezielt. Kein automatischer Modellaufruf, keine Modell-API,
+kein Freigabewriter im Hilfsdienst und keine automatische Serienfreigabe.
+
+Die lesende Oberfläche darf aktuelle Repositorydaten automatisch übernehmen;
+unabgesendete menschliche Eingaben nicht unbemerkt überschreiben. Persönliche
+Arbeitswurzel, Merge- und Bereinigungsoptionen bleiben eigene ausdrücklich
+angezeigte Auftragsparameter, keine aus einem Produktionsrecord abgeleiteten
+Rechte. Bei neuem Job muss dessen Motivbriefing im kopierten Erstauftrag stehen;
+noch nicht vorhandene Repositorydaten werden nicht als existent behauptet.
+
+Die normalen beauftragten Produktionsakteure committen/pushen Index, Record,
+Projektion und Originale an den fälligen Übergängen. Merge bleibt entsprechend
+dem tatsächlichen Auftrag getrennt. Nach vollständiger Mainintegration gilt
+Authoring §9. Der Assistent zeigt danach den bestätigten Abschluss und gültige
+Runtime-/Belegbezüge, keine defekten Links auf entfernte Zwischenbilder.
+
+## 9. Paketgrenze PW-A
+
+PW-A liefert Projektor/Schema, lokale Git-/Paketauflösung, sicheren Dienst,
+Windowsstarter und eine tatsächlich benutzbare **lesende Job-/Bildansicht**.
+Diese bietet Job-/Revisionauswahl, Bildkarten/Großansicht, Vergleich der vorhandenen
+Bildrollen, Quellen-/Aktualisierungsstatus, Hell/Dunkel und verständliche Fehler.
+Es ist kein reiner HTTP-Skeleton und keine nur in Logs sichtbare Bildlieferung.
+
+Noch nicht enthalten sind neue fünfstufige Prompts, produktive Auswahl- und
+Freigabeaufträge, Defaultumstellung, WIP-Import/Migration, eigener Bestandseditor,
+Runtimeänderungen, neue Bilder, Solveränderungen oder automatische Gitpublikation.
+Die kurze Projektor-/Launcher-Anleitung gehört zur Lieferung. Die bestehende
+Offline-HTML-Datei bleibt bis zum vollständigen PW-B-Ersatz als Iststand erhalten;
+kein neuer Kompatibilitätsmodus innerhalb des Assistenten.
+
+Technische Trennung: Der Projektor ist ein ausdrücklich beauftragtes lokales
+Produktionswerkzeug für die neue Ansichtsdatei. Der langlebige HTTP-Dienst ist
+projektseitig ausschließlich Leser. Kein Projektor-/Dateischreibaufruf durch
+einen beliebigen Browserrequest.
+
+Das Issue definiert PW-A-K01 bis K12, T01/T02 sowie die separaten Vor-Merge-Gates.
+PW-B ist erst nach dem tatsächlich gelieferten PW-A-Vertrag fein zu schneiden;
+die produktseitigen Anforderungen dieses Dokuments sind bereits freigegeben.
+
+Die ausführbare PW-A-Schnittstelle, Einrichtung und Schutzgrenzen stehen in der
+[Werkzeuganleitung](../tools/production_workspace/README.md); der konkrete
+Liefer-/Prüfstand einschließlich offener Plattformgates steht in PR #579.
+
+## 10. Nachführung beim späteren PW-B
+
+In einem konsistenten Implementierungsdiff mindestens diese Quellen abgleichen:
+
+- Authoring und den eingebetteten/ersetzenden Regelstand: fünf Aufträge, neue
+  0.8.0-Phasenbedingungen, Ausgabe und verpflichtende Repositoryprojektion.
+- Hintergrundvertrag und Qualität: Bilderzeugung erst Schritt 4, endgültige
+  Nutzung Schritt 5; keine neue Buchsichtpflicht.
+- Paketbuilder, Phasenreader, Finalizer/Export, Projektor und Auftragstransport:
+  neue gültige Zwischenstände und korrekte Bereitschaft, kein alter Schritt-4-
+  Integrationsprompt unter neuem sichtbaren Titel.
+- Werkzeuganleitung, Projektprofil und Produktionsablage: Launcher, Quelle,
+  Veröffentlichung, Wiederaufnahme und Nichtunterstützung alter WIP.
+- #560/#563/#492: tatsächlichen Liefer-/Aktivierungsstand und den neu
+  vorbereiteten Pilotweg führen. Frühere SP-P1-Reihenfolge nicht still ausführen.
+
+Der reale Pilot ist kein Ersatz für technische Prüfung. Eine persönliche Probe
+des vollständigen Assistenten beurteilt Bedienbarkeit am konkreten gelieferten
+Head; sie erteilt keine pauschale Freigabe später erzeugter Bilder oder Rätsel.
+
+## Quellen
+
+[Workflow](dev-rules/WORKFLOW.md), [Projektprofil](PROJECT_PROFILE.md),
+[Authoring](ai-workflows/PUZZLE_AUTHORING.md),
+[0.7-Iststand](ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
+[Hintergrundvertrag](PUZZLE_BACKGROUNDS.md), [Qualität](PUZZLE_QUALITY.md),
+[Produktionswerkzeuge](../tools/puzzle_production/README.md),
+[CI v2](CI_WORKFLOW_V2.md), [CI-Vertrag](dev-rules/CI_CONTRACT.md).
+
+Technische Referenzen zur Umsetzung: [Git-Objektzugriff](https://git-scm.com/docs/git-cat-file),
+[Python-HTTP-Sicherheitsgrenzen](https://docs.python.org/3/library/http.server.html#security-considerations),
+[CSP und lokale Verbindungen](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/connect-src).
+Ein bloßer Aufruf von `python -m http.server` erfüllt die hier definierten
+Zugriffs- und Autoritätsgrenzen nicht.
