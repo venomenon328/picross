@@ -1,6 +1,6 @@
 # P3 Windows-App-Image / Reviewzustellung
 
-Produkthead: 853b8d703e3752d5d0e3ed25b97dfa668aa2fcfb.
+Produkthead: b07622239fba6282ab150cad516589672161098c.
 Empfänger: unabhängiger technischer P3-A01-Reviewer zu PR #591.
 Zweck: unveränderter App-Download, Dateiinventar und Build-/Hashbindung.
 Dies ist ausschließlich ein separater Reviewref, kein Produkt-PR/Release/Tag.
@@ -11,10 +11,10 @@ prüfen und den Reviewref im beauftragten Rückbau entfernen. Eine Refentfernung
 garantiert keine sofortige Löschung historischer Gitobjekte oder Downloadkopien.
 Bei weiter offenem Gate rechtzeitig passenden Kandidaten gezielt neu zustellen.
 
-ZIP: 21.288.383 Bytes; SHA-256
-9844cf42b93956cede1a8f7fc7816b61c9d3b98f720184380ae1d7593967bdc4
+ZIP: 21.288.385 Bytes; SHA-256
+3daa4a42c1cc1d2602b18f3a19599b1819b697b626ef86f411d94ef5718b2e29
 EXE: 4.137.574 Bytes; SHA-256
-58b5aa19299c9a6c1d3e53a27e0a13e34328bc45e5870ece66572196700ba404
+2ee6a1391cf5908e76be493c7314d1fbc539245a4b25daf98933ddf740b75656
 
 Komponenten und Quellcommit: delivery.json bzw. components.json im App-Ordner.
 Dateihashes/Lizenzen und Start-/Updateanleitung liegen im ZIP. Unsigniert.
