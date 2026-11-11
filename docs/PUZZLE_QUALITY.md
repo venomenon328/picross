@@ -1,5 +1,16 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+
+
 **Vertrag 1.0 · Dokumentrevision 9 · 09.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488); HP-W1/HP-W2 / [#560](https://github.com/venomenon328/picross/issues/560); PB-H / [#489](https://github.com/venomenon328/picross/issues/489)**
 
 ## 1. Geltung und Zuständigkeit

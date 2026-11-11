@@ -7,7 +7,7 @@ import zipfile
 
 ROOT = Path(__file__).parent
 FILES = ['__init__.py', '__main__.py', 'presentation.py', 'repository.py', 'server.py', 'sources.py',
-         'ui/index.html', 'ui/app.js', 'ui/style.css']
+         'ui/index.html', 'ui/workflow.js', 'ui/app.js', 'ui/style.css']
 
 
 def build():

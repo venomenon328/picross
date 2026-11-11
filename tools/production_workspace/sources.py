@@ -29,6 +29,15 @@ def production_path(value):
     return value
 
 
+def read_path(value):
+    """Narrow internal completion evidence; never an HTTP path parameter."""
+    ap.relative(value)
+    if value in ('content/registry.json', 'game/data/registry.json') or re.fullmatch(
+            r'content/packages/pz-[a-z0-9][a-z0-9-]{0,59}/[A-Za-z0-9][A-Za-z0-9._-]{0,31}/manifest\.json', value):
+        return value
+    return production_path(value)
+
+
 class LRU:
     """Session-only decoded bytes; never persists original pictures in browser storage."""
     def __init__(self, limit=64 * 1024 * 1024):
@@ -92,7 +101,7 @@ class GitSource:
 
     def blob(self, commit, name, missing=False):
         check_commit(commit)
-        production_path(name)
+        read_path(name)
         if self.commits.get(commit) is None:
             try:
                 resolved = self.resolve(commit)
@@ -161,7 +170,7 @@ class LocalSource:
         self.history = GitSource(root)
 
     def read(self, commit, name, limit=JSON_LIMIT, missing=False):
-        production_path(name)
+        read_path(name)
         if commit is not None:
             return self.history.read(commit, name, limit, missing)
         raw = io.read(self.root, name, limit, missing=missing)

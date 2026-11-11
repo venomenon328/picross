@@ -95,6 +95,7 @@ class Service:
         facts = p.inspect(job['_source'], job['commit'], job['_projection'])
         self.views.put(('validated', job['commit'], io.checksum(p.data(job['_projection']))), b'1')
         return {**job['_projection'], 'facts': facts, 'source': job['source'], 'commit': job['commit'],
+                'source_url': job.get('source_url'), 'branch': job['ref'],
                 'publication': job['publication'], 'status': 'Originalbindungen und Bildbytes geprüft; keine neue Inhaltsfreigabe'}
 
     def picture(self, jid, aid):
@@ -169,9 +170,10 @@ class Handler(BaseHTTPRequestHandler):
             ap.require(self.headers.get('Sec-Fetch-Site') in (None, 'none', 'same-origin'), 'Fremder Browserzugriff abgewiesen.')
             path = urlsplit(self.path)
             ap.require(not path.query and not path.fragment and path.path == self.path, 'Ungültiger API-Pfad.')
-            if method == 'GET' and path.path in ('/', '/app.js', '/style.css'):
+            if method == 'GET' and path.path in ('/', '/app.js', '/workflow.js', '/style.css'):
                 name, mime = {'/': ('index.html', 'text/html; charset=utf-8'),
                               '/app.js': ('app.js', 'text/javascript; charset=utf-8'),
+                              '/workflow.js': ('workflow.js', 'text/javascript; charset=utf-8'),
                               '/style.css': ('style.css', 'text/css; charset=utf-8')}[path.path]
                 return self.reply(200, (UI / name).read_bytes(), mime)
             token = self.headers.get('X-Workspace-Session', '')

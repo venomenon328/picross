@@ -234,7 +234,10 @@ class Repository:
                 except (ValueError, OSError) as exc:
                     errors.append('Quellstand konnte nicht geladen werden: ' + str(exc))
         remote_commits = {s['commit'] for s in sources if s['source'] == 'remote'}
+        remote_match = re.fullmatch(r'(?:https://github\.com/|git@github\.com:)([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git)?', self.remote or '')
+        cloud_repository = 'https://github.com/' + remote_match[1] if remote_match else None
         for job in jobs:
+            job['source_url'] = cloud_repository + '/tree/' + job['commit'] if cloud_repository and job['commit'] in remote_commits else None
             job['publication'] = ('Im konfigurierten Remote gefunden' if job['commit'] in remote_commits else
                                   'Nur lokal nachgewiesen; Remote-Sicherung nicht bestätigt')
         return {'jobs': jobs, 'errors': errors, 'sources': sources, 'synced_at': self.synced_at,
