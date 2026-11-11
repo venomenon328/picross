@@ -266,3 +266,38 @@ class WorkspaceTests(unittest.TestCase):
         for state, remote in ((self.repo / 'cache', None), (self.root / 'state', 'ext::run something'),
                               (self.root / 'state', 'https://name:secret@example.invalid/repo')):
             with self.assertRaises(ValueError): configure(self.repo, state, remote=remote)
+
+    def test_discarded_background_history_uses_exact_manifest_and_original(self):
+        # Resolve the historical transport boundary in isolation; constructor,
+        # projector and HTTP admission are covered above with complete records.
+        from tests.puzzle_production.background_fixtures import BackgroundFixture, PROFILE
+        bg = BackgroundFixture(self.root / 'background', {'profile': PROFILE, 'tool_sha256': 'a' * 64})
+        target = self.repo / 'content/authoring/history'
+        import shutil
+        shutil.copytree(bg.source, target)
+        history_commit = commit(self.repo)
+        source = GitSource(self.repo)
+        ctx = object.__new__(p.Record)
+        ctx.source, ctx.snapshot, ctx.commit = source, history_commit, history_commit
+        ctx.allowed, ctx.offer_keys, ctx.historical_assets = {'background': {}}, {}, []
+        ctx.directory = 'content/authoring/pz-workspace-test/r02'
+        binding = {'manifest': {'storage': 'package', 'root': 'background', 'ref': bg.request['manifest']},
+                   'decision': None, 'derivation': None,
+                   'history': {'commit': history_commit, 'storage': 'directory',
+                               'path': 'content/authoring/history', 'root': '.'}}
+        c = bg.manifest['candidates'][1]
+        name = 'background/' + c['original']['file']
+        ctx.historical_background(binding, bg.manifest, c, name)
+        loc = ctx.historical_assets[0][1]
+        self.assertEqual(p.asset_bytes(source, history_commit, loc), (bg.source / c['original']['file']).read_bytes())
+        self.assertEqual(ctx.asset_name({'role': 'background', 'location': loc}), name)
+        changed = deepcopy(bg.manifest); changed['briefing'] += ' changed'
+        with self.assertRaises(ValueError): ctx.historical_background(binding, changed, c, name)
+        wrong = deepcopy(c); wrong['original']['sha256'] = '0' * 64
+        with self.assertRaises(ValueError): ctx.historical_background(binding, bg.manifest, wrong, name)
+        # The selected active candidate is never allowed to come from history.
+        ctx.directory = 'content/authoring/history'
+        binding['decision'] = {'storage': 'external', 'root': '.', 'ref': bg.request['decision']}
+        with self.assertRaises(ValueError):
+            ctx.historical_background(binding, bg.manifest, bg.manifest['candidates'][0],
+                                      'background/' + bg.manifest['candidates'][0]['original']['file'])

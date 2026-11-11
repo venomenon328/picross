@@ -9,7 +9,7 @@ from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from tools.puzzle_production.authoring_build_contract import names
 from tools.puzzle_production.authoring_builder import index_value
 from tools.puzzle_production.authoring_finalization import RECORD_KEYS
-from tools.puzzle_production.background_contract import validate_manifest, BackgroundError
+from tools.puzzle_production.background_contract import validate_manifest, validate_decision, _bind_decision, BackgroundError
 from tools.puzzle_production.background_package import validate_binding
 from tools.puzzle_production.contract import InvalidInput, canonical_bytes, exact_keys, integer, load_json
 from .sources import Archive, JSON_LIMIT, INDEX, check_commit, production_path
@@ -135,6 +135,7 @@ class Record:
     """Read original package metadata and only referenced members, never replay logic."""
     def __init__(self, source, snapshot, ref, puzzle_id):
         self.source, self.commit = source, ref['commit'] if ref['commit'] is not None else snapshot
+        self.snapshot = snapshot
         self.raw = source.read(self.commit, ref['file'])
         if 'sha256' in ref:
             bind(self.raw, ref)
@@ -185,6 +186,7 @@ class Record:
             ap.require(set(self.archive.files) == set(self.entries) | {'handoff.json', 'inventory.json'}, 'Inventar und Paketsatz unterscheiden sich.')
             self.member(h['rulebook']['file'], h['rulebook']['sha256'])
             self.allowed, self.offer_keys = {role: {} for role in ROLES}, {}
+            self.historical_assets = []
             self._images()
             self.close()  # Retain only tiny validated metadata, not a ZIP per offered revision.
         except BaseException as exc:
@@ -292,7 +294,10 @@ class Record:
                 for candidate in manifest['candidates']:
                     ref = deepcopy(candidate['original'])
                     ref['file'] = ref['file'] if root == '.' else root + '/' + ref['file']
-                    self.allow('background', ref, candidate['id'] if manifest['presentation']['status'] == 'offered' else None)
+                    if ref['file'] in self.entries:
+                        self.allow('background', ref, candidate['id'] if manifest['presentation']['status'] == 'offered' else None)
+                    else:
+                        self.historical_background(binding, manifest, candidate, ref['file'])
             else:
                 # Finalizer may bind external, but still repository-published, background work.
                 raw = self.source.read(self.commit, self.directory + '/' + name)
@@ -308,20 +313,71 @@ class Record:
                     if manifest['presentation']['status'] == 'offered':
                         self.offer_keys[('background', candidate['id'])] = path
 
-    def matches(self, asset):
+    def historical_background(self, binding, manifest, candidate, current_name):
+        history = binding['history']
+        ap.require(history is not None, 'Hintergrundoriginal fehlt ohne historische Bindung.')
+        root = '' if history['root'] == '.' else history['root'] + '/'
+        manifest_ref = binding['manifest']['ref']
+        historical_name = root + manifest_ref['file']
+        original = candidate['original']
+        loc = {'commit': history['commit'], 'storage': 'repository' if history['storage'] == 'directory' else 'package',
+               'container': None, 'file': '', 'sha256': original['sha256'], 'bytes': original['bytes']}
+        if history['storage'] == 'directory':
+            base = history['path'] + '/'
+            raw = self.source.read(history['commit'], base + historical_name)
+            bind(raw, manifest_ref)
+            loc['file'] = base + root + original['file']
+        else:
+            raw_zip = self.source.read(history['commit'], history['path'], ap.MAX_ZIP)
+            archive = Archive(raw_zip)
+            try:
+                raw = archive.read(historical_name, JSON_LIMIT)
+                bind(raw, manifest_ref)
+                bind(archive.read(root + original['file'], 32 * JSON_LIMIT), original)
+            finally:
+                archive.close()
+            loc['container'] = {'file': history['path'], 'sha256': io.checksum(raw_zip), 'bytes': len(raw_zip)}
+            loc['file'] = root + original['file']
+        ap.require(parse(raw) == manifest, 'Historisches Hintergrundmanifest ist nicht identisch.')
+        # Explicit history may replace only discarded originals, never the selected candidate.
+        stored = binding['decision']
+        if stored is not None:
+            name = ('' if stored['root'] == '.' else stored['root'] + '/') + stored['ref']['file']
+            if stored['storage'] == 'package':
+                decision = validate_decision(self.json(name, stored['ref']['sha256']))
+            else:
+                decision = validate_decision(parse(bind(self.source.read(self.commit, self.directory + '/' + name), stored['ref'])))
+            ap.require(decision['manifest'] == manifest_ref, 'Entscheidung bindet ein anderes Manifest.')
+            _bind_decision(manifest, decision)
+            ap.require(decision.get('outcome') != 'selected' or decision.get('candidate_id') != candidate['id'],
+                       'Aktives Hintergrundoriginal darf nicht aus History ersetzt werden.')
+        asset_bytes(self.source, self.snapshot, loc)
+        self.allowed['background'][current_name] = original['sha256']
+        self.historical_assets.append((current_name, loc))
+        if manifest['presentation']['status'] == 'offered':
+            self.offer_keys[('background', candidate['id'])] = current_name
+
+    def asset_name(self, asset):
         loc, role = asset['location'], asset['role']
         actual_commit = loc['commit'] if loc['commit'] is not None else self.snapshot
+        if role == 'background':
+            for name, expected in self.historical_assets:
+                if loc == expected:
+                    return name
         if actual_commit != self.commit:
-            return False
+            return None
         name = loc['file']
         if loc['storage'] == 'repository':
             prefix = self.directory + '/'
             if not name.startswith(prefix):
-                return False
+                return None
             name = name[len(prefix):]
-        elif loc['container']['file'] != self.value['package']['file'] or loc['container']['sha256'] != self.value['package']['sha256']:
-            return False
-        return self.allowed[role].get(name) == loc['sha256']
+        elif loc['container'] != {**self.value['package']}:
+            return None
+        return name if self.allowed[role].get(name) == loc['sha256'] else None
+
+    def matches(self, asset):
+        return self.asset_name(asset) is not None
 
 
 def asset_bytes(source, snapshot, loc):
@@ -373,15 +429,13 @@ def inspect(source, snapshot, value):
             ap.require(name is not None, 'Fremdes oder unvollständiges Angebot: ' + offer['id'])
             for aid in offer['asset_ids']:
                 a = next(a for a in p['assets'] if a['id'] == aid)
-                loc = a['location']
-                inner = loc['file'] if loc['storage'] == 'package' else loc['file'][len(ctx.directory) + 1:]
+                inner = ctx.asset_name(a)
                 ap.require(key in asset_owners[aid] and a['role'] == offer['kind'] and inner == name,
                            'Angebot verweist auf ein fremdes Bild oder einen Sichtungsentwurf.')
         # Require presentation of original images actually offered/selected by its outer record.
         for role in ROLES:
             for name, sha in outer.allowed[role].items():
-                ap.require(any(a['role'] == role and a['location']['sha256'] == sha and
-                               (p['record']['commit'], p['record']['file']) in asset_owners[a['id']] for a in p['assets']),
+                ap.require(any(a['role'] == role and outer.asset_name(a) == name for a in p['assets']),
                            'Pflichtbild fehlt in der Projektion: ' + name)
         return {'state': outer.value['state'], 'blockers': outer.value['blockers'],
                 'test_only': outer.handoff.get('test_only', False), 'verification': 'Überlieferter Produktionsbefund; keine neue Inhaltsprüfung.'}
