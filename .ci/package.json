@@ -33,7 +33,7 @@
     {
       "path": "tests/puzzle_production/batch_fixtures.py",
       "disposition": "change-scoped",
-      "reason": "Bestehende synthetische 0.6-Fälle verwenden einen ausdrücklich als TEST ONLY bezeichneten 0.6-Snapshot statt der inzwischen aktiven 0.8-Norm. Keine Umetikettierung, neue Familie oder Änderung der alten Formatprüfung."
+      "reason": "Bestehende lokale BA-A-Jobs binden die unveränderte ausdrückliche 0.7-Jobnorm; ihre alten eigenständigen 0.6-Eingänge sind als TEST ONLY bezeichnete synthetische Snapshots. Keine Umdeutung der aktiven 0.8-Norm, neue Testfamilie oder Änderung der Formatprüfung."
     },
     {
       "path": "tests/puzzle_production/test_palette_gate.py",
