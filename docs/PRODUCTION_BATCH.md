@@ -1,4 +1,4 @@
-# BA-A: lokale Batchverarbeitung und Wiederaufnahme
+# Batchverarbeitung: lokale Produktion und autorisierte Einzelintegration
 
 Vertrag vor konsumierendem Code, 10.11.2026. Maßgeblich:
 [BA-A / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6779908657),
@@ -7,8 +7,9 @@ Vertrag vor konsumierendem Code, 10.11.2026. Maßgeblich:
 [Hintergründe](PUZZLE_BACKGROUNDS.md) und
 [Werkzeuganleitung](../tools/puzzle_production/README.md).
 Dieser Vertrag schließt D01–D07 und BA-A-K01–K12. Tatsächlicher Liefer- und
-Reviewstand bleibt im Produkt-PR. BA-B und echte Inhaltsproduktion sind nicht
-Teil dieses Pakets; BA-A schließt das Gesamtissue nicht.
+Reviewstand bleibt im Produkt-PR. Die Abschnitte 1–7 beschreiben ausschließlich
+BA-A; die eigenständige BA-B-Formfamilie steht anschließend. Echte Inhaltsproduktion
+ist kein Bestandteil der Werkzeugentwicklung; ein Teilpaket schließt das Gesamtissue nicht.
 
 ## 1. Grenze und Aufruf
 
@@ -440,3 +441,342 @@ Originale am Produkt-Head separat für BA-A-A01, spätestens 17.11.2026 bzw. bei
 späterem Beginn vorher neu konkret datiert. Normale CI `evidence.mode=none`.
 Unabhängiges BA-A-A01 vor Merge bleibt ein eigenes Gate; Selbstreview ersetzt es
 nicht. Nachweise, tatsächliche CI, Head und Rückbau stehen im Draft-PR.
+
+## 8. BA-B: autorisierte serielle Einzelintegration
+
+Vertrag vor konsumierendem Code, 11.11.2026. Maßgeblich ist die
+[BA-B-Paketentscheidung D01–D06/K01–K12](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272).
+BA-A und seine geschlossenen v1-Formen bleiben unverändert. BA-B bietet genau
+`register` und `background_adopt`, keinen zusätzlichen Fachwriter, keine
+Gesamttransaktion und keine kreative Arbeit. Bestehende Export-, Proof-,
+Endfreigabe-, Difficulty-, Quellen-, Transaktions- und Recoveryverträge bleiben
+zuständig. Der Runner erzeugt weder Entscheidungen noch Requests oder Ratings.
+Er führt keine Gitmutation, Netzbeschaffung, Retirement oder echte Inhaltsproduktion
+als Werkzeugtest aus. Ein Abschluss bezeichnet ausschließlich den Zielcheckout.
+
+### 8.1 Einstieg, Roots und vorgezogene Prüfung
+
+`python -m tools.puzzle_production.integration_batch_cli validate|run|resume|status`
+und die gleichnamigen Funktionen in `integration_batch_runner` verwenden
+`plan_path,source_root,repo_root,target_root,work_root,history_root` als API-Argumente.
+CLI: `--plan`, `--source-root`, `--repo-root` (ausführender Werkzeugcheckout),
+`--target-root` (genau ein Zielcheckout), `--work-root`, optional `--history-root`.
+Bei `validate` ist der Arbeitsroot optional; `status` benötigt nur `--work-root`.
+`validate` und `status` schreiben nichts. Status ist historisch, `fresh=false`.
+Run benötigt einen noch nicht vorhandenen eigenen Root, Resume dessen ausdrücklich
+benannten vorhandenen Stand. Kein impliziter Quellen-/Historywechsel.
+
+Alle Pfade sind lokale reguläre Dateien/Verzeichnisse; UTF-8, eindeutige JSON-Schlüssel,
+höchstens Tiefe 32, Zahlenlexeme höchstens 128 Zeichen, keine NaN/Infinity oder
+Bool-Zahlen. Unbekannte Felder, Traversal, Links, Hardlinks, Reparsepunkte und
+abweichende Groß-/Kleinschreibung werden verworfen. Pfade in Refs sind relative
+POSIX-Pfade. Eigene Arbeits-/Ausgaberoots dürfen weder Eingänge noch Ziel-/History-
+oder Werkzeugroots überdecken. Werkzeug- und Zielcheckout dürfen identisch sein;
+native Authoringquellen dürfen ausdrücklich innerhalb des Zielcheckouts liegen.
+Ausgaben entstehen ausschließlich unter dem eigenen Versuchspfad. Die Fachwege
+dürfen ihre eigenen sicheren temporären Bereiche wie bisher verwenden.
+
+Vor dem ersten Fachschreiber prüft BA-B den gesamten ausgewählten Plan: Form,
+Identitäten, Pfade, alle deklarierten Bytes und vollständigen Inventare, Zuordnung
+der Aufträge und Budgets. Fehlende optionale Erklärung bleibt `waiting_human`,
+fehlender noch nicht deklarierter Eingang `waiting_input`; deklarierte fehlende,
+veränderte oder widersprüchliche Bytes sind ungültige Eingaben. Teure Proof-/Export-
+und Katalogprüfungen gehören weiterhin zum nativen zuständigen Einzelaufruf.
+
+### 8.2 Exakte neue Planformen
+
+Jedes Objekt hat exakt die genannten Schlüssel. Nullable Felder sind vorhanden
+und ausdrücklich `null`. Namen entsprechen `[a-z0-9][a-z0-9_-]{0,63}`;
+`puzzle_id` und Produktions-/Bildrevision folgen dem Authoringvertrag. SHA-256
+hat 64 kleine Hexzeichen, Commit-SHA 40. Plan maximal 2 MiB, Checkpoint/Report/
+einzelner Ledger maximal 16 MiB. Native strengere Grenzen gelten zusätzlich.
+Dateirefs maximal 128 MiB, vollständige Inventare höchstens 512 Dateien und
+512 MiB. Das native Einzeldateilimit von 64 MiB bleibt erhalten; allein das
+deklarierte Original-ZIP im v6-Transport darf nach seiner bestehenden eng
+geprüften Ausnahme bis 128 MiB groß sein. Inventare sind nach `file` sortiert,
+case-eindeutig und vollständig.
+
+| Objekt | Exakte Schlüssel und Typen |
+| --- | --- |
+| Plan | `format` = `picross-integration-batch-plan-v1`; `batch_id`: Name; `revision`: Integer 1..1000000; `previous_plan_sha256`: Hash/null; `source_commit`: Commit; `jobs`: geordnete Liste 1..32 Jobs |
+| Job | `job_id`: Name; `puzzle_id`: pz-ID; `revision`: Produktions-/Bildrevision; `operation`: `register`/`background_adopt`; `rulebook`: Regelbindung; `authorization`: FileRef/null; `inputs`: artspezifisch; `parameters`: artspezifisch; `budgets`: artspezifisch; `max_attempts`: artspezifisch |
+| Regelbindung | `version`: `0.6.0`/`0.7.0`; `document_revision`: Integer 1..1000000; `snapshot`: FileRef |
+| FileRef | `file`: relativer Pfad; `sha256`: Hash; `bytes`: Integer 0..134217728 |
+| DirectoryRef | `directory`: relativer Pfad oder `.`; `files`: vollständige Liste FileRef relativ zu diesem Verzeichnis |
+
+Eine pz-ID kommt genau einmal in der gesamten Auswahl vor, auch über beide
+Jobarten. `job_id` ist ebenfalls eindeutig. Revision 1 hat keinen Vorgänger;
+ein Nachfolgeplan hat genau Revision +1 und die SHA-256 der vorherigen vollständigen
+Datei einschließlich End-LF. Initialer Plan und neue Planrevision nennen den
+tatsächlichen Werkzeug-HEAD. Beim unveränderten Resume bleibt dessen bekannte
+ursprüngliche Commitprovenienz erhalten. Ein Commit ist weder Katalogsnapshot
+noch Wiederverwendungsbeweis. Der Regeltext muss seine deklarierte Version/
+Dokumentrevision tatsächlich tragen; native zulässige historische Regeln werden
+nicht durch einen aktuellen Text ersetzt. Der Runner verändert keine Originale.
+
+| Art | Exakte `inputs` | Exakte `parameters` |
+| --- | --- | --- |
+| `register` | `package`: FileRef/DirectoryRef/null; `handoff,record,approval,manual_authorization,palette_exception,difficulty`: FileRef/null; `external`: DirectoryRef/null | `name`: nichtleerer Text bis 256 Zeichen; `runtime_revision`: Integer 1..1000000; `stem,save_slot`: native Stem-Kennung; `category_id`: nichtleerer Text bis 128 Zeichen; `allow_background,rebind_difficulty`: echte Bool |
+| `background_adopt` | `request`: FileRef/null; `work`: DirectoryRef/null | exakt `{}` |
+
+Ein Paketverzeichnis bindet alle Originale durch sein Inventar, eine Paketdatei
+das unveränderte ZIP. `handoff`/`record` sind nur für tatsächlich separat vorhandene
+Originale gesetzt; der Runner fordert keinen künstlichen Authoring-Store.
+Interne Handoffs/Endabnahmen behalten ihre native Bedeutung. `external` bindet
+genau die explizite äußere Wurzel samt vollständigem Inventar. Keine Ausgabe-Refs,
+Globs oder noch unbekannten Ergebnisse anderer Jobs. Difficulty bleibt die echte
+geprüfte Eingangsdatei; null ist ausschließlich für einen fachlich bestätigten
+historischen identischen No-op zulässig, nicht für ein neues Rating.
+
+Für `register` bezeichnet `authorization` einen unveränderten ausdrücklich
+vorbereiteten Integrationsauftrag mit Format `picross-integration-order-v1` und
+exakt `format,operation,puzzle_id,revision,actor,timestamp_utc,statement,evidence,test_only`.
+`operation` ist `register`, ID/Revision sind gleich dem Job; `actor,statement`
+sind nichtleere Texte bis 4096 Zeichen, `timestamp_utc` ein nativer UTC-Zeitstempel,
+`evidence` ein FileRef unter dem Quellenroot auf die tatsächliche ursprüngliche
+Auftragserklärung; `test_only` ist Bool und muss zur Produktion passen.
+Die Dateiform transportiert eine bereits erklärte Befugnis; sie erteilt sich
+nicht selbst eine, und wird vom Runner niemals erstellt/ergänzt. Sie ersetzt
+auch keine native Endabnahme. Synthetische Fixtures markieren alle Erklärungen
+ausdrücklich `test_only` und behaupten keine reale Eigentümerfreigabe.
+
+Bei `background_adopt` ist `authorization` exakt derselbe FileRef wie `request`:
+der unveränderte native `picross-background-adoption-request-v1` enthält seinen
+eigenen passenden Bildänderungsauftrag, Zielsource und Revision; seine
+Hintergrundrefs binden Auswahl/none, Herkunft und Q-HG der tatsächlichen
+Arbeitsdateien. BA-B dupliziert diese Angaben nicht in einem editierbaren
+zweiten Objekt. `work` bindet das vollständige zu speichernde Arbeitsverzeichnis
+einschließlich Originalrecord; Root-/Recordbedeutungen prüft der native Reader.
+
+### 8.3 Budgets und feste Einzelaufrufe
+
+| Art | Exakte `budgets` | Exakte `max_attempts` |
+| --- | --- | --- |
+| `register` | `export_seconds,plan_seconds,reconcile_seconds` jeweils 300; `publication_seconds,recovery_seconds` getrennte endliche positive Zahlen bis 86400, regulär jeweils 1800 | `export,plan,apply,reconcile`: je Integer 1..100 |
+| `background_adopt` | `store_seconds,plan_seconds,adopt_seconds,recovery_seconds,reconcile_seconds` jeweils 300 | `store,plan,adopt,reconcile`: je Integer 1..100 |
+
+Die unveränderte Warnschwelle der Registrierung ist 300 s. Die beiden expliziten
+Registrierungswerte werden nur beim mutierenden Einzelaufruf als die vorhandenen
+Overrides übergeben. Kein äußerer Gesamtdeadline über diesen Aufruf kürzt dessen
+separaten Recoveryrahmen. Bildplan/-adoption/-recovery bleiben je 300 s; keine
+Registrierungsdefaults für Bildoperationen. BA-B startet keinen Workerprozess:
+der OS-Lock und alle synchronen Fachaufrufe gehören demselben CLI-Prozess. Harte
+Beendigung hinterlässt dadurch keinen unabhängig weiterlaufenden Batchworker.
+Native kooperative Abbruch-/Budget- und automatische Rollbackpfade bleiben erhalten.
+
+`register`: `target_adapter.export` prüft seine Ein-/Ausgaben vollständig, danach
+unmittelbar `content_registry.registration(apply=False)`, danach genau ein
+`registration(apply=True)` mit denselben gebundenen Eingängen. Kein routinemäßiges
+zusätzliches inspect/verify-export. Zweiter Job plant nach dem ersten Erfolg.
+Der Apply-Aufruf plant intern selbst erneut; BA-B behauptet keine zusätzliche
+atomare Snapshotbindung zwischen diesen getrennten nativen Aufrufen. Ein nativer
+Konflikt stoppt ohne automatische Neuplanung/Mutation. Ein vollständig frischer
+Plan-No-op kann den Job ohne mutierenden Wiederholungsaufruf abschließen.
+
+`background_adopt`: natives `store` auf Originalrequest/Dateien, danach frisches
+`plan`, danach `adopt` mit genau diesem erhaltenen vollständigen Planbundle.
+Store-No-op ist keine Ziel-/Auswahlfreigabe. Keine Raster-/Revealersetzung,
+Legacy-Erstnachrüstung, neue Analyse, Modell-API oder zusätzliche Buchsicht.
+
+### 8.4 Lock, Auftragslinie und dauerhafte Formen
+
+Der stabile OS-Lock liegt unter `<target>/.picross-integration-batches/`, außerhalb
+von content/game/authoring, unversioniert. Kanonischer geprüfter Root und seine
+Dateisystemidentität binden ihn unabhängig vom Arbeitsroot. Native Writerlocks
+gelten zusätzlich. Nicht löschen/reparieren, keine parallelen BA-B-Schreiber.
+Der Kontrollordner enthält `owner.json`, `.batch-writer.lock`, `claims/` und
+`anchors/`. Claims binden den unveränderten Auftragshash sowie pz-ID/Operation
+an genau den eigenen Workroot. Umbenennung, Planrevision oder neuer Workroot
+derselben Auftragslinie füllt keine Erlaubnis auf. Im bisherigen Planverlauf
+werden Versuche pro pz-ID/Operation/Phase gezählt, nicht pro Jobnamen/Revision;
+Budgets und Maxima dürfen in einer Fortschreibung nur gleich bleiben/sinken.
+
+Der Arbeitsroot enthält ausschließlich `owner.json`, `plans/`, `attempts/`,
+`checkpoint.json`, `report.json` und eigene atomare Schreibreste. Pro Versuch
+`attempts/NNNNNN/reservation.json`, optional `result.json` und `output/`.
+Höchstens 4096 dauerhaft reservierte Versuche. Vor *jedem* Fachaufruf, auch
+Abgleich, werden Reservation und Checkpoint samt externem Anchor dauerhaft
+geschrieben und gelesen. Jede Reservation bleibt unverändert; Ergebnis separat
+append-only. Die ursprünglichen Plandateien bleiben unter
+`plans/NNNNNN-<sha256>.json`. Plan-/Versuchslücken, unbekannte Ledgerdateien,
+gekürzte Historie oder ein widersprüchlicher Checkpoint sind ein gemeinsamer
+technischer Stopp. Atomarer Replace überschreibt nur die zuletzt gelesenen Bytes.
+Ein Ergebnisfile ohne bestätigten externen Anchor bleibt erhalten, aber im
+Checkpoint ausdrücklich `result=null`: erst der passende native lesende Abgleich
+darf den unbekannten Abschluss feststellen, niemals dessen gespeicherter Flag.
+Genau eine vor dem Anchor unterbrochene Ergebnisbuchung ist auch innerhalb einer
+vorreservierten Abgleichgruppe erkennbar; sie erzeugt keine Erfolgsautorität.
+Eine noch nicht im Anchor bestätigte Reservation kann kein Fachresultat besitzen,
+weil vor dessen Bestätigung kein Fachaufruf starten darf. Der Anker bindet sowohl
+alle vorhandenen Resultbytes als auch separat die Liste bestätigter Resultslots.
+Erhaltene unbestätigte Dateien bleiben dadurch gegen spätere Veränderung gebunden,
+ohne im Checkpoint eine Erfolgsautorität zu erhalten.
+Bei einem direkten Nachfolgeplan darf ausschließlich dessen Anchor hinter dem
+vollständig geschriebenen Checkpoint zurückliegen: lückenlose Originalplankette,
+identische Reservierungs-/Result-/Bestätigungshashes und noch keine Reservation
+der neuen Revision sind zwingend. Die unveränderten Writerbarrieren werden auch
+für diesen erneut eingelesenen Plan geprüft. Reines status schreibt nichts;
+erst ein ausdrückliches resume bestätigt den belegten Planübergang dauerhaft,
+bevor es gegebenenfalls eine weitere Nachfolgerevision annimmt.
+Offene oder erfolglos gebuchte mutierende Linien bleiben bis zu ihrem tatsächlich
+bestätigten Abschluss im Plan. Ein Nachfolgeplan darf sie weder entfernen/ersetzen
+noch durch neue Writer davor überholen; zuvor abgeschlossene Jobs dürfen davor
+weiterhin ausschließlich lesend abgeglichen werden.
+
+| Objekt | Exakte Schlüssel |
+| --- | --- |
+| PlanRef | `revision,file,sha256,bytes` (Datei relativ zum Workroot) |
+| Bindings | `source_root,repo_root,target_root,work_root,history_root,work_identity,target_identity,tool_binding` |
+| Identity | `device,inode` (nichtnegative Integer) |
+| ToolBinding | `files,python,pillow,codecs`; files = sortiertes vollständiges relevantes FileRef-Inventar relativ zum Werkzeugroot, python = vollständiger Versionstext, pillow = Versionstext, codecs = `zlib,littlecms,jpeg,jpeg_turbo` als Text/null |
+| Owner | `format` = `picross-integration-batch-owner-v1`, `batch_id,bindings` |
+| Kontrollowner | `format` = `picross-integration-batch-control-v1`, `target_root,target_identity` |
+| Claim | `format` = `picross-integration-batch-claim-v1`, `lineage,puzzle_id,operation,authorization_sha256,work_root,work_identity` |
+| Anchor | `format` = `picross-integration-batch-anchor-v1`, `batch_id,work_root,work_identity,plan_sha256,attempts,reservations_sha256,results_sha256,acknowledged_sha256` |
+| Reservation | `format` = `picross-integration-batch-reservation-v1`, `number,plan_sha256,job_id,puzzle_id,operation,phase,ordinal,inputs_sha256,tool_sha256,budgets,output_dir` |
+| Result | `format` = `picross-integration-batch-result-v1`, `number,status,native,diagnostics,elapsed_seconds,error,exit_code,reached,output_files,remaining` |
+| Attempt | `reservation,result` (Result/null; null heißt unklar/unterbrochen, niemals erfolgreich) |
+| Reached | `entry,files` (unveränderter nativer Registryeintrag und sortierte FileRefs relativ zum Zielcheckout) |
+| Lesender Batchabgleich | `status` = `reconciled`, `id`, `reached`; beziehungsweise `status` = `rollback-confirmed`, `id`, `plan_hash` für den vollständig frisch bestätigten alten Bildplanstand, niemals für Erfolg |
+| JobView | `job_id,puzzle_id,operation,status,historical_completed,current_verified,attempt,reached,reason,next_step` |
+| Checkpoint | `format` = `picross-integration-batch-checkpoint-v1`, `batch_id,plan,plans,bindings,attempts,jobs,status` |
+| Report | `format` = `picross-integration-batch-report-v1`, `batch_id,plan,source_commit,tool_binding,status,exit_code,jobs,attempts,journal,elapsed_seconds,execution_seconds,reconciliation_seconds,waiting_seconds,human_seconds,fresh,next_step` |
+| JournalView | `pending,staging` (relative Pfade/null beziehungsweise Pfadliste) |
+
+Alle neuen Formen sind geschlossen geprüft. Roots sind absolute Texte, History
+Text/null. `bindings` enthält tatsächliche relevante Modul-/Norm-/Methodenbytes
+und Codec-/Pythonbindung; auch ausgeführte Module müssen zu `repo_root` passen.
+Die Commitprovenienz allein reicht nicht. Toolwechsel stoppt Wiederverwendung
+als stale; Originale werden weder umgehasht noch allein wegen eines anderen
+Git-HEAD neu erzeugt. Die historische Bindung bleibt lesbar.
+
+Reservation: `number` Integer 1..4096, `ordinal` Integer 1..100, Phase eine der
+festen Schlüssel aus `max_attempts`, drei Hashfelder echte SHA-256, Budgets
+exakt der zugehörigen historischen Planzeile, `output_dir` exakt
+`attempts/NNNNNN/output`. `inputs_sha256` bindet das vollständige unveränderte
+Jobobjekt ohne Namen/Budgets/Versuchszähler; Identität/Originale/Regeln/Parameter
+bleiben darin. `tool_sha256` bindet die tatsächliche ToolBinding. Anchorzähler
+ist Integer 0..4096, seine Hashes binden geordnete Listen tatsächlicher
+Reservation-/Resultbytes (fehlende Datei null), einschließlich konservativ
+verbrauchter Erlaubnisse. `acknowledged_sha256` bindet die entsprechend geordnete
+Boolliste tatsächlich bestätigter Resultslots. Claims/Anchor sind keine Inhaltsfreigabe.
+
+Result: Status `completed,blocked,failed,aborted,interrupted,recovery_required`;
+`native` das unveränderte vollständige native JSON-Ergebnis, das oben ausdrücklich
+geschlossene lesende BA-B-Abgleichergebnis oder null,
+`diagnostics` das vollständige reale RI-Diagnoseobjekt, `elapsed_seconds`
+endliche nichtnegative Zahl/null, `error` Text/null, `exit_code` Integer 0..255,
+`reached` Reached/null, `output_files` vollständiges Inventar relativ zu output,
+`remaining` Liste eigener Restpfade. Native Objekte behalten ihre eigenen
+geschlossenen Verträge; BA-B führt keine zweite vereinfachte Fachautorität ein.
+Unbekannte Crashzeit bleibt null. Native `planned,stored,registered,adopted,no-op`,
+Blockade, vollständiger Rollback und offener Recoveryfall bleiben unterscheidbar.
+
+### 8.5 Stopp, Crash und drei getrennte Resumewege
+
+Jobs laufen strikt in Planreihenfolge. Der erste ungeklärte Eingang, Fachfehler,
+Abbruch, Teil-Store, fremde Bytekonflikt oder Ledger-/Checkpointfehler stoppt vor
+jedem folgenden Writer. Die vorhandene gemeinsame Erkennung erfasst sowohl
+`content/.registration-pending.json` als auch `.registration-journal-*.tmp`.
+Der vollständig erfolgreiche Präfix bleibt erhalten. Automatischer nativer
+Rollback innerhalb des laufenden Einzelaufrufs bleibt erlaubt; danach offene
+Recovery wird niemals im Runner gestartet. Erst ausdrücklich separat autorisierte
+native Recovery, dann frisches Resume. Kein Locklöschen als Reparatur.
+
+1. Register publiziert, Result noch nicht gebucht: erhaltenen vollständigen Export
+   byteprüfen, frisches natives `registration(apply=False)` mit Ergebnis
+   `no-op,registered=true,changes=[]` bestätigt den eigenen Abschluss. Kein
+   mutierender Wiederholungsaufruf zur Diagnose. Bei nachgewiesenem vollständigem
+   Rollback darf erst ein ausdrückliches Resume und verbleibende Erlaubnis wieder
+   frisch planen/apply aufrufen; kein automatischer Retry im selben Lauf.
+2. Hintergrund publiziert, Result noch nicht gebucht: altes unverändertes Bundle
+   verwenden, **kein neuer Plan**. `catalog_background_change.adopt(...,
+   no_op_only=True)` hat denselben vollständigen nativen Plan-/Work-/Quellen- und
+   Snapshotprüfpfad. Er bestätigt ausschließlich den exakten eigenen Zielstand;
+   sonst zwingende Ablehnung im selben Kontrollfluss vor `tx.execute`. Keine
+   Vorprüfung mit anschließend allgemeinem mutierenden adopt und kein Rückspielen
+   alter Bilder. Fehlendes Bundle oder unbekannter Stand braucht Diagnose.
+   Nach separat erfolgter Recovery darf ein ausdrücklich gestartetes Resume
+   den vollständig erhaltenen alten Planstand lesend bestätigen: unverändertes
+   zuvor gebuchtes Planbundle, nativer vollständiger aktueller Snapshot und exakt
+   dessen alte Quellen-/Namespacebindung. `rollback-confirmed` ist kein Erfolg;
+   erst dann darf dieselbe ausdrückliche Wiederaufnahme eine verbleibende
+   Plan-/Adopterlaubnis verwenden. Der alte Plan wird dabei nicht erneut
+   mutierend angewandt. Ein nicht übereinstimmender Stand führt ausschließlich
+   in den nativen No-op-only-Pfad oder zum Stopp, nie zu einem Mutationsfallback.
+3. Gebuchter Erfolg, danach weitere Erfolge: alten Bildplan nicht mehr aufrufen.
+   Beim Resume wird der aktuelle Gesamtkatalog für den gebuchten Erfolgspräfix
+   einmal über `catalog_transaction.capture` vollständig frisch gelesen; für jeden
+   Job zuvor getrennte endliche Abgleicherlaubnis reservieren. Danach den aktuellen
+   Registryeintrag und jobbezogene Source-/Request-/Revision-/PNG-/Notice- oder
+   Register-/Receiptbytes gegen die tatsächlich gebuchte `reached`-Bindung prüfen.
+   Der Gesamtsnapshot ist nur im Prozess verwendbar; kein serialisierter RI-Kontext.
+   Dieser `reconciled`-Abgleich ist kein gelockerter nativer Bild-No-op.
+
+Nach neu ausgeführten Fachaufrufen bestätigt ein abschließender lesender Abgleich
+die gesamte erreichte Auswahl anhand genau eines frischen Gesamtsnapshots und
+der jobbezogenen Refs. Auch dafür je Job eine vorher dauerhaft gebuchte endliche
+`reconcile`-Erlaubnis; keine automatische Aufstockung. Ein reines Resume einer
+bereits vollständig gebuchten Auswahl verwendet nur seinen bereits beschriebenen
+einen Abgleich. Das Ergebnis ist eine aktuelle geprüfte Momentaufnahme, keine
+atomare Zusicherung gegen erst später schreibende fremde native Prozesse.
+
+Nur aktuell vollständig bestätigte eigene Ziele werden übersprungen. Historischer
+Erfolg bleibt `historical_completed=true`, auch wenn heute `current_verified=false`
+und `status=stale`. Fremder/abweichender/retirierter Stand stoppt ohne Rekonstruktion.
+Verbrauchte Versuche bleiben bei Crash, Umbenennung und neuer Planrevision verbraucht.
+Separate Resumeprüfungen zählen `reconcile`. Keine automatische Erhöhung oder
+unendliche Wiederholung. Ein gebuchtes P6 wird durch späteren Berichtfehler nicht
+als fachlicher Rollback ausgegeben; Originalresult/Journalzustand bleiben sichtbar.
+
+Eine ungebuchte Exportausgabe besitzt keine Wiederverwendungsautorität und wird
+niemals für Registrierung konsumiert. Ihre Bytes bleiben erhalten. Ausschließlich
+ein ausdrücklich gestartetes Resume darf mit einer verbleibenden bereits
+gebundenen Exporterlaubnis einen neuen lokalen Exportversuch in einem neuen
+Versuchspfad aus den erneut gebundenen Originalen ausführen. Erst dessen echtes
+Fachresultat und vollständig gebuchtes Inventar dürfen zur Registrierung führen.
+Ohne verbleibende Erlaubnis Stopp; kein Retry im ursprünglichen Lauf und kein
+Neuaufbau allein wegen eines anderen Git-Heads.
+
+### 8.6 Ergebnisse, Nachweise und Lebenszyklus
+
+Jobstatus exakt `pending,running,completed,waiting_input,waiting_human,blocked,
+failed,aborted,interrupted,stale,recovery_required`. `historical_completed` und
+`current_verified` sind echte Bool, `attempt` Integer 1..4096/null, `reason` und
+`next_step` Text/null, `reached` Reached/null. Checkpoint-/Report-Gesamtstatus und
+Exit: `completed/0,invalid_input/2,incomplete/3,aborted/4,technical_error/5`.
+Completed erfordert jeden Job historisch erfolgreich und aktuell bestätigt.
+Report führt vollständige Attempts, ursprüngliche Fachresultate/Exitcodes,
+Bindings und aktuelle Journalreste. Fresh ist bei ausgeführtem Lauf true,
+historischem status false. Reine Statuslektüre erneuert keine Zielaussage und
+führt ohne neue Prüfung `incomplete/3` mit erhaltenem historischem Einzelabschluss.
+
+Reportzeiten sind endliche nichtnegative Zahlen/null. `execution_seconds` summiert
+bekannte Einzelaufrufe außer reconcile; `reconciliation_seconds` nur Abgleiche.
+Bei unbekanntem enthaltenem Crashintervall ist die jeweilige Summe und die
+Gesamtlaufzeit null. Inklusive RI-Phasen werden nicht zusätzlich addiert.
+`waiting_seconds,human_seconds` bleiben ohne Messung null. Kein behaupteter
+Zeitgewinn und keine Inhalts-/Mainfreigabe durch completed.
+
+Prüfbedarf: Pflichtkern `docs/ci-required` einschließlich Windowsbau sowie genau
+`tools,production.adapter,production.catalog` vollständig. Kleine neue echte
+synthetische BA-B-Regressionen gehören ausdrücklich zu catalog. Bestehende Reader-
+und Importinventare werden konsistent nachgeführt. Kein neuer Algorithmus-/Bild-
+oder Runtimeprüfauftrag, kein neuer permanenter CI-Job.
+
+BA-B-T01 ist die einmalige tatsächliche CLI-Probe mit zwei neuen endabgenommenen
+test_only-Paketen selected/none, eigenem Hintergrundwechsel vor weiterem Register,
+echtem Prozessabbruch, Resume, Journal-/Stagingstopp, erhaltenem Präfix und separat
+ausgeführter nativer Recovery. Die Fixtures und Probe liegen im Produktdiff.
+Genau sechs Textoriginale: `batch-plan.json,checkpoint.json,report.json,cli.log,
+operations.jsonl,manifest.json`; tatsächliche Nachfolgepläne zusätzlich, falls
+verwendet. Vollständige native Objekte/RI-Ausgaben in operations, Head/Umgebung/
+sauberer Stand/Hashinventar/Szenario-/Byte-/mtimebelege im Manifest. Native Bundles
+und Binärdateien im Erzeugerlauf durch Reader prüfen, keine Galerie archivieren.
+
+Normale CI `evidence.mode=none`. Originale getrennt auf temporärem
+`review/491-ba-b` vom endgültigen Produkt-Head, unveränderliche überprüfte Direktlinks
+im Draft-PR. Empfänger BA-B-A01 mit Repositoryzugriff, Aufbewahrung bis unabhängiger
+Prüfung und beauftragtem Rückbau, spätestens 18.11.2026; Refablauf ist nicht automatisch.
+BA-B-A01 bleibt unabhängiges A-Gate vor Merge, Selbstreview separat. Kein Merge
+oder Gesamtabschluss von #491 durch die Implementierungslieferung.

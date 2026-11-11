@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion · 0.7.0-Vorschaustand
 
-**Version 0.7.0 · Dokumentrevision 8 · 10.11.2026**
+**Version 0.7.0 · Dokumentrevision 9 · 11.11.2026**
 
 **Explizit wählbarer Vorbereitungsstand, kein aktiver Produktionsdefault.**
 [PB-H / #489](https://github.com/venomenon328/picross/issues/489#issuecomment-6751071312)
@@ -9,7 +9,7 @@ unterstützt neue Hintergrundpakete nach diesem vollständigen Snapshot. Er
 Parameter-, Rand- und Difficultygarantien von Authoring 0.6.0 und ergänzt die
 Hintergrundarbeit mit eigenen geschlossenen Formen und getrennten Phasen.
 Der kanonische [aktive Authoringweg](PUZZLE_AUTHORING.md) bleibt **0.6.0 /
-Dokumentrevision 47**, ebenso der Default neuer Jobs im
+Dokumentrevision 48**, ebenso der Default neuer Jobs im
 [Offline-Sheet](Picross_Raetselproduktion_Cheat-Sheet.html).
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
 führt mehrere unabhängige Jobs und den ausdrücklich gewählten 0.7.0-Weg.
@@ -18,7 +18,7 @@ seinen tatsächlich gewählten Regelstand. Dieser Snapshot ersetzt den Default n
 
 **Zielpfad:** `docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md` im Repository
 `venomenon328/picross`. Ein neuer 0.7.0-Bauauftrag bindet die vollständigen Bytes
-dieser Datei, Version 0.7.0, Dokumentrevision 8 und den tatsächlich gelesenen
+dieser Datei, Version 0.7.0, Dokumentrevision 9 und den tatsächlich gelesenen
 Quellencommit. Eine umbenannte oder nur im Header geänderte 0.6.0-Datei ist
 kein 0.7.0-Snapshot. Bereits versiegelte Originale behalten ihre eigenen Bytes,
 Versionen und damaligen Nachweise; kein Versionsdowngrade für neue Arbeit.
@@ -37,8 +37,10 @@ ergänzt die lokale serielle Verarbeitung ausdrücklich ausgewählter vorbereite
 Jobs mit vorhandenen Fachwerkzeugen nach [PRODUCTION_BATCH](../PRODUCTION_BATCH.md).
 Der Runner erhält vorhandene Entscheidungen, führt keine Bildwahl aus und endet
 spätestens am lokalen Paketbau. Seine technischen Zustände erteilen keine
-Inhaltsfreigabe. Die vier Aufträge und die Sheetbedienung bleiben erhalten;
-die Orchestrierung der Weitergabe und Integration gehört zum getrennten Folgepaket BA-B.
+Inhaltsfreigabe. [BA-B / #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272)
+ergänzt separat die serielle Integration bereits vollständig vorbereiteter und
+tatsächlich autorisierter Jobs nach §8. Die vier Aufträge, Inhaltsfreigaben und
+Sheetbedienung bleiben erhalten.
 
 **Geltungsgrenze:** PB-H baut `brief_ready`, `reveal_review`, `motif_review`,
 `motif_approved`, `raster_review`, `raster_ready` und `content_ready`. HP-I1a
@@ -1251,7 +1253,7 @@ dass das Sheet die Bytes oder Proofs selbst geprüft hätte. Nach Produktionsabs
 werden Optionslisten geleert, statt auf entfernte Arbeitsdateien zu verweisen.
 
 Beide eingebetteten Sheet-Snapshots sind bytegleich mit ihren Markdownquellen:
-`PUZZLE_AUTHORING.md` 0.6.0/docrev47 und dieser Vorschaupfad 0.7.0/docrev8.
+`PUZZLE_AUTHORING.md` 0.6.0/docrev48 und dieser Vorschaupfad 0.7.0/docrev9.
 Neue Jobs starten mit 0.6.0; ausdrücklich gewählte v5-Jobs binden den Vorschaupfad
 beziehungsweise dessen 0.7.0-Anhang. Der
 Regelwerk-Stand ist unabhängig vom Paketstand; ein noch nicht gemergter Workflow
@@ -1450,6 +1452,44 @@ bleibt Aufgabe des vorhandenen HP-I1b2-/§9-Wegs. Neue Arbeit erfordert ausdrüc
 einen neuen Entwurf/Arbeitsstand; alte historische Quellen sind keine heutige Source.
 
 ## 8. Endabnahme, Export und verbleibende Integration
+
+### BA-B: mehrere vorbereitete Einzelintegrationen
+
+Bei ausdrücklichem Integrationsauftrag darf der getrennte
+[BA-B-Runner](../PRODUCTION_BATCH.md) vollständig vorbereitete Jobs seriell
+übernehmen. `register` verwendet Originalpaket, tatsächliche Endfreigabe und
+sämtliche benötigten äußeren Belege über `export → frischer plan → register`.
+Ein vorheriger Finalizerlauf oder zusätzlicher Repository-Store ist keine neue
+Voraussetzung für bereits passende lokale Eingänge. `background_adopt` verwendet
+den vollständigen unveränderten HP-I1b2-Request samt Arbeitsdateien über
+`store → frischer plan → adopt`. Der Hintergrundweg bleibt ausdrücklich opt-in;
+keine Bildwahl, Endabnahme oder neue Autorisierung aus einem Batchflag ableiten.
+
+Plan, exakte Eingangs-/Auftragsbytes, Phasenbudgets und Versuche bleiben gebunden.
+`validate` prüft lesend die Vorbereitung, `run` führt aus, `resume` prüft frisch,
+`status` zeigt ausschließlich den historischen Stand mit `fresh=false`.
+[CLI und API](../../tools/puzzle_production/README.md#ba-b-autorisierte-serielle-einzelintegration)
+verlangen ausdrücklich benannte Quellen-, Werkzeug-, Ziel- und Arbeitswurzeln.
+Bei der Wiederaufnahme sind drei Fälle getrennt:
+
+| Belegter Stand | Zulässige frische Prüfung |
+| --- | --- |
+| Registrierung publiziert, Batchabschluss noch ungebucht | Lesendes natives `registration(apply=False)` muss den vollständig eigenen No-op bestätigen; kein zweiter Writer. |
+| Bildadoption publiziert, Batchabschluss noch ungebucht | Ursprüngliches Planbundle mit nativem `adopt(..., no_op_only=True)` vollständig prüfen; jeder erforderliche Schreibschritt bleibt gesperrt. |
+| Erfolg gebucht, danach weitere Jobs erfolgreich | Heutigen Gesamtkatalog einmal vollständig prüfen und erreichte Jobbindungen abgleichen; den inzwischen stale Bildplan nicht erneut adoptieren. |
+
+Der erste ungeklärte Fehler, offene Journal-/Stagingrest oder unsichere
+Abschluss stoppt alle folgenden Jobs; erfolgreiche frühere Übernahmen bleiben.
+Nötige native Recovery gesondert im bestehenden autorisierten Weg ausführen,
+danach frisch wiederaufnehmen. Kein automatischer Retry, Batchrollback oder
+Nachfüllen verbrauchter Versuche. RI-/Authoring-/Bildbudgets bleiben getrennt;
+ein Batch erzeugt weder Solver-/Difficultyarbeit noch zusätzliche Routineprüfungen.
+
+`completed` bestätigt den aktuell geprüften Zielcheckout. Originalfalse-Felder
+und historische Freigaben werden nicht umgeschrieben. Arbeitsrecord, Diffprüfung,
+Commit/Push/Draft-PR, CI und gegebenenfalls autorisierter Merge folgen weiter
+diesem §8; der Main-gebundene Abschluss folgt §9. Der Runner selbst führt weder
+Gitaktionen noch Retirement oder Raster-/Revealupdates aus.
 
 **0.7.0-Grenze:** HP-I1a liefert äußere Endabnahme und v6-Export; höchste
 effektive Exportphase bleibt `editorially_approved` und gespeicherte
