@@ -5,7 +5,8 @@ Handoff v4, Record v3 und Projektion v2. Verbindlich sind der
 [PW-B-Vertrag](../../docs/PW_B_CONTRACT.md),
 [Authoringstandard](../../docs/ai-workflows/PUZZLE_AUTHORING.md) und die
 [Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194).
-Die lesende PW-A2-Start-/Git-/Sicherheitsarchitektur bleibt erhalten.
+Die PW-A2-Start-/Git-/Sicherheitsarchitektur bleibt erhalten; P2 ergänzt allein
+die ausdrücklich bestätigte Branchentfernung nach [PW §4.4](../../docs/PRODUCTION_WORKSPACE.md#44-p2--ausdrücklich-bestätigte-produktionsentfernung).
 Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist nur noch
 ein Einstieg zur einzigen Startdatei.
 
@@ -85,7 +86,7 @@ zweiter manueller Einrichtungspfad.
 
 ## Einzelne ausführbare Startdatei
 
-[Picross-Start.cmd](Picross-Start.cmd) enthält den zugehörigen lesenden Programmstand
+[Picross-Start.cmd](Picross-Start.cmd) enthält den zugehörigen vertrauenswürdigen Programmstand
 samt Oberfläche. Sie benötigt den zugehörigen vertrauenswürdigen PW-B-Programmcheckout. Doppelklick genügt; bei Bedarf einmal den Projektordner angeben.
 Die vorhandene Einrichtung und isolierte Pythonumgebung werden wiederverwendet;
 Pillow 12.3.0 wird nur bei Bedarf dort installiert. Python/Git bleiben
@@ -156,10 +157,12 @@ Remote-Branches ausschließlich aus den konfigurierten eigenen Cache-Refs.
 Bereits geöffnete Snapshots bleiben gebunden; bei Offlinefehlern bleiben die
 zuletzt gespeicherten Refs erhalten.
 
-Der Dienst schreibt nur eigene Einrichtung/Cachedateien: `config.json`,
+Außer der ausdrücklich bestätigten P2-Branchentfernung schreibt der Dienst nur
+eigene Einrichtung/Cachedateien: `config.json`,
 `git-cache-pw-v1` und `sync-pw-v1.json`. Der frühere `git-cache` und dessen
 Synchronisierungsdatei bleiben unangetastet und werden nicht durchsucht.
-Kein Pull/Checkout/Reset/Stash/Add/Commit/Push oder Merge im Benutzercheckout.
+Kein Pull/Checkout/Reset/Stash/Add/Commit oder Merge im Benutzercheckout.
+Die optionale lokale P2-Nachbereinigung entfernt nur den bestätigten sicheren Ref.
 Fetch verwendet eine flache Historie (`depth=1`) und `blob:none`, soweit das
 Remote Filter unterstützt. Ausdrücklich gebundene historische Commits und
 einzelne baumgebundene Blobs werden bei Bedarf geholt. Unveränderte Listenbefunde
@@ -187,6 +190,34 @@ Kein Browserbildarchiv: Darstellung, persönliche Auftragsoptionen und höchsten
 20 lokale Motivbriefings bleiben im Local Storage;
 der zufällige Sitzungsschlüssel liegt bis zum Schließen im Session Storage,
 damit Neuladen funktioniert. Er erscheint weder in Logs noch technischen Details.
+
+## Produktion entfernen (P2)
+
+Beim gewählten Remote-Produktionsstand öffnet „Produktion entfernen“ zunächst
+nur eine Vorprüfung. Sie nennt den ganzen Branch einschließlich aller sichtbaren
+Revisionen, die aktuelle SHA, Worktrees, lokale Refreste, PRs und Mainstände.
+Die Aktion entfernt den Branch im konfigurierten Remote; integrierte Inhalte auf
+main bleiben erhalten. Den genauen angezeigten Branchnamen selbst eingeben und
+„Remote-Branch jetzt entfernen“ bestätigen. Pläne laufen nach drei Minuten ab
+und sind nur einmal nutzbar. Nach einem Quellenwechsel neu vorprüfen.
+
+Nur der konfigurierte öffentliche GitHub-Remote `venomenon328/picross` über
+HTTPS/SSH ist produktiv freigegeben. Andere Quellen erklären ihre Sperre.
+Offene PRs, unprüfbarer GitHub-Status, ausgecheckte Zielbranches, abweichende
+lokale Commits und geänderte Remote-SHAs verhindern die Entfernung. Geschlossene
+PRs und vorhandene Mainintegration werden ausdrücklich eingeordnet. Vorhandene
+nichtinteraktive Git-Anmeldung verwenden; keine neue Anmeldung in der UI.
+
+Ein Erfolg wird erst nach Prüfung des entfernten Remote-Refs gemeldet.
+Cachefehler oder ein unbekannter Ausgang bleiben sichtbar und verlangen eine
+neue Quellenprüfung. Lokale und Mainstände bleiben in der Auswahl. Ein sicherer
+lokaler Branchref kann danach optional, zunächst abgewählt, in einem eigenen
+Bestätigungsdialog bereinigt werden. Das löscht keine Arbeitsdatei oder Worktree.
+
+P2-T01–T03 prüfen ausschließlich eigens erstellte synthetische Bare-Remotes und
+Testrefs; der kontrollierte Testadapter ist keine Benutzer-/HTTP-Einstellung.
+Die zwei Revieworiginale und die tatsächliche Windowsbedienprobe stehen mit
+Headbindung und Ablauf im P2-Draft-PR. P2-A01 bleibt unabhängiges Review.
 
 ## Projektor für den Produktionsakteur
 

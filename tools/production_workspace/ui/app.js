@@ -244,10 +244,10 @@ function pause(ms,signal){return new Promise((resolve,reject)=>{
 async function request(path,options={},waitForImageSlot=false){
  for(let attempt=0;;attempt++){
   options.signal?.throwIfAborted();
-  const response=await fetch(path,{...options,headers:{'X-Workspace-Session':token},cache:'no-store'});
+  const response=await fetch(path,{...options,headers:{...options.headers,'X-Workspace-Session':token},cache:'no-store'});
   if(response.ok)return response;
   let body;try{body=await response.json();}catch{body={error:'Lokaler Dienst nicht erreichbar. Starter erneut öffnen.'};}
-  if(response.status!==503||(!waitForImageSlot&&attempt===4))throw new Error(body.error);
+  if(options.method==='POST'||response.status!==503||(!waitForImageSlot&&attempt===4))throw new Error(body.error);
   // Image slots can remain occupied after aborting their HTTP transports.
   // Keep the current cards pending until the server finishes, or the user leaves.
   await pause(250*2**Math.min(attempt,3),options.signal);
@@ -266,7 +266,7 @@ function drainImages(){
  }
 }
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
-function dispose(){generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];$('large').close();}
+function dispose(){closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];$('large').close();}
 function sourceStatus(value){return (value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert')));}
 function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();if(!value.jobs.length){
   $('jobs').append(node('option','Keine Gitstände'));
@@ -286,7 +286,7 @@ function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=
   const opt=node('option',label);opt.value=job.id;$('jobs').append(opt);
  }
  if(keepDraft){newDraft(keepDraft);return;}const retained=value.jobs.find(j=>active&&j.puzzle_id===active.puzzle_id&&j.revision===active.revision&&j.source===active.source&&j.ref===active.ref);$('jobs').value=(retained||value.jobs[0]).id;open($('jobs').value);}
-async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts();const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=id;$('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));try{const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;const view=$('view');view.replaceChildren(node('h2',value.title));view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));view.append(node('p',value.publication,'hint'));workflow(view,value);if(value.facts.blockers.length){const d=node('details');d.append(node('summary','Überlieferte offene Produktionspunkte'));const ul=node('ul');for(const b of value.facts.blockers)ul.append(node('li',b));d.append(ul);view.append(d);}
+async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts();const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=id;$('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));try{const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;const view=$('view');view.replaceChildren(node('h2',value.title));view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));view.append(node('p',value.publication,'hint'));workflow(view,value);removalAction(view,value);if(value.facts.blockers.length){const d=node('details');d.append(node('summary','Überlieferte offene Produktionspunkte'));const ul=node('ul');for(const b of value.facts.blockers)ul.append(node('li',b));d.append(ul);view.append(d);}
  const phase=value.facts.state;const groups=phase==='background_review'?[['background']]:[['reveal','motif'],['raster'],['raster_draft'],...(PW.step(value)===5?[['background']]:[])];const shownComparisons=new Set();for(const roles of groups){const assets=value.assets.filter(a=>{
   if(!roles.includes(a.role))return false;
   if(['reveal','motif'].includes(a.role)){const key=a.role+':'+a.location.sha256;if(shownComparisons.has(key))return false;shownComparisons.add(key);}
@@ -301,6 +301,76 @@ async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts(
  }catch(exc){if(current===generation&&exc.name!=='AbortError')$('view').replaceChildren(node('h2','Arbeitsstand kann nicht geöffnet werden'),node('p',exc.message,'error'),node('p','Quellenveröffentlichung korrigieren und danach neuere Ergebnisse suchen.','hint'));}}
 function zoom(){const img=$('largeImage'),value=$('zoom').value;img.classList.toggle('zoomed',value!=='fit');if(value==='fit')img.removeAttribute('width');else img.width=img.naturalWidth*Number(value);}
 $('largeImage').onload=zoom;$('zoom').onchange=zoom;$('close').onclick=()=>$('large').close();$('jobs').onchange=()=>open($('jobs').value);
+// Destructive plans live only in this dialog, never in browser storage.
+let removalEpoch=0,removalBusy=false;
+function closeRemoval(){removalEpoch++;$('removal')?.close();}
+async function removalPost(route,body){
+ return (await request('/api/removal/'+route,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})).json();
+}
+function removalAction(view,value){
+ const area=node('section',undefined,'removalAction'),button=node('button','Produktion entfernen','danger');
+ const reason=value.removal_unavailable;
+ button.disabled=Boolean(reason);
+ button.onclick=()=>previewRemoval({job_id:active.id,snapshot:listing.snapshot});
+ area.append(button,node('p',reason||'Entfernt den ganzen Produktionsbranch im Remote. Zunächst werden Ziel und Schutzbedingungen geprüft.','hint'));
+ view.append(area);
+}
+async function previewRemoval(binding){
+ closeRemoval();const epoch=removalEpoch,dialog=$('removal'),body=$('removalBody');
+ body.replaceChildren(node('h2','Produktion entfernen'),node('p','Ziel, PRs und lokale Sicherheit werden geprüft …'));
+ $('removalClose').disabled=false;dialog.showModal();
+ try{
+  const plan=await removalPost('preview',binding);
+  if(epoch!==removalEpoch)return;
+  const local=plan.kind==='local';
+  body.replaceChildren(node('h2',local?'Lokalen Branchref bereinigen':'Produktion entfernen'));
+  body.append(node('p',local?'Die Remoteentfernung ist bereits bestätigt. Dieser zusätzliche Schritt entfernt ausschließlich den lokalen Ref.':'Der gesamte Remote-Branch mit allen aufgeführten Revisionen wird entfernt.'));
+  const facts=node('dl',undefined,'removalFacts');
+  const rows=[['Repository',plan.repository],['Quelle',local?'Lokaler Branchref nach Remoteentfernung':'Remote'],['Branch',plan.branch],['Voller Ref',plan.ref],['Geprüfte SHA',plan.sha],['Produktion',plan.title+' · '+plan.puzzle_id],['Betroffene Revisionen',plan.revisions.join(', ')],['Lokaler Ref',plan.local.sha||'Nicht vorhanden'],['Worktrees',plan.local.checked_out?`${plan.local.checked_out} mit ausgechecktem Zielbranch`:'Zielbranch in keinem Worktree ausgecheckt'],['Pull Requests',plan.prs.length?plan.prs.map(p=>`#${p.number}: ${p.merged?'gemergt':p.state==='open'?'offen':'geschlossen, nicht gemergt'}`).join('; '):'Keine passenden PRs'],['Auf main',plan.main.revisions.length||plan.main.registered?`Revisionen: ${plan.main.revisions.join(', ')||'keine Authoringstände'} · Katalog: ${plan.main.registered?'vorhanden':'nicht verzeichnet'}`:'Keine Stände dieser Produktion verzeichnet']];
+  for(const [label,text] of rows)facts.append(node('dt',label),node('dd',text));
+  body.append(facts);
+  for(const warning of plan.warnings)body.append(node('p',warning,'validation'));
+  if(plan.blockers.length){for(const blocker of plan.blockers)body.append(node('p',blocker,'error'));return;}
+  body.append(node('p','Maininhalte, Arbeitsdateien und Worktrees bleiben erhalten. Diese Bestätigung gilt drei Minuten.','hint'));
+  const label=node('label','Zur Bestätigung den exakten Branchnamen selbst eingeben'),input=node('input');
+  input.type='text';input.autocomplete='off';input.spellcheck=false;input.id='removalConfirmation';label.append(input);
+  const confirm=node('button',local?'Lokalen Ref jetzt entfernen':'Remote-Branch jetzt entfernen','danger');confirm.disabled=true;
+  input.oninput=()=>{confirm.disabled=input.value!==plan.branch;};
+  // Do not prefill or accept paste/drop as the deliberate typed confirmation.
+  input.onpaste=e=>e.preventDefault();input.ondrop=e=>e.preventDefault();
+  body.append(label,confirm);input.focus();
+  confirm.onclick=async()=>{
+   if(removalBusy||input.value!==plan.branch)return;
+   removalBusy=true;confirm.disabled=true;input.disabled=true;$('removalClose').disabled=true;
+   try{
+    const result=await removalPost('confirm',{plan_id:plan.plan_id,job_id:plan.job_id,snapshot:plan.snapshot,confirmation:input.value});
+    if(epoch!==removalEpoch)return;
+    if(result.listing){adopt(result.listing);}
+    showRemovalResult(result);
+   }catch(exc){showRemovalResult({removed:false,message:exc.message+' Keine weitere Aktion ausgeführt oder bestätigt. Vor einem neuen Versuch Quellen neu prüfen.'});}
+   finally{removalBusy=false;$('removalClose').disabled=false;}
+  };
+ }catch(exc){if(epoch===removalEpoch)body.replaceChildren(node('h2','Entfernung nicht möglich'),node('p',exc.message,'error'));}
+}
+function showRemovalResult(result){
+ const dialog=$('removal'),body=$('removalBody');
+ body.replaceChildren(node('h2',result.removed?(result.kind==='local'?'Lokaler Ref entfernt':'Remote-Branch entfernt'):'Entfernung nicht bestätigt'),node('p',result.message,result.removed?'':'error'));
+ if(result.branch)body.append(node('p',result.branch,'removalBranch'));
+ if(result.cache_error)body.append(node('p',result.cache_error,'error'));
+ if(result.receipt_id){
+  const label=node('label'),choice=node('input'),button=node('button','Lokale Bereinigung vorprüfen');
+  choice.type='checkbox';choice.checked=false;button.disabled=true;
+  label.append(choice,node('span',' Optional auch den sicheren lokalen Branchref bereinigen'));
+  choice.onchange=()=>{button.disabled=!choice.checked;};
+  button.onclick=()=>previewRemoval({receipt_id:result.receipt_id});
+  body.append(node('p','Der lokale Branch bleibt zunächst als eigene Quelle in der Auswahl erhalten.','hint'),label,button);
+ }
+ body.append(node('p','Weitere lokale und auf main veröffentlichte Stände bleiben in „Veröffentlichte Stände“ erreichbar.','hint'));
+ if(!dialog.open)dialog.showModal();
+}
+$('removalClose').onclick=()=>{if(!removalBusy)closeRemoval();};
+$('removal').oncancel=e=>{if(removalBusy)e.preventDefault();else closeRemoval();};
+
 let pollTimer=null;
 async function checkSources(value){
  clearTimeout(pollTimer);
