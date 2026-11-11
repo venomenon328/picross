@@ -97,6 +97,40 @@ def fixture(root, revision='r01', image_count=1):
     return request, files['reveal.png']
 
 
+def current_fixture(repo, source, revision='r01', proposed=None, approved=None, brief=b'TEST ONLY\n\nSynthetic brief.\n'):
+    """Build genuine current 0.8 originals, including all three offered images."""
+    from tools.puzzle_production import authoring_workflow as w, authoring_build_contract as bc
+    if not (repo / INDEX).exists():
+        (repo / INDEX).parent.mkdir(parents=True)
+        (repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': []}))
+    source.mkdir(parents=True)
+    (source / 'brief.md').write_bytes(brief)
+    (source / 'rulebook.md').write_text('**Version 0.8.0 · Dokumentrevision 1 · TEST ONLY**\n', encoding='utf-8')
+    options = []
+    for n in range(3):
+        name = f'reveal-{n}.png'
+        Image.new('RGBA', (8, 5), (40 + n * 20, 90, 80, 128)).save(source / name)
+        sha = io.checksum((source / name).read_bytes())
+        (source / f'reveal-{n}.provenance.json').write_bytes(p.data({'puzzle_id': 'pz-workspace-test',
+            'file': name, 'sha256': sha, 'author': 'TEST ONLY', 'usage_basis': 'Synthetic pixels'}))
+        options.append({'ID': f'A{n}', 'Beschreibung': f'Synthetic {n}', 'Datei': name, 'SHA-256': sha})
+    h = {'format': w.HANDOFF, 'puzzle_id': 'pz-workspace-test', 'revision': revision,
+         'repo_commit': 'a' * 40, 'state': 'reveal_review', 'inventory': None,
+         'rulebook': {'version': '0.8.0', 'file': 'rulebook.md', 'sha256': io.checksum((source / 'rulebook.md').read_bytes())},
+         'brief': 'brief.md', 'proposed_parameters': proposed, 'approved_parameters': approved or [],
+         'reveal': None, 'motif': None, 'candidate': None, 'repair': None, 'background': None, 'raster_selection': None,
+         'gates': {key: 'pending' for key in bc.BACKGROUND_GATES},
+         'gate_evidence': {key: None for key in bc.BACKGROUND_GATES},
+         'blockers': [], 'test_only': True, 'next_action': 'TEST ONLY · Abschlussbild wählen', 'authorization': 'TEST ONLY'}
+    request = {'format': w.REQUEST, 'handoff': h, 'document_revision': 1, 'target': 'repository',
+               'category_id': None, 'reveal_options': options, 'external': {},
+               'presentation': {'title': 'Synthetisches Motiv', 'raster_offers': []},
+               'files': [{'path': f.name, 'source': f.name, 'sha256': io.checksum(f.read_bytes()), 'bytes': f.stat().st_size}
+                         for f in sorted(source.iterdir())]}
+    stage = source.parent / (source.name + '-build'); stage.mkdir()
+    return builder.build(request, source, stage, repo)
+
+
 class WorkspaceTests(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory(prefix='pw-a-unit-')
@@ -110,6 +144,94 @@ class WorkspaceTests(unittest.TestCase):
     def publish(self):
         project(self.request, self.repo)
         return commit(self.repo)
+
+    def test_current_published_parameters_and_bound_brief_are_read_only(self):
+        proposed = [{'width': 18, 'height': 18, 'mode': 'color', 'foreground_colors': 3,
+                     'size_constraint': 'approximate', 'foreground_color_constraint': 'exact',
+                     'status': 'user_target_not_yet_approved'}]
+        for n, (want, approved, role) in enumerate([(proposed, [], 'proposed'),
+                (proposed, [{'width': [15, 20], 'comment': 'free corridor'}], 'approved'),
+                (None, [], 'absent'), ([*proposed, {'other': 'fully preserved'}], [], 'proposed')]):
+            revision = f'current{n}'
+            result = current_fixture(self.repo, self.root / revision, revision, want, approved,
+                                     b'TEST ONLY\n\n<script>alert("never execute")</script>\n')
+            sha = commit(self.repo)
+            before = git(self.repo, 'status', '--porcelain'), git(self.repo, 'show-ref')
+            record = Path(result['directory']) / 'workspace.json'
+            projection = p.parse(record.read_bytes())
+            facts = p.inspect(GitSource(self.repo), sha, projection)
+            published = facts['published']
+            self.assertEqual((published['proposed'], published['approved'], published['role']), (want, approved, role))
+            self.assertEqual(published['brief']['text'], 'TEST ONLY\n\n<script>alert("never execute")</script>\n')
+            self.assertEqual(published['source']['commit'], sha)
+            self.assertEqual((git(self.repo, 'status', '--porcelain'), git(self.repo, 'show-ref')), before)
+
+    def test_current_parameter_conflict_and_invalid_bound_brief_are_errors(self):
+        result = current_fixture(self.repo, self.root / 'current', 'current')
+        directory = Path(result['directory'])
+        record_path = directory / 'record.json'
+        original = p.parse(record_path.read_bytes())
+        projection = p.parse((directory / 'workspace.json').read_bytes())
+        def inspect_record(record):
+            record_path.write_bytes(p.data(record))
+            projection['record'].update(sha256=io.checksum(p.data(record)), bytes=len(p.data(record)))
+            return p.inspect(LocalSource(self.repo), None, projection)
+        bad = deepcopy(original); bad['parameters'] = [{'width': 10}]
+        with self.assertRaisesRegex(ValueError, 'Parameter'):
+            inspect_record(bad)
+        for case in ('missing', 'hash', 'bytes', 'utf8', 'path'):
+            with self.subTest(case=case):
+                with zipfile.ZipFile(directory / 'package.zip') as archive:
+                    files = {name: archive.read(name) for name in archive.namelist()}
+                h, inv = p.parse(files['handoff.json']), p.parse(files['inventory.json'])
+                if case == 'missing':
+                    del files['brief.md']
+                    inv['files'] = [f for f in inv['files'] if f['path'] != 'brief.md']
+                elif case == 'hash': files['brief.md'] += b'changed'
+                elif case == 'bytes':
+                    next(f for f in inv['files'] if f['path'] == 'brief.md')['bytes'] += 1
+                elif case == 'utf8':
+                    files['brief.md'] = b'\xff'
+                    next(f for f in inv['files'] if f['path'] == 'brief.md').update(sha256=io.checksum(b'\xff'), bytes=1)
+                else: h['brief'] = '../brief.md'
+                files['inventory.json'] = p.data(inv)
+                h['inventory']['sha256'] = io.checksum(files['inventory.json'])
+                files['handoff.json'] = p.data(h)
+                buffer = BytesIO()
+                with zipfile.ZipFile(buffer, 'w') as archive:
+                    for name, raw in files.items(): archive.writestr(name, raw)
+                package_before = (directory / 'package.zip').read_bytes()
+                (directory / 'package.zip').write_bytes(buffer.getvalue())
+                (directory / 'handoff.json').write_bytes(files['handoff.json'])
+                changed = deepcopy(original)
+                changed['package'].update(sha256=io.checksum(buffer.getvalue()), bytes=len(buffer.getvalue()))
+                changed['handoff'].update(sha256=io.checksum(files['handoff.json']), bytes=len(files['handoff.json']))
+                changed['inventory_sha256'] = io.checksum(files['inventory.json'])
+                with self.assertRaises(ValueError): inspect_record(changed)
+                (directory / 'package.zip').write_bytes(package_before)
+                with zipfile.ZipFile(BytesIO(package_before)) as archive:
+                    (directory / 'handoff.json').write_bytes(archive.read('handoff.json'))
+
+    def test_current_ui_source_changes_late_details_and_separate_drafts(self):
+        self.repo = self.root / 'current-repo'; self.repo.mkdir()
+        git(self.repo, 'init', '-q', '-b', 'main')
+        for revision, width in [('r01', 18), ('r02', 27)]:
+            current_fixture(self.repo, self.root / revision, revision,
+                [{'width': width, 'height': 18, 'mode': 'color', 'foreground_colors': 3,
+                  'size_constraint': 'approximate', 'foreground_color_constraint': 'exact'}],
+                brief=b'First paragraph\n\n<script>never execute</script>\n')
+        commit(self.repo)
+        configure(self.repo, self.root / 'state')
+        service = Service(Repository(self.root / 'state')); service.listing()
+        server = Server(service)
+        thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
+        try:
+            script = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
+            result = subprocess.run(['node', str(script), server.origin, service.secret, '[]', 'published'],
+                                    capture_output=True, text=True, encoding='utf-8', timeout=60)
+            self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        finally:
+            server.shutdown(); server.server_close(); thread.join()
 
     def test_new_branch_namespace_skips_old_refs_and_reuses_unchanged_scans(self):
         sha = self.publish()

@@ -232,6 +232,25 @@ class Record:
             names(list(self.entries))
             ap.require(set(self.archive.files) == set(self.entries) | {'handoff.json', 'inventory.json'}, 'Inventar und Paketsatz unterscheiden sich.')
             self.member(h['rulebook']['file'], h['rulebook']['sha256'])
+            # Preserve both source roles. The builder's effective projection is
+            # not an independent authority and a free status string is no approval.
+            proposed, approved = h.get('proposed_parameters'), h.get('approved_parameters', [])
+            ap.require(isinstance(approved, list), 'Ungültiger überlieferter Parameterkorridor.')
+            ap.require(canonical_bytes(r['parameters']) == canonical_bytes(approved or proposed or None),
+                       'Parameter im Record widersprechen dem gebundenen Handoff.')
+            brief_name = ap.relative(h['brief'])
+            try:
+                brief = self.member(brief_name, limit=JSON_LIMIT).decode('utf-8', errors='strict')
+            except UnicodeError as exc:
+                raise InvalidInput('Das gebundene Briefing ist kein gültiger UTF-8-Text.') from exc
+            ap.require('\x00' not in brief, 'Das gebundene Briefing enthält Nullbytes.')
+            self.published = {'proposed': proposed, 'approved': approved,
+                              'role': 'approved' if approved else 'proposed' if proposed else 'absent',
+                              'brief': {'text': brief, 'file': brief_name,
+                                        'sha256': self.entries[brief_name]['sha256'],
+                                        'bytes': self.entries[brief_name]['bytes']},
+                              'source': {'commit': self.commit, 'record': ref['file'],
+                                         'handoff': r['handoff'], 'package': r['package']}}
             self.allowed, self.offer_keys = {role: {} for role in ROLES}, {}
             self.historical_assets = []
             self._images()
@@ -245,10 +264,10 @@ class Record:
     def close(self):
         self.archive.close()
 
-    def member(self, name, expected=None):
+    def member(self, name, expected=None, limit=ap.MAX_FILE):
         ap.relative(name)
         ap.require(name in self.entries, 'Datei ist nicht inventarisiert: ' + name)
-        raw = self.archive.read(name)
+        raw = self.archive.read(name, limit)
         item = self.entries[name]
         ap.require(io.checksum(raw) == item['sha256'] and len(raw) == item['bytes'] and
                    (expected is None or expected == item['sha256']), 'Inventarisierte Bytes stimmen nicht: ' + name)
@@ -502,6 +521,7 @@ def inspect(source, snapshot, value):
                 ap.require(any(a['role'] == role and outer.asset_name(a) == name for a in p['assets']),
                            'Pflichtbild fehlt in der Projektion: ' + name)
         return {'state': outer.value['state'], 'blockers': outer.value['blockers'],
+                'published': outer.published,
                 'authoring_version': outer.value['rulebook']['version'],
                 'background_status': ('pending' if outer.value['background'] is None else
                                       'ready' if outer.value['verification'].get('background_ready') else 'offered'),

@@ -7,6 +7,46 @@ const PW = (()=>{
  function orderStep(value){
   return ({reveal_review:2,motif_review:3,raster_ready:4})[value?.facts.state] || step(value);
  }
+ function publishedGrid(value){
+  const source=value?.facts.published;
+  const parameters=source?.approved?.length?source.approved:source?.proposed;
+  if(!Array.isArray(parameters)||parameters.length!==1)return {};
+  const p=parameters[0];
+  if(!p||typeof p!=='object'||Array.isArray(p))return {};
+  const known=['width','height','mode','foreground_colors','size_constraint','foreground_color_constraint','status'];
+  if(Object.keys(p).some(k=>!known.includes(k)))return {};
+  const grid={},precision={approximate:'approx',exact:'exact'};
+  // Only losslessly representable fields are prefilled. Raw originals stay visible.
+  if(Number.isInteger(p.width)&&p.width>=1&&p.width<=50&&Number.isInteger(p.height)&&p.height>=1&&p.height<=50&&precision[p.size_constraint]){
+   Object.assign(grid,{width:String(p.width),height:String(p.height),sizeAccuracy:precision[p.size_constraint]});
+  }
+  if(['mono','color'].includes(p.mode))grid.mode=p.mode;
+  if(p.mode==='color'&&Number.isInteger(p.foreground_colors)&&p.foreground_colors>=2&&p.foreground_colors<=8&&precision[p.foreground_color_constraint]){
+   Object.assign(grid,{colors:String(p.foreground_colors),colorAccuracy:precision[p.foreground_color_constraint]});
+  }
+  return grid;
+ }
+ function gridChanges(value,intent){
+  const base=publishedGrid(value),next={...base,...intent.grid},removed=intent.removeGrid||{};
+  const changes=[];
+  const groups=[['size','Rastergröße',['width','height','sizeAccuracy']],['mode','Rastermodus',['mode']],['colors','Farbzahl',['colors','colorAccuracy']]];
+  for(const [group,label,keys] of groups){
+   if(removed[group]){changes.push(`${label}: bisherigen Wunsch ausdrücklich aufheben; neu empfehlen und zur Entscheidung vorlegen.`);continue;}
+   if(!keys.some(k=>(next[k]||'')!==(base[k]||'')))continue;
+   if(group==='size'){
+    if(!next.width&&!next.height){if(base.width||base.height)throw Error('Rastergröße ausdrücklich aufheben oder Maße angeben.');continue;}
+    changes.push(gridRequest({width:next.width,height:next.height,sizeAccuracy:next.sizeAccuracy}));
+   }else if(group==='mode'){
+    if(!next.mode){if(base.mode)throw Error('Rastermodus ausdrücklich aufheben oder einen Modus wählen.');continue;}
+    changes.push(gridRequest({mode:next.mode}));
+   }else{
+    if(next.mode!=='color')continue;
+    if(!next.colors){if(base.colors)throw Error('Farbzahl ausdrücklich aufheben oder eine Farbzahl angeben.');continue;}
+    changes.push(gridRequest({mode:'color',colors:next.colors,colorAccuracy:next.colorAccuracy}));
+   }
+  }
+  return changes.join(' ');
+ }
  function gridRequest(grid = {}){
   const parts = [];
   function integer(value, min, max, label){
@@ -85,17 +125,21 @@ const PW = (()=>{
   }else{
    lines.push('Schritt 5: Ich erteile die abschließende redaktionelle Freigabe für die im gebundenen Record exakt bezeichnete Raster-, Reveal- und Hintergrundfassung einschließlich der ausdrücklichen Leerentscheidung, falls vorhanden. Integriere ausschließlich diese Lieferung über den bestehenden Finalizer-, Export-, frischen Plan- und Registrierungsweg.');
   }
-  if(n===1 && intent.notes?.trim())lines.push(`Zusätzliche Motivhinweise für die Abschlussbilder:\n${intent.notes.trim()}`);
+  const published=value?.facts.published;
+  if(published){
+   lines.push(`Veröffentlichter Quellkontext aus dem gebundenen Handoff (keine neue Freigabe): vorgeschlagen ${JSON.stringify(published.proposed)}, als freigegebener Korridor überliefert ${JSON.stringify(published.approved)}. Ein Statuswort allein beweist keine menschliche Freigabe. Lies das inventarisierte Briefing ${published.brief.file} (SHA-256 ${published.brief.sha256}) aus dem gebundenen Originalpaket. Mehrdeutige Angaben vollständig berücksichtigen, keine erste Option still wählen.`);
+  }
+  if(n===1 && intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise für die Abschlussbilder:\n${intent.notes.trim()}`);
   if(n<=2 || (n===3 && action==='rework')){
-   const grid=gridRequest(intent.grid);
+   const grid=published?gridChanges(value,intent):gridRequest(intent.grid);
    if(grid){
-    lines.push(`Vorgaben für das spätere Lösungsraster: ${grid}`);
+    lines.push(`${published?'Neue Absicht gegenüber den veröffentlichten Vorgaben':'Vorgaben für das spätere Lösungsraster'}: ${grid}`);
     if(n===1)lines.push('Halte diese Vorgaben im veröffentlichten Motivbriefing für den Folgeauftrag fest. Das Abschlussbild bleibt detailliert und farbig.');
-    if(n===3)lines.push('Lege den geänderten Parameterkorridor zur Entscheidung vor. Bis dahin gilt die bisherige Freigabe.');
+    if(n===3||published?.approved?.length)lines.push('Lege den geänderten Parameterkorridor über den Korrekturweg zur erneuten Entscheidung vor. Bis dahin gilt die bisherige Freigabe.');
    }
   }
   if(n===2)lines.push('Berücksichtige die bereits veröffentlichten Vorgaben aus dem Motivbriefing. Offene Einstellungen bleiben der begründeten Empfehlung überlassen.');
-  if((n===2||n===3)&&intent.parameters?.trim())lines.push(`Parameterwunsch: ${intent.parameters.trim()}. Materielle Änderungen am freigegebenen Korridor zuerst zur Entscheidung vorlegen.`);
+  if((n===2||(n===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}. Materielle Änderungen am freigegebenen Korridor zuerst zur Entscheidung vorlegen.`);
   if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}.`);
   if(options.workroot?.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${options.workroot.trim()}.`);
   lines.push(options.cleanup?'Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt.':'Keine zusätzliche Abschlussbereinigung beauftragt.');
@@ -103,6 +147,6 @@ const PW = (()=>{
   lines.push('Vor der Übergabe neue Revision, Index und automatisch geprüfte workspace.json mit sämtlichen benötigten Originalen auf demselben Produktionsbranch committen und pushen. Nur tatsächlich erreichte Zustände melden.');
   return lines.join('\n\n');
  }
- return {steps,step,orderStep,prompt};
+ return {steps,step,orderStep,prompt,publishedGrid};
 })();
 if(typeof module!=='undefined')module.exports=PW;
