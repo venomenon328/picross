@@ -2,12 +2,13 @@
 from copy import deepcopy
 from io import BytesIO
 import http.client
-import os
 from pathlib import Path
 import stat
 import subprocess
+import shutil
 import tempfile
 import threading
+import time
 import unittest
 from unittest.mock import patch
 import zipfile
@@ -143,7 +144,7 @@ class WorkspaceTests(unittest.TestCase):
         (self.directory / 'reveal.png').write_bytes(b'dirty')
         status = git(self.repo, 'status', '--porcelain')
         source = GitSource(self.repo)
-        self.assertEqual(source.read(first, str(Path(self.request['record']['file']).parent / 'reveal.png'), 1024), self.png)
+        self.assertEqual(source.read(first, (Path(self.request['record']['file']).parent / 'reveal.png').as_posix(), 1024), self.png)
         configure(self.repo, self.root / 'state')
         repo = Repository(self.root / 'state')
         service = Service(repo)
@@ -189,6 +190,96 @@ class WorkspaceTests(unittest.TestCase):
         path.unlink(); commit(self.repo)
         listing = Service(Repository(self.root / 'state')).listing()
         self.assertEqual(len(listing['jobs']), 1)
+
+    def test_bad_projection_read_is_isolated_to_its_index_entry(self):
+        self.publish()
+        request, _ = fixture(self.repo, 'r02'); project(request, self.repo)
+        commit(self.repo)
+        configure(self.repo, self.root / 'state')
+        view = self.directory / 'workspace.json'
+        for broken in ('oversized', 'symlink', 'invalid_json'):
+            with self.subTest(broken=broken):
+                git(self.repo, 'update-index', '--force-remove', view.relative_to(self.repo).as_posix())
+                view.write_bytes(b' ' * (1024 * 1024 + 1) if broken == 'oversized' else b'not JSON')
+                commit(self.repo)
+                if broken == 'symlink':
+                    # Publish a real Git symlink without requiring Windows symlink privileges.
+                    oid = git(self.repo, 'rev-parse', 'HEAD:' + view.relative_to(self.repo).as_posix()).decode().strip()
+                    git(self.repo, 'update-index', '--cacheinfo', '120000', oid, view.relative_to(self.repo).as_posix())
+                    git(self.repo, '-c', 'user.name=PW synthetic', '-c', 'user.email=pw@example.invalid',
+                        'commit', '-qm', 'synthetic symlink')
+                service = Service(Repository(self.root / 'state'))
+                listing = service.listing()
+                self.assertEqual([j['revision'] for j in listing['jobs']], ['r02'])
+                self.assertEqual(len(listing['errors']), 1)
+                self.assertIn('pz-workspace-test/r01', listing['errors'][0])
+                job = listing['jobs'][0]
+                self.assertEqual(service.detail(job['id'])['revision'], 'r02')
+                self.assertEqual(service.picture(job['id'], 'reveal-A')[0], self.png)
+
+    def test_deleted_remote_ref_is_pruned_without_touching_foreign_refs_or_snapshots(self):
+        # The only published job is on content/demo, not main.
+        (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': []}))
+        commit(self.repo)
+        git(self.repo, 'checkout', '-qb', 'content/demo')
+        (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': [
+            {'puzzle_id': self.request['puzzle_id'], 'revision': 'r01', 'record': self.request['record']['file']}]}))
+        published = self.publish()
+        remote = self.root / 'remote'; remote.mkdir(); git(remote, 'init', '--bare', '-q')
+        git(remote, 'config', 'uploadpack.allowFilter', 'true')
+        git(self.repo, 'push', str(remote), 'main', 'content/demo')
+        git(self.repo, 'checkout', 'main'); git(self.repo, 'branch', '-D', 'content/demo')
+        (self.repo / 'sentinel.txt').write_text('dirty')
+        before = (git(self.repo, 'show-ref'), git(self.repo, 'status', '--porcelain'), (self.repo / '.git/index').read_bytes())
+        configure(self.repo, self.root / 'state', remote=str(remote))
+        repo = Repository(self.root / 'state'); service = Service(repo)
+        first = service.listing(refresh=True)
+        jid = next(j['id'] for j in first['jobs'] if j['source'] == 'remote')
+        self.assertEqual(service.picture(jid, 'reveal-A')[0], self.png)
+        # Same namespace, but outside the configured refspecs, as well as a foreign namespace.
+        for ref in ('refs/pw/other', 'refs/foreign/keep'):
+            git(repo.cached.root, 'update-ref', ref, published)
+        git(self.repo, 'push', str(remote), '--delete', 'content/demo')
+        second = service.listing(refresh=True)
+        self.assertIsNone(second['sync_error'])
+        self.assertEqual(second['jobs'], [])
+        self.assertNotIn('content/demo', [s['ref'] for s in second['sources']])
+        for ref in ('refs/pw/other', 'refs/foreign/keep'):
+            self.assertEqual(repo.cached.resolve(ref), published)
+        self.assertEqual(service.picture(jid, 'reveal-A')[0], self.png)
+        # Republish, cache, then make the remote unavailable: failure must retain its refs.
+        git(self.repo, 'push', str(remote), published + ':refs/heads/content/demo')
+        service.listing(refresh=True)
+        cached_refs = git(repo.cached.root, 'show-ref')
+        remote.rename(self.root / 'offline')
+        offline = service.listing(refresh=True)
+        self.assertIsNotNone(offline['sync_error'])
+        self.assertTrue(any(j['source'] == 'remote' for j in offline['jobs']))
+        self.assertEqual(git(repo.cached.root, 'show-ref'), cached_refs)
+        self.assertEqual((git(self.repo, 'show-ref'), git(self.repo, 'status', '--porcelain'),
+                          (self.repo / '.git/index').read_bytes()), before)
+
+    def test_ui_queues_six_slow_originals_retries_and_ignores_old_responses(self):
+        for request in (self.request, fixture(self.repo, 'r02')[0]):
+            asset = request['assets'][0]
+            request['assets'] = [{**deepcopy(asset), 'id': 'image-' + str(n)} for n in range(6)]
+            request['offers'][0]['asset_ids'] = ['image-0']
+            project(request, self.repo)
+        commit(self.repo); configure(self.repo, self.root / 'state')
+        service = Service(Repository(self.root / 'state'))
+        picture = service.picture
+        def slow(jid, aid):
+            time.sleep(.25)
+            return picture(jid, aid)
+        service.picture = slow
+        server = Server(service); thread = threading.Thread(target=server.serve_forever, daemon=True); thread.start()
+        self.addCleanup(lambda: (server.shutdown(), server.server_close(), thread.join()))
+        node = shutil.which('node')
+        self.assertIsNotNone(node, 'Node.js is required for the small UI loading regression (no browser).')
+        check = Path(__file__).parent / 'production_workspace/check_ui_loading.cjs'
+        result = subprocess.run([node, str(check), server.origin, service.secret, io.checksum(self.png)],
+                                capture_output=True, text=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
     def test_http_capability_host_origin_paths_and_exact_original(self):
         self.publish(); configure(self.repo, self.root / 'state')
@@ -248,10 +339,14 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_git_symlink_and_missing_historical_object_fail(self):
         self.publish()
-        if hasattr(os, 'symlink'):
-            os.symlink('reveal.png', self.directory / 'link.png')
-            sha = commit(self.repo)
-            with self.assertRaises(ValueError): GitSource(self.repo).read(sha, str(Path(self.request['record']['file']).parent / 'link.png'))
+        name = (Path(self.request['record']['file']).parent / 'link.png').as_posix()
+        # Git object mode is the reader's boundary; no host symlink privilege needed.
+        oid = git(self.repo, 'rev-parse', 'HEAD:' + self.request['record']['file']).decode().strip()
+        git(self.repo, 'update-index', '--add', '--cacheinfo', '120000', oid, name)
+        git(self.repo, '-c', 'user.name=PW synthetic', '-c', 'user.email=pw@example.invalid',
+            'commit', '-qm', 'synthetic symlink')
+        sha = git(self.repo, 'rev-parse', 'HEAD').decode().strip()
+        with self.assertRaises(ValueError): GitSource(self.repo).read(sha, name)
         with self.assertRaises(ValueError): GitSource(self.repo).read('f' * 40, self.request['record']['file'])
 
     def test_measured_hash_mutation_and_noncanonical_record_fail(self):
