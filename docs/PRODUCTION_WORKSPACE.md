@@ -7,8 +7,9 @@ Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schr
 Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
 weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
 Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
-bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
-führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+bleiben erhalten. Anzeige und Produktion bleiben lesend; allein die ausdrücklich bestätigte
+Branchentfernung nach §4.4 ist eine enge Schreibausnahme. Veröffentlichung und
+Gitabschluss führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
 
 **Spezifikation 1.0 · 11.11.2026 · [Issue #578](https://github.com/venomenon328/picross/issues/578)**
@@ -196,8 +197,9 @@ bezeichnete Aktualisierungsaktion die gewählten Refs in einen eigenen Gitcache
 geholt. Der Browser öffnet vor dieser Arbeit; eine einzelne Hintergrundoperation
 liefert Fortschrittsstatus und meldet auch einen Fehlerabschluss. Status- und
 vorhandene Bildansichten bleiben währenddessen erreichbar. Aktualisieren erzeugt
-keinen zweiten parallelen Suchlauf. Das ist ausschließlich Cachepflege. Keine Schreiboperation im
-Benutzercheckout, kein Pull, Checkout, Reset, Stash, Add, Commit, Push oder Merge.
+keinen zweiten parallelen Suchlauf. Das ist ausschließlich Cachepflege. Außer der separat bestätigten lokalen Refbereinigung nach §4.4 keine
+Schreiboperation im Benutzercheckout; kein Pull, Checkout, Reset, Stash, Add,
+Commit oder Merge. Der einzige Push ist die konditionale Remoteentfernung nach §4.4.
 Keine automatische Authentifizierungsänderung. Bestehende Git-Anmeldung nutzen;
 kein GitHub-Token in HTML, Browserstorage, Prompt oder Protokoll aufnehmen.
 
@@ -234,6 +236,68 @@ werden gezielt nachgeladen. Unveränderte Index-/Projektionsbefunde werden
 commitgebunden in einem begrenzten Prozesscache wiederverwendet. Statusabrufe
 lesen ausschließlich den zuletzt fertiggestellten Listenstand und starten
 keine erneute Git-Suche.
+
+### 4.4 P2 · ausdrücklich bestätigte Produktionsentfernung
+
+[P2/K07](https://github.com/venomenon328/picross/issues/588#issuecomment-6808562897)
+erlaubt genau eine benutzerinitiierte Ausnahme: den vollständigen ausgewählten
+Remote-Produktionsbranch `refs/heads/content/pw/<puzzle_id>` entfernen. Keine
+Revision einzeln löschen, keine Inhaltsdateien, Worktrees oder Mainintegration
+entfernen. Produktion, Veröffentlichung und Freigaben bleiben beim Akteur.
+
+Die Vorprüfung löst Job und aktuellen Listensnapshot serverseitig auf. Nur eine
+konfliktfreie Remotequelle mit exakter ID-/Branchbindung ist zulässig. Produktiv
+ist allein der bewusst konfigurierte GitHub-Remote `venomenon328/picross` über
+HTTPS oder gewöhnliche GitHub-SSH-URL freigegeben. Rein lokale Quellen und andere
+Remotes bleiben lesbar, ihre Löschfunktion ist gesperrt. Lokale Bare-Remotes sind
+nur über einen kontrollierten Testadapter in isolierten Prüfungen zulässig;
+weder Einrichtung noch HTTP-API besitzen dafür einen Freigabeschalter.
+
+Die Vorschau nennt Repository, Quelltyp, exakten Ref, frische Remote-SHA, alle
+sichtbaren Revisionen des Branches, lokale SHA/Worktrees, PR-Befunde und auf main
+vorhandene Stände. Effektive Fetch-/Pushziele werden geprüft; versteckte
+Pushziele, Mehrfachziele, URL-Rewrites und Redirects werden nicht akzeptiert.
+GitHub-Repositoryidentität und öffentliche Sichtbarkeit werden lesend verifiziert.
+Die paginierte Pull-Request-Abfrage nutzt `head=owner:branch` und `state=all`.
+Unprüfbare PRs oder offene PRs sperren; geschlossene ungemergte PRs warnen,
+gemergte PRs und vorhandene Mainstände erklären die erhaltene Integration.
+
+Alle verknüpften Worktrees und der exakte lokale Branchref werden geprüft.
+Ausgecheckter Zielbranch oder abweichende lokale SHA sperren die ganze Aktion.
+Dirty-Arbeitsbäume anderer Branches bleiben unberührt und blockieren nicht.
+Vorprüfung verändert keine aktive Ansicht oder Quelldatei. Bestätigung verlangt
+einen eigenhändig eingegebenen exakten Branchnamen und einen einmaligen,
+kurzlebigen Sitzungsplan, gebunden an Job, Snapshot, Ziel und Vorprüfungsbefunde.
+Vor dem Push werden diese Prüfungen frisch wiederholt. Refresh und Transaktionen
+laufen seriell; die reine Statusabfrage bleibt erreichbar.
+
+Git erhält ohne Shell genau eine Lösch-Refspec und eine explizite
+`--force-with-lease=<voller Ref>:<erwartete SHA>`. Hooks werden abgeschaltet;
+nur vorhandene nichtinteraktive Anmeldung wird benutzt. Keine neuen Credentials
+im Browser, Zustand oder Log. Erfolg verlangt danach das tatsächlich geprüfte
+Fehlen des exakten Remote-Refs. Push-/Timeout-/Berechtigungsfehler, unbekannter
+Ausgang und fehlgeschlagene Cachesynchronisierung bleiben getrennte Resultate.
+Erst verifizierter Erfolg aktualisiert die Remoteansichten. Lokale und Mainquellen
+bleiben sichtbar. Bei Cachefehler wird eine stale Anzeige ausdrücklich benannt.
+
+Ein noch vorhandener identischer lokaler Branchref kann erst danach separat
+vorgeprüft und ausdrücklich bestätigt entfernt werden. Die Option ist anfangs
+aus. Erneute Worktree-/SHA-/Remoteprüfung und ein bedingtes `update-ref -d`
+verhindern die Entfernung eines inzwischen geänderten Refs. Nie Checkout,
+Worktree, Bild, ZIP, Ordner oder andere Refs löschen. Unsichere Reste bleiben.
+
+Die API ergänzt nur `/api/removal/preview` und `/api/removal/confirm` als POSTs
+mit striktem kleinen UTF-8-JSON (maximal 2048 Bytes). Vorprüfung nimmt entweder
+opake Job-/Snapshot-IDs oder die serververgebene Quittung für die lokale Folgeaktion;
+Bestätigung ausschließlich opake Plan-/Job-/Snapshot-IDs und den Bestätigungstext.
+Alle sonstigen API-Aufrufe behalten ihr Bodyverbot. Sitzung, Host, Origin und CSP
+bleiben verbindlich. Kein allgemeiner Gitwriter, keine freie URL-/Ref-/Pfad-API.
+
+Kleine Git-/Endpointregressionen laufen nur im gewählten `tools`-Modul. Echte
+isolierte Remotetransaktionen und die Windows-/Browserbedienprobe sind einmalige
+P2-T01–T03-Nachweise; ausschließlich synthetische Testrefs dürfen dafür entfallen.
+Zwei gezielte PNG-Originale für P2-A01 liegen getrennt vom Produktdiff bis zum
+unabhängigen Review, höchstens sieben Tage. P3-Paketierung bleibt separat.
 
 ## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist
 
@@ -369,7 +433,8 @@ nicht ausgeführt, SVG nicht als aktive Webseite eingebettet. Text als Text
 rendern. CSP gezielt auf eigene UI-/API-Ressourcen und lokal erzeugte
 Bild-Blob-URLs begrenzen; keine pauschale Freigabe beliebiger Netzwerkziele.
 
-HTTP-Endpunkte akzeptieren serverseitig vergebene Snapshot-/Job-/Assetkennungen,
+HTTP-Endpunkte akzeptieren serverseitig vergebene Snapshot-/Job-/Assetkennungen
+und die eng begrenzten Löschbestätigungen nach §4.4,
 keine beliebigen Dateipfade, Shellkommandos, URLs oder Archivpfade. Der Server
 löst ausschließlich die von validierten Projektionen freigegebenen Ressourcen
 auf. Gitobjekte nach Typ und Größe prüfen; Symlinks, Submodule und Links aus dem
@@ -449,7 +514,7 @@ kein neuer Kompatibilitätsmodus innerhalb des Assistenten.
 
 Technische Trennung: Der Projektor ist ein ausdrücklich beauftragtes lokales
 Produktionswerkzeug für die neue Ansichtsdatei. Der langlebige HTTP-Dienst ist
-projektseitig ausschließlich Leser. Kein Projektor-/Dateischreibaufruf durch
+projektseitig Leser mit der späteren engen P2-Ausnahme nach §4.4. Kein Projektor-/Dateischreibaufruf durch
 einen beliebigen Browserrequest.
 
 Das Issue definiert PW-A-K01 bis K12, T01/T02 sowie die separaten Vor-Merge-Gates.
