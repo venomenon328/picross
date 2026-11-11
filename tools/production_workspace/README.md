@@ -3,6 +3,8 @@
 Die lesende Job-/Bildansicht für neu veröffentlichte Handoff-v3-/Record-v2-
 Arbeitsstände. [Fachvertrag](../../docs/PRODUCTION_WORKSPACE.md),
 [Paketentscheidung PW-A](https://github.com/venomenon328/picross/issues/578#issuecomment-6793791025).
+[Startkorrektur PW-A2](https://github.com/venomenon328/picross/issues/578#issuecomment-6798166149)
+engt das Branchschema ein und lädt Git im Hintergrund.
 Der neue Produktionsdefault und die fünfstufige Auftragssteuerung gehören zu PW-B.
 Das bestehende Offline-Sheet und vorhandene WIP bleiben unverändert.
 
@@ -23,10 +25,16 @@ python -m pip install --only-binary=:all: -r tools/puzzle_production/requirement
 
 Der Starter fragt beim ersten Start nach dem vorhandenen Projektcheckout und
 bietet lokale Gitstände oder die ausdrücklich gewählte Remote-URL an.
-Standardeinstellung: nur lokal. Standardbranches: `main` und `content/*`.
-Der Browser öffnet sich automatisch; Strg+C im Starter beendet den Dienst.
+Standardeinstellung: nur lokal. Standardbranches: `main` und `content/pw/*`.
+Neue Produktionen verwenden verbindlich `content/pw/<puzzle_id>`, zum Beispiel
+`content/pw/pz-eule`, mit einem stabilen Branch pro Rätsel. Alte `content/*`-
+Branches werden weder abgerufen noch durchsucht.
+Der Browser öffnet vor der Git-Suche; diese läuft einzeln im Hintergrund und
+meldet Laufzeit/Abschluss/Fehler in der Oberfläche; Strg+C im Starter beendet den Dienst.
 Nach erneutem Start sind keine Bild-, ZIP- oder JSON-Importe nötig.
-Ein bereits eingerichteter Zustand wird nicht durch neue CLI-Optionen ersetzt.
+Die unveränderte frühere Standardauswahl `main` + `content/*` wird automatisch
+im eigenen Zustand eingeengt. Abweichende alte Auswahlen benötigen einen neuen
+Zustandsordner; neue CLI-Optionen überschreiben keine bestehende Einrichtung.
 
 Explizite Einrichtung aus dem Programmcheckout, mit absoluten lokalen Pfaden:
 
@@ -37,9 +45,9 @@ python -m tools.production_workspace --state C:\Picross-PW
 
 Für bewusst bestätigte Synchronisierung bei der Einrichtung ergänzen:
 `--remote https://github.com/venomenon328/picross.git` oder eine SSH-URL.
-Weitere ausdrücklich gewählte Branches über wiederholtes `--ref` angeben;
-dabei auch `--ref main --ref "content/*"` angeben, wenn diese erhalten bleiben
-sollen. Die URL darf keinen Token und kein eingebettetes Passwort enthalten.
+Eine kleinere Auswahl über wiederholtes `--ref` angeben, zum Beispiel
+`--ref main --ref content/pw/pz-eule`. Andere Branchfamilien sind nicht zulässig.
+Die URL darf keinen Token und kein eingebettetes Passwort enthalten.
 Die vorhandene Git-Anmeldung bleibt zuständig; keine Anmeldedaten in der UI.
 
 Ohne `--state` liegt der eigene Zustandsordner unter
@@ -53,6 +61,33 @@ Ein belegter `--port` wird gemeldet; ohne Angabe wählt der Starter einen freien
 Loopbackport. Fehlendes Git, Python oder Pillow wird gemeldet. Keine ungefragte
 Installation. `--no-browser` dient einem beaufsichtigten Diensttest, nicht als
 zweiter manueller Einrichtungspfad.
+
+## Einzelne ausführbare Startdatei
+
+[Picross-Start.cmd](Picross-Start.cmd) enthält den zugehörigen lesenden Programmstand
+samt Oberfläche. Sie kann auch mit einem unveränderten PW-A-Checkout verwendet
+werden. Doppelklick genügt; bei Bedarf einmal den Projektordner angeben.
+Die vorhandene Einrichtung und isolierte Pythonumgebung werden wiederverwendet;
+Pillow 12.3.0 wird nur bei Bedarf dort installiert. Python/Git bleiben
+Voraussetzung. Store-Python- und Junctionpfade werden innerhalb von Python
+aufgelöst. Das Skript führt keine Git-Aktualisierung des Programmcheckouts aus.
+
+Die eingebetteten vertrauenswürdigen Dateien werden mit SHA-256 geprüft, in einen
+eigenen temporären Programmordner geschrieben und von dort geladen. Die
+unveränderten Produktionsbibliotheken stammen aus dem angegebenen vertrauenswürdigen
+Checkout. Es wird kein Programmcode von Produktionsbranches übernommen.
+Der Programmordner wird bei regulärem Ende entfernt. Den laufenden Starter mit
+Strg+C beenden, bevor eine neue Version gestartet wird.
+
+Nach Änderungen an den eingebetteten Quelldateien regenerieren:
+
+```sh
+python -m tools.production_workspace.build_launcher
+```
+
+Der kleine Regressionstest gleicht die eingebetteten Bytes mit den Quelldateien ab.
+Die Windows-`.cmd`-Ausführung und echte Browserbedienung benötigen weiterhin die
+separat benannte Windowsprobe; eine Linuxmessung belegt diese nicht.
 
 ## Bedienung und Quellenstatus
 
@@ -80,10 +115,15 @@ Remote-Branches ausschließlich aus den konfigurierten eigenen Cache-Refs.
 Bereits geöffnete Snapshots bleiben gebunden; bei Offlinefehlern bleiben die
 zuletzt gespeicherten Refs erhalten.
 
-Der Dienst schreibt nur `config.json`, den eigenen nackten `git-cache` und dessen
-letzten Synchronisierungszeitpunkt. Kein Pull/Checkout/Reset/Stash/Add/Commit/Push
-oder Merge im Benutzercheckout. Fetch verwendet `blob:none`, soweit das Remote
-Filter unterstützt; einzelne baumgebundene Blobs werden bei Bedarf geholt.
+Der Dienst schreibt nur eigene Einrichtung/Cachedateien: `config.json`,
+`git-cache-pw-v1` und `sync-pw-v1.json`. Der frühere `git-cache` und dessen
+Synchronisierungsdatei bleiben unangetastet und werden nicht durchsucht.
+Kein Pull/Checkout/Reset/Stash/Add/Commit/Push oder Merge im Benutzercheckout.
+Fetch verwendet eine flache Historie (`depth=1`) und `blob:none`, soweit das
+Remote Filter unterstützt. Ausdrücklich gebundene historische Commits und
+einzelne baumgebundene Blobs werden bei Bedarf geholt. Unveränderte Listenbefunde
+liegen commitgebunden in einem begrenzten 8-MiB-Prozesscache. HTTP-Statusabrufe
+lesen den fertigen Snapshot und starten keine Git-Suche.
 Es wird nichts entpackt, kein allgemeiner Archivbrowser aufgebaut.
 Der Cache beendet weitere Fetches ab 384 MiB bereits gespeicherter Objekte,
 mit Reserve für ein höchstens 128-MiB-Paket. Danach einen neuen eigenen Zustand

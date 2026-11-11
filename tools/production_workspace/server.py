@@ -25,6 +25,45 @@ class Service:
         # its image slot until completion, reserving two total slots for metadata.
         self.image_workers = threading.BoundedSemaphore(2)
         self.metrics = {'image_requests': 0, 'image_cache_hits': 0, 'image_seconds': 0.0}
+        self.current = None
+        self.update_thread = None
+        self.update_id, self.update_started = 0, 0
+        self.update_state, self.update_error = 'idle', None
+
+    def start_refresh(self):
+        with self.lock:
+            if self.update_state == 'running':
+                return
+            self.update_id += 1
+            self.update_started = time.monotonic()
+            self.update_state, self.update_error = 'running', None
+            self.update_thread = threading.Thread(target=self._refresh, name='PW-source-update', daemon=True)
+            self.update_thread.start()
+
+    def _refresh(self):
+        try:
+            value = self.listing(refresh=True)
+            with self.lock:
+                self.update_error = value.get('sync_error')
+                self.update_state = 'error' if self.update_error else 'done'
+        except Exception:
+            # A background failure must not strand the UI in "loading". Do not
+            # expose arbitrary exception text, paths or remote credentials.
+            with self.lock:
+                self.update_state = 'error'
+                self.update_error = 'Quellen konnten nicht geladen werden. Git-Zugang prüfen und erneut suchen.'
+
+    def status(self):
+        # Never run Git in a status request. A slow refresh owns no HTTP slot and
+        # cannot hold this lock while reading repository objects.
+        with self.lock:
+            value = self.current or {'jobs': [], 'errors': [], 'sources': [], 'snapshot': None,
+                                     'mode': 'remote' if self.repository.remote else 'local',
+                                     'synced_at': None, 'sync_error': None}
+            return {**value, 'update': {'id': self.update_id, 'state': self.update_state,
+                                      'elapsed_seconds': round(time.monotonic() - self.update_started, 1)
+                                      if self.update_state == 'running' else 0,
+                                      'error': self.update_error}}
 
     def listing(self, refresh=False):
         value = self.repository.refresh() if refresh else self.repository.listing()
@@ -41,7 +80,8 @@ class Service:
                 _, expired = self.snapshots.popitem(last=False)
                 for jid in expired:
                     self.jobs.pop(jid, None)
-        return {**value, 'snapshot': snapshot, 'jobs': public}
+            self.current = {**value, 'snapshot': snapshot, 'jobs': public}
+            return self.current
 
     def job(self, jid):
         with self.lock:
@@ -146,9 +186,10 @@ class Handler(BaseHTTPRequestHandler):
             if not acquired:
                 return self.reply(503, p.data({'error': 'Dienst ist beschäftigt; gleich erneut versuchen.'}), 'application/json')
             if method == 'GET' and self.path == '/api/jobs':
-                value = service.listing()
+                value = service.status()
             elif method == 'POST' and self.path == '/api/refresh':
-                value = service.listing(refresh=True)
+                service.start_refresh()
+                value = service.status()
             else:
                 ap.require(method == 'GET' and len(parts) in (3, 5) and parts[:2] == ['api', 'jobs'], 'Unbekannter API-Aufruf.')
                 if len(parts) == 3:

@@ -1,6 +1,6 @@
 # Arbeitsablage für die Rätselproduktion
 
-## Freigegebener neuer Produktionsassistent · noch nicht implementiert
+## Neuer Produktionsassistent · lesender Teil geliefert
 
 [PW / #578](../../docs/PRODUCTION_WORKSPACE.md) spezifiziert den Git-gestützten
 Assistenten mit Launcher, Originalbildern und künftig fünf Schritten. PW-A
@@ -9,6 +9,13 @@ neben dem Record; der Dienst findet sie über den bestehenden Index und löst
 Bilder selbst aus Git/Paketen auf. Keine manuellen Bild-/ZIP-/Routine-JSON-Importe.
 Der Projektor erstellt ausschließlich die neue Ansichtsdatei; der HTTP-Dienst
 ändert keine Projektdateien. Git-Sicherung bleibt beauftragte Produktionsarbeit.
+
+Neue PW-Produktionen werden verbindlich auf `content/pw/<puzzle_id>`
+veröffentlicht, zum Beispiel `content/pw/pz-eule`. Ein Branch pro Produktion,
+Revisionen in der unten beschriebenen Ablage. Der Assistent liest nur `main`
+und diese neue Branchfamilie; alte Produktionsbranches bleiben unangetastet.
+Die vollständige Auftragssteuerung und verpflichtende automatische
+Projektionslieferung folgen weiterhin mit PW-B.
 
 **Bestehende WIP sind kein Kompatibilitätsziel:** keine Migration, nachträgliche
 Projektion oder Alt-Sitzungsunterstützung erforderlich. Das ist kein Auftrag,
