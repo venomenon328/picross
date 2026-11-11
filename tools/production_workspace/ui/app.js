@@ -12,17 +12,19 @@ function pause(ms,signal){return new Promise((resolve,reject)=>{
  const timer=setTimeout(()=>{signal?.removeEventListener('abort',abort);resolve();},ms);
  if(signal?.aborted)abort();else signal?.addEventListener('abort',abort,{once:true});
 });}
-async function request(path,options={}){
+async function request(path,options={},waitForImageSlot=false){
  for(let attempt=0;;attempt++){
   options.signal?.throwIfAborted();
   const response=await fetch(path,{...options,headers:{'X-Workspace-Session':token},cache:'no-store'});
   if(response.ok)return response;
   let body;try{body=await response.json();}catch{body={error:'Lokaler Dienst nicht erreichbar. Starter erneut öffnen.'};}
-  if(response.status!==503||attempt===4)throw new Error(body.error);
-  await pause(250*2**attempt,options.signal);
+  if(response.status!==503||(!waitForImageSlot&&attempt===4))throw new Error(body.error);
+  // Image slots can remain occupied after aborting their HTTP transports.
+  // Keep the current cards pending until the server finishes, or the user leaves.
+  await pause(250*2**Math.min(attempt,3),options.signal);
  }
 }
-// Leave capacity in the four-operation service for metadata and job changes.
+// Bound client requests as well as the server's independently held image slots.
 let imageLoads=0;
 const imageQueue=[];
 function drainImages(){
@@ -30,7 +32,7 @@ function drainImages(){
   const task=imageQueue.shift();
   if(task.signal.aborted){task.reject(task.signal.reason);continue;}
   imageLoads++;
-  request(task.path,{signal:task.signal}).then(r=>r.blob()).then(task.resolve,task.reject)
+  request(task.path,{signal:task.signal},true).then(r=>r.blob()).then(task.resolve,task.reject)
    .finally(()=>{imageLoads--;drainImages();});
  }
 }

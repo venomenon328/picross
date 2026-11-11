@@ -11,12 +11,12 @@
     {
       "path": "tools/test_production_workspace.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische echte Git-/ZIP-/Projektor-/HTTP-Regressionen gegen Rollen-/Hash-/Snapshot-/Pfadfehler. Nacharbeit B01-B03 ergänzt langsames Sechser-Bildladen mit echtem UI-Code in Node.js (Runner vorhanden, kein Browser), defekte Einzelprojektionen sowie Remote-Ref-Löschung/Offline-/Fremdrefschutz; keine neue Kernfamilie, keine realen Produktionsinputs und kein Solver-Replay."
+      "reason": "Kleine synthetische echte Git-/ZIP-/Projektor-/HTTP-Regressionen gegen Rollen-/Hash-/Snapshot-/Pfadfehler. B01 ergänzt die konkrete Fünf-Sekunden-Gegenprobe mit echtem Fetch-Abbruch und zwei schnellen Jobwechseln: serverseitige Bildlast begrenzen, Metadaten freihalten und sechs Bilder automatisch nachladen. Der Test für verspätete Antworten und die bestätigten B02/B03-Regressionen bleiben erhalten. Genau tools, keine neue Kernfamilie, keine echten Produktionsinputs oder Solver-Replays."
     },
     {
       "path": "tools/production_workspace/check_ui_loading.cjs",
       "disposition": "change-scoped",
-      "reason": "Kleiner B01-Helper des tools-Tests: tatsächliches app.js mit DOM-Nachbildung und echtem Loopback-HTTP; prüft Ladegrenze, Originalbytes, 503-/Kartenretry und veraltete Antworten. Keine Browser-/Layoutabnahme oder automatische Chromiumfamilie."
+      "reason": "Kleiner B01-Helper des tools-Tests: tatsächliches app.js mit DOM-Nachbildung und echtem Loopback-HTTP; prüft beide Abortfälle getrennt, automatische Erholung nach mehr als vier 503-Antworten, Metadatenzugriff, begrenzte Bildlast, Originalbytes und Kartenretry. Keine Browser-/Layoutabnahme oder automatische Chromiumfamilie."
     }
   ],
   "core_change": null,

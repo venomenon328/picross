@@ -92,9 +92,13 @@ anlegen; dies ist eine lokale Schutzgrenze, keine CI-Artefaktgrenze.
 Blob-/Bildcaches sind nur im Prozess (je höchstens 64 MiB/512 Einträge),
 Baummetadaten höchstens 4 MiB. Große ZIPs werden einzeln geöffnet und wieder
 freigegeben. Höchstens vier Datenoperationen laufen gleichzeitig; weitere erhalten
-„beschäftigt“. Die Oberfläche lädt Bilder mit einer Zweierwarteschlange und hält
-damit Kapazität für Job-/Metadatenzugriffe frei. Bei „beschäftigt“ wiederholt sie
-höchstens viermal mit wachsendem Abstand; fehlgeschlagene Bildkarten bieten
+„beschäftigt“. Davon dürfen auch nach einem Transportabbruch höchstens zwei
+laufende Bildoperationen sein; deren Serverplätze bleiben bis zum tatsächlichen
+Arbeitsende belegt. So bleibt Kapazität für Job-/Metadatenzugriffe frei.
+Die Oberfläche lädt Bilder mit einer Zweierwarteschlange. Bei „beschäftigt“
+warten aktuelle Bildkarten automatisch weiter, mit Abständen von 250 ms bis
+höchstens zwei Sekunden, bis Kapazität frei wird oder der Job verlassen wird.
+Metadatenaufrufe wiederholen höchstens viermal; fehlgeschlagene Bildkarten bieten
 „Bild erneut laden“. Jobwechsel verwirft alte Warteschlangeneinträge und Antworten.
 Die Jobliste liest keine ZIPs. Ein Job wird vor Bildausgabe gegen
 Originale geprüft, anschließend werden nur gebundene Bildkennungen ausgeliefert.
@@ -172,6 +176,8 @@ Kleine Regressionen: `python -m unittest tools.test_production_workspace -v`
 in der isolierten Imageumgebung, mit Node.js 22+ für die browserfreie Ausführung
 des tatsächlichen UI-Ladecodes gegen einen langsamen lokalen HTTP-Dienst.
 Die DOM-Testnachbildung prüft keine Darstellung oder echte Browserbedienung.
+Sie prüft getrennt echte Fetch-Abbrüche bei fünf Sekunden weiterlaufender
+Serverarbeit und verspätet eintreffende Bildantworten.
 Der einmalige PW-A-T01-Durchstich und die
 wirkliche Windows-/Browserprobe T02 werden am konkreten Lieferhead im PR geführt.
 Linux-/HTTP-Tests ersetzen die Windowsprobe nicht. Die getrennten Vor-Merge-Gates
