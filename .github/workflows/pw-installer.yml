@@ -25,51 +25,11 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Source checkout failed' }
           "source_commit=$source" >> $env:GITHUB_OUTPUT
           Write-Host "Installer source: main@$source"
-      - name: Temporary focused profile diagnosis
-        shell: pwsh
-        run: |
-          $ErrorActionPreference = 'Stop'
-          $name = 'pwprobe' + [Guid]::NewGuid().ToString('N').Substring(0,8)
-          $password = ConvertTo-SecureString ([Guid]::NewGuid().ToString('N') + 'aA!7') -AsPlainText -Force
-          $credential = [pscredential]::new("$env:COMPUTERNAME\$name", $password)
-          $output = New-Item -ItemType Directory "$env:RUNNER_TEMP\pw-profile-probe"
-          $script = Join-Path $output 'probe.ps1'
-          @'
-          $ErrorActionPreference='Continue'
-          whoami.exe /groups
-          foreach ($name in @('USERPROFILE','LOCALAPPDATA','APPDATA','TEMP','TMP')) { Write-Output "Inherited ${name}=$([Environment]::GetEnvironmentVariable($name))" }
-          foreach ($name in @('UserProfile','LocalApplicationData','ApplicationData')) { Write-Output "Known $name=$([Environment]::GetFolderPath($name,'Create'))" }
-          Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' | Format-List
-          $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders')
-          foreach ($name in @('AppData','Local AppData','Programs','Desktop')) { Write-Output "Raw ${name}=$($key.GetValue($name,'',[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)); kind=$($key.GetValueKind($name))" }
-          $key.Close()
-          $profile = [Environment]::GetFolderPath('UserProfile','Create')
-          $env:USERPROFILE = $profile
-          $env:LOCALAPPDATA = Join-Path $profile 'AppData\Local'
-          $env:APPDATA = Join-Path $profile 'AppData\Roaming'
-          $env:TEMP = $env:TMP = Join-Path $env:LOCALAPPDATA 'Temp'
-          New-Item -ItemType Directory -Force $env:LOCALAPPDATA,$env:APPDATA,$env:TEMP | Out-Null
-          & powershell.exe -NoProfile -Command 'foreach ($name in @("UserProfile","LocalApplicationData","ApplicationData","Programs","DesktopDirectory")) { Write-Output "Fresh process $name=$([Environment]::GetFolderPath($name,"Create"))" }'
-          exit 0
-          '@ | Set-Content -LiteralPath $script -Encoding utf8
-          try {
-            New-LocalUser -Name $name -Password $password | Out-Null
-            icacls.exe $output /grant "${name}:(OI)(CI)M" /q
-            foreach ($phase in @('fresh-env')) {
-              $stdout = Join-Path $output "$phase.stdout"
-              $stderr = Join-Path $output "$phase.stderr"
-              $child = Start-Process powershell.exe -Credential $credential -LoadUserProfile -WindowStyle Hidden -Wait -PassThru -ArgumentList @('-NoProfile','-File',"`"$script`"") -RedirectStandardOutput $stdout -RedirectStandardError $stderr
-              Write-Output "$phase exit=$($child.ExitCode)"
-              Get-Content $stdout,$stderr
-            }
-          } finally { Remove-LocalUser -Name $name }
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
-        if: ${{ false }}
         with:
           python-version: '3.13.14'
           architecture: x64
       - name: Pinned private build environment
-        if: ${{ false }}
         shell: pwsh
         run: |
           python -m venv "$env:RUNNER_TEMP\pw-env"
@@ -78,14 +38,20 @@ jobs:
           & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m pip install --only-binary=:all: -r tools/production_workspace/requirements-windows.txt
           if ($LASTEXITCODE -ne 0) { throw 'Pinned dependency setup failed' }
       - name: Build payload and MSI, then isolated installer lifecycle
-        if: ${{ false }}
         shell: pwsh
+        env:
+          SMOKE_HARNESS_COMMIT: ${{ github.workflow_sha }}
         run: |
           & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.build_installer --output "$env:RUNNER_TEMP\pw-product"
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
-          & tools/production_workspace/packaging/smoke-user.ps1 -Python "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -Build "$env:RUNNER_TEMP\pw-product" -Output "$env:RUNNER_TEMP\pw-smoke"
+          # Temporary pre-merge test of exact harness bytes; product stays on main.
+          $harness = New-Item -ItemType Directory "$env:RUNNER_TEMP\pw-harness"
+          foreach ($name in @('smoke-user.ps1', 'smoke-bootstrap.ps1')) {
+            git show "${env:SMOKE_HARNESS_COMMIT}:tools/production_workspace/packaging/$name" | Set-Content -Encoding utf8 (Join-Path $harness $name)
+            if ($LASTEXITCODE -ne 0) { throw 'Harness snapshot failed' }
+          }
+          & (Join-Path $harness 'smoke-user.ps1') -Python "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -Build "$env:RUNNER_TEMP\pw-product" -Output "$env:RUNNER_TEMP\pw-smoke"
       - name: Targeted product download, no release or deployment
-        if: ${{ false }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: Picross-Produktionsassistent-${{ steps.source.outputs.source_commit }}

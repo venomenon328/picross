@@ -62,9 +62,11 @@ Nach Integration des Fixes: Actions → **Manual production assistant installer*
 **Run workflow**, ohne weitere Eingabe. Gebaut wird der dann geholte Mainstand.
 
 Auf dem wegwerfbaren Actionsrunner legt der manuelle Smoke einen echten lokalen
-Standardbenutzer an. Dessen geladenes Profil liefert `USERPROFILE`, `LOCALAPPDATA`
-und `APPDATA`; noch fehlende bekannte Profilordner werden als dieser Benutzer
-angelegt. `TEMP`/`TMP` zeigen auf einen eigenen beschreibbaren Testordner.
+Standardbenutzer an. Dessen geladenes Profil liefert `USERPROFILE`; für dieses
+neue lokale Testkonto werden die Windows-Standardpfade `AppData/Local` und
+`AppData/Roaming` darunter angelegt und vor den frischen Kindprozessen als
+`LOCALAPPDATA`/`APPDATA` gesetzt. `TEMP`/`TMP` zeigen auf einen eigenen
+beschreibbaren Testordner.
 `Start-Process -LoadUserProfile` allein ersetzt die geerbte Runnerumgebung nicht.
 Die Kindprozessausgabe samt Fehlern steht im Actionslog, ohne zusätzlichen
 Technik-Upload. Lokal werden keine Benutzer angelegt; dort einen bestehenden
