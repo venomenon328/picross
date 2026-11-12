@@ -59,6 +59,12 @@ def smoke(build, output):
         process = subprocess.run(args, timeout=180, creationflags=subprocess.CREATE_NO_WINDOW)
         calls.append({'action': action, 'target': Path(str(target)).name, 'exit': process.returncode, 'log': logfile.name})
         if (process.returncode == 0) != success:
+            # Preserve the actual Installer reason in the manual job log.
+            # A child traceback alone hides policy/setup errors on hosted Windows.
+            if logfile.is_file():
+                raw = logfile.read_bytes()
+                encoding = 'utf-16' if raw.startswith((b'\xff\xfe', b'\xfe\xff')) else 'utf-8'
+                print(raw.decode(encoding, errors='replace'), flush=True)
             raise RuntimeError('Unerwarteter MSI-Exitcode ' + str(process.returncode) + '; siehe ' + str(logfile))
     def verify_inventory():
         inventory = json.loads((installed / 'inventory.json').read_text(encoding='utf-8'))
