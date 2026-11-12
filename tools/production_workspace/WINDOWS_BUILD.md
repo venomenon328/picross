@@ -39,8 +39,8 @@ Windows 11 x64, vorhandener .NET-Framework-4.x-Compiler/Runtime; kein globaler
 WiX-Setup oder Elevation für den lokalen Bau. Das offizielle WiX-3.14.1-Binärarchiv
 wird nach URL/SHA-256 aus der Releasequelle geprüft; es entspricht der
 CSC-Chocolatey-Paketbindung `3.14.1.20250415` (Paketrevision, keine andere Engine).
-WiX-Compiler, Linker, DTF/SfxCA und eingebettete WiX-Lizenz kommen aus diesem Archiv.
-Der kleine DTF-Guard läuft im per-user-MSI vor InstallInitialize, auch beim
+WiX-Compiler, Linker, UI und eingebettete WiX-Lizenz kommen aus diesem Archiv.
+Der kleine eigenständige C#-Guard läuft aus der MSI-Binärtabelle vor InstallInitialize, auch beim
 Upgrade/Uninstall. Restart Manager wird ausschließlich lesend benutzt; MSI-
 Restart/Shutdown deaktiviert. Vollständiger Austausch mit MajorUpgrade nach
 InstallInitialize erlaubt transaktionalen Rollback. Kein Installer schreibt in

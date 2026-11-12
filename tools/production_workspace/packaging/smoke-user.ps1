@@ -11,20 +11,21 @@ if ($env:GITHUB_ACTIONS -ne 'true') { throw 'Use an ordinary non-elevated Window
 $name = 'pwtest' + [Guid]::NewGuid().ToString('N').Substring(0,10)
 $password = ConvertTo-SecureString ([Guid]::NewGuid().ToString('N') + 'aA!7') -AsPlainText -Force
 $credential = [pscredential]::new("$env:COMPUTERNAME\$name", $password)
-$script = Join-Path $env:RUNNER_TEMP "$name.ps1"
-$result = Join-Path $env:RUNNER_TEMP "$name-result.txt"
+if (Test-Path -LiteralPath $Output) { throw 'Use a new dedicated test output directory' }
+New-Item -ItemType Directory -Path $Output | Out-Null
+$script = Join-Path $Output 'bootstrap.ps1'
+$result = Join-Path $Output 'exit.txt'
+$case = Join-Path $Output 'lifecycle'
 $source = (Get-Location).Path
 try {
     New-LocalUser -Name $name -Password $password -Description 'Ephemeral P4 MSI synthetic test user' | Out-Null
-    # Dedicated runner temp is already readable by local Users. Grant only this
-    # test account write access to its OWN output parent; no global ACL changes.
-    $parent = Split-Path -Parent $Output
-    & icacls.exe $parent /grant "${name}:(OI)(CI)M" /q | Out-Null
+    # Grant only this account access to this new dedicated test directory.
+    & icacls.exe $Output /grant "${name}:(OI)(CI)M" /q | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Test output access failed' }
     @"
 `$ErrorActionPreference='Stop'
 Set-Location -LiteralPath '$($source.Replace("'", "''"))'
-& '$($Python.Replace("'", "''"))' -m tools.production_workspace.smoke_installer --build '$($Build.Replace("'", "''"))' --output '$($Output.Replace("'", "''"))'
+& '$($Python.Replace("'", "''"))' -m tools.production_workspace.smoke_installer --build '$($Build.Replace("'", "''"))' --output '$($case.Replace("'", "''"))'
 `$code=`$LASTEXITCODE
 Set-Content -LiteralPath '$($result.Replace("'", "''"))' -Value `$code
 exit `$code
@@ -33,7 +34,7 @@ exit `$code
     if ($process.ExitCode -ne 0 -or -not (Test-Path -LiteralPath $result) -or (Get-Content -Raw -LiteralPath $result).Trim() -ne '0') {
         throw 'Actual nonadministrator installer lifecycle failed'
     }
-    Get-Content -Raw -LiteralPath (Join-Path $Output 'result.json')
+    Get-Content -Raw -LiteralPath (Join-Path $case 'result.json')
 } finally {
     Remove-LocalUser -Name $name -ErrorAction SilentlyContinue
     Remove-Item -LiteralPath $script,$result -Force -ErrorAction SilentlyContinue
