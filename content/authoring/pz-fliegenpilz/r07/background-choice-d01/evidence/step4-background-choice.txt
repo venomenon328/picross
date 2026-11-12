@@ -1,0 +1,6 @@
+Tatsächlicher Nutzerauftrag im laufenden Chat; Aufzeichnungszeit (kein separat überlieferter Sendezeitpunkt): 2026-11-12T21:04:05.828746+00:00
+Repository: venomenon328/picross. Verbindlich: AGENTS.md und docs/ai-workflows/PUZZLE_AUTHORING.md (Authoring 0.8.0) im aktuellen main.
+Produktionsdatensatz: https://github.com/venomenon328/picross/blob/94f0fb35ab4f6623a1ddde6d0ca3b03590be0e57/content/authoring/pz-fliegenpilz/r07/record.json
+Schritt 4: Ich wähle die unveränderte Kontextzeichnung aus Angebot B-A-b01. Zur Endabnahme vorbereiten.
+Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt; der fachliche Produktionsabschluss nach Authoring §9 bleibt davon getrennt.
+Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.
