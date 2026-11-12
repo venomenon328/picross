@@ -104,10 +104,15 @@ Schemafelder als Hauptoberfläche.
   werden, sind aber keine Pflichtfelder der Abschlussbilderzeugung.
   Das eigene optionale Feld für Motivhinweise gelangt unverändert in den ersten
   Auftrag. Die optionalen Rastervorgaben unterscheiden Breite/Höhe in Zellen,
-  Genauigkeit der Maße, Modus und bei Farbrätseln die Anzahl der Vordergrundfarben
+  Genauigkeit der ausgefüllten Achsen, Modus und bei Farbrätseln die Anzahl der Vordergrundfarben
   mit eigener Genauigkeit. Wünsche werden im Motivbriefing des Produktionsauftrags
   festgehalten. Bei der Abschlussbildauswahl für den Motivauftrag lassen sie sich
-  konkretisieren. Nach Vorlage des Parameterkorridors laufen Änderungen über die
+  konkretisieren. Breite und Höhe sind unabhängig: keine, nur eine oder beide
+  Achsen sind frühe Wünsche. Offene Achsen passend zum Motiv bestimmen, niemals
+  durch 0, eine Quadratseite oder einen alten aufgehobenen Wert ersetzen.
+  Jede Achse besitzt eine eigene ausdrückliche Aufhebungswahl. Frühe Teilmaße
+  gehören in das veröffentlichte Motivbriefing; konkrete Raster haben zwei Maße.
+  Nach Vorlage des Parameterkorridors laufen Änderungen über die
   Korrektur. Die Grenzen und die stets farbige Abschlussillustration folgen
   [Authoring §2.1](ai-workflows/PUZZLE_AUTHORING.md).
 - Motiv-/Rasterphase: Konfiguration, geschützte Merkmale, echte Bildvergleiche
@@ -141,8 +146,10 @@ Rasterwünsche und den als freigegeben überlieferten Korridor getrennt. Quelle
 ist der gebundene Handoff; der Record muss dessen bestehender Parameterprojektion
 entsprechen. Ein Statuswort beweist keine menschliche Freigabe. Eindeutig
 abbildbare Einzelwünsche belegen die Rasterfelder vor, andere Formen und mehrere
-Optionen bleiben vollständig lesbar. Nur nachweislich fehlende Wünsche heißen
-„Keine Vorgabe hinterlegt“. Das inventarisierte `handoff.brief` wird aus demselben
+Optionen bleiben vollständig lesbar. Fehlende strukturierte Einzelwerte sagen
+nichts über freie Wünsche im Motivbriefing aus. Vollständige Parameteroriginale und veröffentlichtes
+Motivbriefing sind beim Öffnen, Wiederladen und Motiv-/Revisionswechsel geschlossen;
+Zusammenfassung, Quellenstatus und Fehler bleiben davor sichtbar. Das inventarisierte `handoff.brief` wird aus demselben
 geprüften Originalpaket als UTF-8-Klartext mit Absätzen gelesen (höchstens 1 MiB).
 Fehlende oder widersprüchliche Originale sind Fehler.
 
@@ -503,7 +510,12 @@ Browserstorage. Langsame/abgebrochene Ladevorgänge lassen andere Jobs bedienbar
 ## 8. Auftragstransport und Befugnisse im vollständigen Assistenten
 
 PW-B erzeugt pro Handlung einen kurzen, überprüfbaren Auftrag mit Repository,
-fixiertem Quellencommit, Projektions-/Recordpfad und tatsächlichen Auswahl-IDs.
+fixiertem erreichbarem Quellencommit, einem kanonischen Recordpfad als Einstieg
+und tatsächlichen Auswahl-IDs. Daraus erreichbare Parameter, Briefings, Hashes,
+Paket-/Projektionspfade und allgemeine Regeln werden nicht in Folgeaufträge kopiert.
+Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; nur neue
+Absicht, Freigabe, Änderung oder Aufhebung sowie persönliche Befugnisse ergänzen.
+Ein neuer Erstauftrag enthält dagegen Motiv, Hinweise, Referenz und frühe Wünsche.
 Der Empfänger löst die vollständigen Definitionen und Bilder aus diesen Quellen
 auf. Ein relativer Paketpfad allein beweist keinen Zugang. Cloudschritte dürfen
 keine localhost-Adresse oder bloß lokale Windowsdatei als erreichbare Quelle
@@ -513,7 +525,8 @@ Vorgefüllte Quellwerte sind keine neue Absicht oder Freigabe. Der Folgeauftrag
 trennt den veröffentlichten Kontext von Änderungen, ausdrücklich aufgehobenen
 Rasterwünschen und neuen/zusätzlichen Wünschen zur Motivvorlage. Bloßes Leeren
 oder „Offen“ hebt einen vorhandenen Wunsch nicht auf; dafür gibt es eine eigene
-beschriftete Aufhebungswahl. Diese hat Vorrang vor den Eingabefeldern der Gruppe.
+beschriftete Aufhebungswahl je Achse beziehungsweise Modus/Farbzahl. Sie hat Vorrang
+vor den betroffenen Eingabefeldern; die andere Achse bleibt unverändert wirksam.
 Ein geänderter freigegebener Korridor geht über den bestehenden Korrekturweg zur
 erneuten Entscheidung. Die bewusst angeforderte reguläre Freigabe in Schritt 3
 bleibt erhalten.

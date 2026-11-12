@@ -17,8 +17,10 @@ const PW = (()=>{
   if(Object.keys(p).some(k=>!known.includes(k)))return {};
   const grid={},precision={approximate:'approx',exact:'exact'};
   // Only losslessly representable fields are prefilled. Raw originals stay visible.
-  if(Number.isInteger(p.width)&&p.width>=1&&p.width<=50&&Number.isInteger(p.height)&&p.height>=1&&p.height<=50&&precision[p.size_constraint]){
-   Object.assign(grid,{width:String(p.width),height:String(p.height),sizeAccuracy:precision[p.size_constraint]});
+  for(const axis of ['width','height']){
+   if(Number.isInteger(p[axis])&&p[axis]>=1&&p[axis]<=50&&precision[p.size_constraint]){
+    grid[axis]=String(p[axis]);grid.sizeAccuracy=precision[p.size_constraint];
+   }
   }
   if(['mono','color'].includes(p.mode))grid.mode=p.mode;
   if(p.mode==='color'&&Number.isInteger(p.foreground_colors)&&p.foreground_colors>=2&&p.foreground_colors<=8&&precision[p.foreground_color_constraint]){
@@ -29,46 +31,59 @@ const PW = (()=>{
  function gridChanges(value,intent){
   const base=publishedGrid(value),next={...base,...intent.grid},removed=intent.removeGrid||{};
   const changes=[];
-  const groups=[['size','Rastergröße',['width','height','sizeAccuracy']],['mode','Rastermodus',['mode']],['colors','Farbzahl',['colors','colorAccuracy']]];
+  for(const [axis,label] of [['width','Breite'],['height','Höhe']]){
+   if(removed[axis]){
+    changes.push(`${label}: bisherigen Wunsch ausdrücklich aufheben; ${label} passend zum Motiv bestimmen. Andere Vorgaben bleiben bestehen.`);
+   }else if((next[axis]||'')!==(base[axis]||'')||(next[axis]&&next.sizeAccuracy!==base.sizeAccuracy)){
+    if(!next[axis])throw Error(`${label} ausdrücklich aufheben oder einen Wert angeben.`);
+    changes.push(axisRequest(axis,next[axis],next.sizeAccuracy));
+   }
+  }
+  const groups=[['mode','Rastermodus',['mode']],['colors','Farbzahl',['colors','colorAccuracy']]];
   for(const [group,label,keys] of groups){
    if(removed[group]){changes.push(`${label}: bisherigen Wunsch ausdrücklich aufheben; neu empfehlen und zur Entscheidung vorlegen.`);continue;}
    if(!keys.some(k=>(next[k]||'')!==(base[k]||'')))continue;
-   if(group==='size'){
-    if(!next.width&&!next.height){if(base.width||base.height)throw Error('Rastergröße ausdrücklich aufheben oder Maße angeben.');continue;}
-    changes.push(gridRequest({width:next.width,height:next.height,sizeAccuracy:next.sizeAccuracy}));
-   }else if(group==='mode'){
+   if(group==='mode'){
     if(!next.mode){if(base.mode)throw Error('Rastermodus ausdrücklich aufheben oder einen Modus wählen.');continue;}
-    changes.push(gridRequest({mode:next.mode}));
+    changes.push(modeRequest(next.mode));
    }else{
-    if(next.mode!=='color')continue;
+    if(next.mode!=='color'||removed.mode)continue;
     if(!next.colors){if(base.colors)throw Error('Farbzahl ausdrücklich aufheben oder eine Farbzahl angeben.');continue;}
-    changes.push(gridRequest({mode:'color',colors:next.colors,colorAccuracy:next.colorAccuracy}));
+    changes.push(colorRequest(next.colors,next.colorAccuracy));
    }
   }
   return changes.join(' ');
  }
+ function integer(value, min, max, label){
+  if(!/^\d+$/.test(value) || Number(value)<min || Number(value)>max){
+   throw Error(`Bitte für ${label} eine ganze Zahl von ${min} bis ${max} eingeben.`);
+  }
+  return Number(value);
+ }
+ function accuracy(value){
+  if(!value || value==='approx')return 'ungefähr';
+  if(value==='exact')return 'exakt';
+  throw Error('Bitte die Genauigkeit der Rastervorgabe wählen.');
+ }
+ function axisRequest(axis,value,precision){
+  const label=axis==='width'?'Breite':'Höhe';
+  return `${label}: ${accuracy(precision)} ${integer(value,1,50,'die '+label)} Zellen.`;
+ }
+ function colorRequest(value,precision){
+  return `Farbzahl: ${accuracy(precision)} ${integer(value,2,8,'die Farbzahl')} Vordergrundfarben (ohne Leerfelder).`;
+ }
+ function modeRequest(mode){
+  if(!['mono','color'].includes(mode))throw Error('Bitte einen gültigen Rastermodus wählen.');
+  return mode==='mono'?'Rastermodus: monochrom, genau eine Vordergrundfarbe.':'Rastermodus: farbig.';
+ }
  function gridRequest(grid = {}){
   const parts = [];
-  function integer(value, min, max, label){
-   if(!/^\d+$/.test(value) || Number(value)<min || Number(value)>max){
-    throw Error(`Bitte für ${label} eine ganze Zahl von ${min} bis ${max} eingeben.`);
-   }
-   return Number(value);
+  for(const [axis,label] of [['width','Breite'],['height','Höhe']]){
+   parts.push(grid[axis]?axisRequest(axis,grid[axis],grid.sizeAccuracy):`${label} passend zum Motiv bestimmen.`);
   }
-  function accuracy(value){
-   if(!value || value==='approx')return 'ungefähr';
-   if(value==='exact')return 'exakt';
-   throw Error('Bitte die Genauigkeit der Rastervorgabe wählen.');
-  }
-  if(grid.width || grid.height){
-   if(!grid.width || !grid.height)throw Error('Bitte Breite und Höhe gemeinsam angeben oder beide offenlassen.');
-   const width=integer(grid.width,1,50,'die Breite'),height=integer(grid.height,1,50,'die Höhe');
-   parts.push(`Rastergröße: ${accuracy(grid.sizeAccuracy)} ${width} × ${height} Zellen (Breite × Höhe).`);
-  }
-  if(grid.mode==='mono')parts.push('Rastermodus: monochrom, genau eine Vordergrundfarbe.');
+  if(grid.mode)parts.push(modeRequest(grid.mode));
   if(grid.mode==='color'){
-   parts.push('Rastermodus: farbig.');
-   if(grid.colors)parts.push(`Farbzahl: ${accuracy(grid.colorAccuracy)} ${integer(grid.colors,2,8,'die Farbzahl')} Vordergrundfarben (ohne Leerfelder).`);
+   if(grid.colors)parts.push(colorRequest(grid.colors,grid.colorAccuracy));
   }
   return parts.join(' ');
  }
@@ -77,74 +92,73 @@ const PW = (()=>{
   if(!n)throw Error('Dieser Stand benötigt einen eigenen ausdrücklich beauftragten Folgeauftrag.');
   if(value&&value.facts.authoring_version!=='0.8.0')throw Error('Dieser historische Stand gehört nicht zum neuen 0.8-Produktionsweg.');
   const remote=value?.source_url?.match(/^https:\/\/github\.com\/([A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+)\/tree\/([a-f0-9]{40})$/);
-  if(value&&(!remote||(value.commit&&value.commit!==remote[2])))throw Error('Remote-Sicherung nicht bestätigt. Originale und Projektion zuerst pushen, dann Quellen aktualisieren.');
-  const lines=[`Auftrag an ${[1,2,4].includes(n)?'ChatGPT':'Codex'}. Repository: ${remote?.[1]||'venomenon328/picross'}. Lies AGENTS.md und docs/ai-workflows/PUZZLE_AUTHORING.md im aktuellen main. Neue Produktion nach Authoring 0.8.0.`];
+  if(value&&(!remote||value.commit!==remote[2]))throw Error('Remote-Sicherung nicht bestätigt. Originale und Projektion zuerst pushen, dann Quellen aktualisieren.');
+  if(!['continue','rework','resume','background_change'].includes(action))throw Error('Bitte eine gültige Aktion wählen.');
+  const lines=[`Repository: ${remote?.[1]||'venomenon328/picross'}. Verbindlich: AGENTS.md und docs/ai-workflows/PUZZLE_AUTHORING.md (Authoring 0.8.0) im aktuellen main.`];
   if(value){
-   lines.push(`Verbindlicher Arbeitsstand: ${value.source_url}. Rätsel ${value.puzzle_id}, Revision ${value.revision}. Produktionsbranch content/pw/${value.puzzle_id}.`,
-    `Lies ${value.record.file} (SHA-256 ${value.record.sha256}) und ${value.record.file.replace(/record\.json$/,'workspace.json')} aus genau diesem Commit.`);
+   if(!/^pz-[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value.puzzle_id)||
+      !/^[A-Za-z0-9][A-Za-z0-9._-]{0,31}$/.test(value.revision)||
+      value.record?.file!==`content/authoring/${value.puzzle_id}/${value.revision}/record.json`){
+    throw Error('Der kanonische Produktionsrecord ist nicht eindeutig gebunden.');
+   }
+   lines.push(`Produktionsdatensatz: https://github.com/${remote[1]}/blob/${remote[2]}/${value.record.file}`);
   }else{
    if(!intent.brief?.trim())throw Error('Bitte zuerst dein Motiv beschreiben.');
    lines.push(`Neues Motiv: ${intent.brief.trim()}`);
    if(intent.inputImage)lines.push(`Eigene Eingangsdatei: ${intent.inputImage}. Ich füge die tatsächliche Datei diesem Auftrag bei; falls sie fehlt, vor Bildarbeit anfordern.`);
-   lines.push('Vergib die neue Rätsel-ID erst im Produktionsauftrag und lege genau einen Branch content/pw/<puzzle_id> von main an. Es existiert noch kein Produktionsstand.');
+   lines.push('Es existiert noch kein Produktionsdatensatz.');
   }
   const selected=value?.offers.find(o=>o.id===intent.selection&&o.kind===intent.kind);
   if(action==='background_change'){
    if(value?.facts.state!=='registered')throw Error('Eine spätere Hintergrundrevision braucht einen tatsächlich registrierten Stand.');
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Hintergrundänderung beschreiben.');
-   lines.push(`Separater späterer Hintergrundauftrag: ${intent.feedback.trim()}. Prüfe zuerst bestätigte Mainintegration und die tatsächliche aktive Source-/Runtimebindung. Verwende ausschließlich den bestehenden Hintergrundänderungsweg nach PUZZLE_BACKGROUNDS §7.6 und HP-I1b2: drei isolierte Originalangebote, tatsächliche Auswahl oder none, gültige Entscheidung und Ableitung, frischer Plan und sichere Adoption/Recovery. Erhalte Rasterlogik und gültige Raster-/Revealfreigaben. Kein neuer Rasterbau und keine Wiederholung der Endabnahme für unveränderte Inhalte.`);
+   lines.push(`Separater späterer Hintergrundauftrag nach docs/PUZZLE_BACKGROUNDS.md §7.6 / HP-I1b2: ${intent.feedback.trim()}`);
   }else if(action==='rework'){
    if(!intent.feedback?.trim())throw Error('Bitte die gewünschte Korrektur beschreiben.');
    lines.push(`Korrektur in Schritt ${n}: ${intent.feedback.trim()}.`);
-   if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}, Record ${selected.record.file}, SHA-256 ${selected.record.sha256}.`);
-   lines.push('Erhalte freigegebene unveränderte Merkmale. Neue Bytes benötigen die abhängigen neuen Prüfungen und Entscheidungen; kein automatisches Fortschreiten.');
+   if(selected)lines.push(`Betroffenes Angebot: ${selected.kind}/${selected.id}.`);
   }else if(action==='resume'){
-   lines.push(`Nimm Schritt ${n} am gebundenen Gitstand wieder auf. Prüfe tatsächliche Eingänge, Ergebnisse und etwaige Recoveryreste; melde den nächsten ausführbaren Schritt. Keine fehlenden Entscheidungen erfinden.`);
+   lines.push(`Schritt ${n} am gebundenen Datensatz wieder aufnehmen; vorhandene Entscheidungen und etwaige Recoveryreste prüfen.`);
   }else if(!value||value.facts.state==='brief_ready'){
    lines.push('Schritt 1: Erzeuge drei unterschiedliche echte detaillierte farbige Abschlussbilder und lege die gespeicherten Originale zur Auswahl vor.');
   }else if(value.facts.state==='reveal_review'){
    if(!selected||selected.kind!=='reveal')throw Error('Bitte ein Abschlussbild wählen.');
-   lines.push(`Schritt 2: Ich wähle und gebe das unveränderte Abschlussbild ${selected.id} aus ${selected.record.file} (SHA-256 ${selected.record.sha256}) frei. Leite daraus eine Motivvorlage ab, empfehle den Parameterkorridor und lege beides zur Freigabe vor.`);
+   lines.push(`Schritt 2: Ich wähle und gebe das unveränderte Abschlussbild aus Angebot ${selected.id} frei. Motivvorlage und empfohlenen Parameterkorridor zur Freigabe vorlegen.`);
   }else if(value.facts.state==='motif_review'){
-   lines.push('Schritt 3: Ich gebe die im gebundenen Record vorgelegte unveränderte Motivvorlage samt dort vorgeschlagenem Parameterkorridor frei. Produziere innerhalb der Authoringbudgets qualifizierte Rasterangebote; zeige brauchbare nicht qualifizierte Entwürfe getrennt mit ihren konkreten Lücken.');
+   lines.push('Schritt 3: Ich gebe die im gebundenen Datensatz vorgelegte unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor frei. Rasterangebote produzieren.');
   }else if(['motif_approved','raster_review'].includes(value.facts.state)){
-   lines.push('Schritt 3: Setze die ausdrücklich freigegebene Rasterproduktion innerhalb der gebundenen Parameter und Budgets fort. Prüfe Proof, Eindeutigkeit durch vollständige Deduktion, Qualität, Palette und Schwierigkeit.');
+   lines.push('Schritt 3: Die bereits freigegebene Rasterproduktion fortsetzen.');
   }else if(value.facts.state==='raster_ready'){
    if(!selected||selected.kind!=='raster')throw Error('Bitte ein qualifiziertes Rasterangebot wählen.');
-   lines.push(`Schritt 4: Ich wähle das qualifizierte Raster ${selected.id} aus ${selected.record.file} (SHA-256 ${selected.record.sha256}) am genannten Quellcommit. Halte meine tatsächliche Auswahl mit Inventar-, Raster-, Reveal- und Motivbindung als raster-selection-v1 fest. Erzeuge danach drei unterschiedliche echte isolierte Kontextzeichnungen und veröffentliche background_review.`);
+   lines.push(`Schritt 4: Ich wähle das qualifizierte Raster aus Angebot ${selected.id}. Drei Kontextzeichnungen zur Auswahl erstellen; dies ist noch keine Endabnahme oder Integrationsfreigabe.`);
   }else if(value.facts.state==='background_review'){
-   if(intent.selection==='none')lines.push('Schritt 4: Ich entscheide mich an diesem vorgelegten Arbeitsstand ausdrücklich für keinen Hintergrund. Halte diese Leerentscheidung und den geprüften Nullbefund fest; lege die vollständige Endabnahme vor.');
+   if(intent.selection==='none')lines.push('Schritt 4: Ich entscheide mich ausdrücklich für keinen Hintergrund. Zur Endabnahme vorbereiten.');
    else{
     if(!selected||selected.kind!=='background')throw Error('Bitte einen Hintergrund oder bewusst keinen wählen.');
-    lines.push(`Schritt 4: Ich wähle die unveränderte isolierte Kontextzeichnung ${selected.id} aus ${selected.record.file} (SHA-256 ${selected.record.sha256}). Halte meine tatsächliche Entscheidung fest, prüfe Rechte und Sichtbelege und leite die ausgewählte Datei nach dem festen Profil ab. Lege die vollständige Endabnahme vor.`);
+    lines.push(`Schritt 4: Ich wähle die unveränderte Kontextzeichnung aus Angebot ${selected.id}. Zur Endabnahme vorbereiten.`);
    }
   }else if(value.facts.state==='registered'){
-   lines.push('Schritt 5: Die Lieferung ist am gebundenen Integrationscommit lokal registriert. Prüfe aktuellen PR, unabhängiges Review und alle offenen Gates. Keine erneute Registrierung oder Endabnahme. Melde einen Mainabschluss nur nach tatsächlich bestätigtem Merge; anschließend revisionsgenauer Produktionsabschluss gemäß Authoring §9.');
+   lines.push('Schritt 5: Den Git-/PR-Abschluss der gebundenen registrierten Lieferung prüfen und im erteilten Umfang fortsetzen.');
   }else if(value.facts.state==='editorially_approved'){
-   lines.push('Schritt 5: Die unveränderte Lieferung besitzt bereits eine gebundene Endabnahme. Setze den bestehenden Export-, frischen Plan- und Registrierungsweg fort. Prüfe zuerst tatsächliche Registrierung/Recovery; nicht erneut freigeben oder doppelt integrieren.');
+   lines.push('Schritt 5: Die bereits endabgenommene unveränderte Lieferung integrieren; vorhandene Registrierung/Recovery berücksichtigen.');
   }else{
-   lines.push('Schritt 5: Ich erteile die abschließende redaktionelle Freigabe für die im gebundenen Record exakt bezeichnete Raster-, Reveal- und Hintergrundfassung einschließlich der ausdrücklichen Leerentscheidung, falls vorhanden. Integriere ausschließlich diese Lieferung über den bestehenden Finalizer-, Export-, frischen Plan- und Registrierungsweg.');
+   lines.push('Schritt 5: Ich erteile die abschließende redaktionelle Freigabe für die im gebundenen Datensatz bezeichnete Raster-, Reveal- und Hintergrundfassung (gegebenenfalls none) und beauftrage deren Integration.');
   }
   const published=value?.facts.published;
-  if(published){
-   lines.push(`Veröffentlichter Quellkontext aus dem gebundenen Handoff (keine neue Freigabe): vorgeschlagen ${JSON.stringify(published.proposed)}, als freigegebener Korridor überliefert ${JSON.stringify(published.approved)}. Ein Statuswort allein beweist keine menschliche Freigabe. Lies das inventarisierte Briefing ${published.brief.file} (SHA-256 ${published.brief.sha256}) aus dem gebundenen Originalpaket. Mehrdeutige Angaben vollständig berücksichtigen, keine erste Option still wählen.`);
-  }
   if(n===1 && intent.notes?.trim())lines.push(`Neue/zusätzliche Motivhinweise für die Abschlussbilder:\n${intent.notes.trim()}`);
   if(n<=2 || (n===3 && action==='rework')){
-   const grid=published?gridChanges(value,intent):gridRequest(intent.grid);
+   const grid=value?gridChanges(value,intent):gridRequest(intent.grid);
    if(grid){
     lines.push(`${published?'Neue Absicht gegenüber den veröffentlichten Vorgaben':'Vorgaben für das spätere Lösungsraster'}: ${grid}`);
     if(n===1)lines.push('Halte diese Vorgaben im veröffentlichten Motivbriefing für den Folgeauftrag fest. Das Abschlussbild bleibt detailliert und farbig.');
     if(n===3||published?.approved?.length)lines.push('Lege den geänderten Parameterkorridor über den Korrekturweg zur erneuten Entscheidung vor. Bis dahin gilt die bisherige Freigabe.');
    }
   }
-  if(n===2)lines.push('Berücksichtige die bereits veröffentlichten Vorgaben aus dem Motivbriefing. Offene Einstellungen bleiben der begründeten Empfehlung überlassen.');
   if((n===2||(n===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}. Materielle Änderungen am freigegebenen Korridor zuerst zur Entscheidung vorlegen.`);
   if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}.`);
   if(options.workroot?.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${options.workroot.trim()}.`);
   lines.push(options.cleanup?'Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt.':'Keine zusätzliche Abschlussbereinigung beauftragt.');
   lines.push(n===5&&options.merge?'Merge ausdrücklich nur nach aktuellem unabhängigen Review und sämtlichen Vor-Merge-Gates; bestätigten Mainabschluss getrennt melden.':'Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
-  lines.push('Vor der Übergabe neue Revision, Index und automatisch geprüfte workspace.json mit sämtlichen benötigten Originalen auf demselben Produktionsbranch committen und pushen. Nur tatsächlich erreichte Zustände melden.');
   return lines.join('\n\n');
  }
  return {steps,step,orderStep,prompt,publishedGrid};
