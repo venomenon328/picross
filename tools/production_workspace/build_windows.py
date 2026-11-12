@@ -14,7 +14,7 @@ import ssl
 import zlib
 import pyexpat
 import decimal
-import tkinter
+from .release import release, version_tuple, check_history
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
@@ -27,6 +27,7 @@ def sha(path):
 def build(destination):
     if sys.platform != 'win32' or platform.machine().lower() not in ('amd64', 'x86_64') or platform.python_version() != '3.13.14':
         raise RuntimeError('Build benötigt CPython 3.13.14 Windows x64.')
+    import tkinter
     versions = {}
     runtime_versions = {'Tcl/Tk': tkinter.Tcl().eval('info patchlevel'), 'OpenSSL': ssl.OPENSSL_VERSION,
                         'Expat': pyexpat.EXPAT_VERSION, 'zlib': zlib.ZLIB_RUNTIME_VERSION,
@@ -49,6 +50,8 @@ def build(destination):
     if git('status', '--porcelain'):
         raise RuntimeError('Nur aus sauberem, gesichertem Quellstand bauen.')
     commit = git('rev-parse', 'HEAD')
+    product = release()
+    check_history(ROOT, product)
     destination = destination.resolve()
     if destination.exists() or destination.is_relative_to(ROOT):
         raise RuntimeError('Neuen eigenen Buildordner außerhalb des Checkouts wählen.')
@@ -58,13 +61,24 @@ def build(destination):
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
     resources = {f'ui/{name}': sha(PACKAGE / 'ui' / name) for name in ('index.html', 'app.js', 'workflow.js', 'style.css')}
     resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
-    manifest = {'format': 'picross-windows-app-v1', 'version': '588-P3', 'commit': commit,
+    manifest = {'format': 'picross-windows-app-v1', 'version': product['version'], 'commit': commit,
+                'upgrade_code': product['upgrade_code'], 'product_code': product['product_code'],
                 'architecture': 'windows-x64', 'python': platform.python_version(), 'components': versions,
                 'runtime_components': runtime_versions, 'resources': resources, 'signed': False}
     manifest_file = work / 'build.json'
     manifest_file.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    file_version = work / 'version.txt'
+    numbers = version_tuple(product['version']) + (0,)
+    file_version.write_text(
+        'VSVersionInfo(ffi=FixedFileInfo(filevers=' + repr(numbers) + ', prodvers=' + repr(numbers) +
+        ', mask=0x3f, flags=0x0, OS=0x40004, fileType=0x1, subtype=0x0, date=(0,0)), '
+        'kids=[StringFileInfo([StringTable("040704B0", [StringStruct("ProductName", "Picross-Produktionsassistent"), '
+        'StringStruct("ProductVersion", ' + repr(product['version']) + '), StringStruct("FileVersion", ' +
+        repr(product['version']) + '), StringStruct("Comments", ' + repr(commit) + ')])]), '
+        'VarFileInfo([VarStruct("Translation", [1031, 1200])])])', encoding='utf-8')
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', '--onedir', '--windowed',
                     '--noupx', '--name', 'Picross-Start', '--icon', str(PACKAGE / 'assets/launcher.ico'),
+                    '--version-file', str(file_version),
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
                     '--collect-submodules', 'tools.puzzle_production',
