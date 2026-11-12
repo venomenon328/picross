@@ -1,15 +1,1 @@
-{
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/620",
-  "package": "fruit-fast-track",
-  "modules": [],
-  "purpose": "Einmaliger, vom Eigentümer beauftragter direkter Import bereits unabhängig auf ihren alten Produktionsbranches registrierter und endabgenommener Erdbeere, Zitrone und Birne. Gleiche Git-Blobs für vollständige alte Exportpakete, aktive Assets, Quellen, Rating und Added, nur v4/v7-Indizes auf frischem main zusammengeführt. Keine Neuproduktion oder Tool-/Game-Codeänderung. CI prüft docs/ci-required und baut den Windows-Spieler nur, wenn die tatsächliche Pfadklassifikation es verlangt.",
-  "omitted": "Unveränderte Bild-, Raster-, Proof-, Approval- und Exportbytes erneut zu erzeugen oder per altem Toolhash zu revalidieren wäre gerade der nachgewiesene Stopp ohne neue Produktinformation. Keine neuen Rätsel-Tests, Solver-/Bildproduktion, Toolcode- oder native Featureänderungen; daher modules=[]. Die technische Risikoabsicherung erfolgt durch exakten Byte-/Blobvergleich aller neuen Livequellen, kanonische v4/v7-Form, Erhalt aller bestehenden Katalogzeilen und aktuelle Quellen-/CI-Prüfung. Gegebenenfalls gescheiterte echte Readerprüfung wird nicht durch CI-Green überdeckt.",
-  "test_changes": [],
-  "core_change": null,
-  "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
-}
+{"core_change":null,"evidence":{"expires":null,"mode":"none","purpose":null},"format":"development-ci-plan/v1","issue":"https://github.com/venomenon328/picross/issues/615","modules":[],"omitted":"Reine Inhalte ohne Zusatzmodule und ohne Player-Build. Keine Spiel-/Werkzeug-/CI-Codeänderung, neuen Tests, Bestandsreplays, Matrix-/Solver-/Proof-/Difficultyproduktion vor Motivfreigabe, Hintergrundangebote, Chromium, Buch-/Katalogmontagen, Fadeproben oder Testintegration. Temporäre QA-Ansichten enden nach Sichtung; Arbeitsoriginale bleiben gemäß Nutzerauftrag erhalten. Kein Merge.","package":"Schluessel-S2","purpose":"Schritt 2: tatsächliche Freigabe des unveränderten A-r01 binden; native Motivabstraktion M-A-r02 und ausdrücklich vorgeschlagenen Größen-/Modus-/Farb-/Crop-/Korrekturkorridor als neue 0.8.0-Revision publizieren. Allgemeiner Quellen-/Plankern, einmalige Original-/Kleinsichtung sowie ZIP-/Inventar-/Projektions-/Remoteprüfung im Produktionslauf.","test_changes":[]}
