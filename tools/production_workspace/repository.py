@@ -315,6 +315,7 @@ class Repository:
         self.remote = remote_url(c['remote']) if c['remote'] else None
         self.cached = None
         self.sync_error, self.synced_at = None, None
+        self.remote_confirmed = False
         self.lock = threading.RLock()
         self.scans = LRU(8 * 1024 * 1024)
         if self.remote:
@@ -337,7 +338,7 @@ class Repository:
             if status:
                 self.synced_at = p.parse(status)['synced_at']
 
-    def fetch(self, *specs, filtered=False, prune=False, shallow=False, refetch=False):
+    def fetch(self, *specs, filtered=False, prune=False, shallow=False, refetch=False, depth=None):
         # All mutations are confined to this application's private bare cache.
         size = sum(f.stat().st_size for f in (self.cached.root / 'objects').rglob('*') if f.is_file())
         ap.require(size < 384 * 1024 * 1024, 'Gitcache ist voll (512 MiB). Neuen eigenen Zustandsordner einrichten.')
@@ -345,7 +346,7 @@ class Repository:
             '-c', 'protocol.http.allow=always', '-c', 'protocol.ssh.allow=always', '-c', 'protocol.file.allow=always',
             'fetch', '--no-tags', '--no-auto-maintenance', '--no-recurse-submodules', '--no-write-fetch-head',
             *(['--prune', '--atomic'] if prune else []),
-            *(['--depth=1'] if shallow else []),
+            *(['--depth=' + str(depth)] if depth else ['--depth=1'] if shallow else []),
             *(['--refetch'] if refetch else []),
             *(['--filter=blob:none'] if filtered else ['--no-filter']), '--', 'pw-source', *specs, timeout=30)
         after = sum(f.stat().st_size for f in (self.cached.root / 'objects').rglob('*') if f.is_file())
@@ -368,6 +369,7 @@ class Repository:
     def refresh(self):
         with self.lock:
             self.sync_error = None
+            self.remote_confirmed = False
             if self.remote:
                 try:
                     # Fetch fails on an explicitly selected ref that disappeared.
@@ -384,11 +386,13 @@ class Repository:
                     for ref in missing:
                         git(self.cached.root, 'update-ref', '-d', 'refs/pw/' + ref)
                     self.synced_at = datetime.now(timezone.utc).isoformat()
+                    self.remote_confirmed = True
                     raw = p.data({'synced_at': self.synced_at})
                     temporary = io.safe(self.state, 'sync-pw-v1.tmp')
                     temporary.write_bytes(raw)
                     temporary.replace(io.safe(self.state, SYNC))
                 except (ValueError, OSError) as exc:
+                    self.remote_confirmed = False
                     self.sync_error = 'Remote nicht erreichbar oder Anmeldung fehlgeschlagen. Vorhandene Snapshots bleiben lesbar.'
             return self.listing()
 
@@ -414,11 +418,29 @@ class Repository:
                                'Index und Projektion stimmen nicht.')
                     record_raw = source.read(commit, row['record'])
                     p.bind(record_raw, projection['record'])
+                    record = p.parse(record_raw)
+                    from .motifs import PHASES
                     jobs.append({'puzzle_id': row['puzzle_id'], 'revision': row['revision'], 'title': projection['title'],
                                  'file': file, 'status': 'Bilder noch nicht geprüft', '_projection': projection,
+                                 'phase': PHASES.get(record['state'], record['state']),
                                  '_fingerprint': io.checksum(raw + record_raw)})
                 except (ValueError, OSError, KeyError, TypeError) as exc:
                     errors.append('Ungültige Projektion für ' + row['puzzle_id'] + '/' + row['revision'] + ': ' + str(exc))
+        from . import current_view
+        for identity in {j['puzzle_id'] for j in jobs}:
+            current, message = None, None
+            try:
+                raw = source.read(commit, current_view.path(identity), current_view.LIMIT, missing=True)
+                if raw is None:
+                    message = 'Aktueller Ansichtsbezug fehlt; vorhandene Versionen bleiben einzeln aufrufbar.'
+                else:
+                    current = current_view.inspect(source, commit, raw, identity)
+            except (ValueError, OSError, KeyError, TypeError) as exc:
+                message = 'Ungültiger aktueller Ansichtsbezug: ' + str(exc)
+            for job in jobs:
+                if job['puzzle_id'] == identity:
+                    job['current_view'] = bool(current and current['revision'] == job['revision'])
+                    job['current_error'] = message
         value = {'jobs': jobs, 'errors': errors}
         # An offline object may become reachable on the next refresh. Do not
         # turn a transient read failure into a cached permanent failure.
@@ -453,7 +475,7 @@ class Repository:
                     for job in value['jobs']:
                         identity = (job['puzzle_id'], job['revision'])
                         fingerprint = job.pop('_fingerprint')
-                        entry = {**job, 'commit': commit, 'source': origin, 'ref': branch, '_source': source}
+                        entry = {**job, 'binding': fingerprint, 'commit': commit, 'source': origin, 'ref': branch, '_source': source}
                         if identity in bindings and bindings[identity] != fingerprint:
                             for prior in jobs:
                                 if (prior['puzzle_id'], prior['revision']) == identity:
@@ -467,8 +489,21 @@ class Repository:
         remote_match = re.fullmatch(r'(?:https://github\.com/|git@github\.com:)([A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+?)(?:\.git)?', self.remote or '')
         cloud_repository = 'https://github.com/' + remote_match[1] if remote_match else None
         for job in jobs:
-            job['source_url'] = cloud_repository + '/tree/' + job['commit'] if cloud_repository and job['commit'] in remote_commits else None
+            job['source_url'] = cloud_repository + '/tree/' + job['commit'] if self.remote_confirmed and cloud_repository and job['commit'] in remote_commits else None
             job['publication'] = ('Im konfigurierten Remote gefunden' if job['commit'] in remote_commits else
                                   'Nur lokal nachgewiesen; Remote-Sicherung nicht bestätigt')
+            if not self.remote_confirmed and job['source'] == 'remote':
+                job['publication'] = 'Remote nicht aktuell bestätigt; gespeicherter Snapshot bleibt lesbar'
+        from .motifs import Relations
+        history = Relations(self)
+        comparisons = {}
+        for identity in {j['puzzle_id'] for j in jobs}:
+            commits = list(dict.fromkeys(j['commit'] for j in jobs if j['puzzle_id'] == identity))
+            for n, left in enumerate(commits[:32]):
+                for right in commits[n + 1:32]:
+                    relation = history.compare(left, right)
+                    comparisons[left + ':' + right] = relation
+                    comparisons[right + ':' + left] = {'ahead': 'behind', 'behind': 'ahead'}.get(relation, relation)
         return {'jobs': jobs, 'errors': errors, 'sources': sources, 'synced_at': self.synced_at,
+                'relations': comparisons, 'remote_confirmed': self.remote_confirmed,
                 'sync_error': self.sync_error, 'mode': 'remote' if self.remote else 'local'}

@@ -1,22 +1,28 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/596",
-  "package": "A",
+  "package": "B",
   "modules": [
-    "tools"
+    "tools",
+    "production.adapter"
   ],
-  "purpose": "A-K01 bis A-K05: geschlossene Originaldetails, kompaktes Rasterformular, unabhängige frühe Achsen und kurze quellengebundene Folgeaufträge; vorhandene Theme-Persistenz auf P3-Basis erhalten.",
-  "omitted": "Genau tools; keine production.*, native.*, preflight, delivery oder Browser-CI: lokale UI-/Promptsteuerung, keine Produktionsformate, Algorithmen, Spiel- oder Integrationsänderung. Kern liefert Windows-Spieler. Desktop-/Schmalfensterbedienung und Theme einschließlich Windows-App-Neustart/Update sind einmalige Nachweise; fehlende Bedienprobe bleibt vor Merge offen.",
+  "purpose": "B-K01 bis B-K05: gemeinsamer gebundener current-view-Publisher, motivbezogene Versionswahl, echte Gitrelation und geschützter aktiver Snapshot.",
+  "omitted": "Keine Katalog-/Runtime-/Solveränderung: kein production.catalog, native.*, preflight, delivery oder Browser-CI. Kern liefert Windows-Spieler. Einmalige synthetische Gitintegration und getrennte interaktive lokale Bedienprobe; fehlende Bedienprobe bleibt als Vor-Merge-Gate offen.",
   "test_changes": [
     {
-      "path": "tools/test_authoring_sheet.py",
+      "path": "tools/test_production_workspace.py",
       "disposition": "change-scoped",
-      "reason": "Kleine Node-Fälle für einzelne Achsen, Differenz/Aufhebung, Grenzen und fünf Aktionen samt Quellen-/Freigabegrenzen; bestehende Theme-Speicherung mit Reload. Keine duplizierten Parameter oder Regeln."
+      "reason": "Kleine echte synthetische Git-/Pointer-/HTTP-/Controllerfälle einschließlich Offline, Shallow, Quellenkonflikt und ungesendeter Absicht."
     },
     {
       "path": "tools/production_workspace/check_ui_loading.cjs",
       "disposition": "change-scoped",
-      "reason": "Bestehender HTTP-/Controllerdurchstich mit geschlossenen Originaldetails und unabhängiger Achsensteuerung; keine Browserdarstellung behauptet."
+      "reason": "Gruppierung, konkrete Quellenwahl, P2-Schutz und generationgebundene Antworten im bestehenden browserfreien Controllerdurchstich."
+    },
+    {
+      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "disposition": "change-scoped",
+      "reason": "Publisher, Finalizer, Completion und Unterbrechungswiederholung im bestehenden synthetischen 0.8-Durchstich."
     }
   ],
   "core_change": null,
