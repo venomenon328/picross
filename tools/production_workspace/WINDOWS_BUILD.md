@@ -58,10 +58,13 @@ Produktdownload: `Picross-Produktionsassistent-X.Y.Z-windows-x64.msi`, `.sha256`
 `START.txt`, `delivery.json`; 14 Tage Retention. Kein Release/Tag/Deployment.
 Der Workflow wird erstmals nach gesondert freigegebenem Merge regulär aufrufbar.
 P4-T04 bleibt bis zum echten manuellen Run und binären Rückdownload offen.
+Nach Integration des Fixes: Actions → **Manual production assistant installer** →
+**Run workflow**, ohne weitere Eingabe. Gebaut wird der dann geholte Mainstand.
 
 Auf dem wegwerfbaren Actionsrunner legt der manuelle Smoke einen echten lokalen
 Standardbenutzer an. Dessen geladenes Profil liefert `USERPROFILE`, `LOCALAPPDATA`
-und `APPDATA`; `TEMP`/`TMP` zeigen auf einen eigenen beschreibbaren Testordner.
+und `APPDATA`; noch fehlende bekannte Profilordner werden als dieser Benutzer
+angelegt. `TEMP`/`TMP` zeigen auf einen eigenen beschreibbaren Testordner.
 `Start-Process -LoadUserProfile` allein ersetzt die geerbte Runnerumgebung nicht.
 Die Kindprozessausgabe samt Fehlern steht im Actionslog, ohne zusätzlichen
 Technik-Upload. Lokal werden keine Benutzer angelegt; dort einen bestehenden
