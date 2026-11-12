@@ -11,6 +11,7 @@ import sys
 import threading
 import time
 import winreg
+import zipfile
 
 from .build_windows import ROOT, sha
 from .instance import StateLock, control
@@ -103,7 +104,12 @@ def smoke(build, output):
         # Build a genuine previous MSI from a clean synthetic SOURCE COMMIT.
         # No production version override and no relabelled MSI/App metadata.
         previous_source = output / 'previous-source'
-        subprocess.run(['git', 'clone', '--quiet', '--shared', str(ROOT), str(previous_source)], check=True)
+        snapshot = output / 'synthetic-source.zip'
+        subprocess.run(['git', '-c', 'safe.directory=' + str(ROOT), '-C', str(ROOT), 'archive', '--format=zip',
+                        '--output=' + str(snapshot), 'HEAD'], check=True)
+        with zipfile.ZipFile(snapshot) as archive:
+            archive.extractall(previous_source)
+        subprocess.run(['git', '-C', str(previous_source), 'init', '--quiet', '-b', 'main'], check=True)
         source = previous_source / 'tools/production_workspace/release.json'
         old = json.loads(source.read_text()); parts = list(version_tuple(old['version']))
         if parts[2]:
@@ -113,7 +119,7 @@ def smoke(build, output):
         else:
             parts[0] -= 1; parts[1:] = [255, 65535]
         old['version'] = '.'.join(map(str, parts)); source.write_text(json.dumps(old, indent=2) + '\n')
-        subprocess.run(['git', '-C', str(previous_source), 'add', str(source)], check=True)
+        subprocess.run(['git', '-C', str(previous_source), 'add', '.'], check=True)
         subprocess.run(['git', '-C', str(previous_source), '-c', 'user.name=P4 synthetic test', '-c', 'user.email=synthetic@example.invalid',
                         'commit', '--quiet', '-m', 'Synthetic predecessor version, never distribute'], check=True)
         previous_build = output / 'previous-build'

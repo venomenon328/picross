@@ -42,8 +42,8 @@ def wix_source(app, product, guard):
     element(p, 'Property', Id='ARPPRODUCTICON', Value='AppIcon')
     target = element(p, 'Directory', Id='TARGETDIR', Name='SourceDir')
     local = element(target, 'Directory', Id='LocalAppDataFolder')
-    programs = element(local, 'Directory', Id='Programs', Name='Programs')
-    install = element(programs, 'Directory', Id='INSTALLFOLDER', Name='Picross-Produktionsassistent')
+    install = element(local, 'Directory', Id='INSTALLFOLDER', Name='Picross-Produktionsassistent')
+    element(p, 'SetDirectory', Id='INSTALLFOLDER', Value='[LocalAppDataFolder]Programs\\Picross-Produktionsassistent')
     directories = {'': install}
     feature = element(p, 'Feature', Id='Application', Title='Produktionsassistent', Level='1', Absent='disallow')
     import hashlib
@@ -90,16 +90,20 @@ def wix_source(app, product, guard):
         element(component, 'RemoveFolder', Id=identifier('R', name), Directory=directory.get('Id'), On='uninstall')
     element(feature, 'ComponentRef', Id='EmptyFolders')
     element(p, 'Binary', Id='Guard', SourceFile=str(guard))
-    element(p, 'CustomAction', Id='CheckStopped', BinaryKey='Guard', DllEntry='Check', Execute='immediate', Return='check')
+    element(p, 'CustomAction', Id='CheckStopped', BinaryKey='Guard', ExeCommand='"[INSTALLFOLDER]."', Execute='immediate', Return='check')
     sequence = element(p, 'InstallExecuteSequence')
     element(sequence, 'Custom', Action='CheckStopped', Before='InstallInitialize').text = '1'
     element(p, 'UIRef', Id='WixUI_Common')
     ui = element(p, 'UI')
+    element(ui, 'Error', Id='1722').text = ('Picross kann gerade nicht installiert/entfernt werden. '
+        'Assistent und andere Anwendungen mit offenen Programmdateien regulär beenden; eine laufende '
+        'Produktionsentfernung vollständig abwarten. Bei unklarem Zustand Pfade/Rechte prüfen. Danach '
+        'den Installer erneut starten. Es wurde kein Prozess beendet. (Prüfung: [2])')
     element(ui, 'TextStyle', Id='WixUI_Font_Normal', FaceName='Segoe UI', Size='9')
     element(ui, 'TextStyle', Id='WixUI_Font_Bigger', FaceName='Segoe UI', Size='12')
     element(ui, 'TextStyle', Id='WixUI_Font_Title', FaceName='Segoe UI', Size='10', Bold='yes')
     element(p, 'Property', Id='DefaultUIFont', Value='WixUI_Font_Normal')
-    for did in ('ErrorDlg', 'FatalError', 'ProgressDlg', 'UserExit', 'ExitDialog'):
+    for did in ('ErrorDlg', 'FatalError', 'FilesInUse', 'ProgressDlg', 'UserExit', 'ExitDialog'):
         element(ui, 'DialogRef', Id=did)
     element(ui, 'Publish', Dialog='ExitDialog', Control='Finish', Event='EndDialog', Value='Return').text = '1'
     dialog = element(ui, 'Dialog', Id='InstallOptions', Width='370', Height='200', Title='Picross installieren')
@@ -125,20 +129,18 @@ def run(output):
     wix = work / 'wix'
     with zipfile.ZipFile(archive) as z:
         z.extractall(wix)
-    sdk = wix / 'sdk'
     compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
-    assembly = work / 'Guard.dll'
-    subprocess.run([str(compiler), '/nologo', '/target:library', '/platform:x64', '/out:' + str(assembly),
-                    '/reference:' + str(sdk / 'Microsoft.Deployment.WindowsInstaller.dll'), str(PACKAGE / 'packaging/Guard.cs')], check=True)
-    guard = work / 'Guard.CA.dll'
-    subprocess.run([str(sdk / 'MakeSfxCA.exe'), str(guard), str(sdk / 'x64/SfxCA.dll'), str(assembly),
-                    str(sdk / 'Microsoft.Deployment.WindowsInstaller.dll'), str(PACKAGE / 'packaging/CustomAction.config')], check=True)
+    guard = work / 'Guard.exe'
     app = output / 'dist/Picross-Start'
     shutil.copyfile(wix / 'LICENSE.TXT', app / 'LICENSES/WiX.txt')
     files = [{'file': f.relative_to(app).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
              for f in sorted(app.rglob('*')) if f.is_file() and f.name != 'inventory.json']
     (app / 'inventory.json').write_text(json.dumps({'commit': json.loads((app / 'components.json').read_text())['commit'],
                                                   'files': files}, indent=2) + '\n', encoding='utf-8')
+    payload = work / 'Payload.txt'
+    payload.write_text('\n'.join(f.relative_to(app).as_posix() for f in sorted(app.rglob('*')) if f.is_file()) + '\n', encoding='utf-8')
+    subprocess.run([str(compiler), '/nologo', '/target:winexe', '/platform:x64', '/out:' + str(guard),
+                    '/resource:' + str(payload) + ',Payload.txt', str(PACKAGE / 'packaging/Guard.cs')], check=True)
     portable = output / 'Picross-Start-windows-x64.zip'
     with zipfile.ZipFile(portable, 'w', zipfile.ZIP_DEFLATED) as archive:
         for file in sorted(app.rglob('*')):
@@ -149,7 +151,9 @@ def run(output):
     obj = work / 'installer.wixobj'
     msi = output / product['filename']
     subprocess.run([str(wix / 'candle.exe'), '-nologo', '-arch', 'x64', '-out', str(obj), str(source)], check=True)
-    subprocess.run([str(wix / 'light.exe'), '-nologo', '-ext', str(wix / 'WixUIExtension.dll'),
+    # ICE91 warns about per-user files in a hypothetical per-machine install;
+    # this product is explicitly per-user only. Other ICE validation stays on.
+    subprocess.run([str(wix / 'light.exe'), '-nologo', '-sice:ICE91', '-ext', str(wix / 'WixUIExtension.dll'),
                     '-cultures:de-de', '-out', str(msi), str(obj)], check=True)
     checksum = sha(msi)
     (output / (msi.name + '.sha256')).write_text(checksum + '  ' + msi.name + '\n', encoding='utf-8')
@@ -157,6 +161,7 @@ def run(output):
     report = json.loads((output / 'delivery.json').read_text())
     report.update(msi_file=msi.name, msi_sha256=checksum, msi_bytes=msi.stat().st_size,
                   wix_package=product['wix_package'], wix_sha256=product['wix_sha256'],
+                  guard_sha256=sha(guard), guard_compiler_sha256=sha(compiler),
                   zip_bytes=portable.stat().st_size, zip_sha256=sha(portable))
     (output / 'delivery.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report))

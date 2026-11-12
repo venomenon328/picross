@@ -1,4 +1,4 @@
-// Runs in the per-user MSI execute sequence, before InstallInitialize.
+// Standalone Binary-table EXE, per-user execute sequence before InstallInitialize.
 // No shutdown, process termination, state writes or network operations.
 using System;
 using System.IO;
@@ -6,8 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
-using Microsoft.Deployment.WindowsInstaller;
-using FileAttributes = System.IO.FileAttributes;
+using System.Reflection;
 
 public static class Guard {
     [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
@@ -27,13 +26,13 @@ public static class Guard {
         }
     }
 
-    [CustomAction]
-    public static ActionResult Check(Session session) {
+    public static int Main(string[] args) {
         try {
             // Reject property-based path redirection, also during upgrade/uninstall.
             var local = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var expected = Path.Combine(local, "Programs", "Picross-Produktionsassistent");
-            var target = Path.GetFullPath(session["INSTALLFOLDER"]).TrimEnd('\\');
+            if (args.Length != 1) return 2;
+            var target = Path.GetFullPath(args[0]).TrimEnd('\\');
             if (!String.Equals(target, expected, StringComparison.OrdinalIgnoreCase))
                 throw new IOException("Installationsziel muss im eigenen Programmverzeichnis liegen.");
             NoLinks(target);
@@ -57,12 +56,10 @@ public static class Guard {
             if (RmStartSession(out rm, 0, new StringBuilder(33)) != 0)
                 throw new IOException("Windows-Dateibelegung nicht prüfbar.");
             try {
-                using (var view = session.Database.OpenView("SELECT `FileName`, `Directory_` FROM `File`, `Component` WHERE `File`.`Component_` = `Component`.`Component`")) {
-                    view.Execute();
-                    Record row;
-                    while ((row = view.Fetch()) != null) using (row) {
-                        var name = row.GetString(1).Split('|').Last();
-                        var file = Path.Combine(session.GetTargetPath(row.GetString(2)), name);
+                using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Payload.txt"))) {
+                    string relative;
+                    while ((relative = reader.ReadLine()) != null) {
+                        var file = Path.Combine(target, relative);
                         if (File.Exists(file) && RmRegisterResources(rm, 1, new string[] { file }, 0, IntPtr.Zero, 0, IntPtr.Zero) != 0)
                             throw new IOException("Dateibelegung nicht vollständig prüfbar.");
                     }
@@ -72,18 +69,11 @@ public static class Guard {
                 if (result != 0 || needed != 0)
                     throw new IOException("Programmdateien sind durch eine laufende oder fremde Anwendung belegt.");
             } finally { RmEndSession(rm); }
-            session.Log("P4: Programm-/Instanzschutz erfolgreich; keine Prozesse beendet.");
-            return ActionResult.Success;
-        } catch (Exception ex) {
-            // No personal paths, credentials or instance metadata in the report.
-            session.Log("P4: Installation vor Dateimanipulation abgebrochen (" + ex.GetType().Name + ").");
-            using (var record = new Record(1)) {
-                record.SetString(0, "Picross kann gerade nicht installiert/entfernt werden. " +
-                    "Assistent und andere Anwendungen mit offenen Programmdateien regulär beenden; " +
-                    "eine laufende Produktionsentfernung vollständig abwarten. Bei unklarem Zustand Pfade/Rechte prüfen. Danach den Installer erneut starten. Es wurde kein Prozess beendet.");
-                session.Message(InstallMessage.Error, record);
-            }
-            return ActionResult.Failure;
+            return 0;
+        } catch (Exception) {
+            // MSI error 1722 supplies the actionable localized message, also in
+            // quiet-mode logs. No process termination, metadata/path disclosure.
+            return 2;
         }
     }
 }
