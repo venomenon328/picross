@@ -13,7 +13,7 @@ ein Einstieg zur Windows-App.
 „Neues Motiv“ beginnt mit einem Briefing und optional einer eigenen Datei, die
 dem Chat tatsächlich beigegeben werden muss. Zusätzliche Motivhinweise wie Blickwinkel,
 Stimmung und unverzichtbare Merkmale haben ein eigenes Feld. Unter „Rastervorgaben“
-lassen sich Breite und Höhe (je 1–50 Zellen, auch rechteckig), Modus und für
+lassen sich Breite und Höhe unabhängig (je 1–50 Zellen, auch nur eine Achse), Modus und für
 Farbrätsel 2–8 Vordergrundfarben angeben. Maße und Farbzahl haben getrennte
 Genauigkeiten. Ohne Vorgabe bleibt die Wahl offen; das Abschlussbild ist immer
 farbig. Die lokalen Motivbriefings merken sich diese Eingaben pro Entwurf.
@@ -127,20 +127,31 @@ zusätzliche Buttonliste entfällt. Lokale Motivbriefings samt „Entwurf verwer
 sind davon getrennte Browserentwürfe.
 
 Die Detailansicht zeigt überlieferte Parameterrollen und das inventarisierte
-Originalbriefing aus dem geprüften Paket als Klartext mit Absätzen. Eindeutige
+Originalbriefing aus dem geprüften Paket als Klartext mit Absätzen. Beide Originalbereiche
+starten auch nach Wiederladen und Motiv-/Revisionswechsel eingeklappt; Zusammenfassung,
+Quellenstatus und Fehler bleiben sichtbar. Eindeutige
 Einzelwünsche belegen die Felder vor; mehrere Optionen und freie Formen bleiben
 vollständig lesbar. Die Anzeige bestätigt keine neue menschliche Freigabe.
 Record und Handoff müssen übereinstimmen; fehlende/beschädigte Originale und
 ungültiger UTF-8-Text erscheinen als Fehler. Briefings sind auf 1 MiB begrenzt.
 
-Unveränderte Werte bleiben im kopierten Auftrag Quellkontext. Änderungen sowie
+Folgeaufträge nennen einen festen erreichbaren Commit mit dem kanonischen Record
+als Einstieg und binden AGENTS/Authoring 0.8.0 kurz verbindlich ein. Vorhandene Parameter,
+Briefings, Hashlisten und allgemeine Regeln werden dort nicht dupliziert.
+Unveränderte Werte bleiben über diese Quelle gebunden. Änderungen sowie
 „Neue/zusätzliche Wünsche zur Motivvorlage“ sind neue Absichten. Zum Aufheben
 eines bisherigen Wunsches die entsprechende ausdrückliche Aufhebungswahl
-verwenden; sie hat Vorrang vor den Feldern der Gruppe. Leeren oder „Offen“ allein
+verwenden; Breite und Höhe haben eigene Aufhebungswahlen. Die andere Achse bleibt
+wirksam. Aufheben hat Vorrang vor dem jeweiligen Feld. Leeren oder „Offen“ allein
 sperrt den Auftrag, solange dadurch eine bestehende Vorgabe entfallen würde.
 Freigegebene Korridore werden über die Korrektur erneut zur Entscheidung vorgelegt.
 Job-, Revisions-, Quellwechsel und „Neueren Stand laden“ verwerfen ungesendete
 Absichten; ein bloßer Refresh erhält sie. Entwurfswerte überlagern keine Gitdaten.
+
+System/Hell/Dunkel verwendet ausschließlich die bestehende Browserwahl `pw-theme`.
+„System“ bleibt gespeichert und folgt der Systemdarstellung. Reload und ein
+geordnetes P3-App-Neustart/Update bei erhaltenem Zustand verwenden denselben Origin.
+Andere Browserprofile oder ausdrücklich geänderte Ports haben getrennte Einstellungen.
 
 Bildkarten nach Rollen und der Reveal-/Motivvergleich
 laden ihre Originale. Großansicht bietet Einpassen, 100/200/400 Prozent und
