@@ -1,0 +1,9 @@
+Repository: venomenon328/picross. Verbindlich: AGENTS.md und docs/ai-workflows/PUZZLE_AUTHORING.md (Authoring 0.8.0) im aktuellen main.
+
+Produktionsdatensatz: https://github.com/venomenon328/picross/blob/cc1be9802c51fc95b2adc9bcc7334378c1452783/content/authoring/pz-libelle/r01/record.json
+
+Schritt 2: Ich wähle und gebe das unveränderte Abschlussbild aus Angebot B-r01 frei. Motivvorlage und empfohlenen Parameterkorridor zur Freigabe vorlegen.
+
+Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt; der fachliche Produktionsabschluss nach Authoring §9 bleibt davon getrennt.
+
+Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.
