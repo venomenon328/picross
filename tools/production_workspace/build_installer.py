@@ -93,8 +93,15 @@ def wix_source(app, product, guard):
     element(p, 'CustomAction', Id='CheckStopped', BinaryKey='Guard', DllEntry='Check', Execute='immediate', Return='check')
     sequence = element(p, 'InstallExecuteSequence')
     element(sequence, 'Custom', Action='CheckStopped', Before='InstallInitialize').text = '1'
-    element(p, 'UIRef', Id='WixUI_ProgressOnly')
+    element(p, 'UIRef', Id='WixUI_Common')
     ui = element(p, 'UI')
+    element(ui, 'TextStyle', Id='WixUI_Font_Normal', FaceName='Segoe UI', Size='9')
+    element(ui, 'TextStyle', Id='WixUI_Font_Bigger', FaceName='Segoe UI', Size='12')
+    element(ui, 'TextStyle', Id='WixUI_Font_Title', FaceName='Segoe UI', Size='10', Bold='yes')
+    element(p, 'Property', Id='DefaultUIFont', Value='WixUI_Font_Normal')
+    for did in ('ErrorDlg', 'FatalError', 'ProgressDlg', 'UserExit', 'ExitDialog'):
+        element(ui, 'DialogRef', Id=did)
+    element(ui, 'Publish', Dialog='ExitDialog', Control='Finish', Event='EndDialog', Value='Return').text = '1'
     dialog = element(ui, 'Dialog', Id='InstallOptions', Width='370', Height='200', Title='Picross installieren')
     element(dialog, 'Control', Id='Info', Type='Text', X='20', Y='20', Width='330', Height='60', Text='Installiert nur für diesen Benutzer. Git für Windows bleibt erforderlich. Die unsignierte App enthält private Laufzeit und Lizenzen. Einrichtung und Produktionsdaten bleiben getrennt erhalten.')
     element(dialog, 'Control', Id='Desktop', Type='CheckBox', X='20', Y='95', Width='320', Height='18', Property='INSTALLDESKTOP', CheckBoxValue='1', Text='Zusätzlich Desktopverknüpfung anlegen')
@@ -103,7 +110,7 @@ def wix_source(app, product, guard):
     button = element(dialog, 'Control', Id='Cancel', Type='PushButton', X='280', Y='160', Width='70', Height='18', Cancel='yes', Text='Abbrechen')
     element(button, 'Publish', Event='EndDialog', Value='Exit').text = '1'
     sequence = element(ui, 'InstallUISequence')
-    element(sequence, 'Show', Dialog='InstallOptions', Before='ExecuteAction').text = 'NOT Installed AND NOT WIX_DOWNGRADE_DETECTED AND NOT SAMEVERSION'
+    element(sequence, 'Show', Dialog='InstallOptions', Before='ProgressDlg').text = 'NOT Installed AND NOT WIX_DOWNGRADE_DETECTED AND NOT SAMEVERSION'
     return ET.ElementTree(root)
 
 
