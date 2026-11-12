@@ -29,7 +29,7 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Source must be integrated in main' }
           git checkout --detach $env:SOURCE_COMMIT
           if ($LASTEXITCODE -ne 0) { throw 'Source checkout failed' }
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d41bb45a462
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
         with:
           python-version: '3.13.14'
           architecture: x64
@@ -46,8 +46,7 @@ jobs:
         run: |
           & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.build_installer --output "$env:RUNNER_TEMP\pw-product"
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
-          & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.smoke_installer --build "$env:RUNNER_TEMP\pw-product" --output "$env:RUNNER_TEMP\pw-smoke"
-          if ($LASTEXITCODE -ne 0) { throw 'Installer lifecycle failed' }
+          & tools/production_workspace/packaging/smoke-user.ps1 -Python "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -Build "$env:RUNNER_TEMP\pw-product" -Output "$env:RUNNER_TEMP\pw-smoke"
       - name: Targeted product download, no release or deployment
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:

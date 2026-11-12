@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using Microsoft.Deployment.WindowsInstaller;
+using FileAttributes = System.IO.FileAttributes;
 
 public static class Guard {
     [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
