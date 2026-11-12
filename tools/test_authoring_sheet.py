@@ -122,6 +122,6 @@ published.proposed=null;assert.deepEqual(P.publishedGrid(v),{});
 
     def test_old_sheet_is_only_a_launcher_entry_without_embedded_state_machine(self):
         text=(ROOT/'docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html').read_text(encoding='utf-8')
-        self.assertIn('Picross-Start.cmd',text)
+        self.assertIn('Picross-Start.exe',text)
         self.assertNotIn('<script',text)
         self.assertNotIn('picross-cheatsheet-session',text)
