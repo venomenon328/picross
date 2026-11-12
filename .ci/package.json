@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/614",
-  "package": "Libelle-S1",
+  "package": "Libelle-S2",
   "modules": [],
-  "purpose": "Reine Rätselproduktion Schritt 1: drei native farbige Originale, direkte Q-B01/B02/B03-Sichtung, Briefing mit ungefähr 20 × 16 Mono / genau einer Vordergrundfarbe und vollständige Builder-v3-Übergabe. Kleiner Quellen-/Plankern, kein Player-Build.",
-  "omitted": "Keine Werkzeug-/Spieländerung und keine Rasterproduktion: keine production.*, tools, native.*, preflight, delivery oder Chromium. Keine neuen Rätseltests, Solver-/Proofreplays oder Buch-/Katalogmontagen. Menschliche Bildwahl bleibt offen.",
+  "purpose": "Reine Rätselproduktion Schritte 1–2: unveränderte Originale, tatsächliche B-r01-Freigabe, native vorlagentreue Mono-Motivvorlage M-r02 und vorgeschlagener Parameterkorridor, Builder-v3-Übergabe mit Index/Projektion/current-view. Kleiner Quellen-/Plankern, kein Player-Build.",
+  "omitted": "Keine Werkzeug-/Spieländerung, Raster-/Solver-/Proofproduktion oder Integration. Keine production.*, tools, native.*, preflight, delivery oder Chromium; keine neuen Rätseltests oder Bestandsreplays. Direkte Original-/Kleinsichtung, Dateibindungen und Builderprüfung sichern diesen Bildauftrag. Motiv-/Parameterfreigabe bleibt offen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

@@ -20,6 +20,7 @@ FORMAT = "picross-catalog-background-v1"
 CHANGE_FORMAT = "picross-catalog-background-v2"
 CHANGE_JOURNAL = "picross-background-adoption-journal-v1"
 REGISTRY_FORMAT = "picross-content-registry-v3"
+REBIND_FORMATS = ("picross-catalog-background-v3", "picross-catalog-background-v4")
 RUNTIME_FORMAT = "picross-runtime-registry-v6"
 RECEIPT_FORMAT = "picross-integrated-content-v2"
 PATH = "content/backgrounds"
@@ -34,13 +35,13 @@ IMAGE_FIELDS = ("image_revision", "candidate_revision", "decision", "derivation"
 
 def initial(source):
     """Return the immutable first-registration authority of a validated source."""
-    if source["format"] == "picross-catalog-background-v3": return initial(source["base"])
+    if source["format"] in REBIND_FORMATS: return initial(source["base"])
     return source["initial"] if source["format"] == CHANGE_FORMAT else source
 
 
 def current(source):
     """Return current image fields without changing the serialized source form."""
-    if source["format"] == "picross-catalog-background-v3":
+    if source["format"] in REBIND_FORMATS:
         from .background_rebind import image
         return image(source)
     return source["current"] if source["format"] == CHANGE_FORMAT else source
@@ -49,7 +50,7 @@ def current(source):
 def effective(source):
     """Internal view only: original identity plus effective current image fields."""
     result = {**initial(source), **{field: current(source)[field] for field in IMAGE_FIELDS}}
-    if source["format"] == "picross-catalog-background-v3":
+    if source["format"] in REBIND_FORMATS:
         result["identity"] = source["events"][-1]["binding"]["identity"]
     return result
 
@@ -332,7 +333,7 @@ def validate(value, entry):
         ap.require(len(raw) <= LIMIT, "Background source exceeds 1 MiB")
         value = bc.parse_json(raw)
         ap.require(isinstance(value, dict), "Background source must be an object")
-        if value.get("format") == "picross-catalog-background-v3":
+        if value.get("format") in REBIND_FORMATS:
             from . import background_rebind
             return background_rebind.validate(value, entry)
         if value.get("format") != CHANGE_FORMAT:
@@ -389,9 +390,9 @@ def notice_bytes(identifier, candidate):
 
 
 def _transition(previous, following):
-    if previous["format"] == "picross-catalog-background-v3":
+    if previous["format"] in REBIND_FORMATS:
         from .background_rebind import transition, normalized
-        ap.require(following["format"] == "picross-catalog-background-v3", "Background change cannot downgrade Source v3")
+        ap.require(following["format"] == previous["format"], "Background change cannot downgrade or change rebind source generation")
         transition(previous, following, normalized(previous), normalized(following), "background-adoption")
         return
     ap.require(following["format"] == CHANGE_FORMAT and
@@ -446,7 +447,7 @@ def build_change(old_source, entry, request, request_ref, graph, notice_raw):
               "notice": ref(notice_path(entry["id"]), notice_raw) if notice_raw is not None else None,
               "adoption": {"request": deepcopy(request_ref),
                            **{key: deepcopy(request[key]) for key in ("revision", "target", "background", "authorization")}}}
-    if old_source["format"] == "picross-catalog-background-v3":
+    if old_source["format"] in REBIND_FORMATS:
         from .background_rebind import append
         source = append(old_source, entry, old_source["events"][-1]["binding"], "background-adoption", image=active)
     else:
@@ -462,10 +463,13 @@ def validate_delta(journal, before, after, root=None):
     sides; it does not need a retired working directory or raster ZIP.
     """
     from . import background_rebind as rebind
-    ap.require(journal["format"] in (CHANGE_JOURNAL, rebind.BACKGROUND) and journal["operation"] == "background-adoption" and
+    from .catalog_transaction import PE_FORMATS
+    from .content_registry import METADATA_FORMAT
+    pe = journal["format"] == PE_FORMATS["background-adoption"]
+    ap.require(journal["format"] in (CHANGE_JOURNAL, rebind.BACKGROUND, PE_FORMATS["background-adoption"]) and journal["operation"] == "background-adoption" and
                journal["additions"] == {} and journal["report_run"] is None,
                "Invalid background adoption journal operation")
-    ap.require(before["format"] == after["format"] == REGISTRY_FORMAT and
+    ap.require(before["format"] == after["format"] == (METADATA_FORMAT if pe else REGISTRY_FORMAT) and
                encoded(before["entries"]) == encoded(after["entries"]),
                "Background adoption changes catalog entries")
     previous_index, following_index = index(before), index(after)
@@ -476,7 +480,7 @@ def validate_delta(journal, before, after, root=None):
     entry = next(e for e in before["entries"] if e["id"] == identifier)
     previous = _source(None, before, entry, journal["old"])
     following = _source(None, after, entry, journal["new"])
-    ap.require((previous["format"] == rebind.FORMAT) == (journal["format"] == rebind.BACKGROUND),
+    ap.require(pe or rebind.is_rebound(previous) == (journal["format"] == rebind.BACKGROUND),
                "Background journal generation differs from target")
     _transition(previous, following)
     for side, source in (("old", previous), ("new", following)):
@@ -601,6 +605,8 @@ def _source(root, registry, entry, texts=None):
         return None
     _bound(r, raw, name=path(entry["id"]), limit=LIMIT)
     value = validate(io.json_bytes(raw, LIMIT), entry)
+    ap.require(value["format"] != "picross-catalog-background-v4" or registry["format"] == "picross-content-registry-v4",
+               "Background source v4 requires metadata registry v4")
     ap.require(raw == encoded(value), "Noncanonical background source")
     return value
 
@@ -618,7 +624,7 @@ def _receipt(source, source_ref, receipt):
     value = exact_keys(receipt.get("background"), {"origin_sha256", "source"})
     ap.require(value == receipt_binding(source, source_ref), "Background receipt/index/origin binding differs")
     expected = (source["events"][-1]["binding"]["entry"]["production"]["package_sha256"]
-                if source["format"] == "picross-catalog-background-v3" else initial(source)["origin"]["export_manifest_sha256"])
+                if source["format"] in REBIND_FORMATS else initial(source)["origin"]["export_manifest_sha256"])
     ap.require(receipt["entry"]["production"]["package_sha256"] == expected,
                "Background receipt changed original export anchor")
 
@@ -643,7 +649,7 @@ def load(root, registry, entry, texts=None):
     ap.require(io.checksum(manifest_raw) == entry["production"]["package_sha256"], "Background physical package binding differs")
     if manifest.get("format") == RECEIPT_FORMAT:
         _receipt(source, index(registry)[entry["id"]], manifest)
-    elif source["format"] == "picross-catalog-background-v3":
+    elif source["format"] in REBIND_FORMATS:
         from . import background_rebind as rebind
         ap.require(manifest.get("format") in ("picross-target-export-v5", "picross-target-export-v6") and
                    entry["production"]["package_sha256"] == rebind.normalized(source)["production"]["package_sha256"],
@@ -661,7 +667,7 @@ def load(root, registry, entry, texts=None):
                    "Background source requires its original v6 export or v2 receipt")
         ap.require(canonical_bytes(build(io.safe(root, entry["production"]["package"]), manifest, None, entry)) == canonical_bytes(initial(source)),
                    "Active background source differs from original approved production")
-    if source["format"] == "picross-catalog-background-v3":
+    if source["format"] in REBIND_FORMATS:
         from .background_rebind import live
         live(root, source, entry, texts)
     return source
