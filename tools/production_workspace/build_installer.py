@@ -9,6 +9,7 @@ import sys
 import urllib.request
 import xml.etree.ElementTree as ET
 import zipfile
+import uuid
 
 from .build_windows import build, sha, ROOT, PACKAGE
 from .release import release
@@ -60,7 +61,8 @@ def wix_source(app, product, guard):
             directories[name] = element(directories['' if parent == '.' else parent], 'Directory', Id=identifier('D', name), Name=directory.name)
         parent = relative.parent.as_posix()
         name = relative.as_posix()
-        component = element(directories['' if parent == '.' else parent], 'Component', Id=identifier('C', name), Guid='*', Win64='yes')
+        component = element(directories['' if parent == '.' else parent], 'Component', Id=identifier('C', name),
+                            Guid=str(uuid.uuid5(uuid.UUID(product['upgrade_code']), name)), Win64='yes')
         element(component, 'File', Id='LauncherExe' if name == 'Picross-Start.exe' else identifier('F', name), Source=str(file), KeyPath='no')
         element(component, 'RegistryValue', Root='HKCU', Key='Software\\PicrossProductionWorkspace\\Installer\\Files',
                 Name=identifier('F', name), Type='string', Value=product['version'], KeyPath='yes')
@@ -79,6 +81,14 @@ def wix_source(app, product, guard):
         if cid == 'MenuShortcut':
             element(component, 'RemoveFolder', Id='RemoveMenu', On='uninstall')
         element(feature, 'ComponentRef', Id=cid)
+    # Only remove directories if empty; no wildcard or recursive deletion.
+    component = element(install, 'Component', Id='EmptyFolders',
+                        Guid=str(uuid.uuid5(uuid.UUID(product['upgrade_code']), 'EmptyFolders')), Win64='yes')
+    element(component, 'RegistryValue', Root='HKCU', Key='Software\\PicrossProductionWorkspace\\Installer',
+            Name='EmptyFolders', Type='integer', Value='1', KeyPath='yes')
+    for name, directory in directories.items():
+        element(component, 'RemoveFolder', Id=identifier('R', name), Directory=directory.get('Id'), On='uninstall')
+    element(feature, 'ComponentRef', Id='EmptyFolders')
     element(p, 'Binary', Id='Guard', SourceFile=str(guard))
     element(p, 'CustomAction', Id='CheckStopped', BinaryKey='Guard', DllEntry='Check', Execute='immediate', Return='check')
     sequence = element(p, 'InstallExecuteSequence')
