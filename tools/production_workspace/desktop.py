@@ -5,6 +5,7 @@ from pathlib import Path
 import threading
 
 from .instance import StateLock, existing
+from .install_interlock import InstallInterlock
 from .runtime import Runtime, PortConflict, build_id, preflight
 
 
@@ -193,8 +194,10 @@ def run_gui(args, lock, build):
 def main(argv=None, *, console=False):
     import sys
     lock = None
+    installation = InstallInterlock()
     args = arguments(argv)
     try:
+        installation.acquire()
         preflight(gui=not args.headless or getattr(sys, 'frozen', False))
         build = build_id()
         lock = StateLock(args.state)
@@ -214,3 +217,4 @@ def main(argv=None, *, console=False):
     finally:
         if lock:
             lock.close()
+        installation.close()
