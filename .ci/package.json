@@ -1,1 +1,15 @@
-{"core_change":null,"evidence":{"expires":null,"mode":"none","purpose":null},"format":"development-ci-plan/v1","issue":"https://github.com/venomenon328/picross/issues/610","modules":[],"omitted":"Keine Zusatzmodule: ausschließlich Authoringinhalte und Paketplan, keine Code-/Spiel-/gemeinsamen Asset-/CI-Änderung. Keine rätselspezifischen Tests oder Bestandsreplays, kein automatischer Browser, keine technischen CI-Uploads. Native Sichtung isoliert im Produktionsauftrag; keine Hintergrundproduktion, Rasterwahl, Endabnahme oder Integration.","package":"Schnecke-S3-r05-r06","purpose":"Reine Rätselproduktion: tatsächliche M-r02-/Korridorfreigabe, sechs begrenzte Direktimportkandidaten, zwei feste motivtreue Korrekturrunden nach C mit max2 Zellen je Endkandidat und leerem Außenbeschnitt. Produktionsprüfungen: vollständige unbekannt startende Linienproofs, frischer unabhängiger Prüfer, Herkunft/Masken/Endmatrix, aktive0.4-Analyse, echte Zell-/Hinweissichten, geschriebene Builder-v3-ZIPs/Inventare/Projektionen/Pointer und Remoteoriginale. Allgemeiner Kern docs/ci-required ohne Player-Build.","test_changes":[]}
+{
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/610",
+  "package": "Schnecke-S4-r07",
+  "modules": [],
+  "purpose": "Reine Rätselproduktion Schritte 1–4: tatsächliche Rasterwahl R-B-r06 und drei echte native Kontextzeichnungen, isolierte Qualität/Rechte, neue vollständige background_review-Revision samt Index/Projektion/current-view. Allgemeiner Quellen-/Plankern, kein Player-Build.",
+  "omitted": "Keine Zusatzmodule, neuen Tests, Bestandsreplays oder Code-/Runtimeänderungen. Raster/Proof/aktive0.4-Analyse unverändert wiederverwendet; Builder prüft geschriebenes ZIP frisch vollständig. Keine Hintergrundentscheidung/Ableitung, Endabnahme oder Integration.",
+  "test_changes": [],
+  "core_change": null,
+  "evidence": {
+    "mode": "none",
+    "purpose": null,
+    "expires": null
+  }
+}
