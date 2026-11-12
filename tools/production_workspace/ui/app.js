@@ -130,6 +130,17 @@ function publishedContext(view,value){
  const status=p.role==='approved'?'Als freigegebener Parameterkorridor überliefert; keine neue Freigabeprüfung.':p.role==='proposed'?'Veröffentlichter Wunsch, noch nicht freigegebener Parameterkorridor.':'Keine strukturierten Rastervorgaben; siehe Motivbriefing.';
  section.append(node('p',status,'sourceRole'));
  const grid=PW.publishedGrid(value);
+ const parameterList=p.approved?.length?p.approved:p.proposed;
+ const corridor=Array.isArray(parameterList)?parameterList.find(v=>v?.format==='picross-raster-parameters-v1'):null;
+ if(corridor){
+  const kind={exact:'exakt',approximate:'ungefähr',open:'offen'};
+  for(const [axis,label] of [['width','Breite'],['height','Höhe'],['foreground_colors','Vordergrundfarben']]){
+   const c=corridor.constraints[axis];
+   section.append(node('p',`${label}: ${kind[c.kind]}${c.target===null?'':` ${c.target}`} · Untergrenze: ${c.minimum??'keine'} · Obergrenze: ${c.maximum??'keine'}`));
+  }
+  section.append(node('p',`Freigegebene Importstarts: ${corridor.imports.length}. Zelländerungen: ${corridor.derivation.cell_edits?'erlaubt':'nicht erlaubt'}. Leerer Außenbeschnitt: ${corridor.derivation.empty_edge_crop.join(', ')||'keiner'}.`));
+  section.append(node('p',`Geschützte Merkmale: ${corridor.derivation.protected_features.join('; ')||'keine benannt'}. Vollständige Importparameter stehen unten.`));
+ }
  if(Object.keys(grid).length){
   const words=[];
   for(const [axis,label] of [['width','Breite'],['height','Höhe']]){
@@ -140,7 +151,7 @@ function publishedContext(view,value){
   if(grid.colors)words.push(`${grid.colorAccuracy==='exact'?'Exakt':'Ungefähr'} ${grid.colors} Vordergrundfarben`);
   section.append(node('p',words.join(' · ')));
  }
- else if(p.role!=='absent')section.append(node('p','Keine eindeutigen Einzelwerte; die vollständigen Angaben stehen in den Originalen.','hint'));
+ else if(p.role!=='absent'&&!corridor)section.append(node('p','Keine eindeutigen Einzelwerte; die vollständigen Angaben stehen in den Originalen.','hint'));
  const originals=node('details');
  originals.append(node('summary','Vollständige Parameteroriginale'));
  for(const [key,label] of [['proposed','Vorgeschlagene Rasterwünsche'],['approved','Überlieferter freigegebener Korridor']]){

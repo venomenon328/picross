@@ -121,6 +121,7 @@ const PW = (()=>{
    lines.push(`Schritt ${n} am gebundenen Datensatz wieder aufnehmen; vorhandene Entscheidungen und etwaige Recoveryreste prüfen.`);
   }else if(!value||value.facts.state==='brief_ready'){
    lines.push('Schritt 1: Erzeuge drei unterschiedliche echte detaillierte farbige Abschlussbilder und lege die gespeicherten Originale zur Auswahl vor.');
+   lines.push('Prüfe Motiv, Stil, Transparenz und Alphakanten direkt an den Originalen, bei Bedarf auf neutralem Grund oder Schachbrett. Keine routinemäßigen Buch-/Katalogmontagen, Überblendungsproben oder Testintegrationen und keine Verlagerung dieser Arbeit in spätere Schritte.');
   }else if(value.facts.state==='reveal_review'){
    if(!selected||selected.kind!=='reveal')throw Error('Bitte ein Abschlussbild wählen.');
    lines.push(`Schritt 2: Ich wähle und gebe das unveränderte Abschlussbild aus Angebot ${selected.id} frei. Motivvorlage und empfohlenen Parameterkorridor zur Freigabe vorlegen.`);
@@ -155,6 +156,7 @@ const PW = (()=>{
    }
   }
   if((n===2||(n===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}. Materielle Änderungen am freigegebenen Korridor zuerst zur Entscheidung vorlegen.`);
+  if(n===3)lines.push('Offene/ungefähre Endvorgaben trotz konkreter Importstarts erhalten. Kleine motivische Rastermängel und erlaubte leere Außenlinien auch bei gelöster Logik über den regulären festen C-Weg korrigieren; echte Freigabe, Schutzmaske und kumulative Budgets beachten. Historische manuelle Sonderwege bleiben getrennt.');
   if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}.`);
   if(options.workroot?.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${options.workroot.trim()}.`);
   lines.push(options.cleanup?'Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt.':'Keine zusätzliche Abschlussbereinigung beauftragt.');
