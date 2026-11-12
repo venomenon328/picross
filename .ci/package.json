@@ -1,15 +1,15 @@
 {
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/620",
-  "package": "fruit-fast-track",
-  "modules": [],
-  "purpose": "Einmaliger, vom Eigentümer beauftragter direkter Import bereits unabhängig auf ihren alten Produktionsbranches registrierter und endabgenommener Erdbeere, Zitrone und Birne. Gleiche Git-Blobs für vollständige alte Exportpakete, aktive Assets, Quellen, Rating und Added, nur v4/v7-Indizes auf frischem main zusammengeführt. Keine Neuproduktion oder Tool-/Game-Codeänderung. CI prüft docs/ci-required und baut den Windows-Spieler nur, wenn die tatsächliche Pfadklassifikation es verlangt.",
-  "omitted": "Unveränderte Bild-, Raster-, Proof-, Approval- und Exportbytes erneut zu erzeugen oder per altem Toolhash zu revalidieren wäre gerade der nachgewiesene Stopp ohne neue Produktinformation. Keine neuen Rätsel-Tests, Solver-/Bildproduktion, Toolcode- oder native Featureänderungen; daher modules=[]. Die technische Risikoabsicherung erfolgt durch exakten Byte-/Blobvergleich aller neuen Livequellen, kanonische v4/v7-Form, Erhalt aller bestehenden Katalogzeilen und aktuelle Quellen-/CI-Prüfung. Gegebenenfalls gescheiterte echte Readerprüfung wird nicht durch CI-Green überdeckt.",
-  "test_changes": [],
-  "core_change": null,
+  "core_change": "Keine Kern-/Dauerteständerung. Direkte Originalsicht, Dateidiagnose und Paketprüfung einmalig im Produktionslauf. Prüfgrundansichten enden nach Sichtung; Produktionsoriginale bis fachlichem Abschluss nach Authoring §9 erhalten.",
   "evidence": {
+    "expires": null,
     "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
+    "purpose": null
+  },
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/617",
+  "modules": [],
+  "omitted": "Keine Zusatzmodule: keine Werkzeug-/Spiel-/CI-Codeänderung. Keine Rasterproduktion vor Motivfreigabe, keine Solver-/Proof-/Difficulty-/Bestands-/Engine-/Browserprüfung oder technischen Uploads. Keine neuen Tests.",
+  "package": "Marienkäfer · Schritte 1–2 / motif_review r02",
+  "purpose": "Reine Authoring-0.8.0-Produktion: drei Abschlussbildoriginale erhalten, tatsächliche unveränderte C-r01-Freigabe binden, separate Motivvorlage M-r02 samt Parameterkorridor vorlegen und Builder/Index/Projektion/Pointer sichern. Allgemeiner Kern ohne Player-Build.",
+  "test_changes": []
 }
