@@ -15,6 +15,7 @@ import zlib
 import pyexpat
 import decimal
 import tkinter
+from .release import release
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
@@ -58,7 +59,9 @@ def build(destination):
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
     resources = {f'ui/{name}': sha(PACKAGE / 'ui' / name) for name in ('index.html', 'app.js', 'workflow.js', 'style.css')}
     resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
-    manifest = {'format': 'picross-windows-app-v1', 'version': '588-P3', 'commit': commit,
+    product = release()
+    manifest = {'format': 'picross-windows-app-v1', 'version': product['version'], 'commit': commit,
+                'upgrade_code': product['upgrade_code'], 'product_code': product['product_code'],
                 'architecture': 'windows-x64', 'python': platform.python_version(), 'components': versions,
                 'runtime_components': runtime_versions, 'resources': resources, 'signed': False}
     manifest_file = work / 'build.json'
