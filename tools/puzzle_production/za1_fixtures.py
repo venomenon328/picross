@@ -110,12 +110,19 @@ def approve(package, destination):
                       "reveal": {k: h["reveal"][k] for k in ("file", "sha256")}}, "test_only": True})
 
 
-def isolated_checkout(root):
+def isolated_checkout(root, *, legacy=False):
+    """Create a current writable catalog, or an explicit legacy reader fixture.
+
+    Historical exports remain unchanged. Contemporary mutation tests start at
+    the required PE generation; old wire/recovery tests opt into legacy bytes.
+    """
     from .content_registry import projection
     catalog = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")
     registry = load_json(ROOT / "tests/puzzle_production/fixtures/catalog/registry.json")
+    if not legacy:
+        registry.update(format="picross-content-registry-v4", metadata=[], backgrounds=[])
     for name, value in (("content/categories.json", catalog), ("content/registry.json", registry),
-                        ("game/data/registry.json", projection(registry, catalog))):
+                        ("game/data/registry.json", projection(registry, catalog, backgrounds={}))):
         target = root / name
         target.parent.mkdir(parents=True, exist_ok=True)
         write_json(target, value)

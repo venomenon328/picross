@@ -130,7 +130,7 @@ class BackgroundConsumerTests(unittest.TestCase):
         after_sync = snapshot(self.checkout); registry.sync_runtime(self.checkout)
         self.assertEqual(snapshot(self.checkout), after_sync)
         self.assertEqual(self.protected(), before)
-        self.assertEqual(load_json(self.checkout / registry.RUNTIME)['format'], background.RUNTIME_FORMAT)
+        self.assertEqual(load_json(self.checkout / registry.RUNTIME)['format'], registry.METADATA_RUNTIME_FORMAT)
 
     def test_legacy_raster_update_and_reveal_adoption_keep_background_bytes(self):
         protected = self.protected()
@@ -202,8 +202,11 @@ class BackgroundConsumerTests(unittest.TestCase):
             self.assertEqual(snapshot(self.checkout), before)
 
     def test_saved_v2_reveal_plan_allows_false_capability_but_never_acquires_background_scope(self):
+        from tests.puzzle_production.catalog_fixtures import pre_metadata
+        from tools.puzzle_production import catalog_metadata as metadata, catalog_publication as publication
         self.checkout = isolated_checkout(self.root / 'legacy-only')
         rated_registration(self.legacy_export, self.checkout, apply=True)
+        pre_metadata(self.checkout)
         request, row = self.request(self.legacy_id, 'old-reveal')
         value, journal, files = reveal.build(self.checkout, [self.legacy_id], {self.legacy_id: row},
                                              request.parent, plan_format=reveal.SD2_FORMAT)
@@ -219,7 +222,17 @@ class BackgroundConsumerTests(unittest.TestCase):
         with self.assertRaisesRegex(InvalidInput, 'Legacy plan'): reveal.adopt(self.checkout, plan_dir / 'plan.json')
         self.assertEqual(snapshot(self.checkout), before)
         capability['enabled'] = False; write_json(self.checkout / background.CAPABILITY, capability)
-        self.assertEqual(reveal.adopt(self.checkout, plan_dir / 'plan.json')['status'], 'adopted')
+        before = snapshot(self.checkout)
+        with self.assertRaisesRegex(InvalidInput, '[Mm]igrat'):
+            reveal.adopt(self.checkout, plan_dir / 'plan.json')
+        self.assertEqual(snapshot(self.checkout), before)
+        # Construct the already-bound historical completion through its exact
+        # old journal. Its fully verified read-only repeat remains supported.
+        publication.execute(self.checkout, journal)
+        before = snapshot(self.checkout)
+        self.assertEqual(reveal.adopt(self.checkout, plan_dir / 'plan.json')['status'], 'no-op')
+        self.assertEqual(snapshot(self.checkout), before)
+        metadata.apply(self.checkout, metadata.plan_migration(self.checkout))
         capability['enabled'] = True; write_json(self.checkout / background.CAPABILITY, capability)
         rated_registration(self.background.export, self.checkout, apply=True)
         before = snapshot(self.checkout)

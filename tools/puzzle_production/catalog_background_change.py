@@ -97,11 +97,14 @@ def _build(root, request, raw, payload, *, external_root=None, snapshot=None):
     replacements = {} if previous == image else {image_path: {
         "old": publication.binary(previous) if previous is not None else None,
         "new": publication.binary(image) if image is not None else None}}
-    journal = tx.prepare(root, snapshot, writes, operation="background-adoption", replacements=replacements)
+    # Reconstruct old plans for a fully checked no-op; adoption gates actual
+    # writes on the migrated catalog. v4 snapshots select the PE journal here.
+    journal = tx.prepare(root, snapshot, writes, operation="background-adoption", replacements=replacements,
+                         generation="background")
     files = {"input/" + requests.directory(request) + "/" + name: data for name, data in payload.items()}
     if previous is not None:
         files["previous/background.png"] = previous
-    value = {"format": REBIND_FORMAT if source["format"] == "picross-catalog-background-v3" else FORMAT,
+    value = {"format": REBIND_FORMAT if source["format"] in bg.REBIND_FORMATS else FORMAT,
              "request": bg.ref("input/" + requests.record_name(request), raw),
              "snapshot": {"sources": source_hashes(snapshot), "namespaces": snapshot["namespaces"]},
              "old": journal["old"], "new": journal["new"],
@@ -172,7 +175,7 @@ def load_plan(path):
     require(entry is not None, "Plan lacks its background target entry")
     previous_source = bg._source(None, registry, entry, value["old"])
     require(previous_source is not None, "Plan lacks its background source")
-    require((previous_source.get("format") == "picross-catalog-background-v3") == (value["format"] == REBIND_FORMAT),
+    require((previous_source.get("format") in bg.REBIND_FORMATS) == (value["format"] == REBIND_FORMAT),
             "Background plan generation differs from source")
     prior = bg.current(previous_source)
     require(isinstance(prior, dict), "Invalid old current background source object")
@@ -325,6 +328,8 @@ def adopt(root, plan_path, *, seconds=300, integrated_commit=None, fail_step=Non
             if is_target: return result("no-op", value, request)
             require(not no_op_only, "Background no-op-only check requires the exact adopted target")
             require(not absent, "Missing work cannot authorize background publication")
+            from .content_registry import require_current
+            require_current(snapshot["registry"])
             tx.execute(root, journal, fail_step=fail_step, source_check=work_check)
         return result("adopted", value, request)
 
@@ -381,6 +386,8 @@ def store(root, record_path, source_root):
                 fresh = tx.capture(root)
                 require(source_hashes(fresh) == planned["snapshot"]["sources"] and
                         fresh["namespaces"] == planned["snapshot"]["namespaces"], "Background target changed before work publication")
+                from .content_registry import require_current
+                require_current(fresh["registry"])
                 target.parent.mkdir(parents=True, exist_ok=True)
                 published = False
                 try:

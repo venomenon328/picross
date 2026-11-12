@@ -157,6 +157,29 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(current['current_source']['runtime_revision'],2)
         check_checkout(self.checkout)
 
+    def test_prepared_update_preserves_metadata_after_original_category_deletion(self):
+        from tools.puzzle_production import catalog_metadata as metadata, content_registry as cr
+        # Both sealed exports precede these edits. Deleting the origin category
+        # moves every current member, without altering historical export bytes.
+        metadata.apply(self.checkout, metadata.plan(self.checkout, [
+            {'op': 'set_metadata', 'id': 'pz-test-update', 'name': 'Current title'},
+            {'op': 'category_delete', 'id': 'voegel', 'reassign_to': 'wasserwelt'},
+        ]))
+        current = deepcopy(load_json(self.checkout / cr.REGISTRY)['metadata'])
+        before = self.snapshot()
+        self.assertEqual(registration(self.first, self.checkout, apply=True)['status'], 'no-op')
+        self.assertEqual(before, self.snapshot())
+        self.assertEqual(update(self.second, self.checkout, self.expected, apply=True)['status'], 'updated')
+        self.assertEqual(load_json(self.checkout / cr.REGISTRY)['metadata'], current)
+        newer = self.make_export('different-category', 'pz-test-update', 'r03', 3, 8, category='obst-nuesse')
+        expected = file_hash(self.checkout / self.definition)
+        self.assertEqual(update(newer, self.checkout, expected, apply=True)['status'], 'updated')
+        value = check_checkout(self.checkout)
+        self.assertEqual(value['metadata'], current)
+        self.assertEqual(next(e for e in value['entries'] if e['id'] == 'pz-test-update')['category_id'], 'obst-nuesse')
+        runtime = next(e for e in load_json(self.checkout / cr.RUNTIME)['entries'] if e['id'] == 'pz-test-update')
+        self.assertEqual((runtime['name'], runtime['category_id']), ('Current title', 'wasserwelt'))
+
     def test_rejects_stale_revision_slot_category_reveal_and_occupied_package_without_writes(self):
         from unittest.mock import patch
         from tools.puzzle_production import target_adapter
@@ -168,7 +191,7 @@ class UpdateTests(unittest.TestCase):
         checked=difficulty_for_export(self.second)
         cases=[({},'0'*64,'Stale'),({'runtime_revision':1},self.expected,'higher runtime revision'),
                ({'save_slot':'changed_slot'},self.expected,'retain identity'),
-               ({'category_id':'wasserwelt'},self.expected,'retain identity'),
+               ({'category_id':'missing-category'},self.expected,'Unknown category_id'),
                ({'reveal_hash':'0'*64},self.expected,'retain the approved reveal'),
                ({'package_revision':'r01'},self.expected,'package revision already exists')]
         for changes,expected,error in cases:

@@ -14,7 +14,15 @@ static func load_fixture(id: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {}
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
-	return parsed if parsed is Dictionary and parsed.get("id") == entry.id else {}
+	if not parsed is Dictionary or parsed.get("id") != entry.id:
+		return {}
+	if entry.has("name"):
+		# V7 owns the current label. Production definition bytes and save identity
+		# remain unchanged; every normal view receives the same in-memory value.
+		if not Registry.valid_name(entry.name) or not parsed.get("reveal") is Dictionary:
+			return {}
+		parsed.reveal["name"] = entry.name
+	return parsed
 
 static func integer(value: Variant) -> bool:
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value))

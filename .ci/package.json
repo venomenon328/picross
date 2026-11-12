@@ -1,25 +1,114 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/606",
-  "package": "P1",
+  "issue": "https://github.com/venomenon328/picross/issues/576",
+  "package": "PE-A1",
   "modules": [
-    "tools"
+    "tools",
+    "production.adapter",
+    "production.catalog",
+    "native.core",
+    "native.catalog"
   ],
-  "purpose": "K01–K05: plattformunabhängige CORE_PATHS und exakt begrenzte current-view.json-Ausnahme. tools prüft beide gemeinsamen Pfadkonsumenten; kleiner Kern und regulärer Windows-Spielerbau bleiben für diesen CI-Codefix erforderlich. Betroffene kleine Tests einmal nativ unter Windows ausführen und im PR belegen.",
-  "omitted": "Keine native.*, preflight, delivery, production.* oder Chromium; keine Änderungen an Spiel, Rätseln, Pointerdaten, Publishern, Launcher oder Installer. Synthetische Pfade und Gitmodi genügen zur CI-Klassifizierung; keine Bild-/Filmbelege oder persönliche Spielabnahme. Keine zusätzliche schwere Dauersuite.",
+  "purpose": "PE-A1 K01–K12: aktuelle Metadaten/Kategorien, explizite Bestandsmigration v4/v7 und kompatible reguläre Writer. tools prüft Schema/CLI/Zuordnung, production.adapter die unveränderten Exportverträge, production.catalog Transaktionen/Quellen/Recovery, native.core/catalog Reader, Saves und Spoiler. Pflichtkern plus regulärer Windows-Spielerbau. T01/T02 werden zusätzlich einmalig getrennt geliefert.",
+  "omitted": "Kein Solver-/Bildableitungsumbau, keine neue Weboberfläche, Rasterrevision oder Savealgorithmen. Daher keine production.solver/images, native.history/completion/adapters/graphics/export, preflight, delivery oder Chromium. Keine Bestands-Solverreplays; gesonderter kleiner Prozessnachweis T01 erhält Saves vor echter Rasteränderung.",
   "test_changes": [
     {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "core",
-      "reason": "Kleine Kernregression gegen plattformabhängiges Fail-open bei CORE_PATHS/core_change und gegen zu breite Pointerfreistellung; bestehende Pfad-/Gitbindung günstig mit synthetischen PR-/Push-Diffs und nichtregulären Modi erweitern. Keine Engine, Netzwerkzugriffe oder Produktionsinputs."
+      "path": "game/tests/pe_a1_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Günstige native PE-A1-Prüfung der exakten v7-/Altformen, Capability, Namensauflösung und Save-/Spoilerkompatibilität; bestehende ausgewählte native.core/catalog-Familien, keine neue Kern- oder Galerielast."
     },
     {
-      "path": "tools/test_ci_scope.py",
+      "path": "game/tests/run_tests.gd",
       "disposition": "change-scoped",
-      "reason": "Bestehende tools-Auswahlregression um den gemeinsamen current-view-Pfadkonsumenten ergänzen: gültige Pointer bleiben content-only, unzulässige Positionen und gemischte CI-Codeänderungen nicht. Kein neuer Haupt-CI-Pfad oder schwerer Dauerlauf."
+      "reason": "Günstige native PE-A1-Prüfung der exakten v7-/Altformen, Capability, Namensauflösung und Save-/Spoilerkompatibilität; bestehende ausgewählte native.core/catalog-Familien, keine neue Kern- oder Galerielast."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_change_transactions.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende Negativfixtures erreichen mit v4/v7 wieder den vorgesehenen Reader/Recovery-Einstieg; reservierte Slots und unbekannte Journalgenerationen bleiben abgewiesen. Keine neue Testfamilie."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_consumers.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_rebind.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende kleine synthetische Quelle-/Journal-/Readerregression an die ausdrücklich versionierte PE-A1-Generation anpassen; Legacyformen und vollständige Herkunftsprüfung bleiben erhalten. Keine zusätzliche Kern- oder Bildlast."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_transactions.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_added.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_background.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_metadata.py",
+      "disposition": "change-scoped",
+      "reason": "Neue kleine synthetische PE-A1-Regressionen für aktuelle Namen/Kategorien, explizite Migration, unveränderte Herkunft, CLI, No-op, stale Quellen und Recovery. Nur im ausgewählten production.catalog; keine echte Bestandsanalyse."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_reveal.py",
+      "disposition": "change-scoped",
+      "reason": "Historische v2/v3-Reveal-Recovery explizit aus einer Legacy-Fixture prüfen; öffentliche neue Mutation verlangt Migration, gebundene Altjournale, Runtime-Bytes/mtime und geprüfter No-op bleiben erhalten. Keine neue Testfamilie."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_review.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende kleine synthetische Quelle-/Journal-/Readerregression an die ausdrücklich versionierte PE-A1-Generation anpassen; Legacyformen und vollständige Herkunftsprüfung bleiben erhalten. Keine zusätzliche Kern- oder Bildlast."
+    },
+    {
+      "path": "tests/puzzle_production/test_content_update.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_registration_budgets.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende kleine synthetische Quelle-/Journal-/Readerregression an die ausdrücklich versionierte PE-A1-Generation anpassen; Legacyformen und vollständige Herkunftsprüfung bleiben erhalten. Keine zusätzliche Kern- oder Bildlast."
+    },
+    {
+      "path": "tests/puzzle_production/test_registration_publication.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende kleine synthetische Quelle-/Journal-/Readerregression an die ausdrücklich versionierte PE-A1-Generation anpassen; Legacyformen und vollständige Herkunftsprüfung bleiben erhalten. Keine zusätzliche Kern- oder Bildlast."
+    },
+    {
+      "path": "tests/puzzle_production/test_reveal_recovery.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_sd2_catalog.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_target_adapter.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende Negativfixtures erreichen mit v4/v7 wieder den vorgesehenen Reader/Recovery-Einstieg; reservierte Slots und unbekannte Journalgenerationen bleiben abgewiesen. Keine neue Testfamilie."
+    },
+    {
+      "path": "tools/test_background_import.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende kleine synthetische Quelle-/Journal-/Readerregression an die ausdrücklich versionierte PE-A1-Generation anpassen; Legacyformen und vollständige Herkunftsprüfung bleiben erhalten. Keine zusätzliche Kern- oder Bildlast."
+    },
+    {
+      "path": "tools/test_p1_product.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine bestehende Hilfsregression für exakte v4/v7-Reader-/Fixturegrenzen; kein Testbestand aus echten Produktionsdaten und keine zusätzliche Kernlast."
     }
   ],
-  "core_change": "tools/ci_modular.py: eigenen CORE_PATHS-Eintrag mit pathlib relativ zur Repositorywurzel und POSIX-normalisiert ableiten, damit Windows core_change weiter erzwingt. tools/ci_paths.py: ausschließlich den kanonischen vierteiligen Authoring-current-view-Pfad freistellen und ungültige Pointerpositionen vor dem allgemeinen Revisionspfad abweisen. Günstige Kernregression sichert K01/K03; Player-Baupflicht für Entwicklungsdiffs, Modiausnahmen und explizite Bauaufträge unverändert.",
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,
