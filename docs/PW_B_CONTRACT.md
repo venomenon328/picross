@@ -1,4 +1,5 @@
 # PW-B · Fünfstufige Produktion 0.8.0
+
 ## #596/C · Reguläre motivtreue Rasterkorrektur
 
 Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,

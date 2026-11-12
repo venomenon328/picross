@@ -104,7 +104,11 @@ Dateihashes, Planidentität und rekonstruierte Recordbytes müssen exakt stimmen
 Candidate hat `source_type=fixed`, `variant=fixed`, proof `BUNDLE/proof.json`.
 Repair hat exakt `type=fixed_edits_empty_crop,reference,reference_variant,plan,
 record,replay`; die drei Dateien liegen im ausgewählten Bundle. Keine externe
-manuelle Autorisierung. Unveränderte Bildfreigaben bleiben gültig. Matrixgebundene
+manuelle Autorisierung. Bei späterem Phasenwechsel bleibt die ursprüngliche
+Planrevision erhalten, wenn die geprüfte raster_selection genau deren
+qualifizierten Record bindet. Checked-v3 bindet die ausdrücklich gewählte numerische
+Runtime-Revision des vorläufigen Analyseinputs, getrennt von der Paketrevision.
+Unveränderte Logik erfordert keinen neuen Analyselauf. Unveränderte Bildfreigaben bleiben gültig. Matrixgebundene
 Hinweise, Proofs, Paletten-/Sichturteile, Motiv-/Revealbeurteilung und Schwierigkeit
 müssen zum Ende passen. Die Randregel bleibt (left OR right) AND (top OR bottom).
 
@@ -114,6 +118,14 @@ erzeugt zusätzlich eine echte Checked-v3-Bewertung aus dem Enddesign, der Endma
 und Endlogik. Der aktive Default steht in content/difficulty-method.json; der
 CLI-Default 0.3 ist dafür ungeeignet. Das Checked-Objekt liegt in der inventarisierten
 Analyseablage, nicht im historischen difficulty-Objekt. Identische vollständige
+Bindung wird über `gate_evidence.difficulty` auf das Checked-v3-JSON geprüft:
+der Reader rekonstruiert die vorläufige Definition aus Enddesign/Matrix/Logik,
+Rätsel-ID und expliziter Runtime-Revision aus current_source und verlangt deren
+vollständige Checked-Bindung. Der endgültige Export verwendet den bestehenden Rebind.
+Für `visual` und `reveal_consistency` bindet der vorhandene redaktionelle Bericht
+in seinen tatsächlichen Textbytes explizit Endmatrix- und Logikhash; er enthält
+die konkreten Urteile zu Motivtreue und Reveal. Kein technisches Ersatzformat.
+Identische vollständige
 Bindung darf frisch geprüft wiederverwendet werden; geänderte Matrix erfordert
 neue Analyse, Metadatenänderung allein den bestehenden Rebind.
 

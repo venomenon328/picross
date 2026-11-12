@@ -1,4 +1,5 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
+
 ## #596/C · Reguläre motivtreue Rasterkorrektur
 
 Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,

@@ -38,7 +38,7 @@ BACKGROUND_EXPORT_INSPECTION = "picross-target-inspection-v6"
 
 
 def tool_identity(legacy=False, manual=False, color=False, paired=False, accepted_raster=False, palette=False,
-                  background=False):
+                  background=False, fixed=False):
     root = Path(__file__).resolve().parents[2]
     try:
         commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root,
@@ -62,6 +62,8 @@ def tool_identity(legacy=False, manual=False, color=False, paired=False, accepte
     if background:
         files.extend(("background_package.py", "background_assets.py", "background_contract.py", "background_io.py",
                       "background_export.py", "authoring_staging.py", "authoring_workflow.py"))
+    if fixed:
+        files.extend(('fixed_raster.py', 'raster_parameters.py'))
     return {"adapter": ADAPTER, "commit": commit, "versions": versions(),
             "modules": {n: file_hash(Path(__file__).with_name(n)) for n in files}}
 
@@ -269,6 +271,10 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
         from .manual_derivation import inspect_edited_import
         design, matrix, proof, checked, source, reference = diagnostic.candidate_check(inspect_edited_import, package, auth, budget)
         expected_proof = c["bundle"] + "/" + c["variant"] + "-proof.json"
+    elif kind == "fixed":
+        from .fixed_raster import inspect_package
+        design, matrix, proof, checked, source, reference = diagnostic.candidate_check(inspect_package, package, budget)
+        expected_proof = c['bundle'] + '/proof.json'
     elif kind == "import":
         require(h.get("repair") is None, "Ambiguous import/repair origin")
         candidate, proof, checked = diagnostic.candidate_check(inspect_candidate, bundle, c.get("variant"), budget)
@@ -318,25 +324,33 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
     params = ([auth["record"]["accepted_motif" if color_import or late_raster else "approved_motif"]["parameters"]]
               if color_chain or late_raster else h.get("approved_parameters"))
     require(isinstance(params, list) and params, "Missing explicit approved parameters")
-    for p in params:
+    from . import raster_parameters
+    modern_parameters = any(isinstance(p, dict) and p.get('format') == raster_parameters.FORMAT for p in params)
+    if modern_parameters:
+        require(h['rulebook']['version'] == '0.8.0' and kind in ('import', 'fixed'), 'New corridor requires regular 0.8 import/fixed source')
+        corridor = raster_parameters.binding(params, package.approval(h['motif'], 'motif'))
+        raster_parameters.result(corridor, design, matrix)
+        if kind == 'import':
+            require(raster_parameters.import_entry(design, matrix, c['variant']) in corridor['imports'], 'Import outside approved corridor')
+    for p in ([] if modern_parameters else params):
         require(isinstance(p,dict), "Invalid approved parameters")
         for key in ("width","height","foreground_colors"):
             integer(p.get(key),1,4096,"approved "+key)
         require(isinstance(p.get("method"),str) and isinstance(p.get("fit"),str) and
                 isinstance(p.get("actual_crop"),list) and len(p["actual_crop"]) == 4 and
                 all(type(v) is int for v in p["actual_crop"]), "Invalid approved method/fit/crop")
-    variant = source["reference"]["variant"] if kind in ("repair", "manual") or edited_import else c["variant"]
+    variant = source["reference"]["variant"] if kind in ("repair", "manual", "fixed") or edited_import else c["variant"]
     v = next(v for v in design["variants"] if v["id"] == variant)
-    require(any(isinstance(p, dict) and p.get("width") == design["width"] and p.get("height") == design["height"] and
+    require(modern_parameters or any(isinstance(p, dict) and p.get("width") == design["width"] and p.get("height") == design["height"] and
                 p.get("mode") == design["mode"] and p.get("foreground_colors") == len(design["palette"]) and
                 p.get("method") == v["method"] and p.get("fit") == design["fit"] and
                 p.get("actual_crop") == design["crop"] for p in params), "Selected design lies outside approved parameter binding")
     motif_approval = auth["record"]["accepted_motif"] if color_import or late_raster else package.json(h["motif"]["approval"])
     corridor = motif_approval.get("parameters")
     require(isinstance(corridor,dict), "Missing motif parameter corridor")
-    for key in ("width","height","foreground_colors"):
+    for key in (() if modern_parameters else ("width","height","foreground_colors")):
         integer(corridor.get(key),1,4096,"motif approval "+key)
-    require(isinstance(corridor, dict) and all(corridor.get(k) == design[k] for k in ("width", "height", "mode")) and
+    require(modern_parameters or isinstance(corridor, dict) and all(corridor.get(k) == design[k] for k in ("width", "height", "mode")) and
             corridor.get("foreground_colors") == len(design["palette"]) and corridor.get("method") == v["method"],
             "Motif approval parameter corridor differs")
     color_limit = 4 if legacy else 8
@@ -396,7 +410,7 @@ def inspect(package: Package, approval_path=None, *, legacy=False, manual_author
               "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256") if package.derivation else package.archive_sha256,
               "source": source, "width": design["width"], "height": design["height"], "mode": design["mode"],
               "difficulty": difficulty, "frame": {"left": left, "right": right, "top": top, "bottom": bottom},
-              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain, paired, late_raster, palette, background),
+              "fresh_verification": checked, "reveal": reveal, "tool": tool_identity(legacy, manual or edited_import or color_chain, color_chain, paired, late_raster, palette, background, kind == 'fixed'),
               "checked_at_utc": datetime.now(timezone.utc).isoformat(), "test_only": h.get("test_only", False)}
     if not legacy:
         report.update(format="picross-target-inspection-v2", category_id=None,
