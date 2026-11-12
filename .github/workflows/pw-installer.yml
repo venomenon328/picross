@@ -40,16 +40,22 @@ jobs:
           foreach ($name in @('USERPROFILE','LOCALAPPDATA','APPDATA','TEMP','TMP')) { Write-Output "Inherited ${name}=$([Environment]::GetEnvironmentVariable($name))" }
           foreach ($name in @('UserProfile','LocalApplicationData','ApplicationData')) { Write-Output "Known $name=$([Environment]::GetFolderPath($name,'Create'))" }
           Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders' | Format-List
+          $key = [Microsoft.Win32.Registry]::CurrentUser.OpenSubKey('Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders')
+          foreach ($name in @('AppData','Local AppData','Programs','Desktop')) { Write-Output "Raw ${name}=$($key.GetValue($name,'',[Microsoft.Win32.RegistryValueOptions]::DoNotExpandEnvironmentNames)); kind=$($key.GetValueKind($name))" }
+          $key.Close()
           $profile = [Environment]::GetFolderPath('UserProfile','Create')
-          New-Item -ItemType Directory -Force (Join-Path $profile 'AppData\Local'),(Join-Path $profile 'AppData\Roaming') | Out-Null
-          foreach ($name in @('UserProfile','LocalApplicationData','ApplicationData')) { Write-Output "After explicit creation $name=$([Environment]::GetFolderPath($name,'Create'))" }
+          $env:USERPROFILE = $profile
+          $env:LOCALAPPDATA = Join-Path $profile 'AppData\Local'
+          $env:APPDATA = Join-Path $profile 'AppData\Roaming'
+          $env:TEMP = $env:TMP = Join-Path $env:LOCALAPPDATA 'Temp'
+          New-Item -ItemType Directory -Force $env:LOCALAPPDATA,$env:APPDATA,$env:TEMP | Out-Null
+          & powershell.exe -NoProfile -Command 'foreach ($name in @("UserProfile","LocalApplicationData","ApplicationData","Programs","DesktopDirectory")) { Write-Output "Fresh process $name=$([Environment]::GetFolderPath($name,"Create"))" }'
           exit 0
           '@ | Set-Content -LiteralPath $script -Encoding utf8
           try {
             New-LocalUser -Name $name -Password $password | Out-Null
             icacls.exe $output /grant "${name}:(OI)(CI)M" /q
-            foreach ($phase in @('without-users','with-users')) {
-              if ($phase -eq 'with-users') { Add-LocalGroupMember -SID 'S-1-5-32-545' -Member $name }
+            foreach ($phase in @('fresh-env')) {
               $stdout = Join-Path $output "$phase.stdout"
               $stderr = Join-Path $output "$phase.stderr"
               $child = Start-Process powershell.exe -Credential $credential -LoadUserProfile -WindowStyle Hidden -Wait -PassThru -ArgumentList @('-NoProfile','-File',"`"$script`"") -RedirectStandardOutput $stdout -RedirectStandardError $stderr
