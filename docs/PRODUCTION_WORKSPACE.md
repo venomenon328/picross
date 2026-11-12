@@ -178,14 +178,14 @@ neuer Ergebnisse erhält die aktive gebundene Ansicht und ihre Eingaben.
 ### 4.1 Einmalige Einrichtung
 
 Der Launcher erhält genau einen vorhandenen lokalen Projektcheckout und einen
-separaten eigenen Zustands-/Cacheordner. Primärer Einstieg ist das portable
-Windows-x64-App-Image mit `Picross-Start.exe`, privater Python-/Pillow-/Tcl/Tk-
+separaten eigenen Zustands-/Cacheordner. Primärer Einstieg ist der per-user
+Windows-x64-MSI aus dem vorhandenen App-Image mit `Picross-Start.exe`, privater Python-/Pillow-/Tcl/Tk-
 Laufzeit und sämtlichen benötigten unveränderten Readern aus einem Buildcommit.
 Kein globales Python/Node oder Laufzeitdownload. Git mit `--no-lazy-fetch` bleibt
 externe Voraussetzung; vorhandene Anmeldung wiederverwenden, Fehler früh auf Deutsch
 melden. Native Einrichtung/Status, Browser öffnen und geordneter Stop gehören dazu.
 Die CMD bleibt Entwicklerfallback mit vertrauenswürdigem Programmcheckout.
-Die vollständige [P3-Entscheidung](https://github.com/venomenon328/picross/issues/588#issuecomment-6809498803)
+Die vollständige [P4-Entscheidung](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437)
 und [Bau-/Lieferbindung](../tools/production_workspace/WINDOWS_BUILD.md) sind maßgeblich. Der
 Zustandsordner liegt nicht in `content/`, `game/` oder einem fremden Arbeitsbaum.
 [WORKSPACE](dev-rules/WORKSPACE.md) gilt; persönliche Pfade werden nicht committed.
@@ -356,8 +356,25 @@ P2-Transaktion samt Ergebnisprüfung läuft unverändert aus; unbekannter Ausgan
 bleibt unbekannt, kein automatischer Retry. Keine pauschale Python-/Gitbeendigung.
 Minimieren/Tab schließen stoppt nicht. Absturzreste werden nach tatsächlich
 freigegebenem OS-Lock ersetzt, nicht anhand eines PIDs als sicher angenommen.
-Updates ersetzen nach Stop den vollständigen App-Ordner bei erhaltenem Zustand.
-Kein MSI, Updater oder Dienst. Das App-Image ist ohne Zertifikatauftrag unsigniert;
+Updates ersetzen nach vollständigem Stop per neuerem MSI alle installierten
+Programmdateien gemeinsam. Einzige Produktversionsquelle ist
+[release.json](../tools/production_workspace/release.json), unabhängig von Authoring,
+Spielversion und der alten Paketkennung 588-P3. Feste Upgradeidentität, neue
+ProductCodes je Version, keine Same-Version-Installation und kein Downgrade.
+Installation ohne Elevation unter dem eigenen per-user-Programmverzeichnis;
+Startmenü und optional Desktoplink. Konfiguration/Refs/Remote, Cache, `.launcher`-
+Dateien/Port, Browserprofil und externer Checkout bleiben beim Update, Uninstall
+und Wiederinstallieren erhalten. Uninstall entfernt nur eigene Programmdateien,
+Links und den Anwendungseintrag; alte portable Ordner bleiben unangetastet.
+Gitrefresh ist kein Appupdate. Ein Windows-Lebenszeichen pro Benutzer/Produkt
+gilt unabhängig vom `--state` schon während Einrichtung und bis nach dem Drain.
+Vor Dateimanipulation prüft MSI dieses Zeichen, den älteren Standardzustandslock
+und belegte Payloaddateien über Restart Manager. Laufend, fremd oder unklar:
+verständlich abbrechen und nach regulärem Stop wiederholen; kein Kill, kein
+automatischer Stop/Restart und keine erzwungene Rebootaktion. Neue Launcherstarts
+während der Windows-MSI-Ausführung werden zurückgewiesen. Der getrennte Bau
+hat allein `workflow_dispatch`; keinerlei Einbindung in Package CI. Kein Updater
+oder Dienst. Das App-Image und der Installer sind ohne Zertifikatauftrag unsigniert;
 Lizenzen und mögliche SmartScreenhinweise gehören zur Lieferung.
 
 ## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist

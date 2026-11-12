@@ -32,10 +32,11 @@ keinen als Cloudquelle ausgegebenen Folgeauftrag.
 
 ## Start und einmalige Einrichtung
 
-Primärer Einstieg ist das portable **Windows-x64-App-Image mit Picross-Start.exe**.
-Den vollständigen ZIP-Download aus dem P3-Draft-PR zu
-[Issue #588](https://github.com/venomenon328/picross/issues/588) entpacken und die EXE
-doppelt anklicken. Private Python-/Pillow-/Tcl/Tk-Laufzeit, unveränderte benötigte
+Primärer Einstieg ist der per-user **Windows-x64-MSI** nach
+[P4](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437).
+Installieren und den Startmenüeintrag „Picross-Produktionsassistent“ öffnen;
+Desktoplink optional. Das bestehende portable App-Image bleibt Fallback.
+Private Python-/Pillow-/Tcl/Tk-Laufzeit, unveränderte benötigte
 Produktionsreader und UI sind enthalten; kein globales Python/Node, pip oder
 Laufzeitdownload. **Git für Windows mit `--no-lazy-fetch` bleibt Voraussetzung**,
 damit die bisherige Git-/SSH-/Credential-Einrichtung weiterverwendet wird.
@@ -51,7 +52,8 @@ und schreibt keine Konfiguration. Der Datencheckout benötigt **keine ausführba
 tools-Quellen** und liefert niemals Anwendungscode; sämtliche Reader stammen aus
 dem gebundenen App-Build. Fehlende Imports einschließlich `authoring_workflow`,
 Bilddekodierung, UI-/Tcl/Tk-Ressourcen, Gitfähigkeit und Einrichtung werden vor
-Bereitschaft geprüft. Defekte Lieferungen als gesamten Ordner neu entpacken.
+Bereitschaft geprüft. Defekte Installationen regulär deinstallieren und erneut installieren;
+der getrennte Zustand bleibt erhalten.
 
 Bestehende `config.json` im Format `picross-production-workspace-config-v1`,
 gewählter Remote/Refs, `git-cache-pw-v1` und `sync-pw-v1.json` bleiben nutzbar.
@@ -87,6 +89,21 @@ kein harter Abbruch und keine automatische Wiederholung. Unbekannte Ergebnisse
 bleiben als solche sichtbar. Danach sind Port und Lock freigegeben; Konfiguration,
 Cache, Browser und Checkout bleiben erhalten. Absturzreste werden erst nach
 Erwerb des OS-Locks ersetzt, niemals durch Töten eines gespeicherten PIDs.
+
+Updates erfolgen nach vollständigem Stop per neuerem MSI. Version, stabile Upgrade-
+identität und WiX-Bindung stammen aus [release.json](release.json); die frühere
+Paketkennung 588-P3 ist keine Produktversion. Same-Version-Installation und Downgrade
+sind gesperrt. Der Installer ersetzt alle eigenen Programmdateien gemeinsam und
+fasst Zustand/Cache, Browserprofil, Checkout/Refs und portable Ordner nicht an.
+Ein zustandsunabhängiges Windows-Lebenszeichen gilt bereits während Einrichtung
+und bleibt bis zum Ende des P2-Drains erhalten. MSI prüft es vor Dateimanipulation,
+zusätzlich den alten Standardlock und sämtliche belegten Payloaddateien über
+Windows Restart Manager; unklar bedeutet Abbruch. Keine automatische Beendigung.
+Während MSI-Ausführung beginnt kein neuer Launcherbetrieb. Deinstallation entfernt
+nur eigene installierte Dateien/Links und den Windows-Anwendungseintrag.
+„Neuere Ergebnisse suchen“ aktualisiert Gitdaten, keine Programmversion.
+Der eigene [Installerbau](WINDOWS_BUILD.md) läuft ausschließlich manuell;
+Package CI und regulärer Spiel-Windowsbau bleiben getrennt.
 
 ## Entwicklerfallback
 

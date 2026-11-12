@@ -1,29 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/596",
-  "package": "C",
+  "issue": "https://github.com/venomenon328/picross/issues/588",
+  "package": "P4",
   "modules": [
-    "tools",
-    "production.images",
-    "production.adapter"
+    "tools"
   ],
-  "purpose": "C-K01–C-K04: direkte Bildsichtung, geschlossener Parameterkorridor, reguläre feste Mono-/Farbableitung und vollständige Rasterqualifikation.",
-  "omitted": "Keine Solver-/Ratingalgorithmus-, Katalogwriter-, Runtime- oder Rendereränderung: kein production.solver/catalog, native.*, preflight, delivery oder Chromium. Kern liefert Windows-Spieler. C-T01/T02 einmalig am Lieferhead; unabhängiges C-R01 danach.",
+  "purpose": "P4-K01–K08: versioniertes per-user MSI für das bestehende App-Image, Schutz laufender Instanzen, ausschließlich manueller Produktbau. tools prüft kleine Quell-/Metadatenregressionen; regulärer Kern liefert den Windows-Spieler.",
+  "omitted": "Keine Fachproduktion, Solver, Integration, Runtime, Hosting oder Spieleränderung: keine production.*, native.*, preflight, delivery oder Chromium. Echte MSI-Installation T02 und Browserbedienung T03 einmalig vor Review außerhalb Package CI; unabhängiges P4-A01 bleibt separat. T04 erst nach freigegebenem Merge, vor Verteilung.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_fixed_raster.py",
+      "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische Edit-/Crop-/Korridor-/Masken-/Prooffälle; ausschließlich production.images."
-    },
-    {
-      "path": "tests/puzzle_production/test_fixed_raster_adapter.py",
-      "disposition": "change-scoped",
-      "reason": "Echte synthetische Git-/Builder-/ZIP-/Angebots-/Pointerprüfung mit aktiver 0.4 und stale Gegenproben; ausschließlich production.adapter."
-    },
-    {
-      "path": "tools/production_workspace/check_ui_loading.cjs",
-      "disposition": "change-scoped",
-      "reason": "Bestehender browserfreier UI-Durchstich prüft reichen Korridor, offene/ungefähre/exakte Einzelwerte und vollständige Originalanzeige ohne falsche Vorbelegung."
+      "reason": "P4-T01: strikte Versionsbereiche, stabile Upgradeidentität, Same-Version-/Downgradebedingungen, per-user Pfade, Uninstall-/Prozessschutz und alleiniger Dispatch. Kein MSI-Bau/Installationslauf in tools."
     }
   ],
   "core_change": null,

@@ -1,0 +1,61 @@
+name: Manual production assistant installer
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_commit:
+        description: Full trusted source SHA already integrated in main
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  installer:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Select explicit trusted source
+        shell: pwsh
+        env:
+          SOURCE_COMMIT: ${{ inputs.source_commit }}
+        run: |
+          if ($env:SOURCE_COMMIT -cnotmatch '^[0-9a-f]{40}$') { throw 'Full source SHA required' }
+          git merge-base --is-ancestor $env:SOURCE_COMMIT origin/main
+          if ($LASTEXITCODE -ne 0) { throw 'Source must be integrated in main' }
+          git checkout --detach $env:SOURCE_COMMIT
+          if ($LASTEXITCODE -ne 0) { throw 'Source checkout failed' }
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+          architecture: x64
+      - name: Pinned private build environment
+        shell: pwsh
+        run: |
+          python -m venv "$env:RUNNER_TEMP\pw-env"
+          & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m pip install pip==26.1.2
+          if ($LASTEXITCODE -ne 0) { throw 'pip setup failed' }
+          & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m pip install --only-binary=:all: -r tools/production_workspace/requirements-windows.txt
+          if ($LASTEXITCODE -ne 0) { throw 'Pinned dependency setup failed' }
+      - name: Build payload and MSI, then isolated installer lifecycle
+        shell: pwsh
+        run: |
+          & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.build_installer --output "$env:RUNNER_TEMP\pw-product"
+          if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
+          & tools/production_workspace/packaging/smoke-user.ps1 -Python "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -Build "$env:RUNNER_TEMP\pw-product" -Output "$env:RUNNER_TEMP\pw-smoke"
+      - name: Targeted product download, no release or deployment
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: Picross-Produktionsassistent-${{ inputs.source_commit }}
+          path: |
+            ${{ runner.temp }}/pw-product/*.msi
+            ${{ runner.temp }}/pw-product/*.msi.sha256
+            ${{ runner.temp }}/pw-product/START.txt
+            ${{ runner.temp }}/pw-product/delivery.json
+          if-no-files-found: error
+          retention-days: 14
+          compression-level: 0

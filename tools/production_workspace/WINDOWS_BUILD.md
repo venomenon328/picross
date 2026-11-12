@@ -1,11 +1,20 @@
 # Windows-App bauen und prüfen
 
-Maßgeblich: [P3/K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6809498803).
+Maßgeblich: [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437).
 Launcherbau und regulärer Windows-Spieler der Package-CI bleiben getrennt.
 Keine neuen automatischen Trigger und kein Release/Tag. Das zusätzlich beauftragte
 Nonogramm-Icon ist unter [assets](assets/README.md) gebunden.
 
 ## Gebundener Bau
+
+Einzige Releasequelle ist [release.json](release.json): validiertes
+`MAJOR.MINOR.PATCH` im MSI-Bereich (255/255/65535), feste Upgrade-GUID, neue
+deterministische Product-GUID je Version. Startversion steht ausschließlich dort.
+Für ein Update diese Quelle monoton erhöhen; Authoring-/Spielversion und 588-P3
+sind keine Installerproduktversion. Keine inhaltsabweichende Same-Version-
+Installation und kein Downgrade; nach Uninstall ist Wiederinstallation möglich.
+App-/Komponentenmanifest, MSI, Dateiname und Lieferreport verwenden dieselbe
+Version und den sauberen Quellcommit. Zustand und Datencheckout bleiben getrennt.
 
 CPython **3.13.14 Windows x64**, pip **26.1.2**, Tcl/Tk **8.6.15** und sämtliche
 Buildpakete exakt nach [requirements-windows.txt](requirements-windows.txt).
@@ -18,6 +27,50 @@ E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m pip install pip==26.1.2
 E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m pip install --only-binary=:all: -r tools/production_workspace/requirements-windows.txt
 E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.build_windows --output E:\EigeneArbeit\pw-build
 ```
+
+Für das vollständige Produkt stattdessen den Installer-Einstieg ausführen:
+
+```powershell
+E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.build_installer --output E:\EigeneArbeit\pw-installer
+E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.smoke_installer --build E:\EigeneArbeit\pw-installer --output E:\EigeneArbeit\pw-installer-smoke
+```
+
+Windows 11 x64, vorhandener .NET-Framework-4.x-Compiler/Runtime; kein globaler
+WiX-Setup oder Elevation für den lokalen Bau. Das offizielle WiX-3.14.1-Binärarchiv
+wird nach URL/SHA-256 aus der Releasequelle geprüft; es entspricht der
+CSC-Chocolatey-Paketbindung `3.14.1.20250415` (Paketrevision, keine andere Engine).
+WiX-Compiler, Linker, UI und eingebettete WiX-Lizenz kommen aus diesem Archiv.
+Der kleine eigenständige C#-Guard läuft aus der MSI-Binärtabelle vor InstallInitialize, auch beim
+Upgrade/Uninstall. Restart Manager wird ausschließlich lesend benutzt; MSI-
+Restart/Shutdown deaktiviert. Vollständiger Austausch mit MajorUpgrade nach
+InstallInitialize erlaubt transaktionalen Rollback. Kein Installer schreibt in
+Checkout, PW-Zustand, Browserprofil oder portable Altordner.
+
+Der [eigene Workflow](../../.github/workflows/pw-installer.yml) hat ausschließlich
+`workflow_dispatch`, liest eine volle ausdrücklich gewählte SHA, die in `main`
+integriert sein muss, baut sauber und startet genau dieselben Bau-/Smokeskripte.
+Kein Aufruf aus Package CI, kein automatischer Browser-/Installationslauf dort.
+Produktdownload: `Picross-Produktionsassistent-X.Y.Z-windows-x64.msi`, `.sha256`,
+`START.txt`, `delivery.json`; 14 Tage Retention. Kein Release/Tag/Deployment.
+Der Workflow wird erstmals nach gesondert freigegebenem Merge regulär aufrufbar.
+P4-T04 bleibt bis zum echten manuellen Run und binären Rückdownload offen.
+
+P4-T01 prüft kleine Quell-/Metadatenverträge im gewählten `tools`-Modul.
+P4-T02 installiert unter nicht erhöhtem Testbenutzer ausschließlich mit synthetischem
+Zustand, baut aus einem separaten sauberen synthetischen Quellcommit eine echte
+Vorgängerversion, installiert und aktualisiert sie. MSI-Codes, Inventar/Lizenzen,
+Startmenü/Anwendungseintrag, Zweitstart/Port, Same-Version/Downgrade, laufende App,
+fremde Dateibelegung, begonnener synthetischer P2-Drain sowie Uninstall/Reinstall
+werden tatsächlich geprüft. Der Drain nutzt den gleichen Source-Runtimevertrag
+mit eingetretener synthetischer Transaktion; kein Testbypass im Frozen-Produkt.
+Kein Test an echten Zuständen/Refs; bestehende Installation sperrt den Smoke.
+Lokale Testdateien/Logs danach entfernen; kein regulärer Technik-Upload.
+P4-T03 bleibt die tatsächliche Bedienung des installierten Startmenüeintrags,
+nativer Fenster und Standardbrowsers mit synthetischem heutigem Job/Bild und
+erhaltener Browseroption am gleichen Origin nach Upgrade. HTTP ersetzt sie nicht.
+P4-A01 benötigt unabhängig vollständigen Diff/CI/T01–T03 und echte MSI-Bytes.
+Im Draft-PR Commit, MSI-/EXE-Hash, Größe, Inventar, tatsächlichen Binärabruf,
+Szenarien/Akteur/Windowsversion, Einschränkungen und befristeten Prüfzugang nennen.
 
 Der Build prüft Versionen und sauberen Quellstand, bündelt Python, transitiv
 benötigte unveränderte Produktionsmodule einschließlich `authoring_workflow`,

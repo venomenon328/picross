@@ -1,0 +1,7 @@
+{
+  "version": "0.1.0",
+  "upgrade_code": "9F958827-537B-4D84-AF17-462F8F78A8D4",
+  "wix_package": "3.14.1.20250415",
+  "wix_url": "https://github.com/wixtoolset/wix3/releases/download/wix3141rtm/wix314-binaries.zip",
+  "wix_sha256": "6ac824e1642d6f7277d0ed7ea09411a508f6116ba6fae0aa5f2c7daa2ff43d31"
+}
