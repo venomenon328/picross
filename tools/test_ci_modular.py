@@ -28,6 +28,56 @@ class PackageContract(unittest.TestCase):
         p = package(); p['modules'] = []
         self.assertEqual(self.validate(p)['modules'], [])
 
+    def test_core_paths_are_repository_relative_posix_paths_on_this_platform(self):
+        self.assertIn('tools/ci_modular.py', ci.CORE_PATHS)
+        for path in ci.CORE_PATHS:
+            with self.subTest(path=path):
+                self.assertFalse(Path(path).is_absolute())
+                self.assertNotIn('\\', path)
+                self.assertTrue((ci.ROOT / path).is_file())
+
+    def test_current_view_exception_is_exact_and_never_hides_development(self):
+        valid = [f'content/authoring/{identity}/current-view.json'
+                 for identity in ('pz-synthetic', 'pz-0', 'pz-' + 'a' * 60)]
+        invalid = [
+            'content/authoring/pz-synthetic/Current-view.json',
+            'content/authoring/pz-synthetic/current-view.JSON',
+            'content/authoring/pz-Synthetic/current-view.json',
+            'content/authoring/PZ-synthetic/current-view.json',
+            'content/authoring/pz-/current-view.json',
+            'content/authoring/pz-' + 'a' * 61 + '/current-view.json',
+            'content/authoring/pz-bad_id/current-view.json',
+            'content/authoring/current-view.json',
+            'content/authoring//current-view.json',
+            'content/authoring/pz-synthetic/current-view.txt',
+            'content/authoring/pz-synthetic/current-view.json.py',
+            'content/authoring/pz-synthetic/current-view.json/',
+            'content/authoring/pz-synthetic/r01/current-view.json',
+            'content/authoring/pz-synthetic/current-view.json/extra.json',
+            'content/authoring/pz-synthetic/../current-view.json',
+            'content/authoring/pz-synthetic/./current-view.json',
+            'content/authoring//pz-synthetic/current-view.json',
+            r'content/authoring/pz-synthetic\current-view.json',
+            'content/packages/pz-synthetic/current-view.json',
+            'content/authoring/pz-synthetic/unknown.json',
+        ]
+        for path in valid + invalid:
+            with self.subTest(path=path):
+                self.assertEqual(ci.content_path(path), path in valid)
+                for event in ('pull_request', 'push'):
+                    self.assertEqual(ci.player_requirement([path, ci.PLAN_PATH], [], event=event)['required'],
+                                     path in invalid)
+        pointer = valid[0]
+        for path in ('tools/ci_modular.py', 'tools/ci_paths.py', 'tools/helper.py',
+                     '.github/workflows/ci-modular.yml', 'game/main.gd'):
+            for event in ('pull_request', 'push'):
+                with self.subTest(path=path, event=event):
+                    self.assertTrue(ci.player_requirement([pointer, path], [], event=event)['required'])
+        for modules in (['native.core'], ['preflight'], ['delivery']):
+            self.assertTrue(ci.player_requirement([pointer], modules, event='pull_request')['required'])
+        self.assertTrue(ci.player_requirement([pointer], [], event='workflow_dispatch')['required'])
+        self.assertTrue(ci.player_requirement([pointer], [], event='push', nonregular=[pointer])['required'])
+
     def test_player_exception_is_diff_bound_and_never_hides_development(self):
         cases = [
             (['README.md', ci.PLAN_PATH], [], False),
@@ -95,8 +145,11 @@ class PackageContract(unittest.TestCase):
 
     def test_core_growth_and_test_changes_need_a_decision(self):
         p = package()
-        with self.assertRaisesRegex(ValueError, 'core change'):
-            self.validate(p, ['tools/ci_modular.py'])
+        for path in ('tools/ci_modular.py', 'tools/ci_paths.py'):
+            for reason in (None, '', '   '):
+                p['core_change'] = reason
+                with self.subTest(path=path, reason=reason), self.assertRaisesRegex(ValueError, 'core change'):
+                    self.validate(p, [path])
         p['core_change'] = 'A small package contract guard replaces automatic full selection'
         self.validate(p, ['tools/ci_modular.py'])
         with self.assertRaisesRegex(ValueError, 'lifecycle'):
@@ -202,6 +255,42 @@ class PackageContract(unittest.TestCase):
 
 
 class GitBinding(unittest.TestCase):
+    def test_current_view_production_diff_is_build_free_for_pr_and_main_push(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            def git(*args):
+                return subprocess.check_output(['git', *args], cwd=root, stderr=subprocess.DEVNULL).decode().strip()
+            def commit(message):
+                git('add', '.'); git('commit', '-qm', message)
+                return git('rev-parse', 'HEAD')
+            git('init', '-q'); git('config', 'user.name', 'test'); git('config', 'user.email', 'test@example.invalid')
+            (root/'.ci').mkdir(); (root/ci.PLAN_PATH).write_text(json.dumps(package()))
+            base = commit('base')
+            p = package(); p['package'] = 'synthetic-content'; p['modules'] = []
+            (root/ci.PLAN_PATH).write_text(json.dumps(p))
+            pointer = 'content/authoring/pz-synthetic/current-view.json'
+            for path in (pointer, 'content/authoring/index.json',
+                         'content/authoring/pz-synthetic/r01/record.json',
+                         'content/authoring/pz-synthetic/r01/workspace.json',
+                         'content/authoring/pz-synthetic/r01/package.zip'):
+                target = root/path; target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(b'synthetic path classification only\n')
+            head = commit('production and package plan')
+            for event in ('pull_request', 'push'):
+                plan = ci.load_plan(base, head, event, root=root)
+                self.assertEqual(plan['modules'], [])
+                self.assertFalse(plan['player']['required'])
+            # All nonregular Git modes stay build-required without OS symlink privileges.
+            blob = git('hash-object', '-w', pointer)
+            for mode in ('100755', '120000', '160000'):
+                oid = head if mode == '160000' else blob
+                git('update-index', '--cacheinfo', f'{mode},{oid},{pointer}')
+                git('commit', '-qm', 'synthetic nonregular mode')
+                changed = git('rev-parse', 'HEAD')
+                for event in ('pull_request', 'push'):
+                    with self.subTest(mode=mode, event=event):
+                        self.assertTrue(ci.load_plan(base, changed, event, root=root)['player']['required'])
+
     def test_real_git_diff_includes_renames_and_nonregular_document_modes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
