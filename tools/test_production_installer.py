@@ -114,6 +114,8 @@ class InstallerContractTests(unittest.TestCase):
         self.assertIn('ref: main', workflow)
         self.assertIn('git checkout --detach $source', workflow)
         self.assertIn('steps.source.outputs.source_commit', workflow)
+        self.assertIn('-m tools.production_workspace.verify_installer', workflow)
+        self.assertNotIn('smoke-user.ps1', workflow)
         for forbidden in ('pull_request:', 'push:', 'schedule:', 'workflow_run:', 'workflow_call:'):
             self.assertNotIn(forbidden, triggers)
         for path in (ROOT / '.github/workflows/ci-modular.yml', ROOT / 'tools/ci_modular.py'):
