@@ -1,0 +1,48 @@
+{
+  "format": "picross-windows-app-v1",
+  "version": "0.1.0",
+  "commit": "8cd584aad17fe2b8b0189c278cb11a8ddda507d3",
+  "upgrade_code": "9F958827-537B-4D84-AF17-462F8F78A8D4",
+  "product_code": "021FE1D7-1C3E-5E33-A831-5AADAD1B3742",
+  "architecture": "windows-x64",
+  "python": "3.13.14",
+  "components": {
+    "Pillow": "12.3.0",
+    "PyInstaller": "6.22.3",
+    "pyinstaller-hooks-contrib": "2026.10",
+    "altgraph": "0.17.5",
+    "packaging": "26.3",
+    "pefile": "2024.8.26",
+    "pywin32-ctypes": "0.2.3",
+    "setuptools": "84.2.1"
+  },
+  "runtime_components": {
+    "Tcl/Tk": "8.6.15",
+    "OpenSSL": "OpenSSL 3.0.21 9 Jun 2026",
+    "Expat": "expat_2.8.1",
+    "zlib": "1.3.1",
+    "mpdecimal": "4.0.0",
+    "bzip2": "1.0.8",
+    "liblzma": "5.2.5",
+    "libffi": "3.4.4"
+  },
+  "resources": {
+    "ui/index.html": "1636b33a3df9c6215246f4c90068a8803552f8926f8ba11759e0a4d246cc200f",
+    "ui/app.js": "b190f0c028997558d69dff52ad597f2a4be2dd898f04841041fb17ff36ffe7cf",
+    "ui/workflow.js": "ac91ea75c264947012b95c1ccc6d3e3ea777e52a7ffb85d63e0135d966595d40",
+    "ui/style.css": "c8290306711ea47589679871d76ca9335a4c8208a9ccd09fcab0ca3ceb73ac86",
+    "assets/launcher.ico": "be439fa4c88bbea59d9fc1deceedd9baebb3a1472015ecbbd4688caaeb9b3082"
+  },
+  "signed": false,
+  "zip_bytes": 21333891,
+  "zip_sha256": "ba2116f7d75a5245b147830a9ad1c970a2414396e30c1996df59c64f12a52eca",
+  "exe_bytes": 4180815,
+  "exe_sha256": "b5bc4f7039c3d5872d45a9ffe79904d00985b43a4245d10e3fd37c4f7229b792",
+  "msi_file": "Picross-Produktionsassistent-0.1.0-windows-x64.msi",
+  "msi_sha256": "63e03dcb88dbe1c6105f0085ab534a54fbed8322ca77f893fbbb4ef5dcb25fb2",
+  "msi_bytes": 21654630,
+  "wix_package": "3.14.1.20250415",
+  "wix_sha256": "6ac824e1642d6f7277d0ed7ea09411a508f6116ba6fae0aa5f2c7daa2ff43d31",
+  "guard_sha256": "95c677f11c97745af5d4c258f819aa6dbf30989d6ff62c3a68a5efd29451c9f5",
+  "guard_compiler_sha256": "46809206887326d2d24db1eff1f3064de972c3451abe766b49111450a5e08e00"
+}
