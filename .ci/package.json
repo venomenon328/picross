@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/620",
-  "package": "fruit-fast-track",
+  "issue": "https://github.com/venomenon328/picross/issues/614",
+  "package": "Libelle-S2",
   "modules": [],
-  "purpose": "Einmaliger, vom Eigentümer beauftragter direkter Import bereits unabhängig auf ihren alten Produktionsbranches registrierter und endabgenommener Erdbeere, Zitrone und Birne. Gleiche Git-Blobs für vollständige alte Exportpakete, aktive Assets, Quellen, Rating und Added, nur v4/v7-Indizes auf frischem main zusammengeführt. Keine Neuproduktion oder Tool-/Game-Codeänderung. CI prüft docs/ci-required und baut den Windows-Spieler nur, wenn die tatsächliche Pfadklassifikation es verlangt.",
-  "omitted": "Unveränderte Bild-, Raster-, Proof-, Approval- und Exportbytes erneut zu erzeugen oder per altem Toolhash zu revalidieren wäre gerade der nachgewiesene Stopp ohne neue Produktinformation. Keine neuen Rätsel-Tests, Solver-/Bildproduktion, Toolcode- oder native Featureänderungen; daher modules=[]. Die technische Risikoabsicherung erfolgt durch exakten Byte-/Blobvergleich aller neuen Livequellen, kanonische v4/v7-Form, Erhalt aller bestehenden Katalogzeilen und aktuelle Quellen-/CI-Prüfung. Gegebenenfalls gescheiterte echte Readerprüfung wird nicht durch CI-Green überdeckt.",
+  "purpose": "Reine Rätselproduktion Schritte 1–2: unveränderte Originale, tatsächliche B-r01-Freigabe, native vorlagentreue Mono-Motivvorlage M-r02 und vorgeschlagener Parameterkorridor, Builder-v3-Übergabe mit Index/Projektion/current-view. Kleiner Quellen-/Plankern, kein Player-Build.",
+  "omitted": "Keine Werkzeug-/Spieländerung, Raster-/Solver-/Proofproduktion oder Integration. Keine production.*, tools, native.*, preflight, delivery oder Chromium; keine neuen Rätseltests oder Bestandsreplays. Direkte Original-/Kleinsichtung, Dateibindungen und Builderprüfung sichern diesen Bildauftrag. Motiv-/Parameterfreigabe bleibt offen.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
