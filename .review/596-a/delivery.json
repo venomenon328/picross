@@ -1,0 +1,39 @@
+{
+  "format": "picross-windows-app-v1",
+  "version": "588-P3",
+  "commit": "843e60ee84be0220a3612249df72ba72e983eb70",
+  "architecture": "windows-x64",
+  "python": "3.13.14",
+  "components": {
+    "Pillow": "12.3.0",
+    "PyInstaller": "6.22.3",
+    "pyinstaller-hooks-contrib": "2026.10",
+    "altgraph": "0.17.5",
+    "packaging": "26.3",
+    "pefile": "2024.8.26",
+    "pywin32-ctypes": "0.2.3",
+    "setuptools": "84.2.1"
+  },
+  "runtime_components": {
+    "Tcl/Tk": "8.6.15",
+    "OpenSSL": "OpenSSL 3.0.21 9 Jun 2026",
+    "Expat": "expat_2.8.1",
+    "zlib": "1.3.1",
+    "mpdecimal": "4.0.0",
+    "bzip2": "1.0.8",
+    "liblzma": "5.2.5",
+    "libffi": "3.4.4"
+  },
+  "resources": {
+    "ui/index.html": "22d01dc4eb9d1e9b23bc75d4da583ff8aa1da29ebbc42033c66f92a3253a2cf0",
+    "ui/app.js": "98dd5a5f3601cc7a66856afe90a5a931f6ef6dd3752c3f84ee4acdee8c861231",
+    "ui/workflow.js": "73b8cf301030acfc7947ecf1e74e85d13533202b13cfca16192180ac76fbf26a",
+    "ui/style.css": "b14224a1b706181034ff9d235b0799b04afc8e2be7f51bf2d94275e202b63bb6",
+    "assets/launcher.ico": "be439fa4c88bbea59d9fc1deceedd9baebb3a1472015ecbbd4688caaeb9b3082"
+  },
+  "signed": false,
+  "zip_bytes": 21287727,
+  "zip_sha256": "d1f2175001de4dc7b8ebdc36eec80cee44aa657fbb5a044344fcc27a73de4d6d",
+  "exe_bytes": 4137574,
+  "exe_sha256": "e69607d0af1909ae088a5c60442b80cb74d6fcfa1ba0d9877ed36ff4068c28cf"
+}
