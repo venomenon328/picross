@@ -23,6 +23,11 @@
       "reason": "Günstige native PE-A1-Prüfung der exakten v7-/Altformen, Capability, Namensauflösung und Save-/Spoilerkompatibilität; bestehende ausgewählte native.core/catalog-Familien, keine neue Kern- oder Galerielast."
     },
     {
+      "path": "tests/puzzle_production/test_background_change_transactions.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende Negativfixtures erreichen mit v4/v7 wieder den vorgesehenen Reader/Recovery-Einstieg; reservierte Slots und unbekannte Journalgenerationen bleiben abgewiesen. Keine neue Testfamilie."
+    },
+    {
       "path": "tests/puzzle_production/test_background_consumers.py",
       "disposition": "change-scoped",
       "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
@@ -83,6 +88,11 @@
       "reason": "Bestehende synthetische Produktions-/Recoverytests auf die explizite v4/v7-Zielgeneration umstellen und ihre exakt gebundenen Legacyfälle erhalten; gleiche ausgewählte Fachfamilien, keine Reduzierung der Quellenprüfungen."
     },
     {
+      "path": "tests/puzzle_production/test_target_adapter.py",
+      "disposition": "change-scoped",
+      "reason": "Bestehende Negativfixtures erreichen mit v4/v7 wieder den vorgesehenen Reader/Recovery-Einstieg; reservierte Slots und unbekannte Journalgenerationen bleiben abgewiesen. Keine neue Testfamilie."
+    },
+    {
       "path": "tools/test_background_import.py",
       "disposition": "change-scoped",
       "reason": "Bestehende kleine synthetische Quelle-/Journal-/Readerregression an die ausdrücklich versionierte PE-A1-Generation anpassen; Legacyformen und vollständige Herkunftsprüfung bleiben erhalten. Keine zusätzliche Kern- oder Bildlast."
@@ -95,8 +105,8 @@
   ],
   "core_change": null,
   "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
+    "mode": "failure",
+    "purpose": "PE-A1-Implementierer: aktuellen native.catalog-Fehler aus Lauf43291510898 anhand gebundener Gruppen-/Phasenlogs und relevanter Failure-Originale diagnostizieren; nach Behebung auf none zurückstellen, kein zusätzliches Reviewgate.",
+    "expires": "2026-11-13"
   }
 }
