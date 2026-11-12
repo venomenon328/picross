@@ -1,14 +1,17 @@
 # Lokaler Rätselbestand-Editor (PE)
 
-Stand: 11.11.2026. **Vom Eigentümer als Spezifikation freigegebener Sollstand;
-noch nicht implementiert oder abgenommen.** Auftrag und Paketkriterien stehen
-im [PE-Issue #576](https://github.com/venomenon328/picross/issues/576). Geprüfte Ausgangsbasis ist
-`main@9cc07b411155adeab0aa6516ab5b4c4341f48184`.
+Stand: 12.11.2026. **PE-A1 ist im Arbeitsbranch von
+[Draft-PR #577](https://github.com/venomenon328/picross/pull/577) implementiert;
+unabhängiges Review und Merge stehen aus.** Die übrigen Pakete bleiben
+freigegebener Sollstand. Auftrag, Kriterien und gebundene technische Nachweise
+stehen im [PE-Issue #576](https://github.com/venomenon328/picross/issues/576)
+und im Liefer-PR. Implementierungsbasis ist
+`main@187e37bb2471c03f75a2b365ed3e341150b94f66`; der ursprüngliche
+Spezifikationsstand wurde gegen `main@9cc07b411155adeab0aa6516ab5b4c4341f48184` geprüft.
 
 Dieser Vertrag beschreibt ein persönliches Werkzeug außerhalb des Spiels.
-Die bisherigen Fachverträge beschreiben bis zur jeweiligen Lieferung weiterhin
-die vorhandenen Ausführungswege. Die unten ausdrücklich beschlossenen
-Erweiterungen sind keine Behauptung, diese Wege könnten sie bereits ausführen.
+Abschnitt 7 beschreibt das gelieferte Metadatenfundament. Die Bild-/Rasterpflege
+und Weboberfläche in den übrigen Abschnitten benötigen ihre eigenen Lieferungen.
 Neue Rätsel folgen weiterhin [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md).
 
 ## 1. Ziel und freigegebener Umfang
@@ -305,14 +308,60 @@ PE-A1 umfasst die verlustfreie Übernahme des dann aktuellen echten Bestands und
 die nötigen gemeinsamen Leser-/Writeranpassungen. Der echte Bestand dient nur
 der einmaligen Migration und Integritätskontrolle, nicht als wachsender Dauertest.
 
-## 8. Lieferung, Abnahme und Grenzen der Vorbereitung
+### 7.5 Geschlossene Implementierungsformen
+
+Vor der Codeänderung am 12.11.2026 festgelegt: Der gemeinsame lesende Plan
+`picross-editor-metadata-plan-v1` enthält exakt
+`format,operation,operations,changes,files,journal`. `operation` ist `metadata`
+oder `metadata-migration`. Der eingebettete gemeinsame Transaktionsplan bindet
+vollständige alte/neue Quellen, Abwesenheiten und behaltene Dateihashes.
+`changes` zeigt die betroffenen Rätsel-/Kategoriezeilen vorher/nachher;
+`files` nennt nur tatsächlich unterschiedliche Zieldateien. Die Übernahme
+prüft Operationen, Vorschau und Journal erneut gegeneinander. Eine Kategorie-ID
+wird beim Planen einmalig erzeugt und bleibt in diesem Plan fest gebunden.
+
+Die gemeinsame API unterstützt `set_metadata` mit ID und mindestens einem der
+Felder `name,category_id`, `category_create` mit Name, `category_rename` mit ID/Name
+und `category_delete` mit ID sowie optionalem `reassign_to`. Fehlende Neuzuordnung
+bei belegter Kategorie ist ein Fehler. Migration ist eine eigene Operation.
+Der lesende `picross-metadata-view-v1` enthält exakt `format,categories,entries`;
+die Einträge sind die aktuellen `{id,name,category_id}`-Zeilen. Eine geladene
+Ansicht löst IDs im Speicher auf, ohne Definitionen oder Bilder erneut zu lesen.
+
+Die neuen Journale verwenden dieselbe geschlossene äußere Form und denselben
+Publikations-/Recoveryweg wie die bisherige Hintergrundgeneration:
+
+| Operation | Neue Formatkennung |
+| --- | --- |
+| Registrierung | `picross-registration-journal-v8` |
+| Rasterupdate | `picross-content-update-journal-v8` |
+| Rating-/Added-Übernahme, Sync | `picross-catalog-metadata-journal-v5` |
+| Revealübernahme | `picross-reveal-adoption-journal-v5` |
+| Hintergrundübernahme | `picross-background-adoption-journal-v3` |
+| Methodenaktivierung | `picross-difficulty-activation-journal-v3` |
+| Aktuelle Metadaten/Kategorien | `picross-editor-metadata-journal-v1` |
+| Explizite v4/v7-Migration | `picross-editor-migration-journal-v1` |
+
+Für einen regulären Rasterupdate-Export mit geänderter historischer Kategorie
+benötigt der Hintergrund-Verlauf `picross-catalog-background-v4`. Er behält exakt
+die v3-Felder `format,base,entry,events` und deren geschlossene Unterformen.
+Ausschließlich bei einem Rasterupdate darf die Kategorie zwischen historischen
+Bindings wechseln; Struktur, vollständige Export-/Receiptbindung und jeweiliger
+Kategoriesnapshot bleiben geprüft. Der aktuelle Fremdschlüssel steht in
+`metadata`. Alle übrigen Identitäts-, Rasterrevisions-, Bild-, Rechte- und
+Quellenbindungen bleiben erhalten. Ein v3-Verlauf bleibt v3 bis zum ersten
+solchen Kategoriewechsel; danach bleibt er v4. Bei der Prüfung früherer
+`previous_source`-Hashes wird deren tatsächliche v3-/v4-Generation rekonstruiert.
+Migration und reine Metadatenpflege ändern niemals diese Quellenbytes.
+
+## 8. Lieferung, Abnahme und Paketgrenzen
 
 Die beiden Hauptbereiche bleiben Datenpflege und Weboberfläche. Das Fundament
 wird wegen seiner unterschiedlichen Datenrisiken in eigenständige Pakete geteilt:
 
 | Paket | Eigenständig prüfbarer Endzustand |
 | --- | --- |
-| PE-A1 | Aktuelle Namen/Kategorien, v4/v7-Migration, gemeinsame CLI/API und weiter funktionierende Standardproduktion. Erstes vorbereitetes Umsetzungspaket. |
+| PE-A1 | Aktuelle Namen/Kategorien, v4/v7-Migration, gemeinsame CLI/API und weiter funktionierende Standardproduktion. Im Arbeitsbranch implementiert, unabhängiges Review offen. |
 | PE-A2 | Unveränderter Fertigbildimport, Abschlussbildwechsel, Legacy-Erstzuordnung und alle drei Hintergrundzustände. Baut auf PE-A1 auf. |
 | PE-A3 | Textuelle Rasterübernahme mit vorhandenen Prüfungen und gezielter automatischer Savebehandlung bei älterer Rasterrevision. Baut auf PE-A1 und den tatsächlich benötigten Bildbindungen auf. |
 | PE-B | Lokale Weboberfläche und komfortabler Windowsstart für sämtliche freigegebenen Bearbeitungen. Konsumiert die gemeinsamen Writer. |
@@ -322,10 +371,14 @@ Issue. Die weiteren Umfänge sind fachlich beschlossen; ihre konkreten Versions-
 Transaktions-/Prüfentscheidungen werden vor ihrer Umsetzung geschlossen. Ein
 fertiges PE-A1 ist kein fertiger Editor und schließt das Gesamtissue nicht.
 
-Die Spezifikationsänderung wird im zu PE-A1 gehörenden Draft-PR vorbereitet;
-PE-A1 wird bei gesondertem Umsetzungsauftrag auf demselben Branch/PR fortgeführt.
-Der anfängliche Dokumentdiff bleibt buildfrei und hat keine Zusatzmodule.
-Die Umsetzung aktualisiert ihren eigenen `.ci/package.json` entsprechend dem
-Issue-Prüfplan. Technische Lieferung, unabhängiges Review, persönliche Editorprobe
-und Merge sind jeweils getrennt. Keine dieser Handlungen wird durch diese
-Spezifikation als bereits erfolgt behauptet.
+PE-A1 wurde nach ausdrücklichem Umsetzungsauftrag auf demselben Branch/PR
+fortgeführt. Der anfängliche buildfreie Dokumentplan ist durch den
+[PE-A1-Prüfplan](../.ci/package.json) mit `tools`, `production.adapter`,
+`production.catalog`, `native.core` und `native.catalog` ersetzt. Die
+[CLI/API-Anleitung](../tools/puzzle_production/README.md#pe-a1-aktuelle-namen-und-kategorien)
+beschreibt Plan, Übernahme und Recovery. Der echte Bestand wurde ausschließlich
+durch die explizite Migration nach v4/v7 übernommen; Definitionen, Kategorien,
+Bilder und Herkunftsquellen bleiben unverändert. Die einmaligen T01-/T02-Belege
+stehen kompakt im Liefer-PR, nicht als neue Dauerbenchmark- oder Bildfamilie.
+Technische Lieferung, unabhängiges Review, persönliche Editorprobe und Merge
+bleiben getrennt; PE-A1 liefert keine Weboberfläche.

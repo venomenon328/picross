@@ -1,5 +1,16 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+
+
 **Vertrag 1.0 · Dokumentrevision 9 · 09.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488); HP-W1/HP-W2 / [#560](https://github.com/venomenon328/picross/issues/560); PB-H / [#489](https://github.com/venomenon328/picross/issues/489)**
 
 ## 1. Geltung und Zuständigkeit
@@ -85,7 +96,7 @@ redaktionelle Abweichung autorisiert keine materielle Umgestaltung.
 | --- | --- | --- |
 | Q-B01 · Motividentität, Silhouette, Perspektive und Proportionen | Produkt §3.3; Design §4.3; Authoring §§2.1–2.4 | Vor Bildauswahl/-freigabe jede tatsächliche Bilddatei mit Briefing/Referenz vergleichen: Hauptgegenstand, Pose, charakteristische Details, Anatomie und notwendige Negativräume benennen; Verzerrungen/Artefakte einzeln ausweisen. |
 | Q-B02 · Ausgearbeitete Illustration und ruhige Flächensprache | Design §§2/4.3; Authoring §2.3 | In großer und kleiner Ansicht vor Bildfreigabe Konturen, zusammenhängende Farbflächen, Binnenzeichnung, Oberflächendetails und zurückhaltende Schattierung prüfen. Keine bloß vergrößerte Zellgrafik, zufälligen Kleinstflächen, überladenen Hintergründe oder ungewollte Schrift/Wasserzeichen. |
-| Q-B03 · Transparenter Bildgrund und saubere Kanten | [AT §2](REVEAL_TRANSPARENCY.md); Authoring §§2.3/4.4 | Vor Bildfreigabe und bei jeder Bildrevision Außenfläche, echte Aussparungen und Alphakanten auf dem vorhandenen Papier groß und in Kataloggröße ansehen; helle Motivteile und feine Details erhalten. Säume/ausgefranste Kanten benennen. Szenen erhalten eine konkrete motivbezogene transparente Außengestaltung/Vignette bei erhaltener notwendiger Umgebung, keinen pauschalen Verzicht. |
+| Q-B03 · Transparenter Bildgrund und saubere Kanten | [AT §2](REVEAL_TRANSPARENCY.md); Authoring §§2.3/4.4 | Vor Bildfreigabe und bei jeder Bildrevision das Original direkt groß/klein ansehen, bei Bedarf auf neutralem Grund/Schachbrett: Außenfläche, echte Aussparungen, Alphakanten sowie helle Motivteile und feine Details prüfen. Säume/ausgefranste Kanten benennen. Szenen erhalten eine konkrete motivbezogene transparente Außengestaltung/Vignette bei erhaltener notwendiger Umgebung. Keine routinemäßige Buch-/Katalogmontage, Fadeprobe oder Testintegration, auch nicht in spätere Phasen verlagert. Kurzes Urteil im vorhandenen Bericht; technische Alpha-/Rendergarantien bleiben bei ihren Tests, Q-H01/Q-H02 unverändert. |
 
 ### 3.2 Motivvorlage
 
@@ -632,5 +643,5 @@ nach bestätigter Integration bleibt kein dauerhaftes Kandidatenarchiv.
 [AT-Anforderungen](REVEAL_TRANSPARENCY.md) an Abschlussbilder und sämtliche
 Reveal-, Motiv-, Raster-/Hinweis-, Paletten- und Endabnahmen gelten weiter für
 ihre bisherigen Gegenstände. Der helle Graphitstil ersetzt keine ausgearbeitete
-farbige Enthüllung. Umgekehrt werden deren Papier-/Katalogsichtungen nicht zu
+farbige Enthüllung. Umgekehrt wird deren direkte Originalsichtung nicht zu
 einer zusätzlichen Buchsichtpflicht für Hintergrundkandidaten.

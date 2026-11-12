@@ -4,6 +4,7 @@ import re
 
 from . import authoring_package as ap, catalog_io as io
 from .contract import canonical_bytes, exact_keys, integer, load_json
+from . import authoring_workflow as workflow
 
 FORMAT = 'picross-authoring-build-request-v1'
 BACKGROUND_FORMAT = 'picross-authoring-build-request-v2'
@@ -43,6 +44,8 @@ FORMATS = set('PNG JPEG picross-authoring-handoff-v2 picross-authoring-file-inve
               'picross-uniqueness-v1 picross-uniqueness-check-v1 picross-solution-witness-v1 '
               'picross-editorial-approval-v1 picross-palette-editorial-exception-v1'.split())
 FORMATS.update(f'picross-{kind}-v{v}' for kind in ('manual-authorization', 'owner-override') for v in range(1, 7))
+FORMATS.update(('picross-raster-parameters-v1', 'picross-fixed-raster-plan-v1',
+                'picross-fixed-raster-v1', 'picross-fixed-raster-manifest-v1', 'picross-catalog-sd2-rating-v1'))
 
 
 def names(paths):
@@ -84,31 +87,35 @@ def source_record(value, *, member=False, background=False):
 def validate_request(value):
     # Roundtrip also isolates caller mutations and applies strict JSON limits to API calls.
     r = io.json_bytes(canonical_bytes(value), 8 * 1024 * 1024)
+    current = r.get('format') == workflow.REQUEST
     exact_keys(r, {'format', 'handoff', 'document_revision', 'files', 'target',
-                   'category_id', 'reveal_options', 'external'})
-    ap.require(r['format'] in (FORMAT, BACKGROUND_FORMAT), 'Unsupported build request')
-    background = r['format'] == BACKGROUND_FORMAT
+                   'category_id', 'reveal_options', 'external'} | ({'presentation'} if current else set()))
+    ap.require(r['format'] in (FORMAT, BACKGROUND_FORMAT, workflow.REQUEST), 'Unsupported build request')
+    background = r['format'] in (BACKGROUND_FORMAT, workflow.REQUEST)
+    if current:
+        workflow.presentation(r['presentation'])
     integer(r['document_revision'], 1, 1_000_000, 'rulebook document revision')
     ap.require(r['target'] in ('local', 'repository'), 'Invalid publication target')
     if r['category_id'] is not None:
         ap.require(isinstance(r['category_id'], str) and re.fullmatch(r'[a-z][a-z0-9-]{0,63}', r['category_id']),
                    'Invalid category ID')
     h = r['handoff']
-    ap.require(isinstance(h, dict) and set(h) <= HANDOFF_KEYS | ({'background'} if background else set()),
+    ap.require(isinstance(h, dict) and set(h) <= HANDOFF_KEYS | ({'background'} if background else set()) |
+               ({'raster_selection'} if current else set()),
                'Unknown handoff fields; use editorial for prose')
-    ap.require(h.get('format') == ('picross-authoring-handoff-v3' if background else 'picross-authoring-handoff-v2')
+    ap.require(h.get('format') == (workflow.HANDOFF if current else 'picross-authoring-handoff-v3' if background else 'picross-authoring-handoff-v2')
                and h.get('inventory') is None, 'Only matching unsealed Authoring drafts can be built')
-    if background:
+    if background and h.get('background') is not None:
         from .background_package import validate_binding
         validate_binding(h.get('background'))
     ap.require(isinstance(h.get('puzzle_id'), str) and ap.ID.fullmatch(h['puzzle_id']), 'Invalid puzzle ID')
     ap.require(isinstance(h.get('revision'), str) and ap.REVISION.fullmatch(h['revision']), 'Invalid revision')
     names([h['puzzle_id'] + '/' + h['revision'] + '/record.json'])
-    ap.require(h.get('state') in (BACKGROUND_STATES if background else STATES), 'Unsupported build phase')
+    ap.require(h.get('state') in (workflow.EARLY + workflow.LATE if current else BACKGROUND_STATES if background else STATES), 'Unsupported build phase')
     ap.require(isinstance(h.get('repo_commit'), str) and re.fullmatch(r'[0-9a-f]{40}', h['repo_commit']),
                'Missing actual source commit')
     exact_keys(h.get('rulebook'), {'version', 'file', 'sha256'})
-    ap.require(h['rulebook']['version'] == ('0.7.0' if background else '0.6.0'),
+    ap.require(h['rulebook']['version'] == ('0.8.0' if current else '0.7.0' if background else '0.6.0'),
                'Build generation and authoring rulebook differ; old packages stay sealed')
     ap.relative(h['rulebook']['file'])
     ap.sha(h['rulebook']['sha256'])
@@ -122,6 +129,8 @@ def validate_request(value):
         ap.require(isinstance(h.get('gate_evidence'), dict) and set(h['gate_evidence']) == BACKGROUND_GATES,
                    'Handoff v3 requires exactly twelve gate evidence fields')
     ap.require(all(v in ('pending', 'pass', 'fail', 'blocked') for v in h['gates'].values()), 'Invalid gate status')
+    if current:
+        workflow.phase(h)
     ap.require(h['gates'].get('final_editorial') != 'pass' and h['gates'].get('target_export') != 'pass' and
                h.get('final_editorial_approval') is None, 'Later final approval/export belongs outside the original handoff')
     for key in ('blockers', 'content_blockers'):
@@ -129,6 +138,12 @@ def validate_request(value):
         for item in h.get(key, []):
             ap.string(item, key)
     ap.require(isinstance(h.get('approved_parameters', []), list), 'Invalid parameter corridor')
+    from . import raster_parameters
+    for field in ('approved_parameters', 'proposed_parameters'):
+        for p in h.get(field) or []:
+            if isinstance(p, dict) and p.get('format') == raster_parameters.FORMAT:
+                ap.require(current, 'New raster corridor requires Authoring 0.8')
+                raster_parameters.validate(p)
     ap.require(isinstance(r['files'], list) and r['files'], 'Explicit file list required')
     for item in r['files']:
         source_record(item, member=True, background=background)
@@ -151,7 +166,7 @@ def validate_request(value):
         ap.string(option['Beschreibung'], 'option description')
         ap.relative(option['Datei'])
         ap.sha(option['SHA-256'])
-    if h['state'] in ('motif_review', 'motif_approved', 'raster_review', 'raster_ready', 'content_ready'):
+    if h['state'] in ('motif_review', 'motif_approved', 'raster_review', 'raster_ready', 'background_review', 'content_ready'):
         ap.require(not r['reveal_options'], 'Selected reveal must not retain candidate gallery')
     if h['state'] == 'content_ready':
         ap.require(not h.get('content_blockers') and all(b == 'final_editorial: missing bound human final approval'
@@ -193,7 +208,7 @@ def references(p):
                 walk(child, parent)
         elif isinstance(value, dict):
             if 'format' in value:
-                handoff_v3 = value is p.handoff and value.get('format') == 'picross-authoring-handoff-v3'
+                handoff_v3 = value is p.handoff and value.get('format') in ('picross-authoring-handoff-v3', workflow.HANDOFF)
                 ap.require(isinstance(value['format'], str) and (value['format'] in FORMATS or handoff_v3),
                            'Unsupported declared technical format: ' + str(value['format']))
             # Historical references are deliberately external and must name an
@@ -217,7 +232,7 @@ def references(p):
                     path = p.file((parent / ap.relative(name)).as_posix())
                     ap.require(ap.file_hash(path) == ap.sha(expected), 'Manifest file hash mismatch: ' + name)
             for key, child in value.items():
-                if key == 'files' or key == 'background' and value is p.handoff:
+                if key == 'files' or key in ('background', 'raster_selection') and value is p.handoff:
                     continue
                 if isinstance(child, str) and key in ('evidence', 'prompt_file', 'proof', 'verification',
                                                        'baseline_proof', 'assessment_file'):
@@ -225,6 +240,8 @@ def references(p):
                 walk(child, parent)
 
     for name in sorted(p.files):
+        if name in getattr(p, 'selection_files', set()):
+            continue  # Strictly typed immutable source copies, resolved by workflow.selection.
         if name in getattr(p, 'background', {}).get('files', set()):
             continue  # Already closed using explicit typed background roots.
         with p.file(name).open('rb') as stream:
@@ -287,13 +304,23 @@ def validate_phase(root, r, deadline, *, history_repo=None):
     state = h['state']
     if state == 'reveal_review':
         ap.require(bool(r['reveal_options']) or 'reveal' in selected, 'Reveal review requires offered originals')
-    if state in ('motif_review', 'motif_approved', 'raster_review', 'raster_ready', 'content_ready'):
+        if r['format'] == workflow.REQUEST:
+            ap.require(len(r['reveal_options']) == 3 and len({o['SHA-256'] for o in r['reveal_options']}) == 3,
+                       '0.8 reveal review requires three distinct original offers')
+            from PIL import Image
+            for option in r['reveal_options']:
+                with Image.open(p.file(option['Datei'])) as image:
+                    ap.require(image.mode in ('RGB', 'RGBA'), 'Reveal offers must be actual color originals')
+    if state in ('motif_review', 'motif_approved', 'raster_review', 'raster_ready', 'background_review', 'content_ready'):
         ap.require('reveal' in selected and 'motif' in selected, 'Phase requires reveal and motif originals')
         p.approval(selected['reveal'], 'reveal')
         ap.require(selected['motif'].get('derived_from_reveal_sha256') == selected['reveal']['sha256'], 'Wrong motif derivation')
-    if state in ('motif_approved', 'raster_review', 'raster_ready', 'content_ready'):
-        p.approval(selected['motif'], 'motif')
+    if state in ('motif_approved', 'raster_review', 'raster_ready', 'background_review', 'content_ready'):
+        approval = p.approval(selected['motif'], 'motif')
         ap.require(bool(h.get('approved_parameters')), 'Raster work requires approved parameters')
+        from . import raster_parameters
+        if any(isinstance(v, dict) and v.get('format') == raster_parameters.FORMAT for v in h['approved_parameters']):
+            raster_parameters.binding(h['approved_parameters'], approval)
     for kind, gate in (('reveal', 'reveal_approval'), ('motif', 'motif')):
         if h['gates'].get(gate) == 'pass':
             ap.require(kind in selected, 'Image gate lacks original')
@@ -317,7 +344,9 @@ def validate_phase(root, r, deadline, *, history_repo=None):
         for key in ('plan', 'replay', 'record'):
             if repair.get(key):
                 p.file(repair[key])
-    if r['format'] == BACKGROUND_FORMAT:
+    if r['format'] == workflow.REQUEST:
+        p.selection_files = workflow.selection(root, h, history_repo=history_repo, verify_git=True)
+    if r['format'] in (BACKGROUND_FORMAT, workflow.REQUEST):
         from .background_package import validate
         p.background = validate(root, h, history_repo=history_repo, deadline=deadline)
         for name in p.files:
@@ -330,9 +359,12 @@ def validate_phase(root, r, deadline, *, history_repo=None):
             # A later material correction can be pending after the original
             # offer/decision. The first motif review must have the full offer
             # or an explicit evidenced early none, never a silent omission.
-            if state == 'motif_review':
+            if state == 'motif_review' and r['format'] == BACKGROUND_FORMAT:
                 ap.require(m['presentation']['status'] == 'offered' or status == 'none',
                            'Motif review requires offered backgrounds or explicit none')
+        if state == 'background_review':
+            ap.require(p.background['manifest']['presentation']['status'] == 'offered' or status == 'none',
+                       'Background review requires actual offers or evidenced explicit none')
         if state == 'content_ready':
             ap.require(p.background['ready'], 'Background is not ready: ' + '; '.join(p.background['blockers']))
     references(p)

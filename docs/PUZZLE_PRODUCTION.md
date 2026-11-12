@@ -1,5 +1,27 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
 
+## #596/C · Reguläre motivtreue Rasterkorrektur
+
+Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,
+Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
+Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
+Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
+Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
+historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
+Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
+
+
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+
+
 **Aktuelle Produktionsverträge (Workflowabgleich 05.11.2026):**
 [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md) führt die operativen Aufträge,
 Freigaben und Übergaben. [SD2](PUZZLE_DIFFICULTY_V2.md) und
@@ -534,8 +556,14 @@ Rechenzeit; temporäres Zurücknehmen setzt diese Suchbudgets nicht zurück.
 Parameter werden vor dem Lauf festgelegt und protokolliert.
 
 Zunächst genügen einzelne Zelländerungen und wenige nachvollziehbare lokale
-Formänderungen. Neue Abmessungen, ein anderer Ausschnitt oder eine neue Stilisierung
-sind ein neuer Entwurfsauftrag mit neuer Referenz, kein versteckter Reparaturschritt.
+Formänderungen. Der reguläre [C-Weg](FIXED_RASTER.md) ergänzt ausdrücklich
+freigegebene feste Zellkorrekturen und leeren Außenbeschnitt aus direkten RP-3-
+Importen, auch bei bereits gelöster Logik. Originalimportdesign und Endgeometrie
+bleiben getrennt. Offene/ungefähre Endvorgaben werden durch konkrete Importstarts
+nicht exakt. Geschützte Leerstellen dürfen weder verändert noch beschnitten werden;
+jede entfernte Zelle muss bereits im unveränderten Original leer sein.
+Andere neue Abmessungen, Ausschnitte oder Stilisierungen sind ein neuer
+Entwurfsauftrag mit neuer Referenz, kein versteckter Reparaturschritt.
 Die vollständigen Hinweise werden für jeden bewerteten Kandidaten neu abgeleitet.
 Der endgültige Nachweis gilt vom unbekannten Raster aus; alte Teilbeweise und
 Caches dürfen nur bei nachweislich identischen Eingaben wiederverwendet werden.

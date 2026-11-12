@@ -1,5 +1,31 @@
 # Arbeitsablage für die Rätselproduktion
 
+## Produktionsassistent · fünf Schritte nach Authoring 0.8.0
+
+[PW / #578](../../docs/PRODUCTION_WORKSPACE.md) spezifiziert den Git-gestützten
+Assistenten mit Launcher, Originalbildern und fünf Schritten. PW-B
+liefert für neu veröffentlichte Arbeitsstände automatisch eine geprüfte `workspace.json`
+neben dem Record; der Dienst findet sie über den bestehenden Index und löst
+Bilder selbst aus Git/Paketen auf. Keine manuellen Bild-/ZIP-/Routine-JSON-Importe.
+Der Projektor erstellt ausschließlich die neue Ansichtsdatei; der HTTP-Dienst
+ändert keine Projektdateien. Git-Sicherung bleibt beauftragte Produktionsarbeit.
+
+Neue PW-Produktionen werden verbindlich auf `content/pw/<puzzle_id>`
+veröffentlicht, zum Beispiel `content/pw/pz-eule`. Ein Branch pro Produktion,
+Revisionen in der unten beschriebenen Ablage. Der Assistent liest nur `main`
+und diese neue Branchfamilie; alte Produktionsbranches bleiben unangetastet.
+Auftragssteuerung und automatische Projektionslieferung gehören zum neuen
+[0.8-Datenvertrag](../../docs/PW_B_CONTRACT.md): Handoff v4, Record v3 und Projektion v2.
+
+**Bestehende WIP sind kein Kompatibilitätsziel:** keine Migration, nachträgliche
+Projektion oder Alt-Sitzungsunterstützung erforderlich. Das ist kein Auftrag,
+vorhandene Arbeitsdateien zu löschen. Integrierte Inhalte und kompakte Belege
+bleiben erhalten. Neue Produktionen verwenden den fünfstufigen 0.8-Standard;
+Hintergrundgestaltung beginnt nach ausdrücklicher qualifizierter Rasterwahl
+in Schritt 4, Integration ist Schritt 5. Frühe Hintergrundbindungen sind null.
+
+## Derzeitige Ablage
+
 [KAT-1](../../docs/CATEGORIES.md): Zu Beginn Kategorienquelle und vorhandenen Fundus lesen. Neue äußere Records führen `category_id`, sobald die Motivzuordnung feststeht; ein offenes Briefing darf `null` führen. Alte Records ohne Kategorie bleiben lesbar. Vor kategorisiertem ZA-1-v2-Export ist eine gültige ID Pflicht. Bei versiegelten Paketen nur den äußeren Record ergänzen: Paket, Handoff, Inventar, Freigaben, Phasenstatus und bestehende Integrationsbelege bleiben erhalten.
 
 Einstieg: [Produktionsindex](index.json), verbindliche Regeln in
@@ -18,17 +44,20 @@ Dateisatz. Kein Raster-ZIP, Dummyhandoff oder nachträglich erfundener Status
 Reader dispatchen anhand der tatsächlichen Recordkennung. Erstablage und Indexpflege
 über `catalog_background_change store`, Planung/Übernahme über dessen eigene
 Befehle nach [Werkzeuganleitung](../../tools/puzzle_production/README.md#hp-i1b2-eigenständiger-hintergrundwechsel-und-revisionsgenauer-abschluss)
-und [Hintergrundvertrag §11](../../docs/PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel).
-Das aktive 0.6.0-Sheet unterstützt diesen Arbeitsrecord noch nicht.
+und [Hintergrundvertrag §11](../../docs/PUZZLE_BACKGROUNDS.md#11-hp-i1b2-eigenständiger-hintergrundwechsel).
+Der Assistent kann den ausdrücklich getrennten Folgeauftrag am gebundenen
+Registrierungsstand formulieren. Er verwendet dafür diesen eigenen nativen Weg,
+keinen neuen Inhaltswriter und keinen parallelen alten Sheetmodus.
 
 Dieser Index beschreibt Produktionen, nicht den Spielkatalog. Auch ungeprüfte
 Bildphasen und noch nicht endabgenommene Pakete dürfen hier liegen. Der Status
 und nächste erlaubte Schritt müssen diese Grenzen ausdrücklich nennen.
 Registrierte Inhalte verwaltet der Adapter unter `content/packages/` und in
-`content/registry.json`. Die gepflegte Vorlage des
-[Offline-Cheat-Sheets](../../docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html)
-liegt unter `docs/ai-workflows/`; persönliche Sitzungen und Auftragsexporte gehören
-nicht als zusätzliche Sheetkopien in die Authoringablage. Inhalts-/Cleanup-PRs
+`content/registry.json`. Nach dessen Git-Sicherung bindet `projector --complete-record`
+den tatsächlichen Abschluss und aktualisiert die Projektion. Das frühere
+[Offline-Cheat-Sheet](../../docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html)
+verweist nur noch auf den Launcher; persönliche Briefings gehören nicht als
+zusätzliche Sheetkopien in die Authoringablage. Inhalts-/Cleanup-PRs
 führen einen eigenen aktuellen `.ci/package.json` gemäß allgemeinem CI-Vertrag.
 
 ## Abschluss

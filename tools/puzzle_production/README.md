@@ -1,5 +1,106 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+## PE-A1: aktuelle Namen und Kategorien
+
+[`metadata_cli`](metadata_cli.py) pflegt vorhandene registrierte IDs gemäß
+[PE-A1](../../docs/PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag).
+Aktuelle Namen und Kategorien stehen in Inhaltsregistry v4; Runtime v7 ist die
+geprüfte Projektion. Definitions-/Bildbytes, Rasterrevisionen, Ratings, Added und
+historische Produktionsbelege werden bei dieser Pflege nicht neu geschrieben.
+Die gemeinsame API liegt in [`catalog_metadata`](catalog_metadata.py).
+
+Alle Aufrufe laufen vom Repositoryroot. `CHECKOUT` ist der explizite lokale
+Zielcheckout. Plan-/Operationsdateien sind UTF-8-JSON. `--output` schreibt eine
+neue Datei außerhalb des Zielcheckouts als UTF-8 ohne BOM und überschreibt
+keine vorhandene Datei; ohne diese Option steht das JSON auf stdout.
+
+```text
+python -m tools.puzzle_production.metadata_cli view --target-root CHECKOUT
+python -m tools.puzzle_production.metadata_cli plan-migration --target-root CHECKOUT --output MIGRATION.json
+python -m tools.puzzle_production.metadata_cli apply --target-root CHECKOUT --plan MIGRATION.json
+python -m tools.puzzle_production.metadata_cli plan --target-root CHECKOUT --operations OPERATIONS.json --output PLAN.json
+python -m tools.puzzle_production.metadata_cli apply --target-root CHECKOUT --plan PLAN.json
+python -m tools.puzzle_production.metadata_cli recover --target-root CHECKOUT
+```
+
+`view` ist lesend und zeigt alle aktuellen Autorenmetadaten. Eine v4-Ansicht
+öffnet nur Registry und Kategorienquelle. Die API `MetadataView(root)` baut
+einmal die ID-Zuordnung auf; `lookup(id)` und `document()` liefern anschließend
+abgetrennte Speicheransichten ohne weitere Datei-, Bild- oder Proofzugriffe.
+
+Die explizite Migration validiert v2/v3 und schreibt ausschließlich die beiden
+Registrydateien. Ein bereits gültiger v4/v7-Bestand bleibt unverändert. Normale
+mutierende Writer verlangen danach v4/v7 und migrieren nicht nebenbei. Alte
+gebundene Journale zuerst über ihren gemeinsamen Recoveryweg auflösen.
+
+Eine Operationsdatei enthält eine Liste. Beispiel mit einer zuvor aus `view`
+gelesenen ID und aktuell vorhandener Kategorie:
+
+```json
+[
+  {"op": "set_metadata", "id": "pz-beispiel", "name": "Neuer Motivname", "category_id": "voegel"}
+]
+```
+
+`set_metadata` verlangt mindestens Name oder Kategorie. Weitere Operationen
+sind `category_create` mit `name`, `category_rename` mit `id,name` sowie
+`category_delete` mit `id` und optionalem `reassign_to`. Der Plan vergibt bei
+Kategorieanlage eine stabile ID und hängt den internen Ordnungswert an.
+Eine belegte Kategorie kann nur mit einer anderen vorhandenen Ersatzkategorie
+gelöscht werden; sämtliche betroffenen Rätsel werden in derselben Transaktion
+neu zugeordnet. Ihre historischen Kategorieangaben bleiben erhalten.
+
+Planen schreibt keinen Inhalt. Vor Übernahme `changes` und `files` prüfen;
+die Übernahme bindet auch die unveränderten Quellen und deren Abwesenheiten.
+Eine zwischenzeitliche Bearbeitung verlangt einen frischen Plan. Identische
+aktuelle Werte ergeben beim erneuten Planen einen No-op ohne neue Bytes oder
+mtimes. Offene Journale/Locks verhindern auch einen konkurrierenden No-op.
+Recovery stellt den vollständigen alten Zustand wieder her und schützt fremde
+Änderungen. Es gibt keine zusätzliche Metadatenhistorie oder freie Registry-API.
+Rückgabecodes: 0 erfolgreich, 2 ungültiger Eingang/Konflikt, 4 Ressourcenabbruch.
+Raster-/Bildpflege und eine Weboberfläche gehören zu späteren PE-Paketen.
+
+## #596/C · Feste Rasterableitung
+
+Der vor Code festgelegte [Vertrag](../../docs/FIXED_RASTER.md) definiert die
+geschlossenen Parameter-/Plan-/Record-/Manifestformen und deren Grenzen.
+`python -m tools.puzzle_production.fixed_raster derive --root ROOT --plan PLAN --output OUT`
+erzeugt das reguläre Bundle; `inspect --root ROOT --bundle BUNDLE` prüft es frisch.
+Authoring 0.8.0 Dokumentrevision 4: source_type=fixed, kein manueller Override.
+Aktive Schwierigkeit zusätzlich über catalog_analysis mit expliziter Methode 0.4.
+
+
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](../../docs/ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+
+## PW-B: neue Produktion 0.8.0
+
+Build v3 veröffentlicht Handoff v4/Record v3 und die automatisch geprüfte
+workspace.json gemeinsam mit der Revision im expliziten Repositoryziel.
+[#596/B](../../docs/PRODUCTION_CURRENT_VIEW.md) ergänzt den gemeinsamen
+`current-view.json`-Übergabeschritt für Builder, Finalizer, Projektor und Completion.
+Den Pointer samt aktuellen Record-/Projektionsbytes im selben Handoffcommit
+sichern/pushen und Remotezugriff prüfen; unterbrochene Aufrufe identisch vollständig
+wiederholen. Für bestehende vollständige 0.8-Arbeit gezielt
+`python -m tools.production_workspace.projector --repository <checkout> --current-view <pz-ID> <revision>`
+aufrufen. Kein HTTP-Writer und keine Änderung versiegelter Originale.
+Request v3 ergänzt `presentation={title,raster_offers}`. Frühe background- und
+raster_selection-Felder sind null. Erst die gebundene menschliche Rasterwahl
+öffnet background_review. Finalizer v2 aktualisiert den bestehenden Record v3
+und die zugehörige Projektion; keine alten Originalbytes werden verändert.
+Die vollständigen neuen Formen, Beispiele und Aufrufe stehen in
+[PW-B](../../docs/PW_B_CONTRACT.md) und [Authoring §§6–8](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
+Alle folgenden älteren formatgebundenen CLIs bleiben unter ihren ursprünglichen
+Grenzen verfügbar; der neue reguläre Bedienweg ist der lokale Assistent.
+
+
 ## BA-A: lokale Batchverarbeitung und Wiederaufnahme
 
 [`batch_cli`](batch_cli.py) verarbeitet ausdrücklich vorbereitete Jobs seriell.
@@ -2257,3 +2358,12 @@ Originale separat bereitstellen; `store/plan` prüft sie und das frische Ziel.
 konkreten HTTPS-Bericht. Danach bleiben kompakte historische Refs und `test_only`;
 Arbeitsinventar/Originaltext werden aus der Sitzung entfernt. Das ersetzt keine
 Retirementprüfung oder Mainverifikation. Keine neuen Writer oder CLI-Ergebnisimporte.
+
+## PW-A: lesende Git-/Bildansicht
+
+[Launcher, Projektor und geschlossene Datenformen](../production_workspace/README.md)
+stehen separat bereit. PW-A liest neu veröffentlichte Handoff-v3-/Record-v2-
+Arbeitsstände über Index und `workspace.json`; keine Alt-WIP-Konvertierung.
+Der Projektor schreibt ausschließlich die neue Ansichtsdatei, der HTTP-Dienst
+ist projektseitig Leser. Der fünfstufige Default und die verbindliche
+Phasenveröffentlichung folgen erst PW-B; bestehende Produktionsbefehle bleiben.

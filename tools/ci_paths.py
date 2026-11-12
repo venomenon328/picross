@@ -5,6 +5,11 @@ import re
 
 def content_path(path: str) -> bool:
     """Only inert authoring/adapter outputs; never runtime code or shared art."""
+    if path.startswith('content/authoring/') and any(
+            part.lower() == 'current-view.json' for part in path.split('/')):
+        # The pointer has exactly one position; do not fall through to the
+        # general revision-file rule for nested or otherwise malformed pointers.
+        return re.fullmatch(r'content/authoring/pz-[a-z0-9][a-z0-9-]{0,59}/current-view\.json', path) is not None
     if path in {"content/categories.json", "content/registry.json", "content/authoring/index.json",
                 "content/authoring/README.md", "game/data/registry.json"}:
         return True

@@ -77,3 +77,74 @@ def compact(root, identifiers):
         entry['production']['package_sha256'] = file_hash(package / 'manifest.json')
     write_json(root / registry.REGISTRY, value)
     registry.check_checkout(root)
+
+
+def pre_metadata(root, *, runtime_version=5):
+    """Explicitly construct historical bytes from untouched synthetic sources.
+
+    This is fixture construction, never a product downgrade or an alternate
+    writer. Changed metadata and background bindings cannot be thrown away.
+    """
+    value = registry.check_checkout(root)
+    if value["format"] == "picross-content-registry-v4":
+        if value["backgrounds"]:
+            raise ValueError("Historical fixture cannot discard background bindings")
+        expected = []
+        for entry in value["entries"]:
+            if entry["production"]["test_only"] is not True:
+                raise ValueError("Only synthetic prerequisites may be made historical")
+            definition = json.loads((root / "game" / entry["definition"]).read_bytes())
+            expected.append({"id": entry["id"], "name": definition["reveal"]["name"],
+                             "category_id": entry["category_id"]})
+        if value["metadata"] != sorted(expected, key=lambda row: row["id"]):
+            raise ValueError("Historical fixture cannot discard edited metadata")
+        value = {"format": "picross-content-registry-v2", "entries": value["entries"]}
+    catalog = json.loads((root / "content/categories.json").read_bytes())
+    write_json(root / registry.REGISTRY, value)
+    write_json(root / registry.RUNTIME,
+               registry.projection(value, catalog, root, version=runtime_version))
+    registry.check_checkout(root)
+    return value
+
+
+def pre_metadata_journal(journal, root=None):
+    """Construct a bound old wire fixture from an unedited synthetic PE plan.
+
+    Old recovery tests cannot use a new public writer on an old checkout. The
+    exact old envelope is constructed in the test instead; every production
+    field, retained hash, addition and binary replacement stays intact.
+    """
+    from tools.puzzle_production import catalog_transaction as tx
+    from tools.puzzle_production.contract import canonical_bytes
+    original = deepcopy(journal)
+    journal = deepcopy(journal)
+    for side in ("old", "new"):
+        texts = journal[side]
+        value = json.loads(texts[tx.REGISTRY])
+        if value["format"] != "picross-content-registry-v4":
+            continue
+        if value["backgrounds"]:
+            raise ValueError("Historical fixture cannot discard background bindings")
+        expected = []
+        for entry in value["entries"]:
+            if entry["production"]["test_only"] is not True:
+                raise ValueError("Only synthetic journals may be made historical")
+            definition = json.loads(texts["game/" + entry["definition"]])
+            expected.append({"id": entry["id"], "name": definition["reveal"]["name"],
+                             "category_id": entry["category_id"]})
+        if value["metadata"] != sorted(expected, key=lambda row: row["id"]):
+            raise ValueError("Historical fixture cannot discard edited metadata")
+        value = {"format": "picross-content-registry-v2", "entries": value["entries"]}
+        texts[tx.REGISTRY] = (canonical_bytes(value) + b"\n").decode()
+        texts[tx.RUNTIME] = tx.projection(texts, value, version=5).decode()
+    if journal["format"] in tx.PE_FORMATS.values():
+        journal["format"] = tx.BACKGROUND_FORMATS[journal["operation"]]
+    if root is not None:
+        for name in (tx.REGISTRY, tx.RUNTIME):
+            raw = (root / name).read_bytes()
+            sides = [side for side in ("old", "new")
+                     if original[side][name].encode() == raw]
+            if not sides:
+                raise ValueError("Only a bound synthetic journal state may be converted")
+            (root / name).write_bytes(journal[sides[0]][name].encode())
+    return journal

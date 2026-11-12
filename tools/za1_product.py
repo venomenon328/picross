@@ -64,6 +64,10 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
     python_phase("za1-test-only-registration", lambda: replay(workspace / "za1-replay", checkout))
     project = checkout / "game"
     check_checkout(checkout)
+    # Explicit synthetic compatibility fixture after real current registration;
+    # no mixed v7/T-* form and no loss of edited metadata or background bindings.
+    from tests.puzzle_production.catalog_fixtures import pre_metadata
+    pre_metadata(checkout, runtime_version=5)
     install_runtime_fixtures(root, project, append=True)
     directory = output / "za1"
     directory.mkdir()

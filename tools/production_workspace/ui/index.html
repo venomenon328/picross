@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Picross · Produktionswerkstatt</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/workflow.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="headerInner">
+      <div class="heading">
+        <p class="eyebrow"><span class="brandMark" aria-hidden="true"></span> Picross · Produktionswerkstatt</p>
+        <h1>Vom Motiv <em>zum Rätsel</em></h1>
+      </div>
+      <div class="tileArt" aria-hidden="true"><span class="paperTile"><i></i></span></div>
+      <label class="themeLabel">Darstellung<select id="theme"><option value="system">System</option><option value="light">Hell</option><option value="dark">Dunkel</option></select></label>
+    </div>
+  </header>
+  <main>
+    <section class="source" aria-label="Git-Quelle">
+      <div class="sourceInfo"><strong>Git-Quelle</strong><p id="sourceStatus" role="status">Gitstände werden geladen …</p></div>
+      <div class="actions"><button id="refresh">Neuere Ergebnisse suchen</button><button id="load" hidden>Neueren Stand laden</button></div>
+    </section>
+    <p id="error" role="alert" hidden></p>
+    <div class="workspace">
+      <aside aria-label="Produktionsnavigation">
+        <h2>Deine Produktionen</h2>
+        <button id="newJob"><span aria-hidden="true">+</span> Neues Motiv</button>
+        <details id="navigation" open><summary>Entwürfe und Gitstände</summary>
+          <div id="draftList"></div>
+          <label class="jobPicker">Veröffentlichte Motive<select id="jobs"><option>Wird geladen …</option></select></label>
+          <p id="motifStatus" role="status" class="hint"></p>
+          <div id="versions" hidden>
+            <label class="jobPicker">Version / Phase<select id="version"></select></label>
+            <p id="versionOrigin" class="hint"></p>
+            <label class="jobPicker">Konkrete Quelle<select id="jobSource"></select></label>
+            <p id="versionNotes" class="hint"></p>
+          </div>
+          <details><summary>Auftragsoptionen</summary>
+            <label>Codex-Arbeitswurzel<input id="workroot" placeholder="Optionaler lokaler Pfad"></label>
+            <label><input id="merge" type="checkbox"> In Schritt 5 Merge nach Review und allen Gates beauftragen</label>
+          </details>
+        </details>
+      </aside>
+      <section id="view" aria-label="Aktiver Arbeitsbereich"><p>Arbeitsstände werden geladen …</p></section>
+    </div>
+  </main>
+  <dialog id="large" aria-labelledby="largeTitle"><div class="dialogbar"><h2 id="largeTitle">Originalbild</h2><label>Zoom<select id="zoom"><option value="fit">Einpassen</option><option value="1">100 %</option><option value="2">200 %</option><option value="4">400 %</option></select></label><button id="close">Schließen</button></div><p class="hint">Neutraler Prüfgrund zur Transparenzsichtung · Bildbytes unverändert</p><div class="largeCanvas"><img id="largeImage" alt=""></div></dialog>
+  <dialog id="removal" aria-label="Produktionsbranch entfernen"><div id="removalBody"></div><button id="removalClose">Schließen / Abbrechen</button></dialog>
+</body>
+</html>

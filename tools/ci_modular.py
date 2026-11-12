@@ -25,7 +25,7 @@ NATIVE = ('core', 'history', 'catalog', 'completion', 'adapters', 'graphics', 'e
 PRODUCTION = ('solver', 'images', 'adapter', 'catalog')
 MODULES = ('tools', 'preflight', 'delivery', *(f'native.{g}' for g in NATIVE),
            *(f'production.{g}' for g in PRODUCTION))
-CORE_PATHS = {__file__.replace(str(ROOT) + '/', ''), 'tools/test_ci_modular.py',
+CORE_PATHS = {Path(__file__).resolve().relative_to(ROOT).as_posix(), 'tools/test_ci_modular.py',
               '.github/workflows/ci-modular.yml', 'tools/build_main_player.py', 'tools/ci_paths.py'}
 SOFT_SECONDS = 600
 

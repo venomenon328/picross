@@ -296,7 +296,7 @@ def check_repeat(report, snapshot):
                 if modern: current[name] = r["sources"][name]
         projections[row["id"]]["difficulty"] = row["old"]
     candidates = [runtime]
-    if report["format"] in (FORMAT, SD2_FORMAT) and runtime["format"] != "picross-runtime-registry-v6":
+    if report["format"] in (FORMAT, SD2_FORMAT) and runtime["format"] not in ("picross-runtime-registry-v6", "picross-runtime-registry-v7"):
         for version in (2, 3, 4):
             old = deepcopy(runtime)
             old["format"] = "picross-runtime-registry-v" + str(version)
@@ -364,6 +364,8 @@ def adopt(root, workspace, *, apply=False, fail_step=None):
     if report["format"] in SOURCE_FORMATS:
         require(source_hashes(snapshot, report["format"]) == report["result"]["sources"], "Checkout sources changed since preview")
     changes.update(durable)
+    from .content_registry import require_current
+    if apply: require_current(snapshot["registry"])
     journal = tx.prepare(root, snapshot, changes, operation="adoption", report_run=report["run_id"],
                          generation="background" if report["format"] == FORMAT else "sd2" if report["format"] == SD2_FORMAT else "at")
     require(all(safe_external(p).read_bytes() == b for p, b in externals.items()), "Preview inputs changed during planning")

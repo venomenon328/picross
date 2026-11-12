@@ -1,6 +1,6 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
-**PE / #576 · freigegebener Sollstand, noch nicht implementiert:**
+**PE / #576 · PE-A1 im Arbeitsbranch implementiert, PE-A3 noch Sollstand:**
 [PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) ergänzt aktuelle
 Namens-/Kategorieprojektion ohne neue Rätselrevision und ohne Saveänderung.
 Der spätere [PE-A3-Revisionswechsel](PUZZLE_EDITOR.md#5-rastertext-und-spielstandrevision)
