@@ -216,6 +216,30 @@ class MotifTests(unittest.TestCase):
         motif = next(m for m in service.listing()['motifs'] if m['puzzle_id'] == 'pz-workspace-test')
         self.assertIsNone(motif['current_job']); self.assertTrue(any('Ungültiger' in n for n in motif['notes']))
 
+    def test_sync_matches_refs_with_different_versions_and_independent_main(self):
+        _, main = self.build('r01')
+        git(self.repo, 'branch', '-f', 'main', main)
+        self.build('r02')
+        remote = self.remote(); service = self.service(remote)
+        motif = service.listing(refresh=True)['motifs'][0]
+        self.assertEqual(motif['status'], 'Synchron')
+        self.assertEqual({v['revision'] for v in motif['versions']}, {'r01', 'r02'})
+        self.assertTrue(all(v['source_label'] == 'Lokal und Remote' for v in motif['versions']))
+        # Both copies of main advance independently of the production branch.
+        git(self.repo, 'checkout', '-q', 'main')
+        (self.repo / 'metadata.txt').write_text('independent main', encoding='utf-8')
+        commit(self.repo)
+        git(self.repo, 'push', str(remote), 'main')
+        value = service.listing(refresh=True)
+        self.assertIn('divergent', value['relations'].values(), 'cross-ref history really diverges')
+        self.assertEqual(value['motifs'][0]['status'], 'Synchron')
+        self.assertIsNone(value['motifs'][0]['current_job'], 'sync does not choose between divergent pointers')
+        # A source without its remote counterpart must not claim full sync.
+        git(self.repo, 'push', str(remote), ':content/pw/pz-workspace-test')
+        motif = service.listing(refresh=True)['motifs'][0]
+        self.assertEqual(motif['status'], 'Remote nicht aktuell bestätigt')
+        self.assertTrue(any('Gegenref fehlt' in n for n in motif['notes']))
+
     def test_real_push_fetch_ahead_divergence_offline_and_combined_sources(self):
         _, original = self.build('r-z')
         remote = self.remote(); service = self.service(remote)
@@ -291,7 +315,7 @@ class MotifTests(unittest.TestCase):
         self.assertEqual(cv.handoff(self.repo, 'pz-workspace-test', 'r01')['status'], 'reused')
 
     def test_shallow_metadata_reload_and_bounded_unknown_history(self):
-        from tools.production_workspace.motifs import Relations
+        from tools.production_workspace.motifs import Relations, group
         _, base = self.build('r01'); remote = self.remote()
         writer = self.root / 'history-writer'
         git(self.root, 'clone', '-q', '-c', 'core.autocrlf=false', '--branch', 'content/pw/pz-workspace-test', str(remote), str(writer))
@@ -315,6 +339,9 @@ class MotifTests(unittest.TestCase):
         missing = 'd' * 40
         with patch.object(repository, 'fetch', side_effect=ValueError('unavailable')):
             self.assertEqual(graph.compare(tip, missing), 'unknown')
+        uncertain = group(value['jobs'], {}, confirmed=True, remote=str(remote))
+        self.assertEqual(uncertain[0]['status'], 'Remote nicht aktuell bestätigt',
+                         'missing same-ref ancestry cannot become sync or a proven conflict')
         self.assertEqual(repository.local.resolve('refs/heads/content/pw/pz-workspace-test'), base)
 
 

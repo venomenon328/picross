@@ -108,7 +108,10 @@ def group(jobs, comparisons, *, confirmed, remote):
             version['sources'].append(row['id'])
         local, other = [r for r in rows if r['source'] == 'local'], [r for r in rows if r['source'] == 'remote']
         conflicting = any(r.get('conflict') for r in rows)
-        pairs = {relation(a['commit'], b['commit']) for a in local for b in other}
+        # Local/remote synchronization compares the same ref, not independent
+        # main and production histories. Revisions within each ref share its tip.
+        pairs = {relation(a['commit'], b['commit']) for a in local for b in other if a['ref'] == b['ref']}
+        same_refs = {r['ref'] for r in local} == {r['ref'] for r in other}
         if not remote or not confirmed:
             status = 'Remote nicht aktuell bestätigt'
         elif conflicting or 'divergent' in pairs:
@@ -117,7 +120,7 @@ def group(jobs, comparisons, *, confirmed, remote):
             status = 'Nur Remote vorhanden'
         elif not other:
             status = 'Nur lokal vorhanden'
-        elif 'unknown' in pairs:
+        elif not same_refs or 'unknown' in pairs:
             status = 'Remote nicht aktuell bestätigt'
         elif pairs <= {'equal'} and pairs:
             status = 'Synchron'
@@ -150,6 +153,8 @@ def group(jobs, comparisons, *, confirmed, remote):
             selected['sources'].sort(key=lambda jid: jid != current_id)
         chosen = next((r for r in rows if r['id'] == current_id), rows[0])
         errors = list(dict.fromkeys(r['current_error'] for r in rows if r.get('current_error')))
+        if local and other and not same_refs:
+            errors.append('Lokaler oder Remote-Gegenref fehlt für dieses Motiv; Gesamtvergleich nicht bestätigt.')
         if 'unknown' in pairs:
             errors.append('Git-Abstammung nach begrenztem Metadatennachladen ungeklärt; Version bewusst wählen.')
         if not choice:

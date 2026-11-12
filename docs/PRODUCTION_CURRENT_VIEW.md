@@ -59,8 +59,11 @@ Bei fehlenden flachen Metadaten höchstens zwei gezielte Fetches ausgewählter
 Remotespitzen mit `depth=64,blob:none` je Listenlauf; höchstens 256 Commitheader
 je Abstammungsrichtung. Fehlende Historie bleibt ungeklärt. Keine allgemeine
 Historien-/Blobsuche, keine Fetchmutation im Benutzercheckout.
-`Synchron` verlangt gleiche frisch bestätigte Quellenstände, `Lokal neuer` und
-`Remote neuer` bewiesene Abstammung. Divergenz und unterschiedliche Bytes derselben
+Der Lokal-/Remote-Status vergleicht jeweils denselben Ref; verschiedene Main-/
+Produktionsstände sind für sich kein Synchronisationskonflikt. `Synchron` verlangt
+gleiche frisch bestätigte Quellenstände aller vertretenen Refs; fehlt ein Gegenstück,
+bleibt der Gesamtvergleich unbestätigt. `Lokal neuer` und `Remote neuer` verlangen
+bewiesene Abstammung desselben Refs. Divergenz und unterschiedliche Bytes derselben
 ID/Revision erfinden keinen Sieger. Offline-/Authentifizierungsfehler behalten
 Cacheansichten lesbar und zeigen `Remote nicht aktuell bestätigt` samt letzter
 Cachezeit/Fehler. Cachezeit ist keine frische Remoteprüfung. Unbestätigte lokale
