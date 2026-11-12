@@ -39,14 +39,9 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Pinned dependency setup failed' }
       - name: Build payload and inspect actual MSI bytes
         shell: pwsh
-        env:
-          INSPECTION_COMMIT: ${{ github.workflow_sha }}
         run: |
           & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.build_installer --output "$env:RUNNER_TEMP\pw-product"
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
-          # Temporary pre-merge probe: product stays on main; exact proposed inspector.
-          git show "${env:INSPECTION_COMMIT}:tools/production_workspace/verify_installer.py" | Set-Content -Encoding utf8 tools/production_workspace/verify_installer.py
-          if ($LASTEXITCODE -ne 0) { throw 'Inspector source snapshot failed' }
           & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.verify_installer --build "$env:RUNNER_TEMP\pw-product" --output "$env:RUNNER_TEMP\pw-inspection" --expected-commit '${{ steps.source.outputs.source_commit }}' --compare-build
           if ($LASTEXITCODE -ne 0) { throw 'MSI inspection failed' }
       - name: Targeted product download, no release or deployment
