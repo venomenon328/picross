@@ -183,6 +183,9 @@ class MotifTests(unittest.TestCase):
         (self.repo / INDEX).write_bytes(source.read(sha, INDEX)); commit(self.repo)
         service = self.service()
         before = git(self.repo, 'status', '--porcelain'), git(self.repo, 'show-ref')
+        with patch.object(cv, 'inspect', side_effect=OSError('temporary missing object')):
+            uncertain = service.listing()
+        self.assertIsNone(uncertain['motifs'][0]['current_job'])
         with patch.object(p, 'inspect', side_effect=AssertionError('eager package validation')), \
                 patch.object(Archive, '__init__', side_effect=AssertionError('eager ZIP')):
             listing = service.listing()
