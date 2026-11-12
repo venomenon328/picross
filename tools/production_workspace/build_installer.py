@@ -92,7 +92,7 @@ def wix_source(app, product, guard):
     element(p, 'Binary', Id='Guard', SourceFile=str(guard))
     element(p, 'CustomAction', Id='CheckStopped', BinaryKey='Guard', ExeCommand='"[INSTALLFOLDER]."', Execute='immediate', Return='check')
     sequence = element(p, 'InstallExecuteSequence')
-    element(sequence, 'Custom', Action='CheckStopped', Before='InstallInitialize').text = '1'
+    element(sequence, 'Custom', Action='CheckStopped', Before='InstallValidate').text = '1'
     element(p, 'UIRef', Id='WixUI_Common')
     ui = element(p, 'UI')
     element(ui, 'Error', Id='1722').text = ('Picross kann gerade nicht installiert/entfernt werden. '
@@ -135,7 +135,7 @@ def run(output):
     shutil.copyfile(wix / 'LICENSE.TXT', app / 'LICENSES/WiX.txt')
     files = [{'file': f.relative_to(app).as_posix(), 'bytes': f.stat().st_size, 'sha256': sha(f)}
              for f in sorted(app.rglob('*')) if f.is_file() and f.name != 'inventory.json']
-    (app / 'inventory.json').write_text(json.dumps({'commit': json.loads((app / 'components.json').read_text())['commit'],
+    (app / 'inventory.json').write_text(json.dumps({'commit': json.loads((app / 'components.json').read_text(encoding='utf-8'))['commit'],
                                                   'files': files}, indent=2) + '\n', encoding='utf-8')
     payload = work / 'Payload.txt'
     payload.write_text('\n'.join(f.relative_to(app).as_posix() for f in sorted(app.rglob('*')) if f.is_file()) + '\n', encoding='utf-8')
@@ -158,7 +158,7 @@ def run(output):
     checksum = sha(msi)
     (output / (msi.name + '.sha256')).write_text(checksum + '  ' + msi.name + '\n', encoding='utf-8')
     shutil.copyfile(PACKAGE / 'START-WINDOWS.txt', output / 'START.txt')
-    report = json.loads((output / 'delivery.json').read_text())
+    report = json.loads((output / 'delivery.json').read_text(encoding='utf-8'))
     report.update(msi_file=msi.name, msi_sha256=checksum, msi_bytes=msi.stat().st_size,
                   wix_package=product['wix_package'], wix_sha256=product['wix_sha256'],
                   guard_sha256=sha(guard), guard_compiler_sha256=sha(compiler),
