@@ -6,6 +6,7 @@ import re
 import subprocess
 import tempfile
 import xml.etree.ElementTree as ET
+import zipfile
 
 from .build_windows import ROOT, sha
 from .release import release
@@ -19,7 +20,7 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
-def verify(build, output, expected_commit):
+def verify(build, output, expected_commit, wix_archive=None, compare_build=False):
     require(re.fullmatch('[0-9a-f]{40}', expected_commit), 'Full expected source SHA required')
     require(not output.exists(), 'Use a new dedicated inspection directory')
     output.mkdir(parents=True)
@@ -37,14 +38,19 @@ def verify(build, output, expected_commit):
     for field, key in (('ProductVersion', 'version'), ('ProductCode', 'product_code'), ('UpgradeCode', 'upgrade_code')):
         require(properties[field].strip('{}') == product[key], 'MSI property mismatch: ' + field)
     require(not properties.get('ALLUSERS'), 'MSI is not per-user')
+    wix_archive = wix_archive or build / 'work/wix.zip'
     require(report['wix_sha256'] == product['wix_sha256'] and
-            sha(build / 'work/wix.zip') == product['wix_sha256'], 'Unbound WiX inspector')
+            sha(wix_archive) == product['wix_sha256'], 'Unbound WiX inspector')
     app = build / 'dist/Picross-Start'
+    require(not compare_build or app.is_dir(), 'Missing original build payload')
     with tempfile.TemporaryDirectory(prefix='unpacked-', dir=output) as temporary:
         work = Path(temporary)
         extracted = work / 'bytes'
         source = work / 'installer.wxs'
-        subprocess.run([str(build / 'work/wix/dark.exe'), '-nologo', '-x', str(extracted),
+        wix = work / 'wix'
+        with zipfile.ZipFile(wix_archive) as archive:
+            archive.extractall(wix)
+        subprocess.run([str(wix / 'dark.exe'), '-nologo', '-x', str(extracted),
                         '-o', str(source), str(msi)], check=True)
         root = ET.parse(source).getroot()
         package = root.find('.//w:Package', NS)
@@ -55,6 +61,7 @@ def verify(build, output, expected_commit):
         install = root.find('.//w:Directory[@Id="INSTALLFOLDER"]', NS)
         require(install is not None, 'Missing program directory')
         payload = {}
+        seen = set()
 
         def visit(directory, prefix):
             for node in directory.findall('w:Component/w:File', NS):
@@ -63,7 +70,9 @@ def verify(build, output, expected_commit):
                                                               for p in relative.parts), 'Unsafe MSI member')
                 file = Path(node.get('Source')).resolve()
                 require(file.is_relative_to(extracted.resolve()) and file.is_file(), 'Missing extracted MSI member')
-                require(relative.as_posix().casefold() not in {p.casefold() for p in payload}, 'Duplicate MSI member')
+                key = relative.as_posix().casefold()
+                require(key not in seen, 'Duplicate MSI member')
+                seen.add(key)
                 payload[relative.as_posix()] = file
             for child in directory.findall('w:Directory', NS):
                 visit(child, prefix / child.get('Name'))
@@ -71,7 +80,8 @@ def verify(build, output, expected_commit):
         visit(install, PurePosixPath())
         require(len(payload) == len(root.findall('.//w:File', NS)), 'Files outside program payload')
         inventory_file = payload['inventory.json']
-        require(inventory_file.read_bytes() == (app / 'inventory.json').read_bytes(), 'Embedded inventory differs from build')
+        if compare_build:
+            require(inventory_file.read_bytes() == (app / 'inventory.json').read_bytes(), 'Embedded inventory differs from build')
         inventory = json.loads(inventory_file.read_text(encoding='utf-8'))
         rows = inventory['files']
         require(inventory['commit'] == expected_commit, 'Inventory source mismatch')
@@ -79,10 +89,12 @@ def verify(build, output, expected_commit):
                 set(payload) == {r['file'] for r in rows} | {'inventory.json'}, 'Incomplete or extra MSI payload')
         for row in rows:
             file = payload[row['file']]
-            original = (app / row['file']).resolve()
-            require(original.is_relative_to(app.resolve()), 'Unsafe inventory path')
-            require(file.stat().st_size == row['bytes'] and sha(file) == row['sha256'] and
-                    sha(original) == row['sha256'], 'MSI payload differs from inventory/build: ' + row['file'])
+            require(file.stat().st_size == row['bytes'] and sha(file) == row['sha256'],
+                    'MSI payload differs from inventory: ' + row['file'])
+            if compare_build:
+                original = (app / row['file']).resolve()
+                require(original.is_relative_to(app.resolve()) and sha(original) == row['sha256'],
+                        'MSI payload differs from original build: ' + row['file'])
         components = json.loads(payload['components.json'].read_text(encoding='utf-8'))
         for key in ('commit', 'version', 'product_code', 'upgrade_code', 'architecture', 'python',
                     'components', 'runtime_components', 'resources', 'signed'):
@@ -98,7 +110,7 @@ def verify(build, output, expected_commit):
     result = {'format': 'picross-installer-inspection-v1', 'commit': expected_commit, 'version': report['version'],
               'msi_sha256': report['msi_sha256'], 'msi_bytes': report['msi_bytes'],
               'product_code': product['product_code'], 'upgrade_code': product['upgrade_code'],
-              'inventory_files': len(rows), 'license_files': len(licenses),
+              'inventory_files': len(rows), 'license_files': len(licenses), 'compared_to_build': compare_build,
               'limits': 'Actual MSI database and all unpacked bytes verified. No installation; T02 requires a non-elevated Windows client.'}
     (output / 'result.json').write_text(json.dumps(result, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(result))
@@ -110,5 +122,7 @@ if __name__ == '__main__':
     parser.add_argument('--build', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--expected-commit', required=True)
+    parser.add_argument('--wix-archive', type=Path, help='Hash-pinned WiX archive; defaults to build/work/wix.zip')
+    parser.add_argument('--compare-build', action='store_true', help='Also compare to original dist payload (required in Actions)')
     args = parser.parse_args()
-    verify(args.build.resolve(), args.output.resolve(), args.expected_commit)
+    verify(args.build.resolve(), args.output.resolve(), args.expected_commit, args.wix_archive, args.compare_build)

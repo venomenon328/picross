@@ -115,6 +115,7 @@ class InstallerContractTests(unittest.TestCase):
         self.assertIn('git checkout --detach $source', workflow)
         self.assertIn('steps.source.outputs.source_commit', workflow)
         self.assertIn('-m tools.production_workspace.verify_installer', workflow)
+        self.assertIn('--compare-build', workflow)
         self.assertNotIn('smoke-user.ps1', workflow)
         for forbidden in ('pull_request:', 'push:', 'schedule:', 'workflow_run:', 'workflow_call:'):
             self.assertNotIn(forbidden, triggers)

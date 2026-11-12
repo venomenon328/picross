@@ -73,12 +73,13 @@ Installationsrichtlinien geändert und keine echte Installation behauptet.
 
 Der vollständige P4-T02-Lebenszyklussmoke bleibt separat auf einem geeigneten
 Windows-11-x64-Client als normaler Benutzer erforderlich; den tatsächlichen
-Actions-Rückdownload mit dem gebundenen Lieferreport verwenden. Der lokale
-Prüfordner benötigt dafür zusätzlich das hashgeprüfte WiX-Archiv unter
-`work/wix.zip`: der MSI-Smoke baut die reale Vorgängerversion selbst. Download
-und lokale Builddateien getrennt halten. Auf einem Entwicklungscheckout mit
-abweichendem Head den erwarteten Quellcommit beim binären Inspector explizit
-übergeben. Dies ist kein Eingabefeld im Actionsworkflow.
+Actions-Rückdownload mit dem gebundenen Lieferreport verwenden. Der MSI-Smoke
+baut die reale Vorgängerversion selbst. Download und lokale Builddateien getrennt
+halten. Für die binäre Rückdownloadprüfung dem Inspector den tatsächlichen
+Quellcommit und ein hashgebundenes WiX-Archiv über `--expected-commit` und
+`--wix-archive` übergeben; das sind keine Eingabefelder im Actionsworkflow.
+Im Actionsbau ist zusätzlich `--compare-build` verpflichtend: dort werden alle
+MSI-Dateien auch gegen das ursprüngliche `dist`-App-Image verglichen.
 
 P4-T01 prüft kleine Quell-/Metadatenverträge im gewählten `tools`-Modul.
 P4-T02 installiert unter nicht erhöhtem Testbenutzer ausschließlich mit synthetischem
