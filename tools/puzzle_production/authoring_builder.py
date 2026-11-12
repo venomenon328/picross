@@ -16,6 +16,7 @@ import zipfile
 from . import authoring_package as ap, catalog_io as io
 from .authoring_build_contract import BACKGROUND_FORMAT, validate_request, validate_phase
 from .contract import Aborted, InvalidInput, canonical_bytes, digest, exact_keys
+from . import authoring_workflow as workflow
 
 INDEX = 'content/authoring/index.json'
 UNSAVED = 'storage: local working bytes; no verified Git backup commit'
@@ -169,7 +170,7 @@ def verify_zip(path, expected, handoff_raw, request, deadline, *, history_repo=N
 
 
 def inspect_zip(path, external, state, deadline, *, allow_background=False, history_repo=None):
-    if state != 'content_ready' and not (allow_background and state == 'raster_ready'):
+    if state != 'content_ready' and not (allow_background and state in ('raster_ready', 'background_review')):
         return None
     from .target_adapter import inspect
     options = ({'allow_background': True, 'history_repo': history_repo,
@@ -183,7 +184,7 @@ def inspect_zip(path, external, state, deadline, *, allow_background=False, hist
             **({'allow_background': True} if allow_background else {}))
     ap.require(report['technical'] and all(
         b == 'final_editorial: missing bound human final approval' or
-        allow_background and state == 'raster_ready' and b.startswith('background')
+        allow_background and state in ('raster_ready', 'background_review') and b.startswith('background')
         for b in report['blockers']), 'Written ZIP has unresolved content errors')
     # Only stable facts become identity bytes. Timings/check timestamps stay out
     # of the record, and are never reused as a substitute for a fresh inspection.
@@ -202,6 +203,7 @@ def inspect_zip(path, external, state, deadline, *, allow_background=False, hist
 
 def record_for(r, directory, package_raw, handoff_raw, inspection, background=None):
     h = r['handoff']
+    current = workflow.is_current(h)
     blockers = list(dict.fromkeys([*h.get('blockers', []), *h.get('content_blockers', [])]))
     if inspection:
         # Original open choice/final gates remain historical in the handoff.
@@ -214,7 +216,8 @@ def record_for(r, directory, package_raw, handoff_raw, inspection, background=No
                 blockers.append(gate + ': human decision pending')
     if background is not None:
         blockers.extend(background['blockers'])
-        blockers.append('integration: background integration requires HP-I1/HP-I2')
+        if not current:
+            blockers.append('integration: background integration requires HP-I1/HP-I2')
     blockers = list(dict.fromkeys([*blockers, UNSAVED]))
     def ref(name, raw):
         return {'file': directory + '/' + name, 'sha256': io.checksum(raw)}
@@ -226,6 +229,7 @@ def record_for(r, directory, package_raw, handoff_raw, inspection, background=No
                  'motif_approved': '3 · Rätsel produzieren',
                  'raster_review': 'Korrigieren oder Fehler beheben',
                  'raster_ready': '4 · Hintergrundbereitschaft klären und Rätsel abnehmen',
+                 'background_review': workflow.NEXT['background_review'],
                  'content_ready': '4 · Abnehmen & ins Spiel integrieren',
                  'editorially_approved': 'Finale Integration nach verfügbarer HP-I1/HP-I2-Unterstützung'}[state]
     if background is not None and state == 'content_ready':
@@ -250,11 +254,16 @@ def record_for(r, directory, package_raw, handoff_raw, inspection, background=No
         if inspection is None:
             record['verification'] = {'technical': False, 'scope': 'phase and background file bindings only',
                                       'background_ready': background['ready'], 'integration_ready': False}
+    if current:
+        record.update(format=workflow.RECORD, raster_selection=h['raster_selection'],
+                      presentation=r['presentation'], candidate=h.get('candidate'), next_step=workflow.NEXT[state])
     return record
 
 
 def sheet_from_record(record, background=None):
     """Project the record and its freshly read bound manifest; no second state."""
+    if record.get('format') == workflow.RECORD:
+        return None
     ap.require(record.get('format') in ('picross-authoring-record-v1', 'picross-authoring-record-v2'),
                'Unsupported authoring record family for the current sheet; background change work uses its own CLI')
     def image(kind):
@@ -306,7 +315,9 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
         with io.budget(ap.SECONDS):
             deadline = time.monotonic() + ap.SECONDS
             r = validate_request(request)
-            background_enabled = r['format'] == BACKGROUND_FORMAT
+            current = r['format'] == workflow.REQUEST
+            background_enabled = r['format'] in (BACKGROUND_FORMAT, workflow.REQUEST)
+            ap.require(not current or r['target'] == 'repository', '0.8.0 handoffs require repository publication')
             ap.require(background_enabled or history_repo is None, 'history-repo is only supported by build request v2')
             ap.require((r['target'] == 'repository') == (publish_to is not None), 'Request target and publish-to differ')
             sources, output = io.external(source_root), io.external(output_root)
@@ -323,6 +334,9 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
             parent = mkdir(root, directory.rsplit('/', 1)[0])
             lock = gitdir / 'authoring-builder.lock' if gitdir else output / '.authoring-builder.lock'
             with writer(lock):
+                if current:
+                    from tools.production_workspace import current_view
+                    view_before = current_view.observe(root, r['handoff']['puzzle_id'])
                 if gitdir:
                     ap.require(io.read(root, INDEX, 8 * 1024 * 1024) == before, 'Index changed before writer acquisition')
                 with tempfile.TemporaryDirectory(prefix='.pb-a-build-', dir=parent) as temporary:
@@ -374,6 +388,9 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
                     record = record_for(r, directory, package_raw, handoff, inspection, background)
                     record['build_request_sha256'] = request_hash
                     write_new(stage / 'record.json', json_data(record))
+                    if current:
+                        from tools.production_workspace.projector import automatic
+                        write_new(stage / 'workspace.json', automatic(root, directory, stage, index))
                     revision_files = {p.name: {'bytes': p.stat().st_size, 'sha256': ap.file_hash(p)}
                                       for p in sorted(stage.iterdir())}
                     checkpoint('before-publication')
@@ -406,7 +423,9 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
                     # Check every sidecar as well as ZIP/record before and after
                     # indexing; never return a success for changed approval bytes.
                     verify_revision(target, revision_files)
-                    return {'format': 'picross-authoring-build-result-v2' if background_enabled else 'picross-authoring-build-result-v1',
+                    if current:
+                        current_view.publish(root, record['puzzle_id'], record['revision'], view_before)
+                    return {'format': 'picross-authoring-build-result-v3' if current else 'picross-authoring-build-result-v2' if background_enabled else 'picross-authoring-build-result-v1',
                             'status': 'reused' if reused else 'built',
                             'directory': str(target), 'indexed': gitdir is not None, 'record': record,
                             'sheet': sheet_from_record(record, background), 'files': revision_files}
@@ -466,7 +485,8 @@ def main(argv=None):
             result = error_result(exc)
             code = {'invalid_input': 2, 'conflict': 2, 'aborted': 4, 'technical_error': 5}[result['status']]
         else:
-            result = {'format': ('picross-authoring-build-result-v2' if isinstance(request, dict) and request.get('format') == BACKGROUND_FORMAT
+            result = {'format': ('picross-authoring-build-result-v3' if isinstance(request, dict) and request.get('format') == workflow.REQUEST else
+                                'picross-authoring-build-result-v2' if isinstance(request, dict) and request.get('format') == BACKGROUND_FORMAT
                                  else 'picross-authoring-build-result-v1'), 'status': 'aborted' if aborted else 'invalid_input',
                       'message': str(exc), 'remaining': getattr(exc, 'remaining', None),
                       'next_action': 'Inspect the retained complete revision/index; repeat the unchanged request after resolving the conflict.'}

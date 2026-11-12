@@ -14,6 +14,7 @@ from . import background_contract as background, background_package, catalog_io 
 from .authoring_build_contract import EXTERNAL, names
 from .authoring_staging import OwnedStage, StageError
 from .contract import Aborted, InvalidInput, canonical_bytes, digest, exact_keys, integer
+from . import authoring_workflow as workflow
 
 REQUEST = "picross-authoring-finalize-request-v1"
 OPERATION = "picross-authoring-finalization-v1"
@@ -71,7 +72,7 @@ def _authorizations(value, directory):
 def _request(value):
     r = io.json_bytes(canonical_bytes(value), 8 * 1024 * 1024)
     exact_keys(r, {"format", "record", "sidecar_root", "background", "authorizations", "files"})
-    ap.require(r["format"] == REQUEST, "Unsupported authoring finalization request")
+    ap.require(r["format"] in (REQUEST, 'picross-authoring-finalize-request-v2'), "Unsupported authoring finalization request")
     _binding(r["record"])
     parts = r["record"]["file"].split("/")
     repository = parts[:2] == ["content", "authoring"]
@@ -142,12 +143,13 @@ class _Reads:
 
 def _record(raw, directory):
     value = io.json_bytes(raw, ap.MAX_FILE)
-    exact_keys(value, RECORD_KEYS)
+    current = value.get('format') == workflow.RECORD
+    exact_keys(value, RECORD_KEYS | ({'raster_selection', 'presentation', 'candidate'} if current else set()))
     puzzle_id, revision = directory.split("/")[-2:]
-    ap.require(value["format"] == "picross-authoring-record-v2" and
+    ap.require(value["format"] in ("picross-authoring-record-v2", workflow.RECORD) and
                value["puzzle_id"] == puzzle_id and value["revision"] == revision,
                "Record identity/generation differs from the declared authoring revision")
-    ap.require(value["state"] in ("raster_ready", "content_ready", "editorially_approved") and
+    ap.require(value["state"] in (("background_review", "content_ready", "editorially_approved") if current else ("raster_ready", "content_ready", "editorially_approved")) and
                value["integration"] is None, "Finalization requires unintegrated raster-ready authoring")
     ap.sha(value["build_request_sha256"])
     ap.sha(value["inventory_sha256"])
@@ -155,7 +157,7 @@ def _record(raw, directory):
                "Invalid record source commit")
     integer(value["document_revision"], 1, 1_000_000, "record document revision")
     rulebook = exact_keys(value["rulebook"], {"version", "file", "sha256"})
-    ap.require(rulebook["version"] == "0.7.0", "Finalization requires the background rulebook generation")
+    ap.require(rulebook["version"] == ('0.8.0' if current else "0.7.0"), "Finalization requires the matching background rulebook generation")
     ap.relative(rulebook["file"])
     ap.sha(rulebook["sha256"])
     ap.require(value["category_id"] is None or isinstance(value["category_id"], str) and
@@ -242,12 +244,15 @@ def _inspect(package_path, record, external, authorizations, binding, history_re
                    record["handoff"]["sha256"] == ap.file_hash(package.file("handoff.json")),
                    "Record and original package identities differ")
         snapshot = package.bound(h["rulebook"]).read_text(encoding="utf-8")
-        ap.require(re.search(r"^\*\*Version 0\.7\.0 · Dokumentrevision " + str(record["document_revision"]) + r" ·",
+        ap.require(re.search(r"^\*\*Version " + re.escape(record['rulebook']['version']) + r" · Dokumentrevision " + str(record["document_revision"]) + r" ·",
                              snapshot, re.M), "Record rulebook revision differs from original snapshot")
         ap.require(_same(record["reveal"], h.get("reveal")) and _same(record["motif"], h.get("motif")) and
                    not record["reveal_options"] and _same(record["parameters"],
                    h.get("approved_parameters") or h.get("proposed_parameters") or None),
                    "Record changes sealed images, selection or parameters")
+        if workflow.is_current(h):
+            ap.require(record['raster_selection'] == h['raster_selection'] and record['candidate'] == h['candidate'],
+                       'Record changes sealed raster selection')
         report, design, matrix, _, _ = inspect(package, paths["approval.json"],
             manual_authorization=paths["manual-authorization.json"],
             palette_exception=paths["palette-exception.json"], allow_background=True,
@@ -276,10 +281,13 @@ def _proposed(before, verification, current, authorizations):
     approval = authorizations["approval.json"]
     after["final_editorial_approval"] = {k: approval[k] for k in ("file", "sha256")} if approval else None
     after["blockers"] = list(dict.fromkeys([*verification["blockers"], *current["blockers"],
-                                           INTEGRATION, builder.UNSAVED]))
+                                           *([] if before['format'] == workflow.RECORD else [INTEGRATION]), builder.UNSAVED]))
     after["next_step"] = {"raster_ready": "4 · Hintergrundbereitschaft klären und Rätsel abnehmen",
         "content_ready": "4 · Rätsel abnehmen; finale Hintergrundintegration benötigt HP-I1b/HP-I2",
-        "editorially_approved": "Finale Integration nach verfügbarer HP-I1b/HP-I2-Unterstützung"}[after["state"]]
+        "editorially_approved": "Finale Integration nach verfügbarer HP-I1b/HP-I2-Unterstützung",
+        "background_review": workflow.NEXT['background_review']}[after["state"]]
+    if before['format'] == workflow.RECORD:
+        after['next_step'] = workflow.NEXT[after['state']]
     after["next_action"] = after["next_step"]
     return after
 
@@ -299,7 +307,7 @@ def _operation(root, r, directory):
         raw = io.read(root, "operation.json", ap.MAX_FILE)
         op = io.json_bytes(raw, ap.MAX_FILE)
         exact_keys(op, {"format", "request_sha256", "record", "before", "after", "files"})
-        ap.require(op["format"] == OPERATION and op["request_sha256"] == digest(r) and
+        ap.require(op["format"] == ('picross-authoring-finalization-v2' if r['format'].endswith('-v2') else OPERATION) and op["request_sha256"] == digest(r) and
                    op["record"] == r["record"]["file"] and op["files"] == local,
                    "Sidecar belongs to another finalization")
         records = []
@@ -388,6 +396,12 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                             raise Conflict("Stale expected authoring record")
                         before_raw, saved_after, saved_operation = observed_record, None, None
                     before = _record(before_raw, directory)
+                    current_generation = before['format'] == workflow.RECORD
+                    if current_generation:
+                        from tools.production_workspace import current_view
+                        view_before = current_view.observe(output, before['puzzle_id'])
+                    ap.require(current_generation == (r['format'] == 'picross-authoring-finalize-request-v2'),
+                               'Finalizer and record generations differ')
                     original = reads.read("output", before["package"]["file"], ap.MAX_ZIP, ref=before["package"])
                     handoff = reads.read("output", before["handoff"]["file"])
                     ap.require(io.checksum(handoff) == before["handoff"]["sha256"], "Outer handoff hash mismatch")
@@ -448,7 +462,7 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                         after = _proposed(before, verification, current, r["authorizations"])
                         after_raw = builder.json_data(after)
                         local = [{**item, "file": item["file"][len(r["sidecar_root"]) + 1:]} for item in r["files"]]
-                        operation = {"format": OPERATION, "request_sha256": digest(r), "record": r["record"]["file"],
+                        operation = {"format": 'picross-authoring-finalization-v2' if current_generation else OPERATION, "request_sha256": digest(r), "record": r["record"]["file"],
                             "before": _ref("record.before.json", before_raw),
                             "after": _ref("record.after.json", after_raw), "files": local}
                         operation_raw = builder.json_data(operation)
@@ -458,6 +472,20 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                                           ("operation.json", operation_raw)):
                             stage.write("sidecar/" + name, raw)
                         expected_operation = before_raw, after_raw, operation_raw
+                        projections = None
+                        if current_generation:
+                            from tools.production_workspace.projector import automatic
+                            projection_stage = stage.mkdir('projection')
+                            stage.write('projection/package.zip', original)
+                            stage.write('projection/handoff.json', handoff)
+                            stage.write('projection/record.json', before_raw)
+                            prior_projection = automatic(output, directory, projection_stage, index)
+                            next_projection = automatic(output, directory, projection_stage, index,
+                                overlay={**overlay, directory + '/record.json': after_raw})
+                            projection_name = directory + '/workspace.json'
+                            projections = prior_projection, next_projection
+                            ap.require(io.read(output, projection_name, 1024 * 1024) in projections,
+                                       'Projection changed outside this finalization')
                         _operation_guard(sidecar, r, directory, expected_operation)
                         if resumed and (saved_after != after_raw or saved_operation != operation_raw):
                             raise Conflict("Published finalization differs from freshly checked request")
@@ -486,13 +514,25 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                         reads.recheck()
                         _record_guard(output, r, after_raw)
                         _operation_guard(target, r, directory, expected_operation)
-                        return {"format": RESULT, "status": "reused" if observed_record == after_raw else "updated",
+                        if projections is not None:
+                            actual = io.read(output, projection_name, 1024 * 1024)
+                            ap.require(actual in projections, 'Projection changed during finalization')
+                            if actual != projections[1]:
+                                replacement = stage.write('workspace.next.json', projections[1])
+                                os.replace(replacement, io.safe(output, projection_name))
+                            ap.require(io.read(output, projection_name, 1024 * 1024) == projections[1], 'Projection publication failed')
+                            current_view.publish(output, before['puzzle_id'], before['revision'], view_before,
+                                previous={r['record']['file']: before_raw, projection_name: projections[0]})
+                        return {"format": 'picross-authoring-finalize-result-v2' if current_generation else RESULT, "status": "reused" if observed_record == after_raw else "updated",
                                 "record": after, "sheet": builder.sheet_from_record(after, current),
                                 "operation": _ref(r["sidecar_root"] + "/operation.json", operation_raw)}
             except builder.BuildError as exc:
                 raise Conflict(str(exc)) from exc
     except (Exception, KeyboardInterrupt) as exc:
-        return error_result(exc, remaining)
+        result = error_result(exc, remaining)
+        if isinstance(request, dict) and request.get('format') == 'picross-authoring-finalize-request-v2':
+            result['format'] = 'picross-authoring-finalize-result-v2'
+        return result
     finally:
         for path in reversed(made):
             try:

@@ -1,12 +1,13 @@
 # AT · Transparente Abschlussbilder
 
-**PE / #576 · freigegebener Sollstand, noch nicht implementiert:**
+**PE / #576 · Bildpflege bleibt freigegebener Sollstand:**
 Der [Bestandseditor](PUZZLE_EDITOR.md#4-bilder-und-hintergrundauswahl) ergänzt später
 einen manuellen Dateiimport ohne Bildbearbeitung und ohne KI-Zwischenschritt.
 Variable Revealmaße, Transparenzstandard und historische Herkunft bleiben;
-ein Bildwechsel erhöht keine Rasterrevision. Bereits PE-A1 trennt aktuelle Namen
-und Kategorien von ihren Produktionsangaben. Der unten beschriebene AT-Weg ist
-weiterhin der vorhandene Ausführungsstand.
+ein Bildwechsel erhöht keine Rasterrevision. PE-A1 trennt im Arbeitsbranch
+aktuelle Namen und Kategorien von ihren Produktionsangaben. Der unten beschriebene
+AT-Weg erhält diese Metadaten über den gemeinsamen Writer; seine Bildverträge
+bleiben der vorhandene Ausführungsstand.
 
 Vertragsstand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
@@ -91,8 +92,12 @@ Papieruntergrund sichtbar. Keine separate, anders bearbeitete Katalogfassung.
 - Weiße und helle Motivteile bleiben erhalten, ebenso Farben, Konturen, feine
   Details, Pose, Perspektive, Proportionen, Ausschnitt und Komposition. Helligkeit
   allein entscheidet nicht, ob ein Pixel zum Hintergrund gehört.
-- Alphakanten sind in großer Darstellung, kleiner Katalogvorschau und während der
-  Überblendung sauber. Keine hellen Matten/Säume, ausgeschnittenen Motivdetails
+- Alphakanten bleiben auch in kleiner Darstellung und Überblendung sauber.
+  Produktionsprüfung am Original groß/klein, bei Bedarf auf neutralem Grund oder
+  Schachbrett; keine routinemäßigen Buch-/Katalogmontagen, Fadeproben oder
+  Testintegrationen, auch nicht in späteren Phasen. Bestehende Render-/Integrations-
+  tests tragen die technische Garantie; kurze Urteile im vorhandenen Bericht.
+  Keine hellen Matten/Säume, ausgeschnittenen Motivdetails
   oder ausgefransten Konturen; teiltransparente Randpixel bleiben möglich.
 - Vollständige Szenen erhalten eine bewusste motivbezogene Bearbeitung. Prägende
   Umgebung und räumliche Beziehungen bleiben erhalten; transparente Außenfreiräume

@@ -40,6 +40,7 @@ func run() -> void:
 	preload("res://tests/ke_cases.gd").run(self)
 	preload("res://tests/ku_b_cases.gd").run(self)
 	preload("res://tests/sd2_c_cases.gd").run(self)
+	preload("res://tests/pe_a1_cases.gd").run(self)
 	preload("res://tests/hz_cases.gd").run(self)
 	preload("res://tests/hz_b_cases.gd").run(self)
 	preload("res://tests/hz_c_cases.gd").run(self)
@@ -263,7 +264,7 @@ func test_scene() -> void:
 	var expected_catalog: Array[String] = ["T-01", "T-02", "T-04", "T-06", "T-08", "T-09"]
 	check(app.sessions.size() == expected_catalog.size() and app.choices.size() == expected_catalog.size(), "album offers exactly six technical sheets")
 	var catalog_heading: Label = app.album.summary
-	check(catalog_heading != null and catalog_heading.text == "0 von 6 gelöst", "album heading reflects the current catalog")
+	check(catalog_heading != null and catalog_heading.text == "6 Treffer · 0 von 6 gelöst", "album heading reflects the current catalog")
 	for i: int in range(mini(app.sessions.size(), expected_catalog.size())):
 		var definition: Dictionary = app.sessions[i].definition
 		check(str(definition.id) == expected_catalog[i], "album includes correct sheet in position " + str(i))

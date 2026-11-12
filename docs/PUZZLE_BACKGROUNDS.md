@@ -1,13 +1,26 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**PE / #576 · freigegebener Sollstand, noch nicht implementiert:**
+**PE / #576 · PE-A1 im Arbeitsbranch implementiert, Bildpflege noch Sollstand:**
 [PE-A2](PUZZLE_EDITOR.md#4-bilder-und-hintergrundauswahl) ergänzt später fertige
 2304×576-Dateien ohne Neukodierung, die erste individuelle Zuordnung bei einem
 Legacyrätsel und die schreibbare Auswahl Standard/eigenes Bild/kein Hintergrund.
 Die bisherige Ableitung und Legacy-Sperre beschreiben weiter den vorhandenen Weg.
-[PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) führt davor
-Runtime v7 mit identischem v6-Hintergrundteilvertrag ein; Capability-v1 bleibt
+[PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) verwendet
+Runtime v7 mit identischem v6-Hintergrundteilvertrag; Capability-v1 bleibt
 unverändert, Legacy-only aktiviert keine Hintergründe.
+[Source v4](PUZZLE_EDITOR.md#75-geschlossene-implementierungsformen) erhält bei
+einem regulären Rasterupdate mit geänderter historischer Kategorie alle bisherigen
+v3-Ereignisbindungen. Metadatenpflege und Migration ändern keine Hintergrundquelle.
+
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
 **Vertrag 1.0 · Dokumentrevision 12 · 11.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491**
 

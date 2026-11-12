@@ -42,19 +42,29 @@ BACKGROUND_FORMATS = {"registration": "picross-registration-journal-v7", "update
            "added-adoption": "picross-catalog-metadata-journal-v4", "reveal-adoption": "picross-reveal-adoption-journal-v3",
            "method-activation": "picross-difficulty-activation-journal-v2",
            "background-adoption": "picross-background-adoption-journal-v1"}
+PE_FORMATS = {"registration": "picross-registration-journal-v8", "update": "picross-content-update-journal-v8",
+           "adoption": "picross-catalog-metadata-journal-v5", "sync": "picross-catalog-metadata-journal-v5",
+           "added-adoption": "picross-catalog-metadata-journal-v5", "reveal-adoption": "picross-reveal-adoption-journal-v5",
+           "method-activation": "picross-difficulty-activation-journal-v3",
+           "background-adoption": "picross-background-adoption-journal-v3",
+           "metadata": "picross-editor-metadata-journal-v1", "metadata-migration": "picross-editor-migration-journal-v1"}
 REVEAL_LIMIT = 128 * 1024 * 1024
 
 
 def modern(j):
-    return isinstance(j, dict) and j.get("format") in (*REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values(), *AT_FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values(), *AT_FORMATS.values())
 
 
 def sd2(j):
-    return isinstance(j, dict) and j.get("format") in (*REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values())
 
 
 def background(j):
-    return isinstance(j, dict) and j.get("format") in (*REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values())
+
+
+def metadata(j):
+    return isinstance(j, dict) and j.get("format") in PE_FORMATS.values()
 
 
 def safe(root, name):
@@ -92,7 +102,7 @@ def file_limit(root, name, journal=None):
             require(len(raw) == ref["bytes"] and io.checksum(raw) == ref["sha256"], "Journal background source binding differs")
             source = background_source.validate(io.json_bytes(raw, background_source.LIMIT), entry)
             origin = background_source.initial(source)["origin"]
-            if source["format"] == rebind.FORMAT:
+            if rebind.is_rebound(source):
                 update = next((e for e in reversed(source["events"]) if e["operation"] == "update"), None)
                 if update and update["export_source"] is not None: origin = update["export_source"]["origin"]
             if (origin["package"] == prefix and bound.get(name) == origin["original_package"]["original_zip_sha256"] and
@@ -300,8 +310,9 @@ def projection(texts, registry, *, version=None):
     for e in registry["entries"]:
         value = texts.get(added.path(e["id"]))
         if value is not None: dates[e["id"]] = added.validate(rating.bytes_json(value.encode(), added.LIMIT), e["id"])
-    if version is None: version = 6 if registry["format"] == background_source.REGISTRY_FORMAT else 5
-    backgrounds = background_source.projection(registry, texts) if version == 6 else None
+    from .content_registry import METADATA_FORMAT
+    if version is None: version = 7 if registry["format"] == METADATA_FORMAT else 6 if registry["format"] == background_source.REGISTRY_FORMAT else 5
+    backgrounds = background_source.projection(registry, texts) if version >= 6 else None
     result = project(registry, catalog, ratings=records, added=dates, version=3 if version == 2 else version, backgrounds=backgrounds)
     if version == 2:
         result["format"] = "picross-runtime-registry-v2"
@@ -342,21 +353,27 @@ def _stage_check(root, texts, retained, additions=None, replacements=None, legac
         check_checkout(stage)
 
 
-def prepare(root, snapshot, changes, *, operation, additions=None, report_run=None, replacements=None, generation="background"):
+def prepare(root, snapshot, changes, *, operation, additions=None, report_run=None, replacements=None, generation="metadata"):
     additions = additions or {}
-    require(operation in BACKGROUND_FORMATS, "Unknown transaction operation")
+    require(operation in PE_FORMATS, "Unknown transaction operation")
     before = snapshot["registry"]
-    require(generation in ("rebind", "background", "sd2", "at"), "Unknown journal generation")
+    require(generation in ("metadata", "rebind", "background", "sd2", "at"), "Unknown journal generation")
+    from .content_registry import METADATA_FORMAT, require_current
+    if before["format"] == METADATA_FORMAT and generation in ("background", "rebind"):
+        generation = "metadata"
+    if generation == "metadata" and operation != "metadata-migration":
+        require_current(before)
+    require(operation not in ("metadata", "metadata-migration") or generation == "metadata", "Editor operation requires its own journal generation")
     if generation == "background" and operation in REBIND_FORMATS and any(
             changes.get(background_source.path(e["id"]), snapshot["texts"].get(background_source.path(e["id"]))) !=
             snapshot["texts"].get(background_source.path(e["id"])) and
             (operation != "background-adoption" or
-             io.json_bytes(snapshot["texts"][background_source.path(e["id"])], background_source.LIMIT)["format"] == rebind.FORMAT)
+             rebind.is_rebound(io.json_bytes(snapshot["texts"][background_source.path(e["id"])], background_source.LIMIT)))
             for e in before["entries"] if e["id"] in background_source.index(before)):
         generation = "rebind"
-    require(operation != "background-adoption" or generation in ("background", "rebind"),
+    require(operation != "background-adoption" or generation in ("metadata", "background", "rebind"),
             "Background adoption requires its own journal generation")
-    backgrounds = generation in ("background", "rebind")
+    backgrounds = generation in ("metadata", "background", "rebind")
     current = generation != "at"
     if not backgrounds: snapshot = pre_background_snapshot(snapshot)
     if not current: snapshot = pre_sd2_snapshot(snapshot)
@@ -370,7 +387,7 @@ def prepare(root, snapshot, changes, *, operation, additions=None, report_run=No
         require(old[n] is None, "Target already exists/collides: " + n)
     new = {**old, **changes}
     require(all(b is None or isinstance(b, bytes) for b in new.values()), "Invalid transaction bytes")
-    j = {"format": (REBIND_FORMATS if generation == "rebind" else BACKGROUND_FORMATS if backgrounds else FORMATS if current else AT_FORMATS)[operation], "operation": operation,
+    j = {"format": (PE_FORMATS if generation == "metadata" else REBIND_FORMATS if generation == "rebind" else BACKGROUND_FORMATS if backgrounds else FORMATS if current else AT_FORMATS)[operation], "operation": operation,
          "old": {n: b.decode("utf-8") if b is not None else None for n, b in old.items()},
          "new": {n: b.decode("utf-8") if b is not None else None for n, b in new.items()},
          "retained": {n: h for n, h in snapshot["retained"].items() if n not in (replacements or {})},
@@ -390,6 +407,7 @@ def prepare(root, snapshot, changes, *, operation, additions=None, report_run=No
 
 def _delta(j, before, after, root=None):
     from .content_update import notice_path
+    from .content_registry import METADATA_FORMAT, current_metadata
     op = j["operation"]
     changed = {n for n in j["old"] if j["old"][n] != j["new"][n]}
     mutable = {RUNTIME}
@@ -397,11 +415,26 @@ def _delta(j, before, after, root=None):
     reveal_target = None
     background_target = None
     before_backgrounds, after_backgrounds = background_source.index(before), background_source.index(after)
-    rebound = j["format"] in REBIND_FORMATS.values()
-    if op not in ("registration", "background-adoption") and not rebound:
+    rebound = j["format"] in REBIND_FORMATS.values() or metadata(j) and op in REBIND_FORMATS
+    if op not in ("registration", "background-adoption", "metadata-migration") and not rebound:
         require(before["format"] == after["format"] and before_backgrounds == after_backgrounds,
                 "Operation changes background registry authority")
-    if op == "registration":
+    if op in ("metadata", "metadata-migration"):
+        require(metadata(j) and after["format"] == METADATA_FORMAT and
+                before["entries"] == after["entries"] and before_backgrounds == after_backgrounds and
+                j["report_run"] is None and not j["replacements"], "Invalid editor metadata delta")
+        mutable.add(REGISTRY)
+        if op == "metadata-migration":
+            require(before["format"] in ("picross-content-registry-v2", "picross-content-registry-v3") or
+                    before == after and not changed,
+                    "Migration requires v2/v3 source or an unchanged v4 no-op")
+            catalog = io.json_bytes(j["old"][categories.PATH].encode(), categories.MAX_BYTES)
+            expected = current_metadata(before, catalog, definitions={e["id"]: j["old"]["game/" + e["definition"]] for e in before["entries"]})
+            require(after["metadata"] == list(expected.values()), "Migration changes current metadata")
+        else:
+            require(before["format"] == METADATA_FORMAT, "Metadata edit requires migrated source")
+            mutable.add(categories.PATH)
+    elif op == "registration":
         new_entries = [e for e in after["entries"] if e not in before["entries"]]
         require(len(new_entries) == 1 and [e for e in after["entries"] if e not in new_entries] == before["entries"], "Invalid registration delta")
         e = new_entries[0]
@@ -409,8 +442,13 @@ def _delta(j, before, after, root=None):
         require(all(after_backgrounds.get(identifier) == ref for identifier, ref in before_backgrounds.items()) and
                 set(after_backgrounds) - set(before_backgrounds) <= {e["id"]}, "Registration changes existing backgrounds")
         has_background = e["id"] in after_backgrounds
-        require(after["format"] == (background_source.REGISTRY_FORMAT if has_background else before["format"]),
+        require(after["format"] == (METADATA_FORMAT if metadata(j) else background_source.REGISTRY_FORMAT if has_background else before["format"]),
                 "Registration changes registry generation without a new background")
+        if metadata(j):
+            definition = io.json_bytes(j["new"]["game/" + e["definition"]].encode(), 2 * 1024 * 1024)
+            expected = {"id": e["id"], "name": definition["reveal"]["name"], "category_id": e["category_id"]}
+            require(after["metadata"] == sorted(before["metadata"] + [expected], key=lambda row: row["id"]),
+                    "Registration changes existing metadata or omits new metadata")
         if has_background:
             require(background(j), "Background registration requires its bound journal generation")
             source_name, notice_name = background_source.path(e["id"]), background_source.notice_path(e["id"])
@@ -428,7 +466,7 @@ def _delta(j, before, after, root=None):
                     require(j["additions"].get(packaged) == source[key]["sha256"], "Wrong package background output binding")
             else:
                 require(j["new"][notice_name] is None, "none cannot publish a background notice")
-        if j["format"] in (BACKGROUND_FORMATS["registration"], FORMATS["registration"], AT_FORMATS["registration"], PREVIOUS_FORMATS["registration"]):
+        if j["format"] in (PE_FORMATS["registration"], BACKGROUND_FORMATS["registration"], FORMATS["registration"], AT_FORMATS["registration"], PREVIOUS_FORMATS["registration"]):
             mutable.add(added.path(e["id"]))
             value = j["new"][added.path(e["id"])]
             require(value is not None and added.validate(rating.bytes_json(value.encode(), added.LIMIT), e["id"])["provenance"]["kind"] == "registration", "Registration needs its first added timestamp")
@@ -439,13 +477,14 @@ def _delta(j, before, after, root=None):
         pairs = [(a, b) for a, b in zip(before["entries"], after["entries"]) if a != b]
         require(len(before["entries"]) == len(after["entries"]) and len(pairs) == 1, "Invalid update delta")
         a, e = pairs[0]
-        require(a["id"] not in before_backgrounds or j["format"] == rebind.UPDATE,
+        require(a["id"] not in before_backgrounds or j["format"] in (rebind.UPDATE, PE_FORMATS["update"]),
                 "Background target raster update requires bound journal v7")
         if rebound:
             mutable |= rebind.delta(j, before, after, [a["id"]] if a["id"] in before_backgrounds else [])
         active = j["old"].get(reveal.path(a["id"]))
         active = io.json_bytes(active.encode(), reveal.LIMIT) if active is not None else None
-        require(all(a[k] == e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")) and
+        fixed = ("id", "key", "save_slot", "definition", "reveal", "visible") + (() if metadata(j) else ("category_id",))
+        require(all(a[k] == e[k] for k in fixed) and
                 (active["revisions"][-1]["reveal_sha256"] if active else a["production"]["reveal_sha256"]) == e["production"]["reveal_sha256"], "Update changes fixed identity/reveal")
         n = "game/" + e["definition"]
         old_def = rating.bytes_json(j["old"][n].encode(), 2 * 1024 * 1024)
@@ -456,7 +495,8 @@ def _delta(j, before, after, root=None):
             mutable.add(reveal.path(e["id"]))
             fresh = io.json_bytes(j["new"][reveal.path(e["id"])].encode(), reveal.LIMIT)
             catalog = rating.bytes_json(j["old"][categories.PATH].encode(), 131072)
-            expected = reveal.rebind(active, e, new_def["revision"], fresh["bindings"][-1]["notice"]["text"].encode(), catalog)
+            expected = reveal.rebind(active, e, new_def["revision"], fresh["bindings"][-1]["notice"]["text"].encode(), catalog,
+                                     historical_categories=metadata(j))
             require(fresh == expected and j["new"][notice_path(e)] == j["old"][notice_path(e)], "Invalid reveal rebind delta")
         if (rating.definition(j["old"][n].encode())[3] != rating.definition(j["new"][n].encode())[3] or
                 a["production"]["mode"] != e["production"]["mode"]):
@@ -495,6 +535,8 @@ def _delta(j, before, after, root=None):
             from .catalog_added_history import validate_delta
             validate_delta(j, before)
         else: require(j["report_run"] is None, "Sync cannot adopt reports")
+    if metadata(j) and op not in ("metadata", "metadata-migration", "registration"):
+        require(before["metadata"] == after["metadata"], "Operation changes current puzzle metadata")
     require(changed <= mutable, "Unexpected transaction source mutation")
     if package:
         rating_name = rating.path(e["id"])
@@ -533,7 +575,7 @@ def validate_journal(root, j, *, before_write=False):
     exact_keys(j, {"format", "operation", "old", "new", "retained", "additions", "report_run"} | ({"replacements"} if current_generation else set()))
     require(isinstance(j["format"], str) and isinstance(j["operation"], str) and
             any(formats.get(j["operation"]) == j["format"] for formats in
-                (REBIND_FORMATS, BACKGROUND_FORMATS, FORMATS, AT_FORMATS, PREVIOUS_FORMATS, LEGACY_FORMATS)),
+                (PE_FORMATS, REBIND_FORMATS, BACKGROUND_FORMATS, FORMATS, AT_FORMATS, PREVIOUS_FORMATS, LEGACY_FORMATS)),
             "Unsupported catalog journal")
     legacy = j["format"] in LEGACY_FORMATS.values()
     for k in ("old", "new", "retained", "additions"): require(isinstance(j[k], dict), "Invalid journal map")
@@ -541,13 +583,21 @@ def validate_journal(root, j, *, before_write=False):
     for side in ("old", "new"):
         for n in (REGISTRY, RUNTIME, categories.PATH): require(isinstance(j[side].get(n), str), "Missing journal source")
     before, after = (rating.bytes_json(j[s][REGISTRY].encode(), 8 * 1024 * 1024) for s in ("old", "new"))
-    from .content_registry import validate
+    from .content_registry import validate, METADATA_FORMAT
+    require(isinstance(before, dict) and isinstance(after, dict), "Invalid journal registry object")
+    if metadata(j):
+        require(after.get("format") == METADATA_FORMAT and (before.get("format") == METADATA_FORMAT or
+                j["operation"] == "metadata-migration" and before.get("format") in ("picross-content-registry-v2", "picross-content-registry-v3")),
+                "Metadata journal requires its exact registry generation")
+    else:
+        require(before.get("format") != METADATA_FORMAT and after.get("format") != METADATA_FORMAT,
+                "Historical journal cannot bind metadata registry v4")
     for side, registry in (("old",before),("new",after)):
         validate(registry, io.json_bytes(j[side][categories.PATH].encode(), 131072))
     names = text_names(before, legacy=legacy, previous=not current_generation, sd2=new_generation, background=background_generation) | text_names(after, legacy=legacy, previous=not current_generation, sd2=new_generation, background=background_generation) | report_names(j["report_run"], j["operation"])
     if background_generation:
         for side, registry in (("old", before), ("new", after)):
-            background_source.capability(None, j[side], required=registry["format"] == background_source.REGISTRY_FORMAT)
+            background_source.capability(None, j[side], required=registry["format"] == background_source.REGISTRY_FORMAT or bool(background_source.index(registry)))
         require(j["old"].get(background_source.CAPABILITY) == j["new"].get(background_source.CAPABILITY),
                 "Transaction changes background capability")
     else:
@@ -597,6 +647,7 @@ def validate_journal(root, j, *, before_write=False):
         if not legacy and side == "old" and all(j[side].get(added.path(e["id"])) is None for e in registry["entries"]): versions += [2, 3]
         if j["operation"] in ("reveal-adoption", "method-activation") and all(j[side].get(added.path(e["id"])) is None for e in registry["entries"]): versions += [2, 3]
         if background_generation and registry["format"] == background_source.REGISTRY_FORMAT: versions = [6]
+        if metadata(j) and registry["format"] == METADATA_FORMAT: versions = [7]
         if side == "new" or j["operation"] != "sync":
             raw = j[side][RUNTIME].encode()
             runtime = io.json_bytes(raw, 8 * 1024 * 1024)
@@ -668,7 +719,7 @@ def restore_runtime(j, registry):
         raw = j["old"][RUNTIME].encode()
         try:
             runtime = io.json_bytes(raw, 8 * 1024 * 1024)
-            version = next((v for v in (2, 3, 4, 5, 6) if runtime.get("format") == "picross-runtime-registry-v" + str(v)), None)
+            version = next((v for v in (2, 3, 4, 5, 6, 7) if runtime.get("format") == "picross-runtime-registry-v" + str(v)), None)
             if version is not None and raw == projection(j["old"], registry, version=version): return j["old"][RUNTIME]
         except (ValueError, TypeError, KeyError):
             pass  # A sync may have begun with stale bytes; sources remain strict.

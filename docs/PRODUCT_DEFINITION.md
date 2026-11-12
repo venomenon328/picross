@@ -1,5 +1,16 @@
 # Produktdefinition: picross
 
+**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
+[fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
+[PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
+Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
+Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
+weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
+bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
+führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
+
+
 **AR-A / #486:** Die stabile Abschlussansicht bietet **Bild | Raster** zum
 Vergleich mit den bestätigten Spielerfüllungen in Originalpalette und statischer
 Stift-/Rasteroptik. Die Auswahl bleibt innerhalb des Besuchs erhalten und wird

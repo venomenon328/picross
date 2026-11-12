@@ -23,6 +23,7 @@ PREFIX = b'{"format":"picross-reveal-adoption-journal-v1",'
 BACKGROUND_FORMAT = "picross-background-adoption-journal-v1"
 BINARY_FORMATS = ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2",
                   "picross-reveal-adoption-journal-v3", "picross-reveal-adoption-journal-v4",
+                  "picross-reveal-adoption-journal-v5", "picross-background-adoption-journal-v3",
                   "picross-background-adoption-journal-v2", BACKGROUND_FORMAT)
 PREFIXES = tuple(b'{"format":' + canonical_bytes(value) + b',' for value in BINARY_FORMATS)
 NORMAL_LIMIT = 24 * 1024 * 1024
@@ -89,7 +90,7 @@ def decode_binary(value):
 
 
 def nullable_binaries(j):
-    return j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2") and j.get("operation") == "background-adoption"
+    return j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2", "picross-background-adoption-journal-v3") and j.get("operation") == "background-adoption"
 
 
 def binary_hash(value):
@@ -458,7 +459,7 @@ def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
     require(isinstance(j, dict), "Invalid catalog journal")
     require(source_check is None or nullable_binaries(j) and callable(source_check),
             "Source recheck requires background adoption")
-    registration = j.get("operation") == "registration" and j.get("format") in (tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    registration = j.get("operation") == "registration" and j.get("format") in (tx.PE_FORMATS["registration"], tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
     require(registration or publication_seconds is None and recovery_seconds is None,
             "RI-A overrides require a new registration")
     if registration:
