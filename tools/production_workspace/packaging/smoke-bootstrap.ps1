@@ -13,14 +13,17 @@ try {
     }
     # LoadUserProfile loads HKCU, but Start-Process still inherits the caller's
     # environment. Never send compilers/MSI to runneradmin's profile or TEMP.
-    # A first-logon profile can lack AppData directories. Create the known
-    # folders as this user rather than accepting GetFolderPath's empty result.
+    # Resolve the real account profile first. Shell-folder expansion in this
+    # process can already be cached with runneradmin's inherited USERPROFILE.
+    # This disposable, newly created local account uses Windows' default paths;
+    # initialize them before starting fresh Python/compiler/MSI processes.
     $env:USERPROFILE = [Environment]::GetFolderPath('UserProfile', 'Create')
-    $env:LOCALAPPDATA = [Environment]::GetFolderPath('LocalApplicationData', 'Create')
-    $env:APPDATA = [Environment]::GetFolderPath('ApplicationData', 'Create')
-    if (-not $env:USERPROFILE -or -not $env:LOCALAPPDATA -or -not $env:APPDATA) {
-        throw "Loaded test profile is incomplete: USERPROFILE=$env:USERPROFILE; LOCALAPPDATA=$env:LOCALAPPDATA; APPDATA=$env:APPDATA"
+    if (-not $env:USERPROFILE) {
+        throw 'Loaded test profile is missing'
     }
+    $env:LOCALAPPDATA = Join-Path $env:USERPROFILE 'AppData\Local'
+    $env:APPDATA = Join-Path $env:USERPROFILE 'AppData\Roaming'
+    New-Item -ItemType Directory -Force $env:LOCALAPPDATA,$env:APPDATA | Out-Null
     $env:HOME = $env:USERPROFILE
     $env:TEMP = $env:TMP = Join-Path $Output 'temp'
     New-Item -ItemType Directory -Path $env:TEMP | Out-Null
