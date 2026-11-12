@@ -10,7 +10,6 @@ import subprocess
 import sys
 import threading
 import time
-import winreg
 import zipfile
 
 from .build_windows import ROOT, sha
@@ -42,12 +41,14 @@ def smoke(build, output):
             properties['UpgradeCode'].strip('{}') != report['upgrade_code']):
         raise RuntimeError('MSI-Bytes/IdentitÃ¤ten stimmen nicht mit Lieferreport Ã¼berein.')
     installed = Path(os.environ['LOCALAPPDATA']) / 'Programs/Picross-Produktionsassistent'
-    arp_root = r'Software\Microsoft\Windows\CurrentVersion\Uninstall'
+    from ctypes import wintypes
+    installer = ctypes.WinDLL('msi')
+    installer.MsiQueryProductStateW.argtypes = [wintypes.LPCWSTR]
+    installer.MsiQueryProductStateW.restype = ctypes.c_int
     def registered(code):
-        try:
-            return winreg.OpenKey(winreg.HKEY_CURRENT_USER, arp_root + '\\{' + code + '}')
-        except FileNotFoundError:
-            return None
+        # Per-user MSI registration lives in Installer/Products, not necessarily
+        # the ordinary Uninstall registry key. Query Windows Installer itself.
+        return installer.MsiQueryProductStateW('{' + code + '}') == 5
     if installed.exists() or registered(report['product_code']):
         raise RuntimeError('Bestehende echte Installation bleibt geschÃ¼tzt; frisches Testprofil verwenden.')
     calls, children = [], []

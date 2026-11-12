@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import re
 import uuid
+import subprocess
 
 SOURCE = Path(__file__).with_name('release.json')
 
@@ -23,3 +24,15 @@ def release(path=SOURCE):
     value['product_code'] = str(uuid.uuid5(code, value['version'])).upper()
     value['filename'] = 'Picross-Produktionsassistent-' + value['version'] + '-windows-x64.msi'
     return value
+
+
+def check_history(root, current):
+    """Reject a release version decrease or a changed product-line identity."""
+    relative = SOURCE.relative_to(root).as_posix()
+    commits = subprocess.check_output(['git', '-C', str(root), 'log', '--format=%H', 'HEAD', '--', relative], text=True).splitlines()
+    for commit in commits:
+        previous = json.loads(subprocess.check_output(['git', '-C', str(root), 'show', commit + ':' + relative], text=True))
+        if previous['upgrade_code'] != current['upgrade_code']:
+            raise ValueError('Upgradeidentität darf innerhalb der Produktlinie nicht wechseln.')
+        if version_tuple(previous['version']) > version_tuple(current['version']):
+            raise ValueError('Releaseversion muss monoton steigen; keine Rückstufung im Quellverlauf.')

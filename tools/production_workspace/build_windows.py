@@ -15,7 +15,7 @@ import zlib
 import pyexpat
 import decimal
 import tkinter
-from .release import release, version_tuple
+from .release import release, version_tuple, check_history
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
@@ -50,6 +50,8 @@ def build(destination):
     if git('status', '--porcelain'):
         raise RuntimeError('Nur aus sauberem, gesichertem Quellstand bauen.')
     commit = git('rev-parse', 'HEAD')
+    product = release()
+    check_history(ROOT, product)
     destination = destination.resolve()
     if destination.exists() or destination.is_relative_to(ROOT):
         raise RuntimeError('Neuen eigenen Buildordner außerhalb des Checkouts wählen.')
@@ -59,7 +61,6 @@ def build(destination):
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
     resources = {f'ui/{name}': sha(PACKAGE / 'ui' / name) for name in ('index.html', 'app.js', 'workflow.js', 'style.css')}
     resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
-    product = release()
     manifest = {'format': 'picross-windows-app-v1', 'version': product['version'], 'commit': commit,
                 'upgrade_code': product['upgrade_code'], 'product_code': product['product_code'],
                 'architecture': 'windows-x64', 'python': platform.python_version(), 'components': versions,
