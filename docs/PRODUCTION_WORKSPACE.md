@@ -570,9 +570,11 @@ kein Freigabewriter im Hilfsdienst und keine automatische Serienfreigabe.
 
 Die lesende Oberfläche darf aktuelle Repositorydaten automatisch übernehmen;
 unabgesendete menschliche Eingaben nicht unbemerkt überschreiben. Persönliche
-Arbeitswurzel, Merge- und Bereinigungsoptionen bleiben eigene ausdrücklich
-angezeigte Auftragsparameter, keine aus einem Produktionsrecord abgeleiteten
-Rechte. Bei neuem Job muss dessen Motivbriefing im kopierten Erstauftrag stehen;
+Arbeitswurzel und Merge bleiben eigene ausdrücklich angezeigte
+Auftragsparameter, keine aus einem Produktionsrecord abgeleiteten Rechte.
+Der Assistent fordert keine zusätzliche Bereinigung lokaler Arbeitsdaten an;
+eine frühere gespeicherte Bereinigungsoption hat keine Wirkung. Der separate
+fachliche Produktionsabschluss nach Authoring §9 bleibt unverändert. Bei neuem Job muss dessen Motivbriefing im kopierten Erstauftrag stehen;
 noch nicht vorhandene Repositorydaten werden nicht als existent behauptet.
 
 Die normalen beauftragten Produktionsakteure committen/pushen Index, Record,

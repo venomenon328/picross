@@ -87,7 +87,7 @@
  <p class="small" id="repairStatus" role="status"></p>
  <pre class="preview" id="repairText" tabindex="0" hidden></pre>
 </div></div><div class="dialog-foot"><span class="small">Keine Befugnisse aus Ergebnisdaten übernehmen.</span><button class="primary" id="applyImport" disabled>Daten übernehmen</button></div></dialog>
-<dialog id="settingsDialog"><div class="dialog-head"><h2>Projekteinstellungen</h2><button class="quiet" data-close="settingsDialog" aria-label="Schließen">✕</button></div><form id="settingsForm"><div class="dialog-body"><div class="field-grid"><label for="projectName">Projektname<input id="projectName" required placeholder="Mein Projekt"></label><label for="repository">Repository<input id="repository" required placeholder="owner/repository" spellcheck="false"></label><label for="target">Zielbranch<input id="target" required value="main" spellcheck="false"></label><label for="root" class="field-wide">Lokale Codex-Arbeitswurzel · optional<input id="root" placeholder="z. B. E:\Codex\Projekte oder /home/user/codex" spellcheck="false"><small>Neue eigene Checkouts und Arbeitsdateien werden dort angelegt. Ein vorhandener Benutzercheckout bleibt erhalten.</small></label></div><hr class="divider"><label class="switch"><input type="checkbox" id="settingsMerge" checked><span><strong>Review mit bedingtem Merge voreinstellen</strong><small>Gilt für Review, Minimalprompt und erneutes Review.</small></span></label><label class="switch block-gap"><input type="checkbox" id="cleanupToggle" checked><span><strong>Eigene entbehrliche Arbeitsdaten aufräumen</strong><small>Nach Push und Übergabe erforderlicher Belege. Keine fremden Dateien oder ungesicherten Änderungen löschen.</small></span></label><p class="small block-gap">Die Angaben bleiben im selben Browser gespeichert. Bei lokalen HTML-Dateien kann ein anderer Dateipfad einen neuen Speicherbereich verwenden. Mit einer Sicherung lassen sich Projekte und Aufgaben übertragen.</p><p id="settingsError" class="errors" role="status"></p></div><div class="dialog-foot"><button type="button" id="restoreBackup">Sicherung importieren</button><button type="submit" class="primary">Einstellungen speichern</button></div></form></dialog>
+<dialog id="settingsDialog"><div class="dialog-head"><h2>Projekteinstellungen</h2><button class="quiet" data-close="settingsDialog" aria-label="Schließen">✕</button></div><form id="settingsForm"><div class="dialog-body"><div class="field-grid"><label for="projectName">Projektname<input id="projectName" required placeholder="Mein Projekt"></label><label for="repository">Repository<input id="repository" required placeholder="owner/repository" spellcheck="false"></label><label for="target">Zielbranch<input id="target" required value="main" spellcheck="false"></label><label for="root" class="field-wide">Lokale Codex-Arbeitswurzel · optional<input id="root" placeholder="z. B. E:\Codex\Projekte oder /home/user/codex" spellcheck="false"><small>Neue eigene Checkouts und Arbeitsdateien werden dort angelegt. Ein vorhandener Benutzercheckout bleibt erhalten.</small></label></div><hr class="divider"><label class="switch"><input type="checkbox" id="settingsMerge" checked><span><strong>Review mit bedingtem Merge voreinstellen</strong><small>Gilt für Review, Minimalprompt und erneutes Review.</small></span></label><p class="small block-gap">Die Angaben bleiben im selben Browser gespeichert. Bei lokalen HTML-Dateien kann ein anderer Dateipfad einen neuen Speicherbereich verwenden. Mit einer Sicherung lassen sich Projekte und Aufgaben übertragen.</p><p id="settingsError" class="errors" role="status"></p></div><div class="dialog-foot"><button type="button" id="restoreBackup">Sicherung importieren</button><button type="submit" class="primary">Einstellungen speichern</button></div></form></dialog>
 <dialog id="helpDialog"><div class="dialog-head"><h2>Von der Idee bis zum Merge</h2><button class="quiet" data-close="helpDialog" aria-label="Schließen">✕</button></div><div class="dialog-body help"><ol>
 <li>Beim Spezifizieren kommen Ziel, Entscheidungen und Prüfplan ins Issue oder Paket. Für eine reine Besprechung genügt der Chat.</li>
 <li>Jede KI-Antwort auf einen Sheet-Auftrag endet mit dem vollständigen Ergebnis-JSON nach <code>docs/dev-rules/HANDOFF.md</code>. Füge es unter „Ergebnis übernehmen“ ein und prüfe die Vorschau.</li>
@@ -129,7 +129,7 @@ const TEMPLATES=[
 ];
 const clone=x=>JSON.parse(JSON.stringify(x));
 function blankTask(){return {stage:'specify',template:'spec',fields:Object.fromEntries(FIELD_IDS.map(k=>[k,k==='executor'?'Codex':''])),handoff:null,branchMode:'auto',briefs:{},note:null};}
-function newProfile(id,name,repository){return {id,name,repository,target:'main',root:'',merge:true,cleanup:true,task:blankTask()};}
+function newProfile(id,name,repository){return {id,name,repository,target:'main',root:'',merge:true,cleanup:false,task:blankTask()};}
 function initial(){return {format:'development-workbench-settings/v1',active:'picross',theme:'system',profiles:[newProfile('picross','Picross','venomenon328/picross')]};}
 let state=initial(), pending=null, adding=false, toastTimer, importRevision=0;
 const THEMES = ['system','light','dark'];
@@ -339,8 +339,11 @@ function context(t,f){
 }
 function workspaceText(){
  const p=profile(),parts=[];
- if(p.root&&p.task.fields.executor==='Codex')parts.push('Lokale Codex-Arbeitswurzel: '+JSON.stringify(p.root)+'.');
- parts.push('Abschlussbereinigung eigener Arbeitsdaten nach docs/dev-rules/WORKSPACE.md: '+(p.cleanup?'ausdrücklich beauftragt.':'nicht beauftragt; Anschlussdaten erhalten.'));
+ if(p.root&&p.task.fields.executor==='Codex'){
+  parts.push('Lokale Codex-Arbeitswurzel: '+JSON.stringify(p.root)+'.');
+  parts.push('Neue eigene Checkouts, Worktrees, Downloads und temporäre Arbeitsdaten ausschließlich innerhalb dieser Arbeitswurzel anlegen. Ist sie nicht verfügbar, den Konflikt melden und keinen Ersatzpfad wählen.');
+ }
+ parts.push('Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt; laufinterne Test-/Artefaktbereinigung bleibt davon unberührt.');
  return parts.join('\n');
 }
 function mergeText(){return profile().merge
@@ -518,7 +521,7 @@ function previewImport(){
  const next=handoffNext(x);
  pending=x;
  if(next.useSpec)$('applyImport').textContent='Paketauftrag vorbereiten';
- preview.textContent='Geprüft: '+x.repository+'\nIssue: '+(x.issue||'offen')+' · Paket: '+(x.package||'–')+' · PR: '+(x.pr||'offen')+'\nPhase: '+x.phase+' · Head: '+(x.head||'noch nicht vorhanden')+'\n\n'+x.summary+'\n\nNächster Schritt: '+next.action+'\n'+next.reason+(next.useSpec?'\nPaketentscheidung: '+x.spec_url:'')+'\n\nDiese Aufgabendaten ersetzen den bisherigen Stand. Mergeoption, Arbeitswurzel und Bereinigung bleiben erhalten.';
+ preview.textContent='Geprüft: '+x.repository+'\nIssue: '+(x.issue||'offen')+' · Paket: '+(x.package||'–')+' · PR: '+(x.pr||'offen')+'\nPhase: '+x.phase+' · Head: '+(x.head||'noch nicht vorhanden')+'\n\n'+x.summary+'\n\nNächster Schritt: '+next.action+'\n'+next.reason+(next.useSpec?'\nPaketentscheidung: '+x.spec_url:'')+'\n\nDiese Aufgabendaten ersetzen den bisherigen Stand. Mergeoption und Arbeitswurzel bleiben erhalten.';
  $('applyImport').disabled=false;
 }
 function applyImport(){
@@ -537,7 +540,7 @@ function applyImport(){
   persist();$('importDialog').close();invalidateImport();render();goNext();say('Übergabe übernommen. Folgeauftrag ist vorbereitet.');
  }catch(e){say(e.message);}
 }
-function openSettings(isNew=false){adding=isNew;const p=isNew?newProfile('','Neues Projekt',''):profile();$('projectName').value=p.name;$('repository').value=p.repository;$('target').value=p.target;$('root').value=p.root;$('settingsMerge').checked=p.merge;$('cleanupToggle').checked=p.cleanup;$('settingsError').textContent='';$('settingsDialog').showModal();}
+function openSettings(isNew=false){adding=isNew;const p=isNew?newProfile('','Neues Projekt',''):profile();$('projectName').value=p.name;$('repository').value=p.repository;$('target').value=p.target;$('root').value=p.root;$('settingsMerge').checked=p.merge;$('settingsError').textContent='';$('settingsDialog').showModal();}
 function download(data,name){const blob=new Blob([JSON.stringify(data,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 async function copyText(source,button){
  const text=source.textContent;
@@ -615,7 +618,7 @@ for(const b of document.querySelectorAll('[data-stage]'))b.addEventListener('cli
 $('projectSelect').addEventListener('change',()=>{state.active=$('projectSelect').value;invalidateImport();persist();render();});
 $('mergeToggle').addEventListener('change',()=>{profile().merge=$('mergeToggle').checked;persist();renderPrompt();});
 $('settingsSide').onclick=()=>openSettings();$('settingsTop').onclick=()=>openSettings();$('newProject').onclick=()=>openSettings(true);
-$('settingsForm').addEventListener('submit',e=>{e.preventDefault();const repository=$('repository').value.trim(),target=$('target').value.trim(),root=$('root').value.trim();if(!validRepo(repository)){ $('settingsError').textContent='Repository als owner/name eingeben.';return;}if(!target||/[\s~^:?*\[\\]/.test(target)||target.includes('..')){$('settingsError').textContent='Gültigen Zielbranch eingeben.';return;}if(root&&!/^(?:[A-Za-z]:[\\/]|\/|\\\\)/.test(root)){$('settingsError').textContent='Eine absolute Arbeitswurzel eingeben.';return;}let p=profile();if(adding){const id='p-'+Date.now().toString(36);p=newProfile(id,$('projectName').value.trim(),repository);state.profiles.push(p);state.active=id;}else if(repository!==p.repository||target!==p.target){if(!confirm('Repository oder Zielbranch ändern und die bisherige Aufgabe zurücksetzen?'))return;p.task=blankTask();}Object.assign(p,{name:$('projectName').value.trim(),repository,target,root,merge:$('settingsMerge').checked,cleanup:$('cleanupToggle').checked});persist();$('settingsDialog').close();render();say('Projekteinstellungen gespeichert.');});
+$('settingsForm').addEventListener('submit',e=>{e.preventDefault();const repository=$('repository').value.trim(),target=$('target').value.trim(),root=$('root').value.trim();if(!validRepo(repository)){ $('settingsError').textContent='Repository als owner/name eingeben.';return;}if(!target||/[\s~^:?*\[\\]/.test(target)||target.includes('..')){$('settingsError').textContent='Gültigen Zielbranch eingeben.';return;}if(root&&!/^(?:[A-Za-z]:[\\/]|\/|\\\\)/.test(root)){$('settingsError').textContent='Eine absolute Arbeitswurzel eingeben.';return;}let p=profile();if(adding){const id='p-'+Date.now().toString(36);p=newProfile(id,$('projectName').value.trim(),repository);state.profiles.push(p);state.active=id;}else if(repository!==p.repository||target!==p.target){if(!confirm('Repository oder Zielbranch ändern und die bisherige Aufgabe zurücksetzen?'))return;p.task=blankTask();}Object.assign(p,{name:$('projectName').value.trim(),repository,target,root,merge:$('settingsMerge').checked,cleanup:false});persist();$('settingsDialog').close();render();say('Projekteinstellungen gespeichert.');});
 $('openImport').onclick=()=>{invalidateImport();$('importDialog').showModal();};$('importText').oninput=invalidateImport;$('checkImport').onclick=previewImport;$('applyImport').onclick=applyImport;
 $('importFile').onchange=async e=>{
  const file=e.target.files[0];if(!file)return;
