@@ -58,6 +58,11 @@
       "reason": "Neue kleine synthetische PE-A1-Regressionen für aktuelle Namen/Kategorien, explizite Migration, unveränderte Herkunft, CLI, No-op, stale Quellen und Recovery. Nur im ausgewählten production.catalog; keine echte Bestandsanalyse."
     },
     {
+      "path": "tests/puzzle_production/test_catalog_reveal.py",
+      "disposition": "change-scoped",
+      "reason": "Historische v2/v3-Reveal-Recovery explizit aus einer Legacy-Fixture prüfen; öffentliche neue Mutation verlangt Migration, gebundene Altjournale, Runtime-Bytes/mtime und geprüfter No-op bleiben erhalten. Keine neue Testfamilie."
+    },
+    {
       "path": "tests/puzzle_production/test_catalog_review.py",
       "disposition": "change-scoped",
       "reason": "Bestehende kleine synthetische Quelle-/Journal-/Readerregression an die ausdrücklich versionierte PE-A1-Generation anpassen; Legacyformen und vollständige Herkunftsprüfung bleiben erhalten. Keine zusätzliche Kern- oder Bildlast."
@@ -105,8 +110,8 @@
   ],
   "core_change": null,
   "evidence": {
-    "mode": "failure",
-    "purpose": "PE-A1-Implementierer: aktuellen native.catalog-Fehler aus Lauf43291510898 anhand gebundener Gruppen-/Phasenlogs und relevanter Failure-Originale diagnostizieren; nach Behebung auf none zurückstellen, kein zusätzliches Reviewgate.",
-    "expires": "2026-11-13"
+    "mode": "none",
+    "purpose": null,
+    "expires": null
   }
 }

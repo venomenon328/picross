@@ -92,7 +92,7 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
             from tools.puzzle_production.za1_fixtures import difficulty_for_export
             from tools.puzzle_production.contract import write_json as write_canonical
             registry = json.loads((checkout / "content/registry.json").read_text(encoding="utf-8"))
-            write_canonical(project / "data/registry.json", projection(registry, categories))
+            write_canonical(project / "data/registry.json", projection(registry, categories, checkout, version=7))
             package = workspace / "kat2-adapter-input"
             make(package, "pz-test-direct-mono", 4, 3, "mono")
             approval = workspace / "kat2-adapter-approval.json"
