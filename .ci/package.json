@@ -8,8 +8,8 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/594",
   "modules": [],
-  "omitted": "modules=[] und evidence.mode=none: ausschließlich Produktionsdaten und Paketplan. Unveränderte Raster-/Proof-/0.4-Analysebindungen wiederverwenden; Builder prüft das geschriebene neue ZIP frisch vollständig. Keine neuen Rätseltests, Bestandsreplays, Tool-/Runtimeänderungen oder manuellen Browserläufe. Hintergrundwahl, Assetableitung, Endabnahme und Integration bleiben offen. Der bestehende Klassifizierer kann wegen current-view.json dennoch automatisch einen Windowsbau auslösen; kein Toolfix im Inhaltsauftrag.",
-  "package": "Birne · Schritte 1–4 · BIR-G-r04 gewählt, Kontextauswahl r05",
-  "purpose": "Reine Rätselproduktion: tatsächliche Wahl BIR-G-r04 am unveränderten Quellcommit, drei echte native Kontextzeichnungen mit isolierter Q-HG01–04-Sichtung und geklärter Herkunft; neue vollständige background_review-Revision, Index, workspace und current-view.",
+  "omitted": "modules=[] und evidence.mode=none: nur Birnenproduktionsdaten und Paketplan. Der Finalizer prüft das unveränderte Original-ZIP samt bestehenden Raster-/Proof-/0.4-Analysebindungen und neuer Hintergrundableitung frisch. Keine neue Raster-, Solver- oder Difficultyproduktion, Rätseltests, Bestandsreplays, Tool-/Regel-/Runtimeänderungen oder manuellen Browserläufe. Allgemeiner Kern; vollständiger PR-Diff ist reine Produktion und bleibt ohne Player-Build. Finale redaktionelle Endabnahme, Export, Registrierung und Merge bleiben offen.",
+  "package": "Birne · Schritt 4 · BIR-H-B-b01 gewählt, Endabnahme vorbereiten",
+  "purpose": "Reine Rätselproduktion: tatsächliche unveränderte Kontextwahl BIR-H-B-b01 am Originalpaket r05 binden, ausschließlich dieses Original nach festem HP-W2-Profil ableiten und prüfen; Finalizer v2 aktualisiert äußeren Record, workspace und current-view für die Endabnahme. Bestehenden Produktionsbranch mit aktuellem main abgleichen.",
   "test_changes": []
 }
