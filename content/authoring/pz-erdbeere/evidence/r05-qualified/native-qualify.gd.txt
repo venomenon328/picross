@@ -1,0 +1,93 @@
+extends SceneTree
+const Board = preload("res://ui/full_view_board.gd")
+const Session = preload("res://model/session.gd")
+const Book = preload("res://book/main.gd")
+const UiText = preload("res://ui/ui_text.gd")
+
+class StatusBoard extends "res://ui/full_view_board.gd":
+	var forced_status: int = 0
+	func clue_status(_axis: String, _index: int, _token: int) -> int:
+		return forced_status
+
+func _initialize() -> void:
+	call_deferred("run")
+
+func run() -> void:
+	var output: String = OS.get_environment("ERDBEERE_RENDER_OUTPUT")
+	if output.is_empty() or DisplayServer.get_name() == "headless":
+		quit(2)
+		return
+	var definition: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://input.json"))
+	var helper: Node3D = Book.new()
+	var records: Array = []
+	for spec: Array in [[2200, 1300, 24.0, "normal"], [1500, 900, 18.0, "small"]]:
+		var surface: SubViewport = SubViewport.new()
+		surface.size = Vector2i(int(spec[0]), int(spec[1]))
+		surface.transparent_bg = true
+		surface.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		root.add_child(surface)
+		var boards: Array = []
+		for state: int in range(3):
+			var board: StatusBoard = StatusBoard.new()
+			board.forced_status = state
+			board.book_layout = true
+			board.session = Session.new(definition)
+			for y: int in range(int(definition.height)):
+				for x: int in range(int(definition.width)):
+					board.session.player.cells[y * int(definition.width) + x] = int(definition.solution[y][x])
+			board.mode = "V"
+			board.requested_cell = float(spec[2])
+			board.position = Vector2(state * float(spec[0]) / 3.0 + 14, 48)
+			board.size = Vector2(float(spec[0]) / 3.0 - 28, float(spec[1]) - 65)
+			surface.add_child(board)
+			board.set_animations(false)
+			board.clear_pointer_hover()
+			boards.append(board)
+			var label: Label = Label.new()
+			label.text = ["Normal", "Abgeschwächt", "Ausgekreuzt"][state]
+			label.position = Vector2(state * float(spec[0]) / 3.0 + 24, 12)
+			label.add_theme_font_override("font", UiText.font())
+			label.add_theme_font_size_override("font_size", 22 if spec[3] == "normal" else 16)
+			label.add_theme_color_override("font_color", Color("343f42"))
+			surface.add_child(label)
+		var paper: SubViewport = SubViewport.new()
+		paper.size = surface.size
+		paper.own_world_3d = true
+		paper.render_target_update_mode = SubViewport.UPDATE_ALWAYS
+		root.add_child(paper)
+		var material: ShaderMaterial = helper._page_material(1.0)
+		material.set_shader_parameter("content", surface.get_texture())
+		material.set_shader_parameter("has_content", true)
+		material.set_shader_parameter("content_rect", Vector4(0, -6.2, 10, 12.4))
+		var page: MeshInstance3D = helper._page(material)
+		helper.remove_child(page)
+		page.scale.x = 12.4 * float(spec[0]) / float(spec[1]) / 10.0
+		page.position.x = -5.0 * page.scale.x
+		paper.add_child(page)
+		var camera: Camera3D = Camera3D.new()
+		camera.projection = Camera3D.PROJECTION_ORTHOGONAL
+		camera.size = 12.4
+		camera.position = Vector3(0, 0, 20)
+		paper.add_child(camera)
+		camera.look_at(Vector3.ZERO)
+		camera.current = true
+		for frame: int in range(12):
+			await process_frame
+			await RenderingServer.frame_post_draw
+		var image: Image = paper.get_texture().get_image()
+		var name: String = "cells-clues-%s.png" % str(spec[3])
+		if image.save_png(output.path_join(name)) != OK:
+			quit(3)
+			return
+		var measurements: Array = []
+		for board: StatusBoard in boards:
+			measurements.append({"state": board.forced_status, "cell": board.view.cell_size, "font_size": board.clue_font_size(), "font": board.clue_font().get_font_name(), "layout_valid": board.layout_valid, "mode": board.mode})
+		records.append({"file": name, "sha256": FileAccess.get_sha256(output.path_join(name)), "width": image.get_width(), "height": image.get_height(), "boards": measurements, "paper_source": "res://book/paper.png", "paper_shader": "res://book/page.gdshader", "scope": "Isolated native cell/clue sighting on current paper shader; all clue statuses injected for viewing. No gameplay, H1 logic, user saves or production book-layout acceptance claimed."})
+		surface.queue_free()
+		paper.queue_free()
+		await process_frame
+	helper.free()
+	var report: Dictionary = {"engine": Engine.get_version_info(), "display": DisplayServer.get_name(), "renderer": RenderingServer.get_video_adapter_name(), "records": records, "matrix_input_sha256": FileAccess.get_sha256("res://input.json")}
+	FileAccess.open(output.path_join("native-render.json"), FileAccess.WRITE).store_string(JSON.stringify(report, "\t") + "\n")
+	print("ERDBEERE_NATIVE_SIGHTING_COMPLETE")
+	quit(0)
