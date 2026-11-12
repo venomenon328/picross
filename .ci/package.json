@@ -6,7 +6,7 @@
     "tools"
   ],
   "purpose": "Beide Sheet-Promptgeneratoren von lokaler Abschlussbereinigung befreien und exklusive Codex-Arbeitswurzel erhalten. Bestehende tools-Promptregressionen erweitern; regulärer Kern für geänderte UI/Toolquellen.",
-  "omitted": "Kein CI-Pfadfix, keine Änderung der fachlichen Produktionsbereinigung nach Authoring §9, von Produktionsoriginalen, Git-Branchentfernung, Godot-Spiel oder Installer. Keine production.*, native.*, preflight, delivery oder Chromium; keine neue Dauerlast. Die generierte CMD-Fallback-Launcherdatei muss nach Änderung der eingebetteten UI-Quellen noch regeneriert und verifiziert werden.",
+  "omitted": "Kein CI-Pfadfix, keine Änderung der fachlichen Produktionsbereinigung nach Authoring §9, von Produktionsoriginalen, Git-Branchentfernung, Godot-Spiel oder Installer. Keine production.*, native.*, preflight, delivery oder Chromium; keine neue Dauerlast. Die generierte CMD-Fallback-Launcherdatei wird mit dem vorhandenen Bytevergleich gegen die eingebetteten Quellen geprüft.",
   "test_changes": [
     {
       "path": "tools/test_authoring_sheet.py",
