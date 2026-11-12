@@ -48,11 +48,21 @@ class InstallInterlock:
             raise ValueError('Installationsschutz unklar. Laufende App/Installation regulär beenden und erneut versuchen.')
         kernel.OpenMutexW.argtypes = [w.DWORD, w.BOOL, w.LPCWSTR]
         kernel.OpenMutexW.restype = w.HANDLE
-        gate = kernel.OpenMutexW(0x100000, False, 'Global\\_MSIExecute')
+        kernel.WaitForSingleObject.argtypes = [w.HANDLE, w.DWORD]
+        kernel.WaitForSingleObject.restype = w.DWORD
+        kernel.ReleaseMutex.argtypes = [w.HANDLE]
+        gate = kernel.OpenMutexW(0x100001, False, 'Global\\_MSIExecute')
         error = ctypes.get_last_error()
+        busy = False
         if gate:
+            result = kernel.WaitForSingleObject(gate, 0)
+            if result in (0, 0x80):
+                kernel.ReleaseMutex(gate)
+            # An idle MSI server may keep an unowned mutex alive. Only an
+            # actually held/abandoned/unqueryable mutex prevents a new start.
+            busy = result != 0
             kernel.CloseHandle(gate)
-        if gate or error != 2:
+        if busy or (not gate and error != 2):
             self.close()
             raise ValueError('Eine Windowsinstallation läuft oder ist nicht prüfbar. Nach deren Ende erneut starten.')
 
