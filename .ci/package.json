@@ -1,15 +1,15 @@
 {
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/620",
+  "package": "fruit-fast-track",
+  "modules": [],
+  "purpose": "Einmaliger, vom Eigentümer beauftragter direkter Import bereits unabhängig auf ihren alten Produktionsbranches registrierter und endabgenommener Erdbeere, Zitrone und Birne. Gleiche Git-Blobs für vollständige alte Exportpakete, aktive Assets, Quellen, Rating und Added, nur v4/v7-Indizes auf frischem main zusammengeführt. Keine Neuproduktion oder Tool-/Game-Codeänderung. CI prüft docs/ci-required und baut den Windows-Spieler nur, wenn die tatsächliche Pfadklassifikation es verlangt.",
+  "omitted": "Unveränderte Bild-, Raster-, Proof-, Approval- und Exportbytes erneut zu erzeugen oder per altem Toolhash zu revalidieren wäre gerade der nachgewiesene Stopp ohne neue Produktinformation. Keine neuen Rätsel-Tests, Solver-/Bildproduktion, Toolcode- oder native Featureänderungen; daher modules=[]. Die technische Risikoabsicherung erfolgt durch exakten Byte-/Blobvergleich aller neuen Livequellen, kanonische v4/v7-Form, Erhalt aller bestehenden Katalogzeilen und aktuelle Quellen-/CI-Prüfung. Gegebenenfalls gescheiterte echte Readerprüfung wird nicht durch CI-Green überdeckt.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
-    "expires": null,
     "mode": "none",
-    "purpose": null
-  },
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/615",
-  "modules": [],
-  "omitted": "Keine Zusatzmodule: reine Rätselproduktion ohne Spiel-/Werkzeug-/CI-Codeänderung. Kein Player-Build, keine Solver-/Proof-/Difficulty- oder Bestandsreplays, kein Chromium und keine Buch-/Katalogmontagen/Fadeproben/Testintegrationen. Bildfreigabe bleibt offen; keine späteren Produktionsphasen vorgezogen.",
-  "package": "Schluessel-S1",
-  "purpose": "Schritt 1: drei native detaillierte farbige PNG-Originale, Briefing und vollständige Authoring-0.8.0-Übergabe sichern. Allgemeiner Quellen-/Plankern; direkte Q-B01/Q-B02/Q-B03-Sichtung und Datei-/Inventar-/Projektionsprüfung im Produktionslauf.",
-  "test_changes": []
+    "purpose": null,
+    "expires": null
+  }
 }

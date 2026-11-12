@@ -1,4 +1,4 @@
-"""RI-C v6/v7 registration boundaries; no proof authority or persistent cache.
+"""RI-C v6/v7/v8 registration boundaries; no proof authority or persistent cache.
 
 Expectations come from the validated journal. Every comparison reads the current
 filesystem. Only these generations opt in; the shared historical writer stays
@@ -14,7 +14,7 @@ from .authoring_package import require
 
 def supports(journal):
     return (isinstance(journal, dict)
-            and journal.get("format") in ("picross-registration-journal-v6", "picross-registration-journal-v7")
+            and journal.get("format") in ("picross-registration-journal-v6", "picross-registration-journal-v7", "picross-registration-journal-v8")
             and journal.get("operation") == "registration")
 
 
@@ -27,7 +27,7 @@ class Guards:
     """Exact phase expectations, never trusted observations of unchanged files."""
 
     def __init__(self, root, journal, raw, additions=None, *, recovering=False, staged=None):
-        require(supports(journal), "Phased guards require registration v6/v7")
+        require(supports(journal), "Phased guards require registration v6/v7/v8")
         self.root, self.raw = root, raw
         self.view = pub._JournalView(journal, raw)
         self.j = self.view.j

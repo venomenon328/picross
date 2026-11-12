@@ -256,13 +256,12 @@ class ReviewTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(load_json(output), checked)
 
-    def test_legacy_report_adoption_and_recovery_keep_exact_old_schema(self):
+    def test_legacy_report_requires_migration_but_bound_recovery_and_noops_remain(self):
         _, checked = self.register()
         (self.root / rating.path('pz-review')).unlink()
         cr.sync_runtime(self.root)
-        runtime = load_json(self.root / cr.RUNTIME)
-        runtime['format'] = 'picross-runtime-registry-v4'
-        write_json(self.root / cr.RUNTIME, runtime)
+        from tests.puzzle_production.catalog_fixtures import pre_metadata
+        pre_metadata(self.root, runtime_version=4)
         work = self.home / 'legacy-preview'
         report = ca.preview(self.root, work, 'legacy', 'a' * 40, ids=['pz-review'], checked_inputs={'pz-review': checked})
         report['format'] = ca.LEGACY_FORMAT
@@ -273,12 +272,31 @@ class ReviewTests(unittest.TestCase):
         report['result_hash'] = digest(report['result'])
         write_json(work / 'report.json', report)
         (work / 'report.md').write_bytes(ca.markdown(report).encode())
+        ca.validate_report(report)
         before = snapshot(self.root)
+        with self.assertRaisesRegex(ValueError, '[Mm]igrat'):
+            ca.adopt(self.root, work, apply=True)
+        self.assertEqual(snapshot(self.root), before)
+        # Preserve the exact historical transaction/recovery contract. A new
+        # public mutation is gated, while an already-bound old journal remains
+        # recoverable and a fully completed historical operation is a no-op.
+        from tools.puzzle_production import catalog_transaction as tx
+        captured = {}
+        prepare = tx.prepare
+
+        def capture(*args, **kwargs):
+            captured['journal'] = prepare(*args, **kwargs)
+            return captured['journal']
+
+        with patch.object(tx, 'prepare', side_effect=capture):
+            ca.adopt(self.root, work, apply=False)
+        self.assertEqual(snapshot(self.root), before)
+        self.assertEqual(captured['journal']['format'], tx.AT_FORMATS['adoption'])
         with self.assertRaises(InterruptedError):
-            ca.adopt(self.root, work, apply=True, fail_step='crash-runtime')
+            tx.execute(self.root, captured['journal'], fail_step='crash-runtime')
         cr.recover(self.root)
         self.assertEqual(snapshot(self.root), before)
-        ca.adopt(self.root, work, apply=True)
+        tx.execute(self.root, captured['journal'])
         after = snapshot(self.root)
         for apply in (False, True):
             self.assertEqual(ca.adopt(self.root, work, apply=apply)['status'], 'no-op')
