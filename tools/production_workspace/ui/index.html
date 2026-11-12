@@ -32,7 +32,6 @@
         <details id="navigation" open><summary>Entwürfe und Gitstände</summary>
           <div id="draftList"></div>
           <label class="jobPicker">Veröffentlichte Stände<select id="jobs"><option>Wird geladen …</option></select></label>
-          <div id="jobList"></div>
           <details><summary>Auftragsoptionen</summary>
             <label>Codex-Arbeitswurzel<input id="workroot" placeholder="Optionaler lokaler Pfad"></label>
             <label><input id="cleanup" type="checkbox"> Eigene Arbeitsdaten abschließend bereinigen</label>
@@ -44,5 +43,6 @@
     </div>
   </main>
   <dialog id="large" aria-labelledby="largeTitle"><div class="dialogbar"><h2 id="largeTitle">Originalbild</h2><label>Zoom<select id="zoom"><option value="fit">Einpassen</option><option value="1">100 %</option><option value="2">200 %</option><option value="4">400 %</option></select></label><button id="close">Schließen</button></div><p class="hint">Neutraler Prüfgrund zur Transparenzsichtung · Bildbytes unverändert</p><div class="largeCanvas"><img id="largeImage" alt=""></div></dialog>
+  <dialog id="removal" aria-label="Produktionsbranch entfernen"><div id="removalBody"></div><button id="removalClose">Schließen / Abbrechen</button></dialog>
 </body>
 </html>

@@ -13,8 +13,9 @@ class Element {
   before() {}
   replaceChildren(...children) { this.children = children; }
   setAttribute() {}
-  close() {}
-  showModal() {}
+  close() { this.open=false; }
+  showModal() { this.open=true; }
+  focus() {}
 }
 const elements = new Map();
 const document = {
@@ -31,15 +32,21 @@ async function until(test, timeout = 10000) {
 }
 let active = 0, peak = 0, retries = 0, forceFailure = false, failOnce = mode === 'late', oldJob;
 let aborted = 0, metadataBusy = 0, imageBusy = 0;
+let holdDetail=false,releaseDetail=null;
 const fetched = [], hashes = [];
 const context = vm.createContext({
   document, location: {hash: '#' + token, pathname: '/'}, history: {replaceState(){}},
   sessionStorage: {setItem(){}, getItem(){}}, localStorage: {setItem(){}, getItem(){}},
   AbortController, setTimeout, clearTimeout,
+  crypto: require('node:crypto').webcrypto,
   URL: {createObjectURL() { return 'blob:test-' + hashes.length; }, revokeObjectURL(){}},
   fetch: async (path, options) => {
+    if(path.startsWith('/api/removal/'))options={...options,headers:{...options.headers,Origin:origin}};
     if (!path.includes('/assets/')) {
-      const response = await fetch(origin + path, options);
+      const delayed=holdDetail&&path.startsWith('/api/jobs/');
+      if(delayed)holdDetail=false;
+      const response = await fetch(origin + path, delayed?{...options,signal:undefined}:options);
+      if(delayed)await new Promise(resolve=>{releaseDetail=resolve;});
       if (response.status === 503) metadataBusy++;
       return response;
     }
@@ -64,6 +71,69 @@ const run = code => vm.runInContext(code, context);
 (async () => {
   run(readFileSync(__dirname + '/ui/workflow.js', 'utf8'));
   run(readFileSync(__dirname + '/ui/app.js', 'utf8'));
+  if(mode==='removal'){
+    await until(()=>run('detail!==null'));
+    const target=run('listing.jobs.find(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")');
+    await run(`open(${JSON.stringify(target.id)})`);
+    await run('previewRemoval({job_id:active.id,snapshot:listing.snapshot})');
+    const nodes=()=>descendants(document.getElementById('removalBody'));
+    assert(nodes().some(e=>e.textContent==='r01, r02'));
+    assert(nodes().some(e=>e.textContent==='refs/heads/content/pw/pz-workspace-test'));
+    const input=nodes().find(e=>e.id==='removalConfirmation');
+    const button=nodes().find(e=>e.textContent==='Remote-Branch jetzt entfernen');
+    assert.equal(button.disabled,true);
+    input.value='main';input.oninput();assert.equal(button.disabled,true);
+    input.value=target.ref;input.oninput();assert.equal(button.disabled,false);
+    await button.onclick();
+    assert(nodes().some(e=>e.textContent==='Remote-Branch entfernt'));
+    const optional=nodes().find(e=>e.type==='checkbox');assert.equal(optional.checked,false);
+    assert(nodes().find(e=>e.textContent==='Lokale Bereinigung vorprüfen').disabled);
+    assert(run('listing.jobs.some(j=>j.source==="local"&&j.ref==="content/pw/pz-workspace-test")'));
+    assert(!run('listing.jobs.some(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")'));
+    console.log('P2 controller: exact branch/revisions, typed confirmation, real HTTP deletion, local remainder and default-off cleanup passed. No browser-rendering claim.');
+    return;
+  }
+  if(mode==='published'){
+    await until(()=>run('detail!==null'));
+    const first=run('active.id'),second=run('listing.jobs.find(j=>j.revision==="r02").id');
+    assert.equal(document.getElementById('jobs').children.length,2);
+    const labels=document.getElementById('jobs').children.map(el=>el.textContent);
+    assert.equal(new Set(labels).size,2);assert(labels.some(s=>s.includes('r02')));
+    assert(!readFileSync(__dirname+'/ui/index.html','utf8').includes('id="jobList"'));
+    const fields=()=>descendants(document.getElementById('view'));
+    const input=label=>fields().find(el=>el.tag==='label'&&el.textContent===label).children[0];
+    assert.equal(input('Breite (Zellen)').value,'18');
+    assert(fields().some(el=>el.tag==='div'&&el.textContent?.includes('<script>')),'brief is a text node');
+    assert(!fields().some(el=>el.tag==='script'),'no active package markup');
+    input('Breite (Zellen)').value='21';input('Breite (Zellen)').oninput();
+    assert.equal(run('intent.grid.width'),'21');
+    await document.getElementById('refresh').onclick();
+    await until(()=>document.getElementById('load').hidden===false);
+    assert.equal(input('Breite (Zellen)').value,'21','refresh retains active intent');
+    document.getElementById('load').onclick();
+    await until(()=>run('detail!==null'));
+    assert.equal(input('Breite (Zellen)').value,'18','explicit snapshot load resets intent');
+    holdDetail=true;
+    const stale=run('open(listing.jobs[0].id)');
+    await until(()=>releaseDetail!==null);
+    await run('open(listing.jobs.find(j=>j.revision==="r02").id)');
+    assert.equal(input('Breite (Zellen)').value,'27');
+    releaseDetail();await stale;
+    assert.equal(input('Breite (Zellen)').value,'27','late old detail cannot replace source values');
+    run('newDraft()');input('Was soll dein Rätsel zeigen?').value='Local draft';input('Was soll dein Rätsel zeigen?').oninput();
+    input('Breite (Zellen)').value='33';input('Breite (Zellen)').oninput();
+    const draftId=run('draft.id');
+    await run('open(listing.jobs[0].id)');
+    assert.equal(input('Breite (Zellen)').value,'18','local draft never overlays published values');
+    run(`newDraft(${JSON.stringify(draftId)})`);assert.equal(input('Breite (Zellen)').value,'33');
+    descendants(document.getElementById('draftList')).find(el=>el.textContent==='Entwurf verwerfen').onclick();
+    await until(()=>run('detail!==null'));
+    assert.equal(run('drafts.length'),0);
+    assert.equal(input('Breite (Zellen)').value,'18');
+    run('dispose()');
+    console.log('P1-T01 UI: exact source values, text briefing, single distinct dropdown, refresh/load, late detail, isolated draft/discard passed');
+    return;
+  }
   await until(() => cards().length === 6 && active === 2);
   if (mode === 'abort') {
     // Exact review trigger: five-second server work, two rapid job switches,

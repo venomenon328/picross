@@ -7,10 +7,12 @@ from urllib.parse import urlsplit
 from pathlib import Path
 import hmac
 import time
+import json
 
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from . import presentation as p
 from .sources import LRU
+from .repository import ProductionRemoval
 
 UI = Path(__file__).parent / 'ui'
 
@@ -29,11 +31,16 @@ class Service:
         self.update_thread = None
         self.update_id, self.update_started = 0, 0
         self.update_state, self.update_error = 'idle', None
+        self.operation = threading.Lock()
+        self.removal = ProductionRemoval(repository)
+        self.plans, self.receipts = {}, {}
 
     def start_refresh(self):
         with self.lock:
             if self.update_state == 'running':
                 return
+            ap.require(self.operation.acquire(blocking=False), 'Entfernung läuft; danach Quellen erneut suchen.')
+            self.plans.clear()
             self.update_id += 1
             self.update_started = time.monotonic()
             self.update_state, self.update_error = 'running', None
@@ -52,6 +59,8 @@ class Service:
             with self.lock:
                 self.update_state = 'error'
                 self.update_error = 'Quellen konnten nicht geladen werden. Git-Zugang prüfen und erneut suchen.'
+        finally:
+            self.operation.release()
 
     def status(self):
         # Never run Git in a status request. A slow refresh owns no HTTP slot and
@@ -83,6 +92,82 @@ class Service:
             self.current = {**value, 'snapshot': snapshot, 'jobs': public}
             return self.current
 
+    def selected(self, jid, snapshot):
+        with self.lock:
+            ap.require(self.current and self.current['snapshot'] == snapshot and
+                       jid in self.snapshots.get(snapshot, []),
+                       'Auswahl ist veraltet. Neueren Stand laden und erneut vorprüfen.')
+        return self.job(jid)
+
+    def removal_preview(self, body):
+        ap.require(self.operation.acquire(blocking=False), 'Quellenoperation läuft. Danach erneut vorprüfen.')
+        try:
+            with self.repository.lock:
+                now = time.monotonic()
+                self.plans.clear()  # One active confirmation per server session.
+                self.receipts = {key: row for key, row in self.receipts.items() if row['expires'] > now}
+                if set(body) == {'job_id', 'snapshot'}:
+                    job = self.selected(body['job_id'], body['snapshot'])
+                    facts = self.removal.probe(job)
+                    plan = {'kind': 'remote', 'job_id': body['job_id'], 'snapshot': body['snapshot'],
+                            'facts': facts, 'expires': now + 180}
+                else:
+                    ap.require(set(body) == {'receipt_id'}, 'Ungültige Vorprüfungsfelder.')
+                    receipt = self.receipts.pop(body['receipt_id'], None)
+                    ap.require(receipt is not None, 'Quittung fehlt oder ist abgelaufen. Lokaler Ref bleibt erhalten.')
+                    self.removal.local_probe(receipt['facts'])
+                    plan = {**receipt, 'kind': 'local', 'snapshot': self.current['snapshot'],
+                            'expires': now + 180}
+                    facts = plan['facts']
+                pid = None
+                if not facts['blockers']:
+                    pid = secrets.token_hex(16)
+                    self.plans[pid] = plan
+                return {**facts, 'plan_id': pid, 'kind': plan['kind'], 'expires_seconds': 180,
+                        'job_id': plan['job_id'], 'snapshot': plan['snapshot']}
+        finally:
+            self.operation.release()
+
+    def removal_confirm(self, body):
+        ap.require(self.operation.acquire(blocking=False), 'Quellenoperation läuft. Keine zweite Entfernung gestartet.')
+        try:
+            with self.repository.lock:
+                ap.require(set(body) == {'plan_id', 'job_id', 'snapshot', 'confirmation'}, 'Ungültige Bestätigungsfelder.')
+                plan = self.plans.pop(body['plan_id'], None)  # Burn even on bad confirmation or failed Git.
+                ap.require(plan is not None and plan['expires'] > time.monotonic(),
+                           'Plan fehlt, ist abgelaufen oder wurde schon verwendet. Erneut vorprüfen.')
+                facts = plan['facts']
+                ap.require(body['confirmation'] == facts['branch'], 'Branchname stimmt nicht exakt. Erneut vorprüfen.')
+                ap.require(body['job_id'] == plan['job_id'] and body['snapshot'] == plan['snapshot'] and
+                           self.current['snapshot'] == plan['snapshot'], 'Auswahl wurde geändert. Erneut vorprüfen.')
+                if plan['kind'] == 'local':
+                    self.removal.remove_local(facts)
+                    result = {'removed': True, 'kind': 'local', 'message': 'Nur der lokale Branchref wurde entfernt. Arbeitsdateien und Worktrees bleiben erhalten.'}
+                    try:
+                        value = self.listing()
+                    except (ValueError, OSError):
+                        value = None
+                        result['cache_error'] = 'Lokale Refentfernung bestätigt, Anzeige konnte nicht aktualisiert werden. Erneut suchen.'
+                else:
+                    job = self.selected(plan['job_id'], plan['snapshot'])
+                    result = {**self.removal.remove(job, facts), 'kind': 'remote'}
+                    if not result['removed']:
+                        return result
+                    try:
+                        value = self.listing(refresh=True)
+                        if value['sync_error']:
+                            result['cache_error'] = 'Remoteentfernung bestätigt, Cacheaktualisierung fehlgeschlagen. Angezeigte Remotequellen können veraltet sein; erneut suchen.'
+                    except (ValueError, OSError):
+                        value = None
+                        result['cache_error'] = 'Remoteentfernung bestätigt, Anzeige konnte nicht aktualisiert werden. Erneut suchen.'
+                    if facts['local']['sha'] == facts['sha']:
+                        rid = secrets.token_hex(16)
+                        self.receipts = {rid: {**plan, 'expires': time.monotonic() + 180}}
+                        result['receipt_id'] = rid
+                return {**result, 'listing': value, 'branch': facts['branch']}
+        finally:
+            self.operation.release()
+
     def job(self, jid):
         with self.lock:
             ap.require(jid in self.jobs, 'Ansicht ist abgelaufen. Aktuelle Jobliste laden.')
@@ -96,6 +181,7 @@ class Service:
         self.views.put(('validated', job['commit'], io.checksum(p.data(job['_projection']))), b'1')
         return {**job['_projection'], 'facts': facts, 'source': job['source'], 'commit': job['commit'],
                 'source_url': job.get('source_url'), 'branch': job['ref'],
+                'removal_unavailable': self.removal.availability(job),
                 'publication': job['publication'], 'status': 'Originalbindungen und Bildbytes geprüft; keine neue Inhaltsfreigabe'}
 
     def picture(self, jid, aid):
@@ -178,7 +264,33 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(200, (UI / name).read_bytes(), mime)
             token = self.headers.get('X-Workspace-Session', '')
             ap.require(hmac.compare_digest(token.encode(), service.secret.encode()), 'Sitzung fehlt oder ist ungültig. Starter erneut öffnen.')
-            ap.require(not self.headers.get('Transfer-Encoding') and self.headers.get('Content-Length', '0') == '0', 'Anfrageinhalt ist nicht erlaubt.')
+            ap.require(not self.headers.get('Transfer-Encoding'), 'Transfer-Encoding ist nicht erlaubt.')
+            removal = method == 'POST' and self.path in ('/api/removal/preview', '/api/removal/confirm')
+            body = None
+            if removal:
+                ap.require(origin == self.server.origin, 'Entfernung benötigt den eigenen Browserursprung.')
+                ap.require(self.headers.get_all('Content-Type') == ['application/json'] and
+                           len(self.headers.get_all('Content-Length', [])) == 1,
+                           'Genau ein JSON-Content-Type und Content-Length erforderlich.')
+                length = self.headers.get('Content-Length', '')
+                ap.require(length.isascii() and length.isdecimal() and 0 < int(length) <= 2048,
+                           'JSON-Anfrage muss 1–2048 Bytes enthalten.')
+                raw = self.rfile.read(int(length))
+                ap.require(len(raw) == int(length), 'Unvollständiger Anfrageinhalt.')
+                def unique(pairs):
+                    value = {}
+                    for key, item in pairs:
+                        ap.require(key not in value, 'Doppeltes JSON-Feld.')
+                        value[key] = item
+                    return value
+                body = json.loads(raw.decode('utf-8'), object_pairs_hook=unique)
+                ap.require(isinstance(body, dict) and all(isinstance(v, str) and 0 < len(v) <= 160 for v in body.values()),
+                           'Nur kurze Textkennungen sind erlaubt.')
+            else:
+                ap.require(self.headers.get('Content-Length', '0') == '0', 'Anfrageinhalt ist nicht erlaubt.')
+            # Status must stay available even while all reader/transaction slots are busy.
+            if method == 'GET' and self.path == '/api/jobs':
+                return self.reply(200, p.data(service.status()), 'application/json; charset=utf-8')
             parts = self.path.strip('/').split('/')
             if method == 'GET' and len(parts) == 5 and parts[:2] == ['api', 'jobs'] and parts[3] == 'assets':
                 image_acquired = service.image_workers.acquire(blocking=False)
@@ -192,6 +304,8 @@ class Handler(BaseHTTPRequestHandler):
             elif method == 'POST' and self.path == '/api/refresh':
                 service.start_refresh()
                 value = service.status()
+            elif removal:
+                value = service.removal_preview(body) if self.path.endswith('/preview') else service.removal_confirm(body)
             else:
                 ap.require(method == 'GET' and len(parts) in (3, 5) and parts[:2] == ['api', 'jobs'], 'Unbekannter API-Aufruf.')
                 if len(parts) == 3:

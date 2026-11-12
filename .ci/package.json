@@ -1,11 +1,15 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/586",
-  "package": "Erdbeere-Schritt-1-r01",
+  "package": "Erdbeere-Schritt-2-r02",
   "modules": [],
-  "purpose": "Allgemeine Quellen- und Planintegrität der reinen Abschlussbildablage nach Authoring 0.8.0 prüfen. Die konkrete Bild-, Inventar-, ZIP- und Projektionsprüfung erfolgt im Produktionsauftrag.",
-  "omitted": "Keine Zusatzmodule und kein Player-Build: ausschließlich frühe Produktionsdaten mit drei Abschlussbildoriginalen, keine Werkzeug-, Spiel- oder Runtimeänderung. Noch keine Motiv-/Rasterproduktion, Solver-/Proof-/Paletten-/Difficultyprüfung, Bestandsreplays oder Browserprüfung. Keine neuen oder geänderten Tests; technische lokale Prüfansichten enden nach Sicherung und Übergabe.",
+  "purpose": "Reine Produktionsablage r01/r02: Originale, tatsächliche Revealfreigabe, Motivvorlage und Parameterempfehlung nach Authoring 0.8.0; allgemeine Quellen-/Planintegrität.",
+  "omitted": "Keine Zusatzmodule und kein Player-Build: nur Produktionsdaten, Paketplan und Index. Bilddekodierung, Sichturteile, Herkunft, Hash-/ZIP-/Inventar-/Projektionsprüfung erfolgen einmalig im Produktionsauftrag. Keine Raster-, Solver-, Proof-, Difficulty-, Browser- oder Bestandsprüfung; keine Code-/Teständerungen. Temporäre QA-Ansichten enden nach Sichtprüfung; kreative Originale bleiben zur Freigabe erhalten.",
   "test_changes": [],
   "core_change": null,
-  "evidence": {"mode": "none", "purpose": null, "expires": null}
+  "evidence": {
+    "mode": "none",
+    "purpose": null,
+    "expires": null
+  }
 }
