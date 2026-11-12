@@ -1,4 +1,14 @@
 # Rätselproduktion: Bildentwurf, Deduktionsnachweis und Pilot
+## #596/C · Reguläre motivtreue Rasterkorrektur
+
+Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,
+Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
+Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
+Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
+Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
+historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
+Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
+
 
 **PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
 [fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen

@@ -1,4 +1,13 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
+## #596/C · Feste Rasterableitung
+
+Der vor Code festgelegte [Vertrag](../../docs/FIXED_RASTER.md) definiert die
+geschlossenen Parameter-/Plan-/Record-/Manifestformen und deren Grenzen.
+`python -m tools.puzzle_production.fixed_raster derive --root ROOT --plan PLAN --output OUT`
+erzeugt das reguläre Bundle; `inspect --root ROOT --bundle BUNDLE` prüft es frisch.
+Authoring 0.8.0 Dokumentrevision 4: source_type=fixed, kein manueller Override.
+Aktive Schwierigkeit zusätzlich über catalog_analysis mit expliziter Methode 0.4.
+
 
 **PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
 [fünfstufige Authoringweg](../../docs/ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
