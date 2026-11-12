@@ -139,9 +139,18 @@ input::file-selector-button { color: var(--accent); background: var(--soft); bor
 .gridSettings > .hint { margin: 8px 0; }
 .gridSettings fieldset { min-width: 0; border: 0; margin: 15px 0 0; padding: 0; }
 .gridSettings legend { font-weight: 700; font-size: .9rem; padding: 0; }
-.gridRow { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 11px; margin-top: 5px; }
+.gridRow { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 18px; margin-top: 5px; }
 .gridRow label { min-width: 0; color: var(--muted); font-size: .79rem; }
-.paletteFields { grid-column: span 2; display: grid; grid-template-columns: 1fr 1fr; gap: inherit; }
+.gridRow > label { flex: 0 1 12rem; }
+.axisField { flex: 0 1 10rem; max-width: 100%; }
+.numberUnit { display: flex; align-items: baseline; gap: 7px; }
+.numberUnit input,.gridSettings .shortNumber { width: 5.2rem; }
+.numberUnit > span { font-weight: 400; }
+.paletteFields { display: flex; flex-wrap: wrap; gap: 12px 18px; max-width: 100%; }
+.paletteFields > label { max-width: 100%; }
+.gridSettings .removeGrid { display: flex; align-items: baseline; gap: 3px; font-weight: 400; font-size: .75rem; margin-top: 8px; }
+.paletteFields .removeGrid { flex-basis: 100%; margin-top: 0; }
+.gridSettings input:disabled { opacity: .65; }
 .orderActions { margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--line); }
 .primary { color: var(--on-primary); background: var(--primary); border-color: var(--primary); padding: 10px 17px; }
 .primary:not(:disabled):hover { color: var(--on-primary); box-shadow: 0 0 0 2px var(--panel),0 0 0 3px var(--accent); }
@@ -202,8 +211,7 @@ dialog::backdrop { background: #07120fc4; }
   .steps { gap: 0 6px; }
   .steps li { padding: 5px 1px; font-size: .73rem; }
   .stepNumber { width: 18px; height: 18px; }
-  .gridRow,.paletteFields { grid-template-columns: 1fr 1fr; }
-  .gridRow > label:last-child,.paletteFields { grid-column: 1 / -1; }
+  .gridRow { gap: 12px; }
   .gridSettings summary small { display: block; margin-left: 1.2em; }
 }
 
