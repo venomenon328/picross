@@ -1,15 +1,1 @@
-{
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/592",
-  "package": "Zitrone-Schritte-1-2",
-  "modules": [],
-  "purpose": "Freigegebenes Z-A-r01 bytegleich erhalten und die daraus abgeleitete Motivvorlage M-A-r02 samt vorgeschlagenem Parameterkorridor als geprüfte Authoring-0.8.0-Revision motif_review sichern.",
-  "omitted": "Reine Inhaltsproduktion ohne Werkzeug-/Spiel-/CI-Änderung: keine Zusatzmodule und kein Player-Build. Original-/Motivvergleich und Herkunft/PNG/Alpha/Inventar/Projektion werden einmalig im Auftrag geprüft. Noch keine Motivfreigabe, Raster-/Solver-/Schwierigkeitsproduktion oder Bestandsreplays. Keine neuen Tests oder technischen Dauerartefakte.",
-  "test_changes": [],
-  "core_change": null,
-  "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
-}
+{"core_change":null,"evidence":{"expires":null,"mode":"none","purpose":null},"format":"development-ci-plan/v1","issue":"https://github.com/venomenon328/picross/issues/592","modules":[],"omitted":"Reine Inhaltsproduktion: modules=[] und evidence.mode=none, kein Player-Build. Herkunft, Proofs, Endmatrix, Palette/Sichtung, aktuelle 0.4-Schwierigkeit und Builder-ZIP werden einmalig an neuen Revisionen geprüft. Keine Bestandsreplays, Werkzeugänderungen, neuen Tests, automatischen Reviewgalerien oder technischen Daueruploads.","package":"Zitrone-Schritt-3","purpose":"Freigegebene unveränderte Motivvorlage M-A-r02 über vier gezielte RP-3-Importstarts und bei Bedarf reguläre feste C-Korrektur zu vollständig geprüften Rasterangeboten nach Authoring 0.8.0 fortführen.","test_changes":[]}

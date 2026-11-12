@@ -11,6 +11,19 @@ from .sources import LocalSource, Archive, JSON_LIMIT
 
 
 def project(request, root):
+    if request.get('format') != p.CURRENT_REQUEST:
+        return _project(request, root)
+    from tools.puzzle_production import authoring_builder as builder
+    from . import current_view
+    root = io.external(root)
+    with builder.writer(builder.git_root(root) / 'authoring-builder.lock'):
+        expected = current_view.observe(root, request['puzzle_id'])
+        result = _project(request, root)
+        current_view.publish(root, request['puzzle_id'], request['revision'], expected)
+        return result
+
+
+def _project(request, root):
     r = p.validate(request, measured=False)
     source = LocalSource(root)
     result = deepcopy(r)
@@ -155,9 +168,11 @@ def complete(root, record_path, commit):
     root = io.external(root)
     ap.require(git(root, 'merge-base', 'HEAD', commit).decode().strip() == commit, 'Registration is not in current history')
     with builder.writer(builder.git_root(root) / 'authoring-builder.lock'):
+        from . import current_view
         source = LocalSource(root)
         before_raw = source.read(None, record_path)
         before = p.parse(before_raw)
+        view_before = current_view.observe(root, before['puzzle_id'])
         ap.require(before['format'] == 'picross-authoring-record-v3' and
                    before['state'] in ('editorially_approved', 'registered'), 'Completion requires actual final approval')
         after = deepcopy(before)
@@ -193,6 +208,13 @@ def complete(root, record_path, commit):
                     staged = Path(temporary) / Path(name).name
                     builder.write_new(staged, raw)
                     os.replace(staged, io.safe(root, name))
+        # A retry can recover the old pointer only from the actual committed
+        # predecessor, never by accepting arbitrary old hash claims.
+        prior = {record_path: before_raw, projection_path: previous}
+        if before['state'] == 'registered':
+            head = source.history.resolve(git(root, 'rev-parse', 'HEAD').decode().strip())
+            prior = {name: source.history.read(head, name) for name in prior}
+        current_view.publish(root, before['puzzle_id'], before['revision'], view_before, previous=prior)
         return {'status': 'reused' if before_raw == after_raw and previous == projection else 'completed',
                 'state': 'registered', 'record': record_path, 'integration_commit': commit}
 
@@ -202,11 +224,16 @@ def main(argv=None):
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--request', type=Path)
     group.add_argument('--complete-record')
+    group.add_argument('--current-view', nargs=2, metavar=('PUZZLE_ID', 'REVISION'))
     parser.add_argument('--integration-commit')
     parser.add_argument('--repository', required=True, type=Path)
     args = parser.parse_args(argv)
     try:
-        if args.complete_record:
+        if args.current_view:
+            from .current_view import handoff
+            ap.require(args.integration_commit is None, 'Integration commit only belongs to completion')
+            result = handoff(args.repository, *args.current_view)
+        elif args.complete_record:
             result = complete(args.repository, args.complete_record, args.integration_commit)
         else:
             ap.require(args.integration_commit is None, 'Integration commit only belongs to completion')

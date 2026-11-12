@@ -1,0 +1,48 @@
+Picross · Produktionsassistent / Windows x64
+
+Picross-Produktionsassistent-X.Y.Z-windows-x64.msi doppelt anklicken.
+Installation nur für diesen Benutzer, ohne Administratorrechte, unter
+%LOCALAPPDATA%\Programs\Picross-Produktionsassistent. Start über das Startmenü;
+Desktoplink optional. Git für Windows mit --no-lazy-fetch bleibt Voraussetzung;
+vorhandene Git-/SSH-/Credential-Einrichtung wird weiterverwendet. Kein globales
+Python/Node, pip oder Laufzeitdownload. Windows 11 x64 mit .NET Framework 4.x
+(Windowsbestandteil) für den MSI-Sicherheitscheck.
+
+Einmal den vorhandenen Projektcheckout und bewusst lokale Gitstände oder eine
+Remote-URL wählen. Der Checkout liefert ausschließlich Daten, keinen Programmcode.
+Einrichtung und Cache liegen getrennt unter %LOCALAPPDATA%\PicrossProductionWorkspace.
+Ein vorhandener Zustand bleibt nutzbar. Einen anderen bewusst gewählten Zustand
+mit Picross-Start.exe --state "D:\Eigener Zustand" öffnen.
+
+Das kleine Steuerfenster bietet „Im Browser öffnen“ und „Assistent beenden“.
+Minimieren lässt den Dienst laufen; Fensterschließen beendet ihn kontrolliert.
+Tab schließen stoppt ihn nicht. Ein zweiter Start öffnet die passende vorhandene
+Browserinstanz. Eine laufende alte CMD vor dem ersten EXE-Start regulär beenden.
+
+Die Browseradresse wird ab P3 pro Zustand beibehalten. Ein fremd belegter Port
+wird gemeldet; Wechsel erfolgt nur ausdrücklich und hat getrennte Browseroptionen
+und Entwürfe. Frühere unbekannte Zufallsportdaten werden nicht migriert.
+
+Update: Assistent regulär beenden, auf sein tatsächliches Ende warten, dann einen
+Installer mit höherer Produktversion starten. Alle eigenen Programmdateien werden
+gemeinsam ersetzt. Laufende/fremde/unklare Instanz oder belegte Programmdateien:
+Abbruch und nach regulärem Stop erneut versuchen. Begonnene Produktionsentfernung
+samt Ergebnis abwarten. Kein automatischer Kill/Stop/Restart, kein Autoupdater.
+Während einer Windowsinstallation nach deren Ende erneut starten.
+„Neuere Ergebnisse suchen“ aktualisiert Gitdaten, keine installierte Anwendung.
+Gleiche Produktversion und Downgrade werden zurückgewiesen.
+
+Deinstallation über Windows „Installierte Apps“ entfernt Programmdateien und Links.
+Konfiguration/Remote/Refs, Cache, Port, Browserprofil, Datencheckout/Produktionsrefs
+und alte portable Ordner bleiben erhalten. Wiederinstallation nutzt diesen Zustand.
+Browseroptionen bleiben bei gleichem Port und gleichem Browserprofil erreichbar.
+Der gesamte portable App-Ordner bleibt technischer Fallback; nach Stop nur als
+Ganzes ersetzen, niemals einzelne EXEs oder Module austauschen.
+
+Diese Lieferung ist unsigniert. Windows/SmartScreen kann daher warnen.
+Die geprüfte Quelle und SHA-256 stehen im Lieferreport/zugehörigen PR; Schutzfunktionen
+nicht abschalten. Eine Signatur würde Warnungsfreiheit ebenfalls nicht garantieren.
+Komponenten/Quellcommit: components.json. Dateien und Hashes: inventory.json.
+Python-, Pillow-, Tcl/Tk- und PyInstaller-/Bootloaderlizenzen: LICENSES.
+Der ausschließlich manuelle Actionsdownload bleibt 14 Tage verfügbar. Kein
+automatischer Release, Tag oder Deployment und keine unbegrenzte Verfügbarkeit.

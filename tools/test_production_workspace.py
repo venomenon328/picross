@@ -97,7 +97,7 @@ def fixture(root, revision='r01', image_count=1):
     return request, files['reveal.png']
 
 
-def current_fixture(repo, source, revision='r01', proposed=None, approved=None, brief=b'TEST ONLY\n\nSynthetic brief.\n'):
+def current_fixture(repo, source, revision='r01', proposed=None, approved=None, brief=b'TEST ONLY\n\nSynthetic brief.\n', puzzle_id='pz-workspace-test'):
     """Build genuine current 0.8 originals, including all three offered images."""
     from tools.puzzle_production import authoring_workflow as w, authoring_build_contract as bc
     if not (repo / INDEX).exists():
@@ -111,10 +111,10 @@ def current_fixture(repo, source, revision='r01', proposed=None, approved=None, 
         name = f'reveal-{n}.png'
         Image.new('RGBA', (8, 5), (40 + n * 20, 90, 80, 128)).save(source / name)
         sha = io.checksum((source / name).read_bytes())
-        (source / f'reveal-{n}.provenance.json').write_bytes(p.data({'puzzle_id': 'pz-workspace-test',
+        (source / f'reveal-{n}.provenance.json').write_bytes(p.data({'puzzle_id': puzzle_id,
             'file': name, 'sha256': sha, 'author': 'TEST ONLY', 'usage_basis': 'Synthetic pixels'}))
         options.append({'ID': f'A{n}', 'Beschreibung': f'Synthetic {n}', 'Datei': name, 'SHA-256': sha})
-    h = {'format': w.HANDOFF, 'puzzle_id': 'pz-workspace-test', 'revision': revision,
+    h = {'format': w.HANDOFF, 'puzzle_id': puzzle_id, 'revision': revision,
          'repo_commit': 'a' * 40, 'state': 'reveal_review', 'inventory': None,
          'rulebook': {'version': '0.8.0', 'file': 'rulebook.md', 'sha256': io.checksum((source / 'rulebook.md').read_bytes())},
          'brief': 'brief.md', 'proposed_parameters': proposed, 'approved_parameters': approved or [],
@@ -129,6 +129,221 @@ def current_fixture(repo, source, revision='r01', proposed=None, approved=None, 
                          for f in sorted(source.iterdir())]}
     stage = source.parent / (source.name + '-build'); stage.mkdir()
     return builder.build(request, source, stage, repo)
+
+
+class MotifTests(unittest.TestCase):
+    """B: real synthetic published snapshots; never a production corpus."""
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(prefix='pw-b-motifs-')
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.repo = self.root / 'repo'; self.repo.mkdir()
+        git(self.repo, 'init', '-q', '-b', 'main')
+        (self.repo / INDEX).parent.mkdir(parents=True)
+        (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': []}))
+        commit(self.repo)
+        git(self.repo, 'checkout', '-qb', 'content/pw/pz-workspace-test')
+        self.serial = 0
+
+    def build(self, revision, repo=None, puzzle_id='pz-workspace-test'):
+        self.serial += 1
+        result = current_fixture(repo or self.repo, self.root / ('input' + str(self.serial)), revision, puzzle_id=puzzle_id)
+        return result, commit(repo or self.repo)
+
+    def service(self, remote=None):
+        state = self.root / 'state'
+        configure(self.repo, state, remote=str(remote) if remote else None)
+        repository = Repository(state)
+        return Service(repository)
+
+    def remote(self):
+        remote = self.root / 'remote'; remote.mkdir(); git(remote, 'init', '--bare', '-q')
+        git(self.repo, 'push', str(remote), 'main', 'content/pw/pz-workspace-test')
+        return remote
+
+    def test_pointer_strict_form_bindings_index_and_metadata_only_listing(self):
+        from tools.production_workspace import current_view as cv
+        _, sha = self.build('correction-alpha')
+        name = cv.path('pz-workspace-test'); raw = (self.repo / name).read_bytes()
+        pointer = cv.validate(raw, 'pz-workspace-test')
+        self.assertEqual(pointer['revision'], 'correction-alpha')
+        source = GitSource(self.repo)
+        cv.inspect(source, sha, raw, 'pz-workspace-test', originals=True)
+        for mutate in (lambda v: v.update(extra=True), lambda v: v.update(puzzle_id='pz-other'),
+                       lambda v: v.update(revision='foreign'), lambda v: v['record'].update(sha256='0' * 64),
+                       lambda v: v['projection'].update(bytes=True), lambda v: v['record'].update(file='content/authoring/pz-other/r01/record.json')):
+            bad = deepcopy(pointer); mutate(bad)
+            with self.subTest(pointer=bad), self.assertRaises(ValueError):
+                cv.inspect(source, sha, p.data(bad), 'pz-workspace-test')
+        with self.assertRaises(ValueError): cv.validate(raw + b' ', 'pz-workspace-test')
+        (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': []}))
+        bad_sha = commit(self.repo)
+        with self.assertRaisesRegex(ValueError, 'indexed'): cv.inspect(source, bad_sha, raw, 'pz-workspace-test')
+        # Restore only the index; no archive or image may be read for listing.
+        (self.repo / INDEX).write_bytes(source.read(sha, INDEX)); commit(self.repo)
+        service = self.service()
+        before = git(self.repo, 'status', '--porcelain'), git(self.repo, 'show-ref')
+        with patch.object(cv, 'inspect', side_effect=OSError('temporary missing object')):
+            uncertain = service.listing()
+        self.assertIsNone(uncertain['motifs'][0]['current_job'])
+        with patch.object(p, 'inspect', side_effect=AssertionError('eager package validation')), \
+                patch.object(Archive, '__init__', side_effect=AssertionError('eager ZIP')):
+            listing = service.listing()
+        self.assertEqual(len(listing['motifs']), 1)
+        self.assertIsNotNone(listing['motifs'][0]['current_job'])
+        self.assertEqual(before, (git(self.repo, 'status', '--porcelain'), git(self.repo, 'show-ref')))
+
+    def test_grouped_versions_missing_invalid_pointer_and_same_titles(self):
+        from tools.production_workspace import current_view as cv
+        self.build('z-raster'); self.build('a-earlier-phase')
+        self.build('another', puzzle_id='pz-other')
+        # Publish the second identity on main, where all indexed IDs are visible.
+        git(self.repo, 'branch', '-f', 'main', 'HEAD')
+        service = self.service()
+        listing = service.listing()
+        self.assertEqual(len(listing['motifs']), 2)
+        self.assertTrue(all(m['puzzle_id'] in m['label'] for m in listing['motifs']))
+        motif = next(m for m in listing['motifs'] if m['puzzle_id'] == 'pz-workspace-test')
+        self.assertEqual(motif['versions'][0]['revision'], 'a-earlier-phase')
+        self.assertEqual(len(motif['versions']), 2)
+        self.assertTrue(all(not service.detail(j['id'])['facts'].get('editorial_approved') for j in listing['jobs']))
+        (self.repo / cv.path('pz-workspace-test')).unlink(); commit(self.repo)
+        git(self.repo, 'branch', '-f', 'main', 'HEAD')
+        motif = next(m for m in service.listing()['motifs'] if m['puzzle_id'] == 'pz-workspace-test')
+        self.assertIsNone(motif['current_job']); self.assertTrue(any('fehlt' in n for n in motif['notes']))
+        (self.repo / cv.path('pz-workspace-test')).write_bytes(b'{}\n'); commit(self.repo)
+        git(self.repo, 'branch', '-f', 'main', 'HEAD')
+        motif = next(m for m in service.listing()['motifs'] if m['puzzle_id'] == 'pz-workspace-test')
+        self.assertIsNone(motif['current_job']); self.assertTrue(any('Ungültiger' in n for n in motif['notes']))
+
+    def test_sync_matches_refs_with_different_versions_and_independent_main(self):
+        _, main = self.build('r01')
+        git(self.repo, 'branch', '-f', 'main', main)
+        self.build('r02')
+        remote = self.remote(); service = self.service(remote)
+        motif = service.listing(refresh=True)['motifs'][0]
+        self.assertEqual(motif['status'], 'Synchron')
+        self.assertEqual({v['revision'] for v in motif['versions']}, {'r01', 'r02'})
+        self.assertTrue(all(v['source_label'] == 'Lokal und Remote' for v in motif['versions']))
+        # Both copies of main advance independently of the production branch.
+        git(self.repo, 'checkout', '-q', 'main')
+        (self.repo / 'metadata.txt').write_text('independent main', encoding='utf-8')
+        commit(self.repo)
+        git(self.repo, 'push', str(remote), 'main')
+        value = service.listing(refresh=True)
+        self.assertIn('divergent', value['relations'].values(), 'cross-ref history really diverges')
+        self.assertEqual(value['motifs'][0]['status'], 'Synchron')
+        self.assertIsNone(value['motifs'][0]['current_job'], 'sync does not choose between divergent pointers')
+        # A source without its remote counterpart must not claim full sync.
+        git(self.repo, 'push', str(remote), ':content/pw/pz-workspace-test')
+        motif = service.listing(refresh=True)['motifs'][0]
+        self.assertEqual(motif['status'], 'Remote nicht aktuell bestätigt')
+        self.assertTrue(any('Gegenref fehlt' in n for n in motif['notes']))
+
+    def test_real_push_fetch_ahead_divergence_offline_and_combined_sources(self):
+        _, original = self.build('r-z')
+        remote = self.remote(); service = self.service(remote)
+        value = service.listing(refresh=True); motif = value['motifs'][0]
+        self.assertEqual(motif['status'], 'Synchron')
+        self.assertEqual(motif['versions'][0]['source_label'], 'Lokal und Remote')
+        _, newer = self.build('correction-a')
+        value = service.listing(refresh=True); motif = value['motifs'][0]
+        self.assertEqual(motif['status'], 'Lokal neuer')
+        self.assertEqual(service.job(motif['current_job'])['commit'], newer)
+        self.assertIsNone(service.detail(motif['current_job'])['source_url'], 'local work is no cloud source')
+        git(self.repo, 'push', str(remote), 'content/pw/pz-workspace-test')
+        self.assertEqual(service.listing(refresh=True)['motifs'][0]['status'], 'Synchron')
+        writer = self.root / 'writer'; git(self.root, 'clone', '-q', '-c', 'core.autocrlf=false', '--branch', 'content/pw/pz-workspace-test', str(remote), str(writer))
+        _, remote_new = self.build('remote-early', writer)
+        git(writer, 'push', str(remote), 'content/pw/pz-workspace-test')
+        value = service.listing(refresh=True); motif = value['motifs'][0]
+        self.assertEqual(motif['status'], 'Remote neuer')
+        self.assertEqual(service.job(motif['current_job'])['commit'], remote_new)
+        self.build('local-divergence')
+        motif = service.listing(refresh=True)['motifs'][0]
+        self.assertEqual(motif['status'], 'Abweichende Stände'); self.assertIsNone(motif['current_job'])
+        # Real offline failure retains bound cache and blocks false cloud claims.
+        git(service.repository.cached.root, 'config', 'remote.pw-source.url', str(self.root / 'absent'))
+        service.repository.remote = str(self.root / 'absent')
+        value = service.listing(refresh=True)
+        self.assertTrue(value['sync_error']); self.assertFalse(value['remote_confirmed'])
+        self.assertTrue(any(j['source'] == 'remote' for j in value['jobs']))
+        self.assertEqual(value['motifs'][0]['status'], 'Remote nicht aktuell bestätigt')
+        self.assertTrue(all(j['source_url'] is None for j in value['jobs']))
+
+    def test_same_revision_changed_bytes_has_no_winner_but_explicit_views_work(self):
+        _, first = self.build('r01'); remote = self.remote(); service = self.service(remote)
+        directory = self.repo / 'content/authoring/pz-workspace-test/r01'
+        record = p.parse((directory / 'record.json').read_bytes()); record['next_step'] += ' synthetic'
+        record_raw = p.data(record); (directory / 'record.json').write_bytes(record_raw)
+        view = p.parse((directory / 'workspace.json').read_bytes())
+        for ref in [view['record'], *(o['record'] for o in view['offers'])]:
+            ref.update(sha256=io.checksum(record_raw), bytes=len(record_raw))
+        (directory / 'workspace.json').write_bytes(p.data(view))
+        from tools.production_workspace import current_view as cv
+        # This deliberate synthetic valid in-place publisher is bound to the real old bytes.
+        name = cv.path('pz-workspace-test'); expected = (self.repo / name).read_bytes()
+        previous = {n: GitSource(self.repo).read(first, n) for n in [view['record']['file'], 'content/authoring/pz-workspace-test/r01/workspace.json']}
+        cv.publish(self.repo, 'pz-workspace-test', 'r01', expected, previous=previous); commit(self.repo)
+        value = service.listing(refresh=True); motif = value['motifs'][0]
+        self.assertEqual(motif['status'], 'Abweichende Stände'); self.assertIsNone(motif['current_job'])
+        self.assertEqual(len(motif['versions']), 2)
+        for job in value['jobs']:
+            self.assertTrue(job['conflict']); service.detail(job['id'])
+            self.assertIsNotNone(service.removal.availability(service.job(job['id'])))
+
+    def test_pointer_noop_interruption_and_concurrent_change(self):
+        from tools.production_workspace import current_view as cv
+        self.build('r01'); name = cv.path('pz-workspace-test')
+        raw = (self.repo / name).read_bytes(); mtime = (self.repo / name).stat().st_mtime_ns
+        self.assertEqual(cv.handoff(self.repo, 'pz-workspace-test', 'r01')['status'], 'reused')
+
+        self.assertEqual((self.repo / name).stat().st_mtime_ns, mtime)
+        self.build('r02')
+        expected = (self.repo / name).read_bytes()
+        def interrupt(boundary):
+            if boundary == 'before-current-view-replace': raise RuntimeError('synthetic interruption')
+        with patch.object(cv, 'checkpoint', side_effect=interrupt), self.assertRaises(RuntimeError):
+            cv.handoff(self.repo, 'pz-workspace-test', 'r01')
+        self.assertEqual((self.repo / name).read_bytes(), expected)
+        self.assertFalse(list((self.repo / name).parent.glob('.pw-current-view-*')))
+        def race(boundary):
+            if boundary == 'before-current-view-replace': (self.repo / name).write_bytes(raw)
+        with patch.object(cv, 'checkpoint', side_effect=race), self.assertRaises(ValueError):
+            cv.publish(self.repo, 'pz-workspace-test', 'r01', expected)
+        self.assertEqual((self.repo / name).read_bytes(), raw, 'foreign write preserved')
+        self.assertEqual(cv.handoff(self.repo, 'pz-workspace-test', 'r01')['status'], 'reused')
+
+    def test_shallow_metadata_reload_and_bounded_unknown_history(self):
+        from tools.production_workspace.motifs import Relations, group
+        _, base = self.build('r01'); remote = self.remote()
+        writer = self.root / 'history-writer'
+        git(self.root, 'clone', '-q', '-c', 'core.autocrlf=false', '--branch', 'content/pw/pz-workspace-test', str(remote), str(writer))
+        for n in range(4):
+            (writer / 'metadata.txt').write_text(str(n), encoding='utf-8'); commit(writer)
+        git(writer, 'push', str(remote), 'content/pw/pz-workspace-test')
+        service = self.service(remote); repository = service.repository
+        value = service.listing(refresh=True)
+        self.assertEqual(value['motifs'][0]['status'], 'Remote neuer')
+        tip = next(j['commit'] for j in value['jobs'] if j['source'] == 'remote')
+        # Drop no objects: a fresh private depth=1 cache proves the real reload.
+        other_state = self.root / 'shallow-state'
+        configure(self.repo, other_state, remote=str(remote))
+        other = Repository(other_state)
+        with patch.object(other, 'fetch', wraps=other.fetch) as fetch:
+            result = other.refresh()
+        self.assertTrue(any(call.kwargs.get('depth') == 64 for call in fetch.call_args_list))
+        self.assertIn('behind', result['relations'].values())
+        # Missing unrelated ancestry remains unknown after the finite allowance.
+        graph = Relations(repository)
+        missing = 'd' * 40
+        with patch.object(repository, 'fetch', side_effect=ValueError('unavailable')):
+            self.assertEqual(graph.compare(tip, missing), 'unknown')
+        uncertain = group(value['jobs'], {}, confirmed=True, remote=str(remote))
+        self.assertEqual(uncertain[0]['status'], 'Remote nicht aktuell bestätigt',
+                         'missing same-ref ancestry cannot become sync or a proven conflict')
+        self.assertEqual(repository.local.resolve('refs/heads/content/pw/pz-workspace-test'), base)
+
 
 
 class WorkspaceTests(unittest.TestCase):
@@ -334,6 +549,7 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_actual_main_opens_browser_before_git_refresh_finishes(self):
         from tools.production_workspace import __main__ as application
+        from tools.production_workspace import repository as repository_module, server as server_module, processes
         self.publish(); configure(self.repo, self.root / 'state')
         repo = Repository(self.root / 'state')
         entered, release, opened = threading.Event(), threading.Event(), threading.Event()
@@ -347,10 +563,10 @@ class WorkspaceTests(unittest.TestCase):
         def browser(url):
             urls.append(url); opened.set(); return True
         repo.refresh = blocked
-        with patch.object(application, 'Repository', return_value=repo), \
-                patch.object(application, 'Server', side_effect=server), \
-                patch.object(application.webbrowser, 'open', side_effect=browser):
-            runner = threading.Thread(target=lambda: result.append(application.main(['--state', str(self.root / 'state')])))
+        with patch.object(repository_module, 'Repository', return_value=repo), \
+                patch.object(server_module, 'Server', side_effect=server), \
+                patch.object(processes, 'open_browser', side_effect=browser):
+            runner = threading.Thread(target=lambda: result.append(application.main(['--headless', '--state', str(self.root / 'state')])))
             runner.start()
             try:
                 self.assertTrue(entered.wait(2)); self.assertTrue(opened.wait(2))
@@ -362,7 +578,7 @@ class WorkspaceTests(unittest.TestCase):
                 release.set()
                 if server_holder:
                     server_holder[0].service.update_thread.join(10)
-                    server_holder[0].shutdown()
+                    server_holder[0].lifecycle.stop_requested.set()
                 runner.join(10)
             self.assertFalse(runner.is_alive()); self.assertEqual(result, [0])
 

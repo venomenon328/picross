@@ -397,6 +397,9 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                         before_raw, saved_after, saved_operation = observed_record, None, None
                     before = _record(before_raw, directory)
                     current_generation = before['format'] == workflow.RECORD
+                    if current_generation:
+                        from tools.production_workspace import current_view
+                        view_before = current_view.observe(output, before['puzzle_id'])
                     ap.require(current_generation == (r['format'] == 'picross-authoring-finalize-request-v2'),
                                'Finalizer and record generations differ')
                     original = reads.read("output", before["package"]["file"], ap.MAX_ZIP, ref=before["package"])
@@ -518,6 +521,8 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                                 replacement = stage.write('workspace.next.json', projections[1])
                                 os.replace(replacement, io.safe(output, projection_name))
                             ap.require(io.read(output, projection_name, 1024 * 1024) == projections[1], 'Projection publication failed')
+                            current_view.publish(output, before['puzzle_id'], before['revision'], view_before,
+                                previous={r['record']['file']: before_raw, projection_name: projections[0]})
                         return {"format": 'picross-authoring-finalize-result-v2' if current_generation else RESULT, "status": "reused" if observed_record == after_raw else "updated",
                                 "record": after, "sheet": builder.sheet_from_record(after, current),
                                 "operation": _ref(r["sidecar_root"] + "/operation.json", operation_raw)}
