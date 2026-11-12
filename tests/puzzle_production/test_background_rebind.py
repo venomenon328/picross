@@ -71,7 +71,7 @@ class BackgroundRebindTests(unittest.TestCase):
         change.adopt(self.checkout, plan)
         return work, plan
 
-    def export_update(self, revision=8):
+    def export_update(self, revision=8, *, category_id=None):
         entry = self.entries()[self.identifier]
         package = make(self.root / ("input-" + str(revision)), self.identifier, 3, 3, "mono")
         h = load_json(package / "handoff.json")
@@ -96,7 +96,7 @@ class BackgroundRebindTests(unittest.TestCase):
         approve(package, approval)
         exported = self.root / ("export-" + str(revision))
         adapter.export(package, exported, name="TEST ONLY", revision=revision, stem="background_test",
-                       save_slot=entry["save_slot"], approval_path=approval, category_id=entry["category_id"],
+                       save_slot=entry["save_slot"], approval_path=approval, category_id=category_id or entry["category_id"],
                        categories_path=self.checkout / "content/categories.json")
         self.assertEqual(load_json(exported / "manifest.json")["format"], "picross-target-export-v5")
         return exported
@@ -217,6 +217,45 @@ class BackgroundRebindTests(unittest.TestCase):
         registry.check_checkout(self.checkout, replay=True)
         self.assertEqual((self.checkout / original_manifest).read_bytes(), original_receipt)
 
+    def test_current_metadata_survives_category_changing_source_v4_and_retirement(self):
+        from tools.puzzle_production import catalog_metadata as metadata
+        self.start()
+        self.update(self.export_update())
+        historical = self.source()
+        self.assertEqual(historical["format"], binding.FORMAT)
+        metadata.apply(self.checkout, metadata.plan(self.checkout, [
+            {"op": "set_metadata", "id": self.identifier, "name": "Aktuelles Motiv"},
+            {"op": "category_delete", "id": "voegel", "reassign_to": "wasserwelt"},
+        ]))
+        active = deepcopy(load_json(self.checkout / registry.REGISTRY)["metadata"])
+        exported = self.export_update(9, category_id="obst-nuesse")
+        self.update(exported)
+        source = self.source()
+        self.assertEqual(source["format"], binding.METADATA_FORMAT)
+        self.assertEqual(source["base"], historical["base"])
+        self.assertEqual(source["entry"], historical["entry"])
+        self.assertEqual(source["events"][:-1], historical["events"])
+        self.assertEqual(source["events"][-1]["binding"]["entry"]["category_id"], "obst-nuesse")
+        self.assertEqual(bg.current(source), bg.current(historical))
+        # A v3 label cannot silently acquire the new historical-category rule.
+        downgraded = deepcopy(source); downgraded["format"] = binding.FORMAT
+        with self.assertRaises(InvalidInput): bg.validate(downgraded, self.entries()[self.identifier])
+        plan = self.root / "metadata-reveal"
+        reveal.plan(self.checkout, [self.identifier], self.request("metadata"), plan)
+        reveal.adopt(self.checkout, plan / "plan.json")
+        self.background("none", "bg-metadata")
+        commit = self.commit()
+        background_retirement.retire(self.checkout, [(self.identifier, "bg-metadata")], commit)
+        self.retire()
+        registry.check_checkout(self.checkout, replay=True)
+        self.assertEqual(load_json(self.checkout / registry.REGISTRY)["metadata"], active)
+        runtime = load_json(self.checkout / registry.RUNTIME)["entries"][0]
+        self.assertEqual((runtime["name"], runtime["category_id"]), ("Aktuelles Motiv", "wasserwelt"))
+        before = snapshot(self.checkout)
+        self.assertEqual(rated_registration(self.fixture.export, self.checkout, apply=True)["status"], "no-op")
+        registry.sync_runtime(self.checkout)
+        self.assertEqual(snapshot(self.checkout), before)
+
     def test_reveal_journal_rollback_foreign_bytes_and_old_scope(self):
         self.start()
         request = self.request()
@@ -236,7 +275,7 @@ r.adopt(Path(sys.argv[1]), Path(sys.argv[2]))
         self.assertEqual(process.returncode, 77, process.stderr.decode(errors="replace"))
         self.assertTrue((self.checkout / tx.LOCK).exists())
         journal = io.json_bytes(publication.read_journal(self.checkout), publication.LIMIT)
-        self.assertEqual(journal["format"], binding.REVEAL)
+        self.assertEqual(journal["format"], tx.PE_FORMATS["reveal-adoption"])
         downgraded = deepcopy(journal); downgraded["format"] = tx.BACKGROUND_FORMATS["reveal-adoption"]
         with self.assertRaises(InvalidInput): tx.validate_journal(self.checkout, downgraded)
         name = bg.notice_path(self.identifier)
@@ -299,7 +338,7 @@ r.adopt(Path(sys.argv[1]), Path(sys.argv[2]))
             content_update.update(exported, self.checkout, entry["production"]["definition_sha256"],
                                   apply=True, rebind_difficulty=True, fail_step="crash-runtime")
         journal = io.json_bytes(publication.read_journal(self.checkout), publication.LIMIT)
-        self.assertEqual(journal["format"], binding.UPDATE)
+        self.assertEqual(journal["format"], tx.PE_FORMATS["update"])
         downgraded = deepcopy(journal); downgraded["format"] = tx.BACKGROUND_FORMATS["update"]
         with self.assertRaises(InvalidInput): tx.validate_journal(self.checkout, downgraded)
         result = subprocess.run([sys.executable, "-m", "tools.puzzle_production.target_adapter",

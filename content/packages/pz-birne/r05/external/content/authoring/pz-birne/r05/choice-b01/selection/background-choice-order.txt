@@ -1,0 +1,11 @@
+Repository: venomenon328/picross. Verbindlich: AGENTS.md und docs/ai-workflows/PUZZLE_AUTHORING.md (Authoring 0.8.0) im aktuellen main.
+
+Produktionsdatensatz: https://github.com/venomenon328/picross/blob/bc538e263c48d0d25729cc30c7e095853f3655f6/content/authoring/pz-birne/r05/record.json
+
+Schritt 4: Ich wähle die unveränderte Kontextzeichnung aus Angebot BIR-H-B-b01. Zur Endabnahme vorbereiten.
+
+Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt; der fachliche Produktionsabschluss nach Authoring §9 bleibt davon getrennt.
+
+Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.
+
+Erfasst am 2026-11-12T19:03:50Z. Erfassungszeitpunkt der tatsächlichen Chatentscheidung; kein gesonderter Sendezeitstempel verfügbar. Diese Erklärung wählt die unveränderten Originalbytes einschließlich der vereinbarten deterministischen HP-W2-Ableitung; sie erklärt keine finale redaktionelle Endabnahme oder Integration.

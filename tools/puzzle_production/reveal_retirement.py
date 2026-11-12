@@ -185,6 +185,8 @@ def retire(root, revisions, integrated_commit):
     if not present:
         return {'status': 'no-op', 'revisions': revisions, 'integrated_commit': integrated_commit,
                 'removed_files': 0, 'removed_bytes': 0}
+    from .content_registry import require_current
+    require_current(snapshot['registry'])
     # Never recursively delete the ID directory. Unexpected newly created files
     # survive and make rmdir fail. All normal rejection paths precede mutation.
     for name in removed:

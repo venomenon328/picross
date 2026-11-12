@@ -1,5 +1,5 @@
 {
-  "core_change": "Keine Änderung am Kern oder an Dauertests. Einmalige Original-/Alphadiagnose und Paketprüfung; lokale reine Prüfgrundbilder enden nach der Sichtung. Auswahloriginale bleiben bis zum fachlichen Abschluss nach Authoring §9 erhalten.",
+  "core_change": "Keine Kern-/Dauerteständerung. Direkte Originalsicht, Dateidiagnose und Paketprüfung einmalig im Produktionslauf. Prüfgrundansichten enden nach Sichtung; Produktionsoriginale bis fachlichem Abschluss nach Authoring §9 erhalten.",
   "evidence": {
     "expires": null,
     "mode": "none",
@@ -8,8 +8,8 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/617",
   "modules": [],
-  "omitted": "Keine Zusatzmodule: keine Werkzeug-, Spiel- oder CI-Codeänderung. Keine Solver-/Proof-/Bestandsreplays, keine Buch-/Katalogmontagen oder Testintegration und kein Chromium. Bild-/Dateibindungen prüft der bestehende Builder; Originalsicht erfolgt im Produktionsauftrag.",
-  "package": "Marienkäfer · Schritt 1 / reveal_review",
-  "purpose": "Drei native detaillierte farbige Abschlussbildoriginale samt Motivbriefing und direkter Q-B01/Q-B02/Q-B03-Originalsicht nach Authoring 0.8.0 sichern. Allgemeiner Quellen-/Plankern; reine Rätselproduktion bleibt ohne Player-Build.",
+  "omitted": "Keine Zusatzmodule: keine Werkzeug-/Spiel-/CI-Codeänderung. Keine Rasterproduktion vor Motivfreigabe, keine Solver-/Proof-/Difficulty-/Bestands-/Engine-/Browserprüfung oder technischen Uploads. Keine neuen Tests.",
+  "package": "Marienkäfer · Schritte 1–2 / motif_review r02",
+  "purpose": "Reine Authoring-0.8.0-Produktion: drei Abschlussbildoriginale erhalten, tatsächliche unveränderte C-r01-Freigabe binden, separate Motivvorlage M-r02 samt Parameterkorridor vorlegen und Builder/Index/Projektion/Pointer sichern. Allgemeiner Kern ohne Player-Build.",
   "test_changes": []
 }

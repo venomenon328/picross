@@ -289,10 +289,10 @@ else: cr.recover(root)
         self.assertEqual(cr.check_checkout(self.root)['entries'], [])
 
     def test_current_and_legacy_dispatch_is_explicit(self):
-        for generation in range(1, 8):
+        for generation in range(1, 9):
             j = {**self.journal, 'format': 'picross-registration-journal-v' + str(generation)}
-            self.assertEqual(phased.supports(j), generation in (6, 7))
-        for generation in (tx.FORMATS, tx.BACKGROUND_FORMATS):
+            self.assertEqual(phased.supports(j), generation in (6, 7, 8))
+        for generation in (tx.FORMATS, tx.BACKGROUND_FORMATS, tx.PE_FORMATS):
             for operation, format_name in generation.items():
                 self.assertEqual(phased.supports({'format': format_name, 'operation': operation}), operation == 'registration')
 
