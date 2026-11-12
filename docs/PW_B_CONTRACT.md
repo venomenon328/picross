@@ -120,7 +120,10 @@ Eine lokale SHA oder localhost-Adresse wird nicht als Cloudquelle ausgegeben.
 Neue Jobs brauchen nur das tatsächliche Briefing und optional eine eigene
 Eingangsdatei; ID und erster Produktionsbranch werden erst vom Akteur vergeben.
 Die primäre Aktion „Auftrag kopieren“ nennt den passenden Schritt, die feste
-erreichbare Quelle, Record/Projektion und die gewählte Option. Größe, Modus und
+erreichbare Quelle, den kanonischen Record als Einstieg und die gewählte Option.
+Folgeaufträge ergänzen nur neue Absichten/Befugnisse; vorhandene Daten und allgemeine
+Regeln bleiben über diesen Einstieg und den kurzen AGENTS-/Authoringverweis gebunden.
+Größe, Modus und
 Farbzahl sind optionale Hinweise in Motiv-/Rasterarbeit, Kontext erst in Schritt 4.
 Arbeitswurzel, Bereinigung und Merge sind persönliche ausdrückliche Optionen;
 Records setzen sie nicht. Job-/Quellwechsel löscht ungesendete Auswahlabsichten.

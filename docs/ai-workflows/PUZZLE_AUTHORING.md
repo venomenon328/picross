@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.8.0 · Dokumentrevision 1 · 11.11.2026**
+**Version 0.8.0 · Dokumentrevision 2 · 12.11.2026**
 
 Neue Produktionen verwenden den fünfstufigen lokalen Produktionsassistenten.
 Maßgeblich: [PW-B / #578](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194),
@@ -48,6 +48,15 @@ an Werkzeugen, Spiel oder CI folgt weiterhin dem allgemeinen Entwicklungsworkflo
 ### 2.1 Eingaben und Konfiguration
 
 Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild; optional Breite × Höhe (ungefähr/fest), Mono/Farbe, gewünschte Vordergrundfarbzahl (ungefähr/genau) und weitere Einschränkungen. Eine verlinkte oder angezeigte Bildvorschau ersetzt keine gespeicherte Quelldatei.
+
+Frühe Breiten-/Höhenwünsche sind unabhängig: keine, nur eine oder beide Achsen.
+Exakt/ungefähr gilt für ausgefüllte Achsen; offene Achsen passend zum Motiv bestimmen.
+Eine ausdrücklich aufgehobene Breite lässt die weiterhin gültige Höhe bestehen
+und umgekehrt. Leeren allein hebt keine veröffentlichte Vorgabe auf. Keine 0,
+angenommene Quadratseite oder Wiederherstellung eines aufgehobenen Altwerts.
+Diese Wünsche verbindlich im veröffentlichten Motivbriefing der Übergabe führen;
+die spätere konkrete Matrix besitzt zwei Maße. Bestehende geschlossene Formate
+und historische Freigaben bleiben unverändert.
 
 Die KI MUSS Hauptmotiv, unverzichtbare Merkmale, erlaubte Umgestaltung und Einschränkungen erfassen. Fehlende reversible Details sinnvoll ergänzen. Nur wesentliche offene Produktentscheidungen beim Nutzer erfragen, jeweils mit Empfehlung und Konsequenzen.
 
