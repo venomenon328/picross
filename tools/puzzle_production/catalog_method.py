@@ -122,6 +122,8 @@ def adopt(root, value, *, apply=True, fail_step=None):
         require(sources == value["sources"], "Checkout changed since activation")
         return {"status": "no-op", "method": previous["method"]}
     require(current(previous) == value["expected"] and sources == value["sources"], "Stale activation plan")
+    from .content_registry import require_current
+    if apply: require_current(snapshot["registry"])
     record = record_for(value, previous)
     journal = tx.prepare(root, snapshot, {PATH: canonical_bytes(record) + b"\n"}, operation="method-activation",
                          generation="background" if value["format"] == PLAN else "sd2")

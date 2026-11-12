@@ -17,6 +17,11 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
     """
     from tools.puzzle_production.contract import write_json
     catalog = runtime_catalog(root)
+    current = None
+    if append:
+        current = json.loads((project / "data/registry.json").read_text(encoding="utf-8"))
+        if current['format'] in ('picross-runtime-registry-v6', 'picross-runtime-registry-v7'):
+            raise ValueError("Legacy geometry IDs cannot be appended to a v6/v7 production catalog")
     colors = ["#343f42", "#edca78", "#bd604a", "#6c9aab"]
     for entry in catalog["entries"]:
         number = int(entry["id"][2:])
@@ -93,9 +98,6 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
                            f'<rect width="800" height="800" fill="{colors[(number-1)%4]}"/>'
                            '<circle cx="400" cy="400" r="200" fill="#ffffff"/></svg>\n', encoding="utf-8")
     if append:
-        current = json.loads((project / "data/registry.json").read_text(encoding="utf-8"))
-        if current['format'] == 'picross-runtime-registry-v6':
-            raise ValueError("Legacy geometry IDs cannot be appended to a v6 production catalog")
         catalog["categories"] = current["categories"]
         if current['format'] in ('picross-runtime-registry-v4', 'picross-runtime-registry-v5'):
             catalog['format'] = current['format']

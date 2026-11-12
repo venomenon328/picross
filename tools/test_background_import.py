@@ -144,6 +144,30 @@ class BackgroundImportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Unknown/noncanonical"):
             background.source_inventory(source_root)
 
+    def test_metadata_inventory_requires_v7_and_keeps_legacy_capability_optional(self):
+        source_root = self.root / "metadata"
+        (source_root / "game/data").mkdir(parents=True)
+        (source_root / "content").mkdir()
+        (source_root / "content/registry.json").write_text(json.dumps(dict(
+            format="picross-content-registry-v4", entries=[], metadata=[], backgrounds=[])))
+        runtime_path = source_root / "game/data/registry.json"
+        runtime = dict(format="picross-runtime-registry-v7", categories=[], entries=[])
+        runtime_path.write_text(json.dumps(runtime))
+        self.assertEqual(background.source_inventory(source_root)["assets"], [])
+        capability = dict(format="picross-runtime-background-capability-v1",
+                          runtime_format="picross-runtime-registry-v6",
+                          profile_id="picross-background-png2304-v1", enabled=False)
+        capability_path = source_root / "game/data/background-capability.json"
+        capability_path.write_text(json.dumps(capability))
+        self.assertEqual(background.source_inventory(source_root)["assets"], [])
+        runtime_path.write_text(json.dumps({**runtime, "format": "picross-runtime-registry-v6"}))
+        with self.assertRaisesRegex(ValueError, "generation differs"):
+            background.source_inventory(source_root)
+        runtime_path.write_text(json.dumps(runtime))
+        capability_path.write_text(json.dumps({**capability, "enabled": "false"}))
+        with self.assertRaisesRegex(ValueError, "Invalid background capability"):
+            background.source_inventory(source_root)
+
     def test_fixed_patterns_have_distinct_source_and_pixel_identity(self):
         second, rgba = png("b")
         self.assertNotEqual(hashlib.sha256(second).digest(), hashlib.sha256(self.png).digest())

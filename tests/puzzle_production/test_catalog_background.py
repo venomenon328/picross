@@ -31,7 +31,7 @@ class CatalogBackgroundTests(unittest.TestCase):
                 result = rated_registration(f.export, f.checkout, apply=True)
                 self.assertEqual(result["status"], "registered")
                 registry = cr.check_checkout(f.checkout, replay=True)
-                self.assertEqual(registry["format"], cr.BACKGROUND_FORMAT)
+                self.assertEqual(registry["format"], cr.METADATA_FORMAT)
                 entry = registry["entries"][0]
                 source = bg.load(f.checkout, registry, entry)
                 self.assertEqual(source["image_revision"], 1)
@@ -39,10 +39,10 @@ class CatalogBackgroundTests(unittest.TestCase):
                 self.assertEqual(source["origin"]["approval"], load_json(f.approval))
                 self.assertEqual(source["origin"]["export_manifest_sha256"], entry["production"]["package_sha256"])
                 runtime = load_json(f.checkout / cr.RUNTIME)
-                self.assertEqual(runtime["format"], bg.RUNTIME_FORMAT)
+                self.assertEqual(runtime["format"], cr.METADATA_RUNTIME_FORMAT)
                 self.assertEqual(runtime["entries"][0]["background"]["status"], choice)
                 self.assertEqual(set(runtime["entries"][0]), {
-                    "id", "key", "save_slot", "definition", "reveal", "visible", "category_id", "difficulty", "added_at", "background"})
+                    "id", "key", "save_slot", "definition", "reveal", "visible", "category_id", "difficulty", "added_at", "background", "name"})
                 expected = {entry["id"] + ".png", entry["id"] + ".txt"} if choice == "selected" else set()
                 directory = f.checkout / bg.ASSET_PATH
                 self.assertEqual({p.name for p in directory.iterdir()} if directory.exists() else set(), expected)

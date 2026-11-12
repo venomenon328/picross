@@ -90,7 +90,8 @@ def _historical_adoption(history, old_registry, old_entry, row):
     require(source_ref is not None, 'Background revision has no main source')
     source_raw = history.bound(source_name, source_ref, background.LIMIT)
     source = background.validate(io.json_bytes(source_raw, background.LIMIT), old_entry)
-    require(source.get('format') in ('picross-catalog-background-v2', 'picross-catalog-background-v3') and
+    from . import background_rebind as rebind
+    require((source.get('format') == 'picross-catalog-background-v2' or rebind.is_rebound(source)) and
             source_raw == background.encoded(source), 'Background revision was not adopted on main')
     current = background.current(source)
     expected_adoption = {'request': request_ref, **{key: request[key] for key in
@@ -168,16 +169,24 @@ def _historical_adoption(history, old_registry, old_entry, row):
         history.bound(notice_name, current['notice'], background.LIMIT)
     runtime = history.json(registry.RUNTIME, LIMIT)
     entries = runtime.get('entries') if isinstance(runtime, dict) else None
-    require(isinstance(runtime, dict) and runtime.get('format') == background.RUNTIME_FORMAT and isinstance(entries, list),
+    metadata_generation = old_registry['format'] == registry.METADATA_FORMAT
+    runtime_format = registry.METADATA_RUNTIME_FORMAT if metadata_generation else background.RUNTIME_FORMAT
+    require(isinstance(runtime, dict) and runtime.get('format') == runtime_format and isinstance(entries, list),
             'Committed background runtime generation differs')
     matches = [entry for entry in entries if isinstance(entry, dict) and entry.get('id') == identifier]
-    minimal = {'format': background.REGISTRY_FORMAT, 'entries': [old_entry],
+    active = (next(row for row in old_registry['metadata'] if row['id'] == identifier)
+              if metadata_generation else old_entry)
+    minimal = {'format': old_registry['format'], 'entries': [old_entry],
                'backgrounds': [{'id': identifier, 'source': source_ref}]}
+    if metadata_generation: minimal['metadata'] = [active]
     expected = background.projection(minimal, {source_name: source_raw})[identifier]
     require(len(matches) == 1 and matches[0].get('background') == expected and
             all(matches[0].get(key) == old_entry[key] for key in
-                ('id', 'key', 'save_slot', 'definition', 'reveal', 'visible', 'category_id')),
+                ('id', 'key', 'save_slot', 'definition', 'reveal', 'visible')),
             'Committed runtime does not contain the adopted background')
+    require(matches[0].get('category_id') == active['category_id'] and
+            (not metadata_generation or matches[0].get('name') == active['name']),
+            'Committed runtime metadata differs from its current authority')
     return {'directory': directory, 'row': row, 'request': request, 'request_ref': request_ref,
             'source': source, 'entry': old_entry, 'files': files, 'declared': declared}
 
@@ -296,6 +305,7 @@ def retire(root, revisions, integrated_commit):
         if not present:
             return {'status': 'no-op', 'revisions': revisions, 'integrated_commit': integrated_commit,
                     'removed_files': 0, 'removed_bytes': 0}
+        registry.require_current(state['snapshot']['registry'])
         try:
             # Cooperate with store and the existing authoring builder across
             # the final comparison and index replacement, not just the read.

@@ -1,5 +1,14 @@
 # AT · Transparente Abschlussbilder
 
+**PE / #576 · Bildpflege bleibt freigegebener Sollstand:**
+Der [Bestandseditor](PUZZLE_EDITOR.md#4-bilder-und-hintergrundauswahl) ergänzt später
+einen manuellen Dateiimport ohne Bildbearbeitung und ohne KI-Zwischenschritt.
+Variable Revealmaße, Transparenzstandard und historische Herkunft bleiben;
+ein Bildwechsel erhöht keine Rasterrevision. PE-A1 trennt im Arbeitsbranch
+aktuelle Namen und Kategorien von ihren Produktionsangaben. Der unten beschriebene
+AT-Weg erhält diese Metadaten über den gemeinsamen Writer; seine Bildverträge
+bleiben der vorhandene Ausführungsstand.
+
 Vertragsstand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).
 
