@@ -13,8 +13,8 @@ if(typeof matchMedia==='function'){
 }
 try{drafts=JSON.parse(localStorage.getItem('pw-briefs')||'[]');if(!Array.isArray(drafts))drafts=[];drafts=drafts.filter(d=>d&&typeof d.id==='string'&&typeof d.brief==='string').slice(-20);}catch{}
 function saveDrafts(){try{localStorage.setItem('pw-briefs',JSON.stringify(drafts));}catch{}}
-function options(){return {workroot:$('workroot').value,cleanup:$('cleanup').checked,merge:$('merge').checked};}
-for(const key of ['workroot','cleanup','merge']){
+function options(){return {workroot:$('workroot').value,merge:$('merge').checked};}
+for(const key of ['workroot','merge']){
  try{const saved=JSON.parse(localStorage.getItem('pw-options')||'{}');if(key==='workroot')$(key).value=saved[key]||'';else $(key).checked=saved[key]===true;}catch{}
  $(key).onchange=()=>{try{localStorage.setItem('pw-options',JSON.stringify(options()));}catch{}updatePrompt();};
 }
