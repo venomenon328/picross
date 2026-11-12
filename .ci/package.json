@@ -8,8 +8,8 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/594",
   "modules": [],
-  "omitted": "modules=[] und evidence.mode=none: nur Birnenproduktionsdaten und Paketplan. Der Finalizer prüft das unveränderte Original-ZIP samt bestehenden Raster-/Proof-/0.4-Analysebindungen und neuer Hintergrundableitung frisch. Keine neue Raster-, Solver- oder Difficultyproduktion, Rätseltests, Bestandsreplays, Tool-/Regel-/Runtimeänderungen oder manuellen Browserläufe. Allgemeiner Kern; vollständiger PR-Diff ist reine Produktion und bleibt ohne Player-Build. Finale redaktionelle Endabnahme, Export, Registrierung und Merge bleiben offen.",
-  "package": "Birne · Schritt 4 · BIR-H-B-b01 gewählt, Endabnahme vorbereiten",
-  "purpose": "Reine Rätselproduktion: tatsächliche unveränderte Kontextwahl BIR-H-B-b01 am Originalpaket r05 binden, ausschließlich dieses Original nach festem HP-W2-Profil ableiten und prüfen; Finalizer v2 aktualisiert äußeren Record, workspace und current-view für die Endabnahme. Bestehenden Produktionsbranch mit aktuellem main abgleichen.",
+  "omitted": "modules=[] und evidence.mode=none: vollständige fachliche Einzelprüfung durch vorhandenen Finalizer/Export/Plan/Register; keine neue Raster-, Solver- oder Difficultyproduktion und keine rätselspezifischen Tests oder Bestandsreplays. Keine Werkzeug-/Spielcodeänderung, native.* oder Chromium. Allgemeiner Quellen-/Plankern; reine Inhalte sind normativ buildfrei. Der bestehende content_path-Klassifizierer erkennt content/backgrounds und game/art/backgrounds noch nicht und kann daher automatisch einen Windowsbau auslösen. Tatsächliche CI ausweisen; kein Override oder Werkzeugfix im Inhaltsauftrag. Mainmerge und anschließender §9-Produktionsabschluss offen; keine zusätzliche lokale Abschlussbereinigung.",
+  "package": "Birne · Schritt 5 · freigegebene r05 integrieren",
+  "purpose": "Reine Rätselproduktion: tatsächliche Endabnahme am unveränderten Original-ZIP r05 binden, Finalizer v2, Export v6, explizites Difficulty-Rebind der bestehenden 0.4-Bewertung, frischer lesender Plan und autorisierte Erstregistrierung; danach Completion mit tatsächlichem Integrationscommit und Draft-PR.",
   "test_changes": []
 }
