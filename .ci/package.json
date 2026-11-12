@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/592",
-  "package": "Zitrone-Schritt-1",
+  "package": "Zitrone-Schritte-1-2",
   "modules": [],
-  "purpose": "Drei echte detaillierte farbige Abschlussbildoriginale und geprüfte Authoring-0.8.0-Revision reveal_review für Zitrone zur menschlichen Auswahl sichern.",
-  "omitted": "Reine Inhaltsablage ohne Code-, Spiel-, CI- oder gemeinsame Assetänderung: keine Zusatzmodule, kein Player-Build, keine Solver-/Bestandsreplays und keine neuen Tests. PNG-/Alpha-/Sichtprüfung sowie Builder-/Inventar-/Projektionsprüfung erfolgen einmalig im Produktionsauftrag. Menschliche Bildauswahl/-freigabe bleibt offen.",
+  "purpose": "Freigegebenes Z-A-r01 bytegleich erhalten und die daraus abgeleitete Motivvorlage M-A-r02 samt vorgeschlagenem Parameterkorridor als geprüfte Authoring-0.8.0-Revision motif_review sichern.",
+  "omitted": "Reine Inhaltsproduktion ohne Werkzeug-/Spiel-/CI-Änderung: keine Zusatzmodule und kein Player-Build. Original-/Motivvergleich und Herkunft/PNG/Alpha/Inventar/Projektion werden einmalig im Auftrag geprüft. Noch keine Motivfreigabe, Raster-/Solver-/Schwierigkeitsproduktion oder Bestandsreplays. Keine neuen Tests oder technischen Dauerartefakte.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
