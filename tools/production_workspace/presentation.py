@@ -238,6 +238,10 @@ class Record:
             ap.require(isinstance(approved, list), 'Ungültiger überlieferter Parameterkorridor.')
             ap.require(canonical_bytes(r['parameters']) == canonical_bytes(approved or proposed or None),
                        'Parameter im Record widersprechen dem gebundenen Handoff.')
+            for parameter in (approved or []) + (proposed if isinstance(proposed, list) else []):
+                if isinstance(parameter, dict) and parameter.get('format') == 'picross-raster-parameters-v1':
+                    from tools.puzzle_production import raster_parameters
+                    raster_parameters.validate(parameter)
             brief_name = ap.relative(h['brief'])
             try:
                 brief = self.member(brief_name, limit=JSON_LIMIT).decode('utf-8', errors='strict')
@@ -342,6 +346,21 @@ class Record:
                 ap.require(digest(repair['matrix']) == c['matrix_hash'], 'Reparaturraster stimmt nicht.')
                 name, expected = 'after.png', repair['files']['after.png']
                 ready = self.json(bundle + '/result.json', repair['files']['result.json']).get('certified') is True
+            elif m.get('format') == 'picross-fixed-raster-manifest-v1':
+                from tools.puzzle_production.contract import digest
+                fixed = self.json(bundle + '/record.json', m['files']['record.json'])
+                ap.require(c.get('source_type') == 'fixed' and variant == 'fixed' and
+                           fixed.get('format') == 'picross-fixed-raster-v1' and
+                           fixed['puzzle_id'] == h['puzzle_id'] and
+                           digest(fixed['matrix']) == c['matrix_hash'] == fixed['matrix_hash'] and
+                           fixed['logic_hash'] == c['logic_hash'] and
+                           digest(self.json(bundle + '/logic.json', m['files']['logic.json'])) == c['logic_hash'],
+                           'Feste Rasterbindung stimmt nicht.')
+                name, expected = 'raster.png', m['files']['raster.png']
+                replay = self.json(bundle + '/replay.json', m['files']['replay.json'])
+                ap.require(all(replay[k] == fixed[k] for k in ('plan_sha256', 'matrix_hash', 'logic_hash')),
+                           'Fester Replaybezug stimmt nicht.')
+                ready = replay.get('status') == 'solved' and replay.get('certified') is True and replay.get('proof_verified') is True
             else:
                 raise InvalidInput('Rastermanifest wird nicht unterstützt.')
             v = r['verification']
