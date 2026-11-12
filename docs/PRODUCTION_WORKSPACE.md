@@ -153,8 +153,11 @@ Zusammenfassung, Quellenstatus und Fehler bleiben davor sichtbar. Das inventaris
 geprüften Originalpaket als UTF-8-Klartext mit Absätzen gelesen (höchstens 1 MiB).
 Fehlende oder widersprüchliche Originale sind Fehler.
 
-Veröffentlichte Stände haben genau ein Dropdown mit Revision und tatsächlicher
-Quelle; bei Namensgleichheit kommen ID/Branch hinzu. Lokale Entwürfe und deren
+Veröffentlichte Stände haben genau einen Haupteintrag je Rätsel-ID und eine
+getrennte Versions-/Quellwahl nach [aktueller Ansichtsübergabe](PRODUCTION_CURRENT_VIEW.md).
+Bytegleiche Veröffentlichungen zeigen „Lokal und Remote“; echte Gitrelation und
+Konflikte bleiben davon unabhängig sichtbar. Titelgleiche IDs sind unterscheidbar.
+Lokale Entwürfe und deren
 Verwerfen bleiben getrennt. Job-/Revisions-/Quellwechsel und das ausdrückliche
 Laden eines neueren Standes verwerfen ungesendete Absichten. Ein bloßes Suchen
 neuer Ergebnisse erhält die aktive gebundene Ansicht und ihre Eingaben.
