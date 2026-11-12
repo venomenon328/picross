@@ -458,6 +458,13 @@ Papier bei kleiner Katalogdarstellung und großem Abschluss sauber aussehen;
 helle oder dunkle Säume, ausgefranste Kanten und verlorene Details erfüllen das
 Ziel nicht. Perspektive, Proportionen, Bildaufbau und Ausschnitt bleiben erhalten.
 
+Die Produktionssichtung erfolgt direkt am Original, groß/klein und bei Bedarf
+auf neutralem Grund/Schachbrett. Keine routinemäßigen Buch-/Katalogmontagen,
+Fadeproben oder Testintegrationen; auch später keine verlagerte Pflicht.
+Bestehende Render-/Integrationstests tragen die technische Alpha-Garantie.
+Kurze Urteile im vorhandenen Bericht genügen. Tatsächliche Zell-/Hinweissicht
+nach Q-H01/Q-H02 bleibt nötig, ohne neuen Pflichtspielstart je Rätsel.
+
 Für szenische Bilder wird die transparente Außengestaltung motivbezogen
 ausgearbeitet und anhand der konkreten neuen Bildfassung freigegeben. AT ist
 keine pauschale Erlaubnis, das Umfeld zu löschen oder vollflächige Szenen ungeprüft
