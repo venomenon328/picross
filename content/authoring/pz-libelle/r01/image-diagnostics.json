@@ -1,0 +1,62 @@
+{
+  "A": {
+    "sha256": "a1fd84a7eeddd6888d010961e7d0a79fbce9b4490dae9eee34d26122966fbf2a",
+    "bytes": 1184464,
+    "width": 1402,
+    "height": 1122,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 1095245,
+    "partial_alpha_pixels": 475962,
+    "opaque_pixels": 1837,
+    "alpha_bbox": [
+      0,
+      0,
+      1368,
+      1088
+    ]
+  },
+  "B": {
+    "sha256": "fa9115bf5ba8ad8bce8af8f19c5b5d50578e5f388692adc3c14ccc0d89a5b4da",
+    "bytes": 1345641,
+    "width": 1402,
+    "height": 1122,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 1121828,
+    "partial_alpha_pixels": 450869,
+    "opaque_pixels": 347,
+    "alpha_bbox": [
+      0,
+      17,
+      1378,
+      1122
+    ]
+  },
+  "C": {
+    "sha256": "6d3802dd4ccc670403abd905fe3595b766f39d0bf130c3232ed2a78708e4536e",
+    "bytes": 1397806,
+    "width": 1402,
+    "height": 1122,
+    "mode": "RGBA",
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "transparent_pixels": 1043011,
+    "partial_alpha_pixels": 529090,
+    "opaque_pixels": 943,
+    "alpha_bbox": [
+      0,
+      31,
+      1382,
+      1122
+    ]
+  }
+}
