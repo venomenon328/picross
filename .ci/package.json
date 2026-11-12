@@ -1,15 +1,1 @@
-{
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/586",
-  "package": "Erdbeere-Schritt-2-r02",
-  "modules": [],
-  "purpose": "Reine Produktionsablage r01/r02: Originale, tatsächliche Revealfreigabe, Motivvorlage und Parameterempfehlung nach Authoring 0.8.0; allgemeine Quellen-/Planintegrität.",
-  "omitted": "Keine Zusatzmodule und kein Player-Build: nur Produktionsdaten, Paketplan und Index. Bilddekodierung, Sichturteile, Herkunft, Hash-/ZIP-/Inventar-/Projektionsprüfung erfolgen einmalig im Produktionsauftrag. Keine Raster-, Solver-, Proof-, Difficulty-, Browser- oder Bestandsprüfung; keine Code-/Teständerungen. Temporäre QA-Ansichten enden nach Sichtprüfung; kreative Originale bleiben zur Freigabe erhalten.",
-  "test_changes": [],
-  "core_change": null,
-  "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
-}
+{"core_change":null,"evidence":{"expires":null,"mode":"none","purpose":null},"format":"development-ci-plan/v1","issue":"https://github.com/venomenon328/picross/issues/586","modules":[],"omitted":"modules=[] und evidence.mode=none: keine Werkzeug-/Spiel-/Teständerung, kein Player-Build, keine Bestandsprüfung oder neuen Tests. Native Import-/Proof-/Palettenprüfung, exakter manueller Matrixvergleich und unabhängig geprüfte 0.4-Analyse einmalig im Auftrag. raster_review: produktiver ZA-1-Replay unterstützt Maßänderung noch nicht; tatsächliche Spiel-/Hinweiszustände nicht geprüft. Keine qualifizierte Auswahl, kein Merge und kein Chromium.","package":"Erdbeere-Schritt-3-r03-Korrektur","purpose":"Reine Authoring-0.8-Produktionsdaten: explizit beauftragter grüner Stielpixel und verlustfreies Entfernen leerer Außenspalten, 13x22, neue Proofs/L1-Vergleichsbewertung, vollständige Originale und automatische Projektion.","test_changes":[]}
