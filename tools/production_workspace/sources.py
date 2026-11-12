@@ -12,6 +12,7 @@ import zipfile
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from tools.puzzle_production.authoring_build_contract import names
 from tools.puzzle_production.contract import InvalidInput, exact_keys
+from .processes import run, external_environment
 
 SHA1 = re.compile(r'[0-9a-f]{40}\Z')
 JSON_LIMIT = 1024 * 1024
@@ -65,14 +66,14 @@ class LRU:
 
 
 def git(directory, *args, timeout=30):
-    env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+    env = {k: v for k, v in external_environment().items() if not k.startswith('GIT_')}
     env.update(GIT_OPTIONAL_LOCKS='0', GIT_NO_REPLACE_OBJECTS='1', GIT_NO_LAZY_FETCH='1',
                GIT_TERMINAL_PROMPT='0', GCM_INTERACTIVE='never')
     try:
-        result = subprocess.run(['git', '--no-lazy-fetch', '-c', 'core.hooksPath=' + os.devnull,
+        result = run(['git', '--no-lazy-fetch', '-c', 'core.hooksPath=' + os.devnull,
                                  '-c', 'core.fsmonitor=false', '-C', str(directory), *args],
                                 env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                                timeout=timeout, check=False)
+                                timeout=timeout)
     except FileNotFoundError as exc:
         raise InvalidInput('Git fehlt. Bitte Git installieren und erneut starten.') from exc
     except subprocess.TimeoutExpired as exc:

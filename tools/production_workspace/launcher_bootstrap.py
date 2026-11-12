@@ -144,11 +144,10 @@ def main():
         try:
             return process.wait()
         except KeyboardInterrupt:
-            try:
-                return process.wait(timeout=5)
-            except subprocess.TimeoutExpired:
-                process.terminate()
-                return process.wait()
+            # Child receives the same console interrupt and drains its own
+            # requests. Never truncate a begun P2 transaction with terminate().
+            print('Beenden: auf laufende eigene Arbeit warten ...', flush=True)
+            return process.wait()
 
 
 

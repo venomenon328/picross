@@ -8,11 +8,15 @@ from pathlib import Path
 import hmac
 import time
 import json
+import re
+import os
+import socket
 
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from . import presentation as p
 from .sources import LRU
 from .repository import ProductionRemoval
+from .instance import PROTOCOL, mac
 
 UI = Path(__file__).parent / 'ui'
 
@@ -34,9 +38,22 @@ class Service:
         self.operation = threading.Lock()
         self.removal = ProductionRemoval(repository)
         self.plans, self.receipts = {}, {}
+        self.stopping = False
+        self.removal_result = None
+
+    def begin_stop(self):
+        with self.lock:
+            self.stopping = True
+            self.plans.clear()
+
+    def acquire_operation(self):
+        with self.lock:
+            ap.require(not self.stopping, 'Assistent wird beendet. Keine neue Arbeit gestartet.')
+            ap.require(self.operation.acquire(blocking=False), 'Quellenoperation läuft. Danach erneut versuchen.')
 
     def start_refresh(self):
         with self.lock:
+            ap.require(not self.stopping, 'Assistent wird beendet.')
             if self.update_state == 'running':
                 return
             ap.require(self.operation.acquire(blocking=False), 'Entfernung läuft; danach Quellen erneut suchen.')
@@ -44,7 +61,7 @@ class Service:
             self.update_id += 1
             self.update_started = time.monotonic()
             self.update_state, self.update_error = 'running', None
-            self.update_thread = threading.Thread(target=self._refresh, name='PW-source-update', daemon=True)
+            self.update_thread = threading.Thread(target=self._refresh, name='PW-source-update')
             self.update_thread.start()
 
     def _refresh(self):
@@ -100,7 +117,7 @@ class Service:
         return self.job(jid)
 
     def removal_preview(self, body):
-        ap.require(self.operation.acquire(blocking=False), 'Quellenoperation läuft. Danach erneut vorprüfen.')
+        self.acquire_operation()
         try:
             with self.repository.lock:
                 now = time.monotonic()
@@ -129,7 +146,7 @@ class Service:
             self.operation.release()
 
     def removal_confirm(self, body):
-        ap.require(self.operation.acquire(blocking=False), 'Quellenoperation läuft. Keine zweite Entfernung gestartet.')
+        self.acquire_operation()
         try:
             with self.repository.lock:
                 ap.require(set(body) == {'plan_id', 'job_id', 'snapshot', 'confirmation'}, 'Ungültige Bestätigungsfelder.')
@@ -152,6 +169,7 @@ class Service:
                     job = self.selected(plan['job_id'], plan['snapshot'])
                     result = {**self.removal.remove(job, facts), 'kind': 'remote'}
                     if not result['removed']:
+                        self.removal_result = result['message']
                         return result
                     try:
                         value = self.listing(refresh=True)
@@ -164,7 +182,11 @@ class Service:
                         rid = secrets.token_hex(16)
                         self.receipts = {rid: {**plan, 'expires': time.monotonic() + 180}}
                         result['receipt_id'] = rid
+                self.removal_result = result['message']
                 return {**result, 'listing': value, 'branch': facts['branch']}
+        except Exception:
+            self.removal_result = 'Entfernung nicht vollständig bestätigt. Ausgang vor einer weiteren Aktion frisch prüfen.'
+            raise
         finally:
             self.operation.release()
 
@@ -209,12 +231,20 @@ class Service:
 
 
 class Server(ThreadingHTTPServer):
-    daemon_threads = True
-    block_on_close = False
+    daemon_threads = False
+    block_on_close = True
     request_queue_size = 16
+
+    def server_bind(self):
+        if os.name == 'nt':
+            self.allow_reuse_address = False
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
 
     def __init__(self, service, port=0):
         self.service = service
+        self.lifecycle = None
+        self.control_nonces = set()
         super().__init__(('127.0.0.1', port), Handler)
         self.origin = 'http://127.0.0.1:' + str(self.server_address[1])
 
@@ -245,6 +275,48 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         self.handle_request('POST')
 
+    def lifecycle_request(self):
+        runtime = self.server.lifecycle
+        ap.require(runtime is not None, 'Kein Launcherprotokoll verfügbar.')
+        ap.require(not self.headers.get('Transfer-Encoding') and
+                   self.headers.get_all('Content-Type') == ['application/json'] and
+                   len(self.headers.get_all('Content-Length', [])) == 1,
+                   'Ungültiger Steuervertrag.')
+        length = self.headers.get('Content-Length', '')
+        ap.require(length.isascii() and length.isdecimal() and 1 <= int(length) <= 512, 'Ungültige Steuerlänge.')
+        raw = self.rfile.read(int(length))
+        ap.require(len(raw) == int(length), 'Unvollständige Steueranfrage.')
+        def unique(pairs):
+            value = {}
+            for key, item in pairs:
+                ap.require(key not in value, 'Doppeltes Steuerfeld.')
+                value[key] = item
+            return value
+        request = json.loads(raw.decode('ascii'), object_pairs_hook=unique)
+        ap.require(isinstance(request, dict) and set(request) == {'action', 'challenge', 'proof'} and
+                   all(isinstance(v, str) for v in request.values()), 'Ungültige Steuerfelder.')
+        proof = request.pop('proof')
+        ap.require(request['action'] in ('identify', 'open', 'stop') and
+                   re.fullmatch('[0-9a-f]{48}', request['challenge']) and
+                   hmac.compare_digest(proof, mac(runtime.metadata['key'], 'request:', request)),
+                   'Steueridentität nicht bestätigt.')
+        with self.server.service.lock:
+            ap.require(request['challenge'] not in self.server.control_nonces, 'Steueranfrage bereits benutzt.')
+            ap.require(len(self.server.control_nonces) < 4096, 'Steuersitzung ist ausgeschöpft. Regulär im Steuerfenster beenden.')
+            self.server.control_nonces.add(request['challenge'])
+            state = 'stopping' if runtime.stop_requested.is_set() else 'ready'
+            if request['action'] == 'open':
+                ap.require(state == 'ready', 'Assistent wird beendet.')
+                runtime.open_requested.set()
+            if request['action'] == 'stop':
+                runtime.stop_requested.set()
+        value = {'protocol': PROTOCOL, 'build': runtime.build, 'instance': runtime.metadata['instance'],
+                 'challenge': request['challenge'], 'state': state}
+        if request['action'] == 'open':
+            value['browser_url'] = self.server.origin + '/#' + self.server.service.secret
+        value['proof'] = mac(runtime.metadata['key'], 'response:', value)
+        return self.reply(200, p.data(value), 'application/json')
+
     def handle_request(self, method):
         service = self.server.service
         acquired = image_acquired = False
@@ -256,6 +328,9 @@ class Handler(BaseHTTPRequestHandler):
             ap.require(self.headers.get('Sec-Fetch-Site') in (None, 'none', 'same-origin'), 'Fremder Browserzugriff abgewiesen.')
             path = urlsplit(self.path)
             ap.require(not path.query and not path.fragment and path.path == self.path, 'Ungültiger API-Pfad.')
+            if method == 'POST' and self.path == '/control/v1':
+                return self.lifecycle_request()
+            ap.require(not service.stopping, 'Assistent wird beendet. Keine neue Arbeit gestartet.')
             if method == 'GET' and path.path in ('/', '/app.js', '/workflow.js', '/style.css'):
                 name, mime = {'/': ('index.html', 'text/html; charset=utf-8'),
                               '/app.js': ('app.js', 'text/javascript; charset=utf-8'),

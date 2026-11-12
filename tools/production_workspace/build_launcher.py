@@ -6,8 +6,9 @@ from pathlib import Path
 import zipfile
 
 ROOT = Path(__file__).parent
-FILES = ['__init__.py', '__main__.py', 'presentation.py', 'repository.py', 'server.py', 'sources.py',
-         'ui/index.html', 'ui/workflow.js', 'ui/app.js', 'ui/style.css']
+FILES = ['__init__.py', '__main__.py', 'desktop.py', 'instance.py', 'runtime.py', 'processes.py',
+         'presentation.py', 'repository.py', 'server.py', 'sources.py',
+         'ui/index.html', 'ui/workflow.js', 'ui/app.js', 'ui/style.css', 'assets/launcher.ico']
 
 
 def build():

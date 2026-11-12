@@ -334,6 +334,7 @@ class WorkspaceTests(unittest.TestCase):
 
     def test_actual_main_opens_browser_before_git_refresh_finishes(self):
         from tools.production_workspace import __main__ as application
+        from tools.production_workspace import repository as repository_module, server as server_module, processes
         self.publish(); configure(self.repo, self.root / 'state')
         repo = Repository(self.root / 'state')
         entered, release, opened = threading.Event(), threading.Event(), threading.Event()
@@ -347,10 +348,10 @@ class WorkspaceTests(unittest.TestCase):
         def browser(url):
             urls.append(url); opened.set(); return True
         repo.refresh = blocked
-        with patch.object(application, 'Repository', return_value=repo), \
-                patch.object(application, 'Server', side_effect=server), \
-                patch.object(application.webbrowser, 'open', side_effect=browser):
-            runner = threading.Thread(target=lambda: result.append(application.main(['--state', str(self.root / 'state')])))
+        with patch.object(repository_module, 'Repository', return_value=repo), \
+                patch.object(server_module, 'Server', side_effect=server), \
+                patch.object(processes, 'open_browser', side_effect=browser):
+            runner = threading.Thread(target=lambda: result.append(application.main(['--headless', '--state', str(self.root / 'state')])))
             runner.start()
             try:
                 self.assertTrue(entered.wait(2)); self.assertTrue(opened.wait(2))
@@ -362,7 +363,7 @@ class WorkspaceTests(unittest.TestCase):
                 release.set()
                 if server_holder:
                     server_holder[0].service.update_thread.join(10)
-                    server_holder[0].shutdown()
+                    server_holder[0].lifecycle.stop_requested.set()
                 runner.join(10)
             self.assertFalse(runner.is_alive()); self.assertEqual(result, [0])
 
