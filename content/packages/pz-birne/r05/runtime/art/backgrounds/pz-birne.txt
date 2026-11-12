@@ -1,0 +1,6 @@
+Production ID: pz-birne
+Background: BIR-H-B-b01
+Image revision: b01
+Artwork: OpenAI ImageGen im beauftragten Codex-Produktionslauf
+Source: Eigene native Generierung aus Kontextbriefing; B/C gezielt nativ aus eigenen Erstentwürfen überarbeitet.
+Usage basis: Auf ausdrücklichen Nutzerauftrag neu erzeugte Projektinhalte ohne fremde Assets; Herkunft und bekannte Generierungsangaben in den gebundenen Belegen. Keine Exklusivitätszusage.

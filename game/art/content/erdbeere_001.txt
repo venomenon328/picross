@@ -1,0 +1,3 @@
+Production ID: pz-erdbeere
+Artwork: OpenAI ImageGen, native Bildfunktion in ChatGPT/Codex; unter Anleitung des Produktionsakteurs
+Usage basis: Eigenständige KI-Erzeugung im ausdrücklichen Nutzerauftrag für dieses Repository. Textmotiv Erdbeere; keine fremden Eingangsdateien oder Referenzassets verwendet. Keine zusätzliche Behauptung von Exklusivität oder urheberrechtlicher Schutzfähigkeit.
