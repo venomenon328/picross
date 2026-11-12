@@ -19,6 +19,11 @@
       "path": "tests/puzzle_production/test_fixed_raster_adapter.py",
       "disposition": "change-scoped",
       "reason": "Echte synthetische Git-/Builder-/ZIP-/Angebots-/Pointerprüfung mit aktiver 0.4 und stale Gegenproben; ausschließlich production.adapter."
+    },
+    {
+      "path": "tools/production_workspace/check_ui_loading.cjs",
+      "disposition": "change-scoped",
+      "reason": "Bestehender browserfreier UI-Durchstich prüft reichen Korridor, offene/ungefähre/exakte Einzelwerte und vollständige Originalanzeige ohne falsche Vorbelegung."
     }
   ],
   "core_change": null,

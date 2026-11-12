@@ -556,8 +556,14 @@ Rechenzeit; temporäres Zurücknehmen setzt diese Suchbudgets nicht zurück.
 Parameter werden vor dem Lauf festgelegt und protokolliert.
 
 Zunächst genügen einzelne Zelländerungen und wenige nachvollziehbare lokale
-Formänderungen. Neue Abmessungen, ein anderer Ausschnitt oder eine neue Stilisierung
-sind ein neuer Entwurfsauftrag mit neuer Referenz, kein versteckter Reparaturschritt.
+Formänderungen. Der reguläre [C-Weg](FIXED_RASTER.md) ergänzt ausdrücklich
+freigegebene feste Zellkorrekturen und leeren Außenbeschnitt aus direkten RP-3-
+Importen, auch bei bereits gelöster Logik. Originalimportdesign und Endgeometrie
+bleiben getrennt. Offene/ungefähre Endvorgaben werden durch konkrete Importstarts
+nicht exakt. Geschützte Leerstellen dürfen weder verändert noch beschnitten werden;
+jede entfernte Zelle muss bereits im unveränderten Original leer sein.
+Andere neue Abmessungen, Ausschnitte oder Stilisierungen sind ein neuer
+Entwurfsauftrag mit neuer Referenz, kein versteckter Reparaturschritt.
 Die vollständigen Hinweise werden für jeden bewerteten Kandidaten neu abgeleitet.
 Der endgültige Nachweis gilt vom unbekannten Raster aus; alte Teilbeweise und
 Caches dürfen nur bei nachweislich identischen Eingaben wiederverwendet werden.

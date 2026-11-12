@@ -4,7 +4,7 @@ import tempfile
 import unittest
 
 from tools.puzzle_production import fixed_raster as f, raster_parameters as rp, images
-from tools.puzzle_production.contract import digest, load_json, write_json
+from tools.puzzle_production.contract import Aborted, Budget, digest, load_json, write_json
 from tests.puzzle_production.fixed_raster_fixtures import prepare, approve_plan
 
 
@@ -76,6 +76,9 @@ class FixedRasterTests(unittest.TestCase):
     def test_wrong_hash_extra_changes_stale_proof_and_pair_baseline(self):
         p, c = prepare(self.root, paired=True)
         f.derive(self.root, approve_plan(self.root, p), self.root / 'fixed')
+        with self.assertRaises(Aborted): f.inspect(self.root, self.root / 'fixed', Budget(30, 0))
+        tight = deepcopy(p); tight['budgets']['verify_lines'] = 1
+        with self.assertRaises(Aborted): f.reference(self.root, tight, Budget(30, 100000))
         p['reference']['manifest_sha256'] = 'f' * 64
         with self.assertRaisesRegex(ValueError, 'manifest hash'): f.reference(self.root, p)
         directory = self.root / 'fixed'

@@ -172,6 +172,18 @@ const run = code => vm.runInContext(code, context);
     run('publishedContext(ambiguous,detail)');
     assert(descendants(ambiguous).filter(el=>el.tag==='details').every(el=>!el.open),'free forms never auto-open');
     assert(descendants(ambiguous).some(el=>el.textContent?.includes('Keine eindeutigen Einzelwerte')));
+    const corridor={format:'picross-raster-parameters-v1',constraints:{
+      width:{kind:'approximate',target:20,minimum:null,maximum:null},
+      height:{kind:'open',target:null,minimum:null,maximum:null},
+      foreground_colors:{kind:'exact',target:2,minimum:null,maximum:null}},
+      imports:[{width:20,height:25,mode:'color',foreground_colors:2,method:'area',fit:'contain',actual_crop:[0,0,80,100]}],
+      derivation:{cell_edits:true,empty_edge_crop:['left','top'],protected_features:['TEST ONLY outline']}};
+    run(`detail.facts.published={...detail.facts.published,approved:[${JSON.stringify(corridor)}],proposed:[]}`);
+    assert.equal(run('JSON.stringify(PW.publishedGrid(detail))'),'{}','rich corridor never becomes false exact prefill');
+    const rich=new Element('section');context.rich=rich;run('publishedContext(rich,detail)');
+    const words=descendants(rich).map(el=>el.textContent||'').join('\n');
+    assert(words.includes('Breite: ungefähr 20')&&words.includes('Höhe: offen')&&words.includes('Vordergrundfarben: exakt 2'));
+    assert(words.includes('TEST ONLY outline')&&words.includes('actual_crop'),'permissions and complete originals survive');
     run('dispose()');
     console.log('P1-T01 UI: exact source values, text briefing, single distinct dropdown, refresh/load, late detail, isolated draft/discard passed');
     return;

@@ -238,9 +238,9 @@ class Record:
             ap.require(isinstance(approved, list), 'Ungültiger überlieferter Parameterkorridor.')
             ap.require(canonical_bytes(r['parameters']) == canonical_bytes(approved or proposed or None),
                        'Parameter im Record widersprechen dem gebundenen Handoff.')
-            from tools.puzzle_production import raster_parameters
             for parameter in (approved or []) + (proposed if isinstance(proposed, list) else []):
-                if isinstance(parameter, dict) and parameter.get('format') == raster_parameters.FORMAT:
+                if isinstance(parameter, dict) and parameter.get('format') == 'picross-raster-parameters-v1':
+                    from tools.puzzle_production import raster_parameters
                     raster_parameters.validate(parameter)
             brief_name = ap.relative(h['brief'])
             try:
