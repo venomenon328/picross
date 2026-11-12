@@ -57,7 +57,9 @@ Kein inneres Löschen, Skalieren, Spiegeln, Umfärben oder verstecktes Edit.
 
 Budgets hat exakt `max_changes,solve_seconds,solve_lines,verify_seconds,verify_lines`:
 0..2500 Änderungen, Zeit jeweils endlich >0 bis 120 Sekunden, Linien 1..1000000.
-Sie gelten für einen vollständigen festen Versuch, nicht je Zelle. Wiederholungen
+Solve gilt für das vollständige Endzertifikat; Verify begrenzt jeweils die
+Quellrekonstruktion und die separate unabhängige Endprüfung, nicht jede Zelle.
+Ein engerer umgebender Prüfer begrenzt beide zusätzlich kumulativ. Wiederholungen
 oder neue Namen setzen den fachlichen Aufwand nicht zurück. Certification ist
 null für Linien oder die bestehende exakte Paarprofilkonfiguration. Ein
 Paarimport verlangt dieselbe Konfiguration; kein Downgrade. Rationale ist ein

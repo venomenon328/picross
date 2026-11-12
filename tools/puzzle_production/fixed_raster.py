@@ -8,6 +8,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tempfile
+import time
 
 from . import authoring_package as ap, certification, images, raster_parameters as parameters
 from .contract import (Aborted, Budget, InvalidInput, canonical_bytes, digest, exact_keys,
@@ -99,6 +100,8 @@ def transform(p, design, matrix):
 
 def budget(p, kind):
     b = p['budgets']
+    if p['certification']:
+        return certification.bounded_budget(b[kind + '_seconds'], b[kind + '_lines'], p['certification'])
     return Budget(b[kind + '_seconds'], b[kind + '_lines'])
 
 
@@ -110,7 +113,19 @@ def reference(root, p, outer_budget=None):
     manifest = load_json(directory / 'manifest.json')
     ap.require(manifest.get('format') in ('picross-image-manifest-v1', 'picross-image-manifest-v2'), 'Only direct RP-3 reference supported')
     ap.require(p['certification'] == manifest.get('certification'), 'Reference certification cannot be changed/downgraded')
-    c, proof, checked = images.inspect_candidate(directory, r['variant'], outer_budget or budget(p, 'verify'))
+    limits = budget(p, 'verify')
+    if outer_budget is not None:
+        limits.deadline = min(limits.deadline, outer_budget.deadline)
+        limits.max_lines = min(limits.max_lines, max(0, outer_budget.max_lines - outer_budget.lines))
+        limits.max_pair_work = min(limits.max_pair_work, max(0, outer_budget.max_pair_work - outer_budget.pair_work))
+        limits.max_pair_records = min(limits.max_pair_records, outer_budget.max_pair_records)
+    try:
+        c, proof, checked = images.inspect_candidate(directory, r['variant'], limits)
+    finally:
+        if outer_budget is not None:
+            outer_budget.lines += limits.lines
+            outer_budget.pair_work += limits.pair_work
+            outer_budget.pair_peak_records = max(outer_budget.pair_peak_records, limits.pair_peak_records)
     stored = load_json(directory / (r['variant'] + '-result.json'))
     ap.require(checked['proof_verified'] and checked['status'] in ('solved', 'stalled') and
                stored.get('status') == checked['status'] and stored.get('proof_verified') is True and
@@ -130,6 +145,7 @@ def reference(root, p, outer_budget=None):
     entry = parameters.import_entry(c['design'], c['matrix'], r['variant'])
     ap.require(entry in p['parameters']['imports'] and digest(entry) == p['import_hash'], 'Wrong selected import/corridor')
     parameters.result(p['parameters'], c['design'], c['matrix'])
+    limits.check()
     return c, checked
 
 
@@ -141,23 +157,32 @@ def record(p, plan_sha, c, base):
             'logic_hash': digest(images.logic_from_matrix(matrix, design)), 'base_status': base['status']}
 
 
-def proof_check(directory, p):
+def proof_check(directory, p, seconds=None, lines=None, pair_work=None, pair_records=None):
     puzzle = validate_logic(load_json(directory / 'logic.json'))
+    limits = budget(p, 'verify')
+    if seconds is not None:
+        ap.require(math.isfinite(seconds) and seconds >= 0, 'Invalid remaining time')
+        limits.deadline = min(limits.deadline, time.monotonic() + seconds)
+    if lines is not None: limits.max_lines = min(limits.max_lines, integer(lines, 0, 1_000_000, 'remaining lines'))
+    if pair_work is not None: limits.max_pair_work = min(limits.max_pair_work, integer(pair_work, 0, 100_000_000, 'remaining pair work'))
+    if pair_records is not None: limits.max_pair_records = min(limits.max_pair_records, integer(pair_records, 0, 1_000_000, 'remaining pair records'))
     if p['certification']:
-        proof, checked = certification.inspect(puzzle, directory, '', p['certification'], budget(p, 'verify'))
+        proof, checked = certification.inspect(puzzle, directory, '', p['certification'], limits)
     else:
         from .verifier import verify
         proof = load_json(directory / 'proof.json', puzzle.proof_byte_limit)
         certification.require_legacy(puzzle, proof)
-        checked = verify(puzzle, proof, budget(p, 'verify'))
+        checked = verify(puzzle, proof, limits)
     ap.require(checked['status'] == 'solved' and checked['certified'] and checked['proof_verified'], 'Final proof is not certified solved')
     matrix = load_json(directory / 'record.json', LIMIT)['matrix']
     ap.require(proof['final_domains'] == [[[v] for v in row] for row in matrix], 'Final proof matrix differs')
     return checked
 
 
-def fresh_check(directory, p):
+def fresh_check(directory, p, seconds=None, lines=None, pair_work=None, pair_records=None):
     command = [sys.executable, '-m', 'tools.puzzle_production.fixed_raster', '_verify', '--bundle', str(directory.resolve())]
+    for flag, value in (('--seconds', seconds), ('--lines', lines), ('--pair-work', pair_work), ('--pair-records', pair_records)):
+        if value is not None: command.extend((flag, str(value)))
     try:
         result = subprocess.run(command, cwd=Path(__file__).resolve().parents[2], capture_output=True,
                                 timeout=p['budgets']['verify_seconds'] + 10)
@@ -201,7 +226,20 @@ def inspect(root, directory, outer_budget=None):
         image = images.raster_image(value['matrix'], value['design'])
         ap.require(raster.mode == image.mode and raster.size == image.size and not raster.info and
                    getattr(raster, 'n_frames', 1) == 1 and raster.tobytes() == image.tobytes(), 'Fixed raster image differs')
-    checked = fresh_check(directory, p)
+    if outer_budget is not None:
+        outer_budget.check()
+        # The subprocess can only tighten the recorded limits. Its original
+        # plan bytes remain unchanged and all counters come from fresh replay.
+        remaining = min(p['budgets']['verify_seconds'], outer_budget.deadline - time.monotonic())
+        max_lines = min(p['budgets']['verify_lines'], max(0, outer_budget.max_lines - outer_budget.lines))
+        checked = fresh_check(directory, p, remaining, max_lines,
+                              max(0, outer_budget.max_pair_work - outer_budget.pair_work), outer_budget.max_pair_records)
+        outer_budget.lines += checked['line_evaluations']
+        outer_budget.pair_work += checked.get('pair_work', 0)
+        outer_budget.pair_peak_records = max(outer_budget.pair_peak_records, checked.get('pair_peak_records', 0))
+        outer_budget.check()
+    else:
+        checked = fresh_check(directory, p)
     stored = load_json(directory / 'result.json')
     # Timings/counters are observations; status and identities must still agree.
     for key in ('status', 'certified', 'proof_verified', 'logic_hash', 'profile', 'profile_hash'):
@@ -287,10 +325,15 @@ def main(argv=None):
     parser.add_argument('command', choices=('derive', 'inspect', '_verify'))
     parser.add_argument('--root', type=Path); parser.add_argument('--plan', type=Path)
     parser.add_argument('--output', type=Path); parser.add_argument('--bundle', type=Path)
+    parser.add_argument('--seconds', type=float, help=argparse.SUPPRESS)
+    parser.add_argument('--lines', type=int, help=argparse.SUPPRESS)
+    parser.add_argument('--pair-work', type=int, help=argparse.SUPPRESS)
+    parser.add_argument('--pair-records', type=int, help=argparse.SUPPRESS)
     a = parser.parse_args(argv)
     try:
         if a.command == '_verify':
-            result = proof_check(a.bundle, validate_plan(load_json(a.bundle / 'plan.json', LIMIT)))
+            result = proof_check(a.bundle, validate_plan(load_json(a.bundle / 'plan.json', LIMIT)),
+                                 a.seconds, a.lines, a.pair_work, a.pair_records)
         elif a.command == 'derive':
             ap.require(a.root is not None and a.plan is not None and a.output is not None, 'derive requires root/plan/output')
             result = derive(a.root, a.plan, a.output)

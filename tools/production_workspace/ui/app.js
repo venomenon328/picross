@@ -130,7 +130,8 @@ function publishedContext(view,value){
  const status=p.role==='approved'?'Als freigegebener Parameterkorridor überliefert; keine neue Freigabeprüfung.':p.role==='proposed'?'Veröffentlichter Wunsch, noch nicht freigegebener Parameterkorridor.':'Keine strukturierten Rastervorgaben; siehe Motivbriefing.';
  section.append(node('p',status,'sourceRole'));
  const grid=PW.publishedGrid(value);
- const corridor=(p.approved?.length?p.approved:p.proposed)?.find(v=>v?.format==='picross-raster-parameters-v1');
+ const parameterList=p.approved?.length?p.approved:p.proposed;
+ const corridor=Array.isArray(parameterList)?parameterList.find(v=>v?.format==='picross-raster-parameters-v1'):null;
  if(corridor){
   const kind={exact:'exakt',approximate:'ungefähr',open:'offen'};
   for(const [axis,label] of [['width','Breite'],['height','Höhe'],['foreground_colors','Vordergrundfarben']]){
