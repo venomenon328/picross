@@ -6,20 +6,22 @@ from .authoring_package import require
 from .contract import exact_keys, integer, canonical_bytes
 
 FORMAT = "picross-catalog-background-v3"
+METADATA_FORMAT = "picross-catalog-background-v4"
 UPDATE = "picross-content-update-journal-v7"
 REVEAL = "picross-reveal-adoption-journal-v4"
 BACKGROUND = "picross-background-adoption-journal-v2"
 
 
+def is_rebound(source):
+    return isinstance(source, dict) and source.get("format") in (FORMAT, METADATA_FORMAT)
+
+
 def entry_shape(value):
     # Only structural entry validation. Category labels are not authority here;
     # the live registry separately validates actual category membership.
-    from .content_registry import validate
-    from . import categories
+    from .content_registry import validate_entries
     require(isinstance(value, dict) and isinstance(value.get("category_id"), str), "Invalid rebound entry")
-    validate({"format": "picross-content-registry-v2", "entries": [value]},
-             {"format": categories.FORMAT, "categories": [
-                 {"id": value["category_id"], "name": "Binding", "order": 1}]})
+    validate_entries([value])
     return value
 
 
@@ -33,7 +35,7 @@ def image(source):
 
 
 def reveal_hash(source):
-    return (source["events"][-1]["binding"]["reveal"]["sha256"] if source["format"] == FORMAT else
+    return (source["events"][-1]["binding"]["reveal"]["sha256"] if is_rebound(source) else
             bg.initial(source)["origin"]["approval"]["selection"]["reveal"]["sha256"])
 
 
@@ -60,7 +62,7 @@ def prefix(record, value):
 
 def binding(root, source, entry, definition, reveal_raw, notice_raw, record):
     stable = deepcopy(entry)
-    if source["format"] == FORMAT and stable["production"]["package"] == normalized(source)["production"]["package"]:
+    if is_rebound(source) and stable["production"]["package"] == normalized(source)["production"]["package"]:
         stable["production"]["package_sha256"] = normalized(source)["production"]["package_sha256"]
     elif stable["production"]["package"] == bg.initial(source)["origin"]["package"]:
         stable["production"]["package_sha256"] = bg.initial(source)["origin"]["export_manifest_sha256"]
@@ -73,12 +75,15 @@ def binding(root, source, entry, definition, reveal_raw, notice_raw, record):
 
 
 def append(source, original_entry, value, operation, *, image=None, export_source=None):
-    if source["format"] == FORMAT:
+    if is_rebound(source):
         result = deepcopy(source)
     else:
         original_entry = deepcopy(original_entry)
         original_entry["production"]["package_sha256"] = bg.initial(source)["origin"]["export_manifest_sha256"]
         result = {"format": FORMAT, "base": deepcopy(source), "entry": original_entry, "events": []}
+    if value["entry"]["category_id"] != original_entry["category_id"]:
+        require(operation == "update", "Only a new production may change its historical category")
+        result["format"] = METADATA_FORMAT
     result["events"].append({"operation": operation,
         "previous_source": bg.ref(bg.path(original_entry["id"]), bg.encoded(source)),
         "binding": deepcopy(value), "image": deepcopy(image), "export_source": deepcopy(export_source)})
@@ -87,7 +92,7 @@ def append(source, original_entry, value, operation, *, image=None, export_sourc
 
 def validate(value, entry):
     exact_keys(value, {"format", "base", "entry", "events"})
-    require(value["format"] == FORMAT and isinstance(value["base"], dict) and
+    require(value["format"] in (FORMAT, METADATA_FORMAT) and isinstance(value["base"], dict) and
             value["base"].get("format") in (bg.FORMAT, bg.CHANGE_FORMAT), "Invalid background rebind base")
     origin_entry = entry_shape(value["entry"])
     base = bg.validate(value["base"], origin_entry)
@@ -102,6 +107,7 @@ def validate(value, entry):
     previous_notice, previous_at = None, None
     active = bg.current(base)
     packages = {origin_entry["production"]["package"]}
+    category_changed = False
     for index, event in enumerate(events):
         exact_keys(event, {"operation", "previous_source", "binding", "image", "export_source"})
         require(event["previous_source"] == bg.ref(bg.path(entry["id"]), bg.encoded(previous_source)),
@@ -110,8 +116,8 @@ def validate(value, entry):
         e = entry_shape(b["entry"])
         require(e["production"]["package"] == "content/packages/" + e["id"] + "/" + e["production"]["revision"],
                 "Rebound package path differs")
-        require(all(e[k] == origin_entry[k] == entry[k] for k in
-                    ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")) and
+        fixed = ("id", "key", "save_slot", "definition", "reveal", "visible") + (() if value["format"] == METADATA_FORMAT else ("category_id",))
+        require(all(e[k] == origin_entry[k] == entry[k] for k in fixed) and
                 e["production"]["test_only"] == origin_entry["production"]["test_only"] == entry["production"]["test_only"],
                 "Background rebind changes fixed identity")
         ident = exact_keys(b["identity"], {"key", "save_slot", "definition", "runtime_revision"})
@@ -143,6 +149,7 @@ def validate(value, entry):
                         exported["identity"] == ident and all(exported[k] == active[k] for k in bg.IMAGE_FIELDS
                                                             if k != "image_revision"),
                         "v6 raster export changes active background decision")
+            category_changed = category_changed or e["category_id"] != previous_entry["category_id"]
         elif op in ("reveal-adoption", "background-adoption"):
             require(e == previous_entry and ident == previous_identity and event["export_source"] is None,
                     "Image operation changes raster production")
@@ -169,7 +176,12 @@ def validate(value, entry):
             require(False, "Unknown background rebind operation")
         previous_entry, previous_identity = e, ident
         previous_reveal, previous_notice, previous_at = b["reveal"]["sha256"], b["notice"], b["at"]
-        previous_source = {**value, "events": events[:index + 1]}
+        # Existing v3 predecessor refs remain byte-for-byte valid when the
+        # first category-changing update creates v4. Never rehash old events.
+        previous_source = {**value, "format": METADATA_FORMAT if category_changed else FORMAT,
+                           "events": events[:index + 1]}
+    require(value["format"] != METADATA_FORMAT or category_changed,
+            "Background source v4 requires a historical category transition")
     expected = deepcopy(entry)
     expected["production"]["package_sha256"] = previous_entry["production"]["package_sha256"]
     require(expected == previous_entry, "Current background production differs")
@@ -182,7 +194,8 @@ def live(root, source, entry, texts=None):
     from . import categories
     catalog = io.json_bytes(bg._raw(root, categories.PATH, 131072, texts), 131072)
     record_raw = bg._raw(root, at.path(entry["id"]), at.LIMIT, texts, missing=True)
-    record = at.validate(io.json_bytes(record_raw, at.LIMIT), catalog) if record_raw is not None else None
+    historical_categories = at.historical_categories(root, texts)
+    record = at.validate(io.json_bytes(record_raw, at.LIMIT), catalog, historical_categories=historical_categories) if record_raw is not None else None
     if record is not None:
         require(record["format"] == at.BACKGROUND_FORMAT and record_raw == bg.encoded(record), "Wrong background AT source")
     last = source["events"][-1]["binding"]
@@ -190,7 +203,7 @@ def live(root, source, entry, texts=None):
     for event in source["events"]:
         b = event["binding"]
         if b["at"] is None: continue
-        history = at.validate(prefix(record, b["at"]), catalog)
+        history = at.validate(prefix(record, b["at"]), catalog, historical_categories=historical_categories)
         binding = history["bindings"][-1]
         revision = history["revisions"][-1]
         require(binding["entry"] == b["entry"] and binding["runtime_revision"] == b["identity"]["runtime_revision"] and
@@ -202,8 +215,10 @@ def live(root, source, entry, texts=None):
 
 
 def transition(old, new, old_entry, entry, operation):
-    require(new["format"] == FORMAT, "Operation requires background Source v3")
-    if old["format"] == FORMAT:
+    require(is_rebound(new), "Operation requires background rebind source")
+    if is_rebound(old):
+        require(new["format"] == old["format"] or old["format"] == FORMAT and new["format"] == METADATA_FORMAT and
+                operation == "update" and old_entry["category_id"] != entry["category_id"], "Invalid background source generation transition")
         require(new["base"] == old["base"] and new["entry"] == old["entry"] and
                 new["events"][:-1] == old["events"], "Background rebind rewrites history")
     else:

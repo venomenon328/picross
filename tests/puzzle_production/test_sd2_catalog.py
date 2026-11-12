@@ -108,7 +108,7 @@ class CatalogTests(unittest.TestCase):
         self.assertEqual(active['rating_revision'], 2)
         self.assertEqual(active['rating'], self.sd2_checked['rating'])
         self.assertEqual(method.current(method.load(self.checkout))['method'], method.OLD)
-        self.assertEqual(load_json(self.checkout / cr.RUNTIME)['format'], 'picross-runtime-registry-v5')
+        self.assertEqual(load_json(self.checkout / cr.RUNTIME)['format'], cr.METADATA_RUNTIME_FORMAT)
         for name, raw in before.items():
             if name not in (cr.RUNTIME, self.rating_path): self.assertEqual((self.checkout / name).read_bytes(), raw, name)
         stable = stamps(self.checkout)
@@ -212,7 +212,7 @@ class CatalogTests(unittest.TestCase):
         before = fixtures.snapshot(self.checkout)
         with self.assertRaises(InterruptedError): ca.adopt(self.checkout, self.root / 'sd2-test', apply=True, fail_step='crash-runtime')
         journal = load_json(self.checkout / tx.LOCK)
-        self.assertEqual(journal['format'], tx.BACKGROUND_FORMATS['adoption'])
+        self.assertEqual(journal['format'], tx.PE_FORMATS['adoption'])
         self.assertIn(method.PATH, journal['old'])
         def stop(phase, name=None):
             if phase == 'R1-runtime': raise InterruptedError('synthetic recovery interruption')
@@ -238,12 +238,13 @@ class CatalogTests(unittest.TestCase):
         old = deepcopy(journal); old['format'] = tx.AT_FORMATS['sync']
         with self.assertRaises(ValueError): tx.validate_journal(self.checkout, old)
         # A genuine AT generation has no default target and v4 in both sides.
-        registry = cr.check_checkout(self.checkout)
-        raw = cr.projection(registry, load_json(self.checkout / 'content/categories.json'), self.checkout, version=4)
-        write_json(self.checkout / cr.RUNTIME, raw)
+        from tests.puzzle_production.catalog_fixtures import pre_metadata
+        pre_metadata(self.checkout, runtime_version=4)
         snapshot = tx.capture(self.checkout)
         old = tx.prepare(self.checkout, snapshot, {}, operation='sync', generation='at')
         tx.validate_journal(self.checkout, old, before_write=True)
+        from tools.puzzle_production import catalog_metadata
+        catalog_metadata.apply(self.checkout, catalog_metadata.plan_migration(self.checkout))
         self.activate()
         before = fixtures.snapshot(self.checkout)
         with self.assertRaises(ValueError): tx.validate_journal(self.checkout, old)
@@ -425,8 +426,7 @@ class UpdateTests(unittest.TestCase):
 class ProjectionTests(unittest.TestCase):
     def test_old_sync_rejects_v5_but_retains_opaque_stale_recovery(self):
         with tempfile.TemporaryDirectory() as directory:
-            root = isolated_checkout(Path(directory)/'checkout')
-            cr.sync_runtime(root)
+            root = isolated_checkout(Path(directory)/'checkout', legacy=True)
             snapshot = tx.capture(root)
             current = tx.prepare(root,snapshot,{},operation='sync',generation='sd2')
             for formats in (tx.AT_FORMATS,tx.PREVIOUS_FORMATS,tx.LEGACY_FORMATS):

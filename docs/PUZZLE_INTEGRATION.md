@@ -1,5 +1,13 @@
 # RI: Zuverlässige und messbare Rätselintegration
 
+**PE-A1 / #576 · im Arbeitsbranch implementiert, Review offen:**
+Der [Metadatenvertrag](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag)
+ergänzt Inhaltsregistry v4 und Runtime v7. Neue Registrierung initialisiert
+aktuelle Metadaten; bestehende IDs erhalten sie bei Wiederholung und Rasterupdate.
+Aktuelle Kategoriebezüge und historische Exportsnapshots werden getrennt geprüft.
+Gemeinsame Planung, Quellenbindung, Transaktion und Recovery bleiben maßgeblich;
+neue Mutationen verwenden die ausdrücklich versionierte PE-Generation.
+
 **BA-B · 11.11.2026, serielle Einzelintegration:**
 [Paketentscheidung #491](https://github.com/venomenon328/picross/issues/491#issuecomment-6782256272)
 und [PRODUCTION_BATCH](PRODUCTION_BATCH.md) orchestrieren die vorhandenen

@@ -232,11 +232,12 @@ def validate_delta(j, before, root):
         name = reveal.path(entry["id"])
         if j["old"][name] == j["new"][name]: continue
         declared = entry["id"] in bg.index(before)
-        require(not declared or j["format"] == rebind.REVEAL, "Background reveal needs journal v4")
+        require(not declared or j["format"] in (rebind.REVEAL, tx.PE_FORMATS["reveal-adoption"]), "Background reveal needs a bound current journal")
         require(j["new"][name] is not None, "Cannot delete reveal history")
-        new = reveal.validate(io.json_bytes(j["new"][name].encode(), reveal.LIMIT), catalog)
+        historical = before["format"] == "picross-content-registry-v4"
+        new = reveal.validate(io.json_bytes(j["new"][name].encode(), reveal.LIMIT), catalog, historical_categories=historical)
         require(new["format"] == (reveal.BACKGROUND_FORMAT if declared else reveal.FORMAT), "Wrong reveal source generation")
-        old = reveal.validate(io.json_bytes(j["old"][name].encode(), reveal.LIMIT), catalog) if j["old"][name] is not None else None
+        old = reveal.validate(io.json_bytes(j["old"][name].encode(), reveal.LIMIT), catalog, historical_categories=historical) if j["old"][name] is not None else None
         require(new["id"] == entry["id"] and new["identity"] == reveal.identity(entry), "Reveal delta changes identity")
         n = reveal.identity(entry)["notice"]
         if old:
@@ -329,7 +330,8 @@ def adopt(root, path, *, seconds=300, fail_step=None):
             target &= snapshot["retained"][image_name] == row["new_reveal"]["sha256"]
             original_hashes[image_name] = row["old_reveal"]["sha256"]
             record = reveal.validate(io.json_bytes(row["new_record"]["text"].encode(), reveal.LIMIT),
-                                     io.json_bytes(snapshot['texts'][categories.PATH], 131072))
+                                     io.json_bytes(snapshot['texts'][categories.PATH], 131072),
+                                     historical_categories=snapshot["registry"]["format"] == "picross-content-registry-v4")
             revision = record["revisions"][-1]
             prior_notice, next_notice = row["old_notice"]["text"], row["new_notice"]["text"]
             require(next_notice == prior_notice or next_notice.startswith(prior_notice + "\n"), "Notice is not an exact append")
@@ -360,6 +362,8 @@ def adopt(root, path, *, seconds=300, fail_step=None):
             fresh()
             require(source_hashes(tx.capture(root)) == source_hashes(snapshot) and tx.namespaces(root, snapshot["registry"]) == snapshot["namespaces"], "Checkout changed before adoption")
             if target: return result("no-op", value)
+            from .content_registry import require_current
+            require_current(snapshot["registry"])
             publication.execute(root, journal, fail_step=fail_step, under_lock=fresh)
         return result("adopted", value)
 

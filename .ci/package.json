@@ -1,1 +1,15 @@
-{"core_change":null,"evidence":{"expires":null,"mode":"none","purpose":null},"format":"development-ci-plan/v1","issue":"https://github.com/venomenon328/picross/issues/608","modules":[],"omitted":"Reine Rätselproduktion: modules=[] und evidence.mode=none. Keine Tool-/Spiel-/CI-/Runtimeänderungen oder neuen Rätseltests, Bestandsreplays, Player-Builds, Browserläufe, automatischen Reviewgalerien oder Hintergrundproduktion. Rasterwahl/Endabnahme/Integration bleiben offen. Eigene temporäre Renderkopie endet nach Sichtung; benötigte Produktionsoriginale/Fortsetzungsdaten bleiben erhalten. Keine zusätzliche lokale Abschlussbereinigung, kein Merge.","package":"Radieschen · Schritt3 · zwei geprüfte Rasterangebote","purpose":"Tatsächliche Motiv-/Parameterfreigabe erfassen, vier gezielte Entwürfe und zwei technische ID-Neubindungen prüfen; motivtreue feste C-Korrekturen, vollständige Endproofs, frische unabhängige Rekonstruktion, echte 0.4-Analyse/Import, Palette sowie direkte native Zell-/Hinweissichtung. Geschriebene Einzel-ZIPs/Inventare, gemeinsame Projektion/Pointer und Remoteoriginale am festen Commit prüfen.","test_changes":[]}
+{
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/608",
+  "package": "Radieschen · Schritt 4 · Kontextzeichnungen nach Wahl RAD-K-r03",
+  "modules": [],
+  "purpose": "Tatsächliche qualifizierte Rasterwahl am festen Quellcommit binden; drei unterschiedliche native Kontextzeichnungen mit Prompts, Herkunft und isolierten Q-HG01–04-Urteilen sichern. Neue vollständige r05 mit unverändertem Raster/Reveal/Motiv, frischer Prüfung des geschriebenen ZIPs, Inventar, Projektion, current-view und Remoteoriginalbytes. Allgemeiner Quellen-/Plankern docs/ci-required.",
+  "omitted": "Reine Rätselproduktion; keine Tool-/Spiel-/CI-Implementierung, keine neuen Rätseltests oder Bestandsreplays. Deshalb modules=[] und evidence.mode=none, kein Player-Build, Browserlauf oder technischer Upload. Gültige unveränderte Raster-/Difficulty-/Hinweissichtbelege passend weiterführen; Builder prüft die neue Paketfassung vollständig. Hintergrundwahl, Ableitung, Endabnahme und Integration bleiben offen. Temporäre Diagnoseansichten enden nach Sichtung; Produktionsoriginale und Fortsetzungsdaten bleiben bis Auswahl/Integration erhalten. Keine zusätzliche lokale Abschlussbereinigung, kein Merge.",
+  "test_changes": [],
+  "core_change": null,
+  "evidence": {
+    "mode": "none",
+    "purpose": null,
+    "expires": null
+  }
+}

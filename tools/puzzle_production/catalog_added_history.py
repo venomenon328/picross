@@ -61,24 +61,29 @@ def validate_plan(plan):
             registry = rating.bytes_json(e["content"].encode(), added.REPORT_LIMIT)
             catalog = rating.bytes_json(integration["categories"].encode(), 131072)
             production = {"format": registry.get("format"), "entries": [r for r in registry.get("entries", []) if r.get("production") is not None]}
-            if registry.get("format") == cr.BACKGROUND_FORMAT:
+            if registry.get("format") in (cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT):
                 require(plan["format"] == FORMAT, "Old added plan cannot bind a background registry")
                 production["backgrounds"] = registry.get("backgrounds")
+            if registry.get("format") == cr.METADATA_FORMAT:
+                production["metadata"] = registry.get("metadata")
             cr.validate(production, catalog)
             runtime = rating.bytes_json(integration["runtime"].encode(), added.REPORT_LIMIT)
             versions = ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4") + (("picross-runtime-registry-v5",) if plan["format"] in (FORMAT, SD2_FORMAT) else ())
-            if plan["format"] == FORMAT: versions += ("picross-runtime-registry-v6",)
+            if plan["format"] == FORMAT: versions += ("picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT)
             require(runtime.get("format") in versions and
+                    (runtime.get("format") == cr.METADATA_RUNTIME_FORMAT) == (production["format"] == cr.METADATA_FORMAT) and
                     runtime.get("categories") == categories.ordered(catalog), "Invalid historical runtime categories/version")
             runtime_ids = {r["id"]: r for r in runtime["entries"]}
             require(len(runtime_ids) == len(runtime["entries"]), "Duplicate snapshot runtime ID")
             by_id = {r["id"]: r for r in production["entries"]}
+            metadata = cr.current_metadata(production, catalog) if production["format"] == cr.METADATA_FORMAT else {}
             for identifier, bindings in integration["bindings"].items():
                 require(identifier in by_id, "Foreign snapshot binding")
                 row = by_id[identifier]; p = row["production"]
                 require(bindings == {p["package"] + "/manifest.json": p["package_sha256"],
                                     "game/" + row["definition"]: p["definition_sha256"], "game/" + row["reveal"]: p["reveal_sha256"]} and
-                        all(runtime_ids.get(identifier, {}).get(k) == row[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")), "Invalid historical playable binding")
+                        _playable_binding(runtime_ids.get(identifier, {}), row, metadata.get(identifier)),
+                        "Invalid historical playable binding")
         elif e["kind"] == "direct":
             receipt = exact_keys(rating.bytes_json(e["content"].encode(), added.LIMIT), {"id", "event", "success", "registered_at"})
             rating.identity(receipt["id"])
@@ -121,6 +126,13 @@ def validate_plan(plan):
     require(ids == sorted(set(ids)), "Added plan IDs must be unique and ordered")
     require([e["key"] for e in plan["evidence"]] == sorted(evidence), "Added evidence must be ordered")
     return plan
+
+
+def _playable_binding(runtime, entry, metadata=None):
+    expected = {key: entry[key] for key in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")}
+    if metadata is not None:
+        expected.update(name=metadata["name"], category_id=metadata["category_id"])
+    return all(runtime.get(key) == value for key, value in expected.items())
 
 
 def _record(row, name, checksum):
@@ -183,6 +195,8 @@ def adopt(root, plan_path, *, apply=False, fail_step=None):
     if all(snapshot["texts"][n] == b for n, b in changes.items()):
         return {"status": "no-op", "changes": []}
     changes[name] = raw
+    from .content_registry import require_current
+    if apply: require_current(snapshot["registry"])
     journal = tx.prepare(root, snapshot, changes, operation="added-adoption", report_run=plan["run_id"],
                          generation="background" if plan["format"] == FORMAT else "sd2" if plan["format"] == SD2_FORMAT else "at")
     require(plan_path.read_bytes() == raw, "Added plan changed during preparation")
@@ -235,14 +249,19 @@ def plan(root, run, base, *, repository=None, direct=()):
         runtime_raw = show(commit, tx.RUNTIME)
         if raw is None or cats is None or runtime_raw is None: return set()
         registry = rating.bytes_json(raw, 8 * 1024 * 1024)
-        if registry.get("format") not in (cr.FORMAT, cr.BACKGROUND_FORMAT): return set()
+        if registry.get("format") not in (cr.FORMAT, cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT): return set()
         # Retired F-xx prototype entries had a null production field. Validate
         # the categorized production subset without executing historical code.
         production = {"format": registry["format"], "entries": [e for e in registry["entries"] if e.get("production") is not None]}
-        if registry["format"] == cr.BACKGROUND_FORMAT: production["backgrounds"] = registry.get("backgrounds")
-        cr.validate(production, rating.bytes_json(cats, 131072))
+        if registry["format"] in (cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT): production["backgrounds"] = registry.get("backgrounds")
+        if registry["format"] == cr.METADATA_FORMAT: production["metadata"] = registry.get("metadata")
+        catalog = rating.bytes_json(cats, 131072)
+        cr.validate(production, catalog)
+        metadata = cr.current_metadata(production, catalog) if production["format"] == cr.METADATA_FORMAT else {}
         runtime = rating.bytes_json(runtime_raw, 8 * 1024 * 1024)
-        require(runtime.get("format") in ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6"), "Unsupported historical runtime")
+        require(runtime.get("format") in ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT) and
+                (runtime.get("format") == cr.METADATA_RUNTIME_FORMAT) == (production["format"] == cr.METADATA_FORMAT),
+                "Unsupported historical runtime")
         runtime_ids = {e["id"]: e for e in runtime["entries"]}
         require(len(runtime_ids) == len(runtime["entries"]), "Duplicate historical runtime ID")
         date = datetime.fromisoformat(git("show", "-s", "--format=%cI", commit).decode().strip()).astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -251,7 +270,7 @@ def plan(root, run, base, *, repository=None, direct=()):
         for entry in production["entries"]:
             if entry["id"] not in wanted or not entry["visible"]: continue
             projected = runtime_ids.get(entry["id"], {})
-            if any(projected.get(k) != entry[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")): continue
+            if not _playable_binding(projected, entry, metadata.get(entry["id"])): continue
             p = entry["production"]
             paths = {p["package"] + "/manifest.json": p["package_sha256"],
                      "game/" + entry["definition"]: p["definition_sha256"], "game/" + entry["reveal"]: p["reveal_sha256"]}

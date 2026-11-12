@@ -208,15 +208,23 @@ def retire(root, ids, integrated_commit):
             source = backgrounds.load(root, current, entry)
             require(backgrounds.index(main_registry).get(identifier) == current_backgrounds[identifier],
                     "Current background is not indexed on main")
-            require(isinstance(main_runtime, dict) and main_runtime.get("format") == backgrounds.RUNTIME_FORMAT and
+            main_format = (registry.METADATA_RUNTIME_FORMAT if main_registry["format"] == registry.METADATA_FORMAT
+                           else backgrounds.RUNTIME_FORMAT)
+            require(isinstance(main_runtime, dict) and main_runtime.get("format") == main_format and
                     isinstance(main_runtime.get("entries"), list), "Current background runtime is not on main")
             matches = [row for row in main_runtime["entries"] if isinstance(row, dict) and row.get("id") == identifier]
-            minimal = {"format": backgrounds.REGISTRY_FORMAT, "entries": [entry],
+            minimal = {"format": main_registry["format"], "entries": [entry],
                        "backgrounds": [{"id": identifier, "source": current_backgrounds[identifier]}]}
+            if main_registry["format"] == registry.METADATA_FORMAT:
+                active_metadata = registry.current_metadata(main_registry, main_catalog)[identifier]
+                minimal["metadata"] = [active_metadata]
             expected_projection = backgrounds.projection(minimal,
                 {backgrounds.path(identifier): backgrounds.encoded(source)})[identifier]
             require(len(matches) == 1 and matches[0].get("background") == expected_projection,
                     "Current background runtime differs from main")
+            if main_registry["format"] == registry.METADATA_FORMAT:
+                require(all(matches[0].get(key) == active_metadata[key] for key in ("name", "category_id")),
+                        "Current background runtime metadata differs from main")
             old_ref = original_backgrounds[identifier]
             require(tree.get(old_ref["file"], ())[:2] == ("100644", "blob") and
                     int(git("cat-file", "-s", integrated_commit + ":" + old_ref["file"])) <= backgrounds.LIMIT,
@@ -250,6 +258,7 @@ def retire(root, ids, integrated_commit):
     if not plans:
         return {"status": "no-op", "ids": ids, "integrated_commit": integrated_commit, "replaced_files": 0, "replaced_bytes": 0}
 
+    registry.require_current(current)
     try:
         for entry, prefix, selected, receipt, package_dirs, authoring_dirs in plans:
             # Individual checked paths only. A racing foreign file survives and
