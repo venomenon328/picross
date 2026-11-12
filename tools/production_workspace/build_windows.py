@@ -14,7 +14,6 @@ import ssl
 import zlib
 import pyexpat
 import decimal
-import tkinter
 from .release import release, version_tuple, check_history
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -28,6 +27,7 @@ def sha(path):
 def build(destination):
     if sys.platform != 'win32' or platform.machine().lower() not in ('amd64', 'x86_64') or platform.python_version() != '3.13.14':
         raise RuntimeError('Build benötigt CPython 3.13.14 Windows x64.')
+    import tkinter
     versions = {}
     runtime_versions = {'Tcl/Tk': tkinter.Tcl().eval('info patchlevel'), 'OpenSSL': ssl.OPENSSL_VERSION,
                         'Expat': pyexpat.EXPAT_VERSION, 'zlib': zlib.ZLIB_RUNTIME_VERSION,

@@ -3,16 +3,33 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+import subprocess
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 
 from tools.production_workspace import build_installer as installer
-from tools.production_workspace.release import release, version_tuple
+from tools.production_workspace.release import release, version_tuple, check_history
 
 ROOT = Path(__file__).resolve().parents[1]
 NS = {'w': installer.NS}
 
 
 class InstallerContractTests(unittest.TestCase):
+    def test_source_history_refuses_decrease_or_upgrade_identity_change(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            source = root / 'release.json'
+            product = release()
+            source.write_text(json.dumps(product))
+            for args in (('init', '-q'), ('add', '.'), ('-c', 'user.name=P4 test', '-c', 'user.email=p4@example.invalid', 'commit', '-qm', 'synthetic')):
+                subprocess.run(['git', '-C', str(root), *args], check=True, stdout=subprocess.DEVNULL)
+            with patch('tools.production_workspace.release.SOURCE', source):
+                check_history(root, product)
+                with self.assertRaisesRegex(ValueError, 'monoton'):
+                    check_history(root, {**product, 'version': '0.0.1'})
+                with self.assertRaisesRegex(ValueError, 'Upgradeidentität'):
+                    check_history(root, {**product, 'upgrade_code': '11111111-1111-1111-1111-111111111111'})
+
     def test_strict_msi_versions_and_identity(self):
         for invalid in ('01.2.3', '1.0', '1.2.3.4', '1.2.3-rc1', '256.0.0', '1.256.0', '1.0.65536', '0.0.0', '1.2.3\n'):
             with self.subTest(invalid=invalid), self.assertRaises(ValueError):

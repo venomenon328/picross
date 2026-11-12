@@ -8,13 +8,14 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import socket
 import threading
 import time
 import zipfile
 
 from .build_windows import ROOT, sha
 from .instance import StateLock, control
-from .repository import configure
+from .repository import configure, Repository
 from .release import version_tuple
 from .smoke_windows import wait_for
 from .sources import git
@@ -29,9 +30,9 @@ def msi_properties(msi):
 
 def smoke(build, output):
     if os.name != 'nt' or ctypes.windll.shell32.IsUserAnAdmin():
-        raise RuntimeError('Installerprobe benÃ¶tigt einen nicht erhÃ¶hten Windows-Testbenutzer.')
+        raise RuntimeError('Installerprobe benötigt einen nicht erhöhten Windows-Testbenutzer.')
     if output.exists():
-        raise RuntimeError('Neuen eigenen Smokeordner wÃ¤hlen.')
+        raise RuntimeError('Neuen eigenen Smokeordner wählen.')
     output.mkdir(parents=True)
     report = json.loads((build / 'delivery.json').read_text())
     msi = build / report['msi_file']
@@ -39,7 +40,7 @@ def smoke(build, output):
     if (sha(msi) != report['msi_sha256'] or properties['ProductVersion'] != report['version'] or
             properties['ProductCode'].strip('{}') != report['product_code'] or
             properties['UpgradeCode'].strip('{}') != report['upgrade_code']):
-        raise RuntimeError('MSI-Bytes/IdentitÃ¤ten stimmen nicht mit Lieferreport Ã¼berein.')
+        raise RuntimeError('MSI-Bytes/Identitäten stimmen nicht mit Lieferreport überein.')
     installed = Path(os.environ['LOCALAPPDATA']) / 'Programs/Picross-Produktionsassistent'
     from ctypes import wintypes
     installer = ctypes.WinDLL('msi')
@@ -50,7 +51,7 @@ def smoke(build, output):
         # the ordinary Uninstall registry key. Query Windows Installer itself.
         return installer.MsiQueryProductStateW('{' + code + '}') == 5
     if installed.exists() or registered(report['product_code']):
-        raise RuntimeError('Bestehende echte Installation bleibt geschÃ¼tzt; frisches Testprofil verwenden.')
+        raise RuntimeError('Bestehende echte Installation bleibt geschützt; frisches Testprofil verwenden.')
     calls, children = [], []
     installed_code = None
     def execute(target, action='/i', success=True, **props):
@@ -69,22 +70,23 @@ def smoke(build, output):
                 raise RuntimeError('Installiertes Dateiinventar nicht bytegleich: ' + row['file'])
         return inventory
     from tools.test_production_workspace import current_fixture, commit
-    repo = output / 'Daten ohne Code Ã¤'; repo.mkdir()
+    repo = output / 'Daten ohne Code ä'; repo.mkdir()
     git(repo, 'init', '-q', '-b', 'main')
     current_fixture(repo, output / 'Quellen'); commit(repo)
     git(repo, 'branch', 'content/pw/pz-installer-synthetic')
-    state = output / 'Zustand Ã¼'
+    state = output / 'Zustand ü'
     configure(repo, state, refs=['main', 'content/pw/*'])
     cache = state / 'git-cache-pw-v1'; cache.mkdir()
     git(cache, 'init', '--bare', '-q'); git(cache, 'fetch', '--no-tags', str(repo), 'main:refs/pw/main')
     config = json.loads((state / 'config.json').read_text()); config['remote'] = str(repo)
     (state / 'config.json').write_text(json.dumps(config))
     (state / 'sync-pw-v1.json').write_text('{"synced_at":"2026-11-12T00:00:00Z"}\n')
+    Repository(state).refresh()  # Prime all deliberately selected synthetic refs.
     before = ((state / 'config.json').read_bytes(), git(repo, 'show-ref'), git(cache, 'show-ref'), git(repo, 'status', '--porcelain'))
     def preserved():
         actual = ((state / 'config.json').read_bytes(), git(repo, 'show-ref'), git(cache, 'show-ref'), git(repo, 'status', '--porcelain'))
         if actual != before:
-            raise RuntimeError('Konfiguration/Checkout/Refs/Cache wurden verÃ¤ndert.')
+            raise RuntimeError('Konfiguration/Checkout/Refs/Cache wurden verändert.')
     exe = installed / 'Picross-Start.exe'
     def launch():
         process = subprocess.Popen([str(exe), '--headless', '--no-browser', '--state', str(state)],
@@ -100,7 +102,12 @@ def smoke(build, output):
     def stop(process, identity):
         control(identity, 'stop')
         if process.wait(timeout=30) != 0:
-            raise RuntimeError('Installierte App nicht regulÃ¤r beendet.')
+            raise RuntimeError('Installierte App nicht regulär beendet.')
+        if (state / '.launcher/instance.json').exists():
+            raise RuntimeError('Instanzmetadaten nach Stop noch vorhanden.')
+        with socket.socket() as client:
+            if client.connect_ex(('127.0.0.1', identity['port'])) == 0:
+                raise RuntimeError('Installierter Dienstport nach Stop noch belegt.')
     try:
         # Build a genuine previous MSI from a clean synthetic SOURCE COMMIT.
         # No production version override and no relabelled MSI/App metadata.
@@ -132,13 +139,13 @@ def smoke(build, output):
         verify_inventory()
         link = Path(os.environ['APPDATA']) / 'Microsoft/Windows/Start Menu/Programs/Picross-Produktionsassistent/Picross-Produktionsassistent.lnk'
         if not link.is_file() or not registered(installed_code):
-            raise RuntimeError('StartmenÃ¼/Windows-Anwendungseintrag fehlt.')
+            raise RuntimeError('Startmenü/Windows-Anwendungseintrag fehlt.')
         first, identity = launch(); port = identity['port']; preserved()
         # Actual running installed EXE: neither upgrade nor uninstall may touch files.
         exe_hash = sha(exe)
         execute(msi, success=False); execute('{' + installed_code + '}', action='/x', success=False)
         if first.poll() is not None or sha(exe) != exe_hash:
-            raise RuntimeError('Laufende App wurde verÃ¤ndert/unterbrochen.')
+            raise RuntimeError('Laufende App wurde verändert/unterbrochen.')
         second, second_identity = launch()
         if second.wait(timeout=20) != 0 or second_identity['instance'] != identity['instance']:
             raise RuntimeError('Installierter Zweitstart nicht wiederverwendet.')
@@ -185,7 +192,7 @@ def smoke(build, output):
         finally:
             release.set(); worker.join(20); runtime.stopped.wait(20); gate.close(); lock.close()
         if results != [200] or not runtime.stopped.is_set():
-            raise RuntimeError('Synthetischer P2-Drain nicht vollstÃ¤ndig beendet.')
+            raise RuntimeError('Synthetischer P2-Drain nicht vollständig beendet.')
         preserved()
         # A foreign holder of a program file must also block upgrade.
         with (installed / 'components.json').open('rb'):
@@ -193,24 +200,24 @@ def smoke(build, output):
         execute(msi, INSTALLDESKTOP='1'); installed_code = report['product_code']
         current_inventory = verify_inventory(); preserved()
         if registered(older['product_code']) or not registered(installed_code):
-            raise RuntimeError('Upgrade hat alten Produkteintrag nicht vollstÃ¤ndig ersetzt.')
+            raise RuntimeError('Upgrade hat alten Produkteintrag nicht vollständig ersetzt.')
         execute(msi, success=False)  # same version
         execute(older_msi, success=False)  # downgrade
         restarted, identity = launch()
         if identity['port'] != port:
-            raise RuntimeError('Origin beim Upgrade verÃ¤ndert.')
+            raise RuntimeError('Origin beim Upgrade verändert.')
         stop(restarted, identity); preserved()
         address = (state / '.launcher/address.json').read_bytes()
         execute('{' + installed_code + '}', action='/x'); installed_code = None
         if exe.exists() or link.exists() or registered(report['product_code']):
-            raise RuntimeError('Programm/StartmenÃ¼/Produkteintrag nach Uninstall vorhanden.')
+            raise RuntimeError('Programm/Startmenü/Produkteintrag nach Uninstall vorhanden.')
         preserved()
         if (state / '.launcher/address.json').read_bytes() != address:
-            raise RuntimeError('Persistenter Port bei Deinstallation verÃ¤ndert.')
+            raise RuntimeError('Persistenter Port bei Deinstallation verändert.')
         execute(msi); installed_code = report['product_code']; verify_inventory()
         again, identity = launch()
         if identity['port'] != port:
-            raise RuntimeError('Wiederinstallation hat Origin verÃ¤ndert.')
+            raise RuntimeError('Wiederinstallation hat Origin verändert.')
         stop(again, identity); preserved()
         result = {'format': 'picross-installer-smoke-v1', 'commit': report['commit'], 'version': report['version'],
                   'msi_sha256': sha(msi), 'exe_sha256': sha(exe), 'product_code': report['product_code'],
@@ -227,7 +234,7 @@ def smoke(build, output):
                     control(StateLock(state).read(), 'stop'); child.wait(timeout=30)
                 except Exception:
                     # Never hard-kill a transaction; leave explicit failure.
-                    raise RuntimeError('Eigene Testinstanz noch aktiv; Zustand fÃ¼r regulÃ¤ren Stop erhalten.')
+                    raise RuntimeError('Eigene Testinstanz noch aktiv; Zustand für regulären Stop erhalten.')
         if installed_code:
             execute('{' + installed_code + '}', action='/x')
 
