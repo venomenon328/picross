@@ -1,24 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/588",
-  "package": "P2",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "K07: eng bestätigte Produktionsbranchentfernung mit Lease, PR-, Worktree-, Remote- und Sitzungsschutz.",
-  "omitted": "Genau tools; keine production.*, native.*, preflight oder delivery: keine Rätsel-, Spiel-, Integrations- oder Hostingänderung. Kern liefert Windows-Spieler. P2-T01–T03 sind einmalige isolierte Git-/Windows-/Browsernachweise; kein Browser und kein technischer Dauerupload in CI.",
-  "test_changes": [
-    {
-      "path": "tools/test_production_removal.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine Git-/HTTP-/Planregressionen schützen die konditionale Ausnahme nur im bedarfsabhängig gewählten tools-Modul."
-    },
-    {
-      "path": "tools/production_workspace/check_ui_loading.cjs",
-      "disposition": "change-scoped",
-      "reason": "Tatsächlicher UI-Controller gegen echte geschlossene HTTP-Routen: Branchbindung, Texteingabe, Default-aus der lokalen Folgeaktion und Restquellen. Keine Browserdarstellung behauptet."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/594",
+  "package": "Birne · Schritt 1 · pz-birne/r01",
+  "modules": [],
+  "purpose": "Drei native farbige transparente Abschlussbildoriginale samt Briefing, Provenienz und automatisch geprüfter 0.8.0-Produktionsprojektion sichern.",
+  "omitted": "Reine Rätselproduktion: keine zusätzlichen Module, kein Player-Build, keine Code-/Tool-/Spieländerung. Bild-/Datei-/Herkunftssichtung und Builderprüfung im Produktionsauftrag; kein rätselspezifischer CI-Replay oder neuer Testbestand.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
