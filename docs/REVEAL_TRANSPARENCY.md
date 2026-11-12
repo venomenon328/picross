@@ -83,8 +83,12 @@ Papieruntergrund sichtbar. Keine separate, anders bearbeitete Katalogfassung.
 - Weiße und helle Motivteile bleiben erhalten, ebenso Farben, Konturen, feine
   Details, Pose, Perspektive, Proportionen, Ausschnitt und Komposition. Helligkeit
   allein entscheidet nicht, ob ein Pixel zum Hintergrund gehört.
-- Alphakanten sind in großer Darstellung, kleiner Katalogvorschau und während der
-  Überblendung sauber. Keine hellen Matten/Säume, ausgeschnittenen Motivdetails
+- Alphakanten bleiben auch in kleiner Darstellung und Überblendung sauber.
+  Produktionsprüfung am Original groß/klein, bei Bedarf auf neutralem Grund oder
+  Schachbrett; keine routinemäßigen Buch-/Katalogmontagen, Fadeproben oder
+  Testintegrationen, auch nicht in späteren Phasen. Bestehende Render-/Integrations-
+  tests tragen die technische Garantie; kurze Urteile im vorhandenen Bericht.
+  Keine hellen Matten/Säume, ausgeschnittenen Motivdetails
   oder ausgefransten Konturen; teiltransparente Randpixel bleiben möglich.
 - Vollständige Szenen erhalten eine bewusste motivbezogene Bearbeitung. Prägende
   Umgebung und räumliche Beziehungen bleiben erhalten; transparente Außenfreiräume

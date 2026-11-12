@@ -1,6 +1,16 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
+## #596/C · Reguläre motivtreue Rasterkorrektur
 
-**Version 0.8.0 · Dokumentrevision 3 · 12.11.2026**
+Der [geschlossene C-Vertrag](../FIXED_RASTER.md) gilt für Authoring 0.8.0,
+Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
+Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
+Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
+Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
+historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
+Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
+
+
+**Version 0.8.0 · Dokumentrevision 4 · 12.11.2026**
 
 Neue Produktionen verwenden den fünfstufigen lokalen Produktionsassistenten.
 Maßgeblich: [PW-B / #578](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194),
@@ -107,8 +117,15 @@ beziehungsweise Vignette bewusst gestalten und die konkrete Fassung vorlegen.
 Eine Szene ist keine pauschale Ausnahme für einen opaken Bildkasten; Himmel,
 Boden oder Nebenmotive werden zugleich nicht blind entfernt. Geänderte
 Kompositionen und materielle Motivänderungen benötigen die dazugehörige erneute
-Freigabe. Großansicht und tatsächliche Kataloggröße auf dem Papiergrund gemeinsam
-prüfen. Transparenz des Abschlussbilds ändert weder den Leerwert des Rasters
+Freigabe. Das Original groß und klein direkt ansehen, bei Bedarf auf neutralem
+Grund oder Schachbrett: Motiv-/Stilfehler, Außenflächen, Aussparungen, erhaltene
+helle Motivteile und Alphakanten beurteilen. Keine routinemäßigen Buchmontagen,
+Katalogkompositionen, Fadeproben oder Testintegrationen; diese Arbeit wird auch
+nicht in spätere Produktionsphasen verschoben. Die technische Alpha-/Rendergarantie
+liegt bei den bestehenden Integrations-/Rendertests. Kurze Urteile im vorhandenen
+Bericht genügen; keine neue Berichtsgattung oder persönliche Bildabnahme.
+Q-H01/Q-H02 verlangen weiterhin die tatsächliche Zell-/Hinweissicht, ohne neuen
+obligatorischen Spielstart je Rätsel. Transparenz des Abschlussbilds ändert weder den Leerwert des Rasters
 noch weiße Vordergrundfarben einer Farbmatrix.
 
 **Vermeiden:** Fotorealismus/3D-Look als Stilgrundlage, Skizzenrauschen, ausgefranste Doppelkonturen, entscheidende Haarlinien, überladene Hintergründe, schwache Ton-in-Ton-Trennung, zufällige Kleinstflächen, anatomische Artefakte, Schrift/Wasserzeichen und Dekoration allein zum Füllen freier Zellen.
