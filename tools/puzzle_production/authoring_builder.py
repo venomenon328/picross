@@ -334,6 +334,9 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
             parent = mkdir(root, directory.rsplit('/', 1)[0])
             lock = gitdir / 'authoring-builder.lock' if gitdir else output / '.authoring-builder.lock'
             with writer(lock):
+                if current:
+                    from tools.production_workspace import current_view
+                    view_before = current_view.observe(root, r['handoff']['puzzle_id'])
                 if gitdir:
                     ap.require(io.read(root, INDEX, 8 * 1024 * 1024) == before, 'Index changed before writer acquisition')
                 with tempfile.TemporaryDirectory(prefix='.pb-a-build-', dir=parent) as temporary:
@@ -420,6 +423,8 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
                     # Check every sidecar as well as ZIP/record before and after
                     # indexing; never return a success for changed approval bytes.
                     verify_revision(target, revision_files)
+                    if current:
+                        current_view.publish(root, record['puzzle_id'], record['revision'], view_before)
                     return {'format': 'picross-authoring-build-result-v3' if current else 'picross-authoring-build-result-v2' if background_enabled else 'picross-authoring-build-result-v1',
                             'status': 'reused' if reused else 'built',
                             'directory': str(target), 'indexed': gitdir is not None, 'record': record,

@@ -1,5 +1,16 @@
 # PW-B · Fünfstufige Produktion 0.8.0
 
+## #596/C · Reguläre motivtreue Rasterkorrektur
+
+Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,
+Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
+Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
+Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
+Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
+historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
+Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
+
+
 Vertrag vor Code · 11.11.2026 · maßgeblich ist die
 [Paketentscheidung PW-B](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194).
 Die Voraussetzung PW-A2 ist mit PR #580 auf `f9764a91fc0e0c717d9d4ffeb0a769ec8ec0aab9`
@@ -110,6 +121,13 @@ Eingänge; sie sind kein vollständig veröffentlichtes 0.8-Handoff.
 
 ## Veröffentlichung und Bedienung
 
+[#596/B](PRODUCTION_CURRENT_VIEW.md) ergänzt außerhalb der geschlossenen
+Originalformen den gemeinsamen dateigebundenen aktuellen Ansichtsverweis.
+Builder v3, Finalizer v2, Projektor und Completion veröffentlichen ihn nach
+vollständiger Quellenprüfung; der Akteur sichert ihn gemeinsam mit allen Originalen.
+Motivgruppe, Versionsansicht und konkrete Quellwahl ersetzen die flache Hauptliste.
+Ansichtsöffnung ist keine Raster-/Bildwahl oder Freigabe.
+
 Ein Job behält `content/pw/<puzzle_id>`. Vor jedem Handoff baut der Akteur die
 neue Revision, den Index und automatisch die geprüfte Projektion aus den echten
 Angeboten. Er sichert alle benötigten Originale mit Commit und Push. Der Dienst
@@ -120,7 +138,10 @@ Eine lokale SHA oder localhost-Adresse wird nicht als Cloudquelle ausgegeben.
 Neue Jobs brauchen nur das tatsächliche Briefing und optional eine eigene
 Eingangsdatei; ID und erster Produktionsbranch werden erst vom Akteur vergeben.
 Die primäre Aktion „Auftrag kopieren“ nennt den passenden Schritt, die feste
-erreichbare Quelle, Record/Projektion und die gewählte Option. Größe, Modus und
+erreichbare Quelle, den kanonischen Record als Einstieg und die gewählte Option.
+Folgeaufträge ergänzen nur neue Absichten/Befugnisse; vorhandene Daten und allgemeine
+Regeln bleiben über diesen Einstieg und den kurzen AGENTS-/Authoringverweis gebunden.
+Größe, Modus und
 Farbzahl sind optionale Hinweise in Motiv-/Rasterarbeit, Kontext erst in Schritt 4.
 Arbeitswurzel, Bereinigung und Merge sind persönliche ausdrückliche Optionen;
 Records setzen sie nicht. Job-/Quellwechsel löscht ungesendete Auswahlabsichten.

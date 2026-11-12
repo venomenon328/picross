@@ -1,5 +1,16 @@
 # PW · Git-gestützter Produktionsassistent
 
+## #596/C · Reguläre motivtreue Rasterkorrektur
+
+Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,
+Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
+Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
+Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
+Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
+historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
+Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
+
+
 **PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
 [fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
 [PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
@@ -104,10 +115,15 @@ Schemafelder als Hauptoberfläche.
   werden, sind aber keine Pflichtfelder der Abschlussbilderzeugung.
   Das eigene optionale Feld für Motivhinweise gelangt unverändert in den ersten
   Auftrag. Die optionalen Rastervorgaben unterscheiden Breite/Höhe in Zellen,
-  Genauigkeit der Maße, Modus und bei Farbrätseln die Anzahl der Vordergrundfarben
+  Genauigkeit der ausgefüllten Achsen, Modus und bei Farbrätseln die Anzahl der Vordergrundfarben
   mit eigener Genauigkeit. Wünsche werden im Motivbriefing des Produktionsauftrags
   festgehalten. Bei der Abschlussbildauswahl für den Motivauftrag lassen sie sich
-  konkretisieren. Nach Vorlage des Parameterkorridors laufen Änderungen über die
+  konkretisieren. Breite und Höhe sind unabhängig: keine, nur eine oder beide
+  Achsen sind frühe Wünsche. Offene Achsen passend zum Motiv bestimmen, niemals
+  durch 0, eine Quadratseite oder einen alten aufgehobenen Wert ersetzen.
+  Jede Achse besitzt eine eigene ausdrückliche Aufhebungswahl. Frühe Teilmaße
+  gehören in das veröffentlichte Motivbriefing; konkrete Raster haben zwei Maße.
+  Nach Vorlage des Parameterkorridors laufen Änderungen über die
   Korrektur. Die Grenzen und die stets farbige Abschlussillustration folgen
   [Authoring §2.1](ai-workflows/PUZZLE_AUTHORING.md).
 - Motiv-/Rasterphase: Konfiguration, geschützte Merkmale, echte Bildvergleiche
@@ -141,13 +157,18 @@ Rasterwünsche und den als freigegeben überlieferten Korridor getrennt. Quelle
 ist der gebundene Handoff; der Record muss dessen bestehender Parameterprojektion
 entsprechen. Ein Statuswort beweist keine menschliche Freigabe. Eindeutig
 abbildbare Einzelwünsche belegen die Rasterfelder vor, andere Formen und mehrere
-Optionen bleiben vollständig lesbar. Nur nachweislich fehlende Wünsche heißen
-„Keine Vorgabe hinterlegt“. Das inventarisierte `handoff.brief` wird aus demselben
+Optionen bleiben vollständig lesbar. Fehlende strukturierte Einzelwerte sagen
+nichts über freie Wünsche im Motivbriefing aus. Vollständige Parameteroriginale und veröffentlichtes
+Motivbriefing sind beim Öffnen, Wiederladen und Motiv-/Revisionswechsel geschlossen;
+Zusammenfassung, Quellenstatus und Fehler bleiben davor sichtbar. Das inventarisierte `handoff.brief` wird aus demselben
 geprüften Originalpaket als UTF-8-Klartext mit Absätzen gelesen (höchstens 1 MiB).
 Fehlende oder widersprüchliche Originale sind Fehler.
 
-Veröffentlichte Stände haben genau ein Dropdown mit Revision und tatsächlicher
-Quelle; bei Namensgleichheit kommen ID/Branch hinzu. Lokale Entwürfe und deren
+Veröffentlichte Stände haben genau einen Haupteintrag je Rätsel-ID und eine
+getrennte Versions-/Quellwahl nach [aktueller Ansichtsübergabe](PRODUCTION_CURRENT_VIEW.md).
+Bytegleiche Veröffentlichungen zeigen „Lokal und Remote“; echte Gitrelation und
+Konflikte bleiben davon unabhängig sichtbar. Titelgleiche IDs sind unterscheidbar.
+Lokale Entwürfe und deren
 Verwerfen bleiben getrennt. Job-/Revisions-/Quellwechsel und das ausdrückliche
 Laden eines neueren Standes verwerfen ungesendete Absichten. Ein bloßes Suchen
 neuer Ergebnisse erhält die aktive gebundene Ansicht und ihre Eingaben.
@@ -157,9 +178,15 @@ neuer Ergebnisse erhält die aktive gebundene Ansicht und ihre Eingaben.
 ### 4.1 Einmalige Einrichtung
 
 Der Launcher erhält genau einen vorhandenen lokalen Projektcheckout und einen
-separaten eigenen Zustands-/Cacheordner. Python 3.11+ und Git werden geprüft;
-fehlende Voraussetzungen verständlich melden, nicht ungefragt global installieren.
-Ein Windowsstarter öffnet anschließend die lokale Browseroberfläche. Der
+separaten eigenen Zustands-/Cacheordner. Primärer Einstieg ist der per-user
+Windows-x64-MSI aus dem vorhandenen App-Image mit `Picross-Start.exe`, privater Python-/Pillow-/Tcl/Tk-
+Laufzeit und sämtlichen benötigten unveränderten Readern aus einem Buildcommit.
+Kein globales Python/Node oder Laufzeitdownload. Git mit `--no-lazy-fetch` bleibt
+externe Voraussetzung; vorhandene Anmeldung wiederverwenden, Fehler früh auf Deutsch
+melden. Native Einrichtung/Status, Browser öffnen und geordneter Stop gehören dazu.
+Die CMD bleibt Entwicklerfallback mit vertrauenswürdigem Programmcheckout.
+Die vollständige [P4-Entscheidung](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437)
+und [Bau-/Lieferbindung](../tools/production_workspace/WINDOWS_BUILD.md) sind maßgeblich. Der
 Zustandsordner liegt nicht in `content/`, `game/` oder einem fremden Arbeitsbaum.
 [WORKSPACE](dev-rules/WORKSPACE.md) gilt; persönliche Pfade werden nicht committed.
 
@@ -296,8 +323,59 @@ bleiben verbindlich. Kein allgemeiner Gitwriter, keine freie URL-/Ref-/Pfad-API.
 Kleine Git-/Endpointregressionen laufen nur im gewählten `tools`-Modul. Echte
 isolierte Remotetransaktionen und die Windows-/Browserbedienprobe sind einmalige
 P2-T01–T03-Nachweise; ausschließlich synthetische Testrefs dürfen dafür entfallen.
-Zwei gezielte PNG-Originale für P2-A01 liegen getrennt vom Produktdiff bis zum
-unabhängigen Review, höchstens sieben Tage. P3-Paketierung bleibt separat.
+Die nicht gelieferten P2-Browser-/PNG-/A01-Gates wurden durch die
+[Eigentümerentscheidung](https://github.com/venomenon328/picross/pull/590#issuecomment-6809311950)
+aufgehoben. P3-Paketierung und deren neue Nachweise bleiben separat.
+
+### 4.5 P3 · Instanz, Origin und geordneter Stop
+
+`config.json`, explizite Ref-/Remotewahl und vorhandene PW-Caches bleiben erhalten.
+Neue Launcherdateien liegen getrennt in `.launcher/`. Ein OS-Dateilock sichert
+atomar pro Benutzer und kanonischem Zustand; kurzlebige Instanzschlüssel erhalten
+unter Windows eine geschützte DACL für den eigenen Benutzer und SYSTEM.
+Datei-PID/-Portwerte allein erlauben weder Übernahme noch Prozessbeendigung.
+Versionierter Kontrollweg `/control/v1`: ausschließlich challenge-authentisierte
+Identifikation, Öffnen und Stop, mit signierter Antwort und eigener Instanz-/
+Buildbindung. Keine freien Pfade, Ziel-URLs oder Programme. Die passend gebundene
+Browseradresse wird ausschließlich nach Authentisierung zurückgegeben; Geheimnisse
+erscheinen nicht in Logs, Prompts oder dauerhaften Optionen. Bestehender Browser-
+Sitzungs-/Host-/Origin-/CSP- und P2-Bestätigungsschutz bleibt bestehen.
+
+Die erste Bereitschaft und Browseröffnung gehen der Git-Suche voraus. Die
+Loopbackadresse wird ab P3 pro Zustand gespeichert und wiederverwendet. Bei
+Fremdbelegung kein stiller Portwechsel: Wiederholen oder ausdrücklich neuen Port
+mit Hinweis auf getrennte Browseroptionen/Entwürfe wählen. Frühere Zufallsport-
+Browserdaten bleiben unverändert; Migration wird nicht behauptet. Eine historische
+CMD ohne Protokoll zuerst regulär beenden. Produktionsbranches und Datencheckout
+liefern niemals ausführbaren Code. Fehlende Reader, UI/Tcl/Tk und echte
+Pillowdekodierung werden vor Bereitschaft geprüft.
+
+Fensterschließen und „Assistent beenden“ sperren neue Arbeit, warten auf eigene
+Requests und Worker und geben Port/Lock erst nach deren Ende frei. Eine begonnene
+P2-Transaktion samt Ergebnisprüfung läuft unverändert aus; unbekannter Ausgang
+bleibt unbekannt, kein automatischer Retry. Keine pauschale Python-/Gitbeendigung.
+Minimieren/Tab schließen stoppt nicht. Absturzreste werden nach tatsächlich
+freigegebenem OS-Lock ersetzt, nicht anhand eines PIDs als sicher angenommen.
+Updates ersetzen nach vollständigem Stop per neuerem MSI alle installierten
+Programmdateien gemeinsam. Einzige Produktversionsquelle ist
+[release.json](../tools/production_workspace/release.json), unabhängig von Authoring,
+Spielversion und der alten Paketkennung 588-P3. Feste Upgradeidentität, neue
+ProductCodes je Version, keine Same-Version-Installation und kein Downgrade.
+Installation ohne Elevation unter dem eigenen per-user-Programmverzeichnis;
+Startmenü und optional Desktoplink. Konfiguration/Refs/Remote, Cache, `.launcher`-
+Dateien/Port, Browserprofil und externer Checkout bleiben beim Update, Uninstall
+und Wiederinstallieren erhalten. Uninstall entfernt nur eigene Programmdateien,
+Links und den Anwendungseintrag; alte portable Ordner bleiben unangetastet.
+Gitrefresh ist kein Appupdate. Ein Windows-Lebenszeichen pro Benutzer/Produkt
+gilt unabhängig vom `--state` schon während Einrichtung und bis nach dem Drain.
+Vor Dateimanipulation prüft MSI dieses Zeichen, den älteren Standardzustandslock
+und belegte Payloaddateien über Restart Manager. Laufend, fremd oder unklar:
+verständlich abbrechen und nach regulärem Stop wiederholen; kein Kill, kein
+automatischer Stop/Restart und keine erzwungene Rebootaktion. Neue Launcherstarts
+während der Windows-MSI-Ausführung werden zurückgewiesen. Der getrennte Bau
+hat allein `workflow_dispatch`; keinerlei Einbindung in Package CI. Kein Updater
+oder Dienst. Das App-Image und der Installer sind ohne Zertifikatauftrag unsigniert;
+Lizenzen und mögliche SmartScreenhinweise gehören zur Lieferung.
 
 ## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist
 
@@ -463,7 +541,12 @@ Browserstorage. Langsame/abgebrochene Ladevorgänge lassen andere Jobs bedienbar
 ## 8. Auftragstransport und Befugnisse im vollständigen Assistenten
 
 PW-B erzeugt pro Handlung einen kurzen, überprüfbaren Auftrag mit Repository,
-fixiertem Quellencommit, Projektions-/Recordpfad und tatsächlichen Auswahl-IDs.
+fixiertem erreichbarem Quellencommit, einem kanonischen Recordpfad als Einstieg
+und tatsächlichen Auswahl-IDs. Daraus erreichbare Parameter, Briefings, Hashes,
+Paket-/Projektionspfade und allgemeine Regeln werden nicht in Folgeaufträge kopiert.
+Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; nur neue
+Absicht, Freigabe, Änderung oder Aufhebung sowie persönliche Befugnisse ergänzen.
+Ein neuer Erstauftrag enthält dagegen Motiv, Hinweise, Referenz und frühe Wünsche.
 Der Empfänger löst die vollständigen Definitionen und Bilder aus diesen Quellen
 auf. Ein relativer Paketpfad allein beweist keinen Zugang. Cloudschritte dürfen
 keine localhost-Adresse oder bloß lokale Windowsdatei als erreichbare Quelle
@@ -473,7 +556,8 @@ Vorgefüllte Quellwerte sind keine neue Absicht oder Freigabe. Der Folgeauftrag
 trennt den veröffentlichten Kontext von Änderungen, ausdrücklich aufgehobenen
 Rasterwünschen und neuen/zusätzlichen Wünschen zur Motivvorlage. Bloßes Leeren
 oder „Offen“ hebt einen vorhandenen Wunsch nicht auf; dafür gibt es eine eigene
-beschriftete Aufhebungswahl. Diese hat Vorrang vor den Eingabefeldern der Gruppe.
+beschriftete Aufhebungswahl je Achse beziehungsweise Modus/Farbzahl. Sie hat Vorrang
+vor den betroffenen Eingabefeldern; die andere Achse bleibt unverändert wirksam.
 Ein geänderter freigegebener Korridor geht über den bestehenden Korrekturweg zur
 erneuten Entscheidung. Die bewusst angeforderte reguläre Freigabe in Schritt 3
 bleibt erhalten.

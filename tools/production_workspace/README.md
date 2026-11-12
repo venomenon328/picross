@@ -8,12 +8,12 @@ Handoff v4, Record v3 und Projektion v2. Verbindlich sind der
 Die PW-A2-Start-/Git-/Sicherheitsarchitektur bleibt erhalten; P2 ergänzt allein
 die ausdrücklich bestätigte Branchentfernung nach [PW §4.4](../../docs/PRODUCTION_WORKSPACE.md#44-p2--ausdrücklich-bestätigte-produktionsentfernung).
 Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist nur noch
-ein Einstieg zur einzigen Startdatei.
+ein Einstieg zur Windows-App.
 
 „Neues Motiv“ beginnt mit einem Briefing und optional einer eigenen Datei, die
 dem Chat tatsächlich beigegeben werden muss. Zusätzliche Motivhinweise wie Blickwinkel,
 Stimmung und unverzichtbare Merkmale haben ein eigenes Feld. Unter „Rastervorgaben“
-lassen sich Breite und Höhe (je 1–50 Zellen, auch rechteckig), Modus und für
+lassen sich Breite und Höhe unabhängig (je 1–50 Zellen, auch nur eine Achse), Modus und für
 Farbrätsel 2–8 Vordergrundfarben angeben. Maße und Farbzahl haben getrennte
 Genauigkeiten. Ohne Vorgabe bleibt die Wahl offen; das Abschlussbild ist immer
 farbig. Die lokalen Motivbriefings merken sich diese Eingaben pro Entwurf.
@@ -32,106 +32,159 @@ keinen als Cloudquelle ausgegebenen Folgeauftrag.
 
 ## Start und einmalige Einrichtung
 
-Voraussetzungen: Python **3.11+**, aktuelles Git mit `--no-lazy-fetch` und
-Pillow **12.3.0**. Der Git-Schalter verhindert implizites Nachladen im
-Benutzercheckout; ein Git ohne diese Fähigkeit wird abgewiesen. Keine globale
-Installation durch den Starter. Im vertrauenswürdigen Programmcheckout einmal
-in einer eigenen Pythonumgebung installieren, beispielsweise unter Windows:
+Primärer Einstieg ist der per-user **Windows-x64-MSI** nach
+[P4](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437).
+Installieren und den Startmenüeintrag „Picross-Produktionsassistent“ öffnen;
+Desktoplink optional. Das bestehende portable App-Image bleibt Fallback.
+Private Python-/Pillow-/Tcl/Tk-Laufzeit, unveränderte benötigte
+Produktionsreader und UI sind enthalten; kein globales Python/Node, pip oder
+Laufzeitdownload. **Git für Windows mit `--no-lazy-fetch` bleibt Voraussetzung**,
+damit die bisherige Git-/SSH-/Credential-Einrichtung weiterverwendet wird.
+Keine Administratorrechte nötig. [Start-/Updateanleitung](START-WINDOWS.txt),
+[versionierter Bau und Smoke](WINDOWS_BUILD.md).
+
+Das native Steuerfenster bietet bei neuer Einrichtung den vorhandenen lokalen
+Projektcheckout und die bewusste Wahl „Nur lokale Gitstände“ (Standard) oder
+„Mit Remote aktualisieren“. Standardrefs sind `main` und `content/pw/*`.
+Eine kleinere explizite Refwahl über wiederholtes `--ref` ist weiterhin möglich.
+Remote-URLs enthalten keine Tokens/Passwörter. Abbrechen startet keinen Dienst
+und schreibt keine Konfiguration. Der Datencheckout benötigt **keine ausführbaren
+tools-Quellen** und liefert niemals Anwendungscode; sämtliche Reader stammen aus
+dem gebundenen App-Build. Fehlende Imports einschließlich `authoring_workflow`,
+Bilddekodierung, UI-/Tcl/Tk-Ressourcen, Gitfähigkeit und Einrichtung werden vor
+Bereitschaft geprüft. Defekte Installationen regulär deinstallieren und erneut installieren;
+der getrennte Zustand bleibt erhalten.
+
+Bestehende `config.json` im Format `picross-production-workspace-config-v1`,
+gewählter Remote/Refs, `git-cache-pw-v1` und `sync-pw-v1.json` bleiben nutzbar.
+Unbekannte Konfigurationsfelder werden abgewiesen und nicht überschrieben.
+Die historische Einengung des unveränderten alten `content/*`-Defaults bleibt
+bestehen. Kein Checkoutupdate oder Cacheverwerfen als normaler Startweg.
+
+Ohne `--state` liegt der eigene Zustand unter
+`%LOCALAPPDATA%\PicrossProductionWorkspace`. Ein bewusst gewählter anderer
+Zustand bleibt über `Picross-Start.exe --state "D:\Eigener Zustand"` erreichbar.
+Zustand und Datencheckout müssen getrennt liegen. Launcherdateien liegen separat
+unter `.launcher/`: geschützter OS-Lock, kurzlebige authentisierte Instanzmetadaten
+und versionierte persistente Portwahl. Sie ändern das geschlossene Configformat nicht.
+
+Pro Windowsbenutzer und kanonischem Zustand läuft eine Instanz. Zweitstart prüft
+Identität/Build/Protokoll tatsächlich und öffnet dieselbe Browserinstanz, ohne
+zweiten Server/Refresh. Weder PID noch Portdatei allein autorisieren eine Aktion.
+Start läuft noch, fremder Dienst, andere Version und verwaiste Metadaten werden
+unterschieden. Eine historische laufende CMD zuerst regulär mit Strg+C beenden;
+keine automatische Übernahme oder Prozessbeendigung.
+
+Die authentisiert geprüfte Oberfläche öffnet vor Git-Suche/Synchronisierung.
+Ab P3 wird derselbe Loopbackport beim Neustart verwendet; Browseroptionen und
+Entwürfe bleiben damit an ihrer Origin. Bei fremd belegtem Port Wiederholen oder
+**ausdrücklich** einen neuen Port wählen. Dieser hat getrennten Browserzustand.
+Keine automatische Migration unbekannter früherer Zufallsport-Origins.
+
+„Im Browser öffnen“ öffnet den Windows-Standardbrowser. Minimieren lässt den
+Dienst laufen, Tab schließen beendet ihn nicht. „Assistent beenden“ oder
+Fensterschließen sperrt neue Arbeit und wartet sichtbar auf eigene Requests/
+Worker. Eine begonnene P2-Transaktion einschließlich Ergebnisprüfung läuft aus;
+kein harter Abbruch und keine automatische Wiederholung. Unbekannte Ergebnisse
+bleiben als solche sichtbar. Danach sind Port und Lock freigegeben; Konfiguration,
+Cache, Browser und Checkout bleiben erhalten. Absturzreste werden erst nach
+Erwerb des OS-Locks ersetzt, niemals durch Töten eines gespeicherten PIDs.
+
+Updates erfolgen nach vollständigem Stop per neuerem MSI. Version, stabile Upgrade-
+identität und WiX-Bindung stammen aus [release.json](release.json); die frühere
+Paketkennung 588-P3 ist keine Produktversion. Same-Version-Installation und Downgrade
+sind gesperrt. Der Installer ersetzt alle eigenen Programmdateien gemeinsam und
+fasst Zustand/Cache, Browserprofil, Checkout/Refs und portable Ordner nicht an.
+Ein zustandsunabhängiges Windows-Lebenszeichen gilt bereits während Einrichtung
+und bleibt bis zum Ende des P2-Drains erhalten. MSI prüft es vor Dateimanipulation,
+zusätzlich den alten Standardlock und sämtliche belegten Payloaddateien über
+Windows Restart Manager; unklar bedeutet Abbruch. Keine automatische Beendigung.
+Während MSI-Ausführung beginnt kein neuer Launcherbetrieb. Deinstallation entfernt
+nur eigene installierte Dateien/Links und den Windows-Anwendungseintrag.
+„Neuere Ergebnisse suchen“ aktualisiert Gitdaten, keine Programmversion.
+Der eigene [Installerbau](WINDOWS_BUILD.md) läuft ausschließlich manuell;
+Package CI und regulärer Spiel-Windowsbau bleiben getrennt.
+
+## Entwicklerfallback
+
+[Picross-Start.cmd](Picross-Start.cmd) bleibt ein technischer Fallback mit
+vertrauenswürdigem Programmcheckout, Python 3.11+ und isoliertem Pillow 12.3.0.
+Die eingebetteten PW-Dateien samt Icon werden SHA-256-geprüft. Unveränderte weitere
+Produktionsbibliotheken stammen beim Fallback aus dem vertrauenswürdigen
+Programmcheckout. Der EXE-Weg benötigt diesen Codecheckout nicht. Beide verwenden
+denselben Instanz-/Port-/Stopvertrag. Die CMD ist kein App-Image und kein Ersatz
+für dessen Windowsnachweise.
 
 ```powershell
 python -m venv .venv-pw
 .\.venv-pw\Scripts\Activate.ps1
 python -m pip install --only-binary=:all: -r tools/puzzle_production/requirements-image.txt
-.\tools\production_workspace\start-production-workspace.cmd
+python -m tools.production_workspace --state "D:\Eigener Zustand"
 ```
 
-Der Starter fragt beim ersten Start nach dem vorhandenen Projektcheckout und
-bietet lokale Gitstände oder die ausdrücklich gewählte Remote-URL an.
-Standardeinstellung: nur lokal. Standardbranches: `main` und `content/pw/*`.
-Neue Produktionen verwenden verbindlich `content/pw/<puzzle_id>`, zum Beispiel
-`content/pw/pz-eule`, mit einem stabilen Branch pro Rätsel. Alte `content/*`-
-Branches werden weder abgerufen noch durchsucht.
-Der Browser öffnet vor der Git-Suche; diese läuft einzeln im Hintergrund und
-meldet Laufzeit/Abschluss/Fehler in der Oberfläche; Strg+C im Starter beendet den Dienst.
-Nach erneutem Start sind keine Bild-, ZIP- oder JSON-Importe nötig.
-Die unveränderte frühere Standardauswahl `main` + `content/*` wird automatisch
-im eigenen Zustand eingeengt. Abweichende alte Auswahlen benötigen einen neuen
-Zustandsordner; neue CLI-Optionen überschreiben keine bestehende Einrichtung.
+Für explizite erstmalige Einrichtung `--setup --repository` und bei Bedarf
+`--remote`/`--ref` verwenden. Bestehende Einrichtung nicht mit neuen CLI-Optionen
+überschreiben. `--headless --no-browser` ist allein ein beaufsichtigter technischer
+Prozess-/HTTP-Test. `--stop` beendet nur eine tatsächlich passende authentisierte
+Instanz. `--port 0` ist ein ausdrücklich gewählter neuer freier Port.
 
-Explizite Einrichtung aus dem Programmcheckout, mit absoluten lokalen Pfaden:
-
-```powershell
-python -m tools.production_workspace --setup --repository C:\Projekte\picross --state C:\Picross-PW
-python -m tools.production_workspace --state C:\Picross-PW
-```
-
-Für bewusst bestätigte Synchronisierung bei der Einrichtung ergänzen:
-`--remote https://github.com/venomenon328/picross.git` oder eine SSH-URL.
-Eine kleinere Auswahl über wiederholtes `--ref` angeben, zum Beispiel
-`--ref main --ref content/pw/pz-eule`. Andere Branchfamilien sind nicht zulässig.
-Die URL darf keinen Token und kein eingebettetes Passwort enthalten.
-Die vorhandene Git-Anmeldung bleibt zuständig; keine Anmeldedaten in der UI.
-
-Ohne `--state` liegt der eigene Zustandsordner unter
-`%LOCALAPPDATA%\PicrossProductionWorkspace` (Linux: im persönlichen lokalen
-Datenordner). Er muss außerhalb des Projektcheckouts und fremder Git-Arbeitsbäume
-liegen. Der Programmcheckout liefert immer die vertrauenswürdige UI; betrachtete
-Produktionsbranches liefern ausschließlich Daten. Neue Einrichtung benötigt einen
-neuen leeren eigenen Zustandsordner; kein Übernehmen beliebiger fremder Cachebäume.
-
-Ein belegter `--port` wird gemeldet; ohne Angabe wählt der Starter einen freien
-Loopbackport. Fehlendes Git, Python oder Pillow wird gemeldet. Keine ungefragte
-Installation. `--no-browser` dient einem beaufsichtigten Diensttest, nicht als
-zweiter manueller Einrichtungspfad.
-
-## Einzelne ausführbare Startdatei
-
-[Picross-Start.cmd](Picross-Start.cmd) enthält den zugehörigen vertrauenswürdigen Programmstand
-samt Oberfläche. Sie benötigt den zugehörigen vertrauenswürdigen PW-B-Programmcheckout. Doppelklick genügt; bei Bedarf einmal den Projektordner angeben.
-Die vorhandene Einrichtung und isolierte Pythonumgebung werden wiederverwendet;
-Pillow 12.3.0 wird nur bei Bedarf dort installiert. Python/Git bleiben
-Voraussetzung. Store-Python- und Junctionpfade werden innerhalb von Python
-aufgelöst. Das Skript führt keine Git-Aktualisierung des Programmcheckouts aus.
-
-Die eingebetteten vertrauenswürdigen Dateien werden mit SHA-256 geprüft, in einen
-eigenen temporären Programmordner geschrieben und von dort geladen. Die
-unveränderten Produktionsbibliotheken stammen aus dem angegebenen vertrauenswürdigen
-Checkout. Es wird kein Programmcode von Produktionsbranches übernommen.
-Der Programmordner wird bei regulärem Ende entfernt. Den laufenden Starter mit
-Strg+C beenden, bevor eine neue Version gestartet wird.
-
-Nach Änderungen an den eingebetteten Quelldateien regenerieren:
+Nach Änderungen an eingebetteten Quellen regenerieren:
 
 ```sh
 python -m tools.production_workspace.build_launcher
 ```
 
-Der kleine Regressionstest gleicht die eingebetteten Bytes mit den Quelldateien ab.
-Die Windows-`.cmd`-Ausführung und echte Browserbedienung benötigen weiterhin die
-separat benannte Windowsprobe; eine Linuxmessung belegt diese nicht.
+Der Regressionstest vergleicht die eingebetteten Bytes mit den Quellen.
 
 ## Bedienung und Quellenstatus
 
-Den veröffentlichten Stand im einzigen Dropdown wählen. Revision und lokale/
-Remotequelle samt Branch unterscheiden auch gleichnamige Motive; die frühere
-zusätzliche Buttonliste entfällt. Lokale Motivbriefings samt „Entwurf verwerfen“
+Das Hauptdropdown enthält genau ein Motiv pro Rätsel-ID. Die getrennte
+Versionsansicht zeigt Phase, Revision, Herkunft und Aktualität. Titelgleiche IDs
+bleiben unterscheidbar. Die eindeutig aktuelle Ansichtsübergabe steht zuerst und
+öffnet automatisch; bei fehlendem/ungültigem Pointer oder Konflikt bewusst eine
+Version wählen. Kein Raten nach Phase oder Revisionsnummer. Bytegleiche Versionen
+erscheinen einmal mit „Lokal und Remote“; darunter bleibt die konkrete Quelle
+auswählbar. Erst deren ausdrückliche Remotequellwahl aktiviert gegebenenfalls P2.
+[Geschlossener Aktualitäts-/Publikationsvertrag](../../docs/PRODUCTION_CURRENT_VIEW.md). Lokale Motivbriefings samt „Entwurf verwerfen“
 sind davon getrennte Browserentwürfe.
 
+Synchron/Lokal neuer/Remote neuer beruhen auf bestätigter Git-Abstammung.
+Divergenz, unterschiedliche Bytes und nach begrenztem Metadatennachladen unbekannte
+Historie ergeben keinen Sieger. Offline bleibt der alte Snapshot lesbar, samt
+„Remote nicht aktuell bestätigt“, Fehler und letzter Cachezeit. Unbestätigte Quellen
+erlauben keinen Cloudauftrag. Fehlende Pointer lassen sich vom beauftragten Akteur
+für eine vollständige Revision gezielt publizieren:
+
+```text
+python -m tools.production_workspace.projector --repository <checkout> --current-view <pz-ID> <revision>
+```
+
 Die Detailansicht zeigt überlieferte Parameterrollen und das inventarisierte
-Originalbriefing aus dem geprüften Paket als Klartext mit Absätzen. Eindeutige
+Originalbriefing aus dem geprüften Paket als Klartext mit Absätzen. Beide Originalbereiche
+starten auch nach Wiederladen und Motiv-/Revisionswechsel eingeklappt; Zusammenfassung,
+Quellenstatus und Fehler bleiben sichtbar. Eindeutige
 Einzelwünsche belegen die Felder vor; mehrere Optionen und freie Formen bleiben
 vollständig lesbar. Die Anzeige bestätigt keine neue menschliche Freigabe.
 Record und Handoff müssen übereinstimmen; fehlende/beschädigte Originale und
 ungültiger UTF-8-Text erscheinen als Fehler. Briefings sind auf 1 MiB begrenzt.
 
-Unveränderte Werte bleiben im kopierten Auftrag Quellkontext. Änderungen sowie
+Folgeaufträge nennen einen festen erreichbaren Commit mit dem kanonischen Record
+als Einstieg und binden AGENTS/Authoring 0.8.0 kurz verbindlich ein. Vorhandene Parameter,
+Briefings, Hashlisten und allgemeine Regeln werden dort nicht dupliziert.
+Unveränderte Werte bleiben über diese Quelle gebunden. Änderungen sowie
 „Neue/zusätzliche Wünsche zur Motivvorlage“ sind neue Absichten. Zum Aufheben
 eines bisherigen Wunsches die entsprechende ausdrückliche Aufhebungswahl
-verwenden; sie hat Vorrang vor den Feldern der Gruppe. Leeren oder „Offen“ allein
+verwenden; Breite und Höhe haben eigene Aufhebungswahlen. Die andere Achse bleibt
+wirksam. Aufheben hat Vorrang vor dem jeweiligen Feld. Leeren oder „Offen“ allein
 sperrt den Auftrag, solange dadurch eine bestehende Vorgabe entfallen würde.
 Freigegebene Korridore werden über die Korrektur erneut zur Entscheidung vorgelegt.
 Job-, Revisions-, Quellwechsel und „Neueren Stand laden“ verwerfen ungesendete
 Absichten; ein bloßer Refresh erhält sie. Entwurfswerte überlagern keine Gitdaten.
+
+System/Hell/Dunkel verwendet ausschließlich die bestehende Browserwahl `pw-theme`.
+„System“ bleibt gespeichert und folgt der Systemdarstellung. Reload und ein
+geordnetes P3-App-Neustart/Update bei erhaltenem Zustand verwenden denselben Origin.
+Andere Browserprofile oder ausdrücklich geänderte Ports haben getrennte Einstellungen.
 
 Bildkarten nach Rollen und der Reveal-/Motivvergleich
 laden ihre Originale. Großansicht bietet Einpassen, 100/200/400 Prozent und
@@ -216,8 +269,9 @@ Bestätigungsdialog bereinigt werden. Das löscht keine Arbeitsdatei oder Worktr
 
 P2-T01–T03 prüfen ausschließlich eigens erstellte synthetische Bare-Remotes und
 Testrefs; der kontrollierte Testadapter ist keine Benutzer-/HTTP-Einstellung.
-Die zwei Revieworiginale und die tatsächliche Windowsbedienprobe stehen mit
-Headbindung und Ablauf im P2-Draft-PR. P2-A01 bleibt unabhängiges Review.
+Die nicht gelieferten P2-Browser-/PNG-/A01-Gates wurden für P2 ausdrücklich
+[aufgehoben](https://github.com/venomenon328/picross/pull/590#issuecomment-6809311950),
+nicht als bestanden bestätigt. P3 hat eigene T01–T03-/A01-Nachweise.
 
 ## Projektor für den Produktionsakteur
 
@@ -267,13 +321,14 @@ beschreiben die Formen; Pfadsicherheit, Eindeutigkeit, Rollen, Inventare,
 Originalbezüge, tatsächlich dekodierte PNG/JPEG und fachliche Angebotsfähigkeit
 werden zusätzlich im Reader/Projektor geprüft. Keine Solver-/Difficultyausführung.
 
-Geschrieben wird genau `workspace.json` neben `record.json`. Alle anderen Quellen
-bleiben bytegleich. Identische Wiederholung ist No-op samt mtimes. Abweichende
+Geschrieben wird `workspace.json` neben `record.json`; bei aktuellem Request v2
+folgt obligatorisch der geprüfte `current-view.json`-Verweis im ID-Verzeichnis.
+Andere Originale bleiben bytegleich. Identische Wiederholung ist No-op samt mtimes. Abweichende
 bestehende Ausgabe oder zwischenzeitlich geänderte Quellen stoppen. Ein temporärer
 Nachbar wird nach erneuter Quellenprüfung atomar ohne Ersetzen veröffentlicht und
 entfernt. Ergebnis auf stdout: `published` oder `reused`, Pfad/Hash/Bytezahl;
 Exit 0 bei Erfolg, 2 bei ungültigen oder kollidierenden Quellen. Git-Sicherung
-von Index, Record, Projektion und Originalen bleibt ausdrücklich Aufgabe des
+von Index, Record, Projektion, aktuellem Ansichtsverweis und Originalen bleibt ausdrücklich Aufgabe des
 beauftragten Produktionsakteurs. Die HTTP-API kann den Projektor nicht aufrufen.
 
 ## Tatsächlicher Registrierungsabschluss
@@ -286,7 +341,8 @@ python -m tools.production_workspace.projector --repository /absoluter/checkout 
 
 Dieser Aufruf registriert nichts. Er bindet den bereits committeten Registry-/
 Export-/Runtimestand an genau das freigegebene Original, aktualisiert Record und
-Projektion und ist identisch wiederholbar. Danach beide Dateien committen/pushen.
+Projektion samt aktuellem Ansichtsverweis und ist identisch wiederholbar. Danach
+alle drei Dateien committen/pushen.
 Der Assistent meldet „lokal registriert“, niemals dadurch bereits Mainintegration.
 Ein separater Hintergrundfolgeauftrag liest danach zuerst die aktive integrierte
 Source und verwendet ausschließlich den vorhandenen HP-I1b2-Weg.

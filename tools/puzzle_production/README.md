@@ -1,5 +1,15 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+## #596/C · Feste Rasterableitung
+
+Der vor Code festgelegte [Vertrag](../../docs/FIXED_RASTER.md) definiert die
+geschlossenen Parameter-/Plan-/Record-/Manifestformen und deren Grenzen.
+`python -m tools.puzzle_production.fixed_raster derive --root ROOT --plan PLAN --output OUT`
+erzeugt das reguläre Bundle; `inspect --root ROOT --bundle BUNDLE` prüft es frisch.
+Authoring 0.8.0 Dokumentrevision 4: source_type=fixed, kein manueller Override.
+Aktive Schwierigkeit zusätzlich über catalog_analysis mit expliziter Methode 0.4.
+
+
 **PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
 [fünfstufige Authoringweg](../../docs/ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
 [PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
@@ -14,6 +24,13 @@ führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
 Build v3 veröffentlicht Handoff v4/Record v3 und die automatisch geprüfte
 workspace.json gemeinsam mit der Revision im expliziten Repositoryziel.
+[#596/B](../../docs/PRODUCTION_CURRENT_VIEW.md) ergänzt den gemeinsamen
+`current-view.json`-Übergabeschritt für Builder, Finalizer, Projektor und Completion.
+Den Pointer samt aktuellen Record-/Projektionsbytes im selben Handoffcommit
+sichern/pushen und Remotezugriff prüfen; unterbrochene Aufrufe identisch vollständig
+wiederholen. Für bestehende vollständige 0.8-Arbeit gezielt
+`python -m tools.production_workspace.projector --repository <checkout> --current-view <pz-ID> <revision>`
+aufrufen. Kein HTTP-Writer und keine Änderung versiegelter Originale.
 Request v3 ergänzt `presentation={title,raster_offers}`. Frühe background- und
 raster_selection-Felder sind null. Erst die gebundene menschliche Rasterwahl
 öffnet background_review. Finalizer v2 aktualisiert den bestehenden Record v3

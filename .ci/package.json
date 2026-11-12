@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/594",
-  "package": "Birne · Schritte 1–2 · pz-birne/r02",
+  "package": "Birne · Schritte 1–3 · Rasterangebote r03/r04",
   "modules": [],
-  "purpose": "Freigegebenes BIR-A-r01 unverändert erhalten und daraus eine monochrome Motivvorlage mit begründetem Parameterkorridor zur menschlichen Freigabe publizieren; frühere Bildangebote in r01 erhalten.",
-  "omitted": "Reine Rätselproduktion ohne Code-, Tool- oder Runtimeänderung: modules=[]; kein Player-Build, keine Fachreplays oder neuen rätselspezifischen Tests. Bildvergleich/Quell-/Freigabebindung und Builder-/Projektionsprüfung im Produktionsauftrag. Diskrete Raster-, Logik-, Proof- und Difficultyarbeit erst nach echter Motiv-/Parameterfreigabe.",
+  "purpose": "Reine Rätselproduktion: echte Motiv-/Parameterfreigabe, vier begrenzte Direktimporte, zwei motivtreue feste C-Ableitungen mit leerem Außenbeschnitt, vollständige Nachweise und zwei qualifizierte Einzelrevisionen samt aktueller Ansichtsübergabe.",
+  "omitted": "modules=[] und evidence.mode=none: kein Code-/Tool-/Runtime-Diff, kein Player-Build und keine rätselspezifischen Tests oder Bestandsreplays. Quellen, Originale, C-Replay/Proof, Endmatrix, Palette, Randregel, visuelle Zell-/Hinweisqualität und explizite 0.4-Analyse werden im Produktionsauftrag geprüft. Rasterwahl, Hintergrund und Endabnahme sind spätere menschliche Schritte.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

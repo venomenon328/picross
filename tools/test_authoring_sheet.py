@@ -13,7 +13,7 @@ const assert=require('node:assert/strict');
 const P=require('./tools/production_workspace/ui/workflow.js');
 const opts={workroot:'E:/synthetic',cleanup:true,merge:false};
 const record={file:'content/authoring/pz-test/r01/record.json',sha256:'a'.repeat(64)};
-const v={puzzle_id:'pz-test',revision:'r01',source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),
+const v={puzzle_id:'pz-test',revision:'r01',commit:'b'.repeat(40),source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),
  record,facts:{state:'reveal_review',authoring_version:'0.8.0'},offers:[]};
 let text=P.prompt(null,{brief:'Synthetischer Test, keine Produktion'},opts);
 assert.match(text,/Schritt 1/);assert.doesNotMatch(text,/source_commit|localhost|Hintergrund|Kontextzeichnungen/);
@@ -23,10 +23,10 @@ for(const [state,n,kind] of [['reveal_review',2,'reveal'],['motif_review',3,null
  v.facts.state=state;v.offers=kind?[{id:'A',kind,record}]:[];
  const intent={selection:kind?'A':null,kind,parameters:'etwa 25 × 20',context:'Landschaft'};
  text=P.prompt(v,intent,opts);assert.match(text,new RegExp('Schritt '+n));
- assert.match(text,/kein Merge/);assert.match(text,/content\/pw\/pz-test/);
+ assert.match(text,/kein Merge/);assert.ok(text.includes(record.file));assert.ok(text.includes('b'.repeat(40)));
  if(n<4)assert.doesNotMatch(text,/Kontextwunsch|Kontextzeichnungen|Hintergrundkandidaten/);
  if(kind)assert.throws(()=>P.prompt(v,{},opts),/wählen/);
- for(const action of ['resume','rework'])assert.ok(P.prompt(v,{action,feedback:'Linie korrigieren'},opts).includes(v.source_url));
+ for(const action of ['resume','rework'])assert.ok(P.prompt(v,{action,feedback:'Linie korrigieren'},opts).includes(record.file));
 }
 v.facts.state='background_review';assert.match(P.prompt(v,{selection:'none'},opts),/ausdrücklich für keinen Hintergrund/);
 v.facts.state='content_ready';assert.match(P.prompt(v,{}, {...opts,merge:true}),/Merge ausdrücklich nur nach/);
@@ -51,30 +51,30 @@ const grid = {width:'28', height:'19', sizeAccuracy:'exact', mode:'color', color
 const build = settings => P.prompt(null,{...base,grid:settings},{});
 const first = build(grid);
 assert.ok(first.includes(base.notes));
-assert.match(first,/exakt 28 × 19 Zellen/);
+assert.match(first,/Breite: exakt 28 Zellen.*Höhe: exakt 19 Zellen/s);
 assert.match(first,/ungefähr 4 Vordergrundfarben/);
 assert.match(first,/Abschlussbild bleibt detailliert und farbig/);
-assert.match(build({...grid,sizeAccuracy:'approx',colorAccuracy:'exact'}),/ungefähr 28 × 19.*exakt 4/s);
+assert.match(build({...grid,sizeAccuracy:'approx',colorAccuracy:'exact'}),/Breite: ungefähr 28 Zellen.*Höhe: ungefähr 19 Zellen.*exakt 4/s);
 assert.match(build({mode:'mono'}),/monochrom, genau eine Vordergrundfarbe/);
 assert.doesNotMatch(build({...grid,mode:'mono'}),/4 Vordergrundfarben/);
 assert.doesNotMatch(build({mode:'color'}),/Farbzahl:/);
 assert.doesNotMatch(build({}),/Rastergröße:|Rastermodus:|Farbzahl:/);
-for(const bad of [{width:'20'},{height:'10'},{...grid,width:'0'},{...grid,height:'51'},
+for(const bad of [{...grid,width:'0'},{...grid,height:'51'},
                   {...grid,height:'1.5'},{...grid,width:'x'},{...grid,colors:'9'},{...grid,colors:'1'}]){
  assert.throws(()=>build(bad),/Bitte/);
 }
-assert.match(build({...grid,width:'1',height:'50',colors:'8'}),/exakt 1 × 50/);
-const record={file:'record.json',sha256:'a'.repeat(64)};
-const value={source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),
+assert.match(build({...grid,width:'1',height:'50',colors:'8'}),/Breite: exakt 1 Zellen.*Höhe: exakt 50 Zellen/s);
+const record={file:'content/authoring/pz-test/r01/record.json',sha256:'a'.repeat(64)};
+const value={commit:'b'.repeat(40),source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),
  record,puzzle_id:'pz-test',revision:'r01',facts:{state:'reveal_review',authoring_version:'0.8.0'},
  offers:[{id:'A',kind:'reveal',record}]};
 const intent={grid,kind:'reveal',selection:'A'};
 assert.equal(P.orderStep(value),2);
-assert.match(P.prompt(value,intent,{}),/Schritt 2.*exakt 28 × 19/s);
+assert.match(P.prompt(value,intent,{}),/Schritt 2.*Breite: exakt 28 Zellen/s);
 value.facts.state='motif_review';
-assert.doesNotMatch(P.prompt(value,intent,{}),/exakt 28 × 19/);
+assert.doesNotMatch(P.prompt(value,intent,{}),/Breite: exakt 28 Zellen/);
 const correction=P.prompt(value,{...intent,action:'rework',feedback:'Raster anpassen'},{});
-assert.match(correction,/exakt 28 × 19/);
+assert.match(correction,/Breite: exakt 28 Zellen/);
 assert.doesNotMatch(correction,/Ich gebe.*frei/);
 """
         result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True,
@@ -86,24 +86,24 @@ assert.doesNotMatch(correction,/Ich gebe.*frei/);
 const assert=require('node:assert/strict'),P=require('./tools/production_workspace/ui/workflow.js');
 const p={width:18,height:18,mode:'color',foreground_colors:3,size_constraint:'approximate',foreground_color_constraint:'exact',status:'approved'};
 const published={proposed:[p],approved:[],role:'proposed',brief:{file:'brief.md',sha256:'c'.repeat(64)}};
-const record={file:'record.json',sha256:'a'.repeat(64)};
-const v={source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),record,
+const record={file:'content/authoring/pz-test/r01/record.json',sha256:'a'.repeat(64)};
+const v={commit:'b'.repeat(40),source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),record,
  puzzle_id:'pz-test',revision:'r01',facts:{state:'reveal_review',authoring_version:'0.8.0',published},offers:[{id:'A',kind:'reveal',record}]};
 const selected={kind:'reveal',selection:'A'};
 const base=P.publishedGrid(v);
 assert.deepEqual(base,{width:'18',height:'18',sizeAccuracy:'approx',mode:'color',colors:'3',colorAccuracy:'exact'});
 for(const intent of [selected,{...selected,grid:base}]){
  const text=P.prompt(v,intent,{});
- assert.match(text,/Quellkontext.*keine neue Freigabe/);assert.doesNotMatch(text,/Neue Absicht|Vorgaben für das spätere Lösungsraster/);
+ assert.ok(text.includes(record.file));assert.doesNotMatch(text,/Auftrag an|SHA-256|workspace.json|brief.md|foreground_colors/);assert.doesNotMatch(text,/Neue Absicht|Vorgaben für das spätere Lösungsraster/);
  assert.match(text,/Schritt 2: Ich wähle/);assert.doesNotMatch(text,/Ich gebe.*Parameterkorridor frei/);
 }
 let text=P.prompt(v,{...selected,grid:{width:'20'},parameters:'Kelch erhalten\nMehr Platz'},{});
-assert.match(text,/Neue Absicht.*ungefähr 20 × 18/);assert.match(text,/Neue\/zusätzliche Wünsche.*Kelch erhalten\nMehr Platz/);
+assert.match(text,/Neue Absicht.*Breite: ungefähr 20 Zellen/);assert.match(text,/Neue\/zusätzliche Wünsche.*Kelch erhalten\nMehr Platz/);
 assert.throws(()=>P.prompt(v,{...selected,grid:{mode:''}},{}),/ausdrücklich aufheben/);
 assert.throws(()=>P.prompt(v,{...selected,grid:{width:'',height:''}},{}),/ausdrücklich aufheben/);
 assert.throws(()=>P.prompt(v,{...selected,grid:{colors:''}},{}),/ausdrücklich aufheben/);
-text=P.prompt(v,{...selected,removeGrid:{size:true,mode:true,colors:true}},{});
-assert.match(text,/Rastergröße: bisherigen Wunsch ausdrücklich aufheben/);assert.match(text,/Farbzahl: bisherigen Wunsch ausdrücklich aufheben/);
+text=P.prompt(v,{...selected,removeGrid:{width:true,height:true,mode:true,colors:true}},{});
+assert.match(text,/Breite: bisherigen Wunsch ausdrücklich aufheben/);assert.match(text,/Farbzahl: bisherigen Wunsch ausdrücklich aufheben/);
 published.approved=[{...p,width:22}];
 assert.equal(P.publishedGrid(v).width,'22');
 text=P.prompt(v,{...selected,grid:{width:'25'}},{});assert.match(text,/Korrekturweg.*erneuten Entscheidung/);
@@ -120,8 +120,97 @@ published.proposed=null;assert.deepEqual(P.publishedGrid(v),{});
         result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_partial_axes_differential_intent_and_canonical_source(self):
+        probe = r"""
+const assert=require('node:assert/strict'),P=require('./tools/production_workspace/ui/workflow.js');
+const build=grid=>P.prompt(null,{brief:'Testmotiv',grid},{});
+for(const sizeAccuracy of ['approx','exact'])for(const axes of [{},{width:'28'},{height:'30'},{width:'28',height:'19'}]){
+ const text=build({...axes,sizeAccuracy}),precision=sizeAccuracy==='exact'?'exakt':'ungefähr';
+ for(const [axis,label] of [['width','Breite'],['height','Höhe']]){
+  assert.ok(text.includes(axes[axis]?`${label}: ${precision} ${axes[axis]} Zellen`:`${label} passend zum Motiv bestimmen`));
+ }
+ assert.match(text,/veröffentlichten Motivbriefing/);
+}
+for(const axis of ['width','height'])for(const value of ['0','-1','51','1.5','x',' ','NaN'])assert.throws(()=>build({[axis]:value}),/Bitte/);
+for(const colors of ['0','1','9','x','2.5'])assert.throws(()=>build({mode:'color',colors}),/Bitte/);
+for(const colorAccuracy of ['approx','exact'])for(const colors of ['2','8']){
+ assert.ok(build({mode:'color',colors,colorAccuracy}).includes(`${colors} Vordergrundfarben`));
+}
+assert.throws(()=>build({height:'30',sizeAccuracy:'unknown'}),/Genauigkeit/);
+const p={width:18,height:30,size_constraint:'exact',mode:'color',foreground_colors:3,foreground_color_constraint:'exact'};
+const published={proposed:[p],approved:[],role:'proposed',brief:{text:'ORIGINAL_BRIEF_NOT_TO_COPY'}};
+const record={file:'content/authoring/pz-test/r01/record.json',sha256:'a'.repeat(64)};
+const v={puzzle_id:'pz-test',revision:'r01',commit:'b'.repeat(40),
+ source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),record,
+ facts:{state:'reveal_review',authoring_version:'0.8.0',published},offers:[{id:'A',kind:'reveal',record}]};
+const selected={kind:'reveal',selection:'A'},base=P.publishedGrid(v);
+for(const intent of [selected,{...selected,grid:base}]){
+ const text=P.prompt(v,intent,{});
+ assert.doesNotMatch(text,/Neue Absicht|18|30|ORIGINAL_BRIEF|foreground_colors|brief.md|SHA-256|workspace.json|Auftrag an/);
+ assert.equal(text.split(record.file).length,2,'one canonical entry');
+ assert.ok(text.includes('/blob/'+v.commit+'/'+record.file));
+}
+for(const [axis,label,other] of [['width','Breite','Höhe'],['height','Höhe','Breite']]){
+ const text=P.prompt(v,{...selected,removeGrid:{[axis]:true}},{});
+ assert.ok(text.includes(`${label}: bisherigen Wunsch ausdrücklich aufheben`));
+ assert.doesNotMatch(text,new RegExp(other+':|'+other+' passend'));
+ assert.match(text,/Andere Vorgaben bleiben bestehen/);
+ assert.deepEqual(P.publishedGrid(v),base,'removal never mutates source');
+ assert.throws(()=>P.prompt(v,{...selected,grid:{[axis]:''}},{}),/ausdrücklich aufheben/);
+}
+let text=P.prompt(v,{...selected,removeGrid:{width:true},grid:{width:'bad',height:'32'}},{});
+assert.match(text,/Breite: bisherigen Wunsch ausdrücklich aufheben.*Höhe: exakt 32/);
+text=P.prompt(v,{...selected,grid:{width:'20'}},{});assert.doesNotMatch(text,/Höhe:|30 Zellen/);
+text=P.prompt(v,{...selected,grid:{mode:'mono'}},{});assert.doesNotMatch(text,/Breite|Höhe|Farbzahl:/);
+text=P.prompt(v,{...selected,grid:{colors:'4'}},{});assert.match(text,/Farbzahl: exakt 4/);assert.doesNotMatch(text,/Rastermodus:/);
+for(const [source,expected] of [[{height:30,size_constraint:'exact'},{height:'30',sizeAccuracy:'exact'}],
+ [{width:28,size_constraint:'approximate'},{width:'28',sizeAccuracy:'approx'}]]){
+ published.proposed=[source];assert.deepEqual(P.publishedGrid(v),expected);
+ assert.doesNotMatch(P.prompt(v,selected,{}),/Neue Absicht/);
+}
+published.proposed=[{...p,width:[15,20]}];assert.equal(P.publishedGrid(v).height,'30');assert.equal(P.publishedGrid(v).width,undefined);
+for(const commit of [undefined,'c'.repeat(40)])assert.throws(()=>P.prompt({...v,commit},selected,{}),/Remote-Sicherung/);
+for(const file of ['record.json','content/authoring/pz-other/r01/record.json','../record.json']){
+ assert.throws(()=>P.prompt({...v,record:{file}},selected,{}),/kanonische/);
+}
+assert.throws(()=>P.prompt(v,{action:'unknown'},{}),/gültige Aktion/);
+for(const state of ['motif_approved','raster_review','editorially_approved','registered']){
+ v.facts.state=state;assert.doesNotMatch(P.prompt(v,{},{}),/Ich gebe|Ich erteile|Ich wähle/);
+}
+v.revision='proposal.v2';v.record={file:'content/authoring/pz-test/proposal.v2/record.json'};
+assert.ok(P.prompt(v,{},{}).includes(v.record.file));
+"""
+        result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_existing_theme_storage_reloads_explicit_system_light_dark(self):
+        probe = r"""
+const assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const storage=new Map(),code=fs.readFileSync('tools/production_workspace/ui/app.js','utf8');
+function load(){
+ const elements=new Map(),document={documentElement:{dataset:{}},getElementById(id){
+  if(!elements.has(id))elements.set(id,{replaceChildren(){}});return elements.get(id);
+ }};
+ vm.runInNewContext(code,{document,location:{hash:'',pathname:'/'},history:{replaceState(){}},
+  sessionStorage:{getItem(){},setItem(){}},
+  localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},
+  fetch:()=>new Promise(()=>{}),setTimeout,clearTimeout,AbortController});
+ return {document,theme:elements.get('theme')};
+}
+assert.equal(load().theme.value,'system');
+for(const value of ['dark','light','system']){
+ const app=load();app.theme.value=value;app.theme.onchange();
+ assert.equal(storage.get('pw-theme'),value);
+ const reloaded=load();assert.equal(reloaded.theme.value,value);
+ assert.equal(reloaded.document.documentElement.dataset.theme,value);
+}
+assert.deepEqual([...storage.keys()],['pw-theme'],'no second settings store');
+"""
+        result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_old_sheet_is_only_a_launcher_entry_without_embedded_state_machine(self):
         text=(ROOT/'docs/ai-workflows/Picross_Raetselproduktion_Cheat-Sheet.html').read_text(encoding='utf-8')
-        self.assertIn('Picross-Start.cmd',text)
+        self.assertIn('Picross-Start.exe',text)
         self.assertNotIn('<script',text)
         self.assertNotIn('picross-cheatsheet-session',text)

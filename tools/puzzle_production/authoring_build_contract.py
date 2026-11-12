@@ -44,6 +44,8 @@ FORMATS = set('PNG JPEG picross-authoring-handoff-v2 picross-authoring-file-inve
               'picross-uniqueness-v1 picross-uniqueness-check-v1 picross-solution-witness-v1 '
               'picross-editorial-approval-v1 picross-palette-editorial-exception-v1'.split())
 FORMATS.update(f'picross-{kind}-v{v}' for kind in ('manual-authorization', 'owner-override') for v in range(1, 7))
+FORMATS.update(('picross-raster-parameters-v1', 'picross-fixed-raster-plan-v1',
+                'picross-fixed-raster-v1', 'picross-fixed-raster-manifest-v1', 'picross-catalog-sd2-rating-v1'))
 
 
 def names(paths):
@@ -136,6 +138,12 @@ def validate_request(value):
         for item in h.get(key, []):
             ap.string(item, key)
     ap.require(isinstance(h.get('approved_parameters', []), list), 'Invalid parameter corridor')
+    from . import raster_parameters
+    for field in ('approved_parameters', 'proposed_parameters'):
+        for p in h.get(field) or []:
+            if isinstance(p, dict) and p.get('format') == raster_parameters.FORMAT:
+                ap.require(current, 'New raster corridor requires Authoring 0.8')
+                raster_parameters.validate(p)
     ap.require(isinstance(r['files'], list) and r['files'], 'Explicit file list required')
     for item in r['files']:
         source_record(item, member=True, background=background)
@@ -308,8 +316,11 @@ def validate_phase(root, r, deadline, *, history_repo=None):
         p.approval(selected['reveal'], 'reveal')
         ap.require(selected['motif'].get('derived_from_reveal_sha256') == selected['reveal']['sha256'], 'Wrong motif derivation')
     if state in ('motif_approved', 'raster_review', 'raster_ready', 'background_review', 'content_ready'):
-        p.approval(selected['motif'], 'motif')
+        approval = p.approval(selected['motif'], 'motif')
         ap.require(bool(h.get('approved_parameters')), 'Raster work requires approved parameters')
+        from . import raster_parameters
+        if any(isinstance(v, dict) and v.get('format') == raster_parameters.FORMAT for v in h['approved_parameters']):
+            raster_parameters.binding(h['approved_parameters'], approval)
     for kind, gate in (('reveal', 'reveal_approval'), ('motif', 'motif')):
         if h['gates'].get(gate) == 'pass':
             ap.require(kind in selected, 'Image gate lacks original')

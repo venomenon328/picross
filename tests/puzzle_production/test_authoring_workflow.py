@@ -3,12 +3,13 @@ from copy import deepcopy
 from pathlib import Path
 import shutil
 import unittest
+from unittest.mock import patch
 
 from tools.puzzle_production import authoring_builder as builder, authoring_workflow as workflow
 from tools.puzzle_production import authoring_finalization as finalizer
 from tools.puzzle_production.contract import load_json
 from tools.production_workspace import presentation as p
-from tools.production_workspace.sources import git, GitSource
+from tools.production_workspace.sources import git, GitSource, LocalSource
 from tests.puzzle_production import test_authoring_finalization as finalization_tests
 from tests.puzzle_production.background_fixtures import put, put_json, file_ref
 
@@ -135,6 +136,17 @@ class WorkflowTests(unittest.TestCase):
         sha=f.commit()
         view=load_json(f.helper.directory/'workspace.json')
         self.assertEqual(p.inspect(GitSource(f.helper.output),sha,view)['state'],'editorially_approved')
+        from tools.production_workspace import current_view as cv
+        from tools.production_workspace.repository import configure, Repository
+        from tools.production_workspace.server import Service
+        cv.handoff(f.helper.output, 'pz-hp-synthetic', 'r01')
+        f.commit()
+        configure(f.helper.output, f.root / 'view-state')
+        service = Service(Repository(f.root / 'view-state'))
+        motif = service.listing()['motifs'][0]
+        self.assertEqual(motif['versions'][0]['revision'], 'r01', 'later handoff may return to an earlier phase')
+        self.assertEqual(service.detail(motif['current_job'])['facts']['state'], 'raster_ready')
+        self.assertIsNone(service.detail(motif['current_job'])['facts'].get('raster_selection'), 'view opening never selects a raster')
 
     def test_missing_selection_stale_source_and_changed_context_fail_before_publication(self):
         f=WorkflowFixture(self)
@@ -158,3 +170,48 @@ class WorkflowTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'stale'):
             f.build()
         self.assertFalse((f.helper.output/'content/authoring/pz-hp-synthetic/r02').exists())
+
+    def test_current_view_finalizer_interruption_completion_and_noop(self):
+        from tools.production_workspace import current_view as cv, projector
+        from tools.puzzle_production import catalog_io as io
+        f = WorkflowFixture(self)
+        f.build(); f.select(); f.build()
+        root = f.helper.output
+        name = cv.path('pz-hp-synthetic')
+        prior = (root / name).read_bytes()
+        r = f.helper.request(outcome='none', approval=True)
+        r['format'] = 'picross-authoring-finalize-request-v2'
+        def stop(boundary):
+            if boundary == 'before-current-view-replace': raise RuntimeError('TEST ONLY interrupted pointer')
+        with patch.object(cv, 'checkpoint', side_effect=stop):
+            failed = builder.finalize_background(r, f.helper.payload, root)
+        self.assertNotIn(failed['status'], ('updated', 'reused'))
+        self.assertEqual((root / name).read_bytes(), prior)
+        final = builder.finalize_background(r, f.helper.payload, root)
+        self.assertEqual(final['status'], 'reused', final)
+        bound = cv.inspect(LocalSource(root),
+                           None, (root / name).read_bytes(), 'pz-hp-synthetic', originals=True)
+        self.assertEqual(bound['record']['sha256'], io.checksum(f.helper.record_path.read_bytes()))
+        # Completion reads only these committed registration metadata, as specified
+        # by its existing reader contract; no catalog writer or solver is mocked.
+        record = final['record']; directory = 'content/packages/pz-hp-synthetic/r02'
+        manifest = {'format': 'picross-target-export-v6', 'definition_id': record['puzzle_id'],
+                    'package_revision': 'r02', 'editorial_approved': True, 'technical': True,
+                    'input': {'original_package': record['package']},
+                    'approval_sha256': record['final_editorial_approval']['sha256']}
+        manifest_ref = put_json(root, directory + '/manifest.json', manifest)
+        entry = {'id': record['puzzle_id'], 'definition': 'test-only.json', 'reveal': 'test-only.png', 'save_slot': 'test-only',
+                 'production': {'status': 'registered', 'blockers': [], 'package': directory, 'revision': 'r02',
+                                'package_sha256': manifest_ref['sha256']}}
+        put_json(root, 'content/registry.json', {'entries': [entry]})
+        put_json(root, 'game/data/registry.json', {'entries': [entry]})
+        sha = f.commit()
+        with patch.object(cv, 'checkpoint', side_effect=stop), self.assertRaises(RuntimeError):
+            projector.complete(root, f.helper.record_name, sha)
+        done = projector.complete(root, f.helper.record_name, sha)
+        self.assertEqual(done['state'], 'registered')
+        before = (root / name).read_bytes(), (root / name).stat().st_mtime_ns
+        self.assertEqual(projector.complete(root, f.helper.record_name, sha)['status'], 'reused')
+        self.assertEqual(((root / name).read_bytes(), (root / name).stat().st_mtime_ns), before)
+        current = cv.inspect(GitSource(root), f.commit(), (root / name).read_bytes(), 'pz-hp-synthetic', originals=True)
+        self.assertEqual(current['revision'], 'r02')

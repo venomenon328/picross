@@ -1,6 +1,17 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.8.0 · Dokumentrevision 1 · 11.11.2026**
+## #596/C · Reguläre motivtreue Rasterkorrektur
+
+Der [geschlossene C-Vertrag](../FIXED_RASTER.md) gilt für Authoring 0.8.0,
+Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
+Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
+Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
+Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
+historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
+Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
+
+
+**Version 0.8.0 · Dokumentrevision 4 · 12.11.2026**
 
 Neue Produktionen verwenden den fünfstufigen lokalen Produktionsassistenten.
 Maßgeblich: [PW-B / #578](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194),
@@ -48,6 +59,15 @@ an Werkzeugen, Spiel oder CI folgt weiterhin dem allgemeinen Entwicklungsworkflo
 ### 2.1 Eingaben und Konfiguration
 
 Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild; optional Breite × Höhe (ungefähr/fest), Mono/Farbe, gewünschte Vordergrundfarbzahl (ungefähr/genau) und weitere Einschränkungen. Eine verlinkte oder angezeigte Bildvorschau ersetzt keine gespeicherte Quelldatei.
+
+Frühe Breiten-/Höhenwünsche sind unabhängig: keine, nur eine oder beide Achsen.
+Exakt/ungefähr gilt für ausgefüllte Achsen; offene Achsen passend zum Motiv bestimmen.
+Eine ausdrücklich aufgehobene Breite lässt die weiterhin gültige Höhe bestehen
+und umgekehrt. Leeren allein hebt keine veröffentlichte Vorgabe auf. Keine 0,
+angenommene Quadratseite oder Wiederherstellung eines aufgehobenen Altwerts.
+Diese Wünsche verbindlich im veröffentlichten Motivbriefing der Übergabe führen;
+die spätere konkrete Matrix besitzt zwei Maße. Bestehende geschlossene Formate
+und historische Freigaben bleiben unverändert.
 
 Die KI MUSS Hauptmotiv, unverzichtbare Merkmale, erlaubte Umgestaltung und Einschränkungen erfassen. Fehlende reversible Details sinnvoll ergänzen. Nur wesentliche offene Produktentscheidungen beim Nutzer erfragen, jeweils mit Empfehlung und Konsequenzen.
 
@@ -98,8 +118,15 @@ beziehungsweise Vignette bewusst gestalten und die konkrete Fassung vorlegen.
 Eine Szene ist keine pauschale Ausnahme für einen opaken Bildkasten; Himmel,
 Boden oder Nebenmotive werden zugleich nicht blind entfernt. Geänderte
 Kompositionen und materielle Motivänderungen benötigen die dazugehörige erneute
-Freigabe. Großansicht und tatsächliche Kataloggröße auf dem Papiergrund gemeinsam
-prüfen. Transparenz des Abschlussbilds ändert weder den Leerwert des Rasters
+Freigabe. Das Original groß und klein direkt ansehen, bei Bedarf auf neutralem
+Grund oder Schachbrett: Motiv-/Stilfehler, Außenflächen, Aussparungen, erhaltene
+helle Motivteile und Alphakanten beurteilen. Keine routinemäßigen Buchmontagen,
+Katalogkompositionen, Fadeproben oder Testintegrationen; diese Arbeit wird auch
+nicht in spätere Produktionsphasen verschoben. Die technische Alpha-/Rendergarantie
+liegt bei den bestehenden Integrations-/Rendertests. Kurze Urteile im vorhandenen
+Bericht genügen; keine neue Berichtsgattung oder persönliche Bildabnahme.
+Q-H01/Q-H02 verlangen weiterhin die tatsächliche Zell-/Hinweissicht, ohne neuen
+obligatorischen Spielstart je Rätsel. Transparenz des Abschlussbilds ändert weder den Leerwert des Rasters
 noch weiße Vordergrundfarben einer Farbmatrix.
 
 **Vermeiden:** Fotorealismus/3D-Look als Stilgrundlage, Skizzenrauschen, ausgefranste Doppelkonturen, entscheidende Haarlinien, überladene Hintergründe, schwache Ton-in-Ton-Trennung, zufällige Kleinstflächen, anatomische Artefakte, Schrift/Wasserzeichen und Dekoration allein zum Füllen freier Zellen.
@@ -337,6 +364,19 @@ keine technische Prüfung, Herkunft/Rechte oder tatsächliche Freigaben.
 
 ### 4.4 Reparaturen und Änderungen
 
+**Reguläre feste Korrektur (#596/C):** Vor Rückgabe konkrete kleine Kontur-/
+Flächenmängel und störende leere Außenlinien innerhalb des freigegebenen
+Korridors bearbeiten, auch wenn die Logik bereits solved ist. Gute Kandidaten
+nicht unnötig ändern. Den vollständigen [festen Plan](../FIXED_RASTER.md) gegen
+den direkten unveränderten RP-3-Import vorab binden; keine Suche und keine
+nachträglich erweiterte Editliste. Der neue Parameterkorridor bewahrt offene/
+ungefähre Endmaße trotz konkreter Importstarts. Materielle Änderungen bleiben
+entscheidungspflichtig; eine Zelle ist nicht automatisch harmlos. Verbrauchte
+Runden/Kandidaten/Änderungen bleiben kumulativ, auch unter neuen Namen/Ordnern.
+Nachweise einschließlich aktiver 0.4-Analyse am Endstand prüfen; unveränderte
+Bildfreigaben erhalten. Erst der frisch gelesene Builder-ZIP kann raster_ready
+und ein qualifiziertes Angebot ergeben, ohne Endfreigabe/Background/Rasterwahl.
+
 **Aktiver Reparaturauftrag:** Wenn kein visuell tragfähiger Kandidat vollständig
 zertifiziert ist, MUSS Codex gezielte Verbesserungen versuchen, bevor es die
 Produktion allein wegen `stalled` oder belegtem `multiple` zurückgibt. Bereits
@@ -377,7 +417,8 @@ zunächst Abstraktion/Größe/Palette nach 2.4 überarbeiten und nötige Freigab
    Einzellokaländerungen; es optimiert nicht selbst anhand der Diagnosezeugen.
    Codex legt daraus Hypothese und Maske fest. Reicht das nicht, eine konkrete
    lokale Formkorrektur oder andere Abstraktion/Größe/Palette vorschlagen und nur
-   innerhalb vorhandener Befugnisse umsetzen. Feste manuelle Ableitungen brauchen
+   innerhalb vorhandener Befugnisse umsetzen. Für aktuelle genehmigte feste
+   Zellkorrektur/leeren Beschnitt gilt der reguläre C-Weg oben. Historische feste manuelle Ableitungen brauchen
    den tatsächlich unterstützten ZA-1-Vertrag und dessen gesonderte Autorisierung;
    keine freie Matrixmanipulation als regulären Import ausgeben. Materielle
    Änderungen vor Fortsetzung erneut zur Motivfreigabe vorlegen.
@@ -589,6 +630,10 @@ python -m tools.puzzle_production.authoring_builder build --request <request-v3.
 
 Der Builder validiert Dateien, erzeugt Inventar v1, geschriebenes Original-ZIP,
 bytegleiche Handoffkopie, Record v3 und automatisch die geprüfte workspace.json.
+Der gemeinsame [Ansichtsübergabeschritt](../PRODUCTION_CURRENT_VIEW.md) setzt
+zusätzlich `content/authoring/<puzzle_id>/current-view.json` auf genau diese
+Übergabe. Er ist keine Bild-/Rasterwahl. Finalizer und Completion ziehen auch
+bei In-place-Fortschreibung die tatsächlichen Hash-/Bytebindungen nach.
 Er verwendet unveränderte Proof-/Paletten-/Herkunftsprüfer. Frühphasen sind keine
 Inhaltszertifikate; `raster_ready` und spätere Inhaltsphasen werden frisch geprüft.
 `presentation={title,raster_offers}` nennt nur tatsächliche Angebote; zusätzliche
@@ -596,7 +641,7 @@ Rasteroptionen referenzieren ihre bereits gesicherten qualifizierten Einzelrecor
 Keine manuell erfundene Assetgalerie. Der Dienst schreibt diese Dateien nicht.
 
 Danach vollständige benötigte Originale einschließlich sichtbarer Alternativen,
-Index und Projektion committen und pushen. Remotezugriff auf feste Commit-/Dateipfade
+Index, Projektion und aktuellen Ansichtsverweis committen und pushen. Remotezugriff auf feste Commit-/Dateipfade
 prüfen. Den Sicherungscommit erst nach Erfolg melden; `repo_commit` ist lediglich
 die gelesene Herkunft. Lokale Pfade/localhost und ungesicherte SHAs sind keine
 Cloudübergabe. Neue Quellen erst ausdrücklich im Assistenten laden; laufende
@@ -700,7 +745,7 @@ Nach erfolgreicher tatsächlicher Registrierung relevanten Diff und Lieferbytes
 prüfen und den Registrierungsstand committen. Mit
 `python -m tools.production_workspace.projector --repository <checkout> --complete-record <recordpfad> --integration-commit <volle-SHA>`
 den tatsächlichen Abschluss binden und die Projektion automatisch fortschreiben.
-Record und Projektion anschließend committen/pushen; Draft-PR im beauftragten
+Record, Projektion und aktuellen Ansichtsverweis anschließend committen/pushen; Draft-PR im beauftragten
 Umfang erstellen. Reine Produktion
 erhält CI-Kern ohne Windowsbau und ohne neue rätselspezifische Tests. Merge nur bei
 ausdrücklicher passender Befugnis, aktuellem unabhängigen Review und allen Gates.
@@ -718,6 +763,10 @@ sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
    Commit nennen. Offene Nacharbeit oder neuere Arbeitsstände derselben ID zuerst
    klären; fremde/offene Produktionen erhalten.
 2. Nach dem Merge in einem eigenen kleinen Cleanup-Diff ausführen:
+
+   Den [abgeschlossenen Ansichtsverweis](../PRODUCTION_CURRENT_VIEW.md) nach
+   frischem Abgleich mit Revision und Mainbeleg zuerst entfernen. Ein Verweis
+   auf neuere/offene Arbeit bleibt erhalten; dann vor dem ID-Abschluss klären.
 
    ```sh
    python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <vollstaendige-main-SHA> --puzzle-id <pz-ID>

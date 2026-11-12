@@ -5,6 +5,7 @@ try{if(token)sessionStorage.setItem('pw-session',token);else token=sessionStorag
 history.replaceState(null,'',location.pathname);
 let listing=null,pending=null,generation=0,controller=null,urls=[],active=null;
 let detail=null,intent={},draft=null,drafts=[];
+let remoteExplicit=false;
 if(typeof matchMedia==='function'){
  const narrow=matchMedia('(max-width: 800px)');
  const fitNavigation=()=>{$('navigation').open=!narrow.matches;};
@@ -56,7 +57,7 @@ function gridFields(parent,expanded){
  panel.append(summary,node('p','Optional für das spätere Lösungsraster. Offene Werte werden bei der Motivvorlage empfohlen.','hint'));
  const grid={...PW.publishedGrid(detail),...intent.grid};
  panel.open=expanded || Boolean(grid.width || grid.height || grid.mode);
- function control(group,label,key,choices,placeholder){
+ function control(group,label,key,choices,placeholder,unit){
   const wrap=node('label',label);
   const input=node(choices?'select':'input');
   if(choices){
@@ -78,30 +79,47 @@ function gridFields(parent,expanded){
    }
    remember('grid',{...intent.grid,[key]:input.value,...(key==='mode'&&grid.mode!=='color'?{colors:'',colorAccuracy:''}:{})});
   };
-  wrap.append(input);group.append(wrap);
+  if(unit){
+   const measure=node('span',undefined,'numberUnit');measure.append(input,node('span',unit));wrap.append(measure);
+  }else wrap.append(input);
+  group.append(wrap);
   return input;
+ }
+ function removal(group,key,label,inputs,onSync){
+  if(!detail?.facts.published)return;
+  const wrap=node('label',undefined,'removeGrid'),check=node('input');check.type='checkbox';check.checked=intent.removeGrid?.[key]===true;
+  function sync(){
+   for(const [name,input] of inputs){
+    input.disabled=check.checked;
+    input.value=check.checked?'':grid[name]||'';
+   }
+   if(onSync)onSync(check.checked);
+  }
+  check.onchange=()=>{sync();remember('removeGrid',{...intent.removeGrid,[key]:check.checked});};
+  wrap.append(check,node('span',` ${label} ausdrücklich aufheben`));group.append(wrap);sync();
  }
  const sizes=node('fieldset'),dims=node('div',undefined,'gridRow');
  sizes.append(node('legend','Rastergröße'),dims);
  const accuracy=[['approx','Ungefähr'],['exact','Exakt']];
- control(dims,'Breite (Zellen)','width',null,'1–50');
- control(dims,'Höhe (Zellen)','height',null,'1–50');
- control(dims,'Maßvorgabe','sizeAccuracy',accuracy);
+ for(const [key,label] of [['width','Breite'],['height','Höhe']]){
+  const axis=node('div',undefined,'axisField');dims.append(axis);
+  const input=control(axis,label,key,null,'1–50','Zellen');
+  removal(axis,key,label,[[key,input]]);
+ }
+ control(dims,'Genauigkeit der ausgefüllten Achsen','sizeAccuracy',accuracy);
  const modes=node('fieldset'),row=node('div',undefined,'gridRow');
  modes.append(node('legend','Rasterfarben'),row);
- control(row,'Farbmodus','mode',[['','Offen'],['mono','Monochrom'],['color','Farbig']]);
+ const mode=control(row,'Farbmodus','mode',[['','Offen'],['mono','Monochrom'],['color','Farbig']]);
  const palette=node('div',undefined,'paletteFields');
- const colors=control(palette,'Vordergrundfarben','colors',null,'2–8 oder offen');
+ const colors=control(palette,'Vordergrundfarben','colors',null,'2–8');
+ colors.className='shortNumber';
  const precision=control(palette,'Farbzahlvorgabe','colorAccuracy',accuracy);
  palette.hidden=grid.mode!=='color';
  row.append(palette);panel.append(sizes,modes);
  if(detail?.facts.published){
   panel.append(node('p','Vorgefüllte Werte sind Quellkontext. Änderungen werden als neue Wünsche formuliert. Leeren allein hebt keine Vorgabe auf.','hint'));
-  for(const [key,label] of [['size','Rastergröße'],['mode','Rastermodus'],['colors','Farbzahl']]){
-   const wrap=node('label'),check=node('input');check.type='checkbox';check.checked=intent.removeGrid?.[key]===true;
-   check.onchange=()=>remember('removeGrid',{...intent.removeGrid,[key]:check.checked});
-   wrap.append(check,node('span',` ${label}: bisherigen Wunsch ausdrücklich aufheben`));panel.append(wrap);
-  }
+  removal(modes,'mode','Rastermodus',[['mode',mode]],removed=>{palette.hidden=removed||grid.mode!=='color';});
+  removal(palette,'colors','Farbzahl',[['colors',colors]]);
  }
  parent.append(panel);
  return panel;
@@ -109,17 +127,32 @@ function gridFields(parent,expanded){
 function publishedContext(view,value){
  const p=value.facts.published,section=node('section',undefined,'publishedContext');
  section.append(node('h3','Überlieferte Vorgaben & Motivbriefing'));
- const status=p.role==='approved'?'Als freigegebener Parameterkorridor überliefert; keine neue Freigabeprüfung.':p.role==='proposed'?'Veröffentlichter Wunsch, noch nicht freigegebener Parameterkorridor.':'Keine Vorgabe hinterlegt.';
+ const status=p.role==='approved'?'Als freigegebener Parameterkorridor überliefert; keine neue Freigabeprüfung.':p.role==='proposed'?'Veröffentlichter Wunsch, noch nicht freigegebener Parameterkorridor.':'Keine strukturierten Rastervorgaben; siehe Motivbriefing.';
  section.append(node('p',status,'sourceRole'));
  const grid=PW.publishedGrid(value);
+ const parameterList=p.approved?.length?p.approved:p.proposed;
+ const corridor=Array.isArray(parameterList)?parameterList.find(v=>v?.format==='picross-raster-parameters-v1'):null;
+ if(corridor){
+  const kind={exact:'exakt',approximate:'ungefähr',open:'offen'};
+  for(const [axis,label] of [['width','Breite'],['height','Höhe'],['foreground_colors','Vordergrundfarben']]){
+   const c=corridor.constraints[axis];
+   section.append(node('p',`${label}: ${kind[c.kind]}${c.target===null?'':` ${c.target}`} · Untergrenze: ${c.minimum??'keine'} · Obergrenze: ${c.maximum??'keine'}`));
+  }
+  section.append(node('p',`Freigegebene Importstarts: ${corridor.imports.length}. Zelländerungen: ${corridor.derivation.cell_edits?'erlaubt':'nicht erlaubt'}. Leerer Außenbeschnitt: ${corridor.derivation.empty_edge_crop.join(', ')||'keiner'}.`));
+  section.append(node('p',`Geschützte Merkmale: ${corridor.derivation.protected_features.join('; ')||'keine benannt'}. Vollständige Importparameter stehen unten.`));
+ }
  if(Object.keys(grid).length){
   const words=[];
-  if(grid.width)words.push(`Raster: ${grid.sizeAccuracy==='exact'?'exakt':'ungefähr'} ${grid.width} × ${grid.height} Zellen (Breite × Höhe)`);
+  for(const [axis,label] of [['width','Breite'],['height','Höhe']]){
+   if(grid[axis])words.push(`${label}: ${grid.sizeAccuracy==='exact'?'exakt':'ungefähr'} ${grid[axis]} Zellen`);
+   else words.push(`${label}: keine eindeutige Einzelvorgabe; siehe Originale`);
+  }
   if(grid.mode)words.push(`Modus: ${grid.mode==='mono'?'monochrom':'farbig'}`);
   if(grid.colors)words.push(`${grid.colorAccuracy==='exact'?'Exakt':'Ungefähr'} ${grid.colors} Vordergrundfarben`);
   section.append(node('p',words.join(' · ')));
  }
- const originals=node('details');originals.open=!Object.keys(grid).length;
+ else if(p.role!=='absent'&&!corridor)section.append(node('p','Keine eindeutigen Einzelwerte; die vollständigen Angaben stehen in den Originalen.','hint'));
+ const originals=node('details');
  originals.append(node('summary','Vollständige Parameteroriginale'));
  for(const [key,label] of [['proposed','Vorgeschlagene Rasterwünsche'],['approved','Überlieferter freigegebener Korridor']]){
   if(p[key] && (!Array.isArray(p[key])||p[key].length)){
@@ -128,7 +161,7 @@ function publishedContext(view,value){
  }
  if(p.role!=='absent')section.append(originals);
  section.append(node('p',`Quelle: ${active?.source==='local'?'Lokal':'Remote'} · ${active?.ref||''} · ${value.revision} · ${value.commit.slice(0,8)}. Statuswörter in den Originalangaben erteilen keine Freigabe.`,'hint'));
- const briefing=node('details');briefing.open=true;
+ const briefing=node('details');
  briefing.append(node('summary','Veröffentlichtes Motivbriefing'),node('div',p.brief.text,'briefText'));
  section.append(briefing);view.append(section);
 }
@@ -206,6 +239,7 @@ function workflow(view,value){
 function choose(id,kind,button){const label=id==='none'?'kein Hintergrund':detail?.offers.find(o=>o.id===id&&o.kind===kind)?.label||id;intent.selection=id;intent.kind=kind;document.querySelectorAll('[data-choice]').forEach(b=>b.setAttribute('aria-pressed','false'));button.dataset.choice=id;button.setAttribute('aria-pressed','true');$('selectionStatus').textContent=`Vorgemerkt: ${label}. Erst der gesendete Auftrag erklärt deine Wahl.`;updatePrompt();}
 function newDraft(id){
  dispose();active=null;detail=null;
+ $('versions').hidden=true;$('motifStatus').textContent='Lokaler Entwurf';
  draft=drafts.find(d=>d.id===id)||{id:crypto.randomUUID(),brief:''};
  if(!drafts.includes(draft)){drafts.push(draft);drafts=drafts.slice(-20);saveDrafts();}
  intent={brief:draft.brief,notes:draft.notes||'',grid:{...draft.grid}};
@@ -225,7 +259,7 @@ function renderDrafts(){
   const remove=node('button','Entwurf verwerfen','discard');
   remove.onclick=()=>{
    drafts=drafts.filter(d=>d.id!==draft.id);draft=null;saveDrafts();renderDrafts();
-   if(listing?.jobs.length)open(listing.jobs[0].id);
+   if(listing?.motifs.length)chooseMotif(listing.motifs[0].puzzle_id);
    else if(drafts.length)newDraft(drafts.at(-1).id);
    else $('view').replaceChildren(node('p','Über „Neues Motiv“ beginnen.'));
   };
@@ -267,26 +301,53 @@ function drainImages(){
 }
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
 function dispose(){closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];$('large').close();}
-function sourceStatus(value){return (value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert')));}
-function adopt(value){const keepDraft=draft?.id;dispose();listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();if(!value.jobs.length){
-  $('jobs').append(node('option','Keine Gitstände'));
-  if(active && !keepDraft){
-   active=null;detail=null;intent={};
-   $('view').replaceChildren(node('h2','Noch keine veröffentlichten Arbeitsstände'),node('p','Über „Neues Motiv“ beginnen oder einen lokalen Entwurf öffnen.','hint'));
-  }else{
-   newDraft(keepDraft || drafts.at(-1)?.id);
-  }
-  $('jobs').selectedIndex=0;
+function sourceStatus(value){return (value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||(!value.remote_confirmed?'Remote nicht aktuell bestätigt · letzter Cache: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'unbekannt'):('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert'))));}
+function currentMotif(){return listing?.motifs.find(m=>m.puzzle_id===$('jobs').value);}
+function versionControls(motif,id){
+ $('versions').hidden=false;$('version').replaceChildren();
+ const empty=node('option','Version bewusst wählen');empty.value='';$('version').append(empty);
+ for(const [n,v] of motif.versions.entries()){
+  const option=node('option',`${v.current?'Aktuell · ':''}${v.phase} · ${v.revision}`);
+  option.value=String(n);$('version').append(option);
+ }
+ const index=motif.versions.findIndex(v=>v.sources.includes(id));
+ $('version').value=index<0?'':String(index);
+ $('jobSource').replaceChildren();
+ const bound=listing.jobs.find(j=>j.id===id),placeholder=node('option',bound?`Aktiv: ${bound.source==='local'?'Lokal':'Remote'} · ${bound.commit.slice(0,8)} · Quelle wählen`:'Quelle wählen');placeholder.value='';$('jobSource').append(placeholder);
+ const version=motif.versions[index];
+ $('versionOrigin').textContent=version?.source_label||'';
+ if(version)for(const jid of version.sources){
+  const job=listing.jobs.find(j=>j.id===jid),option=node('option',`${job.source==='local'?'Lokal':'Remote'} · ${job.ref==='main'?'main':'Produktionsbranch'} · ${job.commit.slice(0,8)}`);
+  option.value=jid;$('jobSource').append(option);
+ }
+ $('jobSource').value=remoteExplicit?id||'':'';$('jobSource').disabled=!version;
+ $('motifStatus').textContent=motif.status;
+ $('versionNotes').textContent=motif.notes.join(' ');
+}
+function chooseMotif(puzzleId){
+ const motif=listing.motifs.find(m=>m.puzzle_id===puzzleId);
+ if(!motif)return;
+ $('jobs').value=puzzleId;
+ if(motif.current_job){open(motif.current_job);return;}
+ dispose();active=null;draft=null;detail=null;intent={};remoteExplicit=false;renderDrafts();
+ versionControls(motif,null);
+ $('view').replaceChildren(node('h2',motif.title),node('p','Aktuelle Übergabe nicht eindeutig. Bitte eine Version wählen.','validation'),node('p',motif.notes.join(' '),'hint'));
+}
+function adopt(value){
+ const keepDraft=draft?.id,keepId=active?.puzzle_id||$('jobs').value;
+ dispose();listing=value;pending=null;$('load').hidden=true;
+ $('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();
+ for(const motif of value.motifs){const option=node('option',motif.label);option.value=motif.puzzle_id;$('jobs').append(option);}
+ if(keepDraft){newDraft(keepDraft);return;}
+ if(!value.motifs.length){
+  $('jobs').append(node('option','Keine Gitstände'));active=null;detail=null;intent={};
+  if(drafts.length)newDraft(drafts.at(-1).id);
+  else{$('versions').hidden=true;$('motifStatus').textContent='';$('view').replaceChildren(node('h2','Noch keine veröffentlichten Arbeitsstände'),node('p','Über „Neues Motiv“ beginnen.'));}
   return;
  }
- for(const job of value.jobs){
-  let label=`${job.title} · ${job.revision} · ${job.source==='local'?'Lokal':'Remote'}: ${job.ref}`;
-  if(value.jobs.some(other=>other.id!==job.id&&other.title===job.title&&other.revision===job.revision&&other.ref===job.ref&&other.source===job.source))label+=` · ${job.puzzle_id} · ${job.commit.slice(0,8)}`;
-  if(job.conflict)label+=' · Quellenkonflikt';
-  const opt=node('option',label);opt.value=job.id;$('jobs').append(opt);
- }
- if(keepDraft){newDraft(keepDraft);return;}const retained=value.jobs.find(j=>active&&j.puzzle_id===active.puzzle_id&&j.revision===active.revision&&j.source===active.source&&j.ref===active.ref);$('jobs').value=(retained||value.jobs[0]).id;open($('jobs').value);}
-async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts();const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=id;$('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));try{const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;const view=$('view');view.replaceChildren(node('h2',value.title));view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));view.append(node('p',value.publication,'hint'));workflow(view,value);removalAction(view,value);if(value.facts.blockers.length){const d=node('details');d.append(node('summary','Überlieferte offene Produktionspunkte'));const ul=node('ul');for(const b of value.facts.blockers)ul.append(node('li',b));d.append(ul);view.append(d);}
+ chooseMotif(value.motifs.find(m=>m.puzzle_id===keepId)?.puzzle_id||value.motifs[0].puzzle_id);
+}
+async function open(id,explicit=false){dispose();draft=null;detail=null;intent={};remoteExplicit=explicit;renderDrafts();const current=generation,signal=controller.signal;active=listing.jobs.find(j=>j.id===id);$('jobs').value=active.puzzle_id;versionControls(currentMotif(),id);$('view').replaceChildren(node('p','Originalbindungen und Bilder werden geprüft …'));try{const value=await(await request('/api/jobs/'+id,{signal})).json();if(current!==generation)return;const view=$('view');view.replaceChildren(node('h2',value.title));view.append(node('span',({brief_ready:'Briefing bereit',reveal_review:'Abschlussbilder zur Wahl',motif_review:'Motivvorlage zur Freigabe',motif_approved:'Rasterproduktion beauftragt',raster_review:'Rasterprüfung offen',raster_ready:'Geprüfte Raster zur Wahl',background_review:'Kontextzeichnungen zur Wahl',content_ready:'Bereit zur Endabnahme',editorially_approved:'Endabnahme liegt vor',registered:'Lokal registriert'})[value.facts.state]||value.facts.state,'badge'));if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));view.append(node('p',value.publication,'hint'));workflow(view,value);removalAction(view,value);if(value.facts.blockers.length){const d=node('details');d.append(node('summary','Überlieferte offene Produktionspunkte'));const ul=node('ul');for(const b of value.facts.blockers)ul.append(node('li',b));d.append(ul);view.append(d);}
  const phase=value.facts.state;const groups=phase==='background_review'?[['background']]:[['reveal','motif'],['raster'],['raster_draft'],...(PW.step(value)===5?[['background']]:[])];const shownComparisons=new Set();for(const roles of groups){const assets=value.assets.filter(a=>{
   if(!roles.includes(a.role))return false;
   if(['reveal','motif'].includes(a.role)){const key=a.role+':'+a.location.sha256;if(shownComparisons.has(key))return false;shownComparisons.add(key);}
@@ -300,7 +361,9 @@ async function open(id){dispose();draft=null;detail=null;intent={};renderDrafts(
  const details=node('details');details.append(node('summary','Technische Quellenbindungen'));details.append(node('p',value.facts.verification));details.append(node('pre',JSON.stringify({commit:value.commit,record:value.record,assets:value.assets,offers:value.offers},null,2)));view.append(details);
  }catch(exc){if(current===generation&&exc.name!=='AbortError')$('view').replaceChildren(node('h2','Arbeitsstand kann nicht geöffnet werden'),node('p',exc.message,'error'),node('p','Quellenveröffentlichung korrigieren und danach neuere Ergebnisse suchen.','hint'));}}
 function zoom(){const img=$('largeImage'),value=$('zoom').value;img.classList.toggle('zoomed',value!=='fit');if(value==='fit')img.removeAttribute('width');else img.width=img.naturalWidth*Number(value);}
-$('largeImage').onload=zoom;$('zoom').onchange=zoom;$('close').onclick=()=>$('large').close();$('jobs').onchange=()=>open($('jobs').value);
+$('largeImage').onload=zoom;$('zoom').onchange=zoom;$('close').onclick=()=>$('large').close();$('jobs').onchange=()=>chooseMotif($('jobs').value);
+$('version').onchange=()=>{const version=currentMotif()?.versions[Number($('version').value)];if($('version').value!==''&&version)open(version.sources[0]);};
+$('jobSource').onchange=()=>{if($('jobSource').value)open($('jobSource').value,true);};
 // Destructive plans live only in this dialog, never in browser storage.
 let removalEpoch=0,removalBusy=false;
 function closeRemoval(){removalEpoch++;$('removal')?.close();}
@@ -309,7 +372,7 @@ async function removalPost(route,body){
 }
 function removalAction(view,value){
  const area=node('section',undefined,'removalAction'),button=node('button','Produktion entfernen','danger');
- const reason=value.removal_unavailable;
+ const reason=value.removal_unavailable||(!remoteExplicit?'Zur Entfernung zuerst die konkrete Remotequelle ausdrücklich wählen.':null);
  button.disabled=Boolean(reason);
  button.onclick=()=>previewRemoval({job_id:active.id,snapshot:listing.snapshot});
  area.append(button,node('p',reason||'Entfernt den ganzen Produktionsbranch im Remote. Zunächst werden Ziel und Schutzbedingungen geprüft.','hint'));
