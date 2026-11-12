@@ -13,11 +13,13 @@ try {
     }
     # LoadUserProfile loads HKCU, but Start-Process still inherits the caller's
     # environment. Never send compilers/MSI to runneradmin's profile or TEMP.
-    $env:USERPROFILE = [Environment]::GetFolderPath('UserProfile')
-    $env:LOCALAPPDATA = [Environment]::GetFolderPath('LocalApplicationData')
-    $env:APPDATA = [Environment]::GetFolderPath('ApplicationData')
+    # A first-logon profile can lack AppData directories. Create the known
+    # folders as this user rather than accepting GetFolderPath's empty result.
+    $env:USERPROFILE = [Environment]::GetFolderPath('UserProfile', 'Create')
+    $env:LOCALAPPDATA = [Environment]::GetFolderPath('LocalApplicationData', 'Create')
+    $env:APPDATA = [Environment]::GetFolderPath('ApplicationData', 'Create')
     if (-not $env:USERPROFILE -or -not $env:LOCALAPPDATA -or -not $env:APPDATA) {
-        throw 'Loaded test profile is incomplete'
+        throw "Loaded test profile is incomplete: USERPROFILE=$env:USERPROFILE; LOCALAPPDATA=$env:LOCALAPPDATA; APPDATA=$env:APPDATA"
     }
     $env:HOME = $env:USERPROFILE
     $env:TEMP = $env:TMP = Join-Path $Output 'temp'
