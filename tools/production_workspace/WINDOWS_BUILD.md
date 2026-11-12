@@ -2,7 +2,8 @@
 
 Maßgeblich: [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437).
 [P4-N1](https://github.com/venomenon328/picross/issues/588#issuecomment-6828896451)
-bindet die korrigierte Actions-Testumgebung und die automatische Wahl des aktuellen Mainstands.
+und dessen [Prüfzuschnitt](https://github.com/venomenon328/picross/issues/588#issuecomment-6829590335)
+binden die Actions-Prüfung und die automatische Wahl des aktuellen Mainstands.
 Launcherbau und regulärer Windows-Spieler der Package-CI bleiben getrennt.
 Keine neuen automatischen Trigger und kein Release/Tag. Das zusätzlich beauftragte
 Nonogramm-Icon ist unter [assets](assets/README.md) gebunden.
@@ -52,7 +53,7 @@ Der [eigene Workflow](../../.github/workflows/pw-installer.yml) hat ausschließl
 `workflow_dispatch` ohne SHA-Eingabe. Er holt den aktuellen `main`, fixiert dessen
 volle Commit-SHA für den gesamten Lauf und nennt sie im Log und Downloadnamen;
 App-/Liefermanifest binden denselben Stand. Spätere Mainänderungen ändern diesen
-Lauf nicht. Er baut sauber und startet dieselben Bau-/Smokeskripte.
+Lauf nicht. Er baut sauber und prüft die tatsächlichen MSI-Bytes.
 Kein Aufruf aus Package CI, kein automatischer Browser-/Installationslauf dort.
 Produktdownload: `Picross-Produktionsassistent-X.Y.Z-windows-x64.msi`, `.sha256`,
 `START.txt`, `delivery.json`; 14 Tage Retention. Kein Release/Tag/Deployment.
@@ -61,16 +62,23 @@ P4-T04 bleibt bis zum echten manuellen Run und binären Rückdownload offen.
 Nach Integration des Fixes: Actions → **Manual production assistant installer** →
 **Run workflow**, ohne weitere Eingabe. Gebaut wird der dann geholte Mainstand.
 
-Auf dem wegwerfbaren Actionsrunner legt der manuelle Smoke einen echten lokalen
-Standardbenutzer an. Dessen geladenes Profil liefert `USERPROFILE`; für dieses
-neue lokale Testkonto werden die Windows-Standardpfade `AppData/Local` und
-`AppData/Roaming` darunter angelegt und vor den frischen Kindprozessen als
-`LOCALAPPDATA`/`APPDATA` gesetzt. `TEMP`/`TMP` zeigen auf einen eigenen
-beschreibbaren Testordner.
-`Start-Process -LoadUserProfile` allein ersetzt die geerbte Runnerumgebung nicht.
-Die Kindprozessausgabe samt Fehlern steht im Actionslog, ohne zusätzlichen
-Technik-Upload. Lokal werden keine Benutzer angelegt; dort einen bestehenden
-nicht erhöhten Testbenutzer verwenden.
+Hosted Windows Server sperrt nicht zugewiesene per-user MSI für Standardbenutzer
+(1625). Der manuelle Actionsbau prüft deshalb mit
+[verify_installer.py](verify_installer.py) die echte MSI-Datenbank und alle per
+gebundenem WiX `dark.exe` entpackten Bytes: Quelle, Version, Product-/Upgradecode,
+x64/limited/HKCU, Prüfsumme, vollständiges Payloadinventar, Guard und Lizenzbytes.
+Die extrahierten technischen Dateien werden nach der Prüfung entfernt; nur der
+kompakte Befund steht im Joblog. Es werden keine Benutzer angelegt, keine
+Installationsrichtlinien geändert und keine echte Installation behauptet.
+
+Der vollständige P4-T02-Lebenszyklussmoke bleibt separat auf einem geeigneten
+Windows-11-x64-Client als normaler Benutzer erforderlich; den tatsächlichen
+Actions-Rückdownload mit dem gebundenen Lieferreport verwenden. Der lokale
+Prüfordner benötigt dafür zusätzlich das hashgeprüfte WiX-Archiv unter
+`work/wix.zip`: der MSI-Smoke baut die reale Vorgängerversion selbst. Download
+und lokale Builddateien getrennt halten. Auf einem Entwicklungscheckout mit
+abweichendem Head den erwarteten Quellcommit beim binären Inspector explizit
+übergeben. Dies ist kein Eingabefeld im Actionsworkflow.
 
 P4-T01 prüft kleine Quell-/Metadatenverträge im gewählten `tools`-Modul.
 P4-T02 installiert unter nicht erhöhtem Testbenutzer ausschließlich mit synthetischem
