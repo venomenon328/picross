@@ -47,13 +47,23 @@ InstallInitialize erlaubt transaktionalen Rollback. Kein Installer schreibt in
 Checkout, PW-Zustand, Browserprofil oder portable Altordner.
 
 Der [eigene Workflow](../../.github/workflows/pw-installer.yml) hat ausschließlich
-`workflow_dispatch`, liest eine volle ausdrücklich gewählte SHA, die in `main`
-integriert sein muss, baut sauber und startet genau dieselben Bau-/Smokeskripte.
+`workflow_dispatch` ohne SHA-Eingabe. Er holt den aktuellen `main`, fixiert dessen
+volle Commit-SHA für den gesamten Lauf und nennt sie im Log und Downloadnamen;
+App-/Liefermanifest binden denselben Stand. Spätere Mainänderungen ändern diesen
+Lauf nicht. Er baut sauber und startet dieselben Bau-/Smokeskripte.
 Kein Aufruf aus Package CI, kein automatischer Browser-/Installationslauf dort.
 Produktdownload: `Picross-Produktionsassistent-X.Y.Z-windows-x64.msi`, `.sha256`,
 `START.txt`, `delivery.json`; 14 Tage Retention. Kein Release/Tag/Deployment.
 Der Workflow wird erstmals nach gesondert freigegebenem Merge regulär aufrufbar.
 P4-T04 bleibt bis zum echten manuellen Run und binären Rückdownload offen.
+
+Auf dem wegwerfbaren Actionsrunner legt der manuelle Smoke einen echten lokalen
+Standardbenutzer an. Dessen geladenes Profil liefert `USERPROFILE`, `LOCALAPPDATA`
+und `APPDATA`; `TEMP`/`TMP` zeigen auf einen eigenen beschreibbaren Testordner.
+`Start-Process -LoadUserProfile` allein ersetzt die geerbte Runnerumgebung nicht.
+Die Kindprozessausgabe samt Fehlern steht im Actionslog, ohne zusätzlichen
+Technik-Upload. Lokal werden keine Benutzer angelegt; dort einen bestehenden
+nicht erhöhten Testbenutzer verwenden.
 
 P4-T01 prüft kleine Quell-/Metadatenverträge im gewählten `tools`-Modul.
 P4-T02 installiert unter nicht erhöhtem Testbenutzer ausschließlich mit synthetischem

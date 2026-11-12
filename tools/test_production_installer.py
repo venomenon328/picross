@@ -110,6 +110,10 @@ class InstallerContractTests(unittest.TestCase):
         workflow = (ROOT / '.github/workflows/pw-installer.yml').read_text()
         triggers = workflow.split('\non:\n', 1)[1].split('\npermissions:', 1)[0]
         self.assertIn('workflow_dispatch:', triggers)
+        self.assertNotIn('inputs:', triggers)
+        self.assertIn('ref: main', workflow)
+        self.assertIn('git checkout --detach $source', workflow)
+        self.assertIn('steps.source.outputs.source_commit', workflow)
         for forbidden in ('pull_request:', 'push:', 'schedule:', 'workflow_run:', 'workflow_call:'):
             self.assertNotIn(forbidden, triggers)
         for path in (ROOT / '.github/workflows/ci-modular.yml', ROOT / 'tools/ci_modular.py'):

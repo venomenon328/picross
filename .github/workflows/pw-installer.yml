@@ -2,11 +2,6 @@ name: Manual production assistant installer
 
 on:
   workflow_dispatch:
-    inputs:
-      source_commit:
-        description: Full trusted source SHA already integrated in main
-        type: string
-        required: true
 
 permissions:
   contents: read
@@ -17,18 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
+          ref: main
           fetch-depth: 0
           persist-credentials: false
-      - name: Select explicit trusted source
+      - name: Pin latest fetched main commit
+        id: source
         shell: pwsh
-        env:
-          SOURCE_COMMIT: ${{ inputs.source_commit }}
         run: |
-          if ($env:SOURCE_COMMIT -cnotmatch '^[0-9a-f]{40}$') { throw 'Full source SHA required' }
-          git merge-base --is-ancestor $env:SOURCE_COMMIT origin/main
-          if ($LASTEXITCODE -ne 0) { throw 'Source must be integrated in main' }
-          git checkout --detach $env:SOURCE_COMMIT
+          $source = git rev-parse --verify origin/main
+          if ($LASTEXITCODE -ne 0 -or $source -cnotmatch '^[0-9a-f]{40}$') { throw 'Full main SHA required' }
+          git checkout --detach $source
           if ($LASTEXITCODE -ne 0) { throw 'Source checkout failed' }
+          "source_commit=$source" >> $env:GITHUB_OUTPUT
+          Write-Host "Installer source: main@$source"
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
         with:
           python-version: '3.13.14'
@@ -43,23 +39,23 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'Pinned dependency setup failed' }
       - name: Build payload and MSI, then isolated installer lifecycle
         shell: pwsh
+        env:
+          SMOKE_HARNESS_COMMIT: ${{ github.workflow_sha }}
         run: |
           & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.build_installer --output "$env:RUNNER_TEMP\pw-product"
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
-          # Temporary diagnosis of the already integrated source, no product changes.
-          $script = 'tools/production_workspace/packaging/smoke-user.ps1'
-          $text = Get-Content -Raw $script
-          $text = $text.Replace("@('-NoProfile', '-File', `$script)", "@('-NoProfile', '-File', `$script) -RedirectStandardOutput (Join-Path `$Output 'stdout.log') -RedirectStandardError (Join-Path `$Output 'stderr.log')")
-          Set-Content -LiteralPath $script -Value $text -Encoding utf8
-          try {
-            & $script -Python "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -Build "$env:RUNNER_TEMP\pw-product" -Output "$env:RUNNER_TEMP\pw-smoke"
-          } finally {
-            Get-Content "$env:RUNNER_TEMP\pw-smoke\stdout.log","$env:RUNNER_TEMP\pw-smoke\stderr.log" -ErrorAction Continue
+          # Temporary pre-merge test: exact harness from this workflow commit,
+          # unchanged product and synthetic predecessor sources from main.
+          $harness = New-Item -ItemType Directory "$env:RUNNER_TEMP\pw-harness"
+          foreach ($name in @('smoke-user.ps1', 'smoke-bootstrap.ps1')) {
+            git show "${env:SMOKE_HARNESS_COMMIT}:tools/production_workspace/packaging/$name" | Set-Content -Encoding utf8 (Join-Path $harness $name)
+            if ($LASTEXITCODE -ne 0) { throw 'Harness snapshot failed' }
           }
+          & (Join-Path $harness 'smoke-user.ps1') -Python "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -Build "$env:RUNNER_TEMP\pw-product" -Output "$env:RUNNER_TEMP\pw-smoke"
       - name: Targeted product download, no release or deployment
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: Picross-Produktionsassistent-${{ inputs.source_commit }}
+          name: Picross-Produktionsassistent-${{ steps.source.outputs.source_commit }}
           path: |
             ${{ runner.temp }}/pw-product/*.msi
             ${{ runner.temp }}/pw-product/*.msi.sha256
