@@ -156,9 +156,10 @@ ebenfalls hinein; ihre verbindliche Entscheidung steht anschließend in den
 zuständigen Paket-/Repositoryquellen.
 
 Gewählte Befugnisse bleiben ausdrücklich im abgesendeten Auftrag: etwa nur
-Beratung, Umsetzung ohne Merge, Review ohne Korrektur, bedingter Merge oder
-Bereinigung eigener Arbeitsdaten. Ebenso bleibt eine eingestellte lokale
-Arbeitswurzel ein Auftragsparameter. Eine Repositoryregel oder ein importiertes
+Beratung, Umsetzung ohne Merge, Review ohne Korrektur oder bedingter Merge.
+Eine zusätzliche Bereinigung lokaler Arbeitsdaten wird vom Sheet nicht
+beauftragt; ein eigenständiger ausdrücklicher Löschauftrag folgt WORKSPACE.
+Eine eingestellte lokale Arbeitswurzel bleibt ein Auftragsparameter. Eine Repositoryregel oder ein importiertes
 Ergebnis darf diese Nutzerentscheidung nicht selbst ersetzen oder erweitern.
 
 Allgemeine Quellenprüfung, CI-/Test-/Artefaktregeln, Modellwahl, Reviewverfahren,
