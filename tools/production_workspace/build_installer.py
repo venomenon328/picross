@@ -95,10 +95,8 @@ def wix_source(app, product, guard):
     element(sequence, 'Custom', Action='CheckStopped', Before='InstallValidate').text = '1'
     element(p, 'UIRef', Id='WixUI_Common')
     ui = element(p, 'UI')
-    element(ui, 'Error', Id='1722').text = ('Picross kann gerade nicht installiert/entfernt werden. '
-        'Assistent und andere Anwendungen mit offenen Programmdateien regulär beenden; eine laufende '
-        'Produktionsentfernung vollständig abwarten. Bei unklarem Zustand Pfade/Rechte prüfen. Danach '
-        'den Installer erneut starten. Es wurde kein Prozess beendet. (Prüfung: [2])')
+    element(ui, 'Error', Id='1722').text = ('App läuft oder Zugriff ist unklar. Assistent regulär beenden '
+        'und Produktionsentfernung abwarten. Dann Installer erneut starten. Kein Prozess wird beendet.')
     element(ui, 'TextStyle', Id='WixUI_Font_Normal', FaceName='Segoe UI', Size='9')
     element(ui, 'TextStyle', Id='WixUI_Font_Bigger', FaceName='Segoe UI', Size='12')
     element(ui, 'TextStyle', Id='WixUI_Font_Title', FaceName='Segoe UI', Size='10', Bold='yes')
