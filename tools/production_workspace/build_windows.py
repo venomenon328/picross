@@ -15,7 +15,7 @@ import zlib
 import pyexpat
 import decimal
 import tkinter
-from .release import release
+from .release import release, version_tuple
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
@@ -66,8 +66,18 @@ def build(destination):
                 'runtime_components': runtime_versions, 'resources': resources, 'signed': False}
     manifest_file = work / 'build.json'
     manifest_file.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
+    file_version = work / 'version.txt'
+    numbers = version_tuple(product['version']) + (0,)
+    file_version.write_text(
+        'VSVersionInfo(ffi=FixedFileInfo(filevers=' + repr(numbers) + ', prodvers=' + repr(numbers) +
+        ', mask=0x3f, flags=0x0, OS=0x40004, fileType=0x1, subtype=0x0, date=(0,0)), '
+        'kids=[StringFileInfo([StringTable("040704B0", [StringStruct("ProductName", "Picross-Produktionsassistent"), '
+        'StringStruct("ProductVersion", ' + repr(product['version']) + '), StringStruct("FileVersion", ' +
+        repr(product['version']) + '), StringStruct("Comments", ' + repr(commit) + ')])]), '
+        'VarFileInfo([VarStruct("Translation", [1031, 1200])])])', encoding='utf-8')
     subprocess.run([sys.executable, '-m', 'PyInstaller', '--clean', '--noconfirm', '--onedir', '--windowed',
                     '--noupx', '--name', 'Picross-Start', '--icon', str(PACKAGE / 'assets/launcher.ico'),
+                    '--version-file', str(file_version),
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
                     '--collect-submodules', 'tools.puzzle_production',
