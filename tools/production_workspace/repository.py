@@ -427,6 +427,7 @@ class Repository:
                 except (ValueError, OSError, KeyError, TypeError) as exc:
                     errors.append('Ungültige Projektion für ' + row['puzzle_id'] + '/' + row['revision'] + ': ' + str(exc))
         from . import current_view
+        pointer_read_error = False
         for identity in {j['puzzle_id'] for j in jobs}:
             current, message = None, None
             try:
@@ -436,6 +437,7 @@ class Repository:
                 else:
                     current = current_view.inspect(source, commit, raw, identity)
             except (ValueError, OSError, KeyError, TypeError) as exc:
+                pointer_read_error = True
                 message = 'Ungültiger aktueller Ansichtsbezug: ' + str(exc)
             for job in jobs:
                 if job['puzzle_id'] == identity:
@@ -444,7 +446,7 @@ class Repository:
         value = {'jobs': jobs, 'errors': errors}
         # An offline object may become reachable on the next refresh. Do not
         # turn a transient read failure into a cached permanent failure.
-        if not errors:
+        if not errors and not pointer_read_error:
             self.scans.put(key, p.data(value))
         return value
 

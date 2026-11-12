@@ -113,6 +113,10 @@ def group(jobs, comparisons, *, confirmed, remote):
             status = 'Remote nicht aktuell bestätigt'
         elif conflicting or 'divergent' in pairs:
             status = 'Abweichende Stände'
+        elif not local:
+            status = 'Nur Remote vorhanden'
+        elif not other:
+            status = 'Nur lokal vorhanden'
         elif 'unknown' in pairs:
             status = 'Remote nicht aktuell bestätigt'
         elif pairs <= {'equal'} and pairs:
