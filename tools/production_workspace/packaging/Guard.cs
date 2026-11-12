@@ -10,6 +10,12 @@ using System.Reflection;
 using System.Collections.Generic;
 
 public static class Guard {
+    static FileAttributes? Attributes(string path) {
+        try { return File.GetAttributes(path); }
+        catch (FileNotFoundException) { return null; }
+        catch (DirectoryNotFoundException) { return null; }
+        // Access denied and all other inconclusive states propagate as refusal.
+    }
     [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
     static extern IntPtr OpenEvent(uint access, bool inherit, string name);
     [DllImport("kernel32.dll")] static extern bool CloseHandle(IntPtr handle);
@@ -22,7 +28,8 @@ public static class Guard {
 
     static void NoLinks(string path) {
         for (var dir = new DirectoryInfo(path); dir != null; dir = dir.Parent) {
-            if (dir.Exists && (dir.Attributes & FileAttributes.ReparsePoint) != 0)
+            var attributes = Attributes(dir.FullName);
+            if (attributes.HasValue && (attributes.Value & FileAttributes.ReparsePoint) != 0)
                 throw new IOException("Installationspfad enthält einen Link.");
         }
     }
@@ -46,8 +53,9 @@ public static class Guard {
             var state = Path.Combine(local, "PicrossProductionWorkspace", ".launcher");
             NoLinks(state);
             var stateLock = Path.Combine(state, "lock");
-            if (File.Exists(stateLock)) {
-                if ((File.GetAttributes(stateLock) & FileAttributes.ReparsePoint) != 0)
+            var lockAttributes = Attributes(stateLock);
+            if (lockAttributes.HasValue) {
+                if ((lockAttributes.Value & FileAttributes.ReparsePoint) != 0)
                     throw new IOException("Instanzlock enthält einen Link.");
                 using (var stream = new FileStream(stateLock, FileMode.Open, FileAccess.ReadWrite, FileShare.None)) { }
             }
@@ -62,7 +70,13 @@ public static class Guard {
                     string relative;
                     while ((relative = reader.ReadLine()) != null) {
                         var file = Path.Combine(target, relative);
-                        if (File.Exists(file)) paths.Add(file);
+                        NoLinks(Path.GetDirectoryName(file));
+                        var attributes = Attributes(file);
+                        if (attributes.HasValue) {
+                            if ((attributes.Value & FileAttributes.ReparsePoint) != 0)
+                                throw new IOException("Programmdatei enthält einen Link.");
+                            paths.Add(file);
+                        }
                     }
                 }
                 if (paths.Count > 0 && RmRegisterResources(rm, (uint)paths.Count, paths.ToArray(), 0, IntPtr.Zero, 0, IntPtr.Zero) != 0)
