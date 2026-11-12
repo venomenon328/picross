@@ -1,4 +1,5 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
+
 ## #596/C · Reguläre motivtreue Rasterkorrektur
 
 Der [geschlossene C-Vertrag](../FIXED_RASTER.md) gilt für Authoring 0.8.0,
@@ -363,6 +364,19 @@ keine technische Prüfung, Herkunft/Rechte oder tatsächliche Freigaben.
 
 ### 4.4 Reparaturen und Änderungen
 
+**Reguläre feste Korrektur (#596/C):** Vor Rückgabe konkrete kleine Kontur-/
+Flächenmängel und störende leere Außenlinien innerhalb des freigegebenen
+Korridors bearbeiten, auch wenn die Logik bereits solved ist. Gute Kandidaten
+nicht unnötig ändern. Den vollständigen [festen Plan](../FIXED_RASTER.md) gegen
+den direkten unveränderten RP-3-Import vorab binden; keine Suche und keine
+nachträglich erweiterte Editliste. Der neue Parameterkorridor bewahrt offene/
+ungefähre Endmaße trotz konkreter Importstarts. Materielle Änderungen bleiben
+entscheidungspflichtig; eine Zelle ist nicht automatisch harmlos. Verbrauchte
+Runden/Kandidaten/Änderungen bleiben kumulativ, auch unter neuen Namen/Ordnern.
+Nachweise einschließlich aktiver 0.4-Analyse am Endstand prüfen; unveränderte
+Bildfreigaben erhalten. Erst der frisch gelesene Builder-ZIP kann raster_ready
+und ein qualifiziertes Angebot ergeben, ohne Endfreigabe/Background/Rasterwahl.
+
 **Aktiver Reparaturauftrag:** Wenn kein visuell tragfähiger Kandidat vollständig
 zertifiziert ist, MUSS Codex gezielte Verbesserungen versuchen, bevor es die
 Produktion allein wegen `stalled` oder belegtem `multiple` zurückgibt. Bereits
@@ -403,7 +417,8 @@ zunächst Abstraktion/Größe/Palette nach 2.4 überarbeiten und nötige Freigab
    Einzellokaländerungen; es optimiert nicht selbst anhand der Diagnosezeugen.
    Codex legt daraus Hypothese und Maske fest. Reicht das nicht, eine konkrete
    lokale Formkorrektur oder andere Abstraktion/Größe/Palette vorschlagen und nur
-   innerhalb vorhandener Befugnisse umsetzen. Feste manuelle Ableitungen brauchen
+   innerhalb vorhandener Befugnisse umsetzen. Für aktuelle genehmigte feste
+   Zellkorrektur/leeren Beschnitt gilt der reguläre C-Weg oben. Historische feste manuelle Ableitungen brauchen
    den tatsächlich unterstützten ZA-1-Vertrag und dessen gesonderte Autorisierung;
    keine freie Matrixmanipulation als regulären Import ausgeben. Materielle
    Änderungen vor Fortsetzung erneut zur Motivfreigabe vorlegen.

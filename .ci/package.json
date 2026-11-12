@@ -1,28 +1,24 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/596",
-  "package": "B",
+  "package": "C",
   "modules": [
     "tools",
+    "production.images",
     "production.adapter"
   ],
-  "purpose": "B-K01 bis B-K05 und Nacharbeit B-B01: gebundener current-view-Publisher, Versionswahl und Gitrelation; Lokal-/Remote-Status nur zwischen zugehörigen Refs.",
-  "omitted": "Keine Katalog-/Runtime-/Solveränderung: kein production.catalog, native.*, preflight, delivery oder Browser-CI. Kern liefert Windows-Spieler. Synthetische Gitintegration; B-A02-Bedienprobe nicht durchgeführt und als Merge-Gate ausdrücklich aufgehoben (PR #598, Review 5873719375). Unabhängiges Review des neuen Heads separat.",
+  "purpose": "C-K01–C-K04: direkte Bildsichtung, geschlossener Parameterkorridor, reguläre feste Mono-/Farbableitung und vollständige Rasterqualifikation.",
+  "omitted": "Keine Solver-/Ratingalgorithmus-, Katalogwriter-, Runtime- oder Rendereränderung: kein production.solver/catalog, native.*, preflight, delivery oder Chromium. Kern liefert Windows-Spieler. C-T01/T02 einmalig am Lieferhead; unabhängiges C-R01 danach.",
   "test_changes": [
     {
-      "path": "tools/test_production_workspace.py",
+      "path": "tests/puzzle_production/test_fixed_raster.py",
       "disposition": "change-scoped",
-      "reason": "Kleine echte synthetische Git-/Pointer-/HTTP-/Controllerfälle einschließlich B-B01 (synchronisierte Main-/Produktionsrefs trotz unterschiedlicher Versionen/Abstammung), fehlendem Gegenref, Offline, Shallow, Quellenkonflikt und ungesendeter Absicht."
+      "reason": "Kleine synthetische Edit-/Crop-/Korridor-/Masken-/Prooffälle; ausschließlich production.images."
     },
     {
-      "path": "tools/production_workspace/check_ui_loading.cjs",
+      "path": "tests/puzzle_production/test_fixed_raster_adapter.py",
       "disposition": "change-scoped",
-      "reason": "Gruppierung, konkrete Quellenwahl, P2-Schutz und generationgebundene Antworten im bestehenden browserfreien Controllerdurchstich."
-    },
-    {
-      "path": "tests/puzzle_production/test_authoring_workflow.py",
-      "disposition": "change-scoped",
-      "reason": "Publisher, Finalizer, Completion und Unterbrechungswiederholung im bestehenden synthetischen 0.8-Durchstich."
+      "reason": "Echte synthetische Git-/Builder-/ZIP-/Angebots-/Pointerprüfung mit aktiver 0.4 und stale Gegenproben; ausschließlich production.adapter."
     }
   ],
   "core_change": null,
