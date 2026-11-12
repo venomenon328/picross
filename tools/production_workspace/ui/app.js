@@ -56,7 +56,7 @@ function gridFields(parent,expanded){
  panel.append(summary,node('p','Optional für das spätere Lösungsraster. Offene Werte werden bei der Motivvorlage empfohlen.','hint'));
  const grid={...PW.publishedGrid(detail),...intent.grid};
  panel.open=expanded || Boolean(grid.width || grid.height || grid.mode);
- function control(group,label,key,choices,placeholder){
+ function control(group,label,key,choices,placeholder,unit){
   const wrap=node('label',label);
   const input=node(choices?'select':'input');
   if(choices){
@@ -78,30 +78,47 @@ function gridFields(parent,expanded){
    }
    remember('grid',{...intent.grid,[key]:input.value,...(key==='mode'&&grid.mode!=='color'?{colors:'',colorAccuracy:''}:{})});
   };
-  wrap.append(input);group.append(wrap);
+  if(unit){
+   const measure=node('span',undefined,'numberUnit');measure.append(input,node('span',unit));wrap.append(measure);
+  }else wrap.append(input);
+  group.append(wrap);
   return input;
+ }
+ function removal(group,key,label,inputs,onSync){
+  if(!detail?.facts.published)return;
+  const wrap=node('label',undefined,'removeGrid'),check=node('input');check.type='checkbox';check.checked=intent.removeGrid?.[key]===true;
+  function sync(){
+   for(const [name,input] of inputs){
+    input.disabled=check.checked;
+    input.value=check.checked?'':grid[name]||'';
+   }
+   if(onSync)onSync(check.checked);
+  }
+  check.onchange=()=>{sync();remember('removeGrid',{...intent.removeGrid,[key]:check.checked});};
+  wrap.append(check,node('span',` ${label} ausdrücklich aufheben`));group.append(wrap);sync();
  }
  const sizes=node('fieldset'),dims=node('div',undefined,'gridRow');
  sizes.append(node('legend','Rastergröße'),dims);
  const accuracy=[['approx','Ungefähr'],['exact','Exakt']];
- control(dims,'Breite (Zellen)','width',null,'1–50');
- control(dims,'Höhe (Zellen)','height',null,'1–50');
- control(dims,'Maßvorgabe','sizeAccuracy',accuracy);
+ for(const [key,label] of [['width','Breite'],['height','Höhe']]){
+  const axis=node('div',undefined,'axisField');dims.append(axis);
+  const input=control(axis,label,key,null,'1–50','Zellen');
+  removal(axis,key,label,[[key,input]]);
+ }
+ control(dims,'Genauigkeit der ausgefüllten Achsen','sizeAccuracy',accuracy);
  const modes=node('fieldset'),row=node('div',undefined,'gridRow');
  modes.append(node('legend','Rasterfarben'),row);
- control(row,'Farbmodus','mode',[['','Offen'],['mono','Monochrom'],['color','Farbig']]);
+ const mode=control(row,'Farbmodus','mode',[['','Offen'],['mono','Monochrom'],['color','Farbig']]);
  const palette=node('div',undefined,'paletteFields');
- const colors=control(palette,'Vordergrundfarben','colors',null,'2–8 oder offen');
+ const colors=control(palette,'Vordergrundfarben','colors',null,'2–8');
+ colors.className='shortNumber';
  const precision=control(palette,'Farbzahlvorgabe','colorAccuracy',accuracy);
  palette.hidden=grid.mode!=='color';
  row.append(palette);panel.append(sizes,modes);
  if(detail?.facts.published){
   panel.append(node('p','Vorgefüllte Werte sind Quellkontext. Änderungen werden als neue Wünsche formuliert. Leeren allein hebt keine Vorgabe auf.','hint'));
-  for(const [key,label] of [['size','Rastergröße'],['mode','Rastermodus'],['colors','Farbzahl']]){
-   const wrap=node('label'),check=node('input');check.type='checkbox';check.checked=intent.removeGrid?.[key]===true;
-   check.onchange=()=>remember('removeGrid',{...intent.removeGrid,[key]:check.checked});
-   wrap.append(check,node('span',` ${label}: bisherigen Wunsch ausdrücklich aufheben`));panel.append(wrap);
-  }
+  removal(modes,'mode','Rastermodus',[['mode',mode]],removed=>{palette.hidden=removed||grid.mode!=='color';});
+  removal(palette,'colors','Farbzahl',[['colors',colors]]);
  }
  parent.append(panel);
  return panel;
@@ -109,17 +126,21 @@ function gridFields(parent,expanded){
 function publishedContext(view,value){
  const p=value.facts.published,section=node('section',undefined,'publishedContext');
  section.append(node('h3','Überlieferte Vorgaben & Motivbriefing'));
- const status=p.role==='approved'?'Als freigegebener Parameterkorridor überliefert; keine neue Freigabeprüfung.':p.role==='proposed'?'Veröffentlichter Wunsch, noch nicht freigegebener Parameterkorridor.':'Keine Vorgabe hinterlegt.';
+ const status=p.role==='approved'?'Als freigegebener Parameterkorridor überliefert; keine neue Freigabeprüfung.':p.role==='proposed'?'Veröffentlichter Wunsch, noch nicht freigegebener Parameterkorridor.':'Keine strukturierten Rastervorgaben; siehe Motivbriefing.';
  section.append(node('p',status,'sourceRole'));
  const grid=PW.publishedGrid(value);
  if(Object.keys(grid).length){
   const words=[];
-  if(grid.width)words.push(`Raster: ${grid.sizeAccuracy==='exact'?'exakt':'ungefähr'} ${grid.width} × ${grid.height} Zellen (Breite × Höhe)`);
+  for(const [axis,label] of [['width','Breite'],['height','Höhe']]){
+   if(grid[axis])words.push(`${label}: ${grid.sizeAccuracy==='exact'?'exakt':'ungefähr'} ${grid[axis]} Zellen`);
+   else words.push(`${label}: keine eindeutige Einzelvorgabe; siehe Originale`);
+  }
   if(grid.mode)words.push(`Modus: ${grid.mode==='mono'?'monochrom':'farbig'}`);
   if(grid.colors)words.push(`${grid.colorAccuracy==='exact'?'Exakt':'Ungefähr'} ${grid.colors} Vordergrundfarben`);
   section.append(node('p',words.join(' · ')));
  }
- const originals=node('details');originals.open=!Object.keys(grid).length;
+ else if(p.role!=='absent')section.append(node('p','Keine eindeutigen Einzelwerte; die vollständigen Angaben stehen in den Originalen.','hint'));
+ const originals=node('details');
  originals.append(node('summary','Vollständige Parameteroriginale'));
  for(const [key,label] of [['proposed','Vorgeschlagene Rasterwünsche'],['approved','Überlieferter freigegebener Korridor']]){
   if(p[key] && (!Array.isArray(p[key])||p[key].length)){
@@ -128,7 +149,7 @@ function publishedContext(view,value){
  }
  if(p.role!=='absent')section.append(originals);
  section.append(node('p',`Quelle: ${active?.source==='local'?'Lokal':'Remote'} · ${active?.ref||''} · ${value.revision} · ${value.commit.slice(0,8)}. Statuswörter in den Originalangaben erteilen keine Freigabe.`,'hint'));
- const briefing=node('details');briefing.open=true;
+ const briefing=node('details');
  briefing.append(node('summary','Veröffentlichtes Motivbriefing'),node('div',p.brief.text,'briefText'));
  section.append(briefing);view.append(section);
 }
