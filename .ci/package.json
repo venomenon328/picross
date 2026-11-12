@@ -1,15 +1,15 @@
 {
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/594",
-  "package": "Birne · Schritte 1–3 · Rasterangebote r03/r04",
-  "modules": [],
-  "purpose": "Reine Rätselproduktion: echte Motiv-/Parameterfreigabe, vier begrenzte Direktimporte, zwei motivtreue feste C-Ableitungen mit leerem Außenbeschnitt, vollständige Nachweise und zwei qualifizierte Einzelrevisionen samt aktueller Ansichtsübergabe.",
-  "omitted": "modules=[] und evidence.mode=none: kein Code-/Tool-/Runtime-Diff, kein Player-Build und keine rätselspezifischen Tests oder Bestandsreplays. Quellen, Originale, C-Replay/Proof, Endmatrix, Palette, Randregel, visuelle Zell-/Hinweisqualität und explizite 0.4-Analyse werden im Produktionsauftrag geprüft. Rasterwahl, Hintergrund und Endabnahme sind spätere menschliche Schritte.",
-  "test_changes": [],
   "core_change": null,
   "evidence": {
+    "expires": null,
     "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
+    "purpose": null
+  },
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/594",
+  "modules": [],
+  "omitted": "modules=[] und evidence.mode=none: ausschließlich Produktionsdaten und Paketplan. Unveränderte Raster-/Proof-/0.4-Analysebindungen wiederverwenden; Builder prüft das geschriebene neue ZIP frisch vollständig. Keine neuen Rätseltests, Bestandsreplays, Tool-/Runtimeänderungen oder manuellen Browserläufe. Hintergrundwahl, Assetableitung, Endabnahme und Integration bleiben offen. Der bestehende Klassifizierer kann wegen current-view.json dennoch automatisch einen Windowsbau auslösen; kein Toolfix im Inhaltsauftrag.",
+  "package": "Birne · Schritte 1–4 · BIR-G-r04 gewählt, Kontextauswahl r05",
+  "purpose": "Reine Rätselproduktion: tatsächliche Wahl BIR-G-r04 am unveränderten Quellcommit, drei echte native Kontextzeichnungen mit isolierter Q-HG01–04-Sichtung und geklärter Herkunft; neue vollständige background_review-Revision, Index, workspace und current-view.",
+  "test_changes": []
 }
