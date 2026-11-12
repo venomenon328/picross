@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/620",
-  "package": "fruit-fast-track",
+  "issue": "https://github.com/venomenon328/picross/issues/608",
+  "package": "Radieschen · Schritt 4 · Kontextzeichnungen nach Wahl RAD-K-r03",
   "modules": [],
-  "purpose": "Einmaliger, vom Eigentümer beauftragter direkter Import bereits unabhängig auf ihren alten Produktionsbranches registrierter und endabgenommener Erdbeere, Zitrone und Birne. Gleiche Git-Blobs für vollständige alte Exportpakete, aktive Assets, Quellen, Rating und Added, nur v4/v7-Indizes auf frischem main zusammengeführt. Keine Neuproduktion oder Tool-/Game-Codeänderung. CI prüft docs/ci-required und baut den Windows-Spieler nur, wenn die tatsächliche Pfadklassifikation es verlangt.",
-  "omitted": "Unveränderte Bild-, Raster-, Proof-, Approval- und Exportbytes erneut zu erzeugen oder per altem Toolhash zu revalidieren wäre gerade der nachgewiesene Stopp ohne neue Produktinformation. Keine neuen Rätsel-Tests, Solver-/Bildproduktion, Toolcode- oder native Featureänderungen; daher modules=[]. Die technische Risikoabsicherung erfolgt durch exakten Byte-/Blobvergleich aller neuen Livequellen, kanonische v4/v7-Form, Erhalt aller bestehenden Katalogzeilen und aktuelle Quellen-/CI-Prüfung. Gegebenenfalls gescheiterte echte Readerprüfung wird nicht durch CI-Green überdeckt.",
+  "purpose": "Tatsächliche qualifizierte Rasterwahl am festen Quellcommit binden; drei unterschiedliche native Kontextzeichnungen mit Prompts, Herkunft und isolierten Q-HG01–04-Urteilen sichern. Neue vollständige r05 mit unverändertem Raster/Reveal/Motiv, frischer Prüfung des geschriebenen ZIPs, Inventar, Projektion, current-view und Remoteoriginalbytes. Allgemeiner Quellen-/Plankern docs/ci-required.",
+  "omitted": "Reine Rätselproduktion; keine Tool-/Spiel-/CI-Implementierung, keine neuen Rätseltests oder Bestandsreplays. Deshalb modules=[] und evidence.mode=none, kein Player-Build, Browserlauf oder technischer Upload. Gültige unveränderte Raster-/Difficulty-/Hinweissichtbelege passend weiterführen; Builder prüft die neue Paketfassung vollständig. Hintergrundwahl, Ableitung, Endabnahme und Integration bleiben offen. Temporäre Diagnoseansichten enden nach Sichtung; Produktionsoriginale und Fortsetzungsdaten bleiben bis Auswahl/Integration erhalten. Keine zusätzliche lokale Abschlussbereinigung, kein Merge.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
