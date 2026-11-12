@@ -5,13 +5,13 @@
   "modules": [
     "tools"
   ],
-  "purpose": "P4-K01–K08: versioniertes per-user MSI für das bestehende App-Image, Schutz laufender Instanzen, ausschließlich manueller Produktbau. tools prüft kleine Quell-/Metadatenregressionen; regulärer Kern liefert den Windows-Spieler.",
-  "omitted": "Keine Fachproduktion, Solver, Integration, Runtime, Hosting oder Spieleränderung: keine production.*, native.*, preflight, delivery oder Chromium. Echte MSI-Installation T02 und Browserbedienung T03 einmalig vor Review außerhalb Package CI; unabhängiges P4-A01 bleibt separat. T04 erst nach freigegebenem Merge, vor Verteilung.",
+  "purpose": "P4-N1: manuellen Actionsbau für aktuellen main ohne SHA-Eingabe reparieren. Hosted Server prüft reale MSI-/Payload-/Lizenzbytes ohne Installation; echter T02-Lebenszyklus am Actions-Rückdownload separat auf Windows-11-Client. tools prüft bestehenden kleinen Workflowvertrag; normaler Kern liefert den Windows-Spieler.",
+  "omitted": "Keine Payload-, Guard-, Fachproduktions-, Solver-, Runtime-, Hosting- oder Spieleränderung; keine production.*, native.*, preflight, delivery oder Chromium. Keine Richtlinienänderung für die Server-1625-Sperre. Echte Installation nur manuell am Client; T03 aus unveränderten UI-Quellen wiederverwendet. T04 für regulären integrierten Fix vor Verteilung offen.",
   "test_changes": [
     {
       "path": "tools/test_production_installer.py",
       "disposition": "change-scoped",
-      "reason": "P4-T01: strikte Versionsbereiche, stabile Upgradeidentität, Same-Version-/Downgradebedingungen, per-user Pfade, Uninstall-/Prozessschutz und alleiniger Dispatch. Kein MSI-Bau/Installationslauf in tools."
+      "reason": "P4-N1: bestehenden change-scoped Workflowvertrag um feste Main-Auswahl ohne Eingabe, Quell-SHA im Download und den eigenen manuellen MSI-Inspector ergänzen. Keine neuen Dauertests; keine MSI-Erzeugung oder Installation in tools."
     }
   ],
   "core_change": null,
