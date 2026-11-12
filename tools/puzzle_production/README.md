@@ -14,6 +14,13 @@ führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
 Build v3 veröffentlicht Handoff v4/Record v3 und die automatisch geprüfte
 workspace.json gemeinsam mit der Revision im expliziten Repositoryziel.
+[#596/B](../../docs/PRODUCTION_CURRENT_VIEW.md) ergänzt den gemeinsamen
+`current-view.json`-Übergabeschritt für Builder, Finalizer, Projektor und Completion.
+Den Pointer samt aktuellen Record-/Projektionsbytes im selben Handoffcommit
+sichern/pushen und Remotezugriff prüfen; unterbrochene Aufrufe identisch vollständig
+wiederholen. Für bestehende vollständige 0.8-Arbeit gezielt
+`python -m tools.production_workspace.projector --repository <checkout> --current-view <pz-ID> <revision>`
+aufrufen. Kein HTTP-Writer und keine Änderung versiegelter Originale.
 Request v3 ergänzt `presentation={title,raster_offers}`. Frühe background- und
 raster_selection-Felder sind null. Erst die gebundene menschliche Rasterwahl
 öffnet background_review. Finalizer v2 aktualisiert den bestehenden Record v3

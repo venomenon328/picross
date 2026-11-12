@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.8.0 · Dokumentrevision 2 · 12.11.2026**
+**Version 0.8.0 · Dokumentrevision 3 · 12.11.2026**
 
 Neue Produktionen verwenden den fünfstufigen lokalen Produktionsassistenten.
 Maßgeblich: [PW-B / #578](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194),
@@ -598,6 +598,10 @@ python -m tools.puzzle_production.authoring_builder build --request <request-v3.
 
 Der Builder validiert Dateien, erzeugt Inventar v1, geschriebenes Original-ZIP,
 bytegleiche Handoffkopie, Record v3 und automatisch die geprüfte workspace.json.
+Der gemeinsame [Ansichtsübergabeschritt](../PRODUCTION_CURRENT_VIEW.md) setzt
+zusätzlich `content/authoring/<puzzle_id>/current-view.json` auf genau diese
+Übergabe. Er ist keine Bild-/Rasterwahl. Finalizer und Completion ziehen auch
+bei In-place-Fortschreibung die tatsächlichen Hash-/Bytebindungen nach.
 Er verwendet unveränderte Proof-/Paletten-/Herkunftsprüfer. Frühphasen sind keine
 Inhaltszertifikate; `raster_ready` und spätere Inhaltsphasen werden frisch geprüft.
 `presentation={title,raster_offers}` nennt nur tatsächliche Angebote; zusätzliche
@@ -605,7 +609,7 @@ Rasteroptionen referenzieren ihre bereits gesicherten qualifizierten Einzelrecor
 Keine manuell erfundene Assetgalerie. Der Dienst schreibt diese Dateien nicht.
 
 Danach vollständige benötigte Originale einschließlich sichtbarer Alternativen,
-Index und Projektion committen und pushen. Remotezugriff auf feste Commit-/Dateipfade
+Index, Projektion und aktuellen Ansichtsverweis committen und pushen. Remotezugriff auf feste Commit-/Dateipfade
 prüfen. Den Sicherungscommit erst nach Erfolg melden; `repo_commit` ist lediglich
 die gelesene Herkunft. Lokale Pfade/localhost und ungesicherte SHAs sind keine
 Cloudübergabe. Neue Quellen erst ausdrücklich im Assistenten laden; laufende
@@ -709,7 +713,7 @@ Nach erfolgreicher tatsächlicher Registrierung relevanten Diff und Lieferbytes
 prüfen und den Registrierungsstand committen. Mit
 `python -m tools.production_workspace.projector --repository <checkout> --complete-record <recordpfad> --integration-commit <volle-SHA>`
 den tatsächlichen Abschluss binden und die Projektion automatisch fortschreiben.
-Record und Projektion anschließend committen/pushen; Draft-PR im beauftragten
+Record, Projektion und aktuellen Ansichtsverweis anschließend committen/pushen; Draft-PR im beauftragten
 Umfang erstellen. Reine Produktion
 erhält CI-Kern ohne Windowsbau und ohne neue rätselspezifische Tests. Merge nur bei
 ausdrücklicher passender Befugnis, aktuellem unabhängigen Review und allen Gates.
@@ -727,6 +731,10 @@ sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
    Commit nennen. Offene Nacharbeit oder neuere Arbeitsstände derselben ID zuerst
    klären; fremde/offene Produktionen erhalten.
 2. Nach dem Merge in einem eigenen kleinen Cleanup-Diff ausführen:
+
+   Den [abgeschlossenen Ansichtsverweis](../PRODUCTION_CURRENT_VIEW.md) nach
+   frischem Abgleich mit Revision und Mainbeleg zuerst entfernen. Ein Verweis
+   auf neuere/offene Arbeit bleibt erhalten; dann vor dem ID-Abschluss klären.
 
    ```sh
    python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <vollstaendige-main-SHA> --puzzle-id <pz-ID>

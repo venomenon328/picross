@@ -28,7 +28,7 @@ def build_id():
 
 def preflight(gui=False):
     try:
-        for module in ('presentation', 'repository', 'server'):
+        for module in ('presentation', 'repository', 'server', 'current_view', 'motifs'):
             importlib.import_module('tools.production_workspace.' + module)
         importlib.import_module('tools.puzzle_production.authoring_workflow')
         from PIL import Image, __version__

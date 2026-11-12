@@ -80,6 +80,8 @@ main { padding-bottom: 56px; }
 .sourceInfo strong::before { content: ''; display: inline-block; width: 8px; height: 8px; margin-right: 8px; background: var(--accent); border-radius: 2px; }
 .source p,.hint,.validation,.card p,.orderPreview summary { font-size: .86rem; }
 .source p,.hint,.card p { color: var(--muted); }
+#motifStatus { font-weight: 650; color: var(--accent); margin-top: 8px; }
+#versionOrigin,#versionNotes { margin-top: 6px; overflow-wrap: anywhere; }
 button,input,textarea,select { font: inherit; }
 button,select,input:not([type=checkbox]),textarea {
   border: 1px solid var(--line); border-radius: 7px; color: var(--ink); background: var(--field);
