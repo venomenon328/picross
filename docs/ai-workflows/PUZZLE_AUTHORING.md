@@ -715,6 +715,34 @@ technische Kleinigkeit. Über den Finalizer v2 vorhandene äußere Entscheidung,
 Ableitung und Endfreigabe nachtragen; Originale bleiben bytegleich. Atomare
 Recordfortschreibung und geprüfte Projektion verwenden denselben gebundenen Stand.
 
+**Zielbasis vor Erstintegration und Wiederaufnahme:** Aktualisiere vor den folgenden
+Aufrufen und erneut vor jeder registrierenden Mutation tatsächlich `origin/main`
+und stelle dessen volle SHA sowie den Stand des beauftragten Zielcheckouts fest.
+Beziehe aktuelles main sicher in den Produktionsbranch ein; überschreibe dabei
+keine schmutzigen WIP- oder Fremddaten. Prüfe den vollständigen gültigen Zielstand:
+Inhaltsregistry v4, Runtime v7 und genau eine aktuelle Metadatenzeile mit gültiger
+Kategorie je vorhandener ID. Bei veraltetem, fehlendem oder inkonsistentem Ziel,
+Konflikten, offenen Locks/Journalen oder ungeklärter Recovery stoppe vor Mutation
+mit konkretem Grund. Reguläre Registrierung migriert keine v3/v6-Zielbasis implizit.
+
+`registered` auf einem Draftbranch ist keine bestätigte Mainintegration. Hat sich
+der Zielkatalog seit der bisherigen Registrierung geändert, baue die Zielregistrierung
+auf der frischen Hauptbasis mit den tatsächlich gebundenen Originalen und gültigen
+vorhandenen Freigaben neu auf: `export → plan → register`, mit frisch vorgelegtem
+lesendem Plan und echtem Register gegen diesen Zielcheckout. Erzeuge zielabhängige
+Index-, Runtime-, aktive Source-/Receipt- und Abschlussverweise fachlich neu.
+Übernimm alte generierte `content/registry.json` und `game/data/registry.json` weder
+als Ersatz für den aktuellen Katalog noch durch bloße textuelle Konfliktauflösung;
+stufe v4/v7 und aktuelle Metadaten nicht zurück und erhalte alle bisherigen Inhalte.
+
+Erhalte Original-ZIP, Raster-/Revealbytes, historische Herkunfts-/Freigabebelege
+und weiterhin gültige Entscheidungen unverändert. Nutze den gültigen Difficulty-Rebind
+nach §5; erhöhe für eine neue ID nicht den unten angegebenen `--runtime-revision`-Wert.
+Ist die saubere Neubindung technisch nicht möglich oder die Herkunft ungeklärt,
+stoppe konkret statt Herkunft oder Freigaben zu erfinden oder historische Belege umzuschreiben.
+Die bestehenden Quellen-/Lock-/Journal-/Recoveryguards sowie unabhängiges Review
+und passende Mergefreigabe bleiben Pflicht; schreibe nicht direkt auf `main`.
+
 ```text
 python -m tools.puzzle_production.authoring_builder finalize-background --request <finalize-v2.json> --source-root <neue-belege> --output-root <produktionscheckout> --history-repo <produktionscheckout>
 python -m tools.puzzle_production.target_adapter export --allow-background --input <original-package.zip> --external-root <produktionscheckout> --approval <echte-endfreigabe.json> --name <motivname> --runtime-revision 1 --stem <stamm> --save-slot <slot> --category-id <kategorie> --categories content/categories.json --output-dir <neuer-export>
