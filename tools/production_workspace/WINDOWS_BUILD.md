@@ -5,7 +5,13 @@ Maßgeblich: [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#i
 und dessen [Prüfzuschnitt](https://github.com/venomenon328/picross/issues/588#issuecomment-6829590335)
 binden die Actions-Prüfung und die automatische Wahl des aktuellen Mainstands.
 Launcherbau und regulärer Windows-Spieler der Package-CI bleiben getrennt.
-Keine neuen automatischen Trigger und kein Release/Tag. Das zusätzlich beauftragte
+**Aktueller Implementierungsstand:** ausschließlich manueller Bau, kein Release/Tag.
+Der freigegebene, **noch nicht implementierte** [APP-Sollweg](../../docs/PRODUCTION_UPDATES.md)
+aus [#612](https://github.com/venomenon328/picross/issues/612) ersetzt dies
+später durch einen separaten, bei App-Payload-Änderung automatisch laufenden
+Releaseworkflow und einen nachgelagerten sicheren Updateclient. Die folgenden
+P4-Anweisungen beschreiben bis zu diesem Implementierungsstand ausschließlich
+das aktuell ausführbare Verhalten. Das zusätzlich beauftragte
 Nonogramm-Icon ist unter [assets](assets/README.md) gebunden.
 
 ## Gebundener Bau
