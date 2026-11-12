@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   installer:
-    runs-on: windows-2025
+    runs-on: windows-2022
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
@@ -50,6 +50,8 @@ jobs:
             git show "${env:SMOKE_HARNESS_COMMIT}:tools/production_workspace/packaging/$name" | Set-Content -Encoding utf8 (Join-Path $harness $name)
             if ($LASTEXITCODE -ne 0) { throw 'Harness snapshot failed' }
           }
+          git show "${env:SMOKE_HARNESS_COMMIT}:tools/production_workspace/smoke_installer.py" | Set-Content -Encoding utf8 tools/production_workspace/smoke_installer.py
+          if ($LASTEXITCODE -ne 0) { throw 'Smoke source snapshot failed' }
           & (Join-Path $harness 'smoke-user.ps1') -Python "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -Build "$env:RUNNER_TEMP\pw-product" -Output "$env:RUNNER_TEMP\pw-smoke"
       - name: Targeted product download, no release or deployment
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
