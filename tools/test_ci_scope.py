@@ -10,6 +10,21 @@ from ci_scope import FLAGS, JOBS, apply_event_policy, classify, content_path, ev
 
 
 class SelectionTests(unittest.TestCase):
+    def test_current_view_pointer_uses_shared_content_contract(self):
+        pointer = 'content/authoring/pz-synthetic/current-view.json'
+        paths = [pointer, 'content/authoring/pz-synthetic/r01/record.json',
+                 'content/authoring/pz-synthetic/r01/workspace.json']
+        plan = classify(paths)
+        self.assertTrue(plan['content_only'])
+        self.assertTrue(plan['selected']['docs'])
+        self.assertFalse(any(plan['selected'][key] for key in FLAGS))
+        for path in ('content/authoring/pz-Synthetic/current-view.json',
+                     'content/authoring/pz-synthetic/r01/current-view.json',
+                     'content/authoring/pz-synthetic/current-view.json/extra.json',
+                     'tools/ci_paths.py'):
+            with self.subTest(path=path):
+                self.assertFalse(classify(paths + [path])['content_only'])
+
     def test_added_data_path_and_both_tree_modes_are_exact(self):
         from unittest.mock import patch
         valid = "content/added/pz-synthetic.json"
