@@ -1,6 +1,8 @@
 # Windows-App bauen und prüfen
 
 Maßgeblich: [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437).
+[P4-N1](https://github.com/venomenon328/picross/issues/588#issuecomment-6828896451)
+bindet die korrigierte Actions-Testumgebung und die automatische Wahl des aktuellen Mainstands.
 Launcherbau und regulärer Windows-Spieler der Package-CI bleiben getrennt.
 Keine neuen automatischen Trigger und kein Release/Tag. Das zusätzlich beauftragte
 Nonogramm-Icon ist unter [assets](assets/README.md) gebunden.
