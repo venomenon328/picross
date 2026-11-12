@@ -1,17 +1,17 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/588",
-  "package": "P4",
+  "issue": "https://github.com/venomenon328/picross/issues/604",
+  "package": "P1",
   "modules": [
     "tools"
   ],
-  "purpose": "P4-N1: manuellen Actionsbau für aktuellen main ohne SHA-Eingabe reparieren. Hosted Server prüft reale MSI-/Payload-/Lizenzbytes ohne Installation; echter T02-Lebenszyklus am Actions-Rückdownload separat auf Windows-11-Client. tools prüft bestehenden kleinen Workflowvertrag; normaler Kern liefert den Windows-Spieler.",
-  "omitted": "Keine Payload-, Guard-, Fachproduktions-, Solver-, Runtime-, Hosting- oder Spieleränderung; keine production.*, native.*, preflight, delivery oder Chromium. Keine Richtlinienänderung für die Server-1625-Sperre. Echte Installation nur manuell am Client; T03 aus unveränderten UI-Quellen wiederverwendet. T04 für regulären integrierten Fix vor Verteilung offen.",
+  "purpose": "Beide Sheet-Promptgeneratoren von lokaler Abschlussbereinigung befreien und exklusive Codex-Arbeitswurzel erhalten. Bestehende tools-Promptregressionen erweitern; regulärer Kern für geänderte UI/Toolquellen.",
+  "omitted": "Kein CI-Pfadfix, keine Änderung der fachlichen Produktionsbereinigung nach Authoring §9, von Produktionsoriginalen, Git-Branchentfernung, Godot-Spiel oder Installer. Keine production.*, native.*, preflight, delivery oder Chromium; keine neue Dauerlast. Die generierte CMD-Fallback-Launcherdatei wird mit dem vorhandenen Bytevergleich gegen die eingebetteten Quellen geprüft.",
   "test_changes": [
     {
-      "path": "tools/test_production_installer.py",
+      "path": "tools/test_authoring_sheet.py",
       "disposition": "change-scoped",
-      "reason": "P4-N1: bestehenden change-scoped Workflowvertrag um feste Main-Auswahl ohne Eingabe, Quell-SHA im Download und den eigenen manuellen MSI-Inspector ergänzen. Keine neuen Dauertests; keine MSI-Erzeugung oder Installation in tools."
+      "reason": "Vorhandene Node-Promptregression um Legacy-cleanup und exklusive Codex-Arbeitswurzel in beiden Sheettypen ergänzen; keine neue Dauersuite."
     }
   ],
   "core_change": null,

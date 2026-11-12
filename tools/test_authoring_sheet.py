@@ -17,6 +17,10 @@ const v={puzzle_id:'pz-test',revision:'r01',commit:'b'.repeat(40),source_url:'ht
  record,facts:{state:'reveal_review',authoring_version:'0.8.0'},offers:[]};
 let text=P.prompt(null,{brief:'Synthetischer Test, keine Produktion'},opts);
 assert.match(text,/Schritt 1/);assert.doesNotMatch(text,/source_commit|localhost|Hintergrund|Kontextzeichnungen/);
+assert.match(text,/ausschließlich innerhalb dieser Arbeitswurzel/);
+assert.match(text,/Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt/);
+assert.doesNotMatch(text,/Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt/);
+assert.equal(text,P.prompt(null,{brief:'Synthetischer Test, keine Produktion'},{...opts,cleanup:false}));
 assert.throws(()=>P.prompt(null,{},opts),/Motiv/);
 for(const [state,n,kind] of [['reveal_review',2,'reveal'],['motif_review',3,null],['motif_approved',3,null],
  ['raster_review',3,null],['raster_ready',4,'raster'],['background_review',4,'background'],['content_ready',5,null],['editorially_approved',5,null]]){
@@ -205,6 +209,26 @@ for(const value of ['dark','light','system']){
  assert.equal(reloaded.document.documentElement.dataset.theme,value);
 }
 assert.deepEqual([...storage.keys()],['pw-theme'],'no second settings store');
+"""
+        result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_development_sheet_ignores_legacy_cleanup_and_preserves_workroot(self):
+        probe = r"""
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const html=fs.readFileSync('docs/workflow/Entwicklungsworkflow_Cheat-Sheet.html','utf8');
+assert.doesNotMatch(html,/id="cleanupToggle"/);
+const found=html.match(/function workspaceText\(\)\{[\s\S]*?\n\}/);
+assert.ok(found,'workspaceText exists');
+for(const cleanup of [true,false]){
+ const ctx={profile:()=>({root:'E:/Work',cleanup,task:{fields:{executor:'Codex'}}}),JSON};
+ vm.runInNewContext(found[0],ctx);
+ const text=ctx.workspaceText();
+ assert.match(text,/Lokale Codex-Arbeitswurzel/);
+ assert.match(text,/ausschließlich innerhalb dieser Arbeitswurzel/);
+ assert.match(text,/Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt/);
+ assert.doesNotMatch(text,/ausdrücklich beauftragt/);
+}
 """
         result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
         self.assertEqual(result.returncode, 0, result.stderr)

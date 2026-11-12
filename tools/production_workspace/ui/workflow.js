@@ -158,8 +158,11 @@ const PW = (()=>{
   if((n===2||(n===3&&action==='rework'))&&intent.parameters?.trim())lines.push(`Neue/zusätzliche Wünsche zur Motivvorlage: ${intent.parameters.trim()}. Materielle Änderungen am freigegebenen Korridor zuerst zur Entscheidung vorlegen.`);
   if(n===3)lines.push('Offene/ungefähre Endvorgaben trotz konkreter Importstarts erhalten. Kleine motivische Rastermängel und erlaubte leere Außenlinien auch bei gelöster Logik über den regulären festen C-Weg korrigieren; echte Freigabe, Schutzmaske und kumulative Budgets beachten. Historische manuelle Sonderwege bleiben getrennt.');
   if(n===4&&intent.context?.trim())lines.push(`Kontextwunsch: ${intent.context.trim()}.`);
-  if(options.workroot?.trim())lines.push(`Lokale Codex-Arbeitswurzel: ${options.workroot.trim()}.`);
-  lines.push(options.cleanup?'Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt.':'Keine zusätzliche Abschlussbereinigung beauftragt.');
+  if(options.workroot?.trim()){
+   lines.push(`Lokale Codex-Arbeitswurzel: ${options.workroot.trim()}.`);
+   lines.push('Neue eigene Checkouts, Worktrees, Downloads und temporäre Arbeitsdaten ausschließlich innerhalb dieser Arbeitswurzel anlegen. Ist sie nicht verfügbar, den Konflikt melden und keinen Ersatzpfad wählen.');
+  }
+  lines.push('Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt; der fachliche Produktionsabschluss nach Authoring §9 bleibt davon getrennt.');
   lines.push(n===5&&options.merge?'Merge ausdrücklich nur nach aktuellem unabhängigen Review und sämtlichen Vor-Merge-Gates; bestätigten Mainabschluss getrennt melden.':'Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.');
   return lines.join('\n\n');
  }

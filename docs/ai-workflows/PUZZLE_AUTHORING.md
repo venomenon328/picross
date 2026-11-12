@@ -697,8 +697,11 @@ manuellen Einfügen in ein zweites Sheet; der Assistent liest die veröffentlich
 Originaldaten automatisch. Normale Produktion verwendet weiterhin ihr eigenes
 Abschlussformat, nicht das Entwicklungs-HANDOFF-JSON.
 
-Persönliche Arbeitswurzel, Bereinigung und Merge bleiben ausdrücklich gewählte
-Auftragsoptionen. Keine Übernahme solcher Befugnisse aus Record oder Projektion.
+Persönliche Arbeitswurzel und Merge bleiben ausdrücklich gewählte
+Auftragsoptionen. Normale Produktionsprompts beauftragen keine zusätzliche
+Bereinigung lokaler Arbeitsdaten; eine gesonderte ausdrückliche Beauftragung
+folgt WORKSPACE. Der fachliche Produktionsabschluss nach §9 bleibt davon
+unberührt. Keine Übernahme von Befugnissen aus Record oder Projektion.
 Neue lokale Briefingentwürfe dürfen unabhängig gespeichert werden; sie behaupten
 keine Produktions-ID, Quelle oder Freigabe. Gesicherte Jobs und Revisionen bleiben
 über Git nach Neustart wiederauffindbar. Ausdrückliche spätere Hintergrundrevisionen

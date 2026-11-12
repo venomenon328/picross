@@ -6,11 +6,12 @@ Die Wurzel ist kein Löschauftrag für ihren gesamten Inhalt. Eigene Neuanlagen 
 
 Ein Implementierungsauftrag mit aktivierter Bereinigung erlaubt und verlangt, selbst erzeugte entbehrliche Arbeitsdaten nach Abschluss zu entfernen. Vorher Commits pushen, erforderliche aktuelle Reviewbelege übergeben und alle ungesicherten/fremden Änderungen ausschließen. Eigene saubere Worktrees mit dem dafür vorgesehenen Git-Befehl entfernen. Keine Löschung des Benutzer-Checkouts, des Arbeitswurzelverzeichnisses selbst oder entfernter Branches daraus ableiten.
 
-Bei deaktivierter Abschlussbereinigung ist kein nachgelagerter Ablage- oder
+Ohne ausdrückliche Abschlussbereinigung ist kein nachgelagerter Ablage- oder
 Checkout-Rückbau beauftragt; eigene Anschlussdaten mit ihrem Zweck erhalten.
-Die laufinterne Bereinigung temporärer Testdaten gilt unabhängig von dieser
-Einstellung. Die Bereinigungsoption und eine gesetzte Arbeitswurzel werden im
-Auftrag als konkrete Parameter übergeben; die Schutz- und Ablaufregeln stehen
+Die laufinterne Bereinigung temporärer Testdaten gilt unabhängig davon.
+Ein Sheet-Prompt erteilt keinen lokalen Löschauftrag, auch nicht aufgrund
+älterer gespeicherter Bereinigungswerte. Eine gesetzte Arbeitswurzel wird im
+Auftrag als konkreter Parameter übergeben; die Schutz- und Ablaufregeln stehen
 hier. Ist keine Wurzel vorgegeben, die beauftragte Arbeitsumgebung und einen
 eindeutig eigenen Unterordner nutzen. Ein ausdrücklich nur für Codex gesetzter
 Pfad gilt für diese Ausführung, nicht ungefragt für eine andere Umgebung.
