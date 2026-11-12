@@ -106,7 +106,9 @@ class Service:
                 _, expired = self.snapshots.popitem(last=False)
                 for jid in expired:
                     self.jobs.pop(jid, None)
-            self.current = {**value, 'snapshot': snapshot, 'jobs': public}
+            from .motifs import group
+            motifs = group(public, value.get('relations', {}), confirmed=value.get('remote_confirmed', False), remote=self.repository.remote)
+            self.current = {**value, 'snapshot': snapshot, 'jobs': public, 'motifs': motifs}
             return self.current
 
     def selected(self, jid, snapshot):
@@ -194,7 +196,6 @@ class Service:
         with self.lock:
             ap.require(jid in self.jobs, 'Ansicht ist abgelaufen. Aktuelle Jobliste laden.')
             job = self.jobs[jid]
-        ap.require(not job.get('conflict'), 'Widersprüchliche Quellen für dieselbe ID/Revision. Veröffentlichung klären.')
         return job
 
     def detail(self, jid):

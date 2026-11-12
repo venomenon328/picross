@@ -110,6 +110,13 @@ Eingänge; sie sind kein vollständig veröffentlichtes 0.8-Handoff.
 
 ## Veröffentlichung und Bedienung
 
+[#596/B](PRODUCTION_CURRENT_VIEW.md) ergänzt außerhalb der geschlossenen
+Originalformen den gemeinsamen dateigebundenen aktuellen Ansichtsverweis.
+Builder v3, Finalizer v2, Projektor und Completion veröffentlichen ihn nach
+vollständiger Quellenprüfung; der Akteur sichert ihn gemeinsam mit allen Originalen.
+Motivgruppe, Versionsansicht und konkrete Quellwahl ersetzen die flache Hauptliste.
+Ansichtsöffnung ist keine Raster-/Bildwahl oder Freigabe.
+
 Ein Job behält `content/pw/<puzzle_id>`. Vor jedem Handoff baut der Akteur die
 neue Revision, den Index und automatisch die geprüfte Projektion aus den echten
 Angeboten. Er sichert alle benötigten Originale mit Commit und Push. Der Dienst

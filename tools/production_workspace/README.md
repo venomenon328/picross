@@ -121,10 +121,26 @@ Der Regressionstest vergleicht die eingebetteten Bytes mit den Quellen.
 
 ## Bedienung und Quellenstatus
 
-Den veröffentlichten Stand im einzigen Dropdown wählen. Revision und lokale/
-Remotequelle samt Branch unterscheiden auch gleichnamige Motive; die frühere
-zusätzliche Buttonliste entfällt. Lokale Motivbriefings samt „Entwurf verwerfen“
+Das Hauptdropdown enthält genau ein Motiv pro Rätsel-ID. Die getrennte
+Versionsansicht zeigt Phase, Revision, Herkunft und Aktualität. Titelgleiche IDs
+bleiben unterscheidbar. Die eindeutig aktuelle Ansichtsübergabe steht zuerst und
+öffnet automatisch; bei fehlendem/ungültigem Pointer oder Konflikt bewusst eine
+Version wählen. Kein Raten nach Phase oder Revisionsnummer. Bytegleiche Versionen
+erscheinen einmal mit „Lokal und Remote“; darunter bleibt die konkrete Quelle
+auswählbar. Erst deren ausdrückliche Remotequellwahl aktiviert gegebenenfalls P2.
+[Geschlossener Aktualitäts-/Publikationsvertrag](../../docs/PRODUCTION_CURRENT_VIEW.md). Lokale Motivbriefings samt „Entwurf verwerfen“
 sind davon getrennte Browserentwürfe.
+
+Synchron/Lokal neuer/Remote neuer beruhen auf bestätigter Git-Abstammung.
+Divergenz, unterschiedliche Bytes und nach begrenztem Metadatennachladen unbekannte
+Historie ergeben keinen Sieger. Offline bleibt der alte Snapshot lesbar, samt
+„Remote nicht aktuell bestätigt“, Fehler und letzter Cachezeit. Unbestätigte Quellen
+erlauben keinen Cloudauftrag. Fehlende Pointer lassen sich vom beauftragten Akteur
+für eine vollständige Revision gezielt publizieren:
+
+```text
+python -m tools.production_workspace.projector --repository <checkout> --current-view <pz-ID> <revision>
+```
 
 Die Detailansicht zeigt überlieferte Parameterrollen und das inventarisierte
 Originalbriefing aus dem geprüften Paket als Klartext mit Absätzen. Beide Originalbereiche
@@ -288,13 +304,14 @@ beschreiben die Formen; Pfadsicherheit, Eindeutigkeit, Rollen, Inventare,
 Originalbezüge, tatsächlich dekodierte PNG/JPEG und fachliche Angebotsfähigkeit
 werden zusätzlich im Reader/Projektor geprüft. Keine Solver-/Difficultyausführung.
 
-Geschrieben wird genau `workspace.json` neben `record.json`. Alle anderen Quellen
-bleiben bytegleich. Identische Wiederholung ist No-op samt mtimes. Abweichende
+Geschrieben wird `workspace.json` neben `record.json`; bei aktuellem Request v2
+folgt obligatorisch der geprüfte `current-view.json`-Verweis im ID-Verzeichnis.
+Andere Originale bleiben bytegleich. Identische Wiederholung ist No-op samt mtimes. Abweichende
 bestehende Ausgabe oder zwischenzeitlich geänderte Quellen stoppen. Ein temporärer
 Nachbar wird nach erneuter Quellenprüfung atomar ohne Ersetzen veröffentlicht und
 entfernt. Ergebnis auf stdout: `published` oder `reused`, Pfad/Hash/Bytezahl;
 Exit 0 bei Erfolg, 2 bei ungültigen oder kollidierenden Quellen. Git-Sicherung
-von Index, Record, Projektion und Originalen bleibt ausdrücklich Aufgabe des
+von Index, Record, Projektion, aktuellem Ansichtsverweis und Originalen bleibt ausdrücklich Aufgabe des
 beauftragten Produktionsakteurs. Die HTTP-API kann den Projektor nicht aufrufen.
 
 ## Tatsächlicher Registrierungsabschluss
@@ -307,7 +324,8 @@ python -m tools.production_workspace.projector --repository /absoluter/checkout 
 
 Dieser Aufruf registriert nichts. Er bindet den bereits committeten Registry-/
 Export-/Runtimestand an genau das freigegebene Original, aktualisiert Record und
-Projektion und ist identisch wiederholbar. Danach beide Dateien committen/pushen.
+Projektion samt aktuellem Ansichtsverweis und ist identisch wiederholbar. Danach
+alle drei Dateien committen/pushen.
 Der Assistent meldet „lokal registriert“, niemals dadurch bereits Mainintegration.
 Ein separater Hintergrundfolgeauftrag liest danach zuerst die aktive integrierte
 Source und verwendet ausschließlich den vorhandenen HP-I1b2-Weg.

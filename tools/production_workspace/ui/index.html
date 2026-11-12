@@ -31,7 +31,14 @@
         <button id="newJob"><span aria-hidden="true">+</span> Neues Motiv</button>
         <details id="navigation" open><summary>Entwürfe und Gitstände</summary>
           <div id="draftList"></div>
-          <label class="jobPicker">Veröffentlichte Stände<select id="jobs"><option>Wird geladen …</option></select></label>
+          <label class="jobPicker">Veröffentlichte Motive<select id="jobs"><option>Wird geladen …</option></select></label>
+          <p id="motifStatus" role="status" class="hint"></p>
+          <div id="versions" hidden>
+            <label class="jobPicker">Version / Phase<select id="version"></select></label>
+            <p id="versionOrigin" class="hint"></p>
+            <label class="jobPicker">Konkrete Quelle<select id="jobSource"></select></label>
+            <p id="versionNotes" class="hint"></p>
+          </div>
           <details><summary>Auftragsoptionen</summary>
             <label>Codex-Arbeitswurzel<input id="workroot" placeholder="Optionaler lokaler Pfad"></label>
             <label><input id="cleanup" type="checkbox"> Eigene Arbeitsdaten abschließend bereinigen</label>
