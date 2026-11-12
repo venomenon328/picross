@@ -1,25 +1,12 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/606",
-  "package": "P1",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "K01–K05: plattformunabhängige CORE_PATHS und exakt begrenzte current-view.json-Ausnahme. tools prüft beide gemeinsamen Pfadkonsumenten; kleiner Kern und regulärer Windows-Spielerbau bleiben für diesen CI-Codefix erforderlich. Betroffene kleine Tests einmal nativ unter Windows ausführen und im PR belegen.",
-  "omitted": "Keine native.*, preflight, delivery, production.* oder Chromium; keine Änderungen an Spiel, Rätseln, Pointerdaten, Publishern, Launcher oder Installer. Synthetische Pfade und Gitmodi genügen zur CI-Klassifizierung; keine Bild-/Filmbelege oder persönliche Spielabnahme. Keine zusätzliche schwere Dauersuite.",
-  "test_changes": [
-    {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "core",
-      "reason": "Kleine Kernregression gegen plattformabhängiges Fail-open bei CORE_PATHS/core_change und gegen zu breite Pointerfreistellung; bestehende Pfad-/Gitbindung günstig mit synthetischen PR-/Push-Diffs und nichtregulären Modi erweitern. Keine Engine, Netzwerkzugriffe oder Produktionsinputs."
-    },
-    {
-      "path": "tools/test_ci_scope.py",
-      "disposition": "change-scoped",
-      "reason": "Bestehende tools-Auswahlregression um den gemeinsamen current-view-Pfadkonsumenten ergänzen: gültige Pointer bleiben content-only, unzulässige Positionen und gemischte CI-Codeänderungen nicht. Kein neuer Haupt-CI-Pfad oder schwerer Dauerlauf."
-    }
-  ],
-  "core_change": "tools/ci_modular.py: eigenen CORE_PATHS-Eintrag mit pathlib relativ zur Repositorywurzel und POSIX-normalisiert ableiten, damit Windows core_change weiter erzwingt. tools/ci_paths.py: ausschließlich den kanonischen vierteiligen Authoring-current-view-Pfad freistellen und ungültige Pointerpositionen vor dem allgemeinen Revisionspfad abweisen. Günstige Kernregression sichert K01/K03; Player-Baupflicht für Entwicklungsdiffs, Modiausnahmen und explizite Bauaufträge unverändert.",
+  "issue": "https://github.com/venomenon328/picross/issues/610",
+  "package": "Schnecke-S4-r07",
+  "modules": [],
+  "purpose": "Reine Rätselproduktion Schritte 1–4: tatsächliche Rasterwahl R-B-r06 und drei echte native Kontextzeichnungen, isolierte Qualität/Rechte, neue vollständige background_review-Revision samt Index/Projektion/current-view. Allgemeiner Quellen-/Plankern, kein Player-Build.",
+  "omitted": "Keine Zusatzmodule, neuen Tests, Bestandsreplays oder Code-/Runtimeänderungen. Raster/Proof/aktive0.4-Analyse unverändert wiederverwendet; Builder prüft geschriebenes ZIP frisch vollständig. Keine Hintergrundentscheidung/Ableitung, Endabnahme oder Integration.",
+  "test_changes": [],
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,
