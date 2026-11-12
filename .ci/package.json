@@ -1,20 +1,25 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/604",
+  "issue": "https://github.com/venomenon328/picross/issues/606",
   "package": "P1",
   "modules": [
     "tools"
   ],
-  "purpose": "Beide Sheet-Promptgeneratoren von lokaler Abschlussbereinigung befreien und exklusive Codex-Arbeitswurzel erhalten. Bestehende tools-Promptregressionen erweitern; regulärer Kern für geänderte UI/Toolquellen.",
-  "omitted": "Kein CI-Pfadfix, keine Änderung der fachlichen Produktionsbereinigung nach Authoring §9, von Produktionsoriginalen, Git-Branchentfernung, Godot-Spiel oder Installer. Keine production.*, native.*, preflight, delivery oder Chromium; keine neue Dauerlast. Die generierte CMD-Fallback-Launcherdatei wird mit dem vorhandenen Bytevergleich gegen die eingebetteten Quellen geprüft.",
+  "purpose": "K01–K05: plattformunabhängige CORE_PATHS und exakt begrenzte current-view.json-Ausnahme. tools prüft beide gemeinsamen Pfadkonsumenten; kleiner Kern und regulärer Windows-Spielerbau bleiben für diesen CI-Codefix erforderlich. Betroffene kleine Tests einmal nativ unter Windows ausführen und im PR belegen.",
+  "omitted": "Keine native.*, preflight, delivery, production.* oder Chromium; keine Änderungen an Spiel, Rätseln, Pointerdaten, Publishern, Launcher oder Installer. Synthetische Pfade und Gitmodi genügen zur CI-Klassifizierung; keine Bild-/Filmbelege oder persönliche Spielabnahme. Keine zusätzliche schwere Dauersuite.",
   "test_changes": [
     {
-      "path": "tools/test_authoring_sheet.py",
+      "path": "tools/test_ci_modular.py",
+      "disposition": "core",
+      "reason": "Kleine Kernregression gegen plattformabhängiges Fail-open bei CORE_PATHS/core_change und gegen zu breite Pointerfreistellung; bestehende Pfad-/Gitbindung günstig mit synthetischen PR-/Push-Diffs und nichtregulären Modi erweitern. Keine Engine, Netzwerkzugriffe oder Produktionsinputs."
+    },
+    {
+      "path": "tools/test_ci_scope.py",
       "disposition": "change-scoped",
-      "reason": "Vorhandene Node-Promptregression um Legacy-cleanup und exklusive Codex-Arbeitswurzel in beiden Sheettypen ergänzen; keine neue Dauersuite."
+      "reason": "Bestehende tools-Auswahlregression um den gemeinsamen current-view-Pfadkonsumenten ergänzen: gültige Pointer bleiben content-only, unzulässige Positionen und gemischte CI-Codeänderungen nicht. Kein neuer Haupt-CI-Pfad oder schwerer Dauerlauf."
     }
   ],
-  "core_change": null,
+  "core_change": "tools/ci_modular.py: eigenen CORE_PATHS-Eintrag mit pathlib relativ zur Repositorywurzel und POSIX-normalisiert ableiten, damit Windows core_change weiter erzwingt. tools/ci_paths.py: ausschließlich den kanonischen vierteiligen Authoring-current-view-Pfad freistellen und ungültige Pointerpositionen vor dem allgemeinen Revisionspfad abweisen. Günstige Kernregression sichert K01/K03; Player-Baupflicht für Entwicklungsdiffs, Modiausnahmen und explizite Bauaufträge unverändert.",
   "evidence": {
     "mode": "none",
     "purpose": null,
