@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/594",
-  "package": "Birne · Schritt 1 · pz-birne/r01",
+  "package": "Birne · Schritte 1–2 · pz-birne/r02",
   "modules": [],
-  "purpose": "Drei native farbige transparente Abschlussbildoriginale samt Briefing, Provenienz und automatisch geprüfter 0.8.0-Produktionsprojektion sichern.",
-  "omitted": "Reine Rätselproduktion: keine zusätzlichen Module, kein Player-Build, keine Code-/Tool-/Spieländerung. Bild-/Datei-/Herkunftssichtung und Builderprüfung im Produktionsauftrag; kein rätselspezifischer CI-Replay oder neuer Testbestand.",
+  "purpose": "Freigegebenes BIR-A-r01 unverändert erhalten und daraus eine monochrome Motivvorlage mit begründetem Parameterkorridor zur menschlichen Freigabe publizieren; frühere Bildangebote in r01 erhalten.",
+  "omitted": "Reine Rätselproduktion ohne Code-, Tool- oder Runtimeänderung: modules=[]; kein Player-Build, keine Fachreplays oder neuen rätselspezifischen Tests. Bildvergleich/Quell-/Freigabebindung und Builder-/Projektionsprüfung im Produktionsauftrag. Diskrete Raster-, Logik-, Proof- und Difficultyarbeit erst nach echter Motiv-/Parameterfreigabe.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
