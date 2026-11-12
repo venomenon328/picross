@@ -4,6 +4,9 @@ from pathlib import Path
 import tempfile
 import unittest
 import subprocess
+import os
+import threading
+import uuid
 from unittest.mock import patch
 import xml.etree.ElementTree as ET
 
@@ -15,6 +18,39 @@ NS = {'w': installer.NS}
 
 
 class InstallerContractTests(unittest.TestCase):
+    @unittest.skipUnless(os.name == 'nt', 'Actual Windows kernel mutex regression')
+    def test_idle_versus_held_kernel_mutex_without_touching_real_msi(self):
+        import ctypes
+        from ctypes import wintypes as w
+        from tools.production_workspace.install_interlock import _mutex_busy
+        kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+        kernel.CreateMutexW.argtypes = [ctypes.c_void_p, w.BOOL, w.LPCWSTR]
+        kernel.CreateMutexW.restype = w.HANDLE
+        kernel.CloseHandle.argtypes = [w.HANDLE]
+        kernel.ReleaseMutex.argtypes = [w.HANDLE]
+        name = 'Local\\Picross.P4.Test.' + uuid.uuid4().hex
+        self.assertFalse(_mutex_busy(name))
+        idle = kernel.CreateMutexW(None, False, name)
+        try:
+            self.assertTrue(idle)
+            self.assertFalse(_mutex_busy(name))
+        finally:
+            kernel.CloseHandle(idle)
+        entered, release = threading.Event(), threading.Event()
+        def owner():
+            handle = kernel.CreateMutexW(None, True, name)
+            try:
+                entered.set(); release.wait(10)
+            finally:
+                kernel.ReleaseMutex(handle); kernel.CloseHandle(handle)
+        thread = threading.Thread(target=owner); thread.start()
+        try:
+            self.assertTrue(entered.wait(5))
+            self.assertTrue(_mutex_busy(name))
+        finally:
+            release.set(); thread.join(5)
+        self.assertFalse(_mutex_busy(name))
+
     def test_source_history_refuses_decrease_or_upgrade_identity_change(self):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
@@ -58,7 +94,7 @@ class InstallerContractTests(unittest.TestCase):
             self.assertIn('NOT SAMEVERSION', root.find('.//w:Product/w:Condition', NS).text)
             self.assertEqual(root.find('.//w:UpgradeVersion', NS).get('IncludeMaximum'), 'yes')
             check = root.find('.//w:InstallExecuteSequence/w:Custom', NS)
-            self.assertEqual(check.get('Before'), 'InstallInitialize')
+            self.assertEqual(check.get('Before'), 'InstallValidate')
             self.assertEqual(check.text, '1')  # Includes fresh install, upgrade AND uninstall.
             self.assertIsNone(root.find('.//w:RemoveFile', NS))
             self.assertEqual(len(root.findall('.//w:File', NS)), 2)

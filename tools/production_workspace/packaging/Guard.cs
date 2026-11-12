@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
 using System.Reflection;
+using System.Collections.Generic;
 
 public static class Guard {
     [DllImport("kernel32.dll", CharSet=CharSet.Unicode, SetLastError=true)]
@@ -56,14 +57,16 @@ public static class Guard {
             if (RmStartSession(out rm, 0, new StringBuilder(33)) != 0)
                 throw new IOException("Windows-Dateibelegung nicht prüfbar.");
             try {
+                var paths = new List<string>();
                 using (var reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Payload.txt"))) {
                     string relative;
                     while ((relative = reader.ReadLine()) != null) {
                         var file = Path.Combine(target, relative);
-                        if (File.Exists(file) && RmRegisterResources(rm, 1, new string[] { file }, 0, IntPtr.Zero, 0, IntPtr.Zero) != 0)
-                            throw new IOException("Dateibelegung nicht vollständig prüfbar.");
+                        if (File.Exists(file)) paths.Add(file);
                     }
                 }
+                if (paths.Count > 0 && RmRegisterResources(rm, (uint)paths.Count, paths.ToArray(), 0, IntPtr.Zero, 0, IntPtr.Zero) != 0)
+                    throw new IOException("Dateibelegung nicht vollständig prüfbar.");
                 uint needed, count = 0, reasons = 0;
                 var result = RmGetList(rm, out needed, ref count, IntPtr.Zero, ref reasons);
                 if (result != 0 || needed != 0)

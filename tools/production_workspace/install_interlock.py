@@ -8,6 +8,29 @@ The marker lives through setup, preflight, requests and the entire P2 drain.
 import os
 
 
+def _mutex_busy(name):
+    import ctypes
+    from ctypes import wintypes as w
+    kernel = ctypes.WinDLL('kernel32', use_last_error=True)
+    kernel.OpenMutexW.argtypes = [w.DWORD, w.BOOL, w.LPCWSTR]
+    kernel.OpenMutexW.restype = w.HANDLE
+    kernel.WaitForSingleObject.argtypes = [w.HANDLE, w.DWORD]
+    kernel.WaitForSingleObject.restype = w.DWORD
+    kernel.ReleaseMutex.argtypes = [w.HANDLE]
+    kernel.CloseHandle.argtypes = [w.HANDLE]
+    gate = kernel.OpenMutexW(0x100001, False, name)
+    if not gate:
+        return ctypes.get_last_error() != 2
+    try:
+        result = kernel.WaitForSingleObject(gate, 0)
+        if result in (0, 0x80):
+            released = kernel.ReleaseMutex(gate)
+            return result != 0 or not released
+        return True
+    finally:
+        kernel.CloseHandle(gate)
+
+
 class InstallInterlock:
     def __init__(self):
         self.handle = None
@@ -46,23 +69,9 @@ class InstallInterlock:
         self.handle = kernel.CreateEventW(None, True, False, name)
         if not self.handle:
             raise ValueError('Installationsschutz unklar. Laufende App/Installation regulär beenden und erneut versuchen.')
-        kernel.OpenMutexW.argtypes = [w.DWORD, w.BOOL, w.LPCWSTR]
-        kernel.OpenMutexW.restype = w.HANDLE
-        kernel.WaitForSingleObject.argtypes = [w.HANDLE, w.DWORD]
-        kernel.WaitForSingleObject.restype = w.DWORD
-        kernel.ReleaseMutex.argtypes = [w.HANDLE]
-        gate = kernel.OpenMutexW(0x100001, False, 'Global\\_MSIExecute')
-        error = ctypes.get_last_error()
-        busy = False
-        if gate:
-            result = kernel.WaitForSingleObject(gate, 0)
-            if result in (0, 0x80):
-                kernel.ReleaseMutex(gate)
-            # An idle MSI server may keep an unowned mutex alive. Only an
-            # actually held/abandoned/unqueryable mutex prevents a new start.
-            busy = result != 0
-            kernel.CloseHandle(gate)
-        if busy or (not gate and error != 2):
+        # An idle MSI server may keep an unowned mutex alive. Only an
+        # actually held/abandoned/unqueryable mutex prevents a new start.
+        if _mutex_busy('Global\\_MSIExecute'):
             self.close()
             raise ValueError('Eine Windowsinstallation läuft oder ist nicht prüfbar. Nach deren Ende erneut starten.')
 

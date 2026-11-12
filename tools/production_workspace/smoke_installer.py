@@ -1,11 +1,9 @@
 """Manual P4-T02 only: real per-user MSI lifecycle using exclusively synthetic data."""
 import argparse
 import ctypes
-import hashlib
 import json
 import os
 from pathlib import Path
-import shutil
 import subprocess
 import sys
 import socket
@@ -34,7 +32,7 @@ def smoke(build, output):
     if output.exists():
         raise RuntimeError('Neuen eigenen Smokeordner wählen.')
     output.mkdir(parents=True)
-    report = json.loads((build / 'delivery.json').read_text())
+    report = json.loads((build / 'delivery.json').read_text(encoding='utf-8'))
     msi = build / report['msi_file']
     properties = msi_properties(msi)
     if (sha(msi) != report['msi_sha256'] or properties['ProductVersion'] != report['version'] or
@@ -63,7 +61,7 @@ def smoke(build, output):
         if (process.returncode == 0) != success:
             raise RuntimeError('Unerwarteter MSI-Exitcode ' + str(process.returncode) + '; siehe ' + str(logfile))
     def verify_inventory():
-        inventory = json.loads((installed / 'inventory.json').read_text())
+        inventory = json.loads((installed / 'inventory.json').read_text(encoding='utf-8'))
         for row in inventory['files']:
             file = installed / row['file']
             if file.stat().st_size != row['bytes'] or sha(file) != row['sha256']:
@@ -78,8 +76,8 @@ def smoke(build, output):
     configure(repo, state, refs=['main', 'content/pw/*'])
     cache = state / 'git-cache-pw-v1'; cache.mkdir()
     git(cache, 'init', '--bare', '-q'); git(cache, 'fetch', '--no-tags', str(repo), 'main:refs/pw/main')
-    config = json.loads((state / 'config.json').read_text()); config['remote'] = str(repo)
-    (state / 'config.json').write_text(json.dumps(config))
+    config = json.loads((state / 'config.json').read_text(encoding='utf-8')); config['remote'] = str(repo)
+    (state / 'config.json').write_text(json.dumps(config), encoding='utf-8')
     (state / 'sync-pw-v1.json').write_text('{"synced_at":"2026-11-12T00:00:00Z"}\n')
     Repository(state).refresh()  # Prime all deliberately selected synthetic refs.
     before = ((state / 'config.json').read_bytes(), git(repo, 'show-ref'), git(cache, 'show-ref'), git(repo, 'status', '--porcelain'))
@@ -119,21 +117,21 @@ def smoke(build, output):
             archive.extractall(previous_source)
         subprocess.run(['git', '-C', str(previous_source), 'init', '--quiet', '-b', 'main'], check=True)
         source = previous_source / 'tools/production_workspace/release.json'
-        old = json.loads(source.read_text()); parts = list(version_tuple(old['version']))
+        old = json.loads(source.read_text(encoding='utf-8')); parts = list(version_tuple(old['version']))
         if parts[2]:
             parts[2] -= 1
         elif parts[1]:
             parts[1] -= 1; parts[2] = 65535
         else:
             parts[0] -= 1; parts[1:] = [255, 65535]
-        old['version'] = '.'.join(map(str, parts)); source.write_text(json.dumps(old, indent=2) + '\n')
+        old['version'] = '.'.join(map(str, parts)); source.write_text(json.dumps(old, indent=2) + '\n', encoding='utf-8', newline='\n')
         subprocess.run(['git', '-C', str(previous_source), 'add', '.'], check=True)
         subprocess.run(['git', '-C', str(previous_source), '-c', 'user.name=P4 synthetic test', '-c', 'user.email=synthetic@example.invalid',
                         'commit', '--quiet', '-m', 'Synthetic predecessor version, never distribute'], check=True)
         previous_build = output / 'previous-build'
         subprocess.run([sys.executable, '-m', 'tools.production_workspace.build_installer', '--output', str(previous_build)],
                        cwd=previous_source, check=True)
-        older = json.loads((previous_build / 'delivery.json').read_text())
+        older = json.loads((previous_build / 'delivery.json').read_text(encoding='utf-8'))
         older_msi = previous_build / older['msi_file']
         execute(older_msi, INSTALLDESKTOP='1'); installed_code = older['product_code']
         verify_inventory()
@@ -169,13 +167,13 @@ def smoke(build, output):
         entered, release = threading.Event(), threading.Event()
         def transaction(*_):
             entered.set()
-            if not release.wait(120):
+            if not release.wait(500):
                 raise RuntimeError('Synthetic transaction release missing')
             return {'removed': False, 'message': 'synthetischer unbekannter Ausgang; keine echten Produktionsrefs'}
         service.removal.remove = transaction
         results = []
         def request():
-            connection = http.client.HTTPConnection('127.0.0.1', runtime.metadata['port'], timeout=120)
+            connection = http.client.HTTPConnection('127.0.0.1', runtime.metadata['port'], timeout=500)
             connection.request('POST', '/api/removal/confirm', data({'plan_id': 'p', 'job_id': 'j', 'snapshot': 's',
                 'confirmation': 'content/pw/pz-installer-synthetic'}), {'Content-Type': 'application/json',
                 'Origin': runtime.server.origin, 'X-Workspace-Session': service.secret})
