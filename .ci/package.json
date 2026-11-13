@@ -1,11 +1,29 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/576",
-  "package": "PE-B",
-  "modules": ["tools"],
-  "purpose": "PE-B gemäß issuecomment-6855913029, Nacharbeit ausschließlich PE-B-B01 aus Review 5895159357: exklusive Windows-Portbindung vor bind. docs/ci-required mit regulärem Windows-Spieler und tools vollständig. Schmale Konfigurationsregression; einmalige echte Windows-Zweitprozessprobe mit SO_REUSEADDR, weiter erreichbarer Originalsitzung, vorheriger Fremdbelegung und bewusster Ausweichportwahl. T03 mit neu gebautem Starter am finalen Head wiederholen; unveränderte T01/T02-Belege mit Grenzen im PR wiederverwenden.",
-  "omitted": "Keine Änderung an bestehenden Fachwritern, Spielreadern, Solver oder Bildableitung: deshalb production.*, native.*, preflight und delivery ausgelassen. Vorhandene Fachgarantien plus echte einmalige A1/A2/A3-Aufrufe auf synthetischen Daten; kein Echtkatalog-Replay und kein automatisches Spiel-Chromiumprofil. A01 unabhängig vor Merge, U01 Eigentümer vor Gesamtissueabschluss; kein Mergeauftrag.",
-  "test_changes": [{"path":"tools/test_puzzle_editor.py","disposition":"change-scoped","reason":"Kleine HTTP-/Instanz-/Writerregressionen plus Windows-Socketoptionen vor bind gegen PE-B-B01, auch auf Linux prüfbar; nur bei gewähltem tools-Modul. Echte Windows-Zweitprozess-/T03-Proben bleiben einmalig, ebenso T01/T02 und drei bestehende Review-PNGs. Kein Browser-/Engine-/Echtkatalog-Dauertest."}],
+  "issue": "https://github.com/venomenon328/picross/issues/626",
+  "package": "PW2-B",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "PW2-B gemäß issuecomment-6855815878: spielrelevante UI, quellgebundene kurze Aufträge und gemeinsamer Schlussauftrag. Pflichtkern mit Windows-Spielerbau, tools für tatsächlichen Promptgenerator und lesende Workspace-/Auswahlbindungen. T01 echte Browserbedienung und abschließender Redundanzabgleich separat.",
+  "omitted": "Keine production.*, native.*, preflight, delivery oder automatische Chromium-Matrix. Keine Solver-, Writer-, Originalschema-, Spiel-, Bildproduktions-, Installer- oder PW2-C-Änderung. Der interne lesende Antwortzusatz wird aus bereits geprüften Quellen gebunden. Browseroriginale gezielt befristet außerhalb des Produktdiffs; PW2-B-A01 unabhängig vor Merge offen.",
+  "test_changes": [
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Vorhandene Generator-/Optionsfälle prüfen kurze Aufträge, echte neue Absichten, Schlusswahl/none, Default und nicht erweiterte Befugnisse; keine Volltextsnapshots."
+    },
+    {
+      "path": "tools/test_production_workspace.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine lesende Quellen-/Kompositionsfälle im vorhandenen Workspace-Test; Originalbindungen und fehlende/eindeutige Auswahl, keine Solver-/Bestandsreplays."
+    },
+    {
+      "path": "tools/production_workspace/check_ui_loading.cjs",
+      "disposition": "change-scoped",
+      "reason": "Bestehender DOM-/HTTP-Test folgt der neuen Informationsreihenfolge und erhält Lade-/Abbruch-/Quellwechselgarantien; ersetzt keine echte Browserprobe."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

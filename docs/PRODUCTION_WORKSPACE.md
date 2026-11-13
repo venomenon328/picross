@@ -3,7 +3,7 @@
 ## PW2-A · Operativer Quellenweg
 
 Für normale Rätselproduktion aller fünf Schritte einschließlich Korrektur und
-Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 5, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
+Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 6, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
 AGENTS-Produktionseinstieg, gemeinsamer Authoringkern, vollständiger
 [Bildstil](PUZZLE_IMAGE_STYLE.md), dann nur die fällige Phase und die konkret
 benötigte technische Operation. Dieser PW-Gesamtvertrag, WORKFLOW, Projektprofil
@@ -18,12 +18,13 @@ Tusche und leichte neutralgraue Graphitkontexte. Auch komplexe Szenen und Gruppe
 bleiben zulässig. Hintergrundkomposition meint die vollständige 2304×576-Leinwand
 mit transparentem Freiraum, nicht die Alpha-Bounds des sichtbaren Motivs.
 Gemeinsamer Fit/Anker und alle geschlossenen Dateiformen bleiben unverändert.
-PW2-A führt keine UI-/Promptänderungen aus PW2-B oder Listenausblendung aus PW2-C ein.
+PW2-A führte allein den Normschnitt ein. PW2-B ergänzt den unten beschriebenen
+Schlussauftrag und die Oberfläche; Listenausblendung bleibt PW2-C.
 
 ## #596/C · Reguläre motivtreue Rasterkorrektur
 
 Der [geschlossene C-Vertrag](FIXED_RASTER.md) wurde für Authoring 0.8.0,
-Dokumentrevision 4 eingeführt und gilt unter Dokumentrevision 5 weiter.
+Dokumentrevision 4 eingeführt und gilt unter Dokumentrevision 6 weiter.
 Er ergänzt den Produktionsweg um freigegebene feste Mono-/Farbzellenkorrekturen
 und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
 Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
@@ -625,6 +626,44 @@ Projektion und Originale an den fälligen Übergängen. Merge bleibt entsprechen
 dem tatsächlichen Auftrag getrennt. Nach vollständiger Mainintegration gilt
 Authoring §9. Der Assistent zeigt danach den bestätigten Abschluss und gültige
 Runtime-/Belegbezüge, keine defekten Links auf entfernte Zwischenbilder.
+
+## PW2-B · Schlussübersicht und gebundener Auftrag
+
+Die normale Hintergrundentscheidung zeigt zuerst das tatsächlich gewählte Raster,
+dessen Reveal und die vorgemerkte Hintergrunddatei beziehungsweise `none`. Der
+primäre Schlussauftrag erklärt diese konkrete Wahl, Endabnahme und Integration
+zusammen. Er enthält Commit/PR, unabhängiges Review, Squash-Merge erst nach
+aktuellen Vor-Merge-Gates und den bestehenden Produktionsabschluss nach Authoring
+§9. `content_ready`, echte äußere Endfreigabe, Finalizer, Export/Plan/Register und
+bestätigtes main bleiben getrennte technische Tatsachen; kein UI-Writer entsteht.
+
+Ohne gültigen gespeicherten Mergewert ist der bedingte Merge eingeschaltet. Ein
+explizites gespeichertes `false` bleibt erhalten. Die Option und die Wirkung des
+konkreten Schlussauftrags sind sichtbar; Kopieren ist noch kein Absenden.
+Korrektur und Wiederaufnahme erzeugen weder eine neue Endabnahme noch eine neue
+Mergefreigabe. Vorhandene passende Endabnahmen werden nicht erneut erklärt.
+Unveränderte Quellenwerte und allgemeine Regeln werden nicht im Prompt wiederholt;
+Auftrag, feste Recordquelle, neue Absichten und persönliche Arbeitswurzel bleiben.
+
+Die interne lesende Detailantwort ergänzt `facts.metadata` aus den vorhandenen
+Recordfeldern `width,height,mode,used_colors,difficulty`, `facts.originals` mit
+vollständigem geprüftem `record,handoff` und `facts.composition` mit den Asset-IDs
+`raster,reveal,background`. Die Komposition ist vor tatsächlicher Rasterwahl null.
+Spätere IDs stammen ausschließlich aus den Originalbezügen des äußeren Records;
+die inventarisierte Rasterwahl samt unveränderten Quellkopien und Bild-/Kandidaten-
+bindungen wird lesend abgeglichen. Fehlende/uneindeutige Auswahl wird nicht aus
+Galerieordnung oder Dateinamen geraten. Äquivalente Referenzen desselben Originals
+werden deterministisch nach ID zusammengefasst. Ein fehlender Rollenbezug bleibt
+null und verhindert eine scheinbar vollständige Schlussfreigabe. Das sind
+Ansichtsdaten, keine neuen Zertifikate oder Felder der geschlossenen Originalformen.
+
+Bilder und relevante Parameter stehen vor dem Auftrag; handlungsrelevante Probleme
+bleiben sichtbar. Der standardmäßig geschlossene, kopierbare Detailbereich unten
+enthält Original-JSON, Hashes, Revisionen, Commit-/Import- und Diagnosebindungen.
+Briefing und vollständige Parameter sind weiterhin erreichbar. Die vorhandene
+Snapshot-, Bildlade-, Quellwechsel-, P2- und Origin-Sicherheit bleibt erhalten.
+Der CMD-Fallback wird aus denselben Quellen regeneriert. Neue Originale der
+Browserprobe dienen nur PW2-B-T01/A01 im Liefer-PR, nicht einer Dauergalerie.
 
 ## 9. Paketgrenze PW-A
 
