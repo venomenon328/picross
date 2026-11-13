@@ -229,7 +229,10 @@ class AppReleaseTests(unittest.TestCase):
         for name, data in files.items():
             (self.root / name).write_bytes(data)
         inspection = {'commit': self.api.source, 'version': version, 'payload_fingerprint': inputs['sha256'],
-                      'compared_to_build': True, 'msi_sha256': channel.digest(raw), 'msi_bytes': len(raw)}
+                      'compared_to_build': True, 'msi_sha256': channel.digest(raw), 'msi_bytes': len(raw),
+                      'format': 'picross-installer-inspection-v1', 'product_code': product['product_code'],
+                      'upgrade_code': product['upgrade_code'], 'inventory_files': 10, 'license_files': 2,
+                      'limits': 'Synthetic API regression; no installation.'}
         inspection_file = self.root / 'inspection.json'
         inspection_file.write_bytes(payload.canonical(inspection))
         manifest = channel.seal(self.root, inspection_file, planned)
@@ -237,6 +240,9 @@ class AppReleaseTests(unittest.TestCase):
 
     def test_first_version_noop_and_monotone_continuation(self):
         self.assertEqual(channel.next_version({'sha256': 'x'}, None), '0.1.1')
+        with patch.object(channel, 'release', return_value={'version': '0.1.20'}):
+            with self.assertRaisesRegex(ValueError, 'start anchor'):
+                channel.next_version({'sha256': 'x'}, None)
         planned, _ = self.candidate()
         channel.publish(self.api, self.root, planned, enabled=True)
         previous = channel.authority(self.api)
