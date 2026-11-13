@@ -17,7 +17,8 @@ mit Picross-Start.exe --state "D:\Eigener Zustand" öffnen.
 Das kleine Steuerfenster bietet „Im Browser öffnen“ und „Assistent beenden“.
 Minimieren lässt den Dienst laufen; Fensterschließen beendet ihn kontrolliert.
 Tab schließen stoppt ihn nicht. Ein zweiter Start öffnet die passende vorhandene
-Browserinstanz. Eine laufende alte CMD vor dem ersten EXE-Start regulär beenden.
+Browserinstanz; während der vorgelagerten Updateprüfung zeigt er nur das
+Steuerfenster. Eine laufende alte CMD vor dem ersten EXE-Start regulär beenden.
 
 Die Browseradresse wird ab P3 pro Zustand beibehalten. Ein fremd belegter Port
 wird gemeldet; Wechsel erfolgt nur ausdrücklich und hat getrennte Browseroptionen
@@ -53,16 +54,29 @@ signierter Quell-/Versions-/Dateibindung. Der feste öffentliche Trust ist in de
 App eingebaut; eine Metadatensignatur ist keine Windows-Codesignatur.
 App-Updates sind standardmäßig aus. Im nativen Steuerfenster einmalig
 „Aktivieren“ oder „Ablehnen“ wählen; danach jederzeit ein-/ausschaltbar.
-Nur die normal installierte App prüft nach Bereitschaft einmal je Start den
-signierten öffentlichen Kanal. Ohne Opt-in kein Download/Installationsstart.
+Nur die normal installierte App prüft einmal je Start den signierten öffentlichen
+Kanal. Bei bereits aktivierten Updates erscheinen Steuerfenster und lokaler Dienst
+sofort; Browser/Sheet und erster Git-Abgleich warten auf die Updateentscheidung.
+Während Prüfung und Download öffnet „Ohne Update fortfahren“ die vorhandene App
+und verwirft diesen Updateversuch sicher. Die gespeicherte Zustimmung bleibt
+erhalten. „Assistent beenden“ bleibt bedienbar. Nach sicherer Helferübergabe ist
+Überspringen nicht mehr möglich. Ohne Opt-in startet Browser/Git direkt, ohne
+automatischen Netzabruf oder Installationsstart. Einrichtung, portable Fassung
+und Entwickler-/Headless-Start erhalten keine automatische Installationsbefugnis.
 Ein leerer Vertrauensspeicher bedeutet: Kanal inaktiv; erste root-provisionierte
 Version vertrauenswürdig manuell installieren. Auch 0.1.0 benötigt diesen Schritt.
 
-Bei bestätigter neuerer Version lädt die App geprüfte Dateien, schließt laufende
-Arbeit geordnet ab und übergibt an einen unabhängigen Windowshelfer. Er wartet auf
+Bei bestätigt neuerer Version bleiben Browser und erster Git-Abgleich auch
+während Download und Prüfung zurückgestellt. Die App übergibt erst den vollständig
+geprüften Kandidaten an einen unabhängigen Windowshelfer. Er wartet auf
 das vollständige Prozessende, installiert nur die höhere gebundene Version und
 prüft den Wiederanlauf mit demselben Zustand und Port. Offline-/Downloadfehler
-lassen die vorhandene App nutzbar; Ausschalten bricht den Download ab.
+geben Browser und ersten Git-Abgleich der vorhandenen App einmalig frei;
+Ausschalten bricht den Versuch ab. Eine nicht bestätigte neuere Version bedeutet
+keine Zusicherung, dass der Kanal aktuell erreichbar ist. Bei Browserfehler nach
+Arbeitsaufnahme „Im Browser öffnen“ erneut wählen; der erste Git-Abgleich wird
+dabei nicht wiederholt. Bereits begonnene Git-Arbeit und Produktionsentfernung
+laufen beim Beenden weiterhin geordnet aus.
 Installationsfehler/unklarer Ausgang/Rebootbedarf werden ehrlich gemeldet: danach
 Windowsinstallation prüfen und manuell starten bzw. geprüften Installer erneut
 ausführen. Kein automatischer Retry, keine universelle Rollbackgarantie.

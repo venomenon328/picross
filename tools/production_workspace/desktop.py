@@ -101,6 +101,74 @@ def run_headless(args, lock, build):
     return 0
 
 
+class Startup:
+    """GUI-thread owner of first work, skip and update-drain decisions.
+
+    Construct only after authenticated HTTP readiness. Network work lives in
+    Updates; external control requests only set Runtime events, never call us.
+    """
+    def __init__(self, runtime, updates, browser_error):
+        self.runtime, self.updates, self.browser_error = runtime, updates, browser_error
+        self.begun = self.waiting = self.working = self.closing = False
+        self.handoff = None
+
+    def begin(self):
+        if self.begun:
+            return
+        self.begun = True
+        if self.runtime.stop_requested.is_set():
+            self.stop()
+            return
+        self.waiting = bool(self.updates and self.updates.start())
+        if not self.waiting:
+            self.work()
+
+    def open(self):
+        if not self.working or self.closing or self.runtime.stop_requested.is_set():
+            return
+        try:
+            self.runtime.open()
+        except (OSError, ValueError):
+            self.browser_error()
+
+    def work(self):
+        if self.working or self.closing or self.runtime.stop_requested.is_set():
+            return
+        self.waiting = False
+        self.working = True  # Claim before browser error dialogs can reenter Tk.
+        self.runtime.open_requested.clear()  # Coalesce a second start into first open.
+        self.open()
+        if not self.closing and not self.runtime.stop_requested.is_set():
+            self.runtime.refresh()
+
+    def skip(self):
+        if self.waiting and not self.closing and self.updates.cancel():
+            self.work()
+
+    def stop(self):
+        self.closing = True
+        self.waiting = False
+        if self.updates and self.handoff is None:
+            self.updates.cancel()
+        self.runtime.request_stop()
+
+    def poll(self):
+        if self.runtime.stop_requested.is_set() and not self.closing:
+            self.stop()
+        if self.closing:
+            return
+        if self.updates:
+            self.handoff = self.updates.take()
+            if self.handoff:
+                self.stop()
+                return
+            if self.waiting and not self.updates.pending:
+                self.work()
+        if self.runtime.open_requested.is_set():
+            self.runtime.open_requested.clear()
+            self.open()  # While gated, a second start cannot bypass the decision.
+
+
 def run_gui(args, lock, build):
     import tkinter as tk
     from tkinter import ttk, messagebox
@@ -109,7 +177,7 @@ def run_gui(args, lock, build):
         root.iconbitmap(str(Path(__file__).parent / 'assets/launcher.ico'))
     runtime = None
     updates = None
-    update_handoff = None
+    controller = None
     try:
         setup_start = args.setup or not (lock.state / 'config.json').exists()
         if args.setup or not (lock.state / 'config.json').exists():
@@ -140,16 +208,19 @@ def run_gui(args, lock, build):
         def stop():
             nonlocal closing
             closing = True; open_button.configure(state='disabled')
-            if updates and update_handoff is None:
-                updates.cancel()
+            if controller:
+                controller.stop()
             status.set('Beenden: eigene Anfragen und Git-Arbeit laufen aus. Eine begonnene Entfernung wird nicht abgebrochen.')
             if ready.is_set() and 'error' not in startup:
                 runtime.request_stop()
         ttk.Button(panel, text='Assistent beenden', command=stop).pack(anchor='w')
         root.protocol('WM_DELETE_WINDOW', stop)
         launched = False
+        update_status = None
+        decision = None
+        skip_button = None
         def show_updates():
-            nonlocal updates
+            nonlocal updates, update_status, decision, skip_button
             if setup_start or closing or os.name != 'nt' or not getattr(sys, 'frozen', False):
                 return
             from .app_updates import Updates
@@ -176,24 +247,15 @@ def run_gui(args, lock, build):
                     ttk.Button(decision, text='Aktivieren', command=lambda: choose(True)).pack(side='left', padx=8)
                 else:
                     ttk.Checkbutton(decision, text='Automatische App-Updates aktivieren', variable=enabled, command=toggle).pack(anchor='w')
-            def update_tick():
-                nonlocal update_handoff
-                update_status.set(updates.status)
-                if not closing:
-                    update_handoff = updates.take()
-                    if update_handoff:
-                        for child in decision.winfo_children():
-                            child.configure(state='disabled')
-                        stop()
-                root.after(100, update_tick)
-            updates.start(); update_tick()
+            skip_button = ttk.Button(box, text='Ohne Update fortfahren', command=lambda: controller.skip())
+            skip_button.pack(anchor='w', pady=6)
             def recover_tick():
                 updates.poll_result()
                 if updates.recovery_attempts < 10:
                     root.after(1000, recover_tick)
             root.after(1000, recover_tick)
         def tick():
-            nonlocal launched
+            nonlocal launched, controller
             if ready.is_set() and not launched:
                 if 'error' in startup:
                     error = startup['error']
@@ -208,26 +270,33 @@ def run_gui(args, lock, build):
                 if closing:
                     runtime.request_stop()
                 else:
-                    try:
-                        runtime.open()
-                    except (OSError, ValueError):
-                        error_dialog('Standardbrowser nicht erreichbar. Standardbrowser einrichten und erneut öffnen.', root)
-                    runtime.refresh(); open_button.configure(state='normal')
-                    root.after_idle(show_updates)
+                    show_updates()
+                    controller = Startup(runtime, updates, lambda: error_dialog(
+                        'Standardbrowser nicht erreichbar. Standardbrowser einrichten und erneut öffnen.', root))
+                    controller.begin()
             if launched:
                 if runtime.stop_requested.is_set() and not closing:
                     stop()
-                if runtime.open_requested.is_set() and not closing:
-                    runtime.open_requested.clear()
-                    try:
-                        runtime.open(); root.deiconify(); root.lift()
-                    except (OSError, ValueError):
-                        error_dialog('Windows-Standardbrowser prüfen und erneut öffnen.', root)
+                if controller and not closing:
+                    if runtime.open_requested.is_set():
+                        root.deiconify(); root.lift()
+                    controller.poll()
+                    if controller.closing:
+                        stop()
+                    open_button.configure(state='normal' if controller.working and not closing else 'disabled')
+                if updates:
+                    update_status.set(updates.status)
+                    skip_button.configure(state='normal' if controller.waiting and not closing else 'disabled')
+                    if closing:
+                        for child in decision.winfo_children():
+                            if isinstance(child, (ttk.Button, ttk.Checkbutton)):
+                                child.configure(state='disabled')
                 if runtime.stopped.is_set():
                     if runtime.error:
                         error_dialog(runtime.error, root)
                     elif runtime.service.removal_result:
                         messagebox.showinfo('Ergebnis der laufenden Entfernung', runtime.service.removal_result, parent=root)
+                    update_handoff = controller.handoff if controller else None
                     if update_handoff:
                         if runtime.error:
                             update_handoff.abort()
@@ -239,9 +308,12 @@ def run_gui(args, lock, build):
                                 error_dialog('Updateübergabe nicht bestätigt. Assistent danach manuell starten.', root)
                     root.quit(); return
                 if not closing:
-                    update = runtime.service.status()['update']
-                    status.set('Bereit. Quellen werden im Hintergrund gesucht …' if update['state'] == 'running' else
-                               'Bereit. ' + (update['error'] or 'Browser-Tab schließen beendet den Assistenten nicht.'))
+                    if controller and controller.waiting:
+                        status.set('App-Update vor Arbeitsbeginn prüfen. Browser und Git warten; ohne Update fortfahren ist möglich.')
+                    else:
+                        update = runtime.service.status()['update']
+                        status.set('Bereit. Quellen werden im Hintergrund gesucht …' if update['state'] == 'running' else
+                                   'Bereit. ' + (update['error'] or 'Browser-Tab schließen beendet den Assistenten nicht.'))
             root.after(100, tick)
         launch(args.port); root.after(100, tick); root.mainloop()
         return 0

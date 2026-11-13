@@ -11,6 +11,9 @@ class Updates:
     def __init__(self, runtime):
         self.runtime = runtime
         self.cancelled = threading.Event()
+        # GUI owns choose/start/cancel/take; the worker shares only the short
+        # helper-spawn/publication transition. Never hold this over network I/O.
+        self.transition = threading.Lock()
         self.thread = None
         self.handoff = None
         self.stage = None
@@ -39,7 +42,7 @@ class Updates:
             self.started = True
 
     def choose(self, enabled):
-        if self.preferences is None:
+        if self.preferences is None or self.taken or self.runtime.stop_requested.is_set():
             return
         try:
             self.preferences.write(enabled)
@@ -58,11 +61,21 @@ class Updates:
             self.start()
 
     def start(self):
-        if self.started or self.enabled is not True or self.identity is None:
-            return
+        if (self.started or self.cancelled.is_set() or self.runtime.stop_requested.is_set() or
+                self.enabled is not True or self.identity is None):
+            return False
         self.started = True
         self.thread = threading.Thread(target=self._run, name='PW-app-update')
         self.thread.start()
+        return True
+
+    @property
+    def pending(self):
+        with self.transition:
+            # A worker can finish between take() and this read. A published
+            # handoff must keep the gate closed until the next GUI take().
+            return bool(not self.cancelled.is_set() and not self.taken and
+                        (self.thread and self.thread.is_alive() or self.handoff))
 
     def _run(self):
         try:
@@ -71,22 +84,24 @@ class Updates:
             if self.cancelled.is_set():
                 raise client.Cancelled()
             self.stage = Stage(self.runtime.lock.directory)
-            self.status = 'Geprüfte neuere Appversion herunterladen … Ausschalten bricht den Download ab.'
+            self.status = 'Geprüfte neuere Appversion herunterladen …'
             candidate = client.download(metadata, assets, self.stage, self.cancelled)
             if self.cancelled.is_set() or self.preferences.read() is not True or self.runtime.stop_requested.is_set():
                 raise client.Cancelled()
             self.status = 'Vollständigen Kandidaten und unabhängigen Updatehelfer prüfen …'
-            handoff = windows.prepare(candidate, self.stage, self.identity, self.runtime)
-            self.handoff = handoff
-            if self.cancelled.is_set() or self.preferences.read() is not True or self.runtime.stop_requested.is_set():
-                handoff.abort()
-                raise client.Cancelled()
-            self.status = 'App-Update bereit. Laufende Arbeit wird geordnet abgeschlossen …'
+            handoff = windows.prepare(candidate, self.stage, self.identity, self.runtime,
+                                      cancelled=self.cancelled, transition=self.transition)
+            with self.transition:
+                self.handoff = handoff
+                if self.cancelled.is_set() or self.preferences.read() is not True or self.runtime.stop_requested.is_set():
+                    handoff.abort()
+                    raise client.Cancelled()
+                self.status = 'App-Update bereit. Laufende Arbeit wird geordnet abgeschlossen …'
         except client.Cancelled:
             self.cancelled.set()
             self.status = 'App-Update abgebrochen; vorhandene App bleibt verfügbar.'
         except Exception:
-            self.cancelled.set()
+            self.cancel()
             self.status = ('App-Update nicht möglich: Kanal, Signatur, Version, Download oder Übergabe nicht bestätigt. '
                            'Vorhandene App bleibt verfügbar; beim nächsten Start erneut prüfen oder manuell installieren.')
         finally:
@@ -99,10 +114,11 @@ class Updates:
                     self.status += ' Eigene Updateablage konnte noch nicht entfernt werden.'
 
     def take(self):
-        if (self.thread and not self.thread.is_alive() and self.handoff and not self.taken and
-                not self.cancelled.is_set() and self.enabled is True):
-            self.taken = True
-            return self.handoff
+        with self.transition:
+            if (self.thread and not self.thread.is_alive() and self.handoff and not self.taken and
+                    not self.cancelled.is_set() and self.enabled is True and not self.runtime.stop_requested.is_set()):
+                self.taken = True
+                return self.handoff
         return None
 
     def poll_result(self):
@@ -119,13 +135,21 @@ class Updates:
                 pass  # The still-running helper may hold its exclusive stage lock.
 
     def cancel(self):
-        self.cancelled.set()
-        if self.handoff:
-            self.handoff.abort()
+        with self.transition:
+            if self.taken:
+                return False  # The GUI now owns the drain/GO or explicit abort.
+            self.cancelled.set()
+            self.started = True  # Skip/opt-out cannot restart this attempt.
+            if self.handoff:
+                self.handoff.abort()
+            return True
 
     def close(self):
         if not (self.handoff and self.handoff.committed):
-            self.cancel()
+            if self.taken:
+                self.handoff.abort()
+            else:
+                self.cancel()
         if self.thread:
             self.thread.join()  # HTTP time/byte budgets bound exit; no detached downloader.
         if self.handoff and not self.handoff.committed:
