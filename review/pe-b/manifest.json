@@ -1,0 +1,163 @@
+{
+  "product_head": "613f609eabb622f72768c72981682e7076e06e8d",
+  "purpose": "PE-B-A01 independent technical/UI review; portable product candidate for U01",
+  "recipient": "independent PR reviewer and repository owner",
+  "expires": "2026-11-20",
+  "reuse": [
+    {
+      "report": "t01-report.json",
+      "actually_tested_head": "1476fd3acbd633ccfb55e0b5c9453f6bb391195c",
+      "reused_at_head": "613f609eabb622f72768c72981682e7076e06e8d",
+      "reason": "All API/worker/instance and shared-writer/solver/image-input sources are byte-identical; later changes are native lifecycle/import and UI presentation plus unrelated main documentation.",
+      "identical_git_objects": {
+        "tools/puzzle_editor/server.py": "eaef3e14952619164408f1834fbd5ea2eb4c4e55",
+        "tools/puzzle_editor/worker.py": "bfe7cbe02c65f272b69457aacce212b26da35dd0",
+        "tools/puzzle_editor/instance.py": "6dbd8bb640554e321ac28656c0a79a49f49fa153",
+        "tools/puzzle_production": "5b0c22a4401484bb84b47dca0fa39140bf7d5f91"
+      }
+    },
+    {
+      "report": "t01-security-report.json",
+      "actually_tested_head": "8b5ab066440c335d79973d6569cb5c3a3214ed19",
+      "reused_at_head": "613f609eabb622f72768c72981682e7076e06e8d",
+      "reason": "All API/worker/instance and shared-writer/solver/image-input sources are byte-identical; later changes are native lifecycle/import and UI presentation plus unrelated main documentation.",
+      "identical_git_objects": {
+        "tools/puzzle_editor/server.py": "eaef3e14952619164408f1834fbd5ea2eb4c4e55",
+        "tools/puzzle_editor/worker.py": "bfe7cbe02c65f272b69457aacce212b26da35dd0",
+        "tools/puzzle_editor/instance.py": "6dbd8bb640554e321ac28656c0a79a49f49fa153",
+        "tools/puzzle_production": "5b0c22a4401484bb84b47dca0fa39140bf7d5f91"
+      }
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "01-list-detail.png",
+      "bytes": 88217,
+      "sha256": "c9fccb7df70b27265ee8d046017a5ac5c300199a03c400e2e6212fe5a0c47dc4",
+      "head": "613f609eabb622f72768c72981682e7076e06e8d",
+      "resolution": [
+        1600,
+        1000
+      ],
+      "browser": "Microsoft Edge 157.0.4341.46",
+      "url": "http://127.0.0.1:63498/"
+    },
+    {
+      "file": "02-change-preview.png",
+      "bytes": 71886,
+      "sha256": "e533a7319f8a0ad6ece53161f795a5b170dbfab3026ff802ec9df0135715ae4c",
+      "head": "613f609eabb622f72768c72981682e7076e06e8d",
+      "resolution": [
+        1600,
+        1000
+      ],
+      "browser": "Microsoft Edge 157.0.4341.46",
+      "url": "http://127.0.0.1:63498/"
+    },
+    {
+      "file": "03-error.png",
+      "bytes": 63526,
+      "sha256": "3d49d02d41667dfef7a43caa0bf316fc76dd847ec69a53499d5d3701fa2bec32",
+      "head": "613f609eabb622f72768c72981682e7076e06e8d",
+      "resolution": [
+        1600,
+        1000
+      ],
+      "browser": "Microsoft Edge 157.0.4341.46",
+      "url": "http://127.0.0.1:63498/"
+    }
+  ],
+  "files": [
+    {
+      "file": "01-list-detail.png",
+      "bytes": 88217,
+      "sha256": "c9fccb7df70b27265ee8d046017a5ac5c300199a03c400e2e6212fe5a0c47dc4"
+    },
+    {
+      "file": "02-change-preview.png",
+      "bytes": 71886,
+      "sha256": "e533a7319f8a0ad6ece53161f795a5b170dbfab3026ff802ec9df0135715ae4c"
+    },
+    {
+      "file": "03-error.png",
+      "bytes": 63526,
+      "sha256": "3d49d02d41667dfef7a43caa0bf316fc76dd847ec69a53499d5d3701fa2bec32"
+    },
+    {
+      "file": "build.log",
+      "bytes": 9635,
+      "sha256": "2b6a765d0dfba4370d8fb8344046dbb960ff7e90e9c400c04863f766a6d7de60"
+    },
+    {
+      "file": "delivery.json",
+      "bytes": 646,
+      "sha256": "d2743052a36d276ebba6b46a601f65b39773f012bba8605fd4f1038e2e4a731f"
+    },
+    {
+      "file": "Picross-Bestandseditor-windows-x64.zip",
+      "bytes": 21792030,
+      "sha256": "0c8f4056d458e018aae947d45c9cb29ae8f18a9c8663f503e445dc7b98a15f25"
+    },
+    {
+      "file": "t01-report.json",
+      "bytes": 18293,
+      "sha256": "bd210056cb8d26baac6c7782af94859141cbadc7728424601833ed616cda7c21"
+    },
+    {
+      "file": "t01-security-report.json",
+      "bytes": 741,
+      "sha256": "7146edc1a57630c9df949d7ae9890dd8836bbbcf2e654fc9c3e92a706004012a"
+    },
+    {
+      "file": "t01-security.log",
+      "bytes": 625,
+      "sha256": "2e71a9f0357a592dcc588f2aa0bcbd69228faab28f686edf5416d9a9b4f23538"
+    },
+    {
+      "file": "t01.log",
+      "bytes": 987,
+      "sha256": "2f21efa75e7c9e50953998005b3a255bd9aff1e5f228238612b847c9db00c330"
+    },
+    {
+      "file": "t01.py",
+      "bytes": 14058,
+      "sha256": "d80d5ebd460f72d7b895ee1143c9fc5637c34a8b43734783cb57e091d1af164d"
+    },
+    {
+      "file": "t01_security.py",
+      "bytes": 5323,
+      "sha256": "0ae5a9d4f3813c69adf3c3884ce228f07534d02f53b2da644332fdde4ce0b7e5"
+    },
+    {
+      "file": "t02-report.json",
+      "bytes": 1416,
+      "sha256": "24d9c27ee973f0371c814c9196bc9d51635d7036222127454e81b1a1900295c4"
+    },
+    {
+      "file": "t02.log",
+      "bytes": 665,
+      "sha256": "66607aee137e42fd2bb1c534ab4bfe295f4d34b3e800d2d26e5a1863be58bcef"
+    },
+    {
+      "file": "t02.py",
+      "bytes": 8942,
+      "sha256": "37045d42daf9787315a670423e3643914a6ecf6ce7319fa638dd1e023cb1e9b6"
+    },
+    {
+      "file": "t03-partial.json",
+      "bytes": 880,
+      "sha256": "69da550042bcbba5bc22cc14c9d3a30898f9836ff179c2e9c4c987aec0f5c112"
+    },
+    {
+      "file": "t03-partial.log",
+      "bytes": 306,
+      "sha256": "7d6907fc80dcf2d51523e705f46d2efd84d1300f934674bc354d64933cce398c"
+    },
+    {
+      "file": "t03.py",
+      "bytes": 8829,
+      "sha256": "2cab286ed6084cc03b62504f8194bb9ec2560fb5be99cae74b210fbf3a9acef8"
+    }
+  ],
+  "t03": "partial; see t03-partial.json"
+}

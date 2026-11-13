@@ -1,0 +1,9 @@
+PASS real Edge search/filter/select and current detail with lazy current-image catalog preview
+PASS unsaved ID switch guard and explicit discard
+PASS separate category creation via actual plan and apply
+PASS explicit browser v7 to v8 migration preview and confirmation
+PASS native file chooser event, invalid dimension and actual backend cell error
+PASS file drop plus one actual A3 metadata/image/background/raster apply and readback
+PASS selected none standard UI roundtrip and actual category pilot preview
+PASS real refresh unsaved warning and no implicit persistence
+PASS real connection failure retry and fresh-session restart with retained checkout

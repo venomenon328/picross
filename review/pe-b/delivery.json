@@ -1,0 +1,21 @@
+{
+  "format": "picross-pe-build-v1",
+  "version": "0.1.0",
+  "commit": "613f609eabb622f72768c72981682e7076e06e8d",
+  "python": "3.13.14",
+  "tk": "8.6.15",
+  "dependencies": {
+    "Pillow": "12.3.0",
+    "PyInstaller": "6.22.3",
+    "pyinstaller-hooks-contrib": "2026.10",
+    "altgraph": "0.17.5",
+    "packaging": "26.3",
+    "pefile": "2024.8.26",
+    "pywin32-ctypes": "0.2.3",
+    "setuptools": "84.2.1"
+  },
+  "zip_sha256": "0c8f4056d458e018aae947d45c9cb29ae8f18a9c8663f503e445dc7b98a15f25",
+  "zip_bytes": 21792030,
+  "exe_sha256": "5c94110b5b6fbacd770bda7a102e78eb3de28655951e044a7c9a1715257a67f4",
+  "files": 1131
+}

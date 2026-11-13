@@ -1,0 +1,9 @@
+PASS missing actual usage basis blocks plan with all checkout bytes and mtimes unchanged
+PASS changed uploaded bytes block apply before mutation
+PASS changed bound plan bundle blocks apply before mutation
+PASS expired plan rejected and own plan bytes removed
+PASS later upload invalidates earlier plan
+PASS actual pre-publication staging interruption and common recovery, including repeated no-op
+PASS actual Windows junction checkout rejected without following target
+PASS opaque prepared background rejected without content writes
+PASS explicit paired profile runs actual proof/rating and applies a checked raster

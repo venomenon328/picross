@@ -1,0 +1,16 @@
+PASS v4/v7 read and stable two-ID listing
+PASS v7 A1 name edit without implicit migration
+PASS category create rename occupied delete+reassign and empty delete
+PASS explicit runtime-only migration and same-plan idempotence
+capability path game/data/background-capability.json
+PASS byte-identical PNG and combined A2 metadata
+PASS byte-identical SVG and first legacy standard assignment
+PASS selected none standard roundtrip preserves exact prepared background bytes
+PASS formatted raster no-op preserves all mtimes
+PASS stalled deduction and precise invalid cell blocked without writes
+PASS single A3 raster+image+metadata journal and true repeat
+PASS stale catalog before apply preserves foreign bytes
+PASS foreign journal blocks apply without overwrite
+PASS malicious SVG and wrong background dimensions blocked
+PASS actual HTTP interrupted writer and repeated common recovery restore original hashes
+PASS origin host session fetch-site and independent second-ID bytes
