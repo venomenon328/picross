@@ -1,5 +1,14 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+**PE-A1 / #576 · im Arbeitsbranch implementiert, Review offen:**
+[PE-A1](PUZZLE_EDITOR.md#73-migration-und-laufende-produktion) trennt die aktuelle
+Namens-/Kategorieautorität von den weiterhin geprüften Produktionsangaben.
+Bei Erstregistrierung ist die Kategorie aktuell erforderlich; bei vorhandener ID
+bleibt deren aktive Metadatenzeile erhalten, während ein Folgeexport seine eigene
+gebundene Kategorieherkunft behält. Alte Exportformen werden nicht umgedeutet.
+Mutierende Standardproduktion verlangt v4/v7; historische Prüfungen, vollständig
+geprüfte Wiederholungen und gebundene Alt-Recovery bleiben zulässig.
+
 ## #596/C · Reguläre motivtreue Rasterkorrektur
 
 Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,
@@ -20,7 +29,6 @@ weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-J
 Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
-
 
 ## BA-B · Serielle Orchestrierung der bestehenden Einzelwege
 

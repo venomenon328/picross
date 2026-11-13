@@ -92,7 +92,7 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
             from tools.puzzle_production.za1_fixtures import difficulty_for_export
             from tools.puzzle_production.contract import write_json as write_canonical
             registry = json.loads((checkout / "content/registry.json").read_text(encoding="utf-8"))
-            write_canonical(project / "data/registry.json", projection(registry, categories))
+            write_canonical(project / "data/registry.json", projection(registry, categories, checkout, version=7))
             package = workspace / "kat2-adapter-input"
             make(package, "pz-test-direct-mono", 4, 3, "mono")
             approval = workspace / "kat2-adapter-approval.json"
@@ -102,6 +102,10 @@ def run(root, workspace, output, engine, environment, run_phase, python_phase, h
                 name="TEST ONLY Motiv", revision=1, stem="kat2_adapter", save_slot="kat2_adapter",
                 category_id="test-only-kat2-extra", categories_path=categories_path))
             python_phase("kat2-adapter-register", lambda: registration(exported, checkout, apply=True, difficulty=difficulty_for_export(exported)))
+            # The legacy T-* geometry fixtures require an explicit historical
+            # test catalog. This rejects any edited metadata or real content.
+            from tests.puzzle_production.catalog_fixtures import pre_metadata
+            pre_metadata(checkout, runtime_version=5)
             install_runtime_fixtures(root, project, append=True)
         else:
             fixture(project, saves, "regular" if mode in ("restart", "information", "kb", "kk", "ke", "at") else mode)

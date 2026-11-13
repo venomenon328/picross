@@ -1,0 +1,11 @@
+Repository: venomenon328/picross. Verbindlich: AGENTS.md und docs/ai-workflows/PUZZLE_AUTHORING.md (Authoring 0.8.0) im aktuellen main.
+
+Produktionsdatensatz: https://github.com/venomenon328/picross/blob/65c3c0844a849cb610099e8e35b409d555e7312a/content/authoring/pz-zitrone/r05/record.json
+
+Schritt 4: Ich wähle die unveränderte Kontextzeichnung aus Angebot H-A-b01. Zur Endabnahme vorbereiten.
+
+Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt; der fachliche Produktionsabschluss nach Authoring §9 bleibt davon getrennt.
+
+Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.
+
+Aufgezeichnet: 2026-11-12T19:04:25.954800Z. Der Versandzeitpunkt wurde nicht separat bereitgestellt; timestamp_utc bezeichnet die tatsächliche Aufzeichnung der vorliegenden Erklärung. Akteur: Eigentümer im aktuellen Chatauftrag. Keine finale Endabnahme oder Integrationsfreigabe erklärt. Die Auswahl bindet das unveränderte Original H-A-b01/b01 samt vereinbarter deterministischer Profilableitung; keine kreative Änderung.

@@ -1,5 +1,65 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+## PE-A1: aktuelle Namen und Kategorien
+
+[`metadata_cli`](metadata_cli.py) pflegt vorhandene registrierte IDs gemäß
+[PE-A1](../../docs/PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag).
+Aktuelle Namen und Kategorien stehen in Inhaltsregistry v4; Runtime v7 ist die
+geprüfte Projektion. Definitions-/Bildbytes, Rasterrevisionen, Ratings, Added und
+historische Produktionsbelege werden bei dieser Pflege nicht neu geschrieben.
+Die gemeinsame API liegt in [`catalog_metadata`](catalog_metadata.py).
+
+Alle Aufrufe laufen vom Repositoryroot. `CHECKOUT` ist der explizite lokale
+Zielcheckout. Plan-/Operationsdateien sind UTF-8-JSON. `--output` schreibt eine
+neue Datei außerhalb des Zielcheckouts als UTF-8 ohne BOM und überschreibt
+keine vorhandene Datei; ohne diese Option steht das JSON auf stdout.
+
+```text
+python -m tools.puzzle_production.metadata_cli view --target-root CHECKOUT
+python -m tools.puzzle_production.metadata_cli plan-migration --target-root CHECKOUT --output MIGRATION.json
+python -m tools.puzzle_production.metadata_cli apply --target-root CHECKOUT --plan MIGRATION.json
+python -m tools.puzzle_production.metadata_cli plan --target-root CHECKOUT --operations OPERATIONS.json --output PLAN.json
+python -m tools.puzzle_production.metadata_cli apply --target-root CHECKOUT --plan PLAN.json
+python -m tools.puzzle_production.metadata_cli recover --target-root CHECKOUT
+```
+
+`view` ist lesend und zeigt alle aktuellen Autorenmetadaten. Eine v4-Ansicht
+öffnet nur Registry und Kategorienquelle. Die API `MetadataView(root)` baut
+einmal die ID-Zuordnung auf; `lookup(id)` und `document()` liefern anschließend
+abgetrennte Speicheransichten ohne weitere Datei-, Bild- oder Proofzugriffe.
+
+Die explizite Migration validiert v2/v3 und schreibt ausschließlich die beiden
+Registrydateien. Ein bereits gültiger v4/v7-Bestand bleibt unverändert. Normale
+mutierende Writer verlangen danach v4/v7 und migrieren nicht nebenbei. Alte
+gebundene Journale zuerst über ihren gemeinsamen Recoveryweg auflösen.
+
+Eine Operationsdatei enthält eine Liste. Beispiel mit einer zuvor aus `view`
+gelesenen ID und aktuell vorhandener Kategorie:
+
+```json
+[
+  {"op": "set_metadata", "id": "pz-beispiel", "name": "Neuer Motivname", "category_id": "voegel"}
+]
+```
+
+`set_metadata` verlangt mindestens Name oder Kategorie. Weitere Operationen
+sind `category_create` mit `name`, `category_rename` mit `id,name` sowie
+`category_delete` mit `id` und optionalem `reassign_to`. Der Plan vergibt bei
+Kategorieanlage eine stabile ID und hängt den internen Ordnungswert an.
+Eine belegte Kategorie kann nur mit einer anderen vorhandenen Ersatzkategorie
+gelöscht werden; sämtliche betroffenen Rätsel werden in derselben Transaktion
+neu zugeordnet. Ihre historischen Kategorieangaben bleiben erhalten.
+
+Planen schreibt keinen Inhalt. Vor Übernahme `changes` und `files` prüfen;
+die Übernahme bindet auch die unveränderten Quellen und deren Abwesenheiten.
+Eine zwischenzeitliche Bearbeitung verlangt einen frischen Plan. Identische
+aktuelle Werte ergeben beim erneuten Planen einen No-op ohne neue Bytes oder
+mtimes. Offene Journale/Locks verhindern auch einen konkurrierenden No-op.
+Recovery stellt den vollständigen alten Zustand wieder her und schützt fremde
+Änderungen. Es gibt keine zusätzliche Metadatenhistorie oder freie Registry-API.
+Rückgabecodes: 0 erfolgreich, 2 ungültiger Eingang/Konflikt, 4 Ressourcenabbruch.
+Raster-/Bildpflege und eine Weboberfläche gehören zu späteren PE-Paketen.
+
 ## #596/C · Feste Rasterableitung
 
 Der vor Code festgelegte [Vertrag](../../docs/FIXED_RASTER.md) definiert die

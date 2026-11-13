@@ -101,6 +101,15 @@ Retirement bleiben eigene Schritte; Batchabschluss ist keine Mainintegration.
 
 ## Pflichtquellen nach Auftrag
 
+Der [lokale Bestandseditor PE](PUZZLE_EDITOR.md) ist unter
+[#576](https://github.com/venomenon328/picross/issues/576) spezifiziert. PE-A1
+liefert im Arbeitsbranch von [PR #577](https://github.com/venomenon328/picross/pull/577)
+die aktive Namens-/Kategorieautorität in Inhaltsregistry v4 und Runtime v7 samt
+expliziter Migration, Kategorienpflege und gemeinsamer CLI/API. Bestehende
+Produktionsbindungen und Saveidentitäten bleiben getrennt erhalten. Bildpflege,
+Rasterrevisionen und Weboberfläche folgen in eigenen Paketen; das unabhängige
+PE-A1-Review steht vor Merge aus.
+
 | Arbeit | Zusätzlich vollständig lesen |
 | --- | --- |
 | Produkt, Regeln, Inhalte, Progression, UX/UI, Eingabe, Plattform oder Architektur | [Produktdefinition](PRODUCT_DEFINITION.md) |
@@ -116,6 +125,7 @@ Retirement bleiben eigene Schritte; Batchabschluss ist keine Mainintegration.
 | Spriteherstellung, Zellrendering, Cache/Invalidierung | [CELL_RENDERING](CELL_RENDERING.md); PERF-A/B nur bei ihrer konkreten historischen Nacharbeit |
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Katalog, Metadaten oder Sortierung | [CATALOG_PRESENTATION](CATALOG_PRESENTATION.md), [CATALOG_SORTING](CATALOG_SORTING.md), [CATEGORIES](CATEGORIES.md) |
+| Lokaler Bestandseditor oder unabhängige Namens-/Kategoriepflege | [PUZZLE_EDITOR](PUZZLE_EDITOR.md), [Kategorien](CATEGORIES.md), jeweiliges Paket in [#576](https://github.com/venomenon328/picross/issues/576) und tatsächlich betroffene Fachverträge |
 | Abschlussbilder, Bildrevisionen oder Katalogvorschau | [REVEAL_TRANSPARENCY](REVEAL_TRANSPARENCY.md) und dort geroutete Produktions-/Integrationsquellen |
 | Hintergrundzeichnungen je Rätsel, ihre Auswahl, Ableitung oder Einführung | [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md), [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [PUZZLE_QUALITY](PUZZLE_QUALITY.md); spezifizierten Sollweg und tatsächlichen Unterstützungsstand unterscheiden |
 | Neue Rätsel konzipieren, produzieren, korrigieren oder redaktionell abnehmen | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [redaktioneller Qualitätsvertrag](PUZZLE_QUALITY.md) und deren Pflichtquellen |

@@ -119,7 +119,12 @@ class NullableBinaryContractTests(unittest.TestCase):
             self.assertEqual(pub.read_journal(root), raw)
             target.write_bytes(b" " + raw)
             with self.assertRaises(InvalidInput): pub.read_journal(root)
-        for format_ in (tx.BACKGROUND_FORMATS["sync"], "picross-background-adoption-journal-v3"):
+            current = pub.journal_bytes({**value, "format": tx.PE_FORMATS["background-adoption"]})
+            self.assertGreater(len(current), pub.NORMAL_LIMIT)
+            target.write_bytes(current)
+            self.assertEqual(pub.read_journal(root), current)
+        for format_ in (tx.BACKGROUND_FORMATS["sync"], tx.PE_FORMATS["sync"],
+                        "picross-background-adoption-journal-v4"):
             with self.subTest(format=format_), self.assertRaises(Aborted):
                 pub.journal_bytes({**value, "format": format_})
 

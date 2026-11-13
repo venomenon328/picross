@@ -1,0 +1,6 @@
+Production ID: pz-zitrone
+Background: H-A-b01
+Image revision: b01
+Artwork: OpenAI ImageGen · im Auftrag erzeugt
+Source: Eigenes tatsächliches image_gen.imagegen-Ergebnis im Codex-Auftrag vom 12.11.2026; ohne externe Bildreferenz.
+Usage basis: Eigene beauftragte generierte Illustration zur Projektverwendung, ohne bekannte fremde Asset- oder Attributionsbindung.
