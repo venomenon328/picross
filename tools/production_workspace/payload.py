@@ -19,6 +19,7 @@ IGNORED = {
     'check_ui_loading.cjs', 'presentation.schema.json', 'request.schema.json',
     'assets/launcher.png', 'smoke_installer.py', 'smoke_windows.py',
     'build_launcher.py', 'launcher_bootstrap.py',
+    'update_diagnostic.py',  # Isolated synthetic signing adapter; never frozen.
 }
 PRODUCTION_DATA = {
     'difficulty_calibration_0_3.json', 'difficulty_method_0_3.json',
@@ -48,7 +49,8 @@ def selected(path):
                 return True
             if scope == WORKSPACE and (local.startswith('ui/') or local.startswith('licenses/') or
                                       local in {'assets/launcher.ico', 'packaging/Guard.cs', 'release.json',
-                                                'requirements-windows.txt', 'START-WINDOWS.txt'}):
+                                                'requirements-windows.txt', 'requirements-update.txt',
+                                                'update-trust.json', 'START-WINDOWS.txt'}):
                 return True
             raise ValueError('Unclassified potential package input: ' + path)
     return False

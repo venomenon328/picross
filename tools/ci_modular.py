@@ -391,6 +391,7 @@ def main():
             if os.environ.get('GITHUB_OUTPUT'):
                 with open(os.environ['GITHUB_OUTPUT'], 'a') as stream:
                     for key, value in {'modules': ','.join(plan['modules']),
+                                       'tools': str('tools' in plan['modules']).lower(),
                                        'player': str(plan['player']['required']).lower(),
                                        'images': str(any(m == 'tools' or m.startswith(('native.', 'production.')) for m in plan['modules'])).lower(),
                                        'delivery': str('delivery' in plan['modules']).lower()}.items():

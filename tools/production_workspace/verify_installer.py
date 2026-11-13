@@ -11,6 +11,7 @@ import zipfile
 from .build_windows import ROOT, sha
 from .release import release
 from .payload import fingerprint
+from .update_verifier import production_trust
 from .smoke_installer import msi_properties
 
 NS = {'w': 'http://schemas.microsoft.com/wix/2006/wi'}
@@ -109,6 +110,16 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
                     'components', 'runtime_components', 'resources', 'signed'):
             require(components[key] == report[key], 'Embedded components mismatch: ' + key)
         require(sha(payload['Picross-Start.exe']) == report['exe_sha256'], 'Embedded EXE mismatch')
+        for name in ('release.json', 'update-trust.json'):
+            relative = '_internal/tools/production_workspace/' + name
+            require(sha(payload[relative]) == components['resources'][name] and
+                    payload[relative].read_bytes() == (ROOT / 'tools/production_workspace' / name).read_bytes(),
+                    'Packaged public trust/product identity mismatch: ' + name)
+        production_trust()
+        extensions = [name for name in payload if name.endswith('.pyd')]
+        require(any(name.endswith('cryptography/hazmat/bindings/_rust.pyd') for name in extensions) and
+                any(Path(name).name.startswith('_cffi_backend.') for name in extensions),
+                'MSI lacks native cryptography extensions')
         require(payload['Picross-Start.exe'].stat().st_size == report['exe_bytes'], 'Embedded EXE size mismatch')
         # Inspect the actual PE version resource, independently of sidecar JSON.
         import pefile
@@ -126,6 +137,9 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
                 'Embedded safety guard mismatch')
         licenses = [r['file'] for r in rows if r['file'].startswith('LICENSES/')]
         require({'LICENSES/Python.txt', 'LICENSES/WiX.txt'}.issubset(licenses), 'Missing license originals')
+        for package in ('cryptography', 'cffi', 'pycparser'):
+            require(any(name.startswith('LICENSES/' + package + '/') for name in licenses), 'Missing crypto license: ' + package)
+        require('LICENSES/OpenSSL-4.0.3.txt' in licenses, 'Missing cryptography OpenSSL license')
     result = {'format': 'picross-installer-inspection-v1', 'commit': expected_commit, 'version': report['version'],
               'payload_fingerprint': report['payload_fingerprint'],
               'msi_sha256': report['msi_sha256'], 'msi_bytes': report['msi_bytes'],
