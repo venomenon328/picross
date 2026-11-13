@@ -836,3 +836,104 @@ Bilder und Herkunftsquellen bleiben unverändert. Die einmaligen T01-/T02-Belege
 stehen kompakt im Liefer-PR, nicht als neue Dauerbenchmark- oder Bildfamilie.
 Technische Lieferung, unabhängiges Review, persönliche Editorprobe und Merge
 bleiben getrennt; PE-A1 liefert keine Weboberfläche.
+
+## 11. PE-B: lokaler Dienstvertrag v1
+
+Vor konsumierendem Code festgelegt am 13.11.2026 gemäß
+[PE-B-Paketentscheidung](https://github.com/venomenon328/picross/issues/576#issuecomment-6855913029).
+Programmcode und UI kommen ausschließlich aus `tools/puzzle_editor/` und dem
+gebundenen Programmpaket. Das lokal im Starter gewählte bestehende Checkout
+liefert nur Daten. Keine Codeimporte, Gitbefehle oder externen URLs aus diesem
+Checkout. Separate portable Windowsausgabe; keine PW-Zustandsübernahme.
+
+### 11.1 Transport, Sitzung und Lebenszyklus
+
+Nur HTTP auf `127.0.0.1:<tatsächlich gebundener Port>`. Feste statische GETs
+`/`, `/app.js`, `/style.css`; alle Daten unter `/api/pe/v1/`. Exakter Host,
+kein Query/Fragment/Prozentpfad, kein CORS, Fetch-Site nur fehlend/none/same-origin.
+Jeder API-Aufruf benötigt `X-PE-Session` mit 256-Bit-Sitzungsgeheimnis;
+POST zusätzlich exakt den eigenen Origin. Fehlender Origin ist nur lesend erlaubt.
+Der Starter öffnet die UI mit Token im Fragment; JS entfernt das Fragment sofort
+und hält die Sitzung in tabgebundenem sessionStorage, niemals Inhaltsentwürfe.
+Alle Antworten: no-store, nosniff, keine Referrer; CSP beschränkt Skript/Stil/API
+auf eigene Ressourcen und Bilder auf Blob-URLs. SVG nur nach bestehender Prüfung
+als Bild-Blob, nie als Dokument, HTML, object oder Inline-SVG.
+
+Keine Transfer-Encoding-/Chunked-Anfragen, doppelte Längen-/Typ-/Sicherheitsheader
+oder Bodies an GET. POST genau eine dezimale Content-Length und passenden Typ.
+JSON streng UTF-8, ohne doppelte Schlüssel/NaN; höchstens 256 KiB. Upload roh,
+1…32 MiB, Content-Type image/png oder image/svg+xml. Socket-Lesegrenze 15 s;
+höchstens acht gleichzeitige Requests, davon nur eine fachliche Operation.
+Fehler sind `{format:"picross-pe-error-v1",error:<Text>}` mit 400 (Eingabe),
+403 (Sitzung/Ursprung), 404 (Route), 409 (belegt/stale) oder 413 (Länge).
+Erfolg hat stets `format:"picross-pe-api-v1"` und die unten benannten Felder.
+
+Ein OS-Lock pro kanonischem Checkout verhindert zweite Editorinstanzen auch
+bei unterschiedlichem Port/Zustandsordner. Ein Zweitstart meldet die laufende
+Zuordnung; fremde Prozesse werden nie beendet. Belegter Port führt im Starter
+zur bewussten Wahl eines freien Ports. Tabende beendet keinen Prozess.
+Stop sperrt neue Arbeit und wartet auf bereits gestartete Reader/Writer,
+bevor Server, eigene Tempdaten und Lock geschlossen werden. Kein Kill einer
+Mutation. Offenes gemeinsames Journal verlangt ausdrücklich Recovery.
+
+### 11.2 Geschlossene Routen und Formen
+
+Alle Objekte geschlossen. Kennungen sind serververgebene 32-stellige Hexwerte,
+Puzzle-IDs müssen im aktuellen validierten Katalog vorkommen. Ein Plan bleibt
+höchstens zehn Minuten gültig, Uploads höchstens 15 Minuten, höchstens zwei
+Uploads und ein Plan gleichzeitig. Jeder neue Upload/Plan entwertet alte Pläne.
+Kein frei übergebener Datei-/Checkoutpfad und keine Kommando-API.
+
+| Methode/Route | Exakter Eingang / Ergebnisfelder zusätzlich zu format |
+| --- | --- |
+| GET `status` | Kein Body; `checkout,origin,stopping,recovery_required,job`. job null oder `{id,operation,state,stage,elapsed_seconds,result,error}`, state running/done/error. Status führt keine Vollprüfung aus. |
+| GET `catalog` | Kein Body; `snapshot,categories,entries,runtime_format,migration_required`. MetadataView liest die aktuellen Indizes; snapshot bindet deren Bytes und Runtime. Keine Bild-/Paketprüfung in Suche/Filter. Alte v2/v3 melden den nötigen A1-CLI-Migrationsweg. |
+| POST `detail` | `{id,snapshot}`; startet Job. Ergebnis `detail` mit images/raster-View, vollständigem Snapshot-Token und autorisierten Bildrefs; Vollprüfung sichtbar im Job. |
+| GET `image/<asset-id>` | Tokenheader, kein Body. Nur im Detail/Upload freigegebene aktuelle Datei; Ref-Hash/Bytes und Pfadsicherheit beim Abruf erneut prüfen. Originalbytes, kein Encoding. |
+| GET `standard/<category-id>` | Nur aktuelle validierte Kategorie; `assets` mit null bis zwei opaken Bildkennungen für die vorhandene Kategoriezeichnung. Keine Definition-/Paketprüfung, kein freier Bildpfad. |
+| POST `upload/<reveal|background>/<png|svg>` | Rohbytes, Hintergrund nur png. Ergebnis `upload,sha256,bytes`; neue opake Kennung, keine Clientdateinamen/Pfade. Vor Vorschau vorhandene Bildprüfer aufrufen; keine unvalidierten SVG ausliefern. |
+| POST `plan` | `{snapshot,id,metadata,text,profile,reveal,background,authority}`. id null ausschließlich für separate Kategorienaktion, dann metadata eine Liste A1-Operationen, alle anderen Felder null. Sonst metadata null oder A1-ID-Felder, text null oder Rasterstring, profile line/paired, reveal null oder `{upload,provenance}`, background null oder `{status,upload,provenance}`, authority null oder `{actor,statement,confirmed,provenance}` mit confirmed=true. provenance jeweils vier A2-Felder. UTC-Zeitpunkt entsteht am tatsächlichen Bestätigungseingang, keine vorgetäuschte Sichtung. |
+| POST `migration` | `{snapshot}`; eigener A2-v7→v8-Plan, niemals aus normalem Save. |
+| POST `apply` | `{plan,id}`; explizite Bestätigung des ausgewählten Plans/der gebundenen ID, id null bei Kategorie/Migration. Frische Fachprüfung; Ergebnis tatsächliche Writerquittung, keine UI-Erfolgserfindung. |
+| POST `recover` | `{confirmed:true}`; gemeinsames content_registry.recover als eigene Operation. Keine freien Restore-/Löschpfade. |
+| POST `discard` | `{confirmed:true}`; eigene Pläne/Uploads verwerfen, `discarded:true`; keine Inhaltsdatei ändern. |
+| POST `stop` | `{confirmed:true}`; `stopping:true`, anschließend geordnetes Drain. |
+
+Detail/Plan/Migration/Apply/Recovery liefern zunächst 202 mit `job`-Kennung.
+Polling über status liefert den echten Abschluss. Nur ein Workerprozess aus dem
+vertrauenswürdigen Programmpaket arbeitet seriell; Kontrollstatus bleibt erreichbar.
+Stage zeigt gestartete Fachoperation/Originaldiagnose und verstrichene Zeit,
+keine simulierten Prozentwerte. Fachbudgets bleiben je 300 s; Abbruch eines
+Requests beendet keine Mutation. Fertige Ergebnisse bleiben bis zur nächsten
+Operation/Stop. Ein Planresultat enthält exakt
+`plan,id,kind,files,before,after,quality,logic_changed,expires_seconds`;
+kind metadata/images/raster/migration. Vorher/nachher stammen aus dem echten Plan.
+Apply vergleicht Planbundle, Eingangsbytes, Snapshot, ID, Sitzung und Frist frisch.
+Reine ID-Metadaten A1, Bilder A2, Raster samt optionalen A1/A2-Feldern A3;
+Kategorien immer eigene A1-Transaktion. Keine Cross-Writer-Atomizität.
+
+### 11.3 Ablage, Benutzerführung und Lieferung
+
+Uploads, Requests, Planbundle, Workerprofile und Protokolle liegen in einem
+eigenen temporären Verzeichnis außerhalb des Inhaltscheckouts. Sichere I/O-Guards
+gelten für Wurzel, Vorfahren und einzelne Dateien einschließlich Junctions,
+Hardlinks, Aliase und Austausch während des Lesens. Uploadhash vor Plan und
+Apply erneut prüfen. Bei Ablauf/Verwerfen/Stop eigene Daten beseitigen;
+gemeinsame Recoverydaten im Checkout niemals automatisch löschen.
+Lokale Einstellungen enthalten ausschließlich letzten Checkoutpfad und Port.
+
+Ungespeicherte Felder werden markiert; Auswahl-/Kategorie-/Checkoutwechsel sowie
+Refresh verlangen Übernehmen oder bewusstes Verwerfen. Prüfen schreibt keine
+Inhalte. Vorschau nennt Dateien, Änderungen und bei echter Rasterrevision den
+Neustart genau dieser ID beim nächsten Laden. Palette unveränderbar; Dimensionen
+und Hinweise deterministisch aus numerischem Text, Zellfehler 1-basiert.
+Nach Apply tatsächlichen Katalog und Detail neu laden. Git/Build/Veröffentlichung
+bleiben extern. V7 erlaubt A1; Bilder/Raster zeigen eigene Migration an.
+
+Portable Windowsausgabe bindet CPython 3.13.14 x64, Pillow 12.3.0, Tcl/Tk und
+alle Fachmodule, UI, Schemata und Lizenzen. Build prüft Versionen, vollständiges
+Bundleinventar und saubere Quellbindung, kein Laufzeitdownload. Entwicklerstart
+`python -m tools.puzzle_editor` verwendet denselben Starter/Dienst.
+Bedienung/Bau und technische Einschränkungen stehen in der
+[Werkzeuganleitung](../tools/puzzle_editor/README.md). PE-B-A01 bleibt unabhängiges
+Vor-Merge-Review, PE-B-U01 persönliche Eigentümerprobe vor Gesamtissueabschluss.
