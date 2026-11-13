@@ -17,6 +17,7 @@ from .server import Service
 class Window:
     def __init__(self, state, initial=None, port=0):
         self.state, self.service, self.closing = io.external(state), None, False
+        self.stop_failed = False
         self.window = tk.Tk(); self.window.title("Picross · Bestandseditor " + VERSION)
         self.window.geometry("730x330"); self.window.minsize(650, 310)
         self.path, self.port, self.status = tk.StringVar(value=initial or ""), tk.StringVar(value=str(port)), tk.StringVar(value="Vorhandenes lokales Picross-Checkout bewusst auswählen.")
@@ -73,12 +74,18 @@ class Window:
         if self.closing: return
         if self.service and not confirmed and not messagebox.askokcancel("Editor beenden", "Ungespeicherte Browseränderungen vorher übernehmen oder verwerfen. Laufende Fachoperationen werden vollständig abgewartet. Jetzt beenden?", parent=self.window): return
         self.closing = True
+        self.stop_failed = False
         self.status.set("Beenden: laufende Fachoperation wird abgewartet…")
         self.start_button.configure(state="disabled"); self.browser_button.configure(state="disabled")
         def drain():
-            if self.service: self.service.close()
-            self.drained = True
+            try:
+                if self.service: self.service.close()
+            except Exception as exc:
+                self.stop_error = type(exc).__name__+": "+str(exc)
+            finally:
+                self.drained = True
         self.drained = False
+        self.stop_error = None
         threading.Thread(target=drain, name="PE-drain").start()
 
     def poll(self):
@@ -87,7 +94,13 @@ class Window:
         destroyed = False
         try:
             if self.closing and self.drained:
+                if self.stop_error is not None:
+                    self.closing = False; self.stop_failed = True
+                    self.status.set("Beenden unvollständig: "+self.stop_error)
+                    messagebox.showerror("Beenden unvollständig", self.stop_error+"\nEigene Restablage: "+str(self.service.work)+"\nNach Klärung erneut geordnet beenden.", parent=self.window)
+                    return
                 self.window.destroy(); destroyed = True; return
+            if self.stop_failed: return
             if self.service and self.service.stopping and not self.closing: self.close(confirmed=True)
             if self.service and not self.closing:
                 state = self.service.status()

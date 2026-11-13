@@ -141,13 +141,14 @@ class EditorHTTPTests(unittest.TestCase):
         from tools.puzzle_editor.desktop import Window
         window = Window.__new__(Window)
         window.closing = False
+        window.stop_failed = False
         window.service = Mock(stopping=False)
         window.service.status.side_effect = ValueError("concurrent source error")
         window.window = Mock(); window.status = Mock()
         window.poll()
         window.window.after.assert_called_once_with(250, window.poll)
         self.assertIn("concurrent source error", window.status.set.call_args.args[0])
-        window.closing, window.drained = True, True
+        window.closing, window.drained, window.stop_error = True, True, None
         window.poll()
         window.window.destroy.assert_called_once()
 
