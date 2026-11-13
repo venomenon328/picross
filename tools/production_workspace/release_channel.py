@@ -24,7 +24,6 @@ MANIFEST = 'manifest.json'
 PREFIX = '/repos/' + REPOSITORY
 
 
-
 class SafeRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         target = urllib.parse.urlsplit(newurl)
@@ -109,7 +108,6 @@ def trusted_run(api, run_id, source):
     require(main is not None and main['object']['type'] == 'commit' and main['object']['sha'] == source,
             'Source has been superseded on main')
     return run['run_attempt']
-
 
 
 def release_files(api, entry):

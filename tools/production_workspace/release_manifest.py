@@ -101,4 +101,3 @@ def verify_files(manifest, files):
     require(inputs['format'] == 'picross-app-inputs-v1' and inputs['sha256'] == manifest['payload_fingerprint'] and
             type(inputs['files']) is list and bool(inputs['files']) and
             digest(canonical(inputs['files'])) == inputs['sha256'], 'Invalid input fingerprint inventory')
-
