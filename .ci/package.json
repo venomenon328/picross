@@ -1,25 +1,25 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/612",
-  "package": "APP-B1",
+  "issue": "https://github.com/venomenon328/picross/issues/625",
+  "package": "CI-PB",
   "modules": [
     "tools"
   ],
-  "purpose": "APP-B1 gemäß issuecomment-6848332974: Ed25519-signierte Updateautorität, fester öffentlicher Trust, gemeinsamer Verifier und gesperrte Publisherintegration. Tools prüft kleine T01-Regressionen; docs/ci-required liefern den aktuellen Kern und den regulären Windows-Spieler. T02 separat am fixierten PR-Head mit echtem MSI und synthetischer Signatur, keine Veröffentlichung.",
-  "omitted": "Kein APP-B2-Start-/Download-/Installationsclient, keine Produktionswriter, Spiel-/UIänderungen oder echte Bestandsdaten. Keine native.*, preflight, delivery, production.* oder Chromium. Keine dauerhafte MSI-Vollsuite. APP-B1-A01 bleibt unabhängiges Vor-Merge-Review; APP-B1-R01 und APP-A-R01/R02 bleiben getrennte Betriebsgates.",
+  "purpose": "CI-PB gemäß #625: reguläre rätselspezifische Hintergrundquellen, PNGs und Nutzungshinweise in die gemeinsame enge Content-Klassifikation aufnehmen. Der Pflichtkern docs/ci-required einschließlich Windows-Spielerbau bleibt für diesen Entwicklungs-PR aktiv; tools prüft den gemeinsamen ci_scope-Verbraucher und die Werkzeugverträge.",
+  "omitted": "Keine production.*, native.*, preflight, delivery oder Chromium: Writer, Solver, Bildprofile und Spielverhalten ändern sich nicht. Keine echten Rätsel als Testkorpus, kein zusätzlicher Test-PR oder Inhaltsmerge. CI-PB-T01 wird durch den kleinen synthetischen Gitfall für PR/Main-Push einschließlich Anlage, Änderung, Entfernung, Rename-Grenzen und beider Gitmodusseiten geliefert. Keine neue Diagnosegalerie oder allgemeine automatische Pfadauswahl.",
   "test_changes": [
     {
-      "path": "tools/test_production_installer.py",
-      "disposition": "change-scoped",
-      "reason": "Vorhandene synthetische Publisherregression auf v1/v2, beide Aktivierungsschalter, Environment-/Root-/Secretgates und unveränderliche sieben Assets erweitern; ausschließlich tools."
+      "path": "tools/test_ci_modular.py",
+      "disposition": "core",
+      "reason": "Bestehende kleine Klassifikations-/Ausführungsfälle und ein synthetischer Gitfall sichern die buildfreie Hintergrundproduktion, weiterhin ausgewählte Fachprüfungen und die Grenzen zu Entwicklungsänderungen und expliziten Bauaufträgen. Keine Engine, echten Rätselbilder oder neue umfangreiche Regex-Testsuite. Der Gitfall liefert zugleich CI-PB-T01."
     },
     {
-      "path": "tools/test_update_verifier.py",
+      "path": "tools/test_ci_scope.py",
       "disposition": "change-scoped",
-      "reason": "Kleine echte Ed25519-/RFC-8032-, Wire-/Root-/Asset-/Versionsnegativfälle mit temporären Testidentitäten, nur tools; keine Netzwerk- oder Nutzerdaten."
+      "reason": "Kleine Verbraucherprüfung derselben Backgroundklassifikation samt engen Gegenfällen im ausgewählten tools-Modul; die historische automatische Pfadauswahl wird nicht in der Haupt-CI reaktiviert."
     }
   ],
-  "core_change": "Ein zusätzliches Planoutput bindet isolierte Kryptografieinstallation exakt an tools. Keine Kryptografie im Dokumentkern oder Main-Modulumfang; vorhandenes Image-venv wird nur bei gewählten tools ergänzt.",
+  "core_change": "tools/ci_paths.py ist Teil des CI-Kerns. Zwei vollständige Pfadmatches ergänzen ausschließlich content/backgrounds/pz-<id>.json und game/art/backgrounds/pz-<id>.png|txt mit der bestehenden Reveal-ID-Grammatik. Die gezielt erweiterten Kernfälle prüfen PR-/Main-Push-Plan und Ausführung; unbekannte Pfade, Entwicklungsdateien und nicht reguläre Gitmodi bleiben buildpflichtig. Workflow, Ergebnisgate und Umfang des regulären Windows-Kernbaus bleiben erhalten.",
   "evidence": {
     "mode": "none",
     "purpose": null,
