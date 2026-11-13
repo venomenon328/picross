@@ -61,6 +61,15 @@ class RasterTests(unittest.TestCase):
             self.assertEqual(value["files"],[])
             self.assertEqual(raster.apply(self.root,self.home/"bundle")["status"],"noop")
         self.assertEqual(before,snapshot(self.root))
+        original_guard = raster._bundle_guard
+        def concurrent_writer(*args):
+            original_guard(*args)
+            (self.root/tx.LOCK).write_bytes(b"foreign writer")
+        with patch.object(raster,"_bundle_guard",side_effect=concurrent_writer),self.assertRaises(ValueError):
+            raster.apply(self.root,self.home/"bundle")
+        self.assertEqual((self.root/tx.LOCK).read_bytes(),b"foreign writer")
+        (self.root/tx.LOCK).unlink()
+        self.assertEqual(before,snapshot(self.root))
 
     def test_checked_dimension_change_and_combined_metadata_image(self):
         previous = snapshot(self.root)

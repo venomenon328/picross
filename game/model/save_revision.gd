@@ -4,7 +4,6 @@ const Recent = preload("res://model/recent_puzzle.gd")
 const Registry = preload("res://model/content_registry.gd")
 const FORMAT: String = "picross-save-revision-reset-v1"
 const SUFFIXES: Array[String] = [".json", ".bak", ".tmp"]
-const LIMIT: int = 32 * 1024 * 1024
 
 static func exact_keys(value: Dictionary, expected: Array) -> bool:
 	return value.size() == expected.size() and expected.all(func(key: String) -> bool: return value.has(key))
@@ -25,17 +24,21 @@ static func hash_file(path: String) -> Variant:
 	if not Recent.safe_file(path): return "unsafe"
 	if not FileAccess.file_exists(path): return null
 	var file := FileAccess.open(path,FileAccess.READ)
-	if file == null or file.get_length() > LIMIT: return "unreadable"
-	var raw: PackedByteArray = file.get_buffer(file.get_length())
-	var ok: bool = file.get_error() in [OK,ERR_FILE_EOF]
-	file.close()
-	return hash_bytes(raw) if ok else "unreadable"
-
-static func hash_bytes(raw: PackedByteArray) -> String:
+	if file == null: return "unreadable"
+	var length: int = file.get_length()
+	var remaining: int = length
 	var hashing := HashingContext.new()
 	hashing.start(HashingContext.HASH_SHA256)
-	hashing.update(raw)
-	return hashing.finish().hex_encode()
+	while remaining > 0:
+		var raw: PackedByteArray = file.get_buffer(mini(remaining,1024*1024))
+		if raw.is_empty() or not file.get_error() in [OK,ERR_FILE_EOF]:
+			file.close()
+			return "unreadable"
+		hashing.update(raw)
+		remaining -= raw.size()
+	var ok: bool = file.get_length() == length
+	file.close()
+	return hashing.finish().hex_encode() if ok else "unreadable"
 
 static func old_envelope(data: Variant, definition: Dictionary, store: RefCounted) -> bool:
 	if not data is Dictionary or not exact_keys(data,["schema","definition_id","definition_revision","width","height","cells","history","cursor","undo_used","completed","view"]): return false
@@ -43,7 +46,7 @@ static func old_envelope(data: Variant, definition: Dictionary, store: RefCounte
 	if not store.integer(data.definition_revision) or data.definition_revision <= 0 or data.definition_revision >= definition.revision: return false
 	if not store.integer(data.width) or not store.integer(data.height) or data.width < 1 or data.width > 50 or data.height < 1 or data.height > 50: return false
 	var count: int = int(data.width)*int(data.height)
-	if not data.cells is Array or data.cells.size() != count or not data.history is Array or data.history.size() > 100000: return false
+	if not data.cells is Array or data.cells.size() != count or not data.history is Array: return false
 	if not store.integer(data.cursor) or data.cursor < 0 or data.cursor > data.history.size() or not data.undo_used is bool or not data.completed is bool: return false
 	if data.cursor < data.history.size() and not data.undo_used: return false
 	var colors: Array[int] = [1,2,3,4,5,6,7,8]
@@ -140,6 +143,7 @@ static func reset(store: RefCounted, definition: Dictionary) -> String:
 		value = {"format":FORMAT,"id":str(definition.id),"revision":int(definition.revision),"files":files,
 			"recent":hash_file(recent_path(store)) if recent.get("id","") == definition.id else null}
 		var raw: PackedByteArray = (JSON.stringify(value)+"\n").to_utf8_buffer()
+		if decode_marker(raw,definition,store) != value: return "Revisionsreset: Quellen nicht vollständig lesbar."
 		if FileAccess.file_exists(temporary):
 			if read_marker(temporary,definition,store) != value: return "Fremder Revisionsmarker-Temp bleibt erhalten."
 		else:
