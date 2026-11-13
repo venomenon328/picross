@@ -415,7 +415,7 @@ def preserved_background(value):
     return current == expected
 
 
-def promote_background(root, registry, entry, new_entry, definition_ref, runtime_revision):
+def promote_background(root, registry, entry, new_entry, definition_ref, runtime_revision, *, manual_raster=False):
     """Rebind an existing HP image alongside an explicit editor reveal authority.
 
     This operation preserves the image and genuine old proofs. It is not a
@@ -427,7 +427,7 @@ def promote_background(root, registry, entry, new_entry, definition_ref, runtime
     if old["format"] == BACKGROUND_FORMAT:
         return rebind(old, new_entry, definition_ref, runtime_revision)
     record = at.load(root, entry, categories.load(root / categories.PATH))
-    require(record is not None and record["format"] == REVEAL_FORMAT,
+    require(manual_raster or record is not None and record["format"] == REVEAL_FORMAT,
             "Productive background promotion requires an actual current editor reveal")
     active = bg.current(old)
     raw = io.read(root, bg.notice_path(entry["id"]), NOTICE_LIMIT, missing=True)

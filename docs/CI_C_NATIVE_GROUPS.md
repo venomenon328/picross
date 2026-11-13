@@ -1,5 +1,10 @@
 # Native Prüfmodule und Originalnachweise
 
+Package CI führt angeforderte native Module auf getrennten isolierten Runnern
+mit unverändertem Gruppeninhalt und unabhängigem Originalreader aus. Bestehende
+Phasenberichte liefern alle 30 Sekunden Gruppe, aktive Phase und Anzahl tatsächlich
+abgeschlossener Checks im Joblog; diese Aktivitätsanzeige ersetzt kein Ergebnis.
+
 ## HP-I2 / #561: geschlossener Hintergrundnachweis
 
 Das ausgewählte `native.catalog` führt zusätzlich zu den elf KAT-2-Modi die kleine

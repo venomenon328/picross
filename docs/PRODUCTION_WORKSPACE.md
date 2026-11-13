@@ -45,7 +45,9 @@ Gitabschluss führt der beauftragte Akteur aus. Historische Originale werden nic
 **APP-Updatevertrag · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612):**
 [Automatische App-Releases und Selbstupdate](PRODUCTION_UPDATES.md): APP-A ist
 über #613 unabhängig abgenommen und integriert. APP-B1 ergänzt signierte
-Updateautorität und den gemeinsamen Verifier mit unprovisioniertem festem Trust;
+Updateautorität und den gemeinsamen Verifier; APP-ROOT1 bindet den
+[freigegebenen öffentlichen Root](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923)
+im festen Programmtrust, ohne private Signierbereitstellung oder Aktivierung;
 APP-B2 ergänzt den standardmäßig ausgeschalteten Start-/Downloadclient und unabhängigen MSI-Helfer. Die veröffentlichende Pipeline
 bleibt bis zum eigenen Betriebsauftrag, Schlüsselbereitstellung und beiden
 Aktivierungsschaltern gesperrt. Der Selbstupdatekanal bleibt inaktiv. Die Freigabe hebt

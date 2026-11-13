@@ -1,13 +1,15 @@
 # PW: Automatisierte App-Releases und Selbstupdate
 
-**Stand APP-B2 · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612).**
-Maßgeblich: [Paketentscheidung APP-B2](https://github.com/venomenon328/picross/issues/612#issuecomment-6849852805).
+**Stand APP-ROOT1 · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612).**
+Maßgeblich: [APP-ROOT1](https://github.com/venomenon328/picross/issues/612#issuecomment-6851636493)
+und [Eigentümerfreigabe / öffentlicher Root](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923).
 **APP-A ist über PR #613 unabhängig abgenommen und in main integriert.**
 Erste Veröffentlichung und Windows-11-Upgradeprobe sind weiterhin offen.
 **APP-B1 liefert signierte Updateautorität und gemeinsamen Verifier; APP-B2
-ergänzt den standardmäßig ausgeschalteten Client und unabhängigen MSI-Helfer.** Produktionsvertrauen
-ist ausdrücklich unprovisioniert. Veröffentlichung bleibt ohne eigenen Betriebsauftrag,
-provisionierte Roots und beide Aktivierungsschalter gesperrt. Der Updatekanal bleibt inaktiv.
+ergänzt den standardmäßig ausgeschalteten Client und unabhängigen MSI-Helfer.** APP-ROOT1
+verankert ausschließlich den vom Eigentümer freigegebenen öffentlichen Root im Payload.
+Veröffentlichung bleibt ohne eigenen Betriebsauftrag, private Signierbereitstellung
+und beide Aktivierungsschalter gesperrt. Der Updatekanal bleibt inaktiv.
 Dieser Vertrag ersetzt **nicht rückwirkend** die P4-Liefernachweise aus
 [#588](https://github.com/venomenon328/picross/issues/588).
 
@@ -263,14 +265,26 @@ Versions-/Fingerprintautorität, niemals automatische Installationsautorität.
 explizit eingefrorene öffentliche Programmressource mit exakt
 `format="picross-pw-trust-v1"`, `accepted` (ID → striktes Base64 des 32-Byte-Public-Keys),
 `blocked` (eindeutige gesperrte IDs), `active_signer` (genau eine akzeptierte ID).
-Sperren haben Vorrang. Unprovisioniert sind `accepted={}` und `active_signer=null`;
-das ist der gelieferte Stand und autorisiert keine Produktionssignierung.
+Sperren haben Vorrang. Die unprovisionierte Form `accepted={}` und `active_signer=null`
+bleibt gültig und sperrt Signierung. APP-ROOT1 enthält genau den freigegebenen
+öffentlichen Schlüssel `a+FfCpsBYUS/pDwRIDeV8X/VGTk5h0gv61fBP4Nlku4=` unter
+seiner SHA-256-ID `7434f1625066c40b5b1ee43e5202745cccd2986d542bec6af5071688c9b9a134`,
+dieselbe ID als `active_signer` und `blocked=[]`. Der Eigentümer bestätigt die
+sichere private Sicherung; die öffentliche Hashbindung beweist keine private
+Paarzugehörigkeit. Diese wird erst im separat beauftragten Signierbetrieb geprüft.
 Kein Root aus Environment, Nutzereinstellungen, Gitdatencheckout, Browser,
 Produktionsrecord oder beliebigem Download; kein TOFU und kein Testkey-Schalter.
 
-Erst ein eigener Betriebsauftrag an den Eigentümer erzeugt einen echten Schlüssel
-mit sicherer Zufallsquelle. Nur Public Key/ID werden über geprüften PR in das
-Payload aufgenommen. Der private 32-Byte-Seed wird kanonisch Base64-kodiert als
+Die Eigentümerfreigabe erfüllt die Startvoraussetzung ROOT1-A02; ROOT1-A01 bleibt
+unabhängiges Review vor Merge. ROOT1-T01 verwendet nur öffentliche Produktionsbytes
+und synthetische Negativschlüssel. ROOT1-T02 ist der separate nicht veröffentlichende
+Windowsdispatch am festen PR-Head mit frischem MSI-/Frozen-/Trust-/Lizenzvergleich.
+MSI-Originale bleiben höchstens 14 Tage, gezielte technische Originale sieben Tage
+für diesen Reviewer erreichbar; konkrete Bindungen stehen im Draft-PR. ROOT1-R01
+und die bestehenden APP-A/B1/B2-Betriebs-/Windows-11-Gates bleiben getrennt offen.
+
+Nur Public Key/ID werden über den geprüften PR in das Payload aufgenommen.
+Erst auf gesonderten Betriebsauftrag wird der private 32-Byte-Seed kanonisch Base64-kodiert als
 `PW_UPDATE_SIGNING_KEY` im vorab eingerichteten Environment `pw-app-release`
 bereitgestellt. Dessen benutzerdefinierte Branchpolicy erlaubt exakt den Branch
 `main`, keine Tags/Wildcards. Privater Schlüssel nie in Git, Chat, Logs, App oder
