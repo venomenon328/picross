@@ -1,0 +1,75 @@
+{
+  "source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+  "browser": "157.0.4341.46",
+  "scope": "Two completed original large-ID detail operations only; controller later stopped before completing migration. Launcher counters are not actual worker counters.",
+  "completed_jobs": [
+    {
+      "action": "detail-large-first",
+      "wall_seconds": 201.982613,
+      "job_state": "done",
+      "stage": "Fachoperation abgeschlossen",
+      "error": null,
+      "recovery_required": false,
+      "ui_status": "Detail und aktuelle Quellen geprüft. Änderungen erst nach Prüfen und Übernehmen.",
+      "stages": [
+        {
+          "stage": "Fachoperation gestartet: detail",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "stage": "Fachoperation läuft: detail",
+          "elapsed_seconds": 0.3
+        }
+      ],
+      "files_changed": [],
+      "processes": [
+        {
+          "exit_code": 0,
+          "launcher_cpu_seconds": 0.015625,
+          "launcher_os_io": {
+            "read_operations": 1,
+            "write_operations": 0,
+            "other_operations": 206,
+            "read_bytes": 480,
+            "write_bytes": 0,
+            "other_bytes": 5414
+          }
+        }
+      ]
+    },
+    {
+      "action": "detail-large-warm",
+      "wall_seconds": 209.616513,
+      "job_state": "done",
+      "stage": "Fachoperation abgeschlossen",
+      "error": null,
+      "recovery_required": false,
+      "ui_status": "Detail und aktuelle Quellen geprüft. Änderungen erst nach Prüfen und Übernehmen.",
+      "stages": [
+        {
+          "stage": "Fachoperation gestartet: detail",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "stage": "Fachoperation läuft: detail",
+          "elapsed_seconds": 0.3
+        }
+      ],
+      "files_changed": [],
+      "processes": [
+        {
+          "exit_code": 0,
+          "launcher_cpu_seconds": 0.015625,
+          "launcher_os_io": {
+            "read_operations": 1,
+            "write_operations": 0,
+            "other_operations": 206,
+            "read_bytes": 480,
+            "write_bytes": 0,
+            "other_bytes": 5414
+          }
+        }
+      ]
+    }
+  ]
+}

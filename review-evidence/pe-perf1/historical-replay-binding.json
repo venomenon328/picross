@@ -1,0 +1,74 @@
+{
+  "samples": [
+    {
+      "file": "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/derived/H-A-b01/derivation.json",
+      "producer_commit": "b2ad90d0168b5f326aefe524db53a0526c45e278",
+      "original_versions": {
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "python": "3.13.14",
+        "zlib": "1.3.1.zlib-ng"
+      },
+      "current_versions": {
+        "python": "3.13.14",
+        "pillow": "12.3.0",
+        "zlib": "1.3.1.zlib-ng",
+        "littlecms": "2.19"
+      },
+      "modules_different_on_baseline": [
+        "tools/puzzle_production/operation_diagnostics.py"
+      ],
+      "modules_different_on_current": [
+        "tools/puzzle_production/catalog_io.py",
+        "tools/puzzle_production/operation_diagnostics.py"
+      ]
+    },
+    {
+      "file": "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/derived/B-b01/derivation.json",
+      "producer_commit": "392d1cb0736e529555c34ec5ca96cb8d0a61673d",
+      "original_versions": {
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "python": "3.13.14",
+        "zlib": "1.3.1.zlib-ng"
+      },
+      "current_versions": {
+        "python": "3.13.14",
+        "pillow": "12.3.0",
+        "zlib": "1.3.1.zlib-ng",
+        "littlecms": "2.19"
+      },
+      "modules_different_on_baseline": [
+        "tools/puzzle_production/operation_diagnostics.py"
+      ],
+      "modules_different_on_current": [
+        "tools/puzzle_production/catalog_io.py",
+        "tools/puzzle_production/operation_diagnostics.py"
+      ]
+    },
+    {
+      "file": "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/asset/derivation.json",
+      "producer_commit": "515e68800d67f080faae9b74ba488b2ef8443ca2",
+      "original_versions": {
+        "littlecms": "2.19",
+        "pillow": "12.3.0",
+        "python": "3.13.14",
+        "zlib": "1.3.1.zlib-ng"
+      },
+      "current_versions": {
+        "python": "3.13.14",
+        "pillow": "12.3.0",
+        "zlib": "1.3.1.zlib-ng",
+        "littlecms": "2.19"
+      },
+      "modules_different_on_baseline": [
+        "tools/puzzle_production/operation_diagnostics.py"
+      ],
+      "modules_different_on_current": [
+        "tools/puzzle_production/catalog_io.py",
+        "tools/puzzle_production/operation_diagnostics.py"
+      ]
+    }
+  ],
+  "note": "Strict module/codecs identity remains enforced; no historical proof or expected hash is rewritten."
+}

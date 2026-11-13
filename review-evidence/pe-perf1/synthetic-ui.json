@@ -1,0 +1,86 @@
+{
+  "head": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+  "resolution": [
+    1600,
+    1000
+  ],
+  "steps": [
+    "real Edge search/filter/select and current detail with lazy current-image catalog preview",
+    "unsaved ID switch guard and explicit discard",
+    "separate category creation via actual plan and apply",
+    "actual category assignment, rename and occupied delete plus explicit reassign; v7 retained",
+    "explicit browser v7 to v8 migration preview and confirmation",
+    "headless file-input chooser event, invalid dimension and actual backend cell error; no native-dialog claim",
+    "file drop plus one actual A3 metadata/image/background/raster apply and readback",
+    "selected none standard UI roundtrip and actual category pilot preview",
+    "real refresh unsaved warning and no implicit persistence",
+    "real connection failure retry and fresh-session restart with retained checkout"
+  ],
+  "operations": [
+    {
+      "action": "apply",
+      "wall_seconds": 3.194387399998959
+    },
+    {
+      "action": "plan",
+      "wall_seconds": 1.3951308999967296
+    },
+    {
+      "action": "apply",
+      "wall_seconds": 3.2072278000050574
+    },
+    {
+      "action": "apply",
+      "wall_seconds": 3.2069736999983434
+    },
+    {
+      "action": "apply",
+      "wall_seconds": 3.4151491000011447
+    },
+    {
+      "action": "apply",
+      "wall_seconds": 3.935388400001102
+    },
+    {
+      "action": "plan",
+      "wall_seconds": 3.579759300002479
+    },
+    {
+      "action": "apply",
+      "wall_seconds": 12.350631399996928
+    },
+    {
+      "action": "plan",
+      "wall_seconds": 3.488727399999334
+    },
+    {
+      "action": "apply",
+      "wall_seconds": 9.2428335999939
+    },
+    {
+      "action": "plan",
+      "wall_seconds": 3.2706424000061816
+    },
+    {
+      "action": "apply",
+      "wall_seconds": 8.695249299998977
+    }
+  ],
+  "headless": true,
+  "native_test": false,
+  "browser": "157.0.4341.46",
+  "passed": true,
+  "page_errors": [],
+  "screenshots": [
+    {
+      "file": "02-change-preview.png",
+      "bytes": 37116,
+      "sha256": "fc7db2ff0b5b079d1889bbe3a46fd761d33450fca354b8d359dee8e5a857837b"
+    },
+    {
+      "file": "03-error.png",
+      "bytes": 4701,
+      "sha256": "746d5325a66e8a144712b3ec68a4361a84f2323d01e5d7408096f9b15048751c"
+    }
+  ]
+}

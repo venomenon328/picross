@@ -1,0 +1,12 @@
+{
+  "old_source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+  "current_producer": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+  "actual_differing_fields": [
+    "$.checked_hash",
+    "$.tool.modules.catalog_method.py",
+    "$.tool.modules.catalog_transaction.py"
+  ],
+  "rating_result_exactly_equal": true,
+  "analysis_exactly_equal": true,
+  "old_apply_comparability": "Rejected before mutation because prepared proof is bound to current tool modules. This is not an old A3 commit-time benchmark. Old public Plan itself exhausted 300-s budget, so no successful old full plan is claimed."
+}

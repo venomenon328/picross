@@ -1,0 +1,483 @@
+{
+  "head": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+  "environment": "Windows 11 Pro 10.0.26200; standard user; Python 3.13.14/Pillow 12.3.0",
+  "steps": [
+    {
+      "name": "v4/v7 read and stable two-ID listing",
+      "ids": [
+        "pz-test-direct-color",
+        "pz-test-direct-mono"
+      ],
+      "palette": [
+        {
+          "color": "202020",
+          "id": 1,
+          "symbol": "A"
+        }
+      ]
+    },
+    {
+      "name": "v7 A1 name edit without implicit migration",
+      "files": [
+        "content/registry.json",
+        "game/data/registry.json"
+      ]
+    },
+    {
+      "name": "category create rename occupied delete+reassign and empty delete"
+    },
+    {
+      "name": "explicit runtime-only migration and same-plan idempotence",
+      "files": [
+        "game/data/registry.json"
+      ],
+      "before": [
+        "a8bfb0afde7b87d00b4f827dc91b651b9161654b4fbda33be02c83b3fb07a7af",
+        1794604501969277400
+      ],
+      "after": [
+        "a74534b684d606341888447dd95353e8741fc79e1f9dfe1f619c6782b0fdcdae",
+        1794604505177768100
+      ]
+    },
+    {
+      "name": "byte-identical PNG and combined A2 metadata",
+      "sha256": "d42e0beadeab5ce4cdb51d1a67a0f2991950cdf690645be56c97fc0194906fb1",
+      "files": [
+        "content/registry.json",
+        "content/reveals/pz-test-direct-mono.json",
+        "game/art/content/pe_primary.png",
+        "game/art/content/pe_primary.txt",
+        "game/data/registry.json"
+      ]
+    },
+    {
+      "name": "byte-identical SVG and first legacy standard assignment",
+      "sha256": "8e085b8e9d471b3fb9efec2f9f5deefdf3326505219ecc705e611d012f97afcd",
+      "files": [
+        "content/backgrounds/pz-test-direct-mono.json",
+        "content/registry.json",
+        "content/reveals/pz-test-direct-mono.json",
+        "game/art/content/pe_primary.png",
+        "game/art/content/pe_primary.svg",
+        "game/art/content/pe_primary.txt",
+        "game/data/registry.json"
+      ]
+    },
+    {
+      "name": "selected none standard roundtrip preserves exact prepared background bytes",
+      "sha256": "dedceee43af5940fc36f72efac468659f5c9bfc531f6f47f894c20302404e72d"
+    },
+    {
+      "name": "formatted raster no-op preserves all mtimes",
+      "files": 18
+    },
+    {
+      "name": "stalled deduction and precise invalid cell blocked without writes"
+    },
+    {
+      "name": "single A3 raster+image+metadata journal and true repeat",
+      "files": [
+        "content/backgrounds/pz-test-direct-mono.json",
+        "content/difficulty/pz-test-direct-mono/rating.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/catalog-context.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/input.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/logic.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/rating.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/report.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/trace.json",
+        "content/packages/pz-test-direct-mono/editor-2/definition.json",
+        "content/packages/pz-test-direct-mono/editor-2/manifest.json",
+        "content/packages/pz-test-direct-mono/editor-2/previous-definition.json",
+        "content/packages/pz-test-direct-mono/editor-2/proof.json",
+        "content/packages/pz-test-direct-mono/editor-2/request.json",
+        "content/registry.json",
+        "content/reveals/pz-test-direct-mono.json",
+        "game/art/content/pe_primary.svg",
+        "game/art/content/pe_primary.txt",
+        "game/data/content/pe_primary.json",
+        "game/data/registry.json"
+      ]
+    },
+    {
+      "name": "stale catalog before apply preserves foreign bytes"
+    },
+    {
+      "name": "malicious SVG and wrong background dimensions blocked"
+    },
+    {
+      "name": "actual HTTP interrupted writer and repeated common recovery restore original hashes"
+    },
+    {
+      "name": "origin host session fetch-site and independent second-ID bytes",
+      "protected": 3
+    },
+    {
+      "name": "HTTP status and stop during actual P1 writer; orderly drain commits full readback and closes listener"
+    }
+  ],
+  "jobs": [
+    {
+      "route": "detail",
+      "wall_seconds": 0.8718226000055438,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.1425206999992952,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 1.7628477000034763,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.2707522999990033,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 1.7703652999989572,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.2651469000047655,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 1.761251899995841,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.7473352000015439,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.2467925999953877,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 1.5542878999985987,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.270746300004248,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 1.8976222999990568,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.2658698000013828,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 1.5542473000023165,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.2683834999988903,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 1.5550679000007221,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "migration",
+      "wall_seconds": 1.2666314999951283,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 2.0911390999972355,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 0.8395102999929804,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.7478384999994887,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "upload/reveal/png",
+      "wall_seconds": 0.5265910999951302,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.4531371000048239,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 3.124517999996897,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.8557501000032062,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "upload/reveal/svg",
+      "wall_seconds": 0.6304652000035276,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.8057138999938616,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 3.631693399998767,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.8518255000017234,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "upload/background/png",
+      "wall_seconds": 0.62760989999515,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.768993000005139,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 3.7412693000005675,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.8500985999999102,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.7760401999985334,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 3.8568742999996175,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.9718624999950407,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 1.7704572000002372,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 3.1107411999983015,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.983903400003328,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 2.1752826999945682,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 2.528383099997882,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.8525092999989283,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 0.936631500000658,
+      "state": "error",
+      "error": "Raster deduction blocked: stalled · Phase: Snapshot/Checkout validation · Runtime picross-runtime-registry-v8; kein Journal/Staging"
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 0.937488100003975,
+      "state": "error",
+      "error": "Zeile 1, Spalte 2: unbekannte Palette-ID · Phase: Snapshot/Checkout validation · Runtime picross-runtime-registry-v8; kein Journal/Staging"
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 0.8540546000003815,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "upload/reveal/svg",
+      "wall_seconds": 0.6309753000023193,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 3.4296393999975407,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 9.994413200001873,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 5.459284600001411,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 1.5016869000028237,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 3.130429799995909,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 0.9480652999991435,
+      "state": "error",
+      "error": "Transaction target changed; preserve journal: content/categories.json · Phase: Journal validation/Guards · Runtime picross-runtime-registry-v8; kein Journal/Staging"
+    },
+    {
+      "route": "upload/reveal/svg",
+      "wall_seconds": 0.6295220000029076,
+      "state": "error",
+      "error": "Unsupported SVG element · Phase: validate_upload · Runtime picross-runtime-registry-v8; kein Journal/Staging"
+    },
+    {
+      "route": "upload/background/png",
+      "wall_seconds": 0.6279783999998472,
+      "state": "error",
+      "error": "Invalid prepared background: Prepared background must be exactly 2304 x 576 · Phase: validate_upload · Runtime picross-runtime-registry-v8; kein Journal/Staging"
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 1.2667928000009852,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 2.9156462000028114,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "apply",
+      "wall_seconds": 2.9300386999966577,
+      "state": "error",
+      "error": "Injected transaction interruption: game/data/registry.json · Phase: P5 · recovery_required; Journal/Staging erhalten"
+    },
+    {
+      "route": "recover",
+      "wall_seconds": 2.791518299993186,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "recover",
+      "wall_seconds": 1.1463181999934022,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "detail",
+      "wall_seconds": 1.268732299999101,
+      "state": "done",
+      "error": null
+    },
+    {
+      "route": "plan",
+      "wall_seconds": 2.9103195999996387,
+      "state": "done",
+      "error": null
+    }
+  ],
+  "final_inventory_sha256": "ac9e11c9bfd9611bbe161cb5a93a9f79b55fd910ea9fd45c8d330d01580d8344",
+  "passed": true
+}

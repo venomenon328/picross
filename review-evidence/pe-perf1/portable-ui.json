@@ -1,0 +1,4537 @@
+{
+  "head": "d4c99d621855ee8941b94cf84e2b5a58508937c3",
+  "standard_user": true,
+  "browser_mode": "headless Edge on Windows; existing genuine portable EXE service and frozen worker processes",
+  "native_precondition": "Native Start, OS default browser, two physical ID selections and migration plan observed in native-final-report; no claim that physical Apply clicked successfully.",
+  "jobs": [
+    {
+      "action": "detail-0",
+      "wall_seconds": 6.217707999996492,
+      "stages": [
+        {
+          "operation": "detail",
+          "stage": "Fachoperation gestartet: detail",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "detail",
+          "stage": "detail",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze",
+          "elapsed_seconds": 1.0
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze/Method byte binding",
+          "elapsed_seconds": 3.3
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 3.7
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze/Method byte binding",
+          "elapsed_seconds": 5.1
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 5.3
+        }
+      ],
+      "ui_status": "Detail und aktuelle Quellen geprüft. Änderungen erst nach Prüfen und Übernehmen.",
+      "worker_results": [
+        {
+          "operation": "detail",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 327561797,
+              "bytes_read": 326909013,
+              "completed_steps": 4,
+              "detail_snapshots": 1,
+              "full_method_validations": 1,
+              "hash_calls": 1120,
+              "json_reuses": 74,
+              "method_byte_revalidations": 2,
+              "method_validations": 3,
+              "path_checks": 3838,
+              "path_components": 36180,
+              "safe_reads": 1508,
+              "windows_attribute_checks": 36180
+            },
+            "cpu_seconds": 5.203125,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Detail source binding",
+                "parent": null,
+                "seconds": 5.496707
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Detail source binding",
+                "seconds": 0.887791
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Detail source binding/Method freeze",
+                "seconds": 0.190096
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Selected puzzle",
+                "parent": null,
+                "seconds": 0.005554
+              }
+            ],
+            "stage": "Detail source binding",
+            "wall_seconds": 5.59879
+          },
+          "result_status": null
+        }
+      ],
+      "changed": {},
+      "recovery_required": false
+    },
+    {
+      "action": "detail-1",
+      "wall_seconds": 6.232187999994494,
+      "stages": [
+        {
+          "operation": "detail",
+          "stage": "Fachoperation gestartet: detail",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "detail",
+          "stage": "detail",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze",
+          "elapsed_seconds": 1.0
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze/Method byte binding",
+          "elapsed_seconds": 5.1
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 5.3
+        }
+      ],
+      "ui_status": "Detail und aktuelle Quellen geprüft. Änderungen erst nach Prüfen und Übernehmen.",
+      "worker_results": [
+        {
+          "operation": "detail",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 328187935,
+              "bytes_read": 327237619,
+              "completed_steps": 4,
+              "detail_snapshots": 1,
+              "full_method_validations": 1,
+              "hash_calls": 1120,
+              "json_reuses": 74,
+              "method_byte_revalidations": 2,
+              "method_validations": 3,
+              "path_checks": 3838,
+              "path_components": 36180,
+              "safe_reads": 1508,
+              "windows_attribute_checks": 36180
+            },
+            "cpu_seconds": 5.234375,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Detail source binding",
+                "parent": null,
+                "seconds": 5.469032
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Detail source binding",
+                "seconds": 0.823485
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Detail source binding/Method freeze",
+                "seconds": 0.170071
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Selected puzzle",
+                "parent": null,
+                "seconds": 0.007579
+              }
+            ],
+            "stage": "Detail source binding",
+            "wall_seconds": 5.577173
+          },
+          "result_status": null
+        }
+      ],
+      "changed": {},
+      "recovery_required": false
+    },
+    {
+      "action": "migration-plan",
+      "wall_seconds": 37.391756899996835,
+      "stages": [
+        {
+          "operation": "detail",
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 6.0
+        },
+        {
+          "operation": "migration",
+          "stage": "Fachoperation gestartet: migration",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "migration",
+          "stage": "migration",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "operation": "migration",
+          "stage": "Snapshot/Method freeze",
+          "elapsed_seconds": 1.0
+        },
+        {
+          "operation": "migration",
+          "stage": "Snapshot",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "operation": "migration",
+          "stage": "Snapshot/Checkout validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 4.8
+        },
+        {
+          "operation": "migration",
+          "stage": "Snapshot/Checkout validation",
+          "elapsed_seconds": 5.2
+        },
+        {
+          "operation": "migration",
+          "stage": "Snapshot/Checkout validation/Method byte binding",
+          "elapsed_seconds": 11.0
+        },
+        {
+          "operation": "migration",
+          "stage": "Snapshot",
+          "elapsed_seconds": 11.1
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Method freeze",
+          "elapsed_seconds": 13.6
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 13.7
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation/Method freeze",
+          "elapsed_seconds": 14.8
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 15.1
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation/Method freeze",
+          "elapsed_seconds": 15.5
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 15.7
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation/Guards",
+          "elapsed_seconds": 16.0
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof",
+          "elapsed_seconds": 18.1
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 19.3
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+          "elapsed_seconds": 19.5
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 19.8
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method byte binding",
+          "elapsed_seconds": 26.2
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Staging/Proof",
+          "elapsed_seconds": 26.4
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 27.7
+        },
+        {
+          "operation": "migration",
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 27.8
+        },
+        {
+          "operation": "migration",
+          "stage": "migration",
+          "elapsed_seconds": 36.8
+        },
+        {
+          "operation": "migration",
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 36.9
+        }
+      ],
+      "ui_status": "Echter Plan erfolgreich geprüft. Übernehmen ist ein eigener Schritt (zehn Minuten gültig).",
+      "worker_results": [
+        {
+          "operation": "migration",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 2637453668,
+              "bytes_read": 2424657188,
+              "checkout_validations": 3,
+              "completed_steps": 354,
+              "full_method_validations": 1,
+              "guards": 1,
+              "hash_calls": 4850,
+              "journal_validations": 1,
+              "json_reuses": 2414,
+              "method_byte_revalidations": 14,
+              "method_validations": 345,
+              "method_view_reuses": 336,
+              "path_checks": 19568,
+              "path_components": 216526,
+              "plans": 1,
+              "safe_reads": 7649,
+              "snapshots": 1,
+              "staged_checkout_checks": 2,
+              "windows_attribute_checks": 216526
+            },
+            "cpu_seconds": 34.765625,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Snapshot",
+                "parent": null,
+                "seconds": 12.693631
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Snapshot",
+                "seconds": 0.72031
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Snapshot",
+                "seconds": 6.246922
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Snapshot/Checkout validation",
+                "seconds": 0.095417
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Checkout validation/Method freeze",
+                "seconds": 0.094641
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Checkout validation",
+                "seconds": 0.08477
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Method freeze",
+                "seconds": 0.080286
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Plan/Projection",
+                "parent": null,
+                "seconds": 23.699841
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection",
+                "seconds": 0.08724
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Method freeze",
+                "seconds": 0.084587
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection",
+                "seconds": 0.082618
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Journal validation",
+                "parent": "Plan/Projection",
+                "seconds": 12.690001
+              },
+              {
+                "calls": 114,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 0.185913
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Method freeze",
+                "seconds": 0.18037
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 0.176751
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 2.11831
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation/Guards",
+                "seconds": 0.077862
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+                "seconds": 0.077839
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 8.417952
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof",
+                "seconds": 7.038887
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.095156
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+                "seconds": 0.092677
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.089338
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Plan/Projection",
+                "seconds": 10.52841
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Plan/Projection/Staging/Proof",
+                "seconds": 9.121567
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+                "seconds": 0.095311
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+                "seconds": 0.09439
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+                "seconds": 0.078801
+              }
+            ],
+            "stage": "migration",
+            "wall_seconds": 36.547738
+          },
+          "result_status": null
+        }
+      ],
+      "changed": {},
+      "recovery_required": false
+    },
+    {
+      "action": "migration-apply-and-v8-ui-readback",
+      "wall_seconds": 74.79045069999847,
+      "stages": [
+        {
+          "operation": "apply",
+          "stage": "Fachoperation gestartet: apply",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "apply",
+          "stage": "apply",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "operation": "apply",
+          "stage": "Snapshot/Method freeze",
+          "elapsed_seconds": 1.0
+        },
+        {
+          "operation": "apply",
+          "stage": "Snapshot",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "operation": "apply",
+          "stage": "Snapshot/Checkout validation",
+          "elapsed_seconds": 4.5
+        },
+        {
+          "operation": "apply",
+          "stage": "Snapshot/Checkout validation/Method byte binding",
+          "elapsed_seconds": 10.1
+        },
+        {
+          "operation": "apply",
+          "stage": "Snapshot",
+          "elapsed_seconds": 10.4
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Method freeze",
+          "elapsed_seconds": 12.4
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 12.7
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Journal validation/Method freeze",
+          "elapsed_seconds": 14.3
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Journal validation/Method byte binding",
+          "elapsed_seconds": 14.4
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Journal validation/Guards",
+          "elapsed_seconds": 14.8
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof",
+          "elapsed_seconds": 17.0
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 18.0
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+          "elapsed_seconds": 18.2
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 18.5
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Staging/Proof",
+          "elapsed_seconds": 24.6
+        },
+        {
+          "operation": "apply",
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 25.8
+        },
+        {
+          "operation": "apply",
+          "stage": "P0",
+          "elapsed_seconds": 35.3
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation",
+          "elapsed_seconds": 35.5
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Method freeze",
+          "elapsed_seconds": 36.4
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 36.8
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation",
+          "elapsed_seconds": 36.9
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Guards",
+          "elapsed_seconds": 37.6
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Staging/Proof",
+          "elapsed_seconds": 39.5
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 40.6
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Staging/Proof/Checkout validation/Method byte binding",
+          "elapsed_seconds": 47.1
+        },
+        {
+          "operation": "apply",
+          "stage": "P2",
+          "elapsed_seconds": 47.4
+        },
+        {
+          "operation": "apply",
+          "stage": "P2/Guards",
+          "elapsed_seconds": 47.8
+        },
+        {
+          "operation": "apply",
+          "stage": "P5",
+          "elapsed_seconds": 49.6
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Guards",
+          "elapsed_seconds": 49.8
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Guards/Method freeze/Method byte binding",
+          "elapsed_seconds": 54.0
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Guards",
+          "elapsed_seconds": 54.3
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Checkout validation",
+          "elapsed_seconds": 56.4
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Guards",
+          "elapsed_seconds": 64.7
+        },
+        {
+          "operation": "apply",
+          "stage": "P6",
+          "elapsed_seconds": 66.7
+        },
+        {
+          "operation": "apply",
+          "stage": "P6/Guards",
+          "elapsed_seconds": 66.9
+        },
+        {
+          "operation": "apply",
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 68.8
+        },
+        {
+          "operation": "detail",
+          "stage": "Fachoperation gestartet: detail",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "detail",
+          "stage": "detail",
+          "elapsed_seconds": 0.4
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze",
+          "elapsed_seconds": 1.0
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze/Method byte binding",
+          "elapsed_seconds": 3.1
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 3.2
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze/Method byte binding",
+          "elapsed_seconds": 4.5
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 4.8
+        },
+        {
+          "operation": "detail",
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 5.4
+        }
+      ],
+      "ui_status": "Writer bestätigt: migrated. Aktuellen Bestand neu gelesen. Git / Build / Veröffentlichung bleiben extern.",
+      "worker_results": [
+        {
+          "operation": "apply",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 5267846603,
+              "bytes_read": 4841084800,
+              "checkout_validations": 5,
+              "completed_steps": 607,
+              "directory_flushes": 5,
+              "file_fsyncs": 2,
+              "full_method_validations": 1,
+              "guards": 8,
+              "hash_calls": 10686,
+              "journal_validations": 2,
+              "json_reuses": 4077,
+              "method_byte_revalidations": 29,
+              "method_validations": 580,
+              "method_view_reuses": 560,
+              "path_checks": 41574,
+              "path_components": 435976,
+              "phase_boundaries": 11,
+              "plans": 1,
+              "published_bytes": 31794,
+              "published_files": 1,
+              "safe_reads": 15663,
+              "snapshots": 1,
+              "staged_checkout_checks": 3,
+              "windows_attribute_checks": 435976
+            },
+            "cpu_seconds": 66.125,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Snapshot",
+                "parent": null,
+                "seconds": 11.75951
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Snapshot",
+                "seconds": 0.698637
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Snapshot",
+                "seconds": 5.894234
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Snapshot/Checkout validation",
+                "seconds": 0.080578
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Checkout validation/Method freeze",
+                "seconds": 0.079947
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Checkout validation",
+                "seconds": 0.078224
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Method freeze",
+                "seconds": 0.079736
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Plan/Projection",
+                "parent": null,
+                "seconds": 23.003928
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection",
+                "seconds": 0.086176
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Method freeze",
+                "seconds": 0.083644
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection",
+                "seconds": 0.084367
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Journal validation",
+                "parent": "Plan/Projection",
+                "seconds": 11.955852
+              },
+              {
+                "calls": 114,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 0.162086
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Method freeze",
+                "seconds": 0.158994
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 0.153827
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 2.145081
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation/Guards",
+                "seconds": 0.080066
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+                "seconds": 0.080048
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 7.847418
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof",
+                "seconds": 6.539991
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.081944
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+                "seconds": 0.079476
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.082709
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Plan/Projection",
+                "seconds": 10.614164
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Plan/Projection/Staging/Proof",
+                "seconds": 9.297222
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+                "seconds": 0.089166
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+                "seconds": 0.088412
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+                "seconds": 0.077027
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Journal validation",
+                "parent": null,
+                "seconds": 12.195269
+              },
+              {
+                "calls": 114,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Journal validation",
+                "seconds": 0.172432
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation/Method freeze",
+                "seconds": 0.168951
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation",
+                "seconds": 0.167169
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Journal validation",
+                "seconds": 2.075183
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Journal validation/Guards",
+                "seconds": 0.076975
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation/Guards/Method freeze",
+                "seconds": 0.076958
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Journal validation",
+                "seconds": 8.053672
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Journal validation/Staging/Proof",
+                "seconds": 6.691981
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.088058
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation/Staging/Proof/Checkout validation/Method freeze",
+                "seconds": 0.087307
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.080705
+              },
+              {
+                "calls": 5,
+                "inclusive": true,
+                "name": "Directory durability",
+                "parent": null,
+                "seconds": 0.011506
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "File durability",
+                "parent": null,
+                "seconds": 0.014079
+              },
+              {
+                "calls": 6,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": null,
+                "seconds": 12.857037
+              },
+              {
+                "calls": 6,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Guards",
+                "seconds": 0.521841
+              },
+              {
+                "calls": 6,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Guards/Method freeze",
+                "seconds": 0.521722
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": null,
+                "seconds": 8.240921
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Checkout validation",
+                "seconds": 0.079327
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Checkout validation/Method freeze",
+                "seconds": 0.078696
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Checkout validation",
+                "seconds": 0.075944
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Readback",
+                "parent": null,
+                "seconds": 0.048518
+              }
+            ],
+            "stage": "P6/Guards",
+            "wall_seconds": 68.381425
+          },
+          "result_status": "migrated"
+        },
+        {
+          "operation": "detail",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 332245184,
+              "bytes_read": 329410149,
+              "completed_steps": 4,
+              "detail_snapshots": 1,
+              "full_method_validations": 1,
+              "hash_calls": 1126,
+              "json_reuses": 76,
+              "method_byte_revalidations": 2,
+              "method_validations": 3,
+              "path_checks": 3853,
+              "path_components": 36315,
+              "safe_reads": 1515,
+              "windows_attribute_checks": 36315
+            },
+            "cpu_seconds": 4.890625,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Detail source binding",
+                "parent": null,
+                "seconds": 4.906996
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Detail source binding",
+                "seconds": 0.79512
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Detail source binding/Method freeze",
+                "seconds": 0.156649
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Selected puzzle",
+                "parent": null,
+                "seconds": 0.008649
+              }
+            ],
+            "stage": "Detail source binding",
+            "wall_seconds": 5.010947
+          },
+          "result_status": null
+        }
+      ],
+      "changed": {
+        "game/data/registry.json": {
+          "before": {
+            "sha256": "93ae36c3de9d6c16363659a529a8bc5cde250ac06cea49b10e38b1e998cdfb02",
+            "mtime_ns": 1794601069645450200,
+            "bytes": 31794
+          },
+          "after": {
+            "sha256": "5015ff34de16473b8b827936c28cc80b479dc33e74c8ccc3e11346f0165250aa",
+            "mtime_ns": 1794601634900209700,
+            "bytes": 31794
+          }
+        }
+      },
+      "recovery_required": false
+    },
+    {
+      "action": "api-migration-recheck",
+      "wall_seconds": 41.040245199998026,
+      "stages": [
+        {
+          "stage": "Fachoperation gestartet: migration",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "stage": "migration",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "stage": "Snapshot/Method freeze",
+          "elapsed_seconds": 1.1
+        },
+        {
+          "stage": "Snapshot",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "stage": "Snapshot/Checkout validation",
+          "elapsed_seconds": 4.7
+        },
+        {
+          "stage": "Snapshot",
+          "elapsed_seconds": 13.0
+        },
+        {
+          "stage": "Snapshot/Method freeze/Method byte binding",
+          "elapsed_seconds": 14.3
+        },
+        {
+          "stage": "Snapshot",
+          "elapsed_seconds": 14.6
+        },
+        {
+          "stage": "Plan/Projection",
+          "elapsed_seconds": 15.1
+        },
+        {
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 15.5
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Method freeze",
+          "elapsed_seconds": 16.6
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Method byte binding",
+          "elapsed_seconds": 16.9
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Method freeze",
+          "elapsed_seconds": 17.1
+        },
+        {
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 17.4
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Guards",
+          "elapsed_seconds": 17.7
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Staging/Proof",
+          "elapsed_seconds": 19.7
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 20.8
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 21.1
+        },
+        {
+          "stage": "Plan/Projection/Staging/Proof",
+          "elapsed_seconds": 30.0
+        },
+        {
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 31.2
+        },
+        {
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation/Method byte binding",
+          "elapsed_seconds": 40.5
+        },
+        {
+          "stage": "migration",
+          "elapsed_seconds": 40.8
+        },
+        {
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 40.9
+        }
+      ]
+    },
+    {
+      "action": "api-apply-recheck",
+      "wall_seconds": 44.58298410000134,
+      "stages": [
+        {
+          "stage": "Fachoperation gestartet: apply",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "stage": "apply",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "stage": "Snapshot/Method freeze",
+          "elapsed_seconds": 1.1
+        },
+        {
+          "stage": "Snapshot",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "stage": "Snapshot/Checkout validation",
+          "elapsed_seconds": 5.0
+        },
+        {
+          "stage": "Snapshot",
+          "elapsed_seconds": 14.0
+        },
+        {
+          "stage": "Plan/Projection/Method freeze/Method byte binding",
+          "elapsed_seconds": 16.5
+        },
+        {
+          "stage": "Plan/Projection/Method byte binding",
+          "elapsed_seconds": 16.8
+        },
+        {
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 17.1
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Method freeze",
+          "elapsed_seconds": 18.1
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 18.4
+        },
+        {
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 18.7
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Guards/Method freeze/Method byte binding",
+          "elapsed_seconds": 18.8
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Guards",
+          "elapsed_seconds": 19.1
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Staging/Proof",
+          "elapsed_seconds": 21.1
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 22.2
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 22.4
+        },
+        {
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method byte binding",
+          "elapsed_seconds": 32.2
+        },
+        {
+          "stage": "Plan/Projection/Staging/Proof",
+          "elapsed_seconds": 32.3
+        },
+        {
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 33.7
+        },
+        {
+          "stage": "apply",
+          "elapsed_seconds": 44.4
+        },
+        {
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 44.4
+        }
+      ]
+    },
+    {
+      "action": "refresh-v8-and-selected-id",
+      "wall_seconds": 6.175295699998969,
+      "stages": [
+        {
+          "operation": "apply",
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 44.4
+        },
+        {
+          "operation": "detail",
+          "stage": "Fachoperation gestartet: detail",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "detail",
+          "stage": "detail",
+          "elapsed_seconds": 0.5
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze",
+          "elapsed_seconds": 1.1
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "operation": "detail",
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 5.7
+        }
+      ],
+      "ui_status": "Detail und aktuelle Quellen geprüft. Änderungen erst nach Prüfen und Übernehmen.",
+      "worker_results": [
+        {
+          "operation": "detail",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 332245184,
+              "bytes_read": 329410149,
+              "completed_steps": 4,
+              "detail_snapshots": 1,
+              "full_method_validations": 1,
+              "hash_calls": 1126,
+              "json_reuses": 76,
+              "method_byte_revalidations": 2,
+              "method_validations": 3,
+              "path_checks": 3853,
+              "path_components": 36315,
+              "safe_reads": 1515,
+              "windows_attribute_checks": 36315
+            },
+            "cpu_seconds": 5.03125,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Detail source binding",
+                "parent": null,
+                "seconds": 5.282543
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Detail source binding",
+                "seconds": 0.844062
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Detail source binding/Method freeze",
+                "seconds": 0.170686
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Selected puzzle",
+                "parent": null,
+                "seconds": 0.007675
+              }
+            ],
+            "stage": "Detail source binding",
+            "wall_seconds": 5.389371
+          },
+          "result_status": null
+        }
+      ],
+      "changed": {},
+      "recovery_required": false
+    },
+    {
+      "action": "metadata-plan",
+      "wall_seconds": 44.99434040000051,
+      "stages": [
+        {
+          "operation": "plan",
+          "stage": "Fachoperation gestartet: plan",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "plan",
+          "stage": "plan",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "operation": "plan",
+          "stage": "Snapshot/Method freeze",
+          "elapsed_seconds": 1.0
+        },
+        {
+          "operation": "plan",
+          "stage": "Snapshot",
+          "elapsed_seconds": 1.3
+        },
+        {
+          "operation": "plan",
+          "stage": "Snapshot/Checkout validation",
+          "elapsed_seconds": 4.8
+        },
+        {
+          "operation": "plan",
+          "stage": "Snapshot/Checkout validation/Method freeze",
+          "elapsed_seconds": 5.1
+        },
+        {
+          "operation": "plan",
+          "stage": "Snapshot/Checkout validation",
+          "elapsed_seconds": 5.3
+        },
+        {
+          "operation": "plan",
+          "stage": "Snapshot",
+          "elapsed_seconds": 13.8
+        },
+        {
+          "operation": "plan",
+          "stage": "Snapshot/Method freeze/Method byte binding",
+          "elapsed_seconds": 15.4
+        },
+        {
+          "operation": "plan",
+          "stage": "Snapshot",
+          "elapsed_seconds": 15.7
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Method freeze",
+          "elapsed_seconds": 16.4
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 16.7
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 18.0
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 18.1
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 18.4
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation",
+          "elapsed_seconds": 18.8
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation/Guards",
+          "elapsed_seconds": 19.2
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof",
+          "elapsed_seconds": 21.5
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 22.4
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method byte binding",
+          "elapsed_seconds": 32.1
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Staging/Proof",
+          "elapsed_seconds": 32.3
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 33.7
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+          "elapsed_seconds": 34.0
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 34.7
+        },
+        {
+          "operation": "plan",
+          "stage": "Plan/Projection/Staging/Proof/Checkout validation/Method byte binding",
+          "elapsed_seconds": 44.5
+        },
+        {
+          "operation": "plan",
+          "stage": "plan",
+          "elapsed_seconds": 44.8
+        }
+      ],
+      "ui_status": "Echter Plan erfolgreich geprüft. Übernehmen ist ein eigener Schritt (zehn Minuten gültig).",
+      "worker_results": [
+        {
+          "operation": "plan",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 3249483531,
+              "bytes_read": 2865776032,
+              "checkout_validations": 3,
+              "completed_steps": 354,
+              "full_method_validations": 1,
+              "guards": 1,
+              "hash_calls": 5867,
+              "journal_validations": 1,
+              "json_reuses": 2885,
+              "method_byte_revalidations": 14,
+              "method_validations": 345,
+              "method_view_reuses": 336,
+              "path_checks": 22500,
+              "path_components": 249854,
+              "plans": 1,
+              "safe_reads": 8716,
+              "snapshots": 1,
+              "staged_checkout_checks": 2,
+              "windows_attribute_checks": 249854
+            },
+            "cpu_seconds": 41.984375,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Snapshot",
+                "parent": null,
+                "seconds": 15.735468
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Snapshot",
+                "seconds": 0.772254
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Snapshot",
+                "seconds": 9.13676
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Snapshot/Checkout validation",
+                "seconds": 0.100372
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Checkout validation/Method freeze",
+                "seconds": 0.098112
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Checkout validation",
+                "seconds": 0.09099
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Snapshot/Method freeze",
+                "seconds": 0.098771
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Plan/Projection",
+                "parent": null,
+                "seconds": 28.58391
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection",
+                "seconds": 0.081919
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Method freeze",
+                "seconds": 0.079423
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection",
+                "seconds": 0.078603
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Journal validation",
+                "parent": "Plan/Projection",
+                "seconds": 15.692284
+              },
+              {
+                "calls": 114,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 0.192405
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Method freeze",
+                "seconds": 0.190466
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 0.182841
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 2.217172
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation/Guards",
+                "seconds": 0.086383
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+                "seconds": 0.086366
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Plan/Projection/Journal validation",
+                "seconds": 11.144289
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof",
+                "seconds": 9.665981
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.097997
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+                "seconds": 0.097011
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.086334
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Plan/Projection",
+                "seconds": 12.465953
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Plan/Projection/Staging/Proof",
+                "seconds": 10.845426
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+                "seconds": 0.093798
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+                "seconds": 0.088969
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+                "seconds": 0.098399
+              }
+            ],
+            "stage": "plan",
+            "wall_seconds": 44.52981
+          },
+          "result_status": null
+        }
+      ],
+      "changed": {},
+      "recovery_required": false
+    },
+    {
+      "action": "metadata-apply-and-ui-readback",
+      "wall_seconds": 72.38147000000026,
+      "stages": [
+        {
+          "operation": "apply",
+          "stage": "Fachoperation gestartet: apply",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "apply",
+          "stage": "apply",
+          "elapsed_seconds": 0.5
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation",
+          "elapsed_seconds": 1.1
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Method freeze",
+          "elapsed_seconds": 2.9
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation",
+          "elapsed_seconds": 3.2
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Method freeze",
+          "elapsed_seconds": 3.3
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Method byte binding",
+          "elapsed_seconds": 3.7
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Guards/Method freeze/Method byte binding",
+          "elapsed_seconds": 3.8
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Guards",
+          "elapsed_seconds": 4.0
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Staging/Proof",
+          "elapsed_seconds": 6.2
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Staging/Proof/Checkout validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 7.3
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 7.5
+        },
+        {
+          "operation": "apply",
+          "stage": "Journal validation/Staging/Proof/Checkout validation/Method byte binding",
+          "elapsed_seconds": 17.5
+        },
+        {
+          "operation": "apply",
+          "stage": "apply",
+          "elapsed_seconds": 17.8
+        },
+        {
+          "operation": "apply",
+          "stage": "Guards",
+          "elapsed_seconds": 18.0
+        },
+        {
+          "operation": "apply",
+          "stage": "P0",
+          "elapsed_seconds": 20.2
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation",
+          "elapsed_seconds": 20.5
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Method freeze",
+          "elapsed_seconds": 21.8
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation",
+          "elapsed_seconds": 22.0
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Method freeze",
+          "elapsed_seconds": 22.3
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Method byte binding",
+          "elapsed_seconds": 22.5
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Guards/Method freeze/Method byte binding",
+          "elapsed_seconds": 22.8
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Guards",
+          "elapsed_seconds": 23.1
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Staging/Proof",
+          "elapsed_seconds": 25.1
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Staging/Proof/Checkout validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 26.4
+        },
+        {
+          "operation": "apply",
+          "stage": "P0/Journal validation/Staging/Proof/Checkout validation",
+          "elapsed_seconds": 26.7
+        },
+        {
+          "operation": "apply",
+          "stage": "P2",
+          "elapsed_seconds": 36.9
+        },
+        {
+          "operation": "apply",
+          "stage": "P2/Guards",
+          "elapsed_seconds": 37.3
+        },
+        {
+          "operation": "apply",
+          "stage": "P4",
+          "elapsed_seconds": 39.1
+        },
+        {
+          "operation": "apply",
+          "stage": "P4/Guards",
+          "elapsed_seconds": 39.4
+        },
+        {
+          "operation": "apply",
+          "stage": "P5",
+          "elapsed_seconds": 43.9
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Guards",
+          "elapsed_seconds": 44.2
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Checkout validation/Method freeze/Method byte binding",
+          "elapsed_seconds": 50.9
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Checkout validation/Method freeze",
+          "elapsed_seconds": 51.3
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Checkout validation",
+          "elapsed_seconds": 51.7
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Checkout validation/Method byte binding",
+          "elapsed_seconds": 60.3
+        },
+        {
+          "operation": "apply",
+          "stage": "P5/Guards",
+          "elapsed_seconds": 60.5
+        },
+        {
+          "operation": "apply",
+          "stage": "P6",
+          "elapsed_seconds": 62.7
+        },
+        {
+          "operation": "apply",
+          "stage": "P6/Guards",
+          "elapsed_seconds": 62.9
+        },
+        {
+          "operation": "apply",
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 64.9
+        },
+        {
+          "operation": "detail",
+          "stage": "Fachoperation gestartet: detail",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "detail",
+          "stage": "detail",
+          "elapsed_seconds": 0.5
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding/Method freeze",
+          "elapsed_seconds": 1.1
+        },
+        {
+          "operation": "detail",
+          "stage": "Detail source binding",
+          "elapsed_seconds": 1.5
+        },
+        {
+          "operation": "detail",
+          "stage": "Readback / Fachoperation abgeschlossen",
+          "elapsed_seconds": 6.9
+        }
+      ],
+      "ui_status": "Writer bestätigt: updated. Aktuellen Bestand neu gelesen. Git / Build / Veröffentlichung bleiben extern.",
+      "worker_results": [
+        {
+          "operation": "apply",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 4536615006,
+              "bytes_read": 4169487079,
+              "checkout_validations": 3,
+              "completed_steps": 438,
+              "directory_flushes": 7,
+              "file_fsyncs": 3,
+              "full_method_validations": 1,
+              "guards": 11,
+              "hash_calls": 9299,
+              "journal_validations": 2,
+              "json_reuses": 2827,
+              "method_byte_revalidations": 24,
+              "method_validations": 410,
+              "method_view_reuses": 392,
+              "path_checks": 36670,
+              "path_components": 382441,
+              "phase_boundaries": 14,
+              "published_bytes": 165010,
+              "published_files": 2,
+              "safe_reads": 13398,
+              "staged_checkout_checks": 2,
+              "windows_attribute_checks": 382441
+            },
+            "cpu_seconds": 61.25,
+            "phases": [
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Journal validation",
+                "parent": null,
+                "seconds": 33.088287
+              },
+              {
+                "calls": 228,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Journal validation",
+                "seconds": 0.94307
+              },
+              {
+                "calls": 4,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation",
+                "seconds": 0.363531
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation/Method freeze",
+                "seconds": 0.264628
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Journal validation",
+                "seconds": 4.485006
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Journal validation/Guards",
+                "seconds": 0.174142
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation/Guards/Method freeze",
+                "seconds": 0.174104
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Journal validation",
+                "seconds": 23.418647
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Journal validation/Staging/Proof",
+                "seconds": 20.468902
+              },
+              {
+                "calls": 114,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.199654
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation/Staging/Proof/Checkout validation/Method freeze",
+                "seconds": 0.198027
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.168529
+              },
+              {
+                "calls": 9,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": null,
+                "seconds": 21.103478
+              },
+              {
+                "calls": 9,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Guards",
+                "seconds": 0.794837
+              },
+              {
+                "calls": 9,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Guards/Method freeze",
+                "seconds": 0.79463
+              },
+              {
+                "calls": 7,
+                "inclusive": true,
+                "name": "Directory durability",
+                "parent": null,
+                "seconds": 0.013486
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "File durability",
+                "parent": null,
+                "seconds": 0.020709
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": null,
+                "seconds": 9.3748
+              },
+              {
+                "calls": 57,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Checkout validation",
+                "seconds": 0.100371
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Checkout validation/Method freeze",
+                "seconds": 0.092491
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Checkout validation",
+                "seconds": 0.080007
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Readback",
+                "parent": null,
+                "seconds": 0.057965
+              }
+            ],
+            "stage": "P6/Guards",
+            "wall_seconds": 64.614134
+          },
+          "result_status": "updated"
+        },
+        {
+          "operation": "detail",
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 332245292,
+              "bytes_read": 329410311,
+              "completed_steps": 4,
+              "detail_snapshots": 1,
+              "full_method_validations": 1,
+              "hash_calls": 1126,
+              "json_reuses": 76,
+              "method_byte_revalidations": 2,
+              "method_validations": 3,
+              "path_checks": 3853,
+              "path_components": 36315,
+              "safe_reads": 1515,
+              "windows_attribute_checks": 36315
+            },
+            "cpu_seconds": 5.8125,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Detail source binding",
+                "parent": null,
+                "seconds": 6.337696
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Detail source binding",
+                "seconds": 0.956551
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method byte binding",
+                "parent": "Detail source binding/Method freeze",
+                "seconds": 0.22878
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Selected puzzle",
+                "parent": null,
+                "seconds": 0.013435
+              }
+            ],
+            "stage": "Detail source binding",
+            "wall_seconds": 6.474068
+          },
+          "result_status": null
+        }
+      ],
+      "changed": {
+        "content/registry.json": {
+          "before": {
+            "sha256": "2031879e640e0d4e2c202ad472cc0095b0e4d879790b95ac8ca6c18f2786be5a",
+            "mtime_ns": 1794601068415533800,
+            "bytes": 133180
+          },
+          "after": {
+            "sha256": "4f911141990783d0e7313dc81fc559aecb55973e5ee615ed45d0869a6728efad",
+            "mtime_ns": 1794601840306154200,
+            "bytes": 133198
+          }
+        },
+        "game/data/registry.json": {
+          "before": {
+            "sha256": "5015ff34de16473b8b827936c28cc80b479dc33e74c8ccc3e11346f0165250aa",
+            "mtime_ns": 1794601634900209700,
+            "bytes": 31794
+          },
+          "after": {
+            "sha256": "3037bc8cc5d4d8591bdb2e73aaebf3cbdd8ed942aac76c6514a399494eaefae2",
+            "mtime_ns": 1794601845034991300,
+            "bytes": 31812
+          }
+        }
+      },
+      "recovery_required": false
+    }
+  ],
+  "passed": true,
+  "initial_inventory_sha256": "74ad410d28575d0706e6db014264ff9b72d6370eab76a6e2b141bc3267481e45",
+  "browser": "157.0.4341.46",
+  "native_stop_during_frozen_reader_seconds": 9.361515099997632,
+  "native_service_port_closed": true,
+  "journal_absent": true,
+  "page_errors": [],
+  "worker_diagnostics": [
+    {
+      "operation": "migration",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 2637453668,
+          "bytes_read": 2424657188,
+          "checkout_validations": 3,
+          "completed_steps": 354,
+          "full_method_validations": 1,
+          "guards": 1,
+          "hash_calls": 4850,
+          "journal_validations": 1,
+          "json_reuses": 2414,
+          "method_byte_revalidations": 14,
+          "method_validations": 345,
+          "method_view_reuses": 336,
+          "path_checks": 19568,
+          "path_components": 216526,
+          "plans": 1,
+          "safe_reads": 7649,
+          "snapshots": 1,
+          "staged_checkout_checks": 2,
+          "windows_attribute_checks": 216526
+        },
+        "cpu_seconds": 38.671875,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 14.286347
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "seconds": 0.806727
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 7.308236
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.099683
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "seconds": 0.098699
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.101996
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "seconds": 0.105262
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 26.107515
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.102283
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "seconds": 0.099379
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "seconds": 0.095711
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 13.822299
+          },
+          {
+            "calls": 114,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.239683
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "seconds": 0.236224
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.18459
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 2.450889
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "seconds": 0.087039
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "seconds": 0.087017
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 9.07753
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 7.506173
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.102925
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.0998
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.085962
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 11.808781
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 10.41176
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.09619
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.092794
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.086404
+          }
+        ],
+        "stage": "migration",
+        "wall_seconds": 40.572744
+      },
+      "result_status": null
+    },
+    {
+      "operation": "detail",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 327561797,
+          "bytes_read": 326909013,
+          "completed_steps": 4,
+          "detail_snapshots": 1,
+          "full_method_validations": 1,
+          "hash_calls": 1120,
+          "json_reuses": 74,
+          "method_byte_revalidations": 2,
+          "method_validations": 3,
+          "path_checks": 3838,
+          "path_components": 36180,
+          "safe_reads": 1508,
+          "windows_attribute_checks": 36180
+        },
+        "cpu_seconds": 5.203125,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Detail source binding",
+            "parent": null,
+            "seconds": 5.496707
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Detail source binding",
+            "seconds": 0.887791
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Detail source binding/Method freeze",
+            "seconds": 0.190096
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Selected puzzle",
+            "parent": null,
+            "seconds": 0.005554
+          }
+        ],
+        "stage": "Detail source binding",
+        "wall_seconds": 5.59879
+      },
+      "result_status": null
+    },
+    {
+      "operation": "detail",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 328187935,
+          "bytes_read": 327237619,
+          "completed_steps": 4,
+          "detail_snapshots": 1,
+          "full_method_validations": 1,
+          "hash_calls": 1120,
+          "json_reuses": 74,
+          "method_byte_revalidations": 2,
+          "method_validations": 3,
+          "path_checks": 3838,
+          "path_components": 36180,
+          "safe_reads": 1508,
+          "windows_attribute_checks": 36180
+        },
+        "cpu_seconds": 5.234375,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Detail source binding",
+            "parent": null,
+            "seconds": 5.469032
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Detail source binding",
+            "seconds": 0.823485
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Detail source binding/Method freeze",
+            "seconds": 0.170071
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Selected puzzle",
+            "parent": null,
+            "seconds": 0.007579
+          }
+        ],
+        "stage": "Detail source binding",
+        "wall_seconds": 5.577173
+      },
+      "result_status": null
+    },
+    {
+      "operation": "migration",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 2637453668,
+          "bytes_read": 2424657188,
+          "checkout_validations": 3,
+          "completed_steps": 354,
+          "full_method_validations": 1,
+          "guards": 1,
+          "hash_calls": 4850,
+          "journal_validations": 1,
+          "json_reuses": 2414,
+          "method_byte_revalidations": 14,
+          "method_validations": 345,
+          "method_view_reuses": 336,
+          "path_checks": 19568,
+          "path_components": 216526,
+          "plans": 1,
+          "safe_reads": 7649,
+          "snapshots": 1,
+          "staged_checkout_checks": 2,
+          "windows_attribute_checks": 216526
+        },
+        "cpu_seconds": 34.765625,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 12.693631
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "seconds": 0.72031
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 6.246922
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.095417
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "seconds": 0.094641
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.08477
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "seconds": 0.080286
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 23.699841
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.08724
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "seconds": 0.084587
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "seconds": 0.082618
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 12.690001
+          },
+          {
+            "calls": 114,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.185913
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "seconds": 0.18037
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.176751
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 2.11831
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "seconds": 0.077862
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "seconds": 0.077839
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 8.417952
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 7.038887
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.095156
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.092677
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.089338
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 10.52841
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 9.121567
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.095311
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.09439
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.078801
+          }
+        ],
+        "stage": "migration",
+        "wall_seconds": 36.547738
+      },
+      "result_status": null
+    },
+    {
+      "operation": "apply",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 5267846603,
+          "bytes_read": 4841084800,
+          "checkout_validations": 5,
+          "completed_steps": 607,
+          "directory_flushes": 5,
+          "file_fsyncs": 2,
+          "full_method_validations": 1,
+          "guards": 8,
+          "hash_calls": 10686,
+          "journal_validations": 2,
+          "json_reuses": 4077,
+          "method_byte_revalidations": 29,
+          "method_validations": 580,
+          "method_view_reuses": 560,
+          "path_checks": 41574,
+          "path_components": 435976,
+          "phase_boundaries": 11,
+          "plans": 1,
+          "published_bytes": 31794,
+          "published_files": 1,
+          "safe_reads": 15663,
+          "snapshots": 1,
+          "staged_checkout_checks": 3,
+          "windows_attribute_checks": 435976
+        },
+        "cpu_seconds": 66.125,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 11.75951
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "seconds": 0.698637
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 5.894234
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.080578
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "seconds": 0.079947
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.078224
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "seconds": 0.079736
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 23.003928
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.086176
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "seconds": 0.083644
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "seconds": 0.084367
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 11.955852
+          },
+          {
+            "calls": 114,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.162086
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "seconds": 0.158994
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.153827
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 2.145081
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "seconds": 0.080066
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "seconds": 0.080048
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 7.847418
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 6.539991
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.081944
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.079476
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.082709
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 10.614164
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 9.297222
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.089166
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.088412
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.077027
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": null,
+            "seconds": 12.195269
+          },
+          {
+            "calls": 114,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "seconds": 0.172432
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation/Method freeze",
+            "seconds": 0.168951
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation",
+            "seconds": 0.167169
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Journal validation",
+            "seconds": 2.075183
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation/Guards",
+            "seconds": 0.076975
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation/Guards/Method freeze",
+            "seconds": 0.076958
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "seconds": 8.053672
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "seconds": 6.691981
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.088058
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.087307
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.080705
+          },
+          {
+            "calls": 5,
+            "inclusive": true,
+            "name": "Directory durability",
+            "parent": null,
+            "seconds": 0.011506
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "File durability",
+            "parent": null,
+            "seconds": 0.014079
+          },
+          {
+            "calls": 6,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": null,
+            "seconds": 12.857037
+          },
+          {
+            "calls": 6,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Guards",
+            "seconds": 0.521841
+          },
+          {
+            "calls": 6,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Guards/Method freeze",
+            "seconds": 0.521722
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": null,
+            "seconds": 8.240921
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Checkout validation",
+            "seconds": 0.079327
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Checkout validation/Method freeze",
+            "seconds": 0.078696
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Checkout validation",
+            "seconds": 0.075944
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Readback",
+            "parent": null,
+            "seconds": 0.048518
+          }
+        ],
+        "stage": "P6/Guards",
+        "wall_seconds": 68.381425
+      },
+      "result_status": "migrated"
+    },
+    {
+      "operation": "detail",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 332245184,
+          "bytes_read": 329410149,
+          "completed_steps": 4,
+          "detail_snapshots": 1,
+          "full_method_validations": 1,
+          "hash_calls": 1126,
+          "json_reuses": 76,
+          "method_byte_revalidations": 2,
+          "method_validations": 3,
+          "path_checks": 3853,
+          "path_components": 36315,
+          "safe_reads": 1515,
+          "windows_attribute_checks": 36315
+        },
+        "cpu_seconds": 4.890625,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Detail source binding",
+            "parent": null,
+            "seconds": 4.906996
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Detail source binding",
+            "seconds": 0.79512
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Detail source binding/Method freeze",
+            "seconds": 0.156649
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Selected puzzle",
+            "parent": null,
+            "seconds": 0.008649
+          }
+        ],
+        "stage": "Detail source binding",
+        "wall_seconds": 5.010947
+      },
+      "result_status": null
+    },
+    {
+      "operation": "migration",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 3249649802,
+          "bytes_read": 2866235842,
+          "checkout_validations": 3,
+          "completed_steps": 354,
+          "full_method_validations": 1,
+          "guards": 1,
+          "hash_calls": 5870,
+          "journal_validations": 1,
+          "json_reuses": 2887,
+          "method_byte_revalidations": 14,
+          "method_validations": 345,
+          "method_view_reuses": 336,
+          "path_checks": 22523,
+          "path_components": 250014,
+          "plans": 1,
+          "safe_reads": 8722,
+          "snapshots": 1,
+          "staged_checkout_checks": 2,
+          "windows_attribute_checks": 250014
+        },
+        "cpu_seconds": 39.234375,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 14.530145
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "seconds": 0.749582
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 8.52622
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.078042
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "seconds": 0.077332
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.081835
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "seconds": 0.087186
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 25.783974
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.077758
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "seconds": 0.077116
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "seconds": 0.083695
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 14.582231
+          },
+          {
+            "calls": 114,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.167421
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "seconds": 0.162267
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.167842
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 2.173941
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "seconds": 0.082854
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "seconds": 0.082838
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 10.414006
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 9.079824
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.092186
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.091413
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.075162
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 10.790352
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 9.462831
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.089593
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.088918
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.079476
+          }
+        ],
+        "stage": "migration",
+        "wall_seconds": 40.475752
+      },
+      "result_status": null
+    },
+    {
+      "operation": "apply",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 3249649802,
+          "bytes_read": 2866385933,
+          "checkout_validations": 3,
+          "completed_steps": 354,
+          "full_method_validations": 1,
+          "guards": 1,
+          "hash_calls": 5870,
+          "journal_validations": 1,
+          "json_reuses": 2887,
+          "method_byte_revalidations": 14,
+          "method_validations": 345,
+          "method_view_reuses": 336,
+          "path_checks": 22527,
+          "path_components": 250045,
+          "plans": 1,
+          "safe_reads": 8723,
+          "snapshots": 1,
+          "staged_checkout_checks": 2,
+          "windows_attribute_checks": 250045
+        },
+        "cpu_seconds": 41.734375,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 16.056815
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "seconds": 0.756101
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 9.137224
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.086303
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "seconds": 0.085433
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.108798
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "seconds": 0.087702
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 27.824739
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.082274
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "seconds": 0.081673
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "seconds": 0.120447
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 15.292757
+          },
+          {
+            "calls": 114,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.162918
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "seconds": 0.160006
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.152776
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 2.096033
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "seconds": 0.080551
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "seconds": 0.080514
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 11.271635
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 9.926278
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.084192
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.083525
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.091718
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 12.081898
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 10.544854
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.104174
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.103334
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.082572
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Readback",
+            "parent": null,
+            "seconds": 0.056977
+          }
+        ],
+        "stage": "apply",
+        "wall_seconds": 44.092168
+      },
+      "result_status": "noop"
+    },
+    {
+      "operation": "detail",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 332245184,
+          "bytes_read": 329410149,
+          "completed_steps": 4,
+          "detail_snapshots": 1,
+          "full_method_validations": 1,
+          "hash_calls": 1126,
+          "json_reuses": 76,
+          "method_byte_revalidations": 2,
+          "method_validations": 3,
+          "path_checks": 3853,
+          "path_components": 36315,
+          "safe_reads": 1515,
+          "windows_attribute_checks": 36315
+        },
+        "cpu_seconds": 5.03125,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Detail source binding",
+            "parent": null,
+            "seconds": 5.282543
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Detail source binding",
+            "seconds": 0.844062
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Detail source binding/Method freeze",
+            "seconds": 0.170686
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Selected puzzle",
+            "parent": null,
+            "seconds": 0.007675
+          }
+        ],
+        "stage": "Detail source binding",
+        "wall_seconds": 5.389371
+      },
+      "result_status": null
+    },
+    {
+      "operation": "plan",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 3249483531,
+          "bytes_read": 2865776032,
+          "checkout_validations": 3,
+          "completed_steps": 354,
+          "full_method_validations": 1,
+          "guards": 1,
+          "hash_calls": 5867,
+          "journal_validations": 1,
+          "json_reuses": 2885,
+          "method_byte_revalidations": 14,
+          "method_validations": 345,
+          "method_view_reuses": 336,
+          "path_checks": 22500,
+          "path_components": 249854,
+          "plans": 1,
+          "safe_reads": 8716,
+          "snapshots": 1,
+          "staged_checkout_checks": 2,
+          "windows_attribute_checks": 249854
+        },
+        "cpu_seconds": 41.984375,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 15.735468
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "seconds": 0.772254
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 9.13676
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.100372
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "seconds": 0.098112
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.09099
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "seconds": 0.098771
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 28.58391
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.081919
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "seconds": 0.079423
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "seconds": 0.078603
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 15.692284
+          },
+          {
+            "calls": 114,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.192405
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "seconds": 0.190466
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.182841
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 2.217172
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "seconds": 0.086383
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "seconds": 0.086366
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 11.144289
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 9.665981
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.097997
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.097011
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.086334
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 12.465953
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 10.845426
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.093798
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.088969
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.098399
+          }
+        ],
+        "stage": "plan",
+        "wall_seconds": 44.52981
+      },
+      "result_status": null
+    },
+    {
+      "operation": "apply",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 4536615006,
+          "bytes_read": 4169487079,
+          "checkout_validations": 3,
+          "completed_steps": 438,
+          "directory_flushes": 7,
+          "file_fsyncs": 3,
+          "full_method_validations": 1,
+          "guards": 11,
+          "hash_calls": 9299,
+          "journal_validations": 2,
+          "json_reuses": 2827,
+          "method_byte_revalidations": 24,
+          "method_validations": 410,
+          "method_view_reuses": 392,
+          "path_checks": 36670,
+          "path_components": 382441,
+          "phase_boundaries": 14,
+          "published_bytes": 165010,
+          "published_files": 2,
+          "safe_reads": 13398,
+          "staged_checkout_checks": 2,
+          "windows_attribute_checks": 382441
+        },
+        "cpu_seconds": 61.25,
+        "phases": [
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": null,
+            "seconds": 33.088287
+          },
+          {
+            "calls": 228,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "seconds": 0.94307
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation",
+            "seconds": 0.363531
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation/Method freeze",
+            "seconds": 0.264628
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Journal validation",
+            "seconds": 4.485006
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation/Guards",
+            "seconds": 0.174142
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation/Guards/Method freeze",
+            "seconds": 0.174104
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "seconds": 23.418647
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "seconds": 20.468902
+          },
+          {
+            "calls": 114,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.199654
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "seconds": 0.198027
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.168529
+          },
+          {
+            "calls": 9,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": null,
+            "seconds": 21.103478
+          },
+          {
+            "calls": 9,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Guards",
+            "seconds": 0.794837
+          },
+          {
+            "calls": 9,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Guards/Method freeze",
+            "seconds": 0.79463
+          },
+          {
+            "calls": 7,
+            "inclusive": true,
+            "name": "Directory durability",
+            "parent": null,
+            "seconds": 0.013486
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "File durability",
+            "parent": null,
+            "seconds": 0.020709
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": null,
+            "seconds": 9.3748
+          },
+          {
+            "calls": 57,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Checkout validation",
+            "seconds": 0.100371
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Checkout validation/Method freeze",
+            "seconds": 0.092491
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Checkout validation",
+            "seconds": 0.080007
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Readback",
+            "parent": null,
+            "seconds": 0.057965
+          }
+        ],
+        "stage": "P6/Guards",
+        "wall_seconds": 64.614134
+      },
+      "result_status": "updated"
+    },
+    {
+      "operation": "detail",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 332245292,
+          "bytes_read": 329410311,
+          "completed_steps": 4,
+          "detail_snapshots": 1,
+          "full_method_validations": 1,
+          "hash_calls": 1126,
+          "json_reuses": 76,
+          "method_byte_revalidations": 2,
+          "method_validations": 3,
+          "path_checks": 3853,
+          "path_components": 36315,
+          "safe_reads": 1515,
+          "windows_attribute_checks": 36315
+        },
+        "cpu_seconds": 5.8125,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Detail source binding",
+            "parent": null,
+            "seconds": 6.337696
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Detail source binding",
+            "seconds": 0.956551
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Detail source binding/Method freeze",
+            "seconds": 0.22878
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Selected puzzle",
+            "parent": null,
+            "seconds": 0.013435
+          }
+        ],
+        "stage": "Detail source binding",
+        "wall_seconds": 6.474068
+      },
+      "result_status": null
+    },
+    {
+      "operation": "detail",
+      "error": null,
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 331306225,
+          "bytes_read": 328917542,
+          "completed_steps": 4,
+          "detail_snapshots": 1,
+          "full_method_validations": 1,
+          "hash_calls": 1126,
+          "json_reuses": 76,
+          "method_byte_revalidations": 2,
+          "method_validations": 3,
+          "path_checks": 3853,
+          "path_components": 36315,
+          "safe_reads": 1515,
+          "windows_attribute_checks": 36315
+        },
+        "cpu_seconds": 6.03125,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Detail source binding",
+            "parent": null,
+            "seconds": 6.279939
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Detail source binding",
+            "seconds": 0.898494
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method byte binding",
+            "parent": "Detail source binding/Method freeze",
+            "seconds": 0.202914
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Selected puzzle",
+            "parent": null,
+            "seconds": 0.004992
+          }
+        ],
+        "stage": "Detail source binding",
+        "wall_seconds": 6.381078
+      },
+      "result_status": null
+    }
+  ]
+}
