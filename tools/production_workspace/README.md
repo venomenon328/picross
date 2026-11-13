@@ -43,6 +43,12 @@ damit die bisherige Git-/SSH-/Credential-Einrichtung weiterverwendet wird.
 Keine Administratorrechte nötig. [Start-/Updateanleitung](START-WINDOWS.txt),
 [versionierter Bau und Smoke](WINDOWS_BUILD.md).
 
+APP-A ergänzt den [separaten App-Releasekanal](../../docs/PRODUCTION_UPDATES.md)
+mit automatischer Versionsplanung und geprüftem MSI. Erstpublikation bleibt bis
+zur gesonderten Betriebsfreigabe gesperrt; ein Actions-Dispatch ist ausschließlich
+Diagnose. Die App hat weiterhin keinen Updateclient. Gitrefresh und eine neue
+installierte Programmversion sind getrennte Vorgänge.
+
 Das native Steuerfenster bietet bei neuer Einrichtung den vorhandenen lokalen
 Projektcheckout und die bewusste Wahl „Nur lokale Gitstände“ (Standard) oder
 „Mit Remote aktualisieren“. Standardrefs sind `main` und `content/pw/*`.

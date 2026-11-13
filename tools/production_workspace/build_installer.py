@@ -116,9 +116,9 @@ def wix_source(app, product, guard):
     return ET.ElementTree(root)
 
 
-def run(output):
-    product = release()
-    build(output)  # Pins interpreter, components, clean commit, onedir and licenses.
+def run(output, *, version=None):
+    product = release(version=version)
+    build(output, version=version)  # Pins interpreter, components, clean commit, onedir and licenses.
     work = output / 'work'
     archive = work / 'wix.zip'
     urllib.request.urlretrieve(product['wix_url'], archive)
@@ -168,4 +168,6 @@ def run(output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    run(parser.parse_args().output.resolve())
+    parser.add_argument('--version', help='Checked release-plan version, injected without changing sources')
+    args = parser.parse_args()
+    run(args.output.resolve(), version=args.version)
