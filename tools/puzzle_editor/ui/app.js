@@ -94,6 +94,10 @@ function renderList() {
     const category = document.createElement('small'); category.textContent = cats.get(row.category_id);
     const id = document.createElement('small'); id.textContent = row.id;
     button.append(title, category, id); button.onclick = () => perform(async () => { if (await leave()) await select(row.id); });
+    if (current?.detail.id === row.id) {
+      const loaded = $('reveal-pictures').querySelector('img');
+      if (loaded) { const thumbnail = document.createElement('img'); thumbnail.className = 'entry-preview'; thumbnail.src = loaded.src; thumbnail.alt = 'Aktuelles Abschlussbild · ' + row.name; button.prepend(thumbnail); }
+    }
     $('list').append(button);
   }
 }
