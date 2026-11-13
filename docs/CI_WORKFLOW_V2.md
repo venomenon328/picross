@@ -24,8 +24,13 @@ beider Seiten einer Umbenennung. Dokumente (Markdown in den Dokumentationsbereic
 HTML-Sheets und ihre Dokumentressourcen), reine Produktionsdateien gemäß
 [`content_path`](../tools/ci_paths.py) und der aktuelle Paketplan lösen allein
 keinen Player-Build aus. Das umfasst Authoringablage, registrierte Rätselinhalte,
-generierte Runtime-Daten/-Bilder und deren reine Datenbereinigung. Code, gemeinsame
-Spielgrafik, Werkzeug-/CI-Änderungen, unbekannte Pfade oder nicht reguläre Dateimodi
+generierte Runtime-Daten/-Bilder und deren reine Datenbereinigung. Dazu gehören
+auch die rätselspezifischen Hintergrundquellen `content/backgrounds/pz-<id>.json`
+und ihre Assets `game/art/backgrounds/pz-<id>.png` / `.txt`. Diese vollständigen
+Pfadmatches verwenden dieselbe geschlossene ID-Grammatik wie Revealquellen:
+`pz-[a-z0-9][a-z0-9-]{0,59}`. Capabilitydateien, Loader, Shader und `.import`-Dateien
+sind keine Produktionsdaten. Code, gemeinsame Spielgrafik, Werkzeug-/CI-Änderungen,
+unbekannte Pfade oder nicht reguläre Dateimodi
 fallen nicht unter die Ausnahme. Ein gemischter Dokument-/Inhalts-PR bleibt buildfrei,
 solange er ausschließlich diese Klassen enthält.
 

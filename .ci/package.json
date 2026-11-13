@@ -1,20 +1,25 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/576",
-  "package": "PE-A2",
-  "modules": ["tools", "production.adapter", "production.catalog", "native.core", "native.catalog", "native.completion"],
-  "purpose": "PE-A2 gemäß #576, Paketentscheidung issuecomment-6839202555: vorbereitete Abschlussbilder und Hintergrundpräferenzen mit optionalen Metadaten atomar über den gemeinsamen Writer pflegen; explizite Runtime-v8-Migration, echte Ursprungs-/Produktionsbindung und unveränderte Saveidentität. Tools sowie Adapter/Katalog prüfen geschlossene Quellen, Pläne, reguläre Folgeoperationen und Recovery; native core/catalog/completion prüfen Runtimeoverlay, Hintergrundauflösung und Abschluss-/Spielstandverhalten. Der Kern liefert den regulären Windows-Spieler. Die zusätzlichen temporären T01/T02-Nachweise werden am Lieferstand tatsächlich ausgeführt, ihre Originale im erzeugenden Lauf geprüft und danach entfernt.",
-  "omitted": "Keine Editor-UI (PE-B), keine Rasterbearbeitung (PE-A3), keine echten Bestandsrätsel ändern oder neu zertifizieren. Keine neue Dauer-Testfamilie pro Rätsel, keine Solver-/Bildproduktionsvollauswahl, Browserdiagnose oder allgemeine Reviewgalerie. Die kleine neue Katalogtestdatei schützt den geschlossenen API-/Journalvertrag; die umfangreichere T01/T02-End-to-End-Beobachtung bleibt temporär. Unabhängiges PE-A2-A01-Review bleibt vor Merge offen und wird durch Implementiererselbstprüfung oder CI nicht ersetzt.",
-  "test_changes": [
-    {"path": "tests/puzzle_production/test_catalog_images.py", "disposition": "change-scoped", "reason": "Kompakte synthetische API-/Bundle-/Journalfälle für den neuen gemeinsamen Bildpflegevertrag; keine echten Rätseldaten oder dauerhafte T01-Gesamtnachweisfamilie."},
-    {"path": "tests/puzzle_production/test_editor_image_source.py", "disposition": "change-scoped", "reason": "Geschlossene Ursprungshüllen, exakte Revisionen und echte Produktionsfortführung nach manueller Bildpflege mit kleinen synthetischen Quellen."},
-    {"path": "tests/puzzle_production/test_background_change_transactions.py", "disposition": "change-scoped", "reason": "Bestehende Größenklassenregression an die ausdrücklich freigegebenen PE-A2-Binärjournale binden; unbekannte Formate, unzulässige Wirepräfixe und aktuelle Metadatenjournale bleiben an der bisherigen kleineren Grenze abgewiesen."},
-    {"path": "tools/test_background_import.py", "disposition": "change-scoped", "reason": "Vorhandenen unabhängigen Importreader um zulässige direkte PNG-Farbtypen und echte GST2-Formatbindung ergänzen; historische HP-Profile bleiben streng."},
-    {"path": "game/tests/pe_a1_cases.gd", "disposition": "change-scoped", "reason": "Bestehende Metadatenfälle um v8-Revealoverlay, Formatwechsel und Save-/Historyinvarianten ergänzen; v7-Gegenfall bleibt geschützt."},
-    {"path": "game/tests/background_tests.gd", "disposition": "change-scoped", "reason": "Bestehenden Hintergrundvertrag um explizites standard und v8-/Capabilitygrenzen ergänzen."},
-    {"path": "game/tests/content_pack_probe.gd", "disposition": "change-scoped", "reason": "Vorhandenen tatsächlichen PCK-Reader auf gebundene LA8-/RGBA8-Importausgänge erweitern, ohne Quellfallback oder Bildumwandlung der Produktbytes."}
+  "issue": "https://github.com/venomenon328/picross/issues/625",
+  "package": "CI-PB",
+  "modules": [
+    "tools"
   ],
-  "core_change": null,
+  "purpose": "CI-PB gemäß #625: reguläre rätselspezifische Hintergrundquellen, PNGs und Nutzungshinweise in die gemeinsame enge Content-Klassifikation aufnehmen. Der Pflichtkern docs/ci-required einschließlich Windows-Spielerbau bleibt für diesen Entwicklungs-PR aktiv; tools prüft den gemeinsamen ci_scope-Verbraucher und die Werkzeugverträge.",
+  "omitted": "Keine production.*, native.*, preflight, delivery oder Chromium: Writer, Solver, Bildprofile und Spielverhalten ändern sich nicht. Keine echten Rätsel als Testkorpus, kein zusätzlicher Test-PR oder Inhaltsmerge. CI-PB-T01 wird durch den kleinen synthetischen Gitfall für PR/Main-Push einschließlich Anlage, Änderung, Entfernung, Rename-Grenzen und beider Gitmodusseiten geliefert. Keine neue Diagnosegalerie oder allgemeine automatische Pfadauswahl.",
+  "test_changes": [
+    {
+      "path": "tools/test_ci_modular.py",
+      "disposition": "core",
+      "reason": "Bestehende kleine Klassifikations-/Ausführungsfälle und ein synthetischer Gitfall sichern die buildfreie Hintergrundproduktion, weiterhin ausgewählte Fachprüfungen und die Grenzen zu Entwicklungsänderungen und expliziten Bauaufträgen. Keine Engine, echten Rätselbilder oder neue umfangreiche Regex-Testsuite. Der Gitfall liefert zugleich CI-PB-T01."
+    },
+    {
+      "path": "tools/test_ci_scope.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine Verbraucherprüfung derselben Backgroundklassifikation samt engen Gegenfällen im ausgewählten tools-Modul; die historische automatische Pfadauswahl wird nicht in der Haupt-CI reaktiviert."
+    }
+  ],
+  "core_change": "tools/ci_paths.py ist Teil des CI-Kerns. Zwei vollständige Pfadmatches ergänzen ausschließlich content/backgrounds/pz-<id>.json und game/art/backgrounds/pz-<id>.png|txt mit der bestehenden Reveal-ID-Grammatik. Die gezielt erweiterten Kernfälle prüfen PR-/Main-Push-Plan und Ausführung; unbekannte Pfade, Entwicklungsdateien und nicht reguläre Gitmodi bleiben buildpflichtig. Workflow, Ergebnisgate und Umfang des regulären Windows-Kernbaus bleiben erhalten.",
   "evidence": {
     "mode": "none",
     "purpose": null,

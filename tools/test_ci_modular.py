@@ -7,10 +7,15 @@ from pathlib import Path
 import subprocess
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 import zipfile
 
 import ci_modular as ci
+
+
+BACKGROUND_PATHS = ('content/backgrounds/pz-synthetic.json',
+                    'game/art/backgrounds/pz-synthetic.png',
+                    'game/art/backgrounds/pz-synthetic.txt')
 
 
 def package():
@@ -100,26 +105,51 @@ class PackageContract(unittest.TestCase):
             (['unknown'], [], True),
             ([], [], True),
         ]
+        cases += [([path], [], False) for path in BACKGROUND_PATHS]
+        cases += [(list(BACKGROUND_PATHS), modules, False)
+                  for modules in ([], ['tools'], ['production.images'])]
+        cases += [([f'{prefix}/{identity}.{suffix}'], [], False)
+                  for prefix, suffix in (('content/backgrounds', 'json'), ('game/art/backgrounds', 'png'),
+                                         ('game/art/backgrounds', 'txt'))
+                  for identity in ('pz-0', 'pz-' + 'a' * 60)]
+        cases += [(list(BACKGROUND_PATHS), [module], True)
+                  for module in ('preflight', 'delivery', *(f'native.{group}' for group in ci.NATIVE))]
+        cases += [(list(BACKGROUND_PATHS) + [path], [], True) for path in (
+            'content/backgrounds/pz-.json', 'content/backgrounds/pz-Upper.json',
+            'content/backgrounds/pz-bad_id.json', 'content/backgrounds/pz-' + 'a' * 61 + '.json',
+            'content/backgrounds/pz-synthetic/record.json', 'content/backgrounds/../pz-synthetic.json',
+            'content/backgrounds/pz-synthetic.json/', 'content/backgrounds/pz-synthetic.json.py',
+            'content/backgrounds/pz-synthetic.JSON', 'content/backgrounds/pz-synthetic.png',
+            'game/art/backgrounds/pz-synthetic.json', 'game/art/backgrounds/pz-synthetic.PNG',
+            'game/art/backgrounds/pz-synthetic.png.import', 'game/art/backgrounds/pz-synthetic.gdshader',
+            'game/art/backgrounds/loader.gd', 'game/data/background-capability.json',
+            'game/art/backgrounds/shared.png', 'game/art/book/paper.png',
+            'tools/ci_paths.py', 'tools/puzzle_production/solver.py',
+            '.github/workflows/ci-modular.yml', 'game/main.gd', 'unknown.json')]
         for paths, modules, expected in cases:
             for event in ('pull_request', 'push'):
                 with self.subTest(paths=paths, modules=modules, event=event):
                     self.assertEqual(ci.player_requirement(paths, modules, event=event)['required'], expected)
         self.assertTrue(ci.player_requirement(['README.md'], [], event='workflow_dispatch')['required'])
         self.assertTrue(ci.player_requirement(['README.md'], [], event='push', nonregular=['README.md'])['required'])
+        self.assertTrue(ci.player_requirement(BACKGROUND_PATHS, [], event='workflow_dispatch')['required'])
 
     def test_build_free_content_runs_selected_production_without_player_or_upload(self):
         from types import SimpleNamespace
         for modules in ([], ['production.solver']):
             plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
-                    'player': {'required': False}, 'run_attempt': '1', 'modules': modules, 'package': package()}
+                    'player': ci.player_requirement(BACKGROUND_PATHS, modules, event='pull_request'),
+                    'run_attempt': '1', 'modules': modules, 'package': package()}
+            self.assertFalse(plan['player']['required'])
             with self.subTest(modules=modules), tempfile.TemporaryDirectory() as directory:
                 root = Path(directory)
                 binding = {'native_groups': [], 'production_groups': ['solver'] if modules else []}
+                validate = Mock()
                 with patch.object(ci, 'legacy_binding', return_value=binding), \
                      patch.object(ci, 'command') as command, patch.object(ci, 'summary'), \
                      patch.object(ci, 'git', side_effect=['', plan['tested_checkout']]), \
                      patch.dict('sys.modules', {'production_results': SimpleNamespace(
-                         files=lambda *args, **kwargs: [], validate_all=lambda *args: None)}), \
+                         files=lambda *args, **kwargs: [], validate_all=validate)}), \
                      patch.object(ci, 'copy_file'), \
                      patch.dict(os.environ, {'GITHUB_OUTPUT': str(root/'outputs')}):
                     report = ci.execute(plan, root/'out', root/'cache')
@@ -128,7 +158,13 @@ class PackageContract(unittest.TestCase):
                 self.assertEqual(report['player_bytes'], 0)
                 self.assertEqual(report['diagnostic_bytes'], 0)
                 self.assertFalse((root/'out/player').exists())
+                self.assertFalse((root/'cache').exists())
                 self.assertIn('player=false', (root/'outputs').read_text())
+                self.assertIn('diagnostics=false', (root/'outputs').read_text())
+                if modules:
+                    validate.assert_called_once()
+                else:
+                    validate.assert_not_called()
 
     def test_unknown_duplicate_and_nonlist_modules_are_rejected(self):
         for modules in [['native.typo'], ['tools', 'tools'], 'tools', [True]]:
@@ -290,6 +326,74 @@ class GitBinding(unittest.TestCase):
                 for event in ('pull_request', 'push'):
                     with self.subTest(mode=mode, event=event):
                         self.assertTrue(ci.load_plan(base, changed, event, root=root)['player']['required'])
+
+    def test_background_production_diff_is_build_free_for_pr_and_main_push(self):
+        # CI-PB-T01: real Git metadata, synthetic bytes; no puzzle corpus or engine.
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            p = package(); p['modules'] = ['production.solver']
+            def git(*args):
+                return subprocess.check_output(['git', *args], cwd=root, stderr=subprocess.DEVNULL).decode().strip()
+            def commit(message, *, stage_all=True):
+                p['package'] = message
+                (root/ci.PLAN_PATH).write_text(json.dumps(p))
+                git('add', '.' if stage_all else ci.PLAN_PATH)
+                git('commit', '-qm', message)
+                return git('rev-parse', 'HEAD')
+            def assert_player(base, head, required):
+                for event in ('pull_request', 'push'):
+                    with self.subTest(base=base, head=head, event=event):
+                        plan = ci.load_plan(base, head, event, root=root)
+                        self.assertEqual(plan['player']['required'], required)
+                        self.assertEqual(plan['modules'], ['production.solver'] if event == 'pull_request' else [])
+            git('init', '-q'); git('config', 'user.name', 'test'); git('config', 'user.email', 'test@example.invalid')
+            (root/'.ci').mkdir()
+            base = commit('base')
+            for path in (*BACKGROUND_PATHS, 'content/registry.json', 'content/authoring/index.json',
+                         'content/authoring/pz-synthetic/current-view.json',
+                         'content/authoring/pz-synthetic/r01/record.json',
+                         'content/packages/pz-synthetic/r01/package.zip',
+                         'content/reveals/pz-synthetic.json', 'content/added/pz-synthetic.json',
+                         'content/difficulty/pz-synthetic/rating.json',
+                         'content/difficulty/reports/synthetic/report.json',
+                         'game/data/registry.json', 'game/data/content/synthetic.json',
+                         'game/art/content/synthetic.png'):
+                target = root/path; target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_text('synthetic path classification: ' + path + '\n')
+            head = commit('add production including backgrounds'); assert_player(base, head, False)
+            base = head
+            for path in BACKGROUND_PATHS:
+                (root/path).write_text('changed synthetic background: ' + path + '\n')
+            head = commit('change backgrounds'); assert_player(base, head, False)
+            # Both sides of each rename must remain visible, including a source
+            # renamed to inert content and the reverse direction.
+            source = BACKGROUND_PATHS[1]
+            renamed = 'game/art/backgrounds/pz-renamed.png'
+            code = 'game/ui/background_loader.gd'
+            for old, new, required in ((source, renamed, False), (renamed, code, True), (code, renamed, True)):
+                (root/new).parent.mkdir(parents=True, exist_ok=True)
+                (root/old).rename(root/new)
+                base = head; head = commit('rename ' + old + ' to ' + new)
+                paths, _ = ci.changed_metadata(base, head, root=root)
+                self.assertTrue({old, new}.issubset(paths))
+                assert_player(base, head, required)
+            for path in (BACKGROUND_PATHS[0], renamed, BACKGROUND_PATHS[2]):
+                (root/path).unlink()
+            base = head; head = commit('remove backgrounds'); assert_player(base, head, False)
+            source = BACKGROUND_PATHS[0]
+            (root/source).write_text('synthetic background\n')
+            base = head; head = commit('restore source'); assert_player(base, head, False)
+            blob = git('hash-object', '-w', source)
+            for mode in ('100755', '120000', '160000'):
+                oid = head if mode == '160000' else blob
+                git('update-index', '--cacheinfo', f'{mode},{oid},{source}')
+                base = head; head = commit('nonregular ' + mode, stage_all=False)
+                assert_player(base, head, True)
+                git('update-index', '--force-remove', source)
+                base = head; head = commit('remove nonregular ' + mode, stage_all=False)
+                assert_player(base, head, True)
+                base = head; head = commit('restore regular after ' + mode)
+                assert_player(base, head, False)
 
     def test_real_git_diff_includes_renames_and_nonregular_document_modes(self):
         with tempfile.TemporaryDirectory() as directory:
