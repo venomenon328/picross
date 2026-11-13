@@ -258,6 +258,7 @@ class Record:
             self.allowed, self.offer_keys = {role: {} for role in ROLES}, {}
             self.historical_assets = []
             self._images()
+            self._selection()
             self.close()  # Retain only tiny validated metadata, not a ZIP per offered revision.
         except BaseException as exc:
             self.close()
@@ -414,6 +415,60 @@ class Record:
                 _bind_decision(manifest, decision)
                 self.background_choice = 'none' if decision['outcome'] == 'none' else decision['candidate_id']
 
+    def _selection(self):
+        """Bind the summary to the recorded choice and immutable original copies.
+
+        This reads the existing offline selection contract, not a solver or a
+        Git publisher, and does not authenticate a recorded human explanation.
+        """
+        h = self.handoff
+        if not self.current or h.get('raster_selection') is None:
+            return
+        ref = exact_keys(h['raster_selection'], {'file', 'sha256'})
+        s = self.json(ref['file'], ap.sha(ref['sha256']))
+        exact_keys(s, {'format', 'puzzle_id', 'source_commit', 'option_id', 'record', 'projection',
+                       'inventory_sha256', 'candidate', 'reveal', 'motif', 'human', 'test_only'})
+        ap.require(s['format'] == 'picross-raster-selection-v1' and s['puzzle_id'] == h['puzzle_id'] and
+                   type(s['test_only']) is bool and s['test_only'] == h.get('test_only', False),
+                   'Rasterwahl gehört nicht zum aktuellen Produktionsgegenstand.')
+        check_commit(s['source_commit'])
+        ap.require(isinstance(s['option_id'], str) and OPTION.fullmatch(s['option_id']), 'Ungültige Rasterwahl.')
+        copies = {}
+        for key in ('record', 'projection'):
+            item = exact_keys(s[key], {'file', 'sha256', 'bytes', 'copy'})
+            production_path(item['file']); ap.sha(item['sha256'])
+            integer(item['bytes'], 1, JSON_LIMIT, 'Rasterwahl-Originalgröße')
+            raw = self.member(item['copy'], item['sha256'], JSON_LIMIT)
+            ap.require(len(raw) == item['bytes'], 'Rasterwahl-Originalgröße stimmt nicht.')
+            copies[key] = parse(raw)
+        source = copies['record']; projection = validate(copies['projection'])
+        ap.require(source.get('format') == 'picross-authoring-record-v3' and
+                   source['puzzle_id'] == h['puzzle_id'] and source['state'] == 'raster_ready' and
+                   s['record']['file'] == f"content/authoring/{h['puzzle_id']}/{source['revision']}/record.json" and
+                   source['inventory_sha256'] == ap.sha(s['inventory_sha256']), 'Gewählte Rasterrevision stimmt nicht.')
+        ap.require(projection['puzzle_id'] == h['puzzle_id'] and
+                   s['projection']['file'] == f"content/authoring/{h['puzzle_id']}/{projection['revision']}/workspace.json",
+                   'Gewählte Rasterprojektion stimmt nicht.')
+        offers = [o for o in projection['offers'] if o['kind'] == 'raster' and o['id'] == s['option_id']]
+        ap.require(len(offers) == 1 and
+                   all(offers[0]['record'][k] == s['record'][k] for k in ('file', 'sha256', 'bytes')) and
+                   offers[0]['record']['commit'] in (None, s['source_commit']), 'Gewähltes Rasterangebot hat eine andere Quelle.')
+        v = source['verification']
+        ap.require(v.get('technical') is True and v.get('effective_state') == 'raster_ready' and
+                   v.get('format') == 'picross-authoring-content-inspection-v2', 'Gewähltes Raster ist nicht als qualifiziert gebunden.')
+        exact_keys(s['candidate'], {'variant', 'matrix_hash', 'logic_hash'})
+        ap.require(s['candidate'] == {k: h['candidate'][k] for k in s['candidate']} ==
+                   {k: source['candidate'][k] for k in s['candidate']}, 'Gewähltes Raster wurde geändert.')
+        for role in ('reveal', 'motif'):
+            exact_keys(s[role], {'file', 'sha256'})
+            ap.require(s[role] == {k: h[role][k] for k in s[role]} ==
+                       {k: source[role][k] for k in s[role]}, 'Bildkontext der Rasterwahl wurde geändert.')
+        human = exact_keys(s['human'], {'actor', 'timestamp_utc', 'statement', 'evidence'})
+        ap.string(human['actor'], 'Rasterwahl-Akteur'); ap.string(human['statement'], 'Rasterwahl-Erklärung')
+        ap.timestamp(human['timestamp_utc'])
+        evidence = exact_keys(human['evidence'], {'file', 'sha256'})
+        self.member(evidence['file'], ap.sha(evidence['sha256']), JSON_LIMIT)
+
     def historical_background(self, binding, manifest, candidate, current_name):
         history = binding['history']
         ap.require(history is not None, 'Hintergrundoriginal fehlt ohne historische Bindung.')
@@ -494,6 +549,37 @@ def asset_bytes(source, snapshot, loc):
         archive.close()
 
 
+
+def closing_composition(outer, assets):
+    """Project exact current originals, never infer a choice from gallery order.
+
+    These are view identifiers, not a new approval/certification. Equivalent
+    references to the same original are reduced by ID; different originals
+    remain ambiguous and therefore cannot be approved through the summary.
+    """
+    r = outer.value
+    if not outer.current or r['state'] not in (
+            'background_review', 'content_ready', 'editorially_approved', 'registered'):
+        return None
+    if not r.get('raster_selection') or not r.get('candidate') or not r.get('reveal'):
+        return None
+
+    def selected(role, name=None):
+        expected = outer.allowed[role]
+        if name is not None:
+            expected = {n: sha for n, sha in expected.items() if n == name}
+        if len(expected) != 1:
+            return None
+        original = next(iter(expected))
+        matches = [a for a in assets if a['role'] == role and outer.asset_name(a) == original]
+        return min((a['id'] for a in matches), default=None)
+
+    background_name = outer.offer_keys.get(('background', outer.background_choice))
+    # A chosen original stays selectable in the original manifest. None is not an asset.
+    return {'raster': selected('raster'), 'reveal': selected('reveal', r['reveal']['file']),
+            'background': selected('background', background_name) if background_name else None}
+
+
 def inspect(source, snapshot, value):
     """Validate every offered role against its original revision; no new approval."""
     p = validate(value)
@@ -541,6 +627,9 @@ def inspect(source, snapshot, value):
                            'Pflichtbild fehlt in der Projektion: ' + name)
         return {'state': outer.value['state'], 'blockers': outer.value['blockers'],
                 'published': outer.published,
+                'metadata': {k: outer.value.get(k) for k in ('width', 'height', 'mode', 'used_colors', 'difficulty')},
+                'composition': closing_composition(outer, p['assets']),
+                'originals': {'record': deepcopy(outer.value), 'handoff': deepcopy(outer.handoff)},
                 'authoring_version': outer.value['rulebook']['version'],
                 'background_status': ('pending' if outer.value['background'] is None else
                                       'ready' if outer.value['verification'].get('background_ready') else 'offered'),

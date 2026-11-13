@@ -2,7 +2,7 @@
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
 Handoff v4, Record v3 und Projektion v2. Der aktuelle operative Regelstand ist
-**Authoring 0.8.0, Dokumentrevision 5 (PW2-A)**. Normale Produktion liest den
+**Authoring 0.8.0, Dokumentrevision 6 (PW2-A/PW2-B)**. Normale Produktion liest den
 Produktionseinstieg in [AGENTS](../../AGENTS.md),
 [Authoring §1.1](../../docs/ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 den vollständigen [gemeinsamen Bildstil](../../docs/PUZZLE_IMAGE_STYLE.md) und
@@ -13,9 +13,17 @@ verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.
 Die [ursprüngliche PW-B-Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194)
 ist eine Entwicklungs-/Herkunftsquelle, keine zusätzliche Routinelektüre.
 
-PW2-A ändert Quellen und Bildregeln, nicht die Anwendung. Weitere UI-/Prompt-
-verkürzung, regulärer kombinierter Schlussauftrag und Ausblendung integrierter
-Lieferungen bleiben PW2-B/PW2-C in #626. Ein vollständig geeigneter qualifizierter
+PW2-B stellt Bilder, fällige Entscheidungen und relevante Parameter vor die
+technischen Originaldetails. Bei der Hintergrundwahl zeigt die Schlussübersicht
+gewähltes Raster, Reveal und Hintergrund/none. „Endabnahme & Integration: Auftrag
+kopieren“ erzeugt einen gemeinsamen Schlussauftrag; erst sein Absenden erklärt
+die Freigabe. Bedingter Squash-Merge nach unabhängigem Review und aktuellen Gates
+ist ohne gespeicherte Einstellung der Standard; ein ausdrückliches Nein bleibt
+als Draft-Auftrag erhalten. Korrektur/Wiederaufnahme erklären keine neue Endabnahme
+oder Mergefreigabe. Vollständige geprüfte Übergabe-/Recorddaten bleiben unten
+aufklappbar und kopierbar. Quellenwerte, Regeln und nicht beauftragte lokale
+Bereinigung werden nicht routinemäßig im Prompt wiederholt. Ausblendung bereits
+integrierter Lieferungen bleibt PW2-C in #626. Ein vollständig geeigneter qualifizierter
 Rasterkandidat genügt; weitere entstehen nach Authoring bedarfsweise nacheinander,
 ohne Budget-/Qualitätslockerung. Die drei Reveal- und drei Hintergrundoriginale
 bleiben ihre eigenen Bildauswahlen. Hintergrund bedeutet die ganze 2304×576-
