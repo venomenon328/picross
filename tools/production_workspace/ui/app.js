@@ -372,9 +372,21 @@ async function open(id,explicit=false){
   if(value.facts.test_only)view.append(node('span','Technische Testdaten','badge'));
   progress(view,value);metadata(view,value);
   if(value.facts.published)publishedContext(view,value);
-  if(value.facts.blockers.length){
-   const issues=node('section',undefined,'openPoints');issues.append(node('h3','Noch offene Produktionspunkte'));
-   for(const b of value.facts.blockers)issues.append(node('p',b,'validation'));view.append(issues);
+  // Original pending gates are historical context, not fresh reader failures.
+  const points=[];
+  for(const blocker of value.facts.blockers){
+   const key=blocker.split(':',1)[0];
+   if(key==='final_editorial'){
+    if(['background_review','content_ready'].includes(value.facts.state))points.push(['Die Endabnahme wird erst mit dem gesendeten Schlussauftrag erteilt.','hint']);
+   }else if(key==='background_choice'){
+    if(value.facts.state==='background_review')points.push(['Wähle einen Hintergrund oder verzichte ausdrücklich darauf.','hint']);
+   }else if(key==='storage'){
+    if(!value.source_url)points.push(['Remote-Veröffentlichung noch nicht bestätigt. Originale sichern und Quellen aktualisieren.','validation']);
+   }else points.push([blocker,'validation']);
+  }
+  if(points.length){
+   const issues=node('section',undefined,'openPoints');issues.append(node('h3','Noch zu entscheiden oder zu prüfen'));
+   for(const [text,style] of points)issues.append(node('p',text,style));view.append(issues);
   }
   const final=PW.closing(value);
   if(final)finalOverview(view,value,id);
