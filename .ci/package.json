@@ -1,32 +1,29 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/612",
-  "package": "APP-B2",
+  "issue": "https://github.com/venomenon328/picross/issues/576",
+  "package": "PE-A3",
   "modules": [
-    "tools"
+    "tools",
+    "production.solver",
+    "production.adapter",
+    "production.catalog",
+    "native.core",
+    "native.history",
+    "native.catalog",
+    "native.completion"
   ],
-  "purpose": "APP-B2 gemäß Paketentscheidung 6849852805: sicherer Opt-in-Selbstupdateclient, unabhängiger Windowshelfer und T01/T02. Pflichtkern docs/ci-required mit regulärem Windows-Spielerbau; genau tools für Launcher-, Trust-, Download-, Zustands- und Installergrenzen.",
-  "omitted": "Keine native.*, production.*, preflight, delivery, Chromium oder automatische MSI-Installation. Spiel, Rätsel und Browser-API unverändert. T02 nutzt ausschließlich den separaten nicht veröffentlichenden Windowsdispatch mit echtem Bau/Inspector und isolierter Helferdiagnose. T03 bleibt echte Windows-11-Nutzer-/Upgradeprobe als Vor-Release-Gate; T01/T02 belegen weder reale Installation noch universellen Rollback oder produktive Kanalfrische. Keine Produktionskeys/Secrets/Releaseaktivierung.",
+  "purpose": "PE-A3 gemäß #576 issuecomment-6848707827: geprüfte manuelle Rasterrevision über gemeinsamen Writer und gezielter abbruchsicherer Neustart eindeutig älterer eigener Saves. Der Kern liefert den Windows-Spieler. Solver/Adapter/Katalog prüfen unabhängige Proofs, aktive Methode, ehrliche Quellen und Transaktionen; native Gruppen prüfen Save-, History-, Katalog- und Abschlussgrenzen. T01/T02/T03 bleiben einmalige gebundene Nachweise am finalen Head.",
+  "omitted": "Keine production.images/native.adapters/native.graphics/native.export/preflight/delivery oder Chromium, keine neue Grafik, Ableitung, Hostingfunktion, PE-B-Oberfläche oder echte Bestandsmigration/Rätseländerung. Keine Tests an Nutzersaves oder wachsende Echtkatalogfamilie. Unabhängiges PE-A3-A01 bleibt vor Merge offen; kein Merge beauftragt.",
   "test_changes": [
     {
-      "path": "tools/test_app_updates.py",
+      "path": "tests/puzzle_production/test_catalog_raster.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische reale Ed25519-/Kanal-/HTTP-/Opt-in-/Staging-/Abbruch-/Recoveryfälle nur im ausgewählten tools-Modul; keine persönlichen Daten oder echten Release-Mutationen."
+      "reason": "Kleine synthetische Matrix-/No-op-/Qualitäts-/kombinierte Writer-/Stale-/Recoveryfälle, keine dauerhafte T01-Gesamtfamilie."
     },
     {
-      "path": "tools/test_production_launcher.py",
+      "path": "game/tests/pe_a1_cases.gd",
       "disposition": "change-scoped",
-      "reason": "Vorhandener echter synthetischer Request/P2-Drainfall prüft zusätzlich, dass die Helferfreigabe erst nach bestätigtem vollständigem Drain möglich ist; keine zweite P2-Vollsuite."
-    },
-    {
-      "path": "tools/production_workspace/helper_diagnostic.py",
-      "disposition": "change-scoped",
-      "reason": "Expliziter separater APP-B2-T02-Dispatch am fixierten PR-Head; realer Kandidat mit ausschließlich im Prozess erzeugtem Testkey. Kein automatisches tools-/Kernmodul und kein Frozen-Payload. Temporäre Extrakte enden im Lauf, gezielte Originale nach sieben Tagen."
-    },
-    {
-      "path": "tools/production_workspace/packaging/HelperDiagnostic.cs",
-      "disposition": "change-scoped",
-      "reason": "Nur vom expliziten T02-Adapter gebaut: echte gebaute Helferkomponente, MSI-Datenbanknegative und wirklicher Prozesshandle-Wait ohne Installation. Keine Produkt-Testoption; Originalprotokoll sieben Tage."
+      "reason": "Gezielte neue Revisions-/Marker-/Primary-/Backup-/Fehlergrenzen im vorhandenen Coreprozess; keine neue native Prozessfamilie."
     }
   ],
   "core_change": null,

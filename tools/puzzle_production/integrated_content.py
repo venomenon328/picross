@@ -118,6 +118,14 @@ def retire(root, ids, integrated_commit):
         require(prefix == "content/packages/" + identifier + "/" + revision, "Unexpected package path")
         old_entry, historical_notice, existing_receipt, _ = reveal_source.package(root, entry)
         require(canonical_bytes(old_entry) == canonical_bytes(old_entries[identifier]), "Production differs from integrated main entry")
+        manifest = io.json_bytes(io.read(root, prefix + "/manifest.json", LIMIT), LIMIT)
+        if manifest.get("format") == "picross-editor-raster-package-v1":
+            # These are the live manual proof/decision authorities, not an
+            # authoring export eligible for compaction into a receipt. Verify
+            # the complete captured source view on main and retain it intact.
+            for name in set(snapshot["texts"]) | set(snapshot["retained"]):
+                committed(name, io.read(root, name, tx.file_limit(root, name), missing=True), main_tree)
+            continue
         authoring = "content/authoring/" + identifier
         selected = selection(identifier, revision)
         current_rows = {name: row for name, row in rows.items() if row["puzzle_id"] == identifier}

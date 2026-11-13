@@ -219,6 +219,15 @@ bleiben unbenutzt auf Datenträger; sie werden weder migriert noch gelöscht.
 Tests verwenden nur eigene temporäre Profile; das ZIP enthält keine
 Spielstände.
 
+Nach einer geprüften Rasterüberarbeitung startet nur ein eindeutig identifizierter
+älterer Schema-1-Spielstand derselben Rätsel-ID automatisch leer. Aktuelle Primary-
+oder Backupstände haben Vorrang; ein altes Backup blockiert einen aktuellen
+Primary nicht. Ein kurzer Dialog „Rätsel überarbeitet“ erscheint nach dem
+abgeschlossenen Neustart. Der eigene `<slot>.revision-reset.json`-Marker macht
+Unterbrechungen wiederaufnehmbar. Offene Marker und fremde, beschädigte oder
+zukünftige Daten bleiben gesperrt; neue Fortschritte, andere Slots und allgemeine
+Präferenzen werden erhalten. [Revisionsvertrag](../docs/PUZZLE_EDITOR.md#93-sicherer-automatischer-save-neustart).
+
 Fehlendes oder beschädigtes Primary mit gültigem Backup wird sichtbar als Recovery geladen;
 normales Speichern bleibt bis zur bewussten Übernahme gesperrt.
 „Backup zum Speichern übernehmen“ fragt vor dem Ersetzen des Primary nach.

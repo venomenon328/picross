@@ -1,18 +1,20 @@
 # Lokaler Rätselbestand-Editor (PE)
 
-Stand: 12.11.2026. **PE-A1 ist nach unabhängigem Review über
-[PR #577](https://github.com/venomenon328/picross/pull/577) integriert.**
-[PE-A2](https://github.com/venomenon328/picross/issues/576#issuecomment-6839202555)
-ist zur Umsetzung beauftragt; §8 schließt seinen Vertrag vor konsumierendem Code.
-PE-A3 und PE-B bleiben freigegebener Sollstand. Auftrag, Kriterien und gebundene technische Nachweise
+Stand: 13.11.2026. **PE-A1 und PE-A2 sind nach unabhängigem Review über
+[PR #577](https://github.com/venomenon328/picross/pull/577) und
+[PR #623](https://github.com/venomenon328/picross/pull/623) integriert.**
+[PE-A3](https://github.com/venomenon328/picross/issues/576#issuecomment-6848707827)
+liefert den Rasterwriter und gezielten Save-Neustart gemäß §9;
+unabhängige Abnahme und Merge bleiben eigene Schritte. PE-B bleibt Sollstand.
+Auftrag, Kriterien und gebundene technische Nachweise
 stehen im [PE-Issue #576](https://github.com/venomenon328/picross/issues/576)
 und im jeweiligen Liefer-PR. PE-A2 beginnt auf
 `main@907d40c8e08f6c7777cd579c8f214921c67efd9b`; der ursprüngliche
 Spezifikationsstand wurde gegen `main@9cc07b411155adeab0aa6516ab5b4c4341f48184` geprüft.
 
 Dieser Vertrag beschreibt ein persönliches Werkzeug außerhalb des Spiels.
-Abschnitt 7 beschreibt das gelieferte Metadatenfundament, §8 die gemeinsame
-Bildpflege. Rasterpflege und Weboberfläche benötigen ihre eigenen Lieferungen.
+Abschnitt 7 beschreibt das Metadatenfundament, §8 die gemeinsame
+Bildpflege und §9 die geprüfte Rasterpflege. Die Weboberfläche folgt in PE-B.
 Neue Rätsel folgen weiterhin [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md).
 
 ## 1. Ziel und freigegebener Umfang
@@ -684,7 +686,119 @@ Präferenz zurück. Sync, Batch und Produktionsabschluss erhalten dieselbe Autor
 und deren aktive Rechte. Die einmalige #620-Ausnahme begründet keine allgemeine
 HP-W2-Toolhashkompatibilität oder Neuversiegelung alter Belege.
 
-## 9. Lieferung, Abnahme und Paketgrenzen
+## 9. PE-A3: geschlossener Raster- und Revisionsvertrag
+
+Vertrag vor konsumierendem Code, 13.11.2026, gemäß
+[PE-A3](https://github.com/venomenon328/picross/issues/576#issuecomment-6848707827).
+Die gemeinsamen Typen, sichere Pfade, Kanonisierung und Grenzen aus §8 gelten.
+Eingang ist ausschließlich ein gültiger v4/v8-Checkout. Die echte v7-Projektion
+wird nicht implizit migriert. Alle Prüfungen verwenden synthetische Ziele.
+
+### 9.1 Rasterrequest, Paket und Bundle
+
+| Form | Exakte Felder |
+| --- | --- |
+| `picross-editor-raster-request-v1` | `format,id,text,metadata,reveal,background,decision,provenance,profile` |
+| `text` | UTF-8-String bis 64 KiB; eine nichtleere Zeile je Matrixzeile, Whitespace zwischen unsigned Dezimaltokens. Ein abschließender Zeilenumbruch erlaubt, CRLF semantisch gleich. Je Achse 1…50, positive IDs ausschließlich aus unveränderter bestehender Palette. Fehlerpositionen 1-basiert. |
+| `metadata,reveal,background,decision` | Unverändert die jeweiligen Unterformen aus §8.3/8.1. Bei Raster-only sind die ersten drei null. |
+| `provenance` | Vierfeldrige Herkunft nach §8.1 für die tatsächliche manuelle Rasterentscheidung; keine KI-/Authoringbehauptung. |
+| `profile` | `line` oder `paired`; Profile verwenden bestehende volle Mono-/Farbverifikation. Paarwahl allein behauptet keine R4-Notwendigkeit. |
+| `picross-editor-raster-plan-v1` | `format,request,snapshot,old,new,quality,files,plan_hash` |
+| Plan `old,new` | Je `entry,metadata,reveal,background,runtime,definition`; erste fünf wie §8.3, definition vollständiges Schema-2-Objekt. |
+| `quality` | null bei kanonisch gleicher Logik, sonst `method,checked,proof,baseline`; checked ist vollständige geprüfte SD-Hülle, proof/baseline echte Bundle-Refs, baseline nur bei paired nicht null. |
+| `picross-editor-raster-package-v1` | `format,id,revision,previous,origin,definition,reveal_sha256,notice_sha256,quality,decision,provenance,files,package_hash` |
+| Paket `previous` | `entry,identity`; vollständiger physischer Vorgängereintrag und dessen Identity nach §8.1. Seine Paketdateien bleiben unverändert erhalten. |
+| Paket `origin` | `entry,identity`; ursprünglicher echter Produktionsanker, bei wiederholtem Edit unverändert, niemals komplette Vorgängerhülle. |
+| Paket `definition` | Ref auf `definition.json` im eigenen Paket. Definition hat stabile ID/Palette/Revealangaben und bei geänderter Logik genau Vorgängerrevision + 1. |
+| `reveal_sha256` | Historischer Revealhash der neuen Rasterbindung: bisherige Produktionsbindung, bei alter AT-v1/v2-Quelle deren bereits tatsächlich aktiver Bildhash. Keine neue Bildentscheidung. |
+| Paket `quality` | Dieselbe geschlossene Form wie im Plan; vollständige unabhängig geprüfte neue Rating-/Proofbindung. |
+| Paket `files` | Pfad→SHA-256 exakt aller Paketdateien außer `manifest.json`. Zulässig: `definition.json`, `request.json`, `proof.json`, optional `baseline.json` und vollständiges geschlossenes Analysebundle unter `analysis/`. Keine ausführbaren Dateien oder Originalbildkopien. |
+| `package_hash` | Kanonischer Hash des Manifests ohne dieses Feld. Registry bindet zusätzlich den tatsächlichen Manifestdateihash. |
+
+Neue Paketkennung ist `editor-<Runtime-Revision>` unter
+`content/packages/<id>/`; belegte oder aliasierende Ziele sind Konflikte.
+Der historische Produktionsmodus und die historische Difficultyangabe werden
+nicht als neue Bewertung ausgegeben; aktuelle Bewertung kommt ausschließlich
+aus der neuen SD-Quelle. Aus vorheriger Produktion bleiben Bildhash/-pfad,
+Added, Rechte, ID/Key/Slot und alle unbeteiligten IDs erhalten.
+
+Das externe Bundle enthält `plan.json`, `request.json`, bei neuer Logik
+`package/` mit exakt obigem Paket sowie nur die benötigten unveränderten
+A2-Imports unter `input/`, binären Altseiten unter `previous/` (§8.3) und
+exakten geänderten Alttexten unter `before/<SHA-256>.txt`. Letztere sind durch
+den Snapshot gebunden und erlauben die vollständig geprüfte No-op-Wiederholung;
+keine freien Restorepfade. Ihre Gesamtbytes bleiben innerhalb 24 MiB.
+Planung löst und prüft den vollständigen neuen Proof, vergleicht jede Endzelle
+mit der Matrix und analysiert/bewertet mit der aus dem Ziel gelesenen aktiven
+Methode. Apply prüft diese geschriebenen Originale unabhängig erneut und
+rekonstruiert die geplanten Bytes aus Request, Paket und frischen Quellen.
+Keine fremden Pfade aus Plansummaries als Schreibziele öffnen.
+
+Kanonisch gleiche Dimensionen, Farb-ID-Semantik und Matrix erzeugen weder
+neue Entscheidung noch Paket, Solverlauf oder Ratingrevision. Ohne A1/A2-Delta
+bleiben sämtliche Bytes und mtimes gleich. Zusammen gewählte A1/A2-Änderungen
+werden als Teil desselben Rasterjournals mit ihren eigenen Grenzen geprüft.
+
+### 9.2 Gemeinsame Transaktion und Folgequellen
+
+`picross-editor-raster-journal-v1`, Operation `editor-raster`, besitzt exakt
+`format,operation,old,new,retained,additions,report_run,replacements`.
+T8/K8/C8 und die sieben Namespaces aus §8.4 gelten; K8 und packages schließen
+alle tatsächlich referenzierten unveränderten Vorgängerpakete ein.
+`additions` ist exakt das neue Rasterpaket, bei gleicher Logik leer;
+`report_run=null`. Binäre A2-Deltas folgen unverändert §8.4.
+Delta ausschließlich eine bestehende ID: neue Definition/Produktion/Rating,
+erforderliche Reveal-/Hintergrundneubindung, ausdrücklich gewählte A1/A2-Felder
+und abgeleitete Runtime. Kategorienquelle, Added und andere IDs bytegleich.
+Historische Quellenanker und Bildzähler bleiben ohne Bildentscheidung erhalten.
+
+Journalgrenzen: 128 MiB einschließlich Base64, 32 MiB je Binärseite,
+96 MiB dekodiert; ohne Binärdelta 24 MiB. Planung, Apply und Recovery jeweils
+endlich 300 s. Keine RI-Registrierungsabkürzung. Gemeinsamer Lock, vollständige
+isolierte Alt-/Neuprüfung, frische Guards und Runtime zuletzt gelten unverändert.
+Recovery ist wiederholbarer Rollback auf den validierten Altstand; fremde Bytes
+werden mit Journal erhalten. Kein Solverlauf während Recovery.
+
+Gemeinsame Resolver unterscheiden neue Editorpakete ausdrücklich von regulären
+Exporten/Receipts. Historische Registerwiederholung prüft den gebundenen echten
+Produktionsanker und bleibt No-op. Spätere reguläre Updates verwenden weiterhin
+ihren vollständigen Exportprüfweg und erhalten aktuelle Metadaten und Bilder.
+Sync/Rating/Added/Adoption/Abschluss dürfen die Rasterautorität nicht zurückstufen.
+Retirement kompaktiert diese weiterhin benötigten manuellen Proof-/Entscheidungs-
+pakete nicht in Authoringreceipts. Bei vollständig auf main gebundener aktueller
+Quellansicht bleibt die Auswahl eines solchen Pakets ein geprüfter No-op;
+historische Vorgänger bleiben erhalten. Ein späterer echter Standardexport
+folgt wieder seinem normalen Retirementvertrag.
+
+### 9.3 Sicherer automatischer Save-Neustart
+
+Schema 1, Slotnamen und vollständige `SaveStore.validate`-Prüfung aktueller
+Revisionen bleiben. Ältere Erkennung verlangt den exakten Schema-1-Umschlag,
+gleiche ID, Integerrevision `0 < saved < current`, plausible positive Maße,
+typisierte Zellen, History/Redo mit konsistentem Replay und Viewgrundformen.
+Keine Prüfung gegen eine nicht mehr vorhandene Alt-Lösung. Unlesbare, fremde,
+höhere oder unbekannte Fassungen werden nicht automatisch entfernt.
+Gültiges aktuelles Primary hat Vorrang, sonst aktuelles Backup mit bestehender
+bewusster Restoresemantik. Ein eindeutig altes Backup sperrt aktuelle Saves nicht.
+
+Vor automatischem Entfernen entsteht im selben Slotverzeichnis ein atomar
+publizierter Marker `<save_slot>.revision-reset.json`, Format
+`picross-save-revision-reset-v1`, exakt `format,id,revision,files,recent`.
+`files` ist exakt `.json,.bak,.tmp` → SHA-256 oder null für geprüfte Abwesenheit.
+`recent` ist SHA-256 der eigenen alten Merkerdatei oder null; die Merkerdatei
+wird nur bei derselben ID entfernt. Zielrevision 1…1.000.000, gleiche ID/Slot.
+Marker-Temp ist ausschließlich `<save_slot>.revision-reset.tmp` und wird vor
+Publikation vollständig geschrieben, geflusht und zurückgelesen. Fremde
+Temp-/Markerbytes blockieren. Vor jedem Schritt werden Marker und alle noch
+vorhandenen Zielbytes erneut geprüft; nur gebundene eigene Hashes oder bereits
+entfernte Dateien sind zulässige Recoveryzustände. Neue aktuelle Fortschritte,
+fremde Slots und allgemeine Präferenzen bleiben erhalten; Konflikt stoppt.
+Alle Schreib-/Reparatur-/Resetwege beachten offene Marker. Erst nach vollständigem
+eigenen Reset werden Marker und eigener Temp entfernt. Webpersistenz erhält
+den Abschluss über die bestehende Bridge. Der sachliche deutsche Hinweis wird
+nur nach abgeschlossenem automatischem Reset gezeigt, nie aufgrund alter Bytes.
+
+## 10. Lieferung, Abnahme und Paketgrenzen
 
 Die beiden Hauptbereiche bleiben Datenpflege und Weboberfläche. Das Fundament
 wird wegen seiner unterschiedlichen Datenrisiken in eigenständige Pakete geteilt:
@@ -692,13 +806,13 @@ wird wegen seiner unterschiedlichen Datenrisiken in eigenständige Pakete geteil
 | Paket | Eigenständig prüfbarer Endzustand |
 | --- | --- |
 | PE-A1 | Aktuelle Namen/Kategorien, v4/v7-Migration, gemeinsame CLI/API und weiter funktionierende Standardproduktion. Nach unabhängigem Review über PR #577 integriert. |
-| PE-A2 | Unveränderter Fertigbildimport, Abschlussbildwechsel, Legacy-Erstzuordnung, alle drei Hintergrundzustände und kombinierte ID-Metadatenpflege. Geschlossener Vertrag §8 und eigener Prüfplan in #576; Umsetzung beauftragt, Abnahme getrennt. |
-| PE-A3 | Textuelle Rasterübernahme mit vorhandenen Prüfungen und gezielter automatischer Savebehandlung bei älterer Rasterrevision. Baut auf PE-A1 und den tatsächlich benötigten Bildbindungen auf. |
+| PE-A2 | Unveränderter Fertigbildimport, Abschlussbildwechsel, Legacy-Erstzuordnung, alle drei Hintergrundzustände und kombinierte ID-Metadatenpflege. Nach unabhängigem Review über PR #623 integriert. |
+| PE-A3 | Textuelle Rasterübernahme mit vorhandenen Prüfungen und gezielter automatischer Savebehandlung bei älterer Rasterrevision. Vertrag §9, eigener Prüfplan in #576; technische Lieferung und unabhängiges Review getrennt. |
 | PE-B | Lokale Weboberfläche und komfortabler Windowsstart für sämtliche freigegebenen Bearbeitungen. Konsumiert die gemeinsamen Writer. |
 
 PE-A1 und PE-A2 besitzen eigene vollständige Umsetzungsschnitte und Prüfpläne im
-Issue. PE-A3 und PE-B bleiben fachlich beschlossen; ihre konkreten Versions-/
-Transaktions-/Prüfentscheidungen werden vor ihrer Umsetzung geschlossen. Ein
+Issue. PE-A3 besitzt ebenfalls eine geschlossene Paketentscheidung; PE-B bleibt
+fachlich beschlossen und benötigt seinen eigenen Umsetzungsschnitt. Ein
 fertiges Fundament schließt das Gesamtissue nicht.
 
 PE-A1 wurde nach ausdrücklichem Umsetzungsauftrag auf demselben Branch/PR
