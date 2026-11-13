@@ -2,10 +2,19 @@
 
 ## Geltung und Quellen
 
-Repository `venomenon328/picross`, Zielbranch `main`. Vor Arbeit die aktuelle
-[AGENTS.md](../AGENTS.md), den [Workflow](dev-rules/WORKFLOW.md), dieses Profil
-und den vorhandenen aktuellen Issue-/Paketstand lesen. Ein beauftragter Branch
-hat Vorrang vor main. Reviews binden tatsächlichen Diff, Head, Basis und Belege.
+Repository `venomenon328/picross`, Zielbranch `main`. Vor Entwicklungsarbeit die
+aktuelle [AGENTS.md](../AGENTS.md), den [Workflow](dev-rules/WORKFLOW.md), dieses
+Profil und den vorhandenen aktuellen Issue-/Paketstand lesen. Ein beauftragter
+Branch hat Vorrang vor main. Reviews binden tatsächlichen Diff, Head, Basis und Belege.
+
+**Normale Rätselproduktion einschließlich Bild-/Rasterkorrektur und Wiederaufnahme**
+verwendet dagegen ausschließlich den Produktionseinstieg in AGENTS, den gemeinsamen
+Kern aus [Authoring §1](ai-workflows/PUZZLE_AUTHORING.md#1-einstieg-und-befugnisse),
+den vollständigen [Bildstil](PUZZLE_IMAGE_STYLE.md) und die dort geroutete Phase.
+Dieses Profil, WORKFLOW und die nachstehende Fachroutingtabelle sind dafür keine
+zusätzliche pauschale Volllektüre. Technische Operationen laden ihre tatsächlich
+benötigten Verträge nach der Authoringtabelle. Separat beauftragte Regel-,
+Werkzeug-, Spiel- und CI-Entwicklung behält den vollständigen Entwicklungsweg.
 
 Dieses Profil hält stabile Projektbindungen und das Fachrouting. Laufende Aufträge,
 Abnahmen, Ausnahmen und Lieferstatus stehen im jeweiligen Issue/PR. Frühere
@@ -23,7 +32,7 @@ ihren gebundenen Stand. Sie erweitern weder aktuelle Befugnisse noch die Haupt-C
 | Automatisierte App-Releases (APP-A integriert, Betrieb offen), signierte APP-B1-Autorität und standardmäßig ausgeschalteter APP-B2-Client | [PW Updates](PRODUCTION_UPDATES.md), [Issue #612](https://github.com/venomenon328/picross/issues/612); Installerbau und gesperrte Erstpublikation unter [WINDOWS_BUILD](../tools/production_workspace/WINDOWS_BUILD.md) |
 | Entwicklungs-JSON und Sheet | [HANDOFF](dev-rules/HANDOFF.md), [Entwicklungssheet](workflow/Entwicklungsworkflow_Cheat-Sheet.html) |
 | Ausführungs-/Modellentscheidung für noch anstehende Arbeit | [MODEL_SELECTION](dev-rules/MODEL_SELECTION.md), datierter [MODEL_CATALOG](dev-rules/MODEL_CATALOG.md) |
-| Normale Rätselproduktion einschließlich Korrektur/Wiederaufnahme | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md) mit eigenem JSON und eigenen Inhaltsfreigaben |
+| Normale Rätselproduktion einschließlich Korrektur/Wiederaufnahme | [Phasenroute in Authoring §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase) und [gemeinsamer Bildstil](PUZZLE_IMAGE_STYLE.md); eigene Inhaltsfreigaben und Produktionsausgabe |
 | Herkunft der lokalen Regeln | [DEV_RULES_ADOPTION](DEV_RULES_ADOPTION.md) |
 
 ## Entwicklungsbasis und Produktgrenzen
@@ -77,6 +86,8 @@ true sein; den tatsächlichen Abnahmestand führt der aktuelle Produkt-PR.
 Synthetische kompatible Ziele belegen nur den Werkzeugweg.
 PW-B führt für neue Produktionen den fünfstufigen Authoringstandard 0.8.0 ein
 ([geschlossener Vertrag](PW_B_CONTRACT.md)); 0.6/0.7 beschreiben ihre alten Generationen.
+PW2-A präzisiert mit Dokumentrevision 5 dessen operative Pflichtquellen und den
+Bildstil, ohne neue Datenformen oder Änderungen am Assistenten einzuführen.
 Der lokale Assistent ersetzt das Offline-Sheet ohne Alt-WIP-Migration. Capability und verpflichtende Gesamtaktivierung sind
 getrennt. Der konkrete verbleibende Einzelweg wird in #560 abgeglichen.
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)
@@ -99,7 +110,10 @@ ein gemeinsamer Batchwriter je Zielcheckout und begrenzte Wiederaufnahme erhalte
 die Einzelverträge. Finalisierung, Inhaltsentscheidungen, Gitabschluss und
 Retirement bleiben eigene Schritte; Batchabschluss ist keine Mainintegration.
 
-## Pflichtquellen nach Auftrag
+## Pflichtquellen nach Entwicklungsauftrag
+
+Die folgende vollständige Fachlektüre gilt für Entwicklungsaufträge im jeweiligen
+Bereich, nicht zusätzlich zur normalen phasenbezogenen Produktion nach Authoring.
 
 Der [lokale Bestandseditor PE](PUZZLE_EDITOR.md) ist unter
 [#576](https://github.com/venomenon328/picross/issues/576) spezifiziert. PE-A1
@@ -114,7 +128,7 @@ dem konsumierenden Code; tatsächliche Lieferung und unabhängige Abnahme stehen
 im Paket-/PR-Stand. Rasterrevisionen und Weboberfläche bleiben PE-A3/PE-B;
 keine neue persönliche Buchprobe oder Bildproduktion durch das Datenpaket.
 
-| Arbeit | Zusätzlich vollständig lesen |
+| Entwicklungsarbeit | Zusätzlich vollständig lesen |
 | --- | --- |
 | Produkt, Regeln, Inhalte, Progression, UX/UI, Eingabe, Plattform oder Architektur | [Produktdefinition](PRODUCT_DEFINITION.md) |
 | Thematik, Album, Motiventhüllung, UX/UI oder Eingabe/Wertung | [Gestaltungskonzept](DESIGN_CONCEPT.md) |
@@ -126,13 +140,13 @@ keine neue persönliche Buchprobe oder Bildproduktion durch das Datenpaket.
 | Zeichensprache, Vorschau, Zellanimation | [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), betroffene ZS-Verträge |
 | UI-Schrift, kleine Rahmen, Dropdowns, Piktogramme | [HAND_DRAWN_UI](HAND_DRAWN_UI.md), [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), [Z2-Ressourcenweg](Z2_SELECTION.md) |
 | Große bildbasierte Buchseitentitel und untere Informationsnavigation | [BTI-Bildtitel](VIEW_TITLE_ART.md), [Buchintegration](BOOK_INTEGRATION.md), [HZ](HAND_DRAWN_UI.md) |
-| Spriteherstellung, Zellrendering, Cache/Invalidierung | [CELL_RENDERING](CELL_RENDERING.md); PERF-A/B nur bei ihrer konkreten historischen Nacharbeit |
+| Spriteherstellung, Zellrendering, Cache/Invalidierung | [CELL_RENDERING](CELL_RENDERING.md); historische PERF-A/B-Reproduktion ist keine Dauerpflicht |
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Katalog, Metadaten oder Sortierung | [CATALOG_PRESENTATION](CATALOG_PRESENTATION.md), [CATALOG_SORTING](CATALOG_SORTING.md), [CATEGORIES](CATEGORIES.md) |
 | Lokaler Bestandseditor oder unabhängige Namens-/Kategoriepflege | [PUZZLE_EDITOR](PUZZLE_EDITOR.md), [Kategorien](CATEGORIES.md), jeweiliges Paket in [#576](https://github.com/venomenon328/picross/issues/576) und tatsächlich betroffene Fachverträge |
-| Abschlussbilder, Bildrevisionen oder Katalogvorschau | [REVEAL_TRANSPARENCY](REVEAL_TRANSPARENCY.md) und dort geroutete Produktions-/Integrationsquellen |
-| Hintergrundzeichnungen je Rätsel, ihre Auswahl, Ableitung oder Einführung | [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md), [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [PUZZLE_QUALITY](PUZZLE_QUALITY.md); spezifizierten Sollweg und tatsächlichen Unterstützungsstand unterscheiden |
-| Neue Rätsel konzipieren, produzieren, korrigieren oder redaktionell abnehmen | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [redaktioneller Qualitätsvertrag](PUZZLE_QUALITY.md) und deren Pflichtquellen |
+| Abschlussbilder, Bildrevisionen oder Katalogvorschau | [REVEAL_TRANSPARENCY](REVEAL_TRANSPARENCY.md), [Bildstil](PUZZLE_IMAGE_STYLE.md) und dort geroutete Produktions-/Integrationsquellen |
+| Hintergrundzeichnungen je Rätsel, ihre Auswahl, Ableitung oder Einführung | [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md), [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [PUZZLE_QUALITY](PUZZLE_QUALITY.md), [Bildstil](PUZZLE_IMAGE_STYLE.md); spezifizierten Sollweg und tatsächlichen Unterstützungsstand unterscheiden |
+| Änderungen am Produktionsregelwerk oder an redaktionellen Qualitätsverträgen | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md), [Qualitätsvertrag](PUZZLE_QUALITY.md), [Bildstil](PUZZLE_IMAGE_STYLE.md) und tatsächlich betroffene Fachquellen |
 | Produktionswerkzeuge, Import, Reparatur, Assets, Proofs | [PUZZLE_PRODUCTION](PUZZLE_PRODUCTION.md), [Werkzeuganleitung](../tools/puzzle_production/README.md), betroffene versionierte Manifeste/Verträge |
 | Batchverarbeitung, Checkpoints oder Wiederaufnahme vorbereiteter Produktions-/Integrationsjobs | [PRODUCTION_BATCH](PRODUCTION_BATCH.md) und die tatsächlich verwendeten Einzelverträge; BA-A endet lokal, BA-B orchestriert separat autorisierte Einzelintegration, Gitabschluss bleibt getrennt |
 | Schritt-4-Integrationscode, Registrierungsbudgets, Prüfkontext, Publikationsguards/Recovery | [PUZZLE_INTEGRATION](PUZZLE_INTEGRATION.md), [ZA1_ADAPTER](ZA1_ADAPTER.md), aktuelles Paket; Soll und ausführbaren Stand unterscheiden |
@@ -141,11 +155,11 @@ keine neue persönliche Buchprobe oder Bildproduktion durch das Datenpaket.
 | Webbuild, Browserpersistenz oder Hosting | [WEB_HOSTING](WEB_HOSTING.md) und betroffene Fachverträge |
 | Bestandsbereinigung oder historische CI-Nacharbeit | [DEVELOPMENT_ARCHIVE](DEVELOPMENT_ARCHIVE.md), gegebenenfalls [CI2-Herkunft](CI_SLIMMING.md) und dort gebundene Quellen |
 
-Normale Rätselproduktion ist vom Modellrouting ausgenommen: keine Modell-/Reasoning-
-oder Ausführungsempfehlung und keine dafür veranlasste Recherche. Ihre tatsächlichen
-Fähigkeiten/Zugriffe bleiben zu prüfen. Ihre Inhalts- und JSON-Verträge ersetzen
-das Entwicklungs-Handoff; die allgemeine PR-CI samt aktuellem Paketplan gilt trotzdem.
-Separat beauftragte Werkzeug-/Spiel-/CI-Entwicklung folgt dem Entwicklungsworkflow.
+Normale Rätselproduktion folgt der eigenen Phasenroute oben und bleibt vom
+Modellrouting ausgenommen: keine Modell-/Reasoning-/Ausführungsempfehlung oder
+dafür veranlasste Recherche. Tatsächliche Fähigkeiten/Zugriffe bleiben zu prüfen.
+Ihre Inhalts- und Ausgabevorgaben ersetzen das Entwicklungs-Handoff; die allgemeine
+PR-CI samt aktuellem Paketplan gilt trotzdem. Technische Entwicklung bleibt getrennt.
 
 ## Prüfung und Umgebungen
 

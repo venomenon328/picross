@@ -1,37 +1,12 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/576",
-  "package": "PE-A3",
-  "modules": [
-    "tools",
-    "production.solver",
-    "production.adapter",
-    "production.catalog",
-    "native.core",
-    "native.history",
-    "native.catalog",
-    "native.completion"
-  ],
-  "purpose": "PE-A3 gemäß #576 issuecomment-6848707827: geprüfte manuelle Rasterrevision über gemeinsamen Writer und gezielter abbruchsicherer Neustart eindeutig älterer eigener Saves. Der Kern liefert den Windows-Spieler. Solver/Adapter/Katalog prüfen unabhängige Proofs, aktive Methode, ehrliche Quellen und Transaktionen; native Gruppen prüfen Save-, History-, Katalog- und Abschlussgrenzen. T01/T02/T03 bleiben einmalige gebundene Nachweise am finalen Head.",
-  "omitted": "Keine production.images/native.adapters/native.graphics/native.export/preflight/delivery oder Chromium, keine neue Grafik, Ableitung, Hostingfunktion, PE-B-Oberfläche oder echte Bestandsmigration/Rätseländerung. Keine Tests an Nutzersaves oder wachsende Echtkatalogfamilie. Unabhängiges PE-A3-A01 bleibt vor Merge offen; kein Merge beauftragt.",
-  "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_catalog_raster.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine synthetische Matrix-/No-op-/Qualitäts-/kombinierte Writer-/Stale-/Recoveryfälle, keine dauerhafte T01-Gesamtfamilie."
-    },
-    {
-      "path": "game/tests/pe_a1_cases.gd",
-      "disposition": "change-scoped",
-      "reason": "Gezielte neue Revisions-/Marker-/Primary-/Backup-/Fehlergrenzen im vorhandenen Coreprozess; keine neue native Prozessfamilie."
-    },
-    {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "change-scoped",
-      "reason": "Explizit beauftragte CI-Nacharbeit: exakte vollständige Partitionierung, unveränderte Gesamtbindung, Ausschluss nicht angeforderter Teile und nur ein Windowsbau bei native.export."
-    }
-  ],
-  "core_change": "Ausdrücklicher Folgeauftrag nach abgebrochenem >43-Minuten-Lauf: unabhängige vollständige Module auf isolierten Runnern statt serieller Summe ausführen; ci-required verlangt alle Teile und docs erfolgreich. Keine Verringerung von Prüfinhalt, Originalreader oder Quellenbindung. Live-Fortschritt und echte Aktivitätszähler beheben den stummen Produktionsprüfer.",
+  "issue": "https://github.com/venomenon328/picross/issues/626",
+  "package": "PW2-A",
+  "modules": [],
+  "purpose": "PW2-A gemäß issuecomment-6850772525: phasengerechte Pflichtquellen und gemeinsamer Bildstil, bedarfsweise Rasterkandidaten bei erhaltenen Qualitäts- und Budgetgates. Reiner Norm-/Markdownschnitt; docs/ci-required prüfen Quellen und Plan ohne Windows-Spielerbau. PW2-A-T01 verfolgt die tatsächlichen Pflichtquellenwege einschließlich Korrektur/Wiederaufnahme und vergleicht ihren Textumfang einmalig im PR.",
+  "omitted": "Keine Werkzeug-, UI-, Promptgenerator-, Solver-, Writer-, Schema- oder Runtimeänderung. Deshalb keine tools, production.*, native.*, preflight, delivery oder Chromium. Keine Bild-/Rätselproduktion, Bestandsreplays oder neue Dauerregressionen. PW2-B und PW2-C bleiben separat; die unabhängige fachliche Abnahme PW2-A-A01 bleibt vor Merge offen.",
+  "test_changes": [],
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,
