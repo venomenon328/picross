@@ -1,0 +1,175 @@
+{
+  "product_head": "1b9665ca5db330f75fc2ec63c85e5dccfef83d58",
+  "base_commit": "7b2ecb5f9b35d0b296c7ffc185eed2ae20e00981",
+  "package_ci": {
+    "run": 43473557921,
+    "attempt": 1,
+    "tested_commit": "09c3891d5c218639940d630015cddd3ac213dc6c"
+  },
+  "windows_diagnostic": {
+    "run": 43473571943,
+    "attempt": 1,
+    "tested_commit": "1b9665ca5db330f75fc2ec63c85e5dccfef83d58"
+  },
+  "recipient": "APP-B2-S-A01 independent technical reviewer",
+  "review_ref_deadline": "2026-11-20",
+  "binary_receipt_verified": true,
+  "checks": [
+    "ZIP sizes/digests match GitHub",
+    "All manifest asset bytes/SHA-256 and MSI sidecar match",
+    "Committed full input inventory and START bytes match",
+    "Public product trust hash matches source",
+    "MSI inspection bound to manifest: 1045 files, 19 licenses, compare-build true",
+    "Both synthetic signatures verify actual downloaded candidate, production root rejects both",
+    "Built helper digest matches delivery and helper diagnostic"
+  ],
+  "limits": "Receipt verification and source GUI diagnosis by implementer, not independent acceptance or installed Windows-11 T03. No installation/publication.",
+  "artifacts": [
+    {
+      "label": "candidate",
+      "artifact_id": 14062405463,
+      "url": "https://github.com/venomenon328/picross/actions/runs/43473571943/artifacts/14062405463",
+      "bytes": 25670580,
+      "sha256": "e1db79a143b9f52a1ea8d2f5bbf48a1fad403d9a408e6d4fd40acea2d1868420",
+      "expires": "2026-11-27T17:35:12Z"
+    },
+    {
+      "label": "technical",
+      "artifact_id": 14060664166,
+      "url": "https://github.com/venomenon328/picross/actions/runs/43473571943/artifacts/14060664166",
+      "bytes": 6718,
+      "sha256": "0735cbad7f801a454ec65a5523c9104033975b3972a7fa40a01600ece221ea75",
+      "expires": "2026-11-20T17:35:11Z"
+    },
+    {
+      "label": "plan",
+      "artifact_id": 14060339556,
+      "url": "https://github.com/venomenon328/picross/actions/runs/43473571943/artifacts/14060339556",
+      "bytes": 1214,
+      "sha256": "c15685793785e8cf8d0e8fdc6b01354cbf91fa99c2fa366f5e699310338b759e",
+      "expires": "2026-11-20T17:32:00Z"
+    }
+  ],
+  "files": [
+    {
+      "channel": "candidate",
+      "file": "delivery.json",
+      "bytes": 2526,
+      "sha256": "ea49db1c09825402dd86fe02863276e230d9e047cc6e8a30875d6343f7fe797b"
+    },
+    {
+      "channel": "candidate",
+      "file": "inputs.json",
+      "bytes": 31905,
+      "sha256": "20830a23136171b5c6aefc30b32e82010517b835e3f973d0c1371ea0d88bdf46"
+    },
+    {
+      "channel": "candidate",
+      "file": "manifest.json",
+      "bytes": 1628,
+      "sha256": "2c75ecd658d72c6801518fef97953dcb95f58eda21926348a808adeb32990c5b"
+    },
+    {
+      "channel": "candidate",
+      "file": "Picross-Produktionsassistent-0.1.3-windows-x64.msi",
+      "bytes": 25627669,
+      "sha256": "a9becdd973121ac012321979b5d4212098efb630cca769fa9ca9629bf27a3fbb"
+    },
+    {
+      "channel": "candidate",
+      "file": "Picross-Produktionsassistent-0.1.3-windows-x64.msi.sha256",
+      "bytes": 117,
+      "sha256": "0407b031d661848ab99a8bab687418623312c39a70c6fd39fc8a513026928331"
+    },
+    {
+      "channel": "candidate",
+      "file": "START.txt",
+      "bytes": 5855,
+      "sha256": "340c47a2f57835e9e8ba7c3524be4037f3f19fe9d11796c7be96409a5c5872f3"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-b1-review/manifest.json",
+      "bytes": 1756,
+      "sha256": "5ae85d60e4aa5656777c55096544875b9c84405299de629c4561b91eaaff6f04"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-b1-review/manifest.sig.json",
+      "bytes": 238,
+      "sha256": "7d0c8d1b24988566a057ee278dd436bf3b74e4f5bb457895a40a3e7184058f5d"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-b1-review/public-test-trust.json",
+      "bytes": 256,
+      "sha256": "85764663784506360cb4b6bb5acf15f2b620655b18247fa510f534d308a62950"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-b1-review/signature-result.json",
+      "bytes": 760,
+      "sha256": "13afec7107dccdf57c89dd8ad4a78ccbd8eff85cc54785d395c4e622112394b3"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-b2-review/client-manifest.json",
+      "bytes": 1756,
+      "sha256": "9c69fdf214717d10d749109b4a67ca37b9fc3c1c65ce52af33524ad7c6b1fa3f"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-b2-review/client-public-test-trust.json",
+      "bytes": 256,
+      "sha256": "96b73af71cf0d579445ceff616af62dffde9392ac667065a51154e0e44732692"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-b2-review/client-result.json",
+      "bytes": 1023,
+      "sha256": "a0fed469f1f1446ca76bb070fe31cd8f416109597b6f1604bf01d04089d60619"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-b2-review/client-signature.json",
+      "bytes": 238,
+      "sha256": "e94c799442a975d4313f9d24e1033bba215c091a21606b200ae62b5abef2165b"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-inspection/result.json",
+      "bytes": 668,
+      "sha256": "2391381cf405f697b70405da7378650ace66db4eadabb319bbce69cad5a77684"
+    },
+    {
+      "channel": "technical",
+      "file": "pw-product/input-audit.json",
+      "bytes": 7492,
+      "sha256": "12027560d8cfa096a5efeab999576c130dbb21a9e57f8fdf83ca35810677b2c4"
+    },
+    {
+      "channel": "plan",
+      "file": "plan.json",
+      "bytes": 2203,
+      "sha256": "04478c33c6f7f1aca1a0a8b9d38028f2246fd9c2e77bcf97b513bfb7771067bd"
+    },
+    {
+      "channel": "review/612-app-b2-s",
+      "file": "gui-startup.json",
+      "bytes": 3578,
+      "sha256": "8649b16fc7e815cf327485b2deb03663fae6679f0d9edf4d5e920082380b07dd"
+    },
+    {
+      "channel": "review/612-app-b2-s",
+      "file": "gui_diagnostic.py",
+      "bytes": 7545,
+      "sha256": "371f2267f5779a60fa41775a68e601462e315065c395c51d64d7d440400e84b5"
+    },
+    {
+      "channel": "review/612-app-b2-s",
+      "file": "windows-mutex.log",
+      "bytes": 289,
+      "sha256": "d912fc605c07700ef099fd41814853f052c6a3a45534779c5f9e05e5a4f0281f"
+    }
+  ]
+}
