@@ -45,11 +45,12 @@ nicht abschalten. Eine Signatur würde Warnungsfreiheit ebenfalls nicht garantie
 Komponenten/Quellcommit: components.json. Dateien und Hashes: inventory.json.
 Python-, Pillow-, Tcl/Tk-, Kryptografie- und PyInstaller-/Bootloaderlizenzen: LICENSES.
 Actions-Diagnosekandidaten bleiben 14 Tage verfügbar. Der getrennte App-Releasekanal
-wird erst nach eigener Betriebsfreigabe aktiviert; veröffentlichte Versionen unter
+enthält die erste veröffentlichte signierte Version pw-v0.1.1; weitere Releases
+benötigen eine eigene Betriebsfreigabe. Versionen unter
 https://github.com/venomenon328/picross/releases enthalten MSI, Prüfsumme,
 Anleitung, delivery.json, inputs.json, manifest.json und manifest.sig.json mit
-signierter Quell-/Versions-/Dateibindung. Der feste öffentliche Trust ist zunächst
-unprovisioniert; eine Metadatensignatur ist keine Windows-Codesignatur.
+signierter Quell-/Versions-/Dateibindung. Der feste öffentliche Trust ist in der
+App eingebaut; eine Metadatensignatur ist keine Windows-Codesignatur.
 App-Updates sind standardmäßig aus. Im nativen Steuerfenster einmalig
 „Aktivieren“ oder „Ablehnen“ wählen; danach jederzeit ein-/ausschaltbar.
 Nur die normal installierte App prüft nach Bereitschaft einmal je Start den
@@ -65,4 +66,4 @@ lassen die vorhandene App nutzbar; Ausschalten bricht den Download ab.
 Installationsfehler/unklarer Ausgang/Rebootbedarf werden ehrlich gemeldet: danach
 Windowsinstallation prüfen und manuell starten bzw. geprüften Installer erneut
 ausführen. Kein automatischer Retry, keine universelle Rollbackgarantie.
-Die echte Windows-11-Upgradeabnahme und produktive Kanalaktivierung stehen aus.
+Die vollständige echte Windows-11-Selbstupdateabnahme steht noch aus.
