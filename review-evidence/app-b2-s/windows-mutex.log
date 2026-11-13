@@ -1,0 +1,6 @@
+test_idle_versus_held_kernel_mutex_without_touching_real_msi (tools.test_production_installer.InstallerContractTests.test_idle_versus_held_kernel_mutex_without_touching_real_msi) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+OK

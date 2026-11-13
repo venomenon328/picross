@@ -1,0 +1,162 @@
+{
+  "source_head": "1b9665ca5db330f75fc2ec63c85e5dccfef83d58",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.13.14",
+  "tk": 8.6,
+  "results": [
+    {
+      "case": "skip",
+      "passed": true,
+      "events": [
+        {
+          "event": "metadata_worker_waiting",
+          "seconds": 0.28
+        },
+        {
+          "event": "native_controls_respond_while_metadata_waits",
+          "seconds": 0.443
+        },
+        {
+          "event": "open",
+          "seconds": 0.443
+        },
+        {
+          "event": "refresh",
+          "seconds": 0.444
+        },
+        {
+          "event": "regular_stop",
+          "seconds": 0.445
+        }
+      ],
+      "work_calls": [
+        "open",
+        "refresh"
+      ],
+      "state_preserved": true,
+      "http_thread_ended": true
+    },
+    {
+      "case": "stop",
+      "passed": true,
+      "events": [
+        {
+          "event": "metadata_worker_waiting",
+          "seconds": 0.249
+        },
+        {
+          "event": "native_controls_respond_while_metadata_waits",
+          "seconds": 0.4
+        }
+      ],
+      "work_calls": [],
+      "state_preserved": true,
+      "http_thread_ended": true
+    },
+    {
+      "case": "offline",
+      "passed": true,
+      "events": [
+        {
+          "event": "metadata_worker_waiting",
+          "seconds": 0.252
+        },
+        {
+          "event": "native_controls_respond_while_metadata_waits",
+          "seconds": 0.413
+        },
+        {
+          "event": "open",
+          "seconds": 0.475
+        },
+        {
+          "event": "refresh",
+          "seconds": 0.476
+        },
+        {
+          "event": "regular_stop",
+          "seconds": 0.506
+        }
+      ],
+      "work_calls": [
+        "open",
+        "refresh"
+      ],
+      "state_preserved": true,
+      "http_thread_ended": true
+    },
+    {
+      "case": "optout",
+      "passed": true,
+      "events": [
+        {
+          "event": "open",
+          "seconds": 0.261
+        },
+        {
+          "event": "refresh",
+          "seconds": 0.262
+        },
+        {
+          "event": "regular_stop",
+          "seconds": 0.286
+        }
+      ],
+      "work_calls": [
+        "open",
+        "refresh"
+      ],
+      "state_preserved": true,
+      "http_thread_ended": true
+    },
+    {
+      "case": "developer",
+      "passed": true,
+      "events": [
+        {
+          "event": "open",
+          "seconds": 0.243
+        },
+        {
+          "event": "refresh",
+          "seconds": 0.245
+        },
+        {
+          "event": "regular_stop",
+          "seconds": 0.246
+        }
+      ],
+      "work_calls": [
+        "open",
+        "refresh"
+      ],
+      "state_preserved": true,
+      "http_thread_ended": true
+    },
+    {
+      "case": "portable",
+      "passed": true,
+      "events": [
+        {
+          "event": "open",
+          "seconds": 0.239
+        },
+        {
+          "event": "refresh",
+          "seconds": 0.241
+        },
+        {
+          "event": "regular_stop",
+          "seconds": 0.242
+        }
+      ],
+      "work_calls": [
+        "open",
+        "refresh"
+      ],
+      "state_preserved": true,
+      "http_thread_ended": true
+    }
+  ],
+  "limits": "Actual Tk event loop with hidden window and real local HTTP/Git lifecycle; source execution, synthetic installation identity/offline channel, no browser process, MSI, installed app, or T03 claim."
+}
