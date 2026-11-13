@@ -84,7 +84,7 @@ static func old_envelope(data: Variant, definition: Dictionary, store: RefCounte
 			if read.anchor in ["grid_end","outer_start"]:
 				if not exact_keys(read,["anchor"]): return false
 			elif read.anchor == "middle":
-				if not exact_keys(read,["anchor","start","end"]) or not store.integer(read.start) or not store.integer(read.end) or read.start <= 0 or read.end <= read.start or read.end > 50: return false
+				if not exact_keys(read,["anchor","start","end"]) or not store.integer(read.start) or not store.integer(read.end) or read.start <= 0 or read.end <= read.start or read.end >= int(data.width if axis == "row" else data.height): return false
 			else: return false
 	return true
 

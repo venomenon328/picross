@@ -260,12 +260,13 @@ static func revision_cases(runner: SceneTree) -> void:
 	runner.check(not store.write_slot(session,session.view_state).is_empty(),"PE-A3 current backup requires conscious restore")
 	runner.check(store.repair_from_backup(definition_value).is_empty(),"PE-A3 conscious current backup restore")
 	store.reset_slot("t01")
-	for kind: String in ["future","foreign","schema","unreadable","inconsistent"]:
+	for kind: String in ["future","foreign","schema","unreadable","inconsistent","view"]:
 		var bad: Dictionary = older.duplicate(true)
 		if kind == "future": bad.definition_revision = int(definition_value.revision)+1
 		if kind == "foreign": bad.definition_id = "foreign"
 		if kind == "schema": bad.schema = 2
 		if kind == "inconsistent": bad.cursor = 999
+		if kind == "view": bad.view.row_clue_reads[0] = {"anchor":"middle","start":int(older.width),"end":int(older.width)+1}
 		var raw: String = "{" if kind == "unreadable" else JSON.stringify(bad)+"\n"
 		put(store.path_for("t01"),raw)
 		runner.check(store.load_slot(definition_value).status == "error" and FileAccess.get_file_as_string(store.path_for("t01")) == raw,"PE-A3 no auto-deletion of "+kind)
