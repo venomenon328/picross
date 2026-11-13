@@ -107,18 +107,25 @@ jobs:
         run: |
           & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.update_diagnostic --build "$env:RUNNER_TEMP\pw-product" --output "$env:RUNNER_TEMP\pw-b1-review"
           if ($LASTEXITCODE -ne 0) { throw 'Real-candidate signature diagnosis failed' }
-      - name: APP-B1 technical originals for independent review (no private key)
+      - name: APP-B2-T02 actual client and standalone helper diagnosis (no installation)
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.helper_diagnostic --build "$env:RUNNER_TEMP\pw-product" --output "$env:RUNNER_TEMP\pw-b2-review"
+          if ($LASTEXITCODE -ne 0) { throw 'Client/helper diagnosis failed' }
+      - name: APP-B2 technical originals for independent review (no private key)
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: pw-b1-review-${{ needs.plan.outputs.source }}
+          name: pw-b2-review-${{ needs.plan.outputs.source }}
           path: |
             ${{ runner.temp }}/pw-b1-review/*
+            ${{ runner.temp }}/pw-b2-review/*
             ${{ runner.temp }}/pw-product/input-audit.json
             ${{ runner.temp }}/pw-inspection/result.json
           retention-days: 7
           if-no-files-found: error
-      - name: Candidate for independent APP-B1 review and gated publisher
+      - name: Candidate for independent APP-B2 review and gated publisher
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: Picross-Produktionsassistent-${{ needs.plan.outputs.source }}

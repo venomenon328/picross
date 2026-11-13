@@ -63,10 +63,16 @@ def build(destination, *, version=None):
         raise RuntimeError('Neuen eigenen Buildordner außerhalb des Checkouts wählen.')
     destination.mkdir(parents=True)
     work = destination / 'work'; work.mkdir()
+    compiler = Path(os.environ['SystemRoot']) / 'Microsoft.NET/Framework64/v4.0.30319/csc.exe'
+    helper = work / 'UpdateHelper.exe'
+    subprocess.run([str(compiler), '/nologo', '/target:exe', '/platform:x64',
+                    '/reference:System.Web.Extensions.dll', '/out:' + str(helper),
+                    str(PACKAGE / 'packaging/UpdateHelper.cs')], check=True)
     env = os.environ.copy()
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
     resources = {f'ui/{name}': sha(PACKAGE / 'ui' / name) for name in ('index.html', 'app.js', 'workflow.js', 'style.css')}
     resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
+    resources['UpdateHelper.exe'] = sha(helper)
     production_trust()  # Fail the build on malformed public roots, even if unprovisioned.
     for name in ('release.json', 'update-trust.json'):
         resources[name] = sha(PACKAGE / name)
@@ -102,11 +108,12 @@ def build(destination, *, version=None):
                     '--add-data', str(PACKAGE / 'ui') + ':tools/production_workspace/ui',
                     '--add-data', str(PACKAGE / 'assets/launcher.ico') + ':tools/production_workspace/assets',
                     '--add-data', str(manifest_file) + ':tools/production_workspace',
+                    '--add-data', str(helper) + ':tools/production_workspace',
                     '--add-data', str(PACKAGE / 'release.json') + ':tools/production_workspace',
                     '--add-data', str(PACKAGE / 'update-trust.json') + ':tools/production_workspace',
                     str(PACKAGE / 'desktop_entry.py')], check=True, cwd=ROOT, env=env)
     audit = audit_analysis(ROOT, work / 'pyinstaller/Picross-Start/Analysis-00.toc', inputs,
-                           [manifest_file, file_version])
+                           [manifest_file, file_version, helper])
     (destination / 'inputs.json').write_text(json.dumps(inputs, indent=2) + '\n', encoding='utf-8')
     app = destination / 'dist/Picross-Start'
     verify_update_payload(app, work / 'pyinstaller/Picross-Start/PYZ-00.pyz', audit)
@@ -160,8 +167,10 @@ def verify_update_payload(app, pyz, audit):
     from PyInstaller.archive.readers import ZlibArchiveReader
     names = set(ZlibArchiveReader(str(pyz)).toc)
     required = {'tools.production_workspace.update_verifier', 'tools.production_workspace.release_manifest',
+                'tools.production_workspace.update_client', 'tools.production_workspace.update_storage',
+                'tools.production_workspace.update_windows', 'tools.production_workspace.app_updates',
                 'tools.production_workspace.release', 'cryptography.hazmat.primitives.asymmetric.ed25519'}
-    if not required <= names or 'tools.production_workspace.update_diagnostic' in names:
+    if not required <= names or any('tools.production_workspace.' + name in names for name in ('update_diagnostic', 'helper_diagnostic')):
         raise RuntimeError('Frozen Verifier-/Kryptografieinventar fehlt oder enthält den Testadapter.')
     observed = set(audit['repository_inputs'])
     sources = {name.replace('.', '/') + '.py' for name in required if name.startswith('tools.')}
