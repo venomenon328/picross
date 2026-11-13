@@ -8,6 +8,7 @@ import json
 import os
 import re
 import secrets
+import socket
 import shutil
 import subprocess
 import sys
@@ -341,6 +342,13 @@ class Service:
 class HTTP(ThreadingHTTPServer):
     daemon_threads = False
     request_queue_size = 8
+
+    def server_bind(self):
+        if os.name == "nt":
+            # Windows SO_REUSEADDR permits a second listener on our live port.
+            self.allow_reuse_address = False
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
 
     def __init__(self, *args):
         self.slots = threading.BoundedSemaphore(8)

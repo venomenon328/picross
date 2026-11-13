@@ -850,7 +850,10 @@ Checkout. Separate portable Windowsausgabe; keine PW-Zustandsübernahme.
 
 ### 11.1 Transport, Sitzung und Lebenszyklus
 
-Nur HTTP auf `127.0.0.1:<tatsächlich gebundener Port>`. Feste statische GETs
+Nur HTTP auf `127.0.0.1:<tatsächlich gebundener Port>`.
+Der Windows-Listener setzt vor Bindung `SO_EXCLUSIVEADDRUSE` und deaktiviert
+`SO_REUSEADDR`; auch ein späterer zweiter Prozess darf denselben Port nicht teilen.
+Feste statische GETs
 `/`, `/app.js`, `/style.css`; alle Daten unter `/api/pe/v1/`. Exakter Host,
 kein Query/Fragment/Prozentpfad, kein CORS, Fetch-Site nur fehlend/none/same-origin.
 Jeder API-Aufruf benötigt `X-PE-Session` mit 256-Bit-Sitzungsgeheimnis;

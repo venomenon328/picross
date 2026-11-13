@@ -1,12 +1,13 @@
 """Small change-scoped HTTP/ownership regressions; no catalog, browser or engine replay."""
 import http.client
 import json
+import socket
 from pathlib import Path
 import tempfile
 import time
 import unittest
 
-from tools.puzzle_editor.server import Service, API
+from tools.puzzle_editor.server import Service, API, HTTP, Handler
 from tools.puzzle_production.contract import write_json
 
 
@@ -55,6 +56,27 @@ class EditorHTTPTests(unittest.TestCase):
         for path in ("/../content/registry.json", "/%2e%2e/", "/api/pe/v1/catalog?path=x", "/tools/server.py"):
             self.assertGreaterEqual(self.call(path)[0], 400)
         self.assertEqual(self.call(API+"catalog", method="PUT")[0], 403)
+
+    def test_windows_listener_is_exclusive_before_bind(self):
+        from types import SimpleNamespace
+        from unittest.mock import Mock, patch
+        from http.server import HTTPServer
+        from tools.puzzle_editor import server
+        listener = HTTP(("127.0.0.1", 0), Handler, False)
+        real_socket = listener.socket
+        listener.socket = Mock()
+        exclusive = getattr(socket, "SO_EXCLUSIVEADDRUSE", -5)
+        def bind(http):
+            self.assertFalse(http.allow_reuse_address)
+            http.socket.setsockopt.assert_called_once_with(socket.SOL_SOCKET, exclusive, 1)
+        try:
+            with patch.object(server, "os", SimpleNamespace(name="nt")), \
+                    patch.object(socket, "SO_EXCLUSIVEADDRUSE", exclusive, create=True), \
+                    patch.object(HTTPServer, "server_bind", autospec=True, side_effect=bind) as inherited_bind:
+                listener.server_bind()
+                inherited_bind.assert_called_once_with(listener)
+        finally:
+            real_socket.close()
 
     def test_strict_json_body_and_upload_bound_before_mutation(self):
         before = {p: p.read_bytes() for p in self.root.rglob("*") if p.is_file()}
