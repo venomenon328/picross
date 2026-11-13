@@ -95,8 +95,8 @@ function renderList() {
     const id = document.createElement('small'); id.textContent = row.id;
     button.append(title, category, id); button.onclick = () => perform(async () => { if (await leave()) await select(row.id); });
     if (current?.detail.id === row.id) {
-      const loaded = $('reveal-pictures').querySelector('img');
-      if (loaded) { const thumbnail = document.createElement('img'); thumbnail.className = 'entry-preview'; thumbnail.src = loaded.src; thumbnail.alt = 'Aktuelles Abschlussbild · ' + row.name; button.prepend(thumbnail); }
+      const loaded = current.catalogPreview;
+      if (loaded) { const thumbnail = document.createElement('img'); thumbnail.className = 'entry-preview'; thumbnail.src = loaded; thumbnail.alt = 'Aktuelles Abschlussbild · ' + row.name; button.prepend(thumbnail); }
     }
     $('list').append(button);
   }
@@ -141,6 +141,7 @@ async function select(id) {
     span.append(swatch, document.createTextNode(color.id + ' · ' + (color.name || color.color || color.hex || ''))); $('palette').append(span);
   }
   await showPictures('reveal', result.pictures.reveal); await showPictures('background', result.pictures.background);
+  current.catalogPreview = $('reveal-pictures').querySelector('img')?.src;
   grid(); renderList(); message('Detail und aktuelle Quellen geprüft. Änderungen erst nach Prüfen und Übernehmen.');
 }
 function clues(line) {
