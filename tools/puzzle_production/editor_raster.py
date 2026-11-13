@@ -239,6 +239,7 @@ def _package_link(root, entry, manifest, *, replay, seen):
         width=definition_value["width"], height=definition_value["height"])
     require(expected == entry, "Raster package production entry differs")
     old_manifest = io.json_bytes(io.read(root,old["production"]["package"]+"/manifest.json",8*1024*1024),8*1024*1024)
+    require(isinstance(old_manifest,dict),"Invalid raster predecessor manifest object")
     require(io.file_hash(root,old["production"]["package"]+"/manifest.json") == old["production"]["package_sha256"], "Raster predecessor changed")
     files = {prefix+"/"+name for name in value["files"]} | {prefix+"/manifest.json"}
     return old, old_manifest, (value, files)

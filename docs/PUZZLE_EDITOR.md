@@ -717,6 +717,11 @@ wird nicht implizit migriert. Alle Prüfungen verwenden synthetische Ziele.
 
 Neue Paketkennung ist `editor-<Runtime-Revision>` unter
 `content/packages/<id>/`; belegte oder aliasierende Ziele sind Konflikte.
+Eine vorhandene ausschließlich leere Verzeichnisstruktur darf nur verwendet
+werden, wenn jedes Unterverzeichnis ein aus dem geprüften neuen Paketinventar
+hergeleitetes Elternverzeichnis ist. So bleiben nach gemeinsamem Rollback
+zurückgelassene leere Container wiederverwendbar; vorhandene Dateien und fremde
+Unterverzeichnisse werden weder übernommen noch gelöscht.
 Der historische Produktionsmodus und die historische Difficultyangabe werden
 nicht als neue Bewertung ausgegeben; aktuelle Bewertung kommt ausschließlich
 aus der neuen SD-Quelle. Aus vorheriger Produktion bleiben Bildhash/-pfad,

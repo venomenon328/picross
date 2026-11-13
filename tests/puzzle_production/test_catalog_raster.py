@@ -130,6 +130,16 @@ class RasterTests(unittest.TestCase):
         registry.recover(self.root)
         registry.check_checkout(self.root)
         self.assertEqual(before,{name:row[0] for name,row in snapshot(self.root).items()})
+        prefix = self.root/"content/packages"/self.identifier/"editor-2"
+        foreign = prefix/"foreign.txt"
+        foreign.write_bytes(b"foreign")
+        occupied = snapshot(self.root)
+        with self.assertRaisesRegex(ValueError,"foreign"):
+            raster.apply(self.root,self.home/"bundle")
+        self.assertEqual(occupied,snapshot(self.root))
+        foreign.unlink()
+        self.assertEqual(raster.apply(self.root,self.home/"bundle")["status"],"applied")
+        registry.check_checkout(self.root,replay=True)
 
     def test_verified_manual_retirement_keeps_live_proof_and_sync(self):
         from tools.puzzle_production import integrated_content
