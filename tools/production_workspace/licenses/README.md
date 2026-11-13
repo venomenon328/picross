@@ -21,3 +21,11 @@ Der Build liest Tcl/OpenSSL/Expat/zlib/mpdecimal tatsÃ¤chlich aus der Laufzeit
 und verweigert unpassende Versionen. In xz ist allein die public-domain-
 liblzma eingebunden, keine GPL-Kommandozeilenwerkzeuge oder Buildskripte.
 Tk erhÃ¤lt seinen Originaltext zusÃ¤tzlich aus der konkreten Pythoninstallation.
+
+
+APP-B1 ergänzt cryptography 50.0.2, cffi 2.1.1 und pycparser 3.12. Ihre vollständigen
+Lizenzoriginale kommen aus den tatsächlich verwendeten gepinnten Wheels.
+[OpenSSL-4.0.3.txt](OpenSSL-4.0.3.txt) stammt unverändert aus dem
+[offiziellen OpenSSL-4.0.3-Ref](https://github.com/openssl/openssl/blob/openssl-4.0.3/LICENSE.txt)
+und gehört zum statisch gebundenen cryptography-Wheel, getrennt von CPythons
+OpenSSL 3.0.21. Der Bau prüft `OpenSSL 4.0.3 29 Sep 2026` gegen die echte Backendversion.
