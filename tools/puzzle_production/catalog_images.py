@@ -221,6 +221,13 @@ def _validate_plan(value):
             require(all(isinstance(value[side][key], dict) and value[side][key].get("id") == identifier
                         for key in ("metadata", "runtime")), "Image plan row identity differs")
         bg._ref(value["request"], name="request.json", limit=REQUEST_LIMIT)
+    else:
+        for side in ("old", "new"): exact_keys(value[side], {"format", "categories", "entries"})
+        require(value["old"]["format"] in (registry.METADATA_RUNTIME_FORMAT, registry.IMAGE_RUNTIME_FORMAT) and
+                {**value["old"], "format": registry.IMAGE_RUNTIME_FORMAT} == value["new"],
+                "Image migration preview is not lossless v7/v8 to v8")
+        require(value["files"] == ([tx.RUNTIME] if value["old"] != value["new"] else []),
+                "Image migration preview has another file delta")
     return value
 
 
@@ -253,32 +260,150 @@ def _bundle(plan_path, value):
     return request, request_raw
 
 
-def _already_applied(snapshot, value, identifier):
+def _manual_transition(kind, entry, old, new, definition_ref, old_notice_hash):
+    """The same closed source transition for publication and repeated plans."""
+    identifier = entry["id"]
+    source.validate(new)
+    require(new["format"] == (source.REVEAL_FORMAT if kind == "reveal" else source.BACKGROUND_FORMAT) and
+            new["id"] == identifier and new["current"]["authority"]["kind"] == "manual", "Wrong manual source authority")
+    if source.is_editor(old):
+        source.transition(old, new, operation="editor-images")
+    else:
+        require(new["origin"]["source"] == old and new["origin"]["entry"] == new["binding"]["entry"] and
+                new["origin"]["identity"] == new["binding"]["identity"], "First image wrapper changes its real origin")
+        require(new["record_revision"] == max(old.get("record_revision", 0) if old else 0, source._old_image_revision(old)) + 1 and
+                new["current"]["image_revision"] == source._old_image_revision(old) + 1, "First image wrapper skips revision")
+        notice = new["origin"]["notice"]
+        require((notice["sha256"] if notice is not None else None) == old_notice_hash,
+                "First image wrapper changes original attribution")
+        if kind == "reveal" and old is not None:
+            previous = old["revisions"][-1]
+            require(("game/" + entry["reveal"], previous["reveal_sha256"], previous["provenance"]) !=
+                    (new["current"]["asset"]["file"], new["current"]["asset"]["sha256"], new["current"]["provenance"]),
+                    "Unchanged reveal cannot create a first manual wrapper")
+        elif kind == "background" and old is not None:
+            previous = bg.current(old)
+            require((previous["decision"]["outcome"], previous["asset"], previous["provenance"]) !=
+                    (new["current"]["status"], new["current"]["asset"], new["current"]["authority"]["provenance"]),
+                    "Unchanged background cannot create a first manual wrapper")
+    require(new["binding"]["identity"]["definition"] == definition_ref, "Manual image binding changes definition")
+
+
+def _already_applied(root, snapshot, value, request, bundle):
+    identifier = request["id"]
     if _summary(snapshot["texts"], identifier) != value["new"]: return False
     old, current = value["old"], tx.image_snapshot(snapshot)
+    entry = old["entry"]
+    catalog = io.json_bytes(snapshot["texts"][categories.PATH], categories.MAX_BYTES)
+    original, historical_notice, _, _ = reveal.package(root, entry)
+    definition_raw = snapshot["texts"]["game/" + entry["definition"]]
+    definition = io.json_bytes(definition_raw, 2 * source.LIMIT)
+    binding = source.validate_binding({"entry": original, "identity": {"key": entry["key"], "save_slot": entry["save_slot"],
+        "definition": bg.ref("game/" + entry["definition"], definition_raw), "runtime_revision": definition["revision"]}}, identifier)
+    old_reveal, old_background = old["reveal"], old["background"]
+    reveal_asset = {"file": "game/" + entry["reveal"], "sha256": entry["production"]["reveal_sha256"]}
+    reveal_notice = None
+    if old_reveal is not None:
+        reveal.validate(old_reveal, catalog, historical_categories=True)
+        if old_reveal["format"] == source.REVEAL_FORMAT:
+            require(old_reveal["binding"] == binding, "Old reveal preview changes its actual production binding")
+            reveal_asset, reveal_notice = (old_reveal["current"][key] for key in ("asset", "notice"))
+        else:
+            last = old_reveal["bindings"][-1]
+            require(last["entry"] == original and last["runtime_revision"] == definition["revision"],
+                    "Old reveal preview changes its retained production binding")
+            reveal_asset["sha256"] = old_reveal["revisions"][-1]["reveal_sha256"]
+            reveal_notice = old_reveal["revisions"][-1]["notice"]
+    background_asset, background_notice = None, None
+    if old_background is not None:
+        bg.validate(old_background, entry)
+        require(bg.effective(old_background)["identity"] == binding["identity"], "Old background preview changes definition identity")
+        if old_background["format"] == source.BACKGROUND_FORMAT:
+            require(old_background["binding"] == binding, "Old background preview changes its actual production binding")
+        elif old_background["format"] in bg.REBIND_FORMATS:
+            require(old_background["events"][-1]["binding"]["entry"] == original,
+                    "Old background preview changes its retained production binding")
+        else:
+            require(bg.initial(old_background)["origin"]["export_manifest_sha256"] == original["production"]["package_sha256"],
+                    "Old background preview changes its original export anchor")
+        background_asset, background_notice = (bg.current(old_background)[key] for key in ("asset", "notice"))
+
     reverted = deepcopy(snapshot["registry"])
     reverted["metadata"] = [old["metadata"] if row["id"] == identifier else row for row in reverted["metadata"]]
     reverted["backgrounds"] = [row for row in reverted["backgrounds"] if row["id"] != identifier]
-    if old["background"] is not None:
-        reverted["backgrounds"].append({"id": identifier, "source": bg.ref(bg.path(identifier), encoded(old["background"]))})
+    if old_background is not None:
+        reverted["backgrounds"].append({"id": identifier, "source": bg.ref(bg.path(identifier), encoded(old_background))})
         reverted["backgrounds"].sort(key=lambda row: row["id"])
-    runtime = io.json_bytes(snapshot["texts"][tx.RUNTIME], 8 * 1024 * 1024)
-    runtime["entries"] = [old["runtime"] if row["id"] == identifier else row for row in runtime["entries"]]
-    current["sources"][tx.REGISTRY] = io.checksum(encoded(reverted))
-    current["sources"][tx.RUNTIME] = io.checksum(encoded(runtime))
-    for name in value["files"]:
-        if name not in (tx.REGISTRY, tx.RUNTIME): current["sources"][name] = value["snapshot"]["sources"].get(name)
-    # Namespace membership follows the verified inverse source hashes, not a
-    # supplied list of ignored changes. Non-target sources remain unchanged.
-    current["namespaces"] = deepcopy(value["snapshot"]["namespaces"])
-    actual_names = snapshot["namespaces"]
-    for field, names in actual_names.items():
-        if field in ("reveals", "backgrounds", "background_assets", "reveal_assets"):
-            old_names = set(value["snapshot"]["namespaces"][field])
-            require(set(names) ^ old_names <= set(value["files"]), "Unrelated namespace changed since image apply")
+    registry.validate(reverted, catalog)
+    # Projection needs source data, not reconstructed historical notice bytes.
+    # A v5 selected->none plan intentionally retains only the old notice Ref.
+    texts = {name: raw.decode() if raw is not None else None for name, raw in snapshot["texts"].items()}
+    texts[tx.REGISTRY] = encoded(reverted).decode()
+    for kind, name in (("reveal", reveal.path(identifier)), ("background", bg.path(identifier))):
+        texts[name] = encoded(old[kind]).decode() if old[kind] is not None else None
+    runtime = tx.projection(texts, reverted, version=8)
+    require(next(row for row in io.json_bytes(runtime, 8 * 1024 * 1024)["entries"] if row["id"] == identifier) == old["runtime"],
+            "Old image preview differs from its derived runtime projection")
+    inverse = deepcopy(current)
+    inverse["sources"].update({tx.REGISTRY: io.checksum(encoded(reverted)), tx.RUNTIME: io.checksum(runtime),
+        reveal.path(identifier): io.checksum(texts[reveal.path(identifier)].encode() if texts[reveal.path(identifier)] is not None else None),
+        bg.path(identifier): io.checksum(texts[bg.path(identifier)].encode() if texts[bg.path(identifier)] is not None else None),
+        reveal.identity(entry)["notice"]: reveal_notice["sha256"] if reveal_notice is not None else historical_notice,
+        bg.notice_path(identifier): background_notice["sha256"] if background_notice is not None else None})
+    for name in tx.image_candidates({"entries": [entry]}): inverse["sources"][name] = None
+    for asset in (reveal_asset, background_asset):
+        if asset is not None: inverse["sources"][asset["file"]] = asset["sha256"]
+    for field, prefix in (("reveals", reveal.ROOT + "/"), ("backgrounds", bg.PATH + "/"),
+                          ("background_assets", bg.ASSET_PATH + "/"), ("reveal_assets", "game/art/content/")):
+        inverse["namespaces"][field] = sorted(name for name, checksum in inverse["sources"].items()
+            if checksum is not None and name.startswith(prefix))
+    if inverse != value["snapshot"]: return False
+    for asset in (reveal_asset, background_asset):
+        if asset is not None and "bytes" in asset and current["sources"].get(asset["file"]) == asset["sha256"]:
+            bg._bound(asset, io.read(root, asset["file"], reveal.IMAGE_LIMIT), limit=reveal.IMAGE_LIMIT)
+    differences = sorted(name for name in current["sources"] if current["sources"][name] != inverse["sources"][name])
+    require(differences == value["files"], "Repeated image plan has another actual file delta")
+    metadata = {**old["metadata"], **(request["metadata"] or {})}
+    require(metadata == value["new"]["metadata"], "Repeated image plan has another metadata effect")
+    for kind, notice_name in (("reveal", reveal.identity(entry)["notice"]), ("background", bg.notice_path(identifier))):
+        previous, following = old[kind], value["new"][kind]
+        if previous == following: continue
+        part = request[kind]
+        require(part is not None, "Repeated image plan changes an unrequested source")
+        _manual_transition(kind, entry, previous, following, binding["identity"]["definition"], inverse["sources"][notice_name])
+        require(following["current"]["authority"] == {"kind": "manual", "decision": request["decision"], "provenance": part["provenance"]},
+                "Repeated image plan has another manual decision")
+        actual_notice = snapshot["texts"][notice_name]
+        if following["current"]["asset"] is None:
+            require(actual_notice is None, "Image-free preference retains a notice")
+            continue
+        if kind == "reveal":
+            prefix = (reveal_notice or following["origin"]["notice"])["text"].encode()
+        elif background_notice is not None:
+            prefix = actual_notice[:background_notice["bytes"]]
         else:
-            require(names == value["snapshot"]["namespaces"][field], "Unrelated namespace changed since image apply")
-    return current == value["snapshot"]
+            notice = following["origin"]["notice"]
+            prefix = notice["text"].encode() if notice is not None else b""
+        if inverse["sources"][notice_name] is not None:
+            require(io.checksum(prefix) == inverse["sources"][notice_name], "Repeated image plan changes its old notice prefix")
+        require(actual_notice == source.manual_notice(prefix, part["provenance"], request["decision"]),
+                "Repeated image plan changes the exact notice append")
+
+    replacements = {}
+    for name in set(differences) & tx.image_candidates({"entries": [entry]}):
+        pair = {}
+        for side, hashes in (("old", inverse["sources"]), ("new", current["sources"])):
+            checksum = hashes[name]
+            raw = None if checksum is None else (io.read(bundle, "previous/" + checksum + ".bin", reveal.IMAGE_LIMIT)
+                                                 if side == "old" else io.read(root, name, reveal.IMAGE_LIMIT))
+            require(io.checksum(raw) == checksum, "Repeated image binary differs from its binding")
+            if side == "old":
+                ref = next((asset for asset in (reveal_asset, background_asset) if asset is not None and asset["file"] == name), None)
+                require(ref is None or "bytes" not in ref or len(raw) == ref["bytes"], "Old image preview has another byte count")
+            pair[side] = publication.binary(raw) if raw is not None else None
+        replacements[name] = pair
+    publication.validate_replacements({"format": tx.IMAGE_FORMATS["editor-images"], "operation": "editor-images", "replacements": replacements}, reverted)
+    return True
 
 
 def apply(root, plan_path, *, seconds=300, fail_step=None):
@@ -292,7 +417,7 @@ def apply(root, plan_path, *, seconds=300, fail_step=None):
         request, raw = _bundle(plan_path, value)
         snapshot = tx.capture(root)
         if tx.image_snapshot(snapshot) != value["snapshot"]:
-            require(_already_applied(snapshot, value, request["id"]), "Image plan is stale")
+            require(_already_applied(root, snapshot, value, request, plan_path.parent), "Image plan is stale")
             repeated, _, _ = _construct(root, snapshot, request, raw, plan_path.parent / "input")
             require(not repeated["files"], "Bound request no longer describes the reached state")
             return {"status": "noop", "id": request["id"], "files": [], "plan_hash": value["plan_hash"]}
@@ -309,6 +434,10 @@ def apply_migration(root, value, *, seconds=300, fail_step=None):
         value = _validate_plan(deepcopy(value))
         require(value["format"] == MIGRATION, "Expected image migration plan")
         snapshot = tx.capture(root)
+        if value["old"]["format"] == registry.METADATA_RUNTIME_FORMAT:
+            require(all(not source.is_editor(_source(snapshot["texts"], name)) for entry in snapshot["registry"]["entries"]
+                        for name in (reveal.path(entry["id"]), bg.path(entry["id"]))),
+                    "Runtime v7 cannot be the old image migration state of editor sources")
         actual = tx.image_snapshot(snapshot)
         if actual != value["snapshot"]:
             inverse = deepcopy(actual)
@@ -348,25 +477,12 @@ def validate_delta(journal, before, after, root):
             if name not in changed: continue
             identifiers.add(identifier)
             old, new = _source(journal["old"], name), _source(journal["new"], name)
-            source.validate(new)
-            require(new["format"] == (source.REVEAL_FORMAT if kind == "reveal" else source.BACKGROUND_FORMAT) and
-                    new["id"] == identifier and new["current"]["authority"]["kind"] == "manual", "Wrong manual source authority")
-            if source.is_editor(old):
-                source.transition(old, new, operation="editor-images")
-            else:
-                require(new["origin"]["source"] == old and new["origin"]["entry"] == new["binding"]["entry"] and
-                        new["origin"]["identity"] == new["binding"]["identity"], "First image wrapper changes its real origin")
-                require(new["record_revision"] == max(old.get("record_revision", 0) if old else 0, source._old_image_revision(old)) + 1 and
-                        new["current"]["image_revision"] == source._old_image_revision(old) + 1, "First image wrapper skips revision")
-                notice_name = reveal.identity(entry)["notice"] if kind == "reveal" else bg.notice_path(identifier)
-                notice_raw = journal["old"][notice_name]
-                require(new["origin"]["notice"] == (reveal.make_notice(notice_raw.encode()) if notice_raw is not None else None),
-                        "First image wrapper changes original attribution")
-            definition_raw = journal["old"]["game/" + entry["definition"]].encode()
-            require(new["binding"]["identity"]["definition"] == bg.ref("game/" + entry["definition"], definition_raw),
-                    "Manual image binding changes definition")
-            mutable.add(name)
             notice_name = reveal.identity(entry)["notice"] if kind == "reveal" else bg.notice_path(identifier)
+            notice_raw = journal["old"][notice_name]
+            definition_raw = journal["old"]["game/" + entry["definition"]].encode()
+            _manual_transition(kind, entry, old, new, bg.ref("game/" + entry["definition"], definition_raw),
+                               io.checksum(notice_raw.encode() if notice_raw is not None else None))
+            mutable.add(name)
             mutable.add(notice_name)
             authority = new["current"]["authority"]
             prefix = journal["old"][notice_name]

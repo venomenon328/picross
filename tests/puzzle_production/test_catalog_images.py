@@ -270,6 +270,90 @@ class CatalogImageTests(unittest.TestCase):
             images.apply(self.root, output)
         self.assertEqual(snapshot(self.root), before)
 
+    def test_repeat_rejects_rehashed_old_previews_and_another_bound_decision(self):
+        self.migrate()
+        capability(self.root)
+        output, plan = self.plan(self.request(reveal_bytes=SVG, extension=".svg", background_status="selected",
+                                              current_metadata={"name": "Reached combined state"}))
+        self.assertEqual(images.apply(self.root, output)["status"], "updated")
+        self.assertEqual(images.apply(self.root, output)["status"], "noop")
+        before = snapshot(self.root)
+        mutations = (
+            lambda value: value["old"].update(reveal={"not": "a valid historical reveal source"}),
+            lambda value: value["old"].update(background={"not": "a valid historical background source"}),
+            lambda value: value["old"]["metadata"].update(unbound=True),
+            lambda value: value["old"]["runtime"].update(unbound=True),
+            lambda value: value["old"].update(reveal=deepcopy(value["new"]["reveal"])),
+        )
+        for index, mutate in enumerate(mutations):
+            forged = deepcopy(plan)
+            mutate(forged)
+            forged["plan_hash"] = digest({key: value for key, value in forged.items() if key != "plan_hash"})
+            write_json(output / "plan.json", forged)
+            with self.subTest(preview=index), self.assertRaises(ValueError): images.apply(self.root, output)
+            self.assertEqual(snapshot(self.root), before)
+        original_request = (output / "request.json").read_bytes()
+        changed_request = load_json(output / "request.json")
+        changed_request["decision"]["actor"] = "A different claimed original decision"
+        write_json(output / "request.json", changed_request)
+        forged = deepcopy(plan)
+        forged["request"] = background.ref("request.json", (output / "request.json").read_bytes())
+        forged["plan_hash"] = digest({key: value for key, value in forged.items() if key != "plan_hash"})
+        write_json(output / "plan.json", forged)
+        with self.assertRaisesRegex(ValueError, "manual decision"):
+            images.apply(self.root, output)
+        self.assertEqual(snapshot(self.root), before)
+        (output / "request.json").write_bytes(original_request)
+        write_json(output / "plan.json", plan)
+        self.assertEqual(images.apply(self.root, output)["status"], "noop")
+        self.assertEqual(snapshot(self.root), before)
+
+    def test_repeat_migration_rejects_fabricated_old_runtime_and_v7_editor_sources(self):
+        plan = images.plan_migration(self.root)
+        self.assertEqual(images.apply_migration(self.root, plan)["status"], "migrated")
+        before = snapshot(self.root)
+        malformed = {"format": "not-a-runtime", "arbitrary": "never a valid previous runtime"}
+        for old in (malformed, {**plan["old"], "format": "picross-runtime-registry-v6"},
+                    {**plan["old"], "entries": []}):
+            forged = deepcopy(plan)
+            forged["old"] = old
+            forged["snapshot"]["sources"][tx.RUNTIME] = io.checksum(images.encoded(old))
+            forged["plan_hash"] = digest({key: value for key, value in forged.items() if key != "plan_hash"})
+            with self.subTest(old=old["format"]), self.assertRaises(ValueError):
+                images.apply_migration(self.root, forged)
+            self.assertEqual(snapshot(self.root), before)
+        self.assertEqual(images.apply_migration(self.root, plan)["status"], "noop")
+        self.edit(reveal_bytes=self.reveal_png)
+        forged = images.plan_migration(self.root)
+        forged["old"]["format"] = registry.METADATA_RUNTIME_FORMAT
+        forged["files"] = [tx.RUNTIME]
+        forged["snapshot"]["sources"][tx.RUNTIME] = io.checksum(images.encoded(forged["old"]))
+        forged["plan_hash"] = digest({key: value for key, value in forged.items() if key != "plan_hash"})
+        before = snapshot(self.root)
+        with self.assertRaisesRegex(ValueError, "Runtime v7.*editor sources"):
+            images.apply_migration(self.root, forged)
+        self.assertEqual(snapshot(self.root), before)
+        self.assertEqual(images.apply_migration(self.root, images.plan_migration(self.root))["status"], "noop")
+
+    def test_repeated_background_transitions_keep_ref_only_notices_valid(self):
+        self.migrate()
+        capability(self.root)
+        self.edit(background_status="selected")
+        for status, raw in (("selected", self.background_replacement), ("none", None),
+                            ("selected", self.background_png), ("standard", None)):
+            with self.subTest(status=status):
+                output, plan = self.plan(self.request(background_status=status, background_bytes=raw))
+                previous_notice = plan["old"]["background"]["current"]["notice"]
+                if previous_notice is not None:
+                    self.assertEqual(set(previous_notice), {"file", "sha256", "bytes"})
+                    self.assertIsNone(plan["old"]["background"]["origin"]["notice"])
+                self.assertEqual(images.apply(self.root, output)["status"], "updated")
+                if status in ("standard", "none"):
+                    self.assertFalse((self.root / background.notice_path(self.identifier)).exists())
+                before = snapshot(self.root)
+                self.assertEqual(images.apply(self.root, output)["status"], "noop")
+                self.assertEqual(snapshot(self.root), before)
+
     def test_pending_publication_blocks_view_plan_and_noop_apply(self):
         self.migrate()
         self.edit(reveal_bytes=SVG, extension=".svg")
