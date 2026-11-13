@@ -1,15 +1,35 @@
 # PW · Git-gestützter Produktionsassistent
 
+## PW2-A · Operativer Quellenweg
+
+Für normale Rätselproduktion aller fünf Schritte einschließlich Korrektur und
+Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 5, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
+AGENTS-Produktionseinstieg, gemeinsamer Authoringkern, vollständiger
+[Bildstil](PUZZLE_IMAGE_STYLE.md), dann nur die fällige Phase und die konkret
+benötigte technische Operation. Dieser PW-Gesamtvertrag, WORKFLOW, Projektprofil
+und die vollständigen technischen Handbücher sind dabei keine zusätzliche
+pauschale Pflichtlektüre. Quellenlinks sind keine rekursive Vollleseanweisung.
+Die folgenden Abschnitte beschreiben den Assistenten und seine technischen
+Verträge; Entwicklungsaufträge lesen sie weiterhin gemäß AGENTS/Fachrouting.
+Historische Paketgrenzen und Lieferstände sind keine neuen Produktionsaufträge.
+
+Die gemeinsame Stilnorm präzisiert farbige Reveals in Richtung Filzstift/farbiger
+Tusche und leichte neutralgraue Graphitkontexte. Auch komplexe Szenen und Gruppen
+bleiben zulässig. Hintergrundkomposition meint die vollständige 2304×576-Leinwand
+mit transparentem Freiraum, nicht die Alpha-Bounds des sichtbaren Motivs.
+Gemeinsamer Fit/Anker und alle geschlossenen Dateiformen bleiben unverändert.
+PW2-A führt keine UI-/Promptänderungen aus PW2-B oder Listenausblendung aus PW2-C ein.
+
 ## #596/C · Reguläre motivtreue Rasterkorrektur
 
-Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,
-Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
-Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
+Der [geschlossene C-Vertrag](FIXED_RASTER.md) wurde für Authoring 0.8.0,
+Dokumentrevision 4 eingeführt und gilt unter Dokumentrevision 5 weiter.
+Er ergänzt den Produktionsweg um freigegebene feste Mono-/Farbzellenkorrekturen
+und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
 Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
 Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
 historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
 Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
-
 
 **PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
 [fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
@@ -21,7 +41,6 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Anzeige und Produktion bleiben lesend; allein die ausdrücklich bestätigte
 Branchentfernung nach §4.4 ist eine enge Schreibausnahme. Veröffentlichung und
 Gitabschluss führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
-
 
 **APP-Updatevertrag · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612):**
 [Automatische App-Releases und Selbstupdate](PRODUCTION_UPDATES.md): APP-A ist
@@ -61,7 +80,8 @@ Die hier festgelegte Reihenfolge gilt für neue Produktion nach
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) und dem
 [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md). Die geschlossenen neuen Formen
 und ihre tatsächlich umgestellten Verbraucher stehen im [PW-B-Vertrag](PW_B_CONTRACT.md).
-Der neue fünfstufige Authoringstand wird als **0.8.0** eingeführt; 0.7.0 bezeichnet
+Der fünfstufige Authoringstand ist **0.8.0**; die Dokumentrevision 5 ordnet seine
+operativen Quellen, nicht seine technischen Datenformen neu. 0.7.0 bezeichnet
 weiterhin seinen bisherigen vierstufigen Stand, nicht denselben Ablauf unter
 neuem Etikett. Unveränderte technische Dateiformen brauchen keine neue Version
 allein wegen eines neuen UI-Labels; geänderte geschlossene Semantik wird vor Code
@@ -77,11 +97,16 @@ konkurrierenden Inhaltswriter und wartet nicht pauschal auf diesen Editor.
 
 | Schritt | Arbeit und Entscheidung | Ende des Schritts |
 | --- | --- | --- |
-| 1 · Abschlussbilder erstellen | Motivtext und optional eigene Referenz; drei tatsächliche farbige detaillierte Abschlussbilder erzeugen und im Repository sichern | Bildangebote zur Auswahl; noch keine Abstraktion |
-| 2 · Motivvorlage erstellen | Tatsächliche Abschlussbildfreigabe binden; passende Konfiguration empfehlen und aus genau diesem Bild abstrahieren | Vergleich Abschlussbild/Motivvorlage und klarer Parameterkorridor |
-| 3 · Rätsel produzieren | Tatsächliche Motiv-/Parameterfreigabe binden; Varianten, nötige Reparaturen, technische und visuelle Prüfung sowie Schwierigkeit | Vollständig geprüfte Rasterangebote oder ehrlich bezeichnete Sichtungsentwürfe; Rasterwahl |
+| 1 · Abschlussbilder erstellen | Motivtext und optional eigene Referenz; drei tatsächliche farbige detaillierte transparente Abschlussbilder nach gemeinsamem Bildstil erzeugen und im Repository sichern | Bildangebote zur Auswahl; noch keine Abstraktion |
+| 2 · Motivvorlage erstellen | Tatsächliche Abschlussbildfreigabe binden; passende Konfiguration empfehlen und standardmäßig eine begründete Abstraktion aus genau diesem Bild erzeugen | Vergleich Abschlussbild/Motivvorlage und klarer Parameterkorridor |
+| 3 · Rätsel produzieren | Tatsächliche Motiv-/Parameterfreigabe binden; aussichtsreichsten Kandidaten zuerst, weitere nacheinander nur nach konkretem Bedarf; notwendige Reparaturen und vollständige technische/visuelle Qualifikation samt Schwierigkeit | Ein geeignetes geprüftes Raster genügt; sinnvolle vorhandene qualifizierte Alternativen oder getrennte Sichtungsentwürfe; tatsächliche Rasterwahl |
 | 4 · Hintergrund gestalten | Zum gewählten Motiv und Raster drei unterschiedliche Kontextzeichnungen erzeugen, speichern, isoliert zeigen; Wahl/Korrektur oder ausdrückliches `none` | Konkrete Hintergrundentscheidung oder offene Korrektur; kein Spieleinbau |
 | 5 · Abnehmen und integrieren | Tatsächliche Endabnahme des gewählten Rasterpakets, gültige Hintergrundentscheidung und Integrationsauftrag prüfen; Ableitung finalisieren, nur gewählte Lieferung gemeinsam integrieren | Draft-PR oder bei passendem Auftrag tatsächlicher Merge; danach regulärer Produktionsabschluss |
+
+Die bedarfsweise Rasterarbeit setzt weder kumulative Kandidaten-/Such-/Reparatur-
+budgets noch Korridor oder Qualitätsgates zurück. Ein Angebot ist vollständig
+qualifiziert; günstige Vorprüfung ersetzt keinen Endnachweis. Die Dreierauswahl
+bei Reveal und Hintergrund bleibt von der aufgehobenen Rasterquote getrennt.
 
 Die Gestaltung des Hintergrunds gehört weder in Abschlussbild- noch in
 Abstraktions- oder Rasterproduktionsprompts. In Schritten 1–3 keine Aufforderung
@@ -102,14 +127,14 @@ Bild-/Motivfreigabe wird nicht erneut abgefragt. Eine noch offene Hintergrundwah
 kann mit dem abschließenden Auftrag erklärt werden; keine zusätzliche Nachricht
 nur zum Wiederholen derselben unveränderten Bildentscheidung verlangen.
 
-Die [Qualitätsregeln](PUZZLE_QUALITY.md) und der
-[Abschlussbildstandard](REVEAL_TRANSPARENCY.md) bleiben erhalten. Hintergrundbilder
-zeigen Kontext, nicht Rätselsubjekt, Lösung oder Motivname. Drei unterschiedliche
-Bildinhalte sind der Standard, nicht drei Dateiformate desselben Motivs.
-`none` ist eine ausdrückliche Entscheidung, kein Ersatz für fehlende Dateien.
-Keine Buchvorschau, Kandidaten-Testintegration oder zusätzliche Buchabnahme.
-Hintergrundkorrekturen erneuern nur die betroffenen Bildbindungen; unveränderte
-Raster erhalten ihre gültigen Nachweise. Ein nachträglicher eigener
+Die [Qualitätsregeln](PUZZLE_QUALITY.md), der [gemeinsame Bildstil](PUZZLE_IMAGE_STYLE.md)
+und der [Abschlussbildstandard](REVEAL_TRANSPARENCY.md) bleiben maßgeblich.
+Hintergrundbilder zeigen Kontext, nicht Rätselsubjekt, Lösung oder Motivname.
+Drei unterschiedliche Bildinhalte sind der Standard, nicht drei Dateiformate
+desselben Motivs. `none` ist eine ausdrückliche Entscheidung, kein Ersatz für
+fehlende Dateien. Keine Buchvorschau, Kandidaten-Testintegration oder zusätzliche
+Buchabnahme. Hintergrundkorrekturen erneuern nur die betroffenen Bildbindungen;
+unveränderte Raster erhalten ihre gültigen Nachweise. Ein nachträglicher eigener
 Hintergrundwechsel bleibt unter weiteren Aktionen getrennt vom neuen Regelweg.
 
 ## 3. Bedienoberfläche und Datenautorität
@@ -558,8 +583,10 @@ PW-B erzeugt pro Handlung einen kurzen, überprüfbaren Auftrag mit Repository,
 fixiertem erreichbarem Quellencommit, einem kanonischen Recordpfad als Einstieg
 und tatsächlichen Auswahl-IDs. Daraus erreichbare Parameter, Briefings, Hashes,
 Paket-/Projektionspfade und allgemeine Regeln werden nicht in Folgeaufträge kopiert.
-Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; nur neue
-Absicht, Freigabe, Änderung oder Aufhebung sowie persönliche Befugnisse ergänzen.
+Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; er aktiviert
+die phasenbezogene Quellenroute einschließlich des gemeinsamen Bildstils, nicht
+die Volllektüre aller Fachhandbücher. Nur neue Absicht, Freigabe, Änderung oder
+Aufhebung sowie persönliche Befugnisse ergänzen.
 Ein neuer Erstauftrag enthält dagegen Motiv, Hinweise, Referenz und frühe Wünsche.
 Der Empfänger löst die vollständigen Definitionen und Bilder aus diesen Quellen
 auf. Ein relativer Paketpfad allein beweist keinen Zugang. Cloudschritte dürfen
@@ -599,6 +626,9 @@ Runtime-/Belegbezüge, keine defekten Links auf entfernte Zwischenbilder.
 
 ## 9. Paketgrenze PW-A
 
+Dieser Abschnitt beschreibt die historische PW-A-Paketgrenze, nicht den heutigen
+Funktionsumfang nach PW-B. Er ist keine zusätzliche operative Pflichtquelle.
+
 PW-A liefert Projektor/Schema, lokale Git-/Paketauflösung, sicheren Dienst,
 Windowsstarter und eine tatsächlich benutzbare **lesende Job-/Bildansicht**.
 Diese bietet Job-/Revisionauswahl, Bildkarten/Großansicht, Vergleich der vorhandenen
@@ -627,6 +657,7 @@ Liefer-/Prüfstand einschließlich offener Plattformgates steht in PR #579.
 
 ## 10. Nachführung beim späteren PW-B
 
+Historischer Einführungsplan für PW-B; keine Wiederholungsaufträge durch PW2-A.
 In einem konsistenten Implementierungsdiff mindestens diese Quellen abgleichen:
 
 - Authoring und den eingebetteten/ersetzenden Regelstand: fünf Aufträge, neue
@@ -647,8 +678,12 @@ Head; sie erteilt keine pauschale Freigabe später erzeugter Bilder oder Rätsel
 
 ## Quellen
 
+Für normale Produktion gilt ausschließlich das operative Routing am Anfang
+und in Authoring §1.1. Die folgende Liste ordnet Entwicklungs-/Herkunftsquellen
+zu und erteilt keine zusätzliche pauschale Volllektüreplicht:
+
 [Workflow](dev-rules/WORKFLOW.md), [Projektprofil](PROJECT_PROFILE.md),
-[Authoring](ai-workflows/PUZZLE_AUTHORING.md),
+[Authoring](ai-workflows/PUZZLE_AUTHORING.md), [Bildstil](PUZZLE_IMAGE_STYLE.md),
 [0.7-Iststand](ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
 [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md), [Qualität](PUZZLE_QUALITY.md),
 [Produktionswerkzeuge](../tools/puzzle_production/README.md),

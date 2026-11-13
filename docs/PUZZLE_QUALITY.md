@@ -1,53 +1,50 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
-[fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
-[PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing, drei Kandidaten und
-Auswahl beginnen erst nach der ausdrücklichen qualifizierten Rasterwahl in Schritt 4.
-Frühe Hintergrundpflichten sowie 0.6-Default/0.7-Opt-in-/Offline-Sheetbeschreibungen
-weiter unten bezeichnen ihre alten Generationen und gelten nicht für neue 0.8-Jobs.
+**Vertrag 1.0 · Dokumentrevision 10 · 13.11.2026 · PW2-A / [#626](https://github.com/venomenon328/picross/issues/626)**
+
+Für neue Produktionen gilt [Authoring 0.8.0, Dokumentrevision 5](ai-workflows/PUZZLE_AUTHORING.md)
+mit dem geschlossenen [PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing,
+drei Kandidaten und Auswahl beginnen erst nach tatsächlicher qualifizierter
+Rasterwahl in Schritt 4. Frühere 0.6-/0.7-/Offline-Sheetangaben beschreiben ihre
+Einführungsgenerationen, nicht einen parallelen neuen Produktionsweg.
 Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgarantien
-bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
-führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
-
-
-**Vertrag 1.0 · Dokumentrevision 9 · 09.11.2026 · Q-A, P-A-V01 und P-B1/P-B2 / [#488](https://github.com/venomenon328/picross/issues/488); HP-W1/HP-W2 / [#560](https://github.com/venomenon328/picross/issues/560); PB-H / [#489](https://github.com/venomenon328/picross/issues/489)**
+bleiben erhalten. Historische Originale werden nicht migriert.
 
 ## 1. Geltung und Zuständigkeit
 
-Diese Datei ist die verbindliche redaktionelle Qualitätsreferenz für neue
-Produktionen nach [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md).
-Sie bündelt die Anforderungen aus [Produktdefinition §3](PRODUCT_DEFINITION.md),
-[Gestaltungskonzept §§2/4.3](DESIGN_CONCEPT.md) und
-[Produktionsvertrag §§3/6/7](PUZZLE_PRODUCTION.md) sowie die
-Eigentümerpräzisierung in #488. Der Authoringworkflow regelt Aufträge, Budgets,
-Dateisicherung und tatsächliche Freigaben; die technischen Fachverträge regeln
-ihre eigenen Invarianten. Deren Schemas und Grenzwerte werden hier nicht erneut
-definiert. Bei Widersprüchen vor dem betroffenen Schritt die zuständige Quelle
-klären, keine günstigere Regel auswählen.
+Diese Datei bleibt die verbindliche redaktionelle Qualitätsreferenz an ihrem
+bisherigen Pfad. Geschlossene Qualitätsbindungen, Kriterien-IDs und Ergebnisformen
+ändern sich durch PW2-A nicht. Der [gemeinsame Bildstil](PUZZLE_IMAGE_STYLE.md)
+präzisiert die gestalterische Behandlung; die Einzelurteile bleiben hier.
+Die [Authoring-Phasenroute](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase)
+bestimmt die tatsächlich fällige Lektüre, nicht eine pauschale Volllektüre aller
+verlinkten Quellen. Bei einem operativen Verweis auf §8 sind §8.4–8.5 verbindlich;
+§8.1–8.3.1 dokumentieren die unveränderte Herkunft/Referenzeinordnung und sind
+nur bei konkreter Referenzfrage zusätzlich nötig. Historische Lieferberichte
+werden dadurch nicht zu Produktionspflichten.
 
-Der bestehende redaktionelle Vertrag gilt weiter. **§8 ist die durch
-[P-A-M01 ausdrücklich freigegebene](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147)
-Farbprüfregel für neue Rätsel.** Die fachliche Norm ist verbindlich,
-unter Authoring **0.6.0 automatisch aktiv**: P-B2 prüft früh die konkrete
-Ist-Matrix und abschließend den tatsächlichen Endstand in ZA-1 v5. Die
-[lesende Diagnose](../tools/puzzle_production/README.md#p-b1-lesende-palettendiagnose)
-bleibt zusätzlich nutzbar. [V5 und äußerer Ausnahmevertrag](ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)
+Diese Norm bündelt Anforderungen aus [Produktdefinition §3](PRODUCT_DEFINITION.md),
+[Gestaltungskonzept §§2/4.3](DESIGN_CONCEPT.md),
+[Produktionsvertrag §§3/6/7](PUZZLE_PRODUCTION.md) und #488. Authoring regelt
+Aufträge, Budgets, Dateisicherung und tatsächliche Freigaben; technische
+Fachverträge behalten ihre eigenen Invarianten. Deren Schemas/Grenzwerte werden
+hier nicht neu definiert. Widersprüche vor dem betroffenen Schritt klären.
+
+§8 ist die [ausdrücklich freigegebene](https://github.com/venomenon328/picross/issues/488#issuecomment-6721785147)
+Farbprüfregel. Sie wurde mit P-B2 unter 0.6.0 automatisch eingeführt und gilt
+unverändert für den neuen 0.8-Weg: frühe Ist-Matrix und endgültiger Endstand
+werden geprüft. [Lesende Diagnose](../tools/puzzle_production/README.md#p-b1-lesende-palettendiagnose)
+und [äußerer Ausnahmevertrag](ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)
 trennen Messung, visuelle Annahme und Endfreigabe. Kein nicht ausgeführter
-numerischer Test darf als `pass` gelten.
-Die tatsächlichen Farben und Hinweise sind weiter visuell zu beurteilen.
-Eine universelle Zusicherung der Farbwahrnehmung folgt daraus nicht.
-Abgenommene Bestandsrätsel, versiegelte Pakete, Freigaben, technische
-Regelversionen und historische Bewertungen werden nicht rückwirkend umgedeutet.
+numerischer Test ist pass; tatsächliche Farben/Hinweise bleiben visuell zu
+beurteilen. Keine universelle Zusicherung der Farbwahrnehmung und keine
+rückwirkende Umdeutung von Bestandsrätseln, Paketen, Freigaben oder Bewertungen.
 
-§9 ergänzt die Zielqualität des [Hintergrundvertrags](PUZZLE_BACKGROUNDS.md).
-HP-W2 liefert dessen eigenständige technische Datei-/Bildableitung, keine
-visuellen Urteile oder vollständige Produktionsbereitschaft. PB-H prüft diese
-konkreten Belege lesend in opt-in 0.7.0-Hintergrundpaketen; `raster_ready`
-verlangt sämtliche bisherigen Inhaltsgarantien, `content_ready` zusätzlich die
-vollständige Hintergrundbereitschaft. Ein numerischer oder technischer Befund
-erzeugt kein Sichturteil. Der Gesamtweg ist noch nicht aktiviert. Der aktive
-Authoringstand 0.6.0, seine bestehenden Qualitäts-/Freigabegates und die Farbregel bleiben unverändert.
+§9 konkretisiert den [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md). HP-W2 prüft
+Datei-/Bildableitung, nicht visuelle Qualität oder menschliche Wahl. Die frühere
+PB-H-0.7-Einführung bleibt historisch; im aktuellen 0.8-Weg verlangt raster_ready
+alle Rastergarantien, content_ready zusätzlich Hintergrundbereitschaft.
+Technischer Befund erzeugt kein Sichturteil.
 
 ## 2. Einzelurteile, Belege und Klassen
 
@@ -95,7 +92,7 @@ redaktionelle Abweichung autorisiert keine materielle Umgestaltung.
 | ID / Kriterium | Herkunft | Methode und Zeitpunkt |
 | --- | --- | --- |
 | Q-B01 · Motividentität, Silhouette, Perspektive und Proportionen | Produkt §3.3; Design §4.3; Authoring §§2.1–2.4 | Vor Bildauswahl/-freigabe jede tatsächliche Bilddatei mit Briefing/Referenz vergleichen: Hauptgegenstand, Pose, charakteristische Details, Anatomie und notwendige Negativräume benennen; Verzerrungen/Artefakte einzeln ausweisen. |
-| Q-B02 · Ausgearbeitete Illustration und ruhige Flächensprache | Design §§2/4.3; Authoring §2.3 | In großer und kleiner Ansicht vor Bildfreigabe Konturen, zusammenhängende Farbflächen, Binnenzeichnung, Oberflächendetails und zurückhaltende Schattierung prüfen. Keine bloß vergrößerte Zellgrafik, zufälligen Kleinstflächen, überladenen Hintergründe oder ungewollte Schrift/Wasserzeichen. |
+| Q-B02 · Ausgearbeitete Illustration und ruhige Flächensprache | [Gemeinsamer Bildstil](PUZZLE_IMAGE_STYLE.md); Design §§2/4.3; Authoring §2.3 | In großer und kleiner Ansicht vor Bildfreigabe die warme klare farbige Illustration mit leicht sichtbarem Filzstift-/Tuschestrich, lebendiger Kontur und dezenten Farblagen beurteilen. Motivgerechte Zeichentechnik bleibt wählbar; zusammengehörige Form-/Kontur-/Flächensprache, klare Silhouette, Binnenzeichnung, Oberflächendetails und zurückhaltende Schattierung erhalten. Keine bloß vergrößerte Zellgrafik, zufälligen Kleinstflächen, überladenen Hintergründe oder ungewollte Schrift/Wasserzeichen. |
 | Q-B03 · Transparenter Bildgrund und saubere Kanten | [AT §2](REVEAL_TRANSPARENCY.md); Authoring §§2.3/4.4 | Vor Bildfreigabe und bei jeder Bildrevision das Original direkt groß/klein ansehen, bei Bedarf auf neutralem Grund/Schachbrett: Außenfläche, echte Aussparungen, Alphakanten sowie helle Motivteile und feine Details prüfen. Säume/ausgefranste Kanten benennen. Szenen erhalten eine konkrete motivbezogene transparente Außengestaltung/Vignette bei erhaltener notwendiger Umgebung. Keine routinemäßige Buch-/Katalogmontage, Fadeprobe oder Testintegration, auch nicht in spätere Phasen verlagert. Kurzes Urteil im vorhandenen Bericht; technische Alpha-/Rendergarantien bleiben bei ihren Tests, Q-H01/Q-H02 unverändert. |
 
 ### 3.2 Motivvorlage
@@ -113,7 +110,7 @@ redaktionelle Abweichung autorisiert keine materielle Umgestaltung.
 | Q-R01 · Motivtreue und Erkennbarkeit | Produkt §3.3; Design §4.3; Authoring §§2.3/4.1/4.3 | Je Kandidat vor Auswahl sowie nach Reparatur das exakte Raster als verlustfreie Kleinvorschau, ohne Glättung vergrößert und mit Gitter mit Motivvorlage/Abschlussbild vergleichen. Farbe soll selbst ein erkennbares Bild ergeben; bei Mono darf die farbige Enthüllung die stärkere Abstraktion auflösen. In beiden Fällen müssen Hauptform, Perspektive und Identität nachvollziehbar zusammengehören. |
 | Q-R02 · Hauptformen, Negativräume und gezielte Details | Produktion §6; Authoring §§4.3–4.4 | An denselben Ansichten zusammenhängende Hauptformen, Proportionen, notwendige Öffnungen und Einzelzellen auf Motivfunktion prüfen. Ein Auge darf eine Zelle sein; eine wichtige Öffnung darf nicht für leichteren Solvererfolg verschwinden. Zufällige Artefakte und überladene Kleinstflächen konkret markieren. |
 | Q-R03 · Flächennutzung und Innenleerlinien | Authoring §4.3 | Je Kandidat Belegung, isolierte Einzelzellen und vollständig leere Innenzeilen/-spalten erfassen und ansehen. Die bisherigen 15-/85-%-Belegungswerte bleiben ausschließlich Prüfanlässe: weder automatische Ablehnung noch Rechtfertigung für Strecken, Randpixel oder blindes Entfernen von Leerstreifen. Motivischen Nutzen beziehungsweise störende Wirkung begründen. |
-| Q-R04 · Tatsächlich verwendete Palette, alle Farbpaare | Authoring §§2.1/4.3; #488 | Früh bei Paletten-/Rastervergleich und am endgültigen Raster sämtliche verwendeten Vordergrund-IDs samt Farbwerten paarweise visuell beurteilen, auch seltene und unbenachbarte Farben. Unterschiede müssen deutlich sichtbar sein; keine zusätzliche Farbe allein für Solvererfolg oder Verfügbarkeit. Unbenutzte Einträge nicht als verwendete Farben zählen. Kleine Darstellung und Q-H01/Q-H02 mitprüfen; ähnliche Schattierungen konkret nennen. §8 konkretisiert die freigegebene numerische Diagnose; P-B2 aktiviert automatische Früh-/Endprüfung für 0.6.0, getrennt von der Sichtung. |
+| Q-R04 · Tatsächlich verwendete Palette, alle Farbpaare | Authoring §§2.1/4.3; #488 | Früh bei Paletten-/Rastervergleich und am endgültigen Raster sämtliche verwendeten Vordergrund-IDs samt Farbwerten paarweise visuell beurteilen, auch seltene und unbenachbarte Farben. Unterschiede müssen deutlich sichtbar sein; keine zusätzliche Farbe allein für Solvererfolg oder Verfügbarkeit. Unbenutzte Einträge nicht als verwendete Farben zählen. Kleine Darstellung und Q-H01/Q-H02 mitprüfen; ähnliche Schattierungen konkret nennen. §8 konkretisiert die freigegebene numerische Diagnose; die seit P-B2 eingeführten automatischen Früh-/Endprüfungen bleiben auch für 0.8.0 getrennt von der Sichtung. |
 
 ### 3.4 Hinweisansicht und Spielstruktur
 
@@ -143,18 +140,25 @@ Schemas, Zahlen und Befehle bleiben ausschließlich in den verlinkten Normen.
 | H-05 · Paket-/Inventarbindung, echte Endabnahme und Integrationsauftrag | [Authoring §§6–8](ai-workflows/PUZZLE_AUTHORING.md), [ZA-1](ZA1_ADAPTER.md) | Vor Ausgabe eines Angebots geschriebenes Einzelkandidatenpaket/Inventar prüfen. Endabnahme am tatsächlich ausgewählten Paket extern binden, vor Export/Integration vollständig nachweisen und Arbeitsbefugnis prüfen. `content_ready` darf noch die menschliche Endabnahme offen haben; eine Sheet-Auswahl erteilt sie nicht automatisch. |
 | H-06 · Gebundene Schwierigkeit | [Authoring §5](ai-workflows/PUZZLE_AUTHORING.md), [SD2-Integration](SD2_INTEGRATION.md) | Nach finaler Deduktion vor Endabnahme den aktuellen Methoden-/Analysevertrag am konkreten Kandidaten erfüllen; beim Export Definitionsbindung prüfen. Keine Ersatzstufe für fehlenden/abgebrochenen Nachweis und keine Neubewertung alter Pakete aus Q-A. |
 
+Für neue 0.8-Angebote erfüllt bereits `raster_ready` alle fälligen Rastergarantien;
+nur Hintergrundbereitschaft und nachfolgende echte Endabnahme bleiben getrennt.
+Die ältere `content_ready`-Formulierung ist keine Erlaubnis, Rasterangebote
+ungeprüft vorzuziehen. Weniger Angebote senken keines dieser Gates.
+
 ## 5. Sichtung ohne vollständig qualifizierten Kandidaten
 
-Nach der vorgesehenen Varianten-/Profil-/Reparatursuche innerhalb der
-[Authoringbudgets §§4.1–4.4](ai-workflows/PUZZLE_AUTHORING.md) MUSS die KI bei
+Nach der vorgesehenen bedarfsweisen Varianten-/Profil-/Reparatursuche innerhalb
+der [Authoringbudgets §§4.1–4.4](ai-workflows/PUZZLE_AUTHORING.md) MUSS die KI bei
 null vollständig qualifizierten Kandidaten die **zwei bis drei möglichst
 unterschiedlichen besten vorliegenden brauchbaren Entwürfe** zur menschlichen
 Ansicht zeigen, sofern vorhanden. Bei nur einem diesen zeigen. Weitere sinnvolle
 Entwürfe bleiben im Entscheidungsprotokoll auffindbar; gleiche Matrizen mit
 anderem Namen/Profil zählen nicht als Unterschied. Keine künstliche Quote,
-Budgetausweitung oder Behauptung, ein Nichtfund beweise Unmöglichkeit. Sind keine
-brauchbaren tatsächlichen Entwürfe vorhanden, diesen Umstand und den nächsten
-konkreten Korrekturschritt melden, keine Bilder/Dateien erfinden.
+Budgetausweitung oder zusätzliche Erzeugung allein für diese Sichtungszahl.
+Ein geeigneter vollständig qualifizierter Kandidat genügt dagegen nach Authoring
+§4.5; bereits sinnvolle qualifizierte Alternativen dürfen angeboten werden.
+Sind keine brauchbaren tatsächlichen Entwürfe vorhanden, diesen Umstand und den
+nächsten konkreten Korrekturschritt melden, keine Bilder/Dateien erfinden.
 
 Jede Sichtungsansicht MUSS unmittelbar enthalten:
 
@@ -172,15 +176,14 @@ Auswahl keine Integrationsfreigabe. Fehlende Proofs oder unklare Rechte bleiben
 Blocker. Eine gestalterisch attraktive, technisch ungeprüfte Variante darf nicht
 als bereits übernehmbar erscheinen.
 
-Die Sichtung erfolgt im Chat mit echten Links im bestehenden Abschlussbericht,
-ohne parallele Oberfläche. `Raster-Optionen` des Sheet-Formats v2 bleibt für
-tatsächlich freigabefähige, vollständig gebundene Angebote nach Authoring §4.5/§7
-reserviert. Bei null solchen Angeboten ist die Liste `[]`; keinen
-Sichtungsentwurf als `content_ready` ausgeben. Den Produktionsstand je nach
-tatsächlicher Lage als `raster_review` beziehungsweise `blocked` mit Ursache und
-`Korrigieren oder Fehler beheben` als nächstem Schritt führen. Eine nach §6
-zulässig angenommene redaktionelle Abweichung kann erst nach vollständiger
-technischer Prüfung im bestehenden gültigen Auswahlweg erscheinen.
+Die Sichtung erfolgt mit echten Links im bestehenden Abschlussbericht und der
+vorhandenen Produktionsansicht, ohne parallele Datenhaltung. Qualifizierte
+Rasterangebote bleiben vollständig gebundenen Kandidaten nach Authoring §4.5/§7
+vorbehalten. Bei null solchen Angeboten ist die Angebotsliste leer; keinen
+Sichtungsentwurf als `raster_ready` oder `content_ready` ausgeben. Den Stand je
+nach Lage als `raster_review` beziehungsweise `blocked` mit Ursache führen.
+Eine nach §6 zulässig angenommene redaktionelle Abweichung kann erst nach
+vollständiger technischer Prüfung im bestehenden gültigen Auswahlweg erscheinen.
 
 ## 6. Gezielte redaktionelle Einzelfallentscheidung
 
@@ -213,7 +216,7 @@ Authoring §6 sichern; Gatefelder behalten ihre bisherige Freigabe-/Belegsemanti
 Kann ein bestehender technischer Weg einen Zustand nicht gültig abbilden, ist
 keine Übernahme durch Freitext oder ein zusätzliches `pass` erlaubt.
 
-Q-A begründet den redaktionellen Weg. P-B2 implementiert für 0.6.0 den
+Q-A begründet den redaktionellen Weg. P-B2 implementiert den
 [revisions-/paargebundenen äußeren Record](ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5).
 Ein negatives Messergebnis bleibt auch bei Übernahme negativ. Sämtliche übrigen
 Inhaltsgates bleiben erforderlich; die bloße Sichtung oder ein Freitextvermerk
@@ -221,7 +224,7 @@ ist keine technische Ausnahme.
 
 ## 7. Vier endliche synthetische Entscheidungsbeispiele
 
-Diese Beispiele sind reine Vertragsdurchläufe, keine Produktionspakete,
+Diese Beispiele sind reine historische Vertragsdurchläufe, keine Produktionspakete,
 Bilddateien, Freigaben oder ausgeführten Solverbeweise. Die technischen
 Prüfergebnisse sind **gesetzte Szenarioeingaben**, um die Entscheidung zu prüfen;
 sie behaupten keine Zertifizierung der hier notierten Miniaturmatrizen.
@@ -229,6 +232,8 @@ sie behaupten keine Zertifizierung der hier notierten Miniaturmatrizen.
 synthetisches Abschlussmotiv dient ein illustriertes Segelboot; kein Kataloginhalt
 oder davon abgeleiteter Testfall. Die Beschreibungen ersetzen in einer echten
 Sichtung niemals Bild-/Dateilinks. Kein neuer automatischer CI-Testbestand.
+Die historischen Sheet-/Auftragsnummern in dieser Tabelle bezeichnen die damalige
+Generation; neue Produktion folgt der fünfstufigen Authoringroute.
 
 | Fall / endlicher Eingang | Entscheidung und überprüfbarer Ausgang |
 | --- | --- |
@@ -237,19 +242,17 @@ Sichtung niemals Bild-/Dateilinks. Kein neuer automatischer CI-Testbestand.
 | S-03 · Technischer Blocker: `S-C/r01`, Raster `A../AA./BBB`, Bild-/Motivqualität positiv gesetzt, vollständiger unabhängiger Proof H-02 fehlt (`nicht geprüft`). | Nur Diagnose-Sichtung, `Sichtungsentwurf – nicht integrationsbereit`, keine Rasteroption und kein `content_ready`, auch bei ausdrücklichem Gefallen. Nächster Schritt ist vollständiger Deduktions-/Prüfnachweis; eine Qualitätsausnahme heilt den fehlenden Proof nicht. Unklare Rechte H-03 hätten dieselbe Sperrwirkung. |
 | S-04 · Null-Treffer nach begrenzter Suche: vier Kandidaten, zwei Reparaturrunden ohne vollständig qualifiziertes Ergebnis als beendet gesetzt. `S-D/r01: A../AA./BBB` mit fehlendem Proof; `S-E/r02: ..A/.AA/BBB` mit sichtbarer Perspektivabweichung Q-R01 und fehlender aktueller Motivfreigabe H-04; `S-F/r03: AA./A../BBB` mit überladener Kleinstform Q-R02 und offenem H-06. Vierter Kandidat ist identisch mit S-D. | Drei verschiedene beste brauchbare Entwürfe mit Status, technischen Lücken, Defiziten und Korrekturmöglichkeiten zeigen; Duplikat und Entstehungswege im Protokoll. `Raster-Optionen=[]`, kein `content_ready`, keine Budgeterhöhung. Behebung: D nachweisen, E motivtreu korrigieren beziehungsweise neue Motivfreigabe einholen, F vereinfachen/neu prüfen und Bewertung binden. Bei nur einem vorhandenen brauchbaren Entwurf genau diesen zeigen; bei keinem den konkreten Nichtfund melden. |
 
-Die einmalige Q-A-Akzeptanzkontrolle geht diese vier Eingaben in Reihenfolge
-durch und vergleicht Sichtungsstatus, Optionsliste, Ausnahmebefugnis und nächsten
-Schritt mit §2/§4–6. Ergebnisse kompakt im Liefer-PR führen, unabhängigem Review
-zugänglich; keine dauerhaften Beispielbilder, technischen Uploads oder neue
-Testfamilie. Das prüft den redaktionellen Entscheidungsvertrag, keine
-Farbmetrik, Bildqualität oder Adapterfunktion. P-A/P-B erhalten eigene Nachweise.
+Die einmalige Q-A-Akzeptanzkontrolle ging diese vier Eingaben in Reihenfolge
+durch. Sie ist kein neu auszuführendes PW2-A-Produktions- oder CI-Gate.
+Das prüfte den redaktionellen Entscheidungsvertrag, keine Farbmetrik,
+Bildqualität oder Adapterfunktion. Historische Nachweise behalten ihren Umfang.
 
 ## 8. P-A-V01: Freigegebene Regel für paarweise Farbunterscheidbarkeit
 
 ### 8.1 Status, Referenzplan und Grenzen
 
 **Verbindliche Regel-ID `picross-palette-separation-1` (Version 1);
-fachlich freigegeben, P-B1-Diagnose ausführbar; automatische Pflicht unter 0.6.0 durch P-B2.**
+fachlich freigegeben, P-B1-Diagnose ausführbar; automatische Pflicht seit 0.6.0 durch P-B2.**
 Die frühere Vorschlagskennung `picross-palette-separation-1-draft1`
 bezeichnet die mathematisch **unveränderte** Fassung, deren Formel,
 Quantisierung, Grenzen D=10/15 und Warnzone der Eigentümer
@@ -263,12 +266,12 @@ Die unabhängige Quellen-/Rechenprüfung ist im PR #546 dokumentiert.
 Die Regel ist ab ihrem Normmerge verbindlicher Sollstand für **neue** Rätsel.
 Der freiwillige Diagnosebericht `picross-palette-assessment-v1` aus P-B1 bindet
 die unveränderte Berechnung ausdrücklich an Normrevision 4 am Quellcommit
-`45b8fe697364bf73f4277c8b76f92d5c00400919`; diese Dokumentrevision 8 ändert
-Formel, Quantisierung, Grenzen und Referenzwerte nicht. **P-B2 aktiviert**
-Früh-/Endintegration und den geprüften äußeren Ausnahmeweg für neue 0.6.0-Pakete.
-Die visuelle Produktionsprüfung bleibt eigenständig. Authoring 0.5.0, Sheet v2
-und versiegelte Altformate behalten ihre damalige Semantik.
-Kein rückwirkendes Gate, keine Neubewertung oder Umfärbung des Bestands.
+`45b8fe697364bf73f4277c8b76f92d5c00400919`; auch Dokumentrevision 10 ändert
+Formel, Quantisierung, Grenzen, Referenzwerte und bestehende Bindungen nicht.
+P-B2 führte Früh-/Endintegration und den geprüften äußeren Ausnahmeweg für 0.6.0 ein;
+die Garantien gelten im 0.8-Weg weiter. Die visuelle Produktionsprüfung bleibt
+eigenständig. Authoring 0.5.0, Sheet v2 und versiegelte Altformate behalten ihre
+Semantik. Kein rückwirkendes Gate, keine Neubewertung oder Umfärbung des Bestands.
 
 Der [vor der Auswertung veröffentlichte Plan](https://github.com/venomenon328/picross/issues/488#issuecomment-6720934579)
 bindet `main@059bb003dc761e862b304957143b0dd45d92bb82`, synthetische 40×30-Matrizen,
@@ -567,16 +570,14 @@ Keine zusätzliche allgemeine Freigabeschleife oder Pflicht-Probespielrunde.
 
 ## 9. Hintergrundzeichnungen je Rätsel · noch nicht aktivierter Sollweg
 
-Dieser Abschnitt konkretisiert die Bildqualität für
-[PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md). Dort stehen der geschlossene
-Datenvertrag, Phasen, tatsächliche Auswahl, gezielte Invalidierung und Einführung.
-HP-W2 stellt die eigenständige technische Ableitung nach §9.2 bereit; PB-H
-transportiert und prüft die Bild-/Entscheidungsbindungen in eigenen neuen
-Paketformen. Eine Werkzeuglieferung ist keine Bildproduktion oder ausgeführte
-Sichtprüfung.
-Vorbereitete Bildarbeit benötigt einen passenden Inhaltsauftrag und die dafür
-tatsächlich verfügbare Teilfähigkeit; sie aktiviert keinen vollständigen neuen
-Produktionsweg und erweitert keine 0.6.0-Hülle.
+Die Überschrift bleibt als historischer Linkanker erhalten; die Formulierung
+„noch nicht aktiviert“ bezeichnet die damalige HP-/PB-H-Einführung, nicht den
+heutigen Authoring-0.8-Stand. Für neue Produktion beginnt diese Phase erst nach
+der ausdrücklichen Wahl eines vollständig qualifizierten Rasters in Schritt 4.
+Die technischen Arbeits-/Entscheidungs-/Ableitungsverträge stehen weiterhin in
+[PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md); die kurze gestalterische Autorität ist
+[PUZZLE_IMAGE_STYLE](PUZZLE_IMAGE_STYLE.md). Eine Werkzeuglieferung ist keine
+Bildproduktion, ausgeführte Sichtung oder menschliche Entscheidung.
 
 ### 9.1 Isolierte visuelle Beurteilung
 
@@ -589,16 +590,17 @@ ersetzt sie nicht.
 | Kriterium | Gegenstand und Zeitpunkt der isolierten Sichtung |
 | --- | --- |
 | Q-HG01 · Kontext statt Rätselsubjekt | Vor der Auswahl jede Datei mit Briefing, freigegebenem Abschlussbild und geschützten Merkmalen vergleichen. Bezug zum Umfeld ist gewünscht; der konkrete zu erratende Gegenstand, seine Lösungssilhouette, Rasterkopien, der Motivname und aus dem Spielerfortschritt abgeleitete Informationen gehören nicht ins Hintergrundbild. Offenes Briefing und tatsächliche Eigentümervorgabe unterscheiden. Indirekte Hinweise durch den Kontext sind möglich; keine universelle Spoilerfreiheit behaupten. |
-| Q-HG02 · Helle Graphitzeichnung | Echte ImageGen-Zeichnung mit hellen neutralgrauen Strichen, offenen/nachgezogenen Konturen und sparsamer Schraffur prüfen. Keine geometrische Ersatzzeichnung, eingebrannte UI oder Buchoberfläche, Schrift/Wasserzeichen oder deckende Papierimitation. Die Zeichnung soll das vorhandene Papier durchscheinen lassen. |
-| Q-HG03 · Luftige gemeinsame Komposition | Die Komposition auf das gemeinsame transparente 4:1-Zielformat mit proportionalem Fit und gemeinsamem Anker auslegen; Originale dürfen andere native Maße haben. Durchgehende oder offene Kompositionen sind zulässig; zwei getrennte Ecken sind keine Pflicht. Niedrige Mitte, U- oder Halb-U-Form sind Gestaltungsrichtungen, keine individuelle Höhenmaske. Keine individuellen Crops, Offsets oder Motivmasken, kein Strecken oder Verkleinern des Funktionslayouts zur Anpassung eines Motivs. |
+| Q-HG02 · Helle Graphitzeichnung | Echte ImageGen-Zeichnung nach [gemeinsamem Bildstil](PUZZLE_IMAGE_STYLE.md): leichte neutralgraue Graphitstriche, lebendige offene/nachgezogene Konturen und sparsame Schraffur. Einzelobjekte, Gruppen und komplexere zusammenhängende Szenen sind zulässig. Luftigkeit entsteht durch Gewichtung, offene Flächen und leichte Striche, nicht durch eine Simplizitäts-/Objektzahlquote. Keine geometrische Ersatzzeichnung, eingebrannte UI/Buchoberfläche, Schrift/Wasserzeichen oder deckende Papierimitation; Papier auch zwischen Strichen sichtbar lassen. |
+| Q-HG03 · Luftige gemeinsame Komposition | Die **vollständige 2304×576-Leinwand** einschließlich transparentem Freiraum nach [Bildstil](PUZZLE_IMAGE_STYLE.md) beurteilen. Ein rechts stehendes Motiv liegt bereits rechts auf dieser Leinwand und behält den linken Leerraum. Andere native Maße dürfen dieselbe vollständige 4:1-Komposition abbilden; vorhandener gemeinsamer Fit/Anker liefert 2304×576. 3072×768 ist nur technische logische Referenz. U-/Halb-U mit rechts gegebenenfalls vollen 576 Pixeln, links ordentlich bis voll und niedrigerer Mitte ist eine lockere Empfehlung, keine Höhenprozent-/Form-/Zwei-Eckenpflicht. Rechts allein und komplexere offene Szenen sind erlaubt. Kein Alpha-Bounds-Crop, sichtmotivbezogenes Nachzentrieren, per-ID-Offset, Motivmaske, Strecken oder Verkleinern des Funktionslayouts. |
 | Q-HG04 · Echte Transparenz und saubere Striche | Vor Auswahl und nach materieller Bildänderung offene Flächen und Zwischenräume zwischen Strichen an der tatsächlichen Datei prüfen; bei Bedarf neutrale Prüfgründe oder ein Transparenzraster verwenden. Ein Alphakanal allein genügt nicht. Weiße Bildkästen, gemaltes Schachbrett, deckende Zwischenflächen, störende Säume oder verlorene feine Striche erfüllen das Ziel nicht. |
 
 Die drei inhaltlich unterschiedlichen Kandidaten werden als drei gespeicherte,
 erreichbare Einzelbilder vorgelegt. Reine Format-/Auflösungsvarianten desselben
-Motivs zählen nicht mehrfach. Ein endgültiges Lösungsraster ist dafür nicht
-erforderlich. Ein Defizit mit gezieltem Korrekturvorschlag benennen; eine positive
-Dateidiagnose darf es nicht verdecken. Nur eine ausdrückliche Eigentümervorgabe
-ändert die anfängliche Kandidatenzahl im Einzelfall.
+Motivs zählen nicht mehrfach. Der reguläre 0.8-Auftrag setzt die Rasterwahl voraus;
+die eigenständige technische HP-W2-Bildprüfung benötigt selbst keine Lösungszellen.
+Ein Defizit mit gezieltem Korrekturvorschlag benennen; eine positive Dateidiagnose
+darf es nicht verdecken. Nur eine ausdrückliche Eigentümervorgabe ändert die
+anfängliche Hintergrundkandidatenzahl. Die kleinere Rasterangebotszahl ändert sie nicht.
 
 ### 9.2 Technische Diagnose, Bildentscheidung und Integration
 
@@ -621,12 +623,13 @@ bleibt offen beziehungsweise abgelehnt; fehlende/defekte deklarierte Daten sind
 Fehler. Legacy ist keine neue Leerentscheidung. Bewusst leer benötigt keine
 Nulltextur und ist kein automatischer Ersatz für die verlangten Kandidaten.
 
-Die Wahl wird mit den vorhandenen Motiv-/Endabnahmen gebündelt. Eine eindeutige
-frühere Wahl derselben unveränderten Datei bleibt gültig. Isolierte Einzelbilder
-genügen: keine Kandidaten-Testintegration, Buchvorschau, Godot-Starts oder
-zusätzliche persönliche Buchabnahme als Auswahl-/Freigabegate. Erst der spätere
-finale Integrationsweg übernimmt das gewählte gültig abgeleitete Bild oder die
-ausdrückliche Leerentscheidung zusammen mit dem endabgenommenen Rätsel.
+Die Hintergrundwahl kann mit der tatsächlichen Endabnahme im passend beauftragten
+Schlussauftrag erklärt werden. Eine eindeutige frühere Wahl derselben unveränderten
+Datei bleibt gültig. Isolierte Einzelbilder genügen: keine Kandidaten-Testintegration,
+Buchvorschau, Godot-Starts oder zusätzliche persönliche Buchabnahme als Gate.
+Nur das ausgewählte Original ableiten. Der finale Integrationsweg übernimmt das
+gültig abgeleitete Bild oder ausdrückliches none zusammen mit dem endabgenommenen
+Rätsel. Eine UI-/Promptumstellung aus PW2-B wird damit nicht als geliefert behauptet.
 
 Materielle Änderungen an Illustration, Komposition oder Transparenz erfordern
 eine neue Entscheidung zur geänderten Fassung und erneuern die abhängigen

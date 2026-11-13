@@ -1,25 +1,12 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/625",
-  "package": "CI-PB",
-  "modules": [
-    "tools"
-  ],
-  "purpose": "CI-PB gemäß #625: reguläre rätselspezifische Hintergrundquellen, PNGs und Nutzungshinweise in die gemeinsame enge Content-Klassifikation aufnehmen. Der Pflichtkern docs/ci-required einschließlich Windows-Spielerbau bleibt für diesen Entwicklungs-PR aktiv; tools prüft den gemeinsamen ci_scope-Verbraucher und die Werkzeugverträge.",
-  "omitted": "Keine production.*, native.*, preflight, delivery oder Chromium: Writer, Solver, Bildprofile und Spielverhalten ändern sich nicht. Keine echten Rätsel als Testkorpus, kein zusätzlicher Test-PR oder Inhaltsmerge. CI-PB-T01 wird durch den kleinen synthetischen Gitfall für PR/Main-Push einschließlich Anlage, Änderung, Entfernung, Rename-Grenzen und beider Gitmodusseiten geliefert. Keine neue Diagnosegalerie oder allgemeine automatische Pfadauswahl.",
-  "test_changes": [
-    {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "core",
-      "reason": "Bestehende kleine Klassifikations-/Ausführungsfälle und ein synthetischer Gitfall sichern die buildfreie Hintergrundproduktion, weiterhin ausgewählte Fachprüfungen und die Grenzen zu Entwicklungsänderungen und expliziten Bauaufträgen. Keine Engine, echten Rätselbilder oder neue umfangreiche Regex-Testsuite. Der Gitfall liefert zugleich CI-PB-T01."
-    },
-    {
-      "path": "tools/test_ci_scope.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine Verbraucherprüfung derselben Backgroundklassifikation samt engen Gegenfällen im ausgewählten tools-Modul; die historische automatische Pfadauswahl wird nicht in der Haupt-CI reaktiviert."
-    }
-  ],
-  "core_change": "tools/ci_paths.py ist Teil des CI-Kerns. Zwei vollständige Pfadmatches ergänzen ausschließlich content/backgrounds/pz-<id>.json und game/art/backgrounds/pz-<id>.png|txt mit der bestehenden Reveal-ID-Grammatik. Die gezielt erweiterten Kernfälle prüfen PR-/Main-Push-Plan und Ausführung; unbekannte Pfade, Entwicklungsdateien und nicht reguläre Gitmodi bleiben buildpflichtig. Workflow, Ergebnisgate und Umfang des regulären Windows-Kernbaus bleiben erhalten.",
+  "issue": "https://github.com/venomenon328/picross/issues/626",
+  "package": "PW2-A",
+  "modules": [],
+  "purpose": "PW2-A gemäß issuecomment-6850772525: phasengerechte Pflichtquellen und gemeinsamer Bildstil, bedarfsweise Rasterkandidaten bei erhaltenen Qualitäts- und Budgetgates. Reiner Norm-/Markdownschnitt; docs/ci-required prüfen Quellen und Plan ohne Windows-Spielerbau. PW2-A-T01 verfolgt die tatsächlichen Pflichtquellenwege einschließlich Korrektur/Wiederaufnahme und vergleicht ihren Textumfang einmalig im PR.",
+  "omitted": "Keine Werkzeug-, UI-, Promptgenerator-, Solver-, Writer-, Schema- oder Runtimeänderung. Deshalb keine tools, production.*, native.*, preflight, delivery oder Chromium. Keine Bild-/Rätselproduktion, Bestandsreplays oder neue Dauerregressionen. PW2-B und PW2-C bleiben separat; die unabhängige fachliche Abnahme PW2-A-A01 bleibt vor Merge offen.",
+  "test_changes": [],
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,

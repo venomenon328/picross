@@ -1,747 +1,691 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-## #596/C · Reguläre motivtreue Rasterkorrektur
+**Version 0.8.0 · Dokumentrevision 5 · 13.11.2026 · PW2-A**
 
-Der [geschlossene C-Vertrag](../FIXED_RASTER.md) gilt für Authoring 0.8.0,
-Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
-Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
-Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
-Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
-historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
-Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
-
-
-**Version 0.8.0 · Dokumentrevision 4 · 12.11.2026**
-
-Neue Produktionen verwenden den fünfstufigen lokalen Produktionsassistenten.
-Maßgeblich: [PW-B / #578](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194),
-[Produktionsarbeitsbereich](../PRODUCTION_WORKSPACE.md) und der geschlossene
-[0.8-Datenvertrag](../PW_B_CONTRACT.md). Die Reihenfolge ist verbindlich:
-Abschlussbilder → Motivvorlage → Rasterangebote → Kontextzeichnungen → Integration.
-Hintergrundarbeit beginnt erst nach der ausdrücklich erklärten Wahl eines
-vollständig qualifizierten Rasters. In den Schritten 1–3 keine Hintergrundangebote,
-keine Hintergrundbriefings und keine vorgezogenen Hintergrundblocker erzeugen.
-
-Der [0.7-Vorschausnapshot](PUZZLE_AUTHORING_0_7_0_PREVIEW.md) ist historisch.
-Bereits integrierte Inhalte, Saves, versiegelte Originale und ihre damaligen
-Freigaben bleiben unverändert. Bestehende WIP müssen weder migriert noch im
-neuen Assistenten importiert werden. Normale Produktionsaufträge erlauben keine
-Werkzeugentwicklung oder neuen Solver-/Bildalgorithmen.
+Neue Produktionen verwenden fünf Schritte: Abschlussbilder → Motivvorlage →
+Rasterangebote → Kontextzeichnungen → Integration. Hintergrundarbeit beginnt
+erst nach der tatsächlichen Wahl eines vollständig qualifizierten Rasters.
+In Schritten 1–3 keine Hintergrundangebote, Briefings oder vorgezogenen
+Hintergrundblocker erzeugen. Der [0.7-Vorschausnapshot](PUZZLE_AUTHORING_0_7_0_PREVIEW.md)
+ist historisch. Bereits integrierte Inhalte, Saves, versiegelte Originale und
+ihre Freigaben bleiben unverändert. Keine Alt-WIP-Migration und keine
+Werkzeugentwicklung durch einen normalen Produktionsauftrag.
 
 ## 1. Einstieg und Befugnisse
 
-1. Aktuelle `AGENTS.md` tatsächlich abrufen und deren Pflichtquellen einschließlich Workflow und Projektprofil lesen. Außerdem vollständig lesen: `docs/PRODUCT_DEFINITION.md`, `docs/DESIGN_CONCEPT.md`, `docs/PUZZLE_QUALITY.md`, `docs/PUZZLE_PRODUCTION.md` und `tools/puzzle_production/README.md`. Vor Paarlinienprüfung oder Übergabe eines Paarprofilpakets zusätzlich `docs/PAIRED_LINES.md` vollständig lesen.
-2. Zu Beginn Kategorienquelle, Arbeitsindex und Runtime-Registry lesen; Bestandsrätsel nicht einzeln laden oder nachprüfen. Kategorie nach Auftrag oder prägendem Hauptgegenstand gemäß [Kategorienvertrag](../CATEGORIES.md) zuordnen und in Briefing/Record führen. Repository-/Toolstand mit vollständiger Commit-SHA binden. Aktuelle Dateien und tatsächlich benötigte Fähigkeiten prüfen, keine historischen PR-Statuslisten abarbeiten. Abgeschlossene Lieferungen sind keine erneut offenen Voraussetzungen; nur eine konkrete aktuelle Lücke verfolgen.
-3. Bestehende technische Formate, Farbregeln, Solverprofile, Nachweise und Reparaturverträge verwenden. Dieses Regelwerk ersetzt sie nicht. Fehlende Pflichtquellen oder widersprüchliche Vorgaben vor dem betroffenen Schritt klären.
-4. Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine Funktionen, Prüfungen oder Ergebnisse behaupten, die nicht verfügbar beziehungsweise ausgeführt sind.
-5. Keine direkte Modell-API einbauen. Produktionsaufträge mit Repositoryablage erlauben ausschließlich die beauftragte Paketsicherung samt Index; ein Integrationsauftrag erlaubt zusätzlich Abschnitt 8 und die anschließende Bereinigung nach Abschnitt 9. Ablage-/Integrationsmerge braucht den passenden ausdrücklichen oder bedingten Auftrag. Für den zugehörigen Cleanup gilt die Eigentümerfreigabe in Abschnitt 9. Werkzeugänderungen und Veröffentlichung bleiben getrennte Befugnisse. Bereits erteilte passende Aufträge nicht erneut erfragen.
-6. **Menschliches Probespielen ist optional und kein Freigabekriterium.** Ein großer Rätselbestand darf ohne Probespiele entstehen. Verpflichtend bleiben die Abschlussbildfreigabe, die Freigabe der daraus abgeleiteten Motivvorlage, die technische Prüfung und die abschließende redaktionelle Abnahme. Spätere Spielerfahrungen dienen der Verbesserung und Kalibrierung.
+### 1.1 Pflichtquellen nach Phase
 
-**Projektlokale Ausnahme zur Modellauswahl:** Normale Produktionsaufträge nach
-diesem Regelwerk (1–5 einschließlich Korrektur und Wiederaufnahme) erzeugen keine
-Modell-, Reasoning-, Eigenumsetzungs- oder sonstige Ausführungsempfehlung.
-`docs/dev-rules/MODEL_SELECTION.md` und `MODEL_CATALOG.md` dafür nicht laden;
-keine dafür veranlasste Recherche zu Modellen, Preisen oder Clientverfügbarkeit.
-Der Nutzer wählt seine Oberfläche und Einstellungen selbst. Die Prüfung der
-tatsächlich nötigen Bild-, Datei-, Repository- und Werkzeugfähigkeiten bleibt
-Pflicht; konkrete Zugriffsblocker benennen. Separat beauftragte Entwicklungsarbeit
-an Werkzeugen, Spiel oder CI folgt weiterhin dem allgemeinen Entwicklungsworkflow.
+Zuerst den Produktionseinstieg der aktuellen [AGENTS.md](../../AGENTS.md), diesen
+Abschnitt 1 und den vollständigen [gemeinsamen Bildstil](../PUZZLE_IMAGE_STYLE.md)
+lesen. Danach nur die folgende Zeile für die tatsächlich beauftragte Phase.
+Abschnittsangaben verlangen den genannten Abschnitt, nicht die ganze Datei.
+Herkunfts-/Querverweise darin sind keine rekursive Volllektüreplicht. Vor einer
+konkreten technischen Operation zusätzlich ihren unten benannten Vertrag lesen;
+benötigte Felder, Grenzen und Prüfungen niemals aus einem Kurztext erraten.
+
+| Auftrag | Operative Pflichtlektüre zusätzlich zum gemeinsamen Kern |
+| --- | --- |
+| 1 · Abschlussbilder | §§2.1–2.4; Qualität §2 und §3.1; Transparenz §2. Vor Veröffentlichung §§6.1–6.2 und §7. |
+| 2 · Motivvorlage | §§2.1–2.4; Qualität §2 und §3.2 sowie H-03/H-04 aus §4. Vor Veröffentlichung §§6.1–6.2 und §7. |
+| 3 · Rasterangebote | §§4.1–4.5 und §5.2; Qualität §§2–4, §5 bei fehlendem qualifiziertem Kandidaten, §6 nur bei konkreter redaktioneller Ausnahme; bei Farbe zusätzlich §8. Vor Veröffentlichung §§6.1–6.2 und §7. |
+| 4 · Hintergrund | §6.3; Qualität §2 und §9.1; Hintergrundvertrag §3 für Arbeitsmanifest/Entscheidung. Vor Veröffentlichung §§6.1–6.2 und §7. HP-W2 §4 erst bei tatsächlich anstehender Ableitung/Prüfung des ausgewählten Bilds. |
+| 5 · Abschluss/Integration | §§6–9; die in §8 für die tatsächliche Operation gerouteten Integrations-/Zielverträge. Bereits passende Bild-/Rasterbelege prüfen, nicht deren Produktion wiederholen. |
+| Bild-/Rasterkorrektur | §4.4 und die betroffene Phase oben. Nur abhängige Entscheidungen erneuern; für integrierte Bildrevisionen zusätzlich deren eigenen Ziel-/Abschlussweg in §§8–9. |
+| Wiederaufnahme | §§6.1–6.2 und §7, aktuelle tatsächliche Phase oben; bei geänderten Bytes zusätzlich §4.4. Verbrauchte Budgets und gültige Entscheidungen aus dem gebundenen Stand fortführen. |
+
+Die Tabellenbegriffe meinen [Qualität](../PUZZLE_QUALITY.md),
+[Transparenz](../REVEAL_TRANSPARENCY.md) und
+[Hintergrundvertrag](../PUZZLE_BACKGROUNDS.md). Ihre Kriterien und technischen
+Invarianten gelten weiter; nur die Lesereihenfolge ist phasengerecht.
+[Produktdefinition](../PRODUCT_DEFINITION.md), [Gestaltung](../DESIGN_CONCEPT.md),
+[Produktion](../PUZZLE_PRODUCTION.md), [PW](../PRODUCTION_WORKSPACE.md) und die
+[Tool-README](../../tools/puzzle_production/README.md) sind für normale Produktion
+keine zusätzlichen pauschalen Gesamthandbücher. Technische Detaillektüre entsteht
+nur durch eine tatsächlich verwendete Operation:
+
+| Operation | Vor Ausführung benötigte Referenz |
+| --- | --- |
+| Paket bauen/veröffentlichen | [PW-B-Vertrag](../PW_B_CONTRACT.md): Phasen, geschlossene Generationen und Veröffentlichung; Tool-README Abschnitte PW-B und PB-A; §6 dieses Dokuments |
+| Direkter Rasterimport und Endprüfung | Tool-README RP-3, Datenvertrag und Ressourcen; Produktion §§4–5 für verwendete Mono-/Farbsemantik und unabhängigen Proof |
+| Paarprofil | [PAIRED_LINES](../PAIRED_LINES.md) vollständig und Tool-README Paarlinienprofil; kein Routinepaarlauf bei bereits vollständig gelöster Linienlogik |
+| Feste Korrektur oder RP-5-Suche | [FIXED_RASTER](../FIXED_RASTER.md) beziehungsweise Tool-README RP-5; §4.4 und der wirklich verwendete Ableitungsvertrag |
+| Aktuelle Schwierigkeit/Rebind | [SD2-Integration](../SD2_INTEGRATION.md) und Tool-README SD2-C/SD2-B; Analyse-/Bewertungsvertrag nur für die tatsächlich verwendeten Befehle |
+| Gewählten Hintergrund ableiten | Hintergrundvertrag §4 und Tool-README HP-W2; keine Ableitung ungeklärter Kandidaten |
+| Export/Plan/Register/Recovery | [RI](../PUZZLE_INTEGRATION.md) mit seinen aktuellen Budget-/Guardentscheidungen, [ZA-1](../ZA1_ADAPTER.md) für die verwendete Generation und die entsprechende CLI-Anleitung; §8 |
+| Nachintegration/Bildrevision abschließen | §9 und der dort bezeichnete revisionsgenaue Retirementvertrag; keine allgemeine historische Lieferberichtslektüre |
+
+Ein Link auf eine Einführung oder historische Lieferung ist kein neuer Auftrag.
+Der aktuelle Quellenstand muss erreichbar und mit vollständiger Commit-SHA
+gebunden sein. Die Regeldatei und die zugehörigen Stil-/Fachquellen aus demselben
+festgehaltenen Regelstand lesen; alte versiegelte Snapshots nicht umschreiben.
+Der bestehende Regelwerks-Snapshot und seine tatsächlichen Datei-/Hashbindungen
+bleiben erhalten. Diese Dokumentrevision ändert keine Request-/Handoff-/Writer-
+Schemas. Fehlende benötigte Quellen oder Widersprüche blockieren die betroffene
+Operation, nicht automatisch unabhängige Arbeit.
+
+Separat beauftragte Regel-/Werkzeug-/Spiel-/CI-Entwicklung verwendet weiterhin die
+vollständige Entwicklungsroute aus AGENTS einschließlich WORKFLOW, Projektprofil
+und auftragsbezogenen Fachquellen. Diese Ausnahme ist kein Entwickler-Kurzweg.
+
+### 1.2 Gemeinsame Arbeitsregeln
+
+Zu Beginn Kategorienquelle, Arbeitsindex und Runtime-Registry lesen, aber keine
+Bestandsrätsel einzeln laden oder nachprüfen. Kategorie nach Auftrag oder prägendem
+Hauptgegenstand gemäß [Kategorienvertrag](../CATEGORIES.md) zuordnen und in
+Briefing/Record führen. Repository-/Toolstand mit vollständiger SHA binden.
+Tatsächlichen Datei-, Bild-, Repository- und Ausführungszugriff prüfen. Keine
+Funktionen, Originale, Prüfungen oder Erfolge behaupten, die nicht verfügbar oder
+nicht ausgeführt sind. Bestehende Formate, Farbregeln, Solverprofile, Nachweise und
+Reparaturverträge verwenden. Normale Produktion entwickelt keine neuen Werkzeuge.
+
+Keine direkte Modell-API einbauen. Ein Produktionsauftrag mit Repositoryablage
+erlaubt ausschließlich die beauftragte Paketsicherung samt Index; ein
+Integrationsauftrag zusätzlich §8 und den fachlichen Abschluss nach §9.
+Ablage-/Integrationsmerge braucht eine passende ausdrückliche oder bedingte
+Freigabe. Bereits erteilte passende Aufträge nicht erneut erfragen. Kein direkter
+Schreibzugriff auf main, keine fremden Änderungen, ungeklärten Fremdassets,
+Secrets oder privaten Daten übernehmen. Vor lokaler Arbeit die beauftragte
+Arbeitswurzel und [WORKSPACE](../dev-rules/WORKSPACE.md) beachten; diese Lektüre
+betrifft die konkrete Ablage/Bereinigung, nicht den gesamten Entwicklungsworkflow.
+
+Menschliches Probespielen ist optional und kein Produktionsgate. Verpflichtend
+bleiben die tatsächliche Abschlussbildfreigabe, Motiv-/Parameterfreigabe,
+technische Qualifikation, Raster-/Hintergrundwahl und finale redaktionelle
+Abnahme am konkreten Gegenstand. Empfehlung, Dateiexistenz, Klick, Kopieren,
+Aktualisierung oder Schweigen erzeugen keine Freigabe. Materiell geänderte
+kreative Bytes benötigen die passende neue Entscheidung.
+
+Normale Produktionsaufträge 1–5 einschließlich Korrektur und Wiederaufnahme
+liefern keine Modell-, Reasoning- oder Eigenumsetzungsempfehlung. MODEL_SELECTION
+und MODEL_CATALOG nicht dafür laden oder recherchieren. Der Nutzer wählt seine
+Oberfläche selbst; fehlende erforderliche Bild-/Datei-/Werkzeugfähigkeiten bleiben
+konkrete Blocker. Das Produktionsabschlussformat aus §7 gilt, nicht das
+Entwicklungs-HANDOFF-JSON.
 
 ### Prüfungen gehören zur Produktion, nicht zur CI
 
-- Sämtliche rätselbezogenen Prüfungen – Lösbarkeit, Eindeutigkeit, unabhängiger Proof, Herkunft, Reparatur, Gestaltung und Zielintegration – MUSS die KI für die jeweilige neue/geänderte Revision im Produktionsauftrag durchführen und dateigebunden belegen. Unveränderte, passend gebundene Nachweise wiederverwenden; erforderliche Neuprüfungen nach Abschnitt 4.4 bleiben Pflicht.
-- **Keine rätselspezifischen Unit-Tests, Test-Snapshots, CI-Falllisten oder dauerhaften Replayjobs anlegen.** Ein neues Rätsel darf weder den allgemeinen Testbestand noch einen CI-Korpus erweitern. Prüfscripte für den konkreten Auftrag nur temporär außerhalb der Test-Discovery ausführen; Ergebnisse ins Paket, keine CI-Anbindung.
-- Für jeden Inhalts-/Ablage-/Cleanup-PR einen aktuellen `.ci/package.json` nach [CI_WORKFLOW_V2](../CI_WORKFLOW_V2.md) führen; vorhandenes Inhaltsissue/Paket verwenden oder den neuen Auftrag dort erfassen. Reine Inhalte wählen begründet `modules=[]` und `evidence.mode=none`. Der allgemeine Kern prüft Quellen-/Planintegrität; reine Rätselproduktion einschließlich Ablage, Integration und Datenbereinigung bleibt ohne Player-Build. Das gilt auch im Main-Nachlauf. Keine rätselspezifischen Solver-/Proof-Replays, vollständigen Fachtests oder nativen Funktions-/Rendermatrizen ergänzen; unveränderte Bestandsrätsel nicht erneut prüfen.
-- Code-, Tool-, gemeinsame UI-/Asset- und CI-Änderungen sind separate Entwicklungsarbeit mit den passenden allgemeinen Regressionen an einem festen technischen Testbestand. Nicht zur vermeintlichen Absicherung eines neuen Rätsels Code ändern oder den CI-Umfang manuell auf `all` erweitern.
+Sämtliche rätselbezogenen Prüfungen – Lösbarkeit, Eindeutigkeit, unabhängiger
+Proof, Herkunft, Reparatur, Gestaltung und Zielintegration – für die jeweilige
+neue/geänderte Revision tatsächlich durchführen und dateigebunden belegen.
+Unveränderte passend gebundene Ergebnisse wiederverwenden; §4.4 bestimmt die
+nötigen Neuprüfungen. Keine rätselspezifischen Unit-Tests, Test-Snapshots,
+CI-Falllisten oder dauerhaften Replayjobs. Auftragsprüfskripte bleiben temporär
+außerhalb der Test-Discovery; Ergebnisse gehören zum Paket, nicht in einen
+wachsenden CI-Korpus.
+
+Vor jedem Inhalts-/Ablage-/Cleanup-PR den Abschnitt Paketplan sowie die buildfreien
+Änderungsklassen aus [CI v2](../CI_WORKFLOW_V2.md) lesen und einen aktuellen
+`.ci/package.json` führen. Reine Inhalte wählen begründet `modules=[]` und
+`evidence.mode=none`; Quellen-/Planintegrität bleibt Pflicht, ohne Player-Build,
+auch im Main-Nachlauf. Keine Solver-/Proof-Replays, vollständigen Fachtests oder
+nativen Rendermatrizen allein wegen eines neuen Rätsels ergänzen. Code, gemeinsame
+Spielassets und CI-Änderungen sind getrennte Entwicklungsarbeit mit geeignetem
+Prüfplan; nicht die Inhaltsausnahme ausweiten oder manuell `all` wählen.
 
 ## 2. Abschlussbild zuerst, danach Abstraktion
 
 ### 2.1 Eingaben und Konfiguration
 
-Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild; optional Breite × Höhe (ungefähr/fest), Mono/Farbe, gewünschte Vordergrundfarbzahl (ungefähr/genau) und weitere Einschränkungen. Eine verlinkte oder angezeigte Bildvorschau ersetzt keine gespeicherte Quelldatei.
+Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild;
+optional Breite/Höhe (ungefähr/fest), Mono/Farbe, Vordergrundfarbzahl
+(ungefähr/genau) und weitere Einschränkungen. Eine Vorschau ersetzt keine
+Originaldatei. Hauptmotiv, unverzichtbare Merkmale, erlaubte Umgestaltung und
+Einschränkungen erfassen. Reversible Details sinnvoll ergänzen; nur wesentliche
+offene Entscheidungen mit Empfehlung und Konsequenzen klären.
 
-Frühe Breiten-/Höhenwünsche sind unabhängig: keine, nur eine oder beide Achsen.
-Exakt/ungefähr gilt für ausgefüllte Achsen; offene Achsen passend zum Motiv bestimmen.
-Eine ausdrücklich aufgehobene Breite lässt die weiterhin gültige Höhe bestehen
-und umgekehrt. Leeren allein hebt keine veröffentlichte Vorgabe auf. Keine 0,
-angenommene Quadratseite oder Wiederherstellung eines aufgehobenen Altwerts.
-Diese Wünsche verbindlich im veröffentlichten Motivbriefing der Übergabe führen;
-die spätere konkrete Matrix besitzt zwei Maße. Bestehende geschlossene Formate
-und historische Freigaben bleiben unverändert.
+Frühe Breiten-/Höhenwünsche sind unabhängig: keine, eine oder beide Achsen.
+Exakt/ungefähr gilt für ausgefüllte Achsen. Offene Achsen zum Motiv bestimmen;
+keine 0, angenommene Quadratseite oder Wiederherstellung aufgehobener Altwerte.
+Eine ausdrücklich aufgehobene Breite erhält die weiter gültige Höhe und umgekehrt.
+Bloßes Leeren hebt keine veröffentlichte Vorgabe auf. Wünsche im Motivbriefing
+sichern; die konkrete spätere Matrix besitzt zwei Maße. Ein freigegebener
+Parameterkorridor wird nicht stillschweigend durch spätere Formularwerte geändert.
 
-Die KI MUSS Hauptmotiv, unverzichtbare Merkmale, erlaubte Umgestaltung und Einschränkungen erfassen. Fehlende reversible Details sinnvoll ergänzen. Nur wesentliche offene Produktentscheidungen beim Nutzer erfragen, jeweils mit Empfehlung und Konsequenzen.
+Zuerst farbige detaillierte Abschlussbilder, noch keine Abstraktion, Zellmatrix
+oder Hinweise. Fehlende Rastermaße/offener Modus blockieren diese Bildwahl nicht.
+Die spätere Abstrahierbarkeit berücksichtigen, ohne die Illustration vorzeitig
+auf Zellniveau zu vereinfachen. Eine eigene Eingangsdatei ist zunächst Referenz,
+keine automatisch freigegebene Abschlussbilddatei.
 
-Der erste gestalterische Schritt ist immer die Erstellung mehrerer **farbiger, detaillierter Abschlussbilder** aus dem Input. Noch keine abstrahierte Motivvorlage, Zellmatrix oder Hinweise erzeugen. Fehlende Rastermaße oder ein offener Rätselmodus blockieren diese Bildauswahl nicht. Die spätere Darstellbarkeit bei der Komposition berücksichtigen, ohne das Abschlussbild vorzeitig auf Zellniveau zu vereinfachen. Auch ein eigenes Ausgangsbild ist zunächst Referenz und keine automatisch freigegebene Abschlussbilddatei.
+Nach Bildfreigabe bei offener Konfiguration zwei bis drei sinnvolle Möglichkeiten
+knapp vergleichen und eine empfehlen. Motivtreue, Darstellbarkeit, Logikrisiko
+und Spielgefühl getrennt begründen; Rechtecke gleichberechtigt berücksichtigen.
+Dies verlangt nicht mehrere tatsächliche Abstraktionsbilder.
 
-Wenn Größe oder Farbmodus offen sind, nach der Abschlussbildfreigabe **2–3 konkrete Konfigurationen** vergleichen und eine empfehlen. Motivtreue, Darstellbarkeit, erwartetes Lösbarkeitsrisiko und Spielgefühl getrennt begründen. Auch ungefähre Wunschmaße dürfen hinterfragt werden; feste Grenzen nicht eigenmächtig überschreiten. Rechtecke gleichberechtigt berücksichtigen.
-
-- Reguläre Rätsel: **Breite ≤ 50 und Höhe ≤ 50**. Ein weiter gefasstes technisches Werkzeuglimit ist keine Produktfreigabe.
-- Klein (längste Achse ≤ 20): dominante Silhouette und wenige Binnenformen. Mittel (21–35): charakteristische Details und Negativflächen. Groß (36–50): gegliederte zusätzliche Details, keine bloße Vergrößerung. Diese Arbeitsklassen bestimmen keine Schwierigkeit.
-- **Acht Vordergrundfarben plus Leer sind die technische Obergrenze, kein Produktionsziel.** Die kleinste Palette empfehlen, die Identität, wichtige Flächen und Lesbarkeit angemessen erhält; gewöhnlicher Ausgangspunkt sind Mono oder 2–4 Farben. 5–8 sind mit konkretem motivischem Nutzen zulässig. Keine zusätzlichen Farben allein wegen Verfügbarkeit, Größe, Solvererfolg oder künstlich höherer Schwierigkeit.
-- Farbzahl bezeichnet die tatsächlich in der Matrix verwendeten Vordergrund-IDs; `EMPTY` zählt nicht, auch Weiß kann eine Vordergrundfarbe sein. Unbenutzte Paletteinträge, nahezu gleiche Schattierungen und dekorative Einzelzellen erfüllen keinen Farbwunsch. Vor Versiegelung Palette auf tatsächlich nötige Einträge reduzieren und nötige Neuprüfungen aus 4.4 ausführen.
-- Eine **genaue** Farbzahl ist eine feste Vorgabe; bei Konflikt mit Motivqualität oder Nachweis vor Abweichung eine begründete Alternative vorlegen. **Ungefähr** ist ein Ziel: Abweichung begründen und im vorgeschlagenen, später freizugebenden Parameterkorridor konkretisieren; kein stilles Ausweiten auf acht. Mono verwendet genau eine Vordergrundfarbe; widersprüchliche Eingaben vor der betroffenen Abstraktion klären.
-- Bei offener Farbzahl in Auftrag 2 die empfohlene Palette und eine sinnvoll reduzierte Alternative gegenüberstellen. Jede zusätzliche Farbe benötigt eine benannte Funktion, etwa die Trennung charakteristischer Bauteile. Bei 5–8 Farben ausdrücklich erklären, welcher erkennbare Verlust durch weitere Zusammenlegung entsteht. Varianten mit verschiedener Farbzahl in die vorhandene Kandidatenauswahl integrieren, keine zusätzliche Vollmatrix verlangen. Unverzichtbare Farbtrennungen nicht mechanisch reduzieren. Das Abschlussbild bleibt immer farbig, detailliert und unabhängig von der Rasterfarbzahl.
-- Größe, Seitenverhältnis und Palette müssen zum Motiv passen. Vor dem Nachweis keine Lösbarkeit versprechen.
-
-Spätere Formularwünsche dürfen einen bereits freigegebenen Parameterkorridor nicht
-stillschweigend ändern. Widersprüche vor Produktion/Integration klären; die konkret
-vorgelegte Fassung und ihre tatsächliche Freigabe bleiben maßgeblich.
+- Regulär höchstens 50 Zellen je Achse; größere technische Werkzeuggrenzen sind
+  keine Produktfreigabe. Klein (längste Achse bis 20), mittel (21–35) und groß
+  (36–50) unterscheiden Detailspielraum, nicht logische Schwierigkeit.
+- Acht Vordergrundfarben plus Leer sind die technische Obergrenze, kein Ziel.
+  Die kleinste motivgerechte Palette empfehlen; Ausgangspunkt Mono oder 2–4 Farben.
+  5–8 nur mit benanntem motivischem Nutzen und erklärtem Verlust bei Zusammenlegung.
+  Keine Farbe nur für Verfügbarkeit, Solvererfolg oder künstliche Schwierigkeit.
+- Farbzahl zählt tatsächlich verwendete Vordergrund-IDs; EMPTY zählt nicht,
+  Weiß kann Vordergrundfarbe sein. Unbenutzte Einträge, ähnliche Schattierungen
+  und dekorative Einzelzellen erfüllen keinen Farbwunsch. Vor Versiegelung auf
+  nötige Einträge reduzieren und die erforderlichen Neuprüfungen ausführen.
+- Genaue Farbzahl ist fest; Konflikte vor Abweichung klären. Ungefähr ist ein
+  begründbar abweichendes Ziel innerhalb des vorgeschlagenen und danach
+  freigegebenen Korridors. Mono hat eine Vordergrundfarbe. Bei offener Farbzahl
+  die empfohlene Palette und eine sinnvoll reduzierte Alternative erläutern,
+  jede Farbe einer Motivfunktion zuordnen. Keine zusätzliche Vollmatrix verlangen.
+- Maße, Seitenverhältnis und Palette zum Motiv wählen; vor Nachweis keine
+  Lösbarkeit versprechen. Das Abschlussbild bleibt unabhängig davon ausgearbeitet
+  und farbig. Materielle Abweichungen vor weiterer Produktion entscheiden lassen.
 
 ### 2.2 Darstellungen auseinanderhalten
 
 | Darstellung | Zweck und Bindung |
 | --- | --- |
-| Ursprungsidee / Bildquelle | Auftrag oder Referenz; Original, Herkunft und Nutzungsgrundlage erhalten. |
-| Abschlussbild | Zuerst erzeugte farbige, detaillierte Illustration; nach ausdrücklicher menschlicher Auswahl/Freigabe verbindliche gestalterische Referenz für alle folgenden Darstellungen und spätere Belohnungsansicht. |
-| Motivvorlage | Aus genau dem freigegebenen Abschlussbild abgeleitete, vereinfachte, gespeicherte Illustration für den gewählten Rastermodus; eigene menschliche Freigabe vor der Rasterproduktion. |
-| Lösungsraster | Exakte diskrete Zellmatrix aus der Motivvorlage; alleinige Grundlage für Hinweise und Logiknachweis. |
-| Hintergrundzeichnung (zukünftiger Weg) | Eigenständige Kontextillustration mit eigener Bildrevision und tatsächlicher Auswahl; weder Abschlussbild noch Motivvorlage oder Quelle für Lösungszellen. |
+| Ursprungsidee / Bildquelle | Auftrag/Referenz; Original, Herkunft und Nutzungsgrundlage erhalten. |
+| Abschlussbild | Zuerst erzeugte farbige detaillierte Illustration; nach tatsächlicher Auswahl/Freigabe gestalterische Referenz und spätere Belohnungsansicht. |
+| Motivvorlage | Aus genau diesem gespeicherten Bild abgeleitete vereinfachte Illustration; eigene Motiv-/Parameterfreigabe vor Rasterproduktion. |
+| Lösungsraster | Exakte diskrete Zellmatrix; alleinige Grundlage von Hinweisen und Logiknachweis. |
+| Hintergrundzeichnung | Eigenständiger Kontext, separate Bildrevision und Wahl; keine Quelle von Lösungszellen. |
 
-Verbindliche Richtung: **Input → Abschlussbild → freigegebene Abstraktion → Lösungsraster**. Diese drei Darstellungen müssen motivisch zusammenpassen, nicht pixelidentisch sein. Abschlussbild und Motivvorlage als getrennte Dateien und Revisionen führen; das detaillierte Original niemals mit seiner vereinfachten Ableitung überschreiben. Der zukünftige Hintergrund hat einen Kontextbezug, gehört aber nicht zu dieser Ableitungskette.
+Input → Abschlussbild → freigegebene Abstraktion → Lösungsraster bleibt die
+verbindliche Richtung. Motivische Konsistenz, nicht Pixelidentität. Dateien und
+Revisionen getrennt führen; das detaillierte Original nicht mit der Abstraktion
+überschreiben. Der Hintergrund gehört nicht in diese Ableitungskette.
 
 ### 2.3 Styleguide
 
-**Vorgeben:** ruhige, warme, handgezeichnete 2D-Illustration; klare Silhouette; klare, charaktervolle Proportionen; sauber geführte Konturen; zusammenhängende, ausreichend kräftige Farbflächen; charakteristische Innenräume; ruhiger Hintergrund. Das Abschlussbild MUSS eine ausgearbeitete farbige Illustration mit sauberer Binnenzeichnung, motivgerechten Oberflächendetails und zurückhaltender Schattierung sein. Detailliert bedeutet weder fotorealistisch noch überladen. Seine Hauptformen müssen später abstrahierbar bleiben; eine vergrößerte Zellgrafik oder bloß kolorierte Silhouette genügt nicht. Details müssen Erkennbarkeit oder Ausdruck unterstützen. Die gemeinsame Identität entsteht durch Form-, Kontur- und Flächenbehandlung, nicht durch eine für alle Motive identische Palette.
+Die gemeinsame gestalterische Norm steht vollständig in
+[PUZZLE_IMAGE_STYLE](../PUZZLE_IMAGE_STYLE.md): warme klare Illustration mit
+Filzstift-/Tuscheanmutung, kontrollierte Abstraktion und leichte Graphitkontexte.
+Sie ist in jeder Phase Pflicht. [Q-B02/Q-B03](../PUZZLE_QUALITY.md#31-abschlussbildphase)
+und [AT §2](../REVEAL_TRANSPARENCY.md#2-verbindlicher-bildstandard) behalten
+Einzelurteile, echte Transparenz, helle Motivteile und saubere Alphakanten.
+Szenen bewahren notwendige Umgebung und erhalten eine bewusste transparente
+Außenkomposition. Originale groß/klein direkt ansehen, bei Bedarf auf neutralem
+Grund/Schachbrett. Keine routinemäßige Buch-/Katalogmontage, Fadeprobe oder
+Testintegration, auch nicht in spätere Produktionsphasen verlagert.
 
-**Transparenter Bildgrund nach [AT](../REVEAL_TRANSPARENCY.md):** Der freigegebene
-Sollstandard ersetzt neutrale weiße, cremefarbene oder andersfarbige Bildflächen
-um das Motiv durch echte PNG-Transparenz. Tatsächliche Aussparungen, etwa ein
-Henkelinnenraum, werden ebenso freigestellt. Weiße und helle Motivbestandteile,
-feine Konturen, charakteristische Details und Proportionen bleiben erhalten;
-keine globale Farb-/Helligkeitsschlüsselung. Saubere teiltransparente Randpixel
-dürfen keine hellen Säume auf dem Papiergrund erzeugen. Die Ausgabe bleibt eine
-ausgearbeitete farbige Illustration, auch bei monochromem Rätsel.
-
-Szenische Bilder werden motivbezogen behandelt: prägende Gegenstände, ihre
-Beziehungen und notwendige Umgebung bewahren, die transparente Außenfläche
-beziehungsweise Vignette bewusst gestalten und die konkrete Fassung vorlegen.
-Eine Szene ist keine pauschale Ausnahme für einen opaken Bildkasten; Himmel,
-Boden oder Nebenmotive werden zugleich nicht blind entfernt. Geänderte
-Kompositionen und materielle Motivänderungen benötigen die dazugehörige erneute
-Freigabe. Das Original groß und klein direkt ansehen, bei Bedarf auf neutralem
-Grund oder Schachbrett: Motiv-/Stilfehler, Außenflächen, Aussparungen, erhaltene
-helle Motivteile und Alphakanten beurteilen. Keine routinemäßigen Buchmontagen,
-Katalogkompositionen, Fadeproben oder Testintegrationen; diese Arbeit wird auch
-nicht in spätere Produktionsphasen verschoben. Die technische Alpha-/Rendergarantie
-liegt bei den bestehenden Integrations-/Rendertests. Kurze Urteile im vorhandenen
-Bericht genügen; keine neue Berichtsgattung oder persönliche Bildabnahme.
-Q-H01/Q-H02 verlangen weiterhin die tatsächliche Zell-/Hinweissicht, ohne neuen
-obligatorischen Spielstart je Rätsel. Transparenz des Abschlussbilds ändert weder den Leerwert des Rasters
-noch weiße Vordergrundfarben einer Farbmatrix.
-
-**Vermeiden:** Fotorealismus/3D-Look als Stilgrundlage, Skizzenrauschen, ausgefranste Doppelkonturen, entscheidende Haarlinien, überladene Hintergründe, schwache Ton-in-Ton-Trennung, zufällige Kleinstflächen, anatomische Artefakte, Schrift/Wasserzeichen und Dekoration allein zum Füllen freier Zellen.
-
-**Bei Abschlussbild, Motivvorlage, Raster und Hinweisansicht prüfen:** Der
-[Qualitätsvertrag §§2–4](../PUZZLE_QUALITY.md) führt die verbindlichen
-Einzelkriterien, Herkunft, Methoden/Prüfzeitpunkte und die Trennung von
-unabdingbaren Voraussetzungen und redaktionell abweichbaren Zielen.
-Je Kriterium `erfüllt`, `Warnung`, `nicht erfüllt` oder `nicht geprüft` mit
-Begründung und konkreter Datei-/Revisionsbindung dokumentieren. Keine gute
-Gesamtnote darf ein negatives Einzelkriterium verdecken. Historische Berichte
-behalten ihre damaligen Ergebniswörter und Bindungen.
-
-Im Raster nur diskrete Werte, keine Zwischenfarben oder Textur als Zellzustand. Farbige Raster müssen selbst erkennbar sein; bei Mono darf das Abschlussbild zusätzliche Klarheit schaffen. Bei der Abstraktion diese Details gezielt reduzieren, zusammenfassen oder weglassen, ohne Identität, Perspektive, Hauptproportionen und wichtige Negativflächen des Abschlussbilds zu verändern. Das Abschlussbild nicht nachträglich zur Rechtfertigung eines abweichenden Rasters umgestalten.
+Je fälligem Qualitätskriterium erfüllt/Warnung/nicht erfüllt/nicht geprüft mit
+kurzer Begründung und konkreter Datei-/Revisionsbindung festhalten. Kein guter
+Gesamteindruck verdeckt negative Einzelkriterien. Q-H01/Q-H02 behalten die echte
+Zell-/Hinweissicht, ohne obligatorischen Spielstart je Rätsel. Im Raster nur
+diskrete Werte, keine Textur/Zwischenfarben als Zellzustand. Transparenz des
+Reveals ändert weder EMPTY noch weiße Vordergrundfarben der Matrix.
 
 ### 2.4 Abschlussbildauswahl und Abstraktionsfreigabe
 
-1. Standardmäßig **drei sinnvoll unterschiedliche Abschlussbilder** erzeugen. Komposition, Pose oder Farbgebung variieren; Stil, Detailanspruch und Auftrag bewahren. Bei bindender Referenz (`faithful`) Identität und geschützte Geometrie erhalten; freie Interpretation (`free`) ausdrücklich festhalten. Eine ausdrückliche Vorgabe darf die Variantenanzahl reduzieren.
-2. Native Bildgenerierung verwenden. Jede Variante als tatsächliche Einzeldatei speichern und zeigen; eine Kontaktübersicht ist nur Auswahlhilfe. Ohne verfügbare Bildfunktion den Bildschritt als blockiert melden; Konzepte oder behauptete Dateien ersetzen keine Abschlussbildauswahl.
-3. Der Mensch wählt und korrigiert. **Vor jeder Abstraktion MUSS das konkrete Abschlussbild ausdrücklich freigegeben sein**, gebunden an Datei, Revision/Hash und zu bewahrende Merkmale. Eine Auswahl mit Korrekturwunsch ist noch keine Freigabe der korrigierten Fassung.
-4. Danach geeignete Rasterkonfiguration empfehlen und aus den gespeicherten Bytes des freigegebenen Abschlussbilds eine Motivvorlage ableiten. Standardmäßig eine gezielte Abstraktion für die empfohlene Konfiguration erstellen; zusätzliche Varianten nur bei einem konkreten Darstellungs-/Detailkonflikt. Abschlussbild und Abstraktion nebeneinander vorlegen und Detailverluste benennen.
-5. **Vor jeder eigentlichen Rasterproduktion MUSS die konkrete abstrahierte Motivdatei freigegeben sein**, einschließlich Revision/Hash, Abschlussbildbezug, Motivinvarianten und zulässiger Größen-/Modus-/Crop-Varianten. Die Abschlussbildfreigabe ersetzt diese Abstraktionsfreigabe nicht. Schweigen oder unverbindliches Interesse ist keine Freigabe.
+1. Standardmäßig drei sinnvoll unterschiedliche echte Abschlussbilder erzeugen;
+   Komposition/Pose/Farbgebung variieren, Stil, Detailanspruch und Auftrag bewahren.
+   Bindende Referenz (`faithful`) und freie Interpretation (`free`) unterscheiden.
+   Nur eine ausdrückliche Vorgabe reduziert die Variantenanzahl.
+2. Native Bildgenerierung verwenden; jede Variante tatsächlich als Einzeldatei
+   speichern und zeigen. Eine Kontaktübersicht ist nur Auswahlhilfe. Fehlende
+   Bildfunktion blockiert den Bildschritt; Konzepte ersetzen keine Originale.
+3. Vor jeder Abstraktion muss das konkrete Abschlussbild ausdrücklich freigegeben
+   sein: Datei, Revision/Hash und geschützte Merkmale. Eine Auswahl mit Korrekturwunsch
+   ist keine Freigabe noch nicht vorhandener korrigierter Bytes.
+4. Danach standardmäßig eine begründete Abstraktion aus den gespeicherten Bytes
+   für die empfohlene Konfiguration erstellen. Weitere Varianten nur für konkrete
+   offene Darstellungs-/Detailfragen, nicht zur Erfüllung einer Quote. Reveal und
+   Motivvorlage nebeneinander vorlegen; Verluste und Parameterkorridor benennen.
+5. Vor Rasterproduktion echte Freigabe der Motivdatei samt Revision/Hash,
+   Revealbezug, Invarianten und zulässigen Maß-/Modus-/Cropvarianten abwarten.
+   Bildfreigabe ersetzt keine Motivfreigabe; Schweigen ist keine Entscheidung.
 
-Korrekturen nur an der gewählten Darstellung durchführen, zu bewahrende Merkmale nennen und eine neue Revision speichern. Nach zwei erfolglosen Runden Ursache und geänderten Plan vorlegen. Ist die Abstraktion ungeeignet, zunächst Vereinfachung, Größe oder Rasterpalette korrigieren. Ein anderes Abschlussbild benötigt erneut die ausdrückliche Bildfreigabe; es darf nicht stillschweigend an technische Fehlschläge angepasst werden.
+Nur die gewählte Darstellung korrigieren, geschützte Merkmale nennen und neue
+Revision sichern. Nach zwei erfolglosen Bildkorrekturrunden Ursache und geänderten
+Plan vorlegen. Bei ungeeigneter Abstraktion Vereinfachung, Größe oder Palette
+überdenken; anderes Abschlussbild erneut freigeben lassen, nicht heimlich an
+technische Fehlschläge anpassen.
 
 ## 3. Standardablauf: fünf Aufträge
 
 | Schritt | Eingang und Arbeit | Übergabe und echte Entscheidung |
 | --- | --- | --- |
-| 1 · Abschlussbilder | Tatsächliches Motivbriefing, optional eigene Eingangsdatei. Drei unterschiedliche echte detaillierte farbige Abschlussbilder erzeugen. Keine erfundene ID oder Gitquelle beim neuen Briefing. | `reveal_review`, erreichbare Originaldateien; Mensch wählt und gibt die konkrete unveränderte Fassung frei. |
-| 2 · Motivvorlage | Erst nach echter Revealfreigabe dessen gespeicherte Bytes abstrahieren; sinnvollen Größen-/Modus-/Farbenkorridor empfehlen. | `motif_review`, Reveal/Motiv nebeneinander, Verluste und Parameter erklären; echte Motiv-/Parameterfreigabe abwarten. |
-| 3 · Rasterangebote | Erst nach Motivfreigabe begrenzte Varianten-/Reparatursuche nach §§4–5. Proof, Eindeutigkeit durch vollständige Deduktion, Qualität, Palette, Schwierigkeit und Herkunft prüfen. | Qualifizierte Einzelrevisionen `raster_ready`; brauchbare Entwürfe getrennt `raster_review`. Keine automatische Auswahl. |
-| 4 · Kontextzeichnungen | Ausdrückliche Wahl einer qualifizierten Rasteroption am festen veröffentlichten Quellcommit erfassen. Danach drei echte unterschiedliche isolierte Kontextbilder erzeugen. | `background_review`; wählen, gezielt korrigieren oder ausdrücklich none. Erst vollständige Bereitschaft erlaubt `content_ready`. |
-| 5 · Integration | Tatsächliche vollständige Endabnahme, gültiger Rasterstand und ausgewähltes abgeleitetes Bild beziehungsweise ausdrückliches none. | Finalizer → Export → frischer Plan → autorisiertes Register. Git/Draft-PR und bestätigter Mainmerge getrennt nach §8. |
+| 1 · Abschlussbilder | Motivbriefing/optionale Referenz; drei echte detaillierte farbige transparente Bilder. Keine erfundene ID oder Gitquelle beim neuen Briefing. | reveal_review, erreichbare Originale; tatsächliche Bildwahl/-freigabe. |
+| 2 · Motivvorlage | Freigegebene gespeicherte Revealbytes abstrahieren; geeigneten Parameterkorridor empfehlen. | motif_review, Vergleich/Verluste/Parameter; echte Motivfreigabe. |
+| 3 · Rasterangebote | Erst nach Motivfreigabe bedarfsweise Kandidaten und erforderliche Korrekturen; vollständige technische/redaktionelle Qualifikation. | Qualifizierte Einzelrevisionen raster_ready; Sichtungsentwürfe getrennt raster_review. Keine automatische Rasterwahl. |
+| 4 · Kontextzeichnungen | Ausdrückliche Wahl einer qualifizierten Rasteroption am festen Quellencommit; erst danach drei unterschiedliche isolierte Kontextbilder. | background_review; Auswahl, Korrektur oder ausdrückliches none. content_ready erst bei vollständiger Bereitschaft. |
+| 5 · Integration | Tatsächliche Endabnahme, gültiger Rasterstand und ausgewählter abgeleiteter Hintergrund bzw. none. | Finalizer → Export → frischer Plan → autorisiertes Register; Git/Draft-PR, tatsächlicher Mainmerge und §9 nur mit passenden Befugnissen. |
 
-Ein Klick oder kopierter Text ist nur eine lokale Absicht. Erst der tatsächlich
-gesendete Auftrag erklärt eine Entscheidung; erst zurückgelieferte Gitdaten
-bestätigen den erreichten Stand. Der Assistent führt keine Modellaufrufe oder
-Projektwriter aus. Aufträge gehen an ChatGPT/Codex mit erreichbaren festen Gitquellen.
-Fehlt Bild-/Repositoryzugriff, die konkrete Lücke melden, keine Platzhalterproduktion.
+Klick/Kopieren ist lokale Absicht, erst ein abgesendeter Auftrag erklärt eine
+Entscheidung. Erst zurückgelesene Gitdaten belegen einen erreichten Stand.
+Der Assistent ist kein Modellaufrufer oder Projektwriter. Quelle für Cloudakteure
+muss über Git erreichbar sein, nicht bloß über localhost oder einen lokalen Pfad.
 
-Korrektur und Wiederaufnahme binden denselben Job, die wirkliche Quelle und
-betroffene Darstellungen. Nur abhängige Entscheidungen invalidieren. Materielle
-Bildänderungen erhalten neue Revisionen und tatsächliche Freigaben; reine
-Hintergrundkorrekturen erzwingen keine unveränderte Logik-/Difficultyproduktion.
+PW2-A ändert nur Regeln und Quellenrouting. Die UI-/Promptverkürzung und der
+reguläre kombinierte Schlussauftrag aus background_review gehören zu PW2-B in
+[#626](https://github.com/venomenon328/picross/issues/626). Eine bereits ausdrücklich
+kombinierte tatsächliche Freigabe ist zulässig; diese Dokumentrevision behauptet
+keine neue UI-Fähigkeit und erteilt selbst keinen Integrations-/Mergeauftrag.
 
 ## 4. Rasterproduktion und technische Pflichtprüfung
 
-**Zukünftiger Hintergrundweg:** Die folgenden Import-, Logik-, Paletten- und
-Rasterprüfungen behalten ihren eigenen Gegenstand. Hintergründe liefern keine
-Zellwerte und werden nicht über Solvererfolg freigegeben. Eine offene Hintergrundwahl
-stoppt bereits autorisierte unabhängige Rasterarbeit nicht; technische Rasterreife
-allein erfüllt die künftigen Hintergrund-/Integrationsgates aus
-[PUZZLE_BACKGROUNDS](../PUZZLE_BACKGROUNDS.md) jedoch nicht. Für 0.6.0 bleiben die
-nachfolgenden `content_ready`-Anforderungen unverändert.
+Rasterprüfung hat einen eigenen Gegenstand. Hintergründe liefern keine Zellwerte
+und werden nicht durch Solvererfolg freigegeben. Für 0.8.0 ist vollständig
+qualifiziertes raster_ready ohne Hintergrund zulässig; content_ready setzt später
+die eigene Hintergrundbereitschaft voraus. Keine vorgezogenen Hintergrundblocker.
 
 ### 4.1 Import und Rastervarianten
 
-1. Von der **freigegebenen gespeicherten Motivvorlage** ausgehen; ihre Ableitung aus dem freigegebenen Abschlussbilds anhand der Dateien, Hashes und dokumentierten Bearbeitung prüfen. Das Abschlussbild nicht als austauschbare nachträgliche Illustration behandeln. Originalbytes, SHA-256, Normalisierung, Rechte, Parameter und Toolversion erhalten. Während der Produktion beginnt die deterministische Prüfung bei Bildbytes, nicht beim Prompt. Nach finaler Integration besteht keine dauerhafte Wiederholbarkeitspflicht (Abschnitt 9).
-2. Striktes bestehendes Designformat verwenden; aktuelle Format-/Ressourcengrenzen der README einhalten. Redaktionelle Zusatzfelder in Begleitdateien speichern. Crop-Koordinaten und Seitenverhältnis beachten; nicht stillschweigend strecken.
-3. Zunächst **vier gezielte Rasterkandidaten**, mit begründeter Zusatzhypothese höchstens sechs pro Runde erzeugen. Innerhalb der Motivfreigabe beispielsweise zwei Größen mit zwei sinnvollen Parametrierungen vergleichen. Keine blinde Kreuzprodukt-Suche.
-4. Unterschiedliche globale Maße, Crops oder Paletten benötigen getrennte Designs. Beim vorhandenen farbigen `area`-Pfad ist der Schwellenwert wirkungslos; reine Schwellenvarianten sind dort keine unterschiedlichen Ansätze. Mono-Schwellen anhand des Bilds wählen.
-5. Verfahren mit zwangsläufig leeren Außenkanten, insbesondere der entsprechend implementierte `contour`-Pfad, nicht unverändert als reguläres Ergebnis übernehmen. Standard ist ein mit der Randregel kompatibler Import, derzeit `area`.
-6. Gleiche Raster durch exakten Vergleich von Maßen, Palette und Zellwerten erkennen. Kandidatenhashes binden auch Parameter und sind kein reiner Matrixvergleich. Alle Entstehungswege und Ablehnungsgründe erhalten.
-7. Echte Raster als verlustfreie Kleinvorschau, vergrößert ohne Glättung und mit Gitter prüfen. Nicht automatisch den ersten logisch erfolgreichen Kandidaten auswählen.
+1. Von der freigegebenen gespeicherten Motivvorlage ausgehen; Ableitung aus genau
+   dem freigegebenen Reveal anhand Originalen, Hashes und Bearbeitung prüfen.
+   Originalbytes, SHA-256, Normalisierung, Rechte, Parameter und Toolversion erhalten.
+   Während der Produktion beginnt deterministische Prüfung bei Bildbytes, nicht
+   beim Prompt. Nach finaler Integration gilt der Abschluss nach §9.
+2. Striktes bestehendes Designformat und aktuelle Format-/Ressourcengrenzen der
+   RP-3-Anleitung verwenden. Redaktionelle Zusatzangaben in Begleitdateien.
+   Crop und Seitenverhältnis beachten, nicht stillschweigend strecken.
+3. Mit dem aussichtsreichsten begründeten Rasterkandidaten beginnen. Einen zweiten
+   und weitere jeweils nacheinander nur für ein konkret benanntes unerfülltes
+   Kriterium und eine neue motivisch zulässige Hypothese erzeugen. Keine anfängliche
+   Viererquote, keine neue Zweierquote und keine blinde Kreuzprodukt-Suche.
+   Ein vollständig geeigneter qualifizierter Kandidat genügt. Die bestehende
+   Obergrenze bleibt höchstens sechs Rasterkandidaten pro Runde; alle bisherigen
+   Versuche zählen kumulativ. Neue Namen, Ordner oder Wiederaufnahme setzen weder
+   Gesamt-/Such-/Reparaturbudgets noch den freigegebenen Korridor zurück.
+4. Vor teurer Qualifikation preisgünstige Ausschlüsse und Duplikate erkennen:
+   Maße/Werte/Palette, feste Wünsche, offensichtliche Form-/Randmängel und exakten
+   Vergleich von Maßen, Palette und Zellwerten. Parametergebundene Kandidatenhashes
+   sind kein reiner Matrixvergleich. Entstehungswege und Ablehnungsgründe erhalten.
+   Diese Vorprüfung ersetzt keine vollständige Prüfung eines angebotenen Rasters.
+5. Unterschiedliche globale Maße, Crops oder Paletten benötigen getrennte Designs.
+   Beim farbigen area-Pfad ist der Schwellenwert wirkungslos; reine Schwellenvarianten
+   sind dort kein neuer Ansatz. Mono-Schwellen anhand des Bilds wählen. Verfahren
+   mit zwangsläufig leeren Außenkanten, insbesondere der entsprechende contour-Pfad,
+   nicht unverändert als reguläres Ergebnis übernehmen; derzeit area bevorzugen.
+6. Passend gebundene unveränderte Nachweise wiederverwenden. Geänderte Logikeingänge
+   erhalten die Neuprüfungen aus §4.4. Echte Raster klein, ohne Glättung vergrößert
+   und mit Gitter beurteilen. Logischer Erfolg allein ist keine Auswahl.
 
 ### 4.2 Harte Kriterien
 
-Ein freigabefähiger Kandidat MUSS sämtliche folgenden Bedingungen erfüllen:
+Jeder angebotene freigabefähige Kandidat erfüllt vollständig:
 
-- Gültige Maße, Zellwerte, Palette und Formate gemäß Projekt-/Zielvertrag; regulär höchstens 50 je Achse.
-- Vordergrundfarbzahl automatisch als `len({v für v in allen Zellen, wenn v != EMPTY})` zählen; sie muss zur endgültigen Palette, zur genauen Nutzervorgabe (falls gesetzt) und zum freigegebenen Parameterkorridor passen. Wunsch, Istzahl und Palettenrollen im Bericht führen; bloße Paletteinträge zählen nicht als Verwendung.
-- Hinweise deterministisch aus der exakten Matrix berechnet; geltende Farbregeln eingehalten. Gleichfarbige aufeinanderfolgende Blöcke benötigen mindestens eine Leerzelle, verschiedenfarbige dürfen sich berühren.
-- Vollständige deduktive Lösung vom unbekannten Start, ohne vorgefüllte Zellen, notwendiges Raten, Suchannahmen oder Motivwissen.
-- Vollständiger Nachweis unter benanntem Solverprofil; unabhängiger Prüfer akzeptiert ihn. Endzustand entspricht exakt dem Kandidaten.
-- Herkunftskette Input → freigegebenes Abschlussbild → freigegebene Motivvorlage redaktionell/dateibasiert gebunden; Motivvorlage → Normalisierung → Matrix → Hinweise deterministisch rekonstruiert und sämtliche Datei-/Parameterbindungen geprüft; bei Reparatur zusätzlich Referenz, Plan und Replay.
-- Neue Randregel erfüllt:
+- Gültige Maße, Werte, Palette und Formate; regulär höchstens 50 je Achse.
+  Tatsächliche Vordergrundzahl als len({v für v in allen Zellen, wenn v != EMPTY})
+  zählen; endgültige Palette, genaue Vorgabe und freigegebener Korridor passen.
+  Wunsch, Istzahl und Farbrollen nennen, nicht bloß Paletteinträge zählen.
+- Hinweise deterministisch aus exakt dieser Matrix. Gleichfarbige Folgeblöcke
+  haben mindestens eine Leerzelle Abstand; verschiedenfarbige dürfen sich berühren.
+- Vollständige deduktive Lösung vom unbekannten Start, ohne vorgefüllte Zellen,
+  notwendiges Raten, Suchannahmen oder Motivwissen; vollständiger Proof unter
+  benanntem Profil, frischer unabhängiger Prüferprozess und exakter Endmatrixvergleich.
+- Datei-/redaktionelle Herkunft Input → freigegebenes Reveal → freigegebene
+  Motivvorlage; deterministische Rekonstruktion Motivvorlage → Normalisierung →
+  Matrix → Hinweise. Alle Dateien/Parameter prüfen, bei Reparatur zusätzlich
+  Referenz, Plan und Replay. Rechte und echte Freigaben sind keine Solverergebnisse.
+- Randregel: mindestens eine gefüllte Zelle an linker ODER rechter Außenkante
+  UND mindestens eine an oberer ODER unterer Außenkante. Jede Vordergrundfarbe
+  zählt, nicht alle vier Kanten sind nötig; gilt auch für Breite/Höhe 1.
+  Ein vollständig leeres Raster scheitert. Keine motivfremden Randpixel/Rahmen
+  allein zum Bestehen der Regel hinzufügen.
 
-```text
-filled(y,x) := G[y][x] != EMPTY
+Eine tatsächliche menschliche Randregel-Ausnahme für eine konkrete Endrevision
+nur über den unterstützten äußeren ZA-1-v2-Autorisierungsvertrag an Originalpaket,
+Handoff, Inventar, Wahl und Endfreigabe binden. Negativen Originalbefund sichtbar
+erhalten; kein pass-Flag oder allgemeiner Bypass. Alle übrigen Gates bleiben hart.
 
-left   := irgendeine gefüllte Zelle in Spalte 0
-right  := irgendeine gefüllte Zelle in Spalte W-1
-top    := irgendeine gefüllte Zelle in Zeile 0
-bottom := irgendeine gefüllte Zelle in Zeile H-1
+Vollständige gültige Deduktion belegt Eindeutigkeit. stalled beweist weder
+Mehrdeutigkeit noch Unlösbarkeit; aborted ist Abbruch. Exitcode 0, Importbündel,
+generiertes Zahlenbild und KI-Erfolgsaussage sind keine Zertifizierung.
+Die separate Eindeutigkeitsdiagnose sucht und liefert eigene Lösungszeugen;
+unique ersetzt keinen Deduktionsproof, unknown nach einer Lösung keine
+Eindeutigkeit. check-diagnosis prüft Bindungen/Zeugen, nicht die vollständige Suche.
+Keine neue Schwierigkeit oder Freigabe aus einem Suchurteil ableiten.
 
-gültig := (left OR right) AND (top OR bottom)
-```
-
-Jede Vordergrundfarbe zählt als gefüllt. **Nicht alle vier Kanten müssen belegt sein.** Die Formel gilt auch bei Breite/Höhe 1; ein vollständig leeres Raster scheitert. Keine motivfremden Randpixel oder Rahmenlinien nur zum Bestehen der Prüfung hinzufügen.
-
-Eine ausdrücklich erteilte menschliche Ausnahme für eine konkrete Endrevision
-darf nach dem [ZA-1-v2-Autorisierungsvertrag](../ZA1_ADAPTER.md) extern an
-Originalpaket, Handoff, Inventar, Auswahl und Endfreigabe gebunden werden. Die
-verletzte Randregel bleibt als solche im Original und Prüfbericht sichtbar;
-keine pauschale Lockerung und kein einfaches `pass`-Flag. Alle anderen
-Inhalts-/Nachweisgates bleiben erforderlich. Die menschliche Entscheidung und
-eine gegebenenfalls beauftragte Werkzeugerweiterung sind getrennt zu protokollieren.
-
-Ein vollständig gültiger deduktiver Nachweis belegt auch Eindeutigkeit. `stalled` belegt weder Mehrdeutigkeit noch Unlösbarkeit; `aborted` ist ein Abbruch. Exitcode 0 oder ein erzeugtes Importbündel allein ist keine Zertifizierung. Ein generiertes Zahlenbild oder eine KI-Erfolgsaussage ist niemals ein Nachweis.
-
-Die separate [Eindeutigkeitsdiagnose](../PUZZLE_PRODUCTION.md#55-separate-eindeutigkeitsdiagnose-139-paket-a)
-aus #139/A untersucht Hinweise zusätzlich auf `unique`, `multiple`, `no_solution`
-oder `unknown`. Sie sucht intern und liefert eigene dateigebundene Lösungszeugen.
-`unknown` nach genau einer Lösung bestätigt keine Eindeutigkeit. `check-diagnosis`
-prüft Dateibindungen und Zeugen, replayt aber keine vollständige Suche.
-`unique` hebt `stalled` nicht als Produktionshindernis auf, erzeugt keine Freigabe
-und verändert keine Schwierigkeitsbewertung. Die neue Methode 0.2 folgt ausschließlich
-dem unabhängig belegten Deduktionsbedarf aus Abschnitt 5.
-
-Das [Paarlinienprofil](../PAIRED_LINES.md) ist als zusätzliches Deduktionsprofil
-zugelassen. Seine ausdrückliche Auswahl, Produktionsbindung und Grenzen folgen
-Abschnitt 4.2.1. Ein unvollständiger Paarfixpunkt bleibt ohne Freigabe;
-Budgetende ist kein Fixpunkt. Alte 0.4.x-Snapshots legitimieren diese Profile nicht.
-
-Die Logik separat in einem frischen Prüferprozess verifizieren. Herkunft zusätzlich mit der vorhandenen Rekonstruktionsprüfung prüfen, beispielsweise `inspect_candidate` beziehungsweise Reparaturverifikation/passendem Export. Nur tatsächlich vorhandene Befehle/API-Funktionen verwenden. Zeit-/Zeilenbudgets je Befehl aus der README übernehmen; fehlgeschlagene Versuche nicht nachträglich umetikettieren.
+Die vorhandene Rekonstruktionsprüfung (inspect_candidate bzw. passender Reparatur-/
+Exportreader) zusätzlich zur Logik benutzen. Nur wirklich verfügbare Befehle/API
+verwenden; aktuelle Zeit-/Linien-/Ressourcengrenzen der entsprechenden README-
+Abschnitte vor Ausführung lesen. Abgebrochene Versuche nicht umetikettieren.
 
 #### 4.2.1 Profilwahl und Produktionsnachweise
 
-1. **Linienlogik als Ausgangspunkt:** Den zur Mono-/Farbsemantik passenden
-   `full-line-mono`-/`full-line-color`-Nachweis auswerten. Ein vollständig
-   unabhängig bestätigtes Ergebnis genügt; kein zusätzlicher Paar- oder
-   Eindeutigkeitssuchlauf als Routinepflicht für bereits gelöste Kandidaten.
-2. **Vor rein logikbedingter Rasteränderung:** Bei einem visuell tragfähigen
-   Kandidaten mit unabhängig bestätigtem Linienfixpunkt `stalled` SOLL zunächst
-   das passende Paarlinienprofil am unveränderten Raster geprüft werden.
-   Eine begründete Abweichung, etwa eine ausdrücklich auf einfachere Techniken
-   begrenzte Vorgabe oder ein dokumentierter Ressourcenblocker, festhalten.
-   Die bereits zugelassene Profilwahl verlangt keine neue Grundsatzfreigabe;
-   Vorgaben zu Motiv, Parametern und Schwierigkeit bleiben wirksam. Die Prüfung
-   einer unveränderten Matrix zählt nicht als zusätzliche Rastervariante.
-   Bereits durch zwei geprüfte Lösungen belegtes `multiple` direkt nach 4.4
-   bearbeiten; ein stärkeres korrektes Deduktionsprofil beseitigt keine Mehrdeutigkeit.
-3. **Ausdrücklich und vor dem Lauf binden:** Profil-ID und Zeit-/Linien-/Paarbudgets
-   dokumentieren. Bei `import-image` ausdrücklich `--profile paired-lines-mono`
-   beziehungsweise `--profile paired-lines-color` und die vorgesehenen Paarbudgets
-   verwenden; die Standardaufrufe bleiben Linienlogik. Für einen vorhandenen
-   Direktimport dieselbe freigegebene Quelle mit demselben Design in ein neues
-   Ausgabeziel importieren und Matrix-/Logikgleichheit kontrollieren. Ein isoliertes
-   `solve --profile ...` ist ein Logiknachweis, noch kein exportfähiges Produktionsbündel.
-   Niemals nur den Proof in einem alten Manifest austauschen.
-4. **Beide Nachweise prüfen:** Der Paarproduktionslauf erzeugt zusätzlich den
-   eigenen `full-line-*`-Baselineproof und die Assessmentdatei. Baseline und
-   Paarproof derselben Logik in einem frischen unabhängigen Prüferprozess prüfen,
-   etwa gemeinsam mit `assess --input ... --proof ... --baseline ...` gemäß
-   [Werkzeuganleitung](../../tools/puzzle_production/README.md). Das ersetzt nicht
-   Herkunftsrekonstruktion, Endmatrixvergleich und Prüfung der gebundenen
-   Produktionsdateien. `assess` erzeugt `picross-quality-report-v1`; dieser
-   Zusatzbericht ersetzt weder `picross-deduction-assessment-v1` noch
-   `difficulty.json` oder eine menschliche Freigabe.
-5. **Ergebnis statt Profilname werten:** Nur eine verifizierte `stalled`-Baseline
-   und ein vollständiger verifizierter Paarproof belegen R4 nach Abschnitt 5.
-   Eine `aborted`-Baseline, ein unvollständiger Paarproof oder eine bloße
-   Eindeutigkeitsmeldung genügen nicht. Bei `stalled`/`aborted` den betroffenen
-   Profilnamen, offene Zellen, tatsächlich verbrauchte Budgets und Endgrund
-   berichten; keine absolute Aussage, das Rätsel verlange grundsätzlich Raten.
-   Budgets nicht nachträglich zur Herstellung eines Erfolgs umdeuten.
-6. **Kandidat und Weitergabe:** Importmanifest v2 beziehungsweise Reparaturplan,
-   -verlauf und -manifest v2 sowie die passenden versionierten manuellen
-   Ableitungen aus [PAIRED_LINES](../PAIRED_LINES.md) verwenden. Die exakte
-   `certification` durch alle betroffenen Stufen und `candidate.certification`
-   im Handoff führen. Eine Paarreferenz darf nicht in einen alten Ableitungsvertrag
+1. full-line-mono beziehungsweise full-line-color ist der Ausgangspunkt.
+   Vollständig unabhängig bestätigte Linienlogik genügt; kein zusätzlicher
+   Paarprofil- oder Eindeutigkeitssuchlauf als Routinepflicht.
+2. Bei visuell tragfähigem, unabhängig bestätigtem Linienfixpunkt stalled vor
+   rein logikbedingter Rasteränderung zunächst das passende zugelassene Paarprofil
+   am unveränderten Raster prüfen. Eine begründete Abweichung (etwa ausdrücklich
+   einfache Techniken oder Ressourcenblocker) festhalten. Vorgaben bleiben wirksam;
+   Profilprüfung derselben Matrix ist keine zusätzliche Rastervariante. Durch
+   zwei geprüfte Lösungen belegtes multiple dagegen direkt nach §4.4 bearbeiten.
+3. Profil-ID und Zeit-/Linien-/Paarbudgets vor Lauf binden. import-image explizit
+   mit --profile paired-lines-mono bzw. paired-lines-color und Paarbudgets aufrufen;
+   Standard bleibt Linienlogik. Bestehende direkte Quelle mit identischem Design
+   in neues Ziel importieren, Matrix-/Logikgleichheit prüfen. Isoliertes solve ist
+   kein exportfähiges Produktionsbündel; keinen Proof im alten Manifest austauschen.
+4. Der Paarlauf erzeugt eigenen full-line-Baselineproof und Assessment. Baseline
+   und Paarproof derselben Logik frisch unabhängig prüfen, etwa mittels assess
+   --input ... --proof ... --baseline ... gemäß CLI. Das ersetzt weder Herkunft
+   noch Endmatrix-/Dateiprüfung. picross-quality-report-v1 ersetzt weder
+   picross-deduction-assessment-v1 noch difficulty.json oder menschliche Freigaben.
+5. Nur verifizierte stalled-Baseline plus vollständiger verifizierter Paarproof
+   belegen notwendigen R4. Aborted, unvollständiger Paarproof oder unique genügen
+   nicht. Bei Nichtabschluss Profil, offene Zellen, verbrauchte Budgets und Endgrund
+   nennen, keine absolute Aussage über alle denkbaren Lösungsregeln treffen.
+6. Passende versionierte Import-/Reparatur-/manuelle Ableitungsformen nach
+   PAIRED_LINES und die exakte certification durch alle Stufen einschließlich
+   candidate.certification im Handoff führen. Nicht in alten Ableitungsvertrag
    zurückfallen. Quelle, Motivschutz, Bildfreigaben und Endabnahme bleiben Pflicht.
-   Bleibt kein freigabefähiger Kandidat, nach 4.4 innerhalb der bestehenden
-   Befugnisse weiterarbeiten oder den konkreten Blocker dokumentieren.
 
-Die separate Diagnose A ist bei einer konkreten offenen Eindeutigkeitsfrage
-optional. Sie ersetzt keinen der beiden Deduktionsnachweise und ist keine
-Voraussetzung, um das zugelassene Paarprofil auszuwählen. Ihre eigene Suche
-und die unabhängige Prüfung ihrer Lösungszeugen bleiben als solche bezeichnet.
-Keine zusätzlichen CI-Fälle oder erneute Prüfung unveränderter Bestandsrätsel.
+Die separate Eindeutigkeitsdiagnose ist nur bei konkreter offener Frage sinnvoll,
+keine Voraussetzung der bereits zugelassenen Paarprofilwahl. Kein neuer CI-Fall
+oder Bestandsreplay entsteht aus einer konkreten Produktion.
 
 ### 4.3 Redaktionelle Kriterien
 
-Verbindliche Referenz ist [PUZZLE_QUALITY §§2–4](../PUZZLE_QUALITY.md):
-Flächennutzung, zusammenhängende Hauptformen, Perspektive/Proportionen, Details
-und Negativräume, Farbrollen, tatsächliche Raster-/Hinweisansicht und
-Abschlussbildkonsistenz getrennt beurteilen. Mono und Farbe behalten ihre
-unterschiedlichen Erkennbarkeitsziele. Ein Auge darf eine Einzelzelle sein;
-ein Henkel braucht einen Innenraum. Leere Innenstreifen nicht mechanisch entfernen.
+[Qualität §§2–4](../PUZZLE_QUALITY.md) bindet Einzelurteile zu Flächennutzung,
+Hauptformen, Perspektive/Proportionen, Details/Negativräumen, Farbrollen,
+tatsächlicher Raster-/Hinweissicht und Reveal-Konsistenz. Mono und Farbe behalten
+unterschiedliche Erkennbarkeitsziele. Ein Auge darf eine Zelle sein; ein Henkel
+braucht Innenraum. Leere Innenstreifen nicht mechanisch entfernen.
 
-Belegungsanteile unter 15 % oder über 85 %, isolierte Einzelzellen und vollständig
-leere Innenlinien bleiben **nur Prüfanlässe**, keine automatischen Ablehnungen.
-Motivischen Nutzen beziehungsweise Mangel begründen; Form oder Erkennbarkeit
-nicht zugunsten einer Kennzahl verschlechtern. Alle tatsächlich verwendeten
-Vordergrundfarbpaare betrachten, auch seltene und unbenachbarte Farben. Kleine
-Zell-/Hinweisgrößen auf aktuellem Papier mit Kontur/Schraffur sowie normale,
-abgeschwächte und ausgekreuzte Hinweise prüfen; Farbsinnsimulation, soweit
-verfügbar, ergänzt dies. [Qualitätsvertrag §8](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
-enthält die **fachlich freigegebene Regel** `picross-palette-separation-1`
-für paarweisen Oklab-Ausschluss, Warnzone und getrennte visuelle Beurteilung.
-**Aktiv unter Authoring 0.6.0:** RP-3 prüft die konkrete Matrix vor dem
-Solver, RP-5 jede Bewertung und feste manuelle Wege die rekonstruierte Matrix
-vor dem Endproof-Replay. Negative Entwürfe bleiben zur Diagnose sichtbar.
-`check-palette --candidate <vorhandene-*-candidate.json>` bleibt als zusätzliche
-lesende Diagnose verfügbar, ersetzt aber kein finales Gate. Nach jeder Änderung
-Matrix, IDs/RGB/Nutzung und Regelbindung frisch rekonstruieren; Rücksprünge nach
-§4.4 bleiben Pflicht. Ein reiner Palettenentwurf ohne Nutzung ist vorläufig.
+Belegung unter 15 %/über 85 %, isolierte Zellen und leere Innenlinien sind
+Prüfanlässe, keine automatischen Ablehnungen. Motivischen Nutzen/Mangel begründen;
+keine Verschlechterung der Form für eine Kennzahl. Alle tatsächlich verwendeten
+Farbpaare betrachten, auch seltene/unbenachbarte. Kleine Zell-/Hinweisgrößen auf
+aktuellem Papier mit Kontur/Schraffur, normale, abgeschwächte und ausgekreuzte
+Hinweise wirklich ansehen. Verfügbare Farbsinnsimulation nur ergänzend.
 
-Vor `content_ready` das geschriebene Paket mit ZA-1 inspizieren: Der Adapter
-erzeugt selbst den aktuellen vollständigen Pflichtbefund und prüft alle Paare
-frisch. Ein optional inventarisierter `palette_assessment={file,sha256}` wird
-zusätzlich frisch verifiziert. Farbpakete führen `palette_review={file,sha256}`
-auf den inventarisierten `picross-palette-visual-review-v1`-Record mit einzeln
-gebundenen Q-R04/Q-H01/Q-H02-Urteilen und tatsächlichen Ansichten. Exakte Felder,
-Hashes und Bedienung stehen in [ZA-1 P-B2](../ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)
-und der [CLI-Anleitung](../../tools/puzzle_production/README.md#p-b2-automatische-frühdiagnose-und-finale-palettengates).
-Fehlende Sichtung, `nicht geprüft` oder stale/falsche Reports erlauben keine
-Freigabe. Positiver S-Wert allein erfüllt keine visuellen Kriterien; bei Warnung
-oder negativem Sichturteil muss eine konkrete Annahme nach Qualitätsvertrag §6
-mit ursprünglichem Urteil, Akteur, UTC, Wortlaut, Begründung und Beleg vorliegen.
+Die eingeführte und für 0.8.0 fortgeltende Regel picross-palette-separation-1 aus
+[Qualität §8](../PUZZLE_QUALITY.md#8-p-a-v01-freigegebene-regel-für-paarweise-farbunterscheidbarkeit)
+trennt Oklab-Ausschluss, Warnzone und Sichturteil. RP-3 prüft die Ist-Matrix vor
+Solver, RP-5 jede Bewertung, feste Wege die rekonstruierte Matrix vor Endproof.
+Negative Entwürfe bleiben sichtbar. check-palette ist nur zusätzliche Diagnose.
+Nach Änderungen Matrix, IDs/RGB/Nutzung und Regelbindung frisch rekonstruieren;
+Palettenentwürfe ohne tatsächliche Verwendung sind vorläufig.
 
-Ein negativer technischer Befund bleibt negativ. Für eine tatsächliche Übernahme
-braucht es den äußeren `picross-palette-editorial-exception-v1`-Record mit allen
-negativen Paaren, exakten S/RGB/IDs, Kandidaten-/Revisions-/Istmatrix-/Quell-/
-Regel-/Handoff-/Inventar-/Paketbindung und echter Endfreigabe. Diesen Record nur
-außerhalb versiegelter Originale führen und ausdrücklich mit `--palette-exception`
-übergeben; vorhandene manuelle Autorisierungen bleiben zusätzlich nötig.
-Die Ausnahme heilt ausschließlich den Palettenredaktionsblocker, niemals Proof,
-Rechte/Herkunft, Bild-/Motiv-/Endabnahme, feste Parameter, Difficulty oder Randregel.
-Fehlende Freigabe bleibt ein Blocker. Bei null qualifizierten Kandidaten §4.5
-mit echten Bild-/Rasterlinks, Defiziten/Korrekturen und keine qualifizierten Rasterangebote nutzen.
+Vor einem qualifizierten Angebot das geschriebene Paket frisch mit ZA-1 prüfen;
+raster_ready enthält alle Rastergarantien, content_ready später zusätzlich den
+Hintergrund. Der Adapter erhebt den Pflichtbefund an allen Paaren frisch.
+Optionales palette_assessment wird zusätzlich neu verifiziert; Farbpakete binden
+palette_review an den inventarisierten picross-palette-visual-review-v1-Record
+mit tatsächlichen Q-R04/Q-H01/Q-H02-Ansichten und Einzelurteilen. Die geschlossenen
+Felder bleiben in [ZA-1 P-B2](../ZA1_ADAPTER.md#p-b2--authoring-060-und-additive-palettengeneration-v5)
+und der entsprechenden Tool-Anleitung. Fehlende/stale Sichtung, nicht geprüft
+und positive S-Werte allein erlauben keine Freigabe.
 
-Die [F05-Referenzeinordnung nach B-01](../PUZZLE_QUALITY.md#831-b-01-gebundenes-eigentümer-teilfeedback-und-referenzeinordnung)
-trennt positives Eigentümer-Teilfeedback von weiterhin negativen Paarmessungen.
-Sie ist keine Produktionsausnahme und darf weder als `pass` noch als Freigabe
-eines realen Kandidaten übernommen werden. Dafür bleiben §6 des Qualitätsvertrags
-und der geprüfte P-B2-Ausnahmeweg maßgeblich. Die F05-Referenzannahme
-benötigt keine zusätzliche pauschale Eigentümerausnahme.
+Bei Warnung/negativem Sichturteil verlangt eine zulässige Annahme Qualität §6:
+ursprüngliches Urteil, tatsächlicher Akteur, UTC, Wortlaut, Begründung und Beleg.
+Ein negativer technischer Befund bleibt negativ. Für tatsächliche Übernahme den
+äußeren picross-palette-editorial-exception-v1 mit sämtlichen negativen Paaren,
+exakten Werten/IDs und Kandidaten-/Revisions-/Istmatrix-/Quell-/Regel-/Handoff-/
+Inventar-/Paketbindung und echter Endfreigabe benutzen, außerhalb versiegelter
+Originale und ausdrücklich via --palette-exception. Bereits erforderliche
+manuelle Autorisierungen bleiben zusätzlich nötig. Die Ausnahme heilt weder
+Proof noch Rechte, Freigaben, feste Parameter, Difficulty oder Randregel.
 
-Für einen konkreten redaktionellen Mangel gilt der externe, revisionsgebundene
-[Einzelfallprozess aus Qualitätsvertrag §6](../PUZZLE_QUALITY.md).
-Eine begründete Annahme bleibt getrennt vom negativen Einzelbefund und ersetzt
-keine technische Prüfung, Herkunft/Rechte oder tatsächliche Freigaben.
+Historische F05-Referenzannahmen sind keine Ausnahme oder Freigabe eines neuen
+realen Kandidaten. Bei null qualifizierten Kandidaten §4.5 verwenden, mit echten
+Bildern, Defiziten und Korrekturmöglichkeiten; keine qualifizierten Angebote vortäuschen.
 
 ### 4.4 Reparaturen und Änderungen
 
-**Reguläre feste Korrektur (#596/C):** Vor Rückgabe konkrete kleine Kontur-/
-Flächenmängel und störende leere Außenlinien innerhalb des freigegebenen
-Korridors bearbeiten, auch wenn die Logik bereits solved ist. Gute Kandidaten
-nicht unnötig ändern. Den vollständigen [festen Plan](../FIXED_RASTER.md) gegen
-den direkten unveränderten RP-3-Import vorab binden; keine Suche und keine
-nachträglich erweiterte Editliste. Der neue Parameterkorridor bewahrt offene/
-ungefähre Endmaße trotz konkreter Importstarts. Materielle Änderungen bleiben
-entscheidungspflichtig; eine Zelle ist nicht automatisch harmlos. Verbrauchte
-Runden/Kandidaten/Änderungen bleiben kumulativ, auch unter neuen Namen/Ordnern.
-Nachweise einschließlich aktiver 0.4-Analyse am Endstand prüfen; unveränderte
-Bildfreigaben erhalten. Erst der frisch gelesene Builder-ZIP kann raster_ready
-und ein qualifiziertes Angebot ergeben, ohne Endfreigabe/Background/Rasterwahl.
+Konkrete kleine Kontur-/Flächenmängel und störende leere Außenlinien innerhalb
+des freigegebenen Korridors vor Rückgabe bearbeiten, auch bei solved. Gute
+Kandidaten nicht unnötig ändern. Reguläre feste Korrektur folgt
+[FIXED_RASTER](../FIXED_RASTER.md): vollständiger vorab gebundener Plan gegen
+den direkten unveränderten RP-3-Import, keine Suche/nachträglich erweiterte
+Editliste, Schutzmaske und frische Endnachweise einschließlich aktiver 0.4-Analyse.
+Offene/ungefähre Endmaße bleiben trotz konkretem Importstart offen/ungefähr.
+Materielle Änderungen entscheiden lassen; eine Zelle ist nicht automatisch
+harmlos. Runden/Kandidaten/Änderungen zählen kumulativ unter allen Namen/Ordnern.
+Erst frisch geprüfter geschriebener Builder-ZIP erlaubt raster_ready, ohne damit
+Rasterwahl, Hintergrund oder Endfreigabe zu erklären.
 
-**Aktiver Reparaturauftrag:** Wenn kein visuell tragfähiger Kandidat vollständig
-zertifiziert ist, MUSS Codex gezielte Verbesserungen versuchen, bevor es die
-Produktion allein wegen `stalled` oder belegtem `multiple` zurückgibt. Bereits
-geeignete Kandidaten brauchen keine Reparatur. Ein Suchurteil `unique` genügt nicht.
+Wenn kein visuell tragfähiger Kandidat vollständig zertifiziert ist, gezielte
+Verbesserungen versuchen, bevor allein wegen stalled oder belegtem multiple
+zurückgegeben wird. Unique genügt nicht. Nur tragfähige Formen reparieren;
+sonst zuerst Abstraktion/Größe/Palette und notwendige Motivfreigaben klären.
 
-Nur visuell tragfähige Kandidaten reparieren. Sind schon die Hauptformen ungeeignet,
-zunächst Abstraktion/Größe/Palette nach 2.4 überarbeiten und nötige Freigaben einholen.
+1. Ursache trennen. Stalled betrifft das benannte Profil; §4.2.1 ausschöpfen.
+   Bei multiple beide Zeugen/Differenzbereiche prüfen. No_solution/contradiction
+   bei Hinweisen aus derselben Matrix ist zunächst ein Eingangs-/Werkzeugwiderspruch,
+   kein erfundener Bildfehler. Unknown/aborted erfordert Ressourcenanalyse.
+2. Standardmäßig bis zu zwei gezielte Reparaturrunden, bei Erfolg sofort stoppen.
+   Runde 1 am besten geeigneten Kandidaten: offene Domains/Kreuzlinien/Zeugen
+   bestimmen zulässige Regionen. Motivisch plausible Kontur-/Flächen-/Negativraum-
+   änderungen begründen; kein Rauschpixel, Zusatzrahmen oder neue Farbe als Logikanker.
+3. Vor jedem RP-5-Lauf unveränderte Referenz, Schutzmaske für wichtige gefüllte
+   und leere Zellen, Operatoren, Seed und Änderungs-/Such-/Abschlussbudgets speichern.
+   Runde 1 standardmäßig höchstens zwei geänderte Positionen, 64 bewertete
+   Kandidaten und 512 Vorschläge. Zeit-/Linien-/Paarbudgets passend zur gemessenen
+   Referenz innerhalb Werkzeuggrenzen wählen; frische Abschlussprüfung reservieren.
+   Kleinere Budgets nur begründet, nicht als Alibiversuch.
+4. Ohne Fund eine andere begründete Hypothese, zulässige Region oder geeignete
+   Referenz prüfen. Runde 2 bis 128 Kandidaten/1024 Vorschläge. Höheres Zellbudget
+   nur vorab motivbezogen begründen; Schutzmerkmale und Korridor bleiben hart.
+   Keine identische Wiederholung oder Umwertung alter Abbrüche. Ressourcen-/Replay-
+   grenzen können kleinere Runden erfordern; Reichweite/Endgrund berichten.
+   Früher Stopp nur bei Erfolg, fehlendem erlaubtem Änderungsraum, materieller
+   Motivänderung oder konkretem technischem Blocker; nächsten Schritt benennen.
+5. RP-5 optimiert begrenzt lokale Zelländerungen, nicht selbst nach Diagnosezeugen.
+   Akteur legt Hypothese/Maske fest. Reicht das nicht, konkrete Formkorrektur oder
+   Abstraktions-/Maß-/Palettenänderung vorschlagen und nur mit passender Befugnis
+   ausführen. Historische manuelle Ableitungen brauchen ihren unterstützten
+   ZA-1-Vertrag und gesonderte Autorisierung; nicht als regulären Import ausgeben.
 
-1. Ursache trennen: `stalled` betrifft das benannte Profil; Profilwahl nach 4.2.1
-   ausschöpfen. Bei offener Mehrdeutigkeitsfrage darf `diagnose` helfen; für
-   `multiple` beide Zeugen prüfen und ihre Differenzbereiche auswerten. `no_solution`
-   oder `contradiction` bei aus derselben Matrix abgeleiteten Hinweisen ist zunächst
-   ein Eingangs-/Werkzeugwiderspruch: Matrix, Hinweise und Dateibindung abgleichen,
-   keinen Bildfehler daraus erfinden. `unknown`/`aborted` verlangt Ressourcenanalyse,
-   keine Behauptung der Unlösbarkeit. Werkzeugfehler separat melden.
-2. **Standard: bis zu zwei gezielte Reparaturrunden**, bei Erfolg sofort stoppen.
-   Runde 1 bearbeitet den besten geeigneten Kandidaten. Offene Domains, betroffene
-   Kreuzlinien und gegebenenfalls Zeugenunterschiede bestimmen die zulässigen
-   Regionen. Motivisch plausible Kontur-, Flächen- oder Negativraumkorrekturen
-   begründen; kein Rauschpixel, Zusatzrahmen oder neue Farbe nur als Logikanker.
-3. Vor jedem Lauf einen bestehenden RP-5-Plan speichern: unveränderte Referenz,
-   Schutzmaske für wichtige gefüllte **und leere** Zellen, Operatoren, Seed und
-   Änderungs-/Such-/Abschlussbudgets. Runde 1 standardmäßig höchstens zwei
-   geänderte Positionen, bis zu 64 bewertete Kandidaten und 512 Vorschläge.
-   Zeit-/Linien-/Paarbudgets passend zur gemessenen Referenz innerhalb der
-   Werkzeuggrenzen festlegen; frische Abschlussprüfung separat reservieren.
-   Kleinere Suchbudgets nur mit konkretem Grund, nicht als Alibiversuch.
-4. Ohne brauchbaren Fund eine **andere begründete Hypothese** prüfen: andere
-   geeignete Referenz oder andere motivisch zulässige Änderungsregion. Runde 2
-   darf bis zu 128 Kandidaten/1024 Vorschläge nutzen. Ein höheres Zellbudget nur
-   vorab motivbezogen begründen; Schutzmerkmale und Freigabekorridor bleiben hart.
-   Nicht bloß denselben Lauf wiederholen oder alte Abbrüche umwerten. Ressourcen-
-   oder Replaygrenzen können kleinere Runden erfordern; tatsächliche Reichweite
-   und Abbruchgrund berichten. Ein früher Stopp ist nur bei Erfolg, fehlendem
-   zulässigem Änderungsraum, materieller Motivänderung oder konkretem technischen
-   Blocker zulässig. Dann den erforderlichen nächsten Schritt nennen.
-5. RP-5 priorisiert offene Zellen und ihre Umgebung, durchsucht aber nur begrenzt
-   Einzellokaländerungen; es optimiert nicht selbst anhand der Diagnosezeugen.
-   Codex legt daraus Hypothese und Maske fest. Reicht das nicht, eine konkrete
-   lokale Formkorrektur oder andere Abstraktion/Größe/Palette vorschlagen und nur
-   innerhalb vorhandener Befugnisse umsetzen. Für aktuelle genehmigte feste
-   Zellkorrektur/leeren Beschnitt gilt der reguläre C-Weg oben. Historische feste manuelle Ableitungen brauchen
-   den tatsächlich unterstützten ZA-1-Vertrag und dessen gesonderte Autorisierung;
-   keine freie Matrixmanipulation als regulären Import ausgeben. Materielle
-   Änderungen vor Fortsetzung erneut zur Motivfreigabe vorlegen.
-
-Für jede Runde genügen Hypothese, Referenz-/Plankennung, tatsächliche Kandidaten-/
-Änderungszahl, Endgrund und Auswahlentscheidung im bestehenden Entscheidungsprotokoll.
-Kein Erfolg nach begrenzter Suche ist zulässig, aber kein Beweis, dass eine Reparatur
-unmöglich wäre. Bei Paarprofilen muss bereits der Plan die versionierte
-`certification` binden; neue Hinweise brauchen eigene Baseline und Endnachweis.
-
-Referenz, Ergebnis und markierten Zell-Diff vergleichen. `found` allein genügt nicht: Endnachweis, unabhängige Prüfung, Replay und redaktionelle Bewertung sind erforderlich. Bei schlechter Ausgangsform zuerst Abstraktion/Größe/Rasterpalette korrigieren; die freigegebene Abschlussbildreferenz dabei erhalten.
+Je Runde genügen Hypothese, Referenz-/Plankennung, tatsächliche Kandidaten-/
+Änderungszahl, Endgrund und Auswahlentscheidung im bestehenden Protokoll.
+Begrenzter Nichtfund ist kein Beweis unmöglicher Reparatur. Referenz, Resultat
+und markierten Zell-Diff vergleichen; found allein genügt nicht ohne Endproof,
+unabhängige Prüfung, Replay und Redaktion. Neue Hinweise verlangen eigene
+Baseline/Endnachweise; Paarpläne binden certification bereits vor Lauf.
 
 | Änderung | Erforderliche Wiederholung |
 | --- | --- |
-| Zellwert oder Rastermaß, auch nur eine Zelle | Neue Revision, Hinweise, vollständiger Logiknachweis, unabhängige Prüfung und Rasterbewertung |
-| Quelle, Crop, Palette oder Importparameter | Neuer gebundener Import und vollständige Prüfung |
-| Materielle Motivänderung | Zusätzlich erneute ausdrückliche menschliche Motivfreigabe |
-| Abschlussbild geändert | Neue Bildrevision und menschliche Abschlussbildfreigabe; Ableitung, Motiv-/Rasterkonsistenz und Endabnahme erneut prüfen. Materielle Änderungen setzen abhängige Motivfreigaben zurück. Kein neuer Logiklauf allein für eine Bildänderung bei nachweislich unverändertem Raster/Logikeingang; nötige Rasteränderungen vollständig neu nachweisen |
-| Nur Schwierigkeit/Kategorie/Metadaten | Keine neue Bild-/Rasterproduktion und keine neue Bild-/Endfreigabe allein wegen Kategorieänderung. Metadaten bei versiegelten Paketen außen ergänzen, neue Exportbindung separat aufzeichnen. Bewertungs-/Metadatenrevision; unveränderte Matrix-/Nachweisbindung erhalten |
-| Erstmals Paarprofil bei unveränderter Matrix | Neue ausdrücklich profilierte Produktionsbindung, eigener Baseline-/Paarproof und Assessment; keine geänderten Rasterwerte oder umetikettierten Altproofs. Bereits versiegelte Originale erhalten; die neue Lieferung als neue Revision mit echter Regelwerksbindung 0.6.0 führen. Bildfreigaben nur bei unverändertem Gegenstand passend wiederverwenden; Endfreigabe muss das tatsächlich gelieferte Handoff/Inventar binden. |
+| Zellwert oder Rastermaß, auch eine Zelle oder nur leerer Außenbeschnitt | Neue Revision, Hinweise, vollständiger Logiknachweis, unabhängige Prüfung und Rasterbewertung. |
+| Quelle, Crop, Palette oder Importparameter | Neuer gebundener Import und vollständige Prüfung. |
+| Materielle Motivänderung | Zusätzlich erneute ausdrückliche Motivfreigabe. |
+| Abschlussbild | Neue Bildrevision und menschliche Bildfreigabe; Ableitung, Motiv-/Rasterkonsistenz und Endabnahme erneut prüfen. Materielle Änderungen invalidieren abhängige Motivfreigaben. Kein neuer Logiklauf allein bei nachweislich identischem Raster/Logikeingang. |
+| Hintergrundillustration, Komposition oder Transparenz | Neue Bildrevision/Wahl und abhängige Ableitung; Ablehnung mit Grund sichern, kein automatisches none. Unveränderte Raster-/Proof-/Schwierigkeitsbindungen erhalten. |
+| Nur Schwierigkeit/Kategorie/Metadaten | Keine neue Bild-/Rasterproduktion oder Freigabe allein deswegen; bei versiegelten Paketen äußere Ergänzung/Exportbindung, passende Nachweise erhalten. |
+| Erstmals Paarprofil bei gleicher Matrix | Neue profilierte Produktionsbindung samt Baseline, Paarproof und Assessment; keine umetikettierten Altproofs oder veränderten Rasterwerte. Neue Produktion bindet aktuellen 0.8-Regelstand; alte versiegelte Originale bleiben. Endfreigabe bindet tatsächliches Handoff/Inventar. |
 
-Eine reine Freistellung ist nach [AT](../REVEAL_TRANSPARENCY.md) eine neue
-Bildrevision mit tatsächlicher Abschlussbildfreigabe und erneut geprüfter
-Motiv-/Rasterkonsistenz sowie Endabnahme. Die Spezifikationsfreigabe nimmt die
-noch nicht erzeugten Bildbytes nicht ab. Originale Bildfreigaben, Handoffs,
-Inventare und Integrationsbelege bleiben unverändert; die neue aktive Bildfassung
-wird außen gebunden. Bei unveränderten Definitionen samt Runtime-Revision,
-Raster und Logikeingang entsteht allein daraus weder neue Rasterproduktion noch
-Logik-/Proof-/Schwierigkeitsanalyse. Identität, Ressourcenpfade, Slots, Rating
-und Hinzugefügt-Daten bleiben erhalten. Materielle Änderungen bleiben von den
-zusätzlichen Freigaben der obigen Tabelle erfasst.
+Materiell sind Identität, Pose, prägende Proportionen, wichtige Innenräume,
+Gesichtszüge oder geschützte Merkmale; schon eine Zelle kann materiell sein.
+Eine reine Freistellung ist eine neue Bildrevision nach AT, keine Freigabe durch
+Spezifikation. Bei unveränderten Definitionen/Runtime-Revision/Raster/Logik
+entstehen keine neuen Solver-/Proof-/Difficulty-Läufe allein wegen Bildarbeit.
+Identität, Ressourcenpfade, Slots, Rating und Hinzugefügt-Daten bleiben erhalten.
 
-Materiell sind Änderungen an Identität, Pose, charakteristischen Proportionen, wichtigen Innenräumen, Gesichtszügen oder ausdrücklich geschützten Merkmalen. Eine einzelne Zelle kann materiell sein. Auch das Abschneiden ausschließlich leerer Außenlinien verändert das Rastermaß und benötigt neue Nachweise. Manuelle Ableitungen offen kennzeichnen, nicht als unveränderten Originalimport ausgeben.
-
-**Zukünftiger Hintergrundweg – gezielte Bildrevision:** Eine materielle Änderung
-an Hintergrundillustration, Komposition oder Transparenz benötigt eine neue
-Bildrevision und erneute Auswahl genau der geänderten Fassung; ihre abhängigen
-Ableitungen werden ungültig. Bei Ablehnung Grund und nächsten Korrekturschritt
-sichern, keine automatische Leerentscheidung treffen. Unveränderte andere
-Bilder und Rasterfreigaben bleiben passend gebunden. Die im Hintergrundvertrag
-vereinbarte deterministische Größenableitung und unveränderter Pakettransport
-brauchen keine erneute kreative Auswahl. Reine Rastergeometrie-/Palettenänderung
-erzeugt keine Buchabnahme und keine neue Dreierauswahl; tatsächlich geänderten
-Motivkontext gezielt gegen Briefing und gewähltes Bild beurteilen. Reiner
-Hintergrundersatz ändert keine Lösungs-, Hinweis-, Paletten-, Schwierigkeits- oder
-Saveidentität und erfordert keine unveränderten Logiknachweise. Für die spätere
-Bildoperation gelten §8 und der dann unterstützte #561-Vertrag, nicht der
-bestehende AT-Abschlussbild- oder Rasterersatzbefehl.
+Deterministische vereinbarte Hintergrundableitung und bytegleicher Transport
+brauchen keine erneute kreative Wahl. Reine Rastergeometrie-/Palettenänderung
+verlangt keine Buchabnahme oder neue Dreierauswahl; geänderten Motivkontext gezielt
+gegen Briefing/Bild prüfen. Hintergrundersatz folgt seinem eigenen Ziel-/Abschluss-
+vertrag, nicht dem AT- oder Rasterersatzbefehl. Unabhängige unveränderte Freigaben
+bleiben gültig; Korrektur/Wiederaufnahme erteilen keine neue End- oder Mergefreigabe.
 
 ### 4.5 Geprüfte Raster zur menschlichen Auswahl
 
-Aus den ohnehin erzeugten Kandidaten SOLL Auftrag 3 **zwei bis drei sinnvoll
-unterschiedliche, vollständig geprüfte Raster** zur Endabnahme vorlegen. Alle
-angebotenen Varianten müssen den freigegebenen Parameterkorridor sowie §§4–5
-erfüllen: eigene vollständige technische Prüfung, visuelle Bewertung,
-Bildkonsistenz und gebundene Schwierigkeit; eine ausdrücklich angenommene
-redaktionelle Abweichung folgt [Qualitätsvertrag §6](../PUZZLE_QUALITY.md) und
-bleibt als solche sichtbar. Gleiche Matrizen mit anderer Kennung
-oder nur anderem Solverprofil sind keine zusätzlichen Angebote. Auswahl und
-Empfehlung der KI getrennt benennen; die endgültige Wahl trifft der Mensch.
+Ein vollständig geeigneter, technisch und redaktionell qualifizierter Kandidat
+genügt. Bereits vorhandene sinnvoll unterschiedliche qualifizierte Alternativen
+dürfen mit kurzer Empfehlung angeboten werden. Keine Zwei-/Dreierquote und keine
+Erzeugung weiterer Varianten allein für eine Angebotszahl. Jedes Angebot erfüllt
+Korridor und §§4–5 vollständig: eigene technische Prüfung, visuelle Bewertung,
+Bildkonsistenz, gebundene Schwierigkeit oder zulässige ausdrücklich angenommene
+redaktionelle Abweichung nach Qualität §6. Gleiche Matrizen unter anderer ID oder
+anderem Solverprofil sind keine zusätzlichen Angebote. Empfehlung ist keine Wahl.
 
-Die vorhandenen Kandidaten- und Reparaturbudgets werden nicht zur Erfüllung einer
-Quote erweitert. Bei nur einem freigabefähigen Ergebnis eine Option anbieten.
-Bei keinem MUSS die KI nach [Qualitätsvertrag §5](../PUZZLE_QUALITY.md) zwei bis
-drei möglichst unterschiedliche beste brauchbare vorliegende Entwürfe zeigen,
-sofern vorhanden; bei nur einem diesen. Weitere sinnvolle Entwürfe im Protokoll
-auffindbar halten. Jede Sichtungsansicht nennt stabile ID/Revision, tatsächliches
-Raster und Abschlussbild mit echten Bild-/Dateilinks, technische Prüfungen/Lücken,
-maßgebliche Qualitätsdefizite und Korrekturmöglichkeiten sowie den Status
-`Sichtungsentwurf – nicht integrationsbereit`. Auch technisch nicht zertifizierte
-Entwürfe dürfen zur Diagnose betrachtet werden. Ohne brauchbaren Entwurf den
-konkreten Nichtfund und nächsten Korrekturschritt nennen, keine Dateien erfinden.
+Budgets werden nicht für eine Quote erweitert. Bei null qualifizierten Kandidaten
+nach Qualität §5 zwei bis drei möglichst unterschiedliche beste brauchbare
+bereits vorliegende Entwürfe zeigen, sofern vorhanden; bei nur einem diesen.
+Das ist Sichtung, keine neue Kandidatenerzeugungspflicht. Jede Ansicht nennt
+stabile ID/Revision, tatsächliches Raster/Reveal mit echten Links, Prüfungen/Lücken,
+Qualitätsdefizite und Korrekturmöglichkeiten sowie ausdrücklich
+`Sichtungsentwurf – nicht integrationsbereit`. Ohne brauchbaren Entwurf konkreten
+Nichtfund und nächsten Korrekturschritt nennen; keine Dateien erfinden.
 
-Sichtungsentwürfe sind keine Integrationsoptionen: keine qualifizierten Rasterangebote, kein
-`raster_ready`; tatsächlichen Stand als `raster_review` beziehungsweise `blocked`
-mit Grund führen. Eine mögliche gezielte redaktionelle Annahme nach
-[Qualitätsvertrag §6](../PUZZLE_QUALITY.md) bleibt extern an Kandidat, Palette,
-Inventar und Regelstand gebunden. Erst nach zulässiger Korrektur beziehungsweise
-dokumentierter Einzelfallentscheidung und vollständigen aktuellen technischen
-Prüfungen darf ein Kandidat im bestehenden gültigen Auswahlweg erscheinen.
-Fehlende Proofs oder unklare Rechte bleiben Blocker. Empfehlung und Auswahl
-erteilen keine automatische Freigabe.
+Sichtungsentwürfe sind keine Integrationsoptionen oder raster_ready. Raster_review
+bzw. blocked mit Grund führen. Erst zulässige Korrektur/Einzelfallentscheidung und
+alle technischen Nachweise erlauben den gültigen Auswahlweg. Fehlende Proofs oder
+unklare Rechte bleiben Blocker. Empfehlungen erteilen keine automatische Freigabe.
 
-Jedes Angebot erhält eine im Auftrag stabile ID (etwa `R-A-r03`), eine kurze
-Beschreibung seiner Unterschiede, Maße/Modus/Istfarbzahl, Schwierigkeit und echte
-Rasteransichten. Vor der Ausgabe wird **je Raster eine eigene kollisionsfreie
-Paketrevision derselben Rätsel-ID** nach §6 gesichert, beispielsweise `r03`, `r04`
-und `r05`. Jede Revision bleibt ein bestehendes Einzelkandidatenpaket mit genau
-einem `handoff.candidate`, vollständigen benötigten Inputs und eigenem Inventar.
-Alle angebotenen ZIPs auf dem geschriebenen Stand nach §6.1 prüfen; keine neue
-Mehrfachkandidaten-Hülle im Adapter und keine Alternativen-ZIPs ineinander packen.
-Der gemeinsame Vergleich darf Beleglinks nutzen, ersetzt aber keinen Paketeingang.
-
-Die automatisch erzeugte workspace.json bindet jedes qualifizierte Angebot
-an dessen Einzelrecord, Paketrevision, Originalinventar, Bilder und Quellcommit.
-Schritt 4 beginnt ausschließlich mit der tatsächlichen Wahl einer solchen Option.
-Die neue Hintergrundrevision trägt eine `picross-raster-selection-v1`-Datei nach
-[PW-B-Vertrag](../PW_B_CONTRACT.md); Originalrevisionen bleiben bytegleich.
-Nicht gewählte Angebote bleiben bis zur bestätigten Mainintegration erreichbar.
-Empfehlung, erster Listeneintrag und höchste Revisionsnummer sind keine Auswahl.
+Jedes Angebot bekommt stabile Kennung, Unterschiede, Maße/Modus/Istfarbzahl,
+Schwierigkeit und echte Rasteransichten. Vor Ausgabe pro Raster eine kollisionsfreie
+Einzelpaketrevision derselben ID nach §6 sichern, mit genau einem handoff.candidate,
+allen nötigen Inputs und Inventar. Geschriebene ZIPs frisch prüfen; keine neue
+Mehrfachhülle und keine verschachtelten Alternativen-ZIPs. Vergleich ersetzt kein Paket.
+Workspace bindet Angebote an Einzelrecord, Originalinventar, Bilder und Quellencommit.
+Schritt 4 beginnt erst mit tatsächlicher qualifizierter Rasterwahl; die neue Revision
+führt picross-raster-selection-v1 nach PW-B. Originale bleiben bytegleich, nicht
+gewählte Angebote bis bestätigter Mainintegration erreichbar. Weder erste Option
+noch höchste Revisionsnummer gilt automatisch als Wahl.
 
 ## 5. Schwierigkeit L1–L5
 
-**Zukünftiger Hintergrundweg:** Hintergrundstatus und Bildauswahl fließen nicht
-in die Schwierigkeit ein. Bei ausschließlich geänderter Hintergrundrevision
-bleiben passende unveränderte Analyse-/Proofbindungen erhalten; kein neuer
-Solver- oder Schwierigkeitslauf allein wegen dieser Bildarbeit. Für tatsächliche
-Logik-/Paletten-/Rasteränderungen gelten weiterhin die eigenen Nachweispflichten
-aus §4 und den nachfolgenden Bewertungsverträgen.
+Logische Schwierigkeit, Rastergröße, Bearbeitungsumfang und Lösungszeit trennen;
+Sterne-/Fehlerwertung im Spiel bleibt unabhängig. Hintergrundstatus/-wahl fließen
+nicht ein. Bei reiner Bildrevision passende unveränderte Analyse-/Proofbindungen
+erhalten; tatsächliche Logikänderungen verlangen neue Nachweise nach §4.
 
 ### 5.1 Historische Produktionsmethoden 0.1 und 0.2
 
-**Logische Schwierigkeit, Rastergröße, Bearbeitungsumfang und Lösungszeit getrennt angeben.** Große Matrizen oder viele Eingaben sind nicht automatisch schwierig. Sterne-/Fehlerbewertung im Spiel bleibt unabhängig.
-
-Für neue Paarprofilbewertungen `picross-difficulty-0.2` verwenden; reine Linienfälle
-dürfen weiterhin nach 0.1 bewertet werden. Alte Bewertungen nicht überschreiben
-oder als rückwirkende 0.2-Berechnung ausgeben. Den Lösungsverlauf anhand von
-Hinweisen und bisher bewiesenen Domains beurteilen. Profilverwendung allein
-beweist keine Notwendigkeit seiner stärksten Technik.
-
-| Technik | Bedeutung |
-| --- | --- |
-| R0 | Direkte Voll-/Leerbelegung, vollständige Packung, Restleerfelder nach eindeutig abgeschlossenen Blöcken |
-| R1 | Überlappungen sowie Grenzen/Verlängerungen eindeutig zugeordneter Blöcke |
-| R2 | Kombinierte Zuordnung mehrerer Blöcke/Segmente; mehrere Anker, Trennungen oder Farbregeln zusammenführen |
-| R3 | Allgemeine vollständige Zeilenunterstützung, komplexe Alternativen und partielle Farbdomänen, soweit nicht durch R0–R2 erklärt |
-| R4 (0.2) | Notwendige gemeinsame Paarlinienlogik gemäß B-D01, belegt durch separat verifizierten unvollständigen Linienfixpunkt und vollständigen Paarproof derselben Logik |
-
-| Stufe | Einstufungskriterium |
-| --- | --- |
-| **L1 – sehr leicht** | R0 reicht vollständig. |
-| **L2 – leicht** | R1 erforderlich, R0+R1 reichen. |
-| **L3 – mittel** | R2 erforderlich und ausreichend; keine definierte Engstelle beobachtet. |
-| **L4 – schwer** | R2 mit Engstelle oder R3 ohne Engstelle. |
-| **L5 – sehr schwer** | R3 mit Engstelle oder unter 0.2 notwendige R4; diese zusätzlich ausdrücklich als „linienübergreifend / besonders hoher logischer Anspruch“ kennzeichnen. Keine L6-Stufe. |
-
-**Vorläufige Engstellendefinition:** mindestens drei aufeinanderfolgende informative R2/R3-Schritte; jeweils höchstens zwei produktive Linien und höchstens vier Zellen mit Domänenänderung pro Schritt. Ein Schritt ist eine Regelanwendung an einer Linie einschließlich ihrer begründeten Änderungen. Restaufräumen ignorieren, sobald höchstens `max(5, ceil(0.02 × W × H))` Zellen mehrdeutig bleiben. Die Schwellen gehören zur Methodenversion, nicht zum mathematischen Lösbarkeitsvertrag.
-
-Vorgehen:
-
-1. Stärkste belegte Technik und typische Engstellen anhand eines nachvollziehbaren Lösungsverlaufs bestimmen. Gleichzeitig mögliche Fortschritte und deren räumliche Verteilung berücksichtigen; aus einem sequentiellen Proof nicht ungeprüft auf fehlende Alternativen schließen.
-2. Hinweisstruktur und Farbabhängigkeiten dokumentieren. Farbzahl, Schrittzahl, Laufzeit und Zellzahl dürfen die Stufe nicht allein erhöhen. Lange einfache Fortschrittsketten bleiben einfach.
-3. Ohne validierten Bewertungsanalysator `editorial_estimate` verwenden: Hauptstufe, plausiblen Bereich, konkrete Begründung und Vertrauen angeben. Eine begründete KI-Einstufung **genügt ohne menschliches Probespiel**. Nicht erschöpfend geprüfte Techniknotwendigkeit/Engstellen als unsicher kennzeichnen.
-4. `instrumented` nur bei tatsächlich vorhandener geprüfter Instrumentierung verwenden. Diese muss schwächere Regelfamilien bis zum Fixpunkt testen, Fortschrittsmöglichkeiten erfassen und einen festgelegten Bewertungsweg verwenden. Keine solche Fähigkeit erfinden.
-5. Vertrauen: `low` bei KI-Schätzung/ungeklärten Technikgrenzen; `medium` bei vollständig überprüfter Bewertung ohne belastbare menschliche Kalibrierung; `high` erst mit validierter Methode und passenden Vergleichsdaten. Geringes Vertrauen oder fehlende Kalibrierung ist kein Abnahmeblocker; eine unbegründete Stufenzahl ist unvollständig.
-6. Lösungszeit ohne belastbare Daten als `null`/„nicht geschätzt“ ausgeben. Optionale spätere Versuche mit Erfahrungsgruppe, aktiver Zeit, Hilfen, Abbruch und getrennten Urteilen zu Logik/Arbeitsumfang erfassen. Darauf Methode und Zeitprognosen versioniert kalibrieren; Produktion nicht auf diesen Datensatz warten lassen.
-
-Für R4 lautet `assessment_type=instrumented`, `confidence=medium`, Stufe und
-plausibler Bereich L5. Das belegt nur R4-Notwendigkeit, keinen vollständigen
-R0–R3-Analysator und keine menschliche Kalibrierung. `evidence` referenziert die
-inventarisierte Assessmentdatei; `profile_hash` bindet den geprüften Paarproof,
-`logical_demand` enthält die obige Kennzeichnung. ZA-1 prüft Baseline und stärkeren
-Proof frisch. Ohne notwendigen R4 bleiben die R0–R3-Kriterien und Schätzgrenzen.
-
-Stagniert das gewählte Profil, ist das Rätsel nicht freigabefähig; es bekommt
-keine zusätzliche Stufe. Neue Bewertung unveränderter Hinweise braucht keine
-Bild-/Rasterproduktion; ein erstmals beanspruchter stärkerer Technikbedarf
-verlangt die dazugehörigen neuen Nachweise. Ein Abbruch oder bloß verwendeter
-Paarschritt belegt keine Notwendigkeit. Keine Aussage über sämtliche denkbaren Regeln.
+Diese Methoden beschreiben ihre damaligen Pakete, nicht die Wahl für neue 0.8-
+Produktionen. Alte Schätzungen, Snapshots und Freigaben bleiben unverändert.
+Die damaligen Technik-/Engstellen-/Schätzregeln sind im
+[gebundenen Vorgängerstand](https://github.com/venomenon328/picross/blob/a4bb4f929f29cd6d6e188500b5a8dbb1dead60fe/docs/ai-workflows/PUZZLE_AUTHORING.md#51-historische-produktionsmethoden-01-und-02)
+lesbar; keine Routinelektüre oder rückwirkende Neubewertung. Profilverwendung
+allein beweist auch heute keine Notwendigkeit der stärksten Technik. Stalled oder
+Abbruch ist keine zusätzliche Schwierigkeitsstufe.
 
 ### 5.2 Aktueller zusätzlicher Integrationsstandard SD
 
-Ab SD-C1 ersetzt [SD](../PUZZLE_DIFFICULTY.md) die freie neue
-Schätzung durch den zentralen ausdrücklich manuellen Analyseweg nach finaler
-Deduktionsprüfung. Ein passend gebundener vollständiger Bericht wird bei der
-Integration wiederverwendet. Gleiche Methodenversion und Eingabe bestimmen
-dieselbe Bewertung für neue Rätsel und ausgewählte Bestandsrätsel. Abbruch oder fehlende
-Analyse darf nicht durch eine unbegründete Stufe oder ersatzweise 5 verdeckt werden.
+Für neue Produktion gilt die aktive 0.4-Analyse-/Bewertungsbindung aus
+[SD2](../PUZZLE_DIFFICULTY_V2.md) und [SD2-Integration](../SD2_INTEGRATION.md).
+Vor Endfreigabe aus endgültiger Matrix/Design/normalisierter Logik den passenden
+vorläufigen Input erzeugen und den vollständigen aktuellen Bericht prüfen.
+R4-Baseline/Paarproof nur bei tatsächlich beanspruchtem Bedarf binden. Nach
+Endfreigabe/Export das unterstützte Rebind bei gleicher ID/Logik/Matrix auf die
+wirklichen Definitionsbytes anwenden; ursprüngliches rating.source erhalten.
+Befehle/Budgets vor Ausführung in den entsprechenden SD2-Abschnitten der
+Tool-README lesen. Keine freie Ersatzschätzung, pauschale Stufe 5 oder neue
+Bildproduktion bei fehlender/abgebrochener Analyse.
 
-Vor redaktioneller Endfreigabe erzeugt `catalog_analysis candidate` aus endgültiger
-Matrix, Design und normalisierter Logik einen ausdrücklich vorläufigen Schema-2-Input
-mit derselben Farbabbildung wie ZA-1. `analyze` beziehungsweise `import` prüft das
-volle Bundle; passende R4-Baseline-/Paarproofs ausdrücklich angeben, kein Routinepaarlauf.
-Nach Endfreigabe/Export bindet `rebind` die tatsächlichen Definitionsbytes bei
-identischer ID/Logik/Matrix; ursprüngliches `rating.source` bleibt erhalten.
-Befehle und Budgets: [Werkzeuganleitung](../../tools/puzzle_production/README.md).
-
-R0–R3-Instrumentierung, synchrone Wellen, Engstellen und begrenzter Größenbeitrag
-folgen dem eigenen Bewertungsvertrag; vollständige R0-Fälle bleiben auch groß
-sehr leicht. R4 behält seinen unabhängigen Baseline-/Paarbeleg. Zahlen und
-Übergänge werden vor Bestandsanwendung an unabhängigen synthetischen Referenzen
-gebunden. Der reale Katalog bestimmt keine Skalenenden, muss nicht alle Stufen
-besetzen und darf weder direkt noch als Kopie automatisierter Testbestand werden.
-
-Neue aktive Bewertungen liegen außerhalb versiegelter Originalpakete und ändern
-keine alten Schätzungen, Handoffs, Inventare oder Freigaben. Eine reine Neubewertung
-braucht keine neue Bild-/Rasterproduktion oder Motiv-/Endfreigabe. Ohne geänderte
-Logik lösen Titel, Kategorie oder Reveal keinen erneuten Analyselauf aus.
-Menschliches Probespielen bleibt optional; geprüfte synthetische Referenzen
-begründen keine Behauptung empirischer menschlicher Kalibrierung.
+Passend gebundene vollständige Ergebnisse wiederverwenden. Gleiche Methodenversion
+und Eingabe bestimmen dieselbe Bewertung. Keine Skalenenden aus dem realen Katalog,
+kein realer Rätselbestand als Testkorpus. Titel/Kategorie/Reveal bei gleicher Logik
+erzwingen keinen neuen Analyselauf. Alte Originalpakete/Handoffs/Freigaben nicht
+überschreiben; aktive Bewertungen außerhalb versiegelter Produktion führen.
+Probespielen bleibt optional; technische Referenzen sind keine empirische
+menschliche Kalibrierung. Ungemessene Lösungszeiten nicht behaupten.
 
 ## 6. Dateien, Übergabe und Wiederaufnahme
 
 ### 6.1 Repositoryablage während der laufenden Produktion
 
-Ein neuer Job erhält durch den Produktionsakteur eine neue `pz-…`-ID und genau
-einen stabilen Branch `content/pw/<puzzle_id>` von main. Alle weiteren Phasen,
-Varianten, Korrekturen und Wiederaufnahmen bleiben auf diesem Branch. Vorher
-aktuellen Index und Kollisionen prüfen; keine fremde Arbeit überschreiben.
-
-Jede Übergabe besteht aus einer neuen vollständigen Revision unter
-`content/authoring/<puzzle_id>/<revision>/`, indexiert in
-`content/authoring/index.json`. Den echten unversiegelten Request v3 mit
-Handoff v4, tatsächlichem 0.8-Snapshot und expliziter Dateiliste erstellen:
+Neuer Job: neue pz-ID und genau ein stabiler Branch content/pw/<puzzle_id> von main.
+Alle Phasen/Varianten/Korrekturen/Wiederaufnahmen bleiben dort. Index und Kollisionen
+prüfen, keine fremde Arbeit überschreiben. Jede Übergabe erhält eine vollständige
+Revision unter content/authoring/<puzzle_id>/<revision>/ und Eintrag im Arbeitsindex.
+Echten unversiegelten Request v3, Handoff v4, tatsächlichen aktuellen 0.8-Snapshot
+und explizite Dateiliste nach PW-B und der PB-A-Anleitung benutzen:
 
 ```text
 python -m tools.puzzle_production.authoring_builder build --request <request-v3.json> --source-root <vorbereitete-dateien> --output-root <eigene-arbeitswurzel> --publish-to <produktionscheckout> --history-repo <produktionscheckout>
 ```
 
-Der Builder validiert Dateien, erzeugt Inventar v1, geschriebenes Original-ZIP,
-bytegleiche Handoffkopie, Record v3 und automatisch die geprüfte workspace.json.
-Der gemeinsame [Ansichtsübergabeschritt](../PRODUCTION_CURRENT_VIEW.md) setzt
-zusätzlich `content/authoring/<puzzle_id>/current-view.json` auf genau diese
-Übergabe. Er ist keine Bild-/Rasterwahl. Finalizer und Completion ziehen auch
-bei In-place-Fortschreibung die tatsächlichen Hash-/Bytebindungen nach.
-Er verwendet unveränderte Proof-/Paletten-/Herkunftsprüfer. Frühphasen sind keine
-Inhaltszertifikate; `raster_ready` und spätere Inhaltsphasen werden frisch geprüft.
-`presentation={title,raster_offers}` nennt nur tatsächliche Angebote; zusätzliche
-Rasteroptionen referenzieren ihre bereits gesicherten qualifizierten Einzelrecords.
-Keine manuell erfundene Assetgalerie. Der Dienst schreibt diese Dateien nicht.
+Der vorhandene Builder validiert Dateien, erzeugt Inventar v1, geschriebenen
+Original-ZIP, bytegleiche Handoffkopie, Record v3 und geprüfte workspace.json.
+Der [Ansichtsübergabeschritt](../PRODUCTION_CURRENT_VIEW.md) bindet current-view.json
+an genau diese Übergabe; das ist keine Bild-/Rasterwahl. Finalizer/Completion
+ziehen tatsächliche Bindungen auch bei In-place-Fortschreibung nach. Frühphasen
+sind keine Zertifikate; raster_ready/spätere Inhaltsphasen werden frisch geprüft.
+Presentation enthält nur tatsächliche Angebote; weitere Raster referenzieren
+bereits gesicherte qualifizierte Einzelrecords. Keine erfundene Galerie, kein
+Projektwriter im lesenden Dienst.
 
-Danach vollständige benötigte Originale einschließlich sichtbarer Alternativen,
-Index, Projektion und aktuellen Ansichtsverweis committen und pushen. Remotezugriff auf feste Commit-/Dateipfade
-prüfen. Den Sicherungscommit erst nach Erfolg melden; `repo_commit` ist lediglich
-die gelesene Herkunft. Lokale Pfade/localhost und ungesicherte SHAs sind keine
-Cloudübergabe. Neue Quellen erst ausdrücklich im Assistenten laden; laufende
-Ansichten bleiben bis dahin am alten Snapshot. Beim Job-/Quellwechsel lokale
-Auswahlabsichten verwerfen. Defekte/missing Bilder nicht als Angebote ersetzen.
+Vollständige benötigte Originale einschließlich sichtbarer Alternativen, Index,
+Projektion und Ansichtsverweis committen/pushen; feste Remote-Commit-/Dateipfade
+wirklich prüfen. Sicherungscommit erst nach Erfolg melden; repo_commit ist nur
+gelesene Herkunft. Lokale Pfade/localhost und ungesicherte SHAs sind keine
+Cloudübergabe. Neuere Quellen ausdrücklich im Assistenten laden; bloße Suche
+bewahrt gebundene Ansicht/Eingaben. Job-/Quellwechsel verwirft alte Auswahlabsichten.
+Bei Wiederaufnahme aktuelle Quellen, gültige Freigaben, Budgets und offene Arbeit
+prüfen; keine abgeschlossenen historischen Voraussetzungen erneut erfinden.
 
 ### 6.2 Übergabedatensatz
 
-Der vollständige geschlossene Vertrag für Request v3, Handoff v4, Record v3,
-Resultat v3, Rasterwahl, Inspektion v2 und Projektion v2 steht in
-[PW-B_CONTRACT](../PW_B_CONTRACT.md). Frühes `background=null` ist keine
-Leerentscheidung. Beide Hintergrundgates sind pending und ihre Belege null.
-Nur `background_review` und `content_ready` besitzen Hintergrundarbeit und
-die konkrete qualifizierte Rasterwahl. `registered` wird erst aus einer
-wirklich abgeschlossenen Registrierung berichtet; Main erst nach bestätigtem Merge.
-
-Inventar v1, Index v1 und unveränderte technische Bilder-/Proofs-/Freigaben
-beibehalten. Historische Source-/Export-/Runtimeformate weder umetikettieren noch
-neu versiegeln. Unsichere Restpfade, Quellenkonflikte oder unvollständige
-Publikationen offen melden; nur identische vollständig geprüfte eigene Wiederholung
-ist No-op. Keine pauschale Locklöschung oder verdeckte automatische Recovery.
+[PW-B_CONTRACT](../PW_B_CONTRACT.md) definiert unverändert Request v3, Handoff v4,
+Record v3, Resultat v3, Rasterwahl, Inspektion v2 und Projektion v2. Für neue
+Produktion genau die 0.8-Generation verwenden. Frühes background=null ist keine
+Leerentscheidung; beide Hintergrundgates pending, ihre Belege null. Erst
+background_review/content_ready besitzen Hintergrundarbeit und qualifizierte
+Rasterwahl. Registered erst nach wirklicher Registrierung, Main erst nach
+bestätigtem Merge berichten. Inventar v1, Index v1 und technische Bild-/Proof-/
+Freigabeformen behalten; keine historischen Originale umetikettieren oder neu
+versiegeln. Unsichere Restpfade, Konflikte und unvollständige Publikation offen
+melden. Nur vollständig geprüfte identische Wiederholung ist No-op; keine
+pauschale Locklöschung oder verdeckte Recovery.
 
 ### 6.3 Hintergrundarbeit in Schritt 4
 
-Nach tatsächlicher Rasterwahl Kontextbriefing erfassen, drei inhaltlich
-unterschiedliche echte ImageGen-Originale erzeugen und isoliert vorlegen.
-Die [Bildqualität](../PUZZLE_QUALITY.md#9-hintergrundzeichnungen-je-rätsel--noch-nicht-aktivierter-sollweg)
-und [HP-W2-Verträge](../PUZZLE_BACKGROUNDS.md) gelten weiterhin: helle neutrale
-Graphitzeichnung, transparente Freiräume, proportionaler gemeinsamer 4:1-Fit,
-kein Rätselsubjekt, keine Lösungssilhouette, Rasterkopie oder eingebrannte UI.
-Indirekte Kontexthinweise sind möglich; keine universelle Spoilerfreiheit zusagen.
-Nur eine tatsächliche dokumentierte Eigentümerentscheidung erlaubt eine andere
-anfängliche Anzahl oder einen frühen Kandidatenverzicht. Fehlende Bilder sind kein none.
+Erst nach tatsächlicher Wahl eines qualifizierten Rasters Kontextbriefing und
+drei inhaltlich unterschiedliche echte ImageGen-Originale erstellen, speichern
+und isoliert vorlegen. Gemeinsamer [Bildstil](../PUZZLE_IMAGE_STYLE.md) und
+[Q-HG-Kriterien](../PUZZLE_QUALITY.md#91-isolierte-visuelle-beurteilung) sind Pflicht:
+leichte Graphitsprache, echte Transparenz und vollständige 2304×576-Komposition
+mit ihrem Freiraum. Andere native Maße bilden dieselbe vollständige 4:1-Leinwand
+ab; gemeinsamer Fit/Anker, kein Alpha-Bounds-Crop oder sichtmotivbezogenes Zentrieren.
+Kontext statt Rätselsubjekt/Lösung/UI; indirekte Hinweise sind keine zugesicherte
+Spoilerfreiheit. Nur tatsächliche dokumentierte Eigentümervorgabe erlaubt eine
+andere anfängliche Bildzahl oder frühen Kandidatenverzicht. Fehlende Bilder sind
+kein none. Die bedarfsweise Rasterregel verändert nicht diese Dreier-Bildauswahl.
 
-Auswahl/none als bestehende Hintergrundentscheidung v1 binden. Rechte und
-isolierte Q-HG-Sichturteile bleiben getrennt von Dateidiagnosen. Nur ausgewähltes
-Original nach HP-W2 ableiten, bei none den echten Nullbefund prüfen. Keine
-Kandidaten-Testintegration, Buchvorschau oder zusätzliche persönliche Buchabnahme.
-Geänderte kreative Bytes benötigen eine neue Entscheidung; unveränderter
-Transport und feste deterministische Ableitung keine neue kreative Wahl.
+Arbeitsmanifest/Entscheidung aus Hintergrundvertrag §3 verwenden. Wahl/none bindet
+die tatsächlich vorgelegten Bytes. Rechte und isolierte Sichturteile bleiben
+getrennt von Dateidiagnosen. Nur ausgewähltes Original gemäß HP-W2 §4 ableiten;
+bei none echten Nullbefund prüfen. Keine Kandidaten-Testintegration, Buchvorschau
+oder zusätzliche persönliche Buchabnahme. Geänderte kreative Bytes brauchen neue
+Wahl; bytegleicher Transport und festgelegte Ableitung keine erneute kreative Wahl.
+Eine offene Hintergrundwahl darf zusammen mit der tatsächlichen Endabnahme im
+passend beauftragten Schlussauftrag erklärt werden; nicht dieselbe unveränderte
+Entscheidung ein weiteres Mal verlangen. Die PW2-B-Oberfläche ist davon getrennt.
 
 ## 7. Freigaben und Abschlussausgabe
 
-Bild-, Motiv-/Parameter-, Rasterwahl-, Hintergrund- und finale redaktionelle
-Entscheidungen stammen aus tatsächlichen menschlichen Erklärungen. Software prüft
-Aufzeichnungen und Bytes, authentifiziert keine Menschen und ergänzt kein Schweigen.
-Bei Korrekturwünschen nicht die noch gar nicht vorhandene geänderte Fassung freigeben.
+Bild-, Motiv-/Parameter-, Raster-, Hintergrund- und finale redaktionelle
+Entscheidungen stammen aus tatsächlichen menschlichen Erklärungen. Software
+prüft Aufzeichnungen/Bytes, authentifiziert keine Menschen und ergänzt kein
+Schweigen. Korrekturwünsche geben noch nicht vorhandene neue Fassungen nicht frei.
 
-Jede Chatübergabe nennt kurz erreichte Phase, maßgebliche feste Quelle, tatsächlich
-ausgeführte Prüfungen, offene Entscheidung und nächsten Schritt. Echte Bild-/Dateilinks
-und stabile Angebotskennungen bereitstellen. Keine technische JSON-Sammlung zum
-manuellen Einfügen in ein zweites Sheet; der Assistent liest die veröffentlichten
-Originaldaten automatisch. Normale Produktion verwendet weiterhin ihr eigenes
-Abschlussformat, nicht das Entwicklungs-HANDOFF-JSON.
+Jede Chatübergabe nennt kurz erreichte Phase, feste Quelle, tatsächlich ausgeführte
+Prüfungen, offene Entscheidung und nächsten Schritt; echte Bild-/Dateilinks und
+stabile Angebotskennungen. Keine Routine-JSON-Sammlung für ein zweites Sheet:
+der Assistent liest veröffentlichte Originaldaten. Normale Produktion verwendet
+ihr eigenes Abschlussformat, nicht Entwicklungs-HANDOFF.
 
-Persönliche Arbeitswurzel und Merge bleiben ausdrücklich gewählte
-Auftragsoptionen. Normale Produktionsprompts beauftragen keine zusätzliche
-Bereinigung lokaler Arbeitsdaten; eine gesonderte ausdrückliche Beauftragung
-folgt WORKSPACE. Der fachliche Produktionsabschluss nach §9 bleibt davon
-unberührt. Keine Übernahme von Befugnissen aus Record oder Projektion.
-Neue lokale Briefingentwürfe dürfen unabhängig gespeichert werden; sie behaupten
-keine Produktions-ID, Quelle oder Freigabe. Gesicherte Jobs und Revisionen bleiben
-über Git nach Neustart wiederauffindbar. Ausdrückliche spätere Hintergrundrevisionen
-verwenden den vorhandenen HP-I1b2-Auftrag; kein Import alter Sheet-Sitzungen nötig.
+Persönliche Arbeitswurzel und Merge bleiben ausdrücklich gewählte Auftragsoptionen,
+keine Rechte aus einem Record oder einer Projektion. Normale Produktionsprompts
+beauftragen keine zusätzliche lokale Ablagebereinigung; gesonderter Auftrag nach
+WORKSPACE. Der fachliche Produktionsabschluss nach §9 bleibt davon unberührt.
+Neue lokale Briefingentwürfe behaupten keine ID/Quelle/Freigabe. Eigene spätere
+Hintergrundrevisionen benutzen HP-I1b2, keinen Alt-Sheet-Sitzungsimport.
 
 ## 8. Abgenommenes Paket ins Spiel integrieren
 
-Schritt 5 setzt vollständige gültige Raster-/Hintergrundbereitschaft und die echte
-Endfreigabe v2 am unveränderten Original-ZIP voraus. Fehlende Freigaben sind keine
-technische Kleinigkeit. Über den Finalizer v2 vorhandene äußere Entscheidung,
-Ableitung und Endfreigabe nachtragen; Originale bleiben bytegleich. Atomare
-Recordfortschreibung und geprüfte Projektion verwenden denselben gebundenen Stand.
+Schritt 5 setzt vollständige gültige Raster-/Hintergrundbereitschaft und echte
+Endfreigabe v2 am unveränderten Original-ZIP voraus. Vorhandene äußere Entscheidung,
+Ableitung und Endfreigabe über Finalizer v2 nachtragen; Originale bleiben bytegleich.
+Atomare Recordfortschreibung und geprüfte Projektion verwenden denselben Stand.
+Fehlende Freigaben sind keine technische Kleinigkeit.
 
-**Zielbasis vor Erstintegration und Wiederaufnahme:** Aktualisiere vor den folgenden
-Aufrufen und erneut vor jeder registrierenden Mutation tatsächlich `origin/main`
-und stelle dessen volle SHA sowie den Stand des beauftragten Zielcheckouts fest.
-Beziehe aktuelles main sicher in den Produktionsbranch ein; überschreibe dabei
-keine schmutzigen WIP- oder Fremddaten. Prüfe den vollständigen gültigen Zielstand:
-Inhaltsregistry v4, Runtime v7 und genau eine aktuelle Metadatenzeile mit gültiger
-Kategorie je vorhandener ID. Bei veraltetem, fehlendem oder inkonsistentem Ziel,
-Konflikten, offenen Locks/Journalen oder ungeklärter Recovery stoppe vor Mutation
-mit konkretem Grund. Reguläre Registrierung migriert keine v3/v6-Zielbasis implizit.
+Vor Erstintegration, Wiederaufnahme und jeder registrierenden Mutation tatsächlich
+origin/main aktualisieren, vollständige SHA und beauftragten Zielcheckout feststellen.
+Aktuelles main sicher in den Produktionsbranch einbeziehen, schmutzige WIP/Fremddaten
+nicht überschreiben. Gültige Inhaltsregistry v4, die vom aktuellen gemeinsamen
+Writer unterstützte Runtimegeneration und je ID genau eine aktuelle Metadatenzeile
+mit gültiger Kategorie prüfen. Die [PE-A2-Zielregeln](../PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag)
+gehören zum bestehenden Zielvertrag, nicht zu einer Migration durch dieses Regelpaket.
+Veraltete/inkonsistente Ziele, Konflikte, Locks/Journale oder ungeklärte Recovery
+stoppen vor Mutation; keine implizite Zielmigration oder Rückstufung.
 
-`registered` auf einem Draftbranch ist keine bestätigte Mainintegration. Hat sich
-der Zielkatalog seit der bisherigen Registrierung geändert, baue die Zielregistrierung
-auf der frischen Hauptbasis mit den tatsächlich gebundenen Originalen und gültigen
-vorhandenen Freigaben neu auf: `export → plan → register`, mit frisch vorgelegtem
-lesendem Plan und echtem Register gegen diesen Zielcheckout. Erzeuge zielabhängige
-Index-, Runtime-, aktive Source-/Receipt- und Abschlussverweise fachlich neu.
-Übernimm alte generierte `content/registry.json` und `game/data/registry.json` weder
-als Ersatz für den aktuellen Katalog noch durch bloße textuelle Konfliktauflösung;
-stufe v4/v7 und aktuelle Metadaten nicht zurück und erhalte alle bisherigen Inhalte.
-
-Erhalte Original-ZIP, Raster-/Revealbytes, historische Herkunfts-/Freigabebelege
-und weiterhin gültige Entscheidungen unverändert. Nutze den gültigen Difficulty-Rebind
-nach §5; erhöhe für eine neue ID nicht den unten angegebenen `--runtime-revision`-Wert.
-Ist die saubere Neubindung technisch nicht möglich oder die Herkunft ungeklärt,
-stoppe konkret statt Herkunft oder Freigaben zu erfinden oder historische Belege umzuschreiben.
-Die bestehenden Quellen-/Lock-/Journal-/Recoveryguards sowie unabhängiges Review
-und passende Mergefreigabe bleiben Pflicht; schreibe nicht direkt auf `main`.
+Registered auf Draftbranch ist kein Mainabschluss. Bei verändertem Zielkatalog
+mit unveränderten gebundenen Originalen und gültigen Freigaben frisch export → plan →
+register gegen aktuellen Zielcheckout ausführen. Zielabhängige Index-/Runtime-/
+Source-/Receipt-/Abschlussdaten fachlich neu erzeugen. Alte generierte Registries
+nicht als Ersatz für aktuellen Bestand oder durch bloße Textkonfliktauflösung
+übernehmen; alle bestehenden Inhalte/Metadaten erhalten. Original-ZIP, Raster-/
+Revealbytes, historische Herkunft/Freigaben bleiben unverändert. Gültiges
+Difficulty-Rebind benutzen, bei neuer ID --runtime-revision 1 beibehalten.
+Technisch unmögliche Neubindung oder ungeklärte Herkunft konkret melden, nicht
+erfinden/umschreiben. Keine direkte Mainmutation oder Umgehung von Guards.
 
 ```text
 python -m tools.puzzle_production.authoring_builder finalize-background --request <finalize-v2.json> --source-root <neue-belege> --output-root <produktionscheckout> --history-repo <produktionscheckout>
@@ -750,191 +694,153 @@ python -m tools.puzzle_production.target_adapter plan --export <neuer-export> --
 python -m tools.puzzle_production.target_adapter register --export <neuer-export> --checkout <produktionscheckout> --difficulty <geprüfte-difficulty.json>
 ```
 
-Die gültige 0.4-Difficultybindung nach §5 und gegebenenfalls das ausdrücklich
-gewählte Rebind verwenden. Nur die gewählte Lieferung übernehmen. Ein Export v6
-prüft vollständig vor Veröffentlichung; der frische lesende Plan geht jeder
-autorisierenden Registrierung voraus. Register prüft selbst erneut und benutzt
-keinen fremden Plan als Vertrauenscache. Gespeicherte false-Readinessfelder bleiben
-historisch; Zielbereitschaft und registrierter Checkout werden frisch ermittelt.
+Nur gewählte Lieferung übernehmen. Export v6 prüft vollständig vor Veröffentlichung;
+frischer lesender Plan vor autorisierter Registrierung. Register plant selbst neu,
+kein fremder Plan als Vertrauenscache. Historisch gespeicherte false-Readinessfelder
+bleiben; Zielbereitschaft und registrierter Checkout werden frisch ermittelt.
+RI, ZA-1 und aktuelle Katalogguards behalten sichere Pfade/Namespaces/Dateitypen,
+Quelle/Capability/Provenienz, Bilder/Palette/Proof, Kategorie/Difficulty, IDs/Slots
+und test_only. Keine Save-/Registry-/Runtimeänderung als Abkürzung.
 
-[RI](../PUZZLE_INTEGRATION.md), [ZA-1](../ZA1_ADAPTER.md) und die bestehenden
-Katalogguards bleiben vollständig: sichere Pfade/Namespaces/Dateitypen, aktuelle
-Quellen, Capability, Provenienz, Bilder, Palette, Proofs, Kategorie, Difficulty,
-IDs/Slots und test_only. Keine Registry-/Runtime-/Saveänderung als Abkürzung.
-Export/Plan/Eingangsprüfung behalten ihre fachlichen Grenzen. Registrierung und
-deren Recovery besitzen getrennte 1800-s-Schutzrahmen und eine 300-s-Warnung;
+Registrierung und Recovery behalten getrennte 1800-s-Schutzrahmen und 300-s-Warnung;
 ein äußerer Ablauf darf Recovery nicht auf verbrauchte Restzeit beschränken.
-Unterbrechung, Rollback, offene Recovery und dauerhafter Abschluss getrennt melden.
-Bei unklaren/fremden Bytes Dateien und Journal erhalten, nicht Lock oder Gates umgehen.
+Export/Plan/Eingangsprüfung behalten ihre eigenen Grenzen. Unterbrechung, Rollback,
+offene Recovery und Abschluss getrennt berichten. Unklare/fremde Bytes und Journal
+erhalten. Der bestehende BA-B-Runner bleibt nur bei ausdrücklich vorbereiteten
+passenden Einzelintegrationen nutzbar, mit eigenen Mengen-/Budget-/Publikationsgrenzen.
+Kein neuer Batchauftrag, versteckter Solverlauf oder zweites Hintergrundregister.
 
-Der bereits vorhandene BA-B-Runner bleibt für ausdrücklich vorbereitete passende
-Einzelintegrationen nutzbar; 0.8.0 wird als neue native Originalgeneration gelesen,
-seine Mengen-, Budget- und Publikationsgrenzen bleiben unverändert.
-Kein neuer Batchauftrag, versteckter Solverlauf oder neues Hintergrundregister.
+Nach wirklicher Registrierung Diff/Lieferbytes prüfen und Registrierungsstand
+committen. Den Abschluss binden mit:
 
-Nach erfolgreicher tatsächlicher Registrierung relevanten Diff und Lieferbytes
-prüfen und den Registrierungsstand committen. Mit
-`python -m tools.production_workspace.projector --repository <checkout> --complete-record <recordpfad> --integration-commit <volle-SHA>`
-den tatsächlichen Abschluss binden und die Projektion automatisch fortschreiben.
-Record, Projektion und aktuellen Ansichtsverweis anschließend committen/pushen; Draft-PR im beauftragten
-Umfang erstellen. Reine Produktion
-erhält CI-Kern ohne Windowsbau und ohne neue rätselspezifische Tests. Merge nur bei
-ausdrücklicher passender Befugnis, aktuellem unabhängigen Review und allen Gates.
-Ein lokaler Registryerfolg ist kein Mainabschluss. Main erst am bestätigten
-Mergecommit melden. Danach revisionsgenaue Bereinigung nach §9.
+```text
+python -m tools.production_workspace.projector --repository <checkout> --complete-record <recordpfad> --integration-commit <volle-SHA>
+```
+
+Record, Projektion und Ansichtsverweis danach committen/pushen und Draft-PR im
+beauftragten Umfang erstellen. Reine Produktion erhält CI-Kern ohne Windowsbau
+und ohne neue rätselspezifische Tests. Vor Merge aktuellen Head/Basis, unabhängiges
+Review am tatsächlichen Stand, ausgewählte Pflichtchecks, Konfliktfreiheit,
+erforderliche Abnahmen und ausdrückliche/bedingte Befugnis prüfen; Squash verwenden,
+keine Release-/Deploymentfreigabe ableiten. Main erst am zurückgelesenen Mergecommit
+melden; danach der revisionsgenaue Abschluss nach §9. Ein lokaler Erfolg reicht nicht.
 
 ## 9. Produktionsabschluss und Bereinigung
 
-Eigentümerentscheidung vom 14.10.2026: **Ein fertiggestelltes und final auf `main`
-integriertes Rätsel muss nicht erneut produzierbar sein.** Produktionsunterlagen
-sind Arbeitsmaterial, kein dauerhaft wachsender Spiel- oder CI-Bestand.
+Eigentümerentscheidung vom 14.10.2026: Ein fertiggestelltes und final auf main
+integriertes Rätsel muss nicht erneut produzierbar sein. Produktionsunterlagen
+sind Arbeitsmaterial, kein dauerhaft wachsender Spiel-/CI-Bestand.
 
-1. Tatsächliche Endabnahme und Merge nachweisen; `registered` auf einem Draftbranch
-   allein genügt nicht. `origin/main` aktualisieren und den vollständigen enthaltenen
-   Commit nennen. Offene Nacharbeit oder neuere Arbeitsstände derselben ID zuerst
-   klären; fremde/offene Produktionen erhalten.
-2. Nach dem Merge in einem eigenen kleinen Cleanup-Diff ausführen:
-
-   Den [abgeschlossenen Ansichtsverweis](../PRODUCTION_CURRENT_VIEW.md) nach
-   frischem Abgleich mit Revision und Mainbeleg zuerst entfernen. Ein Verweis
-   auf neuere/offene Arbeit bleibt erhalten; dann vor dem ID-Abschluss klären.
+1. Tatsächliche Endabnahme und Merge nachweisen, origin/main aktualisieren und
+   vollständigen enthaltenen Commit nennen. Registered auf Draft genügt nicht.
+   Neuere/offene Arbeit derselben ID zuerst klären, fremde/offene Produktion erhalten.
+2. Nach Merge in eigenem kleinen Cleanup-Diff zuerst den
+   [abgeschlossenen Ansichtsverweis](../PRODUCTION_CURRENT_VIEW.md) frisch gegen
+   Revision/Mainbeleg prüfen und entfernen. Verweis auf neuere/offene Arbeit erhalten;
+   bei ungeklärter ID vor Abschluss stoppen. Dann:
 
    ```sh
    python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <vollstaendige-main-SHA> --puzzle-id <pz-ID>
    ```
 
-   Mehrere bestätigte IDs können mit wiederholtem `--puzzle-id` zusammengefasst
-   werden. Der Befehl prüft Main-Abstammung und unveränderte Integrations-/Arbeitsbytes,
-   entfernt die Authoringrevisionen samt Indexeinträgen und ersetzt das Produktionspaket
-   durch einen kompakten Integrationsdatensatz. Kein Solver, Proof- oder Bildreplay.
-3. Dauerhaft bleiben Runtime-Definition samt Matrix/Hinweisen, Abschlussbild,
-   Nutzungshinweise/Lizenzen, ID/Runtime-Revision/Save-Slot, Kategorie und relevante
-   Schwierigkeitsmetadaten. Der kleine Integrationsdatensatz bindet diese Daten,
-   den ursprünglichen Exporthash und den bestätigten Main-Commit.
-   Nach AT-A bleiben zusätzlich die maßgebliche aktive Bildbindung und ihre
-   Herkunfts-/Freigabebelege erhalten. Cleanup darf weder die aktuelle Bildfassung
-   auf ihren historischen Vorgänger zurücksetzen noch alte Integrationsbelege
-   zur Behauptung einer nachträglichen Bildfreigabe umschreiben.
-   Ab SD-C1 bleiben zusätzlich die kompakte aktive Bewertung und kompakte Berichte,
-   ihre Eingangsbindungen und der gebundene Methoden-/Referenzstand außerhalb
-   versiegelter Produktion erhalten. SD-D09/D10 ermöglichen daraus die manuelle
-   Neubewertung; alte Produktionsdateien oder ein Produktions-Replay sind dafür
-   nicht allgemein vorgeschrieben.
-4. Entfernt werden Quellen-/Abstraktionsbilder, verworfene Varianten, Prompts,
-   ZIPs, duplizierte Exporte, Proofs, Reparaturspuren, Galerien und Zwischenberichte.
-   Keine Kopien in einem neuen Archivordner, in Builds oder CI-Artefakten aufheben.
-   Ein Commit-/PR-Verweis genügt für den Entscheidungsverlauf; Git-Historie bleibt
-   unangetastet. Fortbestehende Nutzungsrechte/Attributionen dürfen nicht verloren gehen.
-5. Diff und unveränderte Runtime-Dateien kontrollieren; Cleanup committen/pushen,
-   separat selbst prüfen und nach erfolgreichen Pflichtchecks **unmittelbar mergen**.
-   Eigentümerfreigabe vom 15.10.2026: Dieser eng begrenzte Nachintegrations-Cleanup
-   ist einschließlich Merge beauftragt, auch wenn der vorausgehende Integrations-PR
-   zunächst als Draft vorgelegt wurde. Kein weiterer Routineprompt, kein dauerhaft
-   offener Cleanup-Draft. Vor dem tatsächlichen Integrationsmerge nichts bereinigen;
-   bei Blocker genau diesen melden. Reine Datenbereinigung führt einen eigenen aktualisierten Paketplan mit
-   begründet `modules=[]`; der allgemeine Quellen-/Plankern bleibt Pflicht, ohne Player-Build und
-   ohne rätselspezifische Tests. Danach Main-Commit
-   und erhaltene Runtime-Dateien nachweisen.
+   Mehrere bestätigte IDs durch wiederholtes --puzzle-id. Der Befehl prüft Main-
+   Abstammung und unveränderte Integrations-/Arbeitsbytes, entfernt abgeschlossene
+   Authoringrevisionen/Indexeinträge und ersetzt das Produktionspaket durch einen
+   kompakten Integrationsdatensatz. Kein Solver-, Proof- oder Bildreplay.
+3. Dauerhaft bleiben Runtime-Definition mit Matrix/Hinweisen, Reveal, Rechte/Notices,
+   ID/Runtime-Revision/Save-Slot, Kategorie und relevante Schwierigkeit. Kompakter
+   Datensatz bindet diese Daten, ursprünglichen Exporthash und bestätigten Maincommit.
+   Aktive Bildbindung samt Herkunft/Freigaben erhalten, nicht auf Vorgänger zurücksetzen
+   oder historische Belege für nachträgliche Freigaben umschreiben. Aktive Bewertung,
+   kompakte Berichte und Eingangs-/Methoden-/Referenzbindungen bleiben außerhalb
+   versiegelter Produktion. Manuelle Neubewertung verlangt keinen Produktionsreplay.
+4. Entfernt werden Quellen-/Abstraktionsbilder, verworfene Varianten, Prompts, ZIPs,
+   duplizierte Exporte, Proofs, Reparaturspuren, Galerien und Zwischenberichte. Keine
+   Kopien in neuen Archiven, Builds oder CI-Artefakten. Git-Historie und kompakte
+   Commit-/PR-Entscheidungsbezüge genügen; Nutzungsrechte/Attribution nicht verlieren.
+5. Diff und unveränderte Runtime kontrollieren, Cleanup committen/pushen, getrennt
+   selbst prüfen und nach erfolgreichen Pflichtchecks unmittelbar mergen.
+   Eigentümerfreigabe vom 15.10.2026: Genau dieser eng begrenzte Nachintegrations-
+   Cleanup einschließlich Merge ist beauftragt, auch nach zuvor als Draft geliefertem
+   Integrations-PR. Kein weiterer Routineprompt oder dauerhaft offener Cleanup-Draft.
+   Vor tatsächlichem Integrationsmerge nichts bereinigen; konkrete Blocker melden.
+   Eigener aktueller Paketplan mit begründet modules=[], Quellen-/Plankern ohne
+   Player-Build und ohne rätselspezifische Tests. Maincommit/erhaltene Runtime nachweisen.
 
-Spätere echte Rätseländerungen sind ein neuer Produktionsauftrag. Fehlende alte
-Arbeitsdateien sind kein Defekt und rechtfertigen keine Wiederherstellungspflicht.
-Neue Exporte werden weiterhin vollständig geprüft; Bestandsregistrierung und
-Kategorienpflege verwenden nach Abschluss nur noch die kompakte Integrationsbindung.
+Spätere echte Rätseländerungen sind neue Aufträge. Fehlende alte Arbeitsdateien
+sind kein Defekt und keine Wiederherstellungspflicht. Neue Exporte bleiben vollständig
+geprüft; Bestandsregistrierung/Kategorienpflege benutzen die kompakte Integrationsbindung.
+Diese fachliche Cleanupfreigabe erweitert keine lokale Checkoutbereinigung und
+keine Befugnis für Werkzeug-/CI-Pakete.
 
 ### Abschluss nachträglicher Bildrevisionen · CI2 vom 26.10.2026
 
-Die freigegebene [CI2-Spezifikation](../CI_SLIMMING.md) /
-[CI2-E / #417](https://github.com/venomenon328/picross/issues/417) ergänzt den Abschlussvertrag
-für spätere Abschlussbilder bereits integrierter Rätsel. Eine bereits bereinigte
-Rasterproduktion befreit spätere Bildarbeit nicht von ihrem eigenen Abschluss und
-verlangt keine erneute Rasterproduktion. CI2-E implementiert dafür den eigenen
-revisionsgenauen Abschlussweg; [T01](../CI2_E_VERIFICATION.md) bindet die Lieferung.
+Spätere Revealrevisionen bereits integrierter Rätsel haben einen eigenen
+revisionsgenauen Abschluss; eine bereinigte Rasterproduktion wird dafür nicht
+wiederhergestellt. Vor Abschluss tatsächliche Bildfreigabe, aktive Bildbindung
+und enthaltenen Maincommit prüfen; neuere/offene Arbeit erhalten. Zugehörige
+erledigte Quellen, Prompts, Varianten, ZIP-/Rohkopien und Indexeinträge entfernen,
+aber aktuelle Bilddatei, Rechte, Herkunft/Freigaben und aktive Revision behalten.
+Definitionsbytes, Runtime-Revision, Save-Slot, Registrierung und Bewertungen bleiben.
+Ursprüngliche versiegelte Integrationsbelege nicht neu erzeugen/umschreiben.
 
-1. Für die abzuschließende Bildrevision tatsächliche Bildfreigaben, aktive Bildbindung
-   und enthaltenen Main-Commit prüfen; offene neuere Arbeit derselben ID erhalten.
-2. Nach abgeschlossener Integration die zugehörigen Bildarbeitsrevisionen einschließlich
-   Quellen, Prompts, Varianten, ZIP-/Rohkopien und erledigter Authoringindexeinträge entfernen.
-   Gebundene historische Verweise ersetzen dauerhafte Kopien der Arbeits- und Reviewdaten.
-3. Aktuelle Bilddatei, Nutzungshinweise, Herkunfts-/Freigabemetadaten und aktive Bildrevision
-   bleiben erhalten. Definitionsbytes, Runtime-Revision, Save-Slot, Registrierung und aktive
-   Bewertungen bleiben unverändert. Ein bereits versiegelter ursprünglicher Integrationsbeleg
-   wird weder neu erzeugt noch zur nachträglichen Bildfreigabe umgeschrieben.
-4. `retire-reveal-production` unterstützt vorhandene `picross-integrated-content-v1`-
-   Datensätze und belässt auch vollständige ursprüngliche Pakete unverändert:
+```sh
+python -m tools.puzzle_production.target_adapter retire-reveal-production --checkout . --integrated-commit <vollstaendige-main-SHA> --authoring-revision <pz-ID> <Authoringrevision>
+```
 
-   ```sh
-   python -m tools.puzzle_production.target_adapter retire-reveal-production --checkout . --integrated-commit <vollstaendige-main-SHA> --authoring-revision <pz-ID> <Authoringrevision>
-   ```
-
-   `--authoring-revision ID REVISION` ist für jede abzuschließende Revision ausdrücklich
-   zu wiederholen. Kein impliziter ID-Gesamtabbau. Zuvor `origin/main` aktualisieren.
-   Der enthaltene Main-Stand muss Record, finale Freigabe und exakt aktuelle Bildquelle
-   binden; offene Journale, fremde Bytes, Teilentfernung und betroffene Indexänderungen
-   blockieren vor Löschung. Neuere/offene Geschwisterrevisionen bleiben unangetastet.
-   Wiederholung mit demselben Main-Beleg nach vollständiger Entfernung ist ein echter
-   No-op, auch ohne alte Pakete. `retire-production` bleibt der ursprüngliche Raster-
-   Abschlussweg; kein Solver, keine Rekonstruktion oder Änderung alter Receipts.
-5. Abnahme verwendet einen begrenzten Datei-/Referenzvergleich und den unveränderten
-   aktiven Datenbestand. Kein Solver-, Bild-, Katalog- oder Spielerreplay allein für
-   diese Bereinigung; aktive Leser und Rechtebindungen bleiben vorher geprüft.
-
-Die frühere eng begrenzte Freigabe zum Nachintegrations-Cleanup einschließlich Merge
-in Schritt 5 bleibt bestehen. Werkzeug-/CI-Codepakete erben keine frühere
-Cleanup-Mergefreigabe. Historische CI2-E-Aufträge sind keine heutige Freigabe oder Sperre.
+Jede Revision ausdrücklich wiederholen, kein impliziter ID-Gesamtabbau.
+Origin/main vorher aktualisieren. Main muss Record, finale Freigabe und exakt
+aktuelle Bildquelle binden. Offene Journale, fremde Bytes, Teilentfernung und
+betroffene Indexänderungen blockieren vor Löschung. Neuere/offene Geschwister
+bleiben. Identische Wiederholung nach vollständiger Entfernung ist nach frischer
+Prüfung No-op, auch ohne alte Pakete. Unterstützte kompakte v1-Datensätze und
+vollständige ursprüngliche Pakete unverändert belassen; retire-production bleibt
+der Rasterabschlussweg. Begrenzter Datei-/Referenzvergleich, kein Solver-/Bild-/
+Katalog-/Spielerreplay allein zur Bereinigung. Die enge Nachintegrationsfreigabe
+aus §9 bleibt, nicht eine neue Befugnis aus historischen CI2-Lieferberichten.
 
 ### Abschluss der Hintergrundarbeit
 
-Der Lebenszyklus aus [PUZZLE_BACKGROUNDS §10](../PUZZLE_BACKGROUNDS.md#10-hp-i1b1--erste-registrierung-und-kompakter-produktionsabschluss)
-ergänzt §9 für HP-I1b1-Erstintegration: `retire-production` erzeugt Receipt v2
-und erhält die aktive kompakte Hintergrundsource samt echten Freigabe-/Rechte-
-und Ableitungsbindungen, PNG/none/Notice und ursprünglichem Exportanker.
-Mainbeleg bleibt getrennt im Receipt. Vor Löschung alle gewählten IDs/Bytes
-gegen tatsächlichen Main-Stand prüfen; offene/neuere/fremde Arbeit erhalten
-oder bei nicht trennbarem ID-Baum vor Mutation blockieren. Nach Abschluss sind
-alte innere Refs historische Identitäten, keine Pflicht zu erneutem Dateizugriff.
-HP-I1b2 ergänzt späteren Ersatz und seinen revisionsgenauen Abschluss;
-`retire-reveal-production` wird dadurch kein Hintergrundabschlusswriter.
+[Hintergrundvertrag §10](../PUZZLE_BACKGROUNDS.md#10-hp-i1b1--erste-registrierung-und-kompakter-produktionsabschluss)
+ergänzt Erstintegration: retire-production erhält aktive kompakte Hintergrundsource,
+echte Freigabe-/Rechte-/Ableitungsbindungen, PNG/none/Notice und ursprünglichen
+Exportanker; Mainbeleg separat im Receipt v2. Vor Löschung gewählte IDs/Bytes
+gegen tatsächliches main prüfen. Offene/neuere/fremde Arbeit erhalten, bei nicht
+trennbarem ID-Baum stoppen. Alte innere Refs sind danach historische Identitäten,
+keine wieder zu öffnenden Pflichtdateien. Retire-reveal-production ist kein
+Hintergrundabschlusswriter.
 
-Bis zur Auswahl bleiben die drei Einzeldateien erreichbar; bis zur tatsächlichen
-finalen Integration alle noch benötigten Arbeits-, Rechte- und Auswahlbindungen
-erhalten. Nach bestätigter Endabnahme und Integration auf `main` die zugehörige
-abgeschlossene Hintergrundarbeit gezielt entfernen: verworfene Kandidaten,
-Prompts, Quellen-/Ableitungskopien, ZIPs und vorübergehende Diagnose-/Reviewdaten.
-Offene neuere Bildrevisionen und fremde Arbeit bleiben erhalten. Kein zusätzliches
-Kandidatenarchiv, keine Wiederherstellung abgeschlossener Rasterproduktion und
-kein Solver-/Bild-/Buchreplay allein für den Abschluss.
-
-Dauerhaft bleiben das aktive Auslieferungsasset beziehungsweise die ausdrücklich
-gebundene Leerentscheidung, Rechte/Attribution, aktive Bildrevision und kompakte
-Auswahl-/Ableitungs-/Integrationsbindungen mit bestätigtem Main-Stand. Historische
-Originalbelege nicht umschreiben, die aktive Bildfassung nicht zurücksetzen.
-Ein späterer reiner Hintergrundersatz erhält seinen eigenen revisionsgenauen
-Abschluss nach denselben Grenzen; offene Geschwisterrevisionen nicht mitlöschen.
+Bis Auswahl drei Einzelbilder erreichbar halten; bis tatsächlicher Integration
+alle noch nötigen Arbeits-/Rechte-/Wahlbindungen. Nach bestätigter Endabnahme und
+Mainintegration nur abgeschlossene Hintergrundarbeit entfernen: verworfene
+Kandidaten, Prompts, Quellen-/Ableitungskopien, ZIPs und temporäre Review-/Diagnosedaten.
+Kein Kandidatenarchiv, keine Wiederherstellung alter Rasterproduktion oder Solver-/
+Bild-/Buchreplay. Aktives Asset bzw. echte Leerentscheidung, Rechte/Attribution,
+aktive Bildrevision und kompakte Wahl-/Ableitungs-/Integrationsbindungen bleiben.
+Historische Originale nicht umschreiben, aktive Bilder nicht zurücksetzen.
 
 ### HP-I1b2: eigene Hintergrundrevision und ihr Abschluss
 
 [Hintergrundvertrag §11](../PUZZLE_BACKGROUNDS.md#11-hp-i1b2--eigenständiger-hintergrundwechsel)
-definiert den unveränderlichen `picross-background-adoption-request-v1` als
-eigenen Arbeitsrecord. Tatsächliche Auswahl/Entfernung und Zielautorisierung
-aufzeichnen, keine neue Rasterfreigabe oder Dummy-ZIP. Kontext aus bytegleicher
-aktueller Source und aktuellem freigegebenem Reveal sichern; ursprüngliche
-Revealautorität bleibt in initial erhalten. Der eigene Folgeauftrag nach
-Hintergrundvertrag §7.6 bleibt unveränderlich; die dortige frühere Sheetbedienung
-ist kein paralleler Assistent. Reguläre neue Rasterjobs folgen den fünf Schritten
-dieses Dokuments. Folgeaufträge müssen die aktuelle integrierte Herkunft lesen.
-Eigene Arbeitsrevision über `catalog_background_change store` samt Index sichern,
-danach `plan` und autorisiertes `adopt` gemäß Werkzeuganleitung. Fehlende oder
-false-Capability blockiert den Zielweg; kein Override. Vorhandene Freigaben
-nicht erneut abfragen. HP-I1c liefert die erlaubte Raster-/Revealneubindung
-vorhandener Hintergrundziele nach seinem eigenen Vertrag.
+definiert den unveränderlichen picross-background-adoption-request-v1. Tatsächliche
+Auswahl/Entfernung und Zielautorisierung aufzeichnen, keine Dummy-ZIPs oder neue
+Rasterfreigabe. Bytegleiche aktuelle Source/freigegebenes Reveal binden, ursprüngliche
+Revealautorität in initial erhalten. Eigener Folgeauftrag nach §7.6 bleibt
+unveränderlich; historische Sheetbedienung ist kein paralleler Assistent.
+Aktuelle integrierte Herkunft lesen, Arbeitsrevision via catalog_background_change
+store samt Index sichern, dann plan und autorisiertes adopt nach CLI. Fehlende/
+false-Capability blockiert, kein Override. Gültige Freigaben nicht erneut verlangen;
+Raster-/Revealneubindung folgt gegebenenfalls HP-I1c, nicht einem erfundenen Ersatzweg.
 
-Nach bestätigter Mainintegration `target_adapter retire-background-production
---checkout <checkout> --integrated-commit <vollständige-main-SHA>
---authoring-revision <pz-ID> <revision>` verwenden. origin/main vorher aktualisieren.
-Nur explizit gewählte, vollständig belegte Revisionen/Indexzeilen entfernen;
-neuere Arbeit und aktuelles PNG/none/Notice/Receipt unverändert erhalten.
-Eine frühere tatsächlich integrierte, inzwischen abgelöste Revision darf mit
-ihrem historischen Mainbeleg abgeschlossen werden. Ganze bereits entfernte
-Revision plus Indexzeile ergibt nach frischer Prüfung No-op, Teilreste nicht.
-Kein ursprüngliches Raster-ZIP rekonstruieren, kein Solver-/Buchreplay.
-Der Befehl liefert einen lokalen Diff, keinen automatischen Commit/Merge.
+Nach bestätigter Mainintegration origin/main aktualisieren und gezielt ausführen:
+
+```text
+python -m tools.puzzle_production.target_adapter retire-background-production --checkout <checkout> --integrated-commit <vollständige-main-SHA> --authoring-revision <pz-ID> <revision>
+```
+
+Nur ausdrücklich gewählte vollständig belegte Revisionen/Indexzeilen entfernen;
+neuere Arbeit, aktives PNG/none/Notice/Receipt bleiben. Eine inzwischen abgelöste,
+tatsächlich integrierte Revision darf mit historischem Mainbeleg abgeschlossen
+werden. Vollständig entfernte Revision plus Index ergibt nach frischer Prüfung
+No-op, Teilreste nicht. Kein altes Raster-ZIP rekonstruieren oder Solver-/Buchreplay.
+Der Befehl liefert lokalen Diff, keinen automatischen Commit/Merge.
