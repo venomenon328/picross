@@ -224,6 +224,8 @@ Der ausgeschlossene `HelperDiagnostic.cs` prüft über Reflection dessen echte
 MSI-Identitäts- und Negativwege sowie Warten auf einen tatsächlichen Prozesshandle:
 Bereitschaft eines isolierten Kindes genügt nicht, erst sein Ende löst den Wait.
 Ungebundene Eingaben an die echte Helfer-EXE werden ohne MSI-Start abgewiesen.
+Der echte Python-Server beantwortet zusätzlich die vom gebauten C#-Helfer erzeugte
+Challenge; derselbe Helfer authentisiert dessen Antwort auf dem isolierten Port.
 Kein Installationstest oder Umgehen der Serverpolicy 1625.
 
 `pw-b2-review-<source>` enthält diese kleinen Ergebnisse, öffentliche synthetische

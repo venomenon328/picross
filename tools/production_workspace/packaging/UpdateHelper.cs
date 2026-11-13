@@ -154,7 +154,8 @@ public static class UpdateHelper {
                 var m=Read(Path.Combine(state,".launcher","instance.json"));
                 Need(Number(m,"pid")==launched.Id && Text(m,"build")==Text(d,"commit") && Number(m,"port")==port &&
                      Text(m,"instance")!=Text(d,"instance") && Text(m,"protocol")=="picross-launcher-v1");
-                string challenge=Guid.NewGuid().ToString("N");
+                byte[] nonce=new byte[24]; using(var random=RandomNumberGenerator.Create()) random.GetBytes(nonce);
+                string challenge=BitConverter.ToString(nonce).Replace("-","").ToLowerInvariant();
                 var body=new SortedDictionary<string,object>(StringComparer.Ordinal){{"action","identify"},{"challenge",challenge}};
                 body["proof"]=Mac(Text(m,"key"),"request:",body);
                 byte[] bytes=Encoding.ASCII.GetBytes(Json.Serialize(body));

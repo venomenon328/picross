@@ -74,9 +74,29 @@ def run(build, output):
         subprocess.run([str(compiler), '/nologo', '/target:exe', '/platform:x64', '/reference:System.Web.Extensions.dll',
                         '/out:' + str(driver), str(Path(__file__).parent / 'packaging/HelperDiagnostic.cs')], check=True)
         identity = release(version=product['version'])
-        result = subprocess.run([str(driver), str(detached), str(build / identity['filename']), product['version'],
-                                 product['product_code'], product['upgrade_code']], check=True, capture_output=True, timeout=60)
-        helper_result = strict_json(result.stdout)
+        from .instance import StateLock
+        from .runtime import Runtime
+        from .repository import configure
+        from .sources import git
+        repository = root / 'synthetic-repo'; repository.mkdir()
+        git(repository, 'init', '-q', '-b', 'main')
+        git(repository, '-c', 'user.name=synthetic', '-c', 'user.email=test@example.invalid',
+            'commit', '--allow-empty', '-qm', 'synthetic')
+        state = root / 'Zustand ü'
+        lock = StateLock(state); require(lock.acquire(), 'Synthetic state locked')
+        runtime = None
+        try:
+            configure(repository, state, refs=['main'], launcher=True)
+            runtime = Runtime(lock, product['source_commit'], no_browser=True)
+            runtime.start()
+            result = subprocess.run([str(driver), str(detached), str(build / identity['filename']), product['version'],
+                                     product['product_code'], product['upgrade_code'], str(state), product['source_commit'],
+                                     str(os.getpid())], check=True, capture_output=True, timeout=60)
+            helper_result = strict_json(result.stdout)
+        finally:
+            if runtime and runtime.thread:
+                runtime.request_stop(); require(runtime.stopped.wait(10) and not runtime.error, 'Diagnostic drain incomplete')
+            lock.close()
     try:
         verifier.verify_metadata(raw, signature)
     except ValueError:
