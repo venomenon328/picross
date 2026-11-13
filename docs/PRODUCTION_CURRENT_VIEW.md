@@ -77,6 +77,23 @@ ausdrücklich wählen, dann die unveränderten frischen P2-Schutzprüfungen/Best
 
 ## Abschluss und Prüfgrenzen
 
+Die aktive Auswahl folgt zusätzlich dem
+[PW2-C-Liefervergleich](PRODUCTION_WORKSPACE.md#pw2-c--aktive-lieferungen-und-bestätigter-abschluss).
+Vor der Motivgruppierung werden ausschließlich konkrete, an einem frisch
+bestätigten konfigurierten Remote-`main` vollständig belegte Lieferungen und ihre
+eindeutig zugeordneten alten Quellen ausgeblendet. Dies gilt vor und nach
+Retirement, auch bei Squash oder unveränderter Sammelübernahme. Gleichheit der ID
+oder des ursprünglichen Exportbezugs allein verdeckt keine neue Revision oder
+spätere Raster-/Reveal-/Hintergrundarbeit. Ein widersprüchlicher Ansichtsverweis,
+abweichende Bytes oder fehlende Lieferbelege halten die betroffene Quelle sichtbar.
+Ohne frischen Mainbezug entsteht keine neue Abschlussannahme. Die Entscheidung
+wird auch bei unverändertem Produktionscommit nach Mainwechsel neu ausgewertet.
+
+Passive Suche übernimmt diesen Listenwechsel noch nicht. Erst das ausdrückliche
+Laden meldet den belegten Entfall und öffnet verbleibende Arbeit derselben ID,
+eine andere offene Produktion oder eine verständlich leere aktive Liste. Lokale
+Browserentwürfe bleiben separat. Der Leser verändert weder Pointer noch Quellen.
+
 Nach bestätigter Endabnahme und Mainintegration entfernt der Produktionsakteur den
 abgeschlossenen Ansichtsverweis **vor** dem vorhandenen `retire-production`-Aufruf:
 Pointer und Mainbeleg frisch prüfen, nur den zur abgeschlossenen Revision gehörenden

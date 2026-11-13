@@ -316,6 +316,7 @@ class Repository:
         self.cached = None
         self.sync_error, self.synced_at = None, None
         self.remote_confirmed = False
+        self.confirmed_main = None
         self.lock = threading.RLock()
         self.scans = LRU(8 * 1024 * 1024)
         if self.remote:
@@ -370,6 +371,7 @@ class Repository:
         with self.lock:
             self.sync_error = None
             self.remote_confirmed = False
+            self.confirmed_main = None
             if self.remote:
                 try:
                     # Fetch fails on an explicitly selected ref that disappeared.
@@ -387,12 +389,15 @@ class Repository:
                         git(self.cached.root, 'update-ref', '-d', 'refs/pw/' + ref)
                     self.synced_at = datetime.now(timezone.utc).isoformat()
                     self.remote_confirmed = True
+                    if 'main' in self.refs and 'refs/heads/main' in present:
+                        self.confirmed_main = self.cached.resolve('refs/pw/main')
                     raw = p.data({'synced_at': self.synced_at})
                     temporary = io.safe(self.state, 'sync-pw-v1.tmp')
                     temporary.write_bytes(raw)
                     temporary.replace(io.safe(self.state, SYNC))
                 except (ValueError, OSError) as exc:
                     self.remote_confirmed = False
+                    self.confirmed_main = None
                     self.sync_error = 'Remote nicht erreichbar oder Anmeldung fehlgeschlagen. Vorhandene Snapshots bleiben lesbar.'
             return self.listing()
 
@@ -423,6 +428,7 @@ class Repository:
                     jobs.append({'puzzle_id': row['puzzle_id'], 'revision': row['revision'], 'title': projection['title'],
                                  'file': file, 'status': 'Bilder noch nicht geprüft', '_projection': projection,
                                  'phase': PHASES.get(record['state'], record['state']),
+                                 '_record': record,
                                  '_fingerprint': io.checksum(raw + record_raw)})
                 except (ValueError, OSError, KeyError, TypeError) as exc:
                     errors.append('Ungültige Projektion für ' + row['puzzle_id'] + '/' + row['revision'] + ': ' + str(exc))
@@ -430,6 +436,7 @@ class Repository:
         pointer_read_error = False
         for identity in {j['puzzle_id'] for j in jobs}:
             current, message = None, None
+            current_invalid = False
             try:
                 raw = source.read(commit, current_view.path(identity), current_view.LIMIT, missing=True)
                 if raw is None:
@@ -438,11 +445,13 @@ class Repository:
                     current = current_view.inspect(source, commit, raw, identity)
             except (ValueError, OSError, KeyError, TypeError) as exc:
                 pointer_read_error = True
+                current_invalid = True
                 message = 'Ungültiger aktueller Ansichtsbezug: ' + str(exc)
             for job in jobs:
                 if job['puzzle_id'] == identity:
                     job['current_view'] = bool(current and current['revision'] == job['revision'])
                     job['current_error'] = message
+                    job['_current_invalid'] = current_invalid
         value = {'jobs': jobs, 'errors': errors}
         # An offline object may become reachable on the next refresh. Do not
         # turn a transient read failure into a cached permanent failure.
@@ -496,6 +505,18 @@ class Repository:
                                   'Nur lokal nachgewiesen; Remote-Sicherung nicht bestätigt')
             if not self.remote_confirmed and job['source'] == 'remote':
                 job['publication'] = 'Remote nicht aktuell bestätigt; gespeicherter Snapshot bleibt lesbar'
+        from . import deliveries
+        jobs, completion = deliveries.active(self, sources, jobs)
+        # A removed historical copy must not leave a conflict marker on the
+        # only remaining, deliberately open version of the same revision.
+        active_bindings = {}
+        for job in jobs:
+            identity = (job['puzzle_id'], job['revision'])
+            active_bindings.setdefault(identity, set()).add(job['binding'])
+        for job in jobs:
+            job.pop('conflict', None)
+            if len(active_bindings[(job['puzzle_id'], job['revision'])]) > 1:
+                job['conflict'] = True
         from .motifs import Relations
         history = Relations(self)
         comparisons = {}
@@ -507,5 +528,6 @@ class Repository:
                     comparisons[left + ':' + right] = relation
                     comparisons[right + ':' + left] = {'ahead': 'behind', 'behind': 'ahead'}.get(relation, relation)
         return {'jobs': jobs, 'errors': errors, 'sources': sources, 'synced_at': self.synced_at,
+                'completion': completion,
                 'relations': comparisons, 'remote_confirmed': self.remote_confirmed,
                 'sync_error': self.sync_error, 'mode': 'remote' if self.remote else 'local'}

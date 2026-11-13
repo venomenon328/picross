@@ -235,8 +235,10 @@ aus `pz-` und kleingeschriebenen Buchstaben/Ziffern mit optionalen Bindestrichen
 Standardauswahl: `main` und `content/pw/*`; ausdrücklich kleinere Auswahlen
 daraus sind zulässig. Andere Produktionsbranches werden weder synchronisiert
 noch inhaltlich durchsucht. Auf einem Produktionsbranch liest der Assistent
-nur Indexeinträge der im Branchnamen gebundenen Rätsel-ID. Auf `main` bleiben
-alle dort veröffentlichten PW-Produktionen lesbar. Der Produktionsakteur muss
+nur Indexeinträge der im Branchnamen gebundenen Rätsel-ID. Auf `main` werden
+die dort veröffentlichten PW-Produktionen gelesen; die aktive Auswahl nimmt
+anschließend nur eindeutig nachgewiesene abgeschlossene Lieferungen gemäß
+PW2-C unten heraus. Der Produktionsakteur muss
 neue PW-Übergaben auf dem zugehörigen Branch veröffentlichen; PW-B übernimmt
 diese Vorgabe in seine Aufträge. Keine Umbenennung/Löschung alter Branches.
 
@@ -343,7 +345,9 @@ im Browser, Zustand oder Log. Erfolg verlangt danach das tatsächlich geprüfte
 Fehlen des exakten Remote-Refs. Push-/Timeout-/Berechtigungsfehler, unbekannter
 Ausgang und fehlgeschlagene Cachesynchronisierung bleiben getrennte Resultate.
 Erst verifizierter Erfolg aktualisiert die Remoteansichten. Lokale und Mainquellen
-bleiben sichtbar. Bei Cachefehler wird eine stale Anzeige ausdrücklich benannt.
+werden weiter gelesen; ihre aktive Auswahl folgt dem lieferbezogenen PW2-C-Abgleich.
+Offene oder unklar zugeordnete Arbeit bleibt sichtbar. Bei Cachefehler wird eine
+stale Anzeige ausdrücklich benannt.
 
 Ein noch vorhandener identischer lokaler Branchref kann erst danach separat
 vorgeprüft und ausdrücklich bestätigt entfernt werden. Die Option ist anfangs
@@ -670,6 +674,54 @@ Briefing und vollständige Parameter sind weiterhin erreichbar. Die vorhandene
 Snapshot-, Bildlade-, Quellwechsel-, P2- und Origin-Sicherheit bleibt erhalten.
 Der CMD-Fallback wird aus denselben Quellen regeneriert. Neue Originale der
 Browserprobe dienen nur PW2-B-T01/A01 im Liefer-PR, nicht einer Dauergalerie.
+
+## PW2-C · aktive Lieferungen und bestätigter Abschluss
+
+Maßgeblich ist die [Paketentscheidung PW2-C](https://github.com/venomenon328/picross/issues/626#issuecomment-6862546388).
+Die aktive Liste blendet eine konkrete Lieferung erst aus, wenn ihre ID,
+Lieferrevision und Original-/Integrationsbindungen mit einem frisch bestätigten
+Commit des konfigurierten Remote-Refs `main` übereinstimmen. `registered`, gleiche
+ID, PR-Status oder Commitabstammung allein genügen nicht. Ein normaler Merge,
+Squash oder unveränderte Sammelübernahme wird anhand derselben Lieferbelege
+erkannt. Spätere unabhängige Ergänzungen der Gesamtregistries ändern die
+Zuordnung einer weiterhin identischen Lieferzeile nicht.
+
+Der begrenzte Leser verwendet Metadaten des vollständigen Exports oder der
+vorhandenen kompakten `picross-integrated-content-v1/v2/v3`-Belege. Nach Retirement
+bindet die aktive Produktion den Receipthash; der darin erhaltene ursprüngliche
+Exporthash bleibt davon verschieden. Raster-, Reveal- und Hintergrundbezüge
+gehören zur Zuordnung. ZIPs, Bilddaten und Solver-/Proofläufe werden für diese
+Listenentscheidung nicht geöffnet oder ausgeführt.
+
+Die Zuordnung erfolgt pro konkreter Quelle vor der Motivgruppierung. Identische
+lokale/Remote-Kopien sowie nachweislich zugehörige ältere Record-/Projektionsstände
+verschwinden gemeinsam. Für ältere Schritte zählt ihre tatsächliche Bindung am
+expliziten historischen Lieferstand, keine Revisionssortierung oder Branchfolge.
+Neue Revisionen, abweichende Bytes, spätere Reveal-/Hintergrundarbeit und fehlende
+oder widersprüchliche Belege bleiben sichtbar, auch unter derselben Rätsel-ID.
+Der Abgleich löscht keine Daten oder Refs und erzeugt keinen Completionbeleg.
+
+Die Bestätigung umfasst den tatsächlichen Mainref im gebundenen Quellenstand.
+Ein lokaler `main`, ein alter Cache oder ein erfolgreiches Refresh nur anderer
+Refs genügt nicht. Eine bewusst ohne `main` konfigurierte Refwahl wird nicht
+erweitert. Bei fehlendem, offline gebliebenem oder unlesbarem Mainbezug bleiben
+betroffene Quellen sichtbar; die Liste erklärt die fehlende Bestätigung.
+Ein Mainwechsel wird auch bei unverändertem Produktionscommit neu ausgewertet.
+Die Statusabfrage startet weiterhin keinen Gitlauf.
+
+Passive Suche erhält die geöffnete Quelle, ihre Bilder und ungesendete Eingaben.
+Erst „Neueren Stand laden“ übernimmt den gefilterten Listenstand und erklärt den
+bestätigten Entfall. Verbleibende offene Arbeit derselben ID bleibt anwählbar;
+andernfalls folgt eine andere offene Produktion oder der leere aktive Zustand.
+Eigene Browserentwürfe bleiben getrennt gespeichert und erreichbar. Die internen
+Listenfelder unter `completion` geben Mainbestätigung, Quellenbindung und
+Ausblendungsumfang an; sie sind Ansichtsdaten, keine neuen Originalschemas.
+
+Kleine synthetische Regressionen liegen im ausgewählten `tools`-Modul. PW2-C-T01
+liefert einmalig den lesenden Praxisabgleich der drei #622-Lieferungen sowie die
+echte Browserprobe mit unveränderten Original-PNGs. Quellen, Produkt-Head,
+Liefer-/Prüfstand und das unabhängige Vor-Merge-Gate PW2-C-A01 stehen im Liefer-PR.
+Es entsteht keine dauerhafte Browsermatrix oder Sammlung realer Produktionsdaten.
 
 ## 9. Paketgrenze PW-A
 

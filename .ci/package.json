@@ -1,13 +1,13 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/612",
-  "package": "APP-B2-S",
+  "issue": "https://github.com/venomenon328/picross/issues/626",
+  "package": "PW2-C",
   "modules": ["tools"],
-  "purpose": "Vorgelagerte Updateentscheidung D01–D06/K01–K08 gemäß #612/issuecomment-6859867142. T01 im tools-Modul prüft echten synthetisch signierten Kandidatenpfad, einmaligen Browser-/Gitstart und Skip-/Stop-/Handoffrennen. Kern liefert regulären Windows-Spieler. T02 ist separat beauftragter nicht veröffentlichender Windows-MSI-Dispatch am Produkt-Head.",
-  "omitted": "Keine native.*, production.*, preflight, delivery, Chromium oder Katalog-/Bildmatrix: keine Änderung an Godot, Rätseln oder Browser-UI. Signatur-/MSI-Negativtests und bestehender Git-/P2-Drain bleiben erhalten. T02 beweist keine installierte Windows-11-Bedienung; APP-B2-S-R01/T03 und bestehende Recoverygates bleiben getrennt offen. Keine doppelte Vollsuite.",
+  "purpose": "PW2-C-K01–K06 gemäß #626/issuecomment-6862546388: lieferbezogene aktive Produktionsauswahl an frisch bestätigtem main, einschließlich Sammelübernahme, kompakter Belege und sicherem Listenwechsel. Das gewählte tools-Modul läuft vollständig; der Kern liefert docs/ci-required und den regulären Windows-Spieler. T01 prüft einmalig die drei unveränderten #622-Lieferungen und die tatsächliche Oberfläche im Browser am festen Produkt-Head.",
+  "omitted": "Keine production.*, native.*, preflight, delivery oder automatische Browsermatrix: nur lesende Werkzeug-/Listensemantik, keine Original-, Katalog-, Spiel-, Solver-, Bild- oder Installeränderung. Vorhandene Schutz- und P2-Prüfungen bleiben im tools-Vertrag. T01 bleibt eine befristete Diagnose außerhalb des Produktdiffs; keine realen Rätseldaten oder Screenshotreferenzen als neuer Dauerkorpus. PW2-C-A01 bleibt separates unabhängiges Review vor Merge.",
   "test_changes": [
-    {"path": "tools/test_app_updates.py", "disposition": "change-scoped", "reason": "Kleine deterministische Startgate-/Abbruch-/Übergaberegression mit synthetischer Signatur und kontrollierten Threadereignissen; nur im gewählten tools-Modul."},
-    {"path": "tools/test_production_launcher.py", "disposition": "change-scoped", "reason": "Echter HTTP-/Lock-/Stopnachweis: Update-GO ohne vorherigen langsamen Gitstart, bewusst gestartetes Git weiterhin drainpflichtig, Stop vor Arbeitsaufnahme."}
+    {"path": "tools/test_workspace_deliveries.py", "disposition": "change-scoped", "reason": "Kleine synthetische Git-/Metadatenfälle für exakte Lieferbindung, ältere Quellen, offene Folgerevisionen, kompakte Belege, Mainfrische und begrenzten lesenden Zugriff; nur im ausgewählten tools-Modul."},
+    {"path": "tools/production_workspace/check_ui_loading.cjs", "disposition": "change-scoped", "reason": "Vorhandene günstige UI-Ladeprüfung ergänzt passive Erhaltung und ausdrückliche Übernahme gefilterter Listen einschließlich gleicher ID, Entwurf und leerer Auswahl; kein neuer Laufweg oder Bildorakel."}
   ],
   "core_change": null,
   "evidence": {
