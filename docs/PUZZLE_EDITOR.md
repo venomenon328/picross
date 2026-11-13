@@ -943,3 +943,51 @@ Bundleinventar und saubere Quellbindung, kein Laufzeitdownload. Entwicklerstart
 Bedienung/Bau und technische Einschränkungen stehen in der
 [Werkzeuganleitung](../tools/puzzle_editor/README.md). PE-B-A01 bleibt unabhängiges
 Vor-Merge-Review, PE-B-U01 persönliche Eigentümerprobe vor Gesamtissueabschluss.
+
+## 12. PE-PERF1: gebundene Effizienz und Betriebsdiagnose
+
+Umsetzungsvertrag zu [#636 einschließlich K08/K09 und T04](https://github.com/venomenon328/picross/issues/636#issuecomment-6861975778).
+Detail, Planung und Übernahme bleiben getrennte Vorgänge mit eigenen endlichen
+300-s-Rahmen. Kein allgemeiner Cache darf einen aktuellen Checkout ersetzen.
+Innerhalb eines Vorgangs dürfen identische unveränderte Eingangsbytes und daraus
+abgeleitete reine Ergebnisse wiederverwendet werden; neue Aufrufe beginnen frisch.
+Quellen, Abwesenheiten, Namespaces und sichere Dateiidentitäten bleiben gebunden.
+Die Detailansicht bindet den vollständigen T8/K8/C8-Bytebestand frisch vor/nach
+Prüfung und validiert die gewählte ID mit demselben Eintragsreader. Sie bescheinigt
+keine fachliche Gesamtprüfung anderer IDs. Plan-/Apply-Snapshots bleiben davon
+unabhängig; ihre Bindung muss zur Detailauswahl passen. Reine JSON-Ableitungen
+werden nur für exakt gleiche Eingangsbytes mit getrennten veränderbaren
+Ergebnisobjekten und begrenztem Speicher innerhalb des Vorgangs wiederverwendet.
+Methodenidentitäten benötigen die tatsächlichen Konfigurations-, Referenz- und
+Implementierungsbytes. Ein rein lesender Projektions-/Prüfblock darf identische
+Methodenprüfungen zwischen vollständiger frischer Vor-/Nachbindung deduplizieren;
+vor Rückgabe müssen alle Methodenbytes unverändert sein. Innerhalb dieses Blocks
+findet keine Inhaltsmutation statt. Jeder Schreibguard behält seine eigenen
+frischen Prüfungen. Gleiche mtimes und neue Aufrufe begründen kein Vertrauen.
+Jeder Writer behält vollständige fachliche Alt-/Zielprüfung, alle Unter-Lock-
+und Fremdbyteguards, dauerhafte Journalpublikation, Runtime zuletzt und Recovery.
+Methodenfreezes, Deduktions-/Ratingprüfung und Spielersaves bleiben unverändert.
+
+Der Jobstatus aus §11 zeigt die tatsächlich betretene Prüf-/Publikationsphase und
+monoton verstrichene Zeit. Es gibt keine geschätzten Prozentwerte. Phasen und
+I/O-Zähler sind ausschließlich Betriebsdiagnose außerhalb fachlicher Plan-/
+Journalidentitäten. Kontrollstatus und geordnetes Beenden bleiben erreichbar;
+Stop wartet Reader und Writer sicher ab. Diagnosefehler erweitern keine
+Schreibbefugnis. Fehler nennen Phase, lesbaren Runtimezustand oder unbekannt
+sowie den wirklichen Journal-/Recoverybedarf ohne Sitzungstoken oder private Pfade.
+
+Migrationsübernahme quittiert erst nach frischem v8-Readback ohne offenes Journal
+den Erfolg. Ein verlorenes Browserergebnis ist kein Rollbackauftrag: neu laden,
+Runtime/Journal prüfen und bei Bedarf frisch planen. Offene Journale/Stagingreste
+bleiben ausschließlich über `content_registry.recover` behandelbar. Migration und
+Änderungsvorschau erhalten die bestehende Rätselauswahl; bewusste Verwerfentscheidungen
+für ungespeicherte Felder bleiben erforderlich.
+
+Die einmaligen Windows-11-Vorher-/Nachherproben verwenden isolierte identische
+56-Rätsel-Kopien und kleine synthetische Fehler-/Recoveryziele. Sie messen Detail
+für zwei unterschiedliche IDs, Migration und getrennte A1-/A2-/A3-Plan-/Applyzeiten,
+prüfen echte Zielbytes, No-op-mtimes und die tatsächliche portable Oberfläche.
+Keine echten Nutzersaves, dauerhaften Echtkatalogfixtures oder automatischen
+Browsergalerien. Nachweise mit Quellhead und Prüfgrenzen stehen im Draft-PR.
+Unabhängiges PE-PERF1-A01 vor Merge und persönliche PE-B-U01 vor Release bleiben
+getrennt; ein technischer Erfolg schließt #576 nicht.

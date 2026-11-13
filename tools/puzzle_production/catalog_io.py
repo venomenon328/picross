@@ -1,6 +1,8 @@
 """Bounded catalog I/O. Paths and open file identities are checked on every read."""
 from contextlib import contextmanager
 from contextvars import ContextVar
+from copy import deepcopy
+from functools import wraps
 import hashlib
 import json
 import os
@@ -15,6 +17,7 @@ from . import operation_diagnostics as diagnostic
 
 CHUNK = 1024 * 1024
 _deadline = ContextVar("catalog_deadline", default=None)
+_operation_data = ContextVar("catalog_operation_data", default=None)
 if os.name == "nt":
     from ctypes import wintypes as _w
     _kernel = ctypes.WinDLL("kernel32", use_last_error=True)
@@ -28,6 +31,7 @@ def budget(seconds=300):
     prior = _deadline.get()
     completed = diagnostic.completion.get()
     token = _deadline.set(min(prior, time.monotonic() + seconds) if prior else time.monotonic() + seconds)
+    data_token = _operation_data.set({"json": {}, "json_bytes": 0}) if _operation_data.get() is None else None
     try:
         tick()
         yield
@@ -35,6 +39,17 @@ def budget(seconds=300):
             tick()
     finally:
         _deadline.reset(token)
+        if data_token is not None:
+            _operation_data.reset(data_token)
+
+
+def bounded(function):
+    """Give a complete catalog API call one scope, including nested checks."""
+    @wraps(function)
+    def wrapped(*args, **kwargs):
+        with budget():
+            return function(*args, **kwargs)
+    return wrapped
 
 
 def tick():
@@ -185,6 +200,13 @@ def json_bytes(raw, limit):
     require(isinstance(raw, bytes), "Catalog JSON must be bytes")
     if len(raw) > limit:
         raise Aborted("resource_limit: catalog JSON exceeds byte limit")
+    tick()
+    data = _operation_data.get()
+    if data is not None and raw in data["json"]:
+        diagnostic.count("json_reuses")
+        # Only pure parsing of these exact bytes is reused. Each caller owns
+        # its object; no mutation can contaminate another reader or operation.
+        return deepcopy(data["json"][raw])
     text = raw.decode("utf-8")
     require(not text.startswith("\ufeff"), "Catalog JSON BOM is unsupported")
     # Bound nesting before json.loads allocates containers. Braces in strings do
@@ -220,4 +242,7 @@ def json_bytes(raw, limit):
     value = json.loads(text, object_pairs_hook=pairs, parse_int=lambda t: number(t, int),
                        parse_float=lambda t: number(t, float), parse_constant=constant)
     canonical_bytes(value)  # Reject nonfinite floats and unpaired Unicode surrogates.
+    if data is not None and len(raw) <= 1024*1024 and data["json_bytes"] + len(raw) <= 16*1024*1024:
+        data["json"][raw] = deepcopy(value)
+        data["json_bytes"] += len(raw)
     return value

@@ -156,7 +156,7 @@ def _write_bundle(output, files):
         with target.open("xb") as stream: stream.write(raw)
 
 
-def plan(root, request_path, output, *, seconds=300):
+def plan(root, request_path, output, *, seconds=300, _snapshot=None):
     with io.budget(seconds):
         root = io.external(root)
         request_path, output = _outside(request_path, root), _outside(output, root)
@@ -164,9 +164,9 @@ def plan(root, request_path, output, *, seconds=300):
                 "Image input and plan output overlap")
         raw = io.read(request_path.parent, request_path.name, REQUEST_LIMIT)
         request = validate_request(io.json_bytes(raw, REQUEST_LIMIT))
-        snapshot = tx.capture(root)
+        snapshot = tx.capture(root) if _snapshot is None else _snapshot
         result, journal, files = _construct(root, snapshot, request, raw, request_path.parent)
-        require(tx.image_snapshot(tx.capture(root)) == result["snapshot"], "Checkout changed during image planning")
+        tx.recheck(root, snapshot)
         require(io.read(request_path.parent, request_path.name, REQUEST_LIMIT) == raw, "Request changed during planning")
         for part in (request["reveal"], request["background"]):
             if part is not None and part["asset"] is not None:
@@ -529,10 +529,15 @@ def view(root, identifier):
     with io.budget():
         root = io.external(root)
         snapshot = tx.capture(root)
-        require(any(e["id"] == identifier for e in snapshot["registry"]["entries"]), "Unknown puzzle ID")
-        registry.require_current(snapshot["registry"])
-        return {"format": "picross-editor-images-view-v1", "id": identifier,
-                "migration_required": not tx.image_generation(snapshot), **_summary(snapshot["texts"], identifier)}
+        return view_from_snapshot(snapshot, identifier)
+
+
+def view_from_snapshot(snapshot, identifier):
+    """Pure projection of the caller's freshly validated complete snapshot."""
+    require(any(e["id"] == identifier for e in snapshot["registry"]["entries"]), "Unknown puzzle ID")
+    registry.require_current(snapshot["registry"])
+    return {"format": "picross-editor-images-view-v1", "id": identifier,
+            "migration_required": not tx.image_generation(snapshot), **_summary(snapshot["texts"], identifier)}
 
 
 def recover(root):

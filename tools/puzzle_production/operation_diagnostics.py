@@ -63,6 +63,10 @@ def phase(name):
     d.emit()
     try:
         yield
+    except BaseException:
+        if not getattr(d, "failure_phase", None):
+            d.failure_phase = phase_path(d)
+        raise
     finally:
         row["seconds"] += time.monotonic() - at
         d.stack.pop()
@@ -266,6 +270,9 @@ def begin_segment(name):
     active = frame.get()
     if active is not None and active.segment != name:
         active.next_segment(name)
+    observer = current.get()
+    if active is None and observer is not None and hasattr(observer, "begin_segment"):
+        observer.begin_segment(name)
 
 
 

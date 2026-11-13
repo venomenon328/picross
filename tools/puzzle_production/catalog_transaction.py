@@ -283,6 +283,61 @@ def capture(root, *, allow_stale=False):
     return {"registry": registry, "texts": texts, "retained": retained, "namespaces": initial_namespaces}
 
 
+@diagnostic.measured("Detail source binding", "detail_snapshots")
+@io.bounded
+def capture_detail(root, identifier):
+    """Read-only ID view with the same complete byte binding as image_snapshot.
+
+    This is not a writer certificate. The selected entry uses the shared full
+    entry checker; every plan/apply still takes its own full capture. All other
+    sources are hash-bound, with fresh before/after identity/namespace guards.
+    """
+    from .content_registry import check_detail, validate
+    from .catalog_publication import staging
+    root = io.external(root)
+    require(read(root, LOCK) is None and not staging(root), "Interrupted registration: recovery required")
+    registry_raw, catalog_raw = read(root, REGISTRY), read(root, categories.PATH)
+    registry = validate(io.json_bytes(registry_raw, 8*1024*1024), io.json_bytes(catalog_raw, categories.MAX_BYTES))
+    initial = namespaces(root, registry, images=True)
+    texts = {name: read(root, name) for name in text_names(registry)}
+    require(texts[REGISTRY] == registry_raw and texts[categories.PATH] == catalog_raw, "Catalog changed during detail")
+    # K8 is derived from the actual safe package/report/asset inventories. Text
+    # authorities remain in T8; inactive C8 alternatives are explicitly absent.
+    names = set(initial["packages"]) | set(initial["background_assets"])
+    names |= {name for name in initial["difficulty"] if name.startswith("content/difficulty/reports/")}
+    names |= {name for name in initial["added"] if name.startswith(added.ROOT+"/reports/")}
+    names |= {active_reveal(entry, texts) for entry in registry["entries"]}
+    retained = {name: file_hash(root, name) for name in names - texts.keys()}
+    snapshot = {"registry": registry, "texts": texts, "retained": retained, "namespaces": initial}
+    check_detail(root, snapshot, identifier)
+    expected = image_snapshot(snapshot)
+    require(sorted(initial["reveal_assets"]) == expected["namespaces"]["reveal_assets"],
+            "Reveal namespace has missing or inactive image resources")
+    for name, checksum in expected["sources"].items():
+        raw = read(root, name)
+        require(io.checksum(raw) == checksum, "Checkout changed during detail source binding: " + name)
+    require(namespaces(root, registry, images=True) == initial and read(root, LOCK) is None and not staging(root),
+            "Checkout namespace/journal changed during detail")
+    return snapshot
+
+
+@diagnostic.measured("Source recheck", "snapshot_rechecks")
+def recheck(root, snapshot):
+    """Recheck every byte/absence and namespace of an in-operation capture.
+
+    Only unchanged bytes can reuse the earlier semantic validation. Never load
+    a snapshot from a client as authority; apply still captures independently.
+    """
+    from .catalog_publication import staging
+    expected = image_snapshot(snapshot)
+    require(read(root, LOCK) is None and not staging(root), "Interrupted registration: recovery required")
+    for name, checksum in expected["sources"].items():
+        require(io.checksum(read(root, name)) == checksum, "Checkout changed during source recheck: " + name)
+    require(namespaces(root, snapshot["registry"], images=True) == expected["namespaces"],
+            "Checkout namespace changed during source recheck")
+    require(read(root, LOCK) is None and not staging(root), "Interrupted registration: recovery required")
+
+
 def namespaces(root, *registries, temporary=(), images=None):
     catalog_method.load(root)
     reveals = reveal.source_paths(root, *registries, temporary=temporary)
@@ -384,6 +439,7 @@ def report_names(run, operation="adoption"):
     return {"content/difficulty/reports/" + run + "/report." + ext for ext in ("json", "md")}
 
 
+@catalog_method.bound_validation
 def projection(texts, registry, *, version=None):
     from .content_registry import projection as project, validate
     catalog = rating.bytes_json(texts[categories.PATH].encode(), 131072)
@@ -448,6 +504,7 @@ def _stage_check(root, texts, retained, additions=None, replacements=None, legac
         check_checkout(stage)
 
 
+@diagnostic.measured("Plan/Projection", "plans")
 def prepare(root, snapshot, changes, *, operation, additions=None, report_run=None, replacements=None, generation="metadata"):
     additions = additions or {}
     require(operation in PE_FORMATS or operation in IMAGE_FORMATS, "Unknown transaction operation")

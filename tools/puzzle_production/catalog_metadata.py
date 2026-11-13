@@ -176,10 +176,11 @@ def _plan(root, snapshot, after, catalog, operations, operation):
     return result
 
 
-def plan(root, operations):
+@io.bounded
+def plan(root, operations, *, _snapshot=None):
     """Prepare an edit without writing any content or generating a save revision."""
     root = io.external(root)
-    snapshot = tx.capture(root)
+    snapshot = tx.capture(root) if _snapshot is None else _snapshot
     registry.require_current(snapshot["registry"])
     catalog = _catalog(snapshot["texts"])
     expanded = _operations(operations, catalog=catalog)
@@ -187,6 +188,7 @@ def plan(root, operations):
     return _plan(root, snapshot, after, target, expanded, "metadata")
 
 
+@io.bounded
 def plan_migration(root):
     """Explicit v2/v3 to v4 migration, with all other sources left byte-identical."""
     root = io.external(root)
@@ -205,6 +207,7 @@ def plan_migration(root):
     return _plan(root, snapshot, after, catalog, [], "metadata-migration")
 
 
+@io.bounded
 def apply(root, value, *, fail_step=None):
     """Revalidate a reviewed plan and publish through the existing guarded writer."""
     root = io.external(root)
