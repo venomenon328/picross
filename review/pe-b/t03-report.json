@@ -1,0 +1,90 @@
+{
+  "product_head": "613f609eabb622f72768c72981682e7076e06e8d",
+  "status": "passed",
+  "environment": "Windows 11 Pro 10.0.26200; standard user, no administrator rights",
+  "verified_current_scenarios": [
+    "ShellExecute portable EXE, native folder picker and automatic standard browser without Python/Git PATH",
+    "second instance preserves first instance and reports checkout ownership",
+    "normal native stop releases port/process and preserves all checkout bytes/mtimes"
+  ],
+  "remaining": [],
+  "note": "The first three current-head scenarios are recorded in t03-partial.json/log. The remaining three scenarios completed after explicit user permission for at most 120 seconds; input control ended after 31.507 seconds. All T03 implementation probes passed; this is no independent A01 review or personal U01 acceptance.",
+  "permission": "Explicit user permission before input; hard limit 120 seconds",
+  "completed_remaining_scenarios": [
+    "Remembered checkout; explicit port-conflict fallback; foreign listener preserved; active frozen detail drains before native stop",
+    "Invalid checkout rejected by the actual native start dialog",
+    "Exact python -m tools.puzzle_editor developer fallback opens its real window/browser and stops cleanly"
+  ],
+  "passed": true,
+  "automation_seconds": 31.507,
+  "checkout_inventory": {
+    "content/categories.json": [
+      "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+      1794584720655531800
+    ],
+    "content/registry.json": [
+      "9ca25fc93cf3b5cb4e3f2f62a87ab47a4eba9845265d2f91aeff0e6a95d2f00b",
+      1794584738333462100
+    ],
+    "tools/__init__.py": [
+      "405f0871af5a486a6bf344e405b84054e0787a5803ed49bac38fb7d8f3e19cfb",
+      1794587638121467800
+    ],
+    "game/data/background-capability.json": [
+      "255c88ff3975f17daabb3452bae9e0a31e62a9d0540df36e0c2d3d44b6219630",
+      1794584761290434300
+    ],
+    "game/data/registry.json": [
+      "aba28576862a050c2e2ada267df9aaa18ddbb8746b291866386e1b48b88bdc65",
+      1794584734985879800
+    ],
+    "game/data/content/pe_primary.json": [
+      "784a04578955e79b8fe4a0635d3289aa7449841ad060022c00835e444bc97861",
+      1794584720658769200
+    ],
+    "game/data/content/pe_secondary.json": [
+      "8b33e142d1ccd207d07f65a5a61d1ed2df30b72a445bc5ed1986df26467c5cbc",
+      1794584734103247900
+    ],
+    "game/art/content/pe_primary.png": [
+      "0b6da86833b548c85711f4153b31f5734df6818898c9aff3c2c99f4265fa75fc",
+      1794584720657750500
+    ],
+    "game/art/content/pe_primary.txt": [
+      "fbbb888aad8dd018546cc2fa835877d1d7d71c942c02c7b1cc491c754cc83d05",
+      1794584720658261100
+    ],
+    "game/art/content/pe_secondary.png": [
+      "844385f91b40a8f79bf8f361bbbda49cbfea48c7400eeb569dc84f5706c61eee",
+      1794584732981465900
+    ],
+    "game/art/content/pe_secondary.txt": [
+      "651844c486524bab972b9909936c50abcd355da1ce3c9e340fb74f1cbd69f692",
+      1794584734056630500
+    ],
+    "content/added/pz-test-direct-color.json": [
+      "f653d1dcfa63983c60b00a015bd53e04fbb60cb57541cc45e2feb3ad1f5580b1",
+      1794584733937012200
+    ],
+    "content/added/pz-test-direct-mono.json": [
+      "ed10deed07ff0b573b27e4e8b9abeacd0c9981dba19269e803cc8e6850b2765d",
+      1794584720654526500
+    ],
+    "content/packages/pz-test-direct-mono/r01/manifest.json": [
+      "fdf14d0a065ca1d869edfc55249f862dcec9d5632d10a75749da64ae63d7f680",
+      1794584720656646900
+    ],
+    "content/packages/pz-test-direct-color/r01/manifest.json": [
+      "095405896b0a8fa4b28f0d40b69afd4f5d657139666ccd99e187bb25b07f63fc",
+      1794584738325234900
+    ],
+    "content/difficulty/pz-test-direct-color/rating.json": [
+      "4de9e7c1ebaa9a2059c84c85c1266cbcaebd8e0bfdefd35794b648160492c2a8",
+      1794584733970328200
+    ],
+    "content/difficulty/pz-test-direct-mono/rating.json": [
+      "73c625830da4903047e56072dd43ae2fc780ec1b0e0c39e93e905370f17e2402",
+      1794584720655531800
+    ]
+  }
+}

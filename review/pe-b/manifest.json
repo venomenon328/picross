@@ -94,6 +94,11 @@
       "sha256": "d2743052a36d276ebba6b46a601f65b39773f012bba8605fd4f1038e2e4a731f"
     },
     {
+      "file": "download-check.json",
+      "bytes": 440,
+      "sha256": "4d01b831accb474aca7727bd5a93d37612556d385f37a9eae152c48c9113727b"
+    },
+    {
       "file": "Picross-Bestandseditor-windows-x64.zip",
       "bytes": 21792030,
       "sha256": "0c8f4056d458e018aae947d45c9cb29ae8f18a9c8663f503e445dc7b98a15f25"
@@ -154,10 +159,25 @@
       "sha256": "7d6907fc80dcf2d51523e705f46d2efd84d1300f934674bc354d64933cce398c"
     },
     {
+      "file": "t03-remaining.log",
+      "bytes": 357,
+      "sha256": "f0949b2bad05a3eb66c7403735458aa1d7ff0837c4e7cf76bb068969ac8b2147"
+    },
+    {
+      "file": "t03-report.json",
+      "bytes": 4032,
+      "sha256": "e6dc7b08f6fa9618fc771c7f5cc9d1a1a83d2e61b138edbf19564ded887f63ff"
+    },
+    {
       "file": "t03.py",
       "bytes": 8829,
       "sha256": "2cab286ed6084cc03b62504f8194bb9ec2560fb5be99cae74b210fbf3a9acef8"
+    },
+    {
+      "file": "t03_remaining.py",
+      "bytes": 5137,
+      "sha256": "1c5a02d964cb7a0a85ddc78ce267c4930c5b457aadbf9a232cef596faa6a3686"
     }
   ],
-  "t03": "partial; see t03-partial.json"
+  "t03": "passed; t03-report.json supersedes the historical interrupted t03-partial.json"
 }

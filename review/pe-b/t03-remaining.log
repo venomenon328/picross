@@ -1,0 +1,4 @@
+PASS Remembered checkout; explicit port-conflict fallback; foreign listener preserved; active frozen detail drains before native stop 13.86
+PASS Invalid checkout rejected by the actual native start dialog 22.68
+PASS Exact python -m tools.puzzle_editor developer fallback opens its real window/browser and stops cleanly 31.51
+INPUT CONTROL STOPPED 31.51
