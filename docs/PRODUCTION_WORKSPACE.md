@@ -379,8 +379,14 @@ Browseradresse wird ausschließlich nach Authentisierung zurückgegeben; Geheimn
 erscheinen nicht in Logs, Prompts oder dauerhaften Optionen. Bestehender Browser-
 Sitzungs-/Host-/Origin-/CSP- und P2-Bestätigungsschutz bleibt bestehen.
 
-Die erste Bereitschaft und Browseröffnung gehen der Git-Suche voraus. Die
-Loopbackadresse wird ab P3 pro Zustand gespeichert und wiederverwendet. Bei
+Die erste Bereitschaft und Browseröffnung gehen der Git-Suche voraus. Beim
+installierten Windows-GUI-Start mit bestehendem Update-Opt-in wartet gemäß
+[APP-B2-S / Updatevertrag §7](PRODUCTION_UPDATES.md#7-app-b2--client-übergabe-und-abschluss)
+zuerst die Browseröffnung samt initialer Git-Suche auf die nebenläufige
+Updateentscheidung. Das native Fenster bleibt bedienbar; „Ohne Update fortfahren“
+verwirft den Versuch und gibt den einmaligen Arbeitsstart frei. Ein Zweitstart
+übersteuert dieses Gate nicht. Ohne Updatefreigabe startet der bisherige Weg.
+Die Loopbackadresse wird ab P3 pro Zustand gespeichert und wiederverwendet. Bei
 Fremdbelegung kein stiller Portwechsel: Wiederholen oder ausdrücklich neuen Port
 mit Hinweis auf getrennte Browseroptionen/Entwürfe wählen. Frühere Zufallsport-
 Browserdaten bleiben unverändert; Migration wird nicht behauptet. Eine historische

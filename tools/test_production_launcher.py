@@ -10,11 +10,12 @@ import tempfile
 import threading
 import time
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from tools.production_workspace import instance, runtime
 from tools.production_workspace.repository import configure
 from tools.production_workspace.sources import git
+from tools.production_workspace.desktop import Startup
 
 
 class LauncherTests(unittest.TestCase):
@@ -162,6 +163,55 @@ class LauncherTests(unittest.TestCase):
             host.service.start_refresh()
         release.set(); self.assertTrue(host.stopped.wait(5))
         self.assertFalse(host.thread.is_alive()); self.assertFalse(host.lock.metadata.exists())
+
+    def test_update_go_never_starts_slow_initial_git_or_waits_for_it(self):
+        from tools.production_workspace.update_windows import Handoff
+        host = self.start()
+        entered, release = threading.Event(), threading.Event()
+        self.addCleanup(release.set)
+        def slow(): entered.set(); release.wait(5)
+        host.service.repository.refresh = slow
+        updates = Mock(); updates.start.return_value = True
+        updates.take.return_value = None; updates.pending = True
+        flow = Startup(host, updates, self.fail)
+        with patch.object(host, 'open') as browser:
+            flow.begin()
+            instance.existing(instance.StateLock(self.state), host.build)
+            flow.poll()
+            self.assertFalse(entered.is_set()); browser.assert_not_called()
+            helper = Mock(); helper.poll.return_value = None
+            handoff = Handoff(helper, 'e' * 48)
+            updates.take.return_value = handoff
+            flow.poll()
+            self.assertTrue(host.stopped.wait(2), 'stop must not join an unnecessary initial Git thread')
+            self.assertFalse(release.is_set()); self.assertFalse(entered.is_set())
+            self.assertIsNone(host.service.update_thread); browser.assert_not_called()
+            handoff.commit(host)
+            helper.stdin.write.assert_called_once_with(('GO ' + 'e' * 48 + '\n').encode())
+
+    def test_start_gate_skip_starts_git_once_and_stop_still_drains_it(self):
+        host = self.start()
+        entered, release = threading.Event(), threading.Event()
+        self.addCleanup(release.set)
+        def slow(): entered.set(); release.wait(5)
+        host.service.repository.refresh = slow
+        updates = Mock(); updates.start.return_value = True
+        updates.take.return_value = None; updates.pending = True; updates.cancel.return_value = True
+        flow = Startup(host, updates, self.fail)
+        with patch.object(host, 'open') as browser, patch.object(host, 'refresh', wraps=host.refresh) as refresh:
+            flow.begin(); flow.skip(); flow.skip(); flow.begin(); flow.poll()
+            self.assertTrue(entered.wait(2)); browser.assert_called_once(); refresh.assert_called_once()
+            flow.stop(); self.assertFalse(host.stopped.wait(0.2))
+            release.set(); self.assertTrue(host.stopped.wait(5))
+
+    def test_stop_before_first_work_never_opens_or_refreshes(self):
+        host = self.start()
+        instance.control(host.metadata, 'stop')
+        flow = Startup(host, None, self.fail)
+        with patch.object(host, 'open') as browser, patch.object(host, 'refresh') as refresh:
+            flow.begin(); flow.poll(); flow.skip()
+            self.assertTrue(host.stopped.wait(5))
+            browser.assert_not_called(); refresh.assert_not_called()
 
     def test_port_reuse_and_explicit_conflict_change_preserve_config(self):
         host = self.start(); port = host.metadata['port']
