@@ -64,9 +64,28 @@ class UpdateVerifierTests(unittest.TestCase):
             self.verify(files={**self.files, 'extra.exe': b'unbound'})
 
     def test_fixed_production_root_rejects_test_key_environment_and_missing_signature(self):
+        # APP-ROOT1: owner-approved PUBLIC bytes, issue 612 / comment 6852316923.
+        key_id = '7434f1625066c40b5b1ee43e5202745cccd2986d542bec6af5071688c9b9a134'
+        encoded = 'a+FfCpsBYUS/pDwRIDeV8X/VGTk5h0gv61fBP4Nlku4='
+        trust = verifier.production_trust()
+        self.assertEqual(trust, {'format': 'picross-pw-trust-v1', 'accepted': {key_id: encoded},
+                                 'blocked': [], 'active_signer': key_id})
+        self.assertEqual(Path(verifier.__file__).with_name('update-trust.json').read_bytes(), canonical(trust))
+        public = base64.b64decode(encoded, validate=True)
+        self.assertEqual(len(public), 32)
+        self.assertEqual(base64.b64encode(public).decode('ascii'), encoded)
+        self.assertEqual(digest(public), key_id)
+        self.assertEqual(verifier._public_key(trust, key_id).public_bytes_raw(), public)
+        with self.assertRaisesRegex(ValueError, 'blocked'):
+            verifier._public_key({**trust, 'blocked': [key_id]}, key_id)
         with patch.dict(os.environ, {'PW_UPDATE_TRUST': str(self.root), 'PW_UPDATE_TEST_KEY': self.secret}):
             with self.assertRaisesRegex(ValueError, 'Unknown signing key'):
                 verifier.verify_candidate(self.raw, self.signature, self.files)
+        # A test signature relabelled with the real root ID must fail cryptographically.
+        raw, signature = self.resign({**strict_json(self.raw), 'signing_key_id': key_id})
+        signature = canonical({**strict_json(signature), 'key_id': key_id})
+        with self.assertRaisesRegex(ValueError, 'Invalid Ed25519'):
+            verifier.verify_candidate(raw, signature, self.files)
         with self.assertRaisesRegex(ValueError, 'missing'):
             self.verify(signature=b'')
         with self.assertRaisesRegex(ValueError, 'Legacy'):
@@ -145,12 +164,17 @@ class UpdateVerifierTests(unittest.TestCase):
 
     def test_signing_failures_do_not_echo_secrets(self):
         for secret in (None, '', 'sensitive-invalid-secret', base64.b64encode(b'x' * 32).decode()):
-            with self.subTest(secret_present=bool(secret)), self.assertRaises(ValueError) as caught:
-                verifier._sign(self.provenance, self.files, secret, self.trust)
-            if secret:
-                self.assertNotIn(secret, str(caught.exception))
-        with self.assertRaisesRegex(ValueError, 'unprovisioned'):
+            for trust in (self.trust, verifier.production_trust()):
+                with self.subTest(secret_present=bool(secret)), self.assertRaises(ValueError) as caught:
+                    verifier._sign(self.provenance, self.files, secret, trust)
+                if secret:
+                    self.assertNotIn(secret, str(caught.exception))
+        with self.assertRaisesRegex(ValueError, 'Invalid PW_UPDATE_SIGNING_KEY encoding or key pair') as caught:
             verifier.sign_candidate(self.provenance, self.files, self.secret)
+        self.assertNotIn(self.secret, str(caught.exception))
+        empty = {'format': 'picross-pw-trust-v1', 'accepted': {}, 'blocked': [], 'active_signer': None}
+        with self.assertRaisesRegex(ValueError, 'unprovisioned'):
+            verifier._sign(self.provenance, self.files, self.secret, empty)
 
 
 if __name__ == '__main__':
