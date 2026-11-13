@@ -46,7 +46,9 @@ Keine Administratorrechte nötig. [Start-/Updateanleitung](START-WINDOWS.txt),
 APP-A ergänzt den [separaten App-Releasekanal](../../docs/PRODUCTION_UPDATES.md)
 mit automatischer Versionsplanung und geprüftem MSI. Erstpublikation bleibt bis
 zur gesonderten Betriebsfreigabe gesperrt; ein Actions-Dispatch ist ausschließlich
-Diagnose. Die App hat weiterhin keinen Updateclient. Gitrefresh und eine neue
+Diagnose. APP-B1 ergänzt die signierte Updateautorität und einen gemeinsamen Offlineverifier,
+der Produktions-Truststore bleibt unprovisioniert. Beide Aktivierungsschalter und
+ein eigener Betriebsauftrag sind nötig. Die App hat weiterhin keinen Updateclient. Gitrefresh und eine neue
 installierte Programmversion sind getrennte Vorgänge.
 
 Das native Steuerfenster bietet bei neuer Einrichtung den vorhandenen lokalen
@@ -96,8 +98,8 @@ bleiben als solche sichtbar. Danach sind Port und Lock freigegeben; Konfiguratio
 Cache, Browser und Checkout bleiben erhalten. Absturzreste werden erst nach
 Erwerb des OS-Locks ersetzt, niemals durch Töten eines gespeicherten PIDs.
 
-Updates erfolgen nach vollständigem Stop per neuerem MSI. Version, stabile Upgrade-
-identität und WiX-Bindung stammen aus [release.json](release.json); die frühere
+Updates erfolgen nach vollständigem Stop per neuerem MSI. Die veröffentlichte Releaseautorität bestimmt neue Produktversionen; stabile Upgrade-
+identität, Pins und 0.1.0-Startanker stammen aus [release.json](release.json); die frühere
 Paketkennung 588-P3 ist keine Produktversion. Same-Version-Installation und Downgrade
 sind gesperrt. Der Installer ersetzt alle eigenen Programmdateien gemeinsam und
 fasst Zustand/Cache, Browserprofil, Checkout/Refs und portable Ordner nicht an.
@@ -108,7 +110,7 @@ Windows Restart Manager; unklar bedeutet Abbruch. Keine automatische Beendigung.
 Während MSI-Ausführung beginnt kein neuer Launcherbetrieb. Deinstallation entfernt
 nur eigene installierte Dateien/Links und den Windows-Anwendungseintrag.
 „Neuere Ergebnisse suchen“ aktualisiert Gitdaten, keine Programmversion.
-Der eigene [Installerbau](WINDOWS_BUILD.md) läuft ausschließlich manuell;
+Der eigene [Installerbau](WINDOWS_BUILD.md) hat einen Main-CI-Folgetrigger und eine rein diagnostische manuelle Ausführung;
 Package CI und regulärer Spiel-Windowsbau bleiben getrennt.
 
 ## Entwicklerfallback
