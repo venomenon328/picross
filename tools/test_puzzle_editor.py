@@ -108,5 +108,21 @@ class EditorHTTPTests(unittest.TestCase):
         os.link(own, self.service.work/"alias.png")
         with self.assertRaises(ValueError): self.service.asset("test.png", root=self.service.work)
 
+    def test_recovery_without_pending_journal_validates_and_does_not_write(self):
+        from tools.puzzle_editor.worker import run
+        before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.rglob("*") if p.is_file()}
+        self.assertEqual(run(self.root, self.service.work, "recover", {})["status"], "noop")
+        self.assertEqual({p: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.rglob("*") if p.is_file()}, before)
+
+    def test_bundle_inventory_rejects_missing_and_changed_program_files(self):
+        from tools.puzzle_editor.bundle import verify
+        from tools.puzzle_production.catalog_io import checksum
+        package = self.home/"program"; package.mkdir()
+        (package/"app.js").write_bytes(b"trusted program")
+        write_json(package/"inventory.json", {"commit": "a"*40, "files": [{"file": "app.js", "bytes": 15, "sha256": checksum(b"trusted program")}]})
+        self.assertEqual(verify(package), "a"*40)
+        (package/"app.js").write_bytes(b"foreign")
+        with self.assertRaises(ValueError): verify(package)
+
 
 if __name__ == "__main__": unittest.main()

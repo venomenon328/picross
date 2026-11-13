@@ -102,6 +102,8 @@ E:\Test\pe-build-env\Scripts\python -m tools.puzzle_editor.build_windows --outpu
 
 Der Builder verlangt die exakten Pins und Tcl/Tk-Version, prüft Frozen-Module,
 UI und byteidentische Fachquellen einschließlich eingefrorener Methoden.
+Der portable Starter prüft vor Bereitschaft zusätzlich alle Programmdateien
+gegen das vollständige Byte-/Hashinventar; fehlende/geänderte Teile sperren den Start.
 Ausgabe: portable ZIP, `components.json`, vollständiges Hash-/Byteinventar,
 Laufzeit-/Python-/Pillow-/PyInstaller-/Tcl/Tk-Lizenzen und `START.md` im Paket.
 `delivery.json` bindet Commit, Versionen, ZIP-/EXEhash. Keine Signatur, kein

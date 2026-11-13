@@ -133,7 +133,7 @@ async function select(id) {
   const empty = document.createElement('span'); empty.className = 'swatch'; empty.textContent = '0 · leer'; $('palette').append(empty);
   for (const color of result.raster.palette) {
     const span = document.createElement('span'); span.className = 'swatch';
-    const swatch = document.createElement('i'); swatch.style.backgroundColor = color.color || color.hex || '#444';
+    const swatch = document.createElement('i'); swatch.style.backgroundColor = '#' + color.color;
     span.append(swatch, document.createTextNode(color.id + ' · ' + (color.name || color.color || color.hex || ''))); $('palette').append(span);
   }
   await showPictures('reveal', result.pictures.reveal); await showPictures('background', result.pictures.background);
@@ -240,7 +240,7 @@ $('apply').onclick = () => perform(async () => {
   message('Writer bestätigt: ' + result.status + '. Aktuellen Bestand neu gelesen. Git / Build / Veröffentlichung bleiben extern.');
 });
 $('reload').onclick = () => perform(async () => { if (await leave()) await load(); });
-$('migrate').onclick = () => perform(async () => { if (await leave()) preview(await job('migration', {snapshot: listing.snapshot})); });
+$('migrate').onclick = () => perform(async () => { if (await leave()) { await load(); preview(await job('migration', {snapshot: listing.snapshot})); } });
 $('recover').onclick = () => perform(async () => { if (confirm('Bestehendes Journal prüfen und ausschließlich den gebundenen gültigen Altstand wiederherstellen?')) { await job('recover', {confirmed: true}); clean(); await load(); } });
 $('stop').onclick = async () => {
   if (!confirm((dirty ? 'Ungespeicherte Änderungen gehen verloren. ' : '') + 'Editor geordnet beenden? Bereits laufende Fachoperationen werden abgeschlossen.')) return;
@@ -248,6 +248,7 @@ $('stop').onclick = async () => {
 };
 $('categories').onclick = () => perform(async () => {
   if (!await leave()) return;
+  await load();
   options($('category-target'), listing.categories); options($('category-reassign'), listing.categories, 'Keine Neuzuordnung (nur leere Kategorie)');
   $('category-confirmed').checked = false; categoryUsage(); $('category-dialog').showModal();
 });
@@ -269,4 +270,11 @@ $('category-check').onclick = () => perform(async () => {
   $('category-dialog').close(); preview(result);
 });
 window.addEventListener('beforeunload', event => { if (dirty || plan) { event.preventDefault(); event.returnValue = ''; } });
+window.addEventListener('hashchange', () => {
+  const fresh = location.hash.slice(1);
+  history.replaceState(null, '', '/');
+  if (!/^[0-9a-f]{64}$/.test(fresh) || fresh === token) return;
+  if ((dirty || plan) && !confirm('Neue Editorsitzung öffnen und ungespeicherte Änderungen verwerfen?')) return;
+  token = fresh; sessionStorage.setItem('pe-session', token); clean(); perform(load);
+});
 perform(load);
