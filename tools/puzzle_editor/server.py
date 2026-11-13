@@ -38,13 +38,16 @@ def pending(root):
 
 
 def catalog(root):
+    names = ("content/registry.json", "content/categories.json", "game/data/registry.json")
+    before = [io.read(root, name, 8*1024*1024) for name in names]
     value = catalog_metadata.view(root)
-    runtime_raw = io.read(root, "game/data/registry.json", 8*1024*1024)
+    after = [io.read(root, name, 8*1024*1024) for name in names]
+    require(before == after, "Katalog während Listenaufbau geändert. Neu laden.")
+    raw, categories_raw, runtime_raw = after
     runtime = io.json_bytes(runtime_raw, 8*1024*1024)
-    raw = io.read(root, "content/registry.json", 8*1024*1024)
     require(io.json_bytes(raw, 8*1024*1024)["format"] == content_registry.METADATA_FORMAT,
             "Altformat: zuerst ausdrückliche A1-Migration über metadata_cli plan-migration/apply ausführen.")
-    token = digest([io.checksum(raw), io.checksum(io.read(root, "content/categories.json", 131072)), io.checksum(runtime_raw)])
+    token = digest([io.checksum(raw), io.checksum(categories_raw), io.checksum(runtime_raw)])
     return {**value, "format": FORMAT, "snapshot": token, "runtime_format": runtime["format"],
             "migration_required": runtime["format"] != "picross-runtime-registry-v8"}
 
@@ -56,8 +59,14 @@ class Service:
         # Validate only the cheap current indexes. Recovery is allowed even with partial data.
         pending_state = pending(self.root)
         if not pending_state: catalog(self.root)
+        temp_base = io.external(temporary if temporary is not None else tempfile.gettempdir())
+        require(not temp_base.is_relative_to(self.root),
+                "Editor-Tempablage muss außerhalb des Checkouts liegen.")
         self.instance = Instance(self.root)
-        self.directory = tempfile.TemporaryDirectory(prefix="picross-pe-", dir=temporary)
+        try:
+            self.directory = tempfile.TemporaryDirectory(prefix="picross-pe-", dir=temp_base)
+        except BaseException:
+            self.instance.close(); raise
         self.work = io.external(self.directory.name)
         require(not self.work.is_relative_to(self.root) and not self.root.is_relative_to(self.work),
                 "Editor-Tempablage muss außerhalb des Checkouts liegen.")
@@ -115,9 +124,10 @@ class Service:
     def invalidate(self):
         for key in list(self.plans): self.remove_plan(key)
 
-    def asset(self, path, *, root=None):
+    def asset(self, path, *, root=None, expected=None):
         root = self.root if root is None else root
         raw = io.read(root, path, 32*1024*1024)
+        require(expected is None or io.checksum(raw) == expected, "Bild nach Detailprüfung geändert. Neu laden.")
         for key, row in self.assets.items():
             if row["root"] == root and row["file"] == path and row["sha256"] == io.checksum(raw): return key
         while len(self.assets) >= 32: self.assets.pop(next(iter(self.assets)))
@@ -207,9 +217,13 @@ class Service:
         def complete(result, work):
             self.assets.clear()
             row = result["detail"]["runtime"]
-            pictures = {"reveal": [self.asset("game/"+row["reveal"])], "background": []}
+            bound = result.pop("_resources")
+            name = "game/"+row["reveal"]
+            pictures = {"reveal": [self.asset(name, expected=bound[name])], "background": []}
             bg = row["background"]
-            if bg["status"] == "selected": pictures["background"] = [self.asset("game/"+bg["asset"]["file"])]
+            if bg["status"] == "selected":
+                name = "game/"+bg["asset"]["file"]
+                pictures["background"] = [self.asset(name, expected=bound[name])]
             elif bg["status"] in ("legacy", "standard") and row["category_id"] in PILOTS:
                 pictures["background"] = [self.asset("game/art/drawing/margins/"+PILOTS[row["category_id"]]+"_"+side+".png") for side in ("left", "right")]
             self.details = {body["id"]: result["snapshot"]}

@@ -124,5 +124,32 @@ class EditorHTTPTests(unittest.TestCase):
         (package/"app.js").write_bytes(b"foreign")
         with self.assertRaises(ValueError): verify(package)
 
+    def test_catalog_cannot_pair_old_labels_with_a_new_snapshot(self):
+        from unittest.mock import patch
+        from tools.puzzle_editor.server import catalog, catalog_metadata
+        original = catalog_metadata.view
+        def concurrent(root):
+            value = original(root)
+            path = root/"content/categories.json"
+            path.write_bytes(path.read_bytes()+b"\n")
+            return value
+        with patch.object(catalog_metadata, "view", side_effect=concurrent):
+            with self.assertRaisesRegex(ValueError, "Listenaufbau"): catalog(self.root)
+
+    def test_native_status_error_keeps_the_shutdown_tick(self):
+        from unittest.mock import Mock
+        from tools.puzzle_editor.desktop import Window
+        window = Window.__new__(Window)
+        window.closing = False
+        window.service = Mock(stopping=False)
+        window.service.status.side_effect = ValueError("concurrent source error")
+        window.window = Mock(); window.status = Mock()
+        window.poll()
+        window.window.after.assert_called_once_with(250, window.poll)
+        self.assertIn("concurrent source error", window.status.set.call_args.args[0])
+        window.closing, window.drained = True, True
+        window.poll()
+        window.window.destroy.assert_called_once()
+
 
 if __name__ == "__main__": unittest.main()
