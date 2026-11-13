@@ -964,6 +964,10 @@ Methodenprüfungen zwischen vollständiger frischer Vor-/Nachbindung deduplizier
 vor Rückgabe müssen alle Methodenbytes unverändert sein. Innerhalb dieses Blocks
 findet keine Inhaltsmutation statt. Jeder Schreibguard behält seine eigenen
 frischen Prüfungen. Gleiche mtimes und neue Aufrufe begründen kein Vertrauen.
+Unter Windows werden Verzeichnisattribute je Pfadkomponente frisch über
+`GetFileAttributesW` gelesen, einschließlich Reparse-Prüfung. Datei- und
+Hardlinkprüfung sowie die Identität des geöffneten Handles vor/nach dem Lesen
+bleiben vollständig; auch Pfadattribute werden niemals zwischengespeichert.
 Jeder Writer behält vollständige fachliche Alt-/Zielprüfung, alle Unter-Lock-
 und Fremdbyteguards, dauerhafte Journalpublikation, Runtime zuletzt und Recovery.
 Methodenfreezes, Deduktions-/Ratingprüfung und Spielersaves bleiben unverändert.

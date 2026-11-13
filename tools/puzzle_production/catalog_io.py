@@ -23,6 +23,9 @@ if os.name == "nt":
     _kernel = ctypes.WinDLL("kernel32", use_last_error=True)
     _long_path = _kernel.GetLongPathNameW
     _long_path.argtypes = [_w.LPCWSTR, _w.LPWSTR, _w.DWORD]
+    _attributes = _kernel.GetFileAttributesW
+    _attributes.argtypes = [_w.LPCWSTR]
+    _attributes.restype = _w.DWORD
 
 
 @contextmanager
@@ -92,6 +95,22 @@ def safe(root, name):
                 matches = [name for name in names if name.casefold() == folded]
                 require(not matches or matches == [part], "Catalog path case collision: " + target)
         current = target
+        if os.name == "nt":
+            # Freshly inspect every ancestor, including its reparse attribute.
+            # Directory identity/inode is not part of this predicate: lstat
+            # opens a handle just to obtain fields that we never consume here.
+            # Files still receive the complete lstat/hardlink checks below.
+            diagnostic.count("windows_attribute_checks")
+            attributes = _attributes(current)
+            if attributes == 0xffffffff:
+                error = ctypes.get_last_error()
+                if error in (2, 3):  # Same missing-component policy as lstat.
+                    continue
+                raise ctypes.WinError(error)
+            require(not attributes & 1024, "Unsafe catalog link/reparse path: " + current)
+            if attributes & 16:
+                last_existing = current
+                continue
         try:
             info = os.lstat(current)
         except FileNotFoundError:
