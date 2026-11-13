@@ -508,6 +508,39 @@ class CatalogImageTests(unittest.TestCase):
 
 
 class CatalogValidationScopeTests(unittest.TestCase):
+    @unittest.skipUnless(__import__("os").name == "nt", "Windows path attributes")
+    def test_windows_fresh_directory_attributes_keep_reparse_case_and_file_guards(self):
+        import ctypes
+        import os
+        import subprocess
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            data = root/"data"; data.mkdir()
+            (data/"source").write_bytes(b"unchanged target")
+            self.assertEqual(io.read(root, "data/source", 100), b"unchanged target")
+            with self.assertRaisesRegex(ValueError, "case collision"):
+                io.read(root, "DATA/source", 100)
+            with self.assertRaises(ValueError): io.safe(data/"source", "child")
+            self.assertEqual(io.safe(root, "absent/leaf"), root/"absent/leaf")
+            selected = root/"selected"; selected.mkdir()
+            self.assertEqual(io.safe(root, "selected/missing"), selected/"missing")
+            selected.rmdir()
+            linked = subprocess.run(["cmd", "/c", "mklink", "/J", str(selected), str(data)], capture_output=True)
+            self.assertEqual(linked.returncode, 0, linked.stderr)
+            try:
+                # A successful earlier observation cannot hide a new junction.
+                with self.assertRaisesRegex(ValueError, "link/reparse"):
+                    io.read(root, "selected/source", 100)
+                self.assertEqual((data/"source").read_bytes(), b"unchanged target")
+            finally:
+                os.rmdir(selected)  # Remove only our junction, never its target.
+            os.link(data/"source", root/"linked-file")
+            with self.assertRaisesRegex(ValueError, "hardlink"):
+                io.read(root, "data/source", 100)
+            with patch.object(io, "_attributes", return_value=0xffffffff), \
+                    patch.object(ctypes, "get_last_error", return_value=5):
+                with self.assertRaises(OSError): io.safe(root, "data/source")
+
     def test_json_reuse_is_exact_bounded_detached_and_ends_with_operation(self):
         raw = b'{"nested":[1,2]}\n'
         with io.budget():
