@@ -158,6 +158,59 @@ class EditorHTTPTests(unittest.TestCase):
         with patch.object(catalog_metadata, "view", side_effect=concurrent):
             with self.assertRaisesRegex(ValueError, "Listenaufbau"): catalog(self.root)
 
+    def finish(self):
+        thread = self.service.thread
+        if thread: thread.join(30)
+        self.assertTrue(not thread or not thread.is_alive(), "Worker did not drain")
+        return self.service.status()["job"]
+
+    def test_migration_real_worker_readback_repeat_and_lost_browser_ack(self):
+        from tools.puzzle_production import catalog_io as io
+        from unittest.mock import patch
+        before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.rglob("*") if p.is_file()}
+        listing = json.loads(self.call(API+"catalog")[1])
+        self.assertEqual(self.call(API+"migration", {"snapshot": listing["snapshot"]})[0], 202)
+        job = self.finish()
+        self.assertEqual(job["state"], "done", job)
+        plan = job["result"]
+        self.assertEqual(plan["files"], ["game/data/registry.json"])
+        self.assertEqual({p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before}, before)
+        original = io.read
+        def progress_race(root, name, *args, **kwargs):
+            if name == "progress.json": raise ValueError("Concurrent telemetry replace")
+            return original(root, name, *args, **kwargs)
+        with patch.object(io, "read", side_effect=progress_race):
+            self.assertEqual(self.call(API+"apply", {"plan": plan["plan"], "id": None})[0], 202)
+            # Simulate a missing UI acknowledgement: drain, then inspect truth
+            # through catalog instead of resubmitting an uncertain mutation.
+            job = self.finish()
+        self.assertEqual(job["state"], "done", job)
+        self.assertEqual(job["result"]["status"], "migrated")
+        self.assertEqual(json.loads(self.call(API+"catalog")[1])["runtime_format"], "picross-runtime-registry-v8")
+        self.assertFalse(self.service.status()["recovery_required"])
+        after = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before}
+        self.assertEqual({p.relative_to(self.root).as_posix() for p in before if before[p] != after[p]}, {"game/data/registry.json"})
+        self.assertEqual(self.call(API+"apply", {"plan": plan["plan"], "id": None})[0], 202)
+        job = self.finish()
+        self.assertEqual(job["state"], "done", job)
+        self.assertEqual(job["result"]["status"], "noop")
+        self.assertEqual({p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before}, after)
+
+    def test_worker_failure_exposes_phase_and_actual_v7_without_private_path(self):
+        listing = json.loads(self.call(API+"catalog")[1])
+        body = {"snapshot": listing["snapshot"], "id": None,
+                "metadata": [{"op": "category_delete", "id": "missing"}],
+                "text": None, "profile": None, "reveal": None, "background": None, "authority": None}
+        self.assertEqual(self.call(API+"plan", body)[0], 202)
+        job = self.finish()
+        self.assertEqual(job["state"], "error", job)
+        self.assertIn("Phase:", job["error"])
+        self.assertIn("picross-runtime-registry-v7", job["error"])
+        self.assertIn("kein Journal/Staging", job["error"])
+        self.assertNotIn(str(self.home), job["error"])
+        self.assertFalse(self.service.status()["recovery_required"])
+        self.assertIsNone(job["result"])
+
     def test_native_status_error_keeps_the_shutdown_tick(self):
         from unittest.mock import Mock
         from tools.puzzle_editor.desktop import Window
