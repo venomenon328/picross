@@ -20,7 +20,7 @@ ihren gebundenen Stand. Sie erweitern weder aktuelle Befugnisse noch die Haupt-C
 | Allgemeiner Test-/Artefaktlebenszyklus | [CI_CONTRACT](dev-rules/CI_CONTRACT.md) |
 | Ausführbare Picross-CI, Module, Laufzeitziel, Aufbewahrung | [CI_WORKFLOW_V2](CI_WORKFLOW_V2.md); [CI_POLICY](CI_POLICY.md) als Wegweiser |
 | Lokale Arbeitswurzel und Bereinigung eigener Daten | [WORKSPACE](dev-rules/WORKSPACE.md) |
-| Automatisierte App-Releases (APP-A integriert, Betrieb offen), signierte APP-B1-Autorität und späterer APP-B2-Client | [PW Updates](PRODUCTION_UPDATES.md), [Issue #612](https://github.com/venomenon328/picross/issues/612); Installerbau und gesperrte Erstpublikation unter [WINDOWS_BUILD](../tools/production_workspace/WINDOWS_BUILD.md) |
+| Automatisierte App-Releases (APP-A integriert, Betrieb offen), signierte APP-B1-Autorität und standardmäßig ausgeschalteter APP-B2-Client | [PW Updates](PRODUCTION_UPDATES.md), [Issue #612](https://github.com/venomenon328/picross/issues/612); Installerbau und gesperrte Erstpublikation unter [WINDOWS_BUILD](../tools/production_workspace/WINDOWS_BUILD.md) |
 | Entwicklungs-JSON und Sheet | [HANDOFF](dev-rules/HANDOFF.md), [Entwicklungssheet](workflow/Entwicklungsworkflow_Cheat-Sheet.html) |
 | Ausführungs-/Modellentscheidung für noch anstehende Arbeit | [MODEL_SELECTION](dev-rules/MODEL_SELECTION.md), datierter [MODEL_CATALOG](dev-rules/MODEL_CATALOG.md) |
 | Normale Rätselproduktion einschließlich Korrektur/Wiederaufnahme | [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md) mit eigenem JSON und eigenen Inhaltsfreigaben |
