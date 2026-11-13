@@ -1,10 +1,12 @@
 # Windows-App bauen und prüfen
 
-Aktuell maßgeblich: [APP-B2-K01–K09 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6849852805)
+Aktuell maßgeblich: [APP-ROOT1 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6851636493)
+mit [öffentlicher Eigentümerfreigabe](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923)
 und der [App-Releasevertrag](../../docs/PRODUCTION_UPDATES.md).
 APP-A ist über #613 unabhängig abgenommen und in main integriert; Erstaktivierung
 und Windows-11-Upgradeprobe bleiben offen. APP-B1 liefert signierte Autorität und
-Verifier mit unprovisionierten öffentlichen Roots; APP-B2 ergänzt Client und
+Verifier; APP-ROOT1 bindet ausschließlich den freigegebenen öffentlichen Root.
+Private Signierbereitstellung und Aktivierung bleiben gesondert. APP-B2 ergänzt Client und
 eigenständigen x64-.NET-Helfer, standardmäßig ausgeschaltet. Der Kanal bleibt inaktiv.
 Die historischen
 [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437),
