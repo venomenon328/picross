@@ -194,9 +194,10 @@ Sitzungsdatei veröffentlichen, keine native Fenstersteuerung ungefragt starten.
 Altfehler, wirkliche neue Apply-Phase mit Zeit und bestätigter Readback. Sie stammen
 aus 1600×1000-Edge-Viewports bei DPR 1; es sind gezielte Elementoriginale ohne
 privaten Checkoutkopf, keine umkodierten oder verkleinerten Vorschauen.
-Der konkrete Belegcommit und der geprüfte binäre Abrufweg stehen im PR. Zugriff
-wurde im Implementiererkonto geprüft; der unabhängige Reviewer benötigt eigenen
-Repositoryzugang und öffnet die Originalbytes selbst. Zustellung ist keine
+Der konkrete Belegcommit und der geprüfte binäre Abrufweg stehen im PR. Zugriff auf die Originalbytes
+wurde per öffentlichem Raw-HTTPS-Abruf ohne Anmeldung geprüft. Der textgebundene
+API-Abruf kann PNG/ZIP nicht als UTF-8 liefern; ein binärer Raw-/Gitabruf ist nötig.
+Der unabhängige Reviewer öffnet die Originalbytes selbst. Zustellung ist keine
 unabhängige Sichtabnahme.
 
 Zweck/Empfänger: einmaliges PE-PERF1-A01 und anschließende persönliche PE-B-U01.
