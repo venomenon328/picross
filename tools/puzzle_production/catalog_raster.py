@@ -172,7 +172,7 @@ def _construct(root, snapshot, request, request_raw, input_root, package_directo
     return plan,journal,bundle_files,additions
 
 
-def plan(root, request_path, output, *, seconds=300):
+def plan(root, request_path, output, *, seconds=300, _snapshot=None):
     with io.budget(seconds):
         root = io.external(root)
         request_path, output = images._outside(request_path,root),images._outside(output,root)
@@ -180,7 +180,7 @@ def plan(root, request_path, output, *, seconds=300):
         require(not output.is_relative_to(request_path.parent) and not request_path.parent.is_relative_to(output),"Raster input and bundle overlap")
         raw = io.read(request_path.parent,request_path.name,raster.REQUEST_LIMIT)
         request = raster.request(io.json_bytes(raw,raster.REQUEST_LIMIT))
-        snapshot = tx.capture(root)
+        snapshot = tx.capture(root) if _snapshot is None else _snapshot
         _require_target(snapshot)
         _, _, old = _definition(snapshot,request["id"])
         value = raster.definition(old,raster.parse(request["text"],old["palette"]))
@@ -188,7 +188,7 @@ def plan(root, request_path, output, *, seconds=300):
             package = Path(temporary)/"package"
             if value["revision"] != old["revision"]: _make_package(root,snapshot,request,raw,value,package)
             result,journal,files,additions = _construct(root,snapshot,request,raw,request_path.parent,package if package.exists() else None)
-            require(tx.image_snapshot(tx.capture(root)) == result["snapshot"],"Checkout changed during raster planning")
+            tx.recheck(root, snapshot)
             require(io.read(request_path.parent,request_path.name,raster.REQUEST_LIMIT) == raw,"Raster request changed during planning")
             files.update({"package/"+path.relative_to(package).as_posix():io.read(path.parent,path.name,64*1024*1024) for path in additions.values()})
             files.update({"request.json":raw,"plan.json":encoded(result)})
@@ -222,7 +222,7 @@ def apply(root, bundle, *, fail_step=None, seconds=300):
         if value["files"]:
             tx.execute(root,journal,additions,fail_step=fail_step,source_check=lambda:_bundle_guard(bundle,bound))
         else:
-            require(tx.image_snapshot(tx.capture(root)) == value["snapshot"],"Checkout changed during raster no-op verification")
+            tx.recheck(root, snapshot)
         return {"status":"applied" if value["files"] else "noop","files":value["files"],"plan_hash":value["plan_hash"]}
 
 
@@ -278,10 +278,15 @@ def _bundle_guard(bundle, expected):
 def view(root, identifier):
     with io.budget():
         snapshot = tx.capture(io.external(root))
-        _, _, value = _definition(snapshot,identifier)
-        return {"format":"picross-editor-raster-view-v1","id":identifier,"revision":value["revision"],
-                "palette":value["palette"],"text":"\n".join(" ".join(map(str,row)) for row in value["solution"])+"\n",
-                "migration_required":not tx.image_generation(snapshot)}
+        return view_from_snapshot(snapshot, identifier)
+
+
+def view_from_snapshot(snapshot, identifier):
+    """Pure grid projection from the same validated sources as the image view."""
+    _, _, value = _definition(snapshot,identifier)
+    return {"format":"picross-editor-raster-view-v1","id":identifier,"revision":value["revision"],
+            "palette":value["palette"],"text":"\n".join(" ".join(map(str,row)) for row in value["solution"])+"\n",
+            "migration_required":not tx.image_generation(snapshot)}
 
 
 def validate_delta(journal, before, after, root):
