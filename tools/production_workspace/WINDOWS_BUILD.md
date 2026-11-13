@@ -1,114 +1,114 @@
 # Windows-App bauen und prüfen
 
-Maßgeblich: [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437).
+Aktuell maßgeblich: [APP-A-K01–K10 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6834815644)
+und der [App-Releasevertrag](../../docs/PRODUCTION_UPDATES.md).
+APP-A ist im Arbeitsbranch implementiert; technisches Review, Mainintegration und
+Erstaktivierung stehen aus. APP-B ist nicht implementiert. Die historischen
+[P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437),
 [P4-N1](https://github.com/venomenon328/picross/issues/588#issuecomment-6828896451)
 und dessen [Prüfzuschnitt](https://github.com/venomenon328/picross/issues/588#issuecomment-6829590335)
-binden die Actions-Prüfung und die automatische Wahl des aktuellen Mainstands.
+behalten ihre damalige Bindung, einschließlich des gelieferten 0.1.0-Installers.
 Launcherbau und regulärer Windows-Spieler der Package-CI bleiben getrennt.
-Keine neuen automatischen Trigger und kein Release/Tag. Das zusätzlich beauftragte
-Nonogramm-Icon ist unter [assets](assets/README.md) gebunden.
+Das Nonogramm-Icon ist unter [assets](assets/README.md) gebunden.
 
-## Gebundener Bau
+## Gebundener Bau und Version
 
-Einzige Releasequelle ist [release.json](release.json): validiertes
-`MAJOR.MINOR.PATCH` im MSI-Bereich (255/255/65535), feste Upgrade-GUID, neue
-deterministische Product-GUID je Version. Startversion steht ausschließlich dort.
-Für ein Update diese Quelle monoton erhöhen; Authoring-/Spielversion und 588-P3
-sind keine Installerproduktversion. Keine inhaltsabweichende Same-Version-
-Installation und kein Downgrade; nach Uninstall ist Wiederinstallation möglich.
-App-/Komponentenmanifest, MSI, Dateiname und Lieferreport verwenden dieselbe
-Version und den sauberen Quellcommit. Zustand und Datencheckout bleiben getrennt.
+[release.json](release.json) hält die feste Upgrade-GUID, WiX-Pins und den
+0.1.0-Startanker. [release_channel.py](release_channel.py) plant aus der letzten
+vollständig geprüften veröffentlichten PW-Version bei geändertem Appfingerprint
+Patch +1, zuerst 0.1.1; gleicher Fingerprint bleibt ohne neuen Bau/Release.
+Keine fortlaufenden Versionscommits auf main. Der explizite Builderparameter
+`--version` verwendet ausschließlich die geplante 0.1.x-Version und verändert
+keine Quelldatei. MSI-Version, ProductCode, EXE-Versionsressource, eingebettete
+Manifeste, MSI-Dateiname und Deliveryreport erhalten denselben Wert. UpgradeCode
+bleibt gleich, ProductCode ist deterministisch neu je Version. Ungültige Version,
+Downgrade und inhaltsabweichende Same-Version-Installation bleiben gesperrt.
+Ohne Parameter bleibt der frühere lokale 0.1.0-Diagnosebau möglich; er ist keine
+Veröffentlichung und keine neue Versionsautorität.
 
 CPython **3.13.14 Windows x64**, pip **26.1.2**, Tcl/Tk **8.6.15** und sämtliche
 Buildpakete exakt nach [requirements-windows.txt](requirements-windows.txt).
-PyInstaller **6.22.3** erzeugt `onedir` + `windowed`, ohne UPX. Sauberer
-gesicherter Gitstand und neuer eigener Ausgabeordner außerhalb des Checkouts:
+PyInstaller **6.22.3** erzeugt `onedir` + `windowed`, ohne UPX. Sauberer gesicherter
+Gitstand und neuer eigener Ausgabeordner außerhalb des Checkouts:
 
 ```powershell
 py -3.13 -m venv E:\EigeneArbeit\pw-build-env
 E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m pip install pip==26.1.2
 E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m pip install --only-binary=:all: -r tools/production_workspace/requirements-windows.txt
-E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.build_windows --output E:\EigeneArbeit\pw-build
+E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.build_installer --output E:\EigeneArbeit\pw-installer --version 0.1.1
+E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.verify_installer --build E:\EigeneArbeit\pw-installer --output E:\EigeneArbeit\pw-inspection --expected-commit <volle-SHA> --version 0.1.1 --compare-build
 ```
 
-Für das vollständige Produkt stattdessen den Installer-Einstieg ausführen:
+`0.1.1` ist hier ein Diagnosebeispiel; die Pipeline verwendet den tatsächlichen
+Planwert. Der Bau erzeugt `inputs.json` und prüft die echte PyInstaller-Analysis
+gegen dieses committete Fingerprintinventar. Die isolierte private Umgebung
+liefert die gepinnten Python-/Wheel-/Runtimeinputs. Der Builder bündelt die
+benötigten Reader einschließlich `authoring_workflow`, Pillow, Tcl/Tk, UI und Icon;
+der Datencheckout hat keine Codeautorität. `components.json` bindet Commit,
+Fingerprint, Architektur, Komponenten und Ressourcenhashes, `inventory.json`
+die übrigen Appdateien. Kein Versprechen bitidentischer EXEs ohne Messung.
 
-```powershell
-E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.build_installer --output E:\EigeneArbeit\pw-installer
-E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.smoke_installer --build E:\EigeneArbeit\pw-installer --output E:\EigeneArbeit\pw-installer-smoke
-```
+WiX **3.14.1** kommt ausschließlich aus dem SHA-256-geprüften offiziellen
+Binärarchiv laut Releasequelle (CSC-Paketbindung `3.14.1.20250415`). Kein globales
+WiX oder Elevation für den Bau; .NET-Framework-4.x-Compiler aus Windows.
+Der eigenständige C#-Guard läuft vor InstallInitialize auch bei Upgrade/Uninstall.
+Restart Manager wird ausschließlich lesend genutzt, automatischer MSI-Restart/
+Shutdown ist deaktiviert. MajorUpgrade nach InstallInitialize erlaubt
+transaktionalen Rollback. Installer schreiben weder in Datencheckout noch Zustand,
+Browserprofil oder portable Altordner.
 
-Windows 11 x64, vorhandener .NET-Framework-4.x-Compiler/Runtime; kein globaler
-WiX-Setup oder Elevation für den lokalen Bau. Das offizielle WiX-3.14.1-Binärarchiv
-wird nach URL/SHA-256 aus der Releasequelle geprüft; es entspricht der
-CSC-Chocolatey-Paketbindung `3.14.1.20250415` (Paketrevision, keine andere Engine).
-WiX-Compiler, Linker, UI und eingebettete WiX-Lizenz kommen aus diesem Archiv.
-Der kleine eigenständige C#-Guard läuft aus der MSI-Binärtabelle vor InstallInitialize, auch beim
-Upgrade/Uninstall. Restart Manager wird ausschließlich lesend benutzt; MSI-
-Restart/Shutdown deaktiviert. Vollständiger Austausch mit MajorUpgrade nach
-InstallInitialize erlaubt transaktionalen Rollback. Kein Installer schreibt in
-Checkout, PW-Zustand, Browserprofil oder portable Altordner.
+## Separater Workflow, Diagnose und Aktivierung
 
-Der [eigene Workflow](../../.github/workflows/pw-installer.yml) hat ausschließlich
-`workflow_dispatch` ohne SHA-Eingabe. Er holt den aktuellen `main`, fixiert dessen
-volle Commit-SHA für den gesamten Lauf und nennt sie im Log und Downloadnamen;
-App-/Liefermanifest binden denselben Stand. Spätere Mainänderungen ändern diesen
-Lauf nicht. Er baut sauber und prüft die tatsächlichen MSI-Bytes.
-Kein Aufruf aus Package CI, kein automatischer Browser-/Installationslauf dort.
-Produktdownload: `Picross-Produktionsassistent-X.Y.Z-windows-x64.msi`, `.sha256`,
-`START.txt`, `delivery.json`; 14 Tage Retention. Kein Release/Tag/Deployment.
-Der Workflow wird erstmals nach gesondert freigegebenem Merge regulär aufrufbar.
-P4-T04 bleibt bis zum echten manuellen Run und binären Rückdownload offen.
-Nach Integration des Fixes: Actions → **Manual production assistant installer** →
-**Run workflow**, ohne weitere Eingabe. Gebaut wird der dann geholte Mainstand.
+[Production assistant release](../../.github/workflows/pw-installer.yml) ist kein
+Job/Modul/Gate der Package CI. Sein automatischer Folgetrigger akzeptiert nur
+eine erfolgreiche abgeschlossene Package-CI-Pushquelle von `venomenon328/picross`
+auf main und prüft deren SHA, Repository, Versuch und beide Pflichtjobs frisch.
+Der Checkout bleibt auf dieser vollen SHA. Bei neuem Main vor Veröffentlichung
+wird der Kandidat verworfen; der nächste erfolgreiche Mainlauf plant neu.
 
-Hosted Windows Server sperrt nicht zugewiesene per-user MSI für Standardbenutzer
-(1625). Der manuelle Actionsbau prüft deshalb mit
-[verify_installer.py](verify_installer.py) die echte MSI-Datenbank und alle per
-gebundenem WiX `dark.exe` entpackten Bytes: Quelle, Version, Product-/Upgradecode,
-x64/limited/HKCU, Prüfsumme, vollständiges Payloadinventar, Guard und Lizenzbytes.
-Die extrahierten technischen Dateien werden nach der Prüfung entfernt; nur der
-kompakte Befund steht im Joblog. Es werden keine Benutzer angelegt, keine
-Installationsrichtlinien geändert und keine echte Installation behauptet.
+Actions → **Production assistant release** → **Run workflow** ist immer eine
+nicht veröffentlichende Diagnose des ausgewählten fixierten Workflowbranchcommits.
+Vor Merge damit ausdrücklich den Implementierungsbranch wählen; diesen Ursprung
+im PR nennen. Keine frei eingegebenen Download-/Repository-/Buildpfade oder SHA.
+Die Diagnose umgeht keine Veröffentlichungschecks, sondern besitzt keinen
+Publikationspfad. Der Publisher wird nur im automatischen Mainfolgelauf und mit
+der nach separat beauftragter Aktivierung gesetzten Repositoryvariable
+`PW_RELEASE_ENABLED=true` gestartet. Hier werden keine Variablen/Secrets geändert.
 
-Der vollständige P4-T02-Lebenszyklussmoke bleibt separat auf einem geeigneten
-Windows-11-x64-Client als normaler Benutzer erforderlich; den tatsächlichen
-Actions-Rückdownload mit dem gebundenen Lieferreport verwenden. Der MSI-Smoke
-baut die reale Vorgängerversion selbst. Download und lokale Builddateien getrennt
-halten. Für die binäre Rückdownloadprüfung dem Inspector den tatsächlichen
-Quellcommit und ein hashgebundenes WiX-Archiv über `--expected-commit` und
-`--wix-archive` übergeben; das sind keine Eingabefelder im Actionsworkflow.
-Im Actionsbau ist zusätzlich `--compare-build` verpflichtend: dort werden alle
-MSI-Dateien auch gegen das ursprüngliche `dist`-App-Image verglichen.
+Ein frischer Plan verifiziert die letzte veröffentlichte PW-Autorität inklusive
+binärer Assets; unvollständige veröffentlichte PW-Einträge sperren. Der Publisher
+hat als einziger Job `contents:write`. Er lädt zuerst in einen gebundenen Draft,
+prüft sämtliche Uploads per binärem Rückdownload und prüft Quelle/Autorität/Main
+unmittelbar vor Freigabe erneut. Erst dann wird der Release sichtbar. Re-Runs
+ergänzen nur fehlende Dateien im identischen Draft, niemals abweichende Assets.
+Fremde Tags/Drafts stoppen ohne Force-Push, Overwrite oder Löschung. Die globale
+serielle Gruppe verhindert gegenseitiges Überholen von Pipelinebuilds.
 
-P4-T01 prüft kleine Quell-/Metadatenverträge im gewählten `tools`-Modul.
-P4-T02 installiert unter nicht erhöhtem Testbenutzer ausschließlich mit synthetischem
-Zustand, baut aus einem separaten sauberen synthetischen Quellcommit eine echte
-Vorgängerversion, installiert und aktualisiert sie. MSI-Codes, Inventar/Lizenzen,
-Startmenü/Anwendungseintrag, Zweitstart/Port, Same-Version/Downgrade, laufende App,
-fremde Dateibelegung, begonnener synthetischer P2-Drain sowie Uninstall/Reinstall
-werden tatsächlich geprüft. Der Drain nutzt den gleichen Source-Runtimevertrag
-mit eingetretener synthetischer Transaktion; kein Testbypass im Frozen-Produkt.
-Kein Test an echten Zuständen/Refs; bestehende Installation sperrt den Smoke.
-Lokale Testdateien/Logs danach entfernen; kein regulärer Technik-Upload.
-P4-T03 bleibt die tatsächliche Bedienung des installierten Startmenüeintrags,
-nativer Fenster und Standardbrowsers mit synthetischem heutigem Job/Bild und
-erhaltener Browseroption am gleichen Origin nach Upgrade. HTTP ersetzt sie nicht.
-P4-A01 benötigt unabhängig vollständigen Diff/CI/T01–T03 und echte MSI-Bytes.
-Im Draft-PR Commit, MSI-/EXE-Hash, Größe, Inventar, tatsächlichen Binärabruf,
-Szenarien/Akteur/Windowsversion, Einschränkungen und befristeten Prüfzugang nennen.
+Produktdateien: `Picross-Produktionsassistent-X.Y.Z-windows-x64.msi`, `.sha256`,
+`START.txt`, `delivery.json`, `inputs.json`, kanonisches `manifest.json`.
+Letzteres bindet Schema, Repository, Produktionsstatus, Version, Source-SHA,
+Fingerprint, Produktidentitäten, MSI-Inspektion und Hash/Bytes jeder anderen Datei.
+Actions-Kandidat vierzehn Tage, Plan sieben Tage für den aktuellen Reviewer;
+Original-Serverbefunde stehen im Joblog. Produktdiff enthält keine Binärbelege.
+Nach gesonderter Erstaktivierung bleiben geprüfte Releases unter `pw-vX.Y.Z`
+langlebig abrufbar. Der erste echte Release mit Rückdownload/Hashprüfung und die
+echte Windows-11-Upgradeprobe sind eigene nachgelagerte Releasegates.
 
-Der Build prüft Versionen und sauberen Quellstand, bündelt Python, transitiv
-benötigte unveränderte Produktionsmodule einschließlich `authoring_workflow`,
-Pillow, Tcl/Tk, UI und Icon aus demselben Commit. Der Datencheckout hat keine
-Codeautorität. `components.json` bindet Commit, Architektur, Komponenten und
-Ressourcenhashes; `inventory.json` alle übrigen Lieferdateien per Größe/SHA-256.
-`delivery.json` außerhalb des App-Images enthält ZIP-/EXE-Größen und SHA-256.
-Kein Versprechen bitidentischer EXEs ohne Messung.
+Hosted Windows Server sperrt per-user MSI für Standardbenutzer (1625). Keine
+Installation oder Änderung dieser Policy im Serverlauf. Der vorhandene Inspector
+liest stattdessen die tatsächliche MSI-Datenbank und alle per gebundenem WiX
+`dark.exe` entpackten Bytes: Quelle, Fingerprint, Version in MSI/EXE,
+Product-/Upgradecode, x64/limited/HKCU, Prüfsumme, vollständiges Payloadinventar,
+Guard und Lizenzbytes. `--compare-build` vergleicht jede Datei zusätzlich mit dem
+ursprünglichen `dist`-App-Image und prüft den ZIP-Hash. Technische Extrakte werden
+laufzeitintern entfernt. Erfolgreiche Inspektion ist keine Clientinstallation.
+Eine unabhängige spätere Rückdownloadprüfung verwendet `--expected-commit`, die
+geplante `--version` und ein hashgebundenes `--wix-archive`.
 
-Die ZIP enthält nur `Picross-Start/` mit Anwendung, Ressourcen, Inventar,
-Start-/Updateanleitung und Lizenzen. Keine Testcheckouts, Produktionsoriginale,
-Zustände, privaten Pfade oder Buildcaches. Den kompletten Ordner ausliefern.
+Die vorhandenen manuellen P4-T02-/T03- und P3-Smokes unten sind bedarfsbezogene
+Client-/Lebenszykluswerkzeuge; APP-A führt sie nicht automatisch aus und behauptet
+keine neue Windows-11-Upgradeabnahme. Bereits gelieferte P4-Nachweise werden durch
+APP-A nicht rückwirkend neu definiert.
 
 ## Nachweise und Zustellung
 

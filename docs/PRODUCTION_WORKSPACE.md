@@ -23,6 +23,15 @@ Branchentfernung nach §4.4 ist eine enge Schreibausnahme. Veröffentlichung und
 Gitabschluss führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
 
+**Freigegebener APP-Update-Sollstand · 12.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612):**
+[Automatische App-Releases und Selbstupdate](PRODUCTION_UPDATES.md) ergänzen
+die bisherige P4-App in zwei Paketen (zuerst APP-A Build/Release, danach
+APP-B sicherer Updateclient). **APP-A im Arbeitsbranch implementiert, noch nicht
+integriert/aktiviert; APP-B nicht implementiert.** Die veröffentlichende Pipeline
+bleibt bis zum eigenen Betriebsauftrag gesperrt. Die neue Freigabe hebt die historischen P4-Verbote
+automatischer Releases/Updater ausschließlich für diesen Sollweg auf;
+Spiel-/Rätsel-/Produktionsdaten bleiben unabhängig.
+
 **Spezifikation 1.0 · 11.11.2026 · [Issue #578](https://github.com/venomenon328/picross/issues/578)**
 
 PW-B liefert diesen Produktionsweg auf Basis des integrierten PW-A2-Starts
@@ -357,8 +366,11 @@ bleibt unbekannt, kein automatischer Retry. Keine pauschale Python-/Gitbeendigun
 Minimieren/Tab schließen stoppt nicht. Absturzreste werden nach tatsächlich
 freigegebenem OS-Lock ersetzt, nicht anhand eines PIDs als sicher angenommen.
 Updates ersetzen nach vollständigem Stop per neuerem MSI alle installierten
-Programmdateien gemeinsam. Einzige Produktversionsquelle ist
-[release.json](../tools/production_workspace/release.json), unabhängig von Authoring,
+Programmdateien gemeinsam. Der [APP-A-Releasekanal](PRODUCTION_UPDATES.md) plant
+Produktversionen aus der veröffentlichten Releaseautorität; bis zu dessen
+Aktivierung gibt es keine neuen automatischen Veröffentlichungen.
+[release.json](../tools/production_workspace/release.json) bleibt 0.1.0-Startanker
+und stabile Paketidentitäts-/Pinquelle, unabhängig von Authoring,
 Spielversion und der alten Paketkennung 588-P3. Feste Upgradeidentität, neue
 ProductCodes je Version, keine Same-Version-Installation und kein Downgrade.
 Installation ohne Elevation unter dem eigenen per-user-Programmverzeichnis;
@@ -373,7 +385,8 @@ und belegte Payloaddateien über Restart Manager. Laufend, fremd oder unklar:
 verständlich abbrechen und nach regulärem Stop wiederholen; kein Kill, kein
 automatischer Stop/Restart und keine erzwungene Rebootaktion. Neue Launcherstarts
 während der Windows-MSI-Ausführung werden zurückgewiesen. Der getrennte Bau
-hat allein `workflow_dispatch`; keinerlei Einbindung in Package CI. Kein Updater
+hat einen isolierten erfolgreichen Main-CI-Folgetrigger und diagnostischen
+`workflow_dispatch`; keinerlei Einbindung in Package CI. Kein Updater
 oder Dienst. Das App-Image und der Installer sind ohne Zertifikatauftrag unsigniert;
 Lizenzen und mögliche SmartScreenhinweise gehören zur Lieferung.
 
