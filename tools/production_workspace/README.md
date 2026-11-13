@@ -65,8 +65,17 @@ mit automatischer Versionsplanung und geprüftem MSI. Erstpublikation bleibt bis
 zur gesonderten Betriebsfreigabe gesperrt; ein Actions-Dispatch ist ausschließlich
 Diagnose. APP-B1 ergänzt die signierte Updateautorität und einen gemeinsamen Offlineverifier,
 der Produktions-Truststore bleibt unprovisioniert. Beide Aktivierungsschalter und
-ein eigener Betriebsauftrag sind nötig. Die App hat weiterhin keinen Updateclient. Gitrefresh und eine neue
-installierte Programmversion sind getrennte Vorgänge.
+ein eigener Betriebsauftrag sind nötig. APP-B2 liefert den standardmäßig
+ausgeschalteten Updateclient mit einmaliger ausdrücklicher Zustimmung im nativen
+Steuerfenster und jederzeit sichtbarem Schalter. Leerer Trust bedeutet inaktiver
+Kanal; eine erste vertrauenswürdig root-provisionierte Version wird manuell
+installiert. Gitrefresh und installierte Programmversion bleiben getrennt.
+Nur der normale installierte GUI-Start prüft nach Bereitschaft einmal nebenläufig.
+Offline-/Signatur-/Downloadfehler lassen den bisherigen Dienst nutzbar; Ausschalten
+bricht den Download ab. Nach vollständiger Verifikation folgen P2-/Requestdrain,
+echtes Prozessende, unabhängiger MSI-Helfer und geprüfter Neustart mit demselben
+Zustand/Port. Fehler, Rebootbedarf und unklarer Ausgang erfordern manuelle Prüfung,
+keinen blinden Retry. Echte Windows-11-Abnahme und Betrieb bleiben eigene Gates.
 
 Das native Steuerfenster bietet bei neuer Einrichtung den vorhandenen lokalen
 Projektcheckout und die bewusste Wahl „Nur lokale Gitstände“ (Standard) oder
