@@ -1,4 +1,4 @@
-"""Single release source, strict MSI three-field versions and stable identities."""
+"""Stable packaging identity/start anchor and explicitly injected build version."""
 import json
 from pathlib import Path
 import re
@@ -17,9 +17,14 @@ def version_tuple(value):
     return parts
 
 
-def release(path=SOURCE):
+def release(path=SOURCE, *, version=None):
     value = json.loads(path.read_text(encoding='utf-8'))
     version_tuple(value['version'])
+    if version is not None:
+        requested = version_tuple(version)
+        if requested[:2] != (0, 1) or requested < version_tuple(value['version']):
+            raise ValueError('Publikationsversion muss in der monotonen 0.1.x-Linie bleiben.')
+        value['version'] = version
     code = uuid.UUID(value['upgrade_code'])
     value['product_code'] = str(uuid.uuid5(code, value['version'])).upper()
     value['filename'] = 'Picross-Produktionsassistent-' + value['version'] + '-windows-x64.msi'

@@ -15,6 +15,7 @@ import zlib
 import pyexpat
 import decimal
 from .release import release, version_tuple, check_history
+from .payload import fingerprint, audit_analysis
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
@@ -24,7 +25,7 @@ def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def build(destination):
+def build(destination, *, version=None):
     if sys.platform != 'win32' or platform.machine().lower() not in ('amd64', 'x86_64') or platform.python_version() != '3.13.14':
         raise RuntimeError('Build benötigt CPython 3.13.14 Windows x64.')
     import tkinter
@@ -39,10 +40,10 @@ def build(destination):
     for line in (PACKAGE / 'requirements-windows.txt').read_text().splitlines():
         if not line or line.startswith('#'):
             continue
-        name, version = line.split('==')
-        if metadata.version(name) != version:
+        name, pinned_version = line.split('==')
+        if metadata.version(name) != pinned_version:
             raise RuntimeError('Falsche Buildabhängigkeit: ' + name)
-        versions[name] = version
+        versions[name] = pinned_version
     if metadata.version('pip') != '26.1.2':
         raise RuntimeError('Build benötigt pip 26.1.2.')
     def git(*args):
@@ -50,8 +51,9 @@ def build(destination):
     if git('status', '--porcelain'):
         raise RuntimeError('Nur aus sauberem, gesichertem Quellstand bauen.')
     commit = git('rev-parse', 'HEAD')
-    product = release()
+    product = release(version=version)
     check_history(ROOT, product)
+    inputs = fingerprint(ROOT)
     destination = destination.resolve()
     if destination.exists() or destination.is_relative_to(ROOT):
         raise RuntimeError('Neuen eigenen Buildordner außerhalb des Checkouts wählen.')
@@ -62,6 +64,7 @@ def build(destination):
     resources = {f'ui/{name}': sha(PACKAGE / 'ui' / name) for name in ('index.html', 'app.js', 'workflow.js', 'style.css')}
     resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
     manifest = {'format': 'picross-windows-app-v1', 'version': product['version'], 'commit': commit,
+                'payload_fingerprint': inputs['sha256'],
                 'upgrade_code': product['upgrade_code'], 'product_code': product['product_code'],
                 'architecture': 'windows-x64', 'python': platform.python_version(), 'components': versions,
                 'runtime_components': runtime_versions, 'resources': resources, 'signed': False}
@@ -86,6 +89,10 @@ def build(destination):
                     '--add-data', str(PACKAGE / 'assets/launcher.ico') + ':tools/production_workspace/assets',
                     '--add-data', str(manifest_file) + ':tools/production_workspace',
                     str(PACKAGE / 'desktop_entry.py')], check=True, cwd=ROOT, env=env)
+    audit = audit_analysis(ROOT, work / 'pyinstaller/Picross-Start/Analysis-00.toc', inputs,
+                           [manifest_file, file_version])
+    (destination / 'inputs.json').write_text(json.dumps(inputs, indent=2) + '\n', encoding='utf-8')
+    (destination / 'input-audit.json').write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     app = destination / 'dist/Picross-Start'
     shutil.copyfile(PACKAGE / 'START-WINDOWS.txt', app / 'START.txt')
     shutil.copyfile(manifest_file, app / 'components.json')
@@ -134,4 +141,6 @@ def build(destination):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    build(parser.parse_args().output)
+    parser.add_argument('--version', help='Explicitly planned 0.1.x publication version; source stays unchanged')
+    args = parser.parse_args()
+    build(args.output, version=args.version)
