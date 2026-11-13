@@ -1,0 +1,17 @@
+{
+  "source": "d4c99d621855ee8941b94cf84e2b5a58508937c3",
+  "passed": true,
+  "unchanged_original_files_independently_compared": 1619,
+  "other_55_entries_and_runtime_rows_exact": true,
+  "selected_revision_increment_and_six_cells_exact": true,
+  "selected_svg_bytes_exact": true,
+  "runtime_v8_and_standard_background": true,
+  "all_plans_details_noops_bytes_and_mtimes_unchanged": true,
+  "independent_full_checkout_source_reader_seconds": 8.150376500001585,
+  "independent_selected_new_raster_proof_replay_seconds": 2.228483099999721,
+  "historical_full_replay_attempt": {
+    "accepted": false,
+    "error": "Background derivation verification failed: Original tool differs from the actual implementation/codecs",
+    "scope": "Historical tool modules are strictly bound. The three retained derivations already differ from baseline 4e5 in operation_diagnostics.py; current additionally differs in catalog_io.py. Python/Pillow/zlib/littlecms versions match. No historical proof, pin or expected hash was changed. See historical-replay-binding.json; full current source reader and selected new A3 replay passed."
+  }
+}

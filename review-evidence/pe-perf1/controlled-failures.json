@@ -1,0 +1,2656 @@
+{
+  "head": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+  "hook": "existing catalog_publication.checkpoint; InterruptedError; no budget/guard patch",
+  "cases": [
+    {
+      "action": "apply",
+      "boundary": "P0",
+      "exit_code": 0,
+      "wall_seconds": 1.33514809999906,
+      "error": "controlled P0 interruption · Phase: P0 · Runtime picross-runtime-registry-v7; kein Journal/Staging",
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 244860,
+          "bytes_read": 283550,
+          "checkout_validations": 4,
+          "completed_steps": 15,
+          "directory_flushes": 2,
+          "guards": 2,
+          "hash_calls": 153,
+          "journal_validations": 2,
+          "json_reuses": 97,
+          "method_validations": 18,
+          "path_checks": 843,
+          "path_components": 7622,
+          "plans": 1,
+          "safe_reads": 326,
+          "snapshots": 1,
+          "staged_checkout_checks": 3,
+          "windows_attribute_checks": 7622
+        },
+        "cpu_seconds": 0.890625,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 0.225679
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 0.102083
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.010892
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 0.3895
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.010264
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 0.217982
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.020501
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.048077
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.129973
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 0.104503
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.010393
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 0.157976
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 0.132204
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.011527
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": null,
+            "seconds": 0.216731
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "seconds": 0.020829
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Journal validation",
+            "seconds": 0.04804
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "seconds": 0.128498
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "seconds": 0.104033
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.010668
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Directory durability",
+            "parent": null,
+            "seconds": 0.007942
+          }
+        ],
+        "stage": "P0",
+        "wall_seconds": 0.986226
+      },
+      "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+      "journal_exists": false,
+      "staging_count": 0,
+      "runtime_format": "picross-runtime-registry-v7",
+      "changed_at_failure": {},
+      "recovery": [
+        {
+          "action": "recover",
+          "boundary": null,
+          "exit_code": 0,
+          "wall_seconds": 0.5570652000023983,
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 16048,
+              "bytes_read": 35623,
+              "checkout_validations": 1,
+              "completed_steps": 1,
+              "hash_calls": 26,
+              "json_reuses": 10,
+              "method_validations": 2,
+              "path_checks": 117,
+              "path_components": 1001,
+              "safe_reads": 46,
+              "windows_attribute_checks": 1001
+            },
+            "cpu_seconds": 0.140625,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": null,
+                "seconds": 0.103546
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Checkout validation",
+                "seconds": 0.010167
+              }
+            ],
+            "stage": "recover",
+            "wall_seconds": 0.224834
+          },
+          "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+          "journal_exists": false,
+          "staging_count": 0,
+          "runtime_format": "picross-runtime-registry-v7"
+        },
+        {
+          "action": "recover",
+          "boundary": null,
+          "exit_code": 0,
+          "wall_seconds": 0.5948070000013104,
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 16048,
+              "bytes_read": 35623,
+              "checkout_validations": 1,
+              "completed_steps": 1,
+              "hash_calls": 26,
+              "json_reuses": 10,
+              "method_validations": 2,
+              "path_checks": 117,
+              "path_components": 1001,
+              "safe_reads": 46,
+              "windows_attribute_checks": 1001
+            },
+            "cpu_seconds": 0.15625,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": null,
+                "seconds": 0.105261
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Checkout validation",
+                "seconds": 0.010112
+              }
+            ],
+            "stage": "recover",
+            "wall_seconds": 0.231066
+          },
+          "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+          "journal_exists": false,
+          "staging_count": 0,
+          "runtime_format": "picross-runtime-registry-v7"
+        }
+      ],
+      "fresh_apply": {
+        "action": "apply",
+        "boundary": null,
+        "exit_code": 0,
+        "wall_seconds": 1.7930354999989504,
+        "error": null,
+        "diagnostics": {
+          "budget_seconds": 300,
+          "counters": {
+            "bytes_hashed": 474307,
+            "bytes_read": 800598,
+            "checkout_validations": 5,
+            "completed_steps": 27,
+            "directory_flushes": 5,
+            "file_fsyncs": 2,
+            "guards": 8,
+            "hash_calls": 304,
+            "journal_validations": 2,
+            "json_reuses": 120,
+            "method_validations": 20,
+            "path_checks": 1461,
+            "path_components": 12804,
+            "phase_boundaries": 9,
+            "plans": 1,
+            "published_bytes": 2319,
+            "published_files": 1,
+            "safe_reads": 552,
+            "snapshots": 1,
+            "staged_checkout_checks": 3,
+            "windows_attribute_checks": 12804
+          },
+          "cpu_seconds": 1.34375,
+          "phases": [
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Snapshot",
+              "parent": null,
+              "seconds": 0.213851
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Snapshot",
+              "seconds": 0.101668
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Snapshot/Checkout validation",
+              "seconds": 0.01031
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Plan/Projection",
+              "parent": null,
+              "seconds": 0.392721
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection",
+              "seconds": 0.010651
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Journal validation",
+              "parent": "Plan/Projection",
+              "seconds": 0.2252
+            },
+            {
+              "calls": 4,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.022116
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.049331
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.134732
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Plan/Projection/Journal validation/Staging/Proof",
+              "seconds": 0.102557
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+              "seconds": 0.010404
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Plan/Projection",
+              "seconds": 0.153174
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Plan/Projection/Staging/Proof",
+              "seconds": 0.129672
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+              "seconds": 0.010604
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Journal validation",
+              "parent": null,
+              "seconds": 0.213456
+            },
+            {
+              "calls": 4,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Journal validation",
+              "seconds": 0.021516
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": "Journal validation",
+              "seconds": 0.04836
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Journal validation",
+              "seconds": 0.124132
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Journal validation/Staging/Proof",
+              "seconds": 0.101117
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Journal validation/Staging/Proof/Checkout validation",
+              "seconds": 0.010982
+            },
+            {
+              "calls": 5,
+              "inclusive": true,
+              "name": "Directory durability",
+              "parent": null,
+              "seconds": 0.009842
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "File durability",
+              "parent": null,
+              "seconds": 0.00212
+            },
+            {
+              "calls": 6,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": null,
+              "seconds": 0.297126
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": null,
+              "seconds": 0.132736
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Checkout validation",
+              "seconds": 0.012975
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Readback",
+              "parent": null,
+              "seconds": 0.079119
+            }
+          ],
+          "stage": "P6",
+          "wall_seconds": 1.449765
+        },
+        "observed_state": "Runtime picross-runtime-registry-v8; kein Journal/Staging",
+        "journal_exists": false,
+        "staging_count": 0,
+        "runtime_format": "picross-runtime-registry-v8"
+      },
+      "repeat_noop": {
+        "action": "apply",
+        "boundary": null,
+        "exit_code": 0,
+        "wall_seconds": 0.7463171999988845,
+        "error": null,
+        "diagnostics": {
+          "budget_seconds": 300,
+          "counters": {
+            "bytes_hashed": 57996,
+            "bytes_read": 132890,
+            "checkout_validations": 1,
+            "completed_steps": 2,
+            "hash_calls": 64,
+            "json_reuses": 29,
+            "method_validations": 2,
+            "path_checks": 345,
+            "path_components": 2896,
+            "safe_reads": 129,
+            "snapshots": 1,
+            "windows_attribute_checks": 2896
+          },
+          "cpu_seconds": 0.328125,
+          "phases": [
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Snapshot",
+              "parent": null,
+              "seconds": 0.25364
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Snapshot",
+              "seconds": 0.129702
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Snapshot/Checkout validation",
+              "seconds": 0.010455
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Readback",
+              "parent": null,
+              "seconds": 0.06334
+            }
+          ],
+          "stage": "Snapshot",
+          "wall_seconds": 0.396705
+        },
+        "observed_state": "Runtime picross-runtime-registry-v8; kein Journal/Staging",
+        "journal_exists": false,
+        "staging_count": 0,
+        "runtime_format": "picross-runtime-registry-v8"
+      },
+      "hash_restoration": true,
+      "noop_mtimes_unchanged": true
+    },
+    {
+      "action": "apply",
+      "boundary": "journal-complete",
+      "exit_code": 0,
+      "wall_seconds": 1.3602694000001065,
+      "error": "controlled journal-complete interruption · Phase: P1 · recovery_required; Journal/Staging erhalten",
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 290589,
+          "bytes_read": 326960,
+          "checkout_validations": 4,
+          "completed_steps": 16,
+          "directory_flushes": 2,
+          "file_fsyncs": 1,
+          "guards": 2,
+          "hash_calls": 154,
+          "journal_validations": 2,
+          "json_reuses": 97,
+          "method_validations": 18,
+          "path_checks": 845,
+          "path_components": 7634,
+          "phase_boundaries": 2,
+          "plans": 1,
+          "safe_reads": 326,
+          "snapshots": 1,
+          "staged_checkout_checks": 3,
+          "windows_attribute_checks": 7634
+        },
+        "cpu_seconds": 0.890625,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 0.220021
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 0.103881
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.01048
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 0.386549
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.01019
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 0.218335
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.020708
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.050472
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.126971
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 0.101759
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.010289
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 0.154773
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 0.131703
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.010982
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": null,
+            "seconds": 0.217791
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "seconds": 0.021513
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Journal validation",
+            "seconds": 0.049824
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "seconds": 0.128071
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "seconds": 0.103131
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.010686
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Directory durability",
+            "parent": null,
+            "seconds": 0.002368
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "File durability",
+            "parent": null,
+            "seconds": 0.001108
+          }
+        ],
+        "stage": "P1",
+        "wall_seconds": 0.983798
+      },
+      "observed_state": "recovery_required; Journal/Staging erhalten",
+      "journal_exists": false,
+      "staging_count": 1,
+      "runtime_format": "picross-runtime-registry-v7",
+      "changed_at_failure": {
+        "content/.registration-journal-d3cf7582b7c61eb2ececf251d0c9df7848f20b76d4a6e190e15861d1b16f288e.tmp": {
+          "before": null,
+          "after": {
+            "sha256": "d3cf7582b7c61eb2ececf251d0c9df7848f20b76d4a6e190e15861d1b16f288e",
+            "mtime_ns": 1794604692751157200
+          }
+        }
+      },
+      "recovery": [
+        {
+          "action": "recover",
+          "boundary": null,
+          "exit_code": 0,
+          "wall_seconds": 0.8111453999954392,
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 206280,
+              "bytes_read": 267698,
+              "checkout_validations": 1,
+              "completed_steps": 6,
+              "directory_flushes": 1,
+              "guards": 2,
+              "hash_calls": 40,
+              "journal_validations": 1,
+              "json_reuses": 23,
+              "method_validations": 6,
+              "path_checks": 300,
+              "path_components": 2638,
+              "safe_reads": 106,
+              "staged_checkout_checks": 1,
+              "windows_attribute_checks": 2638
+            },
+            "cpu_seconds": 0.375,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Recovery",
+                "parent": null,
+                "seconds": 0.331178
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Classification",
+                "parent": "Recovery",
+                "seconds": 0.015993
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Journal validation",
+                "parent": "Recovery/R0",
+                "seconds": 0.246684
+              },
+              {
+                "calls": 4,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.021962
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.052055
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.148381
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Recovery/R0/Journal validation/Staging/Proof",
+                "seconds": 0.121817
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Recovery/R0/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.010651
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R0",
+                "seconds": 0.050796
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "R0",
+                "parent": "Recovery",
+                "seconds": 0.307995
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Directory durability",
+                "parent": "Recovery/R2",
+                "seconds": 0.006405
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "R2",
+                "parent": "Recovery",
+                "seconds": 0.007236
+              }
+            ],
+            "stage": "Recovery/R0/Journal validation/Staging/Proof/Checkout validation",
+            "wall_seconds": 0.470472
+          },
+          "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+          "journal_exists": false,
+          "staging_count": 0,
+          "runtime_format": "picross-runtime-registry-v7"
+        },
+        {
+          "action": "recover",
+          "boundary": null,
+          "exit_code": 0,
+          "wall_seconds": 0.5560470999989775,
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 16048,
+              "bytes_read": 35623,
+              "checkout_validations": 1,
+              "completed_steps": 1,
+              "hash_calls": 26,
+              "json_reuses": 10,
+              "method_validations": 2,
+              "path_checks": 117,
+              "path_components": 1001,
+              "safe_reads": 46,
+              "windows_attribute_checks": 1001
+            },
+            "cpu_seconds": 0.15625,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": null,
+                "seconds": 0.112417
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Checkout validation",
+                "seconds": 0.010312
+              }
+            ],
+            "stage": "recover",
+            "wall_seconds": 0.234776
+          },
+          "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+          "journal_exists": false,
+          "staging_count": 0,
+          "runtime_format": "picross-runtime-registry-v7"
+        }
+      ],
+      "fresh_apply": {
+        "action": "apply",
+        "boundary": null,
+        "exit_code": 0,
+        "wall_seconds": 1.7931592999957502,
+        "error": null,
+        "diagnostics": {
+          "budget_seconds": 300,
+          "counters": {
+            "bytes_hashed": 474307,
+            "bytes_read": 800598,
+            "checkout_validations": 5,
+            "completed_steps": 27,
+            "directory_flushes": 5,
+            "file_fsyncs": 2,
+            "guards": 8,
+            "hash_calls": 304,
+            "journal_validations": 2,
+            "json_reuses": 120,
+            "method_validations": 20,
+            "path_checks": 1461,
+            "path_components": 12804,
+            "phase_boundaries": 9,
+            "plans": 1,
+            "published_bytes": 2319,
+            "published_files": 1,
+            "safe_reads": 552,
+            "snapshots": 1,
+            "staged_checkout_checks": 3,
+            "windows_attribute_checks": 12804
+          },
+          "cpu_seconds": 1.359375,
+          "phases": [
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Snapshot",
+              "parent": null,
+              "seconds": 0.216141
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Snapshot",
+              "seconds": 0.103908
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Snapshot/Checkout validation",
+              "seconds": 0.010712
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Plan/Projection",
+              "parent": null,
+              "seconds": 0.38231
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection",
+              "seconds": 0.010078
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Journal validation",
+              "parent": "Plan/Projection",
+              "seconds": 0.215876
+            },
+            {
+              "calls": 4,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.021423
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.047786
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.128176
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Plan/Projection/Journal validation/Staging/Proof",
+              "seconds": 0.102927
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+              "seconds": 0.010239
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Plan/Projection",
+              "seconds": 0.153049
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Plan/Projection/Staging/Proof",
+              "seconds": 0.130575
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+              "seconds": 0.011001
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Journal validation",
+              "parent": null,
+              "seconds": 0.222372
+            },
+            {
+              "calls": 4,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Journal validation",
+              "seconds": 0.02181
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": "Journal validation",
+              "seconds": 0.048292
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Journal validation",
+              "seconds": 0.133258
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Journal validation/Staging/Proof",
+              "seconds": 0.109051
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Journal validation/Staging/Proof/Checkout validation",
+              "seconds": 0.010892
+            },
+            {
+              "calls": 5,
+              "inclusive": true,
+              "name": "Directory durability",
+              "parent": null,
+              "seconds": 0.010505
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "File durability",
+              "parent": null,
+              "seconds": 0.002035
+            },
+            {
+              "calls": 6,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": null,
+              "seconds": 0.308402
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": null,
+              "seconds": 0.13104
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Checkout validation",
+              "seconds": 0.012187
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Readback",
+              "parent": null,
+              "seconds": 0.074145
+            }
+          ],
+          "stage": "P6",
+          "wall_seconds": 1.458493
+        },
+        "observed_state": "Runtime picross-runtime-registry-v8; kein Journal/Staging",
+        "journal_exists": false,
+        "staging_count": 0,
+        "runtime_format": "picross-runtime-registry-v8"
+      },
+      "repeat_noop": {
+        "action": "apply",
+        "boundary": null,
+        "exit_code": 0,
+        "wall_seconds": 0.771215900000243,
+        "error": null,
+        "diagnostics": {
+          "budget_seconds": 300,
+          "counters": {
+            "bytes_hashed": 57996,
+            "bytes_read": 132890,
+            "checkout_validations": 1,
+            "completed_steps": 2,
+            "hash_calls": 64,
+            "json_reuses": 29,
+            "method_validations": 2,
+            "path_checks": 345,
+            "path_components": 2896,
+            "safe_reads": 129,
+            "snapshots": 1,
+            "windows_attribute_checks": 2896
+          },
+          "cpu_seconds": 0.328125,
+          "phases": [
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Snapshot",
+              "parent": null,
+              "seconds": 0.258455
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Snapshot",
+              "seconds": 0.134184
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Snapshot/Checkout validation",
+              "seconds": 0.010433
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Readback",
+              "parent": null,
+              "seconds": 0.065483
+            }
+          ],
+          "stage": "Snapshot",
+          "wall_seconds": 0.404349
+        },
+        "observed_state": "Runtime picross-runtime-registry-v8; kein Journal/Staging",
+        "journal_exists": false,
+        "staging_count": 0,
+        "runtime_format": "picross-runtime-registry-v8"
+      },
+      "hash_restoration": true,
+      "noop_mtimes_unchanged": true
+    },
+    {
+      "action": "apply",
+      "boundary": "P1",
+      "exit_code": 0,
+      "wall_seconds": 1.3325017999959528,
+      "error": "controlled P1 interruption · Phase: P1 · recovery_required; Journal/Staging erhalten",
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 290589,
+          "bytes_read": 326960,
+          "checkout_validations": 4,
+          "completed_steps": 17,
+          "directory_flushes": 3,
+          "file_fsyncs": 1,
+          "guards": 2,
+          "hash_calls": 154,
+          "journal_validations": 2,
+          "json_reuses": 97,
+          "method_validations": 18,
+          "path_checks": 845,
+          "path_components": 7635,
+          "phase_boundaries": 3,
+          "plans": 1,
+          "safe_reads": 326,
+          "snapshots": 1,
+          "staged_checkout_checks": 3,
+          "windows_attribute_checks": 7635
+        },
+        "cpu_seconds": 0.875,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 0.229797
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 0.107518
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.011036
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 0.381926
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.0103
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 0.213833
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.019936
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.047832
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.127009
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 0.101609
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.010295
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 0.154515
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 0.132134
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.011053
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": null,
+            "seconds": 0.212166
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "seconds": 0.021809
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Journal validation",
+            "seconds": 0.047591
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "seconds": 0.124234
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "seconds": 0.100337
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.010631
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Directory durability",
+            "parent": null,
+            "seconds": 0.008601
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "File durability",
+            "parent": null,
+            "seconds": 0.001302
+          }
+        ],
+        "stage": "P1",
+        "wall_seconds": 0.992459
+      },
+      "observed_state": "recovery_required; Journal/Staging erhalten",
+      "journal_exists": true,
+      "staging_count": 0,
+      "runtime_format": "picross-runtime-registry-v7",
+      "changed_at_failure": {
+        "content/.registration-pending.json": {
+          "before": null,
+          "after": {
+            "sha256": "d3cf7582b7c61eb2ececf251d0c9df7848f20b76d4a6e190e15861d1b16f288e",
+            "mtime_ns": 1794604700258256600
+          }
+        }
+      },
+      "recovery": [
+        {
+          "action": "recover",
+          "boundary": null,
+          "exit_code": 0,
+          "wall_seconds": 1.1086934999984805,
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 140882,
+              "bytes_read": 751456,
+              "checkout_validations": 2,
+              "completed_steps": 11,
+              "directory_flushes": 1,
+              "guards": 6,
+              "hash_calls": 80,
+              "journal_validations": 1,
+              "json_reuses": 40,
+              "method_validations": 8,
+              "path_checks": 766,
+              "path_components": 6567,
+              "phase_boundaries": 21,
+              "safe_reads": 299,
+              "staged_checkout_checks": 1,
+              "windows_attribute_checks": 6567
+            },
+            "cpu_seconds": 0.703125,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Recovery",
+                "parent": null,
+                "seconds": 0.653595
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Classification",
+                "parent": "Recovery",
+                "seconds": 0.014342
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Journal validation",
+                "parent": "Recovery/R0",
+                "seconds": 0.22689
+              },
+              {
+                "calls": 4,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.02035
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.050858
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.133438
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Recovery/R0/Journal validation/Staging/Proof",
+                "seconds": 0.107048
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Recovery/R0/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.010101
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R0",
+                "seconds": 0.051038
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "R0",
+                "parent": "Recovery",
+                "seconds": 0.288173
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R1",
+                "seconds": 0.050056
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "R1",
+                "parent": "Recovery",
+                "seconds": 0.071717
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R2",
+                "seconds": 0.147553
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Recovery/R2",
+                "seconds": 0.104704
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Recovery/R2/Checkout validation",
+                "seconds": 0.012281
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Directory durability",
+                "parent": "Recovery/R2",
+                "seconds": 0.005503
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "R2",
+                "parent": "Recovery",
+                "seconds": 0.279405
+              }
+            ],
+            "stage": "Recovery/R2/Checkout validation",
+            "wall_seconds": 0.780433
+          },
+          "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+          "journal_exists": false,
+          "staging_count": 0,
+          "runtime_format": "picross-runtime-registry-v7"
+        },
+        {
+          "action": "recover",
+          "boundary": null,
+          "exit_code": 0,
+          "wall_seconds": 0.5618983000022126,
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 16048,
+              "bytes_read": 35623,
+              "checkout_validations": 1,
+              "completed_steps": 1,
+              "hash_calls": 26,
+              "json_reuses": 10,
+              "method_validations": 2,
+              "path_checks": 117,
+              "path_components": 1001,
+              "safe_reads": 46,
+              "windows_attribute_checks": 1001
+            },
+            "cpu_seconds": 0.15625,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": null,
+                "seconds": 0.112111
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Checkout validation",
+                "seconds": 0.011457
+              }
+            ],
+            "stage": "recover",
+            "wall_seconds": 0.236349
+          },
+          "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+          "journal_exists": false,
+          "staging_count": 0,
+          "runtime_format": "picross-runtime-registry-v7"
+        }
+      ],
+      "fresh_apply": {
+        "action": "apply",
+        "boundary": null,
+        "exit_code": 0,
+        "wall_seconds": 1.9789225999993505,
+        "error": null,
+        "diagnostics": {
+          "budget_seconds": 300,
+          "counters": {
+            "bytes_hashed": 474307,
+            "bytes_read": 800598,
+            "checkout_validations": 5,
+            "completed_steps": 27,
+            "directory_flushes": 5,
+            "file_fsyncs": 2,
+            "guards": 8,
+            "hash_calls": 304,
+            "journal_validations": 2,
+            "json_reuses": 120,
+            "method_validations": 20,
+            "path_checks": 1461,
+            "path_components": 12804,
+            "phase_boundaries": 9,
+            "plans": 1,
+            "published_bytes": 2319,
+            "published_files": 1,
+            "safe_reads": 552,
+            "snapshots": 1,
+            "staged_checkout_checks": 3,
+            "windows_attribute_checks": 12804
+          },
+          "cpu_seconds": 1.453125,
+          "phases": [
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Snapshot",
+              "parent": null,
+              "seconds": 0.232373
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Snapshot",
+              "seconds": 0.112448
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Snapshot/Checkout validation",
+              "seconds": 0.012123
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Plan/Projection",
+              "parent": null,
+              "seconds": 0.4163
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection",
+              "seconds": 0.023326
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Journal validation",
+              "parent": "Plan/Projection",
+              "seconds": 0.231482
+            },
+            {
+              "calls": 4,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.026108
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.053908
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.128458
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Plan/Projection/Journal validation/Staging/Proof",
+              "seconds": 0.102996
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+              "seconds": 0.010775
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Plan/Projection",
+              "seconds": 0.156721
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Plan/Projection/Staging/Proof",
+              "seconds": 0.132256
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+              "seconds": 0.01071
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Journal validation",
+              "parent": null,
+              "seconds": 0.244133
+            },
+            {
+              "calls": 4,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Journal validation",
+              "seconds": 0.023703
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": "Journal validation",
+              "seconds": 0.056071
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Journal validation",
+              "seconds": 0.144397
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Journal validation/Staging/Proof",
+              "seconds": 0.116706
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Journal validation/Staging/Proof/Checkout validation",
+              "seconds": 0.013633
+            },
+            {
+              "calls": 5,
+              "inclusive": true,
+              "name": "Directory durability",
+              "parent": null,
+              "seconds": 0.029588
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "File durability",
+              "parent": null,
+              "seconds": 0.002237
+            },
+            {
+              "calls": 6,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": null,
+              "seconds": 0.312115
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": null,
+              "seconds": 0.131768
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Checkout validation",
+              "seconds": 0.01234
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Readback",
+              "parent": null,
+              "seconds": 0.073966
+            }
+          ],
+          "stage": "P6",
+          "wall_seconds": 1.575885
+        },
+        "observed_state": "Runtime picross-runtime-registry-v8; kein Journal/Staging",
+        "journal_exists": false,
+        "staging_count": 0,
+        "runtime_format": "picross-runtime-registry-v8"
+      },
+      "repeat_noop": {
+        "action": "apply",
+        "boundary": null,
+        "exit_code": 0,
+        "wall_seconds": 0.7669247999947402,
+        "error": null,
+        "diagnostics": {
+          "budget_seconds": 300,
+          "counters": {
+            "bytes_hashed": 57996,
+            "bytes_read": 132890,
+            "checkout_validations": 1,
+            "completed_steps": 2,
+            "hash_calls": 64,
+            "json_reuses": 29,
+            "method_validations": 2,
+            "path_checks": 345,
+            "path_components": 2896,
+            "safe_reads": 129,
+            "snapshots": 1,
+            "windows_attribute_checks": 2896
+          },
+          "cpu_seconds": 0.34375,
+          "phases": [
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Snapshot",
+              "parent": null,
+              "seconds": 0.272608
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Snapshot",
+              "seconds": 0.140903
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Snapshot/Checkout validation",
+              "seconds": 0.013957
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Readback",
+              "parent": null,
+              "seconds": 0.064284
+            }
+          ],
+          "stage": "Snapshot",
+          "wall_seconds": 0.435808
+        },
+        "observed_state": "Runtime picross-runtime-registry-v8; kein Journal/Staging",
+        "journal_exists": false,
+        "staging_count": 0,
+        "runtime_format": "picross-runtime-registry-v8"
+      },
+      "hash_restoration": true,
+      "noop_mtimes_unchanged": true
+    },
+    {
+      "action": "apply",
+      "boundary": "P5",
+      "exit_code": 0,
+      "wall_seconds": 1.546842600000673,
+      "error": "controlled P5 interruption · Phase: P5 · recovery_required; Journal/Staging erhalten",
+      "diagnostics": {
+        "budget_seconds": 300,
+        "counters": {
+          "bytes_hashed": 379097,
+          "bytes_read": 535304,
+          "checkout_validations": 4,
+          "completed_steps": 22,
+          "directory_flushes": 4,
+          "file_fsyncs": 2,
+          "guards": 5,
+          "hash_calls": 215,
+          "journal_validations": 2,
+          "json_reuses": 97,
+          "method_validations": 18,
+          "path_checks": 1069,
+          "path_components": 9508,
+          "phase_boundaries": 7,
+          "plans": 1,
+          "published_bytes": 2319,
+          "published_files": 1,
+          "safe_reads": 405,
+          "snapshots": 1,
+          "staged_checkout_checks": 3,
+          "windows_attribute_checks": 9508
+        },
+        "cpu_seconds": 1.078125,
+        "phases": [
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Snapshot",
+            "parent": null,
+            "seconds": 0.232153
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "seconds": 0.110106
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "seconds": 0.010647
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Plan/Projection",
+            "parent": null,
+            "seconds": 0.399466
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "seconds": 0.010734
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "seconds": 0.224195
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.021006
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.048395
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "seconds": 0.133471
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "seconds": 0.105418
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.010488
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "seconds": 0.161017
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "seconds": 0.137388
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "seconds": 0.012309
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Journal validation",
+            "parent": null,
+            "seconds": 0.217226
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "seconds": 0.021677
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": "Journal validation",
+            "seconds": 0.048231
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "seconds": 0.126725
+          },
+          {
+            "calls": 1,
+            "inclusive": true,
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "seconds": 0.103241
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "seconds": 0.010278
+          },
+          {
+            "calls": 4,
+            "inclusive": true,
+            "name": "Directory durability",
+            "parent": null,
+            "seconds": 0.004092
+          },
+          {
+            "calls": 2,
+            "inclusive": true,
+            "name": "File durability",
+            "parent": null,
+            "seconds": 0.002123
+          },
+          {
+            "calls": 3,
+            "inclusive": true,
+            "name": "Guards",
+            "parent": null,
+            "seconds": 0.152408
+          }
+        ],
+        "stage": "P5",
+        "wall_seconds": 1.178065
+      },
+      "observed_state": "recovery_required; Journal/Staging erhalten",
+      "journal_exists": true,
+      "staging_count": 0,
+      "runtime_format": "picross-runtime-registry-v8",
+      "changed_at_failure": {
+        "game/data/registry.json": {
+          "before": {
+            "sha256": "fe58a5e4549e921ad63abdc179e8362b300f3127f48468ae6296fcf8cf74c209",
+            "mtime_ns": 1794604476912269200
+          },
+          "after": {
+            "sha256": "c604dbaa04095cec2e02b54cc7700540095dc17b0d2bfe1529f920b68c4bd336",
+            "mtime_ns": 1794604708474919500
+          }
+        },
+        "content/.registration-pending.json": {
+          "before": null,
+          "after": {
+            "sha256": "d3cf7582b7c61eb2ececf251d0c9df7848f20b76d4a6e190e15861d1b16f288e",
+            "mtime_ns": 1794604708356076100
+          }
+        }
+      },
+      "recovery": [
+        {
+          "action": "recover",
+          "boundary": null,
+          "exit_code": 0,
+          "wall_seconds": 1.2947180999981356,
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 143385,
+              "bytes_read": 823996,
+              "checkout_validations": 2,
+              "completed_steps": 14,
+              "directory_flushes": 2,
+              "file_fsyncs": 1,
+              "guards": 7,
+              "hash_calls": 84,
+              "journal_validations": 1,
+              "json_reuses": 40,
+              "method_validations": 8,
+              "path_checks": 846,
+              "path_components": 7234,
+              "phase_boundaries": 23,
+              "published_bytes": 2319,
+              "published_files": 1,
+              "safe_reads": 326,
+              "staged_checkout_checks": 1,
+              "windows_attribute_checks": 7234
+            },
+            "cpu_seconds": 0.8125,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Recovery",
+                "parent": null,
+                "seconds": 0.756856
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Classification",
+                "parent": "Recovery",
+                "seconds": 0.014567
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Journal validation",
+                "parent": "Recovery/R0",
+                "seconds": 0.232279
+              },
+              {
+                "calls": 4,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.020811
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.051448
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Staging/Proof",
+                "parent": "Recovery/R0/Journal validation",
+                "seconds": 0.137942
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Recovery/R0/Journal validation/Staging/Proof",
+                "seconds": 0.110749
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Recovery/R0/Journal validation/Staging/Proof/Checkout validation",
+                "seconds": 0.010222
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R0",
+                "seconds": 0.050824
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "R0",
+                "parent": "Recovery",
+                "seconds": 0.293187
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R1",
+                "seconds": 0.107187
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "File durability",
+                "parent": "Recovery/R1",
+                "seconds": 0.005196
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Directory durability",
+                "parent": "Recovery/R1",
+                "seconds": 0.001866
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "R1",
+                "parent": "Recovery",
+                "seconds": 0.144787
+              },
+              {
+                "calls": 3,
+                "inclusive": true,
+                "name": "Guards",
+                "parent": "Recovery/R2",
+                "seconds": 0.166766
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": "Recovery/R2",
+                "seconds": 0.111381
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Recovery/R2/Checkout validation",
+                "seconds": 0.013865
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Directory durability",
+                "parent": "Recovery/R2",
+                "seconds": 0.000896
+              },
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "R2",
+                "parent": "Recovery",
+                "seconds": 0.304352
+              }
+            ],
+            "stage": "Recovery/R2/Guards",
+            "wall_seconds": 0.889207
+          },
+          "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+          "journal_exists": false,
+          "staging_count": 0,
+          "runtime_format": "picross-runtime-registry-v7"
+        },
+        {
+          "action": "recover",
+          "boundary": null,
+          "exit_code": 0,
+          "wall_seconds": 0.5673934000005829,
+          "error": null,
+          "diagnostics": {
+            "budget_seconds": 300,
+            "counters": {
+              "bytes_hashed": 16048,
+              "bytes_read": 35623,
+              "checkout_validations": 1,
+              "completed_steps": 1,
+              "hash_calls": 26,
+              "json_reuses": 10,
+              "method_validations": 2,
+              "path_checks": 117,
+              "path_components": 1001,
+              "safe_reads": 46,
+              "windows_attribute_checks": 1001
+            },
+            "cpu_seconds": 0.15625,
+            "phases": [
+              {
+                "calls": 1,
+                "inclusive": true,
+                "name": "Checkout validation",
+                "parent": null,
+                "seconds": 0.104223
+              },
+              {
+                "calls": 2,
+                "inclusive": true,
+                "name": "Method freeze",
+                "parent": "Checkout validation",
+                "seconds": 0.010257
+              }
+            ],
+            "stage": "recover",
+            "wall_seconds": 0.233067
+          },
+          "observed_state": "Runtime picross-runtime-registry-v7; kein Journal/Staging",
+          "journal_exists": false,
+          "staging_count": 0,
+          "runtime_format": "picross-runtime-registry-v7"
+        }
+      ],
+      "fresh_apply": {
+        "action": "apply",
+        "boundary": null,
+        "exit_code": 0,
+        "wall_seconds": 1.8622724000015296,
+        "error": null,
+        "diagnostics": {
+          "budget_seconds": 300,
+          "counters": {
+            "bytes_hashed": 474307,
+            "bytes_read": 800598,
+            "checkout_validations": 5,
+            "completed_steps": 27,
+            "directory_flushes": 5,
+            "file_fsyncs": 2,
+            "guards": 8,
+            "hash_calls": 304,
+            "journal_validations": 2,
+            "json_reuses": 120,
+            "method_validations": 20,
+            "path_checks": 1461,
+            "path_components": 12804,
+            "phase_boundaries": 9,
+            "plans": 1,
+            "published_bytes": 2319,
+            "published_files": 1,
+            "safe_reads": 552,
+            "snapshots": 1,
+            "staged_checkout_checks": 3,
+            "windows_attribute_checks": 12804
+          },
+          "cpu_seconds": 1.421875,
+          "phases": [
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Snapshot",
+              "parent": null,
+              "seconds": 0.233148
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Snapshot",
+              "seconds": 0.115312
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Snapshot/Checkout validation",
+              "seconds": 0.012471
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Plan/Projection",
+              "parent": null,
+              "seconds": 0.41973
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection",
+              "seconds": 0.010958
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Journal validation",
+              "parent": "Plan/Projection",
+              "seconds": 0.244484
+            },
+            {
+              "calls": 4,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.020446
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.050291
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Plan/Projection/Journal validation",
+              "seconds": 0.151973
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Plan/Projection/Journal validation/Staging/Proof",
+              "seconds": 0.121957
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+              "seconds": 0.014107
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Plan/Projection",
+              "seconds": 0.16099
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Plan/Projection/Staging/Proof",
+              "seconds": 0.134065
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+              "seconds": 0.011663
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Journal validation",
+              "parent": null,
+              "seconds": 0.219576
+            },
+            {
+              "calls": 4,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Journal validation",
+              "seconds": 0.022562
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": "Journal validation",
+              "seconds": 0.048759
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Staging/Proof",
+              "parent": "Journal validation",
+              "seconds": 0.128911
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Journal validation/Staging/Proof",
+              "seconds": 0.103634
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Journal validation/Staging/Proof/Checkout validation",
+              "seconds": 0.010609
+            },
+            {
+              "calls": 5,
+              "inclusive": true,
+              "name": "Directory durability",
+              "parent": null,
+              "seconds": 0.007126
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "File durability",
+              "parent": null,
+              "seconds": 0.002248
+            },
+            {
+              "calls": 6,
+              "inclusive": true,
+              "name": "Guards",
+              "parent": null,
+              "seconds": 0.312502
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": null,
+              "seconds": 0.138076
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Checkout validation",
+              "seconds": 0.012362
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Readback",
+              "parent": null,
+              "seconds": 0.067996
+            }
+          ],
+          "stage": "P6",
+          "wall_seconds": 1.523925
+        },
+        "observed_state": "Runtime picross-runtime-registry-v8; kein Journal/Staging",
+        "journal_exists": false,
+        "staging_count": 0,
+        "runtime_format": "picross-runtime-registry-v8"
+      },
+      "repeat_noop": {
+        "action": "apply",
+        "boundary": null,
+        "exit_code": 0,
+        "wall_seconds": 0.8315233000030275,
+        "error": null,
+        "diagnostics": {
+          "budget_seconds": 300,
+          "counters": {
+            "bytes_hashed": 57996,
+            "bytes_read": 132890,
+            "checkout_validations": 1,
+            "completed_steps": 2,
+            "hash_calls": 64,
+            "json_reuses": 29,
+            "method_validations": 2,
+            "path_checks": 345,
+            "path_components": 2896,
+            "safe_reads": 129,
+            "snapshots": 1,
+            "windows_attribute_checks": 2896
+          },
+          "cpu_seconds": 0.359375,
+          "phases": [
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Snapshot",
+              "parent": null,
+              "seconds": 0.278426
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Checkout validation",
+              "parent": "Snapshot",
+              "seconds": 0.143299
+            },
+            {
+              "calls": 2,
+              "inclusive": true,
+              "name": "Method freeze",
+              "parent": "Snapshot/Checkout validation",
+              "seconds": 0.011462
+            },
+            {
+              "calls": 1,
+              "inclusive": true,
+              "name": "Readback",
+              "parent": null,
+              "seconds": 0.067658
+            }
+          ],
+          "stage": "Snapshot",
+          "wall_seconds": 0.45081
+        },
+        "observed_state": "Runtime picross-runtime-registry-v8; kein Journal/Staging",
+        "journal_exists": false,
+        "staging_count": 0,
+        "runtime_format": "picross-runtime-registry-v8"
+      },
+      "hash_restoration": true,
+      "noop_mtimes_unchanged": true
+    }
+  ],
+  "passed": true
+}

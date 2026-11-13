@@ -1,0 +1,17 @@
+{
+  "old_source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+  "current_source": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+  "all_bundle_files_identical": true,
+  "old_files": {
+    "plan.json": "93caeddbfb158b9f333310ee5c881d26149d0bc9a69d55596cd30934b90e7f63",
+    "request.json": "5f0aa837ccd11ccb87f1a903023ff27e75e9d93570955cb35dc25a94b77f2554",
+    "input/reveal.svg": "50d303423acdb4fbb787f56747978fc3a7060fe6aa891fdcacb37a3886184b16",
+    "previous/ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360.bin": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360"
+  },
+  "current_files": {
+    "plan.json": "93caeddbfb158b9f333310ee5c881d26149d0bc9a69d55596cd30934b90e7f63",
+    "request.json": "5f0aa837ccd11ccb87f1a903023ff27e75e9d93570955cb35dc25a94b77f2554",
+    "input/reveal.svg": "50d303423acdb4fbb787f56747978fc3a7060fe6aa891fdcacb37a3886184b16",
+    "previous/ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360.bin": "ae6a6719f21111c623a32130bd2e31ed44a61343ab95c90bc73052d64c336360"
+  }
+}

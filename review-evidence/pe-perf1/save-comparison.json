@@ -1,0 +1,2380 @@
+{
+  "old_source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+  "setup_source": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+  "initial_catalog_entries": 56,
+  "preconditions": [
+    "same archive and min-area real ID as current direct measurements",
+    "current explicit runtime-only migration prepares valid v8 because old migration apply fails",
+    "same A1 sample name as current sequence",
+    "old Apply receives a canonical unchanged-schema bundle prepared by the current constructor, then fully revalidates it; no guard or budget patch"
+  ],
+  "runs": [
+    {
+      "source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+      "layer": "direct original A2/A3 API; 300 seconds unchanged",
+      "action": "images-plan",
+      "wall_seconds": 226.84026769999764,
+      "cpu_seconds": 224.53125,
+      "error": null,
+      "changed": {},
+      "journal": false,
+      "runtime_format": "picross-runtime-registry-v8",
+      "profile": {
+        "phases": [
+          {
+            "name": "Snapshot",
+            "parent": null,
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 88.44979289999901
+          },
+          {
+            "name": "namespaces",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 4,
+            "seconds": 5.54268890000094
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/namespaces",
+            "inclusive": true,
+            "calls": 4,
+            "seconds": 1.5893123999994714
+          },
+          {
+            "name": "package",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 112,
+            "seconds": 4.648600999964401
+          },
+          {
+            "name": "check_checkout",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 71.75388540000131
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/check_checkout",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 42.40011490002507
+          },
+          {
+            "name": "package",
+            "parent": "Snapshot/check_checkout",
+            "inclusive": true,
+            "calls": 436,
+            "seconds": 13.40488010005356
+          },
+          {
+            "name": "package",
+            "parent": null,
+            "inclusive": true,
+            "calls": 3,
+            "seconds": 0.06486920000315877
+          },
+          {
+            "name": "prepare",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 138.1010019000023
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.531545999998343
+          },
+          {
+            "name": "validate_journal",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 80.64769220000017
+          },
+          {
+            "name": "Journal validation",
+            "parent": "prepare/validate_journal",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 80.64768039999763
+          },
+          {
+            "name": "package",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 56,
+            "seconds": 1.0224858000074164
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 40.15411070003029
+          },
+          {
+            "name": "Guards",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 2.72349640000175
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation/Guards",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.35850270000082674
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 35.661427099999855
+          },
+          {
+            "name": "check_checkout",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 34.47634619999735
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.465906799981894
+          },
+          {
+            "name": "package",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 218,
+            "seconds": 6.365786999980628
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 36.57856130000437
+          },
+          {
+            "name": "check_checkout",
+            "parent": "prepare/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 35.29117750000296
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.830801299991435
+          },
+          {
+            "name": "package",
+            "parent": "prepare/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 219,
+            "seconds": 6.457120699946245
+          }
+        ],
+        "counters": {
+          "path_checks": 30384,
+          "path_components": 292691,
+          "safe_reads": 11553,
+          "bytes_read": 3895694162,
+          "snapshots": 2,
+          "method_validations": 404,
+          "completed_steps": 1464,
+          "bytes_hashed": 4536024426,
+          "hash_calls": 8305,
+          "journal_validations": 1,
+          "guards": 1,
+          "staged_checkout_checks": 2
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    },
+    {
+      "source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+      "layer": "direct original A2/A3 API; 300 seconds unchanged",
+      "action": "images-apply",
+      "wall_seconds": 300.00616140000056,
+      "cpu_seconds": 297.59375,
+      "error": {
+        "type": "Aborted",
+        "message": "resource_limit: catalog time budget exhausted",
+        "traceback": "Traceback (most recent call last):\n  File \"<task>\\old_save_call.py\", line 17, in <module>\n    else:result=api.apply(root,bundle)\n                ~~~~~~~~~^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_images.py\", line 426, in apply\n    if value[\"files\"]: tx.execute(root, journal, fail_step=fail_step)\n                       ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_transaction.py\", line 925, in execute\n    return current_execute(root, j, additions, fail_step=fail_step,\n                           publication_seconds=publication_seconds, recovery_seconds=recovery_seconds,\n                           **({\"source_check\": source_check} if source_check is not None else {}),\n                           **({\"_verification\": _verification} if _verification is not None else {}))\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_publication.py\", line 516, in execute\n    return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock, source_check=source_check)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_publication.py\", line 574, in _execute\n    guard_fn()\n    ~~~~~~~~^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_publication.py\", line 572, in <lambda>\n    guard_fn = lambda: guard(root, j, raw=raw, expected=expected, additions=additions, _view=view)\n                       ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\operation_diagnostics.py\", line 87, in wrapped\n    result = function(*args, **kwargs)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_publication.py\", line 349, in guard\n    actual = tx.reveal_assets(root, *registries, temporary=temps)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_transaction.py\", line 124, in reveal_assets\n    path = io.safe(root, name)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_io.py\", line 62, in safe\n    tick()\n    ~~~~^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_io.py\", line 49, in tick\n    raise Aborted(\"resource_limit: catalog time budget exhausted\")\ntools.puzzle_production.contract.Aborted: resource_limit: catalog time budget exhausted\n"
+      },
+      "changed": {
+        "content/.registration-pending.json": {
+          "before": null,
+          "after": {
+            "sha256": "625d9ccad1f3f1ac18e2deb494c8fcb19d6a028e6353df9457adbe738a38998a",
+            "mtime_ns": 1794606388085258800,
+            "bytes": 5218094
+          }
+        }
+      },
+      "journal": true,
+      "runtime_format": "picross-runtime-registry-v8",
+      "profile": {
+        "phases": [
+          {
+            "name": "Snapshot",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 41.23717670000042
+          },
+          {
+            "name": "namespaces",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 2.600973399996292
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/namespaces",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.6914203000051202
+          },
+          {
+            "name": "package",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 56,
+            "seconds": 1.9267006000009133
+          },
+          {
+            "name": "check_checkout",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 33.839613199997984
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.473223400011193
+          },
+          {
+            "name": "package",
+            "parent": "Snapshot/check_checkout",
+            "inclusive": true,
+            "calls": 218,
+            "seconds": 6.016468000016175
+          },
+          {
+            "name": "package",
+            "parent": null,
+            "inclusive": true,
+            "calls": 3,
+            "seconds": 0.08731799999804934
+          },
+          {
+            "name": "prepare",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 137.76699709999957
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.629084400017746
+          },
+          {
+            "name": "validate_journal",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 81.48390199999994
+          },
+          {
+            "name": "Journal validation",
+            "parent": "prepare/validate_journal",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 81.48388709999563
+          },
+          {
+            "name": "package",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 56,
+            "seconds": 0.9603940000160947
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 40.704559400022845
+          },
+          {
+            "name": "Guards",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 2.9781941000037477
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation/Guards",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.3768625000011525
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 35.684014300000854
+          },
+          {
+            "name": "check_checkout",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 34.458298300000024
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 21.04307309998694
+          },
+          {
+            "name": "package",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 218,
+            "seconds": 6.0747365999704925
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 35.30683340000542
+          },
+          {
+            "name": "check_checkout",
+            "parent": "prepare/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 34.04533019999508
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.013481400019373
+          },
+          {
+            "name": "package",
+            "parent": "prepare/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 219,
+            "seconds": 6.258121600068989
+          },
+          {
+            "name": "validate_journal",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 83.2627283000038
+          },
+          {
+            "name": "Journal validation",
+            "parent": "validate_journal",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 83.2627147000021
+          },
+          {
+            "name": "package",
+            "parent": "validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 56,
+            "seconds": 1.0560598999654758
+          },
+          {
+            "name": "Method freeze",
+            "parent": "validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 41.49368069999764
+          },
+          {
+            "name": "Guards",
+            "parent": "validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 2.7105474999989383
+          },
+          {
+            "name": "Method freeze",
+            "parent": "validate_journal/Journal validation/Guards",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.3561642999993637
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 36.87692919999972
+          },
+          {
+            "name": "check_checkout",
+            "parent": "validate_journal/Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 35.611407399999734
+          },
+          {
+            "name": "Method freeze",
+            "parent": "validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 21.518840500000806
+          },
+          {
+            "name": "package",
+            "parent": "validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 218,
+            "seconds": 6.39280460007285
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 36.453697199998714
+          },
+          {
+            "name": "check_checkout",
+            "parent": "Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 35.26010049999604
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.33799169996928
+          },
+          {
+            "name": "package",
+            "parent": "Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 219,
+            "seconds": 6.652618400024949
+          },
+          {
+            "name": "Directory durability",
+            "parent": null,
+            "inclusive": true,
+            "calls": 9,
+            "seconds": 0.004624900007911492
+          },
+          {
+            "name": "File durability",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.013999100003275089
+          },
+          {
+            "name": "Guards",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.7399254999982077
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Guards",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.344754899997497
+          }
+        ],
+        "counters": {
+          "path_checks": 34408,
+          "path_components": 339873,
+          "safe_reads": 13065,
+          "bytes_read": 4661954036,
+          "bytes_hashed": 5248177552,
+          "hash_calls": 10091,
+          "snapshots": 1,
+          "method_validations": 575,
+          "completed_steps": 1867,
+          "journal_validations": 2,
+          "guards": 3,
+          "staged_checkout_checks": 4,
+          "directory_flushes": 9,
+          "phase_boundaries": 8,
+          "file_fsyncs": 1
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    },
+    {
+      "source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+      "layer": "direct original A2/A3 API; 300 seconds unchanged",
+      "action": "raster-plan",
+      "wall_seconds": 300.4442815999937,
+      "cpu_seconds": 298.140625,
+      "error": {
+        "type": "Aborted",
+        "message": "resource_limit: catalog time budget exhausted",
+        "traceback": "Traceback (most recent call last):\n  File \"<task>\\old_save_call.py\", line 16, in <module>\n    if action=='plan':result=api.plan(root,b/'old-save-input'/('request.json' if kind=='images' else 'raster.json'),bundle)\n                             ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_raster.py\", line 190, in plan\n    result,journal,files,additions = _construct(root,snapshot,request,raw,request_path.parent,package if package.exists() else None)\n                                     ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_raster.py\", line 160, in _construct\n    journal = tx.prepare(root,snapshot,changes,operation=\"editor-raster\",additions=additions,replacements=replacements,generation=\"images\")\n  File \"<task>\\old-program\\tools\\puzzle_production\\operation_diagnostics.py\", line 87, in wrapped\n    result = function(*args, **kwargs)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_transaction.py\", line 502, in prepare\n    _stage_check(root, j[\"new\"], j[\"retained\"], additions, {n: pair[\"new\"] for n, pair in j[\"replacements\"].items()}, journal=j)\n    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\operation_diagnostics.py\", line 87, in wrapped\n    result = function(*args, **kwargs)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_transaction.py\", line 448, in _stage_check\n    check_checkout(stage)\n    ~~~~~~~~~~~~~~^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\operation_diagnostics.py\", line 87, in wrapped\n    result = function(*args, **kwargs)\n  File \"<task>\\old-program\\tools\\puzzle_production\\content_registry.py\", line 204, in check_checkout\n    expected = projection(r, catalog, root)\n  File \"<task>\\old-program\\tools\\puzzle_production\\content_registry.py\", line 47, in projection\n    ratings = catalog_rating.load_sources(root, registry) if root is not None else {}\n              ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_rating.py\", line 478, in load_sources\n    target = path_in(root, path(entry[\"id\"]))\n  File \"<task>\\old-program\\tools\\puzzle_production\\content_update.py\", line 29, in path_in\n    return safe(root, name)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_io.py\", line 62, in safe\n    tick()\n    ~~~~^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_io.py\", line 49, in tick\n    raise Aborted(\"resource_limit: catalog time budget exhausted\")\ntools.puzzle_production.contract.Aborted: resource_limit: catalog time budget exhausted\n"
+      },
+      "changed": {},
+      "journal": false,
+      "runtime_format": "picross-runtime-registry-v8",
+      "profile": {
+        "phases": [
+          {
+            "name": "Snapshot",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 41.36132019999786
+          },
+          {
+            "name": "namespaces",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 2.4987241999988328
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/namespaces",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.7205079000050318
+          },
+          {
+            "name": "package",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 56,
+            "seconds": 1.8427398999701836
+          },
+          {
+            "name": "check_checkout",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 34.198232599999756
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.0281891999839
+          },
+          {
+            "name": "package",
+            "parent": "Snapshot/check_checkout",
+            "inclusive": true,
+            "calls": 219,
+            "seconds": 6.452622400087421
+          },
+          {
+            "name": "Method freeze",
+            "parent": null,
+            "inclusive": true,
+            "calls": 24,
+            "seconds": 9.001515999982075
+          },
+          {
+            "name": "package",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.029873299994505942
+          },
+          {
+            "name": "prepare",
+            "parent": null,
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 247.49586080000154
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 41.63110329999472
+          },
+          {
+            "name": "validate_journal",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 164.89723939999385
+          },
+          {
+            "name": "Journal validation",
+            "parent": "prepare/validate_journal",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 164.89721469999495
+          },
+          {
+            "name": "package",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 113,
+            "seconds": 1.9738109999962035
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 233,
+            "seconds": 84.820078899902
+          },
+          {
+            "name": "Guards",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 5.5935141000009025
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation/Guards",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.7362701999954879
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 70.42936359999294
+          },
+          {
+            "name": "check_checkout",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 67.94930999999633
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 40.193803099988145
+          },
+          {
+            "name": "package",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 438,
+            "seconds": 12.407354700058931
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 40.2983727000028
+          },
+          {
+            "name": "check_checkout",
+            "parent": "prepare/Staging/Proof",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 37.89052349999838
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 63,
+            "seconds": 22.824756499991054
+          },
+          {
+            "name": "package",
+            "parent": "prepare/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 219,
+            "seconds": 6.673576600027445
+          }
+        ],
+        "counters": {
+          "path_checks": 29807,
+          "path_components": 293280,
+          "safe_reads": 11287,
+          "bytes_read": 4015624791,
+          "snapshots": 1,
+          "method_validations": 609,
+          "completed_steps": 1672,
+          "bytes_hashed": 4316543053,
+          "hash_calls": 7836,
+          "journal_validations": 2,
+          "guards": 2,
+          "staged_checkout_checks": 4
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    },
+    {
+      "source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+      "layer": "direct original A2/A3 API; 300 seconds unchanged",
+      "action": "raster-apply",
+      "wall_seconds": 181.53873419999582,
+      "cpu_seconds": 180.453125,
+      "error": {
+        "type": "InvalidInput",
+        "message": "Raster rating differs from independently checked bundle",
+        "traceback": "Traceback (most recent call last):\n  File \"<task>\\old_save_call.py\", line 17, in <module>\n    else:result=api.apply(root,bundle)\n                ~~~~~~~~~^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_raster.py\", line 212, in apply\n    fresh,journal,files,additions = _construct(root,snapshot,request,raw,bundle/\"input\",bundle/\"package\" if value[\"quality\"] is not None else None)\n                                    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_raster.py\", line 110, in _construct\n    manifest = raster.verify(package_directory,replay=True)\n  File \"<task>\\old-program\\tools\\puzzle_production\\editor_raster.py\", line 204, in verify\n    require(checked_rating == q[\"checked\"], \"Raster rating differs from independently checked bundle\")\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\authoring_package.py\", line 35, in require\n    raise InvalidInput(message)\ntools.puzzle_production.contract.InvalidInput: Raster rating differs from independently checked bundle\n"
+      },
+      "changed": {},
+      "journal": false,
+      "runtime_format": "picross-runtime-registry-v8",
+      "profile": {
+        "phases": [
+          {
+            "name": "Snapshot",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 41.593636600002355
+          },
+          {
+            "name": "namespaces",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 2.541503599997668
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/namespaces",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.6917239000031259
+          },
+          {
+            "name": "package",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 56,
+            "seconds": 1.9825287000276148
+          },
+          {
+            "name": "check_checkout",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 34.2069363000046
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.120705199995427
+          },
+          {
+            "name": "package",
+            "parent": "Snapshot/check_checkout",
+            "inclusive": true,
+            "calls": 219,
+            "seconds": 6.346791499956453
+          },
+          {
+            "name": "prepare",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 137.85936219999712
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.460115000023507
+          },
+          {
+            "name": "validate_journal",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 81.75258240000403
+          },
+          {
+            "name": "Journal validation",
+            "parent": "prepare/validate_journal",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 81.75256760000048
+          },
+          {
+            "name": "package",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 56,
+            "seconds": 1.3343280999761191
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 40.744832499978656
+          },
+          {
+            "name": "Guards",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 3.1842956999971648
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation/Guards",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.43981560000247555
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "prepare/validate_journal/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 35.257778399995004
+          },
+          {
+            "name": "check_checkout",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 33.9723146000033
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.274937499983935
+          },
+          {
+            "name": "package",
+            "parent": "prepare/validate_journal/Journal validation/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 219,
+            "seconds": 6.110971299989615
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "prepare",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 35.310500499996124
+          },
+          {
+            "name": "check_checkout",
+            "parent": "prepare/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 34.120767699998396
+          },
+          {
+            "name": "Method freeze",
+            "parent": "prepare/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 20.075173099990934
+          },
+          {
+            "name": "package",
+            "parent": "prepare/Staging/Proof/check_checkout",
+            "inclusive": true,
+            "calls": 219,
+            "seconds": 6.28211959994951
+          },
+          {
+            "name": "Method freeze",
+            "parent": null,
+            "inclusive": true,
+            "calls": 4,
+            "seconds": 1.4648890000025858
+          }
+        ],
+        "counters": {
+          "path_checks": 21613,
+          "path_components": 210963,
+          "safe_reads": 8251,
+          "bytes_read": 2830779160,
+          "bytes_hashed": 3210580798,
+          "hash_calls": 6019,
+          "snapshots": 1,
+          "method_validations": 349,
+          "completed_steps": 1130,
+          "journal_validations": 1,
+          "guards": 1,
+          "staged_checkout_checks": 2
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    }
+  ],
+  "passed": true,
+  "current_category_runs": [
+    {
+      "source": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+      "action": "category-create-plan",
+      "wall_seconds": 29.89735230000224,
+      "cpu_seconds": 29.703125,
+      "files": [
+        "content/categories.json",
+        "game/data/registry.json"
+      ],
+      "actual_changed": {},
+      "profile": {
+        "phases": [
+          {
+            "name": "Snapshot",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 10.866907600000559
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.5076020000051358
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.293263499996101
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.06383210000785766
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.06339219999790657
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04907159999856958
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.054809799999929965
+          },
+          {
+            "name": "Plan/Projection",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 18.94904929999757
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.04920059999858495
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04885890000150539
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.051114800000505056
+          },
+          {
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 11.110970299996552
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 0.10115939997922396
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.10053370000241557
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.09784489999583457
+          },
+          {
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 1.6503938000023481
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.052262299999711104
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.05224830000224756
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 7.957188100001076
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.937186100003601
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.0798995000004652
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.07937390000006417
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04988969999976689
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 7.519007999995665
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.547547200003464
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.05339069996989565
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.05304450000403449
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.048093199999129865
+          }
+        ],
+        "counters": {
+          "path_checks": 22677,
+          "path_components": 219487,
+          "windows_attribute_checks": 219487,
+          "snapshots": 1,
+          "safe_reads": 8795,
+          "bytes_read": 2844187409,
+          "method_validations": 345,
+          "full_method_validations": 1,
+          "completed_steps": 354,
+          "bytes_hashed": 3209295171,
+          "hash_calls": 5737,
+          "json_reuses": 2977,
+          "checkout_validations": 3,
+          "method_byte_revalidations": 14,
+          "method_view_reuses": 336,
+          "plans": 1,
+          "journal_validations": 1,
+          "guards": 1,
+          "staged_checkout_checks": 2
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    },
+    {
+      "source": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+      "action": "category-create-apply",
+      "wall_seconds": 43.57324610000069,
+      "cpu_seconds": 43.390625,
+      "files": [
+        "content/categories.json",
+        "game/data/registry.json"
+      ],
+      "actual_changed": {
+        "content/categories.json": {
+          "before": [
+            "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+            1794605595614135600
+          ],
+          "after": [
+            "8e4962527fdd9445eb498e6c4135854f68c88848a466727ae1515886ba8ac3f3",
+            1794607136789322600
+          ]
+        },
+        "game/data/registry.json": {
+          "before": [
+            "c824a0d446a6a868967b6dbeb35a769bc009f587afc0171817d0288d2ab39484",
+            1794606521646000600
+          ],
+          "after": [
+            "85896bfbcff43f49396daa4021855e14d7689b8d57cb65e501e7687c3028f908",
+            1794607139994252800
+          ]
+        }
+      },
+      "profile": {
+        "phases": [
+          {
+            "name": "Journal validation",
+            "parent": null,
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 21.91569029999664
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 228,
+            "seconds": 0.6622582000709372
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 4,
+            "seconds": 0.20670469999458874
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Method freeze",
+            "inclusive": true,
+            "calls": 3,
+            "seconds": 0.1681680999972741
+          },
+          {
+            "name": "Guards",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 3.1648955999989994
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation/Guards",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.0967163000095752
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Guards/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.09668709999823477
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 14.984815100004198
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 13.072190200000477
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 0.1014463000028627
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.10041420000197832
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.14380769999843324
+          },
+          {
+            "name": "Guards",
+            "parent": null,
+            "inclusive": true,
+            "calls": 9,
+            "seconds": 14.668384700002207
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Guards",
+            "inclusive": true,
+            "calls": 9,
+            "seconds": 0.5235731000066153
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Guards/Method freeze",
+            "inclusive": true,
+            "calls": 9,
+            "seconds": 0.5234301000018604
+          },
+          {
+            "name": "Directory durability",
+            "parent": null,
+            "inclusive": true,
+            "calls": 7,
+            "seconds": 0.010058500003651716
+          },
+          {
+            "name": "File durability",
+            "parent": null,
+            "inclusive": true,
+            "calls": 3,
+            "seconds": 0.014354499995533843
+          },
+          {
+            "name": "Checkout validation",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.512778000003891
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.06931009994877968
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.0689563000050839
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04955160000099568
+          }
+        ],
+        "counters": {
+          "path_checks": 36848,
+          "path_components": 350008,
+          "windows_attribute_checks": 350008,
+          "journal_validations": 2,
+          "bytes_hashed": 4482619072,
+          "hash_calls": 9452,
+          "json_reuses": 2919,
+          "safe_reads": 13467,
+          "bytes_read": 4129815277,
+          "method_validations": 410,
+          "full_method_validations": 1,
+          "completed_steps": 438,
+          "method_view_reuses": 392,
+          "method_byte_revalidations": 24,
+          "guards": 11,
+          "staged_checkout_checks": 2,
+          "checkout_validations": 3,
+          "directory_flushes": 7,
+          "phase_boundaries": 14,
+          "file_fsyncs": 3,
+          "published_files": 2,
+          "published_bytes": 33294
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    },
+    {
+      "source": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+      "action": "category-assign-plan",
+      "wall_seconds": 29.37426669999695,
+      "cpu_seconds": 29.21875,
+      "files": [
+        "content/registry.json",
+        "game/data/registry.json"
+      ],
+      "actual_changed": {},
+      "profile": {
+        "phases": [
+          {
+            "name": "Snapshot",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 11.453454000002239
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.5151327999992645
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.597143700004381
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.07732260000193492
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.07697889999690233
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.046866799995768815
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.06400580000627087
+          },
+          {
+            "name": "Plan/Projection",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 17.836770100002468
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.05507059999945341
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.05476230000203941
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04889269999694079
+          },
+          {
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 10.32402600000205
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 0.09792380003636936
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.09732409999560332
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.10153059999720426
+          },
+          {
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 1.5387734999967506
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.049786700001277495
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04977320000034524
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 7.2512298000001465
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.246234300000651
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.05938020002213307
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.058956200002285186
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04817349999939324
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 7.202271500005736
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.237161700002616
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.055769900005543604
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.055385599996952806
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04907269999966957
+          }
+        ],
+        "counters": {
+          "path_checks": 22677,
+          "path_components": 219487,
+          "windows_attribute_checks": 219487,
+          "snapshots": 1,
+          "safe_reads": 8795,
+          "bytes_read": 2844197148,
+          "method_validations": 345,
+          "full_method_validations": 1,
+          "completed_steps": 354,
+          "bytes_hashed": 3209295397,
+          "hash_calls": 5737,
+          "json_reuses": 2976,
+          "checkout_validations": 3,
+          "method_byte_revalidations": 14,
+          "method_view_reuses": 336,
+          "plans": 1,
+          "journal_validations": 1,
+          "guards": 1,
+          "staged_checkout_checks": 2
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    },
+    {
+      "source": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+      "action": "category-assign-apply",
+      "wall_seconds": 42.30519690000074,
+      "cpu_seconds": 41.9375,
+      "files": [
+        "content/registry.json",
+        "game/data/registry.json"
+      ],
+      "actual_changed": {
+        "content/registry.json": {
+          "before": [
+            "3723b7ab63603ee7f2247c0b00816ca714348efbc1405a5e3dc38441f934489b",
+            1794606512471084400
+          ],
+          "after": [
+            "88d5f802afdfd61b6e3a389ca697181068945f8103532ac9aa9014a7b334374b",
+            1794607210341929700
+          ]
+        },
+        "game/data/registry.json": {
+          "before": [
+            "85896bfbcff43f49396daa4021855e14d7689b8d57cb65e501e7687c3028f908",
+            1794607139994252800
+          ],
+          "after": [
+            "3d85f6b0f68c8a00cef3f7269fd3906bc707e4fd7d11cc4ebeccf8bed699f67f",
+            1794607213387436400
+          ]
+        }
+      },
+      "profile": {
+        "phases": [
+          {
+            "name": "Journal validation",
+            "parent": null,
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 21.442308600002434
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 228,
+            "seconds": 0.6343560999739566
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 4,
+            "seconds": 0.22599850001279265
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Method freeze",
+            "inclusive": true,
+            "calls": 3,
+            "seconds": 0.17077309999876888
+          },
+          {
+            "name": "Guards",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 3.0284209000019473
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation/Guards",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.104438599992136
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Guards/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.10441190000710776
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 14.541337799993926
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 12.716302100008761
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 0.09624910001002718
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.09535489999689162
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.13081400000373833
+          },
+          {
+            "name": "Guards",
+            "parent": null,
+            "inclusive": true,
+            "calls": 9,
+            "seconds": 14.036928100002115
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Guards",
+            "inclusive": true,
+            "calls": 9,
+            "seconds": 0.4970896000158973
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Guards/Method freeze",
+            "inclusive": true,
+            "calls": 9,
+            "seconds": 0.4969462999870302
+          },
+          {
+            "name": "Directory durability",
+            "parent": null,
+            "inclusive": true,
+            "calls": 7,
+            "seconds": 0.009953200009476859
+          },
+          {
+            "name": "File durability",
+            "parent": null,
+            "inclusive": true,
+            "calls": 3,
+            "seconds": 0.01999219999561319
+          },
+          {
+            "name": "Checkout validation",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.322640800004592
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.08311640000465559
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.08240479999949457
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04652880000503501
+          }
+        ],
+        "counters": {
+          "path_checks": 36848,
+          "path_components": 350008,
+          "windows_attribute_checks": 350008,
+          "journal_validations": 2,
+          "json_reuses": 2918,
+          "bytes_hashed": 4482753258,
+          "hash_calls": 9452,
+          "safe_reads": 13467,
+          "bytes_read": 4130091764,
+          "method_validations": 410,
+          "full_method_validations": 1,
+          "completed_steps": 438,
+          "method_view_reuses": 392,
+          "method_byte_revalidations": 24,
+          "guards": 11,
+          "staged_checkout_checks": 2,
+          "checkout_validations": 3,
+          "directory_flushes": 7,
+          "phase_boundaries": 14,
+          "file_fsyncs": 3,
+          "published_files": 2,
+          "published_bytes": 165362
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    },
+    {
+      "source": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+      "action": "category-delete-reassign-plan",
+      "wall_seconds": 29.59720070000185,
+      "cpu_seconds": 29.359375,
+      "files": [
+        "content/categories.json",
+        "content/registry.json",
+        "game/data/registry.json"
+      ],
+      "actual_changed": {},
+      "profile": {
+        "phases": [
+          {
+            "name": "Snapshot",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 10.727167400000326
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.523596400002134
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Snapshot",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.067817000002833
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Snapshot/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.05803640001977328
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.05771259999892209
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04837390000466257
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Snapshot/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.06153259999700822
+          },
+          {
+            "name": "Plan/Projection",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 18.774185000002035
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.04796220002754126
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04765839999890886
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.059740299999248236
+          },
+          {
+            "name": "Journal validation",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 10.87967049999861
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 0.09638540000742069
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.0957507000057376
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.09664060000068275
+          },
+          {
+            "name": "Guards",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 1.5289820000034524
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Guards",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04826370000228053
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Guards/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.048250100000586826
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection/Journal validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 7.762616899999557
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.8059093999982
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.04982159999781288
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04936719999386696
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.05370949999633012
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Plan/Projection",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 7.584988599999633
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Plan/Projection/Staging/Proof",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 6.621514300000854
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.05004639994876925
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.0495295000000624
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Plan/Projection/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.06420250000519445
+          }
+        ],
+        "counters": {
+          "path_checks": 22678,
+          "path_components": 219494,
+          "windows_attribute_checks": 219494,
+          "snapshots": 1,
+          "safe_reads": 8796,
+          "bytes_read": 2844207022,
+          "method_validations": 345,
+          "full_method_validations": 1,
+          "completed_steps": 354,
+          "bytes_hashed": 3209295213,
+          "hash_calls": 5737,
+          "json_reuses": 2976,
+          "checkout_validations": 3,
+          "method_byte_revalidations": 14,
+          "method_view_reuses": 336,
+          "plans": 1,
+          "journal_validations": 1,
+          "guards": 1,
+          "staged_checkout_checks": 2
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    },
+    {
+      "source": "120ed61824d2184cc59425deeac7def9e7aa3cd0",
+      "action": "category-delete-reassign-apply",
+      "wall_seconds": 44.28302059999987,
+      "cpu_seconds": 44.109375,
+      "files": [
+        "content/categories.json",
+        "content/registry.json",
+        "game/data/registry.json"
+      ],
+      "actual_changed": {
+        "content/categories.json": {
+          "before": [
+            "8e4962527fdd9445eb498e6c4135854f68c88848a466727ae1515886ba8ac3f3",
+            1794607136789322600
+          ],
+          "after": [
+            "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+            1794607283268411500
+          ]
+        },
+        "content/registry.json": {
+          "before": [
+            "88d5f802afdfd61b6e3a389ca697181068945f8103532ac9aa9014a7b334374b",
+            1794607210341929700
+          ],
+          "after": [
+            "3723b7ab63603ee7f2247c0b00816ca714348efbc1405a5e3dc38441f934489b",
+            1794607286325708300
+          ]
+        },
+        "game/data/registry.json": {
+          "before": [
+            "3d85f6b0f68c8a00cef3f7269fd3906bc707e4fd7d11cc4ebeccf8bed699f67f",
+            1794607213387436400
+          ],
+          "after": [
+            "c824a0d446a6a868967b6dbeb35a769bc009f587afc0171817d0288d2ab39484",
+            1794607289332770300
+          ]
+        }
+      },
+      "profile": {
+        "phases": [
+          {
+            "name": "Journal validation",
+            "parent": null,
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 21.239170599998033
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 228,
+            "seconds": 0.6261111999920104
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 4,
+            "seconds": 0.23559739999473095
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Method freeze",
+            "inclusive": true,
+            "calls": 3,
+            "seconds": 0.16964930000540335
+          },
+          {
+            "name": "Guards",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 3.069204499995976
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation/Guards",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.09626929998921696
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Guards/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.09624169999733567
+          },
+          {
+            "name": "Staging/Proof",
+            "parent": "Journal validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 14.560898799994902
+          },
+          {
+            "name": "Checkout validation",
+            "parent": "Journal validation/Staging/Proof",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 12.720503600001393
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 114,
+            "seconds": 0.09787449997384101
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.09701150000182679
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Journal validation/Staging/Proof/Checkout validation",
+            "inclusive": true,
+            "calls": 2,
+            "seconds": 0.12437320000026375
+          },
+          {
+            "name": "Guards",
+            "parent": null,
+            "inclusive": true,
+            "calls": 11,
+            "seconds": 16.575387400007457
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Guards",
+            "inclusive": true,
+            "calls": 11,
+            "seconds": 0.5773756999915349
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Guards/Method freeze",
+            "inclusive": true,
+            "calls": 11,
+            "seconds": 0.5772125999865239
+          },
+          {
+            "name": "Directory durability",
+            "parent": null,
+            "inclusive": true,
+            "calls": 9,
+            "seconds": 0.01079119999485556
+          },
+          {
+            "name": "File durability",
+            "parent": null,
+            "inclusive": true,
+            "calls": 4,
+            "seconds": 0.025654000004578847
+          },
+          {
+            "name": "Checkout validation",
+            "parent": null,
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 5.925952600002347
+          },
+          {
+            "name": "Method freeze",
+            "parent": "Checkout validation",
+            "inclusive": true,
+            "calls": 57,
+            "seconds": 0.04842080000526039
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Checkout validation/Method freeze",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.048083599998790305
+          },
+          {
+            "name": "Method byte binding",
+            "parent": "Checkout validation",
+            "inclusive": true,
+            "calls": 1,
+            "seconds": 0.04789809999783756
+          }
+        ],
+        "counters": {
+          "path_checks": 40401,
+          "path_components": 382641,
+          "windows_attribute_checks": 382641,
+          "journal_validations": 2,
+          "bytes_hashed": 4797976712,
+          "hash_calls": 10309,
+          "json_reuses": 2932,
+          "safe_reads": 14678,
+          "bytes_read": 4452416549,
+          "method_validations": 412,
+          "full_method_validations": 1,
+          "completed_steps": 445,
+          "method_view_reuses": 392,
+          "method_byte_revalidations": 26,
+          "guards": 13,
+          "staged_checkout_checks": 2,
+          "checkout_validations": 3,
+          "directory_flushes": 9,
+          "phase_boundaries": 17,
+          "file_fsyncs": 4,
+          "published_files": 3,
+          "published_bytes": 166550
+        },
+        "limits": [],
+        "missing_measurements": [
+          "filesystem type",
+          "nested proof calls within composite candidate checks",
+          "I/O outside catalog_io (read/hash counters cover catalog_io only)",
+          "tool_commit",
+          "catalog_entries",
+          "package_files"
+        ]
+      }
+    }
+  ]
+}

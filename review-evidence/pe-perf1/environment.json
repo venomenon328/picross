@@ -1,0 +1,24 @@
+{
+  "observed_utc": "2026-11-13T21:24:39.2261969Z",
+  "os": {
+    "Caption": "Microsoft Windows 11 Pro",
+    "Version": "10.0.26200",
+    "BuildNumber": "26200"
+  },
+  "cpu": {
+    "Name": "AMD Ryzen 7 5800X 8-Core Processor             ",
+    "NumberOfCores": 8,
+    "NumberOfLogicalProcessors": 16
+  },
+  "filesystem": {
+    "DriveLetter": "E",
+    "FileSystemType": "NTFS"
+  },
+  "disk": {
+    "FriendlyName": "WDC  WDS200T2B0A-00SM50",
+    "BusType": "SATA"
+  },
+  "cpu_load_not_controlled": true,
+  "os_cache_not_flushed": true,
+  "user_saves_used": false
+}

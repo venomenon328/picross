@@ -1,0 +1,2907 @@
+{
+  "mode": "old",
+  "source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+  "baseline_content": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+  "headless": true,
+  "native_test": false,
+  "resolution": [
+    1600,
+    1000
+  ],
+  "jobs": [
+    {
+      "action": "migration-plan",
+      "wall_seconds": 205.9777372000026,
+      "ui_status": "Echter Plan erfolgreich geprüft. Übernehmen ist ein eigener Schritt (zehn Minuten gültig).",
+      "state": "done",
+      "error": null,
+      "recovery_required": false,
+      "runtime_format": "picross-runtime-registry-v7",
+      "stages": [
+        {
+          "operation": "migration",
+          "stage": "Fachoperation gestartet: migration",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "migration",
+          "stage": "Fachoperation läuft: migration",
+          "elapsed_seconds": 0.7
+        },
+        {
+          "operation": "migration",
+          "stage": "Fachoperation abgeschlossen",
+          "elapsed_seconds": 198.2
+        }
+      ],
+      "changed": {},
+      "processes": [
+        {
+          "exit_code": 0,
+          "launcher_cpu_seconds": 0.046875,
+          "launcher_os_io": {
+            "read_operations": 1,
+            "write_operations": 0,
+            "other_operations": 206,
+            "read_bytes": 480,
+            "write_bytes": 0,
+            "other_bytes": 5414
+          },
+          "worker_error": null,
+          "diagnostics": null,
+          "worker_observation": {
+            "observer": "RAM begin/end and existing phase boundaries; no per-I/O observer; no input/budget/guard changes",
+            "wall_seconds": 187.02826189999905,
+            "cpu_seconds": 184.765625,
+            "events": [
+              {
+                "event": "capture begin",
+                "wall_seconds": 0.3092546999978367,
+                "cpu_seconds": 0.21875
+              },
+              {
+                "event": "capture end",
+                "wall_seconds": 42.591139800002566,
+                "cpu_seconds": 41.765625
+              },
+              {
+                "event": "prepare begin",
+                "wall_seconds": 42.59115079999901,
+                "cpu_seconds": 41.765625
+              },
+              {
+                "event": "validate_journal begin",
+                "wall_seconds": 64.63815259999683,
+                "cpu_seconds": 63.578125
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 109.92302100000234,
+                "cpu_seconds": 108.40625
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 113.03373180000199,
+                "cpu_seconds": 111.5
+              },
+              {
+                "event": "validate_journal end",
+                "wall_seconds": 147.74564239999745,
+                "cpu_seconds": 145.921875
+              },
+              {
+                "event": "prepare end",
+                "wall_seconds": 187.0098691000021,
+                "cpu_seconds": 184.75
+              }
+            ],
+            "actual_worker_os_io": {
+              "read_operations": 45825,
+              "write_operations": 848,
+              "other_operations": 3093105,
+              "read_bytes": 2711561301,
+              "write_bytes": 319007810,
+              "other_bytes": 85467430
+            }
+          }
+        }
+      ]
+    },
+    {
+      "action": "migration-apply",
+      "wall_seconds": 431.79046350000135,
+      "ui_status": "resource_limit: catalog time budget exhausted",
+      "state": "error",
+      "error": "resource_limit: catalog time budget exhausted",
+      "recovery_required": false,
+      "runtime_format": "picross-runtime-registry-v7",
+      "stages": [
+        {
+          "operation": "apply",
+          "stage": "Fachoperation gestartet: apply",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "apply",
+          "stage": "Fachoperation läuft: apply",
+          "elapsed_seconds": 0.3
+        }
+      ],
+      "changed": {
+        "game/data/registry.json": {
+          "before": {
+            "sha256": "93ae36c3de9d6c16363659a529a8bc5cde250ac06cea49b10e38b1e998cdfb02",
+            "mtime_ns": 1794604891940461400,
+            "bytes": 31794
+          },
+          "after": {
+            "sha256": "93ae36c3de9d6c16363659a529a8bc5cde250ac06cea49b10e38b1e998cdfb02",
+            "mtime_ns": 1794605551774114600,
+            "bytes": 31794
+          }
+        }
+      },
+      "processes": [
+        {
+          "exit_code": 0,
+          "launcher_cpu_seconds": 0.015625,
+          "launcher_os_io": {
+            "read_operations": 1,
+            "write_operations": 0,
+            "other_operations": 210,
+            "read_bytes": 480,
+            "write_bytes": 0,
+            "other_bytes": 5462
+          },
+          "worker_error": "resource_limit: catalog time budget exhausted",
+          "diagnostics": null,
+          "worker_observation": {
+            "observer": "RAM begin/end and existing phase boundaries; no per-I/O observer; no input/budget/guard changes",
+            "error": "resource_limit: catalog time budget exhausted",
+            "traceback": "Traceback (most recent call last):\n  File \"<task>\\old_light_entry.py\", line 32, in observed\n    try:return original(*args,**kwargs)\n               ~~~~~~~~^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_editor\\worker.py\", line 49, in run\n    if kind == \"migration\": return images.apply_migration(root, plan)\n                                   ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_images.py\", line 453, in apply_migration\n    if value[\"files\"]: tx.execute(root, journal, fail_step=fail_step)\n                       ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_transaction.py\", line 925, in execute\n    return current_execute(root, j, additions, fail_step=fail_step,\n                           publication_seconds=publication_seconds, recovery_seconds=recovery_seconds,\n                           **({\"source_check\": source_check} if source_check is not None else {}),\n                           **({\"_verification\": _verification} if _verification is not None else {}))\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_publication.py\", line 516, in execute\n    return _execute(root, j, additions, fail_step=fail_step, under_lock=under_lock, source_check=source_check)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_publication.py\", line 624, in _execute\n    guard_fn(); check_checkout(root, replay=j['operation']=='registration', pending_journal=raw,\n                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                               **({\"_verification\": _verification} if _verification is not None else {})); guard_fn()\n                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\content_registry.py\", line 229, in check_checkout\n    reveal.resolve(root, e, catalog)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\reveal_source.py\", line 368, in resolve\n    original, historical_notice, current_receipt, _ = package(root, entry)\n                                                      ~~~~~~~^^^^^^^^^^^^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\reveal_source.py\", line 246, in package\n    raw = io.read(root, prefix + \"/manifest.json\", 8 * 1024 * 1024)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_io.py\", line 115, in read\n    path = safe(root, name)\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_io.py\", line 62, in safe\n    tick()\n    ~~~~^^\n  File \"<task>\\old-program\\tools\\puzzle_production\\catalog_io.py\", line 49, in tick\n    raise Aborted(\"resource_limit: catalog time budget exhausted\")\ntools.puzzle_production.contract.Aborted: resource_limit: catalog time budget exhausted\n",
+            "wall_seconds": 431.2979378000018,
+            "cpu_seconds": 428.796875,
+            "events": [
+              {
+                "event": "capture begin",
+                "wall_seconds": 0.039022700002533384,
+                "cpu_seconds": 0.046875
+              },
+              {
+                "event": "capture end",
+                "wall_seconds": 38.15272720000212,
+                "cpu_seconds": 38.09375
+              },
+              {
+                "event": "prepare begin",
+                "wall_seconds": 38.19276340000215,
+                "cpu_seconds": 38.140625
+              },
+              {
+                "event": "validate_journal begin",
+                "wall_seconds": 60.288991800000076,
+                "cpu_seconds": 60.140625
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 104.64390950000234,
+                "cpu_seconds": 104.15625
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 107.48384590000205,
+                "cpu_seconds": 106.984375
+              },
+              {
+                "event": "validate_journal end",
+                "wall_seconds": 141.73059790000116,
+                "cpu_seconds": 140.984375
+              },
+              {
+                "event": "prepare end",
+                "wall_seconds": 180.00824270000157,
+                "cpu_seconds": 179.109375
+              },
+              {
+                "event": "segment P0",
+                "wall_seconds": 180.02020070000435,
+                "cpu_seconds": 179.125
+              },
+              {
+                "event": "validate_journal begin",
+                "wall_seconds": 180.02020950000588,
+                "cpu_seconds": 179.125
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 225.2446590000036,
+                "cpu_seconds": 224.046875
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 228.0819474000018,
+                "cpu_seconds": 226.859375
+              },
+              {
+                "event": "validate_journal end",
+                "wall_seconds": 260.6526987000034,
+                "cpu_seconds": 259.21875
+              },
+              {
+                "event": "checkpoint P0",
+                "target": null,
+                "wall_seconds": 260.73065000000497,
+                "cpu_seconds": 259.296875
+              },
+              {
+                "event": "segment P1",
+                "wall_seconds": 260.7306644000055,
+                "cpu_seconds": 259.296875
+              },
+              {
+                "event": "checkpoint journal-prefix",
+                "target": null,
+                "wall_seconds": 260.73327090000384,
+                "cpu_seconds": 259.296875
+              },
+              {
+                "event": "checkpoint journal-prefix",
+                "target": null,
+                "wall_seconds": 260.73360670000693,
+                "cpu_seconds": 259.296875
+              },
+              {
+                "event": "checkpoint journal-prefix",
+                "target": null,
+                "wall_seconds": 260.73386420000315,
+                "cpu_seconds": 259.296875
+              },
+              {
+                "event": "checkpoint journal-complete",
+                "target": null,
+                "wall_seconds": 260.7531056000007,
+                "cpu_seconds": 259.3125
+              },
+              {
+                "event": "checkpoint P1",
+                "target": null,
+                "wall_seconds": 260.75632150000456,
+                "cpu_seconds": 259.3125
+              },
+              {
+                "event": "segment P2",
+                "wall_seconds": 260.75633240000025,
+                "cpu_seconds": 259.3125
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 260.7584258000061,
+                "cpu_seconds": 259.3125
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 263.4231416000039,
+                "cpu_seconds": 261.984375
+              },
+              {
+                "event": "checkpoint P2",
+                "target": null,
+                "wall_seconds": 263.4231482000032,
+                "cpu_seconds": 261.984375
+              },
+              {
+                "event": "segment P3",
+                "wall_seconds": 263.4231601000065,
+                "cpu_seconds": 261.984375
+              },
+              {
+                "event": "segment P4",
+                "wall_seconds": 263.4231668000066,
+                "cpu_seconds": 261.984375
+              },
+              {
+                "event": "segment P5",
+                "wall_seconds": 263.4234727000003,
+                "cpu_seconds": 261.984375
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 263.42347630000586,
+                "cpu_seconds": 261.984375
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 266.005073100001,
+                "cpu_seconds": 264.5625
+              },
+              {
+                "event": "checkpoint temp-prefix",
+                "target": "game/data/registry.json",
+                "wall_seconds": 266.0081366000013,
+                "cpu_seconds": 264.5625
+              },
+              {
+                "event": "checkpoint temp-complete",
+                "target": "game/data/registry.json",
+                "wall_seconds": 266.0229752000014,
+                "cpu_seconds": 264.5625
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 266.0229882000058,
+                "cpu_seconds": 264.5625
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 268.7282241000066,
+                "cpu_seconds": 267.25
+              },
+              {
+                "event": "checkpoint P5",
+                "target": "game/data/registry.json",
+                "wall_seconds": 268.7381603000031,
+                "cpu_seconds": 267.25
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 268.73818010000105,
+                "cpu_seconds": 267.25
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 271.3066534000027,
+                "cpu_seconds": 269.765625
+              },
+              {
+                "event": "recover begin",
+                "wall_seconds": 300.00007610000466,
+                "cpu_seconds": 298.15625
+              },
+              {
+                "event": "segment R0",
+                "wall_seconds": 300.5388649000015,
+                "cpu_seconds": 298.703125
+              },
+              {
+                "event": "validate_journal begin",
+                "wall_seconds": 301.3458125000034,
+                "cpu_seconds": 299.515625
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 346.64424140000483,
+                "cpu_seconds": 344.546875
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 349.3975036000047,
+                "cpu_seconds": 347.296875
+              },
+              {
+                "event": "validate_journal end",
+                "wall_seconds": 382.9385717000041,
+                "cpu_seconds": 380.625
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 383.00186170000234,
+                "cpu_seconds": 380.6875
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 386.0420258000013,
+                "cpu_seconds": 383.6875
+              },
+              {
+                "event": "checkpoint R0",
+                "target": null,
+                "wall_seconds": 386.04203340000095,
+                "cpu_seconds": 383.6875
+              },
+              {
+                "event": "segment R1",
+                "wall_seconds": 386.042048000003,
+                "cpu_seconds": 383.6875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-00f37200bcee4d548e2c910ce551d077.json",
+                "wall_seconds": 386.0465869000036,
+                "cpu_seconds": 383.6875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-023b50b44d1c4698a6e17e65b6ea4337.json",
+                "wall_seconds": 386.0499768000009,
+                "cpu_seconds": 383.703125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-0e0cbecdf3204063b6d008ab7ce92141.json",
+                "wall_seconds": 386.05307000000175,
+                "cpu_seconds": 383.703125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-1b7bf32b1fa140918c0692c90d998752.json",
+                "wall_seconds": 386.05580400000326,
+                "cpu_seconds": 383.703125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-1e9cdac1f83a49d5982f93ded09e58de.json",
+                "wall_seconds": 386.0588518000004,
+                "cpu_seconds": 383.703125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-20219e14dbe242689b9ef06297828f34.json",
+                "wall_seconds": 386.06222260000504,
+                "cpu_seconds": 383.703125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-20ecf7747bbf40828238ec26d1207172.json",
+                "wall_seconds": 386.06519870000193,
+                "cpu_seconds": 383.71875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-22969714393847e697e8169a8b688efd.json",
+                "wall_seconds": 386.06839610000316,
+                "cpu_seconds": 383.71875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-25d245061b0c49c190788de8e5d0e45b.json",
+                "wall_seconds": 386.0719076000023,
+                "cpu_seconds": 383.71875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-2a8481f61e6443bda174bd3da67c.json",
+                "wall_seconds": 386.07472340000095,
+                "cpu_seconds": 383.71875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-3a744ae1b7cb4d38b0ac29d030ef.json",
+                "wall_seconds": 386.07713770000555,
+                "cpu_seconds": 383.71875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-3e97c042f0bf474e8608a84ea034c246.json",
+                "wall_seconds": 386.07971110000653,
+                "cpu_seconds": 383.734375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-419437f56aba4603bf7a84bf0b624ba5.json",
+                "wall_seconds": 386.0822812000042,
+                "cpu_seconds": 383.734375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-49a9e539419b48119e8f5f506fcf6dc7.json",
+                "wall_seconds": 386.0845485000027,
+                "cpu_seconds": 383.734375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-51405ea1ad194507a60c9b6701d802f0.json",
+                "wall_seconds": 386.0869524000009,
+                "cpu_seconds": 383.734375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-5ad1e06e19ab475baebc582d4999daa5.json",
+                "wall_seconds": 386.08941560000676,
+                "cpu_seconds": 383.734375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-5f5a379b5abb4c979ee23f807aec9418.json",
+                "wall_seconds": 386.0918196000057,
+                "cpu_seconds": 383.734375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-6d980b0285604e22b8ecfce205aa008b.json",
+                "wall_seconds": 386.09427630000573,
+                "cpu_seconds": 383.734375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-72561c715dd741f9b0082c7ad24802c1.json",
+                "wall_seconds": 386.09699260000343,
+                "cpu_seconds": 383.75
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-72eb9b188896440c8a9a833e803835ec.json",
+                "wall_seconds": 386.0993456000069,
+                "cpu_seconds": 383.75
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-7635c2e042e349fc90ad9ae55681de0f.json",
+                "wall_seconds": 386.1014148000031,
+                "cpu_seconds": 383.75
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-7ec3dcd94bf84e698691ef4b5839.json",
+                "wall_seconds": 386.10342000000674,
+                "cpu_seconds": 383.75
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-82758295d5d34284bbae2716f64f.json",
+                "wall_seconds": 386.1059038000021,
+                "cpu_seconds": 383.75
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-86d1d588a88a46e6ac1285f0097afbca.json",
+                "wall_seconds": 386.1079585000043,
+                "cpu_seconds": 383.75
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-87bf2975c82540a399a3d0c7fa180a25.json",
+                "wall_seconds": 386.1101891000071,
+                "cpu_seconds": 383.765625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-8ea7f3dacdcc428a9fcff7a735bc.json",
+                "wall_seconds": 386.1122312000007,
+                "cpu_seconds": 383.765625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-8ecddf77e80c4543bf4ec714fe3d.json",
+                "wall_seconds": 386.1142691000059,
+                "cpu_seconds": 383.765625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-985d36c1634644fbb2c8a0bf7de3aa9f.json",
+                "wall_seconds": 386.1162548000066,
+                "cpu_seconds": 383.765625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-9a79befc7a834e2d9d5896a477328962.json",
+                "wall_seconds": 386.1183114000014,
+                "cpu_seconds": 383.765625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-9be288b9b5104da88fc8464184647ae7.json",
+                "wall_seconds": 386.1209466,
+                "cpu_seconds": 383.765625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-9d08697a30c749258b742ac979de9def.json",
+                "wall_seconds": 386.1235930000039,
+                "cpu_seconds": 383.765625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-9f7c59054ebb4f3f861e2bce3034320e.json",
+                "wall_seconds": 386.12624860000506,
+                "cpu_seconds": 383.78125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-a13368590b744814915eb722f5b2c5f2.json",
+                "wall_seconds": 386.1283701000066,
+                "cpu_seconds": 383.78125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-a358a1bf1b994efcbebeb55abf825789.json",
+                "wall_seconds": 386.1304952000064,
+                "cpu_seconds": 383.78125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-ad7164c2302a42e5953f6779a1c7.json",
+                "wall_seconds": 386.13246990000334,
+                "cpu_seconds": 383.78125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-b180c25084a34b019f35ad2244f03c24.json",
+                "wall_seconds": 386.1344225000066,
+                "cpu_seconds": 383.78125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-b19a0ccbe3164e1c8fd97267e57dd454.json",
+                "wall_seconds": 386.1365150000056,
+                "cpu_seconds": 383.78125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-b3368aea28ac4a11bf09e0dc9c48.json",
+                "wall_seconds": 386.13853770000424,
+                "cpu_seconds": 383.78125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-b5e2302bf71445c09caac76bbc2a7075.json",
+                "wall_seconds": 386.1405483000053,
+                "cpu_seconds": 383.796875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-b6f94e528b48444985d0561cb48a5bc7.json",
+                "wall_seconds": 386.14251550000336,
+                "cpu_seconds": 383.796875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-bd2783fcd3eb428c933d15259961cfcd.json",
+                "wall_seconds": 386.14447250000376,
+                "cpu_seconds": 383.796875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-birne.json",
+                "wall_seconds": 386.14647010000044,
+                "cpu_seconds": 383.796875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-c71563f1b8c940de998afdd62f09.json",
+                "wall_seconds": 386.1485246000011,
+                "cpu_seconds": 383.796875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-d2d41fd0fc604172a7586f7f41c55320.json",
+                "wall_seconds": 386.1505804000044,
+                "cpu_seconds": 383.796875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-d6cb06cb41854b1da84f0ba2f043aa14.json",
+                "wall_seconds": 386.15254530000675,
+                "cpu_seconds": 383.796875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-d7e68d1138a3448c8b2a4b07e8632350.json",
+                "wall_seconds": 386.15450400000555,
+                "cpu_seconds": 383.796875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-d829eb9b83e94f9c9357ee5ab9c9e359.json",
+                "wall_seconds": 386.15645800000493,
+                "cpu_seconds": 383.8125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-dad34b8331914c909e8ded79491dac94.json",
+                "wall_seconds": 386.1584545000005,
+                "cpu_seconds": 383.8125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-dbbebc72556d4f0c9a37ab69275480e9.json",
+                "wall_seconds": 386.160392100006,
+                "cpu_seconds": 383.8125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c.json",
+                "wall_seconds": 386.1623300000065,
+                "cpu_seconds": 383.8125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-e2e5092925ce4821a9219be7816b5931.json",
+                "wall_seconds": 386.16427939999994,
+                "cpu_seconds": 383.8125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-e45e2e0d67a34f6aa8368f477454.json",
+                "wall_seconds": 386.1664641000025,
+                "cpu_seconds": 383.8125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-eedd1fe72af54714908d5b5aff34.json",
+                "wall_seconds": 386.16964700000244,
+                "cpu_seconds": 383.8125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-erdbeere.json",
+                "wall_seconds": 386.17225560000225,
+                "cpu_seconds": 383.8125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-f68e79ef419a4322b68d06817b39330d.json",
+                "wall_seconds": 386.1750772000014,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/added/pz-zitrone.json",
+                "wall_seconds": 386.17825930000254,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-00f37200bcee4d548e2c910ce551d077.json",
+                "wall_seconds": 386.17971180000313,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-023b50b44d1c4698a6e17e65b6ea4337.json",
+                "wall_seconds": 386.1811203000034,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-0e0cbecdf3204063b6d008ab7ce92141.json",
+                "wall_seconds": 386.1828899000029,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-1b7bf32b1fa140918c0692c90d998752.json",
+                "wall_seconds": 386.18412470000476,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-1e9cdac1f83a49d5982f93ded09e58de.json",
+                "wall_seconds": 386.18538210000406,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-20219e14dbe242689b9ef06297828f34.json",
+                "wall_seconds": 386.18647270000656,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-20ecf7747bbf40828238ec26d1207172.json",
+                "wall_seconds": 386.18754900000204,
+                "cpu_seconds": 383.828125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-22969714393847e697e8169a8b688efd.json",
+                "wall_seconds": 386.1886946000013,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-25d245061b0c49c190788de8e5d0e45b.json",
+                "wall_seconds": 386.1898191,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-2a8481f61e6443bda174bd3da67c.json",
+                "wall_seconds": 386.19098620000295,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-3a744ae1b7cb4d38b0ac29d030ef.json",
+                "wall_seconds": 386.1922999000017,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-3e97c042f0bf474e8608a84ea034c246.json",
+                "wall_seconds": 386.1936910000004,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-419437f56aba4603bf7a84bf0b624ba5.json",
+                "wall_seconds": 386.1950930000021,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-49a9e539419b48119e8f5f506fcf6dc7.json",
+                "wall_seconds": 386.19637409999996,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-51405ea1ad194507a60c9b6701d802f0.json",
+                "wall_seconds": 386.1979710000014,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-5ad1e06e19ab475baebc582d4999daa5.json",
+                "wall_seconds": 386.19933230000606,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-5f5a379b5abb4c979ee23f807aec9418.json",
+                "wall_seconds": 386.2008145,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-6d980b0285604e22b8ecfce205aa008b.json",
+                "wall_seconds": 386.2021787000049,
+                "cpu_seconds": 383.84375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-72561c715dd741f9b0082c7ad24802c1.json",
+                "wall_seconds": 386.2035770000002,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-72eb9b188896440c8a9a833e803835ec.json",
+                "wall_seconds": 386.20490450000216,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-7635c2e042e349fc90ad9ae55681de0f.json",
+                "wall_seconds": 386.2058713000006,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-7ec3dcd94bf84e698691ef4b5839.json",
+                "wall_seconds": 386.2067645000061,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-82758295d5d34284bbae2716f64f.json",
+                "wall_seconds": 386.2077428000048,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-86d1d588a88a46e6ac1285f0097afbca.json",
+                "wall_seconds": 386.20862680000573,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-87bf2975c82540a399a3d0c7fa180a25.json",
+                "wall_seconds": 386.20979120000266,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-8ea7f3dacdcc428a9fcff7a735bc.json",
+                "wall_seconds": 386.21084690000134,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-8ecddf77e80c4543bf4ec714fe3d.json",
+                "wall_seconds": 386.21176100000594,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-985d36c1634644fbb2c8a0bf7de3aa9f.json",
+                "wall_seconds": 386.21265850000054,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-9a79befc7a834e2d9d5896a477328962.json",
+                "wall_seconds": 386.21393810000154,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-9be288b9b5104da88fc8464184647ae7.json",
+                "wall_seconds": 386.21513920000143,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-9d08697a30c749258b742ac979de9def.json",
+                "wall_seconds": 386.21602020000137,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-9f7c59054ebb4f3f861e2bce3034320e.json",
+                "wall_seconds": 386.21695520000503,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-a13368590b744814915eb722f5b2c5f2.json",
+                "wall_seconds": 386.2178553000049,
+                "cpu_seconds": 383.859375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-a358a1bf1b994efcbebeb55abf825789.json",
+                "wall_seconds": 386.21891710000637,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-ad7164c2302a42e5953f6779a1c7.json",
+                "wall_seconds": 386.2200287000014,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-b180c25084a34b019f35ad2244f03c24.json",
+                "wall_seconds": 386.22096960000636,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-b19a0ccbe3164e1c8fd97267e57dd454.json",
+                "wall_seconds": 386.22229900000093,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-b3368aea28ac4a11bf09e0dc9c48.json",
+                "wall_seconds": 386.223467900003,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-b5e2302bf71445c09caac76bbc2a7075.json",
+                "wall_seconds": 386.2243746000022,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-b6f94e528b48444985d0561cb48a5bc7.json",
+                "wall_seconds": 386.22529770000256,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-bd2783fcd3eb428c933d15259961cfcd.json",
+                "wall_seconds": 386.22618850000435,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-birne.json",
+                "wall_seconds": 386.2285106000054,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-c71563f1b8c940de998afdd62f09.json",
+                "wall_seconds": 386.2296054000035,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-d2d41fd0fc604172a7586f7f41c55320.json",
+                "wall_seconds": 386.23063180000463,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-d6cb06cb41854b1da84f0ba2f043aa14.json",
+                "wall_seconds": 386.231515200001,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-d7e68d1138a3448c8b2a4b07e8632350.json",
+                "wall_seconds": 386.2324093000061,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-d829eb9b83e94f9c9357ee5ab9c9e359.json",
+                "wall_seconds": 386.2336387000032,
+                "cpu_seconds": 383.875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-dad34b8331914c909e8ded79491dac94.json",
+                "wall_seconds": 386.23492400000396,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-dbbebc72556d4f0c9a37ab69275480e9.json",
+                "wall_seconds": 386.2362392000068,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c.json",
+                "wall_seconds": 386.23760890000267,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-e2e5092925ce4821a9219be7816b5931.json",
+                "wall_seconds": 386.23893240000325,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-e45e2e0d67a34f6aa8368f477454.json",
+                "wall_seconds": 386.24029390000214,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-eedd1fe72af54714908d5b5aff34.json",
+                "wall_seconds": 386.24153440000373,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-erdbeere.json",
+                "wall_seconds": 386.24442900000577,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-f68e79ef419a4322b68d06817b39330d.json",
+                "wall_seconds": 386.2458501000001,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/backgrounds/pz-zitrone.json",
+                "wall_seconds": 386.2489349000025,
+                "cpu_seconds": 383.890625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/categories.json",
+                "wall_seconds": 386.2519160000011,
+                "cpu_seconds": 383.90625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty-method.json",
+                "wall_seconds": 386.25451270000485,
+                "cpu_seconds": 383.90625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-00f37200bcee4d548e2c910ce551d077/rating.json",
+                "wall_seconds": 386.25696480000624,
+                "cpu_seconds": 383.90625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-023b50b44d1c4698a6e17e65b6ea4337/rating.json",
+                "wall_seconds": 386.259029300003,
+                "cpu_seconds": 383.90625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-0e0cbecdf3204063b6d008ab7ce92141/rating.json",
+                "wall_seconds": 386.2615919000018,
+                "cpu_seconds": 383.90625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-1b7bf32b1fa140918c0692c90d998752/rating.json",
+                "wall_seconds": 386.26431660000526,
+                "cpu_seconds": 383.90625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-1e9cdac1f83a49d5982f93ded09e58de/rating.json",
+                "wall_seconds": 386.26715200000035,
+                "cpu_seconds": 383.921875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-20219e14dbe242689b9ef06297828f34/rating.json",
+                "wall_seconds": 386.27005390000704,
+                "cpu_seconds": 383.921875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-20ecf7747bbf40828238ec26d1207172/rating.json",
+                "wall_seconds": 386.2731747000071,
+                "cpu_seconds": 383.921875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-22969714393847e697e8169a8b688efd/rating.json",
+                "wall_seconds": 386.2765219000066,
+                "cpu_seconds": 383.921875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-25d245061b0c49c190788de8e5d0e45b/rating.json",
+                "wall_seconds": 386.27869950000604,
+                "cpu_seconds": 383.921875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-2a8481f61e6443bda174bd3da67c/rating.json",
+                "wall_seconds": 386.2814795000013,
+                "cpu_seconds": 383.9375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-3a744ae1b7cb4d38b0ac29d030ef/rating.json",
+                "wall_seconds": 386.2838186000008,
+                "cpu_seconds": 383.9375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-3e97c042f0bf474e8608a84ea034c246/rating.json",
+                "wall_seconds": 386.2862032000048,
+                "cpu_seconds": 383.9375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-419437f56aba4603bf7a84bf0b624ba5/rating.json",
+                "wall_seconds": 386.28848840000137,
+                "cpu_seconds": 383.9375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-49a9e539419b48119e8f5f506fcf6dc7/rating.json",
+                "wall_seconds": 386.290928500006,
+                "cpu_seconds": 383.9375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-51405ea1ad194507a60c9b6701d802f0/rating.json",
+                "wall_seconds": 386.2945456000016,
+                "cpu_seconds": 383.9375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-5ad1e06e19ab475baebc582d4999daa5/rating.json",
+                "wall_seconds": 386.2974724000014,
+                "cpu_seconds": 383.953125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-5f5a379b5abb4c979ee23f807aec9418/rating.json",
+                "wall_seconds": 386.2998129000043,
+                "cpu_seconds": 383.953125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-6d980b0285604e22b8ecfce205aa008b/rating.json",
+                "wall_seconds": 386.3031370000026,
+                "cpu_seconds": 383.953125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-72561c715dd741f9b0082c7ad24802c1/rating.json",
+                "wall_seconds": 386.3063356000057,
+                "cpu_seconds": 383.953125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-72eb9b188896440c8a9a833e803835ec/rating.json",
+                "wall_seconds": 386.31000250000216,
+                "cpu_seconds": 383.953125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-7635c2e042e349fc90ad9ae55681de0f/rating.json",
+                "wall_seconds": 386.31334820000484,
+                "cpu_seconds": 383.96875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-7ec3dcd94bf84e698691ef4b5839/rating.json",
+                "wall_seconds": 386.3170517000035,
+                "cpu_seconds": 383.96875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-82758295d5d34284bbae2716f64f/rating.json",
+                "wall_seconds": 386.32030320000194,
+                "cpu_seconds": 383.96875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-86d1d588a88a46e6ac1285f0097afbca/rating.json",
+                "wall_seconds": 386.3234799000056,
+                "cpu_seconds": 383.96875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-87bf2975c82540a399a3d0c7fa180a25/rating.json",
+                "wall_seconds": 386.32715270000335,
+                "cpu_seconds": 383.96875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-8ea7f3dacdcc428a9fcff7a735bc/rating.json",
+                "wall_seconds": 386.3307894000027,
+                "cpu_seconds": 383.984375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-8ecddf77e80c4543bf4ec714fe3d/rating.json",
+                "wall_seconds": 386.3344133000064,
+                "cpu_seconds": 383.984375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-985d36c1634644fbb2c8a0bf7de3aa9f/rating.json",
+                "wall_seconds": 386.3374365000054,
+                "cpu_seconds": 383.984375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-9a79befc7a834e2d9d5896a477328962/rating.json",
+                "wall_seconds": 386.3410600000061,
+                "cpu_seconds": 383.984375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-9be288b9b5104da88fc8464184647ae7/rating.json",
+                "wall_seconds": 386.34436890000507,
+                "cpu_seconds": 384.0
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-9d08697a30c749258b742ac979de9def/rating.json",
+                "wall_seconds": 386.3475055000017,
+                "cpu_seconds": 384.0
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-9f7c59054ebb4f3f861e2bce3034320e/rating.json",
+                "wall_seconds": 386.35059770000225,
+                "cpu_seconds": 384.0
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-a13368590b744814915eb722f5b2c5f2/rating.json",
+                "wall_seconds": 386.35396810000384,
+                "cpu_seconds": 384.0
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-a358a1bf1b994efcbebeb55abf825789/rating.json",
+                "wall_seconds": 386.3575271000009,
+                "cpu_seconds": 384.0
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-ad7164c2302a42e5953f6779a1c7/rating.json",
+                "wall_seconds": 386.3609765000001,
+                "cpu_seconds": 384.015625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-b180c25084a34b019f35ad2244f03c24/rating.json",
+                "wall_seconds": 386.3644743000041,
+                "cpu_seconds": 384.015625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-b19a0ccbe3164e1c8fd97267e57dd454/rating.json",
+                "wall_seconds": 386.3680358000056,
+                "cpu_seconds": 384.015625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-b3368aea28ac4a11bf09e0dc9c48/rating.json",
+                "wall_seconds": 386.371404000005,
+                "cpu_seconds": 384.015625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-b5e2302bf71445c09caac76bbc2a7075/rating.json",
+                "wall_seconds": 386.37473260000115,
+                "cpu_seconds": 384.015625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-b6f94e528b48444985d0561cb48a5bc7/rating.json",
+                "wall_seconds": 386.3777227000028,
+                "cpu_seconds": 384.03125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-bd2783fcd3eb428c933d15259961cfcd/rating.json",
+                "wall_seconds": 386.3806468000039,
+                "cpu_seconds": 384.03125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-birne/rating.json",
+                "wall_seconds": 386.383920100001,
+                "cpu_seconds": 384.03125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-c71563f1b8c940de998afdd62f09/rating.json",
+                "wall_seconds": 386.38598930000444,
+                "cpu_seconds": 384.03125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-d2d41fd0fc604172a7586f7f41c55320/rating.json",
+                "wall_seconds": 386.38817890000064,
+                "cpu_seconds": 384.03125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-d6cb06cb41854b1da84f0ba2f043aa14/rating.json",
+                "wall_seconds": 386.39030180000555,
+                "cpu_seconds": 384.03125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-d7e68d1138a3448c8b2a4b07e8632350/rating.json",
+                "wall_seconds": 386.39233600000443,
+                "cpu_seconds": 384.046875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-d829eb9b83e94f9c9357ee5ab9c9e359/rating.json",
+                "wall_seconds": 386.39439900000434,
+                "cpu_seconds": 384.046875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-dad34b8331914c909e8ded79491dac94/rating.json",
+                "wall_seconds": 386.39640480000526,
+                "cpu_seconds": 384.046875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-dbbebc72556d4f0c9a37ab69275480e9/rating.json",
+                "wall_seconds": 386.3984313000037,
+                "cpu_seconds": 384.046875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/rating.json",
+                "wall_seconds": 386.40107620000344,
+                "cpu_seconds": 384.046875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-e2e5092925ce4821a9219be7816b5931/rating.json",
+                "wall_seconds": 386.4039272000009,
+                "cpu_seconds": 384.046875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-e45e2e0d67a34f6aa8368f477454/rating.json",
+                "wall_seconds": 386.40622980000626,
+                "cpu_seconds": 384.046875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-eedd1fe72af54714908d5b5aff34/rating.json",
+                "wall_seconds": 386.4082845000012,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-erdbeere/rating.json",
+                "wall_seconds": 386.4105333000043,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-f68e79ef419a4322b68d06817b39330d/rating.json",
+                "wall_seconds": 386.4125129000022,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/difficulty/pz-zitrone/rating.json",
+                "wall_seconds": 386.414474300007,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/registry.json",
+                "wall_seconds": 386.4163914000019,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-00f37200bcee4d548e2c910ce551d077.json",
+                "wall_seconds": 386.4174326000066,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-023b50b44d1c4698a6e17e65b6ea4337.json",
+                "wall_seconds": 386.4200529000009,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-0e0cbecdf3204063b6d008ab7ce92141.json",
+                "wall_seconds": 386.42103930000303,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-1b7bf32b1fa140918c0692c90d998752.json",
+                "wall_seconds": 386.4219299000033,
+                "cpu_seconds": 384.0625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-1e9cdac1f83a49d5982f93ded09e58de.json",
+                "wall_seconds": 386.42283530000714,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-20219e14dbe242689b9ef06297828f34.json",
+                "wall_seconds": 386.42486810000264,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-20ecf7747bbf40828238ec26d1207172.json",
+                "wall_seconds": 386.42578050000157,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-22969714393847e697e8169a8b688efd.json",
+                "wall_seconds": 386.4267006000009,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-25d245061b0c49c190788de8e5d0e45b.json",
+                "wall_seconds": 386.42882480000117,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-2a8481f61e6443bda174bd3da67c.json",
+                "wall_seconds": 386.4308244000058,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-3a744ae1b7cb4d38b0ac29d030ef.json",
+                "wall_seconds": 386.4328148000059,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-3e97c042f0bf474e8608a84ea034c246.json",
+                "wall_seconds": 386.435143900002,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-419437f56aba4603bf7a84bf0b624ba5.json",
+                "wall_seconds": 386.43613700000424,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-49a9e539419b48119e8f5f506fcf6dc7.json",
+                "wall_seconds": 386.43732780000573,
+                "cpu_seconds": 384.078125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-51405ea1ad194507a60c9b6701d802f0.json",
+                "wall_seconds": 386.4396656000026,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-5ad1e06e19ab475baebc582d4999daa5.json",
+                "wall_seconds": 386.4416690000071,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-5f5a379b5abb4c979ee23f807aec9418.json",
+                "wall_seconds": 386.44256110000424,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-6d980b0285604e22b8ecfce205aa008b.json",
+                "wall_seconds": 386.4434642000051,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-72561c715dd741f9b0082c7ad24802c1.json",
+                "wall_seconds": 386.44552710000426,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-72eb9b188896440c8a9a833e803835ec.json",
+                "wall_seconds": 386.4475878000012,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-7635c2e042e349fc90ad9ae55681de0f.json",
+                "wall_seconds": 386.4484963000068,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-7ec3dcd94bf84e698691ef4b5839.json",
+                "wall_seconds": 386.45095050000236,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-82758295d5d34284bbae2716f64f.json",
+                "wall_seconds": 386.4529892000064,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-86d1d588a88a46e6ac1285f0097afbca.json",
+                "wall_seconds": 386.4538987000051,
+                "cpu_seconds": 384.09375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-87bf2975c82540a399a3d0c7fa180a25.json",
+                "wall_seconds": 386.4548496000061,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-8ea7f3dacdcc428a9fcff7a735bc.json",
+                "wall_seconds": 386.45687710000493,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-8ecddf77e80c4543bf4ec714fe3d.json",
+                "wall_seconds": 386.45885820000694,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-985d36c1634644fbb2c8a0bf7de3aa9f.json",
+                "wall_seconds": 386.46086800000194,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-9a79befc7a834e2d9d5896a477328962.json",
+                "wall_seconds": 386.46295040000405,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-9be288b9b5104da88fc8464184647ae7.json",
+                "wall_seconds": 386.46385280000686,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-9d08697a30c749258b742ac979de9def.json",
+                "wall_seconds": 386.46476330000587,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-9f7c59054ebb4f3f861e2bce3034320e.json",
+                "wall_seconds": 386.4657189000063,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-a13368590b744814915eb722f5b2c5f2.json",
+                "wall_seconds": 386.46660720000364,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-a358a1bf1b994efcbebeb55abf825789.json",
+                "wall_seconds": 386.4686182000005,
+                "cpu_seconds": 384.109375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-ad7164c2302a42e5953f6779a1c7.json",
+                "wall_seconds": 386.47068710000167,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-b180c25084a34b019f35ad2244f03c24.json",
+                "wall_seconds": 386.4715908000071,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-b19a0ccbe3164e1c8fd97267e57dd454.json",
+                "wall_seconds": 386.47247350000544,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-b3368aea28ac4a11bf09e0dc9c48.json",
+                "wall_seconds": 386.4744364000071,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-b5e2302bf71445c09caac76bbc2a7075.json",
+                "wall_seconds": 386.4764202000006,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-b6f94e528b48444985d0561cb48a5bc7.json",
+                "wall_seconds": 386.477338100005,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-bd2783fcd3eb428c933d15259961cfcd.json",
+                "wall_seconds": 386.4782243000009,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-birne.json",
+                "wall_seconds": 386.47911350000504,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-c71563f1b8c940de998afdd62f09.json",
+                "wall_seconds": 386.48134770000615,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-d2d41fd0fc604172a7586f7f41c55320.json",
+                "wall_seconds": 386.482419800006,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-d6cb06cb41854b1da84f0ba2f043aa14.json",
+                "wall_seconds": 386.4833648000058,
+                "cpu_seconds": 384.125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-d7e68d1138a3448c8b2a4b07e8632350.json",
+                "wall_seconds": 386.4853777000026,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-d829eb9b83e94f9c9357ee5ab9c9e359.json",
+                "wall_seconds": 386.48737690000416,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-dad34b8331914c909e8ded79491dac94.json",
+                "wall_seconds": 386.4882668000064,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-dbbebc72556d4f0c9a37ab69275480e9.json",
+                "wall_seconds": 386.4902312000049,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c.json",
+                "wall_seconds": 386.4911235000036,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-e2e5092925ce4821a9219be7816b5931.json",
+                "wall_seconds": 386.4920115000059,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-e45e2e0d67a34f6aa8368f477454.json",
+                "wall_seconds": 386.4940088000003,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-eedd1fe72af54714908d5b5aff34.json",
+                "wall_seconds": 386.49600510000164,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-erdbeere.json",
+                "wall_seconds": 386.4970406000066,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-f68e79ef419a4322b68d06817b39330d.json",
+                "wall_seconds": 386.49793790000695,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "content/reveals/pz-zitrone.json",
+                "wall_seconds": 386.49882320000324,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-00f37200bcee4d548e2c910ce551d077.txt",
+                "wall_seconds": 386.4997843000019,
+                "cpu_seconds": 384.140625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-023b50b44d1c4698a6e17e65b6ea4337.txt",
+                "wall_seconds": 386.50077300000703,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-0e0cbecdf3204063b6d008ab7ce92141.txt",
+                "wall_seconds": 386.5017133000001,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-1b7bf32b1fa140918c0692c90d998752.txt",
+                "wall_seconds": 386.50265370000125,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-1e9cdac1f83a49d5982f93ded09e58de.txt",
+                "wall_seconds": 386.5036071000068,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-20219e14dbe242689b9ef06297828f34.txt",
+                "wall_seconds": 386.50454360000003,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-20ecf7747bbf40828238ec26d1207172.txt",
+                "wall_seconds": 386.50549200000387,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-22969714393847e697e8169a8b688efd.txt",
+                "wall_seconds": 386.50644000000466,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-25d245061b0c49c190788de8e5d0e45b.txt",
+                "wall_seconds": 386.50744930000656,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-2a8481f61e6443bda174bd3da67c.txt",
+                "wall_seconds": 386.5083991000065,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-3a744ae1b7cb4d38b0ac29d030ef.txt",
+                "wall_seconds": 386.50934170000255,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-3e97c042f0bf474e8608a84ea034c246.txt",
+                "wall_seconds": 386.5102829000025,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-419437f56aba4603bf7a84bf0b624ba5.txt",
+                "wall_seconds": 386.51140050000686,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-49a9e539419b48119e8f5f506fcf6dc7.txt",
+                "wall_seconds": 386.5125426000013,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-51405ea1ad194507a60c9b6701d802f0.txt",
+                "wall_seconds": 386.5135264000055,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-5ad1e06e19ab475baebc582d4999daa5.txt",
+                "wall_seconds": 386.5144705000057,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-5f5a379b5abb4c979ee23f807aec9418.txt",
+                "wall_seconds": 386.51543970000057,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-6d980b0285604e22b8ecfce205aa008b.txt",
+                "wall_seconds": 386.5163845000061,
+                "cpu_seconds": 384.15625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-72561c715dd741f9b0082c7ad24802c1.txt",
+                "wall_seconds": 386.5173363000067,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-72eb9b188896440c8a9a833e803835ec.txt",
+                "wall_seconds": 386.51832110000396,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-7635c2e042e349fc90ad9ae55681de0f.txt",
+                "wall_seconds": 386.5192762000006,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-7ec3dcd94bf84e698691ef4b5839.txt",
+                "wall_seconds": 386.52020880000055,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-82758295d5d34284bbae2716f64f.txt",
+                "wall_seconds": 386.5212057000026,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-86d1d588a88a46e6ac1285f0097afbca.txt",
+                "wall_seconds": 386.5221485000002,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-87bf2975c82540a399a3d0c7fa180a25.txt",
+                "wall_seconds": 386.5231072000024,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-8ea7f3dacdcc428a9fcff7a735bc.txt",
+                "wall_seconds": 386.5240577000004,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-8ecddf77e80c4543bf4ec714fe3d.txt",
+                "wall_seconds": 386.52500050000526,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-985d36c1634644fbb2c8a0bf7de3aa9f.txt",
+                "wall_seconds": 386.52593490000436,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-9a79befc7a834e2d9d5896a477328962.txt",
+                "wall_seconds": 386.5268994000071,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-9be288b9b5104da88fc8464184647ae7.txt",
+                "wall_seconds": 386.5281399000014,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-9d08697a30c749258b742ac979de9def.txt",
+                "wall_seconds": 386.52924930000154,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-9f7c59054ebb4f3f861e2bce3034320e.txt",
+                "wall_seconds": 386.5304352000021,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-a13368590b744814915eb722f5b2c5f2.txt",
+                "wall_seconds": 386.53143520000594,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-a358a1bf1b994efcbebeb55abf825789.txt",
+                "wall_seconds": 386.5323825000014,
+                "cpu_seconds": 384.171875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-ad7164c2302a42e5953f6779a1c7.txt",
+                "wall_seconds": 386.5333463000061,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-b180c25084a34b019f35ad2244f03c24.txt",
+                "wall_seconds": 386.5342835000047,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-b19a0ccbe3164e1c8fd97267e57dd454.txt",
+                "wall_seconds": 386.5352325000058,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-b3368aea28ac4a11bf09e0dc9c48.txt",
+                "wall_seconds": 386.5361675000022,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-b5e2302bf71445c09caac76bbc2a7075.txt",
+                "wall_seconds": 386.5371435000052,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-b6f94e528b48444985d0561cb48a5bc7.txt",
+                "wall_seconds": 386.53809130000445,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-bd2783fcd3eb428c933d15259961cfcd.txt",
+                "wall_seconds": 386.539039700001,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-birne.txt",
+                "wall_seconds": 386.5412390000056,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-c71563f1b8c940de998afdd62f09.txt",
+                "wall_seconds": 386.54220980000537,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-d2d41fd0fc604172a7586f7f41c55320.txt",
+                "wall_seconds": 386.54341730000306,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-d6cb06cb41854b1da84f0ba2f043aa14.txt",
+                "wall_seconds": 386.5444783000057,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-d7e68d1138a3448c8b2a4b07e8632350.txt",
+                "wall_seconds": 386.545463500006,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-d829eb9b83e94f9c9357ee5ab9c9e359.txt",
+                "wall_seconds": 386.5464016000042,
+                "cpu_seconds": 384.1875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-dad34b8331914c909e8ded79491dac94.txt",
+                "wall_seconds": 386.5473950000014,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-dbbebc72556d4f0c9a37ab69275480e9.txt",
+                "wall_seconds": 386.54835890000686,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c.txt",
+                "wall_seconds": 386.5492999000053,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-e2e5092925ce4821a9219be7816b5931.txt",
+                "wall_seconds": 386.55023770000116,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-e45e2e0d67a34f6aa8368f477454.txt",
+                "wall_seconds": 386.55119630000263,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-eedd1fe72af54714908d5b5aff34.txt",
+                "wall_seconds": 386.5521283000053,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-erdbeere.txt",
+                "wall_seconds": 386.5543980000002,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-f68e79ef419a4322b68d06817b39330d.txt",
+                "wall_seconds": 386.5553840000066,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/backgrounds/pz-zitrone.txt",
+                "wall_seconds": 386.558110900005,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/ankh_001.txt",
+                "wall_seconds": 386.5605768000023,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/balut.txt",
+                "wall_seconds": 386.56288530000165,
+                "cpu_seconds": 384.203125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/banane_001.txt",
+                "wall_seconds": 386.5650531000065,
+                "cpu_seconds": 384.21875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/bierglas_001.txt",
+                "wall_seconds": 386.56736190000083,
+                "cpu_seconds": 384.21875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/birne_001.txt",
+                "wall_seconds": 386.56959250000364,
+                "cpu_seconds": 384.21875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/brandenburger_tor_001.txt",
+                "wall_seconds": 386.5718014000013,
+                "cpu_seconds": 384.21875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/buntspecht_001.txt",
+                "wall_seconds": 386.57408290000603,
+                "cpu_seconds": 384.21875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/carabao_kopf_001.txt",
+                "wall_seconds": 386.5763369000051,
+                "cpu_seconds": 384.21875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/cau_vang_001.txt",
+                "wall_seconds": 386.5785814000046,
+                "cpu_seconds": 384.21875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/chicken_adobo.txt",
+                "wall_seconds": 386.580792700006,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/chocolate_hills_001.txt",
+                "wall_seconds": 386.5830730000016,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/chupacabra_001.txt",
+                "wall_seconds": 386.58524070000567,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/drachenfrucht_001.txt",
+                "wall_seconds": 386.5874260000055,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/efeutute_001.txt",
+                "wall_seconds": 386.5898120000056,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/erbse_001.txt",
+                "wall_seconds": 386.5934919000065,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/erdbeere_001.txt",
+                "wall_seconds": 386.5973182000016,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/fledermaus_001.txt",
+                "wall_seconds": 386.60123900000326,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/game_boy_001.txt",
+                "wall_seconds": 386.6045290000038,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/gecko_001.txt",
+                "wall_seconds": 386.6083978000024,
+                "cpu_seconds": 384.234375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/giraffe_001.txt",
+                "wall_seconds": 386.6108810000005,
+                "cpu_seconds": 384.25
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/hamburger_001.txt",
+                "wall_seconds": 386.61389860000054,
+                "cpu_seconds": 384.25
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/ho_chi_minh_001.txt",
+                "wall_seconds": 386.61628990000463,
+                "cpu_seconds": 384.25
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/huhn_419437f5.txt",
+                "wall_seconds": 386.6186293999999,
+                "cpu_seconds": 384.25
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/ingwer_001.txt",
+                "wall_seconds": 386.6214772000021,
+                "cpu_seconds": 384.25
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/japanische_teekanne_001.txt",
+                "wall_seconds": 386.624536000003,
+                "cpu_seconds": 384.25
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/jinja_001.txt",
+                "wall_seconds": 386.62689270000556,
+                "cpu_seconds": 384.265625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/jose_rizal_001.txt",
+                "wall_seconds": 386.6292186000064,
+                "cpu_seconds": 384.265625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/kaktus_001.txt",
+                "wall_seconds": 386.63209220000135,
+                "cpu_seconds": 384.265625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/klauenhammer_001.txt",
+                "wall_seconds": 386.63493720000406,
+                "cpu_seconds": 384.265625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/knoblauch_001.txt",
+                "wall_seconds": 386.6376023000048,
+                "cpu_seconds": 384.265625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/koboldmaki_001.txt",
+                "wall_seconds": 386.64008170000307,
+                "cpu_seconds": 384.265625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/koelner_dom_001.txt",
+                "wall_seconds": 386.64231460000155,
+                "cpu_seconds": 384.28125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/kolibri_001.txt",
+                "wall_seconds": 386.644624200002,
+                "cpu_seconds": 384.28125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/lemmy_kilmister_001.txt",
+                "wall_seconds": 386.6469214000026,
+                "cpu_seconds": 384.28125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/marie_curie_001.txt",
+                "wall_seconds": 386.64917690000584,
+                "cpu_seconds": 384.28125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/om_001.txt",
+                "wall_seconds": 386.6518464000037,
+                "cpu_seconds": 384.28125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/pentagramm_001.txt",
+                "wall_seconds": 386.6541889,
+                "cpu_seconds": 384.28125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/petronas_towers_001.txt",
+                "wall_seconds": 386.6564354000002,
+                "cpu_seconds": 384.28125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/pfirsich_001.txt",
+                "wall_seconds": 386.6587200000067,
+                "cpu_seconds": 384.296875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/qualle_001.txt",
+                "wall_seconds": 386.6609502000065,
+                "cpu_seconds": 384.296875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/regenbogen_001.txt",
+                "wall_seconds": 386.6631841000053,
+                "cpu_seconds": 384.296875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/regenwurm_001.txt",
+                "wall_seconds": 386.66585920000216,
+                "cpu_seconds": 384.296875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/rote_nelke_001.txt",
+                "wall_seconds": 386.6686839000031,
+                "cpu_seconds": 384.296875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/schachspringer_001.txt",
+                "wall_seconds": 386.67140420000214,
+                "cpu_seconds": 384.296875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/seepferdchen_001.txt",
+                "wall_seconds": 386.67364200000156,
+                "cpu_seconds": 384.3125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/sega_game_gear_001.txt",
+                "wall_seconds": 386.6759058000025,
+                "cpu_seconds": 384.3125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/silbermoewe_001.txt",
+                "wall_seconds": 386.67817880000075,
+                "cpu_seconds": 384.3125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/sonnenblume_001.txt",
+                "wall_seconds": 386.68044710000686,
+                "cpu_seconds": 384.3125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/stirnlappenbasilisk_001.txt",
+                "wall_seconds": 386.68269750000036,
+                "cpu_seconds": 384.3125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/tomate_001.txt",
+                "wall_seconds": 386.6851275000008,
+                "cpu_seconds": 384.3125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/torii_001.txt",
+                "wall_seconds": 386.68743520000135,
+                "cpu_seconds": 384.3125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/warnemuende_001.txt",
+                "wall_seconds": 386.6896562000038,
+                "cpu_seconds": 384.328125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/webcam_001.txt",
+                "wall_seconds": 386.6918611000001,
+                "cpu_seconds": 384.328125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/windspiel_001.txt",
+                "wall_seconds": 386.69407960000535,
+                "cpu_seconds": 384.328125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/yin_yang_001.txt",
+                "wall_seconds": 386.6963287000035,
+                "cpu_seconds": 384.328125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/art/content/zitrone_001.txt",
+                "wall_seconds": 386.6991654000012,
+                "cpu_seconds": 384.328125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/background-capability.json",
+                "wall_seconds": 386.7018586000049,
+                "cpu_seconds": 384.328125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/ankh_001.json",
+                "wall_seconds": 386.70499470000505,
+                "cpu_seconds": 384.34375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/balut.json",
+                "wall_seconds": 386.7083788000018,
+                "cpu_seconds": 384.34375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/banane_001.json",
+                "wall_seconds": 386.7123548000018,
+                "cpu_seconds": 384.34375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/bierglas_001.json",
+                "wall_seconds": 386.7154959000036,
+                "cpu_seconds": 384.34375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/birne_001.json",
+                "wall_seconds": 386.7179108000055,
+                "cpu_seconds": 384.34375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/brandenburger_tor_001.json",
+                "wall_seconds": 386.7202053000001,
+                "cpu_seconds": 384.359375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/buntspecht_001.json",
+                "wall_seconds": 386.72245650000696,
+                "cpu_seconds": 384.359375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/carabao_kopf_001.json",
+                "wall_seconds": 386.72476210000605,
+                "cpu_seconds": 384.359375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/cau_vang_001.json",
+                "wall_seconds": 386.72703320000437,
+                "cpu_seconds": 384.359375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/chicken_adobo.json",
+                "wall_seconds": 386.72926340000413,
+                "cpu_seconds": 384.359375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/chocolate_hills_001.json",
+                "wall_seconds": 386.7324987000029,
+                "cpu_seconds": 384.359375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/chupacabra_001.json",
+                "wall_seconds": 386.7348390000043,
+                "cpu_seconds": 384.359375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/drachenfrucht_001.json",
+                "wall_seconds": 386.73717520000355,
+                "cpu_seconds": 384.375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/efeutute_001.json",
+                "wall_seconds": 386.73941310000373,
+                "cpu_seconds": 384.375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/erbse_001.json",
+                "wall_seconds": 386.74169060000713,
+                "cpu_seconds": 384.375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/erdbeere_001.json",
+                "wall_seconds": 386.743927500007,
+                "cpu_seconds": 384.375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/fledermaus_001.json",
+                "wall_seconds": 386.7463519000012,
+                "cpu_seconds": 384.375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/game_boy_001.json",
+                "wall_seconds": 386.7490484000009,
+                "cpu_seconds": 384.375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/gecko_001.json",
+                "wall_seconds": 386.7513332000017,
+                "cpu_seconds": 384.390625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/giraffe_001.json",
+                "wall_seconds": 386.7535621000061,
+                "cpu_seconds": 384.390625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/hamburger_001.json",
+                "wall_seconds": 386.75584900000104,
+                "cpu_seconds": 384.390625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/ho_chi_minh_001.json",
+                "wall_seconds": 386.75812670000596,
+                "cpu_seconds": 384.390625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/huhn_419437f5.json",
+                "wall_seconds": 386.7606217000066,
+                "cpu_seconds": 384.390625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/ingwer_001.json",
+                "wall_seconds": 386.7628440000044,
+                "cpu_seconds": 384.390625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/japanische_teekanne_001.json",
+                "wall_seconds": 386.76547050000227,
+                "cpu_seconds": 384.390625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/jinja_001.json",
+                "wall_seconds": 386.767734800007,
+                "cpu_seconds": 384.40625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/jose_rizal_001.json",
+                "wall_seconds": 386.7699575000006,
+                "cpu_seconds": 384.40625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/kaktus_001.json",
+                "wall_seconds": 386.7721701000046,
+                "cpu_seconds": 384.40625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/klauenhammer_001.json",
+                "wall_seconds": 386.77436950000265,
+                "cpu_seconds": 384.40625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/knoblauch_001.json",
+                "wall_seconds": 386.7767193000036,
+                "cpu_seconds": 384.40625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/koboldmaki_001.json",
+                "wall_seconds": 386.7789800000028,
+                "cpu_seconds": 384.40625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/koelner_dom_001.json",
+                "wall_seconds": 386.7815630000041,
+                "cpu_seconds": 384.40625
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/kolibri_001.json",
+                "wall_seconds": 386.7838220000049,
+                "cpu_seconds": 384.421875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/lemmy_kilmister_001.json",
+                "wall_seconds": 386.7860692000031,
+                "cpu_seconds": 384.421875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/marie_curie_001.json",
+                "wall_seconds": 386.788289600001,
+                "cpu_seconds": 384.421875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/om_001.json",
+                "wall_seconds": 386.79047840000567,
+                "cpu_seconds": 384.421875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/pentagramm_001.json",
+                "wall_seconds": 386.79340070000035,
+                "cpu_seconds": 384.421875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/petronas_towers_001.json",
+                "wall_seconds": 386.7963056000008,
+                "cpu_seconds": 384.421875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/pfirsich_001.json",
+                "wall_seconds": 386.79918290000205,
+                "cpu_seconds": 384.4375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/qualle_001.json",
+                "wall_seconds": 386.80210960000113,
+                "cpu_seconds": 384.4375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/regenbogen_001.json",
+                "wall_seconds": 386.8046278000038,
+                "cpu_seconds": 384.4375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/regenwurm_001.json",
+                "wall_seconds": 386.8068506000054,
+                "cpu_seconds": 384.4375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/rote_nelke_001.json",
+                "wall_seconds": 386.8091796000008,
+                "cpu_seconds": 384.4375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/schachspringer_001.json",
+                "wall_seconds": 386.81135180000274,
+                "cpu_seconds": 384.4375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/seepferdchen_001.json",
+                "wall_seconds": 386.81400750000466,
+                "cpu_seconds": 384.4375
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/sega_game_gear_001.json",
+                "wall_seconds": 386.81625150000036,
+                "cpu_seconds": 384.453125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/silbermoewe_001.json",
+                "wall_seconds": 386.8184781000018,
+                "cpu_seconds": 384.453125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/sonnenblume_001.json",
+                "wall_seconds": 386.82063840000046,
+                "cpu_seconds": 384.453125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/stirnlappenbasilisk_001.json",
+                "wall_seconds": 386.82301010000083,
+                "cpu_seconds": 384.453125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/tomate_001.json",
+                "wall_seconds": 386.8253493000011,
+                "cpu_seconds": 384.453125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/torii_001.json",
+                "wall_seconds": 386.8280392000015,
+                "cpu_seconds": 384.453125
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/warnemuende_001.json",
+                "wall_seconds": 386.8306217000063,
+                "cpu_seconds": 384.46875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/webcam_001.json",
+                "wall_seconds": 386.83287390000623,
+                "cpu_seconds": 384.46875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/windspiel_001.json",
+                "wall_seconds": 386.8350655000031,
+                "cpu_seconds": 384.46875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/yin_yang_001.json",
+                "wall_seconds": 386.8372406000053,
+                "cpu_seconds": 384.46875
+              },
+              {
+                "event": "checkpoint R1-text",
+                "target": "game/data/content/zitrone_001.json",
+                "wall_seconds": 386.83975060000375,
+                "cpu_seconds": 384.46875
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 386.8397652000058,
+                "cpu_seconds": 384.46875
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 389.4841794000022,
+                "cpu_seconds": 387.109375
+              },
+              {
+                "event": "checkpoint temp-prefix",
+                "target": "game/data/registry.json",
+                "wall_seconds": 389.48951800000214,
+                "cpu_seconds": 387.125
+              },
+              {
+                "event": "checkpoint temp-complete",
+                "target": "game/data/registry.json",
+                "wall_seconds": 389.50027700000646,
+                "cpu_seconds": 387.140625
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 389.50029120000545,
+                "cpu_seconds": 387.140625
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 392.15003140000044,
+                "cpu_seconds": 389.796875
+              },
+              {
+                "event": "checkpoint R1-runtime",
+                "target": null,
+                "wall_seconds": 392.15459030000056,
+                "cpu_seconds": 389.796875
+              },
+              {
+                "event": "segment R2",
+                "wall_seconds": 392.15460970000277,
+                "cpu_seconds": 389.796875
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 392.1546165000036,
+                "cpu_seconds": 389.796875
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 394.7661054000055,
+                "cpu_seconds": 392.421875
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 425.3377361000021,
+                "cpu_seconds": 422.828125
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 427.88057760000083,
+                "cpu_seconds": 425.375
+              },
+              {
+                "event": "checkpoint R2",
+                "target": null,
+                "wall_seconds": 428.5762579000002,
+                "cpu_seconds": 426.078125
+              },
+              {
+                "event": "guard begin",
+                "wall_seconds": 428.57626990000426,
+                "cpu_seconds": 426.078125
+              },
+              {
+                "event": "guard end",
+                "wall_seconds": 431.28465150000557,
+                "cpu_seconds": 428.796875
+              },
+              {
+                "event": "recover end",
+                "wall_seconds": 431.2927315000052,
+                "cpu_seconds": 428.796875
+              }
+            ],
+            "actual_worker_os_io": {
+              "read_operations": 116155,
+              "write_operations": 1698,
+              "other_operations": 8157856,
+              "read_bytes": 7098446069,
+              "write_bytes": 640491517,
+              "other_bytes": 223822094
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "initial_inventory_sha256": "cd751c03b396214d9094e309842366c95730e7252e6748b62ef0374f62a5728d",
+  "initial_byte_inventory_sha256": "c25ec68052a3020d515bdc8ef9e0b06d684c8efebb80ba04322de1d1711e701c",
+  "browser": "157.0.4341.46",
+  "failure_restored_bytes": true,
+  "failure_mtime_changed": [
+    "game/data/registry.json"
+  ],
+  "page_errors": [],
+  "journal_absent": true,
+  "originals": [
+    {
+      "file": "01-old-apply-error.png",
+      "bytes": 2589,
+      "sha256": "ff27ead41d0f40c9cfd530f619ee9d9af6310be5cb9042c7b5f46e632b112397"
+    },
+    {
+      "file": "02-new-apply-phase.png",
+      "bytes": 2895,
+      "sha256": "dc9555fe4164f3b2af53e26721db96b2357606eb733040c1836d93da1ed28fe4"
+    },
+    {
+      "file": "03-new-apply-readback.png",
+      "bytes": 4323,
+      "sha256": "5eac40358bd28b53c5530717ec12251dfed51596ca73c48011fb0c379c46bd7a"
+    }
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "mode": "old",
+  "source": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+  "baseline_content": "4e5bfe489851fe4a4b771fcdf125fd89ce440a98",
+  "headless": true,
+  "native_test": false,
+  "resolution": [
+    1600,
+    1000
+  ],
+  "jobs": [
+    {
+      "action": "migration-plan",
+      "wall_seconds": 194.20731529999466,
+      "ui_status": "Echter Plan erfolgreich geprüft. Übernehmen ist ein eigener Schritt (zehn Minuten gültig).",
+      "state": "done",
+      "error": null,
+      "recovery_required": false,
+      "runtime_format": "picross-runtime-registry-v7",
+      "stages": [
+        {
+          "operation": "migration",
+          "stage": "Fachoperation gestartet: migration",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "migration",
+          "stage": "Fachoperation läuft: migration",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "operation": "migration",
+          "stage": "Fachoperation abgeschlossen",
+          "elapsed_seconds": 193.6
+        }
+      ],
+      "changed": {},
+      "processes": [
+        {
+          "exit_code": 0,
+          "worker_error": null,
+          "diagnostics": null,
+          "launcher_cpu_seconds": 0.015625,
+          "launcher_os_io": {
+            "read_operations": 2,
+            "write_operations": 0,
+            "other_operations": 208,
+            "read_bytes": 6377,
+            "write_bytes": 0,
+            "other_bytes": 5414
+          }
+        }
+      ]
+    },
+    {
+      "action": "migration-apply",
+      "wall_seconds": 436.28719199999614,
+      "ui_status": "resource_limit: catalog time budget exhausted",
+      "state": "error",
+      "error": "resource_limit: catalog time budget exhausted",
+      "recovery_required": false,
+      "runtime_format": "picross-runtime-registry-v7",
+      "stages": [
+        {
+          "operation": "apply",
+          "stage": "Fachoperation gestartet: apply",
+          "elapsed_seconds": 0.0
+        },
+        {
+          "operation": "apply",
+          "stage": "Fachoperation läuft: apply",
+          "elapsed_seconds": 0.3
+        },
+        {
+          "operation": "apply",
+          "stage": "Fachoperation gestoppt",
+          "elapsed_seconds": 436.1
+        }
+      ],
+      "changed": {
+        "game/data/registry.json": {
+          "before": {
+            "sha256": "93ae36c3de9d6c16363659a529a8bc5cde250ac06cea49b10e38b1e998cdfb02",
+            "mtime_ns": 1794602983015195800,
+            "bytes": 31794
+          },
+          "after": {
+            "sha256": "93ae36c3de9d6c16363659a529a8bc5cde250ac06cea49b10e38b1e998cdfb02",
+            "mtime_ns": 1794603625565308200,
+            "bytes": 31794
+          }
+        }
+      },
+      "processes": [
+        {
+          "exit_code": 0,
+          "worker_error": "resource_limit: catalog time budget exhausted",
+          "diagnostics": null,
+          "launcher_cpu_seconds": 0.0,
+          "launcher_os_io": {
+            "read_operations": 1,
+            "write_operations": 0,
+            "other_operations": 208,
+            "read_bytes": 480,
+            "write_bytes": 0,
+            "other_bytes": 5414
+          }
+        }
+      ]
+    }
+  ],
+  "passed": true,
+  "initial_inventory_sha256": "e25e3551eed33b12d51624d5af01791af3a18b8a1bcd6dd140194427af68e151",
+  "browser": "157.0.4341.46",
+  "initial_byte_inventory_sha256": "c25ec68052a3020d515bdc8ef9e0b06d684c8efebb80ba04322de1d1711e701c",
+  "independently_compared_archive_files": 1625,
+  "failure_restored_bytes": true,
+  "failure_mtime_changed": [
+    "game/data/registry.json"
+  ],
+  "harness_note": "Initial all-mtime-equal assertion was too strict for the actual automatic rollback. Independently checked every archive file: all bytes restored, runtime v7, no journal/staging; only runtime mtime changed. No manual recovery or source edits.",
+  "cpu_scope_note": "Popen handle identifies the venv redirector. Its counters are not actual worker CPU/I/O; see minimally observed repeat and in-process profiles."
+}
