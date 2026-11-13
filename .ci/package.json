@@ -3,9 +3,9 @@
   "issue": "https://github.com/venomenon328/picross/issues/576",
   "package": "PE-B",
   "modules": ["tools"],
-  "purpose": "PE-B gemäß issuecomment-6855913029: eigener lokaler Webeditor, sichere HTTP-Sitzung, bestehende A1/A2/A3-Writer und portabler Windows-Starter. docs/ci-required mit regulärem Windows-Spieler; tools vollständig für neue Dienst-/Starterquellen und schmale echte HTTP-/Instanz-/Requestregressionen. T01–T03 einmalige isolierte Writer-, Browser- und Windowsproben; separate Editorbau-/Startbindung im PR.",
+  "purpose": "PE-B gemäß issuecomment-6855913029, Nacharbeit ausschließlich PE-B-B01 aus Review 5895159357: exklusive Windows-Portbindung vor bind. docs/ci-required mit regulärem Windows-Spieler und tools vollständig. Schmale Konfigurationsregression; einmalige echte Windows-Zweitprozessprobe mit SO_REUSEADDR, weiter erreichbarer Originalsitzung, vorheriger Fremdbelegung und bewusster Ausweichportwahl. T03 mit neu gebautem Starter am finalen Head wiederholen; unveränderte T01/T02-Belege mit Grenzen im PR wiederverwenden.",
   "omitted": "Keine Änderung an bestehenden Fachwritern, Spielreadern, Solver oder Bildableitung: deshalb production.*, native.*, preflight und delivery ausgelassen. Vorhandene Fachgarantien plus echte einmalige A1/A2/A3-Aufrufe auf synthetischen Daten; kein Echtkatalog-Replay und kein automatisches Spiel-Chromiumprofil. A01 unabhängig vor Merge, U01 Eigentümer vor Gesamtissueabschluss; kein Mergeauftrag.",
-  "test_changes": [{"path":"tools/test_puzzle_editor.py","disposition":"change-scoped","reason":"Kleine echte HTTP-/Origin-/Token-/Body-/Instanz-/Stale-/Kategorie-Writerregressionen bei gewähltem tools-Modul; kein Browser, Engine- oder Echtkatalog-Dauertest. T01–T03 und bis zu drei Review-PNGs bleiben einmalige Belege."}],
+  "test_changes": [{"path":"tools/test_puzzle_editor.py","disposition":"change-scoped","reason":"Kleine HTTP-/Instanz-/Writerregressionen plus Windows-Socketoptionen vor bind gegen PE-B-B01, auch auf Linux prüfbar; nur bei gewähltem tools-Modul. Echte Windows-Zweitprozess-/T03-Proben bleiben einmalig, ebenso T01/T02 und drei bestehende Review-PNGs. Kein Browser-/Engine-/Echtkatalog-Dauertest."}],
   "core_change": null,
   "evidence": {
     "mode": "none",
