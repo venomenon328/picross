@@ -10,6 +10,7 @@ import zipfile
 
 from .build_windows import ROOT, sha
 from .release import release
+from .payload import fingerprint
 from .smoke_installer import msi_properties
 
 NS = {'w': 'http://schemas.microsoft.com/wix/2006/wi'}
@@ -20,12 +21,12 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
-def verify(build, output, expected_commit, wix_archive=None, compare_build=False):
+def verify(build, output, expected_commit, wix_archive=None, compare_build=False, version=None):
     require(re.fullmatch('[0-9a-f]{40}', expected_commit), 'Full expected source SHA required')
     require(not output.exists(), 'Use a new dedicated inspection directory')
     output.mkdir(parents=True)
     report = json.loads((build / 'delivery.json').read_text(encoding='utf-8'))
-    product = release()
+    product = release(version=version)
     require(report['commit'] == expected_commit, 'Unexpected build source')
     for key in ('version', 'product_code', 'upgrade_code'):
         require(report[key] == product[key], 'Release mismatch: ' + key)
@@ -34,6 +35,14 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
     require(msi.stat().st_size == report['msi_bytes'] and sha(msi) == report['msi_sha256'], 'MSI byte mismatch')
     require((build / (msi.name + '.sha256')).read_text(encoding='utf-8') ==
             report['msi_sha256'] + '  ' + msi.name + '\n', 'Checksum file mismatch')
+    if compare_build:
+        inputs = fingerprint(ROOT)
+        require(report['payload_fingerprint'] == inputs['sha256'], 'Source fingerprint mismatch')
+        require(json.loads((build / 'inputs.json').read_bytes()) == inputs, 'Input inventory mismatch')
+        audit = json.loads((build / 'input-audit.json').read_bytes())
+        require(audit['fingerprint'] == inputs['sha256'] and audit['repository_inputs'], 'Frozen input audit missing')
+        portable = build / 'Picross-Start-windows-x64.zip'
+        require(portable.stat().st_size == report['zip_bytes'] and sha(portable) == report['zip_sha256'], 'ZIP byte mismatch')
     properties = msi_properties(msi)  # Actual Windows Installer database, not sidecar metadata.
     for field, key in (('ProductVersion', 'version'), ('ProductCode', 'product_code'), ('UpgradeCode', 'upgrade_code')):
         require(properties[field].strip('{}') == product[key], 'MSI property mismatch: ' + field)
@@ -96,10 +105,20 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
                 require(original.is_relative_to(app.resolve()) and sha(original) == row['sha256'],
                         'MSI payload differs from original build: ' + row['file'])
         components = json.loads(payload['components.json'].read_text(encoding='utf-8'))
-        for key in ('commit', 'version', 'product_code', 'upgrade_code', 'architecture', 'python',
+        for key in ('commit', 'version', 'product_code', 'upgrade_code', 'payload_fingerprint', 'architecture', 'python',
                     'components', 'runtime_components', 'resources', 'signed'):
             require(components[key] == report[key], 'Embedded components mismatch: ' + key)
         require(sha(payload['Picross-Start.exe']) == report['exe_sha256'], 'Embedded EXE mismatch')
+        require(payload['Picross-Start.exe'].stat().st_size == report['exe_bytes'], 'Embedded EXE size mismatch')
+        # Inspect the actual PE version resource, independently of sidecar JSON.
+        import pefile
+        with pefile.PE(str(payload['Picross-Start.exe'])) as pe:
+            fixed = pe.VS_FIXEDFILEINFO[0]
+        expected = tuple(map(int, product['version'].split('.'))) + (0,)
+        for prefix in ('FileVersion', 'ProductVersion'):
+            ms, ls = getattr(fixed, prefix + 'MS'), getattr(fixed, prefix + 'LS')
+            actual = (ms >> 16, ms & 65535, ls >> 16, ls & 65535)
+            require(actual == expected, 'EXE version resource mismatch')
         require(payload['START.txt'].read_bytes() == (build / 'START.txt').read_bytes(), 'Start instructions mismatch')
         guard = root.find('.//w:Binary[@Id="Guard"]', NS)
         guard_file = Path(guard.get('SourceFile')).resolve()
@@ -108,6 +127,7 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
         licenses = [r['file'] for r in rows if r['file'].startswith('LICENSES/')]
         require({'LICENSES/Python.txt', 'LICENSES/WiX.txt'}.issubset(licenses), 'Missing license originals')
     result = {'format': 'picross-installer-inspection-v1', 'commit': expected_commit, 'version': report['version'],
+              'payload_fingerprint': report['payload_fingerprint'],
               'msi_sha256': report['msi_sha256'], 'msi_bytes': report['msi_bytes'],
               'product_code': product['product_code'], 'upgrade_code': product['upgrade_code'],
               'inventory_files': len(rows), 'license_files': len(licenses), 'compared_to_build': compare_build,
@@ -124,5 +144,6 @@ if __name__ == '__main__':
     parser.add_argument('--expected-commit', required=True)
     parser.add_argument('--wix-archive', type=Path, help='Hash-pinned WiX archive; defaults to build/work/wix.zip')
     parser.add_argument('--compare-build', action='store_true', help='Also compare to original dist payload (required in Actions)')
+    parser.add_argument('--version', help='Expected planned publication version')
     args = parser.parse_args()
-    verify(args.build.resolve(), args.output.resolve(), args.expected_commit, args.wix_archive, args.compare_build)
+    verify(args.build.resolve(), args.output.resolve(), args.expected_commit, args.wix_archive, args.compare_build, args.version)
