@@ -117,22 +117,35 @@ class RevealTests(unittest.TestCase):
         with self.assertRaisesRegex(InvalidInput, 'Stale'): at.adopt(self.checkout, plan)
 
     def test_image_adoption_and_recovery_do_not_upgrade_valid_v2_or_v3_runtime(self):
+        from tests.puzzle_production.catalog_fixtures import pre_metadata
         from tools.puzzle_production import catalog_added, catalog_publication as publication
         original=self.checkout
         for version in (2,3):
             self.checkout=self.root/('runtime'+str(version));shutil.copytree(original,self.checkout)
             (self.checkout/catalog_added.path(self.identifier)).unlink()
             cr.sync_runtime(self.checkout)
+            pre_metadata(self.checkout, runtime_version=3)
             captured=tx.capture(self.checkout)
             texts={n:b.decode() if b is not None else None for n,b in captured['texts'].items()}
             (self.checkout/tx.RUNTIME).write_bytes(tx.projection(texts,captured['registry'],version=version))
-            before=snapshot(self.checkout);plan=self.make_plan(version)
+            before=snapshot(self.checkout)
+            bound={};prepare=tx.prepare
+            def capture(*args,**kwargs):
+                bound['journal']=prepare(*args,**kwargs)
+                return bound['journal']
+            with patch.object(tx,'prepare',side_effect=capture):plan=self.make_plan(version)
+            self.assertEqual(bound['journal']['old'][tx.RUNTIME],bound['journal']['new'][tx.RUNTIME])
+            with self.assertRaisesRegex(InvalidInput,'[Mm]igrat'):at.adopt(self.checkout,plan)
+            self.assertEqual(before,snapshot(self.checkout))
+            # A new public mutation needs migration. This explicitly bound
+            # historical journal still recovers and repeats without upgrading
+            # either of the valid old runtime generations.
             def interrupted(phase,name=None):
                 if phase=='P4':raise InterruptedError('TEST ONLY preserved runtime')
-            with patch.object(publication,'checkpoint',side_effect=interrupted),self.assertRaises(InterruptedError):at.adopt(self.checkout,plan)
+            with patch.object(publication,'checkpoint',side_effect=interrupted),self.assertRaises(InterruptedError):publication.execute(self.checkout,bound['journal'])
             cr.recover(self.checkout)
             self.assertEqual({n:b for n,(b,_) in before.items()},{n:b for n,(b,_) in snapshot(self.checkout).items()})
-            at.adopt(self.checkout,plan);after=snapshot(self.checkout)
+            publication.execute(self.checkout,bound['journal']);after=snapshot(self.checkout)
             self.assertEqual(before[tx.RUNTIME],after[tx.RUNTIME])
             self.assertEqual(at.adopt(self.checkout,plan)['status'],'no-op')
             self.assertEqual(after,snapshot(self.checkout))

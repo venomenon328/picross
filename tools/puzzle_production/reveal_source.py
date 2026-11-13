@@ -135,6 +135,18 @@ def background_registry(root):
     return io.json_bytes(io.read(root, REGISTRY, 8 * 1024 * 1024), 8 * 1024 * 1024)
 
 
+def historical_categories(root, texts=None):
+    """Current v4 FKs are validated by the registry, not historical bindings."""
+    from .content_registry import REGISTRY, METADATA_FORMAT
+    if texts is not None and REGISTRY in texts:
+        raw = texts[REGISTRY]
+        if isinstance(raw, str): raw = raw.encode("utf-8")
+        registry = io.json_bytes(raw, 8 * 1024 * 1024)
+    else:
+        registry = background_registry(root)
+    return registry.get("format") == METADATA_FORMAT
+
+
 def require_legacy_target(root, entry, registry=None):
     """B1 has no contract for rebinding a background target's raster/reveal."""
     from . import catalog_background as backgrounds
@@ -143,8 +155,8 @@ def require_legacy_target(root, entry, registry=None):
             "Background target reveal/raster changes require a later integration contract")
 
 
-def validate(value, catalog):
-    from .content_registry import validate as validate_registry, FORMAT as REGISTRY_FORMAT
+def validate(value, catalog, *, historical_categories=False):
+    from .content_registry import validate_entries
     exact_keys(value, {"format", "id", "record_revision", "identity", "origin", "bindings", "revisions", "current", "record_hash"})
     require(value["format"] in (FORMAT, BACKGROUND_FORMAT), "Unknown reveal source format")
     identifier = rating.identity(value["id"])
@@ -162,7 +174,7 @@ def validate(value, catalog):
         integer(binding["runtime_revision"], 1, 1000000, "binding runtime revision")
         require(binding["binding_revision"] == index and binding["previous_binding_hash"] == previous, "Broken reveal binding chain")
         entry = binding["entry"]
-        validate_registry({"format": REGISTRY_FORMAT, "entries": [entry]}, catalog)
+        validate_entries([entry], None if historical_categories else catalog)
         require(entry["id"] == identifier and identity(entry) == value["identity"], "Reveal binding changes identity")
         notice(binding["notice"])
         if index == 1:
@@ -259,6 +271,13 @@ def package(root, entry, *, background_snapshot=None):
     for name, checksum in manifest["files"].items():
         require(io.file_hash(root, prefix + "/" + name, io.export_limit(base, name)) == sha(checksum),
                 "Altered export file: " + name)
+    if not legacy:
+        from . import categories
+        reference = exact_keys(manifest["categories"], {"file", "sha256"})
+        require(reference["file"] == "categories.json" and reference["sha256"] == manifest["files"].get("categories.json"),
+                "Export categories snapshot binding differs")
+        catalog = categories.validate(io.json_bytes(io.read(root, prefix + "/categories.json", categories.MAX_BYTES), categories.MAX_BYTES))
+        categories.lookup(catalog, manifest["category_id"])
     require(manifest["definition_id"] == entry["id"] and manifest["save_slot"] == entry["save_slot"] and
             manifest["definition"] == "runtime/" + entry["definition"] and manifest["reveal"] == "runtime/" + entry["reveal"] and
             manifest["package_revision"] == entry["production"]["revision"] and manifest["test_only"] == entry["production"]["test_only"] and
@@ -286,7 +305,7 @@ def package(root, entry, *, background_snapshot=None):
     if declared:
         source = backgrounds.load(root, registry, entry, texts=None if background_snapshot is None else background_snapshot[1])
         anchor = (source["events"][-1]["binding"]["entry"]["production"]["package_sha256"]
-                  if source["format"] == "picross-catalog-background-v3" else backgrounds.initial(source)['origin']['export_manifest_sha256'])
+                  if source["format"] in backgrounds.REBIND_FORMATS else backgrounds.initial(source)['origin']['export_manifest_sha256'])
         require(anchor == io.checksum(raw),
                 'Background origin export binding differs')
     notice_hash=sha(manifest['files'].get('runtime/'+notice_path(entry).removeprefix('game/')))
@@ -300,7 +319,7 @@ def normalized(root, entry):
 def load(root, entry, catalog):
     raw = io.read(root, path(entry["id"]), LIMIT, missing=True)
     if raw is None: return None
-    value = validate(io.json_bytes(raw, LIMIT), catalog)
+    value = validate(io.json_bytes(raw, LIMIT), catalog, historical_categories=historical_categories(root))
     require(raw == canonical_bytes(value) + b"\n" and value["id"] == entry["id"], "Noncanonical/wrong reveal source")
     return value
 
@@ -313,13 +332,14 @@ def resolve(root, entry, catalog, *, record=None):
     definition = io.read(root, "game/" + entry["definition"], 2 * 1024 * 1024)
     require(io.checksum(definition) == entry["production"]["definition_sha256"], "Registered definition binding changed")
     runtime_revision = rating.bytes_json(definition, 2 * 1024 * 1024)["revision"]
-    record = load(root, entry, catalog) if record is None else validate(record, catalog)
+    record = load(root, entry, catalog) if record is None else validate(record, catalog, historical_categories=historical_categories(root))
     if record is not None:
         from . import catalog_background as bg
         declared = entry["id"] in bg.index(background_registry(root))
         require(record["format"] == (BACKGROUND_FORMAT if declared else FORMAT), "Reveal source generation differs from target")
         if declared:
-            require(bg._source(root, background_registry(root), entry)["format"] == "picross-catalog-background-v3",
+            from .background_rebind import is_rebound
+            require(is_rebound(bg._source(root, background_registry(root), entry)),
                     "Background reveal requires its current rebind authority")
     effective_image, effective_notice = entry["production"]["reveal_sha256"], historical_notice
     if record:
@@ -364,10 +384,10 @@ def revise(root, entry, catalog, image_hash, declaration, attribution, append=No
     value["current"]["image_revision"] += 1
     value["record_revision"] += 1
     value.pop("record_hash", None)
-    return validate(hashed(value, "record_hash"), catalog)
+    return validate(hashed(value, "record_hash"), catalog, historical_categories=historical_categories(root))
 
 
-def rebind(old, entry, runtime_revision, export_notice, catalog):
+def rebind(old, entry, runtime_revision, export_notice, catalog, *, historical_categories=False):
     value = deepcopy(old)
     require(entry["production"]["reveal_sha256"] == old["revisions"][-1]["reveal_sha256"], "Raster update must retain active reveal")
     value["bindings"].append(hashed({"binding_revision": len(old["bindings"]) + 1, "runtime_revision": runtime_revision,
@@ -376,4 +396,4 @@ def rebind(old, entry, runtime_revision, export_notice, catalog):
     value["current"]["binding_revision"] += 1
     value["record_revision"] += 1
     value.pop("record_hash")
-    return validate(hashed(value, "record_hash"), catalog)
+    return validate(hashed(value, "record_hash"), catalog, historical_categories=historical_categories)

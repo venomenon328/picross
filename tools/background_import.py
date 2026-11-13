@@ -76,7 +76,7 @@ def _names(project):
 
 def source_inventory(root: Path) -> dict:
     """Read compact authority, selected sources and notices; never replay puzzles."""
-    from tools.puzzle_production import catalog_background as background, catalog_io as io
+    from tools.puzzle_production import catalog_background as background, catalog_io as io, content_registry as catalog
 
     root = root.resolve()
     if (root / "content/.registration-pending.json").exists():
@@ -87,9 +87,12 @@ def source_inventory(root: Path) -> dict:
     registry = io.json_bytes(io.read(root, "content/registry.json", 8 * 1024 * 1024), 8 * 1024 * 1024)
     background.source_paths(root, registry)
     indexed = background.index(registry)
-    modern = registry["format"] == background.REGISTRY_FORMAT
-    background.capability(root, required=modern)
-    if modern != (runtime["format"] == background.RUNTIME_FORMAT):
+    modern = registry["format"] in (catalog.BACKGROUND_FORMAT, catalog.METADATA_FORMAT)
+    background.capability(root, required=registry["format"] == catalog.BACKGROUND_FORMAT or bool(indexed))
+    formats = {catalog.FORMAT: tuple("picross-runtime-registry-v" + str(v) for v in (2, 3, 4, 5)),
+               catalog.BACKGROUND_FORMAT: (background.RUNTIME_FORMAT,),
+               catalog.METADATA_FORMAT: (catalog.METADATA_RUNTIME_FORMAT,)}
+    if runtime["format"] not in formats.get(registry["format"], ()):
         raise ValueError("Background runtime/source generation differs")
     texts = {name: io.read(root, name, background.LIMIT, missing=True)
              for name in background.text_names(registry)}

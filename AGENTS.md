@@ -47,6 +47,7 @@ unverändert. Der Benutzercheckout wird nicht als temporärer Checkout gelöscht
 | Abschlussbilder/Bildrevisionen/Katalogvorschau | [Transparenz](docs/REVEAL_TRANSPARENCY.md) und dort geroutete Produktions-/Integrationsquellen |
 | UI-Schrift, kleine Rahmen, Dropdowns/Piktogramme | [HZ](docs/HAND_DRAWN_UI.md) |
 | Katalog/Metadaten/Sortierung | [Darstellung](docs/CATALOG_PRESENTATION.md), [Sortierung](docs/CATALOG_SORTING.md) |
+| Lokaler Bestandseditor oder unabhängige Namens-/Kategoriepflege | [PE](docs/PUZZLE_EDITOR.md) und aktuelles Paket in #576; freigegebenen Sollstand von vorhandenen Werkzeugen unterscheiden |
 | Schwierigkeit/Analyse/Bewertung | [SD](docs/PUZZLE_DIFFICULTY.md), [SD2](docs/PUZZLE_DIFFICULTY_V2.md) und jeweils betroffene Analyse-/Kalibrierungs-/Integrationsverträge |
 | Hinweisnavigation/Overlay/Cursorlinien | [HN](docs/CLUE_INTERACTION.md) |
 | Zellrendering/Atlas/Cache | [Zellrendering](docs/CELL_RENDERING.md); historische PERF-A/B-Reproduktion ist keine Dauerpflicht |
