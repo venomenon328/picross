@@ -5,8 +5,6 @@ import json
 import os
 import threading
 import sys
-import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
 import webbrowser
 
 from tools.puzzle_production import catalog_io as io
@@ -14,8 +12,17 @@ from . import VERSION
 from .server import Service
 
 
+def load_ui():
+    # The controller is importable for platform-neutral lifecycle tests.
+    # Actual window creation still requires the bundled Tcl/Tk runtime.
+    global tk, ttk, filedialog, messagebox
+    import tkinter as tk
+    from tkinter import ttk, filedialog, messagebox
+
+
 class Window:
     def __init__(self, state, initial=None, port=0):
+        load_ui()
         self.state, self.service, self.closing = io.external(state), None, False
         self.stop_failed = False
         self.window = tk.Tk(); self.window.title("Picross · Bestandseditor " + VERSION)
@@ -114,6 +121,7 @@ class Window:
 
 
 def main():
+    load_ui()
     if getattr(sys, "frozen", False):
         try:
             from .bundle import verify
