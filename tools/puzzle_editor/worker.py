@@ -20,11 +20,16 @@ def run(root, work, action, body):
     with io.budget(300):
         root, work = io.external(root), io.external(work)
         if action == "detail":
-            before = snapshot(root)
+            sources = tx.image_snapshot(tx.capture(root))
+            before = digest(sources)
             value = images.view(root, body["id"])
             grid = raster.view(root, body["id"])
             require(before == snapshot(root), "Checkout während Detailprüfung geändert. Neu laden.")
-            return {"detail": value, "raster": grid, "snapshot": before}
+            row = value["runtime"]
+            names = ["game/"+row["reveal"]]
+            if row["background"]["status"] == "selected": names.append("game/"+row["background"]["asset"]["file"])
+            return {"detail": value, "raster": grid, "snapshot": before,
+                    "_resources": {name: sources["sources"][name] for name in names}}
         if action == "recover":
             from .server import pending
             if not pending(root):

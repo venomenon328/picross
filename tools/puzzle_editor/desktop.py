@@ -82,15 +82,22 @@ class Window:
         threading.Thread(target=drain, name="PE-drain").start()
 
     def poll(self):
-        if self.closing and self.drained:
-            self.window.destroy(); return
-        if self.service and self.service.stopping and not self.closing: self.close(confirmed=True)
-        if self.service and not self.closing:
-            state = self.service.status()
-            if state["job"] and state["job"]["state"] == "running":
-                self.status.set(self.service.origin+" · "+state["job"]["stage"]+" · "+str(state["job"]["elapsed_seconds"])+" s")
-            else: self.status.set("Bereit · "+self.service.origin+" · "+str(self.service.root))
-        self.window.after(250, self.poll)
+        # A transient status/checkout error must not remove the next lifecycle tick.
+        # In particular, closing a confirmation dialog runs a nested Tk event loop.
+        destroyed = False
+        try:
+            if self.closing and self.drained:
+                self.window.destroy(); destroyed = True; return
+            if self.service and self.service.stopping and not self.closing: self.close(confirmed=True)
+            if self.service and not self.closing:
+                state = self.service.status()
+                if state["job"] and state["job"]["state"] == "running":
+                    self.status.set(self.service.origin+" · "+state["job"]["stage"]+" · "+str(state["job"]["elapsed_seconds"])+" s")
+                else: self.status.set("Bereit · "+self.service.origin+" · "+str(self.service.root))
+        except Exception as exc:
+            self.status.set("Status konnte nicht gelesen werden: "+str(exc))
+        finally:
+            if not destroyed: self.window.after(250, self.poll)
 
 
 def main():
