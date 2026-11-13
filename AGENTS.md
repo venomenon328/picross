@@ -1,6 +1,27 @@
 # Agenteneinstieg für picross
 
-Vor auftragsbezogener Arbeit vollständig lesen:
+## Normale Rätselproduktion
+
+Für neue Rätsel, Bild-/Rasterkorrektur und Wiederaufnahme zuerst diesen Abschnitt,
+dann [Authoring §1](docs/ai-workflows/PUZZLE_AUTHORING.md#1-einstieg-und-befugnisse),
+den vollständigen [gemeinsamen Bildstil](docs/PUZZLE_IMAGE_STYLE.md) und genau die
+in Authoring §1.1 geroutete Produktionsphase lesen. Dort genannte zusätzliche
+Abschnitte sind vor der zugehörigen Operation Pflicht; ein bloßer weiterführender
+Link löst keine rekursive Volllektüre aus. Fehlende benötigte Quellen blockieren
+die davon abhängige Arbeit. Historische Lieferberichte sind keine Pflichtquellen.
+
+Für diesen Inhaltsweg sind die nachstehenden Entwicklungsabschnitte, WORKFLOW,
+PROJECT_PROFILE, der vollständige PW-Vertrag und technische Gesamthandbücher
+nicht zusätzlich pauschal zu lesen. Befugnisse, Quellenbindung, Qualitätsgates,
+Sicherung und Abschluss bleiben im Authoringvertrag verbindlich. Keine Modell-/
+Reasoning-/Eigenumsetzungsempfehlung oder dafür veranlasste Recherche; das eigene
+Produktionsabschlussformat gilt statt des Entwicklungs-HANDOFF-JSON.
+Separat beauftragte Werkzeug-, Regel-, Spiel- oder CI-Entwicklung ist dagegen
+Entwicklungsarbeit und folgt vollständig dem nächsten Abschnitt.
+
+## Entwicklungsarbeit: aktuelle Quellen
+
+Vor auftragsbezogener Entwicklungsarbeit vollständig lesen:
 
 1. [Gemeinsamer Workflow](docs/dev-rules/WORKFLOW.md).
 2. [Projektprofil](docs/PROJECT_PROFILE.md) und auftragsbezogene Fachquellen.
@@ -37,11 +58,11 @@ im beauftragten Rahmen entfernen, Fremdänderungen und echte Nutzerdaten erhalte
 Keine Policy-Umgehung; Blockaden und Restpfade ehrlich nennen. Full Access bleibt
 unverändert. Der Benutzercheckout wird nicht als temporärer Checkout gelöscht.
 
-## Fachrouting
+## Fachrouting für Entwicklungsaufträge
 
 | Auftrag | Zusätzlich vollständig lesen |
 | --- | --- |
-| Produktionsassistent, lokaler Git-/Bildzugriff, Launcher oder fünfstufiger neuer Produktionsweg | [PW](docs/PRODUCTION_WORKSPACE.md) und aktuelles Paket #578; bestehende WIP sind kein Kompatibilitätsziel, bereits integrierte Inhalte bleiben geschützt |
+| Produktionsassistent, lokaler Git-/Bildzugriff, Launcher oder fünfstufiger neuer Produktionsweg | [PW](docs/PRODUCTION_WORKSPACE.md) und aktuelles zuständiges Paket; bestehende WIP sind kein Kompatibilitätsziel, bereits integrierte Inhalte bleiben geschützt |
 | Produkt/UX/Plattform | Pflichtquellen im Projektprofil, insbesondere Produktdefinition und Gestaltungskonzept |
 | Schritt-4-Integrationscode, Budgets, Prüfkontext oder Publikations-/Recoveryguards | [RI](docs/PUZZLE_INTEGRATION.md) und aktuelles Paket; bestehende Ausführung und freigegebenen Sollstand unterscheiden |
 | Abschlussbilder/Bildrevisionen/Katalogvorschau | [Transparenz](docs/REVEAL_TRANSPARENCY.md) und dort geroutete Produktions-/Integrationsquellen |
@@ -59,12 +80,6 @@ Nur vor noch anstehender Implementierung/technischer Nacharbeit
 [MODEL_CATALOG](docs/dev-rules/MODEL_CATALOG.md) vollständig lesen. Keine rückblickende
 Empfehlung nach erledigter Umsetzung. Keine automatische Mehragentenausführung.
 
-**Rätselproduktion bleibt eigenständig:** Normale Aufträge einschließlich Korrektur
-und Wiederaufnahme folgen [PUZZLE_AUTHORING](docs/ai-workflows/PUZZLE_AUTHORING.md).
-Keine Modell-/Reasoningempfehlung oder dafür ausgelöste Recherche; deren eigene
-JSON-/Abschlussregeln gelten statt des Entwicklungsformats. Separat beauftragte
-Werkzeug-/Spiel-/CI-Entwicklung folgt dem allgemeinen Workflow.
-
 ## Befugnisse und Review
 
 Setup ist keine Freigabe von Engine, Sprache, Plattform oder Spielmechanik.
@@ -75,4 +90,3 @@ nutzen, sobald aktuelles Review und alle Vor-Merge-Gates erfüllt sind. Kein Mer
 allein aufgrund einer Sheet-Voreinstellung. Mergeverfahren und Betriebswirkung
 im Projektprofil prüfen. Keine ungefragte zentrale Regelaktualisierung;
 Herkunft in [DEV_RULES_ADOPTION](docs/DEV_RULES_ADOPTION.md).
-
