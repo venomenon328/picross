@@ -12,7 +12,8 @@ from .contract import Aborted, canonical_bytes, InvalidInput
 
 FORMAT = "picross-integrated-content-v1"
 BACKGROUND_FORMAT = "picross-integrated-content-v2"
-FORMATS = (FORMAT, BACKGROUND_FORMAT)
+EDITOR_FORMAT = "picross-integrated-content-v3"
+FORMATS = (FORMAT, BACKGROUND_FORMAT, EDITOR_FORMAT)
 INDEX = "content/authoring/index.json"
 LIMIT = 8 * 1024 * 1024
 
@@ -23,7 +24,7 @@ def check(root, entry, receipt):
     original, notice, stored, _ = reveal_source.package(root, entry)
     require(stored is not None and canonical_bytes(stored) == canonical_bytes(receipt),
             "Integration receipt differs from the registered package")
-    reveal_source.receipt(receipt, original, notice, background=True)
+    reveal_source.receipt(receipt, original, notice, background=True, editor=True)
     resolved = reveal_source.resolve(root, entry, categories.load(root / categories.PATH))
     require(resolved["historical_notice_sha256"] == notice, "Historical player notice differs")
 
@@ -138,7 +139,7 @@ def retire(root, ids, integrated_commit):
                     else:
                         raw = io.read(root, record_path, 2 * 1024 * 1024)
                     record = io.json_bytes(raw, 2 * 1024 * 1024)
-                    require(isinstance(record, dict) and record.get("format") == "picross-background-adoption-request-v1",
+                    require(isinstance(record, dict) and record.get("format") in ("picross-background-adoption-request-v1", "picross-background-adoption-request-v2"),
                             "Other authoring revisions need a separate completion decision: " + name)
                     record = validate_request(record)
                     require(selection(record["puzzle_id"], record["revision"]) == name,
@@ -193,24 +194,40 @@ def retire(root, ids, integrated_commit):
                     require(package_ref.get("bytes") == len(raw) and package_ref.get("sha256") == io.checksum(raw),
                             "Authoring archive binding differs")
                 removed[name] = (io.checksum(raw), len(raw), limit)
-            receipt = {"format": BACKGROUND_FORMAT if bg else FORMAT, "entry": deepcopy(entry),
+            source = backgrounds.load(root, current, entry) if bg else None
+            editor_background = source is not None and source.get("format") == "picross-catalog-background-v5"
+            receipt = {"format": EDITOR_FORMAT if editor_background else BACKGROUND_FORMAT if bg else FORMAT, "entry": deepcopy(entry),
                        "integrated_commit": integrated_commit, "notice_sha256": historical_notice}
             if bg:
-                source = backgrounds.load(root, current, entry)
-                receipt["background"] = backgrounds.receipt_binding(source, current_backgrounds[identifier])
-            reveal_source.receipt(receipt, entry, historical_notice, background=True)
+                if editor_background:
+                    manifest = io.json_bytes(io.read(root, prefix + "/manifest.json", LIMIT), LIMIT)
+                    exported = (backgrounds.build(io.safe(root, prefix), manifest, None, entry)
+                                if manifest.get("format") == "picross-target-export-v6" else None)
+                    receipt["background"] = {"origin_sha256": backgrounds.origin_hash(source), "export_source": exported}
+                else:
+                    receipt["background"] = backgrounds.receipt_binding(source, current_backgrounds[identifier])
+            reveal_source.receipt(receipt, entry, historical_notice, background=True, editor=True)
             plans.append((entry, prefix, selected, receipt, package_dirs, authoring_dirs))
-        require((identifier in current_backgrounds) == (identifier in original_backgrounds),
+        active_reveal = reveal_source.load(root, entry, catalog)
+        is_editor_reveal = active_reveal is not None and active_reveal.get("format") == "picross-catalog-reveal-v3"
+        source = backgrounds.load(root, current, entry) if bg else None
+        editor_background = source is not None and source.get("format") == "picross-catalog-background-v5"
+        require((identifier in current_backgrounds) == (identifier in original_backgrounds) or
+                editor_background and identifier not in original_backgrounds and source["origin"]["source"] is None and
+                source["origin"]["entry"] == old_entry,
                 "Background index membership differs from integrated main")
-        retained.update(("game/" + entry["definition"], "game/" + entry["reveal"], reveal_source.identity(entry)["notice"],
-                         reveal_source.path(identifier), catalog_rating.path(identifier), catalog_added.path(identifier)))
+        retained.update(("game/" + entry["definition"], catalog_rating.path(identifier), catalog_added.path(identifier)))
+        if is_editor_reveal:
+            main_retained.update((active_reveal["current"]["asset"]["file"], reveal_source.identity(entry)["notice"], reveal_source.path(identifier)))
+        else:
+            retained.update(("game/" + entry["reveal"], reveal_source.identity(entry)["notice"], reveal_source.path(identifier)))
         if identifier in current_backgrounds:
             source = backgrounds.load(root, current, entry)
             require(backgrounds.index(main_registry).get(identifier) == current_backgrounds[identifier],
                     "Current background is not indexed on main")
-            main_format = (registry.METADATA_RUNTIME_FORMAT if main_registry["format"] == registry.METADATA_FORMAT
-                           else backgrounds.RUNTIME_FORMAT)
-            require(isinstance(main_runtime, dict) and main_runtime.get("format") == main_format and
+            main_formats = ((registry.METADATA_RUNTIME_FORMAT, registry.IMAGE_RUNTIME_FORMAT) if main_registry["format"] == registry.METADATA_FORMAT
+                           else (backgrounds.RUNTIME_FORMAT,))
+            require(isinstance(main_runtime, dict) and main_runtime.get("format") in main_formats and
                     isinstance(main_runtime.get("entries"), list), "Current background runtime is not on main")
             matches = [row for row in main_runtime["entries"] if isinstance(row, dict) and row.get("id") == identifier]
             minimal = {"format": main_registry["format"], "entries": [entry],
@@ -225,15 +242,17 @@ def retire(root, ids, integrated_commit):
             if main_registry["format"] == registry.METADATA_FORMAT:
                 require(all(matches[0].get(key) == active_metadata[key] for key in ("name", "category_id")),
                         "Current background runtime metadata differs from main")
-            old_ref = original_backgrounds[identifier]
-            require(tree.get(old_ref["file"], ())[:2] == ("100644", "blob") and
-                    int(git("cat-file", "-s", integrated_commit + ":" + old_ref["file"])) <= backgrounds.LIMIT,
-                    "Missing bounded original background source on main")
-            old_raw = git("show", integrated_commit + ":" + old_ref["file"])
-            old_source = backgrounds.validate(io.json_bytes(old_raw, backgrounds.LIMIT), old_entries[identifier])
-            require(backgrounds.ref(old_ref["file"], old_raw) == old_ref and old_raw == backgrounds.encoded(old_source) and
-                    backgrounds.initial(source) == backgrounds.initial(old_source),
-                    "Original background authority differs from integrated main")
+            if identifier in original_backgrounds:
+                old_ref = original_backgrounds[identifier]
+                require(tree.get(old_ref["file"], ())[:2] == ("100644", "blob") and
+                        int(git("cat-file", "-s", integrated_commit + ":" + old_ref["file"])) <= backgrounds.LIMIT,
+                        "Missing bounded original background source on main")
+                old_raw = git("show", integrated_commit + ":" + old_ref["file"])
+                old_source = backgrounds.validate(io.json_bytes(old_raw, backgrounds.LIMIT), old_entries[identifier])
+                require(backgrounds.ref(old_ref["file"], old_raw) == old_ref and old_raw == backgrounds.encoded(old_source) and
+                        (source["origin"] == old_source["origin"] if editor_background and old_source.get("format") == "picross-catalog-background-v5"
+                         else backgrounds.initial(source) == backgrounds.initial(old_source)),
+                        "Original background authority differs from integrated main")
             main_retained.update((backgrounds.CAPABILITY, backgrounds.path(identifier),
                                   backgrounds.asset_path(identifier), backgrounds.notice_path(identifier)))
         resolved = reveal_source.resolve(root, entry, catalog)

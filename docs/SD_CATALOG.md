@@ -1,6 +1,6 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
-**PE-A1 / #576 · im Arbeitsbranch implementiert, Review offen:**
+**PE-A1 / #576 · nach unabhängigem Review integriert:**
 [Aktuelle Metadaten](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag)
 kommen als Tabelle in der bereits gebundenen Inhaltsregistry hinzu. Reine
 Namens-/Kategoriepflege ändert weder Definition noch Rating- oder Bildbindungen.
@@ -8,6 +8,93 @@ Die neuen Pflege-/Migrationsoperationen verwenden den gemeinsamen Transaktionswe
 aktuelle Writer erhalten die Metadaten, historische Belege bleiben vollständig
 geprüft. [PE-A1-Formatgenerationen](PUZZLE_EDITOR.md#75-geschlossene-implementierungsformen)
 ergänzen die vorhandenen geschlossenen Plan-/Journalformen ausdrücklich.
+
+## PE-A2 · Geschlossene v8-Quellen, Pläne und Journale
+
+Vertrag vor konsumierendem Code, 12.11.2026, gemäß
+[PE-A2](https://github.com/venomenon328/picross/issues/576#issuecomment-6839202555)
+und [Receipt-Präzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651).
+[PE §8](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) definiert
+Revealquelle v3, Hintergrundquelle v5, Runtime v8, manuelle Requests und die
+explizite Projektionseinführung. Die folgenden Generationen verwenden dieselbe
+geschlossene äußere Achtfelderform `format,operation,old,new,retained,additions,report_run,replacements`.
+
+| Format | Ausschließlich erlaubte Operationen |
+| --- | --- |
+| `picross-registration-journal-v9` | `registration` |
+| `picross-content-update-journal-v9` | `update` |
+| `picross-catalog-metadata-journal-v6` | `adoption,sync,added-adoption` |
+| `picross-reveal-adoption-journal-v6` | `reveal-adoption` |
+| `picross-background-adoption-journal-v4` | `background-adoption` |
+| `picross-difficulty-activation-journal-v4` | `method-activation` |
+| `picross-editor-metadata-journal-v2` | `metadata` |
+| `picross-editor-images-journal-v1` | `editor-images` |
+| `picross-editor-image-migration-journal-v1` | `editor-image-migration` |
+
+`report_run` bleibt nur bei Rating-/Addedübernahme die tatsächlich gebundene
+Run-ID, sonst null. Für die beiden Editorbildoperationen ist `additions={}`;
+bei Projektionseinführung außerdem `replacements={}`. Die bisherigen erlaubten
+Registrierungs-/Updatepaketadditions und Berichtziele bleiben eng operationsgebunden.
+Die vollständige Deltamatrix aus PE §8.4 ist verbindlich: Bildpflege darf keine
+Definition, Produktion, Rating-/Addedquelle oder unbeteiligte ID verändern;
+kombinierte ID-Metadatenpflege ist ausdrücklich im selben Journal erlaubt.
+
+`T8(R)` umfasst exakt `content/registry.json`, `content/categories.json`,
+`game/data/registry.json`, `content/difficulty-method.json`,
+`game/data/background-capability.json` sowie je ID die abgeleitete Definition,
+Live-Revealnotice, Revealquelle, Rating-, Added-, Hintergrundquelle und
+Hintergrundnotice. Die bisherigen zulässigen Abwesenheiten bleiben null.
+`K8(R)` umfasst sämtliche vorhandenen Livebilder und bisherigen vollständigen
+Paket-/Receipt-/Export-/Berichtsquellen. `C8(R)` umfasst je ID beide technischen
+Revealendungen `.png/.svg` sowie den festen Hintergrund-PNG-Pfad, jeweils als
+tatsächlicher Hash oder ausdrücklich sichere Abwesenheit. `sources` ist exakt
+`T8(R) ∪ K8(R) ∪ C8(R)`. Historische Quelle und aktuell wirksamer Bildpfad werden
+getrennt geprüft; fehlende historische Dateien werden nur nach dem bereits
+gültigen kompakteren Receiptvertrag akzeptiert, nicht wegen des neuen Wrappers.
+
+`old/new` haben exakt dieselbe Menge `T8(Ralt) ∪ T8(Rneu) ∪ Q`, Q ausschließlich
+der bisher erlaubte neue SD-/Addedbericht. `retained` hat exakt die übrigen
+vorhandenen K8-/C8-Quellen abzüglich Text-/Replacementzielen als Pfad→SHA-256.
+Negative C8-Erwartungen werden strikt aus Alt-/Neuquellen hergeleitet; keine
+frei aus einem Journal übernommene Abwesenheit. Neue Bildjournale dürfen nur
+die aus betroffenen IDs/Quellen hergeleiteten alten/neuen Livepfade in
+`replacements` führen. Jede Seite bleibt `{sha256,bytes,base64}` oder sicher
+hergeleitet null; kein null/null, identisches Paar oder freier Löschpfad.
+
+Die genaue Namespaceform ist
+`reveals,difficulty,added,packages,backgrounds,background_assets,reveal_assets`.
+Die ersten sechs behalten ihren tatsächlichen vollständigen bisherigen Umfang;
+`reveal_assets` enthält je registriertem technischem Stamm die genau eine
+wirksame PNG-/SVG-Datei und gemeinsame TXT-Notice. Die inaktive Endung ist
+abwesend. Namespace- und Dateitypprüfungen schließen unbekannte Dateien, Aliase,
+Links und ungebundene eigene Reste vor Mutation aus. Diese Form gilt nur für
+die neue Generation, v7-Snapshots behalten exakt sechs Felder.
+
+| Neue gespeicherte Form | Exakte Felder / neue Bindung |
+| --- | --- |
+| `picross-reveal-request-v2` | `format,entries`; je Zeile unverändert `id,image,approval,provenance,notice_append`. Bild und Approval binden den aktuellen effektiven Revealstand, keine historische Pfadannahme. |
+| `picross-reveal-plan-v5` | `format,ids,snapshot,entries,writes,old_registry,new_registry,plan_hash`; vollständiger Sieben-Namespace-Snapshot. Registryfelder behalten Text/Hash-Form. Zeilen genau `id,old_image_revision,new_image_revision,binding_hash,old_reveal,new_reveal,old_record,new_record,old_notice,new_notice,old_background,new_background`; bei sourcefreiem Hintergrund beide null. `binding_hash` ist bei neuer Revealquelle der kanonische Hash ihrer tatsächlichen aktuellen `binding`, bei alter Quelle der vorhandene Bindinghash. Quellen-/Notice-/Bildrefs bleiben vollständig. |
+| `picross-background-adoption-request-v2` | Bisherige `format,puzzle_id,revision,target,background,authorization,files,test_only` und zusätzlich `context` nach Hintergrundvertrag §14. |
+| `picross-background-adoption-plan-v3` | Unverändert `format,request,snapshot,old,new,files,plan_hash`; aktuelle v8-Quellmenge und sieben Namespaces. Die bestehenden alten/neuen vollständigen Textansichten und Bundleinventarrefs bleiben. |
+| `picross-editor-metadata-plan-v2` | Unverändert `format,operation,operations,changes,files,journal`; auf v8 das passende Metadatenjournal v2. Keine implizite Bildprojektionseinführung. |
+| `picross-catalog-difficulty-report-v6` | Unverändert `format,run_id,result,result_hash,operation`; result exakt `selection,source_commit,method,method_hash,snapshot,sources,entries,distribution`. `sources` bindet vollständig T8/K8/C8, methodische Felder und Ratingunterformen unverändert. |
+| `picross-added-plan-v5` | Unverändert `format,run_id,base_commit,sources,evidence,entries`; `sources` vollständig T8/K8/C8, Addedherkunft und historische Gitbelege behalten ihre Regeln. |
+| `picross-difficulty-activation-plan-v3` | Unverändert `format,expected,target,sources,result_hash`; vollständige aktuelle T8/K8/C8-Bindung, gleiche Methoden-/Default-/No-op-Regeln. |
+
+Alte Pläne, Reports und Journale erhalten keine zusätzlichen Quellen oder neue
+Semantik. Ein v8-Stand ist für eine ältere gespeicherte Operation inkompatibel,
+auch wenn die von ihr gewünschte Einzelzeile gleich aussieht. Neue Planung bindet
+die tatsächliche aktuelle Generation. Fortgeführte Writer erhalten v8, ein
+Sync darf es nicht still auf v7 zurückstufen. Alle Full-/Quick-/CLI-/API-/
+Snapshot-/Recoverywege verwenden denselben Resolver.
+
+Nichtbinäre Journale bleiben bei 24 MiB; die neuen expliziten Bildjournalformate
+bei 128 MiB einschließlich JSON/Base64, 32 MiB je Binärseite und 96 MiB dekodiert
+insgesamt. Keine anderen Byte-/Datei-/Listenlimits werden durch neue Kennungen
+angehoben. Bildplanung/-übernahme/-recovery jeweils 300 s, kein RI-Registrierungsdefault.
+Der gemeinsame Lock, vollständige isolierte Alt-/Neuprüfung, erneute Quellenprüfung
+unter Lock, atomare Publikation, Runtime zuletzt und wiederholbarer ausschließlich
+eigener Rollback bleiben. Fremde Bytes und ungeklärte Reste blockieren mit Journal.
 
 **HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
 [Hintergrundzusatz](#hp-i1b1--hintergrundquellen-pläne-und-transaktionen) führt

@@ -130,6 +130,15 @@ def retire(root, revisions, integrated_commit):
                 integration.get('active_record_sha256') == io.checksum(active_raw), 'Stale reveal integration binding')
         authority = io.json_bytes(active_raw, source.LIMIT)
         require(integration.get('image_revision') == authority['current']['image_revision'], 'Wrong completed image revision')
+        editor = authority.get('format') == source.EDITOR_FORMAT
+        if editor:
+            require(authority['current']['authority']['kind'] == 'production',
+                    'Manual reveal has no authoring production approval to retire')
+            active_approval = authority['current']['authority']['approval']
+            active_reveal = authority['current']['asset']['file']
+        else:
+            active_approval = authority['revisions'][-1]['approval']
+            active_reveal = 'game/' + entry['reveal']
         approval = record.get('final_editorial_approval', {})
         require(isinstance(approval, dict), 'Invalid authoring approval binding')
         approval_name = directory + '/approval.json'
@@ -137,11 +146,11 @@ def retire(root, revisions, integrated_commit):
         approval_raw = git('show', integrated_commit + ':' + approval_name)
         committed_bytes(approval_name, approval_raw)
         require(approval.get('sha256') == io.checksum(approval_raw) and
-                io.json_bytes(approval_raw, LIMIT) == authority['revisions'][-1]['approval'],
+                io.json_bytes(approval_raw, LIMIT) == active_approval,
                 'Completed approval is not retained by active reveal authority')
         # Exact selected active sources, including original receipt, rating and
         # added metadata. Unrelated open authoring revisions are never traversed.
-        retained.update((active, 'game/' + entry['definition'], 'game/' + entry['reveal'],
+        retained.update((active, 'game/' + entry['definition'], active_reveal,
                          source.identity(entry)['notice'], entry['production']['package'] + '/manifest.json',
                          'content/difficulty/' + identifier + '/rating.json', 'content/added/' + identifier + '.json'))
         require(entry == old_entries.get(identifier),

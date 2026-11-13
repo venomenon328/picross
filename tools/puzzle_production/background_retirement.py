@@ -75,8 +75,92 @@ def _stored_name(value):
     return value['ref']['file'] if value['root'] == '.' else value['root'] + '/' + value['ref']['file']
 
 
+def _same_origin(first, later):
+    """Compare true immutable anchors, never two absent HP initial sources."""
+    if first['format'] == later['format'] == background.EDITOR_FORMAT:
+        return first['origin'] == later['origin']
+    original, following = background.initial(first), background.initial(later)
+    return original is not None and following is not None and original == following
+
+
+def _image_state(source):
+    """Comparable current image/proof fields across a productive promotion."""
+    current = background.current(source)
+    if source['format'] != background.EDITOR_FORMAT:
+        return {key: current[key] for key in (*background.IMAGE_FIELDS, 'adoption') if key in current}
+    authority = current['authority']
+    if authority['kind'] != 'production':
+        return current
+    value = {key: current[key] for key in ('image_revision', 'asset', 'notice')}
+    value.update({key: authority[key] for key in ('candidate_revision', 'decision', 'derivation', 'provenance', 'review')})
+    if authority['adoption'] is not None:
+        value['adoption'] = authority['adoption']
+    return value
+
+
+def _editor_context(history, request, source, entry, manifest, declared):
+    """Prove v2's actual reveal context with metadata and Git blob identities."""
+    from . import editor_image_source as images, reveal_source as reveal
+    actual = images.validate_context(request['context'], source['binding']['entry'])
+    binding = source['binding']
+    package_name = entry['production']['package'] + '/manifest.json'
+    package_raw = history.read(package_name, LIMIT)
+    require(io.checksum(package_raw) == entry['production']['package_sha256'],
+            'Committed production package differs from the registry')
+    package = io.json_bytes(package_raw, LIMIT)
+    if package.get('format') in (reveal.RECEIPT, reveal.BACKGROUND_RECEIPT, reveal.EDITOR_RECEIPT):
+        background.check_editor_receipt(source, package, binding['entry'])
+    else:
+        require(entry == binding['entry'] and package.get('format') in
+                tuple('picross-target-export-v' + str(version) for version in range(1, 7)),
+                'Committed editor background has another production anchor')
+
+    copied = manifest['context']
+    manifest_root = request['background']['manifest']['root']
+    require(copied['reveal'] is not None and copied['reveal_approval'] is not None,
+            'Background work lacks its retained reveal context')
+    source_name = _stored_name({'root': manifest_root, 'ref': copied['reveal_approval']})
+    require(source_name in declared and
+            {**declared[source_name], 'file': copied['reveal_approval']['file']} == copied['reveal_approval'],
+            'Reveal context metadata is not in the committed request inventory')
+    copied_raw = history.bound(source_name, copied['reveal_approval'], reveal.LIMIT)
+    if actual['source'] is not None:
+        authority_raw = history.bound(actual['source']['file'], actual['source'], reveal.LIMIT)
+        authority = reveal.validate(io.json_bytes(authority_raw, reveal.LIMIT), None, historical_categories=True)
+        require(copied_raw == authority_raw == canonical_bytes(authority) + b'\n',
+                'Committed context copy differs from the actual reveal source')
+        if authority['format'] == reveal.EDITOR_FORMAT:
+            require(authority['binding'] == binding and actual['reveal'] == authority['current']['asset'],
+                    'Committed current reveal source has another production/image binding')
+            notice = authority['current']['notice']
+            require(all(name not in history.tree for name in images.reveal_candidates(entry) - {actual['reveal']['file']}),
+                    'Committed inactive reveal candidate is present')
+        else:
+            last = authority['bindings'][-1]
+            require(last['entry'] == binding['entry'] and last['runtime_revision'] == binding['identity']['runtime_revision'] and
+                    actual['reveal']['file'] == 'game/' + entry['reveal'] and
+                    actual['reveal']['sha256'] == authority['revisions'][-1]['reveal_sha256'],
+                    'Committed retained reveal source has another effective binding')
+            notice = authority['revisions'][-1]['notice']
+        require(history.read(reveal.identity(entry)['notice'], 65536) == notice['text'].encode('utf-8'),
+                'Committed reveal notice differs from its actual authority')
+    else:
+        require(actual['production'] == binding and reveal.path(entry['id']) not in history.tree and
+                copied_raw == canonical_bytes(actual['production']) + b'\n',
+                'Committed source-free reveal context differs from its actual production')
+
+    reveal_name = _stored_name({'root': manifest_root, 'ref': copied['reveal']})
+    require(reveal_name in declared and
+            {**declared[reveal_name], 'file': copied['reveal']['file']} == copied['reveal'] and
+            all(copied['reveal'][key] == actual['reveal'][key] for key in ('sha256', 'bytes')) and
+            history.size(actual['reveal']['file']) == actual['reveal']['bytes'] and
+            history.regular(reveal_name) == history.regular(actual['reveal']['file']),
+            'Committed effective reveal differs from its retained request context')
+    return actual['reveal']['file']
+
+
 def _historical_adoption(history, old_registry, old_entry, row):
-    from .background_request import validate as validate_request
+    from .background_request import IMAGE_FORMAT, validate as validate_request
     identifier, revision = row['puzzle_id'], row['revision']
     directory = selection(identifier, revision)
     record_raw = history.read(row['record'], bc.MAX_JSON)
@@ -91,12 +175,16 @@ def _historical_adoption(history, old_registry, old_entry, row):
     source_raw = history.bound(source_name, source_ref, background.LIMIT)
     source = background.validate(io.json_bytes(source_raw, background.LIMIT), old_entry)
     from . import background_rebind as rebind
-    require((source.get('format') == 'picross-catalog-background-v2' or rebind.is_rebound(source)) and
+    editor = source['format'] == background.EDITOR_FORMAT
+    require((source.get('format') == 'picross-catalog-background-v2' or rebind.is_rebound(source) or editor) and
             source_raw == background.encoded(source), 'Background revision was not adopted on main')
-    current = background.current(source)
+    current = _image_state(source)
+    require(not editor or source['current']['authority']['kind'] == 'production',
+            'Manual background has no production adoption to retire')
+    fields = ('revision', 'target', 'background', 'authorization') + (('context',) if request['format'] == IMAGE_FORMAT else ())
     expected_adoption = {'request': request_ref, **{key: request[key] for key in
-                         ('revision', 'target', 'background', 'authorization')}}
-    require(current['adoption'] == expected_adoption and
+                         fields}}
+    require(current.get('adoption') == expected_adoption and
             current['image_revision'] == request['target']['image_revision'] + 1 and
             request['test_only'] == old_entry['production']['test_only'],
             'Main source does not adopt the selected background request')
@@ -129,26 +217,37 @@ def _historical_adoption(history, old_registry, old_entry, row):
 
     # The compact prior source and the reveal copy are small/identity-bound
     # context, not a reason to fetch the original raster package or old images.
-    context = manifest['context']
-    manifest_root = request['background']['manifest']['root']
-    require(context['reveal'] is not None and context['reveal_approval'] is not None,
-            'Background work lacks its retained context bindings')
-    context_source = _stored_name({'root': manifest_root, 'ref': context['reveal_approval']})
-    prior_raw = history.bound(context_source, context['reveal_approval'], background.LIMIT)
-    require(background.ref(source_name, prior_raw) == request['target']['source'],
-            'Committed context is not the requested predecessor source')
-    prior = background.validate(io.json_bytes(prior_raw, background.LIMIT), old_entry)
-    require(prior_raw == background.encoded(prior) and background.initial(prior) == background.initial(source) and
-            background.origin_hash(prior) == request['target']['origin_sha256'] and
-            background.current(prior)['image_revision'] == request['target']['image_revision'],
-            'Committed predecessor changes the immutable background origin')
-    context_reveal = _stored_name({'root': manifest_root, 'ref': context['reveal']})
-    from .background_rebind import reveal_hash
-    require(context_reveal in declared and declared[context_reveal]['sha256'] == reveal_hash(source) and
-            declared[context_reveal]['bytes'] == context['reveal']['bytes'] and
-            context['reveal']['sha256'] == reveal_hash(source) and
-            history.regular(context_reveal) == history.regular('game/' + old_entry['reveal']),
-            'Committed live reveal differs from the retained context')
+    if request['format'] == IMAGE_FORMAT:
+        require(editor, 'Background request v2 requires an editor-era production source')
+        # V2 deliberately retains the actual reveal authority, not another
+        # recursive copy of the preceding background wrapper. Its exact target
+        # is already bound by the validated current adoption and real request.
+        live_reveal = _editor_context(history, request, source, old_entry, manifest, declared)
+    else:
+        context = manifest['context']
+        manifest_root = request['background']['manifest']['root']
+        require(context['reveal'] is not None and context['reveal_approval'] is not None,
+                'Background work lacks its retained context bindings')
+        context_source = _stored_name({'root': manifest_root, 'ref': context['reveal_approval']})
+        prior_raw = history.bound(context_source, context['reveal_approval'], background.LIMIT)
+        require(background.ref(source_name, prior_raw) == request['target']['source'],
+                'Committed context is not the requested predecessor source')
+        prior = background.validate(io.json_bytes(prior_raw, background.LIMIT), old_entry)
+        require(prior_raw == background.encoded(prior) and _same_origin(prior, source) and
+                background.origin_hash(prior) == request['target']['origin_sha256'] and
+                background.current(prior)['image_revision'] == request['target']['image_revision'],
+                'Committed predecessor changes the immutable background origin')
+        context_reveal = _stored_name({'root': manifest_root, 'ref': context['reveal']})
+        from .background_rebind import reveal_hash
+        legacy = source['origin']['source'] if editor else source
+        require(legacy is not None, 'Legacy request has no retained actual background source')
+        expected_reveal = reveal_hash(legacy)
+        live_reveal = 'game/' + old_entry['reveal']
+        require(context_reveal in declared and declared[context_reveal]['sha256'] == expected_reveal and
+                declared[context_reveal]['bytes'] == context['reveal']['bytes'] and
+                context['reveal']['sha256'] == expected_reveal and
+                history.regular(context_reveal) == history.regular(live_reveal),
+                'Committed live reveal differs from the retained context')
     definition = background.effective(source)['identity']['definition']
     history.bound('game/' + old_entry['definition'], definition, 2 * 1024 * 1024)
     background.capability(None, {background.CAPABILITY: history.read(background.CAPABILITY, background.CAPABILITY_LIMIT)},
@@ -170,8 +269,10 @@ def _historical_adoption(history, old_registry, old_entry, row):
     runtime = history.json(registry.RUNTIME, LIMIT)
     entries = runtime.get('entries') if isinstance(runtime, dict) else None
     metadata_generation = old_registry['format'] == registry.METADATA_FORMAT
-    runtime_format = registry.METADATA_RUNTIME_FORMAT if metadata_generation else background.RUNTIME_FORMAT
-    require(isinstance(runtime, dict) and runtime.get('format') == runtime_format and isinstance(entries, list),
+    runtime_formats = ((registry.IMAGE_RUNTIME_FORMAT,) if editor else
+                       (registry.METADATA_RUNTIME_FORMAT, registry.IMAGE_RUNTIME_FORMAT) if metadata_generation else
+                       (background.RUNTIME_FORMAT,))
+    require(isinstance(runtime, dict) and runtime.get('format') in runtime_formats and isinstance(entries, list),
             'Committed background runtime generation differs')
     matches = [entry for entry in entries if isinstance(entry, dict) and entry.get('id') == identifier]
     active = (next(row for row in old_registry['metadata'] if row['id'] == identifier)
@@ -182,7 +283,8 @@ def _historical_adoption(history, old_registry, old_entry, row):
     expected = background.projection(minimal, {source_name: source_raw})[identifier]
     require(len(matches) == 1 and matches[0].get('background') == expected and
             all(matches[0].get(key) == old_entry[key] for key in
-                ('id', 'key', 'save_slot', 'definition', 'reveal', 'visible')),
+                ('id', 'key', 'save_slot', 'definition', 'visible')) and
+            matches[0].get('reveal') == live_reveal.removeprefix('game/'),
             'Committed runtime does not contain the adopted background')
     require(matches[0].get('category_id') == active['category_id'] and
             (not metadata_generation or matches[0].get('name') == active['name']),
@@ -244,11 +346,12 @@ def _prepare_checked(root, revisions, integrated_commit, snapshot=None):
                 'Background revision is not integrated on main: ' + directory)
         proof = _historical_adoption(history, old_registry, old_entries[identifier], old_rows[directory])
         active = background.load(root, snapshot['registry'], entries[identifier])
-        require(active is not None and background.initial(active) == background.initial(proof['source']),
+        require(active is not None and _same_origin(active, proof['source']),
                 'Current background has a different immutable origin/identity')
         current, historical = background.current(active), background.current(proof['source'])
         require(current['image_revision'] >= historical['image_revision'] and
-                (current['image_revision'] != historical['image_revision'] or active == proof['source']),
+                (current['image_revision'] != historical['image_revision'] or
+                 _image_state(active) == _image_state(proof['source'])),
                 'Current background is not the proven adoption or its later successor')
         files = tree_files(root, directory)
         absent = directory not in rows

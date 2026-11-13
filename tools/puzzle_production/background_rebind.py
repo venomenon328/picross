@@ -26,6 +26,8 @@ def entry_shape(value):
 
 
 def normalized(source):
+    if source.get("format") == bg.EDITOR_FORMAT:
+        return source["binding"]["entry"]
     return source["events"][-1]["binding"]["entry"]
 
 
@@ -196,8 +198,16 @@ def live(root, source, entry, texts=None):
     record_raw = bg._raw(root, at.path(entry["id"]), at.LIMIT, texts, missing=True)
     historical_categories = at.historical_categories(root, texts)
     record = at.validate(io.json_bytes(record_raw, at.LIMIT), catalog, historical_categories=historical_categories) if record_raw is not None else None
+    editor_record = record if record is not None and record["format"] == at.EDITOR_FORMAT else None
+    if editor_record is not None:
+        require(record_raw == bg.encoded(editor_record), "Noncanonical editor reveal source")
+        # The new explicit authority preserves the entire old AT object. Old
+        # background prefixes remain historical facts, never invented new AT
+        # revisions or requests to reopen a displaced live image.
+        record = editor_record["origin"]["source"]
     if record is not None:
-        require(record["format"] == at.BACKGROUND_FORMAT and record_raw == bg.encoded(record), "Wrong background AT source")
+        require(record["format"] == at.BACKGROUND_FORMAT and
+                (editor_record is not None or record_raw == bg.encoded(record)), "Wrong background AT source")
     last = source["events"][-1]["binding"]
     require(last["at"] == pointer(record), "Background effective AT pointer differs")
     for event in source["events"]:
@@ -211,10 +221,68 @@ def live(root, source, entry, texts=None):
                 revision["notice"]["sha256"] == b["notice"]["sha256"],
                 "Background historical AT binding differs")
     for key, limit in (("reveal", at.IMAGE_LIMIT), ("notice", 65536)):
-        bg._bound(last[key], bg._raw(root, last[key]["file"], limit, texts), limit=limit)
+        if editor_record is None:
+            bg._bound(last[key], bg._raw(root, last[key]["file"], limit, texts), limit=limit)
+    if editor_record is not None:
+        origin = editor_record["origin"]
+        require(origin["entry"] == last["entry"] and origin["identity"] == last["identity"],
+                "Editor reveal origin differs from historical background binding")
+        previous_hash = record["revisions"][-1]["reveal_sha256"] if record is not None else origin["entry"]["production"]["reveal_sha256"]
+        require(last["reveal"]["sha256"] == previous_hash, "Editor reveal origin loses background reveal hash")
+        bg._bound(last["notice"], origin["notice"]["text"].encode("utf-8"), limit=65536)
+        active = editor_record["current"]
+        bg._bound(active["asset"], bg._raw(root, active["asset"]["file"], at.IMAGE_LIMIT, texts), limit=at.IMAGE_LIMIT)
+        bg._bound(bg.ref(at.identity(entry)["notice"], active["notice"]["text"].encode("utf-8")),
+                  bg._raw(root, at.identity(entry)["notice"], 65536, texts), limit=65536)
+
+
+def historical(root, source, texts=None):
+    """Check preserved HP-I1c AT prefixes without treating them as live paths."""
+    from . import categories
+    require(is_rebound(source), "Historical background prefixes require a rebind source")
+    catalog = io.json_bytes(bg._raw(root, categories.PATH, 131072, texts), 131072)
+    identifier = normalized(source)["id"]
+    raw = bg._raw(root, at.path(identifier), at.LIMIT, texts, missing=True)
+    record = at.validate(io.json_bytes(raw, at.LIMIT), catalog, historical_categories=True) if raw is not None else None
+    if record is not None:
+        require(raw == bg.encoded(record), "Noncanonical current reveal source")
+        if record["format"] == at.EDITOR_FORMAT:
+            record = record["origin"]["source"]
+        require(record is None or record["format"] == at.BACKGROUND_FORMAT, "Wrong historical background reveal source")
+    for event in source["events"]:
+        old = event["binding"]
+        if old["at"] is None:
+            continue
+        history = at.validate(prefix(record, old["at"]), catalog, historical_categories=True)
+        binding, image_revision = history["bindings"][-1], history["revisions"][-1]
+        require(binding["entry"] == old["entry"] and
+                binding["runtime_revision"] == old["identity"]["runtime_revision"] and
+                image_revision["reveal_sha256"] == old["reveal"]["sha256"] and
+                image_revision["notice"]["sha256"] == old["notice"]["sha256"],
+                "Preserved background AT prefix differs")
 
 
 def transition(old, new, old_entry, entry, operation):
+    if old.get("format") == bg.EDITOR_FORMAT or new.get("format") == bg.EDITOR_FORMAT:
+        from . import editor_image_source as editor
+        require(new.get("format") == bg.EDITOR_FORMAT, "A production rebind cannot downgrade editor background authority")
+        if old.get("format") == bg.EDITOR_FORMAT:
+            editor.transition(old, new, operation=operation)
+        else:
+            require(operation in ("update", "reveal-adoption") and new["origin"]["source"] == old and
+                    new["origin"]["identity"] == bg.effective(old)["identity"] and editor.preserved_background(new) and
+                    new["record_revision"] == max(old.get("record_revision", 0), bg.current(old)["image_revision"]) + 1,
+                    "Productive background promotion changes historical image authority")
+            expected = deepcopy(old_entry)
+            expected["production"]["package_sha256"] = (normalized(old)["production"]["package_sha256"] if is_rebound(old) else
+                                                        bg.initial(old)["origin"]["export_manifest_sha256"])
+            require(new["origin"]["entry"] == expected, "Productive background promotion changes normalized origin")
+            if operation == "reveal-adoption":
+                require(new["binding"] == {key: new["origin"][key] for key in ("entry", "identity")},
+                        "Reveal rebind changes production definition")
+        bg.validate(old, old_entry)
+        bg.validate(new, entry)
+        return
     require(is_rebound(new), "Operation requires background rebind source")
     if is_rebound(old):
         require(new["format"] == old["format"] or old["format"] == FORMAT and new["format"] == METADATA_FORMAT and
@@ -245,6 +313,17 @@ def delta(j, before, after, identifiers):
         b = next(e for e in after["entries"] if e["id"] == identifier)
         old = bg._source(None, before, a, j["old"])
         new = bg._source(None, after, b, j["new"])
+        if old["format"] == bg.EDITOR_FORMAT or new["format"] == bg.EDITOR_FORMAT:
+            transition(old, new, a, b, j["operation"])
+            if j["operation"] == "update":
+                raw = j["new"]["game/" + b["definition"]]
+                raw = raw.encode("utf-8") if isinstance(raw, str) else raw
+                bg._bound(new["binding"]["identity"]["definition"], raw, limit=2 * bg.LIMIT)
+                definition = io.json_bytes(raw, 2 * bg.LIMIT)
+                require(definition["id"] == b["id"] and definition["revision"] == new["binding"]["identity"]["runtime_revision"],
+                        "Editor background rebind differs from actual new definition")
+            mutable.add(bg.path(identifier))
+            continue
         validate(old, a) if old["format"] == FORMAT else bg.validate(old, a)
         validate(new, b)
         transition(old, new, a, b, j["operation"])
