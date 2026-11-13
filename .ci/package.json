@@ -1,11 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/626",
-  "package": "PW2-A",
-  "modules": [],
-  "purpose": "PW2-A gemäß issuecomment-6850772525: phasengerechte Pflichtquellen und gemeinsamer Bildstil, bedarfsweise Rasterkandidaten bei erhaltenen Qualitäts- und Budgetgates. Reiner Norm-/Markdownschnitt; docs/ci-required prüfen Quellen und Plan ohne Windows-Spielerbau. PW2-A-T01 verfolgt die tatsächlichen Pflichtquellenwege einschließlich Korrektur/Wiederaufnahme und vergleicht ihren Textumfang einmalig im PR.",
-  "omitted": "Keine Werkzeug-, UI-, Promptgenerator-, Solver-, Writer-, Schema- oder Runtimeänderung. Deshalb keine tools, production.*, native.*, preflight, delivery oder Chromium. Keine Bild-/Rätselproduktion, Bestandsreplays oder neue Dauerregressionen. PW2-B und PW2-C bleiben separat; die unabhängige fachliche Abnahme PW2-A-A01 bleibt vor Merge offen.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/576",
+  "package": "PE-B",
+  "modules": ["tools"],
+  "purpose": "PE-B gemäß issuecomment-6855913029: eigener lokaler Webeditor, sichere HTTP-Sitzung, bestehende A1/A2/A3-Writer und portabler Windows-Starter. docs/ci-required mit regulärem Windows-Spieler; tools vollständig für neue Dienst-/Starterquellen und schmale echte HTTP-/Instanz-/Requestregressionen. T01–T03 einmalige isolierte Writer-, Browser- und Windowsproben; separate Editorbau-/Startbindung im PR.",
+  "omitted": "Keine Änderung an bestehenden Fachwritern, Spielreadern, Solver oder Bildableitung: deshalb production.*, native.*, preflight und delivery ausgelassen. Vorhandene Fachgarantien plus echte einmalige A1/A2/A3-Aufrufe auf synthetischen Daten; kein Echtkatalog-Replay und kein automatisches Spiel-Chromiumprofil. A01 unabhängig vor Merge, U01 Eigentümer vor Gesamtissueabschluss; kein Mergeauftrag.",
+  "test_changes": [{"path":"tools/test_puzzle_editor.py","disposition":"change-scoped","reason":"Kleine echte HTTP-/Origin-/Token-/Body-/Instanz-/Stale-/Kategorie-Writerregressionen bei gewähltem tools-Modul; kein Browser, Engine- oder Echtkatalog-Dauertest. T01–T03 und bis zu drei Review-PNGs bleiben einmalige Belege."}],
   "core_change": null,
   "evidence": {
     "mode": "none",
