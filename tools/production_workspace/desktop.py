@@ -1,6 +1,7 @@
 """Native setup/status controller; production remains in the standard browser."""
 import argparse
 import os
+import sys
 from pathlib import Path
 import threading
 
@@ -149,7 +150,7 @@ def run_gui(args, lock, build):
         launched = False
         def show_updates():
             nonlocal updates
-            if setup_start or closing:
+            if setup_start or closing or os.name != 'nt' or not getattr(sys, 'frozen', False):
                 return
             from .app_updates import Updates
             updates = Updates(runtime)
