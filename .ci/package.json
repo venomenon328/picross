@@ -8,6 +8,7 @@
   "test_changes": [
     {"path": "tests/puzzle_production/test_catalog_images.py", "disposition": "change-scoped", "reason": "Kompakte synthetische API-/Bundle-/Journalfälle für den neuen gemeinsamen Bildpflegevertrag; keine echten Rätseldaten oder dauerhafte T01-Gesamtnachweisfamilie."},
     {"path": "tests/puzzle_production/test_editor_image_source.py", "disposition": "change-scoped", "reason": "Geschlossene Ursprungshüllen, exakte Revisionen und echte Produktionsfortführung nach manueller Bildpflege mit kleinen synthetischen Quellen."},
+    {"path": "tests/puzzle_production/test_background_change_transactions.py", "disposition": "change-scoped", "reason": "Bestehende Größenklassenregression an die ausdrücklich freigegebenen PE-A2-Binärjournale binden; unbekannte Formate, unzulässige Wirepräfixe und aktuelle Metadatenjournale bleiben an der bisherigen kleineren Grenze abgewiesen."},
     {"path": "tools/test_background_import.py", "disposition": "change-scoped", "reason": "Vorhandenen unabhängigen Importreader um zulässige direkte PNG-Farbtypen und echte GST2-Formatbindung ergänzen; historische HP-Profile bleiben streng."},
     {"path": "game/tests/pe_a1_cases.gd", "disposition": "change-scoped", "reason": "Bestehende Metadatenfälle um v8-Revealoverlay, Formatwechsel und Save-/Historyinvarianten ergänzen; v7-Gegenfall bleibt geschützt."},
     {"path": "game/tests/background_tests.gd", "disposition": "change-scoped", "reason": "Bestehenden Hintergrundvertrag um explizites standard und v8-/Capabilitygrenzen ergänzen."},
