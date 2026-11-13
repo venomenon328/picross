@@ -1,0 +1,66 @@
+{
+  "format": "pe-b-b01-review-evidence/v1",
+  "product_head": "cf3f9999035088e13a6f24f2004da749653f9c66",
+  "base": "7b2ecb5f9b35d0b296c7ffc185eed2ae20e00981",
+  "ci_test_merge": "ffec089925a4f60244f4b9cfd6296919d9af3695",
+  "ci_run": 43473968349,
+  "ci_attempt": 1,
+  "finding": "PE-B-B01",
+  "source_review": "https://github.com/venomenon328/picross/pull/633#pullrequestreview-5895159357",
+  "recipient": "Independent PR reviewer and repository owner with repository read access",
+  "purpose": "B01 exclusive Windows listener negative probe, final-head rebuilt portable editor and full repeated T03; technical evidence only, no independent or personal acceptance",
+  "expires": "2026-11-20",
+  "cleanup": "Review ref remains until required review, reassess on expiry; remove in separately commissioned remote cleanup, never merge to main",
+  "files": [
+    {
+      "file": ".gitattributes",
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
+      "file": "delivery.json",
+      "bytes": 646,
+      "sha256": "bd6d62357ee959171d9c953107f51f86ff72c22ff5af85af395391278baf537f"
+    },
+    {
+      "file": "Picross-Bestandseditor-windows-x64.zip",
+      "bytes": 21792685,
+      "sha256": "a9a784eb6f0791ba9bd6f8c29a59c1f7809dfa001921358ebfb92b97d5cc7051"
+    },
+    {
+      "file": "reuse.json",
+      "bytes": 1305,
+      "sha256": "b67ff8199921b31dab80d990c9027e55b11f5b5fb2900a148f1f5e44dbf923e1"
+    },
+    {
+      "file": "socket-report.json",
+      "bytes": 2343,
+      "sha256": "1a12005fe1e218af36bbbe802a543828d8f30c5461d8148e13574113ef56527e"
+    },
+    {
+      "file": "socket.log",
+      "bytes": 1537,
+      "sha256": "2af2b8e2e68294c60d122d31847aa160c5683bf11f4030e4bc460d461d453a57"
+    },
+    {
+      "file": "socket_probe.py",
+      "bytes": 4779,
+      "sha256": "975f0a7b6d59d92e081115748b11cfb7cc6d5c0a4fcfc97035f628078c05cedb"
+    },
+    {
+      "file": "t03-report.json",
+      "bytes": 7697,
+      "sha256": "ac4f10185dc30e3888a32cb630fb229fef13b219fd2070f554f0ae379932915b"
+    },
+    {
+      "file": "t03.log",
+      "bytes": 847,
+      "sha256": "ef5aba32845f0c74827f2fccbf7f0406cff19b3d93b68cfa18f0862d686647b2"
+    },
+    {
+      "file": "t03_b01.py",
+      "bytes": 9190,
+      "sha256": "9da7cb2c5a4bb1100be01f842c1eb310b64ee707f3825ec8ecf4019d4f38da7b"
+    }
+  ]
+}
