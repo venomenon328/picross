@@ -1,5 +1,18 @@
 # Windows-App bauen und prüfen
 
+APP-B2-S ergänzt die vorgelagerte Updateprüfung gemäß
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/612#issuecomment-6859867142).
+Bei bestehendem Opt-in der installierten GUI warten Browser/initiales Git bis
+zur Entscheidung beziehungsweise sicheren Helferübergabe. Native Bedienung,
+„Ohne Update fortfahren“ und regulärer Stop bleiben verfügbar; ohne Opt-in
+oder bei Fehlern startet die vorhandene App. Die ausgelieferte
+[Startanleitung](START-WINDOWS.txt) beschreibt diese Bedienung.
+T01 prüft die Start-/Abbruchrennen im gewählten tools-Modul. T02 verwendet den
+unten beschriebenen nicht veröffentlichenden Windowsdispatch am fixierten
+Produkt-Head samt MSI-/Input-/Lizenz-/Trust- und unveränderter Helferdiagnose.
+APP-B2-S-A01 prüft diese Originale unabhängig vor Merge; APP-B2-S-R01/T03 bleibt
+die echte installierte Windows-11-Probe vor produktiver Weiterverteilung.
+
 Aktuell maßgeblich: [APP-ROOT1 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6851636493)
 mit [öffentlicher Eigentümerfreigabe](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923)
 und der [App-Releasevertrag](../../docs/PRODUCTION_UPDATES.md).

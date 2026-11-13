@@ -16,6 +16,7 @@ from .release import release, version_tuple
 from .release_manifest import require, strict_json, hex_string
 from .update_storage import no_links, read_small, atomic_json, recover
 from .update_verifier import VerifiedCandidate, assess_update, verify_candidate
+from .update_client import Cancelled
 
 PACKAGE = Path(__file__).parent
 
@@ -96,7 +97,7 @@ class Handoff:
             self.process.stdin.close()  # EOF means refusal, never implicit installation.
 
 
-def prepare(candidate, stage, identity, runtime):
+def prepare(candidate, stage, identity, runtime, *, cancelled=None, transition=None):
     require(type(candidate) is VerifiedCandidate, 'Full verified candidate required')
     # Revalidate bytes, packaged roots and actual installed identity at the final boundary.
     require(installation() == identity, 'Installed application changed')
@@ -133,11 +134,14 @@ def prepare(candidate, stage, identity, runtime):
         handle = parent_handle()
         value['parent_handle'] = handle
         startup = subprocess.STARTUPINFO(lpAttributeList={'handle_list': [handle]})
-        with system_dlls():
-            process = subprocess.Popen([str(stage.path / 'UpdateHelper.exe')], cwd=stage.path,
-                stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-                startupinfo=startup, close_fds=True, creationflags=subprocess.CREATE_NO_WINDOW,
-                env=external_environment())
+        with transition if transition is not None else threading.Lock():
+            if (cancelled is not None and cancelled.is_set()) or runtime.stop_requested.is_set():
+                raise Cancelled()
+            with system_dlls():
+                process = subprocess.Popen([str(stage.path / 'UpdateHelper.exe')], cwd=stage.path,
+                    stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                    startupinfo=startup, close_fds=True, creationflags=subprocess.CREATE_NO_WINDOW,
+                    env=external_environment())
         process.stdin.write(canonical(value)); process.stdin.flush()
         replies = queue.Queue()
         def read_reply():
