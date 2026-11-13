@@ -87,7 +87,8 @@ Synthetische kompatible Ziele belegen nur den Werkzeugweg.
 PW-B führt für neue Produktionen den fünfstufigen Authoringstandard 0.8.0 ein
 ([geschlossener Vertrag](PW_B_CONTRACT.md)); 0.6/0.7 beschreiben ihre alten Generationen.
 PW2-A präzisiert mit Dokumentrevision 5 dessen operative Pflichtquellen und den
-Bildstil, ohne neue Datenformen oder Änderungen am Assistenten einzuführen.
+Bildstil, ohne neue Datenformen einzuführen. PW2-B ergänzt mit Dokumentrevision 6
+die Oberfläche und den kombinierten Schlussauftrag bei unveränderten Inhaltsgates.
 Der lokale Assistent ersetzt das Offline-Sheet ohne Alt-WIP-Migration. Capability und verpflichtende Gesamtaktivierung sind
 getrennt. Der konkrete verbleibende Einzelweg wird in #560 abgeglichen.
 [MJ-A / #490](https://github.com/venomenon328/picross/issues/490#issuecomment-6774440064)

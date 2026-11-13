@@ -14,17 +14,18 @@ const P=require('./tools/production_workspace/ui/workflow.js');
 const opts={workroot:'E:/synthetic',cleanup:true,merge:false};
 const record={file:'content/authoring/pz-test/r01/record.json',sha256:'a'.repeat(64)};
 const v={puzzle_id:'pz-test',revision:'r01',commit:'b'.repeat(40),source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),
- record,facts:{state:'reveal_review',authoring_version:'0.8.0'},offers:[]};
+ record,facts:{state:'reveal_review',authoring_version:'0.8.0',composition:{raster:'r',reveal:'v'},background_choice:'none'},
+ assets:[{id:'r',role:'raster'},{id:'v',role:'reveal'},{id:'bg',role:'background',location:{sha256:'c'.repeat(64)}}],offers:[]};
 let text=P.prompt(null,{brief:'Synthetischer Test, keine Produktion'},opts);
 assert.match(text,/Schritt 1/);assert.doesNotMatch(text,/source_commit|localhost|Hintergrund|Kontextzeichnungen/);
-assert.match(text,/ausschließlich innerhalb dieser Arbeitswurzel/);
-assert.match(text,/Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt/);
+assert.match(text,/Lokale Codex-Arbeitswurzel: E:\/synthetic/);
+assert.doesNotMatch(text,/Abschlussbereinigung|ausschließlich innerhalb dieser Arbeitswurzel/);
 assert.doesNotMatch(text,/Abschlussbereinigung eigener Arbeitsdaten nach WORKSPACE ausdrücklich beauftragt/);
 assert.equal(text,P.prompt(null,{brief:'Synthetischer Test, keine Produktion'},{...opts,cleanup:false}));
 assert.throws(()=>P.prompt(null,{},opts),/Motiv/);
 for(const [state,n,kind] of [['reveal_review',2,'reveal'],['motif_review',3,null],['motif_approved',3,null],
- ['raster_review',3,null],['raster_ready',4,'raster'],['background_review',4,'background'],['content_ready',5,null],['editorially_approved',5,null]]){
- v.facts.state=state;v.offers=kind?[{id:'A',kind,record}]:[];
+ ['raster_review',3,null],['raster_ready',4,'raster'],['background_review',5,'background'],['content_ready',5,null],['editorially_approved',5,null]]){
+ v.facts.state=state;v.offers=kind?[{id:'A',kind,record,asset_ids:['bg']}]:[];
  const intent={selection:kind?'A':null,kind,parameters:'etwa 25 × 20',context:'Landschaft'};
  text=P.prompt(v,intent,opts);assert.match(text,new RegExp('Schritt '+n));
  assert.match(text,/kein Merge/);assert.ok(text.includes(record.file));assert.ok(text.includes('b'.repeat(40)));
@@ -33,7 +34,7 @@ for(const [state,n,kind] of [['reveal_review',2,'reveal'],['motif_review',3,null
  for(const action of ['resume','rework'])assert.ok(P.prompt(v,{action,feedback:'Linie korrigieren'},opts).includes(record.file));
 }
 v.facts.state='background_review';assert.match(P.prompt(v,{selection:'none'},opts),/ausdrücklich für keinen Hintergrund/);
-v.facts.state='content_ready';assert.match(P.prompt(v,{}, {...opts,merge:true}),/Merge ausdrücklich nur nach/);
+v.facts.state='content_ready';assert.match(P.prompt(v,{}, {...opts,merge:true}),/Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates/);
 for(const url of [null,'http://localhost:1234/job','https://github.com/venomenon328/picross/tree/main']){
  v.source_url=url;assert.throws(()=>P.prompt(v,{},opts),/Remote-Sicherung/);
 }
@@ -57,7 +58,7 @@ const first = build(grid);
 assert.ok(first.includes(base.notes));
 assert.match(first,/Breite: exakt 28 Zellen.*Höhe: exakt 19 Zellen/s);
 assert.match(first,/ungefähr 4 Vordergrundfarben/);
-assert.match(first,/Abschlussbild bleibt detailliert und farbig/);
+assert.match(first,/detaillierte farbige Abschlussbildoriginale/);
 assert.match(build({...grid,sizeAccuracy:'approx',colorAccuracy:'exact'}),/Breite: ungefähr 28 Zellen.*Höhe: ungefähr 19 Zellen.*exakt 4/s);
 assert.match(build({mode:'mono'}),/monochrom, genau eine Vordergrundfarbe/);
 assert.doesNotMatch(build({...grid,mode:'mono'}),/4 Vordergrundfarben/);
@@ -112,7 +113,7 @@ published.approved=[{...p,width:22}];
 assert.equal(P.publishedGrid(v).width,'22');
 text=P.prompt(v,{...selected,grid:{width:'25'}},{});assert.match(text,/Korrekturweg.*erneuten Entscheidung/);
 v.facts.state='motif_review';
-assert.match(P.prompt(v,{},{}),/Schritt 3: Ich gebe.*Parameterkorridor frei/);
+assert.match(P.prompt(v,{},{}),/Schritt 3: Ich gebe.*Parameterkorridor.*frei/);
 text=P.prompt(v,{action:'rework',feedback:'Anpassen',grid:{width:'25'}},{});
 assert.match(text,/Neue Absicht/);assert.doesNotMatch(text,/Ich gebe.*frei/);
 published.approved=[];published.proposed=[p,{width:30}];assert.deepEqual(P.publishedGrid(v),{});
@@ -131,9 +132,10 @@ const build=grid=>P.prompt(null,{brief:'Testmotiv',grid},{});
 for(const sizeAccuracy of ['approx','exact'])for(const axes of [{},{width:'28'},{height:'30'},{width:'28',height:'19'}]){
  const text=build({...axes,sizeAccuracy}),precision=sizeAccuracy==='exact'?'exakt':'ungefähr';
  for(const [axis,label] of [['width','Breite'],['height','Höhe']]){
-  assert.ok(text.includes(axes[axis]?`${label}: ${precision} ${axes[axis]} Zellen`:`${label} passend zum Motiv bestimmen`));
+  if(axes[axis])assert.ok(text.includes(`${label}: ${precision} ${axes[axis]} Zellen`));
+  else assert.doesNotMatch(text,new RegExp(label+':|'+label+' passend'));
  }
- assert.match(text,/veröffentlichten Motivbriefing/);
+ assert.match(text,/Neues Motiv: Testmotiv/);assert.match(text,/AGENTS.md/);assert.match(text,/reveal_review/);
 }
 for(const axis of ['width','height'])for(const value of ['0','-1','51','1.5','x',' ','NaN'])assert.throws(()=>build({[axis]:value}),/Bitte/);
 for(const colors of ['0','1','9','x','2.5'])assert.throws(()=>build({mode:'color',colors}),/Bitte/);
@@ -178,11 +180,54 @@ for(const file of ['record.json','content/authoring/pz-other/r01/record.json','.
  assert.throws(()=>P.prompt({...v,record:{file}},selected,{}),/kanonische/);
 }
 assert.throws(()=>P.prompt(v,{action:'unknown'},{}),/gültige Aktion/);
+v.facts.composition={raster:'r',reveal:'v'};v.facts.background_choice='none';v.assets=[{id:'r',role:'raster'},{id:'v',role:'reveal'}];
 for(const state of ['motif_approved','raster_review','editorially_approved','registered']){
  v.facts.state=state;assert.doesNotMatch(P.prompt(v,{},{}),/Ich gebe|Ich erteile|Ich wähle/);
 }
 v.revision='proposal.v2';v.record={file:'content/authoring/pz-test/proposal.v2/record.json'};
 assert.ok(P.prompt(v,{},{}).includes(v.record.file));
+"""
+        result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
+        self.assertEqual(result.returncode, 0, result.stderr)
+
+    def test_final_order_exact_objects_personal_defaults_and_no_authority_from_resume(self):
+        probe = r"""
+const assert=require('node:assert/strict'),P=require('./tools/production_workspace/ui/workflow.js');
+const record={file:'content/authoring/pz-test/r02/record.json',sha256:'a'.repeat(64)};
+const v={puzzle_id:'pz-test',revision:'r02',commit:'b'.repeat(40),
+ source_url:'https://github.com/venomenon328/picross/tree/'+'b'.repeat(40),record,
+ facts:{state:'background_review',authoring_version:'0.8.0',composition:{raster:'r',reveal:'v',background:null},background_choice:null},
+ assets:[{id:'r',role:'raster'},{id:'v',role:'reveal'},{id:'bg',role:'background',location:{sha256:'c'.repeat(64)}}],
+ offers:[{id:'A',kind:'background',record,asset_ids:['bg']}]};
+const selected={selection:'A',kind:'background'};
+for(const saved of [undefined,null,[],{}, {merge:null}, {merge:'false'}])assert.equal(P.options(saved).merge,true);
+for(const merge of [false,true])assert.equal(P.options({merge}).merge,merge);
+assert.deepEqual(P.options({workroot:'E:/Own',merge:false,cleanup:true}),{workroot:'E:/Own',merge:false});
+assert.equal(P.orderStep(v),5);assert.equal(P.step(v),4,'copy does not advance displayed Git phase');
+for(const intent of [selected,{selection:'none'}]){
+ const before=JSON.stringify(v), text=P.prompt(v,intent,{});
+ assert.match(text,/Schritt 5/);assert.match(text,/Ich erteile die Endabnahme/);assert.match(text,/Integration/);
+ assert.match(text,/unabhängiges Review/);assert.match(text,/Squash-Merge.*Vor-Merge-Gates/);assert.match(text,/Authoring §9/);
+ assert.doesNotMatch(text,/Zur Endabnahme vorbereiten|Keine zusätzliche Abschlussbereinigung|SHA-256|workspace.json/);
+ assert.equal(text.split(record.file).length,2);assert.equal(JSON.stringify(v),before);
+ const draft=P.prompt(v,intent,{merge:false});assert.match(draft,/Draft-PR.*kein Merge/);assert.doesNotMatch(draft,/Squash-Merge/);
+}
+for(const action of ['resume','rework']){
+ const text=P.prompt(v,{...selected,action,feedback:'Striche korrigieren'},{merge:true});
+ assert.doesNotMatch(text,/Ich erteile|Ich wähle|Squash-Merge/);assert.match(text,/kein Merge/);
+}
+for(const intent of [{},{selection:'missing',kind:'background'},{selection:'A',kind:'raster'}])assert.throws(()=>P.prompt(v,intent,{}));
+assert.throws(()=>P.prompt({...v,facts:{...v.facts,composition:null}},selected,{}),/Schlussübersicht/);
+for(const role of ['raster','reveal']){
+ const invalid={...v,assets:v.assets.filter(a=>a.role!==role)};
+ assert.throws(()=>P.prompt(invalid,selected,{}),/Schlussübersicht/);
+}
+const duplicate={...v,assets:[...v.assets,{id:'other',role:'background',location:{sha256:'d'.repeat(64)}}],
+ offers:[{...v.offers[0],asset_ids:['bg','other']}]};
+assert.throws(()=>P.prompt(duplicate,selected,{}),/nicht eindeutig/);
+v.facts.state='editorially_approved';v.facts.background_choice='A';v.facts.composition.background='bg';v.offers=[];
+const retained=P.prompt(v,{},{});assert.doesNotMatch(retained,/Ich erteile|Ich wähle/);assert.match(retained,/bereits endabgenommene/);
+v.facts.state='registered';assert.doesNotMatch(P.prompt(v,{},{}),/Ich erteile|Ich wähle/);
 """
         result = subprocess.run(['node', '-e', probe], cwd=ROOT, capture_output=True, text=True, encoding='utf-8')
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -196,7 +241,7 @@ function load(){
   if(!elements.has(id))elements.set(id,{replaceChildren(){}});return elements.get(id);
  }};
  vm.runInNewContext(code,{document,location:{hash:'',pathname:'/'},history:{replaceState(){}},
-  sessionStorage:{getItem(){},setItem(){}},
+  sessionStorage:{getItem(){},setItem(){}},PW:require('./tools/production_workspace/ui/workflow.js'),
   localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},
   fetch:()=>new Promise(()=>{}),setTimeout,clearTimeout,AbortController});
  return {document,theme:elements.get('theme')};

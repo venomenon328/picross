@@ -2,7 +2,7 @@
 
 **Vertrag 1.0 · Dokumentrevision 10 · 13.11.2026 · PW2-A / [#626](https://github.com/venomenon328/picross/issues/626)**
 
-Für neue Produktionen gilt [Authoring 0.8.0, Dokumentrevision 5](ai-workflows/PUZZLE_AUTHORING.md)
+Für neue Produktionen gilt [Authoring 0.8.0, Dokumentrevision 6](ai-workflows/PUZZLE_AUTHORING.md)
 mit dem geschlossenen [PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing,
 drei Kandidaten und Auswahl beginnen erst nach tatsächlicher qualifizierter
 Rasterwahl in Schritt 4. Frühere 0.6-/0.7-/Offline-Sheetangaben beschreiben ihre

@@ -237,3 +237,32 @@ dialog::backdrop { background: #07120fc4; }
 .removalBranch { overflow-wrap: anywhere; }
 [data-theme=dark] .danger { color: #ffabab; }
 @media (max-width: 540px) { .removalFacts { grid-template-columns: 1fr; gap: 3px; } .removalFacts dd { margin-bottom: 8px; } }
+
+
+/* PW2-B: decision objects before actions; technical sources remain available below. */
+.puzzleMetadata { display: flex; flex-wrap: wrap; gap: 7px 16px; margin: 0 0 14px; font-size: .9rem; color: var(--accent); font-weight: 650; }
+.openPoints { border-left: 3px solid var(--warn); padding: 10px 15px; margin: 12px 0; }
+.openPoints h3 { font-size: 1rem; }
+.openPoints ul { padding-left: 20px; margin: 8px 0 0; }
+.finalOverview { margin: 18px 0; }
+.finalOverview > h3 { font-family: Georgia, serif; font-size: 1.35rem; margin-bottom: 8px; }
+.closingCards { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px; }
+.closingCards .canvas { height: 190px; }
+.summaryBackground { margin-top: 15px; }
+.summaryBackground .canvas { height: 150px; }
+.noneChoice { border: 1px dashed var(--accent); border-radius: 10px; padding: 20px; color: var(--accent); background: var(--soft); }
+.nextAction { margin-top: 24px; }
+.finalScope { border-left: 3px solid var(--accent); padding: 12px 15px; background: var(--soft); margin-top: 15px; }
+.finalScope .hint { margin-top: 8px; }
+.technicalDetails { margin-top: 26px; }
+.technicalDetails textarea { font: .78rem/1.45 ui-monospace,monospace; }
+.technicalDetails button { margin-top: 10px; }
+@media (max-width: 540px) {
+  .closingCards { grid-template-columns: 1fr; }
+  .closingCards .canvas { height: 180px; }
+  .summaryBackground .canvas { height: 120px; }
+  .orderActions > button { width: 100%; }
+}
+
+.summaryBackground { grid-column: 1 / -1; }
+.closingCards h4 { margin: 8px 0; font-size: .9rem; }
