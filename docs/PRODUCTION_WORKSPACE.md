@@ -23,13 +23,14 @@ Branchentfernung nach §4.4 ist eine enge Schreibausnahme. Veröffentlichung und
 Gitabschluss führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
 
-**Freigegebener APP-Update-Sollstand · 12.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612):**
-[Automatische App-Releases und Selbstupdate](PRODUCTION_UPDATES.md) ergänzen
-die bisherige P4-App in zwei Paketen (zuerst APP-A Build/Release, danach
-APP-B sicherer Updateclient). **APP-A im Arbeitsbranch implementiert, noch nicht
-integriert/aktiviert; APP-B nicht implementiert.** Die veröffentlichende Pipeline
-bleibt bis zum eigenen Betriebsauftrag gesperrt. Die neue Freigabe hebt die historischen P4-Verbote
-automatischer Releases/Updater ausschließlich für diesen Sollweg auf;
+**APP-Updatevertrag · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612):**
+[Automatische App-Releases und Selbstupdate](PRODUCTION_UPDATES.md): APP-A ist
+über #613 unabhängig abgenommen und integriert. APP-B1 ergänzt signierte
+Updateautorität und den gemeinsamen Verifier mit unprovisioniertem festem Trust;
+APP-B2 (Startprüfung/Installation) bleibt ausstehend. Die veröffentlichende Pipeline
+bleibt bis zum eigenen Betriebsauftrag, Schlüsselbereitstellung und beiden
+Aktivierungsschaltern gesperrt. Kein aktiver Selbstupdateclient. Die Freigabe hebt
+die historischen P4-Verbote ausschließlich für diesen Sollweg auf;
 Spiel-/Rätsel-/Produktionsdaten bleiben unabhängig.
 
 **Spezifikation 1.0 · 11.11.2026 · [Issue #578](https://github.com/venomenon328/picross/issues/578)**

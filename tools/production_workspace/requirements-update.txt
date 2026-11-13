@@ -1,0 +1,5 @@
+# Shared by tools regressions, release authority readers and the private app build.
+# Stable wheels checked 2026-11-13; CPython 3.11+ (Windows app: 3.13.14 x64).
+cryptography==50.0.2
+cffi==2.1.1
+pycparser==3.12

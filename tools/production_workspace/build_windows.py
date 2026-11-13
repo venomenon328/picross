@@ -16,6 +16,7 @@ import pyexpat
 import decimal
 from .release import release, version_tuple, check_history
 from .payload import fingerprint, audit_analysis
+from .update_verifier import production_trust
 
 ROOT = Path(__file__).resolve().parents[2]
 PACKAGE = ROOT / 'tools/production_workspace'
@@ -37,8 +38,11 @@ def build(destination, *, version=None):
             runtime_versions['Expat'] != 'expat_2.8.1' or runtime_versions['zlib'] != '1.3.1' or
             runtime_versions['mpdecimal'] != '4.0.0'):
         raise RuntimeError('Runtime-Komponenten passen nicht zum versionierten Lizenzinventar.')
-    for line in (PACKAGE / 'requirements-windows.txt').read_text().splitlines():
+    pins = '\n'.join((PACKAGE / name).read_text() for name in ('requirements-windows.txt', 'requirements-update.txt'))
+    for line in pins.splitlines():
         if not line or line.startswith('#'):
+            continue
+        if line == '-r requirements-update.txt':
             continue
         name, pinned_version = line.split('==')
         if metadata.version(name) != pinned_version:
@@ -63,6 +67,13 @@ def build(destination, *, version=None):
     env.update(PYINSTALLER_CONFIG_DIR=str(work / 'cache'), TEMP=str(work), TMP=str(work), PYTHONHASHSEED='0')
     resources = {f'ui/{name}': sha(PACKAGE / 'ui' / name) for name in ('index.html', 'app.js', 'workflow.js', 'style.css')}
     resources['assets/launcher.ico'] = sha(PACKAGE / 'assets/launcher.ico')
+    production_trust()  # Fail the build on malformed public roots, even if unprovisioned.
+    for name in ('release.json', 'update-trust.json'):
+        resources[name] = sha(PACKAGE / name)
+    from cryptography.hazmat.backends.openssl.backend import backend
+    runtime_versions['cryptography OpenSSL'] = backend.openssl_version_text()
+    if runtime_versions['cryptography OpenSSL'] != 'OpenSSL 4.0.3 29 Sep 2026':
+        raise RuntimeError('Kryptografie-Runtime passt nicht zum geprüften Wheel-/Lizenzinventar.')
     manifest = {'format': 'picross-windows-app-v1', 'version': product['version'], 'commit': commit,
                 'payload_fingerprint': inputs['sha256'],
                 'upgrade_code': product['upgrade_code'], 'product_code': product['product_code'],
@@ -85,22 +96,28 @@ def build(destination, *, version=None):
                     '--distpath', str(destination / 'dist'),
                     '--workpath', str(work / 'pyinstaller'), '--specpath', str(work), '--paths', str(ROOT),
                     '--collect-submodules', 'tools.puzzle_production',
+                    '--hidden-import', 'tools.production_workspace.update_verifier',
+                    '--hidden-import', 'cryptography.hazmat.primitives.asymmetric.ed25519',
+                    '--hidden-import', '_cffi_backend',
                     '--add-data', str(PACKAGE / 'ui') + ':tools/production_workspace/ui',
                     '--add-data', str(PACKAGE / 'assets/launcher.ico') + ':tools/production_workspace/assets',
                     '--add-data', str(manifest_file) + ':tools/production_workspace',
+                    '--add-data', str(PACKAGE / 'release.json') + ':tools/production_workspace',
+                    '--add-data', str(PACKAGE / 'update-trust.json') + ':tools/production_workspace',
                     str(PACKAGE / 'desktop_entry.py')], check=True, cwd=ROOT, env=env)
     audit = audit_analysis(ROOT, work / 'pyinstaller/Picross-Start/Analysis-00.toc', inputs,
                            [manifest_file, file_version])
     (destination / 'inputs.json').write_text(json.dumps(inputs, indent=2) + '\n', encoding='utf-8')
-    (destination / 'input-audit.json').write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     app = destination / 'dist/Picross-Start'
+    verify_update_payload(app, work / 'pyinstaller/Picross-Start/PYZ-00.pyz', audit)
+    (destination / 'input-audit.json').write_text(json.dumps(audit, indent=2) + '\n', encoding='utf-8')
     shutil.copyfile(PACKAGE / 'START-WINDOWS.txt', app / 'START.txt')
     shutil.copyfile(manifest_file, app / 'components.json')
     licenses = app / 'LICENSES'; licenses.mkdir()
     shutil.copyfile(Path(sys.base_prefix) / 'LICENSE.txt', licenses / 'Python.txt')
     for notice in (PACKAGE / 'licenses').glob('*.txt'):
         shutil.copyfile(notice, licenses / notice.name)
-    for name in ('Pillow', 'PyInstaller'):
+    for name in ('Pillow', 'PyInstaller', 'cryptography', 'cffi', 'pycparser'):
         dist = metadata.distribution(name)
         copied = False
         for file in dist.files:
@@ -136,6 +153,27 @@ def build(destination, *, version=None):
               'exe_bytes': (app / 'Picross-Start.exe').stat().st_size, 'exe_sha256': sha(app / 'Picross-Start.exe')}
     (destination / 'delivery.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
     print(json.dumps(report, ensure_ascii=False))
+
+
+def verify_update_payload(app, pyz, audit):
+    """Check real frozen code and native crypto extensions, not just source pins."""
+    from PyInstaller.archive.readers import ZlibArchiveReader
+    names = set(ZlibArchiveReader(str(pyz)).toc)
+    required = {'tools.production_workspace.update_verifier', 'tools.production_workspace.release_manifest',
+                'tools.production_workspace.release', 'cryptography.hazmat.primitives.asymmetric.ed25519'}
+    if not required <= names or 'tools.production_workspace.update_diagnostic' in names:
+        raise RuntimeError('Frozen Verifier-/Kryptografieinventar fehlt oder enthält den Testadapter.')
+    observed = set(audit['repository_inputs'])
+    sources = {name.replace('.', '/') + '.py' for name in required if name.startswith('tools.')}
+    sources |= {'tools/production_workspace/release.json', 'tools/production_workspace/update-trust.json'}
+    if not sources <= observed:
+        raise RuntimeError('Verifier-/Trustquellen fehlen im tatsächlichen PyInstaller-Inputabgleich.')
+    files = [p.relative_to(app).as_posix() for p in app.rglob('*.pyd')]
+    if not any(p.endswith('cryptography/hazmat/bindings/_rust.pyd') for p in files) or not any(
+            Path(p).name.startswith('_cffi_backend.') for p in files):
+        raise RuntimeError('Native Kryptografiemodule fehlen im Frozen-Payload.')
+    audit['update_modules'] = sorted(required)
+    audit['crypto_extensions'] = sorted(p for p in files if 'cryptography/' in p or '_cffi_backend.' in p)
 
 
 if __name__ == '__main__':

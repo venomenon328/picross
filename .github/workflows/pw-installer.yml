@@ -8,7 +8,8 @@ on:
   workflow_dispatch:
 
 # Dispatch is ALWAYS diagnostic. Publication additionally needs the separately
-# authorized repository variable PW_RELEASE_ENABLED=true. No secret is added.
+# authorized PW_RELEASE_ENABLED AND PW_UPDATE_SIGNING_ENABLED variables.
+# Production keys are provisioned later, only in the main-only pw-app-release environment.
 permissions:
   contents: read
   actions: read
@@ -42,6 +43,9 @@ jobs:
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
         with:
           python-version: '3.13.14'
+      - name: Pinned signed-authority reader
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
       - name: Verify main CI, fingerprint and published authority
         id: plan
         env:
@@ -97,7 +101,24 @@ jobs:
           Get-Content "$env:RUNNER_TEMP\pw-product\delivery.json"
           Get-Content "$env:RUNNER_TEMP\pw-inspection\result.json"
           if ((git status --porcelain)) { throw 'Build changed source checkout' }
-      - name: Candidate for independent APP-A review and gated publisher
+      - name: APP-B1-T02 real-candidate synthetic signature check (no production secret)
+        if: github.event_name == 'workflow_dispatch'
+        shell: pwsh
+        run: |
+          & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.update_diagnostic --build "$env:RUNNER_TEMP\pw-product" --output "$env:RUNNER_TEMP\pw-b1-review"
+          if ($LASTEXITCODE -ne 0) { throw 'Real-candidate signature diagnosis failed' }
+      - name: APP-B1 technical originals for independent review (no private key)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pw-b1-review-${{ needs.plan.outputs.source }}
+          path: |
+            ${{ runner.temp }}/pw-b1-review/*
+            ${{ runner.temp }}/pw-product/input-audit.json
+            ${{ runner.temp }}/pw-inspection/result.json
+          retention-days: 7
+          if-no-files-found: error
+      - name: Candidate for independent APP-B1 review and gated publisher
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: Picross-Produktionsassistent-${{ needs.plan.outputs.source }}
@@ -112,11 +133,51 @@ jobs:
           retention-days: 14
           compression-level: 0
 
-  publish:
+  publication-gate:
     needs: [plan, installer]
     if: >-
       github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' &&
-      github.repository == 'venomenon328/picross' && vars.PW_RELEASE_ENABLED == 'true'
+      github.repository == 'venomenon328/picross' &&
+      vars.PW_RELEASE_ENABLED == 'true' && vars.PW_UPDATE_SIGNING_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    outputs:
+      authorized: ${{ steps.authorize.outputs.authorized }}
+    steps:
+      # No environment reference: a disabled/unprovisioned run cannot create it.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - name: Pinned signed-authority reader
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pw-plan
+          path: ${{ runner.temp }}/pw-plan
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: Picross-Produktionsassistent-${{ needs.plan.outputs.source }}
+          path: ${{ runner.temp }}/pw-product
+      - name: Check source, candidate, provisioned trust and existing main-only environment
+        id: authorize
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_RELEASE_ENABLED: ${{ vars.PW_RELEASE_ENABLED }}
+          PW_UPDATE_SIGNING_ENABLED: ${{ vars.PW_UPDATE_SIGNING_ENABLED }}
+        run: python -m tools.production_workspace.release_channel authorize --plan "$RUNNER_TEMP/pw-plan/plan.json" --build "$RUNNER_TEMP/pw-product"
+
+  publish:
+    needs: [plan, installer, publication-gate]
+    if: >-
+      github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' &&
+      github.repository == 'venomenon328/picross' &&
+      vars.PW_RELEASE_ENABLED == 'true' && vars.PW_UPDATE_SIGNING_ENABLED == 'true' &&
+      needs.publication-gate.outputs.authorized == 'true'
+    environment: pw-app-release
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -130,6 +191,9 @@ jobs:
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
         with:
           python-version: '3.13.14'
+      - name: Pinned signing environment
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
           name: pw-plan
@@ -142,4 +206,6 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           PW_RELEASE_ENABLED: ${{ vars.PW_RELEASE_ENABLED }}
+          PW_UPDATE_SIGNING_ENABLED: ${{ vars.PW_UPDATE_SIGNING_ENABLED }}
+          PW_UPDATE_SIGNING_KEY: ${{ secrets.PW_UPDATE_SIGNING_KEY }}
         run: python -m tools.production_workspace.release_channel publish --plan "$RUNNER_TEMP/pw-plan/plan.json" --build "$RUNNER_TEMP/pw-product"
