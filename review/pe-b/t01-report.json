@@ -1,0 +1,418 @@
+{
+  "head": "1476fd3acbd633ccfb55e0b5c9453f6bb391195c",
+  "environment": "Windows 11 Pro 10.0.26200; standard user; Python 3.13.14/Pillow 12.3.0",
+  "steps": [
+    {
+      "name": "v4/v7 read and stable two-ID listing",
+      "ids": [
+        "pz-test-direct-color",
+        "pz-test-direct-mono"
+      ],
+      "palette": [
+        {
+          "color": "202020",
+          "id": 1,
+          "symbol": "A"
+        }
+      ]
+    },
+    {
+      "name": "v7 A1 name edit without implicit migration",
+      "files": [
+        "content/registry.json",
+        "game/data/registry.json"
+      ]
+    },
+    {
+      "name": "category create rename occupied delete+reassign and empty delete"
+    },
+    {
+      "name": "explicit runtime-only migration and same-plan idempotence",
+      "files": [
+        "game/data/registry.json"
+      ],
+      "before": [
+        "f21c038e63c157ae1ebb4c5cc0c0269b94b7923edc68d6b2e5bac22a0017c32d",
+        1794586924279454100
+      ],
+      "after": [
+        "ca64872e251de845580e1864891a922826f7521b5decf317cc1f1337137a0240",
+        1794586929124352000
+      ]
+    },
+    {
+      "name": "byte-identical PNG and combined A2 metadata",
+      "sha256": "d42e0beadeab5ce4cdb51d1a67a0f2991950cdf690645be56c97fc0194906fb1",
+      "files": [
+        "content/registry.json",
+        "content/reveals/pz-test-direct-mono.json",
+        "game/art/content/pe_primary.png",
+        "game/art/content/pe_primary.txt",
+        "game/data/registry.json"
+      ]
+    },
+    {
+      "name": "byte-identical SVG and first legacy standard assignment",
+      "sha256": "8e085b8e9d471b3fb9efec2f9f5deefdf3326505219ecc705e611d012f97afcd",
+      "files": [
+        "content/backgrounds/pz-test-direct-mono.json",
+        "content/registry.json",
+        "content/reveals/pz-test-direct-mono.json",
+        "game/art/content/pe_primary.png",
+        "game/art/content/pe_primary.svg",
+        "game/art/content/pe_primary.txt",
+        "game/data/registry.json"
+      ]
+    },
+    {
+      "name": "selected none standard roundtrip preserves exact prepared background bytes",
+      "sha256": "dedceee43af5940fc36f72efac468659f5c9bfc531f6f47f894c20302404e72d"
+    },
+    {
+      "name": "formatted raster no-op preserves all mtimes",
+      "files": 18
+    },
+    {
+      "name": "stalled deduction and precise invalid cell blocked without writes"
+    },
+    {
+      "name": "single A3 raster+image+metadata journal and true repeat",
+      "files": [
+        "content/backgrounds/pz-test-direct-mono.json",
+        "content/difficulty/pz-test-direct-mono/rating.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/catalog-context.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/input.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/logic.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/rating.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/report.json",
+        "content/packages/pz-test-direct-mono/editor-2/analysis/trace.json",
+        "content/packages/pz-test-direct-mono/editor-2/definition.json",
+        "content/packages/pz-test-direct-mono/editor-2/manifest.json",
+        "content/packages/pz-test-direct-mono/editor-2/previous-definition.json",
+        "content/packages/pz-test-direct-mono/editor-2/proof.json",
+        "content/packages/pz-test-direct-mono/editor-2/request.json",
+        "content/registry.json",
+        "content/reveals/pz-test-direct-mono.json",
+        "game/art/content/pe_primary.svg",
+        "game/art/content/pe_primary.txt",
+        "game/data/content/pe_primary.json",
+        "game/data/registry.json"
+      ],
+      "quality": {
+        "baseline": null,
+        "checked": {
+          "analysis_report_hash": "d4905d9c313e98e19cc2bf79656366f60cc39808280008a389ecfb04916c29dd",
+          "checked_hash": "203135bf2a49c69efafd432ffbc63515ba4860fcce78e1eaaae7211cf5d0b041",
+          "compact_analysis": {
+            "deduction_complete": true,
+            "line_analysis_complete": true,
+            "line_fixpoint_confirmed": true,
+            "metrics": {
+              "aggregation": null,
+              "cell_change_events": 6,
+              "family_line_applications": {
+                "R0": 5,
+                "R1": 0,
+                "R2": 0,
+                "R3": 0
+              },
+              "family_waves": {
+                "R0": 1,
+                "R1": 0,
+                "R2": 0,
+                "R3": 0
+              },
+              "highest_family_used": "R0",
+              "new_singletons": 6,
+              "partial_change_events": 0,
+              "r0_fraction_all_cells": [
+                6,
+                6
+              ],
+              "removed_values": 6,
+              "rule_applications": {
+                "R0-cleanup": 0,
+                "R0-empty": 0,
+                "R0-packed": 5,
+                "R1-anchored": 0,
+                "R1-overlap": 0,
+                "R2-segments": 0,
+                "R3-support": 0
+              },
+              "simple_fraction_all_cells": [
+                6,
+                6
+              ],
+              "simple_fraction_determined": [
+                6,
+                6
+              ],
+              "unique_changed_cells": 6,
+              "unique_partial_cells": 0,
+              "wave_count": 1,
+              "workload": {
+                "cells": 6,
+                "clue_count": {
+                  "column": 3,
+                  "row": 2
+                },
+                "clue_length_sum": {
+                  "column": 6,
+                  "row": 6
+                },
+                "colors": 1,
+                "height": 2,
+                "total_clue_length": 12,
+                "total_clues": 5,
+                "width": 3
+              }
+            },
+            "metrics_hash": "63e928a69673e81837d119ebe282b65f4f6cab20d2bef6da370dfff3c9c1822d",
+            "r4": null,
+            "reason": null,
+            "result_hash": "60ce4f5910b980188fe9455627ed946dcd8f0f85c37707faeda1eca237d27ff4",
+            "status": "solved",
+            "trace_hash": "5664847349ba7d83d6729a440023ce61f09705f5ed86c01c03ffc96e9d3e9878"
+          },
+          "current_source": {
+            "definition_sha256": "11fcccf2486b45130e6e6f5adce5518bd95b7ca91973f0407bb89ccf71ae41c9",
+            "id": "pz-test-direct-mono",
+            "runtime_revision": 2
+          },
+          "format": "picross-checked-difficulty-v2",
+          "logic_binding": {
+            "analysis_hash": "480b50e0fb9a0d78d44affa0c3a10501e3313e6cc8646517e51ffe90eea0dbde",
+            "matrix_hash": "4bf994429e904d636ddceb4967ed28bd1846d3b653d9dc8c36dd0234aa4ae4d4"
+          },
+          "production_mode": "mono",
+          "rating": {
+            "analysis_result_hash": "60ce4f5910b980188fe9455627ed946dcd8f0f85c37707faeda1eca237d27ff4",
+            "format": "picross-difficulty-rating-v1",
+            "method": {
+              "aggregation": "sd-rating-aggregation-1",
+              "analysis_parameters": {
+                "aggregation": null
+              },
+              "analyzer": "picross-sd-analyzer-1",
+              "calibration": {
+                "hash": "771a8d57da90b62ca0a299ff60ee62c8a80a45338d44cbda41392e50b39cd6ff",
+                "id": "sd-b-calibration-1"
+              },
+              "configuration": {
+                "duration_weight": [
+                  1,
+                  32
+                ],
+                "fluent_gain": [
+                  1,
+                  2
+                ],
+                "fluent_offer": [
+                  1,
+                  2
+                ],
+                "frequency_weight": [
+                  1,
+                  32
+                ],
+                "local_gain": [
+                  1,
+                  2
+                ],
+                "local_information": [
+                  1,
+                  8
+                ],
+                "local_offer": [
+                  1,
+                  2
+                ],
+                "narrow_gain": [
+                  1,
+                  4
+                ],
+                "narrow_offer": [
+                  1,
+                  4
+                ],
+                "recurrence_cap": 4,
+                "severe_demand": [
+                  3,
+                  4
+                ],
+                "size_cap": [
+                  1,
+                  4
+                ],
+                "size_divisor": 6400,
+                "size_easy_threshold": [
+                  1,
+                  8
+                ],
+                "size_min_demand": [
+                  1,
+                  2
+                ],
+                "size_neutral_cells": 100
+              },
+              "format": "picross-difficulty-method-v1",
+              "id": "picross-difficulty-0.3",
+              "implementation": {
+                "analysis.py": "fbfaeaa8f3e9b85d4ee50c30236072a80f056bca7b9809cc92a8c607bfe23394",
+                "analysis_cli.py": "ffebfee44638706a406239883a5e25d5b18e9f6756900502eb24af1f97ef9ad4",
+                "analysis_contract.py": "f78e2da6396bf19f2faa18975d9f8109a9994b7eeaa0d515ef8e980fc2d6f795",
+                "analysis_io.py": "c4d24577262b3a2065c568f92150c06546d7fb4e25d45815d7917243516e3270",
+                "analysis_rules.py": "a0b362e760630721d53c0092ab319ff0d3f2f3238f3e85cad1348d110df1939a",
+                "analysis_verifier.py": "39386d4a6e599cf7e65c34924be75b97c0688b758b7354c0df3da4f16e4bcf70",
+                "certification.py": "c570827bc7273dc41133c01a21a4d61291cda68257c0aa83f0c86556599cf1dd",
+                "contract.py": "5e9459d65cffab98b63435b51ed4b704d9a55596accd595bf0be1edf553e51f8",
+                "difficulty_rating.py": "d423d86e005f463ce0cc911034b0ccbfabc4a4c2633b50a95d71ef3ecf040fba",
+                "paired_solver.py": "72e5c16656c038b591bd3f6f07b27ecceb9bade84f53db559941e4992a61c811",
+                "paired_verifier.py": "05460f0b312549ecea5d71462bb3d7354743b70c57d111082eff238b9e01b428",
+                "solver.py": "02f663a9eeaf5e1a7b237d652cdd45f0efdcba07af214b5bbbee47c1803d4fed",
+                "verifier.py": "f489b139fdd78f89cd933e1810274774d2ae1fb080cebd6538755996540a1112"
+              },
+              "references": {
+                "hash": "57cbee00fc9f91a7d75b2ca05f9d986c7a4d131fc3ed054e207ee9f40a67874f",
+                "id": "sd-b-references-1"
+              },
+              "rules": "sd-rules-1"
+            },
+            "method_hash": "8f7efa0d5ac76a1bd73fbae3618fec18dba28cf704887188eba2fcf020b9df79",
+            "rating_hash": "069ef1e8246e79b6bc9933625e24aba4133f1a663d0d5cf9604f5ec251621e72",
+            "result": {
+              "assessment_type": "instrumented",
+              "confidence": "medium",
+              "estimated_minutes": null,
+              "explanation": "Logische Basis 1; Größenbeitrag 0; Stufe 1. Instrumentierte Modellschätzung, nicht menschlich kalibriert.",
+              "level": 1,
+              "logical_demand": null,
+              "logical_level": 1,
+              "profile": {
+                "bottleneck_phases": 0,
+                "bottleneck_waves": 0,
+                "cleanup_suffix_waves": 1,
+                "demand": [
+                  0,
+                  1
+                ],
+                "fluent_r1": false,
+                "highest_family": "R0",
+                "localized_combination": false,
+                "longest_bottleneck": 0,
+                "peak_strain": [
+                  0,
+                  1
+                ],
+                "recurrence_bonus": [
+                  0,
+                  1
+                ],
+                "simple_information_fraction": [
+                  1,
+                  1
+                ],
+                "strong_information_fraction": [
+                  0,
+                  1
+                ]
+              },
+              "r4_required": false,
+              "reason": null,
+              "size_adjustment": 0,
+              "size_pressure": [
+                0,
+                1
+              ],
+              "status": "rated",
+              "uncertainty": {
+                "human_calibration": "not_performed",
+                "model": "rule_based_estimate",
+                "technical": "verified_complete"
+              },
+              "workload": {
+                "cells": 6,
+                "height": 2,
+                "width": 3
+              }
+            },
+            "source": {
+              "bytes": 423,
+              "definition_id": "pz-test-direct-mono",
+              "engine_logic_hash": "f81a93d0a79a9f6ac999f628e0ef7b4adeb8169169f77f532c687695ae23d48f",
+              "kind": "runtime",
+              "production_mode": "unknown",
+              "runtime_revision": 2,
+              "sha256": "11fcccf2486b45130e6e6f5adce5518bd95b7ca91973f0407bb89ccf71ae41c9"
+            }
+          },
+          "tool": {
+            "id": "picross-catalog-difficulty",
+            "modules": {
+              "catalog_analysis.py": "fc14788a4fd0e7ea8353464b8e234030328a7d044b967b649ec964115754981d",
+              "catalog_integration.py": "a8e4fd7778d900b19c54d80606a0af8f99f45758c267ba607493acd637f18056",
+              "catalog_rating.py": "98bbef86c30753f3c7f14f272ec3793acdb2444c6da48c790ed9dc131617a1a6",
+              "catalog_transaction.py": "b5cf8e47f32991a4d06df7b4d4eabfd9bf6a4a12fd81be308d93fbd6196551ff"
+            },
+            "version": 1
+          },
+          "verification_hash": "d301ed7eb9a8669cb42a70d78e4ba7c31abd45a13a3a7017a002ff9a58173fdf"
+        },
+        "method": "picross-difficulty-0.3",
+        "proof": {
+          "bytes": 825,
+          "file": "proof.json",
+          "sha256": "07fd0f9184513112fbeaa1c0f2ed15da19cd7650459eb5bf663651ab447c26d2"
+        }
+      }
+    },
+    {
+      "name": "stale catalog before apply preserves foreign bytes"
+    },
+    {
+      "name": "foreign journal blocks apply without overwrite"
+    },
+    {
+      "name": "malicious SVG and wrong background dimensions blocked"
+    },
+    {
+      "name": "actual HTTP interrupted writer and repeated common recovery restore original hashes"
+    },
+    {
+      "name": "origin host session fetch-site and independent second-ID bytes",
+      "protected": 3
+    }
+  ],
+  "final_inventory": {
+    "content/categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+    "content/registry.json": "c281bb252bbd21894eec957859c2c9b2a45e31e51396c2355a5124e6c3df81e5",
+    "game/data/background-capability.json": "255c88ff3975f17daabb3452bae9e0a31e62a9d0540df36e0c2d3d44b6219630",
+    "game/data/registry.json": "6bfc01b319c1060390905a5963bf5d23b0268b9fec1e26c9531d19ed14a7868e",
+    "game/data/content/pe_primary.json": "11fcccf2486b45130e6e6f5adce5518bd95b7ca91973f0407bb89ccf71ae41c9",
+    "game/data/content/pe_secondary.json": "8b33e142d1ccd207d07f65a5a61d1ed2df30b72a445bc5ed1986df26467c5cbc",
+    "game/art/content/pe_primary.svg": "f0bac1adac50ae09fb92396a6fe33bc7a4320b4dcad8933b0bc2681cbc26213b",
+    "game/art/content/pe_primary.txt": "ec8558e3a1bf773d7fc646dd26a6b3a83685a35ea484e034cc927332d77ab1a2",
+    "game/art/content/pe_secondary.png": "844385f91b40a8f79bf8f361bbbda49cbfea48c7400eeb569dc84f5706c61eee",
+    "game/art/content/pe_secondary.txt": "651844c486524bab972b9909936c50abcd355da1ce3c9e340fb74f1cbd69f692",
+    "content/added/pz-test-direct-color.json": "f653d1dcfa63983c60b00a015bd53e04fbb60cb57541cc45e2feb3ad1f5580b1",
+    "content/added/pz-test-direct-mono.json": "ed10deed07ff0b573b27e4e8b9abeacd0c9981dba19269e803cc8e6850b2765d",
+    "content/backgrounds/pz-test-direct-mono.json": "f26ae56340c52819ec672630837175db6167d9ae60421cb7f29c684630d227ad",
+    "content/reveals/pz-test-direct-mono.json": "2d09c55aeb85842d66f6023ecf15df6b288b07d78d52d5bad5f8aecc41b66079",
+    "content/packages/pz-test-direct-mono/editor-2/definition.json": "11fcccf2486b45130e6e6f5adce5518bd95b7ca91973f0407bb89ccf71ae41c9",
+    "content/packages/pz-test-direct-mono/editor-2/manifest.json": "fd8f2177cd71139d1f5df03a3689253f339a6097cf99b211768946dafcfc2779",
+    "content/packages/pz-test-direct-mono/editor-2/previous-definition.json": "784a04578955e79b8fe4a0635d3289aa7449841ad060022c00835e444bc97861",
+    "content/packages/pz-test-direct-mono/editor-2/proof.json": "07fd0f9184513112fbeaa1c0f2ed15da19cd7650459eb5bf663651ab447c26d2",
+    "content/packages/pz-test-direct-mono/editor-2/request.json": "5df81ed9c1b7f97d0bffe9cfdcaabd02253d7a62de2bccafd24d5790d0d0675f",
+    "content/packages/pz-test-direct-mono/r01/manifest.json": "fdf14d0a065ca1d869edfc55249f862dcec9d5632d10a75749da64ae63d7f680",
+    "content/packages/pz-test-direct-mono/editor-2/analysis/catalog-context.json": "4e922adcbe33fa6a0ce8ae6b33c3d7e50fa076303b457ad55ca185659204c470",
+    "content/packages/pz-test-direct-mono/editor-2/analysis/input.json": "11fcccf2486b45130e6e6f5adce5518bd95b7ca91973f0407bb89ccf71ae41c9",
+    "content/packages/pz-test-direct-mono/editor-2/analysis/logic.json": "ba974a300dc5ed0cc9b4fc237e9407d1a4367b767b273c66b991df06a9918fe6",
+    "content/packages/pz-test-direct-mono/editor-2/analysis/rating.json": "4a36744878178f5dd24e66496f0069dd161d60e80263255508cde445ba361dd2",
+    "content/packages/pz-test-direct-mono/editor-2/analysis/report.json": "2352e46d83e85c3c7965e1a9e1ab799a9c7cb2b20a003b7b795deef28c50847c",
+    "content/packages/pz-test-direct-mono/editor-2/analysis/trace.json": "fb5f55e2b8344e7ec83a4fb7c48da952a07a46394cc59311bd6aa5da3dcaccb9",
+    "content/packages/pz-test-direct-color/r01/manifest.json": "095405896b0a8fa4b28f0d40b69afd4f5d657139666ccd99e187bb25b07f63fc",
+    "content/difficulty/pz-test-direct-color/rating.json": "4de9e7c1ebaa9a2059c84c85c1266cbcaebd8e0bfdefd35794b648160492c2a8",
+    "content/difficulty/pz-test-direct-mono/rating.json": "2f618af03aea5c40a3c68029a81281a422f6f3f8f2ac389bc1ac1903917354b3"
+  },
+  "passed": true
+}

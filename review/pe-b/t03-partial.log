@@ -1,0 +1,3 @@
+PASS portable EXE via ShellExecute, actual folder chooser, visible checkout/port and automatic standard browser without Python/Git PATH
+PASS second instance reports existing checkout and does not stop first instance
+PASS normal native stop releases process and port, preserves every checkout byte/mtime

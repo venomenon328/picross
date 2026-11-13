@@ -1,0 +1,102 @@
+294 INFO: PyInstaller: 6.22.3, contrib hooks: 2026.10
+295 INFO: Python: 3.13.14
+339 INFO: Platform: Windows-11-10.0.26200-SP0
+339 INFO: Python environment: E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\venv
+340 INFO: wrote E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\delivery\build\Picross-Bestandseditor.spec
+346 INFO: Removing temporary files and cleaning cache in E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\delivery\build\cache\pyinstaller
+1321 INFO: Module search paths (PYTHONPATH):
+['E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\repo',
+ 'C:\\Program '
+ 'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\python313.zip',
+ 'C:\\Program '
+ 'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\DLLs',
+ 'C:\\Program '
+ 'Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib',
+ 'E:\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0',
+ 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv',
+ 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages',
+ 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\win32',
+ 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\win32\\lib',
+ 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\pythonwin',
+ 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\repo\\tools',
+ 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\repo']
+1997 INFO: Appending 'datas' from .spec
+2010 INFO: checking Analysis
+2010 INFO: Building Analysis because Analysis-00.toc is non existent
+2010 INFO: Looking for Python shared library...
+2010 INFO: Using Python shared library: C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\python313.dll
+2010 INFO: Running Analysis Analysis-00.toc
+2010 INFO: Target bytecode optimization level: 0
+2010 INFO: Initializing module dependency graph...
+2013 INFO: Initializing module graph hook caches...
+2029 INFO: Analyzing modules for base_library.zip ...
+4326 INFO: Processing standard module hook 'hook-encodings.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+5123 INFO: Processing standard module hook 'hook-math.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+6631 INFO: Processing standard module hook 'hook-pickle.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+7799 INFO: Processing standard module hook 'hook-heapq.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+8406 INFO: Caching module dependency graph...
+8451 INFO: Analyzing E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\repo\tools\puzzle_editor\desktop_entry.py
+8523 INFO: Processing standard module hook 'hook-sysconfig.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+8530 INFO: Processing standard module hook 'hook-_ctypes.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+8858 INFO: Processing standard module hook 'hook-xml.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+8887 INFO: Processing standard module hook 'hook-xml.etree.cElementTree.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+9082 INFO: Processing standard module hook 'hook-platform.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+9094 INFO: Processing standard module hook 'hook-PIL.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+9228 INFO: Processing standard module hook 'hook-PIL.Image.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+10129 INFO: Processing standard module hook 'hook-PIL.ImageFilter.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+12181 INFO: Processing standard module hook 'hook-webbrowser.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+12532 INFO: Processing pre-find-module-path hook 'hook-tkinter.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\pre_find_module_path'
+12533 INFO: TclTkInfo: initializing cached Tcl/Tk info...
+13232 INFO: Processing standard module hook 'hook-_tkinter.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+13362 INFO: Analyzing hidden import 'tools.puzzle_production.__main__'
+13446 INFO: Analyzing hidden import 'tools.puzzle_production.batch_cli'
+13644 INFO: Analyzing hidden import 'tools.puzzle_production.batch_worker'
+13651 INFO: Analyzing hidden import 'tools.puzzle_production.benchmark'
+13666 INFO: Analyzing hidden import 'tools.puzzle_production.catalog_background_change'
+13712 INFO: Analyzing hidden import 'tools.puzzle_production.images_cli'
+13716 INFO: Analyzing hidden import 'tools.puzzle_production.integration_batch_cli'
+13834 INFO: Analyzing hidden import 'tools.puzzle_production.metadata_cli'
+13841 INFO: Analyzing hidden import 'tools.puzzle_production.raster_cli'
+13845 INFO: Analyzing hidden import 'tools.puzzle_production.sd2_cli'
+13849 INFO: Analyzing hidden import 'tools.puzzle_production.sd2_rating_cli'
+13854 INFO: Analyzing hidden import 'tools.puzzle_production.sd2_reference_checks'
+13864 INFO: Analyzing hidden import 'tools.puzzle_production.za1_fixtures'
+13882 INFO: Processing module hooks (post-graph stage)...
+14270 INFO: Processing standard module hook 'hook-PIL.SpiderImagePlugin.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+14627 INFO: Processing standard module hook 'hook-_tkinter.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks'
+14643 INFO: Performing binary vs. data reclassification (1044 entries)
+15345 INFO: Looking for ctypes DLLs
+15400 INFO: Analyzing run-time hooks ...
+15402 INFO: Including run-time hook 'pyi_rth_inspect.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+15405 INFO: Including run-time hook 'pyi_rth__tkinter.py' from 'E:\\Zeuch\\Coding\\picross_codex\\576-pe-b-20261113\\venv\\Lib\\site-packages\\PyInstaller\\hooks\\rthooks'
+15437 INFO: Creating base_library.zip...
+15461 INFO: Looking for dynamic libraries
+15832 INFO: Extra DLL search directories (AddDllDirectory): []
+15832 INFO: Extra DLL search directories (PATH): []
+16833 INFO: Warnings written to E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\delivery\build\pyinstaller\Picross-Bestandseditor\warn-Picross-Bestandseditor.txt
+16880 INFO: Graph cross-reference written to E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\delivery\build\pyinstaller\Picross-Bestandseditor\xref-Picross-Bestandseditor.html
+16934 INFO: checking PYZ
+16934 INFO: Building PYZ because PYZ-00.toc is non existent
+16934 INFO: Building PYZ (ZlibArchive) E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\delivery\build\pyinstaller\Picross-Bestandseditor\PYZ-00.pyz
+17320 INFO: Building PYZ (ZlibArchive) E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\delivery\build\pyinstaller\Picross-Bestandseditor\PYZ-00.pyz completed successfully.
+17335 INFO: checking PKG
+17335 INFO: Building PKG because PKG-00.toc is non existent
+17335 INFO: Building PKG (CArchive) Picross-Bestandseditor.pkg
+17354 INFO: Building PKG (CArchive) Picross-Bestandseditor.pkg completed successfully.
+17355 INFO: Bootloader E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\venv\Lib\site-packages\PyInstaller\bootloader\Windows-64bit-intel\runw.exe
+17355 INFO: checking EXE
+17355 INFO: Building EXE because EXE-00.toc is non existent
+17355 INFO: Building EXE from EXE-00.toc
+17356 INFO: Copying bootloader EXE to E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\delivery\build\pyinstaller\Picross-Bestandseditor\Picross-Bestandseditor.exe
+17417 INFO: Copying icon to EXE
+17474 INFO: Copying 0 resources to EXE
+17474 INFO: Embedding manifest in EXE
+17528 INFO: Appending PKG archive to EXE
+17531 INFO: Fixing EXE headers
+17895 INFO: Building EXE from EXE-00.toc completed successfully.
+17907 INFO: checking COLLECT
+17907 INFO: Building COLLECT because COLLECT-00.toc is non existent
+17908 INFO: Building COLLECT COLLECT-00.toc
+20752 INFO: Building COLLECT COLLECT-00.toc completed successfully.
+20778 INFO: Build complete! The results are available in: E:\Zeuch\Coding\picross_codex\576-pe-b-20261113\delivery\dist
+{"format": "picross-pe-build-v1", "version": "0.1.0", "commit": "613f609eabb622f72768c72981682e7076e06e8d", "python": "3.13.14", "tk": "8.6.15", "dependencies": {"Pillow": "12.3.0", "PyInstaller": "6.22.3", "pyinstaller-hooks-contrib": "2026.10", "altgraph": "0.17.5", "packaging": "26.3", "pefile": "2024.8.26", "pywin32-ctypes": "0.2.3", "setuptools": "84.2.1"}, "zip_sha256": "0c8f4056d458e018aae947d45c9cb29ae8f18a9c8663f503e445dc7b98a15f25", "zip_bytes": 21792030, "exe_sha256": "5c94110b5b6fbacd770bda7a102e78eb3de28655951e044a7c9a1715257a67f4", "files": 1131}

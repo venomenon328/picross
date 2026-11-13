@@ -1,0 +1,39 @@
+{
+  "head": "613f609eabb622f72768c72981682e7076e06e8d",
+  "resolution": [
+    1600,
+    1000
+  ],
+  "steps": [
+    "real Edge search/filter/select and current detail with lazy current-image catalog preview",
+    "unsaved ID switch guard and explicit discard",
+    "separate category creation via actual plan and apply",
+    "explicit browser v7 to v8 migration preview and confirmation",
+    "native file chooser event, invalid dimension and actual backend cell error",
+    "file drop plus one actual A3 metadata/image/background/raster apply and readback",
+    "selected none standard UI roundtrip and actual category pilot preview",
+    "real refresh unsaved warning and no implicit persistence",
+    "real connection failure retry and fresh-session restart with retained checkout"
+  ],
+  "url": "http://127.0.0.1:63498/",
+  "browser": "157.0.4341.46",
+  "passed": true,
+  "page_errors": [],
+  "screenshots": [
+    {
+      "file": "01-list-detail.png",
+      "bytes": 88217,
+      "sha256": "c9fccb7df70b27265ee8d046017a5ac5c300199a03c400e2e6212fe5a0c47dc4"
+    },
+    {
+      "file": "02-change-preview.png",
+      "bytes": 71886,
+      "sha256": "e533a7319f8a0ad6ece53161f795a5b170dbfab3026ff802ec9df0135715ae4c"
+    },
+    {
+      "file": "03-error.png",
+      "bytes": 63526,
+      "sha256": "3d49d02d41667dfef7a43caa0bf316fc76dd847ec69a53499d5d3701fa2bec32"
+    }
+  ]
+}

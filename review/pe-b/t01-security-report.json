@@ -1,0 +1,15 @@
+{
+  "head": "8b5ab066440c335d79973d6569cb5c3a3214ed19",
+  "steps": [
+    "missing actual usage basis blocks plan with all checkout bytes and mtimes unchanged",
+    "changed uploaded bytes block apply before mutation",
+    "changed bound plan bundle blocks apply before mutation",
+    "expired plan rejected and own plan bytes removed",
+    "later upload invalidates earlier plan",
+    "actual pre-publication staging interruption and common recovery, including repeated no-op",
+    "actual Windows junction checkout rejected without following target",
+    "opaque prepared background rejected without content writes",
+    "explicit paired profile runs actual proof/rating and applies a checked raster"
+  ],
+  "passed": true
+}

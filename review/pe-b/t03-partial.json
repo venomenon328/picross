@@ -1,0 +1,16 @@
+{
+  "product_head": "613f609eabb622f72768c72981682e7076e06e8d",
+  "status": "interrupted_per_user_instruction",
+  "environment": "Windows 11 Pro 10.0.26200; standard user, no administrator rights",
+  "verified_current_scenarios": [
+    "ShellExecute portable EXE, native folder picker and automatic standard browser without Python/Git PATH",
+    "second instance preserves first instance and reports checkout ownership",
+    "normal native stop releases port/process and preserves all checkout bytes/mtimes"
+  ],
+  "remaining": [
+    "current complete port-conflict/reopen/drain scenario",
+    "invalid-path GUI message",
+    "exact developer fallback start/stop"
+  ],
+  "note": "Mouse/focus automation stopped immediately on user request. Further interaction needs prior explicit duration-based permission. No completed T03 or technical acceptance is claimed."
+}
