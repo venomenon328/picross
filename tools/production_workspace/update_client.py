@@ -64,7 +64,7 @@ class Transport:
         require(url.startswith(API + '?') or url.startswith(DOWNLOAD), 'Foreign channel')
         allowed_url(url, initial=url)
         checkpoint(cancel, deadline)
-        request = urllib.request.Request(url, headers={'Accept': 'application/octet-stream',
+        request = urllib.request.Request(url, headers={'Accept': 'application/vnd.github+json' if url.startswith(API + '?') else 'application/octet-stream',
             'User-Agent': 'Picross-ProductionWorkspace-Updater', 'Accept-Encoding': 'identity'})
         with self.opener.open(request, timeout=min(10, max(0.1, deadline - time.monotonic()))) as response:
             final = response.geturl()

@@ -28,6 +28,10 @@ class HelperDiagnostic {
             Reject("Installed",Guid.Empty.ToString().ToUpperInvariant(),args[2]);
             foreach(string value in new[]{"0.1.01","0.2.1","0.1.65536","0.1.1.1"}) Reject("VersionOf",value);
             Reject("Parent",IntPtr.Zero,new Dictionary<string,object>());
+            var restart=(ProcessStartInfo)Call("RestartInfo",@"C:\synthetic state\Übung",true);
+            Need(!restart.UseShellExecute && restart.EnvironmentVariables["PYINSTALLER_RESET_ENVIRONMENT"]=="1" &&
+                 restart.Arguments=="--state \"C:\\synthetic state\\Übung\" --no-browser");
+            Reject("RestartInfo","C:\\bad\" --injected",false);
             var info=new ProcessStartInfo(Assembly.GetExecutingAssembly().Location,"child") {
                 UseShellExecute=false,CreateNoWindow=true,RedirectStandardInput=true,RedirectStandardOutput=true };
             using(var child=Process.Start(info)) {
@@ -51,6 +55,7 @@ class HelperDiagnostic {
                 {"actual_helper_loaded",true},{"actual_msi_identity",true},{"wrong_msi_version_rejected",true},
                 {"wrong_product_rejected",true},{"uninstalled_identity_rejected",true},{"invalid_versions_rejected",true},
                 {"invalid_parent_handle_rejected",true},{"ready_child_did_not_release_wait",true},
+                {"restart_environment_and_state_bound",true},
                 {"actual_process_exit_released_wait",true},{"unbound_helper_inputs_rejected",true},
                 {"installer_executed",false},{"limits","Reflection into exact built helper; isolated child process. No installed-app or Windows-11 lifecycle claim."}}));
             return 0;

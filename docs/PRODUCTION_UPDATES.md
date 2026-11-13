@@ -397,6 +397,8 @@ weiter über parallele Starts, Locks und Fremdbelegung. Eine installierte Deskto
 Verknüpfung wird beim Upgrade erhalten. Erfolg verlangt MSI-Exit 0, nachgelesene
 neue MSI-/EXE-Version und Bytebindung sowie einen tatsächlich authentisierten
 Wiederanlauf auf dem unveränderten Port mit demselben `--state`/Browsermodus.
+Der Wiederanlauf setzt `PYINSTALLER_RESET_ENVIRONMENT=1` für eine neue eigenständige
+Frozen-Instanz, gemäß [PyInstaller-Neustartvertrag](https://pyinstaller.org/en/stable/common-issues-and-pitfalls.html#using-sys-executable-to-spawn-subprocesses-that-outlive-the-application-process-implementing-application-restart).
 Reboot-/Fehler-/unbestätigte Zustände erhalten einen sichtbaren manuellen Weg;
 keine allgemeine Rollbackgarantie und kein automatischer Wiederholungsdienst.
 
