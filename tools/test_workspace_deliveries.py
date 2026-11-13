@@ -385,8 +385,15 @@ class DeliveryTests(unittest.TestCase):
                 publish_pointer(root, ID, 'early-alpha')
             calls.append(True)
             return original_commit(root)
-        with patch('tools.test_workspace_deliveries.commit', committed):
+        # unittest discovery imports this as test_workspace_deliveries; named
+        # invocation imports tools.test_workspace_deliveries. Patch the actual
+        # fixture globals in either entry mode, not a second module instance.
+        with patch(__name__ + '.commit', committed):
             self.delivery = delivery_fixture(self.repo)
+        source = GitSource(self.repo)
+        historical = self.delivery['registration']
+        pointer = cv.inspect(source, historical, source.read(historical, cv.path(ID)), ID)
+        self.assertEqual(pointer['revision'], 'early-alpha')
         self.integrate()
         active = self.reader.refresh()['jobs']
         self.assertEqual({j['revision'] for j in active}, {'early-alpha'})
