@@ -358,8 +358,31 @@ Primärquellen geprüft 13.11.2026: [Ed25519-API](https://cryptography.io/en/50.
 
 ## 7. APP-B2 · Client, Übergabe und Abschluss
 
-Der normale installierte Windows-GUI-Start prüft nach Dienst-/Browserbereitschaft
-höchstens einmal nebenläufig. Die Identität stammt aus übereinstimmenden gebauten
+Gemäß [APP-B2-S](https://github.com/venomenon328/picross/issues/612#issuecomment-6859867142)
+erscheinen natives Fenster und lokale Dienstbereitschaft sofort. Der normale
+installierte Windows-GUI-Start mit bereits bestätigtem Opt-in prüft höchstens
+einmal nebenläufig **vor** erster Browseröffnung und initialem Git-Refresh.
+Bei signiert bestätigter höherer Version bleiben beide auch während Download,
+Kandidatenprüfung und sicherer Helferübergabe zurückgestellt. Erst die bestätigte
+neue App nimmt nach dem MSI-Neustart regulär die Arbeit auf. Ohne Opt-in oder
+ohne bestätigten höheren Kandidaten, auch bei Offline-/Kanal-/Trust-/Versions-
+oder Downloadfehlern, startet die vorhandene App Browser und initiales Git genau
+einmal. Der Kanalstatus bleibt ehrlich; keine Zusicherung allgemeiner Aktualität.
+
+Während Prüfung/Download ist „Ohne Update fortfahren“ bedienbar. Die Aktion
+verwirft diesen Versuch, ohne die gespeicherte Zustimmung zu ändern. Abbruch
+und Helferstart sind synchronisiert; ein verworfener Versuch erhält niemals GO.
+Nach Übernahme der sicheren Helferübergabe durch die GUI sind Skip und Opt-out
+gesperrt, der bestehende Stop-/MSI-Vertrag entscheidet. Reguläres Beenden bleibt
+vorher möglich, ohne Browser/Git noch nachzustarten. Browseröffnungswünsche eines
+Zweitstarts heben während des Gates nur das Steuerfenster hervor. Manuelles
+„Im Browser öffnen“ wird erst nach Arbeitsaufnahme freigegeben; ein Browserfehler
+erlaubt danach einen ausdrücklichen neuen Öffnungsversuch, keinen zweiten
+initialen Refresh. Tk-Änderungen erfolgen ausschließlich im GUI-Thread.
+Ein nach Arbeitsaufnahme begonnener Git-Refresh/P2-Vorgang läuft beim Stop
+weiterhin geordnet aus; APP-B2-S führt keinen allgemeinen Gitabbruch ein.
+
+Die Identität stammt aus übereinstimmenden gebauten
 `build.json`/`components.json`, festem per-user-Programmziel und tatsächlich
 registrierter MSI-Version. Setup, Entwickler-/portable Fassung, Headless- und
 Zweitstart autorisieren keine Installation. Bei leerem festem Trust bleibt der
