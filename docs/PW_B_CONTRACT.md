@@ -143,9 +143,20 @@ Folgeaufträge ergänzen nur neue Absichten/Befugnisse; vorhandene Daten und all
 Regeln bleiben über diesen Einstieg und den kurzen AGENTS-/Authoringverweis gebunden.
 Größe, Modus und
 Farbzahl sind optionale Hinweise in Motiv-/Rasterarbeit, Kontext erst in Schritt 4.
-Arbeitswurzel, Bereinigung und Merge sind persönliche ausdrückliche Optionen;
-Records setzen sie nicht. Job-/Quellwechsel löscht ungesendete Auswahlabsichten.
+Arbeitswurzel und Merge sind persönliche ausdrückliche Optionen; Records setzen
+sie nicht. Zusätzliche lokale Bereinigung braucht einen gesonderten Auftrag. Job-/Quellwechsel löscht ungesendete Auswahlabsichten.
 Nur neu geladene Gitdaten ändern den angezeigten Produktionsstand.
+
+## PW2-B · Folgeumfang ohne neue Originalgeneration
+
+[PW2-B / #626](https://github.com/venomenon328/picross/issues/626#issuecomment-6855815878)
+verbindet im abgesendeten Schlussauftrag Hintergrundwahl/none, Endabnahme und
+Integration einschließlich bedingtem Squash-Merge. Die vorhandenen Zwischen-
+zustände, Finalizer-, Export-, Registrierungs- und Freigabeverträge bleiben
+unverändert. Die lesende Schlussprojektion und die persönliche Mergeoption
+stehen im [PW-Vertrag](PRODUCTION_WORKSPACE.md#pw2-b--schlussübersicht-und-gebundener-auftrag).
+Der folgende Nachweisabschnitt beschreibt die historische PW-B-Einführung;
+PW2-B erhält seinen eigenen Prüfplan und unabhängiges A01-Gate in #626.
 
 ## Nachweis und Lebenszyklus
 

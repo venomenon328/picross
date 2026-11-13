@@ -131,6 +131,55 @@ def current_fixture(repo, source, revision='r01', proposed=None, approved=None, 
     return builder.build(request, source, stage, repo)
 
 
+class ClosingViewTests(unittest.TestCase):
+    def test_summary_uses_exact_outer_originals_not_gallery_order(self):
+        ctx = p.Record.__new__(p.Record)
+        ctx.current = True; ctx.commit = ctx.snapshot = 'a' * 40
+        ctx.directory = 'content/authoring/pz-test/r02'; ctx.historical_assets = []
+        package = {'file': ctx.directory + '/package.zip', 'sha256': 'b' * 64, 'bytes': 100}
+        ctx.value = {'state': 'background_review', 'package': package, 'raster_selection': {'file': 'selection.json'},
+                     'candidate': {'variant': 'a'}, 'reveal': {'file': 'reveal.png'}}
+        ctx.background_choice = None; ctx.offer_keys = {}
+        ctx.allowed = {role: {} for role in p.ROLES}
+        for role in ('reveal', 'raster', 'background'):
+            ctx.allowed[role][role + '.png'] = 'c' * 64
+        def asset(role, identifier, **changes):
+            loc = {'commit': None, 'storage': 'package', 'container': package, 'file': role + '.png',
+                   'sha256': 'c' * 64, 'bytes': 3}
+            loc.update(changes)
+            return {'id': identifier, 'role': role, 'location': loc}
+        assets = [asset('raster', 'foreign', commit='d' * 40), asset('reveal', 'v'),
+                  asset('background', 'bg'), asset('raster', 'r')]
+        expected = {'raster': 'r', 'reveal': 'v', 'background': None}
+        self.assertEqual(p.closing_composition(ctx, assets), expected)
+        self.assertEqual(p.closing_composition(ctx, list(reversed(assets))), expected)
+        ctx.background_choice = 'A'; ctx.offer_keys[('background', 'A')] = 'background.png'
+        self.assertEqual(p.closing_composition(ctx, assets)['background'], 'bg')
+        self.assertIsNone(p.closing_composition(ctx, [a for a in assets if a['id'] != 'r'])['raster'])
+        ctx.allowed['raster']['second.png'] = 'e' * 64
+        self.assertIsNone(p.closing_composition(ctx, assets)['raster'])
+        ctx.value['state'] = 'raster_ready'
+        self.assertIsNone(p.closing_composition(ctx, assets))
+        ctx.value['state'] = 'background_review'; ctx.value['raster_selection'] = None
+        self.assertIsNone(p.closing_composition(ctx, assets))
+
+    def test_recorded_selection_rejects_scope_and_missing_originals(self):
+        # Small bound JSON copies only: no solver or production corpus.
+        ctx = p.Record.__new__(p.Record); ctx.current = True
+        ctx.handoff = {'raster_selection': {'file': 'choice.json', 'sha256': 'a' * 64},
+                       'puzzle_id': 'pz-test', 'test_only': True}
+        selection = {'format': 'picross-raster-selection-v1', 'puzzle_id': 'pz-test',
+                     'source_commit': 'b' * 40, 'option_id': 'A', 'record': {}, 'projection': {},
+                     'inventory_sha256': 'c' * 64, 'candidate': {}, 'reveal': {}, 'motif': {},
+                     'human': {}, 'test_only': False}
+        ctx.json = lambda name, sha: deepcopy(selection)
+        with self.assertRaisesRegex(ValueError, 'Produktionsgegenstand'): ctx._selection()
+        selection['test_only'] = True
+        with self.assertRaises(ValueError): ctx._selection()
+        selection['source_commit'] = 'main'
+        with self.assertRaises(ValueError): ctx._selection()
+
+
 class MotifTests(unittest.TestCase):
     """B: real synthetic published snapshots; never a production corpus."""
     def setUp(self):
@@ -375,6 +424,10 @@ class WorkspaceTests(unittest.TestCase):
             record = Path(result['directory']) / 'workspace.json'
             projection = p.parse(record.read_bytes())
             facts = p.inspect(GitSource(self.repo), sha, projection)
+            self.assertIsNone(facts['composition'])
+            self.assertEqual(facts['originals']['record'], p.parse((Path(result['directory']) / 'record.json').read_bytes()))
+            self.assertEqual(facts['originals']['handoff'], p.parse((Path(result['directory']) / 'handoff.json').read_bytes()))
+            self.assertEqual(set(facts['metadata']), {'width', 'height', 'mode', 'used_colors', 'difficulty'})
             published = facts['published']
             self.assertEqual((published['proposed'], published['approved'], published['role']), (want, approved, role))
             self.assertEqual(published['brief']['text'], 'TEST ONLY\n\n<script>alert("never execute")</script>\n')
