@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/626",
-  "package": "PW2-A",
+  "issue": "https://github.com/venomenon328/picross/issues/612",
+  "package": "APP-E2E-P",
   "modules": [],
-  "purpose": "PW2-A gemäß issuecomment-6850772525: phasengerechte Pflichtquellen und gemeinsamer Bildstil, bedarfsweise Rasterkandidaten bei erhaltenen Qualitäts- und Budgetgates. Reiner Norm-/Markdownschnitt; docs/ci-required prüfen Quellen und Plan ohne Windows-Spielerbau. PW2-A-T01 verfolgt die tatsächlichen Pflichtquellenwege einschließlich Korrektur/Wiederaufnahme und vergleicht ihren Textumfang einmalig im PR.",
-  "omitted": "Keine Werkzeug-, UI-, Promptgenerator-, Solver-, Writer-, Schema- oder Runtimeänderung. Deshalb keine tools, production.*, native.*, preflight, delivery oder Chromium. Keine Bild-/Rätselproduktion, Bestandsreplays oder neue Dauerregressionen. PW2-B und PW2-C bleiben separat; die unabhängige fachliche Abnahme PW2-A-A01 bleibt vor Merge offen.",
+  "purpose": "Korrektur der ausgelieferten Windows-Startanleitung gemäß issuecomment-6857619012. Der Kern prüft Plan und Quellen; die separate nicht veröffentlichende Windows-App-Pipeline belegt Fingerprint, Versionsplan 0.1.2 sowie MSI-, EXE-, Trust-, Lizenz- und Inputprüfung am Produkt-Head.",
+  "omitted": "Keine Änderung an Updateclient, Installer, Publisher, Sicherheitscode oder Spiellaufzeit; keine Zusatzmodule, Chromium oder neue Dauerregression. Die unabhängige Prüfung APP-E2E-A01 bleibt vor Merge offen; tatsächlicher Windows-11-Selbstupdate und Veröffentlichung sind separate Gates.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
