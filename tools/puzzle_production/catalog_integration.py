@@ -102,6 +102,9 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         from .integrated_content import FORMAT as INTEGRATED
         original = load_json(root / existing["production"]["package"] / "manifest.json")
         same = reveal.normalized(root, existing) == entry
+        if not update and original.get("format") == "picross-editor-raster-package-v1":
+            from .editor_raster import historical_repeat
+            same = same or historical_repeat(root,existing,entry)
         if is_background and old_background is not None:
             exported_background = background.build(export_dir, m, report, entry)
             if not update:

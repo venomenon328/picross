@@ -56,6 +56,9 @@ IMAGE_FORMATS = {"registration": "picross-registration-journal-v9", "update": "p
     "metadata": "picross-editor-metadata-journal-v2", "editor-images": "picross-editor-images-journal-v1",
     "editor-image-migration": "picross-editor-image-migration-journal-v1"}
 
+RASTER_FORMAT = "picross-editor-raster-journal-v1"
+IMAGE_FORMATS["editor-raster"] = RASTER_FORMAT
+
 
 def images(j):
     return isinstance(j, dict) and j.get("format") in IMAGE_FORMATS.values()
@@ -292,6 +295,10 @@ def namespaces(root, *registries, temporary=(), images=None):
         for e in r["entries"]:
             base = safe(root, e["production"]["package"])
             if base.exists():
+                manifest = io.json_bytes(io.read(root,e["production"]["package"]+"/manifest.json",8*1024*1024),8*1024*1024)
+                if manifest.get("format") == "picross-editor-raster-package-v1":
+                    packages.update(reveal.package(root,e)[3])
+            if base.exists():
                 for p in base.rglob("*"):
                     p = safe(root, p.relative_to(root).as_posix())
                     if p.is_file(): packages.add(p.relative_to(root).as_posix())
@@ -502,6 +509,9 @@ def _delta(j, before, after, root=None):
     from .content_update import notice_path
     from .content_registry import METADATA_FORMAT, current_metadata
     op = j["operation"]
+    if op == "editor-raster":
+        from .catalog_raster import validate_delta
+        return validate_delta(j, before, after, root)
     if op in ("editor-images", "editor-image-migration"):
         from .catalog_images import validate_delta
         return validate_delta(j, before, after, root)

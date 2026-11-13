@@ -23,6 +23,7 @@ jobs:
     runs-on: ubuntu-24.04
     outputs:
       started_at: ${{ steps.clock.outputs.started_at }}
+      parts: ${{ steps.selection.outputs.parts }}
     steps:
       - name: Start soft CI clock
         id: clock
@@ -32,6 +33,7 @@ jobs:
           fetch-depth: 2
           persist-credentials: false
       - name: Validate this package and its test lifecycle
+        id: selection
         run: python3 tools/ci_modular.py plan
       - name: Small core contract regression
         run: python3 -m unittest discover -s tools -p 'test_ci_modular.py' -v
@@ -44,10 +46,13 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: python3 tools/ci_growth.py --base "$CI_BASE" --head "$CI_HEAD" --output "${{ runner.temp }}/growth.json"
 
-  ci-required:
+  verify:
     needs: docs
-    if: always()
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        part: ${{ fromJSON(needs.docs.outputs.parts) }}
     steps:
       - name: Require actual successful core checks
         env:
@@ -59,10 +64,10 @@ jobs:
           persist-credentials: false
       - name: Resolve the same source-bound module selection
         id: plan
-        run: python3 tools/ci_modular.py plan
+        run: python3 tools/ci_modular.py plan --part '${{ matrix.part }}'
       - name: Restore verified official toolchain archives
         id: toolchain
-        if: steps.plan.outputs.player == 'true'
+        if: steps.plan.outputs.toolchain == 'true'
         uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: ${{ runner.temp }}/p1-toolchain-cache
@@ -90,8 +95,9 @@ jobs:
           python3 tools/ci_modular.py run
           --output-dir "${{ runner.temp }}/package-output"
           --cache-dir "${{ runner.temp }}/p1-toolchain-cache"
+          --part '${{ matrix.part }}'
       - name: Save verified official archives
-        if: success() && steps.plan.outputs.player == 'true' && steps.toolchain.outputs.cache-hit != 'true'
+        if: success() && steps.plan.outputs.toolchain == 'true' && steps.toolchain.outputs.cache-hit != 'true'
         uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: ${{ runner.temp }}/p1-toolchain-cache
@@ -109,8 +115,28 @@ jobs:
         if: always() && steps.verify.outputs.diagnostics == 'true'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: package-evidence-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_attempt }}
+          name: package-evidence-${{ github.event.pull_request.head.sha || github.sha }}-${{ matrix.part }}-${{ github.run_attempt }}
           path: ${{ runner.temp }}/package-output/diagnostics/
           if-no-files-found: error
           retention-days: ${{ steps.verify.outputs.retention }}
+
+  ci-required:
+    needs: [docs, verify]
+    if: always()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require the core and every requested source-bound execution part
+        env:
+          DOCS_RESULT: ${{ needs.docs.result }}
+          PARTS_RESULT: ${{ needs.verify.result }}
+          EXPECTED_PARTS: ${{ needs.docs.outputs.parts }}
+        run: |
+          python3 - <<'PY'
+          import json, os
+          assert os.environ['DOCS_RESULT'] == 'success', 'Core did not succeed'
+          parts = json.loads(os.environ['EXPECTED_PARTS'])
+          assert isinstance(parts, list) and parts and len(parts) == len(set(parts)), 'Missing/duplicate execution parts'
+          assert os.environ['PARTS_RESULT'] == 'success', 'Requested execution parts failed, were cancelled or skipped'
+          print('All requested execution parts succeeded: ' + ', '.join(parts))
+          PY
 
