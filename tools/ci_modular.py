@@ -277,7 +277,25 @@ def retain_evidence(evidence, success, *, today=None):
     return evidence['mode'] == 'review' or not success
 
 
-def execute(plan, output, cache):
+def execution_parts(plan):
+    """Partition requested work without changing any module's proof obligations."""
+    modules = selected_modules(plan['modules'])
+    player = ['player'] if plan['player']['required'] and 'native.export' not in modules else []
+    return player + modules or ['source']
+
+
+def execution_plan(plan, part=None):
+    if part is None:
+        return plan
+    if part not in execution_parts(plan):
+        raise ValueError('Unrequested CI execution part: ' + part)
+    return {**plan, 'modules': [part] if part in MODULES else [],
+            'player': {**plan['player'], 'required': part in ('player', 'native.export')}}
+
+
+def execute(plan, output, cache, *, part=None):
+    original = plan
+    plan = execution_plan(plan, part)
     output.mkdir(parents=True, exist_ok=False)
     player, diagnostics = output / 'player', output / 'diagnostics'
     started, rows, success, error = time.monotonic(), [], False, None
@@ -363,7 +381,9 @@ def execute(plan, output, cache):
         seconds = round(time.monotonic() - started, 3)
         def size(directory):
             return sum(p.stat().st_size for p in directory.rglob('*') if p.is_file()) if directory.exists() else 0
-        report = {'accepted': success, 'binding': plan, 'modules': rows, 'seconds': seconds,
+        report = {'accepted': success, 'binding': original,
+                  'execution': {'part': part, 'modules': plan['modules'], 'player': plan['player']},
+                  'modules': rows, 'seconds': seconds,
                   'ci_seconds_before_upload': round(elapsed_before + seconds, 3),
                   'soft_goal_exceeded': elapsed_before + seconds > SOFT_SECONDS, 'player_bytes': size(player),
                   'diagnostic_bytes': size(diagnostics), 'error': error}
@@ -383,23 +403,27 @@ def main():
     parser.add_argument('action', choices=['plan', 'run'])
     parser.add_argument('--output-dir', type=Path)
     parser.add_argument('--cache-dir', type=Path)
+    parser.add_argument('--part', help='One exact source-bound execution part; omitted runs the complete plan')
     args = parser.parse_args()
     try:
         plan = original_plan()
+        selected = execution_plan(plan, args.part)
         if args.action == 'plan':
             summary('## CI selection\n\n```json\n' + json.dumps(plan, indent=2) + '\n```')
             if os.environ.get('GITHUB_OUTPUT'):
                 with open(os.environ['GITHUB_OUTPUT'], 'a') as stream:
-                    for key, value in {'modules': ','.join(plan['modules']),
-                                       'tools': str('tools' in plan['modules']).lower(),
-                                       'player': str(plan['player']['required']).lower(),
-                                       'images': str(any(m == 'tools' or m.startswith(('native.', 'production.')) for m in plan['modules'])).lower(),
-                                       'delivery': str('delivery' in plan['modules']).lower()}.items():
+                    for key, value in {'parts': json.dumps(execution_parts(plan), separators=(',', ':')),
+                                       'modules': ','.join(selected['modules']),
+                                       'tools': str('tools' in selected['modules']).lower(),
+                                       'player': str(selected['player']['required']).lower(),
+                                       'toolchain': str(selected['player']['required'] or any(m == 'preflight' or m == 'delivery' or m.startswith('native.') for m in selected['modules'])).lower(),
+                                       'images': str(selected['player']['required'] or any(m == 'tools' or m.startswith(('native.', 'production.')) for m in selected['modules'])).lower(),
+                                       'delivery': str('delivery' in selected['modules']).lower()}.items():
                         stream.write(key + '=' + value + '\n')
             return 0
         if not args.output_dir or not args.cache_dir:
             parser.error('run requires output and cache directories')
-        return 0 if execute(plan, args.output_dir.resolve(), args.cache_dir.resolve())['accepted'] else 1
+        return 0 if execute(plan, args.output_dir.resolve(), args.cache_dir.resolve(), part=args.part)['accepted'] else 1
     except (OSError, ValueError, KeyError, TypeError, subprocess.CalledProcessError) as exc:
         print('CI FAIL: ' + str(exc), file=sys.stderr)
         return 1

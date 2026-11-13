@@ -24,9 +24,14 @@
       "path": "game/tests/pe_a1_cases.gd",
       "disposition": "change-scoped",
       "reason": "Gezielte neue Revisions-/Marker-/Primary-/Backup-/Fehlergrenzen im vorhandenen Coreprozess; keine neue native Prozessfamilie."
+    },
+    {
+      "path": "tools/test_ci_modular.py",
+      "disposition": "change-scoped",
+      "reason": "Explizit beauftragte CI-Nacharbeit: exakte vollständige Partitionierung, unveränderte Gesamtbindung, Ausschluss nicht angeforderter Teile und nur ein Windowsbau bei native.export."
     }
   ],
-  "core_change": null,
+  "core_change": "Ausdrücklicher Folgeauftrag nach abgebrochenem >43-Minuten-Lauf: unabhängige vollständige Module auf isolierten Runnern statt serieller Summe ausführen; ci-required verlangt alle Teile und docs erfolgreich. Keine Verringerung von Prüfinhalt, Originalreader oder Quellenbindung. Live-Fortschritt und echte Aktivitätszähler beheben den stummen Produktionsprüfer.",
   "evidence": {
     "mode": "none",
     "purpose": null,
