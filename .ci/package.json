@@ -1,11 +1,29 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/626",
-  "package": "PW2-A",
-  "modules": [],
-  "purpose": "PW2-A gemäß issuecomment-6850772525: phasengerechte Pflichtquellen und gemeinsamer Bildstil, bedarfsweise Rasterkandidaten bei erhaltenen Qualitäts- und Budgetgates. Reiner Norm-/Markdownschnitt; docs/ci-required prüfen Quellen und Plan ohne Windows-Spielerbau. PW2-A-T01 verfolgt die tatsächlichen Pflichtquellenwege einschließlich Korrektur/Wiederaufnahme und vergleicht ihren Textumfang einmalig im PR.",
-  "omitted": "Keine Werkzeug-, UI-, Promptgenerator-, Solver-, Writer-, Schema- oder Runtimeänderung. Deshalb keine tools, production.*, native.*, preflight, delivery oder Chromium. Keine Bild-/Rätselproduktion, Bestandsreplays oder neue Dauerregressionen. PW2-B und PW2-C bleiben separat; die unabhängige fachliche Abnahme PW2-A-A01 bleibt vor Merge offen.",
-  "test_changes": [],
+  "package": "PW2-B",
+  "modules": [
+    "tools"
+  ],
+  "purpose": "PW2-B gemäß issuecomment-6855815878: spielrelevante UI, quellgebundene kurze Aufträge und gemeinsamer Schlussauftrag. Pflichtkern mit Windows-Spielerbau, tools für tatsächlichen Promptgenerator und lesende Workspace-/Auswahlbindungen. T01 echte Browserbedienung und abschließender Redundanzabgleich separat.",
+  "omitted": "Keine production.*, native.*, preflight, delivery oder automatische Chromium-Matrix. Keine Solver-, Writer-, Originalschema-, Spiel-, Bildproduktions-, Installer- oder PW2-C-Änderung. Der interne lesende Antwortzusatz wird aus bereits geprüften Quellen gebunden. Browseroriginale gezielt befristet außerhalb des Produktdiffs; PW2-B-A01 unabhängig vor Merge offen.",
+  "test_changes": [
+    {
+      "path": "tools/test_authoring_sheet.py",
+      "disposition": "change-scoped",
+      "reason": "Vorhandene Generator-/Optionsfälle prüfen kurze Aufträge, echte neue Absichten, Schlusswahl/none, Default und nicht erweiterte Befugnisse; keine Volltextsnapshots."
+    },
+    {
+      "path": "tools/test_production_workspace.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine lesende Quellen-/Kompositionsfälle im vorhandenen Workspace-Test; Originalbindungen und fehlende/eindeutige Auswahl, keine Solver-/Bestandsreplays."
+    },
+    {
+      "path": "tools/production_workspace/check_ui_loading.cjs",
+      "disposition": "change-scoped",
+      "reason": "Bestehender DOM-/HTTP-Test folgt der neuen Informationsreihenfolge und erhält Lade-/Abbruch-/Quellwechselgarantien; ersetzt keine echte Browserprobe."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

@@ -1,6 +1,6 @@
 # Picross: Regeln für die KI-gestützte Rätselproduktion
 
-**Version 0.8.0 · Dokumentrevision 5 · 13.11.2026 · PW2-A**
+**Version 0.8.0 · Dokumentrevision 6 · 13.11.2026 · PW2-A / PW2-B**
 
 Neue Produktionen verwenden fünf Schritte: Abschlussbilder → Motivvorlage →
 Rasterangebote → Kontextzeichnungen → Integration. Hintergrundarbeit beginnt
@@ -248,11 +248,15 @@ Entscheidung. Erst zurückgelesene Gitdaten belegen einen erreichten Stand.
 Der Assistent ist kein Modellaufrufer oder Projektwriter. Quelle für Cloudakteure
 muss über Git erreichbar sein, nicht bloß über localhost oder einen lokalen Pfad.
 
-PW2-A ändert nur Regeln und Quellenrouting. Die UI-/Promptverkürzung und der
-reguläre kombinierte Schlussauftrag aus background_review gehören zu PW2-B in
-[#626](https://github.com/venomenon328/picross/issues/626). Eine bereits ausdrücklich
-kombinierte tatsächliche Freigabe ist zulässig; diese Dokumentrevision behauptet
-keine neue UI-Fähigkeit und erteilt selbst keinen Integrations-/Mergeauftrag.
+PW2-B in [#626](https://github.com/venomenon328/picross/issues/626) verbindet in der
+Schlussübersicht konkrete Hintergrundwahl/none, Endabnahme und Integration in
+einem regulären Auftrag. Der Standard beauftragt anschließend Commit/PR,
+unabhängiges Review und Squash-Merge erst nach aktuellen Vor-Merge-Gates sowie
+§9. Ein bewusst gewählter Draft-Umfang bleibt ausdrücklich erhalten. Korrektur
+und Wiederaufnahme erklären keine neue Endabnahme oder Mergefreigabe. Die
+technischen Zwischenzustände und Byteprüfungen bleiben, lediglich der gesonderte
+Benutzerauftrag „Zur Endabnahme vorbereiten“ entfällt. Erst das tatsächliche
+Absenden erteilt die genannten Befugnisse, nicht dieser Normtext oder ein Klick.
 
 ## 4. Rasterproduktion und technische Pflichtprüfung
 
@@ -636,7 +640,7 @@ oder zusätzliche persönliche Buchabnahme. Geänderte kreative Bytes brauchen n
 Wahl; bytegleicher Transport und festgelegte Ableitung keine erneute kreative Wahl.
 Eine offene Hintergrundwahl darf zusammen mit der tatsächlichen Endabnahme im
 passend beauftragten Schlussauftrag erklärt werden; nicht dieselbe unveränderte
-Entscheidung ein weiteres Mal verlangen. Die PW2-B-Oberfläche ist davon getrennt.
+Entscheidung ein weiteres Mal verlangen. Die Schlussübersicht nach PW2-B bezeichnet die konkrete unveränderte Kombination.
 
 ## 7. Freigaben und Abschlussausgabe
 
