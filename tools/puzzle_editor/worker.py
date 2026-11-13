@@ -26,6 +26,10 @@ def run(root, work, action, body):
             require(before == snapshot(root), "Checkout während Detailprüfung geändert. Neu laden.")
             return {"detail": value, "raster": grid, "snapshot": before}
         if action == "recover":
+            from .server import pending
+            if not pending(root):
+                content_registry.check_checkout(root)
+                return {"status": "noop", "registered": False}
             return content_registry.recover(root)
         if action == "validate_upload":
             path = io.safe(work, body["file"])

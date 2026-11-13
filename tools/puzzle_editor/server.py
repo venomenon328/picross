@@ -17,6 +17,7 @@ import time
 
 from tools.puzzle_production import catalog_io as io, catalog_metadata, catalog_images
 from tools.puzzle_production import catalog_transaction as tx, content_registry
+from tools.puzzle_production import catalog_publication
 from tools.puzzle_production.contract import digest, exact_keys
 from tools.puzzle_production.authoring_package import require
 from .instance import Instance
@@ -30,6 +31,10 @@ PILOTS = {"wasserwelt": "water", "landschaften-natur": "nature"}
 
 
 def encoded(value): return catalog_images.encoded(value)
+
+
+def pending(root):
+    return io.safe(root, tx.LOCK).exists() or bool(catalog_publication.staging(root))
 
 
 def catalog(root):
@@ -49,8 +54,8 @@ class Service:
         self.root = io.external(root)
         require(self.root.is_dir() and io.safe(self.root, ".git").exists(), "Vorhandenes Picross-Gitcheckout wählen.")
         # Validate only the cheap current indexes. Recovery is allowed even with partial data.
-        pending = io.safe(self.root, tx.LOCK).exists()
-        if not pending: catalog(self.root)
+        pending_state = pending(self.root)
+        if not pending_state: catalog(self.root)
         self.instance = Instance(self.root)
         self.directory = tempfile.TemporaryDirectory(prefix="picross-pe-", dir=temporary)
         self.work = io.external(self.directory.name)
@@ -78,9 +83,9 @@ class Service:
             job = dict(self.job) if self.job else None
             if job:
                 job.pop("started", None)
-                job["elapsed_seconds"] = round(time.monotonic()-self.job["started"], 1)
+                if job["state"] == "running": job["elapsed_seconds"] = round(time.monotonic()-self.job["started"], 1)
             return {"format": FORMAT, "checkout": str(self.root), "origin": self.origin,
-                    "stopping": self.stopping, "recovery_required": io.safe(self.root, tx.LOCK).exists(), "job": job}
+                    "stopping": self.stopping, "recovery_required": pending(self.root), "job": job}
 
     def idle(self):
         require(not self.stopping, "Editor wird beendet.")
@@ -113,6 +118,9 @@ class Service:
     def asset(self, path, *, root=None):
         root = self.root if root is None else root
         raw = io.read(root, path, 32*1024*1024)
+        for key, row in self.assets.items():
+            if row["root"] == root and row["file"] == path and row["sha256"] == io.checksum(raw): return key
+        while len(self.assets) >= 32: self.assets.pop(next(iter(self.assets)))
         key = secrets.token_hex(16)
         self.assets[key] = {"root": root, "file": path, "sha256": io.checksum(raw), "bytes": len(raw)}
         return key
@@ -184,7 +192,8 @@ class Service:
                     for child in jobdir.rglob("*"): io.safe(jobdir, child.relative_to(jobdir).as_posix())
                     shutil.rmtree(jobdir)
                 with self.lock:
-                    self.job.update(state="error" if error else "done", stage="Fachoperation gestoppt" if error else "Fachoperation abgeschlossen", result=result, error=error)
+                    self.job.update(state="error" if error else "done", stage="Fachoperation gestoppt" if error else "Fachoperation abgeschlossen", result=result, error=error,
+                                    elapsed_seconds=round(time.monotonic()-self.job["started"], 1))
                     self.thread = None
         self.thread = threading.Thread(target=execute, name="PE-writer")
         self.thread.start()
@@ -219,7 +228,7 @@ class Service:
                 (kind != "background" or suffix == "png"), "Ungültiger Bildimport.")
         key = secrets.token_hex(16)
         name = "upload-"+key+"."+suffix
-        (self.work/name).write_bytes(raw)
+        with io.safe(self.work, name).open("xb") as stream: stream.write(raw)
         ref = {"file": name, "sha256": io.checksum(raw), "bytes": len(raw), "kind": kind,
                "expires": time.monotonic()+900}
         def complete(result, work):

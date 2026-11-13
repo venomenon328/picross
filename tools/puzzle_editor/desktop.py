@@ -4,6 +4,7 @@ from pathlib import Path
 import json
 import os
 import threading
+import sys
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 import webbrowser
@@ -93,6 +94,14 @@ class Window:
 
 
 def main():
+    if getattr(sys, "frozen", False):
+        try:
+            from .bundle import verify
+            verify()
+        except Exception as exc:
+            notice = tk.Tk(); notice.withdraw()
+            messagebox.showerror("Programmpaket unvollständig", "Portable Ausgabe vollständig neu entpacken.\n"+str(exc), parent=notice)
+            notice.destroy(); return
     parser = argparse.ArgumentParser(description="Lokaler Picross-Bestandseditor")
     parser.add_argument("--state", type=Path, default=Path(os.environ.get("LOCALAPPDATA", str(Path.home())))/"PicrossPuzzleEditor")
     parser.add_argument("--root"); parser.add_argument("--port", type=int)

@@ -3,9 +3,11 @@
 Stand: 13.11.2026. **PE-A1 und PE-A2 sind nach unabhängigem Review über
 [PR #577](https://github.com/venomenon328/picross/pull/577) und
 [PR #623](https://github.com/venomenon328/picross/pull/623) integriert.**
-[PE-A3](https://github.com/venomenon328/picross/issues/576#issuecomment-6848707827)
-liefert den Rasterwriter und gezielten Save-Neustart gemäß §9;
-unabhängige Abnahme und Merge bleiben eigene Schritte. PE-B bleibt Sollstand.
+[PE-A3](https://github.com/venomenon328/picross/pull/628)
+ist ebenfalls unabhängig abgenommen und integriert und liefert den Rasterwriter
+und gezielten Save-Neustart gemäß §9. PE-B ergänzt auf seinem Arbeitsbranch
+den lokalen Dienst, die Oberfläche und den portablen Starter gemäß §11;
+technische Lieferung, unabhängiges Review und persönliche Bedienprobe bleiben getrennt.
 Auftrag, Kriterien und gebundene technische Nachweise
 stehen im [PE-Issue #576](https://github.com/venomenon328/picross/issues/576)
 und im jeweiligen Liefer-PR. PE-A2 beginnt auf
@@ -14,7 +16,7 @@ Spezifikationsstand wurde gegen `main@9cc07b411155adeab0aa6516ab5b4c4341f48184` 
 
 Dieser Vertrag beschreibt ein persönliches Werkzeug außerhalb des Spiels.
 Abschnitt 7 beschreibt das Metadatenfundament, §8 die gemeinsame
-Bildpflege und §9 die geprüfte Rasterpflege. Die Weboberfläche folgt in PE-B.
+Bildpflege, §9 die geprüfte Rasterpflege und §11 die PE-B-Weboberfläche.
 Neue Rätsel folgen weiterhin [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md).
 
 ## 1. Ziel und freigegebener Umfang
@@ -821,8 +823,8 @@ wird wegen seiner unterschiedlichen Datenrisiken in eigenständige Pakete geteil
 | PE-B | Lokale Weboberfläche und komfortabler Windowsstart für sämtliche freigegebenen Bearbeitungen. Konsumiert die gemeinsamen Writer. |
 
 PE-A1 und PE-A2 besitzen eigene vollständige Umsetzungsschnitte und Prüfpläne im
-Issue. PE-A3 besitzt ebenfalls eine geschlossene Paketentscheidung; PE-B bleibt
-fachlich beschlossen und benötigt seinen eigenen Umsetzungsschnitt. Ein
+Issue. PE-A3 ist über PR #628 integriert; PE-B besitzt seine eigene geschlossene
+Paketentscheidung und den Dienstvertrag in §11. Ein
 fertiges Fundament schließt das Gesamtissue nicht.
 
 PE-A1 wurde nach ausdrücklichem Umsetzungsauftrag auf demselben Branch/PR
@@ -865,7 +867,8 @@ JSON streng UTF-8, ohne doppelte Schlüssel/NaN; höchstens 256 KiB. Upload roh,
 1…32 MiB, Content-Type image/png oder image/svg+xml. Socket-Lesegrenze 15 s;
 höchstens acht gleichzeitige Requests, davon nur eine fachliche Operation.
 Fehler sind `{format:"picross-pe-error-v1",error:<Text>}` mit 400 (Eingabe),
-403 (Sitzung/Ursprung), 404 (Route), 409 (belegt/stale) oder 413 (Länge).
+403 (Sitzung/Ursprung), 404 (Route), 409 (belegt/stale beziehungsweise
+Fach-/Zustandskonflikt einer Operation) oder 413 (Länge).
 Erfolg hat stets `format:"picross-pe-api-v1"` und die unten benannten Felder.
 
 Ein OS-Lock pro kanonischem Checkout verhindert zweite Editorinstanzen auch
@@ -888,18 +891,18 @@ Kein frei übergebener Datei-/Checkoutpfad und keine Kommando-API.
 | --- | --- |
 | GET `status` | Kein Body; `checkout,origin,stopping,recovery_required,job`. job null oder `{id,operation,state,stage,elapsed_seconds,result,error}`, state running/done/error. Status führt keine Vollprüfung aus. |
 | GET `catalog` | Kein Body; `snapshot,categories,entries,runtime_format,migration_required`. MetadataView liest die aktuellen Indizes; snapshot bindet deren Bytes und Runtime. Keine Bild-/Paketprüfung in Suche/Filter. Alte v2/v3 melden den nötigen A1-CLI-Migrationsweg. |
-| POST `detail` | `{id,snapshot}`; startet Job. Ergebnis `detail` mit images/raster-View, vollständigem Snapshot-Token und autorisierten Bildrefs; Vollprüfung sichtbar im Job. |
+| POST `detail` | `{id,snapshot}`; startet Job. Ergebnis exakt `detail,raster,snapshot,pictures`: bestehende images/raster-Views, vollständiger Snapshot-Token und `pictures={reveal:[asset-id],background:[asset-id]}` mit null bis zwei Hintergrundbildern; Vollprüfung sichtbar im Job. |
 | GET `image/<asset-id>` | Tokenheader, kein Body. Nur im Detail/Upload freigegebene aktuelle Datei; Ref-Hash/Bytes und Pfadsicherheit beim Abruf erneut prüfen. Originalbytes, kein Encoding. |
 | GET `standard/<category-id>` | Nur aktuelle validierte Kategorie; `assets` mit null bis zwei opaken Bildkennungen für die vorhandene Kategoriezeichnung. Keine Definition-/Paketprüfung, kein freier Bildpfad. |
-| POST `upload/<reveal|background>/<png|svg>` | Rohbytes, Hintergrund nur png. Ergebnis `upload,sha256,bytes`; neue opake Kennung, keine Clientdateinamen/Pfade. Vor Vorschau vorhandene Bildprüfer aufrufen; keine unvalidierten SVG ausliefern. |
+| POST `upload/<reveal|background>/<png|svg>` | Rohbytes, Hintergrund nur png. Startet Prüfjob; Ergebnis exakt `upload,asset,sha256,bytes` mit opaker Import- und Vorschaukennung; keine Clientdateinamen/Pfade. Vor Vorschau vorhandene Bildprüfer aufrufen; keine unvalidierten SVG ausliefern. |
 | POST `plan` | `{snapshot,id,metadata,text,profile,reveal,background,authority}`. id null ausschließlich für separate Kategorienaktion, dann metadata eine Liste A1-Operationen, alle anderen Felder null. Sonst metadata null oder A1-ID-Felder, text null oder Rasterstring, profile line/paired, reveal null oder `{upload,provenance}`, background null oder `{status,upload,provenance}`, authority null oder `{actor,statement,confirmed,provenance}` mit confirmed=true. provenance jeweils vier A2-Felder. UTC-Zeitpunkt entsteht am tatsächlichen Bestätigungseingang, keine vorgetäuschte Sichtung. |
 | POST `migration` | `{snapshot}`; eigener A2-v7→v8-Plan, niemals aus normalem Save. |
 | POST `apply` | `{plan,id}`; explizite Bestätigung des ausgewählten Plans/der gebundenen ID, id null bei Kategorie/Migration. Frische Fachprüfung; Ergebnis tatsächliche Writerquittung, keine UI-Erfolgserfindung. |
-| POST `recover` | `{confirmed:true}`; gemeinsames content_registry.recover als eigene Operation. Keine freien Restore-/Löschpfade. |
+| POST `recover` | `{confirmed:true}`; gemeinsames content_registry.recover als eigene Operation, auch für dessen unpublizierte Journalstagingdatei. Ohne Journal/Staging vollständiges check_checkout und bestätigter No-op. Keine freien Restore-/Löschpfade. |
 | POST `discard` | `{confirmed:true}`; eigene Pläne/Uploads verwerfen, `discarded:true`; keine Inhaltsdatei ändern. |
 | POST `stop` | `{confirmed:true}`; `stopping:true`, anschließend geordnetes Drain. |
 
-Detail/Plan/Migration/Apply/Recovery liefern zunächst 202 mit `job`-Kennung.
+Detail/Upload/Plan/Migration/Apply/Recovery liefern zunächst 202 mit `job`-Kennung.
 Polling über status liefert den echten Abschluss. Nur ein Workerprozess aus dem
 vertrauenswürdigen Programmpaket arbeitet seriell; Kontrollstatus bleibt erreichbar.
 Stage zeigt gestartete Fachoperation/Originaldiagnose und verstrichene Zeit,
