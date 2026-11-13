@@ -66,8 +66,8 @@ def _manifest(raw):
 
 
 @dataclass(frozen=True)
-class VerifiedCandidate:
-    """Immutable binding returned only after signature AND all asset checks."""
+class VerifiedMetadata:
+    """Authenticated description only: NEVER permission to execute an asset."""
     manifest_bytes: bytes
     signature_bytes: bytes
     version: str
@@ -82,7 +82,12 @@ class VerifiedCandidate:
         return digest(self.manifest_bytes)
 
 
-def _verify(manifest_raw, signature_raw, files, trust):
+@dataclass(frozen=True)
+class VerifiedCandidate(VerifiedMetadata):
+    """Immutable binding returned only after signature AND all asset checks."""
+
+
+def _verify_metadata(manifest_raw, signature_raw, trust):
     from cryptography.exceptions import InvalidSignature
     manifest = _manifest(manifest_raw)
     require(type(signature_raw) is bytes and 0 < len(signature_raw) <= SIGNATURE_LIMIT,
@@ -97,10 +102,20 @@ def _verify(manifest_raw, signature_raw, files, trust):
         key.verify(_base64(signature['signature'], 64), DOMAIN + manifest_raw)
     except InvalidSignature:
         raise ValueError('Invalid Ed25519 update signature') from None
-    verify_files(manifest, files)
     msi = manifest['assets'][release(version=manifest['version'])['filename']]
-    return VerifiedCandidate(manifest_raw, signature_raw, manifest['version'], manifest['source_commit'],
+    return VerifiedMetadata(manifest_raw, signature_raw, manifest['version'], manifest['source_commit'],
                              manifest['payload_fingerprint'], manifest['signing_key_id'], msi['sha256'], msi['bytes'])
+
+
+def verify_metadata(manifest_raw, signature_raw):
+    """Pure startup check with the same fixed roots and wire rules as B1."""
+    return _verify_metadata(manifest_raw, signature_raw, production_trust())
+
+
+def _verify(manifest_raw, signature_raw, files, trust):
+    metadata = _verify_metadata(manifest_raw, signature_raw, trust)
+    verify_files(strict_json(metadata.manifest_bytes), files)
+    return VerifiedCandidate(**vars(metadata))
 
 
 def verify_candidate(manifest_raw, signature_raw, files):
@@ -114,7 +129,7 @@ def assess_update(candidate, local_version, local_binding=None):
     The caller supplies its previously authenticated binding, never guessed from
     untrusted metadata. B1 neither reads nor persists installation state.
     """
-    require(type(candidate) is VerifiedCandidate, 'Verified candidate required')
+    require(type(candidate) in (VerifiedMetadata, VerifiedCandidate), 'Verified candidate required')
     current = version_tuple(local_version)
     require(current[:2] == (0, 1), 'Unsupported local application version')
     incoming = version_tuple(candidate.version)

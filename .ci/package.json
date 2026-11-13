@@ -1,25 +1,35 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/625",
-  "package": "CI-PB",
+  "issue": "https://github.com/venomenon328/picross/issues/612",
+  "package": "APP-B2",
   "modules": [
     "tools"
   ],
-  "purpose": "CI-PB gemäß #625: reguläre rätselspezifische Hintergrundquellen, PNGs und Nutzungshinweise in die gemeinsame enge Content-Klassifikation aufnehmen. Der Pflichtkern docs/ci-required einschließlich Windows-Spielerbau bleibt für diesen Entwicklungs-PR aktiv; tools prüft den gemeinsamen ci_scope-Verbraucher und die Werkzeugverträge.",
-  "omitted": "Keine production.*, native.*, preflight, delivery oder Chromium: Writer, Solver, Bildprofile und Spielverhalten ändern sich nicht. Keine echten Rätsel als Testkorpus, kein zusätzlicher Test-PR oder Inhaltsmerge. CI-PB-T01 wird durch den kleinen synthetischen Gitfall für PR/Main-Push einschließlich Anlage, Änderung, Entfernung, Rename-Grenzen und beider Gitmodusseiten geliefert. Keine neue Diagnosegalerie oder allgemeine automatische Pfadauswahl.",
+  "purpose": "APP-B2 gemäß Paketentscheidung 6849852805: sicherer Opt-in-Selbstupdateclient, unabhängiger Windowshelfer und T01/T02. Pflichtkern docs/ci-required mit regulärem Windows-Spielerbau; genau tools für Launcher-, Trust-, Download-, Zustands- und Installergrenzen.",
+  "omitted": "Keine native.*, production.*, preflight, delivery, Chromium oder automatische MSI-Installation. Spiel, Rätsel und Browser-API unverändert. T02 nutzt ausschließlich den separaten nicht veröffentlichenden Windowsdispatch mit echtem Bau/Inspector und isolierter Helferdiagnose. T03 bleibt echte Windows-11-Nutzer-/Upgradeprobe als Vor-Release-Gate; T01/T02 belegen weder reale Installation noch universellen Rollback oder produktive Kanalfrische. Keine Produktionskeys/Secrets/Releaseaktivierung.",
   "test_changes": [
     {
-      "path": "tools/test_ci_modular.py",
-      "disposition": "core",
-      "reason": "Bestehende kleine Klassifikations-/Ausführungsfälle und ein synthetischer Gitfall sichern die buildfreie Hintergrundproduktion, weiterhin ausgewählte Fachprüfungen und die Grenzen zu Entwicklungsänderungen und expliziten Bauaufträgen. Keine Engine, echten Rätselbilder oder neue umfangreiche Regex-Testsuite. Der Gitfall liefert zugleich CI-PB-T01."
+      "path": "tools/test_app_updates.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische reale Ed25519-/Kanal-/HTTP-/Opt-in-/Staging-/Abbruch-/Recoveryfälle nur im ausgewählten tools-Modul; keine persönlichen Daten oder echten Release-Mutationen."
     },
     {
-      "path": "tools/test_ci_scope.py",
+      "path": "tools/test_production_launcher.py",
       "disposition": "change-scoped",
-      "reason": "Kleine Verbraucherprüfung derselben Backgroundklassifikation samt engen Gegenfällen im ausgewählten tools-Modul; die historische automatische Pfadauswahl wird nicht in der Haupt-CI reaktiviert."
+      "reason": "Vorhandener echter synthetischer Request/P2-Drainfall prüft zusätzlich, dass die Helferfreigabe erst nach bestätigtem vollständigem Drain möglich ist; keine zweite P2-Vollsuite."
+    },
+    {
+      "path": "tools/production_workspace/helper_diagnostic.py",
+      "disposition": "change-scoped",
+      "reason": "Expliziter separater APP-B2-T02-Dispatch am fixierten PR-Head; realer Kandidat mit ausschließlich im Prozess erzeugtem Testkey. Kein automatisches tools-/Kernmodul und kein Frozen-Payload. Temporäre Extrakte enden im Lauf, gezielte Originale nach sieben Tagen."
+    },
+    {
+      "path": "tools/production_workspace/packaging/HelperDiagnostic.cs",
+      "disposition": "change-scoped",
+      "reason": "Nur vom expliziten T02-Adapter gebaut: echte gebaute Helferkomponente, MSI-Datenbanknegative und wirklicher Prozesshandle-Wait ohne Installation. Keine Produkt-Testoption; Originalprotokoll sieben Tage."
     }
   ],
-  "core_change": "tools/ci_paths.py ist Teil des CI-Kerns. Zwei vollständige Pfadmatches ergänzen ausschließlich content/backgrounds/pz-<id>.json und game/art/backgrounds/pz-<id>.png|txt mit der bestehenden Reveal-ID-Grammatik. Die gezielt erweiterten Kernfälle prüfen PR-/Main-Push-Plan und Ausführung; unbekannte Pfade, Entwicklungsdateien und nicht reguläre Gitmodi bleiben buildpflichtig. Workflow, Ergebnisgate und Umfang des regulären Windows-Kernbaus bleiben erhalten.",
+  "core_change": null,
   "evidence": {
     "mode": "none",
     "purpose": null,

@@ -221,11 +221,20 @@ class LauncherTests(unittest.TestCase):
         try:
             self.assertTrue(entered.wait(2)); host.request_stop()
             self.assertFalse(host.stopped.wait(0.2)); self.assertEqual(calls, [1])
+            from unittest.mock import Mock
+            from tools.production_workspace.update_windows import Handoff
+            helper = Mock(); helper.poll.return_value = None
+            handoff = Handoff(helper, 'a' * 48)
+            with self.assertRaisesRegex(ValueError, 'drain'):
+                handoff.commit(host)
+            helper.stdin.write.assert_not_called()
         finally:
             release.set(); worker.join(5)
         self.assertTrue(host.stopped.wait(5)); self.assertEqual(result[0][0], 200)
         self.assertEqual(service.removal_result, 'synthetischer unbekannter Ausgang')
         self.assertEqual(calls, [1])
+        handoff.commit(host)
+        helper.stdin.write.assert_called_once_with(('GO ' + 'a' * 48 + '\n').encode())
 
 
 if __name__ == '__main__':

@@ -1,13 +1,13 @@
 # PW: Automatisierte App-Releases und Selbstupdate
 
-**Stand APP-B1 · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612).**
-Maßgeblich: [Paketentscheidung APP-B1](https://github.com/venomenon328/picross/issues/612#issuecomment-6848332974).
+**Stand APP-B2 · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612).**
+Maßgeblich: [Paketentscheidung APP-B2](https://github.com/venomenon328/picross/issues/612#issuecomment-6849852805).
 **APP-A ist über PR #613 unabhängig abgenommen und in main integriert.**
 Erste Veröffentlichung und Windows-11-Upgradeprobe sind weiterhin offen.
 **APP-B1 liefert signierte Updateautorität und gemeinsamen Verifier; APP-B2
-(Startprüfung und Installation) ist noch nicht implementiert.** Produktionsvertrauen
+ergänzt den standardmäßig ausgeschalteten Client und unabhängigen MSI-Helfer.** Produktionsvertrauen
 ist ausdrücklich unprovisioniert. Veröffentlichung bleibt ohne eigenen Betriebsauftrag,
-provisionierte Roots und beide Aktivierungsschalter gesperrt. Kein aktiver Selbstupdateclient.
+provisionierte Roots und beide Aktivierungsschalter gesperrt. Der Updatekanal bleibt inaktiv.
 Dieser Vertrag ersetzt **nicht rückwirkend** die P4-Liefernachweise aus
 [#588](https://github.com/venomenon328/picross/issues/588).
 
@@ -24,7 +24,7 @@ das eigenständige Entwicklungs-HTML und Produktionsbranches bleiben außerhalb.
   Produktversionsvergabe, unabhängiger Windows-MSI-Bau und dauerhafter
   GitHub-Releasekanal. Noch **kein** Downloader/Updater im installierten Launcher.
 - **APP-B1:** signierte Updatekanalinformation und gemeinsamer Offlineverifier.
-- **APP-B2 (danach):** Prüfung beim Start,
+- **APP-B2:** Prüfung beim Start,
   einmalige Zustimmung zu automatischen Updates, sicherer externer MSI-Updatehelfer,
   geordneter Neustart und echte Windows-Lebenszyklusabnahme.
 - Der vorhandene Launcher **0.1.0** besitzt keine Updatefähigkeit.
@@ -98,7 +98,7 @@ Die Veröffentlichung darf nicht als bereits erfolgt gelten, weil der
 Workflowcode gemergt wurde. APP-A stellt keinerlei automatische
 Codeinstallation im Client bereit.
 
-## 3. APP-B2 · Noch ausstehender verifizierter Updateclient
+## 3. APP-B2 · Verifizierter Updateclient
 
 Beim Programmstart wird für die *installierte Anwendung* ein veröffentlichter
 Kanal geprüft, ohne die Verbindung zu Produktions-/Gitrefs als Codequelle zu
@@ -304,7 +304,7 @@ alte ID sperren, neue Wurzel separat prüfen und betroffene Installationen manue
 erneuern. Keine dynamische Rootübernahme oder automatische Brückeninstallation,
 keine nahtlose Rotation aller Offlineclients und keine sofortige Fernsperre
 eines offline installierten Roots. Reguläre Updates unter gültigem Root bleiben
-automatisierbar, sobald APP-B2 geliefert ist.
+automatisierbar; Erstinstallation, produktive Provisionierung und Betriebsgates bleiben erforderlich.
 
 ### Bau, Belege und offene Gates
 
@@ -333,11 +333,89 @@ Produktdiff; nach Ablauf gezielt erneuern. `.ci/package.json`: genau tools,
 `evidence.mode=none`; keine Browser-/Produktions-/Native-Vollmatrix.
 APP-B1-A01 bleibt unabhängiges Review vor Merge. APP-B1-R01 (reale Provisionierung
 und Signaturaktivierung), APP-A-R01 (erste Veröffentlichung) und APP-A-R02
-(Windows-11-Upgrade) bleiben gesonderte offene Betriebsgates. APP-B2 wird erst an
-dieser gelieferten Schnittstelle separat vorbereitet.
+(Windows-11-Upgrade) bleiben gesonderte offene Betriebsgates. APP-B2 verwendet
+diese gelieferte Schnittstelle gemäß Abschnitt 7.
 
 Primärquellen geprüft 13.11.2026: [Ed25519-API](https://cryptography.io/en/50.0.2/hazmat/primitives/asymmetric/ed25519/),
 [stabile Version/Wheel-OpenSSL](https://cryptography.io/en/50.0.2/changelog/),
 [Windows-Wheels](https://cryptography.io/en/50.0.2/installation/),
 [RFC 8032](https://datatracker.ietf.org/doc/html/rfc8032),
 [Environmentfreigaben](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments).
+
+## 7. APP-B2 · Client, Übergabe und Abschluss
+
+Der normale installierte Windows-GUI-Start prüft nach Dienst-/Browserbereitschaft
+höchstens einmal nebenläufig. Die Identität stammt aus übereinstimmenden gebauten
+`build.json`/`components.json`, festem per-user-Programmziel und tatsächlich
+registrierter MSI-Version. Setup, Entwickler-/portable Fassung, Headless- und
+Zweitstart autorisieren keine Installation. Bei leerem festem Trust bleibt der
+Kanal sichtbar inaktiv. Unbestätigte Kanalfrische heißt niemals „aktuell“.
+
+Das native Steuerfenster bietet einmalig ausdrücklich Ablehnen/Aktivieren und
+anschließend einen sichtbaren Schalter. `.launcher/app-updates.json` enthält nur
+`format=picross-app-update-preference-v1` und den booleschen Wert `enabled`.
+Fehlender/ungültiger Zustand ist keine Zustimmung. Die Datei wird im privaten
+Launcherzustand atomar ersetzt; Browserstorage und `config.json` bleiben getrennt.
+Ohne Opt-in findet auch kein automatischer Netzabruf statt. Ausschalten oder
+reguläres Beenden verwirft einen laufenden Download. Nach abgeschlossener Übergabe
+zeigt die Oberfläche den geordneten Stop; ein begonnener P2-Vorgang läuft aus.
+
+[`update_client.py`](../tools/production_workspace/update_client.py) verwendet
+ausschließlich anonyme HTTPS-Releases des festen Repositorys. Keine Tokens,
+Proxy-/Credentialübernahme oder Produktionsremotes. Höchstens vier Seiten à 100
+Releases und 4 MiB, zehn Sekunden je Socketoperation, 60 Sekunden Metadatenbudget;
+unvollständiger Katalog ist ein Fehler. Höchste veröffentlichte 0.1.x-Version
+entscheidet, ohne älteren Fallback. API-Redirects sind verboten; Assetredirects
+gehen höchstens zweimal an den expliziten GitHub-Releaseasset-Host mit festem
+Pfadmuster. v2-Metadaten werden vor Nutzdownloads mit `verify_metadata` geprüft.
+`VerifiedMetadata` ist keine Installationsfreigabe. Gleiche Version ohne bekannte
+identische Bindung und ältere Version sind Fehler, kein Update.
+
+Die fünf gebundenen Nutzassets werden streamend in eine neue private flache
+Stagingablage unter `.launcher/update-staging/<zufällige Kennung>` geladen.
+Maximal 512 MiB zusammen, Sidecars jeweils 8 MiB, 300 Sekunden Downloadbudget;
+das sind lokale Ressourcenschutzgrenzen, keine CI-Erfolgsgates. Keine Extraktion.
+Links/Reparsepfade, unvollständige Längen und Hashabweichungen werden abgewiesen.
+Alle tatsächlichen Bytes durchlaufen danach den unveränderten vollständigen
+B1-Vertrag `verify_candidate`, erneut unmittelbar vor Übergabe.
+
+[`UpdateHelper.cs`](../tools/production_workspace/packaging/UpdateHelper.cs)
+wird als eigenständige x64-.NET-Framework-EXE gebaut und im Ressourceninventar
+gebunden. Eine geprüfte Kopie läuft außerhalb des ersetzten Appimages. Die private
+Pipe übergibt einen geschlossenen Auftrag, ein geerbtes echtes Prozesshandle,
+Instanz-/Benutzer-/Installationsidentität, Manifest-/Asset-/EXEbindungen und Hashes
+von Konfiguration, Port und Zustimmung. Der Helfer prüft seinen tatsächlichen
+Elternprozess, Benutzer und dessen installierte EXE. Erst READY, anschließend
+`Runtime.request_stop()` und vollständiger Request-/P2-Drain; nur dessen bestätigter
+Erfolg sendet GO. Danach wartet der Helfer auf das echte Prozessende, einschließlich
+Desktop-finally/InstallInterlock. EOF oder unbekannter Ausgang autorisieren nichts.
+
+Alle Kandidaten bleiben mit Schreib-/Löschsperre geöffnet. Vor System-msiexec werden
+Hashes und echte MSI-Datenbankidentität erneut geprüft. Feste per-user-Argumente,
+keine Shell, Elevation, Kill- oder Rebootaktion. Der bestehende MSI-Guard entscheidet
+weiter über parallele Starts, Locks und Fremdbelegung. Eine installierte Desktop-
+Verknüpfung wird beim Upgrade erhalten. Erfolg verlangt MSI-Exit 0, nachgelesene
+neue MSI-/EXE-Version und Bytebindung sowie einen tatsächlich authentisierten
+Wiederanlauf auf dem unveränderten Port mit demselben `--state`/Browsermodus.
+Reboot-/Fehler-/unbestätigte Zustände erhalten einen sichtbaren manuellen Weg;
+keine allgemeine Rollbackgarantie und kein automatischer Wiederholungsdienst.
+
+Pending-/Ergebnisdateien enthalten ausschließlich den kleinen Übergabezustand.
+Bestätigt beendete Downloads werden entfernt; eigene Helferreste erst nach seinem
+Ende über die exakte gespeicherte Dateiliste. Fremde Dateien blockieren Bereinigung.
+Unbestätigte Übergaben werden nie erneut ausgeführt. Temporär nicht entfernbare
+Reste bleiben ehrlich als solche erhalten. Keine Checkout-/Cache-/Refwriter.
+
+T01 liegt im bedarfsgewählten `tools`-Modul. T02 ergänzt den separaten diagnostischen
+Windowsdispatch um den echten Client mit synthetischen Signaturen und den gebauten
+Helfer: MSI-Identität/Negativfälle und echtes Prozesshandle-Warten mit isoliertem
+Kindprozess. Der Diagnoseadapter und sein C#-Treiber werden nicht mitgeliefert.
+Unveränderte MSI-Originale höchstens 14 Tage, kleine technische Originale sieben
+Tage; keine privaten Testkeys. A01 bleibt unabhängiges Review vor Merge. T03/R01
+bleibt die echte nicht erhöhte Windows-11-Probe vor produktiver Selbstupdate-
+verteilung; Serverinspektion ersetzt sie nicht. Erste root-provisionierte Version
+weiterhin einmalig manuell installieren, insbesondere nach 0.1.0 oder leerem Trust.
+
+Technische Grundlagen: [Prozess-Wait](https://learn.microsoft.com/en-us/windows/win32/api/synchapi/nf-synchapi-waitforsingleobject),
+[per-user MSI-Abfrage](https://learn.microsoft.com/en-us/windows/win32/api/msi/nf-msi-msigetproductinfoexw),
+[explizite Handlevererbung](https://docs.python.org/3.13/library/subprocess.html#subprocess.STARTUPINFO).

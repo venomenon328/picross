@@ -27,7 +27,7 @@ Update: Assistent regulär beenden, auf sein tatsächliches Ende warten, dann ei
 Installer mit höherer Produktversion starten. Alle eigenen Programmdateien werden
 gemeinsam ersetzt. Laufende/fremde/unklare Instanz oder belegte Programmdateien:
 Abbruch und nach regulärem Stop erneut versuchen. Begonnene Produktionsentfernung
-samt Ergebnis abwarten. Kein automatischer Kill/Stop/Restart, kein Autoupdater.
+samt Ergebnis abwarten. Kein Prozesskill oder erzwungener Neustart.
 Während einer Windowsinstallation nach deren Ende erneut starten.
 „Neuere Ergebnisse suchen“ aktualisiert Gitdaten, keine installierte Anwendung.
 Gleiche Produktversion und Downgrade werden zurückgewiesen.
@@ -50,5 +50,19 @@ https://github.com/venomenon328/picross/releases enthalten MSI, Prüfsumme,
 Anleitung, delivery.json, inputs.json, manifest.json und manifest.sig.json mit
 signierter Quell-/Versions-/Dateibindung. Der feste öffentliche Trust ist zunächst
 unprovisioniert; eine Metadatensignatur ist keine Windows-Codesignatur.
-Diese App besitzt weiterhin keinen Autoupdater. Die bisherige Version 0.1.0 muss
-für eine spätere updaterfähige Version einmalig manuell aktualisiert werden.
+App-Updates sind standardmäßig aus. Im nativen Steuerfenster einmalig
+„Aktivieren“ oder „Ablehnen“ wählen; danach jederzeit ein-/ausschaltbar.
+Nur die normal installierte App prüft nach Bereitschaft einmal je Start den
+signierten öffentlichen Kanal. Ohne Opt-in kein Download/Installationsstart.
+Ein leerer Vertrauensspeicher bedeutet: Kanal inaktiv; erste root-provisionierte
+Version vertrauenswürdig manuell installieren. Auch 0.1.0 benötigt diesen Schritt.
+
+Bei bestätigter neuerer Version lädt die App geprüfte Dateien, schließt laufende
+Arbeit geordnet ab und übergibt an einen unabhängigen Windowshelfer. Er wartet auf
+das vollständige Prozessende, installiert nur die höhere gebundene Version und
+prüft den Wiederanlauf mit demselben Zustand und Port. Offline-/Downloadfehler
+lassen die vorhandene App nutzbar; Ausschalten bricht den Download ab.
+Installationsfehler/unklarer Ausgang/Rebootbedarf werden ehrlich gemeldet: danach
+Windowsinstallation prüfen und manuell starten bzw. geprüften Installer erneut
+ausführen. Kein automatischer Retry, keine universelle Rollbackgarantie.
+Die echte Windows-11-Upgradeabnahme und produktive Kanalaktivierung stehen aus.

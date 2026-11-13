@@ -107,7 +107,10 @@ def run_gui(args, lock, build):
     if os.name == 'nt':
         root.iconbitmap(str(Path(__file__).parent / 'assets/launcher.ico'))
     runtime = None
+    updates = None
+    update_handoff = None
     try:
+        setup_start = args.setup or not (lock.state / 'config.json').exists()
         if args.setup or not (lock.state / 'config.json').exists():
             if not setup(root, args, lock.state):
                 return 0
@@ -136,12 +139,58 @@ def run_gui(args, lock, build):
         def stop():
             nonlocal closing
             closing = True; open_button.configure(state='disabled')
+            if updates and update_handoff is None:
+                updates.cancel()
             status.set('Beenden: eigene Anfragen und Git-Arbeit laufen aus. Eine begonnene Entfernung wird nicht abgebrochen.')
             if ready.is_set() and 'error' not in startup:
                 runtime.request_stop()
         ttk.Button(panel, text='Assistent beenden', command=stop).pack(anchor='w')
         root.protocol('WM_DELETE_WINDOW', stop)
         launched = False
+        def show_updates():
+            nonlocal updates
+            if setup_start or closing:
+                return
+            from .app_updates import Updates
+            updates = Updates(runtime)
+            box = ttk.LabelFrame(panel, text='Automatische App-Updates', padding=10)
+            box.pack(fill='x', pady=12)
+            update_status = tk.StringVar(value=updates.status)
+            ttk.Label(box, textvariable=update_status, wraplength=540).pack(anchor='w')
+            decision = ttk.Frame(box); decision.pack(anchor='w', pady=6)
+            enabled = tk.BooleanVar(value=updates.enabled is True)
+            def toggle():
+                updates.choose(enabled.get()); enabled.set(updates.enabled is True)
+            def choose(value):
+                updates.choose(value)
+                for child in decision.winfo_children():
+                    child.destroy()
+                enabled.set(updates.enabled is True)
+                ttk.Checkbutton(decision, text='Automatische App-Updates aktivieren', variable=enabled, command=toggle).pack(anchor='w')
+            if updates.preferences is not None:
+                if updates.enabled is None:
+                    ttk.Label(decision, text='Automatische App-Updates aktivieren?').pack(anchor='w')
+                    ttk.Label(decision, text='Nach Prüfung werden neuere Versionen geladen; die App beendet laufende Arbeit und startet neu.', wraplength=520).pack(anchor='w')
+                    ttk.Button(decision, text='Ablehnen', command=lambda: choose(False)).pack(side='left')
+                    ttk.Button(decision, text='Aktivieren', command=lambda: choose(True)).pack(side='left', padx=8)
+                else:
+                    ttk.Checkbutton(decision, text='Automatische App-Updates aktivieren', variable=enabled, command=toggle).pack(anchor='w')
+            def update_tick():
+                nonlocal update_handoff
+                update_status.set(updates.status)
+                if not closing:
+                    update_handoff = updates.take()
+                    if update_handoff:
+                        for child in decision.winfo_children():
+                            child.configure(state='disabled')
+                        stop()
+                root.after(100, update_tick)
+            updates.start(); update_tick()
+            def recover_tick():
+                updates.poll_result()
+                if updates.recovery_attempts < 10:
+                    root.after(1000, recover_tick)
+            root.after(1000, recover_tick)
         def tick():
             nonlocal launched
             if ready.is_set() and not launched:
@@ -163,6 +212,7 @@ def run_gui(args, lock, build):
                     except (OSError, ValueError):
                         error_dialog('Standardbrowser nicht erreichbar. Standardbrowser einrichten und erneut öffnen.', root)
                     runtime.refresh(); open_button.configure(state='normal')
+                    root.after_idle(show_updates)
             if launched:
                 if runtime.stop_requested.is_set() and not closing:
                     stop()
@@ -177,6 +227,15 @@ def run_gui(args, lock, build):
                         error_dialog(runtime.error, root)
                     elif runtime.service.removal_result:
                         messagebox.showinfo('Ergebnis der laufenden Entfernung', runtime.service.removal_result, parent=root)
+                    if update_handoff:
+                        if runtime.error:
+                            update_handoff.abort()
+                        else:
+                            try:
+                                update_handoff.commit(runtime)
+                            except (OSError, ValueError):
+                                update_handoff.abort()
+                                error_dialog('Updateübergabe nicht bestätigt. Assistent danach manuell starten.', root)
                     root.quit(); return
                 if not closing:
                     update = runtime.service.status()['update']
@@ -186,6 +245,8 @@ def run_gui(args, lock, build):
         launch(args.port); root.after(100, tick); root.mainloop()
         return 0
     finally:
+        if updates:
+            updates.close()
         if runtime and runtime.thread and runtime.thread.is_alive():
             runtime.request_stop(); runtime.stopped.wait()
         root.destroy()
