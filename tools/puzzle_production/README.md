@@ -1,5 +1,29 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+## PE-A3: geprüfte manuelle Rasterrevision
+
+Vertrag vor konsumierendem Code, 13.11.2026, gemäß
+[PE §9](../../docs/PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag).
+`python -m tools.puzzle_production.raster_cli` bietet `view --checkout ROOT --id ID`,
+`plan --checkout ROOT --request REQUEST --output-dir NEW`,
+`apply --checkout ROOT --bundle BUNDLE` und `recover --checkout ROOT`.
+View liefert den aktuellen numerischen Rastertext und die vorhandene Palette.
+Plan liest `picross-editor-raster-request-v1` nach PE §9.1, prüft Matrix und
+aktuelles Reveal, erzeugt vollständigen Proof samt unabhängiger Prüfung sowie
+aktuelle Bewertung und bindet alle Originale im neuen externen Bundle.
+Apply übernimmt ausdrücklich genau dieses frisch geprüfte Bundle in einer
+gemeinsamen Transaktion einschließlich optionaler A1/A2-Felder. Alle vier
+geschlossenen neuen Formen und ihre exakten Felder stehen in PE §9;
+keine künstlichen Authoringfreigaben. Recovery rollt ausschließlich auf den
+validierten Altstand zurück. Exit 0 Erfolg/No-op, 2 Eingabe/Stale/Belegfehler,
+4 Ressourcenabbruch. Je Aufruf 300 s; keine RI-Budgetoptionen.
+V4/v8 ist Voraussetzung; v7 verlangt zuerst die vorhandene explizite
+`images_cli plan-migration/apply-migration`. Keine echte Bestandsmigration
+durch Rasterpflege. Gleiche Logik bleibt revisionsgleich ohne Solverlauf.
+Saves werden erst durch den regulären Spieler nach dem geschlossenen
+[Savevertrag](../../docs/PROTOTYPE_P1.md#6-speicherung-und-wiederaufnahme)
+gezielt und abbruchsicher behandelt; keine Tests an echten Nutzerprofilen.
+
 ## PE-A1: aktuelle Namen und Kategorien
 
 [`metadata_cli`](metadata_cli.py) pflegt vorhandene registrierte IDs gemäß
@@ -58,7 +82,7 @@ mtimes. Offene Journale/Locks verhindern auch einen konkurrierenden No-op.
 Recovery stellt den vollständigen alten Zustand wieder her und schützt fremde
 Änderungen. Es gibt keine zusätzliche Metadatenhistorie oder freie Registry-API.
 Rückgabecodes: 0 erfolgreich, 2 ungültiger Eingang/Konflikt, 4 Ressourcenabbruch.
-Rasterpflege und eine Weboberfläche gehören zu späteren PE-Paketen.
+Rasterpflege verwendet den eigenen PE-A3-Vertrag oben; die Weboberfläche folgt in PE-B.
 
 ## PE-A2: vorbereitete Bilder und Hintergrundpräferenzen
 

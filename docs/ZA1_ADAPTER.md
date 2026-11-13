@@ -1,5 +1,24 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+## PE-A3 · Eigenständige manuelle Rasterquelle
+
+Vertrag vor konsumierendem Code, 13.11.2026:
+[PE §9](PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag)
+führt `picross-editor-raster-package-v1` im bestehenden Paketbaum ein.
+Es ist kein ZA-1-Export und kein Authoring-/KI-Freigabebeleg. Der gemeinsame
+Paketresolver prüft seine geschlossene Form, Inventar, Definition, tatsächliche
+Entscheidung, Provenienz und vollständigen Vorgängeranker separat.
+Ursprüngliche Pakete/Receipts bleiben unverändert prüfbar. Neue IDs benötigen
+weiterhin reguläre Exporte. Historische Registerwiederholung prüft den echten
+gebundenen Produktionsanker und aktuellen Checkout und bleibt No-op.
+Spätere Standardupdates behalten ihre vollständigen Export-/Proof-/Freigabewege
+und aktuelle manuelle Metadaten/Bilder. Sync, Rating, Added und Abschluss dürfen
+die Rasterautorität nicht zurückstufen. Der Editor greift auf keine Saves zu.
+Retirement erhält aktuelle Editor-Rasterpakete und ihre Vorgänger als benötigte
+Quellautorität; nach Prüfung der vollständigen aktuellen main-Quellbindung ist
+deren Auswahl No-op. Nur tatsächliche Standardexporte werden nach dem vorhandenen
+Authoring-/Receiptvertrag kompaktiert.
+
 **PE-A1 / #576 · nach unabhängigem Review integriert:**
 [PE-A1](PUZZLE_EDITOR.md#73-migration-und-laufende-produktion) trennt die aktuelle
 Namens-/Kategorieautorität von den weiterhin geprüften Produktionsangaben.

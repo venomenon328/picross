@@ -212,3 +212,80 @@ static func run(runner: SceneTree) -> void:
 	reader_cases(runner)
 	save_cases(runner)
 	save_cases(runner, 8)
+	revision_cases(runner)
+
+static func put(path: String, raw: String) -> void:
+	DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+	var file := FileAccess.open(path,FileAccess.WRITE)
+	file.store_string(raw)
+	file.close()
+
+static func revision_cases(runner: SceneTree) -> void:
+	var definition_value: Dictionary = Definition.load_fixture("t01")
+	var session := Session.new(definition_value)
+	session.player.commit([{"index":0,"before":-1,"after":1}])
+	session.player.commit([{"index":1,"before":-1,"after":0}])
+	session.undo()
+	var current: Dictionary = Store.snapshot(session,session.view_state)
+	var older: Dictionary = current.duplicate(true)
+	older.definition_revision = int(definition_value.revision)-1
+	var current_raw: String = JSON.stringify(current)+"\n"
+	var old_raw: String = JSON.stringify(older)+"\n"
+	var store := Store.new(Store.test_root_override+"-pe-a3")
+	var revision = Store.SaveRevision
+	for step: String in ["revision_before_marker","revision_after_marker","revision_after.json","revision_after.bak","revision_after.tmp","revision_before_finish"]:
+		put(store.path_for("t01"),old_raw)
+		put(store.path_for("t01",".bak"),old_raw)
+		put(store.path_for("t01",".tmp"),old_raw)
+		var recent: String = revision.recent_path(store)
+		put(recent,JSON.stringify({"format":"picross-recent-puzzle-v1","id":definition_value.id,"revision":older.definition_revision})+"\n")
+		store.fail_step = step
+		runner.check(store.load_slot(definition_value).status == "error","PE-A3 interrupted reset stays blocked "+step)
+		runner.check(not store.write_slot(session,session.view_state).is_empty(),"PE-A3 marker prevents save across interrupted reset "+step)
+		store.fail_step = ""
+		var loaded: Dictionary = store.load_slot(definition_value)
+		runner.check(loaded.status == "fresh" and loaded.get("revision_reset",false),"PE-A3 repeated reset completes "+step)
+		runner.check(not revision.pending(store,"t01") and not FileAccess.file_exists(recent),"PE-A3 completed reset removes own marker and recent "+step)
+		for suffix: String in [".json",".bak",".tmp"]:
+			runner.check(not FileAccess.file_exists(store.path_for("t01",suffix)),"PE-A3 old slot side removed "+step+suffix)
+		runner.check(store.load_slot(definition_value).status == "fresh","PE-A3 subsequent load has no repeated hint "+step)
+	put(store.path_for("t01"),current_raw)
+	put(store.path_for("t01",".bak"),old_raw)
+	runner.check(store.load_slot(definition_value).status == "loaded","PE-A3 current primary wins over older backup")
+	runner.check(FileAccess.get_file_as_string(store.path_for("t01")) == current_raw,"PE-A3 current primary bytes unchanged")
+	runner.check(store.write_slot(session,session.view_state).is_empty(),"PE-A3 older backup does not block current save")
+	put(store.path_for("t01"),old_raw)
+	put(store.path_for("t01",".bak"),current_raw)
+	runner.check(store.load_slot(definition_value).status == "recovered","PE-A3 current backup wins over older primary")
+	runner.check(not store.write_slot(session,session.view_state).is_empty(),"PE-A3 current backup requires conscious restore")
+	runner.check(store.repair_from_backup(definition_value).is_empty(),"PE-A3 conscious current backup restore")
+	store.reset_slot("t01")
+	for kind: String in ["future","foreign","schema","unreadable","inconsistent"]:
+		var bad: Dictionary = older.duplicate(true)
+		if kind == "future": bad.definition_revision = int(definition_value.revision)+1
+		if kind == "foreign": bad.definition_id = "foreign"
+		if kind == "schema": bad.schema = 2
+		if kind == "inconsistent": bad.cursor = 999
+		var raw: String = "{" if kind == "unreadable" else JSON.stringify(bad)+"\n"
+		put(store.path_for("t01"),raw)
+		runner.check(store.load_slot(definition_value).status == "error" and FileAccess.get_file_as_string(store.path_for("t01")) == raw,"PE-A3 no auto-deletion of "+kind)
+		store.reset_slot("t01")
+	put(store.path_for("t01"),old_raw)
+	store.fail_step = "revision_after_marker"
+	runner.check(store.load_slot(definition_value).status == "error","PE-A3 leaves a bound marker before foreign progress")
+	store.fail_step = ""
+	put(store.path_for("t01"),current_raw)
+	runner.check(store.load_slot(definition_value).status == "error" and FileAccess.get_file_as_string(store.path_for("t01")) == current_raw,"PE-A3 interrupted reset preserves later current primary")
+	var marker: String = revision.marker_path(store,"t01")
+	var forged: Dictionary = revision.read_marker(marker,definition_value,store)
+	forged.files[".json"] = revision.hash_file(store.path_for("t01"))
+	put(marker,JSON.stringify(forged)+"\n")
+	runner.check(store.load_slot(definition_value).status == "error" and FileAccess.get_file_as_string(store.path_for("t01")) == current_raw,"PE-A3 rehashed marker cannot delete a current save")
+	DirAccess.remove_absolute(marker)
+	store.reset_slot("t01")
+	put(store.path_for("t01"),current_raw)
+	DirAccess.make_dir_absolute(marker)
+	runner.check(store.load_slot(definition_value).status == "error","PE-A3 foreign marker directory blocks loading")
+	runner.check(not store.write_slot(session,session.view_state).is_empty() and FileAccess.get_file_as_string(store.path_for("t01")) == current_raw,"PE-A3 foreign marker directory preserves current save")
+	DirAccess.remove_absolute(marker)
+	store.reset_slot("t01")

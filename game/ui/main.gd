@@ -51,6 +51,7 @@ var sessions: Array[Session] = []
 var store: SaveStore
 var slot_status: Array[String] = []
 var slot_errors: Array[String] = []
+var revision_reset_ids: Array[String] = []
 var save_error: String = ""
 var save_timer: Timer
 var status_label: Label
@@ -150,6 +151,7 @@ func _ready() -> void:
 			break
 		var item: Session = Session.new(data)
 		var result: Dictionary = store.load_slot(data)
+		if result.get("revision_reset",false): revision_reset_ids.append(str(data.id))
 		if result.status in ["loaded", "recovered", "backup_invalid"]:
 			SaveStore.apply(result.data, item)
 		session_indices[str(data.id)] = sessions.size()
@@ -179,8 +181,18 @@ func _ready() -> void:
 		board.restore_view(session.view_state)
 		session.view_state = board.capture_view()
 	show_album()
+	if not revision_reset_ids.is_empty(): call_deferred("_show_revision_notice")
 	if OS.get_cmdline_user_args().has("--p1-smoke"):
 		call_deferred("_smoke")
+
+func _show_revision_notice() -> void:
+	var notice := AcceptDialog.new()
+	notice.title = "Rätsel überarbeitet"
+	notice.dialog_text = "Ein überarbeitetes Rätsel beginnt neu. Sein bisheriger Fortschritt wurde zurückgesetzt."
+	notice.confirmed.connect(notice.queue_free)
+	notice.canceled.connect(notice.queue_free)
+	add_child(notice)
+	notice.popup_centered()
 
 func _build() -> void:
 	theme = Theme.new()

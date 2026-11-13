@@ -233,7 +233,7 @@ def validate(value, catalog, *, historical_categories=False):
     return value
 
 
-def package(root, entry, *, background_snapshot=None):
+def package(root, entry, *, background_snapshot=None, historical=False):
     """Check every stored export byte without replaying a deduction trace.
 
     A background journal may supply its old registry/text/binary view while
@@ -247,6 +247,9 @@ def package(root, entry, *, background_snapshot=None):
     manifest = io.json_bytes(raw, 8 * 1024 * 1024)
     require(isinstance(manifest,dict), 'Invalid package manifest object')
     require(io.checksum(raw) == entry["production"]["package_sha256"], "Registered package binding changed")
+    if manifest.get("format") == "picross-editor-raster-package-v1":
+        from . import editor_raster
+        return editor_raster.package(root, entry, manifest)
     files = {}
     base = io.safe(root, prefix)
     for p in base.rglob("*"):
@@ -262,6 +265,8 @@ def package(root, entry, *, background_snapshot=None):
         original = deepcopy(entry)
         original["production"]["package_sha256"] = manifest["entry"]["production"]["package_sha256"]
         receipt(manifest, original, manifest["notice_sha256"], background=True, editor=True)
+        if historical:
+            return original, manifest["notice_sha256"], manifest, set(prefix + "/" + n for n in files)
         from . import catalog_background as backgrounds
         registry = background_registry(root) if background_snapshot is None else background_snapshot[0]
         texts = None if background_snapshot is None else background_snapshot[1]
@@ -317,12 +322,12 @@ def package(root, entry, *, background_snapshot=None):
             inspection.get('package_revision') == entry['production']['revision'], 'Historical production metadata differs')
     from . import catalog_background as backgrounds
     registry = background_registry(root) if background_snapshot is None else background_snapshot[0]
-    declared = entry['id'] in backgrounds.index(registry)
+    declared = not historical and entry['id'] in backgrounds.index(registry)
     if background:
         require(all(manifest[k] is False for k in ('integration_ready','catalog_ready','registered')) and
                 manifest['technical'] is True and manifest['editorial_approved'] is True,
                 'Invalid immutable background export readiness')
-        require(declared, 'Missing registered background authority')
+        require(declared or historical, 'Missing registered background authority')
     if declared:
         texts = None if background_snapshot is None else background_snapshot[1]
         source = backgrounds._source(root, registry, entry, texts)
