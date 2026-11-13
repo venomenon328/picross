@@ -116,6 +116,13 @@ def wix_source(app, product, guard):
     return ET.ElementTree(root)
 
 
+def write_checksum(msi):
+    checksum = sha(msi)
+    msi.with_name(msi.name + '.sha256').write_text(checksum + '  ' + msi.name + '\n',
+                                                 encoding='utf-8', newline='\n')
+    return checksum
+
+
 def run(output, *, version=None):
     product = release(version=version)
     build(output, version=version)  # Pins interpreter, components, clean commit, onedir and licenses.
@@ -153,8 +160,7 @@ def run(output, *, version=None):
     # this product is explicitly per-user only. Other ICE validation stays on.
     subprocess.run([str(wix / 'light.exe'), '-nologo', '-sice:ICE91', '-ext', str(wix / 'WixUIExtension.dll'),
                     '-cultures:de-de', '-out', str(msi), str(obj)], check=True)
-    checksum = sha(msi)
-    (output / (msi.name + '.sha256')).write_text(checksum + '  ' + msi.name + '\n', encoding='utf-8')
+    checksum = write_checksum(msi)
     shutil.copyfile(PACKAGE / 'START-WINDOWS.txt', output / 'START.txt')
     report = json.loads((output / 'delivery.json').read_text(encoding='utf-8'))
     report.update(msi_file=msi.name, msi_sha256=checksum, msi_bytes=msi.stat().st_size,

@@ -141,6 +141,15 @@ class InstallerContractTests(unittest.TestCase):
             with self.subTest(version=version), self.assertRaises(ValueError):
                 release(version=version)
 
+    def test_checksum_producer_uses_canonical_bytes_on_windows_and_linux(self):
+        with tempfile.TemporaryDirectory() as folder:
+            msi = Path(folder) / 'synthetic.msi'
+            msi.write_bytes(b'Synthetic MSI bytes')
+            checksum = installer.write_checksum(msi)
+            raw = (msi.parent / (msi.name + '.sha256')).read_bytes()
+            self.assertEqual(raw, (checksum + '  synthetic.msi\n').encode('utf-8'))
+            self.assertNotIn(b'\r', raw)
+
 
 class MemoryGitHub(channel.GitHub):
     """Synthetic API only; records writes and supports lost upload responses."""
