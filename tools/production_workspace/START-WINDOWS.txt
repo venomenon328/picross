@@ -39,14 +39,16 @@ Browseroptionen bleiben bei gleichem Port und gleichem Browserprofil erreichbar.
 Der gesamte portable App-Ordner bleibt technischer Fallback; nach Stop nur als
 Ganzes ersetzen, niemals einzelne EXEs oder Module austauschen.
 
-Diese Lieferung ist unsigniert. Windows/SmartScreen kann daher warnen.
+MSI und EXE sind nicht codesigniert. Windows/SmartScreen kann daher warnen.
 Die geprüfte Quelle und SHA-256 stehen im Lieferreport/zugehörigen PR; Schutzfunktionen
 nicht abschalten. Eine Signatur würde Warnungsfreiheit ebenfalls nicht garantieren.
 Komponenten/Quellcommit: components.json. Dateien und Hashes: inventory.json.
-Python-, Pillow-, Tcl/Tk- und PyInstaller-/Bootloaderlizenzen: LICENSES.
+Python-, Pillow-, Tcl/Tk-, Kryptografie- und PyInstaller-/Bootloaderlizenzen: LICENSES.
 Actions-Diagnosekandidaten bleiben 14 Tage verfügbar. Der getrennte App-Releasekanal
 wird erst nach eigener Betriebsfreigabe aktiviert; veröffentlichte Versionen unter
 https://github.com/venomenon328/picross/releases enthalten MSI, Prüfsumme,
-Anleitung, delivery.json, inputs.json und manifest.json mit Quell-/Versionsbindung.
+Anleitung, delivery.json, inputs.json, manifest.json und manifest.sig.json mit
+signierter Quell-/Versions-/Dateibindung. Der feste öffentliche Trust ist zunächst
+unprovisioniert; eine Metadatensignatur ist keine Windows-Codesignatur.
 Diese App besitzt weiterhin keinen Autoupdater. Die bisherige Version 0.1.0 muss
 für eine spätere updaterfähige Version einmalig manuell aktualisiert werden.

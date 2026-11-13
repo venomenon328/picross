@@ -4,7 +4,6 @@ GET failures fail closed. Mutations are never blindly retried: the next run
 reconciles a bound draft and byte-identical assets without overwriting anything.
 """
 import argparse
-import hashlib
 import json
 import os
 from pathlib import Path
@@ -16,31 +15,13 @@ import urllib.request
 
 from .payload import canonical, fingerprint, git
 from .release import release, version_tuple
+from .release_manifest import (FORMAT, SIGNED_FORMAT, REPOSITORY, require, digest, strict_json,
+                               validate_manifest, verify_files)
+from . import update_verifier
 
-REPOSITORY = 'venomenon328/picross'
 REPOSITORY_ID = 1381196633
-FORMAT = 'picross-pw-release-v1'
 MANIFEST = 'manifest.json'
 PREFIX = '/repos/' + REPOSITORY
-
-
-def require(condition, message):
-    if not condition:
-        raise ValueError(message)
-
-
-def digest(raw):
-    return hashlib.sha256(raw).hexdigest()
-
-
-def strict_json(raw):
-    def pairs(rows):
-        result = {}
-        for key, value in rows:
-            require(key not in result, 'Duplicate JSON key')
-            result[key] = value
-        return result
-    return json.loads(raw, object_pairs_hook=pairs)
 
 
 class SafeRedirect(urllib.request.HTTPRedirectHandler):
@@ -129,57 +110,6 @@ def trusted_run(api, run_id, source):
     return run['run_attempt']
 
 
-def validate_manifest(value):
-    require(set(value) == {'format', 'repository', 'status', 'version', 'tag', 'source_commit',
-                           'payload_fingerprint', 'product_code', 'upgrade_code', 'assets', 'inspection'},
-            'Invalid release manifest shape')
-    require(value['format'] == FORMAT and value['repository'] == REPOSITORY and value['status'] == 'production',
-            'Foreign or nonproduction manifest')
-    version = version_tuple(value['version'])
-    require(version[:2] == (0, 1) and version > (0, 1, 0) and value['tag'] == 'pw-v' + value['version'],
-            'Unsupported published version')
-    require(re.fullmatch('[0-9a-f]{40}', value['source_commit']) and
-            re.fullmatch('[0-9a-f]{64}', value['payload_fingerprint']), 'Invalid source/fingerprint')
-    product = release(version=value['version'])
-    require(all(value[k] == product[k] for k in ('product_code', 'upgrade_code')), 'Foreign product identity')
-    names = {product['filename'], product['filename'] + '.sha256', 'delivery.json', 'START.txt', 'inputs.json'}
-    require(set(value['assets']) == names, 'Incomplete release assets')
-    for row in value['assets'].values():
-        require(set(row) == {'bytes', 'sha256'} and type(row['bytes']) is int and row['bytes'] > 0 and
-                re.fullmatch('[0-9a-f]{64}', row['sha256']), 'Invalid asset binding')
-    inspection = value['inspection']
-    require(set(inspection) == {'format', 'commit', 'version', 'payload_fingerprint', 'msi_sha256', 'msi_bytes',
-                               'product_code', 'upgrade_code', 'inventory_files', 'license_files', 'compared_to_build', 'limits'} and
-            inspection['format'] == 'picross-installer-inspection-v1' and
-            all(inspection[k] == value[k] for k in ('version', 'product_code', 'upgrade_code')) and
-            type(inspection['inventory_files']) is int and inspection['inventory_files'] > 0 and
-            type(inspection['license_files']) is int and inspection['license_files'] >= 2 and
-            inspection['commit'] == value['source_commit'] and inspection['version'] == value['version'] and
-            inspection['payload_fingerprint'] == value['payload_fingerprint'] and inspection['compared_to_build'] is True and
-            inspection['msi_sha256'] == value['assets'][product['filename']]['sha256'] and
-            inspection['msi_bytes'] == value['assets'][product['filename']]['bytes'], 'Unbound MSI inspection')
-    return value
-
-
-def verify_files(manifest, files):
-    validate_manifest(manifest)
-    require(set(files) == set(manifest['assets']), 'Unexpected or missing candidate file')
-    for name, row in manifest['assets'].items():
-        require(len(files[name]) == row['bytes'] and digest(files[name]) == row['sha256'], 'Asset hash mismatch: ' + name)
-    product = release(version=manifest['version'])
-    report = strict_json(files['delivery.json'])
-    require(all(report[k] == manifest[v] for k, v in (('version', 'version'), ('commit', 'source_commit'),
-            ('payload_fingerprint', 'payload_fingerprint'), ('product_code', 'product_code'), ('upgrade_code', 'upgrade_code'))),
-            'Unbound delivery report')
-    msi = product['filename']
-    require(report['msi_file'] == msi and report['msi_bytes'] == len(files[msi]) and report['msi_sha256'] == digest(files[msi]),
-            'Unbound MSI delivery bytes')
-    require(files[msi + '.sha256'] == (digest(files[msi]) + '  ' + msi + '\n').encode(), 'Invalid checksum sidecar')
-    inputs = strict_json(files['inputs.json'])
-    require(inputs['format'] == 'picross-app-inputs-v1' and inputs['sha256'] == manifest['payload_fingerprint'] and
-            digest(canonical(inputs['files'])) == inputs['sha256'], 'Invalid input fingerprint inventory')
-
-
 def release_files(api, entry):
     assets = api.pages('/releases/' + str(entry['id']) + '/assets')
     require(len({a['name'] for a in assets}) == len(assets), 'Duplicate release assets')
@@ -189,9 +119,15 @@ def release_files(api, entry):
     manifest = validate_manifest(strict_json(raw))
     require(canonical(manifest) == raw and entry['tag_name'] == manifest['tag'] and
             entry['target_commitish'] == manifest['source_commit'] and not entry['prerelease'], 'Release identity mismatch')
-    require(set(by_name) == set(manifest['assets']) | {MANIFEST}, 'Unexpected release assets')
+    signed = manifest['format'] == SIGNED_FORMAT
+    require(set(by_name) == set(manifest['assets']) | {MANIFEST} |
+            ({update_verifier.SIGNATURE} if signed else set()), 'Unexpected release assets')
     verify_tag(api, manifest, allow_missing=entry['draft'])
-    verify_files(manifest, {name: api.asset(by_name[name]) for name in manifest['assets']})
+    files = {name: api.asset(by_name[name]) for name in manifest['assets']}
+    if signed:
+        update_verifier.verify_candidate(raw, api.asset(by_name[update_verifier.SIGNATURE]), files)
+    else:
+        verify_files(manifest, files)  # Historical version authority, never installation authority.
     return manifest
 
 
@@ -230,7 +166,7 @@ def plan(api, root, source, run_id=None):
     version = next_version(inputs, previous)
     return {'format': 'picross-pw-plan-v1', 'source_commit': source, 'run_id': run_id, 'run_attempt': attempt,
             'payload_fingerprint': inputs['sha256'], 'authority': previous, 'version': version,
-            'diagnostic': run_id is None}
+            'diagnostic': run_id is None, 'trust_sha256': digest(canonical(update_verifier.production_trust()))}
 
 
 def seal(build, inspection, planned):
@@ -259,25 +195,62 @@ def verify_tag(api, manifest, *, allow_missing):
     require(obj['type'] == 'commit' and obj['sha'] == manifest['source_commit'], 'Conflicting PW release tag')
 
 
-def publish(api, build, planned, *, enabled):
-    require(enabled and not planned['diagnostic'], 'Publication activation/source gate is closed')
+def _candidate(build, planned):
     manifest_raw = (build / MANIFEST).read_bytes()
     manifest = validate_manifest(strict_json(manifest_raw))
-    require(manifest_raw == canonical(manifest), 'Noncanonical candidate manifest')
+    require(manifest['format'] == FORMAT and manifest_raw == canonical(manifest), 'Noncanonical v1 build provenance')
     require(all(manifest[k] == planned[k] for k in ('source_commit', 'version', 'payload_fingerprint')), 'Candidate differs from plan')
     files = {name: (build / name).read_bytes() for name in manifest['assets']}
     verify_files(manifest, files)
+    return manifest, files
+
+
+def _fresh(api, planned):
+    require(trusted_run(api, planned['run_id'], planned['source_commit']) == planned['run_attempt'], 'Source CI attempt changed')
+    require(authority(api) == planned['authority'], 'Published release authority changed; replan')
+    require(next_version({'sha256': planned['payload_fingerprint']}, planned['authority']) == planned['version'],
+            'Candidate version is not the next changed-payload version')
+    require(digest(canonical(update_verifier.production_trust())) == planned['trust_sha256'],
+            'Signing/trust configuration changed; replan')
+
+
+def authorize(api, build, planned, *, enabled, signing_enabled):
+    """Secret-free checks BEFORE a job may reference the signing environment."""
+    require(enabled and signing_enabled and not planned['diagnostic'], 'Publication activation/source gate is closed')
+    manifest, _ = _candidate(build, planned)
+    _fresh(api, planned)
+    verify_tag(api, manifest, allow_missing=True)
+    trust = update_verifier.production_trust()
+    require(trust['active_signer'] is not None, 'Production signing trust is unprovisioned')
+    update_verifier._public_key(trust, trust['active_signer'])
+    environment = api.request(PREFIX + '/environments/pw-app-release')
+    require(environment is not None and environment.get('name') == 'pw-app-release' and
+            environment.get('deployment_branch_policy') == {'protected_branches': False, 'custom_branch_policies': True},
+            'Pre-existing signing environment with explicit main-only policy required')
+    rules = api.pages('/environments/pw-app-release/deployment-branch-policies', 'branch_policies')
+    require(len(rules) == 1 and rules[0].get('name') == 'main' and rules[0].get('type') == 'branch',
+            'Signing environment must allow only the main branch')
+
+
+def publish(api, build, planned, *, enabled, signing_enabled=False, secret=None):
+    authorize(api, build, planned, enabled=enabled, signing_enabled=signing_enabled)
+    provenance, files = _candidate(build, planned)
+    manifest_raw, signature_raw = update_verifier.sign_candidate(provenance, files, secret)
+    manifest = validate_manifest(strict_json(manifest_raw))
 
     def fresh():
-        require(trusted_run(api, planned['run_id'], planned['source_commit']) == planned['run_attempt'], 'Source CI attempt changed')
-        require(authority(api) == planned['authority'], 'Published release authority changed; replan')
+        authorize(api, build, planned, enabled=enabled, signing_enabled=signing_enabled)
+        # The signed bytes must still be trusted at the final publication check.
+        update_verifier.verify_candidate(manifest_raw, signature_raw, files)
         verify_tag(api, manifest, allow_missing=True)
 
     fresh()
     # Read by tag including drafts. Never overwrite or delete a foreign draft/tag.
     matches = [r for r in api.pages('/releases') if r['tag_name'] == manifest['tag']]
     require(len(matches) <= 1, 'Ambiguous release candidate')
-    body = f'PW APP-A {manifest["tag"]}\nSource: {manifest["source_commit"]}\nFingerprint: {manifest["payload_fingerprint"]}'
+    body = (f'PW APP-B1 {manifest["tag"]}\nSource: {manifest["source_commit"]}\n'
+            f'Fingerprint: {manifest["payload_fingerprint"]}\nManifest: {digest(manifest_raw)}\n'
+            f'Trust: {planned["trust_sha256"]}\nSignature: {digest(signature_raw)}')
     if matches:
         entry = matches[0]
         require(entry['draft'] is True and entry['target_commitish'] == manifest['source_commit'] and
@@ -290,7 +263,7 @@ def publish(api, build, planned, *, enabled):
     existing = api.pages(f'/releases/{release_id}/assets')
     require(len({a['name'] for a in existing}) == len(existing), 'Duplicate draft assets')
     existing = {a['name']: a for a in existing}
-    uploads = {**files, MANIFEST: manifest_raw}  # Manifest last; draft stays invisible until all bytes match.
+    uploads = {**files, MANIFEST: manifest_raw, update_verifier.SIGNATURE: signature_raw}
     require(set(existing) <= set(uploads), 'Foreign assets on candidate draft')
     for name, raw in uploads.items():
         if name in existing:
@@ -312,7 +285,7 @@ def publish(api, build, planned, *, enabled):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('command', choices=('plan', 'seal', 'publish'))
+    parser.add_argument('command', choices=('plan', 'seal', 'authorize', 'publish'))
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[2])
     parser.add_argument('--plan', type=Path, required=True)
     parser.add_argument('--build', type=Path)
@@ -340,8 +313,20 @@ def main():
     else:
         require(os.environ['GITHUB_EVENT_NAME'] == 'workflow_run' and os.environ['GITHUB_REF'] == 'refs/heads/main' and
                 os.environ['GITHUB_REPOSITORY'] == REPOSITORY, 'Publisher must run from repository main')
-        print(publish(GitHub(os.environ['GH_TOKEN']), args.build, strict_json(args.plan.read_bytes()),
-                      enabled=os.environ.get('PW_RELEASE_ENABLED') == 'true'))
+        operation = authorize if args.command == 'authorize' else publish
+        planned = strict_json(args.plan.read_bytes())
+        require(git(args.root, 'rev-parse', 'HEAD').decode().strip() == planned['source_commit'],
+                'Publisher code must match the pinned main source')
+        options = {'enabled': os.environ.get('PW_RELEASE_ENABLED') == 'true',
+                   'signing_enabled': os.environ.get('PW_UPDATE_SIGNING_ENABLED') == 'true'}
+        if args.command == 'publish':
+            options['secret'] = os.environ.get('PW_UPDATE_SIGNING_KEY')
+        result = operation(GitHub(os.environ['GH_TOKEN']), args.build, planned, **options)
+        if args.command == 'authorize':
+            with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as output:
+                output.write('authorized=true\n')
+        else:
+            print(result)
 
 
 if __name__ == '__main__':

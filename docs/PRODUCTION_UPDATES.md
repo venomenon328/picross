@@ -1,13 +1,13 @@
 # PW: Automatisierte App-Releases und Selbstupdate
 
-**Beschlossener Sollvertrag · 12.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612).**
-Verbindliche erste [Paketentscheidung APP-A](https://github.com/venomenon328/picross/issues/612#issuecomment-6834815644).
-**APP-A ist im Arbeitsbranch implementiert; Integration, unabhängiges Review und
-Liveaktivierung sind noch offen.** Der separate
-[`pw-installer.yml`](../.github/workflows/pw-installer.yml) plant automatische
-Versionen und prüft echte Installer. Veröffentlichung bleibt ohne die gesondert
-freigegebene Repositoryvariable `PW_RELEASE_ENABLED=true` gesperrt.
-**APP-B ist nicht implementiert.** Der Launcher prüft und installiert keine Updates.
+**Stand APP-B1 · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612).**
+Maßgeblich: [Paketentscheidung APP-B1](https://github.com/venomenon328/picross/issues/612#issuecomment-6848332974).
+**APP-A ist über PR #613 unabhängig abgenommen und in main integriert.**
+Erste Veröffentlichung und Windows-11-Upgradeprobe sind weiterhin offen.
+**APP-B1 liefert signierte Updateautorität und gemeinsamen Verifier; APP-B2
+(Startprüfung und Installation) ist noch nicht implementiert.** Produktionsvertrauen
+ist ausdrücklich unprovisioniert. Veröffentlichung bleibt ohne eigenen Betriebsauftrag,
+provisionierte Roots und beide Aktivierungsschalter gesperrt. Kein aktiver Selbstupdateclient.
 Dieser Vertrag ersetzt **nicht rückwirkend** die P4-Liefernachweise aus
 [#588](https://github.com/venomenon328/picross/issues/588).
 
@@ -23,7 +23,8 @@ das eigenständige Entwicklungs-HTML und Produktionsbranches bleiben außerhalb.
 - **APP-A (zuerst):** payloadgenaue Änderungserkennung, automatische
   Produktversionsvergabe, unabhängiger Windows-MSI-Bau und dauerhafter
   GitHub-Releasekanal. Noch **kein** Downloader/Updater im installierten Launcher.
-- **APP-B (danach):** signierte Updatekanalinformation, Prüfung beim Start,
+- **APP-B1:** signierte Updatekanalinformation und gemeinsamer Offlineverifier.
+- **APP-B2 (danach):** Prüfung beim Start,
   einmalige Zustimmung zu automatischen Updates, sicherer externer MSI-Updatehelfer,
   geordneter Neustart und echte Windows-Lebenszyklusabnahme.
 - Der vorhandene Launcher **0.1.0** besitzt keine Updatefähigkeit.
@@ -97,7 +98,7 @@ Die Veröffentlichung darf nicht als bereits erfolgt gelten, weil der
 Workflowcode gemergt wurde. APP-A stellt keinerlei automatische
 Codeinstallation im Client bereit.
 
-## 3. APP-B · Verifizierter Updateclient
+## 3. APP-B2 · Noch ausstehender verifizierter Updateclient
 
 Beim Programmstart wird für die *installierte Anwendung* ein veröffentlichter
 Kanal geprüft, ohne die Verbindung zu Produktions-/Gitrefs als Codequelle zu
@@ -110,10 +111,9 @@ Vor jeder automatischen MSI-Ausführung ist die Kanalbeschreibung
 **kryptografisch signiert** und mit einer unabhängig in der Anwendung
 verankerten Vertrauenswurzel geprüft; Asset-SHA-256, Bytezahl,
 Version und Herkunft werden dagegen gebunden. Eine Hashliste aus demselben
-ungeprüften HTTP-Endpoint allein genügt nicht. Den konkreten
-Schlüsselbereitstellungs-/Rotations-/Widerrufsweg als Bestandteil der
-APP-B-Paketentscheidung vor Implementation schließen, ohne Secrets zu
-committen oder eine neue Signierungsbefugnis still anzunehmen.
+ungeprüften HTTP-Endpoint allein genügt nicht. Der in APP-B1 geschlossene Schlüsselbereitstellungs-/Rotations-/Widerrufsweg
+steht in Abschnitt 6; APP-B2 verwendet diese feste Vertrauensgrenze.
+Keine Secrets committen oder eine Signierungsbefugnis aus der Clientumsetzung ableiten.
 Eine Metadatensignatur ist nicht automatisch eine Windows-Codesignatur
 des MSI; SmartScreen und bestehende Plattformrichtlinien bleiben wirksam.
 
@@ -195,18 +195,149 @@ gleichen Draft mit gleicher Quell-/Fingerprintbindung und identischen vorhandene
 Bytes; fehlende Assets werden ergänzt. Abweichende Assets, fremde Tags/Drafts
 und zwischenzeitlich geänderte Releaseautorität stoppen ohne Ersetzen oder Löschen.
 Mutierende API-Aufrufe werden nach unbekanntem Ausgang nicht blind wiederholt.
-Veröffentlichte Vorgänger bleiben erhalten. Manifest und Delivery sind Hash-/
-Provenienzbindungen, keine APP-B-Vertrauenssignatur oder Installationsbefugnis.
+Veröffentlichte Vorgänger bleiben erhalten. Die v1-Form von Manifest und Delivery bleibt Bauprovenienz; die zusätzliche
+v2-Signatur wird ausschließlich im Publisher erzeugt (Abschnitt 6).
 
 Ein manueller Dispatch baut den fixierten Workflow-Branchcommit ausschließlich
 diagnostisch und veröffentlicht nie. Vor Merge kann damit der neue Code im
 Draft-PR geprüft werden; die Herkunft wird als PR-Branch, nicht als bereits
 integrierte Mainfassung ausgewiesen. Der reguläre Folgetrigger verwendet nur
 erfolgreiche Main-Pushquellen. Eine Erstaktivierung braucht nach Review/Integration
-einen eigenen Auftrag zum Setzen der Repositoryvariable und einen gezielten
-erfolgreichen Main-CI-Re-Run. Weder dieser PR noch ein Diagnosebau setzt die Variable.
-Original-Serverlogs und sechs gebundene Kandidatdateien stehen dem unabhängigen
+einen eigenen Betriebsauftrag einschließlich Root-/Environmentbereitstellung,
+beider Repositoryvariablen und eines gezielten erfolgreichen Main-CI-Re-Runs.
+Weder dieser PR noch ein Diagnosebau aktiviert diese Voraussetzungen.
+Original-Serverlogs und sechs gebundene v1-Diagnosekandidatdateien stehen dem unabhängigen
 Reviewer im jeweiligen Actionslauf zur Verfügung (Plan sieben, Produkt vierzehn
 Tage); `.ci/package.json` bleibt `evidence.mode=none`. Abgelaufene Belege müssen
 gezielt erneuert werden. Die erste Liveveröffentlichung und echte Windows-11-
 Upgradeprobe bleiben getrennte nachgelagerte Releasegates.
+
+
+## 6. APP-B1 · Signierte Autorität und feste Roots
+
+[`release_manifest.py`](../tools/production_workspace/release_manifest.py) prüft
+beide geschlossenen Manifestformen und alle tatsächlichen Nutzassetbytes.
+[`update_verifier.py`](../tools/production_workspace/update_verifier.py) authentifiziert
+v2 mit Ed25519 aus der stabilen `cryptography`-Bibliothek. Keine selbst geschriebene
+Kryptografie, kein Netzwerk-/Datenwriter und kein Aufruf von MSI oder Shell.
+
+### Wireform und Schnittstelle
+
+`picross-pw-release-v2` enthält exakt die v1-Felder
+`format,repository,status,version,tag,source_commit,payload_fingerprint,product_code,
+upgrade_code,assets,inspection` und zusätzlich `platform="windows-x64"`,
+`channel="stable"`, `signing_key_id`. Repository ist `venomenon328/picross`, Status
+`production`; Source ist eine volle SHA, Fingerprint SHA-256, Version höher als
+0.1.0 in der MSI-Linie 0.1.x. ProductCode ist versionsspezifisch, UpgradeCode fest.
+`assets` bindet genau MSI, `.sha256`, `START.txt`, `delivery.json`, `inputs.json`
+mit jeweils exakt `bytes` (positive Ganzzahl, kein Boolean) und `sha256`.
+Die bestehenden geschlossenen Inspektionsfelder und Delivery-/Inputbindungen bleiben.
+
+`manifest.sig.json` enthält exakt `format="picross-pw-signature-v1"`,
+`algorithm="Ed25519"`, `key_id`, `signature`. Schlüssel-ID ist der kleingeschriebene
+SHA-256 der 32 rohen Public-Key-Bytes, identisch zu `signing_key_id`.
+Signatur: striktes kanonisches Base64, genau 64 dekodierte Bytes. Signierte Nachricht:
+ASCII `picross-pw-release-v2`, genau ein NUL, dann die unveränderten kanonischen
+UTF-8-Manifestbytes. Kanonisch: `payload.canonical`, sortierte Schlüssel, keine
+Trennleerzeichen, `ensure_ascii=False`, genau ein LF. Auch die Signaturdatei ist
+kanonisch. Manifest höchstens 64 KiB, Signatur höchstens 4 KiB. Ungültiges UTF-8,
+Duplikate, Zusatzfelder, Typabweichungen, NaN/Infinity, andere Formen oder
+nichtkanonische Bytes scheitern. Die Signaturdatei ist kein gehashtes Nutzasset;
+v2 hat genau sieben Releaseassets, historisches v1 weiterhin sechs.
+
+`verify_candidate(manifest_bytes, signature_bytes, files)` verwendet immer den
+festen Programmtrust und liefert erst nach Signatur- und vollständiger Assetprüfung
+einen unveränderlichen `VerifiedCandidate`. Er bindet Originalmanifest/-signatur,
+Version, Source, Fingerprint, Schlüssel und MSI-Hash/-Bytes. `binding` ist SHA-256
+der kanonischen Manifestbytes. `assess_update(candidate, local_version,
+local_binding=None)` liefert nur für höhere Version `update`, bei gleicher Version
+und identischer zuvor authentifizierter Manifestbindung `noop`. Ohne belastbare
+Same-Version-Bindung, bei abweichendem Inhalt oder älterer Version: Fehler.
+Lokaler Zustand wird weder gelesen noch gespeichert. Ein gültiges Ergebnis führt
+keinen Download oder Programmstart aus. v1 ist ausschließlich historische
+Versions-/Fingerprintautorität, niemals automatische Installationsautorität.
+
+### Bootstrap, Geheimnisse und Wechsel
+
+[`update-trust.json`](../tools/production_workspace/update-trust.json) ist eine
+explizit eingefrorene öffentliche Programmressource mit exakt
+`format="picross-pw-trust-v1"`, `accepted` (ID → striktes Base64 des 32-Byte-Public-Keys),
+`blocked` (eindeutige gesperrte IDs), `active_signer` (genau eine akzeptierte ID).
+Sperren haben Vorrang. Unprovisioniert sind `accepted={}` und `active_signer=null`;
+das ist der gelieferte Stand und autorisiert keine Produktionssignierung.
+Kein Root aus Environment, Nutzereinstellungen, Gitdatencheckout, Browser,
+Produktionsrecord oder beliebigem Download; kein TOFU und kein Testkey-Schalter.
+
+Erst ein eigener Betriebsauftrag an den Eigentümer erzeugt einen echten Schlüssel
+mit sicherer Zufallsquelle. Nur Public Key/ID werden über geprüften PR in das
+Payload aufgenommen. Der private 32-Byte-Seed wird kanonisch Base64-kodiert als
+`PW_UPDATE_SIGNING_KEY` im vorab eingerichteten Environment `pw-app-release`
+bereitgestellt. Dessen benutzerdefinierte Branchpolicy erlaubt exakt den Branch
+`main`, keine Tags/Wildcards. Privater Schlüssel nie in Git, Chat, Logs, App oder
+Artefakten; kein privater Clienttoken. APP-B1 richtet nichts davon ein.
+
+Beide Repositoryvariablen `PW_RELEASE_ENABLED=true` und
+`PW_UPDATE_SIGNING_ENABLED=true` sind nötig. Eine secretfreie `publication-gate`
+prüft Main-/Push-/CI-/Versuchs-/Quellbindung, Kandidat, Autorität und provisionierten
+Trust sowie das bereits vorhandene Environment samt Main-only-Policy, bevor der
+Publisher es referenziert. Ohne Freigabe kann ein Lauf kein Environment implizit
+anlegen. Nur `publish` hat Release-Schreibrecht; nur dessen finaler Schritt erhält
+das Secret als Laufzeitwert. Dort werden sämtliche Prüfungen erneut ausgeführt.
+Fehlender/falsch kodierter/fremder/gesperrter Schlüssel stoppt ohne Secret-Echo.
+Diagnose, PR, Fork, Plan und Installer erhalten kein Produktionssecret.
+
+Der Publisher bindet den Trusthash in den Plan, erzeugt aus geprüfter v1-Provenienz
+die v2-Form und signiert deterministisch. Draft-first und serielle Ausführung
+bleiben erhalten. Vor Sichtbarkeit lädt er alle sieben Dateien binär zurück,
+prüft Signatur und Nutzassets erneut und wiederholt den Quellen-/Autoritätscheck.
+Teiluploads sind nur bei identischen bereits vorhandenen Bytes wiederaufnehmbar.
+Geänderte Roots/Signierkonfiguration, fremde Signaturassets oder Autoritätsänderungen
+stoppen ohne Überschreiben. Bestehende Releases/Tags werden nicht nachsigniert.
+Ein blockierter v2-Autoritätsstand erfordert einen eigenen Recoveryauftrag;
+kein stilles Überspringen und kein Reset auf den Startanker.
+
+Geplante Rotation: neuen Public Key zunächst in einer noch vom alten Schlüssel
+signierten App ausliefern. Ein Altclient, der diese Übergangsversion verpasst,
+benötigt nach Stilllegung des alten Keys eine vertrauenswürdig bezogene manuelle
+Installation. Bei Verlust/Kompromittierung Signierung/Veröffentlichung stoppen,
+alte ID sperren, neue Wurzel separat prüfen und betroffene Installationen manuell
+erneuern. Keine dynamische Rootübernahme oder automatische Brückeninstallation,
+keine nahtlose Rotation aller Offlineclients und keine sofortige Fernsperre
+eines offline installierten Roots. Reguläre Updates unter gültigem Root bleiben
+automatisierbar, sobald APP-B2 geliefert ist.
+
+### Bau, Belege und offene Gates
+
+`requirements-update.txt` pinnt die gemeinsame Kryptografiebasis für ausgewählte
+tools-Tests und den separaten Appkanal. Dokumentkern und Main-Modulauswahl erhalten
+keine zusätzliche Kryptografielast. Der Frozenbau sammelt Verifier und benötigte
+Kryptografiemodule ausdrücklich ein, prüft tatsächlichen PYZ-/Native-Erweiterungs-
+bestand und inventarisiert ausschließlich öffentliche Trust-/Produktressourcen.
+Wheel-Lizenzen für cryptography, cffi und pycparser sowie die tatsächlich eingebundene
+OpenSSL-4.0.3-Lizenz werden mitgeliefert. MSI/EXE bleiben ohne Authenticode.
+
+APP-B1-T01 läuft ausschließlich im gewählten tools-Modul mit RFC-8032-Vektor,
+temporären Testidentitäten und positiven/negativen Wire-/Root-/Asset-/Versions-/
+Publisherfällen. [`update_diagnostic.py`](../tools/production_workspace/update_diagnostic.py)
+ist ein ausdrücklich vom Frozen-Payload ausgeschlossener synthetischer Adapter.
+T02 verwendet ihn in der gepinnten Windowsbauumgebung am echten fixierten Kandidaten:
+gültige Signatur prüfen, manipulierte MSI ablehnen und Testroot im Produktionspfad
+ablehnen. Private Testkeys existieren nur im Prozess, keine privaten Schlüsseldateien.
+Die Diagnose ersetzt keine Installation und keinen Windows-11-Lebenszyklus.
+
+Unabhängiger Reviewer erhält Serverlogs, unveränderte sechs v1-Kandidatdateien
+(maximal 14 Tage) sowie v2-Testmanifest/-signatur, öffentlichen Testtrust,
+Ergebnis, Inputaudit und MSI-Inspektion (maximal 7 Tage). Der Lieferkommentar bindet
+Run/Attempt/Head und tatsächlich zurückgeladene Bytes/Hashes. Kein Binärbeleg im
+Produktdiff; nach Ablauf gezielt erneuern. `.ci/package.json`: genau tools,
+`evidence.mode=none`; keine Browser-/Produktions-/Native-Vollmatrix.
+APP-B1-A01 bleibt unabhängiges Review vor Merge. APP-B1-R01 (reale Provisionierung
+und Signaturaktivierung), APP-A-R01 (erste Veröffentlichung) und APP-A-R02
+(Windows-11-Upgrade) bleiben gesonderte offene Betriebsgates. APP-B2 wird erst an
+dieser gelieferten Schnittstelle separat vorbereitet.
+
+Primärquellen geprüft 13.11.2026: [Ed25519-API](https://cryptography.io/en/50.0.2/hazmat/primitives/asymmetric/ed25519/),
+[stabile Version/Wheel-OpenSSL](https://cryptography.io/en/50.0.2/changelog/),
+[Windows-Wheels](https://cryptography.io/en/50.0.2/installation/),
+[RFC 8032](https://datatracker.ietf.org/doc/html/rfc8032),
+[Environmentfreigaben](https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments).
