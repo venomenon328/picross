@@ -4,6 +4,7 @@ import hashlib
 import importlib.metadata as metadata
 import json
 import platform
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -45,12 +46,14 @@ def build(output):
     for file in source.iterdir():
         if file.is_file() and file.suffix in (".py", ".json", ".md"):
             shutil.copyfile(file, source_data/file.name)
+    env = os.environ.copy()
+    env["PYINSTALLER_CONFIG_DIR"] = str(work/"cache")
     subprocess.run([sys.executable, "-m", "PyInstaller", "--clean", "--noconfirm", "--onedir", "--windowed", "--noupx",
         "--name", "Picross-Bestandseditor", "--distpath", str(output/"dist"), "--workpath", str(work/"pyinstaller"),
         "--specpath", str(work), "--paths", str(ROOT), "--collect-submodules", "tools.puzzle_production",
         "--hidden-import", "tools.puzzle_editor.worker", "--hidden-import", "tkinter.filedialog", "--hidden-import", "tkinter.messagebox",
         "--add-data", str(PACKAGE/"ui")+":tools/puzzle_editor/ui",
-        "--add-data", str(source_data)+":tools/puzzle_production", str(PACKAGE/"desktop_entry.py")], check=True, cwd=ROOT)
+        "--add-data", str(source_data)+":tools/puzzle_production", str(PACKAGE/"desktop_entry.py")], check=True, cwd=ROOT, env=env)
     app = output/"dist/Picross-Bestandseditor"
     required = ["Picross-Bestandseditor.exe", "_internal/python313.dll", "_internal/_tkinter.pyd",
                 "_internal/tools/puzzle_editor/ui/index.html", "_internal/tools/puzzle_editor/ui/app.js",
