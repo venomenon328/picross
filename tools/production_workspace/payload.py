@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path, PurePosixPath
 import subprocess
+import re
 
 WORKSPACE = 'tools/production_workspace/'
 PRODUCTION = 'tools/puzzle_production/'
@@ -55,6 +56,7 @@ def selected(path):
 
 def fingerprint(root):
     rows = []
+    seen = set()
     tree = git(root, 'ls-tree', '-rz', '--full-tree', 'HEAD').split(b'\0')
     for entry in tree:
         if not entry:
@@ -64,9 +66,14 @@ def fingerprint(root):
         if not selected(path):
             continue
         mode, kind, blob = metadata.decode().split()
-        if (kind != 'blob' or mode not in {'100644', '100755'} or '\\' in path or
-                ':' in path or PurePosixPath(path).as_posix() != path or '..' in PurePosixPath(path).parts):
+        parts = PurePosixPath(path).parts
+        if (kind != 'blob' or mode not in {'100644', '100755'} or path.casefold() in seen or
+                PurePosixPath(path).is_absolute() or PurePosixPath(path).as_posix() != path or
+                any(p in {'.', '..'} or p.endswith((' ', '.')) or
+                    re.search(r'[\x00-\x1f<>:"\\|?*]', p) or
+                    re.fullmatch(r'(?i)(con|prn|aux|nul|com[1-9]|lpt[1-9])(\..*)?', p) for p in parts)):
             raise ValueError('Unsafe package input: ' + path)
+        seen.add(path.casefold())
         raw = git(root, 'cat-file', 'blob', blob)
         rows.append({'file': path, 'mode': mode, 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest()})
     rows.sort(key=lambda row: row['file'])

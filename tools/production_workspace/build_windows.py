@@ -40,10 +40,10 @@ def build(destination, *, version=None):
     for line in (PACKAGE / 'requirements-windows.txt').read_text().splitlines():
         if not line or line.startswith('#'):
             continue
-        name, version = line.split('==')
-        if metadata.version(name) != version:
+        name, pinned_version = line.split('==')
+        if metadata.version(name) != pinned_version:
             raise RuntimeError('Falsche Buildabhängigkeit: ' + name)
-        versions[name] = version
+        versions[name] = pinned_version
     if metadata.version('pip') != '26.1.2':
         raise RuntimeError('Build benötigt pip 26.1.2.')
     def git(*args):

@@ -148,7 +148,13 @@ def validate_manifest(value):
         require(set(row) == {'bytes', 'sha256'} and type(row['bytes']) is int and row['bytes'] > 0 and
                 re.fullmatch('[0-9a-f]{64}', row['sha256']), 'Invalid asset binding')
     inspection = value['inspection']
-    require(inspection['commit'] == value['source_commit'] and inspection['version'] == value['version'] and
+    require(set(inspection) == {'format', 'commit', 'version', 'payload_fingerprint', 'msi_sha256', 'msi_bytes',
+                               'product_code', 'upgrade_code', 'inventory_files', 'license_files', 'compared_to_build', 'limits'} and
+            inspection['format'] == 'picross-installer-inspection-v1' and
+            all(inspection[k] == value[k] for k in ('version', 'product_code', 'upgrade_code')) and
+            type(inspection['inventory_files']) is int and inspection['inventory_files'] > 0 and
+            type(inspection['license_files']) is int and inspection['license_files'] >= 2 and
+            inspection['commit'] == value['source_commit'] and inspection['version'] == value['version'] and
             inspection['payload_fingerprint'] == value['payload_fingerprint'] and inspection['compared_to_build'] is True and
             inspection['msi_sha256'] == value['assets'][product['filename']]['sha256'] and
             inspection['msi_bytes'] == value['assets'][product['filename']]['bytes'], 'Unbound MSI inspection')
@@ -206,6 +212,7 @@ def authority(api):
 
 
 def next_version(inputs, previous):
+    require(release()['version'] == '0.1.0', 'The release start anchor must remain 0.1.0')
     if previous and previous['manifest']['payload_fingerprint'] == inputs['sha256']:
         return None
     current = previous['manifest']['version'] if previous else release()['version']
