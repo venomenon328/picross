@@ -45,11 +45,13 @@ def run(groups, directory):
             if group not in groups:
                 continue
             at = time.perf_counter()
+            print('PRODUCTION INTEGRATION START ' + name, flush=True)
             with (directory / (name + '.log')).open('w', encoding='utf-8') as log:
                 log.write('Selected integration: ' + name + '\n'); log.flush()
                 result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, timeout=600)
             report['integrations'].append({'name': name, 'group': group, 'exit_code': result.returncode,
                                            'seconds': time.perf_counter() - at})
+            print('PRODUCTION INTEGRATION END ' + json.dumps(report['integrations'][-1], sort_keys=True), flush=True)
         current = binding()
         report['source_unchanged'] = current == report['binding']
         report['accepted'] = tests['accepted'] and report['source_unchanged'] and all(r['exit_code'] == 0 for r in report['integrations'])
