@@ -777,6 +777,11 @@ folgt wieder seinem normalen Retirementvertrag.
 
 ### 9.3 Sicherer automatischer Save-Neustart
 
+Alte mittlere Hinweislesefenster müssen innerhalb der alten Linienlänge liegen:
+`0 < start < end < width` für Zeilen, entsprechend `< height` für Spalten.
+Die alte Lösung wird dafür nicht benötigt; ein darüber hinausreichender Index
+ist schon anhand des gespeicherten Umschlags unplausibel und bleibt Fehler.
+
 Schema 1, Slotnamen und vollständige `SaveStore.validate`-Prüfung aktueller
 Revisionen bleiben. Ältere Erkennung verlangt den exakten Schema-1-Umschlag,
 gleiche ID, Integerrevision `0 < saved < current`, plausible positive Maße,
