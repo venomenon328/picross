@@ -1,0 +1,10 @@
+{
+  "evidence_commit": "1b959ea719e2d0c7a96340ffe6f2298c24bd8c24",
+  "product_head": "613f609eabb622f72768c72981682e7076e06e8d",
+  "transport": "fresh GitHub sparse clone over HTTPS/HTTP1.1",
+  "verified_original_files": 18,
+  "png_originals": 3,
+  "portable_inventory_files": 1131,
+  "all_hashes_match": true,
+  "access_limit": "Download verified with repository-owner account; independent reviewer requires repository access"
+}
