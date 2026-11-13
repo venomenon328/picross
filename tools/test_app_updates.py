@@ -17,6 +17,7 @@ from tools.production_workspace import update_diagnostic, update_windows as wind
 from tools.production_workspace.update_storage import Preferences, Stage, recover, atomic_json, no_links
 from tools.production_workspace.payload import canonical
 from tools.production_workspace.release_manifest import strict_json
+from tools.production_workspace.desktop import Startup
 
 
 class MemoryTransport:
@@ -173,6 +174,197 @@ class ChannelTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Full verified'):
             windows.prepare(metadata, Mock(), Mock(), Mock())
 
+    def startup(self, enabled=True, version='0.1.0'):
+        host = Mock()
+        host.lock.state = self.root
+        host.lock.directory = self.root / '.launcher'
+        host.stop_requested, host.stopped, host.open_requested = (threading.Event() for _ in range(3))
+        host.error = None
+        host.request_stop.side_effect = host.stop_requested.set
+        if enabled is not None:
+            Preferences(host.lock.directory).write(enabled)
+        with (patch.object(windows, 'installation', return_value=Mock(
+                version=version, executable=self.root / 'program/Picross-Start.exe')),
+              patch.object(app_updates, 'production_trust', return_value=self.trust)):
+            updates = app_updates.Updates(host)
+        self.addCleanup(updates.close)
+        return Startup(host, updates, Mock())
+
+    def signed_client(self):
+        """Real metadata/candidate verification; no public channel or key files."""
+        discover = patch.object(client, 'discover', side_effect=lambda version, cancel:
+            client._discover(version, cancel, self.transport,
+                lambda raw, sig: verifier._verify_metadata(raw, sig, self.trust)))
+        download = patch.object(client, 'download', side_effect=lambda metadata, assets, stage, cancel:
+            client._download(metadata, assets, stage, cancel, self.transport,
+                lambda raw, sig, files: verifier._verify(raw, sig, files, self.trust)))
+        discover.start(); download.start()
+        self.addCleanup(discover.stop); self.addCleanup(download.stop)
+
+    def test_start_gate_signed_candidate_handoff_then_go_without_work(self):
+        flow = self.startup(); self.signed_client()
+        helper = Mock(); helper.poll.return_value = None
+        handoff = windows.Handoff(helper, 'a' * 48)
+        def prepare(candidate, *_args, **_kwargs):
+            self.assertIs(type(candidate), verifier.VerifiedCandidate)
+            flow.runtime.open.assert_not_called(); flow.runtime.refresh.assert_not_called()
+            return handoff
+        with patch.object(windows, 'prepare', side_effect=prepare):
+            flow.begin(); flow.updates.thread.join(3)
+        self.assertFalse(flow.updates.thread.is_alive())
+        flow.poll()
+        self.assertIs(flow.handoff, handoff); self.assertTrue(flow.closing)
+        flow.skip(); flow.updates.choose(False); flow.poll()
+        self.assertTrue(flow.updates.preferences.read(), 'accepted handoff owns the decision')
+        flow.runtime.open.assert_not_called(); flow.runtime.refresh.assert_not_called()
+        helper.stdin.write.assert_not_called()
+        flow.runtime.stopped.set(); handoff.commit(flow.runtime)
+        helper.stdin.write.assert_called_once_with(('GO ' + 'a' * 48 + '\n').encode())
+
+    def test_failure_and_version_decisions_release_work_once(self):
+        for failure in ('offline', '429', 'timeout', 'signature', 'empty', 'same', 'old'):
+            with self.subTest(failure=failure):
+                flow = self.startup(version={'same': '0.1.1', 'old': '0.1.2'}.get(failure, '0.1.0'))
+                transport = MemoryTransport(self.raw, self.signature, self.files)
+                if failure == 'signature': transport.files['manifest.sig.json'] = b'invalid'
+                if failure == 'empty': transport.rows = []
+                errors = {'offline': OSError('offline'), '429': urllib.error.HTTPError(client.API, 429, '', {}, None),
+                          'timeout': TimeoutError()}
+                def discover(version, cancel):
+                    if failure in errors: raise errors[failure]
+                    return client._discover(version, cancel, transport,
+                        lambda raw, sig: verifier._verify_metadata(raw, sig, self.trust))
+                with patch.object(client, 'discover', side_effect=discover), patch.object(windows, 'prepare') as prepare:
+                    flow.begin(); flow.updates.thread.join(3)
+                    for _ in range(3): flow.poll(); flow.begin(); flow.skip()
+                    flow.runtime.open.assert_called_once(); flow.runtime.refresh.assert_called_once()
+                    prepare.assert_not_called(); self.assertIn('nicht möglich', flow.updates.status)
+                    flow.updates.close()
+
+    def test_skip_optout_stop_at_network_download_and_handoff_boundaries(self):
+        self.signed_client()
+        for phase in ('metadata', 'download', 'handoff'):
+            for action in ('skip', 'optout', 'stop'):
+                with self.subTest(phase=phase, action=action):
+                    flow = self.startup()
+                    entered, release = threading.Event(), threading.Event()
+                    self.addCleanup(release.set)
+                    helper = Mock(); helper.poll.return_value = None
+                    helper.stdin.closed = False
+                    helper.stdin.close.side_effect = lambda: setattr(helper.stdin, 'closed', True)
+                    handoff = windows.Handoff(helper, 'b' * 48)
+                    def pause():
+                        entered.set()
+                        if not release.wait(3): raise TimeoutError('test boundary not released')
+                    original = self.transport.transfer
+                    def transfer(*args, **kwargs):
+                        if phase == 'download' and args[0].endswith('.msi'): pause()
+                        return original(*args, **kwargs)
+                    def discover(version, cancel):
+                        if phase == 'metadata': pause()
+                        return client._discover(version, cancel, self.transport,
+                            lambda raw, sig: verifier._verify_metadata(raw, sig, self.trust))
+                    def prepare(candidate, *_args, **_kwargs):
+                        self.assertIs(type(candidate), verifier.VerifiedCandidate)
+                        if phase == 'handoff': pause()  # Child began before click, no GO yet.
+                        return handoff
+                    with (patch.object(client, 'discover', side_effect=discover),
+                          patch.object(self.transport, 'transfer', side_effect=transfer),
+                          patch.object(windows, 'prepare', side_effect=prepare) as prepared):
+                        try:
+                            flow.begin(); self.assertTrue(entered.wait(2))
+                            flow.runtime.open_requested.set(); flow.poll()
+                            flow.runtime.open.assert_not_called(); flow.runtime.refresh.assert_not_called()
+                            if action == 'skip': flow.skip()
+                            elif action == 'optout': flow.updates.choose(False); flow.poll()
+                            else: flow.stop()
+                            self.assertTrue(flow.updates.thread.is_alive(), 'GUI must not wait on network/handshake')
+                            if action == 'stop':
+                                flow.runtime.open.assert_not_called(); flow.runtime.refresh.assert_not_called()
+                            else:
+                                flow.runtime.open.assert_called_once(); flow.runtime.refresh.assert_called_once()
+                            self.assertIs(flow.updates.preferences.read(), action != 'optout')
+                        finally:
+                            release.set(); flow.updates.close()
+                        for _ in range(3): flow.poll(); flow.skip()
+                        self.assertIsNone(flow.handoff); self.assertIsNone(flow.updates.take())
+                        helper.stdin.write.assert_not_called()
+                        if phase == 'handoff': self.assertTrue(helper.stdin.close.called)
+                        else: prepared.assert_not_called()
+                        if flow.updates.stage: self.assertFalse(flow.updates.stage.path.exists())
+
+    def test_completed_handoff_can_be_skipped_before_gui_takes_it(self):
+        flow = self.startup(); self.signed_client()
+        helper = Mock(); handoff = windows.Handoff(helper, 'c' * 48)
+        helper.stdin.closed = False
+        helper.stdin.close.side_effect = lambda: setattr(helper.stdin, 'closed', True)
+        with patch.object(windows, 'prepare', return_value=handoff):
+            flow.begin(); flow.updates.thread.join(3)
+        self.assertTrue(flow.updates.pending)
+        flow.skip(); flow.poll()
+        flow.runtime.open.assert_called_once(); flow.runtime.refresh.assert_called_once()
+        self.assertIsNone(flow.handoff); helper.stdin.write.assert_not_called()
+        helper.stdin.close.assert_called_once()
+
+    def test_completion_between_take_and_pending_cannot_release_browser(self):
+        flow = self.startup(); self.signed_client()
+        handoff = windows.Handoff(Mock(), 'd' * 48)
+        with patch.object(windows, 'prepare', return_value=handoff):
+            flow.begin(); flow.updates.thread.join(3)
+        # Model the exact poll that observed a live thread just before completion.
+        with patch.object(flow.updates, 'take', return_value=None): flow.poll()
+        flow.runtime.open.assert_not_called(); flow.runtime.refresh.assert_not_called()
+        flow.poll(); self.assertIs(flow.handoff, handoff)
+
+    def test_no_optin_and_browser_error_do_not_repeat_initial_work(self):
+        for enabled in (None, False):
+            with self.subTest(enabled=enabled):
+                flow = self.startup(enabled=enabled)
+                flow.runtime.open.side_effect = OSError('no browser')
+                with patch.object(client, 'discover') as discover:
+                    flow.begin(); flow.begin(); flow.poll()
+                    discover.assert_not_called()
+                flow.runtime.open.assert_called_once(); flow.runtime.refresh.assert_called_once()
+                flow.browser_error.assert_called_once()
+                flow.runtime.open.side_effect = None
+                flow.runtime.open_requested.set(); flow.poll()
+                self.assertEqual(flow.runtime.open.call_count, 2)
+                flow.runtime.refresh.assert_called_once()
+
+    def test_cancellation_before_native_spawn_prevents_late_helper(self):
+        # Exercise the real Python prepare path up to Popen with no Windows API
+        # or executable process. Trust/installation are isolated test adapters.
+        metadata, assets = self.discover()
+        stage = Stage(self.root / '.launcher')
+        candidate = client._download(metadata, assets, stage, self.cancel, self.transport,
+            lambda raw, sig, files: verifier._verify(raw, sig, files, self.trust))
+        host = self.startup().runtime
+        helper = self.root / 'helper.exe'; helper.write_bytes(b'synthetic, never executed')
+        executable = self.root / 'app.exe'; executable.write_bytes(b'synthetic app')
+        identity = windows.Installation(executable, '0.1.0', 'old-product', 'a' * 40, helper, windows.sha(helper))
+        host.metadata = {'instance': 'a' * 48}; host.no_browser = True
+        (self.root / 'config.json').write_bytes(b'config')
+        (host.lock.directory / 'address.json').write_bytes(b'address')
+        report = {**strict_json(self.files['delivery.json']), 'exe_sha256': 'e' * 64, 'exe_bytes': 10}
+        def handle(): self.cancel.set(); return None  # Skip wins just before spawn.
+        original_json = windows.strict_json
+        def decode(raw):
+            return report if raw == self.files['delivery.json'] else original_json(raw)
+        try:
+            with (patch.object(windows, 'installation', return_value=identity),
+                  patch.object(windows, 'verify_candidate', return_value=candidate),
+                  patch.object(windows, 'strict_json', side_effect=decode),
+                  patch.object(windows, 'parent_handle', side_effect=handle),
+                  patch.object(windows.ctypes, 'WinDLL', create=True),
+                  patch.object(windows.subprocess, 'STARTUPINFO', create=True),
+                  patch.object(windows.subprocess, 'Popen') as spawn):
+                with self.assertRaises(client.Cancelled):
+                    windows.prepare(candidate, stage, identity, host, cancelled=self.cancel, transition=threading.Lock())
+                spawn.assert_not_called()
+            self.assertFalse(stage.path.exists())
+        finally:
+            if stage.path.exists(): stage.cleanup()
+
 
 class TransportTests(unittest.TestCase):
     class Response(BytesIO):
@@ -317,11 +509,15 @@ class LifecycleTests(unittest.TestCase):
 
     def test_empty_root_never_starts_check_even_with_stored_optin(self):
         runtime=Mock(); runtime.lock.state=self.root; runtime.lock.directory=self.root/'.launcher'
+        runtime.stop_requested = threading.Event(); runtime.open_requested = threading.Event()
         Preferences(runtime.lock.directory).write(True)
         with (patch.object(windows,'installation',return_value=Mock(version='0.1.0',executable=self.root/'program'/'Picross-Start.exe')),
               patch.object(app_updates,'production_trust',return_value={'accepted':{}}),
               patch.object(client,'discover') as discover):
-            updates=app_updates.Updates(runtime); updates.start()
+            updates=app_updates.Updates(runtime)
+            flow = Startup(runtime, updates, self.fail)
+            flow.begin(); flow.poll(); flow.begin()
+            runtime.open.assert_called_once(); runtime.refresh.assert_called_once()
             self.assertIn('inaktiv',updates.status); discover.assert_not_called()
             for _ in range(12): updates.poll_result()
             self.assertEqual(updates.recovery_attempts,10)
