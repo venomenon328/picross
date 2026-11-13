@@ -111,10 +111,9 @@ Vor jeder automatischen MSI-Ausführung ist die Kanalbeschreibung
 **kryptografisch signiert** und mit einer unabhängig in der Anwendung
 verankerten Vertrauenswurzel geprüft; Asset-SHA-256, Bytezahl,
 Version und Herkunft werden dagegen gebunden. Eine Hashliste aus demselben
-ungeprüften HTTP-Endpoint allein genügt nicht. Den konkreten
-Schlüsselbereitstellungs-/Rotations-/Widerrufsweg als Bestandteil der
-APP-B-Paketentscheidung vor Implementation schließen, ohne Secrets zu
-committen oder eine neue Signierungsbefugnis still anzunehmen.
+ungeprüften HTTP-Endpoint allein genügt nicht. Der in APP-B1 geschlossene Schlüsselbereitstellungs-/Rotations-/Widerrufsweg
+steht in Abschnitt 6; APP-B2 verwendet diese feste Vertrauensgrenze.
+Keine Secrets committen oder eine Signierungsbefugnis aus der Clientumsetzung ableiten.
 Eine Metadatensignatur ist nicht automatisch eine Windows-Codesignatur
 des MSI; SmartScreen und bestehende Plattformrichtlinien bleiben wirksam.
 
@@ -204,8 +203,9 @@ diagnostisch und veröffentlicht nie. Vor Merge kann damit der neue Code im
 Draft-PR geprüft werden; die Herkunft wird als PR-Branch, nicht als bereits
 integrierte Mainfassung ausgewiesen. Der reguläre Folgetrigger verwendet nur
 erfolgreiche Main-Pushquellen. Eine Erstaktivierung braucht nach Review/Integration
-einen eigenen Auftrag zum Setzen der Repositoryvariable und einen gezielten
-erfolgreichen Main-CI-Re-Run. Weder dieser PR noch ein Diagnosebau setzt die Variable.
+einen eigenen Betriebsauftrag einschließlich Root-/Environmentbereitstellung,
+beider Repositoryvariablen und eines gezielten erfolgreichen Main-CI-Re-Runs.
+Weder dieser PR noch ein Diagnosebau aktiviert diese Voraussetzungen.
 Original-Serverlogs und sechs gebundene v1-Diagnosekandidatdateien stehen dem unabhängigen
 Reviewer im jeweiligen Actionslauf zur Verfügung (Plan sieben, Produkt vierzehn
 Tage); `.ci/package.json` bleibt `evidence.mode=none`. Abgelaufene Belege müssen

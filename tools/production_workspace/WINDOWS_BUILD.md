@@ -74,7 +74,7 @@ Vor Merge damit ausdrücklich den Implementierungsbranch wählen; diesen Ursprun
 im PR nennen. Keine frei eingegebenen Download-/Repository-/Buildpfade oder SHA.
 Die Diagnose umgeht keine Veröffentlichungschecks, sondern besitzt keinen
 Publikationspfad. Der Publisher wird nur im automatischen Mainfolgelauf und mit
-der nach separat beauftragter Aktivierung gesetzten Repositoryvariable
+den nach separat beauftragter Aktivierung gesetzten Repositoryvariablen
 `PW_RELEASE_ENABLED=true` und `PW_UPDATE_SIGNING_ENABLED=true` gestartet.
 Vor jeder Environmentreferenz prüft ein secretfreies Gate Kandidat, Main-CI,
 Trust und das bereits vorhandene `pw-app-release` mit exakt Main-only-Branchpolicy.
@@ -94,7 +94,7 @@ Produktdateien: `Picross-Produktionsassistent-X.Y.Z-windows-x64.msi`, `.sha256`,
 `START.txt`, `delivery.json`, `inputs.json`, kanonisches `manifest.json`.
 Dies ist v1-Diagnoseprovenienz. Erst der Publisher erzeugt v2 plus
 `manifest.sig.json`, lädt alle sieben Dateien binär zurück und prüft sie erneut.
-Letzteres bindet Schema, Repository, Produktionsstatus, Version, Source-SHA,
+Das Manifest bindet Schema, Repository, Produktionsstatus, Version, Source-SHA,
 Fingerprint, Produktidentitäten, MSI-Inspektion und Hash/Bytes jeder anderen Datei.
 Actions-Kandidat vierzehn Tage, Plan sieben Tage für den aktuellen Reviewer;
 Original-Serverbefunde stehen im Joblog. Produktdiff enthält keine Binärbelege.
