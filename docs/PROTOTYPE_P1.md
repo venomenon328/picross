@@ -1,12 +1,11 @@
 # P1: aktiver Spiel-, Eingabe- und Speichervertrag
 
-**PE / #576 · PE-A1 im Arbeitsbranch implementiert, PE-A3 noch Sollstand:**
+**PE / #576 · Metadaten- und Revisionsgrenze:**
 [PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) ergänzt aktuelle
 Namens-/Kategorieprojektion ohne neue Rätselrevision und ohne Saveänderung.
-Der spätere [PE-A3-Revisionswechsel](PUZZLE_EDITOR.md#5-rastertext-und-spielstandrevision)
+Der [PE-A3-Revisionswechsel](PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag)
 beginnt eindeutig zuordenbare ältere Rasterrevisionen automatisch neu; defekte,
-fremde und neuere Saves behalten ihre Fehler-/Recoverybehandlung. Bis PE-A3 bleibt
-die unten beschriebene bewusste Resetpflicht der implementierte Stand.
+fremde und neuere Saves behalten ihre Fehler-/Recoverybehandlung.
 
 ## K-B: unabhängiger Fortsetzen-Merker
 
@@ -570,6 +569,24 @@ Der native Pflicht-Flush-/Close-Vertrag bleibt unverändert.
 Historischer P1.3-Ausgangsstand (Slots heute aus der Registry): `user://p1/saves/` mit aus den neun fest registrierten Inhalts-IDs gebildeten Dateinamen. Schema 1 speichert je Blatt Definitions-ID und -Revision, Dimensionen, bestätigte flache Zellmatrix, vollständige wirksame History samt Redo-Zweig/Cursor und bleibendem `undo_used`, Abschlussstatus, Rasterfokus in Zellkoordinaten, gewünschte gültige Arbeitszoomstufe und Einpassen-Flag (overview), aktive Farbe/Werkzeug sowie individuelle semantische `row_clue_reads` und `column_clue_reads`. Nicht gespeichert werden laufende Gesten, Lösung/Reveal, Wertung, Fehlerstatistik, UI-Skalierung, Fenstergeometrie, Miniaturrahmen oder konkrete Hinweis-Slot-Offets.
 
 Vor Anwendung werden Schema, exakte Definition/Revision, Matrix/Palette, jede nichtleere atomare History-Aktion mit eindeutigen Indizes und gültigen Vor-/Nachwerten, das widerspruchsfreie Replay ab unbekanntem Raster einschließlich Redo, Cursor-Matrix-Gleichheit, `undo_used`, Abschluss und View vollständig geprüft. Unbekannte oder unpassende Daten werden weder teilweise geladen noch still migriert. Der Rasterfokus wird bei Resize gültig begrenzt; Hinweis-Offsets werden aus Rasterende, äußerem Anfang oder mittlerem Tokenfenster für die aktuelle Geometrie neu abgeleitet.
+
+PE-A3 ergänzt ausschließlich den sicher identifizierten älteren Schema-1-Umschlag
+derselben ID mit `0 < saved_revision < current_revision`. Seine eigene Matrix,
+History samt Redo, View und Feldtypen müssen strukturell konsistent sein; die
+nicht mehr vorhandene alte Lösung wird nicht rekonstruiert. Gültige aktuelle
+Primary-/Backupfassungen haben Vorrang. Ein altes Backup neben aktuellem Primary
+blockiert dessen Speicherung nicht. Fehler, falsche ID, unbekanntes Schema und
+zukünftige Revisionen werden nie automatisch entfernt.
+
+Nur alte Fassungen starten über den gebundenen per-Slot-Revisionsmarker nach
+[PE §9.3](PUZZLE_EDITOR.md#93-sicherer-automatischer-save-neustart) vollständig neu.
+Vor jeder Entfernung werden die eigenen alten Bytes erneut geprüft; offene
+Marker sperren Schreiben, Reparatur und manuellen Reset. Wiederanlauf setzt
+denselben Vorgang fort und schützt inzwischen entstandene aktuelle/fremde Bytes.
+Nach vollständigem Abschluss sind Zellen, History/Redo, Undoflag, Abschluss und
+persönliche Rätselansicht leer; nur ein alter Fortsetzen-Merker derselben ID wird
+entfernt. Ein kurzer deutscher Dialog meldet den abgeschlossenen Neustart.
+Schema 1, Slots, allgemeine Präferenzen und die Web-Synchronisationsbrücke bleiben.
 
 Jede wirksame bestätigte Zellaktion und Undo/Redo werden sofort gesichert; Werkzeug/Farbe ebenfalls. Reine Ansicht darf kurz gebündelt werden, wird aber vor Album, Blattwechsel, Beenden und regulärer Window-Close-Anforderung geflusht. Vorschau wird zuerst verworfen. Fehler erscheinen sichtbar und dürfen keinen gesicherten Stand vortäuschen.
 

@@ -232,6 +232,11 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
                 "Editor reveal requires explicit runtime v8 migration")
         # Also enforce the category binding without the expensive production replay.
         m = load_json(package / "manifest.json")
+        if m.get("format") == "picross-editor-raster-package-v1":
+            from . import editor_raster
+            editor_raster.package(root, e, m, replay=replay)
+            background.load(root, r, e)
+            continue
         from . import integrated_content
         source = background.load(root, r, e)
         require(image_runtime or source is None or source.get("format") != "picross-catalog-background-v5",

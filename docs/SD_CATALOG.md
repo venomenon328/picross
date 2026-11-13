@@ -1,5 +1,21 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
+## PE-A3 · Manuelle Rasterpakete
+
+Vertrag vor konsumierendem Code, 13.11.2026:
+[PE §9](PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag)
+definiert exakt Request, Plan, Rasterpaket und `editor-raster`-Journal v1.
+Neue Logik verlangt frische vollständige unabhängig geprüfte Deduktion und
+Bewertung der aktiven Zielmethode. Planung führt die Analyse ausdrücklich aus,
+Apply prüft das geschriebene Bundle frisch; Recovery analysiert nicht.
+Die bisherigen SD-Hüllen und Methodenfreezes bleiben unverändert.
+Das Rasterjournal verwendet die gemeinsame Achtfelderform, genau eine ID,
+Runtime zuletzt und wiederholbaren Rollback. Additions sind ausschließlich das
+neue Rasterpaket, Retained und packages binden sämtliche Vorgängerpakete.
+Optionale A2-Deltas behalten ihre Grenzen; ohne Binärdelta 24 MiB, sonst 128 MiB.
+Alle Phasen bleiben endlich bei 300 s, ohne RI-Override. Andere IDs, Added und
+Kategorienquelle bleiben bytegleich. Identische Logik benötigt keine neue Analyse.
+
 **PE-A1 / #576 · nach unabhängigem Review integriert:**
 [Aktuelle Metadaten](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag)
 kommen als Tabelle in der bereits gebundenen Inhaltsregistry hinzu. Reine

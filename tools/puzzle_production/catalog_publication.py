@@ -26,7 +26,7 @@ BINARY_FORMATS = ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption
                   "picross-reveal-adoption-journal-v5", "picross-background-adoption-journal-v3",
                   "picross-background-adoption-journal-v2", BACKGROUND_FORMAT,
                   "picross-reveal-adoption-journal-v6", "picross-background-adoption-journal-v4",
-                  "picross-editor-images-journal-v1")
+                  "picross-editor-images-journal-v1", "picross-editor-raster-journal-v1")
 PREFIXES = tuple(b'{"format":' + canonical_bytes(value) + b',' for value in BINARY_FORMATS)
 NORMAL_LIMIT = 24 * 1024 * 1024
 LIMIT = 128 * 1024 * 1024
@@ -56,6 +56,7 @@ def read_journal(root, name="content/.registration-pending.json"):
 def journal_bytes(j):
     raw = b'{"format":' + canonical_bytes(j["format"]) + b"," + canonical_bytes({k: v for k, v in j.items() if k != "format"})[1:] + b"\n"
     limit = LIMIT if j["format"] in BINARY_FORMATS else NORMAL_LIMIT
+    if j["format"] == "picross-editor-raster-journal-v1" and not j["replacements"]: limit = NORMAL_LIMIT
     if len(raw) > limit: raise Aborted("resource_limit: transaction journal exceeds byte limit")
     return raw
 
@@ -95,7 +96,8 @@ def nullable_binaries(j):
     return (j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2", "picross-background-adoption-journal-v3",
                                "picross-background-adoption-journal-v4") and j.get("operation") == "background-adoption" or
             j.get("format") == "picross-editor-images-journal-v1" and j.get("operation") == "editor-images" or
-            j.get("format") == "picross-reveal-adoption-journal-v6" and j.get("operation") == "reveal-adoption")
+            j.get("format") == "picross-reveal-adoption-journal-v6" and j.get("operation") == "reveal-adoption" or
+            j.get("format") == "picross-editor-raster-journal-v1" and j.get("operation") == "editor-raster")
 
 
 def binary_hash(value):
@@ -140,7 +142,7 @@ def validate_replacements(j, registry):
     if tx.images(j):
         from .editor_image_input import validate_background
         candidates = {name: e for e in registry["entries"] for name in tx.image_candidates({"entries": [e]})}
-        if j["operation"] not in ("editor-images", "reveal-adoption", "background-adoption"):
+        if j["operation"] not in ("editor-images", "editor-raster", "reveal-adoption", "background-adoption"):
             require(not replacements, "This image journal cannot replace binaries")
             return
         require(set(replacements) <= set(candidates), "Unbound image replacement path")
@@ -375,6 +377,7 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
         require(data is None if old_only else data is None or io.checksum(data) == h, "Foreign addition; preserve journal: " + n)
         if expected is not None: require(io.checksum(data) == expected[n], "Addition publication phase changed: " + n)
     packages = {e["production"]["package"] for r in registries for e in r["entries"]}
+    packages |= {"/".join(name.split("/")[:4]) for name in j["retained"] if name.startswith("content/packages/")}
     allowed_packages = set(j["retained"]) | set(j["additions"]) | temps
     for name in packages:
         p = io.safe(root, name)
@@ -527,7 +530,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, source
     diagnostic.begin_segment("P0")
     tx.validate_journal(root, j, before_write=True)
     if nullable_binaries(j):
-        tx._stage_check(root, j["new"], j["retained"],
+        tx._stage_check(root, j["new"], j["retained"], additions,
                         replacements={name: pair["new"] for name, pair in j["replacements"].items()}, journal=j)
     raw = journal_bytes(j)
     view = _JournalView(j, raw)

@@ -5,6 +5,7 @@ const Session = preload("res://model/session.gd")
 const ClueLayout = preload("res://ui/clue_layout.gd")
 const Registry = preload("res://model/content_registry.gd")
 const WebStorage = preload("res://model/web_storage.gd")
+const SaveRevision = preload("res://model/save_revision.gd")
 const ZOOMS: Array[int] = [12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 40, 44, 48, 54, 60, 66, 72]
 static var test_root_override: String = ""
 var root: String
@@ -167,23 +168,31 @@ static func apply(data: Dictionary, session: Session) -> void:
 	session.view_state = data.view.duplicate(true)
 
 func _parse(path: String, definition: Dictionary) -> Dictionary:
+	if not SaveRevision.Recent.safe_file(path):
+		return {"status":"invalid","error":"Unsicherer Speicherpfad."}
 	if not FileAccess.file_exists(path):
 		return {"status": "missing"}
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {"status": "invalid", "error": "Datei nicht lesbar."}
-	var raw: String = file.get_as_text()
+	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
+	if not SaveRevision.Recent.valid_utf8(bytes): return {"status":"invalid","error":"Ungültiges UTF-8."}
+	var raw: String = bytes.get_string_from_utf8()
 	var parser: JSON = JSON.new()
-	if parser.parse(raw) != OK:
+	if parser.parse(raw) != OK or not Registry.unique_keys(raw):
 		return {"status": "invalid", "error": "JSON beschädigt."}
 	var error: String = validate(parser.data, definition)
+	if not error.is_empty() and SaveRevision.old_envelope(parser.data,definition,self):
+		return {"status":"older","data":parser.data}
 	return {"status": "valid", "data": parser.data} if error.is_empty() else {"status": "invalid", "error": error}
 
 func load_slot(definition: Dictionary) -> Dictionary:
 	var id: String = key_for_definition(str(definition.id))
 	if not id in registered_ids():
 		return {"status": "error", "error": "Unbekanntes Fixture."}
+	if SaveRevision.pending(self,id):
+		return _revision_reset(definition)
 	var primary: Dictionary = _parse(path_for(id), definition)
 	var backup: Dictionary = _parse(path_for(id, ".bak"), definition)
 	if primary.status == "valid":
@@ -192,9 +201,17 @@ func load_slot(definition: Dictionary) -> Dictionary:
 		return {"status": "loaded", "data": primary.data}
 	if backup.status == "valid":
 		return {"status": "recovered", "data": backup.data, "error": "Primärstand fehlt oder ist ungültig; gültiges Backup geladen."}
+	if primary.status in ["older","missing"] and backup.status in ["older","missing"] and (primary.status == "older" or backup.status == "older"):
+		return _revision_reset(definition)
 	if primary.status == "missing" and backup.status == "missing":
 		return {"status": "fresh"}
 	return {"status": "error", "error": "Gespeicherte Daten unlesbar oder inkompatibel; kein gültiges Backup. Arbeitsstand bewusst zurücksetzen."}
+
+func _revision_reset(definition: Dictionary) -> Dictionary:
+	var error: String = SaveRevision.reset(self,definition)
+	WebStorage.finished(str(definition.id),error)
+	if not error.is_empty(): return {"status":"error","error":error}
+	return {"status":"fresh","revision_reset":true}
 
 func _absolute(path: String) -> String:
 	return ProjectSettings.globalize_path(path) if path.begins_with("user://") else path
@@ -208,6 +225,7 @@ func _write_slot(session: Session, view: Dictionary) -> String:
 	var id: String = key_for_definition(str(session.definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
+	if SaveRevision.pending(self,id): return "Offener Revisionsreset; zuerst erneut laden."
 	var candidate: Dictionary = snapshot(session, view)
 	var error: String = validate(candidate, session.definition)
 	if not error.is_empty():
@@ -217,10 +235,12 @@ func _write_slot(session: Session, view: Dictionary) -> String:
 	var temp_path: String = path_for(id, ".tmp")
 	var previous: Dictionary = _parse(primary_path, session.definition)
 	var backup: Dictionary = _parse(backup_path, session.definition)
-	if previous.status == "missing" and backup.status == "valid":
+	if previous.status in ["missing","older"] and backup.status == "valid":
 		return "Gültiges Backup muss vor weiterem Speichern bewusst übernommen werden."
 	if previous.status == "invalid" or backup.status == "invalid":
 		return "Vorhandene ungültige Daten werden nicht überschrieben."
+	if previous.status == "older" or backup.status == "older" and previous.status != "valid":
+		return "Älteren Spielstand zuerst über den Revisionsreset laden."
 	if DirAccess.make_dir_recursive_absolute(_absolute(root)) != OK:
 		return "Speicherverzeichnis nicht erstellbar."
 	var file: FileAccess = FileAccess.open(temp_path, FileAccess.WRITE)
@@ -255,6 +275,7 @@ func reset_slot(id: String) -> String:
 func _reset_slot(id: String) -> String:
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
+	if SaveRevision.pending(self,id): return "Offener Revisionsreset; zuerst erneut laden."
 	if fail_step == "reset":
 		return "Testabbruch vor Reset."
 	for suffix: String in [".json", ".bak", ".tmp"]:
@@ -272,6 +293,7 @@ func _repair_from_backup(definition: Dictionary) -> String:
 	var id: String = key_for_definition(str(definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
+	if SaveRevision.pending(self,id): return "Offener Revisionsreset; zuerst erneut laden."
 	var backup: Dictionary = _parse(path_for(id, ".bak"), definition)
 	if backup.status != "valid":
 		return "Kein gültiges Backup vorhanden."
@@ -304,6 +326,7 @@ func _discard_invalid_backup(definition: Dictionary) -> String:
 	var id: String = key_for_definition(str(definition.id))
 	if not id in registered_ids():
 		return "Unbekanntes Fixture."
+	if SaveRevision.pending(self,id): return "Offener Revisionsreset; zuerst erneut laden."
 	if _parse(path_for(id), definition).status != "valid":
 		return "Kein gültiger Primärstand vorhanden."
 	var backup_path: String = path_for(id, ".bak")
