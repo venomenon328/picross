@@ -15,7 +15,8 @@ import xml.etree.ElementTree as ET
 
 from tools.production_workspace import build_installer as installer
 from tools.production_workspace.release import release, version_tuple, check_history
-from tools.production_workspace import payload, release_channel as channel, verify_installer
+from tools.production_workspace import payload, release_channel as channel, verify_installer, update_verifier
+from tools.production_workspace.update_diagnostic import test_identity
 
 ROOT = Path(__file__).resolve().parents[1]
 NS = {'w': installer.NS}
@@ -118,6 +119,11 @@ class InstallerContractTests(unittest.TestCase):
         self.assertIn('workflow_run:', triggers)
         self.assertIn('workflows: [Package CI]', triggers)
         self.assertIn("vars.PW_RELEASE_ENABLED == 'true'", workflow)
+        self.assertIn("vars.PW_UPDATE_SIGNING_ENABLED == 'true'", workflow)
+        self.assertEqual(workflow.count('environment: pw-app-release'), 1)
+        self.assertEqual(workflow.count('secrets.PW_UPDATE_SIGNING_KEY'), 1)
+        self.assertNotIn('secrets.PW_UPDATE_SIGNING_KEY', workflow.split('\n  publish:', 1)[0])
+        self.assertIn("needs.publication-gate.outputs.authorized == 'true'", workflow)
         self.assertIn("github.event_name == 'workflow_run' && github.ref == 'refs/heads/main'", workflow)
         self.assertEqual(workflow.count('contents: write'), 1)
         self.assertNotIn('contents: write', workflow.split('\n  publish:', 1)[0])
@@ -171,6 +177,11 @@ class MemoryGitHub(channel.GitHub):
         query = urllib.parse.parse_qs(parts.query)
         if method != 'GET':
             self.writes.append((method, route))
+        if route == '/environments/pw-app-release':
+            return {'name': 'pw-app-release', 'deployment_branch_policy':
+                    {'protected_branches': False, 'custom_branch_policies': True}}
+        if route == '/environments/pw-app-release/deployment-branch-policies':
+            return {'branch_policies': [{'name': 'main', 'type': 'branch'}]}
         if route == '/actions/workflows/ci-modular.yml':
             return {'id': 8}
         if route == '/actions/runs/9':
@@ -220,13 +231,24 @@ class AppReleaseTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.api = MemoryGitHub()
+        self.trust, self.secret = test_identity()
+        roots = patch.object(update_verifier, 'production_trust', return_value=self.trust)
+        roots.start(); self.addCleanup(roots.stop)
+
+    def publish(self, *args, **kwargs):
+        return channel.publish(*args, signing_enabled=True, secret=self.secret, **kwargs)
+
+    def signed(self, manifest):
+        files = {name: (self.root / name).read_bytes() for name in manifest['assets']}
+        return channel.strict_json(update_verifier._sign(manifest, files, self.secret, self.trust)[0])
 
     def candidate(self, version='0.1.1', previous=None):
         product = release(version=version)
         rows = [{'file': 'synthetic.py', 'mode': '100644', 'bytes': 1, 'sha256': '0' * 64}]
         inputs = {'format': 'picross-app-inputs-v1', 'sha256': channel.digest(payload.canonical(rows)), 'files': rows}
         planned = {'version': version, 'source_commit': self.api.source, 'run_id': 9, 'run_attempt': 1,
-                   'payload_fingerprint': inputs['sha256'], 'diagnostic': False, 'authority': previous}
+                   'payload_fingerprint': inputs['sha256'], 'diagnostic': False, 'authority': previous,
+                   'trust_sha256': channel.digest(payload.canonical(self.trust))}
         raw = b'SYNTHETIC MSI; not an installation test'
         report = {'version': version, 'commit': self.api.source, 'payload_fingerprint': inputs['sha256'],
                   'product_code': product['product_code'], 'upgrade_code': product['upgrade_code'],
@@ -253,7 +275,7 @@ class AppReleaseTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'start anchor'):
                 channel.next_version({'sha256': 'x'}, None)
         planned, _ = self.candidate()
-        channel.publish(self.api, self.root, planned, enabled=True)
+        self.publish(self.api, self.root, planned, enabled=True)
         previous = channel.authority(self.api)
         self.assertIsNone(channel.next_version({'sha256': planned['payload_fingerprint']}, previous))
         self.assertEqual(channel.next_version({'sha256': 'new'}, previous), '0.1.2')
@@ -289,45 +311,45 @@ class AppReleaseTests(unittest.TestCase):
         planned, manifest = self.candidate()
         self.api.fail_upload = 'START.txt'
         with self.assertRaisesRegex(RuntimeError, 'lost upload'):
-            channel.publish(self.api, self.root, planned, enabled=True)
+            self.publish(self.api, self.root, planned, enabled=True)
         self.assertTrue(self.api.entries[0]['draft'])
         self.assertIsNone(channel.authority(self.api))
-        channel.publish(self.api, self.root, planned, enabled=True)
+        self.publish(self.api, self.root, planned, enabled=True)
         self.assertFalse(self.api.entries[0]['draft'])
-        self.assertEqual(channel.authority(self.api)['manifest'], manifest)
-        self.assertEqual(len(self.api.blobs), 6)
+        self.assertEqual(channel.authority(self.api)['manifest'], self.signed(manifest))
+        self.assertEqual(len(self.api.blobs), 7)
         self.assertTrue(all(method in {'POST', 'PATCH'} for method, _ in self.api.writes))
         # A duplicate event is planned as a no-op; a stale pre-publication plan
         # cannot overwrite the already published same version.
         writes = list(self.api.writes)
         with self.assertRaisesRegex(ValueError, 'authority changed'):
-            channel.publish(self.api, self.root, planned, enabled=True)
+            self.publish(self.api, self.root, planned, enabled=True)
         self.assertEqual(writes, self.api.writes)
 
     def test_same_version_conflicting_assets_or_tags_are_not_overwritten(self):
         planned, manifest = self.candidate()
         self.api.fail_upload = 'START.txt'
         with self.assertRaises(RuntimeError):
-            channel.publish(self.api, self.root, planned, enabled=True)
+            self.publish(self.api, self.root, planned, enabled=True)
         self.api.blobs[1] = b'changed'
         writes = len(self.api.writes)
         with self.assertRaises(ValueError):
-            channel.publish(self.api, self.root, planned, enabled=True)
+            self.publish(self.api, self.root, planned, enabled=True)
         self.assertEqual(len(self.api.writes), writes)
         self.api.tags[manifest['tag']] = 'c' * 40
         with self.assertRaisesRegex(ValueError, 'Conflicting PW release tag'):
-            channel.publish(self.api, self.root, planned, enabled=True)
+            self.publish(self.api, self.root, planned, enabled=True)
 
     def test_activation_diagnostic_and_main_race_cannot_publish(self):
         planned, _ = self.candidate()
         with self.assertRaisesRegex(ValueError, 'gate is closed'):
-            channel.publish(self.api, self.root, planned, enabled=False)
+            self.publish(self.api, self.root, planned, enabled=False)
         with self.assertRaisesRegex(ValueError, 'gate is closed'):
-            channel.publish(self.api, self.root, {**planned, 'diagnostic': True}, enabled=True)
+            self.publish(self.api, self.root, {**planned, 'diagnostic': True}, enabled=True)
         self.assertEqual(self.api.writes, [])
         self.api.change_main_after_upload = True
         with self.assertRaisesRegex(ValueError, 'superseded'):
-            channel.publish(self.api, self.root, planned, enabled=True)
+            self.publish(self.api, self.root, planned, enabled=True)
         self.assertTrue(self.api.entries[0]['draft'])
 
     def test_wrong_msi_manifest_inventory_and_foreign_versions_fail_closed(self):
@@ -344,6 +366,72 @@ class AppReleaseTests(unittest.TestCase):
             channel.validate_manifest({**manifest, 'repository': 'foreign/repo'})
         with self.assertRaises(ValueError):
             channel.strict_json(b'{"version":1,"version":2}')
+
+    def test_signing_activation_missing_secret_roots_and_main_environment_fail_before_writes(self):
+        planned, _ = self.candidate()
+        for enabled, signing in ((False, False), (False, True), (True, False)):
+            with self.subTest(enabled=enabled, signing=signing), self.assertRaises(ValueError):
+                channel.publish(self.api, self.root, planned, enabled=enabled, signing_enabled=signing, secret=self.secret)
+        for secret in (None, 'malformed', test_identity()[1]):
+            with self.subTest(secret_present=bool(secret)), self.assertRaises(ValueError):
+                channel.publish(self.api, self.root, planned, enabled=True, signing_enabled=True, secret=secret)
+        for trust in ({'format': 'picross-pw-trust-v1', 'accepted': {}, 'blocked': [], 'active_signer': None},
+                      {**self.trust, 'blocked': [self.trust['active_signer']]}):
+            with patch.object(update_verifier, 'production_trust', return_value=trust), self.assertRaises(ValueError):
+                self.publish(self.api, self.root, planned, enabled=True)
+        original = self.api.request
+        for environment in (None, {'name': 'pw-app-release', 'deployment_branch_policy': None}):
+            def request(path, **kwargs):
+                return environment if path.endswith('/environments/pw-app-release') else original(path, **kwargs)
+            with patch.object(self.api, 'request', side_effect=request), self.assertRaises(ValueError):
+                self.publish(self.api, self.root, planned, enabled=True)
+        with patch.object(self.api, 'pages', wraps=self.api.pages) as pages:
+            original_pages = self.api.pages._mock_wraps
+            pages.side_effect = lambda path, key=None: [{'name': '*', 'type': 'branch'}] if 'deployment-branch-policies' in path else original_pages(path, key)
+            with self.assertRaisesRegex(ValueError, 'only the main'):
+                self.publish(self.api, self.root, planned, enabled=True)
+        self.assertEqual(self.api.writes, [])
+
+    def test_signature_partial_upload_conflict_and_changed_trust_do_not_overwrite(self):
+        planned, _ = self.candidate()
+        self.api.fail_upload = update_verifier.SIGNATURE
+        with self.assertRaises(RuntimeError):
+            self.publish(self.api, self.root, planned, enabled=True)
+        self.assertTrue(self.api.entries[0]['draft'])
+        writes = list(self.api.writes)
+        other, _ = test_identity()
+        changed = {**self.trust, 'accepted': {**self.trust['accepted'], **other['accepted']}}
+        with patch.object(update_verifier, 'production_trust', return_value=changed), self.assertRaisesRegex(ValueError, 'configuration changed'):
+            self.publish(self.api, self.root, planned, enabled=True)
+        signature_asset = next(a for a in self.api.entries[0]['assets'] if a['name'] == update_verifier.SIGNATURE)
+        self.api.blobs[signature_asset['id']] += b'changed'
+        with self.assertRaises(ValueError):
+            self.publish(self.api, self.root, planned, enabled=True)
+        self.assertEqual(self.api.writes, writes)
+
+    def test_historical_v1_authority_remains_readable_but_cannot_authorize_installation(self):
+        _, manifest = self.candidate()
+        entry = {'id': 1, 'tag_name': manifest['tag'], 'target_commitish': manifest['source_commit'],
+                 'draft': False, 'prerelease': False, 'assets': []}
+        self.api.entries.append(entry)
+        self.api.tags[manifest['tag']] = manifest['source_commit']
+        for name in [*manifest['assets'], 'manifest.json']:
+            raw = (self.root / name).read_bytes()
+            identity = len(self.api.blobs) + 1; self.api.blobs[identity] = raw
+            entry['assets'].append({'id': identity, 'name': name, 'state': 'uploaded',
+                                    'size': len(raw), 'digest': 'sha256:' + channel.digest(raw)})
+        self.assertEqual(channel.authority(self.api)['manifest'], manifest)
+        self.assertEqual(channel.next_version({'sha256': 'changed'}, channel.authority(self.api)), '0.1.2')
+        with self.assertRaisesRegex(ValueError, 'Legacy'):
+            update_verifier.verify_candidate((self.root / 'manifest.json').read_bytes(), b'', {})
+        # A corrupt published v2 authority cannot be skipped/reset to the anchor.
+        raw, signed = update_verifier._sign(manifest, {name: (self.root / name).read_bytes() for name in manifest['assets']},
+                                            self.secret, self.trust)
+        manifest_asset = next(a for a in entry['assets'] if a['name'] == 'manifest.json')
+        self.api.blobs[manifest_asset['id']] = raw
+        manifest_asset.update(size=len(raw), digest='sha256:' + channel.digest(raw))
+        with self.assertRaisesRegex(ValueError, 'Unexpected release assets'):
+            channel.authority(self.api)  # Missing signature; no unsigned fallback.
 
     def test_real_inspector_rejects_wrong_portable_zip_hash_before_msi_access(self):
         planned, manifest = self.candidate()
@@ -367,10 +455,10 @@ class AppReleaseTests(unittest.TestCase):
         calls = []
         def changed(api):
             calls.append(1)
-            return original(api) if len(calls) == 1 else {'changed': True}
+            return original(api) if len(calls) <= 2 else {'changed': True}
         with patch.object(channel, 'authority', side_effect=changed):
             with self.assertRaisesRegex(ValueError, 'authority changed'):
-                channel.publish(self.api, self.root, planned, enabled=True)
+                self.publish(self.api, self.root, planned, enabled=True)
         self.assertTrue(self.api.entries[0]['draft'])
 
     def test_transient_get_is_retried_but_mutation_is_not(self):

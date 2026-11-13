@@ -1,9 +1,11 @@
 # Windows-App bauen und prüfen
 
-Aktuell maßgeblich: [APP-A-K01–K10 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6834815644)
+Aktuell maßgeblich: [APP-B1-K01–K08 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6848332974)
 und der [App-Releasevertrag](../../docs/PRODUCTION_UPDATES.md).
-APP-A ist im Arbeitsbranch implementiert; technisches Review, Mainintegration und
-Erstaktivierung stehen aus. APP-B ist nicht implementiert. Die historischen
+APP-A ist über #613 unabhängig abgenommen und in main integriert; Erstaktivierung
+und Windows-11-Upgradeprobe bleiben offen. APP-B1 liefert signierte Autorität und
+Verifier mit unprovisionierten öffentlichen Roots; APP-B2 ist nicht implementiert.
+Die historischen
 [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437),
 [P4-N1](https://github.com/venomenon328/picross/issues/588#issuecomment-6828896451)
 und dessen [Prüfzuschnitt](https://github.com/venomenon328/picross/issues/588#issuecomment-6829590335)
@@ -43,7 +45,7 @@ E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.ve
 Planwert. Der Bau erzeugt `inputs.json` und prüft die echte PyInstaller-Analysis
 gegen dieses committete Fingerprintinventar. Die isolierte private Umgebung
 liefert die gepinnten Python-/Wheel-/Runtimeinputs. Der Builder bündelt die
-benötigten Reader einschließlich `authoring_workflow`, Pillow, Tcl/Tk, UI und Icon;
+benötigten Reader einschließlich `authoring_workflow`, Pillow, Tcl/Tk, UI und Icon sowie den gemeinsamen Updateverifier;
 der Datencheckout hat keine Codeautorität. `components.json` bindet Commit,
 Fingerprint, Architektur, Komponenten und Ressourcenhashes, `inventory.json`
 die übrigen Appdateien. Kein Versprechen bitidentischer EXEs ohne Messung.
@@ -72,8 +74,12 @@ Vor Merge damit ausdrücklich den Implementierungsbranch wählen; diesen Ursprun
 im PR nennen. Keine frei eingegebenen Download-/Repository-/Buildpfade oder SHA.
 Die Diagnose umgeht keine Veröffentlichungschecks, sondern besitzt keinen
 Publikationspfad. Der Publisher wird nur im automatischen Mainfolgelauf und mit
-der nach separat beauftragter Aktivierung gesetzten Repositoryvariable
-`PW_RELEASE_ENABLED=true` gestartet. Hier werden keine Variablen/Secrets geändert.
+den nach separat beauftragter Aktivierung gesetzten Repositoryvariablen
+`PW_RELEASE_ENABLED=true` und `PW_UPDATE_SIGNING_ENABLED=true` gestartet.
+Vor jeder Environmentreferenz prüft ein secretfreies Gate Kandidat, Main-CI,
+Trust und das bereits vorhandene `pw-app-release` mit exakt Main-only-Branchpolicy.
+Unprovisionierter Trust sperrt. Nur der Publisher erhält den passenden privaten
+32-Byte-Seed als striktes Base64 aus dessen `PW_UPDATE_SIGNING_KEY`. Hier werden keine Variablen/Secrets geändert.
 
 Ein frischer Plan verifiziert die letzte veröffentlichte PW-Autorität inklusive
 binärer Assets; unvollständige veröffentlichte PW-Einträge sperren. Der Publisher
@@ -86,7 +92,9 @@ serielle Gruppe verhindert gegenseitiges Überholen von Pipelinebuilds.
 
 Produktdateien: `Picross-Produktionsassistent-X.Y.Z-windows-x64.msi`, `.sha256`,
 `START.txt`, `delivery.json`, `inputs.json`, kanonisches `manifest.json`.
-Letzteres bindet Schema, Repository, Produktionsstatus, Version, Source-SHA,
+Dies ist v1-Diagnoseprovenienz. Erst der Publisher erzeugt v2 plus
+`manifest.sig.json`, lädt alle sieben Dateien binär zurück und prüft sie erneut.
+Das Manifest bindet Schema, Repository, Produktionsstatus, Version, Source-SHA,
 Fingerprint, Produktidentitäten, MSI-Inspektion und Hash/Bytes jeder anderen Datei.
 Actions-Kandidat vierzehn Tage, Plan sieben Tage für den aktuellen Reviewer;
 Original-Serverbefunde stehen im Joblog. Produktdiff enthält keine Binärbelege.
@@ -157,7 +165,7 @@ Die [weiteren Runtime-Lizenzen](licenses/README.md) ergänzen OpenSSL, Expat, zl
 bzip2, liblzma und mpdecimal; der Build prüft die aus Python abrufbaren Versionen.
 Die PyInstaller-Ausnahme ersetzt keine Abhängigkeitslizenzen.
 
-Die Lieferung bleibt **unsigniert**. Kein Zertifikat, keine neuen Secrets und
+MSI/EXE bleiben **ohne Authenticode-Codesignatur**. Die v2-Metadatensignatur ist davon getrennt. Kein Zertifikat, keine neuen Secrets und
 keine abgeschalteten Schutzfunktionen. SmartScreen kann warnen; auch eine Signatur
 garantiert keine Warnungsfreiheit. Quellcommit/Hash vor Benutzung abgleichen.
 
@@ -166,3 +174,34 @@ Technische Primärquellen: [Bauoptionen](https://pyinstaller.org/en/stable/usage
 [Prozesse/DLL-Suche](https://pyinstaller.org/en/stable/common-issues-and-pitfalls.html),
 [Lizenzausnahme](https://pyinstaller.org/en/stable/license.html),
 [Microsoft SmartScreen](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation).
+
+
+## APP-B1: Kryptografiebasis und Diagnosedurchstich
+
+[requirements-update.txt](requirements-update.txt) pinnt cryptography 50.0.2,
+cffi 2.1.1 und pycparser 3.12. Diese geprüften stabilen Wheels sind gemeinsame
+Basis für tools und separaten Appbau/-kanal; keine neue Dokumentkernabhängigkeit.
+Das Windows-Wheel enthält statisch OpenSSL 4.0.3 (`29 Sep 2026`). Der Builder prüft
+die echte Version, sammelt Ed25519 und `_cffi_backend` explizit ein und kontrolliert
+PYZ-Module, `_rust.pyd`, CFFI-Erweiterung sowie Analysis-Quellen. `release.json`
+und [update-trust.json](update-trust.json) werden bewusst als öffentliche Ressourcen
+eingefroren und in Komponenten-/Dateiinventaren und echter MSI-Inspektion verglichen.
+Wheel-Lizenzoriginale für cryptography/cffi/pycparser und OpenSSL 4.0.3 ergänzen
+das bestehende Lizenzinventar. Kein privater Produktions- oder Testkey im Payload.
+
+Der separate Diagnoseworkflow führt nach `verify_installer --compare-build`
+[update_diagnostic.py](update_diagnostic.py) in derselben gepinnten Windowsumgebung
+aus. Ein temporärer nur im Prozess gehaltener Testkey signiert v2-Metadaten für
+die tatsächlichen MSI-/Delivery-/Inputbytes. Derselbe Verifier bestätigt den
+Kandidaten, lehnt die manipulierte MSI und im Produktionspfad den Testroot ab.
+Der synthetische Adapter ist ausdrücklich vom Frozen-Payload ausgeschlossen.
+Kein Skip bei fehlender Kryptografiebibliothek und kein Produktionssecret im Bau.
+
+Reviewer: unveränderter v1-Diagnosekandidat vierzehn Tage; zusätzliche v2-Testdaten
+(Manifest, Signatur, öffentlicher Testtrust, Ergebnis), Inputaudit und Inspektion
+sieben Tage. Logs bleiben im zugeordneten Run/Attempt; tatsächliche Downloads,
+Byte-/SHA-/Headbindungen im Lieferkommentar. Kein privater Testkey als Datei.
+T02 belegt Paketierung und Windows-Kryptofunktion, keine Installation oder
+Windows-11-Lebenszyklusprobe. Details zu Wireform, reinem Verifier/API,
+Bootstrap/Rotation und offenen A01/R01-Gates stehen in
+[Updates §6](../../docs/PRODUCTION_UPDATES.md#6-app-b1--signierte-autorität-und-feste-roots).
