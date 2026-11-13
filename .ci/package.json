@@ -17,7 +17,7 @@
     {
       "path": "tests/puzzle_production/test_catalog_images.py",
       "disposition": "change-scoped",
-      "reason": "Geschützte Migration, No-op, Quell-/Planstale und Journal-/Recoveryregression auf kleinem synthetischem Bestand; frische Windows-Pfadattribute mit tatsächlicher Junction, Case-Alias und Hardlink."
+      "reason": "Geschützte Migration, No-op, Quell-/Planstale und Journal-/Recoveryregression auf kleinem synthetischem Bestand; frische Pfadbeobachtung mit tatsächlicher Windows-Junction bzw. POSIX-Symlink, Case-Alias, Hardlink und geschlossenem Fehlerpfad. Keine Plattform-Skips im ausgewählten Modul."
     }
   ],
   "core_change": null,
