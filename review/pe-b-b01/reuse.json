@@ -1,0 +1,17 @@
+{
+  "prior_product_head": "613f609eabb622f72768c72981682e7076e06e8d",
+  "current_head": "cf3f9999035088e13a6f24f2004da749653f9c66",
+  "original_evidence_commit": "25c15a22151807d0ae4710034433884fbba7b544",
+  "unchanged_git_objects": {
+    "tools/puzzle_editor/worker.py": "bfe7cbe02c65f272b69457aacce212b26da35dd0",
+    "tools/puzzle_editor/instance.py": "6dbd8bb640554e321ac28656c0a79a49f49fa153",
+    "tools/puzzle_editor/desktop.py": "bd6733504d837e804fdeff083c6af31853ee5a6e",
+    "tools/puzzle_editor/bundle.py": "a9b87d0bfc600a4edf11e6094f5889f5ca1e307a",
+    "tools/puzzle_editor/build_windows.py": "2fa26f62d5c63d75355c85ccdd41bf38af89f02e",
+    "tools/puzzle_editor/ui": "0ba8050279ac6ae3d1b706a2fe2e35bd75c44e1a",
+    "tools/puzzle_production": "5b0c22a4401484bb84b47dca0fa39140bf7d5f91"
+  },
+  "server_change": "Only socket import and Windows HTTP.server_bind added; all other server AST nodes identical. Changed listener proven by fresh real Windows socket probe and rebuilt frozen T03.",
+  "reuse_scope": "Earlier T01 writer/API/transaction scenarios and T02 unchanged UI originals remain bound to their actual reported source heads. No assertion that old Windows/transport proof tested the new listener; replaced by this delivery.",
+  "zip_inventory_files_verified": 1131
+}
