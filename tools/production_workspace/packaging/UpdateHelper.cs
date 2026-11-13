@@ -178,6 +178,13 @@ public static class UpdateHelper {
         }
         return false;
     }
+    static ProcessStartInfo RestartInfo(string state, bool noBrowser) {
+        var info=new ProcessStartInfo(Exe,"--state "+Quote(state)+(noBrowser?" --no-browser":"")) {
+            UseShellExecute=false, WorkingDirectory=Install };
+        // A fresh top-level bootloader, not a worker inheriting the old frozen runtime.
+        info.EnvironmentVariables["PYINSTALLER_RESET_ENVIRONMENT"]="1";
+        return info;
+    }
     public static int Main(string[] args) {
         string state=null, nonce=null, version=null, outcome="unconfirmed";
         IntPtr parent=IntPtr.Zero; var streams=new List<FileStream>(); FileStream active=null;
@@ -240,8 +247,7 @@ public static class UpdateHelper {
             Need(HashFile(Exe)==Text(d,"exe_sha256") && new FileInfo(Exe).Length==Number(d,"exe_bytes"));
             var pe=FileVersionInfo.GetVersionInfo(Exe);
             Need(pe.FileMajorPart==0 && pe.FileMinorPart==1 && pe.FileBuildPart==VersionOf(version).Build && pe.FilePrivatePart==0);
-            using(var launched=Process.Start(new ProcessStartInfo(Exe,"--state "+Quote(state)+((bool)d["no_browser"]?" --no-browser":"")) {
-                    UseShellExecute=false, WorkingDirectory=Install })) Need(Ready(launched,d));
+            using(var launched=Process.Start(RestartInfo(state,(bool)d["no_browser"]))) Need(Ready(launched,d));
             outcome="installed";
             return 0;
         } catch(Exception) { return 2; }

@@ -134,7 +134,7 @@ class ChannelTests(unittest.TestCase):
         finally:
             stage.cleanup()
 
-    def test_cancel_and_disk_full_leave_existing_state_unchanged(self):
+    def test_cancel_before_download_leaves_existing_state_unchanged(self):
         sentinel = self.root / 'config.json'; sentinel.write_bytes(b'user state')
         metadata, assets = self.discover()
         stage = Stage(self.root / '.launcher')
@@ -145,13 +145,33 @@ class ChannelTests(unittest.TestCase):
             self.assertEqual(sentinel.read_bytes(), b'user state')
         finally:
             stage.cleanup()
-        self.cancel.clear()
-        stage = Stage(self.root / '.launcher')
-        try:
-            with patch.object(stage, 'write', side_effect=OSError('disk full')), self.assertRaises(OSError):
-                client._download(metadata, assets, stage, self.cancel, self.transport, Mock())
-        finally:
-            stage.cleanup()
+
+    def test_cancel_during_stream_and_short_write_never_verify_candidate(self):
+        metadata, assets = self.discover()
+        for failure in ('cancel', 'disk', 'short'):
+            stage = Stage(self.root / '.launcher')
+            authenticate = Mock()
+            original = self.transport.transfer
+            def partial(url, output, limit, cancel, deadline, *, expected=None):
+                if not url.endswith('.msi'):
+                    return original(url, output, limit, cancel, deadline, expected=expected)
+                output.write(b'partial')
+                if failure == 'cancel':
+                    cancel.set(); client.checkpoint(cancel, deadline)
+                if failure == 'disk':
+                    raise OSError('synthetic disk full after partial write')
+            try:
+                self.cancel.clear()
+                with patch.object(self.transport, 'transfer', side_effect=partial), self.assertRaises((OSError, ValueError)):
+                    client._download(metadata, assets, stage, self.cancel, self.transport, authenticate)
+                authenticate.assert_not_called()
+            finally:
+                stage.cleanup()
+
+    def test_closed_helper_boundary_rejects_metadata_only(self):
+        metadata, _ = self.discover()
+        with self.assertRaisesRegex(ValueError, 'Full verified'):
+            windows.prepare(metadata, Mock(), Mock(), Mock())
 
 
 class TransportTests(unittest.TestCase):
@@ -294,6 +314,17 @@ class LifecycleTests(unittest.TestCase):
 
     def test_developer_portable_never_installed(self):
         with self.assertRaises(ValueError): windows.installation()
+
+    def test_empty_root_never_starts_check_even_with_stored_optin(self):
+        runtime=Mock(); runtime.lock.state=self.root; runtime.lock.directory=self.root/'.launcher'
+        Preferences(runtime.lock.directory).write(True)
+        with (patch.object(windows,'installation',return_value=Mock(version='0.1.0',executable=self.root/'program'/'Picross-Start.exe')),
+              patch.object(app_updates,'production_trust',return_value={'accepted':{}}),
+              patch.object(client,'discover') as discover):
+            updates=app_updates.Updates(runtime); updates.start()
+            self.assertIn('inaktiv',updates.status); discover.assert_not_called()
+            for _ in range(12): updates.poll_result()
+            self.assertEqual(updates.recovery_attempts,10)
 
 
 if __name__ == '__main__':
