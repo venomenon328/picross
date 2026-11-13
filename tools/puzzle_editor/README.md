@@ -122,9 +122,11 @@ Laufzeit-/Python-/Pillow-/PyInstaller-/Tcl/Tk-Lizenzen und `START.md` im Paket.
 Releasekanal oder automatisches Update. Der normale Windows-Spielerbuild in
 Package CI ist vom separaten Editorbau und dessen tatsächlichem Start getrennt.
 
-Ausgewählt: Projektkern und `tools`; schmale HTTP-/Sicherheits-/Instanztests in
-`tools/test_puzzle_editor.py`. Echte Writer-/Browser-/Windows-T01–T03-Proben
-einmalig auf synthetischen Daten, kein wachsender Echtkatalogtest. Bis zu drei
+Für PE-PERF1 ausgewählt: Projektkern, `tools` und `production.catalog` für die
+geänderten gemeinsamen Quellen-/Snapshotreader; schmale HTTP-/Sicherheits-/
+Instanztests in `tools/test_puzzle_editor.py`. T01–T04 laufen einmalig mit
+isolierten 56-Rätsel-Kopien und synthetischen Writer-/Recoveryfällen, kein
+wachsender Echtkatalogtest. Bis zu drei
 aktuelle UI-Originale und deren Produktheadbindung werden dem unabhängigen
 Reviewer separat zugänglich gemacht. Kein automatisches Spiel-Chromiumprofil.
 Die abschließende persönliche Eigentümerprobe U01 bleibt vor Schließung von
