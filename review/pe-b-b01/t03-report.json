@@ -1,0 +1,212 @@
+{
+  "head": "cf3f9999035088e13a6f24f2004da749653f9c66",
+  "platform": "Windows 11 10.0.26200",
+  "standard_user": true,
+  "delivery": {
+    "format": "picross-pe-build-v1",
+    "version": "0.1.0",
+    "commit": "cf3f9999035088e13a6f24f2004da749653f9c66",
+    "python": "3.13.14",
+    "tk": "8.6.15",
+    "dependencies": {
+      "Pillow": "12.3.0",
+      "PyInstaller": "6.22.3",
+      "pyinstaller-hooks-contrib": "2026.10",
+      "altgraph": "0.17.5",
+      "packaging": "26.3",
+      "pefile": "2024.8.26",
+      "pywin32-ctypes": "0.2.3",
+      "setuptools": "84.2.1"
+    },
+    "zip_sha256": "a9a784eb6f0791ba9bd6f8c29a59c1f7809dfa001921358ebfb92b97d5cc7051",
+    "zip_bytes": 21792685,
+    "exe_sha256": "d21a76edae47444ed3de2bda37bab0df2e4704d9a3156765d32f23085a4436a2",
+    "files": 1131
+  },
+  "steps": [
+    "Portable EXE via ShellExecute; actual folder selection; visible path/port; automatic standard browser without Python/Git in PATH",
+    "Frozen listener rejects later foreign process with default and SO_REUSEADDR; original authenticated browser reload still succeeds",
+    "Second instance rejected while original listener remains alive",
+    "Orderly normal stop; process and port closed; checkout bytes/mtimes preserved",
+    "Remembered checkout reopened; actual prior-occupant dialog and explicit Yes; foreign listener preserved; active frozen detail drains before shutdown",
+    "Invalid checkout visibly rejected without a ready service",
+    "Exact python -m tools.puzzle_editor fallback opens actual window/browser and stops; complete checkout bytes/mtimes unchanged"
+  ],
+  "automation": "Real Tk dialog, Windows UI Automation and bounded mouse/keyboard input in own windows; real standard browser",
+  "input_limit_seconds": 240,
+  "ports": [
+    52047,
+    49415
+  ],
+  "started_pids": [
+    45816,
+    33248,
+    37196,
+    49012,
+    49472
+  ],
+  "later_contenders": [
+    {
+      "pid": 44152,
+      "bound": false,
+      "reuse": 0,
+      "winerror": 10048
+    },
+    {
+      "pid": 51304,
+      "bound": false,
+      "reuse": 1,
+      "winerror": 10013
+    }
+  ],
+  "prior_occupant": {
+    "port": 60683,
+    "preserved": true,
+    "alternative_port": 49415,
+    "explicit_Yes": true
+  },
+  "passed": true,
+  "automation_seconds": 47.723,
+  "checkout_inventory": {
+    ".git/config": [
+      "05becdb83bb897f6103c8d91439e2e9092144edf5b3955a746fce4975c12bfdc",
+      1794584761364473400
+    ],
+    ".git/description": [
+      "85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee",
+      1794584761331103700
+    ],
+    ".git/HEAD": [
+      "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80",
+      1794584761368173100
+    ],
+    "content/categories.json": [
+      "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+      1794584720655531800
+    ],
+    "content/registry.json": [
+      "9ca25fc93cf3b5cb4e3f2f62a87ab47a4eba9845265d2f91aeff0e6a95d2f00b",
+      1794584738333462100
+    ],
+    "tools/__init__.py": [
+      "405f0871af5a486a6bf344e405b84054e0787a5803ed49bac38fb7d8f3e19cfb",
+      1794591445322246500
+    ],
+    "game/data/background-capability.json": [
+      "255c88ff3975f17daabb3452bae9e0a31e62a9d0540df36e0c2d3d44b6219630",
+      1794584761290434300
+    ],
+    "game/data/registry.json": [
+      "aba28576862a050c2e2ada267df9aaa18ddbb8746b291866386e1b48b88bdc65",
+      1794584734985879800
+    ],
+    "game/data/content/pe_primary.json": [
+      "784a04578955e79b8fe4a0635d3289aa7449841ad060022c00835e444bc97861",
+      1794584720658769200
+    ],
+    "game/data/content/pe_secondary.json": [
+      "8b33e142d1ccd207d07f65a5a61d1ed2df30b72a445bc5ed1986df26467c5cbc",
+      1794584734103247900
+    ],
+    "game/art/content/pe_primary.png": [
+      "0b6da86833b548c85711f4153b31f5734df6818898c9aff3c2c99f4265fa75fc",
+      1794584720657750500
+    ],
+    "game/art/content/pe_primary.txt": [
+      "fbbb888aad8dd018546cc2fa835877d1d7d71c942c02c7b1cc491c754cc83d05",
+      1794584720658261100
+    ],
+    "game/art/content/pe_secondary.png": [
+      "844385f91b40a8f79bf8f361bbbda49cbfea48c7400eeb569dc84f5706c61eee",
+      1794584732981465900
+    ],
+    "game/art/content/pe_secondary.txt": [
+      "651844c486524bab972b9909936c50abcd355da1ce3c9e340fb74f1cbd69f692",
+      1794584734056630500
+    ],
+    "content/added/pz-test-direct-color.json": [
+      "f653d1dcfa63983c60b00a015bd53e04fbb60cb57541cc45e2feb3ad1f5580b1",
+      1794584733937012200
+    ],
+    "content/added/pz-test-direct-mono.json": [
+      "ed10deed07ff0b573b27e4e8b9abeacd0c9981dba19269e803cc8e6850b2765d",
+      1794584720654526500
+    ],
+    "content/packages/pz-test-direct-mono/r01/manifest.json": [
+      "fdf14d0a065ca1d869edfc55249f862dcec9d5632d10a75749da64ae63d7f680",
+      1794584720656646900
+    ],
+    "content/packages/pz-test-direct-color/r01/manifest.json": [
+      "095405896b0a8fa4b28f0d40b69afd4f5d657139666ccd99e187bb25b07f63fc",
+      1794584738325234900
+    ],
+    "content/difficulty/pz-test-direct-color/rating.json": [
+      "4de9e7c1ebaa9a2059c84c85c1266cbcaebd8e0bfdefd35794b648160492c2a8",
+      1794584733970328200
+    ],
+    "content/difficulty/pz-test-direct-mono/rating.json": [
+      "73c625830da4903047e56072dd43ae2fc780ec1b0e0c39e93e905370f17e2402",
+      1794584720655531800
+    ],
+    ".git/hooks/applypatch-msg.sample": [
+      "0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7",
+      1794584761331624100
+    ],
+    ".git/hooks/commit-msg.sample": [
+      "efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b",
+      1794584761331624100
+    ],
+    ".git/hooks/fsmonitor-watchman.sample": [
+      "9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0",
+      1794584761332631300
+    ],
+    ".git/hooks/post-update.sample": [
+      "81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5",
+      1794584761332631300
+    ],
+    ".git/hooks/pre-applypatch.sample": [
+      "e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475",
+      1794584761333664600
+    ],
+    ".git/hooks/pre-commit.sample": [
+      "57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b",
+      1794584761338257400
+    ],
+    ".git/hooks/pre-merge-commit.sample": [
+      "d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53",
+      1794584761339288000
+    ],
+    ".git/hooks/pre-push.sample": [
+      "ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a",
+      1794584761339804900
+    ],
+    ".git/hooks/pre-rebase.sample": [
+      "4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3",
+      1794584761340321600
+    ],
+    ".git/hooks/pre-receive.sample": [
+      "a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989",
+      1794584761340321600
+    ],
+    ".git/hooks/prepare-commit-msg.sample": [
+      "e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619",
+      1794584761340321600
+    ],
+    ".git/hooks/push-to-checkout.sample": [
+      "a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f",
+      1794584761341327700
+    ],
+    ".git/hooks/sendemail-validate.sample": [
+      "44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92",
+      1794584761341832700
+    ],
+    ".git/hooks/update.sample": [
+      "8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106",
+      1794584761342338300
+    ],
+    ".git/info/exclude": [
+      "6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1",
+      1794584761343344800
+    ]
+  }
+}

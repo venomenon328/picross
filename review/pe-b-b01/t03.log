@@ -1,0 +1,8 @@
+PASS Portable EXE via ShellExecute; actual folder selection; visible path/port; automatic standard browser without Python/Git in PATH 9.768
+PASS Frozen listener rejects later foreign process with default and SO_REUSEADDR; original authenticated browser reload still succeeds 10.45
+PASS Second instance rejected while original listener remains alive 17.351
+PASS Orderly normal stop; process and port closed; checkout bytes/mtimes preserved 20.923
+PASS Remembered checkout reopened; actual prior-occupant dialog and explicit Yes; foreign listener preserved; active frozen detail drains before shutdown 33.647
+PASS Invalid checkout visibly rejected without a ready service 40.6
+PASS Exact python -m tools.puzzle_editor fallback opens actual window/browser and stops; complete checkout bytes/mtimes unchanged 47.723
+INPUT CONTROL ENDED 47.724
