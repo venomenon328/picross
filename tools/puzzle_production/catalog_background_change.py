@@ -16,6 +16,7 @@ from .background_contract import BackgroundError
 
 FORMAT = "picross-background-adoption-plan-v1"
 REBIND_FORMAT = "picross-background-adoption-plan-v2"
+IMAGE_FORMAT = "picross-background-adoption-plan-v3"
 RESULT = "picross-background-adoption-result-v1"
 PLAN_LIMIT = 24 * 1024 * 1024
 validate_request = requests.validate
@@ -35,6 +36,8 @@ def _publication_error(exc, remaining):
 
 
 def source_hashes(snapshot):
+    if tx.image_generation(snapshot):
+        return tx.image_snapshot(snapshot)["sources"]
     return {**snapshot["retained"], **{name: io.checksum(raw) for name, raw in snapshot["texts"].items()}}
 
 
@@ -54,6 +57,8 @@ def result(status, value=None, request=None, *, error=None, recovery_required=Fa
 
 def _target(root, snapshot, request):
     from .content_registry import ROOT
+    require((request["format"] == requests.IMAGE_FORMAT) == tx.image_generation(snapshot),
+            "Background request generation differs from the current image projection")
     require(request["puzzle_id"] in bg.index(snapshot["registry"]), "Background change requires an existing background target; Legacy retrofit is unsupported")
     entry = next(e for e in snapshot["registry"]["entries"] if e["id"] == request["puzzle_id"])
     require(root != ROOT.resolve() or not entry["production"]["test_only"], "Test-only background cannot enter the real catalog")
@@ -67,7 +72,9 @@ def _work_graph(root, request, raw, payload, source, entry, external_root):
     require(request["target"] == {"source": bg.ref(bg.path(request["puzzle_id"]), bg.encoded(source)),
                                    "origin_sha256": bg.origin_hash(source),
                                    "image_revision": bg.current(source)["image_revision"]}, "Stale background request target")
-    require(request["test_only"] == bg.initial(source)["test_only"], "Background work changes test_only")
+    require(request["test_only"] == entry["production"]["test_only"], "Background work changes test_only")
+    if request["format"] == requests.IMAGE_FORMAT:
+        require(request["context"] == requests.current_context(root, entry), "Stale background reveal context")
     graph = package.validate_change(root, request, source, entry, external_root=external_root)
     expected = {requests.directory(request) + "/" + row["file"] for row in request["files"]}
     used = set(graph["used_files"]) | {requests.directory(request) + "/" + request["authorization"]["evidence"]["file"]}
@@ -83,7 +90,25 @@ def _build(root, request, raw, payload, *, external_root=None, snapshot=None):
     entry, source = _target(root, snapshot, request)
     graph = _work_graph(root, request, raw, payload, source, entry, external_root)
     notice = bg.notice_bytes(request["puzzle_id"], graph["candidate"])
-    current = bg.build_change(source, entry, request, bg.ref(requests.record_name(request), raw), graph, notice)
+    if request["format"] == requests.IMAGE_FORMAT:
+        from . import editor_image_source as images
+        candidate, png = graph["candidate"], graph["asset_bytes"]
+        require(graph["ready"] is True and graph["binding"] == request["background"],
+                "Background change requires the freshly checked exact work binding")
+        active = {"image_revision": bg.current(source)["image_revision"] + 1,
+                  "candidate_revision": candidate["revision"] if candidate else None,
+                  "decision": deepcopy(graph["decision"]), "derivation": deepcopy(graph["derivation"]),
+                  "provenance": deepcopy(candidate["provenance"]) if candidate else None,
+                  "review": deepcopy(candidate["review"]) if candidate else None,
+                  "asset": bg.ref(bg.asset_path(entry["id"]), png) if png is not None else None,
+                  "notice": bg.ref(bg.notice_path(entry["id"]), notice) if notice is not None else None,
+                  "adoption": {"request": bg.ref(requests.record_name(request), raw),
+                               **{key: deepcopy(request[key]) for key in
+                                  ("revision", "target", "background", "authorization", "context")}}}
+        current = (images.adopt_background(source, active) if source["format"] == images.BACKGROUND_FORMAT else
+                   images.adopt_background_from_old(root, snapshot["registry"], entry, active))
+    else:
+        current = bg.build_change(source, entry, request, bg.ref(requests.record_name(request), raw), graph, notice)
     name = bg.path(request["puzzle_id"])
     encoded = bg.encoded(current)
     registry = deepcopy(snapshot["registry"])
@@ -104,9 +129,10 @@ def _build(root, request, raw, payload, *, external_root=None, snapshot=None):
     files = {"input/" + requests.directory(request) + "/" + name: data for name, data in payload.items()}
     if previous is not None:
         files["previous/background.png"] = previous
-    value = {"format": REBIND_FORMAT if source["format"] in bg.REBIND_FORMATS else FORMAT,
+    value = {"format": IMAGE_FORMAT if tx.image_generation(snapshot) else REBIND_FORMAT if source["format"] in bg.REBIND_FORMATS else FORMAT,
              "request": bg.ref("input/" + requests.record_name(request), raw),
-             "snapshot": {"sources": source_hashes(snapshot), "namespaces": snapshot["namespaces"]},
+             "snapshot": tx.image_snapshot(snapshot) if tx.image_generation(snapshot) else
+                         {"sources": source_hashes(snapshot), "namespaces": snapshot["namespaces"]},
              "old": journal["old"], "new": journal["new"],
              "files": [bg.ref(name, data) for name, data in sorted(files.items())]}
     value["plan_hash"] = digest(value)
@@ -119,7 +145,7 @@ def _build(root, request, raw, payload, *, external_root=None, snapshot=None):
 def validate_plan(value):
     value = io.json_bytes(bg.encoded(value), PLAN_LIMIT)
     exact_keys(value, {"format", "request", "snapshot", "old", "new", "files", "plan_hash"})
-    require(value["format"] in (FORMAT, REBIND_FORMAT), "Unsupported background plan format")
+    require(value["format"] in (FORMAT, REBIND_FORMAT, IMAGE_FORMAT), "Unsupported background plan format")
     require(sha(value["plan_hash"]) == digest({k: v for k, v in value.items() if k != "plan_hash"}), "Wrong background plan hash")
     from .background_contract import _ref
     _ref(value["request"])
@@ -131,7 +157,8 @@ def validate_plan(value):
     for name, checksum in snap["sources"].items():
         relative(name)
         if checksum is not None: sha(checksum)
-    exact_keys(snap["namespaces"], {"reveals", "difficulty", "added", "packages", "backgrounds", "background_assets"})
+    exact_keys(snap["namespaces"], {"reveals", "difficulty", "added", "packages", "backgrounds", "background_assets"} |
+               ({"reveal_assets"} if value["format"] == IMAGE_FORMAT else set()))
     for names in snap["namespaces"].values():
         require(isinstance(names, list) and len(names) <= 100000 and all(isinstance(n, str) for n in names) and
                 names == sorted(set(names)), "Invalid background namespace snapshot")
@@ -175,8 +202,13 @@ def load_plan(path):
     require(entry is not None, "Plan lacks its background target entry")
     previous_source = bg._source(None, registry, entry, value["old"])
     require(previous_source is not None, "Plan lacks its background source")
-    require((previous_source.get("format") in bg.REBIND_FORMATS) == (value["format"] == REBIND_FORMAT),
-            "Background plan generation differs from source")
+    image_plan = value["format"] == IMAGE_FORMAT
+    old_runtime = io.json_bytes(value["old"][tx.RUNTIME].encode(), 8 * 1024 * 1024)
+    require(image_plan == (old_runtime.get("format") == "picross-runtime-registry-v8") and
+            image_plan == (request["format"] == requests.IMAGE_FORMAT), "Background plan/request projection differs")
+    if not image_plan:
+        require((previous_source.get("format") in bg.REBIND_FORMATS) == (value["format"] == REBIND_FORMAT),
+                "Background plan generation differs from source")
     prior = bg.current(previous_source)
     require(isinstance(prior, dict), "Invalid old current background source object")
     if prior.get("asset") is not None: expected.add("previous/background.png")
@@ -255,7 +287,9 @@ def _current_expected(value, journal, new):
     for name, text in journal["new"].items():
         sources[name] = io.checksum(text.encode() if text is not None else None)
     for name, pair in journal["replacements"].items():
-        if pair["new"] is None: sources.pop(name, None)
+        if pair["new"] is None:
+            if value["format"] == IMAGE_FORMAT: sources[name] = None
+            else: sources.pop(name, None)
         else: sources[name] = pair["new"]["sha256"]
     # The complete registry/source reader fixes all background namespace paths.
     registry = io.json_bytes(journal["new"][tx.REGISTRY].encode(), 8 * 1024 * 1024)
@@ -291,9 +325,10 @@ def adopt(root, plan_path, *, seconds=300, integrated_commit=None, fail_step=Non
                     "Use the full verified Main commit")
             require(is_target, "An integrated Main proof is for background no-op only")
         previous = bg.validate(io.json_bytes(old[bg.path(request["puzzle_id"])], bg.LIMIT), entry)
-        known = set(snapshot["texts"]) | set(snapshot["retained"])
-        known.discard(bg.asset_path(request["puzzle_id"]))
-        if bg.current(previous)["asset"] is not None: known.add(bg.asset_path(request["puzzle_id"]))
+        known = set(source_hashes(snapshot))
+        if value["format"] != IMAGE_FORMAT:
+            known.discard(bg.asset_path(request["puzzle_id"]))
+            if bg.current(previous)["asset"] is not None: known.add(bg.asset_path(request["puzzle_id"]))
         require(set(value["snapshot"]["sources"]) == known, "Background plan source set differs from the complete target view")
         with tempfile.TemporaryDirectory(prefix="hp-i1b2-old-") as temporary:
             stage = Path(temporary)

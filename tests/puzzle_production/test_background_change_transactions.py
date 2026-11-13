@@ -119,12 +119,21 @@ class NullableBinaryContractTests(unittest.TestCase):
             self.assertEqual(pub.read_journal(root), raw)
             target.write_bytes(b" " + raw)
             with self.assertRaises(InvalidInput): pub.read_journal(root)
-            current = pub.journal_bytes({**value, "format": tx.PE_FORMATS["background-adoption"]})
-            self.assertGreater(len(current), pub.NORMAL_LIMIT)
-            target.write_bytes(current)
-            self.assertEqual(pub.read_journal(root), current)
+            # PE-A2 explicitly admits the three current binary journal forms.
+            # A supported version is not an unknown-format negative fixture.
+            for format_ in (tx.PE_FORMATS["background-adoption"],
+                            tx.IMAGE_FORMATS["background-adoption"],
+                            tx.IMAGE_FORMATS["reveal-adoption"],
+                            tx.IMAGE_FORMATS["editor-images"]):
+                with self.subTest(format=format_):
+                    current = pub.journal_bytes({**value, "format": format_})
+                    self.assertGreater(len(current), pub.NORMAL_LIMIT)
+                    target.write_bytes(current)
+                    self.assertEqual(pub.read_journal(root), current)
+                    target.write_bytes(b" " + current)
+                    with self.assertRaises(InvalidInput): pub.read_journal(root)
         for format_ in (tx.BACKGROUND_FORMATS["sync"], tx.PE_FORMATS["sync"],
-                        "picross-background-adoption-journal-v4"):
+                        tx.IMAGE_FORMATS["sync"], "picross-background-adoption-journal-v999"):
             with self.subTest(format=format_), self.assertRaises(Aborted):
                 pub.journal_bytes({**value, "format": format_})
 

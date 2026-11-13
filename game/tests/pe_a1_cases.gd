@@ -1,15 +1,15 @@
 extends RefCounted
-## Cheap PE-A1 boundary/save cases within the existing native.core process.
+## Cheap PE-A1/A2 boundary/save cases within the existing native.core process.
 const Registry = preload("res://model/content_registry.gd")
 const Definition = preload("res://model/definition.gd")
 const Session = preload("res://model/session.gd")
 const Store = preload("res://model/save_store.gd")
 const BackgroundCases = preload("res://tests/background_tests.gd")
 
-static func registry(status: String = "legacy") -> Dictionary:
+static func registry(status: String = "legacy", version: int = 7) -> Dictionary:
 	var entry: Dictionary = BackgroundCases.entry("pz-metadata-native", status)
 	entry["name"] = "Current name"
-	return BackgroundCases.registry(entry, 7)
+	return BackgroundCases.registry(entry, version)
 
 static func capability(enabled: bool) -> Dictionary:
 	return {"format":"picross-runtime-background-capability-v1", "runtime_format":"picross-runtime-registry-v6", "profile_id":"picross-background-png2304-v1", "enabled":enabled}
@@ -22,7 +22,7 @@ static func reader_cases(runner: SceneTree) -> void:
 		bad.erase(field)
 		runner.check(not Registry.validate(bad).is_empty(), "PE-A1 rejects missing v7 root field " + field)
 	var future_registry: Dictionary = valid.duplicate(true)
-	future_registry.format = "picross-runtime-registry-v8"
+	future_registry.format = "picross-runtime-registry-v9"
 	runner.check(not Registry.validate(future_registry).is_empty(), "PE-A1 rejects unknown future registry")
 	var extra_root: Dictionary = valid.duplicate(true)
 	extra_root["metadata"] = []
@@ -65,6 +65,37 @@ static func reader_cases(runner: SceneTree) -> void:
 	var future: Dictionary = capability(true)
 	future.runtime_format = "picross-runtime-registry-v7"
 	runner.check(not Registry.validate_capability(valid, future, true).is_empty(), "PE-A1 does not invent a new capability generation")
+	for status: String in ["legacy", "standard", "none", "selected"]:
+		var data: Dictionary = registry(status, 8)
+		runner.check(Registry.validate(data).is_empty(), "PE-A2 exact v8 background " + status)
+		var requires_capability: bool = status in ["none", "selected"]
+		runner.check(Registry.validate_capability(data, null, false).is_empty() != requires_capability, "PE-A2 optional capability boundary " + status)
+		runner.check(Registry.validate_capability(data, capability(false), true).is_empty() != requires_capability, "PE-A2 disabled capability boundary " + status)
+		runner.check(Registry.validate_capability(data, capability(true), true).is_empty(), "PE-A2 unchanged capability v1/v6 enables " + status)
+		runner.check(not Registry.validate_capability(data, {}, true).is_empty(), "PE-A2 invalid existing capability fails " + status)
+	for version: int in [6, 7]:
+		var old: Dictionary = registry("standard", version)
+		if version == 6: old.entries[0].erase("name")
+		runner.check(not Registry.validate(old).is_empty(), "PE-A2 does not extend old background reader v%d" % version)
+	var image_catalog: Dictionary = registry("standard", 8)
+	for field: String in image_catalog.entries[0]:
+		var bad: Dictionary = image_catalog.duplicate(true)
+		bad.entries[0].erase(field)
+		runner.check(not Registry.validate(bad).is_empty(), "PE-A2 rejects missing v8 entry field " + field)
+	var extra_image: Dictionary = image_catalog.duplicate(true)
+	extra_image.entries[0]["image_revision"] = 1
+	runner.check(not Registry.validate(extra_image).is_empty(), "PE-A2 v8 has no extra image entry field")
+	for revision: Variant in [null, 0, -1, true, "1", 1.5, 1000001, INF, NAN]:
+		var bad: Dictionary = image_catalog.duplicate(true)
+		bad.entries[0].background.image_revision = revision
+		runner.check(not Registry.validate(bad).is_empty(), "PE-A2 standard needs a bounded preference revision " + str(revision))
+	var bad_standard: Dictionary = image_catalog.duplicate(true)
+	bad_standard.entries[0].background.asset = registry("selected", 8).entries[0].background.asset
+	runner.check(not Registry.validate(bad_standard).is_empty(), "PE-A2 standard cannot own an image")
+	for suffix: String in [".png", ".svg", ".webp", ".PNG", ".png.bak"]:
+		var candidate: Dictionary = image_catalog.duplicate(true)
+		candidate.entries[0].reveal = "art/content/background_a" + suffix
+		runner.check(Registry.validate(candidate).is_empty() == (suffix in [".png", ".svg"]), "PE-A2 current reveal type " + suffix)
 
 static func definition(identifier: String, name: String) -> Dictionary:
 	return {"schema":2, "id":identifier, "revision":1, "width":2, "height":2,
@@ -73,15 +104,15 @@ static func definition(identifier: String, name: String) -> Dictionary:
 		"columns":[[{"length":1,"color":1}],[{"length":1,"color":1}]],
 		"reveal":{"version":1,"definition_id":identifier,"name":name,"image":"res://art/fixtures/t01.svg"}}
 
-static func save_cases(runner: SceneTree) -> void:
+static func save_cases(runner: SceneTree, version: int = 7) -> void:
 	var original: Dictionary = Registry.cached
-	var data: Dictionary = registry()
+	var data: Dictionary = registry("legacy", version)
 	data.categories.append({"id":"renamed-category","name":"Renamed category","order":2})
 	data.entries.clear()
 	var files: Array[String] = []
 	for state: String in ["begun", "solved"]:
 		var identifier: String = "pz-metadata-" + state
-		var entry: Dictionary = BackgroundCases.entry(identifier, "legacy")
+		var entry: Dictionary = BackgroundCases.entry(identifier, "standard" if version == 8 else "legacy")
 		entry.key = "metadata_" + state
 		entry.save_slot = entry.key
 		entry.definition = "data/fixtures/" + entry.key + ".json"
@@ -110,6 +141,7 @@ static func save_cases(runner: SceneTree) -> void:
 		var old_definition: Dictionary = Definition.load_fixture(key)
 		runner.check(Definition.validate(old_definition).is_empty(), "PE-A1 synthetic definition validates " + state)
 		var session: Session = Session.new(old_definition)
+		runner.check(session.reveal().is_empty() and not old_definition.reveal.name in session.album_title(), "PE-A1/A2 new session remains spoiler-free v%d/%s" % [version, state])
 		if state == "begun":
 			session.player.commit([{"index":0,"before":-1,"after":1}])
 			session.player.commit([{"index":1,"before":-1,"after":0}])
@@ -128,10 +160,20 @@ static func save_cases(runner: SceneTree) -> void:
 			if row.id == entry.id:
 				row.name = "After " + state
 				row.category_id = "renamed-category"
+				if version == 8: row.reveal = row.reveal.get_basename() + ".png"
 		var current_definition: Dictionary = Definition.load_fixture(key)
 		var expected: Dictionary = old_definition.duplicate(true)
 		expected.reveal.name = "After " + state
-		runner.check(current_definition == expected, "PE-A1 shared loader only overlays current name " + state)
+		if version == 8: expected.reveal.image = expected.reveal.image.get_basename() + ".png"
+		runner.check(current_definition == expected, "PE-A1/A2 shared loader only overlays current presentation v%d/%s" % [version, state])
+		runner.check(Definition.validate(current_definition).is_empty(), "PE-A1/A2 current actual reveal validates v%d/%s" % [version, state])
+		if version == 7:
+			for row: Dictionary in Registry.cached.entries:
+				if row.id == entry.id: row.reveal = row.reveal.get_basename() + ".png"
+			var unmigrated: Dictionary = Definition.load_fixture(key)
+			runner.check(unmigrated.reveal.image == old_definition.reveal.image and not Definition.validate(unmigrated).is_empty(), "PE-A2 v7 cannot acquire current-image overlay without migration " + state)
+			for row: Dictionary in Registry.cached.entries:
+				if row.id == entry.id: row.reveal = entry.reveal
 		runner.check(Registry.by_id(entry.id).category_id == "renamed-category", "PE-A1 indexed lookup uses current category " + state)
 		var loaded: Dictionary = store.load_slot(current_definition)
 		runner.check(loaded.status == "loaded", "PE-A1 old save remains compatible " + state)
@@ -148,6 +190,17 @@ static func save_cases(runner: SceneTree) -> void:
 				runner.check(restored.player.cells[1] == 0, "PE-A1 retained redo still works")
 			else:
 				runner.check(restored.album_title() == "After solved" and restored.reveal().name == "After solved", "PE-A1 solved title and reveal use current name")
+				if version == 8:
+					runner.check(restored.reveal().image == expected.reveal.image, "PE-A2 solved reveal uses current PNG resource")
+		if version == 8:
+			for row: Dictionary in Registry.cached.entries:
+				if row.id == entry.id: row.reveal = row.reveal.get_basename() + ".svg"
+			var returned: Dictionary = Definition.load_fixture(key)
+			expected.reveal.image = old_definition.reveal.image
+			runner.check(returned == expected and Definition.validate(returned).is_empty(), "PE-A2 PNG to SVG retains current name and definition identity " + state)
+			for row: Dictionary in Registry.cached.entries:
+				if row.id == entry.id: row.reveal = "art/fixtures/foreign.svg"
+			runner.check(Definition.load_fixture(key).is_empty(), "PE-A2 rejects a foreign live reveal stem " + state)
 		runner.check(FileAccess.get_file_as_bytes(path) == definition_bytes, "PE-A1 overlay leaves definition bytes unchanged " + state)
 		runner.check(FileAccess.get_file_as_bytes(store.path_for(key)) == save_bytes, "PE-A1 load leaves save bytes unchanged " + state)
 		store.reset_slot(key)
@@ -158,3 +211,4 @@ static func save_cases(runner: SceneTree) -> void:
 static func run(runner: SceneTree) -> void:
 	reader_cases(runner)
 	save_cases(runner)
+	save_cases(runner, 8)

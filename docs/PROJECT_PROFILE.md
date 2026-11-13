@@ -103,12 +103,16 @@ Retirement bleiben eigene Schritte; Batchabschluss ist keine Mainintegration.
 
 Der [lokale Bestandseditor PE](PUZZLE_EDITOR.md) ist unter
 [#576](https://github.com/venomenon328/picross/issues/576) spezifiziert. PE-A1
-liefert im Arbeitsbranch von [PR #577](https://github.com/venomenon328/picross/pull/577)
+liefert nach unabhängigem Review und Integration von [PR #577](https://github.com/venomenon328/picross/pull/577)
 die aktive Namens-/Kategorieautorität in Inhaltsregistry v4 und Runtime v7 samt
 expliziter Migration, Kategorienpflege und gemeinsamer CLI/API. Bestehende
-Produktionsbindungen und Saveidentitäten bleiben getrennt erhalten. Bildpflege,
-Rasterrevisionen und Weboberfläche folgen in eigenen Paketen; das unabhängige
-PE-A1-Review steht vor Merge aus.
+Produktionsbindungen und Saveidentitäten bleiben getrennt erhalten.
+[PE-A2](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) ergänzt
+unveränderten Fertigbildimport, aktuelle Reveal-/Hintergrundquellen und ausdrücklich
+eingeführte Runtime v8 im gemeinsamen Writer. Der geschlossene Vertrag steht vor
+dem konsumierenden Code; tatsächliche Lieferung und unabhängige Abnahme stehen
+im Paket-/PR-Stand. Rasterrevisionen und Weboberfläche bleiben PE-A3/PE-B;
+keine neue persönliche Buchprobe oder Bildproduktion durch das Datenpaket.
 
 | Arbeit | Zusätzlich vollständig lesen |
 | --- | --- |

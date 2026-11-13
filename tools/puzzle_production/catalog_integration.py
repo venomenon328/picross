@@ -83,6 +83,8 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     entry = export_entry(export_dir, m, report, category, background=is_background)
     old_background = background.load(root, registry, existing) if existing else None
     active_reveal = reveal.load(root, existing, catalog) if existing else None
+    editor_reveal = active_reveal is not None and active_reveal.get("format") == "picross-catalog-reveal-v3"
+    editor_background = old_background is not None and old_background.get("format") == "picross-catalog-background-v5"
     n = "game/" + entry["definition"]
     if update:
         require(existing is not None, "Update requires an existing production ID")
@@ -94,7 +96,8 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         require(all(entry[k] == existing[k] for k in fixed),
                 "Raster update must retain identity, paths, visibility and save slot")
         effective = reveal.resolve(root, existing, catalog)["effective_reveal_sha256"]
-        require(entry["production"]["reveal_sha256"] == effective, "Raster update must retain the approved reveal bytes")
+        require(editor_reveal or entry["production"]["reveal_sha256"] == effective,
+                "Raster update must retain the approved reveal bytes")
     if existing is not None:
         from .integrated_content import FORMAT as INTEGRATED
         original = load_json(root / existing["production"]["package"] / "manifest.json")
@@ -102,8 +105,18 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         if is_background and old_background is not None:
             exported_background = background.build(export_dir, m, report, entry)
             if not update:
-                same = background.initial(old_background) == exported_background
-            elif same:
+                if editor_background and same:
+                    from .integrated_content import EDITOR_FORMAT
+                    actual_export = (original["background"]["export_source"] if original.get("format") == EDITOR_FORMAT
+                        else background.build(root / existing["production"]["package"], original, None, entry))
+                    same = actual_export == exported_background
+                else:
+                    same = False
+                # A genuine first-export repeat remains a no-op after later
+                # raster/reveal bindings and an editor wrapper. The complete
+                # immutable source is separate from the current export above.
+                same = same or background.initial(old_background) == exported_background
+            elif same and not editor_background:
                 same = (next((event["export_source"] for event in reversed(old_background["events"]) if event["operation"] == "update"),
                              background.initial(old_background)) if rebind.is_rebound(old_background) else
                         background.initial(old_background)) == exported_background
@@ -157,15 +170,22 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
             changes[source["notice"]["file"]] = catalog_io.read(export_dir, m["background_notice"]["file"], 65536)
     if active_reveal:
         rebound = reveal.rebind(active_reveal, entry, m["runtime_revision"], changes[notice], catalog,
-                                historical_categories=registry["format"] == METADATA_FORMAT)
+                                historical_categories=registry["format"] == METADATA_FORMAT,
+                                **({"definition_ref": background.ref(n, raw)} if editor_reveal else {}))
         changes[reveal.path(entry["id"])] = canonical_bytes(rebound) + b"\n"
         changes[notice] = snapshot["texts"][notice]
     if update and old_background is not None:
-        rebound_record = rebound if active_reveal else None
-        bound = rebind.binding(root, old_background, entry, raw,
-            catalog_io.read(root, "game/" + entry["reveal"], reveal.IMAGE_LIMIT), changes[notice], rebound_record)
-        rebound_background = rebind.append(old_background, existing, bound, "update",
-            export_source=background.build(export_dir, m, report, entry) if is_background else None)
+        if editor_background or editor_reveal:
+            from . import editor_image_source
+            rebound_background = (editor_image_source.rebind(old_background, entry, background.ref(n, raw), m["runtime_revision"])
+                if editor_background else editor_image_source.promote_background(root, registry, existing, entry,
+                    background.ref(n, raw), m["runtime_revision"]))
+        else:
+            rebound_record = rebound if active_reveal else None
+            bound = rebind.binding(root, old_background, entry, raw,
+                catalog_io.read(root, "game/" + entry["reveal"], reveal.IMAGE_LIMIT), changes[notice], rebound_record)
+            rebound_background = rebind.append(old_background, existing, bound, "update",
+                export_source=background.build(export_dir, m, report, entry) if is_background else None)
         name = background.path(entry["id"])
         changes[name] = background.encoded(rebound_background)
         for row in new["backgrounds"]:
