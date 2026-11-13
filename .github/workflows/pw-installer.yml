@@ -44,7 +44,8 @@ jobs:
         with:
           python-version: '3.13.14'
       - name: Pinned signed-authority reader
-        run: python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
       - name: Verify main CI, fingerprint and published authority
         id: plan
         env:
@@ -151,7 +152,8 @@ jobs:
         with:
           python-version: '3.13.14'
       - name: Pinned signed-authority reader
-        run: python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
           name: pw-plan
@@ -190,7 +192,8 @@ jobs:
         with:
           python-version: '3.13.14'
       - name: Pinned signing environment
-        run: python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
+        run: >-
+          python -m pip install --only-binary=:all: -r tools/production_workspace/requirements-update.txt
       - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
         with:
           name: pw-plan
