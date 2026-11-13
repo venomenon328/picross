@@ -1,10 +1,26 @@
 # Lokaler Produktionsassistent (PW-B)
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
-Handoff v4, Record v3 und Projektion v2. Verbindlich sind der
-[PW-B-Vertrag](../../docs/PW_B_CONTRACT.md),
-[Authoringstandard](../../docs/ai-workflows/PUZZLE_AUTHORING.md) und die
-[Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194).
+Handoff v4, Record v3 und Projektion v2. Der aktuelle operative Regelstand ist
+**Authoring 0.8.0, Dokumentrevision 5 (PW2-A)**. Normale Produktion liest den
+Produktionseinstieg in [AGENTS](../../AGENTS.md),
+[Authoring §1.1](../../docs/ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
+den vollständigen [gemeinsamen Bildstil](../../docs/PUZZLE_IMAGE_STYLE.md) und
+nur die dort geroutete Phase. Diese Anleitung, der
+[PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md) und die technische
+[Produktions-README](../puzzle_production/README.md) werden für die konkret
+verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.
+Die [ursprüngliche PW-B-Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194)
+ist eine Entwicklungs-/Herkunftsquelle, keine zusätzliche Routinelektüre.
+
+PW2-A ändert Quellen und Bildregeln, nicht die Anwendung. Weitere UI-/Prompt-
+verkürzung, regulärer kombinierter Schlussauftrag und Ausblendung integrierter
+Lieferungen bleiben PW2-B/PW2-C in #626. Ein vollständig geeigneter qualifizierter
+Rasterkandidat genügt; weitere entstehen nach Authoring bedarfsweise nacheinander,
+ohne Budget-/Qualitätslockerung. Die drei Reveal- und drei Hintergrundoriginale
+bleiben ihre eigenen Bildauswahlen. Hintergrund bedeutet die ganze 2304×576-
+Leinwand samt Freiraum, nicht einen Zuschnitt auf sichtbare Pixel.
+
 Die PW-A2-Start-/Git-/Sicherheitsarchitektur bleibt erhalten; P2 ergänzt allein
 die ausdrücklich bestätigte Branchentfernung nach [PW §4.4](../../docs/PRODUCTION_WORKSPACE.md#44-p2--ausdrücklich-bestätigte-produktionsentfernung).
 Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist nur noch
@@ -25,8 +41,9 @@ danach Kontextzeichnungen und schließlich Endabnahme/Integration. Ein Klick
 merkt eine Auswahl nur vor. „Auftrag kopieren“ erzeugt den gebundenen Auftrag;
 erst das Absenden und der folgende veröffentlichte Gitstand bestätigen Fortschritt.
 Fortsetzen und Korrektur verwenden dieselben Originalquellen. Eine vorhandene
-gültige Endabnahme wird nicht nochmals angefordert. Arbeitswurzel, Bereinigung
-und bedingte Mergefreigabe sind persönliche Optionen, niemals Recordbefugnisse.
+gültige Endabnahme wird nicht nochmals angefordert. Arbeitswurzel und bedingte
+Mergefreigabe sind persönliche Optionen, niemals Recordbefugnisse. Zusätzliche
+lokale Arbeitsdatenbereinigung braucht einen gesonderten ausdrücklichen Auftrag.
 Ein ungepushter Stand oder lokaler Testremote bleibt sichtbar, liefert aber
 keinen als Cloudquelle ausgegebenen Folgeauftrag.
 
@@ -177,7 +194,9 @@ Record und Handoff müssen übereinstimmen; fehlende/beschädigte Originale und
 ungültiger UTF-8-Text erscheinen als Fehler. Briefings sind auf 1 MiB begrenzt.
 
 Folgeaufträge nennen einen festen erreichbaren Commit mit dem kanonischen Record
-als Einstieg und binden AGENTS/Authoring 0.8.0 kurz verbindlich ein. Vorhandene Parameter,
+als Einstieg und binden AGENTS/Authoring 0.8.0 kurz verbindlich ein. Dieser Einstieg
+führt zur phasengerechten Pflichtlektüre einschließlich Bildstil, nicht zurück
+zur Volllektüre aller Fachhandbücher. Vorhandene Parameter,
 Briefings, Hashlisten und allgemeine Regeln werden dort nicht dupliziert.
 Unveränderte Werte bleiben über diese Quelle gebunden. Änderungen sowie
 „Neue/zusätzliche Wünsche zur Motivvorlage“ sind neue Absichten. Zum Aufheben
@@ -374,4 +393,6 @@ Serverarbeit und verspätet eintreffende Bildantworten.
 Der einmalige PW-B-T01-Durchstich und die
 wirkliche Windows-/Browserprobe T02 werden am konkreten Lieferhead im PR geführt.
 Linux-/HTTP-Tests ersetzen die Windowsprobe nicht. Die getrennten Vor-Merge-Gates
-PW-B-A01 und PW-B-M01 stehen in der Paketentscheidung.
+PW-B-A01 und PW-B-M01 stehen in der ursprünglichen Paketentscheidung; spätere
+paketbezogene Entscheidungen und der tatsächliche Abschluss in #578 bleiben
+maßgeblich. Daraus entstehen keine neuen PW2-A-Browser-/Bildprüfpflichten.
