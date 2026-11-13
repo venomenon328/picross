@@ -27,9 +27,9 @@ Gitabschluss führt der beauftragte Akteur aus. Historische Originale werden nic
 [Automatische App-Releases und Selbstupdate](PRODUCTION_UPDATES.md): APP-A ist
 über #613 unabhängig abgenommen und integriert. APP-B1 ergänzt signierte
 Updateautorität und den gemeinsamen Verifier mit unprovisioniertem festem Trust;
-APP-B2 (Startprüfung/Installation) bleibt ausstehend. Die veröffentlichende Pipeline
+APP-B2 ergänzt den standardmäßig ausgeschalteten Start-/Downloadclient und unabhängigen MSI-Helfer. Die veröffentlichende Pipeline
 bleibt bis zum eigenen Betriebsauftrag, Schlüsselbereitstellung und beiden
-Aktivierungsschaltern gesperrt. Kein aktiver Selbstupdateclient. Die Freigabe hebt
+Aktivierungsschaltern gesperrt. Der Selbstupdatekanal bleibt inaktiv. Die Freigabe hebt
 die historischen P4-Verbote ausschließlich für diesen Sollweg auf;
 Spiel-/Rätsel-/Produktionsdaten bleiben unabhängig.
 
@@ -387,8 +387,8 @@ verständlich abbrechen und nach regulärem Stop wiederholen; kein Kill, kein
 automatischer Stop/Restart und keine erzwungene Rebootaktion. Neue Launcherstarts
 während der Windows-MSI-Ausführung werden zurückgewiesen. Der getrennte Bau
 hat einen isolierten erfolgreichen Main-CI-Folgetrigger und diagnostischen
-`workflow_dispatch`; keinerlei Einbindung in Package CI. Kein Updater
-oder Dienst. Das App-Image und der Installer sind ohne Zertifikatauftrag unsigniert;
+`workflow_dispatch`; keinerlei Einbindung in Package CI. APP-B2 ergänzt den
+Opt-in-Updater gemäß Updatevertrag; kein dauerhafter Dienst. Das App-Image und der Installer sind ohne Zertifikatauftrag unsigniert;
 Lizenzen und mögliche SmartScreenhinweise gehören zur Lieferung.
 
 ## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist
