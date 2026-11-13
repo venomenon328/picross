@@ -23,6 +23,7 @@ FORMAT = "picross-content-registry-v2"
 BACKGROUND_FORMAT = "picross-content-registry-v3"
 METADATA_FORMAT = "picross-content-registry-v4"
 METADATA_RUNTIME_FORMAT = "picross-runtime-registry-v7"
+IMAGE_RUNTIME_FORMAT = "picross-runtime-registry-v8"
 JOURNAL = "picross-registration-journal-v2"
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -40,7 +41,7 @@ def atomic_bytes(path, data):
         temp.unlink(missing_ok=True)
 
 
-def projection(registry, catalog, root=None, *, ratings=None, added=None, backgrounds=None, version=None):
+def projection(registry, catalog, root=None, *, ratings=None, added=None, backgrounds=None, reveals=None, version=None):
     from . import catalog_rating, catalog_background as background
     if ratings is None:
         ratings = catalog_rating.load_sources(root, registry) if root is not None else {}
@@ -48,23 +49,36 @@ def projection(registry, catalog, root=None, *, ratings=None, added=None, backgr
         added = catalog_added.load_sources(root, registry) if root is not None else {}
     if version is None:
         version = 7 if registry["format"] == METADATA_FORMAT else 6 if registry["format"] == BACKGROUND_FORMAT else 5
-    require(type(version) is int and version in (3, 4, 5, 6, 7), "Unsupported projection version")
+        if version == 7 and root is not None:
+            raw = catalog_io.read(root, RUNTIME, 8 * 1024 * 1024, missing=True)
+            from .catalog_transaction import image_generation
+            if raw is not None and image_generation({"texts": {RUNTIME: raw}}):
+                version = 8
+    require(type(version) is int and version in (3, 4, 5, 6, 7, 8), "Unsupported projection version")
     require(registry["format"] != BACKGROUND_FORMAT or version == 6, "Background registry cannot be downgraded")
-    require((registry["format"] == METADATA_FORMAT) == (version == 7), "Metadata registry requires runtime v7")
-    metadata = current_metadata(registry, catalog) if version == 7 else {}
+    require((registry["format"] == METADATA_FORMAT) == (version in (7, 8)), "Metadata registry requires runtime v7/v8")
+    metadata = current_metadata(registry, catalog) if version >= 7 else {}
     if version >= 6 and backgrounds is None:
         require(root is not None, "Background projection requires its bound active sources")
-        background.capability(root, required=version == 6 or bool(background.index(registry)))
         texts = {name: catalog_io.read(root, name, background.LIMIT, missing=True)
                  for name in background.text_names(registry)}
         backgrounds = background.projection(registry, texts)
+        background.capability(root, required=version == 6 or any(row["status"] in ("selected", "none") for row in backgrounds.values()))
+    if version == 8:
+        if reveals is None:
+            require(root is not None, "Image projection requires its bound active reveal sources")
+            from . import reveal_source
+            reveals = {entry["id"]: reveal_source.resolve(root, entry, catalog).get("effective_reveal", entry["reveal"])
+                       for entry in registry["entries"]}
+        require(set(reveals) == {entry["id"] for entry in registry["entries"]}, "Image projection must bind every reveal")
     result = {"format": "picross-runtime-registry-v" + str(version), "categories": categories.ordered(catalog), "entries": [
         {**{k: e[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")},
          "difficulty": catalog_rating.project(ratings[e["id"]]) if e["id"] in ratings else
                        catalog_difficulty.project(e["production"]["difficulty"]),
          **({"added_at": added[e["id"]]["added_at"] if e["id"] in added else None} if version >= 4 else {}),
          **({"background": backgrounds[e["id"]]} if version >= 6 else {}),
-         **({"name": metadata[e["id"]]["name"], "category_id": metadata[e["id"]]["category_id"]} if version == 7 else {})}
+         **({"name": metadata[e["id"]]["name"], "category_id": metadata[e["id"]]["category_id"]} if version >= 7 else {}),
+         **({"reveal": reveals[e["id"]]} if version == 8 else {})}
         for e in registry["entries"]]}
     for entry in result["entries"]: catalog_difficulty.validate_projection(entry["difficulty"], version=min(version, 5))
     require(len(canonical_bytes(result)) + 1 <= 8 * 1024 * 1024, "Runtime registry exceeds 8 MiB")
@@ -185,10 +199,15 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
     from . import catalog_method
     catalog_method.load(root)
     reveal.source_paths(root, r)
-    background.capability(root, required=r["format"] == BACKGROUND_FORMAT or bool(background.index(r)))
     background.source_paths(root, r)
     background_index = background.index(r)
     expected = projection(r, catalog, root)
+    image_runtime = expected["format"] == IMAGE_RUNTIME_FORMAT
+    if image_runtime:
+        from .catalog_transaction import reveal_assets
+        live = {"game/" + row["reveal"] for row in expected["entries"]}
+        live |= {reveal.identity(entry)["notice"] for entry in r["entries"]}
+        require(reveal_assets(root, r) == live, "Reveal namespace has missing or inactive image resources")
     if check_projection:
         allowed = [canonical_bytes(expected)+b"\n"]
         has_sd2 = any(e["difficulty"] and e["difficulty"]["method"] == catalog_method.NEW for e in expected["entries"])
@@ -208,14 +227,21 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
         require(not p["test_only"] or root.resolve() != ROOT.resolve(), "Test-only content cannot enter the real catalog")
         package = root / p["package"]
         reveal.resolve(root, e, catalog)
+        active_reveal = reveal.load(root, e, catalog)
+        require(image_runtime or active_reveal is None or active_reveal.get("format") != "picross-catalog-reveal-v3",
+                "Editor reveal requires explicit runtime v8 migration")
         # Also enforce the category binding without the expensive production replay.
         m = load_json(package / "manifest.json")
         from . import integrated_content
         source = background.load(root, r, e)
+        require(image_runtime or source is None or source.get("format") != "picross-catalog-background-v5",
+                "Editor background requires explicit runtime v8 migration")
         declared = m.get("format") in ("picross-target-export-v6", background.RECEIPT_FORMAT) or (
             m.get("format") == "picross-target-export-v5" and source is not None and source["format"] in background.REBIND_FORMATS)
+        if source is not None and source.get("format") == "picross-catalog-background-v5":
+            declared = True  # Manual authority is independently bound to the original production.
         require(declared == (e["id"] in background_index), "Background export v6/receipt requires its exact active index")
-        if m.get("format") in (integrated_content.FORMAT, background.RECEIPT_FORMAT):
+        if m.get("format") in integrated_content.FORMATS:
             integrated_content.check(root, e, m)
             continue  # Final integration is checked by runtime hashes, never by production replay.
         require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5", "picross-target-export-v6"), "Unsupported registered export")
@@ -363,7 +389,7 @@ def _recover(root):
     raw = tx.read(root, tx.LOCK)
     if raw is None: return tx.recover(root)
     j = io.json_bytes(raw, tx.REVEAL_LIMIT)
-    if isinstance(j, dict) and j.get("format") in set(tx.PE_FORMATS.values()) | set(tx.REBIND_FORMATS.values()) | set(tx.BACKGROUND_FORMATS.values()) | set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
+    if isinstance(j, dict) and j.get("format") in set(tx.IMAGE_FORMATS.values()) | set(tx.PE_FORMATS.values()) | set(tx.REBIND_FORMATS.values()) | set(tx.BACKGROUND_FORMATS.values()) | set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
         return tx.recover(root)
     if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
         from .content_update import recover_update

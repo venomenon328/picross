@@ -54,13 +54,18 @@ func backgrounds() -> void:
 			check(false, "PCK background decoded pixels " + entry.id)
 			continue
 		check(texture.get_size() == Vector2(2304,576) and decoded.get_size() == Vector2i(2304,576), "PCK background PNG2304 dimensions " + entry.id)
-		check(decoded.get_format() == Image.FORMAT_RGBA8 and decoded.has_mipmaps() and decoded.get_mipmap_count() == 11, "PCK background RGBA/full mipmaps " + entry.id)
+		var imported_bytes: PackedByteArray = FileAccess.get_file_as_bytes(imported)
+		check(imported_bytes.size() >= 52 and decoded.get_format() == imported_bytes.decode_u32(48) and decoded.get_format() in [Image.FORMAT_LA8, Image.FORMAT_RGBA8], "PCK background format matches actual imported LA8/RGBA8 " + entry.id)
+		check(decoded.has_mipmaps() and decoded.get_mipmap_count() == 11, "PCK background full mipmaps " + entry.id)
+		# Canonical RGBA is solely the measured decoder view. The source PNG and
+		# compressed texture are unchanged, including native grayscale-alpha.
+		decoded.convert(Image.FORMAT_RGBA8)
 		var total_bytes: int = decoded.get_data().size()
 		var mipmaps: int = decoded.get_mipmap_count()
 		decoded.clear_mipmaps()
 		var base: PackedByteArray = decoded.get_data()
 		var row: Dictionary = {"id":entry.id, "image_revision":background.image_revision, "asset":background.asset,
-			"remap":imported, "imported_bytes":FileAccess.get_file_as_bytes(imported).size(),
+			"remap":imported, "imported_bytes":imported_bytes.size(),
 			"base_rgba_sha256":digest(base), "decoded_base_bytes":base.size(),
 			"decoded_with_mips_bytes":total_bytes, "mipmap_count":mipmaps,
 			"notice_sha256":digest(FileAccess.get_file_as_bytes(notice))}

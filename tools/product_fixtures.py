@@ -2,6 +2,8 @@
 from pathlib import Path
 import shutil
 import json
+import struct
+import zlib
 
 
 def runtime_catalog(root: Path) -> dict:
@@ -20,8 +22,8 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
     current = None
     if append:
         current = json.loads((project / "data/registry.json").read_text(encoding="utf-8"))
-        if current['format'] in ('picross-runtime-registry-v6', 'picross-runtime-registry-v7'):
-            raise ValueError("Legacy geometry IDs cannot be appended to a v6/v7 production catalog")
+        if current['format'] in ('picross-runtime-registry-v6', 'picross-runtime-registry-v7', 'picross-runtime-registry-v8'):
+            raise ValueError("Legacy geometry IDs cannot be appended to a v6/v7/v8 production catalog")
     colors = ["#343f42", "#edca78", "#bd604a", "#6c9aab"]
     for entry in catalog["entries"]:
         number = int(entry["id"][2:])
@@ -97,6 +99,18 @@ def install_runtime_fixtures(root: Path, project: Path, *, append: bool = False)
         artwork.write_text('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800">'
                            f'<rect width="800" height="800" fill="{colors[(number-1)%4]}"/>'
                            '<circle cx="400" cy="400" r="200" fill="#ffffff"/></svg>\n', encoding="utf-8")
+        if number in (1, 2):
+            # Small alternate-format inputs for the v8 loader/save boundary.
+            # These coexist only in the isolated geometry fixture namespace,
+            # never in a source catalog with an active-image inventory.
+            def chunk(kind, data):
+                return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data) & 0xffffffff)
+            width, height = 128, 96
+            scanlines = b"".join(b"\0" + b"".join(bytes((34, 68, 102, 255 if 8 <= x < width-8 and 8 <= y < height-8 else 0))
+                                                for x in range(width)) for y in range(height))
+            artwork.with_suffix(".png").write_bytes(
+                b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 6, 0, 0, 0))
+                + chunk(b"IDAT", zlib.compress(scanlines, 9)) + chunk(b"IEND", b""))
     if append:
         catalog["categories"] = current["categories"]
         if current['format'] in ('picross-runtime-registry-v4', 'picross-runtime-registry-v5'):

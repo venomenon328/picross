@@ -24,7 +24,9 @@ BACKGROUND_FORMAT = "picross-background-adoption-journal-v1"
 BINARY_FORMATS = ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2",
                   "picross-reveal-adoption-journal-v3", "picross-reveal-adoption-journal-v4",
                   "picross-reveal-adoption-journal-v5", "picross-background-adoption-journal-v3",
-                  "picross-background-adoption-journal-v2", BACKGROUND_FORMAT)
+                  "picross-background-adoption-journal-v2", BACKGROUND_FORMAT,
+                  "picross-reveal-adoption-journal-v6", "picross-background-adoption-journal-v4",
+                  "picross-editor-images-journal-v1")
 PREFIXES = tuple(b'{"format":' + canonical_bytes(value) + b',' for value in BINARY_FORMATS)
 NORMAL_LIMIT = 24 * 1024 * 1024
 LIMIT = 128 * 1024 * 1024
@@ -90,7 +92,10 @@ def decode_binary(value):
 
 
 def nullable_binaries(j):
-    return j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2", "picross-background-adoption-journal-v3") and j.get("operation") == "background-adoption"
+    return (j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2", "picross-background-adoption-journal-v3",
+                               "picross-background-adoption-journal-v4") and j.get("operation") == "background-adoption" or
+            j.get("format") == "picross-editor-images-journal-v1" and j.get("operation") == "editor-images" or
+            j.get("format") == "picross-reveal-adoption-journal-v6" and j.get("operation") == "reveal-adoption")
 
 
 def binary_hash(value):
@@ -129,8 +134,36 @@ def _validate_background_image(path):
 
 
 def validate_replacements(j, registry):
+    from . import catalog_transaction as tx
     replacements = j["replacements"]
     require(isinstance(replacements, dict), "Invalid replacement map")
+    if tx.images(j):
+        from .editor_image_input import validate_background
+        candidates = {name: e for e in registry["entries"] for name in tx.image_candidates({"entries": [e]})}
+        if j["operation"] not in ("editor-images", "reveal-adoption", "background-adoption"):
+            require(not replacements, "This image journal cannot replace binaries")
+            return
+        require(set(replacements) <= set(candidates), "Unbound image replacement path")
+        total = 0
+        from .target_adapter import validate_reveal
+        with tempfile.TemporaryDirectory(prefix="pe-image-check-") as directory:
+            for name, pair in replacements.items():
+                exact_keys(pair, {"old", "new"})
+                require(binary_hash(pair["old"]) != binary_hash(pair["new"]), "Unchanged binary replacement")
+                for value in pair.values():
+                    if value is None: continue
+                    binary_shape(value)
+                    total += value["bytes"]
+                    if total > 96 * 1024 * 1024: raise Aborted("resource_limit: replacements exceed 96 MiB")
+                    raw = decode_binary(value)
+                    if name.startswith("game/art/backgrounds/"):
+                        validate_background(raw)
+                    else:
+                        path = Path(directory) / ("image" + Path(name).suffix)
+                        path.write_bytes(raw)
+                        entry = candidates[name]
+                        validate_reveal(path, entry["production"]["width"], entry["production"]["height"])
+        return
     backgrounds = nullable_binaries(j)
     if j["operation"] != "reveal-adoption" and not backgrounds:
         require(not replacements, "This journal cannot replace binaries")
@@ -310,6 +343,14 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
         bound_backgrounds = {n for side in ("old", "new") for n, value in j[side].items() if value is not None}
         bound_backgrounds |= set(j["retained"]) | set(j["additions"]) | set(j["replacements"])
         require(sources | assets <= bound_backgrounds, "Unbound background file; preserve journal")
+    if tx.images(j):
+        actual = tx.reveal_assets(root, *registries, temporary=temps)
+        bound = set(j["retained"]) | set(j["additions"]) | set(j["replacements"])
+        bound |= {name for side in ("old", "new") for name, value in j[side].items() if value is not None}
+        require(actual <= bound, "Unbound alternate reveal appeared; preserve journal")
+        # Negative candidate expectations are derived, never supplied by a plan.
+        for name in set().union(*(tx.image_candidates(registry) for registry in registries)) - bound:
+            require(not io.safe(root, name).exists(), "Unexpected inactive image: " + name)
     allowed_sd = {n for n in j["retained"] if n.startswith("content/difficulty/reports/")} | tx.report_names(j["report_run"], j["operation"])
     sd = io.safe(root, "content/difficulty/reports")
     if sd.exists():
@@ -459,7 +500,7 @@ def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
     require(isinstance(j, dict), "Invalid catalog journal")
     require(source_check is None or nullable_binaries(j) and callable(source_check),
             "Source recheck requires background adoption")
-    registration = j.get("operation") == "registration" and j.get("format") in (tx.PE_FORMATS["registration"], tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    registration = j.get("operation") == "registration" and j.get("format") in (tx.IMAGE_FORMATS["registration"], tx.PE_FORMATS["registration"], tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
     require(registration or publication_seconds is None and recovery_seconds is None,
             "RI-A overrides require a new registration")
     if registration:

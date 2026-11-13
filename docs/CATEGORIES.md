@@ -1,6 +1,6 @@
 # Kategorien- und Zuordnungsvertrag (KAT-1)
 
-**PE-A1 / #576 · im Arbeitsbranch implementiert, Review offen:**
+**PE-A1 / #576 · nach unabhängigem Review integriert:**
 [PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) trennt die aktuelle
 Namens-/Kategoriezuordnung von Produktionsangaben in Inhaltsregistry v4 und
 projiziert Runtime v7. Kategorienpflege einschließlich Löschung nach vollständiger
@@ -9,6 +9,38 @@ mehr aktuell existieren. Die unten beschriebenen v2/v3-Bindungen behalten für
 historische Prüfung und Recovery ihre exakten Altregeln. Neue Mutationen
 verlangen die explizite v4/v7-Migration; vollständig geprüfte No-ops bleiben
 auf alten Beständen möglich. [CLI/API](../tools/puzzle_production/README.md).
+
+## PE-A2 · Aktuelle Bildprojektion v8
+
+Der [geschlossene PE-A2-Vertrag](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag)
+ergänzt die bisherigen Bildpfad-/Legacygrenzen ausdrücklich nur durch neue
+Source-/Plan-/Journalgenerationen. Inhaltsregistry v4 bleibt exakt
+`format,entries,metadata,backgrounds`; Produktionseinträge bleiben unverändert.
+Der vorhandene Hintergrundindex bindet Background v5. Reveal v3 wird weiterhin
+am kanonischen `content/reveals/<id>.json` aufgelöst. Die vollständigen Quellen,
+alternativen Endungen und Abwesenheiten folgen PE §8.4/SD_CATALOG.
+
+`picross-runtime-registry-v8` hat exakt `format,categories,entries`; jeder Eintrag
+exakt `id,key,save_slot,definition,reveal,visible,category_id,difficulty,added_at,background,name`.
+Name/Kategorie bleiben aktuell gemäß Metadatentabelle; reveal ist der aktuelle
+wirksame PNG-/SVG-Pfad. Hintergrund exakt `status,image_revision,asset`: legacy
+null/null, standard mit positiver technischer Präferenzrevision/null, selected/none
+mit ihrem unveränderten Teilvertrag. Kein freies zusätzliches Runtimefeld.
+
+Standard verwendet die vorhandene Zeichnung der aktuellen Kategorie; ohne
+passende Zeichnung ist kein Hintergrund wirksam. selected/none behalten ihre
+Auswahl bei Kategorieänderung. Capability v1 bleibt für selected/none erforderlich
+und für dasselbe v8-Renderprofil gültig; legacy/standard allein erzwingt keine
+Aktivierung. Defekte vorhandene Quellen/Capability werden nicht still ignoriert.
+
+Explizite Projektionseinführung v4/v7→v4/v8 verändert ausschließlich Runtime,
+keine Quelle oder Bildentscheidung. Gewöhnliche Pflege führt sie nicht implizit
+aus. Bildpflege kann nur ausdrücklich gewählte ID-Metadaten, Bild-/Präferenzquellen,
+Livebilder/Notices, betroffene Indexrefs und Runtime gemeinsam ändern. Definitionen,
+historische Produktion, Kategoriequelle, Ratings/Added und Nachbar-IDs bleiben
+bei dieser Operation bytegleich. Die alten AT-Operationsdeltas ohne Runtime-/
+Pfadänderung gelten weiter für ihre alten Generationen; die neue genaue Matrix
+steht in PE §8.4. Reine Bildpflege erzeugt keine Raster-/Save-/Ratingrevision.
 
 **HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
 [Hintergrundzusatz](#hp-i1b1--hintergrundindex-und-kompatible-projektion)

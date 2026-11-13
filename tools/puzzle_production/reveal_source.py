@@ -14,12 +14,14 @@ from . import catalog_io as io, catalog_rating as rating, categories
 
 FORMAT = "picross-catalog-reveal-v1"
 BACKGROUND_FORMAT = "picross-catalog-reveal-v2"
+EDITOR_FORMAT = "picross-catalog-reveal-v3"
 APPROVAL = "picross-reveal-approval-v1"
 ROOT = "content/reveals"
 LIMIT = 1024 * 1024
 IMAGE_LIMIT = 32 * 1024 * 1024
 RECEIPT = "picross-integrated-content-v1"
 BACKGROUND_RECEIPT = "picross-integrated-content-v2"
+EDITOR_RECEIPT = "picross-integrated-content-v3"
 
 
 def path(identifier):
@@ -106,16 +108,18 @@ def check_hash(value, field):
     require(sha(value[field]) == digest({k: v for k, v in value.items() if k != field}), "Wrong reveal " + field)
 
 
-def receipt(value, entry, notice_hash, *, background=False):
+def receipt(value, entry, notice_hash, *, background=False, editor=False):
     """Check a receipt's closed shape without opening historical input refs.
 
     AT-v1 histories keep their original receipt-v1 contract. Only current
     package readers explicitly admit the independently bound background form.
     """
     is_background = isinstance(value, dict) and value.get("format") == BACKGROUND_RECEIPT
+    is_editor = isinstance(value, dict) and value.get("format") == EDITOR_RECEIPT
     exact_keys(value, {"format", "entry", "integrated_commit", "notice_sha256"} |
-               ({"background"} if is_background and background else set()))
-    require(value["format"] == (BACKGROUND_RECEIPT if is_background and background else RECEIPT) and
+               ({"background"} if is_background and background or is_editor and editor else set()))
+    expected_format = EDITOR_RECEIPT if is_editor and editor else BACKGROUND_RECEIPT if is_background and background else RECEIPT
+    require(value["format"] == expected_format and
             isinstance(value["integrated_commit"], str) and
             re.fullmatch(r"[0-9a-f]{40}", value["integrated_commit"]) and canonical_bytes(value["entry"]) == canonical_bytes(entry) and
             sha(value["notice_sha256"]) == notice_hash, "Integrated receipt identity/category/notice differs")
@@ -127,6 +131,14 @@ def receipt(value, entry, notice_hash, *, background=False):
         relative(ref["file"]); sha(ref["sha256"])
         integer(ref["bytes"], 1, 1024 * 1024, "background source bytes")
         require(ref["file"] == backgrounds.path(entry["id"]), "Wrong receipt background source path")
+    if is_editor:
+        from . import catalog_background as backgrounds
+        binding = exact_keys(value["background"], {"origin_sha256", "export_source"})
+        sha(binding["origin_sha256"])
+        if binding["export_source"] is not None:
+            backgrounds._validate_v1(binding["export_source"], entry)
+            require(binding["export_source"]["origin"]["export_manifest_sha256"] == entry["production"]["package_sha256"],
+                    "Editor receipt export source binds another production")
     return value
 
 
@@ -157,6 +169,9 @@ def require_legacy_target(root, entry, registry=None):
 
 def validate(value, catalog, *, historical_categories=False):
     from .content_registry import validate_entries
+    if isinstance(value, dict) and value.get("format") == EDITOR_FORMAT:
+        from . import editor_image_source
+        return editor_image_source.validate(value, catalog)
     exact_keys(value, {"format", "id", "record_revision", "identity", "origin", "bindings", "revisions", "current", "record_hash"})
     require(value["format"] in (FORMAT, BACKGROUND_FORMAT), "Unknown reveal source format")
     identifier = rating.identity(value["id"])
@@ -238,21 +253,27 @@ def package(root, entry, *, background_snapshot=None):
         name = p.relative_to(root).as_posix()
         p = io.safe(root, name)
         if p.is_file(): files[name.removeprefix(prefix + "/")] = p
-    if manifest.get("format") in (RECEIPT, BACKGROUND_RECEIPT):
+    if manifest.get("format") in (RECEIPT, BACKGROUND_RECEIPT, EDITOR_RECEIPT):
         exact_keys(manifest, {"format", "entry", "integrated_commit", "notice_sha256"} |
-                   ({"background"} if manifest["format"] == BACKGROUND_RECEIPT else set()))
+                   ({"background"} if manifest["format"] in (BACKGROUND_RECEIPT, EDITOR_RECEIPT) else set()))
         require(isinstance(manifest["entry"], dict) and isinstance(manifest["entry"].get("production"), dict) and
                 isinstance(manifest["entry"]["production"].get("package_sha256"), str), "Invalid receipt entry")
         require(set(files) == {"manifest.json"}, "Integrated package contains unbound files")
         original = deepcopy(entry)
         original["production"]["package_sha256"] = manifest["entry"]["production"]["package_sha256"]
-        receipt(manifest, original, manifest["notice_sha256"], background=True)
+        receipt(manifest, original, manifest["notice_sha256"], background=True, editor=True)
         from . import catalog_background as backgrounds
         registry = background_registry(root) if background_snapshot is None else background_snapshot[0]
         texts = None if background_snapshot is None else background_snapshot[1]
-        require((entry["id"] in backgrounds.index(registry)) == (manifest["format"] == BACKGROUND_RECEIPT),
-                "Receipt generation differs from registered background authority")
-        if manifest["format"] == BACKGROUND_RECEIPT:
+        declared = entry["id"] in backgrounds.index(registry)
+        source = backgrounds._source(root, registry, entry, texts) if declared else None
+        editor_background = source is not None and source["format"] == backgrounds.EDITOR_FORMAT
+        if editor_background:
+            backgrounds.check_editor_receipt(source, manifest, original)
+        else:
+            require(declared == (manifest["format"] == BACKGROUND_RECEIPT) and manifest["format"] != EDITOR_RECEIPT,
+                    "Receipt generation differs from registered background authority")
+        if manifest["format"] == BACKGROUND_RECEIPT and not editor_background:
             backgrounds.check_receipt(root, registry, entry, manifest, texts=texts)
         return original, manifest["notice_sha256"], manifest, set(prefix + "/" + n for n in files)
     require(manifest.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5", "picross-target-export-v6") and
@@ -303,9 +324,19 @@ def package(root, entry, *, background_snapshot=None):
                 'Invalid immutable background export readiness')
         require(declared, 'Missing registered background authority')
     if declared:
-        source = backgrounds.load(root, registry, entry, texts=None if background_snapshot is None else background_snapshot[1])
-        anchor = (source["events"][-1]["binding"]["entry"]["production"]["package_sha256"]
-                  if source["format"] in backgrounds.REBIND_FORMATS else backgrounds.initial(source)['origin']['export_manifest_sha256'])
+        texts = None if background_snapshot is None else background_snapshot[1]
+        source = backgrounds._source(root, registry, entry, texts)
+        if source["format"] == backgrounds.EDITOR_FORMAT:
+            require(source["binding"]["entry"] == entry, "Editor background current production binding differs")
+            if background:
+                # Validate the actual new export independently. Its image is
+                # historical production, not a replacement of manual preference.
+                backgrounds.build(base, manifest, inspection, entry)
+            anchor = source["binding"]["entry"]["production"]["package_sha256"]
+        else:
+            source = backgrounds.load(root, registry, entry, texts=texts)
+            anchor = (source["events"][-1]["binding"]["entry"]["production"]["package_sha256"]
+                      if source["format"] in backgrounds.REBIND_FORMATS else backgrounds.initial(source)['origin']['export_manifest_sha256'])
         require(anchor == io.checksum(raw),
                 'Background origin export binding differs')
     notice_hash=sha(manifest['files'].get('runtime/'+notice_path(entry).removeprefix('game/')))
@@ -326,6 +357,7 @@ def load(root, entry, catalog):
 
 def resolve(root, entry, catalog, *, record=None):
     from .content_update import notice_path
+    from . import catalog_background as bg
     physical = io.file_hash(root, entry["production"]["package"] + "/manifest.json")
     require(physical == entry["production"]["package_sha256"], "Registered package binding changed")
     original, historical_notice, current_receipt, _ = package(root, entry)
@@ -334,15 +366,33 @@ def resolve(root, entry, catalog, *, record=None):
     runtime_revision = rating.bytes_json(definition, 2 * 1024 * 1024)["revision"]
     record = load(root, entry, catalog) if record is None else validate(record, catalog, historical_categories=historical_categories(root))
     if record is not None:
-        from . import catalog_background as bg
         declared = entry["id"] in bg.index(background_registry(root))
-        require(record["format"] == (BACKGROUND_FORMAT if declared else FORMAT), "Reveal source generation differs from target")
-        if declared:
+        background_source = bg._source(root, background_registry(root), entry) if declared else None
+        editor_background = background_source is not None and background_source["format"] == bg.EDITOR_FORMAT
+        require(record["format"] == EDITOR_FORMAT or editor_background or record["format"] == (BACKGROUND_FORMAT if declared else FORMAT),
+                "Reveal source generation differs from target")
+        if declared and record["format"] != EDITOR_FORMAT:
             from .background_rebind import is_rebound
-            require(is_rebound(bg._source(root, background_registry(root), entry)),
+            require(is_rebound(background_source) or background_source["format"] == bg.EDITOR_FORMAT,
                     "Background reveal requires its current rebind authority")
     effective_image, effective_notice = entry["production"]["reveal_sha256"], historical_notice
-    if record:
+    effective_path = "game/" + entry["reveal"]
+    if record and record["format"] == EDITOR_FORMAT:
+        from . import editor_image_source as editor
+        require(record["binding"]["entry"] == original and
+                record["binding"]["identity"]["runtime_revision"] == runtime_revision and
+                record["binding"]["identity"]["definition"] == bg.ref("game/" + entry["definition"], definition),
+                "Active editor reveal production binding differs")
+        effective_path = record["current"]["asset"]["file"]
+        effective_image = record["current"]["asset"]["sha256"]
+        effective_notice = record["current"]["notice"]["sha256"]
+        for alternative in editor.reveal_candidates(entry) - {effective_path}:
+            require(io.read(root, alternative, IMAGE_LIMIT, missing=True) is None, "Inactive reveal alternative is present")
+        historical = record["origin"]["source"]
+        if historical and len(historical["bindings"]) == 1 and historical["origin"]["receipt"] is not None and \
+                original == historical["origin"]["entry"]:
+            require(current_receipt == historical["origin"]["receipt"], "Original reveal receipt changed")
+    elif record:
         binding = record["bindings"][-1]
         require(binding["entry"] == original and binding["runtime_revision"] == runtime_revision and
                 binding["notice"]["sha256"] == historical_notice, "Active reveal production binding differs")
@@ -350,13 +400,18 @@ def resolve(root, entry, catalog, *, record=None):
             require(current_receipt == record["origin"]["receipt"], "Original reveal receipt changed")
         effective_image = record["revisions"][-1]["reveal_sha256"]
         effective_notice = record["revisions"][-1]["notice"]["sha256"]
-    require(io.file_hash(root, "game/" + entry["reveal"], IMAGE_LIMIT) == effective_image and
+    effective_raw = io.read(root, effective_path, IMAGE_LIMIT)
+    if record and record["format"] == EDITOR_FORMAT:
+        bg._bound(record["current"]["asset"], effective_raw, limit=IMAGE_LIMIT)
+    require(io.checksum(effective_raw) == effective_image and
             io.file_hash(root, notice_path(entry), 65536) == effective_notice, "Effective reveal/notice binding changed")
     return {"id": entry["id"], "definition_sha256": entry["production"]["definition_sha256"],
             "runtime_revision": runtime_revision, "export_manifest_sha256": original["production"]["package_sha256"],
             "physical_manifest_sha256": physical, "historical_reveal_sha256": original["production"]["reveal_sha256"],
             "effective_reveal_sha256": effective_image, "historical_notice_sha256": historical_notice,
-            "effective_notice_sha256": effective_notice, "record_hash": record["record_hash"] if record else None}
+            "effective_notice_sha256": effective_notice, "record_hash": record["record_hash"] if record else None,
+            "effective_reveal": effective_path.removeprefix("game/"),
+            "effective_reveal_ref": bg.ref(effective_path, effective_raw)}
 
 
 def revise(root, entry, catalog, image_hash, declaration, attribution, append=None):
@@ -387,7 +442,11 @@ def revise(root, entry, catalog, image_hash, declaration, attribution, append=No
     return validate(hashed(value, "record_hash"), catalog, historical_categories=historical_categories(root))
 
 
-def rebind(old, entry, runtime_revision, export_notice, catalog, *, historical_categories=False):
+def rebind(old, entry, runtime_revision, export_notice, catalog, *, historical_categories=False, definition_ref=None):
+    if old.get("format") == EDITOR_FORMAT:
+        from . import editor_image_source
+        require(definition_ref is not None, "Editor reveal rebind requires the actual new definition ref")
+        return editor_image_source.rebind(old, entry, definition_ref, runtime_revision, catalog)
     value = deepcopy(old)
     require(entry["production"]["reveal_sha256"] == old["revisions"][-1]["reveal_sha256"], "Raster update must retain active reveal")
     value["bindings"].append(hashed({"binding_revision": len(old["bindings"]) + 1, "runtime_revision": runtime_revision,

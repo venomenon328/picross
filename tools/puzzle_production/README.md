@@ -5,7 +5,7 @@
 [`metadata_cli`](metadata_cli.py) pflegt vorhandene registrierte IDs gemäß
 [PE-A1](../../docs/PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag).
 Aktuelle Namen und Kategorien stehen in Inhaltsregistry v4; Runtime v7 ist die
-geprüfte Projektion. Definitions-/Bildbytes, Rasterrevisionen, Ratings, Added und
+geprüfte Projektion; nach der ausdrücklichen PE-A2-Migration bleibt Runtime v8 erhalten. Definitions-/Bildbytes, Rasterrevisionen, Ratings, Added und
 historische Produktionsbelege werden bei dieser Pflege nicht neu geschrieben.
 Die gemeinsame API liegt in [`catalog_metadata`](catalog_metadata.py).
 
@@ -30,7 +30,7 @@ abgetrennte Speicheransichten ohne weitere Datei-, Bild- oder Proofzugriffe.
 
 Die explizite Migration validiert v2/v3 und schreibt ausschließlich die beiden
 Registrydateien. Ein bereits gültiger v4/v7-Bestand bleibt unverändert. Normale
-mutierende Writer verlangen danach v4/v7 und migrieren nicht nebenbei. Alte
+mutierende Writer verlangen danach v4 mit Runtime v7 oder v8 und migrieren nicht nebenbei. Alte
 gebundene Journale zuerst über ihren gemeinsamen Recoveryweg auflösen.
 
 Eine Operationsdatei enthält eine Liste. Beispiel mit einer zuvor aus `view`
@@ -58,7 +58,51 @@ mtimes. Offene Journale/Locks verhindern auch einen konkurrierenden No-op.
 Recovery stellt den vollständigen alten Zustand wieder her und schützt fremde
 Änderungen. Es gibt keine zusätzliche Metadatenhistorie oder freie Registry-API.
 Rückgabecodes: 0 erfolgreich, 2 ungültiger Eingang/Konflikt, 4 Ressourcenabbruch.
-Raster-/Bildpflege und eine Weboberfläche gehören zu späteren PE-Paketen.
+Rasterpflege und eine Weboberfläche gehören zu späteren PE-Paketen.
+
+## PE-A2: vorbereitete Bilder und Hintergrundpräferenzen
+
+[`images_cli`](images_cli.py) und die gemeinsame API
+[`catalog_images`](catalog_images.py) pflegen genau eine bereits registrierte ID
+gemäß dem [geschlossenen PE-A2-Vertrag](../../docs/PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag).
+Ein Request kann Abschlussbild, Hintergrundpräferenz sowie aktuellen Namen und
+Kategorie gemeinsam ändern. Kategorieanlage/-umbenennung bleibt bei `metadata_cli`.
+
+```text
+python -m tools.puzzle_production.images_cli view --target-root CHECKOUT --id PUZZLE_ID
+python -m tools.puzzle_production.images_cli plan-migration --target-root CHECKOUT --output MIGRATION.json
+python -m tools.puzzle_production.images_cli apply --target-root CHECKOUT --plan MIGRATION.json
+python -m tools.puzzle_production.images_cli plan --target-root CHECKOUT --request INPUT/request.json --output BUNDLE
+python -m tools.puzzle_production.images_cli apply --target-root CHECKOUT --plan BUNDLE/plan.json
+python -m tools.puzzle_production.images_cli recover --target-root CHECKOUT
+```
+
+Die ausdrückliche Migration schreibt ausschließlich die Runtimeprojektion von v7
+nach v8; eine Wiederholung ändert keine Bytes oder mtimes. Ohne Migration wird
+Bildpflege abgewiesen. Normale Folgeoperationen erhalten v8.
+
+Der UTF-8-Request `picross-editor-images-request-v1` hat genau die Felder
+`format,id,metadata,reveal,background,decision`. Nicht gewählte Bereiche sind
+`null`; mindestens ein Bereich muss gewählt sein. Bildrefs binden relative Datei,
+SHA-256 und Bytezahl. Die tatsächliche manuelle Entscheidung nennt handelnde
+Person, UTC-Zeitpunkt und Erklärung; Bildprovenienz nennt Urheber, Nutzungsgrundlage,
+Quelle und Änderungen. Die vollständigen Feldformen stehen im Fachvertrag.
+
+Abschlussbilder sind bereits vorbereitete PNGs oder lokale SVGs. Hintergrundbilder
+sind bereits vorbereitete PNGs mit genau 2304×576 Pixeln, transparenten und
+sichtbaren Bereichen und der festgelegten Farbdarstellung. Der Writer übernimmt
+die geprüften Bytes unverändert. `standard` folgt der aktuellen Kategoriezeichnung,
+`selected` bindet das eigene Bild, `none` unterdrückt den Hintergrund.
+
+`INPUT`, `BUNDLE` und Migrationsplan liegen außerhalb des Zielcheckouts. `plan`
+erzeugt einen neuen geschlossenen Ordner mit `plan.json`, gebundenem `request.json`,
+den benötigten `input/`-Dateien und früheren Bildbytes in `previous/`. Nach der
+Planung darf der ursprüngliche Inputordner entfallen. Vor `apply` sind Vorschau,
+Dateiliste und Entscheidung zu prüfen. Fremde Zusatzdateien, veränderte Quellen,
+offene Journale sowie Pfad- und Dateikollisionen verhindern die Übernahme.
+Die gemeinsame Transaktion veröffentlicht die Runtime zuletzt; Recovery stellt
+ausschließlich den geprüften alten Zustand wieder her. Gleiche aktuelle Werte
+und eine identische Wiederholung bleiben No-ops.
 
 ## #596/C · Feste Rasterableitung
 

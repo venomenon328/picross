@@ -1,13 +1,49 @@
 # AT · Transparente Abschlussbilder
 
-**PE / #576 · Bildpflege bleibt freigegebener Sollstand:**
-Der [Bestandseditor](PUZZLE_EDITOR.md#4-bilder-und-hintergrundauswahl) ergänzt später
+**PE / #576 · PE-A1 integriert, PE-A2 zur Umsetzung beauftragt:**
+Der [Bestandseditor](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) ergänzt
 einen manuellen Dateiimport ohne Bildbearbeitung und ohne KI-Zwischenschritt.
 Variable Revealmaße, Transparenzstandard und historische Herkunft bleiben;
-ein Bildwechsel erhöht keine Rasterrevision. PE-A1 trennt im Arbeitsbranch
+ein Bildwechsel erhöht keine Rasterrevision. PE-A1 trennt
 aktuelle Namen und Kategorien von ihren Produktionsangaben. Der unten beschriebene
 AT-Weg erhält diese Metadaten über den gemeinsamen Writer; seine Bildverträge
-bleiben der vorhandene Ausführungsstand.
+behalten für ihre alten Generationen ihre geschlossene Bedeutung. PE-A2 führt
+die folgenden zusätzlichen Formen ausdrücklich ein.
+
+## PE-A2 · Aktueller Revealpfad und ehrliche manuelle Entscheidung
+
+Reveal v3 hat exakt `format,id,record_revision,origin,binding,current,record_hash`.
+Die vollständigen Unterformen, Zähler, technische Grenzen und das feste manuelle
+Notice-Layout stehen in [PE §8.1–8.2](PUZZLE_EDITOR.md#81-gemeinsame-typen-und-aktive-quellen).
+Der unveränderliche nichtrekursive `origin` enthält die vollständige alte
+Reveal-v1/v2-Quelle oder einen gültigen sourcefreien Produktionsanker; die äußere
+aktuelle `binding` und die aktive Darstellungsentscheidung bleiben getrennt.
+Manuelle Eigentümerauswahl/Speichern erzeugt ehrliche manuelle Provenienz,
+keine fingierte AT-Freigabe. Technische Prüfung ersetzt keine Motivbeurteilung.
+
+Der bestehende Motiv-/Transparenzstandard bleibt. Zulässige vorbereitete PNGs
+und lokale begrenzte SVGs werden bytegleich importiert; andere erlaubte Maße
+und Seitenverhältnisse sind möglich. PNG↔SVG wechselt den verwalteten technischen
+Pfad samt Source/Notice/Runtime und entfernt ausschließlich die eigene verdrängte
+Live-Datei im gemeinsamen Journal. Die unveränderten Definitions-/Produktionseinträge
+bleiben ihre historischen Belege. Die alten festen Pfad-/Endungsregeln werden
+nur für die ausdrücklich neue Generation durch wirksame Auflösung ergänzt.
+
+Eine spätere reguläre AT-Adoption verwendet Revealrequest v2, Revealplan v5 und
+Revealjournal v6 nach [SD_CATALOG](SD_CATALOG.md#pe-a2--geschlossene-v8-quellen-pläne-und-journale).
+Sie führt die aktuelle Quelle mit echter `picross-reveal-approval-v1` fort.
+`authority={kind,approval,binding}` mit kind production erhält den tatsächlichen
+Adoptionstand für spätere vollständige Prüfung des Definitionshashs. Ein folgender
+Raster-Rebind ändert nur die äußere Bindung und keine Bildrevision; ursprüngliche
+manuelle Quelle oder Approval werden nicht auf neue Bytes umversiegelt.
+
+Katalog und Abschluss verwenden dieselbe aktuelle Datei. Neue/begonnene Rätsel
+zeigen weiterhin nur erlaubte eigene Spielerdaten; keine Revealvorschau und
+kein neues Preload. Reine Bildpflege erhält ID/Key/Slot, Definition-/Rasterrevision,
+Matrix/Hinweise/Palette, Rating/Added, Saves/Redo/Abschluss und Recent-Marker.
+Bestehende displayseitige Glättung bleibt abgeleitete Darstellung und ändert
+keine Originalbytes. Keine Runtimefreistellung, neue Bildproduktion oder
+zusätzliche persönliche Buchprobe durch PE-A2.
 
 Vertragsstand: 19.10.2026 · Vertrag 2.0 / AT-A-P01 ·
 [AT / #256](https://github.com/venomenon328/picross/issues/256).

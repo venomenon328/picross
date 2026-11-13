@@ -25,7 +25,7 @@ _NORMS = {
     "docs/PRODUCTION_BATCH.md", "docs/PUZZLE_INTEGRATION.md", "docs/ZA1_ADAPTER.md",
     "docs/PUZZLE_PRODUCTION.md", "docs/PUZZLE_BACKGROUNDS.md", "docs/PUZZLE_QUALITY.md",
     "docs/ai-workflows/PUZZLE_AUTHORING.md", "docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md",
-    "docs/REVEAL_TRANSPARENCY.md", "docs/CATEGORIES.md", "docs/SD_CATALOG.md",
+    "docs/REVEAL_TRANSPARENCY.md", "docs/PUZZLE_EDITOR.md", "docs/CATEGORIES.md", "docs/SD_CATALOG.md",
     "docs/SD2_INTEGRATION.md", "docs/SD2_ANALYZER.md",
 }
 _METHODS = {"content/difficulty-method.json", *(
@@ -196,9 +196,11 @@ def execute(phase, job, source, target, output, history, *, export_dir=None, pla
 def _request_files(target, source):
     """Read current work when present; absence never reconstructs retired work."""
     active = bg.current(source)
-    if "adoption" not in active:
+    editor = source["format"] == bg.EDITOR_FORMAT
+    authority = active["authority"] if editor else active
+    adoption = authority.get("adoption")
+    if adoption is None:
         return {}, None
-    adoption = active["adoption"]
     record_name = adoption["request"]["file"]
     directory = record_name.rsplit("/", 1)[0]
     rows = requests.index_rows(io.json_bytes(io.read(target, requests.INDEX, 8 * 1024 * 1024), 8 * 1024 * 1024))
@@ -206,9 +208,10 @@ def _request_files(target, source):
         return {}, None
     read = requests.read(target, record_name)
     request, raw, payload = read
-    ap.require(bg.ref(record_name, raw) == adoption["request"] and
-               all(request[key] == adoption[key] for key in ("revision", "target", "background", "authorization")) and
-               request["test_only"] == bg.initial(source)["test_only"],
+    fields = ("revision", "target", "background", "authorization") + (("context",) if request["format"] == requests.IMAGE_FORMAT else ())
+    expected = {"request": bg.ref(record_name, raw), **{key: request[key] for key in fields}}
+    test_only = source["binding"]["entry"]["production"]["test_only"] if editor else bg.initial(source)["test_only"]
+    ap.require(expected == adoption and request["test_only"] == test_only,
                "Current background work differs from the adopted source")
     return {directory + "/" + name: raw for name, raw in payload.items()}, (record_name, read)
 
@@ -229,7 +232,9 @@ def reached(target, puzzle_id, snapshot=None):
         ap.require(entry is not None, "Reached target is absent from the current catalog")
         ap.require(io.read(target, tx.REGISTRY, 8 * 1024 * 1024) == snapshot["texts"][tx.REGISTRY],
                    "Catalog changed since the fresh reached-target snapshot")
-        names = {"game/" + entry["definition"], "game/" + entry["reveal"], content_update.notice_path(entry)}
+        catalog = io.json_bytes(snapshot["texts"][categories.PATH], 131072)
+        effective = reveal.resolve(target, entry, catalog)["effective_reveal_ref"]
+        names = {"game/" + entry["definition"], effective["file"], content_update.notice_path(entry)}
         for name in (rating.path(puzzle_id), added.path(puzzle_id), reveal.path(puzzle_id), bg.path(puzzle_id)):
             if snapshot["texts"].get(name) is not None:
                 names.add(name)
