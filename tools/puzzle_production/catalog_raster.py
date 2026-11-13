@@ -115,7 +115,13 @@ def _construct(root, snapshot, request, request_raw, input_root, package_directo
         after = io.json_bytes(changes.get(tx.REGISTRY,snapshot["texts"][tx.REGISTRY]),8*1024*1024)
         fresh = deepcopy(entry)
         prefix = "content/packages/"+identifier+"/"+manifest["revision"]
-        require(not io.safe(root,prefix).exists(),"Raster package target already exists")
+        target = io.safe(root,prefix)
+        if target.exists():
+            parents = {parent.as_posix() for name in manifest["files"] for parent in Path(name).parents if parent.as_posix() != "."}
+            require(target.is_dir(),"Raster package target already exists")
+            for candidate in target.rglob("*"):
+                name = candidate.relative_to(target).as_posix()
+                require(io.safe(root,prefix+"/"+name).is_dir() and name in parents,"Raster package target contains foreign files/directories")
         fresh["production"].update(package=prefix,package_sha256=io.file_hash(package_directory,"manifest.json"),
             revision=manifest["revision"],definition_sha256=io.checksum(encoded(value)),reveal_sha256=manifest["reveal_sha256"],width=value["width"],height=value["height"])
         after["entries"][after["entries"].index(entry)] = fresh
