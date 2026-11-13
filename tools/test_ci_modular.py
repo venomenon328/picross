@@ -26,8 +26,43 @@ def package():
 
 
 class PackageContract(unittest.TestCase):
+    def test_execution_parts_cover_exact_selection_and_reuse_export_player(self):
+        plan = {'modules': ['production.catalog', 'tools', 'native.core'],
+                'player': {'required': True, 'reason': 'Code change'}}
+        parts = ci.execution_parts(plan)
+        self.assertEqual(parts, ['player', 'tools', 'native.core', 'production.catalog'])
+        original = copy.deepcopy(plan)
+        for part in parts:
+            selected = ci.execution_plan(plan, part)
+            self.assertEqual(selected['modules'], [] if part == 'player' else [part])
+            self.assertEqual(selected['player']['required'], part == 'player')
+        self.assertEqual(plan, original)
+        for part in ('source', 'native.graphics', 'production.images', '', 'tools,production.catalog'):
+            with self.assertRaises(ValueError): ci.execution_plan(plan, part)
+        plan['modules'].append('native.export')
+        self.assertNotIn('player', ci.execution_parts(plan))
+        self.assertTrue(ci.execution_plan(plan, 'native.export')['player']['required'])
+        self.assertEqual(ci.execution_parts({'modules': [], 'player': {'required': False}}), ['source'])
+        with self.assertRaises(ValueError):
+            ci.execution_parts({'modules': ['tools', 'tools'], 'player': {'required': False}})
+
     def validate(self, value, paths=()):
         return ci.validate_package(value, paths, repository='venomenon328/picross', today=date(2026, 11, 5))
+
+    def test_part_executes_only_its_work_but_reports_the_original_full_binding(self):
+        plan = {'source_head': 'a'*40, 'base_commit': 'b'*40, 'tested_checkout': 'c'*40,
+                'run_attempt': '1', 'modules': ['tools', 'production.catalog'],
+                'player': {'required': False}, 'package': package()}
+        for failing in (False, True):
+            with self.subTest(failing=failing), tempfile.TemporaryDirectory() as directory:
+                with patch.object(ci, 'command', side_effect=ValueError('actual module failure') if failing else None) as command, \
+                     patch.object(ci, 'summary'), patch.object(ci, 'git', side_effect=['', 'c'*40]), \
+                     patch.dict(os.environ, {'GITHUB_OUTPUT': ''}):
+                    report = ci.execute(plan, Path(directory)/'output', Path(directory)/'cache', part='tools')
+                self.assertEqual(report['accepted'], not failing)
+                self.assertEqual([call.args[1] for call in command.call_args_list], ['tools'])
+                self.assertEqual(report['binding'], plan)
+                self.assertEqual(report['execution']['modules'], ['tools'])
 
     def test_empty_modules_are_a_valid_explicit_core_only_decision(self):
         p = package(); p['modules'] = []

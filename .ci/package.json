@@ -1,20 +1,37 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/612",
-  "package": "APP-ROOT1",
+  "issue": "https://github.com/venomenon328/picross/issues/576",
+  "package": "PE-A3",
   "modules": [
-    "tools"
+    "tools",
+    "production.solver",
+    "production.adapter",
+    "production.catalog",
+    "native.core",
+    "native.history",
+    "native.catalog",
+    "native.completion"
   ],
-  "purpose": "APP-ROOT1 gemäß 6851636493 und Eigentümerfreigabe 6852316923: ausschließlich öffentlicher Ed25519-Root im App-Payload. ROOT1-T01 im gewählten tools-Modul; Pflichtkern docs/ci-required und regulärer Windows-Spielerbau.",
-  "omitted": "Keine native.*, production.*, preflight, delivery, Chromium, Live-Veröffentlichung oder Windows-Installation. ROOT1-T02 separat als nicht veröffentlichender Windowsdispatch am fixierten PR-Head: echter Bau, verify_installer --compare-build, Frozen-/Root-/Helper-/Input-/Lizenzinventar. Keine Produktionssecrets; synthetische Signaturen ersetzen niemals den Root im Payload. ROOT1-A01 bleibt unabhängiges Review vor Merge; ROOT1-R01 und APP-A/B1/B2-Betriebs-/Windows-11-Gates bleiben offen.",
+  "purpose": "PE-A3 gemäß #576 issuecomment-6848707827: geprüfte manuelle Rasterrevision über gemeinsamen Writer und gezielter abbruchsicherer Neustart eindeutig älterer eigener Saves. Der Kern liefert den Windows-Spieler. Solver/Adapter/Katalog prüfen unabhängige Proofs, aktive Methode, ehrliche Quellen und Transaktionen; native Gruppen prüfen Save-, History-, Katalog- und Abschlussgrenzen. T01/T02/T03 bleiben einmalige gebundene Nachweise am finalen Head.",
+  "omitted": "Keine production.images/native.adapters/native.graphics/native.export/preflight/delivery oder Chromium, keine neue Grafik, Ableitung, Hostingfunktion, PE-B-Oberfläche oder echte Bestandsmigration/Rätseländerung. Keine Tests an Nutzersaves oder wachsende Echtkatalogfamilie. Unabhängiges PE-A3-A01 bleibt vor Merge offen; kein Merge beauftragt.",
   "test_changes": [
     {
-      "path": "tools/test_update_verifier.py",
+      "path": "tests/puzzle_production/test_catalog_raster.py",
       "disposition": "change-scoped",
-      "reason": "Vorhandene kleine Verifierregressionen auf den freigegebenen öffentlichen Root umstellen: exakte kanonische Key-/ID-Bindung, blockierter Root, fremde/testende Signaturen und falsche Seeds ohne Echo. Unprovisionierte Negativform und v1/v2-/Publishergrenzen bleiben erhalten. Nur im gewählten tools-Modul; keine neue Dauersuite. Einmalige ROOT1-T02-Originale laufen nach 14/7 Tagen aus."
+      "reason": "Kleine synthetische Matrix-/No-op-/Qualitäts-/kombinierte Writer-/Stale-/Recoveryfälle, keine dauerhafte T01-Gesamtfamilie."
+    },
+    {
+      "path": "game/tests/pe_a1_cases.gd",
+      "disposition": "change-scoped",
+      "reason": "Gezielte neue Revisions-/Marker-/Primary-/Backup-/Fehlergrenzen im vorhandenen Coreprozess; keine neue native Prozessfamilie."
+    },
+    {
+      "path": "tools/test_ci_modular.py",
+      "disposition": "change-scoped",
+      "reason": "Explizit beauftragte CI-Nacharbeit: exakte vollständige Partitionierung, unveränderte Gesamtbindung, Ausschluss nicht angeforderter Teile und nur ein Windowsbau bei native.export."
     }
   ],
-  "core_change": null,
+  "core_change": "Ausdrücklicher Folgeauftrag nach abgebrochenem >43-Minuten-Lauf: unabhängige vollständige Module auf isolierten Runnern statt serieller Summe ausführen; ci-required verlangt alle Teile und docs erfolgreich. Keine Verringerung von Prüfinhalt, Originalreader oder Quellenbindung. Live-Fortschritt und echte Aktivitätszähler beheben den stummen Produktionsprüfer.",
   "evidence": {
     "mode": "none",
     "purpose": null,
