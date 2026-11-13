@@ -116,6 +116,10 @@ def verify(build, output, expected_commit, wix_archive=None, compare_build=False
                     payload[relative].read_bytes() == (ROOT / 'tools/production_workspace' / name).read_bytes(),
                     'Packaged public trust/product identity mismatch: ' + name)
         production_trust()
+        helper = payload['_internal/tools/production_workspace/UpdateHelper.exe']
+        require(sha(helper) == components['resources']['UpdateHelper.exe'], 'MSI independent helper mismatch')
+        require(payload['_internal/tools/production_workspace/build.json'].read_bytes() ==
+                payload['components.json'].read_bytes(), 'Frozen build/components identity mismatch')
         extensions = [name for name in payload if name.endswith('.pyd')]
         require(any(name.endswith('cryptography/hazmat/bindings/_rust.pyd') for name in extensions) and
                 any(Path(name).name.startswith('_cffi_backend.') for name in extensions),

@@ -29,7 +29,7 @@ ihren gebundenen Stand. Sie erweitern weder aktuelle Befugnisse noch die Haupt-C
 | Allgemeiner Test-/Artefaktlebenszyklus | [CI_CONTRACT](dev-rules/CI_CONTRACT.md) |
 | Ausführbare Picross-CI, Module, Laufzeitziel, Aufbewahrung | [CI_WORKFLOW_V2](CI_WORKFLOW_V2.md); [CI_POLICY](CI_POLICY.md) als Wegweiser |
 | Lokale Arbeitswurzel und Bereinigung eigener Daten | [WORKSPACE](dev-rules/WORKSPACE.md) |
-| Automatisierte App-Releases (APP-A integriert, Betrieb offen), signierte APP-B1-Autorität und späterer APP-B2-Client | [PW Updates](PRODUCTION_UPDATES.md), [Issue #612](https://github.com/venomenon328/picross/issues/612); Installerbau und gesperrte Erstpublikation unter [WINDOWS_BUILD](../tools/production_workspace/WINDOWS_BUILD.md) |
+| Automatisierte App-Releases (APP-A integriert, Betrieb offen), signierte APP-B1-Autorität und standardmäßig ausgeschalteter APP-B2-Client | [PW Updates](PRODUCTION_UPDATES.md), [Issue #612](https://github.com/venomenon328/picross/issues/612); Installerbau und gesperrte Erstpublikation unter [WINDOWS_BUILD](../tools/production_workspace/WINDOWS_BUILD.md) |
 | Entwicklungs-JSON und Sheet | [HANDOFF](dev-rules/HANDOFF.md), [Entwicklungssheet](workflow/Entwicklungsworkflow_Cheat-Sheet.html) |
 | Ausführungs-/Modellentscheidung für noch anstehende Arbeit | [MODEL_SELECTION](dev-rules/MODEL_SELECTION.md), datierter [MODEL_CATALOG](dev-rules/MODEL_CATALOG.md) |
 | Normale Rätselproduktion einschließlich Korrektur/Wiederaufnahme | [Phasenroute in Authoring §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase) und [gemeinsamer Bildstil](PUZZLE_IMAGE_STYLE.md); eigene Inhaltsfreigaben und Produktionsausgabe |
@@ -140,7 +140,7 @@ keine neue persönliche Buchprobe oder Bildproduktion durch das Datenpaket.
 | Zeichensprache, Vorschau, Zellanimation | [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), betroffene ZS-Verträge |
 | UI-Schrift, kleine Rahmen, Dropdowns, Piktogramme | [HAND_DRAWN_UI](HAND_DRAWN_UI.md), [UI_DRAWING_STYLE](UI_DRAWING_STYLE.md), [Z2-Ressourcenweg](Z2_SELECTION.md) |
 | Große bildbasierte Buchseitentitel und untere Informationsnavigation | [BTI-Bildtitel](VIEW_TITLE_ART.md), [Buchintegration](BOOK_INTEGRATION.md), [HZ](HAND_DRAWN_UI.md) |
-| Spriteherstellung, Zellrendering, Cache/Invalidierung | [CELL_RENDERING](CELL_RENDERING.md); PERF-A/B nur bei ihrer konkreten historischen Nacharbeit |
+| Spriteherstellung, Zellrendering, Cache/Invalidierung | [CELL_RENDERING](CELL_RENDERING.md); historische PERF-A/B-Reproduktion ist keine Dauerpflicht |
 | Sidebar/Zoomnormalisierung | [SL65](SL65_IMPLEMENTATION.md), aktuelle P1-/Saveverträge |
 | Katalog, Metadaten oder Sortierung | [CATALOG_PRESENTATION](CATALOG_PRESENTATION.md), [CATALOG_SORTING](CATALOG_SORTING.md), [CATEGORIES](CATEGORIES.md) |
 | Lokaler Bestandseditor oder unabhängige Namens-/Kategoriepflege | [PUZZLE_EDITOR](PUZZLE_EDITOR.md), [Kategorien](CATEGORIES.md), jeweiliges Paket in [#576](https://github.com/venomenon328/picross/issues/576) und tatsächlich betroffene Fachverträge |

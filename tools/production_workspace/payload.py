@@ -20,6 +20,7 @@ IGNORED = {
     'assets/launcher.png', 'smoke_installer.py', 'smoke_windows.py',
     'build_launcher.py', 'launcher_bootstrap.py',
     'update_diagnostic.py',  # Isolated synthetic signing adapter; never frozen.
+    'helper_diagnostic.py', 'packaging/HelperDiagnostic.cs',  # Explicit, non-installing T02 adapter.
 }
 PRODUCTION_DATA = {
     'difficulty_calibration_0_3.json', 'difficulty_method_0_3.json',
@@ -48,7 +49,7 @@ def selected(path):
             if local.endswith('.py'):
                 return True
             if scope == WORKSPACE and (local.startswith('ui/') or local.startswith('licenses/') or
-                                      local in {'assets/launcher.ico', 'packaging/Guard.cs', 'release.json',
+                                      local in {'assets/launcher.ico', 'packaging/Guard.cs', 'packaging/UpdateHelper.cs', 'release.json',
                                                 'requirements-windows.txt', 'requirements-update.txt',
                                                 'update-trust.json', 'START-WINDOWS.txt'}):
                 return True

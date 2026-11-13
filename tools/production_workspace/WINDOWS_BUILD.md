@@ -1,10 +1,11 @@
 # Windows-App bauen und prüfen
 
-Aktuell maßgeblich: [APP-B1-K01–K08 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6848332974)
+Aktuell maßgeblich: [APP-B2-K01–K09 / #612](https://github.com/venomenon328/picross/issues/612#issuecomment-6849852805)
 und der [App-Releasevertrag](../../docs/PRODUCTION_UPDATES.md).
 APP-A ist über #613 unabhängig abgenommen und in main integriert; Erstaktivierung
 und Windows-11-Upgradeprobe bleiben offen. APP-B1 liefert signierte Autorität und
-Verifier mit unprovisionierten öffentlichen Roots; APP-B2 ist nicht implementiert.
+Verifier mit unprovisionierten öffentlichen Roots; APP-B2 ergänzt Client und
+eigenständigen x64-.NET-Helfer, standardmäßig ausgeschaltet. Der Kanal bleibt inaktiv.
 Die historischen
 [P4/K01–K08](https://github.com/venomenon328/picross/issues/588#issuecomment-6825638437),
 [P4-N1](https://github.com/venomenon328/picross/issues/588#issuecomment-6828896451)
@@ -43,7 +44,8 @@ E:\EigeneArbeit\pw-build-env\Scripts\python.exe -m tools.production_workspace.ve
 
 `0.1.1` ist hier ein Diagnosebeispiel; die Pipeline verwendet den tatsächlichen
 Planwert. Der Bau erzeugt `inputs.json` und prüft die echte PyInstaller-Analysis
-gegen dieses committete Fingerprintinventar. Die isolierte private Umgebung
+gegen dieses committete Fingerprintinventar. Der C#-Updatehelfer wird vor PyInstaller
+mit dem Windows-.NET-Compiler gebaut, gehasht und explizit als Ressource gebündelt. Die isolierte private Umgebung
 liefert die gepinnten Python-/Wheel-/Runtimeinputs. Der Builder bündelt die
 benötigten Reader einschließlich `authoring_workflow`, Pillow, Tcl/Tk, UI und Icon sowie den gemeinsamen Updateverifier;
 der Datencheckout hat keine Codeautorität. `components.json` bindet Commit,
@@ -107,7 +109,7 @@ Installation oder Änderung dieser Policy im Serverlauf. Der vorhandene Inspecto
 liest stattdessen die tatsächliche MSI-Datenbank und alle per gebundenem WiX
 `dark.exe` entpackten Bytes: Quelle, Fingerprint, Version in MSI/EXE,
 Product-/Upgradecode, x64/limited/HKCU, Prüfsumme, vollständiges Payloadinventar,
-Guard und Lizenzbytes. `--compare-build` vergleicht jede Datei zusätzlich mit dem
+Guard, unabhängiger Updatehelfer und Lizenzbytes. `--compare-build` vergleicht jede Datei zusätzlich mit dem
 ursprünglichen `dist`-App-Image und prüft den ZIP-Hash. Technische Extrakte werden
 laufzeitintern entfernt. Erfolgreiche Inspektion ist keine Clientinstallation.
 Eine unabhängige spätere Rückdownloadprüfung verwendet `--expected-commit`, die
@@ -205,3 +207,29 @@ T02 belegt Paketierung und Windows-Kryptofunktion, keine Installation oder
 Windows-11-Lebenszyklusprobe. Details zu Wireform, reinem Verifier/API,
 Bootstrap/Rotation und offenen A01/R01-Gates stehen in
 [Updates §6](../../docs/PRODUCTION_UPDATES.md#6-app-b1--signierte-autorität-und-feste-roots).
+
+## APP-B2: eigenständiger Helfer und Diagnose
+
+Der Builder kompiliert `packaging/UpdateHelper.cs` mit derselben Windows-.NET-
+Toolchain als eigenständige x64-EXE. Die Appressource, Komponenten-/Dateiinventare,
+Fingerprint und echte MSI-Inspektion binden diese Bytes. Der Helfer verwendet nur
+Windows/.NET, keine DLL aus dem ersetzten Appimage. Kein zweites Pythonpaket.
+Frozen-Audit verlangt Client-/Staging-/Handoffmodule und schließt beide
+synthetischen Diagnoseadapter ausdrücklich aus.
+
+Der nicht veröffentlichende Dispatch führt zusätzlich `helper_diagnostic.py` aus:
+synthetisch signierter echter Kandidat, Cliententscheidung vor Nutzdownloads,
+vollständige Assetverifikation sowie abgetrennte Kopie des gebauten Helfers.
+Der ausgeschlossene `HelperDiagnostic.cs` prüft über Reflection dessen echte
+MSI-Identitäts- und Negativwege sowie Warten auf einen tatsächlichen Prozesshandle:
+Bereitschaft eines isolierten Kindes genügt nicht, erst sein Ende löst den Wait.
+Ungebundene Eingaben an die echte Helfer-EXE werden ohne MSI-Start abgewiesen.
+Der echte Python-Server beantwortet zusätzlich die vom gebauten C#-Helfer erzeugte
+Challenge; derselbe Helfer authentisiert dessen Antwort auf dem isolierten Port.
+Kein Installationstest oder Umgehen der Serverpolicy 1625.
+
+`pw-b2-review-<source>` enthält diese kleinen Ergebnisse, öffentliche synthetische
+Signaturbelege und die vorhandene B1-/MSI-/Inputdiagnose für sieben Tage. Der
+unveränderte Kandidat bleibt vierzehn Tage. Private Testkeys existieren nur im
+Prüfprozess. T03/APP-B2-R01 und APP-A-R02 erfordern weiterhin einen ausdrücklich
+beauftragten echten Windows-11-Test mit installierten passenden Kandidaten.
