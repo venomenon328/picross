@@ -1,30 +1,73 @@
-name: Manual production assistant installer
+name: Production assistant release
 
 on:
+  workflow_run:
+    workflows: [Package CI]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
+# Dispatch is ALWAYS diagnostic. Publication additionally needs the separately
+# authorized repository variable PW_RELEASE_ENABLED=true. No secret is added.
 permissions:
   contents: read
+  actions: read
+
+concurrency:
+  group: pw-app-release
+  cancel-in-progress: false
 
 jobs:
+  plan:
+    if: >-
+      github.repository == 'venomenon328/picross' &&
+      (github.event_name == 'workflow_dispatch' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push' &&
+        github.event.workflow_run.head_branch == 'main' &&
+        github.event.workflow_run.head_repository.full_name == github.repository))
+    runs-on: ubuntu-24.04
+    outputs:
+      changed: ${{ steps.plan.outputs.changed }}
+      version: ${{ steps.plan.outputs.version }}
+      source: ${{ steps.source.outputs.commit }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - id: source
+        run: echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - name: Verify main CI, fingerprint and published authority
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python -m tools.production_workspace.release_channel plan --plan "$RUNNER_TEMP/plan.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: pw-plan
+          path: ${{ runner.temp }}/plan.json
+          retention-days: 7
+          if-no-files-found: error
+
   installer:
+    needs: plan
+    if: needs.plan.outputs.changed == 'true'
     runs-on: windows-2025
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
-          ref: main
+          ref: ${{ needs.plan.outputs.source }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Pin latest fetched main commit
-        id: source
-        shell: pwsh
-        run: |
-          $source = git rev-parse --verify origin/main
-          if ($LASTEXITCODE -ne 0 -or $source -cnotmatch '^[0-9a-f]{40}$') { throw 'Full main SHA required' }
-          git checkout --detach $source
-          if ($LASTEXITCODE -ne 0) { throw 'Source checkout failed' }
-          "source_commit=$source" >> $env:GITHUB_OUTPUT
-          Write-Host "Installer source: main@$source"
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pw-plan
+          path: ${{ runner.temp }}/pw-plan
       - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
         with:
           python-version: '3.13.14'
@@ -37,22 +80,66 @@ jobs:
           if ($LASTEXITCODE -ne 0) { throw 'pip setup failed' }
           & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m pip install --only-binary=:all: -r tools/production_workspace/requirements-windows.txt
           if ($LASTEXITCODE -ne 0) { throw 'Pinned dependency setup failed' }
-      - name: Build payload and inspect actual MSI bytes
+      - name: Build and inspect actual MSI bytes without installation
         shell: pwsh
+        env:
+          PW_VERSION: ${{ needs.plan.outputs.version }}
+          PW_SOURCE: ${{ needs.plan.outputs.source }}
         run: |
-          & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.build_installer --output "$env:RUNNER_TEMP\pw-product"
+          $python = "$env:RUNNER_TEMP\pw-env\Scripts\python.exe"
+          & $python -m tools.production_workspace.build_installer --output "$env:RUNNER_TEMP\pw-product" --version $env:PW_VERSION
           if ($LASTEXITCODE -ne 0) { throw 'Installer build failed' }
-          & "$env:RUNNER_TEMP\pw-env\Scripts\python.exe" -m tools.production_workspace.verify_installer --build "$env:RUNNER_TEMP\pw-product" --output "$env:RUNNER_TEMP\pw-inspection" --expected-commit '${{ steps.source.outputs.source_commit }}' --compare-build
+          & $python -m tools.production_workspace.verify_installer --build "$env:RUNNER_TEMP\pw-product" --output "$env:RUNNER_TEMP\pw-inspection" --expected-commit $env:PW_SOURCE --version $env:PW_VERSION --compare-build
           if ($LASTEXITCODE -ne 0) { throw 'MSI inspection failed' }
-      - name: Targeted product download, no release or deployment
+          & $python -m tools.production_workspace.release_channel seal --plan "$env:RUNNER_TEMP\pw-plan\plan.json" --build "$env:RUNNER_TEMP\pw-product" --inspection "$env:RUNNER_TEMP\pw-inspection\result.json"
+          if ($LASTEXITCODE -ne 0) { throw 'Candidate binding failed' }
+          Get-Content "$env:RUNNER_TEMP\pw-product\input-audit.json"
+          Get-Content "$env:RUNNER_TEMP\pw-product\delivery.json"
+          Get-Content "$env:RUNNER_TEMP\pw-inspection\result.json"
+          if ((git status --porcelain)) { throw 'Build changed source checkout' }
+      - name: Candidate for independent APP-A review and gated publisher
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: Picross-Produktionsassistent-${{ steps.source.outputs.source_commit }}
+          name: Picross-Produktionsassistent-${{ needs.plan.outputs.source }}
           path: |
             ${{ runner.temp }}/pw-product/*.msi
             ${{ runner.temp }}/pw-product/*.msi.sha256
             ${{ runner.temp }}/pw-product/START.txt
             ${{ runner.temp }}/pw-product/delivery.json
+            ${{ runner.temp }}/pw-product/inputs.json
+            ${{ runner.temp }}/pw-product/manifest.json
           if-no-files-found: error
           retention-days: 14
           compression-level: 0
+
+  publish:
+    needs: [plan, installer]
+    if: >-
+      github.event_name == 'workflow_run' && github.ref == 'refs/heads/main' &&
+      github.repository == 'venomenon328/picross' && vars.PW_RELEASE_ENABLED == 'true'
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      # Only default-branch code ever runs with write access. No PR artifacts.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@83679a892e2d95755f2dac6acb0bfd1e9ac5d548
+        with:
+          python-version: '3.13.14'
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: pw-plan
+          path: ${{ runner.temp }}/pw-plan
+      - uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: Picross-Produktionsassistent-${{ needs.plan.outputs.source }}
+          path: ${{ runner.temp }}/pw-product
+      - name: Recheck source CI, main, authority, draft and every uploaded byte
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PW_RELEASE_ENABLED: ${{ vars.PW_RELEASE_ENABLED }}
+        run: python -m tools.production_workspace.release_channel publish --plan "$RUNNER_TEMP/pw-plan/plan.json" --build "$RUNNER_TEMP/pw-product"

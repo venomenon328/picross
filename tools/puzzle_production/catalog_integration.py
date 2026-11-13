@@ -110,8 +110,12 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
                     actual_export = (original["background"]["export_source"] if original.get("format") == EDITOR_FORMAT
                         else background.build(root / existing["production"]["package"], original, None, entry))
                     same = actual_export == exported_background
-                elif not editor_background:
-                    same = same and background.initial(old_background) == exported_background
+                else:
+                    same = False
+                # A genuine first-export repeat remains a no-op after later
+                # raster/reveal bindings and an editor wrapper. The complete
+                # immutable source is separate from the current export above.
+                same = same or background.initial(old_background) == exported_background
             elif same and not editor_background:
                 same = (next((event["export_source"] for event in reversed(old_background["events"]) if event["operation"] == "update"),
                              background.initial(old_background)) if rebind.is_rebound(old_background) else
