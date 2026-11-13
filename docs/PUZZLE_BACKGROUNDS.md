@@ -1,10 +1,11 @@
 # Rätselbezogene Hintergrundzeichnungen
 
-**PE / #576 · PE-A1 im Arbeitsbranch implementiert, Bildpflege noch Sollstand:**
-[PE-A2](PUZZLE_EDITOR.md#4-bilder-und-hintergrundauswahl) ergänzt später fertige
+**PE / #576 · PE-A1 integriert, PE-A2 zur Umsetzung beauftragt:**
+[PE-A2](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) ergänzt fertige
 2304×576-Dateien ohne Neukodierung, die erste individuelle Zuordnung bei einem
 Legacyrätsel und die schreibbare Auswahl Standard/eigenes Bild/kein Hintergrund.
-Die bisherige Ableitung und Legacy-Sperre beschreiben weiter den vorhandenen Weg.
+Der geschlossene neue Vertrag steht in §14. Die bisherige Ableitung und Legacy-Sperre
+beschreiben weiter ausschließlich ihre alten Generationen.
 [PE-A1](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag) verwendet
 Runtime v7 mit identischem v6-Hintergrundteilvertrag; Capability-v1 bleibt
 unverändert, Legacy-only aktiviert keine Hintergründe.
@@ -22,7 +23,7 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
-**Vertrag 1.0 · Dokumentrevision 12 · 11.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491**
+**Vertrag 1.0 · Dokumentrevision 13 · 12.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -2020,3 +2021,105 @@ gewählte Asset wird im letzten regulären Integrationsschritt übernommen.
 Reale Bildproduktion/HW07, Mehrjob-Sheet, Batch und Serienpilot bleiben eigene
 offene Umfänge. Ein grüner Werkzeug- oder Runtimefall schließt #560/#561/#563
 nicht ohne Prüfung ihrer vollständigen zuständigen Kriterien.
+
+## 14. PE-A2 · Fertigimport und ausdrückliche aktuelle Präferenz
+
+Vertrag vor konsumierendem Code gemäß
+[PE-A2](https://github.com/venomenon328/picross/issues/576#issuecomment-6839202555)
+und [Receipt-Präzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651).
+Der direkte Eingang `picross-prepared-background-png2304-v1` prüft genau 2304×576,
+höchstens 32 MiB, nicht animiertes vollständig dekodierbares PNG, bereits korrekte
+Orientierung und sRGB-Kompatibilität, mindestens einen vollständig transparenten
+und einen sichtbaren Pixel. Die bisherigen zulässigen höchstens 8-Bit-PNG-Farbtypen
+einschließlich erlaubtem tRNS und Interlacing bleiben. Quellbytes werden ohne
+Neukodierung importiert; es entsteht kein HP-W2-Derivationobjekt und kein neues
+HP-W2-Codec-/Modulprofil.
+
+Die isolierte Importvorbereitung aus §13.4 erhält weiterhin Kompression 0,
+Mipmaps und die bestehenden Alpha-/Größeneinstellungen. Der tatsächliche Engine-
+Import des direkten Eingangs wird nach Quellenfarbtyp geprüft: Graustufe mit
+Transparenz (Typ 0) und Graualpha (Typ 4) als LA8, RGB/Palette/RGBA (Typ 2/3/6)
+als RGBA8; Maße, tatsächliches Alpha und Mipmaps bleiben vollständig zu prüfen.
+Die alte RGBA8-Prüfung gilt weiter für den historischen HP-W2-Ableitungsausgang.
+Quellprüfung, echter Godotimport und PCK-Dekodierung sind getrennte Aussagen;
+PE-A2-K10/T02 bindet ihren neuen technischen Nachweis. Keine Importsidecars im
+aktiven Inhaltscheckout und keine behauptete Browser-/Windows-GUI-Abnahme.
+
+| Neue Form | Exakte Felder |
+| --- | --- |
+| `picross-catalog-background-v5` | `format,id,record_revision,origin,binding,current,record_hash`. |
+| `origin` | `entry,identity,notice,source`; unveränderter historischer Normalanker, Source v1–v4 oder null nur bei gültigem bisher sourcefreiem Legacy. Keine eingebettete v5-Hülle. |
+| `binding` | `entry,identity`; aktueller geprüfter Normalanker. Identity exakt `key,save_slot,definition,runtime_revision`, Definition als Ref. |
+| `current` | `image_revision,status,asset,notice,authority`; status standard/selected/none. Nur selected besitzt feste Asset-/Notice-Refs `game/art/backgrounds/<id>.png/.txt`, sonst null/null. |
+| Manuelle Autorität | `kind,decision,provenance`, kind manual; Decision/Provenienz/Notice exakt nach PE §8.1–8.2. Bildlose Auswahl hat provenance null. |
+| Produktive Autorität | `kind,candidate_revision,decision,derivation,provenance,review,adoption`, kind production; vorhandene HP-W2-Teilformen vollständig prüfen. |
+| Produktive v5-`adoption` | `request,revision,target,background,authorization,context`; bisherige fünf Unterformen unverändert, context exakt wie im tatsächlichen Request v2. |
+| `picross-background-adoption-request-v2` | `format,puzzle_id,revision,target,background,authorization,files,test_only,context`; die bisherigen acht Felder behalten ihren Vertrag. |
+| `context` | `source,production,reveal`; Source-Ref auf aktuelle Revealquelle oder sourcefreier vollständiger Produktionsanker `{entry,identity}`. Genau eines von source/production ist nicht null. reveal ist immer der aktuelle echte aktive Reveal-Ref. |
+| `picross-background-adoption-plan-v3` | `format,request,snapshot,old,new,files,plan_hash`; bisherige Textansichten/Bundle-Refs, vollständiger v8-Snapshot mit sieben Namespaces. |
+| `picross-background-adoption-journal-v4` | Achtfelderform des gemeinsamen Writers, operation background-adoption. Vollständig hergeleitete Text-/Binär-/Abwesenheitsdeltas aus alten/neuen Quellen; report_run null. |
+
+Manuelle Pflege verwendet separat `picross-editor-images-request-v1` und den
+gemeinsamen Editorbildplan/-writer aus [PE §8](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag).
+Reguläre Produktionsadoption verwendet weiterhin wirkliche Auswahl/Ableitung,
+Endfreigabe/Autorisierung und gebundene Quelldateien; sie darf die aktuelle
+Revealautorität nicht aus `origin.approval.selection.reveal` rekonstruieren.
+Kontext/Target werden beim Planen und unmittelbar vor Übernahme vollständig geprüft.
+Ein späterer manuell geänderter Reveal macht den alten Request stale.
+
+Source v5 bleibt nichtrekursiv. Erste echte Pflege respektiert den bisherigen
+wirksamen Bildzähler; spätere Bild-/Präferenzentscheidung erhöht image_revision
+einmal, Raster-Rebind nur record_revision. Identische Wiederholung erhält Zähler,
+Bytes und ursprüngliche Entscheidung/Zeit. Die genaue Zähler- und Noticeableitung
+steht in PE §8.1–8.2. Originale Rechte/Freigaben werden nicht umgeschrieben.
+
+Eine erforderliche Rebind-Überführung von BG-v1–v4 bei aktivem manuellen Reveal v3
+ist ausdrücklich produktiv: vollständige alte Quelle als unveränderter origin,
+exakt deren aktuelle Bild-/HP-Felder übernehmen, nur neue aktuelle binding und
+record_revision, keine neue image_revision/Entscheidung. Eine vorhandene alte
+fünffeldrige Adoption wird dabei unverändert durch Gleichheit mit der validierten
+Ausgangsquelle bewiesen. Ohne frühere Adoption ist null ausschließlich für das
+ursprüngliche Bild erlaubt, ebenfalls mit vollständigem Gleichheitsnachweis.
+Neue produktive Adoptionsentscheidungen verlangen den sechsfeldrigen v2-Kontext;
+alte Reader werden nicht erweitert. Die
+[begründete Präzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651)
+ändert keine Erstregistrierung und erzeugt keine historische Freigabe.
+
+Für eine wirkliche reguläre Request-v2-Adoption aus noch bestehender BG-v1–v4
+gilt der direkte produktive Erst-Adoptionsbuilder: neue v5-origin enthält die
+vollständige alte Quelle; adoption.target bleibt deren echter Source-Ref,
+damaliger Originhash und Bildzähler. Nur vollständige Gleichheit dieses Targets
+mit der validierten origin.source erlaubt den Erstfall. Die neuen aktuellen
+HP-Belege/context sind echt, beide Zähler steigen einmal; keine erfundene
+Zwischenquelle und kein alter Request mit neuer Bedeutung. Weitere v5-Adoptionen
+binden ihren regulären v5-Originhash.
+
+Inhaltsregistry bleibt v4; der vorhandene Hintergrundindex bindet jede neue Source.
+Runtime v8 behält den dreifeldrigen Hintergrund: legacy null/null, ausdrückliches
+standard mit positiver Präferenzrevision und asset null, selected/none wie bisher.
+Standard folgt der **aktuellen** Metadatenkategorie; fehlt deren vorhandene Zeichnung,
+ist kein Hintergrund wirksam. selected/none bleiben von Kategoriewechseln unabhängig.
+Alle sechs Zustandswechsel, Bildersatz, Legacy-Erstbindung und Standardrückkehr
+sind erlaubt. Defekte deklarierte Quelle ist Fehler, kein stiller Standardfallback.
+Legacy ohne Source beginnt optisch unverändert, ohne rückwirkende manuelle Entscheidung.
+
+Capability v1 gilt unverändert auch für v8 und dasselbe Renderprofil. selected/none
+erfordern enabled, legacy/standard allein nicht; eine vorhandene ungültige Capability
+bleibt Fehler. Die bestehende passive 4:1-Darstellung, untere Zentrierung,
+Besuchs-/Ladegrenzen und Spoiler-/Inputverträge bleiben. Keine neue Kategoriezeichnung.
+
+Die vollständigen T8/K8/C8-/Namespace-/Deltamengen stehen in PE §8.4 und
+[SD_CATALOG](SD_CATALOG.md#pe-a2--geschlossene-v8-quellen-pläne-und-journale).
+Neue Revealendungen und Hintergrund-PNGs werden mit tatsächlichen oder negativen
+Erwartungen gebunden. selected→standard/none entfernt nur eigene aktive PNG/TXT;
+Rollback kann sie wiederherstellen. Fremde Dateien bleiben unangetastet und blockieren.
+
+Für Legacy-Erstbindung mit späterem regulärem v6-Rasterupdate erhält der neue
+`picross-integrated-content-v3`-Receipt exakt
+`format,entry,integrated_commit,notice_sha256,background`; background exakt
+`origin_sha256,export_source`. Die echte aktuelle Export-Source v1 wird vor
+Retirement vollständig geprüft und gespeichert; bei sourcefreier Produktion null.
+Der Originhash bindet den unveränderten v5-Erstanker. Source v5 bekommt dafür
+weder fingierte Initialquelle noch weitere Historie; alte Receipt v1/v2 bleiben streng.
+Aktuelle manuelle Präferenz und Rechte überleben Registrierung, Raster-Rebind,
+reguläre Adoption, Sync, Batch und Produktionsabschluss.

@@ -1,17 +1,18 @@
 # Lokaler Rätselbestand-Editor (PE)
 
-Stand: 12.11.2026. **PE-A1 ist im Arbeitsbranch von
-[Draft-PR #577](https://github.com/venomenon328/picross/pull/577) implementiert;
-unabhängiges Review und Merge stehen aus.** Die übrigen Pakete bleiben
-freigegebener Sollstand. Auftrag, Kriterien und gebundene technische Nachweise
+Stand: 12.11.2026. **PE-A1 ist nach unabhängigem Review über
+[PR #577](https://github.com/venomenon328/picross/pull/577) integriert.**
+[PE-A2](https://github.com/venomenon328/picross/issues/576#issuecomment-6839202555)
+ist zur Umsetzung beauftragt; §8 schließt seinen Vertrag vor konsumierendem Code.
+PE-A3 und PE-B bleiben freigegebener Sollstand. Auftrag, Kriterien und gebundene technische Nachweise
 stehen im [PE-Issue #576](https://github.com/venomenon328/picross/issues/576)
-und im Liefer-PR. Implementierungsbasis ist
-`main@187e37bb2471c03f75a2b365ed3e341150b94f66`; der ursprüngliche
+und im jeweiligen Liefer-PR. PE-A2 beginnt auf
+`main@907d40c8e08f6c7777cd579c8f214921c67efd9b`; der ursprüngliche
 Spezifikationsstand wurde gegen `main@9cc07b411155adeab0aa6516ab5b4c4341f48184` geprüft.
 
 Dieser Vertrag beschreibt ein persönliches Werkzeug außerhalb des Spiels.
-Abschnitt 7 beschreibt das gelieferte Metadatenfundament. Die Bild-/Rasterpflege
-und Weboberfläche in den übrigen Abschnitten benötigen ihre eigenen Lieferungen.
+Abschnitt 7 beschreibt das gelieferte Metadatenfundament, §8 die gemeinsame
+Bildpflege. Rasterpflege und Weboberfläche benötigen ihre eigenen Lieferungen.
 Neue Rätsel folgen weiterhin [PUZZLE_AUTHORING](ai-workflows/PUZZLE_AUTHORING.md).
 
 ## 1. Ziel und freigegebener Umfang
@@ -115,8 +116,8 @@ Laufzeitnebenprodukt; Quellbilder bleiben bytegleich.
 
 Ein Formatwechsel eines Abschlussbilds darf nicht in einen Writer eingeschleust
 werden, der einen unveränderten Dateipfad beziehungsweise dieselbe Endung verlangt.
-PE-A2 muss zulässige PNG-/SVG-Wechsel einschließlich verwaltetem Zielpfad,
-aktueller Referenz und historischer Herkunft konsistent schließen.
+PE-A2 schließt zulässige PNG-/SVG-Wechsel einschließlich verwaltetem Zielpfad,
+aktueller Referenz und historischer Herkunft in §8.
 
 ### 4.2 Drei verständliche Hintergrundzustände
 
@@ -132,9 +133,9 @@ Kategoriewechsel aktualisiert die Standardvorschau; eigenes Bild und ausdrückli
 Kein Hintergrund behalten ihre Bedeutung. Eine defekte individuelle Quelle ist
 ein Fehler und kein stiller Wechsel zu einem anderen Zustand.
 
-Die heutige Runtime kennt `legacy/selected/none`; `legacy` ist eine historische
-Ableitung und noch keine frei schreibbare Präferenz. PE-A2 muss Standard und die
-Legacy-Erstzuordnung ausdrücklich im Quell-/Laufzeitvertrag einführen. Die bisherige
+Runtime v6/v7 kennt `legacy/selected/none`; `legacy` bleibt eine historische
+Ableitung. PE-A2 führt `standard` und die Legacy-Erstzuordnung ausdrücklich in
+Quellen v3/v5 und Runtime v8 ein (§8). Die bisherige
 Sperre der Legacy-Nachrüstung beschreibt den alten Werkzeugweg, nicht das PE-Ziel.
 
 ## 5. Rastertext und Spielstandrevision
@@ -222,7 +223,7 @@ der Inhaltsregistry und Kategorien bleiben.
 | --- | --- |
 | Aktueller Motivname | `metadata[id].name` |
 | Aktuelle Kategorie | `metadata[id].category_id` |
-| Identität, Definition-/Assetpfade und Produktion | Bestehender `entries`-Eintrag und seine gebundenen Fachquellen |
+| Identität, Definitionspfad und Produktion | Bestehender `entries`-Eintrag und seine gebundenen Fachquellen; aktuelle Bildpfade ab PE-A2 nach §8 |
 | Aktuelles Raster | Bestehende Definitionsdatei mit ID, Revision, Matrix, Palette und Hinweisen |
 | Name in `definition.reveal.name` / Kategorie in Produktionseintrag | Zum jeweiligen Produktionsstand gehörende Angabe; kein zweiter aktueller redaktioneller Wert |
 
@@ -266,8 +267,9 @@ Bilder, aktive Quellen, Ratings, Added und Herkunftsbelege bleiben bytegleich.
 Keine sichtbare Umbenennung, neue Rätselrevision, erneute Zertifizierung oder
 Spielstandmigration. Wiederholung eines bereits gültigen v4/v7-Stands ist No-op.
 
-Neue mutierende PE-Operationen und die fortgeführten regulären Writer verlangen
-einen gültigen v4/v7-Zielstand. Außer bei der ausdrücklich aufgerufenen Migration
+PE-A1-Mutationen verlangen einen gültigen v4/v7-Zielstand; PE-A2 ergänzt nach
+expliziter Projektionseinführung v4/v8 (§8). Fortgeführte Writer erhalten die
+gewählte aktuelle Generation. Außer bei der ausdrücklich aufgerufenen Migration
 stoppen sie auf v2/v3 vor Mutation mit einem konkreten Migrationshinweis.
 Historische Prüfung, vollständig geprüfte No-ops und bereits gebundene Alt-Recovery
 bleiben unter ihrem jeweiligen Vertrag möglich. Gewöhnliche Pflege- oder
@@ -354,22 +356,350 @@ solchen Kategoriewechsel; danach bleibt er v4. Bei der Prüfung früherer
 `previous_source`-Hashes wird deren tatsächliche v3-/v4-Generation rekonstruiert.
 Migration und reine Metadatenpflege ändern niemals diese Quellenbytes.
 
-## 8. Lieferung, Abnahme und Paketgrenzen
+## 8. PE-A2: geschlossener Bild- und Präferenzvertrag
+
+Vertrag vor konsumierendem Code, 12.11.2026, gemäß
+[Paketentscheidung PE-A2](https://github.com/venomenon328/picross/issues/576#issuecomment-6839202555).
+Die folgenden Tabellen definieren neue Generationen; bestehende geschlossene
+Quellen, Pläne und Journale behalten ihre Altregeln. Der gemeinsame Writer und
+Resolver gelten für Editor, CLI, Standardproduktion, Sync und Recovery.
+
+### 8.1 Gemeinsame Typen und aktive Quellen
+
+Alle Objekte sind geschlossen, ohne Zusatz- oder Doppelschlüssel. Kanonisches
+UTF-8-JSON verwendet die bestehenden Hashregeln und genau ein abschließendes LF.
+Ein SHA-256 ist eine kleingeschriebene hexadezimale Zeichenfolge mit 64 Stellen;
+Ganzzahlen schließen boolesche Werte aus. Revisionszähler liegen in 1…1.000.000.
+`Ref` ist exakt `{file,sha256,bytes}` mit sicherem relativem POSIX-Pfad, positivem
+Byteumfang und echtem Dateihash. Pfade bleiben unter ihrer gebundenen Wurzel;
+Links/Reparsepunkte, Casefold-/Datei-/Verzeichnisaliase und Kollisionen sind Fehler.
+Eine Quelle darf einschließlich LF höchstens 1 MiB groß sein. Überläufe stoppen
+vor Mutation; historische Belege werden dafür weder gekürzt noch neu versiegelt.
+
+| Objekt | Exakte Felder und Bindung |
+| --- | --- |
+| Revealquelle | `format,id,record_revision,origin,binding,current,record_hash`; `format=picross-catalog-reveal-v3`, Pfad `content/reveals/<id>.json`. |
+| Hintergrundquelle | Dieselben sieben Felder; `format=picross-catalog-background-v5`, Pfad `content/backgrounds/<id>.json`. |
+| `origin` | `entry,identity,notice,source`; einmaliger unveränderlicher Ausgangsanker. |
+| `binding` | `entry,identity`; aktueller vollständig geprüfter Produktions-/Definitionsstand. |
+| `identity` | `key,save_slot,definition,runtime_revision`; `definition` ist der Ref der tatsächlichen Definitionsdatei unter `game/`, übrige Werte müssen zum gebundenen Entry und zur Definition passen. |
+| Reveal-`current` | `image_revision,asset,notice,provenance,authority`. `asset` ist ein Ref auf den bisherigen technischen Revealstamm mit tatsächlicher `.png`-/`.svg`-Endung. `notice` ist die Text/Hash-Unterform, Datei am selben Stamm mit `.txt`. |
+| Hintergrund-`current` | `image_revision,status,asset,notice,authority`; `status` genau `standard`, `selected` oder `none`. Bei selected Asset-/Notice-Refs genau `game/art/backgrounds/<id>.png` beziehungsweise `.txt`; sonst beide null. |
+| `provenance` | `author,usage_basis,source,changes`; bestehende vierfeldrige Provenienz, jede Angabe 1…4096 Zeichen, getrimmt, einzeilig, ohne Steuerzeichen. |
+| Textnotice | `text,sha256`; bestehende Noticeform, 1…65.536 UTF-8-Bytes, abschließendes LF, kein BOM/CR/NUL, Hash über die tatsächlichen Textbytes. |
+| `decision` | `actor,timestamp_utc,statement`; Akteur 1…128, Aussage 1…4096 getrimmte einzeilige Zeichen ohne Steuerzeichen, echter UTC-Zeitpunkt exakt `YYYY-MM-DDTHH:MM:SSZ`. |
+| `record_hash` | Kanonischer SHA-256 des vollständigen Quellenobjekts ohne dieses Feld. |
+
+`origin.entry` ist der vollständige normalisierte historische Produktionseintrag,
+nicht nur seine ID. Export/Receipt und seine ursprünglichen Hash-/Rechte-/
+Freigabebindungen werden nach dem bestehenden gemeinsamen Resolver geprüft.
+`origin.source` ist entweder die vollständige unveränderte vorhandene Reveal-v1/v2-
+beziehungsweise Background-v1–v4-Quelle oder null ausschließlich bei gültiger
+bisher sourcefreier Produktion. Es enthält niemals eine neue v3-/v5-Hülle.
+`origin.notice` bindet die damals wirksame Textnotice, bei bildlosem Hintergrund
+null. Die erste tatsächliche Pflege erstellt diesen Anker; spätere Pflege erhält
+ihn byteinhaltlich. Git führt die Änderungshistorie, keine rekursiven Wrapper.
+
+Die äußere `binding` prüft den aktuellen vollständig normalisierten Entry und
+die aktuellen Definitionsbytes. Ein physischer Export→Receiptwechsel ändert
+keine Rätsel-/Bildidentität und rechtfertigt keine neue Inhaltsentscheidung.
+Bestehende physische Paket-, Receipt- und Exportanker werden vollständig gelesen
+und verglichen; ID-Gleichheit oder der neue Wrapperhash allein genügen nicht.
+
+| `authority` | Exakte Unterform und Prüfung |
+| --- | --- |
+| Manuell | `kind,decision,provenance` mit `kind=manual`. Provenienz nur bei standard/none null; bei einer Datei vollständig. Reveal-`current.provenance` und `authority.provenance` sind identisch. Auswahl und Speichern dokumentieren die wirkliche Eigentümerentscheidung, kein technisches Programm erzeugt ein menschliches Sichturteil. |
+| Produktives Reveal | `kind,approval,binding` mit `kind=production`. `approval` ist die unveränderte gültige `picross-reveal-approval-v1`. Das innere `{entry,identity}` bindet ihren damaligen Adoptionstand. Approval-ID, Bildrevision, Vorgänger-/Bild-/Noticehash und Definitionshash werden gegen diesen Stand geprüft. Ein späterer Raster-Rebind ändert nur die äußere aktuelle Bindung. |
+| Produktiver Hintergrund | `kind,candidate_revision,decision,derivation,provenance,review,adoption` mit `kind=production`; die bestehenden geschlossenen HP-W2-/HP-I1b2-Unterformen bleiben vollständig erhalten und mit Bild/Notice/ID/Revision sowie ihren wirklichen Quellständen gekreuzt geprüft. In Source v5 hat `adoption` exakt `request,revision,target,background,authorization,context`; `context` bindet den tatsächlichen Request-v2-Kontext gemäß §8.5. Alte Sourcegenerationen behalten ihre fünfgliedrige Adoptionsform. |
+
+Standard ist eine manuelle Präferenz, keine fingierte Produktionsableitung.
+Manuelle Aktionen benötigen weder Approval- noch Derivationobjekt. Eine reguläre
+spätere Adoption führt die aktuelle Quelle mit ihren echten Produktionsbelegen
+fort; sie setzt sie nicht auf eine historische Baseline zurück.
+
+Die [Implementierungspräzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651)
+erlaubt zusätzlich die notwendige rein produktive v5-Überführung einer bestehenden
+Background-v1–v4-Quelle beim Rebind auf einen manuellen Reveal-v3-Stand.
+`origin.source` erhält die vollständige alte Quelle samt damaliger Bindung/Notice;
+`current` übernimmt exakt deren validierte tatsächliche Bild-/HP-Felder.
+Die Autorität ist production, keine neue Hintergrundentscheidung: image_revision
+bleibt, record_revision erhöht sich einmal und binding wird aktuell. Eine vorhandene
+alte fünffeldrige Adoption bleibt in genau diesem nachgewiesenen Herkunftsfall
+unverändert. Adoption darf ausschließlich beim ursprünglichen Bild ohne Adoption
+null sein, wenn sämtliche aktuellen Bild-/HP-Felder der vollständig validierten
+origin.source entsprechen. Neue Request-v2-Adoptionen verlangen weiterhin ihren
+sechsfeldrigen Kontext. Keine fiktive Adoption oder allgemeine optionale Beleglücke;
+Erstregistrierung bleibt bei ihrem bisherigen produktiven Quellweg.
+
+Eine echte reguläre Request-v2-Hintergrundadoption darf eine noch vorhandene
+alte BG-v1–v4-Quelle direkt produktiv nach v5 übernehmen. Der Erst-Adoptionsanker
+enthält die vollständige alte Quelle, während `adoption.target` unverändert die
+tatsächlich adressierte alte Source samt ihrem damaligen Originhash/Bildzähler
+bindet. Dieser besondere Targetfall ist ausschließlich durch vollständige
+Gleichheit mit `origin.source` erlaubt; es gibt keine virtuell vorgeschaltete
+v5-Zielquelle. `current` trägt die echte neue sechsfeldrige Adoption mit context,
+image_revision und record_revision steigen je einmal. Spätere v5-Adoptionen
+binden regulär den v5-Originhash. Alte Request-/Sourceformen werden nicht umgedeutet.
+
+`image_revision` zählt wirkliche Änderungen der aktiven Bild-/Präferenzentscheidung:
+erster manueller Wert = bisherige wirksame Bildrevision + 1, bei sourcefreiem
+Legacy 0 + 1. Ein Rebind erhält diesen Wert. Der erste Wrapper erhält
+`record_revision = max(bisherige record_revision, bisherige image_revision, 0) + 1`,
+wobei ein nicht vorhandener Zähler 0 ist; jede spätere wirkliche Quellenfortschreibung
+erhöht ihn genau einmal. Ein No-op erhält beide Zähler und die ursprüngliche
+Entscheidung/Zeit. Nur ein neuer Zeitstempel/Akteur bei identischem gewünschtem
+Datei-/Provenienz-/Präferenzstand erzeugt keine neue Entscheidung. Eine erstmals
+ausdrücklich gespeicherte Standardpräferenz ist von sourcefreiem Legacy getrennt.
+
+### 8.2 Unveränderter Eingang und festes Notice-Layout
+
+`picross-prepared-background-png2304-v1` bezeichnet ausschließlich die Prüfung
+des vorbereiteten direkten Hintergrunds: genau 2304×576, einzelnes nicht
+animiertes vollständig dekodierbares PNG, höchstens 32 MiB, bereits korrekt
+orientiert und sRGB-kompatibel, mindestens ein transparenter und ein sichtbarer
+Pixel. Die bisherigen sicheren höchstens 8-Bit-Farbtypen, zulässiges tRNS und
+Interlacing bleiben zulässig. Dies ist kein HP-W2-Ableitungsprofil; Originalbytes
+werden nicht gedreht, konvertiert oder neu kodiert. Der isolierte Godotimport
+beweist die erweiterten Eingangsformen durch echte Dekodierung im PCK (§9).
+
+Revealgrenzen aus §4.1 bleiben; PNG↔SVG verwendet denselben technischen Stamm
+und die wirkliche neue Endung. Die alte eigene Live-Datei wird im selben
+abgesicherten Vorgang entfernt. Produktionsentry und Definitionsbytes behalten
+ihren historischen Pfad; nur die aktive Quelle und Runtimeauflösung wechseln.
+Keine beliebigen Asset-/Löschpfade und keine dauerhafte Live-Fassungssammlung.
+
+Bei wirklicher manueller Dateiübernahme besteht die Notice aus dem unveränderten
+vorhandenen Live-Noticetext, andernfalls dem vorhandenen `origin.notice.text`,
+andernfalls leerem Präfix. Auf einen nichtleeren Präfix folgt genau ein zusätzliches
+LF. Anschließend folgt exakt dieser Block mit den unveränderten validierten Werten:
+
+```text
+Manuelle Bildpflege (PE-A2)
+author: {author}
+usage_basis: {usage_basis}
+source: {source}
+changes: {changes}
+actor: {actor}
+timestamp_utc: {timestamp_utc}
+statement: {statement}
+```
+
+Auch die letzte Zeile endet mit LF. Keine zusätzliche Datumserzeugung, Umformulierung
+oder fingierte Produktionsfreigabe. Die Gesamtgrenze bleibt 65.536 Bytes; eine
+Überschreitung ist ein konkreter Fehler. No-op erzeugt keinen Block. Standard/none
+entfernt ausschließlich die eigene Live-Notice zusammen mit dem eigenen Livebild;
+die unveränderliche Ausgangsattribution im `origin` bleibt erhalten.
+
+### 8.3 Request, Plan und isoliertes Planbundle
+
+| Form | Exakte Felder |
+| --- | --- |
+| `picross-editor-images-request-v1` | `format,id,metadata,reveal,background,decision`. |
+| `metadata` | null oder nichtleeres Objekt aus ausschließlich `name,category_id`; Werte und Fremdschlüssel gemäß §3/§7. |
+| `reveal` | null oder exakt `asset,provenance`; Asset-Ref unter der ausdrücklich gewählten Inputwurzel. |
+| `background` | null oder exakt `status,asset,provenance`; status standard/selected/none, Asset-Ref und Provenienz nur bei selected, andernfalls beide null. |
+| `decision` | Die geschlossene dreifeldrige Unterform aus §8.1. |
+| `picross-editor-images-plan-v1` | `format,request,snapshot,old,new,files,plan_hash`. |
+| `snapshot` | `sources,namespaces`; vollständige Pfad-/Hash-/Abwesenheits- und Namespacebindung nach §8.4. |
+| Plan-`old` / `new` | Je exakt `entry,metadata,reveal,background,runtime`: vollständiger Produktionseintrag, aktuelle ID-Metadatenzeile, vollständige jeweilige Quelle oder null und vollständige einzelne v8-Runtimezeile. Alle fünf gehören zu derselben ausgewählten ID. |
+| `files` | Sortierte duplikatfreie Liste genau der tatsächlich unterschiedlichen verwalteten Zielpfade; keine frei ausgewählten Schreibziele. |
+| `plan_hash` | Kanonischer SHA-256 des Plans ohne dieses Feld. |
+
+Mindestens eines von metadata/reveal/background ist nicht null. Der Request
+enthält die wirklichen manuellen Eingaben, keine frei editierbare komplette
+Registry. Reine Metadaten-/No-op-Anfragen erzeugen keine Bildentscheidung.
+Gemeinsam gewünschte Bild-/Hintergrund-/ID-Metadatenänderungen bilden genau
+eine Transaktion. Kategorienweite CRUD/Neuzuordnung bleibt eine eigene Operation.
+
+Planung ist im geöffneten Inhaltscheckout vollständig lesend. Sie schreibt
+ausschließlich in das ausdrücklich gewählte eigene Ausgabeziel außerhalb der
+aktiven Inhalte. Das geschlossene Bundle enthält `plan.json`, die unveränderten
+Requestbytes als `request.json`, tatsächlich benötigte Eingangsbilder unter
+`input/<Request-Ref.file>` und erforderliche alte Binärseiten unter
+`previous/<sha256>.bin`. `plan.request` ist der Ref auf `request.json`.
+Keine Binärbytes/Base64 im Plan; das Inventar wird exakt aus Requestrefs und den
+gebundenen alten Binärseiten hergeleitet. Fehlende/fremde Dateien, Aliase oder
+Hash-/Abwesenheitsabweichungen blockieren. Der ursprüngliche externe Eingang
+wird nach vollständiger Bundlebindung nicht mehr gebraucht.
+
+Apply validiert Bundle und aktuellen vollständigen Checkout frisch und
+rekonstruiert Requestwirkung, Vorschau, Importbytes, Quellen, Runtime, `files`
+und gemeinsames Journal unabhängig. Hash/`pass` ersetzen keine Fachprüfung.
+Ein bereits vollständig erreichter identischer Zustand bleibt No-op; ein
+teilweiser oder fremd geänderter Zustand ist kein Erfolg.
+
+### 8.4 Exakte Quellen-, Namespace- und Deltamengen
+
+Für jeden gültigen Gesamtstand R bezeichnet `T8(R)` die bisherige vollständige
+Textmenge des v4/v7-Writers: Inhalts-/Runtime-/Kategorienregistry,
+Difficultydefault und Capability einschließlich sicherer Abwesenheit; je ID
+Definition, gemeinsame Revealnotice, aktive Revealquelle, Rating, Addedquelle,
+Hintergrundquelle und Hintergrundnotice. Fehlende optionale Quellen stehen
+explizit auf null. Bildlose Hintergrundzustände dürfen keine Live-Notice besitzen.
+Quelle, aktueller Index und tatsächliche Status-/Pfadbindung müssen übereinstimmen.
+
+`K8(R)` enthält sämtliche bisherigen Paket-/Receipt-/Export-/Rating-/Added-
+Berichtsquellen und deren vollständig geprüfte historische Bindungen sowie die
+tatsächlich ausgewählten Livebilder. Neue Wrapper ersetzen keine dieser
+Prüfungen. `C8(R)` enthält für jede registrierte ID beide aus ihrem unveränderten
+technischen Revealstamm hergeleiteten `.png`-/`.svg`-Pfade und den festen
+Hintergrund-PNG-Pfad. Genau die wirksamen Dateien existieren; jede inaktive
+Alternative hat eine explizite negative Erwartung. `snapshot.sources` ist exakt
+die Vereinigung `T8(R) ∪ K8(R) ∪ C8(R)`, jeweils SHA-256 oder null nur für erlaubte
+Abwesenheit. Binärbytes werden niemals als Text interpretiert.
+
+`snapshot.namespaces` hat exakt sieben Felder mit sortierten duplikatfreien Listen:
+
+| Feld | Exakte tatsächliche Dateimenge |
+| --- | --- |
+| `reveals` | Aktive kanonische `content/reveals/<id>.json`. |
+| `difficulty` | Bestehende kanonische Rating- und Difficultyberichtspfade. |
+| `added` | Bestehende kanonische Addedquellen und ihre Berichte. |
+| `packages` | Vollständige Dateien in allen registrierten Paket-/Receiptbäumen. |
+| `backgrounds` | Genau die im Registryindex gebundenen `content/backgrounds/<id>.json`. |
+| `background_assets` | Tatsächlich vorhandene selected-PNGs und ihre Notices; keine Dateien für standard/none/legacy. |
+| `reveal_assets` | Tatsächlich vorhandene wirksame `.png`-/`.svg`-Datei und gemeinsame `.txt`-Notice je technischem Revealstamm. |
+
+Die bisherigen Namespacegrenzen bleiben. Fremde Dateien, nichtkanonische Namen,
+Links und unerwartete alternative Endungen blockieren; sichere leere kanonische
+Verzeichnisse dürfen nach Rollback verbleiben. Eine vorhandene ungültige
+Capability ist stets Fehler, auch wenn der Katalog nur legacy/standard enthält.
+
+Das Journal hat exakt `format,operation,old,new,retained,additions,report_run,replacements`.
+Für `editor-images` gilt `format=picross-editor-images-journal-v1`,
+`old/new` besitzen exakt `T8(Ralt) ∪ T8(Rneu)` mit Text oder null;
+`additions={}` und `report_run=null`. `replacements` enthält genau die wirklich
+geänderten binären Pfade aus `C8(Ralt) ∪ C8(Rneu)`, beschränkt auf die ausgewählte
+ID. Jede Seite ist null für sicher belegte Abwesenheit oder die bestehende
+geschlossene Binärform `{sha256,bytes,base64}`. Null/null und identische Seiten
+sind keine Ersetzung. `retained` bindet exakt alle übrigen vorhandenen K8-/C8-Pfade
+mit SHA-256; negative C8-Erwartungen werden zusätzlich streng aus beiden
+vollständigen Quellansichten hergeleitet und geprüft, nicht als neue null-Werte
+in der bisherigen Retainedform gespeichert. Kein freier zusätzlicher Löschpfad.
+Alte/neue Gesamtansicht und Kandidatenmengen werden bei Planung, unter Lock und
+Recovery aus den vollständigen Quellen erneut hergeleitet, nicht aus `files` geglaubt.
+
+| Operation | Ausschließlich zulässige Unterschiede |
+| --- | --- |
+| `editor-images` | Gewünschte Reveal-/Hintergrundquelle, zugehörige Livebilder/Notices, betroffener Hintergrundindexref, ausdrücklich gewählte ID-Metadaten und daraus abgeleitete Runtime. Alle Produktionseinträge/Definitionen, Kategorienquelle, Ratings/Added und unbeteiligten IDs bytegleich. |
+| `editor-image-migration` | Ausschließlich gültige Runtimeprojektion v7→v8; keine Quellen-/Bild-/Metadaten-/Indexänderung. |
+| `metadata` | Wie §7 ausschließlich gewählte aktuelle Metadaten/Kategorien und Runtime; aktive Bildquellen/Präferenzen erhalten. |
+| `registration` | Bestehender vollständig geprüfter neue-ID-Paketumfang mit eigenem regulärem Bildweg; keine manuellen Wrapper ohne manuelle Entscheidung. Bestehende IDs unverändert. |
+| `update` | Bestehender geprüfter Rasterupdateumfang einer ID; manuelle aktuelle Bilder/Präferenzen und Metadaten erhalten, äußere Quellenbindung an neue Definition fortschreiben. Keine neue Bildrevision allein wegen Rebind. |
+| `reveal-adoption` / `background-adoption` | Bestehender jeweils ausdrücklich autorisierter Produktionsbildwechsel; neue aktuelle Quelle fortführen, echte Belege erhalten, nötige Gegenquellenbindung/Index/Runtime ableiten. Keine Rückkehr zur alten Ausgangsautorität. |
+| `adoption` / `added-adoption` / `sync` / `method-activation` | Bisheriges jeweiliges Rating-/Added-/Runtime-/Defaultdelta; aktuelle Bild-, Herkunfts-, Rechte- und Metadatenautorität unverändert. |
+
+Die Journalgrößen bleiben 24 MiB für nichtbinäre und 128 MiB einschließlich
+JSON/Base64 für Bildjournale, höchstens 32 MiB je Binärseite und 96 MiB dekodierte
+Seiten insgesamt. Vor Mutation konkret ablehnen; keine automatische Teilmenge.
+Planung, Übernahme und Recovery haben jeweils eigenständig den bisherigen
+endlichen 300-s-Rahmen. RI-B/RI-C-Registrierungsabkürzungen und der 1800-s-
+Registrierungsdefault werden nicht auf die neue Bildpflege übertragen.
+
+Der Writer verwendet `content/.registration-pending.json`, vollständige isolierte
+Alt-/Zielansichten, dauerhafte Journalanlage vor Mutation, frische Unter-Lock-
+Prüfung, sichere atomare Binär-/Textpublikation und Runtime zuletzt. Recovery
+rollt ausschließlich auf den vollständig gültigen eigenen Altstand zurück,
+auch nach erneutem Abbruch oder bereits erreichter neuer Belegung. Eigene neue
+Endung und entfernte alte Bildseite sind dabei symmetrisch gebunden. Fremde
+Bytes bleiben mit Journal und konkreter Recoverymeldung erhalten.
+
+### 8.5 Runtime v8, Projektionseinführung und Folgegenerationen
+
+`picross-runtime-registry-v8` hat exakt die v7-Wurzel `format,categories,entries`
+und je Eintrag exakt `id,key,save_slot,definition,reveal,visible,category_id,difficulty,added_at,background,name`.
+`reveal` ist der wirksame aktuelle Ressourcenpfad; die übrigen Identitäts-/
+Logikbindungen bleiben erhalten. `background` ist exakt
+`status,image_revision,asset`: legacy mit null/null, standard mit positiver
+Präferenzrevision und asset null; selected/none behalten den bisherigen Teilvertrag.
+Standard folgt der aktuellen Metadatenkategorie, ohne passende Zeichnung ist
+kein Hintergrund wirksam. Fehlende/defekte deklarierte Quellen sind Fehler.
+
+Die unveränderte Capability v1 wird auch für v8 als Nachweis desselben
+selected/none-Renderprofils akzeptiert. selected/none erfordert gültig enabled;
+legacy/standard allein nicht. V2–v7 behalten ihre exakten Altleser.
+Der gemeinsame Godotloader übernimmt aktuellen Namen und Revealpfad nur in
+seine Speicheransicht. Definitionsdatei, Raster-/Save-Revision, Lösung, Hinweise,
+Palette und Ratingbindung bleiben unverändert. Katalog und Abschluss verwenden
+dieselbe aktive Datei; neue/begonnene Rätsel laden sie nicht zur Vorschau.
+
+| Explizite Migration | Geschlossene Form |
+| --- | --- |
+| Plan | `picross-editor-image-migration-plan-v1` mit `format,snapshot,old,new,files,plan_hash`; vollständiger Snapshot aus §8.4, old/new die vollständigen gültigen v7-/v8-Runtimeobjekte. |
+| Wiederholung | Bei bereits gültigem v8 old=new=v8 und files=[]; keine Bytes/mtime-Änderung. |
+| Journal | `picross-editor-image-migration-journal-v1`, operation `editor-image-migration`, gleiche Achtfelderform und vollständige Text-/Quellenmengen; additions/replacements leer, report_run null. Nur Runtime darf sich unterscheiden. |
+
+Bildpflege verlangt v4/v8; gewöhnliches Speichern migriert nicht. Die vorherige
+v2/v3→v4/v7-Migration behält ihren Vertrag; danach ist der ausdrücklich gewählte
+zweite Schritt möglich. V4/v7-Pflege bleibt zulässig, fortgeführte Writer stufen
+einen gültigen v8-Stand niemals zurück.
+
+| Operation auf v8 | Neue Journalkennung |
+| --- | --- |
+| Neue Registrierung | `picross-registration-journal-v9` |
+| Reguläres Rasterupdate | `picross-content-update-journal-v9` |
+| Rating-/Addedübernahme und Sync | `picross-catalog-metadata-journal-v6` |
+| Reguläre AT-Bildadoption | `picross-reveal-adoption-journal-v6` |
+| Reguläre Hintergrundadoption | `picross-background-adoption-journal-v4` |
+| Methodenaktivierung | `picross-difficulty-activation-journal-v4` |
+| PE-Namen-/Kategoriepflege | `picross-editor-metadata-journal-v2` |
+| Gemeinsame Bild-/ID-Metadatenpflege | `picross-editor-images-journal-v1` |
+| Explizite v7→v8-Projektion | `picross-editor-image-migration-journal-v1` |
+
+Die gespeicherten v8-Generationen heißen Revealrequest v2 / Revealplan v5,
+Background-Adoption-Request v2 / Backgroundplan v3, Metadatenplan v2,
+Difficultyreport v6, Addedplan v5 und Aktivierungsplan v3. Ihre exakten bisherigen
+äußeren Felder bleiben, außer der ausdrücklich neuen aktuellen Reveal-/
+Kontextbindung im Background-Adoption-Request v2. Deren Feldtabellen stehen in
+[SD_CATALOG](SD_CATALOG.md) und [PUZZLE_BACKGROUNDS](PUZZLE_BACKGROUNDS.md).
+Alte Pläne/Journale werden weder umetikettiert noch still um Quellen ergänzt.
+
+Der Background-Adoption-Request v2 ergänzt genau `context` zu seinen bisherigen
+acht Wurzelfeldern. Kontext ist exakt `{source,production,reveal}`: `source` ist
+ein Ref auf die aktuelle Revealquelle, andernfalls null; `production` ist nur
+im sourcefreien Fall der vollständig geprüfte Anker `{entry,identity}`, sonst
+null. Genau eine dieser Autoritäten ist vorhanden. `reveal` ist der Ref auf
+die tatsächliche aktuelle Datei einschließlich wirksamer Endung, Hash und Bytes.
+Die Produktionsauswahl bindet diesen aktuellen Kontext; eine alte
+`origin.approval.selection.reveal` ersetzt ihn nicht. Derselbe Kontext bleibt
+in der sechsfeldrigen produktiven v5-Adoption dauerhaft gebunden.
+
+Die [begründete Receipt-Präzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651)
+führt `picross-integrated-content-v3` mit exakt
+`format,entry,integrated_commit,notice_sha256,background` ein. `background` ist
+exakt `{origin_sha256,export_source}`: Hash des kanonischen unveränderlichen
+v5-`origin` und die vollständige echte gültige Source v1 des aktuellen
+v6-Exports, beziehungsweise null bei sourcefreier Produktion. Vor Retirement
+werden Exportquellen, Mainbindung und aktive manuelle Quelle vollständig geprüft.
+Damit bleibt Legacy→manueller Hintergrund→regulärer Rasterexport nach Retirement
+prüfbar, ohne `origin.source=null` umzuschreiben oder neue Wrapperhistorie.
+Bestehende Receipt-v1/v2-Formen bleiben unverändert geschlossen.
+
+Historisch identische Registrierung prüft ursprünglichen Export/Receipt vollständig
+und bleibt nach manueller Pflege No-op. Ein gültiger regulärer Folgeexport wird
+als eigener Produktionsstand geprüft; seine historischen Bildpfade werden von
+den wirksamen manuellen Pfaden getrennt. Er muss eine manuelle Entscheidung nicht
+als HP-W2-Ableitung reproduzieren. Exportbilder setzen keine aktuelle manuelle
+Präferenz zurück. Sync, Batch und Produktionsabschluss erhalten dieselbe Autorität
+und deren aktive Rechte. Die einmalige #620-Ausnahme begründet keine allgemeine
+HP-W2-Toolhashkompatibilität oder Neuversiegelung alter Belege.
+
+## 9. Lieferung, Abnahme und Paketgrenzen
 
 Die beiden Hauptbereiche bleiben Datenpflege und Weboberfläche. Das Fundament
 wird wegen seiner unterschiedlichen Datenrisiken in eigenständige Pakete geteilt:
 
 | Paket | Eigenständig prüfbarer Endzustand |
 | --- | --- |
-| PE-A1 | Aktuelle Namen/Kategorien, v4/v7-Migration, gemeinsame CLI/API und weiter funktionierende Standardproduktion. Im Arbeitsbranch implementiert, unabhängiges Review offen. |
-| PE-A2 | Unveränderter Fertigbildimport, Abschlussbildwechsel, Legacy-Erstzuordnung und alle drei Hintergrundzustände. Baut auf PE-A1 auf. |
+| PE-A1 | Aktuelle Namen/Kategorien, v4/v7-Migration, gemeinsame CLI/API und weiter funktionierende Standardproduktion. Nach unabhängigem Review über PR #577 integriert. |
+| PE-A2 | Unveränderter Fertigbildimport, Abschlussbildwechsel, Legacy-Erstzuordnung, alle drei Hintergrundzustände und kombinierte ID-Metadatenpflege. Geschlossener Vertrag §8 und eigener Prüfplan in #576; Umsetzung beauftragt, Abnahme getrennt. |
 | PE-A3 | Textuelle Rasterübernahme mit vorhandenen Prüfungen und gezielter automatischer Savebehandlung bei älterer Rasterrevision. Baut auf PE-A1 und den tatsächlich benötigten Bildbindungen auf. |
 | PE-B | Lokale Weboberfläche und komfortabler Windowsstart für sämtliche freigegebenen Bearbeitungen. Konsumiert die gemeinsamen Writer. |
 
-Nur PE-A1 erhält jetzt seinen vollständigen Umsetzungsschnitt und Prüfplan im
-Issue. Die weiteren Umfänge sind fachlich beschlossen; ihre konkreten Versions-/
+PE-A1 und PE-A2 besitzen eigene vollständige Umsetzungsschnitte und Prüfpläne im
+Issue. PE-A3 und PE-B bleiben fachlich beschlossen; ihre konkreten Versions-/
 Transaktions-/Prüfentscheidungen werden vor ihrer Umsetzung geschlossen. Ein
-fertiges PE-A1 ist kein fertiger Editor und schließt das Gesamtissue nicht.
+fertiges Fundament schließt das Gesamtissue nicht.
 
 PE-A1 wurde nach ausdrücklichem Umsetzungsauftrag auf demselben Branch/PR
 fortgeführt. Der anfängliche buildfreie Dokumentplan ist durch den

@@ -14,6 +14,7 @@ PATH = "content/difficulty-method.json"
 FORMAT = "picross-difficulty-default-v1"
 LEGACY_PLAN = "picross-difficulty-activation-plan-v1"
 PLAN = "picross-difficulty-activation-plan-v2"
+IMAGE_PLAN = "picross-difficulty-activation-plan-v3"
 LIMIT = 4096
 PLAN_LIMIT = 16 * 1024 * 1024
 
@@ -63,9 +64,15 @@ def current(record):
             "revision": record["revision"] if record else 0}
 
 
-def source_hashes(snapshot, plan_format=PLAN):
+def source_hashes(snapshot, plan_format=None):
+    from . import catalog_transaction as tx
+    if plan_format is None:
+        plan_format = IMAGE_PLAN if tx.image_generation(snapshot) else PLAN
+    require((plan_format == IMAGE_PLAN) == tx.image_generation(snapshot),
+            "Activation plan generation differs from the current image projection")
+    if plan_format == IMAGE_PLAN:
+        return tx.image_snapshot(snapshot)["sources"]
     if plan_format == LEGACY_PLAN:
-        from . import catalog_transaction as tx
         snapshot = tx.pre_background_snapshot(snapshot)
     return {**snapshot["retained"], **{n: io.checksum(raw) for n, raw in snapshot["texts"].items()}}
 
@@ -73,7 +80,7 @@ def source_hashes(snapshot, plan_format=PLAN):
 def validate_plan(value):
     from .catalog_rating import check_hash
     exact_keys(value, {"format", "expected", "target", "sources", "result_hash"})
-    require(value["format"] in (PLAN, LEGACY_PLAN) and len(canonical_bytes(value)) + 1 <= PLAN_LIMIT, "Invalid activation plan format/size")
+    require(value["format"] in (IMAGE_PLAN, PLAN, LEGACY_PLAN) and len(canonical_bytes(value)) + 1 <= PLAN_LIMIT, "Invalid activation plan format/size")
     exact_keys(value["expected"], {"method", "method_hash", "record_hash", "revision"})
     exact_keys(value["target"], {"method", "method_hash"})
     for side in ("expected", "target"):
@@ -96,7 +103,7 @@ def plan(root, expected, target, target_hash):
     snapshot = tx.capture(root)
     before = current(from_bytes(snapshot["texts"][PATH]))
     require(before["method"] == expected, "Unexpected current production default")
-    return validate_plan(rating.hashed({"format": PLAN, "expected": before,
+    return validate_plan(rating.hashed({"format": IMAGE_PLAN if tx.image_generation(snapshot) else PLAN, "expected": before,
         "target": {"method": target, "method_hash": target_hash}, "sources": source_hashes(snapshot)}, "result_hash"))
 
 
@@ -126,7 +133,7 @@ def adopt(root, value, *, apply=True, fail_step=None):
     if apply: require_current(snapshot["registry"])
     record = record_for(value, previous)
     journal = tx.prepare(root, snapshot, {PATH: canonical_bytes(record) + b"\n"}, operation="method-activation",
-                         generation="background" if value["format"] == PLAN else "sd2")
+                         generation="background" if value["format"] in (IMAGE_PLAN, PLAN) else "sd2")
     if apply: tx.execute(root, journal, fail_step=fail_step)
     return {"status": "activated" if apply else "planned-activation", "method": record["method"], "record_hash": record["record_hash"]}
 

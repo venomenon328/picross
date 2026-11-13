@@ -15,6 +15,7 @@ from .authoring_package import require
 from .contract import canonical_bytes, exact_keys
 
 PLAN_FORMAT = "picross-editor-metadata-plan-v1"
+IMAGE_PLAN_FORMAT = "picross-editor-metadata-plan-v2"
 VIEW_FORMAT = "picross-metadata-view-v1"
 PLAN_LIMIT = 32 * 1024 * 1024
 MAX_OPERATIONS = 10000
@@ -168,7 +169,8 @@ def _plan(root, snapshot, after, catalog, operations, operation):
         changes[categories.PATH] = _bytes(catalog)
     journal = tx.prepare(root, snapshot, changes, operation=operation, generation="metadata")
     preview, files = _summary(journal)
-    result = {"format": PLAN_FORMAT, "operation": operation, "operations": operations,
+    result = {"format": IMAGE_PLAN_FORMAT if tx.image_generation(snapshot) else PLAN_FORMAT,
+              "operation": operation, "operations": operations,
               "changes": preview, "files": files, "journal": journal}
     require(len(_bytes(result)) <= PLAN_LIMIT, "Metadata plan exceeds 32 MiB")
     return result
@@ -190,6 +192,8 @@ def plan_migration(root):
     root = io.external(root)
     snapshot = tx.capture(root)
     before = snapshot["registry"]
+    require(not tx.image_generation(snapshot),
+            "Metadata migration keeps its v4/v7 contract; the checkout already uses the explicit v8 image projection")
     catalog = _catalog(snapshot["texts"])
     after = deepcopy(before)
     if before["format"] != registry.METADATA_FORMAT:
@@ -207,11 +211,13 @@ def apply(root, value, *, fail_step=None):
     _unlocked(root)
     value = io.json_bytes(_bytes(value), PLAN_LIMIT)
     exact_keys(value, {"format", "operation", "operations", "changes", "files", "journal"})
-    require(value["format"] == PLAN_FORMAT and value["operation"] in ("metadata", "metadata-migration"),
+    require(value["format"] in (PLAN_FORMAT, IMAGE_PLAN_FORMAT) and
+            value["operation"] in (("metadata",) if value["format"] == IMAGE_PLAN_FORMAT else ("metadata", "metadata-migration")),
             "Unsupported metadata plan")
     journal = value["journal"]
+    formats = tx.IMAGE_FORMATS if value["format"] == IMAGE_PLAN_FORMAT else tx.PE_FORMATS
     require(isinstance(journal, dict) and journal.get("operation") == value["operation"] and
-            journal.get("format") == tx.PE_FORMATS[value["operation"]], "Wrong metadata journal binding")
+            journal.get("format") == formats[value["operation"]], "Wrong metadata journal binding")
     tx.validate_journal(root, journal, before_write=True)
     operations = _operations(value["operations"], expanded=True)
     old_texts = {name: text.encode() if text is not None else None for name, text in journal["old"].items()}

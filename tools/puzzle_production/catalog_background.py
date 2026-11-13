@@ -21,6 +21,7 @@ CHANGE_FORMAT = "picross-catalog-background-v2"
 CHANGE_JOURNAL = "picross-background-adoption-journal-v1"
 REGISTRY_FORMAT = "picross-content-registry-v3"
 REBIND_FORMATS = ("picross-catalog-background-v3", "picross-catalog-background-v4")
+EDITOR_FORMAT = "picross-catalog-background-v5"
 RUNTIME_FORMAT = "picross-runtime-registry-v6"
 RECEIPT_FORMAT = "picross-integrated-content-v2"
 PATH = "content/backgrounds"
@@ -35,6 +36,9 @@ IMAGE_FIELDS = ("image_revision", "candidate_revision", "decision", "derivation"
 
 def initial(source):
     """Return the immutable first-registration authority of a validated source."""
+    if source["format"] == EDITOR_FORMAT:
+        previous = source["origin"]["source"]
+        return initial(previous) if previous is not None else None
     if source["format"] in REBIND_FORMATS: return initial(source["base"])
     return source["initial"] if source["format"] == CHANGE_FORMAT else source
 
@@ -44,11 +48,13 @@ def current(source):
     if source["format"] in REBIND_FORMATS:
         from .background_rebind import image
         return image(source)
-    return source["current"] if source["format"] == CHANGE_FORMAT else source
+    return source["current"] if source["format"] in (CHANGE_FORMAT, EDITOR_FORMAT) else source
 
 
 def effective(source):
     """Internal view only: original identity plus effective current image fields."""
+    if source["format"] == EDITOR_FORMAT:
+        return {**current(source), "identity": source["binding"]["identity"]}
     result = {**initial(source), **{field: current(source)[field] for field in IMAGE_FIELDS}}
     if source["format"] in REBIND_FORMATS:
         result["identity"] = source["events"][-1]["binding"]["identity"]
@@ -57,6 +63,7 @@ def effective(source):
 
 def initial_ref(source):
     original = initial(source)
+    ap.require(original is not None, "Source-free editor background has no historical HP initial source")
     return ref(path(original["puzzle_id"]), encoded(original))
 
 
@@ -336,6 +343,13 @@ def validate(value, entry):
         if value.get("format") in REBIND_FORMATS:
             from . import background_rebind
             return background_rebind.validate(value, entry)
+        if value.get("format") == EDITOR_FORMAT:
+            from . import editor_image_source as editor
+            editor.validate(value)
+            expected = deepcopy(entry)
+            expected["production"]["package_sha256"] = value["binding"]["entry"]["production"]["package_sha256"]
+            ap.require(expected == value["binding"]["entry"], "Current editor background production differs")
+            return value
         if value.get("format") != CHANGE_FORMAT:
             return _validate_v1(value, entry)
         exact_keys(value, {"format", "initial", "current"})
@@ -390,6 +404,30 @@ def notice_bytes(identifier, candidate):
 
 
 def _transition(previous, following):
+    if following["format"] == EDITOR_FORMAT and previous["format"] != EDITOR_FORMAT:
+        from . import editor_image_source as editor
+        editor.validate(following)
+        adoption = following["current"]["authority"].get("adoption")
+        target = adoption.get("target") if isinstance(adoption, dict) else None
+        ap.require(following["origin"]["source"] == previous and
+                   following["binding"] == {key: following["origin"][key] for key in ("entry", "identity")} and
+                   following["current"]["authority"]["kind"] == "production" and
+                   following["record_revision"] == max(previous.get("record_revision", 0), current(previous)["image_revision"]) + 1 and
+                   following["current"]["image_revision"] == current(previous)["image_revision"] + 1 and
+                   target == {"source": ref(path(following["id"]), encoded(previous)),
+                              "origin_sha256": origin_hash(previous), "image_revision": current(previous)["image_revision"]},
+                   "First editor background adoption changes its actual predecessor")
+        ap.require(not (current(previous)["decision"]["outcome"] == following["current"]["status"] == "none"),
+                   "Unchanged none cannot create another image revision")
+        return
+    if previous["format"] == EDITOR_FORMAT:
+        from . import editor_image_source as editor
+        editor.transition(previous, following, operation="background-adoption")
+        target = following["current"]["authority"]["adoption"]["target"]
+        ap.require(target == {"source": ref(path(previous["id"]), encoded(previous)),
+                              "origin_sha256": origin_hash(previous), "image_revision": current(previous)["image_revision"]},
+                   "Background adoption does not bind its immediately previous source")
+        return
     if previous["format"] in REBIND_FORMATS:
         from .background_rebind import transition, normalized
         ap.require(following["format"] == previous["format"], "Background change cannot downgrade or change rebind source generation")
@@ -463,10 +501,11 @@ def validate_delta(journal, before, after, root=None):
     sides; it does not need a retired working directory or raster ZIP.
     """
     from . import background_rebind as rebind
-    from .catalog_transaction import PE_FORMATS
+    from .catalog_transaction import PE_FORMATS, IMAGE_FORMATS
     from .content_registry import METADATA_FORMAT
-    pe = journal["format"] == PE_FORMATS["background-adoption"]
-    ap.require(journal["format"] in (CHANGE_JOURNAL, rebind.BACKGROUND, PE_FORMATS["background-adoption"]) and journal["operation"] == "background-adoption" and
+    pe = journal["format"] in (PE_FORMATS["background-adoption"], IMAGE_FORMATS["background-adoption"])
+    images = journal["format"] == IMAGE_FORMATS["background-adoption"]
+    ap.require(journal["format"] in (CHANGE_JOURNAL, rebind.BACKGROUND, PE_FORMATS["background-adoption"], IMAGE_FORMATS["background-adoption"]) and journal["operation"] == "background-adoption" and
                journal["additions"] == {} and journal["report_run"] is None,
                "Invalid background adoption journal operation")
     ap.require(before["format"] == after["format"] == (METADATA_FORMAT if pe else REGISTRY_FORMAT) and
@@ -480,6 +519,8 @@ def validate_delta(journal, before, after, root=None):
     entry = next(e for e in before["entries"] if e["id"] == identifier)
     previous = _source(None, before, entry, journal["old"])
     following = _source(None, after, entry, journal["new"])
+    ap.require(images or previous["format"] != EDITOR_FORMAT and following["format"] != EDITOR_FORMAT,
+               "Editor background source requires its explicit journal generation")
     ap.require(pe or rebind.is_rebound(previous) == (journal["format"] == rebind.BACKGROUND),
                "Background journal generation differs from target")
     _transition(previous, following)
@@ -605,22 +646,29 @@ def _source(root, registry, entry, texts=None):
         return None
     _bound(r, raw, name=path(entry["id"]), limit=LIMIT)
     value = validate(io.json_bytes(raw, LIMIT), entry)
-    ap.require(value["format"] != "picross-catalog-background-v4" or registry["format"] == "picross-content-registry-v4",
-               "Background source v4 requires metadata registry v4")
+    ap.require(value["format"] not in ("picross-catalog-background-v4", EDITOR_FORMAT) or registry["format"] == "picross-content-registry-v4",
+               "Background source v4/v5 requires metadata registry v4")
     ap.require(raw == encoded(value), "Noncanonical background source")
     return value
 
 
 def origin_hash(source):
+    if source["format"] == EDITOR_FORMAT:
+        return io.checksum(canonical_bytes(source["origin"]))
     return io.checksum(canonical_bytes(initial(source)["origin"]))
 
 
 def receipt_binding(source, source_ref):
+    ap.require(source["format"] != EDITOR_FORMAT,
+               "Editor background retirement requires the independently bound receipt-v3 export source")
     return {"origin_sha256": origin_hash(source),
             "source": initial_ref(source)}
 
 
 def _receipt(source, source_ref, receipt):
+    if source["format"] == EDITOR_FORMAT:
+        check_editor_receipt(source, receipt, source["binding"]["entry"])
+        return
     value = exact_keys(receipt.get("background"), {"origin_sha256", "source"})
     ap.require(value == receipt_binding(source, source_ref), "Background receipt/index/origin binding differs")
     expected = (source["events"][-1]["binding"]["entry"]["production"]["package_sha256"]
@@ -629,12 +677,72 @@ def _receipt(source, source_ref, receipt):
                "Background receipt changed original export anchor")
 
 
+def check_editor_receipt(source, receipt, normalized_entry):
+    """Keep old receipts exact; only v3 describes a later editor-era retirement."""
+    from . import reveal_source as at, editor_image_source as editor
+    ap.require(source["format"] == EDITOR_FORMAT and source["binding"]["entry"] == normalized_entry,
+               "Editor background receipt has another current production")
+    at.receipt(receipt, normalized_entry, receipt["notice_sha256"], background=True, editor=True)
+    if receipt["format"] == editor.RECEIPT_FORMAT:
+        ap.require(receipt["background"]["origin_sha256"] == origin_hash(source),
+                   "Editor receipt changes its immutable image origin")
+    elif receipt["format"] == RECEIPT_FORMAT:
+        previous = source["origin"]["source"]
+        ap.require(previous is not None and source["origin"]["entry"] == normalized_entry,
+                   "Legacy background receipt cannot describe a later editor production")
+        _receipt(previous, initial_ref(previous), receipt)
+    else:
+        ap.require(receipt["format"] == at.RECEIPT and source["origin"]["source"] is None and
+                   source["origin"]["entry"] == normalized_entry,
+                   "Source-free receipt cannot replace a background production anchor")
+    return source
+
+
+def _load_editor(root, registry, entry, source, texts=None):
+    from . import reveal_source as at
+    binding = source["binding"]
+    definition = binding["identity"]["definition"]
+    raw = _raw(root, definition["file"], 2 * LIMIT, texts)
+    _bound(definition, raw, limit=2 * LIMIT)
+    parsed = io.json_bytes(raw, 2 * LIMIT)
+    ap.require(parsed.get("id") == entry["id"] and parsed.get("revision") == binding["identity"]["runtime_revision"],
+               "Editor background current definition identity differs")
+    active = current(source)
+    capability(root, texts, required=active["status"] in ("selected", "none"))
+    notice_raw = None
+    for key, name, limit in (("asset", asset_path(entry["id"]), bc.MAX_PNG), ("notice", notice_path(entry["id"]), 65536)):
+        raw = _raw(root, name, limit, texts, missing=True)
+        if active[key] is None:
+            ap.require(raw is None, "Image-free preference has a live background file")
+        else:
+            _bound(active[key], raw, name=name, limit=limit)
+        if key == "notice":
+            notice_raw = raw
+    if notice_raw is not None and active["authority"]["kind"] == "manual":
+        from . import editor_image_source as editor
+        at.make_notice(notice_raw)
+        original = source["origin"]["notice"]
+        ap.require(original is None or notice_raw.startswith(original["text"].encode("utf-8")),
+                   "Manual background notice removes origin attribution")
+        block = editor.manual_notice(b"", active["authority"]["provenance"], active["authority"]["decision"])
+        ap.require(notice_raw.endswith(block), "Manual background notice differs from its decision")
+    original, _, _, _ = at.package(root, entry, background_snapshot=(registry, texts))
+    ap.require(binding["entry"] == original, "Editor background normalized production differs")
+    historical = source["origin"]["source"]
+    if historical is not None and historical["format"] in REBIND_FORMATS:
+        from .background_rebind import historical as check_historical
+        check_historical(root, historical, texts)
+    return source
+
+
 def load(root, registry, entry, texts=None):
     source = _source(root, registry, entry, texts)
     if source is None:
         for name in (asset_path(entry["id"]), notice_path(entry["id"])):
             ap.require(not io.safe(root, name).exists(), "Legacy entry has background files")
         return None
+    if source["format"] == EDITOR_FORMAT:
+        return _load_editor(root, registry, entry, source, texts)
     active = effective(source)
     definition = active["identity"]["definition"]
     raw = _raw(root, definition["file"], 2 * LIMIT, texts)
@@ -674,6 +782,9 @@ def load(root, registry, entry, texts=None):
 
 
 def check_receipt(root, registry, entry, receipt, texts=None):
+    current_source = _source(root, registry, entry, texts)
+    if current_source is not None and current_source["format"] == EDITOR_FORMAT:
+        return check_editor_receipt(current_source, receipt, current_source["binding"]["entry"])
     source = load(root, registry, entry, texts)
     ap.require(source is not None and receipt.get("format") == RECEIPT_FORMAT, "Missing background receipt authority")
     _receipt(source, index(registry)[entry["id"]], receipt)
@@ -690,7 +801,7 @@ def projection(registry, texts):
     for entry in registry["entries"]:
         source = _source(None, registry, entry, texts)
         source = current(source) if source is not None else None
-        result[entry["id"]] = {"status": source["decision"]["outcome"] if source else "legacy",
+        result[entry["id"]] = {"status": source.get("status", source.get("decision", {}).get("outcome")) if source else "legacy",
                                "image_revision": source["image_revision"] if source else None,
                                "asset": {**source["asset"], "file": source["asset"]["file"].removeprefix("game/")}
                                if source and source["asset"] else None}

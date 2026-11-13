@@ -262,8 +262,9 @@ func _layout_marginalia() -> void:
 	if work.visible and session != null:
 		var entry: Dictionary = Registry.by_id(str(session.definition.id))
 		# selected (including omitted/failed loads) and explicit none never
-		# borrow a Legacy category drawing. Help retains its existing pilot.
-		if str(entry.get("background",{}).get("status","legacy")) != "legacy":
+		# borrow a category drawing. Standard follows the current category,
+		# including its deliberate absence. Help retains its existing pilot.
+		if not str(entry.get("background",{}).get("status","legacy")) in ["legacy", "standard"]:
 			marginalia.arrange("",Rect2(),size,ui_scale,hard,soft)
 			return
 		key = str(entry.get("category_id",""))
