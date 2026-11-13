@@ -123,11 +123,12 @@ def validate(value, raw=None):
     require(isinstance(value["files"], dict), "Invalid raster inventory")
     for name, checksum in value["files"].items():
         relative(name); sha(checksum)
-        require(name in ("definition.json", "request.json", "proof.json", "baseline.json") or name.startswith("analysis/"),
+        require(name in ("definition.json", "previous-definition.json", "request.json", "proof.json", "baseline.json") or name.startswith("analysis/"),
                 "Foreign raster package file")
-    required = {"definition.json", "request.json", "proof.json"} | ({"baseline.json"} if value["quality"]["baseline"] is not None else set())
+    required = {"definition.json", "previous-definition.json", "request.json", "proof.json"} | ({"baseline.json"} if value["quality"]["baseline"] is not None else set())
     require(required <= set(value["files"]), "Incomplete raster package")
     require(value["files"]["definition.json"] == value["definition"]["sha256"], "Raster definition ref differs")
+    require(value["files"]["previous-definition.json"] == old["identity"]["definition"]["sha256"], "Raster predecessor definition ref differs")
     require(sha(value["package_hash"]) == digest({k: v for k, v in value.items() if k != "package_hash"}), "Raster package hash differs")
     if raw is not None:
         require(bg.ref("definition.json", raw) == value["definition"], "Raster definition bytes differ")
@@ -161,6 +162,13 @@ def verify(directory, *, replay=False):
         require(io.file_hash(directory, name, 64*1024*1024) == checksum, "Raster package file changed: "+name)
     req = request(io.json_bytes(io.read(directory, "request.json", REQUEST_LIMIT), REQUEST_LIMIT))
     current = rating.definition(io.read(directory, "definition.json", 2*1024*1024))[0]
+    previous_raw = io.read(directory,"previous-definition.json",2*1024*1024)
+    previous = rating.definition(previous_raw)[0]
+    require(identity(value["previous"]["entry"],previous_raw) == value["previous"]["identity"] and
+            previous["id"] == current["id"] and previous["palette"] == current["palette"] and
+            previous["reveal"] == current["reveal"] and
+            definition(previous,parse(req["text"],previous["palette"])) == current and
+            current["revision"] == previous["revision"]+1,"Raster predecessor logic/palette/revision differs")
     require(req["id"] == value["id"] and req["decision"] == value["decision"] and req["provenance"] == value["provenance"] and
             parse(req["text"], current["palette"]) == current["solution"], "Raster request/definition/decision differs")
     q = value["quality"]
@@ -172,7 +180,7 @@ def verify(directory, *, replay=False):
         expected_analysis |= {"analysis/rating/analysis/"+name for name in analysis_files}
     else:
         expected_analysis = {"analysis/catalog-context.json","analysis/rating.json"} | {"analysis/"+name for name in analysis_files}
-    expected = {"definition.json","request.json","proof.json"} | expected_analysis
+    expected = {"definition.json","previous-definition.json","request.json","proof.json"} | expected_analysis
     if q["baseline"] is not None: expected.add("baseline.json")
     require(set(value["files"]) == expected,"Raster package contains foreign/missing analysis files")
     for key in ("proof", "baseline"):

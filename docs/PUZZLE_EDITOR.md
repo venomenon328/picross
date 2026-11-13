@@ -712,7 +712,7 @@ wird nicht implizit migriert. Alle Prüfungen verwenden synthetische Ziele.
 | Paket `definition` | Ref auf `definition.json` im eigenen Paket. Definition hat stabile ID/Palette/Revealangaben und bei geänderter Logik genau Vorgängerrevision + 1. |
 | `reveal_sha256` | Historischer Revealhash der neuen Rasterbindung: bisherige Produktionsbindung, bei alter AT-v1/v2-Quelle deren bereits tatsächlich aktiver Bildhash. Keine neue Bildentscheidung. |
 | Paket `quality` | Dieselbe geschlossene Form wie im Plan; vollständige unabhängig geprüfte neue Rating-/Proofbindung. |
-| Paket `files` | Pfad→SHA-256 exakt aller Paketdateien außer `manifest.json`. Zulässig: `definition.json`, `request.json`, `proof.json`, optional `baseline.json` und vollständiges geschlossenes Analysebundle unter `analysis/`. Keine ausführbaren Dateien oder Originalbildkopien. |
+| Paket `files` | Pfad→SHA-256 exakt aller Paketdateien außer `manifest.json`. Zulässig: `definition.json`, `previous-definition.json`, `request.json`, `proof.json`, optional `baseline.json` und vollständiges geschlossenes Analysebundle unter `analysis/`. `previous-definition.json` sind die unveränderten alten Definitionsbytes; Hash und vollständige Identity müssen `previous` entsprechen. Damit bleiben tatsächliche Altlogik, Palette und Revision auch nach früherem Retirement prüfbar. Keine ausführbaren Dateien oder Originalbildkopien. |
 | `package_hash` | Kanonischer Hash des Manifests ohne dieses Feld. Registry bindet zusätzlich den tatsächlichen Manifestdateihash. |
 
 Neue Paketkennung ist `editor-<Runtime-Revision>` unter

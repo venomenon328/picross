@@ -47,6 +47,7 @@ def _make_package(root, snapshot, request, request_raw, value, directory):
     directory.mkdir()
     raw = encoded(value)
     (directory/"definition.json").write_bytes(raw)
+    (directory/"previous-definition.json").write_bytes(previous_raw)
     (directory/"request.json").write_bytes(request_raw)
     puzzle = rating.definition(raw)[1]
     baseline = None
@@ -212,7 +213,10 @@ def apply(root, bundle, *, fail_step=None, seconds=300):
         bound.update({"request.json":io.checksum(raw),"plan.json":io.checksum(encoded(value))})
         bound.update({"package/"+path.relative_to(bundle/"package").as_posix():journal["additions"][name] for name,path in additions.items()})
         _bundle_guard(bundle,bound)
-        if value["files"]: tx.execute(root,journal,additions,fail_step=fail_step,source_check=lambda:_bundle_guard(bundle,bound))
+        if value["files"]:
+            tx.execute(root,journal,additions,fail_step=fail_step,source_check=lambda:_bundle_guard(bundle,bound))
+        else:
+            require(tx.image_snapshot(tx.capture(root)) == value["snapshot"],"Checkout changed during raster no-op verification")
         return {"status":"applied" if value["files"] else "noop","files":value["files"],"plan_hash":value["plan_hash"]}
 
 

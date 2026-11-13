@@ -175,9 +175,6 @@ func _parse(path: String, definition: Dictionary) -> Dictionary:
 	var file: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if file == null:
 		return {"status": "invalid", "error": "Datei nicht lesbar."}
-	if file.get_length() > SaveRevision.LIMIT:
-		file.close()
-		return {"status":"invalid","error":"Speicherdatei zu groß."}
 	var bytes: PackedByteArray = file.get_buffer(file.get_length())
 	file.close()
 	if not SaveRevision.Recent.valid_utf8(bytes): return {"status":"invalid","error":"Ungültiges UTF-8."}
