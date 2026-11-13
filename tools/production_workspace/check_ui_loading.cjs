@@ -18,6 +18,7 @@ class Element {
   focus() {}
 }
 const elements = new Map();
+const stored = new Map();
 const document = {
   documentElement: new Element('html'),
   getElementById(id) { if (!elements.has(id)) elements.set(id, new Element(id)); return elements.get(id); },
@@ -36,7 +37,8 @@ let holdDetail=false,releaseDetail=null;
 const fetched = [], hashes = [];
 const context = vm.createContext({
   document, location: {hash: '#' + token, pathname: '/'}, history: {replaceState(){}},
-  sessionStorage: {setItem(){}, getItem(){}}, localStorage: {setItem(){}, getItem(){}},
+  sessionStorage: {setItem(){}, getItem(){}},
+  localStorage: {setItem(key,value){stored.set(key,value);}, getItem(key){return stored.get(key);}},
   AbortController, setTimeout, clearTimeout,
   crypto: require('node:crypto').webcrypto,
   URL: {createObjectURL() { return 'blob:test-' + hashes.length; }, revokeObjectURL(){}},
@@ -104,6 +106,8 @@ const run = code => vm.runInContext(code, context);
     assert(nodes().some(e=>e.textContent==='Remote-Branch entfernt'));
     const optional=nodes().find(e=>e.type==='checkbox');assert.equal(optional.checked,false);
     assert(nodes().find(e=>e.textContent==='Lokale Bereinigung vorprüfen').disabled);
+    assert(nodes().some(e=>e.textContent?.includes('offene Lieferungen bleiben in der aktiven Auswahl sichtbar')));
+    assert(nodes().some(e=>e.textContent?.includes('Nachweislich auf main abgeschlossene Lieferungen erscheinen nicht in der aktiven Auswahl')));
     assert(run('listing.jobs.some(j=>j.source==="local"&&j.ref==="content/pw/pz-workspace-test")'));
     assert(!run('listing.jobs.some(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")'));
     console.log('P2 controller: exact branch/revisions, typed confirmation, real HTTP deletion, local remainder and default-off cleanup passed. No browser-rendering claim.');
@@ -186,8 +190,107 @@ const run = code => vm.runInContext(code, context);
     assert(words.includes('TEST ONLY outline'),'protected features stay visible');
     run('technicalDetails(rich,detail)');
     assert(descendants(rich).some(el=>el.tag==='textarea'&&el.value?.includes('actual_crop')),'complete parameter originals survive in copyable technical details');
+
+    // PW2-C controller cases use synthetic completion metadata around the real
+    // published details/images. These do not prove the backend's main decision.
+    const base=run('JSON.parse(JSON.stringify(listing))');
+    const done=base.jobs.find(j=>j.revision==='r01'),remaining=base.jobs.find(j=>j.revision==='r02');
+    const completion={confirmed:true,main_commit:'c'.repeat(40),hidden_count:1,completed_ids:[],
+      hidden_jobs:[done],note:'Bestätigte Mainintegration: 1 abgeschlossene Lieferung ausgeblendet.'};
+    const sameId={...base,snapshot:'pw2-c-same-id',completion,jobs:[remaining],motifs:[{
+      ...base.motifs[0],current_job:remaining.id,versions:base.motifs[0].versions
+        .filter(v=>v.sources.includes(remaining.id)).map(v=>({...v,sources:[remaining.id]}))}]};
+    await run(`open(${JSON.stringify(done.id)})`);
+    context.completionSnapshot={...base,snapshot:'pw2-c-retained-copy',
+      motifs:[{...base.motifs[0],current_job:done.id}],
+      completion:{...completion,hidden_jobs:[{...done,source:'remote',ref:'content/pw/'+done.puzzle_id}]}};
+    await run('checkSources(completionSnapshot)');document.getElementById('load').onclick();
+    await until(()=>run('detail!==null&&active.revision==="r01"'));
+    assert(!document.getElementById('sourceStatus').textContent.includes('Die bisherige Produktion'),
+      'a hidden source copy does not imply removal while the same delivery remains visible');
+    context.completionSnapshot={...base,snapshot:'pw2-c-unbound-old-source',jobs:[],motifs:[],
+      completion:{...completion,completed_ids:[done.puzzle_id],hidden_jobs:[remaining]}};
+    await run('checkSources(completionSnapshot)');document.getElementById('load').onclick();
+    assert(!document.getElementById('sourceStatus').textContent.includes('Die bisherige Produktion'),
+      'a completed ID alone never proves the vanished active historical delivery');
+    context.completionSnapshot=base;run('adopt(completionSnapshot)');
+    await run(`open(${JSON.stringify(done.id)})`);
+    await until(()=>cards().length===3&&cards().every(c=>descendants(c).some(el=>el.tag==='img')));
+    input('Breite').value='24';input('Breite').oninput();
+    const keptView=document.getElementById('view').children,keptGeneration=run('generation');
+    const keptImages=cards().map(c=>descendants(c).find(el=>el.tag==='img').src);
+    context.completionSnapshot=sameId;
+    await run('checkSources(completionSnapshot)');
+    assert.equal(run('active.id'),done.id,'passive completed-list refresh retains the bound source');
+    assert.equal(run('generation'),keptGeneration,'passive refresh never disposes active images');
+    assert.equal(document.getElementById('view').children,keptView);
+    assert.deepEqual(cards().map(c=>descendants(c).find(el=>el.tag==='img').src),keptImages);
+    assert.equal(input('Breite').value,'24','unsent input survives filtered refresh');
+    assert.equal(document.getElementById('load').hidden,false);
+    document.getElementById('load').onclick();
+    await until(()=>run('detail!==null&&active.revision==="r02"'));
+    assert.equal(run('active.id'),remaining.id,'explicit adoption selects the remaining same-ID work');
+    assert.equal(input('Breite').value,'27','only explicit adoption replaces source inputs');
+    assert(document.getElementById('sourceStatus').textContent.includes('nach bestätigter Mainintegration'));
+    assert(document.getElementById('sourceStatus').textContent.includes('offene Arbeit zur gleichen ID'));
+    assert.equal(document.getElementById('jobs').children.length,1);
+
+    // A fresh remote alone is no main confirmation; show the dedicated note.
+    const unconfirmed={...base,snapshot:'pw2-c-unconfirmed-main',mode:'remote',remote_confirmed:true,sync_error:null,
+      completion:{confirmed:false,main_commit:null,hidden_count:0,completed_ids:[],hidden_jobs:[],
+        note:'Main nicht aktuell bestätigt; mögliche Abschlüsse bleiben sichtbar.'}};
+    context.completionSnapshot=unconfirmed;await run('checkSources(completionSnapshot)');
+    assert.equal(run('active.id'),remaining.id);
+    assert(document.getElementById('sourceStatus').textContent.includes(unconfirmed.completion.note));
+    document.getElementById('load').onclick();await until(()=>run('detail!==null'));
+    assert.equal(run('listing.jobs.length'),base.jobs.length,'unconfirmed candidates remain available');
+    assert(!document.getElementById('sourceStatus').textContent.includes('Die bisherige Produktion'));
+
+    // A remaining motif may need a deliberate version choice; select that motif
+    // instead of keeping the removed one or inventing an unambiguous source.
+    await run(`open(${JSON.stringify(done.id)})`);
+    const nextId='pz-next-open';
+    context.completionSnapshot={...sameId,snapshot:'pw2-c-next-id',jobs:[{...remaining,puzzle_id:nextId}],
+      motifs:[{...sameId.motifs[0],puzzle_id:nextId,title:'Nächste offene Produktion',label:nextId,current_job:null}],
+      completion:{...completion,completed_ids:[done.puzzle_id]}};
+    await run('checkSources(completionSnapshot)');document.getElementById('load').onclick();
+    assert.equal(document.getElementById('jobs').value,nextId);
+    assert.equal(run('active'),null);
+    assert(fields().some(el=>el.textContent==='Nächste offene Produktion'));
+    assert(document.getElementById('sourceStatus').textContent.includes('nächste offene Produktion'));
+
+    run('newDraft()');input('Was soll dein Rätsel zeigen?').value='Keep this local brief';input('Was soll dein Rätsel zeigen?').oninput();
+    input('Breite').value='33';input('Breite').oninput();
+    const keptDraft=run('draft.id'),keptDraftStorage=stored.get('pw-briefs');
+    const draftView=document.getElementById('view').children,draftGeneration=run('generation');
+    const reference=fields().find(el=>el.type==='file');reference.files=[{name:'local-reference.png'}];reference.onchange();
+    const empty={...base,snapshot:'pw2-c-empty',jobs:[],motifs:[],completion:{...completion,completed_ids:[done.puzzle_id]}};
+    context.completionSnapshot=empty;await run('checkSources(completionSnapshot)');document.getElementById('load').onclick();
+    assert.equal(run('draft.id'),keptDraft,'an active local draft survives explicit adoption');
+    assert.equal(input('Was soll dein Rätsel zeigen?').value,'Keep this local brief');
+    assert.equal(input('Breite').value,'33');
+    assert.equal(document.getElementById('view').children,draftView,'snapshot adoption preserves the entire active draft form');
+    assert.equal(run('generation'),draftGeneration);
+    assert.equal(run('intent.inputImage'),'local-reference.png','selected local reference stays bound to the untouched form');
+    assert.equal(document.getElementById('jobs').children[0].textContent,'Keine offenen Produktionen');
+    assert.equal(stored.get('pw-briefs'),keptDraftStorage);
+
+    context.completionSnapshot=base;run('adopt(completionSnapshot)');
+    await run(`open(${JSON.stringify(done.id)})`);
+    holdDetail=true;releaseDetail=null;
+    const lateCompleted=run('open(active.id)');await until(()=>releaseDetail!==null);
+    context.completionSnapshot=empty;await run('checkSources(completionSnapshot)');document.getElementById('load').onclick();
+    releaseDetail();await lateCompleted;
+    assert.equal(run('active'),null);assert.equal(run('detail'),null);assert.equal(run('draft'),null);
+    assert.equal(document.getElementById('jobs').value,'');
+    assert.equal(document.getElementById('versions').hidden,true);
+    assert(fields().some(el=>el.textContent==='Keine offenen Produktionen'));
+    assert.equal(cards().length,0,'late completed detail cannot resurrect the removed view');
+    assert.equal(stored.get('pw-briefs'),keptDraftStorage,'saved drafts survive completion of all published work');
+    assert.equal(run('drafts.length'),1);
+    assert(document.getElementById('sourceStatus').textContent.includes('nach bestätigter Mainintegration'));
     run('dispose()');
-    console.log('P1-T01 UI: exact source values, text briefing, single distinct dropdown, refresh/load, late detail, isolated draft/discard passed');
+    console.log('P1/PW2-C controller: source values, filtered passive refresh, explicit same-ID/next/empty adoption, unconfirmed main, late detail and separate stored drafts passed. Synthetic completion snapshots; no browser-rendering or backend-completion claim.');
     return;
   }
   await until(() => cards().length === 6 && active === 2);
@@ -260,6 +363,6 @@ const run = code => vm.runInContext(code, context);
   await until(() => active === 0);
   await delay(30);
   assert.equal(cards().length, 0);
-  assert(descendants(document.getElementById('view')).some(el => el.textContent === 'Noch keine veröffentlichten Arbeitsstände'));
+  assert(descendants(document.getElementById('view')).some(el => el.textContent === 'Keine offenen Produktionen'));
   console.log('PW-A-B01: six exact originals, peak=2, automatic 503 retry, card retry, metadata and stale/empty-view guards passed');
 })().catch(error => { console.error(error); process.exitCode = 1; });
