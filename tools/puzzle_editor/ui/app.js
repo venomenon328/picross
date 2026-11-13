@@ -207,13 +207,41 @@ async function backgroundPreview() {
 function preview(result) {
   plan = result; $('preview').hidden = false;
   $('plan-summary').replaceChildren();
-  const p = document.createElement('p'); p.textContent = (result.id || 'Kategorien / Runtimeprojektion') + ' · ' + result.kind + ' · ' + result.files.length + ' geänderte Dateien';
+  const p = document.createElement('p'); p.textContent = (result.id || 'Kategorien / Runtimeprojektion') + ' · ' + result.files.length + ' geänderte Dateien';
   $('plan-summary').append(p);
-  const changes = document.createElement('pre');
-  if (result.kind === 'metadata') changes.textContent = JSON.stringify(result.after, null, 2);
-  else if (result.kind === 'migration') changes.textContent = result.before.format + ' → ' + result.after.format + '\nAusschließlich Runtimeprojektion; keine Bild- oder Rasteränderung.';
-  else changes.textContent = JSON.stringify({vorher: result.before.metadata, nachher: result.after.metadata, hintergrundVorher: result.before.runtime.background, hintergrundNachher: result.after.runtime.background, logikGeaendert: result.logic_changed, quality: result.quality?.checked?.rating?.result || null}, null, 2);
-  $('plan-summary').append(changes);
+  const table = document.createElement('table');
+  const header = document.createElement('tr');
+  for (const text of ['Feld', 'Vorher', 'Nachher']) { const cell = document.createElement('th'); cell.textContent = text; header.append(cell); }
+  table.append(header);
+  const row = (label, before, after) => { const tr = document.createElement('tr'); for (const text of [label, before ?? '—', after ?? '—']) { const td = document.createElement('td'); td.textContent = String(text); tr.append(td); } table.append(tr); };
+  const category = id => listing.categories.find(item => item.id === id)?.name || id;
+  const metadata = (before, after) => {
+    if (before?.name !== after?.name) row('Name', before?.name, after?.name);
+    if (before?.category_id !== after?.category_id) row('Kategorie', category(before?.category_id), category(after?.category_id));
+  };
+  const background = value => ({legacy: 'Standard (ohne eigene Zuordnung)', standard: 'Standard der Kategorie', selected: 'Eigenes Bild', none: 'Kein Hintergrund'}[value]);
+  if (result.kind === 'metadata') {
+    for (const change of result.after) {
+      if (change.kind === 'category') row('Kategorie ' + change.id, change.before?.name, change.after?.name);
+      else { row('Rätsel', change.before?.name || change.id, change.after?.name || change.id); metadata(change.before, change.after); }
+    }
+  } else if (result.kind === 'migration') {
+    row('Runtimeprojektion', result.before.format, result.after.format);
+    const text = document.createElement('p'); text.textContent = 'Ausschließlich Runtimeprojektion; keine Bild- oder Rasteränderung.'; $('plan-summary').append(text);
+  } else {
+    metadata(result.before.metadata, result.after.metadata);
+    if (JSON.stringify(result.before.reveal) !== JSON.stringify(result.after.reveal)) row('Abschlussbild', 'Bisheriges Bild', 'Geprüfter Import / aktuelle Bindung');
+    if (JSON.stringify(result.before.background) !== JSON.stringify(result.after.background)) row('Hintergrund', background(result.before.runtime.background.status), background(result.after.runtime.background.status));
+    if (result.kind === 'raster') {
+      const dimensions = value => value.width + ' × ' + value.height + ' · Revision ' + value.revision;
+      row('Raster', dimensions(result.before.definition), dimensions(result.after.definition));
+      const rating = result.quality?.checked?.rating?.result;
+      const text = document.createElement('p');
+      text.textContent = result.logic_changed ? 'Deduktionsnachweis vollständig geprüft. Schwierigkeit: ' + (['', 'Sehr leicht', 'Leicht', 'Mittel', 'Schwer', 'Sehr schwer'][rating?.level] || 'geprüft') + '.' : 'Gleiche Rasterlogik: keine neue Revision und kein Spielstandneustart.';
+      $('plan-summary').append(text);
+    }
+  }
+  $('plan-summary').append(table);
   $('plan-files').textContent = result.files.join('\n') || 'No-op: keine Dateiänderung.';
   $('revision-warning').hidden = !result.logic_changed;
   $('preview').scrollIntoView({behavior: 'smooth', block: 'start'});
