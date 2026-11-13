@@ -2,10 +2,12 @@
 
 **Beschlossener Sollvertrag · 12.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612).**
 Verbindliche erste [Paketentscheidung APP-A](https://github.com/venomenon328/picross/issues/612#issuecomment-6834815644).
-Die folgenden Fähigkeiten sind **noch nicht implementiert oder veröffentlicht**.
-Es gelten bis zur jeweiligen abgenommenen Integration die vorhandenen
-P4-Programm-/Installerregeln und der ausschließlich manuelle
-[`pw-installer.yml`](../.github/workflows/pw-installer.yml).
+**APP-A ist im Arbeitsbranch implementiert; Integration, unabhängiges Review und
+Liveaktivierung sind noch offen.** Der separate
+[`pw-installer.yml`](../.github/workflows/pw-installer.yml) plant automatische
+Versionen und prüft echte Installer. Veröffentlichung bleibt ohne die gesondert
+freigegebene Repositoryvariable `PW_RELEASE_ENABLED=true` gesperrt.
+**APP-B ist nicht implementiert.** Der Launcher prüft und installiert keine Updates.
 Dieser Vertrag ersetzt **nicht rückwirkend** die P4-Liefernachweise aus
 [#588](https://github.com/venomenon328/picross/issues/588).
 
@@ -151,3 +153,60 @@ gebunden; keine pauschal neue Kern-/Browserregression.
 
 Bis zur jeweiligen Implementierung gilt die bestehende
 [Windows-Start-/Buildanleitung](../tools/production_workspace/WINDOWS_BUILD.md).
+
+## 5. APP-A-Ausführung und Recovery
+
+[`payload.py`](../tools/production_workspace/payload.py) bildet die sortierten
+committeten Gitdateien samt Gitmodus, Bytezahl und SHA-256 auf einen kanonischen
+Fingerprint ab. Sämtliche eingesammelten Produktions-Pythonmodule, App-Reader,
+UI, MSI-/Build-/Prüfcode, Pins, Guard, Lizenztexte, Icon und START sind Eingaben.
+Explizite Ausnahmen sind nicht eingebaute Markdown-/Schema-/Kalibrierungsdateien,
+CMD-Fallbackbau und manuelle Smokes. Neue Pythonmodule werden einbezogen;
+unbekannte Ressourcen und nichtreguläre Modi stoppen die Vorprüfung. Änderungen
+außerhalb dieser Eingaben (insbesondere Inhalt, Spiel und allgemeiner CI-Kern)
+ändern den Fingerprint nicht. Der echte Bau gleicht die repositorybezogenen
+Dateien aus `Analysis-00.toc` gegen `inputs.json` ab; ein nicht inventarisierter
+eingefrorener Input oder abweichende Arbeitsbytes brechen den Bau ab.
+
+[`release_channel.py`](../tools/production_workspace/release_channel.py) liest
+den letzten gültigen veröffentlichten `pw-v0.1.x`-Release samt kanonischem
+`manifest.json` und lädt dessen gebundene Assets binär zurück. Unvollständige
+oder fremde veröffentlichte PW-Einträge sind Fehler, keine neue Startlinie.
+Gleicher Fingerprint ist No-op; andernfalls folgt genau Patch +1 ab 0.1.0.
+`--version` injiziert die geplante Version in den vorhandenen Builder und Inspector,
+ohne `release.json` oder den Sourcecheckout zu verändern. ProductCode bleibt
+deterministisch je Version, UpgradeCode bleibt gleich. Der Inspector prüft auch
+die tatsächlichen EXE-Versionsressourcen und den Hash des portablen Bauarchivs.
+
+Der Workflow ist global seriell (`pw-app-release`, kein Abbruch laufender Builds).
+Nur der Publisher hat `contents:write`; er führt ausschließlich Maincode aus.
+Vor Draftanlage und unmittelbar vor Sichtbarkeit prüft er Main-SHA, die echte
+erfolgreiche Package-CI-Pushquelle einschließlich `docs`/`ci-required` und deren
+Versuch sowie die veröffentlichte Autorität erneut. Überholte Kandidaten stoppen;
+ein nachfolgender erfolgreicher Mainlauf plant neu. Die letzte Mainabfrage und
+der GitHub-Publishaufruf sind keine gemeinsame atomare Transaktion: ein danach
+eintreffender Push wird durch seinen eigenen Folgelauf verarbeitet. Die serielle
+Pipeline verhindert, dass ein älterer Pipelinebuild einen neueren überholt.
+
+Uploads erfolgen ausschließlich in einen gebundenen unsichtbaren Draft; erst
+nach binärem Rückdownload aller Dateien und frischer Vorprüfung wird er
+veröffentlicht. Fehler bleiben sichtbar im Lauf. Ein Re-Run übernimmt nur den
+gleichen Draft mit gleicher Quell-/Fingerprintbindung und identischen vorhandenen
+Bytes; fehlende Assets werden ergänzt. Abweichende Assets, fremde Tags/Drafts
+und zwischenzeitlich geänderte Releaseautorität stoppen ohne Ersetzen oder Löschen.
+Mutierende API-Aufrufe werden nach unbekanntem Ausgang nicht blind wiederholt.
+Veröffentlichte Vorgänger bleiben erhalten. Manifest und Delivery sind Hash-/
+Provenienzbindungen, keine APP-B-Vertrauenssignatur oder Installationsbefugnis.
+
+Ein manueller Dispatch baut den fixierten Workflow-Branchcommit ausschließlich
+diagnostisch und veröffentlicht nie. Vor Merge kann damit der neue Code im
+Draft-PR geprüft werden; die Herkunft wird als PR-Branch, nicht als bereits
+integrierte Mainfassung ausgewiesen. Der reguläre Folgetrigger verwendet nur
+erfolgreiche Main-Pushquellen. Eine Erstaktivierung braucht nach Review/Integration
+einen eigenen Auftrag zum Setzen der Repositoryvariable und einen gezielten
+erfolgreichen Main-CI-Re-Run. Weder dieser PR noch ein Diagnosebau setzt die Variable.
+Original-Serverlogs und sechs gebundene Kandidatdateien stehen dem unabhängigen
+Reviewer im jeweiligen Actionslauf zur Verfügung (Plan sieben, Produkt vierzehn
+Tage); `.ci/package.json` bleibt `evidence.mode=none`. Abgelaufene Belege müssen
+gezielt erneuert werden. Die erste Liveveröffentlichung und echte Windows-11-
+Upgradeprobe bleiben getrennte nachgelagerte Releasegates.

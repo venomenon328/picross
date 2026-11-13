@@ -1,11 +1,17 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/612",
-  "package": "APP-A-spec",
-  "modules": [],
-  "purpose": "Nur den ausdrücklich freigegebenen Sollvertrag für automatische App-Versionen/Releases und spätere Selfupdates sowie den eigenständig umsetzbaren APP-A-Paketschnitt versionieren; noch keine ausführbare Änderung.",
-  "omitted": "Keine Änderung an Workflows, Versionsalgorithmus, Installer, Updater, UI, Spiel, Rätseln oder Produktionsdaten. Reine Normdokumentation: kein Playerbau; keine tools/nativen/Fach-/Browsermodule und keine neuen Tests. Nach folgender APP-A-Implementierung diesen Paketplan zur dann tatsächlichen Modulauswahl neu bestimmen.",
-  "test_changes": [],
+  "package": "APP-A",
+  "modules": ["tools"],
+  "purpose": "APP-A-K01–K10: separater App-Fingerprint-/Versions-/Windowsreleaseweg mit explizit gesperrter Erstpublikation. Tools prüft synthetisch Inputinventar, Versionsautorität, vertrauenswürdige CI-Quellen, Draft-Recovery und Veröffentlichungsrennen; Kern liefert den getrennten Windows-Spieler.",
+  "omitted": "Keine native.*, preflight, delivery, production.* oder Chromium: keine Spiel-/Rätsel-/UI-/Produktionsfunktion geändert. Echte MSI-Bytes und PyInstaller-Inputabgleich im separaten nicht veröffentlichenden Windowsworkflow; keine gehostete Installation. Unabhängiges technisches Review vor Merge, Erstveröffentlichung/Rückdownload und Windows-11-Upgrade vor produktiver Verteilung bleiben eigene Gates. Kein APP-B-Updater.",
+  "test_changes": [
+    {
+      "path": "tools/test_production_installer.py",
+      "disposition": "change-scoped",
+      "reason": "Günstige dauerhafte synthetische Sicherheitsregressionen ausschließlich im gewählten tools-Modul: unbekannte Inputs/Collectorabweichung, Modus/Symlink, irrelevante Diffs, Start-/Folgeversion, Quellgates, Hashfehler, Race und Teilupload-Recovery. Echter Server-MSI-Bau einmaliger APP-A-Reviewnachweis, kein neuer Kern-/Modulaufruf. Historischen Dispatch-Only-Test dem nun freigegebenen isolierten Folgetrigger anpassen. Launcherregressionen unverändert weiter ausgewählt."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

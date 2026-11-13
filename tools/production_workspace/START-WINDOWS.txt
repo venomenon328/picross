@@ -44,5 +44,9 @@ Die geprüfte Quelle und SHA-256 stehen im Lieferreport/zugehörigen PR; Schutzf
 nicht abschalten. Eine Signatur würde Warnungsfreiheit ebenfalls nicht garantieren.
 Komponenten/Quellcommit: components.json. Dateien und Hashes: inventory.json.
 Python-, Pillow-, Tcl/Tk- und PyInstaller-/Bootloaderlizenzen: LICENSES.
-Der ausschließlich manuelle Actionsdownload bleibt 14 Tage verfügbar. Kein
-automatischer Release, Tag oder Deployment und keine unbegrenzte Verfügbarkeit.
+Actions-Diagnosekandidaten bleiben 14 Tage verfügbar. Der getrennte App-Releasekanal
+wird erst nach eigener Betriebsfreigabe aktiviert; veröffentlichte Versionen unter
+https://github.com/venomenon328/picross/releases enthalten MSI, Prüfsumme,
+Anleitung, delivery.json, inputs.json und manifest.json mit Quell-/Versionsbindung.
+Diese App besitzt weiterhin keinen Autoupdater. Die bisherige Version 0.1.0 muss
+für eine spätere updaterfähige Version einmalig manuell aktualisiert werden.
