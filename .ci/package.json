@@ -1,11 +1,14 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/612",
-  "package": "APP-E2E-P",
-  "modules": [],
-  "purpose": "Korrektur der ausgelieferten Windows-Startanleitung gemäß issuecomment-6857619012. Der Kern prüft Plan und Quellen; die separate nicht veröffentlichende Windows-App-Pipeline belegt Fingerprint, Versionsplan 0.1.2 sowie MSI-, EXE-, Trust-, Lizenz- und Inputprüfung am Produkt-Head.",
-  "omitted": "Keine Änderung an Updateclient, Installer, Publisher, Sicherheitscode oder Spiellaufzeit; keine Zusatzmodule, Chromium oder neue Dauerregression. Die unabhängige Prüfung APP-E2E-A01 bleibt vor Merge offen; tatsächlicher Windows-11-Selbstupdate und Veröffentlichung sind separate Gates.",
-  "test_changes": [],
+  "package": "APP-B2-S",
+  "modules": ["tools"],
+  "purpose": "Vorgelagerte Updateentscheidung D01–D06/K01–K08 gemäß #612/issuecomment-6859867142. T01 im tools-Modul prüft echten synthetisch signierten Kandidatenpfad, einmaligen Browser-/Gitstart und Skip-/Stop-/Handoffrennen. Kern liefert regulären Windows-Spieler. T02 ist separat beauftragter nicht veröffentlichender Windows-MSI-Dispatch am Produkt-Head.",
+  "omitted": "Keine native.*, production.*, preflight, delivery, Chromium oder Katalog-/Bildmatrix: keine Änderung an Godot, Rätseln oder Browser-UI. Signatur-/MSI-Negativtests und bestehender Git-/P2-Drain bleiben erhalten. T02 beweist keine installierte Windows-11-Bedienung; APP-B2-S-R01/T03 und bestehende Recoverygates bleiben getrennt offen. Keine doppelte Vollsuite.",
+  "test_changes": [
+    {"path": "tools/test_app_updates.py", "disposition": "change-scoped", "reason": "Kleine deterministische Startgate-/Abbruch-/Übergaberegression mit synthetischer Signatur und kontrollierten Threadereignissen; nur im gewählten tools-Modul."},
+    {"path": "tools/test_production_launcher.py", "disposition": "change-scoped", "reason": "Echter HTTP-/Lock-/Stopnachweis: Update-GO ohne vorherigen langsamen Gitstart, bewusst gestartetes Git weiterhin drainpflichtig, Stop vor Arbeitsaufnahme."}
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

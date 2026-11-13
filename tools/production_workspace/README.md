@@ -70,9 +70,15 @@ ausgeschalteten Updateclient mit einmaliger ausdrücklicher Zustimmung im native
 Steuerfenster und jederzeit sichtbarem Schalter. Leerer Trust bedeutet inaktiver
 Kanal; eine erste vertrauenswürdig root-provisionierte Version wird manuell
 installiert. Gitrefresh und installierte Programmversion bleiben getrennt.
-Nur der normale installierte GUI-Start prüft nach Bereitschaft einmal nebenläufig.
-Offline-/Signatur-/Downloadfehler lassen den bisherigen Dienst nutzbar; Ausschalten
-bricht den Download ab. Nach vollständiger Verifikation folgen P2-/Requestdrain,
+Nur der normale installierte GUI-Start prüft einmal nebenläufig. Bei bestehendem
+Opt-in wartet Browser/Sheet samt erstem Git-Refresh bis zur Updateentscheidung,
+bei höherem geprüftem Kandidaten auch bis zum vollständigen Download und Handoff.
+Natives Fenster und lokaler Dienst sind sofort bereit. „Ohne Update fortfahren“
+verwirft den Versuch sicher und startet Browser/Git genau einmal; die Zustimmung
+bleibt gespeichert. Offline-/Signatur-/Downloadfehler geben denselben bisherigen
+Arbeitsstart frei. Ohne Opt-in startet er direkt. Ausschalten bricht den Versuch
+ab; nach sicher übernommener Helferübergabe sind Skip und Opt-out gesperrt.
+Nach vollständiger Verifikation folgen P2-/Requestdrain,
 echtes Prozessende, unabhängiger MSI-Helfer und geprüfter Neustart mit demselben
 Zustand/Port. Fehler, Rebootbedarf und unklarer Ausgang erfordern manuelle Prüfung,
 keinen blinden Retry. Echte Windows-11-Abnahme und Betrieb bleiben eigene Gates.
@@ -103,7 +109,8 @@ unter `.launcher/`: geschützter OS-Lock, kurzlebige authentisierte Instanzmetad
 und versionierte persistente Portwahl. Sie ändern das geschlossene Configformat nicht.
 
 Pro Windowsbenutzer und kanonischem Zustand läuft eine Instanz. Zweitstart prüft
-Identität/Build/Protokoll tatsächlich und öffnet dieselbe Browserinstanz, ohne
+Identität/Build/Protokoll tatsächlich und öffnet dieselbe Browserinstanz (während
+des Update-Startgates nur das Steuerfenster), ohne
 zweiten Server/Refresh. Weder PID noch Portdatei allein autorisieren eine Aktion.
 Start läuft noch, fremder Dienst, andere Version und verwaiste Metadaten werden
 unterschieden. Eine historische laufende CMD zuerst regulär mit Strg+C beenden;
