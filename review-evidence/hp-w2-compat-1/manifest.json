@@ -2,6 +2,11 @@
   "expires": "2026-11-21",
   "files": [
     {
+      "bytes": 8,
+      "file": ".gitattributes",
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    {
       "bytes": 2879,
       "file": "baseline-source.py",
       "sha256": "0b4f391331f9e2ca5a9027f77eaa68c197cf9c5442eb96af63f7e96ae9697a8e"
@@ -70,6 +75,11 @@
       "bytes": 12370,
       "file": "export/inspection.json",
       "sha256": "0355e251232c100fed79caf06371a20a5880f2dcce8e8d9fc84423d625274fa0"
+    },
+    {
+      "bytes": 10927,
+      "file": "export/manifest.json",
+      "sha256": "c3f3003603d6a7ab51170b7879d1834e3100c15b8f942b19e1c9f821f36ab2c4"
     },
     {
       "bytes": 610336,
