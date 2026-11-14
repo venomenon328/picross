@@ -80,9 +80,20 @@ class Updates:
     def _run(self):
         try:
             self.status = 'Signierten App-Updatekanal prüfen …'
-            metadata, assets = client.discover(self.identity.version, self.cancelled)
+            metadata, assets = client.discover(self.identity.version, self.cancelled, installation=self.identity)
             if self.cancelled.is_set():
                 raise client.Cancelled()
+            if metadata.version == self.identity.version:
+                # Discovery checked signed publication identity, not MSI/EXE byte
+                # equality. Re-read the actual installed/MSI context before status.
+                if windows.installation() != self.identity:
+                    raise client.InstallationMismatch('Installed application changed during check')
+                with self.transition:
+                    if (self.cancelled.is_set() or self.preferences.read() is not True or
+                            self.runtime.stop_requested.is_set()):
+                        raise client.Cancelled()
+                    self.status = 'Keine neuere Appversion veröffentlicht.'
+                return
             self.stage = Stage(self.runtime.lock.directory)
             self.status = 'Geprüfte neuere Appversion herunterladen …'
             candidate = client.download(metadata, assets, self.stage, self.cancelled)
@@ -100,6 +111,10 @@ class Updates:
         except client.Cancelled:
             self.cancelled.set()
             self.status = 'App-Update abgebrochen; vorhandene App bleibt verfügbar.'
+        except client.InstallationMismatch:
+            self.cancel()
+            self.status = ('App-Update nicht bestätigt: Installationsidentität passt nicht zum signierten Release. '
+                           'Vorhandene App bleibt verfügbar; Installation prüfen.')
         except Exception:
             self.cancel()
             self.status = ('App-Update nicht möglich: Kanal, Signatur, Version, Download oder Übergabe nicht bestätigt. '

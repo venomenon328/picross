@@ -1,5 +1,7 @@
 """APP-B2-T01: synthetic signed channel, bounded transport and cancellation."""
 import copy
+from dataclasses import replace
+from types import SimpleNamespace
 from io import BytesIO
 import os
 from pathlib import Path
@@ -49,10 +51,10 @@ class ChannelTests(unittest.TestCase):
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
         self.api = fixtures.MemoryGitHub()
-        self.trust, secret = update_diagnostic.test_identity()
+        self.trust, self.secret = update_diagnostic.test_identity()
         self.planned, self.provenance = fixtures.AppReleaseTests.candidate(self)
         self.files = {name: (self.root / name).read_bytes() for name in self.provenance['assets']}
-        self.raw, self.signature = verifier._sign(self.provenance, self.files, secret, self.trust)
+        self.raw, self.signature = verifier._sign(self.provenance, self.files, self.secret, self.trust)
         self.transport = MemoryTransport(self.raw, self.signature, self.files)
         self.cancel = threading.Event()
 
@@ -103,6 +105,108 @@ class ChannelTests(unittest.TestCase):
             with self.subTest(version=version), self.assertRaises(ValueError):
                 self.discover(version)
         self.assertFalse(any(url.endswith('.msi') for url in self.transport.calls))
+
+    def same_release(self):
+        self.planned, self.provenance = fixtures.AppReleaseTests.candidate(self, version='0.1.3')
+        self.files = {name: (self.root / name).read_bytes() for name in self.provenance['assets']}
+        self.raw, self.signature = verifier._sign(self.provenance, self.files, self.secret, self.trust)
+        self.transport = MemoryTransport(self.raw, self.signature, self.files)
+
+    def test_same_013_signed_publication_starts_work_once_without_staging(self):
+        self.same_release(); self.signed_client()
+        flow = self.startup(version='0.1.3')
+        preference = flow.updates.preferences.path.read_bytes()
+        with (patch.object(windows, 'installation', return_value=flow.updates.identity),
+              patch.object(app_updates, 'Stage') as stage,
+              patch.object(windows, 'prepare') as prepare):
+            flow.begin(); flow.updates.thread.join(3)
+            self.assertFalse(flow.updates.thread.is_alive())
+            for _ in range(3): flow.poll(); flow.begin(); flow.skip(); flow.updates.start()
+            stage.assert_not_called(); prepare.assert_not_called()
+        self.assertEqual(flow.updates.status, 'Keine neuere Appversion veröffentlicht.')
+        self.assertIsNone(flow.updates.stage); self.assertIsNone(flow.updates.take())
+        self.assertEqual(len(self.transport.calls), 3, 'only catalog, manifest and signature')
+        flow.runtime.open.assert_called_once(); flow.runtime.refresh.assert_called_once()
+        self.assertEqual(flow.updates.preferences.path.read_bytes(), preference)
+        metadata = verifier._verify_metadata(self.raw, self.signature, self.trust)
+        with self.assertRaises(ValueError): verifier.assess_update(metadata, '0.1.3')
+
+    def test_same_013_identity_conflicts_warn_without_download(self):
+        self.same_release(); self.signed_client()
+        for field, value in (('commit', 'f' * 40), ('payload_fingerprint', 'f' * 64),
+                             ('product_code', 'foreign'), ('upgrade_code', 'foreign'),
+                             ('payload_fingerprint', None)):
+            with self.subTest(field=field, value=value):
+                flow = self.startup(version='0.1.3')
+                flow.updates.identity = replace(flow.updates.identity, **{field: value})
+                with patch.object(app_updates, 'Stage') as stage, patch.object(windows, 'prepare') as prepare:
+                    flow.begin(); flow.updates.thread.join(3); flow.poll(); flow.poll()
+                    stage.assert_not_called(); prepare.assert_not_called()
+                self.assertIn('Installationsidentität passt nicht', flow.updates.status)
+                flow.runtime.open.assert_called_once(); flow.runtime.refresh.assert_called_once()
+        with self.assertRaises(ValueError):
+            self.discover('0.1.3')  # Unknown installed context keeps the original guard.
+        self.assertFalse(any(url.endswith('.msi') for url in self.transport.calls))
+
+    def test_same_013_broken_channel_never_reports_no_newer_release(self):
+        self.same_release()
+        for failure in ('signature', 'manifest', 'asset', 'root', 'blocked', 'catalog',
+                        'offline', '404', '429', 'tls', 'timeout', 'older'):
+            with self.subTest(failure=failure):
+                flow = self.startup(version='0.1.4' if failure == 'older' else '0.1.3')
+                transport = MemoryTransport(self.raw, self.signature, self.files)
+                trust = copy.deepcopy(self.trust)
+                if failure == 'signature': transport.files['manifest.sig.json'] = b'invalid'
+                if failure == 'manifest': transport.files['manifest.json'] = self.raw.replace(b'0.1.3', b'0.1.2')
+                if failure == 'asset': transport.row['assets'][0]['size'] += 1
+                if failure == 'root': trust['accepted'] = {}; trust['active_signer'] = None
+                if failure == 'blocked': trust['blocked'] = list(trust['accepted'])
+                if failure == 'catalog':
+                    transport.rows = [{'tag_name': 'game-v9', 'draft': False, 'prerelease': False}] * 100
+                errors = {'offline': OSError('offline'), 'tls': urllib.error.URLError('TLS'),
+                          'timeout': TimeoutError(), **{str(code): urllib.error.HTTPError(
+                              client.API, code, 'synthetic', {}, None) for code in (404, 429)}}
+                if failure in errors: transport.read = Mock(side_effect=errors[failure])
+                def discover(version, cancel, **kwargs):
+                    return client._discover(version, cancel, transport,
+                        lambda raw, sig: verifier._verify_metadata(raw, sig, trust), **kwargs)
+                with (patch.object(client, 'discover', side_effect=discover),
+                      patch.object(app_updates, 'Stage') as stage, patch.object(windows, 'prepare') as prepare):
+                    flow.begin(); flow.updates.thread.join(3); flow.poll(); flow.poll()
+                    stage.assert_not_called(); prepare.assert_not_called()
+                self.assertIn('nicht möglich', flow.updates.status)
+                flow.runtime.open.assert_called_once(); flow.runtime.refresh.assert_called_once()
+
+    def test_same_013_skip_optout_stop_and_changed_installation(self):
+        self.same_release(); self.signed_client()
+        for action in ('skip', 'optout', 'stop', 'changed'):
+            with self.subTest(action=action):
+                flow = self.startup(version='0.1.3')
+                entered, resume = threading.Event(), threading.Event()
+                self.addCleanup(resume.set)
+                def installation():
+                    entered.set()
+                    if not resume.wait(3): raise TimeoutError('test boundary')
+                    return replace(flow.updates.identity, commit='f' * 40) if action == 'changed' else flow.updates.identity
+                with (patch.object(windows, 'installation', side_effect=installation),
+                      patch.object(app_updates, 'Stage') as stage, patch.object(windows, 'prepare') as prepare):
+                    try:
+                        flow.begin(); self.assertTrue(entered.wait(2))
+                        flow.runtime.open_requested.set(); flow.poll()
+                        flow.runtime.open.assert_not_called(); flow.runtime.refresh.assert_not_called()
+                        if action == 'skip': flow.skip()
+                        elif action == 'optout': flow.updates.choose(False)
+                        elif action == 'stop': flow.stop()
+                    finally:
+                        resume.set(); flow.updates.thread.join(3)
+                    for _ in range(3): flow.poll(); flow.begin(); flow.updates.start()
+                    stage.assert_not_called(); prepare.assert_not_called()
+                if action == 'stop':
+                    flow.runtime.open.assert_not_called(); flow.runtime.refresh.assert_not_called()
+                else:
+                    flow.runtime.open.assert_called_once(); flow.runtime.refresh.assert_called_once()
+                self.assertNotEqual(flow.updates.status, 'Keine neuere Appversion veröffentlicht.')
+                self.assertIs(flow.updates.preferences.read(), action != 'optout')
 
     def test_release_identity_paths_asset_sizes_and_duplicates(self):
         original = copy.deepcopy(self.transport.row)
@@ -174,6 +278,12 @@ class ChannelTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'Full verified'):
             windows.prepare(metadata, Mock(), Mock(), Mock())
 
+    def local_identity(self, version):
+        product = windows.release(version=version)
+        return windows.Installation(self.root / 'program/Picross-Start.exe', version,
+            product['product_code'], self.provenance['source_commit'], self.root / 'helper.exe', 'e' * 64,
+            product['upgrade_code'], self.provenance['payload_fingerprint'])
+
     def startup(self, enabled=True, version='0.1.0'):
         host = Mock()
         host.lock.state = self.root
@@ -183,8 +293,7 @@ class ChannelTests(unittest.TestCase):
         host.request_stop.side_effect = host.stop_requested.set
         if enabled is not None:
             Preferences(host.lock.directory).write(enabled)
-        with (patch.object(windows, 'installation', return_value=Mock(
-                version=version, executable=self.root / 'program/Picross-Start.exe')),
+        with (patch.object(windows, 'installation', return_value=self.local_identity(version)),
               patch.object(app_updates, 'production_trust', return_value=self.trust)):
             updates = app_updates.Updates(host)
         self.addCleanup(updates.close)
@@ -192,9 +301,9 @@ class ChannelTests(unittest.TestCase):
 
     def signed_client(self):
         """Real metadata/candidate verification; no public channel or key files."""
-        discover = patch.object(client, 'discover', side_effect=lambda version, cancel:
+        discover = patch.object(client, 'discover', side_effect=lambda version, cancel, **kwargs:
             client._discover(version, cancel, self.transport,
-                lambda raw, sig: verifier._verify_metadata(raw, sig, self.trust)))
+                lambda raw, sig: verifier._verify_metadata(raw, sig, self.trust), **kwargs))
         download = patch.object(client, 'download', side_effect=lambda metadata, assets, stage, cancel:
             client._download(metadata, assets, stage, cancel, self.transport,
                 lambda raw, sig, files: verifier._verify(raw, sig, files, self.trust)))
@@ -230,8 +339,10 @@ class ChannelTests(unittest.TestCase):
                 if failure == 'empty': transport.rows = []
                 errors = {'offline': OSError('offline'), '429': urllib.error.HTTPError(client.API, 429, '', {}, None),
                           'timeout': TimeoutError()}
-                def discover(version, cancel):
+                def discover(version, cancel, **kwargs):
                     if failure in errors: raise errors[failure]
+                    # Deliberately omit identity: the original same-version
+                    # guard still rejects an unknown installed context.
                     return client._discover(version, cancel, transport,
                         lambda raw, sig: verifier._verify_metadata(raw, sig, self.trust))
                 with patch.object(client, 'discover', side_effect=discover), patch.object(windows, 'prepare') as prepare:
@@ -260,7 +371,7 @@ class ChannelTests(unittest.TestCase):
                     def transfer(*args, **kwargs):
                         if phase == 'download' and args[0].endswith('.msi'): pause()
                         return original(*args, **kwargs)
-                    def discover(version, cancel):
+                    def discover(version, cancel, **kwargs):
                         if phase == 'metadata': pause()
                         return client._discover(version, cancel, self.transport,
                             lambda raw, sig: verifier._verify_metadata(raw, sig, self.trust))
@@ -341,7 +452,7 @@ class ChannelTests(unittest.TestCase):
         host = self.startup().runtime
         helper = self.root / 'helper.exe'; helper.write_bytes(b'synthetic, never executed')
         executable = self.root / 'app.exe'; executable.write_bytes(b'synthetic app')
-        identity = windows.Installation(executable, '0.1.0', 'old-product', 'a' * 40, helper, windows.sha(helper))
+        identity = replace(self.local_identity('0.1.0'), executable=executable, helper=helper, helper_sha256=windows.sha(helper))
         host.metadata = {'instance': 'a' * 48}; host.no_browser = True
         (self.root / 'config.json').write_bytes(b'config')
         (host.lock.directory / 'address.json').write_bytes(b'address')
@@ -364,6 +475,48 @@ class ChannelTests(unittest.TestCase):
             self.assertFalse(stage.path.exists())
         finally:
             if stage.path.exists(): stage.cleanup()
+
+
+class InstallationTests(unittest.TestCase):
+    def test_identity_reads_packaged_build_and_registered_msi(self):
+        with tempfile.TemporaryDirectory(prefix='app-b2-n-identity-') as folder:
+            root = Path(folder)
+            executable = root / 'Programs/Picross-Produktionsassistent/Picross-Start.exe'
+            executable.parent.mkdir(parents=True); executable.write_bytes(b'synthetic exe')
+            package = root / 'packaged'; package.mkdir()
+            helper = package / 'UpdateHelper.exe'; helper.write_bytes(b'synthetic helper')
+            product = windows.release(version='0.1.3')
+            built = {'format': 'picross-windows-app-v1', 'architecture': 'windows-x64',
+                     'version': product['version'], 'product_code': product['product_code'],
+                     'upgrade_code': product['upgrade_code'], 'commit': 'a' * 40,
+                     'payload_fingerprint': 'b' * 64, 'resources': {'UpdateHelper.exe': windows.sha(helper)}}
+            def write(value, components=None):
+                (package / 'build.json').write_bytes(canonical(value))
+                (executable.parent / 'components.json').write_bytes(canonical(value if components is None else components))
+            write(built)
+            with (patch.object(windows, 'os', SimpleNamespace(name='nt')),
+                  patch.object(windows, 'sys', SimpleNamespace(frozen=True, executable=str(executable))),
+                  patch.object(windows, 'PACKAGE', package),
+                  patch.object(windows, 'local_appdata', return_value=root),
+                  patch.object(windows.ctypes, 'windll', create=True) as dll,
+                  patch.object(windows, 'installed_version', return_value='0.1.3') as registered):
+                dll.shell32.IsUserAnAdmin.return_value = False
+                identity = windows.installation()
+                self.assertEqual((identity.version, identity.commit, identity.payload_fingerprint,
+                                  identity.product_code, identity.upgrade_code),
+                                 ('0.1.3', 'a' * 40, 'b' * 64, product['product_code'], product['upgrade_code']))
+                registered.assert_called_once_with(product['product_code'])
+                for field, value in (('payload_fingerprint', None), ('payload_fingerprint', 'invalid'),
+                                     ('commit', 'short'), ('product_code', 'foreign'), ('upgrade_code', 'foreign')):
+                    with self.subTest(field=field, value=value):
+                        write({**built, field: value})
+                        with self.assertRaises(ValueError): windows.installation()
+                write(built, {**built, 'payload_fingerprint': 'c' * 64})
+                with self.assertRaises(ValueError): windows.installation()
+                write(built); registered.return_value = '0.1.2'
+                with self.assertRaises(ValueError): windows.installation()
+                registered.side_effect = ValueError('MSI not registered')
+                with self.assertRaises(ValueError): windows.installation()
 
 
 class TransportTests(unittest.TestCase):
@@ -486,7 +639,7 @@ class LifecycleTests(unittest.TestCase):
 
     def test_optout_cancels_inflight_without_later_helper(self):
         updates=self.controller(); entered=threading.Event(); release=threading.Event()
-        def discover(*_): entered.set(); release.wait(3); return Mock(),{}
+        def discover(*_, **_kwargs): entered.set(); release.wait(3); return Mock(),{}
         with patch.object(client,'discover',side_effect=discover), patch.object(windows,'prepare') as prepare:
             updates.start(); self.assertTrue(entered.wait(1)); updates.choose(False); release.set(); updates.close()
             prepare.assert_not_called(); self.assertIsNone(updates.take())

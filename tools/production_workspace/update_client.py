@@ -24,6 +24,10 @@ class Cancelled(ValueError):
     pass
 
 
+class InstallationMismatch(ValueError):
+    pass
+
+
 def checkpoint(cancel, deadline):
     if cancel.is_set():
         raise Cancelled('Update abgebrochen.')
@@ -136,11 +140,12 @@ def release_assets(row):
     return assets
 
 
-def discover(local_version, cancel, *, transport=None):
-    return _discover(local_version, cancel, transport or Transport(), verifier.verify_metadata)
+def discover(local_version, cancel, *, transport=None, installation=None):
+    return _discover(local_version, cancel, transport or Transport(), verifier.verify_metadata,
+                     installation=installation)
 
 
-def _discover(local_version, cancel, transport, authenticate):
+def _discover(local_version, cancel, transport, authenticate, *, installation=None):
     """Internal seam used by the excluded synthetic adapter, never user settings."""
     deadline = time.monotonic() + 60
     row = latest_release(transport, cancel, deadline)
@@ -159,7 +164,18 @@ def _discover(local_version, cancel, transport, authenticate):
         require(assets[name]['size'] == binding['bytes'] and
                 binding['bytes'] <= (TOTAL_BYTES if name.endswith('.msi') else SIDECAR_BYTES), 'Asset size mismatch/limit')
     require(sum(a['bytes'] for a in manifest['assets'].values()) <= TOTAL_BYTES, 'Candidate size limit')
-    verifier.assess_update(metadata, local_version)  # Same/old without known binding is not authorized.
+    checkpoint(cancel, deadline)
+    if installation is not None and metadata.version == local_version:
+        # Publication status only, NEVER an authenticated local manifest binding
+        # or permission to download/install the same version. The caller obtains
+        # this identity from update_windows.installation(), not preferences/Git.
+        if not all(getattr(installation, field, None) == expected for field, expected in (
+                ('version', metadata.version), ('commit', metadata.source_commit),
+                ('payload_fingerprint', metadata.payload_fingerprint),
+                ('product_code', manifest['product_code']), ('upgrade_code', manifest['upgrade_code']))):
+            raise InstallationMismatch('Installed identity differs from the signed release')
+    else:
+        verifier.assess_update(metadata, local_version)  # Original same/old guard remains intact.
     return metadata, assets
 
 

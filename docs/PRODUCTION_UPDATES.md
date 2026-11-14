@@ -384,7 +384,8 @@ weiterhin geordnet aus; APP-B2-S führt keinen allgemeinen Gitabbruch ein.
 
 Die Identität stammt aus übereinstimmenden gebauten
 `build.json`/`components.json`, festem per-user-Programmziel und tatsächlich
-registrierter MSI-Version. Setup, Entwickler-/portable Fassung, Headless- und
+registrierter MSI-Version. Sie bindet Version, Product-/UpgradeCode, Quellcommit
+und gültigen Payload-Fingerprint. Setup, Entwickler-/portable Fassung, Headless- und
 Zweitstart autorisieren keine Installation. Bei leerem festem Trust bleibt der
 Kanal sichtbar inaktiv. Unbestätigte Kanalfrische heißt niemals „aktuell“.
 
@@ -405,8 +406,32 @@ unvollständiger Katalog ist ein Fehler. Höchste veröffentlichte 0.1.x-Version
 entscheidet, ohne älteren Fallback. API-Redirects sind verboten; Assetredirects
 gehen höchstens zweimal an den expliziten GitHub-Releaseasset-Host mit festem
 Pfadmuster. v2-Metadaten werden vor Nutzdownloads mit `verify_metadata` geprüft.
-`VerifiedMetadata` ist keine Installationsfreigabe. Gleiche Version ohne bekannte
-identische Bindung und ältere Version sind Fehler, kein Update.
+`VerifiedMetadata` ist keine Installationsfreigabe.
+
+Gemäß [APP-B2-N](https://github.com/venomenon328/picross/issues/612#issuecomment-6863885687)
+endet die Prüfung bei gleicher höchster veröffentlichter Version mit dem nativen
+Status „Keine neuere Appversion veröffentlicht.“, wenn die signiert authentifizierten
+v2-Metadaten einschließlich Release-/Assetmetadatenbindung zu sämtlichen genannten
+lokalen Identitätsmerkmalen passen. Die Installation wird vor dieser Meldung erneut
+geprüft. Kein Nutzassetdownload, Staging, Helfer oder MSI; Browser und initiales Git
+starten anschließend genau einmal. Zustimmung und übriger Zustand bleiben erhalten.
+Diese Aussage betrifft das Fehlen einer höheren veröffentlichten Version; sie
+behauptet keine bitidentischen lokalen MSI-/EXE-Bytes und keine authentifizierte
+lokale Manifestbindung. Der unveränderte `assess_update`-Guard verlangt für sein
+kryptografisches `noop` weiterhin die zuvor authentifizierte identische Bindung;
+der Kandidatenhash darf dafür nicht als lokale Autorität eingesetzt werden.
+
+Abweichende Source-/Fingerprint-/Produktidentität ergibt einen unterscheidbaren
+Warnstatus und den nutzbaren bisherigen Arbeitsweg, keine Same-Version-Installation.
+Fehlende oder ungültige Installationsidentität, ältere Version, unvollständiger
+Katalog, Signatur-/Root-/Metadatenfehler sowie Offline/404/429/TLS/Timeout bestätigen
+keine Kanalfrische. Die vorhandenen Fehler-/Fallbackwege bleiben bestehen. Höhere
+Versionen durchlaufen unverändert den vollständigen folgenden Updateweg; kein
+weiterer Versuch in derselben Instanz. Die getrennte nicht veröffentlichende
+T02-Diagnose belegt den automatisch geplanten echten Payload-Kandidaten. Ein späterer
+signierter 0.1.4-Release (bei weiterhin letzter Autorität 0.1.3) erfordert gesonderte
+Betriebsfreigabe; A01 vor Merge und die installierte Windows-11-Probe R01 vor
+Release-/Issueabschluss bleiben getrennte Abnahmen.
 
 Die fünf gebundenen Nutzassets werden streamend in eine neue private flache
 Stagingablage unter `.launcher/update-staging/<zufällige Kennung>` geladen.
