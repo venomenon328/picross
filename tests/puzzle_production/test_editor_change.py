@@ -160,9 +160,18 @@ class EditorChangeTests(unittest.TestCase):
         self.assertEqual((self.root/'game'/self.entry['reveal']).read_bytes(), image)
 
     def test_actual_raster_and_shared_diagnostic(self):
-        plan = edit.plan(self.root, self.request(text='1 1 1\n0 0 0', profile='line'), work=self.home)
-        self.assertIsNotNone(plan['quality'])
-        edit.apply(self.root, plan)
+        import hashlib
+        previous = (self.root/'game'/self.entry['definition']).read_bytes()
+        original = hashlib.sha256
+        streams = []
+        def counted(raw=b'', **kwargs):
+            if raw == previous: streams.append(len(raw))
+            return original(raw, **kwargs)
+        with patch.object(hashlib, 'sha256', side_effect=counted):
+            plan = edit.plan(self.root, self.request(text='1 1 1\n0 0 0', profile='line'), work=self.home)
+            self.assertIsNotNone(plan['quality'])
+            edit.apply(self.root, plan)
+        self.assertLessEqual(len(streams), 4)
         registry.check_checkout(self.root, replay=True)
         before = self.snapshot()
         self.assertEqual(registry.registration(Path(self.fixture.name)/"export", self.root, apply=True)["status"], "no-op")
