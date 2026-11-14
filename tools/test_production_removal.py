@@ -85,7 +85,8 @@ class RemovalTests(unittest.TestCase):
         self.assertTrue(result['removed'])
         self.assertEqual(self.inventory(), [line for line in before if not line.endswith(' ' + REF)])
         self.assertIsNone(self.writer.remote_head(REF))
-        self.assertTrue(any(j['source'] == 'local' and j['ref'] == BRANCH for j in result['listing']['jobs']))
+        self.assertFalse(any(j['source'] == 'local' for j in result['listing']['jobs']))
+        self.assertEqual(git(self.local, 'rev-parse', REF).decode().strip(), self.sha)
         self.assertFalse(any(j['source'] == 'remote' and j['ref'] == BRANCH for j in result['listing']['jobs']))
         self.assertEqual(dirty.read_text(), 'preserve')
         with self.assertRaisesRegex(ValueError, 'verwendet'):
@@ -213,7 +214,8 @@ class RemovalTests(unittest.TestCase):
         value = second.listing(refresh=True)
         self.assertIsNone(value['sync_error'])
         self.assertFalse(any(j['source'] == 'remote' and j['ref'] == BRANCH for j in value['jobs']))
-        self.assertTrue(any(j['source'] == 'local' and j['ref'] == BRANCH for j in value['jobs']))
+        self.assertFalse(any(j['source'] == 'local' for j in value['jobs']))
+        self.assertEqual(git(self.local, 'rev-parse', REF).decode().strip(), self.sha)
 
     def test_remote_timeout_and_unverified_post_push_never_claim_success(self):
         plan = self.preview()

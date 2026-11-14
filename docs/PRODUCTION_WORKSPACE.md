@@ -204,10 +204,14 @@ Fehlende oder widersprüchliche Originale sind Fehler.
 
 Veröffentlichte Stände haben genau einen Haupteintrag je Rätsel-ID und eine
 getrennte Versions-/Quellwahl nach [aktueller Ansichtsübergabe](PRODUCTION_CURRENT_VIEW.md).
-Bytegleiche Veröffentlichungen zeigen „Lokal und Remote“; echte Gitrelation und
-Konflikte bleiben davon unabhängig sichtbar. Titelgleiche IDs sind unterscheidbar.
-Lokale Entwürfe und deren
-Verwerfen bleiben getrennte Browserentwürfe. Job-/Revisions-/Quellwechsel und das ausdrückliche
+Im konfigurierten Remotebetrieb führen ausschließlich die gewählten Remotequellen,
+auch bei lokalen Vorsprüngen oder Divergenzen. Die gültige Spitze des zugeordneten
+Produktionsbranches hat Vorrang vor main; tatsächlich offene Main-only-Arbeit
+bleibt erreichbar. Die normale Fortsetzung benötigt keine Versions-/Quellwahl.
+Titelgleiche IDs sind unterscheidbar. Gespeicherte Motivtexte und deren Verwerfen
+bleiben sekundäre lokale Eingaben, keine laufenden Produktionen. Ohne aktive
+Auswahl beginnt ein erklärter Leerzustand; alte Texte öffnen niemals automatisch.
+Job-/Revisions-/Quellwechsel und das ausdrückliche
 Laden eines neueren Standes verwerfen ungesendete Absichten. Ein bloßes Suchen
 neuer Ergebnisse erhält die aktive gebundene Ansicht und ihre Eingaben.
 
@@ -256,7 +260,10 @@ Produktionsrevision sind verschiedene Kennungen.
 Der Dienst liest **committete Objekte**, nicht ungeprüft gemischte Arbeitsbytes.
 Auch ein verschmutzter Benutzercheckout darf verbunden werden: Seine Änderungen
 bleiben unangetastet und werden nicht als veröffentlichter Stand dargestellt.
-Ein lokaler Commit ist lokal lesbar; daraus folgt keine Remote-Erreichbarkeit.
+Ein lokaler Commit ist im ausdrücklich eingerichteten lokalen Diagnosebetrieb lesbar;
+daraus folgt keine Remote-Erreichbarkeit. Ein bestehender lokaler Betrieb wird
+nicht automatisch auf Remote umgestellt. Im Remotebetrieb bleiben lokale Refs
+für P2 und gezielte Diagnose verfügbar, ohne die aktive Auswahl zu bestimmen.
 
 Die einmalige Einrichtung bietet „Nur lokale Gitstände“ oder „Mit konfiguriertem
 Remote aktualisieren“. Im zweiten Fall werden beim Start und über eine klar
@@ -344,8 +351,9 @@ nur vorhandene nichtinteraktive Anmeldung wird benutzt. Keine neuen Credentials
 im Browser, Zustand oder Log. Erfolg verlangt danach das tatsächlich geprüfte
 Fehlen des exakten Remote-Refs. Push-/Timeout-/Berechtigungsfehler, unbekannter
 Ausgang und fehlgeschlagene Cachesynchronisierung bleiben getrennte Resultate.
-Erst verifizierter Erfolg aktualisiert die Remoteansichten. Lokale und Mainquellen
-werden weiter gelesen; ihre aktive Auswahl folgt dem lieferbezogenen PW2-C-Abgleich.
+Erst verifizierter Erfolg aktualisiert die Remoteansichten.
+Mainquellen werden weiter gelesen; ihre aktive Auswahl folgt dem lieferbezogenen
+Abgleich und der Remoteautorität. Lokale Refreste bleiben für P2 prüfbar.
 Offene oder unklar zugeordnete Arbeit bleibt sichtbar. Bei Cachefehler wird eine
 stale Anzeige ausdrücklich benannt.
 
@@ -692,6 +700,22 @@ bindet die aktive Produktion den Receipthash; der darin erhaltene ursprüngliche
 Exporthash bleibt davon verschieden. Raster-, Reveal- und Hintergrundbezüge
 gehören zur Zuordnung. ZIPs, Bilddaten und Solver-/Proofläufe werden für diese
 Listenentscheidung nicht geöffnet oder ausgeführt.
+Die aktive Reveal-v4-/Hintergrund-v6-Form wird mit dem reinen vorhandenen
+Quellenvalidator geprüft: Identität und aktuelles Bild beziehungsweise
+Hintergrundstatus müssen zur Runtime passen. Da der Validator den Paketanker
+normalisiert, erlaubt der Listenleser ausdrücklich nur den bewiesenen
+Originalexporthash O oder den tatsächlichen Receipthash R. O und R bleiben
+verschieden. Zusätzlich gelten nur exakte kleine historische Quellmetadaten am
+bereits gebundenen Integrationscommit als abgeschlossene Altbindung; belegte
+Abwesenheit ist kein fehlgeschlagener Abruf. Legacyformen bleiben lesbar.
+
+Identische Record-/Projektionsbelege teilen innerhalb des Listenlaufs den
+historischen Liefernachweis; jede konkrete Quelle behält ihre Originalprüfung.
+Alle eingelesenen Lieferungen werden bis zum Ende abgeglichen, auch mehr als 32.
+Die früher begrenzte Gesamtzahl entfällt; bestehende Pfad-/Byte-/Cachegrenzen
+bleiben erhalten. Fehlende Belege und Fehler erscheinen konkret unter
+`completion.unresolved` und in der Fehleranzeige; betroffene Quellen bleiben offen.
+`completion.complete=false` kennzeichnet einen unvollständigen/unklaren Lauf.
 
 Die Zuordnung erfolgt pro konkreter Quelle vor der Motivgruppierung. Identische
 lokale/Remote-Kopien sowie nachweislich zugehörige ältere Record-/Projektionsstände
@@ -713,7 +737,8 @@ Passive Suche erhält die geöffnete Quelle, ihre Bilder und ungesendete Eingabe
 Erst „Neueren Stand laden“ übernimmt den gefilterten Listenstand und erklärt den
 bestätigten Entfall. Verbleibende offene Arbeit derselben ID bleibt anwählbar;
 andernfalls folgt eine andere offene Produktion oder der leere aktive Zustand.
-Eigene Browserentwürfe bleiben getrennt gespeichert und erreichbar. Die internen
+Eigene Motivtexte bleiben getrennt gespeichert und ausdrücklich erreichbar;
+Appstart und Übernehmen einer leeren Liste öffnen keinen gespeicherten Text. Die internen
 Listenfelder unter `completion` geben Mainbestätigung, Quellenbindung und
 Ausblendungsumfang an; sie sind Ansichtsdaten, keine neuen Originalschemas.
 

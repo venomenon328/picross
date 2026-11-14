@@ -130,8 +130,11 @@ def group(jobs, comparisons, *, confirmed, remote):
             status = 'Remote neuer'
         else:
             status = 'Abweichende Stände' if pairs else 'Remote nicht aktuell bestätigt'
-        # Current pointers compete by actual ancestry, never by phase/revision.
-        candidates = [r for r in rows if r.get('current_view')]
+        # Remote production tip leads main, regardless of ancestry, revision
+        # spelling or phase. Main-only open work still has its own entry point.
+        authority = [r for r in rows if r['source'] == 'remote' and r['ref'] == 'content/pw/' + puzzle_id] if remote else []
+        selection = authority or rows
+        candidates = [r for r in selection if r.get('current_view')]
         tips = [r for r in rows if not any(relation(o['commit'], r['commit']) == 'ahead' for o in rows)]
         maximal = [r for r in candidates if not any(relation(o['commit'], r['commit']) == 'ahead' for o in rows)]
         choice = None
@@ -141,6 +144,11 @@ def group(jobs, comparisons, *, confirmed, remote):
             relations = {relation(a['commit'], b['commit']) for a in tips for b in tips}
             if len(keys) == 1 and relations <= {'equal', 'ahead', 'behind'}:
                 choice = next(iter(keys))
+        if remote:
+            keys = {(r['revision'], r['binding']) for r in candidates}
+            choice = next(iter(keys)) if len(keys) == 1 and not any(r.get('_current_invalid') for r in selection) else None
+            maximal = candidates
+            status = 'Remote aktuell bestätigt' if confirmed else 'Remote nicht aktuell bestätigt'
         ordered = list(versions.items())
         ordered.sort(key=lambda item: item[0] != choice)  # Preserve alternatives as peers.
         for key, version in ordered:
