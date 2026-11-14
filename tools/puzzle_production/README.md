@@ -1115,6 +1115,17 @@ erklärt die geänderte Erkennungszeit, kooperativen Lock und verbleibende OS-Re
 [RI-C-T01](../../docs/RI_C_VERIFICATION.md) bindet die tatsächlichen Nachweise;
 keine Sekundenbeschleunigung allein aus verringerten Guardzahlen ableiten.
 
+**RI-REPLAY-1 / #650:** Im normalen mutierenden Registrierungs-P5 wird
+`check_checkout` mit dem aus dem Journal gebundenen **neuen** Paket als
+einziger vollständiger Produktionsreplay-Zielpfad ausgeführt. Für den
+Bestand bleiben frische Manifest-/Inventar-/Runtime-/Bild-/Namespace-
+und RI-C-Quellen-/Transaktionsprüfungen erhalten. Eine alte unkompaktierte
+Produktion wird dort nicht wegen Werkzeugdrift neu reproduziert.
+Explizites `check-registry` (`replay=True` ohne Ziel) sowie
+`verify-export` alter Pakete bleiben vollständige und strenge Audits.
+Unbekannte historische HP-W2-Tools werden nicht per Ausnahme zugelassen.
+Keine Änderung von RI-B-Kontextgrenzen, Recovery oder anderen Operationen.
+
 KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
 Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig
 geprüften v3-Checkout her. Beide Snapshots müssen kanonisch und formatgleich sein.
