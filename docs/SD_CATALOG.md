@@ -1101,6 +1101,31 @@ Belegung. Unbekannte/fremde Bytes bleiben mit konkretem Rest und Journal sichtba
 Keine globale Erkennung vor jedem Dateischritt, keine neue Performancekampagne
 oder Geschwindigkeitsbehauptung. Lauf-/Reviewbelege bleiben am konkreten PR-Head.
 
+### RI-REPLAY-1 · Neues Paket statt historische Produktion in P5 erneut prüfen (#650)
+
+Bei neuer Registrierung bindet der gültige Journal-Delta exakt einen neuen
+Paketpfad. P5 validiert den vollständigen Checkout und prüft die Produktion
+nur dieses Paketpfads frisch beziehungsweise durch die bereits vollständig
+gebundene RI-B-Byte-Nachprüfung. Alle bestehenden Einträge behalten die
+vollständige Manifest-/Paketinventar-, Live-/Hintergrund-/Reveal-,
+Bewertungs-/Metadaten- und Namespaceprüfung. T(R), K(R), G0/G2/G5a/G5b/G6
+sowie Recovery-GR0/GR2 bleiben unverändert bytegebunden; fremde Änderungen
+müssen weiterhin vor dauerhaftem Abschluss erkannt und geschützt werden.
+Ältere `picross-target-export`-Pakete werden in dieser normalen P5-Grenze
+**nicht** erneut auf ihre historische Solver-/Freigabe-/HP-W2-Produktion
+replayt; das ist kein notwendiger Katalogquellen- oder Publikationsguard.
+Ein fehlender, mehrfacher oder unpassender neuer Zielpfad blockiert.
+
+Eine ausdrücklich angeforderte `check_checkout(replay=True)`-Vollprüfung
+ohne Ziel bleibt strikt und prüft alle unkompaktierten Produktionen.
+`verify-export` alter Pakete bleibt ebenso unverändert und kann eine
+unqualifizierte historische Erzeugeridentität weiterhin zurückweisen.
+Andere Transaktionsgenerationen, Wiederholungen, No-ops, Journale und
+Recovery erfahren keine neue Replayausnahme; kein persistenter Cache,
+keine historischen Daten-/Freigabeänderungen oder neue Toolhash-Ausnahmen.
+Dies präzisiert den P5-Produktionsnachweis, nicht die RI-C-Quellen- und
+Fremdänderungsgarantien.
+
 ## HP-I1b2 · Hintergrundwechsel und Quellenkompatibilität
 
 Vertrag vor Code, 10.11.2026, [HP-I1b2](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809).
