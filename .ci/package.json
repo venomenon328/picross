@@ -1,13 +1,24 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/612",
-  "package": "APP-B2-S",
-  "modules": ["tools"],
-  "purpose": "Vorgelagerte Updateentscheidung D01–D06/K01–K08 gemäß #612/issuecomment-6859867142. T01 im tools-Modul prüft echten synthetisch signierten Kandidatenpfad, einmaligen Browser-/Gitstart und Skip-/Stop-/Handoffrennen. Kern liefert regulären Windows-Spieler. T02 ist separat beauftragter nicht veröffentlichender Windows-MSI-Dispatch am Produkt-Head.",
-  "omitted": "Keine native.*, production.*, preflight, delivery, Chromium oder Katalog-/Bildmatrix: keine Änderung an Godot, Rätseln oder Browser-UI. Signatur-/MSI-Negativtests und bestehender Git-/P2-Drain bleiben erhalten. T02 beweist keine installierte Windows-11-Bedienung; APP-B2-S-R01/T03 und bestehende Recoverygates bleiben getrennt offen. Keine doppelte Vollsuite.",
+  "issue": "https://github.com/venomenon328/picross/issues/636",
+  "package": "PE-PERF1",
+  "modules": [
+    "tools",
+    "production.catalog"
+  ],
+  "purpose": "K01–K09 / T01–T04 gemäß issuecomment-6861975778: Detail-, Plan-, Apply-Leistung, bestätigte v7→v8-Migration, echte Speicherzeiten, ehrlicher Phasen-/Fehlerstatus. tools prüft Dienst/Worker/UI; production.catalog den tatsächlich berührten gemeinsamen Snapshot-/Writer-/Quellenschutz. Pflichtkern liefert Windows-Spieler; separater portabler Editorbau und Windows-11-Edge-Probe einmalig.",
+  "omitted": "Keine native.*, production.solver/images/adapter, preflight, delivery oder automatische Chromium-Matrix: keine Spiel-, Save-, Solver-, Ratingformel-, Bildableitungs- oder Exportänderung. Echte A3-Deduktion und unabhängige Bundleprüfung bleiben erhalten und werden synthetisch durchlaufen. 56-Rätsel-Leistungs-/Integritätsvergleich einmalig außerhalb CI; kein neuer Echtkatalog-Dauertest. PE-PERF1-A01 before_merge und persönliche PE-B-U01 before_release bleiben offen.",
   "test_changes": [
-    {"path": "tools/test_app_updates.py", "disposition": "change-scoped", "reason": "Kleine deterministische Startgate-/Abbruch-/Übergaberegression mit synthetischer Signatur und kontrollierten Threadereignissen; nur im gewählten tools-Modul."},
-    {"path": "tools/test_production_launcher.py", "disposition": "change-scoped", "reason": "Echter HTTP-/Lock-/Stopnachweis: Update-GO ohne vorherigen langsamen Gitstart, bewusst gestartetes Git weiterhin drainpflichtig, Stop vor Arbeitsaufnahme."}
+    {
+      "path": "tools/test_puzzle_editor.py",
+      "disposition": "change-scoped",
+      "reason": "Schmale echte Migrations-/Status-/Readback-/Fehler-/Planbindungsfälle im vorhandenen Diensttest; keine Browser-Dauersuite."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_images.py",
+      "disposition": "change-scoped",
+      "reason": "Geschützte Migration, No-op, Quell-/Planstale und Journal-/Recoveryregression auf kleinem synthetischem Bestand; frische Pfadbeobachtung mit tatsächlicher Windows-Junction bzw. POSIX-Symlink, Case-Alias, Hardlink und geschlossenem Fehlerpfad. Keine Plattform-Skips im ausgewählten Modul."
+    }
   ],
   "core_change": null,
   "evidence": {

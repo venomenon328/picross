@@ -113,6 +113,10 @@ class Window:
                 state = self.service.status()
                 if state["job"] and state["job"]["state"] == "running":
                     self.status.set(self.service.origin+" · "+state["job"]["stage"]+" · "+str(state["job"]["elapsed_seconds"])+" s")
+                elif state["recovery_required"]:
+                    self.status.set("Recovery erforderlich · " + str(self.service.root))
+                elif state["job"] and state["job"]["state"] == "error":
+                    self.status.set("Fachoperation fehlgeschlagen · " + state["job"]["error"])
                 else: self.status.set("Bereit · "+self.service.origin+" · "+str(self.service.root))
         except Exception as exc:
             self.status.set("Status konnte nicht gelesen werden: "+str(exc))

@@ -132,6 +132,55 @@ class CatalogImageTests(unittest.TestCase):
         self.assertEqual(images.apply_migration(self.root, noop)["status"], "noop")
         self.assertEqual(snapshot(self.root), unchanged)
 
+    def test_detail_reuses_one_complete_snapshot_without_writing(self):
+        from tools.puzzle_editor.worker import run
+        before = snapshot(self.root)
+        work = self.home/"detail-work"; work.mkdir()
+        original = tx.capture
+        with patch.object(tx, "capture_detail", wraps=tx.capture_detail) as captures, \
+                patch.object(tx, "capture", side_effect=AssertionError("Detail repeated full catalog validation")):
+            result = run(self.root, work, "detail", {"id": self.identifier})
+        self.assertEqual(captures.call_count, 1)
+        self.assertEqual(result["snapshot"], digest(tx.image_snapshot(original(self.root))))
+        self.assertEqual(result["detail"]["id"], self.identifier)
+        definition = load_json(self.root/"game"/self.entry["definition"])
+        self.assertEqual(result["raster"]["palette"], definition["palette"])
+        self.assertEqual(result["raster"]["text"], "\n".join(" ".join(map(str, row)) for row in definition["solution"])+"\n")
+        self.assertEqual(snapshot(self.root), before)
+
+    def test_migration_crash_before_with_and_after_journal_rolls_back_and_replans(self):
+        before = contents(self.root)
+        original_times = snapshot(self.root)
+        plan = images.plan_migration(self.root)
+        def before_journal(phase, name=None):
+            if phase == "P0": raise InterruptedError("before first mutation")
+        with patch.object(publication, "checkpoint", side_effect=before_journal), self.assertRaises(InterruptedError):
+            images.apply_migration(self.root, plan)
+        self.assertEqual(snapshot(self.root), original_times)
+        self.assertFalse((self.root/tx.LOCK).exists())
+        for boundary in ("journal-complete", "P1", "P5"):
+            def crash(phase, name=None):
+                if phase == boundary: raise InterruptedError("controlled migration crash")
+            with self.subTest(boundary=boundary), patch.object(publication, "checkpoint", side_effect=crash), self.assertRaises(InterruptedError):
+                images.apply_migration(self.root, images.plan_migration(self.root))
+            self.assertTrue((self.root/tx.LOCK).exists() or publication.staging(self.root))
+            def interrupted_recovery(phase, name=None):
+                if phase in ("R1-runtime", "R2"): raise InterruptedError("repeated recovery interruption")
+            if boundary != "journal-complete":
+                with patch.object(publication, "checkpoint", side_effect=interrupted_recovery), self.assertRaises(InterruptedError):
+                    registry.recover(self.root)
+            self.assertEqual(registry.recover(self.root)["status"], "rolled-back")
+            self.assertEqual(contents(self.root), before)
+            from tools.puzzle_editor.worker import run
+            work = self.home/"recover-work"; work.mkdir(exist_ok=True)
+            self.assertEqual(run(self.root, work, "recover", {})["status"], "noop")
+        fresh = images.plan_migration(self.root)
+        self.assertEqual(images.apply_migration(self.root, fresh)["status"], "migrated")
+        reached = snapshot(self.root)
+        self.assertEqual(images.apply_migration(self.root, fresh)["status"], "noop")
+        self.assertEqual(snapshot(self.root), reached)
+        self.assertEqual(load_json(self.root/tx.RUNTIME)["format"], registry.IMAGE_RUNTIME_FORMAT)
+
     def test_manual_edit_requires_explicit_runtime_migration(self):
         request = self.request(reveal_bytes=SVG, extension=".svg", current_metadata={"name": "Changed"})
         before = snapshot(self.root)
@@ -454,6 +503,104 @@ class CatalogImageTests(unittest.TestCase):
         self.assertEqual(images.recover(self.root)["status"], "rolled-back")
         self.assertEqual(contents(self.root), before)
         registry.check_checkout(self.root)
+
+
+
+
+class CatalogValidationScopeTests(unittest.TestCase):
+    def test_fresh_path_checks_reject_new_links_case_aliases_and_hardlinks(self):
+        import ctypes
+        import os
+        import subprocess
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            data = root/"data"; data.mkdir()
+            (data/"source").write_bytes(b"unchanged target")
+            self.assertEqual(io.read(root, "data/source", 100), b"unchanged target")
+            with self.assertRaisesRegex(ValueError, "case collision"):
+                io.read(root, "DATA/source", 100)
+            with self.assertRaises(ValueError): io.safe(data/"source", "child")
+            self.assertEqual(io.safe(root, "absent/leaf"), root/"absent/leaf")
+            selected = root/"selected"; selected.mkdir()
+            self.assertEqual(io.safe(root, "selected/missing"), selected/"missing")
+            selected.rmdir()
+            if os.name == "nt":
+                linked = subprocess.run(["cmd", "/c", "mklink", "/J", str(selected), str(data)], capture_output=True)
+                self.assertEqual(linked.returncode, 0, linked.stderr)
+            else:
+                selected.symlink_to(data, target_is_directory=True)
+            try:
+                # A successful earlier observation cannot hide a new junction.
+                with self.assertRaisesRegex(ValueError, "link/reparse"):
+                    io.read(root, "selected/source", 100)
+                self.assertEqual((data/"source").read_bytes(), b"unchanged target")
+            finally:
+                if os.name == "nt": os.rmdir(selected)
+                else: selected.unlink()  # Remove only our link, never its target.
+            os.link(data/"source", root/"linked-file")
+            with self.assertRaisesRegex(ValueError, "hardlink"):
+                io.read(root, "data/source", 100)
+            if os.name == "nt":
+                with patch.object(io, "_attributes", return_value=0xffffffff), \
+                        patch.object(ctypes, "get_last_error", return_value=5):
+                    with self.assertRaises(OSError): io.safe(root, "data/source")
+            else:
+                with patch.object(os, "lstat", side_effect=PermissionError("unreadable component")):
+                    with self.assertRaises(PermissionError): io.safe(root, "data/source")
+
+    def test_json_reuse_is_exact_bounded_detached_and_ends_with_operation(self):
+        raw = b'{"nested":[1,2]}\n'
+        with io.budget():
+            first = io.json_bytes(raw, 100)
+            first["nested"].append(3)
+            self.assertEqual(io.json_bytes(raw, 100), {"nested": [1, 2]})
+            with self.assertRaisesRegex(RuntimeError, "byte limit"):
+                io.json_bytes(raw, 1)
+            with self.assertRaises(ValueError):
+                io.json_bytes(b'{"a":1,"a":2}', 100)
+            self.assertEqual(io.json_bytes(b'{"nested":[4]}', 100), {"nested": [4]})
+            context = io._operation_data.get()
+            with io.budget(): self.assertIs(io._operation_data.get(), context)
+        self.assertIsNone(io._operation_data.get())
+        with io.budget(): self.assertIsNot(io._operation_data.get(), context)
+
+    def test_method_reuse_reopens_all_bound_inputs_and_detects_equal_mtime_change(self):
+        from tools.puzzle_production import catalog_method, sd2_rating_freeze as frozen
+        import json
+        import os
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            method = json.loads((frozen._ROOT/"sd2_method_0_4.json").read_bytes())
+            names = {"sd2_method_0_4.json", *method["artifacts"], *method["implementation"]}
+            for name in names: (root/name).write_bytes((frozen._ROOT/name).read_bytes())
+            with patch.object(frozen, "_ROOT", root), io.budget():
+                expected = catalog_method.method_hash(catalog_method.NEW)
+                actual_read = io.read
+                reads = []
+                def observed(root, name, *args, **kwargs):
+                    reads.append(name)
+                    return actual_read(root, name, *args, **kwargs)
+                with patch.object(io, "read", side_effect=observed):
+                    self.assertEqual(catalog_method.method_hash(catalog_method.NEW), expected)
+                self.assertEqual(set(reads), names)
+                target = root/next(iter(method["implementation"]))
+                info = target.stat(); raw = target.read_bytes()
+                target.write_bytes(bytes([raw[0] ^ 1])+raw[1:])
+                os.utime(target, ns=(info.st_atime_ns, info.st_mtime_ns))
+                with self.assertRaisesRegex(ValueError, "Changed frozen"):
+                    catalog_method.method_hash(catalog_method.NEW)
+                self.assertEqual(target.read_bytes(), bytes([raw[0] ^ 1])+raw[1:])
+            self.assertIsNone(io._operation_data.get())
+            target.write_bytes(raw)
+            with patch.object(frozen, "_ROOT", root), io.budget():
+                with self.assertRaisesRegex(ValueError, "Changed frozen"):
+                    with catalog_method._read_batch():
+                        catalog_method.method_hash(catalog_method.NEW)
+                        target.write_bytes(bytes([raw[0] ^ 1])+raw[1:])
+                        # Reuse inside a reader cannot publish a result before
+                        # the mandatory end binding rejects the changed bytes.
+                        catalog_method.method_hash(catalog_method.NEW)
+                self.assertIsNone(catalog_method._batch.get())
 
 
 if __name__ == "__main__":
