@@ -307,8 +307,8 @@ class Deliveries:
             result['note'] = 'Main wurde gefunden, seine Lieferbelege sind nicht lesbar. Vorhandene Arbeit bleibt sichtbar.'
             return jobs, result
         result['confirmed'] = True
-        proven, attempted, uncertain = {}, set(), False
-        unresolved = []
+        proven, attempted = {}, set()
+        unresolved, unclear = [], set()
         for job in jobs:
             if job['_record'].get('state') != 'registered' or job.get('_current_invalid'):
                 continue
@@ -323,8 +323,7 @@ class Deliveries:
                 for pair in pairs:
                     proven.setdefault(pair, []).append(history)
             except UNREADABLE as exc:
-                uncertain = True
-                unresolved.append(f"{job['puzzle_id']}/{job['revision']}: {exc}")
+                unresolved.append((id(job), f"{job['puzzle_id']}/{job['revision']}: {exc}"))
         remaining, hidden = [], []
         registered_snapshots = {(str(j['_source'].root), j['commit'], j['puzzle_id']) for j in jobs
                                 if j['_record'].get('state') == 'registered'}
@@ -334,14 +333,13 @@ class Deliveries:
                        (str(job['_source'].root), job['commit'], job['puzzle_id']) in registered_snapshots)
             for history in proven.get((job['puzzle_id'], job['revision'], job['binding']), []):
                 if job.get('_current_invalid') or resumed:
-                    uncertain = True
+                    unclear.add(id(job))
                     break
                 try:
                     matched = self.originals_match(job, history)
                     break
                 except UNREADABLE as exc:
-                    uncertain = True
-                    unresolved.append(f"{job['puzzle_id']}/{job['revision']}: {exc}")
+                    unresolved.append((id(job), f"{job['puzzle_id']}/{job['revision']}: {exc}"))
             if matched:
                 hidden.append({key: job[key] for key in ('puzzle_id', 'revision', 'binding', 'commit', 'source', 'ref')})
             else:
@@ -350,9 +348,14 @@ class Deliveries:
                       completed_ids=sorted({j['puzzle_id'] for j in hidden} - {j['puzzle_id'] for j in remaining}))
         result['note'] = (f'Main aktuell bestätigt: {len(hidden)} eindeutig abgeschlossene Quellen ausgeblendet. '
                           'Offene Arbeit bleibt sichtbar.')
+        # A later exact historical proof can close an earlier registration too.
+        # Do not report its obsolete failed comparison as still-open work.
+        remaining_ids = {id(job) for job in remaining}
+        unresolved = list(dict.fromkeys(message for identity, message in unresolved if identity in remaining_ids))
+        uncertain = bool(unresolved or unclear & remaining_ids or any(j.get('_current_invalid') for j in remaining))
         if uncertain:
             result['note'] += ' Nicht eindeutig belegte Lieferungen bleiben ebenfalls sichtbar.'
-        result['unresolved'] = list(dict.fromkeys(unresolved))
+        result['unresolved'] = unresolved
         return remaining, result
 
 
