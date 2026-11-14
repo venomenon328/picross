@@ -469,6 +469,20 @@ Die normale beauftragte Git-Sicherung bleibt Aufgabe des Produktionsakteurs.
 Vor Publikation die gebundenen Quellbytes erneut vergleichen; bei zwischen-
 zeitlicher Änderung keine scheinbar passende Projektion veröffentlichen.
 
+PW3-B teilt ausschließlich innerhalb eines Projektor-/Detailprüfaufrufs bereits
+gelesene Quell- und ZIP-Mitgliedbytes sowie geprüfte Recordmetadaten und
+Bilddekodierbefunde. Der gemeinsame Bytevorrat ist auf 64 MiB/512 Einträge
+begrenzt; Verdrängung führt zum gewöhnlichen vollständigen Lesen. ZIPs werden
+weiter einzeln geöffnet und geschlossen, ihre Namespaces und CRCs vollständig
+geprüft. Jede Referenz behält ihre eigene Hash-/Größen-, Index-, Rollen- und
+Angebotsprüfung. Vor Rückgabe einer lokalen Detailprüfung und an den bisherigen
+Projektor-Publikations-/No-op-Grenzen werden alle ursprünglichen Quellbytes
+frisch gelesen und verglichen, einschließlich Dateiidentität und Pfadschutz.
+Danach und bei Fehler/Abbruch endet der Vorrat. Ein unabhängiger Detail-/Bildabruf
+beginnt ohne diesen Kontext. Keine gespeicherte Prüfautorität, keine Übernahme
+von Adapter-/Proof-/HP-W2-Ergebnissen und keine Zusammenlegung verschiedener
+Finalizerzustände oder Export-/Offlineprüfgrenzen.
+
 PW-B integriert diesen Aufruf verbindlich in jede fällige Übergabe des neuen
 Produktionswegs. Die bisherigen Chat-Sheet-Daten können als Diagnose entfallen;
 der Nutzer muss sie nicht mehr in eine zweite Datenhaltung kopieren.
