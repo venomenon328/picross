@@ -1,18 +1,18 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/646",
-  "package": "PW3-B",
+  "issue": "https://github.com/venomenon328/picross/issues/650",
+  "package": "RI-REPLAY-1",
   "modules": [
-    "tools",
-    "production.adapter"
+    "production.adapter",
+    "production.catalog"
   ],
-  "purpose": "PW3-B-K01-K07: aufruflokale Quell-/Mitgliedbytes und Recordrekonstruktion im Projektor/Detailreader teilen. tools prueft Quellenbindung, Rollen, Grenzen und frische unabhaengige Reads; production.adapter prueft die unveraenderten Builder-/Finalizer-/Export-/ZA-1-Verbrauchergrenzen. docs/ci-required und regulaerer Windows-Spielerbau.",
-  "omitted": "Keine Solver-, Difficulty-, Bildalgorithmus-, Katalog-, Runtime-, Installer- oder Gitpipelineaenderung: production.solver/images/catalog, native.*, preflight, delivery und Browser nicht gewaehlt. Keine schwere Pruefwiederverwendung im Finalizer/Export; deren volle alte/neue bzw. Original-/Staging-/Offlinepruefungen bleiben. T00/T01 einmalig an denselben zwei kleinen synthetischen 0.8-Faellen; Messtreiber/Rohdaten nach Vergleich entfernen, knapper quellengebundener Bericht im PR. Fuenf erzeugte Auftraege einmalig vermessen; keine kosmetische Promptaenderung oder Tokenbehauptung.",
+  "purpose": "INT-B02: mutierende Erstregistrierung prüft die neue Produktion in P5 vollständig/bytegebunden, ohne historische Export-Producer alter unkompaktierter Einträge erneut auszuführen. Adapter sichert die vollständige neue Export-, Staging- und Provenienzprüfung; Catalog sichert aktuelle Quellen-/Inventar-/Namespace-/Journal-Guards sowie Abbruch und Recovery. Pflichtkern mit normalem Windows-Spielerbuild bei Werkzeugänderungen.",
+  "omitted": "Keine Solver-/Bildalgorithmusänderung, daher production.solver/images nicht gewählt. Keine native Spiel-/Runtimeänderung, daher native.* und delivery nicht gewählt; keine Browser-, Installer-, Produktionsdaten- oder Gesamtbestandsreplays. Bestehende P0–P6/R0–R2-Tests werden über gewählte Fachmodule ausgeführt. Reale Fliegenpilz-/Birne-Demonstration einmalig isoliert im Reviewkontext, kein bleibendes CI-Rätselkorpus.",
   "test_changes": [
     {
-      "path": "tools/test_production_workspace.py",
+      "path": "tests/puzzle_production/test_registration_publication.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische Dauerregressionen: identische Originale in mehreren Angeboten behalten jede Rollen-/SHA-/Bytebindung; unabhaengige Detailpruefung dekodiert frisch; kleine Cachegrenze faellt auf Vollreads zurueck; bytegleicher Dateiaustausch, Fehlen und No-op werden frisch geprueft. Bestehende CRC-/Alias-/Bild-/Publikations-/Abbruchregressionen bleiben gewaehlt."
+      "reason": "Kleiner synthetischer Alt-Vollpaket-/Neu-Export-Test: altes verify-export gezielt fehlschlagen lassen, erfolgreiche neue Registrierung und deren vollständige Prüfung belegen; optionaler vollständiger Audit bleibt streng; ungültiges Replayziel und manipulierte Bestandsbytes scheitern. Vorhandene Guards/Recovery-Tests bleiben mitgewählt."
     }
   ],
   "core_change": null,
