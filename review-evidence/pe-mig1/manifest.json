@@ -1,0 +1,86 @@
+{
+  "after-inventory.json": {
+    "bytes": 314536,
+    "sha256": "2454ccbdea6ef35e711e55e965f0a5e0a710ae4f3825500a40e78a8942cc020f"
+  },
+  "apply.stdout.json": {
+    "bytes": 143,
+    "sha256": "1ef634d6aa3d4fed0c68b5aaf765ae4dc75bee9db9c455a1d8126bfb84f1db31"
+  },
+  "audit.py": {
+    "bytes": 4689,
+    "sha256": "5dc4e787b7faade9a3981257d04da5c7cd68ac517a7257d3ccc4bb9e805ee32b"
+  },
+  "before-inventory.json": {
+    "bytes": 314536,
+    "sha256": "d161296123eabf56420e562e80cc77eb7bfadeba30978c3855c2bc1d9f863e60"
+  },
+  "core-tests.log": {
+    "bytes": 3599,
+    "sha256": "c7a45a1e5f1500755e5098ecbf1f762f230f81d99d699de5bd5419a1b5a8f93f"
+  },
+  "docs.log": {
+    "bytes": 162,
+    "sha256": "0b11f044461b7861dbfcea45ef7a1c9bdd2a403ae04c4f665ab45deb3361875c"
+  },
+  "final-audit.json": {
+    "bytes": 237,
+    "sha256": "5796d7f1a862ec7ad86f2cfe6d1fe3add75fa626ee154b6b2ffb703a4cd79ddd"
+  },
+  "local-ci-plan.json": {
+    "bytes": 2010,
+    "sha256": "01ebefaeea6b413effe0dd2091434a327e817ef702524d3a5938d6e9edec5d3b"
+  },
+  "migration-result.json": {
+    "bytes": 486,
+    "sha256": "0d7e9fadbb9a2eae0100d302e61101de93ecb454defd36920168521439ce2e82"
+  },
+  "migration.json": {
+    "bytes": 150116,
+    "sha256": "6d6b0841175b618181773b43407c583a27828caa02400bda78bf00091943a02b"
+  },
+  "noop-apply.stdout.json": {
+    "bytes": 114,
+    "sha256": "93f914525492fb92c802b6c74626acb745b89bd4e0b05d7e02aa3d93c3261e11"
+  },
+  "noop-audit.log": {
+    "bytes": 94,
+    "sha256": "f5863bb3c7907623b974a17199db37d520de16af1e9d56e81149dce3b5b245b0"
+  },
+  "noop-migration.json": {
+    "bytes": 150091,
+    "sha256": "4d24f8e03e34a3d003a3ed7f6be17b8d3daaf1a6b1036744ebf5a0470fd46d54"
+  },
+  "prepare_reader.py": {
+    "bytes": 1411,
+    "sha256": "bc87a9bf8584b3571cdf580f9335eaf79383bdd269ed72b3e5668bec6b29439a"
+  },
+  "reader-inputs.json": {
+    "bytes": 6759,
+    "sha256": "5afb0e7d148900e1afd8d504a7df0f9e0263d2906196612588acef64a7d4fc4c"
+  },
+  "reader.stdout.log": {
+    "bytes": 211,
+    "sha256": "dc3185b495aa4f9bf9245a640a07d0e209c97a0f2f7234934c28c8d7ea90fb90"
+  },
+  "reader_probe.gd": {
+    "bytes": 1573,
+    "sha256": "9e9fece68ca6beadafb8bb8b75185433a6376a89b992ce3ff3fbdc3f95fedd8c"
+  },
+  "repeat-apply.stdout.json": {
+    "bytes": 114,
+    "sha256": "1aa06cbbc06fe8013768eb2a483a5977a1be728274417910cbf2681301386023"
+  },
+  "runtime-after.json": {
+    "bytes": 31794,
+    "sha256": "5015ff34de16473b8b827936c28cc80b479dc33e74c8ccc3e11346f0165250aa"
+  },
+  "runtime-before.json": {
+    "bytes": 31794,
+    "sha256": "93ae36c3de9d6c16363659a529a8bc5cde250ac06cea49b10e38b1e998cdfb02"
+  },
+  "source-summary.json": {
+    "bytes": 12784,
+    "sha256": "b2ff6ad6724d8a45c1e8362408a369b8b6d2a951b980a03018ce2f85b9897fef"
+  }
+}

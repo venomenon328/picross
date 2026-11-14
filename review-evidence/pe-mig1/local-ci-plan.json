@@ -1,0 +1,30 @@
+{
+  "format": "development-ci-run/v1",
+  "source_head": "424620a20761953a11e2daa40031e4181f04a340",
+  "base_commit": "745877a681dfeb052c335b78386adf3a3b136c00",
+  "tested_checkout": "424620a20761953a11e2daa40031e4181f04a340",
+  "event": "pull_request",
+  "run_id": "local",
+  "run_attempt": "1",
+  "modules": [],
+  "player": {
+    "required": false,
+    "reason": "Only documents and/or inert puzzle production; no player build"
+  },
+  "package": {
+    "format": "development-ci-plan/v1",
+    "issue": "https://github.com/venomenon328/picross/issues/641",
+    "package": "PE-MIG1",
+    "modules": [],
+    "purpose": "Einmalige reine Inhaltsprojektion des registrierten v4/v7-Bestands durch vorhandene images_cli plan-migration/apply auf einem sauberen isolierten Checkout. Der verpflichtende docs-/sourcegebundene Kern genügt; nur Runtimeformat v7 nach v8 und dieser administrative Paketplan ändern sich. Einmalig: vollständiger Plan-/Datei-/Byte-/mtimevergleich, echter Runtime-/Definitionsreader und wiederholtes sowie frisch geplantes Apply als vollständiger No-op. Originale separat auf review/641-pe-mig1 für das unabhängige PE-MIG1-A01 vor Merge, Bedarf am 21.11.2026 erneut prüfen.",
+    "omitted": "Keine Zusatzmodule und kein Playerbuild: keine Werkzeug-, Reader-, Vertrags-, Solver-, Bild-, Save- oder Spielcodeänderung. Die unveränderte CLI prüft Quellen/Projektion/Transaktion; der einmalige vollständige Bestandsvergleich und isolierte Godot-Reader belegen diese konkrete Datenmigration. Keine Echtkatalog-Dauerregression, keine neuen Tests oder Kernlast, keine UI-/Browser-/Renderingabnahme. M2/Editorquellformat bleibt separater Folgeauftrag nach verbindlicher Implementierung in #640; unabhängiges Review bleibt offen.",
+    "test_changes": [],
+    "core_change": null,
+    "evidence": {
+      "mode": "none",
+      "purpose": null,
+      "expires": null
+    }
+  },
+  "plan_sha256": "cca33b50eecedc404345254ce8ed42c409cac661261576c1a1022c0a6bf596db"
+}

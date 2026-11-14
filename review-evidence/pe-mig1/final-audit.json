@@ -1,0 +1,11 @@
+{
+  "all_noop_bytes_and_mtimes_equal": true,
+  "changed_files": [
+    ".ci/package.json",
+    "game/data/registry.json"
+  ],
+  "journal": false,
+  "new_files": [],
+  "other_1626_files_byte_and_mtime_equal": true,
+  "removed_files": []
+}

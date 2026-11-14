@@ -1,0 +1,16 @@
+{
+  "changed_bytes": [
+    "game/data/registry.json"
+  ],
+  "changed_mtimes": [
+    "game/data/registry.json"
+  ],
+  "files_checked": 1628,
+  "new_files": [],
+  "only_literal_format_byte_changed": true,
+  "other_files_byte_and_mtime_equal": true,
+  "removed_files": [],
+  "runtime_after_sha256": "5015ff34de16473b8b827936c28cc80b479dc33e74c8ccc3e11346f0165250aa",
+  "runtime_before_sha256": "93ae36c3de9d6c16363659a529a8bc5cde250ac06cea49b10e38b1e998cdfb02",
+  "runtime_bytes": 31794
+}
