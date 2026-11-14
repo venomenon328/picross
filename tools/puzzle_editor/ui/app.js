@@ -70,15 +70,18 @@ function options(select, categories, first) {
   for (const cat of categories) select.add(new Option(cat.name, cat.id));
 }
 async function load() {
+  const selected = current?.detail.id, filter = $('filter').value;
   const status = await api('status');
   $('checkout').textContent = status.checkout; $('origin').textContent = status.origin;
   $('recovery').hidden = !status.recovery_required;
   if (status.recovery_required) { message('Recovery erforderlich. Noch keine neue Bearbeitung möglich.', true); return; }
   listing = await api('catalog');
   options($('filter'), listing.categories, 'Alle Kategorien');
+  if (listing.categories.some(row => row.id === filter)) $('filter').value = filter;
   $('migration').hidden = !listing.migration_required;
   current = null; $('form').hidden = true; $('empty').hidden = false;
-  renderList(); message('Aktuelle Metadaten geladen. Vollprüfung beim Öffnen.');
+  renderList(); message('Aktuelle Metadaten geladen. Quellenbindung beim Öffnen.');
+  if (selected && listing.entries.some(row => row.id === selected)) await select(selected);
 }
 function renderList() {
   if (!listing) return;
@@ -267,13 +270,21 @@ $('discard').onclick = () => perform(async () => { const id = current.detail.id;
 $('cancel-plan').onclick = () => perform(async () => { const id = current?.detail.id; if (await leave()) { listing = await api('catalog'); if (id) await select(id); else await load(); } });
 $('apply').onclick = () => perform(async () => {
   if (!plan) throw new Error('Plan fehlt.');
-  const id = plan.id;
+  const id = plan.id, kind = plan.kind;
   const result = await job('apply', {plan: plan.plan, id});
-  clean(); await api('discard', {confirmed: true}); await load(); if (id) await select(id);
+  clean(); await api('discard', {confirmed: true}); await load(); if (id && current?.detail.id !== id) await select(id);
+  if (kind === 'migration' && listing.runtime_format !== 'picross-runtime-registry-v8') throw new Error('V8-Readback fehlt. Zustand und Journal prüfen.');
   message('Writer bestätigt: ' + result.status + '. Aktuellen Bestand neu gelesen. Git / Build / Veröffentlichung bleiben extern.');
 });
 $('reload').onclick = () => perform(async () => { if (await leave()) await load(); });
-$('migrate').onclick = () => perform(async () => { if (await leave()) { await load(); preview(await job('migration', {snapshot: listing.snapshot})); } });
+$('migrate').onclick = () => perform(async () => {
+  const discarded = dirty;
+  if (await leave()) {
+    listing = await api('catalog');
+    if (discarded && current) await select(current.detail.id);
+    preview(await job('migration', {snapshot: listing.snapshot}));
+  }
+});
 $('recover').onclick = () => perform(async () => { if (confirm('Bestehendes Journal prüfen und ausschließlich den gebundenen gültigen Altstand wiederherstellen?')) { await job('recover', {confirmed: true}); clean(); await load(); } });
 $('stop').onclick = async () => {
   if (!confirm((dirty ? 'Ungespeicherte Änderungen gehen verloren. ' : '') + 'Editor geordnet beenden? Bereits laufende Fachoperationen werden abgeschlossen.')) return;

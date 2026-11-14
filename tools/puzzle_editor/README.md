@@ -1,4 +1,4 @@
-# Lokaler Picross-Bestandseditor · PE-B 0.1.0
+# Lokaler Picross-Bestandseditor · PE-PERF1 0.1.1
 
 Eigenständiges Offlinewerkzeug für bereits registrierte Rätsel. Der
 [Fachvertrag §11](../../docs/PUZZLE_EDITOR.md#11-pe-b-lokaler-dienstvertrag-v1)
@@ -77,11 +77,23 @@ mit ID-Änderungen nicht als gemeinsame atomare Transaktion darstellen.
 ## Migration und Recovery
 
 V4/v7 ist lesbar und über A1 pflegbar. Bild-/Rasterpflege verlangt v4/v8.
-„Migration prüfen / Vorschau“ erzeugt einen eigenen A2-Migrationsplan, der nur
+„Migration prüfen / Vorschau“ erhält die gewählte Rätsel-ID und erzeugt einen eigenen A2-Migrationsplan, der nur
 Runtime v7→v8 ändert. Gesondert übernehmen; Wiederholung ist No-op. Anzeigen und
 gewöhnliches Speichern migrieren niemals. V2/v3 brauchen zuerst den expliziten
 [A1-CLI-Migrationsweg](../puzzle_production/README.md#pe-a1-aktuelle-namen-und-kategorien).
 Der Editor führt keine echte Bestandsmigration automatisch aus.
+
+Während der Prüfung erscheinen die tatsächlich betretene Phase und verstrichene
+Sekunden. Die Anzeige meldet keinen erfundenen Prozentfortschritt. Detailansichten
+binden sämtliche Quellen und prüfen die gewählte ID; gewöhnliches Speichern
+behält die vollständige fachliche Katalogprüfung. Lange Rasterproofs bleiben
+sichtbar. Beenden wartet auf den sicheren Abschluss laufender Prüfungen.
+
+Fehler nennen Phase und beobachteten Runtime-/Journalzustand. Vor Mutation
+fehlgeschlagen, Journal/Staging offen und v8 mit fehlender Browserquittung sind
+getrennte Fälle. Neu laden und Zustand prüfen; ein fehlendes Browserergebnis
+ist keine Erlaubnis zur blinden Wiederholung. Migration quittiert erst nach
+frischem v8-Readback. Für einen neuen Versuch frisch planen.
 
 Ein offenes Journal wird als „Recovery erforderlich“ angezeigt. Ausschließlich
 „Gebundenen Altstand wiederherstellen“ verwendet das gemeinsame
@@ -110,9 +122,11 @@ Laufzeit-/Python-/Pillow-/PyInstaller-/Tcl/Tk-Lizenzen und `START.md` im Paket.
 Releasekanal oder automatisches Update. Der normale Windows-Spielerbuild in
 Package CI ist vom separaten Editorbau und dessen tatsächlichem Start getrennt.
 
-Ausgewählt: Projektkern und `tools`; schmale HTTP-/Sicherheits-/Instanztests in
-`tools/test_puzzle_editor.py`. Echte Writer-/Browser-/Windows-T01–T03-Proben
-einmalig auf synthetischen Daten, kein wachsender Echtkatalogtest. Bis zu drei
+Für PE-PERF1 ausgewählt: Projektkern, `tools` und `production.catalog` für die
+geänderten gemeinsamen Quellen-/Snapshotreader; schmale HTTP-/Sicherheits-/
+Instanztests in `tools/test_puzzle_editor.py`. T01–T04 laufen einmalig mit
+isolierten 56-Rätsel-Kopien und synthetischen Writer-/Recoveryfällen, kein
+wachsender Echtkatalogtest. Bis zu drei
 aktuelle UI-Originale und deren Produktheadbindung werden dem unabhängigen
 Reviewer separat zugänglich gemacht. Kein automatisches Spiel-Chromiumprofil.
 Die abschließende persönliche Eigentümerprobe U01 bleibt vor Schließung von

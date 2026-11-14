@@ -185,7 +185,18 @@ class Service:
                     while process.poll() is None:
                         time.sleep(.15)
                         with self.lock:
-                            self.job["stage"] = "Fachoperation läuft: "+action
+                            try:
+                                progress = io.read(jobdir, "progress.json", 4096, missing=True)
+                                if progress is not None:
+                                    progress = io.json_bytes(progress, 4096)
+                                    exact_keys(progress, {"stage", "elapsed_seconds"})
+                                    require(isinstance(progress["stage"], str) and len(progress["stage"]) <= 512,
+                                            "Ungültige Fachprozessphase.")
+                                    self.job["stage"] = progress["stage"]
+                            except Exception:
+                                # An atomic progress replacement may race this
+                                # read. Always keep draining the actual worker.
+                                pass
                     require(process.returncode == 0, "Fachprozess fehlgeschlagen. Erneut laden; ggf. Recovery prüfen.")
                 value = io.json_bytes(io.read(jobdir, "result.json", 48*1024*1024), 48*1024*1024)
                 require(not value["error"], value["error"] or "Fachprüfung fehlgeschlagen.")
@@ -203,7 +214,7 @@ class Service:
                     for child in jobdir.rglob("*"): io.safe(jobdir, child.relative_to(jobdir).as_posix())
                     shutil.rmtree(jobdir)
                 with self.lock:
-                    self.job.update(state="error" if error else "done", stage="Fachoperation gestoppt" if error else "Fachoperation abgeschlossen", result=result, error=error,
+                    self.job.update(state="error" if error else "done", stage="Fachoperation fehlgeschlagen" if error else "Readback / Fachoperation abgeschlossen", result=result, error=error,
                                     elapsed_seconds=round(time.monotonic()-self.job["started"], 1))
                     self.thread = None
         self.thread = threading.Thread(target=execute, name="PE-writer")
