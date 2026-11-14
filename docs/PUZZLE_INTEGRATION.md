@@ -310,8 +310,10 @@ und die tatsächlich gebundene Zielfähigkeit. Vollständige Eingangsprüfung un
 unabhängiges Stagingreplay bleiben. Die enge 128-MiB-Ausnahme folgt ausschließlich
 dem deklarierten `input/package.zip` bis Inventar/Addition/Guard/Readback; sonstige
 Grenzen unverändert. Keine serialisierte Prüfautorität, kein Cache aus `plan`
-und kein Kontext in Recovery. Tatsächliche HP-W2-Modul-/Codecänderungen weiterhin
-abweisen, ältere Freigaben/Ableitungen nicht auf neue Toolbytes umhängen.
+und kein Kontext in Recovery. HP-W2-Moduldrift nur über die ausdrücklich
+qualifizierte lesende Reproduktion aus [Hintergrund §4.3](PUZZLE_BACKGROUNDS.md#43-stabiler-ableitungsbefund)
+zulassen; unbekannte Erzeuger und Codecänderungen weiterhin abweisen.
+Ältere Freigaben/Ableitungen nicht auf neue Toolbytes umhängen.
 
 RI-C gilt ausdrücklich für registration-v7 mit vollständigem T/K samt
 Capability/null, Hintergrundsource/Notice/PNG, negativen Erwartungen und beiden
