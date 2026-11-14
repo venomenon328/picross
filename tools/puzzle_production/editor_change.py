@@ -50,6 +50,13 @@ def checksum(raw):
     return cache[key][1]
 
 
+def parsed_definition(raw):
+    parsed = rating.definition(raw)
+    cache = _hashes.get()
+    if cache is not None: cache[id(raw)] = (raw, parsed[2]["definition_sha256"])
+    return parsed
+
+
 def ref(name, raw):
     return {"file": name, "sha256": checksum(raw), "bytes": len(raw)}
 
@@ -259,7 +266,7 @@ def detail(root, identifier, expected=None):
     require(expected is None or expected == token(inputs.raw), "Catalog changed; reload")
     entry, row = selected(value, runtime, identifier)
     raw = inputs.read("game/"+entry["definition"], 2*1024*1024)
-    definition = rating.definition(raw)[0]
+    definition = parsed_definition(raw)[0]
     require(checksum(raw) == entry["production"]["definition_sha256"], "Selected definition changed")
     reveal, background = source(inputs, entry, "reveal"), source(inputs, entry, "background")
     result = {"id": identifier, "entry": entry, "metadata": next(e for e in value["metadata"] if e["id"] == identifier),
@@ -330,8 +337,8 @@ def plan(root, request, *, uploads=None, work=None, expected=None, expected_defi
         require(runtime["format"] == registry.IMAGE_RUNTIME_FORMAT, "Explicit v7→v8 migration required")
         action = "raster" if request["text"] is not None else "images"
         definition_raw = inputs.read("game/"+entry["definition"], 2*1024*1024)
+        definition = parsed_definition(definition_raw)[0]
         require(expected_definition is None or checksum(definition_raw) == expected_definition, "Selected raster changed; reload")
-        definition = rating.definition(definition_raw)[0]
         require(checksum(definition_raw) == entry["production"]["definition_sha256"], "Selected definition differs from index")
         target_entry, target_row = selected(target, target_runtime, identifier)
         if request["text"] is not None:
@@ -451,7 +458,7 @@ def _prepare_raster(inputs, entry, previous, definition, profile, work):
     raw = encoded(definition)
     files = {"definition.json": raw, "previous-definition.json": previous}
     for name, data in files.items(): (directory/name).write_bytes(data)
-    puzzle = rating.definition(raw)[1]
+    puzzle = parsed_definition(raw)[1]
     baseline = solve(puzzle, Budget()) if profile == "paired" else None
     proof = solve(puzzle, Budget(), profile="paired-lines-color" if baseline is not None else None)
     check = verify(puzzle, proof, Budget())
@@ -614,7 +621,7 @@ def validate_targets(value, sides, actual):
                 if projected["asset"]: projected["asset"]["file"] = projected["asset"]["file"].removeprefix("game/")
                 require(row["background"] == projected and next(r["source"] for r in after["backgrounds"] if r["id"] == identifier) == ref(name, target[name]), "New background projection differs")
         if definition_path in sides:
-            old_def, new_def = (rating.definition(raw)[0] for raw in sides[definition_path])
+            old_def, new_def = (io.json_bytes(raw, 2*1024*1024) for raw in sides[definition_path])
             require(new_def == raster.definition(old_def, new_def["solution"]) and new_def["revision"] == old_def["revision"]+1, "Invalid raster delta")
             prefix = entry["production"]["package"]
             manifest = raster.validate(io.json_bytes(target[prefix+"/manifest.json"], 1024*1024), definition_raw)
