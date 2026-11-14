@@ -358,7 +358,23 @@ Gleichheit mit dem aktuellen Werkzeug. Originales `commit/dirty` bleibt
 Erzeugerherkunft; ein späterer reiner Contentcommit macht gleiche ausführbare
 Bytes nicht ungültig. Ausgabe und vollständigen Befund mit dem ursprünglichen
 Toolobjekt reproduzieren; geladene/gespeicherte Module und Eingänge müssen dabei
-unverändert bleiben. Echte Modul-/Codec-/Profiländerung bleibt `tool_mismatch`.
+unverändert bleiben. HP-W2-COMPAT-1 aus
+[#645](https://github.com/venomenon328/picross/issues/645#issuecomment-6882921168)
+ergänzt ausschließlich für `selected` die geschlossene Menge qualifizierter
+historischer Erzeugeridentitäten in `background_assets._SELECTED_PRODUCERS`.
+Ihr Hash bindet das vollständige Original-Toolobjekt einschließlich Commit,
+dirty, sämtlicher Modulhashes und Versionen. Erster Eintrag ist
+`23971ee3834218f28977a346e09f716de6eb18fd6fc3acb8cab25a5ad8cab691`
+aus `94f0fb35ab4f6623a1ddde6d0ca3b03590be0e57` (dirty=false), nach Abgleich
+der neun Originalmodule mit Git und tatsächlicher bytegenauer Reproduktion.
+Weitere Identitäten benötigen eigene Qualifizierung. Keine Modulnamenausnahme
+und keine Ausführung historischer Quellen. Aktuelle sichere Leser reproduzieren
+PNG und vollständigen Originalbefund einschließlich Diagnostik; die vollständige
+aktuelle Modul-/Codecbindung wird währenddessen vor/nach geprüft. ID und gesamte
+Versionsmap müssen auch bei dieser Route exakt stimmen. `none`, unbekannte alte
+Tools, geänderte Codecs/Profile oder abweichende Reproduktion bleiben Fehler.
+Finalizer (zuerst alter Record), Export und Offline-`verify-export` erreichen
+dieselbe zentrale Prüfung. Es entsteht kein zusätzlicher persistenter Beleg.
 `derive` einschließlich `reused` verlangt weiterhin den **vollständigen aktuellen**
 `expected_tool_sha256`. Keine Umschreibung alter Befunde oder Freigaben.
 

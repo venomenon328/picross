@@ -34,7 +34,7 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
-**Vertrag 1.0 · Dokumentrevision 13 · 12.11.2026 · HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
+**Vertrag 1.0 · Dokumentrevision 14 · 14.11.2026 · HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -549,9 +549,9 @@ in Eingänge oder Ausgabeordner und gibt bei Erfolg `verified` zurück. Kein Sol
 Engineimport gehört zu diesem Nachweis.
 
 Für **lesendes `verify`** bleiben Request, Befund, originales `tool` und ihre
-Hashes vollständig unverändert und werden strikt geprüft. Aktuelle `id`, die
-vollständige `versions`-Map und die exakte sortierte Modulpfad-/Bytehashmenge
-müssen dem Erzeugerstand entsprechen. Ausschließlich `commit` und `dirty`
+Hashes vollständig unverändert und werden strikt geprüft. In der Grundroute
+müssen aktuelle `id`, die vollständige `versions`-Map und die exakte sortierte
+Modulpfad-/Bytehashmenge dem Erzeugerstand entsprechen. Ausschließlich `commit` und `dirty`
 bezeichnen die unveränderte Herkunft des Erzeugerlaufs; sie verlangen keinen
 identischen HEAD oder Dirtyzustand im späteren Prüfcheckout. Geladene Modulbytes
 müssen den aktuellen Dateien entsprechen; dieser vollständige aktuelle
@@ -560,10 +560,36 @@ nicht ändern. Ausgabe und vollständigen Befund mit dem **originalen Toolobjekt
 frisch reproduzieren und bytegenau vergleichen. Eine passende Hashliste allein
 ist kein Reproduktionsnachweis.
 
+**HP-W2-COMPAT-1 / #645:** Zusätzlich zur obigen Gleichheitsroute darf ausschließlich
+lesendes `verify` eine explizit qualifizierte historische Erzeugeridentität bei
+`selected` prüfen. Die geschlossene Menge in `background_assets.py` bindet über
+`H(tool)` das vollständige originale Toolobjekt einschließlich Commit, dirty,
+sämtlicher neun Modulpfade/-hashes und Versionsmap. Erster Eintrag ist
+`23971ee3834218f28977a346e09f716de6eb18fd6fc3acb8cab25a5ad8cab691`
+aus Commit `94f0fb35ab4f6623a1ddde6d0ca3b03590be0e57`, dirty=false;
+Qualifizierung und Prüfplan stehen in der
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/645#issuecomment-6882921168).
+Vor Aufnahme wurden die vollständigen gebundenen Quellen mit diesem Gitstand
+abgeglichen; weitere Identitäten benötigen einen eigenen qualifizierten Nachweis.
+Historischer Code wird nicht ausgeführt oder aus Git/Netz nachgeladen.
+
+Die Menge allein akzeptiert kein Ergebnis. Aktuelle ID und vollständige
+Codec-/Pythonversionsmap müssen weiterhin exakt passen. Aktuell geladene und
+gespeicherte Module werden vor und nach dem Lauf vollständig gebunden. Der
+aktuelle sichere Leser prüft sämtliche ursprünglichen Request-/Quell-/Entscheidungs-
+und Belegbindungen und reproduziert mit dem festen Profil sowohl das PNG als auch
+den vollständigen Befund einschließlich originalem Toolobjekt und Diagnostik
+bytegenau. Jede Abweichung scheitert. `none` und unbekannte historische Identitäten
+erhalten diese zusätzliche Route nicht. Keine pauschale Modulnamenausnahme,
+kein persistenter Brückenbeleg und keine Umschreibung bestehender Bytes.
+Finalizer prüft weiterhin zuerst den alten Record; Paket-/Exportreader und
+Offline-`verify-export` verwenden dieselbe zentrale Prüfung ohne Sonderfreigabe.
+
 `derive`, einschließlich seines schreibenden `reused`-Pfads, behält die strikte
 vollständige aktuelle `expected_tool_sha256`-Bindung. Tatsächlich geänderte
-Module, Codecs oder Profile bleiben `tool_mismatch` und erfordern eine getrennte
-neue Ableitung; alte Request-/Befund-/Freigabebytes werden nicht umgeschrieben.
+Module außerhalb der ausdrücklich qualifizierten lesenden Route sowie geänderte
+Codecs oder Profile bleiben Fehler und erfordern eine getrennte neue Ableitung;
+alte Request-/Befund-/Freigabebytes werden nicht umgeschrieben.
 Der v6-Prüfbericht führt den aktuellen Prüfstand in `tool`; die unveränderte
 Erzeugerbindung bleibt im über `background.binding.derivation` gebundenen
 Originalbefund. Offline prüfbar bedeutet ohne ursprünglichen
