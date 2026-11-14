@@ -402,6 +402,15 @@ beschreiben die Formen; Pfadsicherheit, Eindeutigkeit, Rollen, Inventare,
 Originalbezüge, tatsächlich dekodierte PNG/JPEG und fachliche Angebotsfähigkeit
 werden zusätzlich im Reader/Projektor geprüft. Keine Solver-/Difficultyausführung.
 
+Projektor und Detailreader teilen nach PW3-B nur während desselben Aufrufs
+Recordmetadaten, Quell-/ZIP-Mitgliedbytes und Dekodierbefunde identischer Bilder.
+Der gemeinsame Bytevorrat bleibt bei 64 MiB/512 Einträgen; verdrängte Daten werden
+gewöhnlich neu gelesen. Jede Angebots-/Rollen-/Hash-/Größenbindung bleibt geprüft.
+Frische Quellbytes samt Pfad-/Dateiidentität werden vor Rückgabe beziehungsweise
+an den bisherigen Publikations-/No-op-Grenzen erneut verglichen. Neue unabhängige
+Detail-/Bildabrufe beginnen frisch. Das ist kein Adapter-/Proof-/HP-W2-Prüfpass;
+Finalizerzustände und Export-/Offlineprüfgrenzen bleiben getrennt.
+
 Geschrieben wird `workspace.json` neben `record.json`; bei aktuellem Request v2
 folgt obligatorisch der geprüfte `current-view.json`-Verweis im ID-Verzeichnis.
 Andere Originale bleiben bytegleich. Identische Wiederholung ist No-op samt mtimes. Abweichende
