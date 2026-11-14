@@ -531,6 +531,11 @@ def validate_targets(value, sides, actual):
     cats = categories.validate(io.json_bytes(target[categories.PATH], categories.MAX_BYTES))
     after = validate_index(io.json_bytes(target[registry.REGISTRY], 8*1024*1024), cats)
     action, identifier = value["action"], value["id"]
+    if identifier is not None:
+        require(next((e for e in before["entries"] if e["id"] == identifier), None) == value["entry"],
+                "Selected plan entry differs from current index")
+    if action != "metadata":
+        require(actual[categories.PATH] == target[categories.PATH], "Puzzle edit changes category definitions")
     require([e["id"] for e in before["entries"]] == [e["id"] for e in after["entries"]], "Editor cannot create/remove puzzle IDs")
     for old, new in zip(before["entries"], after["entries"]):
         if action != "raster" or old["id"] != identifier:
@@ -538,6 +543,9 @@ def validate_targets(value, sides, actual):
         else:
             require(old == value["entry"], "Plan entry differs from current index")
             require(all(old[k] == new[k] for k in old if k != "production"), "Raster changes fixed identity")
+            mutable = {"package", "package_sha256", "revision", "definition_sha256", "width", "height"}
+            require({k: v for k, v in old["production"].items() if k not in mutable} ==
+                    {k: v for k, v in new["production"].items() if k not in mutable}, "Raster changes unrelated production metadata")
     if action == "metadata":
         require(before["backgrounds"] == after["backgrounds"], "Metadata changes image sources")
     else:
@@ -565,6 +573,25 @@ def validate_targets(value, sides, actual):
     if identifier and action in ("images", "raster"):
         entry, row = selected(after, runtime, identifier)
         definition_path = "game/"+entry["definition"]
+        for kind, field in (("reveal", "reveal"), ("background", "background")):
+            source_path = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
+            old_row = next(r for r in old_runtime["entries"] if r["id"] == identifier)
+            if row[field] != old_row[field] or definition_path in sides:
+                require(source_path in sides, "Changed runtime/definition lacks current image source")
+            if kind == "background" and before["backgrounds"] != after["backgrounds"]:
+                require(source_path in sides, "Background index changed without source")
+        for name, (old_raw, new_raw) in sides.items():
+            if not name.startswith("game/art/"): continue
+            kind = "background" if name == bg.asset_path(identifier) else "reveal"
+            source_path = "content/"+("reveals" if kind == "reveal" else "backgrounds")+"/"+identifier+".json"
+            require(source_path in sides, "Image bytes changed without current source")
+            current = io.json_bytes(target[source_path], 1024*1024)["current"]["asset"]
+            previous = io.json_bytes(actual[source_path], 1024*1024)["current"]["asset"]
+            if new_raw is None:
+                require(previous is not None and previous["file"] == name and
+                        (current is None or current["file"] != name), "Unbound image deletion")
+            else:
+                require(current == ref(name, new_raw), "Image bytes lack exact current binding")
         definition_raw = target[definition_path]
         require(checksum(definition_raw) == entry["production"]["definition_sha256"], "New definition/index binding differs")
         for kind in ("reveal", "background"):
