@@ -1,5 +1,16 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+> **PE-EDIT2:** Normale Bestandsbearbeitung verwendet jetzt
+> [`editor_cli`](editor_cli.py) und [`editor_change`](editor_change.py) nach
+> [PE §13](../../docs/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+> `list`, `detail --id`, `plan --request --output`, `apply --plan`, `recover`
+> verwenden `--target-root`; Request `picross-editor-request-v2` enthält keine
+> Herkunfts-/Akteurfelder. Die unten dokumentierten alten A1/A2/A3-Datenformen
+> bleiben explizite Alt-/Recoverykompatibilität. Aktuelle CLI-Planrouten nutzen
+> den schlanken Vertrag. Runtime-/Quellmigration erfolgen ausschließlich extern
+> nach [#641](https://github.com/venomenon328/picross/issues/641), nie in der App.
+
+
 ## PE-A3: geprüfte manuelle Rasterrevision
 
 Vertrag vor konsumierendem Code, 13.11.2026, gemäß

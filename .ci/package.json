@@ -1,13 +1,34 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/626",
-  "package": "PW2-C",
-  "modules": ["tools"],
-  "purpose": "PW2-C-K01–K06 gemäß #626/issuecomment-6862546388: lieferbezogene aktive Produktionsauswahl an frisch bestätigtem main, einschließlich Sammelübernahme, kompakter Belege und sicherem Listenwechsel. Das gewählte tools-Modul läuft vollständig; der Kern liefert docs/ci-required und den regulären Windows-Spieler. T01 prüft einmalig die drei unveränderten #622-Lieferungen und die tatsächliche Oberfläche im Browser am festen Produkt-Head.",
-  "omitted": "Keine production.*, native.*, preflight, delivery oder automatische Browsermatrix: nur lesende Werkzeug-/Listensemantik, keine Original-, Katalog-, Spiel-, Solver-, Bild- oder Installeränderung. Vorhandene Schutz- und P2-Prüfungen bleiben im tools-Vertrag. T01 bleibt eine befristete Diagnose außerhalb des Produktdiffs; keine realen Rätseldaten oder Screenshotreferenzen als neuer Dauerkorpus. PW2-C-A01 bleibt separates unabhängiges Review vor Merge.",
+  "issue": "https://github.com/venomenon328/picross/issues/640",
+  "package": "PE-EDIT2",
+  "modules": [
+    "tools",
+    "production.catalog"
+  ],
+  "purpose": "K01-K08: gezielte Editortransaktion ersetzt normale Vollbestandspruefung; aktuelle technische Quellen und Folgeproduktion, virtuelle Liste, echte Raster-/Papierkomposition und persistentes Theme. Beide ausgewaehlten Module vollstaendig, Kern docs/ci-required mit Windows-Spieler. T01-T03 einmalig an isolierten 56/1000-Testkopien; keine Nutzersaves. Migrationsnachtrag #640/6878198255: #641 ist externe Abhaengigkeit, keine Migration in App/UI/API.",
+  "omitted": "Keine zusaetzliche Solver-, Bildproduktions-, Adapter-, native.*, Preflight-, Delivery- oder automatische Chromium-Matrix. Algorithmen unveraendert; reale bestehende Solver-/Ratingkonsumption nur fuer geaenderte Raster. Neue Quellen-/Recoveryformen im catalog-Modul. Historische Reader/Journale behalten explizite Kompatibilitaet, keine Vollbestandsregression als Pflicht des neuen Editorwegs.",
   "test_changes": [
-    {"path": "tools/test_workspace_deliveries.py", "disposition": "change-scoped", "reason": "Kleine synthetische Git-/Metadatenfälle für exakte Lieferbindung, ältere Quellen, offene Folgerevisionen, kompakte Belege, Mainfrische und begrenzten lesenden Zugriff; nur im ausgewählten tools-Modul."},
-    {"path": "tools/production_workspace/check_ui_loading.cjs", "disposition": "change-scoped", "reason": "Vorhandene günstige UI-Ladeprüfung ergänzt passive Erhaltung und ausdrückliche Übernahme gefilterter Listen einschließlich gleicher ID, Entwurf und leerer Auswahl; kein neuer Laufweg oder Bildorakel."}
+    {
+      "path": "tests/puzzle_production/test_editor_change.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine aktuelle Transaktionsfaelle: harte erlaubte Dateimengen, No-op, gleich-mtime-Konflikt, Links, gezielte Recovery, Quellen ohne Herkunft und normale Folgeproduktion."
+    },
+    {
+      "path": "tools/test_puzzle_editor.py",
+      "disposition": "change-scoped",
+      "reason": "Ersetzt den Vollsnapshot- und UI-Migrationsvertrag durch drei Indexreads, lesende Altversionsablehnung und atomare Theme-Persistenz; bestehende HTTP-/Listener-/Instanzgrenzen bleiben."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_metadata.py",
+      "disposition": "change-scoped",
+      "reason": "CLI-Konsument auf den aktuellen extern vorbereiteten v8-Testbestand umstellen; alte Journal-/Migrationsfaelle bleiben explizite externe Kompatibilitaetspruefungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_images.py",
+      "disposition": "change-scoped",
+      "reason": "Ersetzt normale Vollsnapshot-Detailpflicht durch genau drei Indizes und ausgewaehlte Definition/Quellen; alte externe Migrationstests bleiben."
+    }
   ],
   "core_change": null,
   "evidence": {

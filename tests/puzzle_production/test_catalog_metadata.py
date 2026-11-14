@@ -199,6 +199,10 @@ class MetadataTests(unittest.TestCase):
             marker.unlink()
 
     def test_real_cli_plan_apply_and_invalid_request_preserve_source_bytes(self):
+        # PE-EDIT2 current CLI requires an externally prepared runtime v8.
+        runtime = load_json(self.root / registry.RUNTIME)
+        runtime["format"] = registry.IMAGE_RUNTIME_FORMAT
+        write_json(self.root / registry.RUNTIME, runtime)
         operations = self.home / "operations.json"
         plan = self.home / "cli-plan.json"
         write_json(operations, [{"op": "set_metadata", "id": self.identifier,

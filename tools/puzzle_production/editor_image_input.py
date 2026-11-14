@@ -10,6 +10,37 @@ from . import catalog_io as io, reveal_source
 PROFILE = "picross-prepared-background-png2304-v1"
 
 
+def validate_reveal(raw, suffix, width=1, height=1):
+    """The existing reveal limits on one immutable byte input, without reopens."""
+    import math
+    import re
+    import xml.etree.ElementTree as ET
+    from .image_normalization import normalize_bytes
+    require(isinstance(raw, bytes) and 0 < len(raw) <= reveal_source.IMAGE_LIMIT, "Reveal exceeds 32 MiB")
+    if suffix == ".png":
+        image, meta, _ = normalize_bytes(raw, max_bytes=reveal_source.IMAGE_LIMIT, max_axis=8192, max_pixels=8_000_000)
+        require(meta["format"] == "PNG" and meta["orientation"] == 1, "Reveal requires an oriented PNG")
+        w, h = image.size
+    else:
+        require(suffix == ".svg" and b"<!" not in raw, "Reveal requires PNG or SVG without declarations/entities")
+        try: root = ET.fromstring(raw)
+        except ET.ParseError as exc: raise InvalidInput("Damaged SVG") from exc
+        allowed = {"svg", "g", "path", "rect", "circle", "ellipse", "line", "polyline", "polygon",
+                   "defs", "linearGradient", "stop", "title", "desc"}
+        require(len(list(root.iter())) <= 10000 and root.tag.rsplit("}", 1)[-1] == "svg", "Invalid SVG tree")
+        for node in root.iter():
+            require(node.tag.rsplit("}", 1)[-1] in allowed, "Unsupported SVG element")
+            for key, value in node.attrib.items():
+                require(not key.rsplit("}", 1)[-1].lower().startswith("on") and "href" not in key.lower() and
+                        not any(v in value.lower() for v in ("@import", "javascript:", "http:", "https:", "file:", "data:")) and
+                        (not re.search(r"url\s*\(", value, re.I) or re.fullmatch(r"url\(#[a-zA-Z0-9_-]+\)", value)), "External/executable SVG content unsupported")
+        try: w, h = float(root.attrib["width"]), float(root.attrib["height"])
+        except (KeyError, ValueError) as exc: raise InvalidInput("SVG requires numeric dimensions") from exc
+    require(math.isfinite(w) and math.isfinite(h) and 2*width <= w <= 8192 and 2*height <= h <= 8192 and
+            w*h <= 8_000_000, "Reveal requires >=2 pixels per cell/axis within image limits")
+    return {"width": w, "height": h, "sha256": io.checksum(raw), "bytes": len(raw)}
+
+
 def validate_background(raw):
     """Validate every original byte and decoded pixel without writing a rendition."""
     from PIL import Image, ImageFile, __version__

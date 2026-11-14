@@ -3,7 +3,7 @@ import argparse
 import json
 import sys
 
-from . import catalog_images as images
+from . import catalog_images as images, editor_change as edit, editor_cli
 from .contract import Aborted, InvalidInput
 
 
@@ -24,10 +24,12 @@ def parser():
 def main(argv=None):
     args = parser().parse_args(argv)
     try:
-        if args.command == "view": result = images.view(args.target_root, args.id)
-        elif args.command == "plan": result = images.plan(args.target_root, args.request, args.output, seconds=args.seconds)
+        if args.command == "view": result = edit.detail(args.target_root, args.id)
+        elif args.command == "plan": result = editor_cli.plan_file(args.target_root, args.request, args.output)
         elif args.command == "plan-migration": result = images.plan_migration(args.target_root, args.output, seconds=args.seconds)
-        elif args.command == "apply": result = images.apply(args.target_root, args.plan, seconds=args.seconds)
+        elif args.command == "apply":
+            value = editor_cli.read(args.plan)
+            result = edit.apply(args.target_root, value) if value["format"] == edit.PLAN else images.apply(args.target_root, args.plan, seconds=args.seconds)
         else: result = images.recover(args.target_root)
         code = 0
     except Aborted as exc:

@@ -107,6 +107,27 @@ def check_end(definition, proof):
 
 
 def validate(value, raw=None):
+    from .editor_change import RASTER, validate_binding
+    if value.get("format") == RASTER:
+        exact_keys(value, {"format", "id", "revision", "previous", "definition", "quality", "files", "package_hash"})
+        rating.identity(value["id"])
+        validate_binding(value["previous"], value["id"])
+        require(value["revision"] == "editor-"+str(value["previous"]["identity"]["runtime_revision"]+1), "Invalid raster revision")
+        bg._ref(value["definition"], name="definition.json", limit=2*1024*1024)
+        require(isinstance(value["files"], dict) and len(value["files"]) <= 64, "Invalid raster inventory")
+        for name, checksum in value["files"].items():
+            relative(name); sha(checksum)
+            require(name in ("definition.json", "previous-definition.json", "proof.json", "baseline.json") or name.startswith("analysis/"), "Foreign raster file")
+        require({"definition.json", "previous-definition.json", "proof.json"} <= set(value["files"]), "Incomplete raster inventory")
+        require(value["files"]["definition.json"] == value["definition"]["sha256"] and
+                value["files"]["previous-definition.json"] == value["previous"]["identity"]["definition"]["sha256"], "Raster input bindings differ")
+        require(value["package_hash"] == digest({k: v for k, v in value.items() if k != "package_hash"}), "Raster package hash differs")
+        if raw is not None:
+            bg._bound(value["definition"], raw, limit=2*1024*1024)
+            quality(value["quality"], raw)
+            current = rating.definition(raw)[0]
+            require(current["id"] == value["id"] and current["revision"] == value["previous"]["identity"]["runtime_revision"]+1, "Raster identity differs")
+        return value
     exact_keys(value, {"format", "id", "revision", "previous", "origin", "definition", "reveal_sha256", "notice_sha256",
                        "quality", "decision", "provenance", "files", "package_hash"})
     require(value["format"] == PACKAGE and len(encoded(value)) <= PACKAGE_LIMIT, "Invalid raster package format/size")
@@ -207,6 +228,35 @@ def verify(directory, *, replay=False):
 
 def package(root, entry, manifest, *, replay=False, seen=None):
     """Validate real predecessor packages, without embedding recursive wrappers."""
+    from .editor_change import RASTER
+    if manifest.get("format") == RASTER:
+        prefix = entry["production"]["package"]
+        seen = set() if seen is None else seen
+        require(prefix not in seen, "Cyclic raster package ancestry")
+        seen.add(prefix)
+        raw = io.read(root, prefix+"/definition.json", 2*1024*1024)
+        value = validate(manifest, raw)
+        require(prefix == "content/packages/"+entry["id"]+"/"+value["revision"] and
+                io.file_hash(root, prefix+"/manifest.json") == entry["production"]["package_sha256"] and
+                io.checksum(raw) == entry["production"]["definition_sha256"], "Raster package index differs")
+        require(set(inventory(io.safe(root, prefix))) == set(value["files"]) | {"manifest.json"}, "Raster inventory differs")
+        for name, checksum in value["files"].items():
+            require(io.file_hash(root, prefix+"/"+name, 64*1024*1024) == checksum, "Raster file changed")
+        if replay:
+            from .verifier import verify as verify_proof
+            puzzle = rating.definition(raw)[1]
+            proof = io.json_bytes(io.read(root, prefix+"/proof.json", puzzle.proof_byte_limit), puzzle.proof_byte_limit)
+            require(verify_proof(puzzle, proof, Budget())["certified"], "Incomplete raster proof")
+            check_end(rating.definition(raw)[0], proof)
+            require(rating.import_bundle(io.safe(root, prefix+"/definition.json"), io.safe(root, prefix+"/analysis")) == value["quality"]["checked"], "Raster rating differs")
+        previous_raw = io.read(root, prefix+"/previous-definition.json", 2*1024*1024)
+        old = value["previous"]["entry"]
+        require(identity(old, previous_raw) == value["previous"]["identity"], "Previous raster identity differs")
+        previous_def, current_def = rating.definition(previous_raw)[0], rating.definition(raw)[0]
+        require(current_def == definition(previous_def, current_def["solution"]) and current_def != previous_def,
+                "Raster package changes fixed palette/reveal or is a no-op")
+        _, notice, _, previous_files = reveal.package(root, old, historical=True)
+        return deepcopy(entry), notice, None, previous_files | {prefix+"/"+n for n in value["files"]} | {prefix+"/manifest.json"}
     original = deepcopy(entry)
     files, frames = set(), []
     seen = set() if seen is None else seen
@@ -253,7 +303,8 @@ def historical_repeat(root, entry, incoming):
         require(prefix not in seen,"Cyclic raster ancestry")
         seen.add(prefix)
         manifest = io.json_bytes(io.read(root,prefix+"/manifest.json",8*1024*1024),8*1024*1024)
-        if manifest.get("format") != PACKAGE: return False
+        from .editor_change import RASTER
+        if manifest.get("format") not in (PACKAGE, RASTER): return False
         validate(manifest)
         previous = manifest["previous"]["entry"]
         normalized = reveal.package(root,previous,historical=True)[0]

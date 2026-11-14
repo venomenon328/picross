@@ -15,7 +15,7 @@ def fixture(root):
     (root/".git").mkdir(parents=True)
     write_json(root/"content/categories.json", {"format": "picross-categories-v1", "categories": []})
     write_json(root/"content/registry.json", {"format": "picross-content-registry-v4", "entries": [], "metadata": [], "backgrounds": []})
-    write_json(root/"game/data/registry.json", {"format": "picross-runtime-registry-v7", "categories": [], "entries": []})
+    write_json(root/"game/data/registry.json", {"format": "picross-runtime-registry-v8", "categories": [], "entries": []})
     return root
 
 
@@ -24,7 +24,7 @@ class EditorHTTPTests(unittest.TestCase):
         self.temp = tempfile.TemporaryDirectory(prefix="pe-http-")
         self.home = Path(self.temp.name)
         self.root = fixture(self.home/"checkout")
-        self.service = Service(self.root, temporary=self.home)
+        self.service = Service(self.root, temporary=self.home, state=self.home/"settings")
         self.service.bind()
 
     def tearDown(self):
@@ -89,18 +89,18 @@ class EditorHTTPTests(unittest.TestCase):
 
     def test_checkout_single_instance_and_reopen_after_drain(self):
         with self.assertRaisesRegex(ValueError, "bereits"):
-            Service(self.root, temporary=self.home)
+            Service(self.root, temporary=self.home, state=self.home/"settings")
         work = self.service.work
         self.service.close()
         self.assertFalse(work.exists())
-        self.service = Service(self.root, temporary=self.home); self.service.bind()
+        self.service = Service(self.root, temporary=self.home, state=self.home/"settings"); self.service.bind()
         self.assertEqual(self.call(API+"catalog")[0], 200)
 
     def test_actual_category_plan_apply_and_stale_stop(self):
         _, raw, _ = self.call(API+"catalog"); listing = json.loads(raw)
         body = {"snapshot": listing["snapshot"], "id": None,
                 "metadata": [{"op": "category_create", "name": "Testgruppe"}],
-                "text": None, "profile": None, "reveal": None, "background": None, "authority": None}
+                "text": None, "profile": None, "reveal": None, "background": None}
         status, raw, _ = self.call(API+"plan", body)
         self.assertEqual(status, 202, raw)
         for _ in range(200):
@@ -119,16 +119,17 @@ class EditorHTTPTests(unittest.TestCase):
             time.sleep(.05)
         self.assertEqual(value["state"], "done", value)
         self.assertEqual(json.loads(self.call(API+"catalog")[1])["categories"][0]["name"], "Testgruppe")
-        self.assertEqual(self.call(API+"plan", body)[0], 409)
+        self.assertEqual(self.call(API+"plan", body)[0], 202)
+        self.assertEqual(self.finish()["state"], "error")
 
     def test_image_ref_rejects_changed_bytes_and_hardlinks(self):
         own = self.service.work/"test.png"; own.write_bytes(b"first")
-        key = self.service.asset("test.png", root=self.service.work)
+        key = self.service.asset("test.png", root=self.service.work, expected=__import__("hashlib").sha256(b"first").hexdigest())
         own.write_bytes(b"foreign")
         self.assertGreaterEqual(self.call(API+"image/"+key)[0], 400)
         import os
         os.link(own, self.service.work/"alias.png")
-        with self.assertRaises(ValueError): self.service.asset("test.png", root=self.service.work)
+        with self.assertRaises(ValueError): self.service.picture(key)
 
     def test_recovery_without_pending_journal_validates_and_does_not_write(self):
         from tools.puzzle_editor.worker import run
@@ -146,17 +147,18 @@ class EditorHTTPTests(unittest.TestCase):
         (package/"app.js").write_bytes(b"foreign")
         with self.assertRaises(ValueError): verify(package)
 
-    def test_catalog_cannot_pair_old_labels_with_a_new_snapshot(self):
+    def test_catalog_reads_only_three_indices(self):
         from unittest.mock import patch
-        from tools.puzzle_editor.server import catalog, catalog_metadata
-        original = catalog_metadata.view
-        def concurrent(root):
-            value = original(root)
-            path = root/"content/categories.json"
-            path.write_bytes(path.read_bytes()+b"\n")
-            return value
-        with patch.object(catalog_metadata, "view", side_effect=concurrent):
-            with self.assertRaisesRegex(ValueError, "Listenaufbau"): catalog(self.root)
+        from tools.puzzle_editor.server import catalog
+        from tools.puzzle_production import catalog_io as io, editor_change
+        original = io.read
+        seen = []
+        def read(root, name, *args, **kwargs):
+            self.assertIn(name, editor_change.INDEXES)
+            seen.append(name)
+            return original(root, name, *args, **kwargs)
+        with patch.object(io, "read", side_effect=read): catalog(self.root)
+        self.assertCountEqual(seen, editor_change.INDEXES)
 
     def finish(self):
         thread = self.service.thread
@@ -164,48 +166,38 @@ class EditorHTTPTests(unittest.TestCase):
         self.assertTrue(not thread or not thread.is_alive(), "Worker did not drain")
         return self.service.status()["job"]
 
-    def test_migration_real_worker_readback_repeat_and_lost_browser_ack(self):
-        from tools.puzzle_production import catalog_io as io
-        from unittest.mock import patch
+    def test_old_runtime_has_no_migration_route_and_never_writes(self):
+        path = self.root/"game/data/registry.json"
+        value = json.loads(path.read_bytes()); value["format"] = "picross-runtime-registry-v7"
+        write_json(path, value)
         before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.rglob("*") if p.is_file()}
         listing = json.loads(self.call(API+"catalog")[1])
-        self.assertEqual(self.call(API+"migration", {"snapshot": listing["snapshot"]})[0], 202)
-        job = self.finish()
-        self.assertEqual(job["state"], "done", job)
-        plan = job["result"]
-        self.assertEqual(plan["files"], ["game/data/registry.json"])
-        self.assertEqual({p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before}, before)
-        original = io.read
-        def progress_race(root, name, *args, **kwargs):
-            if name == "progress.json": raise ValueError("Concurrent telemetry replace")
-            return original(root, name, *args, **kwargs)
-        with patch.object(io, "read", side_effect=progress_race):
-            self.assertEqual(self.call(API+"apply", {"plan": plan["plan"], "id": None})[0], 202)
-            # Simulate a missing UI acknowledgement: drain, then inspect truth
-            # through catalog instead of resubmitting an uncertain mutation.
-            job = self.finish()
-        self.assertEqual(job["state"], "done", job)
-        self.assertEqual(job["result"]["status"], "migrated")
-        self.assertEqual(json.loads(self.call(API+"catalog")[1])["runtime_format"], "picross-runtime-registry-v8")
-        self.assertFalse(self.service.status()["recovery_required"])
-        after = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before}
-        self.assertEqual({p.relative_to(self.root).as_posix() for p in before if before[p] != after[p]}, {"game/data/registry.json"})
-        self.assertEqual(self.call(API+"apply", {"plan": plan["plan"], "id": None})[0], 202)
-        job = self.finish()
-        self.assertEqual(job["state"], "done", job)
-        self.assertEqual(job["result"]["status"], "noop")
-        self.assertEqual({p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before}, after)
+        self.assertTrue(listing["migration_required"])
+        self.assertGreaterEqual(self.call(API+"migration", {"snapshot": listing["snapshot"]})[0], 400)
+        self.assertEqual(before, {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before})
+
+    def test_theme_persists_across_new_port_without_worker_or_content_write(self):
+        before = {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in self.root.rglob("*") if p.is_file()}
+        self.service.settings.update(checkout=str(self.root), port=12345)
+        self.assertEqual(self.call(API+"settings", {"theme": "dark"})[0], 200)
+        self.assertIsNone(self.service.job)
+        self.service.close()
+        self.service = Service(self.root, temporary=self.home, state=self.home/"settings")
+        self.service.bind()
+        self.assertEqual(json.loads(self.call(API+"settings")[1])["theme"], "dark")
+        self.assertEqual(self.service.settings.read(), {"checkout": str(self.root), "port": 12345, "theme": "dark"})
+        self.assertEqual(before, {p: (p.read_bytes(), p.stat().st_mtime_ns) for p in before})
 
     def test_worker_failure_exposes_phase_and_actual_v7_without_private_path(self):
         listing = json.loads(self.call(API+"catalog")[1])
         body = {"snapshot": listing["snapshot"], "id": None,
                 "metadata": [{"op": "category_delete", "id": "missing"}],
-                "text": None, "profile": None, "reveal": None, "background": None, "authority": None}
+                "text": None, "profile": None, "reveal": None, "background": None}
         self.assertEqual(self.call(API+"plan", body)[0], 202)
         job = self.finish()
         self.assertEqual(job["state"], "error", job)
         self.assertIn("Phase:", job["error"])
-        self.assertIn("picross-runtime-registry-v7", job["error"])
+        self.assertIn("picross-runtime-registry-v8", job["error"])
         self.assertIn("kein Journal/Staging", job["error"])
         self.assertNotIn(str(self.home), job["error"])
         self.assertFalse(self.service.status()["recovery_required"])
