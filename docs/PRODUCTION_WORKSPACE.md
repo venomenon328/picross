@@ -1,15 +1,36 @@
 # PW · Git-gestützter Produktionsassistent
 
+## PW2-A · Operativer Quellenweg
+
+Für normale Rätselproduktion aller fünf Schritte einschließlich Korrektur und
+Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 6, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
+AGENTS-Produktionseinstieg, gemeinsamer Authoringkern, vollständiger
+[Bildstil](PUZZLE_IMAGE_STYLE.md), dann nur die fällige Phase und die konkret
+benötigte technische Operation. Dieser PW-Gesamtvertrag, WORKFLOW, Projektprofil
+und die vollständigen technischen Handbücher sind dabei keine zusätzliche
+pauschale Pflichtlektüre. Quellenlinks sind keine rekursive Vollleseanweisung.
+Die folgenden Abschnitte beschreiben den Assistenten und seine technischen
+Verträge; Entwicklungsaufträge lesen sie weiterhin gemäß AGENTS/Fachrouting.
+Historische Paketgrenzen und Lieferstände sind keine neuen Produktionsaufträge.
+
+Die gemeinsame Stilnorm präzisiert farbige Reveals in Richtung Filzstift/farbiger
+Tusche und leichte neutralgraue Graphitkontexte. Auch komplexe Szenen und Gruppen
+bleiben zulässig. Hintergrundkomposition meint die vollständige 2304×576-Leinwand
+mit transparentem Freiraum, nicht die Alpha-Bounds des sichtbaren Motivs.
+Gemeinsamer Fit/Anker und alle geschlossenen Dateiformen bleiben unverändert.
+PW2-A führte allein den Normschnitt ein. PW2-B ergänzt den unten beschriebenen
+Schlussauftrag und die Oberfläche; Listenausblendung bleibt PW2-C.
+
 ## #596/C · Reguläre motivtreue Rasterkorrektur
 
-Der [geschlossene C-Vertrag](FIXED_RASTER.md) gilt für Authoring 0.8.0,
-Dokumentrevision 4. Er ergänzt die Schritte 2–6 um freigegebene feste Mono-/
-Farbzellenkorrekturen und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
+Der [geschlossene C-Vertrag](FIXED_RASTER.md) wurde für Authoring 0.8.0,
+Dokumentrevision 4 eingeführt und gilt unter Dokumentrevision 6 weiter.
+Er ergänzt den Produktionsweg um freigegebene feste Mono-/Farbzellenkorrekturen
+und leeren Außenbeschnitt, auch bei bereits gelösten Rastern.
 Korridor, Schutzmaske, frische Endnachweise und echte Motivfreigabe sind Pflicht.
 Die reguläre Übergabe endet bei raster_ready ohne Auswahl/Hintergrund/Endabnahme;
 historische manuelle Sonderwege bleiben getrennt. Bildsichtung folgt der direkten
 Originalprüfung nach Authoring §2.3/Q-B03, ohne verlagerte Montagen-/Fadepflicht.
-
 
 **PW-B · 0.8.0, 11.11.2026:** Für neue Produktionen gilt der
 [fünfstufige Authoringweg](ai-workflows/PUZZLE_AUTHORING.md) mit dem geschlossenen
@@ -22,6 +43,17 @@ bleiben erhalten. Anzeige und Produktion bleiben lesend; allein die ausdrücklic
 Branchentfernung nach §4.4 ist eine enge Schreibausnahme. Veröffentlichung und
 Gitabschluss führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
+**APP-Updatevertrag · 13.11.2026 · [Issue #612](https://github.com/venomenon328/picross/issues/612):**
+[Automatische App-Releases und Selbstupdate](PRODUCTION_UPDATES.md): APP-A ist
+über #613 unabhängig abgenommen und integriert. APP-B1 ergänzt signierte
+Updateautorität und den gemeinsamen Verifier; APP-ROOT1 bindet den
+[freigegebenen öffentlichen Root](https://github.com/venomenon328/picross/issues/612#issuecomment-6852316923)
+im festen Programmtrust, ohne private Signierbereitstellung oder Aktivierung;
+APP-B2 ergänzt den standardmäßig ausgeschalteten Start-/Downloadclient und unabhängigen MSI-Helfer. Die veröffentlichende Pipeline
+bleibt bis zum eigenen Betriebsauftrag, Schlüsselbereitstellung und beiden
+Aktivierungsschaltern gesperrt. Der Selbstupdatekanal bleibt inaktiv. Die Freigabe hebt
+die historischen P4-Verbote ausschließlich für diesen Sollweg auf;
+Spiel-/Rätsel-/Produktionsdaten bleiben unabhängig.
 
 **Spezifikation 1.0 · 11.11.2026 · [Issue #578](https://github.com/venomenon328/picross/issues/578)**
 
@@ -51,7 +83,8 @@ Die hier festgelegte Reihenfolge gilt für neue Produktion nach
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md) und dem
 [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md). Die geschlossenen neuen Formen
 und ihre tatsächlich umgestellten Verbraucher stehen im [PW-B-Vertrag](PW_B_CONTRACT.md).
-Der neue fünfstufige Authoringstand wird als **0.8.0** eingeführt; 0.7.0 bezeichnet
+Der fünfstufige Authoringstand ist **0.8.0**; die Dokumentrevision 5 ordnet seine
+operativen Quellen, nicht seine technischen Datenformen neu. 0.7.0 bezeichnet
 weiterhin seinen bisherigen vierstufigen Stand, nicht denselben Ablauf unter
 neuem Etikett. Unveränderte technische Dateiformen brauchen keine neue Version
 allein wegen eines neuen UI-Labels; geänderte geschlossene Semantik wird vor Code
@@ -67,11 +100,16 @@ konkurrierenden Inhaltswriter und wartet nicht pauschal auf diesen Editor.
 
 | Schritt | Arbeit und Entscheidung | Ende des Schritts |
 | --- | --- | --- |
-| 1 · Abschlussbilder erstellen | Motivtext und optional eigene Referenz; drei tatsächliche farbige detaillierte Abschlussbilder erzeugen und im Repository sichern | Bildangebote zur Auswahl; noch keine Abstraktion |
-| 2 · Motivvorlage erstellen | Tatsächliche Abschlussbildfreigabe binden; passende Konfiguration empfehlen und aus genau diesem Bild abstrahieren | Vergleich Abschlussbild/Motivvorlage und klarer Parameterkorridor |
-| 3 · Rätsel produzieren | Tatsächliche Motiv-/Parameterfreigabe binden; Varianten, nötige Reparaturen, technische und visuelle Prüfung sowie Schwierigkeit | Vollständig geprüfte Rasterangebote oder ehrlich bezeichnete Sichtungsentwürfe; Rasterwahl |
+| 1 · Abschlussbilder erstellen | Motivtext und optional eigene Referenz; drei tatsächliche farbige detaillierte transparente Abschlussbilder nach gemeinsamem Bildstil erzeugen und im Repository sichern | Bildangebote zur Auswahl; noch keine Abstraktion |
+| 2 · Motivvorlage erstellen | Tatsächliche Abschlussbildfreigabe binden; passende Konfiguration empfehlen und standardmäßig eine begründete Abstraktion aus genau diesem Bild erzeugen | Vergleich Abschlussbild/Motivvorlage und klarer Parameterkorridor |
+| 3 · Rätsel produzieren | Tatsächliche Motiv-/Parameterfreigabe binden; aussichtsreichsten Kandidaten zuerst, weitere nacheinander nur nach konkretem Bedarf; notwendige Reparaturen und vollständige technische/visuelle Qualifikation samt Schwierigkeit | Ein geeignetes geprüftes Raster genügt; sinnvolle vorhandene qualifizierte Alternativen oder getrennte Sichtungsentwürfe; tatsächliche Rasterwahl |
 | 4 · Hintergrund gestalten | Zum gewählten Motiv und Raster drei unterschiedliche Kontextzeichnungen erzeugen, speichern, isoliert zeigen; Wahl/Korrektur oder ausdrückliches `none` | Konkrete Hintergrundentscheidung oder offene Korrektur; kein Spieleinbau |
 | 5 · Abnehmen und integrieren | Tatsächliche Endabnahme des gewählten Rasterpakets, gültige Hintergrundentscheidung und Integrationsauftrag prüfen; Ableitung finalisieren, nur gewählte Lieferung gemeinsam integrieren | Draft-PR oder bei passendem Auftrag tatsächlicher Merge; danach regulärer Produktionsabschluss |
+
+Die bedarfsweise Rasterarbeit setzt weder kumulative Kandidaten-/Such-/Reparatur-
+budgets noch Korridor oder Qualitätsgates zurück. Ein Angebot ist vollständig
+qualifiziert; günstige Vorprüfung ersetzt keinen Endnachweis. Die Dreierauswahl
+bei Reveal und Hintergrund bleibt von der aufgehobenen Rasterquote getrennt.
 
 Die Gestaltung des Hintergrunds gehört weder in Abschlussbild- noch in
 Abstraktions- oder Rasterproduktionsprompts. In Schritten 1–3 keine Aufforderung
@@ -92,14 +130,14 @@ Bild-/Motivfreigabe wird nicht erneut abgefragt. Eine noch offene Hintergrundwah
 kann mit dem abschließenden Auftrag erklärt werden; keine zusätzliche Nachricht
 nur zum Wiederholen derselben unveränderten Bildentscheidung verlangen.
 
-Die [Qualitätsregeln](PUZZLE_QUALITY.md) und der
-[Abschlussbildstandard](REVEAL_TRANSPARENCY.md) bleiben erhalten. Hintergrundbilder
-zeigen Kontext, nicht Rätselsubjekt, Lösung oder Motivname. Drei unterschiedliche
-Bildinhalte sind der Standard, nicht drei Dateiformate desselben Motivs.
-`none` ist eine ausdrückliche Entscheidung, kein Ersatz für fehlende Dateien.
-Keine Buchvorschau, Kandidaten-Testintegration oder zusätzliche Buchabnahme.
-Hintergrundkorrekturen erneuern nur die betroffenen Bildbindungen; unveränderte
-Raster erhalten ihre gültigen Nachweise. Ein nachträglicher eigener
+Die [Qualitätsregeln](PUZZLE_QUALITY.md), der [gemeinsame Bildstil](PUZZLE_IMAGE_STYLE.md)
+und der [Abschlussbildstandard](REVEAL_TRANSPARENCY.md) bleiben maßgeblich.
+Hintergrundbilder zeigen Kontext, nicht Rätselsubjekt, Lösung oder Motivname.
+Drei unterschiedliche Bildinhalte sind der Standard, nicht drei Dateiformate
+desselben Motivs. `none` ist eine ausdrückliche Entscheidung, kein Ersatz für
+fehlende Dateien. Keine Buchvorschau, Kandidaten-Testintegration oder zusätzliche
+Buchabnahme. Hintergrundkorrekturen erneuern nur die betroffenen Bildbindungen;
+unveränderte Raster erhalten ihre gültigen Nachweise. Ein nachträglicher eigener
 Hintergrundwechsel bleibt unter weiteren Aktionen getrennt vom neuen Regelweg.
 
 ## 3. Bedienoberfläche und Datenautorität
@@ -169,7 +207,7 @@ getrennte Versions-/Quellwahl nach [aktueller Ansichtsübergabe](PRODUCTION_CURR
 Bytegleiche Veröffentlichungen zeigen „Lokal und Remote“; echte Gitrelation und
 Konflikte bleiben davon unabhängig sichtbar. Titelgleiche IDs sind unterscheidbar.
 Lokale Entwürfe und deren
-Verwerfen bleiben getrennt. Job-/Revisions-/Quellwechsel und das ausdrückliche
+Verwerfen bleiben getrennte Browserentwürfe. Job-/Revisions-/Quellwechsel und das ausdrückliche
 Laden eines neueren Standes verwerfen ungesendete Absichten. Ein bloßes Suchen
 neuer Ergebnisse erhält die aktive gebundene Ansicht und ihre Eingaben.
 
@@ -197,8 +235,10 @@ aus `pz-` und kleingeschriebenen Buchstaben/Ziffern mit optionalen Bindestrichen
 Standardauswahl: `main` und `content/pw/*`; ausdrücklich kleinere Auswahlen
 daraus sind zulässig. Andere Produktionsbranches werden weder synchronisiert
 noch inhaltlich durchsucht. Auf einem Produktionsbranch liest der Assistent
-nur Indexeinträge der im Branchnamen gebundenen Rätsel-ID. Auf `main` bleiben
-alle dort veröffentlichten PW-Produktionen lesbar. Der Produktionsakteur muss
+nur Indexeinträge der im Branchnamen gebundenen Rätsel-ID. Auf `main` werden
+die dort veröffentlichten PW-Produktionen gelesen; die aktive Auswahl nimmt
+anschließend nur eindeutig nachgewiesene abgeschlossene Lieferungen gemäß
+PW2-C unten heraus. Der Produktionsakteur muss
 neue PW-Übergaben auf dem zugehörigen Branch veröffentlichen; PW-B übernimmt
 diese Vorgabe in seine Aufträge. Keine Umbenennung/Löschung alter Branches.
 
@@ -305,7 +345,9 @@ im Browser, Zustand oder Log. Erfolg verlangt danach das tatsächlich geprüfte
 Fehlen des exakten Remote-Refs. Push-/Timeout-/Berechtigungsfehler, unbekannter
 Ausgang und fehlgeschlagene Cachesynchronisierung bleiben getrennte Resultate.
 Erst verifizierter Erfolg aktualisiert die Remoteansichten. Lokale und Mainquellen
-bleiben sichtbar. Bei Cachefehler wird eine stale Anzeige ausdrücklich benannt.
+werden weiter gelesen; ihre aktive Auswahl folgt dem lieferbezogenen PW2-C-Abgleich.
+Offene oder unklar zugeordnete Arbeit bleibt sichtbar. Bei Cachefehler wird eine
+stale Anzeige ausdrücklich benannt.
 
 Ein noch vorhandener identischer lokaler Branchref kann erst danach separat
 vorgeprüft und ausdrücklich bestätigt entfernt werden. Die Option ist anfangs
@@ -341,8 +383,14 @@ Browseradresse wird ausschließlich nach Authentisierung zurückgegeben; Geheimn
 erscheinen nicht in Logs, Prompts oder dauerhaften Optionen. Bestehender Browser-
 Sitzungs-/Host-/Origin-/CSP- und P2-Bestätigungsschutz bleibt bestehen.
 
-Die erste Bereitschaft und Browseröffnung gehen der Git-Suche voraus. Die
-Loopbackadresse wird ab P3 pro Zustand gespeichert und wiederverwendet. Bei
+Die erste Bereitschaft und Browseröffnung gehen der Git-Suche voraus. Beim
+installierten Windows-GUI-Start mit bestehendem Update-Opt-in wartet gemäß
+[APP-B2-S / Updatevertrag §7](PRODUCTION_UPDATES.md#7-app-b2--client-übergabe-und-abschluss)
+zuerst die Browseröffnung samt initialer Git-Suche auf die nebenläufige
+Updateentscheidung. Das native Fenster bleibt bedienbar; „Ohne Update fortfahren“
+verwirft den Versuch und gibt den einmaligen Arbeitsstart frei. Ein Zweitstart
+übersteuert dieses Gate nicht. Ohne Updatefreigabe startet der bisherige Weg.
+Die Loopbackadresse wird ab P3 pro Zustand gespeichert und wiederverwendet. Bei
 Fremdbelegung kein stiller Portwechsel: Wiederholen oder ausdrücklich neuen Port
 mit Hinweis auf getrennte Browseroptionen/Entwürfe wählen. Frühere Zufallsport-
 Browserdaten bleiben unverändert; Migration wird nicht behauptet. Eine historische
@@ -357,8 +405,11 @@ bleibt unbekannt, kein automatischer Retry. Keine pauschale Python-/Gitbeendigun
 Minimieren/Tab schließen stoppt nicht. Absturzreste werden nach tatsächlich
 freigegebenem OS-Lock ersetzt, nicht anhand eines PIDs als sicher angenommen.
 Updates ersetzen nach vollständigem Stop per neuerem MSI alle installierten
-Programmdateien gemeinsam. Einzige Produktversionsquelle ist
-[release.json](../tools/production_workspace/release.json), unabhängig von Authoring,
+Programmdateien gemeinsam. Der [APP-A-Releasekanal](PRODUCTION_UPDATES.md) plant
+Produktversionen aus der veröffentlichten Releaseautorität; bis zu dessen
+Aktivierung gibt es keine neuen automatischen Veröffentlichungen.
+[release.json](../tools/production_workspace/release.json) bleibt 0.1.0-Startanker
+und stabile Paketidentitäts-/Pinquelle, unabhängig von Authoring,
 Spielversion und der alten Paketkennung 588-P3. Feste Upgradeidentität, neue
 ProductCodes je Version, keine Same-Version-Installation und kein Downgrade.
 Installation ohne Elevation unter dem eigenen per-user-Programmverzeichnis;
@@ -373,8 +424,9 @@ und belegte Payloaddateien über Restart Manager. Laufend, fremd oder unklar:
 verständlich abbrechen und nach regulärem Stop wiederholen; kein Kill, kein
 automatischer Stop/Restart und keine erzwungene Rebootaktion. Neue Launcherstarts
 während der Windows-MSI-Ausführung werden zurückgewiesen. Der getrennte Bau
-hat allein `workflow_dispatch`; keinerlei Einbindung in Package CI. Kein Updater
-oder Dienst. Das App-Image und der Installer sind ohne Zertifikatauftrag unsigniert;
+hat einen isolierten erfolgreichen Main-CI-Folgetrigger und diagnostischen
+`workflow_dispatch`; keinerlei Einbindung in Package CI. APP-B2 ergänzt den
+Opt-in-Updater gemäß Updatevertrag; kein dauerhafter Dienst. Das App-Image und der Installer sind ohne Zertifikatauftrag unsigniert;
 Lizenzen und mögliche SmartScreenhinweise gehören zur Lieferung.
 
 ## 5. Warum eine veröffentlichte Ansichtsprojektion nötig ist
@@ -544,8 +596,10 @@ PW-B erzeugt pro Handlung einen kurzen, überprüfbaren Auftrag mit Repository,
 fixiertem erreichbarem Quellencommit, einem kanonischen Recordpfad als Einstieg
 und tatsächlichen Auswahl-IDs. Daraus erreichbare Parameter, Briefings, Hashes,
 Paket-/Projektionspfade und allgemeine Regeln werden nicht in Folgeaufträge kopiert.
-Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; nur neue
-Absicht, Freigabe, Änderung oder Aufhebung sowie persönliche Befugnisse ergänzen.
+Ein kurzer verbindlicher Verweis auf AGENTS und Authoring 0.8.0 genügt; er aktiviert
+die phasenbezogene Quellenroute einschließlich des gemeinsamen Bildstils, nicht
+die Volllektüre aller Fachhandbücher. Nur neue Absicht, Freigabe, Änderung oder
+Aufhebung sowie persönliche Befugnisse ergänzen.
 Ein neuer Erstauftrag enthält dagegen Motiv, Hinweise, Referenz und frühe Wünsche.
 Der Empfänger löst die vollständigen Definitionen und Bilder aus diesen Quellen
 auf. Ein relativer Paketpfad allein beweist keinen Zugang. Cloudschritte dürfen
@@ -583,7 +637,96 @@ dem tatsächlichen Auftrag getrennt. Nach vollständiger Mainintegration gilt
 Authoring §9. Der Assistent zeigt danach den bestätigten Abschluss und gültige
 Runtime-/Belegbezüge, keine defekten Links auf entfernte Zwischenbilder.
 
+## PW2-B · Schlussübersicht und gebundener Auftrag
+
+Die normale Hintergrundentscheidung zeigt zuerst das tatsächlich gewählte Raster,
+dessen Reveal und die vorgemerkte Hintergrunddatei beziehungsweise `none`. Der
+primäre Schlussauftrag erklärt diese konkrete Wahl, Endabnahme und Integration
+zusammen. Er enthält Commit/PR, unabhängiges Review, Squash-Merge erst nach
+aktuellen Vor-Merge-Gates und den bestehenden Produktionsabschluss nach Authoring
+§9. `content_ready`, echte äußere Endfreigabe, Finalizer, Export/Plan/Register und
+bestätigtes main bleiben getrennte technische Tatsachen; kein UI-Writer entsteht.
+
+Ohne gültigen gespeicherten Mergewert ist der bedingte Merge eingeschaltet. Ein
+explizites gespeichertes `false` bleibt erhalten. Die Option und die Wirkung des
+konkreten Schlussauftrags sind sichtbar; Kopieren ist noch kein Absenden.
+Korrektur und Wiederaufnahme erzeugen weder eine neue Endabnahme noch eine neue
+Mergefreigabe. Vorhandene passende Endabnahmen werden nicht erneut erklärt.
+Unveränderte Quellenwerte und allgemeine Regeln werden nicht im Prompt wiederholt;
+Auftrag, feste Recordquelle, neue Absichten und persönliche Arbeitswurzel bleiben.
+
+Die interne lesende Detailantwort ergänzt `facts.metadata` aus den vorhandenen
+Recordfeldern `width,height,mode,used_colors,difficulty`, `facts.originals` mit
+vollständigem geprüftem `record,handoff` und `facts.composition` mit den Asset-IDs
+`raster,reveal,background`. Die Komposition ist vor tatsächlicher Rasterwahl null.
+Spätere IDs stammen ausschließlich aus den Originalbezügen des äußeren Records;
+die inventarisierte Rasterwahl samt unveränderten Quellkopien und Bild-/Kandidaten-
+bindungen wird lesend abgeglichen. Fehlende/uneindeutige Auswahl wird nicht aus
+Galerieordnung oder Dateinamen geraten. Äquivalente Referenzen desselben Originals
+werden deterministisch nach ID zusammengefasst. Ein fehlender Rollenbezug bleibt
+null und verhindert eine scheinbar vollständige Schlussfreigabe. Das sind
+Ansichtsdaten, keine neuen Zertifikate oder Felder der geschlossenen Originalformen.
+
+Bilder und relevante Parameter stehen vor dem Auftrag; handlungsrelevante Probleme
+bleiben sichtbar. Der standardmäßig geschlossene, kopierbare Detailbereich unten
+enthält Original-JSON, Hashes, Revisionen, Commit-/Import- und Diagnosebindungen.
+Briefing und vollständige Parameter sind weiterhin erreichbar. Die vorhandene
+Snapshot-, Bildlade-, Quellwechsel-, P2- und Origin-Sicherheit bleibt erhalten.
+Der CMD-Fallback wird aus denselben Quellen regeneriert. Neue Originale der
+Browserprobe dienen nur PW2-B-T01/A01 im Liefer-PR, nicht einer Dauergalerie.
+
+## PW2-C · aktive Lieferungen und bestätigter Abschluss
+
+Maßgeblich ist die [Paketentscheidung PW2-C](https://github.com/venomenon328/picross/issues/626#issuecomment-6862546388).
+Die aktive Liste blendet eine konkrete Lieferung erst aus, wenn ihre ID,
+Lieferrevision und Original-/Integrationsbindungen mit einem frisch bestätigten
+Commit des konfigurierten Remote-Refs `main` übereinstimmen. `registered`, gleiche
+ID, PR-Status oder Commitabstammung allein genügen nicht. Ein normaler Merge,
+Squash oder unveränderte Sammelübernahme wird anhand derselben Lieferbelege
+erkannt. Spätere unabhängige Ergänzungen der Gesamtregistries ändern die
+Zuordnung einer weiterhin identischen Lieferzeile nicht.
+
+Der begrenzte Leser verwendet Metadaten des vollständigen Exports oder der
+vorhandenen kompakten `picross-integrated-content-v1/v2/v3`-Belege. Nach Retirement
+bindet die aktive Produktion den Receipthash; der darin erhaltene ursprüngliche
+Exporthash bleibt davon verschieden. Raster-, Reveal- und Hintergrundbezüge
+gehören zur Zuordnung. ZIPs, Bilddaten und Solver-/Proofläufe werden für diese
+Listenentscheidung nicht geöffnet oder ausgeführt.
+
+Die Zuordnung erfolgt pro konkreter Quelle vor der Motivgruppierung. Identische
+lokale/Remote-Kopien sowie nachweislich zugehörige ältere Record-/Projektionsstände
+verschwinden gemeinsam. Für ältere Schritte zählt ihre tatsächliche Bindung am
+expliziten historischen Lieferstand, keine Revisionssortierung oder Branchfolge.
+Neue Revisionen, abweichende Bytes, spätere Reveal-/Hintergrundarbeit und fehlende
+oder widersprüchliche Belege bleiben sichtbar, auch unter derselben Rätsel-ID.
+Der Abgleich löscht keine Daten oder Refs und erzeugt keinen Completionbeleg.
+
+Die Bestätigung umfasst den tatsächlichen Mainref im gebundenen Quellenstand.
+Ein lokaler `main`, ein alter Cache oder ein erfolgreiches Refresh nur anderer
+Refs genügt nicht. Eine bewusst ohne `main` konfigurierte Refwahl wird nicht
+erweitert. Bei fehlendem, offline gebliebenem oder unlesbarem Mainbezug bleiben
+betroffene Quellen sichtbar; die Liste erklärt die fehlende Bestätigung.
+Ein Mainwechsel wird auch bei unverändertem Produktionscommit neu ausgewertet.
+Die Statusabfrage startet weiterhin keinen Gitlauf.
+
+Passive Suche erhält die geöffnete Quelle, ihre Bilder und ungesendete Eingaben.
+Erst „Neueren Stand laden“ übernimmt den gefilterten Listenstand und erklärt den
+bestätigten Entfall. Verbleibende offene Arbeit derselben ID bleibt anwählbar;
+andernfalls folgt eine andere offene Produktion oder der leere aktive Zustand.
+Eigene Browserentwürfe bleiben getrennt gespeichert und erreichbar. Die internen
+Listenfelder unter `completion` geben Mainbestätigung, Quellenbindung und
+Ausblendungsumfang an; sie sind Ansichtsdaten, keine neuen Originalschemas.
+
+Kleine synthetische Regressionen liegen im ausgewählten `tools`-Modul. PW2-C-T01
+liefert einmalig den lesenden Praxisabgleich der drei #622-Lieferungen sowie die
+echte Browserprobe mit unveränderten Original-PNGs. Quellen, Produkt-Head,
+Liefer-/Prüfstand und das unabhängige Vor-Merge-Gate PW2-C-A01 stehen im Liefer-PR.
+Es entsteht keine dauerhafte Browsermatrix oder Sammlung realer Produktionsdaten.
+
 ## 9. Paketgrenze PW-A
+
+Dieser Abschnitt beschreibt die historische PW-A-Paketgrenze, nicht den heutigen
+Funktionsumfang nach PW-B. Er ist keine zusätzliche operative Pflichtquelle.
 
 PW-A liefert Projektor/Schema, lokale Git-/Paketauflösung, sicheren Dienst,
 Windowsstarter und eine tatsächlich benutzbare **lesende Job-/Bildansicht**.
@@ -613,6 +756,7 @@ Liefer-/Prüfstand einschließlich offener Plattformgates steht in PR #579.
 
 ## 10. Nachführung beim späteren PW-B
 
+Historischer Einführungsplan für PW-B; keine Wiederholungsaufträge durch PW2-A.
 In einem konsistenten Implementierungsdiff mindestens diese Quellen abgleichen:
 
 - Authoring und den eingebetteten/ersetzenden Regelstand: fünf Aufträge, neue
@@ -633,8 +777,12 @@ Head; sie erteilt keine pauschale Freigabe später erzeugter Bilder oder Rätsel
 
 ## Quellen
 
+Für normale Produktion gilt ausschließlich das operative Routing am Anfang
+und in Authoring §1.1. Die folgende Liste ordnet Entwicklungs-/Herkunftsquellen
+zu und erteilt keine zusätzliche pauschale Volllektüreplicht:
+
 [Workflow](dev-rules/WORKFLOW.md), [Projektprofil](PROJECT_PROFILE.md),
-[Authoring](ai-workflows/PUZZLE_AUTHORING.md),
+[Authoring](ai-workflows/PUZZLE_AUTHORING.md), [Bildstil](PUZZLE_IMAGE_STYLE.md),
 [0.7-Iststand](ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md),
 [Hintergrundvertrag](PUZZLE_BACKGROUNDS.md), [Qualität](PUZZLE_QUALITY.md),
 [Produktionswerkzeuge](../tools/puzzle_production/README.md),

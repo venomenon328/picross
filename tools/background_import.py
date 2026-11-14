@@ -48,6 +48,28 @@ def _regular(path: Path) -> Path:
     return path
 
 
+def _png_image_format(raw, name, *, prepared=True):
+    """Bind the unchanged PNG input to Godot's actual LA8 or RGBA8 output.
+
+    Full direct-input framing/decoding is the manual writer's boundary. This
+    stdlib-only player path binds the already checked bytes and exact supported
+    IHDR; the engine import and PCK probe independently decode those bytes.
+    Historical HP-W2 outputs retain their exact RGBA8/noninterlaced boundary.
+    """
+    if len(raw) < 33 or raw[:16] != b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR":
+        raise ValueError("Background source is not supported PNG2304: " + name)
+    width, height, depth, color, compression, filtering, interlace = struct.unpack(">IIBBBBB", raw[16:29])
+    if not prepared and (width, height, depth, color, compression, filtering, interlace) != (*SIZE, 8, 6, 0, 0, 0):
+        raise ValueError("Historical HP-W2 background output is not PNG2304 RGBA8: " + name)
+    depths = {0: (1, 2, 4, 8), 2: (8,), 3: (1, 2, 4, 8), 4: (8,), 6: (8,)}
+    if ((width, height) != SIZE or depth not in depths.get(color, ())
+            or compression or filtering or interlace not in (0, 1)):
+        raise ValueError("Background source is not supported PNG2304: " + name)
+    # A valid direct input has visible and transparent pixels. Grayscale/tRNS
+    # and grayscale-alpha decode to LA8; RGB/tRNS, palette and RGBA to RGBA8.
+    return 1 if color in (0, 4) else 5
+
+
 def _read_bound(project, ref):
     name = ref["file"]
     if not re.fullmatch(r"art/backgrounds/[A-Za-z0-9_-]+\.(png|txt)", name):
@@ -59,9 +81,7 @@ def _read_bound(project, ref):
     if len(raw) != ref["bytes"] or _hash(raw) != ref["sha256"]:
         raise ValueError("Background source size/hash differs: " + name)
     if name.endswith(".png"):
-        if (len(raw) < 33 or raw[:16] != b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR"
-                or struct.unpack(">IIBBBBB", raw[16:29]) != (*SIZE, 8, 6, 0, 0, 0)):
-            raise ValueError("Background source is not PNG2304 RGBA: " + name)
+        _png_image_format(raw, name)
     return raw
 
 
@@ -76,7 +96,7 @@ def _names(project):
 
 def source_inventory(root: Path) -> dict:
     """Read compact authority, selected sources and notices; never replay puzzles."""
-    from tools.puzzle_production import catalog_background as background, catalog_io as io
+    from tools.puzzle_production import catalog_background as background, catalog_io as io, content_registry as catalog
 
     root = root.resolve()
     if (root / "content/.registration-pending.json").exists():
@@ -87,13 +107,23 @@ def source_inventory(root: Path) -> dict:
     registry = io.json_bytes(io.read(root, "content/registry.json", 8 * 1024 * 1024), 8 * 1024 * 1024)
     background.source_paths(root, registry)
     indexed = background.index(registry)
-    modern = registry["format"] == background.REGISTRY_FORMAT
-    background.capability(root, required=modern)
-    if modern != (runtime["format"] == background.RUNTIME_FORMAT):
+    modern = registry["format"] in (catalog.BACKGROUND_FORMAT, catalog.METADATA_FORMAT)
+    formats = {catalog.FORMAT: tuple("picross-runtime-registry-v" + str(v) for v in (2, 3, 4, 5)),
+               catalog.BACKGROUND_FORMAT: (background.RUNTIME_FORMAT,),
+               catalog.METADATA_FORMAT: (catalog.METADATA_RUNTIME_FORMAT, catalog.IMAGE_RUNTIME_FORMAT)}
+    if runtime["format"] not in formats.get(registry["format"], ()):
         raise ValueError("Background runtime/source generation differs")
     texts = {name: io.read(root, name, background.LIMIT, missing=True)
              for name in background.text_names(registry)}
     projected = background.projection(registry, texts)
+    sources = {identifier: io.json_bytes(texts[ref["file"]], background.LIMIT)
+               for identifier, ref in indexed.items()}
+    if runtime["format"] != catalog.IMAGE_RUNTIME_FORMAT and any(source["format"] == background.EDITOR_FORMAT for source in sources.values()):
+        raise ValueError("Background v5 source requires runtime v8")
+    background.capability(root, required=registry["format"] == catalog.BACKGROUND_FORMAT or
+                          any(row["status"] in ("selected", "none") for row in projected.values()))
+    if runtime["format"] != catalog.IMAGE_RUNTIME_FORMAT and any(row["status"] == "standard" for row in projected.values()):
+        raise ValueError("Background standard preference requires runtime v8")
     entries = runtime["entries"]
     if len(entries) != len(projected) or {e["id"] for e in entries} != set(projected):
         raise ValueError("Background runtime/source IDs differ")
@@ -107,18 +137,34 @@ def source_inventory(root: Path) -> dict:
             continue
         # projection() already checked the compact source against its indexed hash
         # and closed source schema. The notice is not repeated in runtime data.
-        source = io.json_bytes(texts[indexed[identifier]["file"]], background.LIMIT)
-        notice = background.current(source)["notice"]
+        source = sources[identifier]
+        active = background.current(source)
+        # PE §13.3 v6 sources contain only current technical image bindings.
+        # Preserve an existing historical TXT, without inventing a new notice
+        # or making provenance a requirement of an ordinary editor import.
+        slim = source["format"] == "picross-catalog-background-v6"
+        if slim:
+            notice_name = background.notice_path(identifier)
+            notice_raw = io.read(root, notice_name, 65536, missing=True)
+            notice = background.ref(notice_name, notice_raw) if notice_raw is not None else None
+        else:
+            notice = active["notice"]
         row = dict(id=identifier, image_revision=expected["image_revision"], asset=expected["asset"],
-                   notice={**notice, "file": notice["file"].removeprefix("game/")})
-        _read_bound(game, row["asset"])
-        _read_bound(game, row["notice"])
+                   notice={**notice, "file": notice["file"].removeprefix("game/")} if notice else None)
+        image = _read_bound(game, row["asset"])
+        prepared = slim or source["format"] == background.EDITOR_FORMAT and active["authority"]["kind"] == "manual"
+        _png_image_format(image, row["asset"]["file"], prepared=prepared)
+        if row["notice"]: _read_bound(game, row["notice"])
         assets.append(row)
-    wanted = {row[key]["file"] for row in assets for key in ("asset", "notice")}
+    wanted = {ref["file"] for row in assets for ref in _refs(row)}
     if _names(game) != wanted:
         raise ValueError("Active background source inventory differs")
     return dict(format=FORMAT, source_game=str(game), registry_sha256=_hash(raw),
                 assets=sorted(assets, key=lambda row: row["id"]))
+
+
+def _refs(row):
+    return [row["asset"]] + ([row["notice"]] if row["notice"] is not None else [])
 
 
 def require_isolated(project, inventory=None):
@@ -137,14 +183,18 @@ def _verify_sources(project, inventory, *, imports):
     if inventory["format"] != FORMAT or _hash((project / "data/registry.json").read_bytes()) != inventory["registry_sha256"]:
         raise ValueError("Background inventory/runtime binding differs")
     wanted = set()
+    image_formats = {}
     for row in inventory["assets"]:
-        for key in ("asset", "notice"):
-            _read_bound(project, row[key])
-            wanted.add(row[key]["file"])
+        for ref in _refs(row):
+            raw = _read_bound(project, ref)
+            if ref is row["asset"]:
+                image_formats[ref["file"]] = _png_image_format(raw, ref["file"])
+            wanted.add(ref["file"])
         if imports:
             wanted.add(row["asset"]["file"] + ".import")
     if _names(project) != wanted:
         raise ValueError("Isolated background inventory differs")
+    return image_formats
 
 
 def remap_path(asset: str) -> str:
@@ -168,15 +218,15 @@ def prepare_import(project: Path, inventory: dict | None = None) -> dict:
         inventory = dict(format=FORMAT, source_game="", registry_sha256=_hash(raw), assets=[])
     # Repeated preparation is permitted only for the exact bound files and their
     # own technical sidecars; no candidates or unknown files can be imported.
-    wanted = {row[key]["file"] for row in inventory["assets"] for key in ("asset", "notice")}
+    wanted = {ref["file"] for row in inventory["assets"] for ref in _refs(row)}
     allowed = wanted | {row["asset"]["file"] + ".import" for row in inventory["assets"]}
     if not wanted <= _names(project) <= allowed:
         raise ValueError("Isolated background inventory differs")
     if inventory["format"] != FORMAT or _hash((project / "data/registry.json").read_bytes()) != inventory["registry_sha256"]:
         raise ValueError("Background inventory/runtime binding differs")
     for row in inventory["assets"]:
-        for key in ("asset", "notice"):
-            _read_bound(project, row[key])
+        for ref in _refs(row):
+            _read_bound(project, ref)
     for row in inventory["assets"]:
         asset = row["asset"]["file"]
         remap = remap_path(asset)
@@ -191,7 +241,7 @@ def prepare_import(project: Path, inventory: dict | None = None) -> dict:
 
 def verify_import(project: Path, inventory: dict) -> dict:
     """Check actual remaps/profile/output after Godot; decoding is the PCK probe."""
-    _verify_sources(project, inventory, imports=True)
+    image_formats = _verify_sources(project, inventory, imports=True)
     rows = []
     for row in inventory["assets"]:
         asset = row["asset"]["file"]
@@ -211,8 +261,8 @@ def verify_import(project: Path, inventory: dict) -> dict:
                 or struct.unpack_from("<8I", imported, 4) != (1, *SIZE, 1 << 23, 0xffffffff, 0, 0, 0)):
             raise ValueError("Background imported texture header differs: " + asset)
         codec, width, height, mipmaps, image_format = struct.unpack_from("<IHHII", imported, 36)
-        if codec not in (1, 2) or (width, height, mipmaps, image_format) != (*SIZE, 11, 5):
-            raise ValueError("Background imported lossless/RGBA/mipmap header differs: " + asset)
+        if codec not in (1, 2) or (width, height, mipmaps, image_format) != (*SIZE, 11, image_formats[asset]):
+            raise ValueError("Background imported lossless/source-format/mipmap header differs: " + asset)
         offset = 52
         for _ in range(mipmaps + 1):
             if offset + 4 > len(imported):
@@ -249,8 +299,8 @@ def restore_sources(root: Path, project: Path, inventory: dict | None = None) ->
     if directory.exists():
         shutil.rmtree(directory)
     for row in inventory["assets"]:
-        for key in ("asset", "notice"):
-            name = row[key]["file"]
+        for ref in _refs(row):
+            name = ref["file"]
             destination = project / name
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(root / "game" / name, destination)

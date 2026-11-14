@@ -1,0 +1,6 @@
+Production ID: pz-erdbeere
+Background: B
+Image revision: b01
+Artwork: OpenAI ImageGen, native Bildfunktion in Codex unter Anleitung des Produktionsakteurs
+Source: Neue native image_gen-Ausgabe in diesem Schritt-4-Auftrag ohne Eingangsassets.
+Usage basis: Eigenständige KI-Erzeugung im ausdrücklichen Nutzerauftrag für dieses Repository; keine Fremdassets. Keine Zusage von Exklusivität oder urheberrechtlicher Schutzfähigkeit.

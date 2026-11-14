@@ -36,6 +36,8 @@ def read_path(value):
     if value in ('content/registry.json', 'game/data/registry.json') or re.fullmatch(
             r'content/packages/pz-[a-z0-9][a-z0-9-]{0,59}/[A-Za-z0-9][A-Za-z0-9._-]{0,31}/manifest\.json', value):
         return value
+    if re.fullmatch(r'content/(?:backgrounds|reveals)/pz-[a-z0-9][a-z0-9-]{0,59}\.json', value):
+        return value
     return production_path(value)
 
 

@@ -1,4 +1,4 @@
-"""Cheap source/copy/profile boundaries; real Godot/PCK proof is native.export."""
+"""Cheap source/copy/profile boundaries; real decoding needs Godot/PCK evidence."""
 import hashlib
 import json
 from pathlib import Path
@@ -41,13 +41,45 @@ class BackgroundImportTests(unittest.TestCase):
         self.project = self.root / "disposable"
         shutil.copytree(self.source, self.project)
 
-    def header_only_import(self):
+    def header_only_import(self, image_format=5):
         """Only a fake transport/header; never counted as image decoding evidence."""
         for row in self.inventory["assets"]:
             path = self.project / background.remap_path(row["asset"]["file"]).removeprefix("res://")
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(b"GST2" + struct.pack("<8I", 1, 2304, 576, 1 << 23, 0xffffffff, 0, 0, 0)
-                             + struct.pack("<IHHII", 2, 2304, 576, 11, 5) + (struct.pack("<I", 1) + b"x")*12)
+                             + struct.pack("<IHHII", 2, 2304, 576, 11, image_format) + (struct.pack("<I", 1) + b"x")*12)
+
+    def test_direct_png_header_allowlist_and_source_format_binding(self):
+        # Header counterexamples only; these deliberately do not prove PNG
+        # decoding, tRNS/Adam7 pixel correctness or the real PCK import path.
+        signature = b"\x89PNG\r\n\x1a\n\0\0\0\rIHDR"
+        for color, depths in ((0, (1, 2, 4, 8)), (2, (8,)), (3, (1, 2, 4, 8)), (4, (8,)), (6, (8,))):
+            for depth in depths:
+                for interlace in (0, 1):
+                    raw = signature + struct.pack(">IIBBBBB", 2304, 576, depth, color, 0, 0, interlace) + b"\0"*4
+                    with self.subTest(color=color, depth=depth, interlace=interlace):
+                        self.assertEqual(background._png_image_format(raw, "header-only.png"), 1 if color in (0, 4) else 5)
+                        if (depth, color, interlace) == (8, 6, 0):
+                            self.assertEqual(background._png_image_format(raw, "header-only.png", prepared=False), 5)
+                        else:
+                            with self.assertRaisesRegex(ValueError, "Historical HP-W2"):
+                                background._png_image_format(raw, "header-only.png", prepared=False)
+        for values in ((2303, 576, 8, 6, 0, 0, 0), (2304, 575, 8, 6, 0, 0, 0),
+                       (2304, 576, 16, 6, 0, 0, 0), (2304, 576, 4, 4, 0, 0, 0),
+                       (2304, 576, 4, 2, 0, 0, 0), (2304, 576, 8, 1, 0, 0, 0),
+                       (2304, 576, 8, 5, 0, 0, 0), (2304, 576, 8, 6, 1, 0, 0),
+                       (2304, 576, 8, 6, 0, 1, 0), (2304, 576, 8, 6, 0, 0, 2)):
+            raw = signature + struct.pack(">IIBBBBB", *values) + b"\0"*4
+            with self.subTest(values=values), self.assertRaisesRegex(ValueError, "supported PNG2304"):
+                background._png_image_format(raw, "header-only.png")
+
+    def test_imported_format_must_match_the_bound_png_color_type(self):
+        background.prepare_import(self.project, self.inventory)
+        self.header_only_import(image_format=1)
+        with self.assertRaisesRegex(ValueError, "source-format/mipmap"):
+            background.verify_import(self.project, self.inventory)
+        self.header_only_import(image_format=5)
+        self.assertEqual(background.verify_import(self.project, self.inventory)["source_bytes"], len(self.png))
 
     def test_source_and_wrong_copy_are_never_import_destinations(self):
         before = {p.relative_to(self.source).as_posix(): p.read_bytes() for p in self.source.rglob("*") if p.is_file()}
@@ -143,6 +175,82 @@ class BackgroundImportTests(unittest.TestCase):
         stray.write_text("engine import must not write into this namespace")
         with self.assertRaisesRegex(ValueError, "Unknown/noncanonical"):
             background.source_inventory(source_root)
+
+    def test_metadata_inventory_requires_v7_or_v8_and_keeps_legacy_capability_optional(self):
+        source_root = self.root / "metadata"
+        (source_root / "game/data").mkdir(parents=True)
+        (source_root / "content").mkdir()
+        (source_root / "content/registry.json").write_text(json.dumps(dict(
+            format="picross-content-registry-v4", entries=[], metadata=[], backgrounds=[])))
+        runtime_path = source_root / "game/data/registry.json"
+        runtime = dict(format="picross-runtime-registry-v7", categories=[], entries=[])
+        runtime_path.write_text(json.dumps(runtime))
+        self.assertEqual(background.source_inventory(source_root)["assets"], [])
+        runtime_path.write_text(json.dumps({**runtime, "format": "picross-runtime-registry-v8"}))
+        self.assertEqual(background.source_inventory(source_root)["assets"], [])
+        capability = dict(format="picross-runtime-background-capability-v1",
+                          runtime_format="picross-runtime-registry-v6",
+                          profile_id="picross-background-png2304-v1", enabled=False)
+        capability_path = source_root / "game/data/background-capability.json"
+        capability_path.write_text(json.dumps(capability))
+        self.assertEqual(background.source_inventory(source_root)["assets"], [])
+        runtime_path.write_text(json.dumps({**runtime, "format": "picross-runtime-registry-v6"}))
+        with self.assertRaisesRegex(ValueError, "generation differs"):
+            background.source_inventory(source_root)
+        runtime_path.write_text(json.dumps(runtime))
+        capability_path.write_text(json.dumps({**capability, "enabled": "false"}))
+        with self.assertRaisesRegex(ValueError, "Invalid background capability"):
+            background.source_inventory(source_root)
+
+    def test_compact_v6_import_preserves_optional_existing_notice_without_authority(self):
+        from tools.puzzle_production import editor_change as edit, catalog_background as bg
+        from tools.puzzle_production.contract import digest
+        root = self.source.parent
+        identifier = IDS["a"]
+        definition = b'{"revision":1}\n'
+        entry = dict(id=identifier, key=identifier, save_slot="background_a",
+                     definition="data/content/background_a.json", reveal="art/content/background_a.png",
+                     visible=True, category_id="test", production=dict(mode="mono", width=1, height=1,
+                     package="content/packages/"+identifier+"/r01", package_sha256="a"*64,
+                     definition_sha256=hashlib.sha256(definition).hexdigest(), reveal_sha256="b"*64))
+        current = dict(status="selected", image_revision=1,
+                       asset={**self.inventory["assets"][0]["asset"], "file":"game/"+self.inventory["assets"][0]["asset"]["file"]})
+        source = dict(format=edit.BACKGROUND, id=identifier, record_revision=1,
+                      binding=dict(entry=entry, identity=edit.identity(entry, definition)), current=current)
+        source["record_hash"] = digest(source)
+        raw = edit.encoded(edit.validate_source(source, entry))
+        source_path = root/bg.path(identifier)
+        source_path.parent.mkdir(parents=True)
+        source_path.write_bytes(raw)
+        index = dict(format="picross-content-registry-v4", entries=[entry], metadata=[],
+                     backgrounds=[dict(id=identifier, source=bg.ref(bg.path(identifier),raw))])
+        (root/"content/registry.json").write_bytes(edit.encoded(index))
+        runtime = dict(format="picross-runtime-registry-v8", categories=[], entries=[dict(
+            id=identifier, background={**current, "asset":self.inventory["assets"][0]["asset"]})])
+        (self.source/"data/registry.json").write_bytes(edit.encoded(runtime))
+        (self.source/"data/background-capability.json").write_bytes(edit.encoded(dict(
+            format=bg.CAPABILITY_FORMAT, runtime_format=bg.RUNTIME_FORMAT,
+            profile_id="picross-background-png2304-v1", enabled=True)))
+        notice_path = self.source/self.inventory["assets"][0]["notice"]["file"]
+        notice_raw = notice_path.read_bytes()
+        for has_notice in (True, False):
+            with self.subTest(has_notice=has_notice):
+                if not has_notice: notice_path.unlink()
+                before = {p.relative_to(root): (p.read_bytes(),p.stat().st_mtime_ns)
+                          for p in root.rglob("*") if p.is_file()}
+                inventory = background.source_inventory(root)
+                row = inventory["assets"][0]
+                self.assertEqual(row["notice"], self.inventory["assets"][0]["notice"] if has_notice else None)
+                background.restore_sources(root, self.project, inventory)
+                shutil.copyfile(self.source/"data/registry.json", self.project/"data/registry.json")
+                background.prepare_import(self.project, inventory)
+                self.header_only_import()
+                report = background.verify_import(self.project, inventory)
+                self.assertEqual(report["images"][0]["notice"], row["notice"])
+                self.assertEqual(before, {p.relative_to(root): (p.read_bytes(),p.stat().st_mtime_ns)
+                                         for p in root.rglob("*") if p.is_file()})
+                if has_notice: self.assertEqual(notice_path.read_bytes(), notice_raw)
+                else: self.assertFalse(notice_path.exists())
 
     def test_fixed_patterns_have_distinct_source_and_pixel_identity(self):
         second, rgba = png("b")

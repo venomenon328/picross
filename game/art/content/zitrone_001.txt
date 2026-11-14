@@ -1,0 +1,3 @@
+Production ID: pz-zitrone
+Artwork: OpenAI ImageGen über die integrierte Bildfunktion in Codex
+Usage basis: Eigenständig für diesen ausdrücklich beauftragten Projektinhalt generierte Illustration, ohne fremde Bildvorlage oder übernommenes Fremdasset; keine Behauptung exklusiver Rechte.

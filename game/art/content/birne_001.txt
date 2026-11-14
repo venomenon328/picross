@@ -1,0 +1,3 @@
+Production ID: pz-birne
+Artwork: OpenAI ImageGen, im beauftragten Codex-Produktionslauf
+Usage basis: Im ausdrücklichen Nutzerauftrag aus Motivtext neu generiert; keine hochgeladene Referenz und keine fremden Bildassets verwendet. Keine menschliche Bildfreigabe oder Exklusivitätszusage aus der Generierung abgeleitet.
