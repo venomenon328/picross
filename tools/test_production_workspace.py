@@ -132,6 +132,20 @@ def current_fixture(repo, source, revision='r01', proposed=None, approved=None, 
 
 
 class ClosingViewTests(unittest.TestCase):
+    def test_remote_current_pointer_can_return_from_phase_four_to_phase_one(self):
+        from tools.production_workspace.motifs import group
+        common = {'puzzle_id': 'pz-correction', 'title': 'Synthetic correction', 'source': 'remote',
+                  'ref': 'content/pw/pz-correction', 'commit': 'a' * 40, 'current_error': None}
+        rows = [{**common, 'id': 'earlier', 'revision': 'alpha', 'binding': '1' * 64,
+                 'phase': 'Abschlussbilder', 'current_view': True},
+                {**common, 'id': 'later', 'revision': 'zeta', 'binding': '2' * 64,
+                 'phase': 'Kontextzeichnungen', 'current_view': False}]
+        motif = group(rows, {}, confirmed=True, remote='synthetic')[0]
+        self.assertEqual(motif['current_job'], 'earlier')
+        self.assertEqual(motif['phase'], 'Abschlussbilder')
+        rows[0]['current_view'] = False
+        self.assertIsNone(group(rows, {}, confirmed=True, remote='synthetic')[0]['current_job'])
+
     def test_summary_uses_exact_outer_originals_not_gallery_order(self):
         ctx = p.Record.__new__(p.Record)
         ctx.current = True; ctx.commit = ctx.snapshot = 'a' * 40
