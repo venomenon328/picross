@@ -1,6 +1,7 @@
 # Motivbezogene Ansichtsübergabe · #596/B
 
-Maßgeblich ist die [Paketentscheidung B](https://github.com/venomenon328/picross/issues/596#issuecomment-6821266401).
+PW3-A ersetzt die lokale/entfernte Gleichstellung der bisherigen
+[Paketentscheidung B](https://github.com/venomenon328/picross/issues/596#issuecomment-6821266401).
 Der Verweis bezeichnet die aktuell zu öffnende **Ansicht**, keine Bild-/Rasterwahl
 und keine Freigabe. Mehrere Rasterangebote bleiben gleichberechtigt.
 
@@ -54,18 +55,23 @@ Diese Implementierung nutzt **keinen geratenen Altfallback**: ohne eindeutig
 geprüften Ansichtsbezug bewusste Versionswahl oder gezielte nächste Übergabe.
 Keine Alt-WIP-Konvertierung.
 
-Gitrelation verwendet echte Commit-Eltern aus lokalen Objekten und privatem Cache.
-Bei fehlenden flachen Metadaten höchstens zwei gezielte Fetches ausgewählter
-Remotespitzen mit `depth=64,blob:none` je Listenlauf; höchstens 256 Commitheader
-je Abstammungsrichtung. Fehlende Historie bleibt ungeklärt. Keine allgemeine
-Historien-/Blobsuche, keine Fetchmutation im Benutzercheckout.
-Der Lokal-/Remote-Status vergleicht jeweils denselben Ref; verschiedene Main-/
-Produktionsstände sind für sich kein Synchronisationskonflikt. `Synchron` verlangt
-gleiche frisch bestätigte Quellenstände aller vertretenen Refs; fehlt ein Gegenstück,
-bleibt der Gesamtvergleich unbestätigt. `Lokal neuer` und `Remote neuer` verlangen
-bewiesene Abstammung desselben Refs. Divergenz und unterschiedliche Bytes derselben
-ID/Revision erfinden keinen Sieger. Offline-/Authentifizierungsfehler behalten
-Cacheansichten lesbar und zeigen `Remote nicht aktuell bestätigt` samt letzter
+Im konfigurierten Remotebetrieb gilt [PW3-A](https://github.com/venomenon328/picross/issues/646#issuecomment-6882941268):
+Nur ausgewählte Remotequellen bilden die aktive Auswahl. Die gültige aktuelle
+Ansicht am tatsächlichen Tip von `content/pw/<puzzle_id>` führt vor main, auch
+bei unabhängigen Historien, einer früheren Korrekturphase oder nichtnumerischen
+Revisionen. Ohne offenen Produktionsbranch bleibt offene Mainarbeit sichtbar.
+Ein fehlender/defekter Pointer des offenen Produktionsbranches verlangt gezielte
+Remoteversionswahl; main oder lokale Dateien sind kein geratener Ersatz.
+Versions-/Quelldetails bleiben untergeordnet. Lokale Refs werden für P2 oder
+gezielte Diagnose gelesen; lokale Fortschritte erzeugen keine Alternativen und
+keinen Auswahlkonflikt. Es braucht keine Abstammungssuche für diesen Remoteeinstieg.
+
+Bewusst eingerichteter lokaler Diagnosebetrieb bleibt lokal und unverändert
+konfiguriert. Seine Gitrelation verwendet echte Commit-Eltern aus lokalen
+Objekten mit höchstens 256 Headern je Richtung; fehlende Historie bleibt ungeklärt.
+Keine allgemeine Historien-/Blobsuche oder Fetchmutation im Benutzercheckout.
+Offline-/Authentifizierungsfehler behalten ausschließlich den letzten gebundenen
+Remotecache lesbar und zeigen `Remote nicht aktuell bestätigt` samt letzter
 Cachezeit/Fehler. Cachezeit ist keine frische Remoteprüfung. Unbestätigte lokale
 oder veraltete Quellen ergeben keinen Cloudfolgeauftrag.
 
@@ -91,8 +97,13 @@ wird auch bei unverändertem Produktionscommit nach Mainwechsel neu ausgewertet.
 
 Passive Suche übernimmt diesen Listenwechsel noch nicht. Erst das ausdrückliche
 Laden meldet den belegten Entfall und öffnet verbleibende Arbeit derselben ID,
-eine andere offene Produktion oder eine verständlich leere aktive Liste. Lokale
-Browserentwürfe bleiben separat. Der Leser verändert weder Pointer noch Quellen.
+eine andere offene Produktion oder eine verständlich leere aktive Liste. Gespeicherte
+Motivtexte bleiben sekundär ausdrücklich erreichbar und öffnen bei leerer Liste
+oder Appstart niemals automatisch. Neue ungesendete Eingaben überleben passive
+Suche; Kopieren erklärt weder Absenden noch Freigabe. Der Leser verändert weder Pointer noch Quellen. Reveal-v4/Hintergrund-v6,
+getrennte O/R-Anker, exakte historische Quellhashes und vollständige deduplizierte
+Verarbeitung ohne 32er-Gesamtgrenze folgen PW. Geschlossene Originalformen bleiben
+unverändert; `completion.unresolved` benennt fehlende Belege als Ansichtsdaten.
 
 Nach bestätigter Endabnahme und Mainintegration entfernt der Produktionsakteur den
 abgeschlossenen Ansichtsverweis **vor** dem vorhandenen `retire-production`-Aufruf:

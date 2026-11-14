@@ -82,7 +82,7 @@ const run = code => vm.runInContext(code, context);
     const target=run('listing.jobs.find(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")');
     assert.equal(document.getElementById('jobs').children.length,1,'one motif despite source/ref/revision duplicates');
     assert.equal(run('currentMotif().versions.length'),2);
-    assert.equal(run('currentMotif().versions[0].source_label'),'Lokal und Remote');
+    assert.equal(run('currentMotif().versions[0].source_label'),'Remote');
     await assert.rejects(run('removalPost("preview",{job_id:active.puzzle_id,snapshot:listing.snapshot})'));
     await run(`open(${JSON.stringify(target.id)})`);
     const removeButton=()=>descendants(document.getElementById('view')).find(e=>e.textContent==='Produktion entfernen');
@@ -108,7 +108,7 @@ const run = code => vm.runInContext(code, context);
     assert(nodes().find(e=>e.textContent==='Lokale Bereinigung vorprüfen').disabled);
     assert(nodes().some(e=>e.textContent?.includes('offene Lieferungen bleiben in der aktiven Auswahl sichtbar')));
     assert(nodes().some(e=>e.textContent?.includes('Nachweislich auf main abgeschlossene Lieferungen erscheinen nicht in der aktiven Auswahl')));
-    assert(run('listing.jobs.some(j=>j.source==="local"&&j.ref==="content/pw/pz-workspace-test")'));
+    assert(!run('listing.jobs.some(j=>j.source==="local")'),'local remainder is diagnostic only');
     assert(!run('listing.jobs.some(j=>j.source==="remote"&&j.ref==="content/pw/pz-workspace-test")'));
     console.log('P2 controller: exact branch/revisions, typed confirmation, real HTTP deletion, local remainder and default-off cleanup passed. No browser-rendering claim.');
     return;
@@ -246,6 +246,14 @@ const run = code => vm.runInContext(code, context);
     assert.equal(run('listing.jobs.length'),base.jobs.length,'unconfirmed candidates remain available');
     assert(!document.getElementById('sourceStatus').textContent.includes('Die bisherige Produktion'));
 
+    const offline={...base,snapshot:'pw3-a-offline',mode:'remote',remote_confirmed:false,
+      synced_at:'2026-11-14T12:00:00Z',sync_error:'Offline test'};
+    context.completionSnapshot=offline;await run('checkSources(completionSnapshot)');
+    assert.equal(document.getElementById('copyOrder').disabled,true,'offline observation blocks a fresh cloud follow-up');
+    assert(document.getElementById('orderStatus').textContent.includes('Remote nicht aktuell bestätigt'));
+    assert(document.getElementById('sourceStatus').textContent.includes('letzter Cache'));
+    assert(document.getElementById('sourceStatus').textContent.includes('Offline test'));
+
     // A remaining motif may need a deliberate version choice; select that motif
     // instead of keeping the removed one or inventing an unambiguous source.
     await run(`open(${JSON.stringify(done.id)})`);
@@ -289,6 +297,9 @@ const run = code => vm.runInContext(code, context);
     assert.equal(stored.get('pw-briefs'),keptDraftStorage,'saved drafts survive completion of all published work');
     assert.equal(run('drafts.length'),1);
     assert(document.getElementById('sourceStatus').textContent.includes('nach bestätigter Mainintegration'));
+    run('adopt(completionSnapshot)');
+    assert.equal(run('draft'),null,'empty adoption never resurrects a saved text');
+    assert.equal(run('drafts.length'),1,'stored text remains explicitly reachable');
     run('dispose()');
     console.log('P1/PW2-C controller: source values, filtered passive refresh, explicit same-ID/next/empty adoption, unconfirmed main, late detail and separate stored drafts passed. Synthetic completion snapshots; no browser-rendering or backend-completion claim.');
     return;
