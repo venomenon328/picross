@@ -195,3 +195,19 @@ class EditorChangeTests(unittest.TestCase):
         before = self.snapshot()
         self.assertEqual(edit.apply(self.root, edit.plan(self.root, request))['status'], 'noop')
         self.assertEqual(before, self.snapshot())
+
+    def test_forged_selected_identity_and_unbound_image_delta_reject(self):
+        plan = self.metadata_plan()
+        plan['entry']['definition'] = 'data/content/foreign.json'
+        plan['plan_hash'] = digest({k: v for k, v in plan.items() if k != 'plan_hash'})
+        before = self.snapshot()
+        with self.assertRaisesRegex(ValueError, 'Selected plan entry'): edit.apply(self.root, plan)
+        self.assertEqual(before, self.snapshot())
+        raw = b'<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128"/>'
+        from tools.puzzle_production.editor_image_input import validate_reveal
+        plan = edit.plan(self.root, self.request(reveal={'upload': 'image'}), uploads={
+            'image': {'raw': raw, 'suffix': 'svg', 'checked': validate_reveal(raw, '.svg')}})
+        del plan['changes']['content/reveals/'+self.entry['id']+'.json']
+        plan['plan_hash'] = digest({k: v for k, v in plan.items() if k != 'plan_hash'})
+        with self.assertRaisesRegex(ValueError, 'lacks current image source|without current source'): edit.apply(self.root, plan)
+        self.assertEqual(before, self.snapshot())
