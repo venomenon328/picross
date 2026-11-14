@@ -9,6 +9,11 @@
   "expires_utc": "2026-11-21T17:00:00Z",
   "files": [
     {
+      "file": ".gitattributes",
+      "bytes": 9,
+      "sha256": "48747480eddba024928d03be9bf83dc579e5515768647507a767e8187a85c9ab"
+    },
+    {
       "file": "apply-final.log",
       "bytes": 6872,
       "sha256": "e0d44a3234b4f3eaac51650c890b0039e7bf5fd39836e0a5bc95f71e95e5f185"
@@ -237,6 +242,11 @@
       "file": "reader-all56.json",
       "bytes": 363735,
       "sha256": "caada77ce97e9177c1b8cee7b89b399f6844adf0a0c78336dfe0c83486c8d25b"
+    },
+    {
+      "file": "README.md",
+      "bytes": 10262,
+      "sha256": "9c74c22578bb9d46351a8d78ab80513c1cd714b8c9891839350ed014495eb34e"
     },
     {
       "file": "render-inventory.json",
