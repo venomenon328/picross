@@ -49,6 +49,8 @@ class Installation:
     commit: str
     helper: Path
     helper_sha256: str
+    upgrade_code: str
+    payload_fingerprint: str
 
 
 def installation():
@@ -59,14 +61,16 @@ def installation():
     built = read_small(PACKAGE / 'build.json')
     components = read_small(expected.parent / 'components.json')
     require(built == components and built['format'] == 'picross-windows-app-v1' and
-            built['architecture'] == 'windows-x64' and hex_string(built['commit'], 40), 'Invalid installed build identity')
+            built['architecture'] == 'windows-x64' and hex_string(built['commit'], 40) and
+            hex_string(built['payload_fingerprint'], 64), 'Invalid installed build identity')
     product = release(version=built['version'])
     require(all(built[k] == product[k] for k in ('version', 'product_code', 'upgrade_code')) and
             installed_version(product['product_code']) == built['version'], 'Installed MSI version mismatch')
     helper = PACKAGE / 'UpdateHelper.exe'
     require(hex_string(built['resources'].get('UpdateHelper.exe'), 64) and
             sha(helper) == built['resources']['UpdateHelper.exe'], 'Installed helper binding mismatch')
-    return Installation(expected, built['version'], built['product_code'], built['commit'], helper, sha(helper))
+    return Installation(expected, built['version'], built['product_code'], built['commit'], helper, sha(helper),
+                        built['upgrade_code'], built['payload_fingerprint'])
 
 
 def parent_handle():
