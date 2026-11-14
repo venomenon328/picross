@@ -1,5 +1,13 @@
 # Lokaler Rätselbestand-Editor (PE)
 
+**PE-EDIT2 / #640 · verbindlicher Ersatzvertrag, 14.11.2026:** Für normale
+Editoraktionen ersetzt §13 die Vollbestands-, Herkunfts- und Wiederholungsprüfungen
+in §§6–9, 11 und 12. Deren geschlossene Altformen bleiben ausschließlich für
+explizite Altdiagnose und Recovery erhalten. Die neue Garantie betrifft Eingaben,
+aktuell benötigte Abhängigkeiten und Schreibziele; sie zertifiziert keinen
+unberührten Bestand. Der Liefer- und Abnahmestand steht in
+[#640](https://github.com/venomenon328/picross/issues/640).
+
 Stand: 13.11.2026. **PE-A1 und PE-A2 sind nach unabhängigem Review über
 [PR #577](https://github.com/venomenon328/picross/pull/577) und
 [PR #623](https://github.com/venomenon328/picross/pull/623) integriert.**
@@ -32,12 +40,12 @@ Editors. Für Bearbeiten, Prüfen und Speichern ist kein KI-Zwischenschritt nöt
 | Bereich | Verbindliches Verhalten |
 | --- | --- |
 | Einstieg | Bequemer Start unter Windows; lokaler Backendprozess und Browseroberfläche. Der gewählte Checkout ist eindeutig sichtbar. Kein gehosteter Dienst oder GitHub-Zugang erforderlich. |
-| Auswahl | Durchsuchbare Liste mit Name, Kategorie und Bildvorschauen; Kategorienfilter. Auswahl öffnet ein vorhandenes Rätsel. |
+| Auswahl | Durchsuchbare, virtualisierte Liste mit Name und Kategorie, eigener Scrollfläche und rein visueller Sortierung. Keine technischen Keys oder vorab geladenen Bilder in den Zeilen. |
 | Metadaten | Motivname und genau eine Kategorie direkt bearbeiten. Stabile IDs dienen der Zuordnung und sind keine gewöhnlichen Eingabefelder. |
 | Kategorien | Anlegen, Anzeigenamen ändern, zuweisen. Löschen nur leer oder zusammen mit ausdrücklicher Neuzuordnung sämtlicher betroffener Rätsel. Keine Sortierungsverwaltung. |
 | Bilder | Abschlussbild und Hintergrund ansehen, vorbereitete Datei auswählen oder hineinziehen, prüfen und unverändert importieren. |
 | Hintergrund | Standard, eigenes Bild oder ausdrücklich kein Hintergrund. Auch erstmals bei einem bestehenden Legacyrätsel zuweisen und später zu Standard zurückkehren. |
-| Raster | Nachgeordnete Textbearbeitung der Lösungsmatrix mit vorhandener Palette. Maße und Hinweise daraus ableiten beziehungsweise prüfen. Kein Zeichenwerkzeug und keine verpflichtende grafische Rastervorschau. |
+| Raster | Grafische Vorschau mit echter Palette, Leerzellen, Gitter und Zoom/Fit; nachgeordnete Textbearbeitung. Lokale Vorschau ohne Solver. Kein Zeichenwerkzeug. |
 | Speichern | Explizites Speichern und Verwerfen, erkennbare ungespeicherte Änderungen, konkrete Fehler. Zusammengehörige Änderungen werden konsistent übernommen. |
 
 Keine Neuanlage oder Duplikation von Rätseln, keine Rätsellöschung, Bildgenerierung,
@@ -995,3 +1003,177 @@ Keine echten Nutzersaves, dauerhaften Echtkatalogfixtures oder automatischen
 Browsergalerien. Nachweise mit Quellhead und Prüfgrenzen stehen im Draft-PR.
 Unabhängiges PE-PERF1-A01 vor Merge und persönliche PE-B-U01 vor Release bleiben
 getrennt; ein technischer Erfolg schließt #576 nicht.
+
+## 13. PE-EDIT2: gezielte Pflege statt Vollbestandsprüfung
+
+Vor konsumierendem Code festgelegt am 14.11.2026 gemäß
+[#640](https://github.com/venomenon328/picross/issues/640). Dieser Abschnitt
+ersetzt für den normalen Editorweg die widersprechenden Anforderungen in
+§§6–9, 11 und 12 ausdrücklich. Alte gespeicherte Generationen behalten ihren
+eigenen expliziten Recoveryweg; neue Pläne verwenden ausschließlich diese Form.
+
+### 13.1 Lese- und Prüfgrenze
+
+Start/Liste lesen nur Inhaltsregistry, Runtime und Kategorien. Detail liest
+zusätzlich die ausgewählte Definition und ihre kleinen aktuellen Bildreferenzen;
+sichtbare Bilder werden bedarfsweise geladen. Keine rekursive Inventur, keine
+Pakete, historischen Freigaben oder unbeteiligten Einzeldateien, auch nicht im
+Hintergrund. Name/Kategorie/Kategorienpflege benötigen ausschließlich die drei
+Indizes. Runtime v7 wird nur lesend erkannt; Schreiben verlangt Runtime v8.
+Es gibt keine Migration in UI, Dienst, Worker oder portablem Paket. Die
+externe Anweisung steht in [#641](https://github.com/venomenon328/picross/issues/641).
+Die unveränderten Runtimezeilen werden übernommen, nicht aus allen Definitionen
+rekonstruiert. Suche und Sortierung laufen ausschließlich im Browserspeicher.
+
+Ein Bildimport prüft nur seine neuen Bytes auf bestehende Format-, Größen-,
+Alpha- und SVG-Grenzen. Rastertext wird kanonisch verglichen; nur geänderte Logik
+startet den bestehenden Solver-/Ratingweg samt unabhängiger Proofprüfung für
+diese ID. Apply verwendet dessen vorbereitete Bytes ohne erneute Analyse.
+Beschädigte, nicht benötigte historische Belege blockieren die Pflege nicht.
+Urheber, Rechte, Quelle, Akteur, Erklärung und Bestätigung entfallen aus neuen
+Editorrequests und aktiven Editorquellen. Keine Platzhalter und keine erzeugten
+Herkunftsnotices. Historische Archive und Bibliothekslizenzen bleiben erhalten.
+
+### 13.2 Geschlossener Änderungsplan und kleines Journal
+
+Der allgemeine CLI-Einstieg ist `python -m tools.puzzle_production.editor_cli`.
+`list`, `detail --id`, `plan --request --output`, `apply --plan` und `recover`
+verwenden jeweils `--target-root`. Die versionierte Requestform heißt
+`picross-editor-request-v2`, mit exakt `format,id,metadata,text,profile,reveal,
+background,imports`. `metadata` ist bei einer ID die optionale Name/Kategorie-
+Änderung, sonst eine Liste vorhandener Kategorien-/Metadatenoperationen.
+`text`/`profile` sind optionaler Rastertext und `line`/`paired`; Reveal ist
+null oder `{upload}`, Hintergrund null oder `{status,upload}`. `imports` ordnet
+nur benutzte Uploadschlüssel relativen neuen PNG-/SVG-Pfaden neben dem Request
+zu. Eingaben und Plan liegen außerhalb des Inhaltscheckouts. Kein Akteur,
+keine Herkunft, Bestätigung oder implizite Migrationsaktion. Die HTTP-Route
+`/api/pe/v1/plan` überträgt diese fachlichen Werte mit dem aktuellen Index-
+Token und sitzungseigenen bereits geprüften Uploadschlüsseln.
+
+Die logischen Formen sind geschlossene UTF-8-JSON-Objekte ohne Doppelschlüssel,
+kanonisch mit abschließendem LF. Hashes sind SHA-256, Ganzzahlen keine bools.
+Plan und entpacktes Journal sind auf 128 MiB begrenzt; einzelne Seiten auf
+64 MiB, importierte Bilder weiterhin auf 32 MiB. Physisch speichert allein das
+neue Journal die ASCII-Kennung `PICROSS-EDITOR-CHANGE-JOURNAL-V1` plus LF und
+einen RFC-1950/zlib-Strom (Level 6) seines kanonischen JSON mit `format` zuerst.
+Der Reader begrenzt bereits die Dekompression, verlangt genau einen vollständigen
+Strom ohne Nachlauf und prüft die kanonische Rekodierung. Das vermeidet erneutes
+Lesen der Base64-Vergrößerung der betroffenen Bildbytes; alte Journale behalten
+unverändert ihre Kodierung und expliziten Reader.
+
+| Form | Exakte Felder |
+| --- | --- |
+| `picross-editor-change-plan-v1` | `format,action,id,entry,reads,changes,before,after,quality,plan_hash` |
+| `action` | `metadata`, `images` oder `raster`; Kategorienpflege ist metadata mit id/entry null. |
+| `entry` | Der ausgewählte unveränderte Inhaltsregistryeintrag, bei Kategorienpflege null. Er begrenzt technische Zielpfade, keine erneute Produktionsabnahme. |
+| `reads` | Pfad → SHA-256 oder null für tatsächlich benötigte aktuelle Quellen/Abwesenheiten. Keine Namespace- oder Vollbestandsbindung. |
+| `changes` | Pfad → exakt `{old,new}`; jede Seite Base64 der tatsächlichen Bytes oder null. Nur unterschiedliche Seiten, ausschließlich tatsächliche Schreibmenge. |
+| `before,after` | Lesbare fachliche Vorschau der betroffenen Werte; keine zusätzliche Schreibautorität. |
+| `quality` | null ohne Logikänderung; sonst tatsächlich erzeugter und unabhängig geprüfter Rating-/Proofbefund. |
+| `plan_hash` | Kanonischer Hash aller anderen Planfelder. |
+| `picross-editor-change-journal-v1` | `format,action,id,entry,reads,changes`; dieselben bereits vorbereiteten Quellen und Schreibseiten. |
+
+Ein Zielpfad muss aus den drei Indexpfaden oder der ausgewählten Entry-ID und
+ihren festen Definitions-/Bildstämmen herleitbar sein. Kategorienpflege
+dürfen keine Einzeldateien schreiben. Keine freien Restorepfade, Spielstände,
+Programmdateien oder fremden IDs. Quellen und vorbereitete Schreibseiten bleiben bytegebunden;
+der Dienst bindet zusätzlich Sitzung, Plan-ID und zehnminütige Gültigkeit.
+Ein sitzungseigener Worker hält höchstens die zwei ausdrücklich importierten,
+einmal technisch geprüften Bytefolgen (15 Minuten) und einen vorbereiteten Plan
+(zehn Minuten). Es gibt keinen Index-/Bestandscache und keine Leerlaufarbeit.
+Jede neue Detail-/Planaktion liest ihre aktuellen kleinen Eingänge erneut;
+Apply prüft den vorbereiteten Planhash und frisch die relevanten Altbytes.
+Workerende verwirft die Vorbereitung, niemals ein offenes Recoveryjournal.
+Der Browser hält nur bereits sichtbare Bilder der aktuellen Auswahl; reine
+Kompositions- und Themeänderungen brauchen keinen erneuten Inhaltsread.
+Ein alter sichtbarer Detailstand autorisiert kein Überschreiben neuer relevanter
+Index-/Definitionsbytes. Metadatenänderungen hängen nicht an Raster-/Bildbytes.
+
+Der gemeinsame exklusive Writerlock bleibt `content/.registration-pending.json`.
+Die feste neue Journalstagingdatei heißt `content/.editor-change-journal.tmp`.
+Beide werden gezielt geprüft. Keine Repositorysuche nach Journalen. Ein belegter
+Lock oder fremdes/unklares Staging wird erhalten und blockiert neue Mutationen.
+Vor der ersten Inhaltsänderung wird das vollständige Journal dauerhaft und
+atomar ohne Ersetzen eines vorhandenen Locks veröffentlicht. Unter diesem Lock
+werden alle relevanten Eingangs-/Zielaltbytes frisch verglichen. Vor jedem
+Dateiersatz folgt ausschließlich dessen lokale Pfad-/Altbyteprüfung; Runtime
+zuletzt. Kein erneutes Lesen sämtlicher Abhängigkeiten je Schreibziel.
+Ergebnisse werden gezielt zurückgelesen. Flush und atomare Veröffentlichung
+bleiben Pflicht. Ein No-op erzeugt weder Journal noch neue Dateien oder mtimes.
+
+Recovery validiert Form, Pfade und alle betroffenen Zustände vor Mutation und
+stellt nur exakt eigene Alt-/Neu-/belegbare temporäre Bytes wieder her. Fremde
+Bytes stoppen mit erhaltenem Journal. Wiederholung bleibt möglich, Runtime
+wird zuletzt zurückgestellt. Ein verlorener Browserabschluss allein löst keine
+Recovery aus; frischer Readback entscheidet zwischen erledigt und offen.
+Die gemeinsamen Recoverydispatches erkennen diese Generation ausdrücklich.
+
+### 13.3 Aktive Quellen und Kompatibilität
+
+Die neue aktive Quellgeneration muss durch die externe Bestandsmigration
+#641-M2 vorbereitet sein. Bild-/Rasterwriter verlangen bereits Reveal v4 und
+Hintergrund v6, auch für die Standardpräferenz; keine bedarfsgesteuerte
+Konvertierung einzelner Altquellen. Metadatenpflege auf Runtime v8 bleibt von
+historischen Quellen unabhängig. Anzeige liest aktuelle technische Referenzen
+alter Quellen ohne neue Herkunftspflicht. #641-M1/M2 bleiben externe
+Integrationsabhängigkeiten und werden durch dieses Codepaket nicht ausgeführt.
+
+| Quelle | Geschlossene Form |
+| --- | --- |
+| Reveal v4, `content/reveals/<id>.json` | `format,id,record_revision,binding,current,record_hash`; format `picross-catalog-reveal-v4`. |
+| Hintergrund v6, `content/backgrounds/<id>.json` | Dieselben Felder; format `picross-catalog-background-v6`. |
+| `binding` | `entry,identity` mit der technischen aktuellen Entry-/Definitionszuordnung aus §8.1; keine Herkunftskette und kein `origin`. |
+| Reveal `current` | `image_revision,asset`; asset ist der Ref der unveränderten importierten PNG-/SVG-Bytes am bisherigen technischen Stamm. |
+| Hintergrund `current` | `image_revision,status,asset`; standard/none mit asset null, selected mit Ref auf das feste eigene PNG. |
+| `record_hash` | Kanonischer Hash der übrigen Felder. Revisionszähler 1…1.000.000; Bildzähler nur bei tatsächlicher Bild-/Präferenzänderung erhöhen. |
+
+Alte Quellen werden für die normale Anzeige aus ihrer aktuellen technischen
+Referenz gelesen, ohne ihre Herkunft erneut zu reproduzieren. Unbenutzte alte
+beschreibende Werte sind keine Eingabepflicht. Gemeinsame Resolver, Projektion,
+Folgeproduktion und CLI erhalten die neuen aktuellen Bilder und Präferenzen;
+alte Produktionsarchive dürfen sie nicht zurücksetzen. Eine reguläre neue
+Produktion behält ihre eigenen Freigabe-/Exportprüfungen.
+
+### 13.4 Oberfläche, Einstellungen und Nachweise
+
+Rasteränderungen verwenden `picross-editor-raster-package-v2` mit exakt
+`format,id,revision,previous,definition,quality,files,package_hash`.
+`previous` enthält den technischen bisherigen `{entry,identity}`-Anker,
+`definition` den Ref auf `definition.json`, `quality` die bestehenden vier
+Felder `method,checked,proof,baseline`. `files` bindet ausschließlich
+`definition.json`, `previous-definition.json`, `proof.json`, gegebenenfalls
+`baseline.json` und die tatsächlich neu erzeugten `analysis/`-Dateien.
+Keine Entscheidung, Herkunft, Notice oder kopierte historische Produktion.
+Revision ist `editor-<neue Runtime-Revision>`, Paketort wie bisher unter der ID.
+Die geänderte aktive Difficultyquelle und genau diese neuen Paketdateien sind
+zusätzliche erlaubte Rasterziele. Unabhängige Prüfung erfolgt bei Vorbereitung;
+Apply prüft die gebundenen Bytes. Explizite Altdiagnose darf den Vorgängeranker
+auflösen, normale Editoraktionen niemals.
+
+Die Liste rendert nur sichtbare Zeilen plus kleinen Puffer, besitzt eine eigene
+Scrollfläche und feste Suche/Kategorie/Sortierung (Name A–Z, Z–A, Kategorie/Name).
+Tastaturfokus, ID-Auswahl, Filter und Scrollposition bleiben bei Speichern und
+Verwerfen erhalten. Die Sortierung schreibt keine Inhaltsdatei.
+
+Rastervorschau verwendet echte Matrix/Palette, Leerzellen, Gitter und Zoom/Fit.
+Ungültiger Text nennt Zeile/Spalte und wird nicht als gültiges Raster angezeigt.
+Die Bildkomposition verwendet statische aktuelle Spielressourcen: Papier,
+Kategoriezeichnung/eigenes Bild/keine Zeichnung und proportionales Reveal.
+Uploads erscheinen vor dem Speichern; Originalbytes bleiben unverändert.
+Dark Mode verändert den Papierkontext und die Motivfarben nicht.
+
+`config.json` außerhalb des Inhaltscheckouts enthält `checkout,port,theme`;
+theme ist `light` oder `dark`, Altformen ohne theme lesen als light. Gemeinsames
+serialisiertes, atomares Aktualisieren erhält die jeweils anderen Werte.
+GET/POST `settings` lesen beziehungsweise ändern ausschließlich theme, ohne
+Fachworker, Inhaltsdirty-Flag oder Katalogzugriff. Portwechsel und Neustart
+verwenden dieselbe Programmeinstellung.
+
+Verbindliche Datei-/Byte-/End-to-End-Budgets und T01–T03 stehen in #640.
+Kern sowie `tools` und `production.catalog` werden ausgewählt. Dauerhaft bleiben
+kleine synthetische Zugriffs-, Konflikt-, Recovery-, Metadatenfreiheits- und
+Einstellungstests. Einmalige reale Windows-/Browserproben erfolgen ausschließlich
+an eigenen Testkopien; keine echten Nutzersaves. Zwei originale UI-Belege und
+die tatsächlich getestete portable Ausgabe werden dem unabhängigen Reviewer
+mit Produkthead und konkretem Ablaufdatum von höchstens sieben Tagen zugestellt.
+PE-EDIT2-A01 vor Merge und persönliche PE-B-U01 bleiben getrennte Abnahmen.

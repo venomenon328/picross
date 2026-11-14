@@ -1,5 +1,8 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
+> Aktueller Editor-Sonderweg: [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) definiert die gezielte Transaktion, Reveal v4, Hintergrund v6 und Rasterpaket v2. Normale Editoraktionen lesen keine historische Produktion. Explizite Produktionsprüfung/Recovery alter Formen bleiben bestehen; Folgeproduktion erhält die aktuelle technische Bildbindung. Die externe Migration gehört zu #641, nicht in die Editor-App.
+
+
 ## PE-A3 · Manuelle Rasterpakete
 
 Vertrag vor konsumierendem Code, 13.11.2026:

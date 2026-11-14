@@ -10,6 +10,7 @@ import webbrowser
 from tools.puzzle_production import catalog_io as io
 from . import VERSION
 from .server import Service
+from .settings import Settings
 
 
 def load_ui():
@@ -57,15 +58,13 @@ class Window:
             root = io.external(self.path.get())
             if self.state.is_relative_to(root) or root.is_relative_to(self.state):
                 raise ValueError("Einstellungen müssen außerhalb des Inhaltscheckouts liegen.")
-            self.service = Service(root)
+            self.service = Service(root, state=self.state)
             try: self.service.bind(int(value))
             except OSError:
                 if not int(value) or not messagebox.askyesno("Port belegt", "Dieser Port ist nicht verfügbar. Einen freien abweichenden Port wählen?", parent=self.window): raise
                 self.service.bind(0)
             self.path.set(str(root)); self.port.set(str(self.service.http.server_port))
-            self.state.mkdir(parents=True, exist_ok=True)
-            target = io.safe(self.state, "config.json")
-            target.write_text(json.dumps({"checkout": str(root), "port": self.service.http.server_port}, ensure_ascii=False)+"\n", encoding="utf-8")
+            self.service.settings.update(checkout=str(root), port=self.service.http.server_port)
             self.entry.configure(state="disabled"); self.choose.configure(state="disabled"); self.port_entry.configure(state="disabled")
             self.start_button.configure(state="disabled"); self.browser_button.configure(state="normal")
             self.status.set("Bereit · " + self.service.origin + " · " + str(root))
@@ -139,11 +138,6 @@ def main():
     parser.add_argument("--root"); parser.add_argument("--port", type=int)
     args = parser.parse_args()
     state = io.external(args.state)
-    config = {}
-    if io.safe(state, "config.json").exists():
-        try:
-            config = io.json_bytes(io.read(state, "config.json", 4096), 4096)
-            if set(config) != {"checkout", "port"}: config = {}
-        except (ValueError, OSError): config = {}
+    config = Settings(state).read()
     window = Window(state, args.root or config.get("checkout"), args.port if args.port is not None else config.get("port", 0))
     window.window.mainloop()

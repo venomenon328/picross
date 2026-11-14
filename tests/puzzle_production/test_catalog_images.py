@@ -132,20 +132,29 @@ class CatalogImageTests(unittest.TestCase):
         self.assertEqual(images.apply_migration(self.root, noop)["status"], "noop")
         self.assertEqual(snapshot(self.root), unchanged)
 
-    def test_detail_reuses_one_complete_snapshot_without_writing(self):
+    def test_detail_reads_only_current_indices_and_selected_definition_sources(self):
         from tools.puzzle_editor.worker import run
+        from tools.puzzle_production import editor_change as edit
         before = snapshot(self.root)
         work = self.home/"detail-work"; work.mkdir()
-        original = tx.capture
-        with patch.object(tx, "capture_detail", wraps=tx.capture_detail) as captures, \
-                patch.object(tx, "capture", side_effect=AssertionError("Detail repeated full catalog validation")):
-            result = run(self.root, work, "detail", {"id": self.identifier})
-        self.assertEqual(captures.call_count, 1)
-        self.assertEqual(result["snapshot"], digest(tx.image_snapshot(original(self.root))))
+        allowed = set(edit.INDEXES) | {"game/"+self.entry["definition"],
+                    "content/reveals/"+self.identifier+".json", background.path(self.identifier)}
+        original = io.read
+        reads = []
+        def bounded(root, name, *args, **kwargs):
+            self.assertIn(name, allowed)
+            reads.append(name)
+            return original(root, name, *args, **kwargs)
+        with patch.object(io, "read", side_effect=bounded), \
+                patch.object(tx, "capture", side_effect=AssertionError("Full catalog validation forbidden")), \
+                patch.object(tx, "capture_detail", side_effect=AssertionError("Full detail snapshot forbidden")):
+            result = run(self.root, work, "detail", {"id": self.identifier, "snapshot": None})
+        self.assertEqual(set(reads), allowed)
+        self.assertEqual(len(reads), len(allowed))
         self.assertEqual(result["detail"]["id"], self.identifier)
         definition = load_json(self.root/"game"/self.entry["definition"])
         self.assertEqual(result["raster"]["palette"], definition["palette"])
-        self.assertEqual(result["raster"]["text"], "\n".join(" ".join(map(str, row)) for row in definition["solution"])+"\n")
+        self.assertEqual(result["raster"]["text"], "\n".join(" ".join(map(str, row)) for row in definition["solution"]))
         self.assertEqual(snapshot(self.root), before)
 
     def test_migration_crash_before_with_and_after_journal_rolls_back_and_replans(self):

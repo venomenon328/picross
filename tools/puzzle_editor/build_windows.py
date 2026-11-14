@@ -43,16 +43,21 @@ def build(output):
     source = ROOT/"tools/puzzle_production"
     source_data = work/"puzzle_production"; source_data.mkdir()
     # Frozen methods verify real .py/JSON bytes; include those exact trusted sources.
+    excluded = {"editor_migration", "images_cli", "metadata_cli", "raster_cli", "editor_cli"}
     for file in source.iterdir():
-        if file.is_file() and file.suffix in (".py", ".json", ".md"):
+        if file.is_file() and file.stem not in excluded and file.suffix in (".py", ".json", ".md"):
             shutil.copyfile(file, source_data/file.name)
     env = os.environ.copy()
     env["PYINSTALLER_CONFIG_DIR"] = str(work/"cache")
     subprocess.run([sys.executable, "-m", "PyInstaller", "--clean", "--noconfirm", "--onedir", "--windowed", "--noupx",
         "--name", "Picross-Bestandseditor", "--distpath", str(output/"dist"), "--workpath", str(work/"pyinstaller"),
         "--specpath", str(work), "--paths", str(ROOT), "--collect-submodules", "tools.puzzle_production",
+        *[arg for module in sorted(excluded) for arg in ("--exclude-module", "tools.puzzle_production."+module)],
         "--hidden-import", "tools.puzzle_editor.worker", "--hidden-import", "tkinter.filedialog", "--hidden-import", "tkinter.messagebox",
         "--add-data", str(PACKAGE/"ui")+":tools/puzzle_editor/ui",
+        "--add-data", str(ROOT/"game/book/paper.png")+":game/book",
+        "--add-data", str(ROOT/"game/book/paper.json")+":game/book",
+        "--add-data", str(ROOT/"game/art/drawing/margins")+":game/art/drawing/margins",
         "--add-data", str(source_data)+":tools/puzzle_production", str(PACKAGE/"desktop_entry.py")], check=True, cwd=ROOT, env=env)
     app = output/"dist/Picross-Bestandseditor"
     required = ["Picross-Bestandseditor.exe", "_internal/python313.dll", "_internal/_tkinter.pyd",
@@ -65,6 +70,7 @@ def build(output):
     for name in ("tools.puzzle_editor.server", "tools.puzzle_editor.worker", "tools.puzzle_editor.desktop",
                  "tools.puzzle_production.catalog_metadata", "tools.puzzle_production.catalog_images", "tools.puzzle_production.catalog_raster", "PIL.Image", "tkinter"):
         if name not in modules: raise ValueError("Frozen-Modul fehlt: "+name)
+    if any("tools.puzzle_production."+name in modules for name in excluded): raise ValueError("External CLI/migrator included in editor bundle")
     for file in source_data.iterdir():
         if sha(file) != sha(app/"_internal/tools/puzzle_production"/file.name): raise ValueError("Geänderte Fachquelle im Bundle.")
     licenses = app/"LICENSES"; licenses.mkdir()

@@ -109,7 +109,7 @@ def _operations(value, *, expanded=False, catalog=None):
     return result
 
 
-def _edit(before, catalog, operations):
+def _edit(before, catalog, operations, *, validate_registry=registry.validate):
     after, target = deepcopy(before), deepcopy(catalog)
     rows = {row["id"]: row for row in after["metadata"]}
     for item in operations:
@@ -137,7 +137,7 @@ def _edit(before, catalog, operations):
                 row["category_id"] = replacement
             target["categories"] = [e for e in target["categories"] if e["id"] != identifier]
         # Check each step, so malformed transient requests cannot hide in a batch.
-        registry.validate(after, target)
+        validate_registry(after, target)
         require(len(_bytes(target)) <= categories.MAX_BYTES, "Categories exceed byte limit")
     return after, target
 
@@ -188,23 +188,9 @@ def plan(root, operations, *, _snapshot=None):
     return _plan(root, snapshot, after, target, expanded, "metadata")
 
 
-@io.bounded
 def plan_migration(root):
-    """Explicit v2/v3 to v4 migration, with all other sources left byte-identical."""
-    root = io.external(root)
-    snapshot = tx.capture(root)
-    before = snapshot["registry"]
-    require(not tx.image_generation(snapshot),
-            "Metadata migration keeps its v4/v7 contract; the checkout already uses the explicit v8 image projection")
-    catalog = _catalog(snapshot["texts"])
-    after = deepcopy(before)
-    if before["format"] != registry.METADATA_FORMAT:
-        metadata = _metadata(before, catalog, snapshot["texts"])
-        after.update(format=registry.METADATA_FORMAT,
-                     metadata=[metadata[key] for key in sorted(metadata)],
-                     backgrounds=deepcopy(before.get("backgrounds", [])))
-    registry.validate(after, catalog)
-    return _plan(root, snapshot, after, catalog, [], "metadata-migration")
+    from .editor_migration import plan_metadata_migration
+    return plan_metadata_migration(root)
 
 
 @io.bounded

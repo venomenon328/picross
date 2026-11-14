@@ -36,6 +36,8 @@ IMAGE_FIELDS = ("image_revision", "candidate_revision", "decision", "derivation"
 
 def initial(source):
     """Return the immutable first-registration authority of a validated source."""
+    from .editor_change import slim
+    if slim(source): return None
     if source["format"] == EDITOR_FORMAT:
         previous = source["origin"]["source"]
         return initial(previous) if previous is not None else None
@@ -44,6 +46,8 @@ def initial(source):
 
 
 def current(source):
+    from .editor_change import slim
+    if slim(source): return source["current"]
     """Return current image fields without changing the serialized source form."""
     if source["format"] in REBIND_FORMATS:
         from .background_rebind import image
@@ -52,6 +56,8 @@ def current(source):
 
 
 def effective(source):
+    from .editor_change import slim
+    if slim(source): return {**source["current"], "identity": source["binding"]["identity"]}
     """Internal view only: original identity plus effective current image fields."""
     if source["format"] == EDITOR_FORMAT:
         return {**current(source), "identity": source["binding"]["identity"]}
@@ -334,6 +340,8 @@ def _adoption(value, original, *, rebound=False):
 
 def validate(value, entry):
     """Validate both closed generations without opening historical file refs."""
+    from .editor_change import slim, validate_source
+    if slim(value): return validate_source(value, entry)
     try:
         bc._json_tree(value)
         raw = encoded(value)
@@ -741,6 +749,16 @@ def load(root, registry, entry, texts=None):
         for name in (asset_path(entry["id"]), notice_path(entry["id"])):
             ap.require(not io.safe(root, name).exists(), "Legacy entry has background files")
         return None
+    from .editor_change import slim
+    if slim(source):
+        identity = source["binding"]["identity"]
+        _bound(identity["definition"], _raw(root, identity["definition"]["file"], 2*LIMIT, texts), limit=2*LIMIT)
+        active = source["current"]
+        capability(root, texts, required=active["status"] in ("selected", "none"))
+        raw = _raw(root, asset_path(entry["id"]), bc.MAX_PNG, texts, missing=True)
+        if active["asset"] is None: ap.require(raw is None, "Image-free background has active PNG")
+        else: _bound(active["asset"], raw, limit=bc.MAX_PNG)
+        return source
     if source["format"] == EDITOR_FORMAT:
         return _load_editor(root, registry, entry, source, texts)
     active = effective(source)
