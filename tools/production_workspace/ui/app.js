@@ -257,7 +257,10 @@ function drainImages(){
 }
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
 function dispose(){closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];assetLoads=new Map();readyImages=new Set();$('large').close();}
-function sourceStatus(value){return (value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||(!value.remote_confirmed?'Remote nicht aktuell bestätigt · letzter Cache: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'unbekannt'):('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert'))));}
+function sourceStatus(value){
+ const source=value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||(!value.remote_confirmed?'Remote nicht aktuell bestätigt · letzter Cache: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'unbekannt'):('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert')));
+ return [source,value.completion?.note].filter(Boolean).join(' · ');
+}
 function currentMotif(){return listing?.motifs.find(m=>m.puzzle_id===$('jobs').value);}
 function versionControls(motif,id){
  $('versions').hidden=false;$('version').replaceChildren();
@@ -278,15 +281,24 @@ function chooseMotif(puzzleId){
 }
 function adopt(value){
  const keepDraft=draft?.id,keepId=active?.puzzle_id||$('jobs').value;
- dispose();listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=sourceStatus(value);error(value.errors.join('\n'));$('jobs').replaceChildren();
+ // Match a confirmed delivery, not an ID or a vanished source alone. Its same
+ // content may now be read from another commit/ref while open work shares the ID.
+ const sameDelivery=job=>active?.binding&&['puzzle_id','revision','binding'].every(key=>job[key]===active[key]);
+ const completed=!keepDraft&&value.completion?.confirmed&&!value.jobs.some(sameDelivery)&&
+  (active?value.completion.hidden_jobs?.some(sameDelivery):value.completion.completed_ids?.includes(keepId));
+ const retained=value.motifs.find(m=>m.puzzle_id===keepId);
+ const notice=completed?`Die bisherige Produktion (${keepId}) wurde nach bestätigter Mainintegration aus der aktiven Liste entfernt. ${retained?'Die noch offene Arbeit zur gleichen ID bleibt ausgewählt.':value.motifs.length?'Die nächste offene Produktion ist ausgewählt.':'Die aktive Liste enthält keine offenen Produktionen. Lokale Entwürfe bleiben erhalten.'}`:'';
+ if(!keepDraft)dispose();
+ listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=[sourceStatus(value),notice].filter(Boolean).join(' · ');error(value.errors.join('\n'));$('jobs').replaceChildren();
  for(const motif of value.motifs){const option=node('option',motif.label);option.value=motif.puzzle_id;$('jobs').append(option);}
- if(keepDraft){newDraft(keepDraft);return;}
+ if(!value.motifs.length){const empty=node('option','Keine offenen Produktionen');empty.value='';$('jobs').append(empty);$('jobs').value='';}
+ if(keepDraft){if(value.jobs.length)$('jobs').selectedIndex=-1;return;}
  if(!value.motifs.length){
-  $('jobs').append(node('option','Keine Gitstände'));active=null;detail=null;intent={};
-  if(drafts.length)newDraft(drafts.at(-1).id);else{$('versions').hidden=true;$('motifStatus').textContent='';$('view').replaceChildren(node('h2','Noch keine veröffentlichten Arbeitsstände'),node('p','Über „Neues Motiv“ beginnen.'));}
+  active=null;detail=null;intent={};remoteExplicit=false;
+  if(drafts.length&&!completed)newDraft(drafts.at(-1).id);else{$('versions').hidden=true;$('motifStatus').textContent='';$('view').replaceChildren(node('h2','Keine offenen Produktionen'),node('p',drafts.length?'Einen lokalen Entwurf wählen oder über „Neues Motiv“ beginnen.':'Über „Neues Motiv“ beginnen.'));}
   return;
  }
- chooseMotif(value.motifs.find(m=>m.puzzle_id===keepId)?.puzzle_id||value.motifs[0].puzzle_id);
+ chooseMotif(retained?.puzzle_id||value.motifs[0].puzzle_id);
 }
 function assetURL(id,asset,current,signal){
  if(!assetLoads.has(asset.id)){
@@ -473,9 +485,9 @@ function showRemovalResult(result){
   label.append(choice,node('span',' Optional auch den sicheren lokalen Branchref bereinigen'));
   choice.onchange=()=>{button.disabled=!choice.checked;};
   button.onclick=()=>previewRemoval({receipt_id:result.receipt_id});
-  body.append(node('p','Der lokale Branch bleibt zunächst als eigene Quelle in der Auswahl erhalten.','hint'),label,button);
+  body.append(node('p','Der lokale Branch bleibt zunächst erhalten; offene Lieferungen bleiben in der aktiven Auswahl sichtbar.','hint'),label,button);
  }
- body.append(node('p','Weitere lokale und auf main veröffentlichte Stände bleiben in „Veröffentlichte Stände“ erreichbar.','hint'));
+ body.append(node('p','Maininhalte und weitere lokale Stände bleiben erhalten. Nachweislich auf main abgeschlossene Lieferungen erscheinen nicht in der aktiven Auswahl.','hint'));
  if(!dialog.open)dialog.showModal();
 }
 $('removalClose').onclick=()=>{if(!removalBusy)closeRemoval();};

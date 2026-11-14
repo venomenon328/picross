@@ -22,8 +22,8 @@ ist ohne gespeicherte Einstellung der Standard; ein ausdrückliches Nein bleibt
 als Draft-Auftrag erhalten. Korrektur/Wiederaufnahme erklären keine neue Endabnahme
 oder Mergefreigabe. Vollständige geprüfte Übergabe-/Recorddaten bleiben unten
 aufklappbar und kopierbar. Quellenwerte, Regeln und nicht beauftragte lokale
-Bereinigung werden nicht routinemäßig im Prompt wiederholt. Ausblendung bereits
-integrierter Lieferungen bleibt PW2-C in #626. Ein vollständig geeigneter qualifizierter
+Bereinigung werden nicht routinemäßig im Prompt wiederholt. PW2-C nimmt konkret
+nachgewiesene integrierte Lieferungen aus der aktiven Auswahl. Ein vollständig geeigneter qualifizierter
 Rasterkandidat genügt; weitere entstehen nach Authoring bedarfsweise nacheinander,
 ohne Budget-/Qualitätslockerung. Die drei Reveal- und drei Hintergrundoriginale
 bleiben ihre eigenen Bildauswahlen. Hintergrund bedeutet die ganze 2304×576-
@@ -250,6 +250,24 @@ Bis zu acht Listenstände bleiben pro Sitzung erreichbar; danach neu laden.
 Unterschiedliche Quellen derselben ID/Revision mit abweichenden Bytes sind
 Konflikte. Es wird keine höchste Revisionszeichenfolge gewählt.
 
+PW2-C gleicht konkrete Lieferungen samt Original-/Integrationsbindungen mit dem
+frisch bestätigten konfigurierten Remote-`main` ab. Vollständiger Export und die
+vorhandenen kompakten Abschlussbelege werden anhand begrenzter Metadaten gelesen;
+dies öffnet keine ZIPs/Bilder und führt keine Solver-/Proofprüfung aus. Regulärer
+Merge, Squash und unveränderte Sammelübernahme werden gleich behandelt. Bestätigte
+Lieferungen, identische Kopien und eindeutig zugehörige alte Schritte verschwinden
+aus der aktiven Liste. Eine offene neue Revision oder spätere Bildarbeit derselben
+ID bleibt sichtbar. Unklare Zuordnung wird nicht als Abschluss geraten.
+
+Eine lokale Mainkopie, Cachezeit oder erfolgreiche Suche nur anderer Refs bestätigt
+keine Mainintegration. Ohne frischen tatsächlichen Mainbezug bleibt betroffene
+Arbeit sichtbar; ein bewusst abgewählter Mainref wird nicht zusätzlich geladen.
+Die Liste erklärt diesen Zustand. Passive Suche lässt auch eine inzwischen
+abgeschlossene geöffnete Quelle samt Bildern und ungesendeten Eingaben stehen.
+Erst „Neueren Stand laden“ meldet deren belegten Entfall und übernimmt offene Arbeit
+derselben ID, eine andere Produktion oder den leeren aktiven Zustand. Browserentwürfe
+bleiben eigenständig gespeichert. Es werden dabei keine Dateien oder Refs gelöscht.
+
 Nur lokale Nachweise, im konfigurierten Remote gefundene Commits, Zeitpunkt der
 letzten Synchronisierung und Remote-/Offlinefehler sind getrennt sichtbar.
 Ein lokaler Commit ist keine bestätigte Remote-Sicherung. Offline bleibt ein
@@ -314,7 +332,8 @@ nichtinteraktive Git-Anmeldung verwenden; keine neue Anmeldung in der UI.
 
 Ein Erfolg wird erst nach Prüfung des entfernten Remote-Refs gemeldet.
 Cachefehler oder ein unbekannter Ausgang bleiben sichtbar und verlangen eine
-neue Quellenprüfung. Lokale und Mainstände bleiben in der Auswahl. Ein sicherer
+neue Quellenprüfung. Lokale und Mainstände werden weiter gelesen; in der aktiven
+Auswahl bleiben offene oder nicht eindeutig abgeschlossene Lieferungen. Ein sicherer
 lokaler Branchref kann danach optional, zunächst abgewählt, in einem eigenen
 Bestätigungsdialog bereinigt werden. Das löscht keine Arbeitsdatei oder Worktree.
 
