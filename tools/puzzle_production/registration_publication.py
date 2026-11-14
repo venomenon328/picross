@@ -257,7 +257,10 @@ def execute(root, journal, additions, *, fail_step=None, under_lock=None, verifi
                 raise InterruptedError("Injected transaction interruption: " + name)
             if fail_step == name or name == tx.REGISTRY and fail_step == "index":
                 raise OSError("Injected registration failure: " + name)
-        check_checkout(root, replay=True, pending_journal=raw,
+        # The journal's single new export was replayed independently during
+        # staging. Keep its full P5 verification without re-running historical
+        # producers for every other registered package.
+        check_checkout(root, replay=True, replay_package=package, pending_journal=raw,
                        **({"_verification": verification} if verification is not None else {}))
         state.full("G5b")
         diagnostic.begin_segment("P6")
