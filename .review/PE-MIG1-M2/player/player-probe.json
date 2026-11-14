@@ -1,0 +1,165 @@
+{
+	"cases": [
+		{
+			"category_id": "wasserwelt",
+			"id": "pz-20ecf7747bbf40828238ec26d1207172",
+			"image": "case-0-standard.png",
+			"legacy_standard_pixels_identical": true,
+			"reveal": "art/content/qualle_001.png",
+			"revision": 1.0,
+			"snapshot": {
+				"active_requests": 0,
+				"binding": {
+					"asset": null,
+					"id": "pz-20ecf7747bbf40828238ec26d1207172",
+					"image_revision": 1.0,
+					"status": "standard",
+					"token": 1
+				},
+				"completed_count": 0,
+				"diagnostic": "",
+				"discarded_count": 0,
+				"frozen": true,
+				"has_ready": false,
+				"has_texture": false,
+				"last_load_usec": 0,
+				"peak_requests": 0,
+				"queued": false,
+				"rect": "[P: (160.2963, 433.9259), S: (1048.296, 262.0741)]",
+				"request_count": 0,
+				"stale_requests": 0,
+				"state": "standard",
+				"visible_id": "",
+				"visible_revision": null,
+				"visible_token": null
+			},
+			"status": "standard"
+		},
+		{
+			"category_id": "obst-nuesse",
+			"id": "pz-00f37200bcee4d548e2c910ce551d077",
+			"image": "case-1-standard.png",
+			"legacy_standard_pixels_identical": true,
+			"reveal": "art/content/drachenfrucht_001.png",
+			"revision": 1.0,
+			"snapshot": {
+				"active_requests": 0,
+				"binding": {
+					"asset": null,
+					"id": "pz-00f37200bcee4d548e2c910ce551d077",
+					"image_revision": 1.0,
+					"status": "standard",
+					"token": 2
+				},
+				"completed_count": 0,
+				"diagnostic": "",
+				"discarded_count": 0,
+				"frozen": true,
+				"has_ready": false,
+				"has_texture": false,
+				"last_load_usec": 0,
+				"peak_requests": 0,
+				"queued": false,
+				"rect": "[P: (160.2963, 433.9259), S: (1048.296, 262.0741)]",
+				"request_count": 0,
+				"stale_requests": 0,
+				"state": "standard",
+				"visible_id": "",
+				"visible_revision": null,
+				"visible_token": null
+			},
+			"status": "standard"
+		},
+		{
+			"category_id": "obst-nuesse",
+			"id": "pz-birne",
+			"image": "case-2-selected.png",
+			"legacy_standard_pixels_identical": null,
+			"reveal": "art/content/birne_001.png",
+			"revision": 1.0,
+			"snapshot": {
+				"active_requests": 0,
+				"binding": {
+					"asset": {
+						"bytes": 486658.0,
+						"file": "art/backgrounds/pz-birne.png",
+						"sha256": "fc59684a00e38145de8d496ff863fde5997c42dc844c112e526013e3b17171c9"
+					},
+					"id": "pz-birne",
+					"image_revision": 1.0,
+					"status": "selected",
+					"token": 3
+				},
+				"completed_count": 1,
+				"diagnostic": "",
+				"discarded_count": 0,
+				"frozen": true,
+				"has_ready": false,
+				"has_texture": true,
+				"last_load_usec": 140686,
+				"peak_requests": 1,
+				"queued": false,
+				"rect": "[P: (160.2963, 433.9259), S: (1048.296, 262.0741)]",
+				"request_count": 1,
+				"stale_requests": 0,
+				"state": "visible",
+				"visible_id": "pz-birne",
+				"visible_revision": 1.0,
+				"visible_token": 3
+			},
+			"status": "selected"
+		},
+		{
+			"category_id": "menschen-berufe",
+			"id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+			"image": "case-3-standard.png",
+			"legacy_standard_pixels_identical": true,
+			"reveal": "art/content/ho_chi_minh_001.png",
+			"revision": 1.0,
+			"snapshot": {
+				"active_requests": 0,
+				"binding": {
+					"asset": null,
+					"id": "pz-023b50b44d1c4698a6e17e65b6ea4337",
+					"image_revision": 1.0,
+					"status": "standard",
+					"token": 4
+				},
+				"completed_count": 1,
+				"diagnostic": "",
+				"discarded_count": 0,
+				"frozen": true,
+				"has_ready": false,
+				"has_texture": false,
+				"last_load_usec": 140686,
+				"peak_requests": 1,
+				"queued": false,
+				"rect": "[P: (160.2963, 433.9259), S: (1048.296, 262.0741)]",
+				"request_count": 1,
+				"stale_requests": 0,
+				"state": "standard",
+				"visible_id": "",
+				"visible_revision": null,
+				"visible_token": null
+			},
+			"status": "standard"
+		}
+	],
+	"display": "Windows",
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"entries": 56,
+	"failures": [],
+	"renderer": "NVIDIA GeForce RTX 3070",
+	"status": "passed",
+	"user_saves": false
+}

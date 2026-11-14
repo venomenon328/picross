@@ -1,0 +1,15 @@
+{
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/641",
+  "package": "PE-MIG1/M2",
+  "modules": [],
+  "purpose": "M2-K01-K04: einmalige externe aktive Quellenmigration des realen 56er-Bestands; Produktdiff nur Reveal-v4/Background-v6, Hintergrundindex, technisch erforderliche legacy->standard-Runtimefelder und Paketplan. Keine Bild-, Logik-, Save- oder Produktcodeaenderung. Buildfreier docs/verify(source)/ci-required-Kern. Externer Einmal-Runner, Guard-/Rollbacktests, Vollvergleich, No-op, alle 56 Editorreader und ausgewaehlte Godotdarstellung als gezielte Revieworiginale am separaten Belegref; niemals in App/UI/API/Starter eingebunden.",
+  "omitted": "Keine Zusatzmodule oder neue Echtkatalog-Dauersuite: Datenmigration aendert keine ausgelieferten Werkzeuge, Reader, Algorithmen, Spiel- oder CI-Programme. tools/production.catalog sind fuer unveraenderte Programme nicht erforderlich. Einmalige echte Bestands-, Editor- und Spielerproben erfolgen isoliert; kein automatisches Chromium und keine echten Benutzersaves.",
+  "test_changes": [],
+  "core_change": null,
+  "evidence": {
+    "mode": "none",
+    "purpose": null,
+    "expires": null
+  }
+}

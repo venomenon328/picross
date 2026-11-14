@@ -1,0 +1,49 @@
+{
+  "format": "picross-background-import-v1",
+  "source_game": "E:\\Zeuch\\Coding\\picross_codex\\641-m2-20261114\\temp\\import-repro\\game",
+  "registry_sha256": "556a2cf7e1bebdbdb0befee8f45e18665e8e6052f02bf6c9486014392203abd0",
+  "assets": [
+    {
+      "id": "pz-birne",
+      "image_revision": 1,
+      "asset": {
+        "bytes": 486658,
+        "file": "art/backgrounds/pz-birne.png",
+        "sha256": "fc59684a00e38145de8d496ff863fde5997c42dc844c112e526013e3b17171c9"
+      },
+      "notice": {
+        "file": "art/backgrounds/pz-birne.txt",
+        "sha256": "8c34c7a604af506cbc9b41c5838dc87fa12c58fa567752eda472000930c2b1ae",
+        "bytes": 438
+      }
+    },
+    {
+      "id": "pz-erdbeere",
+      "image_revision": 1,
+      "asset": {
+        "bytes": 569682,
+        "file": "art/backgrounds/pz-erdbeere.png",
+        "sha256": "0f1d7bec08c5e9ae7af48b8dca73074711b5f284d7d4f62d3bf57c1d2e9ba8a2"
+      },
+      "notice": {
+        "file": "art/backgrounds/pz-erdbeere.txt",
+        "sha256": "9162a14990c5027f5b3e45db4e0f2c6a7c22b9bfef43f008c7e4ffcf5543f48a",
+        "bytes": 432
+      }
+    },
+    {
+      "id": "pz-zitrone",
+      "image_revision": 1,
+      "asset": {
+        "bytes": 442113,
+        "file": "art/backgrounds/pz-zitrone.png",
+        "sha256": "1f41b9a85756d295ea47de163fb9767b3922d66b5ecec0a98d3d4e5f744d6853"
+      },
+      "notice": {
+        "file": "art/backgrounds/pz-zitrone.txt",
+        "sha256": "43a9056fffd43e98e2d84fe689fc3c51991ebc311dcd003403a55920896e1641",
+        "bytes": 365
+      }
+    }
+  ]
+}

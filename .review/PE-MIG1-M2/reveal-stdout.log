@@ -1,0 +1,4 @@
+Godot Engine v4.7.2.stable.official.ed1daf0bf - https://godotengine.org
+OpenGL API 3.3.0 NVIDIA 610.88 - Compatibility - Using Device: NVIDIA - NVIDIA GeForce RTX 3070
+
+M2_REVEAL {"cases":[{"id":"pz-00f37200bcee4d548e2c910ce551d077","image":"reveal-pz-00f37200bcee4d548e2c910ce551d077.png","in_memory_completed_only":true,"name":"Drachenfrucht","reveal":"res://art/content/drachenfrucht_001.png","revision":1.0,"texture_size":"(1254.0, 1254.0)"},{"id":"pz-023b50b44d1c4698a6e17e65b6ea4337","image":"reveal-pz-023b50b44d1c4698a6e17e65b6ea4337.png","in_memory_completed_only":true,"name":"Ho Chi Minh","reveal":"res://art/content/ho_chi_minh_001.png","revision":1.0,"texture_size":"(1086.0, 1448.0)"}],"failures":[],"status":"passed","user_saves":false}

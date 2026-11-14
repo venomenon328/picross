@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<stdin>", line 13, in <module>
+  File "E:\Zeuch\Coding\picross_codex\641-m2-20261114\repo\tools\background_import.py", line 142, in source_inventory
+    notice = active["notice"]
+             ~~~~~~^^^^^^^^^^
+KeyError: 'notice'

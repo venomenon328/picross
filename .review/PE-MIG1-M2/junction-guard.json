@@ -1,0 +1,7 @@
+{
+  "scenario": "windows_directory_junction",
+  "status": "rejected_without_mutation",
+  "error": "Unsafe catalog link/reparse path: E:\\Zeuch\\Coding\\picross_codex\\641-m2-20261114\\temp\\junction-case\\content\\reveals",
+  "target_files_and_mtimes_preserved": 1726,
+  "file_symlink_creation": "unavailable: WinError 1314; no elevation or permission change"
+}

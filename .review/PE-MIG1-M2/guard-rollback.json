@@ -1,0 +1,57 @@
+[
+  {
+    "scenario": "foreign_lock",
+    "status": "rejected_without_mutation",
+    "error": "Existing lock/staging/recovery: preserve it"
+  },
+  {
+    "scenario": "foreign_staging",
+    "status": "rejected_without_mutation",
+    "error": "Existing lock/staging/recovery: preserve it"
+  },
+  {
+    "scenario": "same_mtime_stale_bytes",
+    "status": "rejected_without_mutation",
+    "error": "Stale inventory"
+  },
+  {
+    "scenario": "forged_write_path",
+    "status": "rejected_without_mutation",
+    "error": "Foreign write path"
+  },
+  {
+    "scenario": "hardlink",
+    "status": "rejected_without_mutation",
+    "error": "Catalog hardlink is unsupported: E:\\Zeuch\\Coding\\picross_codex\\641-m2-20261114\\testrepo\\content\\reveals\\pz-00f37200bcee4d548e2c910ce551d077.json"
+  },
+  {
+    "scenario": "symlink",
+    "status": "unavailable",
+    "error": "[WinError 1314] A required privilege is not held by the client: 'E:\\\\Zeuch\\\\Coding\\\\picross_codex\\\\641-m2-20261114\\\\testrepo\\\\game\\\\data\\\\registry.json' -> 'E:\\\\Zeuch\\\\Coding\\\\picross_codex\\\\641-m2-20261114\\\\testrepo\\\\content\\\\reveals\\\\pz-00f37200bcee4d548e2c910ce551d077.json'"
+  },
+  {
+    "scenario": "interruption_0",
+    "status": "rolled_back_exactly",
+    "seconds": 81.94736489999923
+  },
+  {
+    "scenario": "foreign_recovery_bytes",
+    "status": "rejected_without_mutation",
+    "error": "Foreign recovery bytes: content/backgrounds/pz-00f37200bcee4d548e2c910ce551d077.json"
+  },
+  {
+    "scenario": "interruption_1",
+    "status": "rolled_back_exactly",
+    "seconds": 97.87977339999998
+  },
+  {
+    "scenario": "interruption_113",
+    "status": "rolled_back_exactly",
+    "seconds": 85.69353509999928
+  },
+  {
+    "scenario": "interruption_114",
+    "status": "rolled_back_exactly",
+    "seconds": 82.94556020000164
+  }
+]

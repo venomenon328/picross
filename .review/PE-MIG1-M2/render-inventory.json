@@ -1,0 +1,112 @@
+[
+  {
+    "file": "player/case-0-legacy.png",
+    "bytes": 983309,
+    "sha256": "e8778e8ba7b62bf562f3efa8bbc0b0989904ffc1e5f98a897a680fa906d00f06",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": false
+  },
+  {
+    "file": "player/case-0-standard.png",
+    "bytes": 983309,
+    "sha256": "e8778e8ba7b62bf562f3efa8bbc0b0989904ffc1e5f98a897a680fa906d00f06",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": false
+  },
+  {
+    "file": "player/case-1-legacy.png",
+    "bytes": 979297,
+    "sha256": "8e68da5c35085758d9a5751447deb3e8d2b1e386caf412f2b4e0475b27ff1921",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": false
+  },
+  {
+    "file": "player/case-1-standard.png",
+    "bytes": 979297,
+    "sha256": "8e68da5c35085758d9a5751447deb3e8d2b1e386caf412f2b4e0475b27ff1921",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": false
+  },
+  {
+    "file": "player/case-2-selected.png",
+    "bytes": 1008850,
+    "sha256": "11620531a9071ef24a0b315f33c4ae49e6cd660979744e759e4b2593280c1b7c",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": true
+  },
+  {
+    "file": "player/case-3-legacy.png",
+    "bytes": 986896,
+    "sha256": "b3349570223da3aeab37c8b5f9c9464201e1f060e972523591eb934d81bc8332",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": false
+  },
+  {
+    "file": "player/case-3-standard.png",
+    "bytes": 986896,
+    "sha256": "b3349570223da3aeab37c8b5f9c9464201e1f060e972523591eb934d81bc8332",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": false
+  },
+  {
+    "file": "player/category-visible-legacy.png",
+    "bytes": 1928597,
+    "sha256": "822b23be3865cb77fc02f40e808b5e89c10408bce4e2592388dbbb704e82a81a",
+    "pixels": [
+      1920,
+      1080
+    ],
+    "delivered": true
+  },
+  {
+    "file": "player/category-visible-standard.png",
+    "bytes": 1928597,
+    "sha256": "822b23be3865cb77fc02f40e808b5e89c10408bce4e2592388dbbb704e82a81a",
+    "pixels": [
+      1920,
+      1080
+    ],
+    "delivered": true
+  },
+  {
+    "file": "player/reveal-pz-00f37200bcee4d548e2c910ce551d077.png",
+    "bytes": 1077250,
+    "sha256": "fcec0fdd465279c65fdb416c11b7882e88e502b279635c99fe543b67eb9c829c",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": true
+  },
+  {
+    "file": "player/reveal-pz-023b50b44d1c4698a6e17e65b6ea4337.png",
+    "bytes": 1020831,
+    "sha256": "44d90787f83206880b650bba70fe95eed90391b21b7639fc6344060dfb6fe0a3",
+    "pixels": [
+      1280,
+      720
+    ],
+    "delivered": true
+  }
+]
