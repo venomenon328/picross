@@ -193,13 +193,14 @@ class AuthoringFinalizationTests(unittest.TestCase):
             initial = self.request()
             self.assertEqual(self.run_finalize(initial)["status"], "updated")
         old_sidecar = self.bytes_and_times(self.output / initial["sidecar_root"])
+        with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})):
+            request = self.approval_request()
         before = self.bytes_and_times(self.output)
         # An unknown old record fails before reading/publishing the new approval.
-        blocked = self.run_finalize(initial)
+        blocked = self.run_finalize(request)
         self.assertEqual(blocked["status"], "invalid_input", blocked)
         self.assertEqual(self.bytes_and_times(self.output), before)
         with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})):
-            request = self.approval_request()
             original = (self.directory / "package.zip").read_bytes()
             with patch.object(assets, "_render", wraps=assets._render) as render:
                 result = self.run_finalize(request)
