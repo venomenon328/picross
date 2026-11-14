@@ -14,6 +14,7 @@ from .contract import canonical_bytes, exact_keys, load_json, integer
 from . import categories
 from . import catalog_difficulty
 from . import catalog_added
+from . import catalog_method
 import time
 import os
 
@@ -184,6 +185,8 @@ def validate_entries(entries, catalog=None):
     return entries
 
 
+@diagnostic.measured("Checkout validation", "checkout_validations")
+@catalog_method.bound_validation
 def check_checkout(root, replay=False, *, check_projection=True, pending_journal=None, _verification=None):
     from . import catalog_io as io, reveal_source as reveal, catalog_background as background
     if _verification is not None:
@@ -223,46 +226,92 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
                 allowed.append(canonical_bytes(older) + b"\n")
         require(io.read(root, RUNTIME, 8 * 1024 * 1024) in allowed, "Runtime registry is stale")
     for e in r["entries"]:
-        p = e["production"]
-        require(not p["test_only"] or root.resolve() != ROOT.resolve(), "Test-only content cannot enter the real catalog")
-        package = root / p["package"]
-        reveal.resolve(root, e, catalog)
-        active_reveal = reveal.load(root, e, catalog)
-        require(image_runtime or active_reveal is None or active_reveal.get("format") != "picross-catalog-reveal-v3",
-                "Editor reveal requires explicit runtime v8 migration")
-        # Also enforce the category binding without the expensive production replay.
-        m = load_json(package / "manifest.json")
-        if m.get("format") == "picross-editor-raster-package-v1":
-            from . import editor_raster
-            editor_raster.package(root, e, m, replay=replay)
-            background.load(root, r, e)
-            continue
-        from . import integrated_content
-        source = background.load(root, r, e)
-        require(image_runtime or source is None or source.get("format") != "picross-catalog-background-v5",
-                "Editor background requires explicit runtime v8 migration")
-        declared = m.get("format") in ("picross-target-export-v6", background.RECEIPT_FORMAT) or (
-            m.get("format") == "picross-target-export-v5" and source is not None and source["format"] in background.REBIND_FORMATS)
-        if source is not None and source.get("format") == "picross-catalog-background-v5":
-            declared = True  # Manual authority is independently bound to the original production.
-        require(declared == (e["id"] in background_index), "Background export v6/receipt requires its exact active index")
-        if m.get("format") in integrated_content.FORMATS:
-            integrated_content.check(root, e, m)
-            continue  # Final integration is checked by runtime hashes, never by production replay.
-        require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5", "picross-target-export-v6"), "Unsupported registered export")
-        if m["format"] != "picross-target-export-v1":
-            require(m.get("category_id") == e["category_id"], "Registered category differs from export")
-        if replay:
-            from .target_adapter import verify_export
-            if _verification is not None and p["package"] == _verification.package:
-                m, report = _verification.written(root, p["package"], pending_journal)
-            else:
-                m, report = verify_export(package)
-            require(m["definition_id"] == e["id"] and m["save_slot"] == e["save_slot"] and
-                    m["definition"] == "runtime/"+e["definition"] and m["reveal"] == "runtime/"+e["reveal"] and
-                    report["package_revision"] == p["revision"] and
-                    all(report[k] == p[k] for k in ("width","height","mode","difficulty")), "Registered package identity differs")
+        _check_entry(root, r, catalog, e, image_runtime=image_runtime, replay=replay,
+                     pending_journal=pending_journal, _verification=_verification)
     return r
+
+
+def _check_entry(root, r, catalog, e, *, image_runtime, replay=False, pending_journal=None, _verification=None):
+    """The same complete production/source check for one registered entry."""
+    from . import catalog_io as io, reveal_source as reveal, catalog_background as background
+    background_index = background.index(r)
+    p = e["production"]
+    require(not p["test_only"] or root.resolve() != ROOT.resolve(), "Test-only content cannot enter the real catalog")
+    package = root / p["package"]
+    reveal.resolve(root, e, catalog)
+    active_reveal = reveal.load(root, e, catalog)
+    require(image_runtime or active_reveal is None or active_reveal.get("format") != "picross-catalog-reveal-v3",
+            "Editor reveal requires explicit runtime v8 migration")
+    # Also enforce the category binding without the expensive production replay.
+    m = load_json(package / "manifest.json")
+    if m.get("format") == "picross-editor-raster-package-v1":
+        from . import editor_raster
+        editor_raster.package(root, e, m, replay=replay)
+        background.load(root, r, e)
+        return
+    from . import integrated_content
+    source = background.load(root, r, e)
+    require(image_runtime or source is None or source.get("format") != "picross-catalog-background-v5",
+            "Editor background requires explicit runtime v8 migration")
+    declared = m.get("format") in ("picross-target-export-v6", background.RECEIPT_FORMAT) or (
+        m.get("format") == "picross-target-export-v5" and source is not None and source["format"] in background.REBIND_FORMATS)
+    if source is not None and source.get("format") == "picross-catalog-background-v5":
+        declared = True  # Manual authority is independently bound to the original production.
+    require(declared == (e["id"] in background_index), "Background export v6/receipt requires its exact active index")
+    if m.get("format") in integrated_content.FORMATS:
+        integrated_content.check(root, e, m)
+        return  # Final integration is checked by runtime hashes, never by production replay.
+    require(m.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5", "picross-target-export-v6"), "Unsupported registered export")
+    if m["format"] != "picross-target-export-v1":
+        require(m.get("category_id") == e["category_id"], "Registered category differs from export")
+    if replay:
+        from .target_adapter import verify_export
+        if _verification is not None and p["package"] == _verification.package:
+            m, report = _verification.written(root, p["package"], pending_journal)
+        else:
+            m, report = verify_export(package)
+        require(m["definition_id"] == e["id"] and m["save_slot"] == e["save_slot"] and
+                m["definition"] == "runtime/"+e["definition"] and m["reveal"] == "runtime/"+e["reveal"] and
+                report["package_revision"] == p["revision"] and
+                all(report[k] == p[k] for k in ("width","height","mode","difficulty")), "Registered package identity differs")
+
+
+def check_detail(root, snapshot, identifier):
+    """Validate the selected ID, without certifying unrelated puzzle semantics.
+
+    The caller binds/rechecks the complete source and namespace byte inventory.
+    Writers always use check_checkout; this function never publishes anything.
+    """
+    from . import catalog_io as io, catalog_rating as rating, catalog_background as bg, reveal_source as reveal
+    r, texts = snapshot["registry"], snapshot["texts"]
+    require_current(r)
+    entries = [e for e in r["entries"] if e["id"] == identifier]
+    require(len(entries) == 1, "Unknown puzzle ID")
+    entry = entries[0]
+    catalog = categories.validate(io.json_bytes(texts[categories.PATH], categories.MAX_BYTES))
+    actual = io.json_bytes(texts[RUNTIME], 8*1024*1024)
+    exact_keys(actual, {"format", "categories", "entries"})
+    require(texts[RUNTIME] == canonical_bytes(actual)+b"\n", "Noncanonical editor runtime")
+    require(actual["format"] in (METADATA_RUNTIME_FORMAT, IMAGE_RUNTIME_FORMAT), "Unsupported editor runtime")
+    require(isinstance(actual["entries"], list) and all(isinstance(e, dict) for e in actual["entries"]) and
+            [e.get("id") for e in actual["entries"]] == [e["id"] for e in r["entries"]] and
+            actual["categories"] == categories.ordered(catalog), "Runtime catalog identity/categories differ")
+    selected = {**r, "entries": entries, "metadata": [row for row in r["metadata"] if row["id"] == identifier],
+                "backgrounds": [row for row in r["backgrounds"] if row["id"] == identifier]}
+    raw = texts[rating.path(identifier)]
+    ratings = {identifier: rating.validate(io.json_bytes(raw, rating.LIMIT),
+        definition_bytes=texts["game/"+entry["definition"]], production_mode=entry["production"]["mode"])} if raw is not None else {}
+    raw = texts[catalog_added.path(identifier)]
+    dates = {identifier: catalog_added.validate(io.json_bytes(raw, catalog_added.LIMIT), identifier)} if raw is not None else {}
+    backgrounds = bg.projection(selected, texts)
+    bg.capability(None, texts, required=any(row["status"] in ("selected", "none") for row in backgrounds.values()))
+    image_runtime = actual["format"] == IMAGE_RUNTIME_FORMAT
+    reveals = {identifier: reveal.resolve(root, entry, catalog)["effective_reveal"]} if image_runtime else None
+    expected = projection(selected, catalog, ratings=ratings, added=dates, backgrounds=backgrounds, reveals=reveals,
+                          version=8 if image_runtime else 7)
+    require(next(e for e in actual["entries"] if e["id"] == identifier) == expected["entries"][0],
+            "Selected runtime entry is stale")
+    _check_entry(root, r, catalog, entry, image_runtime=image_runtime)
 
 
 def sync_runtime(root):

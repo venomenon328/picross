@@ -1,5 +1,8 @@
 """Explicit, snapshot-bound production default; importing this module activates nothing."""
 import argparse
+from contextlib import contextmanager
+from contextvars import ContextVar
+from functools import wraps
 from pathlib import Path
 
 from .authoring_package import require, sha, relative
@@ -17,16 +20,84 @@ PLAN = "picross-difficulty-activation-plan-v2"
 IMAGE_PLAN = "picross-difficulty-activation-plan-v3"
 LIMIT = 4096
 PLAN_LIMIT = 16 * 1024 * 1024
+_batch = ContextVar("catalog_method_read_batch", default=None)
+
+
+def _check_inputs(root, files):
+    with diagnostic.phase("Method byte binding"):
+        require(all(io.read(root, name, 64*1024*1024) == raw for name, raw in files.items()),
+                "Changed frozen difficulty method inputs")
+    diagnostic.count("method_byte_revalidations")
+
+
+@contextmanager
+def _read_batch():
+    if _batch.get() is not None:
+        yield
+        return
+    data_token = io._operation_data.set({"json": {}, "json_bytes": 0}) if io._operation_data.get() is None else None
+    used = {}
+    token = _batch.set(used)
+    try:
+        yield
+        # No active content writes inside these readers. A changed method
+        # invalidates the whole result before any caller can consume it.
+        for key, files in used.items():
+            _check_inputs(key[2], files)
+    finally:
+        _batch.reset(token)
+        if data_token is not None: io._operation_data.reset(data_token)
+
+
+def bound_validation(function):
+    """Deduplicate pure method validation in one byte-bound read-only view."""
+    @wraps(function)
+    def wrapped(*args, **kwargs):
+        with _read_batch():
+            return function(*args, **kwargs)
+    return wrapped
 
 
 @diagnostic.measured("Method freeze", "method_validations")
 def method_hash(method):
     require(method in METHODS, "Unsupported difficulty method")
     if method == OLD:
-        from .difficulty_rating import frozen_method
+        from . import difficulty_rating as implementation
     else:
-        from .sd2_rating_freeze import frozen_method
-    return digest(frozen_method())
+        from . import sd2_rating_freeze as implementation
+    data = io._operation_data.get()
+    if data is None:
+        return digest(implementation.frozen_method())
+    root = implementation._ROOT
+    key = ("method", method, root)
+    batch = _batch.get()
+    if batch is not None and key in batch:
+        diagnostic.count("method_view_reuses")
+        return data[key][1]
+    prior = data.get(key)
+    if prior is not None:
+        # Always reopen every actual method/config/reference/implementation
+        # file with identity guards. No mtime/path or successful-check cache.
+        _check_inputs(root, prior[0])
+        if batch is not None: batch[key] = prior[0]
+        return prior[1]
+    name = "difficulty_method_0_3.json" if method == OLD else "sd2_method_0_4.json"
+    raw = io.read(root, name, 64*1024*1024)
+    value = io.json_bytes(raw, 64*1024*1024)
+    identity = implementation.METHOD_HASH
+    require(digest(value) == identity, "Unknown or changed difficulty method configuration")
+    names = {name, *value["implementation"]}
+    names.update(("difficulty_references_0_3.json", "difficulty_calibration_0_3.json") if method == OLD else value["artifacts"])
+    before = {n: io.read(root, n, 64*1024*1024) for n in sorted(names)}
+    validated = implementation.frozen_method()
+    require(all(io.read(root, n, 64*1024*1024) == b for n, b in before.items()),
+            "Difficulty method changed during validation")
+    result = digest(validated)
+    require(result == identity and before[name] == raw, "Difficulty method configuration changed during validation")
+    data[key] = (before, result)
+    if batch is not None: batch[key] = before
+    diagnostic.count("full_method_validations")
+    return result
 
 
 def validate(value):
