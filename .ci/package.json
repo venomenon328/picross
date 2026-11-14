@@ -1,14 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/626",
-  "package": "PW2-C",
-  "modules": ["tools"],
-  "purpose": "PW2-C-K01–K06 gemäß #626/issuecomment-6862546388: lieferbezogene aktive Produktionsauswahl an frisch bestätigtem main, einschließlich Sammelübernahme, kompakter Belege und sicherem Listenwechsel. Das gewählte tools-Modul läuft vollständig; der Kern liefert docs/ci-required und den regulären Windows-Spieler. T01 prüft einmalig die drei unveränderten #622-Lieferungen und die tatsächliche Oberfläche im Browser am festen Produkt-Head.",
-  "omitted": "Keine production.*, native.*, preflight, delivery oder automatische Browsermatrix: nur lesende Werkzeug-/Listensemantik, keine Original-, Katalog-, Spiel-, Solver-, Bild- oder Installeränderung. Vorhandene Schutz- und P2-Prüfungen bleiben im tools-Vertrag. T01 bleibt eine befristete Diagnose außerhalb des Produktdiffs; keine realen Rätseldaten oder Screenshotreferenzen als neuer Dauerkorpus. PW2-C-A01 bleibt separates unabhängiges Review vor Merge.",
-  "test_changes": [
-    {"path": "tools/test_workspace_deliveries.py", "disposition": "change-scoped", "reason": "Kleine synthetische Git-/Metadatenfälle für exakte Lieferbindung, ältere Quellen, offene Folgerevisionen, kompakte Belege, Mainfrische und begrenzten lesenden Zugriff; nur im ausgewählten tools-Modul."},
-    {"path": "tools/production_workspace/check_ui_loading.cjs", "disposition": "change-scoped", "reason": "Vorhandene günstige UI-Ladeprüfung ergänzt passive Erhaltung und ausdrückliche Übernahme gefilterter Listen einschließlich gleicher ID, Entwurf und leerer Auswahl; kein neuer Laufweg oder Bildorakel."}
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/641",
+  "package": "PE-MIG1",
+  "modules": [],
+  "purpose": "Einmalige reine Inhaltsprojektion des registrierten v4/v7-Bestands durch vorhandene images_cli plan-migration/apply auf einem sauberen isolierten Checkout. Der verpflichtende docs-/sourcegebundene Kern genügt; nur Runtimeformat v7 nach v8 und dieser administrative Paketplan ändern sich. Einmalig: vollständiger Plan-/Datei-/Byte-/mtimevergleich, echter Runtime-/Definitionsreader und wiederholtes sowie frisch geplantes Apply als vollständiger No-op. Originale separat auf review/641-pe-mig1 für das unabhängige PE-MIG1-A01 vor Merge, Bedarf am 21.11.2026 erneut prüfen.",
+  "omitted": "Keine Zusatzmodule und kein Playerbuild: keine Werkzeug-, Reader-, Vertrags-, Solver-, Bild-, Save- oder Spielcodeänderung. Die unveränderte CLI prüft Quellen/Projektion/Transaktion; der einmalige vollständige Bestandsvergleich und isolierte Godot-Reader belegen diese konkrete Datenmigration. Keine Echtkatalog-Dauerregression, keine neuen Tests oder Kernlast, keine UI-/Browser-/Renderingabnahme. M2/Editorquellformat bleibt separater Folgeauftrag nach verbindlicher Implementierung in #640; unabhängiges Review bleibt offen.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
