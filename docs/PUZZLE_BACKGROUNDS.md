@@ -2,6 +2,14 @@
 
 > Aktueller Editor-Sonderweg: [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) definiert die gezielte Transaktion, Reveal v4, Hintergrund v6 und Rasterpaket v2. Normale Editoraktionen lesen keine historische Produktion. Explizite Produktionsprüfung/Recovery alter Formen bleiben bestehen; Folgeproduktion erhält die aktuelle technische Bildbindung. Die externe Migration gehört zu #641, nicht in die Editor-App.
 
+Der isolierte Spielerimport konsumiert auch kompakte Hintergrund-v6-Quellen
+ohne `notice` oder `authority` im `current`. Vorhandene historische TXT-Dateien
+am festen Hintergrundstamm bleiben unverändert und werden im technischen
+Importinventar mit echten Bytes/Hashes gebunden. Ohne vorhandene TXT-Datei ist
+dessen `notice` null; der Import erzeugt weder Ersatztext noch Herkunftspflichten.
+Aktive PNG-Bindung, sichere Namensräume und das gemeinsame Importprofil bleiben
+geprüft. Ältere Quellen behalten ihre bisherigen verpflichtenden Notice-Refs.
+
 
 **PE / #576 · PE-A1 integriert, PE-A2 zur Umsetzung beauftragt:**
 [PE-A2](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) ergänzt fertige
