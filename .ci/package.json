@@ -1,1 +1,15 @@
-{"core_change":null,"evidence":{"expires":null,"mode":"none","purpose":null},"format":"development-ci-plan/v1","issue":"https://github.com/venomenon328/picross/issues/602","modules":[],"omitted":"Reine Authoringfortschreibung und Fehlernachweise: modules=[], evidence.mode=none; kein Player-Build, Browser, neue Rätseltests oder routinemäßiger Bestandsreplay. Keine Werkzeug-/Fremdproduktänderung. Kein Registerabschluss, Merge oder Retirement.","package":"Fliegenpilz-r07-Endabnahme-Export-INT-B02","purpose":"Echte unveränderte r07-Endabnahme erfolgreich finalisiert und v6 exportiert/geplant. Registrierung scheitert an bestehendem Birne-HP-W2-Paket im P5-Replay; vollständigen Rollback und unveränderten Katalog sichern. Unabhängiges Review; kein Merge bei offenem INT-B02.","test_changes":[]}
+{
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/602",
+  "package": "Fliegenpilz-r07-Schritt5-Integration",
+  "modules": [],
+  "purpose": "Unveränderte endabgenommene Fliegenpilz-r07-Lieferung mit aktuellem main frisch exportieren, planen und registrieren; Quellen- und Planintegrität im CI-Kern.",
+  "omitted": "Reine Rätselinhalte und Produktionsabschlussdaten: kein Player-Build, keine zusätzlichen Fachmodule, Browserläufe oder neuen rätselspezifischen Tests. Gültige unveränderte Bild-, Raster-, Proof- und 0.4-Bewertungsbelege wiederverwenden.",
+  "test_changes": [],
+  "core_change": null,
+  "evidence": {
+    "mode": "none",
+    "expires": null,
+    "purpose": null
+  }
+}
