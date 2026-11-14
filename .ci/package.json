@@ -1,33 +1,32 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/645",
-  "package": "HP-W2-COMPAT-1",
+  "issue": "https://github.com/venomenon328/picross/issues/646",
+  "package": "PW3-A",
   "modules": [
-    "production.images",
-    "production.adapter"
+    "tools"
   ],
-  "purpose": "D01-D04/K01-K07 aus Paketentscheidung 6882921168: geschlossene historische selected-Erzeugeridentitaet an der zentralen lesenden HP-W2-Grenze mit frischer bytegenauer Reproduktion. production.images prueft background_assets und echte synthetische Ableitung; production.adapter prueft background_package, Finalizer, Export/Offlineverify und ZA-1. docs/ci-required und regulaerer Windows-Spielerbau bleiben verpflichtend.",
-  "omitted": "Kein tools-Pauschallauf: HP-W2 liegt in production.images. Kein production.catalog, da kein Katalog-/Transaktionsdiff und unveraenderte Consumer-/Publisher-/Recoveryimplementierung; bestehende Adapter-Negativ-/Unterbrechungsfaelle bleiben aktiv. Keine solver-, native-, preflight-, delivery-, Chromium- oder Echtkorpus-Dauermatrix. Exakter Fliegenpilz-r07-Uebergang einmalig isoliert, ohne plan/register/completion, echte Registry oder Saves.",
+  "purpose": "K01-K07: Remoteauswahl, metadatengebundener Mainabschluss aktueller Quellen, vollstaendige deduplizierte Verarbeitung und UI-Snapshotsteuerung. docs/ci-required mit regulaerem Windows-Spielerbau.",
+  "omitted": "Keine Produktionswriter, Solver, Raster-/Bildalgorithmen, Runtime oder Installation geaendert: keine production.*, native.*, preflight oder delivery. Keine automatische Chromium-Matrix; T01 einmalig am Produkt-Head mit synthetischem Git und echten Browserinteraktionen, zwei Original-PNGs auf befristetem separatem Reviewref. PW3-B bleibt separat.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/background_fixtures.py",
+      "path": "tools/test_production_workspace.py",
       "disposition": "change-scoped",
-      "reason": "Kleiner synthetischer Alt-Erzeuger fuer explizit injizierte Testidentitaeten; keine reale Raetselfixture und keine Ausfuehrung historischer Module. Aktuelle Leser, Rendering und Bytepruefung bleiben echt."
+      "reason": "Vorhandene kleine Git-/Readerregressionen auf Remoteautoritaet umstellen; lokale Diagnose und P2 bleiben geschuetzt."
     },
     {
-      "path": "tests/puzzle_production/test_background_assets.py",
+      "path": "tools/test_workspace_deliveries.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische Regressionen fuer volle Provenienz, selected/none, Reproduktion/Diagnostik, derive/reused-Sperre und aktuelle Codecs. Bestehende Module-during-run-, Pfad-/Lock-/Stagefaelle unveraendert."
+      "reason": "Kleine synthetische Quellenformen, exakte O/R-Bindung und mindestens 33 deduplizierte Abschluesse ohne ZIP-/Bildzugriff."
     },
     {
-      "path": "tests/puzzle_production/test_authoring_finalization.py",
+      "path": "tools/production_workspace/check_ui_loading.cjs",
       "disposition": "change-scoped",
-      "reason": "Alt-Record und nachfolgende Endfreigabe wirklich reproduzieren; Original/Sidecars erhalten; unbekannter Erzeuger stoppt ohne Mutation."
+      "reason": "Bestehenden Nodecontroller um leere Startliste, neue Eingabe/passive Suche und Remotequellwahl ergaenzen; keine Darstellungsbehauptung."
     },
     {
-      "path": "tests/puzzle_production/test_background_export.py",
+      "path": "tools/test_production_removal.py",
       "disposition": "change-scoped",
-      "reason": "Synthetischer Export-/Offlinepfad fuer qualifizierte Altidentitaet ohne Verbrauchersonderfreigabe; unbekanntes Tool und manipulierte PNGbytes bleiben Fehler."
+      "reason": "Vorhandene P2-Schutztests behalten echte lokale Refpruefung statt einer entfallenen lokalen Produktionsalternative; keine Abschwaechung des Guards."
     }
   ],
   "core_change": null,

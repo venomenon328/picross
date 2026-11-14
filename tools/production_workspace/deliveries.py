@@ -10,12 +10,12 @@ from copy import deepcopy
 from tools.puzzle_production import authoring_package as ap, catalog_io as io
 from tools.puzzle_production import catalog_background as background, content_registry as registry
 from tools.puzzle_production import reveal_source as reveal
+from tools.puzzle_production import editor_change as editor
 from tools.puzzle_production.authoring_finalization import RECORD_KEYS
 from tools.puzzle_production.contract import exact_keys
 from . import presentation as p
 from .sources import JSON_LIMIT
 
-MAX_REGISTRATIONS = 32
 COMPLETION_STEP = '5 · Lokal registriert; unabhängiges Review und Git-/Mainabschluss prüfen'
 UNREADABLE = (ValueError, OSError, KeyError, TypeError, AttributeError)
 
@@ -104,7 +104,29 @@ class Deliveries:
         # Current image authorities preserve immutable production, even after
         # retirement or independent image work. Read only their bound metadata.
         bg = None
-        closed_images = {background.path(record['puzzle_id']): {None}, reveal.path(record['puzzle_id']): {None}}
+        allowed = {integration['manifest']['sha256'], current['production']['package_sha256']}
+        runtime = self.runtime.get(record['puzzle_id'])
+        ap.require(runtime is not None, 'Main-Runtimebeleg fehlt.')
+        closed_images = {}
+        # Exact small source metadata at the bound integration commit admits
+        # old branch copies after source migration. Absence is a proven tree
+        # result; an unavailable object must fail, never become None.
+        for name in (background.path(record['puzzle_id']), reveal.path(record['puzzle_id'])):
+            old = source.read(integration['commit'], name, missing=True)
+            closed_images[name] = {io.checksum(old) if old is not None else None}
+
+        def slim_source(value):
+            editor.validate_source(value, normalized)
+            binding = value['binding']
+            ap.require(binding['entry']['production']['package_sha256'] in allowed,
+                       'Aktive Bildquelle bindet weder Originalexport noch Receipt.')
+            identity = binding['identity']
+            ap.require(all(identity[k] == runtime[k] for k in ('key', 'save_slot')) and
+                       identity['definition']['file'] == 'game/' + runtime['definition'] and
+                       ('runtime_revision' not in original_manifest or
+                        identity['runtime_revision'] == original_manifest['runtime_revision']),
+                       'Aktive Bildidentität gehört nicht zur Main-Runtime.')
+            return value['current']
         ref = self.backgrounds.get(record['puzzle_id'])
         if ref is not None:
             bg_raw = p.bind(self.source.read(self.main, ref['file']), ref)
@@ -116,6 +138,8 @@ class Deliveries:
             prior = bg
             for _ in range(4):
                 closed_images[ref['file']].add(io.checksum(p.data(prior)))
+                if editor.slim(prior):
+                    break
                 if prior['format'] == background.EDITOR_FORMAT:
                     prior = prior['origin']['source']
                 elif prior['format'] in background.REBIND_FORMATS:
@@ -126,10 +150,16 @@ class Deliveries:
                     break
                 if prior is None:
                     break
-            anchor = (bg['binding']['entry']['production']['package_sha256'] if bg['format'] == background.EDITOR_FORMAT else
+            if editor.slim(bg):
+                active = deepcopy(slim_source(bg))
+                if active['asset'] is not None:
+                    active['asset']['file'] = active['asset']['file'].removeprefix('game/')
+                ap.require(runtime.get('background') == active, 'Aktiver Hintergrund unterscheidet sich von der Main-Runtime.')
+            anchor = (bg['binding']['entry']['production']['package_sha256'] if bg['format'] == background.EDITOR_FORMAT or editor.slim(bg) else
                       bg['events'][-1]['binding']['entry']['production']['package_sha256'] if bg['format'] in background.REBIND_FORMATS else
                       background.initial(bg)['origin']['export_manifest_sha256'])
-            ap.require(anchor == integration['manifest']['sha256'], 'Hintergrund bindet eine andere Lieferung.')
+            ap.require(anchor in allowed if editor.slim(bg) else anchor == integration['manifest']['sha256'],
+                       'Hintergrund bindet eine andere Lieferung.')
             initial = background.initial(bg)
             if initial is not None and initial['origin']['package'] == original['production']['package']:
                 origin = initial['origin']
@@ -139,7 +169,9 @@ class Deliveries:
                                for key in ('handoff_sha256', 'inventory_sha256')),
                            'Hintergrund verliert die ursprüngliche Paket-/Abnahmebindung.')
         ap.require(record['background'] is None or bg is not None, 'Main-Hintergrundbeleg fehlt.')
-        if retired:
+        if ref is None:
+            closed_images[background.path(record['puzzle_id'])].add(None)
+        if retired and not editor.slim(bg):
             if manifest['format'] == reveal.EDITOR_RECEIPT:
                 ap.require(bg is not None and bg['format'] == background.EDITOR_FORMAT, 'Editor-Abschlussbeleg ohne Bildautorität.')
                 background.check_editor_receipt(bg, manifest, normalized)
@@ -160,11 +192,18 @@ class Deliveries:
             closed_images[reveal.path(record['puzzle_id'])].add(io.checksum(image_raw))
             if image['format'] == reveal.EDITOR_FORMAT and image['origin']['source'] is not None:
                 closed_images[reveal.path(record['puzzle_id'])].add(io.checksum(p.data(image['origin']['source'])))
-            binding = image['binding'] if image['format'] == reveal.EDITOR_FORMAT else image['bindings'][-1]
-            ap.require(binding['entry'] == normalized, 'Abschlussbild bindet eine andere Lieferung.')
+            if editor.slim(image):
+                active = slim_source(image)
+                effective_reveal = active['asset']['file'].removeprefix('game/')
+                if editor.slim(bg):
+                    ap.require(image['binding']['identity'] == bg['binding']['identity'], 'Aktive Bildidentitäten widersprechen sich.')
+            else:
+                binding = image['binding'] if image['format'] == reveal.EDITOR_FORMAT else image['bindings'][-1]
+                ap.require(binding['entry'] == normalized, 'Abschlussbild bindet eine andere Lieferung.')
             if image['format'] == reveal.EDITOR_FORMAT:
                 effective_reveal = image['current']['asset']['file'].removeprefix('game/')
-        runtime = self.runtime.get(record['puzzle_id'])
+        else:
+            closed_images[reveal.path(record['puzzle_id'])].add(None)
         ap.require(runtime is not None and all(runtime[k] == original[k] for k in ('id', 'key', 'definition', 'save_slot')) and
                    runtime['reveal'] == effective_reveal, 'Main-Runtime gehört nicht zur Lieferung.')
         self.images[record['puzzle_id']] = closed_images
@@ -269,22 +308,23 @@ class Deliveries:
             return jobs, result
         result['confirmed'] = True
         proven, attempted, uncertain = {}, set(), False
+        unresolved = []
         for job in jobs:
             if job['_record'].get('state') != 'registered' or job.get('_current_invalid'):
                 continue
-            key = (str(job['_source'].root), job['commit'], job['binding'])
+            # Same bound record/projection means the same historical proof.
+            # Every concrete source still passes originals_match below.
+            key = (job['puzzle_id'], job['revision'], job['binding'])
             if key in attempted:
-                continue
-            if len(attempted) >= MAX_REGISTRATIONS:
-                uncertain = True
                 continue
             attempted.add(key)
             try:
                 pairs, history = self.historical_jobs(job)
                 for pair in pairs:
                     proven.setdefault(pair, []).append(history)
-            except UNREADABLE:
+            except UNREADABLE as exc:
                 uncertain = True
+                unresolved.append(f"{job['puzzle_id']}/{job['revision']}: {exc}")
         remaining, hidden = [], []
         registered_snapshots = {(str(j['_source'].root), j['commit'], j['puzzle_id']) for j in jobs
                                 if j['_record'].get('state') == 'registered'}
@@ -299,8 +339,9 @@ class Deliveries:
                 try:
                     matched = self.originals_match(job, history)
                     break
-                except UNREADABLE:
+                except UNREADABLE as exc:
                     uncertain = True
+                    unresolved.append(f"{job['puzzle_id']}/{job['revision']}: {exc}")
             if matched:
                 hidden.append({key: job[key] for key in ('puzzle_id', 'revision', 'binding', 'commit', 'source', 'ref')})
             else:
@@ -311,6 +352,7 @@ class Deliveries:
                           'Offene Arbeit bleibt sichtbar.')
         if uncertain:
             result['note'] += ' Nicht eindeutig belegte Lieferungen bleiben ebenfalls sichtbar.'
+        result['unresolved'] = list(dict.fromkeys(unresolved))
         return remaining, result
 
 
