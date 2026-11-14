@@ -1,0 +1,263 @@
+{
+  "expires": "2026-11-21",
+  "files": [
+    {
+      "bytes": 2879,
+      "file": "baseline-source.py",
+      "sha256": "0b4f391331f9e2ca5a9027f77eaa68c197cf9c5442eb96af63f7e96ae9697a8e"
+    },
+    {
+      "bytes": 5177,
+      "file": "baseline.json",
+      "sha256": "09e481f362805b04435ef0d44756b5434579fd97a405d62fcaa98faec015ece1"
+    },
+    {
+      "bytes": 640,
+      "file": "binding.json",
+      "sha256": "621be771ff379008dc58485b107983aebcb5febef2058749aedf9a220e344d35"
+    },
+    {
+      "bytes": 29456,
+      "file": "ci-summary.json",
+      "sha256": "a874f34a1117098577f723696c344548459b6ec355a769fc0ee5b00e90ef58d6"
+    },
+    {
+      "bytes": 1861,
+      "file": "current-description.json",
+      "sha256": "f15bd6445d4cbc22f9e76e2c0d98e0284bf232c571768eb2fdae43a11e71defc"
+    },
+    {
+      "bytes": 895,
+      "file": "derive-request.json",
+      "sha256": "871ff96185783218271ecff00c5c577dcadd8ddfe76a55b3565bea5cd4af93d5"
+    },
+    {
+      "bytes": 1975,
+      "file": "export/approval.json",
+      "sha256": "b360b8c5f3c686d8fc717887ca62a0ffbf69a89851a23698c70cab4033af426f"
+    },
+    {
+      "bytes": 1312,
+      "file": "export/categories.json",
+      "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+    },
+    {
+      "bytes": 1362,
+      "file": "export/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/decisions/d01.json",
+      "sha256": "b1bdecbf2da958107cd2573cec1af14960ab9d586c8ee011fb10ae5377b7bfc3"
+    },
+    {
+      "bytes": 610336,
+      "file": "export/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/derived/background.png",
+      "sha256": "a937d68149a2828d19e7295de6d9069da9314dede967a133547f77831536b91f"
+    },
+    {
+      "bytes": 3941,
+      "file": "export/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/derived/derivation.json",
+      "sha256": "eddc3abfdfca0d60f07bfa9269434dce3b87972f2e72244b40634c3de7bd21b0"
+    },
+    {
+      "bytes": 756,
+      "file": "export/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/evidence/step4-background-choice.txt",
+      "sha256": "ac858c05fa0a97db7818207f30b6d53b848870b9fd880fd4a2e8320a1ace3a0d"
+    },
+    {
+      "bytes": 24734843,
+      "file": "export/input/package.zip",
+      "sha256": "0ca64ae2eee8c317d7ed1d34978180f26029cb91e3276bf7201a682b444057bd"
+    },
+    {
+      "bytes": 12370,
+      "file": "export/inspection.json",
+      "sha256": "0355e251232c100fed79caf06371a20a5880f2dcce8e8d9fc84423d625274fa0"
+    },
+    {
+      "bytes": 610336,
+      "file": "export/runtime/art/backgrounds/pz-fliegenpilz.png",
+      "sha256": "a937d68149a2828d19e7295de6d9069da9314dede967a133547f77831536b91f"
+    },
+    {
+      "bytes": 394,
+      "file": "export/runtime/art/backgrounds/pz-fliegenpilz.txt",
+      "sha256": "3592758ee341ac446498592620e33054e1b505ac85a6fb0079c66cd678a8edd3"
+    },
+    {
+      "bytes": 1381425,
+      "file": "export/runtime/art/content/fliegenpilz.png",
+      "sha256": "e18b0894bed89ca950289554ffe3944b739efdbe8eeb3c9b64303ed1b6f26db9"
+    },
+    {
+      "bytes": 305,
+      "file": "export/runtime/art/content/fliegenpilz.txt",
+      "sha256": "440f167cca4d566324d97b7b2e30456bc5d8ab66bce80305be8c7d1bdcce904f"
+    },
+    {
+      "bytes": 3350,
+      "file": "export/runtime/data/content/fliegenpilz.json",
+      "sha256": "660350719c72b02dc7667d37c4ee26bb23affa4d041b948f4e39dbc7ca052423"
+    },
+    {
+      "bytes": 2138,
+      "file": "export/usage.txt",
+      "sha256": "13fc26d58b3def80938b940e7ae6cdac7e2e7ed51fb6c19be5e56d579f7b295f"
+    },
+    {
+      "bytes": 175,
+      "file": "export.stderr.log",
+      "sha256": "ce8c4bccc58aa1a02df6e881b32747194abd6f07efe2ce769fdd1d2dd33898cc"
+    },
+    {
+      "bytes": 15106,
+      "file": "export.stdout.json",
+      "sha256": "72bda65ed6b81b4db5bbe94db1ac7232cf9e1a9799b8cd6e747a87ba575b84f0"
+    },
+    {
+      "bytes": 12339,
+      "file": "final-inspection.json",
+      "sha256": "f01a48a4b7ca50de1e0b9741519aec8d85969cfa565f0bf21424b50b46162971"
+    },
+    {
+      "bytes": 12,
+      "file": "finalize-repeat.stderr.log",
+      "sha256": "24d43c81e188922d4ae0a09501560c240c68a6fd1fb26898818919eb041224a7"
+    },
+    {
+      "bytes": 7423,
+      "file": "finalize-repeat.stdout.json",
+      "sha256": "f3867a701b9c7572d47b36c866f7580df873261bfb3bf64971ae97c10574c6a4"
+    },
+    {
+      "bytes": 12,
+      "file": "finalize.stderr.log",
+      "sha256": "24d43c81e188922d4ae0a09501560c240c68a6fd1fb26898818919eb041224a7"
+    },
+    {
+      "bytes": 7424,
+      "file": "finalize.stdout.json",
+      "sha256": "4a8d38953fc7cdb55c297c73807af9becc2b64cc80406a6bee90ae7b72025e55"
+    },
+    {
+      "bytes": 417,
+      "file": "finalizer-state/current-view.json",
+      "sha256": "b06d769aaaf5ab9e9aa2a9420b29e4ffd7e7ca88bad4d88cf2f2e6cf1aa006b1"
+    },
+    {
+      "bytes": 1975,
+      "file": "finalizer-state/sidecar/approval.json",
+      "sha256": "b360b8c5f3c686d8fc717887ca62a0ffbf69a89851a23698c70cab4033af426f"
+    },
+    {
+      "bytes": 569,
+      "file": "finalizer-state/sidecar/operation.json",
+      "sha256": "6562c8a7a531ca0beb1d33d2925db54b25d2b8e90fa752838626138141b0f818"
+    },
+    {
+      "bytes": 7150,
+      "file": "finalizer-state/sidecar/record.after.json",
+      "sha256": "c9f94f3ac962b90428252778917aee86672bde2ca22e4c3019119cba6542f1ae"
+    },
+    {
+      "bytes": 6961,
+      "file": "finalizer-state/sidecar/record.before.json",
+      "sha256": "0c1bb34d5d288347719be9572dbe647d05e344f7cf6b86ea0531d337185416bc"
+    },
+    {
+      "bytes": 3813,
+      "file": "finalizer-state/workspace.json",
+      "sha256": "46a13c3d6ec285831d9e9fb566dbc8cf129bf641b1f84047db3d139df7def2e4"
+    },
+    {
+      "bytes": 6609,
+      "file": "historical-source-diff.patch",
+      "sha256": "7d2d09b357fff7c144ac6337ced1b92cf741912128dcc0df2b45c6d62f52826f"
+    },
+    {
+      "bytes": 23410,
+      "file": "offline-verify.json",
+      "sha256": "72302b4dd21d0dc682c78aaeda92f330b049492c15aeb3a30f235bd2cfdcb8f8"
+    },
+    {
+      "bytes": 1975,
+      "file": "original-request/approval.json",
+      "sha256": "b360b8c5f3c686d8fc717887ca62a0ffbf69a89851a23698c70cab4033af426f"
+    },
+    {
+      "bytes": 1425,
+      "file": "original-request/blocker.json",
+      "sha256": "ac84ff2fa29d4a0a3cef04ffcdc8bd010dfac00a56cbf43e99be8382b25ae5db"
+    },
+    {
+      "bytes": 1424,
+      "file": "original-request/finalize-request.json",
+      "sha256": "1ff29d426ae871c1c3c096ca698a1c286c157cf2c81c9ef1a9b28225ac4d6a8e"
+    },
+    {
+      "bytes": 344,
+      "file": "original-request/finalize-result.json",
+      "sha256": "a427df3fec9b04b09329469f32c468c44bc948a59aaafb6b95ea35936424b6c2"
+    },
+    {
+      "bytes": 658,
+      "file": "original-request/user-order.txt",
+      "sha256": "325cd3f22452117bcb4967d5b82d34a7b8a778fd5535fb73c770fb5be3d9d3b0"
+    },
+    {
+      "bytes": 5969,
+      "file": "README.md",
+      "sha256": "cd8dd2cc5c5231c01a90199eb56e6f28c044b67f4fe0112bd65769e12ff7d8c6"
+    },
+    {
+      "bytes": 8899,
+      "file": "replay.py",
+      "sha256": "e7b22fba13d6b4396851f2ed87fc090402d28dabf76c40d3c22e3cd4aedffc3d"
+    },
+    {
+      "bytes": 1151433,
+      "file": "selected-original.png",
+      "sha256": "c28cbd5fce401c50678be03afb982dd9db9b726f4f2c53fc1173a27dda182119"
+    },
+    {
+      "bytes": 610336,
+      "file": "selected-proof/background.png",
+      "sha256": "a937d68149a2828d19e7295de6d9069da9314dede967a133547f77831536b91f"
+    },
+    {
+      "bytes": 3941,
+      "file": "selected-proof/derivation.json",
+      "sha256": "eddc3abfdfca0d60f07bfa9269434dce3b87972f2e72244b40634c3de7bd21b0"
+    },
+    {
+      "bytes": 1381425,
+      "file": "selected-reveal.png",
+      "sha256": "e18b0894bed89ca950289554ffe3944b739efdbe8eeb3c9b64303ed1b6f26db9"
+    },
+    {
+      "bytes": 307,
+      "file": "selected-verify.json",
+      "sha256": "676418a8ea0fd06273a3f6fe49cc0dc48cbdd6cb6fd53e7ea00fb9bc76628ac8"
+    },
+    {
+      "bytes": 1478,
+      "file": "synthetic.log",
+      "sha256": "96226e5b7e7c452d09986e7016446d502ab124d9dca7718661db5d035e8e821c"
+    },
+    {
+      "bytes": 351,
+      "file": "unchanged-originals.json",
+      "sha256": "4258cb096186fe09483ff21f413d8c39087888252533a32efe74a3fb02540ad3"
+    },
+    {
+      "bytes": 12,
+      "file": "verify-export.stderr.log",
+      "sha256": "24d43c81e188922d4ae0a09501560c240c68a6fd1fb26898818919eb041224a7"
+    },
+    {
+      "bytes": 13039,
+      "file": "verify-export.stdout.json",
+      "sha256": "a40f937f53745c43f33ffebd279ba537bd9e34bef4794dcd5e8b50c45f1c7e7f"
+    }
+  ],
+  "format": "hp-w2-compat-1-review-files-v1",
+  "original_head": "58799134bf11e16bae4d946e8f6ebdadda3edfed",
+  "product_head": "ac70185e12c0d47722a0e84e437f3861f1bb62e4"
+}

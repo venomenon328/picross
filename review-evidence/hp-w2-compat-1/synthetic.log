@@ -1,0 +1,11 @@
+test_qualified_selected_reproduces_full_original_and_never_authorizes_writing (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_qualified_selected_reproduces_full_original_and_never_authorizes_writing) ... ok
+test_qualified_identity_rejects_consistently_rehashed_provenance_changes (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_qualified_identity_rejects_consistently_rehashed_provenance_changes) ... ok
+test_qualified_selected_rejects_changed_bytes_diagnostics_and_profile (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_qualified_selected_rejects_changed_bytes_diagnostics_and_profile) ... ok
+test_qualified_none_and_current_codec_drift_remain_closed (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_qualified_none_and_current_codec_drift_remain_closed) ... ok
+test_qualified_old_record_is_checked_before_approval_and_stays_byte_identical (tests.puzzle_production.test_authoring_finalization.AuthoringFinalizationTests.test_qualified_old_record_is_checked_before_approval_and_stays_byte_identical) ... ok
+test_qualified_producer_reaches_export_and_offline_reader_without_special_consumer_pass (tests.puzzle_production.test_background_export.BackgroundExportTests.test_qualified_producer_reaches_export_and_offline_reader_without_special_consumer_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 51.083s
+
+OK

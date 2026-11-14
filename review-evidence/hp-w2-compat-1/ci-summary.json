@@ -1,0 +1,795 @@
+{
+  "run_id": 43633183578,
+  "url": "https://github.com/venomenon328/picross/actions/runs/43633183578",
+  "head": "ac70185e12c0d47722a0e84e437f3861f1bb62e4",
+  "attempt": 1,
+  "status": "completed",
+  "conclusion": "success",
+  "started": "2026-11-14T19:38:26Z",
+  "updated": "2026-11-14T19:43:23Z",
+  "wall_seconds": 297,
+  "jobs": {
+    "jobs": [
+      {
+        "id": 132564222716,
+        "name": "docs",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 43633183578,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Start soft CI clock",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Validate this package and its test lifecycle",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Small core contract regression",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Document and source integrity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Reject generated archive classes without size caps",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 7
+          },
+          {
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 14
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          }
+        ]
+      },
+      {
+        "id": 132564300118,
+        "name": "verify (player)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 43633183578,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Require actual successful core checks",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Resolve the same source-bound module selection",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Restore verified official toolchain archives",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Install image dependency only for selected modules",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Install pinned cryptography only for selected tools regressions",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Install SSH tooling only for delivery verification",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8
+          },
+          {
+            "name": "Build Windows when required, run modules and verify originals",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Save verified official archives",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Upload the playable Windows application",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 11
+          },
+          {
+            "name": "Upload only requested and unexpired review or failure evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 12
+          },
+          {
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 24
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 25
+          }
+        ]
+      },
+      {
+        "id": 132564300152,
+        "name": "verify (production.adapter)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 43633183578,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Require actual successful core checks",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Resolve the same source-bound module selection",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Restore verified official toolchain archives",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 5
+          },
+          {
+            "name": "Install image dependency only for selected modules",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Install pinned cryptography only for selected tools regressions",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Install SSH tooling only for delivery verification",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8
+          },
+          {
+            "name": "Build Windows when required, run modules and verify originals",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Save verified official archives",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Upload the playable Windows application",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11
+          },
+          {
+            "name": "Upload only requested and unexpired review or failure evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 12
+          },
+          {
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 24
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 25
+          }
+        ]
+      },
+      {
+        "id": 132564300157,
+        "name": "verify (production.images)",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 43633183578,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Require actual successful core checks",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          },
+          {
+            "name": "Resolve the same source-bound module selection",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 4
+          },
+          {
+            "name": "Restore verified official toolchain archives",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 5
+          },
+          {
+            "name": "Install image dependency only for selected modules",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Install pinned cryptography only for selected tools regressions",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Install SSH tooling only for delivery verification",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 8
+          },
+          {
+            "name": "Build Windows when required, run modules and verify originals",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Save verified official archives",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Upload the playable Windows application",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11
+          },
+          {
+            "name": "Upload only requested and unexpired review or failure evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 12
+          },
+          {
+            "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 24
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 25
+          }
+        ]
+      },
+      {
+        "id": 132565501162,
+        "name": "ci-required",
+        "status": "completed",
+        "conclusion": "success",
+        "run_id": 43633183578,
+        "logs_url": null,
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Require the core and every requested source-bound execution part",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      }
+    ]
+  },
+  "summaries": [
+    {
+      "job_id": 132564300118,
+      "result": {
+        "accepted": true,
+        "binding": {
+          "format": "development-ci-run/v1",
+          "source_head": "ac70185e12c0d47722a0e84e437f3861f1bb62e4",
+          "base_commit": "e1e8caf91d9ad1e6661807e09020c338ad6b6d29",
+          "tested_checkout": "4d62f7c9dac1a3fa9072daf9b2fe28a9628ae924",
+          "event": "pull_request",
+          "run_id": "43633183578",
+          "run_attempt": "1",
+          "modules": [
+            "production.images",
+            "production.adapter"
+          ],
+          "player": {
+            "required": true,
+            "reason": "Development changes or no safely classifiable diff"
+          },
+          "package": {
+            "format": "development-ci-plan/v1",
+            "issue": "https://github.com/venomenon328/picross/issues/645",
+            "package": "HP-W2-COMPAT-1",
+            "modules": [
+              "production.images",
+              "production.adapter"
+            ],
+            "purpose": "D01-D04/K01-K07 aus Paketentscheidung 6882921168: geschlossene historische selected-Erzeugeridentitaet an der zentralen lesenden HP-W2-Grenze mit frischer bytegenauer Reproduktion. production.images prueft background_assets und echte synthetische Ableitung; production.adapter prueft background_package, Finalizer, Export/Offlineverify und ZA-1. docs/ci-required und regulaerer Windows-Spielerbau bleiben verpflichtend.",
+            "omitted": "Kein tools-Pauschallauf: HP-W2 liegt in production.images. Kein production.catalog, da kein Katalog-/Transaktionsdiff und unveraenderte Consumer-/Publisher-/Recoveryimplementierung; bestehende Adapter-Negativ-/Unterbrechungsfaelle bleiben aktiv. Keine solver-, native-, preflight-, delivery-, Chromium- oder Echtkorpus-Dauermatrix. Exakter Fliegenpilz-r07-Uebergang einmalig isoliert, ohne plan/register/completion, echte Registry oder Saves.",
+            "test_changes": [
+              {
+                "path": "tests/puzzle_production/background_fixtures.py",
+                "disposition": "change-scoped",
+                "reason": "Kleiner synthetischer Alt-Erzeuger fuer explizit injizierte Testidentitaeten; keine reale Raetselfixture und keine Ausfuehrung historischer Module. Aktuelle Leser, Rendering und Bytepruefung bleiben echt."
+              },
+              {
+                "path": "tests/puzzle_production/test_background_assets.py",
+                "disposition": "change-scoped",
+                "reason": "Kleine synthetische Regressionen fuer volle Provenienz, selected/none, Reproduktion/Diagnostik, derive/reused-Sperre und aktuelle Codecs. Bestehende Module-during-run-, Pfad-/Lock-/Stagefaelle unveraendert."
+              },
+              {
+                "path": "tests/puzzle_production/test_authoring_finalization.py",
+                "disposition": "change-scoped",
+                "reason": "Alt-Record und nachfolgende Endfreigabe wirklich reproduzieren; Original/Sidecars erhalten; unbekannter Erzeuger stoppt ohne Mutation."
+              },
+              {
+                "path": "tests/puzzle_production/test_background_export.py",
+                "disposition": "change-scoped",
+                "reason": "Synthetischer Export-/Offlinepfad fuer qualifizierte Altidentitaet ohne Verbrauchersonderfreigabe; unbekanntes Tool und manipulierte PNGbytes bleiben Fehler."
+              }
+            ],
+            "core_change": null,
+            "evidence": {
+              "mode": "none",
+              "purpose": null,
+              "expires": null
+            }
+          },
+          "plan_sha256": "d16a713d88ec7d01d53f6920672d79fbe7d2a2168cdf0b9956601ff27f583d47"
+        },
+        "execution": {
+          "part": "player",
+          "modules": [],
+          "player": {
+            "required": true,
+            "reason": "Development changes or no safely classifiable diff"
+          }
+        },
+        "modules": [
+          {
+            "module": "windows-player",
+            "exit_code": 0,
+            "seconds": 31.05
+          }
+        ],
+        "seconds": 31.453,
+        "ci_seconds_before_upload": 70.977,
+        "soft_goal_exceeded": false,
+        "player_bytes": 199560140,
+        "diagnostic_bytes": 0,
+        "error": null
+      },
+      "tests": 0,
+      "non_success": [],
+      "production": null
+    },
+    {
+      "job_id": 132564300152,
+      "result": {
+        "accepted": true,
+        "binding": {
+          "format": "development-ci-run/v1",
+          "source_head": "ac70185e12c0d47722a0e84e437f3861f1bb62e4",
+          "base_commit": "e1e8caf91d9ad1e6661807e09020c338ad6b6d29",
+          "tested_checkout": "4d62f7c9dac1a3fa9072daf9b2fe28a9628ae924",
+          "event": "pull_request",
+          "run_id": "43633183578",
+          "run_attempt": "1",
+          "modules": [
+            "production.images",
+            "production.adapter"
+          ],
+          "player": {
+            "required": true,
+            "reason": "Development changes or no safely classifiable diff"
+          },
+          "package": {
+            "format": "development-ci-plan/v1",
+            "issue": "https://github.com/venomenon328/picross/issues/645",
+            "package": "HP-W2-COMPAT-1",
+            "modules": [
+              "production.images",
+              "production.adapter"
+            ],
+            "purpose": "D01-D04/K01-K07 aus Paketentscheidung 6882921168: geschlossene historische selected-Erzeugeridentitaet an der zentralen lesenden HP-W2-Grenze mit frischer bytegenauer Reproduktion. production.images prueft background_assets und echte synthetische Ableitung; production.adapter prueft background_package, Finalizer, Export/Offlineverify und ZA-1. docs/ci-required und regulaerer Windows-Spielerbau bleiben verpflichtend.",
+            "omitted": "Kein tools-Pauschallauf: HP-W2 liegt in production.images. Kein production.catalog, da kein Katalog-/Transaktionsdiff und unveraenderte Consumer-/Publisher-/Recoveryimplementierung; bestehende Adapter-Negativ-/Unterbrechungsfaelle bleiben aktiv. Keine solver-, native-, preflight-, delivery-, Chromium- oder Echtkorpus-Dauermatrix. Exakter Fliegenpilz-r07-Uebergang einmalig isoliert, ohne plan/register/completion, echte Registry oder Saves.",
+            "test_changes": [
+              {
+                "path": "tests/puzzle_production/background_fixtures.py",
+                "disposition": "change-scoped",
+                "reason": "Kleiner synthetischer Alt-Erzeuger fuer explizit injizierte Testidentitaeten; keine reale Raetselfixture und keine Ausfuehrung historischer Module. Aktuelle Leser, Rendering und Bytepruefung bleiben echt."
+              },
+              {
+                "path": "tests/puzzle_production/test_background_assets.py",
+                "disposition": "change-scoped",
+                "reason": "Kleine synthetische Regressionen fuer volle Provenienz, selected/none, Reproduktion/Diagnostik, derive/reused-Sperre und aktuelle Codecs. Bestehende Module-during-run-, Pfad-/Lock-/Stagefaelle unveraendert."
+              },
+              {
+                "path": "tests/puzzle_production/test_authoring_finalization.py",
+                "disposition": "change-scoped",
+                "reason": "Alt-Record und nachfolgende Endfreigabe wirklich reproduzieren; Original/Sidecars erhalten; unbekannter Erzeuger stoppt ohne Mutation."
+              },
+              {
+                "path": "tests/puzzle_production/test_background_export.py",
+                "disposition": "change-scoped",
+                "reason": "Synthetischer Export-/Offlinepfad fuer qualifizierte Altidentitaet ohne Verbrauchersonderfreigabe; unbekanntes Tool und manipulierte PNGbytes bleiben Fehler."
+              }
+            ],
+            "core_change": null,
+            "evidence": {
+              "mode": "none",
+              "purpose": null,
+              "expires": null
+            }
+          },
+          "plan_sha256": "d16a713d88ec7d01d53f6920672d79fbe7d2a2168cdf0b9956601ff27f583d47"
+        },
+        "execution": {
+          "part": "production.adapter",
+          "modules": [
+            "production.adapter"
+          ],
+          "player": {
+            "required": false,
+            "reason": "Development changes or no safely classifiable diff"
+          }
+        },
+        "modules": [
+          {
+            "module": "production",
+            "exit_code": 0,
+            "seconds": 235.656
+          }
+        ],
+        "seconds": 235.797,
+        "ci_seconds_before_upload": 265.626,
+        "soft_goal_exceeded": false,
+        "player_bytes": 0,
+        "diagnostic_bytes": 0,
+        "error": null
+      },
+      "tests": 189,
+      "non_success": [],
+      "production": {
+        "format": "picross-production-result-v1",
+        "groups": [
+          "adapter"
+        ],
+        "expected": {
+          "adapter": {
+            "modules": [
+              "test_accepted_raster_adapter",
+              "test_approved_color_adapter",
+              "test_authoring_builder",
+              "test_authoring_finalization",
+              "test_authoring_workflow",
+              "test_background_content",
+              "test_background_export",
+              "test_background_package",
+              "test_batch",
+              "test_batch_operations",
+              "test_color_derivation_adapter",
+              "test_edited_import_adapter",
+              "test_fixed_raster_adapter",
+              "test_manual_adapter",
+              "test_palette_gate",
+              "test_stalled_color_adapter",
+              "test_target_adapter"
+            ],
+            "integrations": [
+              "za1-replay"
+            ]
+          }
+        },
+        "binding": {
+          "source_head": "ac70185e12c0d47722a0e84e437f3861f1bb62e4",
+          "base_commit": "e1e8caf91d9ad1e6661807e09020c338ad6b6d29",
+          "tested_checkout": "4d62f7c9dac1a3fa9072daf9b2fe28a9628ae924",
+          "run_id": "43633183578",
+          "run_attempt": "1",
+          "selection_attempt": "1",
+          "git_status": ""
+        },
+        "accepted": true,
+        "integrations": [
+          {
+            "name": "za1-replay",
+            "group": "adapter",
+            "exit_code": 0,
+            "seconds": 28.132700477000014
+          }
+        ],
+        "tests_accepted": true,
+        "source_unchanged": true,
+        "seconds": 235.18062189699998,
+        "files": [
+          {
+            "file": "tests.json",
+            "bytes": 60795,
+            "sha256": "4a3925b1db42d0e02b5152d6cdfa98dc0154b83bb4e907b9a3a929cb98bf9d4b"
+          },
+          {
+            "file": "tests.log",
+            "bytes": 33483,
+            "sha256": "8fd89d703c32013653d018f70247887e52d96fb3ba308246292c310e419d2de6"
+          },
+          {
+            "file": "za1-replay/replay.json",
+            "bytes": 13221,
+            "sha256": "04acf128a935bc03337a63304c946481799338c649046af01ee93b8cbac62612"
+          },
+          {
+            "file": "za1-replay.log",
+            "bytes": 33,
+            "sha256": "361ae1d5bc79fa4ac46ac47c6c1b91c3159b5b3470a80fa1eb176e7399657650"
+          }
+        ]
+      }
+    },
+    {
+      "job_id": 132564300157,
+      "result": {
+        "accepted": true,
+        "binding": {
+          "format": "development-ci-run/v1",
+          "source_head": "ac70185e12c0d47722a0e84e437f3861f1bb62e4",
+          "base_commit": "e1e8caf91d9ad1e6661807e09020c338ad6b6d29",
+          "tested_checkout": "4d62f7c9dac1a3fa9072daf9b2fe28a9628ae924",
+          "event": "pull_request",
+          "run_id": "43633183578",
+          "run_attempt": "1",
+          "modules": [
+            "production.images",
+            "production.adapter"
+          ],
+          "player": {
+            "required": true,
+            "reason": "Development changes or no safely classifiable diff"
+          },
+          "package": {
+            "format": "development-ci-plan/v1",
+            "issue": "https://github.com/venomenon328/picross/issues/645",
+            "package": "HP-W2-COMPAT-1",
+            "modules": [
+              "production.images",
+              "production.adapter"
+            ],
+            "purpose": "D01-D04/K01-K07 aus Paketentscheidung 6882921168: geschlossene historische selected-Erzeugeridentitaet an der zentralen lesenden HP-W2-Grenze mit frischer bytegenauer Reproduktion. production.images prueft background_assets und echte synthetische Ableitung; production.adapter prueft background_package, Finalizer, Export/Offlineverify und ZA-1. docs/ci-required und regulaerer Windows-Spielerbau bleiben verpflichtend.",
+            "omitted": "Kein tools-Pauschallauf: HP-W2 liegt in production.images. Kein production.catalog, da kein Katalog-/Transaktionsdiff und unveraenderte Consumer-/Publisher-/Recoveryimplementierung; bestehende Adapter-Negativ-/Unterbrechungsfaelle bleiben aktiv. Keine solver-, native-, preflight-, delivery-, Chromium- oder Echtkorpus-Dauermatrix. Exakter Fliegenpilz-r07-Uebergang einmalig isoliert, ohne plan/register/completion, echte Registry oder Saves.",
+            "test_changes": [
+              {
+                "path": "tests/puzzle_production/background_fixtures.py",
+                "disposition": "change-scoped",
+                "reason": "Kleiner synthetischer Alt-Erzeuger fuer explizit injizierte Testidentitaeten; keine reale Raetselfixture und keine Ausfuehrung historischer Module. Aktuelle Leser, Rendering und Bytepruefung bleiben echt."
+              },
+              {
+                "path": "tests/puzzle_production/test_background_assets.py",
+                "disposition": "change-scoped",
+                "reason": "Kleine synthetische Regressionen fuer volle Provenienz, selected/none, Reproduktion/Diagnostik, derive/reused-Sperre und aktuelle Codecs. Bestehende Module-during-run-, Pfad-/Lock-/Stagefaelle unveraendert."
+              },
+              {
+                "path": "tests/puzzle_production/test_authoring_finalization.py",
+                "disposition": "change-scoped",
+                "reason": "Alt-Record und nachfolgende Endfreigabe wirklich reproduzieren; Original/Sidecars erhalten; unbekannter Erzeuger stoppt ohne Mutation."
+              },
+              {
+                "path": "tests/puzzle_production/test_background_export.py",
+                "disposition": "change-scoped",
+                "reason": "Synthetischer Export-/Offlinepfad fuer qualifizierte Altidentitaet ohne Verbrauchersonderfreigabe; unbekanntes Tool und manipulierte PNGbytes bleiben Fehler."
+              }
+            ],
+            "core_change": null,
+            "evidence": {
+              "mode": "none",
+              "purpose": null,
+              "expires": null
+            }
+          },
+          "plan_sha256": "d16a713d88ec7d01d53f6920672d79fbe7d2a2168cdf0b9956601ff27f583d47"
+        },
+        "execution": {
+          "part": "production.images",
+          "modules": [
+            "production.images"
+          ],
+          "player": {
+            "required": false,
+            "reason": "Development changes or no safely classifiable diff"
+          }
+        },
+        "modules": [
+          {
+            "module": "production",
+            "exit_code": 0,
+            "seconds": 47.823
+          }
+        ],
+        "seconds": 47.863,
+        "ci_seconds_before_upload": 80.82,
+        "soft_goal_exceeded": false,
+        "player_bytes": 0,
+        "diagnostic_bytes": 0,
+        "error": null
+      },
+      "tests": 100,
+      "non_success": [],
+      "production": {
+        "format": "picross-production-result-v1",
+        "groups": [
+          "images"
+        ],
+        "expected": {
+          "images": {
+            "modules": [
+              "test_background_assets",
+              "test_images",
+              "test_fixed_raster",
+              "test_paired_production",
+              "test_repair",
+              "test_rp6"
+            ],
+            "integrations": []
+          }
+        },
+        "binding": {
+          "source_head": "ac70185e12c0d47722a0e84e437f3861f1bb62e4",
+          "base_commit": "e1e8caf91d9ad1e6661807e09020c338ad6b6d29",
+          "tested_checkout": "4d62f7c9dac1a3fa9072daf9b2fe28a9628ae924",
+          "run_id": "43633183578",
+          "run_attempt": "1",
+          "selection_attempt": "1",
+          "git_status": ""
+        },
+        "accepted": true,
+        "integrations": [],
+        "tests_accepted": true,
+        "source_unchanged": true,
+        "seconds": 47.209673229,
+        "files": [
+          {
+            "file": "tests.json",
+            "bytes": 30551,
+            "sha256": "e2f91aece96a7193786ef1a3b3b58620371e9986e04a99ecf04ef67e5fb0eeb0"
+          },
+          {
+            "file": "tests.log",
+            "bytes": 16249,
+            "sha256": "2da366aedd266379f642e794c7032c2a6817177e49c54780f2ad5c4615552a19"
+          }
+        ]
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 14129290259,
+      "name": "picross-windows-ac70185e12c0d47722a0e84e437f3861f1bb62e4-1",
+      "size_in_bytes": 130169850,
+      "url": "https://api.github.com/repos/venomenon328/picross/actions/artifacts/14129290259",
+      "archive_download_url": "https://api.github.com/repos/venomenon328/picross/actions/artifacts/14129290259/zip",
+      "expired": false,
+      "created_at": "2026-11-14T19:40:07Z",
+      "expires_at": "2026-11-28T19:40:02Z",
+      "updated_at": "2026-11-14T19:40:07Z",
+      "digest": "sha256:5423fc8ba9cf6670049752ebfcc34cf2ff053c1d1ccd31c19fe3f692ac894043",
+      "workflow_run": {
+        "id": 43633183578,
+        "repository_id": 1381196633,
+        "head_repository_id": 1381196633,
+        "head_branch": "fix/645-hp-w2-compat",
+        "head_sha": "ac70185e12c0d47722a0e84e437f3861f1bb62e4"
+      }
+    }
+  ]
+}
