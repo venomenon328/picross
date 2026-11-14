@@ -83,13 +83,14 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     entry = export_entry(export_dir, m, report, category, background=is_background)
     old_background = background.load(root, registry, existing) if existing else None
     active_reveal = reveal.load(root, existing, catalog) if existing else None
-    editor_reveal = active_reveal is not None and active_reveal.get("format") == "picross-catalog-reveal-v3"
-    editor_background = old_background is not None and old_background.get("format") == "picross-catalog-background-v5"
+    editor_reveal = active_reveal is not None and active_reveal.get("format") in ("picross-catalog-reveal-v3", "picross-catalog-reveal-v4")
+    editor_background = old_background is not None and old_background.get("format") in ("picross-catalog-background-v5", "picross-catalog-background-v6")
     n = "game/" + entry["definition"]
     if update:
         require(existing is not None, "Update requires an existing production ID")
         require(not is_background or old_background is not None, "Legacy retrofit is unsupported")
-        require(old_background is None or m["format"] in (palette_gate.EXPORT, BACKGROUND_EXPORT),
+        from .editor_change import slim
+        require(old_background is None or slim(old_background) or m["format"] in (palette_gate.EXPORT, BACKGROUND_EXPORT),
                 "Background raster update requires v5 or v6")
         require(file_hash(tx.safe(root, "game/" + existing["definition"])) == expected_definition_sha256, "Stale expected definition hash")
         fixed = ("id", "key", "save_slot", "definition", "reveal", "visible") + (() if registry["format"] == METADATA_FORMAT else ("category_id",))
@@ -102,7 +103,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         from .integrated_content import FORMAT as INTEGRATED
         original = load_json(root / existing["production"]["package"] / "manifest.json")
         same = reveal.normalized(root, existing) == entry
-        if not update and original.get("format") == "picross-editor-raster-package-v1":
+        if not update and original.get("format") in ("picross-editor-raster-package-v1", "picross-editor-raster-package-v2"):
             from .editor_raster import historical_repeat
             same = same or historical_repeat(root,existing,entry)
         if is_background and old_background is not None:

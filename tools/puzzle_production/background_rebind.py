@@ -263,6 +263,14 @@ def historical(root, source, texts=None):
 
 
 def transition(old, new, old_entry, entry, operation):
+    from .editor_change import slim, validate_source
+    if slim(old) or slim(new):
+        require(slim(old) and slim(new), "External source migration required")
+        validate_source(old, old_entry); validate_source(new, entry)
+        require(new["format"] == old["format"] and new["id"] == old["id"] and
+                new["current"] == old["current"] and new["record_revision"] == old["record_revision"]+1 and
+                operation in ("update", "reveal-adoption"), "Invalid compact background rebind")
+        return
     if old.get("format") == bg.EDITOR_FORMAT or new.get("format") == bg.EDITOR_FORMAT:
         from . import editor_image_source as editor
         require(new.get("format") == bg.EDITOR_FORMAT, "A production rebind cannot downgrade editor background authority")
@@ -313,7 +321,8 @@ def delta(j, before, after, identifiers):
         b = next(e for e in after["entries"] if e["id"] == identifier)
         old = bg._source(None, before, a, j["old"])
         new = bg._source(None, after, b, j["new"])
-        if old["format"] == bg.EDITOR_FORMAT or new["format"] == bg.EDITOR_FORMAT:
+        from .editor_change import slim
+        if old["format"] == bg.EDITOR_FORMAT or new["format"] == bg.EDITOR_FORMAT or slim(old) or slim(new):
             transition(old, new, a, b, j["operation"])
             if j["operation"] == "update":
                 raw = j["new"]["game/" + b["definition"]]

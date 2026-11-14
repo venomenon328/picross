@@ -1,5 +1,8 @@
 # Rätselbezogene Hintergrundzeichnungen
 
+> Aktueller Editor-Sonderweg: [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) definiert die gezielte Transaktion, Reveal v4, Hintergrund v6 und Rasterpaket v2. Normale Editoraktionen lesen keine historische Produktion. Explizite Produktionsprüfung/Recovery alter Formen bleiben bestehen; Folgeproduktion erhält die aktuelle technische Bildbindung. Die externe Migration gehört zu #641, nicht in die Editor-App.
+
+
 **PE / #576 · PE-A1 integriert, PE-A2 zur Umsetzung beauftragt:**
 [PE-A2](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) ergänzt fertige
 2304×576-Dateien ohne Neukodierung, die erste individuelle Zuordnung bei einem

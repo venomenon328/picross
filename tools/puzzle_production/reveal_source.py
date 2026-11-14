@@ -168,6 +168,8 @@ def require_legacy_target(root, entry, registry=None):
 
 
 def validate(value, catalog, *, historical_categories=False):
+    from .editor_change import slim, validate_source
+    if slim(value): return validate_source(value)
     from .content_registry import validate_entries
     if isinstance(value, dict) and value.get("format") == EDITOR_FORMAT:
         from . import editor_image_source
@@ -247,7 +249,7 @@ def package(root, entry, *, background_snapshot=None, historical=False):
     manifest = io.json_bytes(raw, 8 * 1024 * 1024)
     require(isinstance(manifest,dict), 'Invalid package manifest object')
     require(io.checksum(raw) == entry["production"]["package_sha256"], "Registered package binding changed")
-    if manifest.get("format") == "picross-editor-raster-package-v1":
+    if manifest.get("format") in ("picross-editor-raster-package-v1", "picross-editor-raster-package-v2"):
         from . import editor_raster
         return editor_raster.package(root, entry, manifest)
     files = {}
@@ -273,12 +275,15 @@ def package(root, entry, *, background_snapshot=None, historical=False):
         declared = entry["id"] in backgrounds.index(registry)
         source = backgrounds._source(root, registry, entry, texts) if declared else None
         editor_background = source is not None and source["format"] == backgrounds.EDITOR_FORMAT
-        if editor_background:
+        from .editor_change import slim, validate_source
+        if slim(source):
+            validate_source(source, entry)
+        elif editor_background:
             backgrounds.check_editor_receipt(source, manifest, original)
         else:
             require(declared == (manifest["format"] == BACKGROUND_RECEIPT) and manifest["format"] != EDITOR_RECEIPT,
                     "Receipt generation differs from registered background authority")
-        if manifest["format"] == BACKGROUND_RECEIPT and not editor_background:
+        if manifest["format"] == BACKGROUND_RECEIPT and not editor_background and not slim(source):
             backgrounds.check_receipt(root, registry, entry, manifest, texts=texts)
         return original, manifest["notice_sha256"], manifest, set(prefix + "/" + n for n in files)
     require(manifest.get("format") in ("picross-target-export-v1", "picross-target-export-v2", "picross-target-export-v3", "picross-target-export-v4", "picross-target-export-v5", "picross-target-export-v6") and
@@ -331,7 +336,8 @@ def package(root, entry, *, background_snapshot=None, historical=False):
     if declared:
         texts = None if background_snapshot is None else background_snapshot[1]
         source = backgrounds._source(root, registry, entry, texts)
-        if source["format"] == backgrounds.EDITOR_FORMAT:
+        from .editor_change import slim
+        if source["format"] == backgrounds.EDITOR_FORMAT or slim(source):
             require(source["binding"]["entry"] == entry, "Editor background current production binding differs")
             if background:
                 # Validate the actual new export independently. Its image is
@@ -355,7 +361,9 @@ def normalized(root, entry):
 def load(root, entry, catalog):
     raw = io.read(root, path(entry["id"]), LIMIT, missing=True)
     if raw is None: return None
-    value = validate(io.json_bytes(raw, LIMIT), catalog, historical_categories=historical_categories(root))
+    from .editor_change import slim, validate_source
+    value = io.json_bytes(raw, LIMIT)
+    value = validate_source(value, entry) if slim(value) else validate(value, catalog, historical_categories=historical_categories(root))
     require(raw == canonical_bytes(value) + b"\n" and value["id"] == entry["id"], "Noncanonical/wrong reveal source")
     return value
 
@@ -370,6 +378,19 @@ def resolve(root, entry, catalog, *, record=None):
     require(io.checksum(definition) == entry["production"]["definition_sha256"], "Registered definition binding changed")
     runtime_revision = rating.bytes_json(definition, 2 * 1024 * 1024)["revision"]
     record = load(root, entry, catalog) if record is None else validate(record, catalog, historical_categories=historical_categories(root))
+    from .editor_change import slim, validate_source
+    if slim(record):
+        validate_source(record, entry)
+        require(record["binding"]["identity"]["definition"] == bg.ref("game/"+entry["definition"], definition), "Current reveal definition changed")
+        asset = record["current"]["asset"]
+        bg._bound(asset, io.read(root, asset["file"], IMAGE_LIMIT), limit=IMAGE_LIMIT)
+        return {"id": entry["id"], "definition_sha256": entry["production"]["definition_sha256"],
+            "runtime_revision": runtime_revision, "export_manifest_sha256": original["production"]["package_sha256"],
+            "physical_manifest_sha256": physical, "historical_reveal_sha256": original["production"]["reveal_sha256"],
+            "effective_reveal_sha256": asset["sha256"], "historical_notice_sha256": historical_notice,
+            "effective_notice_sha256": io.file_hash(root, notice_path(entry), 65536),
+            "record_hash": record["record_hash"], "effective_reveal": asset["file"].removeprefix("game/"),
+            "effective_reveal_ref": deepcopy(asset)}
     if record is not None:
         declared = entry["id"] in bg.index(background_registry(root))
         background_source = bg._source(root, background_registry(root), entry) if declared else None
@@ -448,7 +469,8 @@ def revise(root, entry, catalog, image_hash, declaration, attribution, append=No
 
 
 def rebind(old, entry, runtime_revision, export_notice, catalog, *, historical_categories=False, definition_ref=None):
-    if old.get("format") == EDITOR_FORMAT:
+    from .editor_change import slim
+    if old.get("format") == EDITOR_FORMAT or slim(old):
         from . import editor_image_source
         require(definition_ref is not None, "Editor reveal rebind requires the actual new definition ref")
         return editor_image_source.rebind(old, entry, definition_ref, runtime_revision, catalog)

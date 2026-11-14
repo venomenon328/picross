@@ -1,11 +1,35 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/641",
-  "package": "PE-MIG1",
-  "modules": [],
-  "purpose": "Einmalige reine Inhaltsprojektion des registrierten v4/v7-Bestands durch vorhandene images_cli plan-migration/apply auf einem sauberen isolierten Checkout. Der verpflichtende docs-/sourcegebundene Kern genügt; nur Runtimeformat v7 nach v8 und dieser administrative Paketplan ändern sich. Einmalig: vollständiger Plan-/Datei-/Byte-/mtimevergleich, echter Runtime-/Definitionsreader und wiederholtes sowie frisch geplantes Apply als vollständiger No-op. Originale separat auf review/641-pe-mig1 für das unabhängige PE-MIG1-A01 vor Merge, Bedarf am 21.11.2026 erneut prüfen.",
-  "omitted": "Keine Zusatzmodule und kein Playerbuild: keine Werkzeug-, Reader-, Vertrags-, Solver-, Bild-, Save- oder Spielcodeänderung. Die unveränderte CLI prüft Quellen/Projektion/Transaktion; der einmalige vollständige Bestandsvergleich und isolierte Godot-Reader belegen diese konkrete Datenmigration. Keine Echtkatalog-Dauerregression, keine neuen Tests oder Kernlast, keine UI-/Browser-/Renderingabnahme. M2/Editorquellformat bleibt separater Folgeauftrag nach verbindlicher Implementierung in #640; unabhängiges Review bleibt offen.",
-  "test_changes": [],
+  "issue": "https://github.com/venomenon328/picross/issues/640",
+  "package": "PE-EDIT2",
+  "modules": [
+    "tools",
+    "production.catalog"
+  ],
+  "purpose": "K01-K08: gezielte Editortransaktion ersetzt normale Vollbestandspruefung; aktuelle technische Quellen und Folgeproduktion, virtuelle Liste, echte Raster-/Papierkomposition und persistentes Theme. Beide ausgewaehlten Module vollstaendig, Kern docs/ci-required mit Windows-Spieler. T01-T03 einmalig an isolierten 56/1000-Testkopien; keine Nutzersaves. Migrationsnachtrag #640/6878198255: #641 ist externe Abhaengigkeit, keine Migration in App/UI/API.",
+  "omitted": "Keine zusaetzliche Solver-, Bildproduktions-, Adapter-, native.*, Preflight-, Delivery- oder automatische Chromium-Matrix. Algorithmen unveraendert; reale bestehende Solver-/Ratingkonsumption nur fuer geaenderte Raster. Neue Quellen-/Recoveryformen im catalog-Modul. Historische Reader/Journale behalten explizite Kompatibilitaet, keine Vollbestandsregression als Pflicht des neuen Editorwegs.",
+  "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_editor_change.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine aktuelle Transaktionsfaelle: harte erlaubte Dateimengen, No-op, gleich-mtime-Konflikt, Links, gezielte Recovery, Quellen ohne Herkunft und normale Folgeproduktion."
+    },
+    {
+      "path": "tools/test_puzzle_editor.py",
+      "disposition": "change-scoped",
+      "reason": "Ersetzt den Vollsnapshot- und UI-Migrationsvertrag durch drei Indexreads, lesende Altversionsablehnung und atomare Theme-Persistenz; bestehende HTTP-/Listener-/Instanzgrenzen bleiben."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_metadata.py",
+      "disposition": "change-scoped",
+      "reason": "CLI-Konsument auf den aktuellen extern vorbereiteten v8-Testbestand umstellen; alte Journal-/Migrationsfaelle bleiben explizite externe Kompatibilitaetspruefungen."
+    },
+    {
+      "path": "tests/puzzle_production/test_catalog_images.py",
+      "disposition": "change-scoped",
+      "reason": "Ersetzt normale Vollsnapshot-Detailpflicht durch genau drei Indizes und ausgewaehlte Definition/Quellen; alte externe Migrationstests bleiben."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",

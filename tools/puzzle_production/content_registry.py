@@ -240,22 +240,22 @@ def _check_entry(root, r, catalog, e, *, image_runtime, replay=False, pending_jo
     package = root / p["package"]
     reveal.resolve(root, e, catalog)
     active_reveal = reveal.load(root, e, catalog)
-    require(image_runtime or active_reveal is None or active_reveal.get("format") != "picross-catalog-reveal-v3",
+    require(image_runtime or active_reveal is None or active_reveal.get("format") not in ("picross-catalog-reveal-v3", "picross-catalog-reveal-v4"),
             "Editor reveal requires explicit runtime v8 migration")
     # Also enforce the category binding without the expensive production replay.
     m = load_json(package / "manifest.json")
-    if m.get("format") == "picross-editor-raster-package-v1":
+    if m.get("format") in ("picross-editor-raster-package-v1", "picross-editor-raster-package-v2"):
         from . import editor_raster
         editor_raster.package(root, e, m, replay=replay)
         background.load(root, r, e)
         return
     from . import integrated_content
     source = background.load(root, r, e)
-    require(image_runtime or source is None or source.get("format") != "picross-catalog-background-v5",
+    require(image_runtime or source is None or source.get("format") not in ("picross-catalog-background-v5", "picross-catalog-background-v6"),
             "Editor background requires explicit runtime v8 migration")
     declared = m.get("format") in ("picross-target-export-v6", background.RECEIPT_FORMAT) or (
         m.get("format") == "picross-target-export-v5" and source is not None and source["format"] in background.REBIND_FORMATS)
-    if source is not None and source.get("format") == "picross-catalog-background-v5":
+    if source is not None and source.get("format") in ("picross-catalog-background-v5", "picross-catalog-background-v6"):
         declared = True  # Manual authority is independently bound to the original production.
     require(declared == (e["id"] in background_index), "Background export v6/receipt requires its exact active index")
     if m.get("format") in integrated_content.FORMATS:
@@ -408,6 +408,17 @@ def recovery_target(root, journal, registry, runtime):
 
 def recover(root, *, recovery_seconds=None):
     """Explicit rollback after process death; preflight every byte before mutation."""
+    from . import editor_change
+    root = catalog_io.external(root)
+    for name in (editor_change.LOCK, editor_change.STAGE):
+        candidate = catalog_io.safe(root, name)
+        if candidate.exists():
+            from .catalog_publication import EDITOR_PREFIX
+            with candidate.open("rb") as stream: prefix = stream.read(len(EDITOR_PREFIX))
+            if prefix == EDITOR_PREFIX:
+                require(recovery_seconds is None, "RI-A override is not an editor recovery option")
+                with catalog_io.budget(300): return editor_change.recover(root)
+            break
     started = time.monotonic()
     diagnostic.seconds(recovery_seconds, now=started)
     # Classification is read-only and bounded. All subsequent checks and writes
