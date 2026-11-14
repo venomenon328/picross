@@ -77,6 +77,12 @@ keine Zusicherung, dass der Kanal aktuell erreichbar ist. Bei Browserfehler nach
 Arbeitsaufnahme „Im Browser öffnen“ erneut wählen; der erste Git-Abgleich wird
 dabei nicht wiederholt. Bereits begonnene Git-Arbeit und Produktionsentfernung
 laufen beim Beenden weiterhin geordnet aus.
+Entspricht die höchste signiert geprüfte Releaseversion der geprüften lokalen
+Installationsidentität, zeigt das Steuerfenster „Keine neuere Appversion
+veröffentlicht.“ Browser und erster Git-Abgleich starten einmalig, ohne Download
+oder Installation. Das bestätigt keine bitidentischen MSI-/EXE-Dateien. Bei
+abweichender Installationsidentität erscheint eine Warnung; die vorhandene App
+bleibt nutzbar. Kanal-/Netzfehler bestätigen weiterhin keine Aktualität.
 Installationsfehler/unklarer Ausgang/Rebootbedarf werden ehrlich gemeldet: danach
 Windowsinstallation prüfen und manuell starten bzw. geprüften Installer erneut
 ausführen. Kein automatischer Retry, keine universelle Rollbackgarantie.
