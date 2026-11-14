@@ -12,7 +12,7 @@ from tools.puzzle_production.authoring_finalization import RECORD_KEYS
 from tools.puzzle_production.background_contract import validate_manifest, validate_decision, _bind_decision, BackgroundError
 from tools.puzzle_production.background_package import validate_binding
 from tools.puzzle_production.contract import InvalidInput, canonical_bytes, exact_keys, integer, load_json
-from .sources import Archive, JSON_LIMIT, INDEX, check_commit, production_path
+from .sources import Archive, JSON_LIMIT, INDEX, check_commit, production_path, _ReadScope
 
 FORMAT = 'picross-production-presentation-v1'
 REQUEST = 'picross-production-presentation-request-v1'
@@ -201,7 +201,7 @@ class Record:
         bind(raw, r['package'])
         self.archive = Archive(raw)
         try:
-            handoff_raw = self.archive.read('handoff.json', JSON_LIMIT)
+            handoff_raw = self._read_member('handoff.json', JSON_LIMIT)
             ap.require(handoff_raw == source.read(self.commit, r['handoff']['file']), 'Äußerer Handoff unterscheidet sich vom Original.')
             bind(handoff_raw, r['handoff'])
             self.handoff = h = parse(handoff_raw)
@@ -215,7 +215,7 @@ class Record:
                 workflow.presentation(r['presentation'])
                 ap.require(r['raster_selection'] == h['raster_selection'] and r['candidate'] == h.get('candidate'),
                            'Rasterwahl weicht vom Original ab.')
-            inv_raw = self.archive.read('inventory.json', JSON_LIMIT)
+            inv_raw = self._read_member('inventory.json', JSON_LIMIT)
             bind(inv_raw, h['inventory'])
             ap.require(io.checksum(inv_raw) == r['inventory_sha256'], 'Inventarbindung stimmt nicht.')
             inv = parse(inv_raw)
@@ -258,6 +258,7 @@ class Record:
             self.allowed, self.offer_keys = {role: {} for role in ROLES}, {}
             self.historical_assets = []
             self._images()
+            self._selection()
             self.close()  # Retain only tiny validated metadata, not a ZIP per offered revision.
         except BaseException as exc:
             self.close()
@@ -268,10 +269,15 @@ class Record:
     def close(self):
         self.archive.close()
 
+    def _read_member(self, name, limit):
+        if isinstance(self.source, _ReadScope):
+            return self.source.member(self.commit, self.value['package']['file'], name, limit, self.archive)
+        return self.archive.read(name, limit)
+
     def member(self, name, expected=None, limit=ap.MAX_FILE):
         ap.relative(name)
         ap.require(name in self.entries, 'Datei ist nicht inventarisiert: ' + name)
-        raw = self.archive.read(name, limit)
+        raw = self._read_member(name, limit)
         item = self.entries[name]
         ap.require(io.checksum(raw) == item['sha256'] and len(raw) == item['bytes'] and
                    (expected is None or expected == item['sha256']), 'Inventarisierte Bytes stimmen nicht: ' + name)
@@ -414,6 +420,60 @@ class Record:
                 _bind_decision(manifest, decision)
                 self.background_choice = 'none' if decision['outcome'] == 'none' else decision['candidate_id']
 
+    def _selection(self):
+        """Bind the summary to the recorded choice and immutable original copies.
+
+        This reads the existing offline selection contract, not a solver or a
+        Git publisher, and does not authenticate a recorded human explanation.
+        """
+        h = self.handoff
+        if not self.current or h.get('raster_selection') is None:
+            return
+        ref = exact_keys(h['raster_selection'], {'file', 'sha256'})
+        s = self.json(ref['file'], ap.sha(ref['sha256']))
+        exact_keys(s, {'format', 'puzzle_id', 'source_commit', 'option_id', 'record', 'projection',
+                       'inventory_sha256', 'candidate', 'reveal', 'motif', 'human', 'test_only'})
+        ap.require(s['format'] == 'picross-raster-selection-v1' and s['puzzle_id'] == h['puzzle_id'] and
+                   type(s['test_only']) is bool and s['test_only'] == h.get('test_only', False),
+                   'Rasterwahl gehört nicht zum aktuellen Produktionsgegenstand.')
+        check_commit(s['source_commit'])
+        ap.require(isinstance(s['option_id'], str) and OPTION.fullmatch(s['option_id']), 'Ungültige Rasterwahl.')
+        copies = {}
+        for key in ('record', 'projection'):
+            item = exact_keys(s[key], {'file', 'sha256', 'bytes', 'copy'})
+            production_path(item['file']); ap.sha(item['sha256'])
+            integer(item['bytes'], 1, JSON_LIMIT, 'Rasterwahl-Originalgröße')
+            raw = self.member(item['copy'], item['sha256'], JSON_LIMIT)
+            ap.require(len(raw) == item['bytes'], 'Rasterwahl-Originalgröße stimmt nicht.')
+            copies[key] = parse(raw)
+        source = copies['record']; projection = validate(copies['projection'])
+        ap.require(source.get('format') == 'picross-authoring-record-v3' and
+                   source['puzzle_id'] == h['puzzle_id'] and source['state'] == 'raster_ready' and
+                   s['record']['file'] == f"content/authoring/{h['puzzle_id']}/{source['revision']}/record.json" and
+                   source['inventory_sha256'] == ap.sha(s['inventory_sha256']), 'Gewählte Rasterrevision stimmt nicht.')
+        ap.require(projection['puzzle_id'] == h['puzzle_id'] and
+                   s['projection']['file'] == f"content/authoring/{h['puzzle_id']}/{projection['revision']}/workspace.json",
+                   'Gewählte Rasterprojektion stimmt nicht.')
+        offers = [o for o in projection['offers'] if o['kind'] == 'raster' and o['id'] == s['option_id']]
+        ap.require(len(offers) == 1 and
+                   all(offers[0]['record'][k] == s['record'][k] for k in ('file', 'sha256', 'bytes')) and
+                   offers[0]['record']['commit'] in (None, s['source_commit']), 'Gewähltes Rasterangebot hat eine andere Quelle.')
+        v = source['verification']
+        ap.require(v.get('technical') is True and v.get('effective_state') == 'raster_ready' and
+                   v.get('format') == 'picross-authoring-content-inspection-v2', 'Gewähltes Raster ist nicht als qualifiziert gebunden.')
+        exact_keys(s['candidate'], {'variant', 'matrix_hash', 'logic_hash'})
+        ap.require(s['candidate'] == {k: h['candidate'][k] for k in s['candidate']} ==
+                   {k: source['candidate'][k] for k in s['candidate']}, 'Gewähltes Raster wurde geändert.')
+        for role in ('reveal', 'motif'):
+            exact_keys(s[role], {'file', 'sha256'})
+            ap.require(s[role] == {k: h[role][k] for k in s[role]} ==
+                       {k: source[role][k] for k in s[role]}, 'Bildkontext der Rasterwahl wurde geändert.')
+        human = exact_keys(s['human'], {'actor', 'timestamp_utc', 'statement', 'evidence'})
+        ap.string(human['actor'], 'Rasterwahl-Akteur'); ap.string(human['statement'], 'Rasterwahl-Erklärung')
+        ap.timestamp(human['timestamp_utc'])
+        evidence = exact_keys(human['evidence'], {'file', 'sha256'})
+        self.member(evidence['file'], ap.sha(evidence['sha256']), JSON_LIMIT)
+
     def historical_background(self, binding, manifest, candidate, current_name):
         history = binding['history']
         ap.require(history is not None, 'Hintergrundoriginal fehlt ohne historische Bindung.')
@@ -487,6 +547,8 @@ def asset_bytes(source, snapshot, loc):
         return bind(source.read(commit, loc['file'], 32 * JSON_LIMIT), loc)
     raw = source.read(commit, loc['container']['file'], ap.MAX_ZIP)
     bind(raw, loc['container'])
+    if isinstance(source, _ReadScope):
+        return bind(source.member(commit, loc['container']['file'], loc['file'], 32 * JSON_LIMIT), loc)
     archive = Archive(raw)
     try:
         return bind(archive.read(loc['file'], 32 * JSON_LIMIT), loc)
@@ -494,8 +556,77 @@ def asset_bytes(source, snapshot, loc):
         archive.close()
 
 
+
+def closing_composition(outer, assets):
+    """Project exact current originals, never infer a choice from gallery order.
+
+    These are view identifiers, not a new approval/certification. Equivalent
+    references to the same original are reduced by ID; different originals
+    remain ambiguous and therefore cannot be approved through the summary.
+    """
+    r = outer.value
+    if not outer.current or r['state'] not in (
+            'background_review', 'content_ready', 'editorially_approved', 'registered'):
+        return None
+    if not r.get('raster_selection') or not r.get('candidate') or not r.get('reveal'):
+        return None
+
+    def selected(role, name=None):
+        expected = outer.allowed[role]
+        if name is not None:
+            expected = {n: sha for n, sha in expected.items() if n == name}
+        if len(expected) != 1:
+            return None
+        original = next(iter(expected))
+        matches = [a for a in assets if a['role'] == role and outer.asset_name(a) == original]
+        return min((a['id'] for a in matches), default=None)
+
+    background_name = outer.offer_keys.get(('background', outer.background_choice))
+    # A chosen original stays selectable in the original manifest. None is not an asset.
+    return {'raster': selected('raster'), 'reveal': selected('reveal', r['reveal']['file']),
+            'background': selected('background', background_name) if background_name else None}
+
+
+class _Inspection:
+    """Private operation; callers cannot supply records or persisted success flags."""
+    def __init__(self, source, snapshot):
+        self.source, self.snapshot = _ReadScope(source), snapshot
+        self.records = {}
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        for ctx in self.records.values():
+            ctx.close()
+        self.records.clear()
+        self.source.clear()
+
+    def record(self, ref, puzzle_id):
+        commit = ref['commit'] if ref['commit'] is not None else self.snapshot
+        key = (commit, ref['file'], puzzle_id)
+        if key not in self.records:
+            self.records[key] = Record(self.source, self.snapshot, ref, puzzle_id)
+        ctx = self.records[key]
+        if 'sha256' in ref:
+            bind(ctx.raw, ref)
+        return ctx
+
+    def inspect(self, value):
+        return _inspect(self, value)
+
+
 def inspect(source, snapshot, value):
+    """Fresh independent detail inspection; never reuses another call's findings."""
+    with _Inspection(source, snapshot) as operation:
+        result = operation.inspect(value)
+        operation.source.recheck()
+        return result
+
+
+def _inspect(operation, value):
     """Validate every offered role against its original revision; no new approval."""
+    source, snapshot = operation.source, operation.snapshot
     p = validate(value)
     refs = [p['record'], *(o['record'] for o in p['offers'])]
     contexts, outer, asset_owners = {}, None, {}
@@ -509,16 +640,21 @@ def inspect(source, snapshot, value):
             commit = ref['commit'] if ref['commit'] is not None else snapshot
             index = index_value(source.read(commit, INDEX, 8 * JSON_LIMIT))
             ap.require(any(e['record'] == ref['file'] for e in index['entries']), 'Angebotsrecord ist nicht indexiert.')
-            ctx = Record(source, snapshot, ref, p['puzzle_id'])
+            ctx = operation.record(ref, p['puzzle_id'])
             ctx.snapshot = snapshot
             if outer is None:
                 outer = ctx
             contexts[key] = ctx
         ap.require(outer.current == (p['format'] == CURRENT_FORMAT), 'Projektion und Originalgeneration unterscheiden sich.')
+        decoded = set()
         for a in p['assets']:
             owners = [key for key, ctx in contexts.items() if ctx.matches(a)]
             ap.require(owners, 'Bildrolle oder Originalquelle stimmt nicht: ' + a['id'])
-            image(asset_bytes(source, snapshot, a['location']))
+            raw = asset_bytes(source, snapshot, a['location'])
+            identity = (a['location']['sha256'], len(raw))
+            if identity not in decoded:
+                image(raw)
+                decoded.add(identity)
             asset_owners[a['id']] = owners
         for offer in p['offers']:
             key = (offer['record']['commit'], offer['record']['file'])
@@ -541,6 +677,9 @@ def inspect(source, snapshot, value):
                            'Pflichtbild fehlt in der Projektion: ' + name)
         return {'state': outer.value['state'], 'blockers': outer.value['blockers'],
                 'published': outer.published,
+                'metadata': {k: outer.value.get(k) for k in ('width', 'height', 'mode', 'used_colors', 'difficulty')},
+                'composition': closing_composition(outer, p['assets']),
+                'originals': {'record': deepcopy(outer.value), 'handoff': deepcopy(outer.handoff)},
                 'authoring_version': outer.value['rulebook']['version'],
                 'background_status': ('pending' if outer.value['background'] is None else
                                       'ready' if outer.value['verification'].get('background_ready') else 'offered'),

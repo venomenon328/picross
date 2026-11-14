@@ -310,8 +310,10 @@ und die tatsächlich gebundene Zielfähigkeit. Vollständige Eingangsprüfung un
 unabhängiges Stagingreplay bleiben. Die enge 128-MiB-Ausnahme folgt ausschließlich
 dem deklarierten `input/package.zip` bis Inventar/Addition/Guard/Readback; sonstige
 Grenzen unverändert. Keine serialisierte Prüfautorität, kein Cache aus `plan`
-und kein Kontext in Recovery. Tatsächliche HP-W2-Modul-/Codecänderungen weiterhin
-abweisen, ältere Freigaben/Ableitungen nicht auf neue Toolbytes umhängen.
+und kein Kontext in Recovery. HP-W2-Moduldrift nur über die ausdrücklich
+qualifizierte lesende Reproduktion aus [Hintergrund §4.3](PUZZLE_BACKGROUNDS.md#43-stabiler-ableitungsbefund)
+zulassen; unbekannte Erzeuger und Codecänderungen weiterhin abweisen.
+Ältere Freigaben/Ableitungen nicht auf neue Toolbytes umhängen.
 
 RI-C gilt ausdrücklich für registration-v7 mit vollständigem T/K samt
 Capability/null, Hintergrundsource/Notice/PNG, negativen Erwartungen und beiden
@@ -320,6 +322,22 @@ G6/P6 sowie GR0/R0 und GR2/R2 bleiben die vollständigen Prüfgrenzen;
 dazwischen lokale Ziel-/Eltern-/Lock-/Tempprüfungen. Kein nur auf v6 begrenzter
 Dispatchfallback und keine Ausdehnung auf andere Operationen. Der vollständige
 Vertrag und genaue Mengen stehen in SD-Catalog, nicht in einem Zeit-/mtimecache.
+
+**RI-REPLAY-1 / #650 (INT-B02):** Bei einer mutierenden Erstregistrierung
+erhält der P5-Checkoutcheck den aus dem validierten Registrierungsjournal
+ermittelten *einzigen neuen* Paketpfad. Nur dieses Paket wird in P5 erneut
+auf vollständige Produktion geprüft beziehungsweise mit dem privaten RI-B-
+Kontext bytegebunden nachgeprüft. Alle anderen Einträge werden weiterhin
+bei derselben vollständigen Checkoutprüfung über ihre gespeicherten
+Manifest-/Dateihashes, aktuellen Definitionen und Bildern, Quellen,
+Registry-/Runtimeprojektion und Namespaces validiert, aber ihre historische
+Proof- und HP-W2-Produktion wird nicht neu ausgeführt. G0/G2/G5a/G5b/G6,
+T/K-Guards und Herkunftsbytes bleiben unverändert. Ohne gültigen einzigen
+Zielpfad wird abgebrochen. Ausdrückliche vollständige Bestandsdiagnosen
+(`check_checkout(replay=True)`) und isoliertes `verify-export` bleiben
+unverändert streng; inkompatible historische Erzeuger werden dort weiterhin
+abgewiesen. Keine neue COMPAT-Allowlist, kein globales Replay-Freizeichen,
+keine Änderung an Recovery und anderen Operationen.
 
 Recovery bleibt Rückführung des vollständig gültigen eigenen Altstands, keine
 Vorwärtsfortsetzung. Bei fremden/unklaren Bytes Dateien und Journal erhalten,

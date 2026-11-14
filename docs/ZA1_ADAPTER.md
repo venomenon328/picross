@@ -1,13 +1,85 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
-**PE-A1 / #576 · im Arbeitsbranch implementiert, Review offen:**
+> Aktueller Editor-Sonderweg: [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) definiert die gezielte Transaktion, Reveal v4, Hintergrund v6 und Rasterpaket v2. Normale Editoraktionen lesen keine historische Produktion. Explizite Produktionsprüfung/Recovery alter Formen bleiben bestehen; Folgeproduktion erhält die aktuelle technische Bildbindung. Die externe Migration gehört zu #641, nicht in die Editor-App.
+
+
+## PE-A3 · Eigenständige manuelle Rasterquelle
+
+Vertrag vor konsumierendem Code, 13.11.2026:
+[PE §9](PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag)
+führt `picross-editor-raster-package-v1` im bestehenden Paketbaum ein.
+Es ist kein ZA-1-Export und kein Authoring-/KI-Freigabebeleg. Der gemeinsame
+Paketresolver prüft seine geschlossene Form, Inventar, Definition, tatsächliche
+Entscheidung, Provenienz und vollständigen Vorgängeranker separat.
+Ursprüngliche Pakete/Receipts bleiben unverändert prüfbar. Neue IDs benötigen
+weiterhin reguläre Exporte. Historische Registerwiederholung prüft den echten
+gebundenen Produktionsanker und aktuellen Checkout und bleibt No-op.
+Spätere Standardupdates behalten ihre vollständigen Export-/Proof-/Freigabewege
+und aktuelle manuelle Metadaten/Bilder. Sync, Rating, Added und Abschluss dürfen
+die Rasterautorität nicht zurückstufen. Der Editor greift auf keine Saves zu.
+Retirement erhält aktuelle Editor-Rasterpakete und ihre Vorgänger als benötigte
+Quellautorität; nach Prüfung der vollständigen aktuellen main-Quellbindung ist
+deren Auswahl No-op. Nur tatsächliche Standardexporte werden nach dem vorhandenen
+Authoring-/Receiptvertrag kompaktiert.
+
+**PE-A1 / #576 · nach unabhängigem Review integriert:**
 [PE-A1](PUZZLE_EDITOR.md#73-migration-und-laufende-produktion) trennt die aktuelle
 Namens-/Kategorieautorität von den weiterhin geprüften Produktionsangaben.
 Bei Erstregistrierung ist die Kategorie aktuell erforderlich; bei vorhandener ID
 bleibt deren aktive Metadatenzeile erhalten, während ein Folgeexport seine eigene
 gebundene Kategorieherkunft behält. Alte Exportformen werden nicht umgedeutet.
-Mutierende Standardproduktion verlangt v4/v7; historische Prüfungen, vollständig
+Mutierende Standardproduktion verlangt v4/v7 oder ausdrücklich eingeführtes v4/v8;
+historische Prüfungen, vollständig
 geprüfte Wiederholungen und gebundene Alt-Recovery bleiben zulässig.
+
+## PE-A2 · Aktuelle Bildautorität und vollständige Produktionsherkunft
+
+[PE §8](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) und die
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839202555)
+ergänzen vor konsumierendem Code Revealquelle v3, Hintergrundquelle v5 und
+Runtime v8. Beide Quellen haben exakt
+`format,id,record_revision,origin,binding,current,record_hash`.
+`origin={entry,identity,notice,source}` bindet einmalig die vollständige ursprüngliche
+Produktion und alte geschlossene Source oder deren gültige sourcefreie Abwesenheit.
+`binding={entry,identity}` bindet den aktuellen geprüften Produktionsstand.
+Die Identity ist exakt `{key,save_slot,definition,runtime_revision}`, Definition
+als echter Ref. Alle weiteren aktuellen Felder/Autoritäten stehen geschlossen in PE.
+
+Der bisherige Produktionseintrag und seine Reveal-/Definitionspfade bleiben
+historische Exportdaten. Wirksamer PNG-/SVG-Pfad und eigene Hintergrundpräferenz
+werden getrennt aufgelöst. Vollständige Export-/Receipt-/Freigabe-/Byte-/
+Rechteprüfung bleibt; kein Vergleich nur über ID und keine manuelle HP-W2-Fiktion.
+Die exakten neuen Quell-/Namespace-/Journalmengen stehen im
+[SD-Catalog-Vertrag](SD_CATALOG.md#pe-a2--geschlossene-v8-quellen-pläne-und-journale).
+
+| Folgeoperation | Verbindliches Verhalten auf v4/v8 |
+| --- | --- |
+| Neue Registrierung | Frische volle Produktion prüfen und ihren regulären Bildweg initialisieren; keine neue manuelle Source ohne manuelle Aktion. |
+| Ursprüngliche Registerwiederholung | Vollständigen ursprünglichen Export-/Receiptanker prüfen; aktuelle Metadaten/Bilder erhalten, echte Wiederholung ist No-op. |
+| Regulärer Rasterupdate | Eigenen Export und tatsächliche Freigaben vollständig prüfen. Aktuelle manuelle Bilder einschließlich Endung und Standard-/selected-/none-Präferenz erhalten; äußere Quellenbindung an neue Definition fortschreiben, keine Bildrevision allein deshalb. Exporthintergründe ersetzen keine manuelle Präferenz. |
+| Reguläre AT-/HP-W2-Adoption | Aktuelle Source fortführen, echte neue Produktionsentscheidung binden, historische `origin` unverändert. Eine alte vorbereitete Quelle wird stale. |
+| Sync/Metadaten/Rating/Added/Batch | Aktuelle gemeinsame Auflösung erhalten, nicht aus alten Produktionsbildern rekonstruieren. |
+| Produktionsabschluss | Nur tatsächliche Main-/Livebindung finalisieren; aktive Quelle, Bild, Notice und Rechte erhalten. |
+
+Die [Receipt-Präzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651)
+führt ausschließlich für den neuen getrennten Herkunftsfall
+`picross-integrated-content-v3` ein. Exakte Felder:
+`format,entry,integrated_commit,notice_sha256,background`.
+`background` ist exakt `{origin_sha256,export_source}`. Ersteres ist der
+kanonische Hash des unveränderten Background-v5-`origin`; `export_source` ist
+die vollständige echte gültige Source v1 des aktuellen v6-Exports oder null
+bei sourcefreier Produktion. Vor Retirement wird sie aus den tatsächlichen
+Exportdateien abgeleitet und vollständig gegen Export/Entry/Mainbindung geprüft.
+Damit bleibt auch Legacy→manueller Hintergrund→regulärer Rasterupdate nach
+Paketretirement prüfbar, obwohl der ehrliche Erstanker `origin.source=null` bleibt.
+Keine neue Ereignischronik, Sourceänderung oder Umdeutung von Receipt v1/v2.
+
+Die gemeinsame Registry bleibt v4 mit exakt `format,entries,metadata,backgrounds`;
+neue aktive Hintergrundquellen werden über den vorhandenen Ref-Index gebunden.
+Kein neues Raster, keine geänderte Definition, Palette, Saveidentität oder
+Solver-/Ratingrevision durch reine Bildpflege. Die explizite v7→v8-Migration
+ändert allein die Runtimeprojektion; alte Registrierungs-/Updategenerationen
+behalten ihren gebundenen Stand und werden nicht nachträglich erweitert.
 
 ## #596/C · Reguläre motivtreue Rasterkorrektur
 
@@ -880,6 +952,18 @@ native Spiel-/Neustart-/PCK-Funktionsprobe je Rätsel. Der allgemeine
 [Quellen-/Plankern](CI_WORKFLOW_V2.md) gilt für jeden PR; reine Dokumente und reine Rätselinhalte bleiben ohne Player-Build.
 Weitere Proben nur mit konkretem Zweck; allgemeine Code-/Exportmodule werden
 im aktuellen Paketplan ausgewählt.
+
+**RI-REPLAY-1 / #650:** Die normale mutierende neue Registrierung revalidiert
+im P5-Checkoutcheck die vollständige Produktion nur für das vom Journal
+eindeutig gebundene neue Exportpaket. Bestehende Vollpakete erhalten dieselben
+frischen Manifest-/Datei-/Live-/Namespace- und Transaktionsprüfungen,
+aber kein neues historisches Proof-/HP-W2-Replay. `check-registry` als
+bewusste Vollreplay-Diagnose und einzelnes `verify-export` bleiben streng:
+eine nicht qualifizierte Alt-Erzeugeridentität wird dort weiter abgewiesen.
+Der vollständig geprüfte neue Input, sein unabhängiges Stagingreplay,
+G0/G2/G5a/G5b/G6, Recovery und unveränderte Katalogidentitäten sind nicht
+durch einen globalen `replay=False`-Bypass ersetzbar. Details:
+[RI](PUZZLE_INTEGRATION.md) und [SD-Catalog](SD_CATALOG.md#ri-replay-1--neues-paket-statt-historische-produktion-in-p5-erneut-prüfen-650).
 
 Künstliche Freigaben sind `test_only=true`; Registrierung im echten eigenen
 Checkout wird verweigert. Die folgenden allgemeinen Entwicklungsprüfungen gehören
