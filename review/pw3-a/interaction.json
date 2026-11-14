@@ -1,0 +1,58 @@
+{
+  "product_head": "46350cd44d2b20af1a4fe22926dead726a8449d6",
+  "browser": "145.0.7632.6",
+  "os": "Windows; Playwright 1.65.2; installed Chromium executable; headless real browser",
+  "viewports": [
+    [
+      1280,
+      960
+    ],
+    [
+      430,
+      900
+    ]
+  ],
+  "device_scale_factor": 1,
+  "scenarios": [
+    "PASS: appstart with saved browsertext and locally committed phase 1 opens exactly one remote production at phase 4; source details closed; screenshot active.png 1280x960 @1.",
+    "PASS: 430x900 narrow viewport has visible picker and no horizontal overflow; new unsent text survives passive real Git refresh.",
+    "PASS: actual remote lookup failure retains bound phase-4 images; cache date/error visible and cloud follow-up disabled.",
+    "PASS: real metadata-bound main integration stays pending during passive search; explicit load hides proved delivery and opens remaining genuine same-ID work.",
+    "PASS: second proved integration leads to empty active list without draft fallback; texts preserved; reload remains empty. screenshot empty.png 1280x960 @1."
+  ],
+  "sources": {
+    "advanced": "f9a37543a293b221bc2f74ce01ced8bea9b3d28a",
+    "local_phase1": "64947d9286cd8fa275b5bd160bb4cdefca9789c0",
+    "first_main": "492c2377dd8e42700af5aac912dc059f5b2e6059",
+    "remaining_open": "b21648d2a813f09149a6394a80344bb12a9168ea",
+    "second_main": "fc2cf3d8797e121613666b55c1b495fe61a391fd"
+  },
+  "limitations": "Synthetic source production and metadata-only registration, not a new production certification or Windows app/installer/game trial.",
+  "purpose": "PW3-A-T01 originals for independent reviewer of PR #648 / PW3-A-A01",
+  "expires": "2026-11-20",
+  "owner": "Implementer; remove temporary review ref after review, no later than expiry; if gate remains open re-evaluate and re-deliver.",
+  "originals": [
+    {
+      "file": "active.png",
+      "bytes": 162254,
+      "sha256": "5e75bd44ad1353acf0d8d10f54ebfe324915f383da423af0003c17db0223fb05",
+      "viewport": [
+        1280,
+        960
+      ],
+      "device_scale_factor": 1,
+      "unchanged": true
+    },
+    {
+      "file": "empty.png",
+      "bytes": 125137,
+      "sha256": "3cb0009e5fb4d745e3a3e0de07671103e82f2b93cf1069b3650e175d67cad862",
+      "viewport": [
+        1280,
+        960
+      ],
+      "device_scale_factor": 1,
+      "unchanged": true
+    }
+  ]
+}
