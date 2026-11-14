@@ -1,18 +1,33 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/641",
-  "package": "PE-MIG1/M2",
+  "issue": "https://github.com/venomenon328/picross/issues/645",
+  "package": "HP-W2-COMPAT-1",
   "modules": [
-    "tools",
-    "production.catalog"
+    "production.images",
+    "production.adapter"
   ],
-  "purpose": "M2-K01-K04 mit ausdruecklich beauftragter enger v6-Spielerimport-Readerkorrektur (Issue #641, Kommentar 6881270569). Echte 56er-Quellenmigration plus tools/production.catalog vollstaendig und regulärer Windows-Spielerbau wegen Werkzeugdiff. Einmalige externe Guard-/Rollback-/Vollvergleichs-/No-op-/56-Reader-/Editor-/Godotbelege am separaten Reviewref; keine Migration in App/UI/API/Starter.",
-  "omitted": "Keine zusaetzliche Solver-, Bildproduktions-, Adapter-, native.*, Preflight-, Delivery- oder automatische Chromium-Matrix: deren Algorithmen/Spielprogramme bleiben unveraendert. Bestehende Solver-/Ratingkonsumption und gezielte echte Godotdarstellung einmalig isoliert. Keine neue Echtkatalog-Dauersuite; keine echten Benutzersaves.",
+  "purpose": "D01-D04/K01-K07 aus Paketentscheidung 6882921168: geschlossene historische selected-Erzeugeridentitaet an der zentralen lesenden HP-W2-Grenze mit frischer bytegenauer Reproduktion. production.images prueft background_assets und echte synthetische Ableitung; production.adapter prueft background_package, Finalizer, Export/Offlineverify und ZA-1. docs/ci-required und regulaerer Windows-Spielerbau bleiben verpflichtend.",
+  "omitted": "Kein tools-Pauschallauf: HP-W2 liegt in production.images. Kein production.catalog, da kein Katalog-/Transaktionsdiff und unveraenderte Consumer-/Publisher-/Recoveryimplementierung; bestehende Adapter-Negativ-/Unterbrechungsfaelle bleiben aktiv. Keine solver-, native-, preflight-, delivery-, Chromium- oder Echtkorpus-Dauermatrix. Exakter Fliegenpilz-r07-Uebergang einmalig isoliert, ohne plan/register/completion, echte Registry oder Saves.",
   "test_changes": [
     {
-      "path": "tools/test_background_import.py",
+      "path": "tests/puzzle_production/background_fixtures.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische Regression fuer v6-selected-Quellen ohne notice/authority: vorhandene TXT-Bytes binden und erhalten, keine neue Noticepflicht, unveraenderte Import-/Namespaceguards."
+      "reason": "Kleiner synthetischer Alt-Erzeuger fuer explizit injizierte Testidentitaeten; keine reale Raetselfixture und keine Ausfuehrung historischer Module. Aktuelle Leser, Rendering und Bytepruefung bleiben echt."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_assets.py",
+      "disposition": "change-scoped",
+      "reason": "Kleine synthetische Regressionen fuer volle Provenienz, selected/none, Reproduktion/Diagnostik, derive/reused-Sperre und aktuelle Codecs. Bestehende Module-during-run-, Pfad-/Lock-/Stagefaelle unveraendert."
+    },
+    {
+      "path": "tests/puzzle_production/test_authoring_finalization.py",
+      "disposition": "change-scoped",
+      "reason": "Alt-Record und nachfolgende Endfreigabe wirklich reproduzieren; Original/Sidecars erhalten; unbekannter Erzeuger stoppt ohne Mutation."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_export.py",
+      "disposition": "change-scoped",
+      "reason": "Synthetischer Export-/Offlinepfad fuer qualifizierte Altidentitaet ohne Verbrauchersonderfreigabe; unbekanntes Tool und manipulierte PNGbytes bleiben Fehler."
     }
   ],
   "core_change": null,

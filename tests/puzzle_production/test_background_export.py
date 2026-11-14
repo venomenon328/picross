@@ -16,7 +16,7 @@ from tools.puzzle_production import background_export as export_v6
 from tools.puzzle_production.contract import InvalidInput, load_json, write_json
 from tools.puzzle_production.za1_fixtures import ROOT, approve, seal
 from tests.puzzle_production import test_background_content as fixtures
-from tests.puzzle_production.background_fixtures import file_ref, put, put_json
+from tests.puzzle_production.background_fixtures import file_ref, historical_description, put, put_json
 
 
 class BackgroundExportTests(unittest.TestCase):
@@ -145,6 +145,32 @@ class BackgroundExportTests(unittest.TestCase):
             self.assertEqual((output / "input/package.zip").read_bytes(), original[0])
             self.assertEqual(manifest["background"]["manifest"], binding["manifest"])
             self.assertTrue(any(n.startswith("external/") for n in manifest["files"]))
+
+    def test_qualified_producer_reaches_export_and_offline_reader_without_special_consumer_pass(self):
+        old = historical_description(assets.describe())
+        with patch.object(assets, "_tool", return_value=old["tool"]):
+            source, fixture, _, archive, approval = self.early(name="historical")
+        with self.assertRaisesRegex(InvalidInput, "Original tool differs"):
+            self.export(archive, approval, name="blocked-historical")
+        self.assertFalse((self.root / "blocked-historical").exists())
+        with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})):
+            output, manifest = self.export(archive, approval, name="historical-export")
+            original = (output / "input/package.zip").read_bytes()
+            source.rename(source.with_name("source-unavailable"))
+            fixture.root.rename(fixture.root.with_name("fixture-unavailable"))
+            archive.unlink()
+            approval.unlink()
+            with patch.object(bp, "_History", side_effect=AssertionError("Offline must not read historical Git")):
+                checked, report = adapter.verify_export(output)
+            self.assertEqual(checked, manifest)
+            self.assertTrue(report["export_verified"])
+            self.assertEqual((output / "input/package.zip").read_bytes(), original)
+            # Even a qualified identity must pass actual PNG/Befund reproduction.
+            png = output / manifest["background_asset"]["file"]
+            png.write_bytes(png.read_bytes() + b"foreign")
+            self.rehash(output)
+            with self.assertRaises(InvalidInput):
+                adapter.verify_export(output)
 
     def compact_history(self, *, later_b=False):
         source, fixture, h, _, _ = self.early()
