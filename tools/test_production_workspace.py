@@ -675,6 +675,91 @@ class WorkspaceTests(unittest.TestCase):
             self.assertEqual((f.read_bytes(), f.stat().st_mtime_ns), value)
         self.assertEqual(set(self.directory.glob('.pw-*')), set())
 
+    def test_shared_originals_keep_each_role_binding_and_fresh_independent_decode(self):
+        request, _ = fixture(self.repo, 'shared', image_count=3)
+        duplicate = deepcopy(request['assets'][0])
+        duplicate['id'] = 'same-original'
+        request['assets'].append(duplicate)
+        request['offers'][0]['asset_ids'].append(duplicate['id'])
+        with patch.object(p, 'image', wraps=p.image) as decode:
+            result = project(request, self.repo)
+        self.assertEqual(decode.call_count, 3, 'one decode per distinct original in this call')
+        view = p.parse((self.repo / result['file']).read_bytes())
+        # A cached original cannot authorize a different role, hash or bytecount.
+        for key, value in [('role', 'raster'), ('sha256', '0' * 64), ('bytes', 1)]:
+            bad = deepcopy(view)
+            target = bad['assets'][-1] if key == 'role' else bad['assets'][-1]['location']
+            target[key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                p.inspect(LocalSource(self.repo), None, bad)
+        with patch.object(p, 'image', side_effect=InvalidInput('changed image reader')), \
+                self.assertRaisesRegex(ValueError, 'changed image reader'):
+            p.inspect(LocalSource(self.repo), None, view)
+        # Tiny shared byte budget forces eviction, never a missing/unchecked image.
+        from tools.production_workspace import sources
+        lru = sources.LRU
+        with patch.object(sources, 'LRU', side_effect=lambda limit=64*1024*1024: lru(min(limit, 128))):
+            facts = p.inspect(LocalSource(self.repo), None, view)
+        self.assertEqual(facts['state'], 'reveal_review')
+
+    def test_cached_external_image_is_freshly_rechecked_before_return_and_noop(self):
+        import os
+        request = deepcopy(self.request)
+        request['assets'][0]['location'].update(storage='repository', container=None,
+            file=self.directory.relative_to(self.repo).as_posix() + '/reveal.png')
+        result = project(request, self.repo)
+        view = p.parse((self.repo / result['file']).read_bytes())
+        image_path = self.directory / 'reveal.png'
+        original = p.image
+        def replace(raw):
+            value = original(raw)
+            temporary = image_path.with_suffix('.replacement')
+            temporary.write_bytes(image_path.read_bytes())
+            os.replace(temporary, image_path)  # same bytes, new file identity
+            return value
+        with patch.object(p, 'image', side_effect=replace), self.assertRaises(ValueError):
+            p.inspect(LocalSource(self.repo), None, view)
+        before = (self.repo / result['file']).read_bytes()
+        with patch.object(p, 'image', side_effect=replace), self.assertRaises(ValueError):
+            project(request, self.repo)
+        self.assertEqual((self.repo / result['file']).read_bytes(), before)
+        image_path.unlink()
+        with self.assertRaises(ValueError):
+            p.inspect(LocalSource(self.repo), None, view)
+
+    def test_automatic_shares_record_but_rechecks_stage_bytes_and_identity(self):
+        from tools.production_workspace import projector
+        result = current_fixture(self.repo, self.root / 'current-source', revision='current')
+        directory = Path(result['directory'])
+        name = directory.relative_to(self.repo).as_posix()
+        index = p.parse((self.repo / INDEX).read_bytes())
+        before = (directory / 'workspace.json').read_bytes()
+        with patch.object(p, 'Record', wraps=p.Record) as records:
+            raw = projector.automatic(self.repo, name, directory, index)
+        self.assertEqual(raw, before)
+        self.assertEqual(records.call_count, 1, 'generation and final role validation share the same checked record')
+        original = p.image
+        for same_bytes in (False, True):
+            handoff = directory / 'handoff.json'
+            saved = handoff.read_bytes()
+            def change(raw):
+                result = original(raw)
+                if same_bytes:
+                    import os
+                    replacement = handoff.with_suffix('.replacement')
+                    replacement.write_bytes(saved)
+                    os.replace(replacement, handoff)
+                else:
+                    handoff.write_bytes(saved + b' ')
+                return result
+            try:
+                with self.subTest(same_bytes=same_bytes), patch.object(p, 'image', side_effect=change), \
+                        self.assertRaises(ValueError):
+                    projector.automatic(self.repo, name, directory, index)
+                self.assertEqual((directory / 'workspace.json').read_bytes(), before)
+            finally:
+                handoff.write_bytes(saved)
+
     def test_closed_request_and_invalid_roles_are_rejected(self):
         for mutate in (lambda r: r.update(approved=True),
                        lambda r: r['assets'][0].update(role='raster'),
