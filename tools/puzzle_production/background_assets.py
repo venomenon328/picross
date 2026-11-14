@@ -33,6 +33,16 @@ _ROOT = Path(__file__).resolve().parents[2]
 _MODULES = tuple("tools/puzzle_production/" + name + ".py" for name in (
     "__init__", "authoring_package", "background_assets", "background_contract",
     "background_io", "catalog_io", "contract", "image_normalization", "operation_diagnostics"))
+# Closed, qualified producer identities for selected, read-only reproduction.
+# H(tool) binds ALL original fields, including commit/dirty, nine module hashes
+# and codec versions. Qualification: #645, decision 6882921168; source bytes
+# checked at 94f0fb35ab4f6623a1ddde6d0ca3b03590be0e57 (dirty=false).
+# Adding an identity requires its own source audit and actual byte reproduction.
+# This set never authorizes derive/reused, none, or acceptance without _prepare
+# and the complete byte comparison in _check_output. No historical code is run.
+_SELECTED_PRODUCERS = frozenset({
+    "23971ee3834218f28977a346e09f716de6eb18fd6fc3acb8cab25a5ad8cab691",
+})
 # Bind the loaded implementation as well as its current on-disk source. Editing
 # modules in an already running process requires a fresh process, not a false
 # claim that newly read bytes were the code used by the interpreter.
@@ -271,7 +281,7 @@ def _check_output(directory, report, png, budget, *, conflict=False):
 
 
 def _verification_tool(request, reader, current):
-    """Keep producer provenance while requiring the same executable bytes/codecs."""
+    """Choose provenance for fresh reproduction, never an acceptance shortcut."""
     report = parse_json(reader.read("derivation.json", MAX_JSON), "derivation.json")
     if not isinstance(report, dict):
         raise BackgroundError("invalid_binding", "Derivation must be an object", "derivation.json")
@@ -289,7 +299,12 @@ def _verification_tool(request, reader, current):
             report.get("request_sha256") != digest(request) or
             canonical(report.get("request")) != canonical(request)):
         raise BackgroundError("invalid_binding", "Original request/tool binding differs", "derivation.json")
-    if any(original[key] != current[key] for key in ("id", "versions", "modules")):
+    same_implementation = all(original[key] == current[key] for key in ("id", "versions", "modules"))
+    qualified_selected = (
+        report["tool_sha256"] in _SELECTED_PRODUCERS and
+        request["source"] is not None and report.get("outcome") == "selected" and
+        all(original[key] == current[key] for key in ("id", "versions")))
+    if not (same_implementation or qualified_selected):
         raise BackgroundError("tool_mismatch", "Original tool differs from the actual implementation/codecs")
     return original
 

@@ -29,6 +29,19 @@ def digest(value):
     return hashlib.sha256(canonical(value)).hexdigest()
 
 
+def historical_description(current):
+    """Invented producer for compatibility tests; never a production identity.
+
+    Tests explicitly inject its digest into the closed selection set. Rendering,
+    input readers, output comparisons and consumer transactions remain real.
+    """
+    old = copy.deepcopy(current)
+    old["tool"].update(commit="1" * 40, dirty=False)
+    old["tool"]["modules"][0]["sha256"] = "2" * 64
+    old["tool_sha256"] = digest(old["tool"])
+    return old
+
+
 def file_ref(root, name):
     raw = (Path(root) / name).read_bytes()
     return {"file": name, "sha256": hashlib.sha256(raw).hexdigest(), "bytes": len(raw)}
