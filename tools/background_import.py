@@ -139,19 +139,32 @@ def source_inventory(root: Path) -> dict:
         # and closed source schema. The notice is not repeated in runtime data.
         source = sources[identifier]
         active = background.current(source)
-        notice = active["notice"]
+        # PE §13.3 v6 sources contain only current technical image bindings.
+        # Preserve an existing historical TXT, without inventing a new notice
+        # or making provenance a requirement of an ordinary editor import.
+        slim = source["format"] == "picross-catalog-background-v6"
+        if slim:
+            notice_name = background.notice_path(identifier)
+            notice_raw = io.read(root, notice_name, 65536, missing=True)
+            notice = background.ref(notice_name, notice_raw) if notice_raw is not None else None
+        else:
+            notice = active["notice"]
         row = dict(id=identifier, image_revision=expected["image_revision"], asset=expected["asset"],
-                   notice={**notice, "file": notice["file"].removeprefix("game/")})
+                   notice={**notice, "file": notice["file"].removeprefix("game/")} if notice else None)
         image = _read_bound(game, row["asset"])
-        prepared = source["format"] == background.EDITOR_FORMAT and active["authority"]["kind"] == "manual"
+        prepared = slim or source["format"] == background.EDITOR_FORMAT and active["authority"]["kind"] == "manual"
         _png_image_format(image, row["asset"]["file"], prepared=prepared)
-        _read_bound(game, row["notice"])
+        if row["notice"]: _read_bound(game, row["notice"])
         assets.append(row)
-    wanted = {row[key]["file"] for row in assets for key in ("asset", "notice")}
+    wanted = {ref["file"] for row in assets for ref in _refs(row)}
     if _names(game) != wanted:
         raise ValueError("Active background source inventory differs")
     return dict(format=FORMAT, source_game=str(game), registry_sha256=_hash(raw),
                 assets=sorted(assets, key=lambda row: row["id"]))
+
+
+def _refs(row):
+    return [row["asset"]] + ([row["notice"]] if row["notice"] is not None else [])
 
 
 def require_isolated(project, inventory=None):
@@ -172,11 +185,11 @@ def _verify_sources(project, inventory, *, imports):
     wanted = set()
     image_formats = {}
     for row in inventory["assets"]:
-        for key in ("asset", "notice"):
-            raw = _read_bound(project, row[key])
-            if key == "asset":
-                image_formats[row[key]["file"]] = _png_image_format(raw, row[key]["file"])
-            wanted.add(row[key]["file"])
+        for ref in _refs(row):
+            raw = _read_bound(project, ref)
+            if ref is row["asset"]:
+                image_formats[ref["file"]] = _png_image_format(raw, ref["file"])
+            wanted.add(ref["file"])
         if imports:
             wanted.add(row["asset"]["file"] + ".import")
     if _names(project) != wanted:
@@ -205,15 +218,15 @@ def prepare_import(project: Path, inventory: dict | None = None) -> dict:
         inventory = dict(format=FORMAT, source_game="", registry_sha256=_hash(raw), assets=[])
     # Repeated preparation is permitted only for the exact bound files and their
     # own technical sidecars; no candidates or unknown files can be imported.
-    wanted = {row[key]["file"] for row in inventory["assets"] for key in ("asset", "notice")}
+    wanted = {ref["file"] for row in inventory["assets"] for ref in _refs(row)}
     allowed = wanted | {row["asset"]["file"] + ".import" for row in inventory["assets"]}
     if not wanted <= _names(project) <= allowed:
         raise ValueError("Isolated background inventory differs")
     if inventory["format"] != FORMAT or _hash((project / "data/registry.json").read_bytes()) != inventory["registry_sha256"]:
         raise ValueError("Background inventory/runtime binding differs")
     for row in inventory["assets"]:
-        for key in ("asset", "notice"):
-            _read_bound(project, row[key])
+        for ref in _refs(row):
+            _read_bound(project, ref)
     for row in inventory["assets"]:
         asset = row["asset"]["file"]
         remap = remap_path(asset)
@@ -286,8 +299,8 @@ def restore_sources(root: Path, project: Path, inventory: dict | None = None) ->
     if directory.exists():
         shutil.rmtree(directory)
     for row in inventory["assets"]:
-        for key in ("asset", "notice"):
-            name = row[key]["file"]
+        for ref in _refs(row):
+            name = ref["file"]
             destination = project / name
             destination.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(root / "game" / name, destination)
