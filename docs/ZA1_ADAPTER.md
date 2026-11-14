@@ -953,6 +953,18 @@ native Spiel-/Neustart-/PCK-Funktionsprobe je Rätsel. Der allgemeine
 Weitere Proben nur mit konkretem Zweck; allgemeine Code-/Exportmodule werden
 im aktuellen Paketplan ausgewählt.
 
+**RI-REPLAY-1 / #650:** Die normale mutierende neue Registrierung revalidiert
+im P5-Checkoutcheck die vollständige Produktion nur für das vom Journal
+eindeutig gebundene neue Exportpaket. Bestehende Vollpakete erhalten dieselben
+frischen Manifest-/Datei-/Live-/Namespace- und Transaktionsprüfungen,
+aber kein neues historisches Proof-/HP-W2-Replay. `check-registry` als
+bewusste Vollreplay-Diagnose und einzelnes `verify-export` bleiben streng:
+eine nicht qualifizierte Alt-Erzeugeridentität wird dort weiter abgewiesen.
+Der vollständig geprüfte neue Input, sein unabhängiges Stagingreplay,
+G0/G2/G5a/G5b/G6, Recovery und unveränderte Katalogidentitäten sind nicht
+durch einen globalen `replay=False`-Bypass ersetzbar. Details:
+[RI](PUZZLE_INTEGRATION.md) und [SD-Catalog](SD_CATALOG.md#ri-replay-1--neues-paket-statt-historische-produktion-in-p5-erneut-prüfen-650).
+
 Künstliche Freigaben sind `test_only=true`; Registrierung im echten eigenen
 Checkout wird verweigert. Die folgenden allgemeinen Entwicklungsprüfungen gehören
 zu passenden Werkzeug-/Spieländerungen, nicht zur Produktion einzelner Rätsel.
