@@ -1,32 +1,18 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/646",
-  "package": "PW3-A",
+  "package": "PW3-B",
   "modules": [
-    "tools"
+    "tools",
+    "production.adapter"
   ],
-  "purpose": "K01-K07: Remoteauswahl, metadatengebundener Mainabschluss aktueller Quellen, vollstaendige deduplizierte Verarbeitung und UI-Snapshotsteuerung. docs/ci-required mit regulaerem Windows-Spielerbau.",
-  "omitted": "Keine Produktionswriter, Solver, Raster-/Bildalgorithmen, Runtime oder Installation geaendert: keine production.*, native.*, preflight oder delivery. Keine automatische Chromium-Matrix; T01 einmalig am Produkt-Head mit synthetischem Git und echten Browserinteraktionen, zwei Original-PNGs auf befristetem separatem Reviewref. PW3-B bleibt separat.",
+  "purpose": "PW3-B-K01-K07: aufruflokale Quell-/Mitgliedbytes und Recordrekonstruktion im Projektor/Detailreader teilen. tools prueft Quellenbindung, Rollen, Grenzen und frische unabhaengige Reads; production.adapter prueft die unveraenderten Builder-/Finalizer-/Export-/ZA-1-Verbrauchergrenzen. docs/ci-required und regulaerer Windows-Spielerbau.",
+  "omitted": "Keine Solver-, Difficulty-, Bildalgorithmus-, Katalog-, Runtime-, Installer- oder Gitpipelineaenderung: production.solver/images/catalog, native.*, preflight, delivery und Browser nicht gewaehlt. Keine schwere Pruefwiederverwendung im Finalizer/Export; deren volle alte/neue bzw. Original-/Staging-/Offlinepruefungen bleiben. T00/T01 einmalig an denselben zwei kleinen synthetischen 0.8-Faellen; Messtreiber/Rohdaten nach Vergleich entfernen, knapper quellengebundener Bericht im PR. Fuenf erzeugte Auftraege einmalig vermessen; keine kosmetische Promptaenderung oder Tokenbehauptung.",
   "test_changes": [
     {
       "path": "tools/test_production_workspace.py",
       "disposition": "change-scoped",
-      "reason": "Vorhandene kleine Git-/Readerregressionen auf Remoteautoritaet umstellen; lokale Diagnose und P2 bleiben geschuetzt."
-    },
-    {
-      "path": "tools/test_workspace_deliveries.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine synthetische Quellenformen, exakte O/R-Bindung und mindestens 33 deduplizierte Abschluesse ohne ZIP-/Bildzugriff."
-    },
-    {
-      "path": "tools/production_workspace/check_ui_loading.cjs",
-      "disposition": "change-scoped",
-      "reason": "Bestehenden Nodecontroller um leere Startliste, neue Eingabe/passive Suche und Remotequellwahl ergaenzen; keine Darstellungsbehauptung."
-    },
-    {
-      "path": "tools/test_production_removal.py",
-      "disposition": "change-scoped",
-      "reason": "Vorhandene P2-Schutztests behalten echte lokale Refpruefung statt einer entfallenen lokalen Produktionsalternative; keine Abschwaechung des Guards."
+      "reason": "Kleine synthetische Dauerregressionen: identische Originale in mehreren Angeboten behalten jede Rollen-/SHA-/Bytebindung; unabhaengige Detailpruefung dekodiert frisch; kleine Cachegrenze faellt auf Vollreads zurueck; bytegleicher Dateiaustausch, Fehlen und No-op werden frisch geprueft. Bestehende CRC-/Alias-/Bild-/Publikations-/Abbruchregressionen bleiben gewaehlt."
     }
   ],
   "core_change": null,

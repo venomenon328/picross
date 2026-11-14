@@ -12,7 +12,7 @@ from tools.puzzle_production.authoring_finalization import RECORD_KEYS
 from tools.puzzle_production.background_contract import validate_manifest, validate_decision, _bind_decision, BackgroundError
 from tools.puzzle_production.background_package import validate_binding
 from tools.puzzle_production.contract import InvalidInput, canonical_bytes, exact_keys, integer, load_json
-from .sources import Archive, JSON_LIMIT, INDEX, check_commit, production_path
+from .sources import Archive, JSON_LIMIT, INDEX, check_commit, production_path, _ReadScope
 
 FORMAT = 'picross-production-presentation-v1'
 REQUEST = 'picross-production-presentation-request-v1'
@@ -201,7 +201,7 @@ class Record:
         bind(raw, r['package'])
         self.archive = Archive(raw)
         try:
-            handoff_raw = self.archive.read('handoff.json', JSON_LIMIT)
+            handoff_raw = self._read_member('handoff.json', JSON_LIMIT)
             ap.require(handoff_raw == source.read(self.commit, r['handoff']['file']), 'Äußerer Handoff unterscheidet sich vom Original.')
             bind(handoff_raw, r['handoff'])
             self.handoff = h = parse(handoff_raw)
@@ -215,7 +215,7 @@ class Record:
                 workflow.presentation(r['presentation'])
                 ap.require(r['raster_selection'] == h['raster_selection'] and r['candidate'] == h.get('candidate'),
                            'Rasterwahl weicht vom Original ab.')
-            inv_raw = self.archive.read('inventory.json', JSON_LIMIT)
+            inv_raw = self._read_member('inventory.json', JSON_LIMIT)
             bind(inv_raw, h['inventory'])
             ap.require(io.checksum(inv_raw) == r['inventory_sha256'], 'Inventarbindung stimmt nicht.')
             inv = parse(inv_raw)
@@ -269,10 +269,15 @@ class Record:
     def close(self):
         self.archive.close()
 
+    def _read_member(self, name, limit):
+        if isinstance(self.source, _ReadScope):
+            return self.source.member(self.commit, self.value['package']['file'], name, limit, self.archive)
+        return self.archive.read(name, limit)
+
     def member(self, name, expected=None, limit=ap.MAX_FILE):
         ap.relative(name)
         ap.require(name in self.entries, 'Datei ist nicht inventarisiert: ' + name)
-        raw = self.archive.read(name, limit)
+        raw = self._read_member(name, limit)
         item = self.entries[name]
         ap.require(io.checksum(raw) == item['sha256'] and len(raw) == item['bytes'] and
                    (expected is None or expected == item['sha256']), 'Inventarisierte Bytes stimmen nicht: ' + name)
@@ -542,6 +547,8 @@ def asset_bytes(source, snapshot, loc):
         return bind(source.read(commit, loc['file'], 32 * JSON_LIMIT), loc)
     raw = source.read(commit, loc['container']['file'], ap.MAX_ZIP)
     bind(raw, loc['container'])
+    if isinstance(source, _ReadScope):
+        return bind(source.member(commit, loc['container']['file'], loc['file'], 32 * JSON_LIMIT), loc)
     archive = Archive(raw)
     try:
         return bind(archive.read(loc['file'], 32 * JSON_LIMIT), loc)
@@ -580,8 +587,46 @@ def closing_composition(outer, assets):
             'background': selected('background', background_name) if background_name else None}
 
 
+class _Inspection:
+    """Private operation; callers cannot supply records or persisted success flags."""
+    def __init__(self, source, snapshot):
+        self.source, self.snapshot = _ReadScope(source), snapshot
+        self.records = {}
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *_):
+        for ctx in self.records.values():
+            ctx.close()
+        self.records.clear()
+        self.source.clear()
+
+    def record(self, ref, puzzle_id):
+        commit = ref['commit'] if ref['commit'] is not None else self.snapshot
+        key = (commit, ref['file'], puzzle_id)
+        if key not in self.records:
+            self.records[key] = Record(self.source, self.snapshot, ref, puzzle_id)
+        ctx = self.records[key]
+        if 'sha256' in ref:
+            bind(ctx.raw, ref)
+        return ctx
+
+    def inspect(self, value):
+        return _inspect(self, value)
+
+
 def inspect(source, snapshot, value):
+    """Fresh independent detail inspection; never reuses another call's findings."""
+    with _Inspection(source, snapshot) as operation:
+        result = operation.inspect(value)
+        operation.source.recheck()
+        return result
+
+
+def _inspect(operation, value):
     """Validate every offered role against its original revision; no new approval."""
+    source, snapshot = operation.source, operation.snapshot
     p = validate(value)
     refs = [p['record'], *(o['record'] for o in p['offers'])]
     contexts, outer, asset_owners = {}, None, {}
@@ -595,16 +640,21 @@ def inspect(source, snapshot, value):
             commit = ref['commit'] if ref['commit'] is not None else snapshot
             index = index_value(source.read(commit, INDEX, 8 * JSON_LIMIT))
             ap.require(any(e['record'] == ref['file'] for e in index['entries']), 'Angebotsrecord ist nicht indexiert.')
-            ctx = Record(source, snapshot, ref, p['puzzle_id'])
+            ctx = operation.record(ref, p['puzzle_id'])
             ctx.snapshot = snapshot
             if outer is None:
                 outer = ctx
             contexts[key] = ctx
         ap.require(outer.current == (p['format'] == CURRENT_FORMAT), 'Projektion und Originalgeneration unterscheiden sich.')
+        decoded = set()
         for a in p['assets']:
             owners = [key for key, ctx in contexts.items() if ctx.matches(a)]
             ap.require(owners, 'Bildrolle oder Originalquelle stimmt nicht: ' + a['id'])
-            image(asset_bytes(source, snapshot, a['location']))
+            raw = asset_bytes(source, snapshot, a['location'])
+            identity = (a['location']['sha256'], len(raw))
+            if identity not in decoded:
+                image(raw)
+                decoded.add(identity)
             asset_owners[a['id']] = owners
         for offer in p['offers']:
             key = (offer['record']['commit'], offer['record']['file'])
