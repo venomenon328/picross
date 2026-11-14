@@ -16,7 +16,7 @@ import tempfile
 import threading
 import time
 
-from tools.puzzle_production import catalog_io as io, catalog_metadata, catalog_images
+from tools.puzzle_production import catalog_io as io, editor_change
 from tools.puzzle_production import catalog_transaction as tx, content_registry
 from tools.puzzle_production import catalog_publication
 from tools.puzzle_production.contract import digest, exact_keys
@@ -31,31 +31,25 @@ HEX = re.compile(r"[0-9a-f]{32}")
 PILOTS = {"wasserwelt": "water", "landschaften-natur": "nature"}
 
 
-def encoded(value): return catalog_images.encoded(value)
+def encoded(value): return editor_change.encoded(value)
 
 
 def pending(root):
-    return io.safe(root, tx.LOCK).exists() or bool(catalog_publication.staging(root))
+    from tools.puzzle_production.editor_change import pending as check
+    return check(root)
 
 
 def catalog(root):
-    names = ("content/registry.json", "content/categories.json", "game/data/registry.json")
-    before = [io.read(root, name, 8*1024*1024) for name in names]
-    value = catalog_metadata.view(root)
-    after = [io.read(root, name, 8*1024*1024) for name in names]
-    require(before == after, "Katalog während Listenaufbau geändert. Neu laden.")
-    raw, categories_raw, runtime_raw = after
-    runtime = io.json_bytes(runtime_raw, 8*1024*1024)
-    require(io.json_bytes(raw, 8*1024*1024)["format"] == content_registry.METADATA_FORMAT,
-            "Altformat: zuerst ausdrückliche A1-Migration über metadata_cli plan-migration/apply ausführen.")
-    token = digest([io.checksum(raw), io.checksum(categories_raw), io.checksum(runtime_raw)])
-    return {**value, "format": FORMAT, "snapshot": token, "runtime_format": runtime["format"],
-            "migration_required": runtime["format"] != "picross-runtime-registry-v8"}
+    from tools.puzzle_production.editor_change import listing
+    return listing(root)
 
 
 class Service:
-    def __init__(self, root, *, temporary=None):
+    def __init__(self, root, *, temporary=None, state=None):
         self.root = io.external(root)
+        from .settings import Settings
+        self.settings = Settings(state)
+        require(not self.settings.directory.is_relative_to(self.root), "Programmeinstellungen müssen außerhalb des Checkouts liegen.")
         require(self.root.is_dir() and io.safe(self.root, ".git").exists(), "Vorhandenes Picross-Gitcheckout wählen.")
         # Validate only the cheap current indexes. Recovery is allowed even with partial data.
         pending_state = pending(self.root)
@@ -76,6 +70,7 @@ class Service:
         self.lock = threading.RLock()
         self.thread, self.http, self.server_thread = None, None, None
         self.assets, self.uploads, self.plans, self.details = {}, {}, {}, {}
+        self.worker = None; self.worker_log = None
 
     def bind(self, port=0):
         self.http = HTTP(("127.0.0.1", port), Handler)
@@ -94,8 +89,9 @@ class Service:
             if job:
                 job.pop("started", None)
                 if job["state"] == "running": job["elapsed_seconds"] = round(time.monotonic()-self.job["started"], 1)
+            running = bool(self.thread and self.thread.is_alive())
             return {"format": FORMAT, "checkout": str(self.root), "origin": self.origin,
-                    "stopping": self.stopping, "recovery_required": pending(self.root), "job": job}
+                    "stopping": self.stopping, "recovery_required": False if running else pending(self.root), "job": job}
 
     def idle(self):
         require(not self.stopping, "Editor wird beendet.")
@@ -125,35 +121,45 @@ class Service:
     def invalidate(self):
         for key in list(self.plans): self.remove_plan(key)
 
-    def asset(self, path, *, root=None, expected=None):
+    def asset(self, path, *, root=None, expected=None, validated=False):
         root = self.root if root is None else root
-        raw = io.read(root, path, 32*1024*1024)
-        require(expected is None or io.checksum(raw) == expected, "Bild nach Detailprüfung geändert. Neu laden.")
         for key, row in self.assets.items():
-            if row["root"] == root and row["file"] == path and row["sha256"] == io.checksum(raw): return key
+            if row["root"] == root and row["file"] == path and row["sha256"] == expected: return key
         while len(self.assets) >= 32: self.assets.pop(next(iter(self.assets)))
         key = secrets.token_hex(16)
-        self.assets[key] = {"root": root, "file": path, "sha256": io.checksum(raw), "bytes": len(raw)}
+        self.assets[key] = {"root": root, "file": path, "sha256": expected, "validated": validated}
         return key
 
     def picture(self, key):
         require(HEX.fullmatch(key) and key in self.assets, "Bild ist nicht freigegeben. Detail neu laden.")
         row = self.assets[key]
         raw = io.read(row["root"], row["file"], 32*1024*1024)
-        require(io.checksum(raw) == row["sha256"] and len(raw) == row["bytes"], "Bildbytes geändert. Neu laden.")
-        if row["file"].endswith(".svg"):
-            from tools.puzzle_production.target_adapter import validate_reveal
-            validate_reveal(io.safe(row["root"], row["file"]), 1, 1)
-            require(io.read(row["root"], row["file"], 32*1024*1024) == raw, "SVG während Prüfung geändert.")
+        require(row["sha256"] is None or io.checksum(raw) == row["sha256"], "Bildbytes geändert. Neu laden.")
+        if row["file"].endswith(".svg") and not row["validated"]:
+            from tools.puzzle_production.editor_image_input import validate_reveal
+            validate_reveal(raw, ".svg")
+            row["validated"] = row["sha256"] is not None
         return raw, "image/svg+xml" if row["file"].endswith(".svg") else "image/png"
 
     def standard(self, identifier):
-        view = catalog_metadata.MetadataView(self.root).document()
-        require(any(row["id"] == identifier for row in view["categories"]), "Unbekannte aktuelle Kategorie.")
         assets = []
         if identifier in PILOTS:
-            assets = [self.asset("game/art/drawing/margins/"+PILOTS[identifier]+"_"+side+".png") for side in ("left", "right")]
+            assets = [self.asset("game/art/drawing/margins/"+PILOTS[identifier]+"_"+side+".png", root=CODE) for side in ("left", "right")]
         return {"format": FORMAT, "assets": assets}
+
+    def start_worker(self):
+        if self.worker is not None:
+            require(self.worker.poll() is None, "Fachprozess beendet. Editor neu starten; ggf. Recovery prüfen.")
+            return
+        command = [sys.executable, "--session"] if getattr(sys, "frozen", False) else [sys.executable, "-I", "-c",
+            "import sys;sys.path.insert(0,sys.argv[1]);from tools.puzzle_editor.worker import loop;loop(sys.argv[2])", str(CODE)]
+        env = os.environ.copy()
+        temp = self.work/"session-temp"; temp.mkdir()
+        env.update(TEMP=str(temp), TMP=str(temp), TMPDIR=str(temp), PYTHONNOUSERSITE="1")
+        self.worker_log = (self.work/"worker.log").open("wb")
+        self.worker = subprocess.Popen(command+[str(self.work)], cwd=CODE, env=env,
+            stdin=subprocess.PIPE, stdout=self.worker_log, stderr=self.worker_log,
+            text=True, encoding="utf-8", creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
 
     def start(self, action, body, *, work=None, complete=None):
         self.idle()
@@ -170,34 +176,21 @@ class Service:
         def execute():
             result, error = None, None
             try:
-                command = ([sys.executable, "--worker"] if getattr(sys, "frozen", False) else
-                           [sys.executable, "-I", "-m", "tools.puzzle_editor.worker"])
-                # Isolated Python ignores cwd/PYTHONPATH. Insert only the installed program root.
-                if not getattr(sys, "frozen", False):
-                    command = [sys.executable, "-I", "-c",
-                        "import sys;sys.path.insert(0,sys.argv[1]);from tools.puzzle_editor.worker import main;main(sys.argv[2])", str(CODE)]
-                env = os.environ.copy()
-                temp = jobdir/"temp"; temp.mkdir()
-                env.update(TEMP=str(temp), TMP=str(temp), TMPDIR=str(temp), PYTHONNOUSERSITE="1")
-                with (jobdir/"operation.log").open("wb") as log:
-                    process = subprocess.Popen(command+[str(jobdir/"job.json")], cwd=CODE, env=env,
-                        stdout=log, stderr=log, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
-                    while process.poll() is None:
-                        time.sleep(.15)
-                        with self.lock:
-                            try:
-                                progress = io.read(jobdir, "progress.json", 4096, missing=True)
-                                if progress is not None:
-                                    progress = io.json_bytes(progress, 4096)
-                                    exact_keys(progress, {"stage", "elapsed_seconds"})
-                                    require(isinstance(progress["stage"], str) and len(progress["stage"]) <= 512,
-                                            "Ungültige Fachprozessphase.")
-                                    self.job["stage"] = progress["stage"]
-                            except Exception:
-                                # An atomic progress replacement may race this
-                                # read. Always keep draining the actual worker.
-                                pass
-                    require(process.returncode == 0, "Fachprozess fehlgeschlagen. Erneut laden; ggf. Recovery prüfen.")
+                self.start_worker()
+                self.worker.stdin.write(str(jobdir/"job.json")+"\n"); self.worker.stdin.flush()
+                while not (jobdir/"result.json").exists():
+                    require(self.worker.poll() is None, "Fachprozess fehlgeschlagen. Neu starten; ggf. Recovery prüfen.")
+                    time.sleep(.025)
+                    with self.lock:
+                        try:
+                            progress = io.read(jobdir, "progress.json", 4096, missing=True)
+                            if progress is not None:
+                                progress = io.json_bytes(progress, 4096)
+                                exact_keys(progress, {"stage", "elapsed_seconds"})
+                                require(isinstance(progress["stage"], str) and len(progress["stage"]) <= 512, "Ungültige Fachprozessphase")
+                                self.job["stage"] = progress["stage"]
+                        except Exception:
+                            pass
                 value = io.json_bytes(io.read(jobdir, "result.json", 48*1024*1024), 48*1024*1024)
                 require(not value["error"], value["error"] or "Fachprüfung fehlgeschlagen.")
                 result = value["result"]
@@ -223,9 +216,6 @@ class Service:
 
     def detail(self, body):
         exact_keys(body, {"id", "snapshot"})
-        listing = catalog(self.root)
-        require(body["snapshot"] == listing["snapshot"], "Katalog veraltet. Neu laden.")
-        require(any(e["id"] == body["id"] for e in listing["entries"]), "Unbekannte Rätsel-ID.")
         def complete(result, work):
             self.assets.clear()
             row = result["detail"]["runtime"]
@@ -237,11 +227,12 @@ class Service:
                 name = "game/"+bg["asset"]["file"]
                 pictures["background"] = [self.asset(name, expected=bound[name])]
             elif bg["status"] in ("legacy", "standard") and row["category_id"] in PILOTS:
-                pictures["background"] = [self.asset("game/art/drawing/margins/"+PILOTS[row["category_id"]]+"_"+side+".png") for side in ("left", "right")]
-            self.details = {body["id"]: result["snapshot"]}
+                pictures["background"] = self.standard(row["category_id"])["assets"]
+            pictures["paper"] = self.asset("game/book/paper.png", root=CODE)
+            self.details = {body["id"]: {"snapshot": result["snapshot"], "definition_sha256": result["definition_sha256"]}}
             result["pictures"] = pictures
             return result
-        return self.start("detail", {"id": body["id"]}, complete=complete)
+        return self.start("detail", body, complete=complete)
 
     def upload(self, kind, suffix, raw):
         self.idle(); self.purge(); self.invalidate()
@@ -258,63 +249,49 @@ class Service:
         ref = {"file": name, "sha256": io.checksum(raw), "bytes": len(raw), "kind": kind,
                "expires": time.monotonic()+900}
         def complete(result, work):
+            ref["checked"] = result
             self.uploads[key] = ref
-            asset = self.asset(name, root=self.work)
+            asset = self.asset(name, root=self.work, expected=ref["sha256"], validated=True)
             return {"upload": key, "asset": asset, "sha256": ref["sha256"], "bytes": ref["bytes"]}
         return self.start("validate_upload", {"file": name, "kind": kind}, work=self.work, complete=complete)
 
-    def plan(self, body, migration=False):
+    def plan(self, body):
         self.idle(); self.purge(); self.invalidate()
-        if migration:
-            exact_keys(body, {"snapshot"})
-            require(body["snapshot"] == catalog(self.root)["snapshot"], "Katalog veraltet.")
-            action, identifier, payload = "migration", None, {"catalog_snapshot": body["snapshot"]}
+        exact_keys(body, {"snapshot", "id", "metadata", "text", "profile", "reveal", "background"})
+        identifier = body["id"]
+        if identifier is None:
+            require(all(body[k] is None for k in ("text", "profile", "reveal", "background")), "Kategorien separat speichern.")
+            require(isinstance(body["metadata"], list) and len(body["metadata"]) == 1 and
+                    body["metadata"][0].get("op") in ("category_create", "category_rename", "category_delete"), "Eine Kategorienaktion erwartet.")
+            bound = None
         else:
-            exact_keys(body, {"snapshot", "id", "metadata", "text", "profile", "reveal", "background", "authority"})
-            identifier = body["id"]
-            if identifier is None:
-                require(body["snapshot"] == catalog(self.root)["snapshot"], "Katalog veraltet.")
-                require(all(body[k] is None for k in ("text", "profile", "reveal", "background", "authority")), "Kategorien separat speichern.")
-                require(isinstance(body["metadata"], list) and len(body["metadata"]) == 1 and
-                        body["metadata"][0].get("op") in ("category_create", "category_rename", "category_delete"), "Eine Kategorienaktion erwartet.")
-                bound = None
+            require(isinstance(identifier, str) and identifier in self.details and self.details[identifier]["snapshot"] == body["snapshot"], "Detailbindung fehlt/veraltet.")
+            bound = body["snapshot"]
+        request = dict(body); request.pop("snapshot")
+        uploads = {}
+        selected = []
+        for kind in ("reveal", "background"):
+            part = body[kind]
+            if part is None: continue
+            exact_keys(part, {"upload"} | ({"status"} if kind == "background" else set()))
+            key = part["upload"]
+            if key is None:
+                require(kind == "background" and part["status"] in ("none", "standard", "selected"), "Bilddatei fehlt.")
+                ref = None
             else:
-                require(isinstance(identifier, str) and identifier in self.details and self.details[identifier] == body["snapshot"], "Detailbindung fehlt/veraltet.")
-                bound = body["snapshot"]
-            authority = body["authority"]
-            if authority is not None:
-                exact_keys(authority, {"actor", "statement", "confirmed", "provenance"})
-                require(authority["confirmed"] is True, "Bewusste manuelle Bestätigung fehlt.")
-            request = dict(body); request.pop("snapshot")
-            uploads = {}
-            selected = []
-            for kind in ("reveal", "background"):
-                part = body[kind]
-                if part is None: continue
-                exact_keys(part, {"upload", "provenance"} | ({"status"} if kind == "background" else set()))
-                key = part["upload"]
-                if key is None:
-                    require(kind == "background" and part["status"] in ("none", "standard") and part["provenance"] is None, "Bilddatei fehlt.")
-                    ref = None
-                else:
-                    require(key in self.uploads and self.uploads[key]["kind"] == kind, "Import fehlt/abgelaufen oder falscher Bildtyp.")
-                    row = self.uploads[key]
-                    raw = io.read(self.work, row["file"], 32*1024*1024)
-                    require(io.checksum(raw) == row["sha256"] and len(raw) == row["bytes"], "Importbytes geändert.")
-                    ref = {k: row[k] for k in ("file", "sha256", "bytes")}
-                    uploads[row["file"]] = base64.b64encode(raw).decode()
-                    selected.append(key)
-                request[kind] = {"asset": ref, "provenance": part["provenance"], **({"status": part["status"]} if kind == "background" else {})}
-            action = "plan"
-            payload = {"bound_snapshot": bound, "request": request, "uploads": uploads,
-                       "catalog_snapshot": body["snapshot"] if identifier is None else None,
-                       "confirmed_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+                require(key in self.uploads and self.uploads[key]["kind"] == kind, "Import fehlt/abgelaufen oder falscher Bildtyp.")
+                row = self.uploads[key]
+                uploads[key] = {"file": row["file"], "sha256": row["sha256"]}
+                selected.append(key)
+        action = "plan"
+        payload = {"request": request, "uploads": uploads, "catalog_snapshot": body["snapshot"],
+                   "definition_sha256": self.details[identifier]["definition_sha256"] if identifier else None}
         def complete(result, work):
             key = secrets.token_hex(16)
-            hashes = {p.relative_to(work).as_posix(): io.file_hash(work, p.relative_to(work).as_posix()) for p in work.rglob("*") if p.is_file()}
+            plan_hash = result["plan_hash"]
             self.plans[key] = {"work": str(work), "kind": result["kind"], "id": identifier,
-                               "expires": time.monotonic()+600, "hashes": hashes,
-                               "uploads": [] if migration else selected}
+                               "expires": time.monotonic()+600, "plan_hash": plan_hash,
+                               "uploads": selected}
             return {"plan": key, "id": identifier, **result, "expires_seconds": 600}
         return self.start(action, payload, complete=complete)
 
@@ -325,16 +302,13 @@ class Service:
         row = self.plans[body["plan"]]
         require(row["id"] == body["id"], "Ziel-ID stimmt nicht mit dem Plan überein.")
         work = io.external(row["work"])
-        actual = {p.relative_to(work).as_posix(): io.file_hash(work, p.relative_to(work).as_posix()) for p in work.rglob("*") if p.is_file()}
-        require(actual == row["hashes"], "Planbundle geändert.")
-        for key in row["uploads"]:
-            require(key in self.uploads, "Import abgelaufen.")
-            item = self.uploads[key]
-            require(io.file_hash(self.work, item["file"]) == item["sha256"], "Importbytes geändert.")
         def complete(result, ignored):
-            self.details.clear()
+            for identifier, previous in self.details.items():
+                previous["snapshot"] = result["catalog"]["snapshot"]
+                if identifier == row["id"] and result.get("definition_sha256"):
+                    previous["definition_sha256"] = result["definition_sha256"]
             return result
-        return self.start("apply", {"kind": row["kind"]}, work=work, complete=complete)
+        return self.start("apply", {"kind": row["kind"], "plan_hash": row["plan_hash"]}, work=work, complete=complete)
 
     def stop(self):
         with self.lock: self.stopping = True
@@ -343,6 +317,12 @@ class Service:
         self.stop()
         active = self.thread
         if active: active.join()
+        if self.worker is not None:
+            if self.worker.poll() is None:
+                self.worker.stdin.write("stop\n"); self.worker.stdin.flush()
+                self.worker.stdin.close(); self.worker.wait()
+            self.worker = None
+        if self.worker_log: self.worker_log.close(); self.worker_log = None
         if self.http:
             self.http.shutdown(); self.http.server_close()
         if self.server_thread: self.server_thread.join()
@@ -415,6 +395,7 @@ class Handler(BaseHTTPRequestHandler):
             route = self.path[len(API):]
             if self.command == "GET":
                 if route == "status": return self.reply(200, s.status())
+                if route == "settings": return self.reply(200, {"theme": s.settings.read()["theme"]})
                 if route == "catalog": return self.reply(200, catalog(s.root))
                 if re.fullmatch(r"standard/[a-z][a-z0-9-]{0,63}", route):
                     with s.lock:
@@ -442,11 +423,13 @@ class Handler(BaseHTTPRequestHandler):
                 if route == "stop":
                     exact_keys(body, {"confirmed"}); require(body["confirmed"] is True, "Bestätigung fehlt.")
                     s.stop(); return self.reply(200, {"format": FORMAT, "stopping": True})
+                if route == "settings":
+                    exact_keys(body, {"theme"})
+                    return self.reply(200, {"theme": s.settings.update(**body)["theme"]})
                 s.idle()
                 if upload: result = s.upload(upload[1], upload[2], raw)
                 elif route == "detail": result = s.detail(body)
                 elif route == "plan": result = s.plan(body)
-                elif route == "migration": result = s.plan(body, migration=True)
                 elif route == "apply": result = s.apply(body)
                 elif route == "recover":
                     exact_keys(body, {"confirmed"}); require(body["confirmed"] is True, "Bestätigung fehlt.")

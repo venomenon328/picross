@@ -3,7 +3,7 @@ import argparse
 import json
 from pathlib import Path
 
-from . import catalog_raster as raster, content_registry
+from . import editor_change as edit, editor_cli, content_registry
 from .contract import Aborted
 
 
@@ -20,9 +20,11 @@ def main(argv=None):
         if command == "apply": part.add_argument("--bundle",type=Path,required=True)
     args = parser.parse_args(argv)
     try:
-        if args.command == "view": value = raster.view(args.checkout,args.id)
-        elif args.command == "plan": value = raster.plan(args.checkout,args.request,args.output_dir)
-        elif args.command == "apply": value = raster.apply(args.checkout,args.bundle)
+        if args.command == "view": value = edit.detail(args.checkout,args.id)
+        elif args.command == "plan":
+            args.output_dir.mkdir(parents=True, exist_ok=False)
+            value = editor_cli.plan_file(args.checkout,args.request,args.output_dir/"plan.json")
+        elif args.command == "apply": value = edit.apply(args.checkout,editor_cli.read(args.bundle/"plan.json"))
         else: value = content_registry.recover(args.checkout)
         print(json.dumps(value,ensure_ascii=False,allow_nan=False))
         return 0

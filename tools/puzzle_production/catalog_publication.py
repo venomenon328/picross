@@ -26,16 +26,19 @@ BINARY_FORMATS = ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption
                   "picross-reveal-adoption-journal-v5", "picross-background-adoption-journal-v3",
                   "picross-background-adoption-journal-v2", BACKGROUND_FORMAT,
                   "picross-reveal-adoption-journal-v6", "picross-background-adoption-journal-v4",
-                  "picross-editor-images-journal-v1", "picross-editor-raster-journal-v1")
+                  "picross-editor-images-journal-v1", "picross-editor-raster-journal-v1",
+                  "picross-editor-change-journal-v1")
 PREFIXES = tuple(b'{"format":' + canonical_bytes(value) + b',' for value in BINARY_FORMATS)
 NORMAL_LIMIT = 24 * 1024 * 1024
 LIMIT = 128 * 1024 * 1024
+EDITOR_PREFIX = b"PICROSS-EDITOR-CHANGE-JOURNAL-V1\n"
 
 
 def staging(root):
     directory = io.safe(root, "content")
     return sorted(p.relative_to(root).as_posix() for p in directory.iterdir()
-                  if p.name.startswith(".registration-journal-") and p.name.endswith(".tmp"))
+                  if (p.name.startswith(".registration-journal-") and p.name.endswith(".tmp"))
+                  or p.name == ".editor-change-journal.tmp")
 
 
 def read_journal(root, name="content/.registration-pending.json"):
@@ -45,8 +48,9 @@ def read_journal(root, name="content/.registration-pending.json"):
     size = p.stat().st_size
     if size > LIMIT: raise Aborted("resource_limit: journal exceeds 128 MiB")
     with p.open("rb") as stream: prefix = stream.read(4096)
-    require(size <= NORMAL_LIMIT or prefix.startswith(PREFIXES), "Only declared binary journals may exceed 24 MiB")
-    raw = io.read(root, name, LIMIT if prefix.startswith(PREFIXES) else NORMAL_LIMIT)
+    binary = prefix.startswith(PREFIXES) or prefix.startswith(EDITOR_PREFIX)
+    require(size <= NORMAL_LIMIT or binary, "Only declared binary journals may exceed 24 MiB")
+    raw = io.read(root, name, LIMIT if binary else NORMAL_LIMIT)
     active = diagnostic.frame.get()
     if active is not None and hasattr(active, "journal_raw"):
         require(raw == active.journal_raw, "Journal changed after recovery classification")
@@ -58,6 +62,9 @@ def journal_bytes(j):
     limit = LIMIT if j["format"] in BINARY_FORMATS else NORMAL_LIMIT
     if j["format"] == "picross-editor-raster-journal-v1" and not j["replacements"]: limit = NORMAL_LIMIT
     if len(raw) > limit: raise Aborted("resource_limit: transaction journal exceeds byte limit")
+    if j["format"] == "picross-editor-change-journal-v1":
+        import zlib
+        raw = EDITOR_PREFIX + zlib.compress(raw, level=6)
     return raw
 
 

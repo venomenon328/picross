@@ -67,6 +67,8 @@ def reveal_candidates(entry):
 
 def reveal_path(entry, record=None):
     """Resource-relative effective path; historical production stays untouched."""
+    from .editor_change import slim
+    if slim(record): return record["current"]["asset"]["file"].removeprefix("game/")
     return (record["current"]["asset"]["file"].removeprefix("game/")
             if is_editor(record) and record["format"] == REVEAL_FORMAT else entry["reveal"])
 
@@ -446,6 +448,19 @@ def promote_background(root, registry, entry, new_entry, definition_ref, runtime
 
 def rebind(value, entry, definition_ref, runtime_revision, catalog=None):
     """Advance only the current raster binding; retain the actual image decision."""
+    from .editor_change import slim, validate_source, validate_binding as current_binding
+    if slim(value):
+        validate_source(value)
+        result = deepcopy(value)
+        result["binding"] = current_binding({"entry": deepcopy(entry), "identity": {
+            "key": entry["key"], "save_slot": entry["save_slot"], "definition": deepcopy(definition_ref),
+            "runtime_revision": runtime_revision}}, value["id"])
+        _same_identity(value["binding"], result["binding"])
+        if result["binding"] == value["binding"]: return result
+        result["record_revision"] += 1
+        result.pop("record_hash")
+        result["record_hash"] = digest(result)
+        return validate_source(result, entry)
     validate(value, catalog)
     new_binding = validate_binding({"entry": deepcopy(entry), "identity": {
         "key": entry["key"], "save_slot": entry["save_slot"], "definition": deepcopy(definition_ref),

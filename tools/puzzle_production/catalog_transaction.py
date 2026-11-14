@@ -90,7 +90,9 @@ def active_reveal(entry, texts):
     if isinstance(raw, str): raw = raw.encode()
     if raw is not None:
         value = io.json_bytes(raw, reveal.LIMIT)
-        if value.get("format") == "picross-catalog-reveal-v3":
+        from .editor_change import slim, validate_source
+        if slim(value): return validate_source(value)["current"]["asset"]["file"]
+        if value.get("format") in ("picross-catalog-reveal-v3", "picross-catalog-reveal-v4"):
             from . import editor_image_source
             value = editor_image_source.validate(value)
             return value["current"]["asset"]["file"]
@@ -178,7 +180,7 @@ def file_limit(root, name, journal=None):
             ref = refs[entry["id"]]
             require(len(raw) == ref["bytes"] and io.checksum(raw) == ref["sha256"], "Journal background source binding differs")
             source = background_source.validate(io.json_bytes(raw, background_source.LIMIT), entry)
-            if source.get("format") == "picross-catalog-background-v5":
+            if source.get("format") in ("picross-catalog-background-v5", "picross-catalog-background-v6"):
                 if (source["binding"]["entry"]["production"]["package"] == prefix and
                         bound.get(prefix + "/manifest.json") == entry["production"]["package_sha256"] and name in bound):
                     return MAX_ZIP  # Complete staged export/receipt validation still precedes publication.
@@ -351,7 +353,7 @@ def namespaces(root, *registries, temporary=(), images=None):
             base = safe(root, e["production"]["package"])
             if base.exists():
                 manifest = io.json_bytes(io.read(root,e["production"]["package"]+"/manifest.json",8*1024*1024),8*1024*1024)
-                if manifest.get("format") == "picross-editor-raster-package-v1":
+                if manifest.get("format") in ("picross-editor-raster-package-v1", "picross-editor-raster-package-v2"):
                     packages.update(reveal.package(root,e)[3])
             if base.exists():
                 for p in base.rglob("*"):
@@ -647,7 +649,7 @@ def _delta(j, before, after, root=None):
         active = j["old"].get(reveal.path(a["id"]))
         active = io.json_bytes(active.encode(), reveal.LIMIT) if active is not None else None
         fixed = ("id", "key", "save_slot", "definition", "reveal", "visible") + (() if metadata(j) else ("category_id",))
-        editor_reveal = active is not None and active.get("format") == "picross-catalog-reveal-v3"
+        editor_reveal = active is not None and active.get("format") in ("picross-catalog-reveal-v3", "picross-catalog-reveal-v4")
         require(all(a[k] == e[k] for k in fixed) and (images(j) and editor_reveal or
                 (active["revisions"][-1]["reveal_sha256"] if active else a["production"]["reveal_sha256"]) == e["production"]["reveal_sha256"]), "Update changes fixed identity/reveal")
         n = "game/" + e["definition"]
