@@ -1,0 +1,6 @@
+test_cli_candidate_import_rebind_new_production_and_explicit_all_preview (tests.puzzle_production.test_sd2_catalog.CatalogTests.test_cli_candidate_import_rebind_new_production_and_explicit_all_preview) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 140.645s
+
+OK

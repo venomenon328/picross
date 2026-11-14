@@ -1,0 +1,28 @@
+{
+  "format": "pe-mig1-m2-ci-diagnostic-v1",
+  "product_head": "7e14963525ec9a6f82064535ecbca263be3270dc",
+  "base": "15ceb9b8fe54e2003883d623d1358d3cfc2d062d",
+  "expires_utc": "2026-11-21T17:00:00Z",
+  "purpose": "Nachvollziehbare Diagnose des ersten ausgewaehlten CI-Fehlers; kein CI- oder Produktfix",
+  "runner_sha256_base_equals_head": "d98ae48774a48bb2d0faf8dcda7e809f3e5d4a3746559a1e289336f06fc60f60",
+  "original_ci_exception": "Not present in job log; original failure attribution is an inference",
+  "inference_evidence": "SD2 CLI case 17:38:54.003..17:38:57.818 UTC overlaps missing 17:38:57.675 heartbeat; unchanged isolated SD2 case passes; actual unchanged run_tests heartbeat deterministically corrupts redirected CLI JSON",
+  "counterexample_expected": "Actual synthetic unittest ERROR/JSONDecodeError demonstrates race; reproduction script asserts that result and exits 0",
+  "files": [
+    {
+      "file": "isolated-sd2-test.log",
+      "bytes": 314,
+      "sha256": "2eb8c1d61999e30e9cc723935964f4926d86790cdc1212036782174b0226407f"
+    },
+    {
+      "file": "reproduce_heartbeat.py",
+      "bytes": 2523,
+      "sha256": "dad61bcc47d58677f93d0c7b5f4c11f5e5fb7b5610781d80af625cb52d69f6e1"
+    },
+    {
+      "file": "reproduction.log",
+      "bytes": 2257,
+      "sha256": "eb9665a06102ea5bc4a38e28c61e149f89f000729d4c674f8d9ce78d3012620a"
+    }
+  ]
+}

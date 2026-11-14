@@ -1,0 +1,33 @@
+PRODUCTION FIXTURE START class-setup m2_heartbeat_probe.CliCapture
+PRODUCTION FIXTURE END {"kind": "class-setup", "owner": "m2_heartbeat_probe.CliCapture", "seconds": 3.3399999665562063e-05}
+PRODUCTION TEST START m2_heartbeat_probe.CliCapture.test_cli_json
+PRODUCTION TEST END {"id": "m2_heartbeat_probe.CliCapture.test_cli_json", "seconds": 0.0028798999992432073, "status": "error"}
+PRODUCTION FIXTURE START class-teardown m2_heartbeat_probe.CliCapture
+PRODUCTION FIXTURE END {"kind": "class-teardown", "owner": "m2_heartbeat_probe.CliCapture", "seconds": 2.3799999326001853e-05}
+PRODUCTION FIXTURE START module-teardown m2_heartbeat_probe
+PRODUCTION FIXTURE END {"kind": "module-teardown", "owner": "m2_heartbeat_probe", "seconds": 1.3799999578623101e-05}
+test_cli_json (m2_heartbeat_probe.CliCapture.test_cli_json) ... ERROR
+
+======================================================================
+ERROR: test_cli_json (m2_heartbeat_probe.CliCapture.test_cli_json)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\Zeuch\Coding\picross_codex\641-m2-20261114\reproduce_heartbeat.py", line 47, in test_cli_json
+    json.loads(stream.getvalue())
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\json\__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\json\decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\json\decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (errors=1)
+
+REPRODUCED: actual unchanged production runner heartbeat contaminates captured CLI stdout JSON
