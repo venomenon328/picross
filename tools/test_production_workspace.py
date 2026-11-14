@@ -188,6 +188,7 @@ class MotifTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.repo = self.root / 'repo'; self.repo.mkdir()
         git(self.repo, 'init', '-q', '-b', 'main')
+        git(self.repo, 'config', 'core.autocrlf', 'false')
         (self.repo / INDEX).parent.mkdir(parents=True)
         (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': []}))
         commit(self.repo)
