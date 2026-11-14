@@ -315,6 +315,48 @@ class SourceTests(unittest.TestCase):
     @classmethod
     def tearDownClass(cls): cls.temp.cleanup()
 
+    def test_new_registration_replays_only_new_export_and_guards_old_bytes(self):
+        """A historical producer mismatch must not veto an unrelated new ID."""
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp) / 'checkout'
+            shutil.copytree(self.base, root)
+            old = cr.check_checkout(root)['entries'][0]
+            old_package = (root / old['production']['package']).resolve()
+            self.assertTrue((old_package / 'manifest.json').exists())
+
+            original_verify = adapter.verify_export
+            calls = {'old': 0, 'new': 0}
+            def verify(path):
+                if Path(path).resolve() == old_package:
+                    calls['old'] += 1
+                    raise InvalidInput('INT-B02 simulated old producer mismatch')
+                calls['new'] += 1
+                return original_verify(path)
+
+            with patch.object(adapter, 'verify_export', side_effect=verify):
+                self.assertEqual(
+                    cr.registration(self.home / 'export', root, apply=True,
+                                    difficulty=za1.difficulty_for_export(self.home / 'export'))['status'],
+                    'registered')
+                self.assertEqual(calls['old'], 0)
+                self.assertGreaterEqual(calls['new'], 2)
+                # Deliberate historical full audits stay strict and opt-in.
+                with self.assertRaisesRegex(InvalidInput, 'INT-B02 simulated'):
+                    cr.check_checkout(root, replay=True)
+                self.assertEqual(calls['old'], 1)
+
+            with self.assertRaises(InvalidInput):
+                cr.check_checkout(root, replay=True, replay_package='content/packages/pz-missing/r01')
+            with self.assertRaises(InvalidInput):
+                cr.check_checkout(root, replay_package=old['production']['package'])
+
+            # Omitting old proof replay must not weaken its complete stored
+            # package inventory or the current live/catalog source checks.
+            stale = old_package / 'usage.txt'
+            stale.write_bytes(stale.read_bytes() + b'FOREIGN')
+            with self.assertRaises(InvalidInput):
+                cr.check_checkout(root, replay=False)
+
     def test_all_text_and_retained_authorities_and_absences_are_fresh(self):
         for name in sorted(set(self.journal['old']) | set(self.journal['retained'])):
             with self.subTest(source=name), tempfile.TemporaryDirectory() as temp:
