@@ -5,7 +5,7 @@ let token = location.hash.slice(1) || sessionStorage.getItem('pe-session') || ''
 history.replaceState(null, '', '/');
 if (/^[0-9a-f]{64}$/.test(token)) sessionStorage.setItem('pe-session', token);
 let listing, current, plan, busy = false, dirty = false, imports = {}, blobs = [], generation = 0;
-const pictureCache=new Map(); let importAssets={};
+const pictureCache=new Map(); let importAssets={}, shownPictures={};
 function message(text, error = false) { $('status').textContent = text; $('status').classList.toggle('error', error); }
 function controls(value) {
   busy = value; document.body.classList.toggle('busy', value);
@@ -137,6 +137,7 @@ async function picture(asset) {
   const url = URL.createObjectURL(await response.blob()); blobs.push(url); pictureCache.set(asset,url); return url;
 }
 async function showPictures(kind, assets) {
+  shownPictures[kind]=[...assets];
   const target = $(kind + '-pictures'); target.replaceChildren();
   if (!assets.length) { target.textContent = 'Kein Hintergrund wirksam'; compose(); return; }
   for (const asset of assets) {
@@ -317,6 +318,7 @@ $('apply').onclick = () => perform(async () => {
       $('raster').value=current.raster.text; grid();
     }
     $('background').value=current.detail.runtime.background.status;
+    current.pictures={...current.pictures,...shownPictures};
   }
   clean(); renderList();
   message('Writer bestätigt: ' + result.status + '. Aktuellen Bestand neu gelesen. Git / Build / Veröffentlichung bleiben extern.');
