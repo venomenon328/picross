@@ -250,6 +250,7 @@ const run = code => vm.runInContext(code, context);
       synced_at:'2026-11-14T12:00:00Z',sync_error:'Offline test'};
     context.completionSnapshot=offline;await run('checkSources(completionSnapshot)');
     assert.equal(document.getElementById('copyOrder').disabled,true,'offline observation blocks a fresh cloud follow-up');
+    assert(document.getElementById('orderStatus').textContent.includes('Remote nicht aktuell bestätigt'));
     assert(document.getElementById('sourceStatus').textContent.includes('letzter Cache'));
     assert(document.getElementById('sourceStatus').textContent.includes('Offline test'));
 
