@@ -23,7 +23,7 @@ from tools.puzzle_production import background_io as bio
 from tools.puzzle_production.background_contract import BackgroundError
 from tests.puzzle_production.background_fixtures import (
     BackgroundFixture, PROFILE, canonical, chunk, chunks, diagnostic, digest,
-    file_ref, gray_icc, image_bytes, insert_chunk, pixels, put, put_json,
+    file_ref, gray_icc, historical_description, image_bytes, insert_chunk, pixels, put, put_json,
 )
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -550,6 +550,125 @@ class BackgroundAssetsTests(unittest.TestCase):
                     self.assertEqual(snapshot(fixture.source), before_source)
                     self.assertEqual(snapshot(fixture.target), before_output)
                     self.assertEqual(self.report(fixture)["tool"], producer["tool"])
+
+    def historical_fixture(self, *, none=False):
+        old = historical_description(assets.describe())
+        self.number += 1
+        fixture = BackgroundFixture(self.root / str(self.number), old, none=none)
+        # Simulate the earlier producer only while creating the synthetic input.
+        with patch.object(assets, "_tool", return_value=old["tool"]):
+            self.assert_success(self.derive(fixture), "none" if none else "derived", fixture.target)
+        return fixture, old
+
+    def test_qualified_selected_reproduces_full_original_and_never_authorizes_writing(self):
+        fixture, old = self.historical_fixture()
+        before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+        # Unknown drift is closed even when rendering would produce the same PNG.
+        self.assert_error(assets.verify(fixture.request, fixture.source, fixture.target), "tool_mismatch")
+        with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})):
+            self.assert_success(assets.verify(fixture.request, fixture.source, fixture.target), "verified", fixture.target)
+            fresh = fixture.root / "new-output"
+            fresh.mkdir()
+            for output in (fresh, fixture.output):
+                self.assert_error(assets.derive(fixture.request, fixture.source, output), "tool_mismatch")
+            self.assertEqual(list(fresh.iterdir()), [])
+        self.assertEqual(self.report(fixture)["tool"], old["tool"])
+        self.assertEqual(snapshot(fixture.source), before_source)
+        self.assertEqual(snapshot(fixture.target), before_output)
+
+    def test_qualified_identity_rejects_consistently_rehashed_provenance_changes(self):
+        for alteration in ("commit", "dirty", "module_hash", "module_order", "module_missing",
+                           "module_extra", "id", "python", "pillow", "zlib", "littlecms"):
+            with self.subTest(alteration=alteration):
+                fixture, old = self.historical_fixture()
+                report = self.report(fixture)
+                tool = report["tool"]
+                if alteration == "commit":
+                    tool["commit"] = "3" * 40
+                elif alteration == "dirty":
+                    tool["dirty"] = True
+                elif alteration == "module_hash":
+                    tool["modules"][0]["sha256"] = "4" * 64
+                elif alteration == "module_order":
+                    tool["modules"].reverse()
+                elif alteration == "module_missing":
+                    tool["modules"].pop()
+                elif alteration == "module_extra":
+                    tool["modules"].append({"file": "foreign.py", "sha256": "5" * 64})
+                elif alteration == "id":
+                    tool["id"] = "foreign-producer"
+                else:
+                    tool["versions"][alteration] = "foreign-version"
+                request = copy.deepcopy(fixture.request)
+                report["tool_sha256"] = request["expected_tool_sha256"] = digest(tool)
+                report.update(request=request, request_sha256=digest(request))
+                put_json(fixture.target, "derivation.json", report)
+                before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+                with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})):
+                    self.assert_error(assets.verify(request, fixture.source, fixture.target), "tool_mismatch")
+                self.assertEqual(snapshot(fixture.source), before_source)
+                self.assertEqual(snapshot(fixture.target), before_output)
+
+    def test_qualified_selected_rejects_changed_bytes_diagnostics_and_profile(self):
+        for alteration in ("png", "diagnostics", "source", "decision_evidence", "request", "profile", "reproduction"):
+            with self.subTest(alteration=alteration):
+                fixture, old = self.historical_fixture()
+                request = copy.deepcopy(fixture.request)
+                report = self.report(fixture)
+                render = assets._render
+                if alteration == "png":
+                    raw = (fixture.target / "background.png").read_bytes() + b"foreign"
+                    report["output"] = put(fixture.target, "background.png", raw)
+                elif alteration == "diagnostics":
+                    report["diagnostics"]["upscaled"] = not report["diagnostics"]["upscaled"]
+                elif alteration == "source":
+                    put(fixture.source, request["source"]["file"], image_bytes(pixels((3, 2))))
+                elif alteration == "decision_evidence":
+                    put(fixture.source, "evidence/decision.txt", b"Changed human evidence")
+                elif alteration == "request":
+                    request["output"] = "different-intent"
+                elif alteration == "profile":
+                    request["profile"]["width"] = 2305
+                else:
+                    original_render = render
+                    def different_render(*args):
+                        png, diagnostics = original_render(*args)
+                        return png + b"different-reproduction", diagnostics
+                    render = different_render
+                put_json(fixture.target, "derivation.json", report)
+                before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+                with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})), \
+                        patch.object(assets, "_render", side_effect=render):
+                    result = assets.verify(request, fixture.source, fixture.target)
+                self.assertEqual(result["status"], "invalid_input", result)
+                self.assertEqual(snapshot(fixture.source), before_source)
+                self.assertEqual(snapshot(fixture.target), before_output)
+
+    def test_qualified_none_and_current_codec_drift_remain_closed(self):
+        fixture, old = self.historical_fixture(none=True)
+        with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})):
+            self.assert_error(assets.verify(fixture.request, fixture.source, fixture.target), "tool_mismatch")
+        fixture, old = self.historical_fixture()
+        before_source, before_output = snapshot(fixture.source), snapshot(fixture.target)
+        for timing in ("before", "during"):
+            version, render = assets.features.version_codec, assets._render
+            changed = timing == "before"
+
+            def codec(name):
+                return "foreign-codec" if changed else version(name)
+
+            def change_codec(*args):
+                nonlocal changed
+                result = render(*args)
+                changed = True
+                return result
+
+            with patch.object(assets, "_SELECTED_PRODUCERS", frozenset({old["tool_sha256"]})), \
+                    patch.object(assets.features, "version_codec", side_effect=codec), \
+                    patch.object(assets, "_render", side_effect=change_codec):
+                self.assert_error(assets.verify(fixture.request, fixture.source, fixture.target), "tool_mismatch")
+        self.assertEqual(snapshot(fixture.source), before_source)
+        self.assertEqual(snapshot(fixture.target), before_output)
 
     def test_verify_rejects_changed_actual_module_in_a_fresh_process(self):
         checkout = self.tool_checkout()

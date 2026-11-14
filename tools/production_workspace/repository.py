@@ -465,9 +465,11 @@ class Repository:
 
     def _listing(self):
         jobs, errors, sources = [], [], []
-        candidates = [('local', self.local, 'refs/heads/')]
-        if self.cached:
-            candidates.append(('remote', self.cached, 'refs/pw/'))
+        # A configured remote is the production authority, including offline
+        # cache views. Local refs remain available to P2/targeted diagnostics,
+        # but cannot introduce alternatives or block a published handoff.
+        candidates = ([('remote', self.cached, 'refs/pw/')] if self.cached else
+                      [('local', self.local, 'refs/heads/')])
         bindings = {}
         for origin, source, prefix in candidates:
             raw = git(source.root, 'for-each-ref', '--format=%(refname)', *[prefix + ref for ref in self.refs])
@@ -507,6 +509,10 @@ class Repository:
                 job['publication'] = 'Remote nicht aktuell bestätigt; gespeicherter Snapshot bleibt lesbar'
         from . import deliveries
         jobs, completion = deliveries.active(self, sources, jobs)
+        errors.extend(completion.get('unresolved', []))
+        completion['complete'] = not errors
+        if errors:
+            completion['note'] += ' Aktualisierung unvollständig oder Lieferzuordnung ungeklärt; Fehlerhinweise beachten.'
         # A removed historical copy must not leave a conflict marker on the
         # only remaining, deliberately open version of the same revision.
         active_bindings = {}
@@ -520,7 +526,7 @@ class Repository:
         from .motifs import Relations
         history = Relations(self)
         comparisons = {}
-        for identity in {j['puzzle_id'] for j in jobs}:
+        for identity in ({j['puzzle_id'] for j in jobs} if not self.remote else set()):
             commits = list(dict.fromkeys(j['commit'] for j in jobs if j['puzzle_id'] == identity))
             for n, left in enumerate(commits[:32]):
                 for right in commits[n + 1:32]:
