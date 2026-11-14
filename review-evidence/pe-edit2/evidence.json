@@ -9,7 +9,22 @@
     "run": 43612452543,
     "attempt": 1,
     "url": "https://github.com/venomenon328/picross/actions/runs/43612452543",
-    "status": "See final PR check result; catalog was still running when this evidence was assembled."
+    "status": "success",
+    "completed_at": "2026-11-14T16:10:14Z",
+    "jobs": {
+      "docs": "success, 13s, 21 core tests",
+      "tools": "success, 1m40s, 497 tests in 82.605s",
+      "production.catalog": "success, 17m59s; complete module execution 1063.397s",
+      "player": "success, 1m5s; Windows player build on Linux, not native player launch",
+      "ci-required": "success, 2s"
+    },
+    "wall_seconds": 1101,
+    "soft_ten_minute_goal_exceeded": true,
+    "player_artifact": {
+      "id": 14121090567,
+      "bytes": 130169884,
+      "expires_at": "2026-11-28T15:53:08Z"
+    }
   },
   "expires": "2026-11-21T15:00:00Z",
   "hardware": {
@@ -6388,5 +6403,11 @@
     "PE-EDIT2-A01: independent review before merge",
     "PE-B-U01 / #576: owner acceptance before release",
     "External #641 M2 for real active source conversion; not performed here"
-  ]
+  ],
+  "published_binary_verification": {
+    "commit": "4fd106b4b706c6f4107f1bc905c43903264fb7eb",
+    "method": "Authenticated GitHub Contents API raw response via binary urllib.request streaming; normal gh Windows output failed with transform: short source buffer",
+    "result": "All five published files equal local originals; ZIP extracted and all 1145 inventory entries verified; both downloaded original PNGs opened at full original resolution",
+    "scope": "Implementer account with repository access; independent reviewer needs repository authorization and binary-capable client"
+  }
 }
