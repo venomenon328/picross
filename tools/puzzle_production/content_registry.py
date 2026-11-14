@@ -187,7 +187,8 @@ def validate_entries(entries, catalog=None):
 
 @diagnostic.measured("Checkout validation", "checkout_validations")
 @catalog_method.bound_validation
-def check_checkout(root, replay=False, *, check_projection=True, pending_journal=None, _verification=None):
+def check_checkout(root, replay=False, *, check_projection=True, pending_journal=None, _verification=None,
+                   replay_package=None):
     from . import catalog_io as io, reveal_source as reveal, catalog_background as background
     if _verification is not None:
         from .registration_verification import require_context
@@ -225,9 +226,21 @@ def check_checkout(root, replay=False, *, check_projection=True, pending_journal
                 for e in older["entries"]: del e["difficulty"]
                 allowed.append(canonical_bytes(older) + b"\n")
         require(io.read(root, RUNTIME, 8 * 1024 * 1024) in allowed, "Runtime registry is stale")
+    if replay_package is not None:
+        # Registration P5 replays only the newly published export. All existing
+        # packages still receive the complete live-byte, manifest/inventory,
+        # namespace and catalog checks in _check_entry and the transaction guards.
+        require(replay and check_projection and type(replay_package) is str,
+                "Targeted replay requires a full projected checkout validation")
+        require(sum(e["production"]["package"] == replay_package for e in r["entries"]) == 1,
+                "Targeted replay must identify one registered package")
+        if _verification is not None:
+            require(_verification.package == replay_package,
+                    "Targeted replay differs from the bound registration verification")
     for e in r["entries"]:
-        _check_entry(root, r, catalog, e, image_runtime=image_runtime, replay=replay,
-                     pending_journal=pending_journal, _verification=_verification)
+        selected_replay = replay and (replay_package is None or e["production"]["package"] == replay_package)
+        _check_entry(root, r, catalog, e, image_runtime=image_runtime, replay=selected_replay,
+                     pending_journal=pending_journal, _verification=_verification if selected_replay else None)
     return r
 
 
