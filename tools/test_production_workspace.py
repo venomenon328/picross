@@ -728,7 +728,7 @@ class WorkspaceTests(unittest.TestCase):
             p.inspect(LocalSource(self.repo), None, view)
 
     def test_automatic_shares_record_but_rechecks_stage_bytes_and_identity(self):
-        from .production_workspace import projector
+        from tools.production_workspace import projector
         result = current_fixture(self.repo, self.root / 'current-source', revision='current')
         directory = Path(result['directory'])
         name = directory.relative_to(self.repo).as_posix()
