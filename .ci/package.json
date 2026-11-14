@@ -1,33 +1,18 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/640",
-  "package": "PE-EDIT2",
+  "issue": "https://github.com/venomenon328/picross/issues/641",
+  "package": "PE-MIG1/M2",
   "modules": [
     "tools",
     "production.catalog"
   ],
-  "purpose": "K01-K08: gezielte Editortransaktion ersetzt normale Vollbestandspruefung; aktuelle technische Quellen und Folgeproduktion, virtuelle Liste, echte Raster-/Papierkomposition und persistentes Theme. Beide ausgewaehlten Module vollstaendig, Kern docs/ci-required mit Windows-Spieler. T01-T03 einmalig an isolierten 56/1000-Testkopien; keine Nutzersaves. Migrationsnachtrag #640/6878198255: #641 ist externe Abhaengigkeit, keine Migration in App/UI/API.",
-  "omitted": "Keine zusaetzliche Solver-, Bildproduktions-, Adapter-, native.*, Preflight-, Delivery- oder automatische Chromium-Matrix. Algorithmen unveraendert; reale bestehende Solver-/Ratingkonsumption nur fuer geaenderte Raster. Neue Quellen-/Recoveryformen im catalog-Modul. Historische Reader/Journale behalten explizite Kompatibilitaet, keine Vollbestandsregression als Pflicht des neuen Editorwegs.",
+  "purpose": "M2-K01-K04 mit ausdruecklich beauftragter enger v6-Spielerimport-Readerkorrektur (Issue #641, Kommentar 6881270569). Echte 56er-Quellenmigration plus tools/production.catalog vollstaendig und regulärer Windows-Spielerbau wegen Werkzeugdiff. Einmalige externe Guard-/Rollback-/Vollvergleichs-/No-op-/56-Reader-/Editor-/Godotbelege am separaten Reviewref; keine Migration in App/UI/API/Starter.",
+  "omitted": "Keine zusaetzliche Solver-, Bildproduktions-, Adapter-, native.*, Preflight-, Delivery- oder automatische Chromium-Matrix: deren Algorithmen/Spielprogramme bleiben unveraendert. Bestehende Solver-/Ratingkonsumption und gezielte echte Godotdarstellung einmalig isoliert. Keine neue Echtkatalog-Dauersuite; keine echten Benutzersaves.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_editor_change.py",
+      "path": "tools/test_background_import.py",
       "disposition": "change-scoped",
-      "reason": "Kleine aktuelle Transaktionsfaelle: harte erlaubte Dateimengen, No-op, gleich-mtime-Konflikt, Links, gezielte Recovery, Quellen ohne Herkunft und normale Folgeproduktion."
-    },
-    {
-      "path": "tools/test_puzzle_editor.py",
-      "disposition": "change-scoped",
-      "reason": "Ersetzt den Vollsnapshot- und UI-Migrationsvertrag durch drei Indexreads, lesende Altversionsablehnung und atomare Theme-Persistenz; bestehende HTTP-/Listener-/Instanzgrenzen bleiben."
-    },
-    {
-      "path": "tests/puzzle_production/test_catalog_metadata.py",
-      "disposition": "change-scoped",
-      "reason": "CLI-Konsument auf den aktuellen extern vorbereiteten v8-Testbestand umstellen; alte Journal-/Migrationsfaelle bleiben explizite externe Kompatibilitaetspruefungen."
-    },
-    {
-      "path": "tests/puzzle_production/test_catalog_images.py",
-      "disposition": "change-scoped",
-      "reason": "Ersetzt normale Vollsnapshot-Detailpflicht durch genau drei Indizes und ausgewaehlte Definition/Quellen; alte externe Migrationstests bleiben."
+      "reason": "Kleine synthetische Regression fuer v6-selected-Quellen ohne notice/authority: vorhandene TXT-Bytes binden und erhalten, keine neue Noticepflicht, unveraenderte Import-/Namespaceguards."
     }
   ],
   "core_change": null,
