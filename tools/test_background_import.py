@@ -202,6 +202,56 @@ class BackgroundImportTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Invalid background capability"):
             background.source_inventory(source_root)
 
+    def test_compact_v6_import_preserves_optional_existing_notice_without_authority(self):
+        from tools.puzzle_production import editor_change as edit, catalog_background as bg
+        from tools.puzzle_production.contract import digest
+        root = self.source.parent
+        identifier = IDS["a"]
+        definition = b'{"revision":1}\n'
+        entry = dict(id=identifier, key=identifier, save_slot="background_a",
+                     definition="data/content/background_a.json", reveal="art/content/background_a.png",
+                     visible=True, category_id="test", production=dict(mode="mono", width=1, height=1,
+                     package="content/packages/"+identifier+"/r01", package_sha256="a"*64,
+                     definition_sha256=hashlib.sha256(definition).hexdigest(), reveal_sha256="b"*64))
+        current = dict(status="selected", image_revision=1,
+                       asset={**self.inventory["assets"][0]["asset"], "file":"game/"+self.inventory["assets"][0]["asset"]["file"]})
+        source = dict(format=edit.BACKGROUND, id=identifier, record_revision=1,
+                      binding=dict(entry=entry, identity=edit.identity(entry, definition)), current=current)
+        source["record_hash"] = digest(source)
+        raw = edit.encoded(edit.validate_source(source, entry))
+        source_path = root/bg.path(identifier)
+        source_path.parent.mkdir(parents=True)
+        source_path.write_bytes(raw)
+        index = dict(format="picross-content-registry-v4", entries=[entry], metadata=[],
+                     backgrounds=[dict(id=identifier, source=bg.ref(bg.path(identifier),raw))])
+        (root/"content/registry.json").write_bytes(edit.encoded(index))
+        runtime = dict(format="picross-runtime-registry-v8", categories=[], entries=[dict(
+            id=identifier, background={**current, "asset":self.inventory["assets"][0]["asset"]})])
+        (self.source/"data/registry.json").write_bytes(edit.encoded(runtime))
+        (self.source/"data/background-capability.json").write_bytes(edit.encoded(dict(
+            format=bg.CAPABILITY_FORMAT, runtime_format=bg.RUNTIME_FORMAT,
+            profile_id="picross-background-png2304-v1", enabled=True)))
+        notice_path = self.source/self.inventory["assets"][0]["notice"]["file"]
+        notice_raw = notice_path.read_bytes()
+        for has_notice in (True, False):
+            with self.subTest(has_notice=has_notice):
+                if not has_notice: notice_path.unlink()
+                before = {p.relative_to(root): (p.read_bytes(),p.stat().st_mtime_ns)
+                          for p in root.rglob("*") if p.is_file()}
+                inventory = background.source_inventory(root)
+                row = inventory["assets"][0]
+                self.assertEqual(row["notice"], self.inventory["assets"][0]["notice"] if has_notice else None)
+                background.restore_sources(root, self.project, inventory)
+                shutil.copyfile(self.source/"data/registry.json", self.project/"data/registry.json")
+                background.prepare_import(self.project, inventory)
+                self.header_only_import()
+                report = background.verify_import(self.project, inventory)
+                self.assertEqual(report["images"][0]["notice"], row["notice"])
+                self.assertEqual(before, {p.relative_to(root): (p.read_bytes(),p.stat().st_mtime_ns)
+                                         for p in root.rglob("*") if p.is_file()})
+                if has_notice: self.assertEqual(notice_path.read_bytes(), notice_raw)
+                else: self.assertFalse(notice_path.exists())
+
     def test_fixed_patterns_have_distinct_source_and_pixel_identity(self):
         second, rgba = png("b")
         self.assertNotEqual(hashlib.sha256(second).digest(), hashlib.sha256(self.png).digest())
