@@ -6,12 +6,8 @@ history.replaceState(null,'',location.pathname);
 let listing=null,pending=null,generation=0,controller=null,urls=[],active=null;
 let detail=null,intent={},draft=null,drafts=[];
 let remoteExplicit=false;
+let remoteFresh=null;
 let assetLoads=new Map(),readyImages=new Set();
-if(typeof matchMedia==='function'){
- const narrow=matchMedia('(max-width: 800px)');
- const fitNavigation=()=>{$('navigation').open=!narrow.matches;};
- fitNavigation();narrow.addEventListener('change',fitNavigation);
-}
 try{drafts=JSON.parse(localStorage.getItem('pw-briefs')||'[]');if(!Array.isArray(drafts))drafts=[];drafts=drafts.filter(d=>d&&typeof d.id==='string'&&typeof d.brief==='string').slice(-20);}catch{}
 function saveDrafts(){try{localStorage.setItem('pw-briefs',JSON.stringify(drafts));}catch{}}
 function options(){return {workroot:$('workroot').value,merge:$('merge').checked};}
@@ -33,6 +29,7 @@ function updatePrompt(){
  button.textContent=final?(detail.facts.state==='registered'?'Git-Abschluss: Auftrag kopieren':'Endabnahme & Integration: Auftrag kopieren'):'Auftrag kopieren';
  if($('finalScope'))$('finalScope').hidden=!final;
  try{
+  if(detail&&remoteFresh===false)throw Error('Remote nicht aktuell bestätigt. Vor einem Cloudfolgeauftrag die Quellen erfolgreich aktualisieren.');
   if(final){
    const images=PW.finalAssets(detail,intent);
    if([images.raster,images.reveal,images.background].filter(Boolean).some(a=>!readyImages.has(a.id))){
@@ -216,12 +213,14 @@ function newDraft(id){
 }
 function renderDrafts(){
  const list=$('draftList');list.replaceChildren();if(!drafts.length)return;
- list.append(node('p','Lokale Entwürfe','navLabel'));
- for(const d of drafts){const b=node('button',(d.brief.trim()||'Unbenannter Entwurf').slice(0,42),'job');b.setAttribute('aria-current',String(d===draft));b.onclick=()=>newDraft(d.id);list.append(b);}
+ const label=node('label','Gespeicherten Motivtext öffnen'),select=node('select');
+ const empty=node('option','Motivtext wählen …');empty.value='';select.append(empty);
+ for(const d of drafts){const option=node('option',(d.brief.trim()||'Unbenannter Motivtext').slice(0,60));option.value=d.id;select.append(option);}
+ select.value=draft?.id||'';select.onchange=()=>{if(select.value)newDraft(select.value);};label.append(select);list.append(label);
  if(draft){
   const remove=node('button','Entwurf verwerfen','discard');remove.onclick=()=>{
    drafts=drafts.filter(d=>d.id!==draft.id);draft=null;saveDrafts();renderDrafts();
-   if(listing?.motifs.length)chooseMotif(listing.motifs[0].puzzle_id);else if(drafts.length)newDraft(drafts.at(-1).id);else $('view').replaceChildren(node('p','Über „Neues Motiv“ beginnen.'));
+   if(listing?.motifs.length)chooseMotif(listing.motifs[0].puzzle_id);else $('view').replaceChildren(node('p','Über „Neues Motiv“ beginnen oder einen gespeicherten Motivtext ausdrücklich öffnen.'));
   };list.append(remove);
  }
 }
@@ -258,7 +257,8 @@ function drainImages(){
 function imageRequest(path,signal){return new Promise((resolve,reject)=>{imageQueue.push({path,signal,resolve,reject});drainImages();});}
 function dispose(){closeRemoval();generation++;controller?.abort();controller=new AbortController();for(const url of urls)URL.revokeObjectURL(url);urls=[];assetLoads=new Map();readyImages=new Set();$('large').close();}
 function sourceStatus(value){
- const source=value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':value.sync_error||(!value.remote_confirmed?'Remote nicht aktuell bestätigt · letzter Cache: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'unbekannt'):('Remote zuletzt geladen: '+(value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'noch nicht synchronisiert')));
+ const age=value.synced_at?new Date(value.synced_at).toLocaleString('de-DE'):'unbekannt';
+ const source=value.mode==='local'?'Nur lokale Gitstände · Remote-Sicherung nicht bestätigt':!value.remote_confirmed?['Remote nicht aktuell bestätigt','letzter Cache: '+age,value.sync_error].filter(Boolean).join(' · '):'Remote zuletzt geladen: '+age;
  return [source,value.completion?.note].filter(Boolean).join(' · ');
 }
 function currentMotif(){return listing?.motifs.find(m=>m.puzzle_id===$('jobs').value);}
@@ -287,7 +287,7 @@ function adopt(value){
  const completed=!keepDraft&&value.completion?.confirmed&&!value.jobs.some(sameDelivery)&&
   (active?value.completion.hidden_jobs?.some(sameDelivery):value.completion.completed_ids?.includes(keepId));
  const retained=value.motifs.find(m=>m.puzzle_id===keepId);
- const notice=completed?`Die bisherige Produktion (${keepId}) wurde nach bestätigter Mainintegration aus der aktiven Liste entfernt. ${retained?'Die noch offene Arbeit zur gleichen ID bleibt ausgewählt.':value.motifs.length?'Die nächste offene Produktion ist ausgewählt.':'Die aktive Liste enthält keine offenen Produktionen. Lokale Entwürfe bleiben erhalten.'}`:'';
+ const notice=completed?`Die bisherige Produktion (${keepId}) wurde nach bestätigter Mainintegration aus der aktiven Liste entfernt. ${retained?'Die noch offene Arbeit zur gleichen ID bleibt ausgewählt.':value.motifs.length?'Die nächste offene Produktion ist ausgewählt.':'Die aktive Liste enthält keine offenen Produktionen. Gespeicherte Motivtexte bleiben erhalten.'}`:'';
  if(!keepDraft)dispose();
  listing=value;pending=null;$('load').hidden=true;$('sourceStatus').textContent=[sourceStatus(value),notice].filter(Boolean).join(' · ');error(value.errors.join('\n'));$('jobs').replaceChildren();
  for(const motif of value.motifs){const option=node('option',motif.label);option.value=motif.puzzle_id;$('jobs').append(option);}
@@ -295,7 +295,7 @@ function adopt(value){
  if(keepDraft){if(value.jobs.length)$('jobs').selectedIndex=-1;return;}
  if(!value.motifs.length){
   active=null;detail=null;intent={};remoteExplicit=false;
-  if(drafts.length&&!completed)newDraft(drafts.at(-1).id);else{$('versions').hidden=true;$('motifStatus').textContent='';$('view').replaceChildren(node('h2','Keine offenen Produktionen'),node('p',drafts.length?'Einen lokalen Entwurf wählen oder über „Neues Motiv“ beginnen.':'Über „Neues Motiv“ beginnen.'));}
+  $('versions').hidden=true;$('motifStatus').textContent='';$('view').replaceChildren(node('h2','Keine offenen Produktionen'),node('p',drafts.length?'Über „Neues Motiv“ beginnen oder einen gespeicherten Motivtext ausdrücklich öffnen.':'Über „Neues Motiv“ beginnen.'));
   return;
  }
  chooseMotif(retained?.puzzle_id||value.motifs[0].puzzle_id);
@@ -492,10 +492,14 @@ function showRemovalResult(result){
 }
 $('removalClose').onclick=()=>{if(!removalBusy)closeRemoval();};
 $('removal').oncancel=e=>{if(removalBusy)e.preventDefault();else closeRemoval();};
-let pollTimer=null;
+let pollTimer=null,sourceRequest=0;
 async function checkSources(value){
  clearTimeout(pollTimer);
  const update=value.update||{state:'done'};
+ if(update.state!=='running'){
+  remoteFresh=value.mode==='remote'?value.remote_confirmed===true&&update.state!=='error':null;
+  updatePrompt();
+ }
  $('refresh').disabled=update.state==='running';
  if(update.state==='running'){$('sourceStatus').textContent=`Arbeitsstände werden gesucht · ${Math.floor(update.elapsed_seconds||0)} Sekunden`;}
  else if(!listing&&value.snapshot){adopt(value);}
@@ -503,8 +507,8 @@ async function checkSources(value){
  if(update.state==='error')error(update.error||'Aktualisierung fehlgeschlagen. Erneut suchen.');
  if(update.state==='running')pollTimer=setTimeout(pollSources,1000);
 }
-async function pollSources(){try{await checkSources(await(await request('/api/jobs')).json());}catch(exc){$('refresh').disabled=false;error(exc.message);}}
-$('refresh').onclick=async()=>{const button=$('refresh');button.disabled=true;try{await checkSources(await(await request('/api/refresh',{method:'POST'})).json());}catch(exc){error(exc.message);button.disabled=false;}};
+async function pollSources(){const epoch=++sourceRequest;try{const value=await(await request('/api/jobs')).json();if(epoch===sourceRequest)await checkSources(value);}catch(exc){if(epoch===sourceRequest){$('refresh').disabled=false;error(exc.message);}}}
+$('refresh').onclick=async()=>{const epoch=++sourceRequest,button=$('refresh');clearTimeout(pollTimer);button.disabled=true;try{const value=await(await request('/api/refresh',{method:'POST'})).json();if(epoch===sourceRequest)await checkSources(value);}catch(exc){if(epoch===sourceRequest){error(exc.message);button.disabled=false;}}};
 $('load').onclick=()=>{if(pending)adopt(pending);};
 function theme(value){document.documentElement.dataset.theme=value;try{localStorage.setItem('pw-theme',value);}catch{}}
 $('theme').onchange=()=>theme($('theme').value);try{$('theme').value=localStorage.getItem('pw-theme')||'system';}catch{}theme($('theme').value);

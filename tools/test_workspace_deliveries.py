@@ -231,6 +231,31 @@ def integrate_fixture(root, delivery, *, mode='copy', receipt=None):
     return main
 
 
+def slim_sources(root, delivery, *, anchor=None):
+    """Current source forms over already proved synthetic registration metadata."""
+    from tools.puzzle_production import editor_change as editor
+    entry = deepcopy(delivery['entry'])
+    entry['production']['package_sha256'] = anchor or entry['production']['package_sha256']
+    binding = {'entry': entry, 'identity': {'key': entry['key'], 'save_slot': entry['save_slot'],
+        'definition': {'file': 'game/' + entry['definition'], 'sha256': entry['production']['definition_sha256'], 'bytes': 4},
+        'runtime_revision': 1}}
+    for kind, form, current in (
+        ('reveal', editor.REVEAL, {'image_revision': 1, 'asset': {
+            'file': 'game/' + entry['reveal'], 'sha256': entry['production']['reveal_sha256'], 'bytes': 4}}),
+        ('background', editor.BACKGROUND, {'image_revision': 1, 'status': 'none', 'asset': None})):
+        value = {'format': form, 'id': entry['id'], 'record_revision': 1, 'binding': deepcopy(binding), 'current': current}
+        value['record_hash'] = digest(value)
+        editor.validate_source(value)
+        ref = put(root, (reveal if kind == 'reveal' else bg).path(entry['id']), value)
+        if kind == 'background':
+            catalog = p.parse((root / registry.REGISTRY).read_bytes())
+            catalog['backgrounds'] = [{'id': entry['id'], 'source': ref}]
+            put(root, registry.REGISTRY, catalog)
+    runtime = p.parse((root / registry.RUNTIME).read_bytes())
+    runtime['entries'][0]['background'] = {'image_revision': 1, 'status': 'none', 'asset': None}
+    put(root, registry.RUNTIME, runtime)
+
+
 class DeliveryTests(unittest.TestCase):
     def setUp(self):
         temporary = tempfile.TemporaryDirectory(prefix='pw-c-deliveries-')
@@ -239,6 +264,7 @@ class DeliveryTests(unittest.TestCase):
         self.repo = self.root / 'repo'
         self.repo.mkdir()
         git(self.repo, 'init', '-q', '-b', 'main')
+        git(self.repo, 'config', 'core.autocrlf', 'false')
         put(self.repo, INDEX, {'format': 'picross-authoring-index-v1', 'entries': []})
         put(self.repo, registry.REGISTRY, {'format': registry.METADATA_FORMAT, 'entries': [], 'backgrounds': [], 'metadata': []})
         put(self.repo, registry.RUNTIME, {'format': registry.IMAGE_RUNTIME_FORMAT, 'entries': []})
@@ -275,7 +301,7 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(after['jobs'], [])
         self.assertEqual(after['completion']['main_commit'], main)
         self.assertEqual(after['completion']['completed_ids'], [ID])
-        self.assertEqual(after['completion']['hidden_count'], 4)
+        self.assertEqual(after['completion']['hidden_count'], 2)
         self.assertEqual({j['revision'] for j in after['completion']['hidden_jobs']}, {'early-alpha', 'r02'})
         # The unfiltered branch scan is still used by P2's all-revision preview.
         self.assertEqual(len(self.reader.scan(self.reader.local, branch, ID)['jobs']), 2)
@@ -297,9 +323,9 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual(result['jobs'], [])
         git(self.repo, 'reset', '--hard', self.delivery['head'])
         metadata_job(self.repo, 'future-beta')
-        commit(self.repo)
+        commit(self.repo); self.push()
         result = self.reader.refresh()
-        self.assertEqual([(j['source'], j['revision']) for j in result['jobs']], [('local', 'future-beta')])
+        self.assertEqual([(j['source'], j['revision']) for j in result['jobs']], [('remote', 'future-beta')])
         self.assertEqual(result['completion']['completed_ids'], [])
 
     def test_divergent_record_projection_and_new_image_work_are_retained(self):
@@ -319,9 +345,10 @@ class DeliveryTests(unittest.TestCase):
                 projection['record'] = {'commit': None, **ref}
                 put(self.repo, self.delivery['projection_file'], projection)
                 publish_pointer(self.repo, ID, 'r02')
-                commit(self.repo)
+                commit(self.repo); self.push()
                 active = self.reader.refresh()['jobs']
-                self.assertEqual([(j['source'], j['revision']) for j in active], [('local', 'r02')])
+                self.assertEqual({(j['source'], j['revision']) for j in active},
+                                 {('remote', 'early-alpha'), ('remote', 'r02')})
 
     def test_invalid_current_view_and_unproven_earlier_bytes_stay(self):
         self.integrate()
@@ -329,16 +356,16 @@ class DeliveryTests(unittest.TestCase):
         pointer = p.parse((self.repo / name).read_bytes())
         pointer['record']['sha256'] = '0' * 64
         put(self.repo, name, pointer)
-        commit(self.repo)
+        commit(self.repo); self.push()
         self.assertEqual({j['revision'] for j in self.reader.refresh()['jobs']}, {'early-alpha', 'r02'})
         git(self.repo, 'reset', '--hard', self.delivery['head'])
         early = f'content/authoring/{ID}/early-alpha/workspace.json'
         projection = p.parse((self.repo / early).read_bytes())
         projection['title'] = 'Unproven earlier work'
         put(self.repo, early, projection)
-        commit(self.repo)
+        commit(self.repo); self.push()
         active = self.reader.refresh()['jobs']
-        self.assertEqual([(j['source'], j['revision']) for j in active], [('local', 'early-alpha')])
+        self.assertEqual([(j['source'], j['revision']) for j in active], [('remote', 'early-alpha')])
 
     def test_unchanged_record_cannot_conceal_changed_package_or_independent_image_metadata(self):
         self.integrate()
@@ -346,10 +373,10 @@ class DeliveryTests(unittest.TestCase):
             with self.subTest(changed=name):
                 git(self.repo, 'reset', '--hard', self.delivery['head'])
                 put(self.repo, name, b'new independent source bytes\n')
-                commit(self.repo)
+                commit(self.repo); self.push()
                 value = self.reader.refresh()
-                self.assertTrue(any(j['source'] == 'local' and j['revision'] == 'r02' for j in value['jobs']))
-                self.assertFalse(any(j['source'] == 'remote' for j in value['jobs']))
+                self.assertTrue(any(j['source'] == 'remote' and j['revision'] == 'r02' for j in value['jobs']))
+                self.assertTrue(all(j['source'] == 'remote' for j in value['jobs']))
                 self.assertFalse(any(j.get('conflict') for j in value['jobs']))
 
     def test_unchanged_record_with_new_export_or_runtime_binding_stays_open(self):
@@ -372,10 +399,10 @@ class DeliveryTests(unittest.TestCase):
                     catalog = deepcopy(self.delivery['registry'])
                     catalog['entries'][0]['production']['definition_sha256'] = '0' * 64
                     put(self.repo, registry.REGISTRY, catalog)
-                commit(self.repo)
+                commit(self.repo); self.push()
                 active = self.reader.refresh()['jobs']
                 self.assertEqual({(j['source'], j['revision']) for j in active},
-                                 {('local', 'r02'), ('local', 'early-alpha')})
+                                 {('remote', 'r02'), ('remote', 'early-alpha')})
 
     def test_historical_nonfinal_current_view_cannot_close_all_indexed_work(self):
         git(self.repo, 'reset', '--hard', self.early)
@@ -397,14 +424,14 @@ class DeliveryTests(unittest.TestCase):
         self.integrate()
         active = self.reader.refresh()['jobs']
         self.assertEqual({j['revision'] for j in active}, {'early-alpha'})
-        self.assertEqual({j['source'] for j in active}, {'local', 'remote'})
+        self.assertEqual({j['source'] for j in active}, {'remote'})
 
     def test_new_current_pointer_back_to_old_step_is_a_visible_resumption(self):
         self.integrate()
         publish_pointer(self.repo, ID, 'early-alpha')
-        commit(self.repo)
+        commit(self.repo); self.push()
         active = self.reader.refresh()['jobs']
-        self.assertEqual([(j['source'], j['revision']) for j in active], [('local', 'early-alpha')])
+        self.assertEqual([(j['source'], j['revision']) for j in active], [('remote', 'early-alpha')])
         self.assertTrue(active[0]['current_view'])
 
     def test_background_receipt_and_rehashed_wrong_origin_or_export_anchor(self):
@@ -427,7 +454,7 @@ class DeliveryTests(unittest.TestCase):
                 catalog = p.parse((self.repo / registry.REGISTRY).read_bytes())
                 catalog['entries'][0]['production']['package_sha256'] = ref['sha256']
                 put(self.repo, registry.REGISTRY, catalog)
-                commit(self.repo)
+                commit(self.repo); self.push()
                 git(self.repo, 'checkout', '-q', self.branch)
                 self.push()
                 self.assertTrue(self.reader.refresh()['jobs'])
@@ -447,7 +474,7 @@ class DeliveryTests(unittest.TestCase):
         extra['production'].update(package='content/packages/pz-other/r01', revision='r01')
         catalog['entries'] = sorted(catalog['entries'] + [extra], key=lambda e: e['id'])
         put(self.repo, registry.REGISTRY, catalog)
-        commit(self.repo)
+        commit(self.repo); self.push()
         git(self.repo, 'checkout', '-q', self.branch)
         self.push()
         self.assertEqual(self.reader.refresh()['jobs'], [])
@@ -480,7 +507,7 @@ class DeliveryTests(unittest.TestCase):
         self.integrate()
         git(self.repo, 'checkout', '-q', 'main')
         (self.repo / self.delivery['manifest_ref']['file']).unlink()
-        commit(self.repo)
+        commit(self.repo); self.push()
         git(self.repo, 'checkout', '-q', self.branch)
         self.push()
         self.assertTrue(self.reader.refresh()['jobs'])
@@ -503,7 +530,7 @@ class DeliveryTests(unittest.TestCase):
                     git(self.repo, 'checkout', '-q', 'main')
                     git(self.repo, 'reset', '--hard', valid_main)
                     put(self.repo, name, malformed)
-                    commit(self.repo)
+                    commit(self.repo); self.push()
                     git(self.repo, 'checkout', '-q', self.branch)
                     self.push()
                     self.assertTrue(self.reader.refresh()['jobs'])
@@ -514,7 +541,7 @@ class DeliveryTests(unittest.TestCase):
             with self.subTest(field=field):
                 git(self.repo, 'reset', '--hard', self.delivery['registration'])
                 put(self.repo, self.delivery['record']['integration'][field]['file'], malformed)
-                historical = commit(self.repo)
+                historical = commit(self.repo); self.push()
                 record = deepcopy(self.delivery['record'])
                 record['integration']['commit'] = historical
                 for key in ('manifest', 'registry', 'runtime'):
@@ -526,9 +553,68 @@ class DeliveryTests(unittest.TestCase):
                 projection['record'] = {'commit': None, **ref}
                 put(self.repo, self.delivery['projection_file'], projection)
                 publish_pointer(self.repo, ID, 'r02')
-                commit(self.repo)
+                commit(self.repo); self.push()
                 active = self.reader.refresh()['jobs']
-                self.assertTrue(any(j['source'] == 'local' and j['revision'] == 'r02' for j in active))
+                self.assertTrue(any(j['source'] == 'remote' and j['revision'] == 'r02' for j in active))
+
+    def test_slim_sources_export_receipts_and_exact_historical_sources(self):
+        # All supported receipt generations; the O/R distinction stays explicit.
+        for receipt in (None, reveal.RECEIPT, reveal.BACKGROUND_RECEIPT, reveal.EDITOR_RECEIPT):
+            with self.subTest(receipt=receipt):
+                git(self.repo, 'branch', '-f', 'main', self.base)
+                git(self.repo, 'reset', '--hard', self.early)
+                self.delivery = delivery_fixture(self.repo, with_background=True)
+                self.integrate(receipt=receipt)
+                git(self.repo, 'checkout', '-q', 'main')
+                slim_sources(self.repo, self.delivery)
+                commit(self.repo)
+                git(self.repo, 'checkout', '-q', self.branch); self.push()
+                value = self.reader.refresh()
+                self.assertEqual(value['jobs'], [], value['completion'])
+                if receipt is not None:
+                    catalog = p.parse(GitSource(self.repo).read(value['completion']['main_commit'], registry.REGISTRY))
+                    receipt_hash = catalog['entries'][0]['production']['package_sha256']
+                    self.assertNotEqual(receipt_hash, self.delivery['manifest_ref']['sha256'])
+                    git(self.repo, 'checkout', '-q', 'main')
+                    slim_sources(self.repo, self.delivery, anchor=receipt_hash); commit(self.repo)
+                    git(self.repo, 'checkout', '-q', self.branch); self.push()
+                    self.assertEqual(self.reader.refresh()['jobs'], [])
+
+    def test_slim_sources_rehashed_foreign_anchor_runtime_and_missing_history_stay_visible(self):
+        self.integrate(receipt=reveal.RECEIPT)
+        git(self.repo, 'checkout', '-q', 'main')
+        slim_sources(self.repo, self.delivery); valid = commit(self.repo)
+        git(self.repo, 'checkout', '-q', self.branch); self.push()
+        self.assertEqual(self.reader.refresh()['jobs'], [])
+        from tools.puzzle_production import editor_change as editor
+        for change in ('foreign_anchor', 'runtime', 'identity', 'missing_source'):
+            with self.subTest(change=change):
+                git(self.repo, 'checkout', '-q', 'main'); git(self.repo, 'reset', '--hard', valid)
+                if change == 'runtime':
+                    value = p.parse((self.repo / registry.RUNTIME).read_bytes())
+                    value['entries'][0]['background']['image_revision'] += 1
+                    put(self.repo, registry.RUNTIME, value)
+                elif change == 'missing_source':
+                    (self.repo / bg.path(ID)).unlink()
+                else:
+                    value = p.parse((self.repo / reveal.path(ID)).read_bytes())
+                    if change == 'foreign_anchor': value['binding']['entry']['production']['package_sha256'] = 'e' * 64
+                    else: value['binding']['identity']['runtime_revision'] += 1
+                    value['record_hash'] = digest({k: v for k, v in value.items() if k != 'record_hash'})
+                    editor.validate_source(value)
+                    put(self.repo, reveal.path(ID), value)
+                commit(self.repo); git(self.repo, 'checkout', '-q', self.branch); self.push()
+                self.assertTrue(self.reader.refresh()['jobs'])
+        git(self.repo, 'branch', '-f', 'main', valid); self.push()
+        original = GitSource.read
+        def unavailable(source, sha, name, *args, **kwargs):
+            if sha == self.delivery['registration'] and name == reveal.path(ID):
+                raise ValueError('historical source unavailable, not absent')
+            return original(source, sha, name, *args, **kwargs)
+        with patch.object(GitSource, 'read', unavailable):
+            value = self.reader.refresh()
+        self.assertTrue(value['jobs'])
+        self.assertTrue(any('historical source unavailable' in e for e in value['errors']))
 
     def test_listing_only_reads_bounded_metadata_and_status_poll_never_runs_git(self):
         self.integrate()
@@ -553,6 +639,68 @@ class DeliveryTests(unittest.TestCase):
         with patch('tools.production_workspace.repository.git', side_effect=AssertionError('Git in status')):
             value = service.status()
         self.assertEqual(value['update']['state'], 'idle')
+
+
+class CompleteDeliveryBatchTests(unittest.TestCase):
+    def test_33_distinct_deliveries_duplicate_sources_and_original_guards(self):
+        """Real reader over tiny immutable in-memory Git-object views, no I/O matrix."""
+        from types import SimpleNamespace
+        from tools.production_workspace import deliveries
+        from tools.production_workspace.sources import LRU
+        with tempfile.TemporaryDirectory(prefix='pw3-a-batch-') as temporary:
+            root = Path(temporary)
+            snapshots = {}
+            def committed(root):
+                sha = format(len(snapshots) + 1, '040x')
+                snapshots[sha] = {f.relative_to(root).as_posix(): f.read_bytes() for f in root.rglob('*') if f.is_file()}
+                return sha
+            all_entries, all_runtime, histories = [], [], []
+            with patch(__name__ + '.commit', committed), patch(__name__ + '.git', return_value=b'content/pw/pz-batch'):
+                for number in range(33):
+                    identifier = f'pz-batch-{number:02}'
+                    d = delivery_fixture(root, puzzle_id=identifier)
+                    all_entries.append(d['entry']); all_runtime.extend(d['runtime']['entries']); histories.append(d)
+            put(root, registry.REGISTRY, {'format': registry.METADATA_FORMAT, 'entries': all_entries,
+                'backgrounds': [], 'metadata': [{'id': e['id'], 'name': 'Synthetic', 'category_id': 'synthetic'} for e in all_entries]})
+            put(root, registry.RUNTIME, {'format': registry.IMAGE_RUNTIME_FORMAT, 'entries': all_runtime})
+            main = committed(root)
+            class Source:
+                root = Path('synthetic-object-source')
+                def read(self, sha, name, limit=1024*1024, missing=False):
+                    if not name.endswith('.json'): raise AssertionError('nonmetadata byte read: ' + name)
+                    raw = snapshots[sha].get(name)
+                    if raw is None and not missing: raise ValueError('missing object')
+                    if raw is not None and len(raw) > limit: raise ValueError('oversize')
+                    return raw
+                def blob(self, sha, name, missing=False):
+                    raw = snapshots[sha].get(name)
+                    return io.checksum(raw) if raw is not None else None
+            source = Source()
+            repo = SimpleNamespace(cached=source, confirmed_main=main, scans=LRU(8*1024*1024))
+            repo.scan = lambda *args: Repository.scan(repo, *args)
+            jobs = []
+            for d in histories:
+                row = repo.scan(source, d['head'], d['entry']['id'])['jobs'][0]
+                binding = row.pop('_fingerprint')
+                job = {**row, 'commit': d['head'], '_source': source, 'binding': binding,
+                       'source': 'remote', 'ref': 'content/pw/' + row['puzzle_id']}
+                jobs.extend([job, {**job, 'ref': 'main'}])
+            # Copy 67 has the same outer proof but altered originals: keep it.
+            damaged = {**jobs[0], 'commit': 'f' * 40}
+            snapshots[damaged['commit']] = dict(snapshots[jobs[0]['commit']])
+            snapshots[damaged['commit']][damaged['_record']['package']['file']] = b'changed original'
+            jobs.append(damaged)
+            with patch.object(deliveries.Deliveries, 'historical_jobs', autospec=True,
+                              side_effect=deliveries.Deliveries.historical_jobs) as prove, \
+                 patch('tools.production_workspace.sources.Archive', side_effect=AssertionError('ZIP')), \
+                 patch.object(p, 'image', side_effect=AssertionError('image')), \
+                 patch('tools.production_workspace.projector.complete', side_effect=AssertionError('writer')):
+                remaining, result = deliveries.active(repo, [{'source':'remote','ref':'main','commit':main}], jobs)
+            self.assertEqual(prove.call_count, 33, 'identical delivery proofs are deduplicated')
+            self.assertEqual(remaining, [damaged])
+            self.assertEqual(result['hidden_count'], 66)
+            self.assertEqual(len(result['completed_ids']), 32)
+            self.assertTrue(result['unresolved'])
 
 
 if __name__ == '__main__':

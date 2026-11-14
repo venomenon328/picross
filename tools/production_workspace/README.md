@@ -187,21 +187,26 @@ Der Regressionstest vergleicht die eingebetteten Bytes mit den Quellen.
 
 ## Bedienung und Quellenstatus
 
-Das Hauptdropdown enthält genau ein Motiv pro Rätsel-ID. Die getrennte
-Versionsansicht zeigt Phase, Revision, Herkunft und Aktualität. Titelgleiche IDs
-bleiben unterscheidbar. Die eindeutig aktuelle Ansichtsübergabe steht zuerst und
-öffnet automatisch; bei fehlendem/ungültigem Pointer oder Konflikt bewusst eine
-Version wählen. Kein Raten nach Phase oder Revisionsnummer. Bytegleiche Versionen
-erscheinen einmal mit „Lokal und Remote“; darunter bleibt die konkrete Quelle
-auswählbar. Erst deren ausdrückliche Remotequellwahl aktiviert gegebenenfalls P2.
-[Geschlossener Aktualitäts-/Publikationsvertrag](../../docs/PRODUCTION_CURRENT_VIEW.md). Lokale Motivbriefings samt „Entwurf verwerfen“
-sind davon getrennte Browserentwürfe.
+Das Hauptdropdown enthält genau eine offene Produktion pro Rätsel-ID mit Titel
+und aktueller Phase; titelgleiche IDs bleiben unterscheidbar. Im bewusst
+konfigurierten Remotebetrieb führen nur Remotequellen. Die gültige Spitze von
+`content/pw/<puzzle_id>` öffnet direkt, auch bei lokalen Vorsprüngen, Divergenzen
+oder einer früheren veröffentlichten Korrekturphase. Tatsächlich offene Main-only-
+Arbeit bleibt sichtbar. Die untergeordneten Versions-/Quelldetails dienen der
+gezielten Remoteversionswahl bei fehlendem/defektem Pointer und der konkreten
+Quellwahl für P2. Automatisches Öffnen aktiviert keine Entfernung.
+[Ansichtsvertrag](../../docs/PRODUCTION_CURRENT_VIEW.md).
 
-Synchron/Lokal neuer/Remote neuer beruhen auf bestätigter Git-Abstammung.
-Divergenz, unterschiedliche Bytes und nach begrenztem Metadatennachladen unbekannte
-Historie ergeben keinen Sieger. Offline bleibt der alte Snapshot lesbar, samt
-„Remote nicht aktuell bestätigt“, Fehler und letzter Cachezeit. Unbestätigte Quellen
-erlauben keinen Cloudauftrag. Fehlende Pointer lassen sich vom beauftragten Akteur
+„Neues Motiv“ bleibt der Einstieg vor Veröffentlichung. Unter „Gespeicherte
+Motivtexte“ lassen sich lokale Eingaben ausdrücklich öffnen oder verwerfen;
+sie erscheinen nicht als laufende Produktionen. Keine Titelzuordnung, automatische
+Löschung oder alte Entwurfsöffnung bei Appstart/leerem Ergebnis. Der bewusst
+lokale Diagnosebetrieb bleibt lokal eingerichtet. Im Remotebetrieb sind lokale
+Refs weiter für P2/Diagnose lesbar, ohne Produktionsalternativen zu erzeugen.
+
+Offline bleibt der alte Remotesnapshot lesbar, samt „Remote nicht aktuell
+bestätigt“, Fehler und letzter Cachezeit. Unbestätigte Quellen erlauben keinen
+Cloudauftrag. Fehlende Pointer lassen sich vom beauftragten Akteur
 für eine vollständige Revision gezielt publizieren:
 
 ```text
@@ -257,7 +262,13 @@ dies öffnet keine ZIPs/Bilder und führt keine Solver-/Proofprüfung aus. Regul
 Merge, Squash und unveränderte Sammelübernahme werden gleich behandelt. Bestätigte
 Lieferungen, identische Kopien und eindeutig zugehörige alte Schritte verschwinden
 aus der aktiven Liste. Eine offene neue Revision oder spätere Bildarbeit derselben
-ID bleibt sichtbar. Unklare Zuordnung wird nicht als Abschluss geraten.
+ID bleibt sichtbar. Unklare Zuordnung wird nicht als Abschluss geraten. Aktive Reveal-v4- und
+Hintergrund-v6-Quellen werden rein lesend gegen Originalexport/Receipt und Runtime
+abgeglichen; O/R bleiben verschieden. Exakte Quellmetadaten am gebundenen
+Integrationscommit erlauben alte Branchkopien, kein beliebiger gemeinsamer
+Exportanker. Mehr als 32 Abschlüsse werden vollständig verarbeitet; identische
+Lieferbelege werden dedupliziert, konkrete Originalquellen einzeln geprüft.
+Fehlende Belege erscheinen konkret als Fehler und halten betroffene Arbeit offen.
 
 Eine lokale Mainkopie, Cachezeit oder erfolgreiche Suche nur anderer Refs bestätigt
 keine Mainintegration. Ohne frischen tatsächlichen Mainbezug bleibt betroffene
@@ -265,8 +276,8 @@ Arbeit sichtbar; ein bewusst abgewählter Mainref wird nicht zusätzlich geladen
 Die Liste erklärt diesen Zustand. Passive Suche lässt auch eine inzwischen
 abgeschlossene geöffnete Quelle samt Bildern und ungesendeten Eingaben stehen.
 Erst „Neueren Stand laden“ meldet deren belegten Entfall und übernimmt offene Arbeit
-derselben ID, eine andere Produktion oder den leeren aktiven Zustand. Browserentwürfe
-bleiben eigenständig gespeichert. Es werden dabei keine Dateien oder Refs gelöscht.
+derselben ID, eine andere Produktion oder den leeren aktiven Zustand. Gespeicherte Motivtexte
+bleiben eigenständig gespeichert und werden nicht automatisch geöffnet. Es werden dabei keine Dateien oder Refs gelöscht.
 
 Nur lokale Nachweise, im konfigurierten Remote gefundene Commits, Zeitpunkt der
 letzten Synchronisierung und Remote-/Offlinefehler sind getrennt sichtbar.
