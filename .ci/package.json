@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/602",
-  "package": "Fliegenpilz-r07-Schritt5-Integration",
+  "package": "Fliegenpilz-r07-Schritt5-INT-B02-v9",
   "modules": [],
-  "purpose": "Unveränderte endabgenommene Fliegenpilz-r07-Lieferung mit aktuellem main frisch exportieren, planen und registrieren; Quellen- und Planintegrität im CI-Kern.",
-  "omitted": "Reine Rätselinhalte und Produktionsabschlussdaten: kein Player-Build, keine zusätzlichen Fachmodule, Browserläufe oder neuen rätselspezifischen Tests. Gültige unveränderte Bild-, Raster-, Proof- und 0.4-Bewertungsbelege wiederverwenden.",
+  "purpose": "Unveränderte Endabnahme gegen aktuelles main frisch exportiert und geplant. Native Registrierung an bestehender v9-P5-Dispatchlücke gescheitert; vollständigen Rollback, Originalbindungen und Diagnose sichern. Unabhängiges Review; kein Merge bei offenem Inhaltsgate.",
+  "omitted": "Reine Produktions- und Diagnosebelege: modules=[], evidence.mode=none; kein Player-Build, Browser, neue Rätseltests, Werkzeugpatch oder wiederholter Bestandsreplay. Unveränderte Proof-/Bild-/0.4-Analysebelege bleiben erhalten. Kein Mainabschluss oder vorgezogener Authoring-§9-Cleanup.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
