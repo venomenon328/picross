@@ -1,5 +1,144 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+> **PE-EDIT2:** Normale Bestandsbearbeitung verwendet jetzt
+> [`editor_cli`](editor_cli.py) und [`editor_change`](editor_change.py) nach
+> [PE §13](../../docs/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+> `list`, `detail --id`, `plan --request --output`, `apply --plan`, `recover`
+> verwenden `--target-root`; Request `picross-editor-request-v2` enthält keine
+> Herkunfts-/Akteurfelder. Die unten dokumentierten alten A1/A2/A3-Datenformen
+> bleiben explizite Alt-/Recoverykompatibilität. Aktuelle CLI-Planrouten nutzen
+> den schlanken Vertrag. Runtime-/Quellmigration erfolgen ausschließlich extern
+> nach [#641](https://github.com/venomenon328/picross/issues/641), nie in der App.
+
+
+## PE-A3: geprüfte manuelle Rasterrevision
+
+Vertrag vor konsumierendem Code, 13.11.2026, gemäß
+[PE §9](../../docs/PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag).
+`python -m tools.puzzle_production.raster_cli` bietet `view --checkout ROOT --id ID`,
+`plan --checkout ROOT --request REQUEST --output-dir NEW`,
+`apply --checkout ROOT --bundle BUNDLE` und `recover --checkout ROOT`.
+View liefert den aktuellen numerischen Rastertext und die vorhandene Palette.
+Plan liest `picross-editor-raster-request-v1` nach PE §9.1, prüft Matrix und
+aktuelles Reveal, erzeugt vollständigen Proof samt unabhängiger Prüfung sowie
+aktuelle Bewertung und bindet alle Originale im neuen externen Bundle.
+Apply übernimmt ausdrücklich genau dieses frisch geprüfte Bundle in einer
+gemeinsamen Transaktion einschließlich optionaler A1/A2-Felder. Alle vier
+geschlossenen neuen Formen und ihre exakten Felder stehen in PE §9;
+keine künstlichen Authoringfreigaben. Recovery rollt ausschließlich auf den
+validierten Altstand zurück. Exit 0 Erfolg/No-op, 2 Eingabe/Stale/Belegfehler,
+4 Ressourcenabbruch. Je Aufruf 300 s; keine RI-Budgetoptionen.
+V4/v8 ist Voraussetzung; v7 verlangt zuerst die vorhandene explizite
+`images_cli plan-migration/apply-migration`. Keine echte Bestandsmigration
+durch Rasterpflege. Gleiche Logik bleibt revisionsgleich ohne Solverlauf.
+Saves werden erst durch den regulären Spieler nach dem geschlossenen
+[Savevertrag](../../docs/PROTOTYPE_P1.md#6-speicherung-und-wiederaufnahme)
+gezielt und abbruchsicher behandelt; keine Tests an echten Nutzerprofilen.
+
+## PE-A1: aktuelle Namen und Kategorien
+
+[`metadata_cli`](metadata_cli.py) pflegt vorhandene registrierte IDs gemäß
+[PE-A1](../../docs/PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag).
+Aktuelle Namen und Kategorien stehen in Inhaltsregistry v4; Runtime v7 ist die
+geprüfte Projektion; nach der ausdrücklichen PE-A2-Migration bleibt Runtime v8 erhalten. Definitions-/Bildbytes, Rasterrevisionen, Ratings, Added und
+historische Produktionsbelege werden bei dieser Pflege nicht neu geschrieben.
+Die gemeinsame API liegt in [`catalog_metadata`](catalog_metadata.py).
+
+Alle Aufrufe laufen vom Repositoryroot. `CHECKOUT` ist der explizite lokale
+Zielcheckout. Plan-/Operationsdateien sind UTF-8-JSON. `--output` schreibt eine
+neue Datei außerhalb des Zielcheckouts als UTF-8 ohne BOM und überschreibt
+keine vorhandene Datei; ohne diese Option steht das JSON auf stdout.
+
+```text
+python -m tools.puzzle_production.metadata_cli view --target-root CHECKOUT
+python -m tools.puzzle_production.metadata_cli plan-migration --target-root CHECKOUT --output MIGRATION.json
+python -m tools.puzzle_production.metadata_cli apply --target-root CHECKOUT --plan MIGRATION.json
+python -m tools.puzzle_production.metadata_cli plan --target-root CHECKOUT --operations OPERATIONS.json --output PLAN.json
+python -m tools.puzzle_production.metadata_cli apply --target-root CHECKOUT --plan PLAN.json
+python -m tools.puzzle_production.metadata_cli recover --target-root CHECKOUT
+```
+
+`view` ist lesend und zeigt alle aktuellen Autorenmetadaten. Eine v4-Ansicht
+öffnet nur Registry und Kategorienquelle. Die API `MetadataView(root)` baut
+einmal die ID-Zuordnung auf; `lookup(id)` und `document()` liefern anschließend
+abgetrennte Speicheransichten ohne weitere Datei-, Bild- oder Proofzugriffe.
+
+Die explizite Migration validiert v2/v3 und schreibt ausschließlich die beiden
+Registrydateien. Ein bereits gültiger v4/v7-Bestand bleibt unverändert. Normale
+mutierende Writer verlangen danach v4 mit Runtime v7 oder v8 und migrieren nicht nebenbei. Alte
+gebundene Journale zuerst über ihren gemeinsamen Recoveryweg auflösen.
+
+Eine Operationsdatei enthält eine Liste. Beispiel mit einer zuvor aus `view`
+gelesenen ID und aktuell vorhandener Kategorie:
+
+```json
+[
+  {"op": "set_metadata", "id": "pz-beispiel", "name": "Neuer Motivname", "category_id": "voegel"}
+]
+```
+
+`set_metadata` verlangt mindestens Name oder Kategorie. Weitere Operationen
+sind `category_create` mit `name`, `category_rename` mit `id,name` sowie
+`category_delete` mit `id` und optionalem `reassign_to`. Der Plan vergibt bei
+Kategorieanlage eine stabile ID und hängt den internen Ordnungswert an.
+Eine belegte Kategorie kann nur mit einer anderen vorhandenen Ersatzkategorie
+gelöscht werden; sämtliche betroffenen Rätsel werden in derselben Transaktion
+neu zugeordnet. Ihre historischen Kategorieangaben bleiben erhalten.
+
+Planen schreibt keinen Inhalt. Vor Übernahme `changes` und `files` prüfen;
+die Übernahme bindet auch die unveränderten Quellen und deren Abwesenheiten.
+Eine zwischenzeitliche Bearbeitung verlangt einen frischen Plan. Identische
+aktuelle Werte ergeben beim erneuten Planen einen No-op ohne neue Bytes oder
+mtimes. Offene Journale/Locks verhindern auch einen konkurrierenden No-op.
+Recovery stellt den vollständigen alten Zustand wieder her und schützt fremde
+Änderungen. Es gibt keine zusätzliche Metadatenhistorie oder freie Registry-API.
+Rückgabecodes: 0 erfolgreich, 2 ungültiger Eingang/Konflikt, 4 Ressourcenabbruch.
+Rasterpflege verwendet den eigenen PE-A3-Vertrag oben; die Weboberfläche folgt in PE-B.
+
+## PE-A2: vorbereitete Bilder und Hintergrundpräferenzen
+
+[`images_cli`](images_cli.py) und die gemeinsame API
+[`catalog_images`](catalog_images.py) pflegen genau eine bereits registrierte ID
+gemäß dem [geschlossenen PE-A2-Vertrag](../../docs/PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag).
+Ein Request kann Abschlussbild, Hintergrundpräferenz sowie aktuellen Namen und
+Kategorie gemeinsam ändern. Kategorieanlage/-umbenennung bleibt bei `metadata_cli`.
+
+```text
+python -m tools.puzzle_production.images_cli view --target-root CHECKOUT --id PUZZLE_ID
+python -m tools.puzzle_production.images_cli plan-migration --target-root CHECKOUT --output MIGRATION.json
+python -m tools.puzzle_production.images_cli apply --target-root CHECKOUT --plan MIGRATION.json
+python -m tools.puzzle_production.images_cli plan --target-root CHECKOUT --request INPUT/request.json --output BUNDLE
+python -m tools.puzzle_production.images_cli apply --target-root CHECKOUT --plan BUNDLE/plan.json
+python -m tools.puzzle_production.images_cli recover --target-root CHECKOUT
+```
+
+Die ausdrückliche Migration schreibt ausschließlich die Runtimeprojektion von v7
+nach v8; eine Wiederholung ändert keine Bytes oder mtimes. Ohne Migration wird
+Bildpflege abgewiesen. Normale Folgeoperationen erhalten v8.
+
+Der UTF-8-Request `picross-editor-images-request-v1` hat genau die Felder
+`format,id,metadata,reveal,background,decision`. Nicht gewählte Bereiche sind
+`null`; mindestens ein Bereich muss gewählt sein. Bildrefs binden relative Datei,
+SHA-256 und Bytezahl. Die tatsächliche manuelle Entscheidung nennt handelnde
+Person, UTC-Zeitpunkt und Erklärung; Bildprovenienz nennt Urheber, Nutzungsgrundlage,
+Quelle und Änderungen. Die vollständigen Feldformen stehen im Fachvertrag.
+
+Abschlussbilder sind bereits vorbereitete PNGs oder lokale SVGs. Hintergrundbilder
+sind bereits vorbereitete PNGs mit genau 2304×576 Pixeln, transparenten und
+sichtbaren Bereichen und der festgelegten Farbdarstellung. Der Writer übernimmt
+die geprüften Bytes unverändert. `standard` folgt der aktuellen Kategoriezeichnung,
+`selected` bindet das eigene Bild, `none` unterdrückt den Hintergrund.
+
+`INPUT`, `BUNDLE` und Migrationsplan liegen außerhalb des Zielcheckouts. `plan`
+erzeugt einen neuen geschlossenen Ordner mit `plan.json`, gebundenem `request.json`,
+den benötigten `input/`-Dateien und früheren Bildbytes in `previous/`. Nach der
+Planung darf der ursprüngliche Inputordner entfallen. Vor `apply` sind Vorschau,
+Dateiliste und Entscheidung zu prüfen. Fremde Zusatzdateien, veränderte Quellen,
+offene Journale sowie Pfad- und Dateikollisionen verhindern die Übernahme.
+Die gemeinsame Transaktion veröffentlicht die Runtime zuletzt; Recovery stellt
+ausschließlich den geprüften alten Zustand wieder her. Gleiche aktuelle Werte
+und eine identische Wiederholung bleiben No-ops.
+
 ## #596/C · Feste Rasterableitung
 
 Der vor Code festgelegte [Vertrag](../../docs/FIXED_RASTER.md) definiert die

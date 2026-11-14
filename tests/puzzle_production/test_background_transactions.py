@@ -68,7 +68,7 @@ class BackgroundTransactionTests(unittest.TestCase):
                 self.root = self.clone(choice, choice)
                 f = self.examples[choice]
                 j = f.journal
-                self.assertEqual(j["format"], tx.BACKGROUND_FORMATS["registration"])
+                self.assertEqual(j["format"], tx.PE_FORMATS["registration"])
                 self.assertEqual(set(j), {"format", "operation", "old", "new", "retained", "additions", "report_run", "replacements"})
                 self.assertEqual(j["replacements"], {})
                 identifier = f.manifest["definition_id"]
@@ -84,7 +84,7 @@ class BackgroundTransactionTests(unittest.TestCase):
                 self.assertEqual(boundaries, ["G0", "G2", "G5a", "G5b", "G6"])
                 registry = cr.check_checkout(self.root, replay=True)
                 runtime = json.loads((self.root / tx.RUNTIME).read_bytes())
-                self.assertEqual(registry["format"], bg.REGISTRY_FORMAT)
+                self.assertEqual(registry["format"], cr.METADATA_FORMAT)
                 self.assertEqual(runtime["entries"][0]["background"]["status"], choice)
                 captured = tx.capture(self.root)
                 self.assertIn(bg.path(identifier), captured["texts"])
@@ -210,19 +210,34 @@ class BackgroundTransactionTests(unittest.TestCase):
         def capture(root, journal, additions, **kwargs):
             stage = kwargs["_verification"].stage
             captured["additions"] = {n: exported / p.relative_to(stage) for n, p in additions.items()}
-            changes = {n: raw.encode() if raw is not None else None for n, raw in journal["new"].items() if raw != journal["old"][n]}
-            captured["journal"] = tx.prepare(root, tx.capture(root), changes, operation="registration",
-                                             additions=captured["additions"], generation="sd2")
+            captured["journal"] = deepcopy(journal)
         with patch.object(tx, "execute", side_effect=capture):
             cr.registration(exported, base, apply=True, difficulty=difficulty_for_export(exported))
+        from tests.puzzle_production.catalog_fixtures import pre_metadata_journal
+        historical = pre_metadata_journal(captured["journal"], base)
+        changes = {n: raw.encode() if raw is not None else None for n, raw in historical["new"].items()
+                   if raw != historical["old"][n]}
+        captured["journal"] = tx.prepare(base, tx.capture(base), changes, operation="registration",
+                                         additions=captured["additions"], generation="sd2")
         self.assertEqual(captured["journal"]["format"], tx.FORMATS["registration"])
         self.assertNotIn(bg.CAPABILITY, captured["journal"]["old"])
         for mutation in ("false", "missing", "true", "foreign-source"):
             with self.subTest(mutation=mutation):
                 root = self.home / ("legacy-" + mutation)
                 shutil.copytree(base, root)
-                with self.assertRaises(InterruptedError):
-                    pub.execute(root, deepcopy(captured["journal"]), captured["additions"], fail_step="crash-index")
+                # Explicit historical interrupted-state fixture. Current public
+                # writers must not perform a new mutation on this old catalog.
+                journal = deepcopy(captured["journal"])
+                for name, original in captured["additions"].items():
+                    target = root / name
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(original, target)
+                for name, raw in journal["new"].items():
+                    if name != tx.RUNTIME and raw is not None:
+                        target = root / name
+                        target.parent.mkdir(parents=True, exist_ok=True)
+                        target.write_bytes(raw.encode())
+                (root / tx.LOCK).write_bytes(pub.journal_bytes(journal))
                 if mutation == "missing": (root / bg.CAPABILITY).unlink()
                 elif mutation == "true": capability(root, True)
                 elif mutation == "foreign-source":

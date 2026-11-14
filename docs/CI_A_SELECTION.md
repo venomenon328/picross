@@ -35,6 +35,11 @@ dem bestehenden Producerinventar bereit. Interne synthetische ZA-1-Checkouts
 bleiben Arbeitsdaten; der unveränderte Reader prüft die Originalbelege weiterhin
 exakt gegen deklarierte Dateiliste, Hashes und Pflichtumfang.
 Nur eine aktuelle befristete Evidenceanforderung bewirkt einen technischen Upload.
+In Package CI läuft jede angeforderte Fachgruppe auf einem eigenen isolierten
+Runner; ihr vollständiger Producer/Reader bindet weiterhin denselben Gesamtplan,
+Quellhead und Testmerge. Test- und Fixturebeginn/-ende sowie 30-sekündige echte
+Operationszähler stehen live im Joblog. Die Trennung verändert weder Discovery
+noch Prüfinhalt und benötigt keinen technischen Transport zwischen Jobs.
 Ein positives Joblabel oder eine leere Gruppe ersetzt diese Prüfung nicht.
 
 Alle Fachtests verwenden feste synthetische Eingänge. Der echte Katalog wird

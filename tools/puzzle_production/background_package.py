@@ -275,7 +275,7 @@ def _readiness(manifest, decision, candidate, derivation):
 
 def _change_context(reads, location, manifest, request, source, entry):
     """Bind preserved real reveal authority only for the HP-I1b2 request path."""
-    from . import catalog_background as bg
+    from . import catalog_background as bg, background_request as requests
     source = bg.validate(source, entry)
     source_ref = bg.ref(bg.path(entry["id"]), bg.encoded(source))
     ap.require(request["target"] == {"source": source_ref, "origin_sha256": bg.origin_hash(source),
@@ -285,6 +285,21 @@ def _change_context(reads, location, manifest, request, source, entry):
     context = manifest["context"]
     ap.require(context["reveal"] is not None and context["reveal_approval"] is not None,
                "Background change requires retained source and reveal context")
+    if request["format"] == requests.IMAGE_FORMAT:
+        active = requests.current_context(reads.roots["package"], entry)
+        ap.require(request["context"] == active, "Background request has a stale reveal context")
+        if active["source"] is not None:
+            authority = reads.read(("package", "."), active["source"], limit=bg.LIMIT, assemble=False)
+        else:
+            authority = bg.encoded(active["production"])
+        copied = reads.read(location, context["reveal_approval"], limit=bg.LIMIT)
+        ap.require(copied == authority, "Background context copy differs from the current reveal authority")
+        live = reads.read(("package", "."), active["reveal"], assemble=False)
+        ap.require(context["reveal"]["sha256"] == active["reveal"]["sha256"] and
+                   context["reveal"]["bytes"] == active["reveal"]["bytes"] and
+                   reads.read(location, context["reveal"]) == live,
+                   "Background reveal copy differs from the current effective reveal")
+        return
     copied = reads.read(location, context["reveal_approval"], limit=bg.LIMIT)
     ap.require(copied == actual, "Background context authority is not the current source bytes")
     reveal = context["reveal"]

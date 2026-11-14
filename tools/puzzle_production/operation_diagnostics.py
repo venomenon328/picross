@@ -63,6 +63,10 @@ def phase(name):
     d.emit()
     try:
         yield
+    except BaseException:
+        if not getattr(d, "failure_phase", None):
+            d.failure_phase = phase_path(d)
+        raise
     finally:
         row["seconds"] += time.monotonic() - at
         d.stack.pop()
@@ -266,6 +270,9 @@ def begin_segment(name):
     active = frame.get()
     if active is not None and active.segment != name:
         active.next_segment(name)
+    observer = current.get()
+    if active is None and observer is not None and hasattr(observer, "begin_segment"):
+        observer.begin_segment(name)
 
 
 
@@ -376,7 +383,7 @@ def _early_registration(raw, *, staged=False):
     if fields is None:
         return False
     fmt = fields.get("format")
-    modern = fmt in (tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    modern = fmt in (tx.IMAGE_FORMATS["registration"], tx.PE_FORMATS["registration"], tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
     previous = fmt in (tx.PREVIOUS_FORMATS["registration"], tx.LEGACY_FORMATS["registration"])
     if staged and not modern:
         return False
@@ -432,7 +439,7 @@ def classify(root, *, on_registration=None):
         # The historical decoder still enforces its complete closed schema.
         op = "update"
     else:
-        maps = (tx.REBIND_FORMATS, tx.BACKGROUND_FORMATS, tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS)
+        maps = (tx.IMAGE_FORMATS, tx.PE_FORMATS, tx.REBIND_FORMATS, tx.BACKGROUND_FORMATS, tx.FORMATS, tx.AT_FORMATS, tx.PREVIOUS_FORMATS, tx.LEGACY_FORMATS)
         op = j.get("operation")
         require(isinstance(op, str) and any(m.get(op) == fmt for m in maps), "Unsupported recovery journal format/operation")
         exact_keys(j, {"format", "operation", "old", "new", "retained", "additions", "report_run"} |

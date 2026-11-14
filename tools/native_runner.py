@@ -1,5 +1,6 @@
 """Run independent native groups, retaining progressive evidence even on failure."""
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 import json
 import os
 from pathlib import Path
@@ -7,10 +8,35 @@ import platform
 import shutil
 import subprocess
 import sys
+import threading
 import time
 
 from native_contract import GROUPS, coverage
 from p1_evidence import source_identity, now
+
+
+@contextmanager
+def activity(group, directory):
+    """Expose existing progressive phase evidence; never substitutes a result."""
+    stopped = threading.Event()
+    started = time.monotonic()
+    def observe():
+        while not stopped.wait(30):
+            row = {'group': group, 'seconds': round(time.monotonic()-started, 3)}
+            try:
+                report = json.loads((directory/'product-report.json').read_text(encoding='utf-8'))
+                row.update(phase=report.get('active_phase'),
+                           completed_checks=sum(check.get('status') == 'success' for check in report['checks']))
+            except (OSError, ValueError, KeyError, TypeError):
+                row['phase'] = 'setup or report update'
+            print('NATIVE ACTIVITY ' + json.dumps(row, sort_keys=True), flush=True)
+    worker = threading.Thread(target=observe, daemon=True)
+    worker.start()
+    try:
+        yield
+    finally:
+        stopped.set()
+        worker.join()
 
 
 def cached_archives_ready(cache, host):
@@ -85,7 +111,7 @@ def run(args):
                    '--download-timeout-seconds', str(args.download_timeout_seconds)]
         env = os.environ.copy()
         print('NATIVE GROUP START '+group, flush=True)
-        with log.open('wb') as stream:
+        with log.open('wb') as stream, activity(group, technical/group):
             completed = subprocess.run(command, env=env, stdout=stream, stderr=subprocess.STDOUT)
         print('NATIVE GROUP END '+group+' exit='+str(completed.returncode), flush=True)
         return dict(group=group, exit_code=completed.returncode,

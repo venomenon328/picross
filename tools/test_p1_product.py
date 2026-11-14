@@ -281,6 +281,23 @@ class ProductHarnessTests(unittest.TestCase):
             self.assertEqual((project / "art/content/new.png").read_bytes(), b"opaque bytes")
             self.assertTrue(restore_player_catalog(source, project))
 
+    def test_legacy_geometry_append_rejects_current_background_shapes_before_writes(self):
+        from product_fixtures import install_runtime_fixtures
+        import json
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary)
+            (project / "data").mkdir()
+            path = project / "data/registry.json"
+            for version in (6, 7):
+                raw = json.dumps(dict(format=f"picross-runtime-registry-v{version}", categories=[], entries=[])).encode()
+                path.write_bytes(raw)
+                with self.subTest(version=version), self.assertRaisesRegex(ValueError, "Legacy geometry IDs"):
+                    install_runtime_fixtures(root, project, append=True)
+                self.assertEqual(path.read_bytes(), raw)
+                self.assertEqual([p.relative_to(project).as_posix() for p in project.rglob('*') if p.is_file()],
+                                 ["data/registry.json"])
+
     def test_regular_identity_and_study_exclusions_survive_project_move(self):
         root = Path(__file__).resolve().parents[1] / "game"
         project = (root / "project.godot").read_text(encoding="utf-8")

@@ -18,8 +18,10 @@ except ImportError:
     from tests.puzzle_production.test_catalog_reveal import RevealTests, snapshot
 
 
-def pre_background_journal(journal):
+def pre_background_journal(journal, root=None):
     """Build old fixtures only from strictly compatible inactive source views."""
+    from tests.puzzle_production.catalog_fixtures import pre_metadata_journal
+    journal = pre_metadata_journal(journal, root)
     for side in ('old', 'new'):
         texts = {name: raw.encode() if raw is not None else None for name, raw in journal[side].items()}
         historical = tx.pre_background_snapshot({'texts': texts, 'retained': journal['retained']})
@@ -190,7 +192,7 @@ else: c.recover(Path(root))
         with self.assertRaises(InterruptedError):cr.registration(self.exported,empty,apply=True,difficulty=difficulty_for_export(self.exported),fail_step='crash-index')
         original=io.json_bytes((empty/tx.LOCK).read_bytes(),pub.LIMIT)
         for format in (tx.LEGACY_FORMATS['registration'],tx.PREVIOUS_FORMATS['registration']):
-            root=self.root/format;shutil.copytree(empty,root);j=pre_background_journal(deepcopy(original))
+            root=self.root/format;shutil.copytree(empty,root);j=pre_background_journal(deepcopy(original),root)
             j['format']=format;j.pop('replacements')
             legacy=format==tx.LEGACY_FORMATS['registration']
             for side in ('old','new'):
@@ -229,11 +231,12 @@ else: c.recover(Path(root))
             if legacy:(root/added.path(self.identifier)).unlink();cr.sync_runtime(root)
             from tools.puzzle_production import catalog_method as method
             registry=cr.check_checkout(root)
-            write_json(root/tx.RUNTIME,cr.projection(registry,load_json(root/tx.categories.PATH),root,version=4))
             captured=tx.capture(root);old={n:b for n,(b,_) in snapshot(root).items()}
             with self.assertRaises(InterruptedError):
                 update(exported,root,self.entry['production']['definition_sha256'],apply=True,rebind_difficulty=True,fail_step='crash-content/registry.json')
-            j=pre_background_journal(io.json_bytes((root/tx.LOCK).read_bytes(),pub.LIMIT));j['format']=format;j.pop('replacements')
+            j=pre_background_journal(io.json_bytes((root/tx.LOCK).read_bytes(),pub.LIMIT),root);j['format']=format;j.pop('replacements')
+            captured['texts']={n:b.encode() if b is not None else None for n,b in j['old'].items()}
+            captured['registry']=json.loads(j['old'][tx.REGISTRY])
             j['retained']=tx.historical_snapshot(captured)['retained']
             for side in ('old','new'):
                 j[side].pop(method.PATH)
@@ -242,6 +245,8 @@ else: c.recover(Path(root))
                     j[side].pop(added.path(self.identifier))
                 j[side][tx.RUNTIME]=tx.projection(j[side],json.loads(j[side][tx.REGISTRY]),version=3 if legacy else 4).decode()
             (root/tx.RUNTIME).write_text(j['old'][tx.RUNTIME],encoding='utf-8',newline='\n')
+            old[tx.REGISTRY]=j['old'][tx.REGISTRY].encode()
+            old[tx.RUNTIME]=tx.projection(j['old'],json.loads(j['old'][tx.REGISTRY]),version=4)
             (root/tx.LOCK).write_bytes(canonical_bytes(j)+b'\n')
             foreign=root/source.path(self.identifier);foreign.parent.mkdir(exist_ok=True);foreign.write_bytes(b'foreign AT\n')
             before=snapshot(root)
@@ -257,7 +262,9 @@ else: c.recover(Path(root))
             root=self.root/format;shutil.copytree(self.checkout,root)
             legacy=format==tx.LEGACY_FORMATS['sync']
             if legacy:(root/added.path(self.identifier)).unlink();cr.sync_runtime(root)
-            captured=tx.capture(root);j=tx.prepare(root,captured,{},operation='sync',generation='sd2')
+            captured=tx.capture(root);j=pre_background_journal(tx.prepare(root,captured,{},operation='sync'),root)
+            captured['texts']={n:b.encode() if b is not None else None for n,b in j['old'].items()}
+            captured['registry']=json.loads(j['old'][tx.REGISTRY])
             j['format']=format
             if format!=tx.FORMATS['sync']:
                 for side in ('old','new'):
