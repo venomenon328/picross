@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/619",
-  "package": "Marienkaefer-r04-Schritt4-background-review",
+  "package": "Marienkaefer r05: Korrektur der gewaehlten Kontextzeichnung",
   "modules": [],
-  "purpose": "Bytegebundene Rasterwahl MK-R-r03 und drei isolierte ImageGen-Kontextoriginale als background_review nach Authoring 0.8.0 Rev7. Q-HG03 bei allen nicht erfüllt: native 3:1-Leinwand statt 4:1, Korrekturbedarf offen. Reine Authoringdaten: buildfreier docs-/ci-required-Quellen-/Plankern.",
-  "omitted": "Keine Werkzeug-, Spiel-, CI-, Solver- oder Rasteränderung. Unveränderte Proof-/Difficulty-/Bildbelege erhalten; neuer geschriebener ZIP durch regulären Builder frisch geprüft und separat inspiziert. Keine Hintergrundwahl, HP-W2-Ableitung, Endabnahme, Integration, Browser oder Player-Build. Draft-PR ohne Merge.",
+  "purpose": "Neue Hintergrundrevision nach ausdruecklichem Korrekturauftrag sichern und als background_review zur erneuten Auswahl vorlegen. Reine Produktionsdaten: buildfreier Quellen-/Plankern docs/ci-required.",
+  "omitted": "Keine Werkzeug-, Spiel-, CI-, Raster-, Reveal- oder Difficultyaenderung. Unveraenderte qualifizierte Raster-/Proof-/Bildbelege weiterverwenden. Keine HP-W2-Kandidatenableitung, Endabnahme neuer Bildbytes, Registrierung, Merge, Browser oder Player-Build.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
