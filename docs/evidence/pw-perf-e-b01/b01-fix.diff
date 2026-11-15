@@ -1,0 +1,111 @@
+diff --git a/.ci/package.json b/.ci/package.json
+index fed81cca..30a8ff88 100644
+--- a/.ci/package.json
++++ b/.ci/package.json
+@@ -6,13 +6,13 @@
+     "production.catalog",
+     "production.adapter"
+   ],
+-  "purpose": "PW-PERF-E K01–K08: ausgewählte Retirementreader, aktuelle Quellen und Receipt v4; production.catalog für Lifecycle/Guards, production.adapter für tatsächlich geänderte gemeinsame Receipt-/CLI-Consumer. Schlanker Kern und regulärer Windowsbau.",
++  "purpose": "PW-PERF-E K01–K08: ausgewählte Retirementreader, aktuelle Quellen und Receipt v4; production.catalog für Lifecycle/Guards, production.adapter für tatsächlich geänderte gemeinsame Receipt-/CLI-Consumer. Schlanker Kern und regulärer Windowsbau. B01-Nacharbeit: echte Commitobjektart vor allen Mutationen, synthetischer Root-Tree-Negativfall und separater Quellcommit.",
+   "omitted": "Keine echte Rätselbereinigung, Solver-/Bildproduktion, Editor-UX, Spiel- oder Saveänderung. Daher keine tools-, production.solver/images-, native-, delivery- oder Chromium-Suite. Gemeinsame Indizes werden geprüft; unbeteiligte Altdateien sind keine Retirementabhängigkeit.",
+   "test_changes": [
+     {
+       "path": "tests/puzzle_production/test_retirement_current.py",
+       "disposition": "change-scoped",
+-      "reason": "Kleine synthetische T01-Lifecycle-, Quellen-/Rechte-, Main-, Fremddaten-, Teilfehler- und Nullread-Prüfungen."
++      "reason": "Kleine synthetische T01-Lifecycle-, Quellen-/Rechte-, Main-, Fremddaten-, Teilfehler- und Nullread-Prüfungen. B01 erweitert den vorhandenen Sonderimportfall um unveränderte Bytes/mtimes, Lock-/Lösch-/Schreibfallen und einen echten nicht verwandten Quellcommit."
+     },
+     {
+       "path": "tools/puzzle_production/integrated_content.py",
+@@ -22,8 +22,8 @@
+   ],
+   "core_change": null,
+   "evidence": {
+-    "mode": "failure",
+-    "purpose": "Gezielte Diagnose des in Lauf 43725097262 fehlgeschlagenen SD2-CLI-Tests; vollstaendiger tests.log-Traceback fuer PW-PERF-E, kein Galerieupload.",
+-    "expires": "2026-11-22"
++    "mode": "none",
++    "purpose": null,
++    "expires": null
+   }
+ }
+diff --git a/docs/ZA1_ADAPTER.md b/docs/ZA1_ADAPTER.md
+index 86f404af..c02d42f3 100644
+--- a/docs/ZA1_ADAPTER.md
++++ b/docs/ZA1_ADAPTER.md
+@@ -1869,7 +1869,10 @@ die aktuelle Registry bindet ausschließlich den Hash R der tatsächlichen Recei
+   `--source-commit ID SHA` angegeben. Bei jeder neuen v4-Kompaktierung müssen der dortige Entry und Paket-Gitbaum
+   exakt zum importierten Export passen; der dort indexierte Authoringrecord muss
+   dieselbe Revision als registered ohne Blocker führen, auch wenn source_commit und
+-  integrated_commit gleich sind. Fehlende Quellen sperren.
++  integrated_commit gleich sind. Fehlende Quellen sperren. Vor Locknahme oder
++  Dateiänderung muss jede ausdrücklich übergebene SHA direkt ein Gitobjekt
++  vom Typ `commit` bezeichnen. Tree-, Blob- und Tagobjekte sind keine
++  Quellcommits; erfolgreiche Treeish-Pfadabfragen genügen nicht.
+ - `main_commit`: voller geprüfter origin/main-Stand des Retirementaufrufs. Beide
+   Maincommits müssen Vorfahren von HEAD sein; integrated_commit zusätzlich von
+   origin/main. source_commit darf der ursprüngliche, nicht gemergte Produktionshead
+diff --git a/tests/puzzle_production/test_retirement_current.py b/tests/puzzle_production/test_retirement_current.py
+index fd28ce43..846e0d0b 100644
+--- a/tests/puzzle_production/test_retirement_current.py
++++ b/tests/puzzle_production/test_retirement_current.py
+@@ -131,12 +131,29 @@ class CurrentRetirementTests(unittest.TestCase):
+         write_json(self.root/directory/'record.json',{'format':'picross-authoring-record-v2','puzzle_id':self.identifier,'revision':revision,'state':'registered','blockers':[]})
+         write_json(self.root/retirement.INDEX,{'format':'picross-authoring-index-v1','entries':[{'puzzle_id':self.identifier,'revision':revision,'record':directory+'/record.json'}]})
+         source=self.commit()
++        self.git("checkout","--orphan","synthetic-import")
+         shutil.rmtree(self.root/directory)
+         write_json(self.root/retirement.INDEX,{'format':'picross-authoring-index-v1','entries':[]})
+         imported=self.commit();self.migrate('none');main=self.commit()
+         with self.assertRaises(ValueError):retirement.retire(self.root,[self.identifier],imported,source_commits={self.identifier:'f'*40})
+         with self.assertRaisesRegex(ValueError,'original registered authoring'):retirement.retire(self.root,[self.identifier],imported)
+-        before=snapshot(self.root)
++        # B01: the root tree resolves the same package and registered record,
++        # but has no commit history. Reject it before even acquiring the lock.
++        tree=self.git('rev-parse',source+'^{tree}')
++        prefix=self.entry['production']['package']
++        self.assertEqual(self.git('cat-file','-t',tree),'tree')
++        self.assertEqual(self.git('rev-parse',tree+':'+prefix),self.git('rev-parse',imported+':'+prefix))
++        self.assertEqual(json.loads(self.git('show',tree+':'+directory+'/record.json'))['state'],'registered')
++        self.assertEqual(self.git('rev-list','--parents','-n','1',imported),imported)
++        before=snapshot(self.root);git_before=self.git('status','--porcelain=v1')
++        with patch.object(retirement_scope.Reads,'acquire',side_effect=AssertionError('unexpected lock')), \
++             patch.object(Path,'unlink',side_effect=AssertionError('unexpected deletion')), \
++             patch.object(cr,'atomic_bytes',side_effect=AssertionError('unexpected write')), \
++             self.assertRaisesRegex(ValueError,'Source Git identity must be a commit object'):
++            retirement.retire(self.root,[self.identifier],imported,source_commits={self.identifier:tree})
++        self.assertEqual(before,snapshot(self.root))
++        self.assertEqual(git_before,self.git('status','--porcelain=v1'))
++        self.assertFalse((self.root/tx.LOCK).exists())
+         retirement.retire(self.root,[self.identifier],imported,source_commits={self.identifier:source})
+         value=load_json(self.root/self.entry['production']['package']/'manifest.json')
+         self.assertEqual(value['provenance']['source_commit'],source)
+diff --git a/tools/puzzle_production/README.md b/tools/puzzle_production/README.md
+index c4bad4e5..b505c09f 100644
+--- a/tools/puzzle_production/README.md
++++ b/tools/puzzle_production/README.md
+@@ -2545,7 +2545,9 @@ an binding/current geprüft, ohne erfundenen initial-Ursprung. Aktive
+ Editorrasterpakete v1/v2 bleiben vollständige aktive Autorität. Alte Receipts
+ v1/v2/v3 bleiben unverändert. V4 erhält Originalexport, Rechte und tatsächlichen
+ Main-/Quellcommit getrennt; Sonderimportquellen werden je ID ausdrücklich mit
+-`--source-commit ID SHA` gebunden. Keine erneute Endfreigabe oder Completion.
++`--source-commit ID SHA` gebunden. SHA muss direkt ein vorhandenes Gitobjekt
++vom Typ `commit` bezeichnen; Tree-/Blob-/Tag-SHAs stoppen vor Lock oder
++Dateiänderung. Keine erneute Endfreigabe oder Completion.
+ Nur ausgewählte Abhängigkeiten werden gelesen, keine fremden Paket-/Bildbäume.
+ Alle Preflights vor erster Löschung, gezielter Abschlussreadback, frischer
+ Byte-/mtime-No-op und ehrliche Teilfehlerreste sind verbindlich. Dieses
+diff --git a/tools/puzzle_production/integrated_content.py b/tools/puzzle_production/integrated_content.py
+index e4b1b15e..2e48d57d 100644
+--- a/tools/puzzle_production/integrated_content.py
++++ b/tools/puzzle_production/integrated_content.py
+@@ -82,6 +82,8 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
+     require(isinstance(source_commits, dict) and set(source_commits) <= set(ids), "Foreign source commit ID")
+     for commit in source_commits.values():
+         require(isinstance(commit,str) and re.fullmatch(r"[0-9a-f]{40}",commit), "Use full source commit")
++        require(git("cat-file", "-t", commit).strip() == b"commit",
++                "Source Git identity must be a commit object")
+     from .retirement_scope import capture
+     snapshot = capture(root, ids)
+     current = snapshot["registry"]

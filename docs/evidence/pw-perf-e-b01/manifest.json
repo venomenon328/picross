@@ -1,0 +1,49 @@
+{
+  "product_head": "f10ef329e6a98e1bb9e50c9c409998f2b518340f",
+  "test_merge": "4f0f66f40bf55ddeb79e65e8e003749d3ebe34af",
+  "purpose": "PW-PERF-E-B01 technical evidence for independent PW-PERF-E-A01 before_merge review",
+  "recipient": "independent A01 reviewer",
+  "expires": "2026-11-22",
+  "files": [
+    {
+      "file": "b01-after.log",
+      "bytes": 1686,
+      "sha256": "ba08b821530530dff0566d9cd878a1486f1316d1b79250c70146eb78b078dee8"
+    },
+    {
+      "file": "b01-before.log",
+      "bytes": 3464,
+      "sha256": "e1c58d9f6d5e33392f69afdec409723bccdacec4f56cc877364a1454b0406bc9"
+    },
+    {
+      "file": "b01-fix.diff",
+      "bytes": 8153,
+      "sha256": "bebea9484ef8fbcfc855b00895f6c85a8d8f4656a11be0daad50d3382494d715"
+    },
+    {
+      "file": "b01-test.patch",
+      "bytes": 2987,
+      "sha256": "58b5bdbfcbde70ec785d640412d428e4b0e2d00dec800a0f5fc715a12682021e"
+    },
+    {
+      "file": "core-tests.log",
+      "bytes": 3599,
+      "sha256": "452495514c5262713a1290acc9bfb70282ab823ce27aa9597aaa9396c32048b6"
+    },
+    {
+      "file": "docs.log",
+      "bytes": 162,
+      "sha256": "0b11f044461b7861dbfcea45ef7a1c9bdd2a403ae04c4f665ab45deb3361875c"
+    },
+    {
+      "file": "README.md",
+      "bytes": 4583,
+      "sha256": "7acda57e5b902037bba22da81187aa107f22d80b0c9d47267054bf2e1637d70b"
+    },
+    {
+      "file": "source-and-results.json",
+      "bytes": 1852,
+      "sha256": "cc2277407fde2e865992268f3926f1e484d7e6b392099836905acfdc89492b42"
+    }
+  ]
+}

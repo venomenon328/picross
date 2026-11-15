@@ -1,0 +1,47 @@
+{
+  "product_head": "f10ef329e6a98e1bb9e50c9c409998f2b518340f",
+  "base": "d50eeb71b9e017bfe82f3d58563b779d9df1c145",
+  "reviewed_previous_head": "e9b8f233fc73549e4d0c7d943489be434cbf9182",
+  "test_merge": "4f0f66f40bf55ddeb79e65e8e003749d3ebe34af",
+  "ci_run": 43731528915,
+  "ci_attempt": 1,
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+  "pillow": "12.3.0",
+  "temporary_root": "E:/Zeuch/Coding/picross_codex/653-pw-perf-e-b01-20261115/tmp",
+  "files": {
+    "tools/puzzle_production/integrated_content.py": {
+      "bytes": 26305,
+      "sha256": "4e7fdf6b84d2dbc5211e47e363414c83d98e3de1d4146a07e71dcfbbf69f82b4"
+    },
+    "tests/puzzle_production/test_retirement_current.py": {
+      "bytes": 18672,
+      "sha256": "4a781a5c583acb0518efbba0e67a7975a9a745f8012927b0bc610d40510a5a69"
+    },
+    ".ci/package.json": {
+      "bytes": 1729,
+      "sha256": "02ca48f795a573cc772755fd1a5540bddb4438c06bad776b0786c2dee231f520"
+    }
+  },
+  "before": {
+    "command": "python -m unittest tests.puzzle_production.test_retirement_current.CurrentRetirementTests.test_v6_original_rights_and_distinct_import_source -v",
+    "product_code": "e9b8f233fc73549e4d0c7d943489be434cbf9182 plus b01-test.patch only for the new test",
+    "expected": "failure at unexpected lock, not the missing commit-object error",
+    "result": "reproduced",
+    "seconds": 51.526
+  },
+  "after": {
+    "command": "python -m unittest tests.puzzle_production.test_retirement_current -v",
+    "result": "8 tests passed",
+    "seconds": 83.409
+  },
+  "core": {
+    "command": "python -m unittest discover -s tools -p test_ci_modular.py -v",
+    "result": "21 tests passed",
+    "seconds": 17.658
+  },
+  "docs": {
+    "command": "python tools/check_docs.py",
+    "result": "passed"
+  }
+}

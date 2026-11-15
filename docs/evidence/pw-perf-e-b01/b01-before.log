@@ -1,0 +1,35 @@
+test_v6_original_rights_and_distinct_import_source (tests.puzzle_production.test_retirement_current.CurrentRetirementTests.test_v6_original_rights_and_distinct_import_source) ... FAIL
+
+======================================================================
+FAIL: test_v6_original_rights_and_distinct_import_source (tests.puzzle_production.test_retirement_current.CurrentRetirementTests.test_v6_original_rights_and_distinct_import_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\repo\tools\puzzle_production\integrated_content.py", line 329, in _retire
+    reads.acquire(ids, integrated_commit)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py", line 1169, in __call__
+    return self._mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py", line 1173, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\Lib\unittest\mock.py", line 1234, in _execute_mock_call
+    raise effect
+AssertionError: unexpected lock
+
+The above exception was the direct cause of the following exception:
+
+tools.puzzle_production.contract.InvalidInput: Production retirement did not complete: unexpected lock; remaining paths: E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\tmp\retirement-current-9nr5o4vl\checkout\content\authoring\index.json, E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\tmp\retirement-current-9nr5o4vl\checkout\content\authoring\pz-hp-synthetic, E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\tmp\retirement-current-9nr5o4vl\checkout\content\packages\pz-hp-synthetic\r01, E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\tmp\retirement-current-9nr5o4vl\checkout\content\registry.json
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\repo\tests\puzzle_production\test_retirement_current.py", line 152, in test_v6_original_rights_and_distinct_import_source
+    self.assertRaisesRegex(ValueError,'Source Git identity must be a commit object'):
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: "Source Git identity must be a commit object" does not match "Production retirement did not complete: unexpected lock; remaining paths: E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\tmp\retirement-current-9nr5o4vl\checkout\content\authoring\index.json, E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\tmp\retirement-current-9nr5o4vl\checkout\content\authoring\pz-hp-synthetic, E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\tmp\retirement-current-9nr5o4vl\checkout\content\packages\pz-hp-synthetic\r01, E:\Zeuch\Coding\picross_codex\653-pw-perf-e-b01-20261115\tmp\retirement-current-9nr5o4vl\checkout\content\registry.json"
+
+----------------------------------------------------------------------
+Ran 1 test in 51.526s
+
+FAILED (failures=1)

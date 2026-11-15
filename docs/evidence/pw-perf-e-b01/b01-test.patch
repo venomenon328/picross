@@ -1,0 +1,35 @@
+diff --git a/tests/puzzle_production/test_retirement_current.py b/tests/puzzle_production/test_retirement_current.py
+index fd28ce43..846e0d0b 100644
+--- a/tests/puzzle_production/test_retirement_current.py
++++ b/tests/puzzle_production/test_retirement_current.py
+@@ -131,12 +131,29 @@ class CurrentRetirementTests(unittest.TestCase):
+         write_json(self.root/directory/'record.json',{'format':'picross-authoring-record-v2','puzzle_id':self.identifier,'revision':revision,'state':'registered','blockers':[]})
+         write_json(self.root/retirement.INDEX,{'format':'picross-authoring-index-v1','entries':[{'puzzle_id':self.identifier,'revision':revision,'record':directory+'/record.json'}]})
+         source=self.commit()
++        self.git("checkout","--orphan","synthetic-import")
+         shutil.rmtree(self.root/directory)
+         write_json(self.root/retirement.INDEX,{'format':'picross-authoring-index-v1','entries':[]})
+         imported=self.commit();self.migrate('none');main=self.commit()
+         with self.assertRaises(ValueError):retirement.retire(self.root,[self.identifier],imported,source_commits={self.identifier:'f'*40})
+         with self.assertRaisesRegex(ValueError,'original registered authoring'):retirement.retire(self.root,[self.identifier],imported)
+-        before=snapshot(self.root)
++        # B01: the root tree resolves the same package and registered record,
++        # but has no commit history. Reject it before even acquiring the lock.
++        tree=self.git('rev-parse',source+'^{tree}')
++        prefix=self.entry['production']['package']
++        self.assertEqual(self.git('cat-file','-t',tree),'tree')
++        self.assertEqual(self.git('rev-parse',tree+':'+prefix),self.git('rev-parse',imported+':'+prefix))
++        self.assertEqual(json.loads(self.git('show',tree+':'+directory+'/record.json'))['state'],'registered')
++        self.assertEqual(self.git('rev-list','--parents','-n','1',imported),imported)
++        before=snapshot(self.root);git_before=self.git('status','--porcelain=v1')
++        with patch.object(retirement_scope.Reads,'acquire',side_effect=AssertionError('unexpected lock')), \
++             patch.object(Path,'unlink',side_effect=AssertionError('unexpected deletion')), \
++             patch.object(cr,'atomic_bytes',side_effect=AssertionError('unexpected write')), \
++             self.assertRaisesRegex(ValueError,'Source Git identity must be a commit object'):
++            retirement.retire(self.root,[self.identifier],imported,source_commits={self.identifier:tree})
++        self.assertEqual(before,snapshot(self.root))
++        self.assertEqual(git_before,self.git('status','--porcelain=v1'))
++        self.assertFalse((self.root/tx.LOCK).exists())
+         retirement.retire(self.root,[self.identifier],imported,source_commits={self.identifier:source})
+         value=load_json(self.root/self.entry['production']['package']/'manifest.json')
+         self.assertEqual(value['provenance']['source_commit'],source)
