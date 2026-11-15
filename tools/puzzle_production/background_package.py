@@ -450,7 +450,7 @@ def _validate(root, handoff, binding, *, history_repo, deadline, external_root, 
             location = reads.location(binding["derivation"])
             ref = binding["derivation"]["ref"]
             derivation = reads.json(location, ref, assemble=False)
-            ap.require(isinstance(derivation, dict) and derivation.get("format") == "picross-background-derivation-v1",
+            ap.require(isinstance(derivation, dict) and derivation.get("format") in ("picross-background-derivation-v1", "picross-background-derivation-v2"),
                        "Unsupported background derivation")
             request = bc.validate_request(derivation.get("request"))
             ap.require(request["manifest"] == current_ref and request["decision"] == binding["decision"]["ref"] and

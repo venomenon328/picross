@@ -474,14 +474,14 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                         expected_operation = before_raw, after_raw, operation_raw
                         projections = None
                         if current_generation:
-                            from tools.production_workspace.projector import automatic
+                            from tools.production_workspace.projector import finalization_views
                             projection_stage = stage.mkdir('projection')
                             stage.write('projection/package.zip', original)
                             stage.write('projection/handoff.json', handoff)
                             stage.write('projection/record.json', before_raw)
-                            prior_projection = automatic(output, directory, projection_stage, index)
-                            next_projection = automatic(output, directory, projection_stage, index,
-                                overlay={**overlay, directory + '/record.json': after_raw})
+                            prior_projection, next_projection = finalization_views(
+                                output, directory, projection_stage, index, before, after,
+                                {**overlay, directory + '/record.json': after_raw})
                             projection_name = directory + '/workspace.json'
                             projections = prior_projection, next_projection
                             ap.require(io.read(output, projection_name, 1024 * 1024) in projections,
