@@ -1,4 +1,4 @@
-"""RI-C v6/v7/v8 registration boundaries; no proof authority or persistent cache.
+"""RI-C v6/v7/v8/v9 registration boundaries; no proof authority or persistent cache.
 
 Expectations come from the validated journal. Every comparison reads the current
 filesystem. Only these generations opt in; the shared historical writer stays
@@ -13,9 +13,7 @@ from .authoring_package import require
 
 
 def supports(journal):
-    return (isinstance(journal, dict)
-            and journal.get("format") in ("picross-registration-journal-v6", "picross-registration-journal-v7", "picross-registration-journal-v8")
-            and journal.get("operation") == "registration")
+    return tx.registration_route(journal) == "phased"
 
 
 def hashes(texts):
@@ -27,7 +25,7 @@ class Guards:
     """Exact phase expectations, never trusted observations of unchanged files."""
 
     def __init__(self, root, journal, raw, additions=None, *, recovering=False, staged=None):
-        require(supports(journal), "Phased guards require registration v6/v7/v8")
+        require(supports(journal), "Phased guards require a supported registration generation")
         self.root, self.raw = root, raw
         self.view = pub._JournalView(journal, raw)
         self.j = self.view.j
@@ -56,7 +54,27 @@ class Guards:
                 for entry in registry["entries"]:
                     if entry["id"] not in refs: continue
                     source = background.validate(io.json_bytes(self.j[side][background.path(entry["id"])].encode(), background.LIMIT), entry)
-                    origin = background.initial(source)["origin"]
+                    initial = background.initial(source)
+                    if initial is None:
+                        # Slim sources have current technical bindings only.
+                        # Authorize an empty transport root from the actual
+                        # bound export, never an invented historical approval.
+                        entry = source["binding"]["entry"]
+                        package = entry["production"]["package"]
+                        manifest_name = package + "/manifest.json"
+                        if bound.get(manifest_name) != entry["production"]["package_sha256"]:
+                            continue
+                        raw_manifest = io.read(root, manifest_name, 8 * 1024 * 1024)
+                        require(io.checksum(raw_manifest) == bound[manifest_name], "Bound export changed")
+                        manifest = io.json_bytes(raw_manifest, 8 * 1024 * 1024)
+                        if manifest.get("format") != "picross-target-export-v6":
+                            continue
+                        if (not any(n.startswith("external/") for n in manifest["files"]) and
+                                all(manifest["background"][k]["storage"] != "external"
+                                    for k in ("manifest", "decision", "derivation"))):
+                            self.allowed_dirs.add(package + "/external")
+                        continue
+                    origin = initial["origin"]
                     prefix = origin["package"] + "/external"
                     binding = origin["approval"]["background"]
                     if (bound.get(origin["package"] + "/manifest.json") == origin["export_manifest_sha256"] and

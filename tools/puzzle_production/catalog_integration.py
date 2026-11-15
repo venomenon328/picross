@@ -125,7 +125,9 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
                              background.initial(old_background)) if rebind.is_rebound(old_background) else
                         background.initial(old_background)) == exported_background
         if same:
-            check_checkout(root, replay=not update and original.get("format") not in (INTEGRATED, background.RECEIPT_FORMAT))
+            # The incoming export was fully verified above. Repetition proves
+            # current integrity, not other IDs' historical production.
+            check_checkout(root)
             require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
                     all(tx.file_hash(root, name) == h for name, h in snapshot["retained"].items()) and
                     tx.namespaces(root,registry)==snapshot['namespaces'], "Checkout changed during planning")

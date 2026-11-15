@@ -339,6 +339,41 @@ unverändert streng; inkompatible historische Erzeuger werden dort weiterhin
 abgewiesen. Keine neue COMPAT-Allowlist, kein globales Replay-Freizeichen,
 keine Änderung an Recovery und anderen Operationen.
 
+
+**RI-V9 / #652:** Die aktuelle Registrierung erzeugt auf Registry v4 mit
+Runtime v8 Journal v9 und verwendet denselben phasierten RI-C-Writer wie
+v6/v7/v8. Der geschlossene Vertrag `catalog_transaction.REGISTRATION_GENERATIONS`
+bindet Erzeuger, Publikationsdispatch und Recoveryklassifikation: v5 verwendet
+den historischen gemeinsamen Writer, v6–v9 den phasierten Writer. v3/v4 bleiben
+historische Readerformen. Eine neue Generation braucht einen ausdrücklich
+gebundenen und geprüften Pfad; unbekannte Formate oder abweichende Erzeuger-
+Zuordnungen dürfen nicht in einen allgemeinen Writer fallen.
+
+Reveal v4 und Hintergrund v6 sind eigenständige aktuelle Bildquellen mit
+`binding/current`. Sie besitzen keinen historischen `initial.origin`.
+Ihre aktuellen Bindungen, Livebilder, Status standard/selected/none und manuelle
+Metadaten bleiben erhalten. Für ein vollständiges altes v6-Paket wird die einzige
+zulässige leere Transportwurzel `external/` nur aus dem tatsächlich hashgebundenen
+Exportmanifest und dessen nicht externen Hintergrundbezügen hergeleitet.
+Unbekannte leere Unterverzeichnisse bleiben unzulässig; keine erfundene Freigabe,
+Herkunft oder Bildableitung ersetzt die schlanke Quelle.
+
+Eingang und unabhängiges Staging der neuen Produktion bleiben vollständig
+geprüft. P5 prüft ausschließlich das eine neue Journalpaket auf Produktion;
+Altbestände behalten ihre vollständigen Integritäts-/Quellen-/Namespacechecks.
+Eine identische erneute Registrierung prüft ihren Eingang und die aktuelle
+Checkoutintegrität, ohne fremde historische Produktion nachzuspielen.
+Staging-Recovery und unterbrochene Rückführung verwenden dieselbe v9-Route,
+frische GR0/GR2-Grenzen und Runtime als letztes Datenziel. Nach entferntem
+Journal ist ein weiterer Recoveryaufruf mangels Auftrag weiterhin ein Fehler.
+Explizite Vollaudits und verify-export bleiben streng.
+
+Completion ist erst nach P6 und dem Commit der tatsächlichen Registrierung
+zulässig. Der bestehende Projektor bindet Record, Projektion und aktuellen
+Ansichtsverweis; Wiederaufnahme und identische Wiederholung bleiben geprüft.
+Authoring §9 wird nur an einem bestätigten Mainstand ausgeführt. Der isolierte
+RI-V9-Durchstich ist kein Abschluss oder Retirement des Inhalts-PR #603.
+
 Recovery bleibt Rückführung des vollständig gültigen eigenen Altstands, keine
 Vorwärtsfortsetzung. Bei fremden/unklaren Bytes Dateien und Journal erhalten,
 Restzustand ehrlich melden. Runtime zuletzt, Lock erst nach belegtem vollständigem

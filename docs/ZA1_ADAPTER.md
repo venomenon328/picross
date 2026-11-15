@@ -54,7 +54,7 @@ Die exakten neuen Quell-/Namespace-/Journalmengen stehen im
 
 | Folgeoperation | Verbindliches Verhalten auf v4/v8 |
 | --- | --- |
-| Neue Registrierung | Frische volle Produktion prüfen und ihren regulären Bildweg initialisieren; keine neue manuelle Source ohne manuelle Aktion. |
+| Neue Registrierung | Frische volle Produktion prüfen und ihren regulären Bildweg initialisieren; v4/v8 erzeugt Journal v9 und erreicht den phasierten Writer gemäß [RI-V9](SD_CATALOG.md#ri-v9--geschlossener-erzeuger--quellen--und-recoveryweg-652). Keine neue manuelle Source ohne manuelle Aktion. |
 | Ursprüngliche Registerwiederholung | Vollständigen ursprünglichen Export-/Receiptanker prüfen; aktuelle Metadaten/Bilder erhalten, echte Wiederholung ist No-op. |
 | Regulärer Rasterupdate | Eigenen Export und tatsächliche Freigaben vollständig prüfen. Aktuelle manuelle Bilder einschließlich Endung und Standard-/selected-/none-Präferenz erhalten; äußere Quellenbindung an neue Definition fortschreiben, keine Bildrevision allein deshalb. Exporthintergründe ersetzen keine manuelle Präferenz. |
 | Reguläre AT-/HP-W2-Adoption | Aktuelle Source fortführen, echte neue Produktionsentscheidung binden, historische `origin` unverändert. Eine alte vorbereitete Quelle wird stale. |
