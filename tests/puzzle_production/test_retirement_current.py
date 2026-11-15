@@ -231,3 +231,18 @@ class CurrentRetirementTests(unittest.TestCase):
         write_json(self.root/cr.REGISTRY,value);before=snapshot(self.root)
         with self.assertRaises(ValueError):retirement.retire(self.root,[self.identifier],commit)
         self.assertEqual(before,snapshot(self.root))
+
+    def test_current_source_revision_and_hash_bindings_are_checked(self):
+        self.migrate();commit=self.commit()
+        for name in (reveal.path(self.identifier),bg.path(self.identifier)):
+            path=self.root/name;raw=path.read_bytes();value=load_json(path)
+            value['binding']['identity']['runtime_revision']+=1
+            value['record_hash']=digest({k:v for k,v in value.items() if k!='record_hash'})
+            write_json(path,value)
+            if name==bg.path(self.identifier):
+                registry=load_json(self.root/cr.REGISTRY);original=(self.root/cr.REGISTRY).read_bytes()
+                registry['backgrounds'][0]['source']=bg.ref(name,path.read_bytes());write_json(self.root/cr.REGISTRY,registry)
+            before=snapshot(self.root)
+            with self.assertRaisesRegex(ValueError,'runtime revision differs'):retirement.retire(self.root,[self.identifier],commit)
+            self.assertEqual(before,snapshot(self.root));path.write_bytes(raw)
+            if name==bg.path(self.identifier):(self.root/cr.REGISTRY).write_bytes(original)

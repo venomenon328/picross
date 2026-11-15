@@ -767,7 +767,9 @@ def load(root, registry, entry, texts=None):
     from .editor_change import slim
     if slim(source):
         identity = source["binding"]["identity"]
-        _bound(identity["definition"], _raw(root, identity["definition"]["file"], 2*LIMIT, texts), limit=2*LIMIT)
+        definition = _raw(root, identity["definition"]["file"], 2*LIMIT, texts)
+        _bound(identity["definition"], definition, limit=2*LIMIT)
+        ap.require(io.json_bytes(definition, 2*LIMIT)["revision"] == identity["runtime_revision"], "Current background runtime revision differs")
         active = source["current"]
         capability(root, texts, required=active["status"] in ("selected", "none"))
         raw = _raw(root, asset_path(entry["id"]), bc.MAX_PNG, texts, missing=True)

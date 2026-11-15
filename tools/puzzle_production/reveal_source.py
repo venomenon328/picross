@@ -389,6 +389,7 @@ def resolve(root, entry, catalog, *, record=None):
     if slim(record):
         validate_source(record, entry)
         require(record["binding"]["entry"]["production"]["package_sha256"] in (original["production"]["package_sha256"], entry["production"]["package_sha256"]), "Current reveal export anchor differs")
+        require(record["binding"]["identity"]["runtime_revision"] == runtime_revision, "Current reveal runtime revision differs")
         require(record["binding"]["identity"]["definition"] == bg.ref("game/"+entry["definition"], definition), "Current reveal definition changed")
         asset = record["current"]["asset"]
         bg._bound(asset, io.read(root, asset["file"], IMAGE_LIMIT), limit=IMAGE_LIMIT)
