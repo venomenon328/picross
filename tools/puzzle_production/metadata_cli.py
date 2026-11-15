@@ -8,6 +8,7 @@ import sys
 
 from . import catalog_io as io, catalog_metadata as metadata, operation_diagnostics as diagnostic
 from .contract import Aborted, InvalidInput
+from . import editor_change as edit
 
 
 def parser():
@@ -35,13 +36,14 @@ def main(argv=None):
     try:
         output = diagnostic.report_target(args.output, [args.target_root, getattr(args, "operations", None)]) if getattr(args, "output", None) else None
         if args.command == "view":
-            result = metadata.view(args.target_root)
+            result = edit.listing(args.target_root)
         elif args.command == "plan":
-            result = metadata.plan(args.target_root, _input(args.operations))
+            result = edit.plan(args.target_root, {"id": None, "metadata": _input(args.operations), "text": None, "profile": None, "reveal": None, "background": None})
         elif args.command == "plan-migration":
             result = metadata.plan_migration(args.target_root)
         elif args.command == "apply":
-            result = metadata.apply(args.target_root, _input(args.plan))
+            value = _input(args.plan)
+            result = edit.apply(args.target_root, value) if value["format"] == edit.PLAN else metadata.apply(args.target_root, value)
         else:
             result = metadata.recover(args.target_root)
         if output is not None:

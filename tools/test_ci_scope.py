@@ -10,6 +10,19 @@ from ci_scope import FLAGS, JOBS, apply_event_policy, classify, content_path, ev
 
 
 class SelectionTests(unittest.TestCase):
+    def test_background_paths_use_shared_content_contract(self):
+        paths = ['content/backgrounds/pz-synthetic.json',
+                 'game/art/backgrounds/pz-synthetic.png', 'game/art/backgrounds/pz-synthetic.txt']
+        plan = classify(paths)
+        self.assertTrue(plan['content_only'])
+        self.assertTrue(plan['selected']['docs'])
+        self.assertFalse(any(plan['selected'][key] for key in FLAGS))
+        for path in ('game/data/background-capability.json', 'game/art/backgrounds/pz-synthetic.png.import',
+                     'content/backgrounds/pz-synthetic/record.json', 'tools/ci_paths.py'):
+            with self.subTest(path=path):
+                self.assertFalse(content_path(path))
+                self.assertFalse(classify(paths + [path])['content_only'])
+
     def test_current_view_pointer_uses_shared_content_contract(self):
         pointer = 'content/authoring/pz-synthetic/current-view.json'
         paths = [pointer, 'content/authoring/pz-synthetic/r01/record.json',

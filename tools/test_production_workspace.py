@@ -131,6 +131,69 @@ def current_fixture(repo, source, revision='r01', proposed=None, approved=None, 
     return builder.build(request, source, stage, repo)
 
 
+class ClosingViewTests(unittest.TestCase):
+    def test_remote_current_pointer_can_return_from_phase_four_to_phase_one(self):
+        from tools.production_workspace.motifs import group
+        common = {'puzzle_id': 'pz-correction', 'title': 'Synthetic correction', 'source': 'remote',
+                  'ref': 'content/pw/pz-correction', 'commit': 'a' * 40, 'current_error': None}
+        rows = [{**common, 'id': 'earlier', 'revision': 'alpha', 'binding': '1' * 64,
+                 'phase': 'Abschlussbilder', 'current_view': True},
+                {**common, 'id': 'later', 'revision': 'zeta', 'binding': '2' * 64,
+                 'phase': 'Kontextzeichnungen', 'current_view': False}]
+        motif = group(rows, {}, confirmed=True, remote='synthetic')[0]
+        self.assertEqual(motif['current_job'], 'earlier')
+        self.assertEqual(motif['phase'], 'Abschlussbilder')
+        rows[0]['current_view'] = False
+        self.assertIsNone(group(rows, {}, confirmed=True, remote='synthetic')[0]['current_job'])
+
+    def test_summary_uses_exact_outer_originals_not_gallery_order(self):
+        ctx = p.Record.__new__(p.Record)
+        ctx.current = True; ctx.commit = ctx.snapshot = 'a' * 40
+        ctx.directory = 'content/authoring/pz-test/r02'; ctx.historical_assets = []
+        package = {'file': ctx.directory + '/package.zip', 'sha256': 'b' * 64, 'bytes': 100}
+        ctx.value = {'state': 'background_review', 'package': package, 'raster_selection': {'file': 'selection.json'},
+                     'candidate': {'variant': 'a'}, 'reveal': {'file': 'reveal.png'}}
+        ctx.background_choice = None; ctx.offer_keys = {}
+        ctx.allowed = {role: {} for role in p.ROLES}
+        for role in ('reveal', 'raster', 'background'):
+            ctx.allowed[role][role + '.png'] = 'c' * 64
+        def asset(role, identifier, **changes):
+            loc = {'commit': None, 'storage': 'package', 'container': package, 'file': role + '.png',
+                   'sha256': 'c' * 64, 'bytes': 3}
+            loc.update(changes)
+            return {'id': identifier, 'role': role, 'location': loc}
+        assets = [asset('raster', 'foreign', commit='d' * 40), asset('reveal', 'v'),
+                  asset('background', 'bg'), asset('raster', 'r')]
+        expected = {'raster': 'r', 'reveal': 'v', 'background': None}
+        self.assertEqual(p.closing_composition(ctx, assets), expected)
+        self.assertEqual(p.closing_composition(ctx, list(reversed(assets))), expected)
+        ctx.background_choice = 'A'; ctx.offer_keys[('background', 'A')] = 'background.png'
+        self.assertEqual(p.closing_composition(ctx, assets)['background'], 'bg')
+        self.assertIsNone(p.closing_composition(ctx, [a for a in assets if a['id'] != 'r'])['raster'])
+        ctx.allowed['raster']['second.png'] = 'e' * 64
+        self.assertIsNone(p.closing_composition(ctx, assets)['raster'])
+        ctx.value['state'] = 'raster_ready'
+        self.assertIsNone(p.closing_composition(ctx, assets))
+        ctx.value['state'] = 'background_review'; ctx.value['raster_selection'] = None
+        self.assertIsNone(p.closing_composition(ctx, assets))
+
+    def test_recorded_selection_rejects_scope_and_missing_originals(self):
+        # Small bound JSON copies only: no solver or production corpus.
+        ctx = p.Record.__new__(p.Record); ctx.current = True
+        ctx.handoff = {'raster_selection': {'file': 'choice.json', 'sha256': 'a' * 64},
+                       'puzzle_id': 'pz-test', 'test_only': True}
+        selection = {'format': 'picross-raster-selection-v1', 'puzzle_id': 'pz-test',
+                     'source_commit': 'b' * 40, 'option_id': 'A', 'record': {}, 'projection': {},
+                     'inventory_sha256': 'c' * 64, 'candidate': {}, 'reveal': {}, 'motif': {},
+                     'human': {}, 'test_only': False}
+        ctx.json = lambda name, sha: deepcopy(selection)
+        with self.assertRaisesRegex(ValueError, 'Produktionsgegenstand'): ctx._selection()
+        selection['test_only'] = True
+        with self.assertRaises(ValueError): ctx._selection()
+        selection['source_commit'] = 'main'
+        with self.assertRaises(ValueError): ctx._selection()
+
+
 class MotifTests(unittest.TestCase):
     """B: real synthetic published snapshots; never a production corpus."""
     def setUp(self):
@@ -139,6 +202,7 @@ class MotifTests(unittest.TestCase):
         self.root = Path(self.temp.name)
         self.repo = self.root / 'repo'; self.repo.mkdir()
         git(self.repo, 'init', '-q', '-b', 'main')
+        git(self.repo, 'config', 'core.autocrlf', 'false')
         (self.repo / INDEX).parent.mkdir(parents=True)
         (self.repo / INDEX).write_bytes(p.data({'format': 'picross-authoring-index-v1', 'entries': []}))
         commit(self.repo)
@@ -216,81 +280,84 @@ class MotifTests(unittest.TestCase):
         motif = next(m for m in service.listing()['motifs'] if m['puzzle_id'] == 'pz-workspace-test')
         self.assertIsNone(motif['current_job']); self.assertTrue(any('Ungültiger' in n for n in motif['notes']))
 
-    def test_sync_matches_refs_with_different_versions_and_independent_main(self):
+    def test_remote_tip_leads_independent_main_and_local_progress(self):
         _, main = self.build('r01')
         git(self.repo, 'branch', '-f', 'main', main)
-        self.build('r02')
+        _, published = self.build('remote-alpha')
         remote = self.remote(); service = self.service(remote)
-        motif = service.listing(refresh=True)['motifs'][0]
-        self.assertEqual(motif['status'], 'Synchron')
-        self.assertEqual({v['revision'] for v in motif['versions']}, {'r01', 'r02'})
-        self.assertTrue(all(v['source_label'] == 'Lokal und Remote' for v in motif['versions']))
-        # Both copies of main advance independently of the production branch.
+        self.build('local-newer')
+        value = service.listing(refresh=True); motif = value['motifs'][0]
+        self.assertEqual(motif['status'], 'Remote aktuell bestätigt')
+        self.assertEqual(service.job(motif['current_job'])['commit'], published)
+        self.assertEqual({j['source'] for j in value['jobs']}, {'remote'})
+        self.assertEqual({v['revision'] for v in motif['versions']}, {'r01', 'remote-alpha'})
+        self.assertTrue(all(v['source_label'] == 'Remote' for v in motif['versions']))
+        # A separate main pointer must not override the production branch tip.
         git(self.repo, 'checkout', '-q', 'main')
-        (self.repo / 'metadata.txt').write_text('independent main', encoding='utf-8')
-        commit(self.repo)
+        self.build('independent-main')
         git(self.repo, 'push', str(remote), 'main')
+        git(self.repo, 'checkout', '-q', 'content/pw/pz-workspace-test')
         value = service.listing(refresh=True)
-        self.assertIn('divergent', value['relations'].values(), 'cross-ref history really diverges')
-        self.assertEqual(value['motifs'][0]['status'], 'Synchron')
-        self.assertIsNone(value['motifs'][0]['current_job'], 'sync does not choose between divergent pointers')
-        # A source without its remote counterpart must not claim full sync.
+        self.assertEqual(service.job(value['motifs'][0]['current_job'])['commit'], published)
         git(self.repo, 'push', str(remote), ':content/pw/pz-workspace-test')
-        motif = service.listing(refresh=True)['motifs'][0]
-        self.assertEqual(motif['status'], 'Remote nicht aktuell bestätigt')
-        self.assertTrue(any('Gegenref fehlt' in n for n in motif['notes']))
+        value = service.listing(refresh=True)
+        self.assertEqual(service.job(value['motifs'][0]['current_job'])['ref'], 'main')
+        self.assertFalse(any(j['source'] == 'local' for j in value['jobs']))
 
-    def test_real_push_fetch_ahead_divergence_offline_and_combined_sources(self):
-        _, original = self.build('r-z')
-        remote = self.remote(); service = self.service(remote)
-        value = service.listing(refresh=True); motif = value['motifs'][0]
-        self.assertEqual(motif['status'], 'Synchron')
-        self.assertEqual(motif['versions'][0]['source_label'], 'Lokal und Remote')
-        _, newer = self.build('correction-a')
-        value = service.listing(refresh=True); motif = value['motifs'][0]
-        self.assertEqual(motif['status'], 'Lokal neuer')
-        self.assertEqual(service.job(motif['current_job'])['commit'], newer)
-        self.assertIsNone(service.detail(motif['current_job'])['source_url'], 'local work is no cloud source')
-        git(self.repo, 'push', str(remote), 'content/pw/pz-workspace-test')
-        self.assertEqual(service.listing(refresh=True)['motifs'][0]['status'], 'Synchron')
-        writer = self.root / 'writer'; git(self.root, 'clone', '-q', '-c', 'core.autocrlf=false', '--branch', 'content/pw/pz-workspace-test', str(remote), str(writer))
+    def test_remote_correction_divergence_offline_and_broken_pointer(self):
+        from tools.production_workspace import current_view as cv
+        self.build('r-z'); remote = self.remote(); service = self.service(remote)
+        writer = self.root / 'writer'
+        git(self.root, 'clone', '-q', '-c', 'core.autocrlf=false', '--branch', 'content/pw/pz-workspace-test', str(remote), str(writer))
         _, remote_new = self.build('remote-early', writer)
         git(writer, 'push', str(remote), 'content/pw/pz-workspace-test')
-        value = service.listing(refresh=True); motif = value['motifs'][0]
-        self.assertEqual(motif['status'], 'Remote neuer')
-        self.assertEqual(service.job(motif['current_job'])['commit'], remote_new)
         self.build('local-divergence')
-        motif = service.listing(refresh=True)['motifs'][0]
-        self.assertEqual(motif['status'], 'Abweichende Stände'); self.assertIsNone(motif['current_job'])
-        # Real offline failure retains bound cache and blocks false cloud claims.
-        git(service.repository.cached.root, 'config', 'remote.pw-source.url', str(self.root / 'absent'))
-        service.repository.remote = str(self.root / 'absent')
+        value = service.listing(refresh=True); motif = value['motifs'][0]
+        self.assertEqual(service.job(motif['current_job'])['commit'], remote_new)
+        self.assertFalse(any(j.get('conflict') for j in value['jobs']))
+        # A deliberately earlier handoff, with a nonnumeric revision, still leads.
+        raw = GitSource(writer).read(remote_new, cv.path('pz-workspace-test'))
+        cv.handoff(writer, 'pz-workspace-test', 'r-z')
+        correction = commit(writer)
+        git(writer, 'push', str(remote), 'content/pw/pz-workspace-test')
         value = service.listing(refresh=True)
-        self.assertTrue(value['sync_error']); self.assertFalse(value['remote_confirmed'])
-        self.assertTrue(any(j['source'] == 'remote' for j in value['jobs']))
+        self.assertEqual(service.job(value['motifs'][0]['current_job'])['revision'], 'r-z')
+        (writer / cv.path('pz-workspace-test')).unlink(); commit(writer)
+        git(writer, 'push', str(remote), 'content/pw/pz-workspace-test')
+        value = service.listing(refresh=True)
+        self.assertIsNone(value['motifs'][0]['current_job'])
+        self.assertTrue(any('fehlt' in n for n in value['motifs'][0]['notes']))
+        (writer / cv.path('pz-workspace-test')).write_bytes(b'{}\n'); commit(writer)
+        git(writer, 'push', str(remote), 'content/pw/pz-workspace-test')
+        value = service.listing(refresh=True)
+        self.assertIsNone(value['motifs'][0]['current_job'])
+        self.assertTrue(any('Ungültiger' in n for n in value['motifs'][0]['notes']))
+        # Restore the exact valid pointer. Offline keeps that remote cache only.
+        (writer / cv.path('pz-workspace-test')).write_bytes(raw); commit(writer)
+        git(writer, 'push', str(remote), 'content/pw/pz-workspace-test')
+        service.listing(refresh=True)
+        with patch.object(service.repository, 'fetch', side_effect=ValueError('offline')):
+            value = service.listing(refresh=True)
+        self.assertTrue(value['sync_error']); self.assertTrue(value['synced_at'])
+        self.assertFalse(value['remote_confirmed'])
+        self.assertEqual({j['source'] for j in value['jobs']}, {'remote'})
         self.assertEqual(value['motifs'][0]['status'], 'Remote nicht aktuell bestätigt')
         self.assertTrue(all(j['source_url'] is None for j in value['jobs']))
 
-    def test_same_revision_changed_bytes_has_no_winner_but_explicit_views_work(self):
-        _, first = self.build('r01'); remote = self.remote(); service = self.service(remote)
-        directory = self.repo / 'content/authoring/pz-workspace-test/r01'
-        record = p.parse((directory / 'record.json').read_bytes()); record['next_step'] += ' synthetic'
-        record_raw = p.data(record); (directory / 'record.json').write_bytes(record_raw)
-        view = p.parse((directory / 'workspace.json').read_bytes())
-        for ref in [view['record'], *(o['record'] for o in view['offers'])]:
-            ref.update(sha256=io.checksum(record_raw), bytes=len(record_raw))
-        (directory / 'workspace.json').write_bytes(p.data(view))
-        from tools.production_workspace import current_view as cv
-        # This deliberate synthetic valid in-place publisher is bound to the real old bytes.
-        name = cv.path('pz-workspace-test'); expected = (self.repo / name).read_bytes()
-        previous = {n: GitSource(self.repo).read(first, n) for n in [view['record']['file'], 'content/authoring/pz-workspace-test/r01/workspace.json']}
-        cv.publish(self.repo, 'pz-workspace-test', 'r01', expected, previous=previous); commit(self.repo)
+    def test_same_revision_local_bytes_never_block_remote(self):
+        self.build('r01'); remote = self.remote(); service = self.service(remote)
+        from tools.test_workspace_deliveries import put, publish_pointer
+        name = 'content/authoring/pz-workspace-test/r01/record.json'
+        record = p.parse((self.repo / name).read_bytes()); record['next_step'] += ' local only'
+        ref = put(self.repo, name, record)
+        name = name.replace('record.json', 'workspace.json')
+        view = p.parse((self.repo / name).read_bytes()); view['record'].update(ref)
+        put(self.repo, name, view); publish_pointer(self.repo, 'pz-workspace-test', 'r01'); commit(self.repo)
         value = service.listing(refresh=True); motif = value['motifs'][0]
-        self.assertEqual(motif['status'], 'Abweichende Stände'); self.assertIsNone(motif['current_job'])
-        self.assertEqual(len(motif['versions']), 2)
-        for job in value['jobs']:
-            self.assertTrue(job['conflict']); service.detail(job['id'])
-            self.assertIsNotNone(service.removal.availability(service.job(job['id'])))
+        self.assertIsNotNone(motif['current_job'])
+        self.assertEqual(len(motif['versions']), 1)
+        self.assertTrue(all(not j.get('conflict') for j in value['jobs']))
+        self.assertNotEqual(service.job(motif['current_job'])['commit'], git(self.repo, 'rev-parse', 'HEAD').decode().strip())
 
     def test_pointer_noop_interruption_and_concurrent_change(self):
         from tools.production_workspace import current_view as cv
@@ -314,35 +381,13 @@ class MotifTests(unittest.TestCase):
         self.assertEqual((self.repo / name).read_bytes(), raw, 'foreign write preserved')
         self.assertEqual(cv.handoff(self.repo, 'pz-workspace-test', 'r01')['status'], 'reused')
 
-    def test_shallow_metadata_reload_and_bounded_unknown_history(self):
-        from tools.production_workspace.motifs import Relations, group
-        _, base = self.build('r01'); remote = self.remote()
-        writer = self.root / 'history-writer'
-        git(self.root, 'clone', '-q', '-c', 'core.autocrlf=false', '--branch', 'content/pw/pz-workspace-test', str(remote), str(writer))
-        for n in range(4):
-            (writer / 'metadata.txt').write_text(str(n), encoding='utf-8'); commit(writer)
-        git(writer, 'push', str(remote), 'content/pw/pz-workspace-test')
-        service = self.service(remote); repository = service.repository
-        value = service.listing(refresh=True)
-        self.assertEqual(value['motifs'][0]['status'], 'Remote neuer')
-        tip = next(j['commit'] for j in value['jobs'] if j['source'] == 'remote')
-        # Drop no objects: a fresh private depth=1 cache proves the real reload.
-        other_state = self.root / 'shallow-state'
-        configure(self.repo, other_state, remote=str(remote))
-        other = Repository(other_state)
-        with patch.object(other, 'fetch', wraps=other.fetch) as fetch:
-            result = other.refresh()
-        self.assertTrue(any(call.kwargs.get('depth') == 64 for call in fetch.call_args_list))
-        self.assertIn('behind', result['relations'].values())
-        # Missing unrelated ancestry remains unknown after the finite allowance.
-        graph = Relations(repository)
-        missing = 'd' * 40
-        with patch.object(repository, 'fetch', side_effect=ValueError('unavailable')):
-            self.assertEqual(graph.compare(tip, missing), 'unknown')
-        uncertain = group(value['jobs'], {}, confirmed=True, remote=str(remote))
-        self.assertEqual(uncertain[0]['status'], 'Remote nicht aktuell bestätigt',
-                         'missing same-ref ancestry cannot become sync or a proven conflict')
-        self.assertEqual(repository.local.resolve('refs/heads/content/pw/pz-workspace-test'), base)
+    def test_remote_selection_needs_no_ancestry_reload(self):
+        self.build('r01'); remote = self.remote(); self.build('local-only')
+        service = self.service(remote)
+        with patch('tools.production_workspace.motifs.Relations.compare', side_effect=AssertionError('unneeded history')):
+            value = service.listing(refresh=True)
+        self.assertEqual(value['relations'], {})
+        self.assertIsNotNone(value['motifs'][0]['current_job'])
 
 
 
@@ -375,6 +420,10 @@ class WorkspaceTests(unittest.TestCase):
             record = Path(result['directory']) / 'workspace.json'
             projection = p.parse(record.read_bytes())
             facts = p.inspect(GitSource(self.repo), sha, projection)
+            self.assertIsNone(facts['composition'])
+            self.assertEqual(facts['originals']['record'], p.parse((Path(result['directory']) / 'record.json').read_bytes()))
+            self.assertEqual(facts['originals']['handoff'], p.parse((Path(result['directory']) / 'handoff.json').read_bytes()))
+            self.assertEqual(set(facts['metadata']), {'width', 'height', 'mode', 'used_colors', 'difficulty'})
             published = facts['published']
             self.assertEqual((published['proposed'], published['approved'], published['role']), (want, approved, role))
             self.assertEqual(published['brief']['text'], 'TEST ONLY\n\n<script>alert("never execute")</script>\n')
@@ -625,6 +674,91 @@ class WorkspaceTests(unittest.TestCase):
         for f, value in before.items():
             self.assertEqual((f.read_bytes(), f.stat().st_mtime_ns), value)
         self.assertEqual(set(self.directory.glob('.pw-*')), set())
+
+    def test_shared_originals_keep_each_role_binding_and_fresh_independent_decode(self):
+        request, _ = fixture(self.repo, 'shared', image_count=3)
+        duplicate = deepcopy(request['assets'][0])
+        duplicate['id'] = 'same-original'
+        request['assets'].append(duplicate)
+        request['offers'][0]['asset_ids'].append(duplicate['id'])
+        with patch.object(p, 'image', wraps=p.image) as decode:
+            result = project(request, self.repo)
+        self.assertEqual(decode.call_count, 3, 'one decode per distinct original in this call')
+        view = p.parse((self.repo / result['file']).read_bytes())
+        # A cached original cannot authorize a different role, hash or bytecount.
+        for key, value in [('role', 'raster'), ('sha256', '0' * 64), ('bytes', 1)]:
+            bad = deepcopy(view)
+            target = bad['assets'][-1] if key == 'role' else bad['assets'][-1]['location']
+            target[key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                p.inspect(LocalSource(self.repo), None, bad)
+        with patch.object(p, 'image', side_effect=InvalidInput('changed image reader')), \
+                self.assertRaisesRegex(ValueError, 'changed image reader'):
+            p.inspect(LocalSource(self.repo), None, view)
+        # Tiny shared byte budget forces eviction, never a missing/unchecked image.
+        from tools.production_workspace import sources
+        lru = sources.LRU
+        with patch.object(sources, 'LRU', side_effect=lambda limit=64*1024*1024: lru(min(limit, 128))):
+            facts = p.inspect(LocalSource(self.repo), None, view)
+        self.assertEqual(facts['state'], 'reveal_review')
+
+    def test_cached_external_image_is_freshly_rechecked_before_return_and_noop(self):
+        import os
+        request = deepcopy(self.request)
+        request['assets'][0]['location'].update(storage='repository', container=None,
+            file=self.directory.relative_to(self.repo).as_posix() + '/reveal.png')
+        result = project(request, self.repo)
+        view = p.parse((self.repo / result['file']).read_bytes())
+        image_path = self.directory / 'reveal.png'
+        original = p.image
+        def replace(raw):
+            value = original(raw)
+            temporary = image_path.with_suffix('.replacement')
+            temporary.write_bytes(image_path.read_bytes())
+            os.replace(temporary, image_path)  # same bytes, new file identity
+            return value
+        with patch.object(p, 'image', side_effect=replace), self.assertRaises(ValueError):
+            p.inspect(LocalSource(self.repo), None, view)
+        before = (self.repo / result['file']).read_bytes()
+        with patch.object(p, 'image', side_effect=replace), self.assertRaises(ValueError):
+            project(request, self.repo)
+        self.assertEqual((self.repo / result['file']).read_bytes(), before)
+        image_path.unlink()
+        with self.assertRaises(ValueError):
+            p.inspect(LocalSource(self.repo), None, view)
+
+    def test_automatic_shares_record_but_rechecks_stage_bytes_and_identity(self):
+        from tools.production_workspace import projector
+        result = current_fixture(self.repo, self.root / 'current-source', revision='current')
+        directory = Path(result['directory'])
+        name = directory.relative_to(self.repo).as_posix()
+        index = p.parse((self.repo / INDEX).read_bytes())
+        before = (directory / 'workspace.json').read_bytes()
+        with patch.object(p, 'Record', wraps=p.Record) as records:
+            raw = projector.automatic(self.repo, name, directory, index)
+        self.assertEqual(raw, before)
+        self.assertEqual(records.call_count, 1, 'generation and final role validation share the same checked record')
+        original = p.image
+        for same_bytes in (False, True):
+            handoff = directory / 'handoff.json'
+            saved = handoff.read_bytes()
+            def change(raw):
+                result = original(raw)
+                if same_bytes:
+                    import os
+                    replacement = handoff.with_suffix('.replacement')
+                    replacement.write_bytes(saved)
+                    os.replace(replacement, handoff)
+                else:
+                    handoff.write_bytes(saved + b' ')
+                return result
+            try:
+                with self.subTest(same_bytes=same_bytes), patch.object(p, 'image', side_effect=change), \
+                        self.assertRaises(ValueError):
+                    projector.automatic(self.repo, name, directory, index)
+                self.assertEqual((directory / 'workspace.json').read_bytes(), before)
+            finally:
+                handoff.write_bytes(saved)
 
     def test_closed_request_and_invalid_roles_are_rejected(self):
         for mutate in (lambda r: r.update(approved=True),

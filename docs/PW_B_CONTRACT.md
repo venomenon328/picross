@@ -143,9 +143,20 @@ Folgeaufträge ergänzen nur neue Absichten/Befugnisse; vorhandene Daten und all
 Regeln bleiben über diesen Einstieg und den kurzen AGENTS-/Authoringverweis gebunden.
 Größe, Modus und
 Farbzahl sind optionale Hinweise in Motiv-/Rasterarbeit, Kontext erst in Schritt 4.
-Arbeitswurzel, Bereinigung und Merge sind persönliche ausdrückliche Optionen;
-Records setzen sie nicht. Job-/Quellwechsel löscht ungesendete Auswahlabsichten.
+Arbeitswurzel und Merge sind persönliche ausdrückliche Optionen; Records setzen
+sie nicht. Zusätzliche lokale Bereinigung braucht einen gesonderten Auftrag. Job-/Quellwechsel löscht ungesendete Auswahlabsichten.
 Nur neu geladene Gitdaten ändern den angezeigten Produktionsstand.
+
+## PW2-B · Folgeumfang ohne neue Originalgeneration
+
+[PW2-B / #626](https://github.com/venomenon328/picross/issues/626#issuecomment-6855815878)
+verbindet im abgesendeten Schlussauftrag Hintergrundwahl/none, Endabnahme und
+Integration einschließlich bedingtem Squash-Merge. Die vorhandenen Zwischen-
+zustände, Finalizer-, Export-, Registrierungs- und Freigabeverträge bleiben
+unverändert. Die lesende Schlussprojektion und die persönliche Mergeoption
+stehen im [PW-Vertrag](PRODUCTION_WORKSPACE.md#pw2-b--schlussübersicht-und-gebundener-auftrag).
+Der folgende Nachweisabschnitt beschreibt die historische PW-B-Einführung;
+PW2-B erhält seinen eigenen Prüfplan und unabhängiges A01-Gate in #626.
 
 ## Nachweis und Lebenszyklus
 
@@ -160,3 +171,99 @@ technischen Uploads. Höchstens die zwei ausdrücklich vereinbarten UI-PNGs
 auf befristetem Reviewref, Originalabruf vor Übergabe prüfen; maximal sieben Tage.
 PW-B-A01 (unabhängiges Review) und PW-B-M01 (Eigentümerdurchlauf oder ausdrücklicher
 paketbezogener Erlass) bleiben vor Merge. Dieser Auftrag enthält keinen Merge.
+
+
+## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
+
+Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
+in [Hintergrund §4](PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
+Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
+`image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
+keine Neusiegelung alter Originale oder Erweiterung von #645.
+
+Export v6 prüft Original und tatsächliches Staging jeweils vollständig. Zwischen
+beiden ersetzt ausschließlich der eigene unveränderte, byte-/pfadgebundene
+Aufrufkontext die redundante volle Pending-Inspektion. Ein geschlossener Vergleich
+der geschriebenen Pending-Dateimenge samt Bytes/Manifest und frischen Identitäten
+bleibt Pflicht. Inspection, Hashliste, Methoden, Freigaben, Notices, Kategorien und
+vollständige Readbacks bleiben gebunden. Vor Publikation werden Quellen und Ziel
+frisch geprüft. Separates verify-export beginnt immer eine vollständige Prüfung.
+
+Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
+Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits
+unabhängig geprüften Zustands-, Hintergrund- und Freigabefelder ist zulässig;
+abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung.
+Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
+Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
+Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
+
+## PW-PERF-D · Regelquellen und Snapshotgeneration
+
+Authoring 0.8.0 Dokumentrevision 7 ändert ausschließlich Quellenorganisation und
+Snapshotbindung. Neue geschlossene Generationen: Buildrequest v4, Handoff v5,
+Record v4, Buildresult v4. Ihre Felder entsprechen v3/v4/v3/v3; allein rulebook
+hat die folgende neue Form. Producer dispatcht nach Request, Reader nach Handoff/
+Record. Gemischte Generationen sind Fehler. Phasen, zwölf Gates, Freigaben,
+Inventar v1, Inhaltsinspektion v2, Projektion v2, Finalizerrequest/-result v2 und
+Export v6 behalten ihre fachliche Semantik und nehmen die neue Originalgeneration
+explizit an. Kein unsupported WIP-Migrationsanspruch.
+
+rulebook enthält exakt `format,version,document_revision,source_commit,sources`:
+format `picross-authoring-rulebook-v2`, version `0.8.0`, document_revision 7,
+source_commit volle Git-SHA identisch zum handoff.repo_commit. sources ist eine
+lexikografisch nach path sortierte Liste; je Eintrag exakt `path,file,sha256,bytes`.
+path ist der kanonische Repositorypfad, file exakt `rulebook/` + path; SHA-256 und
+Bytezahl binden vollständige unveränderte Gitblobbytes (keine LF-Neukodierung).
+Die geschlossene Menge enthält genau:
+
+- `docs/ai-workflows/PUZZLE_AUTHORING.md` und `PUZZLE_AUTHORING_STEP_1.md` bis
+  `PUZZLE_AUTHORING_STEP_5.md` im selben Verzeichnis;
+- `docs/PUZZLE_IMAGE_STYLE.md` und `docs/PUZZLE_QUALITY.md`.
+
+Alle acht Quellen liegen inventarisiert im Paket. Alle sechs Authoringheader
+müssen Version/Dokumentrevision exakt ausweisen. Neue Builder vergleichen jeden
+Eintrag zusätzlich mit den echten Gitbytes am source_commit im ausdrücklich
+benannten history_repo; fehlende Quellen, fremde Commits, abweichende Hashes,
+Bytezahlen, Pfade, Header, Formen oder Dokumentrevisionen scheitern. Der Commit
+muss Vorfahr des aktuellen history_repo-HEAD sein. Kein Fetch oder Gitwriter.
+Offline-/Export-/Ansichtsreader prüfen die vollständige geschlossene Menge und
+alle tatsächlichen Bytes, Inventarbindung und Commitgleichheit; ohne Git behaupten
+sie keine erneute Commitauthentisierung. Der Quellcommit ist Herkunft, keine
+menschliche Freigabe. Alle Phasendateien im Snapshot zu sichern bedeutet nicht,
+sie im normalen Phasenauftrag zu lesen.
+
+Bedingte technische Verträge (PW-B/CLI, AT, HP-W2, RI/ZA-1, SD2, feste Korrektur,
+Retirement) gehören nicht in diese Snapshotmenge. Der Router verlangt sie vor der
+konkreten Operation am selben Regelquellstand; ihre vorhandenen eigenen Daten-/
+Methoden-/Writerbindungen bleiben zusätzlich bestehen. Qualität wird vollständig
+gebunden, aber für Farbe nur operativ §§8.4–8.5 gelesen. Historische Herleitung
+wird durch die Bytebindung weder Routinelektüre noch neuer Produktionsauftrag.
+
+Historische Handoff-v2/v3/v4-, Request-v1/v2/v3- und Record-v1/v2/v3-Pakete behalten
+rulebook exakt `{version,file,sha256}` und ihre damaligen Header/Hashes. Keine
+Ersatzdatei, Neubindung, Änderung oder Neuversiegelung alter Originale. BA-A bleibt
+bei seinen lokalen 0.6/0.7-Eingängen; eine alte 0.6-Snapshotidentität wird gegen
+ihren gebundenen Gitursprung statt gegen den heute anders organisierten Router
+geprüft. BA-B bindet bei neuen Originalen den vollständigen rulebook-v2-Satz und
+prüft ihn nativ; die äußere Batchregel nennt als snapshot den gemeinsamen Kern
+mit passender Version/Revision. Die Package-/Batch-Werkzeugbindungen führen die
+acht aktuellen Regelquellen mit. Keine Erweiterung von Writerrechten oder Budgets.
+
+Die abgeleitete Palettenbindung übernimmt bei Handoff v5 das vollständige geprüfte
+rulebook-v2-Objekt. Dafür erhält allein die äußere Palettenausnahme die explizite
+Generation `picross-palette-editorial-exception-v2`: exakt v1-Felder, aber
+binding.rulebook ist v2 statt Einzeldatei. Der Reader dispatcht nach Originalhandoff;
+v1 gehört ausschließlich zu alten Originalen, v2 ausschließlich zu Handoff v5.
+Negative Paarbefunde, echte Endfreigabe, sämtliche übrigen Bindungen und visuelle
+Q-R04/Q-H01/Q-H02-Gates bleiben unverändert. Keine neue Farbmetrik oder Ausnahmebefugnis.
+
+Rev7 ist ausschließlich über die neue Generation zulässig. Ein alter 0.8-Handoff/
+Request/Record darf keinen Rev7-Einstieg als vermeintlich vollständigen einzelnen
+Snapshot annehmen; für alte 0.8-Formen sind nur damalige Revisionen bis 6 zulässig.
+Ein Wechsel des Versionslabels kann keine fehlenden neuen Quellen legitimieren.
+
+Historische Ansichtsprojektionen behalten ihre frühere reine Datei-/Inventarbindung;
+die neue Header-/Revisionsprüfung wird ihnen nicht nachträglich auferlegt. Der
+Ansichtsreader weist jedoch eine ausdrücklich deklarierte Rev7 unter alter Form
+zurück. Neue Ansichten prüfen alle neuen Quellen und Header vollständig.
