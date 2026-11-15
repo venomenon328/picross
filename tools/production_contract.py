@@ -26,7 +26,7 @@ MODULES = {
                 'test_catalog_added', 'test_catalog_background', 'test_catalog_integration', 'test_catalog_metadata', 'test_catalog_reveal',
                 'test_catalog_review', 'test_categories_adapter', 'test_content_update',
                 'test_catalog_images', 'test_catalog_raster', 'test_editor_image_source', 'test_editor_change',
-                'test_integrated_content', 'test_integration_batch', 'test_integration_batch_guards',
+                'test_retirement_current', 'test_integrated_content', 'test_integration_batch', 'test_integration_batch_guards',
                 'test_ke_recovery', 'test_reveal_recovery',
                 'test_sd2_catalog', 'test_registration_budgets', 'test_registration_verification',
                 'test_registration_publication'),
@@ -117,8 +117,7 @@ def audited_consumers(root):
 
 
 # Filled from the reviewed import graph; the fast tool audit rejects drift.
-SOURCE_GROUPS = {'tools/puzzle_production/authoring_rulebook.py': ('solver', 'images', 'adapter', 'catalog'),
- 'tests/puzzle_production/background_catalog_fixtures.py': ('catalog',),
+SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('catalog',),
  'tests/puzzle_production/background_change_fixtures.py': ('catalog',),
  'tests/puzzle_production/background_fixtures.py': ('images', 'adapter', 'catalog'),
  'tests/puzzle_production/batch_fixtures.py': ('adapter',),
@@ -191,6 +190,7 @@ SOURCE_GROUPS = {'tools/puzzle_production/authoring_rulebook.py': ('solver', 'im
  'tests/puzzle_production/test_registration_publication.py': ('catalog',),
  'tests/puzzle_production/test_registration_verification.py': ('catalog',),
  'tests/puzzle_production/test_repair.py': ('images', 'adapter', 'catalog'),
+ 'tests/puzzle_production/test_retirement_current.py': ('catalog',),
  'tests/puzzle_production/test_reveal_recovery.py': ('catalog',),
  'tests/puzzle_production/test_rp6.py': ('images',),
  'tests/puzzle_production/test_sd2_analysis.py': ('solver',),
@@ -211,6 +211,7 @@ SOURCE_GROUPS = {'tools/puzzle_production/authoring_rulebook.py': ('solver', 'im
  'tools/puzzle_production/authoring_builder.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_finalization.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_package.py': ('solver', 'images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/authoring_rulebook.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_staging.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/authoring_workflow.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/background_assets.py': ('solver', 'images', 'adapter', 'catalog'),
@@ -288,6 +289,8 @@ SOURCE_GROUPS = {'tools/puzzle_production/authoring_rulebook.py': ('solver', 'im
  'tools/puzzle_production/registration_publication.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/registration_verification.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/repair.py': ('solver', 'images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/retirement_receipt.py': ('solver', 'images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/retirement_scope.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/reveal_retirement.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/reveal_source.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/sd2_analysis.py': ('solver', 'images', 'adapter', 'catalog'),

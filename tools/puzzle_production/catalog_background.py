@@ -572,7 +572,15 @@ def build(export_dir, manifest, report, entry):
     approval or tool identity. Full input/stage replay remains the caller's gate.
     """
     try:
-        return _build(export_dir, manifest, entry)
+        scope = io._retirement_reads.get()
+        if scope is None: return _build(export_dir, manifest, entry)
+        key = (str(export_dir), io.checksum(canonical_bytes(manifest)), io.checksum(canonical_bytes(entry)))
+        if scope is not None and key in scope.backgrounds:
+            scope.recheck()
+            return deepcopy(scope.backgrounds[key])
+        value = _build(export_dir, manifest, entry)
+        if scope is not None: scope.backgrounds[key] = deepcopy(value)
+        return value
     except (bc.BackgroundError, zipfile.BadZipFile) as exc:
         raise InvalidInput("Invalid background production metadata: " + str(exc)) from exc
 
@@ -759,7 +767,9 @@ def load(root, registry, entry, texts=None):
     from .editor_change import slim
     if slim(source):
         identity = source["binding"]["identity"]
-        _bound(identity["definition"], _raw(root, identity["definition"]["file"], 2*LIMIT, texts), limit=2*LIMIT)
+        definition = _raw(root, identity["definition"]["file"], 2*LIMIT, texts)
+        _bound(identity["definition"], definition, limit=2*LIMIT)
+        ap.require(io.json_bytes(definition, 2*LIMIT)["revision"] == identity["runtime_revision"], "Current background runtime revision differs")
         active = source["current"]
         capability(root, texts, required=active["status"] in ("selected", "none"))
         raw = _raw(root, asset_path(entry["id"]), bc.MAX_PNG, texts, missing=True)
