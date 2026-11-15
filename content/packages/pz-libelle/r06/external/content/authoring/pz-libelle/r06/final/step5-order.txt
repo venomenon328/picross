@@ -1,7 +1,0 @@
-Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot LIB-HG-A-b01.
-Ich erteile die Endabnahme für diese Hintergrundentscheidung zusammen mit dem gewählten Raster und dem zugehörigen Reveal im gebundenen Datensatz und beauftrage deren Integration.
-Commit, Push und PR; unabhängiges Review, danach Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates. Bestätigten Mainabschluss und Produktionsabschluss nach Authoring §9 durchführen.
-Gebundener Datensatz: 3e93981ba986aa4fc0a350df3bff5025b056170a:content/authoring/pz-libelle/r05/record.json.
-Konkrete angebotene Korrektur: vollständige Zeichnung pixelgleich auf 2896×724 erweitern, jeweils 362 transparente Pixel links und rechts.
-Tatsächliche Nutzerantwort: Ja, korrigiere. Eine erneute Bildwahl ist nicht nötig. Du kannst direkt mit der korrigierten Fassung fortsetzen.
-Aufzeichnungszeitpunkt ist der Empfang/Aufzeichnung in dieser Ausführung, kein erfundener historischer Chatzeitpunkt.

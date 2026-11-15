@@ -1,5 +1,0 @@
-Repository: venomenon328/picross · Ziel main.
-Produktionsdatensatz: https://github.com/venomenon328/picross/blob/195e747ba0b0e98f3336a7a313881c67fa32d84c/content/authoring/pz-libelle/r02/record.json
-Schritt 3: Ich gebe die unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor im Datensatz frei. Qualifizierte Rasterangebote als raster_ready vorlegen.
-Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.
-Erfasst 2026-11-15T18:54:08.773662+00:00; Erfassungszeit der tatsächlichen Chatentscheidung, kein gesondert belegter Sendezeitstempel.
