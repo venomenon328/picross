@@ -321,7 +321,10 @@ API: `describe()`, `derive(request, source_root, output_root)` und
 `tools.puzzle_production.background_assets`. `describe` liefert das vollständige
 feste Profil, dessen kanonischen Hash und den tatsächlichen Tool-/Codecstand
 samt Hash sowie getrennte tatsächliche Git-Herkunft `producer={commit,dirty}`.
-V2-`dirty` beschreibt den Arbeitsbaum einschließlich unversionierter Dateien;
+V2-`dirty` beschreibt den Arbeitsbaum einschließlich unversionierter Dateien
+zu Aufrufbeginn vor eigenen Schreibvorgängen. Spätere eigene Lock-/Stagingdateien
+ändern keine Bildautorität; Quellen, Renderstand und Ziele werden frisch geprüft.
+Die genaue Provenienzsemantik steht in [Hintergrund §4.7](../../docs/PUZZLE_BACKGROUNDS.md#47-pw-perf-c-neue-hp-w2-beleggeneration-v2).
 `describe --generation 1` beschreibt ausdrücklich die alte Neun-Modul-Identität. Für einen neuen Auftrag diese Werte verwenden; ein abweichender
 `expected_tool_sha256` wird vor dem Schreiben zurückgewiesen.
 

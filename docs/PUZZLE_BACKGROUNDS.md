@@ -678,7 +678,12 @@ PNG-/Ressourcen-/Pfadgrenzen bleiben unverändert. Der Befund
 `picross-background-derivation-v2` hat exakt die bisherigen v1-Befundfelder plus
 `producer`. `producer` ist exakt `{commit,dirty}`: vollständige tatsächliche
 Git-HEAD-SHA und Boolean für den tatsächlichen Arbeitsbaum (einschließlich
-unversionierter Dateien). Diese Herkunft gehört zum Befund, nicht zu H(tool).
+unversionierter Dateien), ermittelt zu Beginn des Aufrufs vor eigenen Lock-/
+Staging-/Ausgabeschreibvorgängen. Diese Herkunft gehört zum Befund, nicht zu
+H(tool). Spätere Git-Statusänderungen, insbesondere durch eigene Arbeitsdateien,
+sind kein Renderidentitätswechsel. Der Dirty-Status wird ohne zusätzliche
+Pfadausnahmen ermittelt; echte Eingangs-/Zieländerungen und Renderquellenwechsel
+werden weiterhin an ihren unabhängigen frischen Datei-/Bytegrenzen abgewiesen.
 
 V2-`tool` hat exakt `id,versions,modules`, ID `picross-background-2`.
 `versions` hat exakt `python,pillow,zlib,littlecms`; Pillow bleibt 12.3.0.
