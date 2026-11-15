@@ -82,3 +82,16 @@ es gibt keinen automatischen Rollback aus bereits entfernten Originalen.
 Die CI-Originale stehen im aktuellen Package-CI-Lauf 43727256774; hier werden sie
 nicht als zweite Logsammlung kopiert. Alle für T01/T02 benötigten lokalen Originale
 sind mit Bytezahl und SHA-256 in `manifest.json` gebunden. A01 bleibt unabhängig offen.
+
+## Separater CI-Diagnosehinweis
+
+Der unveränderte Heartbeat aus tools/production_tests.py schreibt aus einem
+Hintergrundthread auf das jeweils aktuelle stdout. Einmalig wurde seine echte
+AST-Funktion mit genau einem deterministischen Tick unter redirect_stdout
+ausgeführt und anschließend eine gültige CLI-JSON-Zeile ausgegeben. Der
+JSON-Reader scheitert an der vorangestellten Fortschrittsmeldung; das Original
+steht in heartbeat-reproduction.json. Die Runnerdatei ist bytegleich zu main.
+Im fehlgeschlagenen Lauf liegt der erwartete Tick um 14:52:37 UTC innerhalb
+des CLI-Tests, und gerade dieser Tick fehlt im äußeren Log. Das ist ein
+konkreter Hinweis auf die bestehende stdout-Kollision, kein nachträglich
+rekonstruierter Originaltraceback. Der Runner wurde im Paket nicht geändert.

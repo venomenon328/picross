@@ -1,0 +1,7 @@
+{
+  "source": "tools/production_tests.py",
+  "same_as_main": true,
+  "deterministic_actual_heartbeat_capture": "PRODUCTION ACTIVITY {\"active\": [], \"calls\": {}, \"seconds\": 0.001}\n{\"status\": \"expected-cli-json\"}\n",
+  "json_error": "Expecting value: line 1 column 1 (char 0)",
+  "limitation": "Demonstrates the existing stdout collision; does not recover the missing original CI traceback."
+}

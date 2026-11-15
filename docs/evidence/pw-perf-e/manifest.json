@@ -38,6 +38,10 @@
       "bytes": 5911,
       "sha256": "eabc6b9e72029b42d8725d62e1bcef5a6211b52338038d950557228cbfc7868f"
     },
+    "heartbeat-reproduction.json": {
+      "bytes": 409,
+      "sha256": "ec507cb3629b3ddfb59a36cbe1848c0d6ea522a3dfe296c683b97775bc69264b"
+    },
     "measure.py": {
       "bytes": 1543,
       "sha256": "ace1f71054506bb53b573d141a65fcadb8ace12df1dedf0415a5c04c95860c29"
@@ -55,8 +59,8 @@
       "sha256": "1f3cea66186394645e3c992ecb03de29f5f2777d65961cd36a78eecc2438acf5"
     },
     "README.md": {
-      "bytes": 5740,
-      "sha256": "511646f2942478eaaafa363f8d4217d0157162946f4fb2f9f7f2f6064093726c"
+      "bytes": 6537,
+      "sha256": "f33b0b09bd3044d37068d411b5a8030faf5f591950dbcb5826b75210ce8f882a"
     },
     "sd2-followup.log": {
       "bytes": 519,
