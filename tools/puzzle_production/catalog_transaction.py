@@ -61,7 +61,10 @@ IMAGE_FORMATS["editor-raster"] = RASTER_FORMAT
 
 # Closed registration capabilities, shared by producer, publish and recovery.
 # Adding a format map alone must never silently enable a different writer.
+DEPENDENCY_FORMATS = {"registration": "picross-registration-journal-v10"}
+
 REGISTRATION_GENERATIONS = {
+    "dependencies": (DEPENDENCY_FORMATS, "picross-registration-journal-v10", "phased"),
     "at": (AT_FORMATS, "picross-registration-journal-v5", "shared"),
     "sd2": (FORMATS, "picross-registration-journal-v6", "phased"),
     "background": (BACKGROUND_FORMATS, "picross-registration-journal-v7", "phased"),
@@ -158,19 +161,19 @@ def reveal_assets(root, *registries, temporary=()):
 
 
 def modern(j):
-    return isinstance(j, dict) and j.get("format") in (*IMAGE_FORMATS.values(), *PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values(), *AT_FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*DEPENDENCY_FORMATS.values(), *IMAGE_FORMATS.values(), *PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values(), *AT_FORMATS.values())
 
 
 def sd2(j):
-    return isinstance(j, dict) and j.get("format") in (*IMAGE_FORMATS.values(), *PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*DEPENDENCY_FORMATS.values(), *IMAGE_FORMATS.values(), *PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values(), *FORMATS.values())
 
 
 def background(j):
-    return isinstance(j, dict) and j.get("format") in (*IMAGE_FORMATS.values(), *PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*DEPENDENCY_FORMATS.values(), *IMAGE_FORMATS.values(), *PE_FORMATS.values(), *REBIND_FORMATS.values(), *BACKGROUND_FORMATS.values())
 
 
 def metadata(j):
-    return isinstance(j, dict) and j.get("format") in (*IMAGE_FORMATS.values(), *PE_FORMATS.values())
+    return isinstance(j, dict) and j.get("format") in (*DEPENDENCY_FORMATS.values(), *IMAGE_FORMATS.values(), *PE_FORMATS.values())
 
 
 def safe(root, name):
@@ -536,6 +539,10 @@ def _stage_check(root, texts, retained, additions=None, replacements=None, legac
 @diagnostic.measured("Plan/Projection", "plans")
 def prepare(root, snapshot, changes, *, operation, additions=None, report_run=None, replacements=None, generation="metadata"):
     additions = additions or {}
+    if snapshot.get("registration_v10"):
+        require(operation == "registration", "v10 only supports first registration")
+        from .registration_dependencies import prepare as prepare_dependencies
+        return prepare_dependencies(root, snapshot, changes, additions)
     require(operation in PE_FORMATS or operation in IMAGE_FORMATS, "Unknown transaction operation")
     before = snapshot["registry"]
     require(generation in ("images", "metadata", "rebind", "background", "sd2", "at"), "Unknown journal generation")
@@ -593,7 +600,9 @@ def prepare(root, snapshot, changes, *, operation, additions=None, report_run=No
     return j
 
 
-def _delta(j, before, after, root=None):
+def _delta(j, before, after, root=None, *, planned=False):
+    require(not planned or j["format"] == DEPENDENCY_FORMATS["registration"] and j["operation"] == "registration",
+            "Timestamp-free delta is only a v10 read-only plan")
     from .content_update import notice_path
     from .content_registry import METADATA_FORMAT, current_metadata
     op = j["operation"]
@@ -660,10 +669,13 @@ def _delta(j, before, after, root=None):
                     require(j["additions"].get(packaged) == source[key]["sha256"], "Wrong package background output binding")
             else:
                 require(j["new"][notice_name] is None, "none cannot publish a background notice")
-        if j["format"] in (IMAGE_FORMATS["registration"], PE_FORMATS["registration"], BACKGROUND_FORMATS["registration"], FORMATS["registration"], AT_FORMATS["registration"], PREVIOUS_FORMATS["registration"]):
+        if j["format"] in (DEPENDENCY_FORMATS["registration"], IMAGE_FORMATS["registration"], PE_FORMATS["registration"], BACKGROUND_FORMATS["registration"], FORMATS["registration"], AT_FORMATS["registration"], PREVIOUS_FORMATS["registration"]):
             mutable.add(added.path(e["id"]))
             value = j["new"][added.path(e["id"])]
-            require(value is not None and added.validate(rating.bytes_json(value.encode(), added.LIMIT), e["id"])["provenance"]["kind"] == "registration", "Registration needs its first added timestamp")
+            if planned:
+                require(value is None, "Read-only registration cannot allocate Added")
+            else:
+                require(value is not None and added.validate(rating.bytes_json(value.encode(), added.LIMIT), e["id"])["provenance"]["kind"] == "registration", "Registration needs its first added timestamp")
         require(all(j["old"][n] is None for n in mutable - {REGISTRY, RUNTIME}), "Occupied registration target")
         require(j["new"][rating.path(e["id"])] is not None, "New registration requires difficulty 0.3")
         package, reveal_target = e["production"]["package"], "game/" + e["reveal"]
@@ -774,6 +786,9 @@ def _delta(j, before, after, root=None):
 
 @diagnostic.measured("Journal validation", "journal_validations")
 def validate_journal(root, j, *, before_write=False):
+    if isinstance(j, dict) and j.get("format") == DEPENDENCY_FORMATS["registration"]:
+        from .registration_dependencies import validate_journal as validate_dependencies
+        return validate_dependencies(root, j, before_write=before_write)
     require(isinstance(j, dict) and isinstance(j.get("format"), str), "Invalid catalog journal")
     current_generation = modern(j)
     new_generation = sd2(j)

@@ -282,6 +282,7 @@ SOURCE_GROUPS = {'tests/puzzle_production/background_catalog_fixtures.py': ('cat
  'tools/puzzle_production/quality.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/raster_cli.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/raster_parameters.py': ('solver', 'images', 'adapter', 'catalog'),
+ 'tools/puzzle_production/registration_dependencies.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/registration_publication.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/registration_verification.py': ('solver', 'images', 'adapter', 'catalog'),
  'tools/puzzle_production/repair.py': ('solver', 'images', 'adapter', 'catalog'),
