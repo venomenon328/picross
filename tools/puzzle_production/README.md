@@ -2077,6 +2077,26 @@ Nach endgültiger Integration auf main:
 python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <main-SHA> --puzzle-id <pz-ID>
 ```
 
+Für abgeschlossene mehrphasige PW-Produktion zusätzliche frühere Phasen und
+gemeinsame Arbeitsdateien ausdrücklich auswählen, zum Beispiel:
+
+```sh
+python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <ursprüngliche-main-SHA> --puzzle-id <pz-ID> --completed-revision <pz-ID> <frühere-revision> --completed-work <pz-ID> evidence
+```
+
+Beide Zusatzoptionen sind wiederholbar; `--completed-work ID PATH` ist relativ
+zu `content/authoring/ID/` und darf keine Revisionswurzel oder current-view.json
+einschließen. Die integrierte Schlussrevision ist bereits implizit ausgewählt.
+API: `retire(..., completed_revisions=[(ID, REVISION)], completed_work=[(ID, PATH)])`.
+Die technische Auswahl führt der Akteur im bestehenden §9-Auftrag ohne neue
+Nutzerfreigabe pro altem Record aus. Ursprünglichen Mainanker und alte Zustände
+behalten; vollständige aktuelle Bytes/Indexzeilen müssen zum Mainanker passen.
+Ungewählte normale Revisionen und unbekannte Zusatzarbeit stoppen den Lauf vor
+Löschung. Keine automatische Auswahl nach Revisionsnummer und kein manuelles
+Vorlöschen. Gleiche Auswahl nach vollständigem Abschluss ergibt einen schreibfreien
+No-op; Teilreste bleiben Fehler. Vollständiger
+[Vertrag](../../docs/ZA1_ADAPTER.md#pw-retire--abschluss-mehrphasiger-produktion).
+
 [Authoring §9](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md) und
 [Integrationsformat](../../docs/ZA1_ADAPTER.md) regeln die Bereinigung.
 Bestandsprüfungen lesen danach Runtimehashes und kompakte Integrationsdaten,

@@ -1,15 +1,15 @@
 {
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/610",
-  "package": "Schnecke r07: Endabnahme und Erstintegration HG-A-b01",
-  "modules": [],
-  "purpose": "Unveränderte gewählte Kontextzeichnung HG-A-b01 samt Raster R-B-r06 und Reveal finalisieren, exportieren, frisch planen und registrieren; Completion und unabhängiges Review vor bedingt autorisiertem Squash-Merge.",
-  "omitted": "Reine Rätselproduktion. Vorhandene passende Qualitäts- und Proofbelege weiterverwenden; neue Lieferung vollständig mit gemeinsamen Produktionswerkzeugen prüfen. Keine neuen Rätseltests, Bestandsreplays, Player-Builds, Browserläufe oder technischen Uploads. Authoring §9 nach bestätigtem Mainabschluss.",
-  "test_changes": [],
   "core_change": null,
   "evidence": {
+    "expires": null,
     "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
+    "purpose": null
+  },
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/610",
+  "modules": [],
+  "omitted": "Reine Rätselproduktion. Vorhandene passende Qualitäts- und Proofbelege weiterverwenden; neue Lieferung vollständig mit gemeinsamen Produktionswerkzeugen prüfen. Keine neuen Rätseltests, Bestandsreplays, Player-Builds, Browserläufe oder technischen Uploads. Authoring §9 nach bestätigtem Mainabschluss.",
+  "package": "Schnecke r07: unveränderte endabgenommene Lieferung integrieren",
+  "purpose": "Unverändertes Originalpaket mit echten Freigaben regulär exportieren, Difficulty 0.4 bei gleicher Logik rebindend erhalten, frisch planen und registrieren; Completion, unabhängiges Review und bedingter Squash-Merge nach aktuellen Gates.",
+  "test_changes": []
 }

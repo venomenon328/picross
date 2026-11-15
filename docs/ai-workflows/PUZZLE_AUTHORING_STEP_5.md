@@ -95,6 +95,18 @@ sind Arbeitsmaterial, kein dauerhaft wachsender Spiel-/CI-Bestand.
    Abstammung und unveränderte Integrations-/Arbeitsbytes, entfernt abgeschlossene
    Authoringrevisionen/Indexeinträge und ersetzt das Produktionspaket durch einen
    kompakten Integrationsdatensatz. Kein Solver-, Proof- oder Bildreplay.
+   Bei mehrphasiger Produktion zusätzlich die nachweislich abgeschlossenen
+   früheren Phasen mit wiederholbarem `--completed-revision <pz-ID> <revision>`
+   und gemeinsame Zusatzarbeit mit `--completed-work <pz-ID> <relativer-Pfad>`
+   auswählen, etwa `evidence`. Diese technische Auswahl gehört zur bestehenden
+   Abschlussbefugnis und benötigt keine weitere Nutzerfreigabe je Vorgängerrecord.
+   Zuordnung aus tatsächlichem Produktionsverlauf und unverändertem Mainbaum
+   prüfen; gleiche ID oder kleinere Revisionsnummer allein reichen nicht.
+   Alte Phasenzustände/Freigaben nicht umschreiben. Ungewählte normale Revisionen,
+   unbekannte Zusatzdateien und neuere/offene Arbeit blockieren vor Mutation;
+   nicht durch manuelles Vorlöschen umgehen. Der geschlossene
+   [Mehrphasenvertrag](../ZA1_ADAPTER.md#pw-retire--abschluss-mehrphasiger-produktion)
+   bindet Auswahl, ursprünglichen Mainanker, Schutzprüfungen und Wiederholung.
 3. Dauerhaft bleiben Runtime-Definition mit Matrix/Hinweisen, Reveal, Rechte/Notices,
    ID/Runtime-Revision/Save-Slot, Kategorie und relevante Schwierigkeit. Kompakter
    Datensatz bindet diese Daten, ursprünglichen Exporthash und bestätigten Maincommit.

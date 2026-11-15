@@ -1,0 +1,3 @@
+Production ID: pz-marienkaefer
+Artwork: OpenAI ImageGen · native Bildgenerierung in Codex
+Usage basis: Im ausdrücklich beauftragten Motivauftrag neu erzeugte KI-Illustration zur Verwendung im Picross-Projekt; keine externe Bildvorlage oder übernommenen Fremdassets. Keine Behauptung ausschließlicher Rechte.

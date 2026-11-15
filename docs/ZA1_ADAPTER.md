@@ -1945,3 +1945,50 @@ Sperrbytes werden nach erfolgreichem Readback entfernt; ein Teilfehler erhält
 den Marker und nennt ihn ausdrücklich zur manuellen Klärung mit dem tatsächlichen
 Git-Diff. Keine automatische Locklöschung oder ZIPrekonstruktion. Ein No-op
 beansprucht keinen Marker und verändert keine Datei/mtime.
+
+## PW-RETIRE · Abschluss mehrphasiger Produktion
+
+[Paket #665](https://github.com/venomenon328/picross/issues/665) ergänzt den
+bestehenden Retirementwriter, ohne neue Receiptgeneration oder vorgezogenen
+RI-ONE-Umbau. Die integrierte Schlussrevision bleibt implizit ausgewählt.
+Zusätzlich wählt der Produktionsakteur mit wiederholbarem
+`--completed-revision ID REVISION` die tatsächlich erledigten früheren normalen
+PW-Phasen und mit `--completed-work ID PATH` konkret zugeordnete Zusatzarbeit.
+PATH ist ein kanonischer Datei- oder Verzeichnispfad relativ zur betreffenden
+`content/authoring/ID/`-Wurzel, beispielsweise `evidence`. Die API ergänzt
+`completed_revisions` und `completed_work`, jeweils optionale Listen von Paaren.
+
+Diese technische Auswahl gehört zum bereits beauftragten §9-Abschluss; keine
+zusätzliche Nutzerfreigabe pro altem Phasendatensatz. Der Akteur muss die Zuordnung
+aus dem tatsächlichen Produktionsverlauf feststellen. Gleiche ID, niedrigere
+Revisionsnummer oder lexikografische Reihenfolge genügen allein nicht. Frühere
+v3/v4-Records behalten ihre ursprünglichen Phasenzustände, offenen damaligen
+Gates und Freigaben; keine nachträgliche Completion oder Neuversiegelung.
+Sie müssen eine bekannte frühe/späte PW-Phase oder editorially_approved führen,
+mit gleicher ID/Revision und ohne eigene Integrationsbindung.
+
+Jede zusätzliche Revision muss im ursprünglichen enthaltenen Integrationscommit
+indexiert sein. Aktuelle Zeile, vollständige Dateimenge, reguläre Modi und Bytes
+müssen diesem Commit entsprechen. Zusatzarbeit muss dort ebenfalls vollständig
+enthalten sein. IDs außerhalb der gewählten Produktion, unbekannte Formen,
+Duplikate/Casefold-Aliase, Traversierung, ID-Wurzel, current-view.json und
+überlappende Arbeitsauswahlen sind Fehler. Zusatzarbeit darf mit keiner aktuellen
+oder historischen indexierten Revisionswurzel überlappen, auch nicht mit einer
+explizit gewählten. Der bestehende separate Main-/Revisionscheck und Abbau des
+abgeschlossenen Ansichtsverweises bleiben vor dem Retirementaufruf erforderlich.
+
+Ungewählte normale Revisionsgeschwister blockieren weiterhin vor jeder Mutation;
+dadurch bleiben auch ihre möglicherweise gemeinsam benötigten Arbeitsbelege
+erhalten. Eindeutig getrennte indexierte Hintergrundadoptionsjobs bleiben nach
+ihrem bisherigen Vertrag erhalten. Alle gewählten IDs, Revisionen und Arbeitspfade
+werden vor Locknahme/Löschung geprüft. Neue Dateien, ungemergte Änderungen,
+Staging oder Teilentfernung sind kein erfolgreicher Abschluss.
+
+Planung, einzelne geprüfte Dateilöschung, Verzeichnisabbau und Indexfortschreibung
+verwenden dieselbe ausdrücklich ausgewählte Menge. Unbekannte Dateien werden nie
+rekursiv entfernt. Aktive Runtime, Bilder/Quellen, Rechte/Notices, Metadaten,
+Bewertungen und ursprüngliche Integrationsanker bleiben erhalten. Nach vollständig
+erfolgreichem Abschluss ist dieselbe Auswahl bei frischer Prüfung ein Byte-/mtime-
+No-op ohne alte Archivöffnung. Ursprüngliche Existenz und Recordidentität werden
+weiter aus den kleinen Mainquellen geprüft; wieder erschienene Reste blockieren.
+Die vorhandenen Lock-, Readback- und ehrlichen Teilfehlerregeln gelten unverändert.
