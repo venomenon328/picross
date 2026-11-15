@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/614",
-  "package": "Libelle-S3",
+  "package": "Libelle r04: Kopf- und Flügelkorrektur zur Rasterwahl",
   "modules": [],
-  "purpose": "Reine Rätselproduktion Schritt 3: freigegebene M-r02 und Parameter, qualifizierte Einzelrasterpakete mit Proof, Rekonstruktion, SD2-0.4 und Sichturteilen; Index/Projektion/current-view. Buildfreier Quellen-/Plankern.",
-  "omitted": "Keine Werkzeug-, Spiel- oder CI-Implementierung, keine Integration. Produktionsprüfungen am neuen Rätsel statt production.*, tools, native.*, preflight, delivery oder Chromium; keine Rätsel-Dauertests oder Bestandsreplays.",
+  "purpose": "Reine Schritt-3-Rätselkorrektur: feste elf Zellleerungen gegen r03, vollständige unabhängige Paarzertifizierung, aktive 0.4-Bewertung L5 und tatsächliche Sichtprüfung. Builder-ZIP, Index/Projektion/current-view; buildfreier Quellen-/Plankern.",
+  "omitted": "Keine Werkzeug-, Spiel- oder CI-Implementierung, keine Integration oder Merge. Keine Rätsel-Dauertests, Bestandsreplays, Browser- oder zusätzlichen Fach-/Native-CI-Module. Produktionsprüfungen am neuen Raster lokal ausgeführt; modules=[], evidence.mode=none.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

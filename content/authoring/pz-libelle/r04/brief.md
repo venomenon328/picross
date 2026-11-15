@@ -1,0 +1,1 @@
+Libelle · Schritt-3-Korrektur r04, Kategorie insekten-kleine-tiere. LIB-R-r04: 20x15 Mono, genau ink #263238, L5 nach aktiver 0.4. Markanterer Kopf mit schmalem Hals, filigranere Flügelansätze, Beinverlust erlaubt. Rasterwahl offen; danach drei Kontexte in Schritt 4.

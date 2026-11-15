@@ -1,0 +1,7 @@
+Repository: venomenon328/picross · Ziel: main. Lies AGENTS.md und den gemeinsamen Authoring-Kern, den vollständigen Bildstil und die dort für Schritt 4 geroutete Phasendatei im aktuellen main (Authoring 0.8.0).
+
+Produktionsdatensatz: https://github.com/venomenon328/picross/blob/40ac5e4c4d1122149382056fed5097b66c8279cc/content/authoring/pz-libelle/r03/record.json
+
+Korrektur in Schritt 3: Im Raster sollte der Kopf sich etwas markanter vom Körper abheben und die Flügel soweit möglich eine flügelhaftere Form behalten, sowie die Verbindung zum Körper filigraner sein. Detailverlust bei den Beinen oder ein Verzicht auf sichtbare Beine ist okay.. Korrigierten Stand zur fälligen Entscheidung vorlegen.
+
+Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.
