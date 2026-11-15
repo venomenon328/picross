@@ -289,10 +289,10 @@ else: cr.recover(root)
         self.assertEqual(cr.check_checkout(self.root)['entries'], [])
 
     def test_current_and_legacy_dispatch_is_explicit(self):
-        for generation in range(1, 9):
+        for generation in range(1, 11):
             j = {**self.journal, 'format': 'picross-registration-journal-v' + str(generation)}
-            self.assertEqual(phased.supports(j), generation in (6, 7, 8))
-        for generation in (tx.FORMATS, tx.BACKGROUND_FORMATS, tx.PE_FORMATS):
+            self.assertEqual(phased.supports(j), generation in (6, 7, 8, 9))
+        for generation in (tx.FORMATS, tx.BACKGROUND_FORMATS, tx.PE_FORMATS, tx.IMAGE_FORMATS):
             for operation, format_name in generation.items():
                 self.assertEqual(phased.supports({'format': format_name, 'operation': operation}), operation == 'registration')
 
@@ -386,3 +386,184 @@ class SourceTests(unittest.TestCase):
                 state = phased.Guards(self.base, self.journal, pub.journal_bytes(self.journal))
                 with patch.object(module, '_ROOT', root / 'methods'), self.assertRaises(ValueError):
                     state.full('G0', before_lock=True)
+
+
+
+class CurrentGenerationTests(unittest.TestCase):
+    """RI-V9: actual public producer on a slim v4/v8 mixed synthetic catalog."""
+    @classmethod
+    def setUpClass(cls):
+        from tests.puzzle_production.background_catalog_fixtures import prepare
+        from tools.puzzle_production import catalog_background as bg, editor_change as edit
+        from tools.puzzle_production.contract import write_json
+        owner = unittest.TestCase(); cls.addClassCleanup(owner.doCleanups)
+        old = prepare(owner, 'selected', registered=True)
+        cls.base = old.checkout
+        cls.home = old.case.root
+        # A second, compact old entry coexists with the complete v6 production.
+        catalog_fixtures.registered(cls.home / 'mono', stem='v9_old', save_slot='v9_old')
+        za1.rated_registration(cls.home / 'mono/export', cls.base, apply=True)
+        mono = za1.difficulty_for_export(cls.home / 'mono/export')['current_source']['id']
+        catalog_fixtures.compact(cls.base, [mono])
+        value = cr.check_checkout(cls.base)
+        runtime = json.loads((cls.base / cr.RUNTIME).read_bytes())
+        runtime['format'] = cr.IMAGE_RUNTIME_FORMAT
+        refs = bg.index(value)
+        value['backgrounds'] = []
+        for entry in value['entries']:
+            row = next(r for r in runtime['entries'] if r['id'] == entry['id'])
+            definition = (cls.base / 'game' / entry['definition']).read_bytes()
+            reveal = edit._record(entry, definition, None, 'reveal', {
+                'image_revision': 2, 'asset': bg.ref('game/' + row['reveal'],
+                    (cls.base / 'game' / row['reveal']).read_bytes())})
+            if entry['id'] in refs:
+                source = json.loads((cls.base / bg.path(entry['id'])).read_bytes())
+                current = bg.current(source)
+                image = {'image_revision': 2, 'status': current['decision']['outcome'],
+                         'asset': current['asset']}
+            else:
+                image = {'image_revision': 2, 'status': 'standard', 'asset': None}
+            source = edit._record(entry, definition, None, 'background', image)
+            write_json(cls.base / ('content/reveals/' + entry['id'] + '.json'), reveal)
+            write_json(cls.base / bg.path(entry['id']), source)
+            value['backgrounds'].append({'id': entry['id'], 'source': bg.ref(bg.path(entry['id']), bg.encoded(source))})
+            row['background'] = {**image, 'asset': {**image['asset'], 'file': image['asset']['file'].removeprefix('game/')}
+                                 if image['asset'] else None}
+        write_json(cls.base / cr.REGISTRY, value)
+        write_json(cls.base / cr.RUNTIME, runtime)
+        cls.old_id = old.manifest['definition_id']
+        cls.old_package = next(e['production']['package'] for e in value['entries'] if e['id'] == cls.old_id)
+        (cls.base / cls.old_package / 'external').mkdir(exist_ok=True)
+        request = {'id': cls.old_id, 'metadata': {'name': 'Manuell geändert', 'category_id': 'voegel'},
+                   'text': None, 'profile': None, 'reveal': None, 'background': None}
+        edit.apply(cls.base, edit.plan(cls.base, request))
+        cr.check_checkout(cls.base)
+        cls.export = cls.home / 'new-color'
+        approval = cls.home / 'color-approval.json'; za1.approve(za1.FIXTURES / 'direct-color', approval)
+        adapter.export(za1.FIXTURES / 'direct-color', cls.export, name='TEST ONLY v9',
+                       revision=1, stem='v9_new', save_slot='v9_new', approval_path=approval,
+                       category_id='voegel', categories_path=cls.base / 'content/categories.json')
+        cls.difficulty = za1.difficulty_for_export(cls.export)
+
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary.cleanup)
+        self.root = Path(temporary.name) / 'checkout'
+        shutil.copytree(self.base, self.root)
+
+    def register(self, **kwargs):
+        return cr.registration(self.export, self.root, apply=True, difficulty=self.difficulty, **kwargs)
+
+    def test_generated_v9_mixed_slim_sources_no_old_replay_and_noop(self):
+        from tools.puzzle_production import catalog_background as bg
+        before = fixture.files(self.root)
+        historical = {str((self.root / e['production']['package']).resolve()) for e in cr.check_checkout(self.root)['entries']}
+        original = adapter.verify_export
+        calls = {'old': 0, 'new': 0}
+        def verify(path):
+            if str(Path(path).resolve()) in historical:
+                calls['old'] += 1
+                raise InvalidInput('RI-V9 intentionally unreproducible old producer')
+            calls['new'] += 1
+            return original(path)
+        observed = []
+        def writer(root, j, additions, **kwargs):
+            observed.append(deepcopy(j))
+            return phased_execute(root, j, additions, **kwargs)
+        phased_execute = phased.execute
+        with patch.object(adapter, 'verify_export', side_effect=verify), patch.object(phased, 'execute', side_effect=writer):
+            self.assertEqual(self.register()['status'], 'registered')
+            self.assertEqual(calls['old'], 0)
+            self.assertGreaterEqual(calls['new'], 2)
+            journal, = observed
+            self.assertEqual(journal['format'], tx.IMAGE_FORMATS['registration'])
+            self.assertEqual(json.loads(journal['old'][tx.RUNTIME])['format'], cr.IMAGE_RUNTIME_FORMAT)
+            self.assertTrue(diag._early_registration(pub.journal_bytes(journal), staged=True))
+            state = fixture.files(self.root)
+            self.assertEqual(self.register()['status'], 'no-op')
+            self.assertEqual(state, fixture.files(self.root))
+            self.assertEqual(calls['old'], 0)
+            with self.assertRaisesRegex(InvalidInput, 'unreproducible'):
+                cr.check_checkout(self.root, replay=True)
+        after = fixture.files(self.root)
+        for name in before:
+            if name not in (tx.REGISTRY, tx.RUNTIME):
+                self.assertEqual(before[name], after[name], name)
+        self.assertFalse((self.root / tx.LOCK).exists())
+        self.assertEqual(len(cr.check_checkout(self.root)['entries']), 3)
+        source = json.loads((self.root / bg.path(self.old_id)).read_bytes())
+        self.assertIsNone(bg.initial(source))
+        self.assertNotIn('origin', source)
+
+    def test_none_current_choice_and_empty_transport_exception_are_precise(self):
+        from tools.puzzle_production import catalog_background as bg, editor_change as edit
+        request = {'id': self.old_id, 'metadata': None, 'text': None, 'profile': None,
+                   'reveal': None, 'background': {'status': 'none', 'upload': None}}
+        edit.apply(self.root, edit.plan(self.root, request))
+        source = self.root / bg.path(self.old_id)
+        before = source.read_bytes()
+        self.assertEqual(self.register()['status'], 'registered')
+        self.assertEqual(source.read_bytes(), before)
+        value = cr.check_checkout(self.root)
+        self.assertEqual(json.loads(before)['current']['status'], 'none')
+
+    def test_package_runtime_and_staging_recover_v9_with_fresh_conflict_guards(self):
+        for phase in ('journal-complete', 'P3', 'P5'):
+            with self.subTest(phase=phase):
+                original = fixture.files(self.root)
+                def stop(at, name=None):
+                    if at == phase: raise InterruptedError('RI-V9 interruption')
+                with patch.object(pub, 'checkpoint', side_effect=stop), self.assertRaises(InterruptedError):
+                    self.register()
+                classified = diag.classify(self.root)
+                # Classification validates the actual generated v9, including staged recovery.
+                self.assertIn('picross-registration-journal-v9', str(classified))
+                def restop(at, name=None):
+                    if at == 'R1-addition': raise InterruptedError('RI-V9 recovery interrupted')
+                if phase != 'journal-complete':
+                    with patch.object(pub, 'checkpoint', side_effect=restop), self.assertRaises(InterruptedError):
+                        cr.recover(self.root)
+                cr.recover(self.root)
+                with self.assertRaisesRegex(InvalidInput, 'Missing/ambiguous journal staging'):
+                    cr.recover(self.root)
+                self.assertEqual({n: raw for n, (raw, stamp) in fixture.files(self.root).items()},
+                                 {n: raw for n, (raw, stamp) in original.items()})
+
+    def test_new_unknown_generation_or_foreign_slim_bytes_never_write(self):
+        from tools.puzzle_production import catalog_background as bg
+        original = fixture.files(self.root)
+        with patch.dict(tx.IMAGE_FORMATS, registration='picross-registration-journal-v10'):
+            with self.assertRaisesRegex(InvalidInput, 'Unserved registration generation'):
+                self.register()
+        self.assertEqual(fixture.files(self.root), original)
+        name = bg.path(self.old_id)
+        (self.root / name).write_bytes((self.root / name).read_bytes() + b'FOREIGN')
+        before = fixture.files(self.root)
+        with self.assertRaises(ValueError): self.register()
+        self.assertEqual(fixture.files(self.root), before)
+
+    def test_new_input_and_unknown_empty_directory_reject_without_mutation(self):
+        from tools.puzzle_production import catalog_rating
+        before = fixture.files(self.root)
+        bad = deepcopy(self.difficulty)
+        bad['current_source']['definition_sha256'] = '0' * 64
+        bad = catalog_rating.hashed(bad, 'checked_hash')
+        with self.assertRaises(InvalidInput):
+            cr.registration(self.export, self.root, apply=True, difficulty=bad)
+        self.assertEqual(fixture.files(self.root), before)
+        foreign = self.root / self.old_package / 'external/unknown'
+        foreign.mkdir()
+        with self.assertRaises(ValueError): self.register()
+        self.assertTrue(foreign.is_dir())
+        self.assertEqual(fixture.files(self.root), before)
+
+    def test_every_declared_registration_generation_has_an_explicit_route(self):
+        declared = {value['registration'] for value in vars(tx).values()
+                    if isinstance(value, dict) and isinstance(value.get('registration'), str)}
+        historical = {tx.LEGACY_FORMATS['registration'], tx.PREVIOUS_FORMATS['registration']}
+        served = {name for formats, name, route in tx.REGISTRATION_GENERATIONS.values()}
+        self.assertEqual(declared, historical | served)
+        for generation, (formats, name, route) in tx.REGISTRATION_GENERATIONS.items():
+            self.assertEqual(tx.registration_format(generation), name)
+            self.assertEqual(tx.registration_route({'operation': 'registration', 'format': name}), route)
+        self.assertIsNone(tx.registration_route({'operation': 'registration', 'format': 'picross-registration-journal-v10'}))
