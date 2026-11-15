@@ -36,6 +36,8 @@ def read_path(value):
     if value in ('content/registry.json', 'game/data/registry.json') or re.fullmatch(
             r'content/packages/pz-[a-z0-9][a-z0-9-]{0,59}/[A-Za-z0-9][A-Za-z0-9._-]{0,31}/manifest\.json', value):
         return value
+    if re.fullmatch(r'content/(?:backgrounds|reveals)/pz-[a-z0-9][a-z0-9-]{0,59}\.json', value):
+        return value
     return production_path(value)
 
 
@@ -186,6 +188,64 @@ class LocalSource:
     def recheck(self):
         for name, limit in list(self.seen):
             self.read(None, name, limit, missing=self.seen[(name, limit)][0] is None)
+
+
+class _ReadScope:
+    """Private call-local bytes, never a replacement for publication rechecks.
+
+    Source/member bytes share one bounded LRU. The small source observations
+    survive eviction so a miss and the final fresh read still bind the first
+    bytes. LocalSource retains its independent path/file identity observations.
+    """
+    def __init__(self, source):
+        self.source, self.cache, self.seen = source, LRU(), {}
+
+    def read(self, commit, name, limit=JSON_LIMIT, missing=False):
+        key = (commit, name)
+        raw = self.cache.get(('source', *key))
+        if raw is None:
+            raw = self.source.read(commit, name, limit, missing)
+            observed = (io.checksum(raw), None if raw is None else len(raw))
+            if key in self.seen:
+                ap.require(self.seen[key][2] == observed, 'Quellen wurden zwischenzeitlich geändert: ' + name)
+            else:
+                self.seen[key] = (limit, missing, observed)
+            if raw is not None:
+                self.cache.put(('source', *key), raw)
+        ap.require(raw is not None or missing, 'Datei fehlt: ' + name)
+        ap.require(raw is None or len(raw) <= limit, 'Datei überschreitet die Lesegrenze: ' + name)
+        return raw
+
+    def member(self, commit, container, name, limit, archive=None):
+        ap.relative(name)
+        key = ('member', commit, container, name)
+        raw = self.cache.get(key)
+        if raw is None:
+            if archive is None:
+                archive = Archive(self.read(commit, container, ap.MAX_ZIP))
+                try:
+                    raw = archive.read(name, limit)
+                finally:
+                    archive.close()
+            else:
+                raw = archive.read(name, limit)
+            self.cache.put(key, raw)
+        ap.require(len(raw) <= limit, 'ZIP-Datei überschreitet Lesegrenze.')
+        return raw
+
+    def recheck(self):
+        # Deliberately bypass the LRU. No mtime/hash-only shortcut at this boundary.
+        if isinstance(self.source, LocalSource):
+            self.source.recheck()
+            return
+        for (commit, name), (limit, missing, expected) in self.seen.items():
+            raw = self.source.read(commit, name, limit, missing)
+            ap.require((io.checksum(raw), None if raw is None else len(raw)) == expected,
+                       'Quellen wurden zwischenzeitlich geändert: ' + name)
+
+    def clear(self):
+        self.cache = LRU()
+        self.seen.clear()
 
 
 class Archive:

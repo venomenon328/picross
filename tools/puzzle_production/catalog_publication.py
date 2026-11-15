@@ -24,16 +24,21 @@ BACKGROUND_FORMAT = "picross-background-adoption-journal-v1"
 BINARY_FORMATS = ("picross-reveal-adoption-journal-v1", "picross-reveal-adoption-journal-v2",
                   "picross-reveal-adoption-journal-v3", "picross-reveal-adoption-journal-v4",
                   "picross-reveal-adoption-journal-v5", "picross-background-adoption-journal-v3",
-                  "picross-background-adoption-journal-v2", BACKGROUND_FORMAT)
+                  "picross-background-adoption-journal-v2", BACKGROUND_FORMAT,
+                  "picross-reveal-adoption-journal-v6", "picross-background-adoption-journal-v4",
+                  "picross-editor-images-journal-v1", "picross-editor-raster-journal-v1",
+                  "picross-editor-change-journal-v1")
 PREFIXES = tuple(b'{"format":' + canonical_bytes(value) + b',' for value in BINARY_FORMATS)
 NORMAL_LIMIT = 24 * 1024 * 1024
 LIMIT = 128 * 1024 * 1024
+EDITOR_PREFIX = b"PICROSS-EDITOR-CHANGE-JOURNAL-V1\n"
 
 
 def staging(root):
     directory = io.safe(root, "content")
     return sorted(p.relative_to(root).as_posix() for p in directory.iterdir()
-                  if p.name.startswith(".registration-journal-") and p.name.endswith(".tmp"))
+                  if (p.name.startswith(".registration-journal-") and p.name.endswith(".tmp"))
+                  or p.name == ".editor-change-journal.tmp")
 
 
 def read_journal(root, name="content/.registration-pending.json"):
@@ -43,8 +48,9 @@ def read_journal(root, name="content/.registration-pending.json"):
     size = p.stat().st_size
     if size > LIMIT: raise Aborted("resource_limit: journal exceeds 128 MiB")
     with p.open("rb") as stream: prefix = stream.read(4096)
-    require(size <= NORMAL_LIMIT or prefix.startswith(PREFIXES), "Only declared binary journals may exceed 24 MiB")
-    raw = io.read(root, name, LIMIT if prefix.startswith(PREFIXES) else NORMAL_LIMIT)
+    binary = prefix.startswith(PREFIXES) or prefix.startswith(EDITOR_PREFIX)
+    require(size <= NORMAL_LIMIT or binary, "Only declared binary journals may exceed 24 MiB")
+    raw = io.read(root, name, LIMIT if binary else NORMAL_LIMIT)
     active = diagnostic.frame.get()
     if active is not None and hasattr(active, "journal_raw"):
         require(raw == active.journal_raw, "Journal changed after recovery classification")
@@ -54,7 +60,11 @@ def read_journal(root, name="content/.registration-pending.json"):
 def journal_bytes(j):
     raw = b'{"format":' + canonical_bytes(j["format"]) + b"," + canonical_bytes({k: v for k, v in j.items() if k != "format"})[1:] + b"\n"
     limit = LIMIT if j["format"] in BINARY_FORMATS else NORMAL_LIMIT
+    if j["format"] == "picross-editor-raster-journal-v1" and not j["replacements"]: limit = NORMAL_LIMIT
     if len(raw) > limit: raise Aborted("resource_limit: transaction journal exceeds byte limit")
+    if j["format"] == "picross-editor-change-journal-v1":
+        import zlib
+        raw = EDITOR_PREFIX + zlib.compress(raw, level=6)
     return raw
 
 
@@ -90,7 +100,11 @@ def decode_binary(value):
 
 
 def nullable_binaries(j):
-    return j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2", "picross-background-adoption-journal-v3") and j.get("operation") == "background-adoption"
+    return (j.get("format") in (BACKGROUND_FORMAT, "picross-background-adoption-journal-v2", "picross-background-adoption-journal-v3",
+                               "picross-background-adoption-journal-v4") and j.get("operation") == "background-adoption" or
+            j.get("format") == "picross-editor-images-journal-v1" and j.get("operation") == "editor-images" or
+            j.get("format") == "picross-reveal-adoption-journal-v6" and j.get("operation") == "reveal-adoption" or
+            j.get("format") == "picross-editor-raster-journal-v1" and j.get("operation") == "editor-raster")
 
 
 def binary_hash(value):
@@ -129,8 +143,36 @@ def _validate_background_image(path):
 
 
 def validate_replacements(j, registry):
+    from . import catalog_transaction as tx
     replacements = j["replacements"]
     require(isinstance(replacements, dict), "Invalid replacement map")
+    if tx.images(j):
+        from .editor_image_input import validate_background
+        candidates = {name: e for e in registry["entries"] for name in tx.image_candidates({"entries": [e]})}
+        if j["operation"] not in ("editor-images", "editor-raster", "reveal-adoption", "background-adoption"):
+            require(not replacements, "This image journal cannot replace binaries")
+            return
+        require(set(replacements) <= set(candidates), "Unbound image replacement path")
+        total = 0
+        from .target_adapter import validate_reveal
+        with tempfile.TemporaryDirectory(prefix="pe-image-check-") as directory:
+            for name, pair in replacements.items():
+                exact_keys(pair, {"old", "new"})
+                require(binary_hash(pair["old"]) != binary_hash(pair["new"]), "Unchanged binary replacement")
+                for value in pair.values():
+                    if value is None: continue
+                    binary_shape(value)
+                    total += value["bytes"]
+                    if total > 96 * 1024 * 1024: raise Aborted("resource_limit: replacements exceed 96 MiB")
+                    raw = decode_binary(value)
+                    if name.startswith("game/art/backgrounds/"):
+                        validate_background(raw)
+                    else:
+                        path = Path(directory) / ("image" + Path(name).suffix)
+                        path.write_bytes(raw)
+                        entry = candidates[name]
+                        validate_reveal(path, entry["production"]["width"], entry["production"]["height"])
+        return
     backgrounds = nullable_binaries(j)
     if j["operation"] != "reveal-adoption" and not backgrounds:
         require(not replacements, "This journal cannot replace binaries")
@@ -310,6 +352,14 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
         bound_backgrounds = {n for side in ("old", "new") for n, value in j[side].items() if value is not None}
         bound_backgrounds |= set(j["retained"]) | set(j["additions"]) | set(j["replacements"])
         require(sources | assets <= bound_backgrounds, "Unbound background file; preserve journal")
+    if tx.images(j):
+        actual = tx.reveal_assets(root, *registries, temporary=temps)
+        bound = set(j["retained"]) | set(j["additions"]) | set(j["replacements"])
+        bound |= {name for side in ("old", "new") for name, value in j[side].items() if value is not None}
+        require(actual <= bound, "Unbound alternate reveal appeared; preserve journal")
+        # Negative candidate expectations are derived, never supplied by a plan.
+        for name in set().union(*(tx.image_candidates(registry) for registry in registries)) - bound:
+            require(not io.safe(root, name).exists(), "Unexpected inactive image: " + name)
     allowed_sd = {n for n in j["retained"] if n.startswith("content/difficulty/reports/")} | tx.report_names(j["report_run"], j["operation"])
     sd = io.safe(root, "content/difficulty/reports")
     if sd.exists():
@@ -334,6 +384,7 @@ def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _
         require(data is None if old_only else data is None or io.checksum(data) == h, "Foreign addition; preserve journal: " + n)
         if expected is not None: require(io.checksum(data) == expected[n], "Addition publication phase changed: " + n)
     packages = {e["production"]["package"] for r in registries for e in r["entries"]}
+    packages |= {"/".join(name.split("/")[:4]) for name in j["retained"] if name.startswith("content/packages/")}
     allowed_packages = set(j["retained"]) | set(j["additions"]) | temps
     for name in packages:
         p = io.safe(root, name)
@@ -459,7 +510,7 @@ def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
     require(isinstance(j, dict), "Invalid catalog journal")
     require(source_check is None or nullable_binaries(j) and callable(source_check),
             "Source recheck requires background adoption")
-    registration = j.get("operation") == "registration" and j.get("format") in (tx.PE_FORMATS["registration"], tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    registration = j.get("operation") == "registration" and j.get("format") in (tx.IMAGE_FORMATS["registration"], tx.PE_FORMATS["registration"], tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
     require(registration or publication_seconds is None and recovery_seconds is None,
             "RI-A overrides require a new registration")
     if registration:
@@ -486,7 +537,7 @@ def _execute(root, j, additions=None, *, fail_step=None, under_lock=None, source
     diagnostic.begin_segment("P0")
     tx.validate_journal(root, j, before_write=True)
     if nullable_binaries(j):
-        tx._stage_check(root, j["new"], j["retained"],
+        tx._stage_check(root, j["new"], j["retained"], additions,
                         replacements={name: pair["new"] for name, pair in j["replacements"].items()}, journal=j)
     raw = journal_bytes(j)
     view = _JournalView(j, raw)

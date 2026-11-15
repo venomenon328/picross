@@ -22,7 +22,7 @@ static func valid_category_id(value: Variant) -> bool:
 	return true
 
 static func validate(raw: Variant) -> String:
-	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", "picross-runtime-registry-v7"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
+	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", "picross-runtime-registry-v7", "picross-runtime-registry-v8"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
 		return "Unsupported runtime registry format"
 	if raw.categories.size() > 256 or raw.entries.size() > 10000:
 		return "Registry count limit exceeded"
@@ -47,17 +47,18 @@ static func validate(raw: Variant) -> String:
 		previous_order = int(order)
 	var seen: Dictionary = {}
 	var current: bool = raw.format != "picross-runtime-registry-v2"
-	var named: bool = raw.format == "picross-runtime-registry-v7"
+	var image_preferences: bool = raw.format == "picross-runtime-registry-v8"
+	var named: bool = image_preferences or raw.format == "picross-runtime-registry-v7"
 	var backgrounds: bool = named or raw.format == "picross-runtime-registry-v6"
 	var dated: bool = backgrounds or raw.format in ["picross-runtime-registry-v4", "picross-runtime-registry-v5"]
-	# v6/v7 retain the v5 difficulty and v6 background sub-contracts.
+	# V8 retains the v7 fields and v5 difficulty; only v8 adds standard.
 	var version: int = 5 if backgrounds or raw.format == "picross-runtime-registry-v5" else 4
 	for item: Variant in raw.entries:
 		if not item is Dictionary or item.size() != (11 if named else 10 if backgrounds else 9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
 			return "Invalid registry entry fields"
 		if named and not valid_name(item.get("name")):
 			return "Invalid current puzzle name"
-		if backgrounds and not valid_background(item):
+		if backgrounds and not valid_background(item, image_preferences):
 			return "Invalid catalog background"
 		if dated and (not item.has("added_at") or not valid_added(item.added_at)):
 			return "Invalid catalog added timestamp"
@@ -79,6 +80,8 @@ static func validate(raw: Variant) -> String:
 				return "Invalid registry resource path"
 		if not str(item.definition).begins_with("data/") or not str(item.definition).ends_with(".json") or not str(item.reveal).begins_with("art/"):
 			return "Invalid registry resource type"
+		if image_preferences and not (str(item.reveal).ends_with(".png") or str(item.reveal).ends_with(".svg")):
+			return "Invalid current reveal type"
 		if not valid_category_id(item.category_id) or not category_ids.has(item.category_id):
 			return "Missing or unknown category for " + str(item.id)
 	return ""
@@ -94,7 +97,7 @@ static func valid_name(value: Variant) -> bool:
 	return false
 
 static func validate_capability(registry: Dictionary, value: Variant, present: bool) -> String:
-	# A v7 catalog always has a background field, even for a legacy-only target.
+	# V7/v8 always have a background field, even for a category-only target.
 	# The capability continues to certify the unchanged v6 background contract.
 	var enabled: bool = false
 	if present:
@@ -102,7 +105,7 @@ static func validate_capability(registry: Dictionary, value: Variant, present: b
 			return "Invalid background capability"
 		enabled = value.enabled
 	for entry: Dictionary in registry.entries:
-		if entry.background.status != "legacy" and not enabled:
+		if entry.background.status in ["selected", "none"] and not enabled:
 			return "Background catalog requires enabled compatible capability"
 	return ""
 
@@ -111,7 +114,7 @@ static func bounded_integer(value: Variant, minimum: int, maximum: int) -> bool:
 	# must not be accepted as integer revisions or byte counts.
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and value >= minimum and value <= maximum
 
-static func valid_background(item: Dictionary) -> bool:
+static func valid_background(item: Dictionary, allow_standard: bool = false) -> bool:
 	var identifier: Variant = item.get("id")
 	if not identifier is String or identifier.length() < 4 or identifier.length() > 63 or not identifier.begins_with("pz-") or not identifier[3] in "abcdefghijklmnopqrstuvwxyz0123456789":
 		return false
@@ -122,6 +125,8 @@ static func valid_background(item: Dictionary) -> bool:
 		return false
 	if value.status == "legacy":
 		return value.image_revision == null and value.asset == null
+	if allow_standard and value.status == "standard":
+		return bounded_integer(value.image_revision, 1, 1000000) and value.asset == null
 	if not value.status in ["none", "selected"] or not bounded_integer(value.image_revision, 1, 1000000):
 		return false
 	if value.status == "none": return value.asset == null
@@ -168,7 +173,7 @@ static func _load() -> Dictionary:
 	load_error = validate(raw)
 	if not load_error.is_empty():
 		return {}
-	if raw.format == "picross-runtime-registry-v7":
+	if raw.format in ["picross-runtime-registry-v7", "picross-runtime-registry-v8"]:
 		var capability: Variant = null
 		var present: bool = FileAccess.file_exists(CAPABILITY_PATH) or DirAccess.dir_exists_absolute(CAPABILITY_PATH)
 		if present:
@@ -186,6 +191,9 @@ static func _load() -> Dictionary:
 			return {}
 	cached = raw
 	return cached
+
+static func current_reveal_enabled() -> bool:
+	return _load().get("format") == "picross-runtime-registry-v8"
 
 static func unique_keys(text: String) -> bool:
 	var objects: Array[Dictionary] = []

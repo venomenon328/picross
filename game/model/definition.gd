@@ -17,11 +17,22 @@ static func load_fixture(id: String) -> Dictionary:
 	if not parsed is Dictionary or parsed.get("id") != entry.id:
 		return {}
 	if entry.has("name"):
-		# V7 owns the current label. Production definition bytes and save identity
+		# V7+ owns the current label. Production definition bytes and save identity
 		# remain unchanged; every normal view receives the same in-memory value.
 		if not Registry.valid_name(entry.name) or not parsed.get("reveal") is Dictionary:
 			return {}
 		parsed.reveal["name"] = entry.name
+	if Registry.current_reveal_enabled():
+		# Only v8 separates the live image from its historical production path.
+		# A format switch keeps that same technical stem; it never edits the
+		# definition file or the raster/save revision.
+		if not parsed.get("reveal") is Dictionary or not parsed.reveal.get("image") is String:
+			return {}
+		var historical: String = parsed.reveal.image
+		var current: String = "res://" + str(entry.reveal)
+		if not (historical.ends_with(".png") or historical.ends_with(".svg")) or historical.get_basename() != current.get_basename():
+			return {}
+		parsed.reveal["image"] = current
 	return parsed
 
 static func integer(value: Variant) -> bool:

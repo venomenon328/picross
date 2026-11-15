@@ -1,11 +1,46 @@
 # RP-1 bis RP-5: Deduktionskern, Bildproduktion und Reparatur
 
+> **PE-EDIT2:** Normale Bestandsbearbeitung verwendet jetzt
+> [`editor_cli`](editor_cli.py) und [`editor_change`](editor_change.py) nach
+> [PE §13](../../docs/PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung).
+> `list`, `detail --id`, `plan --request --output`, `apply --plan`, `recover`
+> verwenden `--target-root`; Request `picross-editor-request-v2` enthält keine
+> Herkunfts-/Akteurfelder. Die unten dokumentierten alten A1/A2/A3-Datenformen
+> bleiben explizite Alt-/Recoverykompatibilität. Aktuelle CLI-Planrouten nutzen
+> den schlanken Vertrag. Runtime-/Quellmigration erfolgen ausschließlich extern
+> nach [#641](https://github.com/venomenon328/picross/issues/641), nie in der App.
+
+
+## PE-A3: geprüfte manuelle Rasterrevision
+
+Vertrag vor konsumierendem Code, 13.11.2026, gemäß
+[PE §9](../../docs/PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag).
+`python -m tools.puzzle_production.raster_cli` bietet `view --checkout ROOT --id ID`,
+`plan --checkout ROOT --request REQUEST --output-dir NEW`,
+`apply --checkout ROOT --bundle BUNDLE` und `recover --checkout ROOT`.
+View liefert den aktuellen numerischen Rastertext und die vorhandene Palette.
+Plan liest `picross-editor-raster-request-v1` nach PE §9.1, prüft Matrix und
+aktuelles Reveal, erzeugt vollständigen Proof samt unabhängiger Prüfung sowie
+aktuelle Bewertung und bindet alle Originale im neuen externen Bundle.
+Apply übernimmt ausdrücklich genau dieses frisch geprüfte Bundle in einer
+gemeinsamen Transaktion einschließlich optionaler A1/A2-Felder. Alle vier
+geschlossenen neuen Formen und ihre exakten Felder stehen in PE §9;
+keine künstlichen Authoringfreigaben. Recovery rollt ausschließlich auf den
+validierten Altstand zurück. Exit 0 Erfolg/No-op, 2 Eingabe/Stale/Belegfehler,
+4 Ressourcenabbruch. Je Aufruf 300 s; keine RI-Budgetoptionen.
+V4/v8 ist Voraussetzung; v7 verlangt zuerst die vorhandene explizite
+`images_cli plan-migration/apply-migration`. Keine echte Bestandsmigration
+durch Rasterpflege. Gleiche Logik bleibt revisionsgleich ohne Solverlauf.
+Saves werden erst durch den regulären Spieler nach dem geschlossenen
+[Savevertrag](../../docs/PROTOTYPE_P1.md#6-speicherung-und-wiederaufnahme)
+gezielt und abbruchsicher behandelt; keine Tests an echten Nutzerprofilen.
+
 ## PE-A1: aktuelle Namen und Kategorien
 
 [`metadata_cli`](metadata_cli.py) pflegt vorhandene registrierte IDs gemäß
 [PE-A1](../../docs/PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag).
 Aktuelle Namen und Kategorien stehen in Inhaltsregistry v4; Runtime v7 ist die
-geprüfte Projektion. Definitions-/Bildbytes, Rasterrevisionen, Ratings, Added und
+geprüfte Projektion; nach der ausdrücklichen PE-A2-Migration bleibt Runtime v8 erhalten. Definitions-/Bildbytes, Rasterrevisionen, Ratings, Added und
 historische Produktionsbelege werden bei dieser Pflege nicht neu geschrieben.
 Die gemeinsame API liegt in [`catalog_metadata`](catalog_metadata.py).
 
@@ -30,7 +65,7 @@ abgetrennte Speicheransichten ohne weitere Datei-, Bild- oder Proofzugriffe.
 
 Die explizite Migration validiert v2/v3 und schreibt ausschließlich die beiden
 Registrydateien. Ein bereits gültiger v4/v7-Bestand bleibt unverändert. Normale
-mutierende Writer verlangen danach v4/v7 und migrieren nicht nebenbei. Alte
+mutierende Writer verlangen danach v4 mit Runtime v7 oder v8 und migrieren nicht nebenbei. Alte
 gebundene Journale zuerst über ihren gemeinsamen Recoveryweg auflösen.
 
 Eine Operationsdatei enthält eine Liste. Beispiel mit einer zuvor aus `view`
@@ -58,7 +93,51 @@ mtimes. Offene Journale/Locks verhindern auch einen konkurrierenden No-op.
 Recovery stellt den vollständigen alten Zustand wieder her und schützt fremde
 Änderungen. Es gibt keine zusätzliche Metadatenhistorie oder freie Registry-API.
 Rückgabecodes: 0 erfolgreich, 2 ungültiger Eingang/Konflikt, 4 Ressourcenabbruch.
-Raster-/Bildpflege und eine Weboberfläche gehören zu späteren PE-Paketen.
+Rasterpflege verwendet den eigenen PE-A3-Vertrag oben; die Weboberfläche folgt in PE-B.
+
+## PE-A2: vorbereitete Bilder und Hintergrundpräferenzen
+
+[`images_cli`](images_cli.py) und die gemeinsame API
+[`catalog_images`](catalog_images.py) pflegen genau eine bereits registrierte ID
+gemäß dem [geschlossenen PE-A2-Vertrag](../../docs/PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag).
+Ein Request kann Abschlussbild, Hintergrundpräferenz sowie aktuellen Namen und
+Kategorie gemeinsam ändern. Kategorieanlage/-umbenennung bleibt bei `metadata_cli`.
+
+```text
+python -m tools.puzzle_production.images_cli view --target-root CHECKOUT --id PUZZLE_ID
+python -m tools.puzzle_production.images_cli plan-migration --target-root CHECKOUT --output MIGRATION.json
+python -m tools.puzzle_production.images_cli apply --target-root CHECKOUT --plan MIGRATION.json
+python -m tools.puzzle_production.images_cli plan --target-root CHECKOUT --request INPUT/request.json --output BUNDLE
+python -m tools.puzzle_production.images_cli apply --target-root CHECKOUT --plan BUNDLE/plan.json
+python -m tools.puzzle_production.images_cli recover --target-root CHECKOUT
+```
+
+Die ausdrückliche Migration schreibt ausschließlich die Runtimeprojektion von v7
+nach v8; eine Wiederholung ändert keine Bytes oder mtimes. Ohne Migration wird
+Bildpflege abgewiesen. Normale Folgeoperationen erhalten v8.
+
+Der UTF-8-Request `picross-editor-images-request-v1` hat genau die Felder
+`format,id,metadata,reveal,background,decision`. Nicht gewählte Bereiche sind
+`null`; mindestens ein Bereich muss gewählt sein. Bildrefs binden relative Datei,
+SHA-256 und Bytezahl. Die tatsächliche manuelle Entscheidung nennt handelnde
+Person, UTC-Zeitpunkt und Erklärung; Bildprovenienz nennt Urheber, Nutzungsgrundlage,
+Quelle und Änderungen. Die vollständigen Feldformen stehen im Fachvertrag.
+
+Abschlussbilder sind bereits vorbereitete PNGs oder lokale SVGs. Hintergrundbilder
+sind bereits vorbereitete PNGs mit genau 2304×576 Pixeln, transparenten und
+sichtbaren Bereichen und der festgelegten Farbdarstellung. Der Writer übernimmt
+die geprüften Bytes unverändert. `standard` folgt der aktuellen Kategoriezeichnung,
+`selected` bindet das eigene Bild, `none` unterdrückt den Hintergrund.
+
+`INPUT`, `BUNDLE` und Migrationsplan liegen außerhalb des Zielcheckouts. `plan`
+erzeugt einen neuen geschlossenen Ordner mit `plan.json`, gebundenem `request.json`,
+den benötigten `input/`-Dateien und früheren Bildbytes in `previous/`. Nach der
+Planung darf der ursprüngliche Inputordner entfallen. Vor `apply` sind Vorschau,
+Dateiliste und Entscheidung zu prüfen. Fremde Zusatzdateien, veränderte Quellen,
+offene Journale sowie Pfad- und Dateikollisionen verhindern die Übernahme.
+Die gemeinsame Transaktion veröffentlicht die Runtime zuletzt; Recovery stellt
+ausschließlich den geprüften alten Zustand wieder her. Gleiche aktuelle Werte
+und eine identische Wiederholung bleiben No-ops.
 
 ## #596/C · Feste Rasterableitung
 
@@ -279,7 +358,23 @@ Gleichheit mit dem aktuellen Werkzeug. Originales `commit/dirty` bleibt
 Erzeugerherkunft; ein späterer reiner Contentcommit macht gleiche ausführbare
 Bytes nicht ungültig. Ausgabe und vollständigen Befund mit dem ursprünglichen
 Toolobjekt reproduzieren; geladene/gespeicherte Module und Eingänge müssen dabei
-unverändert bleiben. Echte Modul-/Codec-/Profiländerung bleibt `tool_mismatch`.
+unverändert bleiben. HP-W2-COMPAT-1 aus
+[#645](https://github.com/venomenon328/picross/issues/645#issuecomment-6882921168)
+ergänzt ausschließlich für `selected` die geschlossene Menge qualifizierter
+historischer Erzeugeridentitäten in `background_assets._SELECTED_PRODUCERS`.
+Ihr Hash bindet das vollständige Original-Toolobjekt einschließlich Commit,
+dirty, sämtlicher Modulhashes und Versionen. Erster Eintrag ist
+`23971ee3834218f28977a346e09f716de6eb18fd6fc3acb8cab25a5ad8cab691`
+aus `94f0fb35ab4f6623a1ddde6d0ca3b03590be0e57` (dirty=false), nach Abgleich
+der neun Originalmodule mit Git und tatsächlicher bytegenauer Reproduktion.
+Weitere Identitäten benötigen eigene Qualifizierung. Keine Modulnamenausnahme
+und keine Ausführung historischer Quellen. Aktuelle sichere Leser reproduzieren
+PNG und vollständigen Originalbefund einschließlich Diagnostik; die vollständige
+aktuelle Modul-/Codecbindung wird währenddessen vor/nach geprüft. ID und gesamte
+Versionsmap müssen auch bei dieser Route exakt stimmen. `none`, unbekannte alte
+Tools, geänderte Codecs/Profile oder abweichende Reproduktion bleiben Fehler.
+Finalizer (zuerst alter Record), Export und Offline-`verify-export` erreichen
+dieselbe zentrale Prüfung. Es entsteht kein zusätzlicher persistenter Beleg.
 `derive` einschließlich `reused` verlangt weiterhin den **vollständigen aktuellen**
 `expected_tool_sha256`. Keine Umschreibung alter Befunde oder Freigaben.
 
@@ -1019,6 +1114,17 @@ Der [Transaktionsvertrag](../../docs/SD_CATALOG.md#ri-c--phasengrenzen-für-erst
 erklärt die geänderte Erkennungszeit, kooperativen Lock und verbleibende OS-Rennen.
 [RI-C-T01](../../docs/RI_C_VERIFICATION.md) bindet die tatsächlichen Nachweise;
 keine Sekundenbeschleunigung allein aus verringerten Guardzahlen ableiten.
+
+**RI-REPLAY-1 / #650:** Im normalen mutierenden Registrierungs-P5 wird
+`check_checkout` mit dem aus dem Journal gebundenen **neuen** Paket als
+einziger vollständiger Produktionsreplay-Zielpfad ausgeführt. Für den
+Bestand bleiben frische Manifest-/Inventar-/Runtime-/Bild-/Namespace-
+und RI-C-Quellen-/Transaktionsprüfungen erhalten. Eine alte unkompaktierte
+Produktion wird dort nicht wegen Werkzeugdrift neu reproduziert.
+Explizites `check-registry` (`replay=True` ohne Ziel) sowie
+`verify-export` alter Pakete bleiben vollständige und strenge Audits.
+Unbekannte historische HP-W2-Tools werden nicht per Ausnahme zugelassen.
+Keine Änderung von RI-B-Kontextgrenzen, Recovery oder anderen Operationen.
 
 KE-N1: `recover-registration` übernimmt gültige alte Runtime-v2-Snapshots in
 Registrierungsjournal v2 bzw. Updatejournal v1 und stellt direkt einen vollständig

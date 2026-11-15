@@ -1,15 +1,15 @@
 {
-  "core_change": "Keine Kern-/Dauerteständerung. Direkte Originalsicht, Dateidiagnose und Paketprüfung einmalig im Produktionslauf. Prüfgrundansichten enden nach Sichtung; Produktionsoriginale bis fachlichem Abschluss nach Authoring §9 erhalten.",
-  "evidence": {
-    "expires": null,
-    "mode": "none",
-    "purpose": null
-  },
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/617",
+  "issue": "https://github.com/venomenon328/picross/pull/643",
+  "package": "Marienkaefer-Schritt-3",
   "modules": [],
-  "omitted": "Keine Zusatzmodule: keine Werkzeug-/Spiel-/CI-Codeänderung. Keine Rasterproduktion vor Motivfreigabe, keine Solver-/Proof-/Difficulty-/Bestands-/Engine-/Browserprüfung oder technischen Uploads. Keine neuen Tests.",
-  "package": "Marienkäfer · Schritte 1–2 / motif_review r02",
-  "purpose": "Reine Authoring-0.8.0-Produktion: drei Abschlussbildoriginale erhalten, tatsächliche unveränderte C-r01-Freigabe binden, separate Motivvorlage M-r02 samt Parameterkorridor vorlegen und Builder/Index/Projektion/Pointer sichern. Allgemeiner Kern ohne Player-Build.",
-  "test_changes": []
+  "purpose": "Reine Authoring-0.8-Rasterproduktion pz-marienkaefer: qualifizierte Einzelrevision und Ansichtsübergabe; Quellen-/Planintegrität ohne Spielerbuild.",
+  "omitted": "Keine Werkzeug-, Spiel-, CI- oder gemeinsamen Assetänderungen. Rätselspezifische Import-, Proof-, Herkunfts-, Paletten-, Schwierigkeits- und ZIP-Prüfungen erfolgen in der Produktion; keine CI-Replays.",
+  "test_changes": [],
+  "core_change": null,
+  "evidence": {
+    "mode": "none",
+    "purpose": null,
+    "expires": null
+  }
 }

@@ -14,6 +14,14 @@ Dieser Vertrag ersetzt frühere automatische Vollauswahl, verpflichtende Gesamtl
 
 - `docs`: aktuellen Paketplan prüfen, kleine Plan-/Ergebnisregressionen, Dokumentintegrität und Metadatencheck gegen neue generierte Archivklassen. Kein vollständiges `unittest discover` im Kern.
 - `ci-required`: echte erfolgreiche Kernprüfung voraussetzen, Plan aus ursprünglichem Ereignis/Quellcommit erneut lesen, bei buildpflichtigem Umfang das reguläre Windows-x64-Paket erstellen und ausschließlich angeforderte Zusatzmodule ausführen. Originale der gewählten nativen/Fachmodule werden im selben Job unabhängig geprüft.
+- Die angeforderten Module laufen als exakte `verify`-Matrixteile auf getrennten
+  Runnern. Jeder Teil liest denselben ursprünglichen Gesamtplan und prüft seine
+  Zugehörigkeit sowie Head/Basis/Testmerge frisch. Modulinhalt und Originalreader
+  bleiben vollständig; keine Ergebnisübernahme zwischen Jobs. Der Windowsbau ist
+  ein eigener Teil, außer `native.export` liefert ihn bereits. `ci-required`
+  verlangt erfolgreiche `docs` und **alle** angeforderten Matrixteile; fehlende,
+  übersprungene, abgebrochene oder fehlgeschlagene Teile sind kein Erfolg.
+  Ohne Zusatzmodule und Baupflicht prüft ein expliziter `source`-Teil die Bindung.
 - Windows-Download: EXE, Konsolenhilfe, PCK, Anleitung und Lizenzen; ein flaches ZIP durch den Uploaddienst. Kein Technikbaum. Ein Linuxexport ist kein behaupteter nativer Windows-Start. Bei gewähltem `native.export` wird dessen geprüftes Paket wiederverwendet statt doppelt gebaut.
 - main führt nur diesen Kern aus und übernimmt keine Zusatzmodule des gerade abgeschlossenen Pakets. Reine Dokumentenänderungen und reine Rätselproduktion bleiben ohne Player-Build; das gilt auch im Main-Nachlauf. Quellen-/Planintegrität und Ergebnisgate bleiben erforderlich.
 
@@ -24,8 +32,13 @@ beider Seiten einer Umbenennung. Dokumente (Markdown in den Dokumentationsbereic
 HTML-Sheets und ihre Dokumentressourcen), reine Produktionsdateien gemäß
 [`content_path`](../tools/ci_paths.py) und der aktuelle Paketplan lösen allein
 keinen Player-Build aus. Das umfasst Authoringablage, registrierte Rätselinhalte,
-generierte Runtime-Daten/-Bilder und deren reine Datenbereinigung. Code, gemeinsame
-Spielgrafik, Werkzeug-/CI-Änderungen, unbekannte Pfade oder nicht reguläre Dateimodi
+generierte Runtime-Daten/-Bilder und deren reine Datenbereinigung. Dazu gehören
+auch die rätselspezifischen Hintergrundquellen `content/backgrounds/pz-<id>.json`
+und ihre Assets `game/art/backgrounds/pz-<id>.png` / `.txt`. Diese vollständigen
+Pfadmatches verwenden dieselbe geschlossene ID-Grammatik wie Revealquellen:
+`pz-[a-z0-9][a-z0-9-]{0,59}`. Capabilitydateien, Loader, Shader und `.import`-Dateien
+sind keine Produktionsdaten. Code, gemeinsame Spielgrafik, Werkzeug-/CI-Änderungen,
+unbekannte Pfade oder nicht reguläre Dateimodi
 fallen nicht unter die Ausnahme. Ein gemischter Dokument-/Inhalts-PR bleibt buildfrei,
 solange er ausschließlich diese Klassen enthält.
 
