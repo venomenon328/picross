@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/619",
-  "package": "Marienkaefer r05: Korrektur der gewaehlten Kontextzeichnung",
+  "package": "Marienkäfer r05: Endabnahme und Erstintegration MK-HG-A-b04",
   "modules": [],
-  "purpose": "Neue Hintergrundrevision nach ausdruecklichem Korrekturauftrag sichern und als background_review zur erneuten Auswahl vorlegen. Reine Produktionsdaten: buildfreier Quellen-/Plankern docs/ci-required.",
-  "omitted": "Keine Werkzeug-, Spiel-, CI-, Raster-, Reveal- oder Difficultyaenderung. Unveraenderte qualifizierte Raster-/Proof-/Bildbelege weiterverwenden. Keine HP-W2-Kandidatenableitung, Endabnahme neuer Bildbytes, Registrierung, Merge, Browser oder Player-Build.",
+  "purpose": "Unveränderte menschlich gewählte Kontextzeichnung mit ausdrücklicher Q-HG02-Warnungsannahme, Raster und Reveal finalisieren; regulärer Export, frischer Plan, Registrierung und Completion. Quellen-/Plankern docs/ci-required; unabhängiges Review am tatsächlichen PR-Head vor bedingt autorisiertem Squash-Merge.",
+  "omitted": "Reine Rätselproduktion ohne Werkzeug-, Spiel- oder CI-Änderungen. Keine neuen Rätseltests, Bestands-/Solverreplays, Player-Builds, Browserläufe oder technischen Uploads. Passende Qualitäts- und Proofbelege erhalten; neue Lieferung tatsächlich über gemeinsame Produktionswerkzeuge prüfen. Authoring §9 erst nach bestätigter Mainintegration.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
