@@ -1,25 +1,11 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/653",
-  "package": "PW-PERF-E",
-  "modules": [
-    "production.catalog",
-    "production.adapter"
-  ],
-  "purpose": "PW-PERF-E K01–K08: ausgewählte Retirementreader, aktuelle Quellen und Receipt v4; production.catalog für Lifecycle/Guards, production.adapter für tatsächlich geänderte gemeinsame Receipt-/CLI-Consumer. Schlanker Kern und regulärer Windowsbau. B01-Nacharbeit: echte Commitobjektart vor allen Mutationen, synthetischer Root-Tree-Negativfall und separater Quellcommit.",
-  "omitted": "Keine echte Rätselbereinigung, Solver-/Bildproduktion, Editor-UX, Spiel- oder Saveänderung. Daher keine tools-, production.solver/images-, native-, delivery- oder Chromium-Suite. Gemeinsame Indizes werden geprüft; unbeteiligte Altdateien sind keine Retirementabhängigkeit.",
-  "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_retirement_current.py",
-      "disposition": "change-scoped",
-      "reason": "Kleine synthetische T01-Lifecycle-, Quellen-/Rechte-, Main-, Fremddaten-, Teilfehler- und Nullread-Prüfungen. B01 erweitert den vorhandenen Sonderimportfall um unveränderte Bytes/mtimes, Lock-/Lösch-/Schreibfallen und einen echten nicht verwandten Quellcommit."
-    },
-    {
-      "path": "tools/puzzle_production/integrated_content.py",
-      "disposition": "temporary",
-      "reason": "T02 identischer gültiger synthetischer Vorher/Nachherfall, reale Byte-/Hash-/Zeitmessung. Originale auf separatem Reviewref bis A01, spätestens 2026-11-22; keine Bestandsbereinigung."
-    }
-  ],
+  "package": "PW-PERF-E-DATA",
+  "modules": [],
+  "purpose": "Kompaktierung ausschließlich pz-birne/r05, pz-erdbeere/r06 und pz-zitrone/r05 mit bestehendem retire-production. Reiner regulärer Content-/Paketplan-Diff einschließlich 42 Löschungen: buildfreier docs-/ci-required-Kern. DATA-T01/T02 prüfen reale Git-/Rechtebindungen, gezielten Readback, Livebytes, Nettobytes und frischen No-op.",
+  "omitted": "Keine Werkzeug-, Spiel-, Solver-, Bild- oder Saveänderung. Keine Zusatzmodule, kein Windowsbau, kein Produktionsreplay und keine neue Dauersuite. Unabhängiges PW-PERF-E-DATA-A01 vor Merge bleibt offen; aktuelle Textoriginale auf separatem Reviewref bis Reviewabschluss, spätestens 2026-11-22.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
