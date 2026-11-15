@@ -34,7 +34,7 @@ Bestehende Inhalts-, Proof-, Paletten-, Bild-, Freigabe- und Integrationsgaranti
 bleiben erhalten. Der Dienst bleibt lesend; Veröffentlichung und Gitabschluss
 führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
-**Vertrag 1.0 · Dokumentrevision 14 · 14.11.2026 · HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
+**Vertrag 1.0 · Dokumentrevision 15 · 15.11.2026 · HG-FORMAT / [#663](https://github.com/venomenon328/picross/issues/663); HP-W2-COMPAT-1 / #645; HP-W1/HP-W2 / #560; PB-H / #489; HP-I1a/HP-I1b1/HP-I1b2/HP-I1c/HP-I2 / #561; MJ-A/MJ-B / #490; BA-A/BA-B / #491; PE-A2 / #576**
 
 ## 1. Geltung und tatsächlicher Unterstützungsstand
 
@@ -774,7 +774,7 @@ Die konkrete ausgewählte Paketrevision und Originalbytes bleiben gleichwohl
 | Nur administrative Manifestangaben berichtigt | Alte Originale/Entscheidung erhalten. Übernahme über `carried_from` nur bei identischen gewählten Originalbytes, Kandidaten-ID/Bildrevision, `context` und Profil; tatsächlicher Akteur/UTC/Wortlaut/Beleg bytegleich. Neue Manifestbindung und Berichtigungsgrund im Entscheidungsprotokoll; keine erfundene neue Zustimmung. Geänderte Rechte werden eigenständig geprüft. |
 | Rastermaß, Zellwerte oder Palette geändert, Motivkontext unverändert | Vorhandene gültige Hintergrundwahl bleibt bestehen; nur die nach Authoring fälligen Raster-/Paletten-/Proofnachweise erneuern. Keine zusätzliche Buchsicht. |
 | Motivkontext oder geschützte Merkmale geändert | Gezielten Hintergrundvergleich dokumentieren. Bei betroffener Kontext-/Bildidentität neue Bildentscheidung; nicht automatisch drei neue Motive. |
-| Auswahl abgelehnt oder konkrete Korrektur offen | Zustand `rejected`/`pending`, Korrektur nur im Auftrag; unveränderte bereits autorisierte Rasterarbeit darf fortgesetzt werden. Keine automatische erste/empfohlene Option. |
+| Auswahl abgelehnt oder konkrete Korrektur offen | Zustand `rejected`/`pending`, Korrektur im beauftragten Umfang; reine Formatkorrektur laufender Kandidaten ist nach [Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl) bereits vom Hintergrundproduktionsauftrag umfasst und braucht keine zusätzliche Rückfrage, auch vor der Bildwahl. Unveränderte bereits autorisierte Rasterarbeit darf fortgesetzt werden. Keine automatische erste/empfohlene Option. |
 | Wiederaufnahme | Index/Record, tatsächlichen Paketstand, Hintergrundmanifest, Entscheidung, Originale, Rechte, Befund und Freigaben selbst laden/prüfen. Keine erneuten Uploads/Bestätigungen für bereits erreichbare gültige Bytes; keine stillen Versionswechsel. |
 | Reiner späterer Hintergrundersatz | Gesonderter Bildauftrag mit neuen Originalen/Wahl/Ableitung und dem sicheren HP-I1b-Weg. Lösungs-, Hinweis-, Paletten-, Schwierigkeits-, Runtime-/Saveidentität, Slot, Added-Daten und gültige unveränderte Freigaben erhalten. Keine Rekonstruktion alter bereinigter Rasterproduktion oder neuen Solverläufe allein wegen des Bilds. |
 
@@ -783,7 +783,13 @@ Entscheidung mit explizitem `previous_decision`; abhängige Ableitung/Endbindung
 muss genau diese Wahl verwenden. Keine alten Freigaben überschreiben. Für
 `carried_from` gilt dieselbe azyklische Vorgängerregel; der neue Record kann
 nicht auf sich oder einen Nachfolger zeigen. Eine Materialänderung ist darüber
-nicht übertragbar. Der ursprüngliche ImageGen-Prompt legitimiert keine Änderung.
+nicht übertragbar. Der ursprüngliche ImageGen-Prompt allein legitimiert keine
+materielle Umgestaltung. Die bereits vom Hintergrundproduktionsauftrag umfasste
+Formatkorrektur nach Schritt 4 §6.3.1 erlaubt das Herstellen korrigierter Kandidatenbytes,
+einschließlich
+transparenter Leinwanderweiterung per Skript; ihre tatsächliche Wahl bleibt offen.
+Dieser Vorwahlschritt ist keine HP-W2-Ableitung und verändert weder deren Profil
+noch bereits integrierte Bilder oder historische Freigaben.
 
 ## 7. Transportformen ohne Datenverlust
 

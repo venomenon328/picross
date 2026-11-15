@@ -1,15 +1,15 @@
 {
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/663",
+  "package": "HG-FORMAT: 4:1-Hintergrundkandidaten ohne zusätzliche Korrekturfreigabe",
+  "modules": [],
+  "purpose": "Dokumente präzisieren: tatsächliche 4:1-Maße vor der Bildwahl prüfen, Formatfehler im bestehenden Hintergrundauftrag eigenständig korrigieren und Arbeitsbefugnis von Bildwahl trennen. Quellen-/Plankern docs und ci-required; Dokumentdiff und normative Querverweise gegen HG-F01–HG-F06 prüfen.",
+  "omitted": "Reiner Dokumentenfix ohne Code-, Schema-, Bild-, Produktionsdaten- oder Runtimeänderung. Keine Zusatzmodule, Spieler-/Browserläufe, Solverreplays, neue Bildgenerierung oder technischen Uploads. Authoring 0.8.0/docrev7 und HP-W2 bleiben unverändert; neue Normbytes über Quellcommit/Hashes binden. Keine neuen Dauertests.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
-    "expires": null,
     "mode": "none",
-    "purpose": null
-  },
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/615",
-  "modules": [],
-  "omitted": "Reine Rätselproduktion: modules=[] und evidence.mode=none. Quellen-/Plankern ohne Player-Build, neue rätselspezifische Tests oder Bestandsreplays. Vollständige Inhalts-, Proof-, Bild-, Herkunfts- und Freigabeprüfung durch Finalizer/Export/Plan/Register; vorhandene L4-Bewertung nur technisch rebindend erhalten. Keine Werkzeug-, Spiel- oder CI-Codeänderung.",
-  "package": "Schluessel-Schritt5-Integration",
-  "purpose": "Endabnahme des Eigentümers für SCH-HG-A/b02, SCH-R-r04 und Reveal A-r01 am unveränderten r06-Paket binden. HP-W2, Finalizer v2, Export v6, frischer Plan, Erstregistrierung und Completion; unabhängiges Review und bedingter Squash-Merge nach aktuellen Gates.",
-  "test_changes": []
+    "purpose": null,
+    "expires": null
+  }
 }
