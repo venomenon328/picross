@@ -8,8 +8,8 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/615",
   "modules": [],
-  "omitted": "Reine laufende Rätselproduktion: modules=[] und evidence.mode=none. Kein Player-Build, keine neuen Tests, keine Werkzeug-/Spiel-/CI-Codeänderung, kein Chromium oder Bestandsreplay. Passende Raster-/Bild-/0.4-Belege bytegleich erhalten; Builder prüft das neue geschriebene Paket vollständig. Keine Hintergrundwahl, HP-W2-Ableitung, Endabnahme, Integration oder Merge.",
-  "package": "Schluessel-Schritt4-Kontextzeichnungen",
-  "purpose": "Echte Wahl SCH-R-r04 und drei unterschiedliche ImageGen-Kontextoriginale als background_review r05 sichern; neue Rev7-Quellenbindung, Arbeitsmanifest, Qualitätsurteile und geprüfte Projektion. Native 3:1-Leinwände sind als Q-HG03 nicht erfüllt festgehalten; Freigabe zur transparenten 4:1-Ergänzung steht aus.",
+  "omitted": "Reine laufende Rätselproduktion: modules=[] und evidence.mode=none; Quellen-/Plankern ohne Player-Build. Keine neuen Tests, keine Werkzeug-/Spiel-/CI-Codeänderung oder Bestandsreplays. Builder prüft das geschriebene r06-Paket vollständig; keine neue Solver-/Difficultyproduktion. Keine HP-W2-Ableitung, Endabnahme, Integration oder Merge.",
+  "package": "Schluessel-Schritt4-Kontextzeichnungen-4zu1",
+  "purpose": "Autorisierte proportionale Pillow-Leinwandergänzung der drei ImageGen-Kontexte auf 2304×576 RGBA. Neue Bild-/Manifestrevision b02 und background_review r06; gebundene Pixel-/Transparenzprüfungen. Rasterwahl und unveränderte Produktionsbelege erhalten. Keine Hintergrundwahl oder Integration.",
   "test_changes": []
 }
