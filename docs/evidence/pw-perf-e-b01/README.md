@@ -14,7 +14,7 @@ Empfänger: unabhängiger A01-Reviewer. Zweck: B01-Erfolgskriterien und aktuelle
 - `b01-fix.diff`: vollständiger Nacharbeitsdiff e9b8f233 → f10ef329, fünf Dateien, darunter genau zwei zusätzliche Produktcodezeilen.
 - `source-and-results.json`: exakte Quellen, Kommandos, Umgebung, Zeiten und Quellbytebindungen.
 - `sd2-followup.log` und `ci-attempt-1.json`: der einzelne SD2-CLI-Ausreißer in Versuch 1 und drei erfolgreiche lokale Folgeproben (201,981 s), einschließlich des vorherigen Cleanupfalls. Kein nachgewiesener aktueller Traceback; Heartbeat/stdout-Kollision ist nur eine bekannte mögliche Ursache.
-- `ci-attempt-2.json`: unveränderter Original-Ergebnisrecord aus dem aktuellen Katalogjob, accepted/tests_accepted/source_unchanged=true, exakte Head-/Testmerge-/Versuchsbindung.
+- `ci-attempt-2.json`: vollständiger Ergebnisrecord aus dem [aktuellen Katalog-Joblog](https://github.com/venomenon328/picross/actions/runs/43731528915/job/132872340398), als JSON formatiert; kein Originaldownload der temporären production-result.json. Accepted/tests_accepted/source_unchanged=true, exakte Head-/Testmerge-/Versuchsbindung.
 
 Windows/NTFS, Python 3.13, isoliertes Pillow 12.3.0. Tempdateien lagen unter der beauftragten Codex-Arbeitswurzel. Für die Vorherprobe auf einem isolierten e9b8f233-Checkout nur `b01-test.patch` anwenden und den in `source-and-results.json` genannten Einzeltest ausführen; die Lockfalle verhindert echte Inhaltsmutation. Für den Nachherlauf den unveränderten Produkthead und die dort genannte gesamte Testdatei verwenden. Keine echten Katalogdaten oder Nutzersaves verwenden.
 
