@@ -2535,3 +2535,20 @@ abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung
 Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
 Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
 Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
+
+
+## PW-PERF-E · Gezielter Abschluss aktueller Quellen
+
+Für `retire-production` gilt der geschlossene [Receipt-v4- und Prüfvertrag](../../docs/ZA1_ADAPTER.md#pw-perf-e--ausgewählter-produktionsabschluss-und-receipt-v4).
+Aktuelle Background v6 (selected/none/standard) und Reveal v4 (PNG/SVG) werden
+an binding/current geprüft, ohne erfundenen initial-Ursprung. Aktive
+Editorrasterpakete v1/v2 bleiben vollständige aktive Autorität. Alte Receipts
+v1/v2/v3 bleiben unverändert. V4 erhält Originalexport, Rechte und tatsächlichen
+Main-/Quellcommit getrennt; Sonderimportquellen werden je ID ausdrücklich mit
+`--source-commit ID SHA` gebunden. SHA muss direkt ein vorhandenes Gitobjekt
+vom Typ `commit` bezeichnen; Tree-/Blob-/Tag-SHAs stoppen vor Lock oder
+Dateiänderung. Keine erneute Endfreigabe oder Completion.
+Nur ausgewählte Abhängigkeiten werden gelesen, keine fremden Paket-/Bildbäume.
+Alle Preflights vor erster Löschung, gezielter Abschlussreadback, frischer
+Byte-/mtime-No-op und ehrliche Teilfehlerreste sind verbindlich. Dieses
+Werkzeugpaket beauftragt keine reale Bereinigung; sie braucht einen separaten Auftrag.

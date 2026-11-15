@@ -13,7 +13,8 @@ from .contract import Aborted, canonical_bytes, InvalidInput
 FORMAT = "picross-integrated-content-v1"
 BACKGROUND_FORMAT = "picross-integrated-content-v2"
 EDITOR_FORMAT = "picross-integrated-content-v3"
-FORMATS = (FORMAT, BACKGROUND_FORMAT, EDITOR_FORMAT)
+CURRENT_FORMAT = "picross-integrated-content-v4"
+FORMATS = (FORMAT, BACKGROUND_FORMAT, EDITOR_FORMAT, CURRENT_FORMAT)
 INDEX = "content/authoring/index.json"
 LIMIT = 8 * 1024 * 1024
 
@@ -25,7 +26,7 @@ def check(root, entry, receipt):
     require(stored is not None and canonical_bytes(stored) == canonical_bytes(receipt),
             "Integration receipt differs from the registered package")
     reveal_source.receipt(receipt, original, notice, background=True, editor=True)
-    resolved = reveal_source.resolve(root, entry, categories.load(root / categories.PATH))
+    resolved = reveal_source.resolve(root, entry, categories.validate(io.json_bytes(io.read(root, categories.PATH, categories.MAX_BYTES), categories.MAX_BYTES)))
     require(resolved["historical_notice_sha256"] == notice, "Historical player notice differs")
 
 
@@ -46,7 +47,14 @@ def _tree(root, directory, *, empty=()):
     return files, directories
 
 
-def retire(root, ids, integrated_commit):
+def retire(root, ids, integrated_commit, *, source_commits=None):
+    from .retirement_scope import operation
+    root = io.external(root)
+    with operation(root) as reads:
+        return _retire(root, ids, integrated_commit, reads, {} if source_commits is None else source_commits)
+
+
+def _retire(root, ids, integrated_commit, reads, source_commits):
     """Prepare a local diff after the whole selected production reached main.
 
     Git tree identities bind current bytes. Already retired sources use their
@@ -68,11 +76,17 @@ def retire(root, ids, integrated_commit):
     # Refreshing origin/main belongs to the workflow. No network or Git writes.
     for ref in ("origin/main", "HEAD"):
         git("merge-base", "--is-ancestor", integrated_commit, ref)
-    snapshot = tx.capture(root)
-    current = snapshot["registry"]
     require(isinstance(ids, (list, tuple)) and ids and all(isinstance(i, str) for i in ids) and
             len(ids) == len(set(ids)), "Unknown/duplicate production IDs")
     for identifier in ids: reveal_source.path(identifier)
+    require(isinstance(source_commits, dict) and set(source_commits) <= set(ids), "Foreign source commit ID")
+    for commit in source_commits.values():
+        require(isinstance(commit,str) and re.fullmatch(r"[0-9a-f]{40}",commit), "Use full source commit")
+        require(git("cat-file", "-t", commit).strip() == b"commit",
+                "Source Git identity must be a commit object")
+    from .retirement_scope import capture
+    snapshot = capture(root, ids)
+    current = snapshot["registry"]
     catalog = io.json_bytes(snapshot["texts"][categories.PATH], 131072)
     old_catalog = categories.validate(io.json_bytes(git("show", integrated_commit + ":" + categories.PATH), 131072))
     original = registry.validate(io.json_bytes(git("show", integrated_commit + ":" + registry.REGISTRY), LIMIT), old_catalog)
@@ -94,7 +108,9 @@ def retire(root, ids, integrated_commit):
     tree = git_tree(integrated_commit)
     # A later background adoption does not change the original completion
     # receipt. Its actual current bytes must nevertheless already be on main.
-    main_tree = git_tree("origin/main")
+    main_commit = git("rev-parse", "origin/main").decode().strip()
+    git("merge-base", "--is-ancestor", main_commit, "HEAD")
+    main_tree = git_tree(main_commit)
     main_catalog = categories.validate(io.json_bytes(git("show", "origin/main:" + categories.PATH), 131072))
     main_registry = registry.validate(io.json_bytes(git("show", "origin/main:" + registry.REGISTRY), LIMIT), main_catalog)
     main_runtime = io.json_bytes(git("show", "origin/main:" + registry.RUNTIME), LIMIT)
@@ -113,17 +129,30 @@ def retire(root, ids, integrated_commit):
     current_backgrounds, original_backgrounds = backgrounds.index(current), backgrounds.index(original)
     for identifier in ids:
         entry = by_id[identifier]
+        main_entry = next((e for e in main_registry["entries"] if e["id"] == identifier), None)
+        require(main_entry is not None, "Selected production is absent from current main")
+        comparable = deepcopy(main_entry)
+        comparable["production"]["package_sha256"] = entry["production"]["package_sha256"]
+        require(comparable == entry, "Selected entry differs from current main")
+        require(next(r for r in current["metadata"] if r["id"] == identifier) ==
+                next(r for r in main_registry["metadata"] if r["id"] == identifier), "Selected metadata differs from main")
+        if identifier in current_backgrounds:
+            require(backgrounds.index(main_registry).get(identifier) == current_backgrounds[identifier],
+                    "Current background is not indexed on main")
+        runtime = io.json_bytes(snapshot["texts"][registry.RUNTIME], LIMIT)
+        require(next(r for r in runtime["entries"] if r["id"] == identifier) ==
+                next(r for r in main_runtime["entries"] if r["id"] == identifier), "Selected runtime differs from main")
         prefix = entry["production"]["package"]
         revision = entry["production"]["revision"]
         require(prefix == "content/packages/" + identifier + "/" + revision, "Unexpected package path")
-        old_entry, historical_notice, existing_receipt, _ = reveal_source.package(root, entry)
+        old_entry, historical_notice, existing_receipt, package_dependencies = reveal_source.package(root, entry)
         require(canonical_bytes(old_entry) == canonical_bytes(old_entries[identifier]), "Production differs from integrated main entry")
         manifest = io.json_bytes(io.read(root, prefix + "/manifest.json", LIMIT), LIMIT)
-        if manifest.get("format") == "picross-editor-raster-package-v1":
+        if manifest.get("format") in ("picross-editor-raster-package-v1", "picross-editor-raster-package-v2"):
             # These are the live manual proof/decision authorities, not an
             # authoring export eligible for compaction into a receipt. Verify
             # the complete captured source view on main and retain it intact.
-            for name in set(snapshot["texts"]) | set(snapshot["retained"]):
+            for name in set(reads.data) | package_dependencies:
                 committed(name, io.read(root, name, tx.file_limit(root, name), missing=True), main_tree)
             continue
         authoring = "content/authoring/" + identifier
@@ -163,6 +192,9 @@ def retire(root, ids, integrated_commit):
         selected_rows = {name: row for name, row in current_rows.items() if name == selected}
         original_selected_rows = {name: row for name, row in old_rows.items() if name == selected}
         if existing_receipt is not None:
+            if identifier in source_commits:
+                require(existing_receipt.get("provenance", {}).get("source_commit") == source_commits[identifier],
+                        "Already retired production has a different source proof")
             require(existing_receipt["integrated_commit"] == integrated_commit,
                     "Already retired production has a different main proof")
             require(not selected_rows and not io.safe(root, selected).exists(),
@@ -203,10 +235,17 @@ def retire(root, ids, integrated_commit):
                             "Authoring archive binding differs")
                 removed[name] = (io.checksum(raw), len(raw), limit)
             source = backgrounds.load(root, current, entry) if bg else None
+            from .editor_change import slim
+            active_source = reveal_source.load(root, entry, catalog)
+            modern = slim(source) or source is None and slim(active_source)
             editor_background = source is not None and source.get("format") == "picross-catalog-background-v5"
             receipt = {"format": EDITOR_FORMAT if editor_background else BACKGROUND_FORMAT if bg else FORMAT, "entry": deepcopy(entry),
                        "integrated_commit": integrated_commit, "notice_sha256": historical_notice}
-            if bg:
+            if modern:
+                from .retirement_receipt import build
+                receipt = build(root, entry, manifest, historical_notice, integrated_commit,
+                                main_commit, source_commits.get(identifier, integrated_commit), git)
+            elif bg:
                 if editor_background:
                     manifest = io.json_bytes(io.read(root, prefix + "/manifest.json", LIMIT), LIMIT)
                     exported = (backgrounds.build(io.safe(root, prefix), manifest, None, entry)
@@ -217,10 +256,12 @@ def retire(root, ids, integrated_commit):
             reveal_source.receipt(receipt, entry, historical_notice, background=True, editor=True)
             plans.append((entry, prefix, selected, receipt, package_dirs, authoring_dirs))
         active_reveal = reveal_source.load(root, entry, catalog)
-        is_editor_reveal = active_reveal is not None and active_reveal.get("format") == "picross-catalog-reveal-v3"
+        is_editor_reveal = active_reveal is not None and active_reveal.get("format") in ("picross-catalog-reveal-v3", "picross-catalog-reveal-v4")
         source = backgrounds.load(root, current, entry) if bg else None
         editor_background = source is not None and source.get("format") == "picross-catalog-background-v5"
-        require((identifier in current_backgrounds) == (identifier in original_backgrounds) or
+        from .editor_change import slim
+        modern_background = slim(source)
+        require(modern_background or (identifier in current_backgrounds) == (identifier in original_backgrounds) or
                 editor_background and identifier not in original_backgrounds and source["origin"]["source"] is None and
                 source["origin"]["entry"] == old_entry,
                 "Background index membership differs from integrated main")
@@ -231,8 +272,6 @@ def retire(root, ids, integrated_commit):
             retained.update(("game/" + entry["reveal"], reveal_source.identity(entry)["notice"], reveal_source.path(identifier)))
         if identifier in current_backgrounds:
             source = backgrounds.load(root, current, entry)
-            require(backgrounds.index(main_registry).get(identifier) == current_backgrounds[identifier],
-                    "Current background is not indexed on main")
             main_formats = ((registry.METADATA_RUNTIME_FORMAT, registry.IMAGE_RUNTIME_FORMAT) if main_registry["format"] == registry.METADATA_FORMAT
                            else (backgrounds.RUNTIME_FORMAT,))
             require(isinstance(main_runtime, dict) and main_runtime.get("format") in main_formats and
@@ -250,7 +289,7 @@ def retire(root, ids, integrated_commit):
             if main_registry["format"] == registry.METADATA_FORMAT:
                 require(all(matches[0].get(key) == active_metadata[key] for key in ("name", "category_id")),
                         "Current background runtime metadata differs from main")
-            if identifier in original_backgrounds:
+            if identifier in original_backgrounds and not modern_background:
                 old_ref = original_backgrounds[identifier]
                 require(tree.get(old_ref["file"], ())[:2] == ("100644", "blob") and
                         int(git("cat-file", "-s", integrated_commit + ":" + old_ref["file"])) <= backgrounds.LIMIT,
@@ -270,23 +309,26 @@ def retire(root, ids, integrated_commit):
         committed(name, io.read(root, name, tx.file_limit(root, name), missing=True))
     for name in sorted(main_retained):
         committed(name, io.read(root, name, tx.file_limit(root, name), missing=True), main_tree)
-    affected = sorted(set(snapshot["texts"]) | set(snapshot["retained"]) | {INDEX} | set(scopes))
+    affected = sorted(set(reads.data) | {INDEX} | set(scopes))
     for start in range(0, len(affected), 20):
         git("diff", "--cached", "--quiet", "--", *affected[start:start + 20])
     require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
             all(tx.file_hash(root, name) == checksum for name, checksum in snapshot["retained"].items()) and
-            tx.namespaces(root, current) == snapshot["namespaces"] and io.read(root, INDEX, LIMIT) == index_bytes,
+            io.read(root, INDEX, LIMIT) == index_bytes,
             "Checkout sources changed during retirement planning")
     for directory, expected in scopes.items():
         require(_tree(root, directory, empty={directory + "/external"}) == expected,
                 "Production namespace changed during retirement planning: " + directory)
     for name, (checksum, _, limit) in removed.items():
         require(io.file_hash(root, name, limit) == checksum, "Production bytes changed during retirement planning: " + name)
+    reads.recheck()
+    require(git("rev-parse", "origin/main").decode().strip() == main_commit, "Main changed during retirement")
     if not plans:
         return {"status": "no-op", "ids": ids, "integrated_commit": integrated_commit, "replaced_files": 0, "replaced_bytes": 0}
 
     registry.require_current(current)
     try:
+        reads.acquire(ids, integrated_commit)
         for entry, prefix, selected, receipt, package_dirs, authoring_dirs in plans:
             # Individual checked paths only. A racing foreign file survives and
             # prevents directory removal; recursive deletion would erase it.
@@ -294,6 +336,7 @@ def retire(root, ids, integrated_commit):
                 if (name.startswith(prefix + "/") and name != prefix + "/manifest.json") or name.startswith(selected + "/"):
                     require(io.file_hash(root, name, limit) == checksum, "Production changed before deletion: " + name)
                     io.safe(root, name).unlink()
+                    reads.forget(name)
             for directory in sorted(package_dirs | authoring_dirs, key=lambda name: len(name.split("/")), reverse=True):
                 io.safe(root, directory).rmdir()
             if io.safe(root, selected).exists():
@@ -306,21 +349,27 @@ def retire(root, ids, integrated_commit):
                     "Package manifest/namespace changed before receipt replacement: " + prefix)
             raw = canonical_bytes(receipt) + b"\n"
             registry.atomic_bytes(io.safe(root, manifest), raw)
+            reads.forget(manifest)
             entry["production"]["package_sha256"] = io.checksum(raw)
         completed = {plan[2] for plan in plans}
         index["entries"] = [row for row in index["entries"] if selection(row["puzzle_id"], row["revision"]) not in completed]
         updated_index = canonical_bytes(index) + b"\n"
         require(io.read(root, INDEX, LIMIT) == index_bytes, "Authoring index changed before retirement replacement")
-        if updated_index != index_bytes: registry.atomic_bytes(io.safe(root, INDEX), updated_index)
+        if updated_index != index_bytes:
+            registry.atomic_bytes(io.safe(root, INDEX), updated_index)
+            reads.forget(INDEX)
         require(tx.read(root, registry.REGISTRY) == snapshot["texts"][registry.REGISTRY],
                 "Registry changed before retirement replacement")
         registry.atomic_bytes(io.safe(root, registry.REGISTRY), canonical_bytes(current) + b"\n")
-        registry.check_checkout(root)
+        reads.forget(registry.REGISTRY)
+        capture(root, ids)
+        reads.recheck()
+        reads.release()
     except (Exception, KeyboardInterrupt) as exc:
         # This command deliberately supplies no synthetic rollback or old ZIP
         # reconstruction. Leave the actual reviewable remnants and name them.
         remaining = []
-        for name in sorted(set(scopes) | {INDEX, registry.REGISTRY}):
+        for name in sorted(set(scopes) | {INDEX, registry.REGISTRY, tx.LOCK}):
             try:
                 if (root / name).exists(): remaining.append(str(root / name))
             except OSError:
