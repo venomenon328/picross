@@ -187,8 +187,9 @@ class AuthoringFinalizationTests(unittest.TestCase):
 
     def test_qualified_old_record_is_checked_before_approval_and_stays_byte_identical(self):
         self.build()
-        old = historical_description(assets.describe())
+        old = historical_description(assets.describe(generation=1))
         self.fixture.request["expected_tool_sha256"] = old["tool_sha256"]
+        self.fixture.request["format"] = "picross-background-derive-request-v1"
         with patch.object(assets, "_tool", return_value=old["tool"]):
             initial = self.request()
             self.assertEqual(self.run_finalize(initial)["status"], "updated")
