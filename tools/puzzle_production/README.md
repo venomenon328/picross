@@ -320,11 +320,12 @@ API: `describe()`, `derive(request, source_root, output_root)` und
 `verify(request, source_root, output_directory)` aus
 `tools.puzzle_production.background_assets`. `describe` liefert das vollständige
 feste Profil, dessen kanonischen Hash und den tatsächlichen Tool-/Codecstand
-samt Hash. Dessen `dirty` bezieht sich auf Abweichungen der tatsächlich verwendeten
-eigenen Module vom gebundenen Gitcommit. Für einen neuen Auftrag diese Werte verwenden; ein abweichender
+samt Hash sowie getrennte tatsächliche Git-Herkunft `producer={commit,dirty}`.
+V2-`dirty` beschreibt den Arbeitsbaum einschließlich unversionierter Dateien;
+`describe --generation 1` beschreibt ausdrücklich die alte Neun-Modul-Identität. Für einen neuen Auftrag diese Werte verwenden; ein abweichender
 `expected_tool_sha256` wird vor dem Schreiben zurückgewiesen.
 
-Der geschlossene `picross-background-derive-request-v1` bindet das
+Der neue geschlossene `picross-background-derive-request-v2` bindet das
 `picross-background-work-v1`-Manifest, die `picross-background-decision-v1`-
 Entscheidung und bei `selected` das genaue Original über Pfad, Bytezahl und
 Dateihash. Sein `profile` ist das vollständige Profil aus `describe`, `output`
@@ -352,7 +353,9 @@ Der vollständige ursprüngliche Request steht in `derivation.json.request`;
 ohne ursprüngliche Requestdatei darf die CLI dieses exakte Objekt aus einer
 eigenen temporären Datei verwenden. Transportierte Ergebnisordner bleiben
 prüfbar, solange die erforderlichen unveränderten Quellen erreichbar sind.
-Lesendes `verify` prüft originale Request-/Befund-/Toolhashes strikt, verlangt
+Beide Generationen prüfen vollständige Originalbefunde; bei v2 bleibt `producer`
+außerhalb der Bildidentität. Für v1 gilt weiterhin: Lesendes `verify` prüft
+originale Request-/Befund-/Toolhashes strikt, verlangt
 aber nur für `id`, vollständige `versions` und die exakte Modulpfad-/Bytehashmenge
 Gleichheit mit dem aktuellen Werkzeug. Originales `commit/dirty` bleibt
 Erzeugerherkunft; ein späterer reiner Contentcommit macht gleiche ausführbare
@@ -2496,3 +2499,29 @@ Gesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue
 Publikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen
 und andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen
 nichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.
+
+
+## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
+
+Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
+in [Hintergrund §4](../../docs/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
+Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
+`image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
+keine Neusiegelung alter Originale oder Erweiterung von #645.
+
+Export v6 prüft Original und tatsächliches Staging jeweils vollständig. Zwischen
+beiden ersetzt ausschließlich der eigene unveränderte, byte-/pfadgebundene
+Aufrufkontext die redundante volle Pending-Inspektion. Ein geschlossener Vergleich
+der geschriebenen Pending-Dateimenge samt Bytes/Manifest und frischen Identitäten
+bleibt Pflicht. Inspection, Hashliste, Methoden, Freigaben, Notices, Kategorien und
+vollständige Readbacks bleiben gebunden. Vor Publikation werden Quellen und Ziel
+frisch geprüft. Separates verify-export beginnt immer eine vollständige Prüfung.
+
+Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
+Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits
+unabhängig geprüften Zustands-, Hintergrund- und Freigabefelder ist zulässig;
+abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung.
+Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
+Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
+Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.

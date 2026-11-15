@@ -106,6 +106,22 @@ class WorkflowFixture:
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_finalizer_shares_one_projection_and_matches_independent_view(self):
+        from tools.production_workspace import projector
+        f = WorkflowFixture(self)
+        f.build(); f.select(); f.build()
+        request = f.helper.request(outcome='none', approval=True)
+        request['format'] = 'picross-authoring-finalize-request-v2'
+        with patch.object(projector, '_automatic', wraps=projector._automatic) as inspections:
+            result = builder.finalize_background(request, f.helper.payload, f.helper.output)
+        self.assertEqual(result['status'], 'updated', result)
+        self.assertEqual(inspections.call_count, 1)
+        index = load_json(f.helper.output / builder.INDEX)
+        directory = f.helper.record_name.rsplit('/', 1)[0]
+        independent = projector.automatic(f.helper.output, directory, f.helper.directory, index)
+        self.assertEqual((f.helper.directory / 'workspace.json').read_bytes(), independent)
+        self.assertEqual(builder.finalize_background(request, f.helper.payload, f.helper.output)['status'], 'reused')
+
     def test_early_background_is_rejected_and_raster_is_qualified_without_it(self):
         f=WorkflowFixture(self,mode='color')
         from tools.puzzle_production import background_package

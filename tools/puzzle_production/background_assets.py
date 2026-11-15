@@ -22,7 +22,7 @@ from PIL import Image, ImageFile, PngImagePlugin, __version__, features
 from . import background_io as io
 from .background_contract import (BackgroundError, MAX_JSON, MAX_PNG, PROFILE,
                                   canonical, digest, load_inputs, parse_json,
-                                  validate_request)
+                                  validate_request, validate_producer)
 from .contract import InvalidInput
 from .image_normalization import normalize_bytes
 
@@ -106,11 +106,40 @@ def _tool(budget):
             "versions": versions, "modules": modules}
 
 
-def describe():
+def _v2_tool(budget):
+    from . import background_render, image_normalization
+    versions = {"python": platform.python_version(), "pillow": __version__,
+                "zlib": features.version_codec("zlib"), "littlecms": features.version_module("littlecms2")}
+    if __version__ != PILLOW_VERSION or any(not isinstance(v, str) or not v.strip() for v in versions.values()):
+        raise BackgroundError("tool_mismatch", "Required background codecs are unavailable")
+    reader = io.Reader(_ROOT, budget)
+    modules = []
+    for module in (background_render, image_normalization):
+        name = "tools/puzzle_production/" + module.__name__.rsplit(".", 1)[1] + ".py"
+        raw = reader.read(name, MAX_JSON)
+        sha = hashlib.sha256(raw).hexdigest()
+        if sha != module.SOURCE_SHA256:
+            raise BackgroundError("tool_mismatch", "Loaded render source changed; restart the process", name)
+        modules.append({"file": name, "sha256": sha})
+    reader.recheck()
     try:
-        tool = _tool(io.Budget())
+        commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=_ROOT,
+            text=True, stderr=subprocess.PIPE, timeout=10).strip()
+        dirty = bool(subprocess.check_output(["git", "status", "--porcelain", "--untracked-files=normal"],
+            cwd=_ROOT, stderr=subprocess.PIPE, timeout=10))
+    except (subprocess.SubprocessError, OSError) as exc:
+        raise BackgroundError("internal_error", "Cannot bind actual producer Git provenance") from exc
+    producer = validate_producer({"commit": commit, "dirty": dirty})
+    return {"id": "picross-background-2", "versions": versions, "modules": modules}, producer, reader
+
+
+def describe(generation=2):
+    try:
+        if type(generation) is not int or generation not in (1, 2):
+            raise BackgroundError("unsupported_format", "Unsupported tool generation")
+        tool, producer, _ = _v2_tool(io.Budget()) if generation == 2 else (_tool(io.Budget()), None, None)
         return {"profile": parse_json(canonical(PROFILE)), "profile_sha256": digest(PROFILE),
-                "tool": tool, "tool_sha256": digest(tool)}
+                "tool": tool, "tool_sha256": digest(tool), **({"producer": producer} if generation == 2 else {})}
     except (Exception, KeyboardInterrupt, SystemExit) as exc:
         return _error(exc)
 
@@ -229,11 +258,14 @@ def _render(raw, budget):
                     "upscaled": fit[0] > width or fit[1] > height}
 
 
-def _prepare(request, reader, tool, budget):
+def _prepare(request, reader, tool, budget, producer=None):
     manifest, decision, candidate = load_inputs(request, reader)
     png, diagnostics = None, {"source": None, "output": None, "upscaled": None}
     if candidate is not None:
-        png, diagnostics = _render(reader.read_ref(request["source"], MAX_PNG), budget)
+        render = _render
+        if producer is not None:
+            from .background_render import _render as render
+        png, diagnostics = render(reader.read_ref(request["source"], MAX_PNG), budget)
     derivation = {"format": "picross-background-derivation-v1", "request_sha256": digest(request),
                   "request": request, "puzzle_id": manifest["puzzle_id"], "job_id": manifest["job_id"],
                   "background_revision": manifest["revision"],
@@ -243,6 +275,8 @@ def _prepare(request, reader, tool, budget):
                   "profile_sha256": digest(request["profile"]), "tool": tool, "tool_sha256": digest(tool),
                   "output": _ref("background.png", png) if png is not None else None,
                   "diagnostics": diagnostics, "test_only": manifest["test_only"]}
+    if producer is not None:
+        derivation.update(format="picross-background-derivation-v2", producer=producer)
     raw = canonical(derivation) + b"\n"
     if len(raw) > MAX_JSON:
         raise BackgroundError("resource_limit", "Derivation exceeds 2 MiB")
@@ -265,7 +299,7 @@ def _check_output(directory, report, png, budget, *, conflict=False):
             if name == "derivation.json":
                 decoded = parse_json(actual, name)
                 if (isinstance(decoded, dict) and isinstance(decoded.get("format"), str) and
-                        decoded["format"] != "picross-background-derivation-v1"):
+                        decoded["format"] not in ("picross-background-derivation-v1", "picross-background-derivation-v2")):
                     raise BackgroundError("unsupported_format", "Unsupported declared derivation format", name)
             if actual != value:
                 raise BackgroundError("invalid_binding", "Output does not match fresh deterministic derivation", name)
@@ -309,13 +343,34 @@ def _verification_tool(request, reader, current):
     return original
 
 
+def _v2_original(request, reader, current):
+    report = parse_json(reader.read("derivation.json", MAX_JSON), "derivation.json")
+    if not isinstance(report, dict) or report.get("format") != "picross-background-derivation-v2":
+        raise BackgroundError("unsupported_format", "Request and derivation generations differ")
+    producer = validate_producer(report.get("producer"))
+    if (report.get("tool") != current or report.get("tool_sha256") != digest(current) or
+            request["expected_tool_sha256"] != digest(current) or
+            report.get("request_sha256") != digest(request) or report.get("request") != request):
+        raise BackgroundError("tool_mismatch", "Original request/render implementation/codecs differ")
+    return producer
+
+
 def _run(request, source_root, output, *, verifying, budget=None, request_reader=None):
     stage, published, remaining, made_parents = None, None, None, []
     result = None
     try:
         budget = budget if budget is not None else io.Budget()
         request = validate_request(request)
-        tool = _tool(budget)
+        v2 = request["format"] == "picross-background-derive-request-v2"
+        tool, provenance, tool_reader = _v2_tool(budget) if v2 else (_tool(budget), None, None)
+        def check_tool():
+            if v2:
+                tool_reader.recheck()
+                actual, current_provenance, _ = _v2_tool(budget)
+                if actual != tool or current_provenance != provenance:
+                    raise BackgroundError("tool_mismatch", "Render tool or producer changed during operation")
+            elif _tool(budget) != tool:
+                raise BackgroundError("tool_mismatch", "Tool changed during operation")
         if not verifying and request["expected_tool_sha256"] != digest(tool):
             raise BackgroundError("tool_mismatch", "Requested tool hash differs from the actual implementation/codecs")
         source_root, output = io.roots(source_root, output)
@@ -332,8 +387,9 @@ def _run(request, source_root, output, *, verifying, budget=None, request_reader
 
         reader = io.Reader(source_root, budget)
         report_reader = io.Reader(output, budget) if verifying else None
-        producer = _verification_tool(request, report_reader, tool) if verifying else tool
-        report, png = _prepare(request, reader, producer, budget)
+        producer = _verification_tool(request, report_reader, tool) if verifying and not v2 else tool
+        original_provenance = _v2_original(request, report_reader, tool) if verifying and v2 else provenance
+        report, png = _prepare(request, reader, producer, budget, original_provenance)
         if verifying:
             output_unchanged()
             refs = _check_output(output, report, png, budget)
@@ -341,20 +397,25 @@ def _run(request, source_root, output, *, verifying, budget=None, request_reader
             reader.recheck()
             if request_reader is not None:
                 request_reader.recheck()
-            if _tool(budget) != tool:
-                raise BackgroundError("tool_mismatch", "Tool changed during verification")
+            check_tool()
             return {"status": "verified", **refs, "error": None, "remaining": None}
         target = io.safe(output, request["output"])
         output_unchanged()
         with io.writer(output):
             output_unchanged()
             if target.exists():
+                if v2:
+                    original_reader = io.Reader(target, budget)
+                    original_provenance = _v2_original(request, original_reader, tool)
+                    decoded = parse_json(report)
+                    decoded["producer"] = original_provenance
+                    report = canonical(decoded) + b"\n"
+                    original_reader.recheck()
                 refs = _check_output(target, report, png, budget, conflict=True)
                 reader.recheck()
                 if request_reader is not None:
                     request_reader.recheck()
-                if _tool(budget) != tool:
-                    raise BackgroundError("tool_mismatch", "Tool changed during derivation")
+                check_tool()
                 return {"status": "reused", **refs, "error": None, "remaining": None}
             stage = io.Stage(output, digest(request))
             stage.prepare()
@@ -369,8 +430,7 @@ def _run(request, source_root, output, *, verifying, budget=None, request_reader
             reader.recheck()
             if request_reader is not None:
                 request_reader.recheck()
-            if _tool(budget) != tool:
-                raise BackgroundError("tool_mismatch", "Tool changed before publication")
+            check_tool()
             output_unchanged()
             budget.check()
             io.publish_directory(stage.payload, target)
@@ -423,7 +483,7 @@ def main(argv=None):
             handlers[signum] = signal.signal(signum, interrupted)
         parser = _Parser(description=__doc__, add_help=False)
         commands = parser.add_subparsers(dest="command", required=True, parser_class=_Parser)
-        commands.add_parser("describe", add_help=False)
+        commands.add_parser("describe", add_help=False).add_argument("--generation", type=int, choices=(1, 2), default=2)
         for name, output_option in (("derive", "--output-root"), ("verify", "--output-dir")):
             sub = commands.add_parser(name, add_help=False)
             sub.add_argument("--request", required=True)
@@ -431,7 +491,7 @@ def main(argv=None):
             sub.add_argument(output_option, required=True)
         args = parser.parse_args(argv)
         if args.command == "describe":
-            result = describe()
+            result = describe(args.generation)
         else:
             request_path = io.external(args.request)
             budget = io.Budget()
