@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/614",
-  "package": "Libelle r05: Rasterwahl und drei Kontextentwürfe zur isolierten Sichtung",
+  "package": "Libelle Schritt 5: freigegebene 4:1-Leinwandkorrektur und Erstintegration",
   "modules": [],
-  "purpose": "Reine Schritt-4-Rätselproduktion: bytegebundene Wahl LIB-R-r04, drei neue ImageGen-Kontexte mit Einzelurteilen, background_review samt offenem Q-HG03-Formatmangel, geprüfter Builder-ZIP und Index/Projektion/current-view. Buildfreier Quellen-/Plankern.",
-  "omitted": "Keine Werkzeug-, Spiel- oder CI-Implementierung; keine Integration, Endabnahme oder Merge. Keine Kandidatenableitung oder Buchmontage. Unveränderte Raster-/Proof-/Schwierigkeitsnachweise werden erhalten und im neuen ZIP frisch geprüft; keine zusätzlichen Fach-/Native-/Browser-CI-Module und keine Rätsel-Dauertests.",
+  "purpose": "Reine Raetselproduktion: pixelgleiche Leinwanderweiterung der gewaehlten Kontextzeichnung, gepruefte Bild-/Freigabebindung, Export/Plan/Register und Completion. Quellen- und Plankern ohne Player-Build.",
+  "omitted": "Keine Werkzeug-, Spiel-, gemeinsamen Asset- oder CI-Implementierung. Keine neuen Raetseltests oder allgemeinen Solver-/Proof-/Bildreplays; vorhandene unveraenderte Produktionsnachweise werden vom regulaeren Eingang geprueft. Keine Fach-, Native- oder Browsermodule.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

@@ -1,1 +1,0 @@
-{"format":"picross-authoring-finalize-result-v2","message":"Background derivation verification failed: Original tool differs from the actual implementation/codecs","next_action":"Inspect the current record and retained sidecar or private stage; retry the identical request after resolving the cause.","remaining":null,"status":"invalid_input"}

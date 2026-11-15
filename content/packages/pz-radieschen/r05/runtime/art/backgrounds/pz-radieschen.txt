@@ -1,6 +1,0 @@
-Production ID: pz-radieschen
-Background: RAD-HG-A-b01
-Image revision: b01
-Artwork: OpenAI ImageGen im beauftragten Codex-Produktionslauf
-Source: Native integrierte Bilderzeugung aus neuem Kontextbriefing, unveränderte Original-PNG-Bytes.
-Usage basis: Im ausdrücklichen Nutzerauftrag neu generiert; keine externe Bildquelle oder Fremdassets verwendet. Nutzung im beauftragten Projekt, keine Exklusivitätszusage.

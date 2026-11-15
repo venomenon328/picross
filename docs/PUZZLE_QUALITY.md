@@ -1,6 +1,6 @@
 # Redaktioneller Qualitätsvertrag für neue Rätsel
 
-**Vertrag 1.0 · Dokumentrevision 10 · 13.11.2026 · PW2-A / [#626](https://github.com/venomenon328/picross/issues/626)**
+**Vertrag 1.0 · Dokumentrevision 11 · 15.11.2026 · HG-FORMAT / [#663](https://github.com/venomenon328/picross/issues/663); PW2-A / #626**
 
 Für neue Produktionen gilt [Authoring 0.8.0, Dokumentrevision 7](ai-workflows/PUZZLE_AUTHORING.md)
 mit dem geschlossenen [PW-B-Datenvertrag](PW_B_CONTRACT.md). Hintergrundbriefing,
@@ -266,7 +266,7 @@ Die unabhängige Quellen-/Rechenprüfung ist im PR #546 dokumentiert.
 Die Regel ist ab ihrem Normmerge verbindlicher Sollstand für **neue** Rätsel.
 Der freiwillige Diagnosebericht `picross-palette-assessment-v1` aus P-B1 bindet
 die unveränderte Berechnung ausdrücklich an Normrevision 4 am Quellcommit
-`45b8fe697364bf73f4277c8b76f92d5c00400919`; auch Dokumentrevision 10 ändert
+`45b8fe697364bf73f4277c8b76f92d5c00400919`; auch Dokumentrevision 11 ändert
 Formel, Quantisierung, Grenzen, Referenzwerte und bestehende Bindungen nicht.
 P-B2 führte Früh-/Endintegration und den geprüften äußeren Ausnahmeweg für 0.6.0 ein;
 die Garantien gelten im 0.8-Weg weiter. Die visuelle Produktionsprüfung bleibt
@@ -591,7 +591,7 @@ ersetzt sie nicht.
 | --- | --- |
 | Q-HG01 · Kontext statt Rätselsubjekt | Vor der Auswahl jede Datei mit Briefing, freigegebenem Abschlussbild und geschützten Merkmalen vergleichen. Bezug zum Umfeld ist gewünscht; der konkrete zu erratende Gegenstand, seine Lösungssilhouette, Rasterkopien, der Motivname und aus dem Spielerfortschritt abgeleitete Informationen gehören nicht ins Hintergrundbild. Offenes Briefing und tatsächliche Eigentümervorgabe unterscheiden. Indirekte Hinweise durch den Kontext sind möglich; keine universelle Spoilerfreiheit behaupten. |
 | Q-HG02 · Helle Graphitzeichnung | Echte ImageGen-Zeichnung nach [gemeinsamem Bildstil](PUZZLE_IMAGE_STYLE.md): leichte neutralgraue Graphitstriche, lebendige offene/nachgezogene Konturen und sparsame Schraffur. Einzelobjekte, Gruppen und komplexere zusammenhängende Szenen sind zulässig. Luftigkeit entsteht durch Gewichtung, offene Flächen und leichte Striche, nicht durch eine Simplizitäts-/Objektzahlquote. Keine geometrische Ersatzzeichnung, eingebrannte UI/Buchoberfläche, Schrift/Wasserzeichen oder deckende Papierimitation; Papier auch zwischen Strichen sichtbar lassen. |
-| Q-HG03 · Luftige gemeinsame Komposition | Die **vollständige 2304×576-Leinwand** einschließlich transparentem Freiraum nach [Bildstil](PUZZLE_IMAGE_STYLE.md) beurteilen. Ein rechts stehendes Motiv liegt bereits rechts auf dieser Leinwand und behält den linken Leerraum. Andere native Maße dürfen dieselbe vollständige 4:1-Komposition abbilden; vorhandener gemeinsamer Fit/Anker liefert 2304×576. 3072×768 ist nur technische logische Referenz. U-/Halb-U mit rechts gegebenenfalls vollen 576 Pixeln, links ordentlich bis voll und niedrigerer Mitte ist eine lockere Empfehlung, keine Höhenprozent-/Form-/Zwei-Eckenpflicht. Rechts allein und komplexere offene Szenen sind erlaubt. Kein Alpha-Bounds-Crop, sichtmotivbezogenes Nachzentrieren, per-ID-Offset, Motivmaske, Strecken oder Verkleinern des Funktionslayouts. |
+| Q-HG03 · Luftige gemeinsame Komposition | Vor jeder Auswahlvorlage die tatsächlichen PNG-Maße jedes Kandidaten lesen und binden: **Breite = 4 × Höhe**. Ein 3:1-Rohbild erfüllt das Format nicht; eigenständige Korrektur nach [Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl), danach Maße und Gesamtkomposition erneut prüfen. Die **vollständige 2304×576-Leinwand** einschließlich transparentem Freiraum nach [Bildstil](PUZZLE_IMAGE_STYLE.md) beurteilen. Ein rechts stehendes Motiv liegt bereits rechts auf dieser Leinwand und behält den linken Leerraum. Andere native Maße dürfen dieselbe vollständige 4:1-Komposition abbilden; vorhandener gemeinsamer Fit/Anker liefert 2304×576. 3072×768 ist nur technische logische Referenz. U-/Halb-U mit rechts gegebenenfalls vollen 576 Pixeln, links ordentlich bis voll und niedrigerer Mitte ist eine lockere Empfehlung, keine Höhenprozent-/Form-/Zwei-Eckenpflicht. Rechts allein und komplexere offene Szenen sind erlaubt. Kein Alpha-Bounds-Crop, sichtmotivbezogenes Nachzentrieren, per-ID-Offset, Motivmaske, Strecken oder Verkleinern des Funktionslayouts. |
 | Q-HG04 · Echte Transparenz und saubere Striche | Vor Auswahl und nach materieller Bildänderung offene Flächen und Zwischenräume zwischen Strichen an der tatsächlichen Datei prüfen; bei Bedarf neutrale Prüfgründe oder ein Transparenzraster verwenden. Ein Alphakanal allein genügt nicht. Weiße Bildkästen, gemaltes Schachbrett, deckende Zwischenflächen, störende Säume oder verlorene feine Striche erfüllen das Ziel nicht. |
 
 Die drei inhaltlich unterschiedlichen Kandidaten werden als drei gespeicherte,
@@ -631,6 +631,9 @@ Nur das ausgewählte Original ableiten. Der finale Integrationsweg übernimmt da
 gültig abgeleitete Bild oder ausdrückliches none zusammen mit dem endabgenommenen
 Rätsel. Eine UI-/Promptumstellung aus PW2-B wird damit nicht als geliefert behauptet.
 
+Die Befugnis zur Formatkorrektur nach Schritt 4 §6.3.1 und die tatsächliche
+Bildwahl sind getrennt: die korrigierte Auswahlvorlage ohne zusätzliche
+Ausführungserlaubnis herstellen, ihre Verwendung nicht selbst freigeben.
 Materielle Änderungen an Illustration, Komposition oder Transparenz erfordern
 eine neue Entscheidung zur geänderten Fassung und erneuern die abhängigen
 Ableitungen. Vereinbarte deterministische Größenableitung und unveränderter

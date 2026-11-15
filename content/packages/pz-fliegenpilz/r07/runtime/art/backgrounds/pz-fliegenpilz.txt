@@ -1,6 +1,0 @@
-Production ID: pz-fliegenpilz
-Background: B-A-b01
-Image revision: b01
-Artwork: OpenAI ImageGen im Codex-Chat
-Source: Native ImageGen-Ausgabe am 2026-11-12T20:36:02.040443+00:00 im ausdrücklichen Projektauftrag; ausschließlich eigener Textprompt.
-Usage basis: Vom Nutzer beauftragte KI-Ausgabe zur projektbezogenen Verwendung; keine eingebrachten Fremdbilder oder zusätzlichen Fremdlizenzen.
