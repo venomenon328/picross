@@ -331,6 +331,9 @@ class _JournalView:
 def guard(root, j, *, raw=None, expected=None, old_only=False, additions=None, _view=None):
     from . import catalog_transaction as tx, catalog_rating as rating, catalog_added as added
     from . import catalog_method
+    if j.get("format") == tx.DEPENDENCY_FORMATS["registration"]:
+        from .registration_dependencies import guard as dependency_guard
+        return dependency_guard(root, j, raw=raw, expected=expected, old_only=old_only, additions=additions, _view=_view)
     default = catalog_method.load(root)
     require(tx.sd2(j) or default is None, "Legacy journal cannot bind production default")
     raw = journal_bytes(j) if raw is None else raw
