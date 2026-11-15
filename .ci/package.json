@@ -1,25 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/652",
-  "package": "RI-V9",
-  "modules": [
-    "production.adapter",
-    "production.catalog"
-  ],
-  "purpose": "RI-V9: geschlossener Registrierungsgenerationsvertrag, echte v4/v8→v9-Route und slim Reveal-v4/Background-v6 im gemischten Bestand. Vollständige neue Eingangs-/Stagingprüfung, bestandsgebundene Integrität, gezieltes P5, Recovery und Wiederholung. Pflichtkern einschließlich Windows-Spielerbuild.",
-  "omitted": "Keine Solver-/Bildalgorithmusänderung, daher production.solver/images nicht gewählt. Keine native Spiel-/Runtimeänderung, daher native.* und delivery nicht gewählt; keine Browser-, Installer-, Produktionsdaten- oder Gesamtbestandsreplays. Bestehende P0–P6/R0–R2-Tests werden über gewählte Fachmodule ausgeführt. Reale Fliegenpilz-/Birne-Demonstration einmalig isoliert im Reviewkontext, kein bleibendes CI-Rätselkorpus.",
-  "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_registration_publication.py",
-      "disposition": "change-scoped",
-      "reason": "Echte öffentliche v9-Erzeugung mit slim Quellen und Voll-/Kompaktbestand; geschlossene Generationsabdeckung, standard/selected/none, kein alter Produktionsreplay, No-op, Paket-/Runtime-/Stagingabbruch und wiederholte Recovery. Vorhandene RI-C-Matrix bleibt gewählt."
-    },
-    {
-      "path": "tests/puzzle_production/test_authoring_workflow.py",
-      "disposition": "change-scoped",
-      "reason": "Vorhandener synthetischer Completion-/Resume-Test erhält echte v9-Registrierung auf v4/v8 statt Metadatenstub; danach normaler isolierter Main-/§9-Abschluss mit unveränderten Livebytes und No-op."
-    }
-  ],
+  "issue": "https://github.com/venomenon328/picross/issues/653",
+  "package": "PW-PERF-A",
+  "modules": [],
+  "purpose": "Quellengebundener Analysebericht zu Produktionsaufwand, Prüfungsnutzen, Phasendokumenten und Bestandsabschluss; vier gesondert zu beauftragende Optimierungspakete. Reine Dokumentenänderung mit aktuellem Pflichtkern, ohne Spielerbau.",
+  "omitted": "Keine Produktimplementierung, Katalogbereinigung oder Teständerung. Vorhandene Belege aus #603, #649 und #652 wiederverwendet; eine isolierte positive Windows-/NTFS-Wiederholung und lesende Inventar-/Quellenproben nur als befristete Revieworiginale, kein CI-Korpus.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",
