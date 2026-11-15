@@ -1,7 +1,0 @@
-Repository: venomenon328/picross · Ziel: main. Lies AGENTS.md und den gemeinsamen Authoring-Kern, den vollständigen Bildstil und die dort für Schritt 4 geroutete Phasendatei im aktuellen main (Authoring 0.8.0).
-
-Produktionsdatensatz: https://github.com/venomenon328/picross/blob/c6cc8696972ccdda79663d4da9fefc026b6e809e/content/authoring/pz-marienkaefer/r03/record.json
-
-Schritt 4: Ich wähle das qualifizierte Raster aus Angebot MK-R-r03. Drei Kontextzeichnungen als background_review zur Auswahl vorlegen; noch keine Endabnahme oder Integration.
-
-Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.
