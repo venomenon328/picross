@@ -1,6 +1,7 @@
 # Gemeinsamer Bildstil der Rätselproduktion
 
-**PW2-A · 13.11.2026.** Diese kurze Norm ist Pflichtlektüre in allen fünf
+**PW2-A · 13.11.2026; Formatpräzisierung HG-FORMAT · 15.11.2026.**
+Diese kurze Norm ist Pflichtlektüre in allen fünf
 Produktionsphasen sowie bei Korrektur und Wiederaufnahme. Sie präzisiert die
 zusammengehörige Bildserie; Ablauf und Quellenbedarf stehen in
 [Authoring](ai-workflows/PUZZLE_AUTHORING.md). Die verbindlichen Kriterienkennungen,
@@ -92,7 +93,13 @@ Neukomposition oder Beschnitt. Die technische logische Referenz 3072×768 ist ke
 zweite gestalterische Zielfläche. Das feste HP-W2-Profil, seine Rundung,
 Alpha-/Farbbehandlung und der gemeinsame Runtime-Fit bleiben unverändert.
 Die technische Fähigkeit eines Readers, weitere Maße einzulesen, erweitert
-nicht diese gestalterische Vorgabe.
+nicht diese gestalterische Vorgabe. Vor der Bildwahl müssen die tatsächlichen
+Kandidatenmaße exakt 4:1 erfüllen; andere native Maße sind andere Auflösungen,
+keine anderen Seitenverhältnisse. Falsche Generatorformate werden nach
+[Schritt 4 §6.3.1](ai-workflows/PUZZLE_AUTHORING_STEP_4.md#631-formatkorrektur-vor-der-bildwahl)
+im laufenden Auftrag ohne zusätzliche Korrekturfreigabe berichtigt. Die dort
+erlaubte transparente Leinwanderweiterung erhält die vollständige Zeichnung;
+auch die korrigierte Gesamtkomposition muss die Stil- und Qualitätsvorgaben erfüllen.
 
 ## Sichtung, Freigabe und Bestand
 
