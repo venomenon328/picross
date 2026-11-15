@@ -1,5 +1,9 @@
 # PW · Git-gestützter Produktionsassistent
 
+## Freigegebene Konsolidierung RI-ONE
+
+[Ein aktueller Integrationsweg](PUZZLE_INTEGRATION_SINGLE_PATH.md) und [Issue #660](https://github.com/venomenon328/picross/issues/660) führen den freigegebenen Umbau von Integration, Completion und Abschluss. PW soll denselben aktuellen Integrationskern und gegenwartsbezogene Lieferdaten verwenden; historische Paket-/Receiptbeweise entfallen in diesem Scope. Die sechs im Issue benannten laufenden Produktionen werden zuerst abgeschlossen. Diese reine Spezifikation ändert weder ihre aktuellen Aufträge noch Daten, Phasensnapshots oder ausführbare Leser.
+
 ## PW2-A · Operativer Quellenweg
 
 Für normale Rätselproduktion aller fünf Schritte einschließlich Korrektur und

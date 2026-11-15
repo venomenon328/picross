@@ -1,5 +1,9 @@
 # RI: Zuverlässige und messbare Rätselintegration
 
+## Freigegebene Konsolidierung RI-ONE
+
+[Issue #660](https://github.com/venomenon328/picross/issues/660) und [Ein aktueller Integrationsweg](PUZZLE_INTEGRATION_SINGLE_PATH.md) führen den freigegebenen Sollvertrag: eine aktuelle Erstintegration samt Recovery und Abschluss, ohne historische Generations- oder Integrationsherkunftspflichten. Die technische Umsetzung beginnt erst nach der dort gebundenen Startbedingung. Bis zur gemeinsamen Umschaltung von Code, Bestand und Lesern bleibt der nachstehende ausführbare Stand für laufende Produktionen maßgeblich; seine alten Kompatibilitätszusagen sind kein Ziel des neuen Pakets.
+
 **PE-A1 / #576 · im Arbeitsbranch implementiert, Review offen:**
 Der [Metadatenvertrag](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag)
 ergänzt Inhaltsregistry v4 und Runtime v7. Neue Registrierung initialisiert
