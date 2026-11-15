@@ -8,8 +8,8 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/615",
   "modules": [],
-  "omitted": "Reine laufende Rätselproduktion: modules=[] und evidence.mode=none; Quellen-/Plankern ohne Player-Build. Keine neuen Tests, keine Werkzeug-/Spiel-/CI-Codeänderung oder Bestandsreplays. Builder prüft das geschriebene r06-Paket vollständig; keine neue Solver-/Difficultyproduktion. Keine HP-W2-Ableitung, Endabnahme, Integration oder Merge.",
-  "package": "Schluessel-Schritt4-Kontextzeichnungen-4zu1",
-  "purpose": "Autorisierte proportionale Pillow-Leinwandergänzung der drei ImageGen-Kontexte auf 2304×576 RGBA. Neue Bild-/Manifestrevision b02 und background_review r06; gebundene Pixel-/Transparenzprüfungen. Rasterwahl und unveränderte Produktionsbelege erhalten. Keine Hintergrundwahl oder Integration.",
+  "omitted": "Reine Rätselproduktion: modules=[] und evidence.mode=none. Quellen-/Plankern ohne Player-Build, neue rätselspezifische Tests oder Bestandsreplays. Vollständige Inhalts-, Proof-, Bild-, Herkunfts- und Freigabeprüfung durch Finalizer/Export/Plan/Register; vorhandene L4-Bewertung nur technisch rebindend erhalten. Keine Werkzeug-, Spiel- oder CI-Codeänderung.",
+  "package": "Schluessel-Schritt5-Integration",
+  "purpose": "Endabnahme des Eigentümers für SCH-HG-A/b02, SCH-R-r04 und Reveal A-r01 am unveränderten r06-Paket binden. HP-W2, Finalizer v2, Export v6, frischer Plan, Erstregistrierung und Completion; unabhängiges Review und bedingter Squash-Merge nach aktuellen Gates.",
   "test_changes": []
 }
