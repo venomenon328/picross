@@ -1,0 +1,16 @@
+Ursprünglicher Schritt-5-Auftrag:
+Repository: venomenon328/picross · Ziel: main. Lies AGENTS.md und den gemeinsamen Authoring-Kern, den vollständigen Bildstil und die dort für Schritt 5 geroutete Phasendatei im aktuellen main (Authoring 0.8.0).
+Produktionsdatensatz: https://github.com/venomenon328/picross/blob/5def6de719065ea87a9cf71d6e609d67fa6d2ff4/content/authoring/pz-marienkaefer/r04/record.json
+Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot MK-HG-A-b01.
+Ich erteile die Endabnahme für diese Hintergrundentscheidung zusammen mit dem gewählten Raster und dem zugehörigen Reveal im gebundenen Datensatz und beauftrage deren Integration.
+Commit, Push und PR; unabhängiges Review, danach Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates. Bestätigten Mainabschluss und Produktionsabschluss nach Authoring §9 durchführen.
+
+Nach offengelegtem 3:1-Blocker fragte der Assistent:
+Darf ich die gewählte Zeichnung als neue vollständige 4:1-Revision korrigieren und erneut vorlegen? Diese Rückfrage ist nötig, weil dein Auftrag ausdrücklich die unveränderte Zeichnung auswählt und die erforderliche Korrektur neue Bildbytes erzeugt. Raster und Reveal bleiben dabei erhalten.
+Nutzerantwort: Ja, bitte korrigiere.
+
+Nach erneut erfolglosem ImageGen-Formatversuch fragte der Assistent:
+Darf ich MK-HG-A-b01 per Skript auf eine neue transparente Leinwand von 2896×724 Pixeln (4:1) setzen — mit je 362 transparenten Pixeln links und rechts, ohne Skalierung, Beschnitt oder Änderung der Zeichnung? Die neue Revision würde ich anschließend zur Auswahl vorlegen.
+Nutzerantwort: Ja, transparente Leinwand per Skript erweitern
+
+Dies sind die tatsächlichen Erklärungen aus dieser Unterhaltung. UTC-Felder bezeichnen Aufzeichnungszeit, keinen unabhängig überlieferten Sendezeitstempel. Keine Auswahl oder Endabnahme der noch nicht vorgelegten neuen Bildbytes wird daraus abgeleitet.
