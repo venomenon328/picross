@@ -480,3 +480,15 @@ nach Retirement und bei ursprünglicher Registerwiederholung. Budgets, vollstän
 T/K-/Namespaceguards, frische Prüfung unter Lock, Runtime zuletzt und Recovery
 bleiben erhalten. Echte Capability bleibt false; nur isolierte synthetische
 test_only-Ziele verwenden true. Keine Authoring-/Sheet-Formatänderung.
+
+## PW-PERF-B · Begrenzte Erstregistrierungsprüfung
+
+Für Erstregistrierung auf v4/v8 gilt ausschließlich die neue geschlossene
+[v10-Semantik](PUZZLE_INTEGRATION.md). Gemeinsame Indizes, neue Produktion samt Freigaben/Proof,
+abhängige Quellen und Schreibziele bleiben vollständig gebunden. Unbeteiligte
+alte Paket-/Liveasset-/Sidecardateien werden nicht gelesen oder als intakt
+bestätigt; ihre Defekte erkennt der zuständige Reader oder ein expliziter
+Gesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue
+Publikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen
+und andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen
+nichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.

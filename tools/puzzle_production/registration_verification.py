@@ -106,7 +106,8 @@ class _Verification:
                         for n, b in self.snapshot["texts"].items()), "Verification source snapshot differs")
             require(all(tx.read(root, n) == b for n, b in self.snapshot["texts"].items()) and
                     all(tx.file_hash(root, n, journal) == h for n, h in self.snapshot["retained"].items()) and
-                    tx.namespaces(root, before) == self.snapshot["namespaces"], "Verification sources changed")
+                    (self.snapshot.get("registration_v10") or
+                     tx.namespaces(root, before) == self.snapshot["namespaces"]), "Verification sources changed")
             expected = {self.package + "/" + n: self.stage / n for n in self.stage_state[1]}
             manifest = self.result[0]
             expected["game/" + manifest["reveal"].removeprefix("runtime/")] = self.stage / manifest["reveal"]
