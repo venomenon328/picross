@@ -200,6 +200,7 @@ class CurrentRetirementTests(unittest.TestCase):
         before=snapshot(self.root);unlink=Path.unlink;deleted=[]
         def fail(path,*args,**kw):
             if path.is_relative_to(self.root/self.entry['production']['package']):
+                self.assertTrue((self.root/edit.LOCK).exists())
                 if deleted:raise OSError('controlled second deletion failure')
                 deleted.append(path)
             return unlink(path,*args,**kw)

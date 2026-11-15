@@ -1929,3 +1929,16 @@ neuen Bytes und Projektion. Ein vollständig gültiger vorhandener Receipt ist n
 frischer Prüfung ein Byte-/mtime-No-op ohne historischen Archivzugriff.
 Unbeteiligte Defekte werden erst von ihrem gezielten Reader oder explizitem
 Gesamtaudit erkannt; dieser Abschluss zertifiziert sie nicht.
+
+
+Vor der ersten Mutation beansprucht Retirement den gemeinsamen Writerpfad
+`content/.registration-pending.json` exklusiv (create-new, fsync). Der geschlossene
+interne Sperrmarker hat exakt `format,ids,integrated_commit` mit
+`format=picross-retirement-lock-v1`, der ausgewählten ID-Liste und voller Main-SHA.
+Er ist kein Recoveryjournal und enthält keine behaupteten Rollbackbytes. Nach
+Locknahme werden die zuvor gebundenen Quellen erneut geprüft. Andere Writer
+blockieren an diesem gemeinsamen Pfad. Nur die frisch geprüften eigenen
+Sperrbytes werden nach erfolgreichem Readback entfernt; ein Teilfehler erhält
+den Marker und nennt ihn ausdrücklich zur manuellen Klärung mit dem tatsächlichen
+Git-Diff. Keine automatische Locklöschung oder ZIPrekonstruktion. Ein No-op
+beansprucht keinen Marker und verändert keine Datei/mtime.

@@ -325,6 +325,7 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
 
     registry.require_current(current)
     try:
+        reads.acquire(ids, integrated_commit)
         for entry, prefix, selected, receipt, package_dirs, authoring_dirs in plans:
             # Individual checked paths only. A racing foreign file survives and
             # prevents directory removal; recursive deletion would erase it.
@@ -360,11 +361,12 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
         reads.forget(registry.REGISTRY)
         capture(root, ids)
         reads.recheck()
+        reads.release()
     except (Exception, KeyboardInterrupt) as exc:
         # This command deliberately supplies no synthetic rollback or old ZIP
         # reconstruction. Leave the actual reviewable remnants and name them.
         remaining = []
-        for name in sorted(set(scopes) | {INDEX, registry.REGISTRY}):
+        for name in sorted(set(scopes) | {INDEX, registry.REGISTRY, tx.LOCK}):
             try:
                 if (root / name).exists(): remaining.append(str(root / name))
             except OSError:
