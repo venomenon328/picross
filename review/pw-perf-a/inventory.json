@@ -1,0 +1,565 @@
+{
+  "head": "6b0057100d5bdacd68878d80d5bd29e5ca4ee9a5",
+  "registry": "picross-content-registry-v4",
+  "runtime": "picross-runtime-registry-v8",
+  "entries": 56,
+  "package_forms": {
+    "picross-integrated-content-v1": 55,
+    "picross-target-export-v6": 3
+  },
+  "packages": [
+    {
+      "path": "content/packages/pz-00f37200bcee4d548e2c910ce551d077/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2509,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-023b50b44d1c4698a6e17e65b6ea4337/r07/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2530,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-0e0cbecdf3204063b6d008ab7ce92141/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2057,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-1b7bf32b1fa140918c0692c90d998752/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2057,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-1e9cdac1f83a49d5982f93ded09e58de/r06/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2364,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-20219e14dbe242689b9ef06297828f34/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2680,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-20ecf7747bbf40828238ec26d1207172/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 1826,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-22969714393847e697e8169a8b688efd/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2236,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-25d245061b0c49c190788de8e5d0e45b/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2686,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-2a8481f61e6443bda174bd3da67c/r06/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2437,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-3a744ae1b7cb4d38b0ac29d030ef/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2510,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-3e97c042f0bf474e8608a84ea034c246/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2916,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-419437f56aba4603bf7a84bf0b624ba5/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2395,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-49a9e539419b48119e8f5f506fcf6dc7/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2180,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-51405ea1ad194507a60c9b6701d802f0/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2656,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-5ad1e06e19ab475baebc582d4999daa5/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2853,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-5f5a379b5abb4c979ee23f807aec9418/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2342,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-6d980b0285604e22b8ecfce205aa008b/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2179,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-72561c715dd741f9b0082c7ad24802c1/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2554,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-72eb9b188896440c8a9a833e803835ec/r07/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2952,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-7635c2e042e349fc90ad9ae55681de0f/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2321,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-7ec3dcd94bf84e698691ef4b5839/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2802,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-82758295d5d34284bbae2716f64f/r06/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2739,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-86d1d588a88a46e6ac1285f0097afbca/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2249,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-87bf2975c82540a399a3d0c7fa180a25/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2279,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-8ea7f3dacdcc428a9fcff7a735bc/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 3177,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2174,
+      "active": false,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-8ecddf77e80c4543bf4ec714fe3d/r09/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2749,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-985d36c1634644fbb2c8a0bf7de3aa9f/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2970,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-9a79befc7a834e2d9d5896a477328962/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2819,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-9be288b9b5104da88fc8464184647ae7/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 1691,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-9d08697a30c749258b742ac979de9def/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2306,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-9f7c59054ebb4f3f861e2bce3034320e/r06/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 1990,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-a13368590b744814915eb722f5b2c5f2/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2273,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-a358a1bf1b994efcbebeb55abf825789/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2868,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-ad7164c2302a42e5953f6779a1c7/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 3188,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-b180c25084a34b019f35ad2244f03c24/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2372,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-b19a0ccbe3164e1c8fd97267e57dd454/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 3007,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-b3368aea28ac4a11bf09e0dc9c48/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2983,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-b5e2302bf71445c09caac76bbc2a7075/r11/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2355,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-b6f94e528b48444985d0561cb48a5bc7/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2092,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-bd2783fcd3eb428c933d15259961cfcd/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2045,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-birne/r05/manifest.json",
+      "format": "picross-target-export-v6",
+      "files": 15,
+      "bytes": 16107114,
+      "active": true,
+      "zip_bytes": 13420146
+    },
+    {
+      "path": "content/packages/pz-c71563f1b8c940de998afdd62f09/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2994,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-d2d41fd0fc604172a7586f7f41c55320/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2189,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-d6cb06cb41854b1da84f0ba2f043aa14/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2398,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-d7e68d1138a3448c8b2a4b07e8632350/r06/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2225,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-d829eb9b83e94f9c9357ee5ab9c9e359/r05/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2807,
+      "active": false,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-d829eb9b83e94f9c9357ee5ab9c9e359/r06/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2728,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-dad34b8331914c909e8ded79491dac94/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2238,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-dbbebc72556d4f0c9a37ab69275480e9/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2826,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-dbcf38395b9f4dda86c8b3d6cdae1f2c/r06/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2280,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-e2e5092925ce4821a9219be7816b5931/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2619,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-e45e2e0d67a34f6aa8368f477454/r04/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2978,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-eedd1fe72af54714908d5b5aff34/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2772,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-erdbeere/r06/manifest.json",
+      "format": "picross-target-export-v6",
+      "files": 15,
+      "bytes": 21714958,
+      "active": true,
+      "zip_bytes": 18871091
+    },
+    {
+      "path": "content/packages/pz-f68e79ef419a4322b68d06817b39330d/r03/manifest.json",
+      "format": "picross-integrated-content-v1",
+      "files": 1,
+      "bytes": 2153,
+      "active": true,
+      "zip_bytes": 0
+    },
+    {
+      "path": "content/packages/pz-zitrone/r05/manifest.json",
+      "format": "picross-target-export-v6",
+      "files": 15,
+      "bytes": 17355973,
+      "active": true,
+      "zip_bytes": 14739356
+    }
+  ],
+  "sources": {
+    "content/reveals/": {
+      "picross-catalog-reveal-v4": 56
+    },
+    "content/backgrounds/": {
+      "picross-catalog-background-v6": 56
+    }
+  },
+  "authoring": {
+    "entries": [
+      {
+        "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
+        "record": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r01/record.json",
+        "revision": "r01"
+      },
+      {
+        "puzzle_id": "pz-cc522b3f66bc4d6eafe1f8a387d18d1f",
+        "record": "content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/record.json",
+        "revision": "r01"
+      },
+      {
+        "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
+        "record": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/record.json",
+        "revision": "r02"
+      },
+      {
+        "puzzle_id": "pz-4ec5ac61e2c447bd98c8508a993cbd32",
+        "record": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/record.json",
+        "revision": "r03"
+      }
+    ],
+    "format": "picross-authoring-index-v1"
+  },
+  "zip_tree": [
+    {
+      "path": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r01/package.zip",
+      "mode": "100644",
+      "oid": "0a44c874f5e685e050f343114e5c23817314d02e",
+      "bytes": 4501224
+    },
+    {
+      "path": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r02/package.zip",
+      "mode": "100644",
+      "oid": "e38aab04c955099dd20a0dd2e26ecc11c0823191",
+      "bytes": 2795924
+    },
+    {
+      "path": "content/authoring/pz-4ec5ac61e2c447bd98c8508a993cbd32/r03/package.zip",
+      "mode": "100644",
+      "oid": "801aed068d7c46048f14af209be223710a8036e4",
+      "bytes": 12239053
+    },
+    {
+      "path": "content/authoring/pz-cc522b3f66bc4d6eafe1f8a387d18d1f/r01/package.zip",
+      "mode": "100644",
+      "oid": "849d13ff6bb915696d757e8f1cf5a9acbd4172ca",
+      "bytes": 26578
+    },
+    {
+      "path": "content/packages/pz-birne/r05/input/package.zip",
+      "mode": "100644",
+      "oid": "6a15c00ff2006134ab9a7213cdcfc8ae168cdb0a",
+      "bytes": 13420146
+    },
+    {
+      "path": "content/packages/pz-erdbeere/r06/input/package.zip",
+      "mode": "100644",
+      "oid": "d2a35adf08fe9e963e82c3d34ebc01fba75c9c31",
+      "bytes": 18871091
+    },
+    {
+      "path": "content/packages/pz-zitrone/r05/input/package.zip",
+      "mode": "100644",
+      "oid": "10af5f39950d729d0b668003aac1636516df4b44",
+      "bytes": 14739356
+    }
+  ],
+  "doc_sizes": {
+    "AGENTS.md": 6623,
+    "README.md": 3488,
+    "docs/PROJECT_PROFILE.md": 17951,
+    "docs/PRODUCTION_WORKSPACE.md": 56306,
+    "docs/ai-workflows/PUZZLE_AUTHORING.md": 60305,
+    "docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md": 157957,
+    "docs/PUZZLE_QUALITY.md": 55561,
+    "docs/PUZZLE_BACKGROUNDS.md": 183887,
+    "docs/ZA1_ADAPTER.md": 116306,
+    "tools/puzzle_production/README.md": 171186
+  }
+}

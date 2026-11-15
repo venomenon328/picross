@@ -1,0 +1,11 @@
+{
+  "purpose": "PW-PERF-A measurement and read-only inventory review; temporary, not a benchmark corpus",
+  "expires_utc": "2026-11-22T00:00:00Z",
+  "base": "6b0057100d5bdacd68878d80d5bd29e5ca4ee9a5",
+  "source": "e3b177673011c5477dd605c24420fef589e8f878",
+  "filesystem": "E: NTFS, Win32_LogicalDisk DriveType=3",
+  "cache": "Fresh Python process and disposable checkout, no OS cache flush; source restoration and export/plan warm later reads; no cold-cache claim",
+  "timing": "259.5055363 s entire repeat.py process incl instrumentation/imports/inventories/extra check_checkout/local commit; native timers are nested within it. 4.417416 s worktree+source setup separately; venv/pip/API/review/model/waits not comprehensively timed",
+  "originals": "Reuses #652 run-through.py at ea8961cb8cd267cb2227fee647a7f835551efe8d. Only additional observational wrappers; no replacement validators. Read classifications partition returned catalog_io bytes by path; counts do not cover all filesystem I/O. Stage copy timer includes validation, not just copying.",
+  "reproduction": "Place scripts beside repo (tool checkout at base), through (separate target worktree at base with authoring pz-fliegenpilz + index from source), venv Python 3.13.14/Pillow 12.3.0. TEMP/TMP=owned temp. Run repeat.py exactly once; it writes only isolated through/export/evidence. Isolated registration commit is not a repository integration or merge. source_map.py and inventory.py read repo metadata/docs only."
+}

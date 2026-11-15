@@ -1,0 +1,40 @@
+{
+  "io": {
+    "input-or-temp:calls": 432,
+    "input-or-temp:bytes": 746076677,
+    "live-content:calls": 6242,
+    "live-content:bytes": 2834969795,
+    "catalog-source:calls": 6675,
+    "catalog-source:bytes": 433583030,
+    "old-package:calls": 4618,
+    "old-package:bytes": 2074932197,
+    "tool-runtime:calls": 1916,
+    "tool-runtime:bytes": 97292712,
+    "new-package:calls": 494,
+    "new-package:bytes": 480963422
+  },
+  "calls": {
+    "reveal.package": 1262,
+    "registry.projection": 10,
+    "reveal.resolve": 829,
+    "verification.inventory": 31,
+    "verification.methods": 6
+  },
+  "stage_copies": [
+    {
+      "files": 506,
+      "bytes": 159414757,
+      "seconds": 14.523861400004535
+    },
+    {
+      "files": 529,
+      "bytes": 188805805,
+      "seconds": 15.96501239999634
+    },
+    {
+      "files": 506,
+      "bytes": 159414757,
+      "seconds": 14.975239199993666
+    }
+  ]
+}

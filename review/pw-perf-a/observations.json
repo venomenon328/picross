@@ -1,0 +1,67 @@
+{
+  "replay_calls": {
+    "old": 0,
+    "new": 2
+  },
+  "route": [
+    {
+      "format": "picross-registration-journal-v9",
+      "operation": "registration",
+      "writer": "registration_publication.execute",
+      "journal_sha256": "e351ab5f6f234eea74034bae09485b2a0c7e452468c886fed6e11729cf1bad62",
+      "additions": [
+        "content/packages/pz-fliegenpilz/r07/approval.json",
+        "content/packages/pz-fliegenpilz/r07/categories.json",
+        "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/decisions/d01.json",
+        "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/derived/background.png",
+        "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/derived/derivation.json",
+        "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/evidence/step4-background-choice.txt",
+        "content/packages/pz-fliegenpilz/r07/input/package.zip",
+        "content/packages/pz-fliegenpilz/r07/inspection.json",
+        "content/packages/pz-fliegenpilz/r07/manifest.json",
+        "content/packages/pz-fliegenpilz/r07/runtime/art/backgrounds/pz-fliegenpilz.png",
+        "content/packages/pz-fliegenpilz/r07/runtime/art/backgrounds/pz-fliegenpilz.txt",
+        "content/packages/pz-fliegenpilz/r07/runtime/art/content/fliegenpilz.png",
+        "content/packages/pz-fliegenpilz/r07/runtime/art/content/fliegenpilz.txt",
+        "content/packages/pz-fliegenpilz/r07/runtime/data/content/fliegenpilz.json",
+        "content/packages/pz-fliegenpilz/r07/usage.txt",
+        "game/art/backgrounds/pz-fliegenpilz.png",
+        "game/art/content/fliegenpilz.png"
+      ],
+      "targets": [
+        "content/added/pz-fliegenpilz.json",
+        "content/backgrounds/pz-fliegenpilz.json",
+        "content/difficulty/pz-fliegenpilz/rating.json",
+        "content/packages/pz-fliegenpilz/r07/approval.json",
+        "content/packages/pz-fliegenpilz/r07/categories.json",
+        "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/decisions/d01.json",
+        "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/derived/background.png",
+        "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/derived/derivation.json",
+        "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/evidence/step4-background-choice.txt",
+        "content/packages/pz-fliegenpilz/r07/input/package.zip",
+        "content/packages/pz-fliegenpilz/r07/inspection.json",
+        "content/packages/pz-fliegenpilz/r07/manifest.json",
+        "content/packages/pz-fliegenpilz/r07/runtime/art/backgrounds/pz-fliegenpilz.png",
+        "content/packages/pz-fliegenpilz/r07/runtime/art/backgrounds/pz-fliegenpilz.txt",
+        "content/packages/pz-fliegenpilz/r07/runtime/art/content/fliegenpilz.png",
+        "content/packages/pz-fliegenpilz/r07/runtime/art/content/fliegenpilz.txt",
+        "content/packages/pz-fliegenpilz/r07/runtime/data/content/fliegenpilz.json",
+        "content/packages/pz-fliegenpilz/r07/usage.txt",
+        "content/registry.json",
+        "game/art/backgrounds/pz-fliegenpilz.png",
+        "game/art/backgrounds/pz-fliegenpilz.txt",
+        "game/art/content/fliegenpilz.png",
+        "game/art/content/fliegenpilz.txt",
+        "game/data/content/fliegenpilz.json",
+        "game/data/registry.json"
+      ]
+    }
+  ],
+  "completed_guards": [
+    "G0",
+    "G2",
+    "G5a",
+    "G5b",
+    "G6"
+  ]
+}

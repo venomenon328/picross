@@ -1,0 +1,462 @@
+{
+  "method": "UTF-8 bytes, original LF, heading range union, no token estimate; local read-only route probe, not model token telemetry",
+  "phases": [
+    {
+      "phase": 1,
+      "file_reads": 5,
+      "selected_bytes": 35494,
+      "file_bytes_read": 165594,
+      "repeated_reads_within_phase": 0,
+      "truncated_local_reads": 0,
+      "files": [
+        {
+          "file": "AGENTS.md",
+          "sections": [
+            "production"
+          ],
+          "ranges": [
+            [
+              1,
+              21
+            ]
+          ],
+          "file_bytes_read": 6623,
+          "selected_bytes": 1270,
+          "sha256": "1fcf892b29045a38d67308e65c24949f51008f2b01fe02754f8ebba9685dde20"
+        },
+        {
+          "file": "docs/PUZZLE_IMAGE_STYLE.md",
+          "sections": [
+            "all"
+          ],
+          "ranges": [
+            [
+              1,
+              111
+            ]
+          ],
+          "file_bytes_read": 7041,
+          "selected_bytes": 7041,
+          "sha256": "80a260c837310d8c85a17852fa9da55772c8307e5fe14d45a9ee6a6cf5878d8d"
+        },
+        {
+          "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+          "sections": [
+            "1.",
+            "2.",
+            "6.1",
+            "6.2",
+            "7."
+          ],
+          "ranges": [
+            [
+              14,
+              235
+            ],
+            [
+              575,
+              620
+            ],
+            [
+              645,
+              664
+            ]
+          ],
+          "file_bytes_read": 60305,
+          "selected_bytes": 20168,
+          "sha256": "fdc6b70632203ec2880749f4e45f0f20909719cde3f277188b1e92a0ff983e59"
+        },
+        {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "sections": [
+            "2.",
+            "3.1"
+          ],
+          "ranges": [
+            [
+              49,
+              82
+            ],
+            [
+              90,
+              97
+            ]
+          ],
+          "file_bytes_read": 55561,
+          "selected_bytes": 4523,
+          "sha256": "864e8c5f4b4279ce7b763cbb9372f39aac2adefef9fa04478b82595b1eb6c594"
+        },
+        {
+          "file": "docs/REVEAL_TRANSPARENCY.md",
+          "sections": [
+            "2."
+          ],
+          "ranges": [
+            [
+              123,
+              158
+            ]
+          ],
+          "file_bytes_read": 36064,
+          "selected_bytes": 2492,
+          "sha256": "7a6c13202d87bf4eafa5471ec59229e99997ab91cbc06cc347ab0e3ebfcbf93f"
+        }
+      ]
+    },
+    {
+      "phase": 2,
+      "file_reads": 4,
+      "selected_bytes": 33552,
+      "file_bytes_read": 129530,
+      "repeated_reads_within_phase": 0,
+      "truncated_local_reads": 0,
+      "files": [
+        {
+          "file": "AGENTS.md",
+          "sections": [
+            "production"
+          ],
+          "ranges": [
+            [
+              1,
+              21
+            ]
+          ],
+          "file_bytes_read": 6623,
+          "selected_bytes": 1270,
+          "sha256": "1fcf892b29045a38d67308e65c24949f51008f2b01fe02754f8ebba9685dde20"
+        },
+        {
+          "file": "docs/PUZZLE_IMAGE_STYLE.md",
+          "sections": [
+            "all"
+          ],
+          "ranges": [
+            [
+              1,
+              111
+            ]
+          ],
+          "file_bytes_read": 7041,
+          "selected_bytes": 7041,
+          "sha256": "80a260c837310d8c85a17852fa9da55772c8307e5fe14d45a9ee6a6cf5878d8d"
+        },
+        {
+          "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+          "sections": [
+            "1.",
+            "2.",
+            "6.1",
+            "6.2",
+            "7."
+          ],
+          "ranges": [
+            [
+              14,
+              235
+            ],
+            [
+              575,
+              620
+            ],
+            [
+              645,
+              664
+            ]
+          ],
+          "file_bytes_read": 60305,
+          "selected_bytes": 20168,
+          "sha256": "fdc6b70632203ec2880749f4e45f0f20909719cde3f277188b1e92a0ff983e59"
+        },
+        {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "sections": [
+            "2.",
+            "3.2",
+            "H03H04"
+          ],
+          "ranges": [
+            [
+              49,
+              82
+            ],
+            [
+              98,
+              105
+            ],
+            [
+              138,
+              139
+            ]
+          ],
+          "file_bytes_read": 55561,
+          "selected_bytes": 5073,
+          "sha256": "14f5c1b48296cee789f6ab3d6536454be97b3af1cb995dc48e1b047f6139c0f0"
+        }
+      ]
+    },
+    {
+      "phase": 3,
+      "file_reads": 4,
+      "selected_bytes": 56378,
+      "file_bytes_read": 129530,
+      "repeated_reads_within_phase": 0,
+      "truncated_local_reads": 0,
+      "files": [
+        {
+          "file": "AGENTS.md",
+          "sections": [
+            "production"
+          ],
+          "ranges": [
+            [
+              1,
+              21
+            ]
+          ],
+          "file_bytes_read": 6623,
+          "selected_bytes": 1270,
+          "sha256": "1fcf892b29045a38d67308e65c24949f51008f2b01fe02754f8ebba9685dde20"
+        },
+        {
+          "file": "docs/PUZZLE_IMAGE_STYLE.md",
+          "sections": [
+            "all"
+          ],
+          "ranges": [
+            [
+              1,
+              111
+            ]
+          ],
+          "file_bytes_read": 7041,
+          "selected_bytes": 7041,
+          "sha256": "80a260c837310d8c85a17852fa9da55772c8307e5fe14d45a9ee6a6cf5878d8d"
+        },
+        {
+          "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+          "sections": [
+            "1.",
+            "4.",
+            "5.2",
+            "6.1",
+            "6.2",
+            "7."
+          ],
+          "ranges": [
+            [
+              14,
+              124
+            ],
+            [
+              261,
+              534
+            ],
+            [
+              552,
+              572
+            ],
+            [
+              575,
+              620
+            ],
+            [
+              645,
+              664
+            ]
+          ],
+          "file_bytes_read": 60305,
+          "selected_bytes": 33995,
+          "sha256": "62e3f02239d532ef7a16aef7e12f57dd32d48fe2ca4be33ab4e84c96433d19e7"
+        },
+        {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "sections": [
+            "2.",
+            "3.",
+            "4."
+          ],
+          "ranges": [
+            [
+              49,
+              147
+            ]
+          ],
+          "file_bytes_read": 55561,
+          "selected_bytes": 14072,
+          "sha256": "3309111f5de1e328257262ebf8e6193e40574a459291d763d7a21192a1b60aac"
+        }
+      ]
+    },
+    {
+      "phase": 4,
+      "file_reads": 5,
+      "selected_bytes": 46592,
+      "file_bytes_read": 313417,
+      "repeated_reads_within_phase": 0,
+      "truncated_local_reads": 0,
+      "files": [
+        {
+          "file": "AGENTS.md",
+          "sections": [
+            "production"
+          ],
+          "ranges": [
+            [
+              1,
+              21
+            ]
+          ],
+          "file_bytes_read": 6623,
+          "selected_bytes": 1270,
+          "sha256": "1fcf892b29045a38d67308e65c24949f51008f2b01fe02754f8ebba9685dde20"
+        },
+        {
+          "file": "docs/PUZZLE_IMAGE_STYLE.md",
+          "sections": [
+            "all"
+          ],
+          "ranges": [
+            [
+              1,
+              111
+            ]
+          ],
+          "file_bytes_read": 7041,
+          "selected_bytes": 7041,
+          "sha256": "80a260c837310d8c85a17852fa9da55772c8307e5fe14d45a9ee6a6cf5878d8d"
+        },
+        {
+          "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+          "sections": [
+            "1.",
+            "6.1",
+            "6.2",
+            "6.3",
+            "7."
+          ],
+          "ranges": [
+            [
+              14,
+              124
+            ],
+            [
+              575,
+              664
+            ]
+          ],
+          "file_bytes_read": 60305,
+          "selected_bytes": 14497,
+          "sha256": "f50ac73400c1ab3fe55b5643df49202bf170e7d4770695c3ac81b8d3a2da944e"
+        },
+        {
+          "file": "docs/PUZZLE_QUALITY.md",
+          "sections": [
+            "2.",
+            "9.1"
+          ],
+          "ranges": [
+            [
+              49,
+              82
+            ],
+            [
+              582,
+              604
+            ]
+          ],
+          "file_bytes_read": 55561,
+          "selected_bytes": 6103,
+          "sha256": "fa888a6112ff0763a36a9f37faf4235d4e3a00507f9a4522d055d8d77f254b44"
+        },
+        {
+          "file": "docs/PUZZLE_BACKGROUNDS.md",
+          "sections": [
+            "3."
+          ],
+          "ranges": [
+            [
+              179,
+              393
+            ]
+          ],
+          "file_bytes_read": 183887,
+          "selected_bytes": 17681,
+          "sha256": "5c32b81d080503e9b12879dbfed31a3c162b19fe172b3a9463f5974ba5296b50"
+        }
+      ]
+    },
+    {
+      "phase": 5,
+      "file_reads": 3,
+      "selected_bytes": 35761,
+      "file_bytes_read": 73969,
+      "repeated_reads_within_phase": 0,
+      "truncated_local_reads": 0,
+      "files": [
+        {
+          "file": "AGENTS.md",
+          "sections": [
+            "production"
+          ],
+          "ranges": [
+            [
+              1,
+              21
+            ]
+          ],
+          "file_bytes_read": 6623,
+          "selected_bytes": 1270,
+          "sha256": "1fcf892b29045a38d67308e65c24949f51008f2b01fe02754f8ebba9685dde20"
+        },
+        {
+          "file": "docs/PUZZLE_IMAGE_STYLE.md",
+          "sections": [
+            "all"
+          ],
+          "ranges": [
+            [
+              1,
+              111
+            ]
+          ],
+          "file_bytes_read": 7041,
+          "selected_bytes": 7041,
+          "sha256": "80a260c837310d8c85a17852fa9da55772c8307e5fe14d45a9ee6a6cf5878d8d"
+        },
+        {
+          "file": "docs/ai-workflows/PUZZLE_AUTHORING.md",
+          "sections": [
+            "1.",
+            "6.",
+            "7.",
+            "8.",
+            "9."
+          ],
+          "ranges": [
+            [
+              14,
+              124
+            ],
+            [
+              573,
+              850
+            ]
+          ],
+          "file_bytes_read": 60305,
+          "selected_bytes": 27450,
+          "sha256": "4365e6641ca6f5df324eafdedd2a340c8fdec3a90d223dc461e6e3329afbae37"
+        }
+      ]
+    }
+  ],
+  "conditional_quality_bytes": {
+    "quality 5.": 2600,
+    "quality 6.": 2407,
+    "quality 8.": 22035,
+    "quality 8.2": 1979,
+    "quality 8.3": 8841,
+    "quality 8.4": 3626,
+    "quality 8.5": 3500
+  }
+}

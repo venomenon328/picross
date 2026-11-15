@@ -1,0 +1,121 @@
+{
+  "existing_files": 925,
+  "unchanged_files": 923,
+  "changed": {
+    "content/registry.json": {
+      "before": {
+        "sha256": "27722d05074859d6e153cf3b7c96c570d6f911e9a8ff8ba7c373f38f08e5b1a1",
+        "bytes": 144484
+      },
+      "after": {
+        "sha256": "0b757ed9784d56b8eb5dd49cc53f776d5033cafe7963cf3d7953fa0d02724e7d",
+        "bytes": 146515
+      }
+    },
+    "game/data/registry.json": {
+      "before": {
+        "sha256": "556a2cf7e1bebdbdb0befee8f45e18665e8e6052f02bf6c9486014392203abd0",
+        "bytes": 31741
+      },
+      "after": {
+        "sha256": "1a11dae0da40f6789d02bd829d96cf26e5d1d027a8416376f969f23fd4e8d321",
+        "bytes": 32373
+      }
+    }
+  },
+  "added": {
+    "content/added/pz-fliegenpilz.json": {
+      "sha256": "4d60ff5230ea5b29189e11bfba85f804649dbaa7ac016f595a797d87f7f065ae",
+      "bytes": 270
+    },
+    "content/backgrounds/pz-fliegenpilz.json": {
+      "sha256": "a91b180daea9fd82c2be827d2f44e91b1c4e7ad9156cd249bc66ffb8df89281d",
+      "bytes": 12719
+    },
+    "content/difficulty/pz-fliegenpilz/rating.json": {
+      "sha256": "51afb26c03337dc32e92d8f703e9d825406641e4b77799015e2741ea23776af4",
+      "bytes": 3816
+    },
+    "content/packages/pz-fliegenpilz/r07/approval.json": {
+      "sha256": "b360b8c5f3c686d8fc717887ca62a0ffbf69a89851a23698c70cab4033af426f",
+      "bytes": 1975
+    },
+    "content/packages/pz-fliegenpilz/r07/categories.json": {
+      "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+      "bytes": 1312
+    },
+    "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/decisions/d01.json": {
+      "sha256": "b1bdecbf2da958107cd2573cec1af14960ab9d586c8ee011fb10ae5377b7bfc3",
+      "bytes": 1362
+    },
+    "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/derived/background.png": {
+      "sha256": "a937d68149a2828d19e7295de6d9069da9314dede967a133547f77831536b91f",
+      "bytes": 610336
+    },
+    "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/derived/derivation.json": {
+      "sha256": "eddc3abfdfca0d60f07bfa9269434dce3b87972f2e72244b40634c3de7bd21b0",
+      "bytes": 3941
+    },
+    "content/packages/pz-fliegenpilz/r07/external/content/authoring/pz-fliegenpilz/r07/background-choice-d01/evidence/step4-background-choice.txt": {
+      "sha256": "ac858c05fa0a97db7818207f30b6d53b848870b9fd880fd4a2e8320a1ace3a0d",
+      "bytes": 756
+    },
+    "content/packages/pz-fliegenpilz/r07/input/package.zip": {
+      "sha256": "0ca64ae2eee8c317d7ed1d34978180f26029cb91e3276bf7201a682b444057bd",
+      "bytes": 24734843
+    },
+    "content/packages/pz-fliegenpilz/r07/inspection.json": {
+      "sha256": "997d47192fd0d2fb1578cbc0637e24363de9cc53c12bb017537af34932f92748",
+      "bytes": 12370
+    },
+    "content/packages/pz-fliegenpilz/r07/manifest.json": {
+      "sha256": "0aa4f866e8cfd7c8c6e250629414cfd6653d030f6403cbe7aa7b335521ecd251",
+      "bytes": 10927
+    },
+    "content/packages/pz-fliegenpilz/r07/runtime/art/backgrounds/pz-fliegenpilz.png": {
+      "sha256": "a937d68149a2828d19e7295de6d9069da9314dede967a133547f77831536b91f",
+      "bytes": 610336
+    },
+    "content/packages/pz-fliegenpilz/r07/runtime/art/backgrounds/pz-fliegenpilz.txt": {
+      "sha256": "3592758ee341ac446498592620e33054e1b505ac85a6fb0079c66cd678a8edd3",
+      "bytes": 394
+    },
+    "content/packages/pz-fliegenpilz/r07/runtime/art/content/fliegenpilz.png": {
+      "sha256": "e18b0894bed89ca950289554ffe3944b739efdbe8eeb3c9b64303ed1b6f26db9",
+      "bytes": 1381425
+    },
+    "content/packages/pz-fliegenpilz/r07/runtime/art/content/fliegenpilz.txt": {
+      "sha256": "440f167cca4d566324d97b7b2e30456bc5d8ab66bce80305be8c7d1bdcce904f",
+      "bytes": 305
+    },
+    "content/packages/pz-fliegenpilz/r07/runtime/data/content/fliegenpilz.json": {
+      "sha256": "660350719c72b02dc7667d37c4ee26bb23affa4d041b948f4e39dbc7ca052423",
+      "bytes": 3350
+    },
+    "content/packages/pz-fliegenpilz/r07/usage.txt": {
+      "sha256": "13fc26d58b3def80938b940e7ae6cdac7e2e7ed51fb6c19be5e56d579f7b295f",
+      "bytes": 2138
+    },
+    "game/art/backgrounds/pz-fliegenpilz.png": {
+      "sha256": "a937d68149a2828d19e7295de6d9069da9314dede967a133547f77831536b91f",
+      "bytes": 610336
+    },
+    "game/art/backgrounds/pz-fliegenpilz.txt": {
+      "sha256": "3592758ee341ac446498592620e33054e1b505ac85a6fb0079c66cd678a8edd3",
+      "bytes": 394
+    },
+    "game/art/content/fliegenpilz.png": {
+      "sha256": "e18b0894bed89ca950289554ffe3944b739efdbe8eeb3c9b64303ed1b6f26db9",
+      "bytes": 1381425
+    },
+    "game/art/content/fliegenpilz.txt": {
+      "sha256": "440f167cca4d566324d97b7b2e30456bc5d8ab66bce80305be8c7d1bdcce904f",
+      "bytes": 305
+    },
+    "game/data/content/fliegenpilz.json": {
+      "sha256": "660350719c72b02dc7667d37c4ee26bb23affa4d041b948f4e39dbc7ca052423",
+      "bytes": 3350
+    }
+  },
+  "before_inventory_sha256": "e5fdd06a519eab64f03497c11e234cfc1cdec30f024af51298202a6f280e758d"
+}
