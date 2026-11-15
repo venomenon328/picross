@@ -1,0 +1,20 @@
+{
+  "product_head": "c22674012acd7d42d65edb345fcf90db3c0f9d5b",
+  "prior_evidence_commit": "c4f422aecddef159007c90ae3481f333802069d1",
+  "prior_manifest_verified": "6/6 bytes/SHA-256",
+  "sections": 31,
+  "norm_units": 123,
+  "routing_links": 76,
+  "errors": [],
+  "unchanged_scope": "All inherited authority paths/anchors and active links verified; other product source files unchanged from reviewed head except package plan.",
+  "B01": {
+    "source_review": "https://github.com/venomenon328/picross/pull/658#pullrequestreview-5910720341",
+    "actor": "Implementierer",
+    "authority": {
+      "file": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+      "anchor": "43-redaktionelle-kriterien"
+    },
+    "current_text": "Bei Warnung/negativem Sichturteil gilt Qualität §6: ursprüngliches Urteil,\nAkteur, UTC, Wortlaut, Begründung und Beleg. Technischer Negativbefund bleibt negativ.\nFür die Übernahme außerhalb versiegelter Originale via --palette-exception:\nHandoff v5/Rev7 verlangt picross-palette-editorial-exception-v2 mit vollständigem\nrulebook-v2 in binding.rulebook; historische Originale ausschließlich v1.\nAlle negativen Paare, exakte Werte/IDs, Kandidat/Revision/Istmatrix/Quelle/Regel,\nHandoff/Inventar/Paket und echte Endfreigabe binden. Erforderliche manuelle\nAutorisierungen bleiben zusätzlich nötig. Die Ausnahme heilt weder Proof noch\nRechte, Freigaben, feste Parameter, Difficulty oder Randregel.",
+    "semantic_delta": "Corrects v1-only instruction to v2/full rulebook-v2 for Handoff v5/Rev7, v1 for historical originals. Negative judgments, all pair/byte bindings, real final approval and other hard gates retained."
+  }
+}

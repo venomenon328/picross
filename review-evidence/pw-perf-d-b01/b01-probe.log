@@ -1,0 +1,7 @@
+{"handoff": "picross-authoring-handoff-v5", "assessment": "negative", "negative_pairs": [{"ids": ["blue", "red"], "rgb": ["#487b9d", "#447799"], "q": [[561264, -38955, -65583], [547849, -38928, -65872]], "S": 180046475, "D": "1.341814", "status": "negative", "rule_id": "picross-palette-separation-1"}], "rulebook_sources": 8, "v2": "accepted", "v1": "rejected", "missing_rule_source": "rejected", "missing_pair": "rejected", "missing_approval": "rejected", "wrong_approval_hash": "rejected"}
+test_negative_v5_exception_generation_and_bindings (__main__.Boundary.test_negative_v5_exception_generation_and_bindings) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.063s
+
+OK

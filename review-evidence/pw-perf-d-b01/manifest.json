@@ -1,0 +1,54 @@
+{
+  "product_head": "c22674012acd7d42d65edb345fcf90db3c0f9d5b",
+  "base": "a559e8b38be7e658ff1d3d2aa667380657c89f4d",
+  "pr": 658,
+  "purpose": "PW-PERF-D-B01 / unabhängiges A01: aktuelle technische Originale",
+  "expires": "2026-11-22",
+  "files": [
+    {
+      "file": "b01-probe.log",
+      "bytes": 726,
+      "sha256": "1a8f6dd6a6ac29431b84d8e26bddeff7c65f69f166d889f6c0b0e263eeb8049c"
+    },
+    {
+      "file": "b01_probe.py",
+      "bytes": 4422,
+      "sha256": "c3f3f262ee196129837a34b6652fae91cf71771c5304d076877b0138e94b4ea6"
+    },
+    {
+      "file": "core.log",
+      "bytes": 3599,
+      "sha256": "762b7aaec4abb042e83aed0f428629f78ce918193eb75c7e4f16b9636aa4f65e"
+    },
+    {
+      "file": "README.md",
+      "bytes": 4512,
+      "sha256": "28cfc0136470e9205b6e5d8c2f4b530032e656fa23a69ae667bd4bc6e7e238c4"
+    },
+    {
+      "file": "source-map.json",
+      "bytes": 49392,
+      "sha256": "f2ffcfc9c523ab2772ecfbce0161e5f6e75031fbaba5f7f45f811579ca41fa8a"
+    },
+    {
+      "file": "source-probe.log",
+      "bytes": 240,
+      "sha256": "985b080f0ea854f14b361824866738e7e3823ead6ef9138d6be3b62dc73aecdc"
+    },
+    {
+      "file": "source_probe.py",
+      "bytes": 4921,
+      "sha256": "63846946444e61553d9f59a2652ae7aff1e623d25b855c4d3a091a3acf87603f"
+    },
+    {
+      "file": "t01-delta.json",
+      "bytes": 1668,
+      "sha256": "4637d9f4a01f9740538dfd6addcc4dee049bb8e9f45724caf1633580b3c31cad"
+    },
+    {
+      "file": "technical-sources.json",
+      "bytes": 5585,
+      "sha256": "65e7137d9bb5dd357003458a6d20a01aae755a5368a9ee31ce8bc3371c244333"
+    }
+  ]
+}
