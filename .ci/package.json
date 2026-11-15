@@ -8,8 +8,8 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/615",
   "modules": [],
-  "omitted": "Reine Rätselproduktion: keine Spiel-, Werkzeug- oder CI-Codeänderung, keine Zusatzmodule oder neuen Tests, keine Bestandsreplays, kein Chromium. Produktionsnachweise erfolgen einmalig am konkreten Raster. Rasterwahl bleibt offen; Hintergrundarbeit beginnt erst danach. Draft-PR, kein Merge.",
-  "package": "Schluessel-r04-Schaftkorrektur",
-  "purpose": "Beauftragte feste Rasterkorrektur: gleichmäßigere Schlüsselstange mit geringerer Stufung; vollständige neue Produktionsprüfung und Rev7-Einzelangebot zur Wahl. Reine Rätselproduktion ohne Player-Build.",
+  "omitted": "Reine laufende Rätselproduktion: modules=[] und evidence.mode=none. Kein Player-Build, keine neuen Tests, keine Werkzeug-/Spiel-/CI-Codeänderung, kein Chromium oder Bestandsreplay. Passende Raster-/Bild-/0.4-Belege bytegleich erhalten; Builder prüft das neue geschriebene Paket vollständig. Keine Hintergrundwahl, HP-W2-Ableitung, Endabnahme, Integration oder Merge.",
+  "package": "Schluessel-Schritt4-Kontextzeichnungen",
+  "purpose": "Echte Wahl SCH-R-r04 und drei unterschiedliche ImageGen-Kontextoriginale als background_review r05 sichern; neue Rev7-Quellenbindung, Arbeitsmanifest, Qualitätsurteile und geprüfte Projektion. Native 3:1-Leinwände sind als Q-HG03 nicht erfüllt festgehalten; Freigabe zur transparenten 4:1-Ergänzung steht aus.",
   "test_changes": []
 }
