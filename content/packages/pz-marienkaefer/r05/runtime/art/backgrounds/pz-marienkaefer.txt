@@ -1,6 +1,0 @@
-Production ID: pz-marienkaefer
-Background: MK-HG-A-b04
-Image revision: b04
-Artwork: OpenAI ImageGen, im Nutzerauftrag durch Codex erzeugt
-Source: Eigenes ImageGen-Original A-b01; ausdrücklich genehmigte skriptbasierte Ergänzung der vollständigen transparenten Leinwand, dokumentiert in canvas-b04.json.
-Usage basis: Eigene im Nutzerauftrag generierte Ausgabe für venomenon328/picross; keine externe Bildvorlage.
