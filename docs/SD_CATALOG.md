@@ -1126,6 +1126,43 @@ keine historischen Daten-/Freigabeänderungen oder neue Toolhash-Ausnahmen.
 Dies präzisiert den P5-Produktionsnachweis, nicht die RI-C-Quellen- und
 Fremdänderungsgarantien.
 
+### RI-V9 · Geschlossener Erzeuger-, Quellen- und Recoveryweg (#652)
+
+Die vorhandene geschlossene Journalvalidierung prüft weiterhin vollständige
+Registry-/Runtime-/Quellenbindungen. Die gemeinsame Registrierungstabelle
+in `catalog_transaction.REGISTRATION_GENERATIONS` bindet zusätzlich die
+Erzeugerauswahl, den Writer und die Recoveryklassifikation aneinander:
+
+| Erzeugergeneration | Registry / erzeugte Runtime | Journal | Publikation und Recovery |
+| --- | --- | --- | --- |
+| at | v2 / v4 | v5 | Historischer gemeinsamer Writer |
+| sd2 | v2 / v5 | v6 | Phasierter RI-C-Writer |
+| background | v2 oder v3 / v6 | v7 | Phasierter RI-C-Writer |
+| metadata | v4 / v7 | v8 | Phasierter RI-C-Writer |
+| images | v4 / v8 | v9 | Phasierter RI-C-Writer |
+
+Die reguläre aktuelle Produktion wählt metadata beziehungsweise images anhand
+des echten Zielzustands. Die Tabelle ist kein Downgrade-/Migrationsweg.
+Historische Journal-v3/v4-Reader bleiben getrennt. Unbekannte Generationen
+oder eine nicht zugeordnete Erzeugeränderung blockieren vor Mutation.
+
+v9 erhält die in PE §13 eingeführten schlanken Reveal-v4-/Hintergrund-v6-Quellen
+mit `binding/current` sowie unterstützte historische Quellen. Ein fehlendes
+historisches initial ist bei schlanken Quellen gültig und wird nicht durch
+einen konstruierten Origin ersetzt. Die alleinige leere `external/`-Ausnahme
+eines alten Vollpakets benötigt dessen tatsächlich gebundenes v6-Manifest,
+ein Inventar ohne externe Dateien und nicht externe Hintergrundbezüge.
+Weitere unbekannte leere Verzeichnisse bleiben gesperrt.
+
+G0/G2/G5a/G5b/G6 und GR0/GR2 gelten unverändert auch für v8/v9 einschließlich
+Journalstaging und wiederholtem unterbrochenem Rollback. Die neue Produktion
+wird vollständig am Eingang und unabhängig im Staging geprüft; P5 bleibt auf
+das eine neue Journalpaket begrenzt. Als gezielte Erweiterung von RI-REPLAY-1
+prüft auch die identische Registerwiederholung nur ihren vollständigen Eingang
+und die aktuelle Checkoutintegrität, ohne fremde historische Produktion.
+Vollaudit und verify-export bleiben strikt. Completion und synthetischer
+§9-Abschluss folgen dem [RI-V9-Vertrag](PUZZLE_INTEGRATION.md).
+
 ## HP-I1b2 · Hintergrundwechsel und Quellenkompatibilität
 
 Vertrag vor Code, 10.11.2026, [HP-I1b2](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809).
@@ -1187,3 +1224,96 @@ nach Retirement und bei ursprünglicher Registerwiederholung. Budgets, vollstän
 T/K-/Namespaceguards, frische Prüfung unter Lock, Runtime zuletzt und Recovery
 bleiben erhalten. Echte Capability bleibt false; nur isolierte synthetische
 test_only-Ziele verwenden true. Keine Authoring-/Sheet-Formatänderung.
+
+## PW-PERF-B · Erstregistrierung v10 (Vertrag vor Code)
+
+Maßgeblich: [Paketentscheidung #653](https://github.com/venomenon328/picross/issues/653#issuecomment-6887731468).
+Nur Erstregistrierung auf Inhaltsregistry v4 / Runtime v8 verwendet
+`picross-registration-journal-v10`, `operation=registration`, Route `phased`.
+Update, Sync, Editor und Hintergrundwechsel sowie alte Zielgenerationen behalten
+ihre bisherigen geschlossenen Formate. Unbekannte Kombinationen sind Fehler.
+Die Datenformate der Indizes, Pakete und Freigaben bleiben unverändert.
+
+### Geschlossene Autorität und Projektion
+
+Gemeinsame Quellen S sind exakt `content/registry.json`,
+`game/data/registry.json`, `content/categories.json`,
+`content/difficulty-method.json` (optionale Methodendefaultquelle) und
+`game/data/background-capability.json` (optionale Capabilityquelle).
+Alle vorhandenen Indexeinträge werden strukturell validiert: vollständige
+ID-/Key-/Slot-/Pfad-/Casefold-Eindeutigkeit, Kategorien, aktuelle Metadaten,
+Backgroundrefs und exakte Runtime-v8-Felder samt Difficulty/Datum/Bildrefs.
+Runtime-Identitäten, Kategorien und Metadaten müssen dem Inhaltsindex entsprechen.
+Bestehende Runtimewerte für Difficulty, Added und aktuelle Bilder sind hierbei
+Indexautorität; ihre alten Quelldateien werden ausdrücklich nicht rekonstruiert.
+Die neue Projektion erhält sämtliche alten Eintragswerte unverändert und ergänzt
+nur die aus dem vollständig geprüften neuen Export und seinen Quellen abgeleitete
+neue Zeile. Globale Bildpfad- und Paketpfadkollisionen bleiben Fehler.
+
+Für genau die neue ID N enthält T neben S deren Definition, Revealnotice,
+Rating, Added, kanonische Revealsource, Backgroundsource und Backgroundnotice
+sowie beide kanonischen Revealendungen und den kanonischen Background-PNG-Pfad,
+soweit sie nicht zu den binären Additionen gehören. Alle neuen T-Pfade sind alt
+null; unbenutzte Quellen/Bildalternativen bleiben auch neu null. Keine Quelle
+anderer IDs gehört zu T. K (`retained`) ist exakt leer: benötigte gemeinsame
+Textquellen sind bereits in S, neue Paketdateien gehören zu A. A (`additions`)
+enthält exakt sämtliche Dateien des neuen geprüften Exports unter dessen
+`content/packages/<id>/<revision>/` sowie sein Live-Reveal und gegebenenfalls
+sein Live-Hintergrund. A bindet SHA-256; T und A sind disjunkt. Pfade werden aus
+Indizes und Export abgeleitet, niemals aus einem ungeprüften freien Quellenplan.
+Keine vollständige Katalogkopie auf Platte oder im Speicher.
+
+Das Journal hat exakt `format,operation,old,new,retained,additions,report_run,replacements`.
+`old` und `new` haben exakt dieselbe Menge T; Werte sind UTF-8-Text oder null.
+`retained={}`, `report_run=null`, `replacements={}`. Die bestehenden kanonischen
+Journalbytes (format zuerst, übrige Schlüssel sortiert, LF) und 24-MiB-Grenze gelten.
+Der Registrydelta ist exakt ein neuer sortierter Entry mit neuer Metadatenzeile
+und optional dessen Backgroundref. Alle alten Entries/Metadaten/Refs bleiben
+wertgleich; Kategorien, Methodenindex und Capability bleiben bytegleich.
+Neue Definition, Notice, Rating, Added und optionale Source/Notice sind exakt
+an Paket, ID, aktive Methode und Hintergrundausgaben gebunden. Added wird nur
+im mutierenden Aufruf einmal erzeugt; der lesende Plan projiziert null und
+kündigt `add-on-success` an. Kein gespeicherter Plan autorisiert Register.
+
+### Prüfung, Eigentum und Wiederanlauf
+
+Originaleingang samt Freigabe/Proof/HP-W2 sowie zweites unabhängiges Stagingreplay
+bleiben vollständig. Der prozesslokale RI-B-Kontext bindet Eingang, Staging,
+Methodenimplementierung und gegebenenfalls externe Difficultydatei frisch;
+P3 und P5 lesen exakt die veröffentlichten neuen Paketbytes und Mengen zurück.
+Die neue Zielprojektion/Sidecar- und Bildhashbindung wird ohne Katalogkopie geprüft.
+Eine identische Wiederholung prüft frisch den Eingang und die betroffene ID,
+bleibt schreibfrei und prüft keine unbeteiligte Altproduktion.
+
+G0/G2/G5a/G5b/G6 und GR0/GR2, P0–P6/R0–R2, Runtime zuletzt, Journaldauerhaftigkeit,
+exklusive no-replace-Publikation, fsync und unabhängiges Recoverybudget bleiben.
+Guards lesen S/T/A frisch; sie prüfen sichere reguläre Ziele und Eltern,
+Link-/Hardlink-/Casefold-Aliase, neue Paketbaumdateien/-verzeichnisse,
+ID-bezogene Sidecar-/Bildkollisionen sowie Tempnamen in allen Schreibeltern.
+Unbeteiligte alte Archiv-/Bild-/Sidecarbäume werden nicht inventarisiert.
+Temps bleiben `.registration-<JournalSHA256>-<Index>.tmp` nach sortiertem
+Schreibinventar; Staging bleibt `content/.registration-journal-<SHA256>.tmp`.
+Nur vollständige gebundene Additionsbytes, bei Texttemps eigene vollständige
+Bytes oder Präfixe, sind Eigentum. Fremde/unklare Bytes erhalten Journal und Daten.
+
+Recovery klassifiziert v10 explizit, validiert beide Indexseiten und den exakten
+Delta erneut ohne RI-B-Kontext und akzeptiert je Ziel nur eigene Alt-/Neubytes
+oder erlaubte Abwesenheit. Es stellt ausschließlich die gebundene alte Seite
+wieder her, entfernt ausschließlich eigene vollständige Additionen und führt
+keine Registrierung vorwärts fort. Wiederholte Unterbrechung bleibt zulässig.
+Der vollständig alte Index ist das Rückkehrziel; alte Quellen werden dabei nicht
+nachträglich zertifiziert. v3–v9-Recovery bleibt unverändert, v1 gesperrt.
+
+### Reichweite der Aussage und Erkennungszeitpunkte
+
+P0 prüft gemeinsame Indizes, neue Produktion, Quellen und freie Ziele; P2 liest
+alle konsumierten Quellen und Ziele unter Lock frisch. P5 bestätigt neue
+Projektion, neue Paket-/Bild-/Sidecarbytes; P6 bestätigt diesen Zustand vor
+Lockentfernung. R0 prüft Journal, beide Indexseiten und eigene Zwischenstände;
+R2 bestätigt alte gebundene Indizes und entfernte eigene neue Ziele.
+**Keine dieser v10-Grenzen bestätigt Existenz, Hash oder semantische Gültigkeit
+unbeteiligter alter Definitionen, Receipts, Archive, Sidecars oder Livebilder.**
+Deren Defekt wird beim zuständigen gezielten Reader oder ausdrücklich angeforderten
+Vollaudit erkannt. `check_checkout(replay=True)` ohne Ziel und `verify-export`
+bleiben vollständige Prüfungen. Keine Aussage gegen nichtkooperierendes ABA-/
+OS-Racing. Keine rückwirkende Abschwächung älterer Journalgenerationen.

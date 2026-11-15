@@ -65,7 +65,13 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     if is_background:
         background.capability(root, required=True)
     if update: sha(expected_definition_sha256)
-    snapshot = tx.capture(root)
+    from . import registration_dependencies as dependencies
+    # Dispatch by actual target indices; update and old generations retain the
+    # original full-catalog authority. Invalid v4/v8 data never falls back.
+    initial_registry = catalog_io.json_bytes(tx.read(root, tx.REGISTRY), 8*1024*1024)
+    current_target = (not update and initial_registry.get("format") == METADATA_FORMAT and
+                      tx.image_generation({"texts": {tx.RUNTIME: tx.read(root, tx.RUNTIME)}}))
+    snapshot = dependencies.capture(root, manifest.get("definition_id")) if current_target else tx.capture(root)
     registry = snapshot["registry"]
     if diagnostic.current.get():
         diagnostic.current.get().environment["catalog_entries"] = len(registry["entries"])
@@ -125,10 +131,15 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
                              background.initial(old_background)) if rebind.is_rebound(old_background) else
                         background.initial(old_background)) == exported_background
         if same:
-            check_checkout(root, replay=not update and original.get("format") not in (INTEGRATED, background.RECEIPT_FORMAT))
-            require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
-                    all(tx.file_hash(root, name) == h for name, h in snapshot["retained"].items()) and
-                    tx.namespaces(root,registry)==snapshot['namespaces'], "Checkout changed during planning")
+            # The incoming export was fully verified above. Repetition proves
+            # current integrity, not other IDs' historical production.
+            if current_target:
+                dependencies.check_repeat(root, snapshot, existing)
+            else:
+                check_checkout(root)
+                require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
+                        all(tx.file_hash(root, name) == h for name, h in snapshot["retained"].items()) and
+                        tx.namespaces(root,registry)==snapshot['namespaces'], "Checkout changed during planning")
             return {"status": "no-op", "registered": True, "id": entry["id"], "category": category, "changes": []}
         require(update, "Occupied production ID/revision: update is outside ZA-1")
     require_current(registry)
@@ -223,7 +234,12 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         if not existing and apply:
             changes[added.path(entry["id"])] = added.encoded(added.registration(entry["id"]))
         journal = tx.prepare(root, snapshot, changes, operation="update" if update else "registration", additions=additions) if existing or apply else None
-        if journal is None:
+        if journal is None and current_target:
+            proposal = dependencies.prepare(root, snapshot, changes, additions, planned=True)
+            planned_changes = [{"path": name, "operation": "add" if proposal["old"][name] is None else "replace"}
+                               for name in sorted(proposal["new"]) if proposal["new"][name] != proposal["old"][name]]
+            planned_changes.append({"path": added.path(entry["id"]), "operation": "add-on-success"})
+        elif journal is None:
             names = tx.text_names(registry) | tx.text_names(new)
             old = {name: snapshot["texts"][name] if name in snapshot["texts"] else tx.read(root, name) for name in names}
             require(all(old[name] is None for name in names - tx.text_names(registry)), "Registration plan target already exists")

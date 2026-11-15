@@ -465,7 +465,9 @@ python -m tools.puzzle_production.background_assets verify --request <request.js
 ```
 
 Die [Werkzeuganleitung](../tools/puzzle_production/README.md#hp-w2-eigenständige-hintergrundableitung)
-beschreibt die lokale Verwendung mit dem gebundenen Pillowstand. `describe()` liefert exakt
+beschreibt die lokale Verwendung mit dem gebundenen Pillowstand. Neue Produktion
+verwendet die unten definierte v2-Generation. Die folgende ursprüngliche v1-Form
+bleibt unverändert: `describe(generation=1)` liefert exakt
 `{profile,profile_sha256,tool,tool_sha256}`. `profile` ist das Objekt aus §4.1,
 `tool_sha256=H(tool)`. `tool` ist exakt
 `{id,commit,dirty,versions,modules}`: `id="picross-background-1"`, tatsächlicher
@@ -478,7 +480,7 @@ verwendeten eigenen Dekodier-/Profil-/Prüf-/Schreibmodule. Keine behauptete
 `derive(request, source_root, output_root)` erhält dasselbe JSON-Objekt wie die
 CLI. Wurzeln müssen explizite vorhandene sichere Verzeichnisse sein, dürfen
 einander nicht überdecken und nicht auf einen aktiven Spiel-/Katalogbaum zeigen.
-Der neue Auftrag `picross-background-derive-request-v1` enthält genau:
+Der v1-Auftrag `picross-background-derive-request-v1` enthält genau:
 
 | Schlüssel | Typ / Bedeutung |
 | --- | --- |
@@ -664,6 +666,50 @@ Bytes und bereits vollständige Veröffentlichungen erhalten und Restpfad melden
 Nach hartem Kill eigene Reste erst nach Besitz-/Lockprüfung gemäß WORKSPACE
 bereinigen. Ein möglicherweise vollständiger Rest wird erst nach vollständiger
 frischer Prüfung desselben Requests wiederverwendet.
+
+
+### 4.7 PW-PERF-C: neue HP-W2-Beleggeneration v2
+
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/653#issuecomment-6892078406).
+Neue Aufträge verwenden `picross-background-derive-request-v2`, mit exakt den
+sieben v1-Feldern `format,manifest,decision,source,profile,expected_tool_sha256,output`.
+Das feste Profil `picross-background-png2304-v1`, kanonische Hashbildung und alle
+PNG-/Ressourcen-/Pfadgrenzen bleiben unverändert. Der Befund
+`picross-background-derivation-v2` hat exakt die bisherigen v1-Befundfelder plus
+`producer`. `producer` ist exakt `{commit,dirty}`: vollständige tatsächliche
+Git-HEAD-SHA und Boolean für den tatsächlichen Arbeitsbaum (einschließlich
+unversionierter Dateien), ermittelt zu Beginn des Aufrufs vor eigenen Lock-/
+Staging-/Ausgabeschreibvorgängen. Diese Herkunft gehört zum Befund, nicht zu
+H(tool). Spätere Git-Statusänderungen, insbesondere durch eigene Arbeitsdateien,
+sind kein Renderidentitätswechsel. Der Dirty-Status wird ohne zusätzliche
+Pfadausnahmen ermittelt; echte Eingangs-/Zieländerungen und Renderquellenwechsel
+werden weiterhin an ihren unabhängigen frischen Datei-/Bytegrenzen abgewiesen.
+
+V2-`tool` hat exakt `id,versions,modules`, ID `picross-background-2`.
+`versions` hat exakt `python,pillow,zlib,littlecms`; Pillow bleibt 12.3.0.
+`modules` ist die sortierte, eindeutige Liste aus exakt zwei `{file,sha256}`-Zeilen:
+`tools/puzzle_production/background_render.py` und
+`tools/puzzle_production/image_normalization.py`. Der erste enthält die strikte
+PNG-Prüfung, Geometrie, Alphabehandlung, Pixelbefunde und PNG-Kodierung, der zweite
+die tatsächliche Farb-/EXIF-Normalisierung. Keine Diagnose-, Git-, CLI-, I/O- oder
+Orchestrierungsmodule im Bildidentitätskern. Geladene Renderquellen und ihre
+physischen Dateiidentitäten müssen vor/nach dem Aufruf passen; lediglich aktuelle
+Dateien zu hashen genügt nicht. Profil/Codecs/Renderquellen ändern die Identität,
+reine Diagnose- oder Gitänderungen tun dies nicht.
+
+`describe`/`describe(generation=2)` liefert Profil/Tool samt Hashes und `producer`;
+`describe --generation 1` / `describe(generation=1)` beschreibt ausdrücklich v1.
+Der Request dispatcht derive/verify ohne Generationsraten. V1 behält seine exakten
+Felder, neun Module, Tool-ID und bisherigen Reproduktionsregeln. Die qualifizierte
+selected-Ausnahme aus #645 wird nicht erweitert; sie gilt weder für none noch
+Produktion. Request-, Tool- und Befundgeneration müssen zusammenpassen.
+
+Verify reproduziert Bild und den ganzen Originalbefund einschließlich ursprünglicher
+Herkunft. Identischer v2-Reuse erhält ebenfalls die ursprünglichen Befundbytes;
+er prüft Quellen, Ziele und aktuelle Implementierung frisch, ohne Überschreiben.
+Fremde/fehlende/teilweise Ziele bleiben Fehler. Katalog-, Receipt-, Paket-,
+Finalizer- und Offline-Reader dispatchen beide geschlossenen Formen. Export v6,
+Record-/Registryformen und historische Originalbytes ändern sich nicht.
 
 ## 5. Paketbindung und gewöhnliche finale Endabnahme
 
@@ -1316,7 +1362,7 @@ Menschenzeit und Auswahlwartezeit getrennt im vorhandenen Authoringprotokoll;
 unbekannte Zeiten `null`.
 
 Nach bestätigter Endabnahme und tatsächlicher Main-Integration gilt
-[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung).
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung).
 Aktives PNG beziehungsweise explizite Leerbindung, Nutzungsrechte/Attribution,
 kompakte echte Auswahl-/Ableitungs-/Integrationsbindungen und aktive Bildrevision
 bleiben. Originale, Kandidaten, Prompts, Arbeits-ZIPs und Zwischenbelege enden
@@ -2160,3 +2206,30 @@ Der Originhash bindet den unveränderten v5-Erstanker. Source v5 bekommt dafür
 weder fingierte Initialquelle noch weitere Historie; alte Receipt v1/v2 bleiben streng.
 Aktuelle manuelle Präferenz und Rechte überleben Registrierung, Raster-Rebind,
 reguläre Adoption, Sync, Batch und Produktionsabschluss.
+
+## PW-PERF-B · Begrenzte Erstregistrierungsprüfung
+
+Für Erstregistrierung auf v4/v8 gilt ausschließlich die neue geschlossene
+[v10-Semantik](PUZZLE_INTEGRATION.md). Gemeinsame Indizes, neue Produktion samt Freigaben/Proof,
+abhängige Quellen und Schreibziele bleiben vollständig gebunden. Unbeteiligte
+alte Paket-/Liveasset-/Sidecardateien werden nicht gelesen oder als intakt
+bestätigt; ihre Defekte erkennt der zuständige Reader oder ein expliziter
+Gesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue
+Publikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen
+und andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen
+nichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.
+
+
+## PW-PERF-E · Gezielter Abschluss aktueller Quellen
+
+Für `retire-production` gilt der geschlossene [Receipt-v4- und Prüfvertrag](ZA1_ADAPTER.md#pw-perf-e--ausgewählter-produktionsabschluss-und-receipt-v4).
+Aktuelle Background v6 (selected/none/standard) und Reveal v4 (PNG/SVG) werden
+an binding/current geprüft, ohne erfundenen initial-Ursprung. Aktive
+Editorrasterpakete v1/v2 bleiben vollständige aktive Autorität. Alte Receipts
+v1/v2/v3 bleiben unverändert. V4 erhält Originalexport, Rechte und tatsächlichen
+Main-/Quellcommit getrennt; Sonderimportquellen werden je ID ausdrücklich mit
+`--source-commit ID SHA` gebunden. Keine erneute Endfreigabe oder Completion.
+Nur ausgewählte Abhängigkeiten werden gelesen, keine fremden Paket-/Bildbäume.
+Alle Preflights vor erster Löschung, gezielter Abschlussreadback, frischer
+Byte-/mtime-No-op und ehrliche Teilfehlerreste sind verbindlich. Dieses
+Werkzeugpaket beauftragt keine reale Bereinigung; sie braucht einen separaten Auftrag.

@@ -9,7 +9,7 @@
   "issue": "https://github.com/venomenon328/picross/issues/615",
   "modules": [],
   "omitted": "Reine Rätselproduktion: keine Spiel-, Werkzeug- oder CI-Codeänderung, keine Zusatzmodule oder neuen Tests, keine Bestandsreplays, kein Chromium. Produktionsnachweise erfolgen einmalig am konkreten Raster. Rasterwahl bleibt offen; Hintergrundarbeit beginnt erst danach. Draft-PR, kein Merge.",
-  "package": "Schluessel-S3",
-  "purpose": "Schritt 3: Freigabe der unveränderten Motivvorlage M-A-r02 und ihres Parameterkorridors binden; qualifiziertes Einzelraster mit Proof, Rekonstruktion, Sichturteil und aktiver 0.4-Schwierigkeit als raster_ready sichern. Quellen-/Plankern ohne Player-Build.",
+  "package": "Schluessel-r04-Schaftkorrektur",
+  "purpose": "Beauftragte feste Rasterkorrektur: gleichmäßigere Schlüsselstange mit geringerer Stufung; vollständige neue Produktionsprüfung und Rev7-Einzelangebot zur Wahl. Reine Rätselproduktion ohne Player-Build.",
   "test_changes": []
 }

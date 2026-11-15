@@ -1,0 +1,49 @@
+# Schritt 1: Abschlussbilder
+
+**Version 0.8.0 · Dokumentrevision 7 · 15.11.2026 · PW-PERF-D**
+
+Pflicht: [gemeinsamer Kern](PUZZLE_AUTHORING.md) vollständig und vollständiger
+[Bildstil](../PUZZLE_IMAGE_STYLE.md), danach diese Phase. Zusätzlich: [Qualität](../PUZZLE_QUALITY.md) §2/§3.1; [Transparenz](../REVEAL_TRANSPARENCY.md) §2.
+Sicherung, Wiederaufnahme, gemeinsame Bildkorrektur und Abschlussausgabe: Kern §§6–7.
+
+## 2. Abschlussbild zuerst
+
+### 2.1 Eingaben und Konfiguration
+
+Zulässiger Input: Motivtext beliebiger Ausführlichkeit und/oder Ausgangsbild;
+optional Breite/Höhe (ungefähr/fest), Mono/Farbe, Vordergrundfarbzahl
+(ungefähr/genau) und weitere Einschränkungen. Eine Vorschau ersetzt keine
+Originaldatei. Hauptmotiv, unverzichtbare Merkmale, erlaubte Umgestaltung und
+Einschränkungen erfassen. Reversible Details sinnvoll ergänzen; nur wesentliche
+offene Entscheidungen mit Empfehlung und Konsequenzen klären.
+
+Frühe Breiten-/Höhenwünsche sind unabhängig: keine, eine oder beide Achsen.
+Exakt/ungefähr gilt für ausgefüllte Achsen. Offene Achsen zum Motiv bestimmen;
+keine 0, angenommene Quadratseite oder Wiederherstellung aufgehobener Altwerte.
+Eine ausdrücklich aufgehobene Breite erhält die weiter gültige Höhe und umgekehrt.
+Bloßes Leeren hebt keine veröffentlichte Vorgabe auf. Wünsche im Motivbriefing
+sichern; die konkrete spätere Matrix besitzt zwei Maße. Ein freigegebener
+Parameterkorridor wird nicht stillschweigend durch spätere Formularwerte geändert.
+
+Zuerst farbige detaillierte Abschlussbilder, noch keine Abstraktion, Zellmatrix
+oder Hinweise. Fehlende Rastermaße/offener Modus blockieren diese Bildwahl nicht.
+Die spätere Abstrahierbarkeit berücksichtigen, ohne die Illustration vorzeitig
+auf Zellniveau zu vereinfachen. Eine eigene Eingangsdatei ist zunächst Referenz,
+keine automatisch freigegebene Abschlussbilddatei.
+
+
+### 2.4 Abschlussbildauswahl und Abstraktionsfreigabe
+
+1. Standardmäßig drei sinnvoll unterschiedliche echte Abschlussbilder erzeugen;
+   Komposition/Pose/Farbgebung variieren, Stil, Detailanspruch und Auftrag bewahren.
+   Bindende Referenz (`faithful`) und freie Interpretation (`free`) unterscheiden.
+   Nur eine ausdrückliche Vorgabe reduziert die Variantenanzahl.
+2. Native Bildgenerierung verwenden; jede Variante tatsächlich als Einzeldatei
+   speichern und zeigen. Eine Kontaktübersicht ist nur Auswahlhilfe. Fehlende
+   Bildfunktion blockiert den Bildschritt; Konzepte ersetzen keine Originale.
+3. Vor jeder Abstraktion muss das konkrete Abschlussbild ausdrücklich freigegeben
+   sein: Datei, Revision/Hash und geschützte Merkmale. Eine Auswahl mit Korrekturwunsch
+   ist keine Freigabe noch nicht vorhandener korrigierter Bytes.
+
+Übergabe: reveal_review mit erreichbaren Originalen zur tatsächlichen Bildwahl/-freigabe.
+Keine Abstraktion vor dieser Entscheidung; neue Briefings erfinden keine ID/Gitquelle.

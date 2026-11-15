@@ -1,0 +1,620 @@
+[
+  {
+    "when": "before_rename",
+    "pid": 45984,
+    "cwd": "E:\\Zeuch\\Coding\\picross\\.codex-fliegenpilz-step5\\repo",
+    "stage": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export",
+    "target": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\export",
+    "target_exists": false,
+    "time": 1794767982.2701654,
+    "access": [
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\approval.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\categories.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\input",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\inspection.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\manifest.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\usage.txt",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\input\\package.zip",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\data",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\backgrounds",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\content",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\data\\content",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\data\\content\\fliegenpilz_001.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\backgrounds\\pz-fliegenpilz.png",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\backgrounds\\pz-fliegenpilz.txt",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\content\\fliegenpilz_001.png",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\content\\fliegenpilz_001.txt",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\decisions",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\derived",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\evidence",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\decisions\\d01.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\derived\\background.png",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\derived\\derivation.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\evidence\\step4-background-choice.txt",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      }
+    ],
+    "target_parent_access": {
+      "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115",
+      "attributes": 16,
+      "metadata": 0,
+      "rename_access": 0
+    },
+    "restart_manager": {
+      "start": 0,
+      "register": 0,
+      "processes": [
+        {
+          "pid": 33320,
+          "name": "Visual Studio Code",
+          "service": "",
+          "status": 1
+        }
+      ],
+      "list_code": 0,
+      "reboot_reason": 0,
+      "end": 0
+    },
+    "resource_groups": {
+      "approval.json": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "categories.json": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "external": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "input": {
+        "start": 0,
+        "register": 0,
+        "processes": [
+          {
+            "pid": 33320,
+            "name": "Visual Studio Code",
+            "service": "",
+            "status": 1
+          }
+        ],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "inspection.json": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "manifest.json": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "runtime": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "usage.txt": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      }
+    },
+    "handles": [
+      {
+        "pid": 33320,
+        "total_handles": 327,
+        "selected_handles": [
+          {
+            "handle": 1800,
+            "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\input\\package.zip",
+            "access": "0x120089"
+          }
+        ]
+      },
+      {
+        "pid": 45984,
+        "total_handles": 302,
+        "selected_handles": []
+      }
+    ]
+  },
+  {
+    "when": "rename_exception",
+    "pid": 45984,
+    "cwd": "E:\\Zeuch\\Coding\\picross\\.codex-fliegenpilz-step5\\repo",
+    "stage": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export",
+    "target": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\export",
+    "target_exists": false,
+    "time": 1794767983.1953738,
+    "access": [
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\approval.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\categories.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\input",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\inspection.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\manifest.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\usage.txt",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\input\\package.zip",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\data",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\backgrounds",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\content",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\data\\content",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\data\\content\\fliegenpilz_001.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\backgrounds\\pz-fliegenpilz.png",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\backgrounds\\pz-fliegenpilz.txt",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\content\\fliegenpilz_001.png",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\runtime\\art\\content\\fliegenpilz_001.txt",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\decisions",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\derived",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\evidence",
+        "attributes": 16,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\decisions\\d01.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\derived\\background.png",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\derived\\derivation.json",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      },
+      {
+        "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115\\.hp-i1a-export-y9o640h6\\export\\external\\content\\authoring\\pz-fliegenpilz\\r07\\background-choice-d01\\evidence\\step4-background-choice.txt",
+        "attributes": 32,
+        "metadata": 0,
+        "rename_access": 0
+      }
+    ],
+    "target_parent_access": {
+      "path": "E:\\Zeuch\\Coding\\picross\\artifacts\\fliegenpilz-rename-20261115",
+      "attributes": 16,
+      "metadata": 0,
+      "rename_access": 0
+    },
+    "error": "PermissionError(13, 'Access is denied')",
+    "restart_manager": {
+      "start": 0,
+      "register": 0,
+      "processes": [
+        {
+          "pid": 33320,
+          "name": "Visual Studio Code",
+          "service": "",
+          "status": 1
+        }
+      ],
+      "list_code": 0,
+      "reboot_reason": 0,
+      "end": 0
+    },
+    "resource_groups": {
+      "approval.json": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "categories.json": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "external": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "input": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "inspection.json": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "manifest.json": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "runtime": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      },
+      "usage.txt": {
+        "start": 0,
+        "register": 0,
+        "processes": [],
+        "list_code": 0,
+        "reboot_reason": 0,
+        "end": 0
+      }
+    },
+    "handles": [
+      {
+        "pid": 33320,
+        "total_handles": 326,
+        "selected_handles": []
+      },
+      {
+        "pid": 45984,
+        "total_handles": 302,
+        "selected_handles": []
+      }
+    ]
+  }
+]

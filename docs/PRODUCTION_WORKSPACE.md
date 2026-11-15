@@ -3,7 +3,7 @@
 ## PW2-A · Operativer Quellenweg
 
 Für normale Rätselproduktion aller fünf Schritte einschließlich Korrektur und
-Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 6, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
+Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 7, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
 AGENTS-Produktionseinstieg, gemeinsamer Authoringkern, vollständiger
 [Bildstil](PUZZLE_IMAGE_STYLE.md), dann nur die fällige Phase und die konkret
 benötigte technische Operation. Dieser PW-Gesamtvertrag, WORKFLOW, Projektprofil
@@ -163,7 +163,7 @@ Schemafelder als Hauptoberfläche.
   gehören in das veröffentlichte Motivbriefing; konkrete Raster haben zwei Maße.
   Nach Vorlage des Parameterkorridors laufen Änderungen über die
   Korrektur. Die Grenzen und die stets farbige Abschlussillustration folgen
-  [Authoring §2.1](ai-workflows/PUZZLE_AUTHORING.md).
+  [Authoring §2.1](ai-workflows/PUZZLE_AUTHORING_STEP_2.md).
 - Motiv-/Rasterphase: Konfiguration, geschützte Merkmale, echte Bildvergleiche
   und verständlich bezeichnete Rasteroptionen. Maße, Farben und Schwierigkeit
   sind Ergebnisdaten, keine zu kopierenden technischen Eingaben.
@@ -832,3 +832,41 @@ Technische Referenzen zur Umsetzung: [Git-Objektzugriff](https://git-scm.com/doc
 [CSP und lokale Verbindungen](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Security-Policy/connect-src).
 Ein bloßer Aufruf von `python -m http.server` erfüllt die hier definierten
 Zugriffs- und Autoritätsgrenzen nicht.
+
+## PW-PERF-B · Begrenzte Erstregistrierungsprüfung
+
+Für Erstregistrierung auf v4/v8 gilt ausschließlich die neue geschlossene
+[v10-Semantik](PUZZLE_INTEGRATION.md). Gemeinsame Indizes, neue Produktion samt Freigaben/Proof,
+abhängige Quellen und Schreibziele bleiben vollständig gebunden. Unbeteiligte
+alte Paket-/Liveasset-/Sidecardateien werden nicht gelesen oder als intakt
+bestätigt; ihre Defekte erkennt der zuständige Reader oder ein expliziter
+Gesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue
+Publikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen
+und andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen
+nichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.
+
+
+## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
+
+Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
+in [Hintergrund §4](PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
+Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
+`image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
+keine Neusiegelung alter Originale oder Erweiterung von #645.
+
+Export v6 prüft Original und tatsächliches Staging jeweils vollständig. Zwischen
+beiden ersetzt ausschließlich der eigene unveränderte, byte-/pfadgebundene
+Aufrufkontext die redundante volle Pending-Inspektion. Ein geschlossener Vergleich
+der geschriebenen Pending-Dateimenge samt Bytes/Manifest und frischen Identitäten
+bleibt Pflicht. Inspection, Hashliste, Methoden, Freigaben, Notices, Kategorien und
+vollständige Readbacks bleiben gebunden. Vor Publikation werden Quellen und Ziel
+frisch geprüft. Separates verify-export beginnt immer eine vollständige Prüfung.
+
+Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
+Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits
+unabhängig geprüften Zustands-, Hintergrund- und Freigabefelder ist zulässig;
+abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung.
+Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
+Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
+Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.

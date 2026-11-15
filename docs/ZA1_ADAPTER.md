@@ -54,7 +54,7 @@ Die exakten neuen Quell-/Namespace-/Journalmengen stehen im
 
 | Folgeoperation | Verbindliches Verhalten auf v4/v8 |
 | --- | --- |
-| Neue Registrierung | Frische volle Produktion prüfen und ihren regulären Bildweg initialisieren; keine neue manuelle Source ohne manuelle Aktion. |
+| Neue Registrierung | Frische volle Produktion prüfen und ihren regulären Bildweg initialisieren; v4/v8 erzeugt Journal v9 und erreicht den phasierten Writer gemäß [RI-V9](SD_CATALOG.md#ri-v9--geschlossener-erzeuger--quellen--und-recoveryweg-652). Keine neue manuelle Source ohne manuelle Aktion. |
 | Ursprüngliche Registerwiederholung | Vollständigen ursprünglichen Export-/Receiptanker prüfen; aktuelle Metadaten/Bilder erhalten, echte Wiederholung ist No-op. |
 | Regulärer Rasterupdate | Eigenen Export und tatsächliche Freigaben vollständig prüfen. Aktuelle manuelle Bilder einschließlich Endung und Standard-/selected-/none-Präferenz erhalten; äußere Quellenbindung an neue Definition fortschreiben, keine Bildrevision allein deshalb. Exporthintergründe ersetzen keine manuelle Präferenz. |
 | Reguläre AT-/HP-W2-Adoption | Aktuelle Source fortführen, echte neue Produktionsentscheidung binden, historische `origin` unverändert. Eine alte vorbereitete Quelle wird stale. |
@@ -947,7 +947,7 @@ benötigten Originaldateien. Es behauptet keine vollständige Paketkopie.
 Der Spieler erhält Runtime-Ressourcen und einen `.txt`-Hinweis aus
 Urheber/Nutzungsgrundlage. Proofs, Quellen, Freigabeprotokolle und Testpakete
 bleiben ausgeschlossen. Für reine Inhaltsintegration gelten die Adapter-/Dateiprüfungen
-aus [PUZZLE_AUTHORING §8](ai-workflows/PUZZLE_AUTHORING.md); keine zusätzliche
+aus [PUZZLE_AUTHORING §8](ai-workflows/PUZZLE_AUTHORING_STEP_5.md); keine zusätzliche
 native Spiel-/Neustart-/PCK-Funktionsprobe je Rätsel. Der allgemeine
 [Quellen-/Plankern](CI_WORKFLOW_V2.md) gilt für jeden PR; reine Dokumente und reine Rätselinhalte bleiben ohne Player-Build.
 Weitere Proben nur mit konkretem Zweck; allgemeine Code-/Exportmodule werden
@@ -1625,7 +1625,7 @@ bereitet ausschließlich einen Git-Diff vor; Commit, PR und Merge folgen dem Wor
 Kein automatischer Nach-Merge-Job und kein wachsender CI-Testbestand.
 
 Die freigegebene [CI2-Spezifikation](CI_SLIMMING.md) ergänzt den eigenständigen
-[Abschluss späterer Bildrevisionen](ai-workflows/PUZZLE_AUTHORING.md#abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026)
+[Abschluss späterer Bildrevisionen](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#abschluss-nachträglicher-bildrevisionen--ci2-vom-26102026)
 auch bei bereits vorhandenem `picross-integrated-content-v1`-Datensatz. Das ist ein
 noch umzusetzender Abschlussweg, keine bereits verfügbare Erweiterung des obigen
 Befehls; Receiptformat, aktive Bildbindungen und ursprüngliche Belege bleiben erhalten.
@@ -1719,3 +1719,229 @@ alter Journalgenerationen. Der gültige 0.6.0-Default und seine Originalformen
 bleiben erhalten, 0.7.0 ausdrücklich opt-in. Der vollständige verpflichtende
 Einzelweg wird gesondert in #560 abgeglichen. Keine zusätzliche persönliche
 Buchabnahme pro Rätsel und keine automatische Sheet- oder Produktionsaktivierung.
+
+## PW-PERF-B · Erstregistrierung v10 (Vertrag vor Code)
+
+Maßgeblich: [Paketentscheidung #653](https://github.com/venomenon328/picross/issues/653#issuecomment-6887731468).
+Nur Erstregistrierung auf Inhaltsregistry v4 / Runtime v8 verwendet
+`picross-registration-journal-v10`, `operation=registration`, Route `phased`.
+Update, Sync, Editor und Hintergrundwechsel sowie alte Zielgenerationen behalten
+ihre bisherigen geschlossenen Formate. Unbekannte Kombinationen sind Fehler.
+Die Datenformate der Indizes, Pakete und Freigaben bleiben unverändert.
+
+### Geschlossene Autorität und Projektion
+
+Gemeinsame Quellen S sind exakt `content/registry.json`,
+`game/data/registry.json`, `content/categories.json`,
+`content/difficulty-method.json` (optionale Methodendefaultquelle) und
+`game/data/background-capability.json` (optionale Capabilityquelle).
+Alle vorhandenen Indexeinträge werden strukturell validiert: vollständige
+ID-/Key-/Slot-/Pfad-/Casefold-Eindeutigkeit, Kategorien, aktuelle Metadaten,
+Backgroundrefs und exakte Runtime-v8-Felder samt Difficulty/Datum/Bildrefs.
+Runtime-Identitäten, Kategorien und Metadaten müssen dem Inhaltsindex entsprechen.
+Bestehende Runtimewerte für Difficulty, Added und aktuelle Bilder sind hierbei
+Indexautorität; ihre alten Quelldateien werden ausdrücklich nicht rekonstruiert.
+Die neue Projektion erhält sämtliche alten Eintragswerte unverändert und ergänzt
+nur die aus dem vollständig geprüften neuen Export und seinen Quellen abgeleitete
+neue Zeile. Globale Bildpfad- und Paketpfadkollisionen bleiben Fehler.
+
+Für genau die neue ID N enthält T neben S deren Definition, Revealnotice,
+Rating, Added, kanonische Revealsource, Backgroundsource und Backgroundnotice
+sowie beide kanonischen Revealendungen und den kanonischen Background-PNG-Pfad,
+soweit sie nicht zu den binären Additionen gehören. Alle neuen T-Pfade sind alt
+null; unbenutzte Quellen/Bildalternativen bleiben auch neu null. Keine Quelle
+anderer IDs gehört zu T. K (`retained`) ist exakt leer: benötigte gemeinsame
+Textquellen sind bereits in S, neue Paketdateien gehören zu A. A (`additions`)
+enthält exakt sämtliche Dateien des neuen geprüften Exports unter dessen
+`content/packages/<id>/<revision>/` sowie sein Live-Reveal und gegebenenfalls
+sein Live-Hintergrund. A bindet SHA-256; T und A sind disjunkt. Pfade werden aus
+Indizes und Export abgeleitet, niemals aus einem ungeprüften freien Quellenplan.
+Keine vollständige Katalogkopie auf Platte oder im Speicher.
+
+Das Journal hat exakt `format,operation,old,new,retained,additions,report_run,replacements`.
+`old` und `new` haben exakt dieselbe Menge T; Werte sind UTF-8-Text oder null.
+`retained={}`, `report_run=null`, `replacements={}`. Die bestehenden kanonischen
+Journalbytes (format zuerst, übrige Schlüssel sortiert, LF) und 24-MiB-Grenze gelten.
+Der Registrydelta ist exakt ein neuer sortierter Entry mit neuer Metadatenzeile
+und optional dessen Backgroundref. Alle alten Entries/Metadaten/Refs bleiben
+wertgleich; Kategorien, Methodenindex und Capability bleiben bytegleich.
+Neue Definition, Notice, Rating, Added und optionale Source/Notice sind exakt
+an Paket, ID, aktive Methode und Hintergrundausgaben gebunden. Added wird nur
+im mutierenden Aufruf einmal erzeugt; der lesende Plan projiziert null und
+kündigt `add-on-success` an. Kein gespeicherter Plan autorisiert Register.
+
+### Prüfung, Eigentum und Wiederanlauf
+
+Originaleingang samt Freigabe/Proof/HP-W2 sowie zweites unabhängiges Stagingreplay
+bleiben vollständig. Der prozesslokale RI-B-Kontext bindet Eingang, Staging,
+Methodenimplementierung und gegebenenfalls externe Difficultydatei frisch;
+P3 und P5 lesen exakt die veröffentlichten neuen Paketbytes und Mengen zurück.
+Die neue Zielprojektion/Sidecar- und Bildhashbindung wird ohne Katalogkopie geprüft.
+Eine identische Wiederholung prüft frisch den Eingang und die betroffene ID,
+bleibt schreibfrei und prüft keine unbeteiligte Altproduktion.
+
+G0/G2/G5a/G5b/G6 und GR0/GR2, P0–P6/R0–R2, Runtime zuletzt, Journaldauerhaftigkeit,
+exklusive no-replace-Publikation, fsync und unabhängiges Recoverybudget bleiben.
+Guards lesen S/T/A frisch; sie prüfen sichere reguläre Ziele und Eltern,
+Link-/Hardlink-/Casefold-Aliase, neue Paketbaumdateien/-verzeichnisse,
+ID-bezogene Sidecar-/Bildkollisionen sowie Tempnamen in allen Schreibeltern.
+Unbeteiligte alte Archiv-/Bild-/Sidecarbäume werden nicht inventarisiert.
+Temps bleiben `.registration-<JournalSHA256>-<Index>.tmp` nach sortiertem
+Schreibinventar; Staging bleibt `content/.registration-journal-<SHA256>.tmp`.
+Nur vollständige gebundene Additionsbytes, bei Texttemps eigene vollständige
+Bytes oder Präfixe, sind Eigentum. Fremde/unklare Bytes erhalten Journal und Daten.
+
+Recovery klassifiziert v10 explizit, validiert beide Indexseiten und den exakten
+Delta erneut ohne RI-B-Kontext und akzeptiert je Ziel nur eigene Alt-/Neubytes
+oder erlaubte Abwesenheit. Es stellt ausschließlich die gebundene alte Seite
+wieder her, entfernt ausschließlich eigene vollständige Additionen und führt
+keine Registrierung vorwärts fort. Wiederholte Unterbrechung bleibt zulässig.
+Der vollständig alte Index ist das Rückkehrziel; alte Quellen werden dabei nicht
+nachträglich zertifiziert. v3–v9-Recovery bleibt unverändert, v1 gesperrt.
+
+### Reichweite der Aussage und Erkennungszeitpunkte
+
+P0 prüft gemeinsame Indizes, neue Produktion, Quellen und freie Ziele; P2 liest
+alle konsumierten Quellen und Ziele unter Lock frisch. P5 bestätigt neue
+Projektion, neue Paket-/Bild-/Sidecarbytes; P6 bestätigt diesen Zustand vor
+Lockentfernung. R0 prüft Journal, beide Indexseiten und eigene Zwischenstände;
+R2 bestätigt alte gebundene Indizes und entfernte eigene neue Ziele.
+**Keine dieser v10-Grenzen bestätigt Existenz, Hash oder semantische Gültigkeit
+unbeteiligter alter Definitionen, Receipts, Archive, Sidecars oder Livebilder.**
+Deren Defekt wird beim zuständigen gezielten Reader oder ausdrücklich angeforderten
+Vollaudit erkannt. `check_checkout(replay=True)` ohne Ziel und `verify-export`
+bleiben vollständige Prüfungen. Keine Aussage gegen nichtkooperierendes ABA-/
+OS-Racing. Keine rückwirkende Abschwächung älterer Journalgenerationen.
+
+
+## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
+
+Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
+in [Hintergrund §4](PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
+Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
+`image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
+keine Neusiegelung alter Originale oder Erweiterung von #645.
+
+Export v6 prüft Original und tatsächliches Staging jeweils vollständig. Zwischen
+beiden ersetzt ausschließlich der eigene unveränderte, byte-/pfadgebundene
+Aufrufkontext die redundante volle Pending-Inspektion. Ein geschlossener Vergleich
+der geschriebenen Pending-Dateimenge samt Bytes/Manifest und frischen Identitäten
+bleibt Pflicht. Inspection, Hashliste, Methoden, Freigaben, Notices, Kategorien und
+vollständige Readbacks bleiben gebunden. Vor Publikation werden Quellen und Ziel
+frisch geprüft. Separates verify-export beginnt immer eine vollständige Prüfung.
+
+Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
+Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits
+unabhängig geprüften Zustands-, Hintergrund- und Freigabefelder ist zulässig;
+abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung.
+Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
+Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
+Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.
+
+## PW-PERF-D · Mehrdateisnapshot im unveränderten Export v6
+
+[PW-B](PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration) definiert
+Handoff v5/Record v4 und rulebook-v2. Export v6/Offlineprüfung prüft sämtliche acht
+inventarisierten Regelquellen statt einer einzelnen Datei, ohne alte Originale
+umzubinden. Palettenausnahme v2 bindet das vollständige neue Regelobjekt; v1 bleibt
+alten Handoffs vorbehalten. Alle übrigen Ausnahmefelder, Negativbefunde, echten
+Endfreigaben und Inhaltsgates bleiben unverändert.
+
+
+## PW-PERF-E · Ausgewählter Produktionsabschluss und Receipt v4
+
+Vertrag vor Code, 15.11.2026. Maßgeblich ist die
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/653#issuecomment-6894952911).
+Dieser Werkzeugweg führt keine reale Bestandsbereinigung aus.
+
+### Geschlossene Form und Herkunft
+
+`picross-integrated-content-v4` enthält exakt
+`format,entry,integrated_commit,notice_sha256,provenance`.
+`entry` ist der ursprüngliche vollständige Exportentry, einschließlich Exporthash O;
+die aktuelle Registry bindet ausschließlich den Hash R der tatsächlichen Receiptbytes.
+`integrated_commit` ist der volle Main-Integrationscommit des ursprünglichen Exports.
+`provenance` enthält exakt `source_commit,main_commit,package_tree,export_manifest,notice,background`:
+
+- `source_commit`: voller ursprünglicher registrierter Git-Quellcommit. Standard ist
+  integrated_commit; ein abweichender Sonderimport wird ausdrücklich je ID mit
+  `--source-commit ID SHA` angegeben. Bei jeder neuen v4-Kompaktierung müssen der dortige Entry und Paket-Gitbaum
+  exakt zum importierten Export passen; der dort indexierte Authoringrecord muss
+  dieselbe Revision als registered ohne Blocker führen, auch wenn source_commit und
+  integrated_commit gleich sind. Fehlende Quellen sperren. Vor Locknahme oder
+  Dateiänderung muss jede ausdrücklich übergebene SHA direkt ein Gitobjekt
+  vom Typ `commit` bezeichnen. Tree-, Blob- und Tagobjekte sind keine
+  Quellcommits; erfolgreiche Treeish-Pfadabfragen genügen nicht.
+- `main_commit`: voller geprüfter origin/main-Stand des Retirementaufrufs. Beide
+  Maincommits müssen Vorfahren von HEAD sein; integrated_commit zusätzlich von
+  origin/main. source_commit darf der ursprüngliche, nicht gemergte Produktionshead
+  eines expliziten Imports sein. Die drei Begriffe sind keine austauschbaren Belege.
+- `package_tree`: ursprüngliche Git-Tree-SHA des vollständigen Exportverzeichnisses,
+  identisch an source_commit und integrated_commit. Kein aktueller Gesamtbaumhash.
+- `export_manifest`: Ref mit exakt `file,sha256,bytes`, kanonischer Paketmanifestpfad,
+  SHA-256 O und ursprünglicher Bytezahl (1 bis 8 MiB).
+- `notice`: unveränderte ursprüngliche Revealnotice, exakt `text,sha256` nach AT;
+  ihr Hash ist notice_sha256. Fehlende Nutzungsangaben werden nicht ergänzt.
+- `background`: bei Export v6 die aus den tatsächlich gebundenen Originalen gelesene
+  vollständige geschlossene Backgroundsource v1, sonst null. Sie erhält ursprüngliche
+  Approval, Entscheidung, Herkunft/Rechte und Ableitungsbindung. Fehlende oder offene
+  Rechte sperren. Kein rekonstruierter initial-Teil einer Source v6.
+
+V4 wird ausschließlich für neue Abschlüsse mit aktueller Backgroundsource v6
+oder Revealsource v4 ohne deklarierte Hintergrundquelle erzeugt. Bei älteren
+vollständigen Hintergrundquellen bleiben die passenden v2/v3-Abschlussformen
+maßgeblich, auch zusammen mit Reveal v4. Bestehende Receipts v1/v2/v3 bleiben unverändert und
+behalten ihre geschlossenen Formen. V4 ist weder Export noch Zertifikat und
+behauptet keine neue kreative Freigabe oder nachträgliche Completion.
+Der tatsächliche Import #622 ist integrated_commit, sein jeweiliger alter
+Produktionshead source_commit; ein späterer Retirementstand ist main_commit.
+Es gibt keine fest eingebaute Liste erlaubter Rätsel oder Toolhashes.
+
+### Ausgewählte Abhängigkeiten und Grenzen
+
+Gemeinsame Registry/Runtime/Kategorien/Methoden-/Capability- und Authoringindizes
+werden strukturell auf Identität, Slots, Pfade, Kollisionen und Projektion geprüft.
+Nur ausdrücklich ausgewählte IDs liefern Dateiabhängigkeiten: aktives Paket,
+Definition, Rating/Added und referenzierte Belege, Reveal-/Backgroundquellen,
+aktuelle Assets/Notices, eigene Authoringrevisionen. Keine Vollkatalog-Capture,
+Inventur fremder Paket-/Bild-/Sidecarbäume oder Öffnung fremder Inhalte.
+Aktuelle v6-Quellen prüfen binding/current und tatsächliche selected/none/standard-
+Bytes; Reveal v4 prüft PNG oder SVG. Aktive Editorrasterpakete v1/v2 bleiben samt
+previous/definition/quality/files bytegleich erhalten; kein Proofreplay.
+
+Alle ausgewählten IDs werden vor der ersten Mutation gegen tatsächliche Mainbytes,
+Paketbaum, Index, vollständige Originaldateimengen, Pfadsicherheit und Staging geprüft.
+Unbekannte/unindexierte/offene Rasterarbeit und Teilzustände sperren; getrennte
+indexierte Hintergrundjobs bleiben erhalten. Ein frischer Aufruf liest jedes zu
+entfernende Original höchstens einmal vollständig, prüft seinen SHA-256 und Gitblob;
+innerhalb dieses Aufrufs dürfen identische unveränderliche Bytes wiederverwendet
+werden. Frische sichere Pfad-/Dateiidentitäten einschließlich Größe, mtime, ctime,
+unter Windows echte NTFS-ChangeTime statt Erstellungszeit, Inode und Linkzahl sowie Namensräume werden vor Mutation erneut geprüft. Kein
+persistenter Prüfcache und keine Garantie gegen nichtkooperierendes OS-/ABA-Racing.
+ZIPs werden nur für konkret benötigte Originalrechte/Backgroundmetadaten geöffnet;
+kein Solver-, Produktions-, Bild- oder Freigabereplay.
+
+Publikation ersetzt ausschließlich ausgewählte Manifeste, deren Registryhashes
+und zugehörige Authoringindexzeilen; alle aktiven Quellen/Notices, Metadaten,
+Runtime, Rating/Added, Identitäten und Save-Slots bleiben bytegleich. Einzeldateien
+werden atomar ersetzt, der gesamte Mehrdateivorgang ist keine OS-Transaktion.
+Teilfehlermeldungen nennen tatsächliche Reste; keine Rekonstruktion gelöschter ZIPs
+oder automatische Wiederholung. Abschließende gezielte Readerprüfung bestätigt die
+neuen Bytes und Projektion. Ein vollständig gültiger vorhandener Receipt ist nach
+frischer Prüfung ein Byte-/mtime-No-op ohne historischen Archivzugriff.
+Unbeteiligte Defekte werden erst von ihrem gezielten Reader oder explizitem
+Gesamtaudit erkannt; dieser Abschluss zertifiziert sie nicht.
+
+
+Vor der ersten Mutation beansprucht Retirement den gemeinsamen Writerpfad
+`content/.registration-pending.json` exklusiv (create-new, fsync). Der geschlossene
+interne Sperrmarker hat exakt `format,ids,integrated_commit` mit
+`format=picross-retirement-lock-v1`, der ausgewählten ID-Liste und voller Main-SHA.
+Er ist kein Recoveryjournal und enthält keine behaupteten Rollbackbytes. Nach
+Locknahme werden die zuvor gebundenen Quellen erneut geprüft. Andere Writer
+blockieren an diesem gemeinsamen Pfad. Nur die frisch geprüften eigenen
+Sperrbytes werden nach erfolgreichem Readback entfernt; ein Teilfehler erhält
+den Marker und nennt ihn ausdrücklich zur manuellen Klärung mit dem tatsächlichen
+Git-Diff. Keine automatische Locklöschung oder ZIPrekonstruktion. Ein No-op
+beansprucht keinen Marker und verändert keine Datei/mtime.

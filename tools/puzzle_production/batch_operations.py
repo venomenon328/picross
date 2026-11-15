@@ -78,7 +78,7 @@ _REPAIR_LIMITS = ("search_seconds", "final_seconds", "search_lines", "final_line
 _ROOT = Path(__file__).resolve().parents[2]
 _CORE = {"__init__", "batch_operations", "batch_contract", "batch_io", "batch_runner", "batch_worker",
          "contract", "authoring_package", "authoring_build_contract", "background_io", "background_contract",
-         "catalog_io", "operation_diagnostics"}
+         "catalog_io", "operation_diagnostics", "authoring_rulebook"}
 _LOGIC = {"solver", "verifier", "paired_solver", "paired_verifier", "certification"}
 _IMAGES = _LOGIC | {"images", "image_normalization", "palette_gate", "palette_quality"}
 _ANALYSIS = _IMAGES | {
@@ -186,7 +186,8 @@ def _tool_paths(kind):
     if kind in ("image_import", "candidate_verify", "logic_certify", "repair", "difficulty", "authoring_build"):
         norms.append("docs/PUZZLE_PRODUCTION.md")
     if kind in ("image_import", "logic_certify", "repair", "difficulty", "authoring_build"):
-        norms.append("docs/ai-workflows/PUZZLE_AUTHORING.md")
+        from .authoring_rulebook import PATHS
+        norms.extend(PATHS)
     if kind in ("difficulty", "authoring_build"):
         norms.extend((*_METHOD_FILES, "docs/SD2_INTEGRATION.md", "docs/SD2_ANALYZER.md"))
     if kind in ("background", "authoring_build"):
