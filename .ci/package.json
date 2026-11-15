@@ -1,11 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/665",
-  "package": "PW-RETIRE-PHASES: abgeschlossene Phasen und Zusatzarbeit gezielt bereinigen",
-  "modules": ["production.catalog"],
-  "purpose": "Quellen-/Plankern und Windowsbau für Werkzeugcode; production.catalog enthält die tatsächlichen Retirement-, Receipt-, Quellen- und Guardregressionen. Gezielte synthetische Mehrphasenfälle prüfen API, echten CLI-Prozess, Schutz vor ungewählter/neuer/fremder Arbeit sowie Byte-/mtime-No-op. RET-K01 bis RET-K05 aus #665.",
-  "omitted": "Keine Änderung an Solver, Bildproduktion, Export, Builder, Projektor, Spieler, allgemeinen Transaktionen oder CI. Daher keine tools-, adapter-, solver-, images-, native-, preflight-, delivery- oder Browsermodule; keine echte Produktion als CI-Korpus, keine technische Dauerablage. Der normale Kern liefert den vorgeschriebenen Windowsbau; kein nativer Windows-Spielstart daraus abgeleitet.",
-  "test_changes": [{"path": "tests/puzzle_production/test_retirement_current.py", "disposition": "change-scoped", "reason": "Wenige synthetische Fälle im bestehenden Modul verhindern die belegte Mehrphasen-Abschlussblockade und unbeabsichtigte Löschung. Kein Produktionsreplay oder zusätzlicher Kernumfang."}],
+  "issue": "https://github.com/venomenon328/picross/issues/660",
+  "package": "Authoring §9: Fliegenpilz, Radieschen, Marienkäfer und Schlüssel abschließen",
+  "modules": [],
+  "purpose": "Reiner Nachintegrationsabschluss der vier tatsächlich endabgenommenen und auf main integrierten Produktionen nach Authoring Schritt 5 §9. Regulärer Main-/Ansichtsabgleich, explizite completed-revision-/completed-work-Auswahl, nativer retire-production-Readback, vollständiger Diff und frischer Byte-/mtime-No-op. Quellen-/Plankern genügt.",
+  "omitted": "Keine Werkzeug-, Spiel-, gemeinsamen Asset- oder CI-Änderungen. Aktive Runtime, Definitionen, Bilder/Quellen, Rechte, Metadaten, Bewertungen und Identitäten bleiben unverändert. Deshalb keine Zusatzmodule, Player-Bauten, Solver-/Proof-/Bildreplays, neuen Rätseltests oder Browserläufe.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",

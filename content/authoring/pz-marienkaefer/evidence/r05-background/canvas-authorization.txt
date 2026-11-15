@@ -1,2 +1,0 @@
-Frage: Darf ich MK-HG-A-b01 per Skript auf eine neue transparente Leinwand von 2896×724 Pixeln (4:1) setzen — mit je 362 transparenten Pixeln links und rechts, ohne Skalierung, Beschnitt oder Änderung der Zeichnung? Die neue Revision würde ich anschließend zur Auswahl vorlegen.
-Antwort des Auftraggebers: Ja, transparente Leinwand per Skript erweitern
