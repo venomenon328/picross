@@ -1,3 +1,0 @@
-Production ID: pz-schluessel
-Artwork: OpenAI ImageGen, native Bildfunktion in Codex, im Auftrag des Repositoryeigentümers
-Usage basis: Auftragsbezogen neu KI-generiert aus eigenem Motivbriefing, ohne hochgeladene oder übernommene Fremdassets; zur Nutzung im Projekt picross erzeugt. Keine Drittattribution aus Referenzmaterial erforderlich; keine Exklusivität behauptet.

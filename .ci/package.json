@@ -1,11 +1,11 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/665",
-  "package": "PW-RETIRE-PHASES: abgeschlossene Phasen und Zusatzarbeit gezielt bereinigen",
-  "modules": ["production.catalog"],
-  "purpose": "Quellen-/Plankern und Windowsbau für Werkzeugcode; production.catalog enthält die tatsächlichen Retirement-, Receipt-, Quellen- und Guardregressionen. Gezielte synthetische Mehrphasenfälle prüfen API, echten CLI-Prozess, Schutz vor ungewählter/neuer/fremder Arbeit sowie Byte-/mtime-No-op. RET-K01 bis RET-K05 aus #665.",
-  "omitted": "Keine Änderung an Solver, Bildproduktion, Export, Builder, Projektor, Spieler, allgemeinen Transaktionen oder CI. Daher keine tools-, adapter-, solver-, images-, native-, preflight-, delivery- oder Browsermodule; keine echte Produktion als CI-Korpus, keine technische Dauerablage. Der normale Kern liefert den vorgeschriebenen Windowsbau; kein nativer Windows-Spielstart daraus abgeleitet.",
-  "test_changes": [{"path": "tests/puzzle_production/test_retirement_current.py", "disposition": "change-scoped", "reason": "Wenige synthetische Fälle im bestehenden Modul verhindern die belegte Mehrphasen-Abschlussblockade und unbeabsichtigte Löschung. Kein Produktionsreplay oder zusätzlicher Kernumfang."}],
+  "issue": "https://github.com/venomenon328/picross/issues/602",
+  "package": "PW-CLOSE-FOUR: Authoring §9 für #602, #608, #617 und #615",
+  "modules": [],
+  "purpose": "Reiner Nachintegrationsabschluss vier bestätigter Produktionen mit dem unveränderten nativen retire-production aus #666. Frische Main-/Pointer-/Freigabebindung, explizite frühere Phasen und evidence; aktive Quellen und Runtime erhalten, vier frische No-ops und getrennte Diff-/Readerprüfung. Quellen-/Plankern docs und ci-required.",
+  "omitted": "Keine Produkt-/Werkzeug-/CI-Codeänderung, keine neuen Bilder, Raster oder Bewertungen. Keine Solver-/Proof-/Bild-/Bestandsreplays, Fachmodule, neuen Rätseltests, Browser- oder Player-Bauten. Einmaliger Operator nur auf separatem temporärem Ausführungsref, nicht in diesem Produktdiff; kein technischer Upload.",
+  "test_changes": [],
   "core_change": null,
   "evidence": {
     "mode": "none",

@@ -1,6 +1,0 @@
-Production ID: pz-schluessel
-Background: SCH-HG-A
-Image revision: b02
-Artwork: OpenAI ImageGen im Auftrag des Eigentümers; technische Leinwandergänzung durch Codex/Pillow
-Source: Eingebautes image_gen.imagegen, unveränderte native r05-Eingänge; autorisierte proportionale Pillow-Leinwandergänzung.
-Usage basis: Eigene vom Eigentümer beauftragte generierte Projektillustration ohne externe Bildreferenzen.

@@ -1,9 +1,0 @@
-Repository: venomenon328/picross · Ziel: main. Lies AGENTS.md und den gemeinsamen Authoring-Kern, den vollständigen Bildstil und die dort für Schritt 5 geroutete Phasendatei im aktuellen main (Authoring 0.8.0).
-
-Produktionsdatensatz: https://github.com/venomenon328/picross/blob/04e1bf99e8f725ca41206cae765780d1b59b8984/content/authoring/pz-radieschen/r05/record.json
-
-Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot RAD-HG-A-b01.
-
-Ich erteile die Endabnahme für diese Hintergrundentscheidung zusammen mit dem gewählten Raster und dem zugehörigen Reveal im gebundenen Datensatz und beauftrage deren Integration.
-
-Commit, Push und PR; unabhängiges Review, danach Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates. Bestätigten Mainabschluss und Produktionsabschluss nach Authoring §9 durchführen.
