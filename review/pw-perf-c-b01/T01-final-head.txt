@@ -1,0 +1,35 @@
+test_first_derive_inside_clean_checkout_preserves_provenance_and_noop (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop) ... ok
+test_git_and_diagnostics_preserve_identity_original_producer_and_reuse (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_git_and_diagnostics_preserve_identity_original_producer_and_reuse) ... ok
+test_loaded_render_identity_and_mid_operation_replacement_reject (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_loaded_render_identity_and_mid_operation_replacement_reject) ... ok
+test_v2_closed_report_profile_codecs_and_changed_targets (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_v2_closed_report_profile_codecs_and_changed_targets) ... ok
+test_v2_publication_rechecks_source_target_and_codec_changes (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_v2_publication_rechecks_source_target_and_codec_changes) ... ok
+test_v2_selected_none_exact_pixels_and_legacy_dispatch (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_v2_selected_none_exact_pixels_and_legacy_dispatch) ... ok
+test_two_full_inspections_fresh_offline_and_pending_tamper (tests.puzzle_production.test_background_export.BackgroundExportTests.test_two_full_inspections_fresh_offline_and_pending_tamper) ... ok
+test_finalizer_shares_one_projection_and_matches_independent_view (tests.puzzle_production.test_authoring_workflow.WorkflowTests.test_finalizer_shares_one_projection_and_matches_independent_view) ... ok
+test_qualified_selected_reproduces_full_original_and_never_authorizes_writing (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_qualified_selected_reproduces_full_original_and_never_authorizes_writing) ... ok
+test_qualified_identity_rejects_consistently_rehashed_provenance_changes (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_qualified_identity_rejects_consistently_rehashed_provenance_changes) ... ok
+test_qualified_none_and_current_codec_drift_remain_closed (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_qualified_none_and_current_codec_drift_remain_closed) ... ok
+test_source_change_during_render_is_conflict_and_cleans_unpublished_stage (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_source_change_during_render_is_conflict_and_cleans_unpublished_stage) ... 
+  test_source_change_during_render_is_conflict_and_cleans_unpublished_stage (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_source_change_during_render_is_conflict_and_cleans_unpublished_stage) (change='symlink') ... FAIL
+test_foreign_stage_bytes_are_preserved_and_reported_even_under_an_owned_filename (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_foreign_stage_bytes_are_preserved_and_reported_even_under_an_owned_filename) ... ok
+test_qualified_old_record_is_checked_before_approval_and_stays_byte_identical (tests.puzzle_production.test_authoring_finalization.AuthoringFinalizationTests.test_qualified_old_record_is_checked_before_approval_and_stays_byte_identical) ... ok
+
+======================================================================
+FAIL: test_source_change_during_render_is_conflict_and_cleans_unpublished_stage (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_source_change_during_render_is_conflict_and_cleans_unpublished_stage) (change='symlink')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\Zeuch\Coding\picross_codex\653-pw-perf-c-b01-20261115\repo\tests\puzzle_production\test_background_assets.py", line 929, in test_source_change_during_render_is_conflict_and_cleans_unpublished_stage
+    self.assert_error(self.derive(fixture), "source_changed", "conflict")
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\Zeuch\Coding\picross_codex\653-pw-perf-c-b01-20261115\repo\tests\puzzle_production\test_background_assets.py", line 66, in assert_error
+    self.assertEqual(result["status"], status, result)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'technical_error' != 'conflict'
+- technical_error
++ conflict
+ : {'status': 'technical_error', 'derivation': None, 'output': None, 'error': {'code': 'io_error', 'message': "[WinError 1314] A required privilege is not held by the client: 'E:\\\\Zeuch\\\\Coding\\\\picross_codex\\\\653-pw-perf-c-b01-20261115\\\\temp\\\\hp-w2-synthetic-5zwo1wko\\\\2\\\\replaced-original.png' -> 'E:\\\\Zeuch\\\\Coding\\\\picross_codex\\\\653-pw-perf-c-b01-20261115\\\\temp\\\\hp-w2-synthetic-5zwo1wko\\\\2\\\\source\\\\original\\\\A-b01.png'", 'path': None}, 'remaining': None}
+
+----------------------------------------------------------------------
+Ran 14 tests in 102.088s
+
+FAILED (failures=1)

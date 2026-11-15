@@ -1,0 +1,241 @@
+{
+  "format": "pw-perf-c-b01-comparison/v1",
+  "source_head": "e7827be657c88b0f5e36db4e05318dcdd2d39008",
+  "base": "5351b14439212e4927d83f0b1f8fc145ca5b7719",
+  "rows": [
+    {
+      "mode": "mono",
+      "operation": "finalizer",
+      "before_seconds": 14.425205099993036,
+      "after_seconds": 7.784328199995798,
+      "before_counts": {
+        "file_reads": 317,
+        "file_reads_bytes": 892304,
+        "hash": 278,
+        "hash_bytes": 1853697,
+        "zip_opens": 6,
+        "adapter_inspections": 2,
+        "image_opens": 38,
+        "png_load_calls": 43,
+        "png_decodes": 23,
+        "projector_inspections": 2,
+        "records": 3,
+        "member_reads": 63,
+        "member_reads_bytes": 73503,
+        "view_image_checks": 15
+      },
+      "after_counts": {
+        "file_reads": 311,
+        "file_reads_bytes": 800836,
+        "hash": 227,
+        "hash_bytes": 1436826,
+        "zip_opens": 5,
+        "adapter_inspections": 2,
+        "image_opens": 28,
+        "png_load_calls": 38,
+        "png_decodes": 18,
+        "projector_inspections": 1,
+        "records": 2,
+        "member_reads": 42,
+        "member_reads_bytes": 49002,
+        "view_image_checks": 10
+      },
+      "limits": {
+        "projector_inspections": 1,
+        "zip_opens": 6,
+        "records": 3
+      },
+      "work_pass": true,
+      "time_pass": true
+    },
+    {
+      "mode": "mono",
+      "operation": "export",
+      "before_seconds": 7.296195599992643,
+      "after_seconds": 5.372894399988581,
+      "before_counts": {
+        "file_reads": 287,
+        "file_reads_bytes": 609942,
+        "zip_opens": 3,
+        "hash": 78,
+        "hash_bytes": 477415,
+        "adapter_inspections": 3,
+        "image_opens": 12,
+        "png_load_calls": 42,
+        "png_decodes": 12
+      },
+      "after_counts": {
+        "file_reads": 199,
+        "file_reads_bytes": 451715,
+        "zip_opens": 2,
+        "hash": 72,
+        "hash_bytes": 426087,
+        "adapter_inspections": 2,
+        "image_opens": 8,
+        "png_load_calls": 28,
+        "png_decodes": 8
+      },
+      "limits": {
+        "adapter_inspections": 2,
+        "zip_opens": 2,
+        "png_decodes": 8,
+        "file_reads": 287,
+        "file_reads_bytes": 622374
+      },
+      "work_pass": true,
+      "time_pass": true
+    },
+    {
+      "mode": "mono",
+      "operation": "verify-export",
+      "before_seconds": 2.1717376000015065,
+      "after_seconds": 2.1657891999930143,
+      "before_counts": {
+        "file_reads": 102,
+        "file_reads_bytes": 228350,
+        "hash": 29,
+        "hash_bytes": 164343,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 4,
+        "png_load_calls": 14,
+        "png_decodes": 4
+      },
+      "after_counts": {
+        "file_reads": 102,
+        "file_reads_bytes": 228350,
+        "hash": 29,
+        "hash_bytes": 164343,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 4,
+        "png_load_calls": 14,
+        "png_decodes": 4
+      },
+      "limits": {
+        "adapter_inspections": 1,
+        "zip_opens": 1
+      },
+      "work_pass": true,
+      "time_pass": null
+    },
+    {
+      "mode": "color",
+      "operation": "finalizer",
+      "before_seconds": 10.483431900007417,
+      "after_seconds": 10.328451399996993,
+      "before_counts": {
+        "file_reads": 345,
+        "file_reads_bytes": 1487946,
+        "hash": 288,
+        "hash_bytes": 2363206,
+        "zip_opens": 6,
+        "adapter_inspections": 2,
+        "image_opens": 44,
+        "png_load_calls": 57,
+        "png_decodes": 27,
+        "projector_inspections": 2,
+        "records": 3,
+        "member_reads": 63,
+        "member_reads_bytes": 74445,
+        "view_image_checks": 15
+      },
+      "after_counts": {
+        "file_reads": 339,
+        "file_reads_bytes": 1389910,
+        "hash": 237,
+        "hash_bytes": 1916495,
+        "zip_opens": 5,
+        "adapter_inspections": 2,
+        "image_opens": 34,
+        "png_load_calls": 52,
+        "png_decodes": 22,
+        "projector_inspections": 1,
+        "records": 2,
+        "member_reads": 42,
+        "member_reads_bytes": 49630,
+        "view_image_checks": 10
+      },
+      "limits": {
+        "projector_inspections": 1,
+        "zip_opens": 6,
+        "records": 3
+      },
+      "work_pass": true,
+      "time_pass": true
+    },
+    {
+      "mode": "color",
+      "operation": "export",
+      "before_seconds": 10.536080999998376,
+      "after_seconds": 7.556538799995906,
+      "before_counts": {
+        "file_reads": 334,
+        "file_reads_bytes": 1453420,
+        "zip_opens": 3,
+        "hash": 102,
+        "hash_bytes": 1140663,
+        "adapter_inspections": 3,
+        "image_opens": 21,
+        "png_load_calls": 63,
+        "png_decodes": 18
+      },
+      "after_counts": {
+        "file_reads": 231,
+        "file_reads_bytes": 1047712,
+        "zip_opens": 2,
+        "hash": 93,
+        "hash_bytes": 1007616,
+        "adapter_inspections": 2,
+        "image_opens": 14,
+        "png_load_calls": 42,
+        "png_decodes": 12
+      },
+      "limits": {
+        "adapter_inspections": 2,
+        "zip_opens": 2,
+        "png_decodes": 12,
+        "file_reads": 334,
+        "file_reads_bytes": 1465852
+      },
+      "work_pass": true,
+      "time_pass": true
+    },
+    {
+      "mode": "color",
+      "operation": "verify-export",
+      "before_seconds": 3.103346599993529,
+      "after_seconds": 3.1306996999919647,
+      "before_counts": {
+        "file_reads": 120,
+        "file_reads_bytes": 565740,
+        "hash": 38,
+        "hash_bytes": 412825,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 7,
+        "png_load_calls": 21,
+        "png_decodes": 6
+      },
+      "after_counts": {
+        "file_reads": 120,
+        "file_reads_bytes": 565740,
+        "hash": 38,
+        "hash_bytes": 412825,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 7,
+        "png_load_calls": 21,
+        "png_decodes": 6
+      },
+      "limits": {
+        "adapter_inspections": 1,
+        "zip_opens": 1
+      },
+      "work_pass": true,
+      "time_pass": null
+    }
+  ],
+  "comparison": "Same restored synthetic 3x3 mono/none and color/selected snapshots; control uses base plus exactly six final v2 reader/render modules. This is a new measurement, not reuse of historical times.",
+  "limits": "Single warm comparison, no extra repeat. Setup and copying outside timer; Python allocations only, no RSS/physical disk claim. Offline verification has a fresh-work constraint but no speedup requirement."
+}

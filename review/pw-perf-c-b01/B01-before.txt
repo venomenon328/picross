@@ -1,0 +1,32 @@
+test_first_derive_inside_clean_checkout_preserves_provenance_and_noop (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop) ... 
+  test_first_derive_inside_clean_checkout_preserves_provenance_and_noop (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop) (none=False) ... FAIL
+  test_first_derive_inside_clean_checkout_preserves_provenance_and_noop (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop) (none=True) ... FAIL
+
+======================================================================
+FAIL: test_first_derive_inside_clean_checkout_preserves_provenance_and_noop (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop) (none=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\Zeuch\Coding\picross_codex\653-pw-perf-c-b01-20261115\repo\tests\puzzle_production\test_background_assets.py", line 1192, in test_first_derive_inside_clean_checkout_preserves_provenance_and_noop
+    first = cli('derive', '--request', request, '--source-root', f.source,
+                '--output-root', f.output)
+  File "E:\Zeuch\Coding\picross_codex\653-pw-perf-c-b01-20261115\repo\tests\puzzle_production\test_background_assets.py", line 1179, in cli
+    self.assertEqual(code, 0, (result, stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : ({'derivation': None, 'error': {'code': 'tool_mismatch', 'message': 'Render tool or producer changed during operation', 'path': None}, 'output': None, 'remaining': None, 'status': 'invalid_input'}, '')
+
+======================================================================
+FAIL: test_first_derive_inside_clean_checkout_preserves_provenance_and_noop (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop) (none=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\Zeuch\Coding\picross_codex\653-pw-perf-c-b01-20261115\repo\tests\puzzle_production\test_background_assets.py", line 1192, in test_first_derive_inside_clean_checkout_preserves_provenance_and_noop
+    first = cli('derive', '--request', request, '--source-root', f.source,
+                '--output-root', f.output)
+  File "E:\Zeuch\Coding\picross_codex\653-pw-perf-c-b01-20261115\repo\tests\puzzle_production\test_background_assets.py", line 1179, in cli
+    self.assertEqual(code, 0, (result, stderr))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 2 != 0 : ({'derivation': None, 'error': {'code': 'tool_mismatch', 'message': 'Render tool or producer changed during operation', 'path': None}, 'output': None, 'remaining': None, 'status': 'invalid_input'}, '')
+
+----------------------------------------------------------------------
+Ran 1 test in 5.579s
+
+FAILED (failures=2)

@@ -1,0 +1,124 @@
+{
+  "format": "pw-perf-c-b01-review-originals/v1",
+  "purpose": "Independent PW-PERF-C-A01 review of the B01 rework; no approval or merge authorization",
+  "product_head": "e7827be657c88b0f5e36db4e05318dcdd2d39008",
+  "base": "5351b14439212e4927d83f0b1f8fc145ca5b7719",
+  "test_merge": "6a3b1caf1f7a617bec0835d30373b1d7f426e73f",
+  "prior_head": "56178a15df59e39a4c2695d04e1c83efbf1d7bb2",
+  "spec_url": "https://github.com/venomenon328/picross/issues/653#issuecomment-6892078406",
+  "finding_url": "https://github.com/venomenon328/picross/pull/657#pullrequestreview-5910226540",
+  "ci_url": "https://github.com/venomenon328/picross/actions/runs/43704637049",
+  "expires": "2026-11-22T00:00:00Z",
+  "review_ref": "review/653-pw-perf-c-b01-until-20261122",
+  "cleanup_owner": "Implementer/review actor after A01; reassess delivery at expiry if review is still pending. Never merge this review ref. Local own worktrees/data are removed after verified remote delivery.",
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+    "pillow": "12.3.0",
+    "filesystem": "NTFS, E:; isolated venv and task-owned TEMP/TMP"
+  },
+  "finding": {
+    "id": "PW-PERF-C-B01",
+    "owner": "Codex / implementer",
+    "definition": "Initial clean tool checkout becomes dirty due to its own writer lock/stage; comparing whole producer provenance incorrectly rejects first v2 derive or reuse.",
+    "fix": "Record authentic invocation-start producer; recheck actual render tool and source/target guards independently. No new gitignore/path exclusions; no v1 or qualified-producer change.",
+    "success_mapping": [
+      {
+        "criterion": "Initially clean Git checkout, bound inputs and output_root inside it; first selected/none derive publishes exact full output",
+        "test": "BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop"
+      },
+      {
+        "criterion": "Reuse and independent CLI verify preserve bytes and nanosecond mtimes, original producer retained",
+        "test": "BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop"
+      },
+      {
+        "criterion": "Real untracked data still produces dirty=true; own lock/stage does not change render identity",
+        "test": "BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop"
+      },
+      {
+        "criterion": "Source, target and codec change after stage creation blocks publication and retains foreign bytes",
+        "test": "BackgroundV2Tests.test_v2_publication_rechecks_source_target_and_codec_changes"
+      },
+      {
+        "criterion": "Actual loaded render byte change/replacement, profiles and changed outputs still blocked",
+        "test": "BackgroundV2Tests.test_loaded_render_identity_and_mid_operation_replacement_reject; test_v2_closed_report_profile_codecs_and_changed_targets"
+      },
+      {
+        "criterion": "Independent final-head review",
+        "owner": "Independent reviewer",
+        "status": "PW-PERF-C-A01 remains open / before_merge"
+      }
+    ]
+  },
+  "checks": {
+    "B01-before.txt": {
+      "source": "prior_head plus the new clean-checkout regression only; original product code",
+      "command": "python -m unittest tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_first_derive_inside_clean_checkout_preserves_provenance_and_noop -v",
+      "result": "Expected failure: both selected and none return tool_mismatch before first publication; exit 1, 1 test, 2 failing subtests, 5.579 s"
+    },
+    "T01-focused-head.txt": {
+      "source": "product_head, clean worktree",
+      "command": "python -m unittest tests.puzzle_production.test_background_assets.BackgroundV2Tests tests.puzzle_production.test_background_export.BackgroundExportTests.test_two_full_inspections_fresh_offline_and_pending_tamper tests.puzzle_production.test_authoring_workflow.WorkflowTests.test_finalizer_shares_one_projection_and_matches_independent_view -v",
+      "result": "8 tests passed, 71.013 s"
+    },
+    "T01-final-head.txt": {
+      "source": "product_head, clean worktree",
+      "result": "Extended 14-test Windows run: 13 passed, one test failed only in symlink subtest due WinError 1314 (missing creation privilege); 102.088 s. Not claimed as a local pass.",
+      "ci_resolution": "Same unchanged test passes under Linux in job 132783033111 on test_merge; selected/none B01 tests pass there as well.",
+      "command": "python -m unittest [the 14 fully qualified test names printed in this original log] -v"
+    }
+  },
+  "measurement_reproduction": [
+    "Use isolated Python 3.13.14/Pillow 12.3.0, NTFS, own TASK/temp. Place measure.py directly in TASK, product checkout at TASK/repo. PW3_MEASURE_REPO selects the measured checkout. No concurrent local test/benchmark.",
+    "Run measure.py prepare exactly once on product_head. It creates both WorkflowFixture cases and preserves before-finalize and before-export snapshots in TASK/measure-v2, with paths in config-v2.json. These same bytes are restored before every measured operation.",
+    "Control checkout at base plus exactly background_assets.py, background_contract.py, background_package.py, catalog_background.py, image_normalization.py and background_render.py from product_head. All measured source module hashes and source_diff are recorded in raw reports.",
+    "Run PW3_MEASURE_REPO=control python measure.py T00-controlled, then PW3_MEASURE_REPO=repo python measure.py T01-final. Copy/setup outside the timer; warm OS cache, no forced cache flush. No extra repeat was used.",
+    "Driver derives from prior review commit a49be9028ac4d28631784a1801854101490ebd17. Only temporary phase-loop variable renamed label to phase_label so operation now correctly reports finalizer/export/verify-export on both sides. No timing/counter logic changed.",
+    "check.py independently validates every delivered file hash, current product module hashes, raw counts/limits/times and output equality. Run from this review checkout with python review/pw-perf-c-b01/check.py.",
+    "Finalizer inputs/results/outputs are identical. Export payloads identical except inspection.json and its manifest binding. Offline report differences restricted to checked_at_utc and genuine tool provenance/module identity. No original bytes are rewritten."
+  ],
+  "limitations": [
+    "Synthetic warm-cache Windows measurement only; no real catalog, graphical acceptance, browser or player startup.",
+    "Only Python allocation peaks measured; no native/Git RSS or physical-disk bytes. Nested inclusive phases are not additive.",
+    "T03 selected modules and final CI result are linked in PR; A01 remains independently required.",
+    "Full PR diff whitespace check reports a pre-existing blank EOF in background_render.py from the prior implementation. B01-only diff has no whitespace errors; unrelated render source left unchanged."
+  ],
+  "files": {
+    "B01-before.txt": {
+      "bytes": 3200,
+      "sha256": "0a5c3eb5316f4a1a56264dd842854ccc2f4719ab618e177831c72685d9692b90"
+    },
+    "check.py": {
+      "bytes": 2399,
+      "sha256": "e671e9af1ec79900cbafc8cd476fb311607d486eb67f13cade5dd19e9bae0c5f"
+    },
+    "measure.py": {
+      "bytes": 9631,
+      "sha256": "4affc4e1f4c7123590d95514f85ec901505933fde254f1f468effee31a72a345"
+    },
+    "T00-controlled.json": {
+      "bytes": 152850,
+      "sha256": "6f0e98864ce2947b09d0729bd671f69c372dad7efce28c78b852001d55ae500f"
+    },
+    "T01-final-head.txt": {
+      "bytes": 4974,
+      "sha256": "ebeb1868000c214c58246703b64ad1184744c26ed008cb850af15982808d6b03"
+    },
+    "T01-final.json": {
+      "bytes": 152481,
+      "sha256": "7fbfe1f08667af0f67bd76be9cf24becaf7bf725bd4372b0f437b6d39ae3ef62"
+    },
+    "T01-focused-head.txt": {
+      "bytes": 1713,
+      "sha256": "6ca14b15e4f2d7380f36adf69e6c05c9e494e80c7074592499651cde5512c814"
+    },
+    "T02-summary.json": {
+      "bytes": 6878,
+      "sha256": "e27a819c36cc6d190113068d0fdce559558849c65f47defdc02293e83e34e7a2"
+    },
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    }
+  }
+}
