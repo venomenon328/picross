@@ -1,0 +1,7 @@
+Fliegenpilz r07: Windows export rename diagnosis
+
+Purpose: independent review of read-only observation and the bounded debugger pause used before the unchanged native export publication. No production function was replaced, no foreign handle closed, no permissions/settings changed. The recorded call used unchanged tools from picross main 5fc8effc740dc37eafc7d513a253c7a6a6ff6e07 and production head a05e57433f6e533e76604813fb5c439f29b9fdbc. Source/selection: e3b177673011c5477dd605c24420fef589e8f878, pz-fliegenpilz/r07.
+
+The wrapper's default layout matches the task-owned local diagnosis directory. PICROSS_RENAME_DIAGNOSTIC_ROOT selects a separate owned run directory; PICROSS_RENAME_WAIT_FOR_RELEASE=1 permits at most five seconds of observation before the original function executes. NtQueryInformationProcess is a diagnostic Windows implementation detail; handle duplicates are closed locally using DUPLICATE_SAME_ACCESS, never DUPLICATE_CLOSE_SOURCE. File names retained in output are confined to the selected staging tree. No RmShutdown/RmRestart is called.
+
+The source outputs and release-wait log are linked from PR #603. The independent reviewer must assess actual native output, repository diff, and current gates separately; the pause isn't a persistent production fix. All artifacts are for this review only. Retention ends with review, no later than 2026-11-22. This branch is not an implementation or merge target.

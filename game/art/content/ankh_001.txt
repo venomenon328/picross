@@ -1,3 +1,0 @@
-Production ID: pz-b6f94e528b48444985d0561cb48a5bc7
-Artwork: ChatGPT image_gen.imagegen, beauftragte native Bildgenerierung/-bearbeitung
-Usage basis: Auftragsbezogene KI-Erzeugung für das Picross-Projekt; keine fremden Bildbytes oder direkte Modell-API. Keine Exklusivitäts-/Schutzfähigkeitsbehauptung.

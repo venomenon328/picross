@@ -1,3 +1,0 @@
-Production ID: pz-87bf2975c82540a399a3d0c7fa180a25
-Artwork: OpenAI-Bildgenerierung im Nutzerauftrag
-Usage basis: Die ursprüngliche Referenz ist laut tatsächlicher Nutzererklärung eine eigene Vorlage (approvals/reference-usage.json). Ausdrücklich beauftragte KI-Bearbeitung, Rätselproduktion und Repositoryablage; keine fremde Lizenz behauptet.

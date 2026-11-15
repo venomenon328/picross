@@ -1,3 +1,0 @@
-Production ID: pz-49a9e539419b48119e8f5f506fcf6dc7
-Artwork: ChatGPT native image generation (image_gen.imagegen)
-Usage basis: Im ausdrücklichen Nutzerauftrag für das Picross-Projekt neu erzeugte KI-Ausgabe; keine externe Bildreferenz. Tatsächliche Freigabe separat gebunden.

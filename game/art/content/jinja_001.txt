@@ -1,3 +1,0 @@
-Production ID: pz-d6cb06cb41854b1da84f0ba2f043aa14
-Artwork: OpenAI / native ChatGPT image generation
-Usage basis: Projektbezogen aus Nutzerauftrag und gespeichertem Prompt erzeugt; keine Fremdassets verwendet.

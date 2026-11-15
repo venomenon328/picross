@@ -1,5 +1,0 @@
-Production ID: pz-72eb9b188896440c8a9a833e803835ec
-Artwork: OpenAI image_gen.imagegen im Nutzerauftrag
-Usage basis: KI-erzeugtes Original ohne Fremdbildbytes; beauftragte Projektverwendung.
-
-AT-B-V01: Native AI image edit of the existing project artwork at owner request (Issue #256); exterior transparency revision. No human visual author asserted; no additional third-party reference asset.
