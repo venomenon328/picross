@@ -22,8 +22,8 @@
   ],
   "core_change": null,
   "evidence": {
-    "mode": "none",
-    "purpose": null,
-    "expires": null
+    "mode": "failure",
+    "purpose": "Gezielte Diagnose des in Lauf 43725097262 fehlgeschlagenen SD2-CLI-Tests; vollstaendiger tests.log-Traceback fuer PW-PERF-E, kein Galerieupload.",
+    "expires": "2026-11-22"
   }
 }
