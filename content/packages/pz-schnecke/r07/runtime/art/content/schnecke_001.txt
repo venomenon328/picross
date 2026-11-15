@@ -1,3 +1,0 @@
-Production ID: pz-schnecke
-Artwork: OpenAI ImageGen, vom beauftragten Codex-Akteur bedient
-Usage basis: Auf ausdrücklichen Nutzerauftrag mit der nativen ImageGen-Funktion neu erzeugt; keine fremden Bildvorlagen oder Fremdassets verwendet. Nutzung als Projektausgabe im beauftragten Repository; keine zusätzliche Exklusivitäts- oder Urheberrechtsgarantie behauptet.

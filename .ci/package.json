@@ -8,8 +8,8 @@
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/610",
   "modules": [],
-  "omitted": "Reine Rätselproduktion. Vorhandene passende Qualitäts- und Proofbelege weiterverwenden; neue Lieferung vollständig mit gemeinsamen Produktionswerkzeugen prüfen. Keine neuen Rätseltests, Bestandsreplays, Player-Builds, Browserläufe oder technischen Uploads. Authoring §9 nach bestätigtem Mainabschluss.",
-  "package": "Schnecke r07: unveränderte endabgenommene Lieferung integrieren",
-  "purpose": "Unverändertes Originalpaket mit echten Freigaben regulär exportieren, Difficulty 0.4 bei gleicher Logik rebindend erhalten, frisch planen und registrieren; Completion, unabhängiges Review und bedingter Squash-Merge nach aktuellen Gates.",
+  "omitted": "Reiner Inhaltsabschluss ohne Code-, Tool-, Spiel- oder gemeinsame Assetänderung. modules=[]; Quellen-/Plankern ohne Player-Build, neue Rätseltests, Solver-/Proof-/Bildreplay oder technische Uploads.",
+  "package": "Schnecke r07: Produktionsabschluss nach Authoring §9",
+  "purpose": "Nach bestätigter Mainintegration nur abgeschlossene r01/r02/r05/r06/r07 und zugeordnete Angebots-/Analysearbeit mit nativem Retirement entfernen. Kompakte Integrationsbindung, aktive Runtime, Bilder, Rechte und Bewertung erhalten; gezielter Readback und Byte-/mtime-No-op.",
   "test_changes": []
 }

@@ -1,6 +1,0 @@
-Production ID: pz-schnecke
-Background: HG-A-b01
-Image revision: b01
-Artwork: OpenAI ImageGen im beauftragten Codex-Produktionslauf
-Source: Eigene native Textgenerierung; A gezielte native Transparenzrevision des eigenen Erstentwurfs.
-Usage basis: Auf ausdrücklichen Nutzerauftrag neu erzeugte Projektinhalte ohne fremde Assets; gebundene Herkunftsbelege und Prompts. Keine Exklusivitätszusage.
