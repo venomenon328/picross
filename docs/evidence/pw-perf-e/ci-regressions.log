@@ -1,0 +1,7 @@
+test_original_cleanup_preserves_changed_source_and_independent_work (tests.puzzle_production.test_background_change_retirement.BackgroundChangeRetirementTests.test_original_cleanup_preserves_changed_source_and_independent_work) ... ok
+test_at_added_and_cleanup_preserve_mixed_authorities_without_analysis (tests.puzzle_production.test_sd2_catalog.CatalogTests.test_at_added_and_cleanup_preserve_mixed_authorities_without_analysis) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 217.915s
+
+OK

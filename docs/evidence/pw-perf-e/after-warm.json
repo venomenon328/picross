@@ -5,18 +5,18 @@
   "hash_bytes": 34692,
   "paths": {
     "content\\.registration-pending.json": 133,
+    "content\\registry.json": 2278,
     "content\\difficulty-method.json": 0,
     "game\\data\\registry.json": 1852,
     "game\\data\\background-capability.json": 0,
-    "content\\registry.json": 2278,
     "content\\categories.json": 1312,
+    "game\\art\\backgrounds\\pz-test-direct-mono.txt": 0,
     "content\\added\\pz-test-direct-mono.json": 275,
-    "game\\data\\content\\pz-test-direct-mono.json": 597,
     "game\\art\\content\\pz-test-direct-mono.txt": 135,
     "content\\backgrounds\\pz-test-direct-mono.json": 0,
-    "game\\art\\backgrounds\\pz-test-direct-mono.txt": 0,
-    "content\\reveals\\pz-test-direct-mono.json": 0,
+    "game\\data\\content\\pz-test-direct-mono.json": 597,
     "content\\difficulty\\pz-test-direct-mono\\rating.json": 5658,
+    "content\\reveals\\pz-test-direct-mono.json": 0,
     "content\\packages\\pz-test-direct-mono\\r01\\manifest.json": 5269,
     "content\\packages\\pz-test-direct-mono\\r01\\approval.json": 714,
     "content\\packages\\pz-test-direct-mono\\r01\\categories.json": 1312,
@@ -51,7 +51,7 @@
     "game\\art\\content\\pz-test-direct-mono.svg": 0,
     "content\\authoring\\index.json": 53
   },
-  "seconds": 2.613488699993468,
+  "seconds": 2.5524657999922056,
   "warm": true,
   "os": "Windows-11-10.0.26200-SP0",
   "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
@@ -60,7 +60,7 @@
     "ids": [
       "pz-test-direct-mono"
     ],
-    "integrated_commit": "8b15dc332cba5e621c11f4f27b308318623ad4ea",
+    "integrated_commit": "aa6aa83ff1487579a0d0168442afd1d712f8037c",
     "replaced_files": 30,
     "replaced_bytes": 31504
   }

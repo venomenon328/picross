@@ -38,14 +38,14 @@
     "read_bytes": 45071,
     "hash_calls": 35,
     "hash_bytes": 34692,
-    "seconds": 2.712428300001193,
+    "seconds": 2.774897900002543,
     "warm": false,
     "os": "Windows-11-10.0.26200-SP0",
     "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
     "disjoint_read_bytes": {
       "shared_indices_capability_and_lock": 5575,
-      "selected_sources": 6530,
       "selected_live_assets": 227,
+      "selected_sources": 6530,
       "selected_package": 32686,
       "authoring_index_or_selected_work": 53
     }
@@ -55,14 +55,14 @@
     "read_bytes": 45071,
     "hash_calls": 35,
     "hash_bytes": 34692,
-    "seconds": 2.613488699993468,
+    "seconds": 2.5524657999922056,
     "warm": true,
     "os": "Windows-11-10.0.26200-SP0",
     "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
     "disjoint_read_bytes": {
       "shared_indices_capability_and_lock": 5575,
-      "selected_sources": 6530,
       "selected_live_assets": 227,
+      "selected_sources": 6530,
       "selected_package": 32686,
       "authoring_index_or_selected_work": 53
     }
