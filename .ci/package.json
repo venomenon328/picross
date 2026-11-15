@@ -1,15 +1,15 @@
 {
-  "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/619",
-  "package": "Marienkäfer r05: Endabnahme und Erstintegration MK-HG-A-b04",
-  "modules": [],
-  "purpose": "Unveränderte menschlich gewählte Kontextzeichnung mit ausdrücklicher Q-HG02-Warnungsannahme, Raster und Reveal finalisieren; regulärer Export, frischer Plan, Registrierung und Completion. Quellen-/Plankern docs/ci-required; unabhängiges Review am tatsächlichen PR-Head vor bedingt autorisiertem Squash-Merge.",
-  "omitted": "Reine Rätselproduktion ohne Werkzeug-, Spiel- oder CI-Änderungen. Keine neuen Rätseltests, Bestands-/Solverreplays, Player-Builds, Browserläufe oder technischen Uploads. Passende Qualitäts- und Proofbelege erhalten; neue Lieferung tatsächlich über gemeinsame Produktionswerkzeuge prüfen. Authoring §9 erst nach bestätigter Mainintegration.",
-  "test_changes": [],
   "core_change": null,
   "evidence": {
+    "expires": null,
     "mode": "none",
-    "purpose": null,
-    "expires": null
-  }
+    "purpose": null
+  },
+  "format": "development-ci-plan/v1",
+  "issue": "https://github.com/venomenon328/picross/issues/615",
+  "modules": [],
+  "omitted": "Reine Rätselproduktion: modules=[] und evidence.mode=none. Quellen-/Plankern ohne Player-Build, neue rätselspezifische Tests oder Bestandsreplays. Vollständige Inhalts-, Proof-, Bild-, Herkunfts- und Freigabeprüfung durch Finalizer/Export/Plan/Register; vorhandene L4-Bewertung nur technisch rebindend erhalten. Keine Werkzeug-, Spiel- oder CI-Codeänderung.",
+  "package": "Schluessel-Schritt5-Integration",
+  "purpose": "Endabnahme des Eigentümers für SCH-HG-A/b02, SCH-R-r04 und Reveal A-r01 am unveränderten r06-Paket binden. HP-W2, Finalizer v2, Export v6, frischer Plan, Erstregistrierung und Completion; unabhängiges Review und bedingter Squash-Merge nach aktuellen Gates.",
+  "test_changes": []
 }
