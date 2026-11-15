@@ -1,0 +1,88 @@
+{
+	"display": "Windows",
+	"engine": {
+		"build": "official",
+		"hash": "ed1daf0bf001b61586d9930840f2f1394092c079",
+		"hex": 263938,
+		"major": 4,
+		"minor": 7,
+		"patch": 2,
+		"status": "stable",
+		"string": "4.7.2-stable (official)",
+		"timestamp": 0
+	},
+	"matrix_input_sha256": "23abd2a7a59ebc90dda6a9ff3f5aedfac81be7c836cebd492da88ce4117b7a75",
+	"records": [
+		{
+			"boards": [
+				{
+					"cell": 24.0,
+					"font": "Delight Coffee",
+					"font_size": 19,
+					"layout_valid": true,
+					"mode": "V",
+					"state": 0
+				},
+				{
+					"cell": 24.0,
+					"font": "Delight Coffee",
+					"font_size": 19,
+					"layout_valid": true,
+					"mode": "V",
+					"state": 1
+				},
+				{
+					"cell": 24.0,
+					"font": "Delight Coffee",
+					"font_size": 19,
+					"layout_valid": true,
+					"mode": "V",
+					"state": 2
+				}
+			],
+			"file": "cells-clues-normal.png",
+			"height": 1300,
+			"paper_shader": "res://book/page.gdshader",
+			"paper_source": "res://book/paper.png",
+			"scope": "Isolated native cell/clue sighting on current paper shader; all clue statuses injected for viewing. No gameplay, H1 logic, user saves or production book-layout acceptance claimed.",
+			"sha256": "773e9d50adfb805bbe279835b4381101d5f55a52fecb88a52952401ad6c073a9",
+			"width": 2200
+		},
+		{
+			"boards": [
+				{
+					"cell": 16.94,
+					"font": "Delight Coffee",
+					"font_size": 10,
+					"layout_valid": true,
+					"mode": "V",
+					"state": 0
+				},
+				{
+					"cell": 16.94,
+					"font": "Delight Coffee",
+					"font_size": 10,
+					"layout_valid": true,
+					"mode": "V",
+					"state": 1
+				},
+				{
+					"cell": 16.94,
+					"font": "Delight Coffee",
+					"font_size": 10,
+					"layout_valid": true,
+					"mode": "V",
+					"state": 2
+				}
+			],
+			"file": "cells-clues-small.png",
+			"height": 900,
+			"paper_shader": "res://book/page.gdshader",
+			"paper_source": "res://book/paper.png",
+			"scope": "Isolated native cell/clue sighting on current paper shader; all clue statuses injected for viewing. No gameplay, H1 logic, user saves or production book-layout acceptance claimed.",
+			"sha256": "3aa482d33750d06c7d4db8f21775ed566251679e8004280abbc4995d9b0d5f4b",
+			"width": 1500
+		}
+	],
+	"renderer": "NVIDIA GeForce RTX 3070"
+}
