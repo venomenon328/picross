@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/608",
-  "package": "Radieschen r05: Endabnahme und Erstintegration RAD-HG-A-b01",
+  "issue": "https://github.com/venomenon328/picross/issues/619",
+  "package": "Marienkäfer r05: Endabnahme und Erstintegration MK-HG-A-b04",
   "modules": [],
-  "purpose": "Unveränderte menschlich gewählte Hintergrundzeichnung, Raster und Reveal finalisieren; Export, frischer Plan, Registrierung und Completion. Quell- und Plankern docs/ci-required. Unabhängiges Review am tatsächlichen PR-Head vor bedingt autorisiertem Squash-Merge.",
-  "omitted": "Reine Rätselproduktion ohne Werkzeug-, Spiel- oder CI-Änderungen. Keine neuen Rätseltests, Solver-/Bestandsreplays, Player-Builds, Browserläufe oder technischen Uploads. Vorhandene passende Qualitäts- und Proofbelege weiterverwenden; neue Lieferung tatsächlich über die gemeinsamen Produktionswerkzeuge prüfen. Authoring §9 erst nach bestätigtem Mainabschluss.",
+  "purpose": "Unveränderte menschlich gewählte Kontextzeichnung mit ausdrücklicher Q-HG02-Warnungsannahme, Raster und Reveal finalisieren; regulärer Export, frischer Plan, Registrierung und Completion. Quellen-/Plankern docs/ci-required; unabhängiges Review am tatsächlichen PR-Head vor bedingt autorisiertem Squash-Merge.",
+  "omitted": "Reine Rätselproduktion ohne Werkzeug-, Spiel- oder CI-Änderungen. Keine neuen Rätseltests, Bestands-/Solverreplays, Player-Builds, Browserläufe oder technischen Uploads. Passende Qualitäts- und Proofbelege erhalten; neue Lieferung tatsächlich über gemeinsame Produktionswerkzeuge prüfen. Authoring §9 erst nach bestätigter Mainintegration.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

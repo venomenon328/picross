@@ -1,0 +1,11 @@
+# Marienkäfer r05 · Wiesenrand A als neue 4:1-Bildrevision
+
+MK-HG-A-b04 ist die ausdrücklich genehmigte transparente Leinwanderweiterung des gewählten MK-HG-A-b01: 2896×724 RGBA, je 362 transparente Pixel links und rechts. Originalzeichnung unverändert, keine Skalierung oder Beschnitt, kein Alpha-Bounds-Crop und keine Runtime-Sonderpositionierung. RGBA-Pixelgleichheit der gesamten übernommenen Originalleinwand und ausschließlich transparente neue Streifen tatsächlich geprüft. Vollständige Originalleinwand groß, klein und auf neutralem Grund angesehen.
+
+Q-HG01, Q-HG03 und Q-HG04 erfüllt. Q-HG02 bleibt Warnung: sehr zarte, leicht neblige Hauptkonturen, besonders verkleinert. Diese Warnung ist durch den Korrekturauftrag nicht ausdrücklich angenommen. Eine neue tatsächliche Wahl/Endabnahme dieser neuen Bildbytes und konkrete Annahme der Q-HG02-Warnung oder gesonderte Strichkorrektur stehen aus.
+
+Der vorherige ImageGen-Formatkorrekturversuch A-b03 verfehlte erneut 4:1 (2172×724). Originalausgabe/Prompt bleiben unverändert erhalten und sind kein neues freigabefähiges Angebot. Nach den zwei gescheiterten Formatkorrekturen A-b02/A-b03 wurde der Plan offengelegt und vom Auftraggeber die skriptbasierte Leinwanderweiterung ausdrücklich freigegeben. Kein weiteres identisches Generierungsreplay. Die neue b04-Korrektur nutzt ausschließlich A-b01; keine weißen Füllungen aus b03 übernommen.
+
+Raster MK-R-r03, 20×20, drei Farben, Reveal C-r01, Motiv M-r02, Logik, Proofs, aktive Schwierigkeit L4 (Methode 0.4), Kategorienzuordnung insekten-kleine-tiere und verbrauchte Rasterbudgets bleiben unverändert. r01–r04 und deren äußere Records/Projektionen/Originale bleiben bytegleich. Neue Palette-Review-Bindung ausschließlich administrativ auf r05, ursprüngliche Sichtzeiten und Urteile erhalten. Keine neue native Raster-/Hinweissichtung behauptet.
+
+Regel-/Werkzeugquelle: main be85306d4fc1bfd51506e846da0a2fc4c08435a1, Authoring 0.8.0 Rev7 mit vollständigem Achtdateisnapshot. Neue vollständige Einzelrevision über regulären Builder frisch prüfen. Hintergrundentscheidung und finale Freigabe neuer Bytes bleiben null. background_review, keine HP-W2-Kandidatenableitung, Export, Registrierung, Merge oder Produktionsbereinigung.
