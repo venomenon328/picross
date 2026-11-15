@@ -510,7 +510,7 @@ def execute(root, j, additions=None, *, fail_step=None, under_lock=None,
     require(isinstance(j, dict), "Invalid catalog journal")
     require(source_check is None or nullable_binaries(j) and callable(source_check),
             "Source recheck requires background adoption")
-    registration = j.get("operation") == "registration" and j.get("format") in (tx.IMAGE_FORMATS["registration"], tx.PE_FORMATS["registration"], tx.BACKGROUND_FORMATS["registration"], tx.FORMATS["registration"], tx.AT_FORMATS["registration"])
+    registration = tx.registration_route(j) is not None
     require(registration or publication_seconds is None and recovery_seconds is None,
             "RI-A overrides require a new registration")
     if registration:
