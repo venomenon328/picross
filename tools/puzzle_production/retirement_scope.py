@@ -6,7 +6,7 @@ import os
 import ctypes
 from . import catalog_io as io, catalog_transaction as tx, registration_dependencies as dep
 from . import content_registry as cr, categories, reveal_source as reveal, catalog_background as bg
-from . import catalog_added as added, editor_change
+from . import catalog_added as added, catalog_publication as publication
 from .authoring_package import require
 from .contract import canonical_bytes
 
@@ -48,6 +48,7 @@ class Reads:
         self.root, self.data, self.identities, self.hashes = root, {}, {}, {}
         self.bytes = 0
         self.backgrounds = {}
+        self.lock = None
 
     def identity(self, name):
         p = io.safe(self.root, name)
@@ -84,8 +85,31 @@ class Reads:
     def forget(self, name):
         self.data.pop(name, None); self.identities.pop(name, None)
 
+    def pending(self):
+        require(not publication.staging(self.root), 'Interrupted publication: recovery required')
+        raw = io.read(self.root, tx.LOCK, 24*1024*1024, missing=True)
+        require(raw == self.lock, 'Interrupted publication: recovery required')
+
+    def acquire(self, ids, commit):
+        self.recheck()
+        raw = canonical_bytes({'format':'picross-retirement-lock-v1','ids':list(ids),'integrated_commit':commit})+b'\n'
+        target = io.safe(self.root, tx.LOCK)
+        fd = os.open(target, os.O_WRONLY|os.O_CREAT|os.O_EXCL|getattr(os,'O_BINARY',0)|getattr(os,'O_NOFOLLOW',0), 0o644)
+        with os.fdopen(fd,'wb') as stream:
+            stream.write(raw);stream.flush();os.fsync(stream.fileno())
+        self.lock = raw
+        self.forget(tx.LOCK)
+        self.recheck()
+
+    def release(self):
+        require(self.lock is not None, 'Retirement does not own a lock')
+        self.recheck()
+        io.safe(self.root, tx.LOCK).unlink()
+        self.forget(tx.LOCK)
+        self.lock = None
+
     def recheck(self):
-        require(not editor_change.pending(self.root), 'Interrupted publication: recovery required')
+        self.pending()
         for name in self.data: self.guard(name)
 
 
@@ -99,7 +123,7 @@ def operation(root):
 
 
 def capture(root, ids):
-    require(not editor_change.pending(root), 'Interrupted publication: recovery required')
+    io._retirement_reads.get().pending()
     shared = {n: tx.read(root, n) for n in dep.SHARED}
     runtime = dep.parse(shared[cr.RUNTIME])
     # v7 and v8 have identical closed fields; only the effective reveal semantics
