@@ -1,11 +1,20 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/653",
-  "package": "PW-PERF-A",
-  "modules": [],
-  "purpose": "Quellengebundener Analysebericht zu Produktionsaufwand, Prüfungsnutzen, Phasendokumenten und Bestandsabschluss; vier gesondert zu beauftragende Optimierungspakete. Reine Dokumentenänderung mit aktuellem Pflichtkern, ohne Spielerbau.",
-  "omitted": "Keine Produktimplementierung, Katalogbereinigung oder Teständerung. Vorhandene Belege aus #603, #649 und #652 wiederverwendet; eine isolierte positive Windows-/NTFS-Wiederholung und lesende Inventar-/Quellenproben nur als befristete Revieworiginale, kein CI-Korpus.",
-  "test_changes": [],
+  "package": "PW-PERF-B",
+  "modules": [
+    "production.catalog",
+    "production.adapter"
+  ],
+  "purpose": "Erstregistrierung v10 auf v4/v8: begrenzte gemeinsame Indexautorität, neue Produktion und Ziele; kopierfreie Projektion, gleiche Publikations-/Recoveryguards.",
+  "omitted": "Keine Solver-/Bildalgorithmus-, Spiel-/UI-/Browser- oder Lieferwegänderung. Einmaliger isolierter 56er-Windowsvergleich nur als befristetes Revieworiginal für A01; keine reale Katalogmutation.",
+  "test_changes": [
+    {
+      "path": "tests/puzzle_production/test_registration_publication.py",
+      "disposition": "change-scoped",
+      "reason": "Dauerhafte kleine synthetische v10-Schutz-/Zählfälle; gezielte Anpassung der früheren v9-Vollbestandsaussage, v9-Recovery weiterhin explizit. Keine Echtkatalogfixture."
+    }
+  ],
   "core_change": null,
   "evidence": {
     "mode": "none",
