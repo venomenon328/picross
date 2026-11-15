@@ -11,14 +11,22 @@ LEGACY_FORMAT = "picross-added-plan-v1"
 AT_FORMAT = "picross-added-plan-v2"
 SD2_FORMAT = "picross-added-plan-v3"
 FORMAT = "picross-added-plan-v4"
+IMAGE_FORMAT = "picross-added-plan-v5"
+METHOD_FORMATS = (IMAGE_FORMAT, FORMAT, SD2_FORMAT)
 
 
 def hashed(raw):
     return hashlib.sha256(raw).hexdigest() if raw is not None else None
 
 
-def source_hashes(snapshot, plan_format=FORMAT):
+def source_hashes(snapshot, plan_format=None):
     from . import catalog_transaction as tx
+    if plan_format is None:
+        plan_format = IMAGE_FORMAT if tx.image_generation(snapshot) else FORMAT
+    require((plan_format == IMAGE_FORMAT) == tx.image_generation(snapshot),
+            "Added plan generation differs from the current image projection")
+    if plan_format == IMAGE_FORMAT:
+        return tx.image_snapshot(snapshot)["sources"]
     if plan_format != FORMAT: snapshot = tx.pre_background_snapshot(snapshot)
     if plan_format not in (FORMAT, SD2_FORMAT): snapshot = tx.pre_sd2_snapshot(snapshot)
     if plan_format == LEGACY_FORMAT: snapshot = tx.historical_snapshot(snapshot)
@@ -27,10 +35,10 @@ def source_hashes(snapshot, plan_format=FORMAT):
 
 def validate_plan(plan):
     exact_keys(plan, {"format", "run_id", "base_commit", "sources", "evidence", "entries"})
-    require(plan["format"] in (FORMAT, SD2_FORMAT, AT_FORMAT, LEGACY_FORMAT) and len(canonical_bytes(plan)) + 1 <= added.REPORT_LIMIT, "Invalid added plan format/size")
+    require(plan["format"] in (IMAGE_FORMAT, FORMAT, SD2_FORMAT, AT_FORMAT, LEGACY_FORMAT) and len(canonical_bytes(plan)) + 1 <= added.REPORT_LIMIT, "Invalid added plan format/size")
     added.report_path(plan["run_id"])
     added.commit(plan["base_commit"])
-    require(isinstance(plan["sources"], dict) and len(plan["sources"]) <= (80004 if plan["format"] in (FORMAT, SD2_FORMAT) else 80003 if plan["format"] == AT_FORMAT else 100003), "Invalid added source map")
+    require(isinstance(plan["sources"], dict) and len(plan["sources"]) <= (80004 if plan["format"] in METHOD_FORMATS else 80003 if plan["format"] == AT_FORMAT else 100003), "Invalid added source map")
     for n, h in plan["sources"].items():
         relative(n)
         if h is not None: sha(h)
@@ -61,24 +69,30 @@ def validate_plan(plan):
             registry = rating.bytes_json(e["content"].encode(), added.REPORT_LIMIT)
             catalog = rating.bytes_json(integration["categories"].encode(), 131072)
             production = {"format": registry.get("format"), "entries": [r for r in registry.get("entries", []) if r.get("production") is not None]}
-            if registry.get("format") == cr.BACKGROUND_FORMAT:
-                require(plan["format"] == FORMAT, "Old added plan cannot bind a background registry")
+            if registry.get("format") in (cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT):
+                require(plan["format"] in (IMAGE_FORMAT, FORMAT), "Old added plan cannot bind a background registry")
                 production["backgrounds"] = registry.get("backgrounds")
+            if registry.get("format") == cr.METADATA_FORMAT:
+                production["metadata"] = registry.get("metadata")
             cr.validate(production, catalog)
             runtime = rating.bytes_json(integration["runtime"].encode(), added.REPORT_LIMIT)
-            versions = ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4") + (("picross-runtime-registry-v5",) if plan["format"] in (FORMAT, SD2_FORMAT) else ())
-            if plan["format"] == FORMAT: versions += ("picross-runtime-registry-v6",)
+            versions = ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4") + (("picross-runtime-registry-v5",) if plan["format"] in METHOD_FORMATS else ())
+            if plan["format"] in (IMAGE_FORMAT, FORMAT): versions += ("picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT)
+            if plan["format"] == IMAGE_FORMAT: versions += ("picross-runtime-registry-v8",)
             require(runtime.get("format") in versions and
+                    (runtime.get("format") in (cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8")) == (production["format"] == cr.METADATA_FORMAT) and
                     runtime.get("categories") == categories.ordered(catalog), "Invalid historical runtime categories/version")
             runtime_ids = {r["id"]: r for r in runtime["entries"]}
             require(len(runtime_ids) == len(runtime["entries"]), "Duplicate snapshot runtime ID")
             by_id = {r["id"]: r for r in production["entries"]}
+            metadata = cr.current_metadata(production, catalog) if production["format"] == cr.METADATA_FORMAT else {}
             for identifier, bindings in integration["bindings"].items():
                 require(identifier in by_id, "Foreign snapshot binding")
                 row = by_id[identifier]; p = row["production"]
                 require(bindings == {p["package"] + "/manifest.json": p["package_sha256"],
                                     "game/" + row["definition"]: p["definition_sha256"], "game/" + row["reveal"]: p["reveal_sha256"]} and
-                        all(runtime_ids.get(identifier, {}).get(k) == row[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")), "Invalid historical playable binding")
+                        _playable_binding(runtime_ids.get(identifier, {}), row, metadata.get(identifier)),
+                        "Invalid historical playable binding")
         elif e["kind"] == "direct":
             receipt = exact_keys(rating.bytes_json(e["content"].encode(), added.LIMIT), {"id", "event", "success", "registered_at"})
             rating.identity(receipt["id"])
@@ -123,6 +137,13 @@ def validate_plan(plan):
     return plan
 
 
+def _playable_binding(runtime, entry, metadata=None):
+    expected = {key: entry[key] for key in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")}
+    if metadata is not None:
+        expected.update(name=metadata["name"], category_id=metadata["category_id"])
+    return all(runtime.get(key) == value for key, value in expected.items())
+
+
 def _record(row, name, checksum):
     return added.validate({"format": added.FORMAT, "id": row["id"], "added_at": row["proposed"],
         "provenance": {"kind": row["kind"], "reference_time": row["reference_time"], "commit": row["commit"],
@@ -161,9 +182,7 @@ def adopt(root, plan_path, *, apply=False, fail_step=None):
     plan = validate_plan(rating.bytes_json(raw, added.REPORT_LIMIT))
     require(raw == canonical_bytes(plan) + b"\n", "Added plan must be canonical")
     snapshot = tx.capture(root)
-    if plan["format"] != FORMAT: tx.pre_background_snapshot(snapshot)
-    if plan["format"] not in (FORMAT, SD2_FORMAT): tx.pre_sd2_snapshot(snapshot)
-    if plan["format"] == LEGACY_FORMAT: tx.historical_snapshot(snapshot)
+    source_hashes(snapshot, plan["format"])
     require([e["id"] for e in snapshot["registry"]["entries"]] == [r["id"] for r in plan["entries"]], "Added catalog changed")
     name = added.report_path(plan["run_id"])
     changes = {added.path(r["id"]): added.encoded(record_for(plan, r["id"], raw)) for r in plan["entries"]}
@@ -183,8 +202,10 @@ def adopt(root, plan_path, *, apply=False, fail_step=None):
     if all(snapshot["texts"][n] == b for n, b in changes.items()):
         return {"status": "no-op", "changes": []}
     changes[name] = raw
+    from .content_registry import require_current
+    if apply: require_current(snapshot["registry"])
     journal = tx.prepare(root, snapshot, changes, operation="added-adoption", report_run=plan["run_id"],
-                         generation="background" if plan["format"] == FORMAT else "sd2" if plan["format"] == SD2_FORMAT else "at")
+                         generation="background" if plan["format"] in (IMAGE_FORMAT, FORMAT) else "sd2" if plan["format"] == SD2_FORMAT else "at")
     require(plan_path.read_bytes() == raw, "Added plan changed during preparation")
     if apply: tx.execute(root, journal, fail_step=fail_step)
     return {"status": "adopted" if apply else "planned-adoption", "changes": sorted(changes)}
@@ -235,14 +256,19 @@ def plan(root, run, base, *, repository=None, direct=()):
         runtime_raw = show(commit, tx.RUNTIME)
         if raw is None or cats is None or runtime_raw is None: return set()
         registry = rating.bytes_json(raw, 8 * 1024 * 1024)
-        if registry.get("format") not in (cr.FORMAT, cr.BACKGROUND_FORMAT): return set()
+        if registry.get("format") not in (cr.FORMAT, cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT): return set()
         # Retired F-xx prototype entries had a null production field. Validate
         # the categorized production subset without executing historical code.
         production = {"format": registry["format"], "entries": [e for e in registry["entries"] if e.get("production") is not None]}
-        if registry["format"] == cr.BACKGROUND_FORMAT: production["backgrounds"] = registry.get("backgrounds")
-        cr.validate(production, rating.bytes_json(cats, 131072))
+        if registry["format"] in (cr.BACKGROUND_FORMAT, cr.METADATA_FORMAT): production["backgrounds"] = registry.get("backgrounds")
+        if registry["format"] == cr.METADATA_FORMAT: production["metadata"] = registry.get("metadata")
+        catalog = rating.bytes_json(cats, 131072)
+        cr.validate(production, catalog)
+        metadata = cr.current_metadata(production, catalog) if production["format"] == cr.METADATA_FORMAT else {}
         runtime = rating.bytes_json(runtime_raw, 8 * 1024 * 1024)
-        require(runtime.get("format") in ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6"), "Unsupported historical runtime")
+        require(runtime.get("format") in ("picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8") and
+                (runtime.get("format") in (cr.METADATA_RUNTIME_FORMAT, "picross-runtime-registry-v8")) == (production["format"] == cr.METADATA_FORMAT),
+                "Unsupported historical runtime")
         runtime_ids = {e["id"]: e for e in runtime["entries"]}
         require(len(runtime_ids) == len(runtime["entries"]), "Duplicate historical runtime ID")
         date = datetime.fromisoformat(git("show", "-s", "--format=%cI", commit).decode().strip()).astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -251,7 +277,7 @@ def plan(root, run, base, *, repository=None, direct=()):
         for entry in production["entries"]:
             if entry["id"] not in wanted or not entry["visible"]: continue
             projected = runtime_ids.get(entry["id"], {})
-            if any(projected.get(k) != entry[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")): continue
+            if not _playable_binding(projected, entry, metadata.get(entry["id"])): continue
             p = entry["production"]
             paths = {p["package"] + "/manifest.json": p["package_sha256"],
                      "game/" + entry["definition"]: p["definition_sha256"], "game/" + entry["reveal"]: p["reveal_sha256"]}
@@ -330,7 +356,8 @@ def plan(root, run, base, *, repository=None, direct=()):
             "proposed": selected["reference_time"] if selected else None, "kind": selected["kind"] if selected else "unknown",
             "reference_time": selected["reference_time"] if selected else None, "commit": selected["commit"] if selected else None,
             "evidence": selected["key"] if selected else None, "reason": reason})
-    return validate_plan({"format": FORMAT, "run_id": run, "base_commit": base, "sources": source_hashes(snapshot),
+    return validate_plan({"format": IMAGE_FORMAT if tx.image_generation(snapshot) else FORMAT,
+        "run_id": run, "base_commit": base, "sources": source_hashes(snapshot),
         "evidence": [evidence[key] for key in sorted(used)], "entries": rows})
 
 

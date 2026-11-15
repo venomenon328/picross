@@ -1,0 +1,3 @@
+Production ID: pz-fliegenpilz
+Artwork: OpenAI ImageGen via Codex, im Auftrag des Repositoryeigentümers
+Usage basis: Vom Repositoryeigentümer beauftragte native KI-Bildgenerierung ohne Fremdvorlage oder Fremdasset; projektbezogene Nutzung der erzeugten Ausgabe. Keine ausschließlichen Rechte behauptet.

@@ -51,7 +51,7 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     diagnostic.seconds(recovery_seconds)
     require(apply and expected_definition_sha256 is None or publication_seconds is None and recovery_seconds is None,
             "RI-A overrides require mutating new registration, not plan/update")
-    from .content_registry import ROOT, export_entry, check_checkout, validate
+    from .content_registry import ROOT, export_entry, check_checkout, validate, require_current, METADATA_FORMAT
     from .content_update import notice_path
     from .target_adapter import verify_export, FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, BACKGROUND_EXPORT, palette_gate
     root = catalog_io.external(root)
@@ -65,7 +65,13 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     if is_background:
         background.capability(root, required=True)
     if update: sha(expected_definition_sha256)
-    snapshot = tx.capture(root)
+    from . import registration_dependencies as dependencies
+    # Dispatch by actual target indices; update and old generations retain the
+    # original full-catalog authority. Invalid v4/v8 data never falls back.
+    initial_registry = catalog_io.json_bytes(tx.read(root, tx.REGISTRY), 8*1024*1024)
+    current_target = (not update and initial_registry.get("format") == METADATA_FORMAT and
+                      tx.image_generation({"texts": {tx.RUNTIME: tx.read(root, tx.RUNTIME)}}))
+    snapshot = dependencies.capture(root, manifest.get("definition_id")) if current_target else tx.capture(root)
     registry = snapshot["registry"]
     if diagnostic.current.get():
         diagnostic.current.get().environment["catalog_entries"] = len(registry["entries"])
@@ -75,41 +81,68 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
     m, report = verify_export(export_dir)  # Existing mandatory full production check.
     require(m["format"] in (FORMAT, MANUAL_FORMAT, PAIRED_FORMAT, palette_gate.EXPORT, BACKGROUND_EXPORT), "Category-less legacy export: create a new categorized export")
     require(not m["test_only"] or root != ROOT.resolve(), "Test-only fixtures cannot be registered in the real repository")
-    category = categories.lookup(catalog, m["category_id"])
+    existing = next((e for e in registry["entries"] if e["id"].casefold() == m["definition_id"].casefold()), None)
+    # The export's snapshot is historical provenance for an existing ID. Its
+    # category may have been deleted after a valid current reassignment.
+    export_catalog = categories.load(export_dir / m["categories"]["file"]) if existing and registry["format"] == METADATA_FORMAT else catalog
+    category = categories.lookup(export_catalog, m["category_id"])
     entry = export_entry(export_dir, m, report, category, background=is_background)
-    existing = next((e for e in registry["entries"] if e["id"].casefold() == entry["id"].casefold()), None)
     old_background = background.load(root, registry, existing) if existing else None
     active_reveal = reveal.load(root, existing, catalog) if existing else None
+    editor_reveal = active_reveal is not None and active_reveal.get("format") in ("picross-catalog-reveal-v3", "picross-catalog-reveal-v4")
+    editor_background = old_background is not None and old_background.get("format") in ("picross-catalog-background-v5", "picross-catalog-background-v6")
     n = "game/" + entry["definition"]
     if update:
         require(existing is not None, "Update requires an existing production ID")
         require(not is_background or old_background is not None, "Legacy retrofit is unsupported")
-        require(old_background is None or m["format"] in (palette_gate.EXPORT, BACKGROUND_EXPORT),
+        from .editor_change import slim
+        require(old_background is None or slim(old_background) or m["format"] in (palette_gate.EXPORT, BACKGROUND_EXPORT),
                 "Background raster update requires v5 or v6")
         require(file_hash(tx.safe(root, "game/" + existing["definition"])) == expected_definition_sha256, "Stale expected definition hash")
-        require(all(entry[k] == existing[k] for k in ("id", "key", "save_slot", "definition", "reveal", "visible", "category_id")),
-                "Raster update must retain identity, paths, visibility, category and save slot")
+        fixed = ("id", "key", "save_slot", "definition", "reveal", "visible") + (() if registry["format"] == METADATA_FORMAT else ("category_id",))
+        require(all(entry[k] == existing[k] for k in fixed),
+                "Raster update must retain identity, paths, visibility and save slot")
         effective = reveal.resolve(root, existing, catalog)["effective_reveal_sha256"]
-        require(entry["production"]["reveal_sha256"] == effective, "Raster update must retain the approved reveal bytes")
+        require(editor_reveal or entry["production"]["reveal_sha256"] == effective,
+                "Raster update must retain the approved reveal bytes")
     if existing is not None:
         from .integrated_content import FORMAT as INTEGRATED
         original = load_json(root / existing["production"]["package"] / "manifest.json")
         same = reveal.normalized(root, existing) == entry
+        if not update and original.get("format") in ("picross-editor-raster-package-v1", "picross-editor-raster-package-v2"):
+            from .editor_raster import historical_repeat
+            same = same or historical_repeat(root,existing,entry)
         if is_background and old_background is not None:
             exported_background = background.build(export_dir, m, report, entry)
             if not update:
-                same = background.initial(old_background) == exported_background
-            elif same:
+                if editor_background and same:
+                    from .integrated_content import EDITOR_FORMAT
+                    actual_export = (original["background"]["export_source"] if original.get("format") == EDITOR_FORMAT
+                        else background.build(root / existing["production"]["package"], original, None, entry))
+                    same = actual_export == exported_background
+                else:
+                    same = False
+                # A genuine first-export repeat remains a no-op after later
+                # raster/reveal bindings and an editor wrapper. The complete
+                # immutable source is separate from the current export above.
+                same = same or background.initial(old_background) == exported_background
+            elif same and not editor_background:
                 same = (next((event["export_source"] for event in reversed(old_background["events"]) if event["operation"] == "update"),
-                             background.initial(old_background)) if old_background["format"] == rebind.FORMAT else
+                             background.initial(old_background)) if rebind.is_rebound(old_background) else
                         background.initial(old_background)) == exported_background
         if same:
-            check_checkout(root, replay=not update and original.get("format") not in (INTEGRATED, background.RECEIPT_FORMAT))
-            require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
-                    all(tx.file_hash(root, name) == h for name, h in snapshot["retained"].items()) and
-                    tx.namespaces(root,registry)==snapshot['namespaces'], "Checkout changed during planning")
+            # The incoming export was fully verified above. Repetition proves
+            # current integrity, not other IDs' historical production.
+            if current_target:
+                dependencies.check_repeat(root, snapshot, existing)
+            else:
+                check_checkout(root)
+                require(all(tx.read(root, name) == raw for name, raw in snapshot["texts"].items()) and
+                        all(tx.file_hash(root, name) == h for name, h in snapshot["retained"].items()) and
+                        tx.namespaces(root,registry)==snapshot['namespaces'], "Checkout changed during planning")
             return {"status": "no-op", "registered": True, "id": entry["id"], "category": category, "changes": []}
         require(update, "Occupied production ID/revision: update is outside ZA-1")
+    require_current(registry)
     raw = (export_dir / m["definition"]).read_bytes()
     require(hashlib.sha256(raw).hexdigest() == entry["production"]["definition_sha256"], "Export definition changed during planning")
     previous = None
@@ -131,11 +164,14 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
                                    active_method=catalog_method.current(catalog_method.from_bytes(snapshot["texts"][catalog_method.PATH]))["method"])
     new = deepcopy(registry)
     if existing: new["entries"][new["entries"].index(existing)] = entry
-    else: new["entries"].append(entry)
+    else:
+        new["entries"].append(entry)
+        new["metadata"].append({"id": entry["id"], "name": rating.bytes_json(raw, 2 * 1024 * 1024)["reveal"]["name"],
+                                "category_id": entry["category_id"]})
+        new["metadata"].sort(key=lambda row: row["id"])
     new["entries"].sort(key=lambda e: e["id"])
     source = background.build(export_dir, m, report, entry) if is_background and not existing else None
     if source is not None:
-        new["format"] = background.REGISTRY_FORMAT
         new.setdefault("backgrounds", []).append({"id": entry["id"], "source": background.ref(background.path(entry["id"]), background.encoded(source))})
         new["backgrounds"].sort(key=lambda row: row["id"])
     validate(new, catalog)
@@ -148,15 +184,23 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         if source["notice"] is not None:
             changes[source["notice"]["file"]] = catalog_io.read(export_dir, m["background_notice"]["file"], 65536)
     if active_reveal:
-        rebound = reveal.rebind(active_reveal, entry, m["runtime_revision"], changes[notice], catalog)
+        rebound = reveal.rebind(active_reveal, entry, m["runtime_revision"], changes[notice], catalog,
+                                historical_categories=registry["format"] == METADATA_FORMAT,
+                                **({"definition_ref": background.ref(n, raw)} if editor_reveal else {}))
         changes[reveal.path(entry["id"])] = canonical_bytes(rebound) + b"\n"
         changes[notice] = snapshot["texts"][notice]
     if update and old_background is not None:
-        rebound_record = rebound if active_reveal else None
-        bound = rebind.binding(root, old_background, entry, raw,
-            catalog_io.read(root, "game/" + entry["reveal"], reveal.IMAGE_LIMIT), changes[notice], rebound_record)
-        rebound_background = rebind.append(old_background, existing, bound, "update",
-            export_source=background.build(export_dir, m, report, entry) if is_background else None)
+        if editor_background or editor_reveal:
+            from . import editor_image_source
+            rebound_background = (editor_image_source.rebind(old_background, entry, background.ref(n, raw), m["runtime_revision"])
+                if editor_background else editor_image_source.promote_background(root, registry, existing, entry,
+                    background.ref(n, raw), m["runtime_revision"]))
+        else:
+            rebound_record = rebound if active_reveal else None
+            bound = rebind.binding(root, old_background, entry, raw,
+                catalog_io.read(root, "game/" + entry["reveal"], reveal.IMAGE_LIMIT), changes[notice], rebound_record)
+            rebound_background = rebind.append(old_background, existing, bound, "update",
+                export_source=background.build(export_dir, m, report, entry) if is_background else None)
         name = background.path(entry["id"])
         changes[name] = background.encoded(rebound_background)
         for row in new["backgrounds"]:
@@ -190,7 +234,12 @@ def integrate(export_dir, root, *, apply=False, expected_definition_sha256=None,
         if not existing and apply:
             changes[added.path(entry["id"])] = added.encoded(added.registration(entry["id"]))
         journal = tx.prepare(root, snapshot, changes, operation="update" if update else "registration", additions=additions) if existing or apply else None
-        if journal is None:
+        if journal is None and current_target:
+            proposal = dependencies.prepare(root, snapshot, changes, additions, planned=True)
+            planned_changes = [{"path": name, "operation": "add" if proposal["old"][name] is None else "replace"}
+                               for name in sorted(proposal["new"]) if proposal["new"][name] != proposal["old"][name]]
+            planned_changes.append({"path": added.path(entry["id"]), "operation": "add-on-success"})
+        elif journal is None:
             names = tx.text_names(registry) | tx.text_names(new)
             old = {name: snapshot["texts"][name] if name in snapshot["texts"] else tx.read(root, name) for name in names}
             require(all(old[name] is None for name in names - tx.text_names(registry)), "Registration plan target already exists")

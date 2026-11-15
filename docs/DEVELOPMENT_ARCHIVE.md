@@ -11,7 +11,7 @@ macht sie ebenso wenig dauerhaft notwendig. Für Tests/Artefakte gilt
 | Bestand | Zuständiger Zweck/Vertrag |
 | --- | --- |
 | `game/` einschließlich Buch-, Font-, Atlas- und Inhaltsressourcen | Runtime und Nutzungsrechte; technische Tests/Fixtures sind vom Spielerexport ausgeschlossen |
-| `content/authoring/` | Laufende Produktion und noch benötigte Freigabevorlagen; Abschluss nach [Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung) |
+| `content/authoring/` | Laufende Produktion und noch benötigte Freigabevorlagen; Abschluss nach [Authoring §9](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung) |
 | `content/packages/` | Bis Abschluss gebundene Produktionskopie; danach kompakte [ZA-1-Integrationsbindung](ZA1_ADAPTER.md) |
 | Aktive Bild-, Rating-, Hinzugefügt- und Kategorienmetadaten | Produkt-/Freigabedaten gemäß Fachvertrag; keine CI-Laufgalerie |
 | Feste synthetische Testinputs, Freezes und tatsächlich verwendete Referenzen | Konkrete Regression, Kompatibilität oder methodischer Vertrag; keine echten Katalogkopien |

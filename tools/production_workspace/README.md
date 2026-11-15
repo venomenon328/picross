@@ -1,10 +1,34 @@
 # Lokaler Produktionsassistent (PW-B)
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
-Handoff v4, Record v3 und Projektion v2. Verbindlich sind der
-[PW-B-Vertrag](../../docs/PW_B_CONTRACT.md),
-[Authoringstandard](../../docs/ai-workflows/PUZZLE_AUTHORING.md) und die
-[Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194).
+Handoff v5, Record v4 und Projektion v2. Der aktuelle operative Regelstand ist
+**Authoring 0.8.0, Dokumentrevision 7 (PW-PERF-D)**. Normale Produktion liest den
+Produktionseinstieg in [AGENTS](../../AGENTS.md),
+[Authoring §1.1](../../docs/ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
+den vollständigen [gemeinsamen Bildstil](../../docs/PUZZLE_IMAGE_STYLE.md) und
+nur die dort geroutete Phasendatei. Diese Anleitung, der
+[PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md) und die technische
+[Produktions-README](../puzzle_production/README.md) werden für die konkret
+verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.
+Die [ursprüngliche PW-B-Paketentscheidung](https://github.com/venomenon328/picross/issues/578#issuecomment-6799208194)
+ist eine Entwicklungs-/Herkunftsquelle, keine zusätzliche Routinelektüre.
+
+PW2-B stellt Bilder, fällige Entscheidungen und relevante Parameter vor die
+technischen Originaldetails. Bei der Hintergrundwahl zeigt die Schlussübersicht
+gewähltes Raster, Reveal und Hintergrund/none. „Endabnahme & Integration: Auftrag
+kopieren“ erzeugt einen gemeinsamen Schlussauftrag; erst sein Absenden erklärt
+die Freigabe. Bedingter Squash-Merge nach unabhängigem Review und aktuellen Gates
+ist ohne gespeicherte Einstellung der Standard; ein ausdrückliches Nein bleibt
+als Draft-Auftrag erhalten. Korrektur/Wiederaufnahme erklären keine neue Endabnahme
+oder Mergefreigabe. Vollständige geprüfte Übergabe-/Recorddaten bleiben unten
+aufklappbar und kopierbar. Quellenwerte, Regeln und nicht beauftragte lokale
+Bereinigung werden nicht routinemäßig im Prompt wiederholt. PW2-C nimmt konkret
+nachgewiesene integrierte Lieferungen aus der aktiven Auswahl. Ein vollständig geeigneter qualifizierter
+Rasterkandidat genügt; weitere entstehen nach Authoring bedarfsweise nacheinander,
+ohne Budget-/Qualitätslockerung. Die drei Reveal- und drei Hintergrundoriginale
+bleiben ihre eigenen Bildauswahlen. Hintergrund bedeutet die ganze 2304×576-
+Leinwand samt Freiraum, nicht einen Zuschnitt auf sichtbare Pixel.
+
 Die PW-A2-Start-/Git-/Sicherheitsarchitektur bleibt erhalten; P2 ergänzt allein
 die ausdrücklich bestätigte Branchentfernung nach [PW §4.4](../../docs/PRODUCTION_WORKSPACE.md#44-p2--ausdrücklich-bestätigte-produktionsentfernung).
 Bestehende WIP werden nicht konvertiert. Das frühere Offline-Sheet ist nur noch
@@ -25,8 +49,9 @@ danach Kontextzeichnungen und schließlich Endabnahme/Integration. Ein Klick
 merkt eine Auswahl nur vor. „Auftrag kopieren“ erzeugt den gebundenen Auftrag;
 erst das Absenden und der folgende veröffentlichte Gitstand bestätigen Fortschritt.
 Fortsetzen und Korrektur verwenden dieselben Originalquellen. Eine vorhandene
-gültige Endabnahme wird nicht nochmals angefordert. Arbeitswurzel, Bereinigung
-und bedingte Mergefreigabe sind persönliche Optionen, niemals Recordbefugnisse.
+gültige Endabnahme wird nicht nochmals angefordert. Arbeitswurzel und bedingte
+Mergefreigabe sind persönliche Optionen, niemals Recordbefugnisse. Zusätzliche
+lokale Arbeitsdatenbereinigung braucht einen gesonderten ausdrücklichen Auftrag.
 Ein ungepushter Stand oder lokaler Testremote bleibt sichtbar, liefert aber
 keinen als Cloudquelle ausgegebenen Folgeauftrag.
 
@@ -42,6 +67,29 @@ Laufzeitdownload. **Git für Windows mit `--no-lazy-fetch` bleibt Voraussetzung*
 damit die bisherige Git-/SSH-/Credential-Einrichtung weiterverwendet wird.
 Keine Administratorrechte nötig. [Start-/Updateanleitung](START-WINDOWS.txt),
 [versionierter Bau und Smoke](WINDOWS_BUILD.md).
+
+APP-A ergänzt den [separaten App-Releasekanal](../../docs/PRODUCTION_UPDATES.md)
+mit automatischer Versionsplanung und geprüftem MSI. Erstpublikation bleibt bis
+zur gesonderten Betriebsfreigabe gesperrt; ein Actions-Dispatch ist ausschließlich
+Diagnose. APP-B1 ergänzt die signierte Updateautorität und einen gemeinsamen Offlineverifier,
+der Produktions-Truststore bleibt unprovisioniert. Beide Aktivierungsschalter und
+ein eigener Betriebsauftrag sind nötig. APP-B2 liefert den standardmäßig
+ausgeschalteten Updateclient mit einmaliger ausdrücklicher Zustimmung im nativen
+Steuerfenster und jederzeit sichtbarem Schalter. Leerer Trust bedeutet inaktiver
+Kanal; eine erste vertrauenswürdig root-provisionierte Version wird manuell
+installiert. Gitrefresh und installierte Programmversion bleiben getrennt.
+Nur der normale installierte GUI-Start prüft einmal nebenläufig. Bei bestehendem
+Opt-in wartet Browser/Sheet samt erstem Git-Refresh bis zur Updateentscheidung,
+bei höherem geprüftem Kandidaten auch bis zum vollständigen Download und Handoff.
+Natives Fenster und lokaler Dienst sind sofort bereit. „Ohne Update fortfahren“
+verwirft den Versuch sicher und startet Browser/Git genau einmal; die Zustimmung
+bleibt gespeichert. Offline-/Signatur-/Downloadfehler geben denselben bisherigen
+Arbeitsstart frei. Ohne Opt-in startet er direkt. Ausschalten bricht den Versuch
+ab; nach sicher übernommener Helferübergabe sind Skip und Opt-out gesperrt.
+Nach vollständiger Verifikation folgen P2-/Requestdrain,
+echtes Prozessende, unabhängiger MSI-Helfer und geprüfter Neustart mit demselben
+Zustand/Port. Fehler, Rebootbedarf und unklarer Ausgang erfordern manuelle Prüfung,
+keinen blinden Retry. Echte Windows-11-Abnahme und Betrieb bleiben eigene Gates.
 
 Das native Steuerfenster bietet bei neuer Einrichtung den vorhandenen lokalen
 Projektcheckout und die bewusste Wahl „Nur lokale Gitstände“ (Standard) oder
@@ -69,7 +117,8 @@ unter `.launcher/`: geschützter OS-Lock, kurzlebige authentisierte Instanzmetad
 und versionierte persistente Portwahl. Sie ändern das geschlossene Configformat nicht.
 
 Pro Windowsbenutzer und kanonischem Zustand läuft eine Instanz. Zweitstart prüft
-Identität/Build/Protokoll tatsächlich und öffnet dieselbe Browserinstanz, ohne
+Identität/Build/Protokoll tatsächlich und öffnet dieselbe Browserinstanz (während
+des Update-Startgates nur das Steuerfenster), ohne
 zweiten Server/Refresh. Weder PID noch Portdatei allein autorisieren eine Aktion.
 Start läuft noch, fremder Dienst, andere Version und verwaiste Metadaten werden
 unterschieden. Eine historische laufende CMD zuerst regulär mit Strg+C beenden;
@@ -90,8 +139,8 @@ bleiben als solche sichtbar. Danach sind Port und Lock freigegeben; Konfiguratio
 Cache, Browser und Checkout bleiben erhalten. Absturzreste werden erst nach
 Erwerb des OS-Locks ersetzt, niemals durch Töten eines gespeicherten PIDs.
 
-Updates erfolgen nach vollständigem Stop per neuerem MSI. Version, stabile Upgrade-
-identität und WiX-Bindung stammen aus [release.json](release.json); die frühere
+Updates erfolgen nach vollständigem Stop per neuerem MSI. Die veröffentlichte Releaseautorität bestimmt neue Produktversionen; stabile Upgrade-
+identität, Pins und 0.1.0-Startanker stammen aus [release.json](release.json); die frühere
 Paketkennung 588-P3 ist keine Produktversion. Same-Version-Installation und Downgrade
 sind gesperrt. Der Installer ersetzt alle eigenen Programmdateien gemeinsam und
 fasst Zustand/Cache, Browserprofil, Checkout/Refs und portable Ordner nicht an.
@@ -102,7 +151,7 @@ Windows Restart Manager; unklar bedeutet Abbruch. Keine automatische Beendigung.
 Während MSI-Ausführung beginnt kein neuer Launcherbetrieb. Deinstallation entfernt
 nur eigene installierte Dateien/Links und den Windows-Anwendungseintrag.
 „Neuere Ergebnisse suchen“ aktualisiert Gitdaten, keine Programmversion.
-Der eigene [Installerbau](WINDOWS_BUILD.md) läuft ausschließlich manuell;
+Der eigene [Installerbau](WINDOWS_BUILD.md) hat einen Main-CI-Folgetrigger und eine rein diagnostische manuelle Ausführung;
 Package CI und regulärer Spiel-Windowsbau bleiben getrennt.
 
 ## Entwicklerfallback
@@ -138,21 +187,26 @@ Der Regressionstest vergleicht die eingebetteten Bytes mit den Quellen.
 
 ## Bedienung und Quellenstatus
 
-Das Hauptdropdown enthält genau ein Motiv pro Rätsel-ID. Die getrennte
-Versionsansicht zeigt Phase, Revision, Herkunft und Aktualität. Titelgleiche IDs
-bleiben unterscheidbar. Die eindeutig aktuelle Ansichtsübergabe steht zuerst und
-öffnet automatisch; bei fehlendem/ungültigem Pointer oder Konflikt bewusst eine
-Version wählen. Kein Raten nach Phase oder Revisionsnummer. Bytegleiche Versionen
-erscheinen einmal mit „Lokal und Remote“; darunter bleibt die konkrete Quelle
-auswählbar. Erst deren ausdrückliche Remotequellwahl aktiviert gegebenenfalls P2.
-[Geschlossener Aktualitäts-/Publikationsvertrag](../../docs/PRODUCTION_CURRENT_VIEW.md). Lokale Motivbriefings samt „Entwurf verwerfen“
-sind davon getrennte Browserentwürfe.
+Das Hauptdropdown enthält genau eine offene Produktion pro Rätsel-ID mit Titel
+und aktueller Phase; titelgleiche IDs bleiben unterscheidbar. Im bewusst
+konfigurierten Remotebetrieb führen nur Remotequellen. Die gültige Spitze von
+`content/pw/<puzzle_id>` öffnet direkt, auch bei lokalen Vorsprüngen, Divergenzen
+oder einer früheren veröffentlichten Korrekturphase. Tatsächlich offene Main-only-
+Arbeit bleibt sichtbar. Die untergeordneten Versions-/Quelldetails dienen der
+gezielten Remoteversionswahl bei fehlendem/defektem Pointer und der konkreten
+Quellwahl für P2. Automatisches Öffnen aktiviert keine Entfernung.
+[Ansichtsvertrag](../../docs/PRODUCTION_CURRENT_VIEW.md).
 
-Synchron/Lokal neuer/Remote neuer beruhen auf bestätigter Git-Abstammung.
-Divergenz, unterschiedliche Bytes und nach begrenztem Metadatennachladen unbekannte
-Historie ergeben keinen Sieger. Offline bleibt der alte Snapshot lesbar, samt
-„Remote nicht aktuell bestätigt“, Fehler und letzter Cachezeit. Unbestätigte Quellen
-erlauben keinen Cloudauftrag. Fehlende Pointer lassen sich vom beauftragten Akteur
+„Neues Motiv“ bleibt der Einstieg vor Veröffentlichung. Unter „Gespeicherte
+Motivtexte“ lassen sich lokale Eingaben ausdrücklich öffnen oder verwerfen;
+sie erscheinen nicht als laufende Produktionen. Keine Titelzuordnung, automatische
+Löschung oder alte Entwurfsöffnung bei Appstart/leerem Ergebnis. Der bewusst
+lokale Diagnosebetrieb bleibt lokal eingerichtet. Im Remotebetrieb sind lokale
+Refs weiter für P2/Diagnose lesbar, ohne Produktionsalternativen zu erzeugen.
+
+Offline bleibt der alte Remotesnapshot lesbar, samt „Remote nicht aktuell
+bestätigt“, Fehler und letzter Cachezeit. Unbestätigte Quellen erlauben keinen
+Cloudauftrag. Fehlende Pointer lassen sich vom beauftragten Akteur
 für eine vollständige Revision gezielt publizieren:
 
 ```text
@@ -169,7 +223,9 @@ Record und Handoff müssen übereinstimmen; fehlende/beschädigte Originale und
 ungültiger UTF-8-Text erscheinen als Fehler. Briefings sind auf 1 MiB begrenzt.
 
 Folgeaufträge nennen einen festen erreichbaren Commit mit dem kanonischen Record
-als Einstieg und binden AGENTS/Authoring 0.8.0 kurz verbindlich ein. Vorhandene Parameter,
+als Einstieg und binden AGENTS/Authoring 0.8.0 kurz verbindlich ein. Dieser Einstieg
+führt zur phasengerechten Pflichtlektüre einschließlich Bildstil, nicht zurück
+zur Volllektüre aller Fachhandbücher. Vorhandene Parameter,
 Briefings, Hashlisten und allgemeine Regeln werden dort nicht dupliziert.
 Unveränderte Werte bleiben über diese Quelle gebunden. Änderungen sowie
 „Neue/zusätzliche Wünsche zur Motivvorlage“ sind neue Absichten. Zum Aufheben
@@ -198,6 +254,30 @@ an ihrer SHA gebunden. „Neueren Stand laden“ übernimmt die neue komplette L
 Bis zu acht Listenstände bleiben pro Sitzung erreichbar; danach neu laden.
 Unterschiedliche Quellen derselben ID/Revision mit abweichenden Bytes sind
 Konflikte. Es wird keine höchste Revisionszeichenfolge gewählt.
+
+PW2-C gleicht konkrete Lieferungen samt Original-/Integrationsbindungen mit dem
+frisch bestätigten konfigurierten Remote-`main` ab. Vollständiger Export und die
+vorhandenen kompakten Abschlussbelege werden anhand begrenzter Metadaten gelesen;
+dies öffnet keine ZIPs/Bilder und führt keine Solver-/Proofprüfung aus. Regulärer
+Merge, Squash und unveränderte Sammelübernahme werden gleich behandelt. Bestätigte
+Lieferungen, identische Kopien und eindeutig zugehörige alte Schritte verschwinden
+aus der aktiven Liste. Eine offene neue Revision oder spätere Bildarbeit derselben
+ID bleibt sichtbar. Unklare Zuordnung wird nicht als Abschluss geraten. Aktive Reveal-v4- und
+Hintergrund-v6-Quellen werden rein lesend gegen Originalexport/Receipt und Runtime
+abgeglichen; O/R bleiben verschieden. Exakte Quellmetadaten am gebundenen
+Integrationscommit erlauben alte Branchkopien, kein beliebiger gemeinsamer
+Exportanker. Mehr als 32 Abschlüsse werden vollständig verarbeitet; identische
+Lieferbelege werden dedupliziert, konkrete Originalquellen einzeln geprüft.
+Fehlende Belege erscheinen konkret als Fehler und halten betroffene Arbeit offen.
+
+Eine lokale Mainkopie, Cachezeit oder erfolgreiche Suche nur anderer Refs bestätigt
+keine Mainintegration. Ohne frischen tatsächlichen Mainbezug bleibt betroffene
+Arbeit sichtbar; ein bewusst abgewählter Mainref wird nicht zusätzlich geladen.
+Die Liste erklärt diesen Zustand. Passive Suche lässt auch eine inzwischen
+abgeschlossene geöffnete Quelle samt Bildern und ungesendeten Eingaben stehen.
+Erst „Neueren Stand laden“ meldet deren belegten Entfall und übernimmt offene Arbeit
+derselben ID, eine andere Produktion oder den leeren aktiven Zustand. Gespeicherte Motivtexte
+bleiben eigenständig gespeichert und werden nicht automatisch geöffnet. Es werden dabei keine Dateien oder Refs gelöscht.
 
 Nur lokale Nachweise, im konfigurierten Remote gefundene Commits, Zeitpunkt der
 letzten Synchronisierung und Remote-/Offlinefehler sind getrennt sichtbar.
@@ -263,7 +343,8 @@ nichtinteraktive Git-Anmeldung verwenden; keine neue Anmeldung in der UI.
 
 Ein Erfolg wird erst nach Prüfung des entfernten Remote-Refs gemeldet.
 Cachefehler oder ein unbekannter Ausgang bleiben sichtbar und verlangen eine
-neue Quellenprüfung. Lokale und Mainstände bleiben in der Auswahl. Ein sicherer
+neue Quellenprüfung. Lokale und Mainstände werden weiter gelesen; in der aktiven
+Auswahl bleiben offene oder nicht eindeutig abgeschlossene Lieferungen. Ein sicherer
 lokaler Branchref kann danach optional, zunächst abgewählt, in einem eigenen
 Bestätigungsdialog bereinigt werden. Das löscht keine Arbeitsdatei oder Worktree.
 
@@ -321,6 +402,15 @@ beschreiben die Formen; Pfadsicherheit, Eindeutigkeit, Rollen, Inventare,
 Originalbezüge, tatsächlich dekodierte PNG/JPEG und fachliche Angebotsfähigkeit
 werden zusätzlich im Reader/Projektor geprüft. Keine Solver-/Difficultyausführung.
 
+Projektor und Detailreader teilen nach PW3-B nur während desselben Aufrufs
+Recordmetadaten, Quell-/ZIP-Mitgliedbytes und Dekodierbefunde identischer Bilder.
+Der gemeinsame Bytevorrat bleibt bei 64 MiB/512 Einträgen; verdrängte Daten werden
+gewöhnlich neu gelesen. Jede Angebots-/Rollen-/Hash-/Größenbindung bleibt geprüft.
+Frische Quellbytes samt Pfad-/Dateiidentität werden vor Rückgabe beziehungsweise
+an den bisherigen Publikations-/No-op-Grenzen erneut verglichen. Neue unabhängige
+Detail-/Bildabrufe beginnen frisch. Das ist kein Adapter-/Proof-/HP-W2-Prüfpass;
+Finalizerzustände und Export-/Offlineprüfgrenzen bleiben getrennt.
+
 Geschrieben wird `workspace.json` neben `record.json`; bei aktuellem Request v2
 folgt obligatorisch der geprüfte `current-view.json`-Verweis im ID-Verzeichnis.
 Andere Originale bleiben bytegleich. Identische Wiederholung ist No-op samt mtimes. Abweichende
@@ -366,4 +456,32 @@ Serverarbeit und verspätet eintreffende Bildantworten.
 Der einmalige PW-B-T01-Durchstich und die
 wirkliche Windows-/Browserprobe T02 werden am konkreten Lieferhead im PR geführt.
 Linux-/HTTP-Tests ersetzen die Windowsprobe nicht. Die getrennten Vor-Merge-Gates
-PW-B-A01 und PW-B-M01 stehen in der Paketentscheidung.
+PW-B-A01 und PW-B-M01 stehen in der ursprünglichen Paketentscheidung; spätere
+paketbezogene Entscheidungen und der tatsächliche Abschluss in #578 bleiben
+maßgeblich. Daraus entstehen keine neuen PW2-A-Browser-/Bildprüfpflichten.
+
+
+## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
+
+Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
+in [Hintergrund §4](../../docs/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
+Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
+`image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
+keine Neusiegelung alter Originale oder Erweiterung von #645.
+
+Export v6 prüft Original und tatsächliches Staging jeweils vollständig. Zwischen
+beiden ersetzt ausschließlich der eigene unveränderte, byte-/pfadgebundene
+Aufrufkontext die redundante volle Pending-Inspektion. Ein geschlossener Vergleich
+der geschriebenen Pending-Dateimenge samt Bytes/Manifest und frischen Identitäten
+bleibt Pflicht. Inspection, Hashliste, Methoden, Freigaben, Notices, Kategorien und
+vollständige Readbacks bleiben gebunden. Vor Publikation werden Quellen und Ziel
+frisch geprüft. Separates verify-export beginnt immer eine vollständige Prüfung.
+
+Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
+Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits
+unabhängig geprüften Zustands-, Hintergrund- und Freigabefelder ist zulässig;
+abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung.
+Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
+Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
+Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.

@@ -7,6 +7,7 @@ from .contract import InvalidInput, canonical_bytes, exact_keys, integer
 from .reveal_retirement import INDEX, index_rows, selection, tree_files
 
 FORMAT = "picross-background-adoption-request-v1"
+IMAGE_FORMAT = "picross-background-adoption-request-v2"
 LIMIT = 2 * 1024 * 1024
 MAX_FILES = 256
 MAX_BYTES = 96 * 1024 * 1024
@@ -31,6 +32,19 @@ def index_row(value):
 
 def ref(name, raw):
     return {"file": name, "sha256": io.checksum(raw), "bytes": len(raw)}
+
+
+def current_context(root, entry):
+    """Resolve the current reveal authority without inventing an approval."""
+    from . import categories, reveal_source as reveal, editor_image_source as images
+    catalog = io.json_bytes(io.read(root, categories.PATH, 131072), 131072)
+    resolved = reveal.resolve(root, entry, catalog)
+    name = reveal.path(entry["id"])
+    raw = io.read(root, name, reveal.LIMIT, missing=True)
+    value = {"source": ref(name, raw) if raw is not None else None,
+             "production": None if raw is not None else images.make_binding(root, entry),
+             "reveal": resolved["effective_reveal_ref"]}
+    return images.validate_context(value, entry)
 
 
 def inventory(value, *, count=MAX_FILES, total=MAX_BYTES, exclude=()):
@@ -61,8 +75,10 @@ def validate(value):
 
 def _validate(value):
     value = io.json_bytes(encoded(value), LIMIT)
-    exact_keys(value, {"format", "puzzle_id", "revision", "target", "background", "authorization", "files", "test_only"})
-    ap.require(value["format"] == FORMAT, "Unsupported background work record format")
+    images = isinstance(value, dict) and value.get("format") == IMAGE_FORMAT
+    exact_keys(value, {"format", "puzzle_id", "revision", "target", "background", "authorization", "files", "test_only"} |
+               ({"context"} if images else set()))
+    ap.require(value["format"] in (FORMAT, IMAGE_FORMAT), "Unsupported background work record format")
     base = directory(value)
     ap.require(type(value["test_only"]) is bool, "Background test_only must be Boolean")
     target = exact_keys(value["target"], {"source", "origin_sha256", "image_revision"})
@@ -72,6 +88,23 @@ def _validate(value):
     integer(target["source"]["bytes"], 1, 1024 * 1024, "background source bytes")
     ap.sha(target["origin_sha256"])
     integer(target["image_revision"], 1, 1_000_000, "background target image revision")
+    if images:
+        context = exact_keys(value["context"], {"source", "production", "reveal"})
+        ap.require((context["source"] is None) != (context["production"] is None),
+                   "Background context requires exactly one current reveal authority")
+        if context["source"] is not None:
+            bc._ref(context["source"])
+            ap.require(context["source"]["file"] == "content/reveals/" + value["puzzle_id"] + ".json",
+                       "Background context binds another reveal source")
+            integer(context["source"]["bytes"], 1, 1024 * 1024, "reveal source bytes")
+        else:
+            from .editor_image_source import validate_binding
+            validate_binding(context["production"], value["puzzle_id"])
+        bc._ref(context["reveal"])
+        integer(context["reveal"]["bytes"], 1, FILE_LIMIT, "current reveal bytes")
+        ap.require(context["reveal"]["file"].startswith("game/art/content/") and
+                   context["reveal"]["file"].endswith((".png", ".svg")),
+                   "Background context requires a managed reveal asset")
     binding = package.validate_binding(value["background"], package_only=False)
     ap.require(binding["history"] is None, "Background change cannot fetch discarded history")
     inventory(value["files"], exclude=("record.json",))

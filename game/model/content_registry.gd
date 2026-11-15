@@ -1,9 +1,14 @@
 extends RefCounted
 ## Bundled, generated data only. No save input or runtime directory discovery.
 const PATH: String = "res://data/registry.json"
+const CAPABILITY_PATH: String = "res://data/background-capability.json"
 const Difficulty = preload("res://model/catalog_difficulty.gd")
 static var cached: Dictionary = {}
 static var load_error: String = ""
+static var indexed_cache: Dictionary = {}
+static var indexed_count: int = -1
+static var id_positions: Dictionary = {}
+static var key_positions: Dictionary = {}
 const LEGACY_BACKGROUND: Dictionary = {"status":"legacy", "image_revision":null, "asset":null}
 
 static func valid_category_id(value: Variant) -> bool:
@@ -17,7 +22,7 @@ static func valid_category_id(value: Variant) -> bool:
 	return true
 
 static func validate(raw: Variant) -> String:
-	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
+	if not raw is Dictionary or raw.size() != 3 or not raw.get("format") in ["picross-runtime-registry-v2", "picross-runtime-registry-v3", "picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6", "picross-runtime-registry-v7", "picross-runtime-registry-v8"] or not raw.get("entries") is Array or not raw.get("categories") is Array:
 		return "Unsupported runtime registry format"
 	if raw.categories.size() > 256 or raw.entries.size() > 10000:
 		return "Registry count limit exceeded"
@@ -42,14 +47,18 @@ static func validate(raw: Variant) -> String:
 		previous_order = int(order)
 	var seen: Dictionary = {}
 	var current: bool = raw.format != "picross-runtime-registry-v2"
-	var backgrounds: bool = raw.format == "picross-runtime-registry-v6"
-	var dated: bool = raw.format in ["picross-runtime-registry-v4", "picross-runtime-registry-v5", "picross-runtime-registry-v6"]
-	# v6 adds background metadata, not a new difficulty generation.
-	var version: int = 5 if raw.format in ["picross-runtime-registry-v5", "picross-runtime-registry-v6"] else 4
+	var image_preferences: bool = raw.format == "picross-runtime-registry-v8"
+	var named: bool = image_preferences or raw.format == "picross-runtime-registry-v7"
+	var backgrounds: bool = named or raw.format == "picross-runtime-registry-v6"
+	var dated: bool = backgrounds or raw.format in ["picross-runtime-registry-v4", "picross-runtime-registry-v5"]
+	# V8 retains the v7 fields and v5 difficulty; only v8 adds standard.
+	var version: int = 5 if backgrounds or raw.format == "picross-runtime-registry-v5" else 4
 	for item: Variant in raw.entries:
-		if not item is Dictionary or item.size() != (10 if backgrounds else 9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
+		if not item is Dictionary or item.size() != (11 if named else 10 if backgrounds else 9 if dated else 8 if current else 7) or not item.get("visible") is bool or not item.has("category_id"):
 			return "Invalid registry entry fields"
-		if backgrounds and not valid_background(item):
+		if named and not valid_name(item.get("name")):
+			return "Invalid current puzzle name"
+		if backgrounds and not valid_background(item, image_preferences):
 			return "Invalid catalog background"
 		if dated and (not item.has("added_at") or not valid_added(item.added_at)):
 			return "Invalid catalog added timestamp"
@@ -71,8 +80,33 @@ static func validate(raw: Variant) -> String:
 				return "Invalid registry resource path"
 		if not str(item.definition).begins_with("data/") or not str(item.definition).ends_with(".json") or not str(item.reveal).begins_with("art/"):
 			return "Invalid registry resource type"
+		if image_preferences and not (str(item.reveal).ends_with(".png") or str(item.reveal).ends_with(".svg")):
+			return "Invalid current reveal type"
 		if not valid_category_id(item.category_id) or not category_ids.has(item.category_id):
 			return "Missing or unknown category for " + str(item.id)
+	return ""
+
+static func valid_name(value: Variant) -> bool:
+	if not value is String or value.length() < 1 or value.length() > 128:
+		return false
+	# Match Python's string.strip() boundary, including non-ASCII whitespace.
+	for index: int in range(value.length()):
+		var point: int = value.unicode_at(index)
+		if not ((point >= 9 and point <= 13) or (point >= 28 and point <= 32) or point in [133, 160, 5760, 8232, 8233, 8239, 8287, 12288] or (point >= 8192 and point <= 8202)):
+			return true
+	return false
+
+static func validate_capability(registry: Dictionary, value: Variant, present: bool) -> String:
+	# V7/v8 always have a background field, even for a category-only target.
+	# The capability continues to certify the unchanged v6 background contract.
+	var enabled: bool = false
+	if present:
+		if not value is Dictionary or value.size() != 4 or value.get("format") != "picross-runtime-background-capability-v1" or value.get("runtime_format") != "picross-runtime-registry-v6" or value.get("profile_id") != "picross-background-png2304-v1" or not value.get("enabled") is bool:
+			return "Invalid background capability"
+		enabled = value.enabled
+	for entry: Dictionary in registry.entries:
+		if entry.background.status in ["selected", "none"] and not enabled:
+			return "Background catalog requires enabled compatible capability"
 	return ""
 
 static func bounded_integer(value: Variant, minimum: int, maximum: int) -> bool:
@@ -80,7 +114,7 @@ static func bounded_integer(value: Variant, minimum: int, maximum: int) -> bool:
 	# must not be accepted as integer revisions or byte counts.
 	return (value is int or value is float) and is_finite(float(value)) and float(value) == floor(float(value)) and value >= minimum and value <= maximum
 
-static func valid_background(item: Dictionary) -> bool:
+static func valid_background(item: Dictionary, allow_standard: bool = false) -> bool:
 	var identifier: Variant = item.get("id")
 	if not identifier is String or identifier.length() < 4 or identifier.length() > 63 or not identifier.begins_with("pz-") or not identifier[3] in "abcdefghijklmnopqrstuvwxyz0123456789":
 		return false
@@ -91,6 +125,8 @@ static func valid_background(item: Dictionary) -> bool:
 		return false
 	if value.status == "legacy":
 		return value.image_revision == null and value.asset == null
+	if allow_standard and value.status == "standard":
+		return bounded_integer(value.image_revision, 1, 1000000) and value.asset == null
 	if not value.status in ["none", "selected"] or not bounded_integer(value.image_revision, 1, 1000000):
 		return false
 	if value.status == "none": return value.asset == null
@@ -137,8 +173,27 @@ static func _load() -> Dictionary:
 	load_error = validate(raw)
 	if not load_error.is_empty():
 		return {}
+	if raw.format in ["picross-runtime-registry-v7", "picross-runtime-registry-v8"]:
+		var capability: Variant = null
+		var present: bool = FileAccess.file_exists(CAPABILITY_PATH) or DirAccess.dir_exists_absolute(CAPABILITY_PATH)
+		if present:
+			var capability_file: FileAccess = FileAccess.open(CAPABILITY_PATH, FileAccess.READ)
+			if capability_file == null or capability_file.get_length() > 4096:
+				load_error = "Unreadable or oversized background capability"
+				return {}
+			var capability_text: String = capability_file.get_as_text()
+			if not unique_keys(capability_text):
+				load_error = "Duplicate background capability JSON key"
+				return {}
+			capability = JSON.parse_string(capability_text)
+		load_error = validate_capability(raw, capability, present)
+		if not load_error.is_empty():
+			return {}
 	cached = raw
 	return cached
+
+static func current_reveal_enabled() -> bool:
+	return _load().get("format") == "picross-runtime-registry-v8"
 
 static func unique_keys(text: String) -> bool:
 	var objects: Array[Dictionary] = []
@@ -177,24 +232,32 @@ static func categories() -> Array[Dictionary]:
 		result.append(item.duplicate(true))
 	return result
 
+static func _index() -> Array:
+	var catalog: Dictionary = _load()
+	var items: Array = catalog.get("entries", [])
+	if not is_same(indexed_cache, catalog) or indexed_count != items.size():
+		id_positions.clear()
+		key_positions.clear()
+		for index: int in range(items.size()):
+			id_positions[items[index].id] = index
+			key_positions[items[index].key] = index
+		indexed_cache = catalog
+		indexed_count = items.size()
+	return items
+
 static func by_key(key: String) -> Dictionary:
-	for entry: Dictionary in _load().get("entries", []):
-		if entry.key == key:
-			return entry.duplicate(true)
-	return {}
+	var items: Array = _index()
+	var index: int = key_positions.get(key, -1)
+	return items[index].duplicate(true) if index >= 0 else {}
 
 static func by_id(id: String) -> Dictionary:
-	for entry: Dictionary in _load().get("entries", []):
-		if entry.id == id:
-			return entry.duplicate(true)
-	return {}
+	var items: Array = _index()
+	var index: int = id_positions.get(id, -1)
+	return items[index].duplicate(true) if index >= 0 else {}
 
 static func ordinal(id: String) -> int:
-	var index: int = 0
-	for entry: Dictionary in _load().get("entries", []):
-		index += 1
-		if entry.id == id: return index
-	return 0
+	_index()
+	return int(id_positions.get(id, -1)) + 1
 
 static func key_for_id(id: String) -> String:
 	return str(by_id(id).get("key", ""))

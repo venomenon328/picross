@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/610",
-  "package": "Schnecke-S4-r07",
+  "issue": "https://github.com/venomenon328/picross",
+  "package": "Schnecke r07: Endabnahme und Erstintegration HG-A-b01",
   "modules": [],
-  "purpose": "Reine Rätselproduktion Schritte 1–4: tatsächliche Rasterwahl R-B-r06 und drei echte native Kontextzeichnungen, isolierte Qualität/Rechte, neue vollständige background_review-Revision samt Index/Projektion/current-view. Allgemeiner Quellen-/Plankern, kein Player-Build.",
-  "omitted": "Keine Zusatzmodule, neuen Tests, Bestandsreplays oder Code-/Runtimeänderungen. Raster/Proof/aktive0.4-Analyse unverändert wiederverwendet; Builder prüft geschriebenes ZIP frisch vollständig. Keine Hintergrundentscheidung/Ableitung, Endabnahme oder Integration.",
+  "purpose": "Unveränderte gewählte Kontextzeichnung HG-A-b01 samt Raster R-B-r06 und Reveal finalisieren, exportieren, frisch planen und registrieren; Completion und unabhängiges Review vor bedingt autorisiertem Squash-Merge.",
+  "omitted": "Reine Rätselproduktion. Vorhandene passende Qualitäts- und Proofbelege weiterverwenden; neue Lieferung vollständig mit gemeinsamen Produktionswerkzeugen prüfen. Keine neuen Rätseltests, Bestandsreplays, Player-Builds, Browserläufe oder technischen Uploads. Authoring §9 nach bestätigtem Mainabschluss.",
   "test_changes": [],
   "core_change": null,
   "evidence": {

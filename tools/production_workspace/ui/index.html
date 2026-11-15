@@ -29,21 +29,21 @@
       <aside aria-label="Produktionsnavigation">
         <h2>Deine Produktionen</h2>
         <button id="newJob"><span aria-hidden="true">+</span> Neues Motiv</button>
-        <details id="navigation" open><summary>Entwürfe und Gitstände</summary>
-          <div id="draftList"></div>
-          <label class="jobPicker">Veröffentlichte Motive<select id="jobs"><option>Wird geladen …</option></select></label>
+        <div id="navigation">
+          <label class="jobPicker">Offene Produktionen<select id="jobs"><option>Wird geladen …</option></select></label>
           <p id="motifStatus" role="status" class="hint"></p>
-          <div id="versions" hidden>
+          <details id="versions" hidden><summary>Versionen & Quellen</summary>
             <label class="jobPicker">Version / Phase<select id="version"></select></label>
             <p id="versionOrigin" class="hint"></p>
             <label class="jobPicker">Konkrete Quelle<select id="jobSource"></select></label>
             <p id="versionNotes" class="hint"></p>
-          </div>
+          </details>
+          <details><summary>Gespeicherte Motivtexte</summary><div id="draftList"></div><p class="hint">Lokale Eingaben vor der Veröffentlichung.</p></details>
           <details><summary>Auftragsoptionen</summary>
             <label>Codex-Arbeitswurzel<input id="workroot" placeholder="Optionaler lokaler Pfad"></label>
-            <label><input id="merge" type="checkbox"> In Schritt 5 Merge nach Review und allen Gates beauftragen</label>
+            <label><input id="merge" type="checkbox" checked> Schlussauftrag: Squash-Merge nach unabhängigem Review und allen Gates</label>
           </details>
-        </details>
+        </div>
       </aside>
       <section id="view" aria-label="Aktiver Arbeitsbereich"><p>Arbeitsstände werden geladen …</p></section>
     </div>

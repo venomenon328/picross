@@ -1,5 +1,120 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
+> Aktueller Editor-Sonderweg: [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) definiert die gezielte Transaktion, Reveal v4, Hintergrund v6 und Rasterpaket v2. Normale Editoraktionen lesen keine historische Produktion. Explizite Produktionsprüfung/Recovery alter Formen bleiben bestehen; Folgeproduktion erhält die aktuelle technische Bildbindung. Die externe Migration gehört zu #641, nicht in die Editor-App.
+
+
+## PE-A3 · Manuelle Rasterpakete
+
+Vertrag vor konsumierendem Code, 13.11.2026:
+[PE §9](PUZZLE_EDITOR.md#9-pe-a3-geschlossener-raster--und-revisionsvertrag)
+definiert exakt Request, Plan, Rasterpaket und `editor-raster`-Journal v1.
+Neue Logik verlangt frische vollständige unabhängig geprüfte Deduktion und
+Bewertung der aktiven Zielmethode. Planung führt die Analyse ausdrücklich aus,
+Apply prüft das geschriebene Bundle frisch; Recovery analysiert nicht.
+Die bisherigen SD-Hüllen und Methodenfreezes bleiben unverändert.
+Das Rasterjournal verwendet die gemeinsame Achtfelderform, genau eine ID,
+Runtime zuletzt und wiederholbaren Rollback. Additions sind ausschließlich das
+neue Rasterpaket, Retained und packages binden sämtliche Vorgängerpakete.
+Optionale A2-Deltas behalten ihre Grenzen; ohne Binärdelta 24 MiB, sonst 128 MiB.
+Alle Phasen bleiben endlich bei 300 s, ohne RI-Override. Andere IDs, Added und
+Kategorienquelle bleiben bytegleich. Identische Logik benötigt keine neue Analyse.
+
+**PE-A1 / #576 · nach unabhängigem Review integriert:**
+[Aktuelle Metadaten](PUZZLE_EDITOR.md#7-pe-a1-geschlossener-metadatenvertrag)
+kommen als Tabelle in der bereits gebundenen Inhaltsregistry hinzu. Reine
+Namens-/Kategoriepflege ändert weder Definition noch Rating- oder Bildbindungen.
+Die neuen Pflege-/Migrationsoperationen verwenden den gemeinsamen Transaktionsweg;
+aktuelle Writer erhalten die Metadaten, historische Belege bleiben vollständig
+geprüft. [PE-A1-Formatgenerationen](PUZZLE_EDITOR.md#75-geschlossene-implementierungsformen)
+ergänzen die vorhandenen geschlossenen Plan-/Journalformen ausdrücklich.
+
+## PE-A2 · Geschlossene v8-Quellen, Pläne und Journale
+
+Vertrag vor konsumierendem Code, 12.11.2026, gemäß
+[PE-A2](https://github.com/venomenon328/picross/issues/576#issuecomment-6839202555)
+und [Receipt-Präzisierung](https://github.com/venomenon328/picross/issues/576#issuecomment-6839354651).
+[PE §8](PUZZLE_EDITOR.md#8-pe-a2-geschlossener-bild--und-präferenzvertrag) definiert
+Revealquelle v3, Hintergrundquelle v5, Runtime v8, manuelle Requests und die
+explizite Projektionseinführung. Die folgenden Generationen verwenden dieselbe
+geschlossene äußere Achtfelderform `format,operation,old,new,retained,additions,report_run,replacements`.
+
+| Format | Ausschließlich erlaubte Operationen |
+| --- | --- |
+| `picross-registration-journal-v9` | `registration` |
+| `picross-content-update-journal-v9` | `update` |
+| `picross-catalog-metadata-journal-v6` | `adoption,sync,added-adoption` |
+| `picross-reveal-adoption-journal-v6` | `reveal-adoption` |
+| `picross-background-adoption-journal-v4` | `background-adoption` |
+| `picross-difficulty-activation-journal-v4` | `method-activation` |
+| `picross-editor-metadata-journal-v2` | `metadata` |
+| `picross-editor-images-journal-v1` | `editor-images` |
+| `picross-editor-image-migration-journal-v1` | `editor-image-migration` |
+
+`report_run` bleibt nur bei Rating-/Addedübernahme die tatsächlich gebundene
+Run-ID, sonst null. Für die beiden Editorbildoperationen ist `additions={}`;
+bei Projektionseinführung außerdem `replacements={}`. Die bisherigen erlaubten
+Registrierungs-/Updatepaketadditions und Berichtziele bleiben eng operationsgebunden.
+Die vollständige Deltamatrix aus PE §8.4 ist verbindlich: Bildpflege darf keine
+Definition, Produktion, Rating-/Addedquelle oder unbeteiligte ID verändern;
+kombinierte ID-Metadatenpflege ist ausdrücklich im selben Journal erlaubt.
+
+`T8(R)` umfasst exakt `content/registry.json`, `content/categories.json`,
+`game/data/registry.json`, `content/difficulty-method.json`,
+`game/data/background-capability.json` sowie je ID die abgeleitete Definition,
+Live-Revealnotice, Revealquelle, Rating-, Added-, Hintergrundquelle und
+Hintergrundnotice. Die bisherigen zulässigen Abwesenheiten bleiben null.
+`K8(R)` umfasst sämtliche vorhandenen Livebilder und bisherigen vollständigen
+Paket-/Receipt-/Export-/Berichtsquellen. `C8(R)` umfasst je ID beide technischen
+Revealendungen `.png/.svg` sowie den festen Hintergrund-PNG-Pfad, jeweils als
+tatsächlicher Hash oder ausdrücklich sichere Abwesenheit. `sources` ist exakt
+`T8(R) ∪ K8(R) ∪ C8(R)`. Historische Quelle und aktuell wirksamer Bildpfad werden
+getrennt geprüft; fehlende historische Dateien werden nur nach dem bereits
+gültigen kompakteren Receiptvertrag akzeptiert, nicht wegen des neuen Wrappers.
+
+`old/new` haben exakt dieselbe Menge `T8(Ralt) ∪ T8(Rneu) ∪ Q`, Q ausschließlich
+der bisher erlaubte neue SD-/Addedbericht. `retained` hat exakt die übrigen
+vorhandenen K8-/C8-Quellen abzüglich Text-/Replacementzielen als Pfad→SHA-256.
+Negative C8-Erwartungen werden strikt aus Alt-/Neuquellen hergeleitet; keine
+frei aus einem Journal übernommene Abwesenheit. Neue Bildjournale dürfen nur
+die aus betroffenen IDs/Quellen hergeleiteten alten/neuen Livepfade in
+`replacements` führen. Jede Seite bleibt `{sha256,bytes,base64}` oder sicher
+hergeleitet null; kein null/null, identisches Paar oder freier Löschpfad.
+
+Die genaue Namespaceform ist
+`reveals,difficulty,added,packages,backgrounds,background_assets,reveal_assets`.
+Die ersten sechs behalten ihren tatsächlichen vollständigen bisherigen Umfang;
+`reveal_assets` enthält je registriertem technischem Stamm die genau eine
+wirksame PNG-/SVG-Datei und gemeinsame TXT-Notice. Die inaktive Endung ist
+abwesend. Namespace- und Dateitypprüfungen schließen unbekannte Dateien, Aliase,
+Links und ungebundene eigene Reste vor Mutation aus. Diese Form gilt nur für
+die neue Generation, v7-Snapshots behalten exakt sechs Felder.
+
+| Neue gespeicherte Form | Exakte Felder / neue Bindung |
+| --- | --- |
+| `picross-reveal-request-v2` | `format,entries`; je Zeile unverändert `id,image,approval,provenance,notice_append`. Bild und Approval binden den aktuellen effektiven Revealstand, keine historische Pfadannahme. |
+| `picross-reveal-plan-v5` | `format,ids,snapshot,entries,writes,old_registry,new_registry,plan_hash`; vollständiger Sieben-Namespace-Snapshot. Registryfelder behalten Text/Hash-Form. Zeilen genau `id,old_image_revision,new_image_revision,binding_hash,old_reveal,new_reveal,old_record,new_record,old_notice,new_notice,old_background,new_background`; bei sourcefreiem Hintergrund beide null. `binding_hash` ist bei neuer Revealquelle der kanonische Hash ihrer tatsächlichen aktuellen `binding`, bei alter Quelle der vorhandene Bindinghash. Quellen-/Notice-/Bildrefs bleiben vollständig. |
+| `picross-background-adoption-request-v2` | Bisherige `format,puzzle_id,revision,target,background,authorization,files,test_only` und zusätzlich `context` nach Hintergrundvertrag §14. |
+| `picross-background-adoption-plan-v3` | Unverändert `format,request,snapshot,old,new,files,plan_hash`; aktuelle v8-Quellmenge und sieben Namespaces. Die bestehenden alten/neuen vollständigen Textansichten und Bundleinventarrefs bleiben. |
+| `picross-editor-metadata-plan-v2` | Unverändert `format,operation,operations,changes,files,journal`; auf v8 das passende Metadatenjournal v2. Keine implizite Bildprojektionseinführung. |
+| `picross-catalog-difficulty-report-v6` | Unverändert `format,run_id,result,result_hash,operation`; result exakt `selection,source_commit,method,method_hash,snapshot,sources,entries,distribution`. `sources` bindet vollständig T8/K8/C8, methodische Felder und Ratingunterformen unverändert. |
+| `picross-added-plan-v5` | Unverändert `format,run_id,base_commit,sources,evidence,entries`; `sources` vollständig T8/K8/C8, Addedherkunft und historische Gitbelege behalten ihre Regeln. |
+| `picross-difficulty-activation-plan-v3` | Unverändert `format,expected,target,sources,result_hash`; vollständige aktuelle T8/K8/C8-Bindung, gleiche Methoden-/Default-/No-op-Regeln. |
+
+Alte Pläne, Reports und Journale erhalten keine zusätzlichen Quellen oder neue
+Semantik. Ein v8-Stand ist für eine ältere gespeicherte Operation inkompatibel,
+auch wenn die von ihr gewünschte Einzelzeile gleich aussieht. Neue Planung bindet
+die tatsächliche aktuelle Generation. Fortgeführte Writer erhalten v8, ein
+Sync darf es nicht still auf v7 zurückstufen. Alle Full-/Quick-/CLI-/API-/
+Snapshot-/Recoverywege verwenden denselben Resolver.
+
+Nichtbinäre Journale bleiben bei 24 MiB; die neuen expliziten Bildjournalformate
+bei 128 MiB einschließlich JSON/Base64, 32 MiB je Binärseite und 96 MiB dekodiert
+insgesamt. Keine anderen Byte-/Datei-/Listenlimits werden durch neue Kennungen
+angehoben. Bildplanung/-übernahme/-recovery jeweils 300 s, kein RI-Registrierungsdefault.
+Der gemeinsame Lock, vollständige isolierte Alt-/Neuprüfung, erneute Quellenprüfung
+unter Lock, atomare Publikation, Runtime zuletzt und wiederholbarer ausschließlich
+eigener Rollback bleiben. Fremde Bytes und ungeklärte Reste blockieren mit Journal.
+
 **HP-I1b1 · 09.11.2026, Vertrag vor Code:** Der
 [Hintergrundzusatz](#hp-i1b1--hintergrundquellen-pläne-und-transaktionen) führt
 neue geschlossene Quellen-/Plan-/Journalgenerationen ein. Historische Abschnitte
@@ -986,6 +1101,68 @@ Belegung. Unbekannte/fremde Bytes bleiben mit konkretem Rest und Journal sichtba
 Keine globale Erkennung vor jedem Dateischritt, keine neue Performancekampagne
 oder Geschwindigkeitsbehauptung. Lauf-/Reviewbelege bleiben am konkreten PR-Head.
 
+### RI-REPLAY-1 · Neues Paket statt historische Produktion in P5 erneut prüfen (#650)
+
+Bei neuer Registrierung bindet der gültige Journal-Delta exakt einen neuen
+Paketpfad. P5 validiert den vollständigen Checkout und prüft die Produktion
+nur dieses Paketpfads frisch beziehungsweise durch die bereits vollständig
+gebundene RI-B-Byte-Nachprüfung. Alle bestehenden Einträge behalten die
+vollständige Manifest-/Paketinventar-, Live-/Hintergrund-/Reveal-,
+Bewertungs-/Metadaten- und Namespaceprüfung. T(R), K(R), G0/G2/G5a/G5b/G6
+sowie Recovery-GR0/GR2 bleiben unverändert bytegebunden; fremde Änderungen
+müssen weiterhin vor dauerhaftem Abschluss erkannt und geschützt werden.
+Ältere `picross-target-export`-Pakete werden in dieser normalen P5-Grenze
+**nicht** erneut auf ihre historische Solver-/Freigabe-/HP-W2-Produktion
+replayt; das ist kein notwendiger Katalogquellen- oder Publikationsguard.
+Ein fehlender, mehrfacher oder unpassender neuer Zielpfad blockiert.
+
+Eine ausdrücklich angeforderte `check_checkout(replay=True)`-Vollprüfung
+ohne Ziel bleibt strikt und prüft alle unkompaktierten Produktionen.
+`verify-export` alter Pakete bleibt ebenso unverändert und kann eine
+unqualifizierte historische Erzeugeridentität weiterhin zurückweisen.
+Andere Transaktionsgenerationen, Wiederholungen, No-ops, Journale und
+Recovery erfahren keine neue Replayausnahme; kein persistenter Cache,
+keine historischen Daten-/Freigabeänderungen oder neue Toolhash-Ausnahmen.
+Dies präzisiert den P5-Produktionsnachweis, nicht die RI-C-Quellen- und
+Fremdänderungsgarantien.
+
+### RI-V9 · Geschlossener Erzeuger-, Quellen- und Recoveryweg (#652)
+
+Die vorhandene geschlossene Journalvalidierung prüft weiterhin vollständige
+Registry-/Runtime-/Quellenbindungen. Die gemeinsame Registrierungstabelle
+in `catalog_transaction.REGISTRATION_GENERATIONS` bindet zusätzlich die
+Erzeugerauswahl, den Writer und die Recoveryklassifikation aneinander:
+
+| Erzeugergeneration | Registry / erzeugte Runtime | Journal | Publikation und Recovery |
+| --- | --- | --- | --- |
+| at | v2 / v4 | v5 | Historischer gemeinsamer Writer |
+| sd2 | v2 / v5 | v6 | Phasierter RI-C-Writer |
+| background | v2 oder v3 / v6 | v7 | Phasierter RI-C-Writer |
+| metadata | v4 / v7 | v8 | Phasierter RI-C-Writer |
+| images | v4 / v8 | v9 | Phasierter RI-C-Writer |
+
+Die reguläre aktuelle Produktion wählt metadata beziehungsweise images anhand
+des echten Zielzustands. Die Tabelle ist kein Downgrade-/Migrationsweg.
+Historische Journal-v3/v4-Reader bleiben getrennt. Unbekannte Generationen
+oder eine nicht zugeordnete Erzeugeränderung blockieren vor Mutation.
+
+v9 erhält die in PE §13 eingeführten schlanken Reveal-v4-/Hintergrund-v6-Quellen
+mit `binding/current` sowie unterstützte historische Quellen. Ein fehlendes
+historisches initial ist bei schlanken Quellen gültig und wird nicht durch
+einen konstruierten Origin ersetzt. Die alleinige leere `external/`-Ausnahme
+eines alten Vollpakets benötigt dessen tatsächlich gebundenes v6-Manifest,
+ein Inventar ohne externe Dateien und nicht externe Hintergrundbezüge.
+Weitere unbekannte leere Verzeichnisse bleiben gesperrt.
+
+G0/G2/G5a/G5b/G6 und GR0/GR2 gelten unverändert auch für v8/v9 einschließlich
+Journalstaging und wiederholtem unterbrochenem Rollback. Die neue Produktion
+wird vollständig am Eingang und unabhängig im Staging geprüft; P5 bleibt auf
+das eine neue Journalpaket begrenzt. Als gezielte Erweiterung von RI-REPLAY-1
+prüft auch die identische Registerwiederholung nur ihren vollständigen Eingang
+und die aktuelle Checkoutintegrität, ohne fremde historische Produktion.
+Vollaudit und verify-export bleiben strikt. Completion und synthetischer
+§9-Abschluss folgen dem [RI-V9-Vertrag](PUZZLE_INTEGRATION.md).
+
 ## HP-I1b2 · Hintergrundwechsel und Quellenkompatibilität
 
 Vertrag vor Code, 10.11.2026, [HP-I1b2](https://github.com/venomenon328/picross/issues/561#issuecomment-6763700809).
@@ -1047,3 +1224,96 @@ nach Retirement und bei ursprünglicher Registerwiederholung. Budgets, vollstän
 T/K-/Namespaceguards, frische Prüfung unter Lock, Runtime zuletzt und Recovery
 bleiben erhalten. Echte Capability bleibt false; nur isolierte synthetische
 test_only-Ziele verwenden true. Keine Authoring-/Sheet-Formatänderung.
+
+## PW-PERF-B · Erstregistrierung v10 (Vertrag vor Code)
+
+Maßgeblich: [Paketentscheidung #653](https://github.com/venomenon328/picross/issues/653#issuecomment-6887731468).
+Nur Erstregistrierung auf Inhaltsregistry v4 / Runtime v8 verwendet
+`picross-registration-journal-v10`, `operation=registration`, Route `phased`.
+Update, Sync, Editor und Hintergrundwechsel sowie alte Zielgenerationen behalten
+ihre bisherigen geschlossenen Formate. Unbekannte Kombinationen sind Fehler.
+Die Datenformate der Indizes, Pakete und Freigaben bleiben unverändert.
+
+### Geschlossene Autorität und Projektion
+
+Gemeinsame Quellen S sind exakt `content/registry.json`,
+`game/data/registry.json`, `content/categories.json`,
+`content/difficulty-method.json` (optionale Methodendefaultquelle) und
+`game/data/background-capability.json` (optionale Capabilityquelle).
+Alle vorhandenen Indexeinträge werden strukturell validiert: vollständige
+ID-/Key-/Slot-/Pfad-/Casefold-Eindeutigkeit, Kategorien, aktuelle Metadaten,
+Backgroundrefs und exakte Runtime-v8-Felder samt Difficulty/Datum/Bildrefs.
+Runtime-Identitäten, Kategorien und Metadaten müssen dem Inhaltsindex entsprechen.
+Bestehende Runtimewerte für Difficulty, Added und aktuelle Bilder sind hierbei
+Indexautorität; ihre alten Quelldateien werden ausdrücklich nicht rekonstruiert.
+Die neue Projektion erhält sämtliche alten Eintragswerte unverändert und ergänzt
+nur die aus dem vollständig geprüften neuen Export und seinen Quellen abgeleitete
+neue Zeile. Globale Bildpfad- und Paketpfadkollisionen bleiben Fehler.
+
+Für genau die neue ID N enthält T neben S deren Definition, Revealnotice,
+Rating, Added, kanonische Revealsource, Backgroundsource und Backgroundnotice
+sowie beide kanonischen Revealendungen und den kanonischen Background-PNG-Pfad,
+soweit sie nicht zu den binären Additionen gehören. Alle neuen T-Pfade sind alt
+null; unbenutzte Quellen/Bildalternativen bleiben auch neu null. Keine Quelle
+anderer IDs gehört zu T. K (`retained`) ist exakt leer: benötigte gemeinsame
+Textquellen sind bereits in S, neue Paketdateien gehören zu A. A (`additions`)
+enthält exakt sämtliche Dateien des neuen geprüften Exports unter dessen
+`content/packages/<id>/<revision>/` sowie sein Live-Reveal und gegebenenfalls
+sein Live-Hintergrund. A bindet SHA-256; T und A sind disjunkt. Pfade werden aus
+Indizes und Export abgeleitet, niemals aus einem ungeprüften freien Quellenplan.
+Keine vollständige Katalogkopie auf Platte oder im Speicher.
+
+Das Journal hat exakt `format,operation,old,new,retained,additions,report_run,replacements`.
+`old` und `new` haben exakt dieselbe Menge T; Werte sind UTF-8-Text oder null.
+`retained={}`, `report_run=null`, `replacements={}`. Die bestehenden kanonischen
+Journalbytes (format zuerst, übrige Schlüssel sortiert, LF) und 24-MiB-Grenze gelten.
+Der Registrydelta ist exakt ein neuer sortierter Entry mit neuer Metadatenzeile
+und optional dessen Backgroundref. Alle alten Entries/Metadaten/Refs bleiben
+wertgleich; Kategorien, Methodenindex und Capability bleiben bytegleich.
+Neue Definition, Notice, Rating, Added und optionale Source/Notice sind exakt
+an Paket, ID, aktive Methode und Hintergrundausgaben gebunden. Added wird nur
+im mutierenden Aufruf einmal erzeugt; der lesende Plan projiziert null und
+kündigt `add-on-success` an. Kein gespeicherter Plan autorisiert Register.
+
+### Prüfung, Eigentum und Wiederanlauf
+
+Originaleingang samt Freigabe/Proof/HP-W2 sowie zweites unabhängiges Stagingreplay
+bleiben vollständig. Der prozesslokale RI-B-Kontext bindet Eingang, Staging,
+Methodenimplementierung und gegebenenfalls externe Difficultydatei frisch;
+P3 und P5 lesen exakt die veröffentlichten neuen Paketbytes und Mengen zurück.
+Die neue Zielprojektion/Sidecar- und Bildhashbindung wird ohne Katalogkopie geprüft.
+Eine identische Wiederholung prüft frisch den Eingang und die betroffene ID,
+bleibt schreibfrei und prüft keine unbeteiligte Altproduktion.
+
+G0/G2/G5a/G5b/G6 und GR0/GR2, P0–P6/R0–R2, Runtime zuletzt, Journaldauerhaftigkeit,
+exklusive no-replace-Publikation, fsync und unabhängiges Recoverybudget bleiben.
+Guards lesen S/T/A frisch; sie prüfen sichere reguläre Ziele und Eltern,
+Link-/Hardlink-/Casefold-Aliase, neue Paketbaumdateien/-verzeichnisse,
+ID-bezogene Sidecar-/Bildkollisionen sowie Tempnamen in allen Schreibeltern.
+Unbeteiligte alte Archiv-/Bild-/Sidecarbäume werden nicht inventarisiert.
+Temps bleiben `.registration-<JournalSHA256>-<Index>.tmp` nach sortiertem
+Schreibinventar; Staging bleibt `content/.registration-journal-<SHA256>.tmp`.
+Nur vollständige gebundene Additionsbytes, bei Texttemps eigene vollständige
+Bytes oder Präfixe, sind Eigentum. Fremde/unklare Bytes erhalten Journal und Daten.
+
+Recovery klassifiziert v10 explizit, validiert beide Indexseiten und den exakten
+Delta erneut ohne RI-B-Kontext und akzeptiert je Ziel nur eigene Alt-/Neubytes
+oder erlaubte Abwesenheit. Es stellt ausschließlich die gebundene alte Seite
+wieder her, entfernt ausschließlich eigene vollständige Additionen und führt
+keine Registrierung vorwärts fort. Wiederholte Unterbrechung bleibt zulässig.
+Der vollständig alte Index ist das Rückkehrziel; alte Quellen werden dabei nicht
+nachträglich zertifiziert. v3–v9-Recovery bleibt unverändert, v1 gesperrt.
+
+### Reichweite der Aussage und Erkennungszeitpunkte
+
+P0 prüft gemeinsame Indizes, neue Produktion, Quellen und freie Ziele; P2 liest
+alle konsumierten Quellen und Ziele unter Lock frisch. P5 bestätigt neue
+Projektion, neue Paket-/Bild-/Sidecarbytes; P6 bestätigt diesen Zustand vor
+Lockentfernung. R0 prüft Journal, beide Indexseiten und eigene Zwischenstände;
+R2 bestätigt alte gebundene Indizes und entfernte eigene neue Ziele.
+**Keine dieser v10-Grenzen bestätigt Existenz, Hash oder semantische Gültigkeit
+unbeteiligter alter Definitionen, Receipts, Archive, Sidecars oder Livebilder.**
+Deren Defekt wird beim zuständigen gezielten Reader oder ausdrücklich angeforderten
+Vollaudit erkannt. `check_checkout(replay=True)` ohne Ziel und `verify-export`
+bleiben vollständige Prüfungen. Keine Aussage gegen nichtkooperierendes ABA-/
+OS-Racing. Keine rückwirkende Abschwächung älterer Journalgenerationen.

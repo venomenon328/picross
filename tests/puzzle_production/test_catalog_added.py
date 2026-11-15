@@ -20,11 +20,15 @@ class AddedTests(unittest.TestCase):
     tearDownClass = classmethod(fixtures.CatalogTests.tearDownClass.__func__)
     setUp = fixtures.CatalogTests.setUp
 
-    def unstamp(self):
+    def unstamp(self, *, legacy=False):
+        if legacy:
+            from tests.puzzle_production.catalog_fixtures import pre_metadata
+            pre_metadata(self.checkout)
         (self.checkout / added.path(self.identifier)).unlink()
         registry = load_json(self.checkout / cr.REGISTRY)
         categories = load_json(self.checkout / 'content/categories.json')
-        (self.checkout / cr.RUNTIME).write_bytes(canonical_bytes(cr.projection(registry, categories, self.checkout, version=3)) + b'\n')
+        (self.checkout / cr.RUNTIME).write_bytes(canonical_bytes(cr.projection(
+            registry, categories, self.checkout, version=3 if legacy else None)) + b'\n')
 
     def git(self, *args, date='2024-01-01T12:00:00Z'):
         env = {**os.environ, 'GIT_AUTHOR_DATE': date, 'GIT_COMMITTER_DATE': date,
@@ -94,6 +98,26 @@ class AddedTests(unittest.TestCase):
         immutable = {n: b for n, b in before.items() if n != cr.RUNTIME}
         self.assertTrue(all(after[n] == b for n, b in immutable.items()))
 
+    def test_history_accepts_current_metadata_with_deleted_origin_category(self):
+        from tools.puzzle_production import catalog_metadata as metadata
+        original = deepcopy(cr.check_checkout(self.checkout)['entries'])
+        metadata.apply(self.checkout, metadata.plan(self.checkout, [
+            {'op': 'set_metadata', 'id': self.identifier, 'name': 'Current catalog name'},
+            {'op': 'category_delete', 'id': 'voegel', 'reassign_to': 'wasserwelt'},
+        ]))
+        value, path = self.historical_plan()
+        self.assertEqual(value['entries'][0]['proposed'], '2024-01-01T12:00:00Z')
+        self.assertEqual(value['entries'][0]['kind'], 'git-snapshot')
+        history.adopt(self.checkout, path, apply=True)
+        current = cr.check_checkout(self.checkout)
+        self.assertEqual(current['entries'], original)
+        self.assertEqual(current['metadata'], [
+            {'id': self.identifier, 'name': 'Current catalog name', 'category_id': 'wasserwelt'}])
+        runtime = load_json(self.checkout / cr.RUNTIME)['entries'][0]
+        self.assertEqual(runtime['name'], 'Current catalog name')
+        self.assertEqual(runtime['category_id'], 'wasserwelt')
+        self.assertEqual(runtime['added_at'], value['entries'][0]['proposed'])
+
     def test_historical_crash_recovery_foreign_guard_and_stale_plan(self):
         _, path = self.historical_plan()
         before = snapshot(self.checkout)
@@ -110,13 +134,18 @@ class AddedTests(unittest.TestCase):
         self.assertFalse((self.checkout / added.path(self.identifier)).exists())
         self.assertFalse((self.checkout / tx.LOCK).exists())
         cr.check_checkout(self.checkout)
-        # A C rollback restores the valid v3 bytes exactly. An explicit later
-        # sync upgrades to v5 and then makes that v3-bound plan stale.
+        # Rollback restores the valid source bytes exactly. A later category
+        # display edit and its projection make the bound plan stale.
         self.assertEqual(snapshot(self.checkout), before)
+        from tools.puzzle_production.contract import write_json
+        changed = load_json(self.checkout / 'content/categories.json')
+        changed['categories'][0]['name'] = 'Changed after rollback'
+        write_json(self.checkout / 'content/categories.json', changed)
         cr.sync_runtime(self.checkout)
         with self.assertRaisesRegex(ValueError, 'sources changed'):
             history.adopt(self.checkout, path, apply=True)
-        self.assertTrue(all((self.checkout/n).read_bytes() == b for n,b in before.items() if n != cr.RUNTIME))
+        self.assertTrue(all((self.checkout/n).read_bytes() == b for n,b in before.items()
+                            if n not in (cr.RUNTIME, 'content/categories.json')))
 
     def test_retained_metadata_in_new_plan_and_repeat_planning(self):
         value, path = self.historical_plan()
@@ -154,7 +183,7 @@ class AddedTests(unittest.TestCase):
         self.assertIn('no valid visible',unknown['entries'][0]['reason'])
 
     def test_legacy_v3_journal_recovers_directly_to_v4(self):
-        self.unstamp()
+        self.unstamp(legacy=True)
         snapshot_before = tx.capture(self.checkout)
         journal = tx.prepare(self.checkout, snapshot_before, {}, operation='sync', generation='sd2')
         journal['format'] = tx.LEGACY_FORMATS['sync']

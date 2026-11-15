@@ -6,6 +6,7 @@ import platform
 import shutil
 from pathlib import Path
 import sys
+import threading
 import time
 import unittest
 from unittest.mock import patch
@@ -31,6 +32,7 @@ class MeasuredResult(unittest.TextTestResult):
 
     def startTest(self, test):
         self.started = time.perf_counter()
+        print('PRODUCTION TEST START ' + test.id(), flush=True)
         super().startTest(test)
 
     def addSuccess(self, test):
@@ -57,6 +59,7 @@ class MeasuredResult(unittest.TextTestResult):
     def stopTest(self, test):
         self.rows.append({'id': test.id(), 'status': self.outcomes.get(test.id(), 'incomplete'),
                           'seconds': time.perf_counter() - self.started})
+        print('PRODUCTION TEST END ' + json.dumps(self.rows[-1], sort_keys=True), flush=True)
         super().stopTest(test)
 
 
@@ -68,11 +71,13 @@ class MeasuredSuite(unittest.TestSuite):
 
     def measure(self, kind, name, callback, *args):
         started = time.perf_counter()
+        print('PRODUCTION FIXTURE START ' + kind + ' ' + name, flush=True)
         try:
             return callback(*args)
         finally:
             self.fixtures.append({'kind': kind, 'owner': name,
                                   'seconds': time.perf_counter() - started})
+            print('PRODUCTION FIXTURE END ' + json.dumps(self.fixtures[-1], sort_keys=True), flush=True)
 
     def _handleClassSetUp(self, test, result):
         if test.__class__ != getattr(result, '_previousTestClass', None):
@@ -140,6 +145,22 @@ def run_tests(groups, directory):
     from tools.puzzle_production import za1_fixtures
     suite_started = time.perf_counter()
     with contextlib.ExitStack() as stack:
+        # Progress counters distinguish actual repeated I/O from a silent/stuck
+        # test. This observes calls only; no validation or result is bypassed.
+        stopped = threading.Event()
+        def heartbeat():
+            while not stopped.wait(30):
+                print('PRODUCTION ACTIVITY ' + json.dumps({
+                    'seconds': round(time.perf_counter()-suite_started, 3),
+                    'calls': timer.counts.copy(),
+                    'active': [frame[0] for frame in timer.active],
+                }, sort_keys=True), flush=True)
+        worker = threading.Thread(target=heartbeat, daemon=True)
+        worker.start()
+        def finish_progress():
+            stopped.set()
+            worker.join()
+        stack.callback(finish_progress)
         for module, name in ((target_adapter, 'export'), (target_adapter, 'verify_export'),
                              (content_registry, 'registration'), (content_registry, 'check_checkout'),
                              (images, 'import_image'), (shutil, 'copytree'),

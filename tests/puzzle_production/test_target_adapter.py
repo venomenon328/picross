@@ -122,6 +122,7 @@ class TargetTests(unittest.TestCase):
         checkout = isolated_checkout(self.root / "checkout")
         registration(out, checkout, apply=True)
         original = check_checkout(checkout, replay=True)
+        original_runtime = load_json(checkout / "game/data/registry.json")
         for slot in ("con", "nul", "prn", "aux", "com1", "lpt9"):
             with self.subTest(slot=slot):
                 changed = copy.deepcopy(original)
@@ -129,8 +130,11 @@ class TargetTests(unittest.TestCase):
                 with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
                     validate(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json"))
                 write_json(checkout / "content/registry.json", changed)
-                # Keep projection consistent, so stale runtime data cannot mask B-01.
-                write_json(checkout / "game/data/registry.json", projection(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")))
+                # Forge matching runtime bytes directly: the current projector
+                # correctly refuses to construct an invalid save-slot fixture.
+                runtime = copy.deepcopy(original_runtime)
+                next(row for row in runtime["entries"] if row["id"] == changed["entries"][-1]["id"])["save_slot"] = slot
+                write_json(checkout / "game/data/registry.json", runtime)
                 before = self.snapshot(checkout)
                 for replay in (False, True):
                     with self.assertRaisesRegex(InvalidInput, "Unsafe package path"):
@@ -148,7 +152,9 @@ class TargetTests(unittest.TestCase):
         changed = json.loads(journal["new"][REGISTRY])
         changed["entries"][-1]["save_slot"] = "con"
         journal["new"][REGISTRY] = json.dumps(changed)
-        journal["new"][RUNTIME] = json.dumps(projection(changed, load_json(ROOT / "tests/puzzle_production/fixtures/catalog/categories.json")))
+        runtime = json.loads(journal["new"][RUNTIME])
+        next(row for row in runtime["entries"] if row["id"] == changed["entries"][-1]["id"])["save_slot"] = "con"
+        journal["new"][RUNTIME] = json.dumps(runtime)
         from tools.puzzle_production.catalog_publication import journal_bytes
         lock.write_bytes(journal_bytes(journal))
         before = self.snapshot(checkout)
