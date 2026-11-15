@@ -289,10 +289,10 @@ else: cr.recover(root)
         self.assertEqual(cr.check_checkout(self.root)['entries'], [])
 
     def test_current_and_legacy_dispatch_is_explicit(self):
-        for generation in range(1, 11):
+        for generation in range(1, 12):
             j = {**self.journal, 'format': 'picross-registration-journal-v' + str(generation)}
-            self.assertEqual(phased.supports(j), generation in (6, 7, 8, 9))
-        for generation in (tx.FORMATS, tx.BACKGROUND_FORMATS, tx.PE_FORMATS, tx.IMAGE_FORMATS):
+            self.assertEqual(phased.supports(j), generation in (6, 7, 8, 9, 10))
+        for generation in (tx.FORMATS, tx.BACKGROUND_FORMATS, tx.PE_FORMATS, tx.IMAGE_FORMATS, tx.DEPENDENCY_FORMATS):
             for operation, format_name in generation.items():
                 self.assertEqual(phased.supports({'format': format_name, 'operation': operation}), operation == 'registration')
 
@@ -390,7 +390,7 @@ class SourceTests(unittest.TestCase):
 
 
 class CurrentGenerationTests(unittest.TestCase):
-    """RI-V9: actual public producer on a slim v4/v8 mixed synthetic catalog."""
+    """PW-PERF-B: actual v10 producer on a slim v4/v8 mixed synthetic catalog."""
     @classmethod
     def setUpClass(cls):
         from tests.puzzle_production.background_catalog_fixtures import prepare
