@@ -1,0 +1,3 @@
+Production ID: pz-libelle
+Artwork: Native ImageGen in Codex, auf Auftrag des Repositoryeigentümers
+Usage basis: Neue KI-generierte Illustration für picross gemäß Nutzerauftrag; keine Fremdreferenzen. notice.txt dokumentiert die Nutzungsgrundlage.
