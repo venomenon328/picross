@@ -1,0 +1,3 @@
+Production ID: pz-radieschen
+Artwork: OpenAI ImageGen im beauftragten Codex-Produktionslauf
+Usage basis: Im ausdrücklichen Nutzerauftrag aus Motivtext neu generiert; keine externe Bildquelle, Referenz oder fremden Assets verwendet. Generierung ist keine menschliche Bildfreigabe und keine Exklusivitätszusage.

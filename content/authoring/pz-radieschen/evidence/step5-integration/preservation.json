@@ -1,0 +1,163 @@
+{
+  "format": "picross-production-preservation-note-v1",
+  "puzzle_id": "pz-radieschen",
+  "revision": "r05",
+  "base": "8ab41562b6bf066f8bd5433a91210c5cfd402b91",
+  "old_catalog_entries_preserved": 57,
+  "checks": [
+    "all previous content entries, current metadata and background refs preserved",
+    "all previous runtime rows unchanged",
+    "categories, method and capability byte-identical",
+    "new runtime definition/reveal/background byte-identical to verified export",
+    "original r05 ZIP byte-identical to human-selected source",
+    "active 0.4 L2 and selected RAD-HG-A-b01; no open registration journal"
+  ],
+  "runtime_entry": {
+    "added_at": "2026-11-15T19:25:54Z",
+    "background": {
+      "asset": {
+        "bytes": 361385,
+        "file": "art/backgrounds/pz-radieschen.png",
+        "sha256": "eed3a1e4fef0b28e793107b819ca8b926aef4e4cf1997227136de6a06338414c"
+      },
+      "image_revision": 1,
+      "status": "selected"
+    },
+    "category_id": "gemuese-pilze-kraeuter",
+    "definition": "data/content/radieschen_001.json",
+    "difficulty": {
+      "assessment_type": "instrumented",
+      "confidence": "medium",
+      "level": "L2",
+      "method": "picross-difficulty-0.4",
+      "plausible_range": [
+        "L2",
+        "L2"
+      ],
+      "r4_required": false
+    },
+    "id": "pz-radieschen",
+    "key": "pz-radieschen",
+    "name": "Radieschen",
+    "reveal": "art/content/radieschen_001.png",
+    "save_slot": "radieschen_001",
+    "visible": true
+  },
+  "hashes": {
+    "game/data/content/radieschen_001.json": "dec54b05fea3314f7ed9786cb065c977e0d4f87e66f14ed6ad12734ea762bf09",
+    "game/art/content/radieschen_001.png": "f3c460b6e585ae1ee9a56957511c88b22679d1d8281a0047898fe4592794e3f2",
+    "game/art/backgrounds/pz-radieschen.png": "eed3a1e4fef0b28e793107b819ca8b926aef4e4cf1997227136de6a06338414c"
+  },
+  "operations": {
+    "export": {
+      "outcome": "completed",
+      "elapsed_seconds": 10.057072400013567,
+      "journal_state": {
+        "journal": "not-inspected",
+        "lock": "not-inspected"
+      },
+      "counters": {
+        "bytes_hashed": 129450133,
+        "bytes_read": 174238400,
+        "candidate_proof_check_attempts": 2,
+        "completed_steps": 8,
+        "export_validation_attempts": 1,
+        "exports": 1,
+        "full_candidate_proof_checks": 2,
+        "full_export_validations": 1,
+        "full_input_inspections": 2,
+        "full_method_validations": 1,
+        "hash_calls": 95,
+        "input_inspection_attempts": 2,
+        "json_reuses": 1,
+        "method_byte_revalidations": 1,
+        "method_validations": 2,
+        "path_checks": 2151,
+        "path_components": 17550,
+        "safe_reads": 395,
+        "windows_attribute_checks": 17550
+      }
+    },
+    "plan": {
+      "outcome": "completed",
+      "elapsed_seconds": 18.72071340000548,
+      "journal_state": {
+        "journal": "not-inspected",
+        "lock": "not-inspected"
+      },
+      "counters": {
+        "bytes_hashed": 183088262,
+        "bytes_read": 270546441,
+        "candidate_proof_check_attempts": 2,
+        "completed_steps": 36,
+        "export_validation_attempts": 2,
+        "full_candidate_proof_checks": 2,
+        "full_export_validations": 2,
+        "full_input_inspections": 2,
+        "full_method_validations": 5,
+        "hash_calls": 157,
+        "input_inspection_attempts": 2,
+        "method_byte_revalidations": 3,
+        "method_validations": 27,
+        "method_view_reuses": 3,
+        "path_checks": 2850,
+        "path_components": 24205,
+        "registration_index_snapshots": 1,
+        "registration_projections": 1,
+        "safe_reads": 909,
+        "windows_attribute_checks": 24205
+      }
+    },
+    "register": {
+      "outcome": "completed",
+      "elapsed_seconds": 45.58333359999233,
+      "journal_state": {
+        "journal": "removed",
+        "lock": "durably-removed"
+      },
+      "counters": {
+        "bytes_hashed": 702477183,
+        "bytes_read": 819144796,
+        "candidate_proof_check_attempts": 2,
+        "catalog_boundaries": 5,
+        "catalog_boundary_attempts": 5,
+        "completed_steps": 211,
+        "directory_flushes": 89,
+        "export_validation_attempts": 2,
+        "file_fsyncs": 43,
+        "full_candidate_proof_checks": 2,
+        "full_export_validations": 2,
+        "full_input_inspections": 2,
+        "full_method_validations": 7,
+        "guards": 5,
+        "hash_calls": 1397,
+        "input_inspection_attempts": 2,
+        "journal_validations": 1,
+        "method_byte_revalidations": 5,
+        "method_validations": 61,
+        "method_view_reuses": 5,
+        "path_checks": 9232,
+        "path_components": 84097,
+        "phase_boundaries": 101,
+        "plans": 1,
+        "published_bytes": 19136304,
+        "published_files": 25,
+        "registration_index_snapshots": 1,
+        "registration_projections": 1,
+        "safe_reads": 2815,
+        "target_guards": 50,
+        "verified_package_check_attempts": 2,
+        "verified_package_reuses": 2,
+        "windows_attribute_checks": 84097
+      }
+    }
+  },
+  "export_environment_issue": {
+    "failed_attempts": 2,
+    "failure": "native atomic rename: Windows Access denied before catalog mutation; owned stage removed",
+    "remedy": "read-only audit hook, <=5 s bounded Restart Manager observation before one unchanged native rename; no tool, guard, hash, permission or source changes",
+    "release_observed_after_seconds": 2.811671200004639,
+    "process": "Visual Studio Code",
+    "historical_diagnostic_source": "8ab41562b6bf066f8bd5433a91210c5cfd402b91:content/authoring/pz-fliegenpilz/evidence/r07-step5-registered-20261115/release-wait.json"
+  }
+}
