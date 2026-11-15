@@ -1,0 +1,1 @@
+Libelle · Schritt 3, Kategorie insekten-kleine-tiere. Tatsächlich freigegebene M-r02, Korridor unverändert in parameters.json. Angebot LIB-R-r03:20×15 mono/genau ink, L4 nach0.4. Originalbriefing brief-r01.md; Quellen, Befunde und nächste menschliche Rasterwahl in report.md. Hintergrund/Rasterwahl/Endabnahme bleiben offen.
