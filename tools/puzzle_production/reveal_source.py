@@ -22,6 +22,7 @@ IMAGE_LIMIT = 32 * 1024 * 1024
 RECEIPT = "picross-integrated-content-v1"
 BACKGROUND_RECEIPT = "picross-integrated-content-v2"
 EDITOR_RECEIPT = "picross-integrated-content-v3"
+CURRENT_RECEIPT = "picross-integrated-content-v4"
 
 
 def path(identifier):
@@ -114,6 +115,9 @@ def receipt(value, entry, notice_hash, *, background=False, editor=False):
     AT-v1 histories keep their original receipt-v1 contract. Only current
     package readers explicitly admit the independently bound background form.
     """
+    if isinstance(value,dict) and value.get("format") == CURRENT_RECEIPT and background and editor:
+        from .retirement_receipt import validate as validate_receipt
+        return validate_receipt(value,entry,notice_hash)
     is_background = isinstance(value, dict) and value.get("format") == BACKGROUND_RECEIPT
     is_editor = isinstance(value, dict) and value.get("format") == EDITOR_RECEIPT
     exact_keys(value, {"format", "entry", "integrated_commit", "notice_sha256"} |
@@ -258,9 +262,9 @@ def package(root, entry, *, background_snapshot=None, historical=False):
         name = p.relative_to(root).as_posix()
         p = io.safe(root, name)
         if p.is_file(): files[name.removeprefix(prefix + "/")] = p
-    if manifest.get("format") in (RECEIPT, BACKGROUND_RECEIPT, EDITOR_RECEIPT):
+    if manifest.get("format") in (RECEIPT, BACKGROUND_RECEIPT, EDITOR_RECEIPT, CURRENT_RECEIPT):
         exact_keys(manifest, {"format", "entry", "integrated_commit", "notice_sha256"} |
-                   ({"background"} if manifest["format"] in (BACKGROUND_RECEIPT, EDITOR_RECEIPT) else set()))
+                   ({"background"} if manifest["format"] in (BACKGROUND_RECEIPT, EDITOR_RECEIPT) else {"provenance"} if manifest["format"] == CURRENT_RECEIPT else set()))
         require(isinstance(manifest["entry"], dict) and isinstance(manifest["entry"].get("production"), dict) and
                 isinstance(manifest["entry"]["production"].get("package_sha256"), str), "Invalid receipt entry")
         require(set(files) == {"manifest.json"}, "Integrated package contains unbound files")
@@ -276,11 +280,15 @@ def package(root, entry, *, background_snapshot=None, historical=False):
         source = backgrounds._source(root, registry, entry, texts) if declared else None
         editor_background = source is not None and source["format"] == backgrounds.EDITOR_FORMAT
         from .editor_change import slim, validate_source
+        if manifest["format"] == CURRENT_RECEIPT:
+            current_reveal = load(root,entry,categories.validate(io.json_bytes(io.read(root, categories.PATH, categories.MAX_BYTES), categories.MAX_BYTES)))
+            require(slim(source) or slim(current_reveal), "Receipt v4 requires current editor authority")
         if slim(source):
             validate_source(source, entry)
+            require(source["binding"]["entry"]["production"]["package_sha256"] in (original["production"]["package_sha256"], entry["production"]["package_sha256"]), "Current background export anchor differs")
         elif editor_background:
             backgrounds.check_editor_receipt(source, manifest, original)
-        else:
+        elif manifest["format"] != CURRENT_RECEIPT:
             require(declared == (manifest["format"] == BACKGROUND_RECEIPT) and manifest["format"] != EDITOR_RECEIPT,
                     "Receipt generation differs from registered background authority")
         if manifest["format"] == BACKGROUND_RECEIPT and not editor_background and not slim(source):
@@ -303,7 +311,6 @@ def package(root, entry, *, background_snapshot=None, historical=False):
         require(io.file_hash(root, prefix + "/" + name, io.export_limit(base, name)) == sha(checksum),
                 "Altered export file: " + name)
     if not legacy:
-        from . import categories
         reference = exact_keys(manifest["categories"], {"file", "sha256"})
         require(reference["file"] == "categories.json" and reference["sha256"] == manifest["files"].get("categories.json"),
                 "Export categories snapshot binding differs")
@@ -381,6 +388,7 @@ def resolve(root, entry, catalog, *, record=None):
     from .editor_change import slim, validate_source
     if slim(record):
         validate_source(record, entry)
+        require(record["binding"]["entry"]["production"]["package_sha256"] in (original["production"]["package_sha256"], entry["production"]["package_sha256"]), "Current reveal export anchor differs")
         require(record["binding"]["identity"]["definition"] == bg.ref("game/"+entry["definition"], definition), "Current reveal definition changed")
         asset = record["current"]["asset"]
         bg._bound(asset, io.read(root, asset["file"], IMAGE_LIMIT), limit=IMAGE_LIMIT)

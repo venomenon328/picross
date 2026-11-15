@@ -1,23 +1,23 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/653",
-  "package": "PW-PERF-D",
+  "package": "PW-PERF-E",
   "modules": [
-    "tools",
+    "production.catalog",
     "production.adapter"
   ],
-  "purpose": "PW-PERF-D einschließlich B01: generationsspezifische Schritt-3-Palettenausnahme gemäß Review 5910720341. Bestehende Snapshotconsumer und Fachmodule des gesamten PR bleiben ausgewählt.",
-  "omitted": "Keine Solver-/Bildalgorithmus-/Katalog-/Spiel-/Releaseänderung. Keine echte Produktion, Vollkatalogprüfung oder Chromium. Palettenänderung nur generationsgebundener Normanker, durch synthetischen Adapterpfad geprüft.",
+  "purpose": "PW-PERF-E K01–K08: ausgewählte Retirementreader, aktuelle Quellen und Receipt v4; production.catalog für Lifecycle/Guards, production.adapter für tatsächlich geänderte gemeinsame Receipt-/CLI-Consumer. Schlanker Kern und regulärer Windowsbau.",
+  "omitted": "Keine echte Rätselbereinigung, Solver-/Bildproduktion, Editor-UX, Spiel- oder Saveänderung. Daher keine tools-, production.solver/images-, native-, delivery- oder Chromium-Suite. Gemeinsame Indizes werden geprüft; unbeteiligte Altdateien sind keine Retirementabhängigkeit.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "path": "tests/puzzle_production/test_retirement_current.py",
       "disposition": "change-scoped",
-      "reason": "Kleine synthetische Builder-/Reader-/Finalizer-/Exportregression der neuen Quellenmenge; fehlende/manipulierte Quellen, Revision/Commit/Form und unveränderter historischer Einzeldateisnapshot."
+      "reason": "Kleine synthetische T01-Lifecycle-, Quellen-/Rechte-, Main-, Fremddaten-, Teilfehler- und Nullread-Prüfungen."
     },
     {
-      "path": "docs/ai-workflows/PUZZLE_AUTHORING_STEP_3.md",
+      "path": "tools/puzzle_production/integrated_content.py",
       "disposition": "temporary",
-      "reason": "B01: einmaliger synthetischer Negativpalettenfall für Handoff v5: Ausnahme v2 mit vollständigem rulebook-v2 zulässig, v1 und manipulierte Bindungen unzulässig. Quellenprobe am finalen Head aktualisieren; keine neue Dauersuite oder Galerie. Originale befristet bis A01/2026-11-22."
+      "reason": "T02 identischer gültiger synthetischer Vorher/Nachherfall, reale Byte-/Hash-/Zeitmessung. Originale auf separatem Reviewref bis A01, spätestens 2026-11-22; keine Bestandsbereinigung."
     }
   ],
   "core_change": null,

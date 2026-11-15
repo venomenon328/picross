@@ -1847,3 +1847,85 @@ inventarisierten Regelquellen statt einer einzelnen Datei, ohne alte Originale
 umzubinden. Palettenausnahme v2 bindet das vollständige neue Regelobjekt; v1 bleibt
 alten Handoffs vorbehalten. Alle übrigen Ausnahmefelder, Negativbefunde, echten
 Endfreigaben und Inhaltsgates bleiben unverändert.
+
+
+## PW-PERF-E · Ausgewählter Produktionsabschluss und Receipt v4
+
+Vertrag vor Code, 15.11.2026. Maßgeblich ist die
+[Paketentscheidung](https://github.com/venomenon328/picross/issues/653#issuecomment-6894952911).
+Dieser Werkzeugweg führt keine reale Bestandsbereinigung aus.
+
+### Geschlossene Form und Herkunft
+
+`picross-integrated-content-v4` enthält exakt
+`format,entry,integrated_commit,notice_sha256,provenance`.
+`entry` ist der ursprüngliche vollständige Exportentry, einschließlich Exporthash O;
+die aktuelle Registry bindet ausschließlich den Hash R der tatsächlichen Receiptbytes.
+`integrated_commit` ist der volle Main-Integrationscommit des ursprünglichen Exports.
+`provenance` enthält exakt `source_commit,main_commit,package_tree,export_manifest,notice,background`:
+
+- `source_commit`: voller ursprünglicher registrierter Git-Quellcommit. Standard ist
+  integrated_commit; ein abweichender Sonderimport wird ausdrücklich je ID mit
+  `--source-commit ID SHA` angegeben. Bei jeder neuen v4-Kompaktierung müssen der dortige Entry und Paket-Gitbaum
+  exakt zum importierten Export passen; der dort indexierte Authoringrecord muss
+  dieselbe Revision als registered ohne Blocker führen, auch wenn source_commit und
+  integrated_commit gleich sind. Fehlende Quellen sperren.
+- `main_commit`: voller geprüfter origin/main-Stand des Retirementaufrufs. Beide
+  Maincommits müssen Vorfahren von HEAD sein; integrated_commit zusätzlich von
+  origin/main. source_commit darf der ursprüngliche, nicht gemergte Produktionshead
+  eines expliziten Imports sein. Die drei Begriffe sind keine austauschbaren Belege.
+- `package_tree`: ursprüngliche Git-Tree-SHA des vollständigen Exportverzeichnisses,
+  identisch an source_commit und integrated_commit. Kein aktueller Gesamtbaumhash.
+- `export_manifest`: Ref mit exakt `file,sha256,bytes`, kanonischer Paketmanifestpfad,
+  SHA-256 O und ursprünglicher Bytezahl (1 bis 8 MiB).
+- `notice`: unveränderte ursprüngliche Revealnotice, exakt `text,sha256` nach AT;
+  ihr Hash ist notice_sha256. Fehlende Nutzungsangaben werden nicht ergänzt.
+- `background`: bei Export v6 die aus den tatsächlich gebundenen Originalen gelesene
+  vollständige geschlossene Backgroundsource v1, sonst null. Sie erhält ursprüngliche
+  Approval, Entscheidung, Herkunft/Rechte und Ableitungsbindung. Fehlende oder offene
+  Rechte sperren. Kein rekonstruierter initial-Teil einer Source v6.
+
+V4 wird ausschließlich für neue Abschlüsse mit aktueller Backgroundsource v6
+oder Revealsource v4 ohne deklarierte Hintergrundquelle erzeugt. Bei älteren
+vollständigen Hintergrundquellen bleiben die passenden v2/v3-Abschlussformen
+maßgeblich, auch zusammen mit Reveal v4. Bestehende Receipts v1/v2/v3 bleiben unverändert und
+behalten ihre geschlossenen Formen. V4 ist weder Export noch Zertifikat und
+behauptet keine neue kreative Freigabe oder nachträgliche Completion.
+Der tatsächliche Import #622 ist integrated_commit, sein jeweiliger alter
+Produktionshead source_commit; ein späterer Retirementstand ist main_commit.
+Es gibt keine fest eingebaute Liste erlaubter Rätsel oder Toolhashes.
+
+### Ausgewählte Abhängigkeiten und Grenzen
+
+Gemeinsame Registry/Runtime/Kategorien/Methoden-/Capability- und Authoringindizes
+werden strukturell auf Identität, Slots, Pfade, Kollisionen und Projektion geprüft.
+Nur ausdrücklich ausgewählte IDs liefern Dateiabhängigkeiten: aktives Paket,
+Definition, Rating/Added und referenzierte Belege, Reveal-/Backgroundquellen,
+aktuelle Assets/Notices, eigene Authoringrevisionen. Keine Vollkatalog-Capture,
+Inventur fremder Paket-/Bild-/Sidecarbäume oder Öffnung fremder Inhalte.
+Aktuelle v6-Quellen prüfen binding/current und tatsächliche selected/none/standard-
+Bytes; Reveal v4 prüft PNG oder SVG. Aktive Editorrasterpakete v1/v2 bleiben samt
+previous/definition/quality/files bytegleich erhalten; kein Proofreplay.
+
+Alle ausgewählten IDs werden vor der ersten Mutation gegen tatsächliche Mainbytes,
+Paketbaum, Index, vollständige Originaldateimengen, Pfadsicherheit und Staging geprüft.
+Unbekannte/unindexierte/offene Rasterarbeit und Teilzustände sperren; getrennte
+indexierte Hintergrundjobs bleiben erhalten. Ein frischer Aufruf liest jedes zu
+entfernende Original höchstens einmal vollständig, prüft seinen SHA-256 und Gitblob;
+innerhalb dieses Aufrufs dürfen identische unveränderliche Bytes wiederverwendet
+werden. Frische sichere Pfad-/Dateiidentitäten einschließlich Größe, mtime, ctime,
+unter Windows echte NTFS-ChangeTime statt Erstellungszeit, Inode und Linkzahl sowie Namensräume werden vor Mutation erneut geprüft. Kein
+persistenter Prüfcache und keine Garantie gegen nichtkooperierendes OS-/ABA-Racing.
+ZIPs werden nur für konkret benötigte Originalrechte/Backgroundmetadaten geöffnet;
+kein Solver-, Produktions-, Bild- oder Freigabereplay.
+
+Publikation ersetzt ausschließlich ausgewählte Manifeste, deren Registryhashes
+und zugehörige Authoringindexzeilen; alle aktiven Quellen/Notices, Metadaten,
+Runtime, Rating/Added, Identitäten und Save-Slots bleiben bytegleich. Einzeldateien
+werden atomar ersetzt, der gesamte Mehrdateivorgang ist keine OS-Transaktion.
+Teilfehlermeldungen nennen tatsächliche Reste; keine Rekonstruktion gelöschter ZIPs
+oder automatische Wiederholung. Abschließende gezielte Readerprüfung bestätigt die
+neuen Bytes und Projektion. Ein vollständig gültiger vorhandener Receipt ist nach
+frischer Prüfung ein Byte-/mtime-No-op ohne historischen Archivzugriff.
+Unbeteiligte Defekte werden erst von ihrem gezielten Reader oder explizitem
+Gesamtaudit erkannt; dieser Abschluss zertifiziert sie nicht.
