@@ -572,7 +572,15 @@ def build(export_dir, manifest, report, entry):
     approval or tool identity. Full input/stage replay remains the caller's gate.
     """
     try:
-        return _build(export_dir, manifest, entry)
+        scope = io._retirement_reads.get()
+        if scope is None: return _build(export_dir, manifest, entry)
+        key = (str(export_dir), io.checksum(canonical_bytes(manifest)), io.checksum(canonical_bytes(entry)))
+        if scope is not None and key in scope.backgrounds:
+            scope.recheck()
+            return deepcopy(scope.backgrounds[key])
+        value = _build(export_dir, manifest, entry)
+        if scope is not None: scope.backgrounds[key] = deepcopy(value)
+        return value
     except (bc.BackgroundError, zipfile.BadZipFile) as exc:
         raise InvalidInput("Invalid background production metadata: " + str(exc)) from exc
 
