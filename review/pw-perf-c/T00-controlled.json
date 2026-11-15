@@ -1,0 +1,3337 @@
+{
+  "tag": "T00-controlled",
+  "source_head": "5351b14439212e4927d83f0b1f8fc145ca5b7719",
+  "source_diff": " tools/puzzle_production/background_assets.py   | 96 +++++++++++++++++++++-----\n tools/puzzle_production/background_contract.py | 11 ++-\n tools/puzzle_production/background_package.py  |  2 +-\n tools/puzzle_production/catalog_background.py  | 21 ++++--\n tools/puzzle_production/image_normalization.py |  3 +\n 5 files changed, 106 insertions(+), 27 deletions(-)\n",
+  "modules": {
+    "tools\\production_workspace\\__init__.py": "14fe28e02e042b1c91905f800a3878bfae0a5644742c6de04e23f8fd81379ca4",
+    "tools\\production_workspace\\__main__.py": "8bc89e4f9920b7e8751682b11f61e6da1deb087f24bd77038ab208707d445b6f",
+    "tools\\production_workspace\\app_updates.py": "33fee0efbb5816f89d3514711baa89e3324a345d4101ad368d68a47d544700fd",
+    "tools\\production_workspace\\build_installer.py": "69d3f86a4279e76bd64e9dfc138ca1d3e9026e9615a171024db4dca16e01ab05",
+    "tools\\production_workspace\\build_launcher.py": "2ddd9612a099d869c9f122113a912166dbd815601b0214629586bcbda8d38822",
+    "tools\\production_workspace\\build_windows.py": "cf52026c6dcedd612850198e2bac748efdafa54d8313075da07ff6022d50dcdf",
+    "tools\\production_workspace\\current_view.py": "cd2b5bdab6390f4174a877846f1163cc73b7cf9b1d17b7df979a026c2d11935e",
+    "tools\\production_workspace\\deliveries.py": "ef17b1b73fe9d4e3231c3a51fe28e0f4997d8d28f46c8eaa21b013077521b675",
+    "tools\\production_workspace\\desktop.py": "fa119e5a89f6492c1c1c53d0d820a1d0d7e68b59bb3040552eaf48974df120a5",
+    "tools\\production_workspace\\desktop_entry.py": "e1e56dfdeac0585f4224dab8a24a651ef867531933fdcd6f1dc1993d879a4d55",
+    "tools\\production_workspace\\helper_diagnostic.py": "65057bddfc743b9bde36aecdfe22f5b9b049426c0b7fa5944129593c418167d5",
+    "tools\\production_workspace\\install_interlock.py": "325c582e1ac5b18459a0cf80b86bfedf8bb7be70ca760f188f183ec460a16b01",
+    "tools\\production_workspace\\instance.py": "1c55d2ad5ebfb95f8f829c3cf7c68631b40f7484cd3a5c43c7ca69db8fa786d2",
+    "tools\\production_workspace\\launcher_bootstrap.py": "e5c3f5438cb5f73bb38c14d4e317cee27292f228de328021d636ae0295e2ba8c",
+    "tools\\production_workspace\\motifs.py": "6a81b1c9a0c000a2394c6968216a74fac838439cd4967360965d224e9015fe3f",
+    "tools\\production_workspace\\payload.py": "1f3a3c982342c81afe382a76268bc4f7db39531bd59fc242bf3e235a9845043f",
+    "tools\\production_workspace\\presentation.py": "c539d9b9dac6a6dbc5a8111d0ff8d7c269761fab1c2c880920c126d0df658aa1",
+    "tools\\production_workspace\\processes.py": "439e74cbd85a03d9fecbf65b19a092afbf09c17f7b6a0c7f9ed7cd832e179cc9",
+    "tools\\production_workspace\\projector.py": "dd2c060cb2d926dc0e19ef113b5e0ee455257022f7682ebae08d24f8fdaea481",
+    "tools\\production_workspace\\release.py": "1832dff9a93db8e95886e657a11e3f748fab8cdb12da35f371ad19c94b445f3e",
+    "tools\\production_workspace\\release_channel.py": "8672256c0103d77d23e070ee9de4395c36ae61b967c0a22ad5153288fb99f2ec",
+    "tools\\production_workspace\\release_manifest.py": "c674916d361fc57e321878452033ff03adf96b46a89770fd80ce53c42a5e37c6",
+    "tools\\production_workspace\\repository.py": "d35090d74477b046047ece064f18cd2ec8c2c4bb49a76bfed60dd1e3a3104d3d",
+    "tools\\production_workspace\\runtime.py": "95027234353b1167ad9a48227cd4d9e5f8c8bc3d7567a88fcc7e724d0f1e4bfc",
+    "tools\\production_workspace\\server.py": "b25a7a040632631903566dae48cf667c3c4b52538c13b36463079bbd791029e0",
+    "tools\\production_workspace\\smoke_installer.py": "9c98f831eef22216d69729947a13ffd81eb34409db82bc99788744fc7ee2b838",
+    "tools\\production_workspace\\smoke_windows.py": "c74ca9ac7614023690cc555bab369e9c73206cddcb6026e37def8e82b2547534",
+    "tools\\production_workspace\\sources.py": "38b909b21a93873f8b3a546933e0c73b4c2711e0d82244dfc003a74468e22603",
+    "tools\\production_workspace\\update_client.py": "d61bd1384f7c6eef6400ca6e0620ee219943c2b951a62ea8f3440dfbd791a4b0",
+    "tools\\production_workspace\\update_diagnostic.py": "728c09dd8dd52f17120cad357641f4e2289df575356c4fb690a889508ea1f72f",
+    "tools\\production_workspace\\update_storage.py": "7cd1ffb758fa33f469363b107a8c4e469d0fd6e5a86738d6ee7c16ea4ef5044d",
+    "tools\\production_workspace\\update_verifier.py": "a8819b125e5e705950528c3d7bb5a0d00905446729c40fd6eb268039469c2045",
+    "tools\\production_workspace\\update_windows.py": "c21f4e50b75feccc0d6c1b3bd0eba21d3d0f66ee012c6e450215fb063087d127",
+    "tools\\production_workspace\\verify_installer.py": "5fc516f54f9866195bbb98a34e64581e9fcd775d954839f35dc68145e1a3b84e",
+    "tools\\puzzle_production\\__init__.py": "dd0e71d7ffc7b40e412dacfe08e854870229155b1fb023f68f2753687634d882",
+    "tools\\puzzle_production\\__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+    "tools\\puzzle_production\\accepted_raster.py": "003491ff41543f3f8b52ff789fd239542eb868cb1bd35eb80f71227361f5104f",
+    "tools\\puzzle_production\\analysis.py": "fbfaeaa8f3e9b85d4ee50c30236072a80f056bca7b9809cc92a8c607bfe23394",
+    "tools\\puzzle_production\\analysis_cli.py": "ffebfee44638706a406239883a5e25d5b18e9f6756900502eb24af1f97ef9ad4",
+    "tools\\puzzle_production\\analysis_contract.py": "f78e2da6396bf19f2faa18975d9f8109a9994b7eeaa0d515ef8e980fc2d6f795",
+    "tools\\puzzle_production\\analysis_io.py": "c4d24577262b3a2065c568f92150c06546d7fb4e25d45815d7917243516e3270",
+    "tools\\puzzle_production\\analysis_rules.py": "a0b362e760630721d53c0092ab319ff0d3f2f3238f3e85cad1348d110df1939a",
+    "tools\\puzzle_production\\analysis_verifier.py": "39386d4a6e599cf7e65c34924be75b97c0688b758b7354c0df3da4f16e4bcf70",
+    "tools\\puzzle_production\\authoring_build_contract.py": "b9cc732610e7d84d255d2c6f92c1291c3492379792180c84314542dfee334d0a",
+    "tools\\puzzle_production\\authoring_builder.py": "bee9103068302df199534947d5f3b6066341a91836814db6dd7db71793a8f8e9",
+    "tools\\puzzle_production\\authoring_finalization.py": "eafab9ed81f8f37991941d333b49d5ab1e616feb95a6f442a136a99ed74a2d94",
+    "tools\\puzzle_production\\authoring_package.py": "f277a4a7220f42cb564ffed5bda3ccc6ced62e23d9c3dc0023443ed8805f4a0f",
+    "tools\\puzzle_production\\authoring_staging.py": "bc266d65d4b17d929c0fac9ba14b1948c63d2d352c19eace096f642e0ef29c0e",
+    "tools\\puzzle_production\\authoring_workflow.py": "94c2f54a44d2f04d810b0688e3f050319e1c9e2ce47dabc5cb98b2b9a2eb3031",
+    "tools\\puzzle_production\\background_assets.py": "e57211a1b515bb898d9dcbf549da3925a38d08d8164f52b8d84f8cb6d26ba4c9",
+    "tools\\puzzle_production\\background_contract.py": "4284d21f3e4e136cb56f866a657e7d7a23353114b901ec33a9d2e33ea0593912",
+    "tools\\puzzle_production\\background_export.py": "15fe0a01ba5fb831207399e9855586806e57d9e8a0c20d9ab3ce2a255be447c7",
+    "tools\\puzzle_production\\background_io.py": "0600d3823ebdfee87296ae9ea45b7116b38392c00387a85952001493af7f9829",
+    "tools\\puzzle_production\\background_package.py": "a71e7d91cd312eda23da1c0af4845f4fab69a2af2127d6cbdcffcf477230abd5",
+    "tools\\puzzle_production\\background_rebind.py": "b1f83b8d3ee277cd18626002af75154d89984aa8bcf64fab5838225459748723",
+    "tools\\puzzle_production\\background_render.py": "1c3fa91f688a26834e5c7dfebc6c6941f773dcf73b8352cbbf2dd1e3088611fc",
+    "tools\\puzzle_production\\background_request.py": "6e4b2c7c8f108bed237f22e76b6924031ed5ac62172e53682889583e137a68e6",
+    "tools\\puzzle_production\\background_retirement.py": "04a6b57e587af8e0fa81ec6cb058371c99666c1e0a356e56baff9f097ca3bea9",
+    "tools\\puzzle_production\\batch_cli.py": "38b2499ffa239505bc21f3c85ef0c9f9e32a919694333b7383aeffbf0a968771",
+    "tools\\puzzle_production\\batch_contract.py": "a90385fb54c80580f6545f9c24e6a32d942059df7fd32e1bc1efba718f12aa3b",
+    "tools\\puzzle_production\\batch_io.py": "8022438ae272c93c949f904fac296c7f63b804e51e3e406df6bbd0d8eca517ca",
+    "tools\\puzzle_production\\batch_operations.py": "c68ab415d088e33cb9857433b85772c0a8b745cfd2e5eac6bdc7fbea740e5f4d",
+    "tools\\puzzle_production\\batch_runner.py": "07cf56b8e906d38fffb1cbdd67e3e278f9aaf8268cca9a34455ec3c707e58241",
+    "tools\\puzzle_production\\batch_worker.py": "d7e9bbac0391aed14d7da1def5596895bd75b450146feeb5a60ce47cdd24edcb",
+    "tools\\puzzle_production\\benchmark.py": "6e19a325242c0ed3ef42ae2d282bfb13b1e1402b46ea297b8fefe8612ebc423e",
+    "tools\\puzzle_production\\catalog_added.py": "b043429f52b9a223c6ca112bc25e47e59e64487272c77a67c9d98bd8eef25366",
+    "tools\\puzzle_production\\catalog_added_history.py": "2d18c76f1056c48dfa43b6dde826ff380d971e49a2cf4879594f6c2a05167721",
+    "tools\\puzzle_production\\catalog_analysis.py": "fc14788a4fd0e7ea8353464b8e234030328a7d044b967b649ec964115754981d",
+    "tools\\puzzle_production\\catalog_background.py": "1b7aa9bd70bb0db95c90e325bc1c60d490644c783d2cab0a33d485c85c4ecd1b",
+    "tools\\puzzle_production\\catalog_background_change.py": "521a82c9ee6d647dd31f37ebea41b05137e0a0228bb5526f8fdfb2f3d6001fe6",
+    "tools\\puzzle_production\\catalog_difficulty.py": "32dcc74843bfe37d748a3387197680d4e00d028dd93f342132d81af0a90e6533",
+    "tools\\puzzle_production\\catalog_images.py": "d21647ff7d1cfa7196e18051f6c4bd0d4981bb5ed733a7ec7dccbf7097452340",
+    "tools\\puzzle_production\\catalog_integration.py": "007bb6ac9d05c38fa20a339b5749f970c8cdf7766bfeebd71d6dd6aa0dd1c899",
+    "tools\\puzzle_production\\catalog_io.py": "becf631860da736a693b3afb5f20d95727ef9c8e7974547dd51f9920804cc7a0",
+    "tools\\puzzle_production\\catalog_metadata.py": "9d0f553e30b4e558735ec6df159c68ecca310793ba4d02284ed3d4cb5485149f",
+    "tools\\puzzle_production\\catalog_method.py": "630f9ef9cc6005cd6531058b9acc6b0071ca7f3f1a5e3bc317061ab63ee1efb0",
+    "tools\\puzzle_production\\catalog_publication.py": "1c90162f2a3240e1156dee01e70d9eebe8394394568b8b9d6a4c4a08cee2877c",
+    "tools\\puzzle_production\\catalog_raster.py": "4a36ebcaa3cff4f7bba155d2978235c4337478826fd158a4154d2edde50f6df3",
+    "tools\\puzzle_production\\catalog_rating.py": "98bbef86c30753f3c7f14f272ec3793acdb2444c6da48c790ed9dc131617a1a6",
+    "tools\\puzzle_production\\catalog_reveal.py": "4da817fbb21c5ca42413ab26bdfcc466135be761346ad9a00bbe74989e78c5ed",
+    "tools\\puzzle_production\\catalog_transaction.py": "a7a969b0dad42e276f555c06098b118311c0b5ff26b4de6e813c01e2765307ff",
+    "tools\\puzzle_production\\categories.py": "3790a5bce1b6bebc238e23db8e35e79c887261c57c3e41b78d190694a91758a5",
+    "tools\\puzzle_production\\certification.py": "c570827bc7273dc41133c01a21a4d61291cda68257c0aa83f0c86556599cf1dd",
+    "tools\\puzzle_production\\cli.py": "340e97ea132df8e6921a7a6a0399c5cbe109cafbac0a820a66d3b84dad46f814",
+    "tools\\puzzle_production\\color_derivation.py": "0eac2966957191ad7ed89c3840a01728b3047486ff4f6c26a2b2fef511855c22",
+    "tools\\puzzle_production\\content_registry.py": "456f10514454e925a7fc8f3b066e222e21cf12ebed94580343e9d932c7841a21",
+    "tools\\puzzle_production\\content_update.py": "eceea3f6349e99d5d90e69b4a7ee71247b0d1588ef6ea4c4edb34b49de4eaffb",
+    "tools\\puzzle_production\\contract.py": "5e9459d65cffab98b63435b51ed4b704d9a55596accd595bf0be1edf553e51f8",
+    "tools\\puzzle_production\\diagnosis.py": "8e42d59622c7dea817d3a5ddc324a7592271eef8f0214ff7198b762cdf3378b6",
+    "tools\\puzzle_production\\diagnosis_cli.py": "60ba292c3ea70ebf7c181a1d2b41be6d522961b5600040d0587a64bf471b3510",
+    "tools\\puzzle_production\\diagnosis_verifier.py": "f3f86b140b727aca29e4b1bf527b30c1bc71ddd9803bed54f72101f32cc4140b",
+    "tools\\puzzle_production\\difficulty_identity.py": "e54ff7a845d23f714063c76f4bdd97c058c924629360011c84a5671f5b32e2de",
+    "tools\\puzzle_production\\difficulty_rating.py": "d423d86e005f463ce0cc911034b0ccbfabc4a4c2633b50a95d71ef3ecf040fba",
+    "tools\\puzzle_production\\editor_change.py": "c9e370a7761108ad72b18b2791bed61058aca9671bced4ac8ccff9c99cdf7b39",
+    "tools\\puzzle_production\\editor_cli.py": "9e587f53586c1fde0e12a105c680bff3d1c09e80d5687d37ac7bfa5f289e6540",
+    "tools\\puzzle_production\\editor_image_input.py": "58bcba169b34a48dc8beeda84b35c17b15be4e1e9c12e015b817ed2c62e79383",
+    "tools\\puzzle_production\\editor_image_source.py": "f0570886f63c68a21c1f867045a32c79ef09218394c7eeb5da38ba0a09b0bc72",
+    "tools\\puzzle_production\\editor_migration.py": "3dbe38d94563f0a53bb46aed2560b18da0dee4229c5b57a8caf6abc9f9230aca",
+    "tools\\puzzle_production\\editor_raster.py": "8a6c4949f68b29ab6cd27a0912424f4d9676f41fdaed9a553ee29a87f04186fd",
+    "tools\\puzzle_production\\fixed_raster.py": "8d9537d60cb03f5cc608c7b21d1576f163906e2844a8195d82f4b6133227513d",
+    "tools\\puzzle_production\\image_cli.py": "2e0e09c430130e6f660c2464eef2764b15c8c9fc560453aadc96b646d7c981ea",
+    "tools\\puzzle_production\\image_normalization.py": "91a1839053e9aebe692551fe28ecaa32c7943a3f7b6c0e67a31c10a6fa9c3f88",
+    "tools\\puzzle_production\\images.py": "d017b9d26ba785e7059e4fd8d7b4fd57fab9b2938d9248bb9e041a09a8019287",
+    "tools\\puzzle_production\\images_cli.py": "115c9bc570cb85c746d0135c17575847e484d45904778b8ea94f921f508f3d04",
+    "tools\\puzzle_production\\integrated_content.py": "6e878e9c9b8f05fed845e6ed905377c3a93c026fc411e94a444fe99b835376d2",
+    "tools\\puzzle_production\\integration_batch_cli.py": "aa891b194bd40a2655e7ebf8c270ed1a2a72dc27fa7e66c6148fc225b8ce016f",
+    "tools\\puzzle_production\\integration_batch_contract.py": "f094482a84891cf3a7bd0ca0f45368141fe08fe2b43f6b02a8332ef5e68895b6",
+    "tools\\puzzle_production\\integration_batch_operations.py": "40f329eadfaf6dc3b80ef492c4b118d581bc015d479c636852131c75197993aa",
+    "tools\\puzzle_production\\integration_batch_runner.py": "de0998d816964dede3c82099630230d536044ebf936a81b7f52c1ebfbe7952cc",
+    "tools\\puzzle_production\\manual_derivation.py": "53309a972f8ac381acc9f603356180879c7a154986a844b64aac149333beb7b1",
+    "tools\\puzzle_production\\metadata_cli.py": "b03ef26f352c1c77a09e8d9dd8e91b84684237b1c03aac1452c2ad1c0837c176",
+    "tools\\puzzle_production\\operation_diagnostics.py": "d9fdebbfbbb34352144cf68409456c5f6b5df512984a5e6d73c2999e5cc34dbe",
+    "tools\\puzzle_production\\p1_export.py": "5ea354e103dd0c009bde73f9cc844fe61d4654bb5607d7f0133b546211e6fe91",
+    "tools\\puzzle_production\\paired_solver.py": "72e5c16656c038b591bd3f6f07b27ecceb9bade84f53db559941e4992a61c811",
+    "tools\\puzzle_production\\paired_verifier.py": "05460f0b312549ecea5d71462bb3d7354743b70c57d111082eff238b9e01b428",
+    "tools\\puzzle_production\\palette_gate.py": "fc16467a42e40ee7650fcbf0d591fdfa9e549a96b7a2f1ea036b6712f5a88bb3",
+    "tools\\puzzle_production\\palette_quality.py": "0c13f8d2fb3953fed66721a23c840c0c804d1a552c8df51a8027d178ef63ca2c",
+    "tools\\puzzle_production\\quality.py": "5a9aec411782661c2dc4183d15b908052a4c88edc03e1e32c751a7ec0332f3b0",
+    "tools\\puzzle_production\\raster_cli.py": "c3801c9f71e43e5510314d2bb5ff195a05ecf19323f2beb149fa94cee1a9caa6",
+    "tools\\puzzle_production\\raster_parameters.py": "7d2087d1f510d9de310666aa7629c4a4640d4bcbb78b6e48b2b9386766f11fc5",
+    "tools\\puzzle_production\\registration_dependencies.py": "c3fcd724df6357a0f44516f369002cda2084f73c54ec50182f881b9aad3442a4",
+    "tools\\puzzle_production\\registration_publication.py": "e126e26f0d6cfebf9a9170e8171228b462778a35b06d5ffdff095dff81452e64",
+    "tools\\puzzle_production\\registration_verification.py": "3141edb4c4e132ed961c6045c437552dcef9df1d3067eb2a025a87c37fcf5952",
+    "tools\\puzzle_production\\repair.py": "758026ac783fbd29d029ece1a9bb32fe6c3f9c73100992fca79b942bcc661725",
+    "tools\\puzzle_production\\reveal_retirement.py": "cfc1e9c4cadeb96a22af33662cd953d68c913bfa7427cdc193caabc8852d0491",
+    "tools\\puzzle_production\\reveal_source.py": "f4ba04fc83f01fb9152add7bf98668e3ae30b288e307348ab5278beb4ec2acf4",
+    "tools\\puzzle_production\\sd2_analysis.py": "98346cf97b715808efad039b7ee7afab1b4d78c74c4b5d54bfeaa45d9d5368e8",
+    "tools\\puzzle_production\\sd2_catalog_rating.py": "81c961910e19d749c8760855a38bb06aafa1a7eb5ea63361cd274630b4dc169c",
+    "tools\\puzzle_production\\sd2_cli.py": "4596a827ff16b36d418806970f8974c4cbe8772caf1eef293ada0cd9faa5f261",
+    "tools\\puzzle_production\\sd2_contract.py": "8628fe4aed40567a24646865ab63c337cbcb8ab90c6eae6cd73a7690600edf38",
+    "tools\\puzzle_production\\sd2_io.py": "e916d105c63d2313cf3e28de8a9dfd956b012efa1e4012d64c422682416f9c24",
+    "tools\\puzzle_production\\sd2_profiles.py": "2e043fdb16f9fb4652c323cfa7494949f2dcbdc8339b1046e76314c5d3b3813c",
+    "tools\\puzzle_production\\sd2_rating.py": "cb30c6fd58c66b56b48c3741985fa2c52a797c62c0df5646469315e8e9397831",
+    "tools\\puzzle_production\\sd2_rating_cli.py": "8c1ebd01de47d5569e4de9eeaed21a98d5d2a46d0b18387d2c842269891617b8",
+    "tools\\puzzle_production\\sd2_rating_freeze.py": "5c7682f2783d9e83e8ca8065bcf8539405c1a6fd5f69785f7d8ea2193b9f6b56",
+    "tools\\puzzle_production\\sd2_rating_identity.py": "6fc0599137345c2a66d2d86f55543105481f30731f965a03fba011d85435afed",
+    "tools\\puzzle_production\\sd2_rating_io.py": "8d9f90c53df02cbcef61d95a7bb6a6063458ee937517de5f7b45598db3dafaf6",
+    "tools\\puzzle_production\\sd2_reference_checks.py": "7141afd2b03fa4db1f44c90e5980f93d5d8ba76f9148bdcd41fa4ff812797199",
+    "tools\\puzzle_production\\sd2_rules.py": "345095b5419161eb9cef1d798a079a945201562d0a6b5df5e4577015205022da",
+    "tools\\puzzle_production\\sd2_verifier.py": "7afdd52a6e8a38ede26735685680c599750d5abcb0908c75ecbab90641a6a3e7",
+    "tools\\puzzle_production\\solver.py": "02f663a9eeaf5e1a7b237d652cdd45f0efdcba07af214b5bbbee47c1803d4fed",
+    "tools\\puzzle_production\\target_adapter.py": "35f85a1eaa9a016c07c2a98f629f23037d01221b83a2c7c4d42e42159ee2f799",
+    "tools\\puzzle_production\\verifier.py": "f489b139fdd78f89cd933e1810274774d2ae1fb080cebd6538755996540a1112",
+    "tools\\puzzle_production\\za1_fixtures.py": "b0fb58cf4ce3d57e9c28d764d54cebefb01a34af72c9a1e11cad697f97718e3d"
+  },
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+    "background_tool": {
+      "profile": {
+        "anchor": "bottom-center",
+        "color_space": "sRGB",
+        "fit": "contain",
+        "format": "PNG",
+        "height": 576,
+        "id": "picross-background-png2304-v1",
+        "metadata": "sRGB-only",
+        "mode": "RGBA",
+        "png_compress_level": 9,
+        "png_optimize": false,
+        "resample": "pillow-rgba-premultiplied-lanczos",
+        "transparent_rgb": "zero",
+        "upscale": true,
+        "width": 2304
+      },
+      "profile_sha256": "ba5e7f5634e9625ef2d54b90d10bb88e5ef7bc67608d086a543c7e85770b62ff",
+      "tool": {
+        "id": "picross-background-2",
+        "versions": {
+          "python": "3.13.14",
+          "pillow": "12.3.0",
+          "zlib": "1.3.1.zlib-ng",
+          "littlecms": "2.19"
+        },
+        "modules": [
+          {
+            "file": "tools/puzzle_production/background_render.py",
+            "sha256": "1c3fa91f688a26834e5c7dfebc6c6941f773dcf73b8352cbbf2dd1e3088611fc"
+          },
+          {
+            "file": "tools/puzzle_production/image_normalization.py",
+            "sha256": "91a1839053e9aebe692551fe28ecaa32c7943a3f7b6c0e67a31c10a6fa9c3f88"
+          }
+        ]
+      },
+      "tool_sha256": "17224845977ab8eb1de09f666ee5361e4ec5311e7fdc0faef13663c44e2c885b",
+      "producer": {
+        "commit": "5351b14439212e4927d83f0b1f8fc145ca5b7719",
+        "dirty": true
+      }
+    }
+  },
+  "rows": [
+    {
+      "operation": "background-reproduction",
+      "seconds": 7.461966999995639,
+      "peak_python_bytes": 34393574,
+      "counts": {
+        "file_reads": 317,
+        "file_reads_bytes": 892258,
+        "hash": 278,
+        "hash_bytes": 1853586,
+        "zip_opens": 6,
+        "adapter_inspections": 2,
+        "image_opens": 38,
+        "png_load_calls": 43,
+        "png_decodes": 23,
+        "projector_inspections": 2,
+        "records": 3,
+        "member_reads": 63,
+        "member_reads_bytes": 73500,
+        "view_image_checks": 15
+      },
+      "phases": {
+        "content": {
+          "calls": 2,
+          "inclusive_seconds": 2.7360989000007976,
+          "exclusive_seconds": 1.6445506000018213
+        },
+        "finalizer-content": {
+          "calls": 2,
+          "inclusive_seconds": 3.5894515000109095,
+          "exclusive_seconds": 0.8533526000101119
+        },
+        "background-reproduction": {
+          "calls": 2,
+          "inclusive_seconds": 1.0915482999989763,
+          "exclusive_seconds": 1.0915482999989763
+        },
+        "projector": {
+          "calls": 2,
+          "inclusive_seconds": 0.3749143000022741,
+          "exclusive_seconds": 0.3749143000022741
+        }
+      },
+      "unattributed_seconds": 3.497601199982455,
+      "mode": "mono",
+      "result": {
+        "format": "picross-authoring-finalize-result-v2",
+        "status": "updated",
+        "record": {
+          "background": {
+            "decision": {
+              "ref": {
+                "bytes": 1017,
+                "file": "decisions/d01.json",
+                "sha256": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9"
+              },
+              "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+              "storage": "external"
+            },
+            "derivation": {
+              "ref": {
+                "bytes": 2346,
+                "file": "derived/bg01/derivation.json",
+                "sha256": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a"
+              },
+              "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+              "storage": "external"
+            },
+            "history": null,
+            "manifest": {
+              "ref": {
+                "bytes": 5446,
+                "file": "work/bg01.json",
+                "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13"
+              },
+              "root": "background",
+              "storage": "package"
+            }
+          },
+          "blockers": [
+            "storage: local working bytes; no verified Git backup commit"
+          ],
+          "build_request_sha256": "5215dfca7e17d93c10451ac1c957872013f22f84b8c9edab2294dbcd7dfcd14c",
+          "candidate": {
+            "bundle": "production/import",
+            "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+            "matrix_hash": "1cd13ecfb4c50bb4b1b5e9f207cf5a3ebb8e8ff3bf191fcb95e597acf65d2321",
+            "proof": "production/import/area-proof.json",
+            "source_type": "import",
+            "variant": "area"
+          },
+          "category_id": "voegel",
+          "difficulty": {
+            "assessment_type": "editorial_estimate",
+            "confidence": "low",
+            "level": "L1",
+            "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+            "method": "picross-difficulty-0.1",
+            "plausible_range": [
+              "L1",
+              "L2"
+            ],
+            "playtest": "not_performed",
+            "rule_families": {
+              "R0": "Artificial full runs"
+            },
+            "time_estimate": null
+          },
+          "document_revision": 1,
+          "final_editorial_approval": {
+            "file": "content/authoring/pz-hp-synthetic/r02/sidecars/late01/approval.json",
+            "sha256": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d"
+          },
+          "format": "picross-authoring-record-v3",
+          "handoff": {
+            "file": "content/authoring/pz-hp-synthetic/r02/handoff.json",
+            "sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23"
+          },
+          "height": 3,
+          "integration": null,
+          "inventory_sha256": "c34e9da777154c4732c1fc1ef025735c0499565459cec9f3be493c4e4661ad68",
+          "mode": "mono",
+          "motif": {
+            "approval": "motif-approval.json",
+            "derived_from_reveal_sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+            "file": "motifs/source.png",
+            "sha256": "ea0bd2f7e298a37dc5b99e3f74d39229d87e4454395ef61f6b019139cd871b17"
+          },
+          "next_action": "5 · Ins Spiel integrieren",
+          "next_step": "5 · Ins Spiel integrieren",
+          "package": {
+            "bytes": 39631,
+            "file": "content/authoring/pz-hp-synthetic/r02/package.zip",
+            "sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d"
+          },
+          "parameters": [
+            {
+              "actual_crop": [
+                0,
+                0,
+                3,
+                3
+              ],
+              "fit": "exact",
+              "foreground_colors": 1,
+              "height": 3,
+              "method": "area",
+              "mode": "mono",
+              "width": 3
+            }
+          ],
+          "pr": null,
+          "presentation": {
+            "raster_offers": [],
+            "title": "TEST ONLY · Raster und Kontext"
+          },
+          "puzzle_id": "pz-hp-synthetic",
+          "raster_selection": {
+            "file": "raster-selection.json",
+            "sha256": "1886a29bf132a3f56a68778eee1c03a327ebd6939dfde8ac37b8707266eb3eea"
+          },
+          "repo_commit": "039f59d9a94ad6c2fea32a900d03d1d3b8a7df4c",
+          "reveal": {
+            "approval": "reveal-approval.json",
+            "file": "reveals/reveal.png",
+            "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+          },
+          "reveal_options": [],
+          "revision": "r02",
+          "rulebook": {
+            "file": "rulebook.md",
+            "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f",
+            "version": "0.8.0"
+          },
+          "source_commit": null,
+          "state": "editorially_approved",
+          "used_colors": 1,
+          "verification": {
+            "format": "picross-authoring-content-inspection-v2",
+            "technical": true,
+            "editorial_approved": true,
+            "blockers": [],
+            "width": 3,
+            "height": 3,
+            "mode": "mono",
+            "used_colors": 1,
+            "difficulty": {
+              "assessment_type": "editorial_estimate",
+              "confidence": "low",
+              "level": "L1",
+              "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+              "method": "picross-difficulty-0.1",
+              "plausible_range": [
+                "L1",
+                "L2"
+              ],
+              "playtest": "not_performed",
+              "rule_families": {
+                "R0": "Artificial full runs"
+              },
+              "time_estimate": null
+            },
+            "original_state": "background_review",
+            "effective_state": "editorially_approved",
+            "integration_ready": false,
+            "background_ready": true,
+            "authorizations": {
+              "approval.json": {
+                "bytes": 1600,
+                "file": "content/authoring/pz-hp-synthetic/r02/sidecars/late01/approval.json",
+                "sha256": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d"
+              },
+              "manual-authorization.json": null,
+              "owner-override.json": null,
+              "palette-exception.json": null
+            }
+          },
+          "width": 3
+        },
+        "sheet": null,
+        "operation": {
+          "file": "content/authoring/pz-hp-synthetic/r02/sidecars/late01/operation.json",
+          "sha256": "9f8bfcb02e6d761d90809bd933849cc6eb14b993efde908916c308700178725b",
+          "bytes": 938
+        }
+      },
+      "bindings": {
+        "handoff.json": {
+          "sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23",
+          "bytes": 2506
+        },
+        "package.zip": {
+          "sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d",
+          "bytes": 39631
+        },
+        "record.json": {
+          "sha256": "04fbdd4f6ea5b29368ae6a26e7b95234c7c64295e9e691242278322dd2789dfb",
+          "bytes": 4214
+        },
+        "sidecars/late01/approval.json": {
+          "sha256": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d",
+          "bytes": 1600
+        },
+        "sidecars/late01/decisions/d01.json": {
+          "sha256": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9",
+          "bytes": 1017
+        },
+        "sidecars/late01/derived/bg01/derivation.json": {
+          "sha256": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a",
+          "bytes": 2346
+        },
+        "sidecars/late01/evidence/decision.txt": {
+          "sha256": "07a648120fa07fe9111cb2808ef2fa8b0ae9d09a7814f5f1a7916f0f57742b78",
+          "bytes": 48
+        },
+        "sidecars/late01/operation.json": {
+          "sha256": "9f8bfcb02e6d761d90809bd933849cc6eb14b993efde908916c308700178725b",
+          "bytes": 938
+        },
+        "sidecars/late01/record.after.json": {
+          "sha256": "04fbdd4f6ea5b29368ae6a26e7b95234c7c64295e9e691242278322dd2789dfb",
+          "bytes": 4214
+        },
+        "sidecars/late01/record.before.json": {
+          "sha256": "ef583beb8f1c3b0687b3cc103a947712a86f514ecbd16e57a7ad76221f4c3da4",
+          "bytes": 3594
+        },
+        "workspace.json": {
+          "sha256": "002e4dcdc25626eb9949dc895584533f2584f6f42ea627b9635203d239f5b2e6",
+          "bytes": 3521
+        }
+      },
+      "input_bindings": {
+        "approval.json": {
+          "sha256": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d",
+          "bytes": 1600
+        },
+        "background-1/output/.background-writer.lock": {
+          "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+          "bytes": 1
+        },
+        "background-1/output/derived/bg01/derivation.json": {
+          "sha256": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a",
+          "bytes": 2346
+        },
+        "background-1/source/context/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "background-1/source/context/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "background-1/source/decisions/d01.json": {
+          "sha256": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9",
+          "bytes": 1017
+        },
+        "background-1/source/evidence/decision.txt": {
+          "sha256": "07a648120fa07fe9111cb2808ef2fa8b0ae9d09a7814f5f1a7916f0f57742b78",
+          "bytes": 48
+        },
+        "background-1/source/evidence/presentation.txt": {
+          "sha256": "558b262c172afceac0490c9d96dbd62814da7169d0e061e3203324c224fcd8b7",
+          "bytes": 71
+        },
+        "background-1/source/evidence/prompt.txt": {
+          "sha256": "77f0ca42304cf83315f96928935b6d57f722618056cdd0f85f772dc181579548",
+          "bytes": 70
+        },
+        "background-1/source/evidence/reveal.txt": {
+          "sha256": "dedf64b84def0194cec99613ad206ca90d18447e4ebc9e5a17ccbfc8b03de908",
+          "bytes": 46
+        },
+        "background-1/source/evidence/rights.txt": {
+          "sha256": "92e35a2c42f910783a1a8de4709394c4c26b91dbf2a90f21e3a2e1fe72663a70",
+          "bytes": 72
+        },
+        "background-1/source/original/A-b01.png": {
+          "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564",
+          "bytes": 90
+        },
+        "background-1/source/original/B-b01.png": {
+          "sha256": "3bca2957fd46b61527ca32fc7b908893ba1420da67c1b0dedb4c3f5cdc6169f4",
+          "bytes": 91
+        },
+        "background-1/source/original/C-b01.png": {
+          "sha256": "5d00db6c39da49001b5d2f39d0c1ed3703f0fae8c80b61b0eeb3f5058f00c6d5",
+          "bytes": 90
+        },
+        "background-1/source/work/bg01.json": {
+          "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13",
+          "bytes": 5446
+        },
+        "background-saved/context/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "background-saved/context/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "background-saved/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "background-saved/evidence/presentation.txt": {
+          "sha256": "558b262c172afceac0490c9d96dbd62814da7169d0e061e3203324c224fcd8b7",
+          "bytes": 71
+        },
+        "background-saved/evidence/prompt.txt": {
+          "sha256": "77f0ca42304cf83315f96928935b6d57f722618056cdd0f85f772dc181579548",
+          "bytes": 70
+        },
+        "background-saved/evidence/reveal.txt": {
+          "sha256": "dedf64b84def0194cec99613ad206ca90d18447e4ebc9e5a17ccbfc8b03de908",
+          "bytes": 46
+        },
+        "background-saved/evidence/rights.txt": {
+          "sha256": "92e35a2c42f910783a1a8de4709394c4c26b91dbf2a90f21e3a2e1fe72663a70",
+          "bytes": 72
+        },
+        "background-saved/original/A-b01.png": {
+          "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564",
+          "bytes": 90
+        },
+        "background-saved/original/B-b01.png": {
+          "sha256": "3bca2957fd46b61527ca32fc7b908893ba1420da67c1b0dedb4c3f5cdc6169f4",
+          "bytes": 91
+        },
+        "background-saved/original/C-b01.png": {
+          "sha256": "5d00db6c39da49001b5d2f39d0c1ed3703f0fae8c80b61b0eeb3f5058f00c6d5",
+          "bytes": 90
+        },
+        "background-saved/work/bg01.json": {
+          "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13",
+          "bytes": 5446
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/approval.json": {
+          "sha256": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d",
+          "bytes": 1600
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/decisions/d01.json": {
+          "sha256": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9",
+          "bytes": 1017
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/derivation.json": {
+          "sha256": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a",
+          "bytes": 2346
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/evidence/decision.txt": {
+          "sha256": "07a648120fa07fe9111cb2808ef2fa8b0ae9d09a7814f5f1a7916f0f57742b78",
+          "bytes": 48
+        },
+        "package/background/context/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "package/background/context/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "package/background/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "package/background/evidence/presentation.txt": {
+          "sha256": "558b262c172afceac0490c9d96dbd62814da7169d0e061e3203324c224fcd8b7",
+          "bytes": 71
+        },
+        "package/background/evidence/prompt.txt": {
+          "sha256": "77f0ca42304cf83315f96928935b6d57f722618056cdd0f85f772dc181579548",
+          "bytes": 70
+        },
+        "package/background/evidence/reveal.txt": {
+          "sha256": "dedf64b84def0194cec99613ad206ca90d18447e4ebc9e5a17ccbfc8b03de908",
+          "bytes": 46
+        },
+        "package/background/evidence/rights.txt": {
+          "sha256": "92e35a2c42f910783a1a8de4709394c4c26b91dbf2a90f21e3a2e1fe72663a70",
+          "bytes": 72
+        },
+        "package/background/original/A-b01.png": {
+          "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564",
+          "bytes": 90
+        },
+        "package/background/original/B-b01.png": {
+          "sha256": "3bca2957fd46b61527ca32fc7b908893ba1420da67c1b0dedb4c3f5cdc6169f4",
+          "bytes": 91
+        },
+        "package/background/original/C-b01.png": {
+          "sha256": "5d00db6c39da49001b5d2f39d0c1ed3703f0fae8c80b61b0eeb3f5058f00c6d5",
+          "bytes": 90
+        },
+        "package/background/work/bg01.json": {
+          "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13",
+          "bytes": 5446
+        },
+        "package/design.json": {
+          "sha256": "bc5fc39c169500543a4ce877155e5e9b7c6bf3efe20b606c29a6adcfd2bc4834",
+          "bytes": 446
+        },
+        "package/difficulty.json": {
+          "sha256": "8cdb022e982b52a1b22a80704ef77f287bb515d07488f269e3f8217cf1bc20aa",
+          "bytes": 311
+        },
+        "package/evidence.txt": {
+          "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0",
+          "bytes": 66
+        },
+        "package/motif-approval.json": {
+          "sha256": "9c9fb02302767ee7866b369acadf3c4c530b13aeef1ded726672c33129ad61d0",
+          "bytes": 478
+        },
+        "package/motifs/source.png": {
+          "sha256": "ea0bd2f7e298a37dc5b99e3f74d39229d87e4454395ef61f6b019139cd871b17",
+          "bytes": 88
+        },
+        "package/motifs/source.provenance.json": {
+          "sha256": "ddd94af8fdb4f133abe6f580794b3d0544a04a00e4e538f526b50ade7e5845fe",
+          "bytes": 361
+        },
+        "package/production/import/area-candidate.json": {
+          "sha256": "04f24fcd4d6f2f09b99c56fa7356cb777ae2bc4635bee5cefa6f5b3b98d511d7",
+          "bytes": 1032
+        },
+        "package/production/import/area-logic.json": {
+          "sha256": "d233b611494ccf70ffd1e6520e2cf740542be5d515dd111e4f7fbd070bb67b68",
+          "bytes": 370
+        },
+        "package/production/import/area-proof.json": {
+          "sha256": "d434bf666081d3f733d1886c0ef9d7bf6c5549bcbd5e59b5e05ee966186ddf32",
+          "bytes": 1158
+        },
+        "package/production/import/area-raster.png": {
+          "sha256": "ea0bd2f7e298a37dc5b99e3f74d39229d87e4454395ef61f6b019139cd871b17",
+          "bytes": 88
+        },
+        "package/production/import/area-result.json": {
+          "sha256": "59a8be613bcad86c2eeb9388853d5fea570d063eacf7a8e8c3309fee711df42a",
+          "bytes": 410
+        },
+        "package/production/import/briefing.txt": {
+          "sha256": "510cabeaa8231615fe4ac7eefed392cee338228000ffbd6b52c6cb7717fc40c9",
+          "bytes": 106
+        },
+        "package/production/import/design.json": {
+          "sha256": "bc5fc39c169500543a4ce877155e5e9b7c6bf3efe20b606c29a6adcfd2bc4834",
+          "bytes": 446
+        },
+        "package/production/import/index.html": {
+          "sha256": "4a1afcb329e2d3ff873881321e461be9a3ad9448300c37bf4416a14e0c43a6f1",
+          "bytes": 6113
+        },
+        "package/production/import/manifest.json": {
+          "sha256": "3003e75dedb7582dcf06f8c63299e318982421e10ddef4d1ed77e956e68d1147",
+          "bytes": 2539
+        },
+        "package/production/import/normalized.png": {
+          "sha256": "8d76abb9d303c868131cb58e3379a9af6397616d1bdd508bdc62f9f4791c98e6",
+          "bytes": 86
+        },
+        "package/production/import/original.png": {
+          "sha256": "ea0bd2f7e298a37dc5b99e3f74d39229d87e4454395ef61f6b019139cd871b17",
+          "bytes": 88
+        },
+        "package/raster-choice.txt": {
+          "sha256": "4661d7c2ab4200b02b8a290332aba5b441d77fe1a4b79881c0637f40966f87db",
+          "bytes": 44
+        },
+        "package/raster-selection.json": {
+          "sha256": "1886a29bf132a3f56a68778eee1c03a327ebd6939dfde8ac37b8707266eb3eea",
+          "bytes": 1311
+        },
+        "package/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "package/reveals/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "package/reveals/reveal.provenance.json": {
+          "sha256": "95901f3c6b89fff2cf674da68d67884f5e2b96159b7f19288a76de2bfd3d1f5d",
+          "bytes": 241
+        },
+        "package/rulebook.md": {
+          "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f",
+          "bytes": 53
+        },
+        "package/selected-source/projection.json": {
+          "sha256": "b6128f9ed4d7fc0a81fe0b8c31a75fcf501ad3e9e7bac4d6aa7cd16b4dd8dbe4",
+          "bytes": 1771
+        },
+        "package/selected-source/record.json": {
+          "sha256": "1206b6d49bd72cb9ae18c14f52d83291e40293af24a17943fa152352febe46ab",
+          "bytes": 3121
+        },
+        "repository/content/authoring/index.json": {
+          "sha256": "0b309cd09ceeb069662080b2919b2e450e843ad799e737e70146acf16838c2a0",
+          "bytes": 272
+        },
+        "repository/content/authoring/pz-hp-synthetic/current-view.json": {
+          "sha256": "bcf39a30d5f4ea33b423bfa62e876bacc6d2f196779f00152a3131d69b5f150f",
+          "bytes": 420
+        },
+        "repository/content/authoring/pz-hp-synthetic/r01/handoff.json": {
+          "sha256": "b1c30b92a089a97c2259d295fb770a19ecabf38c4a7404a3a04c473d373a7bec",
+          "bytes": 2177
+        },
+        "repository/content/authoring/pz-hp-synthetic/r01/package.zip": {
+          "sha256": "fd1c5bc5de6ec2c8764a8387967819de3697dfb70e568e85fda544369ad216d6",
+          "bytes": 22699
+        },
+        "repository/content/authoring/pz-hp-synthetic/r01/record.json": {
+          "sha256": "1206b6d49bd72cb9ae18c14f52d83291e40293af24a17943fa152352febe46ab",
+          "bytes": 3121
+        },
+        "repository/content/authoring/pz-hp-synthetic/r01/workspace.json": {
+          "sha256": "b6128f9ed4d7fc0a81fe0b8c31a75fcf501ad3e9e7bac4d6aa7cd16b4dd8dbe4",
+          "bytes": 1771
+        },
+        "repository/content/authoring/pz-hp-synthetic/r02/handoff.json": {
+          "sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23",
+          "bytes": 2506
+        },
+        "repository/content/authoring/pz-hp-synthetic/r02/package.zip": {
+          "sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d",
+          "bytes": 39631
+        },
+        "repository/content/authoring/pz-hp-synthetic/r02/record.json": {
+          "sha256": "ef583beb8f1c3b0687b3cc103a947712a86f514ecbd16e57a7ad76221f4c3da4",
+          "bytes": 3594
+        },
+        "repository/content/authoring/pz-hp-synthetic/r02/workspace.json": {
+          "sha256": "793fd14b8ce31d80b1ca601a2b03ed15908d1b2a8db39f47ef9dab796e8058a8",
+          "bytes": 3521
+        }
+      }
+    },
+    {
+      "operation": "background-reproduction",
+      "seconds": 6.847151000009035,
+      "peak_python_bytes": 34372263,
+      "counts": {
+        "file_reads": 287,
+        "file_reads_bytes": 609918,
+        "zip_opens": 3,
+        "hash": 78,
+        "hash_bytes": 477388,
+        "adapter_inspections": 3,
+        "image_opens": 12,
+        "png_load_calls": 42,
+        "png_decodes": 12
+      },
+      "phases": {
+        "background-reproduction": {
+          "calls": 3,
+          "inclusive_seconds": 1.6581359999981942,
+          "exclusive_seconds": 1.6581359999981942
+        },
+        "content": {
+          "calls": 3,
+          "inclusive_seconds": 3.6563693000061903,
+          "exclusive_seconds": 1.9982333000079961
+        },
+        "transport-inventory": {
+          "calls": 4,
+          "inclusive_seconds": 0.7381226000143215,
+          "exclusive_seconds": 0.7381226000143215
+        },
+        "staging/offline": {
+          "calls": 2,
+          "inclusive_seconds": 4.210404200013727,
+          "exclusive_seconds": 1.0380792999931145
+        }
+      },
+      "unattributed_seconds": 1.4145797999954084,
+      "mode": "mono",
+      "result": {
+        "format": "picross-target-export-v6",
+        "adapter": "authoring-p1-rect-color-1",
+        "definition_id": "pz-hp-synthetic",
+        "category_id": "voegel",
+        "categories": {
+          "file": "categories.json",
+          "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+        },
+        "runtime_revision": 1,
+        "package_revision": "r02",
+        "save_slot": "pw3_synthetic",
+        "stem": "pw3_synthetic",
+        "definition": "runtime/data/content/pw3_synthetic.json",
+        "reveal": "runtime/art/content/pw3_synthetic.png",
+        "color_mapping": {
+          "empty": 0,
+          "ink": 1
+        },
+        "selection": {
+          "variant": "area",
+          "matrix_hash": "1cd13ecfb4c50bb4b1b5e9f207cf5a3ebb8e8ff3bf191fcb95e597acf65d2321",
+          "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+          "reveal": {
+            "file": "reveals/reveal.png",
+            "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+          }
+        },
+        "handoff_sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23",
+        "inventory_sha256": "c34e9da777154c4732c1fc1ef025735c0499565459cec9f3be493c4e4661ad68",
+        "approval_sha256": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d",
+        "technical": true,
+        "editorial_approved": true,
+        "catalog_ready": false,
+        "registered": false,
+        "integration_ready": false,
+        "test_only": true,
+        "files": {
+          "approval.json": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d",
+          "categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+          "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/decisions/d01.json": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9",
+          "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/derivation.json": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a",
+          "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/evidence/decision.txt": "07a648120fa07fe9111cb2808ef2fa8b0ae9d09a7814f5f1a7916f0f57742b78",
+          "input/package.zip": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d",
+          "inspection.json": "ef4781072e0676d95d8f4716a1d9ed4b32bddae2502b3e9812f502741f8c2acf",
+          "runtime/art/content/pw3_synthetic.png": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "runtime/art/content/pw3_synthetic.txt": "686d2a5cdd9d68acf82b7216c4852662a815689496031352ff1597ebde27833b",
+          "runtime/data/content/pw3_synthetic.json": "c7bf9a94284a08e87d48ef9e45ad6f61199b2ba43c3ff551abe92cdb51400815",
+          "usage.txt": "e3eac3c7f707f8ceb92084aac72d63bec91e7a3b19def44671550584d1c34320"
+        },
+        "palette_gate": {
+          "assessment": {
+            "format": "picross-palette-assessment-v1",
+            "rule_id": "picross-palette-separation-1",
+            "norm": {
+              "file": "docs/PUZZLE_QUALITY.md",
+              "contract": "1.0",
+              "document_revision": 4,
+              "commit": "45b8fe697364bf73f4277c8b76f92d5c00400919"
+            },
+            "candidate": {
+              "id": "b3589a0e586e524706cd3a727267519b83379c2b633eaa89627c4d0091ca5647",
+              "revision": 1,
+              "source_id": "test-only",
+              "normalized_sha256": "8d76abb9d303c868131cb58e3379a9af6397616d1bdd508bdc62f9f4791c98e6"
+            },
+            "matrix": {
+              "width": 3,
+              "height": 3,
+              "order": "row-major",
+              "sha256": "5c0050d48ed81c2e9792ac222937da668723b31d2c8949cdecdba59037662876"
+            },
+            "palette_sha256": "3dca34adc1431fbdfb92342a8632d9f5a93185de7ca16e74085d45e1c0bc6034",
+            "source_fingerprint": "75401db84ba3c3e0a97c77274b9091f413728e282a0d997a5ef98830470697e6",
+            "used": [
+              {
+                "id": "ink",
+                "rgb": "#202020",
+                "cells": 7,
+                "q": [
+                  243535,
+                  0,
+                  0
+                ]
+              }
+            ],
+            "unused_ids": [],
+            "empty_cells": 2,
+            "pair_count": 0,
+            "pairs": [],
+            "worst_pair": null,
+            "negative_pairs": [],
+            "warning_pairs": [],
+            "status": "positive",
+            "complete": true
+          },
+          "binding": {
+            "puzzle_id": "pz-hp-synthetic",
+            "revision": "r02",
+            "candidate": {
+              "bundle": "production/import",
+              "variant": "area",
+              "source_type": "import"
+            },
+            "source": {
+              "kind": "import",
+              "candidate_id": "b3589a0e586e524706cd3a727267519b83379c2b633eaa89627c4d0091ca5647",
+              "variant": "area"
+            },
+            "matrix_hash": "1cd13ecfb4c50bb4b1b5e9f207cf5a3ebb8e8ff3bf191fcb95e597acf65d2321",
+            "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+            "palette_sha256": "3dca34adc1431fbdfb92342a8632d9f5a93185de7ca16e74085d45e1c0bc6034",
+            "source_fingerprint": "75401db84ba3c3e0a97c77274b9091f413728e282a0d997a5ef98830470697e6",
+            "rulebook": {
+              "version": "0.8.0",
+              "file": "rulebook.md",
+              "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f"
+            },
+            "handoff_sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23",
+            "inventory_sha256": "c34e9da777154c4732c1fc1ef025735c0499565459cec9f3be493c4e4661ad68",
+            "original_zip_sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d"
+          },
+          "visual_review": null,
+          "exception": null,
+          "allowed": true
+        },
+        "input": {
+          "original_package": {
+            "file": "input/package.zip",
+            "sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d",
+            "bytes": 39631
+          },
+          "external_root": "external",
+          "discarded_files": []
+        },
+        "background": {
+          "candidate_id": null,
+          "decision": {
+            "ref": {
+              "bytes": 1017,
+              "file": "decisions/d01.json",
+              "sha256": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9"
+            },
+            "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+            "storage": "external"
+          },
+          "derivation": {
+            "ref": {
+              "bytes": 2346,
+              "file": "derived/bg01/derivation.json",
+              "sha256": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a"
+            },
+            "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+            "storage": "external"
+          },
+          "manifest": {
+            "ref": {
+              "bytes": 5446,
+              "file": "work/bg01.json",
+              "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13"
+            },
+            "root": "background",
+            "storage": "package"
+          },
+          "original": null,
+          "outcome": "none",
+          "output": null,
+          "profile_sha256": "ba5e7f5634e9625ef2d54b90d10bb88e5ef7bc67608d086a543c7e85770b62ff"
+        },
+        "background_asset": null,
+        "background_notice": null
+      },
+      "bindings": {
+        "approval.json": {
+          "sha256": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d",
+          "bytes": 1600
+        },
+        "categories.json": {
+          "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+          "bytes": 1312
+        },
+        "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/decisions/d01.json": {
+          "sha256": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9",
+          "bytes": 1017
+        },
+        "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/derivation.json": {
+          "sha256": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a",
+          "bytes": 2346
+        },
+        "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/evidence/decision.txt": {
+          "sha256": "07a648120fa07fe9111cb2808ef2fa8b0ae9d09a7814f5f1a7916f0f57742b78",
+          "bytes": 48
+        },
+        "input/package.zip": {
+          "sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d",
+          "bytes": 39631
+        },
+        "inspection.json": {
+          "sha256": "ef4781072e0676d95d8f4716a1d9ed4b32bddae2502b3e9812f502741f8c2acf",
+          "bytes": 6515
+        },
+        "manifest.json": {
+          "sha256": "c5b3482e9067f57e8e51a822af9fb57f8271fb81891aa67b3a4f70a22115f200",
+          "bytes": 5447
+        },
+        "runtime/art/content/pw3_synthetic.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "runtime/art/content/pw3_synthetic.txt": {
+          "sha256": "686d2a5cdd9d68acf82b7216c4852662a815689496031352ff1597ebde27833b",
+          "bytes": 131
+        },
+        "runtime/data/content/pw3_synthetic.json": {
+          "sha256": "c7bf9a94284a08e87d48ef9e45ad6f61199b2ba43c3ff551abe92cdb51400815",
+          "bytes": 451
+        },
+        "usage.txt": {
+          "sha256": "e3eac3c7f707f8ceb92084aac72d63bec91e7a3b19def44671550584d1c34320",
+          "bytes": 650
+        }
+      }
+    },
+    {
+      "operation": "background-reproduction",
+      "seconds": 2.0115403000090737,
+      "peak_python_bytes": 33829673,
+      "counts": {
+        "file_reads": 102,
+        "file_reads_bytes": 228341,
+        "hash": 29,
+        "hash_bytes": 164334,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 4,
+        "png_load_calls": 14,
+        "png_decodes": 4
+      },
+      "phases": {
+        "transport-inventory": {
+          "calls": 2,
+          "inclusive_seconds": 0.3355949000106193,
+          "exclusive_seconds": 0.3355949000106193
+        },
+        "background-reproduction": {
+          "calls": 1,
+          "inclusive_seconds": 0.5355487000051653,
+          "exclusive_seconds": 0.5355487000051653
+        },
+        "content": {
+          "calls": 1,
+          "inclusive_seconds": 1.1747043000068516,
+          "exclusive_seconds": 0.6391556000016863
+        },
+        "staging/offline": {
+          "calls": 1,
+          "inclusive_seconds": 1.9954326000006404,
+          "exclusive_seconds": 0.4851333999831695
+        }
+      },
+      "unattributed_seconds": 0.016107700008433312,
+      "mode": "mono",
+      "result": [
+        {
+          "adapter": "authoring-p1-rect-color-1",
+          "approval_sha256": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d",
+          "background": {
+            "candidate_id": null,
+            "decision": {
+              "ref": {
+                "bytes": 1017,
+                "file": "decisions/d01.json",
+                "sha256": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9"
+              },
+              "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+              "storage": "external"
+            },
+            "derivation": {
+              "ref": {
+                "bytes": 2346,
+                "file": "derived/bg01/derivation.json",
+                "sha256": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a"
+              },
+              "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+              "storage": "external"
+            },
+            "manifest": {
+              "ref": {
+                "bytes": 5446,
+                "file": "work/bg01.json",
+                "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13"
+              },
+              "root": "background",
+              "storage": "package"
+            },
+            "original": null,
+            "outcome": "none",
+            "output": null,
+            "profile_sha256": "ba5e7f5634e9625ef2d54b90d10bb88e5ef7bc67608d086a543c7e85770b62ff"
+          },
+          "background_asset": null,
+          "background_notice": null,
+          "catalog_ready": false,
+          "categories": {
+            "file": "categories.json",
+            "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+          },
+          "category_id": "voegel",
+          "color_mapping": {
+            "empty": 0,
+            "ink": 1
+          },
+          "definition": "runtime/data/content/pw3_synthetic.json",
+          "definition_id": "pz-hp-synthetic",
+          "editorial_approved": true,
+          "files": {
+            "approval.json": "b57dd9ac8794647d50556a55f1176398bd911a4fd579adf1979963c6d91b009d",
+            "categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+            "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/decisions/d01.json": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9",
+            "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/derivation.json": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a",
+            "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/evidence/decision.txt": "07a648120fa07fe9111cb2808ef2fa8b0ae9d09a7814f5f1a7916f0f57742b78",
+            "input/package.zip": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d",
+            "inspection.json": "ef4781072e0676d95d8f4716a1d9ed4b32bddae2502b3e9812f502741f8c2acf",
+            "runtime/art/content/pw3_synthetic.png": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+            "runtime/art/content/pw3_synthetic.txt": "686d2a5cdd9d68acf82b7216c4852662a815689496031352ff1597ebde27833b",
+            "runtime/data/content/pw3_synthetic.json": "c7bf9a94284a08e87d48ef9e45ad6f61199b2ba43c3ff551abe92cdb51400815",
+            "usage.txt": "e3eac3c7f707f8ceb92084aac72d63bec91e7a3b19def44671550584d1c34320"
+          },
+          "format": "picross-target-export-v6",
+          "handoff_sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23",
+          "input": {
+            "discarded_files": [],
+            "external_root": "external",
+            "original_package": {
+              "bytes": 39631,
+              "file": "input/package.zip",
+              "sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d"
+            }
+          },
+          "integration_ready": false,
+          "inventory_sha256": "c34e9da777154c4732c1fc1ef025735c0499565459cec9f3be493c4e4661ad68",
+          "package_revision": "r02",
+          "palette_gate": {
+            "allowed": true,
+            "assessment": {
+              "candidate": {
+                "id": "b3589a0e586e524706cd3a727267519b83379c2b633eaa89627c4d0091ca5647",
+                "normalized_sha256": "8d76abb9d303c868131cb58e3379a9af6397616d1bdd508bdc62f9f4791c98e6",
+                "revision": 1,
+                "source_id": "test-only"
+              },
+              "complete": true,
+              "empty_cells": 2,
+              "format": "picross-palette-assessment-v1",
+              "matrix": {
+                "height": 3,
+                "order": "row-major",
+                "sha256": "5c0050d48ed81c2e9792ac222937da668723b31d2c8949cdecdba59037662876",
+                "width": 3
+              },
+              "negative_pairs": [],
+              "norm": {
+                "commit": "45b8fe697364bf73f4277c8b76f92d5c00400919",
+                "contract": "1.0",
+                "document_revision": 4,
+                "file": "docs/PUZZLE_QUALITY.md"
+              },
+              "pair_count": 0,
+              "pairs": [],
+              "palette_sha256": "3dca34adc1431fbdfb92342a8632d9f5a93185de7ca16e74085d45e1c0bc6034",
+              "rule_id": "picross-palette-separation-1",
+              "source_fingerprint": "75401db84ba3c3e0a97c77274b9091f413728e282a0d997a5ef98830470697e6",
+              "status": "positive",
+              "unused_ids": [],
+              "used": [
+                {
+                  "cells": 7,
+                  "id": "ink",
+                  "q": [
+                    243535,
+                    0,
+                    0
+                  ],
+                  "rgb": "#202020"
+                }
+              ],
+              "warning_pairs": [],
+              "worst_pair": null
+            },
+            "binding": {
+              "candidate": {
+                "bundle": "production/import",
+                "source_type": "import",
+                "variant": "area"
+              },
+              "handoff_sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23",
+              "inventory_sha256": "c34e9da777154c4732c1fc1ef025735c0499565459cec9f3be493c4e4661ad68",
+              "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+              "matrix_hash": "1cd13ecfb4c50bb4b1b5e9f207cf5a3ebb8e8ff3bf191fcb95e597acf65d2321",
+              "original_zip_sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d",
+              "palette_sha256": "3dca34adc1431fbdfb92342a8632d9f5a93185de7ca16e74085d45e1c0bc6034",
+              "puzzle_id": "pz-hp-synthetic",
+              "revision": "r02",
+              "rulebook": {
+                "file": "rulebook.md",
+                "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f",
+                "version": "0.8.0"
+              },
+              "source": {
+                "candidate_id": "b3589a0e586e524706cd3a727267519b83379c2b633eaa89627c4d0091ca5647",
+                "kind": "import",
+                "variant": "area"
+              },
+              "source_fingerprint": "75401db84ba3c3e0a97c77274b9091f413728e282a0d997a5ef98830470697e6"
+            },
+            "exception": null,
+            "visual_review": null
+          },
+          "registered": false,
+          "reveal": "runtime/art/content/pw3_synthetic.png",
+          "runtime_revision": 1,
+          "save_slot": "pw3_synthetic",
+          "selection": {
+            "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+            "matrix_hash": "1cd13ecfb4c50bb4b1b5e9f207cf5a3ebb8e8ff3bf191fcb95e597acf65d2321",
+            "reveal": {
+              "file": "reveals/reveal.png",
+              "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+            },
+            "variant": "area"
+          },
+          "stem": "pw3_synthetic",
+          "technical": true,
+          "test_only": true
+        },
+        {
+          "format": "picross-target-inspection-v6",
+          "adapter": "authoring-p1-rect-color-1",
+          "technical": true,
+          "editorial_approved": true,
+          "catalog_ready": false,
+          "registered": false,
+          "blockers": [],
+          "puzzle_id": "pz-hp-synthetic",
+          "package_revision": "r02",
+          "selection": {
+            "variant": "area",
+            "matrix_hash": "1cd13ecfb4c50bb4b1b5e9f207cf5a3ebb8e8ff3bf191fcb95e597acf65d2321",
+            "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+            "reveal": {
+              "file": "reveals/reveal.png",
+              "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+            }
+          },
+          "handoff_sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23",
+          "inventory_sha256": "c34e9da777154c4732c1fc1ef025735c0499565459cec9f3be493c4e4661ad68",
+          "original_zip_sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d",
+          "source": {
+            "kind": "import",
+            "candidate_id": "b3589a0e586e524706cd3a727267519b83379c2b633eaa89627c4d0091ca5647",
+            "variant": "area"
+          },
+          "width": 3,
+          "height": 3,
+          "mode": "mono",
+          "difficulty": {
+            "assessment_type": "editorial_estimate",
+            "confidence": "low",
+            "level": "L1",
+            "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+            "method": "picross-difficulty-0.1",
+            "plausible_range": [
+              "L1",
+              "L2"
+            ],
+            "playtest": "not_performed",
+            "rule_families": {
+              "R0": "Artificial full runs"
+            },
+            "time_estimate": null
+          },
+          "frame": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fresh_verification": {
+            "status": "solved",
+            "proof_verified": true,
+            "certified": true,
+            "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+            "profile": {
+              "id": "full-line-mono",
+              "version": 1,
+              "start": "unknown",
+              "deduction": "all-line-supported-values",
+              "search": false
+            },
+            "profile_hash": "e49e4cd74c4c4c02e08170ce670a40f48b82490a6bea52c3c764143d7a0af4b0",
+            "steps": 5,
+            "line_evaluations": 11
+          },
+          "reveal": {
+            "width": 12,
+            "height": 12,
+            "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+          },
+          "tool": {
+            "adapter": "authoring-p1-rect-color-1",
+            "commit": "5351b14439212e4927d83f0b1f8fc145ca5b7719",
+            "versions": {
+              "tool": "rp3-image-1",
+              "pillow": "12.3.0",
+              "jpeg": "8.0",
+              "jpeg_turbo": "3.1.4.1",
+              "littlecms": "2.19",
+              "zlib": "1.3.1.zlib-ng"
+            },
+            "modules": {
+              "authoring_package.py": "f277a4a7220f42cb564ffed5bda3ccc6ced62e23d9c3dc0023443ed8805f4a0f",
+              "target_adapter.py": "35f85a1eaa9a016c07c2a98f629f23037d01221b83a2c7c4d42e42159ee2f799",
+              "content_registry.py": "456f10514454e925a7fc8f3b066e222e21cf12ebed94580343e9d932c7841a21",
+              "images.py": "d017b9d26ba785e7059e4fd8d7b4fd57fab9b2938d9248bb9e041a09a8019287",
+              "repair.py": "758026ac783fbd29d029ece1a9bb32fe6c3f9c73100992fca79b942bcc661725",
+              "contract.py": "5e9459d65cffab98b63435b51ed4b704d9a55596accd595bf0be1edf553e51f8",
+              "verifier.py": "f489b139fdd78f89cd933e1810274774d2ae1fb080cebd6538755996540a1112",
+              "categories.py": "3790a5bce1b6bebc238e23db8e35e79c887261c57c3e41b78d190694a91758a5",
+              "palette_quality.py": "0c13f8d2fb3953fed66721a23c840c0c804d1a552c8df51a8027d178ef63ca2c",
+              "palette_gate.py": "fc16467a42e40ee7650fcbf0d591fdfa9e549a96b7a2f1ea036b6712f5a88bb3",
+              "background_package.py": "a71e7d91cd312eda23da1c0af4845f4fab69a2af2127d6cbdcffcf477230abd5",
+              "background_assets.py": "e57211a1b515bb898d9dcbf549da3925a38d08d8164f52b8d84f8cb6d26ba4c9",
+              "background_contract.py": "4284d21f3e4e136cb56f866a657e7d7a23353114b901ec33a9d2e33ea0593912",
+              "background_io.py": "0600d3823ebdfee87296ae9ea45b7116b38392c00387a85952001493af7f9829",
+              "background_export.py": "15fe0a01ba5fb831207399e9855586806e57d9e8a0c20d9ab3ce2a255be447c7",
+              "authoring_staging.py": "bc266d65d4b17d929c0fac9ba14b1948c63d2d352c19eace096f642e0ef29c0e",
+              "authoring_workflow.py": "94c2f54a44d2f04d810b0688e3f050319e1c9e2ce47dabc5cb98b2b9a2eb3031"
+            }
+          },
+          "checked_at_utc": "2026-11-15T09:35:26.050767+00:00",
+          "test_only": true,
+          "category_id": "voegel",
+          "category_ready": true,
+          "palette_gate": {
+            "assessment": {
+              "format": "picross-palette-assessment-v1",
+              "rule_id": "picross-palette-separation-1",
+              "norm": {
+                "file": "docs/PUZZLE_QUALITY.md",
+                "contract": "1.0",
+                "document_revision": 4,
+                "commit": "45b8fe697364bf73f4277c8b76f92d5c00400919"
+              },
+              "candidate": {
+                "id": "b3589a0e586e524706cd3a727267519b83379c2b633eaa89627c4d0091ca5647",
+                "revision": 1,
+                "source_id": "test-only",
+                "normalized_sha256": "8d76abb9d303c868131cb58e3379a9af6397616d1bdd508bdc62f9f4791c98e6"
+              },
+              "matrix": {
+                "width": 3,
+                "height": 3,
+                "order": "row-major",
+                "sha256": "5c0050d48ed81c2e9792ac222937da668723b31d2c8949cdecdba59037662876"
+              },
+              "palette_sha256": "3dca34adc1431fbdfb92342a8632d9f5a93185de7ca16e74085d45e1c0bc6034",
+              "source_fingerprint": "75401db84ba3c3e0a97c77274b9091f413728e282a0d997a5ef98830470697e6",
+              "used": [
+                {
+                  "id": "ink",
+                  "rgb": "#202020",
+                  "cells": 7,
+                  "q": [
+                    243535,
+                    0,
+                    0
+                  ]
+                }
+              ],
+              "unused_ids": [],
+              "empty_cells": 2,
+              "pair_count": 0,
+              "pairs": [],
+              "worst_pair": null,
+              "negative_pairs": [],
+              "warning_pairs": [],
+              "status": "positive",
+              "complete": true
+            },
+            "binding": {
+              "puzzle_id": "pz-hp-synthetic",
+              "revision": "r02",
+              "candidate": {
+                "bundle": "production/import",
+                "variant": "area",
+                "source_type": "import"
+              },
+              "source": {
+                "kind": "import",
+                "candidate_id": "b3589a0e586e524706cd3a727267519b83379c2b633eaa89627c4d0091ca5647",
+                "variant": "area"
+              },
+              "matrix_hash": "1cd13ecfb4c50bb4b1b5e9f207cf5a3ebb8e8ff3bf191fcb95e597acf65d2321",
+              "logic_hash": "8074a2856650ce99d160b74284ddb40967f31ff2009eedb16a0a17c8af455ae2",
+              "palette_sha256": "3dca34adc1431fbdfb92342a8632d9f5a93185de7ca16e74085d45e1c0bc6034",
+              "source_fingerprint": "75401db84ba3c3e0a97c77274b9091f413728e282a0d997a5ef98830470697e6",
+              "rulebook": {
+                "version": "0.8.0",
+                "file": "rulebook.md",
+                "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f"
+              },
+              "handoff_sha256": "dcf17519a7cfa0cce6edb9a5884bf763d7194909bd8ca9c47078571666eb7c23",
+              "inventory_sha256": "c34e9da777154c4732c1fc1ef025735c0499565459cec9f3be493c4e4661ad68",
+              "original_zip_sha256": "a4d022a644333a5326555859d89a53bcc6b4832cee2e07c54874348c6c522e1d"
+            },
+            "visual_review": null,
+            "exception": null,
+            "allowed": true
+          },
+          "original_state": "background_review",
+          "effective_state": "editorially_approved",
+          "background": {
+            "status": "none",
+            "ready": true,
+            "binding": {
+              "decision": {
+                "ref": {
+                  "bytes": 1017,
+                  "file": "decisions/d01.json",
+                  "sha256": "5279f0ab69e3c26c5ff0904a5bf9d90655a745c2304439ab50a499d458179ea9"
+                },
+                "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+                "storage": "external"
+              },
+              "derivation": {
+                "ref": {
+                  "bytes": 2346,
+                  "file": "derived/bg01/derivation.json",
+                  "sha256": "2a2a15dc06893a98ab087a0450943c1916f418ce70cb185462228b1a59c9674a"
+                },
+                "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+                "storage": "external"
+              },
+              "history": null,
+              "manifest": {
+                "ref": {
+                  "bytes": 5446,
+                  "file": "work/bg01.json",
+                  "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13"
+                },
+                "root": "background",
+                "storage": "package"
+              }
+            }
+          },
+          "integration_ready": false,
+          "export_verified": true
+        }
+      ]
+    },
+    {
+      "operation": "background-reproduction",
+      "seconds": 9.579266000000644,
+      "peak_python_bytes": 67503378,
+      "counts": {
+        "file_reads": 345,
+        "file_reads_bytes": 1487942,
+        "hash": 288,
+        "hash_bytes": 2363206,
+        "zip_opens": 6,
+        "adapter_inspections": 2,
+        "image_opens": 44,
+        "png_load_calls": 57,
+        "png_decodes": 27,
+        "projector_inspections": 2,
+        "records": 3,
+        "member_reads": 63,
+        "member_reads_bytes": 74445,
+        "view_image_checks": 15
+      },
+      "phases": {
+        "content": {
+          "calls": 2,
+          "inclusive_seconds": 4.365945700003067,
+          "exclusive_seconds": 1.9182097000011709
+        },
+        "finalizer-content": {
+          "calls": 2,
+          "inclusive_seconds": 5.240674299988314,
+          "exclusive_seconds": 0.8747285999852465
+        },
+        "background-reproduction": {
+          "calls": 2,
+          "inclusive_seconds": 2.447736000001896,
+          "exclusive_seconds": 2.447736000001896
+        },
+        "projector": {
+          "calls": 2,
+          "inclusive_seconds": 0.36456360000011045,
+          "exclusive_seconds": 0.36456360000011045
+        }
+      },
+      "unattributed_seconds": 3.9740281000122195,
+      "mode": "color",
+      "result": {
+        "format": "picross-authoring-finalize-result-v2",
+        "status": "updated",
+        "record": {
+          "background": {
+            "decision": {
+              "ref": {
+                "bytes": 1262,
+                "file": "decisions/d01.json",
+                "sha256": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de"
+              },
+              "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+              "storage": "external"
+            },
+            "derivation": {
+              "ref": {
+                "bytes": 2974,
+                "file": "derived/bg01/derivation.json",
+                "sha256": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa"
+              },
+              "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+              "storage": "external"
+            },
+            "history": null,
+            "manifest": {
+              "ref": {
+                "bytes": 5446,
+                "file": "work/bg01.json",
+                "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13"
+              },
+              "root": "background",
+              "storage": "package"
+            }
+          },
+          "blockers": [
+            "storage: local working bytes; no verified Git backup commit"
+          ],
+          "build_request_sha256": "0dc0721d5678f9bce929741898662ee1a4e6687ea3c3ca19a5113b4425736501",
+          "candidate": {
+            "bundle": "production/import",
+            "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+            "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+            "proof": "production/import/area-proof.json",
+            "source_type": "import",
+            "variant": "area"
+          },
+          "category_id": "voegel",
+          "difficulty": {
+            "assessment_type": "editorial_estimate",
+            "confidence": "low",
+            "level": "L1",
+            "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+            "method": "picross-difficulty-0.1",
+            "plausible_range": [
+              "L1",
+              "L2"
+            ],
+            "playtest": "not_performed",
+            "rule_families": {
+              "R0": "Artificial full runs"
+            },
+            "time_estimate": null
+          },
+          "document_revision": 1,
+          "final_editorial_approval": {
+            "file": "content/authoring/pz-hp-synthetic/r02/sidecars/late01/approval.json",
+            "sha256": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a"
+          },
+          "format": "picross-authoring-record-v3",
+          "handoff": {
+            "file": "content/authoring/pz-hp-synthetic/r02/handoff.json",
+            "sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e"
+          },
+          "height": 3,
+          "integration": null,
+          "inventory_sha256": "7aeec6573bb6cc8a4629c35d69a3059d48af4c3ec9f30c239b40c7f017b57c72",
+          "mode": "color",
+          "motif": {
+            "approval": "motif-approval.json",
+            "derived_from_reveal_sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+            "file": "motifs/source.png",
+            "sha256": "7791e716c93de5e7b9b6fdede6d1dc8c63ad846cb8865f91fefb5918876eb850"
+          },
+          "next_action": "5 · Ins Spiel integrieren",
+          "next_step": "5 · Ins Spiel integrieren",
+          "package": {
+            "bytes": 42790,
+            "file": "content/authoring/pz-hp-synthetic/r02/package.zip",
+            "sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f"
+          },
+          "parameters": [
+            {
+              "actual_crop": [
+                0,
+                0,
+                3,
+                3
+              ],
+              "fit": "exact",
+              "foreground_colors": 2,
+              "height": 3,
+              "method": "area",
+              "mode": "color",
+              "width": 3
+            }
+          ],
+          "pr": null,
+          "presentation": {
+            "raster_offers": [],
+            "title": "TEST ONLY · Raster und Kontext"
+          },
+          "puzzle_id": "pz-hp-synthetic",
+          "raster_selection": {
+            "file": "raster-selection.json",
+            "sha256": "b5c92257088158d77213e8943312323c66d3141820def088b272fe7eb22f115f"
+          },
+          "repo_commit": "039f59d9a94ad6c2fea32a900d03d1d3b8a7df4c",
+          "reveal": {
+            "approval": "reveal-approval.json",
+            "file": "reveals/reveal.png",
+            "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+          },
+          "reveal_options": [],
+          "revision": "r02",
+          "rulebook": {
+            "file": "rulebook.md",
+            "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f",
+            "version": "0.8.0"
+          },
+          "source_commit": null,
+          "state": "editorially_approved",
+          "used_colors": 2,
+          "verification": {
+            "format": "picross-authoring-content-inspection-v2",
+            "technical": true,
+            "editorial_approved": true,
+            "blockers": [],
+            "width": 3,
+            "height": 3,
+            "mode": "color",
+            "used_colors": 2,
+            "difficulty": {
+              "assessment_type": "editorial_estimate",
+              "confidence": "low",
+              "level": "L1",
+              "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+              "method": "picross-difficulty-0.1",
+              "plausible_range": [
+                "L1",
+                "L2"
+              ],
+              "playtest": "not_performed",
+              "rule_families": {
+                "R0": "Artificial full runs"
+              },
+              "time_estimate": null
+            },
+            "original_state": "background_review",
+            "effective_state": "editorially_approved",
+            "integration_ready": false,
+            "background_ready": true,
+            "authorizations": {
+              "approval.json": {
+                "bytes": 1826,
+                "file": "content/authoring/pz-hp-synthetic/r02/sidecars/late01/approval.json",
+                "sha256": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a"
+              },
+              "manual-authorization.json": null,
+              "owner-override.json": null,
+              "palette-exception.json": null
+            }
+          },
+          "width": 3
+        },
+        "sheet": null,
+        "operation": {
+          "file": "content/authoring/pz-hp-synthetic/r02/sidecars/late01/operation.json",
+          "sha256": "02d6f0195d6ab24b4bd2b8b022e66c0c60e21306600311db5e24f8bec3710ff2",
+          "bytes": 1067
+        }
+      },
+      "bindings": {
+        "handoff.json": {
+          "sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e",
+          "bytes": 2631
+        },
+        "package.zip": {
+          "sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f",
+          "bytes": 42790
+        },
+        "record.json": {
+          "sha256": "2219aed76e6aa00b072fbf14676e28de53110638315a379c5340dafd7ceabe2f",
+          "bytes": 4217
+        },
+        "sidecars/late01/approval.json": {
+          "sha256": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a",
+          "bytes": 1826
+        },
+        "sidecars/late01/decisions/d01.json": {
+          "sha256": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de",
+          "bytes": 1262
+        },
+        "sidecars/late01/derived/bg01/background.png": {
+          "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+          "bytes": 37884
+        },
+        "sidecars/late01/derived/bg01/derivation.json": {
+          "sha256": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa",
+          "bytes": 2974
+        },
+        "sidecars/late01/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "sidecars/late01/operation.json": {
+          "sha256": "02d6f0195d6ab24b4bd2b8b022e66c0c60e21306600311db5e24f8bec3710ff2",
+          "bytes": 1067
+        },
+        "sidecars/late01/record.after.json": {
+          "sha256": "2219aed76e6aa00b072fbf14676e28de53110638315a379c5340dafd7ceabe2f",
+          "bytes": 4217
+        },
+        "sidecars/late01/record.before.json": {
+          "sha256": "e59ed34075ed3a3009455deb8fd1df88be71c2fe3c1ca3291a294c7f4eb57cae",
+          "bytes": 3597
+        },
+        "workspace.json": {
+          "sha256": "1b5aa16a19ebcc84f9afa69c75c8906476e488d13b2d76c9c6d3e33c6b7a7a36",
+          "bytes": 3518
+        }
+      },
+      "input_bindings": {
+        "approval.json": {
+          "sha256": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a",
+          "bytes": 1826
+        },
+        "background-1/source/context/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "background-1/source/context/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "background-1/source/decisions/d01.json": {
+          "sha256": "b8efff521daa7ae8b951f29d658d3ceb2efc6048ba5c71f113ac0eb6bb9ba79f",
+          "bytes": 959
+        },
+        "background-1/source/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "background-1/source/evidence/presentation.txt": {
+          "sha256": "558b262c172afceac0490c9d96dbd62814da7169d0e061e3203324c224fcd8b7",
+          "bytes": 71
+        },
+        "background-1/source/evidence/prompt.txt": {
+          "sha256": "77f0ca42304cf83315f96928935b6d57f722618056cdd0f85f772dc181579548",
+          "bytes": 70
+        },
+        "background-1/source/evidence/reveal.txt": {
+          "sha256": "dedf64b84def0194cec99613ad206ca90d18447e4ebc9e5a17ccbfc8b03de908",
+          "bytes": 46
+        },
+        "background-1/source/evidence/rights.txt": {
+          "sha256": "92e35a2c42f910783a1a8de4709394c4c26b91dbf2a90f21e3a2e1fe72663a70",
+          "bytes": 72
+        },
+        "background-1/source/original/A-b01.png": {
+          "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564",
+          "bytes": 90
+        },
+        "background-1/source/original/B-b01.png": {
+          "sha256": "3bca2957fd46b61527ca32fc7b908893ba1420da67c1b0dedb4c3f5cdc6169f4",
+          "bytes": 91
+        },
+        "background-1/source/original/C-b01.png": {
+          "sha256": "5d00db6c39da49001b5d2f39d0c1ed3703f0fae8c80b61b0eeb3f5058f00c6d5",
+          "bytes": 90
+        },
+        "background-1/source/work/bg01.json": {
+          "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13",
+          "bytes": 5446
+        },
+        "background-2/output/.background-writer.lock": {
+          "sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+          "bytes": 1
+        },
+        "background-2/output/derived/bg01/background.png": {
+          "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+          "bytes": 37884
+        },
+        "background-2/output/derived/bg01/derivation.json": {
+          "sha256": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa",
+          "bytes": 2974
+        },
+        "background-2/source/context/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "background-2/source/context/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "background-2/source/decisions/d01.json": {
+          "sha256": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de",
+          "bytes": 1262
+        },
+        "background-2/source/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "background-2/source/evidence/presentation.txt": {
+          "sha256": "558b262c172afceac0490c9d96dbd62814da7169d0e061e3203324c224fcd8b7",
+          "bytes": 71
+        },
+        "background-2/source/evidence/prompt.txt": {
+          "sha256": "77f0ca42304cf83315f96928935b6d57f722618056cdd0f85f772dc181579548",
+          "bytes": 70
+        },
+        "background-2/source/evidence/reveal.txt": {
+          "sha256": "dedf64b84def0194cec99613ad206ca90d18447e4ebc9e5a17ccbfc8b03de908",
+          "bytes": 46
+        },
+        "background-2/source/evidence/rights.txt": {
+          "sha256": "92e35a2c42f910783a1a8de4709394c4c26b91dbf2a90f21e3a2e1fe72663a70",
+          "bytes": 72
+        },
+        "background-2/source/original/A-b01.png": {
+          "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564",
+          "bytes": 90
+        },
+        "background-2/source/original/B-b01.png": {
+          "sha256": "3bca2957fd46b61527ca32fc7b908893ba1420da67c1b0dedb4c3f5cdc6169f4",
+          "bytes": 91
+        },
+        "background-2/source/original/C-b01.png": {
+          "sha256": "5d00db6c39da49001b5d2f39d0c1ed3703f0fae8c80b61b0eeb3f5058f00c6d5",
+          "bytes": 90
+        },
+        "background-2/source/work/bg01.json": {
+          "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13",
+          "bytes": 5446
+        },
+        "background-saved/context/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "background-saved/context/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "background-saved/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "background-saved/evidence/presentation.txt": {
+          "sha256": "558b262c172afceac0490c9d96dbd62814da7169d0e061e3203324c224fcd8b7",
+          "bytes": 71
+        },
+        "background-saved/evidence/prompt.txt": {
+          "sha256": "77f0ca42304cf83315f96928935b6d57f722618056cdd0f85f772dc181579548",
+          "bytes": 70
+        },
+        "background-saved/evidence/reveal.txt": {
+          "sha256": "dedf64b84def0194cec99613ad206ca90d18447e4ebc9e5a17ccbfc8b03de908",
+          "bytes": 46
+        },
+        "background-saved/evidence/rights.txt": {
+          "sha256": "92e35a2c42f910783a1a8de4709394c4c26b91dbf2a90f21e3a2e1fe72663a70",
+          "bytes": 72
+        },
+        "background-saved/original/A-b01.png": {
+          "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564",
+          "bytes": 90
+        },
+        "background-saved/original/B-b01.png": {
+          "sha256": "3bca2957fd46b61527ca32fc7b908893ba1420da67c1b0dedb4c3f5cdc6169f4",
+          "bytes": 91
+        },
+        "background-saved/original/C-b01.png": {
+          "sha256": "5d00db6c39da49001b5d2f39d0c1ed3703f0fae8c80b61b0eeb3f5058f00c6d5",
+          "bytes": 90
+        },
+        "background-saved/work/bg01.json": {
+          "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13",
+          "bytes": 5446
+        },
+        "color/background/context/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "color/background/context/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "color/background/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "color/background/evidence/presentation.txt": {
+          "sha256": "558b262c172afceac0490c9d96dbd62814da7169d0e061e3203324c224fcd8b7",
+          "bytes": 71
+        },
+        "color/background/evidence/prompt.txt": {
+          "sha256": "77f0ca42304cf83315f96928935b6d57f722618056cdd0f85f772dc181579548",
+          "bytes": 70
+        },
+        "color/background/evidence/reveal.txt": {
+          "sha256": "dedf64b84def0194cec99613ad206ca90d18447e4ebc9e5a17ccbfc8b03de908",
+          "bytes": 46
+        },
+        "color/background/evidence/rights.txt": {
+          "sha256": "92e35a2c42f910783a1a8de4709394c4c26b91dbf2a90f21e3a2e1fe72663a70",
+          "bytes": 72
+        },
+        "color/background/original/A-b01.png": {
+          "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564",
+          "bytes": 90
+        },
+        "color/background/original/B-b01.png": {
+          "sha256": "3bca2957fd46b61527ca32fc7b908893ba1420da67c1b0dedb4c3f5cdc6169f4",
+          "bytes": 91
+        },
+        "color/background/original/C-b01.png": {
+          "sha256": "5d00db6c39da49001b5d2f39d0c1ed3703f0fae8c80b61b0eeb3f5058f00c6d5",
+          "bytes": 90
+        },
+        "color/background/work/bg01.json": {
+          "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13",
+          "bytes": 5446
+        },
+        "color/design.json": {
+          "sha256": "4b7907fc0c52e5882b26784119c609a694125f1bfc3afb10a5272746d8ea6649",
+          "bytes": 477
+        },
+        "color/difficulty.json": {
+          "sha256": "edcc1d8b6accc568364267ead12d448ad442464b19da366484644901c1dd94ef",
+          "bytes": 311
+        },
+        "color/evidence.txt": {
+          "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0",
+          "bytes": 66
+        },
+        "color/motif-approval.json": {
+          "sha256": "e8a4f59cf7ef81d34b2d6b96efd18b657147f35011ff7c54c4a0dfac233b176a",
+          "bytes": 479
+        },
+        "color/motifs/source.png": {
+          "sha256": "7791e716c93de5e7b9b6fdede6d1dc8c63ad846cb8865f91fefb5918876eb850",
+          "bytes": 89
+        },
+        "color/motifs/source.provenance.json": {
+          "sha256": "422296716dd85af76aa6f09df48f89b20960d4ab774a306cf70d3a712ee1c324",
+          "bytes": 361
+        },
+        "color/palette-review.json": {
+          "sha256": "06babce217e1630e27ed5c63f407424d2377217857dfd6c207dcde5769fb7463",
+          "bytes": 1254
+        },
+        "color/production/import/area-candidate.json": {
+          "sha256": "57893054d83c850d86fb0135afdc30b8a3edb411720ecffde6fe96e225edd6f9",
+          "bytes": 1066
+        },
+        "color/production/import/area-logic.json": {
+          "sha256": "a38a6636e99098fbee407160974f8f257d1e59422ce735dc2bcdf87536d8ab3f",
+          "bytes": 521
+        },
+        "color/production/import/area-proof.json": {
+          "sha256": "7d54e8fb5202c54baf7a9151dab344ee3e0f18ed33ac5dbf768bb2117275dbf4",
+          "bytes": 1457
+        },
+        "color/production/import/area-raster.png": {
+          "sha256": "7791e716c93de5e7b9b6fdede6d1dc8c63ad846cb8865f91fefb5918876eb850",
+          "bytes": 89
+        },
+        "color/production/import/area-result.json": {
+          "sha256": "8e5aec56696297c35e918e918cd0d44940bd526aa01bc91d96b51d73c3406959",
+          "bytes": 412
+        },
+        "color/production/import/briefing.txt": {
+          "sha256": "510cabeaa8231615fe4ac7eefed392cee338228000ffbd6b52c6cb7717fc40c9",
+          "bytes": 106
+        },
+        "color/production/import/design.json": {
+          "sha256": "6a80332d4d69b26df1a33d9a86d7902212cffc356771d8d279aa9bbc81055c22",
+          "bytes": 477
+        },
+        "color/production/import/index.html": {
+          "sha256": "61b7a858d2c8b93c57de8edbd73ccb5c530f3edf2af8a7a1125f013c88c0af4c",
+          "bytes": 7071
+        },
+        "color/production/import/manifest.json": {
+          "sha256": "558478672f701fbd2636668a6e2febcba4f6ef12fa081a60d09ab0974847cd3d",
+          "bytes": 2572
+        },
+        "color/production/import/normalized.png": {
+          "sha256": "42bda3465b93519772986021edf54b969707a0811eaa3d1bfedf8ec6f89d753b",
+          "bytes": 89
+        },
+        "color/production/import/original.png": {
+          "sha256": "7791e716c93de5e7b9b6fdede6d1dc8c63ad846cb8865f91fefb5918876eb850",
+          "bytes": 89
+        },
+        "color/raster-choice.txt": {
+          "sha256": "4661d7c2ab4200b02b8a290332aba5b441d77fe1a4b79881c0637f40966f87db",
+          "bytes": 44
+        },
+        "color/raster-selection.json": {
+          "sha256": "b5c92257088158d77213e8943312323c66d3141820def088b272fe7eb22f115f",
+          "bytes": 1311
+        },
+        "color/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "color/reveals/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "color/reveals/reveal.provenance.json": {
+          "sha256": "95901f3c6b89fff2cf674da68d67884f5e2b96159b7f19288a76de2bfd3d1f5d",
+          "bytes": 241
+        },
+        "color/rulebook.md": {
+          "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f",
+          "bytes": 53
+        },
+        "color/selected-source/projection.json": {
+          "sha256": "7598b373c9fd28b02767963f0c6f90cece42b6dd9ce3134b57e1193f36fa47ae",
+          "bytes": 1768
+        },
+        "color/selected-source/record.json": {
+          "sha256": "b9989289b7806c409142ae07d22e03d06c3217a5ed3ee4f5d3e21d99bbaf2a0c",
+          "bytes": 3124
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/approval.json": {
+          "sha256": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a",
+          "bytes": 1826
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/decisions/d01.json": {
+          "sha256": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de",
+          "bytes": 1262
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/background.png": {
+          "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+          "bytes": 37884
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/derivation.json": {
+          "sha256": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa",
+          "bytes": 2974
+        },
+        "new-files/content/authoring/pz-hp-synthetic/r02/sidecars/late01/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "package/background/context/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "package/background/context/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "package/background/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "package/background/evidence/presentation.txt": {
+          "sha256": "558b262c172afceac0490c9d96dbd62814da7169d0e061e3203324c224fcd8b7",
+          "bytes": 71
+        },
+        "package/background/evidence/prompt.txt": {
+          "sha256": "77f0ca42304cf83315f96928935b6d57f722618056cdd0f85f772dc181579548",
+          "bytes": 70
+        },
+        "package/background/evidence/reveal.txt": {
+          "sha256": "dedf64b84def0194cec99613ad206ca90d18447e4ebc9e5a17ccbfc8b03de908",
+          "bytes": 46
+        },
+        "package/background/evidence/rights.txt": {
+          "sha256": "92e35a2c42f910783a1a8de4709394c4c26b91dbf2a90f21e3a2e1fe72663a70",
+          "bytes": 72
+        },
+        "package/background/original/A-b01.png": {
+          "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564",
+          "bytes": 90
+        },
+        "package/background/original/B-b01.png": {
+          "sha256": "3bca2957fd46b61527ca32fc7b908893ba1420da67c1b0dedb4c3f5cdc6169f4",
+          "bytes": 91
+        },
+        "package/background/original/C-b01.png": {
+          "sha256": "5d00db6c39da49001b5d2f39d0c1ed3703f0fae8c80b61b0eeb3f5058f00c6d5",
+          "bytes": 90
+        },
+        "package/background/work/bg01.json": {
+          "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13",
+          "bytes": 5446
+        },
+        "package/design.json": {
+          "sha256": "bc5fc39c169500543a4ce877155e5e9b7c6bf3efe20b606c29a6adcfd2bc4834",
+          "bytes": 446
+        },
+        "package/difficulty.json": {
+          "sha256": "8cdb022e982b52a1b22a80704ef77f287bb515d07488f269e3f8217cf1bc20aa",
+          "bytes": 311
+        },
+        "package/evidence.txt": {
+          "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0",
+          "bytes": 66
+        },
+        "package/motif-approval.json": {
+          "sha256": "9c9fb02302767ee7866b369acadf3c4c530b13aeef1ded726672c33129ad61d0",
+          "bytes": 478
+        },
+        "package/motifs/source.png": {
+          "sha256": "ea0bd2f7e298a37dc5b99e3f74d39229d87e4454395ef61f6b019139cd871b17",
+          "bytes": 88
+        },
+        "package/motifs/source.provenance.json": {
+          "sha256": "ddd94af8fdb4f133abe6f580794b3d0544a04a00e4e538f526b50ade7e5845fe",
+          "bytes": 361
+        },
+        "package/production/import/area-candidate.json": {
+          "sha256": "04f24fcd4d6f2f09b99c56fa7356cb777ae2bc4635bee5cefa6f5b3b98d511d7",
+          "bytes": 1032
+        },
+        "package/production/import/area-logic.json": {
+          "sha256": "d233b611494ccf70ffd1e6520e2cf740542be5d515dd111e4f7fbd070bb67b68",
+          "bytes": 370
+        },
+        "package/production/import/area-proof.json": {
+          "sha256": "d434bf666081d3f733d1886c0ef9d7bf6c5549bcbd5e59b5e05ee966186ddf32",
+          "bytes": 1158
+        },
+        "package/production/import/area-raster.png": {
+          "sha256": "ea0bd2f7e298a37dc5b99e3f74d39229d87e4454395ef61f6b019139cd871b17",
+          "bytes": 88
+        },
+        "package/production/import/area-result.json": {
+          "sha256": "3f07fe1c1b183ea416df2e242ec6359c6ea3c745a505eff4710b47d06fd2a979",
+          "bytes": 411
+        },
+        "package/production/import/briefing.txt": {
+          "sha256": "510cabeaa8231615fe4ac7eefed392cee338228000ffbd6b52c6cb7717fc40c9",
+          "bytes": 106
+        },
+        "package/production/import/design.json": {
+          "sha256": "bc5fc39c169500543a4ce877155e5e9b7c6bf3efe20b606c29a6adcfd2bc4834",
+          "bytes": 446
+        },
+        "package/production/import/index.html": {
+          "sha256": "877847c90a6584c0328583bcd8cfac5d5d22688a440eee4d7e42d5ed97056864",
+          "bytes": 6114
+        },
+        "package/production/import/manifest.json": {
+          "sha256": "729c0099ee6d5dd56786a7f9e77c3dbcc7fbce8fa497db01dea02d4f12bb90f9",
+          "bytes": 2540
+        },
+        "package/production/import/normalized.png": {
+          "sha256": "8d76abb9d303c868131cb58e3379a9af6397616d1bdd508bdc62f9f4791c98e6",
+          "bytes": 86
+        },
+        "package/production/import/original.png": {
+          "sha256": "ea0bd2f7e298a37dc5b99e3f74d39229d87e4454395ef61f6b019139cd871b17",
+          "bytes": 88
+        },
+        "package/reveal-approval.json": {
+          "sha256": "03ccc519f4bb7782a8939c5690229ad5302f13ca801423ab8301d193392ffbd0",
+          "bytes": 296
+        },
+        "package/reveals/reveal.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "package/reveals/reveal.provenance.json": {
+          "sha256": "95901f3c6b89fff2cf674da68d67884f5e2b96159b7f19288a76de2bfd3d1f5d",
+          "bytes": 241
+        },
+        "package/rulebook.md": {
+          "sha256": "3e2b7d84db12a3717543407d8274baab9bc985d1d8cd9bdc23729bd03c61fc52",
+          "bytes": 82
+        },
+        "repository/content/authoring/index.json": {
+          "sha256": "0b309cd09ceeb069662080b2919b2e450e843ad799e737e70146acf16838c2a0",
+          "bytes": 272
+        },
+        "repository/content/authoring/pz-hp-synthetic/current-view.json": {
+          "sha256": "a0bfb5a2415d8d16b5ea96b14c1d886d59251b3c7f529f200040c5aa66270814",
+          "bytes": 420
+        },
+        "repository/content/authoring/pz-hp-synthetic/r01/handoff.json": {
+          "sha256": "df600163773336d41a1c498b30c2e2549b22eea077b13fa6c6970d97a33822b6",
+          "bytes": 2302
+        },
+        "repository/content/authoring/pz-hp-synthetic/r01/package.zip": {
+          "sha256": "794ea4610b7a0c4e735b510a0a9e0d7d62ec860b626db8f4388f17d70eff60de",
+          "bytes": 25858
+        },
+        "repository/content/authoring/pz-hp-synthetic/r01/record.json": {
+          "sha256": "b9989289b7806c409142ae07d22e03d06c3217a5ed3ee4f5d3e21d99bbaf2a0c",
+          "bytes": 3124
+        },
+        "repository/content/authoring/pz-hp-synthetic/r01/workspace.json": {
+          "sha256": "7598b373c9fd28b02767963f0c6f90cece42b6dd9ce3134b57e1193f36fa47ae",
+          "bytes": 1768
+        },
+        "repository/content/authoring/pz-hp-synthetic/r02/handoff.json": {
+          "sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e",
+          "bytes": 2631
+        },
+        "repository/content/authoring/pz-hp-synthetic/r02/package.zip": {
+          "sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f",
+          "bytes": 42790
+        },
+        "repository/content/authoring/pz-hp-synthetic/r02/record.json": {
+          "sha256": "e59ed34075ed3a3009455deb8fd1df88be71c2fe3c1ca3291a294c7f4eb57cae",
+          "bytes": 3597
+        },
+        "repository/content/authoring/pz-hp-synthetic/r02/workspace.json": {
+          "sha256": "3be33a3a17c07a3a1403525507a9aa40faa8ddd88b1e050f8b29b88f04e29725",
+          "bytes": 3518
+        }
+      }
+    },
+    {
+      "operation": "background-reproduction",
+      "seconds": 9.756727299987688,
+      "peak_python_bytes": 68168553,
+      "counts": {
+        "file_reads": 334,
+        "file_reads_bytes": 1453420,
+        "zip_opens": 3,
+        "hash": 102,
+        "hash_bytes": 1140663,
+        "adapter_inspections": 3,
+        "image_opens": 21,
+        "png_load_calls": 63,
+        "png_decodes": 18
+      },
+      "phases": {
+        "background-reproduction": {
+          "calls": 3,
+          "inclusive_seconds": 3.7082593999948585,
+          "exclusive_seconds": 3.7082593999948585
+        },
+        "content": {
+          "calls": 3,
+          "inclusive_seconds": 6.129347800000687,
+          "exclusive_seconds": 2.4210884000058286
+        },
+        "transport-inventory": {
+          "calls": 4,
+          "inclusive_seconds": 0.973826800021925,
+          "exclusive_seconds": 0.973826800021925
+        },
+        "staging/offline": {
+          "calls": 2,
+          "inclusive_seconds": 6.1500718999886885,
+          "exclusive_seconds": 1.0611748999654083
+        }
+      },
+      "unattributed_seconds": 1.5923777999996673,
+      "mode": "color",
+      "result": {
+        "format": "picross-target-export-v6",
+        "adapter": "authoring-p1-rect-color-1",
+        "definition_id": "pz-hp-synthetic",
+        "category_id": "voegel",
+        "categories": {
+          "file": "categories.json",
+          "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+        },
+        "runtime_revision": 1,
+        "package_revision": "r02",
+        "save_slot": "pw3_synthetic",
+        "stem": "pw3_synthetic",
+        "definition": "runtime/data/content/pw3_synthetic.json",
+        "reveal": "runtime/art/content/pw3_synthetic.png",
+        "color_mapping": {
+          "empty": 0,
+          "blue": 1,
+          "red": 2
+        },
+        "selection": {
+          "variant": "area",
+          "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+          "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+          "reveal": {
+            "file": "reveals/reveal.png",
+            "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+          }
+        },
+        "handoff_sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e",
+        "inventory_sha256": "7aeec6573bb6cc8a4629c35d69a3059d48af4c3ec9f30c239b40c7f017b57c72",
+        "approval_sha256": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a",
+        "technical": true,
+        "editorial_approved": true,
+        "catalog_ready": false,
+        "registered": false,
+        "integration_ready": false,
+        "test_only": true,
+        "files": {
+          "approval.json": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a",
+          "categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+          "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/decisions/d01.json": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de",
+          "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/background.png": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+          "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/derivation.json": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa",
+          "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/evidence/decision.txt": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "input/package.zip": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f",
+          "inspection.json": "6632a4006793b86065cd5f0c0b245705853055cceba55955ce954f45bcac82da",
+          "runtime/art/backgrounds/pz-hp-synthetic.png": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+          "runtime/art/backgrounds/pz-hp-synthetic.txt": "89ac781955af05febe430a10ec54a680006cec7685fbf8ae439478b9105c89db",
+          "runtime/art/content/pw3_synthetic.png": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "runtime/art/content/pw3_synthetic.txt": "686d2a5cdd9d68acf82b7216c4852662a815689496031352ff1597ebde27833b",
+          "runtime/data/content/pw3_synthetic.json": "1ef2b41bfcd93114687825c1989871a3d80d6a3a3c16c21423a3cd210f0a2bea",
+          "usage.txt": "bca1c8771f0483100ea193255c2bfabe79b23f16123af1427dc26b4900f9519a"
+        },
+        "palette_gate": {
+          "assessment": {
+            "format": "picross-palette-assessment-v1",
+            "rule_id": "picross-palette-separation-1",
+            "norm": {
+              "file": "docs/PUZZLE_QUALITY.md",
+              "contract": "1.0",
+              "document_revision": 4,
+              "commit": "45b8fe697364bf73f4277c8b76f92d5c00400919"
+            },
+            "candidate": {
+              "id": "cff05691c9e972d55f2d31806980fd5013232e59037d4e5ec7c80637fa681ac6",
+              "revision": 1,
+              "source_id": "test-only",
+              "normalized_sha256": "42bda3465b93519772986021edf54b969707a0811eaa3d1bfedf8ec6f89d753b"
+            },
+            "matrix": {
+              "width": 3,
+              "height": 3,
+              "order": "row-major",
+              "sha256": "f9138fbd4842a5fff45d283d46785d370552d0694aad86b8f9091f2ba0b18798"
+            },
+            "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+            "source_fingerprint": "24bfb0ec61ced1a989ecd856cd5f053b30cc11dcebbb9d09f7b1d61f35db88a5",
+            "used": [
+              {
+                "id": "blue",
+                "rgb": "#2678bd",
+                "cells": 3,
+                "q": [
+                  558511,
+                  -48364,
+                  -122665
+                ]
+              },
+              {
+                "id": "red",
+                "rgb": "#cc3333",
+                "cells": 4,
+                "q": [
+                  559396,
+                  170935,
+                  82863
+                ]
+              }
+            ],
+            "unused_ids": [],
+            "empty_cells": 2,
+            "pair_count": 1,
+            "pairs": [
+              {
+                "ids": [
+                  "blue",
+                  "red"
+                ],
+                "rgb": [
+                  "#2678bd",
+                  "#cc3333"
+                ],
+                "q": [
+                  [
+                    558511,
+                    -48364,
+                    -122665
+                  ],
+                  [
+                    559396,
+                    170935,
+                    82863
+                  ]
+                ],
+                "S": 90334593410,
+                "D": "30.055714",
+                "status": "positive",
+                "rule_id": "picross-palette-separation-1"
+              }
+            ],
+            "worst_pair": {
+              "ids": [
+                "blue",
+                "red"
+              ],
+              "rgb": [
+                "#2678bd",
+                "#cc3333"
+              ],
+              "q": [
+                [
+                  558511,
+                  -48364,
+                  -122665
+                ],
+                [
+                  559396,
+                  170935,
+                  82863
+                ]
+              ],
+              "S": 90334593410,
+              "D": "30.055714",
+              "status": "positive",
+              "rule_id": "picross-palette-separation-1"
+            },
+            "negative_pairs": [],
+            "warning_pairs": [],
+            "status": "positive",
+            "complete": true
+          },
+          "binding": {
+            "puzzle_id": "pz-hp-synthetic",
+            "revision": "r02",
+            "candidate": {
+              "bundle": "production/import",
+              "variant": "area",
+              "source_type": "import"
+            },
+            "source": {
+              "kind": "import",
+              "candidate_id": "cff05691c9e972d55f2d31806980fd5013232e59037d4e5ec7c80637fa681ac6",
+              "variant": "area"
+            },
+            "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+            "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+            "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+            "source_fingerprint": "24bfb0ec61ced1a989ecd856cd5f053b30cc11dcebbb9d09f7b1d61f35db88a5",
+            "rulebook": {
+              "version": "0.8.0",
+              "file": "rulebook.md",
+              "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f"
+            },
+            "handoff_sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e",
+            "inventory_sha256": "7aeec6573bb6cc8a4629c35d69a3059d48af4c3ec9f30c239b40c7f017b57c72",
+            "original_zip_sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f"
+          },
+          "visual_review": {
+            "criteria": {
+              "Q-H01": {
+                "accepted": false,
+                "actor": "TEST ONLY",
+                "evidence": [
+                  {
+                    "file": "evidence.txt",
+                    "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                  }
+                ],
+                "reason": "Test-only boundary evidence.",
+                "result": "erfüllt",
+                "statement": "Synthetic palette judgment.",
+                "timestamp_utc": "2026-11-09T12:00:00Z"
+              },
+              "Q-H02": {
+                "accepted": false,
+                "actor": "TEST ONLY",
+                "evidence": [
+                  {
+                    "file": "evidence.txt",
+                    "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                  }
+                ],
+                "reason": "Test-only boundary evidence.",
+                "result": "erfüllt",
+                "statement": "Synthetic palette judgment.",
+                "timestamp_utc": "2026-11-09T12:00:00Z"
+              },
+              "Q-R04": {
+                "accepted": false,
+                "actor": "TEST ONLY",
+                "evidence": [
+                  {
+                    "file": "evidence.txt",
+                    "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                  }
+                ],
+                "reason": "Test-only boundary evidence.",
+                "result": "erfüllt",
+                "statement": "Synthetic palette judgment.",
+                "timestamp_utc": "2026-11-09T12:00:00Z"
+              }
+            },
+            "format": "picross-palette-visual-review-v1",
+            "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+            "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+            "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+            "puzzle_id": "pz-hp-synthetic",
+            "revision": "r02"
+          },
+          "exception": null,
+          "allowed": true
+        },
+        "input": {
+          "original_package": {
+            "file": "input/package.zip",
+            "sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f",
+            "bytes": 42790
+          },
+          "external_root": "external",
+          "discarded_files": []
+        },
+        "background": {
+          "candidate_id": "A",
+          "decision": {
+            "ref": {
+              "bytes": 1262,
+              "file": "decisions/d01.json",
+              "sha256": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de"
+            },
+            "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+            "storage": "external"
+          },
+          "derivation": {
+            "ref": {
+              "bytes": 2974,
+              "file": "derived/bg01/derivation.json",
+              "sha256": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa"
+            },
+            "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+            "storage": "external"
+          },
+          "manifest": {
+            "ref": {
+              "bytes": 5446,
+              "file": "work/bg01.json",
+              "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13"
+            },
+            "root": "background",
+            "storage": "package"
+          },
+          "original": {
+            "bytes": 90,
+            "file": "original/A-b01.png",
+            "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564"
+          },
+          "outcome": "selected",
+          "output": {
+            "bytes": 37884,
+            "file": "background.png",
+            "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4"
+          },
+          "profile_sha256": "ba5e7f5634e9625ef2d54b90d10bb88e5ef7bc67608d086a543c7e85770b62ff"
+        },
+        "background_asset": {
+          "file": "runtime/art/backgrounds/pz-hp-synthetic.png",
+          "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+          "bytes": 37884
+        },
+        "background_notice": {
+          "file": "runtime/art/backgrounds/pz-hp-synthetic.txt",
+          "sha256": "89ac781955af05febe430a10ec54a680006cec7685fbf8ae439478b9105c89db",
+          "bytes": 184
+        }
+      },
+      "bindings": {
+        "approval.json": {
+          "sha256": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a",
+          "bytes": 1826
+        },
+        "categories.json": {
+          "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+          "bytes": 1312
+        },
+        "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/decisions/d01.json": {
+          "sha256": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de",
+          "bytes": 1262
+        },
+        "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/background.png": {
+          "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+          "bytes": 37884
+        },
+        "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/derivation.json": {
+          "sha256": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa",
+          "bytes": 2974
+        },
+        "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/evidence/decision.txt": {
+          "sha256": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+          "bytes": 68
+        },
+        "input/package.zip": {
+          "sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f",
+          "bytes": 42790
+        },
+        "inspection.json": {
+          "sha256": "6632a4006793b86065cd5f0c0b245705853055cceba55955ce954f45bcac82da",
+          "bytes": 8233
+        },
+        "manifest.json": {
+          "sha256": "8edbdcf852127e9d2ffd407b7fc5df64c503888430f60f2c903f96f93ad37dc8",
+          "bytes": 8058
+        },
+        "runtime/art/backgrounds/pz-hp-synthetic.png": {
+          "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+          "bytes": 37884
+        },
+        "runtime/art/backgrounds/pz-hp-synthetic.txt": {
+          "sha256": "89ac781955af05febe430a10ec54a680006cec7685fbf8ae439478b9105c89db",
+          "bytes": 184
+        },
+        "runtime/art/content/pw3_synthetic.png": {
+          "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+          "bytes": 80
+        },
+        "runtime/art/content/pw3_synthetic.txt": {
+          "sha256": "686d2a5cdd9d68acf82b7216c4852662a815689496031352ff1597ebde27833b",
+          "bytes": 131
+        },
+        "runtime/data/content/pw3_synthetic.json": {
+          "sha256": "1ef2b41bfcd93114687825c1989871a3d80d6a3a3c16c21423a3cd210f0a2bea",
+          "bytes": 582
+        },
+        "usage.txt": {
+          "sha256": "bca1c8771f0483100ea193255c2bfabe79b23f16123af1427dc26b4900f9519a",
+          "bytes": 650
+        }
+      }
+    },
+    {
+      "operation": "background-reproduction",
+      "seconds": 3.1374797000025865,
+      "peak_python_bytes": 67399423,
+      "counts": {
+        "file_reads": 120,
+        "file_reads_bytes": 565740,
+        "hash": 38,
+        "hash_bytes": 412825,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 7,
+        "png_load_calls": 21,
+        "png_decodes": 6
+      },
+      "phases": {
+        "transport-inventory": {
+          "calls": 2,
+          "inclusive_seconds": 0.4246219999913592,
+          "exclusive_seconds": 0.4246219999913592
+        },
+        "background-reproduction": {
+          "calls": 1,
+          "inclusive_seconds": 1.2657560000079684,
+          "exclusive_seconds": 1.2657560000079684
+        },
+        "content": {
+          "calls": 1,
+          "inclusive_seconds": 2.097722900012741,
+          "exclusive_seconds": 0.8319669000047725
+        },
+        "staging/offline": {
+          "calls": 1,
+          "inclusive_seconds": 3.1193500999943353,
+          "exclusive_seconds": 0.5970051999902353
+        }
+      },
+      "unattributed_seconds": 0.018129600008251145,
+      "mode": "color",
+      "result": [
+        {
+          "adapter": "authoring-p1-rect-color-1",
+          "approval_sha256": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a",
+          "background": {
+            "candidate_id": "A",
+            "decision": {
+              "ref": {
+                "bytes": 1262,
+                "file": "decisions/d01.json",
+                "sha256": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de"
+              },
+              "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+              "storage": "external"
+            },
+            "derivation": {
+              "ref": {
+                "bytes": 2974,
+                "file": "derived/bg01/derivation.json",
+                "sha256": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa"
+              },
+              "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+              "storage": "external"
+            },
+            "manifest": {
+              "ref": {
+                "bytes": 5446,
+                "file": "work/bg01.json",
+                "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13"
+              },
+              "root": "background",
+              "storage": "package"
+            },
+            "original": {
+              "bytes": 90,
+              "file": "original/A-b01.png",
+              "sha256": "4318d89a38a821c3d21b401215071b531e45b988bbfd09acd96ee12521116564"
+            },
+            "outcome": "selected",
+            "output": {
+              "bytes": 37884,
+              "file": "background.png",
+              "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4"
+            },
+            "profile_sha256": "ba5e7f5634e9625ef2d54b90d10bb88e5ef7bc67608d086a543c7e85770b62ff"
+          },
+          "background_asset": {
+            "bytes": 37884,
+            "file": "runtime/art/backgrounds/pz-hp-synthetic.png",
+            "sha256": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4"
+          },
+          "background_notice": {
+            "bytes": 184,
+            "file": "runtime/art/backgrounds/pz-hp-synthetic.txt",
+            "sha256": "89ac781955af05febe430a10ec54a680006cec7685fbf8ae439478b9105c89db"
+          },
+          "catalog_ready": false,
+          "categories": {
+            "file": "categories.json",
+            "sha256": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70"
+          },
+          "category_id": "voegel",
+          "color_mapping": {
+            "blue": 1,
+            "empty": 0,
+            "red": 2
+          },
+          "definition": "runtime/data/content/pw3_synthetic.json",
+          "definition_id": "pz-hp-synthetic",
+          "editorial_approved": true,
+          "files": {
+            "approval.json": "02c24419d80380c927e3176eab470ea29e47f76f992a483fda32bea767d5e04a",
+            "categories.json": "1f07150672b22cafba0b08175acb4130377edd6d096dd29bccbc5ea7f723cd70",
+            "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/decisions/d01.json": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de",
+            "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/background.png": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+            "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/derived/bg01/derivation.json": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa",
+            "external/content/authoring/pz-hp-synthetic/r02/sidecars/late01/evidence/decision.txt": "8e69ec0781e0c48af4539883c7553a3a41aec1820ee342170879ac6307c8b006",
+            "input/package.zip": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f",
+            "inspection.json": "6632a4006793b86065cd5f0c0b245705853055cceba55955ce954f45bcac82da",
+            "runtime/art/backgrounds/pz-hp-synthetic.png": "d51999cfd7f26e5a2ac127eae75c07e0e0d4c91449831e3bb9ded20961915db4",
+            "runtime/art/backgrounds/pz-hp-synthetic.txt": "89ac781955af05febe430a10ec54a680006cec7685fbf8ae439478b9105c89db",
+            "runtime/art/content/pw3_synthetic.png": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144",
+            "runtime/art/content/pw3_synthetic.txt": "686d2a5cdd9d68acf82b7216c4852662a815689496031352ff1597ebde27833b",
+            "runtime/data/content/pw3_synthetic.json": "1ef2b41bfcd93114687825c1989871a3d80d6a3a3c16c21423a3cd210f0a2bea",
+            "usage.txt": "bca1c8771f0483100ea193255c2bfabe79b23f16123af1427dc26b4900f9519a"
+          },
+          "format": "picross-target-export-v6",
+          "handoff_sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e",
+          "input": {
+            "discarded_files": [],
+            "external_root": "external",
+            "original_package": {
+              "bytes": 42790,
+              "file": "input/package.zip",
+              "sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f"
+            }
+          },
+          "integration_ready": false,
+          "inventory_sha256": "7aeec6573bb6cc8a4629c35d69a3059d48af4c3ec9f30c239b40c7f017b57c72",
+          "package_revision": "r02",
+          "palette_gate": {
+            "allowed": true,
+            "assessment": {
+              "candidate": {
+                "id": "cff05691c9e972d55f2d31806980fd5013232e59037d4e5ec7c80637fa681ac6",
+                "normalized_sha256": "42bda3465b93519772986021edf54b969707a0811eaa3d1bfedf8ec6f89d753b",
+                "revision": 1,
+                "source_id": "test-only"
+              },
+              "complete": true,
+              "empty_cells": 2,
+              "format": "picross-palette-assessment-v1",
+              "matrix": {
+                "height": 3,
+                "order": "row-major",
+                "sha256": "f9138fbd4842a5fff45d283d46785d370552d0694aad86b8f9091f2ba0b18798",
+                "width": 3
+              },
+              "negative_pairs": [],
+              "norm": {
+                "commit": "45b8fe697364bf73f4277c8b76f92d5c00400919",
+                "contract": "1.0",
+                "document_revision": 4,
+                "file": "docs/PUZZLE_QUALITY.md"
+              },
+              "pair_count": 1,
+              "pairs": [
+                {
+                  "D": "30.055714",
+                  "S": 90334593410,
+                  "ids": [
+                    "blue",
+                    "red"
+                  ],
+                  "q": [
+                    [
+                      558511,
+                      -48364,
+                      -122665
+                    ],
+                    [
+                      559396,
+                      170935,
+                      82863
+                    ]
+                  ],
+                  "rgb": [
+                    "#2678bd",
+                    "#cc3333"
+                  ],
+                  "rule_id": "picross-palette-separation-1",
+                  "status": "positive"
+                }
+              ],
+              "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+              "rule_id": "picross-palette-separation-1",
+              "source_fingerprint": "24bfb0ec61ced1a989ecd856cd5f053b30cc11dcebbb9d09f7b1d61f35db88a5",
+              "status": "positive",
+              "unused_ids": [],
+              "used": [
+                {
+                  "cells": 3,
+                  "id": "blue",
+                  "q": [
+                    558511,
+                    -48364,
+                    -122665
+                  ],
+                  "rgb": "#2678bd"
+                },
+                {
+                  "cells": 4,
+                  "id": "red",
+                  "q": [
+                    559396,
+                    170935,
+                    82863
+                  ],
+                  "rgb": "#cc3333"
+                }
+              ],
+              "warning_pairs": [],
+              "worst_pair": {
+                "D": "30.055714",
+                "S": 90334593410,
+                "ids": [
+                  "blue",
+                  "red"
+                ],
+                "q": [
+                  [
+                    558511,
+                    -48364,
+                    -122665
+                  ],
+                  [
+                    559396,
+                    170935,
+                    82863
+                  ]
+                ],
+                "rgb": [
+                  "#2678bd",
+                  "#cc3333"
+                ],
+                "rule_id": "picross-palette-separation-1",
+                "status": "positive"
+              }
+            },
+            "binding": {
+              "candidate": {
+                "bundle": "production/import",
+                "source_type": "import",
+                "variant": "area"
+              },
+              "handoff_sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e",
+              "inventory_sha256": "7aeec6573bb6cc8a4629c35d69a3059d48af4c3ec9f30c239b40c7f017b57c72",
+              "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+              "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+              "original_zip_sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f",
+              "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+              "puzzle_id": "pz-hp-synthetic",
+              "revision": "r02",
+              "rulebook": {
+                "file": "rulebook.md",
+                "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f",
+                "version": "0.8.0"
+              },
+              "source": {
+                "candidate_id": "cff05691c9e972d55f2d31806980fd5013232e59037d4e5ec7c80637fa681ac6",
+                "kind": "import",
+                "variant": "area"
+              },
+              "source_fingerprint": "24bfb0ec61ced1a989ecd856cd5f053b30cc11dcebbb9d09f7b1d61f35db88a5"
+            },
+            "exception": null,
+            "visual_review": {
+              "criteria": {
+                "Q-H01": {
+                  "accepted": false,
+                  "actor": "TEST ONLY",
+                  "evidence": [
+                    {
+                      "file": "evidence.txt",
+                      "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                    }
+                  ],
+                  "reason": "Test-only boundary evidence.",
+                  "result": "erfüllt",
+                  "statement": "Synthetic palette judgment.",
+                  "timestamp_utc": "2026-11-09T12:00:00Z"
+                },
+                "Q-H02": {
+                  "accepted": false,
+                  "actor": "TEST ONLY",
+                  "evidence": [
+                    {
+                      "file": "evidence.txt",
+                      "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                    }
+                  ],
+                  "reason": "Test-only boundary evidence.",
+                  "result": "erfüllt",
+                  "statement": "Synthetic palette judgment.",
+                  "timestamp_utc": "2026-11-09T12:00:00Z"
+                },
+                "Q-R04": {
+                  "accepted": false,
+                  "actor": "TEST ONLY",
+                  "evidence": [
+                    {
+                      "file": "evidence.txt",
+                      "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                    }
+                  ],
+                  "reason": "Test-only boundary evidence.",
+                  "result": "erfüllt",
+                  "statement": "Synthetic palette judgment.",
+                  "timestamp_utc": "2026-11-09T12:00:00Z"
+                }
+              },
+              "format": "picross-palette-visual-review-v1",
+              "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+              "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+              "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+              "puzzle_id": "pz-hp-synthetic",
+              "revision": "r02"
+            }
+          },
+          "registered": false,
+          "reveal": "runtime/art/content/pw3_synthetic.png",
+          "runtime_revision": 1,
+          "save_slot": "pw3_synthetic",
+          "selection": {
+            "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+            "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+            "reveal": {
+              "file": "reveals/reveal.png",
+              "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+            },
+            "variant": "area"
+          },
+          "stem": "pw3_synthetic",
+          "technical": true,
+          "test_only": true
+        },
+        {
+          "format": "picross-target-inspection-v6",
+          "adapter": "authoring-p1-rect-color-1",
+          "technical": true,
+          "editorial_approved": true,
+          "catalog_ready": false,
+          "registered": false,
+          "blockers": [],
+          "puzzle_id": "pz-hp-synthetic",
+          "package_revision": "r02",
+          "selection": {
+            "variant": "area",
+            "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+            "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+            "reveal": {
+              "file": "reveals/reveal.png",
+              "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+            }
+          },
+          "handoff_sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e",
+          "inventory_sha256": "7aeec6573bb6cc8a4629c35d69a3059d48af4c3ec9f30c239b40c7f017b57c72",
+          "original_zip_sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f",
+          "source": {
+            "kind": "import",
+            "candidate_id": "cff05691c9e972d55f2d31806980fd5013232e59037d4e5ec7c80637fa681ac6",
+            "variant": "area"
+          },
+          "width": 3,
+          "height": 3,
+          "mode": "color",
+          "difficulty": {
+            "assessment_type": "editorial_estimate",
+            "confidence": "low",
+            "level": "L1",
+            "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+            "method": "picross-difficulty-0.1",
+            "plausible_range": [
+              "L1",
+              "L2"
+            ],
+            "playtest": "not_performed",
+            "rule_families": {
+              "R0": "Artificial full runs"
+            },
+            "time_estimate": null
+          },
+          "frame": {
+            "left": true,
+            "right": true,
+            "top": true,
+            "bottom": true
+          },
+          "fresh_verification": {
+            "status": "solved",
+            "proof_verified": true,
+            "certified": true,
+            "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+            "profile": {
+              "id": "full-line-color",
+              "version": 1,
+              "start": "unknown",
+              "deduction": "all-line-supported-values",
+              "search": false
+            },
+            "profile_hash": "f63ee6c88e6baa9f6a22f386ae532482d7ffb7b9a2237867f0d7cd9960ab608f",
+            "steps": 6,
+            "line_evaluations": 12
+          },
+          "reveal": {
+            "width": 12,
+            "height": 12,
+            "sha256": "de8715e85b71dc7d8fd5148b1b894048c90485b2bf9a3fde074f706fc8bd6144"
+          },
+          "tool": {
+            "adapter": "authoring-p1-rect-color-1",
+            "commit": "5351b14439212e4927d83f0b1f8fc145ca5b7719",
+            "versions": {
+              "tool": "rp3-image-1",
+              "pillow": "12.3.0",
+              "jpeg": "8.0",
+              "jpeg_turbo": "3.1.4.1",
+              "littlecms": "2.19",
+              "zlib": "1.3.1.zlib-ng"
+            },
+            "modules": {
+              "authoring_package.py": "f277a4a7220f42cb564ffed5bda3ccc6ced62e23d9c3dc0023443ed8805f4a0f",
+              "target_adapter.py": "35f85a1eaa9a016c07c2a98f629f23037d01221b83a2c7c4d42e42159ee2f799",
+              "content_registry.py": "456f10514454e925a7fc8f3b066e222e21cf12ebed94580343e9d932c7841a21",
+              "images.py": "d017b9d26ba785e7059e4fd8d7b4fd57fab9b2938d9248bb9e041a09a8019287",
+              "repair.py": "758026ac783fbd29d029ece1a9bb32fe6c3f9c73100992fca79b942bcc661725",
+              "contract.py": "5e9459d65cffab98b63435b51ed4b704d9a55596accd595bf0be1edf553e51f8",
+              "verifier.py": "f489b139fdd78f89cd933e1810274774d2ae1fb080cebd6538755996540a1112",
+              "categories.py": "3790a5bce1b6bebc238e23db8e35e79c887261c57c3e41b78d190694a91758a5",
+              "palette_quality.py": "0c13f8d2fb3953fed66721a23c840c0c804d1a552c8df51a8027d178ef63ca2c",
+              "palette_gate.py": "fc16467a42e40ee7650fcbf0d591fdfa9e549a96b7a2f1ea036b6712f5a88bb3",
+              "background_package.py": "a71e7d91cd312eda23da1c0af4845f4fab69a2af2127d6cbdcffcf477230abd5",
+              "background_assets.py": "e57211a1b515bb898d9dcbf549da3925a38d08d8164f52b8d84f8cb6d26ba4c9",
+              "background_contract.py": "4284d21f3e4e136cb56f866a657e7d7a23353114b901ec33a9d2e33ea0593912",
+              "background_io.py": "0600d3823ebdfee87296ae9ea45b7116b38392c00387a85952001493af7f9829",
+              "background_export.py": "15fe0a01ba5fb831207399e9855586806e57d9e8a0c20d9ab3ce2a255be447c7",
+              "authoring_staging.py": "bc266d65d4b17d929c0fac9ba14b1948c63d2d352c19eace096f642e0ef29c0e",
+              "authoring_workflow.py": "94c2f54a44d2f04d810b0688e3f050319e1c9e2ce47dabc5cb98b2b9a2eb3031"
+            }
+          },
+          "checked_at_utc": "2026-11-15T09:35:49.281385+00:00",
+          "test_only": true,
+          "category_id": "voegel",
+          "category_ready": true,
+          "palette_gate": {
+            "assessment": {
+              "format": "picross-palette-assessment-v1",
+              "rule_id": "picross-palette-separation-1",
+              "norm": {
+                "file": "docs/PUZZLE_QUALITY.md",
+                "contract": "1.0",
+                "document_revision": 4,
+                "commit": "45b8fe697364bf73f4277c8b76f92d5c00400919"
+              },
+              "candidate": {
+                "id": "cff05691c9e972d55f2d31806980fd5013232e59037d4e5ec7c80637fa681ac6",
+                "revision": 1,
+                "source_id": "test-only",
+                "normalized_sha256": "42bda3465b93519772986021edf54b969707a0811eaa3d1bfedf8ec6f89d753b"
+              },
+              "matrix": {
+                "width": 3,
+                "height": 3,
+                "order": "row-major",
+                "sha256": "f9138fbd4842a5fff45d283d46785d370552d0694aad86b8f9091f2ba0b18798"
+              },
+              "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+              "source_fingerprint": "24bfb0ec61ced1a989ecd856cd5f053b30cc11dcebbb9d09f7b1d61f35db88a5",
+              "used": [
+                {
+                  "id": "blue",
+                  "rgb": "#2678bd",
+                  "cells": 3,
+                  "q": [
+                    558511,
+                    -48364,
+                    -122665
+                  ]
+                },
+                {
+                  "id": "red",
+                  "rgb": "#cc3333",
+                  "cells": 4,
+                  "q": [
+                    559396,
+                    170935,
+                    82863
+                  ]
+                }
+              ],
+              "unused_ids": [],
+              "empty_cells": 2,
+              "pair_count": 1,
+              "pairs": [
+                {
+                  "ids": [
+                    "blue",
+                    "red"
+                  ],
+                  "rgb": [
+                    "#2678bd",
+                    "#cc3333"
+                  ],
+                  "q": [
+                    [
+                      558511,
+                      -48364,
+                      -122665
+                    ],
+                    [
+                      559396,
+                      170935,
+                      82863
+                    ]
+                  ],
+                  "S": 90334593410,
+                  "D": "30.055714",
+                  "status": "positive",
+                  "rule_id": "picross-palette-separation-1"
+                }
+              ],
+              "worst_pair": {
+                "ids": [
+                  "blue",
+                  "red"
+                ],
+                "rgb": [
+                  "#2678bd",
+                  "#cc3333"
+                ],
+                "q": [
+                  [
+                    558511,
+                    -48364,
+                    -122665
+                  ],
+                  [
+                    559396,
+                    170935,
+                    82863
+                  ]
+                ],
+                "S": 90334593410,
+                "D": "30.055714",
+                "status": "positive",
+                "rule_id": "picross-palette-separation-1"
+              },
+              "negative_pairs": [],
+              "warning_pairs": [],
+              "status": "positive",
+              "complete": true
+            },
+            "binding": {
+              "puzzle_id": "pz-hp-synthetic",
+              "revision": "r02",
+              "candidate": {
+                "bundle": "production/import",
+                "variant": "area",
+                "source_type": "import"
+              },
+              "source": {
+                "kind": "import",
+                "candidate_id": "cff05691c9e972d55f2d31806980fd5013232e59037d4e5ec7c80637fa681ac6",
+                "variant": "area"
+              },
+              "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+              "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+              "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+              "source_fingerprint": "24bfb0ec61ced1a989ecd856cd5f053b30cc11dcebbb9d09f7b1d61f35db88a5",
+              "rulebook": {
+                "version": "0.8.0",
+                "file": "rulebook.md",
+                "sha256": "fb3980a92f6470994ccae26c2e869619f970b85f786aea086c574a015da1ac7f"
+              },
+              "handoff_sha256": "663103ae7fdd31d9387eec444ffc2663a6faa80cde590e77b0788fa6275f2e9e",
+              "inventory_sha256": "7aeec6573bb6cc8a4629c35d69a3059d48af4c3ec9f30c239b40c7f017b57c72",
+              "original_zip_sha256": "e61e40e66f1e4583e4e261e69ea9a32c15c8d20ed7be0f18a22a57303a491b9f"
+            },
+            "visual_review": {
+              "criteria": {
+                "Q-H01": {
+                  "accepted": false,
+                  "actor": "TEST ONLY",
+                  "evidence": [
+                    {
+                      "file": "evidence.txt",
+                      "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                    }
+                  ],
+                  "reason": "Test-only boundary evidence.",
+                  "result": "erfüllt",
+                  "statement": "Synthetic palette judgment.",
+                  "timestamp_utc": "2026-11-09T12:00:00Z"
+                },
+                "Q-H02": {
+                  "accepted": false,
+                  "actor": "TEST ONLY",
+                  "evidence": [
+                    {
+                      "file": "evidence.txt",
+                      "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                    }
+                  ],
+                  "reason": "Test-only boundary evidence.",
+                  "result": "erfüllt",
+                  "statement": "Synthetic palette judgment.",
+                  "timestamp_utc": "2026-11-09T12:00:00Z"
+                },
+                "Q-R04": {
+                  "accepted": false,
+                  "actor": "TEST ONLY",
+                  "evidence": [
+                    {
+                      "file": "evidence.txt",
+                      "sha256": "ba52fafdf0766816f24bea176032b22a65af504a46380b4c898c58391de4e8e0"
+                    }
+                  ],
+                  "reason": "Test-only boundary evidence.",
+                  "result": "erfüllt",
+                  "statement": "Synthetic palette judgment.",
+                  "timestamp_utc": "2026-11-09T12:00:00Z"
+                }
+              },
+              "format": "picross-palette-visual-review-v1",
+              "logic_hash": "c1d8a2c06f3a8476abcd86d6a10aae538349f4d84e896e557402fdd8e6398648",
+              "matrix_hash": "ba8f2f35bfd9acc894ddccc9660988242b10312510979bf3e0256cf7bb1c0f9e",
+              "palette_sha256": "10af2417338f08250fa525067b1557faf37304be2ccb03167b73281babaf3d4f",
+              "puzzle_id": "pz-hp-synthetic",
+              "revision": "r02"
+            },
+            "exception": null,
+            "allowed": true
+          },
+          "original_state": "background_review",
+          "effective_state": "editorially_approved",
+          "background": {
+            "status": "selected",
+            "ready": true,
+            "binding": {
+              "decision": {
+                "ref": {
+                  "bytes": 1262,
+                  "file": "decisions/d01.json",
+                  "sha256": "753e572b4643b6bdd1929feb7bb5ac8e4795f479efda5553df2f4506c69e85de"
+                },
+                "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+                "storage": "external"
+              },
+              "derivation": {
+                "ref": {
+                  "bytes": 2974,
+                  "file": "derived/bg01/derivation.json",
+                  "sha256": "08ea29b2a972c4bbfde17b17fce0400d5271fa8976dbc995e6e858d0e29401aa"
+                },
+                "root": "content/authoring/pz-hp-synthetic/r02/sidecars/late01",
+                "storage": "external"
+              },
+              "history": null,
+              "manifest": {
+                "ref": {
+                  "bytes": 5446,
+                  "file": "work/bg01.json",
+                  "sha256": "325395f11f5a1bf1d8865060716ff90c929ee2b49db0a15830f5c3a18bda1d13"
+                },
+                "root": "background",
+                "storage": "package"
+              }
+            }
+          },
+          "integration_ready": false,
+          "export_verified": true
+        }
+      ]
+    }
+  ]
+}

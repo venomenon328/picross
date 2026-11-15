@@ -1,0 +1,11 @@
+test_git_and_diagnostics_preserve_identity_original_producer_and_reuse (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_git_and_diagnostics_preserve_identity_original_producer_and_reuse) ... ok
+test_loaded_render_identity_and_mid_operation_replacement_reject (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_loaded_render_identity_and_mid_operation_replacement_reject) ... ok
+test_v2_closed_report_profile_codecs_and_changed_targets (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_v2_closed_report_profile_codecs_and_changed_targets) ... ok
+test_v2_selected_none_exact_pixels_and_legacy_dispatch (tests.puzzle_production.test_background_assets.BackgroundV2Tests.test_v2_selected_none_exact_pixels_and_legacy_dispatch) ... ok
+test_finalizer_shares_one_projection_and_matches_independent_view (tests.puzzle_production.test_authoring_workflow.WorkflowTests.test_finalizer_shares_one_projection_and_matches_independent_view) ... ok
+test_two_full_inspections_fresh_offline_and_pending_tamper (tests.puzzle_production.test_background_export.BackgroundExportTests.test_two_full_inspections_fresh_offline_and_pending_tamper) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 47.581s
+
+OK

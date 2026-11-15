@@ -1,0 +1,63 @@
+{
+  "format": "pw-perf-c-review-originals/v1",
+  "purpose": "PW-PERF-C-A01 independent technical review; no merge authorization",
+  "product_head": "56178a15df59e39a4c2695d04e1c83efbf1d7bb2",
+  "measured_head": "5f306f2edfe07fb340f7c53271b5512e1dde470e",
+  "base": "5351b14439212e4927d83f0b1f8fc145ca5b7719",
+  "spec_url": "https://github.com/venomenon328/picross/issues/653#issuecomment-6892078406",
+  "pr": "https://github.com/venomenon328/picross/pull/657",
+  "expires": "2026-11-22T00:00:00Z",
+  "cleanup_owner": "Codex/review actor after A01 or expiry; keep originals while required review is pending and reassess at expiry. Never merge this review branch.",
+  "files": {
+    "T00-main.json": {
+      "sha256": "65a1ba3e0b27dbaaf5d4791e801a45d73da4d814080c7af03129175e0cbadeb4",
+      "bytes": 153677
+    },
+    "T00-controlled.json": {
+      "sha256": "ad360738969dd9b2d5120d8479d6a7673b1839ed1fcff439c1f750135032da8f",
+      "bytes": 152940
+    },
+    "T01-final.json": {
+      "sha256": "e56e19c866844d3a1e7e295ad300d3d146d97fa9e32022c0f77c2915e6d0b786",
+      "bytes": 152561
+    },
+    "T02-summary.json": {
+      "sha256": "074d809ce2da2c8fcf51729565ce50d0828c64f5a0dfe6f024c2e12f2709ada4",
+      "bytes": 9103
+    },
+    "measure.py": {
+      "sha256": "c46a8317096f14914402af1efec855ace9a7d54b69269d505d69cdd22645baaf",
+      "bytes": 9619
+    },
+    "T01-native.log": {
+      "sha256": "4dfde7574ebe38f8c6972c10ba1dad3960c9cea38e11f99ce5167f73b143fa74",
+      "bytes": 1301
+    },
+    "compat-tests.log": {
+      "sha256": "810703b36c2f392f15686e7e897b1128b990f011166b4acb61ae9a72d7a8e6e4",
+      "bytes": 1476
+    },
+    "check.py": {
+      "bytes": 2265,
+      "sha256": "4bc36b98d5b18426987e55311c12674801337afd39f91495fbeaab7cf2ab8b43"
+    }
+  },
+  "reproduction": [
+    "Isolated Python 3.13.14 + Pillow 12.3.0 on Windows 11; explicit own TASK/temp. Warm OS cache after fixture copy; no cache flush, no RSS claim.",
+    "measure.py is the exact final observed temporary driver based on #649. prepare constructs the two existing WorkflowFixture cases; execute prepare once then preserve/restore its snapshots for both measured implementations. Timing excludes preparation/copying.",
+    "T00-controlled: main at base with exactly background_assets.py, background_contract.py, background_package.py, catalog_background.py, image_normalization.py and new background_render.py copied from measured_head. Other measured implementation modules remain exact main bytes.",
+    "T01-final: product implementation at measured_head. The final_head changes only metadata-only fixture dispatch; every production module hash in T01-final.json matches final_head.",
+    "Set PW3_MEASURE_REPO to each checkout. Run the same measure.py once per implementation against the retained config-v2.json/snapshots. No concurrent local tests.",
+    "T00-main is a separate pure main/v1 reference from the earlier valid synthetic inputs. Its driver differed only in config.json/measure path selection. Do not feed these old v1 inputs into changed implementations or broaden #645.",
+    "The raw operation field is mislabeled by a temporary phase-loop variable shadow. Preserve raw originals; authoritative row order is mono finalizer/export/verify-export then color finalizer/export/verify-export, visible in driver invocations and T02-summary. No timing/counter/result mutation."
+  ],
+  "limitations": [
+    "Local broad preliminary tests encountered Windows symlink privilege, SIGTERM and POSIX-only mock assumptions. Full unchanged negatives are run by source-bound Linux Package CI, not marked locally passed.",
+    "No real catalog, imagery, solver search, merge, browser run or installer run; Windows artifact is a build, not a startup assertion.",
+    "Python allocation peak only; native/Pillow/Git RSS and physical disk bytes are not measured. catalog_io reads and nested inclusive phases must not be double-counted."
+  ],
+  "local_checks": {
+    "T01-native.log": "6 focused tests passed on final_head",
+    "compat-tests.log": "6 historical v1/finalizer/export guard tests passed; measured production bytes identical to final_head"
+  }
+}

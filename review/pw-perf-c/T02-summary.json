@@ -1,0 +1,289 @@
+{
+  "package": "PW-PERF-C",
+  "spec": "https://github.com/venomenon328/picross/issues/653#issuecomment-6892078406",
+  "final_head": "56178a15df59e39a4c2695d04e1c83efbf1d7bb2",
+  "measured_head": "5f306f2edfe07fb340f7c53271b5512e1dde470e",
+  "measurement_to_final": "Only the metadata-only legacy fixture dispatch changed; all measured production module bytes are identical (hashes in raw originals).",
+  "raw_label_note": "The temporary phase-observer loop shadows the raw operation label. Raw JSON is retained unchanged. Rows 0..5 are mono finalizer/export/verify-export, color finalizer/export/verify-export, as unambiguously invoked in measure.py. This does not affect counters, timers, results or bindings.",
+  "baseline": "T00-main is untouched main with v1 inputs. T00-controlled uses the identical main export/finalizer/projector implementations plus exactly six final v2 reader/render modules so both sides consume the same valid, unchanged v2 inputs. No compatibility exemption or resealing of old originals.",
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+    "background_tool": {
+      "profile": {
+        "anchor": "bottom-center",
+        "color_space": "sRGB",
+        "fit": "contain",
+        "format": "PNG",
+        "height": 576,
+        "id": "picross-background-png2304-v1",
+        "metadata": "sRGB-only",
+        "mode": "RGBA",
+        "png_compress_level": 9,
+        "png_optimize": false,
+        "resample": "pillow-rgba-premultiplied-lanczos",
+        "transparent_rgb": "zero",
+        "upscale": true,
+        "width": 2304
+      },
+      "profile_sha256": "ba5e7f5634e9625ef2d54b90d10bb88e5ef7bc67608d086a543c7e85770b62ff",
+      "tool": {
+        "id": "picross-background-2",
+        "versions": {
+          "python": "3.13.14",
+          "pillow": "12.3.0",
+          "zlib": "1.3.1.zlib-ng",
+          "littlecms": "2.19"
+        },
+        "modules": [
+          {
+            "file": "tools/puzzle_production/background_render.py",
+            "sha256": "1c3fa91f688a26834e5c7dfebc6c6941f773dcf73b8352cbbf2dd1e3088611fc"
+          },
+          {
+            "file": "tools/puzzle_production/image_normalization.py",
+            "sha256": "91a1839053e9aebe692551fe28ecaa32c7943a3f7b6c0e67a31c10a6fa9c3f88"
+          }
+        ]
+      },
+      "tool_sha256": "17224845977ab8eb1de09f666ee5361e4ec5311e7fdc0faef13663c44e2c885b",
+      "producer": {
+        "commit": "5f306f2edfe07fb340f7c53271b5512e1dde470e",
+        "dirty": false
+      }
+    }
+  },
+  "rows": [
+    {
+      "mode": "mono",
+      "operation": "finalizer",
+      "before_seconds": 7.461966999995639,
+      "after_seconds": 7.0576143999933265,
+      "before_counts": {
+        "file_reads": 317,
+        "file_reads_bytes": 892258,
+        "hash": 278,
+        "hash_bytes": 1853586,
+        "zip_opens": 6,
+        "adapter_inspections": 2,
+        "image_opens": 38,
+        "png_load_calls": 43,
+        "png_decodes": 23,
+        "projector_inspections": 2,
+        "records": 3,
+        "member_reads": 63,
+        "member_reads_bytes": 73500,
+        "view_image_checks": 15
+      },
+      "after_counts": {
+        "file_reads": 311,
+        "file_reads_bytes": 800796,
+        "hash": 227,
+        "hash_bytes": 1436743,
+        "zip_opens": 5,
+        "adapter_inspections": 2,
+        "image_opens": 28,
+        "png_load_calls": 38,
+        "png_decodes": 18,
+        "projector_inspections": 1,
+        "records": 2,
+        "member_reads": 42,
+        "member_reads_bytes": 49000,
+        "view_image_checks": 10
+      },
+      "limits": {
+        "projector_inspections": 1,
+        "zip_opens": 6,
+        "records": 3
+      },
+      "unchanged_content": true,
+      "input_set_sha256": "e6c3afc4265f4debcaa148988cc8a4c131b48c2e51434acedb1225858ba08fd6",
+      "input_files": 76
+    },
+    {
+      "mode": "mono",
+      "operation": "export",
+      "before_seconds": 6.847151000009035,
+      "after_seconds": 4.761458099994343,
+      "before_counts": {
+        "file_reads": 287,
+        "file_reads_bytes": 609918,
+        "zip_opens": 3,
+        "hash": 78,
+        "hash_bytes": 477388,
+        "adapter_inspections": 3,
+        "image_opens": 12,
+        "png_load_calls": 42,
+        "png_decodes": 12
+      },
+      "after_counts": {
+        "file_reads": 199,
+        "file_reads_bytes": 451697,
+        "zip_opens": 2,
+        "hash": 72,
+        "hash_bytes": 426063,
+        "adapter_inspections": 2,
+        "image_opens": 8,
+        "png_load_calls": 28,
+        "png_decodes": 8
+      },
+      "limits": {
+        "adapter_inspections": 2,
+        "zip_opens": 2,
+        "png_decodes": 8,
+        "file_reads": 287,
+        "file_reads_bytes": 622374
+      },
+      "unchanged_content": true
+    },
+    {
+      "mode": "mono",
+      "operation": "verify-export",
+      "before_seconds": 2.0115403000090737,
+      "after_seconds": 2.017372100002831,
+      "before_counts": {
+        "file_reads": 102,
+        "file_reads_bytes": 228341,
+        "hash": 29,
+        "hash_bytes": 164334,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 4,
+        "png_load_calls": 14,
+        "png_decodes": 4
+      },
+      "after_counts": {
+        "file_reads": 102,
+        "file_reads_bytes": 228341,
+        "hash": 29,
+        "hash_bytes": 164334,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 4,
+        "png_load_calls": 14,
+        "png_decodes": 4
+      },
+      "limits": {
+        "adapter_inspections": 1,
+        "zip_opens": 1
+      },
+      "unchanged_content": true
+    },
+    {
+      "mode": "color",
+      "operation": "finalizer",
+      "before_seconds": 9.579266000000644,
+      "after_seconds": 9.092082799994387,
+      "before_counts": {
+        "file_reads": 345,
+        "file_reads_bytes": 1487942,
+        "hash": 288,
+        "hash_bytes": 2363206,
+        "zip_opens": 6,
+        "adapter_inspections": 2,
+        "image_opens": 44,
+        "png_load_calls": 57,
+        "png_decodes": 27,
+        "projector_inspections": 2,
+        "records": 3,
+        "member_reads": 63,
+        "member_reads_bytes": 74445,
+        "view_image_checks": 15
+      },
+      "after_counts": {
+        "file_reads": 339,
+        "file_reads_bytes": 1389906,
+        "hash": 237,
+        "hash_bytes": 1916495,
+        "zip_opens": 5,
+        "adapter_inspections": 2,
+        "image_opens": 34,
+        "png_load_calls": 52,
+        "png_decodes": 22,
+        "projector_inspections": 1,
+        "records": 2,
+        "member_reads": 42,
+        "member_reads_bytes": 49630,
+        "view_image_checks": 10
+      },
+      "limits": {
+        "projector_inspections": 1,
+        "zip_opens": 6,
+        "records": 3
+      },
+      "unchanged_content": true,
+      "input_set_sha256": "0b2ff568df9979ac00db17f89122949a2fbfd1959eba5e26e08f6d2b59445a8e",
+      "input_files": 123
+    },
+    {
+      "mode": "color",
+      "operation": "export",
+      "before_seconds": 9.756727299987688,
+      "after_seconds": 6.685803100001067,
+      "before_counts": {
+        "file_reads": 334,
+        "file_reads_bytes": 1453420,
+        "zip_opens": 3,
+        "hash": 102,
+        "hash_bytes": 1140663,
+        "adapter_inspections": 3,
+        "image_opens": 21,
+        "png_load_calls": 63,
+        "png_decodes": 18
+      },
+      "after_counts": {
+        "file_reads": 231,
+        "file_reads_bytes": 1047712,
+        "zip_opens": 2,
+        "hash": 93,
+        "hash_bytes": 1007616,
+        "adapter_inspections": 2,
+        "image_opens": 14,
+        "png_load_calls": 42,
+        "png_decodes": 12
+      },
+      "limits": {
+        "adapter_inspections": 2,
+        "zip_opens": 2,
+        "png_decodes": 12,
+        "file_reads": 334,
+        "file_reads_bytes": 1465852
+      },
+      "unchanged_content": true
+    },
+    {
+      "mode": "color",
+      "operation": "verify-export",
+      "before_seconds": 3.1374797000025865,
+      "after_seconds": 2.956911000001128,
+      "before_counts": {
+        "file_reads": 120,
+        "file_reads_bytes": 565740,
+        "hash": 38,
+        "hash_bytes": 412825,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 7,
+        "png_load_calls": 21,
+        "png_decodes": 6
+      },
+      "after_counts": {
+        "file_reads": 120,
+        "file_reads_bytes": 565740,
+        "hash": 38,
+        "hash_bytes": 412825,
+        "zip_opens": 1,
+        "adapter_inspections": 1,
+        "image_opens": 7,
+        "png_load_calls": 21,
+        "png_decodes": 6
+      },
+      "limits": {
+        "adapter_inspections": 1,
+        "zip_opens": 1
+      },
+      "unchanged_content": true
+    }
+  ],
+  "all_budgets_pass": true
+}

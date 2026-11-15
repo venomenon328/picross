@@ -1,0 +1,11 @@
+test_verify_preserves_producer_bytes_across_content_commit_and_dirty_to_clean (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_verify_preserves_producer_bytes_across_content_commit_and_dirty_to_clean) ... ok
+test_verify_rejects_changed_actual_module_in_a_fresh_process (tests.puzzle_production.test_background_assets.BackgroundAssetsTests.test_verify_rejects_changed_actual_module_in_a_fresh_process) ... ok
+test_qualified_producer_reaches_export_and_offline_reader_without_special_consumer_pass (tests.puzzle_production.test_background_export.BackgroundExportTests.test_qualified_producer_reaches_export_and_offline_reader_without_special_consumer_pass) ... ok
+test_qualified_old_record_is_checked_before_approval_and_stays_byte_identical (tests.puzzle_production.test_authoring_finalization.AuthoringFinalizationTests.test_qualified_old_record_is_checked_before_approval_and_stays_byte_identical) ... ok
+test_source_change_and_target_race_are_rejected_before_publication (tests.puzzle_production.test_background_export.BackgroundExportTests.test_source_change_and_target_race_are_rejected_before_publication) ... ok
+test_failed_export_keeps_foreign_stage_bytes_and_reports_remaining_path (tests.puzzle_production.test_background_export.BackgroundExportTests.test_failed_export_keeps_foreign_stage_bytes_and_reports_remaining_path) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 63.083s
+
+OK
