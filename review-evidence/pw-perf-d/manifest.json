@@ -7,8 +7,8 @@
   "files": [
     {
       "file": "norm-coverage.json",
-      "bytes": 120151,
-      "sha256": "67377908231ada46399dafafebf9c68298b38d0e34ae66f6f4b5e006b69d7705"
+      "bytes": 118823,
+      "sha256": "84b7a6bd868a54ff005657b9dded1336ba09b0dca24a6634efe175bdacce4ae8"
     },
     {
       "file": "README.md",
@@ -17,13 +17,13 @@
     },
     {
       "file": "routing-links.json",
-      "bytes": 12241,
-      "sha256": "65835a5a043fd92d003cc55eab227284679d82001711e2a3118f424082174685"
+      "bytes": 11856,
+      "sha256": "724925a09671a87e07c563495c743f18b6e3070bae6a75baa24cbaf1f9a32597"
     },
     {
       "file": "source-map.json",
-      "bytes": 49345,
-      "sha256": "dac432b6b33507cfc1a54395cbeac1a476e70b4bef02d960d55730b489352310"
+      "bytes": 47128,
+      "sha256": "e4cb43e58858647f26bc1089b8de4b607a6ddcc46188fb9a206e994e1fa03d67"
     },
     {
       "file": "source_probe.py",
@@ -32,8 +32,8 @@
     },
     {
       "file": "technical-sources.json",
-      "bytes": 5698,
-      "sha256": "22c7c5926ff5bb6a3283e0a0a1814006d610b394f7a6d19a032ba308bfb6ad41"
+      "bytes": 5585,
+      "sha256": "fc0d14cb12a8abb59cd8ecdbd532748d579018fd90e3f3704a930293beec6463"
     }
   ]
 }
