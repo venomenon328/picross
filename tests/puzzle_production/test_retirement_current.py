@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
 import tempfile
 import unittest
 from unittest.mock import patch
@@ -88,6 +89,136 @@ class CurrentRetirementTests(unittest.TestCase):
         if row['background']['asset']: row['background']['asset']['file']=image.removeprefix('game/')
         capability(self.root)
         write_json(self.root/cr.REGISTRY,value);write_json(self.root/cr.RUNTIME,runtime)
+
+    def add_phase(self, revision, state='reveal_review', record_format='picross-authoring-record-v3'):
+        directory=f'content/authoring/{self.identifier}/{revision}'
+        package=directory+'/package.zip'
+        raw=b'TEST ONLY opaque completed phase archive: '+revision.encode()
+        (self.root/directory).mkdir(parents=True)
+        (self.root/package).write_bytes(raw)
+        write_json(self.root/directory/'record.json',{
+            'format':record_format,'puzzle_id':self.identifier,
+            'revision':revision,'state':state,'blockers':[],
+            'package':{'file':package,'bytes':len(raw),'sha256':io.checksum(raw)}})
+        index=load_json(self.root/retirement.INDEX)
+        index['entries'].append({'puzzle_id':self.identifier,'revision':revision,'record':directory+'/record.json'})
+        write_json(self.root/retirement.INDEX,index)
+
+    def completed_phases(self):
+        # The declared finished scope, not revision-number ordering, authorizes
+        # retirement. Earlier creative states need no invented final approvals.
+        self.add_phase('reveal-draft')
+        self.add_phase('raster-draft','raster_ready','picross-authoring-record-v4')
+        directory=self.root/'content/authoring'/self.identifier
+        write_json(directory/'evidence/summary.json',{'test_only':'completed phase evidence'})
+        write_json(directory/'evidence/nested/measurement.json',{'test_only':17})
+        (directory/'notes.txt').write_text('TEST ONLY completed production notes\n',encoding='utf-8')
+        return {'completed_revisions':[(self.identifier,'reveal-draft'),(self.identifier,'raster-draft')],
+                'completed_work':[(self.identifier,'evidence'),(self.identifier,'notes.txt')]}
+
+    def refused_unchanged(self, commit, **selection):
+        before=snapshot(self.root);status=self.git('status','--porcelain=v1')
+        with self.assertRaises(ValueError):
+            retirement.retire(self.root,[self.identifier],commit,**selection)
+        self.assertEqual(before,snapshot(self.root))
+        self.assertEqual(status,self.git('status','--porcelain=v1'))
+        self.assertFalse((self.root/tx.LOCK).exists())
+
+    def test_explicit_completed_phases_preserve_live_sources_and_repeat_without_archives(self):
+        selection=self.completed_phases();self.migrate('selected','.png');commit=self.commit()
+        before=snapshot(self.root)
+        result=retirement.retire(self.root,[self.identifier],commit,**selection)
+        self.assertEqual(result['status'],'production_retired')
+        after=snapshot(self.root);prefix=self.entry['production']['package']
+        authoring=f'content/authoring/{self.identifier}/'
+        allowed={cr.REGISTRY,retirement.INDEX}|{n for n in before if n.startswith((prefix+'/',authoring))}
+        self.assertEqual({n:v for n,v in before.items() if n not in allowed},
+                         {n:v for n,v in after.items() if n not in allowed})
+        self.assertFalse((self.root/authoring).exists())
+        self.assertEqual(load_json(self.root/retirement.INDEX)['entries'],[])
+        self.assertEqual(load_json(self.root/prefix/'manifest.json')['entry'],self.entry)
+        # Includes rights notices, runtime, current reveal/background sources,
+        # definitions, images, rating and added metadata in the invariant above.
+        read=io._read;run=subprocess.run
+        def no_archive_read(root,name,limit,**kw):
+            self.assertFalse(str(name).endswith('.zip'),'retired archive reopened')
+            return read(root,name,limit,**kw)
+        def no_historical_archive(args,*a,**kw):
+            self.assertFalse('show' in args and any(str(x).endswith('.zip') for x in args),
+                             'historical archive reconstructed')
+            return run(args,*a,**kw)
+        with patch.object(io,'_read',side_effect=no_archive_read), \
+             patch.object(subprocess,'run',side_effect=no_historical_archive), \
+             patch.object(bg,'build',side_effect=AssertionError('retired ZIP replay')):
+            self.assertEqual(retirement.retire(self.root,[self.identifier],commit,**selection)['status'],'no-op')
+        self.assertEqual(after,snapshot(self.root))
+        # A partial remnant is a concrete failure, never a successful no-op.
+        remnant=self.root/authoring/'evidence/summary.json'
+        remnant.parent.mkdir(parents=True);remnant.write_bytes(before[authoring+'evidence/summary.json'][0])
+        self.refused_unchanged(commit,**selection)
+
+    def test_completed_phase_selection_is_required_and_explicit(self):
+        selection=self.completed_phases();self.migrate();commit=self.commit()
+        for selected in ({}, {'completed_revisions':selection['completed_revisions']},
+                         {**selection,'completed_revisions':selection['completed_revisions'][:1]}):
+            with self.subTest(selection=selected):self.refused_unchanged(commit,**selected)
+
+    def test_completed_selection_rejects_foreign_unknown_alias_and_overlapping_paths(self):
+        selection=self.completed_phases();self.migrate();commit=self.commit()
+        revisions=selection['completed_revisions'];work=selection['completed_work']
+        invalid=[
+            {**selection,'completed_revisions':revisions+[('pz-foreign','reveal-draft')]},
+            {**selection,'completed_revisions':revisions+[(self.identifier,'unknown-phase')]},
+            {**selection,'completed_revisions':revisions+[revisions[0]]},
+            {**selection,'completed_work':work+[('pz-foreign','evidence')]},
+            {**selection,'completed_work':work+[(self.identifier,'evidence/summary.json')]},
+            {**selection,'completed_work':work+[work[0]]},
+        ]
+        for name in ('','.', '..','../other','/absolute','./evidence','evidence/../evidence',
+                     'evidence//summary.json','evidence/','EVIDENCE','current-view.json',
+                     self.entry['production']['revision'],'reveal-draft/package.zip','unknown-work'):
+            invalid.append({**selection,'completed_work':work+[(self.identifier,name)]})
+        for selected in invalid:
+            with self.subTest(selection=selected):self.refused_unchanged(commit,**selected)
+
+    def test_completed_selections_require_original_main_bytes_rows_and_file_sets(self):
+        selection=self.completed_phases();self.migrate();commit=self.commit()
+        directory=self.root/'content/authoring'/self.identifier
+        record=directory/'reveal-draft/record.json';original=record.read_bytes()
+        value=load_json(record);value['puzzle_id']='pz-foreign';write_json(record,value)
+        self.refused_unchanged(commit,**selection);record.write_bytes(original)
+        evidence=directory/'evidence/summary.json';original=evidence.read_bytes();stamp=evidence.stat()
+        evidence.write_bytes(original.replace(b'completed',b'altered!!'))
+        os.utime(evidence,ns=(stamp.st_atime_ns,stamp.st_mtime_ns))
+        self.refused_unchanged(commit,**selection);evidence.write_bytes(original)
+        extra=directory/'evidence/unpublished.txt';extra.write_text('TEST ONLY new work',encoding='utf-8')
+        self.refused_unchanged(commit,**selection);extra.unlink()
+        archive=directory/'raster-draft/package.zip';original=archive.read_bytes();archive.unlink()
+        self.refused_unchanged(commit,**selection);archive.write_bytes(original)
+        index=self.root/retirement.INDEX;original=index.read_bytes();value=load_json(index)
+        value['entries']=[r for r in value['entries'] if r['revision']!='reveal-draft'];write_json(index,value)
+        self.refused_unchanged(commit,**selection);index.write_bytes(original)
+        name=evidence.relative_to(self.root).as_posix();original=evidence.read_bytes()
+        evidence.write_bytes(original+b' ');self.git('add','--',name);evidence.write_bytes(original)
+        self.refused_unchanged(commit,**selection);self.git('reset','-q','HEAD','--',name)
+        # It exists on newer main, but was absent from the original integration.
+        # Its numerically smaller name must not make it safe to discard.
+        self.add_phase('r00');self.commit()
+        self.refused_unchanged(commit,**{**selection,'completed_revisions':
+                              selection['completed_revisions']+[(self.identifier,'r00')]})
+
+    def test_cli_retires_explicit_completed_phases_and_work(self):
+        selection=self.completed_phases();self.migrate();commit=self.commit()
+        args=[sys.executable,'-m','tools.puzzle_production.target_adapter','retire-production',
+              '--checkout',str(self.root),'--integrated-commit',commit,'--puzzle-id',self.identifier]
+        for flag,items in (('--completed-revision',selection['completed_revisions']),
+                           ('--completed-work',selection['completed_work'])):
+            for identifier,name in items:args.extend((flag,identifier,name))
+        result=subprocess.run(args,cwd=Path(__file__).resolve().parents[2],capture_output=True,text=True)
+        self.assertEqual(result.returncode,0,result.stdout+result.stderr)
+        self.assertEqual(json.loads(result.stdout)['status'],'production_retired')
+        self.assertFalse((self.root/'content/authoring'/self.identifier).exists())
+        self.assertEqual(load_json(self.root/retirement.INDEX)['entries'],[])
 
     def test_current_preferences_png_svg_original_anchor_and_noop(self):
         imported=self.commit();self.migrate('selected','.png');main=self.commit()

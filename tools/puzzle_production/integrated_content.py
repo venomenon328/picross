@@ -47,14 +47,48 @@ def _tree(root, directory, *, empty=()):
     return files, directories
 
 
-def retire(root, ids, integrated_commit, *, source_commits=None):
+def _within(name, directory):
+    return name == directory or name.startswith(directory + "/")
+
+
+def _completed_selection(ids, revisions, work):
+    """Explicit work ownership, never inferred from revision names or ID alone."""
+    from .authoring_package import relative
+    from .reveal_retirement import selection
+    result = {identifier: {"revisions": set(), "work": set()} for identifier in ids}
+    for values, kind in ((revisions, "revisions"), (work, "work")):
+        values = [] if values is None else values
+        require(isinstance(values, (list, tuple)), "Expected completed work pairs")
+        for pair in values:
+            require(isinstance(pair, (list, tuple)) and len(pair) == 2 and
+                    all(isinstance(value, str) for value in pair), "Expected ID and completed work path")
+            identifier, value = pair
+            require(identifier in result, "Completed work belongs to an unselected production")
+            if kind == "revisions":
+                name = selection(identifier, value)
+            else:
+                relative(value)
+                require(value.split("/")[0].casefold() != "current-view.json",
+                        "Remove the verified completed current view separately")
+                name = "content/authoring/" + identifier + "/" + value
+            names = result[identifier][kind]
+            folded = name.casefold()
+            require(not any(_within(folded, other.casefold()) or _within(other.casefold(), folded)
+                            for other in names), "Duplicate or overlapping completed work selection")
+            names.add(name)
+    return result
+
+
+def retire(root, ids, integrated_commit, *, source_commits=None,
+           completed_revisions=None, completed_work=None):
     from .retirement_scope import operation
     root = io.external(root)
     with operation(root) as reads:
-        return _retire(root, ids, integrated_commit, reads, {} if source_commits is None else source_commits)
+        return _retire(root, ids, integrated_commit, reads, {} if source_commits is None else source_commits,
+                       completed_revisions, completed_work)
 
 
-def _retire(root, ids, integrated_commit, reads, source_commits):
+def _retire(root, ids, integrated_commit, reads, source_commits, completed_revisions, completed_work):
     """Prepare a local diff after the whole selected production reached main.
 
     Git tree identities bind current bytes. Already retired sources use their
@@ -79,6 +113,7 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
     require(isinstance(ids, (list, tuple)) and ids and all(isinstance(i, str) for i in ids) and
             len(ids) == len(set(ids)), "Unknown/duplicate production IDs")
     for identifier in ids: reveal_source.path(identifier)
+    completion = _completed_selection(ids, completed_revisions, completed_work)
     require(isinstance(source_commits, dict) and set(source_commits) <= set(ids), "Foreign source commit ID")
     for commit in source_commits.values():
         require(isinstance(commit,str) and re.fullmatch(r"[0-9a-f]{40}",commit), "Use full source commit")
@@ -86,6 +121,7 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
                 "Source Git identity must be a commit object")
     from .retirement_scope import capture
     snapshot = capture(root, ids)
+    live_dependencies = set(reads.data)
     current = snapshot["registry"]
     catalog = io.json_bytes(snapshot["texts"][categories.PATH], 131072)
     old_catalog = categories.validate(io.json_bytes(git("show", integrated_commit + ":" + categories.PATH), 131072))
@@ -106,6 +142,12 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
         return result
 
     tree = git_tree(integrated_commit)
+
+    def historical_record(name):
+        require(tree.get(name, ())[:2] == ("100644", "blob") and
+                int(git("cat-file", "-s", integrated_commit + ":" + name)) <= 2 * 1024 * 1024,
+                "Missing regular integrated authoring record: " + name)
+        return io.json_bytes(git("show", integrated_commit + ":" + name), 2 * 1024 * 1024)
     # A later background adoption does not change the original completion
     # receipt. Its actual current bytes must nevertheless already be on main.
     main_commit = git("rev-parse", "origin/main").decode().strip()
@@ -149,6 +191,7 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
         require(canonical_bytes(old_entry) == canonical_bytes(old_entries[identifier]), "Production differs from integrated main entry")
         manifest = io.json_bytes(io.read(root, prefix + "/manifest.json", LIMIT), LIMIT)
         if manifest.get("format") in ("picross-editor-raster-package-v1", "picross-editor-raster-package-v2"):
+            require(not any(completion[identifier].values()), "Editor raster authority has no production work to retire")
             # These are the live manual proof/decision authorities, not an
             # authoring export eligible for compaction into a receipt. Verify
             # the complete captured source view on main and retain it intact.
@@ -159,8 +202,35 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
         selected = selection(identifier, revision)
         current_rows = {name: row for name, row in rows.items() if row["puzzle_id"] == identifier}
         old_rows = {name: row for name, row in original_rows.items() if row["puzzle_id"] == identifier}
+        extra_revisions, extra_work = completion[identifier]["revisions"], completion[identifier]["work"]
+        require(selected not in extra_revisions, "Integrated revision is already selected")
+        completed = {selected} | extra_revisions
+        records = {}
+        if extra_revisions:
+            from .authoring_workflow import EARLY, LATE, RECORDS
+            for directory in sorted(extra_revisions):
+                require(directory in old_rows, "Completed revision is not indexed at integrated main: " + directory)
+                record = historical_record(old_rows[directory]["record"])
+                require(isinstance(record, dict) and record.get("format") in RECORDS and
+                        record.get("puzzle_id") == identifier and
+                        selection(identifier, record.get("revision")) == directory and
+                        record.get("state") in EARLY + LATE + ("editorially_approved",) and
+                        record.get("integration") is None and isinstance(record.get("blockers"), list),
+                        "Not a completed prior production phase: " + directory)
+                records[directory] = record
+        expected_work = set()
+        for name in sorted(extra_work):
+            folded = name.casefold()
+            require(not any(_within(folded, directory.casefold()) or _within(directory.casefold(), folded)
+                            for directory in set(current_rows) | set(old_rows) | completed),
+                    "Completed work overlaps an authoring revision: " + name)
+            expected = {path for path in tree if _within(path, name)}
+            require(expected and all(tree[path][:2] == ("100644", "blob") for path in expected),
+                    "Completed work is not regular work at integrated main: " + name)
+            require(not expected & live_dependencies, "Completed work is still an active source: " + name)
+            expected_work.update(expected)
         bg = identifier in current_backgrounds
-        siblings = (set(current_rows) | set(old_rows)) - {selected}
+        siblings = (set(current_rows) | set(old_rows)) - completed
         if siblings:
             require(bg, "Other authoring revisions need a separate completion decision: " + authoring)
             from .background_request import validate as validate_request
@@ -187,50 +257,69 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
         authoring_files_all, _ = scopes[authoring]
         require(not io.safe(root, authoring).exists() or current_rows or bg and not any(scopes[authoring]),
                 "Unindexed authoring work prevents retirement: " + authoring)
-        require(all(any(name.startswith(directory + "/") for directory in current_rows)
+        require(all(any(name.startswith(directory + "/") for directory in current_rows) or
+                    any(_within(name, path) for path in extra_work)
                     for name in authoring_files_all), "Unindexed authoring work prevents retirement: " + authoring)
-        selected_rows = {name: row for name, row in current_rows.items() if name == selected}
-        original_selected_rows = {name: row for name, row in old_rows.items() if name == selected}
+        selected_rows = {name: row for name, row in current_rows.items() if name in completed}
+        original_selected_rows = {name: row for name, row in old_rows.items() if name in completed}
         if existing_receipt is not None:
             if identifier in source_commits:
                 require(existing_receipt.get("provenance", {}).get("source_commit") == source_commits[identifier],
                         "Already retired production has a different source proof")
             require(existing_receipt["integrated_commit"] == integrated_commit,
                     "Already retired production has a different main proof")
-            require(not selected_rows and not io.safe(root, selected).exists(),
+            require(not selected_rows and not any(io.safe(root, name).exists() for name in completed | extra_work),
                     "Retired production still has original authoring work: " + selected)
             scopes[prefix] = _tree(root, prefix)
             require(scopes[prefix][0] == {prefix + "/manifest.json"}, "Retired package has remaining work")
         else:
             require(selected_rows == original_selected_rows, "Unmerged authoring index changes: " + selected)
             scopes[prefix] = _tree(root, prefix, empty={prefix + "/external"} if bg else ())
-            scopes[selected] = _tree(root, selected)
             package_files, package_dirs = scopes[prefix]
-            authoring_files, authoring_dirs = scopes[selected]
+            authoring_files = set()
+            for directory in sorted(completed):
+                scopes[directory] = _tree(root, directory)
+                authoring_files.update(scopes[directory][0])
+            for name in sorted(extra_work):
+                path = io.safe(root, name)
+                if name in tree:
+                    require(path.is_file(), "Incomplete completed work file: " + name)
+                    authoring_files.add(name)
+                else:
+                    scopes[name] = _tree(root, name)
+                    require(path.is_dir(), "Incomplete completed work directory: " + name)
+                    authoring_files.update(scopes[name][0])
+            preserved = authoring_files_all - authoring_files
+            authoring_dirs = {name for name in scopes[authoring][1]
+                              if not any(_within(path, name) for path in preserved)}
             require(not io.safe(root, selected).exists() or selected_rows,
                     "Unindexed authoring work prevents retirement: " + selected)
-            if selected_rows:
-                require(authoring_files, "Incomplete original authoring revision: " + selected)
+            if selected in selected_rows:
+                require(scopes[selected][0], "Incomplete original authoring revision: " + selected)
                 record = io.json_bytes(io.read(root, selected_rows[selected]["record"], LIMIT), LIMIT)
                 require(isinstance(record, dict) and record.get("format") in ("picross-authoring-record-v1", "picross-authoring-record-v2", "picross-authoring-record-v3", "picross-authoring-record-v4") and
                         record.get("puzzle_id") == identifier and record.get("revision") == revision and
                         record.get("state") == "registered" and record.get("blockers") == [],
                         "Authoring revision is not completed: " + selected)
+                records[selected] = record
             names = package_files | authoring_files
-            expected = {name for name in tree if name.startswith(prefix + "/") or name.startswith(selected + "/")}
+            expected = {name for name in tree if name.startswith(prefix + "/") or
+                        any(name.startswith(directory + "/") for directory in completed)} | expected_work
             require(names == expected, "Unmerged additions/deletions in production: " + identifier)
+            archives = {directory + "/package.zip": record.get("package", {})
+                        for directory, record in records.items()}
             for name in sorted(names):
                 # Only the exact declared original archive receives its 128 MiB
                 # allowance. Arbitrary catalog/authoring files remain at 64 MiB.
                 limit = tx.file_limit(root, name)
-                if selected_rows and name == selected + "/package.zip":
-                    package_ref = record.get("package", {})
+                if name in archives:
+                    package_ref = archives[name]
                     require(isinstance(package_ref, dict) and package_ref.get("file") == name,
                             "Unbound authoring archive")
                     limit = MAX_ZIP
                 raw = io.read(root, name, limit)
                 committed(name, raw)
-                if selected_rows and name == selected + "/package.zip":
+                if name in archives:
                     require(package_ref.get("bytes") == len(raw) and package_ref.get("sha256") == io.checksum(raw),
                             "Authoring archive binding differs")
                 removed[name] = (io.checksum(raw), len(raw), limit)
@@ -254,7 +343,7 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
                 else:
                     receipt["background"] = backgrounds.receipt_binding(source, current_backgrounds[identifier])
             reveal_source.receipt(receipt, entry, historical_notice, background=True, editor=True)
-            plans.append((entry, prefix, selected, receipt, package_dirs, authoring_dirs))
+            plans.append((entry, prefix, completed, receipt, package_dirs, authoring_dirs, authoring_files))
         active_reveal = reveal_source.load(root, entry, catalog)
         is_editor_reveal = active_reveal is not None and active_reveal.get("format") in ("picross-catalog-reveal-v3", "picross-catalog-reveal-v4")
         source = backgrounds.load(root, current, entry) if bg else None
@@ -329,20 +418,19 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
     registry.require_current(current)
     try:
         reads.acquire(ids, integrated_commit)
-        for entry, prefix, selected, receipt, package_dirs, authoring_dirs in plans:
+        for entry, prefix, completed, receipt, package_dirs, authoring_dirs, authoring_files in plans:
             # Individual checked paths only. A racing foreign file survives and
             # prevents directory removal; recursive deletion would erase it.
             for name, (checksum, _, limit) in removed.items():
-                if (name.startswith(prefix + "/") and name != prefix + "/manifest.json") or name.startswith(selected + "/"):
+                if (name.startswith(prefix + "/") and name != prefix + "/manifest.json") or name in authoring_files:
                     require(io.file_hash(root, name, limit) == checksum, "Production changed before deletion: " + name)
                     io.safe(root, name).unlink()
                     reads.forget(name)
             for directory in sorted(package_dirs | authoring_dirs, key=lambda name: len(name.split("/")), reverse=True):
                 io.safe(root, directory).rmdir()
-            if io.safe(root, selected).exists():
-                io.safe(root, selected).rmdir()
-                authoring = str(PurePosixPath(selected).parent)
-                if not any(io.safe(root, authoring).iterdir()): io.safe(root, authoring).rmdir()
+            authoring = "content/authoring/" + entry["id"]
+            if io.safe(root, authoring).exists() and not any(io.safe(root, authoring).iterdir()):
+                io.safe(root, authoring).rmdir()
             manifest = prefix + "/manifest.json"
             checksum, _, limit = removed[manifest]
             require(_tree(root, prefix) == ({manifest}, set()) and io.file_hash(root, manifest, limit) == checksum,
@@ -351,7 +439,7 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
             registry.atomic_bytes(io.safe(root, manifest), raw)
             reads.forget(manifest)
             entry["production"]["package_sha256"] = io.checksum(raw)
-        completed = {plan[2] for plan in plans}
+        completed = set().union(*(plan[2] for plan in plans))
         index["entries"] = [row for row in index["entries"] if selection(row["puzzle_id"], row["revision"]) not in completed]
         updated_index = canonical_bytes(index) + b"\n"
         require(io.read(root, INDEX, LIMIT) == index_bytes, "Authoring index changed before retirement replacement")
