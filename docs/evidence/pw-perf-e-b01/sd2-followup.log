@@ -1,0 +1,8 @@
+test_at_added_and_cleanup_preserve_mixed_authorities_without_analysis (tests.puzzle_production.test_sd2_catalog.CatalogTests.test_at_added_and_cleanup_preserve_mixed_authorities_without_analysis) ... ok
+test_checked_import_is_closed_and_keeps_frozen_result (tests.puzzle_production.test_sd2_catalog.CatalogTests.test_checked_import_is_closed_and_keeps_frozen_result) ... ok
+test_cli_candidate_import_rebind_new_production_and_explicit_all_preview (tests.puzzle_production.test_sd2_catalog.CatalogTests.test_cli_candidate_import_rebind_new_production_and_explicit_all_preview) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 201.981s
+
+OK

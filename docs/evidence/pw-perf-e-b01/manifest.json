@@ -31,6 +31,16 @@
       "sha256": "58b5bdbfcbde70ec785d640412d428e4b0e2d00dec800a0f5fc715a12682021e"
     },
     {
+      "file": "ci-attempt-1.json",
+      "bytes": 2940,
+      "sha256": "6457ec4dd87bc425b01aa567bb804caeda0a1d9d1ce70899c2a3e70391ba0204"
+    },
+    {
+      "file": "ci-attempt-2.json",
+      "bytes": 2112,
+      "sha256": "8a7e9a85affe2ad77103dcc5dba5703138a1e57863e3b921eb848107c5a8fb25"
+    },
+    {
       "file": "core-tests.log",
       "bytes": 3599,
       "sha256": "452495514c5262713a1290acc9bfb70282ab823ce27aa9597aaa9396c32048b6"
@@ -42,13 +52,19 @@
     },
     {
       "file": "README.md",
-      "bytes": 4583,
-      "sha256": "7acda57e5b902037bba22da81187aa107f22d80b0c9d47267054bf2e1637d70b"
+      "bytes": 5596,
+      "sha256": "dd3686dece0b741474d3f45750d5fadba041ad00c11e75b885efe030d6f97fbd"
+    },
+    {
+      "file": "sd2-followup.log",
+      "bytes": 691,
+      "sha256": "e2822d19b76e88bc663a5d97e3b6f6363badc6725b4698dfc300abc78f3826c6"
     },
     {
       "file": "source-and-results.json",
       "bytes": 1852,
       "sha256": "cc2277407fde2e865992268f3926f1e484d7e6b392099836905acfdc89492b42"
     }
-  ]
+  ],
+  "ci_attempt": 2
 }

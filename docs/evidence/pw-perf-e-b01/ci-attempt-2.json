@@ -1,0 +1,72 @@
+{
+  "format": "picross-production-result-v1",
+  "groups": [
+    "catalog"
+  ],
+  "expected": {
+    "catalog": {
+      "modules": [
+        "test_background_adoption_readonly",
+        "test_background_catalog_boundary",
+        "test_background_change",
+        "test_background_change_consumers",
+        "test_background_change_retirement",
+        "test_background_change_transactions",
+        "test_background_source",
+        "test_background_consumers",
+        "test_background_rebind",
+        "test_background_retirement",
+        "test_background_transactions",
+        "test_catalog_added",
+        "test_catalog_background",
+        "test_catalog_integration",
+        "test_catalog_metadata",
+        "test_catalog_reveal",
+        "test_catalog_review",
+        "test_categories_adapter",
+        "test_content_update",
+        "test_catalog_images",
+        "test_catalog_raster",
+        "test_editor_image_source",
+        "test_editor_change",
+        "test_retirement_current",
+        "test_integrated_content",
+        "test_integration_batch",
+        "test_integration_batch_guards",
+        "test_ke_recovery",
+        "test_reveal_recovery",
+        "test_sd2_catalog",
+        "test_registration_budgets",
+        "test_registration_verification",
+        "test_registration_publication"
+      ],
+      "integrations": []
+    }
+  },
+  "binding": {
+    "source_head": "f10ef329e6a98e1bb9e50c9c409998f2b518340f",
+    "base_commit": "d50eeb71b9e017bfe82f3d58563b779d9df1c145",
+    "tested_checkout": "4f0f66f40bf55ddeb79e65e8e003749d3ebe34af",
+    "run_id": "43731528915",
+    "run_attempt": "2",
+    "selection_attempt": "2",
+    "git_status": ""
+  },
+  "accepted": true,
+  "integrations": [],
+  "tests_accepted": true,
+  "source_unchanged": true,
+  "seconds": 1063.180597686,
+  "files": [
+    {
+      "file": "tests.json",
+      "bytes": 116551,
+      "sha256": "608b2e87f7e0b539bd2ef6239f1ce8fff915bd0b6a029f98097bd2bd5d6320bd"
+    },
+    {
+      "file": "tests.log",
+      "bytes": 65679,
+      "sha256": "5e3bea89abd3789563c505ae70525f2107ae4e4a56848f14512e485233aff197"
+    }
+  ]
+}

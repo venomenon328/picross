@@ -1,0 +1,31 @@
+{
+  "job_url": "https://github.com/venomenon328/picross/actions/runs/43731528915/job/132864901508",
+  "run_attempt": 1,
+  "source_head": "f10ef329e6a98e1bb9e50c9c409998f2b518340f",
+  "test_merge": "4f0f66f40bf55ddeb79e65e8e003749d3ebe34af",
+  "source_unchanged": true,
+  "only_error": [
+    "2026-11-15T16:06:20.1375844Z PRODUCTION TEST END {\"id\": \"test_sd2_catalog.CatalogTests.test_cli_candidate_import_rebind_new_production_and_explicit_all_preview\", \"seconds\": 6.8565959009999915, \"status\": \"error\"}"
+  ],
+  "retirement_results": [
+    "2026-11-15T15:59:56.2909609Z PRODUCTION TEST END {\"id\": \"test_retirement_current.CurrentRetirementTests.test_current_preferences_png_svg_original_anchor_and_noop\", \"seconds\": 0.8898908489999258, \"status\": \"success\"}",
+    "2026-11-15T15:59:56.4714462Z PRODUCTION TEST END {\"id\": \"test_retirement_current.CurrentRetirementTests.test_current_source_revision_and_hash_bindings_are_checked\", \"seconds\": 0.18040409900004306, \"status\": \"success\"}",
+    "2026-11-15T15:59:56.8838888Z PRODUCTION TEST END {\"id\": \"test_retirement_current.CurrentRetirementTests.test_editor_raster_v2_is_live_authority_and_not_compacted\", \"seconds\": 0.4124261200000774, \"status\": \"success\"}",
+    "2026-11-15T15:59:57.3322837Z PRODUCTION TEST END {\"id\": \"test_retirement_current.CurrentRetirementTests.test_missing_rights_open_unindexed_staged_and_current_main_block\", \"seconds\": 0.4483675209999092, \"status\": \"success\"}",
+    "2026-11-15T15:59:57.8176127Z PRODUCTION TEST END {\"id\": \"test_retirement_current.CurrentRetirementTests.test_same_mtime_changes_and_partial_delete_are_not_hidden\", \"seconds\": 0.4852556180001102, \"status\": \"success\"}",
+    "2026-11-15T15:59:57.9197780Z PRODUCTION TEST END {\"id\": \"test_retirement_current.CurrentRetirementTests.test_unknown_main_and_global_identity_collision_block_all_ids\", \"seconds\": 0.10211078899999393, \"status\": \"success\"}",
+    "2026-11-15T15:59:58.1839538Z PRODUCTION TEST END {\"id\": \"test_retirement_current.CurrentRetirementTests.test_unrelated_file_reads_and_inventories_are_forbidden\", \"seconds\": 0.2641800090000288, \"status\": \"success\"}",
+    "2026-11-15T15:59:58.7576722Z PRODUCTION TEST END {\"id\": \"test_retirement_current.CurrentRetirementTests.test_v6_original_rights_and_distinct_import_source\", \"seconds\": 0.5736285109999244, \"status\": \"success\"}"
+  ],
+  "limits": "No full tests.log traceback retained in attempt 1 (evidence=none). Existing heartbeat/stdout collision is a possible mechanism, not proved for this run.",
+  "local_followup": {
+    "tests": [
+      "test_at_added_and_cleanup_preserve_mixed_authorities_without_analysis",
+      "test_checked_import_is_closed_and_keeps_frozen_result",
+      "test_cli_candidate_import_rebind_new_production_and_explicit_all_preview"
+    ],
+    "result": "3 passed",
+    "seconds": 201.981,
+    "log": "sd2-followup.log"
+  }
+}
