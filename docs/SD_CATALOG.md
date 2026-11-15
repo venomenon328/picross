@@ -1,5 +1,9 @@
 # SD-C1: Bewertungsquelle, Import und Transaktionen
 
+## Freigegebene Konsolidierung RI-ONE
+
+[Ein aktueller Integrationsweg](PUZZLE_INTEGRATION_SINGLE_PATH.md) ist der freigegebene Sollvertrag aus [Issue #660](https://github.com/venomenon328/picross/issues/660): aktueller Inhaltsindex ohne historische Produktionspaketpflicht, ein Erstregistrierungs-/Recoveryweg und einmalige konsistente Bestandsüberführung. Runtime v8, aktuelle Nutzdaten und Saveidentitäten bleiben erhalten. Die unten beschriebenen Generations- und Herkunftsbindungen gelten operativ bis zur gemeinsamen technischen Umschaltung; sie begründen keine Dauerkompatibilität im neuen Paket.
+
 > Aktueller Editor-Sonderweg: [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) definiert die gezielte Transaktion, Reveal v4, Hintergrund v6 und Rasterpaket v2. Normale Editoraktionen lesen keine historische Produktion. Explizite Produktionsprüfung/Recovery alter Formen bleiben bestehen; Folgeproduktion erhält die aktuelle technische Bildbindung. Die externe Migration gehört zu #641, nicht in die Editor-App.
 
 

@@ -1,5 +1,9 @@
 # ZA-1: Authoring-Eingang, Zieladapter und Registrierung
 
+## Freigegebene Konsolidierung RI-ONE
+
+[Ein aktueller Integrationsweg](PUZZLE_INTEGRATION_SINGLE_PATH.md) und [Issue #660](https://github.com/venomenon328/picross/issues/660) ersetzen bei der späteren RI-ONE-Umschaltung historische Export-/Registrierungsvarianten, Producer-/Toolversionszulassung und dauerhafte Integrationsreceipts durch aktuelle Nutzdaten. Die folgende Beschreibung bleibt bis dahin der ausführbare Istvertrag; diese Spezifikationslieferung ändert keine Pakete, Reader oder Freigaben. Aktuelle Inhaltsprüfung, Rechte und funktionale Transaktionssicherheit bleiben Teil des neuen Solls.
+
 > Aktueller Editor-Sonderweg: [PE §13](PUZZLE_EDITOR.md#13-pe-edit2-gezielte-pflege-statt-vollbestandsprüfung) definiert die gezielte Transaktion, Reveal v4, Hintergrund v6 und Rasterpaket v2. Normale Editoraktionen lesen keine historische Produktion. Explizite Produktionsprüfung/Recovery alter Formen bleiben bestehen; Folgeproduktion erhält die aktuelle technische Bildbindung. Die externe Migration gehört zu #641, nicht in die Editor-App.
 
 

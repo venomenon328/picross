@@ -1,5 +1,9 @@
 # Projektprofil: picross
 
+## Freigegebene Konsolidierung RI-ONE
+
+Der freigegebene Sollvertrag [Ein aktueller Integrationsweg](PUZZLE_INTEGRATION_SINGLE_PATH.md) gehört zu [Issue #660](https://github.com/venomenon328/picross/issues/660). Er sieht eine aktuelle Erstintegration einschließlich Recovery/Abschluss und aktueller Inhaltsautorität ohne historische Produktions- oder Integrationsherkunftspflichten vor. Code, Bestand und direkte Leser werden nach der dort gebundenen Produktions-Startbedingung gemeinsam umgestellt. Bis dahin bleibt der ausführbare Stand dieses Profils für laufende Produktionen maßgeblich. Bei Entwicklung von RI-ONE ist der neue Sollvertrag zusätzlich vollständig zu lesen; die reine Spezifikationslieferung ist keine bereits erfolgte Umsetzung.
+
 ## Geltung und Quellen
 
 Repository `venomenon328/picross`, Zielbranch `main`. Vor Entwicklungsarbeit die
