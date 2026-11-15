@@ -1,0 +1,85 @@
+{
+  "product_head": "5070cb0e2b0893734d790a333653d09e22f698e7",
+  "base": "c243d9ce95f7cfe55332840f3bf44b313d3b9128",
+  "test_merge": "bc54058d5c70a48f43fdb5b1aefa25921d3d4b2c",
+  "ci_run": 43669252829,
+  "attempt": 1,
+  "spec_url": "https://github.com/venomenon328/picross/issues/653#issuecomment-6887731468",
+  "expires": "2026-11-22",
+  "metrics": {
+    "before": {
+      "plan_seconds": 44.86399600000004,
+      "register_seconds": 132.1408672999969,
+      "safe_reads": 20377,
+      "catalog_io_bytes_read": 6667817833,
+      "catalog_io_bytes_hashed": 5699031343,
+      "catalog_io_hash_calls": 14461,
+      "old_target_files": {
+        "package:reads": 3019,
+        "package:bytes": 1449031139,
+        "live:reads": 2995,
+        "live:bytes": 1918884830,
+        "package:hashes": 1625,
+        "live:hashes": 920
+      },
+      "full_catalog_copies": 3,
+      "full_catalog_copy_bytes": 507635319,
+      "full_new_replays": 2,
+      "new_package_readbacks": 2,
+      "publication_boundaries": 5,
+      "disjoint_seconds": {
+        "planning": 69.43220690000453,
+        "publication": 62.66344709999976,
+        "outer_overhead": 0.0452132999926107
+      },
+      "publication_children_inclusive_seconds": {
+        "Prevalidation": 0.014174699994327966,
+        "P0": 25.721047400002135,
+        "P1": 0.03493259999959264,
+        "P2": 4.128449900003034,
+        "P3": 5.4147437999999966,
+        "P4": 0.48928560000058496,
+        "P5": 21.9800533000016,
+        "P6": 4.880788599999505
+      }
+    },
+    "after": {
+      "plan_seconds": 15.832633899997745,
+      "register_seconds": 38.63984419999906,
+      "safe_reads": 2773,
+      "catalog_io_bytes_read": 1229828452,
+      "catalog_io_bytes_hashed": 1079438986,
+      "catalog_io_hash_calls": 1371,
+      "old_target_files": {},
+      "full_catalog_copies": 0,
+      "full_catalog_copy_bytes": 0,
+      "full_new_replays": 2,
+      "new_package_readbacks": 2,
+      "publication_boundaries": 5,
+      "disjoint_seconds": {
+        "planning": 19.04264859999239,
+        "publication": 19.548828400002094,
+        "outer_overhead": 0.04836720000457717
+      },
+      "publication_children_inclusive_seconds": {
+        "Prevalidation": 0.0018637000030139461,
+        "P0": 5.50723989999824,
+        "P1": 0.03105840000353055,
+        "P2": 0.7533885999946506,
+        "P3": 5.316240400003153,
+        "P4": 0.30909799999790266,
+        "P5": 6.067958600004204,
+        "P6": 1.5620073999962187
+      }
+    }
+  },
+  "budgets": {
+    "plan_seconds": 46,
+    "register_seconds": 136,
+    "safe_reads": 15759,
+    "catalog_io_bytes_read": 4592885636,
+    "old_reads_hashes_decodes": 0,
+    "full_catalog_copies": 0
+  },
+  "result": "passed"
+}

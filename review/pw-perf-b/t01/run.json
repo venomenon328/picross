@@ -1,0 +1,16 @@
+{
+  "head": "5070cb0e2b0893734d790a333653d09e22f698e7",
+  "base": "c243d9ce95f7cfe55332840f3bf44b313d3b9128",
+  "command": [
+    "E:\\Zeuch\\Coding\\picross_codex\\653-pw-perf-b-20261115\\venv\\Scripts\\python.exe",
+    "-m",
+    "unittest",
+    "-v",
+    "tests.puzzle_production.test_registration_publication.CurrentGenerationTests"
+  ],
+  "purpose": "PW-PERF-B-T01 final-head synthetic cases",
+  "started_utc": "2026-11-15T02:48:43Z",
+  "exit_code": 0,
+  "seconds": 302.277104300003,
+  "finished_utc": "2026-11-15T02:53:46Z"
+}

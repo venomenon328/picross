@@ -1,0 +1,38 @@
+{
+  "source_head": "5070cb0e2b0893734d790a333653d09e22f698e7",
+  "base_commit": "c243d9ce95f7cfe55332840f3bf44b313d3b9128",
+  "tested_commit": "bc54058d5c70a48f43fdb5b1aefa25921d3d4b2c",
+  "run_id": 43669252829,
+  "run_attempt": 1,
+  "run_url": "https://github.com/venomenon328/picross/actions/runs/43669252829",
+  "evidence_mode": "none",
+  "jobs": [
+    {
+      "name": "core/docs",
+      "url": "https://github.com/venomenon328/picross/actions/runs/43669252829/job/132675397869"
+    },
+    {
+      "name": "production.adapter",
+      "url": "https://github.com/venomenon328/picross/actions/runs/43669252829/job/132675487686"
+    },
+    {
+      "name": "windows-player",
+      "url": "https://github.com/venomenon328/picross/actions/runs/43669252829/job/132675487655"
+    },
+    {
+      "name": "production.catalog",
+      "url": "https://github.com/venomenon328/picross/actions/runs/43669252829/job/132675487642"
+    }
+  ],
+  "windows_artifact": {
+    "name": "windows-player",
+    "url": "https://github.com/venomenon328/picross/actions/runs/43669252829/job/132675487655",
+    "status": "passed",
+    "artifact": "https://github.com/venomenon328/picross/actions/runs/43669252829/artifacts/14143541755",
+    "expires": "2026-11-29",
+    "archive_bytes": 130169853,
+    "sha256": "e35a7a55335edbade1a5fb0bf0fd40beb9b16a61521701ced366d4cf36356992",
+    "interactive_launch": "not run on Linux"
+  },
+  "note": "This is the immutable run/file binding; the final result and complete module counts are recorded in the product PR and the linked original CI job logs."
+}

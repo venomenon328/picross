@@ -1,0 +1,20 @@
+[
+  {
+    "id": "pz-birne",
+    "package": "content/packages/pz-birne/r05",
+    "format": "picross-target-export-v6",
+    "files": 15
+  },
+  {
+    "id": "pz-erdbeere",
+    "package": "content/packages/pz-erdbeere/r06",
+    "format": "picross-target-export-v6",
+    "files": 15
+  },
+  {
+    "id": "pz-zitrone",
+    "package": "content/packages/pz-zitrone/r05",
+    "format": "picross-target-export-v6",
+    "files": 15
+  }
+]

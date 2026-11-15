@@ -1,0 +1,20 @@
+{
+  "status": "passed",
+  "base": "c243d9ce95f7cfe55332840f3bf44b313d3b9128",
+  "source": "e3b177673011c5477dd605c24420fef589e8f878",
+  "tool_head": "5070cb0e2b0893734d790a333653d09e22f698e7",
+  "replays": {
+    "old": 0,
+    "new": 2
+  },
+  "guards": [
+    "G0",
+    "G2",
+    "G5a",
+    "G5b",
+    "G6"
+  ],
+  "entries_preserved": 56,
+  "retirement": false,
+  "merge": false
+}

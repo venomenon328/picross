@@ -1,0 +1,20 @@
+{
+  "io": {
+    "input-or-temp:calls": 448,
+    "input-or-temp:bytes": 796842228,
+    "live-content:calls": 164,
+    "live-content:bytes": 14547893,
+    "catalog-source:calls": 390,
+    "catalog-source:bytes": 87312825,
+    "tool-runtime:calls": 1392,
+    "tool-runtime:bytes": 84699868,
+    "new-package:calls": 379,
+    "new-package:bytes": 246425638
+  },
+  "calls": {
+    "verification.inventory": 32,
+    "verification.methods": 6,
+    "registry.projection": 5
+  },
+  "stage_copies": []
+}
