@@ -1,4 +1,0 @@
-extends "res://ui/full_view_board.gd"
-var probe_status: int = 0
-func clue_status(_axis: String, _index: int, _token: int) -> int:
-	return probe_status

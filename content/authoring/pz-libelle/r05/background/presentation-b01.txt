@@ -1,6 +1,0 @@
-Drei getrennte ImageGen-Originale wurden in diesem Chat tatsächlich angezeigt und isoliert gesichtet. Stabile Angebotskennungen und unveränderte Paketpfade:
-LIB-HG-A-b01 | background/original/A-b01.png | SHA-256 1cb73b961083365517f354aa7f5fc760df6b37f3b09fcba01ac684eae405914d
-LIB-HG-B-b01 | background/original/B-b01.png | SHA-256 c6d1dca29991beb9c8fa0a8429ca839d955376b044382ddf2cd1919b0dc5245d
-LIB-HG-C-b01 | background/original/C-b01.png | SHA-256 0cb3458b3edb9ef483bd676a1bbd03c6d9752ed38828cee18b100f3dd6001a65
-
-Alle drei Originale sind als Einzel-PNGs in derselben Repositoryrevision und im Paket gespeichert; workspace.json zeigt die Originale getrennt. Hintergrundwahl bleibt offen, kein none. Q-HG03 ist bei allen drei nicht erfüllt: 2172×724 statt vollständiger 4:1-Leinwand. Eine Motivpräferenz ist noch keine Verwendungsgenehmigung für korrigierte Bytes.
