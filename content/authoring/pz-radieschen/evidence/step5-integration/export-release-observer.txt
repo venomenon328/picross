@@ -1,0 +1,41 @@
+import ctypes,ctypes.wintypes as w,json,sys,time,runpy
+from pathlib import Path
+t=Path(r'E:/Zeuch/Coding/picross/.codex-radieschen-step5-20261115')
+p=Path(r'E:/Zeuch/Coding/picross/.codex-radieschen-step1/checkout')
+sys.path.insert(0,str(p))
+rm=ctypes.WinDLL('rstrtmgr')
+class P(ctypes.Structure): _fields_=[('pid',w.DWORD),('start',w.FILETIME)]
+class I(ctypes.Structure): _fields_=[('process',P),('app',w.WCHAR*256),('service',w.WCHAR*64),('kind',w.UINT),('status',w.ULONG),('session',w.DWORD),('restartable',w.BOOL)]
+rm.RmStartSession.argtypes=[ctypes.POINTER(w.DWORD),w.DWORD,w.LPWSTR]
+rm.RmRegisterResources.argtypes=[w.DWORD,w.UINT,ctypes.POINTER(w.LPCWSTR),w.UINT,ctypes.c_void_p,w.UINT,ctypes.c_void_p]
+rm.RmGetList.argtypes=[w.DWORD,ctypes.POINTER(w.UINT),ctypes.POINTER(w.UINT),ctypes.POINTER(I),ctypes.POINTER(w.DWORD)]
+rm.RmEndSession.argtypes=[w.DWORD]
+def users(path):
+ session=w.DWORD();key=ctypes.create_unicode_buffer(33);code=rm.RmStartSession(ctypes.byref(session),0,key)
+ if code:return {'error':code}
+ try:
+  resources=(w.LPCWSTR*1)(str(path));code=rm.RmRegisterResources(session,1,resources,0,None,0,None)
+  if code:return {'error':code}
+  needed=w.UINT();count=w.UINT();why=w.DWORD();code=rm.RmGetList(session,ctypes.byref(needed),ctypes.byref(count),None,ctypes.byref(why))
+  if code not in (0,234):return {'error':code}
+  if not needed.value:return {'processes':[]}
+  count=w.UINT(needed.value);items=(I*count.value)();code=rm.RmGetList(session,ctypes.byref(needed),ctypes.byref(count),items,ctypes.byref(why))
+  if code:return {'error':code}
+  return {'processes':[{'pid':i.process.pid,'name':i.app} for i in items[:count.value]]}
+ finally:rm.RmEndSession(session)
+observations=[]
+def observe(event,args):
+ if event!='os.rename':return
+ source,target=map(Path,args[:2])
+ if source.name!='export' or not source.parent.name.startswith('.hp-i1a-export-') or target!=t/'export':return
+ began=time.monotonic()
+ while True:
+  state=users(source/'input/package.zip');elapsed=time.monotonic()-began
+  observations.append({'seconds':elapsed,'source':str(source),'target':str(target),'users':state})
+  (t/'export-release-observations.json').write_text(json.dumps(observations,ensure_ascii=False,indent=2),encoding='utf-8')
+  if 'error' in state or not state.get('processes') or elapsed>=5:break
+  time.sleep(.2)
+sys.addaudithook(observe)
+a=p/'content/authoring/pz-radieschen/r05'
+sys.argv=['target_adapter','export','--allow-background','--input',str(a/'package.zip'),'--external-root',str(p),'--history-repo',str(p),'--approval',str(a/'step5-accepted/approval.json'),'--name','Radieschen','--runtime-revision','1','--stem','radieschen_001','--save-slot','radieschen_001','--category-id','gemuese-pilze-kraeuter','--categories',str(p/'content/categories.json'),'--output-dir',str(t/'export'),'--operation-report',str(t/'export-operation.json')]
+runpy.run_module('tools.puzzle_production.target_adapter',run_name='__main__')
