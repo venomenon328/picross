@@ -1,0 +1,100 @@
+[
+  {
+    "status": "standard",
+    "extension": ".svg",
+    "result": {
+      "status": "production_retired",
+      "ids": [
+        "pz-test-direct-mono"
+      ],
+      "integrated_commit": "a477dcda0ff88d2313548193727c463558efca4f",
+      "replaced_files": 31,
+      "replaced_bytes": 31618
+    },
+    "live_bytes_and_mtimes_identical": true,
+    "delta": [
+      "content/authoring/index.json",
+      "content/authoring/pz-test-direct-mono/r01/record.json",
+      "content/packages/pz-test-direct-mono/r01/approval.json",
+      "content/packages/pz-test-direct-mono/r01/categories.json",
+      "content/packages/pz-test-direct-mono/r01/input/derivation.json",
+      "content/packages/pz-test-direct-mono/r01/input/difficulty.json",
+      "content/packages/pz-test-direct-mono/r01/input/evidence.txt",
+      "content/packages/pz-test-direct-mono/r01/input/handoff.json",
+      "content/packages/pz-test-direct-mono/r01/input/inventory.json",
+      "content/packages/pz-test-direct-mono/r01/input/motif-approval.json",
+      "content/packages/pz-test-direct-mono/r01/input/motifs/source.png",
+      "content/packages/pz-test-direct-mono/r01/input/motifs/source.provenance.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-candidate.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-logic.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-proof.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-raster.png",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-result.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/briefing.txt",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/design.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/index.html",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/manifest.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/normalized.png",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/original.png",
+      "content/packages/pz-test-direct-mono/r01/input/reveal-approval.json",
+      "content/packages/pz-test-direct-mono/r01/input/reveals/reveal.png",
+      "content/packages/pz-test-direct-mono/r01/input/reveals/reveal.provenance.json",
+      "content/packages/pz-test-direct-mono/r01/inspection.json",
+      "content/packages/pz-test-direct-mono/r01/manifest.json",
+      "content/packages/pz-test-direct-mono/r01/runtime/art/content/retirement_current.png",
+      "content/packages/pz-test-direct-mono/r01/runtime/art/content/retirement_current.txt",
+      "content/packages/pz-test-direct-mono/r01/runtime/data/content/retirement_current.json",
+      "content/packages/pz-test-direct-mono/r01/usage.txt",
+      "content/registry.json"
+    ]
+  },
+  {
+    "status": "none",
+    "extension": ".png",
+    "result": {
+      "status": "production_retired",
+      "ids": [
+        "pz-test-direct-mono"
+      ],
+      "integrated_commit": "f851e967f1959bab2765e9f2437cca0e4f66fa10",
+      "replaced_files": 31,
+      "replaced_bytes": 31618
+    },
+    "live_bytes_and_mtimes_identical": true,
+    "delta": [
+      "content/authoring/index.json",
+      "content/authoring/pz-test-direct-mono/r01/record.json",
+      "content/packages/pz-test-direct-mono/r01/approval.json",
+      "content/packages/pz-test-direct-mono/r01/categories.json",
+      "content/packages/pz-test-direct-mono/r01/input/derivation.json",
+      "content/packages/pz-test-direct-mono/r01/input/difficulty.json",
+      "content/packages/pz-test-direct-mono/r01/input/evidence.txt",
+      "content/packages/pz-test-direct-mono/r01/input/handoff.json",
+      "content/packages/pz-test-direct-mono/r01/input/inventory.json",
+      "content/packages/pz-test-direct-mono/r01/input/motif-approval.json",
+      "content/packages/pz-test-direct-mono/r01/input/motifs/source.png",
+      "content/packages/pz-test-direct-mono/r01/input/motifs/source.provenance.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-candidate.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-logic.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-proof.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-raster.png",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/area-result.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/briefing.txt",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/design.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/index.html",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/manifest.json",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/normalized.png",
+      "content/packages/pz-test-direct-mono/r01/input/production/import/original.png",
+      "content/packages/pz-test-direct-mono/r01/input/reveal-approval.json",
+      "content/packages/pz-test-direct-mono/r01/input/reveals/reveal.png",
+      "content/packages/pz-test-direct-mono/r01/input/reveals/reveal.provenance.json",
+      "content/packages/pz-test-direct-mono/r01/inspection.json",
+      "content/packages/pz-test-direct-mono/r01/manifest.json",
+      "content/packages/pz-test-direct-mono/r01/runtime/art/content/retirement_current.png",
+      "content/packages/pz-test-direct-mono/r01/runtime/art/content/retirement_current.txt",
+      "content/packages/pz-test-direct-mono/r01/runtime/data/content/retirement_current.json",
+      "content/packages/pz-test-direct-mono/r01/usage.txt",
+      "content/registry.json"
+    ]
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "zip_metadata_opens": 1,
+    "production_replays": 0,
+    "solver_replays": 0,
+    "image_decodes": 0,
+    "error": "Cannot verify integration source: fatal: path 'content/packages/pz-hp-synthetic/r01' exists on disk, but not in 'ffffffffffffffffffffffffffffffffffffffff'"
+  },
+  {
+    "zip_metadata_opens": 1,
+    "production_replays": 0,
+    "solver_replays": 0,
+    "image_decodes": 0,
+    "error": "Missing original registered authoring source"
+  },
+  {
+    "zip_metadata_opens": 1,
+    "production_replays": 0,
+    "solver_replays": 0,
+    "image_decodes": 0,
+    "result": "production_retired"
+  }
+]

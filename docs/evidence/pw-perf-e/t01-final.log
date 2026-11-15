@@ -1,0 +1,14 @@
+test_current_preferences_png_svg_original_anchor_and_noop (test_retirement_current.CurrentRetirementTests.test_current_preferences_png_svg_original_anchor_and_noop) ... ok
+test_current_source_revision_and_hash_bindings_are_checked (test_retirement_current.CurrentRetirementTests.test_current_source_revision_and_hash_bindings_are_checked) ... ok
+test_editor_raster_v2_is_live_authority_and_not_compacted (test_retirement_current.CurrentRetirementTests.test_editor_raster_v2_is_live_authority_and_not_compacted) ... ok
+test_missing_rights_open_unindexed_staged_and_current_main_block (test_retirement_current.CurrentRetirementTests.test_missing_rights_open_unindexed_staged_and_current_main_block) ... ok
+test_same_mtime_changes_and_partial_delete_are_not_hidden (test_retirement_current.CurrentRetirementTests.test_same_mtime_changes_and_partial_delete_are_not_hidden) ... ok
+test_unknown_main_and_global_identity_collision_block_all_ids (test_retirement_current.CurrentRetirementTests.test_unknown_main_and_global_identity_collision_block_all_ids) ... ok
+test_unrelated_file_reads_and_inventories_are_forbidden (test_retirement_current.CurrentRetirementTests.test_unrelated_file_reads_and_inventories_are_forbidden) ... ok
+test_v6_original_rights_and_distinct_import_source (test_retirement_current.CurrentRetirementTests.test_v6_original_rights_and_distinct_import_source) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 83.303s
+
+OK
+T01 and one-time current-form matrix passed

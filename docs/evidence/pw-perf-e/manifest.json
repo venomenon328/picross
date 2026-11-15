@@ -1,0 +1,66 @@
+{
+  "format": "pw-perf-e-review-evidence-v1",
+  "product_head": "e866c7689046bb51a0dc8a96470ba4c15345667b",
+  "baseline_head": "d50eeb71b9e017bfe82f3d58563b779d9df1c145",
+  "test_merge": "cf2c07824015388d3621440e0b66da18358b3474",
+  "expires": "2026-11-22",
+  "purpose": "A01 independent review of T01/T02 and K01-K08",
+  "files": {
+    ".gitattributes": {
+      "bytes": 9,
+      "sha256": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992"
+    },
+    "after-first.json": {
+      "bytes": 4065,
+      "sha256": "91c2fb906480fde78dcebe1c1496dfc935e5d02557bc0fe9e19fb8b6d429e822"
+    },
+    "after-warm.json": {
+      "bytes": 4064,
+      "sha256": "9d9a2b198e7576150ef0115830df133e1ee4b7c800bd0745336347368118a751"
+    },
+    "baseline-first.json": {
+      "bytes": 4003,
+      "sha256": "ffbc450aa2c839fa53f373c181fa364ff772b71aef864e68070842ee7d5a773d"
+    },
+    "baseline-warm.json": {
+      "bytes": 4002,
+      "sha256": "e813ae7ddf522d8d7a0ede2d1762a26f1ee4677f8ed14c28d521282f7b3cff07"
+    },
+    "comparison.json": {
+      "bytes": 2183,
+      "sha256": "7cd70ca0f12c843a055e858e0186d351621e0468109bc4db447bee6dfb5932cd"
+    },
+    "current-cases.json": {
+      "bytes": 5911,
+      "sha256": "9dfc3f91bb44d64b7b5f3f51318dd282daaa78494b3b4068c8b984be20439dd4"
+    },
+    "measure.py": {
+      "bytes": 1543,
+      "sha256": "ace1f71054506bb53b573d141a65fcadb8ace12df1dedf0415a5c04c95860c29"
+    },
+    "measure_after.py": {
+      "bytes": 1540,
+      "sha256": "4b6a597cb56be7425757c1670fb19f0097ddf85d7f2fd446e192dcf27da37def"
+    },
+    "operation-counters.json": {
+      "bytes": 637,
+      "sha256": "214893706112f7d1e2a181d0b271edabb7cd2ab498a4c95078cd2740d4989c0b"
+    },
+    "operation_counters.py": {
+      "bytes": 1759,
+      "sha256": "1f3cea66186394645e3c992ecb03de29f5f2777d65961cd36a78eecc2438acf5"
+    },
+    "README.md": {
+      "bytes": 4224,
+      "sha256": "fb9f5152890f2731639a0514f4935b6b216a923bb266b38a6c68ba55e8d41575"
+    },
+    "t01-final.log": {
+      "bytes": 1539,
+      "sha256": "4280eb2cc4d6b9b55ccff1341bf76243305be92324663155f6b7687e1a923dbd"
+    },
+    "validate_current.py": {
+      "bytes": 1936,
+      "sha256": "9e0d1ff46f6003ed59885de05c1466a9c8fea739d06e22bef716a921e5eb5f9c"
+    }
+  }
+}
