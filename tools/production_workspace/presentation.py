@@ -173,9 +173,9 @@ class Record:
         if 'sha256' in ref:
             bind(self.raw, ref)
         self.value = r = parse(self.raw)
-        self.current = current = r.get('format') == 'picross-authoring-record-v3'
+        self.current = current = r.get('format') in ('picross-authoring-record-v3', 'picross-authoring-record-v4')
         exact_keys(r, RECORD_KEYS | ({'raster_selection', 'presentation', 'candidate'} if current else set()))
-        ap.require(r['format'] in ('picross-authoring-record-v2', 'picross-authoring-record-v3') and r['puzzle_id'] == puzzle_id and
+        ap.require(r['format'] in ('picross-authoring-record-v2', 'picross-authoring-record-v3', 'picross-authoring-record-v4') and r['puzzle_id'] == puzzle_id and
                    isinstance(r['revision'], str) and ap.REVISION.fullmatch(r['revision']), 'Recordgeneration oder Identität stimmt nicht.')
         self.directory = f"content/authoring/{puzzle_id}/{r['revision']}"
         ap.require(ref['file'] == self.directory + '/record.json', 'Nichtkanonischer Angebotsrecord.')
@@ -205,7 +205,7 @@ class Record:
             ap.require(handoff_raw == source.read(self.commit, r['handoff']['file']), 'Äußerer Handoff unterscheidet sich vom Original.')
             bind(handoff_raw, r['handoff'])
             self.handoff = h = parse(handoff_raw)
-            ap.require(h['format'] == ('picross-authoring-handoff-v4' if current else 'picross-authoring-handoff-v3') and h['puzzle_id'] == puzzle_id and
+            ap.require(h['format'] == ('picross-authoring-handoff-v5' if r['format'] == 'picross-authoring-record-v4' else 'picross-authoring-handoff-v4' if current else 'picross-authoring-handoff-v3') and h['puzzle_id'] == puzzle_id and
                        h['revision'] == r['revision'] and h['rulebook'] == r['rulebook'], 'Handoffidentität stimmt nicht.')
             for key in ('reveal', 'motif'):
                 ap.require(r[key] == h.get(key), 'Bildbezug weicht vom Handoff ab.')
@@ -231,7 +231,9 @@ class Record:
                 self.entries[item['path']] = item
             names(list(self.entries))
             ap.require(set(self.archive.files) == set(self.entries) | {'handoff.json', 'inventory.json'}, 'Inventar und Paketsatz unterscheiden sich.')
-            self.member(h['rulebook']['file'], h['rulebook']['sha256'])
+            from tools.puzzle_production import authoring_rulebook as rules
+            ap.require(r['repo_commit'] == h['repo_commit'], 'Record producer differs from handoff')
+            rules.validate(h['rulebook'], h['format'], h['repo_commit'], self.member, r['document_revision'])
             # Preserve both source roles. The builder's effective projection is
             # not an independent authority and a free status string is no approval.
             proposed, approved = h.get('proposed_parameters'), h.get('approved_parameters', [])
@@ -447,7 +449,7 @@ class Record:
             ap.require(len(raw) == item['bytes'], 'Rasterwahl-Originalgröße stimmt nicht.')
             copies[key] = parse(raw)
         source = copies['record']; projection = validate(copies['projection'])
-        ap.require(source.get('format') == 'picross-authoring-record-v3' and
+        ap.require(source.get('format') in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
                    source['puzzle_id'] == h['puzzle_id'] and source['state'] == 'raster_ready' and
                    s['record']['file'] == f"content/authoring/{h['puzzle_id']}/{source['revision']}/record.json" and
                    source['inventory_sha256'] == ap.sha(s['inventory_sha256']), 'Gewählte Rasterrevision stimmt nicht.')

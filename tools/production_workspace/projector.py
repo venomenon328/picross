@@ -223,7 +223,7 @@ def complete(root, record_path, commit):
         before_raw = source.read(None, record_path)
         before = p.parse(before_raw)
         view_before = current_view.observe(root, before['puzzle_id'])
-        ap.require(before['format'] == 'picross-authoring-record-v3' and
+        ap.require(before['format'] in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
                    before['state'] in ('editorially_approved', 'registered'), 'Completion requires actual final approval')
         after = deepcopy(before)
         if before['state'] != 'registered':

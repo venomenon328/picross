@@ -60,7 +60,7 @@ keine entbehrlichen CI-Belege.
 
 Authoringarbeitsstände liegen unter [content/authoring](../content/authoring/README.md),
 registrierte Pakete unter `content/packages/`. Nach bestätigter Endabnahme und
-Main-Integration folgt der eigene Produktionsabschluss nach Authoring §9.
+Main-Integration folgt der eigene Produktionsabschluss nach Schritt 5 §9.
 Runtime, Rechte, aktive Metadaten und kompakte Freigabe-/Integrationsbindungen
 bleiben erhalten. Keine dauerhafte Wiederholbarkeit abgeschlossener Produktion.
 
@@ -84,6 +84,9 @@ Legacy und Hilfe behalten ihre bisherigen Zeichnungen. Die echte Capability
 darf erst mit funktionierendem und technisch abgenommenem Runtime-/Importweg
 true sein; den tatsächlichen Abnahmestand führt der aktuelle Produkt-PR.
 Synthetische kompatible Ziele belegen nur den Werkzeugweg.
+PW-PERF-D ordnet die aktuelle Dokumentrevision 7 in gemeinsamen Kern und fünf
+Phasendateien; neue Originale verwenden den expliziten Mehrdateisnapshot nach
+[PW-B](PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
 PW-B führt für neue Produktionen den fünfstufigen Authoringstandard 0.8.0 ein
 ([geschlossener Vertrag](PW_B_CONTRACT.md)); 0.6/0.7 beschreiben ihre alten Generationen.
 PW2-A präzisiert mit Dokumentrevision 5 dessen operative Pflichtquellen und den

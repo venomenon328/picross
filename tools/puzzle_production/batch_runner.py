@@ -61,8 +61,11 @@ def _prepare(plan_path, source_root, repo_root, work_root=None, history_root=Non
         pattern = rb"(?m)^\*\*Version " + re.escape(rule["version"].encode()) + rb" \xc2\xb7 Dokumentrevision " + str(rule["document_revision"]).encode() + rb" \xc2\xb7"
         bio.require(re.search(pattern, snapshot_raw), "Rulebook snapshot version/revision mismatch")
         file = "PUZZLE_AUTHORING.md" if rule["version"] == "0.6.0" else "PUZZLE_AUTHORING_0_7_0_PREVIEW.md"
-        bio.require(snapshot_raw == bio.read(repo / "docs" / "ai-workflows" / file),
-                    "Unknown or unsupported current rulebook snapshot")
+        current_raw = bio.read(repo / "docs" / "ai-workflows" / file)
+        if snapshot_raw != current_raw:
+            from tools.production_workspace.sources import git
+            original = git(repo, 'show', plan['source_commit'] + ':docs/ai-workflows/' + file)
+            bio.require(snapshot_raw == original, 'Unknown or unsupported original rulebook snapshot')
         refs = [rule["snapshot"], *job["decisions"].values()]
         for stage in job["stages"]:
             refs.extend(stage["inputs"].values())

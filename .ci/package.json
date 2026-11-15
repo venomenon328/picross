@@ -1,35 +1,18 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/653",
-  "package": "PW-PERF-C",
+  "package": "PW-PERF-D",
   "modules": [
     "tools",
-    "production.adapter",
-    "production.images",
-    "production.catalog"
+    "production.adapter"
   ],
-  "purpose": "Aufrufgebundene Export-/Finalizerpruefung und geschlossene HP-W2-v2-Bildidentitaet mit getrennten Producerdaten.",
-  "omitted": "Keine Solver-/Spiel-/Browser-/Lieferweg- oder v10-Aenderung; T02 nur temporaere synthetische 3x3-Messungen, keine echten Inhalte.",
+  "purpose": "Kanonischer Authoringkern und fünf Phasendateien mit geschlossener neuer Snapshotgeneration und unveränderten historischen Readerpfaden.",
+  "omitted": "Keine Solver-/Bildalgorithmus-/Katalog-/Spiel-/Releaseänderung. Keine echte Produktion, Vollkatalogprüfung oder Chromium. Palettenänderung nur generationsgebundener Normanker, durch synthetischen Adapterpfad geprüft.",
   "test_changes": [
-    {
-      "path": "tests/puzzle_production/test_background_assets.py",
-      "disposition": "change-scoped",
-      "reason": "Geschlossene v2-Identitaet, echte Reproduktion, Provenienz, Dateiaustausch und v1-Abgrenzung. B01: erster selected/none-Schreiblauf im sauberen Git-Checkout mit internem Ausgabe-Root, authentische Startprovenienz, schreibfreier Reuse/Verify und frische Fremdaenderungs-/Codecguards."
-    },
-    {
-      "path": "tests/puzzle_production/test_background_export.py",
-      "disposition": "change-scoped",
-      "reason": "Zwei volle Inspektionen, frische Offlinepruefung und Pending-Manipulation; historische Faelle explizit v1."
-    },
     {
       "path": "tests/puzzle_production/test_authoring_workflow.py",
       "disposition": "change-scoped",
-      "reason": "Eine gemeinsame Projektion stimmt mit unabhaengiger Vollpruefung ueberein."
-    },
-    {
-      "path": "tests/puzzle_production/test_authoring_finalization.py",
-      "disposition": "change-scoped",
-      "reason": "Historische qualifizierte Produktion bleibt explizit v1."
+      "reason": "Kleine synthetische Builder-/Reader-/Finalizer-/Exportregression der neuen Quellenmenge; fehlende/manipulierte Quellen, Revision/Commit/Form und unveränderter historischer Einzeldateisnapshot."
     }
   ],
   "core_change": null,
