@@ -1,6 +1,6 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/pull/643",
+  "issue": "https://github.com/venomenon328/picross/issues/619",
   "package": "Marienkaefer-Schritt-3",
   "modules": [],
   "purpose": "Reine Authoring-0.8-Rasterproduktion pz-marienkaefer: qualifizierte Einzelrevision und Ansichtsübergabe; Quellen-/Planintegrität ohne Spielerbuild.",
