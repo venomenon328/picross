@@ -161,7 +161,14 @@ führt der beauftragte Akteur aus. Historische Originale werden nicht migriert.
 
 ## PW-B: neue Produktion 0.8.0
 
-Build v3 veröffentlicht Handoff v4/Record v3 und die automatisch geprüfte
+Dokumentrevision 7 bindet den [geschlossenen Mehrdateisnapshot](../../docs/PW_B_CONTRACT.md#pw-perf-d--regelquellen-und-snapshotgeneration).
+`authoring_rulebook.capture(repository, commit)` liefert die geprüfte Regelbindung
+und ein Dictionary der unveränderten Paketdateibytes. Diese unter den gelieferten
+Pfaden im eigenen source-root ablegen und wie alle Eingänge explizit in `files`
+führen; `handoff.repo_commit=commit`, Request v4, Handoff v5, Dokumentrevision 7.
+Alte Einzeldatei-Originale bleiben unter ihren bisherigen Generationen lesbar.
+
+Build v4 veröffentlicht Handoff v5/Record v4 und die automatisch geprüfte
 workspace.json gemeinsam mit der Revision im expliziten Repositoryziel.
 [#596/B](../../docs/PRODUCTION_CURRENT_VIEW.md) ergänzt den gemeinsamen
 `current-view.json`-Übergabeschritt für Builder, Finalizer, Projektor und Completion.
@@ -170,9 +177,9 @@ sichern/pushen und Remotezugriff prüfen; unterbrochene Aufrufe identisch vollst
 wiederholen. Für bestehende vollständige 0.8-Arbeit gezielt
 `python -m tools.production_workspace.projector --repository <checkout> --current-view <pz-ID> <revision>`
 aufrufen. Kein HTTP-Writer und keine Änderung versiegelter Originale.
-Request v3 ergänzt `presentation={title,raster_offers}`. Frühe background- und
+Request v4 übernimmt `presentation={title,raster_offers}`. Frühe background- und
 raster_selection-Felder sind null. Erst die gebundene menschliche Rasterwahl
-öffnet background_review. Finalizer v2 aktualisiert den bestehenden Record v3
+öffnet background_review. Finalizer v2 aktualisiert den bestehenden Record v4
 und die zugehörige Projektion; keine alten Originalbytes werden verändert.
 Die vollständigen neuen Formen, Beispiele und Aufrufe stehen in
 [PW-B](../../docs/PW_B_CONTRACT.md) und [Authoring §§6–8](../../docs/ai-workflows/PUZZLE_AUTHORING.md).
@@ -2070,7 +2077,7 @@ Nach endgültiger Integration auf main:
 python -m tools.puzzle_production.target_adapter retire-production --checkout . --integrated-commit <main-SHA> --puzzle-id <pz-ID>
 ```
 
-[Authoring §9](../../docs/ai-workflows/PUZZLE_AUTHORING.md) und
+[Authoring §9](../../docs/ai-workflows/PUZZLE_AUTHORING_STEP_5.md) und
 [Integrationsformat](../../docs/ZA1_ADAPTER.md) regeln die Bereinigung.
 Bestandsprüfungen lesen danach Runtimehashes und kompakte Integrationsdaten,
 keine Quellen, Proofs, ZIPs oder Produktionsreplays. Die Entwicklung neuer Rätsel

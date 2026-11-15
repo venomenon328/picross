@@ -3,7 +3,7 @@
 ## PW2-A · Operativer Quellenweg
 
 Für normale Rätselproduktion aller fünf Schritte einschließlich Korrektur und
-Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 6, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
+Wiederaufnahme gilt [Authoring 0.8.0, Dokumentrevision 7, §1.1](ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase):
 AGENTS-Produktionseinstieg, gemeinsamer Authoringkern, vollständiger
 [Bildstil](PUZZLE_IMAGE_STYLE.md), dann nur die fällige Phase und die konkret
 benötigte technische Operation. Dieser PW-Gesamtvertrag, WORKFLOW, Projektprofil
@@ -163,7 +163,7 @@ Schemafelder als Hauptoberfläche.
   gehören in das veröffentlichte Motivbriefing; konkrete Raster haben zwei Maße.
   Nach Vorlage des Parameterkorridors laufen Änderungen über die
   Korrektur. Die Grenzen und die stets farbige Abschlussillustration folgen
-  [Authoring §2.1](ai-workflows/PUZZLE_AUTHORING.md).
+  [Authoring §2.1](ai-workflows/PUZZLE_AUTHORING_STEP_2.md).
 - Motiv-/Rasterphase: Konfiguration, geschützte Merkmale, echte Bildvergleiche
   und verständlich bezeichnete Rasteroptionen. Maße, Farben und Schwierigkeit
   sind Ergebnisdaten, keine zu kopierenden technischen Eingaben.

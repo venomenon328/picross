@@ -542,7 +542,7 @@ def validate(root, handoff, *, history_repo=None, deadline=None, external_root=N
                 "manifest": None, "decision": None, "derivation": None, "options": [],
                 "files": set(), "derivative_files": set(), "external_files": set(), "decision_refs": set()}
     ap.require((handoff.get("format"), handoff.get("rulebook", {}).get("version")) in
-               (("picross-authoring-handoff-v3", "0.7.0"), (workflow.HANDOFF, "0.8.0")), "Unsupported background handoff generation")
+               (("picross-authoring-handoff-v3", "0.7.0"), (workflow.HANDOFF, "0.8.0"), (workflow.rules.HANDOFF, "0.8.0")), "Unsupported background handoff generation")
     try:
         return _validate(root, handoff, handoff.get("background"), history_repo=history_repo,
                          deadline=deadline, external_root=external_root, external=False, transport=transport)
@@ -555,7 +555,7 @@ def validate(root, handoff, *, history_repo=None, deadline=None, external_root=N
 def validate_external(root, handoff, binding, *, history_repo=None, deadline=None, external_root=None, transport=None):
     """Read explicitly provided outer bindings; never change the original handoff."""
     ap.require((handoff.get("format"), handoff.get("rulebook", {}).get("version")) in
-               (("picross-authoring-handoff-v3", "0.7.0"), ("picross-authoring-handoff-v4", "0.8.0")) and
+               (("picross-authoring-handoff-v3", "0.7.0"), ("picross-authoring-handoff-v4", "0.8.0"), ("picross-authoring-handoff-v5", "0.8.0")) and
                handoff.get('background') is not None, "Outer background binding requires original background work")
     try:
         return _validate(root, handoff, binding, history_repo=history_repo, deadline=deadline,

@@ -255,14 +255,14 @@ def record_for(r, directory, package_raw, handoff_raw, inspection, background=No
             record['verification'] = {'technical': False, 'scope': 'phase and background file bindings only',
                                       'background_ready': background['ready'], 'integration_ready': False}
     if current:
-        record.update(format=workflow.RECORD, raster_selection=h['raster_selection'],
+        record.update(format=workflow.rules.RECORD if h['format'] == workflow.rules.HANDOFF else workflow.RECORD, raster_selection=h['raster_selection'],
                       presentation=r['presentation'], candidate=h.get('candidate'), next_step=workflow.NEXT[state])
     return record
 
 
 def sheet_from_record(record, background=None):
     """Project the record and its freshly read bound manifest; no second state."""
-    if record.get('format') == workflow.RECORD:
+    if record.get('format') in workflow.RECORDS:
         return None
     ap.require(record.get('format') in ('picross-authoring-record-v1', 'picross-authoring-record-v2'),
                'Unsupported authoring record family for the current sheet; background change work uses its own CLI')
@@ -315,8 +315,8 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
         with io.budget(ap.SECONDS):
             deadline = time.monotonic() + ap.SECONDS
             r = validate_request(request)
-            current = r['format'] == workflow.REQUEST
-            background_enabled = r['format'] in (BACKGROUND_FORMAT, workflow.REQUEST)
+            current = r['format'] in workflow.REQUESTS
+            background_enabled = r['format'] in (BACKGROUND_FORMAT, *workflow.REQUESTS)
             ap.require(not current or r['target'] == 'repository', '0.8.0 handoffs require repository publication')
             ap.require(background_enabled or history_repo is None, 'history-repo is only supported by build request v2')
             ap.require((r['target'] == 'repository') == (publish_to is not None), 'Request target and publish-to differ')
@@ -425,7 +425,7 @@ def build(request, source_root, output_root, publish_to=None, *, history_repo=No
                     verify_revision(target, revision_files)
                     if current:
                         current_view.publish(root, record['puzzle_id'], record['revision'], view_before)
-                    return {'format': 'picross-authoring-build-result-v3' if current else 'picross-authoring-build-result-v2' if background_enabled else 'picross-authoring-build-result-v1',
+                    return {'format': 'picross-authoring-build-result-v4' if r['format'] == workflow.rules.REQUEST else 'picross-authoring-build-result-v3' if current else 'picross-authoring-build-result-v2' if background_enabled else 'picross-authoring-build-result-v1',
                             'status': 'reused' if reused else 'built',
                             'directory': str(target), 'indexed': gitdir is not None, 'record': record,
                             'sheet': sheet_from_record(record, background), 'files': revision_files}
@@ -485,7 +485,7 @@ def main(argv=None):
             result = error_result(exc)
             code = {'invalid_input': 2, 'conflict': 2, 'aborted': 4, 'technical_error': 5}[result['status']]
         else:
-            result = {'format': ('picross-authoring-build-result-v3' if isinstance(request, dict) and request.get('format') == workflow.REQUEST else
+            result = {'format': ('picross-authoring-build-result-v4' if isinstance(request, dict) and request.get('format') == workflow.rules.REQUEST else 'picross-authoring-build-result-v3' if isinstance(request, dict) and request.get('format') in workflow.REQUESTS else
                                 'picross-authoring-build-result-v2' if isinstance(request, dict) and request.get('format') == BACKGROUND_FORMAT
                                  else 'picross-authoring-build-result-v1'), 'status': 'aborted' if aborted else 'invalid_input',
                       'message': str(exc), 'remaining': getattr(exc, 'remaining', None),

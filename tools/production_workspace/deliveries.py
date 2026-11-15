@@ -34,7 +34,7 @@ def rows(value):
 def completed_record(before, integration):
     """Only the existing projector.complete transition may differ historically."""
     exact_keys(before, RECORD_KEYS | {'raster_selection', 'presentation', 'candidate'})
-    ap.require(before['format'] == 'picross-authoring-record-v3' and
+    ap.require(before['format'] in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
                before['state'] == 'editorially_approved' and before['integration'] is None and
                isinstance(before['verification'], dict) and
                before['verification'].get('effective_state') == 'editorially_approved',

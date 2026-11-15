@@ -57,7 +57,7 @@ Die folgenden Vorbereitungs-/Lieferstatus, insbesondere „AT-B-F01 beauftragt�
 und „AT-B-R01 offen“, beschreiben frühere Stände und erteilen keinen erneuten
 Arbeitsauftrag. Historische Nachweise und ihre damaligen Urteile bleiben gebunden.
 Der Abschluss der Bildarbeitsdaten nach [CI2](CI_SLIMMING.md) und
-[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung)
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung)
 ist mit CI2-E auf `chore/417-ci2-e-cleanup` /
 [Draft-PR #423](https://github.com/venomenon328/picross/pull/423) ausgeführt;
 [E-T01](CI2_E_VERIFICATION.md) bindet Bereinigung und technische Nacharbeit.
