@@ -1,0 +1,11 @@
+Repository: venomenon328/picross. Verbindlich: AGENTS.md und docs/ai-workflows/PUZZLE_AUTHORING.md (Authoring 0.8.0) im aktuellen main.
+
+Produktionsdatensatz: https://github.com/venomenon328/picross/blob/83dcf285276983b12c13a51d7b62748927c70e77/content/authoring/pz-radieschen/r02/record.json
+
+Schritt 3: Ich gebe die im gebundenen Datensatz vorgelegte unveränderte Motivvorlage samt vorgeschlagenem Parameterkorridor frei. Rasterangebote produzieren.
+
+Offene/ungefähre Endvorgaben trotz konkreter Importstarts erhalten. Kleine motivische Rastermängel und erlaubte leere Außenlinien auch bei gelöster Logik über den regulären festen C-Weg korrigieren; echte Freigabe, Schutzmaske und kumulative Budgets beachten. Historische manuelle Sonderwege bleiben getrennt.
+
+Keine zusätzliche Abschlussbereinigung lokaler Arbeitsdaten beauftragt; der fachliche Produktionsabschluss nach Authoring §9 bleibt davon getrennt.
+
+Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.
