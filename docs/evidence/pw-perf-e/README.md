@@ -25,8 +25,10 @@ T02 verwendet auf beiden Codeständen denselben kleinen gültigen historischen
 Exportfall aus IntegratedContentTests.prepare(), unveränderte ursprüngliche
 Paketmenge: 30 Dateien / 31.504 Bytes. Kein v6-Erfolgswert wird rückwirkend erfunden.
 Windows 11 / Python 3.13.14 / Pillow 12.3.0, ein erster und ein begrenzter warmer
-Aufruf, kein Cacheflush. Fixtureaufbau liegt außerhalb der Messung. Git-Commits
-enthalten naturgemäß unterschiedliche Zeitstempel; Inhaltsbytes sind identisch.
+Aufruf, kein Cacheflush. Fixtureaufbau liegt außerhalb der Messung. Git-Commits und die bei Fixture-Registrierung erzeugten Added-Records enthalten
+unterschiedliche Zeitstempel. Verglichen werden dieselbe Fixturedefinition,
+dieselben Dateimengen und derselbe ursprüngliche Paketbyteumfang; es wird keine
+vollständige Byteidentität dieser unabhängig erzeugten Zeitstempelfelder behauptet.
 Vorher/Nachher instrumentieren dieselben tatsächlichen catalog_io-Bytezugriffe und
 SHA-256-Hasharbeiten: vor Änderung io.read/checksum, danach deren physische
 _read/_checksum-Grenze unter dem aufrufgebundenen Reader. Pure Hashes außerhalb
