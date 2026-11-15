@@ -164,6 +164,7 @@ class WorkflowTests(unittest.TestCase):
         name = next(n for n in payload if n.endswith('STEP_3.md'))
         (f.helper.source / name).unlink()
         with self.assertRaises((ValueError, OSError)): verify()
+        with self.assertRaises((ValueError, OSError)): f.build()
         put(f.helper.source, name, payload[name] + b'changed')
         with self.assertRaisesRegex(ValueError, 'bytes/hash'): verify()
         # Even internally rehashed bytes must match the declared Git original.
@@ -195,6 +196,7 @@ class WorkflowTests(unittest.TestCase):
         h['rulebook'].pop('extra')
         h['rulebook']['sources'].pop()
         with self.assertRaisesRegex(ValueError, 'sources'): verify()
+        with self.assertRaisesRegex(ValueError, 'sources'): f.build()
         self.assertFalse((f.helper.output / 'content/authoring/pz-hp-synthetic/r01').exists())
 
     def test_unchanged_historical_single_file_snapshot_keeps_its_reader(self):
