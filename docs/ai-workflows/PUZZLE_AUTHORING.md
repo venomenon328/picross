@@ -157,7 +157,7 @@ Hintergrundgates pending und Belege null; null ist kein none. Erst background_re
 content_ready besitzen Hintergrundarbeit und qualifizierte Rasterwahl.
 Registered erst nach Registrierung, main nach bestätigtem Merge melden.
 Originale nie umetikettieren/neu versiegeln. Konflikte, Restpfade und Teilpublikation
-offen melden. Nur geprüft identische Wiederholung ist No-op;
+offen melden. Nur vollständig geprüft identische Wiederholung ist No-op;
 keine pauschale Locklöschung/verdeckte Recovery.
 
 ## 7. Freigaben und Abschlussausgabe
