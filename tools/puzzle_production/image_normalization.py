@@ -10,6 +10,9 @@ from __future__ import annotations
 import hashlib
 import io
 import warnings
+from pathlib import Path
+
+SOURCE_SHA256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
 
 from PIL import Image, ImageCms, ImageOps
 

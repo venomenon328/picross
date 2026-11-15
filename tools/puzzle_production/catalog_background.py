@@ -213,11 +213,16 @@ def _diagnostics(value, selected):
 
 
 def _derivation(value, decision, approval, test_only):
+    v2 = isinstance(value, dict) and value.get("format") == "picross-background-derivation-v2"
     exact_keys(value, {"format", "request_sha256", "request", "puzzle_id", "job_id", "background_revision", "manifest",
                        "decision", "outcome", "candidate_id", "source", "profile", "profile_sha256", "tool", "tool_sha256",
-                       "output", "diagnostics", "test_only"})
-    ap.require(value["format"] == "picross-background-derivation-v1", "Wrong historical background derivation format")
+                       "output", "diagnostics", "test_only"} | ({"producer"} if v2 else set()))
+    ap.require(value["format"] in ("picross-background-derivation-v1", "picross-background-derivation-v2"), "Wrong historical background derivation format")
     request = bc.validate_request(value["request"])
+    ap.require(request["format"] == "picross-background-derive-request-v" + ("2" if v2 else "1"),
+               "Background request/derivation generations differ")
+    if v2:
+        bc.validate_producer(value["producer"])
     ap.require(ap.sha(value["request_sha256"]) == bc.digest(request) and
                all(value[k] == request[k] for k in ("manifest", "decision", "source", "profile")) and
                value["manifest"] == decision["manifest"] == approval["manifest"]["ref"] and
@@ -229,21 +234,23 @@ def _derivation(value, decision, approval, test_only):
                value["profile_sha256"] == approval["profile_sha256"] == bc.digest(bc.PROFILE) and
                type(value["test_only"]) is bool and value["test_only"] == test_only,
                "Historical background derivation binding differs")
-    tool = exact_keys(value["tool"], {"id", "commit", "dirty", "versions", "modules"})
-    ap.require(tool["id"] == "picross-background-1" and isinstance(tool["commit"], str) and
-               re.fullmatch(r"[0-9a-f]{40}", tool["commit"]) and type(tool["dirty"]) is bool,
-               "Invalid historical background tool")
+    tool = exact_keys(value["tool"], {"id", "versions", "modules"} | (set() if v2 else {"commit", "dirty"}))
+    ap.require(tool["id"] == ("picross-background-2" if v2 else "picross-background-1"), "Invalid background tool generation")
+    if not v2:
+        bc.validate_producer({k: tool[k] for k in ("commit", "dirty")})
     versions = exact_keys(tool["versions"], {"python", "pillow", "zlib", "littlecms"})
     for v in versions.values(): ap.string(v, "historical codec")
     ap.require(versions["pillow"] == "12.3.0", "Wrong historical background Pillow contract")
     modules = tool["modules"]
-    ap.require(isinstance(modules, list) and len(modules) == 9, "Invalid historical background module inventory")
+    ap.require(isinstance(modules, list) and len(modules) == (2 if v2 else 9), "Invalid historical background module inventory")
     names = []
     for row in modules:
         exact_keys(row, {"file", "sha256"}); ap.relative(row["file"]); ap.sha(row["sha256"]); names.append(row["file"])
     expected_modules = ["tools/puzzle_production/" + name + ".py" for name in (
         "__init__", "authoring_package", "background_assets", "background_contract", "background_io", "catalog_io",
         "contract", "image_normalization", "operation_diagnostics")]
+    if v2:
+        expected_modules = ["tools/puzzle_production/background_render.py", "tools/puzzle_production/image_normalization.py"]
     ap.require(names == expected_modules and
                ap.sha(value["tool_sha256"]) == request["expected_tool_sha256"] == bc.digest(tool),
                "Historical background tool binding differs")

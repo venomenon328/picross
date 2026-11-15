@@ -1,18 +1,35 @@
 {
   "format": "development-ci-plan/v1",
   "issue": "https://github.com/venomenon328/picross/issues/653",
-  "package": "PW-PERF-B",
+  "package": "PW-PERF-C",
   "modules": [
-    "production.catalog",
-    "production.adapter"
+    "tools",
+    "production.adapter",
+    "production.images",
+    "production.catalog"
   ],
-  "purpose": "Erstregistrierung v10 auf v4/v8: begrenzte gemeinsame Indexautorität, neue Produktion und Ziele; kopierfreie Projektion, gleiche Publikations-/Recoveryguards.",
-  "omitted": "Keine Solver-/Bildalgorithmus-, Spiel-/UI-/Browser- oder Lieferwegänderung. Einmaliger isolierter 56er-Windowsvergleich nur als befristetes Revieworiginal für A01; keine reale Katalogmutation.",
+  "purpose": "Aufrufgebundene Export-/Finalizerpruefung und geschlossene HP-W2-v2-Bildidentitaet mit getrennten Producerdaten.",
+  "omitted": "Keine Solver-/Spiel-/Browser-/Lieferweg- oder v10-Aenderung; T02 nur temporaere synthetische 3x3-Messungen, keine echten Inhalte.",
   "test_changes": [
     {
-      "path": "tests/puzzle_production/test_registration_publication.py",
+      "path": "tests/puzzle_production/test_background_assets.py",
       "disposition": "change-scoped",
-      "reason": "Dauerhafte kleine synthetische v10-Schutz-/Zählfälle; gezielte Anpassung der früheren v9-Vollbestandsaussage, v9-Recovery weiterhin explizit. Keine Echtkatalogfixture."
+      "reason": "Geschlossene v2-Identitaet, echte Reproduktion, Provenienz, Dateiaustausch und v1-Abgrenzung. B01: erster selected/none-Schreiblauf im sauberen Git-Checkout mit internem Ausgabe-Root, authentische Startprovenienz, schreibfreier Reuse/Verify und frische Fremdaenderungs-/Codecguards."
+    },
+    {
+      "path": "tests/puzzle_production/test_background_export.py",
+      "disposition": "change-scoped",
+      "reason": "Zwei volle Inspektionen, frische Offlinepruefung und Pending-Manipulation; historische Faelle explizit v1."
+    },
+    {
+      "path": "tests/puzzle_production/test_authoring_workflow.py",
+      "disposition": "change-scoped",
+      "reason": "Eine gemeinsame Projektion stimmt mit unabhaengiger Vollpruefung ueberein."
+    },
+    {
+      "path": "tests/puzzle_production/test_authoring_finalization.py",
+      "disposition": "change-scoped",
+      "reason": "Historische qualifizierte Produktion bleibt explizit v1."
     }
   ],
   "core_change": null,
