@@ -57,7 +57,7 @@ Die folgenden Vorbereitungs-/Lieferstatus, insbesondere „AT-B-F01 beauftragt�
 und „AT-B-R01 offen“, beschreiben frühere Stände und erteilen keinen erneuten
 Arbeitsauftrag. Historische Nachweise und ihre damaligen Urteile bleiben gebunden.
 Der Abschluss der Bildarbeitsdaten nach [CI2](CI_SLIMMING.md) und
-[Authoring §9](ai-workflows/PUZZLE_AUTHORING.md#9-produktionsabschluss-und-bereinigung)
+[Authoring §9](ai-workflows/PUZZLE_AUTHORING_STEP_5.md#9-produktionsabschluss-und-bereinigung)
 ist mit CI2-E auf `chore/417-ci2-e-cleanup` /
 [Draft-PR #423](https://github.com/venomenon328/picross/pull/423) ausgeführt;
 [E-T01](CI2_E_VERIFICATION.md) bindet Bereinigung und technische Nacharbeit.
@@ -480,3 +480,30 @@ nach Retirement und bei ursprünglicher Registerwiederholung. Budgets, vollstän
 T/K-/Namespaceguards, frische Prüfung unter Lock, Runtime zuletzt und Recovery
 bleiben erhalten. Echte Capability bleibt false; nur isolierte synthetische
 test_only-Ziele verwenden true. Keine Authoring-/Sheet-Formatänderung.
+
+## PW-PERF-B · Begrenzte Erstregistrierungsprüfung
+
+Für Erstregistrierung auf v4/v8 gilt ausschließlich die neue geschlossene
+[v10-Semantik](PUZZLE_INTEGRATION.md). Gemeinsame Indizes, neue Produktion samt Freigaben/Proof,
+abhängige Quellen und Schreibziele bleiben vollständig gebunden. Unbeteiligte
+alte Paket-/Liveasset-/Sidecardateien werden nicht gelesen oder als intakt
+bestätigt; ihre Defekte erkennt der zuständige Reader oder ein expliziter
+Gesamtaudit. P0/P2 prüfen neue Quellen und freie/eigene Ziele, P5/P6 die neue
+Publikation, R0/R2 eigene Zwischenstände und alte Indizes. Alte Journalgenerationen
+und andere Writer behalten ihre bisherigen Prüfverträge. Keine Garantie gegen
+nichtkooperierendes ABA-/OS-Racing; keine Änderung menschlicher Freigaben.
+
+
+## PW-PERF-E · Gezielter Abschluss aktueller Quellen
+
+Für `retire-production` gilt der geschlossene [Receipt-v4- und Prüfvertrag](ZA1_ADAPTER.md#pw-perf-e--ausgewählter-produktionsabschluss-und-receipt-v4).
+Aktuelle Background v6 (selected/none/standard) und Reveal v4 (PNG/SVG) werden
+an binding/current geprüft, ohne erfundenen initial-Ursprung. Aktive
+Editorrasterpakete v1/v2 bleiben vollständige aktive Autorität. Alte Receipts
+v1/v2/v3 bleiben unverändert. V4 erhält Originalexport, Rechte und tatsächlichen
+Main-/Quellcommit getrennt; Sonderimportquellen werden je ID ausdrücklich mit
+`--source-commit ID SHA` gebunden. Keine erneute Endfreigabe oder Completion.
+Nur ausgewählte Abhängigkeiten werden gelesen, keine fremden Paket-/Bildbäume.
+Alle Preflights vor erster Löschung, gezielter Abschlussreadback, frischer
+Byte-/mtime-No-op und ehrliche Teilfehlerreste sind verbindlich. Dieses
+Werkzeugpaket beauftragt keine reale Bereinigung; sie braucht einen separaten Auftrag.

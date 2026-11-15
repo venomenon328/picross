@@ -47,7 +47,7 @@ def inspect(source, commit, raw, puzzle_id, *, originals=False):
     record_raw = p.bind(source.read(commit, value['record']['file']), value['record'])
     projection = p.validate(p.parse(p.bind(source.read(commit, value['projection']['file']), value['projection'])))
     record = p.parse(record_raw)
-    ap.require(projection['format'] == p.CURRENT_FORMAT and record['format'] == 'picross-authoring-record-v3' and
+    ap.require(projection['format'] == p.CURRENT_FORMAT and record['format'] in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
                all(record[k] == projection[k] == value[k] for k in ('puzzle_id', 'revision')),
                'Current-view requires matching 0.8 originals')
     p.bind(record_raw, projection['record'])

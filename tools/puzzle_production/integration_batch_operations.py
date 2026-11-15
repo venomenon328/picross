@@ -28,6 +28,9 @@ _NORMS = {
     "docs/REVEAL_TRANSPARENCY.md", "docs/PUZZLE_EDITOR.md", "docs/CATEGORIES.md", "docs/SD_CATALOG.md",
     "docs/SD2_INTEGRATION.md", "docs/SD2_ANALYZER.md",
 }
+from .authoring_rulebook import PATHS as _RULE_PATHS
+_NORMS.update(_RULE_PATHS)
+
 _METHODS = {"content/difficulty-method.json", *(
     _PREFIX + name for name in (
         "difficulty_method_0_3.json", "difficulty_calibration_0_3.json", "difficulty_references_0_3.json",

@@ -1,12 +1,12 @@
 # Lokaler Produktionsassistent (PW-B)
 
 Der fünfstufige Assistent für neue Authoring-0.8.0-Produktionen verwendet
-Handoff v4, Record v3 und Projektion v2. Der aktuelle operative Regelstand ist
-**Authoring 0.8.0, Dokumentrevision 6 (PW2-A/PW2-B)**. Normale Produktion liest den
+Handoff v5, Record v4 und Projektion v2. Der aktuelle operative Regelstand ist
+**Authoring 0.8.0, Dokumentrevision 7 (PW-PERF-D)**. Normale Produktion liest den
 Produktionseinstieg in [AGENTS](../../AGENTS.md),
 [Authoring §1.1](../../docs/ai-workflows/PUZZLE_AUTHORING.md#11-pflichtquellen-nach-phase),
 den vollständigen [gemeinsamen Bildstil](../../docs/PUZZLE_IMAGE_STYLE.md) und
-nur die dort geroutete Phase. Diese Anleitung, der
+nur die dort geroutete Phasendatei. Diese Anleitung, der
 [PW-B-Datenvertrag](../../docs/PW_B_CONTRACT.md) und die technische
 [Produktions-README](../puzzle_production/README.md) werden für die konkret
 verwendete Operation abschnittsbezogen gelesen, nicht pauschal vollständig.
@@ -459,3 +459,29 @@ Linux-/HTTP-Tests ersetzen die Windowsprobe nicht. Die getrennten Vor-Merge-Gate
 PW-B-A01 und PW-B-M01 stehen in der ursprünglichen Paketentscheidung; spätere
 paketbezogene Entscheidungen und der tatsächliche Abschluss in #578 bleiben
 maßgeblich. Daraus entstehen keine neuen PW2-A-Browser-/Bildprüfpflichten.
+
+
+## PW-PERF-C · aufrufgebundene Prüfung und Hintergrund v2
+
+Die geschlossenen HP-W2-v1/v2-Formen und das unveränderte PNG2304-Profil stehen
+in [Hintergrund §4](../../docs/PUZZLE_BACKGROUNDS.md#4-hp-w2-eigenständige-datei--und-ableitungsschnittstelle).
+Neue Ableitungen verwenden Request/Befund v2 und Tool `picross-background-2`;
+Git-`producer` bleibt getrennt vom Bildkern aus `background_render.py` und
+`image_normalization.py`. Alle Consumer prüfen v1 und v2 generationsgenau;
+keine Neusiegelung alter Originale oder Erweiterung von #645.
+
+Export v6 prüft Original und tatsächliches Staging jeweils vollständig. Zwischen
+beiden ersetzt ausschließlich der eigene unveränderte, byte-/pfadgebundene
+Aufrufkontext die redundante volle Pending-Inspektion. Ein geschlossener Vergleich
+der geschriebenen Pending-Dateimenge samt Bytes/Manifest und frischen Identitäten
+bleibt Pflicht. Inspection, Hashliste, Methoden, Freigaben, Notices, Kategorien und
+vollständige Readbacks bleiben gebunden. Vor Publikation werden Quellen und Ziel
+frisch geprüft. Separates verify-export beginnt immer eine vollständige Prüfung.
+
+Der Finalizer darf zwei Projektionen aus einem vollständig geprüften gemeinsamen
+Paket-/Record-/Quellkontext ableiten. Nur ein geschlossenes Delta der bereits
+unabhängig geprüften Zustands-, Hintergrund- und Freigabefelder ist zulässig;
+abweichende Darstellungs-/Bild-/Angebotsquellen verlangen vollständige Prüfung.
+Alte und neue Inhalts-/Freigabeprüfung bleiben eigenständig. Sidecar vor Record,
+Bytevergleich, Fremddatenschutz, Wiederaufnahme und No-op bleiben verbindlich.
+Keine Befunde über Aufrufe, Ziele oder Locks hinweg weiterverwenden.

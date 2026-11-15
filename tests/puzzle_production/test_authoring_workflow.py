@@ -47,6 +47,20 @@ class WorkflowFixture:
                         'target':'repository','category_id':'voegel','reveal_options':[],'external':{},
                         'presentation':{'title':'TEST ONLY · Raster und Kontext','raster_offers':[]}}
 
+    def split_rulebook(self):
+        from tools.puzzle_production import authoring_rulebook as rules
+        # A real isolated Git provenance, with only canonical norm files.
+        for name in rules.PATHS:
+            put(self.helper.output, name, (Path(__file__).resolve().parents[2] / name).read_bytes())
+        commit = self.commit()
+        rule, payload = rules.capture(self.helper.output, commit)
+        for name, raw in payload.items():
+            put(self.helper.source, name, raw)
+        (self.helper.source / 'rulebook.md').unlink()
+        self.request.update(format=rules.REQUEST, document_revision=7)
+        self.request['handoff'].update(format=rules.HANDOFF, repo_commit=commit, rulebook=rule)
+        return payload
+
     def commit(self):
         f=self.helper
         git(f.output,'add','.')
@@ -106,6 +120,120 @@ class WorkflowFixture:
 
 
 class WorkflowTests(unittest.TestCase):
+    def test_split_snapshot_builder_reader_finalizer_and_offline_export(self):
+        from tools.puzzle_production import authoring_rulebook as rules, target_adapter as adapter
+        from tools.puzzle_production import authoring_package as ap
+        for mode in ('mono', 'color'):
+            f = WorkflowFixture(self, mode=mode)
+            payload = f.split_rulebook()
+            result = f.build()
+            self.assertEqual(result['format'], 'picross-authoring-build-result-v4')
+            self.assertEqual(result['record']['format'], rules.RECORD)
+            with ap.open_package(f.helper.directory / 'package.zip', allow_background=True) as package:
+                self.assertEqual(package.handoff['rulebook'], f.request['handoff']['rulebook'])
+                for name, raw in payload.items():
+                    self.assertEqual(package.file(name).read_bytes(), raw)
+            f.select(); f.build()
+            _, final = f.finalize(outcome='none')
+            self.assertEqual(final['status'], 'updated', final)
+            record = final['record']
+            self.assertEqual(record['format'], rules.RECORD)
+            sha = f.commit()
+            p.inspect(GitSource(f.helper.output), sha,
+                      load_json(f.helper.directory / 'workspace.json'))
+            exported = f.root / 'split-export'
+            adapter.export(f.helper.output / record['package']['file'], exported,
+                           name='TEST ONLY split snapshot', revision=1, stem='split_snapshot',
+                           save_slot='split_snapshot', category_id='voegel',
+                           categories_path=Path(__file__).resolve().parents[2] / 'content/categories.json', approval_path=f.helper.output / record['final_editorial_approval']['file'],
+                           allow_background=True, external_root=f.helper.output, history_repo=f.helper.output)
+            adapter.verify_export(exported)
+
+    def test_split_snapshot_rejects_missing_changed_foreign_and_wrong_generation(self):
+        from tools.puzzle_production import authoring_rulebook as rules
+        from tools.puzzle_production.authoring_build_contract import validate_request
+        f = WorkflowFixture(self)
+        payload = f.split_rulebook()
+        h = f.request['handoff']
+        def verify():
+            # New source binding is checked before any phase qualification/publication.
+            rules.validate(h['rulebook'], h['format'], h['repo_commit'],
+                           lambda name: (f.helper.source / name).read_bytes(),
+                           f.request['document_revision'], history_repo=f.helper.output, verify_git=True)
+        verify()
+        name = next(n for n in payload if n.endswith('STEP_3.md'))
+        (f.helper.source / name).unlink()
+        with self.assertRaises((ValueError, OSError)): verify()
+        with self.assertRaises((ValueError, OSError)): f.build()
+        put(f.helper.source, name, payload[name] + b'changed')
+        with self.assertRaisesRegex(ValueError, 'bytes/hash'): verify()
+        # Even internally rehashed bytes must match the declared Git original.
+        item = next(v for v in h['rulebook']['sources'] if v['file'] == name)
+        original = deepcopy(item)
+        item.update(file_ref(f.helper.source, name))
+        with self.assertRaisesRegex(ValueError, 'Git commit'): verify()
+        item.clear(); item.update(original); put(f.helper.source, name, payload[name])
+        f.request['document_revision'] = 6
+        with self.assertRaisesRegex(ValueError, 'revision'): verify()
+        f.request['document_revision'] = 7
+        original_commit = h['repo_commit']
+        h['rulebook']['source_commit'] = 'f' * 40
+        with self.assertRaisesRegex(ValueError, 'commit'): verify()
+        h['repo_commit'] = 'f' * 40
+        with self.assertRaises(ValueError): verify()
+        h['repo_commit'] = h['rulebook']['source_commit'] = original_commit
+        # Same files at the later commit are valid, but cannot claim a legacy form.
+        f.request['format'] = workflow.REQUEST
+        with self.assertRaisesRegex(ValueError, 'matching unsealed'): validate_request(f.request)
+        f.request['format'] = rules.REQUEST
+        legacy_rule = {'version':'0.8.0', 'file':'rulebook/docs/ai-workflows/PUZZLE_AUTHORING.md',
+                       'sha256':next(v['sha256'] for v in h['rulebook']['sources'] if v['path'].endswith('/PUZZLE_AUTHORING.md'))}
+        with self.assertRaisesRegex(ValueError, 'Rev7'):
+            rules.validate(legacy_rule, workflow.HANDOFF, original_commit,
+                           lambda name: (f.helper.source / name).read_bytes())
+        h['rulebook']['extra'] = True
+        with self.assertRaises(ValueError): verify()
+        h['rulebook'].pop('extra')
+        h['rulebook']['sources'].pop()
+        with self.assertRaisesRegex(ValueError, 'sources'): verify()
+        with self.assertRaisesRegex(ValueError, 'sources'): f.build()
+        self.assertFalse((f.helper.output / 'content/authoring/pz-hp-synthetic/r01').exists())
+
+    def test_unchanged_historical_single_file_snapshot_keeps_its_reader(self):
+        # Existing, immutable historical Markdown; no re-snapshot of current norms.
+        from tools.puzzle_production import authoring_package as ap
+        f = finalization_tests.AuthoringFinalizationTests()
+        f.setUp(); self.addCleanup(f.doCleanups)
+        raw = (Path(__file__).resolve().parents[2] / 'docs/ai-workflows/PUZZLE_AUTHORING_0_7_0_PREVIEW.md').read_bytes()
+        ref = put(f.source, 'rulebook.md', raw)
+        f.handoff['rulebook'] = {'version':'0.7.0', 'file':'rulebook.md', 'sha256':ref['sha256']}
+        f.build_request['document_revision'] = 9
+        for item in f.build_request['files']:
+            if item['path'] == 'rulebook.md': item.update(sha256=ref['sha256'], bytes=ref['bytes'])
+        result = f.build()
+        self.assertEqual(result['record']['format'], 'picross-authoring-record-v2')
+        with ap.open_package(f.directory / 'package.zip', allow_background=True) as package:
+            self.assertEqual(package.file('rulebook.md').read_bytes(), raw)
+        # Legacy shape cannot be relabeled as the new generation.
+        from tools.puzzle_production import authoring_rulebook as rules
+        with self.assertRaises(ValueError): rules.shape(f.handoff['rulebook'], rules.HANDOFF, f.handoff['repo_commit'], 7)
+
+    def test_finalizer_shares_one_projection_and_matches_independent_view(self):
+        from tools.production_workspace import projector
+        f = WorkflowFixture(self)
+        f.build(); f.select(); f.build()
+        request = f.helper.request(outcome='none', approval=True)
+        request['format'] = 'picross-authoring-finalize-request-v2'
+        with patch.object(projector, '_automatic', wraps=projector._automatic) as inspections:
+            result = builder.finalize_background(request, f.helper.payload, f.helper.output)
+        self.assertEqual(result['status'], 'updated', result)
+        self.assertEqual(inspections.call_count, 1)
+        index = load_json(f.helper.output / builder.INDEX)
+        directory = f.helper.record_name.rsplit('/', 1)[0]
+        independent = projector.automatic(f.helper.output, directory, f.helper.directory, index)
+        self.assertEqual((f.helper.directory / 'workspace.json').read_bytes(), independent)
+        self.assertEqual(builder.finalize_background(request, f.helper.payload, f.helper.output)['status'], 'reused')
+
     def test_early_background_is_rejected_and_raster_is_qualified_without_it(self):
         f=WorkflowFixture(self,mode='color')
         from tools.puzzle_production import background_package
@@ -192,19 +320,37 @@ class WorkflowTests(unittest.TestCase):
         bound = cv.inspect(LocalSource(root),
                            None, (root / name).read_bytes(), 'pz-hp-synthetic', originals=True)
         self.assertEqual(bound['record']['sha256'], io.checksum(f.helper.record_path.read_bytes()))
-        # Completion reads only these committed registration metadata, as specified
-        # by its existing reader contract; no catalog writer or solver is mocked.
-        record = final['record']; directory = 'content/packages/pz-hp-synthetic/r02'
-        manifest = {'format': 'picross-target-export-v6', 'definition_id': record['puzzle_id'],
-                    'package_revision': 'r02', 'editorial_approved': True, 'technical': True,
-                    'input': {'original_package': record['package']},
-                    'approval_sha256': record['final_editorial_approval']['sha256']}
-        manifest_ref = put_json(root, directory + '/manifest.json', manifest)
-        entry = {'id': record['puzzle_id'], 'definition': 'test-only.json', 'reveal': 'test-only.png', 'save_slot': 'test-only',
-                 'production': {'status': 'registered', 'blockers': [], 'package': directory, 'revision': 'r02',
-                                'package_sha256': manifest_ref['sha256']}}
-        put_json(root, 'content/registry.json', {'entries': [entry]})
-        put_json(root, 'game/data/registry.json', {'entries': [entry]})
+
+        # RI-V9: complete a real current registration, then exercise the normal
+        # main-bound retirement in this isolated synthetic Git repository.
+        from tests.puzzle_production.catalog_fixtures import registered
+        from tests.puzzle_production.test_editor_change import current_fixture
+        from tools.puzzle_production import target_adapter as adapter, content_registry as registry
+        from tools.puzzle_production import integrated_content, catalog_background as bg
+        from tools.puzzle_production.za1_fixtures import rated_registration
+        old = f.root / 'old'
+        registered(old, stem='completion_old', save_slot='completion_old')
+        current_fixture(old / 'base')
+        shutil.copytree(old / 'base', root, dirs_exist_ok=True)
+        put_json(root, bg.CAPABILITY, {'format': bg.CAPABILITY_FORMAT,
+                 'runtime_format': bg.RUNTIME_FORMAT, 'profile_id': 'picross-background-png2304-v1', 'enabled': True})
+        record = final['record']
+        # This isolated retirement fixture has exactly one active revision;
+        # the raster-choice predecessor remains reachable in synthetic history.
+        predecessor = root / 'content/authoring/pz-hp-synthetic/r01'
+        self.assertTrue(predecessor.resolve().is_relative_to(root.resolve()))
+        shutil.rmtree(predecessor)
+        index = load_json(root / builder.INDEX)
+        index['entries'] = [row for row in index['entries'] if row['revision'] == 'r02']
+        put_json(root, builder.INDEX, index)
+        exported = f.root / 'export'
+        adapter.export(root / record['package']['file'], exported, name='TEST ONLY completion',
+                       revision=1, stem='completion_new', save_slot='completion_new',
+                       approval_path=root / record['final_editorial_approval']['file'],
+                       category_id='voegel', categories_path=root / 'content/categories.json',
+                       allow_background=True, external_root=root, history_repo=root)
+        self.assertEqual(rated_registration(exported, root, apply=True)['status'], 'registered')
+        registry.check_checkout(root)
         sha = f.commit()
         with patch.object(cv, 'checkpoint', side_effect=stop), self.assertRaises(RuntimeError):
             projector.complete(root, f.helper.record_name, sha)
@@ -215,3 +361,14 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(((root / name).read_bytes(), (root / name).stat().st_mtime_ns), before)
         current = cv.inspect(GitSource(root), f.commit(), (root / name).read_bytes(), 'pz-hp-synthetic', originals=True)
         self.assertEqual(current['revision'], 'r02')
+
+        integrated_commit = git(root, 'rev-parse', 'HEAD').decode().strip()
+        git(root, 'update-ref', 'refs/remotes/origin/main', integrated_commit)
+        # The verified completed pointer is removed before §9, as in Authoring.
+        (root / name).unlink()
+        game_before = {str(p.relative_to(root)): p.read_bytes() for p in (root / 'game').rglob('*') if p.is_file()}
+        result = integrated_content.retire(root, ['pz-hp-synthetic'], integrated_commit)
+        self.assertEqual(result['status'], 'production_retired')
+        self.assertEqual(integrated_content.retire(root, ['pz-hp-synthetic'], integrated_commit)['status'], 'no-op')
+        self.assertEqual(game_before, {str(p.relative_to(root)): p.read_bytes() for p in (root / 'game').rglob('*') if p.is_file()})
+        registry.check_checkout(root)
