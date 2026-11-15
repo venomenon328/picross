@@ -1,6 +1,6 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/pull/619",
+  "issue": "https://github.com/venomenon328/picross/issues/619",
   "package": "Marienkaefer-r04-Schritt4-background-review",
   "modules": [],
   "purpose": "Bytegebundene Rasterwahl MK-R-r03 und drei isolierte ImageGen-Kontextoriginale als background_review nach Authoring 0.8.0 Rev7. Q-HG03 bei allen nicht erfüllt: native 3:1-Leinwand statt 4:1, Korrekturbedarf offen. Reine Authoringdaten: buildfreier docs-/ci-required-Quellen-/Plankern.",
