@@ -1,0 +1,302 @@
+{
+  "status": "PASS",
+  "environment": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "base": "aac669b5e3df7a1c095b93d054fbd9a68db3f99f",
+  "packages": [
+    {
+      "id": "pz-birne",
+      "revision": "r05",
+      "gross_original_bytes": 16107114,
+      "deleted_files": 14,
+      "deleted_file_bytes": 16100545,
+      "replaced_original_manifest_bytes": 6569,
+      "written_receipt_bytes": 16339,
+      "net_package_saving_bytes": 16090775,
+      "export_O_sha256": "85847c382990fea82973ce942e040393d1f51a1cb1568c051f584654927e5ac5",
+      "receipt_R_sha256": "0b6e7591fb0d2bb362e9aba6522a4ddf46567ad769f27733140436f3d97b050a",
+      "source_commit": "2916e94c2d2eeaf8d5ce6ebd15346fe22a20a8d8",
+      "integrated_commit": "907d40c8e08f6c7777cd579c8f214921c67efd9b",
+      "main_commit": "aac669b5e3df7a1c095b93d054fbd9a68db3f99f",
+      "package_tree": "f5d6aaee9e9b986285417a8692bb046b07bad4f3",
+      "original_background_rights_provenance": {
+        "attribution": null,
+        "author": "OpenAI ImageGen im beauftragten Codex-Produktionslauf",
+        "evidence": [
+          {
+            "bytes": 979,
+            "file": "background/provenance.txt",
+            "sha256": "5a04e80b9c84951dd55fdadd7929b60369c720a45bacfbb849afe123c9f4659d"
+          },
+          {
+            "bytes": 721,
+            "file": "step4-order.txt",
+            "sha256": "4391a2a450faecaaa4770670862c3b3a629c8312fba04847c931b0bae74b391a"
+          },
+          {
+            "bytes": 1242,
+            "file": "background/prompts/B.txt",
+            "sha256": "89c098dcc7443e5bb9c96744ce09af3340b856143670de88a6546f74b08b8089"
+          },
+          {
+            "bytes": 911,
+            "file": "background/prompts/B_edit.txt",
+            "sha256": "0a4189fc0eb9ae17702296433e4ac8f305aacc06f502132629441ed6340ded7c"
+          },
+          {
+            "bytes": 1169351,
+            "file": "background/generation-input/B.png",
+            "sha256": "8eb0f88bc61d2d93f5c44be9476c6134e107d87048fc020640ea83e09ea4223c"
+          }
+        ],
+        "rights_status": "resolved",
+        "source": "Eigene native Generierung aus Kontextbriefing; B/C gezielt nativ aus eigenen Erstentwürfen überarbeitet.",
+        "usage_basis": "Auf ausdrücklichen Nutzerauftrag neu erzeugte Projektinhalte ohne fremde Assets; Herkunft und bekannte Generierungsangaben in den gebundenen Belegen. Keine Exklusivitätszusage."
+      },
+      "original_background_approval": {
+        "bytes": 2018,
+        "file": "approval.json",
+        "sha256": "3dd8ebdd2beb6fdc348e57d716f7603a8cd4b39147c053480f5e7dce6afa07df"
+      },
+      "original_notice": {
+        "sha256": "c45823beafc679d3ded62af16a91c25e176b6bf4c3bcfd0c961383a881520161",
+        "text": "Production ID: pz-birne\nArtwork: OpenAI ImageGen, im beauftragten Codex-Produktionslauf\nUsage basis: Im ausdrücklichen Nutzerauftrag aus Motivtext neu generiert; keine hochgeladene Referenz und keine fremden Bildassets verwendet. Keine menschliche Bildfreigabe oder Exklusivitätszusage aus der Generierung abgeleitet.\n"
+      },
+      "targeted_readers": "PASS"
+    },
+    {
+      "id": "pz-erdbeere",
+      "revision": "r06",
+      "gross_original_bytes": 21714958,
+      "deleted_files": 14,
+      "deleted_file_bytes": 21705051,
+      "replaced_original_manifest_bytes": 9907,
+      "written_receipt_bytes": 16211,
+      "net_package_saving_bytes": 21698747,
+      "export_O_sha256": "67c40b62d25ec9a05b6ef28992090c0062021407279156a704e2510c693aafd5",
+      "receipt_R_sha256": "eba7f5e0d66e2092cbf3064d471b52234ebee5ed2b3009116aedafc74f98c595",
+      "source_commit": "f96583bdddcdc8df2c630fe480857a6e4da1a9f7",
+      "integrated_commit": "907d40c8e08f6c7777cd579c8f214921c67efd9b",
+      "main_commit": "aac669b5e3df7a1c095b93d054fbd9a68db3f99f",
+      "package_tree": "c94e8cf9bcdd02a6de923c34448e91b8930d84ff",
+      "original_background_rights_provenance": {
+        "attribution": null,
+        "author": "OpenAI ImageGen, native Bildfunktion in Codex unter Anleitung des Produktionsakteurs",
+        "evidence": [
+          {
+            "bytes": 913,
+            "file": "background/evidence/generation.md",
+            "sha256": "c195c40944887dd7886c3ada32d246f2eb0400e87b94ee0d855874e4ea156bd4"
+          },
+          {
+            "bytes": 807,
+            "file": "evidence/r06-order.md",
+            "sha256": "3a5c98c52551cc456843e5c0dce216d5fa274905271ec9b6946a7212cecc5a91"
+          }
+        ],
+        "rights_status": "resolved",
+        "source": "Neue native image_gen-Ausgabe in diesem Schritt-4-Auftrag ohne Eingangsassets.",
+        "usage_basis": "Eigenständige KI-Erzeugung im ausdrücklichen Nutzerauftrag für dieses Repository; keine Fremdassets. Keine Zusage von Exklusivität oder urheberrechtlicher Schutzfähigkeit."
+      },
+      "original_background_approval": {
+        "bytes": 2027,
+        "file": "approval.json",
+        "sha256": "9436765dfc9e9456a3dd8d2129ca9d682ff43b244d2dbcd4fc645f744f05b08d"
+      },
+      "original_notice": {
+        "sha256": "f353b801762c61066ae83094c5ce02e898155fcb68ef76cfe7a2206aecf368e7",
+        "text": "Production ID: pz-erdbeere\nArtwork: OpenAI ImageGen, native Bildfunktion in ChatGPT/Codex; unter Anleitung des Produktionsakteurs\nUsage basis: Eigenständige KI-Erzeugung im ausdrücklichen Nutzerauftrag für dieses Repository. Textmotiv Erdbeere; keine fremden Eingangsdateien oder Referenzassets verwendet. Keine zusätzliche Behauptung von Exklusivität oder urheberrechtlicher Schutzfähigkeit.\n"
+      },
+      "targeted_readers": "PASS"
+    },
+    {
+      "id": "pz-zitrone",
+      "revision": "r05",
+      "gross_original_bytes": 17355973,
+      "deleted_files": 14,
+      "deleted_file_bytes": 17345845,
+      "replaced_original_manifest_bytes": 10128,
+      "written_receipt_bytes": 15532,
+      "net_package_saving_bytes": 17340441,
+      "export_O_sha256": "e0bc28b8696080e7ef8482c4e327a3de5136699b03cec07d3dfa7d71fdba40cf",
+      "receipt_R_sha256": "7162a7c88febe2ce5bbab8998bad026610b735b3e930823a742206c12470ec8d",
+      "source_commit": "b8d797dbb7d4b30c10476e3b8b68ab60780b3d22",
+      "integrated_commit": "907d40c8e08f6c7777cd579c8f214921c67efd9b",
+      "main_commit": "aac669b5e3df7a1c095b93d054fbd9a68db3f99f",
+      "package_tree": "d49fd7755f2ac9742951bff0b3fe1a39dfc19291",
+      "original_background_rights_provenance": {
+        "attribution": null,
+        "author": "OpenAI ImageGen · im Auftrag erzeugt",
+        "evidence": [
+          {
+            "bytes": 1094,
+            "file": "background/evidence/generation.txt",
+            "sha256": "682a1d156dceab4ee02645c741e6d064f802cea582ff8fcded0ad7a7a21a0d2b"
+          },
+          {
+            "bytes": 1338,
+            "file": "background/prompts/A.txt",
+            "sha256": "a4815414c730cb8b52f08bc2c5ef31147a3ecc3b158c23ff42b022949ef7dcff"
+          }
+        ],
+        "rights_status": "resolved",
+        "source": "Eigenes tatsächliches image_gen.imagegen-Ergebnis im Codex-Auftrag vom 12.11.2026; ohne externe Bildreferenz.",
+        "usage_basis": "Eigene beauftragte generierte Illustration zur Projektverwendung, ohne bekannte fremde Asset- oder Attributionsbindung."
+      },
+      "original_background_approval": {
+        "bytes": 2033,
+        "file": "approval.json",
+        "sha256": "1927ac8f25cbc2d23a7beb881516d47ece577f2f393c7a6fd2b64ed2868bb86b"
+      },
+      "original_notice": {
+        "sha256": "8742e36f027709fd963799ba12e982f1b2306360bf23fc6b95414195cc650ccf",
+        "text": "Production ID: pz-zitrone\nArtwork: OpenAI ImageGen über die integrierte Bildfunktion in Codex\nUsage basis: Eigenständig für diesen ausdrücklich beauftragten Projektinhalt generierte Illustration, ohne fremde Bildvorlage oder übernommenes Fremdasset; keine Behauptung exklusiver Rechte.\n"
+      },
+      "targeted_readers": "PASS"
+    }
+  ],
+  "totals": {
+    "original_package_bytes": 55178045,
+    "deleted_files": 42,
+    "deleted_file_bytes": 55151441,
+    "replaced_original_manifest_bytes": 26604,
+    "new_receipt_bytes": 48082,
+    "net_package_saving_bytes": 55129963,
+    "registry_before_bytes": 144484,
+    "registry_after_bytes": 144484,
+    "plan_before_bytes": 1729,
+    "plan_after_bytes": 944,
+    "net_entire_diff_saving_bytes": 55130748
+  },
+  "all_56_registry_entries_preserved_except_3_package_hashes": true,
+  "runtime_56_entries_and_all_protected_tracked_paths_unchanged": true,
+  "unchanged_tracked_file_stats": 1681,
+  "full_diff_paths": {
+    ".ci/package.json": "M",
+    "content/packages/pz-birne/r05/approval.json": "D",
+    "content/packages/pz-birne/r05/categories.json": "D",
+    "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/asset/background.png": "D",
+    "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/asset/derivation.json": "D",
+    "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/selection/background-b01.json": "D",
+    "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/selection/background-choice-order.txt": "D",
+    "content/packages/pz-birne/r05/input/package.zip": "D",
+    "content/packages/pz-birne/r05/inspection.json": "D",
+    "content/packages/pz-birne/r05/manifest.json": "M",
+    "content/packages/pz-birne/r05/runtime/art/backgrounds/pz-birne.png": "D",
+    "content/packages/pz-birne/r05/runtime/art/backgrounds/pz-birne.txt": "D",
+    "content/packages/pz-birne/r05/runtime/art/content/birne_001.png": "D",
+    "content/packages/pz-birne/r05/runtime/art/content/birne_001.txt": "D",
+    "content/packages/pz-birne/r05/runtime/data/content/birne_001.json": "D",
+    "content/packages/pz-birne/r05/usage.txt": "D",
+    "content/packages/pz-erdbeere/r06/approval.json": "D",
+    "content/packages/pz-erdbeere/r06/categories.json": "D",
+    "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/background/decisions/d01.json": "D",
+    "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/derived/B-b01/background.png": "D",
+    "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/derived/B-b01/derivation.json": "D",
+    "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/evidence/r06-background-choice.md": "D",
+    "content/packages/pz-erdbeere/r06/input/package.zip": "D",
+    "content/packages/pz-erdbeere/r06/inspection.json": "D",
+    "content/packages/pz-erdbeere/r06/manifest.json": "M",
+    "content/packages/pz-erdbeere/r06/runtime/art/backgrounds/pz-erdbeere.png": "D",
+    "content/packages/pz-erdbeere/r06/runtime/art/backgrounds/pz-erdbeere.txt": "D",
+    "content/packages/pz-erdbeere/r06/runtime/art/content/erdbeere_001.png": "D",
+    "content/packages/pz-erdbeere/r06/runtime/art/content/erdbeere_001.txt": "D",
+    "content/packages/pz-erdbeere/r06/runtime/data/content/erdbeere_001.json": "D",
+    "content/packages/pz-erdbeere/r06/usage.txt": "D",
+    "content/packages/pz-zitrone/r05/approval.json": "D",
+    "content/packages/pz-zitrone/r05/categories.json": "D",
+    "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/background/decisions/d01.json": "D",
+    "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/background/evidence/choice-ha-b01.txt": "D",
+    "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/derived/H-A-b01/background.png": "D",
+    "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/derived/H-A-b01/derivation.json": "D",
+    "content/packages/pz-zitrone/r05/input/package.zip": "D",
+    "content/packages/pz-zitrone/r05/inspection.json": "D",
+    "content/packages/pz-zitrone/r05/manifest.json": "M",
+    "content/packages/pz-zitrone/r05/runtime/art/backgrounds/pz-zitrone.png": "D",
+    "content/packages/pz-zitrone/r05/runtime/art/backgrounds/pz-zitrone.txt": "D",
+    "content/packages/pz-zitrone/r05/runtime/art/content/zitrone_001.png": "D",
+    "content/packages/pz-zitrone/r05/runtime/art/content/zitrone_001.txt": "D",
+    "content/packages/pz-zitrone/r05/runtime/data/content/zitrone_001.json": "D",
+    "content/packages/pz-zitrone/r05/usage.txt": "D",
+    "content/registry.json": "M"
+  },
+  "targeted_reader_files": [
+    "content/.registration-pending.json",
+    "content/added/pz-birne.json",
+    "content/added/pz-erdbeere.json",
+    "content/added/pz-zitrone.json",
+    "content/backgrounds/pz-birne.json",
+    "content/backgrounds/pz-erdbeere.json",
+    "content/backgrounds/pz-zitrone.json",
+    "content/categories.json",
+    "content/difficulty-method.json",
+    "content/difficulty/pz-birne/rating.json",
+    "content/difficulty/pz-erdbeere/rating.json",
+    "content/difficulty/pz-zitrone/rating.json",
+    "content/packages/pz-birne/r05/manifest.json",
+    "content/packages/pz-erdbeere/r06/manifest.json",
+    "content/packages/pz-zitrone/r05/manifest.json",
+    "content/registry.json",
+    "content/reveals/pz-birne.json",
+    "content/reveals/pz-erdbeere.json",
+    "content/reveals/pz-zitrone.json",
+    "game/art/backgrounds/pz-birne.png",
+    "game/art/backgrounds/pz-birne.txt",
+    "game/art/backgrounds/pz-erdbeere.png",
+    "game/art/backgrounds/pz-erdbeere.txt",
+    "game/art/backgrounds/pz-zitrone.png",
+    "game/art/backgrounds/pz-zitrone.txt",
+    "game/art/content/birne_001.png",
+    "game/art/content/birne_001.svg",
+    "game/art/content/birne_001.txt",
+    "game/art/content/erdbeere_001.png",
+    "game/art/content/erdbeere_001.svg",
+    "game/art/content/erdbeere_001.txt",
+    "game/art/content/zitrone_001.png",
+    "game/art/content/zitrone_001.svg",
+    "game/art/content/zitrone_001.txt",
+    "game/data/background-capability.json",
+    "game/data/content/birne_001.json",
+    "game/data/content/erdbeere_001.json",
+    "game/data/content/zitrone_001.json",
+    "game/data/registry.json",
+    "tools/puzzle_production/__init__.py",
+    "tools/puzzle_production/analysis.py",
+    "tools/puzzle_production/analysis_cli.py",
+    "tools/puzzle_production/analysis_contract.py",
+    "tools/puzzle_production/analysis_io.py",
+    "tools/puzzle_production/analysis_rules.py",
+    "tools/puzzle_production/analysis_verifier.py",
+    "tools/puzzle_production/certification.py",
+    "tools/puzzle_production/contract.py",
+    "tools/puzzle_production/difficulty_calibration_0_3.json",
+    "tools/puzzle_production/difficulty_identity.py",
+    "tools/puzzle_production/difficulty_method_0_3.json",
+    "tools/puzzle_production/difficulty_rating.py",
+    "tools/puzzle_production/difficulty_references_0_3.json",
+    "tools/puzzle_production/paired_solver.py",
+    "tools/puzzle_production/paired_verifier.py",
+    "tools/puzzle_production/sd2_analysis.py",
+    "tools/puzzle_production/sd2_calibration_0_4.json",
+    "tools/puzzle_production/sd2_cli.py",
+    "tools/puzzle_production/sd2_comparison_0_4.json",
+    "tools/puzzle_production/sd2_contract.py",
+    "tools/puzzle_production/sd2_io.py",
+    "tools/puzzle_production/sd2_method_0_4.json",
+    "tools/puzzle_production/sd2_profiles.py",
+    "tools/puzzle_production/sd2_rating.py",
+    "tools/puzzle_production/sd2_rating_cli.py",
+    "tools/puzzle_production/sd2_rating_freeze.py",
+    "tools/puzzle_production/sd2_rating_io.py",
+    "tools/puzzle_production/sd2_reference_checks.py",
+    "tools/puzzle_production/sd2_references_0_4.json",
+    "tools/puzzle_production/sd2_rules.py",
+    "tools/puzzle_production/sd2_validation_0_4.json",
+    "tools/puzzle_production/sd2_verifier.py",
+    "tools/puzzle_production/solver.py",
+    "tools/puzzle_production/verifier.py"
+  ],
+  "git_status_after": "M .ci/package.json\n D content/packages/pz-birne/r05/approval.json\n D content/packages/pz-birne/r05/categories.json\n D content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/asset/background.png\n D content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/asset/derivation.json\n D content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/selection/background-b01.json\n D content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/selection/background-choice-order.txt\n D content/packages/pz-birne/r05/input/package.zip\n D content/packages/pz-birne/r05/inspection.json\n M content/packages/pz-birne/r05/manifest.json\n D content/packages/pz-birne/r05/runtime/art/backgrounds/pz-birne.png\n D content/packages/pz-birne/r05/runtime/art/backgrounds/pz-birne.txt\n D content/packages/pz-birne/r05/runtime/art/content/birne_001.png\n D content/packages/pz-birne/r05/runtime/art/content/birne_001.txt\n D content/packages/pz-birne/r05/runtime/data/content/birne_001.json\n D content/packages/pz-birne/r05/usage.txt\n D content/packages/pz-erdbeere/r06/approval.json\n D content/packages/pz-erdbeere/r06/categories.json\n D content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/background/decisions/d01.json\n D content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/derived/B-b01/background.png\n D content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/derived/B-b01/derivation.json\n D content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/evidence/r06-background-choice.md\n D content/packages/pz-erdbeere/r06/input/package.zip\n D content/packages/pz-erdbeere/r06/inspection.json\n M content/packages/pz-erdbeere/r06/manifest.json\n D content/packages/pz-erdbeere/r06/runtime/art/backgrounds/pz-erdbeere.png\n D content/packages/pz-erdbeere/r06/runtime/art/backgrounds/pz-erdbeere.txt\n D content/packages/pz-erdbeere/r06/runtime/art/content/erdbeere_001.png\n D content/packages/pz-erdbeere/r06/runtime/art/content/erdbeere_001.txt\n D content/packages/pz-erdbeere/r06/runtime/data/content/erdbeere_001.json\n D content/packages/pz-erdbeere/r06/usage.txt\n D content/packages/pz-zitrone/r05/approval.json\n D content/packages/pz-zitrone/r05/categories.json\n D content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/background/decisions/d01.json\n D content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/background/evidence/choice-ha-b01.txt\n D content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/derived/H-A-b01/background.png\n D content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/derived/H-A-b01/derivation.json\n D content/packages/pz-zitrone/r05/input/package.zip\n D content/packages/pz-zitrone/r05/inspection.json\n M content/packages/pz-zitrone/r05/manifest.json\n D content/packages/pz-zitrone/r05/runtime/art/backgrounds/pz-zitrone.png\n D content/packages/pz-zitrone/r05/runtime/art/backgrounds/pz-zitrone.txt\n D content/packages/pz-zitrone/r05/runtime/art/content/zitrone_001.png\n D content/packages/pz-zitrone/r05/runtime/art/content/zitrone_001.txt\n D content/packages/pz-zitrone/r05/runtime/data/content/zitrone_001.json\n D content/packages/pz-zitrone/r05/usage.txt\n M content/registry.json"
+}

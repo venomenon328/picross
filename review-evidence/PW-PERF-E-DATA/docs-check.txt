@@ -1,0 +1,2 @@
+PASS: text conventions, inline file links, version and rules portability
+Not checked: anchors, reference links, external URLs, snapshot identity, game behavior

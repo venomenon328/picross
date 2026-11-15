@@ -1,0 +1,69 @@
+{
+  "package": "PW-PERF-E-DATA",
+  "product_head": "158fe08c45067ed24bd9f89fd054910ba05e3e0a",
+  "base": "aac669b5e3df7a1c095b93d054fbd9a68db3f99f",
+  "test_merge": null,
+  "expires": "2026-11-22",
+  "files": [
+    {
+      "file": "preflight.json",
+      "bytes": 13059,
+      "sha256": "c16d91b4a1d34533eb0e1be410c50b708898ee799632de39e3ae74484bf17c1c"
+    },
+    {
+      "file": "retirement-stdout.json",
+      "bytes": 199,
+      "sha256": "459f0ada8f252fe1c49ec1197f1d40b92ff2b08dffea46be06684c92cd67f971"
+    },
+    {
+      "file": "verification.json",
+      "bytes": 19397,
+      "sha256": "90e5fa126abfba96766a5ed2a1303e37eef0ff51ad230794ca3887bc35bcdb86"
+    },
+    {
+      "file": "noop.json",
+      "bytes": 4185,
+      "sha256": "2b688732a39fb68343cefdde087e5c9c4b02a8908c4a8980b93e1dfedecf0dce"
+    },
+    {
+      "file": "noop-stdout.json",
+      "bytes": 177,
+      "sha256": "8adc8724a6a6ab8f22a6fe3928eb804e2d4b66afb0b7010111344bc09bd7d121"
+    },
+    {
+      "file": "core-tests.txt",
+      "bytes": 3599,
+      "sha256": "f36871792c9699f1090fe13be8bfec71902f25363abb3d5d4aebc7eed754ca86"
+    },
+    {
+      "file": "docs-check.txt",
+      "bytes": 162,
+      "sha256": "0b11f044461b7861dbfcea45ef7a1c9bdd2a403ae04c4f665ab45deb3361875c"
+    },
+    {
+      "file": "committed-plan.json",
+      "bytes": 1506,
+      "sha256": "96e6c600fed2bef42dc1f7c6a0b854cb7c032063a486b24c8703073def8caba5"
+    },
+    {
+      "file": "preflight.py",
+      "bytes": 4599,
+      "sha256": "d889d3ab679e1525d0754e6802e037477b40cf409dda667fe1ff0dea50e47de0"
+    },
+    {
+      "file": "verify.py",
+      "bytes": 6519,
+      "sha256": "5fecefd5124ffdadc013c34bd5847d30111114fdb2b12008f0594cc8910c93e4"
+    },
+    {
+      "file": "noop.py",
+      "bytes": 3141,
+      "sha256": "25834a9ed0f0e26a5e97e7748838cd88edfdebe2b628eb34271c8fc676d0cc86"
+    },
+    {
+      "file": "README.txt",
+      "bytes": 2964,
+      "sha256": "667b9d021f8b5a11d838e0357958a77aec511f4409cce0afd640a6707f18c9e3"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "format": "development-ci-run/v1",
+  "source_head": "158fe08c45067ed24bd9f89fd054910ba05e3e0a",
+  "base_commit": "aac669b5e3df7a1c095b93d054fbd9a68db3f99f",
+  "tested_checkout": "158fe08c45067ed24bd9f89fd054910ba05e3e0a",
+  "event": "pull_request",
+  "run_id": "local",
+  "run_attempt": "1",
+  "modules": [],
+  "player": {
+    "required": false,
+    "reason": "Only documents and/or inert puzzle production; no player build"
+  },
+  "package": {
+    "format": "development-ci-plan/v1",
+    "issue": "https://github.com/venomenon328/picross/issues/653",
+    "package": "PW-PERF-E-DATA",
+    "modules": [],
+    "purpose": "Kompaktierung ausschließlich pz-birne/r05, pz-erdbeere/r06 und pz-zitrone/r05 mit bestehendem retire-production. Reiner regulärer Content-/Paketplan-Diff einschließlich 42 Löschungen: buildfreier docs-/ci-required-Kern. DATA-T01/T02 prüfen reale Git-/Rechtebindungen, gezielten Readback, Livebytes, Nettobytes und frischen No-op.",
+    "omitted": "Keine Werkzeug-, Spiel-, Solver-, Bild- oder Saveänderung. Keine Zusatzmodule, kein Windowsbau, kein Produktionsreplay und keine neue Dauersuite. Unabhängiges PW-PERF-E-DATA-A01 vor Merge bleibt offen; aktuelle Textoriginale auf separatem Reviewref bis Reviewabschluss, spätestens 2026-11-22.",
+    "test_changes": [],
+    "core_change": null,
+    "evidence": {
+      "mode": "none",
+      "purpose": null,
+      "expires": null
+    }
+  },
+  "plan_sha256": "ec299ae9eb28bb592518dfa5673db97eedc8dbfcbf120107b89d5aecd378ab4f"
+}

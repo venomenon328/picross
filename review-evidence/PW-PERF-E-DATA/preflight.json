@@ -1,0 +1,323 @@
+{
+  "status": "PASS",
+  "main": "aac669b5e3df7a1c095b93d054fbd9a68db3f99f",
+  "integrated_commit": "907d40c8e08f6c7777cd579c8f214921c67efd9b",
+  "git_status_before": "",
+  "registry_entries": 56,
+  "runtime_entries": 56,
+  "selected_index_rows": 0,
+  "lock_or_staging": false,
+  "packages": [
+    {
+      "id": "pz-birne",
+      "source_commit": "2916e94c2d2eeaf8d5ce6ebd15346fe22a20a8d8",
+      "revision": "r05",
+      "package_tree": "f5d6aaee9e9b986285417a8692bb046b07bad4f3",
+      "files": [
+        {
+          "file": "content/packages/pz-birne/r05/approval.json",
+          "bytes": 2018,
+          "blob": "a6af1601632f4d242555340336e8fe8cca79bec3",
+          "mtime_ns": 1794764723980570700
+        },
+        {
+          "file": "content/packages/pz-birne/r05/categories.json",
+          "bytes": 1312,
+          "blob": "011f25364456692d609833d45b14baffee1ba121",
+          "mtime_ns": 1794764723981085600
+        },
+        {
+          "file": "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/asset/background.png",
+          "bytes": 486658,
+          "blob": "fa79b7309e0f4e6435319851b96873432d6bdb2f",
+          "mtime_ns": 1794764723987265900
+        },
+        {
+          "file": "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/asset/derivation.json",
+          "bytes": 3966,
+          "blob": "43f69424ea58728b92754386e07c2e7997968c8f",
+          "mtime_ns": 1794764723987775700
+        },
+        {
+          "file": "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/selection/background-b01.json",
+          "bytes": 1358,
+          "blob": "4ff674014e65e6a0f99b6a8bd013ea71ba434211",
+          "mtime_ns": 1794764723988779900
+        },
+        {
+          "file": "content/packages/pz-birne/r05/external/content/authoring/pz-birne/r05/choice-b01/selection/background-choice-order.txt",
+          "bytes": 944,
+          "blob": "800629a25de9159c9699fb431c7570cefc6d5e5b",
+          "mtime_ns": 1794764723990386000
+        },
+        {
+          "file": "content/packages/pz-birne/r05/input/package.zip",
+          "bytes": 13420146,
+          "blob": "6a15c00ff2006134ab9a7213cdcfc8ae168cdb0a",
+          "mtime_ns": 1794764724035842500
+        },
+        {
+          "file": "content/packages/pz-birne/r05/inspection.json",
+          "bytes": 8130,
+          "blob": "c6dddffcc0abde9dce6a858c2dd49cd2399b2487",
+          "mtime_ns": 1794764724037895100
+        },
+        {
+          "file": "content/packages/pz-birne/r05/manifest.json",
+          "bytes": 6569,
+          "blob": "ad6934c62815c5c48fd5d58b52f82b533f7c3c78",
+          "mtime_ns": 1794764724038406600
+        },
+        {
+          "file": "content/packages/pz-birne/r05/runtime/art/backgrounds/pz-birne.png",
+          "bytes": 486658,
+          "blob": "fa79b7309e0f4e6435319851b96873432d6bdb2f",
+          "mtime_ns": 1794764724042612500
+        },
+        {
+          "file": "content/packages/pz-birne/r05/runtime/art/backgrounds/pz-birne.txt",
+          "bytes": 438,
+          "blob": "97ecb15c86c3d2a3c9e969761326d639ab6962db",
+          "mtime_ns": 1794764724042612500
+        },
+        {
+          "file": "content/packages/pz-birne/r05/runtime/art/content/birne_001.png",
+          "bytes": 1684666,
+          "blob": "c75c1944ac2aeca0a96329390f25f4f22bb8b4ee",
+          "mtime_ns": 1794764724050507400
+        },
+        {
+          "file": "content/packages/pz-birne/r05/runtime/art/content/birne_001.txt",
+          "bytes": 320,
+          "blob": "b5930ded4bdf18b4f9ba3d0efd08888d8979609e",
+          "mtime_ns": 1794764724051553700
+        },
+        {
+          "file": "content/packages/pz-birne/r05/runtime/data/content/birne_001.json",
+          "bytes": 2017,
+          "blob": "7d8890d323fc72c9f9414e735443fc1b3da34b9b",
+          "mtime_ns": 1794764724053062000
+        },
+        {
+          "file": "content/packages/pz-birne/r05/usage.txt",
+          "bytes": 1914,
+          "blob": "4fd13e179c3efa46184b41672815ac99ef0fcf2c",
+          "mtime_ns": 1794764724053565800
+        }
+      ],
+      "gross_bytes": 16107114,
+      "original_manifest_bytes": 6569,
+      "original_manifest_sha256": "85847c382990fea82973ce942e040393d1f51a1cb1568c051f584654927e5ac5",
+      "registered_record": "content/authoring/pz-birne/r05/record.json",
+      "registered_record_sha256": "f47f5744c557412cfdeb74e2de538605cc95bbc8b42968fccdddcb88b0060637"
+    },
+    {
+      "id": "pz-erdbeere",
+      "source_commit": "f96583bdddcdc8df2c630fe480857a6e4da1a9f7",
+      "revision": "r06",
+      "package_tree": "c94e8cf9bcdd02a6de923c34448e91b8930d84ff",
+      "files": [
+        {
+          "file": "content/packages/pz-erdbeere/r06/approval.json",
+          "bytes": 2027,
+          "blob": "f2e7db9860968d80ef3a891bcb221b3a630e3407",
+          "mtime_ns": 1794764724070701900
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/categories.json",
+          "bytes": 1312,
+          "blob": "011f25364456692d609833d45b14baffee1ba121",
+          "mtime_ns": 1794764724071707400
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/background/decisions/d01.json",
+          "bytes": 1354,
+          "blob": "bd3fda200b66bbf527806dceaddb5e1f27dc5600",
+          "mtime_ns": 1794764724076422000
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/derived/B-b01/background.png",
+          "bytes": 569682,
+          "blob": "4b06580cc3af65c7e3c63e5fafb56b3102e1ab90",
+          "mtime_ns": 1794764724079911800
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/derived/B-b01/derivation.json",
+          "bytes": 3948,
+          "blob": "51ccab13eb58bbc7343d30d989f8b2bf6db3b647",
+          "mtime_ns": 1794764724080543800
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/external/content/authoring/pz-erdbeere/r06/selection-b01/evidence/r06-background-choice.md",
+          "bytes": 978,
+          "blob": "ddacad09b711fbacf9cf6125a97d8de307175d83",
+          "mtime_ns": 1794764724081690000
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/input/package.zip",
+          "bytes": 18871091,
+          "blob": "d2a35adf08fe9e963e82c3d34ebc01fba75c9c31",
+          "mtime_ns": 1794764724151521100
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/inspection.json",
+          "bytes": 11571,
+          "blob": "8094d5ebc28b46990ff4f120f225554d406f1b54",
+          "mtime_ns": 1794764724154061100
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/manifest.json",
+          "bytes": 9907,
+          "blob": "dbada7b15f4dbbb7ce609b62fa83b0cfbe2b9a44",
+          "mtime_ns": 1794764724154572600
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/runtime/art/backgrounds/pz-erdbeere.png",
+          "bytes": 569682,
+          "blob": "4b06580cc3af65c7e3c63e5fafb56b3102e1ab90",
+          "mtime_ns": 1794764724158610500
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/runtime/art/backgrounds/pz-erdbeere.txt",
+          "bytes": 432,
+          "blob": "8e3434b3472be86080fe41c902bb5c68abc58033",
+          "mtime_ns": 1794764724159615800
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/runtime/art/content/erdbeere_001.png",
+          "bytes": 1666798,
+          "blob": "f70da0b458173b7db7101617e0035252cbbccbe1",
+          "mtime_ns": 1794764724167245400
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/runtime/art/content/erdbeere_001.txt",
+          "bytes": 399,
+          "blob": "8863d7c8fe7cfdb124e02508a5d9714d6dfbb05d",
+          "mtime_ns": 1794764724167749200
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/runtime/data/content/erdbeere_001.json",
+          "bytes": 3708,
+          "blob": "80a906953a2749060304d15e2c2c14a1381bb51d",
+          "mtime_ns": 1794764724169991600
+        },
+        {
+          "file": "content/packages/pz-erdbeere/r06/usage.txt",
+          "bytes": 2069,
+          "blob": "4c7336f00da3175948a57f866512b77285459af4",
+          "mtime_ns": 1794764724170656500
+        }
+      ],
+      "gross_bytes": 21714958,
+      "original_manifest_bytes": 9907,
+      "original_manifest_sha256": "67c40b62d25ec9a05b6ef28992090c0062021407279156a704e2510c693aafd5",
+      "registered_record": "content/authoring/pz-erdbeere/r06/record.json",
+      "registered_record_sha256": "5fe6cc87b57b4289b12737a26c70f391c3e4eebcaf91b70a7ba2bde6ca053cff"
+    },
+    {
+      "id": "pz-zitrone",
+      "source_commit": "b8d797dbb7d4b30c10476e3b8b68ab60780b3d22",
+      "revision": "r05",
+      "package_tree": "d49fd7755f2ac9742951bff0b3fe1a39dfc19291",
+      "files": [
+        {
+          "file": "content/packages/pz-zitrone/r05/approval.json",
+          "bytes": 2033,
+          "blob": "851a4820e903b4b46a087f34d6e047be06452031",
+          "mtime_ns": 1794764724174446400
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/categories.json",
+          "bytes": 1312,
+          "blob": "011f25364456692d609833d45b14baffee1ba121",
+          "mtime_ns": 1794764724174951400
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/background/decisions/d01.json",
+          "bytes": 1375,
+          "blob": "e25654d0b7394cf86d3c4c380c643ac78963e33c",
+          "mtime_ns": 1794764724179485500
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/background/evidence/choice-ha-b01.txt",
+          "bytes": 1041,
+          "blob": "db368ab8f70fc4b5be1a049a53995d0af5947b52",
+          "mtime_ns": 1794764724179485500
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/derived/H-A-b01/background.png",
+          "bytes": 442113,
+          "blob": "d7bb1b0d755df6fa03037053c177bc6e0ff0e149",
+          "mtime_ns": 1794764724183513900
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/external/content/authoring/pz-zitrone/r05/selection-ha-b01/derived/H-A-b01/derivation.json",
+          "bytes": 3962,
+          "blob": "5273e7d299c1b99b3c383e31cd0fcca0c5c01915",
+          "mtime_ns": 1794764724184538800
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/input/package.zip",
+          "bytes": 14739356,
+          "blob": "10af5f39950d729d0b668003aac1636516df4b44",
+          "mtime_ns": 1794764724238598100
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/inspection.json",
+          "bytes": 11271,
+          "blob": "f20e6107386e2ddb8cadb4b3378581f30c97ebf1",
+          "mtime_ns": 1794764724239618000
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/manifest.json",
+          "bytes": 10128,
+          "blob": "9f2790017bdf9b06804a523dcedd635f84e3142d",
+          "mtime_ns": 1794764724241038800
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/runtime/art/backgrounds/pz-zitrone.png",
+          "bytes": 442113,
+          "blob": "d7bb1b0d755df6fa03037053c177bc6e0ff0e149",
+          "mtime_ns": 1794764724244704100
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/runtime/art/backgrounds/pz-zitrone.txt",
+          "bytes": 365,
+          "blob": "2527a5593f92a8bb0eebb0bf1a5d2b70913c3fc3",
+          "mtime_ns": 1794764724245709400
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/runtime/art/content/zitrone_001.png",
+          "bytes": 1696812,
+          "blob": "57f0bad0d3ae9ba46691a68b7cd997fc09ac2a52",
+          "mtime_ns": 1794764724254621800
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/runtime/art/content/zitrone_001.txt",
+          "bytes": 291,
+          "blob": "161c0e4e0dfbf625f92ecbbf8a2516ace2cee230",
+          "mtime_ns": 1794764724255627600
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/runtime/data/content/zitrone_001.json",
+          "bytes": 1952,
+          "blob": "e836f8941f8ee0e15c1d533cdc0e1354569b382e",
+          "mtime_ns": 1794764724257398600
+        },
+        {
+          "file": "content/packages/pz-zitrone/r05/usage.txt",
+          "bytes": 1849,
+          "blob": "81f4d770c7c07d1a9814ff1fbda114087c9ffd5f",
+          "mtime_ns": 1794764724257398600
+        }
+      ],
+      "gross_bytes": 17355973,
+      "original_manifest_bytes": 10128,
+      "original_manifest_sha256": "e0bc28b8696080e7ef8482c4e327a3de5136699b03cec07d3dfa7d71fdba40cf",
+      "registered_record": "content/authoring/pz-zitrone/r05/record.json",
+      "registered_record_sha256": "55ef866c6702fac38d2e4945b0074ea2da5b0f0eefe27557c01e897df9e717b0"
+    }
+  ],
+  "total_files": 45,
+  "gross_bytes": 55178045
+}
