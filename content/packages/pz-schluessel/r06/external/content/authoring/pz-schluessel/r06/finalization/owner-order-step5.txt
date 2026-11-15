@@ -1,8 +1,0 @@
-Schritt 5: Ich wähle die unveränderte Kontextzeichnung aus Angebot SCH-HG-A.
-
-Ich erteile die Endabnahme für diese Hintergrundentscheidung zusammen mit dem gewählten Raster und dem zugehörigen Reveal im gebundenen Datensatz und beauftrage deren Integration.
-
-Repository: venomenon328/picross · Ziel: main.
-Produktionsdatensatz: https://github.com/venomenon328/picross/blob/457187a7d14c9e1ef0577c0b3ac1b8745b5acb8e/content/authoring/pz-schluessel/r06/record.json
-Lokale Codex-Arbeitswurzel: E:\Zeuch\Coding\picross_codex.
-Commit, Push und PR; unabhängiges Review, danach Squash-Merge nur bei erfüllten aktuellen Vor-Merge-Gates. Bestätigten Mainabschluss und Produktionsabschluss nach Authoring §9 durchführen.

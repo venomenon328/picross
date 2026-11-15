@@ -1,4 +1,0 @@
-Repository: venomenon328/picross · Ziel: main.
-Produktionsdatensatz: https://github.com/venomenon328/picross/blob/5c6e6bf4e0f4aa9d6f344cef229f1deee9a51fd2/content/authoring/pz-schluessel/r03/record.json
-Korrektur in Schritt 3: Die "Stange" des Schlüssels sollte im Raster von gleichmäßigerer Dicke sein. Evtl. sollte die Neigung nach links dafür etwas weniger ausgeprägt sein als in der Vorlage.. Korrigierten Stand zur fälligen Entscheidung vorlegen.
-Commit, Push und Draft-PR im beauftragten Umfang; kein Merge.

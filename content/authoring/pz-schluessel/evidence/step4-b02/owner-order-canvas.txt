@@ -1,2 +1,0 @@
-Frage: ImageGen liefert auch nach gezielter Korrektur nur 3:1 statt der vorgeschriebenen 4:1-Leinwand. Darf ich die drei Bilder mit Pillow proportional verkleinern und ausschließlich transparente Leinwand ergänzen, ohne Beschnitt oder Streckung?
-Antwort des Eigentümers: Ja, transparente Leinwand per Pillow ergänzen
