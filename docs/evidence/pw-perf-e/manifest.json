@@ -1,8 +1,8 @@
 {
   "format": "pw-perf-e-review-evidence-v1",
-  "product_head": "0926debcecdb77c4c4525e6f0f61498216aff9e9",
+  "product_head": "e9b8f233fc73549e4d0c7d943489be434cbf9182",
   "baseline_head": "d50eeb71b9e017bfe82f3d58563b779d9df1c145",
-  "test_merge": "229dcd5a7cdec27e70a5207b88cad8496dda3841",
+  "test_merge": "185709dd092aec9da0aff8c966ec63216764f629",
   "expires": "2026-11-22",
   "purpose": "A01 independent review of T01/T02 and K01-K08",
   "files": {
@@ -55,8 +55,12 @@
       "sha256": "1f3cea66186394645e3c992ecb03de29f5f2777d65961cd36a78eecc2438acf5"
     },
     "README.md": {
-      "bytes": 5010,
-      "sha256": "0333a3f2358bcb164003565bc63e765b8703eeb29bbb87fea6545e1e9a7e0a1b"
+      "bytes": 5740,
+      "sha256": "511646f2942478eaaafa363f8d4217d0157162946f4fb2f9f7f2f6064093726c"
+    },
+    "sd2-followup.log": {
+      "bytes": 519,
+      "sha256": "99a941f327520a3d32dfef393ef2f8491cebcf8a5bc52a1203c00575c2b6890d"
     },
     "t01-final.log": {
       "bytes": 1539,
@@ -66,5 +70,6 @@
       "bytes": 1936,
       "sha256": "9e0d1ff46f6003ed59885de05c1466a9c8fea739d06e22bef716a921e5eb5f9c"
     }
-  }
+  },
+  "measurement_head": "0926debcecdb77c4c4525e6f0f61498216aff9e9"
 }

@@ -1,8 +1,11 @@
 # PW-PERF-E · befristete Revieworiginale
 
-Produkt-Head: 0926debcecdb77c4c4525e6f0f61498216aff9e9.
+Produkt-Head: e9b8f233fc73549e4d0c7d943489be434cbf9182.
+Code-/Messhead: 0926debcecdb77c4c4525e6f0f61498216aff9e9.
+Zwischen beiden Heads wurde ausschließlich .ci/package.json geändert: befristete
+Fehlerdiagnostik statt none. tools/, tests/, docs/, game/ und content/ sind identisch.
 Basis/Vorhercode: d50eeb71b9e017bfe82f3d58563b779d9df1c145.
-Tatsächlicher Testmerge: 229dcd5a7cdec27e70a5207b88cad8496dda3841.
+Tatsächlicher Testmerge: 185709dd092aec9da0aff8c966ec63216764f629.
 PR: https://github.com/venomenon328/picross/pull/659
 Entscheidung: https://github.com/venomenon328/picross/issues/653#issuecomment-6894952911
 
@@ -13,6 +16,14 @@ Repositoryzugriff ist erforderlich. Keine Bildoriginale, Galerien oder privaten
 Nutzerdaten erforderlich. Die Dateien liegen unverändert und ohne ZIP vor.
 
 ## Originale und Reproduktion
+
+Lauf 43725097262 bestand die beiden korrigierten Fälle, meldete jedoch einen
+Fehler im zuvor erfolgreichen SD2-CLI-Test. Dieser und sein relevanter
+vorangehender Retirementfall wurden gemeinsam lokal wiederholt: beide
+bestanden (297,844 s; sd2-followup.log). Die Ursache des einzelnen CI-Fehlers
+ist damit nicht festgestellt. Der nächste Lauf erhält bei erneutem Fehler
+gezielt tests.log/Traceback mit Zweck und Ablauf 2026-11-22. Produktcode und
+Testanforderungen wurden dafür nicht geändert.
 
 Die CI fand am Vorgängerhead zwei Regressionen. Der allgemeine Main-Guard
 verdeckte die konkrete Hintergrunddiagnose; eingefrorene Methodenquellen
@@ -55,7 +66,7 @@ Die unveränderten Auftragsskripte sind beigefügt. Sie erwarten ihren eigenen
 Arbeitsordner mit `repo/` auf dem jeweils genannten Stand und importierbaren
 Tests; TEMP/TMP zeigen auf dessen eigene temporäre Ablage. `measure.py` wird auf
 der Basis ausgeführt, `measure_after.py`, `validate_current.py` und
-`operation_counters.py` auf dem Produkt-Head. Python aus einer isolierten Umgebung
+`operation_counters.py` auf dem Code-/Messhead. Python aus einer isolierten Umgebung
 mit Pillow exakt 12.3.0 starten. Diese Skripte gehören nicht zum Produkt oder
 zur regulären Testdiscovery. Der Produktionsdiff enthält keine Reviewdateien.
 
@@ -68,6 +79,6 @@ Garantie gegen nichtkooperierendes OS-/ABA-Racing. Der gemeinsame Marker schütz
 kooperierende Katalogwriter. Teilfehler erhalten Marker und tatsächlichen Diff;
 es gibt keinen automatischen Rollback aus bereits entfernten Originalen.
 
-Die CI-Originale stehen im aktuellen Package-CI-Lauf 43725097262; hier werden sie
+Die CI-Originale stehen im aktuellen Package-CI-Lauf 43727256774; hier werden sie
 nicht als zweite Logsammlung kopiert. Alle für T01/T02 benötigten lokalen Originale
 sind mit Bytezahl und SHA-256 in `manifest.json` gebunden. A01 bleibt unabhängig offen.
