@@ -61,7 +61,11 @@ class Reads:
 
     def read(self, root, name, limit, *, missing=False):
         path = Path(root).absolute()/name
-        require(path.is_relative_to(self.root), 'Retirement read outside checkout')
+        # Method validation also reads frozen implementation inputs outside
+        # this catalog. Keep their independent safe reader and fresh checks;
+        # they are not cached or treated as selected catalog dependencies.
+        if not path.is_relative_to(self.root):
+            return io._read(root, name, limit, missing=missing)
         name = path.relative_to(self.root).as_posix()
         if name not in self.data:
             before = self.identity(name)

@@ -134,6 +134,9 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
         require(comparable == entry, "Selected entry differs from current main")
         require(next(r for r in current["metadata"] if r["id"] == identifier) ==
                 next(r for r in main_registry["metadata"] if r["id"] == identifier), "Selected metadata differs from main")
+        if identifier in current_backgrounds:
+            require(backgrounds.index(main_registry).get(identifier) == current_backgrounds[identifier],
+                    "Current background is not indexed on main")
         runtime = io.json_bytes(snapshot["texts"][registry.RUNTIME], LIMIT)
         require(next(r for r in runtime["entries"] if r["id"] == identifier) ==
                 next(r for r in main_runtime["entries"] if r["id"] == identifier), "Selected runtime differs from main")
@@ -267,8 +270,6 @@ def _retire(root, ids, integrated_commit, reads, source_commits):
             retained.update(("game/" + entry["reveal"], reveal_source.identity(entry)["notice"], reveal_source.path(identifier)))
         if identifier in current_backgrounds:
             source = backgrounds.load(root, current, entry)
-            require(backgrounds.index(main_registry).get(identifier) == current_backgrounds[identifier],
-                    "Current background is not indexed on main")
             main_formats = ((registry.METADATA_RUNTIME_FORMAT, registry.IMAGE_RUNTIME_FORMAT) if main_registry["format"] == registry.METADATA_FORMAT
                            else (backgrounds.RUNTIME_FORMAT,))
             require(isinstance(main_runtime, dict) and main_runtime.get("format") in main_formats and
