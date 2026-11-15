@@ -233,7 +233,11 @@ class Record:
             ap.require(set(self.archive.files) == set(self.entries) | {'handoff.json', 'inventory.json'}, 'Inventar und Paketsatz unterscheiden sich.')
             from tools.puzzle_production import authoring_rulebook as rules
             ap.require(r['repo_commit'] == h['repo_commit'], 'Record producer differs from handoff')
-            rules.validate(h['rulebook'], h['format'], h['repo_commit'], self.member, r['document_revision'])
+            if r['format'] == rules.RECORD:
+                rules.validate(h['rulebook'], h['format'], h['repo_commit'], self.member, r['document_revision'])
+            else:
+                raw_rule = self.member(h['rulebook']['file'], h['rulebook']['sha256'])
+                rules.reject_relabel(h['rulebook'], raw_rule)
             # Preserve both source roles. The builder's effective projection is
             # not an independent authority and a free status string is no approval.
             proposed, approved = h.get('proposed_parameters'), h.get('approved_parameters', [])

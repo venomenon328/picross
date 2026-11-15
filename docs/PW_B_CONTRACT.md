@@ -262,3 +262,8 @@ Rev7 ist ausschließlich über die neue Generation zulässig. Ein alter 0.8-Hand
 Request/Record darf keinen Rev7-Einstieg als vermeintlich vollständigen einzelnen
 Snapshot annehmen; für alte 0.8-Formen sind nur damalige Revisionen bis 6 zulässig.
 Ein Wechsel des Versionslabels kann keine fehlenden neuen Quellen legitimieren.
+
+Historische Ansichtsprojektionen behalten ihre frühere reine Datei-/Inventarbindung;
+die neue Header-/Revisionsprüfung wird ihnen nicht nachträglich auferlegt. Der
+Ansichtsreader weist jedoch eine ausdrücklich deklarierte Rev7 unter alter Form
+zurück. Neue Ansichten prüfen alle neuen Quellen und Header vollständig.

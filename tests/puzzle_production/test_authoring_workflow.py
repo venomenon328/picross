@@ -123,30 +123,31 @@ class WorkflowTests(unittest.TestCase):
     def test_split_snapshot_builder_reader_finalizer_and_offline_export(self):
         from tools.puzzle_production import authoring_rulebook as rules, target_adapter as adapter
         from tools.puzzle_production import authoring_package as ap
-        f = WorkflowFixture(self)
-        payload = f.split_rulebook()
-        result = f.build()
-        self.assertEqual(result['format'], 'picross-authoring-build-result-v4')
-        self.assertEqual(result['record']['format'], rules.RECORD)
-        with ap.open_package(f.helper.directory / 'package.zip', allow_background=True) as package:
-            self.assertEqual(package.handoff['rulebook'], f.request['handoff']['rulebook'])
-            for name, raw in payload.items():
-                self.assertEqual(package.file(name).read_bytes(), raw)
-        f.select(); f.build()
-        _, final = f.finalize(outcome='none')
-        self.assertEqual(final['status'], 'updated', final)
-        record = final['record']
-        self.assertEqual(record['format'], rules.RECORD)
-        sha = f.commit()
-        p.inspect(GitSource(f.helper.output), sha,
-                  load_json(f.helper.directory / 'workspace.json'))
-        exported = f.root / 'split-export'
-        adapter.export(f.helper.output / record['package']['file'], exported,
-                       name='TEST ONLY split snapshot', revision=1, stem='split_snapshot',
-                       save_slot='split_snapshot', category_id='voegel',
-                       categories_path=Path(__file__).resolve().parents[2] / 'content/categories.json', approval_path=f.helper.output / record['final_editorial_approval']['file'],
-                       allow_background=True, external_root=f.helper.output, history_repo=f.helper.output)
-        adapter.verify_export(exported)
+        for mode in ('mono', 'color'):
+            f = WorkflowFixture(self, mode=mode)
+            payload = f.split_rulebook()
+            result = f.build()
+            self.assertEqual(result['format'], 'picross-authoring-build-result-v4')
+            self.assertEqual(result['record']['format'], rules.RECORD)
+            with ap.open_package(f.helper.directory / 'package.zip', allow_background=True) as package:
+                self.assertEqual(package.handoff['rulebook'], f.request['handoff']['rulebook'])
+                for name, raw in payload.items():
+                    self.assertEqual(package.file(name).read_bytes(), raw)
+            f.select(); f.build()
+            _, final = f.finalize(outcome='none')
+            self.assertEqual(final['status'], 'updated', final)
+            record = final['record']
+            self.assertEqual(record['format'], rules.RECORD)
+            sha = f.commit()
+            p.inspect(GitSource(f.helper.output), sha,
+                      load_json(f.helper.directory / 'workspace.json'))
+            exported = f.root / 'split-export'
+            adapter.export(f.helper.output / record['package']['file'], exported,
+                           name='TEST ONLY split snapshot', revision=1, stem='split_snapshot',
+                           save_slot='split_snapshot', category_id='voegel',
+                           categories_path=Path(__file__).resolve().parents[2] / 'content/categories.json', approval_path=f.helper.output / record['final_editorial_approval']['file'],
+                           allow_background=True, external_root=f.helper.output, history_repo=f.helper.output)
+            adapter.verify_export(exported)
 
     def test_split_snapshot_rejects_missing_changed_foreign_and_wrong_generation(self):
         from tools.puzzle_production import authoring_rulebook as rules
