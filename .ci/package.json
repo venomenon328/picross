@@ -1,10 +1,10 @@
 {
   "format": "development-ci-plan/v1",
-  "issue": "https://github.com/venomenon328/picross/issues/653",
-  "package": "PW-PERF-E-DATA",
+  "issue": "https://github.com/venomenon328/picross/issues/602",
+  "package": "Fliegenpilz-r07-Schritt5-Registriert",
   "modules": [],
-  "purpose": "Kompaktierung ausschließlich pz-birne/r05, pz-erdbeere/r06 und pz-zitrone/r05 mit bestehendem retire-production. Reiner regulärer Content-/Paketplan-Diff einschließlich 42 Löschungen: buildfreier docs-/ci-required-Kern. DATA-T01/T02 prüfen reale Git-/Rechtebindungen, gezielten Readback, Livebytes, Nettobytes und frischen No-op.",
-  "omitted": "Keine Werkzeug-, Spiel-, Solver-, Bild- oder Saveänderung. Keine Zusatzmodule, kein Windowsbau, kein Produktionsreplay und keine neue Dauersuite. Unabhängiges PW-PERF-E-DATA-A01 vor Merge bleibt offen; aktuelle Textoriginale auf separatem Reviewref bis Reviewabschluss, spätestens 2026-11-22.",
+  "purpose": "Unveränderte endabgenommene Lieferung r07 frisch exportiert, geplant, regulär registriert und per Projektor abgeschlossen. Windowsblocker als kurzzeitiger Code.exe-ZIP-Handle diagnostiziert; natürliche Freigabe vor unveränderter atomarer Publikation beobachtet. Reine Produktionsdaten: buildfreier docs-/ci-required-Quellen-/Plankern.",
+  "omitted": "Keine Werkzeug-, Spiel-, CI-, Rechte- oder kreativen Änderungen. Vorhandene Proof-/Bild-/Difficultybelege und zulässiges Rebind; kein neuer Solver-/Bestandsreplay, Browser, Zusatzmodul oder Player-Build. Eigenständiges Review am aktuellen Head vor bedingtem Squash-Merge; Authoring §9 erst nach bestätigtem Mainmerge.",
   "test_changes": [],
   "core_change": null,
   "evidence": {
