@@ -143,10 +143,10 @@ class _Reads:
 
 def _record(raw, directory):
     value = io.json_bytes(raw, ap.MAX_FILE)
-    current = value.get('format') == workflow.RECORD
+    current = value.get('format') in workflow.RECORDS
     exact_keys(value, RECORD_KEYS | ({'raster_selection', 'presentation', 'candidate'} if current else set()))
     puzzle_id, revision = directory.split("/")[-2:]
-    ap.require(value["format"] in ("picross-authoring-record-v2", workflow.RECORD) and
+    ap.require(value["format"] in ("picross-authoring-record-v2", *workflow.RECORDS) and
                value["puzzle_id"] == puzzle_id and value["revision"] == revision,
                "Record identity/generation differs from the declared authoring revision")
     ap.require(value["state"] in (("background_review", "content_ready", "editorially_approved") if current else ("raster_ready", "content_ready", "editorially_approved")) and
@@ -156,10 +156,9 @@ def _record(raw, directory):
     ap.require(isinstance(value["repo_commit"], str) and re.fullmatch(r"[0-9a-f]{40}", value["repo_commit"]),
                "Invalid record source commit")
     integer(value["document_revision"], 1, 1_000_000, "record document revision")
-    rulebook = exact_keys(value["rulebook"], {"version", "file", "sha256"})
-    ap.require(rulebook["version"] == ('0.8.0' if current else "0.7.0"), "Finalization requires the matching background rulebook generation")
-    ap.relative(rulebook["file"])
-    ap.sha(rulebook["sha256"])
+    generation = workflow.rules.HANDOFF if value['format'] == workflow.rules.RECORD else workflow.HANDOFF if current else 'picross-authoring-handoff-v3'
+    workflow.rules.shape(value['rulebook'], generation, value['repo_commit'], value['document_revision'])
+    ap.require(value['rulebook']['version'] == ('0.8.0' if current else '0.7.0'), 'Finalization requires matching rulebook')
     ap.require(value["category_id"] is None or isinstance(value["category_id"], str) and
                re.fullmatch(r"[a-z][a-z0-9-]{0,63}", value["category_id"]), "Invalid record category")
     _binding(value["package"], limit=ap.MAX_ZIP)
@@ -243,9 +242,8 @@ def _inspect(package_path, record, external, authorizations, binding, history_re
                    record["inventory_sha256"] == h["inventory"]["sha256"] and
                    record["handoff"]["sha256"] == ap.file_hash(package.file("handoff.json")),
                    "Record and original package identities differ")
-        snapshot = package.bound(h["rulebook"]).read_text(encoding="utf-8")
-        ap.require(re.search(r"^\*\*Version " + re.escape(record['rulebook']['version']) + r" · Dokumentrevision " + str(record["document_revision"]) + r" ·",
-                             snapshot, re.M), "Record rulebook revision differs from original snapshot")
+        workflow.rules.validate(h['rulebook'], h['format'], h['repo_commit'],
+                                lambda name: package.file(name).read_bytes(), record['document_revision'])
         ap.require(_same(record["reveal"], h.get("reveal")) and _same(record["motif"], h.get("motif")) and
                    not record["reveal_options"] and _same(record["parameters"],
                    h.get("approved_parameters") or h.get("proposed_parameters") or None),
@@ -281,12 +279,12 @@ def _proposed(before, verification, current, authorizations):
     approval = authorizations["approval.json"]
     after["final_editorial_approval"] = {k: approval[k] for k in ("file", "sha256")} if approval else None
     after["blockers"] = list(dict.fromkeys([*verification["blockers"], *current["blockers"],
-                                           *([] if before['format'] == workflow.RECORD else [INTEGRATION]), builder.UNSAVED]))
+                                           *([] if before['format'] in workflow.RECORDS else [INTEGRATION]), builder.UNSAVED]))
     after["next_step"] = {"raster_ready": "4 · Hintergrundbereitschaft klären und Rätsel abnehmen",
         "content_ready": "4 · Rätsel abnehmen; finale Hintergrundintegration benötigt HP-I1b/HP-I2",
         "editorially_approved": "Finale Integration nach verfügbarer HP-I1b/HP-I2-Unterstützung",
         "background_review": workflow.NEXT['background_review']}[after["state"]]
-    if before['format'] == workflow.RECORD:
+    if before['format'] in workflow.RECORDS:
         after['next_step'] = workflow.NEXT[after['state']]
     after["next_action"] = after["next_step"]
     return after
@@ -396,7 +394,7 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                             raise Conflict("Stale expected authoring record")
                         before_raw, saved_after, saved_operation = observed_record, None, None
                     before = _record(before_raw, directory)
-                    current_generation = before['format'] == workflow.RECORD
+                    current_generation = before['format'] in workflow.RECORDS
                     if current_generation:
                         from tools.production_workspace import current_view
                         view_before = current_view.observe(output, before['puzzle_id'])
@@ -474,14 +472,14 @@ def finalize_background(request, source_root, output_root, *, history_repo=None)
                         expected_operation = before_raw, after_raw, operation_raw
                         projections = None
                         if current_generation:
-                            from tools.production_workspace.projector import automatic
+                            from tools.production_workspace.projector import finalization_views
                             projection_stage = stage.mkdir('projection')
                             stage.write('projection/package.zip', original)
                             stage.write('projection/handoff.json', handoff)
                             stage.write('projection/record.json', before_raw)
-                            prior_projection = automatic(output, directory, projection_stage, index)
-                            next_projection = automatic(output, directory, projection_stage, index,
-                                overlay={**overlay, directory + '/record.json': after_raw})
+                            prior_projection, next_projection = finalization_views(
+                                output, directory, projection_stage, index, before, after,
+                                {**overlay, directory + '/record.json': after_raw})
                             projection_name = directory + '/workspace.json'
                             projections = prior_projection, next_projection
                             ap.require(io.read(output, projection_name, 1024 * 1024) in projections,

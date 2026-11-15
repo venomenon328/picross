@@ -467,7 +467,7 @@ def _recover(root):
     raw = tx.read(root, tx.LOCK)
     if raw is None: return tx.recover(root)
     j = io.json_bytes(raw, tx.REVEAL_LIMIT)
-    if isinstance(j, dict) and j.get("format") in set(tx.IMAGE_FORMATS.values()) | set(tx.PE_FORMATS.values()) | set(tx.REBIND_FORMATS.values()) | set(tx.BACKGROUND_FORMATS.values()) | set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
+    if isinstance(j, dict) and j.get("format") in set(tx.DEPENDENCY_FORMATS.values()) | set(tx.IMAGE_FORMATS.values()) | set(tx.PE_FORMATS.values()) | set(tx.REBIND_FORMATS.values()) | set(tx.BACKGROUND_FORMATS.values()) | set(tx.FORMATS.values()) | set(tx.AT_FORMATS.values()) | set(tx.PREVIOUS_FORMATS.values()) | set(tx.LEGACY_FORMATS.values()):
         return tx.recover(root)
     if isinstance(j, dict) and j.get("format") == "picross-content-update-journal-v1":
         from .content_update import recover_update

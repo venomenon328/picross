@@ -5,7 +5,7 @@
 Für neue Rätsel, Bild-/Rasterkorrektur und Wiederaufnahme zuerst diesen Abschnitt,
 dann [Authoring §1](docs/ai-workflows/PUZZLE_AUTHORING.md#1-einstieg-und-befugnisse),
 den vollständigen [gemeinsamen Bildstil](docs/PUZZLE_IMAGE_STYLE.md) und genau die
-in Authoring §1.1 geroutete Produktionsphase lesen. Dort genannte zusätzliche
+in Authoring §1.1 geroutete Phasendatei lesen. Dort genannte zusätzliche
 Abschnitte sind vor der zugehörigen Operation Pflicht; ein bloßer weiterführender
 Link löst keine rekursive Volllektüre aus. Fehlende benötigte Quellen blockieren
 die davon abhängige Arbeit. Historische Lieferberichte sind keine Pflichtquellen.

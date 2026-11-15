@@ -112,6 +112,43 @@ def automatic(root, directory, stage, index, *, overlay=None):
         return raw
 
 
+def finalization_views(root, directory, stage, index, before, after, overlay):
+    """Share only the closed finalizer delta; all other views stay fully fresh.
+
+    Called under the finalizer's lock, after BOTH content/background/approval
+    inspections. The ordinary automatic reader binds the unchanged originals;
+    the finalizer rechecks its byte/identity observations at every publication.
+    """
+    prior = automatic(root, directory, stage, index)
+    changed = {key for key in before if p.data(before[key]) != p.data(after.get(key))}
+    delta = {'state', 'background', 'verification', 'final_editorial_approval',
+             'blockers', 'next_step', 'next_action', 'source_commit', 'pr'}
+    def qualified(record):
+        v = record['verification']
+        return (record['state'] in ('background_review', 'content_ready', 'editorially_approved') and
+                v.get('technical') is True and v.get('format') == 'picross-authoring-content-inspection-v2' and
+                v.get('effective_state') == record['state'] and v.get('integration_ready') is False and
+                all(v.get(k) == record[k] for k in ('width', 'height', 'mode', 'used_colors', 'difficulty')) and
+                all(b == 'final_editorial: missing bound human final approval' or b.startswith('background')
+                    for b in v.get('blockers', [])))
+    common = (set(before) == set(after) and changed <= delta and qualified(before) and qualified(after) and
+              all(before['background'][k] == after['background'][k] for k in ('manifest', 'history')) and
+              before['verification'].get('original_state') == after['verification'].get('original_state'))
+    if not common:
+        return prior, automatic(root, directory, stage, index, overlay=overlay)
+    value = p.parse(prior)
+    p.bind(p.data(before), value['record'])
+    raw = overlay[directory + '/record.json']
+    ap.require(p.parse(raw) == after, 'Finalizer projection delta does not bind the new record')
+    measured = {**value['record'], 'sha256': io.checksum(raw), 'bytes': len(raw)}
+    for offer in value['offers']:
+        if offer['record'] == value['record']:
+            offer['record'] = deepcopy(measured)
+    value['record'] = measured
+    p.validate(value)
+    return prior, p.data(value)
+
+
 def _automatic(operation, directory):
     source = operation.source
     record = p.parse(source.read(None, directory + '/record.json'))
@@ -186,7 +223,7 @@ def complete(root, record_path, commit):
         before_raw = source.read(None, record_path)
         before = p.parse(before_raw)
         view_before = current_view.observe(root, before['puzzle_id'])
-        ap.require(before['format'] == 'picross-authoring-record-v3' and
+        ap.require(before['format'] in ('picross-authoring-record-v3', 'picross-authoring-record-v4') and
                    before['state'] in ('editorially_approved', 'registered'), 'Completion requires actual final approval')
         after = deepcopy(before)
         if before['state'] != 'registered':

@@ -4,6 +4,7 @@ Every caller supplies freshly reconstructed production inputs. Editorial
 records remain statements by their recorded actors, never numeric test passes.
 """
 from pathlib import Path
+from copy import deepcopy
 
 from . import palette_quality as quality
 from .authoring_package import file_hash, require, string, timestamp
@@ -81,7 +82,7 @@ def exception_record(package, path, binding, assessment, approval):
     value = load_json(target, 128 * 1024)
     exact_keys(value, {"format", "binding", "negative_pairs", "actor", "timestamp_utc", "statement",
                        "reason", "approval_sha256", "test_only"})
-    same(value["format"], EXCEPTION, "Unsupported palette exception")
+    same(value["format"], "picross-palette-editorial-exception-v2" if package.handoff["format"] == "picross-authoring-handoff-v5" else EXCEPTION, "Unsupported palette exception")
     same(value["binding"], binding, "Stale palette exception binding")
     same(value["negative_pairs"], assessment["negative_pairs"], "Palette exception must bind every negative pair")
     same(value["approval_sha256"], approval["sha256"], "Palette exception final approval differs")
@@ -109,7 +110,7 @@ def inspect(package, design, matrix, logic, source, reference, approval, excepti
                "candidate": {k: h["candidate"][k] for k in ("bundle", "variant", "source_type")},
                "source": source, "matrix_hash": digest(matrix), "logic_hash": digest(logic),
                "palette_sha256": assessment["palette_sha256"], "source_fingerprint": assessment["source_fingerprint"],
-               "rulebook": {k: h["rulebook"][k] for k in ("version", "file", "sha256")},
+               "rulebook": deepcopy(h["rulebook"]),
                "handoff_sha256": file_hash(package.file("handoff.json")),
                "inventory_sha256": h["inventory"]["sha256"],
                "original_zip_sha256": (package.derivation or {}).get("original_zip_sha256")
