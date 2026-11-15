@@ -14,7 +14,7 @@
     {
       "path": "tests/puzzle_production/test_background_assets.py",
       "disposition": "change-scoped",
-      "reason": "Geschlossene v2-Identitaet, echte Reproduktion, Provenienz, Dateiaustausch und v1-Abgrenzung."
+      "reason": "Geschlossene v2-Identitaet, echte Reproduktion, Provenienz, Dateiaustausch und v1-Abgrenzung. B01: erster selected/none-Schreiblauf im sauberen Git-Checkout mit internem Ausgabe-Root, authentische Startprovenienz, schreibfreier Reuse/Verify und frische Fremdaenderungs-/Codecguards."
     },
     {
       "path": "tests/puzzle_production/test_background_export.py",

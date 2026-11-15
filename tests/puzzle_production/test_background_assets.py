@@ -1168,6 +1168,101 @@ class BackgroundV2Tests(unittest.TestCase):
         self.assertNotEqual(cli('verify', '--request', request, '--source-root', f.source, '--output-dir', f.target)[0], 0)
         self.assertEqual(snapshot(f.target), original)
 
+    def test_first_derive_inside_clean_checkout_preserves_provenance_and_noop(self):
+        for none in (False, True):
+            with self.subTest(none=none):
+                checkout = self.helper.tool_checkout()
+                name = 'tools/puzzle_production/background_render.py'
+                shutil.copyfile(ROOT / name, checkout / name)
+                def cli(*args):
+                    code, result, stderr = self.helper.cli(*args, cwd=checkout)
+                    self.assertEqual(code, 0, (result, stderr))
+                    return result
+                description = cli('describe', '--generation', '2')
+                f = BackgroundFixture(checkout / 'work', description, none=none)
+                request = f.request_file()
+                self.helper.git(checkout, 'add', '.')
+                self.helper.git(checkout, 'commit', '-qm', 'Bound synthetic inputs')
+                self.assertEqual(self.helper.git(checkout, 'status', '--porcelain',
+                                                '--untracked-files=normal'), '')
+                start = cli('describe', '--generation', '2')
+                self.assertFalse(start['producer']['dirty'])
+                self.assertFalse((f.output / '.background-writer.lock').exists())
+                before = snapshot(f.source)
+                first = cli('derive', '--request', request, '--source-root', f.source,
+                            '--output-root', f.output)
+                self.helper.assert_success(first, 'none' if none else 'derived', f.target)
+                self.assertEqual(set(p.name for p in f.target.iterdir()),
+                                 {'derivation.json'} if none else {'derivation.json', 'background.png'})
+                report = json.loads((f.target / 'derivation.json').read_bytes())
+                self.assertEqual(report['producer'], start['producer'])
+                self.assertTrue((f.output / '.background-writer.lock').exists())
+                self.assertEqual(list(f.output.glob('.hp-w2-stage-*')), [])
+                after = cli('describe', '--generation', '2')
+                self.assertTrue(after['producer']['dirty'])
+                self.assertEqual(after['tool'], start['tool'])
+                original = snapshot(f.root)
+                for command, option, output, status in (
+                        ('derive', '--output-root', f.output, 'reused'),
+                        ('verify', '--output-dir', f.target, 'verified')):
+                    result = cli(command, '--request', request, '--source-root', f.source,
+                                 option, output)
+                    self.helper.assert_success(result, status, f.target)
+                    self.assertEqual(snapshot(f.root), original)
+                self.assertEqual(snapshot(f.source), before)
+                # A real pre-existing untracked file must still yield dirty=true.
+                self.helper.git(checkout, 'add', '.')
+                self.helper.git(checkout, 'commit', '-qm', 'Synthetic published result')
+                self.assertEqual(self.helper.git(checkout, 'status', '--porcelain',
+                                                '--untracked-files=normal'), '')
+                foreign = checkout / 'foreign.txt'
+                foreign.write_bytes(b'Unrelated untracked data must remain visible.')
+                current = cli('describe', '--generation', '2')
+                self.assertTrue(current['producer']['dirty'])
+                f.request['output'] = 'derived/bg02'
+                request = f.request_file()
+                result = cli('derive', '--request', request, '--source-root', f.source,
+                             '--output-root', f.output)
+                self.helper.assert_success(result, 'none' if none else 'derived', f.target)
+                self.assertEqual(json.loads((f.target / 'derivation.json').read_bytes())['producer'],
+                                 current['producer'])
+                self.assertEqual(foreign.read_bytes(), b'Unrelated untracked data must remain visible.')
+
+    def test_v2_publication_rechecks_source_target_and_codec_changes(self):
+        for none in (False, True):
+            for kind in ('source', 'target', 'codec'):
+                with self.subTest(none=none, kind=kind):
+                    f = self.fixture(f'publication-{none}-{kind}', none=none)
+                    write = bio.Stage.write
+                    codec = assets.features.version_codec
+                    changed = False
+                    foreign = f.source / f.request['decision']['file']
+                    def mutate(stage, name, raw):
+                        nonlocal changed, foreign
+                        write(stage, name, raw)
+                        if name == 'derivation.json':
+                            changed = True
+                            if kind == 'source':
+                                foreign.write_bytes(b'Foreign source bytes')
+                            elif kind == 'target':
+                                f.target.mkdir(parents=True)
+                                foreign = f.target / 'foreign.txt'
+                                foreign.write_bytes(b'Foreign target bytes')
+                    def version(name):
+                        return 'foreign-codec' if changed and kind == 'codec' else codec(name)
+                    with patch.object(bio.Stage, 'write', new=mutate), patch.object(
+                            assets.features, 'version_codec', side_effect=version):
+                        result = assets.derive(f.request, f.source, f.output)
+                    self.assertTrue(changed)
+                    code = {'source': 'source_changed', 'target': 'target_conflict',
+                            'codec': 'tool_mismatch'}[kind]
+                    self.helper.assert_error(result, code,
+                        'invalid_input' if kind == 'codec' else 'conflict')
+                    self.assertFalse((f.target / 'derivation.json').exists())
+                    self.assertEqual(list(f.output.glob('.hp-w2-stage-*')), [])
+                    if kind != 'codec':
+                        self.assertEqual(foreign.read_bytes(), f'Foreign {kind} bytes'.encode())
+
     def test_loaded_render_identity_and_mid_operation_replacement_reject(self):
         from tools.puzzle_production import background_render
         checkout = self.helper.tool_checkout()

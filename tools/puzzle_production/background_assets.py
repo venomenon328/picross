@@ -366,9 +366,12 @@ def _run(request, source_root, output, *, verifying, budget=None, request_reader
         def check_tool():
             if v2:
                 tool_reader.recheck()
-                actual, current_provenance, _ = _v2_tool(budget)
-                if actual != tool or current_provenance != provenance:
-                    raise BackgroundError("tool_mismatch", "Render tool or producer changed during operation")
+                actual, _, _ = _v2_tool(budget)
+                # Provenance records the real invocation start. Our own lock,
+                # stage and output can dirty that checkout without changing the
+                # render identity; input/target readers guard their own bytes.
+                if actual != tool:
+                    raise BackgroundError("tool_mismatch", "Render tool changed during operation")
             elif _tool(budget) != tool:
                 raise BackgroundError("tool_mismatch", "Tool changed during operation")
         if not verifying and request["expected_tool_sha256"] != digest(tool):
