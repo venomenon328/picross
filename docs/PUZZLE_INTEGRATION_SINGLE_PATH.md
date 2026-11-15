@@ -59,7 +59,8 @@ historische Produktions-Difficulty als zweite Autorität.
 | Benötigte Information | Verbindliche aktuelle Autorität |
 | --- | --- |
 | ID, Key, Save-Slot, Definitionspfad, Sichtbarkeit | Aktueller Inhaltsindex; bisherige Identitäten bleiben erhalten |
-| Runtime-Rätselrevision, Raster, Hinweise, Palette, Maße und Modus | Tatsächliche aktuelle Definition; keine Ableitung aus Produktionshistorie |
+| Runtime-Rätselrevision, Raster, Hinweise, Palette und Maße | Tatsächliche aktuelle Definition; keine Ableitung aus Produktionshistorie |
+| Mono-/Farbmodus | Aktuelles Feld `mode` im Inhaltsindex und Integrationsinput; bei Überführung den vorhandenen wirksamen Modus erhalten |
 | Name und Kategorie | Bestehende aktuelle Metadaten und Kategorienzuordnung |
 | Reveal und Hintergrundpräferenz/-asset | Aktuelle Bildquellen und Livebytes; nur der derzeit wirksame Zustand |
 | Schwierigkeit und Hinzugefügt-Datum | Aktuelle fachliche Bewertungs-/Datumdaten; kein historischer Erzeugerreplay |
@@ -73,8 +74,12 @@ Integrationskette. Aktuelle Inhaltsprüfsummen zur Datei-/Änderungszuordnung
 sind zulässig; sie werden nicht zu einem Herkunftsausweis ausgebaut.
 
 `production.package` wird nicht durch eine neue obligatorische Receipt-,
-Zertifikats- oder „Aktuellbeleg“-Datei ersetzt. Merkmale wie Maße/Modus werden
-aus ihrer vorhandenen fachlichen Autorität gelesen. Bereits bestehende aktuelle
+Zertifikats- oder „Aktuellbeleg“-Datei ersetzt. Maße werden aus der Definition gelesen. Der Modus wird als aktuelles Feld
+`mode` mit den bisherigen Werten `mono` oder `color` im Inhaltsindex erhalten;
+bei der einmaligen Überführung wird der bestehende wirksame Wert aus
+`production.mode` übernommen. Definitionen enthalten heute kein eindeutiges
+Modusfeld: Einfarbiges Color darf nicht allein wegen der Palettengröße zu Mono
+werden. Bereits bestehende aktuelle
 Metadaten-, Rating- und Datumquellen werden wiederverwendet, ohne eine zweite
 bearbeitbare Datenhaltung aufzubauen.
 
@@ -95,8 +100,9 @@ fachliche Bewertung; bestehende Rätsel werden nicht ungefragt neu bewertet.
 Der Eingang transportiert die ausgewählten finalen Nutzdaten, ihre benötigten
 aktuellen Qualitätsnachweise und die tatsächliche Freigabe. Er besteht aus:
 
-1. vollständiger finaler Definition einschließlich Matrix/Hinweisen/Palette
-   sowie gewünschter aktueller Identität und Pfad-/Save-Slotzuordnung;
+1. vollständiger finaler Definition einschließlich Matrix/Hinweisen/Palette,
+   ausdrücklichem aktuellem Modus sowie gewünschter aktueller Identität und
+   Pfad-/Save-Slotzuordnung;
 2. gewähltem Reveal, Hintergrundpräferenz und gegebenenfalls gewähltem Asset,
    jeweils mit benötigter aktueller Nutzungsgrundlage;
 3. Name, gültiger Kategorie und passender aktueller Difficulty;
